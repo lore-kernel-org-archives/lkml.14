@@ -1,27 +1,28 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2083.outbound.protection.outlook.com [40.107.223.83])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2078.outbound.protection.outlook.com [40.107.92.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0266F08E;
-	Mon,  8 Apr 2024 12:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2067B3E5;
+	Mon,  8 Apr 2024 12:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.78
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580875; cv=fail; b=fkb0qdnT7KRIgf4kbUt17BC858oVFBD3rziHywVwLxgQ30RYkqgbz8NiShN7eHaQ3S4qD5QRT7XwQ5fNVaoBMD1ofafZCifsgrfgvRsDDUFY49Kj+tfowX8Xs78hSQQJHEQv+Ya+lGIIX84lDJ+BUNN1pwlEJllRp6VfPXfnemc=
+	t=1712580879; cv=fail; b=E5ofHLHRFlN1sWtDej6K+B4na+0quJLtnuq8quE/Z+JzL7HU0q1c7rA4xzNsbC4GKpeOQKSlSY5XMBtnlhyJjOr/kOYDuc9WPeHcalP+IzASm5ECMEke3gFfonRc50VnFes80Qxql7MhDvLws5r3ByC0LdeAuO8jOEmbgjUbknQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580875; c=relaxed/simple;
-	bh=GzCHQb+b5mjqjQX85hu+ZTeXNPz7/e9N6h8o/vKorxg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mMkWExw5DJmugALKTjfM5zKQMg49j7hCDpg9/qmokoEb8YJAcWRzZCadQPBjX1NdZiuQJFi8udQLekZzp6e/hkAjRPZXkOo/3Hg0INL8GbKpnQsTyNBDELUkaWuAj7pTk45CsC1nwg2MWFPMVGmXUO5zEL1sZwRyADdVBSWrLBo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cOBge/Yc; arc=fail smtp.client-ip=40.107.223.83
+	s=arc-20240116; t=1712580879; c=relaxed/simple;
+	bh=g4KttqU3zxKQlek7DsPqtT/EY+zUBUUs1q8UzggIz4A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bM65Ic2ArXDu/Cd7UK2czTdrqA5STA4T3II/DcMY2DOgQrLpqwrWA2baT+b2CVriar0ilDmcoRGKMA3aY0UsyGbFujFC5yePLPTaAk2oHYahngyZBRvV0xS0wh3V6Nbe5/BP6wJJJuUZ7DKnAiiYmlV53i+27Ry11mHSKCec6MQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=f/jOOR6w; arc=fail smtp.client-ip=40.107.92.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cOBge/Yc"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="f/jOOR6w"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VGxF4rf6toKkc4ymR2ZPEhd7lHG95JLm+Dt/dcZWAPriAp+X0z2jHnr/I4XhjLsZqjhWjccRlbrGzo2H8AR4jzOwWMVyfmTXuZVWJUWfPeK9qdb5PISHp3SQOzrBosy8cSWcWo3RVDctX2QZ/srrR0jcP6cJSxk0+BBSzMN2pQTymS3IrQwezcaNIcn0hIDgM+1G6j9NtINcutg5s8fuCBAglTQumZsGNCKvLZK6UMAfy7zZjblB0fBkYq70RChiKRWEAYEptJrPTmNPCt+cT2qer0SOIs91X0PSIL7THcwuUvan/REKrMHSuZzekL6Bok1bMOmXlDOEjObv2pjwXw==
+ b=dpjSl2mdQSgJdFqBoyZ7v4g5HuKGJm6hI14HpXTeZJbnD63vYksvMIiLl98IAZi20jWlbdnLPlBdPpN5XQADcOC+zFbqa5EwzWWE7E6lSRbVX0bjWvD1N7zcGuqR77YO11cT1jD0QSIu6r8UgJYwQjXiRslysBQbYJqcYwoW8EhRKru4RbMtkbthXe+z6N/1Lr2+qPCtBttcYKy32l0UW2aK2xsIDdWj2CAHm6LJjqu4YFIMM/PkWIX0WoLl8c0C2+a+hj1kX/BCRNKgpSy6Q/ZZVHsL6ib5Lh9Jx6ZrbYPBGAfm0GDd36enDMyrR6i03GybjkV7hRsVZ8SaIxBoBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vetlP21hQJ95M8t3oHmkorJC8ZQy2jcFN8CRJiGwgN4=;
- b=ej1WImZ/g/RoRSkGVp/9RETgDJbZUVCrwVxDlRSaYGFPKo5rKXNb1G/Ytsxb+aUCbrVEq+kAjWQbUC2WeudImZfOwXKZGgTHZI2uUzkRIq1U0+wIuTT1B08c8GYo2oV1bbMRmVdSdBoJGZNLH+0LVGQVCEa1ahJREiG97S/HcOlx1yj6C9ZqFwZcBrCorlit0rsQcg4wMvC8y0SuwjUoAIs4pbl3WDF3XihtxlzXmsGmKMPM5uW491m5I7CSlaVDG3Io/ul50qnejo/hnBx0Q7gsfy6pRBME0nD+F/ZsHNOUKkMXUynUDiByfjoz0vEogEUcuWjQT21l8DjM75h7Fg==
+ bh=yfRaFeSwThfmWuhjh+xiVcQeHoZzaZigjEK39FRs3qE=;
+ b=Mj4DHOeac8TLApfjISLytIDJVt0kyqrnpBM4rTlUcvU3S7Ay/04LgUKlfZy5cuiWpCp7IHaK7yU08C3iETduTKsrTG3K3vJEgs/u9JpPvA+p0oJ7KJ/lS78U/1BJDbf4x6QgtBOojKTwyTiFAArT/TIjIUn3jdChbPIxvBWHN+8KYUAwMk+VSnVxDlgenrA8OWnOM4M8Zai+z0YijoVLJ5vdRnbxRFaQtKedZNEZwsVs7h3SKCV7zZdL621d7u7AHfCxQeHScLMohwQJu3wpytEfXYirt/N+hBjIswCb21s1iFrpy4Z+ZGmtzqq5NDo9h+LlatN+L/xDvY8IysFp3g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -29,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vetlP21hQJ95M8t3oHmkorJC8ZQy2jcFN8CRJiGwgN4=;
- b=cOBge/Yclf10Jy7YAh2sxlghAd3aAw7mKzDTPY4k56UzHl3V2ieSvMT4ttsIY1ff1DYR6EOud0FVR46e1yvCPLNPse2kFngUYfjcYZqCrZdYvGSWTEcp3illX5gTMu/i6MrQkFdPE/9lbOjV+sxICF6a0hbMDUtTuOzt7vA7GQaADqeI7LXQ3kIqXWv6OoT7S2tig+x9oC824LdbA9GtERwRV2sfurcF6urEulla01758/oVkS0y6dclImeCbcoviJuQDGzrBIG95ZZ8C5HBgrOW/AiOc+cBMeD2qcMA5NITdOrqmUVR9IXACp8VMZux6Ios/pO2JCSU+sD48Tu38w==
-Received: from BN9PR03CA0797.namprd03.prod.outlook.com (2603:10b6:408:13f::22)
- by CH0PR12MB8579.namprd12.prod.outlook.com (2603:10b6:610:182::10) with
+ bh=yfRaFeSwThfmWuhjh+xiVcQeHoZzaZigjEK39FRs3qE=;
+ b=f/jOOR6wLry2CJ86N6kn4faBpGYaymHEEi+NSnLqVkM5CHs/0vM2NqZ38KdxHNf2Hz+Pg8xFtz322AGpVhhRmtfUuVBD8GqxdtSDbxi+oF46+adL4cQkhxaUtoRUwx6Bcw7DkpjG/uRYQfloUF8pxx1aDZ6DWmc3smq9qz+rALxQU3Z552S45JFJwUIqAicX7/lRqlbrlSHIXgfUE0vF24TbUdtM8fD1ZxMviSmoEZ89XSozFi6YM6/nlXOX+Orl/EQPDJEq7YB8saYeL345AHrDARqTXYYDcIX7MTg9xkhn8EluJ5JGmcg2nt0cZUPV4gEUMrEyiBft1CqnNEQmNg==
+Received: from BN9PR03CA0674.namprd03.prod.outlook.com (2603:10b6:408:10e::19)
+ by SN7PR12MB8601.namprd12.prod.outlook.com (2603:10b6:806:26e::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
- 2024 12:54:22 +0000
-Received: from BN1PEPF00004689.namprd05.prod.outlook.com
- (2603:10b6:408:13f:cafe::b2) by BN9PR03CA0797.outlook.office365.com
- (2603:10b6:408:13f::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.30 via Frontend
- Transport; Mon, 8 Apr 2024 12:54:22 +0000
+ 2024 12:54:33 +0000
+Received: from BN1PEPF0000468C.namprd05.prod.outlook.com
+ (2603:10b6:408:10e:cafe::e0) by BN9PR03CA0674.outlook.office365.com
+ (2603:10b6:408:10e::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.36 via Frontend
+ Transport; Mon, 8 Apr 2024 12:54:33 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -48,17 +49,17 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.160 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.160) by
- BN1PEPF00004689.mail.protection.outlook.com (10.167.243.134) with Microsoft
+ BN1PEPF0000468C.mail.protection.outlook.com (10.167.243.137) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Mon, 8 Apr 2024 12:54:22 +0000
+ 15.20.7452.22 via Frontend Transport; Mon, 8 Apr 2024 12:54:33 +0000
 Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
  (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 8 Apr 2024
- 05:54:02 -0700
+ 05:54:14 -0700
 Received: from dev-r-vrt-155.mtr.labs.mlnx (10.126.230.35) by
  rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Mon, 8 Apr 2024 05:53:57 -0700
+ 15.2.1258.12; Mon, 8 Apr 2024 05:54:08 -0700
 From: Danielle Ratson <danieller@nvidia.com>
 To: <netdev@vger.kernel.org>
 CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
@@ -69,11 +70,13 @@ CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
 	<richardcochran@gmail.com>, <shayagr@amazon.com>, <paul.greenwalt@intel.com>,
 	<jiri@resnulli.us>, <linux-doc@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <mlxsw@nvidia.com>, <petrm@nvidia.com>,
-	<idosch@nvidia.com>, Danielle Ratson <danieller@nvidia.com>
-Subject: [PATCH net-next 00/10] Add ability to flash modules' firmware
-Date: Mon, 8 Apr 2024 15:53:30 +0300
-Message-ID: <20240408125340.2084269-1-danieller@nvidia.com>
+	<idosch@nvidia.com>
+Subject: [PATCH net-next 02/10] mlxsw: Implement ethtool operation to write to a transceiver module EEPROM
+Date: Mon, 8 Apr 2024 15:53:32 +0300
+Message-ID: <20240408125340.2084269-3-danieller@nvidia.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240408125340.2084269-1-danieller@nvidia.com>
+References: <20240408125340.2084269-1-danieller@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,131 +89,193 @@ X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
  rnnvmail201.nvidia.com (10.129.68.8)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004689:EE_|CH0PR12MB8579:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6c8b7112-7190-49fa-612e-08dc57cb035b
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000468C:EE_|SN7PR12MB8601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b4584db-5fc2-4930-72b5-08dc57cb09ba
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	Y2cX2Q9wRjcNIj86e6549ijVF96MWpc1bzqqaJCBwYdug8ohdrXAmAlqLRWF7t1chXn6DyKIQ8Zx/BnXOZziBYYFO+IKhZfDJZVTpPnrJvHpaLlw/96UW0aVEw94K3YvdNk85hBhP55aMAiOYsJEHI40B793nLqu9JgxEPExwv/WhgTLE+Lbywb2nSmewDeYJ6bZrArAaUnlcIqkes0r2iA2fOZ7xiyCXHif6AnVcR0i1gy5HGRBEuqPf8VGQGDad3+HQL1RvqWL373cJ1AqbManfARtQUE6S5DX+6beU3mYlTvirKY/XY0Nfso8xlSimp+tI8ZVxGDAIeGsX6gpxDmuUSYufobGjqvJXE7qq2EkK1ed8tWHDzH6MH7CcSNE1tH/B3eSz0pcDjlpYu8NNXqPe4diKc8Kj2UAmRRAbknG6ZFtuYfPgPNbeYbdAQwVLLNLMdOIbAhIHtj/RACcFdfOMogQgzbSN0Cxt4b9XToXLR+2d+FVO9dfeArXQbVsWIhL0f+D9yqBM2TuiVh2H7DuICBHhpW3j3Qf16wCXQgJeciImm9E7TqJ2OXvYr3bqQm0kGkL3NLRmJIwrU93yJ2z1oE3eeaJv3q6XSG0fSxCccQitTCjlFriMaBh8sbirfXRSaiTIDSVLnuY+gPSpGHPiV4SBHgPwzZw238vlG9aidqTS3P3iV52Rnnrv0hfc9E/ZFsj6mQAP/zfX4zbckXulrPooKowZKY1IDIRPeNtqlAbw73f4ZVGf9ouIUIJ
+	EMCiLJotLtwhoIt9xASYl27i3gCbTBwSU4lxaisxQmvPDrOrXT2GSfkycUCNtUXgPpJ0OrfmCZ4vmSzcA7NqldMZ1MP5vFOX3/I4uMImTHvFfGZ2EiW3L2u4o0r3O5dhv0AidNVYL/XLAKGbGSaXMgq3HhQuJpEWB8EjZ3XnOTupomvIqIED9G4vI/hZdAnf31FoDgmnxKM8sST45Av1/N2ws/3wVwtoG4wWqxTRpoZbaAe0msFzTELPK5iEFrJk+emEdbtjzB5/8CUUJ/dmYdK7kb3N3ZG3drCezuQohMGygQv65dxvhS8pz33vNbZLu06weflLRJuzbUucHbg3ClSv8USORJA7CoYGcNm6M400OAa5gjod6OvS5sTxkYJtw1nxpLiXWpX7HbaBHoXXrWky+UZvbcOC7hS/ltZMEI68BtokBxKtNrQaRcV/KCSsVXRMGjO+3zZs1ILZy9f7kA565Qq3x0GtwFOI/AnD6NdqdlmKtDaNLLAG9O9aakAmNW26/ZrrHN4wnIHjNcfdzxkgDiVndR9ClHTuzYoNPGxZSVkzKqVKHygLD8TW+FMtfkeOmLaJBXwsERH/ZOK5c8ha0iLdP0JyNEGFxV9y+GbL8CcWigR1ZaUXZg8yetzxnJ1STMb71VqI+KqW7LNQIf7beAYII8W1plcmwWRO8h9zU3yIbwzRj3WLUNCmYqsRn7FSiheRPlfV/QvWM3rlKGf3syOaoXbZLK1BjpttMsXUd/gdG2Of92XcIWsV2RNJ
 X-Forefront-Antispam-Report:
 	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(1800799015)(7416005)(376005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 12:54:22.3721
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 12:54:33.0928
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c8b7112-7190-49fa-612e-08dc57cb035b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b4584db-5fc2-4930-72b5-08dc57cb09ba
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004689.namprd05.prod.outlook.com
+	BN1PEPF0000468C.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8579
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8601
 
-CMIS compliant modules such as QSFP-DD might be running a firmware that
-can be updated in a vendor-neutral way by exchanging messages between
-the host and the module as described in section 7.2.2 of revision
-4.0 of the CMIS standard.
+From: Ido Schimmel <idosch@nvidia.com>
 
-According to the CMIS standard, the firmware update process is done
-using a CDB commands sequence.
+Implement the ethtool_ops::set_module_eeprom_by_page operation to allow
+ethtool to write to a transceiver module EEPROM, in a similar fashion to
+the ethtool_ops::get_module_eeprom_by_page operation.
 
-CDB (Command Data Block Message Communication) reads and writes are
-performed on memory map pages 9Fh-AFh according to the CMIS standard,
-section 8.12 of revision 4.0.
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Reviewed-by: Petr Machata <petrm@nvidia.com>
+---
+ .../net/ethernet/mellanox/mlxsw/core_env.c    | 57 +++++++++++++++++++
+ .../net/ethernet/mellanox/mlxsw/core_env.h    |  6 ++
+ drivers/net/ethernet/mellanox/mlxsw/minimal.c | 15 +++++
+ .../mellanox/mlxsw/spectrum_ethtool.c         | 15 +++++
+ 4 files changed, 93 insertions(+)
 
-Add a pair of new ethtool messages that allow:
-
-* User space to trigger firmware update of transceiver modules
-
-* The kernel to notify user space about the progress of the process
-
-The user interface is designed to be asynchronous in order to avoid RTNL
-being held for too long and to allow several modules to be updated
-simultaneously. The interface is designed with CMIS compliant modules in
-mind, but kept generic enough to accommodate future use cases, if these
-arise.
-
-The kernel interface that will implement the firmware update using CDB
-command will include 2 layers that will be added under ethtool:
-
-* The upper layer that will be triggered from the module layer, is
- cmis_ fw_update.
-* The lower one is cmis_cdb.
-
-In the future there might be more operations to implement using CDB
-commands. Therefore, the idea is to keep the cmis_cdb interface clean and
-the cmis_fw_update specific to the cdb commands handling it.
-
-The communication between the kernel and the driver will be done using
-two ethtool operations that enable reading and writing the transceiver
-module EEPROM.
-The operation ethtool_ops::get_module_eeprom_by_page, that is already
-implemented, will be used for reading from the EEPROM the CDB reply,
-e.g. reading module setting, state, etc.
-The operation ethtool_ops::set_module_eeprom_by_page, that is added in
-the current patchset, will be used for writing to the EEPROM the CDB
-command such as start firmware image, run firmware image, etc.
-
-Therefore in order for a driver to implement module flashing, that
-driver needs to implement the two functions mentioned above.
-
-Patchset overview:
-Patch #1-#2: Implement the EEPROM writing in mlxsw.
-Patch #3: Define the interface between the kernel and user space.
-Patch #4: Add ability to notify the flashing firmware progress.
-Patch #5: Add firmware flashing in progress flag.
-Patch #6: Add extended compliance codes.
-Patch #7: Add the cdb layer.
-Patch #8: Add the fw_update layer.
-Patch #9: Add ability to flash transceiver modules' firmware.
-Patch #10: Veto problematic scenarios.
-
-Danielle Ratson (8):
-  ethtool: Add an interface for flashing transceiver modules' firmware
-  ethtool: Add flashing transceiver modules' firmware notifications
-    ability
-  include: netdevice: Add module firmware flashing in progress flag to
-    net_device
-  net: sfp: Add more extended compliance codes
-  ethtool: cmis_cdb: Add a layer for supporting CDB commands
-  ethtool: cmis_fw_update: add a layer for supporting firmware update
-    using CDB
-  ethtool: Add ability to flash transceiver modules' firmware
-  ethtool: Veto some operations during firmware flashing process
-
-Ido Schimmel (2):
-  ethtool: Add ethtool operation to write to a transceiver module EEPROM
-  mlxsw: Implement ethtool operation to write to a transceiver module
-    EEPROM
-
- Documentation/netlink/specs/ethtool.yaml      |  63 ++
- Documentation/networking/ethtool-netlink.rst  |  62 ++
- .../net/ethernet/mellanox/mlxsw/core_env.c    |  57 ++
- .../net/ethernet/mellanox/mlxsw/core_env.h    |   6 +
- drivers/net/ethernet/mellanox/mlxsw/minimal.c |  15 +
- .../mellanox/mlxsw/spectrum_ethtool.c         |  15 +
- include/linux/ethtool.h                       |  20 +-
- include/linux/netdevice.h                     |   4 +-
- include/linux/sfp.h                           |   6 +
- include/uapi/linux/ethtool.h                  |  18 +
- include/uapi/linux/ethtool_netlink.h          |  20 +
- net/ethtool/Makefile                          |   2 +-
- net/ethtool/cmis.h                            | 121 ++++
- net/ethtool/cmis_cdb.c                        | 549 ++++++++++++++++++
- net/ethtool/cmis_fw_update.c                  | 391 +++++++++++++
- net/ethtool/eeprom.c                          |   6 +
- net/ethtool/ioctl.c                           |  12 +
- net/ethtool/module.c                          | 286 +++++++++
- net/ethtool/module_fw.h                       |  38 ++
- net/ethtool/netlink.c                         |  37 +-
- net/ethtool/netlink.h                         |   2 +
- 21 files changed, 1719 insertions(+), 11 deletions(-)
- create mode 100644 net/ethtool/cmis.h
- create mode 100644 net/ethtool/cmis_cdb.c
- create mode 100644 net/ethtool/cmis_fw_update.c
- create mode 100644 net/ethtool/module_fw.h
-
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_env.c b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+index 53b150b7ae4e..79e4c745ac3b 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_env.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_env.c
+@@ -513,6 +513,63 @@ mlxsw_env_get_module_eeprom_by_page(struct mlxsw_core *mlxsw_core,
+ }
+ EXPORT_SYMBOL(mlxsw_env_get_module_eeprom_by_page);
+ 
++int
++mlxsw_env_set_module_eeprom_by_page(struct mlxsw_core *mlxsw_core,
++				    u8 slot_index, u8 module,
++				    const struct ethtool_module_eeprom *page,
++				    struct netlink_ext_ack *extack)
++{
++	struct mlxsw_env *mlxsw_env = mlxsw_core_env(mlxsw_core);
++	u32 bytes_written = 0;
++	u16 device_addr;
++	int err;
++
++	if (!mlxsw_env_linecard_is_active(mlxsw_env, slot_index)) {
++		NL_SET_ERR_MSG_MOD(extack,
++				   "Cannot write to EEPROM of a module on an inactive line card");
++		return -EIO;
++	}
++
++	err = mlxsw_env_validate_module_type(mlxsw_core, slot_index, module);
++	if (err) {
++		NL_SET_ERR_MSG_MOD(extack, "EEPROM is not equipped on port module type");
++		return err;
++	}
++
++	device_addr = page->offset;
++
++	while (bytes_written < page->length) {
++		char mcia_pl[MLXSW_REG_MCIA_LEN];
++		char eeprom_tmp[128] = {};
++		u8 size;
++
++		size = min_t(u8, page->length - bytes_written,
++			     mlxsw_env->max_eeprom_len);
++
++		mlxsw_reg_mcia_pack(mcia_pl, slot_index, module, page->page,
++				    device_addr + bytes_written, size,
++				    page->i2c_address);
++		mlxsw_reg_mcia_bank_number_set(mcia_pl, page->bank);
++		memcpy(eeprom_tmp, page->data + bytes_written, size);
++		mlxsw_reg_mcia_eeprom_memcpy_to(mcia_pl, eeprom_tmp);
++
++		err = mlxsw_reg_write(mlxsw_core, MLXSW_REG(mcia), mcia_pl);
++		if (err) {
++			NL_SET_ERR_MSG_MOD(extack, "Failed to access module's EEPROM");
++			return err;
++		}
++
++		err = mlxsw_env_mcia_status_process(mcia_pl, extack);
++		if (err)
++			return err;
++
++		bytes_written += size;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(mlxsw_env_set_module_eeprom_by_page);
++
+ static int mlxsw_env_module_reset(struct mlxsw_core *mlxsw_core, u8 slot_index,
+ 				  u8 module)
+ {
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core_env.h b/drivers/net/ethernet/mellanox/mlxsw/core_env.h
+index a197e3ae069c..e4ff17869400 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core_env.h
++++ b/drivers/net/ethernet/mellanox/mlxsw/core_env.h
+@@ -28,6 +28,12 @@ mlxsw_env_get_module_eeprom_by_page(struct mlxsw_core *mlxsw_core,
+ 				    const struct ethtool_module_eeprom *page,
+ 				    struct netlink_ext_ack *extack);
+ 
++int
++mlxsw_env_set_module_eeprom_by_page(struct mlxsw_core *mlxsw_core,
++				    u8 slot_index, u8 module,
++				    const struct ethtool_module_eeprom *page,
++				    struct netlink_ext_ack *extack);
++
+ int mlxsw_env_reset_module(struct net_device *netdev,
+ 			   struct mlxsw_core *mlxsw_core, u8 slot_index,
+ 			   u8 module, u32 *flags);
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/minimal.c b/drivers/net/ethernet/mellanox/mlxsw/minimal.c
+index f0ceb196a6ce..448263423e36 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/minimal.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/minimal.c
+@@ -140,6 +140,20 @@ mlxsw_m_get_module_eeprom_by_page(struct net_device *netdev,
+ 						   page, extack);
+ }
+ 
++static int
++mlxsw_m_set_module_eeprom_by_page(struct net_device *netdev,
++				  const struct ethtool_module_eeprom *page,
++				  struct netlink_ext_ack *extack)
++{
++	struct mlxsw_m_port *mlxsw_m_port = netdev_priv(netdev);
++	struct mlxsw_core *core = mlxsw_m_port->mlxsw_m->core;
++
++	return mlxsw_env_set_module_eeprom_by_page(core,
++						   mlxsw_m_port->slot_index,
++						   mlxsw_m_port->module,
++						   page, extack);
++}
++
+ static int mlxsw_m_reset(struct net_device *netdev, u32 *flags)
+ {
+ 	struct mlxsw_m_port *mlxsw_m_port = netdev_priv(netdev);
+@@ -181,6 +195,7 @@ static const struct ethtool_ops mlxsw_m_port_ethtool_ops = {
+ 	.get_module_info	= mlxsw_m_get_module_info,
+ 	.get_module_eeprom	= mlxsw_m_get_module_eeprom,
+ 	.get_module_eeprom_by_page = mlxsw_m_get_module_eeprom_by_page,
++	.set_module_eeprom_by_page = mlxsw_m_set_module_eeprom_by_page,
+ 	.reset			= mlxsw_m_reset,
+ 	.get_module_power_mode	= mlxsw_m_get_module_power_mode,
+ 	.set_module_power_mode	= mlxsw_m_set_module_power_mode,
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+index a755b0a901d3..c79da1411d33 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_ethtool.c
+@@ -1067,6 +1067,20 @@ mlxsw_sp_get_module_eeprom_by_page(struct net_device *dev,
+ 						   module, page, extack);
+ }
+ 
++static int
++mlxsw_sp_set_module_eeprom_by_page(struct net_device *dev,
++				   const struct ethtool_module_eeprom *page,
++				   struct netlink_ext_ack *extack)
++{
++	struct mlxsw_sp_port *mlxsw_sp_port = netdev_priv(dev);
++	struct mlxsw_sp *mlxsw_sp = mlxsw_sp_port->mlxsw_sp;
++	u8 slot_index = mlxsw_sp_port->mapping.slot_index;
++	u8 module = mlxsw_sp_port->mapping.module;
++
++	return mlxsw_env_set_module_eeprom_by_page(mlxsw_sp->core, slot_index,
++						   module, page, extack);
++}
++
+ static int
+ mlxsw_sp_get_ts_info(struct net_device *netdev, struct ethtool_ts_info *info)
+ {
+@@ -1256,6 +1270,7 @@ const struct ethtool_ops mlxsw_sp_port_ethtool_ops = {
+ 	.get_module_info		= mlxsw_sp_get_module_info,
+ 	.get_module_eeprom		= mlxsw_sp_get_module_eeprom,
+ 	.get_module_eeprom_by_page	= mlxsw_sp_get_module_eeprom_by_page,
++	.set_module_eeprom_by_page	= mlxsw_sp_set_module_eeprom_by_page,
+ 	.get_ts_info			= mlxsw_sp_get_ts_info,
+ 	.get_eth_phy_stats		= mlxsw_sp_get_eth_phy_stats,
+ 	.get_eth_mac_stats		= mlxsw_sp_get_eth_mac_stats,
 -- 
 2.43.0
 
