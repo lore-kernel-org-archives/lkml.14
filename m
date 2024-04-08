@@ -1,197 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504B2383A0;
-	Mon,  8 Apr 2024 08:09:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AF8381DF
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563799; cv=none; b=X61BDpjdSnQ+6W3MiuKmSVuz9TUjaIzLAqYyHWtgzhX/wiXUcaPIaF9yzmzIwEK2jnc/9S5fC8/ghsJrD+zNQ65QO4uh+kdUfat3ENQZnOjEAQf4envcbbti0DqN95uyIxfD3mNDX7cp9Yo8cBdSMj8ozKtLz6z59WH8I4X2kvg=
+	t=1712563801; cv=none; b=OiQUM18sIKv1lnnf3t9h8XLkbkbvycrRmxJWDDxuN1F84FLuhGbjt8k0xJpUHmbovZWaJLkBkToI37ISepUNALei+v55fAlVWDTZEBjr5MGXB2KmVegOJAeafGi7lTBcByg52PWd4+p8qR9gwO8Z2MWUHD3Iro1npY/ZCcxiSPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563799; c=relaxed/simple;
-	bh=JNFc4F167hpSFgsBvPrqtFJbZiF/Fqk7yk6nxtVXHRA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ly8FfUjglA/uTv2aCely/+Xebw/CHm26Rknl3aGCEOtCw3WjdD47neVpdpyXSFcinvbIj41YoTRTxkHFy9YVm5zNA8R7iX30yofhHTKqkMacTuCGwFS4BtOzMoCZNZK12TNZFmwxJYu7aEhPcszda26u4IcrazM34/cLs2xuWxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFJLfVAe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712563801; c=relaxed/simple;
+	bh=ljkAHH/jrVsEddYmqwbcAhxir0nJCPPqH96atvjx+I8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZS1tzAATXuPytOoCLY/lHJxXMtbw6plhlC7iPA9xjjku3rXVKxU640QIknkAiz1YWjYgx6L6NZDJ+tb675VurbGApX1Tjyp3YxRZl+f9O17C5go1OWl6S7XtRmAl4UWF4+EJEVfOYmpJaY9btS7V/DZ3pbBlCxAKggvM8Oni4QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BCdJ1pjI; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFJLfVAe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BADC43399;
-	Mon,  8 Apr 2024 08:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712563799;
-	bh=JNFc4F167hpSFgsBvPrqtFJbZiF/Fqk7yk6nxtVXHRA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ZFJLfVAewQCa4CdnoSF20zK/+VJRD/0CYBVd+/ksicWGIwtsbojBOgZ9HUf5WHZ1f
-	 R/S/IZlWOvjQ8gtNqhfZ8Hjc2HrkNIPfzlm+OvFgOuqVNmQRCnCRZ/8nEvFFmAzbVO
-	 Xf9wCjzf6ilvfgTOOQE+YS2P9fgdDq01+qu/6HAhSlJgqPVaTrpa3O+X9+8hFqH5MP
-	 K/h6FgsY65quopECOF9tu2kNEhF1uA6jH7YUIUFb0behIdLeHVK6OKeH0Yef/6pGNh
-	 sgAfsdvQGMzo0gDoHsWdYo+6/DiiDExpN/4Pw4mxQn4vBzyjzyAqD7eQ8Eu/8H4ock
-	 ubetS8ez4BIWg==
-From: bentiss@kernel.org
-Date: Mon, 08 Apr 2024 10:09:27 +0200
-Subject: [PATCH RFC bpf-next v6 2/6] bpf: Add support for
- KF_ARG_PTR_TO_TIMER
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BCdJ1pjI"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e346224bdso2150296a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:09:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712563797; x=1713168597; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OzIHovojG3644yJzi7Rp4zPvS+LnsKi9BT3OOCmERoA=;
+        b=BCdJ1pjInKKk4vrgVcjnsJf+I8ArtH02GFeLNUq5rIpogQRb1hlTw5Z4a3CIC9dQ86
+         p99pc2LF+33dZHwTcmQ1PXNyRNgdShtYxKUSWlLafAORk5KWI3oB/Ej8E8U0MpM8EJlY
+         qpkdpWMfD8j733hkxoa0lhQ8kmu+Quh1PTpL/yIXyID5KDMxHta/P9lXZ3uyOkRE1FNP
+         NVbd3Z2+aDKxlS+UCRpPT6VnHCKMul0ZxQ4TisDo8oMpguE1aYKRNXfWum1OD/3yOZFA
+         jUaYsiHZiRh/Emp4+Hs73LZBgkDILK2QonUpJAWjV06+OC6Mh1L222fKXGtzA9bfNqtI
+         dvdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712563797; x=1713168597;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OzIHovojG3644yJzi7Rp4zPvS+LnsKi9BT3OOCmERoA=;
+        b=xVWJOBjfohHBasIe0VSBY/02tuAPvdcA3imaAb++DNfW2MP1RDXcueWKsWndhKL7jF
+         gaJTCku9WC8Nr/aYB4Gp74R+EeHOqw3J2oZd1Qe7dqyqHMsCMSquivmNU3Rfl+PZ7EvQ
+         WdFsFgFiYsT0bcr4kPwM38XDVjmw0PZhTASIZaxE9xUk16uqAw7GU5kbYg3XQIJOEEV+
+         Onga6HGOor9UM2lX8tONqSg2rBMH9vTs0zFyDHQWrdT2s6n4Kl71/08yapXJYAo9R0gv
+         Dp6A5650kc+jSXH2SZqw5PFBJIIAYxX6jk211pq0m5SGLXYXOIRLw9mMJH3S2WQIWQ3L
+         v18g==
+X-Forwarded-Encrypted: i=1; AJvYcCVAI+v7Xd/cCaMCcZ7e6kAOh72Bf7u5/V+xOzhBfYq1seUEKY6/26TAM1uCQ8YIW4dZydafo81WnLa9lW1aD+AekpEKlkT54uKAmFh9
+X-Gm-Message-State: AOJu0Yx7KQCDUOnbPYM04DJkzoj1Bpn3EwFkMf27NMfTi8nHHiLpk/DM
+	NnqGnMBzvhwkULFpOGlq0LosvrC2zfPymR6NUgEDnLBrEPAjXe+jNOPWmzGrFQw=
+X-Google-Smtp-Source: AGHT+IHtvCDCPVlkweFZtEXFJMtCJqeKZm0fgLqDOmu+n81huoTOcfZOWzp5QNMYK38WJkLMK2XiTQ==
+X-Received: by 2002:a17:906:3391:b0:a4e:768a:144f with SMTP id v17-20020a170906339100b00a4e768a144fmr4666050eja.36.1712563797196;
+        Mon, 08 Apr 2024 01:09:57 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id gt17-20020a1709072d9100b00a51b3d4bb39sm3081020ejc.59.2024.04.08.01.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 01:09:56 -0700 (PDT)
+Date: Mon, 8 Apr 2024 11:09:51 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 2/2] thermal/drivers/mediatek/lvts_thermal: Improve some
+ memory allocation
+Message-ID: <d97f2a57-d318-455b-a860-8bd7972c8aaf@moroto.mountain>
+References: <42a87fb9837f1760d1ad4eb7162a7536785dc6f5.1712520052.git.christophe.jaillet@wanadoo.fr>
+ <8cb69f245311a348164b0b5ca3dbc59386746035.1712520052.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-hid-bpf-sleepable-v6-2-0499ddd91b94@kernel.org>
-References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
-In-Reply-To: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Kumar Kartikeya Dwivedi <memxor@gmail.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563787; l=4204;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=s0w876z4WCZOEAGRxkVjR4XsfmFuFBrGvAiFCapdFjE=;
- b=/y+TNn3r9mE73W+o37r2GOBGpi5eXAv161C+UefqHJaSyeki0PLrwsYHsOpyYZ2stCWQdr5NX
- OtpVNxZ6sVBCFR+kpSwSuyKHUSShBibNb3V6krCnyoro0O5PIS2AvIH
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cb69f245311a348164b0b5ca3dbc59386746035.1712520052.git.christophe.jaillet@wanadoo.fr>
 
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+On Sun, Apr 07, 2024 at 10:01:49PM +0200, Christophe JAILLET wrote:
+> diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
+> index 3003dc350766..b133f731c5ba 100644
+> --- a/drivers/thermal/mediatek/lvts_thermal.c
+> +++ b/drivers/thermal/mediatek/lvts_thermal.c
+> @@ -204,7 +204,7 @@ static const struct debugfs_reg32 lvts_regs[] = {
+>  
+>  static int lvts_debugfs_init(struct device *dev, struct lvts_domain *lvts_td)
+>  {
+> -	struct debugfs_regset32 *regset;
+> +	struct debugfs_regset32 *regsets;
+>  	struct lvts_ctrl *lvts_ctrl;
+>  	struct dentry *dentry;
+>  	char name[64];
+> @@ -214,8 +214,14 @@ static int lvts_debugfs_init(struct device *dev, struct lvts_domain *lvts_td)
+>  	if (IS_ERR(lvts_td->dom_dentry))
+>  		return 0;
+>  
+> +	regsets = devm_kcalloc(dev, lvts_td->num_lvts_ctrl,
+> +			       sizeof(*regsets), GFP_KERNEL);
+> +	if (!regsets)
+> +		return 0;
 
-Introduce support for KF_ARG_PTR_TO_TIMER. The kfuncs will use bpf_timer
-as argument and that will be recognized as timer argument by verifier.
-bpf_timer_kern casting can happen inside kfunc, but using bpf_timer in
-argument makes life easier for users who work with non-kern type in BPF
-progs.
+I understand that this preserved the behavior from the original code,
+but the original code was wrong.  This should return -ENOMEM.
 
-Fix up process_timer_func's meta argument usage (ignore if NULL) so that
-we can share the same checks for helpers and kfuncs. meta argument is
-only needed to ensure bpf_timer_init's timer and map arguments are
-coming from the same map (map_uid logic is necessary for correct
-inner-map handling).
+> +
+>  	for (i = 0; i < lvts_td->num_lvts_ctrl; i++) {
+>  
+> +		struct debugfs_regset32 *regset = &regsets[i];
+>  		lvts_ctrl = &lvts_td->lvts_ctrl[i];
 
-No such concerns will be necessary for kfuncs as timer initialization
-happens using helpers, hence pass NULL to process_timer_func from kfunc
-argument handling code to ignore it.
+The blank line should come after the declaration.
 
-Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-
----
-
-changes in v6:
-- used Kumar's version of the patch
-- reverted `+BTF_ID(struct, bpf_timer_kern)`
-
-changes in v5:
-- also check for the reg offset
-
-changes in v4:
-- enforce KF_ARG_PTR_TO_TIMER to be of type PTR_TO_MAP_VALUE
-
-new in v3 (split from v2 02/10)
----
- kernel/bpf/verifier.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index ca6cacf7b42f..ccfe9057d8dc 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -7568,12 +7568,16 @@ static int process_timer_func(struct bpf_verifier_env *env, int regno,
- 			val + reg->off, map->record->timer_off);
- 		return -EINVAL;
- 	}
-+	/* meta is only needed for bpf_timer_init to match timer and map */
-+	if (!meta)
-+		goto out;
- 	if (meta->map_ptr) {
- 		verbose(env, "verifier bug. Two map pointers in a timer helper\n");
- 		return -EFAULT;
- 	}
- 	meta->map_uid = reg->map_uid;
- 	meta->map_ptr = map;
-+out:
- 	return 0;
- }
- 
-@@ -10826,6 +10830,7 @@ enum {
- 	KF_ARG_LIST_NODE_ID,
- 	KF_ARG_RB_ROOT_ID,
- 	KF_ARG_RB_NODE_ID,
-+	KF_ARG_TIMER_ID,
- };
- 
- BTF_ID_LIST(kf_arg_btf_ids)
-@@ -10834,6 +10839,7 @@ BTF_ID(struct, bpf_list_head)
- BTF_ID(struct, bpf_list_node)
- BTF_ID(struct, bpf_rb_root)
- BTF_ID(struct, bpf_rb_node)
-+BTF_ID(struct, bpf_timer_kern)
- 
- static bool __is_kfunc_ptr_arg_type(const struct btf *btf,
- 				    const struct btf_param *arg, int type)
-@@ -10877,6 +10883,11 @@ static bool is_kfunc_arg_rbtree_node(const struct btf *btf, const struct btf_par
- 	return __is_kfunc_ptr_arg_type(btf, arg, KF_ARG_RB_NODE_ID);
- }
- 
-+static bool is_kfunc_arg_timer(const struct btf *btf, const struct btf_param *arg)
-+{
-+	return __is_kfunc_ptr_arg_type(btf, arg, KF_ARG_TIMER_ID);
-+}
-+
- static bool is_kfunc_arg_callback(struct bpf_verifier_env *env, const struct btf *btf,
- 				  const struct btf_param *arg)
- {
-@@ -10946,6 +10957,7 @@ enum kfunc_ptr_arg_type {
- 	KF_ARG_PTR_TO_NULL,
- 	KF_ARG_PTR_TO_CONST_STR,
- 	KF_ARG_PTR_TO_MAP,
-+	KF_ARG_PTR_TO_TIMER,
- };
- 
- enum special_kfunc_type {
-@@ -11102,6 +11114,9 @@ get_kfunc_ptr_arg_type(struct bpf_verifier_env *env,
- 	if (is_kfunc_arg_map(meta->btf, &args[argno]))
- 		return KF_ARG_PTR_TO_MAP;
- 
-+	if (is_kfunc_arg_timer(meta->btf, &args[argno]))
-+		return KF_ARG_PTR_TO_TIMER;
-+
- 	if ((base_type(reg->type) == PTR_TO_BTF_ID || reg2btf_ids[base_type(reg->type)])) {
- 		if (!btf_type_is_struct(ref_t)) {
- 			verbose(env, "kernel function %s args#%d pointer type %s %s is not supported\n",
-@@ -11735,6 +11750,7 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
- 		case KF_ARG_PTR_TO_CALLBACK:
- 		case KF_ARG_PTR_TO_REFCOUNTED_KPTR:
- 		case KF_ARG_PTR_TO_CONST_STR:
-+		case KF_ARG_PTR_TO_TIMER:
- 			/* Trusted by default */
- 			break;
- 		default:
-@@ -12021,6 +12037,15 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
- 			if (ret)
- 				return ret;
- 			break;
-+		case KF_ARG_PTR_TO_TIMER:
-+			if (reg->type != PTR_TO_MAP_VALUE) {
-+				verbose(env, "arg#%d doesn't point to a map value\n", i);
-+				return -EINVAL;
-+			}
-+			ret = process_timer_func(env, regno, NULL);
-+			if (ret < 0)
-+				return ret;
-+			break;
- 		}
- 	}
- 
-
--- 
-2.44.0
+regards,
+dan carpenter
 
