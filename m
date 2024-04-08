@@ -1,103 +1,217 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5624D28DDE
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052522C69C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712564219; cv=none; b=HGKcYsMsOuQDignWGApJo6brBK68m5IDDbygxDO2QjZA5Lp/KmLuGfhjy5jigsr0HbrG4JNCLa3qINYVyuxr4Od6YQSlrtPz/Aap8CWz0zoZEBzfl3l2F+OseOxTpxEKp+Zj1ZVNwLyeksnkz4F1kct90IyoaAK4nJUM8NLGv2E=
+	t=1712564381; cv=none; b=jjgoXSsbcNP2BBv5YkvNJaqQNXfunUi4PvURNg9xRyOWOY9sSGs7QnqIzjCmDgqvzKqV5LVRp9L3dPsVVDZ4qxXcvHLtypWPGsWGAmn4gl+pIFDqlUfM9BFwOSy1anREzXziPXjExP20eRHRG9aCUnd60SHLagxJZQxQL6B2apM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712564219; c=relaxed/simple;
-	bh=cPhgJR2bshKb+dPc9xJ0xovHcPH+z5sVjkaZ3ePwos0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kghfAzII0GCMWElljJW7HzpT/JN8i7/4c1sWsSqNsgkZTHxJfAiWnF4zI/43ZTbSc1S+Fu46nVDK59Cykbn9aVge8VFmuWQWk05cTsXaLXUy0tK9rXK2Lhz6gwIJT9M5cOEq66jePMIrJILwTg+d0BV08kvfW5eDiC+9dmpgyzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VChk23Fttz21kdc;
-	Mon,  8 Apr 2024 16:15:54 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id EE5AC1401E9;
-	Mon,  8 Apr 2024 16:16:48 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 8 Apr 2024 16:16:48 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-	<broonie@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
-	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH] arm64: arm_pmuv3: Correctly extract and check the PMUVer
-Date: Mon, 8 Apr 2024 16:11:58 +0800
-Message-ID: <20240408081158.15291-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1712564381; c=relaxed/simple;
+	bh=3xyKNVnpyx7eTuoCOHoqqHyJSp+D6SnTDkUbYoFulbY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DaqyLTzaLakeNNrBQnDbNpGW/6FpT/n1sKylebbrIDmsZVNKf2sopzDRwgc6nyRrQqoQP71IFZ91Zve2xHX4xyZ0lss9GsM/Oa1xsQW/EF301HV5OSLdLJUQHo8zvt2krHWM33p2S2v9Om0SlTx7cP9txCcNP93pObC/2f+GVSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUS6KZZf; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUS6KZZf"
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7e057fb0b69so889275241.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:19:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712564379; x=1713169179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AX5+jXHMJTfU3cppVGB1oM10Q5k8KJr3dApT/VnvvYU=;
+        b=WUS6KZZffhntHjBHPFuISwpGxTINGTH+KvrV9GZEzh3Mi5xcz8uMtQsrcAL2fXqOXb
+         h/WlEqeU0Ul6YKVRwhD3kyysYfDl5CR80WtiadBPmhecL3pY5l475mK6X8WHaIMidqrp
+         8+foXHWDccz1J0zY8NkHgE5aglaefiCHz7fqkdvyoCMaCWf7Hz3LKH/czOxFpA9UxIg5
+         KrL5rlBE+7iiJt6rIFZOFiL+kPLONknKnyHaI6iF2mvfWTj+HIYcKDOGQp33awEiSndE
+         g8cgj6MXdzjpGCRnWHSx9HL1LpNfaNmbR3NQsD5JcNeIw+kHTgmD88imK25J7TgoctbS
+         MJAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712564379; x=1713169179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AX5+jXHMJTfU3cppVGB1oM10Q5k8KJr3dApT/VnvvYU=;
+        b=VePq3NX0KgdX/A6lcy6G5ZytwvN6R5549t9dMkVNkyB9ppBBUidV/Qz6nOou+ilWVh
+         Qv4815WUnRUw8YJ60uyEInwCqHVGEAIfQ5rD5mtuwlj3rlbhQjnk3DcAlDVGahYbkkYN
+         InObjeg473Dje10raWBhmN+LfRVemkzp21U1QzmnHKvoFjuh4Bo9Zhej5M1HrDNn1nyb
+         zno/gSIfvOsYvn6zZuyb/mdwjTX0j6cpzV87Uc1SKAGI9KE/iFDEuV5XTkvAIAf1h0/a
+         s9W1dpOq6lrrw3cI/G2BlwbltqzHzvCWEQllpBaTyu+ap+UaAWwejPtBpspf5hkQ3r3R
+         oE5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVhiKRcIhZdujYlc/ALI4596T50jF97Cp2gzoSkGi2eqivzHiES9eKruDTg9e8WXwhh7iYVtatu7hpevg7R01OrRefyDpAl2QEyuCt3
+X-Gm-Message-State: AOJu0YwzG2EBYs0yHzb5eHGo1wasr6nuWe9z5qEMjybAjRHk1TOs5AAM
+	h5x2agRZZzWJToI7MNUEvV4oDCdI2Z3Nx9qNZ0t8FncNeYShgjuHuUHbMIGmcHpmI5b6vHRVqFR
+	8BrMTyzYaTFUzDpfOKA9v2saf16k=
+X-Google-Smtp-Source: AGHT+IHwKABiDH+sg4ocAOFV1rysPCy6M6jUel2pd3ftK4+6+b2hwxv91016VKyxPctK/xPT3DR2sG4D7Wn8cgcCrtA=
+X-Received: by 2002:a05:6102:32c8:b0:47a:110:143e with SMTP id
+ o8-20020a05610232c800b0047a0110143emr1628878vss.6.1712564378854; Mon, 08 Apr
+ 2024 01:19:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+References: <20240408080539.14282-1-liuhailong@oppo.com>
+In-Reply-To: <20240408080539.14282-1-liuhailong@oppo.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Mon, 8 Apr 2024 20:19:26 +1200
+Message-ID: <CAGsJ_4y7oGpxrgaWp=0WmG-zdkr2JmqMxnqQdjTsc1Q=5kKdoQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: do not skip CMA while LRU is full of CMA folios
+To: liuhailong@oppo.com
+Cc: akpm@linux-foundation.org, nathan@kernel.org, ndesaulniers@google.com, 
+	trix@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, surenb@google.com, zhaoyang.huang@unisoc.com, 
+	quic_charante@quicinc.com, yuzhao@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On Mon, Apr 8, 2024 at 8:06=E2=80=AFPM <liuhailong@oppo.com> wrote:
+>
+> From: liuhailong <liuhailong@oppo.com>
+>
+> If the allocation flag isn't movable, commit 5da226dbfce3 ("mm:
+> skip CMA pages when they are not available") skips CMA during direct
+> reclamation. This generally speeds up the reclamation of non-movable
+> folios. However, in scenarios with limited system memory and a majority
+> of reclaimable folios in LRU being from CMA, this can result in prolonged
+> idle loops where the system reclaims nothing but consumes CPU.
+>
+> I traced the process of a thread entering direct reclamation,
+> and printed the relevant information of the sc(scan_control).
+> __alloc_pages_direct_reclaim start
+> sc->priority:9 sc->nr_skipped_cma:32208  sc->nr_scanned:36  sc->nr_reclai=
+med:3
+> sc->priority:8 sc->nr_skipped_cma:32199  sc->nr_scanned:69  sc->nr_reclai=
+med:3
+> sc->priority:7 sc->nr_skipped_cma:198405 sc->nr_scanned:121 sc->nr_reclai=
+med:3
+> sc->priority:6 sc->nr_skipped_cma:236713 sc->nr_scanned:147 sc->nr_reclai=
+med:3
+> sc->priority:5 sc->nr_skipped_cma:708209 sc->nr_scanned:379 sc->nr_reclai=
+med:3
+> sc->priority:4 sc->nr_skipped_cma:785537 sc->nr_scanned:646 sc->nr_reclai=
+med:3
+> __alloc_pages_direct_reclaim end duration 3356ms
+>
+> Continuously skipping CMA even when the LRU is filled with CMA
+> folios can also result in lmkd failing to terminate processes. The
+> duration of psi_memstall (measured from the exit to the entry of
+> __alloc_pages_direct_reclaim) becomes excessively long, lasting for
+> example a couple of seconds. Consequently, lmkd fails to awaken and
+> terminate processes promptly.
 
-Currently we're using "sbfx" to extract the PMUVer from ID_AA64DFR0_EL1
-and skip the init/reset if no PMU present when the extracted PMUVer is
-negative or is zero. However for PMUv3p8 the PMUVer will be 0b1000 and
-PMUVer extracted by "sbfx" will always be negative and we'll skip the
-init/reset in __init_el2_debug/reset_pmuserenr_el0 unexpectedly.
+If you're planning to send a newer version, it's best to include
+the reproducer here.
 
-So this patch use "ubfx" instead of "sbfx" to extract the PMUVer. If
-the PMUVer is implementation defined (0b1111) then reset it to zero
-and skip the reset/init. Previously we'll also skip the init/reset
-if the PMUVer is higher than the version we known (currently PMUv3p9),
-with this patch we'll only skip if the PMU is not implemented or
-implementation defined. This keeps consistence with how we probe
-the PMU in the driver with pmuv3_implemented().
+>
+> This patch introduces no_skip_cma and sets it to true when the number of
+> skipped CMA folios is excessively high. It offers two benefits: Rather
+> than wasting time in idle loops, it's better to assist other threads in
+> reclaiming some folios; This shortens the duration of psi_memstall and
+> ensures timely activation of lmkd within a few milliseconds.
+>
+> Signed-off-by: liuhailong <liuhailong@oppo.com>
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- arch/arm64/include/asm/assembler.h | 5 ++++-
- arch/arm64/include/asm/el2_setup.h | 5 ++++-
- 2 files changed, 8 insertions(+), 2 deletions(-)
+I believe this patch tackles a niche scenario where CMA is configured
+to be large.
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index ab8b396428da..3b7373d6c565 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -480,7 +480,10 @@ alternative_endif
-  */
- 	.macro	reset_pmuserenr_el0, tmpreg
- 	mrs	\tmpreg, id_aa64dfr0_el1
--	sbfx	\tmpreg, \tmpreg, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	ubfx	\tmpreg, \tmpreg, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	cmp	\tmpreg, #ID_AA64DFR0_EL1_PMUVer_IMP_DEF
-+	csel	\tmpreg, xzr, \tmpreg, eq	// If PMU's IMP_DEF, regard it
-+						// as not implemented and skip
- 	cmp	\tmpreg, #1			// Skip if no PMU present
- 	b.lt	9000f
- 	msr	pmuserenr_el0, xzr		// Disable PMU access from EL0
-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-index b7afaa026842..2438e12b60c5 100644
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -59,7 +59,10 @@
- 
- .macro __init_el2_debug
- 	mrs	x1, id_aa64dfr0_el1
--	sbfx	x0, x1, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	ubfx	x0, x1, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	cmp	x0, #ID_AA64DFR0_EL1_PMUVer_IMP_DEF
-+	csel	x0, xzr, x0, eq			// If PMU's IMP_DEF, regard it
-+						// as not implemented and skip
- 	cmp	x0, #1
- 	b.lt	.Lskip_pmu_\@			// Skip if no PMU present
- 	mrs	x0, pmcr_el0			// Disable debug access traps
--- 
-2.24.0
+Acked-by: Barry Song <baohua@kernel.org>
 
+> ---
+
+This is evidently version 3 of your previous patch titled "[PATCH v2] Rever=
+t "
+mm: skip CMA pages when they are not available".[1]
+
+It's advisable to provide a brief explanation of the changes made from v2
+and include a link to v2 here.
+
+[1] https://lore.kernel.org/linux-mm/CAGsJ_4wD-NiquhnhK_6TGEF4reTGO9pVNGyYB=
+nYZ1inVFc40WQ@mail.gmail.com/
+
+>  mm/vmscan.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index fa321c125099..2c74c1c94d88 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -114,6 +114,9 @@ struct scan_control {
+>         /* Proactive reclaim invoked by userspace through memory.reclaim =
+*/
+>         unsigned int proactive:1;
+>
+> +       /* Can reclaim skip cma pages */
+> +       unsigned int no_skip_cma:1;
+> +
+>         /*
+>          * Cgroup memory below memory.low is protected as long as we
+>          * don't threaten to OOM. If any cgroup is reclaimed at
+> @@ -157,6 +160,9 @@ struct scan_control {
+>         /* Number of pages freed so far during a call to shrink_zones() *=
+/
+>         unsigned long nr_reclaimed;
+>
+> +       /* Number of cma-pages skipped so far during a call to shrink_zon=
+es() */
+> +       unsigned long nr_skipped_cma;
+> +
+>         struct {
+>                 unsigned int dirty;
+>                 unsigned int unqueued_dirty;
+> @@ -1572,9 +1578,13 @@ static __always_inline void update_lru_sizes(struc=
+t lruvec *lruvec,
+>   */
+>  static bool skip_cma(struct folio *folio, struct scan_control *sc)
+>  {
+> -       return !current_is_kswapd() &&
+> +       bool ret =3D !current_is_kswapd() && !sc->no_skip_cma &&
+>                         gfp_migratetype(sc->gfp_mask) !=3D MIGRATE_MOVABL=
+E &&
+>                         folio_migratetype(folio) =3D=3D MIGRATE_CMA;
+> +
+> +       if (ret)
+> +               sc->nr_skipped_cma +=3D folio_nr_pages(folio);
+> +       return ret;
+>  }
+>  #else
+>  static bool skip_cma(struct folio *folio, struct scan_control *sc)
+> @@ -6188,6 +6198,7 @@ static unsigned long do_try_to_free_pages(struct zo=
+nelist *zonelist,
+>                         vmpressure_prio(sc->gfp_mask, sc->target_mem_cgro=
+up,
+>                                         sc->priority);
+>                 sc->nr_scanned =3D 0;
+> +               sc->nr_skipped_cma =3D 0;
+>                 shrink_zones(zonelist, sc);
+>
+>                 if (sc->nr_reclaimed >=3D sc->nr_to_reclaim)
+> @@ -6202,6 +6213,16 @@ static unsigned long do_try_to_free_pages(struct z=
+onelist *zonelist,
+>                  */
+>                 if (sc->priority < DEF_PRIORITY - 2)
+>                         sc->may_writepage =3D 1;
+> +
+> +               /*
+> +                * If we're getting trouble reclaiming non-cma pages and
+> +                * currently a substantial number of CMA pages on LRU,
+> +                * start reclaiming cma pages to alleviate other threads
+> +                * and decrease lru size.
+> +                */
+> +               if (sc->priority < DEF_PRIORITY - 2 &&
+> +                   sc->nr_scanned < (sc->nr_skipped_cma >> 3))
+> +                       sc->no_skip_cma =3D 1;
+>         } while (--sc->priority >=3D 0);
+>
+>         last_pgdat =3D NULL;
+> --
+> 2.36.1
+>
+
+Thanks
+Barry
