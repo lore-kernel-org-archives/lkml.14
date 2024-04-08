@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C40147C72;
-	Mon,  8 Apr 2024 18:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E01148835;
+	Mon,  8 Apr 2024 18:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602526; cv=none; b=B+IT3lw/NrE9K7z5K/ZpwmEFWQaP+Osvs8H+UZAknOdNJ3JpUf12H3gXnwkyRdZoVWKnhfACS2Wi99rnrVydJ9qS615d/DWClRhdV/325HyX+aRiAcKg/+jHbPdtfYz97FdYWiuaFC4JudmtrvvbeW97qFcOnI4ml19sAptYHR4=
+	t=1712602527; cv=none; b=pkoKst4hQyQkZRr2Gd/hxZbfy4wBVad9SOmcoPkj6f29vTQxURK2stFE9i9X0Kf9ri22blyIa2hryyTosz0A26xSdrWdfLa2sBDJZpfnD/VQ9NzmJHa6LaCxO/cXGqBZR3bxOhixnklTAjONztT80Apxc1aDL2pqk/WiGp32oxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602526; c=relaxed/simple;
-	bh=eIb4mp2+ak7Zrc/JqmL5iOMyf+ztQz2scuPWswxDijM=;
+	s=arc-20240116; t=1712602527; c=relaxed/simple;
+	bh=BvHgZcFAUDVTBrBRbiRaDYjdO4l4T3ZRwoMXPA6BMQk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JNO1P9iKKktfeLQH0LYaQX1JABp859A4slqTzH8zdzGdpHDy5p4rBDrF/cin0YJv18EVGMhCK+XlsNolbcUngYV7Nt+RdKMgOiCEKHmLGUjk1bgmBCTRC4C5412Fy00hTkng9cZLGZsAzzy+6boqfjP/bDTC30sawMVmaqKjsjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EKziX7k2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aWltg7frMU05UPwsMDnsuWrK3KWZbq7EOjndEcT1qy1scnItFLGd0H1vz0eJ8yJE6bDyggXX9R9XW6SMtvA3Y5L1gBZzEgtOs8g75GpSsHvvgHZbNmR/5T0dKH/HhU3F20wQwHLDG/DhB1xdhJjjUSK+rQ/Y0uC95ydpMsqgrnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzBTMfx3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EKziX7k2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 865B7C43390;
-	Mon,  8 Apr 2024 18:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzBTMfx3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB06EC433C7;
+	Mon,  8 Apr 2024 18:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712602526;
-	bh=eIb4mp2+ak7Zrc/JqmL5iOMyf+ztQz2scuPWswxDijM=;
+	s=k20201202; t=1712602527;
+	bh=BvHgZcFAUDVTBrBRbiRaDYjdO4l4T3ZRwoMXPA6BMQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EKziX7k2yShkVf0VUqBaAeeSjf8LQ/AyakjfKKgWV0l9T4dbSGLM6jB1X2fwEvzcs
-	 ASbYFnsjHSRPLv8UzJ/NnrAxNk7sMCVIIKV0Wp4MUmRlpWcff6Vx6B7D1APZ5UUP8k
-	 Kzl5YkuDB33frAUeNlQkbLR++I1n3BKCaIpOHzC8mD31anTECXmAXJwxXD1sB3Hs+v
-	 E6TuOLGNK2m+YqlviGlvivvV7Bdbfm0s81aPsgCNm1wmsQCzYoGQtYvRwo/yKET+yZ
-	 COKDG5ecMuZBp9crNTdkuBEtW6aWANBCmPBUg7gj5Jqj31Lk1VuCDE5vNuZyXLzta5
-	 S2oWbhFWBEdjA==
+	b=EzBTMfx3rwiLU0W2aX9wWUyhTBaWz8dCWK1EzV/EnvzsHz3Nd2thn6M96J7zpmzmC
+	 fnxpCzSKtT4aojVmgTDApEZjvrIU23q8AS36rpJAYggyoz5tC+Js+e1Xreb5B4hHGC
+	 sjUJLk/LsYzTkkN4dNda7Ka3n/CwWbcvoO5OIT/Ve/4TNOsGuo0m/uqqM/T8pCblsV
+	 8P4pWQNgQre8cdPR9gbFt4lyu0edvSWJUqyY11t6SDAHJBRsyV7J4ygqNM6YDZbT7V
+	 a/k1oTb6ZZe8gp0ewJk15NBYvMqwC+MDm5+skXK19QtQMPDCWKNbciVQJ/k6af9I90
+	 a8oP1UOACEB1A==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,15 +36,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org
-Subject: [PATCH 7/9] tools/include: Sync x86 asm/msr-index.h with the kernel sources
-Date: Mon,  8 Apr 2024 11:55:18 -0700
-Message-ID: <20240408185520.1550865-8-namhyung@kernel.org>
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 9/9] tools/include: Sync arm64 asm/cputype.h with the kernel sources
+Date: Mon,  8 Apr 2024 11:55:20 -0700
+Message-ID: <20240408185520.1550865-10-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 In-Reply-To: <20240408185520.1550865-1-namhyung@kernel.org>
 References: <20240408185520.1550865-1-namhyung@kernel.org>
@@ -58,133 +55,50 @@ Content-Transfer-Encoding: 8bit
 
 To pick up the changes from:
 
-  8076fcde016c ("x86/rfds: Mitigate Register File Data Sampling (RFDS)")
-  d7b69b590bc9 ("x86/sev: Dump SEV_STATUS")
-  cd6df3f378f6 ("x86/cpu: Add MSR numbers for FRED configuration")
-  216d106c7ff7 ("x86/sev: Add SEV-SNP host initialization support")
+  fb091ff39479 ("arm64: Subscribe Microsoft Azure Cobalt 100 to ARM Neoverse N2 errata")
 
 This should address these tools/perf build warnings:
 
   Warning: Kernel ABI header differences:
-    diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+    diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/arch/x86/include/asm/msr-index.h | 74 ++++++++++++++++++--------
- 1 file changed, 51 insertions(+), 23 deletions(-)
+ tools/arch/arm64/include/asm/cputype.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 1f9dc9bd13eb..05956bd8bacf 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -176,6 +176,14 @@
- 						 * CPU is not vulnerable to Gather
- 						 * Data Sampling (GDS).
- 						 */
-+#define ARCH_CAP_RFDS_NO		BIT(27)	/*
-+						 * Not susceptible to Register
-+						 * File Data Sampling.
-+						 */
-+#define ARCH_CAP_RFDS_CLEAR		BIT(28)	/*
-+						 * VERW clears CPU Register
-+						 * File.
-+						 */
+diff --git a/tools/arch/arm64/include/asm/cputype.h b/tools/arch/arm64/include/asm/cputype.h
+index 7c7493cb571f..52f076afeb96 100644
+--- a/tools/arch/arm64/include/asm/cputype.h
++++ b/tools/arch/arm64/include/asm/cputype.h
+@@ -61,6 +61,7 @@
+ #define ARM_CPU_IMP_HISI		0x48
+ #define ARM_CPU_IMP_APPLE		0x61
+ #define ARM_CPU_IMP_AMPERE		0xC0
++#define ARM_CPU_IMP_MICROSOFT		0x6D
  
- #define ARCH_CAP_XAPIC_DISABLE		BIT(21)	/*
- 						 * IA32_XAPIC_DISABLE_STATUS MSR
-@@ -605,34 +613,47 @@
- #define MSR_AMD64_SEV_ES_GHCB		0xc0010130
- #define MSR_AMD64_SEV			0xc0010131
- #define MSR_AMD64_SEV_ENABLED_BIT	0
--#define MSR_AMD64_SEV_ES_ENABLED_BIT	1
--#define MSR_AMD64_SEV_SNP_ENABLED_BIT	2
- #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
-+#define MSR_AMD64_SEV_ES_ENABLED_BIT	1
- #define MSR_AMD64_SEV_ES_ENABLED	BIT_ULL(MSR_AMD64_SEV_ES_ENABLED_BIT)
-+#define MSR_AMD64_SEV_SNP_ENABLED_BIT	2
- #define MSR_AMD64_SEV_SNP_ENABLED	BIT_ULL(MSR_AMD64_SEV_SNP_ENABLED_BIT)
--
--/* SNP feature bits enabled by the hypervisor */
--#define MSR_AMD64_SNP_VTOM			BIT_ULL(3)
--#define MSR_AMD64_SNP_REFLECT_VC		BIT_ULL(4)
--#define MSR_AMD64_SNP_RESTRICTED_INJ		BIT_ULL(5)
--#define MSR_AMD64_SNP_ALT_INJ			BIT_ULL(6)
--#define MSR_AMD64_SNP_DEBUG_SWAP		BIT_ULL(7)
--#define MSR_AMD64_SNP_PREVENT_HOST_IBS		BIT_ULL(8)
--#define MSR_AMD64_SNP_BTB_ISOLATION		BIT_ULL(9)
--#define MSR_AMD64_SNP_VMPL_SSS			BIT_ULL(10)
--#define MSR_AMD64_SNP_SECURE_TSC		BIT_ULL(11)
--#define MSR_AMD64_SNP_VMGEXIT_PARAM		BIT_ULL(12)
--#define MSR_AMD64_SNP_IBS_VIRT			BIT_ULL(14)
--#define MSR_AMD64_SNP_VMSA_REG_PROTECTION	BIT_ULL(16)
--#define MSR_AMD64_SNP_SMT_PROTECTION		BIT_ULL(17)
--
--/* SNP feature bits reserved for future use. */
--#define MSR_AMD64_SNP_RESERVED_BIT13		BIT_ULL(13)
--#define MSR_AMD64_SNP_RESERVED_BIT15		BIT_ULL(15)
--#define MSR_AMD64_SNP_RESERVED_MASK		GENMASK_ULL(63, 18)
-+#define MSR_AMD64_SNP_VTOM_BIT		3
-+#define MSR_AMD64_SNP_VTOM		BIT_ULL(MSR_AMD64_SNP_VTOM_BIT)
-+#define MSR_AMD64_SNP_REFLECT_VC_BIT	4
-+#define MSR_AMD64_SNP_REFLECT_VC	BIT_ULL(MSR_AMD64_SNP_REFLECT_VC_BIT)
-+#define MSR_AMD64_SNP_RESTRICTED_INJ_BIT 5
-+#define MSR_AMD64_SNP_RESTRICTED_INJ	BIT_ULL(MSR_AMD64_SNP_RESTRICTED_INJ_BIT)
-+#define MSR_AMD64_SNP_ALT_INJ_BIT	6
-+#define MSR_AMD64_SNP_ALT_INJ		BIT_ULL(MSR_AMD64_SNP_ALT_INJ_BIT)
-+#define MSR_AMD64_SNP_DEBUG_SWAP_BIT	7
-+#define MSR_AMD64_SNP_DEBUG_SWAP	BIT_ULL(MSR_AMD64_SNP_DEBUG_SWAP_BIT)
-+#define MSR_AMD64_SNP_PREVENT_HOST_IBS_BIT 8
-+#define MSR_AMD64_SNP_PREVENT_HOST_IBS	BIT_ULL(MSR_AMD64_SNP_PREVENT_HOST_IBS_BIT)
-+#define MSR_AMD64_SNP_BTB_ISOLATION_BIT	9
-+#define MSR_AMD64_SNP_BTB_ISOLATION	BIT_ULL(MSR_AMD64_SNP_BTB_ISOLATION_BIT)
-+#define MSR_AMD64_SNP_VMPL_SSS_BIT	10
-+#define MSR_AMD64_SNP_VMPL_SSS		BIT_ULL(MSR_AMD64_SNP_VMPL_SSS_BIT)
-+#define MSR_AMD64_SNP_SECURE_TSC_BIT	11
-+#define MSR_AMD64_SNP_SECURE_TSC	BIT_ULL(MSR_AMD64_SNP_SECURE_TSC_BIT)
-+#define MSR_AMD64_SNP_VMGEXIT_PARAM_BIT	12
-+#define MSR_AMD64_SNP_VMGEXIT_PARAM	BIT_ULL(MSR_AMD64_SNP_VMGEXIT_PARAM_BIT)
-+#define MSR_AMD64_SNP_RESERVED_BIT13	BIT_ULL(13)
-+#define MSR_AMD64_SNP_IBS_VIRT_BIT	14
-+#define MSR_AMD64_SNP_IBS_VIRT		BIT_ULL(MSR_AMD64_SNP_IBS_VIRT_BIT)
-+#define MSR_AMD64_SNP_RESERVED_BIT15	BIT_ULL(15)
-+#define MSR_AMD64_SNP_VMSA_REG_PROT_BIT	16
-+#define MSR_AMD64_SNP_VMSA_REG_PROT	BIT_ULL(MSR_AMD64_SNP_VMSA_REG_PROT_BIT)
-+#define MSR_AMD64_SNP_SMT_PROT_BIT	17
-+#define MSR_AMD64_SNP_SMT_PROT		BIT_ULL(MSR_AMD64_SNP_SMT_PROT_BIT)
-+#define MSR_AMD64_SNP_RESV_BIT		18
-+#define MSR_AMD64_SNP_RESERVED_MASK	GENMASK_ULL(63, MSR_AMD64_SNP_RESV_BIT)
+ #define ARM_CPU_PART_AEM_V8		0xD0F
+ #define ARM_CPU_PART_FOUNDATION		0xD00
+@@ -135,6 +136,8 @@
  
- #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
+ #define AMPERE_CPU_PART_AMPERE1		0xAC3
  
-+#define MSR_AMD64_RMP_BASE		0xc0010132
-+#define MSR_AMD64_RMP_END		0xc0010133
++#define MICROSOFT_CPU_PART_AZURE_COBALT_100	0xD49 /* Based on r0p0 of ARM Neoverse N2 */
 +
- /* AMD Collaborative Processor Performance Control MSRs */
- #define MSR_AMD_CPPC_CAP1		0xc00102b0
- #define MSR_AMD_CPPC_ENABLE		0xc00102b1
-@@ -719,8 +740,15 @@
- #define MSR_K8_TOP_MEM1			0xc001001a
- #define MSR_K8_TOP_MEM2			0xc001001d
- #define MSR_AMD64_SYSCFG		0xc0010010
--#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT	23
-+#define MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT 23
- #define MSR_AMD64_SYSCFG_MEM_ENCRYPT	BIT_ULL(MSR_AMD64_SYSCFG_MEM_ENCRYPT_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_EN_BIT	24
-+#define MSR_AMD64_SYSCFG_SNP_EN		BIT_ULL(MSR_AMD64_SYSCFG_SNP_EN_BIT)
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT 25
-+#define MSR_AMD64_SYSCFG_SNP_VMPL_EN	BIT_ULL(MSR_AMD64_SYSCFG_SNP_VMPL_EN_BIT)
-+#define MSR_AMD64_SYSCFG_MFDM_BIT	19
-+#define MSR_AMD64_SYSCFG_MFDM		BIT_ULL(MSR_AMD64_SYSCFG_MFDM_BIT)
-+
- #define MSR_K8_INT_PENDING_MSG		0xc0010055
- /* C1E active bits in int pending message */
- #define K8_INTP_C1E_ACTIVE_MASK		0x18000000
+ #define MIDR_CORTEX_A53 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A53)
+ #define MIDR_CORTEX_A57 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A57)
+ #define MIDR_CORTEX_A72 MIDR_CPU_MODEL(ARM_CPU_IMP_ARM, ARM_CPU_PART_CORTEX_A72)
+@@ -193,6 +196,7 @@
+ #define MIDR_APPLE_M2_BLIZZARD_MAX MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M2_BLIZZARD_MAX)
+ #define MIDR_APPLE_M2_AVALANCHE_MAX MIDR_CPU_MODEL(ARM_CPU_IMP_APPLE, APPLE_CPU_PART_M2_AVALANCHE_MAX)
+ #define MIDR_AMPERE1 MIDR_CPU_MODEL(ARM_CPU_IMP_AMPERE, AMPERE_CPU_PART_AMPERE1)
++#define MIDR_MICROSOFT_AZURE_COBALT_100 MIDR_CPU_MODEL(ARM_CPU_IMP_MICROSOFT, MICROSOFT_CPU_PART_AZURE_COBALT_100)
+ 
+ /* Fujitsu Erratum 010001 affects A64FX 1.0 and 1.1, (v0r0 and v1r0) */
+ #define MIDR_FUJITSU_ERRATUM_010001		MIDR_FUJITSU_A64FX
 -- 
 2.44.0.478.gd926399ef9-goog
 
