@@ -1,366 +1,141 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2051.outbound.protection.outlook.com [40.107.102.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8657B1494B8;
-	Mon,  8 Apr 2024 20:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712609651; cv=fail; b=toyHxNogDf6TKdR/8DcAD5Wm0FBCns6X58Ohb2DSE1dQeAfr0pu9gopB4c5qteAWiIpFKgb7TOBtBuL1tC/vzC2SKjPdNh9fMCHKqRiX7ekInDSpnzEDi/2hOXP7gcgI1es1qt6mWyZfgVp31ywTvSLbISnorONMM4PHQaBQCZk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712609651; c=relaxed/simple;
-	bh=HP0Dv8jCe16phOvQemQteL1gyrB3FLMoFx+fww5cBBg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oaKiYa5NFeFhu5wmijseB/7lzNCOYNXlX00k9jwLgjgpWefvCpXMFUgzyLoRJZWSa/k44SbcleWRKJ0078jpzD+qq623eaiJ62eNa7Pkes6V8d0eE1bG6gpyo3GfQvGROjeEoQ+neaijiiaqpUdH1gLjb/mkB1UFFGaQgsv3dog=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5ufC6asR; arc=fail smtp.client-ip=40.107.102.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F5414601C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 20:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712609673; cv=none; b=JZLKLa9EqPU/MxW3n+KQQjkn17Xpib30/fPaYPVOhUuPCNfZhwDjHyv5hoZxoRoMa2uT6eJXi4cBgW4z6FxGAtnPzhKpsjsenA0kyrajAb3fCzMMuUrDr9BSRKWLhR0zB7Xyho6R4ivxcBQ/iNbGQ4I/bVTRBqk+1bE8A/j+OaE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712609673; c=relaxed/simple;
+	bh=FWzuTDS/0jE8Zj1WSIL/PuE/iPyHj5EpRy5w5pnchQw=;
+	h=From:Message-Id:Content-Type:Mime-Version:Subject:Date:
+	 In-Reply-To:Cc:To:References; b=Jp+1KLfrwOfQls5kuJjxAYJzHvidKldXIj8s6848EphtOnGasE3OvqArjLD6YA6jFeqWCefqYTkE0noDSCNIa/y7vRHbGj96aSnBp/ZdqvYhF/v35HrEp2Hjh/482OjTOOkXGLGbX62lalYWA0ZC3XOMSACbpAmwKwwW9Xiy/YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca; spf=pass smtp.mailfrom=dilger.ca; dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b=mK3NbKZb; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dilger.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dilger.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5ufC6asR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EbGSGNsHepZw1xJPcK+Lo3/xMP/Op0MFHQWIEoY6VKvV9PuldSyX/U4yiHCtmi3dWsM4x3/AEAepml8u1gmBGUNU12knAQ9qnN0mNw8X2MrPO1Kb0jQwGtRRlQlFhdWwpSC2YIa0sKeq0lhfkDQEmNHZHm0QoOiVzolWKyBUxRRN1zc/CEe8xhYpaDLzxwMizP+n5rNrK+zs+Q3L0CKxLuEbC936qPxLa8NZ6pF/n9A+TpBUrA0Tub5gZFX8ow7sbwsBTi9H12DpSzTQTrmA0OfvDnLZ8+yLujs/u6anFYH0F5XCFmTpzUmhJA5MtwLA57IFoj9YIsFzzbdt6fvabQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f4pk4mwSgyrVx9zjRZUeO+BPHs8ARntKlObHEWw1UlY=;
- b=OgNeFLwCZYEn1RWRJ5SKfAJRzPuWJjPO7Za3OAEkCRnrMfxE9BvW2wh9yZE66HMyolwcxNFkKSn+Qivc1i0o+2iDce1U/gerXdcl01vttHDQjjfeXYZFQfrEUFAlXglYZ3PzJQ2wQa3DRxD4HhsYZDwsACji2tdqxouJHaY0/si4O66gVY7pKIu5ukDdM708b7kA7WixrRXEbCUBgH6vaiq1ch4H9uSOUFF7ItH3ulYz8Wmss9wFyuxNkqH4z40Myd4kTkIagEmdhQZ8ZXT+xP53904aGLUDB8MyOnpYz1Mks89GUhK6y7kcMWwTzjC/fl1sJRguJeey2lhbLwJ8eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f4pk4mwSgyrVx9zjRZUeO+BPHs8ARntKlObHEWw1UlY=;
- b=5ufC6asRtO6viwPd9yKtifMF+onomYzvVngASnWcrE0UI793XxpEXwztG3vX8Gz2LqalTOCjwLP8dMrOwUVg20ewm5OKvrR4JqX70WmEvG/7+nBvwK6lJp+79k+FV335Z6sGs0pGOuWxL2KuGoIbP9mzu0HuNQnbV/mV7UyhSzk=
-Received: from CH0PR03CA0422.namprd03.prod.outlook.com (2603:10b6:610:10e::19)
- by MW6PR12MB8867.namprd12.prod.outlook.com (2603:10b6:303:249::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
- 2024 20:54:06 +0000
-Received: from CH3PEPF00000016.namprd21.prod.outlook.com
- (2603:10b6:610:10e:cafe::c9) by CH0PR03CA0422.outlook.office365.com
- (2603:10b6:610:10e::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.35 via Frontend
- Transport; Mon, 8 Apr 2024 20:54:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- CH3PEPF00000016.mail.protection.outlook.com (10.167.244.121) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7495.0 via Frontend Transport; Mon, 8 Apr 2024 20:54:03 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Apr
- 2024 15:54:03 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Apr
- 2024 15:54:03 -0500
-Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Mon, 8 Apr 2024 15:54:02 -0500
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<michal.simek@amd.com>, <ben.levinsky@amd.com>, <tanmay.shah@amd.com>
-CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v14 4/4] remoteproc: zynqmp: parse TCM from device tree
-Date: Mon, 8 Apr 2024 13:53:14 -0700
-Message-ID: <20240408205313.3552165-5-tanmay.shah@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240408205313.3552165-1-tanmay.shah@amd.com>
-References: <20240408205313.3552165-1-tanmay.shah@amd.com>
+	dkim=pass (2048-bit key) header.d=dilger-ca.20230601.gappssmtp.com header.i=@dilger-ca.20230601.gappssmtp.com header.b="mK3NbKZb"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ecfeefe94cso2321739b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 13:54:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20230601.gappssmtp.com; s=20230601; t=1712609669; x=1713214469; darn=vger.kernel.org;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mXo0bBXwc68qEXAAMO2s2pb6MbtWIrtXNEI/+8vfi7s=;
+        b=mK3NbKZb/t5APRnXCYLsSRrIO1lsEKQCCDP0H/DrH8zGgomMmxy/Gxdb8OhIVOmIjf
+         8Qt+PLfM+jLVpu9YASQRBYA6yXkCmq3OLtFbH9/1gF/lDYuYW0Ov3QxrIhvqiUcIAFme
+         rhPwG6nxcxg2aYKkgl+sv/Bq8BT58JNdlCl7bJL54knwp4LTPOBZMEgQMjTT4a0Kgh3Z
+         4OuqWGtsthZvEPmls+3jI05FByTd8/6s+SyPwKJn6ubwRjyOvtGUIrrCaaK+XlDNkRyj
+         sV3JZ18jOmWjpFfETpjWtA/vnuB0P9XSoVir60hiVYxVISMlgfbqcEGpc8x9tmTMJtul
+         z+Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712609669; x=1713214469;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mXo0bBXwc68qEXAAMO2s2pb6MbtWIrtXNEI/+8vfi7s=;
+        b=tGLKdUZP82vIhSwQC3+Sr0VDjORuxldGGbwVu169G8cXsaC9uavgowgNr+HjpyEY4e
+         K0x8hB1pSf+IuJn6A9ssn7sSK3OzttunrnAQjTYbYNBU47P8yV6ZsYnbmZCRxm0L1rrH
+         ZU0V0JN8nTMBNAcHKGH5KuRWH4YZWmFnFhUke9ywp9liV2vl3WrcXsUYWnpIFwLz2lOc
+         vRkz57c0sGSv8uSYd0h2bWrB+syI5rDLy2CdJmzo7qDv5zLE1bvnHZb5WJff9/9L0I52
+         IrB1H81kxaYw1Eo/Bu+iHHy21vIbYJzMuLdwnJY1vJi1PthceI0BZELg1XtUT8oRRLiO
+         QijQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9PT6fzzPqlJWw/wShzS13Hjyt+ur4GjkXIXK62c84MyGN6prkHadEqYVUetMxjg5kfQ0/I99JIzKQ0MLCJOumSY4Ar2G5YpC+tDJh
+X-Gm-Message-State: AOJu0YzvOzSpmKS2kT+D1RbVmceTIyy4kO/f1Xr5i9+juNXJyKoOkTCK
+	2usRsgeUOGsMV1yswV7DNU0k8K6SC8hvTWs8TZJq4Vbpj3RhcELzDzsBW60+qjA=
+X-Google-Smtp-Source: AGHT+IE6cOZM6q49ZFC8gRWK5IYFXUAJRq+PgMphvdKuZ2sd8FJbt5ggg5OMa8Y/mo6Kml0BMTRBtw==
+X-Received: by 2002:a05:6a00:14ca:b0:6ed:21b2:ca54 with SMTP id w10-20020a056a0014ca00b006ed21b2ca54mr1122436pfu.17.1712609669451;
+        Mon, 08 Apr 2024 13:54:29 -0700 (PDT)
+Received: from cabot.adilger.int (S01068c763f81ca4b.cg.shawcable.net. [70.77.200.158])
+        by smtp.gmail.com with ESMTPSA id u14-20020a056a00098e00b006e5af565b1dsm6996684pfg.201.2024.04.08.13.54.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2024 13:54:28 -0700 (PDT)
+From: Andreas Dilger <adilger@dilger.ca>
+Message-Id: <4E5BC096-0EEC-467E-8C6B-276CF5BED332@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_63F7C3C4-1B33-4AA2-B964-892D266A9523";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: tanmay.shah@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF00000016:EE_|MW6PR12MB8867:EE_
-X-MS-Office365-Filtering-Correlation-Id: 67f0f46d-426d-42eb-573b-08dc580e0674
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qEmG3OaZS24XlKr7ZWLu9MBU7ekZz3Psh3zaaRJc5N2GYUiIl1UJwPmFWjWQolX3UwhwSA1tPhwKjXQVPDYc7lvSI0R+7XCztXOO1lUlPBkWTRnQBYNyfWqakTrR+jvGfOgkLkWM96v1qhVKvOYA+iB5Km1rlH5ovCsXKV7jY35zBzhiQUSh7yrsKRMhSzV0mHsp1K2Hq3ZYTM4p9YEewzkzE+0gKaWkQB9hTIUGSzbrrawZDAlgDAKsjtyVH2MYzuVzxDdRKV+0Wieytnmwg5nozRmuYjObO/isXxehIroiDp9UmHWlee401ka4ieUT1wsXBvq8T1+u3x66qVxnK9RHVZG5XOs3MWYfo2lwxe7mULFYeri3mi3f6N5rzH1wdpopLW2v1f+92FOgVy8mNl6/WpF3TkKfnVwKSLs/w6jW7mRn4KQCFXBnugS/DdE7V3Z2C10oRF+6tgZ40474J2QcOKKVGwxuIiNu5RnVUphzQRgeOi2qKu6Hbpi7J7bdOqat/97u+8JDUswCsAwe/80U2dMZcrIRxszvhw73e1O154KnLICsjGIqkqMsbghGaZvqU6RCv4hXivCMGzejQ295tnGyl6TSU+Cbz1hPMc5adsFKD/mkAv9AOdGIymli03OqhSYUT2AFs+XaoJ2XnRxJcz05OaCOCZHM/GGCHxEr8/nGYSXhW5F5Hw0Qtr/llzrDR753NYpsI7RgammdE/mxbbv+pRmcStIXqubhuS707EJ12jMIwS1QpC6Jhjjx
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400014)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 20:54:03.9592
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67f0f46d-426d-42eb-573b-08dc580e0674
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF00000016.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8867
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: =?utf-8?Q?Re=3A_=5BPATCH=5D_ext4=3A_block=5Fvalidity=3A_Remove_un?=
+ =?utf-8?Q?necessary_=E2=80=98NULL=E2=80=99_values_from_new=5Fnode?=
+Date: Mon, 8 Apr 2024 14:54:27 -0600
+In-Reply-To: <20240402022300.25858-1-zeming@nfschina.com>
+Cc: Theodore Ts'o <tytso@mit.edu>,
+ Ext4 Developers List <linux-ext4@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Li zeming <zeming@nfschina.com>
+References: <20240402022300.25858-1-zeming@nfschina.com>
+X-Mailer: Apple Mail (2.3273)
 
-ZynqMP TCM information was fixed in driver. Now ZynqMP TCM information
-is available in device-tree. Parse TCM information in driver
-as per new bindings.
 
-Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
----
+--Apple-Mail=_63F7C3C4-1B33-4AA2-B964-892D266A9523
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Changes in v14:
-  - Add Versal platform support
-  - Add Versal-NET platform support
-  - Maintain backward compatibility for ZynqMP platform and use hardcode
-    TCM addresses
-  - Configure TCM based on xlnx,tcm-mode property for Versal
-  - Avoid TCM configuration if that property isn't available in DT 
+On Apr 1, 2024, at 8:23 PM, Li zeming <zeming@nfschina.com> wrote:
+>=20
+> new_node is assigned first, so it does not need to initialize the
+> assignment.
+>=20
+> Signed-off-by: Li zeming <zeming@nfschina.com>
+> ---
+> fs/ext4/block_validity.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+> index 6fe3c941b5651..87ee3a17bd29c 100644
+> --- a/fs/ext4/block_validity.c
+> +++ b/fs/ext4/block_validity.c
+> @@ -72,7 +72,7 @@ static int add_system_zone(struct ext4_system_blocks =
+*system_blks,
+> {
+> 	struct ext4_system_zone *new_entry, *entry;
+> 	struct rb_node **n =3D &system_blks->root.rb_node, *node;
+> -	struct rb_node *parent =3D NULL, *new_node =3D NULL;
+> +	struct rb_node *parent =3D NULL, *new_node;
 
- drivers/remoteproc/xlnx_r5_remoteproc.c | 173 ++++++++++++++++++------
- 1 file changed, 132 insertions(+), 41 deletions(-)
+This one is more compact and doesn't have the issue with
+the "cleanup" label at the end.
 
-diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
-index 0f942440b4e2..504492f930ac 100644
---- a/drivers/remoteproc/xlnx_r5_remoteproc.c
-+++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
-@@ -74,8 +74,8 @@ struct mbox_info {
- };
- 
- /*
-- * Hardcoded TCM bank values. This will be removed once TCM bindings are
-- * accepted for system-dt specifications and upstreamed in linux kernel
-+ * Hardcoded TCM bank values. This will stay in driver to maintain backward
-+ * compatibility with device-tree that does not have TCM information.
-  */
- static const struct mem_bank_data zynqmp_tcm_banks_split[] = {
- 	{0xffe00000UL, 0x0, 0x10000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 64KB each */
-@@ -300,36 +300,6 @@ static void zynqmp_r5_rproc_kick(struct rproc *rproc, int vqid)
- 		dev_warn(dev, "failed to send message\n");
- }
- 
--/*
-- * zynqmp_r5_set_mode()
-- *
-- * set RPU cluster and TCM operation mode
-- *
-- * @r5_core: pointer to zynqmp_r5_core type object
-- * @fw_reg_val: value expected by firmware to configure RPU cluster mode
-- * @tcm_mode: value expected by fw to configure TCM mode (lockstep or split)
-- *
-- * Return: 0 for success and < 0 for failure
-- */
--static int zynqmp_r5_set_mode(struct zynqmp_r5_core *r5_core,
--			      enum rpu_oper_mode fw_reg_val,
--			      enum rpu_tcm_comb tcm_mode)
--{
--	int ret;
--
--	ret = zynqmp_pm_set_rpu_mode(r5_core->pm_domain_id, fw_reg_val);
--	if (ret < 0) {
--		dev_err(r5_core->dev, "failed to set RPU mode\n");
--		return ret;
--	}
--
--	ret = zynqmp_pm_set_tcm_config(r5_core->pm_domain_id, tcm_mode);
--	if (ret < 0)
--		dev_err(r5_core->dev, "failed to configure TCM\n");
--
--	return ret;
--}
--
- /*
-  * zynqmp_r5_rproc_start()
-  * @rproc: single R5 core's corresponding rproc instance
-@@ -761,6 +731,103 @@ static struct zynqmp_r5_core *zynqmp_r5_add_rproc_core(struct device *cdev)
- 	return ERR_PTR(ret);
- }
- 
-+static int zynqmp_r5_get_tcm_node_from_dt(struct zynqmp_r5_cluster *cluster)
-+{
-+	int i, j, tcm_bank_count, ret, tcm_pd_idx, pd_count;
-+	struct of_phandle_args out_args;
-+	struct zynqmp_r5_core *r5_core;
-+	struct platform_device *cpdev;
-+	struct mem_bank_data *tcm;
-+	struct device_node *np;
-+	struct resource *res;
-+	u64 abs_addr, size;
-+	struct device *dev;
-+
-+	for (i = 0; i < cluster->core_count; i++) {
-+		r5_core = cluster->r5_cores[i];
-+		dev = r5_core->dev;
-+		np = r5_core->np;
-+
-+		pd_count = of_count_phandle_with_args(np, "power-domains",
-+						      "#power-domain-cells");
-+
-+		if (pd_count <= 0) {
-+			dev_err(dev, "invalid power-domains property, %d\n", pd_count);
-+			return -EINVAL;
-+		}
-+
-+		/* First entry in power-domains list is for r5 core, rest for TCM. */
-+		tcm_bank_count = pd_count - 1;
-+
-+		if (tcm_bank_count <= 0) {
-+			dev_err(dev, "invalid TCM count %d\n", tcm_bank_count);
-+			return -EINVAL;
-+		}
-+
-+		r5_core->tcm_banks = devm_kcalloc(dev, tcm_bank_count,
-+						  sizeof(struct mem_bank_data *),
-+						  GFP_KERNEL);
-+		if (!r5_core->tcm_banks)
-+			return -ENOMEM;
-+
-+		r5_core->tcm_bank_count = tcm_bank_count;
-+		for (j = 0, tcm_pd_idx = 1; j < tcm_bank_count; j++, tcm_pd_idx++) {
-+			tcm = devm_kzalloc(dev, sizeof(struct mem_bank_data),
-+					   GFP_KERNEL);
-+			if (!tcm)
-+				return -ENOMEM;
-+
-+			r5_core->tcm_banks[j] = tcm;
-+
-+			/* Get power-domains id of TCM. */
-+			ret = of_parse_phandle_with_args(np, "power-domains",
-+							 "#power-domain-cells",
-+							 tcm_pd_idx, &out_args);
-+			if (ret) {
-+				dev_err(r5_core->dev,
-+					"failed to get tcm %d pm domain, ret %d\n",
-+					tcm_pd_idx, ret);
-+				return ret;
-+			}
-+			tcm->pm_domain_id = out_args.args[0];
-+			of_node_put(out_args.np);
-+
-+			/* Get TCM address without translation. */
-+			ret = of_property_read_reg(np, j, &abs_addr, &size);
-+			if (ret) {
-+				dev_err(dev, "failed to get reg property\n");
-+				return ret;
-+			}
-+
-+			/*
-+			 * Remote processor can address only 32 bits
-+			 * so convert 64-bits into 32-bits. This will discard
-+			 * any unwanted upper 32-bits.
-+			 */
-+			tcm->da = (u32)abs_addr;
-+			tcm->size = (u32)size;
-+
-+			cpdev = to_platform_device(dev);
-+			res = platform_get_resource(cpdev, IORESOURCE_MEM, j);
-+			if (!res) {
-+				dev_err(dev, "failed to get tcm resource\n");
-+				return -EINVAL;
-+			}
-+
-+			tcm->addr = (u32)res->start;
-+			tcm->bank_name = (char *)res->name;
-+			res = devm_request_mem_region(dev, tcm->addr, tcm->size,
-+						      tcm->bank_name);
-+			if (!res) {
-+				dev_err(dev, "failed to request tcm resource\n");
-+				return -EINVAL;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * zynqmp_r5_get_tcm_node()
-  * Ideally this function should parse tcm node and store information
-@@ -839,9 +906,16 @@ static int zynqmp_r5_core_init(struct zynqmp_r5_cluster *cluster,
- 	struct zynqmp_r5_core *r5_core;
- 	int ret, i;
- 
--	ret = zynqmp_r5_get_tcm_node(cluster);
--	if (ret < 0) {
--		dev_err(dev, "can't get tcm node, err %d\n", ret);
-+	r5_core = cluster->r5_cores[0];
-+
-+	/* Maintain backward compatibility for zynqmp by using hardcode TCM address. */
-+	if (device_is_compatible(dev, "xlnx,zynqmp-r5fss"))
-+		ret = zynqmp_r5_get_tcm_node(cluster);
-+	else
-+		ret = zynqmp_r5_get_tcm_node_from_dt(cluster);
-+
-+	if (ret) {
-+		dev_err(dev, "can't get tcm, err %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -856,12 +930,18 @@ static int zynqmp_r5_core_init(struct zynqmp_r5_cluster *cluster,
- 			return ret;
- 		}
- 
--		ret = zynqmp_r5_set_mode(r5_core, fw_reg_val, tcm_mode);
--		if (ret) {
--			dev_err(dev, "failed to set r5 cluster mode %d, err %d\n",
--				cluster->mode, ret);
-+		ret = zynqmp_pm_set_rpu_mode(r5_core->pm_domain_id, fw_reg_val);
-+		if (ret < 0) {
-+			dev_err(r5_core->dev, "failed to set RPU mode\n");
- 			return ret;
- 		}
-+
-+		if (device_is_compatible(dev, "xlnx,zynqmp-r5fss") ||
-+		    of_find_property(dev_of_node(dev), "xlnx,tcm-mode", NULL)) {
-+			ret = zynqmp_pm_set_tcm_config(r5_core->pm_domain_id, tcm_mode);
-+			if (ret < 0)
-+				dev_err(r5_core->dev, "failed to configure TCM\n");
-+		}
- 	}
- 
- 	return 0;
-@@ -906,16 +986,25 @@ static int zynqmp_r5_cluster_init(struct zynqmp_r5_cluster *cluster)
- 	 * fail driver probe if either of that is not set in dts.
- 	 */
- 	if (cluster_mode == LOCKSTEP_MODE) {
--		tcm_mode = PM_RPU_TCM_COMB;
- 		fw_reg_val = PM_RPU_MODE_LOCKSTEP;
- 	} else if (cluster_mode == SPLIT_MODE) {
--		tcm_mode = PM_RPU_TCM_SPLIT;
- 		fw_reg_val = PM_RPU_MODE_SPLIT;
- 	} else {
- 		dev_err(dev, "driver does not support cluster mode %d\n", cluster_mode);
- 		return -EINVAL;
- 	}
- 
-+	if (device_is_compatible(dev, "xlnx,zynqmp-r5fss")) {
-+		if (cluster_mode == LOCKSTEP_MODE)
-+			tcm_mode = PM_RPU_TCM_COMB;
-+		else
-+			tcm_mode = PM_RPU_TCM_SPLIT;
-+	} else if (of_find_property(dev_node, "xlnx,tcm-mode", NULL)) {
-+		ret = of_property_read_u32(dev_node, "xlnx,tcm-mode", (u32 *)&tcm_mode);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	/*
- 	 * Number of cores is decided by number of child nodes of
- 	 * r5f subsystem node in dts. If Split mode is used in dts
-@@ -1100,6 +1189,8 @@ static int zynqmp_r5_remoteproc_probe(struct platform_device *pdev)
- /* Match table for OF platform binding */
- static const struct of_device_id zynqmp_r5_remoteproc_match[] = {
- 	{ .compatible = "xlnx,zynqmp-r5fss", },
-+	{ .compatible = "xlnx,versal-r5fss", },
-+	{ .compatible = "xlnx,versal-net-r52fss", },
- 	{ /* end of list */ },
- };
- MODULE_DEVICE_TABLE(of, zynqmp_r5_remoteproc_match);
--- 
-2.25.1
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
 
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_63F7C3C4-1B33-4AA2-B964-892D266A9523
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmYUWYMACgkQcqXauRfM
+H+COAQ//fd/+Y1hjlh0ZAn9FQop1SO9vmwog5pcjqcyg+JKlMJOu0Fi1UkgsHknj
+K27qtRDzkX9BeqjKmzAykyVKNUrORnycZeSAz3vx3xTJN+NLjRkggeXX7EvqeZH9
+J82FO2IA2TQSY0d87hXyfXPEqNlIqw11jLL2QV76vF68THRgDiZ5pt29qYOdPvx0
+CJDtxEqh7xfspPy1clj7JbHjcJdVy9CQnUW+3sxm/SXV5N5jMopl6UcUPMhdQCTr
+sCOgngYhBw5KNDBH/hui+0KruqGW6+rwVxvKs08E7NMMc6dNXGF0LxUhpAF7CXGm
+HyJimemGhsw0dLzUzEQgQlv8/uFPs8dzRRCBgUxvYNPFkZA6Y8zCHne6dObcR1oR
+oWVgGbh183tZRoREFQek1leCiAiA5e4sW/xxEUFDsVE0WCLQiSRiHRPJPwerkATn
+WiB9NFOopFETY4FtKPq5OxOv0ovzmDezZLaSl7/o3kWdy7kQMz8xNrN+4X+i2W+P
+uUs8oVsd3PH5Vt6ypRIKJVzszMeg6qrbXHgqMUZSzbpPiGoV+0aJ68O1xijG8WOZ
++1abvJjvyH/NxDmoOgae+Mv+fYXThSS8EqMths0y89wfCobGUO2FttusRwSicq1p
+WyG+xYGVZPyBU0k8cVsvXzLuEuwgCR9iN+eWkStVK4YZ7cnSvCo=
+=kjFk
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_63F7C3C4-1B33-4AA2-B964-892D266A9523--
