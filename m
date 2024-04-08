@@ -1,128 +1,127 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFC03BBDB;
-	Mon,  8 Apr 2024 08:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AD638FA7;
+	Mon,  8 Apr 2024 08:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712564861; cv=none; b=ADbKMm3qJgmSxS+QWmffU5aVDd0rXUslpToVsiqCVYqp9aEJ5/86/QcrXN9D0MjNZUtRmuqBEbHRAM0vJM4IksoYNHCARmuKzILWy/o1hi+R/vk6eFBP9ZXK6LRSCdw0qdaRynOIulbqEaqJK4K3E00eOQk8telcbmJzgpYIVf8=
+	t=1712564873; cv=none; b=kMT4P2diWVgte5cGPHHNy4hy8t8DgZ2Z4+r77qqXyDP0NYGxDAAbEKF2EK4MIKFd140B6lLWs1pedAzYjz7Eo/+zmYYJZs1QShwg7+Sv7V6IWql7j4zVQQu41KgRs25bxvE6i6NSm0g+G12G5LEdzRGe+EgP6r1ufPcjqrVTnSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712564861; c=relaxed/simple;
-	bh=u9L7qVa0ZjLHzku/GRWHHqefATdqWRrHJlXyyocla8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eOoV4iXCFAbJlOwaS2Tjdpg1OjsKRnKmOVzzuVz6AwKUWzYmUJmLoY7QKbiaXfOMLHReLSBpNIlUp88rNpVYDouB39Qm0euw8QR7phXLcM865RMmZqlgG6xAjH7RJb0srkR5UZ4xzzMJRPtHOHtH0tRB2RzTW03MZb5infotxRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1712564873; c=relaxed/simple;
+	bh=iDRZ7NACy/T0uhiXZjIuXu3NxT/V6Mg0k8eu2ro0ehM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=DktipVVl20DTMawM7GbbiF6bGPnIA9kq/QVvFz/LWjLLfhUkSb6VjU94lOF9xdptpvjtL7K4TJof4qMu39RDCes+u4w67XT2mtjFdbyLy3bPuVAVunn3+QVpASYRG2jYSWrKpk+mCsCyG7/IxiB1rh9FdYfRHJXUicyawpB3A3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KCgs3AYs; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so3110882a12.1;
-        Mon, 08 Apr 2024 01:27:39 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCgs3AYs"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a46a7208eedso606526366b.0;
+        Mon, 08 Apr 2024 01:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712564870; x=1713169670; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=iDRZ7NACy/T0uhiXZjIuXu3NxT/V6Mg0k8eu2ro0ehM=;
+        b=KCgs3AYsklV3+jlY5WOBBM3eC9FaLZ970jZsdH1PdnsYFlezqFYbB1aWD+SH/+pHiz
+         cpuhPyGyNQxQ7RMl4YwjsCi+sVHcX94BOeMKlr5Y1M2MNZfCCfIfYhFH7KOcdiXFW2vw
+         1C7MMjTVbBwSoqfuxPwNX9hMlMEEpWbJaERlo7iFhXpdmUgJJSOLSxjiWYwS3XGEOqv4
+         npvDqlocUoLkz2Od++vdK2mDyflskHL+3S0G5sF5D2cWP9oxGxZdHoHGOvYSFMrOeHpt
+         VwrIwa7sd/Xn1vA2FRTWrBZzQJowp0lvlwQgIY/yKLBgu8xqSOQbwX6l9KffHUK+STJS
+         iyTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712564859; x=1713169659;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mduMjCqjA7drDw2lEIoqwW5oGXEwTzrsNz9VmuPIKQw=;
-        b=G4oD/tN7k00pbY/aLU1vmj7HekENQo8QrzOHUVfqTTkSm+GK5ldTIInhkv7+5Kg/h+
-         JFsgxPPQ0JNSwvq8hEaXAMrEWNCJZKeVYbe7g00FUnAQ9ZN4nQt5cIqb2zpVX8ESh3Zx
-         7gPvQhS2aE2s+FEVyqfYYUjR4aWSN+r/PTY1fhp+HKQyPlylKXA8k5JmgH8KponFxdjY
-         29vg3OptFkNk9g9txkR+1JUNNqvaHHr3GxILXOZgGiBxOdL+lnzlQ0kiCNN1CoAjpm3x
-         sNswmTlKPfHTc2fWPDucGdA1sJX3kM69oQrmPrLv9lbE6YttJD/GkY/R4XCO+kkomBpn
-         WjdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6NJYwtnB03uxgJuzEOS4pgknqwRKaCHlEqsgJTx4qSvIM6e4Yao2e1Y0L3PQ4HWLwfb6opGTQbb1w9wDUoZ/GSZxaC55l9GTd2uNDklgI1qNq7aWR4Z2iwRxHixVq89F77Hl2SXXSxfMxemXyhCCLk4vDhhPIkr7i+jUrqO+0QMUXa/HZI6qZ+jlhL589auBdPJkxZ/RiI5fA200uutolqCK17sh+JLRQL7v0ZBVuDVGEUkbWFDJlyy9JrexBdXrBF/wKdQ==
-X-Gm-Message-State: AOJu0YzqrVUtIuNCbvcvGbGcT+qrBrHW/Rx72RJv0nBWREg+d1sTFCWA
-	JqQQcjgykj0NILhb2GnbMdofTrSoJdr2Yv3dPKwmyPlEhZyPVht3Di/ZrEpc7es=
-X-Google-Smtp-Source: AGHT+IGJ7rgElWb5tKJ3j015626NGsXJVnXE5arFslRsaZzIOOWwKBgE3ge5TOwfbMt/xI4zlwZA+w==
-X-Received: by 2002:a17:90b:4b4b:b0:2a2:cd61:c3f5 with SMTP id mi11-20020a17090b4b4b00b002a2cd61c3f5mr6874061pjb.37.1712564858823;
-        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com. [209.85.210.182])
-        by smtp.gmail.com with ESMTPSA id ft4-20020a17090b0f8400b002a54c4dd0f2sm226774pjb.43.2024.04.08.01.27.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ecf3943040so2596615b3a.0;
-        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX+dQMpX+7YAU7PBBS5ccV34mj6qNRn0ffOJOpVXs6NW7aBqj9UYYwmhkEJEUJ7M4vpY0eMoIDMP0/AGpGnrU+rda3VFGUtFU2zeTkNkMUKl6taW42f5aXOEYTZkXrDyk7v1aSgWjGlcJvK0glDBvgWWSky+/pr1IYeSqp97IgNi0rKhs1TBuEPcvgj6hxn8D8GEPNtH6XJlpSU+3OwXCTOl/PvhVl8MYd4DWktiPihO2dXMOrk/CUBGpelyiSP8IAxTKrEgA==
-X-Received: by 2002:a25:7406:0:b0:de0:e7f2:a03d with SMTP id
- p6-20020a257406000000b00de0e7f2a03dmr2539436ybc.3.1712564836998; Mon, 08 Apr
- 2024 01:27:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712564870; x=1713169670;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iDRZ7NACy/T0uhiXZjIuXu3NxT/V6Mg0k8eu2ro0ehM=;
+        b=LFP0pAKJPkQTLu0BqMuNVc5E3voU75J4Vi0Y2KWBVBZPQiJIITX3O4tH9VEh468Qaq
+         iq5bHxa4zBFNUIeQ8Ql3ioHjBwgKY7EkGNIshG7lUtOxMLgeNOpxwJtPcWPVB/1mN84I
+         u8y0Zz/KFEODZnSDidAu7hP5XUtxCq8U9dlnxI/UFBawVfSNuXbQeB3UjQkQrMv4sJ6F
+         eoxv812Uf9/5BLJBg8BaeAwpLLMA2NLDo8gqOZvwV3TaVmwe6MhKHP3iG1X8n0UyvTcz
+         tklRO40yZELEQbHMdeNnkCo21T/orxiMAhV1a/CQr+GFGvZtCmoTKZ8/t3c2KzYiLdD0
+         Rd8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUE6vbeJE8wFTgclqzWk9ydrRUaElo4MIa+iBSz7fxv85h7739jKQfF/mbCw6fvRV70vqdJmJhaprrGlZZiiV6SAvxHf9+Cwzy3
+X-Gm-Message-State: AOJu0YxgY0kBXgs7mLil5+PJ1DebVZecrP4WzNKKNXET4HMn0DurtccB
+	eZiy6in6OWZB9KCbvBbQ/eDBCUVr7RxK/35T7sdmNqLuC2OvciNO
+X-Google-Smtp-Source: AGHT+IHg5+lrP7tvoC+ALMJ4gdEovq3a1kuvBB+v2TYMUycN77t34ozFlvzlLhjogKeEl+Oztg8+Lg==
+X-Received: by 2002:a17:907:7293:b0:a51:aebf:7e4c with SMTP id dt19-20020a170907729300b00a51aebf7e4cmr5655739ejc.9.1712564869512;
+        Mon, 08 Apr 2024 01:27:49 -0700 (PDT)
+Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
+        by smtp.gmail.com with ESMTPSA id h21-20020a1709066d9500b00a4dacd6b8b3sm4159224ejt.68.2024.04.08.01.27.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 01:27:49 -0700 (PDT)
+Message-ID: <b6c6700d924916dd09afd2878321a7c87b8e922d.camel@gmail.com>
+Subject: Re: [PATCH v1] iio: adc: ad_sigma_delta: Clear pending interrupts
+ before enable
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>, Markus Burri <markus.burri@mt.com>
+Cc: linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ linux-iio@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>
+Date: Mon, 08 Apr 2024 10:31:21 +0200
+In-Reply-To: <20240406171728.16170b48@jic23-huawei>
+References: <20240404175126.110208-1-markus.burri@mt.com>
+	 <20240406171728.16170b48@jic23-huawei>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org> <20240407102000.37213-3-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240407102000.37213-3-krzysztof.kozlowski@linaro.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 8 Apr 2024 10:27:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWjWLdu9c7=OhFLsY+jSZXspb6jPHxVai2GcbJoS7MDLg@mail.gmail.com>
-Message-ID: <CAMuHMdWjWLdu9c7=OhFLsY+jSZXspb6jPHxVai2GcbJoS7MDLg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: PCI: host-bridges: switch from
- deprecated pci-bus.yaml
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Will Deacon <will@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Srikanth Thokala <srikanth.thokala@intel.com>, Ryder Lee <ryder.lee@mediatek.com>, 
-	Jianjun Wang <jianjun.wang@mediatek.com>, 
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Daire McNamara <daire.mcnamara@microchip.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, 
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Mark Kettenis <kettenis@openbsd.org>, 
-	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
-	Jiaxun Yang <jiaxun.yang@flygoat.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 7, 2024 at 12:20=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> dtschema package with core schemas deprecated pci-bus.yaml schema in
-> favor of pci-host-bridge.yaml.  Update all bindings to use the latter
-> one.
->
-> The difference between pci-bus.yaml and pci-host-bridge.yaml is only in
-> lack of "reg" property defined by the latter, which should not have any
-> effect here, because all these bindings define the "reg".
->
-> The change is therefore quite trivial, except mediatek,mt7621-pcie.yaml
-> binding which have children nodes being also host bridges, apparently.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Sat, 2024-04-06 at 17:17 +0100, Jonathan Cameron wrote:
+> On Thu,=C2=A0 4 Apr 2024 19:51:26 +0200
+> Markus Burri <markus.burri@mt.com> wrote:
+>=20
+> Hi Markus,
+>=20
+>=20
+> > For device will enable and disable irq contiously like AD7195,
+> > it use DOUT/RDY pin for both SPI transfer and data ready.
+> > It will disable irq during SPI transfer, and re-eanble irq after SPI
+> > transfer.
+> > That may cause irq status bit set to 1 during spi transfer.
+>=20
+> Superficially that sounds like it might be an irq driver bug to me...
+> Or just possibly an irq chip doing lazy disabling?
 
->  Documentation/devicetree/bindings/pci/rcar-pci-host.yaml      | 2 +-
->  .../devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml        | 2 +-
+Yes, this sounds odd as we are already explicitly disabling lazy disabling:
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+https://elixir.bootlin.com/linux/latest/source/drivers/iio/adc/ad_sigma_del=
+ta.c#L589
 
-Gr{oetje,eeting}s,
+>=20
+> >=20
+> > When the active condition has been detected, the corresponding bit
+> > remains set until cleared by software. Status flags are cleared
+> > by writing a 1 to the corresponding bit position.
+> >=20
+> > Signed-off-by: Markus Burri <markus.burri@mt.com>
+>=20
+> I'll need an appropriate ADI ack for this one.
+>=20
 
-                        Geert
+Yeah, I wanted to reply to this one Friday but then completely forgot. I ca=
+n't
+really ack this one. I would need some insights from someone with more core=
+ IRQ
+knowledge. But...
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+> It seems highly unusual to be calling a generic irqchip related function =
+in a
+> driver (there are no other such users).=C2=A0 So this seems unlikely to b=
+e
+> the right fix for this particular problem.
+>=20
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Yes, and this (I think) would not even fix (if a fix is needed) this for al=
+l
+irqchips which to me already sounds not the way to go.
+
+- Nuno S=C3=A1
+>=20
