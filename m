@@ -1,87 +1,90 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C0D171B0
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 22:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CB91D558;
+	Mon,  8 Apr 2024 22:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712616528; cv=none; b=o3MpIVaG9bF2eg2FCGdXUeENzgE1lCzUGGPd3p+jpKUlBrIjuUk7oJTVTZZoe/6fdm3puWehQEimMxij8n3XNEW0radKcB28YrE/9kAdfwJAx6IHUQHIWMgVrrsybXK7j4zpsINF+cDROXakHw7gyA40mEKmfSx8FLEecXbHIj0=
+	t=1712616674; cv=none; b=bYfUs43fX5CmZ41RoyRvvzxc/Ut22+jZtMZwS4xWR9zqDHgsRFrRtIqWu7+qBOLcEh/meJ3Vn7BwbE4xSvZgbE9Pqj8vbmyMq/D2XMfMO90khXgdODuOkxEQ0pHUUmRKQkLhHMbA3003qzn/miwb8Uf/EgQMgaxytiO2nFiAq2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712616528; c=relaxed/simple;
-	bh=RRWWx01pPfJbdFi3MWVf0eOueg30+ChmYzjuX0MhCRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hpzVdWAos/0MHR4cO5saIyFZuK3VaGh6+tEGmwxijIamoBpKRF2FNS2XIodkhmVBeCeClog+mBqZBIyg84muE0hHXz8psqxl5J20VggiuXvIgIkGBJf95sYUXfv/TW/fy1scIAxpFRFPDVg6dLxDul/0xBzXYQfrL7+czZFPmTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LOYpK2w1; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1712616674; c=relaxed/simple;
+	bh=DOQyBmJqMcgpGS+w7kqQ0AoLHI+zmLPm0WGY9FVt1ao=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cfsWCoJSDwGdHURzTn2z522+CnUTy2NG10+kjd7CAD6+ZB/0Xm6DTpQMldBumPsVgZ3sTAxbbMWuZ5AoZmcY+DSk9IL+d0XGBZSd96GBme7q9UTOKKT/Fr9r+TTvguGlSHMfbY6Q7KD6RVvGTmze9zS0xBd0cA6LT6x7zY8COU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=H4zl7AiH; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LOYpK2w1"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712616523; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Nz3YIIIQmU8yWVDXM1ZV8xt6EYuCL7CXXu2zWkKWpgo=;
-	b=LOYpK2w1Y3YxK3id5xrc5JL/9ncb6O5LUO6dPO5/v2epvhGUwwpMv3IN/0QvGxi5MRPVtSw0CpFSJESdW8zRHZ4v11gFdwQJQsyszkO6bLqTBnCAOzgDaTeTD/iC5SoGgDkzqPyQIDE4ll30QlW2+MBkFKAzgKdnHsEu2cLORy8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W4CNr.I_1712616521;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W4CNr.I_1712616521)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Apr 2024 06:48:42 +0800
-Message-ID: <3b3d0b99-f7b5-4dcc-a631-1018f4025acf@linux.alibaba.com>
-Date: Tue, 9 Apr 2024 06:48:41 +0800
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="H4zl7AiH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712616670;
+	bh=DOQyBmJqMcgpGS+w7kqQ0AoLHI+zmLPm0WGY9FVt1ao=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=H4zl7AiHRZ7NMYdl/m7szepNLfoAtnnMjNiJH13JnLSGq1LGW0rTFeURfBvJ3lXCF
+	 zqmxCLpQ9iu6cV+xSiJBzN3+Od9d0RYLDdhsJTeQH5rUB1e5P/J31qWzXlxuEHQ49l
+	 Ly05X/F7P6nAQglkJDSol/wjfzUEofEc362EI0Achdw0U8zDzJsZBawsiJ5IMFY/7D
+	 bjCBL/k4Fyx1IzG5+HPZrgWVvDpppNghUG8qMcZVBUvgVsqTSDKnzceXLdwIZLOkVW
+	 pwYbTC7MDxkBWur6euQ4oBWH9JUGtJkreYsZz8OcQguZ5UlrgEnGYP+f0uIDv3qI0t
+	 JS5whFyo1Xgyw==
+Received: from jupiter.universe (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B6D4837820AD;
+	Mon,  8 Apr 2024 22:51:10 +0000 (UTC)
+Received: by jupiter.universe (Postfix, from userid 1000)
+	id 3FAC14800D0; Tue,  9 Apr 2024 00:51:10 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Heiko Stuebner <heiko@sntech.de>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	linux-rockchip@lists.infradead.org,
+	linux-phy@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@collabora.com
+Subject: [PATCH v5 03/10] arm64: defconfig: enable Rockchip Samsung USBDP PHY
+Date: Tue,  9 Apr 2024 00:50:30 +0200
+Message-ID: <20240408225109.128953-4-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240408225109.128953-1-sebastian.reichel@collabora.com>
+References: <20240408225109.128953-1-sebastian.reichel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs: use raw_smp_processor_id() to get buffer from
- global buffer pool
-To: Sandeep Dhavale <dhavale@google.com>, Gao Xiang <xiang@kernel.org>,
- Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Chunhai Guo <guochunhai@vivo.com>
-Cc: linux-erofs@lists.ozlabs.org,
- syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com,
- kernel-team@android.com, linux-kernel@vger.kernel.org
-References: <20240408215231.3376659-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240408215231.3376659-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Sandeep,
+The USBDP Phy is used by RK3588 to handle the Dual-Role USB3
+controllers. The Phy also supports Displayport Alt-Mode, but
+the necessary DRM driver has not yet been merged.
 
-On 2024/4/9 05:52, Sandeep Dhavale wrote:
-> erofs will decompress in the preemptible context (kworker or per cpu
-> thread). As smp_processor_id() cannot be used in preemptible contexts,
-> use raw_smp_processor_id() instead to index into global buffer pool.
-> 
-> Reported-by: syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com
-> Fixes: 7a7513292cc6 ("erofs: rename per-CPU buffers to global buffer pool and make it configurable")
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks for catching this, since the original patch is
-for next upstream cycle, may I fold this fix in the
-original patch?
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2c30d617e180..364795edb94b 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1517,6 +1517,7 @@ CONFIG_PHY_ROCKCHIP_PCIE=m
+ CONFIG_PHY_ROCKCHIP_SAMSUNG_HDPTX=m
+ CONFIG_PHY_ROCKCHIP_SNPS_PCIE3=y
+ CONFIG_PHY_ROCKCHIP_TYPEC=y
++CONFIG_PHY_ROCKCHIP_USBDP=m
+ CONFIG_PHY_SAMSUNG_UFS=y
+ CONFIG_PHY_UNIPHIER_USB2=y
+ CONFIG_PHY_UNIPHIER_USB3=y
+-- 
+2.43.0
 
-I will add your credit into the original patch.
-
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/zutil.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-> index b9b99158bb4e..036024bce9f7 100644
-> --- a/fs/erofs/zutil.c
-> +++ b/fs/erofs/zutil.c
-> @@ -30,7 +30,7 @@ static struct shrinker *erofs_shrinker_info;
->   
->   static unsigned int z_erofs_gbuf_id(void)
->   {
-> -	return smp_processor_id() % z_erofs_gbuf_count;
-> +	return raw_smp_processor_id() % z_erofs_gbuf_count;
->   }
->   
->   void *z_erofs_get_gbuf(unsigned int requiredpages)
