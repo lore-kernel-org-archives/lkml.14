@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F114430D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452C114431C;
 	Mon,  8 Apr 2024 17:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712598587; cv=none; b=bag+Ny48dNbKq5+zwYPwZ1D9S8bB7tL/vYtV34L1RdbsN24p8BiPGkI77F1KKhudtu7B9JcZ7AeTPSx354ysBOwjCRq/5hQM0mXTtJLOQxXfRgHYSEpjIRfTvDXDxbbjZ8AuNLeCXRkslHhFOQyptJ3at5ewH21iT/BLJKJiaCg=
+	t=1712598587; cv=none; b=dZrCj2HLWzXf89B0uOHmaSn+WKwJEVDJy90GeB226ePmjeENnT3xQJfOeO6BIvwEzMS0JmAAmD8UGRNU0MZR677mKCrJL8h+Y6Rfj/iIEo002fFvJpYI/+wCLKIXyOOg59q1yipP3R22W5ruUTX40q1zTg8ADH/XY3fbxrTna/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712598587; c=relaxed/simple;
-	bh=tfMsSeoEnAanJOvsNUK1ZSGwuyHwUMHJZxMmkLFM9oM=;
+	bh=JQmLzMtBpKC/TtfERldphRZSepAv95vPmjK1jOVEaZM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XLG8OP9znCSa5Goao/gOZWYveJEFF0FtIm0AjeGx56ZGaksJoSU0r1tOwZPztmPj5qLJVYNLX2tq1RwkSarZrktK+0/XuJVyx8VnmEZiHxKUFdESPThGNOla/tupvkwljy4d8kVOneGOuw93W94FMLFQoebpiGeWOsyjv5DDV1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fy8cbsHj; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gr+TQClgVwNxIJewvrQ0o8i24svb5fhwoXOjkwfyonahoVrsF00drVxssSGyFfhaUinKNu9kPvVn1aDNtx7hlrN8PkAKnIi245oBtZ0rcA83LCYoi4uWLi5ibZpF/pddIf3Ur8sxbHrFFTDTokNKAhuCa9oBpyMQU5Dpx6EOXVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EaTuN8fN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fy8cbsHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12396C4166B;
-	Mon,  8 Apr 2024 17:49:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EaTuN8fN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE318C43601;
+	Mon,  8 Apr 2024 17:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712598587;
-	bh=tfMsSeoEnAanJOvsNUK1ZSGwuyHwUMHJZxMmkLFM9oM=;
+	bh=JQmLzMtBpKC/TtfERldphRZSepAv95vPmjK1jOVEaZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Fy8cbsHj41PBvy142ggT5VF4bjQpqQj5tVH6mMSOeBiI2gWJSNxGwfIrWI5dgXs45
-	 8H+qV+/sPsvmH2wG5HAI26Xrsz8vHSMDr+6ahlihXdJbd8VOe0fcsHzFFra/eMs7S2
-	 wTfHCDyLbT8x6oo//Wy9DTDKgKwPq3LysoiJs8TQ7qw+l2xmPXciuiq/UUzdSKfcod
-	 5josUU5CMZy+Al/Tz2qZVrW7p/Mle95lxAwRcPOvlIbjSO0t8reXFUbwYJzDQOR0k1
-	 l/uFbi6BvFPyCRxBgF/O9AILZGqmKaCtvyb6FrmC8fTV7BmUs6SAEitXued40oo2gf
-	 VAaoRDF/lE/0A==
+	b=EaTuN8fNI0+WZ62ylMY5dtBA33Pfm7uJAF3/3+yfk5Zo16QAlWA8dH8RV94LQTAcB
+	 /TCbzXBUNABV7sW6dZ4fh1hiI08jTyXC0FqnoonimRb9h8uRLZEVvJGtfCdXDyJ9Mg
+	 FOxpgXWzr43xO1S4Xgo5fKP+fhqrZWy9YfU8jRmqINHdw4J/AJ3QTAFgOwPJUFVz8V
+	 Xm9zngLOHXi0nSHh71nhcRmYJh28WgQz29EYvoSljw700jTBJma1QDjcjSmy9DQRip
+	 QtArN/yxzD8mP1hkGIf2ofhq9GxDfEJNfcTiotgQNBwuZ9W2OSQHandTmih2gLhWNJ
+	 F9bO+7hcgEFWQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 54D52CE2CD2; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
+	id 4CA58CE2CCC; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -39,15 +39,11 @@ Cc: elver@google.com,
 	pmladek@suse.com,
 	torvalds@linux-foundation.org,
 	Arnd Bergmann <arnd@arndb.de>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Vineet Gupta <vgupta@kernel.org>,
-	Andi Shyti <andi.shyti@linux.intel.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-snps-arc@lists.infradead.org
-Subject: [PATCH cmpxchg 10/14] ARC: Emulate one-byte cmpxchg
-Date: Mon,  8 Apr 2024 10:49:40 -0700
-Message-Id: <20240408174944.907695-10-paulmck@kernel.org>
+	Al Viro <viro@zeniv.linux.org.uk>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH cmpxchg 07/14] parisc: add missing export of __cmpxchg_u8()
+Date: Mon,  8 Apr 2024 10:49:37 -0700
+Message-Id: <20240408174944.907695-7-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
 References: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
@@ -59,86 +55,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use the new cmpxchg_emu_u8() to emulate one-byte cmpxchg() on arc.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ paulmck: Drop two-byte support per Arnd Bergmann feedback. ]
+__cmpxchg_u8() had been added (initially) for the sake of
+drivers/phy/ti/phy-tusb1210.c; the thing is, that drivers is
+modular, so we need an export
 
+Fixes: b344d6a83d01 "parisc: add support for cmpxchg on u8 pointers"
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Vineet Gupta <vgupta@kernel.org>
-Cc: Andi Shyti <andi.shyti@linux.intel.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: <linux-snps-arc@lists.infradead.org>
 ---
- arch/arc/Kconfig               |  1 +
- arch/arc/include/asm/cmpxchg.h | 32 +++++++++++++++++++++++---------
- 2 files changed, 24 insertions(+), 9 deletions(-)
+ arch/parisc/kernel/parisc_ksyms.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index 99d2845f3feb9..5bf6137f0fd47 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -14,6 +14,7 @@ config ARC
- 	select ARCH_HAS_SETUP_DMA_OPS
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-+	select ARCH_NEED_CMPXCHG_1_EMU
- 	select ARCH_SUPPORTS_ATOMIC_RMW if ARC_HAS_LLSC
- 	select ARCH_32BIT_OFF_T
- 	select BUILDTIME_TABLE_SORT
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index e138fde067dea..c3833e18389f4 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -46,6 +46,9 @@
- 	__typeof__(*(ptr)) _prev_;					\
- 									\
- 	switch(sizeof((_p_))) {						\
-+	case 1:								\
-+		_prev_ = cmpxchg_emu_u8((volatile u8 *)_p_, _o_, _n_);	\
-+		break;							\
- 	case 4:								\
- 		_prev_ = __cmpxchg(_p_, _o_, _n_);			\
- 		break;							\
-@@ -65,16 +68,27 @@
- 	__typeof__(*(ptr)) _prev_;					\
- 	unsigned long __flags;						\
- 									\
--	BUILD_BUG_ON(sizeof(_p_) != 4);					\
-+	switch(sizeof((_p_))) {						\
-+	case 1:								\
-+		__flags = cmpxchg_emu_u8((volatile u8 *)_p_, _o_, _n_);	\
-+		_prev_ = (__typeof__(*(ptr)))__flags;			\
-+		break;							\
-+		break;							\
-+	case 4:								\
-+		/*							\
-+		 * spin lock/unlock provide the needed smp_mb()		\
-+		 * before/after						\
-+		 */							\
-+		atomic_ops_lock(__flags);				\
-+		_prev_ = *_p_;						\
-+		if (_prev_ == _o_)					\
-+			*_p_ = _n_;					\
-+		atomic_ops_unlock(__flags);				\
-+		break;							\
-+	default:							\
-+		BUILD_BUG();						\
-+	}								\
- 									\
--	/*								\
--	 * spin lock/unlock provide the needed smp_mb() before/after	\
--	 */								\
--	atomic_ops_lock(__flags);					\
--	_prev_ = *_p_;							\
--	if (_prev_ == _o_)						\
--		*_p_ = _n_;						\
--	atomic_ops_unlock(__flags);					\
- 	_prev_;								\
- })
- 
+diff --git a/arch/parisc/kernel/parisc_ksyms.c b/arch/parisc/kernel/parisc_ksyms.c
+index 6f0c92e8149d8..dcf61cbd31470 100644
+--- a/arch/parisc/kernel/parisc_ksyms.c
++++ b/arch/parisc/kernel/parisc_ksyms.c
+@@ -22,6 +22,7 @@ EXPORT_SYMBOL(memset);
+ #include <linux/atomic.h>
+ EXPORT_SYMBOL(__xchg8);
+ EXPORT_SYMBOL(__xchg32);
++EXPORT_SYMBOL(__cmpxchg_u8);
+ EXPORT_SYMBOL(__cmpxchg_u32);
+ EXPORT_SYMBOL(__cmpxchg_u64);
+ #ifdef CONFIG_SMP
 -- 
 2.40.1
 
