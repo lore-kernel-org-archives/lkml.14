@@ -1,79 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D16F06CDA9;
-	Mon,  8 Apr 2024 12:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDFA2D057;
+	Mon,  8 Apr 2024 12:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580097; cv=none; b=SCq7Nhph9ArEiSBi2KYxWVLdVQbrFX7mttVUFG5YOnXqTGLeLB9gIGMlptWT4Mjs1mevPz3rzelZKuoor0VWuwHK1u8rYXZiKVYRSRLcUuGDcw/UfffxrZ1lobOsv86PbbRMJpso657J1KC6sifeHp0jAg2h5vMNw3gWk2RxZNI=
+	t=1712580140; cv=none; b=WP636mpj3ZOXsHwZX/ayEM6loB/CBbohxuOJLhu4zdJzMd23M6BGDAVz/khp0Zz3iMKHhnPSWgQ3ynrSF1uFsWPhgeMbM/RyY4ODOWl4wJfJzWR+0XRSbr7Tl1APc7dZvfv54AXKc2IbOP3D6C2Mq7gg1L1XSqqVzJkCi8a61Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580097; c=relaxed/simple;
-	bh=84XOeCfBTbfAfttwzGK3yMdnjmXgpOzlJpVU1/u2iwY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AfoRikhNE4F1iKoGclla1rACLuXm3UdRbiVfZNFDKH5atux2oUNu/wGmbonjL3mgEHv1kXkVfzNYXVhY0Edk7XDojhuwCahAWRDaTMlERl1VheChChizO/koQHgpfIs+Dw3iBJ16pFEEg+VKTl8OmrEEB4QlWeFJrbHRIySht/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ADo9i2gD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ADo9i2gD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02028C433F1;
-	Mon,  8 Apr 2024 12:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712580097;
-	bh=84XOeCfBTbfAfttwzGK3yMdnjmXgpOzlJpVU1/u2iwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ADo9i2gDRMK9fGFxuyRBtekoT/HW6XfvyyIBJPylgXOsjOWfer5glc+0FAA2Zgo9E
-	 KVq/2M72ncIn1oUdL/jiMVMN9tBKRDlXwGJvcM3UQr9b7TQ/EPfhREtdae0SiATLxc
-	 fhKNpEjk6++Z16otyBAZtL6H+O7a/k8SMDxKzttxkZdAptOzdTEGv1efESdTIyKnRz
-	 CwI70XxMnDpOkrxYWlzxgaRRc02ZtfNbGW0siFvn3tvd1QI/U60LaZvHOnFdl4fmcT
-	 Kr28iG7YF4YnfdfOWKZIdCEBDxGrsV2A/MwgcCMqSmZfQQDVtwZ0bzKNPI0WH57c0B
-	 e7oi/a/9Coefw==
-Date: Mon, 8 Apr 2024 13:41:33 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: tiwai@suse.com, linux-sound@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH 1/4] regmap: Add regmap_read_bypassed()
-Message-ID: <043a984a-db22-4216-96d9-1fefe4694d88@sirena.org.uk>
-References: <20240408101803.43183-1-rf@opensource.cirrus.com>
- <20240408101803.43183-2-rf@opensource.cirrus.com>
+	s=arc-20240116; t=1712580140; c=relaxed/simple;
+	bh=4KoBWQJ8F7B0mWMu96tsQo9bqI4843gXdehwB5urs6Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nVs2lilHRS+soCwhqxCIDtbYJjXJYHdmSCRR/+GThER7xoXKiKJKCov125EglLfw/57JvlvpFFDTSHJUIEs02ZCeBhby5D12/BuIGg/km5rn+3vDC5Yih2qF0VXjgGAjw/jGFeTCbKVSzRGwur6MJMsdGKL9mU/YgHd/JIJvbC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: JNqtrZ7ABL9Xa/s63myixw0s2rathzfd5Pavffzr1QJzZh4c0Tr4bFBDvM9xPuOXm7KdsMWDg5
+ tIPo6rrvwKnw==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:01 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	eblanc@baylibre.com,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v6 00/11] Add support for TI TPS65224 PMIC
+Date: Mon,  8 Apr 2024 18:10:36 +0530
+Message-Id: <20240408124047.191895-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zejkK65P6uQG8f5B"
-Content-Disposition: inline
-In-Reply-To: <20240408101803.43183-2-rf@opensource.cirrus.com>
-X-Cookie: Drive defensively.  Buy a tank.
+Content-Transfer-Encoding: 8bit
+
+This series modifies the existing TPS6594 drivers to add support for the
+TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
+similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
+PFSM, Regulators and GPIO features overlap between the two devices.
+
+TPS65224 is a Power Management IC (PMIC) which provides regulators and
+other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
+Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces. The PMIC TPS65224
+additionally has a 12-bit ADC.
+Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
+
+Driver re-use is applied following the advice of the following series:
+https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
+
+The features implemented in this series are:
+- TPS65224 Register definitions
+- Core (MFD I2C and SPI entry points)
+- PFSM	
+- Regulators
+- Pinctrl
+
+TPS65224 Register definitions:
+This patch adds macros for register field definitions of TPS65224
+to the existing TPS6594 driver.  
+
+Core description:
+I2C and SPI interface protocols are implemented, with and without
+the bit-integrity error detection feature (CRC mode).
+
+PFSM description:
+Strictly speaking, PFSM is not hardware. It is a piece of code.
+PMIC integrates a state machine which manages operational modes.
+Depending on the current operational mode, some voltage domains
+remain energized while others can be off.
+PFSM driver can be used to trigger transitions between configured
+states.
+
+Regulators description:
+4 BUCKs and 3 LDOs.
+BUCK12 can be used in dual-phase mode.
+
+Pinctrl description:
+TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
+functions such as I2C or SPI interface or watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+This series was tested on linux-next tag: next-20240118
+
+Test logs can be found here:
+https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
+
+Changelog v5 -> v6:
+- Refactoring regulator driver: pass both array and size
+  in tps6594_regulator_irq_handler function
+
+Bhargav Raviprakash (8):
+  mfd: tps6594: use volatile_table instead of volatile_reg
+  mfd: tps6594: add regmap config in match data
+  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+  mfd: tps6594-core: Add TI TPS65224 PMIC core
+  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
+    dts
+
+Nirmala Devi Mal Nadar (3):
+  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
+  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
+ drivers/mfd/tps6594-core.c                    | 253 ++++++++++--
+ drivers/mfd/tps6594-i2c.c                     |  41 +-
+ drivers/mfd/tps6594-spi.c                     |  43 ++-
+ drivers/misc/tps6594-pfsm.c                   |  48 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             | 275 ++++++++++---
+ drivers/regulator/Kconfig                     |   4 +-
+ drivers/regulator/tps6594-regulator.c         | 243 ++++++++++--
+ include/linux/mfd/tps6594.h                   | 362 +++++++++++++++++-
+ 10 files changed, 1221 insertions(+), 144 deletions(-)
 
 
---zejkK65P6uQG8f5B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+-- 
+2.25.1
 
-On Mon, Apr 08, 2024 at 11:18:00AM +0100, Richard Fitzgerald wrote:
-
-> I have a kunit test case for this. But it's based on top of a chain of
-> other changes I've made to the regmap kunit test, so I'll send it with
-> that chain.
-
-The usual term is series or patch series...
-
---zejkK65P6uQG8f5B
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYT5fwACgkQJNaLcl1U
-h9Bd2gf/aVxNn0Us1Z5jnN3TVYqcd+LL0xVE5/jlXAQJmUIqyWBzWxzmqMTFHfaR
-CfWnsK6kciVGQdEfKJaWxWt0Xa4ouBC6N7k9AnUCtHVHe9ag6FMWaTOZAFPhczSi
-5hk6zPZOjdiZk9NRBUB5SkLX195zJtMpu92HOOvgb/EjahoI/Gqt0vHPag27rsgv
-5VnvTW3+HGkayPRoUVWCXgcm9A+SIpXMbS6sCYpA/1hHjUIa3UMd1R/ssoRuDjnR
-CagEvIqMNUS4JovbB8KKdaUsEyDfqjQfXXp5k0w24if+sCPXrbDwLBpYuZqs0pnu
-RrrfGlBL0NOgULLw3YOh3ZhTw2ADKw==
-=SuRZ
------END PGP SIGNATURE-----
-
---zejkK65P6uQG8f5B--
