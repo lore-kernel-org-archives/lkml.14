@@ -1,90 +1,128 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1543985A
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFC03BBDB;
+	Mon,  8 Apr 2024 08:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712564855; cv=none; b=Jd3X0ZnyhI4ikpfwO0ceexAP2wtRj77fNi2XCaF8vOV87jCZBvyZ8qy1w2JHqynwcZoAl8tm+F+xX6sErSoFYdw8hHy1q1iYGLD1ds78ZQ0SC9IKpgamwQqUKYSCz4zeBHz/2mq7H2wmtUmphuDz1n2k3VMjObzg7WHRtMdPrqI=
+	t=1712564861; cv=none; b=ADbKMm3qJgmSxS+QWmffU5aVDd0rXUslpToVsiqCVYqp9aEJ5/86/QcrXN9D0MjNZUtRmuqBEbHRAM0vJM4IksoYNHCARmuKzILWy/o1hi+R/vk6eFBP9ZXK6LRSCdw0qdaRynOIulbqEaqJK4K3E00eOQk8telcbmJzgpYIVf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712564855; c=relaxed/simple;
-	bh=acB8XKlK63YaYiZix0/DXS+gQ9+3Ls+Q1yDi2zDPyV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sxiSbJqx1U2pz3SmddVy1fuepPRPTzqFdqD5lJNXzVafo7s6I4iiFQT8AEQKY/QTqby/nsXw2aY0wqfHD3WCCJfoivbCB21wBoWZ623h8GWF2SQ+7oOtkH/+Zkwyf7Clho9TI1UT2i19/s7VGpdBKm+Ctm6IbdpscenHA2GC4Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Z6jPgWbJ; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Z6jPgWbJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=acB8
-	XKlK63YaYiZix0/DXS+gQ9+3Ls+Q1yDi2zDPyV8=; b=Z6jPgWbJ0XxLyhyWO9KF
-	pwy5/5+FFWGzd0kbfPTcJVszemyuLuMk9wL0qDwKoCRMtqeHXrf7NPO8fQuJ3/GB
-	K6WJoVWOpIRzDpNtsojZ1l7nDxt/OS0KZt+FkQZ4Q8yiRfyBuWfxf96koX3bE/+H
-	GtsDtwfFiYWhTOzGPTdJjEY/mZUrrFkcWLAt+CZeN5v7PnjJftOPpg/Jx4U/Z0M0
-	9+26/C9zOT5kBD6A5ev48aPX8KNBd96ORuNjryXRdkhJdP2czkhGCR1/erm4BzJz
-	vUvC17FMYGZzUi5u+PVU/dK5onloZaT9bNBvrvccomr/rJaKPTRA6wwC4pQw5cRL
-	3Q==
-Received: (qmail 700993 invoked from network); 8 Apr 2024 10:27:30 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 8 Apr 2024 10:27:30 +0200
-X-UD-Smtp-Session: l3s3148p1@SxSRk5EV7ukgAwDPXwE9APSWg5D5lDs4
-Date: Mon, 8 Apr 2024 10:27:30 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/64] i2c: reword i2c_algorithm according to newest
- specification
-Message-ID: <radpp6rhldonuhtqulhoppscvuv4rdysipbmsba5ffxz5vsbrh@hedc36qvca5b>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
- <20240322132619.6389-2-wsa+renesas@sang-engineering.com>
- <54i4mvoxegs6vda7cwvlo6a6nn4qrdtibcpif2642bspid4mqu@5qjt5q2xyxoq>
+	s=arc-20240116; t=1712564861; c=relaxed/simple;
+	bh=u9L7qVa0ZjLHzku/GRWHHqefATdqWRrHJlXyyocla8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eOoV4iXCFAbJlOwaS2Tjdpg1OjsKRnKmOVzzuVz6AwKUWzYmUJmLoY7QKbiaXfOMLHReLSBpNIlUp88rNpVYDouB39Qm0euw8QR7phXLcM865RMmZqlgG6xAjH7RJb0srkR5UZ4xzzMJRPtHOHtH0tRB2RzTW03MZb5infotxRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5dbd519bde6so3110882a12.1;
+        Mon, 08 Apr 2024 01:27:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712564859; x=1713169659;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mduMjCqjA7drDw2lEIoqwW5oGXEwTzrsNz9VmuPIKQw=;
+        b=G4oD/tN7k00pbY/aLU1vmj7HekENQo8QrzOHUVfqTTkSm+GK5ldTIInhkv7+5Kg/h+
+         JFsgxPPQ0JNSwvq8hEaXAMrEWNCJZKeVYbe7g00FUnAQ9ZN4nQt5cIqb2zpVX8ESh3Zx
+         7gPvQhS2aE2s+FEVyqfYYUjR4aWSN+r/PTY1fhp+HKQyPlylKXA8k5JmgH8KponFxdjY
+         29vg3OptFkNk9g9txkR+1JUNNqvaHHr3GxILXOZgGiBxOdL+lnzlQ0kiCNN1CoAjpm3x
+         sNswmTlKPfHTc2fWPDucGdA1sJX3kM69oQrmPrLv9lbE6YttJD/GkY/R4XCO+kkomBpn
+         WjdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6NJYwtnB03uxgJuzEOS4pgknqwRKaCHlEqsgJTx4qSvIM6e4Yao2e1Y0L3PQ4HWLwfb6opGTQbb1w9wDUoZ/GSZxaC55l9GTd2uNDklgI1qNq7aWR4Z2iwRxHixVq89F77Hl2SXXSxfMxemXyhCCLk4vDhhPIkr7i+jUrqO+0QMUXa/HZI6qZ+jlhL589auBdPJkxZ/RiI5fA200uutolqCK17sh+JLRQL7v0ZBVuDVGEUkbWFDJlyy9JrexBdXrBF/wKdQ==
+X-Gm-Message-State: AOJu0YzqrVUtIuNCbvcvGbGcT+qrBrHW/Rx72RJv0nBWREg+d1sTFCWA
+	JqQQcjgykj0NILhb2GnbMdofTrSoJdr2Yv3dPKwmyPlEhZyPVht3Di/ZrEpc7es=
+X-Google-Smtp-Source: AGHT+IGJ7rgElWb5tKJ3j015626NGsXJVnXE5arFslRsaZzIOOWwKBgE3ge5TOwfbMt/xI4zlwZA+w==
+X-Received: by 2002:a17:90b:4b4b:b0:2a2:cd61:c3f5 with SMTP id mi11-20020a17090b4b4b00b002a2cd61c3f5mr6874061pjb.37.1712564858823;
+        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com. [209.85.210.182])
+        by smtp.gmail.com with ESMTPSA id ft4-20020a17090b0f8400b002a54c4dd0f2sm226774pjb.43.2024.04.08.01.27.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6ecf3943040so2596615b3a.0;
+        Mon, 08 Apr 2024 01:27:38 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX+dQMpX+7YAU7PBBS5ccV34mj6qNRn0ffOJOpVXs6NW7aBqj9UYYwmhkEJEUJ7M4vpY0eMoIDMP0/AGpGnrU+rda3VFGUtFU2zeTkNkMUKl6taW42f5aXOEYTZkXrDyk7v1aSgWjGlcJvK0glDBvgWWSky+/pr1IYeSqp97IgNi0rKhs1TBuEPcvgj6hxn8D8GEPNtH6XJlpSU+3OwXCTOl/PvhVl8MYd4DWktiPihO2dXMOrk/CUBGpelyiSP8IAxTKrEgA==
+X-Received: by 2002:a25:7406:0:b0:de0:e7f2:a03d with SMTP id
+ p6-20020a257406000000b00de0e7f2a03dmr2539436ybc.3.1712564836998; Mon, 08 Apr
+ 2024 01:27:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zxnylq37tlfuzgwn"
-Content-Disposition: inline
-In-Reply-To: <54i4mvoxegs6vda7cwvlo6a6nn4qrdtibcpif2642bspid4mqu@5qjt5q2xyxoq>
-
-
---zxnylq37tlfuzgwn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240407102000.37213-1-krzysztof.kozlowski@linaro.org> <20240407102000.37213-3-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240407102000.37213-3-krzysztof.kozlowski@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 8 Apr 2024 10:27:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWjWLdu9c7=OhFLsY+jSZXspb6jPHxVai2GcbJoS7MDLg@mail.gmail.com>
+Message-ID: <CAMuHMdWjWLdu9c7=OhFLsY+jSZXspb6jPHxVai2GcbJoS7MDLg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: PCI: host-bridges: switch from
+ deprecated pci-bus.yaml
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Will Deacon <will@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Srikanth Thokala <srikanth.thokala@intel.com>, Ryder Lee <ryder.lee@mediatek.com>, 
+	Jianjun Wang <jianjun.wang@mediatek.com>, 
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Daire McNamara <daire.mcnamara@microchip.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Jingoo Han <jingoohan1@gmail.com>, 
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>, Michal Simek <michal.simek@amd.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Mark Kettenis <kettenis@openbsd.org>, 
+	Tom Joseph <tjoseph@cadence.com>, Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, 
+	Jiaxun Yang <jiaxun.yang@flygoat.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+	Thippeswamy Havalige <thippeswamy.havalige@amd.com>, linux-pci@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
+On Sun, Apr 7, 2024 at 12:20=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> dtschema package with core schemas deprecated pci-bus.yaml schema in
+> favor of pci-host-bridge.yaml.  Update all bindings to use the latter
+> one.
+>
+> The difference between pci-bus.yaml and pci-host-bridge.yaml is only in
+> lack of "reg" property defined by the latter, which should not have any
+> effect here, because all these bindings define the "reg".
+>
+> The change is therefore quite trivial, except mediatek,mt7621-pcie.yaml
+> binding which have children nodes being also host bridges, apparently.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> > Start changing the wording of the I2C main header wrt. the newest I2C
-> > v7, SMBus 3.2, I3C specifications and replace "master/slave" with more
->=20
-> nit: "I3C 1.1.1" as you added the version to every specification.
+>  Documentation/devicetree/bindings/pci/rcar-pci-host.yaml      | 2 +-
+>  .../devicetree/bindings/pci/renesas,pci-rcar-gen2.yaml        | 2 +-
 
-Added, thanks!
+LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
---zxnylq37tlfuzgwn
-Content-Type: application/pgp-signature; name="signature.asc"
+                        Geert
 
------BEGIN PGP SIGNATURE-----
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmYTqm4ACgkQFA3kzBSg
-KbYMMQ/+OhLYGC59tV+TS21FcETbwq/13whmAzPzypftqNkehZq7wULcpAcgbKGK
-sjb8/UIK2TFpVQgMKER2VsUIz4nS/7tnI2Qn7xiQUyK+Fg9/pxfmhEd9NS4ZgFHA
-XFYXwi86Kqs4M/EoIwmmj4neLnJGMG1zJsZOFdbuLgxg+rf7ZRkNL9LY1lpXVa4p
-SAXW1oJv5jtLFPo9iLJioTkJaeuzx6cj8FuPwM5op6ZJo+QWxDPaOI/iLzZDPwRl
-O1mMbgHfuvhsSP6oMgun460sVQ8Co9S4C0aftruiw7Cz4j7eqFLPPPqVvGp43xTM
-ADu2e1zF3CCpXcF+9hZ7d0fm9p6w8oe+79K18UXQUDDECYNfKS0sB+ASIBiEsvPn
-fxrH6+1gaAU9b5RmbrRlY3jPYSeEgdFgybbBmG4eGzMcVdK0OiI8CCmfdjlxa+Nj
-tlSTBlMw8jNJBxlsR/+/KzHdLVa0kWH7jyc4a1SEXg85JU8Awg/dpYPE7AA1ICM7
-nEsMRTh2tZvpZOAY7A1HQT15PFLWu7Af6/KN+T+0nfz+k9ihvMNEk2kjZFSjkfl/
-eOLh9WP+Mt1nI/PBouUYpIvbTAaBeiepymhDfuoVqXJS46FZVk79HT3wZ/ZLXvDt
-Ka8N8oDHcqUnb6nTz5tPV+Y3fedPcFu9n3I8ZCKPiGRX9/kKsjY=
-=WozI
------END PGP SIGNATURE-----
-
---zxnylq37tlfuzgwn--
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
