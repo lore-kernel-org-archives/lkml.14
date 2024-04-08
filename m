@@ -1,139 +1,167 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C8BE48;
-	Mon,  8 Apr 2024 05:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D15FBE48
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 05:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712554647; cv=none; b=b4EoE8CNL4TdkS308A6lucHvmQbZx8Pi4v5SK+o6w5J5pfzGe8H9548wKK1BuRfsP1AvnbsejKasEs+5luRhrESID+lOhfJfWbCzv72jL7DWoi072aPuGk59h3xbk/b5CMLBs3K9KTGzj84/zcvRTWk4AyHYk3V7auL+k4iG3Os=
+	t=1712554655; cv=none; b=PLqD0g67BGtfknaNhajR3AKzOFTxULeUihfhh4rGVcVuoiS3aVX5Y4sVoLDu1E4Ba+tW9j6bG2Ubu069asYWFkOlhyK4mDZ6L9LkuVZELUQ/SetNJgbsxCvL1H7EzeVz5+sVR9Qfm0EwRsP6ln93FM+3l0rw4Qc888sCAkZllnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712554647; c=relaxed/simple;
-	bh=rMb9e18qNwbirZ+Qeyrr3v7QUvTj6l5pPSr3dd5orDA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=obBWOhSp/vLK76Qw+neH21T3OL1W/Cdfr5/P8awOCe0J/Ni8L/KFX3hwACQcJj8W4dnPLu1hAhFpOVa3Lo+fIGI1PMREvHsO0MDbmgxAnD8tsQNq5dZchCsMibJPRyOTTRwU4SMvhwoLsZnb2nu7+CMMThEhnqoeVGTOJ+n5Cmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56e4a148aecso1091516a12.1;
-        Sun, 07 Apr 2024 22:37:25 -0700 (PDT)
+	s=arc-20240116; t=1712554655; c=relaxed/simple;
+	bh=PlaoKMkkbwRopVHxjZ81zgR+BSt6yBxSGyH82WAI16g=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=rwE46daMTTqVJaEK0D47ien4eJdglGvh2h4jE2Q9xbKtPtrnqsOiS0q42t0bMX8yl3bmPjNNWg34QQUHcmQTip5qU6hxMJ21lwQVMBmseiMdl5x79TQNua4Uryz4iDzZ+Ol0HzamCPdsjbOgglTLxL5nUSYv/K6KOcHJRnyNOWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d022d0c76aso413227039f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 22:37:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712554644; x=1713159444;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nOUTwdyNc/dDtKEYyWTr+IwLAmFJrKuyGjQagjzfSRk=;
-        b=pH67AO/gfDn5mOlCBvEL3AUcJLo6X9QECEhYPscQoIf8fTmhGaz59NPLxbOIDkrxz2
-         DhOZku9RtvoHS1FxUPk5t2QAVYwPGhTlj9zba4gjR5XmkMhyTDo/xu1eRiWR3GdQwYAL
-         WTDK7ZSBwuEgfFqxCPoST9Yy+804H2r+a0OgzbQoqSX0VoembmtEZLvb0qV6mJkK0D25
-         heD/Rz6oqSSRcb0B4MEVJTGJ3ha/higCmtPglMGAaKlXiMI7Lfthhtm1akvXBOrCWrqD
-         X0Tw8obaGb/aobE5vUn5EJ/TaxSXa4AOp+WLaG2UDh1tQ58dxfSfqPQBDMN85mJoaceV
-         W53Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXRtD/EGghawdnzjJh0DySpIj1H8b8ApCih1bDrvf9D2pO5AO5j8n4K3e5lSNPwRA4XAj7XfbUxSM6F3T7QwyLFjMY/RCXymaWfwaDgn+9vnotcreJjpny+P3P7Kod6eRTa2/ObbFeDWdSq
-X-Gm-Message-State: AOJu0YzNCNbwb1v8zHrbK2bC2kCo1lmtPfuXh3VPT5N9DrQK7C6RqMAj
-	+vodM2w1/+FjlrocmEZePRCs4QdjTrR3dE26rkEXhecTIABNT4M3
-X-Google-Smtp-Source: AGHT+IG+wF5q0MmQfa0v3anYFLqftAUbHZlonE6OOw5x/lgjrDfgD2meAC6ZXPM/ILo74CXmJTFfpg==
-X-Received: by 2002:a50:9319:0:b0:56e:2dfc:6189 with SMTP id m25-20020a509319000000b0056e2dfc6189mr5109047eda.2.1712554644093;
-        Sun, 07 Apr 2024 22:37:24 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id cn10-20020a0564020caa00b0056e68b14986sm93936edb.29.2024.04.07.22.37.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Apr 2024 22:37:23 -0700 (PDT)
-Message-ID: <3adf561b-2d6b-47be-8fca-2a26ee738670@kernel.org>
-Date: Mon, 8 Apr 2024 07:37:22 +0200
+        d=1e100.net; s=20230601; t=1712554653; x=1713159453;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vKi95jyAR9UGqqxHndWlLAjt2KjqNn8010J0mQ3K9UQ=;
+        b=ifHVn5kjCAI8ZCcQC/BvCWB25ravLjmA/VLuF2aRtuFBr7Eyz49wk1DtfTNujsNulB
+         lLW8J8CkdInMaD6BdxNRJBzkIlO8jwHeGFo5l6nTYESmMc5Lttpk029OP/MkKXU8gFrq
+         /jR+Zu84SHud9c9b9Pghg6cBnZE8k48lZxuDBX1OurQ9iYLynTdy/Zsbb2G4JCPVZL/H
+         MQDI0Uum826S86FbgI9tqHphuwJq2Ck7+fJD5+Lc3bP0AsPJOfq6Nr7eAUCGo36+ktGJ
+         OCI9h0mfyoMpTADChWCqbZDKigltkBXNJ6QgpD+91mKzfOBq+x+dq+lJcHzw6CfxXahB
+         GbOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDxskskBE9BXelOtT6sMFyH0VeObndbULHfwcSSzYv397nVd1FysSWoiGFd/mk1cgQqRVUk8grRFxtX5Z27aYf2SxDreCsuA/9Ar85
+X-Gm-Message-State: AOJu0Yw5GLUczTLm521E9rgPxNyJ9EsLMhryi9TzASB5bMTQf/hviHEW
+	yQZJeeZqeCqubIDhGvMBuNyORE4MmNCB+zHshvkEcRgxS1nv0kjMj4dxV44qA7fj8U/ioxufBcy
+	WSpoYdrB/9b9SLm/L3j4K2DwdqbbRivfPZ2kiwHZloR2aryjY3CWVrdg=
+X-Google-Smtp-Source: AGHT+IEHd5mSDwz8qlWZV7v1SpzIfoRT4uHkR2ekY/3S1NCd5xVfIvM29yPrBsNjRfpiszYDQhSnee5q4PhDNc+eJUGeN6trcYFE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] serial/pmac_zilog: Remove flawed mitigation for rx irq
- flood
-From: Jiri Slaby <jirislaby@kernel.org>
-To: Michael Ellerman <mpe@ellerman.id.au>, Finn Thain
- <fthain@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
- Benjamin Herrenschmidt <benh@kernel.crashing.org>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
- linux-serial@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <dda2187e128bfaaf092351812e4538e2e41c17f6.1711599093.git.fthain@linux-m68k.org>
- <Zg3YZN-QupyVaTPm@surfacebook.localdomain>
- <8f234f26-d5e3-66ed-ab0c-86d3c9852b4a@linux-m68k.org>
- <CAHp75VcxLez_Nm0N8=gpWd7SKGd9JF2QXEOOB_gvX3ZtTzj6HQ@mail.gmail.com>
- <87y19s7bk6.fsf@mail.lhotse>
- <4bddf8ec-97f1-07f6-9c0a-523c102c0a1b@linux-m68k.org>
- <87v84sbexv.fsf@mail.lhotse>
- <b1553164-18db-4f5c-b1a5-28a393d64941@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <b1553164-18db-4f5c-b1a5-28a393d64941@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:378d:b0:481:2592:4f5a with SMTP id
+ w13-20020a056638378d00b0048125924f5amr401258jal.1.1712554653459; Sun, 07 Apr
+ 2024 22:37:33 -0700 (PDT)
+Date: Sun, 07 Apr 2024 22:37:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c7345f06158f331a@google.com>
+Subject: [syzbot] [jffs2?] kernel BUG in jffs2_start_garbage_collect_thread
+From: syzbot <syzbot+61a9d95630970eece39d@syzkaller.appspotmail.com>
+To: arnd@arndb.de, dhowells@redhat.com, dwmw2@infradead.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, richard@nod.at, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-On 08. 04. 24, 7:32, Jiri Slaby wrote:
-> On 08. 04. 24, 7:29, Michael Ellerman wrote:
->> Many maintainers won't drop Cc: tags if they are there in the submitted
->> patch. So I agree with Andy that we should encourage folks not to add
->> them in the first place.
-> 
-> But fix the docs first.
-> 
-> I am personally not biased to any variant (as in: I don't care where CCs 
-> live in a patch).
+Hello,
 
-OTOH, as a submitter, it's a major PITA to carry CCs in notes (to have 
-those under the --- line). Esp. when I have patches in a queue for years.
+syzbot found the following issue on:
 
-How do people handle that? (Like rebases on current kernel.)
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=16f4efc5180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4d90a36f0cab495a
+dashboard link: https://syzkaller.appspot.com/bug?extid=61a9d95630970eece39d
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15ea8f4b180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1754c105180000
 
-> regards,
--- 
-js
-suse labs
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/72ab73815344/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2d6d6b0d7071/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/48e275e5478b/bzImage-fe46a7dd.xz
 
+The issue was bisected to:
+
+commit 9c8ad7a2ff0bfe58f019ec0abc1fb965114dde7d
+Author: David Howells <dhowells@redhat.com>
+Date:   Thu May 16 11:52:27 2019 +0000
+
+    uapi, x86: Fix the syscall numbering of the mount API syscalls [ver #2]
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=168fca9d180000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=158fca9d180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=118fca9d180000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+61a9d95630970eece39d@syzkaller.appspotmail.com
+Fixes: 9c8ad7a2ff0b ("uapi, x86: Fix the syscall numbering of the mount API syscalls [ver #2]")
+
+------------[ cut here ]------------
+kernel BUG at fs/jffs2/background.c:40!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 0 PID: 5060 Comm: syz-executor108 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:jffs2_start_garbage_collect_thread+0x1f5/0x200 fs/jffs2/background.c:40
+Code: 03 ff e9 1b ff ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 64 ff ff ff 48 89 df e8 76 78 03 ff e9 57 ff ff ff e8 9c 77 a3 fe 90 <0f> 0b 66 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000422fd00 EFLAGS: 00010293
+RAX: ffffffff82f17cb4 RBX: ffff8880240a6018 RCX: ffff8880242b5a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880240a6000
+RBP: 0000000000000000 R08: ffffffff82f1c1c9 R09: 1ffff92000845f94
+R10: dffffc0000000000 R11: fffff52000845f95 R12: ffff8880240a6000
+R13: dffffc0000000000 R14: ffff8880240a6000 R15: ffff88802e7774f8
+FS:  000055559415a380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f54dacad0d0 CR3: 000000007aeec000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ jffs2_do_remount_fs+0x15b/0x1d0 fs/jffs2/fs.c:415
+ reconfigure_super+0x445/0x880 fs/super.c:1071
+ vfs_cmd_reconfigure fs/fsopen.c:267 [inline]
+ vfs_fsconfig_locked fs/fsopen.c:296 [inline]
+ __do_sys_fsconfig fs/fsopen.c:476 [inline]
+ __se_sys_fsconfig+0xab5/0xec0 fs/fsopen.c:349
+ do_syscall_64+0xfb/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f54dac35cf9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc9713c8d8 EFLAGS: 00000246 ORIG_RAX: 00000000000001af
+RAX: ffffffffffffffda RBX: 0030656c69662f2e RCX: 00007f54dac35cf9
+RDX: 0000000000000000 RSI: 0000000000000007 RDI: 0000000000000003
+RBP: 0000000000010305 R08: 0000000000000000 R09: 0000000000000006
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffc9713c8ec
+R13: 431bde82d7b634db R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:jffs2_start_garbage_collect_thread+0x1f5/0x200 fs/jffs2/background.c:40
+Code: 03 ff e9 1b ff ff ff 89 d9 80 e1 07 80 c1 03 38 c1 0f 8c 64 ff ff ff 48 89 df e8 76 78 03 ff e9 57 ff ff ff e8 9c 77 a3 fe 90 <0f> 0b 66 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc9000422fd00 EFLAGS: 00010293
+RAX: ffffffff82f17cb4 RBX: ffff8880240a6018 RCX: ffff8880242b5a00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880240a6000
+RBP: 0000000000000000 R08: ffffffff82f1c1c9 R09: 1ffff92000845f94
+R10: dffffc0000000000 R11: fffff52000845f95 R12: ffff8880240a6000
+R13: dffffc0000000000 R14: ffff8880240a6000 R15: ffff88802e7774f8
+FS:  000055559415a380(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc9713c7d8 CR3: 000000007aeec000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
