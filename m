@@ -1,124 +1,93 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B07182C5;
-	Mon,  8 Apr 2024 08:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7813D964;
+	Mon,  8 Apr 2024 08:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712566546; cv=none; b=PFBVPhpqM18K5DyN0gX2gtTjujCXZ6NLhmUjx/yTXQHrRtFJivJjCVTgF2OuzxI4WKpPYum5QToUocaO8bDLD1ny7lpGFCLRG7wunwaSqT4c0OpLMpwFD7arH/8qERXF1Haqrn+gDveL7rr7XQviOWIVPu1ceQE3fjzAfB/UOBU=
+	t=1712566590; cv=none; b=uKS5eyJXhm/Ln4buSdAcAKiM/FxkrtdABIjt3m15DQvPQWxsutwNwWvLaRlZwkRrAl5MQzYKybf7vZLRsv4UmpYheN38Jpdml2mR+3XaaY2t1KGnzbdUNX3DCTAlPjfFBfsgJ/EDnHwrcu7pt8/rT2RG1iwsJNZAp8yFqFF17vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712566546; c=relaxed/simple;
-	bh=IPFP5xc9/pxOtHa7dx37HFwUJ4eOs/7aF+oBG2Aleu0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HjOJ7xdo54F+i6epRYGrGYfTBKpDoCVP9yCd5FIlHydq4xpVCoSjAGHswIO8LwIDDQWUTNeGp8FNhhAe4Pj1loNc95z6BYp/PQXbmoKOkCKmXuRQTbpzFligk/kWcXPhIN+qiS7cbvL9SWkWws0qGxfFHgGAjsUKpM5wGeV6+SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vb710pVK; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1712566590; c=relaxed/simple;
+	bh=qzK+0wT9Cyf1NitkqrySMGpyo8anNQHWIeU6cKIpYWY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RLAPSvIYso7OxUQJIZtbNcmMzQO992KZaLzKrxQZ2WuJz7P0cuDNt9SN3cIe+cHvKkMissS3yWRlj9bo7sXKb54iLiSqNjpO7XzTX4GW9tr92xArwVrnDd8DYLztHn3bFFX80MJzUNGpkVcTpcpHZonEkAcPXiEciZgUTnPaBbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=dC8TND7a; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vb710pVK"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4387LkXm002802;
-	Mon, 8 Apr 2024 10:55:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=vqeMlJil1d4Uvh5eSb07G55oP9mOJmKI1taWJJHq3pw=; b=vb
-	710pVKG1Jh6EgSswSo4VjZWMn32r8sHQPTp48FWW06zwjdYcrg7Rp140C+WMC6oM
-	46YpR7zGQ6vZh1mC07vMmkq7HZcK3E7JvDvaxdrWvzUBtJmKABtxJAihwIcUwVwF
-	XX07/T/nUdzErbsa4srelH6Zj6DEecqWnLF52CCAYSjoe3UziIkd0zGyCII2c+p6
-	KJs7e9XGYasxi4E36+72yslTqO910vTCBahW2JUaFXOkV3brxOGfXIlOcckr2UCy
-	wE+gHn2CbT9+UpBvRBRcec5ZP5/TOmJ67BoGi2OKXJkSB8nRoBYro+dA2rz8fBWs
-	c0UXGWgvW1N1jXAmbUqg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbfy0ku7r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 10:55:33 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9C67440045;
-	Mon,  8 Apr 2024 10:55:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B70A32138C6;
-	Mon,  8 Apr 2024 10:54:51 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 8 Apr
- 2024 10:54:51 +0200
-Message-ID: <79ec72ab-5451-4743-8cf9-229b8edb2b54@foss.st.com>
-Date: Mon, 8 Apr 2024 10:54:50 +0200
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="dC8TND7a"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=qzK+0wT9Cyf1NitkqrySMGpyo8anNQHWIeU6cKIpYWY=; b=dC8TND7agfDyNYALvE97sUKUio
+	LEBwCQM2OmTmz54MJ5kWzG6Dej7Q8WFmAE/WabcvYrjSyCWxiOMs3VMccEYEsDtFG0ad3fm971gYq
+	VNPrkXCZYr30YxsDDqoMgfra5jQ3aq2bwt2FFE7LKJDacliBtpSRjQeXQqOAECWQaDUm/7PVyZJq5
+	skPZiFu9BhLMOIdq6Er+Q7mc7pgRikOrvNUK1qrFgX9nMttGNAc8tVN7MKD2n3j0sFqM/mkVFPYIO
+	OXVp6pSA0GXy+XfRnhoHNFpKpVoR5lX6n6KAvLyIdnVZY8ozLfLbTcnpstTEeHopPW5EXzwSQIjQj
+	N9ikHv6Q==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rtknZ-0007O7-Ml; Mon, 08 Apr 2024 10:56:17 +0200
+Received: from [185.17.218.86] (helo=localhost)
+	by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rtknY-000H9m-SJ; Mon, 08 Apr 2024 10:56:16 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Jiri Slaby
+ <jirislaby@kernel.org>,  Shawn Guo <shawnguo@kernel.org>,  Sascha Hauer
+ <s.hauer@pengutronix.de>,  Pengutronix Kernel Team
+ <kernel@pengutronix.de>,  Marc Kleine-Budde <mkl@pengutronix.de>,
+  linux-kernel@vger.kernel.org,  linux-serial@vger.kernel.org,
+  imx@lists.linux.dev,  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] serial: imx: Introduce timeout when waiting on
+ transmitter empty
+In-Reply-To: <CAOMZO5Axz7un+9H2uEoQtE0=pYNC0hEyZiNobrSi2m0ajj8N+g@mail.gmail.com>
+	(Fabio Estevam's message of "Fri, 5 Apr 2024 14:38:48 -0300")
+References: <76cf9ce9cbf9dcdf78bc00ce7a919db1776ebce1.1712309058.git.esben@geanix.com>
+	<CAOMZO5Axz7un+9H2uEoQtE0=pYNC0hEyZiNobrSi2m0ajj8N+g@mail.gmail.com>
+Date: Mon, 08 Apr 2024 10:56:16 +0200
+Message-ID: <87ttkckzbj.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ARM: dts: stm32: add heartbeat led for stm32mp157c-ed1
-To: <patrice.chotard@foss.st.com>, <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20240326075438.2891335-1-patrice.chotard@foss.st.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20240326075438.2891335-1-patrice.chotard@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27239/Mon Apr  8 10:26:06 2024)
 
-Hi Patrice
+Fabio Estevam <festevam@gmail.com> writes:
 
-On 3/26/24 08:54, patrice.chotard@foss.st.com wrote:
-> From: Patrice Chotard <patrice.chotard@foss.st.com>
-> 
-> Add heartbeat led for stm32mp157c-ed1.
-> 
-> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> ---
-> 
-> V2 changes :
->    _ add color and function properties.
-> 
->   arch/arm/boot/dts/st/stm32mp157c-ed1.dts | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-> index 66ed5f9921ba..525d9ca7d576 100644
-> --- a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-> +++ b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
-> @@ -10,6 +10,7 @@
->   #include "stm32mp15-pinctrl.dtsi"
->   #include "stm32mp15xxaa-pinctrl.dtsi"
->   #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/leds/common.h>
->   #include <dt-bindings/mfd/st,stpmic1.h>
->   
->   / {
-> @@ -24,6 +25,17 @@ chosen {
->   		stdout-path = "serial0:115200n8";
->   	};
->   
-> +	led {
-> +		compatible = "gpio-leds";
-> +		led-blue {
-> +			gpios = <&gpiod 9 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +			default-state = "off";
-> +			function = LED_FUNCTION_HEARTBEAT;
-> +			color = <LED_COLOR_ID_BLUE>;
-> +		};
-> +	};
-> +
->   	memory@c0000000 {
->   		device_type = "memory";
->   		reg = <0xC0000000 0x40000000>;
+> On Fri, Apr 5, 2024 at 6:25=E2=80=AFAM Esben Haabendal <esben@geanix.com>=
+ wrote:
+>>
+>> By waiting at most 1 second for USR2_TXDC to be set, we avoid a potentit=
+al
+>
+> s/potentital/potential
 
-Applied on stm32-next.
+Thanks, fixing.
 
-thanks
-Alex
+> Could you elaborate on this deadlock? Have you seen it in practice?
+
+I cannot say for sure if I have seen it. But in some cases, that is
+exactly what you would see. Nothing.
+
+If it would occur during shutdown, the console would simply stop/block,
+and you would see nothing.
+
+> Should a Fixes tag be added?
+
+Which commit should I add to that tag? The polling without timeout dates
+back to at least 2.6.12-rc2.
+
+/Esben
