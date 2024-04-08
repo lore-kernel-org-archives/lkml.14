@@ -1,105 +1,129 @@
-Received: from fallback13.i.mail.ru (fallback13.i.mail.ru [79.137.243.65])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE4313F45E;
-	Mon,  8 Apr 2024 15:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C7114036F
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 15:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712589745; cv=none; b=Y9I72atoNvvlC2G+6Csm4y503ASbeXsFPBSvJn77mvA9x8pcsfVHpTMlgVV9F0vIUxGacxt2VRVPcd9uSB8mF4llMjJ4oVYq4ByQZ4n37cI/qRhR9glSVa6Ykwqr/NYt1m8339c8Bv0c4mLKj6+7AZzDj84LVej6IQu6UVeM8FQ=
+	t=1712589781; cv=none; b=rmPXJuXDVzlh8fi3dWO7hSSdFd1SkEmIn/GgfZQ9p+VLHbJVPK7tZc15KYu81ScAOFWV1Lk2X0mJKpWObGCdlhqAgS5CWoStdLWlxPQuxJEbBjSHvZOEBVtzbF5fwzAHPxbd6GRHCeBUloZ6G268a/I38pBz0zi5XZI9ifcP/SI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712589745; c=relaxed/simple;
-	bh=p3uqGizp9xIMGF6CjhHwqsqD088dKF3LY0AdqM5qQiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qq7rG6g6x6UyRiRE8C0PWuOCEpzuPSdcajUKtR5mWBZl/ZD8bGSepzcaheLzy7jNRyHAZDceshtJPK+hVsY//2a0KfXmX52fGMy3fBLAwByXogC9DYNSLY0sAdkcGHkV7eqIOc9lF7CwSUR7FYBW/oCZbbonwShRceCZ1btnu38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru; spf=pass smtp.mailfrom=mail.ru; dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b=HoUXJp6S; dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b=yjqDBG6G; arc=none smtp.client-ip=79.137.243.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.ru
+	s=arc-20240116; t=1712589781; c=relaxed/simple;
+	bh=OU2tVQvyT4SRuoCW2qCM4+ovjL9o9abprj5AcavWWWE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cTwjJeMymNFJiiMhK2jJ213RUIy/81qg2NBtJDbXLtKJWGdxBr/uav1B8HtLqrCVzS8PxnPGfWzFY6JaGUeUSxLRGvpvvs7OId8dfBn7DH8sDgqFCVtM7CF67C178SBOe1S/3AYeSoNQTYnRHvdJd3eG3VOt4L3f6TVfGa3sUcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ibncLV5x; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b="HoUXJp6S";
-	dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b="yjqDBG6G"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=wx+/Kt3SIcMw3DZo1mkGE7FX70+jMpgo7G/HwD3+K2o=;
-	t=1712589742;x=1712679742; 
-	b=HoUXJp6SeqVinIgCUBN52+/roPTJLzz2FJjeVhKtjKZddGdr2I0O8zDlLsM7FYxP/226b/GAXAGwRdlaGhDUWxNWVdGCXcFWMelc1C1scfJPzANjZS+6bV4HufizFmONdSZx11pnivn0lYeuZw5riIzh0e/tk864cP4pzyxQTEiIrg3Iy8EkHSKTYl2GsFDlqvMr2xAM4Ruv6q2E8aKBVnrfXMpYeUv8X4YcE9zF6Yj6l6JOT1E05VvaskijyYEU9ALTws/O4BUNxPqxax0rzT2yCyG/iZqdPa10BFe9V7CZH59zYAMkP/fbOeSmcH2XIajKKdB8r/U/gPJTTf83sQ==;
-Received: from [10.12.4.14] (port=36942 helo=smtp39.i.mail.ru)
-	by fallback13.i.mail.ru with esmtp (envelope-from <end.to.start@mail.ru>)
-	id 1rtqdF-000xdo-ME; Mon, 08 Apr 2024 18:10:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru;
-	s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:
-	To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=wx+/Kt3SIcMw3DZo1mkGE7FX70+jMpgo7G/HwD3+K2o=; t=1712589001; x=1712679001; 
-	b=yjqDBG6G0J5L2MHnjxjVOoKN7xNAN7I5ksll1/A0v1aaK9FTZ8MhOX/P+CP7cPSFp/R9ZX87sTR
-	NVFE21oW+67Iw8zEJPChONI2S3VTJQx3AeQ6xFGBHW1JIx4Dz1qRQFKnBv3oH7GDgUxSaKypFvjNo
-	muXDT4WaLcs0EEeSBz/eF0NsPRACa3Uby2QOvIupqq1BJHBata63LpDzV4Ddh0H6/kArHI+/h7SeJ
-	gs1DkFNXZtkq1p8f511xWhUKVlegivV5+CnjIEqHzLW0a4aKdk94WtS/Q6UH6C6B1uqtwHdSObUsi
-	2p8xWKsHJfA/SPV8R7qp+eXYJ/jgmjQGqTLw==;
-Received: by smtp39.i.mail.ru with esmtpa (envelope-from <end.to.start@mail.ru>)
-	id 1rtqd2-000000009jk-20tw; Mon, 08 Apr 2024 18:09:48 +0300
-From: "end.to.start" <end.to.start@mail.ru>
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"end . to . start" <end.to.start@mail.ru>
-Subject: [PATCH 1/1] sound: Support microphone from device Acer 315-24p
-Date: Mon,  8 Apr 2024 18:09:05 +0300
-Message-ID: <20240408150905.43407-1-end.to.start@mail.ru>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ibncLV5x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712589778;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uNaLEe1EqaX5cisZeqS+C09rvuUmVecNNaJN/+fnKGc=;
+	b=ibncLV5xqay9XjS7DvkKxu5UWg6bpwjatYfmsK1PAnNDcgYzEuvC+vZJkw0262lrBe8X8K
+	mbPcTWg9apztFK8TGQd92ZYJ2iBUBd7QV6RXq/w6aQVP0KeQffl5GF9tSschbDOWdGl3zq
+	elwmNEy4SrdkkOSciHzHmcf1Hr8qt2w=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-ySSsIh20NbOAMCXmbsZBZQ-1; Mon, 08 Apr 2024 11:22:57 -0400
+X-MC-Unique: ySSsIh20NbOAMCXmbsZBZQ-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-78c4db6bd8dso372136785a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 08:22:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712589777; x=1713194577;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uNaLEe1EqaX5cisZeqS+C09rvuUmVecNNaJN/+fnKGc=;
+        b=dR1T5edNuegIO3SoWJQ4fWvX9KvcxXnd+Qjst/Cx+U7vjHADSrwc1fsAKKPVZSnVzG
+         2MSuhomrHNb+lPzOPyRPIevTvdm0BRQthZAxeaULAK3gVmPKcF0IA/FaNQq9Uyy+PAvr
+         ztrWn9IhmfR2RsZvk5YQeBOKGQ3aVv0KJT/utk1XRSX4KxF7e5IjsNqxB4mqrgE9fJoM
+         MEhSuUevo6dZJk/n2xMCLvH4vxYE5o6buW7VgTWNpf4XyCHhfCPPzIC6/XL4tQQ7OIRf
+         4usoLiAvXzAL/cDKJ9YcUAzsNlHYtzHhzH1roOEECPMzDbaIZKEpuwIp7DMY9nLPQ5VU
+         V0zQ==
+X-Gm-Message-State: AOJu0YyJvIJPh9TR8zUGS4KmH5EQZRKJBtUoSIlarIj7OZuVaYrduCGw
+	fxeqvmyTZroChdTskV275Le3VKNc9LkTzEB/uOqUsfgGJsBwmbsS70KihgCV8meRcYRCKSgWrcR
+	NjN+lfvPD1jSL8+B6ncKrsWtRu3U+vs0zjUAulxT/0gyGbsCjM5Qf1+lOWQGMaw==
+X-Received: by 2002:a05:6214:d81:b0:696:8c2f:9a12 with SMTP id e1-20020a0562140d8100b006968c2f9a12mr9180104qve.37.1712589777098;
+        Mon, 08 Apr 2024 08:22:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSJndSw8uJPc8rgUwKsJDwcdZZq27Y+2zqtPiQYmLDnd0ZNc7Lo/hTxepEvEegZZ6PNqLwXw==
+X-Received: by 2002:a05:6214:d81:b0:696:8c2f:9a12 with SMTP id e1-20020a0562140d8100b006968c2f9a12mr9180088qve.37.1712589776789;
+        Mon, 08 Apr 2024 08:22:56 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id ev6-20020a0562140a8600b0069aae04b06esm2277699qvb.85.2024.04.08.08.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 08:22:55 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>, Zefan Li
+ <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, Frederic
+ Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Alex Shi <alexs@kernel.org>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Michal =?utf-8?Q?Koutn=C3=BD?=
+ <mkoutny@suse.com>, Waiman
+ Long <longman@redhat.com>
+Subject: Re: [PATCH v2 1/2] cgroup/cpuset: Make cpuset hotplug processing
+ synchronous
+In-Reply-To: <20240404134749.2857852-2-longman@redhat.com>
+References: <20240404134749.2857852-1-longman@redhat.com>
+ <20240404134749.2857852-2-longman@redhat.com>
+Date: Mon, 08 Apr 2024 17:22:50 +0200
+Message-ID: <xhsmhr0ffang5.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-4EC0790: 1
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD9D327C87852EB66D31116567C8E3CFDFF0E1C6585A2586D0D182A05F53808504030E86D195FBFA14D3DE06ABAFEAF6705ECCA9D1F5DDEDF42BBAA07CA003C8BA6BC0FEE398BF55443
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7492D3E4238663367EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F7900637DEEC83A7CF8598608638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D805961545C5C777FD9EB30F61FB181D1959AD1E186B66E7AF20879F7C8C5043D14489FFFB0AA5F4BFA417C69337E82CC2CC7F00164DA146DAFE8445B8C89999728AA50765F79006372A3B24BF85B2E607389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8A9FF340AA05FB58CF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C0085B890FD2717DA302FCEF25BFAB3454AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C34B26726BD97DF1CFBA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CFB73CFAAED92B6E131DD303D21008E298D5E8D9A59859A8B6D082881546D9349175ECD9A6C639B01B78DA827A17800CE796B81110D3CD4288731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A56F17E783356658EC5002B1117B3ED6960CA70ABAE5EA647230E4A65F242F5898823CB91A9FED034534781492E4B8EEADABF80F987DAEDACBC79554A2A72441328621D336A7BC284946AD531847A6065A27ED053E960B195EBDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0AD93B9BA3C444D644977DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF45B00B261A430CA5BBCEDE6F76895AB947921DF39F88E614015E91357665F65FE98901B1639BBD631CFDFDFCAF5E4A4B417BCEB617B21AD3031AFA059D85FBFFD5C9CA713F8CFD3936DDF96CB8D31E6A913E6812662D5F2A65982B5FD154E7DC8F0ECD54AF826900C3981EEBE9DB10F943082AE146A756F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojabKNeIbMV3uh7/WLBVO8nQ==
-X-Mailru-Sender: F34414D909EE10BD7829694AFAC1E9592C6A313979055771B951B70A5BD4BD8E35E73068979AA8954C683740FFAD31F6C773E5EF782A67EF9314192DE98EED7FA9800083D4B72A528C9769C13AF3BBAE440A67913D6ED084D7A14DD9E34ECE7467EA787935ED9F1B
-X-Mras: Ok
-X-4EC0790: 1
-X-7564579A: B8F34718100C35BD
-X-77F55803: 6242723A09DB00B4DB7CCFC93CF1872E8DC4F42B55D8A582718B3D7011F544C268F3CF0E9FE49B695C3EC5CDC8399ABC44D82FE0EB9EC2B801A36E2F7E7FBFCD39401918445667E6
-X-7FA49CB5: 0D63561A33F958A5889B563FAA9B3D83BE5021A100EE5A3BCF32B16F353EAC16CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F79006378E5B25976F539216389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8C824672CB62AFFF2F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA775ECD9A6C639B01B78DA827A17800CE7535881B9F39D4165731C566533BA786AA5CC5B56E945C8DA
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojabKNeIbMV3txdPNMKTGzKQ==
-X-Mailru-MI: 8002000000000800
-X-Mras: Ok
+Content-Type: text/plain
 
-This patch adds microphone detection for the Acer 315-24p, after which a microphone appears on the device and starts working
+On 04/04/24 09:47, Waiman Long wrote:
+> Since commit 3a5a6d0c2b03("cpuset: don't nest cgroup_mutex inside
+> get_online_cpus()"), cpuset hotplug was done asynchronously via a work
+> function. This is to avoid recursive locking of cgroup_mutex.
+>
+> Since then, the cgroup locking scheme has changed quite a bit. A
+> cpuset_mutex was introduced to protect cpuset specific operations.
+> The cpuset_mutex is then replaced by a cpuset_rwsem. With commit
+> d74b27d63a8b ("cgroup/cpuset: Change cpuset_rwsem and hotplug lock
+> order"), cpu_hotplug_lock is acquired before cpuset_rwsem. Later on,
+> cpuset_rwsem is reverted back to cpuset_mutex. All these locking changes
+> allow the hotplug code to call into cpuset core directly.
+>
+> The following commits were also merged due to the asynchronous nature
+> of cpuset hotplug processing.
+>
+>   - commit b22afcdf04c9 ("cpu/hotplug: Cure the cpusets trainwreck")
+>   - commit 50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume
+>     bugs")
+>   - commit 28b89b9e6f7b ("cpuset: handle race between CPU hotplug and
+>     cpuset_hotplug_work")
+>
+> Clean up all these bandages by making cpuset hotplug
+> processing synchronous again with the exception that the call to
+> cgroup_transfer_tasks() to transfer tasks out of an empty cgroup v1
+> cpuset, if necessary, will still be done via a work function due to the
+> existing cgroup_mutex -> cpu_hotplug_lock dependency. It is possible
+> to reverse that dependency, but that will require updating a number of
+> different cgroup controllers. This special hotplug code path should be
+> rarely taken anyway.
+>
+> As all the cpuset states will be updated by the end of the hotplug
+> operation, we can revert most the above commits except commit
+> 50e76632339d ("sched/cpuset/pm: Fix cpuset vs. suspend-resume bugs")
+> which is partially reverted.  Also removing some cpus_read_lock trylock
+> attempts in the cpuset partition code as they are no longer necessary
+> since the cpu_hotplug_lock is now held for the whole duration of the
+> cpuset hotplug code path.
+>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Signed-off-by: end.to.start <end.to.start@mail.ru>
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 69c68d8e7..1760b5d42 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -430,6 +430,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "MRID6"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "MDC"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Herbag_MDU"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
--- 
-2.44.0
+Tested-by: Valentin Schneider <vschneid@redhat.com>
 
