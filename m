@@ -1,165 +1,329 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2113.outbound.protection.outlook.com [40.107.20.113])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBDD3C48D;
-	Mon,  8 Apr 2024 07:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562610; cv=fail; b=ktb6iFmwCTfMmNki9h8vLm7QkeoosGdEjNsKwdJG2erXxJLtFckvTSreoiqbfQN4zgcfcQxb6Plv5e3qObvvyuCQMGkfK3bt8LKVD4M84tvDxUc7QSpuXFmk7kVULN6emcECZVnX9mN/bJWc0z2AyDI6nA0olOl8JtMAdrhq7mU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712562610; c=relaxed/simple;
-	bh=R9+q49ZbvqINkWf+jGSXywn16E0VSzbn5+szbiebXfQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uGM8GuLq0aoVrBZ9uEmw6R5YIb0KE2SwzroM6ymH5jPdjSN2hGpmj4qFIpHW+WD66qiqv5IIBpQd7AEVxarWuu5RyYHrcgqaF01K+QbLo0BTHqHKwTB/8eHuSkGRROeofWmwEWVMX2koPaI8cKWB4J8S9JBtizw6gOWKKRg4gYs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=W1fDBm7S; arc=fail smtp.client-ip=40.107.20.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252704F1EB
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712562625; cv=none; b=BOqHQ8Ai1PF1nNoVCFSiWS2G1/aUHXpRxNI+7yv9i5dZFiAn8gAQcq939gs76mWR/0k0T7TI/z1jAkTnVXPy6FAFYZB+QKaGf5SY4SuHvuksholu+4YhLwTpXED0beyAnCyayka5BokiLfG094w05L6DvR8+iusyoVGSZMxKyP0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712562625; c=relaxed/simple;
+	bh=RjYRTDvzTcTKvXloWUm+Og7kf8w/nybMo/cGCHzJppU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HuDArzm2OTH5Jg88VhhYBCmBix5sALcC3RoIzhbWbNrKhhEdRbwa9G40cp9WQbQwsxwBvc4pJFJF9k+J63ugrlOWqeaa0h9t7jlm20AS6OGYJRRZ6/EfI+HvcRuzANPjIon7+gxNyJmjvDKPBXDfvsALMCgZey/XWMeRs0A4Hq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kH7xxpV5; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="W1fDBm7S"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JT4EqBLzgM7ZOKxJWwO5os0BeXiJ/5dh8X5/mBoUb0/UB8cbOFYMQgdkmkE6Bd2rGQbuQeNmVDhDyt5mUOpDsacf/fLzM6PurQS9XQmQjPgjuH9hkIWAEUmwtu6deKI8En1Rzjh4lIHaJgSX7eW6D4sGCb1nhhrWvHVtt9tecRcEo2BqVhhzYCR5KtXh6VVAdecS3VB51rbTlY4FumbZBLN3RwcAdRzXOYXTVvpsAFOjFSP1keEp8hsba7b9ZJy1DF2GGp94E/84l3k7q3X/JA7i9bebJoxJ3HFoUrfD8xdEcl+2ava6PsoeOOexs5/ia2EvHB+TgPkS6XNY7e2FaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PiMWilwkmPNZge8EsTLNHRIWqbfxTe37oPlQRLv2XYg=;
- b=ih/jyGCcIv00z30VQrylA0fwbUtw0sO2kYIzi4ROh5JQf5+mrLDAcuqIh2KNxmOltHEqCjXXw47x0Wj9XOLtzpwsTJE0LpNyBSZnsOBQz4fcsH04Z2FPlUdHnAO/F3/k1hGKYFlEdK4h9DcsvmBqwdT7T2bISjGXefYpV6+6E7JOBgbw4f0wN2e60V8KI6yMbwEaEub4a2u1KQjSmVvDIMWFeXVX5lg40zt+uE/yherQRuh9ZjA0gi+n/lLgx5HQaarhDDb8aALEerWBxptCVZ7DqXxpXhUr1t4Ms0TvAknd1FWpcH3cH078nBT0h7Ly5Ak2Q8E8T1ZwSD88nzHIdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PiMWilwkmPNZge8EsTLNHRIWqbfxTe37oPlQRLv2XYg=;
- b=W1fDBm7S433aO3TUQyIliepNS56J1M9pRr0annj8IWiikrDPjR3st22H/zQYnRCKOsQExw4ZK0bAzd4mXBWYLItA0KVFksSaQ+zRBOxH//gSVDAYYISZDlPPXjalIFRJYJtY56fog3AG6rytBcv0ww82eAYB5rYsAB8yosMixOQ=
-Received: from PAXPR04MB9231.eurprd04.prod.outlook.com (2603:10a6:102:2bb::10)
- by DBBPR04MB7644.eurprd04.prod.outlook.com (2603:10a6:10:20c::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
- 2024 07:50:05 +0000
-Received: from PAXPR04MB9231.eurprd04.prod.outlook.com
- ([fe80::c2ee:dfc0:577:cc57]) by PAXPR04MB9231.eurprd04.prod.outlook.com
- ([fe80::c2ee:dfc0:577:cc57%3]) with mapi id 15.20.7409.042; Mon, 8 Apr 2024
- 07:50:05 +0000
-Message-ID: <58b0a77d-8bcf-4d76-82a0-15bfc1cc2e43@nxp.com>
-Date: Mon, 8 Apr 2024 10:50:02 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH v4 1/2] dt-bindings: media: imx8-jpeg: Add clocks
- entries
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- shawnguo@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- festevam@denx.de, festevam@gmail.com, alexander.stein@ew.tq-group.com,
- Frank.li@nxp.com, ming.qian@nxp.com
-Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, s.hauer@pengutronix.de,
- kernel@pengutronix.de, mchehab@kernel.org, hverkuil@xs4all.nl,
- linux-media@vger.kernel.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20240408030734.1191069-1-mirela.rabulea@nxp.com>
- <fd1d99fe-943f-4fcc-a736-9d97dba5a80e@linaro.org>
-From: Mirela Rabulea <mirela.rabulea@nxp.com>
-In-Reply-To: <fd1d99fe-943f-4fcc-a736-9d97dba5a80e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: VI1PR10CA0109.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:28::38) To PAXPR04MB9231.eurprd04.prod.outlook.com
- (2603:10a6:102:2bb::10)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kH7xxpV5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B8889E0005;
+	Mon,  8 Apr 2024 07:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712562621;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7J4B7uFncGNc/REWUGl1tz0b0N7yc6POe9VIZOkYi9g=;
+	b=kH7xxpV5mrUdtwyCqApHyEsUATMVVPSr9NoZImWMFnY7ChJ1qcAeUjDmFhEvWwg3Tj3y2M
+	tHacVtLlhlKVrVAqDQ/wUe0UC44hoBtRg1m9dZOSxoWdHtHBWMt/8K3F96Ulp5EqZOd8MM
+	sv9ucffpb7tMvZvL1pc8s+MrYpZUPmHcc8D3qYrXJreYMlGvqu3FsnUUX8cseHuA2DXcid
+	IhPHfkgorzQ1RmlT9za1Ep0rA+8SnAzQcfYv7+agXCESiOfScAmulfCXu2RodwCtMYti2+
+	ZEf6461m4hOH7raJLR1UexBsfkXDLXuC8yOL5+U2eFL8d+g7uUVAMgWZ3Qsx2g==
+Date: Mon, 8 Apr 2024 09:50:18 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH v5 09/16] drm/vkms: Introduce pixel_read_direction enum
+Message-ID: <ZhOhupo3bf6Cxasy@louis-chauvet-laptop>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+ <20240313-yuv-v5-9-e610cbd03f52@bootlin.com>
+ <20240325151103.0a5f7112.pekka.paalanen@collabora.com>
+ <ZgLwTJVb_Z_MHuCp@localhost.localdomain>
+ <20240327141629.48ec16f2.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9231:EE_|DBBPR04MB7644:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	7YVKRCQt84UqsOaIb+cNgKO5T+SxAXERkogUOxmRrb/yhCQFN0rm23wgz4ONii9ZY2rmA34lRK9SOZRMowxg3baffXLgn+fYePMTBWGygCPN4bgG6S1fX+YmZxLgga8R5ksV1qo3iW7DaAFVKptwsGPPuj78IxasImp1RvD0Z1s8h2lkEBG7Drrgj8v6DB4LiPVT5yDVSwnWWc3TO0vtqlo40xvnXHS9T80q87Oe/M7EERarKTu5vaZDu7ghG3ny7VlNZcjPHXbLdTxWOMdhzH4naP78CMe7B/sdirHDN3s0GbEwhzmDxFwsZ+Pf9v8DZFXl8FbVSSjfMJ/h5Nvb+1pZyPpRrPNYyJnsc4cKS7of2t+kEOdTrazLc4z///XxHdYd3QHN14DYCjlxCf2VpM4ghKRZb3s0Me2OHwctH9AKH6YDVqPz/YuUZsXa8nPP6eM7q/pcUS5huZX/wGhvmijDvcUZM3EMepoNtVkT2ZwCK2TzyBiZnvMbpOLRfuGOeVZ3IfSv01PiUM0P7uINKxeRYoO6WLbG/UVyQx8Nld2pzQGYS3tAQnNhErWiwhWH2lsGu/eveLPiYN/GbLRB3bbhn2b1o1p8wfLB3+ICEGs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9231.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NnpvM25FU3FMUFVBNG42dVJRV2IyMGRLNXpEZDlYY2YwSU5oaGY2WVI5VXda?=
- =?utf-8?B?ckN6dUh0cW0zSm9DbTZta3Q2SEwwbU9kUGdnNFphWU43aHlaNTRKRCs2UkVt?=
- =?utf-8?B?TGU5UHhKaTNjQld4SkQ0TXd6cFlBN25YeUlsREt2QmhVbEZoRnNEUFFUNmhP?=
- =?utf-8?B?dlJobzJKSW5OOG9aRXVVMENFbUFOSk8zRjF1cXRJMkxlc0RlYVhiOTZSbGth?=
- =?utf-8?B?T1p6cnUrbS9LRkNMa3ZrREkrTlhKU0ZBOTM3RDcrNVNJbTk2QVFTVHpvMTJZ?=
- =?utf-8?B?VVF2dnJlY2FVcStxZ2c2NExCckg2ZCs5N01PTTBpdzg4ZnpRWGZ0WWN2dXU5?=
- =?utf-8?B?T1l2bzRVWnkvQm44aHZidjdEOEFOcEw1YnNHWG9KcHNjT1BxbzNiYi9Sb1Z6?=
- =?utf-8?B?dDE2SzA1QTB4c3AvdUN3c0RHN0lxb0RuYm5MdlN6d0YvZm9DTEppL05YSGdB?=
- =?utf-8?B?WTRsc2JBd3RtVm5TVUdyeVpManpQZ3RGMC9kS1dFeC9RbEhPRjhiOStJYkxx?=
- =?utf-8?B?VURCMjVacUlkdDhaWGtqVVNvK0RzV0pRRjd2ckNHaVBGRWVQa2lqME8vZXVR?=
- =?utf-8?B?YWRuV2JFQmM5SDVGbGV5NW14VlJTckc5Ujh6UkdZbDQ3VFlpR3BEYUZxV3Fa?=
- =?utf-8?B?UUdqMUtCSDQwTWJJMTJtV0IxaUl0dUlZeDVZeUd4OEwxVHlCMDllVTJUNE5X?=
- =?utf-8?B?SDZINWJNRHIrbDJiV2JpZGllSFkzdmRLQVVpZUl4a3o0QkdwTHYzQXBGaGxG?=
- =?utf-8?B?bEtqY28xdFFOWFk4Y2s3amdkM2ljcUg2U0NsWFc5Y0thRGFORkNRVmVnM0tz?=
- =?utf-8?B?SUNrcXFNWk5lcG5HOThyZXpVeGJiVUNXb0NEdlRzdW1vZHphS2syMm9vTC9R?=
- =?utf-8?B?ZmU1SlFMd0pSUElBakxkMTZCaElmYm1RendKUzlHOTlBYlhSSHIvMm81VzB1?=
- =?utf-8?B?UkVVdEEzYU9hVm5NUktDRlBRMnBYVDVCWTFEUWNIRkZOQ1cwTmJGWEFSc3dY?=
- =?utf-8?B?Y3gwQ092ZEdzc3NWREhjTk0rMmF4amlZSkwzS2dGVnFIb250SFIvMTNaN2ph?=
- =?utf-8?B?NkVsd2xDdFh6RHRydDhIaHNhd2kxV1VoVktqZW1rWTc5cEFGRVM3MlBVelNJ?=
- =?utf-8?B?ckdzMVpnaXV3WkVGSFF6VG5JQUNUT3ViSTZ3RERKZUNBTTNIVnlSOGZFMFpr?=
- =?utf-8?B?emJKYjFGc2MySU52WjcrbE1oOTdLcHJCb0E4ZjlTR3QyWDRpV2dDdXJiY2pW?=
- =?utf-8?B?K2NnM3IyanZvUUdCdjJMbWRVQ2hvTFhza0trL2RwVVdSZXhuOEoySGEvR3Fm?=
- =?utf-8?B?b3JCMHFKNkNsSFpoSGw4OWRwdGZxZDZjeW9IY0JNd0wxTEZrdFRQdDVpL0gv?=
- =?utf-8?B?Wm1odEZDVTBGZk1TQ1hDbUNtSW8zVGRicG9XOXZNbjZqaGlTVFlwYXdhS1cv?=
- =?utf-8?B?ck5pbGZDNzkrZy83NWZHVVVaQnhXS2sxTVFoU3lpc2ljMHhYcGhnMGJaWkdt?=
- =?utf-8?B?RVRaMnAvTGw5SUU0UTlrWUdjelhLZFRRMlNLWWM5WnY5L0d5T3huQ0tHTkVx?=
- =?utf-8?B?bmJPYmRiV3RlZTcvS1Bzd0Zmc2lhUittdCt0L3VlbzNoQTM5NWdwbDJoRDNt?=
- =?utf-8?B?UWliQzlDVVJ6a2E2K2pUcjdoYUJ1VFc0dE9kM0hoclhzaWxpdGNWcHpDcVpF?=
- =?utf-8?B?elRYS1FXSUd3NXM5QzN4TXJjZnN2cm5SOGVOdm5GVTIrbkVjdUhhcXlRa0Yy?=
- =?utf-8?B?RDhBU3ltTmRydGtBbUlpTXNZS1FTWXpxcnJ5VEM1STcrdzNEeFYyak5ORjI3?=
- =?utf-8?B?UmNkdWsydEhMQjdqYWRDMUFMSm9LNGFEQ0IrbDlneHJOZW1rNVQ2aERTVW52?=
- =?utf-8?B?b2JFYTgxaW5WY1BZeHFUQ2VEdUpUUUJBTG4reUhjWmwreFE4T1g5Qk1RL0Rs?=
- =?utf-8?B?Q3pndTErSUFoUTdZRTJLaFBydWJhaFkzUUJPQnRnd1RYWThNUnhlWDBBaXJZ?=
- =?utf-8?B?VjdNcktHaFBjYkttcEJQMWJ0YlZseG5TU3ZhM3htQXcreGFWd25qWTBvalhO?=
- =?utf-8?B?amVwajRXL1BNUUVIVnphUUdCVUZPMGdVOWdBT0E1Q3gzUHU3MmFXN2UzeEYy?=
- =?utf-8?Q?QL+AyYbnsYFdRznaRPGMei4nI?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51229028-4323-46ed-c917-08dc57a0811b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9231.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 07:50:05.3769
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZVzEQ3tCT5WSv1B7I93D5sDUIjW+KqKbqz8td2NRGOl1AThDz2lozJdL6nOxOmVkMVyO9/+wXPRjuY2996Mh1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7644
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240327141629.48ec16f2.pekka.paalanen@collabora.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Hi Krzysztof,
+Le 27/03/24 - 14:16, Pekka Paalanen a écrit :
+> On Tue, 26 Mar 2024 16:57:00 +0100
+> Louis Chauvet <louis.chauvet@bootlin.com> wrote:
+> 
+> > Le 25/03/24 - 15:11, Pekka Paalanen a écrit :
+> > > On Wed, 13 Mar 2024 18:45:03 +0100
+> > > Louis Chauvet <louis.chauvet@bootlin.com> wrote:
+> > >   
+> > > > The pixel_read_direction enum is useful to describe the reading direction
+> > > > in a plane. It avoids using the rotation property of DRM, which not
+> > > > practical to know the direction of reading.
+> > > > This patch also introduce two helpers, one to compute the
+> > > > pixel_read_direction from the DRM rotation property, and one to compute
+> > > > the step, in byte, between two successive pixel in a specific direction.
+> > > > 
+> > > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > > > ---
+> > > >  drivers/gpu/drm/vkms/vkms_composer.c | 36 ++++++++++++++++++++++++++++++++++++
+> > > >  drivers/gpu/drm/vkms/vkms_drv.h      | 11 +++++++++++
+> > > >  drivers/gpu/drm/vkms/vkms_formats.c  | 30 ++++++++++++++++++++++++++++++
+> > > >  3 files changed, 77 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > index 9254086f23ff..989bcf59f375 100644
+> > > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > @@ -159,6 +159,42 @@ static void apply_lut(const struct vkms_crtc_state *crtc_state, struct line_buff
+> > > >  	}
+> > > >  }
+> > > >  
+> > > > +/**
+> > > > + * direction_for_rotation() - Get the correct reading direction for a given rotation
+> > > > + *
+> > > > + * This function will use the @rotation setting of a source plane to compute the reading
+> > > > + * direction in this plane which correspond to a "left to right writing" in the CRTC.
+> > > > + * For example, if the buffer is reflected on X axis, the pixel must be read from right to left
+> > > > + * to be written from left to right on the CRTC.  
+> > > 
+> > > That is a well written description.  
+> > 
+> > Thanks
+> >  
+> > > > + *
+> > > > + * @rotation: Rotation to analyze. It correspond the field @frame_info.rotation.
+> > > > + */
+> > > > +static enum pixel_read_direction direction_for_rotation(unsigned int rotation)
+> > > > +{
+> > > > +	if (rotation & DRM_MODE_ROTATE_0) {
+> > > > +		if (rotation & DRM_MODE_REFLECT_X)
+> > > > +			return READ_RIGHT_TO_LEFT;
+> > > > +		else
+> > > > +			return READ_LEFT_TO_RIGHT;
+> > > > +	} else if (rotation & DRM_MODE_ROTATE_90) {
+> > > > +		if (rotation & DRM_MODE_REFLECT_Y)
+> > > > +			return READ_BOTTOM_TO_TOP;
+> > > > +		else
+> > > > +			return READ_TOP_TO_BOTTOM;
+> > > > +	} else if (rotation & DRM_MODE_ROTATE_180) {
+> > > > +		if (rotation & DRM_MODE_REFLECT_X)
+> > > > +			return READ_LEFT_TO_RIGHT;
+> > > > +		else
+> > > > +			return READ_RIGHT_TO_LEFT;
+> > > > +	} else if (rotation & DRM_MODE_ROTATE_270) {
+> > > > +		if (rotation & DRM_MODE_REFLECT_Y)
+> > > > +			return READ_TOP_TO_BOTTOM;
+> > > > +		else
+> > > > +			return READ_BOTTOM_TO_TOP;
+> > > > +	}
+> > > > +	return READ_LEFT_TO_RIGHT;  
+> > > 
+> > > I'm a little worried seeing REFLECT_X is supported only for some
+> > > rotations, and REFLECT_Y for other rotations. Why is an analysis of all
+> > > combinations not necessary?  
+> > 
+> > I don't need to manage all the combination because this is only about 
+> > the "horizontal writing".
+> > 
+> > So, if you want to write a line in the CRTC, with:
+> > - ROT_0 || REF_X => You need to read the source line from right to left
+> > - ROT_0 => You need to read source buffer from left to right
+> > - ROT_0 || REF_Y => You need to read the source line from left to right
+> 
+> That is true, indeed.
+> 
+> > In this case, REF_Y only have an effect on the "column reading". It is not 
+> > needed here because the new version of the blend function will use the 
+> > drm_rect_* helpers to compute the correct y coordinate.
+> > 
+> > If you think it's clearer, I can create a big switch(rotation) like this:
+> > 
+> > 	switch (rotation) {
+> > 	case ROT_0:
+> > 	case ROT_0 || REF_X:
+> > 		return L2R;
+> > 	case ROT_0 || REF_Y:
+> > 		return R2L;
+> > 	case ROT_90:
+> > 	case ROT_90 || REF_X:
+> > 		return T2B;
+> > 	[...]
+> > 	}
+> > 
+> > So all cases are clearly covered?
+> 
+> I think that would suit my personal taste better. It would not raise
+> questions nor need a comment. It does become a long function, but I
+> tend to favour long and clear more than short and needs thinking to
+> figure out if it works, everything else being equivalent.
 
-On 08.04.2024 09:38, Krzysztof Kozlowski wrote:
-> Please correct subject. You already got comments on this.
-> https://lore.kernel.org/linux-devicetree/2fb8c43c-c079-e04e-f727-3bc1dc29996e@linaro.org/
+I will change it to switch case.
+ 
+> I wonder how DRM maintainers feel.
+> 
+> > > I hope IGT uses FB patterns instead of solid color in its tests of
+> > > rotation to be able to detect the difference.  
+> > 
+> > They use solid colors, and even my new rotation test [3] use solid colors.
+> 
+> That will completely fail to detect rotation and reflection bugs then.
+> E.g. userspace asks for 180-degree rotation, and the driver does not
+> rotate at all. Or rotate-180 getting confused with one reflection.
 
-Sorry I missed that.
+I think I missunderstood what you means with "solid colors".
 
-I will update the prefix to "media: dt-bindings: nxp,imx8-jpeg:". as you 
-suggested in v2.
->> Changes since v3:
->> - Add items for clocks (per Krzysztof's feddback)
->> - Add description for clocks (per Conor's feddback to the other similar patch from Alexander)
->> - Add "media:" to the subject
-> Where? It was there before, so what did you change?
+The tests uses a plane with multiple solid colors:
 
-I started from v3 here: 
-https://lore.kernel.org/linux-devicetree/20230912163810.1750488-1-festevam@gmail.com/
++-------+-------+
+| White | Red   |
++-------+-------+
+| Blue  | Green |
++-------+-------+
 
-The subject was: "[PATCH v3 1/3] dt-bindings: imx8-jpeg: Add clocks 
-entries", I had just added "media:". Anyways, will update it again.
+But it don't use gradients because of YUV.
+ 
+> > It is mainly for yuv formats with subsampling: if you have formats with 
+> > subsampling, a "software rotated buffer" and a "hardware rotated buffer" 
+> > will not apply the same subsampling, so the colors will be slightly 
+> > different.
+> 
+> Why would they not use the same subsampling?
 
->> +  clocks:
->> +    description:
->> +      The JPEG decoder/encoder requires two clocks for it's wrapper (AXI and APB),
->> +      and one clock for it's core engine (AXI, same source as for the wrapper)
-> Description is now redundant, drop it.
+YUV422, for each pair of pixels along a horizontal line, the U and V 
+components are shared between those two pixels. However, along a vertical 
+line, each pixel has its own U and V components.
 
-Ok, I will do so in v5.
+When you rotate an image by 90 degrees:
+ - Hardware Rotation: If you use hardware rotation, the YUV subsampling 
+   axis will align with what was previously the "White-Red" axis. The 
+   hardware will handle the rotation.
+ - Software Rotation: If you use software rotation, the YUV subsampling 
+   axis will align with what was previously the "Red-Green" axis.
 
-Thanks a lot for feedback,
+Because the subsampling compression axis changes depending on whether 
+you're using hardware or software rotation, the compression effect on 
+colors will differ. Specifically:
+ - Hardware rotation, a gradient along the "White-Red" axis may be 
+   compressed (i.e same UV component for multiple pixels along the 
+   gradient).
+ - Software rotation, the same gradient will not be compressed (i.e, each 
+   different color in the gradient have dedicated UV component)
 
-Mirela
+The same reasoning also apply for "color borders", and my series [3] avoid 
+this issue by choosing the right number of pixels.
+
+> The framebuffer contents are defined in its natural orientation, and
+> the subsampling applies in the natural orientation. If such a FB
+> is on a rotated plane, one must account for subsampling first, and
+> rotate second. 90-degree rotation does not change the encoded color.
+> 
+> Getting the subsampling exactly right is going to be necessary sooner
+> or later. There is no UAPI for setting chroma siting yet, but ideally
+> there should be.
+> 
+> > > The return values do seem correct to me, assuming I have guessed
+> > > correctly what "X" and "Y" refer to when combined with rotation. I did
+> > > not find good documentation about that.  
+> > 
+> > Yes, it is difficult to understand how rotation and reflexion should 
+> > works in drm. I spend half a day testing all the combination in drm_rect_* 
+> > helpers to understand how this works. According to the code:
+> > - If only rotation or only reflexion, easy as expected
+> > - If reflexion and rotation are mixed, the source buffer is first 
+> >   reflected and then rotated.
+> 
+> Now that you know, you could send a documentation patch. :-)
+
+And now I'm not sure about it :)
+
+I was running the tests on my v6, and for the first time ran my new 
+rotation [3] on the previous VKMS code. None of the tests for 
+ROT_90+reflexion and ROT_270+reflexion are passing...
+
+So, either the previous vkms implementation was wrong, or mine is wrong :)
+
+So, if a DRM expert can explain this, it could be nice.
+
+To have a common example, if I take the same buffer as above 
+(white+red+blue+green), if I create a plane with rotation = 
+ROTATION_90 | REFLECTION_X, what is the expected result?
+
+1 - rotation then reflection 
+
++-------+-------+
+| Green | Red   |
++-------+-------+
+| Blue  | White |
++-------+-------+
+
+2 - reflection then rotation (my vkms implementation)
+
++-------+-------+
+| White | Blue  |
++-------+-------+
+| Red   | Green |
++-------+-------+
+
+Thanks a lot,
+Louis Chauvet
+
+> For me as a userspace developer, the important place is
+> https://dri.freedesktop.org/docs/drm/gpu/drm-kms.html#standard-plane-properties
+> 
+> >  
+> > > Btw. if there are already functions that are able to transform
+> > > coordinates based on the rotation bitfield, you could alternatively use
+> > > them. Transform CRTC point (0, 0) to A, and (1, 0) to B. Now A and B
+> > > are in plane coordinate system, and vector B - A gives you the
+> > > direction. The reason I'm mentioning this is that then you don't have
+> > > to implement yet another copy of the rotation bitfield semantics from
+> > > scratch.  
+> > 
+> > You are totaly right. I will try this elegant method. Yes, there are some 
+> > helpers (drm_rect_rotate_inv), so I will try to do something.
+
+It works fine, a bit more tricky to get the right implementation. It will 
+be in the v6.
+ 
+> Cool, thanks,
+> pq
+> 
+   
+[...]
 
 
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
