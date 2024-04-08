@@ -1,216 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE46F29CE0;
-	Mon,  8 Apr 2024 09:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712569652; cv=fail; b=h3/eyqHytBXuglAngX+pwWs8zhDFAZepOq8ja6krrnShrCNIduRV0uuhik8mhTSjZf5eg73skPE84s2C3a4VQApCsiJNeJHneTPzqZ95Eps8L/vV68pXPv0DhbL34cRxG96mbiaLX6ZzAAqCSwHG04oTpvaArP+hnOMDELnKOYQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712569652; c=relaxed/simple;
-	bh=s1tC1pukuaijnvqnHTyMXaFh72wjvDKJ59D2iaTbeaY=;
-	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=PRdLB556ED6bVr6uj6qQ9Ui/MeIQUsb7TYhydQiXtgzsGyUWW8aB9Q3wxMf5ublNFQRnISeFc/uvkwEEdiujOdlEzqcvAhL5VJBp9WnSO1dcuAG4Sy+V4T/K8JvJjmL4kgjzmpN8fZGh1yFT+Bk4PxueioVZ7krYrbV2RoaKL2Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaUkAHY1; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaUkAHY1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712569651; x=1744105651;
-  h=message-id:date:subject:from:to:cc:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=s1tC1pukuaijnvqnHTyMXaFh72wjvDKJ59D2iaTbeaY=;
-  b=gaUkAHY1/iDPiNtsZY18RmLzkBVSNZQuk9g+XR9FhU5NrFisLaGqvcXG
-   naK9d3bSsgaQldG9VMplv5aiGuA15T4NI2cSnIiGfE//zYX8z9QeGXjJc
-   ZDDoT0VGgILEYV0MAR5uC6Q8UoDKH598fxUifK9Be4hRabLBMCNYR3s2C
-   F2ocQeHTWDVc+bdbpFBVBXXw/NXmLIdFlsdBrrTazGOsJEwr9EXEyLxUq
-   mlG2uERJjbAIll/GI8/vailljZHVEsy9zkyXMR+P2TKfFleW+ppOTXiFu
-   1o2RK3rgfBUn7xjMAztJG4CipCYcw038e2MNNeajxYIMcHf0neP3gMr15
-   w==;
-X-CSE-ConnectionGUID: iMGWDIf4R2qpAuq8hthYuQ==
-X-CSE-MsgGUID: reitgozgRhOIBS61STLkTg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7939764"
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="7939764"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 02:47:30 -0700
-X-CSE-ConnectionGUID: itBeR800TGSiOvVigtylQg==
-X-CSE-MsgGUID: Z1T7v/TjQdigjYaU2PXbvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="19782800"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Apr 2024 02:47:29 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 02:47:28 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 02:47:28 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Apr 2024 02:47:28 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 02:47:28 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g39rvE8t5qiqr3XezzTdXcaumo15nRy/rsMaFlj2Q4HOj/uVjVn9i+flqxQ0j1/p4wSpcaniNRHmyyfwka4nN0i0+kkQNW/j44nKPGIyanW/MsDjKmgMMX5VnLJU6aHpbAnjFxFRtclfuGb7mxOuN0shSbUlO0nVhmz0PdsAOwOkc0KFBwx7nOwlZxyNfuMnHlVKMSXkKRAZ8we95C4O7PnBYXF25Mu2duyZuO61N7EEOQaJtQi8JbaTG6NnRSoAO1FO62AaypZVifidtbvc8IXQE1R/U/8uJE8D/NQth2U6kUT4LVFBicnh70NArPgKOw5DXqvrSFUbWhY1hkeouw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ia6S9HD5jhk4fto5/+z9wWZTVsmkk3xnAAWmLAoOtUw=;
- b=XEMNefcNvAC50TfZwlPRl2+xVXyEqMZ+jSiaDMoie//wdz5c9hXF0pNs1sTfPeYLLEorczb/SjkceNZz7zGNk7uyp5VmS7yi7oLJENCa9rnOqgZXxxpzmWkW/2VOCVrgITsSbiXgOaxnO3xAOw4hr89VbFSkHyaM9+19lcnVOJRT6h4V1AColNU+llkWUbxTik+z4BnTVxyLq2GCUtcW5B7G7RWpZUJvzXezZqBKo/+nwZOjXn5DmixfJYbhNzoR0UX97/QjZRVqQYKzTimody20rRLJikflbaGHo6Dvkgl2d0Za7iQ4DS4oF7VOcJtu6s2V+9Gt/ySMELnRWdmA5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
- by MW4PR11MB5774.namprd11.prod.outlook.com (2603:10b6:303:182::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Mon, 8 Apr
- 2024 09:47:25 +0000
-Received: from DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9]) by DS0PR11MB8718.namprd11.prod.outlook.com
- ([fe80::654c:d66a:ec8e:45e9%6]) with mapi id 15.20.7452.019; Mon, 8 Apr 2024
- 09:47:25 +0000
-Message-ID: <755c17b2-0ec2-49dd-9352-63e5d2f1ba4c@intel.com>
-Date: Mon, 8 Apr 2024 11:45:32 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 7/9] libeth: add Rx buffer management
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: Kees Cook <keescook@chromium.org>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
-	<pabeni@redhat.com>, Alexander Duyck <alexanderduyck@fb.com>, Yunsheng Lin
-	<linyunsheng@huawei.com>, Jesper Dangaard Brouer <hawk@kernel.org>, "Ilias
- Apalodimas" <ilias.apalodimas@linaro.org>, Christoph Lameter <cl@linux.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>,
-	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>, <netdev@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240404154402.3581254-1-aleksander.lobakin@intel.com>
- <20240404154402.3581254-8-aleksander.lobakin@intel.com>
- <20240405212513.0d189968@kernel.org>
- <1dda8fd5-233b-4b26-95cc-f4eb339a7f88@intel.com>
-Content-Language: en-US
-In-Reply-To: <1dda8fd5-233b-4b26-95cc-f4eb339a7f88@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MI0P293CA0015.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:44::8) To DS0PR11MB8718.namprd11.prod.outlook.com
- (2603:10b6:8:1b9::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CDBFBF3;
+	Mon,  8 Apr 2024 09:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712569665; cv=none; b=XF4K0ub4MEZlmxN28Oth/JosD355/EX9evX+wwlZWutdZiea4tPFcruvD/N3o8XYB5sQ7k3P9sJ0iYH4vSbUh+UIgYQsfhvqiBTxKP3okP3XZ6dPi44VGcr8LyBv0gZH4QmD8iPr4UiwJ2HmR8ceM8qsSnWKUfkE+rqwIwtwDDg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712569665; c=relaxed/simple;
+	bh=97P4hwOBL8anWqyksdeGLp7M7kyP6hFX6f9Mnke7txQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O4tksS2DUy5itqhvLbh6DCDDBVwiODB0oOBBjf2PSIfIoqKliqQ/qSqDMStAAUrozVvGIlwcKcJACI5lrJ5L4aC9aSqVByw6EGT49DdvBb0JTUzaSYt6AUHtP9KIAKJ4jOwRFVZ3ZOFu1sCHViN95YTeYd3rHz+PlH2giln4x6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A9FC433C7;
+	Mon,  8 Apr 2024 09:47:44 +0000 (UTC)
+Message-ID: <ae5840f3-7e19-4d60-bd87-567068a3f813@xs4all.nl>
+Date: Mon, 8 Apr 2024 11:47:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|MW4PR11MB5774:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Bx3VU46w+jYyPne/6/VDFGIUb+WkiC6QKSRg3bKyMQKqIAm/nqH2AZaV1BI+YVUu4P+dBakb9nIxO/azcF7K/K6BHP2UMmG3qcl5AD0NburgStBb4+RjwrAakDKDWRYr3f04mI827pNCkw4zZgZo2ohRxreefREs22JlMc+YaV4+cdgIPwRbp9sUweZrhJzVU96c7aYban8FYbY/OK5lehier30E1R8btmCo2O2n4pOWB7D6O7pQyoXp0aUdS/EDTMmt96vHjAIvfUbXC0YpKNaT910+7mGqf55Aov/WBXHr0dCoE8kWdPfJnpAYe5KTCN27Y9xFTdqXhGWbva710gMSThIqILMBVSInQzImRpmAb/capTvdptACfXsoebbYmPrSHPj87oREjoycTlfFkDed2Fw9gQCdOBz8mACOfgo1xP1FkH6sTVXy9Fa/9wabKZh4VjqlSfmOZ4Kl2snGVhvDSN3bafaxsLZhTmm9GessDd99nJAoKdsfVo0xiWYqBe/y89Rrbbb3m5tnCPyfj1jjI2j/4EZsOABulMBEXxZ/SsUguSmK/Y4Pr+NI4NteKUurCylNIjQsaXqhF+PB5/45QBjcexNNQslT2Z9AS2iVzUm1zciIzBkGdhgStqH03yEVva/frG22m4cwOoGrMSuZzNjyeFu+0lKJ3l7E2QI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eWJoWmN5LzdXUFREWmZlTVoxWEdGK1NySTJlL3l2SDhVNnNMWExpbHQrUzk3?=
- =?utf-8?B?cHhoZmNPd2VVWk9IT2sxdjF0UTVrb2lYODMxMUNmUHlzSG4yaHBKbG0rd2RV?=
- =?utf-8?B?bmdVQmJnTGRrMloya3d3QkdZVStIQ3FLbGRJOXNvVDRmY21CNUlTb1FwVUtB?=
- =?utf-8?B?YXg4WnZpaVhDbnA0TkRIc2tpVjBCSmFvZThPb3hUdkpRUjdXbDhrTkxvOFFv?=
- =?utf-8?B?b1NpVDdLY2tDYUVOVEp1SnJVNXM3QWFqOUVSUEZNWXE0OEhUTGVrUlN3ejRs?=
- =?utf-8?B?blhjZXhaNUYwRHI1WXdOejZabTQ2RW45WXc0aTgyQWVUZW9qWXQ4blpMK3F0?=
- =?utf-8?B?K0NQZXJLQ0xhUG5FTkFKSnVnWGRNNDN5QVU1VTNwQlF4bHlzZWtDTEpPRkts?=
- =?utf-8?B?clgzNGxzWmQwQmRlanZkTGRVVWVMQUNWamFGOWdmWUpqRHpqTldQN2ZQVGdI?=
- =?utf-8?B?OEYwKzVWSVFMSFI3Qy8wbTBMZGRVYjMvSkh1bURibUtyMU1wSWtCYmJZMWlO?=
- =?utf-8?B?cG1sbStHdVFlTFhUNmplWkdzVDBLTnYxdFRsMElSQXJMc09kWmp3UnB6SjFz?=
- =?utf-8?B?VGEyV1dlVnZ3dHVZY2RSU01nMmpuNmNLYkJQdXV0RVR6VGxhODN4enp3TXpX?=
- =?utf-8?B?aFhhbHdrbUFtcWUzeWpjeVdJTU1Rb0x1blJZZm9VUTV1L2lHQ1QwcnVOM2wv?=
- =?utf-8?B?WXM0d1JFMG8xeVRFY2pKMzdTVkZpVURoRFJOTS9QQ0owWnRaUm9kSGJPckda?=
- =?utf-8?B?WWl4Z3FZK1NtT3AvSlRjbkRhVFpwZGZMRkhsUndRQUJSek5NRkZxWmgrNThh?=
- =?utf-8?B?R3dicHBiSWVGc0NTaGVyb1k5TWZaRDlESGpaZzFtclM3VFhzS0ZGTGRCdzRB?=
- =?utf-8?B?MXVMbzE2SHlvT1RWSkwzV0xXSkh4TWZTOTlxTVNRLzRuRjZlS3BzaFRaUE5w?=
- =?utf-8?B?Si90cWI2MTU2R0FhcStHS1VWSGs1Z09WQnFuM21FdDkwRjFKOU1tMlJ2WHVE?=
- =?utf-8?B?aktHdFBoMjFaNUEzUVdpMUJsblFTT3FySU85ekt2T3BtUXNod0wvb0w5enFO?=
- =?utf-8?B?Z01YZTBrS3BxQU1sUklSQzFublV1VE5MdXRUbnRDK3ZkVzJvd1VjcU0vNVBY?=
- =?utf-8?B?Vy82ZDhYYUxsby9OdE1GWHZLRFF2WE52UkFwaUpoWGdrR1ROaEFuelh2UHMv?=
- =?utf-8?B?dWtqZ01KKytRcjhIUzN6cEozOFplTzYveVBnSDFKeFJxdmpydWJJbnNRSHc1?=
- =?utf-8?B?UUlpZzhtaXZJT3pheDRSS3lhNnc3Y3E5YTIrRzJ2cFE3eXJOZnV4VFNBb0xz?=
- =?utf-8?B?MjRkU1FaL1RFOE1OcFovSU9hbVNsaDV5QUlxMXhGa1VmR0VsaFJpUTJ0dllE?=
- =?utf-8?B?cWh4MFBZZmhiTkR2dStoZjJPWnpYNkpuYlNoRXlpNzBsTkpvOHh6Ym1oR2N2?=
- =?utf-8?B?SmhabmJUQ2tBWjkzQTVsUkNPdXp6N3dHK3BLMnVzRE5TNU9xZkJpRjduNUVL?=
- =?utf-8?B?N1dWWVF1cHorQVJsdEQ1ZHhCbGpQZWJ4dE5jeDZwYjlBVFlnSWorZzlQbWly?=
- =?utf-8?B?Wk5nUllaNTA0TEhBcWdzdnlyOFJqdkhsUHpGTFRpa2xBZ2xtczJPR3VvZ0tL?=
- =?utf-8?B?M3VjQVBHbHdQMnUyRWtJSXQ5dVVoaE1saG5UMTRHOVRwcm5mZHhBeHFRcS9s?=
- =?utf-8?B?ZUttMlhlcFcxajFWWXpmMFZGdldhY2thOUd4Z2l6RGhSVzB4VFhSMW1GMEth?=
- =?utf-8?B?Q2JDLzRCSTYyTWU3V1FXWkxGWGRTVUVENUgwVEFpaE5XZ2NXS3Iva1B4MGR3?=
- =?utf-8?B?Q2x0NC8wa04vWko3TFRSN0RXQjBSNlFvUnBtTm1GdEE5bmpNQ0tyYkFyS0VO?=
- =?utf-8?B?bmY5ajZTMHIvUWxWM2NSNHFjeGZMZGdac04yYlhtdm1rQmpvbE1CeTMybDRZ?=
- =?utf-8?B?YTFsdUF2U3VhOVNGNWhzZGpHK2J2eCtTSXNvMXA3bUpOdzczeEMxSlNlN3Fj?=
- =?utf-8?B?dWNycng2ODc5VUk0QUlyRjF1S2dsMzUwQjBLYnhyWDViK0hRRmRGOWU4NDMx?=
- =?utf-8?B?RXQrQXBJVGk0VTFUQmNmalpxeTRPcVQzbGI0OEtjaUdKNmpmbzBRbHJYS21D?=
- =?utf-8?B?RnRadzNqZ01PYTc2MWtCdWxSTXBIUlNRN2wrTGZzdHU5K0xFVVJRK3h6WjR2?=
- =?utf-8?B?M2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14b80e2f-93c7-4356-8274-08dc57b0e544
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 09:47:25.4222
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DKYmllRdpc5nExvZ3zWP6cd5uYdnM8l+li6ob1HGM+ZJUsmjIK4UR4tl4ZbIwjtY6XxYdARlGHprEnLrkEH7Vr9U/Vp9BlL4bCF4NS3a5Hk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB5774
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] media: dvbdev: make dvb_class constant
+Content-Language: en-US, nl
+To: "Ricardo B. Marliere" <ricardo@marliere.net>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Sean Young <sean@mess.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240305-class_cleanup-media-v1-0-53e1538973cd@marliere.net>
+ <20240305-class_cleanup-media-v1-1-53e1538973cd@marliere.net>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20240305-class_cleanup-media-v1-1-53e1538973cd@marliere.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-Date: Mon, 8 Apr 2024 11:11:12 +0200
-
-> From: Jakub Kicinski <kuba@kernel.org>
-> Date: Fri, 5 Apr 2024 21:25:13 -0700
+On 05/03/2024 14:26, Ricardo B. Marliere wrote:
+> Since commit 43a7206b0963 ("driver core: class: make class_register() take
+> a const *"), the driver core allows for struct class to be in read-only
+> memory, so move the dvb_class structure to be declared at build time
+> placing it into read-only memory, instead of having to be dynamically
+> allocated at boot time.
 > 
->> On Thu,  4 Apr 2024 17:44:00 +0200 Alexander Lobakin wrote:
->>> +/**
->>> + * struct libeth_fq - structure representing a buffer queue
->>> + * @fp: hotpath part of the structure
->>
->> Second time this happens this week, so maybe some tooling change in 6.9
->> but apparently kdoc does not want to know about the tagged struct:
->>
->> include/net/libeth/rx.h:69: warning: Excess struct member 'fp' description in 'libeth_fq'
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+> ---
+>  drivers/media/dvb-core/dvbdev.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
 > 
-> Oh no, maybe we should teach kdoc to parse struct_group*()?
+> diff --git a/drivers/media/dvb-core/dvbdev.c b/drivers/media/dvb-core/dvbdev.c
+> index 733d0bc4b4cc..dcbf68b00240 100644
+> --- a/drivers/media/dvb-core/dvbdev.c
+> +++ b/drivers/media/dvb-core/dvbdev.c
+> @@ -78,7 +78,13 @@ static const u8 minor_type[] = {
+>  #define MAX_DVB_MINORS		(DVB_MAX_ADAPTERS * 64)
+>  #endif
+>  
+> -static struct class *dvb_class;
+> +static int dvb_uevent(const struct device *dev, struct kobj_uevent_env *env);
+> +static char *dvb_devnode(const struct device *dev, umode_t *mode);
 
-scripts/kernel-doc apparently can handle them...
+Forward references are typically something you want to avoid.
 
-+ Kees
+Looking at the code, I think it makes sense to just move those two functions
+to just before this dvb_class.
 
+> +static const struct class dvb_class = {
+> +	.name = "dvb",
+> +	.dev_uevent = dvb_uevent,
+> +	.devnode = dvb_devnode,
+> +};
+>  
+>  static struct dvb_device *dvb_minors[MAX_DVB_MINORS];
+>  static DECLARE_RWSEM(minor_rwsem);
+
+Also move the dvb_class (+ the two functions) to after this line. I think that's
+a more suitable place for this.
+
+> @@ -561,7 +567,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
+>  		return ret;
+>  	}
+>  
+> -	clsdev = device_create(dvb_class, adap->device,
+> +	clsdev = device_create(&dvb_class, adap->device,
+>  			       MKDEV(DVB_MAJOR, minor),
+>  			       dvbdev, "dvb%d.%s%d", adap->num, dnames[type], id);
+>  	if (IS_ERR(clsdev)) {
+> @@ -600,7 +606,7 @@ void dvb_remove_device(struct dvb_device *dvbdev)
+>  
+>  	dvb_media_device_free(dvbdev);
+>  
+> -	device_destroy(dvb_class, MKDEV(DVB_MAJOR, dvbdev->minor));
+> +	device_destroy(&dvb_class, MKDEV(DVB_MAJOR, dvbdev->minor));
+>  
+>  	list_del(&dvbdev->list_head);
+>  }
+> @@ -1096,13 +1102,10 @@ static int __init init_dvbdev(void)
+>  		goto error;
+>  	}
+>  
+> -	dvb_class = class_create("dvb");
+> -	if (IS_ERR(dvb_class)) {
+> -		retval = PTR_ERR(dvb_class);
+> +	retval = class_register(&dvb_class);
+> +	if (retval != 0)
+
+This can just be 'if (retval)'.
+
+>  		goto error;
+> -	}
+> -	dvb_class->dev_uevent = dvb_uevent;
+> -	dvb_class->devnode = dvb_devnode;
+> +
+>  	return 0;
+>  
+>  error:
+> @@ -1115,7 +1118,7 @@ static void __exit exit_dvbdev(void)
+>  {
+>  	struct dvbdevfops_node *node, *next;
+>  
+> -	class_destroy(dvb_class);
+> +	class_unregister(&dvb_class);
+>  	cdev_del(&dvb_device_cdev);
+>  	unregister_chrdev_region(MKDEV(DVB_MAJOR, 0), MAX_DVB_MINORS);
+>  
 > 
->>
->>> + * @pp: &page_pool for buffer management
->>> + * @fqes: array of Rx buffers
->>> + * @truesize: size to allocate per buffer, w/overhead
->>> + * @count: number of descriptors/buffers the queue has
->>> + * @buf_len: HW-writeable length per each buffer
->>> + * @nid: ID of the closest NUMA node with memory
->>> + */
->>> +struct libeth_fq {
->>> +	struct_group_tagged(libeth_fq_fp, fp,
->>> +		struct page_pool	*pp;
->>> +		struct libeth_fqe	*fqes;
->>> +
->>> +		u32			truesize;
->>> +		u32			count;
->>> +	);
->>> +
->>> +	/* Cold fields */
->>> +	u32			buf_len;
->>> +	int			nid;
->>> +};
 
-Thanks,
-Olek
+Regards,
+
+	Hans
