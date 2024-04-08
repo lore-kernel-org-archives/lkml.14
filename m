@@ -1,37 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F2E47F7C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA524AEC4;
 	Mon,  8 Apr 2024 08:10:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563810; cv=none; b=qQ+iW7H//NeU2KBtpEa0mPb4NeMDrfVPy/7lbpEXDlcUofBBM24wYz8GzSGIbpDotDw9+R4lw51oIGQqQKrenrc0qc8Dy9QymEcxwF6USg7RhRPQfvd1nlAnO8sRY45zSX5J0ahgd28OYtdhRzOkXmAU7csWWFxstdx0UlLIHaM=
+	t=1712563810; cv=none; b=D2GUs9qhYj+ZOpE0j6CAfD6XbnYSysb4QlRf1g0m9+1hWiBnN3C2gGux9zkFrTm1cC7rv38IHHpB13OTxbchnAMbJZJs9ZCSCsO1HGfm8W+IW7h6xG9PhwNi1WZJ1RsTgue1ILJqJunt4ALKRpvLEJuwJGL6OEFpVFnfSrMTNaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712563810; c=relaxed/simple;
-	bh=Zfdfmw4YgP1HV3+xyjpGmpcpKBb4YOFB7O+xev3b2rE=;
+	bh=635XJV7/rS2AZSR2TOFYFdxkBgPz6B2TWBzQ/ySmu9M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Wfg9V89VZ59UqRv+4n9+JkYRLoayyJC3/aHtjzI36si+rV+F0dnU7tIBlwBkMGh2IUZjIhKLDDUrM6Vfg8xYkP8uqRKqnhDYZC3xIay9kMJzTCJThUUxj1zxP/v/6JAO786/yv2OEdxy0CevyV+5Jk2pDbyqdXAvGw3JEH6q79I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWvhSzR1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=KMTaaaou7wTuv84Gt4ICP75aDRXPCyWyN6lbn1FocfcX+tOPwgUEohOc5zCdbrDdnx6kd4lxW+93E0uGbJzn8HiiWuyu9JUeeI6Rkw1TVPDsNYeiZTmu28rD2f6bmuztmgtCcoqFdbBWo0kbOHFywJzVh78RHtSbv/t4XsdM0jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcmzYzSC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWvhSzR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DA6F1C433B1;
-	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcmzYzSC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 080A2C43399;
+	Mon,  8 Apr 2024 08:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712563809;
-	bh=Zfdfmw4YgP1HV3+xyjpGmpcpKBb4YOFB7O+xev3b2rE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FWvhSzR1jtLLcHA2TQeU+vFcOpAxmji8gycNQrW7geWAPhehqQ4dbd0E3HXK4m+B/
-	 Xm7b2eqt3ers5AsduDB7Qqb0wfBDP2usTMEtO0SdoVp+K+ssQeHCIFiaW60OqBWx2h
-	 /bzDvGFa4dnPkUI+1NTgkM+bZwWXx7cX09gn3V12bxkRlYZMCSM/nTHsdBJV2jKsw1
-	 VC9NJH3HwiS+dqCXsXHal8MdmUFmNvsBgkznBmkkbVL5gFpe0ZhLAsKu7q6Nz63iqR
-	 FovPngUpA8QXjMI3a6YeZULL1Fs6ck3oS3hXNL94k5LYRrJTNmwRE8OKZNPYMLaozw
-	 l9SxVNieMHUaQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B95CD1292;
-	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 08 Apr 2024 11:09:53 +0300
-Subject: [PATCH 1/4] ARM: ep93xx: add regmap aux_dev
+	s=k20201202; t=1712563810;
+	bh=635XJV7/rS2AZSR2TOFYFdxkBgPz6B2TWBzQ/ySmu9M=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=rcmzYzSCS2UQ2yznV+tN4pM6lfJYvCiY03U13zRxlWbiIotEWFvWdSs/qgVhMI1yd
+	 rNTsHKNniThyXgmiB+e4VlzhPaZ7b8T4KfJfINbTfnBj8JVTMhcMURbifUt4tzQZNL
+	 mzbt8W+LRY18yOXl580XOf6PByqx8Pz4uTY/dcdHFX3iXBA5xmKEkvzKedKX3Firl1
+	 mLH5KPeB3HwIsqCZwoRdO1K/cvKCHvV5KjgLnElda611Oh9ONye5pDAwWV4VaLMJZN
+	 JTjEicFtMXx/Bt3JdGpYzyPfRiuEWWuqKVFwkRvVt3z4OjSoFPZoBq9RLkiBzjP4tF
+	 0PbWKFnIQcuwA==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Mon, 08 Apr 2024 10:09:30 +0200
+Subject: [PATCH RFC bpf-next v6 5/6] tools: sync include/uapi/linux/bpf.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,97 +37,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-ep93xx-clk-v1-1-1d0f4c324647@maquefel.me>
-References: <20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.me>
-In-Reply-To: <20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.me>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, Nikita Shubin <nikita.shubin@maquefel.me>, 
- Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563809; l=1936;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=fGS9fJK3awLSzWpcMoPlPiB8iiGYJR/6Q3XZJdJ0Jqw=;
- b=dCM4n39WhbzN+OZDn/lZ7Zyvi/p3PBOxPXmWeNpKw8BHEqvvTAh2HRAEX7APt8aOiq+7FXds0CUX
- hpCD4Pj+Axm7SdVfWDrsIFGPtkytOrc7+lwXusHWm1IwdRMBY/0Y
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
+Message-Id: <20240408-hid-bpf-sleepable-v6-5-0499ddd91b94@kernel.org>
+References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+In-Reply-To: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563787; l=1530;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=635XJV7/rS2AZSR2TOFYFdxkBgPz6B2TWBzQ/ySmu9M=;
+ b=3a7SZ7xD0328vUxDQYvfQWMfPdppH06CJBZk9RnsI5LibRtnAfsK7nV4ruTCSR80t86Vx78ab
+ Yp4jph6hShYCpu03ot6opzyxC/9gplP3l9T/T0NKywzNn+3k3Ew5yFH
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+cp include/uapi/linux/bpf.h tools/include/uapi/linux/bpf.h
 
-The following driver's should be instantiated by ep93xx syscon driver:
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 
-- reboot
-- pinctrl
-- clock
-
-They all require access to DEVCFG register with a shared lock held, to
-avoid conflict writing to swlocked parts of DEVCFG.
-
-Provide common resources such as base, regmap and spinlock via auxiliary
-bus framework.
-
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- include/linux/soc/cirrus/ep93xx.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
 
-diff --git a/include/linux/soc/cirrus/ep93xx.h b/include/linux/soc/cirrus/ep93xx.h
-index 56fbe2dc59b1..a27447971302 100644
---- a/include/linux/soc/cirrus/ep93xx.h
-+++ b/include/linux/soc/cirrus/ep93xx.h
-@@ -3,6 +3,18 @@
- #define _SOC_EP93XX_H
+updated in v6
+
+no changes in v5
+
+new in v4
+---
+ tools/include/uapi/linux/bpf.h | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index bf80b614c4db..f1890eed213a 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -1662,9 +1662,10 @@ union bpf_attr {
+ 	} query;
  
- struct platform_device;
-+struct regmap;
-+struct spinlock_t;
-+
-+enum ep93xx_soc_model {
-+	EP93XX_9301_SOC,
-+	EP93XX_9307_SOC,
-+	EP93XX_9312_SOC,
+ 	struct { /* anonymous struct used by BPF_RAW_TRACEPOINT_OPEN command */
+-		__u64 name;
+-		__u32 prog_fd;
+-		__aligned_u64 cookie;
++		__u64		name;
++		__u32		prog_fd;
++		__u32		:32;
++		__aligned_u64	cookie;
+ 	} raw_tracepoint;
+ 
+ 	struct { /* anonymous struct for BPF_BTF_LOAD */
+@@ -7468,6 +7469,19 @@ enum {
+ 	BPF_F_TIMER_CPU_PIN = (1ULL << 1),
+ };
+ 
++/* Extra flags to control bpf_timer_init() behaviour, in addition to CLOCK_*.
++ *     - BPF_F_TIMER_SLEEPABLE: Timer will run in a workqueue in a sleepable
++ *       context, with no guarantees of ordering nor timing (consider this as
++ *       being just offloaded immediately).
++ */
++enum {
++	/* CLOCK_* are using bits 0 to 3 */
++	BPF_F_TIMER_SLEEPABLE = (1ULL << 4),
++	__MAX_BPF_F_TIMER_INIT,
 +};
 +
-+#include <linux/auxiliary_bus.h>
-+#include <linux/compiler_types.h>
-+#include <linux/container_of.h>
- 
- #define EP93XX_CHIP_REV_D0	3
- #define EP93XX_CHIP_REV_D1	4
-@@ -10,6 +22,20 @@ struct platform_device;
- #define EP93XX_CHIP_REV_E1	6
- #define EP93XX_CHIP_REV_E2	7
- 
-+struct ep93xx_regmap_adev {
-+	struct auxiliary_device adev;
-+	struct regmap *map;
-+	void __iomem *base;
-+	spinlock_t *lock;
-+	void (*write)(struct regmap *map, spinlock_t *lock, unsigned int reg,
-+		      unsigned int val);
-+	void (*update_bits)(struct regmap *map, spinlock_t *lock,
-+			    unsigned int reg, unsigned int mask, unsigned int val);
-+};
++#define MAX_BPF_F_TIMER_INIT __MAX_BPF_F_TIMER_INIT
 +
-+#define to_ep93xx_regmap_adev(_adev) \
-+	container_of((_adev), struct ep93xx_regmap_adev, adev)
-+
- #ifdef CONFIG_ARCH_EP93XX
- int ep93xx_pwm_acquire_gpio(struct platform_device *pdev);
- void ep93xx_pwm_release_gpio(struct platform_device *pdev);
+ /* BPF numbers iterator state */
+ struct bpf_iter_num {
+ 	/* opaque iterator state; having __u64 here allows to preserve correct
 
 -- 
-2.41.0
-
+2.44.0
 
