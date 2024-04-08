@@ -1,127 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5A01422A5;
-	Mon,  8 Apr 2024 16:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C188B13E3E7
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 16:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712592328; cv=none; b=TELszdc+2XLiWbwjwl7YNonOKIaBEILGq1usPAXOYVGWDUcgnzJ02R1sOv76zHsAe8EuFMTgM1AJ67xI6UHjbxJYcIMyUpZjWMqKgZQZrZyFhA8c1YGDx4e3TAbwFyRoTdOngqUWKNfcIVCjVjuVOB90i6tCJGLklOjQ7p7fGvA=
+	t=1712592385; cv=none; b=atf8AtXTOlw7ORxEgGs6Gy2TqDV2xiPuh3QdWwoZXh+yQ7idXwL0CauoFVJCntg/l5B1VGxMsSmZA+2GTgiKfhA5w9TVBhCqzwm9n8Bm9FoENuC/qUlVTV8m75T6REjMg0938y0zLdrvrtz5djXeWzKt7qW0eEc+ldFBt78D0DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712592328; c=relaxed/simple;
-	bh=89yc5QMbAbaIHZrgRhtGJe2HiTHmQje9pz5N+ruQzp0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cUe3rCQQMqAgcFYKBzMxCrwUoUNVGuUGZcbULTq9WyME1QsMpAK1ZsTyguyxVCA92SdJMBmmx5mdqNnEGpM7YYqE0c2BxghRHbWJKaWgScWD5b5yQOwEO+3Uu/cOcZ/oA+k+0Scq/HUvUH8DvWmr/oWchtOfeAAE/0YH8OInN1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3FP3lWI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712592385; c=relaxed/simple;
+	bh=EHGyqHY9v++W1MuSnMW3pb0Ag9yRHxOl0H8XDfQ14Js=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=kzcMN7m0J9/i9DmA4StmhTbT0KrsmdtcHJ/s+LW5mwx6/NHBubUaL708Rf/M5Zq5qKbeaKPEXzl9Uuovg5gho9/bVPDRCEMLMrSuP98zhShQrJLVZ/AXjK5b31sv7O/epQbENZgYf8/YRPqPa1/bKiJq2rGcpgdeyyhnR3JzgVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=h4LBflJg; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3FP3lWI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E214C433C7;
-	Mon,  8 Apr 2024 16:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712592328;
-	bh=89yc5QMbAbaIHZrgRhtGJe2HiTHmQje9pz5N+ruQzp0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=u3FP3lWIukvhD5sQ1VuVWLq5upMZ0iDspSTDO2+zdvNEN7VDTJ5tKLJzkXUQ8XJkd
-	 QJPAdbC96ZzFQfHUURPaKklRVlgdO92AKuET3PxVcdo4Dbd0z4quQndPtg1v3HH6VP
-	 Agm+bJc0TTZu0WXMdca90qFmjsuMrD01tJ0bRXnIIZlrtbs/0ORVL7kDf0q2zLU0nh
-	 nbv/Zc1ma/GWBgRGNRjG0+UZb21g1dkErecQ3faSPg2+ko4vGd23bnRUHFGBGvamKI
-	 Y4aIljYZohYJHEXwStl0bvUHCq38pXNV0LcO7mKG0me7qNo+7ZMUYyrT/VQdTYgZmt
-	 rpbXRCsq8TAfg==
-From: SeongJae Park <sj@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: SeongJae Park <sj@kernel.org>,
-	stable@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org,
-	damon@lists.linux.dev
-Subject: Re: [PATCH 6.8 000/273] 6.8.5-rc1 review
-Date: Mon,  8 Apr 2024 09:05:24 -0700
-Message-Id: <20240408160524.90792-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240408125309.280181634@linuxfoundation.org>
-References: 
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="h4LBflJg"
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2523E3FB6C
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 16:06:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1712592375;
+	bh=Qi/UC6J504JL4p4+SSyJBGVVdfDEf7nzpgfz+ECmA10=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID;
+	b=h4LBflJgUEsRkZ+HimVxB9XdOgig7/JFDWjSYe+5GUPAmlCKbSN/oYk5nwqpZzQqo
+	 biHG1s465fP7D0pYdc9tGThlLiLSspAUGo8IwzEwiP/y5DymVclBjEzut6fyDtXb34
+	 1tDUFhnaM6+rQs8dOJrHhGJ41d4/vXRp1iDCNm2Qaru9NB8fM6/JfI+rvfBM7nQtz7
+	 vcJftbMf7pDdsW9g6mbb5x/jBQX0TEha4/MwYkW7qNEQ/jXm6Job4cesNf4KyRXME4
+	 BDQ2SsnE93kQn8nhq8l6BlhXLY9imMCsunz9nlZIWP4PdRdJe4tVOfBlXW+fHrROcx
+	 Am/7MvVHk+m2g==
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5d8df7c5500so3304748a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 09:06:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712592373; x=1713197173;
+        h=message-id:date:content-transfer-encoding:content-id:mime-version
+         :comments:references:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qi/UC6J504JL4p4+SSyJBGVVdfDEf7nzpgfz+ECmA10=;
+        b=LHa8G2xZJBberx1xpdoclag8oo7lvk2OPdFUvTZmNbyjFnjhyP1adAKsvNmwZ/xZGV
+         ZAWaaHXHUMke//A54yKRbZiksjylgBOq/K2AQwxoxYHvt+O2xQvlY6DdrRf3700cVokB
+         bsMNSQBH3aFtgYkZ/54Quyw9QxNPDJRCwjsPmUyX8Oh2S1LbAwvFCF91iaONXDdhYNT1
+         HoIqDBgo5Dcwi1+bVyEEHydORLpRkKOyaMI4Mdm2XofuySKDPWMAglSyQ8zv1KLqcvUU
+         BLDB5RbaLATqjpa7lCmAsrnI6XOLsfq3rej40rUbb5nttBlJm4jNpqn0aFVyK1zKzuAi
+         fCQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWuMvf8Xa2ZEDRCnoXbAlo9ZmbajD69swGRlixOKToIjS1y7rqrD3JfmCS9OXdurReqKH9Gz0SIWiOgmHEpgeEy4sJJl3ZNZTf6qc7+
+X-Gm-Message-State: AOJu0Yx6MdwsxLGQRg7DcTtZdXURbCDDV7GWP6X734O2CujEX+3wYq/r
+	UHIoafK+p2iHgUlNppMt8FL95QE/8IZC4EI4kGN35ZX9/ifbRup7Hc3V6acfCYINJ9cvzhsinUs
+	tamWMpN2CG7lDLfAL2ndzI1HosCDHLicn2Dn7IW/0DHAioNsux4X1W/JuVRQ3HwzN6K5vRglgGO
+	mRXg==
+X-Received: by 2002:a05:6a20:244d:b0:1a7:4ec2:fb20 with SMTP id t13-20020a056a20244d00b001a74ec2fb20mr5130756pzc.0.1712592373165;
+        Mon, 08 Apr 2024 09:06:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWOOgQmG4OvLR0u05aXzy0qbRkNFTK0fHXlDI+xx+rXrPw17t7bIi/He0DVj9VnHWE6DSsJw==
+X-Received: by 2002:a05:6a20:244d:b0:1a7:4ec2:fb20 with SMTP id t13-20020a056a20244d00b001a74ec2fb20mr5130701pzc.0.1712592372516;
+        Mon, 08 Apr 2024 09:06:12 -0700 (PDT)
+Received: from famine.localdomain ([50.125.80.253])
+        by smtp.gmail.com with ESMTPSA id du17-20020a056a002b5100b006ecceed26bfsm6693109pfb.219.2024.04.08.09.06.12
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 08 Apr 2024 09:06:12 -0700 (PDT)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id AE33C604B6; Mon,  8 Apr 2024 09:06:11 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id A672A9FA74;
+	Mon,  8 Apr 2024 09:06:11 -0700 (PDT)
+From: Jay Vosburgh <jay.vosburgh@canonical.com>
+To: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+cc: Andy Gospodarek <andy@greyhouse.net>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] bonding: 802.3ad: Avoid packet loss when switching aggregator
+In-reply-to: <20240404114908.134034-1-tbogendoerfer@suse.de>
+References: <20240404114908.134034-1-tbogendoerfer@suse.de>
+Comments: In-reply-to Thomas Bogendoerfer <tbogendoerfer@suse.de>
+   message dated "Thu, 04 Apr 2024 13:49:08 +0200."
+X-Mailer: MH-E 8.6+git; nmh 1.6; Emacs 29.0.50
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <21528.1712592371.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 08 Apr 2024 09:06:11 -0700
+Message-ID: <21529.1712592371@famine>
 
-Hello,
+Thomas Bogendoerfer <tbogendoerfer@suse.de> wrote:
 
-On Mon,  8 Apr 2024 14:54:35 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>If selection logic decides to switch to a new aggregator it disables
+>all ports of the old aggregator, but doesn't enable ports on
+>the new aggregator. These ports will eventually be enabled when
+>the next LACPDU is received, which might take some time and without an
+>active port transmitted frames are dropped. Avoid this by enabling
+>already collected ports of the new aggregator immediately.
+>
+>Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>---
+> drivers/net/bonding/bond_3ad.c | 7 +++++++
+> 1 file changed, 7 insertions(+)
+>
+>diff --git a/drivers/net/bonding/bond_3ad.c b/drivers/net/bonding/bond_3a=
+d.c
+>index c6807e473ab7..529e2a7c51e2 100644
+>--- a/drivers/net/bonding/bond_3ad.c
+>+++ b/drivers/net/bonding/bond_3ad.c
+>@@ -1876,6 +1876,13 @@ static void ad_agg_selection_logic(struct aggregat=
+or *agg,
+> 				__disable_port(port);
+> 			}
+> 		}
+>+
+>+		/* enable ports on new active aggregator */
+>+		for (port =3D best->lag_ports; port;
+>+			port =3D port->next_port_in_aggregator) {
+>+			__enable_port(port);
+>+		}
+>+
 
-> This is the start of the stable review cycle for the 6.8.5 release.
-> There are 273 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 10 Apr 2024 12:52:23 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
-> and the diffstat can be found below.
+	I think this will do the wrong thing if the port in question is
+not in a valid state to send or receive (i.e., it is not one of
+COLLECTING_DISTRIBUTING, COLLECTING, or DISTRIBUTING).
 
-This rc kernel passes DAMON functionality test[1] on my test machine.
-Attaching the test results summary below.  Please note that I retrieved the
-kernel from linux-stable-rc tree[2].
 
-Tested-by: SeongJae Park <sj@kernel.org>
+	As it happens, this situation, except for the case of individual
+ports, is handled just below this code:
 
-[1] https://github.com/awslabs/damon-tests/tree/next/corr
-[2] 51d60edf2813 ("Linux 6.8.5-rc1")
+	/* if the selected aggregator is of join individuals
+	 * (partner_system is NULL), enable their ports
+	 */
+	active =3D __get_active_agg(origin);
 
-Thanks,
-SJ
+	if (active) {
+		if (!__agg_has_partner(active)) {
+			for (port =3D active->lag_ports; port;
+			     port =3D port->next_port_in_aggregator) {
+				__enable_port(port);
+			}
+			*update_slave_arr =3D true;
+		}
+	}
 
-[...]
+	rcu_read_unlock();
 
----
+	FWIW, looking at it, I'm not sure that "__agg_has_partner" is
+the proper test for invididual-ness, but I'd have to do a bit of poking
+to confirm that.  In any event, that's not what you want to change right
+now.
 
-ok 2 selftests: damon: debugfs_schemes.sh
-ok 3 selftests: damon: debugfs_target_ids.sh
-ok 4 selftests: damon: debugfs_empty_targets.sh
-ok 5 selftests: damon: debugfs_huge_count_read_write.sh
-ok 6 selftests: damon: debugfs_duplicate_context_creation.sh
-ok 7 selftests: damon: debugfs_rm_non_contexts.sh
-ok 8 selftests: damon: sysfs.sh
-ok 9 selftests: damon: sysfs_update_removed_scheme_dir.sh
-ok 10 selftests: damon: sysfs_update_schemes_tried_regions_hang.py
-ok 11 selftests: damon: sysfs_update_schemes_tried_regions_wss_estimation.py
-ok 12 selftests: damon: reclaim.sh
-ok 13 selftests: damon: lru_sort.sh
-ok 1 selftests: damon-tests: kunit.sh
-ok 2 selftests: damon-tests: huge_count_read_write.sh
-ok 3 selftests: damon-tests: buffer_overflow.sh
-ok 4 selftests: damon-tests: rm_contexts.sh
-ok 5 selftests: damon-tests: record_null_deref.sh
-ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
-ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
-ok 8 selftests: damon-tests: damo_tests.sh
-ok 9 selftests: damon-tests: masim-record.sh
-ok 10 selftests: damon-tests: build_i386.sh
-ok 11 selftests: damon-tests: build_arm64.sh
-ok 12 selftests: damon-tests: build_m68k.sh
-ok 13 selftests: damon-tests: build_i386_idle_flag.sh
-ok 14 selftests: damon-tests: build_i386_highpte.sh
-ok 15 selftests: damon-tests: build_nomemcg.sh
- [33m
- [92mPASS [39m
+	Instead of adding another block that does more or less the same
+thing, I'd suggest updating this logic to include tests for C_D, C, or D
+states, and enabling the ports if that is the case.  Probably something
+like (I have not tested or compiled this at all):
+
+	if (active) {
+		if (!__agg_has_partner(active)) {
+			[ ... the current !__agg_has_partner() stuff ]
+		} else {
+			for (port =3D active->lag_ports; port;
+			     port =3D port->next_port_in_aggregator) {
+				switch (port->sm_mux_state) {
+				case AD_MUX_DISTRIBUTING:
+				case AD_MUX_COLLECTING_DISTRIBUTING:
+					ad_enable_collecting_distributing(port,
+							update_slave_arr);
+					port->ntt =3D true;
+					break;
+				case AD_MUX_COLLECTING:
+					ad_enable_collecting(port);
+					ad_disable_distributing(port, update_slave_arr);
+					port->ntt =3D true;
+					break;
+				default:
+					break;
+		}
+
+
+	Using the wrapper functions (instead of calling __enable_port,
+et al, directly) enables logging for the transitions.
+
+	-J
+
+
+
+> 		/* Slave array needs update. */
+> 		*update_slave_arr =3D true;
+> 	}
+>-- =
+
+>2.35.3
+>
+>
