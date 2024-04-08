@@ -1,157 +1,131 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7012FB0F;
-	Mon,  8 Apr 2024 13:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7276578285
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712583048; cv=none; b=b1trBf2goJArpoyXB3SA4JLbixA1siwJ4zGLe1sSKn3Y1R8JaWz0fz7ZUut6LbRXpaMEV0BHRctBC5hUA8FKYxVaJFHtcUSQeToxWvHe2auG4deXQv3Vp+KOS285RpkIEpU46jH5ZsMWHrm9wesC8o0jBucE5tNWF4c7DO1ZyaM=
+	t=1712583073; cv=none; b=u4fCNGymv9H5VdUb4QefORbpRQDTES23+IfmpRrmOm3XdGN6M0WoxW4dfobkna/K1bcFjquo/dqgvpj4EcOlqH1Xe4bJUM27kSi36U9QNuv1QXkgUqkc8x4PJei3q/IFvPdLOtr5RGWRTzGol9dtPtrmlLjwCi94N4Jx6dQA7og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712583048; c=relaxed/simple;
-	bh=NNdTGMeI3BKJSbRWKcY6O6EwK/hyTYU9C4WsrkgvkGY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fqoH6UGZGE+EVcKvW5JjR/NF+eRedo4l6gy0w/u6sY0KqApfAdiDmgogntDJC/jZK+moq5ItEImIy/tyticxXMV3pKzNSaVce1fhU6Cp0aI+l9qSZO0rsB1t06g+ZghlGVstjxiDSzoCWAWJRQ2r0RZlZEpGZBS3Cl+8c1cZiF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ti4YtRDl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712583073; c=relaxed/simple;
+	bh=U+TxDpNxchTE2/GIdmhTEkofyrVXhhjnmFxCseLaaao=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NO1gZSLkjVDpq8Vai99h4dqGeYEHpqNETaAYCPPDrGsGTmQenRZMUyXi49UqhStmKj+zVtE+gV9gfk1PFFFE59oO7qbIgtj3JVrikjh4LTSg7t7Xrx/QOegMsOZmSY7n6/YLmoqGFwXov+3XwXHJtWL7MV/4ap5rUqBb1ssZOHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j2NPu2v5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iuMm+nvq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ti4YtRDl"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386cEKx022412;
-	Mon, 8 Apr 2024 13:30:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=PTV5+DQ7ryKEZGv3mJS+ywNkymvYkqTD/TtVct3tAaE=; b=Ti
-	4YtRDlkF8J+8EnNeeN26QBselNe81iSqnUXwOA7Wt9EzvJD39Vk1W762toY1zL+/
-	diDanINEFyc6rxnfwIS4mWFR1mDpR9JQAoeXY5dJF/EWh0oI/6Vbq7QoG7i/ilz4
-	uEG+MncMs1r/EToGCZhH4+/HmyJiehgphmhGdK4d451zwNwSRBumrqejZZgVwgn7
-	H2aer37S0uHeQj1BH/ruADsfo1Xd6NHGhjTFfSI9COppQ2qvhzTCt0I9KgEBcx6m
-	adWVfm3vBVf0+iMjjtWibrY+xEQXrRo37aBujzw+M7ZoPaorOoTcTFMEWSQFjt9P
-	pF3QZbHAO2MneazT+uRg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg2rvnj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 13:30:41 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 438DUexl027062
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Apr 2024 13:30:40 GMT
-Received: from hu-kriskura-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 8 Apr 2024 06:30:34 -0700
-From: Krishna Kurapati <quic_kriskura@quicinc.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Felipe Balbi
-	<balbi@kernel.org>, Johan Hovold <johan@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_ppratap@quicinc.com>, <quic_jackp@quicinc.com>,
-        Krishna Kurapati
-	<quic_kriskura@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v20 9/9] usb: dwc3: qcom: Add multiport suspend/resume support for wrapper
-Date: Mon, 8 Apr 2024 18:59:25 +0530
-Message-ID: <20240408132925.1880571-10-quic_kriskura@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240408132925.1880571-1-quic_kriskura@quicinc.com>
-References: <20240408132925.1880571-1-quic_kriskura@quicinc.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j2NPu2v5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iuMm+nvq"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712583070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kIE/Zx18HsTE3h79BZccA0yg8HSgBKuWXBZ95h1ChA0=;
+	b=j2NPu2v546fgFEfKTl2l9n1P+sqUf3V1qJi1k6rTm9dEZLdT5QmjAHBSEMR08kTZV6BvF/
+	Jdbk1jwRDaeTmcZekpiukWHrnbfDAYAv8yx9L8v2d6uEbDUbiVNngG482Vrtr3Hkavz5zz
+	8EO9YTQroOXgNpsgIket5O0uUN4NA9u4AJBJbgEe1Ddx6xdgOknVyo9apavYby0kAyeRVF
+	0egu1NSsFqxmqN1GdO3B7BmmC7JDYKpMhH5I8iIllt7p9ZKB0M268mOmsIlbNkpc8Vy4qx
+	/goUyqypk/LleniGSX2aiPeVUfN0Khaw2xB6iHNJcigfc+oaRK3xqDD6GiuO3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712583070;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kIE/Zx18HsTE3h79BZccA0yg8HSgBKuWXBZ95h1ChA0=;
+	b=iuMm+nvq9gwLs51UtsXHO1ovbzBYvGzwUg0kfywv5JXUbYx9Ql1sm7ZGmVrIhiL6Uh03kj
+	9td8tvtr4UnDfgAg==
+To: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: adobriyan@gmail.com, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-kernel@vger.kernel.org, peterz@infradead.org,
+ Jonathan.Cameron@huawei.com, linuxarm@huawei.com, linux@roeck-us.net,
+ Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Subject: Re: [PATCH 1/2] x86/cpu/topology: don't write to immutable
+ cpu_present_mask
+In-Reply-To: <20240407152643.3245-1-adobriyan@gmail.com>
+References: <20240407152643.3245-1-adobriyan@gmail.com>
+Date: Mon, 08 Apr 2024 15:31:10 +0200
+Message-ID: <87ttkc6kwx.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: CWw8j9w_-d6Ts9q8FHgy7NvY2rBs_wUn
-X-Proofpoint-GUID: CWw8j9w_-d6Ts9q8FHgy7NvY2rBs_wUn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-08_11,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999
- bulkscore=0 impostorscore=0 suspectscore=0 phishscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404080104
 
-Power event IRQ is used for wakeup in cases:
-a) where the controller is super speed capable and missing an
-ss_phy interrupt.
-b) where the GIC is not capable of detecting DP/DM hs phy irq's.
+On Sun, Apr 07 2024 at 18:26, Alexey Dobriyan wrote:
+> Workaround the following oops:
+>
+> 	topology_hotplug_apic
+> 	topo_set_cpuids
+> 		set_cpu_possible(cpu, true);
+> 		// write to __ro_after_init section after init
 
-Power event IRQ stat register indicates whether high speed phy
-entered and exited L2 successfully during suspend and resume.
-Indicate the same for all ports of multiport.
+Duh, yes.
 
-Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> adobriyan: I'm not sure what's going on, can it set unset bit here?
+> If not, then why does it repeat the job and set already set bits.
+>
+> Anyhow, let's not oops peoples' machines for now.
+
+Adding a bandaid to paper over the non-understood real problem is
+definitely not a good plan. I take this patch as a bug report.
+
+Proper fix below.
+
+Thanks,
+
+        tglx
 ---
- drivers/usb/dwc3/dwc3-qcom.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+Subject: x86/topology: Don't update cpu_possible_map in topo_set_cpuids()
+From: Thomas Gleixner <tglx@linutronix.de>
+Date: Mon, 08 Apr 2024 15:22:01 +0200
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index 12182e0f8f45..d3e6d5d5e8bf 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -52,6 +52,13 @@
- #define APPS_USB_AVG_BW 0
- #define APPS_USB_PEAK_BW MBps_to_icc(40)
+topo_set_cpuids() updates cpu_present_map and cpu_possible map. It is
+invoked during enumeration and "physical hotplug" operations. In the
+latter case this results in a kernel crash because cpu_possible_map is
+marked read only after init completes.
+
+There is no reason to update cpu_possible_map in that function. During
+enumeration cpu_possible_map is not relevant and gets fully initialized
+after enumeration completed. On "physical hotplug" the bit is already set
+because the kernel allows only CPUs to be plugged which have been
+enumerated and associated to a CPU number during early boot.
+
+Remove the bogus update of cpu_possible_map.
+
+Fixes: 0e53e7b656cf ("x86/cpu/topology: Sanitize the APIC admission logic")
+Reported-by: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/cpu/topology.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -123,7 +123,6 @@ static void topo_set_cpuids(unsigned int
+ 	early_per_cpu(x86_cpu_to_apicid, cpu) = apic_id;
+ 	early_per_cpu(x86_cpu_to_acpiid, cpu) = acpi_id;
+ #endif
+-	set_cpu_possible(cpu, true);
+ 	set_cpu_present(cpu, true);
+ }
  
-+static const u32 pwr_evnt_irq_stat_reg[DWC3_MAX_PORTS] = {
-+	0x58,
-+	0x1dc,
-+	0x228,
-+	0x238,
-+};
-+
- struct dwc3_qcom_port {
- 	int			qusb2_phy_irq;
- 	int			dp_hs_phy_irq;
-@@ -421,9 +428,11 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
- 	if (qcom->is_suspended)
- 		return 0;
+@@ -210,7 +209,11 @@ static __init void topo_register_apic(u3
+ 		topo_info.nr_disabled_cpus++;
+ 	}
  
--	val = readl(qcom->qscratch_base + PWR_EVNT_IRQ_STAT_REG);
--	if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
--		dev_err(qcom->dev, "HS-PHY not in L2\n");
-+	for (i = 0; i < qcom->num_ports; i++) {
-+		val = readl(qcom->qscratch_base + pwr_evnt_irq_stat_reg[i]);
-+		if (!(val & PWR_EVNT_LPM_IN_L2_MASK))
-+			dev_err(qcom->dev, "port-%d HS-PHY not in L2\n", i + 1);
-+	}
- 
- 	for (i = qcom->num_clocks - 1; i >= 0; i--)
- 		clk_disable_unprepare(qcom->clks[i]);
-@@ -472,8 +481,11 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
- 		dev_warn(qcom->dev, "failed to enable interconnect: %d\n", ret);
- 
- 	/* Clear existing events from PHY related to L2 in/out */
--	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
--			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+	for (i = 0; i < qcom->num_ports; i++) {
-+		dwc3_qcom_setbits(qcom->qscratch_base,
-+				  pwr_evnt_irq_stat_reg[i],
-+				  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
-+	}
- 
- 	qcom->is_suspended = false;
- 
--- 
-2.34.1
+-	/* Register present and possible CPUs in the domain maps */
++	/*
++	 * Register present and possible CPUs in the domain
++	 * maps. cpu_possible_map will be updated in
++	 * topology_init_possible_cpus() after enumeration is done.
++	 */
+ 	for (dom = TOPO_SMT_DOMAIN; dom < TOPO_MAX_DOMAIN; dom++)
+ 		set_bit(topo_apicid(apic_id, dom), apic_maps[dom].map);
+ }
 
