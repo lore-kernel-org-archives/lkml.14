@@ -1,103 +1,113 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FF22554B
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382D51CD38
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:02:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712559677; cv=none; b=TFE6A6is9QlpAZl5WwOJsgvhZfj0UYB3hPOPKkETh/Z/7yODPM+SwxIl3uGWRhK4bJ0WB/mBuzcldCRXrPqRoEhFkcpNj1ecyM2pM7INug81oj+yt6KGslGH6uVdJ6LHl6gc96TZ/paT479v27ldGNHoDsbw/valhEwOWyuauQQ=
+	t=1712559728; cv=none; b=M8DTHPfzzOFe3I5S6G6a29b5Mw7rSJrWGxLbAZvEZAtoB+L/q1ED+Il/H8e6FTiQn/ESuhhaHh2fHXtVr1hVPFBT+qJ+mPs9ULBi/c/en+wgc6cpN/zq7swSKvIfTmBN3ZD8+EEgze4Letynba3w4XEqBc+nwNBXxL90iBU2CgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712559677; c=relaxed/simple;
-	bh=nLsZRwx1i4MrD7mYj20l01ThXf/uHKnb3iNXZjBpzqE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VmzWPJqyVuPBnbDhhLpktTLFgxqtslLx/qYMmWDrEx2Ly+FKbSWXQpCC74rm/w7fxGkVGFVzn11tibdVMIV2qQioH6PTYN4oPsN15UnIR+mUXwoSMwsbbyRnDobhwMVINdZ32pM+p8vErQvqnNQw/ey5qVumfIcDfiIYDRs118A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A+oTm0h9; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712559728; c=relaxed/simple;
+	bh=+J3hXyNpUJmooVXir9znvQFZPVRcR4aW/rauvt6w34U=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=KsKOHGZEUzZym7dvhri7ssrSjHMjsuZT/dUzDbgogSuD+smu1hzv3m8WKP1iZKlg/Yvb7DwqQAneKoRDvSPdd9sGZMN+CerZ6yRe8SSyDCe+zFVGz+JplmvLPFOK/iPjE4AupbVB+gAbeUuFkp/CGjf+YA3sXAcBxSilimOsHfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=0uDQ1s6b; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+oTm0h9"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ecf3943040so2541770b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:01:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="0uDQ1s6b"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a51a20a6041so308824966b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:02:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712559676; x=1713164476; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iipQgF147rj4hVuYbg8MCyDIn3mxGhNULOVGWWVLgmo=;
-        b=A+oTm0h9jfw2mRhEij9sXBBy+7+FuI5s/fyTQCc2hood9vCDHgpC1KxHbZzn3puzY0
-         hpdCiKd6+3EL08an2IJeJqOXJajw1M7lQ4mX5NJj+BPlWQNnO3/bZYGIKYmqGtHMRwRo
-         iXhW/VhFB9izH7EY7PcCuFI6uKF6eCeGFQO0VL51PX5QMZGgtvxOQAiNHADmudSut0fT
-         uLtFPlTy47vYMKS81jk0g98N3RhRGqeCGu3UFzKiPMhuG7Oi5i/iI4x4ENRZIwdFavJV
-         lme1g2HjbX/qyH7uDSgklMfobYFChs5GlKUZD42TGGdcAHXF9mifM6+8w1tiW1duDkVT
-         HsSw==
+        d=fairphone.com; s=fair; t=1712559723; x=1713164523; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=offh16ke5+BtPn8lxdjzqkvHVyx4akkldH1viry0sBk=;
+        b=0uDQ1s6bAlCt3EwH+WhXaX2W8xvEGRwUA0M/gspvsa4fCoN7s4v3cu8sOVYULAntZw
+         x3V2vImDwgzlO2tpc2AtYmqUsmKcKIi63Gy4jG0ep25c8Diyuq1ASikkO4ipFcXJh3G2
+         msHR4Ohi4ZPGsw7n8MSp46OxrEik94QytSUzZ2mySO+v1muOxWiyoGqm6LZ/32SQPHZv
+         RRWff9CNC+s8bNkH3Yep4AWGOstyx/fVQUvKVA7iOqCY6CbFDzrWXeIJk1CvjHZTTHUn
+         h8uajPR0gxjVsG58BCCl2r6h4zPskgI6VVGLtmd5xkPTluhodX1a11bSsxILmbzz27D+
+         5XRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712559676; x=1713164476;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iipQgF147rj4hVuYbg8MCyDIn3mxGhNULOVGWWVLgmo=;
-        b=DGRTXAdoVz5DS5ekF6Pdeq0ek9T1P1Iq9ik7xoKioABanX4gtv11evykxUeKrouvj4
-         rlCkOW5Ea8gDnxG6f/bi8l0hd3LPcbPdbZdC2Ud5F7U0u/V7+TygmUbBGLF9k4qes9ZZ
-         vpIVrv/Wzr42o6DC/88mpRTBZfuqDxXsD0jAiWK22HSyWikU+0U96BQPLKPDWdo6SUnR
-         /sIeZro28J6r99dc858Q0UQuN9iaBsRv+T4gP2HydChPrCYmRMNlQOdTrgw5LteT4o8J
-         F31dZe5t+zDqbm97lXwti6/htBoNVRtIEJOnhAenjYQlmMzA6tYm7XHrDBCV1dPs2dmK
-         9+YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWb5hgrwD22Ja0fpAHmbEuHBUgQpK3CcKvO5poBN/j8RMYqQZbje4BN0TgzO337LEdTHsKT228b/WlcIDq/6UeN601gdMEm5OldfZTj
-X-Gm-Message-State: AOJu0YyuHOMo2c48uk+Km+gMzzjv3CjK20YPllzKGByd+6qB2w12YVoy
-	oPaiDpKooMyrjCDGeKZmO5SycAXBtXhzxQVe98IKxtZ6hrnY5/1o
-X-Google-Smtp-Source: AGHT+IGO0HzM4Lj/0joZG14MyEbYD3f6xfjrVq1lXZMVNVQsccyijl9qF9j2y8TKRBMLAcRrGkuTLw==
-X-Received: by 2002:a05:6a00:c8b:b0:6ea:e2ed:497d with SMTP id a11-20020a056a000c8b00b006eae2ed497dmr7673437pfv.19.1712559675841;
-        Mon, 08 Apr 2024 00:01:15 -0700 (PDT)
-Received: from [192.168.255.10] ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id u16-20020a056a00099000b006ed06c4074bsm4736772pfg.85.2024.04.08.00.01.13
+        d=1e100.net; s=20230601; t=1712559723; x=1713164523;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=offh16ke5+BtPn8lxdjzqkvHVyx4akkldH1viry0sBk=;
+        b=t1VD03Pja8X5V3HYIKw4ios8qq7LuG7MMt4x7mTGSMqigdMnatukwzdG/hMgViFA4o
+         58AmiFUF0/dWR7gb4spDKj+E34FPjKHXDXTP2/g2wFNRwOQQAGs7/1Xl03lS9GMhZDFV
+         r45Zp/MW6WJCzPgTTTZxV57htrkFRny4XWfQIFqs7P4XzhAi7L79aP2oGH6xPaKGgi9y
+         6S1kPD7FGaRf/myDyTvQj0FU0eln8Jts2MH9LrxzlEjEoa0fP57pK56l6jgWIReFdnTl
+         uALmsBZvzxTSY1Tpm3TjlteLx5lippQuUa/x/nhHzEqvfTbuRhsNs17695SgT1BydsbS
+         Q+pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgL8ECkcOs3pY8VP5O9sj9t9PUKiEYkp7Mqe+rZsxdDEiXdlyqxxLRrRHFTbqkKamL5+y/tpv8JCRM1CNlEnt/touTmjmsqnioVWoK
+X-Gm-Message-State: AOJu0YyE7dEwVb+3taBSD3CxFD2cLjE/GAlFhPMYI15OLRj/qE5ekvbq
+	pw05Qby+WeZY2cA5YtaBLL9l+1+anH1Btd4Vj5XNYoS48b40xUeuqt5il8i9CVg=
+X-Google-Smtp-Source: AGHT+IGx9XWjPlhTGwhQaw4YbPMUv+UviHwS/hf5jfRvCaR11azYOCmvOEGSZXxsXF/fHOKZQMqw2A==
+X-Received: by 2002:a17:907:6d0e:b0:a51:cdef:f7a7 with SMTP id sa14-20020a1709076d0e00b00a51cdeff7a7mr2608583ejc.54.1712559722617;
+        Mon, 08 Apr 2024 00:02:02 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id og9-20020a1709071dc900b00a4ea067f6f8sm4055003ejc.161.2024.04.08.00.02.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 00:01:15 -0700 (PDT)
-Message-ID: <f0ff6898-3704-4a46-8357-ce556037c1a9@gmail.com>
-Date: Mon, 8 Apr 2024 15:01:11 +0800
+        Mon, 08 Apr 2024 00:02:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 14/14] mm/ksm: remove set_page_stable_node
-To: David Hildenbrand <david@redhat.com>, alexs@kernel.org,
- Matthew Wilcox <willy@infradead.org>, Andrea Arcangeli
- <aarcange@redhat.com>, Izik Eidus <izik.eidus@ravellosystems.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, ryncsn@gmail.com
-Cc: Hugh Dickins <hughd@google.com>, Chris Wright <chrisw@sous-sol.org>
-References: <20240325124904.398913-1-alexs@kernel.org>
- <20240325124904.398913-15-alexs@kernel.org>
- <43a5c133-b271-41b4-9b4f-a2de29b9f593@redhat.com>
-Content-Language: en-US
-From: Alex Shi <seakeel@gmail.com>
-In-Reply-To: <43a5c133-b271-41b4-9b4f-a2de29b9f593@redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Mon, 08 Apr 2024 09:02:01 +0200
+Message-Id: <D0EJR77G6HF0.2LUJ3XY1YFG65@fairphone.com>
+Cc: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] arm64: dts: qcom: add USB-C orientation GPIOs
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@linaro.org>, "Bjorn Andersson"
+ <andersson@kernel.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Conor Dooley" <conor+dt@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240408-hdk-orientation-gpios-v1-0-8064ba43e52a@linaro.org>
+In-Reply-To: <20240408-hdk-orientation-gpios-v1-0-8064ba43e52a@linaro.org>
 
+On Mon Apr 8, 2024 at 4:33 AM CEST, Dmitry Baryshkov wrote:
+> Populate orientation GPIOs for some of the PMIC-GLINK-based devices.
+> This leaves only FairPhone5, RB3Gen2, SC8180X Primus and SC8280XP CRD
+> without the orientation GPIOs declared.
 
+Hi Dmitry,
 
-On 4/5/24 5:07 PM, David Hildenbrand wrote:
-> On 25.03.24 13:49, alexs@kernel.org wrote:
->> From: "Alex Shi (tencent)" <alexs@kernel.org>
->>
->> Remove the func since all caller are gone. Also remove the
->> VM_BUG_ON_PAGE() because it's not applicable for a folio.
->>
->> Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
->> To: linux-kernel@vger.kernel.org
->> To: linux-mm@kvack.org
->> To: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Izik Eidus <izik.eidus@ravellosystems.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Chris Wright <chrisw@sous-sol.org>
->> ---
-> 
-> Also, best to just squash this and #13.
+How would I find this GPIO on the schematics, or downstream devicetree?
+I scanned over some relevant areas but nothing jumped out at me except
+for the USB_PHY_PS signal coming from PM7250B CC_OUT and going into
+GPIO_140 of the QCM6490 - but I'm guessing this is something else?
 
-Sure, it's better merge them.
-> 
+Regards
+Luca
+
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> Dmitry Baryshkov (4):
+>       arm64: dts: qcom: sm8350-hdk: add USB-C orientation GPIO
+>       arm64: dts: qcom: sm8450-hdk: add USB-C orientation GPIO
+>       arm64: dts: qcom: sc8280xp-lenovo-thinkpad-x13s: add USB-C orientat=
+ion GPIOs
+>       arm64: dts: qcom: sc8180x-lenovo-flex-5g: add USB-C orientation GPI=
+Os
+>
+>  arch/arm64/boot/dts/qcom/sc8180x-lenovo-flex-5g.dts        | 2 ++
+>  arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 ++
+>  arch/arm64/boot/dts/qcom/sm8350-hdk.dts                    | 1 +
+>  arch/arm64/boot/dts/qcom/sm8450-hdk.dts                    | 1 +
+>  4 files changed, 6 insertions(+)
+> ---
+> base-commit: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
+> change-id: 20240408-hdk-orientation-gpios-141bc7fd247d
+>
+> Best regards,
+
