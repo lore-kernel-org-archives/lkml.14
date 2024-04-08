@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25E641442F5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288261442F6;
 	Mon,  8 Apr 2024 17:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712598587; cv=none; b=HF5drZ3LJqAYVDJlbtdcu/E7pkkW74PB9aXeCdaTllOMyVlsVxmEtMISVWOfmIhdfv6w0bDzJN34ezNbosbLC+GrqXLGrXZ8Rkcc06uTs/Hm79kOd67glo3mxhrbKfjt2w9zn4O5kJ0B576FIHzZucWeB3xTREdJjPAoq7UsprU=
+	t=1712598587; cv=none; b=JyWXVZN0ZWQDO1P7L7neLbKICLrmBYFzi/h1CVyAM/0WQ3Np8OtNj9++z4huwa0JEu+AjtxHBwmASnvBuYNJmjuHLaP11pSOPA5BgK7fjioDRHvRDO8zTLzi5X31RDrFxJTgpNBU5ETGsWyVIeEqw47ZDen3G1jcnpJjvkjO7DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712598587; c=relaxed/simple;
-	bh=xV0bjRNG69Gk9MLDp+p1hE+J2KXV1jWcp0coMhIa834=;
+	bh=1eMVNwHdcY4Pw0fbrq6XWtA7kyaxHrAZ9QJnM9orhXk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vGJYckoS3MzrB+A6G7nUWaj+F02NeTPEpesL4YRCRjJKz3yLehkyEAxEidc6U7LULz34gr+GXlinxiQwnMHdSgdr44uPvOdsQ0EshkX9ddwIoAPel1vw7LEILX/lSHYga3wXh0p5cI5N9tb5qF2V7hoBZIRbwYhgQFpHk0oTTSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHynODyi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BKuUFGuIe11FC3PZRkA9byi1nVHJ7wXZvdUrkuvHqDBWAZH7L/XMUm3iFXWq5hrkk/KI7MfzBNtU3QN4nZyDFg7B24mTLYdf0trqWxLTedt9wxQPRfc+X+4/1CdhzHvBTM5Lr+uGYAOWGti7t0tmsmK9Rj1rXMjnw/RiXOlwsbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HeYHevdH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHynODyi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4D26C433A6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HeYHevdH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4E5EC433B1;
 	Mon,  8 Apr 2024 17:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712598586;
-	bh=xV0bjRNG69Gk9MLDp+p1hE+J2KXV1jWcp0coMhIa834=;
+	bh=1eMVNwHdcY4Pw0fbrq6XWtA7kyaxHrAZ9QJnM9orhXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cHynODyi86K0iz6CitTyqMyJyLOUHClUFN4tYtRr9OORmhm3UsY+YIyJhBBojQ0w2
-	 gHlHLTEFJ+aLETIDK5/ZWSxCeNhsqrEgGzWWLuwCwyCY0z91Q+AcJCzX1uqgTlz17b
-	 TRJnmS7XFmG5VZ6Eqclaqp5K2Msz3Duo3VRKIerFZ1CKenuBFnRqj9myEZUnb7d/Gh
-	 9swwosCwgOr10TiWF1OD8sA3gft4cGvt/cD+ebznXVAhlnZn5RlOsOf9G5AKlJXk0p
-	 VB7X4oUln+myzA2zq8L55NOv9c1txNGYMT0vt0rVHYbRvrmg/BQTkepZNoNJ4FJlQP
-	 CL3rAirCHB4GA==
+	b=HeYHevdHb8JNXD8d+3/qaLhicozT5IGtyN9Qef0TyneWBFJ22cJV4JHfQoFh0QRcD
+	 oe+SVtnLcXDJYNdqIIUqmkjLW6TZVO7OjG2QAbgZ9lEplrJwWTxYxl3fM2+I9Kc4Ax
+	 K9LjmkGODfvg7Rla6D68L6uHrQOGk+fYzub6X0Wz2xwjPUpNJXCkmxi1YYTLYbDOxp
+	 UJMLgod3VW82wczSxpVQjO1Rr09JLyqPrRYRYcUYveWf1THGvUJ7umoBr1M5NXNV1o
+	 Nl0cVZCv9BjbP5Sp3o9riilb5X+JwdyvbeeBni+Bo10yUOVg9MZjpGw/sCGNHYHWeO
+	 5bLbVpDfqwWDQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 4725ECE1E8D; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
+	id 444CACE1979; Mon,  8 Apr 2024 10:49:46 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -41,9 +41,9 @@ Cc: elver@google.com,
 	Arnd Bergmann <arnd@arndb.de>,
 	Al Viro <viro@zeniv.linux.org.uk>,
 	"Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH cmpxchg 05/14] parisc: __cmpxchg_u32(): lift conversion into the callers
-Date: Mon,  8 Apr 2024 10:49:35 -0700
-Message-Id: <20240408174944.907695-5-paulmck@kernel.org>
+Subject: [PATCH cmpxchg 04/14] sparc32: add __cmpxchg_u{8,16}() and teach __cmpxchg() to handle those sizes
+Date: Mon,  8 Apr 2024 10:49:34 -0700
+Message-Id: <20240408174944.907695-4-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
 References: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
@@ -57,57 +57,65 @@ Content-Transfer-Encoding: 8bit
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-__cmpxchg_u32() return value is unsigned int explicitly cast to
-unsigned long.  Both callers are returns from functions that
-return unsigned long; might as well have __cmpxchg_u32()
-return that unsigned int (aka u32) and let the callers convert
-implicitly.
+trivial now
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- arch/parisc/include/asm/cmpxchg.h | 3 +--
- arch/parisc/lib/bitops.c          | 6 +++---
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ arch/sparc/include/asm/cmpxchg_32.h | 16 +++++++---------
+ arch/sparc/lib/atomic32.c           |  4 ++++
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index c1d776bb16b4e..0924ebc576d28 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -57,8 +57,7 @@ __arch_xchg(unsigned long x, volatile void *ptr, int size)
- extern void __cmpxchg_called_with_bad_pointer(void);
+diff --git a/arch/sparc/include/asm/cmpxchg_32.h b/arch/sparc/include/asm/cmpxchg_32.h
+index 05d5f86a56dc2..8c1a3ca34eeb7 100644
+--- a/arch/sparc/include/asm/cmpxchg_32.h
++++ b/arch/sparc/include/asm/cmpxchg_32.h
+@@ -38,21 +38,19 @@ static __always_inline unsigned long __arch_xchg(unsigned long x, __volatile__ v
  
- /* __cmpxchg_u32/u64 defined in arch/parisc/lib/bitops.c */
--extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
--				   unsigned int new_);
-+extern u32 __cmpxchg_u32(volatile u32 *m, u32 old, u32 new_);
- extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
- extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
+ /* bug catcher for when unsupported size is used - won't link */
+ void __cmpxchg_called_with_bad_pointer(void);
+-/* we only need to support cmpxchg of a u32 on sparc */
++u8 __cmpxchg_u8(volatile u8 *m, u8 old, u8 new_);
++u16 __cmpxchg_u16(volatile u16 *m, u16 old, u16 new_);
+ u32 __cmpxchg_u32(volatile u32 *m, u32 old, u32 new_);
  
-diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
-index 36a3141990746..ae2231d921985 100644
---- a/arch/parisc/lib/bitops.c
-+++ b/arch/parisc/lib/bitops.c
-@@ -68,16 +68,16 @@ u64 notrace __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new)
- 	return prev;
- }
- 
--unsigned long notrace __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsigned int new)
-+u32 notrace __cmpxchg_u32(volatile u32 *ptr, u32 old, u32 new)
+ /* don't worry...optimizer will get rid of most of this */
+ static inline unsigned long
+ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
  {
- 	unsigned long flags;
--	unsigned int prev;
-+	u32 prev;
- 
- 	_atomic_spin_lock_irqsave(ptr, flags);
- 	if ((prev = *ptr) == old)
- 		*ptr = new;
- 	_atomic_spin_unlock_irqrestore(ptr, flags);
--	return (unsigned long)prev;
-+	return prev;
+-	switch (size) {
+-	case 4:
+-		return __cmpxchg_u32(ptr, old, new_);
+-	default:
+-		__cmpxchg_called_with_bad_pointer();
+-		break;
+-	}
+-	return old;
++	return
++		size == 1 ? __cmpxchg_u8(ptr, old, new_) :
++		size == 2 ? __cmpxchg_u16(ptr, old, new_) :
++		size == 4 ? __cmpxchg_u32(ptr, old, new_) :
++			(__cmpxchg_called_with_bad_pointer(), old);
  }
  
- u8 notrace __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
+ #define arch_cmpxchg(ptr, o, n)						\
+diff --git a/arch/sparc/lib/atomic32.c b/arch/sparc/lib/atomic32.c
+index 0d215a772428e..8ae880ebf07aa 100644
+--- a/arch/sparc/lib/atomic32.c
++++ b/arch/sparc/lib/atomic32.c
+@@ -173,8 +173,12 @@ EXPORT_SYMBOL(sp32___change_bit);
+ 		return prev;					\
+ 	}
+ 
++CMPXCHG(u8)
++CMPXCHG(u16)
+ CMPXCHG(u32)
+ CMPXCHG(u64)
++EXPORT_SYMBOL(__cmpxchg_u8);
++EXPORT_SYMBOL(__cmpxchg_u16);
+ EXPORT_SYMBOL(__cmpxchg_u32);
+ EXPORT_SYMBOL(__cmpxchg_u64);
+ 
 -- 
 2.40.1
 
