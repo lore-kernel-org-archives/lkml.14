@@ -1,90 +1,197 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4B637714;
-	Mon,  8 Apr 2024 08:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504B2383A0;
+	Mon,  8 Apr 2024 08:09:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563800; cv=none; b=FrUPMcbTjQyHxejL4wtXkMrlswtb5rc/14fOyGFJY0bwqEaJn24555RPsMx95SgxUAZhGj5E52yOzlQJB3JTwtYnZJXUw/Nx++0NFplQ1aKeJnjHP75jih4rUkUTv8oUqFuubLQR4kNVXjjFUTikp1xDRnUb33/VzJmWH/jBcFQ=
+	t=1712563799; cv=none; b=X61BDpjdSnQ+6W3MiuKmSVuz9TUjaIzLAqYyHWtgzhX/wiXUcaPIaF9yzmzIwEK2jnc/9S5fC8/ghsJrD+zNQ65QO4uh+kdUfat3ENQZnOjEAQf4envcbbti0DqN95uyIxfD3mNDX7cp9Yo8cBdSMj8ozKtLz6z59WH8I4X2kvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563800; c=relaxed/simple;
-	bh=pWtcmGsxyIKVFZBiCnrSuEFJOUkya1JEC0H7DAF8vzc=;
-	h=Message-ID:Date:From:MIME-Version:To:CC:Subject:References:
-	 In-Reply-To:Content-Type; b=ijHfR3o7kch56DXpkiqeUFZeoOrS25o69Rq7Nig67DHcuiWNCuSMXu1xjahoE2WHs/hbHMQ9Fvwi3Y1HmIiqz3IyoCvILnhXoiQvRLs/xRBNS+a+pYz0Yq1g3T2hosvz9T3FQfxXdpKszRP30hjjYbhJjNZWZFwUdiO3vKAbuTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=hisilicon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VChWw6bXzztS00;
-	Mon,  8 Apr 2024 16:07:08 +0800 (CST)
-Received: from kwepemd500014.china.huawei.com (unknown [7.221.188.63])
-	by mail.maildlp.com (Postfix) with ESMTPS id 985B31401E9;
-	Mon,  8 Apr 2024 16:09:49 +0800 (CST)
-Received: from [10.67.121.2] (10.67.121.2) by kwepemd500014.china.huawei.com
- (7.221.188.63) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Mon, 8 Apr
- 2024 16:09:48 +0800
-Message-ID: <6613A639.1070009@hisilicon.com>
-Date: Mon, 8 Apr 2024 16:09:29 +0800
-From: Wei Xu <xuwei5@hisilicon.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:24.0) Gecko/20100101 Thunderbird/24.2.0
+	s=arc-20240116; t=1712563799; c=relaxed/simple;
+	bh=JNFc4F167hpSFgsBvPrqtFJbZiF/Fqk7yk6nxtVXHRA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ly8FfUjglA/uTv2aCely/+Xebw/CHm26Rknl3aGCEOtCw3WjdD47neVpdpyXSFcinvbIj41YoTRTxkHFy9YVm5zNA8R7iX30yofhHTKqkMacTuCGwFS4BtOzMoCZNZK12TNZFmwxJYu7aEhPcszda26u4IcrazM34/cLs2xuWxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZFJLfVAe; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZFJLfVAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BADC43399;
+	Mon,  8 Apr 2024 08:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712563799;
+	bh=JNFc4F167hpSFgsBvPrqtFJbZiF/Fqk7yk6nxtVXHRA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ZFJLfVAewQCa4CdnoSF20zK/+VJRD/0CYBVd+/ksicWGIwtsbojBOgZ9HUf5WHZ1f
+	 R/S/IZlWOvjQ8gtNqhfZ8Hjc2HrkNIPfzlm+OvFgOuqVNmQRCnCRZ/8nEvFFmAzbVO
+	 Xf9wCjzf6ilvfgTOOQE+YS2P9fgdDq01+qu/6HAhSlJgqPVaTrpa3O+X9+8hFqH5MP
+	 K/h6FgsY65quopECOF9tu2kNEhF1uA6jH7YUIUFb0behIdLeHVK6OKeH0Yef/6pGNh
+	 sgAfsdvQGMzo0gDoHsWdYo+6/DiiDExpN/4Pw4mxQn4vBzyjzyAqD7eQ8Eu/8H4ock
+	 ubetS8ez4BIWg==
+From: bentiss@kernel.org
+Date: Mon, 08 Apr 2024 10:09:27 +0200
+Subject: [PATCH RFC bpf-next v6 2/6] bpf: Add support for
+ KF_ARG_PTR_TO_TIMER
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Jiancheng Xue <xuejiancheng@hisilicon.com>, Alex Elder <elder@linaro.org>,
-	Peter Griffin <peter.griffin@linaro.org>, Yang Xiwen
-	<forbidden405@outlook.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH v3 0/3] arm64: dts: hi3798cv200: fix GICR size, add cache
- info, maintenance irq and GICH, GICV spaces
-References: <20240219-cache-v3-0-a33c57534ae9@outlook.com> <171256140981.12523.5652563259173425537.b4-ty@linaro.org>
-In-Reply-To: <171256140981.12523.5652563259173425537.b4-ty@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd500014.china.huawei.com (7.221.188.63)
+Message-Id: <20240408-hid-bpf-sleepable-v6-2-0499ddd91b94@kernel.org>
+References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+In-Reply-To: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563787; l=4204;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=s0w876z4WCZOEAGRxkVjR4XsfmFuFBrGvAiFCapdFjE=;
+ b=/y+TNn3r9mE73W+o37r2GOBGpi5eXAv161C+UefqHJaSyeki0PLrwsYHsOpyYZ2stCWQdr5NX
+ OtpVNxZ6sVBCFR+kpSwSuyKHUSShBibNb3V6krCnyoro0O5PIS2AvIH
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-Hi Krzysztof,
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
 
-On 2024/4/8 15:31, Krzysztof Kozlowski wrote:
-> 
-> On Mon, 19 Feb 2024 23:05:25 +0800, Yang Xiwen wrote:
->> The patchset fixes some warnings reported by the kernel during boot.
->>
->> The cache size info is from Processor_Datasheet_v2XX.pdf [1], Section
->> 2.2.1 Master Processor.
->>
->> The cache line size and the set-associative info are from Cortex-A53
->> Documentation [2].
->>
->> [...]
-> 
-> It's rc3 and almost one month after last ping/talk, so apparently these got
-> lost. I'll take them, but let me know if this should go via different tree.
-> 
-> 
-> Applied, thanks!
+Introduce support for KF_ARG_PTR_TO_TIMER. The kfuncs will use bpf_timer
+as argument and that will be recognized as timer argument by verifier.
+bpf_timer_kern casting can happen inside kfunc, but using bpf_timer in
+argument makes life easier for users who work with non-kern type in BPF
+progs.
 
-Thanks!
-Fine to me.
+Fix up process_timer_func's meta argument usage (ignore if NULL) so that
+we can share the same checks for helpers and kfuncs. meta argument is
+only needed to ensure bpf_timer_init's timer and map arguments are
+coming from the same map (map_uid logic is necessary for correct
+inner-map handling).
 
-Best Regards,
-Wei
+No such concerns will be necessary for kfuncs as timer initialization
+happens using helpers, hence pass NULL to process_timer_func from kfunc
+argument handling code to ignore it.
 
-> 
-> [1/3] arm64: dts: hi3798cv200: fix the size of GICR
->       https://git.kernel.org/krzk/linux-dt/c/428a575dc9038846ad259466d5ba109858c0a023
-> [2/3] arm64: dts: hi3798cv200: add GICH, GICV register space and irq
->       https://git.kernel.org/krzk/linux-dt/c/f00a6b9644a5668e25ad9ca5aff53b6de4b0aaf6
-> [3/3] arm64: dts: hi3798cv200: add cache info
->       https://git.kernel.org/krzk/linux-dt/c/c7a3ad884d1dc1302dcc3295baa18917180b8bec
-> 
-> Best regards,
-> 
+Signed-off-by: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+
+---
+
+changes in v6:
+- used Kumar's version of the patch
+- reverted `+BTF_ID(struct, bpf_timer_kern)`
+
+changes in v5:
+- also check for the reg offset
+
+changes in v4:
+- enforce KF_ARG_PTR_TO_TIMER to be of type PTR_TO_MAP_VALUE
+
+new in v3 (split from v2 02/10)
+---
+ kernel/bpf/verifier.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index ca6cacf7b42f..ccfe9057d8dc 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -7568,12 +7568,16 @@ static int process_timer_func(struct bpf_verifier_env *env, int regno,
+ 			val + reg->off, map->record->timer_off);
+ 		return -EINVAL;
+ 	}
++	/* meta is only needed for bpf_timer_init to match timer and map */
++	if (!meta)
++		goto out;
+ 	if (meta->map_ptr) {
+ 		verbose(env, "verifier bug. Two map pointers in a timer helper\n");
+ 		return -EFAULT;
+ 	}
+ 	meta->map_uid = reg->map_uid;
+ 	meta->map_ptr = map;
++out:
+ 	return 0;
+ }
+ 
+@@ -10826,6 +10830,7 @@ enum {
+ 	KF_ARG_LIST_NODE_ID,
+ 	KF_ARG_RB_ROOT_ID,
+ 	KF_ARG_RB_NODE_ID,
++	KF_ARG_TIMER_ID,
+ };
+ 
+ BTF_ID_LIST(kf_arg_btf_ids)
+@@ -10834,6 +10839,7 @@ BTF_ID(struct, bpf_list_head)
+ BTF_ID(struct, bpf_list_node)
+ BTF_ID(struct, bpf_rb_root)
+ BTF_ID(struct, bpf_rb_node)
++BTF_ID(struct, bpf_timer_kern)
+ 
+ static bool __is_kfunc_ptr_arg_type(const struct btf *btf,
+ 				    const struct btf_param *arg, int type)
+@@ -10877,6 +10883,11 @@ static bool is_kfunc_arg_rbtree_node(const struct btf *btf, const struct btf_par
+ 	return __is_kfunc_ptr_arg_type(btf, arg, KF_ARG_RB_NODE_ID);
+ }
+ 
++static bool is_kfunc_arg_timer(const struct btf *btf, const struct btf_param *arg)
++{
++	return __is_kfunc_ptr_arg_type(btf, arg, KF_ARG_TIMER_ID);
++}
++
+ static bool is_kfunc_arg_callback(struct bpf_verifier_env *env, const struct btf *btf,
+ 				  const struct btf_param *arg)
+ {
+@@ -10946,6 +10957,7 @@ enum kfunc_ptr_arg_type {
+ 	KF_ARG_PTR_TO_NULL,
+ 	KF_ARG_PTR_TO_CONST_STR,
+ 	KF_ARG_PTR_TO_MAP,
++	KF_ARG_PTR_TO_TIMER,
+ };
+ 
+ enum special_kfunc_type {
+@@ -11102,6 +11114,9 @@ get_kfunc_ptr_arg_type(struct bpf_verifier_env *env,
+ 	if (is_kfunc_arg_map(meta->btf, &args[argno]))
+ 		return KF_ARG_PTR_TO_MAP;
+ 
++	if (is_kfunc_arg_timer(meta->btf, &args[argno]))
++		return KF_ARG_PTR_TO_TIMER;
++
+ 	if ((base_type(reg->type) == PTR_TO_BTF_ID || reg2btf_ids[base_type(reg->type)])) {
+ 		if (!btf_type_is_struct(ref_t)) {
+ 			verbose(env, "kernel function %s args#%d pointer type %s %s is not supported\n",
+@@ -11735,6 +11750,7 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
+ 		case KF_ARG_PTR_TO_CALLBACK:
+ 		case KF_ARG_PTR_TO_REFCOUNTED_KPTR:
+ 		case KF_ARG_PTR_TO_CONST_STR:
++		case KF_ARG_PTR_TO_TIMER:
+ 			/* Trusted by default */
+ 			break;
+ 		default:
+@@ -12021,6 +12037,15 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
+ 			if (ret)
+ 				return ret;
+ 			break;
++		case KF_ARG_PTR_TO_TIMER:
++			if (reg->type != PTR_TO_MAP_VALUE) {
++				verbose(env, "arg#%d doesn't point to a map value\n", i);
++				return -EINVAL;
++			}
++			ret = process_timer_func(env, regno, NULL);
++			if (ret < 0)
++				return ret;
++			break;
+ 		}
+ 	}
+ 
+
+-- 
+2.44.0
+
