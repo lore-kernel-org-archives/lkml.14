@@ -1,182 +1,168 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DC9383AC
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B8F4084D
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:30:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712565031; cv=none; b=VgSsIB1iitkTjPJynddz0jaDLwtwi2J7YM+XQIYMOYAjvro/8K6+wvEvq55Prj1v67UwJQ5uDRaoQAO4yzHlCAaZg3xUqIcZPh+U080SOQpYl/p+1jIGOGP0+m8+k07t67Gbui6c5CiWaCz+jaBS/u4jePkvn2GdysQHxtTvOmY=
+	t=1712565047; cv=none; b=c8fUEJxUUNWKiExBokiWHEYsaLc1zmjdKz4Eq9mlNfCZyN+PjgkjfSwctEEUBMdVIzqVfHbZIfbEbuKOHF4aEyD+fOib5ogqFbAMD07BbG+jCY7VXXgrWIqKbXZyBf0CJyTnbzRC8lREb5iHeVYQ+o413AuNqYQ0vfb57+gho6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712565031; c=relaxed/simple;
-	bh=SjoKRikooQ4rEt9uMbPK7q5uiAWzzXZcdF0Tuaxrr7U=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=PyxMGvajk5+oINX7a8RwfXhXw+sogaoT7ozgCAb20NE9/cC1tOdJ2Y6V4V8/6S6gIf8FK0jH/+qTx1bfegNz+lAK2WdBbUzMy8imQ9B+Ls8fDdW9UVwc+1XXPMWsKVJhIlamf27ZOIS20qJYdNZUoExy99TX1ibyiMOrOAYLcVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Z7kJ1jj9; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1712565047; c=relaxed/simple;
+	bh=DlCB0MLCDKFbZ6OQNy2rzkZOL85cCf+2vW/rg/QwDXQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jpkivlj8kBNCOM1chdSxSBlNpnIRzECVzvZaCCeiy5TVf6LnXfjP/+ucz+lMIbOA0VI/r2yGkT/MkDdPPkACR4PPdL/vr41Bm3WSHQ4Q7iWKoat6A3+FeZ+n8vu1Gfr/C/dmCTJvYXO0iUkrGpTn1meWCdbLA+exyZf66BZGa68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m2tm/66T; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z7kJ1jj9"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20240408083021epoutp03e1f7b6c0c9ba8ecaf39a75d1bc729f74~EQNBOdxd72460224602epoutp03D
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:30:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20240408083021epoutp03e1f7b6c0c9ba8ecaf39a75d1bc729f74~EQNBOdxd72460224602epoutp03D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712565021;
-	bh=9xA2wuGcrIdnD6QeGCy6pEWH3ESJOZu31jlHG5iQwik=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=Z7kJ1jj9MYf5CiYovRq/Ur5n5kClTRjQmZkb0MozYiehYWGMcoqzWCYNe9w/rTZbV
-	 zP75BK8Q2LzWKLbw5EswMttKCEPI/m3PLqpLHIYBv/Gti4IpkaTaI1acON2gdwjolf
-	 wXyH40CIJPezyvYNXXsp2ff8wbNrUL3L5zN/ZbO8=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20240408083021epcas5p491258648313d8da9b58c4a4934efc60a~EQNAsQgpS0206302063epcas5p4y;
-	Mon,  8 Apr 2024 08:30:21 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4VCj2g6XtLz4x9Pr; Mon,  8 Apr
-	2024 08:30:19 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5E.EC.19431.B1BA3166; Mon,  8 Apr 2024 17:30:19 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20240408083019epcas5p429571d61b25b95490b913fcabc7f59d5~EQM-CUC7b1593915939epcas5p4J;
-	Mon,  8 Apr 2024 08:30:19 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240408083019epsmtrp1fa891c230381087b44984bc443f55da4~EQM-AK4XT0109201092epsmtrp1a;
-	Mon,  8 Apr 2024 08:30:19 +0000 (GMT)
-X-AuditID: b6c32a50-f57ff70000004be7-f2-6613ab1bfa7a
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	20.74.07541.B1BA3166; Mon,  8 Apr 2024 17:30:19 +0900 (KST)
-Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20240408083014epsmtip26c7beec99df2675222e2fb04202b7b6e~EQM60mQBJ1598715987epsmtip29;
-	Mon,  8 Apr 2024 08:30:14 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Peter Griffin'" <peter.griffin@linaro.org>, <mturquette@baylibre.com>,
-	<sboyd@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <vkoul@kernel.org>, <kishon@kernel.org>,
-	<avri.altman@wdc.com>, <bvanassche@acm.org>, <s.nawrocki@samsung.com>,
-	<cw00.choi@samsung.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<chanho61.park@samsung.com>, <ebiggers@kernel.org>
-Cc: <linux-scsi@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <tudor.ambarus@linaro.org>,
-	<andre.draszik@linaro.org>, <saravanak@google.com>,
-	<willmcvicker@google.com>
-In-Reply-To: <20240404122559.898930-1-peter.griffin@linaro.org>
-Subject: RE: [PATCH 00/17] HSI2, UFS & UFS phy support for Tensor GS101
-Date: Mon, 8 Apr 2024 14:00:13 +0530
-Message-ID: <04d401da898e$fd57ec10$f807c430$@samsung.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m2tm/66T"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56e67402a3fso3232a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712565044; x=1713169844; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=W9xvn/M8xXcsYEzO1oyT+gGu7oWuytzcOqfktvcQPMI=;
+        b=m2tm/66TXfi4TtA8dT0qginmmQIuMBsFvai40coLQHtwq3175DldiQX1JLNkaU3nO7
+         vkGMAEpNSt/6sw8bF3tSJ96tNJxZ4B7vG4Hr9KtCU8Lu9ZQM+qqvEV+GUrZGy9N3Vf1/
+         4IbWVstqqMSgU1k1ro6JYq0GHIXSaJzlMxFQ2n9pgDGZCqWlmw8YmQPeLfMKyOBR0FdG
+         wXAemPBPS7sDTxlhpysDlCUzSE3/8L0sD+IEKKrFLD3fKw85gPtuc6e51qdtO3zlHylc
+         90nSBdfOJi+yCJgR2zeXkLzNwutmXZ1eUkUxQhr/jgYiROahU8N4uxcaUn1gZ1jFP16B
+         vLdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712565044; x=1713169844;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W9xvn/M8xXcsYEzO1oyT+gGu7oWuytzcOqfktvcQPMI=;
+        b=L4jz0Em/sUiScR0ZlkqQUkNRdtUv5kEyNuUCN9yyM3N8vI/NLadIJRCQ+Nq4EPTUg1
+         cFYGZ1gJkbx5UusTdwQsQMdhSvuoOXJtJk0CYvvXC8uxzp/cuIaaPt0H2RouucTqEj4q
+         YmCXxEW42aF8LASlIB9afMaFaXzNSJIXozgZYjebIM6BNbYTbO7Ry77BE/BpZ3UCwfHC
+         eixFNiV7ggZG1m9Urktug8J9s5vdZcO7//PnCZ8iR1P6mjGe5mici1WuSG7bvYvwbElH
+         3C0zZHEejmJQw9CmBUB6n9QrRxVwQKuXtMQT7lvigk8iJSkjKp9FlpXC5pFheskSPV+6
+         xxNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXJe3sGxUXY1qAJpIhXuFWrme0dnPcNIrREU7KrLEzg3ktzTpi06kD9n1o090Rrsb95xbDvnOv9Plz7NONhOLDV2klFrunt4urWg1tn
+X-Gm-Message-State: AOJu0YzRjp+YN8oU+UuMOuQ2Ik84GJLRLqxgqf2Uh161wB/Sl8k4GH7x
+	hggqiUzg23ivBaOaw4AdGInk6Q0d5H7A7zrBOe0XSewwLsA0LO1s+EqAAoE4GRmnanVuhhpLcN1
+	T8oMUm92pUyJIbDn+bXGiwBimUyFboo8m/If4
+X-Google-Smtp-Source: AGHT+IGo86f+JsIMmosO2vCw07SGAuz9k/s/hLLN/rH0J0gPgIV9YJdb3JCApyMU+QZ12S3yUx1niuFqmBiJ/5noLeE=
+X-Received: by 2002:a05:6402:542:b0:56e:ac4:e1f3 with SMTP id
+ i2-20020a056402054200b0056e0ac4e1f3mr203931edx.7.1712565044222; Mon, 08 Apr
+ 2024 01:30:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQG67MGYnqOHzIYqhKHsGv8jtpiocwJaURTOsYpwP3A=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1BUZRiec9mziwkdFsJvgEncLJEEdpXFbxkuMoCcwgkaHUlnCo/s4TLA
-	7s5e0popTVkkQC6TmeKahIW0psBCuHGTuEjcJAOW60ARRGBAIAOSsMRysPj3vO88z/e8z/vN
-	y8P4l7iOvHiZmlHK6EQBsQUvr9/t6u502y5G2FIggmWTpTicWOom4OW/lzDYef91+F31QxT2
-	zI9z4I2Ghxx4p2oZg/m95Shs1K5icCJ3iICG300cOJsxxIGdFToCZusXcHilowaF6T1GAt5q
-	MqPwUUsILL5ixuFqlZEL6/+6wIFpdSsENJtKcDjX/x78YfAnDOrnVpEDTlRnVxg106vlUnkG
-	DWXQf0pQg6YqgsrOr0Wo0q/PULNj/TiVWaZHqCeGl6kLteloxAvHE3zjGFrKKF0YWbRcGi+L
-	9ROEHY4KihJ7C0XuIgncL3CR0UmMnyD4UIT7wfjEtRUIXN6nEzVrrQhapRJ4+vsq5Ro14xIn
-	V6n9BIxCmqjwUnio6CSVRhbrIWPUPiKhcK94jXgiIc6Q/gRTzNicXikIP4vc25qGWPEA6QXu
-	nruJpiFbeHyyCgGZqfe5bDGHgCXjCMYWCwhoe1zHeS651v4ZbsF8shoBxZmBaQhvDf+JgGd7
-	LG2CdAfGmymERWtP5mKgprh7/SGMHELBgPY8YWFZkQHgk5FMxILtyFCQXV2yboCTO4HpZ/16
-	35qUgKKxPILFtqD56ui6MUZuB/emdBg7kAtYGivgWIawJ32A9qtolrINTDQ2rKcB5C9WoG+y
-	E2H5weDX5BKcxXZgsqmMy2JHMJGVwrW8A0gK5C87su04MHWraEMaAGq7dLiFgpG7QVGFJ2tl
-	Ay4+G0VZpTVITeGz7FfB+enuDSMnkJOevrFBCvReHcCzkR25m3LlbsqVuylA7v9meQiuRxwZ
-	hSoplokWK0TuMubUf78dLU8yIOvn4RZhRG4Xr3jUISgPqUMADxPYWx8W28bwraX0Bx8ySnmU
-	UpPIqOoQ8dq2czDHl6Lla/clU0eJvCRCL29vby/JPm+RYJv1Y+11KZ+MpdVMAsMoGOVzHcqz
-	cjyLRh0xDS+brad29XVUbm8pnBWDmsIHMVXOYb49T6sDM2o+8jff8Ms42le5WPiFwTm09VSw
-	acehhPIY2j0v5wT1bdNMe2SQ8I2db/441aHI0updP56r35WyaMVpGvOdfFEQGtk17vB2zNFy
-	dX/qK9PSEIf9+XitP/qujjjZtpggdLMVHzlZt6dZ13y9a6htZLbHrNFWu3158FJrOBZwRnV6
-	9MHYYLhzc1nweIjIteLzZPu3Gusr+UGtW+8EFmf/Zpy/GxNyXKKz+WM+o2Dv8DtPL+/L6i/l
-	Tz+a95GbGr5PzhtwC45sCUIkyweGjzmsXENfm/Rs7z8WWIafWxaX098sLNYP/SPAVXG0yA1T
-	quh/AXnKHTOnBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsWy7bCSvK70auE0gwv9vBZbXm1msXj58yqb
-	xbQPP5ktLu/Xtliz9xyTxfUvz1kt5h85x2qxds8fZotFN7YxWRxt/c9s8XLWPTaLTY+vsVp8
-	7LnHanF51xw2iwmrvrFYzDi/j8mi+/oONovlx/8xWVw85WqxYcY/Fov/e3awWxx+085q0XXo
-	L5vFv2sbWSw+3Yqz2HnnBLPFqk//GR2kPS5f8fZ4f6OV3WPBplKPTas62TzuXNvD5jFh0QFG
-	j81L6j0+Pr3F4tG3ZRWjx+dNch7tB7qZArijuGxSUnMyy1KL9O0SuDI2dX9mLnjPV/F3mX8D
-	43aeLkZODgkBE4nZZyezdDFycQgJ7GaU6Jn9hxUiIS1xfeMEdghbWGLlv+fsEEXPGCWajpxg
-	A0mwCehK7FjcxgaSEBFYxyzx/d4zJpAEs8ALJomzl+IgOiYwSsyZ3AI2ilPAXqLxUR8jiC0s
-	4C4xYe9GsHUsAioS1y6sAovzClhKrH+6gA3CFpQ4OfMJ0H0cQEP1JNo2MkLMl5fY/nYOM8R1
-	ChI/ny5jBSkREbCSaF2YDFEiLvHy6BH2CYzCs5AMmoUwaBaSQbOQdCxgZFnFKJlaUJybnpts
-	WGCYl1quV5yYW1yal66XnJ+7iRGcQrQ0djDem/9P7xAjEwfjIUYJDmYlEd5gU8E0Id6UxMqq
-	1KL8+KLSnNTiQ4zSHCxK4ryGM2anCAmkJ5akZqemFqQWwWSZODilGpguyf3eHm1yub7kf0Pw
-	Sdv6NZ+fzwzZcynF7rxG3tuSu0/nlk8wSTTJlF7wsn1amX4fl87LKY/Z5r1InrJz40v+1y7/
-	FiQ3cV5vrbK7laVopBmzPePXa7OT31Za6T4tNLD5GS/iUqebyqr79WGarlVKcVisUdiTCzHX
-	hZUS9cLvfvqxJijr8M9np561TJ9dnbu9df72w4nzjLTXMi9bVqO7bUHHjSovTcmDkpPm7BfM
-	uW5eaLygSuX4ezmZ+Xv2bbxdNlU3dtuZX03Sqt5sdawSH2JmNhR3bG9yD/zIlTlv4Tab56vz
-	94hFXVEvK1B0yd8vXXzQInPO/+qYsyXRaZcFfeKkRDKSEhhNFqbbHldiKc5INNRiLipOBADk
-	2iCOkAMAAA==
-X-CMS-MailID: 20240408083019epcas5p429571d61b25b95490b913fcabc7f59d5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20240404122615epcas5p3812bd7c825bf604fc474bbcdf40d11f6
-References: <CGME20240404122615epcas5p3812bd7c825bf604fc474bbcdf40d11f6@epcas5p3.samsung.com>
-	<20240404122559.898930-1-peter.griffin@linaro.org>
+References: <87sf02bgez.ffs@tglx> <87r0fmbe65.ffs@tglx> <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
+ <87o7aqb6uw.ffs@tglx> <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
+ <87frw2axv0.ffs@tglx> <20240404145408.GD7153@redhat.com> <87le5t9f14.ffs@tglx>
+ <20240406150950.GA3060@redhat.com> <20240406151057.GB3060@redhat.com>
+In-Reply-To: <20240406151057.GB3060@redhat.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 8 Apr 2024 10:30:32 +0200
+Message-ID: <CACT4Y+Ych4+pdpcTk=yWYUOJcceL5RYoE_B9djX_pwrgOcGmFA@mail.gmail.com>
+Subject: Re: [PATCH] selftests/timers/posix_timers: reimplement check_timer_distribution()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>, 
+	Marco Elver <elver@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kasan-dev@googlegroups.com, 
+	Edward Liaw <edliaw@google.com>, Carlos Llamas <cmllamas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Peter
+On Sat, 6 Apr 2024 at 17:12, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Dmitry, Thomas,
+>
+> To simplify the review I've attached the code with this patch applied below.
+>
+> Yes, this changes the "semantics" of check_timer_distribution(), perhaps it
+> should be renamed.
+>
+> But I do not see a better approach, and in fact I think that
+>
+>         Test that all running threads _eventually_ receive CLOCK_PROCESS_CPUTIME_ID
+>
+> is the wrong goal.
+>
+> Do you agree?
+>
+> Oleg.
+> -------------------------------------------------------------------------------
+>
+> static pthread_t ctd_thread;
+> static volatile int ctd_count, ctd_failed;
+>
+> static void ctd_sighandler(int sig)
+> {
+>         if (pthread_self() != ctd_thread)
+>                 ctd_failed = 1;
+>         ctd_count--;
+> }
+>
+> static void *ctd_thread_func(void *arg)
+> {
+>         struct itimerspec val = {
+>                 .it_value.tv_sec = 0,
+>                 .it_value.tv_nsec = 1000 * 1000,
+>                 .it_interval.tv_sec = 0,
+>                 .it_interval.tv_nsec = 1000 * 1000,
+>         };
+>         timer_t id;
+>
+>         /* 1/10 seconds to ensure the leader sleeps */
+>         usleep(10000);
+>
+>         ctd_count = 100;
+>         if (timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id))
+>                 return "Can't create timer";
+>         if (timer_settime(id, 0, &val, NULL))
+>                 return "Can't set timer";
+>
+>         while (ctd_count > 0 && !ctd_failed)
+>                 ;
+>
+>         if (timer_delete(id))
+>                 return "Can't delete timer";
+>
+>         return NULL;
+> }
+>
+> /*
+>  * Test that only the running thread receives the timer signal.
+>  */
+> static int check_timer_distribution(void)
+> {
+>         const char *errmsg;
+>
+>         signal(SIGALRM, ctd_sighandler);
+>
+>         errmsg = "Can't create thread";
+>         if (pthread_create(&ctd_thread, NULL, ctd_thread_func, NULL))
+>                 goto err;
+>
+>         errmsg = "Can't join thread";
+>         if (pthread_join(ctd_thread, (void **)&errmsg) || errmsg)
+>                 goto err;
+>
+>         if (ctd_failed)
+>                 ksft_test_result_skip("No signal distribution. Assuming old kernel\n");
 
-> -----Original Message-----
-> From: Peter Griffin <peter.griffin@linaro.org>
-> Sent: Thursday, April 4, 2024 5:56 PM
-> To: mturquette@baylibre.com; sboyd@kernel.org; robh@kernel.org;
-> krzk+dt@kernel.org; conor+dt@kernel.org; vkoul@kernel.org;
-> kishon@kernel.org; alim.akhtar@samsung.com; avri.altman@wdc.com;
-> bvanassche@acm.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
-> jejb@linux.ibm.com; martin.petersen@oracle.com;
-> chanho61.park@samsung.com; ebiggers@kernel.org
-> Cc: linux-scsi@vger.kernel.org; linux-phy@lists.infradead.org;
-> devicetree@vger.kernel.org; linux-clk@vger.kernel.org; linux-samsung-
-> soc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; tudor.ambarus@linaro.org;
-> andre.draszik@linaro.org; saravanak@google.com;
-> willmcvicker@google.com; Peter Griffin <peter.griffin@linaro.org>
-> Subject: [PATCH 00/17] HSI2, UFS & UFS phy support for Tensor GS101
-> 
-> Hi folks,
-> 
-> 
-> Question
-> ========
-> 
-> Currently the link comes up in Gear 3 due to ufshcd_init_host_params()
-> host_params initialisation. If I update that to use UFS_HS_G4 for
-negotiation
-> then the link come up in Gear 4. I propose (in a future patch) to use VER
-> register offset 0x8 to determine whether to set G4 capability or not (if
-major
-> version is >= 3).
-> 
-> The bitfield of VER register in gs101 docs is
-> 
-> RSVD [31:16] Reserved
-> MJR [15:8] Major version number
-> MNR [7:4] Minor version number
-> VS [3:0] Version Suffix
-> 
-> Can anyone confirm if other Exynos platforms supported by this driver have
-> the same register, and if it conforms to the bitfield described above?
-> 
-
-VER (offset 0x8) is standard UFS HCI spec, so all vendor need to have this
-(unless something really wrong with the HW)
-Yes, Exynos and FSD SoC has these bitfield implemented.
- 
-> 
-> 2.44.0.478.gd926399ef9-goog
+Shouldn't the test fail here? The goal of a test is to fail when
+things don't work.
+I don't see any other ksft_test_result_fail() calls, and it does not
+look that the test will hang on incorrect distribution.
 
 
+>         else
+>                 ksft_test_result_pass("check signal distribution\n");
+>
+>         return 0;
+> err:
+>         ksft_print_msg(errmsg);
+>         return -1;
+> }
+>
