@@ -1,23 +1,23 @@
 Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E408971753
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB84E7641B;
+	Mon,  8 Apr 2024 12:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580144; cv=none; b=tYpYXFohhfnj3CA/hRCWbih2uHl2+AXSKC3/Qo7V2PjEwLwMbMvmh+vBGhnMU41t+ehZPaSSuXfG54zzc7r7/frEZeMV4pp1wAFbBujkRxO9nQtuFLuDaf6uY+XDpMcriRUaR4Urnu7wmNHsWmhAZawDy7dVaqpZL6evg6wFi/c=
+	t=1712580147; cv=none; b=lIr49APN/xAQszyd2VFmKY44PnaBC+56otoJahD4dG6ygdl0bxkcTlIR42HI491NEDYVP/gvP7frEgxOn6MUXSp3denw2NENP7Cy599/parNDHf/u8T9BivdiUz608fbi+f/04Yy74W/2eoX8ToyUBCdgrcYjJ6fmRNUGyUblyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580144; c=relaxed/simple;
-	bh=EclyQN+YA7HHsemmcLckQ4roFm2VU11PIgupyA6ilZI=;
+	s=arc-20240116; t=1712580147; c=relaxed/simple;
+	bh=SQtS1moFzY8TfD0WnLZVCwjP4N3w+K0NYbbTwsrDKjE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tOOhSPYsOY7ftwEPNWHGUgmiqw/pvU84EH8geTxE3qF10PnEUnOjVtvx/Db4cWyprW8Nsc4qhBPMBcLi9xk5Hsg30CsVXVKt67EKPMgnO6jSnWE36S5Kxf0vogPgJXn9yIvhIiP2Q3ikXCn4lElkBvxYsgUZ6Go/xahThHPuwok=
+	 MIME-Version; b=plPyyCW6ZroHKBoew619P1Au2T/4WgOKtVzwkX3AoY0Xa+q6LlxkxyWU5jZQyZGQEYzfOZ3NdzM9I2nnTcCtgMcD61UKEhs6GGP4FTNCQtRiK3IAUkA9io/CqtOpnnlIKZhOciHBVnTZyORHC02dYGrLMGg5sKo5FG3CTbnN2Dk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: q5LbA2NHz0MfRxgoH4WuKIA1kVcYZQN2zG48N4t5l5kyhgBfo3F1dkkDft83UErmIckyye0qSa
- VX5O+kn2tMGg==
+IronPort-SDR: d409yRtlYQ2FG8mJYQU4ScbgxR2PyJhum+j2Ztc7pa3GdbTO7lFnI/HGLC+k2RObiEhKUvD5Kf
+ wzsOBKjHHKEw==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:08 +0530
+  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:12 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
 To: linux-kernel@vger.kernel.org
 Cc: m.nirmaladevi@ltts.com,
@@ -39,9 +39,9 @@ Cc: m.nirmaladevi@ltts.com,
 	kristo@kernel.org,
 	eblanc@baylibre.com,
 	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v6 03/11] mfd: tps6594: add regmap config in match data
-Date: Mon,  8 Apr 2024 18:10:39 +0530
-Message-Id: <20240408124047.191895-4-bhargav.r@ltts.com>
+Subject: [PATCH v6 05/11] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+Date: Mon,  8 Apr 2024 18:10:41 +0530
+Message-Id: <20240408124047.191895-6-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240408124047.191895-1-bhargav.r@ltts.com>
 References: <20240408124047.191895-1-bhargav.r@ltts.com>
@@ -53,146 +53,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduces a new struct tps6594_match_data. This struct holds fields for
-chip id and regmap config. Using this struct in of_device_id data field.
-This helps in adding support for TPS65224 PMIC.
+Add support for TPS65224 PMIC in TPS6594's I2C driver which has
+significant functional overlap.
 
 Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 Acked-by: Julien Panis <jpanis@baylibre.com>
 ---
- drivers/mfd/tps6594-i2c.c   | 24 ++++++++++++++++--------
- drivers/mfd/tps6594-spi.c   | 24 ++++++++++++++++--------
- include/linux/mfd/tps6594.h | 11 +++++++++++
- 3 files changed, 43 insertions(+), 16 deletions(-)
+ drivers/mfd/tps6594-i2c.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
-index c125b474b..9e2ed48b7 100644
+index 9e2ed48b7..0d741da74 100644
 --- a/drivers/mfd/tps6594-i2c.c
 +++ b/drivers/mfd/tps6594-i2c.c
-@@ -192,10 +192,16 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /*
+- * I2C access driver for TI TPS6594/TPS6593/LP8764 PMICs
++ * I2C access driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+  *
+  * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
+  */
+@@ -192,16 +192,27 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
  	.write = tps6594_i2c_write,
  };
  
-+static const struct tps6594_match_data match_data[] = {
-+	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
-+	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
-+	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
++static const struct regmap_config tps65224_i2c_regmap_config = {
++	.reg_bits = 16,
++	.val_bits = 8,
++	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
++	.volatile_table = &tps65224_volatile_table,
++	.read = tps6594_i2c_read,
++	.write = tps6594_i2c_write,
 +};
 +
+ static const struct tps6594_match_data match_data[] = {
+ 	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
+ 	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
+ 	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
++	[TPS65224] = {TPS65224, &tps65224_i2c_regmap_config},
+ };
+ 
  static const struct of_device_id tps6594_i2c_of_match_table[] = {
--	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
--	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
--	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-+	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
-+	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
-+	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
+ 	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
+ 	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
+ 	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
++	{ .compatible = "ti,tps65224-q1", .data = &match_data[TPS65224], },
  	{}
  };
  MODULE_DEVICE_TABLE(of, tps6594_i2c_of_match_table);
-@@ -205,6 +211,7 @@ static int tps6594_i2c_probe(struct i2c_client *client)
- 	struct device *dev = &client->dev;
- 	struct tps6594 *tps;
- 	const struct of_device_id *match;
-+	const struct tps6594_match_data *mdata;
+@@ -248,5 +259,5 @@ static struct i2c_driver tps6594_i2c_driver = {
+ module_i2c_driver(tps6594_i2c_driver);
  
- 	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
- 	if (!tps)
-@@ -216,14 +223,15 @@ static int tps6594_i2c_probe(struct i2c_client *client)
- 	tps->reg = client->addr;
- 	tps->irq = client->irq;
- 
--	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
--	if (IS_ERR(tps->regmap))
--		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
--
- 	match = of_match_device(tps6594_i2c_of_match_table, dev);
- 	if (!match)
- 		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
--	tps->chip_id = (unsigned long)match->data;
-+	mdata = (struct tps6594_match_data *)match->data;
-+	tps->chip_id = mdata->chip_id;
-+
-+	tps->regmap = devm_regmap_init(dev, NULL, client, mdata->config);
-+	if (IS_ERR(tps->regmap))
-+		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
- 
- 	crc8_populate_msb(tps6594_i2c_crc_table, TPS6594_CRC8_POLYNOMIAL);
- 
-diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
-index 5afb1736f..82a1c02e3 100644
---- a/drivers/mfd/tps6594-spi.c
-+++ b/drivers/mfd/tps6594-spi.c
-@@ -77,10 +77,16 @@ static const struct regmap_config tps6594_spi_regmap_config = {
- 	.use_single_write = true,
- };
- 
-+static const struct tps6594_match_data match_data[] = {
-+	[TPS6594] = {TPS6594, &tps6594_spi_regmap_config},
-+	[TPS6593] = {TPS6593, &tps6594_spi_regmap_config},
-+	[LP8764] = {LP8764, &tps6594_spi_regmap_config},
-+};
-+
- static const struct of_device_id tps6594_spi_of_match_table[] = {
--	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
--	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
--	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-+	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
-+	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
-+	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, tps6594_spi_of_match_table);
-@@ -90,6 +96,7 @@ static int tps6594_spi_probe(struct spi_device *spi)
- 	struct device *dev = &spi->dev;
- 	struct tps6594 *tps;
- 	const struct of_device_id *match;
-+	const struct tps6594_match_data *mdata;
- 
- 	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
- 	if (!tps)
-@@ -101,14 +108,15 @@ static int tps6594_spi_probe(struct spi_device *spi)
- 	tps->reg = spi_get_chipselect(spi, 0);
- 	tps->irq = spi->irq;
- 
--	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
--	if (IS_ERR(tps->regmap))
--		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
--
- 	match = of_match_device(tps6594_spi_of_match_table, dev);
- 	if (!match)
- 		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
--	tps->chip_id = (unsigned long)match->data;
-+	mdata = (struct tps6594_match_data *)match->data;
-+	tps->chip_id = mdata->chip_id;
-+
-+	tps->regmap = devm_regmap_init(dev, NULL, spi, mdata->config);
-+	if (IS_ERR(tps->regmap))
-+		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
- 
- 	crc8_populate_msb(tps6594_spi_crc_table, TPS6594_CRC8_POLYNOMIAL);
- 
-diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
-index 16543fd4d..d781e0fe3 100644
---- a/include/linux/mfd/tps6594.h
-+++ b/include/linux/mfd/tps6594.h
-@@ -1337,6 +1337,17 @@ struct tps6594 {
- 	struct regmap_irq_chip_data *irq_data;
- };
- 
-+/**
-+ * struct tps6594_match_data - of match data of PMIC
-+ *
-+ * @chip_id: chip ID of PMIC
-+ * @config: regmap config of PMIC
-+ */
-+struct tps6594_match_data {
-+	unsigned long chip_id;
-+	const struct regmap_config *config;
-+};
-+
- extern const struct regmap_access_table tps6594_volatile_table;
- extern const struct regmap_access_table tps65224_volatile_table;
- 
+ MODULE_AUTHOR("Julien Panis <jpanis@baylibre.com>");
+-MODULE_DESCRIPTION("TPS6594 I2C Interface Driver");
++MODULE_DESCRIPTION("I2C Interface Driver for TPS65224, TPS6594/3, and LP8764");
+ MODULE_LICENSE("GPL");
 -- 
 2.25.1
 
