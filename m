@@ -1,135 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8190025753
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B058A25753;
+	Mon,  8 Apr 2024 18:27:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712600782; cv=none; b=u4nbrKU/rKQxp8P5ZWw2VviYvRf+pOJVWdH5idCow6KV+MgEHL4UKHTJxCbtBmxJ2AifTBf/icRdL8Biwwc9tM9ey6XuQVc2o7q/PGHy3qzf0zhK8CS5GBKIRZhACVUJbGHtCD5xgXHLpwNE8wKsOBsl6eUcIPiXxcrCPSJfJfM=
+	t=1712600876; cv=none; b=YjN54RFcLi7qAGv9UPhfKtMUTaRJoCTbjVscYrvjf0nfVlSPnu3CYeCKhYNESgSkFrp2k5LxxdPGy0WBGm1dzBLiggXOVs8d8nhaBo4izzJy9txfHQTHZFT0JQjistEF/fz2/yItqZg/yTcALrTTLhBrVhxn6nYK10sfjIQXNpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712600782; c=relaxed/simple;
-	bh=zHVhbDUXvIHrWkiMCgJm6IIlq6tLgPd0bdBaL4AIw+g=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=GgqtS0wCJ7EBsaoM8kb+C3ObWmgmsmyohD5Mq4LNhLf0r8WPVNsdtPaRC6PG4B20WnCdwegNvqn5fWh7A+q4A+Qc1sbYotGSsN9SlHgi0cWmWEnVfwJPsIjQz5Eh+itEv6VZlt++Srcj0aPc9hJgpAqX3RilWYza+jVMFnRs5yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jgl/1v36; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712600876; c=relaxed/simple;
+	bh=SNEAHwiZ2/SqBEx1r4aC42w+KK919cWs3IE6VdePVaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qDlyZVtqUejAolJIeVlOn037aru0QG6FbtKuP7MH5Y/drICCeiyCwwT8Fa9vpBOiyTvCWjpq0Y7M+jKUjYHlrhBrJV1P0HnJ0ELxlEMrUiBW7n20qvkSzXCR6btbXTJD/8HZ3NFIoLsQT4iFzAAiYymL3h/tqBfAbP+WbXSDj6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JdE6xMQ/; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jgl/1v36"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2073C433C7;
-	Mon,  8 Apr 2024 18:26:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712600782;
-	bh=zHVhbDUXvIHrWkiMCgJm6IIlq6tLgPd0bdBaL4AIw+g=;
-	h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-	b=Jgl/1v36x9gPDRGRtgHLpwSWPWCHyO0Au+aX1+oeGjrzJlGRsUOmUY1aLymZ1LD1l
-	 uriWZpqBeVIymR/WovDHQoyS0iLtOWMaZ9T6TX6ZZDnAdBr1VVPrskaCTEUMzChLFF
-	 b271khNSiAkAf9N/7A2kcLCykf4hAdXZSA5fMuGNmvAYNC1SC2tds+cnVaf3wcfzym
-	 5upBRFtDc+qeB/F50U21OOXfzubYNKKNiLpLm+p2vsiyYnmoAG8gO70G+sU+R5kfTB
-	 jQK90zKMDPSbIeJ+HSqnJbN2hPnWoyW5CQliIRm23OG+D2MvYaf1UCg8kslhr37SsL
-	 RMbdKOukmcmZg==
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfauth.nyi.internal (Postfix) with ESMTP id C1C131200066;
-	Mon,  8 Apr 2024 14:26:20 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 08 Apr 2024 14:26:20 -0400
-X-ME-Sender: <xms:zDYUZnSXwNry391rmaAK2q6pWJ7P0xZmJqjLiKNUODDJ3Pk00Nb_og>
-    <xme:zDYUZozQ-Krgj5gAi4w0A6kwSsFcIV-8dt9B-4wIyRh2cXKg42gpmJ8Jlp6Co3E4R
-    xmMNRybm_uDDjY3Vo0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudegiedguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtf
-    frrghtthgvrhhnpefgffejleeluddugfejueeiteefvddtgfeutefhvdfgudfhveekgeeh
-    gfevledvudenucffohhmrghinhepphgrshhtvggsihhnrdgtohhmnecuvehluhhsthgvrh
-    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgr
-    uhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrg
-    hrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:zDYUZs3rvvfu67uhmCGEJAPq0TQAmvT7jZzbrj7k9JydV3_k6Zvy9g>
-    <xmx:zDYUZnAABHBYRqtaQ-sy4qdjwWZ5twBGfpIp6UlPW9OgKyogl3P1qA>
-    <xmx:zDYUZgiUnA3CotxjZrPEu_YvIt0FIAQQQTrD-b2MARoGg2OoNZYR0g>
-    <xmx:zDYUZrrT8GCJZwI1mE0yIznln8ztL49PsAFRhw2fLcHjtuTVD2lhFw>
-    <xmx:zDYUZrjT2JJ-Q1GpA_EUI3Mpg9KqHNMSXAZdTcxUwl0GX5MSayuguQmB>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 81795B60089; Mon,  8 Apr 2024 14:26:20 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-368-gc733b1d8df-fm-20240402.001-gc733b1d8
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JdE6xMQ/"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so5322805a12.3;
+        Mon, 08 Apr 2024 11:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712600873; x=1713205673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H87O+ieoRLaVWCX2hAH7EWkWIZKVrjyzCm9L1MBqBu8=;
+        b=JdE6xMQ/vpNJ1b1ewQrwcOdJbM2zq3X07LGlaN9PGAczxyjjAuANAWuliKEF6SLVTW
+         SuPKnLZlSETi200wdMdKjJC1Y8N2ahqtcNOVhrYlRigDCdG2ASqDedAfwPVtuPOPFQ0+
+         Ze0SqQJfmE5X+6CBifYU5jqUlsIDoZUOTBDwAjgpG9al4cyvZJ2IqjwzyrLsowf1R9gJ
+         9w3NvPuxtssH5Ce/+tJN8NESOhmg8cE7i6fFTE+JnVdgn3iHhaSMJAS4H5gNPVFMIfd6
+         Vx/mo24mMvRrl55XjgkmxOkykqJ/4SodK3XaIV88h0m/hBjYJHBHyQFnMR+Ep3g6aBAM
+         R9TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712600873; x=1713205673;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H87O+ieoRLaVWCX2hAH7EWkWIZKVrjyzCm9L1MBqBu8=;
+        b=wmq1K6CIJ/0NNbgWwfFBs9vGafpKUAgxc8HxbXlXuruxrqGoCfmPlpSaCUzd+K3MOF
+         2QhUXLAWg/MR6crowLVsYVuT8qprKGSrkyEZDxGU+cY2kfsG6fEg8/BmkJHhcpDIbmgY
+         PCKvmwqQfrk+B4ZyXqUdHYugZwCL/kG+Tkt++hNmSFd+5ACafZrHptsX+9kW3TTBaRj0
+         a9SM5oGfagWWJewBViWSJ8keBW+xQaOe6wfWXqP1Kks/n3NgwAZuWBDB/t/OwG1IQb/2
+         KLEh0JHqjgtOwlvYvYxfEJA7bBjrRJMs4/SFec5TkpRSxtmiKCzwG7PZ4/bxtsPJ++3u
+         IEnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaEyROTanVElH9/nledmLSljciCEixSXTteBOJVOD6XBJ/wBqUruv9kUSIDVWK/FWMknveCKlET1PAMiiwFLPfNASmgrGOwxHDCf18MJ/f9GQSt075PZtxjIfHtYJ1JsaHQufOkQYt+Y7deQOokTA=
+X-Gm-Message-State: AOJu0YzaZR4U+BOILzi4rSEPO4nb179LqEpFBsQhokgEtcHQcTIzmTgL
+	h6TTs8NzpE8T/gJfXxzE4JwyzFSL9sAFV88ifNbjVHPUouBVulN+
+X-Google-Smtp-Source: AGHT+IF/A3Mn10U1WHg8e0iglxnCMNrW0sQqf3XHbJswJ+zUr3CpfOdD/50CyuCyAfJCYN68RFynGQ==
+X-Received: by 2002:a50:9e48:0:b0:56e:2464:7c4b with SMTP id z66-20020a509e48000000b0056e24647c4bmr6270548ede.10.1712600872491;
+        Mon, 08 Apr 2024 11:27:52 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id i2-20020a50fc02000000b0056e22be831dsm4326912edr.42.2024.04.08.11.27.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 11:27:51 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Mon, 8 Apr 2024 20:27:49 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86-ml <x86@kernel.org>, linux-tip-commits@vger.kernel.org,
+	Julian Stecklina <julian.stecklina@cyberus-technology.de>,
+	Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [tip: x86/boot] x86/boot: Move kernel cmdline setup earlier in
+ the boot process (again)
+Message-ID: <ZhQ3JSXT05Kv/RpM@gmail.com>
+References: <171169867308.10875.15117897441999380027.tip-bot2@tip-bot2>
+ <20240408181732.GCZhQ0vGSfP3Gf8tDW@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <1622d9ff-feed-4a12-9d8d-3f00088c9edf@app.fastmail.com>
-In-Reply-To: <76214105-94ae-4540-8511-e9e2ff6d257e@moroto.mountain>
-References: <20240328140512.4148825-1-arnd@kernel.org>
- <20240328140512.4148825-11-arnd@kernel.org>
- <76214105-94ae-4540-8511-e9e2ff6d257e@moroto.mountain>
-Date: Mon, 08 Apr 2024 20:26:00 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Dan Carpenter" <dan.carpenter@linaro.org>
-Cc: linux-kernel@vger.kernel.org, "Viresh Kumar" <vireshk@kernel.org>,
- "Johan Hovold" <johan@kernel.org>, "Alex Elder" <elder@kernel.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Arnd Bergmann" <arnd@arndb.de>,
- "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
- greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev
-Subject: Re: [PATCH 10/11] staging: greybus: change strncpy() to strscpy()
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408181732.GCZhQ0vGSfP3Gf8tDW@fat_crate.local>
 
-On Thu, Mar 28, 2024, at 16:00, Dan Carpenter wrote:
-> On Thu, Mar 28, 2024 at 03:04:54PM +0100, Arnd Bergmann wrote:
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->> This is from randconfig testing with random gcc versions, a .config to
->> reproduce is at https://pastebin.com/r13yezkU
->> ---
->>  drivers/staging/greybus/fw-management.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/staging/greybus/fw-management.c b/drivers/staging/greybus/fw-management.c
->> index 3054f084d777..35bfdd5f32d2 100644
->> --- a/drivers/staging/greybus/fw-management.c
->> +++ b/drivers/staging/greybus/fw-management.c
->> @@ -303,13 +303,13 @@ static int fw_mgmt_backend_fw_update_operation(struct fw_mgmt *fw_mgmt,
->>  	struct gb_fw_mgmt_backend_fw_update_request request;
->>  	int ret;
->>  
->> -	strncpy(request.firmware_tag, tag, GB_FIRMWARE_TAG_MAX_SIZE);
->> +	ret = strscpy(request.firmware_tag, tag, GB_FIRMWARE_TAG_MAX_SIZE);
->
-> This needs to be strscpy_pad() or it risks an information leak.
 
-Right, I think I misread the code thinking that the strncpy()
-destination was user provided, but I see now that this copy is
-from user-provided data into the stack, so the padding is indeed
-stale stack data.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-I could not find out whether this gets copied back to userspace,
-but adding the padding is safer indeed.
+> On Fri, Mar 29, 2024 at 07:51:13AM -0000, tip-bot2 for Julian Stecklina wrote:
+> > The following commit has been merged into the x86/boot branch of tip:
+> > 
+> > Commit-ID:     4faa0e5d6d79fc4c6e1943e8b62a65744d8439a0
+> > Gitweb:        https://git.kernel.org/tip/4faa0e5d6d79fc4c6e1943e8b62a65744d8439a0
+> > Author:        Julian Stecklina <julian.stecklina@cyberus-technology.de>
+> > AuthorDate:    Thu, 28 Mar 2024 16:42:12 +01:00
+> > Committer:     Ingo Molnar <mingo@kernel.org>
+> > CommitterDate: Fri, 29 Mar 2024 08:19:12 +01:00
+> > 
+> > x86/boot: Move kernel cmdline setup earlier in the boot process (again)
+> 
+> ...
+> 
+> > The order is now:
+> > 
+> > 	setup_arch():
+> > 	  -> Assemble final command line:
+> > 	     boot_command_line = builtin_cmdline + boot_cmdline
+> > 
+> > 	  -> early_cpu_init()
+> > 	    -> early_identify_cpu()
+> > 	      -> sld_setup()
+> > 		-> sld_state_setup()
+> > 		  -> Looks for split_lock_detect in boot_command_line
+> > 
+> > 	  -> e820__memory_setup()
+> > 
+> > 	  -> parse_early_param()
+> 
+> So that thing. Should we do something like the silly thing below so that 
+> it catches potential issues with parsing builtin cmdline stuff too early?
 
->>  
->>  	/*
->>  	 * The firmware-tag should be NULL terminated, otherwise throw error and
->                                       ^^^^^^^^^^^^^^^^
-> These comments are out of date.
->
->>  	 * fail.
->>  	 */
->> -	if (request.firmware_tag[GB_FIRMWARE_TAG_MAX_SIZE - 1] != '\0') {
->> +	if (ret == -E2BIG) {
->>  		dev_err(fw_mgmt->parent, "backend-update: firmware-tag is not NULL terminated\n");
->                                                           
-> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> More out of date prints.
+Yep, that's a good idea.
 
-I had thought about changing it when I did the patch, but could
-not come up with anything that describes the error condition better:
-the cause of the -E2BIG error is still the missing NUL-termination
-in the provided string.
+Acked-by: Ingo Molnar <mingo@kernel.org>
 
-Maybe we should instead not print a warning at all? The general
-rule is that user triggered operations should not lead to
-spamming the kernel logs.
-
-     Arnd
+	Ingo
