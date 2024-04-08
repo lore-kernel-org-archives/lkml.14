@@ -1,443 +1,142 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEACB29CE0
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37085B043;
+	Mon,  8 Apr 2024 07:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562495; cv=none; b=oQDmwW3VxA1pDbZDejc1JsgjK9siqPD8CnPc8vK82o8wE0KkgHV5gC0+nGpqiNPdwU7cmT3Vg6o1AN8F3+/zfI53VKEuxm/t+kay5X4X6nrps4nGTqG5m9Zt5RE2l5MsrZV9i7Crsdh5RemrpgNDwNAapJ6enx32sQWX+OgfBmM=
+	t=1712562500; cv=none; b=Uf956maEr2OykIa4UaL9ocP+IlwoZ7fuKHvA8uSzfn7JNofrNEllaW1TxlToE9PaY4jRfW2ZVF1QNmVMNIpLqUXzCo73AUb3S/LWryzYueWAjF+orZUua30ih1ZaQ6bTrQZaGRMDinyY9/Cu7CAb+rvP6KJlB1NkP+GTRB60tkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712562495; c=relaxed/simple;
-	bh=1knzds/bkhu8Rhxy8f+f57/uVYlC83ou4R+nh+qdcEk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b4TTpGv8Nsq/hoX9ow8rWfwn/jc3FxINObbxfoLoBHbhvuUCAK9yGMdNRhTWNLewR57Ru2iAAx6juLU9ZhuA3exKWMNOf5f5bhKUTYN36T+jwg9dfnH2gHvKipx544aF6MbUyPTEEMc/OUmNRRZiWx61YUuA+T5UBLuJu50gRvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjY-0005Id-4f; Mon, 08 Apr 2024 09:48:04 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjV-00B4Jq-1B; Mon, 08 Apr 2024 09:48:01 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjU-007exR-31;
-	Mon, 08 Apr 2024 09:48:00 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v4 3/9] net: add IEEE 802.1q specific helpers
-Date: Mon,  8 Apr 2024 09:47:52 +0200
-Message-Id: <20240408074758.1825674-4-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240408074758.1825674-1-o.rempel@pengutronix.de>
-References: <20240408074758.1825674-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1712562500; c=relaxed/simple;
+	bh=Ds4WWTaPfBAY8QE5hs8uu8bmRScO9DPoptIQA+2BO7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gj+056myh2lXhqhm/eWWJnegnTrzxUfHPIbVUZoc5X+2wzbSytiCf+Qm9FmZj/Ue2imNe1OPvFrchjwzvSIWuJWaWeJu5I94CUB0LrDCrFFffg83WMGXUF4y32UoRlbkSGLBw+XjieC2ATY7HB11Tsbpd0DGOOzZNDSF8gB1SLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A6E6C433F1;
+	Mon,  8 Apr 2024 07:48:17 +0000 (UTC)
+Message-ID: <12daffe3-ae5e-4b0f-bb61-3dd233e344bb@xs4all.nl>
+Date: Mon, 8 Apr 2024 09:48:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v0 00/14] Make I2C terminology more inclusive for I2C
+ Algobit and consumers
+Content-Language: en-US, nl
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Easwar Hariharan <eahariha@linux.microsoft.com>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
+ <intel-gfx@lists.freedesktop.org>,
+ "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
+ <intel-xe@lists.freedesktop.org>,
+ "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS"
+ <nouveau@lists.freedesktop.org>,
+ "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+ "open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
+ "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+References: <20240329170038.3863998-1-eahariha@linux.microsoft.com>
+ <ffumcagmzdstcf3qcn3f26555pnu7i6azjppciyd4zvcoit7pv@vu262tsfnqyr>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <ffumcagmzdstcf3qcn3f26555pnu7i6azjppciyd4zvcoit7pv@vu262tsfnqyr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-IEEE 802.1q specification provides recommendation and examples which can
-be used as good default values for different drivers.
+On 05/04/2024 12:18, Wolfram Sang wrote:
+> Hello Easwar,
+> 
+> On Fri, Mar 29, 2024 at 05:00:24PM +0000, Easwar Hariharan wrote:
+>> I2C v7, SMBus 3.2, and I3C specifications have replaced "master/slave"
+>> with more appropriate terms. Inspired by and following on to Wolfram's
+>> series to fix drivers/i2c/[1], fix the terminology for users of the
+>> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
+>> in the specification.
+> 
+> I really appreciate that you want to assist in this task to improve the
+> I2C core. I do. I am afraid, however, that you took the second step
+> before the first one, though. As I mentioned in my original cover
+> letter, this is not only about renaming but also improving the I2C API
+> (splitting up header files...). So, drivers are not a priority right
+> now. They can be better fixed once the core is ready.
+> 
+> It is true that I changed quite some controller drivers within the i2c
+> realm. I did this to gain experience. As you also noticed quite some
+> questions came up. We need to agree on answers first. And once we are
+> happy with the answers we found, then IMO we can go outside of the i2c
+> realm and send patches to other subsystems referencing agreed
+> precedence. I intentionally did not go outside i2c yet. Since your
+> patches are already there, you probably want to foster them until they
+> are ready for inclusion. Yet, regarding further patches, my suggestion
+> is to wait until the core is ready. That might take a while, though.
+> However, there is enough to discuss until the core is ready. So, your
+> collaboration there is highly appreciated!
+> 
+>> The last patch updating the .master_xfer method to .xfer depends on
+>> patch 1 of Wolfram's series below, but the series is otherwise
+>> independent. It may make sense for the last patch to go in with
+> 
+> Please drop the last patch from this series. It will nicely remove the
+> dependency. Also, like above, I first want to gain experience with i2c
+> before going to other subsystems. That was intended.
 
-This patch implements mapping examples documented in IEEE 802.1Q-2022 in
-Annex I "I.3 Traffic type to traffic class mapping" and IETF DSCP naming
-and mapping DSCP to Traffic Type inspired by RFC8325.
+OK, based on this I'll mark the media patches in this series as 'Deferred'
+in our patchwork.
 
-This helpers will be used in followup patches for dsa/microchip DCB
-implementation.
+Regards,
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
-changes v4:
-- use -EOPNOTSUPP instead of -ENOTSUP
-- ieee8021q_tt_to_tc() return error if requested not supported amount
-  of queues
-changes v2:
-- properly export symbols with EXPORT_SYMBOL_GPL()
-- return error if NET_IEEE8021Q_HELPERS is not enabled
----
- include/net/dscp.h           |  76 ++++++++++++++++
- include/net/ieee8021q.h      |  51 +++++++++++
- net/Kconfig                  |   4 +
- net/core/Makefile            |   1 +
- net/core/ieee8021q_helpers.c | 171 +++++++++++++++++++++++++++++++++++
- 5 files changed, 303 insertions(+)
- create mode 100644 include/net/dscp.h
- create mode 100644 include/net/ieee8021q.h
- create mode 100644 net/core/ieee8021q_helpers.c
+	Hans
 
-diff --git a/include/net/dscp.h b/include/net/dscp.h
-new file mode 100644
-index 0000000000000..ba40540868c9c
---- /dev/null
-+++ b/include/net/dscp.h
-@@ -0,0 +1,76 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef __DSCP_H__
-+#define __DSCP_H__
-+
-+/*
-+ * DSCP Pools and Codepoint Space Division:
-+ *
-+ * The Differentiated Services (Diffserv) architecture defines a method for
-+ * classifying and managing network traffic using the DS field in IPv4 and IPv6
-+ * packet headers. This field can carry one of 64 distinct DSCP (Differentiated
-+ * Services Code Point) values, which are divided into three pools based on
-+ * their Least Significant Bits (LSB) patterns and intended usage. Each pool has
-+ * a specific registration procedure for assigning DSCP values:
-+ *
-+ * Pool 1 (Standards Action Pool):
-+ * - Codepoint Space: xxxxx0
-+ *   This pool includes DSCP values ending in '0' (binary), allocated via
-+ *   Standards Action. It is intended for globally recognized traffic classes,
-+ *   ensuring interoperability across the internet. This pool encompasses
-+ *   well-known DSCP values such as CS0-CS7, AFxx, EF, and VOICE-ADMIT.
-+ *
-+ * Pool 2 (Experimental/Local Use Pool):
-+ * - Codepoint Space: xxxx11
-+ *   Reserved for DSCP values ending in '11' (binary), this pool is designated
-+ *   for Experimental or Local Use. It allows for private or temporary traffic
-+ *   marking schemes not intended for standardized global use, facilitating
-+ *   testing and network-specific configurations without impacting
-+ *   interoperability.
-+ *
-+ * Pool 3 (Preferential Standardization Pool):
-+ * - Codepoint Space: xxxx01
-+ *   Initially reserved for experimental or local use, this pool now serves as
-+ *   a secondary standardization resource should Pool 1 become exhausted. DSCP
-+ *   values ending in '01' (binary) are assigned via Standards Action, with a
-+ *   focus on adopting new, standardized traffic classes as the need arises.
-+ *
-+ * For pool updates see:
-+ * https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml
-+ */
-+
-+/* Pool 1: Standardized DSCP values as per [RFC8126] */
-+#define DSCP_CS0 0		/* 000000, [RFC2474] */
-+/* CS0 is some times called default (DF) */
-+#define DSCP_DF 0		/* 000000, [RFC2474] */
-+#define DSCP_CS1 8		/* 001000, [RFC2474] */
-+#define DSCP_CS2 16		/* 010000, [RFC2474] */
-+#define DSCP_CS3 24		/* 011000, [RFC2474] */
-+#define DSCP_CS4 32		/* 100000, [RFC2474] */
-+#define DSCP_CS5 40		/* 101000, [RFC2474] */
-+#define DSCP_CS6 48		/* 110000, [RFC2474] */
-+#define DSCP_CS7 56		/* 111000, [RFC2474] */
-+#define DSCP_AF11 10		/* 001010, [RFC2597] */
-+#define DSCP_AF12 12		/* 001100, [RFC2597] */
-+#define DSCP_AF13 14		/* 001110, [RFC2597] */
-+#define DSCP_AF21 18		/* 010010, [RFC2597] */
-+#define DSCP_AF22 20		/* 010100, [RFC2597] */
-+#define DSCP_AF23 22		/* 010110, [RFC2597] */
-+#define DSCP_AF31 26		/* 011010, [RFC2597] */
-+#define DSCP_AF32 28		/* 011100, [RFC2597] */
-+#define DSCP_AF33 30		/* 011110, [RFC2597] */
-+#define DSCP_AF41 34		/* 100010, [RFC2597] */
-+#define DSCP_AF42 36		/* 100100, [RFC2597] */
-+#define DSCP_AF43 38		/* 100110, [RFC2597] */
-+#define DSCP_EF 46		/* 101110, [RFC3246] */
-+#define DSCP_VOICE_ADMIT 44	/* 101100, [RFC5865] */
-+
-+/* Pool 3: Standardized assignments, previously available for experimental/local
-+ * use
-+ */
-+#define DSCP_LE 1		/* 000001, [RFC8622] */
-+
-+#define DSCP_MAX 64
-+
-+#endif /* __DSCP_H__ */
-diff --git a/include/net/ieee8021q.h b/include/net/ieee8021q.h
-new file mode 100644
-index 0000000000000..08fb5a617c046
---- /dev/null
-+++ b/include/net/ieee8021q.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef _NET_IEEE8021Q_H
-+#define _NET_IEEE8021Q_H
-+
-+#include <linux/errno.h>
-+
-+/**
-+ * enum ieee8021q_traffic_type - 802.1Q traffic type priority values (802.1Q-2022)
-+ *
-+ * @IEEE8021Q_TT_BK: Background
-+ * @IEEE8021Q_TT_BE: Best Effort (default). According to 802.1Q-2022, BE is 0
-+ * but has higher priority than BK which is 1.
-+ * @IEEE8021Q_TT_EE: Excellent Effort
-+ * @IEEE8021Q_TT_CA: Critical Applications
-+ * @IEEE8021Q_TT_VI: Video, < 100 ms latency and jitter
-+ * @IEEE8021Q_TT_VO: Voice, < 10 ms latency and jitter
-+ * @IEEE8021Q_TT_IC: Internetwork Control
-+ * @IEEE8021Q_TT_NC: Network Control
-+ */
-+enum ieee8021q_traffic_type {
-+	IEEE8021Q_TT_BK = 0,
-+	IEEE8021Q_TT_BE = 1,
-+	IEEE8021Q_TT_EE = 2,
-+	IEEE8021Q_TT_CA = 3,
-+	IEEE8021Q_TT_VI = 4,
-+	IEEE8021Q_TT_VO = 5,
-+	IEEE8021Q_TT_IC = 6,
-+	IEEE8021Q_TT_NC = 7,
-+};
-+
-+#if IS_ENABLED(CONFIG_NET_IEEE8021Q_HELPERS)
-+
-+int ietf_dscp_to_ieee8021q_tt(int dscp);
-+int ieee8021q_tt_to_tc(int tt, int num_queues);
-+
-+#else
-+
-+static inline int ietf_dscp_to_ieee8021q_tt(int dscp)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int ieee8021q_tt_to_tc(int tt, int num_queues)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+#endif
-+#endif /* _NET_IEEE8021Q_H */
-diff --git a/net/Kconfig b/net/Kconfig
-index d5ab791f7afa2..b94ee06f28c18 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -452,6 +452,10 @@ config GRO_CELLS
- config SOCK_VALIDATE_XMIT
- 	bool
- 
-+config NET_IEEE8021Q_HELPERS
-+	bool
-+	default n
-+
- config NET_SELFTESTS
- 	def_tristate PHYLIB
- 	depends on PHYLIB && INET
-diff --git a/net/core/Makefile b/net/core/Makefile
-index 21d6fbc7e884c..62be9aef25285 100644
---- a/net/core/Makefile
-+++ b/net/core/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_NETPOLL) += netpoll.o
- obj-$(CONFIG_FIB_RULES) += fib_rules.o
- obj-$(CONFIG_TRACEPOINTS) += net-traces.o
- obj-$(CONFIG_NET_DROP_MONITOR) += drop_monitor.o
-+obj-$(CONFIG_NET_IEEE8021Q_HELPERS) += ieee8021q_helpers.o
- obj-$(CONFIG_NET_SELFTESTS) += selftests.o
- obj-$(CONFIG_NETWORK_PHY_TIMESTAMPING) += timestamping.o
- obj-$(CONFIG_NET_PTP_CLASSIFY) += ptp_classifier.o
-diff --git a/net/core/ieee8021q_helpers.c b/net/core/ieee8021q_helpers.c
-new file mode 100644
-index 0000000000000..3564dc83d1d3d
---- /dev/null
-+++ b/net/core/ieee8021q_helpers.c
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+
-+#include <linux/printk.h>
-+#include <linux/types.h>
-+#include <net/dscp.h>
-+#include <net/ieee8021q.h>
-+
-+/* Following arrays map Traffic Types (TT) to traffic classes (TC) for different
-+ * number of queues as shown in the example provided by  IEEE 802.1Q-2022 in
-+ * Annex I "I.3 Traffic type to traffic class mapping" and Table I-1 "Traffic
-+ * type to traffic class mapping".
-+ */
-+static const u8 ieee8021q_8queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,
-+	[IEEE8021Q_TT_CA] = 3,
-+	[IEEE8021Q_TT_VI] = 4,
-+	[IEEE8021Q_TT_VO] = 5,
-+	[IEEE8021Q_TT_IC] = 6,
-+	[IEEE8021Q_TT_NC] = 7,
-+};
-+
-+static const u8 ieee8021q_7queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,
-+	[IEEE8021Q_TT_CA] = 3,
-+	[IEEE8021Q_TT_VI] = 4,	[IEEE8021Q_TT_VO] = 4,
-+	[IEEE8021Q_TT_IC] = 5,
-+	[IEEE8021Q_TT_NC] = 6,
-+};
-+
-+static const u8 ieee8021q_6queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0,
-+	[IEEE8021Q_TT_BE] = 1,
-+	[IEEE8021Q_TT_EE] = 2,	[IEEE8021Q_TT_CA] = 2,
-+	[IEEE8021Q_TT_VI] = 3,	[IEEE8021Q_TT_VO] = 3,
-+	[IEEE8021Q_TT_IC] = 4,
-+	[IEEE8021Q_TT_NC] = 5,
-+};
-+
-+static const u8 ieee8021q_5queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-+	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-+	[IEEE8021Q_TT_IC] = 3,
-+	[IEEE8021Q_TT_NC] = 4,
-+};
-+
-+static const u8 ieee8021q_4queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-+	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-+	[IEEE8021Q_TT_IC] = 3, [IEEE8021Q_TT_NC] = 3,
-+};
-+
-+static const u8 ieee8021q_3queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-+	[IEEE8021Q_TT_IC] = 2, [IEEE8021Q_TT_NC] = 2,
-+};
-+
-+static const u8 ieee8021q_2queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-+	[IEEE8021Q_TT_IC] = 1, [IEEE8021Q_TT_NC] = 1,
-+};
-+
-+static const u8 ieee8021q_1queue_tt_tc_map[] = {
-+	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-+	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-+	[IEEE8021Q_TT_VI] = 0, [IEEE8021Q_TT_VO] = 0,
-+	[IEEE8021Q_TT_IC] = 0, [IEEE8021Q_TT_NC] = 0,
-+};
-+
-+/**
-+ * ieee8021q_tt_to_tc - Map IEEE 802.1Q Traffic Type to Traffic Class
-+ * @tt: IEEE 802.1Q Traffic Type
-+ * @num_queues: Number of queues
-+ *
-+ * This function maps an IEEE 802.1Q Traffic Type to a Traffic Class (TC) based
-+ * on the number of queues configured on the switch. The mapping is based on the
-+ * example provided by IEEE 802.1Q-2022 in Annex I "I.3 Traffic type to traffic
-+ * class mapping" and Table I-1 "Traffic type to traffic class mapping".
-+ *
-+ * Return: Traffic Class corresponding to the given Traffic Type or -EINVAL if
-+ * the number of queues is not supported. -EINVAL is used to differentiate from
-+ * -EOPNOTSUPP which is used to indicate that this library function is not
-+ * compiled in.
-+ */
-+int ieee8021q_tt_to_tc(int tt, int num_queues)
-+{
-+	switch (num_queues) {
-+	case 8:
-+		return ieee8021q_8queue_tt_tc_map[tt];
-+	case 7:
-+		return ieee8021q_7queue_tt_tc_map[tt];
-+	case 6:
-+		return ieee8021q_6queue_tt_tc_map[tt];
-+	case 5:
-+		return ieee8021q_5queue_tt_tc_map[tt];
-+	case 4:
-+		return ieee8021q_4queue_tt_tc_map[tt];
-+	case 3:
-+		return ieee8021q_3queue_tt_tc_map[tt];
-+	case 2:
-+		return ieee8021q_2queue_tt_tc_map[tt];
-+	case 1:
-+		return ieee8021q_1queue_tt_tc_map[tt];
-+	}
-+
-+	pr_err("Invalid number of queues %d\n", num_queues);
-+
-+	return -EINVAL;
-+}
-+EXPORT_SYMBOL_GPL(ieee8021q_tt_to_tc);
-+
-+/**
-+ * ietf_dscp_to_ieee8021q_tt - Map IETF DSCP to IEEE 802.1Q Traffic Type
-+ * @dscp: IETF DSCP value
-+ *
-+ * This function maps an IETF DSCP value to an IEEE 802.1Q Traffic Type (TT).
-+ * Since there is no corresponding mapping between DSCP and IEEE 802.1Q Traffic
-+ * Type, this function is inspired by the RFC8325 documentation which describe
-+ * the mapping between DSCP and 802.11 User Priority (UP) values.
-+ *
-+ * Return: IEEE 802.1Q Traffic Type corresponding to the given DSCP value
-+ */
-+
-+int ietf_dscp_to_ieee8021q_tt(int dscp)
-+{
-+	switch (dscp) {
-+	case DSCP_CS0:
-+	case DSCP_AF11:
-+	case DSCP_AF12:
-+	case DSCP_AF13:
-+		return IEEE8021Q_TT_BE;
-+	case DSCP_CS1:
-+		return IEEE8021Q_TT_BK;
-+	case DSCP_CS2:
-+	case DSCP_AF21:
-+	case DSCP_AF22:
-+	case DSCP_AF23:
-+		return IEEE8021Q_TT_EE;
-+	case DSCP_CS3:
-+	case DSCP_AF31:
-+	case DSCP_AF32:
-+	case DSCP_AF33:
-+		return IEEE8021Q_TT_CA;
-+	case DSCP_CS4:
-+	case DSCP_AF41:
-+	case DSCP_AF42:
-+	case DSCP_AF43:
-+		return IEEE8021Q_TT_VI;
-+	case DSCP_CS5:
-+	case DSCP_EF:
-+	case DSCP_VOICE_ADMIT:
-+		return IEEE8021Q_TT_VO;
-+	case DSCP_CS6:
-+		return IEEE8021Q_TT_IC;
-+	case DSCP_CS7:
-+		return IEEE8021Q_TT_NC;
-+	}
-+
-+	return (dscp >> 3) & 0x7;
-+}
-+EXPORT_SYMBOL_GPL(ietf_dscp_to_ieee8021q_tt);
--- 
-2.39.2
+> 
+> All the best and happy hacking,
+> 
+>    Wolfram
+> 
 
