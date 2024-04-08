@@ -1,143 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4D22BAE5
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5390825619;
+	Mon,  8 Apr 2024 07:40:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562004; cv=none; b=MiWGX0UTkKk8cLSQivpCkfefLmq/Y1gsXgxqi4O7HuB+guEsT6jKmnje6ezxvL/+D115mfzCWblZa+hC7Y9GQcm9zptKZy5WxqnpF9m/qnkZvmtT8gSBH59QELrAISZvF2XUsDXLgL/Tm5WmDBPYvn65Zl9gSII1/s4Fl5atEbs=
+	t=1712562051; cv=none; b=OHr3biGOi0ZSp6IYi7k7TeH238Yc9f45wybGVBkc8CwN6UJUQ3dbXMz/SHTONNoCIN6949LC2+ahUeH+Jcz+FVTdGU2QjJrrle/HKMnV44TUnliM6ZnG4N7i2aQZfTDi6JjxHewBSEautoRQrMHh4eoFZa8HSJLCAqf62fP6v+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712562004; c=relaxed/simple;
-	bh=rNOqKr343ZSMxime79iGUap0wNoYZSF/QDcsqxpgorI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UTdx6m68JeyzjY/D41e6T1NbGSAJ5H/ZrIUIy3tBs84PGcweRfrx4eN4KT7kfnVoxTG1DwA6oGe+a1psjhWk+EAvP/9UXMKQwkgnTSuDmgL0a0lQhD0Xe44dZAySrsb7s7xTYM6ZZkh/DksgSwihUVaVcZG6nnbDvZyuggF6adM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a3yzc0hf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712562051; c=relaxed/simple;
+	bh=/PwTXAMc4qIagsONctj643hd2NRLVGHlttgBejgG8j8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ae0nXd5WctShqAezhHvsSeHqNIdU85UkFIdxkZTGNGxOzmQ76pRFrJb5jsMuF7YzdNPqyP7wSgGASiS4COw7Xl62OO+nLc19gO4QTwy3qmN3d+O4DFRt/DLk0huM5CNEf7WHe8wTKhgRbiyPbVpZ/VwNDpci+N2lmw/XI02BPSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BWAQhQUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a3yzc0hf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712562002;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U6c8NxRj9cq6OvbALtg2Roh5bDMfOSXXjT3FSUcwbEE=;
-	b=a3yzc0hfnQblN1RQ9xPlpKqER/Y507NphLSGZooTZe+CsiHlfa5GhpTPxcnOHMju3kWh3u
-	AsdIPLnHXjqJmiPRo54muE220MfneTb3Q0U3Y2pSdFhLMNcCODcWUkElNj66KWl5VZE5Ts
-	cHWztf70VreBSzqREQdWDNQh0QVechA=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-Lmm0lp-kNcObHqJAfF7JhQ-1; Mon, 08 Apr 2024 03:40:00 -0400
-X-MC-Unique: Lmm0lp-kNcObHqJAfF7JhQ-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-516be44ea1dso3563047e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:40:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712561999; x=1713166799;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U6c8NxRj9cq6OvbALtg2Roh5bDMfOSXXjT3FSUcwbEE=;
-        b=Au0LsEy655763RVx97XIQuibXduDsgpaSkXCmaxejhgV2RFchs3tzpdE3RBHy1p7Du
-         5oiRKN6OltEv0EYC5rlRPx+rVkAI7CGq5VOE0eVJSB5hoSBdXzwLx4rkDSKtRu2tQu07
-         qd6WqFHoOeuDLhXLKE/Btf7uEOcp4lL43p8KhNioT3dz5I47okaHHdH4uZMpSqCcPLHR
-         nGAiKk0E4jCOyFFL1d/OpxeY4mB11Sr2eterIXuFJbwfQukLIgCA0nP/55SMJLlDTYgk
-         9hqV6jl/doESAA3KKKAB+VP4JxzXmK5K20cFSBtyiO3sGFVIjJHHr9nQcgDFmXt4c4+r
-         TG4w==
-X-Forwarded-Encrypted: i=1; AJvYcCVTXt0igUHfk8mtybv9acj9s5VDzqaK4X3FNhYmXOc5HT87DcIE8duy1rkWDRCsqIksifzbmQE4IM94eIFXWyNhA8dbMwbO7So02T6E
-X-Gm-Message-State: AOJu0Yw2WPdOslPP3dU7ik3OPAzpIh4xn00O/UTqcVZZsdzoNOw2QSiz
-	8XwUwC2SwhTdGX2Wp8hQ2Y7nVBUuJ4e8Cql17+dLgpM+hfhqIqR4aBWkeRFZFztuLAE0Crf69NX
-	veaZqwDIkQpruB3J6BEJg6pWDVA2WnuOg+PdWgR8J7P8nO44i/pj303eRQ28kBA==
-X-Received: by 2002:a05:6512:6c9:b0:516:c8e5:db35 with SMTP id u9-20020a05651206c900b00516c8e5db35mr6894126lff.18.1712561999179;
-        Mon, 08 Apr 2024 00:39:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYDBkJjgbRSv4emXcuf1/HTD8JQtEuPSUD5eeQ3QrlOhXQrKMs2KEWRXNbHyZBPzEseuHvbQ==
-X-Received: by 2002:a05:6512:6c9:b0:516:c8e5:db35 with SMTP id u9-20020a05651206c900b00516c8e5db35mr6894089lff.18.1712561998195;
-        Mon, 08 Apr 2024 00:39:58 -0700 (PDT)
-Received: from redhat.com ([2.52.152.188])
-        by smtp.gmail.com with ESMTPSA id n8-20020a5d4c48000000b0033e7b05edf3sm8276904wrt.44.2024.04.08.00.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 00:39:57 -0700 (PDT)
-Date: Mon, 8 Apr 2024 03:39:54 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, kvm@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] Documentation: Add reconnect process for VDUSE
-Message-ID: <20240408033804-mutt-send-email-mst@kernel.org>
-References: <20240404055635.316259-1-lulu@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BWAQhQUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69ACAC433C7;
+	Mon,  8 Apr 2024 07:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712562050;
+	bh=/PwTXAMc4qIagsONctj643hd2NRLVGHlttgBejgG8j8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=BWAQhQUo/m+lzgIsUQVYBAOxqNr0gy9VJuIhOQqc7fdK4j0ctn1Sxzf4CRuItOoiy
+	 jgpzyy+pHdhB2WKLtO2xFcc9s02F7jHdZVTkZnOO2dqk/RC2+t2LLrLyG7mAp1B6z5
+	 373vOlk+ZNrKklfkwiAUxs5KRrurYxlW/oBozWhr7SV6vZrSxLDOHgm3cGt1JYQb7a
+	 M0q6ZpuEAYDx12xXCE48O43Di0EDP3W1Tn9WDbh8I8Zd5NTE6rBwCSueFDhgVBsdcv
+	 zh7jeBA0lttsxUDDgCdFKw1p1ZQ/Y0j5LyUgCQoAdhxteAZgiKvVnRPXgZVXPAP7k7
+	 1NeFBuUS+RpFw==
+From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Puranjay Mohan
+ <puranjay12@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
+ Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
+ <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
+ <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ bpf@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Pu Lehui <pulehui@huawei.com>
+Subject: Re: [PATCH bpf-next] riscv, bpf: add internal-only MOV instruction
+ to resolve per-CPU addrs
+In-Reply-To: <CAEf4BzZ2Tz5-GwbQKYg7KoGwqN8ewPBakmghHaH20MfoATe74g@mail.gmail.com>
+References: <20240405124348.27644-1-puranjay12@gmail.com>
+ <CAEf4BzZ2Tz5-GwbQKYg7KoGwqN8ewPBakmghHaH20MfoATe74g@mail.gmail.com>
+Date: Mon, 08 Apr 2024 09:40:47 +0200
+Message-ID: <87cyr0uwsg.fsf@all.your.base.are.belong.to.us>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404055635.316259-1-lulu@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 04, 2024 at 01:56:31PM +0800, Cindy Lu wrote:
-> Add a document explaining the reconnect process, including what the
-> Userspace App needs to do and how it works with the kernel.
-> 
-> Signed-off-by: Cindy Lu <lulu@redhat.com>
-> ---
->  Documentation/userspace-api/vduse.rst | 41 +++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/vduse.rst b/Documentation/userspace-api/vduse.rst
-> index bdb880e01132..7faa83462e78 100644
-> --- a/Documentation/userspace-api/vduse.rst
-> +++ b/Documentation/userspace-api/vduse.rst
-> @@ -231,3 +231,44 @@ able to start the dataplane processing as follows:
->     after the used ring is filled.
->  
->  For more details on the uAPI, please see include/uapi/linux/vduse.h.
-> +
-> +HOW VDUSE devices reconnection works
-> +------------------------------------
-> +1. What is reconnection?
-> +
-> +   When the userspace application loads, it should establish a connection
-> +   to the vduse kernel device. Sometimes,the userspace application exists,
-> +   and we want to support its restart and connect to the kernel device again
-> +
-> +2. How can I support reconnection in a userspace application?
-> +
-> +2.1 During initialization, the userspace application should first verify the
-> +    existence of the device "/dev/vduse/vduse_name".
-> +    If it doesn't exist, it means this is the first-time for connection. goto step 2.2
-> +    If it exists, it means this is a reconnection, and we should goto step 2.3
-> +
-> +2.2 Create a new VDUSE instance with ioctl(VDUSE_CREATE_DEV) on
-> +    /dev/vduse/control.
-> +    When ioctl(VDUSE_CREATE_DEV) is called, kernel allocates memory for
-> +    the reconnect information. The total memory size is PAGE_SIZE*vq_mumber.
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-Confused. Where is that allocation, in code?
+> On Fri, Apr 5, 2024 at 5:44=E2=80=AFAM Puranjay Mohan <puranjay12@gmail.c=
+om> wrote:
+>>
+>> Support an instruction for resolving absolute addresses of per-CPU
+>> data from their per-CPU offsets. This instruction is internal-only and
+>> users are not allowed to use them directly. They will only be used for
+>> internal inlining optimizations for now between BPF verifier and BPF
+>> JITs.
+>>
+>> RISC-V uses generic per-cpu implementation where the offsets for CPUs
+>> are kept in an array called __per_cpu_offset[cpu_number]. RISCV stores
+>> the address of the task_struct in TP register. The first element in
+>> tast_struct is struct thread_info, and we can get the cpu number by
+>> reading from the TP register + offsetof(struct thread_info, cpu).
+>>
+>> Once we have the cpu number in a register we read the offset for that
+>> cpu from address: &__per_cpu_offset + cpu_number << 3. Then we add this
+>> offset to the destination register.
+>>
+>> To measure the improvement from this change, the benchmark in [1] was
+>> used on Qemu:
+>>
+>> Before:
+>> glob-arr-inc   :    1.127 =C2=B1 0.013M/s
+>> arr-inc        :    1.121 =C2=B1 0.004M/s
+>> hash-inc       :    0.681 =C2=B1 0.052M/s
+>>
+>> After:
+>> glob-arr-inc   :    1.138 =C2=B1 0.011M/s
+>> arr-inc        :    1.366 =C2=B1 0.006M/s
+>> hash-inc       :    0.676 =C2=B1 0.001M/s
+>
+> TBH, I don't trust benchmarks done inside QEMU. Can you try running
+> this on some real hardware?
 
-Thanks!
+I just ran it on a "VisionFive2" SBC:
 
-> +2.3 Check if the information is suitable for reconnect
-> +    If this is reconnection :
-> +    Before attempting to reconnect, The userspace application needs to use the
-> +    ioctl(VDUSE_DEV_GET_CONFIG, VDUSE_DEV_GET_STATUS, VDUSE_DEV_GET_FEATURES...)
-> +    to get the information from kernel.
-> +    Please review the information and confirm if it is suitable to reconnect.
-> +
-> +2.4 Userspace application needs to mmap the memory to userspace
-> +    The userspace application requires mapping one page for every vq. These pages
-> +    should be used to save vq-related information during system running. Additionally,
-> +    the application must define its own structure to store information for reconnection.
-> +
-> +2.5 Completed the initialization and running the application.
-> +    While the application is running, it is important to store relevant information
-> +    about reconnections in mapped pages. When calling the ioctl VDUSE_VQ_GET_INFO to
-> +    get vq information, it's necessary to check whether it's a reconnection. If it is
-> +    a reconnection, the vq-related information must be get from the mapped pages.
-> +
-> +2.6 When the Userspace application exits, it is necessary to unmap all the
-> +    pages for reconnection
-> -- 
-> 2.43.0
+BEFORE
+=3D=3D=3D=3D=3D=3D
+glob-arr-inc   :   11.586 =C2=B1 0.021M/s=20
+arr-inc        :   10.892 =C2=B1 0.005M/s=20
+hash-inc       :    1.517 =C2=B1 0.001M/s=20
 
+AFTER
+=3D=3D=3D=3D=3D
+glob-arr-inc   :   11.893 =C2=B1 0.017M/s  (+2.6%)
+arr-inc        :   11.630 =C2=B1 0.020M/s  (+6.8%)
+hash-inc       :    1.543 =C2=B1 0.002M/s  (+1.7%)
+
+(It's early, and the coffee haven't kicked in, so I hope the
+calculations are correct...)
+
+>>
+>> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
+>>
+>> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+>> ---
+>>  arch/riscv/net/bpf_jit_comp64.c | 24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_co=
+mp64.c
+>> index 15e482f2c657..e95bd1d459a4 100644
+>> --- a/arch/riscv/net/bpf_jit_comp64.c
+>> +++ b/arch/riscv/net/bpf_jit_comp64.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/stop_machine.h>
+>>  #include <asm/patch.h>
+>>  #include <asm/cfi.h>
+>> +#include <asm/percpu.h>
+>>  #include "bpf_jit.h"
+>>
+>>  #define RV_FENTRY_NINSNS 2
+>> @@ -1089,6 +1090,24 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn=
+, struct rv_jit_context *ctx,
+>>                         emit_or(RV_REG_T1, rd, RV_REG_T1, ctx);
+>>                         emit_mv(rd, RV_REG_T1, ctx);
+>>                         break;
+>> +               } else if (insn_is_mov_percpu_addr(insn)) {
+>> +                       if (rd !=3D rs)
+>> +                               emit_mv(rd, rs, ctx);
+>
+> Is this an unconditional move instruction? in x86-64, EMIT_mov checks
+> whether source and destination registers are the same and doesn't emit
+> anything if they match (which makes sense, right)?
+
+Yeah, it is. Folding the check into the emit sounds like a good idea.
+
+
+Bj=C3=B6rn
