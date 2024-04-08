@@ -1,56 +1,56 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C9A187F;
-	Mon,  8 Apr 2024 03:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596C98F4A;
+	Mon,  8 Apr 2024 03:52:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712548317; cv=none; b=C32MYqaruNylijMj169odAb766KRZ810OX3FwZ3Rd8AoBWjBY4NvGzZIZmY6xKf5YssxeUV35MiADeSMEqB/V1H/2flHHdzA0LwUa2Zj2dEO1cZOYBEHAQpzrkr+gGlzKGufunRIh4l2/6mxpAwSSKIbQSKXIXbhgwE+nYsAErI=
+	t=1712548322; cv=none; b=SA/sxGuNulcE3onoOwTSBidZi3E1VybBsff2THMQI6eczHshs6XiLiv0P9Gf7uAi4//t6EadaNN53ogLyD9HMjgL5dvCXm3t86rWneHwtMD+LSsQljvzhUb6i/lgCrBJCZQ0y73ZLHkUO2CN/1gTMZt+6jCbnluhkLalMBQF9oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712548317; c=relaxed/simple;
-	bh=j379rSTUR0Ce5ip59QtuRg1bNWYwoLOMVJkQdI+EU2M=;
+	s=arc-20240116; t=1712548322; c=relaxed/simple;
+	bh=b99iJg1A5bvxRUOumWSxLIxtvCLHK+sA+lw4WRmUyxA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eS5u5cfzHhXqNRv5S06o1y0vkDLViyd9ERWM3P3QkrMYBO5r+QH3/L+w8RutmeL8RaHxYtvsjn7Dwv5Kowj6f0sVisqdQxNzHCw7nqLjv0OeDP7XK5HmtiLVANaZ4FajeVmMkY1kcXVkg3lrbNMKBTVwLa2vNJPCniNtfQDm4tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lJcZAU4a; arc=none smtp.client-ip=198.175.65.17
+	 MIME-Version; b=BNsybEHIXTfsVpRc+Iu/PTFdBh/YFeelnLug/vbD7emJArYRyLdpMurTvhgsrzHEsO5d/jE7rUUQLG5MZfVwY8rQDwgM94mogp0OgHKJ1yVsmNgV7plklDaSjBL8AVlWIe9kTWpZUtAV0N2OyWwHAtbeyrcNz8UOZJEP83oUDaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mOjSCb5U; arc=none smtp.client-ip=198.175.65.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lJcZAU4a"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mOjSCb5U"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712548316; x=1744084316;
+  t=1712548322; x=1744084322;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=j379rSTUR0Ce5ip59QtuRg1bNWYwoLOMVJkQdI+EU2M=;
-  b=lJcZAU4am8zl0PSKh3AW0zbcwR9AnYHNQRpbtrv7Lqf9fSnhKcHYvoOq
-   EPQsZggJlm2vgwAIOrjhn/ZkWcYi26//onShNTrBivnKyhUSik4LfAz8m
-   MXvbgYAYR9xSVcaeK4vd/PY7Gyoc0Rxj49YvVECMlaz099175cHcsVxCL
-   bBNJP4zqDs45Fi/e/Taf2BBm0N1m8xSh7aQFwFqdKmBVGhK/H/PQZ3RCu
-   nKZA31SOy7k2/IrnwdDJ+nWHehFoJTpzgoAmDcPJX0x2Z5enkDrvTzVRA
-   iLlY1h7OeU6GiEDambWLNaPA6sEaD/Y4yDYX5EsjTBnkJsjv7f9i2x7FN
-   g==;
-X-CSE-ConnectionGUID: 5Z27K2KSRAqcrg9C0hftZg==
-X-CSE-MsgGUID: zmldObq/R9q2TiNEWnMv2w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7909940"
+  bh=b99iJg1A5bvxRUOumWSxLIxtvCLHK+sA+lw4WRmUyxA=;
+  b=mOjSCb5U2Kt42zF7bc+eQOvryf9cRF4O3lC2dMBNYk8JMqmo9eqO7h5y
+   vQ0VFueR0hx/Vp5bmicIoOgkVJ6d/y1/uRueKYSzra1Cu5EcHXZuZNpBT
+   MctYWxb4dqy2JJuMJ5KZO2ithQO7ACiWD3DTbMWElu3GsPlSiZv2UXMoT
+   RnSkhCPwxaRfw7NcfWA9Ebzb85eE9gozR9Sf092tCMgQhTxE1xyInHUFY
+   pWU/QHAG9BctLcvoGvl9XaZtbHv40H3HQ9bfyV3A8Mp46yGnjAZnf17Cg
+   XeMzqFUawxb8nkEOmW0h7vpJvpmpUKLpNOwmfdtBb+epTxG6X1geS/v3v
+   Q==;
+X-CSE-ConnectionGUID: XTIoPchySoamnQniAOJIPw==
+X-CSE-MsgGUID: 7o7qoMyXTKyxhd7K1t+cZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7909942"
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="7909940"
+   d="scan'208";a="7909942"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:51:56 -0700
-X-CSE-ConnectionGUID: W3Xp7JebTiGXPetE2bWBPg==
-X-CSE-MsgGUID: OSYQHC+sRryAUR9iSa0Hsw==
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:52:01 -0700
+X-CSE-ConnectionGUID: vDongyGvQ++vYf9MoiPBsQ==
+X-CSE-MsgGUID: QMAjILr8TlyXmz49YFW7Ig==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="19870362"
+   d="scan'208";a="19870377"
 Received: from lihon19x-mobl.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.249.173.91])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:51:53 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:51:59 -0700
 From: Zhang Rui <rui.zhang@intel.com>
 To: rafael.j.wysocki@intel.com
 Cc: linux-kernel@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	srinivas.pandruvada@intel.com
-Subject: [PATCH V2 1/3] powercap: intel_rapl: Sort header files
-Date: Mon,  8 Apr 2024 11:51:39 +0800
-Message-Id: <20240408035141.248644-2-rui.zhang@intel.com>
+Subject: [PATCH V2 3/3] powercap: intel_rapl_tpmi: Enable PMU support
+Date: Mon,  8 Apr 2024 11:51:41 +0800
+Message-Id: <20240408035141.248644-4-rui.zhang@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240408035141.248644-1-rui.zhang@intel.com>
 References: <20240408035141.248644-1-rui.zhang@intel.com>
@@ -62,57 +62,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sort header files alphabetically.
+Enable RAPL PMU support for TPMI RAPL driver.
 
 Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 ---
- drivers/powercap/intel_rapl_common.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/powercap/intel_rapl_tpmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index a28d54fd5222..1f4a7aa12d77 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -5,27 +5,27 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/powercap/intel_rapl_tpmi.c b/drivers/powercap/intel_rapl_tpmi.c
+index f6b7f085977c..947544e4d229 100644
+--- a/drivers/powercap/intel_rapl_tpmi.c
++++ b/drivers/powercap/intel_rapl_tpmi.c
+@@ -302,6 +302,8 @@ static int intel_rapl_tpmi_probe(struct auxiliary_device *auxdev,
+ 		goto err;
+ 	}
  
-+#include <linux/bitmap.h>
- #include <linux/cleanup.h>
-+#include <linux/cpu.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/intel_rapl.h>
- #include <linux/kernel.h>
--#include <linux/module.h>
- #include <linux/list.h>
--#include <linux/types.h>
--#include <linux/device.h>
--#include <linux/slab.h>
- #include <linux/log2.h>
--#include <linux/bitmap.h>
--#include <linux/delay.h>
--#include <linux/sysfs.h>
--#include <linux/cpu.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
- #include <linux/powercap.h>
--#include <linux/suspend.h>
--#include <linux/intel_rapl.h>
- #include <linux/processor.h>
--#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/suspend.h>
-+#include <linux/sysfs.h>
-+#include <linux/types.h>
++	rapl_package_add_pmu(trp->rp);
++
+ 	auxiliary_set_drvdata(auxdev, trp);
  
--#include <asm/iosf_mbi.h>
- #include <asm/cpu_device_id.h>
- #include <asm/intel-family.h>
-+#include <asm/iosf_mbi.h>
+ 	return 0;
+@@ -314,6 +316,7 @@ static void intel_rapl_tpmi_remove(struct auxiliary_device *auxdev)
+ {
+ 	struct tpmi_rapl_package *trp = auxiliary_get_drvdata(auxdev);
  
- /* bitmasks for RAPL MSRs, used by primitive access functions */
- #define ENERGY_STATUS_MASK      0xffffffff
++	rapl_package_remove_pmu(trp->rp);
+ 	rapl_remove_package(trp->rp);
+ 	trp_release(trp);
+ }
 -- 
 2.34.1
 
