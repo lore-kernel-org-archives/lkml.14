@@ -1,67 +1,64 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2F336AFB
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6743353389
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 08:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563827; cv=none; b=spyX0F9n73YgeejUpZLOiKL7KfRV4P65f3/2TLFakmg0CJC1bG9lx8+54weQGMwbtY4w6ine0bushskXfBNxenRy8MyaOTkAoG1uOsYsW61u7sZqCwxeQFgz4kHMXXmhKOg2i8lz8MtxDpXEYiMh9fgH5KCSc1/NvjRoNxY4ifs=
+	t=1712563831; cv=none; b=EvZqfa0fcvFIKsP6uSuqRQZpN8GMvwDM/fi1AU7Qcr6UVU8jAB4WJe7WfOPW4mjTYjRcKuQc4RpL4Bxef3n/vdkc7pIDN1H80qFHhL3MjnQ8axcCwrIYT7kZdLSFVfVDOxLfY44M+zUzaciK7f0yrgS3l8aOcuwnefp889moAbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563827; c=relaxed/simple;
-	bh=GHDQU9zd2nMXU7UlrQa3DtToNffnBvQ5Ugz2l1CzFYM=;
+	s=arc-20240116; t=1712563831; c=relaxed/simple;
+	bh=virOewUX4t0oSLmoki5IIgzfGSQ60/H3437FkDr3qko=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=rN3LJtVJ2v/kGLINElf6/lp+Su33Jhw6EVxfpFhUNSsUL5DyCX1gVwEazeVBXBwsHxjRpJXcokJeR6i1Ti1uGvM8d+06Sb0xfiHbKB3efaMSfrGYqqNobbZom2geghj2jo6Nq3zcFSQJRgSy1+PDNm+J05R4280x5A1PKovkGbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lA1jsfpf; arc=none smtp.client-ip=209.85.208.41
+	 Content-Disposition; b=pHviAc2de6PlAJKmiGBvOalsGaa71thsf4KjwJF/ZIr5soEOM/p0cGT6JpbPfwKOuG6AKt8x8XfaeKknzgCPrjVZTxj75SHHJ1bEF0vf37iidx1/7FTH7AJarooxTs9dtkGx6szkJv+DunVNq9u/3bDLx8Dck4AMQae6IUW1DOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JtK9dDMH; arc=none smtp.client-ip=209.85.218.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lA1jsfpf"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so4540988a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:10:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JtK9dDMH"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a51d7213a42so60585566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 01:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712563823; x=1713168623; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712563828; x=1713168628; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LOr2piSF59rBtL6qQkJRVxuVH7En2uLFiUAi/dy63d4=;
-        b=lA1jsfpfNIMPKQ3qH+2mopqRLcf3heuEPPpprN54142bgZ57ukTuIitDmKQGYUDwgK
-         u1eA82n6FfDFzT62zXPg4fKPfOCf7SPlmyfb7gjv1OefhVEEJi2RFqszkC8WJii2oOj3
-         I2tMjb2BrccF8OoctXyZPxXO8FDw6JE9r60nHUFr1KytJzzV3JrwjN4pgiXiI6oAsssr
-         Xj/oTcfPfSQdWGlUj5BE51PDpV5pj0MpVysmIv4fvWdKB1RiLK6zGRDaIa46/imDiieS
-         44ZpCA7fL+Lai6VmPe+/zw4n/muLAxkW7rrKA80hVt8GO5bLq662vsqVBaVSpc1U61HY
-         jjSw==
+        bh=SO3oSKHhB+QUpEgYOl7F+vhVd4MWO5gWULhDTn9lHJk=;
+        b=JtK9dDMHhI40zGAm112hD9FH+/Um82S5KZTsm3vXdSoVMMsXwePpUt/H4ASWhyXgH8
+         anE5e4xDNptqeEcyFZLOftnk9m+qbNFZ2Sy/4fgI+ErCudRGXKyn1G8p6nONzJK5nmZ1
+         M9FxZpGGc6F14bAjkhEGD/1eoc6rwsg/lT8nGs+lODyaUGT62X5xxiZh2V6FU0o0EPRb
+         SWqwE+ZfP7Ftu1uWPbAzbziLNF+TNsdBRLktzTNzPhfnDrVTQ/xvB9V/aOCOLHSvZeZT
+         2WlwsVdfBrm50l5LYBzDATMNhfcaQkTCsc0oPUYS+pSBBpbt97kxBjrP/dmxA+dXnEfQ
+         5lmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712563823; x=1713168623;
+        d=1e100.net; s=20230601; t=1712563828; x=1713168628;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LOr2piSF59rBtL6qQkJRVxuVH7En2uLFiUAi/dy63d4=;
-        b=w8W2EOB8f+TsHxhGywb1+UhgQ6bgHrjt5Vpqtv2Ev3WnTBJntdXV9UIgDKptghuDbU
-         RG5j51fNl4lhnqEHdeTPp5zAM2PsS1ZtekCRF1JUGy/+OFy+10/LAA+uK6EltaggXKOS
-         ySq7+yiqZmH5BeNcCFDa+CLe9tcwmfXY/F02DoZbFZL8nskLGV2KwCE068Om9aNVJpKi
-         HcEg0tcMUnS35fS8ZBGviuxbyvivgX9kiKsIkgmc71+GbcyZJgXMwS69EBiL49iUgJu6
-         bLPDt2oyQyzyRmM9K4fr3gNSiYCJpc0MGI3Y/vH3yncBFsCRYh+5S80map0Tn4i3l/Zp
-         fC/g==
-X-Forwarded-Encrypted: i=1; AJvYcCV3oIU1uykKARVqLs1yQGBZufKX+Z/vqcQ+JZCqcWwVAQPuEy4IgLrPe+PKiKmpW6v5jqNy51xgQKIaGN4+Mm2KsQK5ougyxanfk6XP
-X-Gm-Message-State: AOJu0YxHKPH140KYOrb1gXL/WQqm3WAwsbaCtQqR7320k3WZPJe4rrPX
-	rto4E8MU6J+fL57iWM7qy8J4vHJuyecnWDmZmmvGZgRQheVaCwOwuGeHvuwoj5U=
-X-Google-Smtp-Source: AGHT+IHSMNUBKuLQipt6eiK/GpbVAIRoVBfOGY9eusOY9M1lS39qRZiKY7EBBCgcSpTRamQWTGpjPQ==
-X-Received: by 2002:a50:d6d2:0:b0:56e:2bf4:fe0a with SMTP id l18-20020a50d6d2000000b0056e2bf4fe0amr6239511edj.35.1712563823192;
-        Mon, 08 Apr 2024 01:10:23 -0700 (PDT)
+        bh=SO3oSKHhB+QUpEgYOl7F+vhVd4MWO5gWULhDTn9lHJk=;
+        b=psUv9njZjw+MnYk6p+kwQkIdykRYFrhJXWFvuw/V7r86j7X/cGcCpi1nS05PyX9So1
+         o20O0npz4mga15sGCD20fdI3IAu/4mnFRqEJ3/7tgOseZnaqAfUgRxyGazAiXk8Hv/Gs
+         C9NO+kbTn0353IxYgCOWAjppwONmtxhsA3aJilR4NYOLaDWmh0zs2pAiL6YWjUDBmUqw
+         ST2YvEWoyERch7tbCv2egheCHkXZuc5O4rqYRJp2z0lVDl3XEmHAzuxU4FMRBgCyJnDq
+         B+Sr7H2lL6AN90jDfi1TV4Z4cNQPGZb2N/0/tAe06Q+Vf8ad9/oxMx0RJuz4IUTRE9vg
+         YeGw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDCyITlc67FD3D1CjEte3kyJm3D0coibMAs87vxYiddUKsuNBCzzzMbVSqho40Lrj2I8b612W1yc7ZvbiDsJgseLy64o3I/Pi1aHhX
+X-Gm-Message-State: AOJu0Yw6WuNp4SZU7ycmlMrdMNaws76ZXx36igvf60sGZDcLkeQkmD37
+	dHoENUGMyVRYy1PA83BjeuyPVwCoVLNXip+VWFzeFQiLMTZ2+DSwb08zmAGMxmY=
+X-Google-Smtp-Source: AGHT+IGBP2Eb1evno6OQER1fBynnrKOVTRDH6lrULwXK4u5X7YCnyIyHK40Fs4HT+0CKsXZ9E+hNfQ==
+X-Received: by 2002:a17:906:ae4f:b0:a47:4bd6:9857 with SMTP id lf15-20020a170906ae4f00b00a474bd69857mr4337354ejb.64.1712563827422;
+        Mon, 08 Apr 2024 01:10:27 -0700 (PDT)
 Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id b14-20020aa7c90e000000b0056e46beba6dsm2416447edt.16.2024.04.08.01.10.22
+        by smtp.gmail.com with ESMTPSA id r11-20020a1709067fcb00b00a4e9359fbe8sm4091818ejs.44.2024.04.08.01.10.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 01:10:23 -0700 (PDT)
-Date: Mon, 8 Apr 2024 10:36:35 +0300
+        Mon, 08 Apr 2024 01:10:27 -0700 (PDT)
+Date: Mon, 8 Apr 2024 10:38:02 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/panthor: clean up some types in panthor_sched_suspend()
-Message-ID: <85356b15-4840-4e64-8c75-922cdd6a5fef@moroto.mountain>
+Subject: [PATCH] ASoC: soc-card: Fix a reversed if condition
+Message-ID: <155bb76e-dc57-4a5c-b0eb-acee5ebde9f4@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,33 +69,28 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-These variables should be u32 instead of u64 because they're only
-storing u32 values.  Also static checkers complain when we do:
+This if condition is reversed.  But fortunately, it has very little
+impact on runtime behavior.
 
-	suspended_slots &= ~upd_ctx.timedout_mask;
-
-In this code "suspended_slots" is a u64 and "upd_ctx.timedout_mask".  The
-mask clears out the top 32 bits which would likely be a bug if anything
-were stored there.
-
+Fixes: ef7784e41db7 ("ASoC: soc-card: Add KUnit test case for snd_soc_card_get_kcontrol")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/gpu/drm/panthor/panthor_sched.c | 2 +-
+ sound/soc/soc-card-test.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-index d4bc652b34d5..b3a51a6de523 100644
---- a/drivers/gpu/drm/panthor/panthor_sched.c
-+++ b/drivers/gpu/drm/panthor/panthor_sched.c
-@@ -2546,7 +2546,7 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
- {
- 	struct panthor_scheduler *sched = ptdev->scheduler;
- 	struct panthor_csg_slots_upd_ctx upd_ctx;
--	u64 suspended_slots, faulty_slots;
-+	u32 suspended_slots, faulty_slots;
- 	struct panthor_group *group;
- 	u32 i;
+diff --git a/sound/soc/soc-card-test.c b/sound/soc/soc-card-test.c
+index 075c52fe82e5..a9fe7d243807 100644
+--- a/sound/soc/soc-card-test.c
++++ b/sound/soc/soc-card-test.c
+@@ -148,7 +148,7 @@ static int soc_card_test_case_init(struct kunit *test)
+ 	priv->card->owner = THIS_MODULE;
  
+ 	ret = snd_soc_register_card(priv->card);
+-	if (!ret)
++	if (ret)
+ 		return ret;
+ 
+ 	return 0;
 -- 
 2.43.0
 
