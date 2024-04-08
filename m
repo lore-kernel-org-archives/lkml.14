@@ -1,121 +1,111 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3C41442F3
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3906B1E532;
+	Mon,  8 Apr 2024 18:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712599799; cv=none; b=UnZ2ovbo3I5m1JeAz2XSei6a5K+8A/pZ96gPpy3Vd4A7NmDxTnjny3ATvgB25zmcKds1L7/fWitoU0RnoAJYHyxp92aBxWhW1/uLtOBJ2LjOX2jNtFLiBBG4WF12FKWxb0bpJjrHvFcwKK63BFuY2eIYGf6e6FM1M8nN8E2PCLE=
+	t=1712600103; cv=none; b=qHei4SoMm5ukA5X4eBA25jHVdmmhiFexFFA29YQ8TT9w7iLYXP7DkPhcg0kt+bHYiGW6wKaxqfAm4Pe2Vh3mI3pP4PL5MHIwWv+0qG+eL+6PIB1auKHobYF4pIlHcUr+3GsgI5jmOE1xaMct54eKe7xeglxdJ7Vg57d8Xp38HaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712599799; c=relaxed/simple;
-	bh=WP8hAFXeEVd5tHoNZiaf7s8D8tEPRQgQjUGi1E9MqKs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=q8EKqi5ZTLwrmcITnF3nnXpWDam3Eu76Yqqz8LI6Oa8/wCP/8H9NQwbSFrxfVA2qEil5LkR9Cw2JTTOurw20lGTcHXa/Vy455EqDA8STQXQ87NtxY2iFC/BskX9DLzNDlCmMlcMi9jJvCo1NRWeNLiGuuw9CGAN8S+dkzYMbFPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jfraker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Oa/maYBr; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jfraker.bounces.google.com
+	s=arc-20240116; t=1712600103; c=relaxed/simple;
+	bh=DRLQBzi4n7i2Dg4ZtyUnMCFLjm5PQPflcAJMjZDoMg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QXLwom81nuTjJ+uJbk8Or74jR4RwT5FvGZNVbPUZFB6JMRXp8OazOnol8RuwKXJCgPQGOuW/N8sX1NL0efr1jV6an9w2QnVjqumW3P0Zi7PSgKW0TT2ylcK+BQSfTdN4ey43Ka/qhWJ3bVWvO6TugzofLHmsin49ynfHm4x5BKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=rD/DuaXG; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Oa/maYBr"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6e6bab4b84dso4668210b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 11:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712599798; x=1713204598; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dgbG1Kt8OxqM+KCQPgmquqh3ShladChtxEoh6/p4jxE=;
-        b=Oa/maYBrXDZ8MWW7hDNFr9Qm4xuJxoHOgHIZmDo5S7LH4MO3peb0+4wDE7Buvql20V
-         7K9q6fD9BXm7XpoQmi5cgJqGq5uMoBjPYjANen4IxaOaG2DCQRHKdIhih7cLbr2r2XkU
-         JcfQwjXb6uYQhNhYeH5B+MkHaXOOYH7Gy8UPO+JCa/NknnWqilc75osLvX2MB8HZOBI9
-         ZOQ+vGjkXQdNVaApaA0PxJeJjwgCaTUMvTVm0wtzueNvpeX/IaswS69/FwmbHK083U1i
-         0fz9FvQEtUUIvBQwdvCyekd0tXiIJIMSIABpGjLR6OkeIiudxYipl5Yl/VVjyBngIkKi
-         Answ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712599798; x=1713204598;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dgbG1Kt8OxqM+KCQPgmquqh3ShladChtxEoh6/p4jxE=;
-        b=TONIEpGWj7YZn+iBgOsBkJnc6HmdsJxFMXf9cqqiF+HwcC8LmEVysFPfgUHn2JGeJF
-         owrHcex8njN/mzdVX08n1641bk2KSIor82BN8RW29FGWbrZrz3gleUr4urEip0t6e3Z6
-         3cLVhk8gHIznRzl+JoNSq4k27Uxfbwx7h/b3566aWnvXfYaHVAZ9FfKVdYM2v+w+7AR8
-         bTKIGbD8hlrY3KxxO3lZ4j+ECkrzDOyWuOG8GCkYB7+vhJrDph9rRQK4zlY9BPcPaRYB
-         aPEPynsZv5OYJSLzN/jMtNgPqxqOU18NKS2xOrBELMio0AM/xEHjxrIoe92LlXoxCmKf
-         iuug==
-X-Forwarded-Encrypted: i=1; AJvYcCXUDzgo5k/tug8cNnJUrwRfnhaa9kXmXLTqJcV6APOHi76M9Am6ulvBmJCK9tn/PU2nCnipVGYb62eKzvgRdlnSzKr+Z1o/YR9hDqV7
-X-Gm-Message-State: AOJu0YxcnfWSdsaIy2LFyRVFJC+3Qv9ABVfxsH252NomV8TwE0ioe/yH
-	jrkwB6Nam56+9dxb7Bxpesr5iF/J39SW2HERvYjgVEVkHi+lWuyBUGO2nI9UqkMV0J2JjpUMsmi
-	fLyRJ5A==
-X-Google-Smtp-Source: AGHT+IHEQdg+WFK20td73HXYL1HOcs2r0AnCOwnHy4r3acAolUl2JpksDFSa12UIh86gW5W6t8zQ6Ud+xxdx
-X-Received: from jfraker202.plv.corp.google.com ([2620:15c:11c:202:81fa:e559:a246:3147])
- (user=jfraker job=sendgmr) by 2002:a05:6a00:2d8f:b0:6ea:c7a2:b4c5 with SMTP
- id fb15-20020a056a002d8f00b006eac7a2b4c5mr866601pfb.3.1712599797626; Mon, 08
- Apr 2024 11:09:57 -0700 (PDT)
-Date: Mon,  8 Apr 2024 11:09:01 -0700
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="rD/DuaXG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lABSIXPCn9p8sq353W0yAZhqYSCgGyOF0S6qhldHPVs=; b=rD/DuaXGJUwscfQo6NGAG8g65s
+	tCzL7+mWcBjrNTrmZag077vReK7YhF9gncf0MwHcNkynQKZrrryCqMno6LpBRbsLVkbJMYcqMTk8p
+	j5iM0qqotUpxDQkZc8YMeNhn2cmm3ZYMqLbv1IJXwIUjXasU7KmeUFqQvZMU5UYpUgad729+PY6uv
+	3I1xKRatGGvS5iW2NGLFI18yKnjFt+vrFUqwT+7nvKoM/L+0XYV31HiBHJxan0g8SvYgmUIdZUgj/
+	5zB/CAY0RdNSRipc6fkXry6fwS74eDECzfGai5oX7VzRgvQJxFnC3suRfxdoHCWpGXqr3xatvzgfQ
+	99plpD5Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rttVt-008cm8-04;
+	Mon, 08 Apr 2024 18:14:37 +0000
+Date: Mon, 8 Apr 2024 19:14:36 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Boqun Feng <boqun.feng@gmail.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	llvm@lists.linux.dev, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	kent.overstreet@gmail.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, elver@google.com,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [WIP 0/3] Memory model and atomic API in Rust
+Message-ID: <20240408181436.GO538574@ZenIV>
+References: <20240322233838.868874-1-boqun.feng@gmail.com>
+ <s2jeqq22n5ef5jknaps37mfdjvuqrns4w7i22qp2r7r4bzjqs2@my3eyxoa3pl3>
+ <CAHk-=whY5A=S=bLwCFL=043DoR0TTgSDUmfPDx2rXhkk3KANPQ@mail.gmail.com>
+ <u2suttqa4c423q4ojehbucaxsm6wguqtgouj7vudp55jmuivq3@okzfgryarwnv>
+ <CAHk-=whkQk=zq5XiMcaU3xj4v69+jyoP-y6Sywhq-TvxSSvfEA@mail.gmail.com>
+ <c51227c9a4103ad1de43fc3cda5396b1196c31d7.camel@redhat.com>
+ <CAHk-=wjP1i014DGPKTsAC6TpByC3xeNHDjVA4E4gsnzUgJBYBQ@mail.gmail.com>
+ <ZhQVHZnU3beOhEGU@casper.infradead.org>
+ <CAHk-=whmmeU_r_o+sPMcr7tPr-EU+HLnmL+GaWUkMUW0kDzDxw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240408180918.2773238-1-jfraker@google.com>
-Subject: [PATCH net-next] gve: Correctly report software timestamping capabilities
-From: John Fraker <jfraker@google.com>
-To: netdev@vger.kernel.org
-Cc: John Fraker <jfraker@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Shailend Chand <shailend@google.com>, 
-	Willem de Bruijn <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Junfeng Guo <junfeng.guo@intel.com>, 
-	Ziwei Xiao <ziweixiao@google.com>, Jeroen de Borst <jeroendb@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whmmeU_r_o+sPMcr7tPr-EU+HLnmL+GaWUkMUW0kDzDxw@mail.gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-gve has supported software timestamp generation since its inception,
-but has not advertised that support via ethtool. This patch correctly
-advertises that support.
+On Mon, Apr 08, 2024 at 10:01:32AM -0700, Linus Torvalds wrote:
 
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Signed-off-by: John Fraker <jfraker@google.com>
+> For our own historical reasons, while we have a few generic atomic
+> operations: bit operations, cmpxchg, etc, most of our arithmetic and
+> logical ops all rely on a special "atomic_t" type (later extended with
+> "atomic_long_t").
+> 
+> The reason? The garbage that is legacy Sparc atomics.
+> 
+> Sparc historically basically didn't have any atomics outside of the
+> 'test and set byte' one, so if you wanted an atomic counter thing, and
+> you cared about sparc, you had to play games with "some bits of the
+> counter are the atomic byte lock".
+> 
+> And we do not care about that Sparc horror any *more*, but we used to.
 
----
- drivers/net/ethernet/google/gve/gve_ethtool.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
-index 815dead..99f5aeb 100644
---- a/drivers/net/ethernet/google/gve/gve_ethtool.c
-+++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
-@@ -4,6 +4,8 @@
-  * Copyright (C) 2015-2021 Google, Inc.
-  */
- 
-+#include <linux/ethtool.h>
-+#include <linux/net_tstamp.h>
- #include <linux/rtnetlink.h>
- #include "gve.h"
- #include "gve_adminq.h"
-@@ -763,6 +765,15 @@ static int gve_set_coalesce(struct net_device *netdev,
- 	return 0;
- }
- 
-+static int gve_get_ts_info(struct net_device *netdev, struct ethtool_ts_info *info)
-+{
-+	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-+				SOF_TIMESTAMPING_TX_SOFTWARE |
-+				SOF_TIMESTAMPING_SOFTWARE;
-+
-+	return 0;
-+}
-+
- const struct ethtool_ops gve_ethtool_ops = {
- 	.supported_coalesce_params = ETHTOOL_COALESCE_USECS,
- 	.supported_ring_params = ETHTOOL_RING_USE_TCP_DATA_SPLIT,
-@@ -784,5 +795,6 @@ const struct ethtool_ops gve_ethtool_ops = {
- 	.set_tunable = gve_set_tunable,
- 	.get_priv_flags = gve_get_priv_flags,
- 	.set_priv_flags = gve_set_priv_flags,
--	.get_link_ksettings = gve_get_link_ksettings
-+	.get_link_ksettings = gve_get_link_ksettings,
-+	.get_ts_info = gve_get_ts_info
- };
--- 
-2.44.0.478.gd926399ef9-goog
-
+FWIW, PA-RISC is no better - the same "fetch and replace with constant"
+kind of primitive as for sparc32, only the constant is (u32)0 instead
+of (u8)~0.  And unlike sparc64, 64bit variant didn't get better.
