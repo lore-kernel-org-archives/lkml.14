@@ -1,73 +1,114 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08E4C651AB;
-	Mon,  8 Apr 2024 11:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2795FB97;
+	Mon,  8 Apr 2024 11:21:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712575200; cv=none; b=nfUOMZkxpKyY0MWDNFEV0nY9OoldGjq43JWZJKZzXxVHmF+HTuVxAWBQWDprLJBcdPRWrsf9c4SyrGvBLz7cIWP0kRcGrVrO5/ARTkujQyvze35aS3leevZm0KRSmtH7qbJ6qFpqN4K34U4n7UAYtmLtMcvz3rtrEgukkdcJflY=
+	t=1712575317; cv=none; b=eXSLxARZfn78WGInb5j5FPo4HTqQCL8Tm677hjBaL3TKntocW1YZqpwgbV97WsTtZev1H7sokS3KmOvoom0W1D2koWW/Eyg6M4qBMpJM+SUEl4JPb4IB49bGBTd32e9Lz7SrKI94dJJmYPy0H7rrN08TPazzQajVqV3gehEnD64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712575200; c=relaxed/simple;
-	bh=wD+Fo20bnrhoPJfi7YZ187f/1U0jGmS8VTzoEFMI1NE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bDvSo5NDFNeE+rfgUqQ+ktPD0iJg/p5VAIXGbqlsIqv+yoPeJUEuhaFHf46lmsJthT0ZjKuVXfqBfOKVPlgdQiF4Z5DU3RxnFN81Hmx8BS+7NPxT3V7rANxwCqAEE4mYfUjt4JT89TOIBWRHZJj+0OWMLGuO2vc6vXt63H77RRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B7E8261E5FE07;
-	Mon,  8 Apr 2024 13:18:53 +0200 (CEST)
-Message-ID: <256fdb2e-9b83-4837-bd31-0c34e4267c31@molgen.mpg.de>
-Date: Mon, 8 Apr 2024 13:18:52 +0200
+	s=arc-20240116; t=1712575317; c=relaxed/simple;
+	bh=fdquaXWCbYL4ik7x4w+mTdj5QkTTmaC30QJ1pMlJkJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfhRVxvH+yqyg2c2eti9ahw5ibkSXyAVjbBpK7JHndJXqflgkG65yaxUlnwtP/KWDOWCWcbXEKO3Y5JfnB/5oIy4irNH/ix51V1KqC+hCADB83K8mozkA4v8Md5kfup/fqSJmDMLoJehTr2IzFPRq+9gOj1ul+5OhTmM6X2tR/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=cxWklAGe; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="cxWklAGe"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id 2F9B51C006B; Mon,  8 Apr 2024 13:21:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1712575312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BrP8N21nXarKEWVxpMkevruH+XMKp5XToFxXZz5jtTM=;
+	b=cxWklAGeXe6x3EkvF82RB5i7oLcXDXwKw3Y7ozLZDFUGQNZVVQczWqUPVycL5ywH4XJPTo
+	h1w+sBy0Wv4iKUUMPmzMVVqkaw4cceMGBKRCcokHcTVr0ktLqjTJHcMVoT+CnRGTTzHt/n
+	XbbeHL3NCwuQPQNBGREv7pN7ZnrXnq0=
+Date: Mon, 8 Apr 2024 13:21:51 +0200
+From: Pavel Machek <pavel@ucw.cz>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: phone-devel@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>,
+	fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org,
+	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
+	megi@xff.cz
+Subject: Re: [PATCHv3 1/2] dt-bindings: usb: typec: anx7688: start a binding
+ document
+Message-ID: <ZhPTTxI4oTF3pgrk@duo.ucw.cz>
+References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
+ <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
- #08!!! on Dell XPS 13 9360
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
- <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
-References: <354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de>
- <87o7ak411y.fsf@somnus>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <87o7ak411y.fsf@somnus>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Dear Anna-Maria,
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PGNyKrA94GXh8GmU"
+Content-Disposition: inline
+In-Reply-To: <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
 
 
-Thank you for your response.
+--PGNyKrA94GXh8GmU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi!
 
-Am 08.04.24 um 12:10 schrieb Anna-Maria Behnsen:
+> > Add binding for anx7688 usb type-c bridge. I don't have a datasheet,
+> > but I did best I could.
+> >=20
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> ...
+>=20
+> > +  cabledet-gpios:
+> > +    maxItems: 1
+> > +    description: GPIO controlling CABLE_DET (C3) pin.
+> > +
+> > +  avdd10-supply:
+> > +    description: 1.0V power supply going to AVDD10 (A4, ...) pins
+> > +
+> > +  dvdd10-supply:
+> > +    description: 1.0V power supply going to DVDD10 (D6, ...) pins
+> > +
+> > +  avdd18-supply:
+> > +    description: 1.8V power supply going to AVDD18 (E3, ...) pins
+> > +
+> > +  dvdd18-supply:
+> > +    description: 1.8V power supply going to DVDD18 (G4, ...) pins
+> > +
+> > +  avdd33-supply:
+> > +    description: 3.3V power supply going to AVDD33 (C4, ...) pins
+> > +
+> > +  i2c-supply: true
+> > +  vconn-supply: true
+>=20
+> There are no such supplies like i2c and vconn on the schematics.
+>=20
+> I think this represents some other part of component which was added
+> here only for convenience.
 
-> Paul Menzel writes:
+Can you give me pointer to documentation you are looking at?
 
->> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9-rc2+
->> built from commit b1e6ec0a0fd0 (Merge tag 'docs-6.9-fixes' of
->> git://git.lwn.net/linux) the external USB-C adapter Dell DA300 stopped
->> working (only the Ethernet port was used). Linux logged:
-> 
-> thanks for the report. Can you please provide a trace beside the dmesg
-> output? The following trace events should be enabled (via kernel command
-> line):
-> 
-> trace_event=timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit
-Unfortunately I haven’t been able to reproduce it until now. Should it 
-happen again, I am going to try your suggestion.
+Best regards,
+							Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
 
+--PGNyKrA94GXh8GmU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind regards,
+-----BEGIN PGP SIGNATURE-----
 
-Paul
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhPTTwAKCRAw5/Bqldv6
+8pSfAKChCJQYbXh+ffiYIr3g7dsXssSWbQCfT8lWq5X3vnCAnv25EY7uJIVeogE=
+=7fNt
+-----END PGP SIGNATURE-----
+
+--PGNyKrA94GXh8GmU--
