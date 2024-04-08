@@ -1,279 +1,286 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFE96025E
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 11:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92F733FB81;
+	Mon,  8 Apr 2024 11:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712574481; cv=none; b=HN/eTKMNDfyigDDxbLks00Zfp42/SrW0KOMzu7QgXaGZiHy4klYzzh8ftwBXVcHzxG/G+Jqm/XAqpmExdnv6mAy9Cfw19cJxyK7c65YlC3yAcjtGXdYDVyNyj3tg9RH1lgs6V6SAHPz/iBUwj8Bea9JLrDM9EUapZ8Lp5xuJyMc=
+	t=1712574564; cv=none; b=r162lVlZEb5spTvET81ToOtSAh9hZTW5hfjqFtfg4VHvTqI3ltPRzyhGOa6f8tN3bP5qji/MUid1eDxosl6ely5aVD7Y0CFT8/N+vcvAUbUakOmFFWBJxx8Y+NK5wUxmPCRW2VB3qW7vsg/SauH237YTIqMtjy9WQ8NbqMYcgAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712574481; c=relaxed/simple;
-	bh=YhxUQBg3n3cTnufK2zPe131A0C62pT4wrNfA/Coth50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OgBsELtpBfQSA4JL9IOhrjE4/60j1KyTVp9sIAvVveY6mFSPW1zcp7ILwHnCvRU2sxEBLEiFQ8x3YzbWMqF1gRZENf2xUL8C2MXNFJhO6lZNuvrvpAajfpC6u49m1psZZuucfEC6n2Hgh+C81b/3WryVg/KlWcy6EEX1MNaB+GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=Ht5rXnBv; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="Ht5rXnBv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=G8yNq+5/1rE8/5Dwk4z6wsHTs+C7YBQ68IPG6F+ovZ4=; b=Ht5rXnBvynUwwe/qU0kYhHgQC1
-	6P0cPSJATQGx0nHe6NQoKbIkAmZjdBsLxkIa1HDIwNH57McaHgs8iZZGafYVY0CT1k2YSrv/JXoLC
-	lU1xexwN53IQORZdi08jz9lI3P23ebeejTcI9ju67bd92HMrJG6sVU9RnXVQjZEIO2hBdWmA5RqTX
-	pBNcS2stYbU5lGoEQ4GroAZCjXMySrSkpm1bq4gjyJb+OnCKAqvznji/nRJ1uftpEzUR2ShDvjPi5
-	B5zT8m+MiBJ1mdoGZmysdTkN19nHGFtE4ta1ShF1jAyLYX0NjM3LdyGj/JyF7xzLeYv5x2E3ePXRg
-	Ovd53EVQ==;
-Received: from [177.34.169.255] (helo=[192.168.0.139])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rtmqY-002Tcn-Hz; Mon, 08 Apr 2024 13:07:30 +0200
-Message-ID: <eb52c5b7-074e-4f63-a5c4-c693190b5805@igalia.com>
-Date: Mon, 8 Apr 2024 08:07:20 -0300
+	s=arc-20240116; t=1712574564; c=relaxed/simple;
+	bh=9CeiNUcdm4E9QUyAOhGqsopVTsAAf2iZyW0FuV0/aj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AiSC2soF3wbuz0qjJLbvA58Oub9K+eLqXRSJ/Vb65NEbpJpdEYniLF+MKT2oAm+p8MdznCvcxYyYrwl++hjFITsaGcErq5TqpizW7g8V4LDF8ETTG/Hj/NB8ClNbq9m+mLmxZY73iAKXFU6inj5vS8XMFz++v9bIuniGPDzp7ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F921DA7;
+	Mon,  8 Apr 2024 04:09:52 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A97743F766;
+	Mon,  8 Apr 2024 04:09:20 -0700 (PDT)
+Date: Mon, 8 Apr 2024 12:09:18 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, sudeep.holla@arm.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: mailbox: arm,mhuv3: Add bindings
+Message-ID: <ZhPQXgMP_BahaJ66@pluto>
+References: <20240404062347.3219795-1-cristian.marussi@arm.com>
+ <20240404062347.3219795-2-cristian.marussi@arm.com>
+ <CABb+yY07OQQ8gAOZM2iV7nh_P5sQPWwNPODfwnJNZoPk8MNg2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/panfrost: Show overall GPU usage stats through sysfs
- knob
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
- Rob Herring <robh@kernel.org>, Steven Price <steven.price@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- kernel@collabora.com, Christopher Healy <healych@amazon.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20240404140014.1022816-1-adrian.larumbe@collabora.com>
- <364bd804-2be6-4a0a-a3d2-e6fa136a73ab@igalia.com>
- <6aoklcyuvvxgqecjzatn2xopevbsrejhkvzmcqosbu2wkngtui@36gynkk5fay6>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-Autocrypt: addr=mcanal@igalia.com; keydata=
- xjMEZIsaeRYJKwYBBAHaRw8BAQdAGU6aY8oojw61KS5rGGMrlcilFqR6p6ID45IZ6ovX0h3N
- H01haXJhIENhbmFsIDxtY2FuYWxAaWdhbGlhLmNvbT7CjwQTFggANxYhBDMCqFtIvFKVRJZQ
- hDSPnHLaGFVuBQJkixp5BQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQNI+cctoYVW5u
- GAEAwpaC5rI3wD8zqETKwGVoXd6+AbmGfZuVD40xepy7z/8BAM5w95/oyPsHUqOsg/xUTlNp
- rlbhA+WWoaOXA3XgR+wCzjgEZIsaeRIKKwYBBAGXVQEFAQEHQGoOK0jgh0IorMAacx6WUUWb
- s3RLiJYWUU6iNrk5wWUbAwEIB8J+BBgWCAAmFiEEMwKoW0i8UpVEllCENI+cctoYVW4FAmSL
- GnkFCQWjmoACGwwACgkQNI+cctoYVW6cqwD/Q9R98msvkhgRvi18fzUPFDwwogn+F+gQJJ6o
- pwpgFkAA/R2zOfla3IT6G3SBoV5ucdpdCpnIXFpQLbmfHK7dXsAC
-In-Reply-To: <6aoklcyuvvxgqecjzatn2xopevbsrejhkvzmcqosbu2wkngtui@36gynkk5fay6>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABb+yY07OQQ8gAOZM2iV7nh_P5sQPWwNPODfwnJNZoPk8MNg2w@mail.gmail.com>
 
-On 4/4/24 18:30, Adrián Larumbe wrote:
-> On 04.04.2024 11:31, Maíra Canal wrote:
->> On 4/4/24 11:00, Adrián Larumbe wrote:
->>> This changeset is heavily inspired by commit 509433d8146c ("drm/v3d: Expose
->>> the total GPU usage stats on sysfs"). The point is making broader GPU
->>> occupancy numbers available through the sysfs interface, so that for every
->>> job slot, its number of processed jobs and total processing time are
->>> displayed.
->>
->> Shouldn't we make this sysfs interface a generic DRM interface?
->> Something that would be standard for all drivers and that we could
->> integrate into gputop in the future.
+On Sun, Apr 07, 2024 at 06:38:52PM -0500, Jassi Brar wrote:
+> On Thu, Apr 4, 2024 at 1:25 AM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+> >
+> > Add bindings for the ARM MHUv3 Mailbox controller.
+> >
+
+Hi,
+
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ---
+> > v2 -> v3
+> > - fixed spurious tabs in dt_binding_check
+> > v1 -> v2
+> > - clarified extension descriptions around configurability and discoverability
+> > - removed unused labels from the example
+> > - using pattern properties to define interrupt-names
+> > - bumped interrupt maxItems to 74 (allowing uo to 8 channels per extension)
+> > ---
+> >  .../bindings/mailbox/arm,mhuv3.yaml           | 217 ++++++++++++++++++
+> >  1 file changed, 217 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml b/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
+> > new file mode 100644
+> > index 000000000000..32a8bb711464
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm,mhuv3.yaml
+> > @@ -0,0 +1,217 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mailbox/arm,mhuv3.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ARM MHUv3 Mailbox Controller
+> > +
+> > +maintainers:
+> > +  - Sudeep Holla <sudeep.holla@arm.com>
+> > +  - Cristian Marussi <cristian.marussi@arm.com>
+> > +
+> > +description: |
+> > +  The Arm Message Handling Unit (MHU) Version 3 is a mailbox controller that
+> > +  enables unidirectional communications with remote processors through various
+> > +  possible transport protocols.
+> > +  The controller can optionally support a varying number of extensions that, in
+> > +  turn, enable different kinds of transport to be used for communication.
+> > +  Number, type and characteristics of each supported extension can be discovered
+> > +  dynamically at runtime.
+> > +
+> > +  Given the unidirectional nature of the controller, an MHUv3 mailbox controller
+> > +  is composed of a MHU Sender (MHUS) containing a PostBox (PBX) block and a MHU
+> > +  Receiver (MHUR) containing a MailBox (MBX) block, where
+> > +
+> > +   PBX is used to
+> > +      - Configure the MHU
+> > +      - Send Transfers to the Receiver
+> > +      - Optionally receive acknowledgment of a Transfer from the Receiver
+> > +
+> > +   MBX is used to
+> > +      - Configure the MHU
+> > +      - Receive Transfers from the Sender
+> > +      - Optionally acknowledge Transfers sent by the Sender
+> > +
+> > +  Both PBX and MBX need to be present and defined in the DT description if you
+> > +  need to establish a bidirectional communication, since you will have to
+> > +  acquire two distinct unidirectional channels, one for each block.
+> > +
+> > +  As a consequence both blocks needs to be represented separately and specified
+> > +  as distinct DT nodes in order to properly describe their resources.
+> > +
+> > +  Note that, though, thanks to the runtime discoverability, there is no need to
+> > +  identify the type of blocks with distinct compatibles.
+> > +
+> > +  Following are the MHUv3 possible extensions.
+> > +
+> > +  - Doorbell Extension (DBE): DBE defines a type of channel called a Doorbell
+> > +    Channel (DBCH). DBCH enables a single bit Transfer to be sent from the
+> > +    Sender to Receiver. The Transfer indicates that an event has occurred.
+> > +    When DBE is implemented, the number of DBCHs that an implementation of the
+> > +    MHU can support is between 1 and 128, numbered starting from 0 in ascending
+> > +    order and discoverable at run-time.
+> > +    Each DBCH contains 32 individual fields, referred to as flags, each of which
+> > +    can be used independently. It is possible for the Sender to send multiple
+> > +    Transfers at once using a single DBCH, so long as each Transfer uses
+> > +    a different flag in the DBCH.
+> > +    Optionally, data may be transmitted through an out-of-band shared memory
+> > +    region, wherein the MHU Doorbell is used strictly as an interrupt generation
+> > +    mechanism, but this is out of the scope of these bindings.
+> > +
+> > +  - FastChannel Extension (FCE): FCE defines a type of channel called a Fast
+> > +    Channel (FCH). FCH is intended for lower overhead communication between
+> > +    Sender and Receiver at the expense of determinism. An FCH allows the Sender
+> > +    to update the channel value at any time, regardless of whether the previous
+> > +    value has been seen by the Receiver. When the Receiver reads the channel's
+> > +    content it gets the last value written to the channel.
+> > +    FCH is considered lossy in nature, and means that the Sender has no way of
+> > +    knowing if, or when, the Receiver will act on the Transfer.
+> > +    FCHs are expected to behave as RAM which generates interrupts when writes
+> > +    occur to the locations within the RAM.
+> > +    When FCE is implemented, the number of FCHs that an implementation of the
+> > +    MHU can support is between 1-1024, if the FastChannel word-size is 32-bits,
+> > +    or between 1-512, when the FastChannel word-size is 64-bits.
+> > +    FCHs are numbered from 0 in ascending order.
+> > +    Note that the number of FCHs and the word-size are implementation defined,
+> > +    not configurable but discoverable at run-time.
+> > +    Optionally, data may be transmitted through an out-of-band shared memory
+> > +    region, wherein the MHU FastChannel is used as an interrupt generation
+> > +    mechanism which carries also a pointer to such out-of-band data, but this
+> > +    is out of the scope of these bindings.
+> > +
+> > +  - FIFO Extension (FE): FE defines a Channel type called a FIFO Channel (FFCH).
+> > +    FFCH allows a Sender to send
+> > +       - Multiple Transfers to the Receiver without having to wait for the
+> > +         previous Transfer to be acknowledged by the Receiver, as long as the
+> > +         FIFO has room for the Transfer.
+> > +       - Transfers which require the Receiver to provide acknowledgment.
+> > +       - Transfers which have in-band payload.
+> > +    In all cases, the data is guaranteed to be observed by the Receiver in the
+> > +    same order which the Sender sent it.
+> > +    When FE is implemented, the number of FFCHs that an implementation of the
+> > +    MHU can support is between 1 and 64, numbered starting from 0 in ascending
+> > +    order. The number of FFCHs, their depth (same for all implemented FFCHs) and
+> > +    the access-granularity are implementation defined, not configurable but
+> > +    discoverable at run-time.
+> > +    Optionally, additional data may be transmitted through an out-of-band shared
+> > +    memory region, wherein the MHU FIFO is used to transmit, in order, a small
+> > +    part of the payload (like a header) and a reference to the shared memory
+> > +    area holding the remaining, bigger, chunk of the payload, but this is out of
+> > +    the scope of these bindings.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: arm,mhuv3
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 74
+> > +
+> > +  interrupt-names:
+> > +    description: |
+> > +      The MHUv3 controller generates a number of events some of which are used
+> > +      to generate interrupts; as a consequence it can expose a varying number of
+> > +      optional PBX/MBX interrupts, representing the events generated during the
+> > +      operation of the various transport protocols associated with different
+> > +      extensions. All interrupts of the MHU are level-sensitive.
+> > +      Some of these optional interrupts are defined per-channel, where the
+> > +      number of channels effectively available is implementation defined and
+> > +      run-time discoverable.
+> > +      In the following names are enumerated using patterns, with per-channel
+> > +      interrupts implicitly capped at the maximum channels allowed by the
+> > +      specification for each extension type.
+> > +      For the sake of simplicity maxItems is anyway capped to a most plausible
+> > +      number, assuming way less channels would be implemented than actually
+> > +      possible.
+> > +
+> > +      The only mandatory interrupts on the MHU are:
+> > +        - combined
+> > +        - mbx-fch-xfer-<N> but only if mbx-fcgrp-xfer-<N> is not implemented.
+> > +
+> > +    minItems: 1
+> > +    maxItems: 74
+> > +    items:
+> > +      oneOf:
+> > +        - const: combined
+> > +          description: PBX/MBX Combined interrupt
+> > +        - const: combined-ffch
+> > +          description: PBX/MBX FIFO Combined interrupt
+> > +        - pattern: '^ffch-low-tide-[0-9]+$'
+> > +          description: PBX/MBX FIFO Channel <N> Low Tide interrupt
+> > +        - pattern: '^ffch-high-tide-[0-9]+$'
+> > +          description: PBX/MBX FIFO Channel <N> High Tide interrupt
+> > +        - pattern: '^ffch-flush-[0-9]+$'
+> > +          description: PBX/MBX FIFO Channel <N> Flush interrupt
+> > +        - pattern: '^mbx-dbch-xfer-[0-9]+$'
+> > +          description: MBX Doorbell Channel <N> Transfer interrupt
+> > +        - pattern: '^mbx-fch-xfer-[0-9]+$'
+> > +          description: MBX FastChannel <N> Transfer interrupt
+> > +        - pattern: '^mbx-fchgrp-xfer-[0-9]+$'
+> > +          description: MBX FastChannel <N> Group Transfer interrupt
+> > +        - pattern: '^mbx-ffch-xfer-[0-9]+$'
+> > +          description: MBX FIFO Channel <N> Transfer interrupt
+> > +        - pattern: '^pbx-dbch-xfer-ack-[0-9]+$'
+> > +          description: PBX Doorbell Channel <N> Transfer Ack interrupt
+> > +        - pattern: '^pbx-ffch-xfer-ack-[0-9]+$'
+> > +          description: PBX FIFO Channel <N> Transfer Ack interrupt
+> > +
+> Can we have optional subnodes (with different properties as required)
+> for each extension type ?
+>
+
+Not sure if I have understood properly you request, but the type of extensions
+present in a PBX/MBX block can be discovered at runtime together with their
+characteristics (like the number of channels) so the specific DT properties
+can be searched (or NOT) based on the features discovered at run-time:
+are you asking for subnodes as a means of adding clarity to what can be
+defined in a block depending on what it is (PBX vs MBX) and what
+extensions it has ?
+
+if that is the reason ... the convoluted names like pbx/mbx-dbch- etc...
+was my attempt at thhat :D ... to give a hint at what you can define in a PBX
+vs MBX block and what is related to each extensions...
+
+Note that, though, since the PBX/MBX blocks are discoverable at runtime as such,
+they are not identified as such in the DT (same compatible) so I would not have
+anywayy the capability to check in the DT which is which (PBX/MBX) and if the
+properties are appropriate or not, nor I could know which extensions are really
+implemented, so such subnodes would ony be a way of grouping props in the DT
+without adding any compile time check capability nor adding any improvement to
+the runtime DT parsing proces...
+
+...BUT, of course, I could be wrong and missing a something here, so I
+am happy to corrected on the subnodes utility...
+
 > 
-> I think the best way to generalise this sysfs knob would be to create a DRM
-> class attribute somewhere in drivers/gpu/drm/drm_sysfs.c and then adding a new
-> function to 'struct drm_driver' that would return a structure with the relevant
-> information (execution units and their names, number of processed jobs, etc).
-
-These is exactly what I was thinking about.
-
+> > +  '#mbox-cells':
+> > +    description: |
+> > +      The first argument in the consumers 'mboxes' property represents the
+> > +      extension type, the second is for the channel number while the third
+> > +      depends on extension type.
+> > +
+> > +      Extension type for DBE is 0 and the third parameter represents the
+> > +      doorbell flag number to use.
+> > +      Extension type for FCE is 1, third parameter unused.
+> > +      Extension type for FE is 2, third parameter unused.
+> > +
+> > +      mboxes = <&mhu 0 0 5>; // DBE, Doorbell Channel Window 0, doorbell flag 5.
+> > +      mboxes = <&mhu 0 1 7>; // DBE, Doorbell Channel Window 1, doorbell flag 7.
+> > +      mboxes = <&mhu 1 0 0>; // FCE, FastChannel Window 0.
+> > +      mboxes = <&mhu 1 3 0>; // FCE, FastChannel Window 3.
+> > +      mboxes = <&mhu 2 1 0>; // FE, FIFO Channel Window 1.
+> > +      mboxes = <&mhu 2 7 0>; // FE, FIFO Channel Window 7.
+> >
+> Please define the extension types, instead of 0, 1 and 2.
 > 
-> What that information would exactly be is up to debate, I guess, since different
-> drivers might be interested in showing different bits of information.
 
-I believe we can start with the requirements of V3D and Panfrost and 
-them, expand from it.
+I'll do.
 
-> 
-> Laying that down is important because the sysfs file would become part of the
-> device class API.
-
-My PoV: it is important, but not completly tragic if we don't get it
-perfect. Just like fdinfo, which is evolving.
-
-> 
-> I might come up with a new RFC patch series that does precisely that, at least
-> for v3d and Panfrost, and maybe other people could pitch in with the sort of
-> things they'd like to see for other drivers?
-
-Yeah, this would be a great idea. Please, CC me on this series.
-
-Best Regards,
-- Maíra
-
-> 
-> Cheers,
-> Adrian
-> 
->> Best Regards,
->> - Maíra
->>
->>>
->>> Cc: Boris Brezillon <boris.brezillon@collabora.com>
->>> Cc: Christopher Healy <healych@amazon.com>
->>> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
->>> ---
->>>    drivers/gpu/drm/panfrost/panfrost_device.h |  5 +++
->>>    drivers/gpu/drm/panfrost/panfrost_drv.c    | 49 ++++++++++++++++++++--
->>>    drivers/gpu/drm/panfrost/panfrost_job.c    | 17 +++++++-
->>>    drivers/gpu/drm/panfrost/panfrost_job.h    |  3 ++
->>>    4 files changed, 68 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
->>> index cffcb0ac7c11..1d343351c634 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
->>> @@ -169,6 +169,11 @@ struct panfrost_engine_usage {
->>>    	unsigned long long cycles[NUM_JOB_SLOTS];
->>>    };
->>> +struct panfrost_slot_usage {
->>> +	u64 enabled_ns;
->>> +	u64 jobs_sent;
->>> +};
->>> +
->>>    struct panfrost_file_priv {
->>>    	struct panfrost_device *pfdev;
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> index ef9f6c0716d5..6afcde66270f 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
->>> @@ -8,6 +8,7 @@
->>>    #include <linux/pagemap.h>
->>>    #include <linux/platform_device.h>
->>>    #include <linux/pm_runtime.h>
->>> +#include <linux/sched/clock.h>
->>>    #include <drm/panfrost_drm.h>
->>>    #include <drm/drm_drv.h>
->>>    #include <drm/drm_ioctl.h>
->>> @@ -524,6 +525,10 @@ static const struct drm_ioctl_desc panfrost_drm_driver_ioctls[] = {
->>>    	PANFROST_IOCTL(MADVISE,		madvise,	DRM_RENDER_ALLOW),
->>>    };
->>> +static const char * const engine_names[] = {
->>> +	"fragment", "vertex-tiler", "compute-only"
->>> +};
->>> +
->>>    static void panfrost_gpu_show_fdinfo(struct panfrost_device *pfdev,
->>>    				     struct panfrost_file_priv *panfrost_priv,
->>>    				     struct drm_printer *p)
->>> @@ -543,10 +548,6 @@ static void panfrost_gpu_show_fdinfo(struct panfrost_device *pfdev,
->>>    	 *   job spent on the GPU.
->>>    	 */
->>> -	static const char * const engine_names[] = {
->>> -		"fragment", "vertex-tiler", "compute-only"
->>> -	};
->>> -
->>>    	BUILD_BUG_ON(ARRAY_SIZE(engine_names) != NUM_JOB_SLOTS);
->>>    	for (i = 0; i < NUM_JOB_SLOTS - 1; i++) {
->>> @@ -716,8 +717,48 @@ static ssize_t profiling_store(struct device *dev,
->>>    static DEVICE_ATTR_RW(profiling);
->>> +static ssize_t
->>> +gpu_stats_show(struct device *dev, struct device_attribute *attr, char *buf)
->>> +{
->>> +	struct panfrost_device *pfdev = dev_get_drvdata(dev);
->>> +	struct panfrost_slot_usage stats;
->>> +	u64 timestamp = local_clock();
->>> +	ssize_t len = 0;
->>> +	unsigned int i;
->>> +
->>> +	BUILD_BUG_ON(ARRAY_SIZE(engine_names) != NUM_JOB_SLOTS);
->>> +
->>> +	len += sysfs_emit(buf, "queue        timestamp        jobs        runtime\n");
->>> +	len += sysfs_emit_at(buf, len, "-------------------------------------------------\n");
->>> +
->>> +	for (i = 0; i < NUM_JOB_SLOTS - 1; i++) {
->>> +
->>> +		stats = get_slot_stats(pfdev, i);
->>> +
->>> +		/*
->>> +		 * Each line will display the slot name, timestamp, the number
->>> +		 * of jobs handled by that engine and runtime, as shown below:
->>> +		 *
->>> +		 * queue        timestamp        jobs        runtime
->>> +		 * -------------------------------------------------
->>> +		 * fragment     12252943467507   638         1184747640
->>> +		 * vertex-tiler 12252943467507   636         121663838
->>> +		 *
->>> +		 */
->>> +		len += sysfs_emit_at(buf, len, "%-13s%-17llu%-12llu%llu\n",
->>> +				     engine_names[i],
->>> +				     timestamp,
->>> +				     stats.jobs_sent,
->>> +				     stats.enabled_ns);
->>> +	}
->>> +
->>> +	return len;
->>> +}
->>> +static DEVICE_ATTR_RO(gpu_stats);
->>> +
->>>    static struct attribute *panfrost_attrs[] = {
->>>    	&dev_attr_profiling.attr,
->>> +	&dev_attr_gpu_stats.attr,
->>>    	NULL,
->>>    };
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_job.c b/drivers/gpu/drm/panfrost/panfrost_job.c
->>> index a61ef0af9a4e..4c779e6f4cb0 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_job.c
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_job.c
->>> @@ -31,6 +31,8 @@ struct panfrost_queue_state {
->>>    	struct drm_gpu_scheduler sched;
->>>    	u64 fence_context;
->>>    	u64 emit_seqno;
->>> +
->>> +	struct panfrost_slot_usage stats;
->>>    };
->>>    struct panfrost_job_slot {
->>> @@ -160,15 +162,20 @@ panfrost_dequeue_job(struct panfrost_device *pfdev, int slot)
->>>    	WARN_ON(!job);
->>>    	if (job->is_profiled) {
->>> +		u64 job_time = ktime_to_ns(ktime_sub(ktime_get(), job->start_time));
->>> +
->>>    		if (job->engine_usage) {
->>> -			job->engine_usage->elapsed_ns[slot] +=
->>> -				ktime_to_ns(ktime_sub(ktime_get(), job->start_time));
->>> +			job->engine_usage->elapsed_ns[slot] += job_time;
->>>    			job->engine_usage->cycles[slot] +=
->>>    				panfrost_cycle_counter_read(pfdev) - job->start_cycles;
->>>    		}
->>> +
->>>    		panfrost_cycle_counter_put(job->pfdev);
->>> +		pfdev->js->queue[slot].stats.enabled_ns += job_time;
->>>    	}
->>> +	pfdev->js->queue[slot].stats.jobs_sent++;
->>> +
->>>    	pfdev->jobs[slot][0] = pfdev->jobs[slot][1];
->>>    	pfdev->jobs[slot][1] = NULL;
->>> @@ -987,3 +994,9 @@ int panfrost_job_is_idle(struct panfrost_device *pfdev)
->>>    	return true;
->>>    }
->>> +
->>> +struct panfrost_slot_usage
->>> +get_slot_stats(struct panfrost_device *pfdev, unsigned int slot)
->>> +{
->>> +	return pfdev->js->queue[slot].stats;
->>> +}
->>> diff --git a/drivers/gpu/drm/panfrost/panfrost_job.h b/drivers/gpu/drm/panfrost/panfrost_job.h
->>> index ec581b97852b..e9e2c9db0526 100644
->>> --- a/drivers/gpu/drm/panfrost/panfrost_job.h
->>> +++ b/drivers/gpu/drm/panfrost/panfrost_job.h
->>> @@ -50,4 +50,7 @@ void panfrost_job_enable_interrupts(struct panfrost_device *pfdev);
->>>    void panfrost_job_suspend_irq(struct panfrost_device *pfdev);
->>>    int panfrost_job_is_idle(struct panfrost_device *pfdev);
->>> +struct panfrost_slot_usage
->>> +get_slot_stats(struct panfrost_device *pfdev, unsigned int slot);
->>> +
->>>    #endif
->>>
->>> base-commit: 45c734fdd43db14444025910b4c59dd2b8be714a
->>> prerequisite-patch-id: 06ac397dd381984bfbff2a7661320c4f05470635
+Thanks for the review.
+Cristian
