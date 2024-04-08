@@ -1,226 +1,111 @@
-Received: from smtp-190e.mail.infomaniak.ch (smtp-190e.mail.infomaniak.ch [185.125.25.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BB92E400
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5027028DDE
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562795; cv=none; b=DwjFYqrbQmo8YUI9WcBONy4j9p0I0UUsT5u5O1uxb+yIAQXavdF2d/e821rEVyT52uIBbPheQITyE8P2bYNyWzKHGio5W+QXPSyM7bwSJ62yg+oRA8sNk4KB9DFS0y0FF0fUX2GBypXTcFcH2CG5zPM0v8jq8vUcye6neDXIWZg=
+	t=1712562894; cv=none; b=Ui5eQ4y9S276asmKeAMmZx2B0glWntY7ZOIyfSw3jWDJEz+aKcdOBx1JlfNbQEqdSpwoYijFZdQY9X31R0PriNhpJxMcRtKajHhFAwRExkE/hz8XJg0XCbBBkVDPxls7txQEC3tQxf+Gqd+SGUR51yyVyLyKZ4dcASvmSe1xvKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712562795; c=relaxed/simple;
-	bh=DSVedLN/9sNq/HBRK05msQLVmLdeU8WEsK5nC9gm8+E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YqtxBP8q/L3O5U6js1xXVc5Qx0+wHZPMauceWnw3Z+kKcBc1XxRIVoH2I+Z32JZANqT6yUtBERDmz+Eb+LlutlTXeJDqTvL+fQLu1DV61YkeXhvL4b1IdOaHkPXY17WBotCnd4WFXK3il8TNrDuwk3Zi+oKHzYdJzGFkMRKsE90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=plIrvCaC; arc=none smtp.client-ip=185.125.25.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1712562894; c=relaxed/simple;
+	bh=RVtr28lBoOHvIvD1ov1ffDQZp850k5qzsqBjP0G6FrM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NhTW/+/4hWcF2vqwvonBbG9JB1j2umhRWTANzirXxrQT8lQV3LDlzTV2vKHjC2ECgWN78ZJudaFwAuTi4RH5UWpAQlctCtfrX+FtNMJbVlTTqWzjOjuoY2tHGxPiMmltqCAEBB7OLrUsMNyZVPILr28mYk5FyWYrdIYAqNviTic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A7bDWPUo; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="plIrvCaC"
-Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VCh4f4XSKzLMs;
-	Mon,  8 Apr 2024 09:46:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1712562418;
-	bh=DSVedLN/9sNq/HBRK05msQLVmLdeU8WEsK5nC9gm8+E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=plIrvCaCTl2uB50gN84HYodD7H8HQiFSINSoCXMjfQl23eukDoU30Y0Idn6p2DtOa
-	 UtzO+MtiJhZ11JPAf8m+J3QpBv/lbHe6RBXHHBM/x0vzZOnTf3s+YTiEkAD1OWFQlN
-	 UPGcS4zYrQFY+7jxFjh0nXgSV9ariQbyvbEbcdT4=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VCh4d6Rnlzgq4;
-	Mon,  8 Apr 2024 09:46:57 +0200 (CEST)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Brendan Higgins <brendanhiggins@google.com>,
-	David Gow <davidgow@google.com>,
-	Rae Moar <rmoar@google.com>,
-	Shuah Khan <skhan@linuxfoundation.org>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	James Morris <jamorris@linux.microsoft.com>,
-	Kees Cook <keescook@chromium.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-	Marco Pagani <marpagan@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Thara Gopinath <tgopinath@microsoft.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Zahra Tarkhani <ztarkhani@microsoft.com>,
-	kunit-dev@googlegroups.com,
-	kvm@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	x86@kernel.org
-Subject: [PATCH v4 RESEND 6/7] kunit: Print last test location on fault
-Date: Mon,  8 Apr 2024 09:46:24 +0200
-Message-ID: <20240408074625.65017-7-mic@digikod.net>
-In-Reply-To: <20240408074625.65017-1-mic@digikod.net>
-References: <20240408074625.65017-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A7bDWPUo"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4da702e48e0so1850879e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 00:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712562892; x=1713167692; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RVtr28lBoOHvIvD1ov1ffDQZp850k5qzsqBjP0G6FrM=;
+        b=A7bDWPUoDhvn5fZDNyearHGhAII4mPhc3cGJW563d17s4FuspTuYzV3Fg+f2INji8c
+         nS54eAg/vj8wLHW9lpa+UnkrYuwcwPsgUUCOABqtfzoXMNyYwhxcbikgp2EhiVSXwVJg
+         A1/clYFgtidaZmwS9LleenIPRHjRWrW8pXnGUUaHWaf8ZWURu2A0XhDRCnm3U8fr/rCD
+         ym3GF9j8wcTdKftZNO8n5Pq0qgJ6EW81B6MBTjLKvtiVaBYsZrBzwQUfYBSi6thY0yV7
+         iH5536FEl3HxS+kxG77TOFVNUdvsHQy9LOgAlaLQXBDL7RzOtUKgbANY1XuIE5neyg53
+         lk0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712562892; x=1713167692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RVtr28lBoOHvIvD1ov1ffDQZp850k5qzsqBjP0G6FrM=;
+        b=SdMgFhDlKuz1TyN7m/M0m7c+h2mO0kjyCjUQYd8/KSrn0d8YiByUFVyODUhwarctTC
+         vTUODxrjmpcR9F5uOwZ/YIl4uXaZdLP2qDhPX1yzOrmD3vw2HJVrBb8OMHTXQu8yIfZS
+         4KVb/XOSkhF1J059r6IP1OOgQIJf7rrnwE1Wq0Aix35VRneSrfxypiOeKLO1smTlgBud
+         9u0ouF30FU1gkPiC1ZBnPnr28K2O1FkO+HMKCXVdmUCQrufQJS2dEiAprFkmywKoHl7V
+         uKNiETgk51VAquHTh3RSEJVh1+ORCLcs1Arff4cB4XrzIpe6FI1sITS/sN7CpHisCJbl
+         zOHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXg5WzHFWLi2rxCh4Llvd2mPl2jVO3iB8XMXV0ynxiXZgXkwFM/I6cUI6wY7NNmGZXagwYDWMXqzC18IW7LHoX6seuyurBTQAHmaPHj
+X-Gm-Message-State: AOJu0Yyyv1bnerywFiauTrhsNrXBBsojoFfW0QCi0jbYvbWrZapMCddY
+	v5sPlweiouSVB/7czuxER0Mip8/SeFOixUoxC3eOZWdTvyoV0DS4kLFmWClDUXmR7oyJDdbV/aA
+	fBLXeozN0YDQZfWZiUiQj0B0pm0Ek6GLBK/Ki
+X-Google-Smtp-Source: AGHT+IGcCyaNVx367m9DP4JDrvGBbQiY4qh1tbucRREFcDFxokiEPF+PgsM+B5tIkA6dWC++IXhSDVvAoSrUN1h8r9Q=
+X-Received: by 2002:a05:6122:a0b:b0:4d3:36b9:2c26 with SMTP id
+ 11-20020a0561220a0b00b004d336b92c26mr5325895vkn.14.1712562892077; Mon, 08 Apr
+ 2024 00:54:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+References: <20240404-alice-mm-v4-0-49a84242cf02@google.com>
+ <20240404-alice-mm-v4-4-49a84242cf02@google.com> <a48b2347-b58b-432e-bdb8-d5449016ab57@proton.me>
+ <CAH5fLgg3wpcDE+n6nd0CGtDzyXSrD2nLhY8RxdTHjAD8hQ9VDQ@mail.gmail.com> <c130a6f5-77d7-4d9e-984d-7a8bf48ff918@proton.me>
+In-Reply-To: <c130a6f5-77d7-4d9e-984d-7a8bf48ff918@proton.me>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 8 Apr 2024 09:54:40 +0200
+Message-ID: <CAH5fLgigLV17+6U75MC43XFnYeqtgvrrTWD7JmDSB-ebNjCVvw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] rust: add abstraction for `struct page`
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, 
+	Kees Cook <keescook@chromium.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	=?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>, 
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This helps identify the location of test faults with opportunistic calls
-to _KUNIT_SAVE_LOC().  This can be useful while writing tests or
-debugging them.  It is possible to call KUNIT_SUCCESS() to explicit save
-last location.
+On Sun, Apr 7, 2024 at 10:59=E2=80=AFAM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On 05.04.24 09:44, Alice Ryhl wrote:
+> > On Fri, Apr 5, 2024 at 12:33=E2=80=AFAM Benno Lossin <benno.lossin@prot=
+on.me> wrote:
+> >>
+> >> On 04.04.24 14:31, Alice Ryhl wrote:
+> >>> +/// A bitwise shift for the page size.
+> >>> +#[allow(clippy::unnecessary_cast)]
+> >>
+> >> Why can't you remove the cast?
+> >
+> > Bindgen could decide to use a different type in the future or on
+> > different platforms.
+>
+> Did that already happen?
+>
+> I think that we might want to know if the type changes, since then the
+> value might change?
 
-Cc: Brendan Higgins <brendanhiggins@google.com>
-Cc: David Gow <davidgow@google.com>
-Cc: Rae Moar <rmoar@google.com>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240408074625.65017-7-mic@digikod.net
----
+I mean, it's quite unlikely that the page size will not fit in an
+usize, even if it changes?
 
-Changes since v3:
-* Improve the try-fault error message as suggested by David.
+From bindgen's point of view, this constant is just an integer literal
+with no type information. So I don't see how we can expect it to
+always be generated as a usize?
 
-Changes since v2:
-* Extend the commit message according to discussion with David.
-
-Changes since v1:
-* Add Kees's Reviewed-by.
----
- include/kunit/test.h  | 24 +++++++++++++++++++++---
- lib/kunit/try-catch.c | 10 +++++++---
- 2 files changed, 28 insertions(+), 6 deletions(-)
-
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index fcb4a4940ace..f3aa66eb0087 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -301,6 +301,8 @@ struct kunit {
- 	struct list_head resources; /* Protected by lock. */
- 
- 	char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-+	/* Saves the last seen test. Useful to help with faults. */
-+	struct kunit_loc last_seen;
- };
- 
- static inline void kunit_set_failure(struct kunit *test)
-@@ -567,6 +569,15 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
- #define kunit_err(test, fmt, ...) \
- 	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
-+/*
-+ * Must be called at the beginning of each KUNIT_*_ASSERTION().
-+ * Cf. KUNIT_CURRENT_LOC.
-+ */
-+#define _KUNIT_SAVE_LOC(test) do {					       \
-+	WRITE_ONCE(test->last_seen.file, __FILE__);			       \
-+	WRITE_ONCE(test->last_seen.line, __LINE__);			       \
-+} while (0)
-+
- /**
-  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-  * @test: The test context object.
-@@ -575,7 +586,7 @@ void __printf(2, 3) kunit_log_append(struct string_stream *log, const char *fmt,
-  * words, it does nothing and only exists for code clarity. See
-  * KUNIT_EXPECT_TRUE() for more information.
-  */
--#define KUNIT_SUCCEED(test) do {} while (0)
-+#define KUNIT_SUCCEED(test) _KUNIT_SAVE_LOC(test)
- 
- void __noreturn __kunit_abort(struct kunit *test);
- 
-@@ -601,14 +612,16 @@ void __kunit_do_failed_assertion(struct kunit *test,
- } while (0)
- 
- 
--#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...)		       \
-+#define KUNIT_FAIL_ASSERTION(test, assert_type, fmt, ...) do {		       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	_KUNIT_FAILED(test,						       \
- 		      assert_type,					       \
- 		      kunit_fail_assert,				       \
- 		      kunit_fail_assert_format,				       \
- 		      {},						       \
- 		      fmt,						       \
--		      ##__VA_ARGS__)
-+		      ##__VA_ARGS__);					       \
-+} while (0)
- 
- /**
-  * KUNIT_FAIL() - Always causes a test to fail when evaluated.
-@@ -637,6 +650,7 @@ void __kunit_do_failed_assertion(struct kunit *test,
- 			      fmt,					       \
- 			      ...)					       \
- do {									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(!!(condition_) == !!expected_true_))			       \
- 		break;							       \
- 									       \
-@@ -698,6 +712,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left op __right))					       \
- 		break;							       \
- 									       \
-@@ -758,6 +773,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely((__left) && (__right) && (strcmp(__left, __right) op 0)))   \
- 		break;							       \
- 									       \
-@@ -791,6 +807,7 @@ do {									       \
- 		.right_text = #right,					       \
- 	};								       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (likely(__left && __right))					       \
- 		if (likely(memcmp(__left, __right, __size) op 0))	       \
- 			break;						       \
-@@ -815,6 +832,7 @@ do {									       \
- do {									       \
- 	const typeof(ptr) __ptr = (ptr);				       \
- 									       \
-+	_KUNIT_SAVE_LOC(test);						       \
- 	if (!IS_ERR_OR_NULL(__ptr))					       \
- 		break;							       \
- 									       \
-diff --git a/lib/kunit/try-catch.c b/lib/kunit/try-catch.c
-index 7a3910dd78a6..fa687278ccc9 100644
---- a/lib/kunit/try-catch.c
-+++ b/lib/kunit/try-catch.c
-@@ -96,9 +96,13 @@ void kunit_try_catch_run(struct kunit_try_catch *try_catch, void *context)
- 
- 	if (exit_code == -EFAULT)
- 		try_catch->try_result = 0;
--	else if (exit_code == -EINTR)
--		kunit_err(test, "try faulted\n");
--	else if (exit_code == -ETIMEDOUT)
-+	else if (exit_code == -EINTR) {
-+		if (test->last_seen.file)
-+			kunit_err(test, "try faulted: last line seen %s:%d\n",
-+				  test->last_seen.file, test->last_seen.line);
-+		else
-+			kunit_err(test, "try faulted\n");
-+	} else if (exit_code == -ETIMEDOUT)
- 		kunit_err(test, "try timed out\n");
- 	else if (exit_code)
- 		kunit_err(test, "Unknown error: %d\n", exit_code);
--- 
-2.44.0
-
+Alice
