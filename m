@@ -1,136 +1,103 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321031422DD;
-	Mon,  8 Apr 2024 15:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C19C14265A;
+	Mon,  8 Apr 2024 15:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712591599; cv=none; b=ck7082bzpt9J4m1g/J1EMVKkwhaU/DQVYUiwBQ9BXTCiKQIGv/RNja7cNU7Hk0ru+cYBcCZRZfWmF9R77QqnkSVwnZr7vRVQHyQbHq13GHaggLk+PD+GRU8ZuDX8oa44CW74JPTgeIfEu6uvcEmA9KI9mnGC0eQHz7MhZtrXCuo=
+	t=1712591601; cv=none; b=rrAxEG1poWde8lshxzAr+8WIqmpBERs4I/sYXFxJpPZFHgErN1sQdPTFhTAxAR5vFOd95cLS2ry+4go6dIJI8O8T1kG8gOFqTG840onvi/MWNS1ONzf1dwlq9XuQ3oXW5qedtZChkSt5dgBDPA+vfiNfTSB6DfkW+nW49t22shA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712591599; c=relaxed/simple;
-	bh=oXF0IOpDbbU06OjI6OgtSVdRvz0EfEWAr+7KUKC2fPo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HG1UhfdhyLvgSHphNEOyAa0USbm741bjyAdghbrXGYjkhifQtM58KG/cJ7g1T7Dt2df6vGoGN37BAeuNdu1Hh1LWKGgxccfDDlCyiz9IMDcNd3neIl3jhdjUkfrrs9Uh4LhDipW9Ioubaqz0vMxh5P5S618BkliK8EdpLcw5Vd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H0TC8yZe; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712591601; c=relaxed/simple;
+	bh=Ayz7Pk1l7/zi8DRIp+xNrMxlwSWlL1f67lgps6EFpgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PtHzf6jwVYvf72fkkaTczBE7AwQeFbW5ZGGsgbC2/v94AC649w6tWXVuDuGrUynGBgcr2DoGlet//2L31RMJsP8a5srPvzWYxu6uNpZzavWCoddCmNQyC4caxTPvtt+jLuSpkU/SkJMu2hxPCebIMcDq8jLruZPqEiclvsh9kTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drrUGeTW; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H0TC8yZe"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d1ecaf25so4632688e87.2;
-        Mon, 08 Apr 2024 08:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712591595; x=1713196395; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OZNPSolpsyW2BBt4Cv9G0c69Pzyf7OGHTEy9xs9+O7A=;
-        b=H0TC8yZegMO+X3le90cx46Q8Cx1YNjaRCived1bgdughzuizA8CDVdVa30LFcipXBj
-         2KuJgAgrJ/MWDz4/v4CqWEabQffMw0L4vMbIiGntu9SjQvVlf4202hBEiLCYUEzm+G2I
-         qH9kUmF//L0kcy96i1oA+SyQY6FURngGqFgyeeMtK6BdG/RLI+JDvQjVKC7VTXtaHf8b
-         8OgqtU+FgFA/S7IN8wi1pfE2Kf5JSXNQv42tmoip2KajjnurR7H6DJJlV9rTGLmZqxLA
-         WE9CI4OIWoxtJ5ZSed63q/PwjRl9w2c7SrVZeksBnIAynd+7V6WWGXAD6Eky/SynSlP7
-         DzwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712591595; x=1713196395;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OZNPSolpsyW2BBt4Cv9G0c69Pzyf7OGHTEy9xs9+O7A=;
-        b=nZWLG9FbP+qhvxFaH0K4nfJFAOpF9WiNe+i6DEhIHXmG2jOSNNCbtMyUQZVchCU4D9
-         /Hk5KKxtKD+GCAKhRJqDsSFJvnLp2N0YabLV3FiM+Aj3BfYxwxsuK5Nr/bOyczv+bClJ
-         +5VKJVd6SD1212wDaam4XIq7YaYpdgxoolwTl8f2tx0WTKv4yg0q820cSuorP9fY2hbR
-         e9lqmJFN/2T2ShqNyrPZE/w6UD2ehQzpLb1geI3laWrShZALO6biJg2xBSqoc3raHcxf
-         Qci4Mq8aJ5pzQeo/iszYtKBW0hN0l43AoJ1L7VIXO6+BijxHHoOLvbCEFwq/rTtUvMTp
-         xmnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX580uJjRzM5jXagOQmxURZ+40iauypJH3rUJjMgumuwm+kPLMQqCGI8/eq7EYuVWIYtNmvw9kXmUP34FMzEa1LS36AKCtnoGm7hqloUKO0dHAHlQaTiMQtl+YBREE9acpSJWjzJ8Okkw==
-X-Gm-Message-State: AOJu0Yx6Inmw9UuqR+bciwqV1YFYXu68Ulor7bV5i8pUEEDW85HaDdtS
-	AXHWbkHJQ8SU/SjHPsobkP4J6zRVeFTwWUmDsYHPXaaYPKzrshhk
-X-Google-Smtp-Source: AGHT+IHHjnlpbYGoVoRBTjaLp6Pq3A5BQFRFuLX80oSlH+nvQTdtLncSAg4Fv6oSY2gm4yEe75RZ0g==
-X-Received: by 2002:ac2:5f1c:0:b0:516:ce06:ac8e with SMTP id 28-20020ac25f1c000000b00516ce06ac8emr5820717lfq.51.1712591595088;
-        Mon, 08 Apr 2024 08:53:15 -0700 (PDT)
-Received: from [127.0.1.1] ([213.208.157.67])
-        by smtp.gmail.com with ESMTPSA id l13-20020a170906794d00b00a46a2779475sm4547849ejo.101.2024.04.08.08.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 08:53:14 -0700 (PDT)
-From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Date: Mon, 08 Apr 2024 17:53:03 +0200
-Subject: [PATCH 3/9] dt-bindings: rtc: lpc32xx-rtc: move to trivial-rtc
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drrUGeTW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712591599; x=1744127599;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Ayz7Pk1l7/zi8DRIp+xNrMxlwSWlL1f67lgps6EFpgc=;
+  b=drrUGeTWb/RYNQwm1wu8S8CWkHFVY51C3OHaWLETEXQ8qymgD10m/TTj
+   UEmeYGGNlu09qudh18clqQYXEuikUoEEQsPan7LCNT/VQHPGR1Tt0hIQc
+   XA2zRBYG1g93mLZz8ls6yJzzoYP5Vz68+paFCBwIkvmbuR04pf/sV/hVB
+   nbqU46n7Xaa9W2k5/N8chQNGDSfhN8WNQOhcep8zHnLo2AbnxAl0uq5eR
+   gEtw8EvWhX/DtbaYnm/kG7vGDeEI7Vpr8Qab0gGOJaw7lO3dNzrvPCYfQ
+   uBRyuKT5XfBJjZPzceWr/+SKn2XfW0IYu8hq2yadEO9JgxnhhWDer98IU
+   w==;
+X-CSE-ConnectionGUID: 21Rfsuo3RZuos7YudC5kVA==
+X-CSE-MsgGUID: jeAbz/UJQjKf2egUneo5aA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="10850176"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="10850176"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:53:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="915369182"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="915369182"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 08:53:17 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rtrJ4-00000002ZJF-3Z42;
+	Mon, 08 Apr 2024 18:53:14 +0300
+Date: Mon, 8 Apr 2024 18:53:14 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v1] ACPI: Declare acpi_blacklisted() only if CONFIG_X86
+ is enabled
+Message-ID: <ZhQS6uYmpsxFD3gn@smile.fi.intel.com>
+References: <20240407063341.3710801-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <ZhQE9dU-VIcWI6au@smile.fi.intel.com>
+ <CAC41dw-Df3L7B=Tq2QkQHDT2Yf3MzHgy8-czPAkZhdPf0Tea4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-rtc_dtschema-v1-3-c447542fc362@gmail.com>
-References: <20240408-rtc_dtschema-v1-0-c447542fc362@gmail.com>
-In-Reply-To: <20240408-rtc_dtschema-v1-0-c447542fc362@gmail.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
- Vladimir Zapolskiy <vz@mleia.com>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-stm32@st-md-mailman.stormreply.com, 
- Javier Carrasco <javier.carrasco.cruz@gmail.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712591586; l=1653;
- i=javier.carrasco.cruz@gmail.com; s=20240312; h=from:subject:message-id;
- bh=oXF0IOpDbbU06OjI6OgtSVdRvz0EfEWAr+7KUKC2fPo=;
- b=cXwmCtklzwmwm52UDPVuk6WWDHgL1i0zzCtfIEhsTmu1EI8lNZwtM2+GXUd9vnJCrPPqUZ8mZ
- dM7tV4/p9z9AnwXdlchsL+guM1nOVq79TSHnwxlzcL0CuAAe0Fn8NP7
-X-Developer-Key: i=javier.carrasco.cruz@gmail.com; a=ed25519;
- pk=lzSIvIzMz0JhJrzLXI0HAdPwsNPSSmEn6RbS+PTS9aQ=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC41dw-Df3L7B=Tq2QkQHDT2Yf3MzHgy8-czPAkZhdPf0Tea4Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-This RTC requires a compatible, a reg and a single interrupt,
-which makes it suitable for a direct conversion into trivial-rtc.
+On Mon, Apr 08, 2024 at 08:42:48AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> On Mon, Apr 8, 2024 at 7:53 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sat, Apr 06, 2024 at 11:33:41PM -0700, Kuppuswamy Sathyanarayanan wrote:
 
-Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
----
- Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt  | 15 ---------------
- Documentation/devicetree/bindings/rtc/trivial-rtc.yaml |  2 ++
- 2 files changed, 2 insertions(+), 15 deletions(-)
+...
 
-diff --git a/Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt b/Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt
-deleted file mode 100644
-index a87a1e9bc060..000000000000
---- a/Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--* NXP LPC32xx SoC Real Time Clock controller
--
--Required properties:
--- compatible: must be "nxp,lpc3220-rtc"
--- reg: physical base address of the controller and length of memory mapped
--  region.
--- interrupts: The RTC interrupt
--
--Example:
--
--	rtc@40024000 {
--		compatible = "nxp,lpc3220-rtc";
--		reg = <0x40024000 0x1000>;
--		interrupts = <52 0>;
--	};
-diff --git a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-index b889b9317a41..d6ce7ac29033 100644
---- a/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-+++ b/Documentation/devicetree/bindings/rtc/trivial-rtc.yaml
-@@ -55,6 +55,8 @@ properties:
-       - microcrystal,rv3029
-       # Real Time Clock
-       - microcrystal,rv8523
-+      # NXP LPC32xx SoC Real-time Clock
-+      - nxp,lpc3220-rtc
-       # Real-time Clock Module
-       - pericom,pt7c4338
-       # I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+> > >  extern char acpi_video_backlight_string[];
+> > >  extern long acpi_is_video_device(acpi_handle handle);
+> > > +#ifdef CONFIG_X86
+> > >  extern int acpi_blacklisted(void);
+> > > +#endif
+> > >  extern void acpi_osi_setup(char *str);
+> > >  extern bool acpi_osi_is_win8(void);
+> >
+> > IIRC there is already similar ifdeffery, can we just move the declaration
+> > there?
+> 
+> There is none for CONFIG_X86. We only have some combinations or
+> derived config checks like below:
+> 
+> #if defined(CONFIG_X86) || defined(CONFIG_LOONGARCH)
+> #ifdef CONFIG_X86_IO_APIC
+
+Okay, it seems I mixed this with acpi_bus.h.
 
 -- 
-2.40.1
+With Best Regards,
+Andy Shevchenko
+
 
