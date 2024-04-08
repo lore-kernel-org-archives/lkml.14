@@ -1,172 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E80D6A014
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A436A014;
+	Mon,  8 Apr 2024 12:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580007; cv=none; b=pgn5BUTSyksqFb9+V9nij2qtxeaMcAwiqWcfWi9hNMQrAoQ9AXDwKGWjQk89EugqzSaqU0p0Q1cMpClYQUzwbtyzkBSOhwftKBaFnTETgeD/rbMOjiTtdj/CCQK0jQ7dd4/wa5cjxfuD7TRFvDGG4sQ+oaf5L9UsizGrwe5AczA=
+	t=1712580067; cv=none; b=Qh9zepN0+7kCmHrFbSanlMipaseF4IFT2t8185gTFYFyu/3mc8QxqpXhQuL+xgMT+9EFsT/qXr8HgX2/gSb3OWDY6GcqJ0YS8PaI+6wwyHg650XdTxPEaxxSIo4jTwqid14kN0ucR29HimvM72P6QtyUkSyfeHZQVdTx9lt6TZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580007; c=relaxed/simple;
-	bh=fxPXw2p77yhgVxO+9PcInO2jf4CRcklB5uKFPixrm8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ha7pqCXyBUiylSu9ehzcoY+wyA1DkmbD0Tbb1mar+mOSQX1D2clNe2akdKwpSFZExpHUsfK2LL1ZSyz3IFpnrbGTveY6voISzGtWVRF5/97YF/R6x6PfC1YZRUgd38kEwvdstkCyZTuLXd+aVl8fbNff3wrJGo5o+9StZkIKpXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ICPX0NBP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712580067; c=relaxed/simple;
+	bh=uznQfg3AOHrzxljdeifxnUVqLDxe5aZvgkCnddzWjPI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=GCe+OtQ3pJBpb9fQ7+3yHdyA0+9PqKjPtH96JIb8/D70pgIzGfXH2kjioA4hLLd37nO+5P0S40r9mKGUBs2UTGReyWYsNmjZ/0phHbA+cw0HIq5Xw8NdMKLru2tNZMKcb/CRUVloe4PKBUCkPADIw2wS4L9NS2v1hFaBoWNr53c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M0xMeCRG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ICPX0NBP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712580003;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ae2COtjajtOOtS6X4ygU+qeHK/f9eu0OjppudYN/LXQ=;
-	b=ICPX0NBPIWiSzHv/qAZo0YcA8QGYQM63evZiJLFredajKRrV0BQkvoC549+haRafGyFbXw
-	4WmmFotLtu+SXRFFxoXJZ8Gd34iKQooRkXhFngPmBdRCgtZDBPri/dBWW7B+al21NlazXQ
-	S1+pEgv1ZyJ0uCTHeKNml9SnMMwdvbA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-21-HnAjSohWP-y_Dmn4UA7jxA-1; Mon, 08 Apr 2024 08:40:02 -0400
-X-MC-Unique: HnAjSohWP-y_Dmn4UA7jxA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a519e05fe4fso226361066b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 05:40:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712580001; x=1713184801;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ae2COtjajtOOtS6X4ygU+qeHK/f9eu0OjppudYN/LXQ=;
-        b=UKlWugGq8ch9BzB6vkGTUOmuYIYxt741aqjHdtYlqJkbQBHJ7jtM4u803y2/xgJmS1
-         fBm6wUKcbHNtUR/WK9cWIAEju4q0awXUXtw8TeMGRI3zSrEz/s+i7tKrMgLIcp/zTtOh
-         LVkzfVmeo/Nm/s3d543GgCBaqj+fc6cMXm9mFPhYZCySTrEY0NRuB6VmyZHN1TRkWoMQ
-         yAbA4xxHGlLPetDf1biMNXBivOy3xtnPNLjaZIsLOZzzASYMvMK3Wfkjx4sqbJnL1YgR
-         DiTJlBCWeEPR9ol6zaaii3lVi42eAB++v1J9ONUaW8y5YRbiTlIejvGygGotguJEjBBx
-         Yngg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjOpz4TS1Hca+JVzhwgJequA6k7n31AUAAs+Tvjx9A3cpj5aF8LYRsCSsXoLQ7fQQOcorYHYgvt9pGCsNJU8vmkDOJJ+WFjQxU+VtQ
-X-Gm-Message-State: AOJu0YxJbHpCaAVCQnB2pZ8U6bNa40HnDq8NgANqSdXNwhs5hygXOzLZ
-	BGNd/LMJlws63LOCjuNRMnett4/YHs9LWKLbIq+TB/9V1fakBiXfFHQY6EZYpVUTZez7CubTzA2
-	Y7v/eJxq6nsJqV0O5XKk8rZ/Hp7NuQHHq02fnGV+nc5DvLNtrTOXh/7zrhG9ESiboKFgi7+R+eZ
-	Z83RZzdi+g/PkckonbeiFpOthDxV1h3dCktxRcK/VoTy/PJi8=
-X-Received: by 2002:a17:907:9444:b0:a51:d70f:b5f2 with SMTP id dl4-20020a170907944400b00a51d70fb5f2mr2084585ejc.20.1712580000865;
-        Mon, 08 Apr 2024 05:40:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg3MkKq/gJZBjDBVnAKe4jU7q9XkeS1BfnnkBObgzhdnwCFitOZa/DmVr4r6jMIn9yjc43uLBh88PkDhgd3Mk=
-X-Received: by 2002:a17:907:9444:b0:a51:d70f:b5f2 with SMTP id
- dl4-20020a170907944400b00a51d70fb5f2mr2084571ejc.20.1712580000551; Mon, 08
- Apr 2024 05:40:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M0xMeCRG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CCAC433C7;
+	Mon,  8 Apr 2024 12:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712580066;
+	bh=uznQfg3AOHrzxljdeifxnUVqLDxe5aZvgkCnddzWjPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M0xMeCRG7CKo7TXZmry2s3woUlQ93apSYPU5CjKDJUjsUbdCCD2qeAj1KI8TOaB4Z
+	 7HbwMBjnM9i2MUiF3IAQnSzZ/dLqkFT14hnC5ejJN0Lg7TWOTR/uqSm523aVq+wJCG
+	 iux37RJFVsYacSU1l397/li8Ogz5SYj0H3dlLejRW1/K/eYtsh23ejlBw9nSyfavDo
+	 D8GkKZK05hySKPpmFJTjCORgED2UkN4uc073Z2APkXAoJvvfvu3+9+3F+0hXwQqDDU
+	 TlA4xV6RcKIBT0BBUmYDR7x8uPTEr2IgM1GasC1xfg+xZ2JpwT7zq+Xk7fCz0Gwg30
+	 HY3itlSwYS9Ow==
+Date: Mon, 8 Apr 2024 21:41:02 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
+ <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] kprobes: Avoid possible warn in
+ __arm_kprobe_ftrace()
+Message-Id: <20240408214102.be792c5cefd5ab757ef32a14@kernel.org>
+In-Reply-To: <20240408083403.3302274-1-zhengyejian1@huawei.com>
+References: <20240407035904.2556645-1-zhengyejian1@huawei.com>
+	<20240408083403.3302274-1-zhengyejian1@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240404055635.316259-1-lulu@redhat.com> <20240408033804-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20240408033804-mutt-send-email-mst@kernel.org>
-From: Cindy Lu <lulu@redhat.com>
-Date: Mon, 8 Apr 2024 20:39:21 +0800
-Message-ID: <CACLfguUL=Kteorvyn=wRUWFJFvhvgRyp+V7GNBp2R33hK1vnSw@mail.gmail.com>
-Subject: Re: [PATCH v3] Documentation: Add reconnect process for VDUSE
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: jasowang@redhat.com, kvm@vger.kernel.org, 
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024 at 3:40=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com> =
-wrote:
->
-> On Thu, Apr 04, 2024 at 01:56:31PM +0800, Cindy Lu wrote:
-> > Add a document explaining the reconnect process, including what the
-> > Userspace App needs to do and how it works with the kernel.
-> >
-> > Signed-off-by: Cindy Lu <lulu@redhat.com>
-> > ---
-> >  Documentation/userspace-api/vduse.rst | 41 +++++++++++++++++++++++++++
-> >  1 file changed, 41 insertions(+)
-> >
-> > diff --git a/Documentation/userspace-api/vduse.rst b/Documentation/user=
-space-api/vduse.rst
-> > index bdb880e01132..7faa83462e78 100644
-> > --- a/Documentation/userspace-api/vduse.rst
-> > +++ b/Documentation/userspace-api/vduse.rst
-> > @@ -231,3 +231,44 @@ able to start the dataplane processing as follows:
-> >     after the used ring is filled.
-> >
-> >  For more details on the uAPI, please see include/uapi/linux/vduse.h.
-> > +
-> > +HOW VDUSE devices reconnection works
-> > +------------------------------------
-> > +1. What is reconnection?
-> > +
-> > +   When the userspace application loads, it should establish a connect=
-ion
-> > +   to the vduse kernel device. Sometimes,the userspace application exi=
-sts,
-> > +   and we want to support its restart and connect to the kernel device=
- again
-> > +
-> > +2. How can I support reconnection in a userspace application?
-> > +
-> > +2.1 During initialization, the userspace application should first veri=
-fy the
-> > +    existence of the device "/dev/vduse/vduse_name".
-> > +    If it doesn't exist, it means this is the first-time for connectio=
-n. goto step 2.2
-> > +    If it exists, it means this is a reconnection, and we should goto =
-step 2.3
-> > +
-> > +2.2 Create a new VDUSE instance with ioctl(VDUSE_CREATE_DEV) on
-> > +    /dev/vduse/control.
-> > +    When ioctl(VDUSE_CREATE_DEV) is called, kernel allocates memory fo=
-r
-> > +    the reconnect information. The total memory size is PAGE_SIZE*vq_m=
-umber.
->
-> Confused. Where is that allocation, in code?
->
-> Thanks!
->
-this should allocated in function vduse_create_dev(), I will rewrite
-this part  to make it more clearer
-will send a new version soon
-Thanks
-cindy
+Hi Zheng,
 
-> > +2.3 Check if the information is suitable for reconnect
-> > +    If this is reconnection :
-> > +    Before attempting to reconnect, The userspace application needs to=
- use the
-> > +    ioctl(VDUSE_DEV_GET_CONFIG, VDUSE_DEV_GET_STATUS, VDUSE_DEV_GET_FE=
-ATURES...)
-> > +    to get the information from kernel.
-> > +    Please review the information and confirm if it is suitable to rec=
-onnect.
-> > +
-> > +2.4 Userspace application needs to mmap the memory to userspace
-> > +    The userspace application requires mapping one page for every vq. =
-These pages
-> > +    should be used to save vq-related information during system runnin=
-g. Additionally,
-> > +    the application must define its own structure to store information=
- for reconnection.
-> > +
-> > +2.5 Completed the initialization and running the application.
-> > +    While the application is running, it is important to store relevan=
-t information
-> > +    about reconnections in mapped pages. When calling the ioctl VDUSE_=
-VQ_GET_INFO to
-> > +    get vq information, it's necessary to check whether it's a reconne=
-ction. If it is
-> > +    a reconnection, the vq-related information must be get from the ma=
-pped pages.
-> > +
-> > +2.6 When the Userspace application exits, it is necessary to unmap all=
- the
-> > +    pages for reconnection
-> > --
-> > 2.43.0
->
+On Mon, 8 Apr 2024 16:34:03 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
+> There is once warn in __arm_kprobe_ftrace() on:
+> 
+>  ret = ftrace_set_filter_ip(ops, (unsigned long)p->addr, 0, 0);
+>  if (WARN_ONCE(..., "Failed to arm kprobe-ftrace at %pS (error %d)\n", ...)
+>    return ret;
+> 
+> This warning is generated because 'p->addr' is detected to be not a valid
+> ftrace location in ftrace_set_filter_ip(). The ftrace address check is done
+> by check_ftrace_location() at the beginning of check_kprobe_address_safe().
+> At that point, ftrace_location(addr) == addr should return true if the
+> module is loaded. Then the module is searched twice:
+>   1. in is_module_text_address(), we find that 'p->addr' is in a module;
+>   2. in __module_text_address(), we find the module;
+> 
+> If the module has just been unloaded before the second search, then
+> '*probed_mod' is NULL and we would not go to get the module refcount,
+> then the return value of check_kprobe_address_safe() would be 0, but
+> actually we need to return -EINVAL.
+
+OK, so you found a race window in check_kprobe_address_safe().
+
+It does something like below.
+
+check_kprobe_address_safe() {
+	...
+
+	/* Timing [A] */
+
+	if (!(core_kernel_text(p->addr) ||
+		is_module_text_address(p->addr)) ||
+		...(other reserved address check)) {
+		return -EINVAL;
+	}
+
+	/* Timing [B] */
+
+	*probed_mod = __module_text_address(p->addr):
+	if (*probe_mod) {
+		if (!try_module_get(*probed_mod)) {
+			return -ENOENT;
+		}
+		...	
+	}
+}
+
+So, if p->addr is in a module which is alive at the timing [A], but
+unloaded at timing [B], 'p->addr' is passed the
+'is_module_text_address(p->addr)' check, but *probed_mod becomes NULL.
+Thus the corresponding module is not referenced and kprobe_arm(p) will
+access a wrong address (use after free).
+This happens either kprobe on ftrace is enabled or not.
+
+To fix this problem, we should move the mutex_lock(kprobe_mutex) before
+check_kprobe_address_safe() because kprobe_module_callback() also lock it
+so it can stop module unloading.
+
+Can you ensure this will fix your problem?
+I think your patch is just optimizing but not fixing the fundamental
+problem, which is we don't have an atomic search symbol and get module
+API. In that case, we should stop a whole module unloading system until
+registering a new kprobe on a module. (After registering the kprobe,
+the callback can mark it gone and disarm_kprobe does not work anymore.)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 9d9095e81792..94eaefd1bc51 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1633,11 +1633,11 @@ int register_kprobe(struct kprobe *p)
+ 	p->nmissed = 0;
+ 	INIT_LIST_HEAD(&p->list);
+ 
++	mutex_lock(&kprobe_mutex);
++
+ 	ret = check_kprobe_address_safe(p, &probed_mod);
+ 	if (ret)
+-		return ret;
+-
+-	mutex_lock(&kprobe_mutex);
++		goto out;
+ 
+ 	if (on_func_entry)
+ 		p->flags |= KPROBE_FLAG_ON_FUNC_ENTRY;
+
+----
+
+Thank you,
+
+> 
+> To fix it, originally we can simply check 'p->addr' is out of text again,
+> like below. But that would check twice respectively in kernel text and
+> module text, so finally I reduce them to be once.
+> 
+>   if (!(core_kernel_text((unsigned long) p->addr) ||
+>       is_module_text_address((unsigned long) p->addr)) || ...) {
+> 	ret = -EINVAL;
+> 	goto out;
+>   }
+>   ...
+>   *probed_mod = __module_text_address((unsigned long) p->addr);
+>   if (*probed_mod) {
+> 	...
+>   } else if (!core_kernel_text((unsigned long) p->addr)) { // check again!
+> 	ret = -EINVAL;
+> 	goto out;
+>   }
+> 
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> ---
+>  kernel/kprobes.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> v2:
+>  - Update commit messages and comments as suggested by Masami.
+>    Link: https://lore.kernel.org/all/20240408115038.b0c85767bf1f249eccc32fff@kernel.org/
+> 
+> v1:
+>  - Link: https://lore.kernel.org/all/20240407035904.2556645-1-zhengyejian1@huawei.com/
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 9d9095e81792..65adc815fc6e 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1567,10 +1567,17 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  	jump_label_lock();
+>  	preempt_disable();
+>  
+> -	/* Ensure it is not in reserved area nor out of text */
+> -	if (!(core_kernel_text((unsigned long) p->addr) ||
+> -	    is_module_text_address((unsigned long) p->addr)) ||
+> -	    in_gate_area_no_mm((unsigned long) p->addr) ||
+> +	/* Ensure the address is in a text area, and find a module if exists. */
+> +	*probed_mod = NULL;
+> +	if (!core_kernel_text((unsigned long) p->addr)) {
+> +		*probed_mod = __module_text_address((unsigned long) p->addr);
+> +		if (!(*probed_mod)) {
+> +			ret = -EINVAL;
+> +			goto out;
+> +		}
+> +	}
+> +	/* Ensure it is not in reserved area. */
+> +	if (in_gate_area_no_mm((unsigned long) p->addr) ||
+>  	    within_kprobe_blacklist((unsigned long) p->addr) ||
+>  	    jump_label_text_reserved(p->addr, p->addr) ||
+>  	    static_call_text_reserved(p->addr, p->addr) ||
+> @@ -1580,8 +1587,7 @@ static int check_kprobe_address_safe(struct kprobe *p,
+>  		goto out;
+>  	}
+>  
+> -	/* Check if 'p' is probing a module. */
+> -	*probed_mod = __module_text_address((unsigned long) p->addr);
+> +	/* Get module refcount and reject __init functions for loaded modules. */
+>  	if (*probed_mod) {
+>  		/*
+>  		 * We must hold a refcount of the probed module while updating
+> -- 
+> 2.25.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
