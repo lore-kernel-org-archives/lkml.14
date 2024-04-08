@@ -1,151 +1,146 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0A85C62;
-	Mon,  8 Apr 2024 14:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43858127B4E;
+	Mon,  8 Apr 2024 14:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585874; cv=none; b=QqDRPhABxRGBFywbRX23hlH/9B23DAxPcT6VHrNvQ8CI1cOSxzvZn3ctabs2IH8KW5XqF85DNOF+hJU6YC4aTqo1zIRdQH77s9frV8XnnrmbxDV5YCfwjeVqUKaRY9QuPaPeSstD5ZoFUq2odypFUlH2b19wzp3Z/aQcp22gK9s=
+	t=1712585884; cv=none; b=C0KsXaBkvOX9o65nXp99/JN/IWceXuvsZi5mlu7ZtFoWzjJHWJxaBQ4lnMt4gI+Lss+X+oKxxQfaV3xb5EoDfrWHOI3Bvo7rZeU6go/S5UcLuUro5EFEc+j3L8JDtnj3qQ9PEsAmdEPSpGXOG2t244YasMmT0qo+4vNFov+tnJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585874; c=relaxed/simple;
-	bh=Cl8QpYOgFS27JEtOyqS+PfQ5qeqh0B3tVFHersoU1nc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wl/NlUJRq7efc7we8lcWe6qQA4jiNBS852T15tjqIcqbmcSWP8euS9yG7WJFD5AOtiK+1/Ce2gOoshhVkVC7cNr2E1Em70eHvzpst7hQmAL5QjShCSRqj2kOTc7zpQrIDeoxfIKYR8YXqeCkZGoeXb32O+dwgWBtGJAR0mtVE4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IhCOGV76; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IhCOGV76"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d87450361fso29562611fa.2;
-        Mon, 08 Apr 2024 07:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712585871; x=1713190671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M31BcrwK8SyOstFSsCRRJRL+DvnUXY7YE1UKU/j7W1Q=;
-        b=IhCOGV7663PB/vTHSaBbNVItEGqXkqMfXr+1rqdg5Oaxpqnfss73iMbg/IyuzZgQGP
-         LxMAQNSksLRUHdF3yLnBs1OCu3hj9+EXHkbgo6BSHJfOEddUGjju4JPubSYvD1xKWyCQ
-         35+sCLcB9I3JxQ7FuQLiHYgd8U4F3kCiasXp6CCFZDH0GJjc2NoxiJe8iO0ytIn72Q3B
-         ZMunMYYegTp0vWPPz/FfweckMWKOsmFTu5WAOejFEUCxUwZMu/6Q4rmAxZsZqJ4B/m7+
-         uzXUPcuKI0z8qyQ/ZJ6IBkt04QRcpHltNgkBtwK8wNwz3jg6UzwAHg+0awiRKqQf2MM7
-         mFIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712585871; x=1713190671;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M31BcrwK8SyOstFSsCRRJRL+DvnUXY7YE1UKU/j7W1Q=;
-        b=WlQAR//eHsDxkrUrVkR220CD75qj2wLuybxTZyzckabvan0lSsboFRLbGrKE7k13KO
-         2PerXmap792HV95V4a0FQhBlY5EwuuBE+aXORQ4m4bUBF+6FvbQWGxUFwLztSut//Z6o
-         b5UlkJisJ97OvlTN1xE7m6lMubIQaSTAQe4QrOIzwqkTEGjBxhblAE25HrLziOrZJNTR
-         JCIzKb1bM1AFCY3rLrFJAUy1JHoxYuSrXuol5jbN7QVhcNfJ+lYPAow03HmfG7fBc+qx
-         4iiTNm3AtxBVjLBBCVd3LLT5qJVaycFGwDKyutIEJzu1DAynsZgSV7W9bER8pl9qM6KZ
-         IELQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXPeVF7ugy1pUn9GHL0VdBwcaI7KrmmEINeiDvkM/pkJpOidy0yRLlYtoYcz1uEtuio7OyMDk3TlcmIA3NLjppJi3zTCgaJiXxVSv8Wsv3uAxrjgiFbVUf+xCxUi2HAKbBAERIiQdxtPgcd7N5tnM9FEJut1c2Td5ZVkAj9esmKq6BODIj+
-X-Gm-Message-State: AOJu0YzcnE/KqvQa2FymQw91fOxOoeiNsQrT0z8FrL6DYHuRUdqHZnbs
-	DPoOM/hf+B0o3leY0NVz+X11vA3nhEwfPGFAVwRiMJDW/E/uCHGZ
-X-Google-Smtp-Source: AGHT+IFnpIW39OsH1V2HOl6MsdfzguPCEEvF7udJVoH0kUnAjrqa8nv/jsxnbhshQZ8EESW8mdNILw==
-X-Received: by 2002:a05:651c:4cd:b0:2d8:9baa:50ae with SMTP id e13-20020a05651c04cd00b002d89baa50aemr799329lji.31.1712585870446;
-        Mon, 08 Apr 2024 07:17:50 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id p13-20020a05600c468d00b004163059bb53sm12321801wmo.16.2024.04.08.07.17.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 07:17:50 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com,
-	dsahern@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next v5 0/6] net: gro: encapsulation bug fix and flush checks improvements
-Date: Mon,  8 Apr 2024 16:17:14 +0200
-Message-Id: <20240408141720.98832-1-richardbgobert@gmail.com>
+	s=arc-20240116; t=1712585884; c=relaxed/simple;
+	bh=H92i75+oyvNWVJtkoi+cDWvL0dIIzwlAH92gqf8Shvo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=dLMFOll4dZfHGuc9lzRcD0JP95OuZ9QmablSafB/aRB4j5u/oO8sAih3Oin5n6yP/FWgSMrpBSQpgWfresLaNYTl4V4RHcN/EQrY06noIy0xWFJPmCLQKfS5iG/oJbCWLbCZ3VzZiH3alnJN4WsLw7thi99ABZPBEpjlShvgBaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03FBEC43399;
+	Mon,  8 Apr 2024 14:18:00 +0000 (UTC)
+Message-ID: <5aa6d853-60f5-485b-b892-e6e81acdfc12@xs4all.nl>
+Date: Mon, 8 Apr 2024 16:17:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/16] Switch subdev dv timing callbacks to pad ops
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To: =?UTF-8?Q?Pawe=C5=82_Anikiel?= <panikiel@google.com>,
+ kieran.bingham@ideasonboard.com, mchehab@kernel.org, tharvey@gateworks.com,
+ niklas.soderlund@ragnatech.se, prabhakar.csengg@gmail.com,
+ charles-antoine.couret@nexvision.fr, thierry.reding@gmail.com,
+ jonathanh@nvidia.com, skomatineni@nvidia.com, luca.ceresoli@bootlin.com
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ chromeos-krk-upstreaming@google.com
+References: <20240405141411.1807189-1-panikiel@google.com>
+ <6027dacf-549e-4855-97d9-dd02e65fd94a@xs4all.nl>
+In-Reply-To: <6027dacf-549e-4855-97d9-dd02e65fd94a@xs4all.nl>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series fixes a bug in the complete phase of UDP in GRO, in which
-socket lookup fails due to using network_header when parsing encapsulated
-packets. The fix is to pass p_off parameter in *_gro_complete.
+On 08/04/2024 16:15, Hans Verkuil wrote:
+> On 05/04/2024 16:13, Paweł Anikiel wrote:
+>> Currently, subdev dv timing calls (i.e. g/s/query_dv_timings) are video
+>> ops without a pad argument. This is a problem if the subdevice can have
+>> different dv timings for each pad (e.g. a DisplayPort receiver with
+>> multiple virtual channels).
+>>
+>> This patchset changes subdev dv timing callbacks to include a pad
+>> argument, and moves them from video to pad ops. All the affected
+>> drivers are updated to use the new pad ops version.
+>>
+>> The affected drivers were updated in a way that mathes how they deal
+>> with the pad argument in other callbacks (mainly enum_dv_timings,
+>> dv_timings_cap, get/set_edid).
+>>
+>> This was originally a part of a larger patchset:
+>> https://lore.kernel.org/lkml/20240221160215.484151-2-panikiel@google.com/
+>>
+>> Paweł Anikiel (16):
+>>   media: v4l2-subdev: Add pad versions of dv timing subdev calls
+>>   media: i2c: adv748x: Switch dv timing callbacks to pad ops
+>>   media: i2c: adv7511: Switch dv timing callbacks to pad ops
+>>   media: i2c: adv7604: Switch dv timing callbacks to pad ops
+>>   media: i2c: adv7842: Switch dv timing callbacks to pad ops
+>>   media: i2c: tc358743: Switch dv timing callbacks to pad ops
+>>   media: i2c: tda1997x: Switch dv timing callbacks to pad ops
+>>   media: i2c: ths7303: Switch dv timing callbacks to pad ops
+>>   media: i2c: ths8200: Switch dv timing callbacks to pad ops
+>>   media: i2c: tvp7002: Switch dv timing callbacks to pad ops
+>>   media: spi: gs1662: Switch dv timing callbacks to pad ops
+>>   media: cobalt: Use pad variant of dv timing subdev calls
+>>   media: rcar-vin: Use pad variant of dv timing subdev calls
+>>   media: vpif_capture: Use pad variant of dv timing subdev calls
+>>   media: tegra-video: Use pad variant of dv timing subdev calls
+>>   media: v4l2-subdev: Remove non-pad dv timing callbacks
+> 
+> You missed one:
+> 
+> In file included from include/media/v4l2-device.h:13,
+>                  from drivers/media/platform/ti/davinci/vpif_display.h:13,
+>                  from drivers/media/platform/ti/davinci/vpif_display.c:26:
+> drivers/media/platform/ti/davinci/vpif_display.c: In function 'vpif_s_dv_timings':
+> include/media/v4l2-subdev.h:1816:56: error: 'const struct v4l2_subdev_video_ops' has no member named 's_dv_timings'
+>  1816 |                 else if (!(__sd->ops->o && __sd->ops->o->f))            \
+>       |                                                        ^~
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: note: in expansion of macro 'v4l2_subdev_call'
+>   937 |         ret = v4l2_subdev_call(ch->sd, video, s_dv_timings, timings);
+>       |               ^~~~~~~~~~~~~~~~
+> include/media/v4l2-subdev.h:1819:53: error: 'const struct v4l2_subdev_video_ops' has no member named 's_dv_timings'
+>  1819 |                          v4l2_subdev_call_wrappers.o->f)                \
+>       |                                                     ^~
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: note: in expansion of macro 'v4l2_subdev_call'
+>   937 |         ret = v4l2_subdev_call(ch->sd, video, s_dv_timings, timings);
+>       |               ^~~~~~~~~~~~~~~~
+> include/media/v4l2-subdev.h:1820:63: error: 'const struct v4l2_subdev_video_ops' has no member named 's_dv_timings'
+>  1820 |                         __result = v4l2_subdev_call_wrappers.o->f(      \
+>       |                                                               ^~
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: note: in expansion of macro 'v4l2_subdev_call'
+>   937 |         ret = v4l2_subdev_call(ch->sd, video, s_dv_timings, timings);
+>       |               ^~~~~~~~~~~~~~~~
+> include/media/v4l2-subdev.h:1823:48: error: 'const struct v4l2_subdev_video_ops' has no member named 's_dv_timings'
+>  1823 |                         __result = __sd->ops->o->f(__sd, ##args);       \
+>       |                                                ^~
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: note: in expansion of macro 'v4l2_subdev_call'
+>   937 |         ret = v4l2_subdev_call(ch->sd, video, s_dv_timings, timings);
+>       |               ^~~~~~~~~~~~~~~~
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: error: no member 's_dv_timings' in struct v4l2_subdev_video_ops
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: error: no member 's_dv_timings' in struct v4l2_subdev_video_ops
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: error: no member 's_dv_timings' in struct v4l2_subdev_video_ops
+> drivers/media/platform/ti/davinci/vpif_display.c:937:15: error: no member 's_dv_timings' in struct v4l2_subdev_video_ops
 
-Next, the fields network_offset and inner_network_offset are added to
-napi_gro_cb, and are both set during the receive phase of GRO. This is then
-leveraged in the next commit to remove flush_id state from napi_gro_cb, and
-stateful code in {ipv6,inet}_gro_receive which may be unnecessarily
-complicated due to encapsulation support in GRO.
+No need to post a v2. Just post a single patch '14.5/16' to convert vpif_display that
+will be added after patch [14/16], then I'll take care of it.
 
-In addition, udpgro_fwd selftest is adjusted to include the socket lookup
-case for vxlan. This selftest will test its supposed functionality once
-local bind support is merged (https://lore.kernel.org/netdev/df300a49-7811-4126-a56a-a77100c8841b@gmail.com/).
+Regards,
 
-v4 -> v5:
- - Add 1st commit - flush id checks in udp_gro_receive segment which can be
-   backported by itself
- - Add TCP measurements for the 5th commit
- - Add flush id tests to ensure flush id logic is preserved in GRO
- - Simplify gro_inet_flush by removing a branch
- - v4:
-   https://lore.kernel.org/all/20240325182543.87683-1-richardbgobert@gmail.com/
+	Hans
 
-v3 -> v4:
- - Fix code comment and commit message typos
- - v3:
-   https://lore.kernel.org/all/f939c84a-2322-4393-a5b0-9b1e0be8ed8e@gmail.com/
-
-v2 -> v3:
- - Use napi_gro_cb instead of skb->{offset}
- - v2:
-   https://lore.kernel.org/all/2ce1600b-e733-448b-91ac-9d0ae2b866a4@gmail.com/
-
-v1 -> v2:
- - Pass p_off in *_gro_complete to fix UDP bug
- - Remove more conditionals and memory fetches from inet_gro_flush
- - v1:
-   https://lore.kernel.org/netdev/e1d22505-c5f8-4c02-a997-64248480338b@gmail.com/
-
-Richard Gobert (6):
-  net: gro: add flush check in udp_gro_receive_segment
-  net: gro: add p_off param in *_gro_complete
-  selftests/net: add local address bind in vxlan selftest
-  net: gro: add {inner_}network_offset to napi_gro_cb
-  net: gro: move L3 flush checks to tcp_gro_receive
-  selftests/net: add flush id selftests
-
- drivers/net/geneve.c                      |   7 +-
- drivers/net/vxlan/vxlan_core.c            |  11 +-
- include/linux/etherdevice.h               |   2 +-
- include/linux/netdevice.h                 |   3 +-
- include/linux/udp.h                       |   2 +-
- include/net/gro.h                         |  93 ++++++++++++--
- include/net/inet_common.h                 |   2 +-
- include/net/tcp.h                         |   6 +-
- include/net/udp.h                         |   8 +-
- include/net/udp_tunnel.h                  |   2 +-
- net/8021q/vlan_core.c                     |   6 +-
- net/core/gro.c                            |   7 +-
- net/ethernet/eth.c                        |   5 +-
- net/ipv4/af_inet.c                        |  54 +-------
- net/ipv4/fou_core.c                       |   9 +-
- net/ipv4/gre_offload.c                    |   6 +-
- net/ipv4/tcp_offload.c                    |  22 +---
- net/ipv4/udp.c                            |   3 +-
- net/ipv4/udp_offload.c                    |  31 +++--
- net/ipv6/ip6_offload.c                    |  41 +++---
- net/ipv6/tcpv6_offload.c                  |   7 +-
- net/ipv6/udp.c                            |   3 +-
- net/ipv6/udp_offload.c                    |  13 +-
- tools/testing/selftests/net/gro.c         | 144 ++++++++++++++++++++++
- tools/testing/selftests/net/udpgro_fwd.sh |  10 +-
- 25 files changed, 336 insertions(+), 161 deletions(-)
-
--- 
-2.36.1
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>>  drivers/media/i2c/adv748x/adv748x-hdmi.c      | 16 ++++----
+>>  drivers/media/i2c/adv7511-v4l2.c              | 14 +++++--
+>>  drivers/media/i2c/adv7604.c                   | 14 +++----
+>>  drivers/media/i2c/adv7842.c                   | 25 ++++++++----
+>>  drivers/media/i2c/tc358743.c                  | 23 +++++++----
+>>  drivers/media/i2c/tda1997x.c                  | 12 +++---
+>>  drivers/media/i2c/ths7303.c                   |  8 +++-
+>>  drivers/media/i2c/ths8200.c                   | 14 +++++--
+>>  drivers/media/i2c/tvp7002.c                   | 26 +++++++++----
+>>  drivers/media/pci/cobalt/cobalt-v4l2.c        | 12 +++---
+>>  .../platform/renesas/rcar-vin/rcar-v4l2.c     |  9 +++--
+>>  .../media/platform/ti/davinci/vpif_capture.c  |  4 +-
+>>  drivers/media/spi/gs1662.c                    | 21 +++++++---
+>>  drivers/media/v4l2-core/v4l2-subdev.c         | 39 +++++++++++++++++--
+>>  drivers/staging/media/tegra-video/vi.c        | 12 +++---
+>>  include/media/v4l2-subdev.h                   | 28 ++++++-------
+>>  16 files changed, 183 insertions(+), 94 deletions(-)
+>>
+> 
+> 
 
