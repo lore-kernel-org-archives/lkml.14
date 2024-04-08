@@ -1,78 +1,335 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2054.outbound.protection.outlook.com [40.107.101.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24C014601C;
-	Mon,  8 Apr 2024 20:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712609633; cv=none; b=MVfYJ7jx23FFPZL1lG3OK/CWdyAdr+Bf+r5WHXfwuxprUsaoVd9XJw7JL0MExKLF4X9oMEeSW4nTvdCCSMT0SVqypVb4fz1qxWtFoE1XTtMpkeEI5jFY8H25pyk8aaNxSO39/1m8mxwRwEWtj4wxz2fbg95Z5EBXwvRJEniYf64=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712609633; c=relaxed/simple;
-	bh=KU0aZoQogbYaaiBUupsRPlXydh4mg/fVrHbYunWm8SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9hCvutkyGEvoq2pvLW6arsdIhZtrs56A2v85BzzgJEwW3U5BUjLOGSHEq8OpXCF55dXalpy/5+OrI2XUqFsK0K7zzqymt011G/l+T1xif6jjNi0eDmPDafzO1BtpkGj4uKIcsvzkk2IVXCFzefcHhzuPOSzKd9DnkmxMIDlSVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wa6YA5UD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A35A1465AB;
+	Mon,  8 Apr 2024 20:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712609644; cv=fail; b=KabBKhu8uixKafe2J0tCecIXD+gejo42dHceh+Lj+S1yxETDzGuc72oSGFFZV+QOjLtMh0hme3R/j5EhJU+tEfl97qDYT2MZ5kVQS4U24e9GHrJfyPuERoHCFiGYHrZOlLt4wRxF9tcjVqmuDW/36KuOV39601HnfGXQsZObEKI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712609644; c=relaxed/simple;
+	bh=NB0eOtiqFlMSoEWXBvtV7QgRZOpf01bZ61XhUTCNNU4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oljpw5hVKrfoCAYXszcRED5Ixk47yO6H5Aqb7u6sC2hROr9uNt5d+cXCLKiiWf4Chmm9sHrjYkSYjwqkt2uimaDTvmQjJ3CKO65FRLCHOmeZVHAB7EzFYcGkT9IZqS5ijoYglUHK/LXXn39SjJldAXQwZx/PR3HScxA1Yym5uro=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EHuHNHUt; arc=fail smtp.client-ip=40.107.101.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wa6YA5UD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4455BC433C7;
-	Mon,  8 Apr 2024 20:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712609633;
-	bh=KU0aZoQogbYaaiBUupsRPlXydh4mg/fVrHbYunWm8SI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Wa6YA5UDRRxQIpnvaOrK2H3MZdsCJhqVYthmIc2LaQPtVrDqIbuVv3xe0JklgbhNC
-	 GCVMXHk8fHCVF4yWCkQKCePn3vRFXrmoOqMFR3nKA4uQxSlw2SziX//OeQBKuphiyC
-	 xjEOs8LtMk3vRvXeK+L/BjWkmlxHOzGVj5uasadKrg16xJan1ROKTeIcXAWHYKrfYq
-	 rcm7WL09lN8NXVQTSDLNcspSF7NgZuZQp8jJ3SObo2NPjTdXqTpI31iZ4/yJurH1lQ
-	 RLGcI/mgf5usU37YfRdoULegxw4bwQ7+0uOToPT8u6nRbW+Q4lfsOaYIJPMXMycDR1
-	 U7PKsikuTrd1Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id E10A8CE126C; Mon,  8 Apr 2024 13:53:52 -0700 (PDT)
-Date: Mon, 8 Apr 2024 13:53:52 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	elver@google.com, akpm@linux-foundation.org, tglx@linutronix.de,
-	peterz@infradead.org, dianders@chromium.org, pmladek@suse.com,
-	Arnd Bergmann <arnd@arndb.de>, Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH cmpxchg 08/14] parisc: add u16 support to cmpxchg()
-Message-ID: <ce6522d9-01fa-4f71-9e4c-66fa91cd65ba@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <7b3646e0-667c-48e2-8f09-e493c43c30cb@paulmck-laptop>
- <20240408174944.907695-8-paulmck@kernel.org>
- <CAHk-=whwbdbNXeJ0m+YZqZcxKPD3v4dbcPVCd6gP7YkwCM=X7w@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EHuHNHUt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aqp8bkYpd7X7GUOcgEZ0LkTSy8jSkxVwV2itAAEzrFtxluPITbkZ/ea9QKOrvjRFkXCtsyencDPZzyGKpQpvsJfZEzJ1QfqjHrx5jCbUciusfY7jsQNVGoZmdVSRskZ/4wRj+Ge22MN2mm3McgeLoHGdlZaVyoojOPIkk4ZSzc/2cpa8DMQtyWGn4c6yV3TwipO96EOy94Gg3K9DHCrfLh91Mpg6qVRn2wG6DoXyY2SU1Tpq2chHa0zB5Knp/NyyLSdBFaTx3uhCLplvj/kPnGIIEM+yqF3D5e9SB4eK1gYOjGW8q2NgLlzkpFpf7kV/ezKm0m7kx5JSss/5n4zC9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oyo58WNyCKwdye/UzAMvtllU8L6elmNDMUgLwJhX3sY=;
+ b=cqYjqpLtW6/fJKUHXX1fWaSMfGuO/i9INCwYomH5/C+ET1NHYi4Nbsj+Iydu8bmvg3q5TTORtHbpYZIs4VH1xEAdkRgOwJ04Jw7DG9dzH2na0RRQFAsoK6Hi/yrPEPnD49U/LFSrPbWpGAQ+SrdLG5Ob/HFDTnPH/Eqz5JqWPyIZQQEMiN5QRiYkqvbqQ1rZiRmMugd1MwezKNcuyPyLyX4w+ehrSF6CMnKVPSWTtbjZBXnUJ3q1jHYkTwxlkhVRJ3r/it+rciV71NNlBW4QRTlpiSP//pw0ByYAO3muvsLSS/lk8pHTjLqI5hG4nQTfQ8beU2XLiXc0EkJTadstQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oyo58WNyCKwdye/UzAMvtllU8L6elmNDMUgLwJhX3sY=;
+ b=EHuHNHUt83X1WQcSW1+/6B4W4xvYYkFsgLJDmuo3L9xJbKozw8UwXTKW71J3mFMQEhXEzMmwlqORoXDCY6qUFMSTuaU/DOoJPhHKbyzfthbl5ATbfz+7uXGxHXhFMOGm4qosbQ1hWa7iyfLE9jumuU9PUi6rVgpNo9ApetlRKcE=
+Received: from MN2PR20CA0056.namprd20.prod.outlook.com (2603:10b6:208:235::25)
+ by DS7PR12MB5742.namprd12.prod.outlook.com (2603:10b6:8:71::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
+ 2024 20:54:00 +0000
+Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
+ (2603:10b6:208:235:cafe::23) by MN2PR20CA0056.outlook.office365.com
+ (2603:10b6:208:235::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46 via Frontend
+ Transport; Mon, 8 Apr 2024 20:54:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Mon, 8 Apr 2024 20:54:00 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 8 Apr
+ 2024 15:53:59 -0500
+Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Mon, 8 Apr 2024 15:53:58 -0500
+From: Tanmay Shah <tanmay.shah@amd.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>, <robh@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<michal.simek@amd.com>, <ben.levinsky@amd.com>, <tanmay.shah@amd.com>
+CC: <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v14 1/4] remoteproc: zynqmp: fix lockstep mode memory region
+Date: Mon, 8 Apr 2024 13:53:11 -0700
+Message-ID: <20240408205313.3552165-2-tanmay.shah@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240408205313.3552165-1-tanmay.shah@amd.com>
+References: <20240408205313.3552165-1-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whwbdbNXeJ0m+YZqZcxKPD3v4dbcPVCd6gP7YkwCM=X7w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: tanmay.shah@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|DS7PR12MB5742:EE_
+X-MS-Office365-Filtering-Correlation-Id: fe03c925-4252-4bdf-6379-08dc580e0423
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	/uunMSXISOLiX0iwUAM9nqpRF2QW4CozAKk5YvgFul0GBjsGewE3WtztGjSZhVTRwGTcZ118Qv6sYIK/VmX8REx7Ed2Rpd6rO+GXx8Z7ETgI6GKJ9KDdtQUXeEVD3UDtz/Ov0XUONXBf2H39G99btv++3Bk6zX6PXDI7HHdJSJFRBFoLA0XwvV77q6OgwglSLqqE0P7U0B6X9EuFALn4DNlEl+9JjsCCEormMDhgCU5W73kVcBaLN/1NauwPiCPbGBTEPzCFz7hs4GZeyVBR+8UYGEy7b1UbqAcWSRj6lR19fdjNSSpC0WPaOwoNah3LY6bgGjboyZVxlLP94Ezv6N0a3X1RQJP6yoKMkytKGfZFfWm9zLGLEUCP0wSLnaxDIP7OXVfSHQ4giNjD+OltERGFJf9LXdMumVwpG7r+p+9ZKHbZdU8WAjDmPeWuHJSSHOxEVA/AKsmJlRW5u8hIDbfRc2kYedlAzL7vdd2t7MjViO/2u2V32wjiStBg341uv/31G9uyR3VkU183LboXGfhLnFhnl1/R7daX974SgCtR9PSBOq8caITBCFvzcaX/kxf4eDcPwD04zdAo4kQE4dphChkDZH4I+IxljMkHa9+i4OmY5E9kiEFNB1RM+D3wgj4h7Q36A+e2HHo4X/VNNRIg4AOcJ+PsBHWoBCzd4y2Ili32KK90ssWkx+6AladB3zM8PiTvRzETcrFMoHUxWT0PHpBBY8nilMGlIOZ5wHwshGQC1GukRD62Hn4TZ3wm
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(376005)(82310400014)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 20:54:00.0888
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe03c925-4252-4bdf-6379-08dc580e0423
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AA.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB5742
 
-On Mon, Apr 08, 2024 at 01:10:40PM -0700, Linus Torvalds wrote:
-> On Mon, 8 Apr 2024 at 10:50, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > And get rid of manual truncation down to u8, etc. in there - the
-> > only reason for those is to avoid bogus warnings about constant
-> > truncation from sparse, and those are easy to avoid by turning
-> > that switch into conditional expression.
-> 
-> I support the use of the conditional, but why add the 16-bit case when
-> it turns out we don't want it after all?
+In lockstep mode, r5 core0 uses TCM of R5 core1. Following is lockstep
+mode memory region as per hardware reference manual.
 
-You are quite right that we do not want it for emulation.  However, this
-commit is providing native parisc support for the full set of cases,
-just like x86 already does.
+    |      *TCM*         |   *R5 View* | *Linux view* |
+    | R5_0 ATCM (128 KB) | 0x0000_0000 | 0xFFE0_0000  |
+    | R5_0 BTCM (128 KB) | 0x0002_0000 | 0xFFE2_0000  |
 
-Plus this native parisc/sparc32 support is harmless.  If someone adds a
-16-bit cmpxchg() in core code, which (as you say) is a bug given that
-some systems do not support 16-bit loads and stores, then kernel test
-robot builds of arc, csky, sh, xtensa, and riscv will complain bitterly.
+However, driver shouldn't model it as above because R5 core0 TCM and core1
+TCM has different power-domains mapped to it.
+Hence, TCM address space in lockstep mode should be modeled as 64KB
+regions only where each region has its own power-domain as following:
 
-Plus I hope that ongoing removal of support for antique systems will allow
-us to support 16-bit cmpxchg() in core code sooner rather than later.
-(Hey, I can dream, can't I?)
+    |      *TCM*         |   *R5 View* | *Linux view* |
+    | R5_0 ATCM0 (64 KB) | 0x0000_0000 | 0xFFE0_0000  |
+    | R5_0 BTCM0 (64 KB) | 0x0002_0000 | 0xFFE2_0000  |
+    | R5_0 ATCM1 (64 KB) | 0x0001_0000 | 0xFFE1_0000  |
+    | R5_0 BTCM1 (64 KB) | 0x0003_0000 | 0xFFE3_0000  |
 
-							Thanx, Paul
+This makes driver maintanance easy and makes design robust for future
+platorms as well.
+
+Signed-off-by: Tanmay Shah <tanmay.shah@amd.com>
+---
+ drivers/remoteproc/xlnx_r5_remoteproc.c | 146 ++----------------------
+ 1 file changed, 12 insertions(+), 134 deletions(-)
+
+diff --git a/drivers/remoteproc/xlnx_r5_remoteproc.c b/drivers/remoteproc/xlnx_r5_remoteproc.c
+index cfbd97b89c26..0f942440b4e2 100644
+--- a/drivers/remoteproc/xlnx_r5_remoteproc.c
++++ b/drivers/remoteproc/xlnx_r5_remoteproc.c
+@@ -84,12 +84,12 @@ static const struct mem_bank_data zynqmp_tcm_banks_split[] = {
+ 	{0xffeb0000UL, 0x20000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
+ };
+ 
+-/* In lockstep mode cluster combines each 64KB TCM and makes 128KB TCM */
++/* In lockstep mode cluster uses each 64KB TCM from second core as well */
+ static const struct mem_bank_data zynqmp_tcm_banks_lockstep[] = {
+-	{0xffe00000UL, 0x0, 0x20000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 128KB each */
+-	{0xffe20000UL, 0x20000, 0x20000UL, PD_R5_0_BTCM, "btcm0"},
+-	{0, 0, 0, PD_R5_1_ATCM, ""},
+-	{0, 0, 0, PD_R5_1_BTCM, ""},
++	{0xffe00000UL, 0x0, 0x10000UL, PD_R5_0_ATCM, "atcm0"}, /* TCM 64KB each */
++	{0xffe20000UL, 0x20000, 0x10000UL, PD_R5_0_BTCM, "btcm0"},
++	{0xffe10000UL, 0x10000, 0x10000UL, PD_R5_1_ATCM, "atcm1"},
++	{0xffe30000UL, 0x30000, 0x10000UL, PD_R5_1_BTCM, "btcm1"},
+ };
+ 
+ /**
+@@ -541,14 +541,14 @@ static int tcm_mem_map(struct rproc *rproc,
+ }
+ 
+ /*
+- * add_tcm_carveout_split_mode()
++ * add_tcm_banks()
+  * @rproc: single R5 core's corresponding rproc instance
+  *
+- * allocate and add remoteproc carveout for TCM memory in split mode
++ * allocate and add remoteproc carveout for TCM memory
+  *
+  * return 0 on success, otherwise non-zero value on failure
+  */
+-static int add_tcm_carveout_split_mode(struct rproc *rproc)
++static int add_tcm_banks(struct rproc *rproc)
+ {
+ 	struct rproc_mem_entry *rproc_mem;
+ 	struct zynqmp_r5_core *r5_core;
+@@ -581,10 +581,10 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+ 					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+ 		if (ret < 0) {
+ 			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
+-			goto release_tcm_split;
++			goto release_tcm;
+ 		}
+ 
+-		dev_dbg(dev, "TCM carveout split mode %s addr=%llx, da=0x%x, size=0x%lx",
++		dev_dbg(dev, "TCM carveout %s addr=%llx, da=0x%x, size=0x%lx",
+ 			bank_name, bank_addr, da, bank_size);
+ 
+ 		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
+@@ -594,99 +594,16 @@ static int add_tcm_carveout_split_mode(struct rproc *rproc)
+ 		if (!rproc_mem) {
+ 			ret = -ENOMEM;
+ 			zynqmp_pm_release_node(pm_domain_id);
+-			goto release_tcm_split;
+-		}
+-
+-		rproc_add_carveout(rproc, rproc_mem);
+-		rproc_coredump_add_segment(rproc, da, bank_size);
+-	}
+-
+-	return 0;
+-
+-release_tcm_split:
+-	/* If failed, Turn off all TCM banks turned on before */
+-	for (i--; i >= 0; i--) {
+-		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+-		zynqmp_pm_release_node(pm_domain_id);
+-	}
+-	return ret;
+-}
+-
+-/*
+- * add_tcm_carveout_lockstep_mode()
+- * @rproc: single R5 core's corresponding rproc instance
+- *
+- * allocate and add remoteproc carveout for TCM memory in lockstep mode
+- *
+- * return 0 on success, otherwise non-zero value on failure
+- */
+-static int add_tcm_carveout_lockstep_mode(struct rproc *rproc)
+-{
+-	struct rproc_mem_entry *rproc_mem;
+-	struct zynqmp_r5_core *r5_core;
+-	int i, num_banks, ret;
+-	phys_addr_t bank_addr;
+-	size_t bank_size = 0;
+-	struct device *dev;
+-	u32 pm_domain_id;
+-	char *bank_name;
+-	u32 da;
+-
+-	r5_core = rproc->priv;
+-	dev = r5_core->dev;
+-
+-	/* Go through zynqmp banks for r5 node */
+-	num_banks = r5_core->tcm_bank_count;
+-
+-	/*
+-	 * In lockstep mode, TCM is contiguous memory block
+-	 * However, each TCM block still needs to be enabled individually.
+-	 * So, Enable each TCM block individually.
+-	 * Although ATCM and BTCM is contiguous memory block, add two separate
+-	 * carveouts for both.
+-	 */
+-	for (i = 0; i < num_banks; i++) {
+-		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+-
+-		/* Turn on each TCM bank individually */
+-		ret = zynqmp_pm_request_node(pm_domain_id,
+-					     ZYNQMP_PM_CAPABILITY_ACCESS, 0,
+-					     ZYNQMP_PM_REQUEST_ACK_BLOCKING);
+-		if (ret < 0) {
+-			dev_err(dev, "failed to turn on TCM 0x%x", pm_domain_id);
+-			goto release_tcm_lockstep;
+-		}
+-
+-		bank_size = r5_core->tcm_banks[i]->size;
+-		if (bank_size == 0)
+-			continue;
+-
+-		bank_addr = r5_core->tcm_banks[i]->addr;
+-		da = r5_core->tcm_banks[i]->da;
+-		bank_name = r5_core->tcm_banks[i]->bank_name;
+-
+-		/* Register TCM address range, TCM map and unmap functions */
+-		rproc_mem = rproc_mem_entry_init(dev, NULL, bank_addr,
+-						 bank_size, da,
+-						 tcm_mem_map, tcm_mem_unmap,
+-						 bank_name);
+-		if (!rproc_mem) {
+-			ret = -ENOMEM;
+-			zynqmp_pm_release_node(pm_domain_id);
+-			goto release_tcm_lockstep;
++			goto release_tcm;
+ 		}
+ 
+-		/* If registration is success, add carveouts */
+ 		rproc_add_carveout(rproc, rproc_mem);
+ 		rproc_coredump_add_segment(rproc, da, bank_size);
+-
+-		dev_dbg(dev, "TCM carveout lockstep mode %s addr=0x%llx, da=0x%x, size=0x%lx",
+-			bank_name, bank_addr, da, bank_size);
+ 	}
+ 
+ 	return 0;
+ 
+-release_tcm_lockstep:
++release_tcm:
+ 	/* If failed, Turn off all TCM banks turned on before */
+ 	for (i--; i >= 0; i--) {
+ 		pm_domain_id = r5_core->tcm_banks[i]->pm_domain_id;
+@@ -695,45 +612,6 @@ static int add_tcm_carveout_lockstep_mode(struct rproc *rproc)
+ 	return ret;
+ }
+ 
+-/*
+- * add_tcm_banks()
+- * @rproc: single R5 core's corresponding rproc instance
+- *
+- * allocate and add remoteproc carveouts for TCM memory based on cluster mode
+- *
+- * return 0 on success, otherwise non-zero value on failure
+- */
+-static int add_tcm_banks(struct rproc *rproc)
+-{
+-	struct zynqmp_r5_cluster *cluster;
+-	struct zynqmp_r5_core *r5_core;
+-	struct device *dev;
+-
+-	r5_core = rproc->priv;
+-	if (!r5_core)
+-		return -EINVAL;
+-
+-	dev = r5_core->dev;
+-
+-	cluster = dev_get_drvdata(dev->parent);
+-	if (!cluster) {
+-		dev_err(dev->parent, "Invalid driver data\n");
+-		return -EINVAL;
+-	}
+-
+-	/*
+-	 * In lockstep mode TCM banks are one contiguous memory region of 256Kb
+-	 * In split mode, each TCM bank is 64Kb and not contiguous.
+-	 * We add memory carveouts accordingly.
+-	 */
+-	if (cluster->mode == SPLIT_MODE)
+-		return add_tcm_carveout_split_mode(rproc);
+-	else if (cluster->mode == LOCKSTEP_MODE)
+-		return add_tcm_carveout_lockstep_mode(rproc);
+-
+-	return -EINVAL;
+-}
+-
+ /*
+  * zynqmp_r5_parse_fw()
+  * @rproc: single R5 core's corresponding rproc instance
+-- 
+2.25.1
+
