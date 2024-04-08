@@ -1,107 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA15F14389C;
-	Mon,  8 Apr 2024 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3192F143860;
+	Mon,  8 Apr 2024 17:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712596982; cv=none; b=Ujd3PKRlPIA+r/xXwv1rVqLjwpns90Qf8l0CVQ0ETVoF43rQye98mOSxziPTG92IAgxrEZg1wMU0+s8UkVuk+lgSY+2ujxKgMEm+QRRH0F/yoSPeWq9LHN12glBs1+aI4Rq51merzxBwsksT5uha7fabah6frru7sLLefBvGpRY=
+	t=1712596985; cv=none; b=SC1CiHo8IQkeX9TJDFBw5Bi72iyhJAZ3/WE4N3ZTdyzJP6Oo3esoG5yY7WGVmaqoCrUajeLja+iUyh0Fko7HY+qXQPcofdcmKzrzfKFCKdQ9oecMg+KrO6OaWZ+KkQteEtVHsIdx2C5g+hylmwr2ULLtFgcIo3AvpSIhk9aIGaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712596982; c=relaxed/simple;
-	bh=PSdUNjxecv9/EH8TvrTsRyagADl80n4dir3Oe48bPOI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kfu7ZbcDYAMFKHi4mAh4FtzjwtXKKW2SQgl5VoMY/dYg/kXraCrx/MJTHZsi08H9EAutpi6tsWPip5ZEy4+XIgY82KT+oOkR9eIMFPV+WwkLFU1GDwCY02BLYBXVgqYlUgFa7yRt4olqVR72MxhJyXESgm4ndcEE+LK31PKrmNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZ4TR5Ma; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1712596985; c=relaxed/simple;
+	bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=h2Z7pwoAq6mjMYC49hTFyaqBCF2fWX+Dy0cAYQYdkNJFzcHSwMRWHS0itms9jHX50xn4C9gYQdO/gkwloX7wpncEn3Lm2Hq60wpmSsfLYEEfmwELIWlN32sK6miN69O3awyS1zaKjULXBN/4RCeRmEpIAH8V22HgxkRbluGQb7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8Tggwn2; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZ4TR5Ma"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8Tggwn2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712596981; x=1744132981;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PSdUNjxecv9/EH8TvrTsRyagADl80n4dir3Oe48bPOI=;
-  b=nZ4TR5MaekUhIy6cDlE9WHE8T+dN9+EtVSydQAII/uojo83l+ZwaYsVR
-   Jcd9TlCZQXZfEGm5VTRKBRsi+MIb2nIUA4K46QxdLoEZutGW0oseiTAEl
-   tjxzm202gQk0k+XioylUh5yxByoDZe8+wVb6F/htyrtuZXpfNqEdkYn+N
-   MupaR4/s3lDVHej3FfBgalVLD2TnHOTjFmJlo/3Nfge2d4jlmFyyhmQoL
-   6V7d/n1krPFCaMOgGnoNs+xjW1RrojKVzt2FKUIIIestBl0mZe+xuDKn3
-   g4oCh4jVb3sZh8b5n3vQt7IimLOSLwGv8S7UcNFUpSgbUPATljJGJgAL1
+  t=1712596984; x=1744132984;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Pqh3pyoAGMUHh7oj7/eiymnpIKVlFY2rZB4bG8dyHWI=;
+  b=Y8Tggwn2E7nnZ1xEP3lOhSfcO5IQl55ssMdB9lmfsvtabS/SaD3w2Fg2
+   2YDzTP6HkbXcA7PsP1TvgPb/2YriqvotGmnqtdUoYqI1DSG+Em62MkUUl
+   K8qeId8RUHRHk4I9Ero5joK95uaAAfd/9xxVWyQKecWyPEEWMLvQQ1Nql
+   kjig9jAWMWETSwO/acKzxNy1AHQ62mtpu79BA2C/NHv5IywQfT2edSURm
+   zhVyjlKRn15h3H85c/iZCxgQH6yDzhBPZZUBLUivc5cjgqot50daENG0a
+   tAI+GKrS/YjC1aepISY441jjDIAI5dfvBFlOEESzXhQusYt5YeTXicG5c
    w==;
-X-CSE-ConnectionGUID: oghk6tjmQiakx4EFQSU6Ag==
-X-CSE-MsgGUID: RRXlIi+0SU6okRH0KXMJpA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7757467"
+X-CSE-ConnectionGUID: KOw7q+nwSz674k2fFXtLIA==
+X-CSE-MsgGUID: dSR1qco2TPCnPOT6mhfGdw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8112054"
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="7757467"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:00 -0700
-X-CSE-ConnectionGUID: a8sq+q/VRRmRTSHSWV6cuw==
-X-CSE-MsgGUID: OlpQj4e/SoSchFFOlUJeuw==
+   d="scan'208";a="8112054"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:03 -0700
+X-CSE-ConnectionGUID: axvwqU3gQVOpapr20X6fPA==
+X-CSE-MsgGUID: JxHFW/8+Qwm9nS4h3K8IXA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="24697460"
-Received: from shahsmit-mobl1.amr.corp.intel.com (HELO [10.212.101.141]) ([10.212.101.141])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:22:59 -0700
-Message-ID: <ba585faa-d761-45ed-9e44-784097b3439a@linux.intel.com>
-Date: Mon, 8 Apr 2024 10:37:29 -0500
+   d="scan'208";a="19877439"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 10:23:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Apr 2024 20:22:57 +0300 (EEST)
+To: "David E. Box" <david.e.box@linux.intel.com>
+cc: Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    sathyanarayanan.kuppuswamy@linux.intel.com
+Subject: Re: [PATCH V3 8/9] platform/x86/intel/sdsi: Simplify ascii
+ printing
+In-Reply-To: <20240405032507.2637311-9-david.e.box@linux.intel.com>
+Message-ID: <6dd8b2c0-1c89-43f0-0426-df8d483a7b1e@linux.intel.com>
+References: <20240405032507.2637311-1-david.e.box@linux.intel.com> <20240405032507.2637311-9-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: Intel: sof_rt5682: Fix uninitialized variable in
- probe
-To: Dan Carpenter <dan.carpenter@linaro.org>, Brent Lu <brent.lu@intel.com>
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>,
- Liam Girdwood <liam.r.girdwood@linux.intel.com>,
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
- Bard Liao <yung-chuan.liao@linux.intel.com>,
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, Mark Brown
- <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Terry Cheong <htcheong@chromium.org>,
- Uday M Bhat <uday.m.bhat@intel.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Mac Chiang <mac.chiang@intel.com>, apoorv <apoorv@intel.com>,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <6e16433f-1897-46a2-b3ee-e177e7d846b8@moroto.mountain>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <6e16433f-1897-46a2-b3ee-e177e7d846b8@moroto.mountain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
+On Thu, 4 Apr 2024, David E. Box wrote:
 
-
-On 4/8/24 02:35, Dan Carpenter wrote:
-> Initialize "is_legacy_cpu" to false to prevent an uninitialized variable
-> bug.
+> Use printf width specifier to set the display length of encoded feature
+> names.
 > 
-> Fixes: 8efcd4864652 ("ASoC: Intel: sof_rt5682: use common module for sof_card_private initialization")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-
-Good catch.
-
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
->  sound/soc/intel/boards/sof_rt5682.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-> index aadd341a202c..966bcd3e8bdc 100644
-> --- a/sound/soc/intel/boards/sof_rt5682.c
-> +++ b/sound/soc/intel/boards/sof_rt5682.c
-> @@ -606,7 +606,7 @@ static int sof_audio_probe(struct platform_device *pdev)
->  {
->  	struct snd_soc_acpi_mach *mach = pdev->dev.platform_data;
->  	struct sof_card_private *ctx;
-> -	bool is_legacy_cpu;
-> +	bool is_legacy_cpu = false;
->  	int ret;
+> V3 - Add FEAT_LEN #def
+> 
+> V2 - Split of V1 patch 7
+> 
+>  tools/arch/x86/intel_sdsi/intel_sdsi.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> index 45bc69e6718e..0c9670ba1f15 100644
+> --- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> +++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+> @@ -43,6 +43,7 @@
+>  #define METER_CERT_MAX_SIZE	4096
+>  #define STATE_MAX_NUM_LICENSES	16
+>  #define STATE_MAX_NUM_IN_BUNDLE	(uint32_t)8
+> +#define FEAT_LEN		4
 >  
->  	if (pdev->id_entry && pdev->id_entry->driver_data)
+>  #define __round_mask(x, y) ((__typeof__(x))((y) - 1))
+>  #define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
+> @@ -409,11 +410,10 @@ static int sdsi_meter_cert_show(struct sdsi_dev *s)
+>  
+>  	printf("Number of Feature Counters:   %ld\n", BUNDLE_COUNT(mc->bundle_length));
+>  	while (count < BUNDLE_COUNT(mc->bundle_length)) {
+> -		char feature[5];
+> +		char feature[FEAT_LEN];
+>  
+> -		feature[4] = '\0';
+>  		get_feature(bec[count].encoding, feature);
+> -		printf("    %s:          %d\n", feature, bec[count].counter);
+> +		printf("    %.4s:          %d\n", feature, bec[count].counter);
+>  		++count;
+>  	}
+>  
+> @@ -494,7 +494,7 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
+>  			sizeof(*lki) +			// size of the license key info
+>  			offset;				// offset to this blob content
+>  		struct bundle_encoding *bundle = (void *)(lbc) + sizeof(*lbc);
+> -		char feature[5];
+> +		char feature[FEAT_LEN];
+>  		uint32_t i;
+>  
+>  		printf("     Blob %d:\n", count - 1);
+> @@ -507,11 +507,9 @@ static int sdsi_state_cert_show(struct sdsi_dev *s)
+>  		printf("        Blob revision ID:           %u\n", lbc->rev_id);
+>  		printf("        Number of Features:         %u\n", lbc->num_bundles);
+>  
+> -		feature[4] = '\0';
+> -
+>  		for (i = 0; i < min(lbc->num_bundles, STATE_MAX_NUM_IN_BUNDLE); i++) {
+>  			get_feature(bundle[i].encoding, feature);
+> -			printf("                 Feature %d:         %s\n", i, feature);
+> +			printf("                 Feature %d:         %.4s\n", i, feature);
+>  		}
+>  
+>  		if (lbc->num_bundles > STATE_MAX_NUM_IN_BUNDLE)
+> 
+
+Hi,
+
+After staring this for a while, I cannot get rid of the feeling that the 
+removal of NUL termination is a step into wrong direction. But IMO, 
+instead of the caller side, the NUL termination could be added inside 
+get_feature().
+
+-- 
+ i.
+
