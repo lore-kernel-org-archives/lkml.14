@@ -1,163 +1,134 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD334C61F
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12A54F5EC
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712567758; cv=none; b=l2MkoCLgUnxtz8zHncRSAXjOrHOjCbW+5jT0lsL6HOob8CV8h/++jPkDuGyi5gEvwohljFC06Vb+Klgf3kfVsKAuaGTWWEgr4OYBR5krRgXWOpaam/ruHYxJaF2ME6TYtxCcfla8UVm0kBXfASzDOs3nTeWiFFuHKVGTydGHQ14=
+	t=1712567777; cv=none; b=SX6N51ucXy09+z0JEv0+qgJ+DQ3SiOWL15/hIT7bzRH8pKMCGqOaNCy3CTmWhwaKtNDW9avrwEap8ycaJNS6FJrHy99WoxY+iUt6y9c/MuTMp67G76A2CzSJC5CVrDDYed+onRbtjUEXH7fhTPxtKIrlcif/W1GLSa+ypoOsK/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712567758; c=relaxed/simple;
-	bh=+l84a63zQDa3KCQZBJ4TJN5KeUrb8PGLNV0AJ96geus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X56yuT8mUpNzTZMkpLxVb792wVZCBI1eDrfa6TdgHbcRUsc4p817MT2FjKOIynG9pXBNRcK1m5mjfkbsqgLFYv9pGu6rFuzxTYc45XVtG7Wu3l/QQporE688dRDWdTNlgzEyXuc7LncWsmdOIrXMNlvt8GSyRlluWv+l4L2l+H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F1kAwpE8; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712567777; c=relaxed/simple;
+	bh=RcF5b+pWVnXy171fFdlh0P//rNSn0NhuAptCsv6unGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tds5w1BN+LRGFW/xvhLjFJGc+x0HaVBYsNxp14srMMDhyKZEd3+Ew4Yi/Ag6gQURXQL+vsb5dqozhuSTh24WFQNFh5LOEBbbLKCDMoRgM5D/9dyycmHR2e7kDoz6Dlhwjcvg+/Al1ClxziDYEhE+tadQN/vsUZhymJoMhzcrlkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cbIXDCb+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1kAwpE8"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e346224bdso2220723a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:15:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712567755; x=1713172555; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eOdMmskLhpoulw50kdQ3gfPaoFiHiAEoT4mUXvHBa/M=;
-        b=F1kAwpE8ebOc6jF9LVlYe6Tu5cDedi+bln5+78s6k06sS+q7gwOR4sOOMrxEIgZfT6
-         yg0Sfr1zUbUkKoZK+M2sixYWzWZLv4AxzqrAhFGlmJDNy7t2ntV4GN9LKHRa4C4VM72s
-         jGyvVy9ntxIOwlgf7PdJ8eNzbIeJDr3/cYZCF8Zz2bbWUjFByXcEKYAcP1aGQcXKz/WW
-         NGchpEcmuPqTJBlKMkWGEPjebzoyOoyta3LMotGHVJIRZsR6Qj+cwnYXUyjFHdqxHn2B
-         Cnjnzk7FahyxpTFHlL9s0F5ImLDAvbwsSmSZKiq+vmGElpWeXLUiJhZxO/Og0c6VDhUq
-         r6HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712567755; x=1713172555;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eOdMmskLhpoulw50kdQ3gfPaoFiHiAEoT4mUXvHBa/M=;
-        b=K8S7dpo4Bzuh3SqbfpRLNK+HeqRnLXwWaqtMR5j8vv3Qp+q4JtTabhUFUELpdulID/
-         xtFVipV9CvOiJ693ZrRJw/TKLFWeudbjDAYxJVU2JAY9o1TNJt58Ks3cMfyRE9sIPmSW
-         c2O4yUw7+wKyamiq76ImbXxgSNiyvcgKAa+yQXFswLe0PN5XuKJGg+AhN9TW3Eep7iQM
-         KLXrXjaYSTTKHArVnE3Tx8ttYxxhw23kxLXiw9+bT5MMcXQ+0ZLQPSWEPWE8Tza+YGhL
-         /futn5Gc36LJWw7Ra/24Z5C1IsUc8Of7pJic/YCTwbsi+1hVFzoeckd/9BNuqwlQdZjE
-         FeOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYx2310W3R67Uhy3AQ4J99zw7pu6hwFeTNL5QBlpIb19EvnJVhPaqGslszaJGPI47qOQoxa1IVI7RN5itJKGV5ePukG6wzKDVYTIhQ
-X-Gm-Message-State: AOJu0YwrBPDJwJdw7L2SUtb2eUBM7O68jfgXGG9yAy3EUBscsEtS2nKG
-	fwMcL5naP+YPkGaVRwyKSs7fjFENpIHfgquc0b1TMwOMsZXVYW9/
-X-Google-Smtp-Source: AGHT+IG+R/qhW/X2ZQ+8rlioxyUiO/2xWxmNPBfrDICBrlzwOpQqKoIeO5q9NsrSWbaxtnFPp5HW4w==
-X-Received: by 2002:a50:ab50:0:b0:568:c6a2:f427 with SMTP id t16-20020a50ab50000000b00568c6a2f427mr5624423edc.27.1712567754711;
-        Mon, 08 Apr 2024 02:15:54 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id n2-20020a056402434200b0056de7bee45bsm3854201edc.18.2024.04.08.02.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 02:15:53 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 3/3] locking/atomic/x86: Introduce arch_try_cmpxchg64() for !CONFIG_X86_CMPXCHG64
-Date: Mon,  8 Apr 2024 11:13:58 +0200
-Message-ID: <20240408091547.90111-4-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240408091547.90111-1-ubizjak@gmail.com>
-References: <20240408091547.90111-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cbIXDCb+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KJfVH9LBCImx01OlujvNZgANIUnI1d6+NPWDI/wmv/M=; b=cbIXDCb+TFrPMIAPCv86wkJW4x
+	EK022BOrl4n4FjF+xU2zC7EzySQs3M8JUn/vqz8XG07WbBUCxXYBQEkJe8rclnIxZmXDo2ZdKQaDj
+	NfGaaECPuwJq0Ic6iiRsTIYqgwYQoKrykq5zglrqhtnDyC1Ot150MK87tNoTUGPiyloe+I4UJHCsS
+	GLBTcE+4ZLaRf5OBGKiXiSauTvu3W+8W8XTr6YLBMCoMl62qPLnEG0r7Bgkwt6LtDD3fJPRRRR+ko
+	b1JQMI/HMQ963Us2kYLEJCxN4h3USBdeNI/tm7E1qAHra4yryoM73kggmWdpbihGf5QbjPLmTVW6+
+	Dn6oAqKQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rtl6j-000000074BU-39VK;
+	Mon, 08 Apr 2024 09:16:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6B7DF30243A; Mon,  8 Apr 2024 11:16:05 +0200 (CEST)
+Date: Mon, 8 Apr 2024 11:16:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 5/5] sched/fair: Rename set_next_buddy() to
+ set_next_pick()
+Message-ID: <20240408091605.GE21904@noisy.programming.kicks-ass.net>
+References: <20240407084319.1462211-1-mingo@kernel.org>
+ <20240407084319.1462211-6-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240407084319.1462211-6-mingo@kernel.org>
 
-Commit:
+On Sun, Apr 07, 2024 at 10:43:19AM +0200, Ingo Molnar wrote:
+> This is a mechanism to set the next task_pick target,
+> 'buddy' is too ambiguous and refers to a historic feature we
+> don't have anymore.
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  kernel/sched/fair.c | 28 +++++++++++++---------------
+>  1 file changed, 13 insertions(+), 15 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 93ea653065f5..fe730f232ffd 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3200,7 +3200,16 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  	hrtick_update(rq);
+>  }
+>  
+> -static void set_next_buddy(struct sched_entity *se);
+> +static void set_next_pick(struct sched_entity *se)
+> +{
+> +	for_each_sched_entity(se) {
+> +		if (SCHED_WARN_ON(!se->on_rq))
+> +			return;
+> +		if (se_is_idle(se))
+> +			return;
+> +		cfs_rq_of(se)->next = se;
+> +	}
+> +}
+>  
+>  /*
+>   * The dequeue_task method is called before nr_running is
+> @@ -3240,7 +3249,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>  			 * p is sleeping when it is within its sched_slice.
+>  			 */
+>  			if (task_sleep && se && !throttled_hierarchy(cfs_rq))
+> -				set_next_buddy(se);
+> +				set_next_pick(se);
+>  			break;
+>  		}
+>  		flags |= DEQUEUE_SLEEP;
+> @@ -4631,17 +4640,6 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  static inline void set_task_max_allowed_capacity(struct task_struct *p) {}
+>  #endif /* CONFIG_SMP */
+>  
+> -static void set_next_buddy(struct sched_entity *se)
+> -{
+> -	for_each_sched_entity(se) {
+> -		if (SCHED_WARN_ON(!se->on_rq))
+> -			return;
+> -		if (se_is_idle(se))
+> -			return;
+> -		cfs_rq_of(se)->next = se;
+> -	}
+> -}
+> -
 
-  6d12c8d308e68 ("percpu: Wire up cmpxchg128")
+Hurmmm.. afaict the only actual user of cfs_rq->next left is task_hot(),
+no? Is that thing worth it?
 
-improved emulated cmpxchg8b_emu() library function to return
-success/failure in a ZF flag.
+That is, should we not totally nuke the thing?
 
-Define arch_try_cmpxchg64() for !CONFIG_X86_CMPXCHG64 targets
-to override the generic archy_try_cmpxchg() with an optimized
-target specific implementation that handles ZF flag.
+>  /*
+>   * Preempt the current task with a newly woken task if needed:
+>   */
+> @@ -4769,7 +4767,7 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
+>  		goto simple;
+>  
+>  	/*
+> -	 * Because of the set_next_buddy() in dequeue_task_fair() it is rather
+> +	 * Because of the set_next_pick() in dequeue_task_fair() it is rather
+>  	 * likely that a next task is from the same cgroup as the current.
+>  	 *
 
-The assembly code at the call sites improves from:
-
-   bf56d:	e8 fc ff ff ff       	call   cmpxchg8b_emu
-   bf572:	8b 74 24 28          	mov    0x28(%esp),%esi
-   bf576:	89 c3                	mov    %eax,%ebx
-   bf578:	89 d1                	mov    %edx,%ecx
-   bf57a:	8b 7c 24 2c          	mov    0x2c(%esp),%edi
-   bf57e:	89 f0                	mov    %esi,%eax
-   bf580:	89 fa                	mov    %edi,%edx
-   bf582:	31 d8                	xor    %ebx,%eax
-   bf584:	31 ca                	xor    %ecx,%edx
-   bf586:	09 d0                	or     %edx,%eax
-   bf588:	0f 84 e3 01 00 00    	je     bf771 <...>
-
-to:
-
-   bf572:	e8 fc ff ff ff       	call   cmpxchg8b_emu
-   bf577:	0f 84 b6 01 00 00    	je     bf733 <...>
-
-No functional changes intended.
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/include/asm/cmpxchg_32.h | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index fe40d0681ea8..9e0d330dd5d0 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -122,6 +122,34 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64
- }
- #define arch_cmpxchg64_local arch_cmpxchg64_local
- 
-+#define __arch_try_cmpxchg64_emu(_ptr, _oldp, _new)			\
-+({									\
-+	union __u64_halves o = { .full = *(_oldp), },			\
-+			   n = { .full = (_new), };			\
-+	bool ret;							\
-+									\
-+	asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE			\
-+				 "call cmpxchg8b_emu",			\
-+				 "lock; cmpxchg8b %[ptr]", X86_FEATURE_CX8) \
-+		     CC_SET(e)						\
-+		     : CC_OUT(e) (ret),					\
-+		       [ptr] "+m" (*(_ptr)),				\
-+		       "+a" (o.low), "+d" (o.high)			\
-+		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
-+		     : "memory");					\
-+									\
-+	if (unlikely(!ret))						\
-+		*(_oldp) = o.full;					\
-+									\
-+	likely(ret);							\
-+})
-+
-+static __always_inline bool arch_try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 new)
-+{
-+	return __arch_try_cmpxchg64_emu(ptr, oldp, new);
-+}
-+#define arch_try_cmpxchg64 arch_try_cmpxchg64
-+
- #endif
- 
- #define system_has_cmpxchg64()		boot_cpu_has(X86_FEATURE_CX8)
--- 
-2.44.0
-
+So, given you killed the ->next consideration in pick, isn't this
+comment 'misleading' at best?
