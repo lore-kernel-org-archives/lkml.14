@@ -1,96 +1,113 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B487172F;
-	Mon,  8 Apr 2024 13:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60FC481A6
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712581238; cv=none; b=fOUO8BzCb2bR5hBQNsAhuHc/vdVIsqCejozfJuBQk144g2DU8dpS5ksw31YLv3QW0/Mjz+TrrLiumppESbd8Zef44SsxOZfiUyLxw/tUuODF2o5qf2v1qLTjpRqiiU/ddG/cYuh/QOmnIkJPFhN0vEOll5chq+3xmgbPi7Hdxqo=
+	t=1712581371; cv=none; b=W7CajIol7MajOgg7d6T/0bxQgWMR+Wpf0uSY8M0hmUkaUY3VxSKs+n9agrEXZHKwtUZFMUENSkDiFRak0gPUTNkn+mDwqyA/53dV2wLst8nabd2sj1I/z4Liqb/MG98+G3pTtJP2/132TmE+H9nVA2YSnbts0tgSpRG/xuva6wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712581238; c=relaxed/simple;
-	bh=FkXLzyxqjZzUX3ydZJqpehjHFFdMSDLx+4h5DWHTIiY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RQcOdFqJH2qcxACnm662f4KxwE+ZttMtBUUrTFTHSr+OIFiptpWG/YoVHvjJ2/RshG/RyFRAb8sLzq0AoAl0nKFBLnEYKoG7yCS+a9YWwtd8A9346uN2KarfZwgz52H0Xfg55mHA0wbv655JWgybAXdonvp5hf7YDItKUcaFvpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=wNVB4yAr; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1712581371; c=relaxed/simple;
+	bh=ZXfvgeDROZep0slQBXDkO+E1iJzwIlpz6tUv4s83HYk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RC0LehfKpovThoTw1m6dI0KR0RWdz4uGIclRia11LF/a9Ld08Kbv4UCaphbcdYys4TGzt5Fzl+9BiSCXzVBWin8ZR4oMwjxx+QGWcTx3knyyHRHXhoNBa09QoAZ2lmsl9Hdhy0q8K2w1HPyXjIp3epOuXPRmNJO+5fADmcVbeqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=APVDouur; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="wNVB4yAr"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1712581229; bh=FkXLzyxqjZzUX3ydZJqpehjHFFdMSDLx+4h5DWHTIiY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=wNVB4yArKpa2PUdlKiLdUKq+m0PD/rqSv51mIeW6FY3daUZxgK8MjoX3api0EigvJ
-	 d5z8okWEZnkeGojomYZA7aj65SsZa2dOSApaNxn8tFnlvRvlc/7hgZwq5qAZFZp7pL
-	 1iaq0RtpGeDFMHpwyKAhdlW4p+XbPu3Kc3DuG0drdQvu4h3ol/L5ja8gwcd0Hitm1K
-	 T2NtVewABkVOGdCDoZbjpCZVKXITP4DD8t2PTpdUAby5d4tjjTeE6dNCaRZQfI7Ick
-	 FgMlzoZJSH9a24rzBvXxDStS9jsl0JRPl77FgvewUknuJ5doB+aFCH1YU8LucGi4yv
-	 LXUTQZ5bAez+A==
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jserv@ccns.ncku.edu.tw, cake@lists.bufferbloat.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: sched: cake: Optimize number of calls to
- cake_heapify()
-In-Reply-To: <ZhPRfYt0BLh9UELN@visitorckw-System-Product-Name>
-References: <20240406235532.613696-1-visitorckw@gmail.com>
- <87frvxgnmr.fsf@toke.dk> <ZhPRfYt0BLh9UELN@visitorckw-System-Product-Name>
-Date: Mon, 08 Apr 2024 15:00:29 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87cyr0ggb6.fsf@toke.dk>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="APVDouur"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 4DF53100002;
+	Mon,  8 Apr 2024 16:02:28 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1712581348; bh=1T7AEdzVVI+WLTfJLcfbhpzyh/ZfKNV6VSBHpjNe3VM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=APVDouurCYo7J2EyewYYJhe5R+ziwrvmZMsGCPS/HBPIMvflG4KEwdTbJuleyECay
+	 dQMvgoig7sWdpQ7xGxhpABVqQqZ8dgkkJEc4EiWQHAgJHxClTIU5bDpM3EkrsQMbZC
+	 XRt23IhrH8mc8Ta+yRT1nsCszLJzlG+3FY+k6vFX0YLzdcBdfA9bOJdlmNnIcya8er
+	 PtRu3UyyxXRe0cQ2mPRMhlDMSiRklRId/02MjPeyX6lkrpzjPENF/i8kdoyjSgIf4V
+	 krFOkOY9eSakkxfeVxYt9RsYXyyEc/Hk5+pWD3qm6TtAuY41f3GmH8cFd42OZIgWPp
+	 NlPAlQ05jYYzg==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Mon,  8 Apr 2024 15:58:39 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
+ 15:58:18 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Swapnil Jakhade <sjakhade@cadence.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Andrzej Hajda
+	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert
+ Foss <rfoss@kernel.org>, Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Nikhil
+ Devshatwar <nikhil.nd@ti.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Jani Nikula
+	<jani.nikula@intel.com>, Rob Herring <robh@kernel.org>, Zhu Wang
+	<wangzhu9@huawei.com>, Yuti Amonkar <yamonkar@cadence.com>, Jyri Sarha
+	<jsarha@ti.com>, Quentin Schulz <quentin.schulz@free-electrons.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] drm: bridge: cdns-mhdp8546: Fix possible null pointer dereference
+Date: Mon, 8 Apr 2024 15:58:10 +0300
+Message-ID: <20240408125810.21899-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184622 [Apr 08 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 15 0.3.15 adb41f89e2951eb37b279104a7abb8e79494a5e7, {Tracking_from_domain_doesnt_match_to}, mx1.t-argos.ru.ru:7.1.1;127.0.0.199:7.1.2;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/08 07:15:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/08 06:53:00 #24704467
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Kuan-Wei Chiu <visitorckw@gmail.com> writes:
+In cdns_mhdp_atomic_enable(), the return value of drm_mode_duplicate() is
+assigned to mhdp_state->current_mode, and there is a dereference of it in
+drm_mode_set_name(), which will lead to a NULL pointer dereference on
+failure of drm_mode_duplicate().
 
-> On Sun, Apr 07, 2024 at 06:10:04PM +0200, Toke H=C3=B8iland-J=C3=B8rgense=
-n wrote:
->> Kuan-Wei Chiu <visitorckw@gmail.com> writes:
->>=20
->> > Improve the max-heap construction process by reducing unnecessary
->> > heapify operations. Specifically, adjust the starting condition from
->> > n / 2 to n / 2 - 1 in the loop that iterates over all non-leaf
->> > elements.
->>=20
->> Please add an explanation for why this change is correct, and why it is
->> beneficial. "Improve" and "unnecessary" is way too implicit.
->>=20
->> pw-bot: cr
->
-> For correctness:
-> To build a heap, we need to perform heapify operations on all non-leaf
-> nodes, so we need to find the index of the first non-leaf node. In a
-> heap, the index of node i, the left child's index is 2 * i + 1, and the
-> right child's index is 2 * i + 2. The left and right children of node
-> CAKE_MAX_TINS * CAKE_QUEUES / 2 are at indexes CAKE_MAX_TINS *
-> CAKE_QUEUES + 1 and CAKE_MAX_TINS * CAKE_QUEUES + 2, respectively. Both
-> children's indexes are beyond the range of the heap, indicating that
-> CAKE_MAX_TINS * CAKE_QUEUES / 2 is a leaf node. The left child of node
-> CAKE_MAX_TINS * CAKE_QUEUES / 2 - 1 is at index CAKE_MAX_TINS *
-> CAKE_QUEUES - 1, and the right child is at index CAKE_MAX_TINS *
-> CAKE_QUEUES. Therefore, we know the left child exists, but the right
-> child does not. Since it's not a leaf node, the loop should start from
-> it.
->
-> For benefit:
-> We can reduce 2 function calls (one for cake_heapify() and another for
-> cake_heap_get_backlog()) and decrease 5 branch condition evaluations
-> (one for iterating through all non-leaf nodes, one inside the while
-> loop of cake_heapify(), and three more inside the while loop with if
-> conditions). The only added operation is an extra subtraction.
->
-> If you're satisfied with the explanation above, I can attempt to
-> rewrite the commit message and send the v2 patch.
+Fix this bug add a check of mhdp_state->current_mode.
 
-Yes, sounds reasonable. Did you measure any real-world performance
-benefit, or is this purely a theoretical optimisation? Either way,
-please indicate this in the updated patch description.
+Fixes: fb43aa0acdfd ("drm: bridge: Add support for Cadence MHDP8546 DPI/DP bridge")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
--Toke
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+index e226acc5c15e..8a91ef0ae065 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
+@@ -2059,6 +2059,9 @@ static void cdns_mhdp_atomic_enable(struct drm_bridge *bridge,
+ 	mhdp_state = to_cdns_mhdp_bridge_state(new_state);
+ 
+ 	mhdp_state->current_mode = drm_mode_duplicate(bridge->dev, mode);
++	if (!mhdp_state->current_mode)
++		return;
++
+ 	drm_mode_set_name(mhdp_state->current_mode);
+ 
+ 	dev_dbg(mhdp->dev, "%s: Enabling mode %s\n", __func__, mode->name);
+-- 
+2.30.2
+
