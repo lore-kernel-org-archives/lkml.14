@@ -1,167 +1,212 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E22313F440
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 15:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B4B1CD21;
+	Mon,  8 Apr 2024 15:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712588788; cv=none; b=PezYfkz9QN7+jxO/DSUoPsHHHeW5QwckCZlwQBBws2UZS/i4SZMYu/7gqXCEWNro2yC5uoQzmXkwL3ZV3Oo57aJnML6FwPYzJtQvyRpfHygX1X2GZKt018lB09TzA7G14unqlZeoTzju9FH8Eabk6YccrVaJmjxma4Ww1oD7NPw=
+	t=1712589003; cv=none; b=HaH64v8SxtISHTOcCzLZVo2IBs9xb0tIMiEFwO71K98Puh38P4nt9OuG6Sua+rvn5TGR3W4EEz9bFyTG3Nn8TrNKuOx5OG7NCK7GACYeaxspKCAM7Qdxiv7OA7oYkvYFS48GG/cVI9Fyt38+6v3y2+0mSe/Sb427f5tgrfNQQ24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712588788; c=relaxed/simple;
-	bh=MsNpVO9pB/7MMcibh2I88NHwGOLe1uSWzf4L7HJ0tE0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b7on60fzrxgTqvC6zTc+u86/9y5M8N1nZh5OsqNJJGoQ5fBSSONrS7z2HJ6pwK/pdA1ST/JKhCdGZOQ4uFPZC1jETevS+BYQ+R82pWF/RCvYb3epQBIkvsMGuS8F1tgW0404qmyukMOYIDUJtb+IsIv7wDtOiaQSwr38dRaG4Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vCRYj0Zo; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712589003; c=relaxed/simple;
+	bh=7RjjAX+l+5ybv+rftzcGFZmHFQtRiNYQm+IvwvQLEoo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G/TJWCjkRQyfRROq8xYVTyoO4ZgYYzLR7NqXwU6lWKc01ELFfuF00p0lNwhqclyR3HWEj/uhkkzl8wzybn5wGWtXnJ0M9EPvlWE6tR7bBtWnRefbrzsiIigX8iAhkksV/VS8twC5JC6zuX0Ombg106YUyp01Fogmk8/B4x+PulA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nlBPUSKm; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCRYj0Zo"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4165805e158so10399725e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 08:06:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlBPUSKm"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41650ee55ffso9455035e9.0;
+        Mon, 08 Apr 2024 08:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712588784; x=1713193584; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dxs6cIQGM15UBhBDso3tA3kUyIdNuLINVbFD4GzTI/Q=;
-        b=vCRYj0Zo/VI9J8iHKRgyZJeNxW+CL7ZduogXCThyoMGKjHS0zyapKDeJ/mnZ9w5RLM
-         EITe3YeyXDofQ9m3U+4b8VBeGqGA4lAmD9B5RVNqD9Um8dwWgcT3PDg92UCKFeN9Mppn
-         JvSZCBZzYplhqELjw+kjDCFPYMlUFsCWAtiIt/ZdG705IiGTLf/LuePAv+y8LvirQlJI
-         VOHxNq9Z+eQlk+2rUZXeyZswzn6yAynjc5VYKCfU5/uUFfen2NRL3ccxMV3pyrKMm/s3
-         gHFFl77qyeMQpskKZrtBej35SeNW3UDNp5wOPwyMn5jWCrwmOJ8smHrY7OLlXuPwA4nA
-         WpWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712588784; x=1713193584;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712588999; x=1713193799; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dxs6cIQGM15UBhBDso3tA3kUyIdNuLINVbFD4GzTI/Q=;
-        b=AbVMkO0uTFw7QX3wCaE4hdKNmYV4AWNo8tUt/idxxxR+atyTAJ9HFVzby+4+LJ23oR
-         7LEjHDqlBCnH49yofi1cIQR2Jp02oiQtg0sCIKA/yArYCbcyEqxe0OesJuBhJOm9uYqy
-         bJWkBFxA+Du0+fWXScTyD3LdI2LdfLFqkdZoN2a6cC1C1Y5PQc6j9cTsHsksncxDhuJl
-         lpJp7x/EYTyVei7ER6j35JKv+kbdQnQPOflcnQScim3eQHzDR+L+R3Opef3lN3qGCpxt
-         GJMnbsOQVNXwlM7OdhNGOIsVUmKgPCpLMdh3hIOekupcwP4gaq4vyoUX2iwO8tQZHxHz
-         Q20Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTo5GMdJm85wjUXxdC/pBenJDgAEL1+xax8EuqTzeKJGPjmm0lkdQmLSiOEHD0VoBOy9oARUy5Z7tWe/W3/NaIGzZcIpoUz3kP/2SW
-X-Gm-Message-State: AOJu0YzHbM8GD1rX6UhHPfqgDT+Q4XxUMVX12K2UUGAdA0nNIurmdql/
-	Ne13RrE/qfjtmFmBJH3K2X/ThfDAgRqb26pTubm1ZwAsOfBzKPzBh/2foNCyy0U=
-X-Google-Smtp-Source: AGHT+IFnASuk0b7wQuK6k5VWyqkLb542+HkDjKIZIid0oTGMKzSJn6440x/462PKUtK4PX7NzyAtfA==
-X-Received: by 2002:a5d:6086:0:b0:343:d06e:51fe with SMTP id w6-20020a5d6086000000b00343d06e51femr6955094wrt.20.1712588784285;
-        Mon, 08 Apr 2024 08:06:24 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id n6-20020a5d6606000000b0033e745b8bcfsm9165815wru.88.2024.04.08.08.06.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 08:06:23 -0700 (PDT)
-Message-ID: <69ab2bd9-401a-42ff-90fa-6600dd071722@linaro.org>
-Date: Mon, 8 Apr 2024 17:06:21 +0200
+        bh=5o7+hDSIuCWKDG8jzwsz/CU+9322M+SgxIxtVMZNuNI=;
+        b=nlBPUSKm9+uNXDQNnZa+6e6c47Z7wE7XuQeObWPWaF+3xUuW725GMn6bPB/SS+8yKI
+         2H4z12+MYZHzjeH6+Xx2xUjAGOjHcIV1cSN0wO1pBnAxIvDFx4irItjFDPMOsy0QaPeK
+         G5PP+u1/ZoFtA3kFGFEffVQKP1xA8IC/GCOGbeJZNhiE6uaErR3sSigYYszTTfs6qkfC
+         emeoiSxk57DNg+EKnWDocYbP1XBriWbQOB8xo1itFANj1/8014bQAjmmmZwZaUTSkYII
+         iZEkOlOvwJWJ67umvA8hKnj6Gn72Xnim7hPI2vxqSblA9EYIz///WYa9eDO0VFBLZ1+r
+         KBhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712588999; x=1713193799;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5o7+hDSIuCWKDG8jzwsz/CU+9322M+SgxIxtVMZNuNI=;
+        b=sfL4tQprEAFSxhIdM6qBF5mKAEC5dFsOvmij8cvPNNEueodSKKYVD7lWEthkOWYwyh
+         DqL6fmiEtFqdaYgCW1Ha7pC1j/q6fp+o1BBLUU5bHAkWXT2+rU0x6iCLXgzErBTC9czq
+         +JVK6r2yVsBnx4sdIRncO2KhoCjeRq+k8Sj/xQQQ7RSo+vmj6XPkAPL6SRFvT6NbPU/q
+         zotBEIBvexmBuNSJfpn99AfBcUiK7sweyG25MT6vaXw1e7TcDz1mXF+xJ3PhZTJkGlZI
+         QB7xLQ9NkDPJMfAnvOiuXV5MUL3zDrNlh1OhwRq8ODWUpMUo7FqVHxBefreP981sTobE
+         cSLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZZ/qhim/+QG/JEZy04JGOtxYEtfrkIc8373Sy6yY6W5q6HGxCbM0RZ1gV5pmK/VhONAxW75v2YSU8NvbsdLjFqEDZfqCNl/rnXGsjMW6o6cf7mwJDhU8kUtDUzNQjWTORaVy5pXY5Xcff/W5V4pT475+25WazTqiL
+X-Gm-Message-State: AOJu0YwatePjlq1XSKgOxFVFdB0+TjpgkwQ9VDJmhYkuQsUi29lyLz2n
+	o2rqbTGQOsoN5+2fYoGNqgusKIa3H8g/l3UJxrBKx7TE/3WEHDSpiSWT6RuWLcu9/c5TXcL2xbg
+	9bk2SDoHuGehIjqFibMwmM+B/rcA=
+X-Google-Smtp-Source: AGHT+IGfD5tw9rqnE5LU+TW60kXROajtXB4BtqIhZq3i2yRRlQkfuwvGF/5wsc9QyaA0puOL1oGI7yTw06d1aVVHif4=
+X-Received: by 2002:a05:6000:1048:b0:343:9d6d:59a4 with SMTP id
+ c8-20020a056000104800b003439d6d59a4mr6383480wrx.28.1712588999269; Mon, 08 Apr
+ 2024 08:09:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] ASoC: dt-bindings: imx-audio-spdif: convert to YAML
-To: Shengjiu Wang <shengjiu.wang@gmail.com>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
- broonie@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <1712561233-27250-1-git-send-email-shengjiu.wang@nxp.com>
- <01734d96-bed2-4f7e-bbba-7068f14c822b@linaro.org>
- <CAA+D8ANiKH7Oc+KAjD_BMp9P2EVeM8Q6dLGFCC8a83bJXUpPEA@mail.gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAA+D8ANiKH7Oc+KAjD_BMp9P2EVeM8Q6dLGFCC8a83bJXUpPEA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240407130850.19625-1-linyunsheng@huawei.com>
+ <CAKgT0Uex+e_g9nyqk6DiB03U4zs_A1z2LoztHnpYbJ9LPm=NFA@mail.gmail.com> <05c21500-033b-dfee-6aa7-1ee967616213@huawei.com>
+In-Reply-To: <05c21500-033b-dfee-6aa7-1ee967616213@huawei.com>
+From: Alexander Duyck <alexander.duyck@gmail.com>
+Date: Mon, 8 Apr 2024 08:09:22 -0700
+Message-ID: <CAKgT0UdjBXguCudxM9-tzKx2qWYg18xp5cG2xaeY893rVbw5qQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v1 00/12] First try to replace page_frag with page_frag_cache
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 08/04/2024 10:01, Shengjiu Wang wrote:
->>> +
->>> +anyOf:
->>> +  - required:
->>> +      - spdif-in
->>> +  - required:
->>> +      - spdif-out
->>> +  - required:
->>> +      - spdif-out
->>> +      - spdif-in
->>
->> Do you need the last required block?
-> 
-> Yes,  one of them or both are required.
+On Mon, Apr 8, 2024 at 6:38=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei.com=
+> wrote:
+>
+> On 2024/4/8 1:02, Alexander Duyck wrote:
+> > On Sun, Apr 7, 2024 at 6:10=E2=80=AFAM Yunsheng Lin <linyunsheng@huawei=
+.com> wrote:
+> >>
+> >> After [1], Only there are two implementations for page frag:
+> >>
+> >> 1. mm/page_alloc.c: net stack seems to be using it in the
+> >>    rx part with 'struct page_frag_cache' and the main API
+> >>    being page_frag_alloc_align().
+> >> 2. net/core/sock.c: net stack seems to be using it in the
+> >>    tx part with 'struct page_frag' and the main API being
+> >>    skb_page_frag_refill().
+> >>
+> >> This patchset tries to unfiy the page frag implementation
+> >> by replacing page_frag with page_frag_cache for sk_page_frag()
+> >> first. net_high_order_alloc_disable_key for the implementation
+> >> in net/core/sock.c doesn't seems matter that much now have
+> >> have pcp support for high-order pages in commit 44042b449872
+> >> ("mm/page_alloc: allow high-order pages to be stored on the
+> >> per-cpu lists").
+> >>
+> >> As the related change is mostly related to networking, so
+> >> targeting the net-next. And will try to replace the rest
+> >> of page_frag in the follow patchset.
+> >>
+> >> After this patchset, we are not only able to unify the page
+> >> frag implementation a little, but seems able to have about
+> >> 0.5+% performance boost testing by using the vhost_net_test
+> >> introduced in [1] and page_frag_test.ko introduced in this
+> >> patch.
+> >
+> > One question that jumps out at me for this is "why?". No offense but
+> > this is a pretty massive set of changes with over 1400 additions and
+> > 500+ deletions and I can't help but ask why, and this cover page
+> > doesn't give me any good reason to think about accepting this set.
+>
+> There are 375 + 256 additions for testing module and the documentation
+> update in the last two patches, and there is 198 additions and 176
+> deletions for moving the page fragment allocator from page_alloc into
+> its own file in patch 1.
+> Without above number, there are above 600+ additions and 300+ deletions,
+> deos that seems reasonable considering 140+ additions are needed to for
+> the new API, 300+ additions and deletions for updating the users to use
+> the new API as there are many users using the old API?
 
-And? It's already there: that's the meaning of any. It is not oneOf...
-Before answering please test your changes and ideas. I pointed issue
-here and you responded just to close my comment. That does not make me
-happy, just wastes my time.
+Maybe it would make more sense to break this into 2 sets. The first
+one adding your testing, and the second one consolidating the API.
+With that we would have a clearly defined test infrastructure in place
+for the second set which is making significant changes to the API. In
+addition it would provide the opportunity for others to point out any
+other test that they might want pulled in since this is likely to have
+impact outside of just the tests you have proposed.
 
-> 
->>
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    sound {
->>
->> That's a random change...
->>
->> Instead of sending two patches per day, please carefully address the
->> feedback.
-> 
-> In v1 you suggest to change it to spdif?  but spdif may conflict
-> with the fsl,spdif.yaml.   so which name I should use?
+> > What is meant to be the benefit to the community for adding this? All
+> > I am seeing is a ton of extra code to have to review as this
+> > unification is adding an additional 1000+ lines without a good
+> > explanation as to why they are needed.
+>
+> Some benefits I see for now:
+> 1. Improve the maintainability of page frag's implementation:
+>    (1) future bugfix and performance can be done in one place.
+>        For example, we may able to save some space for the
+>        'page_frag_cache' API user, and avoid 'get_page()' for
+>        the old 'page_frag' API user.
 
-I don't understand where is the conflict. That's a different binding.
+The problem as I see it is it is consolidating all the consumers down
+to the least common denominator in terms of performance. You have
+already demonstrated that with patch 2 which enforces that all drivers
+have to work from the bottom up instead of being able to work top down
+in the page.
 
-Best regards,
-Krzysztof
+This eventually leads you down the path where every time somebody has
+a use case for it that may not be optimal for others it is going to be
+a fight to see if the new use case can degrade the performance of the
+other use cases.
 
+>    (2) Provide a proper API so that caller does not need to access
+>        internal data field. Exposing the internal data field may
+>        enable the caller to do some unexpcted implementation of
+>        its own like below, after this patchset the API user is not
+>        supposed to do access the data field of 'page_frag_cache'
+>        directly[Currently it is still acessable from API caller if
+>        the caller is not following the rule, I am not sure how to
+>        limit the access without any performance impact yet].
+> https://elixir.bootlin.com/linux/v6.9-rc3/source/drivers/net/ethernet/che=
+lsio/inline_crypto/chtls/chtls_io.c#L1141
+
+This just makes the issue I point out in 1 even worse. The problem is
+this code has to be used at the very lowest of levels and is as
+tightly optimized as it is since it is called at least once per packet
+in the case of networking. Networking that is still getting faster
+mind you and demanding even fewer cycles per packet to try and keep
+up. I just see this change as taking us in the wrong direction.
+
+> 2. page_frag API may provide a central point for netwroking to allocate
+>    memory instead of calling page allocator directly in the future, so
+>    that we can decouple 'struct page' from networking.
+
+I hope not. The fact is the page allocator serves a very specific
+purpose, and the page frag API was meant to serve a different one and
+not be a replacement for it. One thing that has really irked me is the
+fact that I have seen it abused as much as it has been where people
+seem to think it is just a page allocator when it was really meant to
+just provide a way to shard order 0 pages into sizes that are half a
+page or less in size. I really meant for it to be a quick-n-dirty slab
+allocator for sizes 2K or less where ideally we are working with
+powers of 2.
+
+It concerns me that you are talking about taking this down a path that
+will likely lead to further misuse of the code as a backdoor way to
+allocate order 0 pages using this instead of just using the page
+allocator.
+
+> >
+> > Also I wouldn't bother mentioning the 0.5+% performance gain as a
+> > "bonus". Changes of that amount usually mean it is within the margin
+> > of error. At best it likely means you haven't introduced a noticeable
+> > regression.
+>
+> For micro-benchmark ko added in this patchset, performance gain seems qui=
+t
+> stable from testing in system without any other load.
+
+Again, that doesn't mean anything. It could just be that the code
+shifted somewhere due to all the code moved so a loop got more aligned
+than it was before. To give you an idea I have seen performance gains
+in the past from turning off Rx checksum for some workloads and that
+was simply due to the fact that the CPUs were staying awake longer
+instead of going into deep sleep states as such we could handle more
+packets per second even though we were using more cycles. Without
+significantly more context it is hard to say that the gain is anything
+real at all and a 0.5% gain is well within that margin of error.
