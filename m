@@ -1,702 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F30747F;
-	Mon,  8 Apr 2024 03:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712548321; cv=none; b=OgECVkxdLctB+Ym/L7WbvOJ46kVwXftO4k+Zjl6oNymoqIhT3+41DKe3uFHNXvOIxfr3Nd/8jVi4pPpAjU2EBva/kHUtuSJrX50NTBZDy2ifS8PZnyV73CmsIVRiw/pXm4kTWDbtS9ZN53Yvn88uMVkaLjfIJrpAQV/Nj7kcxBQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712548321; c=relaxed/simple;
-	bh=g3DNCJyk9J0cgMR4iEi75S6I7I7GfTqUkjvWJ0G6v1I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Os3lnbJLubsmmurOgm9Drbrqr1Pz4T/Da6PS8aeI7H50oRE/xi95TbW0EToI4JNH0U+uJeECM4QSTCzO+J72MBBlZdn79BMhKqJpDSFBIh+LabXNBRqhBnoZyV6i4LRQwVBfyYxp4sAb63GYiWsYimG2aqV88zzgyBK/VX1jCAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hymx7WMa; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0CC1DA26
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 03:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712548380; cv=fail; b=fg/9kGHQMi7hdRFbh1ilTbM6YgeuFYJvcVxIl/+A9R4x8W8vc/9JUftPPjeBEnd0eJNMzX0MbmJcXLEYa+3v74QjOb6uOHSs9Xm13mNGSf/wbZLnJv4S7OAKdxqTShM7xwVgHI1vWj+IbVP8G8swIMykGVFBbQ9L7um6gO4SXvU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712548380; c=relaxed/simple;
+	bh=1JF9KZpjEshZ24UhbtoqQXVAt/Euc2FTP3rpBFUbalo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ioM3EO8BVmagX+UtaKMpk4uDx6e0nh30L6EATDngYiTYgS1MCfqMm3DoOKo9n5ArvdsWuVPamVMNNHAsoTzi61CoklMJVNALLEgDXZNRGG1npCRIwTof5R7SI+yCGlMwkY0/yNsWnB3yEKwCw9b0ePn25k8yb47ZILLRDNDtvh0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nYgBxble; arc=fail smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hymx7WMa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nYgBxble"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712548319; x=1744084319;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g3DNCJyk9J0cgMR4iEi75S6I7I7GfTqUkjvWJ0G6v1I=;
-  b=hymx7WMaY8zdVeRJQwnQ8BlXS14odrjFE72+/93YyPOiqA7g8PhxHy/W
-   l4COauzaac5Yfi1Sf8UOvIa/sCYiaCS7bmCdzisrOSQE3xAvZ12U3+7Jx
-   lLCEqwIDJOPpKsTu3bpKfJXIy9pmIW5oiysz6IMfBTBO5MCGeJdc4/Vz3
-   9FnuKPN7OXZksuZmhOvzpyJuuf8cRsFcyLjPrC5ncQjOqkROnsa2HB3SA
-   RmtUf6eDY+cMixXOqv9yOlK4BpRDLJ2JmhnlnwIX5myW0zKMvGDAtQ/eK
-   ylb/M5ZJWFi+zrp/SM+msO092JK1gBtDX0+gs2zBndIVvQko5wHMgYF+K
-   w==;
-X-CSE-ConnectionGUID: JtDZkeogRPmchg22Qd9RKQ==
-X-CSE-MsgGUID: xvdN+ErrSBucLe0MGKQ0fw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7909941"
+  t=1712548379; x=1744084379;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=1JF9KZpjEshZ24UhbtoqQXVAt/Euc2FTP3rpBFUbalo=;
+  b=nYgBxble8DbbadP+OWf3BPCsE8+h8mp5okrakoc90sldRyHxFa3xNM01
+   GHVv2TWZav/ZI/KcXUob7KAvSHueQ9gfXkz+qzxDs2hvIIcqhMM8u+1AV
+   6ZvjD33++CwFIo8TCusIJsTZDMQHTbw0tkg2PjGzr01DXnBw558y3oNYZ
+   TCE9va9SEbTc83e53tJYxeNUOmWztSwYsY4dPSrjha0+nvfcYKz0cMd3K
+   XKvoVH71ENfh5pE/wWvLcWpmFaOBo5j0SRmO1mJEARU94BA7xwzGsVBG1
+   mCfVM7+/vYtsymiBGDX4eWqJGQKztzwPT7Zzqr8s/rcqixExoskKxDmM+
+   g==;
+X-CSE-ConnectionGUID: 016AYNELSKy8t2kmXQZwnQ==
+X-CSE-MsgGUID: 53urMCj/STyfT2lFp/Gcrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7672743"
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="7909941"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:51:59 -0700
-X-CSE-ConnectionGUID: auSQyuB5RfGiMBOCwe+3AQ==
-X-CSE-MsgGUID: SOf+9IeJTcuJjem33oj/OA==
+   d="scan'208";a="7672743"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:52:58 -0700
+X-CSE-ConnectionGUID: 3sTxJGCvTV6d7xvhY+W34g==
+X-CSE-MsgGUID: cw37Gt4ZTFCLsUk8q0zqMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="19870369"
-Received: from lihon19x-mobl.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.249.173.91])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2024 20:51:56 -0700
-From: Zhang Rui <rui.zhang@intel.com>
-To: rafael.j.wysocki@intel.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	srinivas.pandruvada@intel.com
-Subject: [PATCH V2 2/3] powercap: intel_rapl: Introduce APIs for PMU support
-Date: Mon,  8 Apr 2024 11:51:40 +0800
-Message-Id: <20240408035141.248644-3-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240408035141.248644-1-rui.zhang@intel.com>
-References: <20240408035141.248644-1-rui.zhang@intel.com>
+   d="scan'208";a="24520864"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 Apr 2024 20:52:59 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 7 Apr 2024 20:52:57 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 7 Apr 2024 20:52:57 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 7 Apr 2024 20:52:57 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 7 Apr 2024 20:52:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VpBT9pitkVyYgp3GJwf0n7QkaaM859JdwsvlJN01Nwo6xO11EHSP1lF8XfZYDG8Xnqt+ZFuAF6F3TYM5Ek5wKK2y/t4SG0gZyherqe2lSGuvs4sRNr8jxcF9t8TYYHSZVGgfgf8z5rGQteFiMqVnXKzB95c9d02c84dnI8aKh6qdcL09manmzFmKDu8s+ApK0MbX6dUhQoO3pR8Zht/+1Y+IIt5gzQ7hXBn3WwnC47qgOdlloAzzWo4B3dQWlrm+++S7o4lTfLaz1azEo6Tk9hCFPRI/y5LipAlGwyNfJ6qbw0u6v3GVpE5qrMiL57BhXDcDNeswk5Neg/q4BtjIEA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8waNPgtWTxP6HhVmZj7+HjODfDMaPOAtS18BQ97A2y0=;
+ b=edQNpmM7VG12juZ9doZvk6UdzHn2iokW1JT8Qvs0YdH+C/H8n37kI0TG7JuFIk66OF99sMueMiZPeisurQycDBIrncNcEmzBrmWiDCZcTYLmq6kZSxaw05cY3vpvaC4E3KcK3E76OcJ3dJCb9GRkPECT22UhScTXOJZ1U844Fn4drN6R73jx4rWOqz0fAZKEOblQnb9+0MBMPsagoRA82efJiyo4g+a1YEDxDl7DLXOMHR+XYi1y8RG+gLPMVv16DHTk4qeTJ2AEBPQzQo/chypTKygrfnbY66J1mhGw9kYq8DLfgG8YMvxqm2agI7orINeAxTzl3dBhGDT9S3xy4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by DS0PR11MB8069.namprd11.prod.outlook.com (2603:10b6:8:12c::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Mon, 8 Apr
+ 2024 03:52:55 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::6c9f:86e:4b8e:8234%6]) with mapi id 15.20.7452.019; Mon, 8 Apr 2024
+ 03:52:55 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>
+CC: Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] iommu/vt-d: Fix WARN_ON in iommu probe path
+Thread-Topic: [PATCH 1/1] iommu/vt-d: Fix WARN_ON in iommu probe path
+Thread-Index: AQHaiIkfDCiYXSWkLUGWnjJZsYe/DLFdt7FQ
+Date: Mon, 8 Apr 2024 03:52:54 +0000
+Message-ID: <BN9PR11MB52760913F36DACBC612088668C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240407011429.136282-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20240407011429.136282-1-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DS0PR11MB8069:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wvoGzKTArk8z2UTI1Zbf8c5OU2TLkgkBdEjwo5LrJ3wrfXpiFwXxboK7eY9DjXbSyeXgHHhdc6m7+n8Xmw5IQb+VQTv/mxaYYxeUdSuvdeqNGkMSIQmSeKm00zoFlERCodmX25DjJpWEcGu0lGrw9BN2FLodLU7K1ScewnYflfhwIPzPVOiWB0sGSNWLFZM+qptPOy5k8fhPxeVIJEl0llr2t7rRo8VE18OZ2gFQHnF1tj6DdGYL9XIETNoLs6em9b9RLJgEYm8uxvp9nQcwCmHel/LNdRb46UcsqoAzMWL8Z9OuVZDZ/sRgEd+29KEi0c2uO0ms88J2TCgH4dQ0RXaj3cujQxN1ydBms3jw6NOZaHETycRkNN+EsekdL43J8f7NR9lVQL3LW8/Ic4tQ457VN98iilKmium256yIKLrdS83rN9qSSqSFDdbsArGBtvTrD5pJRhTWp1InaU/ydmyJjXUHT+ycmidC1GgfYYyscIzY72ZvoYlNGkzzBLyXQeF/451jrSuyXqvh1Q2beSJyIjgv4bRE8fkS5rHP3W5IAiYzV4qFtbgUEQ8y1Ufzwe96WSAKHAN4iFFm1uS/pZTAYG0UBkZ7yYyKG1xovYtCreAMrQz04hfktflKuL4UJ7TwLY20/UWFzHzVAAsjYZTDPY3QpRzJs5GmZ1rpzBE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?0Rm6h5zatkXY/qcbXaoAXDuYA5T0ON++YeL+2s2cj4VxIMqRF8jcVDrpN1Rg?=
+ =?us-ascii?Q?4x/JWGIyJKdzAKdkE+MhkwYwQFzAdEnhG/WC3wqzkU4J2Khe75IAqd8afyfM?=
+ =?us-ascii?Q?hEgIWc7Bu3zkBucfB3u01c41azyi1sTwS/JuRHdkmvQxWGS/tLmhxsHqaLnx?=
+ =?us-ascii?Q?N5mc/2SRHcQTkk6wdAh5oqwcxIQxrXpQahLT8T/MUCyHHgNDXl36iGVVQyGc?=
+ =?us-ascii?Q?wmeIvSiGEczP781qMFbtMexyps+2IL40AE8i9KxiuLxYbWDbIU/pjqX4TBsO?=
+ =?us-ascii?Q?VdgqjnGRwtinEUOWexZ08wn+CuulPOlOPCZvAN1//1Rn2lcz7wX9mSuAKmmG?=
+ =?us-ascii?Q?t1sTefLoZ4NBQBAuOkUQaI7iTlHd9GqvYUtTUN3wxtAT/+clHnxSX+cFIjS3?=
+ =?us-ascii?Q?ceT3fqMm1YGpldaX+9Lk/BDiU74t/Z+ybxJCVevD6hrgzdIW5pTsEBp9nd+d?=
+ =?us-ascii?Q?OzrXTdjhySdZuwlTQGpsejblKLYCuQ9Czfw+G9BQkvhfC9BVwo4T7SDI+mqQ?=
+ =?us-ascii?Q?+ba+v4YM3iiiUb4BjsR+8XjhuNRE4rm9ox4xjWwK7dA/Ml+J4DMKQPKGablF?=
+ =?us-ascii?Q?ViahfhTZ6W7wdRU7UkvJ4/dcmGBRTl8G1ccdiVFxkEXC6jS0RCcsumsb3Gc0?=
+ =?us-ascii?Q?2IxjR82CE9AQIEbwRsaROAFBqcj2G/8sju1dopaSeyzFyAW9MdkPcC3oflGe?=
+ =?us-ascii?Q?SpWIVIVeaPhU+ih6c/XpPofsmJbdj/tm5RbBIkPMxw5AA/637i2+Qp9P1OEA?=
+ =?us-ascii?Q?8hv+AjVMPrgZ+ib9lkHN3LG7AupaHBJstN9QXEXYXcuuAZ3enX+xZqBhW9pS?=
+ =?us-ascii?Q?f8qNk2ss9Qx9zxohuz1S/Oo03LrveMSP2+/mn9qPAXRryS3Vh/Qfj309raES?=
+ =?us-ascii?Q?lU2kgEvznbFdIIrdE2hM5rKPPIZKih7MB2d9RxVoVv2ZQXD2GadBeHwsKdcY?=
+ =?us-ascii?Q?UfmZITo4Lhye3/p2pfd+z8S5mtyPVJLTMkXSx1A5fTpPjZOlm4J9Hxip3F+X?=
+ =?us-ascii?Q?3f5h18YPXcJH2wjBzMGwuxHRoe+eyUMJwQpZKVmDwFWfR1yhfNpWKCneHHiD?=
+ =?us-ascii?Q?8Oc/3QD9+osNb2C+s/ytk66UeZ9OdpFnu+w00ezC7bRlQTQXiOYbgho6+Oec?=
+ =?us-ascii?Q?uHrMbIJ9GhG23gQ2SKj5rms1dl2sn0kc783LrKEIzRQT1B9xz8LsoPnRKVzw?=
+ =?us-ascii?Q?4Y4xTANzo+HOZLd29Vf7TpIEN2cc1o5I2L3NOWzRW9lu+V15OZrMxc59lN+5?=
+ =?us-ascii?Q?jXEWb/PI1X6R5bRGK7mffsMo+h0O4IeAuI9pc+cpTj+9AQuBLhaa1uD5gJGQ?=
+ =?us-ascii?Q?ZSWTqZ3+32XaGUzZuj/BATr41N/60P5KwcBDoAFAYYMDULRFMi7oZZbS7pA6?=
+ =?us-ascii?Q?iRim2RhNb9RvAXw0hd71ZqNdCiZAwEPKaNwdHIQn/ytAcR+uhdtiMvVcLPTb?=
+ =?us-ascii?Q?MMnTqTaXq1w5Fetu/A+oAqaDVcIkWnMjDxoO01D6kVkwgAGUjBPauGEu2DeH?=
+ =?us-ascii?Q?Xyqx3i90rtZYGeTSS6Kpe5L2yFGk/2qsQSHAcnw1pQ7irBftkX2xGJjlz5D6?=
+ =?us-ascii?Q?LEOSRKu6sv+EmmlHFjxQO/4bK9ys9S8jJZHr+c7+?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7fc723f-ae26-41a4-573a-08dc577f5f34
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Apr 2024 03:52:54.9292
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rpLmdwe33DyQlk+WE+FP2PIrN/oyNTB7qbdW5sdvWovWm3MHbhNeyGIkfRLmhEgYbt5jwyhf7CrsELwVzHHvHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB8069
+X-OriginatorOrg: intel.com
 
-Introduce two new APIs rapl_package_add_pmu()/rapl_package_remove_pmu().
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Sunday, April 7, 2024 9:14 AM
+>=20
+> Commit 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
+> devices") adds all devices probed by the iommu driver in a rbtree
+> indexed by the source ID of each device. It assumes that each device
+> has a unique source ID. This assumption is incorrect and the VT-d
+> spec doesn't state this requirement either.
+>=20
+> The reason for using a rbtree to track devices is to look up the device
+> with PCI bus and devfunc in the paths of handling ATS invalidation time
+> out error and the PRI I/O page faults. Both are PCI ATS feature related.
+>=20
+> Only track the devices that have PCI ATS capabilities in the rbtree to
+> avoid unnecessary WARN_ON in the iommu probe path. Otherwise, on some
+> platforms below kernel splat will be displayed and the iommu probe result=
+s
+> in failure.
 
-RAPL driver can invoke these APIs to expose its supported energy
-counters via perf PMU. The new RAPL PMU is fully compatible with current
-MSR RAPL PMU, including using the same PMU name and events
-name/id/unit/scale, etc.
+Just be curious. What about two ATS capable devices putting behind
+a PCI-to-PCIe bridge?
 
-For example, use below command
- perf stat -e power/energy-pkg/ -e power/energy-ram/ -e power/energy-cores/ FOO
-to get the energy consumption for events in the "perf list" output.
+>=20
+>  WARNING: CPU: 3 PID: 166 at drivers/iommu/intel/iommu.c:158
+> intel_iommu_probe_device+0x319/0xd90
+>  Call Trace:
+>   <TASK>
+>   ? __warn+0x7e/0x180
+>   ? intel_iommu_probe_device+0x319/0xd90
+>   ? report_bug+0x1f8/0x200
+>   ? handle_bug+0x3c/0x70
+>   ? exc_invalid_op+0x18/0x70
+>   ? asm_exc_invalid_op+0x1a/0x20
+>   ? intel_iommu_probe_device+0x319/0xd90
+>   ? debug_mutex_init+0x37/0x50
+>   __iommu_probe_device+0xf2/0x4f0
+>   iommu_probe_device+0x22/0x70
+>   iommu_bus_notifier+0x1e/0x40
+>   notifier_call_chain+0x46/0x150
+>   blocking_notifier_call_chain+0x42/0x60
+>   bus_notify+0x2f/0x50
+>   device_add+0x5ed/0x7e0
+>   platform_device_add+0xf5/0x240
+>   mfd_add_devices+0x3f9/0x500
+>   ? preempt_count_add+0x4c/0xa0
+>   ? up_write+0xa2/0x1b0
+>   ? __debugfs_create_file+0xe3/0x150
+>   intel_lpss_probe+0x49f/0x5b0
+>   ? pci_conf1_write+0xa3/0xf0
+>   intel_lpss_pci_probe+0xcf/0x110 [intel_lpss_pci]
+>   pci_device_probe+0x95/0x120
+>   really_probe+0xd9/0x370
+>   ? __pfx___driver_attach+0x10/0x10
+>   __driver_probe_device+0x73/0x150
+>   driver_probe_device+0x19/0xa0
+>   __driver_attach+0xb6/0x180
+>   ? __pfx___driver_attach+0x10/0x10
+>   bus_for_each_dev+0x77/0xd0
+>   bus_add_driver+0x114/0x210
+>   driver_register+0x5b/0x110
+>   ? __pfx_intel_lpss_pci_driver_init+0x10/0x10 [intel_lpss_pci]
+>   do_one_initcall+0x57/0x2b0
+>   ? kmalloc_trace+0x21e/0x280
+>   ? do_init_module+0x1e/0x210
+>   do_init_module+0x5f/0x210
+>   load_module+0x1d37/0x1fc0
+>   ? init_module_from_file+0x86/0xd0
+>   init_module_from_file+0x86/0xd0
+>   idempotent_init_module+0x17c/0x230
+>   __x64_sys_finit_module+0x56/0xb0
+>   do_syscall_64+0x6e/0x140
+>   entry_SYSCALL_64_after_hwframe+0x71/0x79
+>=20
+> Fixes: 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
+> devices")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index 50eb9aed47cc..a7ecd90303dc 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4299,9 +4299,11 @@ static struct iommu_device
+> *intel_iommu_probe_device(struct device *dev)
+>  	}
+>=20
+>  	dev_iommu_priv_set(dev, info);
+> -	ret =3D device_rbtree_insert(iommu, info);
+> -	if (ret)
+> -		goto free;
+> +	if (pdev && pci_ats_supported(pdev)) {
+> +		ret =3D device_rbtree_insert(iommu, info);
+> +		if (ret)
+> +			goto free;
+> +	}
 
-This does not introduce any conflict because TPMI RAPL is the only user
-of these APIs currently, and it never co-exists with MSR RAPL.
+probably replace device_rbtree with ats_rbtree?
 
-Note that, TPMI RAPL is probed dynamically, and the events supported by
-each TPMI RAPL device can be different. Thus, for a new RAPL Package
-device that wants PMU support,
-1. if PMU has not been registered yet, register the PMU with events
-   supported by current RAPL Package device
-2. if PMU has been registered and no new events support is needed, do
-   nothing
-2. or else, unregister current PMU and re-register the PMU with events
-   supported by all probed RAPL Package devices that need PMU support.
-   For example, on a dual-package system using TPMI RAPL, it is possible
-   that Package 1 behaves as TPMI domain root and supports Psys domain.
-   In this case, register PMU without Psys event when probing Package 0,
-   and re-register the PMU with Psys event when probing Package 1.
-
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/powercap/intel_rapl_common.c | 537 +++++++++++++++++++++++++++
- include/linux/intel_rapl.h           |  23 ++
- 2 files changed, 560 insertions(+)
-
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 1f4a7aa12d77..f51012f023b0 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -15,6 +15,8 @@
- #include <linux/list.h>
- #include <linux/log2.h>
- #include <linux/module.h>
-+#include <linux/nospec.h>
-+#include <linux/perf_event.h>
- #include <linux/platform_device.h>
- #include <linux/powercap.h>
- #include <linux/processor.h>
-@@ -1506,6 +1508,541 @@ static int rapl_detect_domains(struct rapl_package *rp)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PERF_EVENTS
-+
-+/* Support for RAPL PMU */
-+
-+struct rapl_pmu {
-+	struct pmu pmu;
-+	u64 timer_ms;
-+	cpumask_t cpu_mask;
-+	unsigned long domain_map;	/* Events supported by all registered RAPL packages */
-+	bool registered;
-+};
-+
-+static struct rapl_pmu rapl_pmu;
-+
-+/* PMU helpers */
-+static int get_pmu_cpu(struct rapl_package *rp)
-+{
-+	int cpu;
-+
-+	if (!rp->has_pmu)
-+		return nr_cpu_ids;
-+
-+	if (rp->lead_cpu >= 0)
-+		return rp->lead_cpu;
-+
-+	/* TPMI RAPL uses any CPU in the package for PMU */
-+	for_each_online_cpu(cpu)
-+		if (topology_physical_package_id(cpu) == rp->id)
-+			return cpu;
-+
-+	return nr_cpu_ids;
-+}
-+
-+static bool is_rp_pmu_cpu(struct rapl_package *rp, int cpu)
-+{
-+	if (!rp->has_pmu)
-+		return false;
-+
-+	if (rp->lead_cpu >= 0)
-+		return cpu == rp->lead_cpu;
-+
-+	/* TPMI RAPL uses any CPU in the package for PMU */
-+	return topology_physical_package_id(cpu) == rp->id;
-+}
-+
-+static struct rapl_package_pmu_data *event_to_pmu_data(struct perf_event *event)
-+{
-+	struct rapl_package *rp = event->pmu_private;
-+
-+	return &rp->pmu_data;
-+}
-+
-+/* PMU event callbacks */
-+
-+/* Return 0 for unsupported events or failed read */
-+static u64 event_read_counter(struct perf_event *event)
-+{
-+	struct rapl_package *rp = event->pmu_private;
-+	u64 val;
-+	int ret;
-+
-+	if (event->hw.idx < 0)
-+		return 0;
-+
-+	ret = rapl_read_data_raw(&rp->domains[event->hw.idx], ENERGY_COUNTER, false, &val);
-+	return ret ? 0 : val;
-+}
-+
-+static void __rapl_pmu_event_start(struct perf_event *event)
-+{
-+	struct rapl_package_pmu_data *data = event_to_pmu_data(event);
-+
-+	if (WARN_ON_ONCE(!(event->hw.state & PERF_HES_STOPPED)))
-+		return;
-+
-+	event->hw.state = 0;
-+
-+	list_add_tail(&event->active_entry, &data->active_list);
-+
-+	local64_set(&event->hw.prev_count, event_read_counter(event));
-+	if (++data->n_active == 1)
-+		hrtimer_start(&data->hrtimer, data->timer_interval,
-+			      HRTIMER_MODE_REL_PINNED);
-+}
-+
-+static void rapl_pmu_event_start(struct perf_event *event, int mode)
-+{
-+	struct rapl_package_pmu_data *data = event_to_pmu_data(event);
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+	__rapl_pmu_event_start(event);
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+}
-+
-+static u64 rapl_event_update(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct rapl_package_pmu_data *data = event_to_pmu_data(event);
-+	u64 prev_raw_count, new_raw_count;
-+	s64 delta, sdelta;
-+
-+again:
-+	prev_raw_count = local64_read(&hwc->prev_count);
-+	new_raw_count = event_read_counter(event);
-+
-+	if (local64_cmpxchg(&hwc->prev_count, prev_raw_count,
-+			new_raw_count) != prev_raw_count)
-+		goto again;
-+
-+	/*
-+	 * Now we have the new raw value and have updated the prev
-+	 * timestamp already. We can now calculate the elapsed delta
-+	 * (event-)time and add that to the generic event.
-+	 */
-+	delta = new_raw_count - prev_raw_count;
-+
-+	/*
-+	 * Scale delta to smallest unit (2^-32)
-+	 * users must then scale back: count * 1/(1e9*2^32) to get Joules
-+	 * or use ldexp(count, -32).
-+	 * Watts = Joules/Time delta
-+	 */
-+	sdelta = delta * data->scale[event->hw.flags];
-+
-+	local64_add(sdelta, &event->count);
-+
-+	return new_raw_count;
-+}
-+
-+static void rapl_pmu_event_stop(struct perf_event *event, int mode)
-+{
-+	struct rapl_package_pmu_data *data = event_to_pmu_data(event);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+
-+	/* Mark event as deactivated and stopped */
-+	if (!(hwc->state & PERF_HES_STOPPED)) {
-+		WARN_ON_ONCE(data->n_active <= 0);
-+		if (--data->n_active == 0)
-+			hrtimer_cancel(&data->hrtimer);
-+
-+		list_del(&event->active_entry);
-+
-+		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
-+		hwc->state |= PERF_HES_STOPPED;
-+	}
-+
-+	/* Check if update of sw counter is necessary */
-+	if ((mode & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-+		/*
-+		 * Drain the remaining delta count out of a event
-+		 * that we are disabling:
-+		 */
-+		rapl_event_update(event);
-+		hwc->state |= PERF_HES_UPTODATE;
-+	}
-+
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+}
-+
-+static int rapl_pmu_event_add(struct perf_event *event, int mode)
-+{
-+	struct rapl_package_pmu_data *data = event_to_pmu_data(event);
-+	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+
-+	if (mode & PERF_EF_START)
-+		__rapl_pmu_event_start(event);
-+
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+
-+	return 0;
-+}
-+
-+static void rapl_pmu_event_del(struct perf_event *event, int flags)
-+{
-+	rapl_pmu_event_stop(event, PERF_EF_UPDATE);
-+}
-+
-+/*
-+ * RAPL energy status counters
-+ */
-+enum perf_rapl_events {
-+	PERF_RAPL_PP0 = 0,	/* all cores */
-+	PERF_RAPL_PKG,		/* entire package */
-+	PERF_RAPL_RAM,		/* DRAM */
-+	PERF_RAPL_PP1,		/* gpu */
-+	PERF_RAPL_PSYS,		/* psys */
-+};
-+#define RAPL_EVENT_MASK GENMASK(7, 0)
-+
-+static int event_to_domain(int event)
-+{
-+	switch (event) {
-+	case PERF_RAPL_PP0:
-+		return RAPL_DOMAIN_PP0;
-+	case PERF_RAPL_PKG:
-+		return RAPL_DOMAIN_PACKAGE;
-+	case PERF_RAPL_RAM:
-+		return RAPL_DOMAIN_DRAM;
-+	case PERF_RAPL_PP1:
-+		return RAPL_DOMAIN_PP1;
-+	case PERF_RAPL_PSYS:
-+		return RAPL_DOMAIN_PLATFORM;
-+	default:
-+		return RAPL_DOMAIN_MAX;
-+	}
-+}
-+
-+static int rapl_pmu_event_init(struct perf_event *event)
-+{
-+	struct rapl_package *pos, *rp = NULL;
-+	u64 cfg = event->attr.config & RAPL_EVENT_MASK;
-+	int domain, idx;
-+
-+	/* Only look at RAPL events */
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	/* Check only supported bits are set */
-+	if (event->attr.config & ~RAPL_EVENT_MASK)
-+		return -EINVAL;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	/* Find out which Package the event belongs to */
-+	list_for_each_entry(pos, &rapl_packages, plist) {
-+		if (is_rp_pmu_cpu(pos, event->cpu)) {
-+			rp = pos;
-+			break;
-+		}
-+	}
-+	if (!rp)
-+		return -ENODEV;
-+
-+	/* Find out which RAPL Domain the event belongs to */
-+	domain = event_to_domain(cfg - 1);
-+	if (domain >= RAPL_DOMAIN_MAX)
-+		return -EINVAL;
-+
-+	event->event_caps |= PERF_EV_CAP_READ_ACTIVE_PKG;
-+	event->pmu_private = rp;	/* Which package */
-+	event->hw.flags = domain;	/* Which domain */
-+
-+	event->hw.idx = -1;
-+	/* Find out the index in rp->domains[] to get domain pointer */
-+	for (idx = 0; idx < rp->nr_domains; idx++) {
-+		if (rp->domains[idx].id == domain) {
-+			event->hw.idx = idx;
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void rapl_pmu_event_read(struct perf_event *event)
-+{
-+	rapl_event_update(event);
-+}
-+
-+static enum hrtimer_restart rapl_hrtimer_handle(struct hrtimer *hrtimer)
-+{
-+	struct rapl_package_pmu_data *data =
-+		container_of(hrtimer, struct rapl_package_pmu_data, hrtimer);
-+	struct perf_event *event;
-+	unsigned long flags;
-+
-+	if (!data->n_active)
-+		return HRTIMER_NORESTART;
-+
-+	raw_spin_lock_irqsave(&data->lock, flags);
-+
-+	list_for_each_entry(event, &data->active_list, active_entry)
-+		rapl_event_update(event);
-+
-+	raw_spin_unlock_irqrestore(&data->lock, flags);
-+
-+	hrtimer_forward_now(hrtimer, data->timer_interval);
-+
-+	return HRTIMER_RESTART;
-+}
-+
-+/* PMU sysfs attributes */
-+
-+/*
-+ * There are no default events, but we need to create "events" group (with
-+ * empty attrs) before updating it with detected events.
-+ */
-+static struct attribute *attrs_empty[] = {
-+	NULL,
-+};
-+
-+static struct attribute_group pmu_events_group = {
-+	.name = "events",
-+	.attrs = attrs_empty,
-+};
-+
-+static ssize_t cpumask_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct rapl_package *rp;
-+	int cpu;
-+
-+	cpus_read_lock();
-+	cpumask_clear(&rapl_pmu.cpu_mask);
-+
-+	/* Choose a cpu for each RAPL Package */
-+	list_for_each_entry(rp, &rapl_packages, plist) {
-+		cpu = get_pmu_cpu(rp);
-+		if (cpu < nr_cpu_ids)
-+			cpumask_set_cpu(cpu, &rapl_pmu.cpu_mask);
-+	}
-+	cpus_read_unlock();
-+
-+	return cpumap_print_to_pagebuf(true, buf, &rapl_pmu.cpu_mask);
-+}
-+
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *pmu_cpumask_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL
-+};
-+
-+static struct attribute_group pmu_cpumask_group = {
-+	.attrs = pmu_cpumask_attrs,
-+};
-+
-+PMU_FORMAT_ATTR(event, "config:0-7");
-+static struct attribute *pmu_format_attr[] = {
-+	&format_attr_event.attr,
-+	NULL
-+};
-+
-+static struct attribute_group pmu_format_group = {
-+	.name = "format",
-+	.attrs = pmu_format_attr,
-+};
-+
-+static const struct attribute_group *pmu_attr_groups[] = {
-+	&pmu_events_group,
-+	&pmu_cpumask_group,
-+	&pmu_format_group,
-+	NULL
-+};
-+
-+#define RAPL_EVENT_ATTR_STR(_name, v, str)					\
-+static struct perf_pmu_events_attr event_attr_##v = {				\
-+	.attr		= __ATTR(_name, 0444, perf_event_sysfs_show, NULL),	\
-+	.event_str	= str,							\
-+}
-+
-+RAPL_EVENT_ATTR_STR(energy-cores,	rapl_cores,	"event=0x01");
-+RAPL_EVENT_ATTR_STR(energy-pkg,		rapl_pkg,	"event=0x02");
-+RAPL_EVENT_ATTR_STR(energy-ram,		rapl_ram,	"event=0x03");
-+RAPL_EVENT_ATTR_STR(energy-gpu,		rapl_gpu,	"event=0x04");
-+RAPL_EVENT_ATTR_STR(energy-psys,	rapl_psys,	"event=0x05");
-+
-+RAPL_EVENT_ATTR_STR(energy-cores.unit,	rapl_unit_cores,	"Joules");
-+RAPL_EVENT_ATTR_STR(energy-pkg.unit,	rapl_unit_pkg,		"Joules");
-+RAPL_EVENT_ATTR_STR(energy-ram.unit,	rapl_unit_ram,		"Joules");
-+RAPL_EVENT_ATTR_STR(energy-gpu.unit,	rapl_unit_gpu,		"Joules");
-+RAPL_EVENT_ATTR_STR(energy-psys.unit,	rapl_unit_psys,		"Joules");
-+
-+RAPL_EVENT_ATTR_STR(energy-cores.scale,	rapl_scale_cores,	"2.3283064365386962890625e-10");
-+RAPL_EVENT_ATTR_STR(energy-pkg.scale,	rapl_scale_pkg,		"2.3283064365386962890625e-10");
-+RAPL_EVENT_ATTR_STR(energy-ram.scale,	rapl_scale_ram,		"2.3283064365386962890625e-10");
-+RAPL_EVENT_ATTR_STR(energy-gpu.scale,	rapl_scale_gpu,		"2.3283064365386962890625e-10");
-+RAPL_EVENT_ATTR_STR(energy-psys.scale,	rapl_scale_psys,	"2.3283064365386962890625e-10");
-+
-+#define RAPL_EVENT_GROUP(_name, domain)			\
-+static struct attribute *pmu_attr_##_name[] = {		\
-+	&event_attr_rapl_##_name.attr.attr,		\
-+	&event_attr_rapl_unit_##_name.attr.attr,	\
-+	&event_attr_rapl_scale_##_name.attr.attr,	\
-+	NULL						\
-+};							\
-+static umode_t is_visible_##_name(struct kobject *kobj, struct attribute *attr, int event)	\
-+{											\
-+	return rapl_pmu.domain_map & BIT(domain) ? attr->mode : 0;	\
-+}							\
-+static struct attribute_group pmu_group_##_name = {	\
-+	.name  = "events",				\
-+	.attrs = pmu_attr_##_name,			\
-+	.is_visible = is_visible_##_name,		\
-+}
-+
-+RAPL_EVENT_GROUP(cores,	RAPL_DOMAIN_PP0);
-+RAPL_EVENT_GROUP(pkg,	RAPL_DOMAIN_PACKAGE);
-+RAPL_EVENT_GROUP(ram,	RAPL_DOMAIN_DRAM);
-+RAPL_EVENT_GROUP(gpu,	RAPL_DOMAIN_PP1);
-+RAPL_EVENT_GROUP(psys,	RAPL_DOMAIN_PLATFORM);
-+
-+static const struct attribute_group *pmu_attr_update[] = {
-+	&pmu_group_cores,
-+	&pmu_group_pkg,
-+	&pmu_group_ram,
-+	&pmu_group_gpu,
-+	&pmu_group_psys,
-+	NULL
-+};
-+
-+static int rapl_pmu_update(struct rapl_package *rp)
-+{
-+	int ret;
-+
-+	/* Return if PMU already covers all events supported by current RAPL Package */
-+	if (rapl_pmu.registered && !(rp->domain_map & (~rapl_pmu.domain_map)))
-+		return 0;
-+
-+	/* Unregister previous registered PMU */
-+	if (rapl_pmu.registered) {
-+		perf_pmu_unregister(&rapl_pmu.pmu);
-+		memset(&rapl_pmu.pmu, 0, sizeof(struct pmu));
-+	}
-+
-+	rapl_pmu.domain_map |= rp->domain_map;
-+
-+	memset(&rapl_pmu.pmu, 0, sizeof(struct pmu));
-+	rapl_pmu.pmu.attr_groups = pmu_attr_groups;
-+	rapl_pmu.pmu.attr_update = pmu_attr_update;
-+	rapl_pmu.pmu.task_ctx_nr = perf_invalid_context;
-+	rapl_pmu.pmu.event_init = rapl_pmu_event_init;
-+	rapl_pmu.pmu.add = rapl_pmu_event_add;
-+	rapl_pmu.pmu.del = rapl_pmu_event_del;
-+	rapl_pmu.pmu.start = rapl_pmu_event_start;
-+	rapl_pmu.pmu.stop = rapl_pmu_event_stop;
-+	rapl_pmu.pmu.read = rapl_pmu_event_read;
-+	rapl_pmu.pmu.module = THIS_MODULE;
-+	rapl_pmu.pmu.capabilities = PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT;
-+	ret = perf_pmu_register(&rapl_pmu.pmu, "power", -1);
-+	if (ret)
-+		pr_warn("Failed to register PMU\n");
-+
-+	rapl_pmu.registered = !ret;
-+
-+	return ret;
-+}
-+
-+int rapl_package_add_pmu(struct rapl_package *rp)
-+{
-+	struct rapl_package_pmu_data *data = &rp->pmu_data;
-+	int idx;
-+	int ret;
-+
-+	if (rp->has_pmu)
-+		return -EEXIST;
-+
-+	guard(cpus_read_lock)();
-+
-+	for (idx = 0; idx < rp->nr_domains; idx++) {
-+		struct rapl_domain *rd = &rp->domains[idx];
-+		int domain = rd->id;
-+		u64 val;
-+
-+		if (!test_bit(domain, &rp->domain_map))
-+			continue;
-+
-+		/*
-+		 * The RAPL PMU granularity is 2^-32 Joules
-+		 * data->scale[]: times of 2^-32 Joules for each ENERGY COUNTER increase
-+		 */
-+		val = rd->energy_unit * (1ULL << 32);
-+		do_div(val, ENERGY_UNIT_SCALE * 1000000);
-+		data->scale[domain] = val;
-+
-+		if (!rapl_pmu.timer_ms) {
-+			struct rapl_primitive_info *rpi = get_rpi(rp, ENERGY_COUNTER);
-+
-+			/*
-+			 * Calculate the timer rate:
-+			 * Use reference of 200W for scaling the timeout to avoid counter
-+			 * overflows.
-+			 *
-+			 * max_count = rpi->mask >> rpi->shift + 1
-+			 * max_energy_pj = max_count * rd->energy_unit
-+			 * max_time_sec = (max_energy_pj / 1000000000) / 200w
-+			 *
-+			 * rapl_pmu.timer_ms = max_time_sec * 1000 / 2
-+			 */
-+			val = (rpi->mask >> rpi->shift) + 1;
-+			val *= rd->energy_unit;
-+			do_div(val, 1000000 * 200 * 2);
-+			rapl_pmu.timer_ms = val;
-+
-+			pr_info("%llu ms ovfl timer\n", rapl_pmu.timer_ms);
-+		}
-+
-+		pr_info("Domain %s: hw unit %lld * 2^-32 Joules\n", rd->name, data->scale[domain]);
-+	}
-+
-+	/* Initialize per package PMU data */
-+	raw_spin_lock_init(&data->lock);
-+	INIT_LIST_HEAD(&data->active_list);
-+	data->timer_interval = ms_to_ktime(rapl_pmu.timer_ms);
-+	hrtimer_init(&data->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	data->hrtimer.function = rapl_hrtimer_handle;
-+
-+	ret = rapl_pmu_update(rp);
-+	if (!ret)
-+		rp->has_pmu = true;
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(rapl_package_add_pmu);
-+
-+void rapl_package_remove_pmu(struct rapl_package *rp)
-+{
-+	struct rapl_package *pos;
-+
-+	if (!rp->has_pmu)
-+		return;
-+
-+	guard(cpus_read_lock)();
-+
-+	list_for_each_entry(pos, &rapl_packages, plist) {
-+		/* PMU is still needed */
-+		if (pos->has_pmu)
-+			return;
-+	}
-+
-+	perf_pmu_unregister(&rapl_pmu.pmu);
-+	memset(&rapl_pmu, 0, sizeof(struct rapl_pmu));
-+}
-+EXPORT_SYMBOL_GPL(rapl_package_remove_pmu);
-+#endif
-+
- /* called from CPU hotplug notifier, hotplug lock held */
- void rapl_remove_package_cpuslocked(struct rapl_package *rp)
- {
-diff --git a/include/linux/intel_rapl.h b/include/linux/intel_rapl.h
-index f3196f82fd8a..38e43dbb3dac 100644
---- a/include/linux/intel_rapl.h
-+++ b/include/linux/intel_rapl.h
-@@ -158,6 +158,17 @@ struct rapl_if_priv {
- 	void *rpi;
- };
- 
-+#ifdef CONFIG_PERF_EVENTS
-+struct rapl_package_pmu_data {
-+	u64 scale[RAPL_DOMAIN_MAX];
-+	raw_spinlock_t lock;
-+	int n_active;
-+	struct list_head active_list;
-+	ktime_t timer_interval;
-+	struct hrtimer hrtimer;
-+};
-+#endif
-+
- /* maximum rapl package domain name: package-%d-die-%d */
- #define PACKAGE_DOMAIN_NAME_LENGTH 30
- 
-@@ -176,6 +187,10 @@ struct rapl_package {
- 	struct cpumask cpumask;
- 	char name[PACKAGE_DOMAIN_NAME_LENGTH];
- 	struct rapl_if_priv *priv;
-+#ifdef CONFIG_PERF_EVENTS
-+	bool has_pmu;
-+	struct rapl_package_pmu_data pmu_data;
-+#endif
- };
- 
- struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct rapl_if_priv *priv,
-@@ -188,4 +203,12 @@ struct rapl_package *rapl_find_package_domain(int id, struct rapl_if_priv *priv,
- struct rapl_package *rapl_add_package(int id, struct rapl_if_priv *priv, bool id_is_cpu);
- void rapl_remove_package(struct rapl_package *rp);
- 
-+#ifdef CONFIG_PERF_EVENTS
-+int rapl_package_add_pmu(struct rapl_package *rp);
-+void rapl_package_remove_pmu(struct rapl_package *rp);
-+#else
-+static inline int rapl_package_add_pmu(struct rapl_package *rp) { return 0; }
-+static inline void rapl_package_remove_pmu(struct rapl_package *rp) { }
-+#endif
-+
- #endif /* __INTEL_RAPL_H__ */
--- 
-2.34.1
+>=20
+>  	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev)) {
+>  		ret =3D intel_pasid_alloc_table(dev);
+> @@ -4336,7 +4338,8 @@ static void intel_iommu_release_device(struct
+> device *dev)
+>  	struct intel_iommu *iommu =3D info->iommu;
+>=20
+>  	mutex_lock(&iommu->iopf_lock);
+> -	device_rbtree_remove(info);
+> +	if (dev_is_pci(dev) && pci_ats_supported(to_pci_dev(dev)))
+> +		device_rbtree_remove(info);
+>  	mutex_unlock(&iommu->iopf_lock);
+>=20
+>  	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
+> --
+> 2.34.1
 
