@@ -1,125 +1,192 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C9313A254
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 14:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8161713B594;
+	Mon,  8 Apr 2024 14:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712586633; cv=none; b=bnyz/BwsnyB0NNC6TZ+Rf2XJX3FX3C7rAWZuc3TpVvC5t0vT7EX+TXG+PEN0Njjkc4D9JrGSPKsTInsMoYnA3DSNbVEW+4BxWQ9O7Fjkv2lJWLTEyfkF9KdXv7PWDFtQQpNaIQtmyNa+OtoA3PTM2Qw2A58YxZ+wTxpycvHKpGU=
+	t=1712586651; cv=none; b=NL+U8IOQMy1a0TOalLoxCjigFefTKBvHj1kdWeSrIC47qWngNOoE8QXFHQAbpVAPf2b2ddu5Q0OEjcCcxQsYTzi55I3BPNHXa8ZDAMf9aUPhqYi8ocOq1B7+NeeTX2mNMlLSmChqoMXs+pStcFa6304uHWSQ/piOM6XVWMpfxII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712586633; c=relaxed/simple;
-	bh=RgNAfYk0IeW8ozwHqAQ2FZbXTFcFsxgUeSwFe0Lwusw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vs06hzF9d/LXxRrtdDb9YWrldZ64D7ZSf6iRNK4CNtZJzdx+Smt9MZFIwLcYBV6dWQyDKkgpDuZaCPNXOb4OfBS3Xt2GUao5q7RYgLbz9w/1tnXZsXgLGcHzDuztkLTZUJfVSEK4q7Ty8ThiEysVVuc6xULybaqPFY46x8xa/W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tjk8btpd; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712586651; c=relaxed/simple;
+	bh=Re4ozZr4CHJHzufgoZx5yfogXY8vgcdxYpMPuHB77VI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rm4VsFmkYe/VqqOB5tZBYfIv37pvsfXHk/53d6XWzh8jAkX9+zy+Ygdq/C5Hex+MsbK/F4fiUB3TqQH2WjhAoW5jGzGpkuqcaDHcQBqPWEHirlIsTkkbJ/DA5RHvhAj5RH6oS2UdsDT/xZ4ltIvAfN0TBUK/GciOyNqR+IPDtwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n2PEwkJo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x3AnvYBI; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=n2PEwkJo; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=x3AnvYBI; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tjk8btpd"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516d0161e13so4834401e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 07:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712586629; x=1713191429; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JbNAL/GJwarHvPTE1x3HLG2P6WbYMjHYM5jL5CYr4Ds=;
-        b=Tjk8btpdi8oW0O+vu/IgWiRPrT2YVgIyDH4UIsNfcAsIA4tOamR/FL4mvfheKSGZP0
-         2GS+uW6COhiteIFmi5kAOQ7AoK8nwHfyFlvGelOc1vEv25DUVaIxCK0cfQud5Fu1Tfm3
-         w7nOQVC7i2x75W9+NrOb+jgEejxxF+1Cy+5HghURx8ipA8dUPb3Fln2PslCMRBKz2zFF
-         T8sW/ZkQfioWl9a7v7TvGEfFzLFDE/d/Oxu6oFFTka76t3VypUJOh1HagnjzAtkoxpLX
-         5CPcj2U24khPVGBfzuP93lWhJ7j5iT53P87dqsF/srPk/VBNx20F4QVAfqEtdzovKS2n
-         q6nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712586629; x=1713191429;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JbNAL/GJwarHvPTE1x3HLG2P6WbYMjHYM5jL5CYr4Ds=;
-        b=MAh2MO+kUzmE6pU/eh0LN5FeCdSKTNwrJXXjnwwQ1OWsMUeHYA1JxG/9fe/YqKBt58
-         rr+rH+wYLBS5j7FEa5z2FHedGaG99AoQhVZzKuJ1N26V9+kYOYXype7PBCRmt6mTaQuy
-         MePu8naOQUGkrbHehcCuMXlWdTld3mzKJQLeixaaSstSK+v2iWcQi5QrSU+Gw+BkjSWM
-         ceunSFJss5GQyOQJN6IVnXCVT8wBfKdzaZo0nPApWwWe8cULxGNrolvxOhOvBCUiHCfX
-         1/WjzJ2GvZ2hQw0vvpEQxbHiMVmgLNKwTKXc/8t9FYXv7GbW01QhmVxom0ZchPUT02+i
-         DxSw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0JneCv2VvdHOGOvDDpl7IEkWFM7z6hMr5IJpF9M37LBGnXL1d0mT/yn3Nh2voz68h63aQTj1/T5oPAgEKvujdRI32S5FcAsHEVoJk
-X-Gm-Message-State: AOJu0YyVJGGG4XRhB1gJoLZEc8Pa4VupO3yPAO3PdhYfAveoU9oCBCC+
-	IN7YafHc8p0SBv85Jum85N40TmtqmOJGIL2w/N96Uh7G6zSkh3q4Z77NVVLhMQI=
-X-Google-Smtp-Source: AGHT+IHC2GoNZnZz63pJWddMfVDcEqhdjGlleVnBgtGQ2PFqmRbP3jcpGS5qBPiJXHTsSKRRqsifyA==
-X-Received: by 2002:a19:2d43:0:b0:516:d18b:eae8 with SMTP id t3-20020a192d43000000b00516d18beae8mr5691961lft.41.1712586628967;
-        Mon, 08 Apr 2024 07:30:28 -0700 (PDT)
-Received: from [172.30.204.201] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id q20-20020a194314000000b00516c5eef5c7sm1209811lfa.243.2024.04.08.07.30.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 07:30:28 -0700 (PDT)
-Message-ID: <dbe5562d-9850-4a25-b279-f8fcffd9291e@linaro.org>
-Date: Mon, 8 Apr 2024 16:30:26 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n2PEwkJo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x3AnvYBI";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="n2PEwkJo";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="x3AnvYBI"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 95BD9203D1;
+	Mon,  8 Apr 2024 14:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712586647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn/qWfU1LE05R6zzlgfcSN5haYke/pTO+J4746Gv9mo=;
+	b=n2PEwkJoZtm1iK07eyggjA7Kqoq15r7fKlEqTDvD/JZSOVAc6rivsnp7W2DSsHOuekfnsH
+	4zgFflJPpRtYq4KwKvBE6p7xnL0O3w86+/l/wwY9KPkS2CBXcM/k6qPgON1qSe5LuTZNCC
+	ilg2lTg/qpC2dKhOIxmjxrB4dkrRfmU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712586647;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn/qWfU1LE05R6zzlgfcSN5haYke/pTO+J4746Gv9mo=;
+	b=x3AnvYBIROEdOj1Us8VkbtucD98rhb5N3jcwpGYuI2OrqLs0kXEJKxeVmuV7IuZ98ekVZw
+	84xOclvqxuf1TECg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712586647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn/qWfU1LE05R6zzlgfcSN5haYke/pTO+J4746Gv9mo=;
+	b=n2PEwkJoZtm1iK07eyggjA7Kqoq15r7fKlEqTDvD/JZSOVAc6rivsnp7W2DSsHOuekfnsH
+	4zgFflJPpRtYq4KwKvBE6p7xnL0O3w86+/l/wwY9KPkS2CBXcM/k6qPgON1qSe5LuTZNCC
+	ilg2lTg/qpC2dKhOIxmjxrB4dkrRfmU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712586647;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zn/qWfU1LE05R6zzlgfcSN5haYke/pTO+J4746Gv9mo=;
+	b=x3AnvYBIROEdOj1Us8VkbtucD98rhb5N3jcwpGYuI2OrqLs0kXEJKxeVmuV7IuZ98ekVZw
+	84xOclvqxuf1TECg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 8A2B91332F;
+	Mon,  8 Apr 2024 14:30:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id h3S0IZf/E2Y8cAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 08 Apr 2024 14:30:47 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2CB4AA0814; Mon,  8 Apr 2024 16:30:43 +0200 (CEST)
+Date: Mon, 8 Apr 2024 16:30:43 +0200
+From: Jan Kara <jack@suse.cz>
+To: Chao Yu <chao@kernel.org>
+Cc: jack@suse.com, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] quota: don't let mark_dquot_dirty() fail silently
+Message-ID: <20240408143043.65yowy2yvf46weab@quack3>
+References: <20240407073128.3489785-1-chao@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] firmware: qcom: uefisecapp: Fix memory related IO
- errors and crashes
-To: Maximilian Luz <luzmaximilian@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
- Johan Hovold <johan+linaro@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Guru Das Srinagesh <quic_gurus@quicinc.com>, Ard Biesheuvel
- <ardb@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240406130125.1047436-1-luzmaximilian@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240406130125.1047436-1-luzmaximilian@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240407073128.3489785-1-chao@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.77 / 50.00];
+	BAYES_HAM(-2.97)[99.86%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns,suse.com:email]
+X-Spam-Score: -3.77
+X-Spam-Flag: NO
 
-
-
-On 4/6/24 15:01, Maximilian Luz wrote:
-> It turns out that while the QSEECOM APP_SEND command has specific fields
-> for request and response buffers, uefisecapp expects them both to be in
-> a single memory region. Failure to adhere to this has (so far) resulted
-> in either no response being written to the response buffer (causing an
-> EIO to be emitted down the line), the SCM call to fail with EINVAL
-> (i.e., directly from TZ/firmware), or the device to be hard-reset.
+On Sun 07-04-24 15:31:28, Chao Yu wrote:
+> mark_dquot_dirty() will callback to specified filesystem function,
+> it may fail due to any reasons, however, no caller will check return
+> value of mark_dquot_dirty(), so, it may fail silently, let's print
+> one line message for such case.
 > 
-> While this issue can be triggered deterministically, in the current form
-> it seems to happen rather sporadically (which is why it has gone
-> unnoticed during earlier testing). This is likely due to the two
-> kzalloc() calls (for request and response) being directly after each
-> other. Which means that those likely return consecutive regions most of
-> the time, especially when not much else is going on in the system.
-> 
-> Fix this by allocating a single memory region for both request and
-> response buffers, properly aligning both structs inside it. This
-> unfortunately also means that the qcom_scm_qseecom_app_send() interface
-> needs to be restructured, as it should no longer map the DMA regions
-> separately. Therefore, move the responsibility of DMA allocation (or
-> mapping) to the caller.
-> 
-> Fixes: 759e7a2b62eb ("firmware: Add support for Qualcomm UEFI Secure Application")
-> Cc: stable@vger.kernel.org  # 6.7
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > ---
+>  fs/quota/dquot.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
 > 
-> Changes in v2:
-> - rename DMA related variables
->    - replace _phys suffix with _dma
->    - drop _virt suffix
-> - use DMA-based naming in comments instead of referring to physical
->    addresses/memory
-> 
-> ---
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index dacbee455c03..c5df7863942a 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -399,21 +399,20 @@ int dquot_mark_dquot_dirty(struct dquot *dquot)
+>  EXPORT_SYMBOL(dquot_mark_dquot_dirty);
+>  
+>  /* Dirtify all the dquots - this can block when journalling */
+> -static inline int mark_all_dquot_dirty(struct dquot __rcu * const *dquots)
+> +static inline void mark_all_dquot_dirty(struct dquot __rcu * const *dquots)
+>  {
+> -	int ret, err, cnt;
+> +	int ret, cnt;
+>  	struct dquot *dquot;
+>  
+> -	ret = err = 0;
+>  	for (cnt = 0; cnt < MAXQUOTAS; cnt++) {
+>  		dquot = srcu_dereference(dquots[cnt], &dquot_srcu);
+> -		if (dquot)
+> -			/* Even in case of error we have to continue */
+> -			ret = mark_dquot_dirty(dquot);
+> -		if (!err)
+> -			err = ret;
+> +		if (!dquot)
+> +			continue;
+> +		ret = mark_dquot_dirty(dquot);
+> +		if (ret < 0)
+> +			quota_error(dquot->dq_sb,
+> +				"mark_all_dquot_dirty fails, ret: %d", ret);
 
-Tested-by: Konrad Dybcio <konrad.dybcio@linaro.org> # X13s
+Do you have any practical case you care about? Because in practice the
+filesystem will usually report if there's some catastrophic error (and the
+errors from ->mark_dirty() all mean the filesystem is in unhealthy state).
+So this message just adds to the noise in the error log - and e.g. if the
+disk goes bad so we cannot write, we could spew a lot of messages like
+this.
 
-I've been running this for quite some time now, no explosions so far
+>  	}
+> -	return err;
+>  }
+>  
+>  static inline void dqput_all(struct dquot **dquot)
+> @@ -2725,6 +2724,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>  {
+>  	struct mem_dqblk *dm = &dquot->dq_dqb;
+>  	int check_blim = 0, check_ilim = 0;
+> +	int ret;
+>  	struct mem_dqinfo *dqi = &sb_dqopt(dquot->dq_sb)->info[dquot->dq_id.type];
+>  
+>  	if (di->d_fieldmask & ~VFS_QC_MASK)
+> @@ -2807,7 +2807,10 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
+>  	else
+>  		set_bit(DQ_FAKE_B, &dquot->dq_flags);
+>  	spin_unlock(&dquot->dq_dqb_lock);
+> -	mark_dquot_dirty(dquot);
+> +	ret = mark_dquot_dirty(dquot);
+> +	if (ret < 0)
+> +		quota_error(dquot->dq_sb,
+> +			"mark_dquot_dirty fails, ret: %d", ret);
 
-Konrad
+Here, we can propagate the error back to userspace, which is probably
+better than spamming the logs.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
