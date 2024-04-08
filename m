@@ -1,158 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E79B3C47D;
-	Mon,  8 Apr 2024 08:54:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B07182C5;
+	Mon,  8 Apr 2024 08:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712566455; cv=none; b=QqcGvFf2rhJOYIk0Oq7+tbJr4dlxsbCV49QKPQkdVND1VmYGRDvC2JacQ9G0wePJQ07ZrXgGCGOMWLIQYgR9rXbYGU69oVXR5qfn6zDlWurG9FrSApWRrpt2q9+dTkAh0hRsPg1lgN9ItfEynNAlBaZuLlO2ws6Pie0kS7kFVsk=
+	t=1712566546; cv=none; b=PFBVPhpqM18K5DyN0gX2gtTjujCXZ6NLhmUjx/yTXQHrRtFJivJjCVTgF2OuzxI4WKpPYum5QToUocaO8bDLD1ny7lpGFCLRG7wunwaSqT4c0OpLMpwFD7arH/8qERXF1Haqrn+gDveL7rr7XQviOWIVPu1ceQE3fjzAfB/UOBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712566455; c=relaxed/simple;
-	bh=hcvbPjCew43t9UhfecUGg/FJNEitg4pAy4+vnKk8h4c=;
+	s=arc-20240116; t=1712566546; c=relaxed/simple;
+	bh=IPFP5xc9/pxOtHa7dx37HFwUJ4eOs/7aF+oBG2Aleu0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IsFEdDYFbqMnfuZAnCFWZ4dcU5DnyvcDyU1sF5w8aB7ayngICCfrhLyPNS5zhhRhs9ouK2zejZfiCLGO7T5vomFKB/PgCvyU/edd4g+6jYbCHtzvOVAN1jrC2b77bFlE4ABwaFziUy9N6/GLbXWJrM5E8bS8age7+V4P7sZ5Zdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GT4tbcib; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 In-Reply-To:Content-Type; b=HjOJ7xdo54F+i6epRYGrGYfTBKpDoCVP9yCd5FIlHydq4xpVCoSjAGHswIO8LwIDDQWUTNeGp8FNhhAe4Pj1loNc95z6BYp/PQXbmoKOkCKmXuRQTbpzFligk/kWcXPhIN+qiS7cbvL9SWkWws0qGxfFHgGAjsUKpM5wGeV6+SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=vb710pVK; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GT4tbcib"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386dLYb011755;
-	Mon, 8 Apr 2024 08:54:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="vb710pVK"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4387LkXm002802;
+	Mon, 8 Apr 2024 10:55:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=l9bkOl54FLJ/y558SuedQw5a33GKs+cjk4IG7XYx52M=; b=GT
-	4tbcib2au95gnLKRKsv7anIJyYaVgGPQnpU01JSZIRtbs7OBcmPdL2vBvjJJven6
-	112ODdsxpdsPLkaKdZrswzOC3qIjOhN8bCBu1Kg748uGzCfw3cjKpTIfQEfGWbbA
-	J6n8uAd13apbaIq08FU7DUgvVziovBqXlXfz4a+NUjFydfvfjCPSwB2i/dPgePKy
-	rDsM1pT8ZbWLO0B9TQUxzmNGdscKOX4WVOXZOCMYG80FleVjb4EoehKtOAlSESmB
-	LcMC2qo5F1p6BvYmCpWk5AZDlMZClhtbl7/H7XHt3eA7/ueC1y+ANeRRQgp8b/Da
-	hzrO6FK8UaABHLqW4JtA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbfyg8d8-1
+	selector1; bh=vqeMlJil1d4Uvh5eSb07G55oP9mOJmKI1taWJJHq3pw=; b=vb
+	710pVKG1Jh6EgSswSo4VjZWMn32r8sHQPTp48FWW06zwjdYcrg7Rp140C+WMC6oM
+	46YpR7zGQ6vZh1mC07vMmkq7HZcK3E7JvDvaxdrWvzUBtJmKABtxJAihwIcUwVwF
+	XX07/T/nUdzErbsa4srelH6Zj6DEecqWnLF52CCAYSjoe3UziIkd0zGyCII2c+p6
+	KJs7e9XGYasxi4E36+72yslTqO910vTCBahW2JUaFXOkV3brxOGfXIlOcckr2UCy
+	wE+gHn2CbT9+UpBvRBRcec5ZP5/TOmJ67BoGi2OKXJkSB8nRoBYro+dA2rz8fBWs
+	c0UXGWgvW1N1jXAmbUqg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbfy0ku7r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 08:54:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4388s3v8002658
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Apr 2024 08:54:03 GMT
-Received: from [10.216.26.18] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
- 01:53:55 -0700
-Message-ID: <1093dace-3de9-4a13-c118-fffd49678622@quicinc.com>
-Date: Mon, 8 Apr 2024 14:23:51 +0530
+	Mon, 08 Apr 2024 10:55:33 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9C67440045;
+	Mon,  8 Apr 2024 10:55:30 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B70A32138C6;
+	Mon,  8 Apr 2024 10:54:51 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Mon, 8 Apr
+ 2024 10:54:51 +0200
+Message-ID: <79ec72ab-5451-4743-8cf9-229b8edb2b54@foss.st.com>
+Date: Mon, 8 Apr 2024 10:54:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH v9 3/6] dt-bindings: pci: qcom: Add opp table
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] ARM: dts: stm32: add heartbeat led for stm32mp157c-ed1
+To: <patrice.chotard@foss.st.com>, <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20240326075438.2891335-1-patrice.chotard@foss.st.com>
 Content-Language: en-US
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas
-	<bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <krzysztof.kozlowski@linaro.org>
-References: <20240407-opp_support-v9-0-496184dc45d7@quicinc.com>
- <20240407-opp_support-v9-3-496184dc45d7@quicinc.com>
- <20240407144227.GC2679@thinkpad>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <20240407144227.GC2679@thinkpad>
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20240326075438.2891335-1-patrice.chotard@foss.st.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: wie7NdtPzyH7wckslzDsF4TpvnpQFKCj
-X-Proofpoint-GUID: wie7NdtPzyH7wckslzDsF4TpvnpQFKCj
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 clxscore=1015 suspectscore=0
- impostorscore=0 spamscore=0 adultscore=0 bulkscore=0 mlxlogscore=999
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404080068
 
-Ack to all the comments. I will modify them in next patch series.
+Hi Patrice
 
-- Krishna Chaitanya.
+On 3/26/24 08:54, patrice.chotard@foss.st.com wrote:
+> From: Patrice Chotard <patrice.chotard@foss.st.com>
+> 
+> Add heartbeat led for stm32mp157c-ed1.
+> 
+> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+> ---
+> 
+> V2 changes :
+>    _ add color and function properties.
+> 
+>   arch/arm/boot/dts/st/stm32mp157c-ed1.dts | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
+> index 66ed5f9921ba..525d9ca7d576 100644
+> --- a/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
+> +++ b/arch/arm/boot/dts/st/stm32mp157c-ed1.dts
+> @@ -10,6 +10,7 @@
+>   #include "stm32mp15-pinctrl.dtsi"
+>   #include "stm32mp15xxaa-pinctrl.dtsi"
+>   #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/leds/common.h>
+>   #include <dt-bindings/mfd/st,stpmic1.h>
+>   
+>   / {
+> @@ -24,6 +25,17 @@ chosen {
+>   		stdout-path = "serial0:115200n8";
+>   	};
+>   
+> +	led {
+> +		compatible = "gpio-leds";
+> +		led-blue {
+> +			gpios = <&gpiod 9 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			default-state = "off";
+> +			function = LED_FUNCTION_HEARTBEAT;
+> +			color = <LED_COLOR_ID_BLUE>;
+> +		};
+> +	};
+> +
+>   	memory@c0000000 {
+>   		device_type = "memory";
+>   		reg = <0xC0000000 0x40000000>;
 
-On 4/7/2024 8:12 PM, Manivannan Sadhasivam wrote:
-> On Sun, Apr 07, 2024 at 10:07:36AM +0530, Krishna chaitanya chundru wrote:
-> 
-> s/opp/OPP
-> 
->> PCIe needs to choose the appropriate performance state of RPMH power
-> 
-> s/RPMH/RPMh
-> 
->> domain based upon the PCIe gen speed.
->>
-> 
-> s/upon/on
-> 
->> Adding the Operating Performance Points table allows to adjust power
->> domain performance state and icc peak bw, depending on the PCIe gen
-> 
-> s/icc/ICC
-> 
-> s/PCIe gen speed/PCIe data rate
-> 
->> speed and width.
->>
-> 
-> s/width/link width
-> 
->> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
-> With above changes,
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> - Mani
-> 
->> ---
->>   Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
->> index 1496d6993ab4..d8c0afaa4b19 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
->> @@ -69,6 +69,10 @@ properties:
->>         - const: msi6
->>         - const: msi7
->>   
->> +  operating-points-v2: true
->> +  opp-table:
->> +    type: object
->> +
->>     resets:
->>       maxItems: 1
->>   
->>
->> -- 
->> 2.42.0
->>
-> 
+Applied on stm32-next.
+
+thanks
+Alex
