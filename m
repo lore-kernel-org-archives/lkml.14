@@ -1,92 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B11169E07;
-	Mon,  8 Apr 2024 12:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA8769E07;
+	Mon,  8 Apr 2024 12:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712578167; cv=none; b=DCHSMtu3E+oBeSgsgTDaz9icsNnabuDNxDMZmRN2Wcz7eD/DD/H0I29uoT7IMEJiJy+Wqo/tNifLS1wMSbrqFqQHm74d251uOfPtcMlo+Dp5ga3R9YMBQ8M2zttR4Oph2v5d5X/g2QQ3IAJoBPQzQOI89io7OiWiHMr0EM/GCYU=
+	t=1712578347; cv=none; b=eyKuS9qjDWndhAAOwywxG3F9gTYmAsDdkHPNzam1U+mzeL8BUMpk93IlUsLpPCgdv8fxGldiztPlaIado6VnQf2+v/re/ulsjaiMq1qfMkEmdCyzMVE563wL2+1UMC6AajG7P+39exRHFd1KiY1AptuKNySJED8uMqlyBU9ilI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712578167; c=relaxed/simple;
-	bh=jMhyIsACrXJPq53fcYvr3d0wlQI+edXLZWNObmw9AEU=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=ECzZsqZNs7hKgo6+C5ebFigbpzfqrudL+Dt463PHKV3zMcgzkWg6pPbPs1uaxW4a7acx4DP6plTT4vqs9KqC2JLSl31C70/6AhsSKuMT9dDUqerBTt8gp4DT9StGzTANH84WRJ5A21vUBZ1dVEtyT/ArIRtfWANtxAOVFhhxYbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iC9iw0e8; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712578347; c=relaxed/simple;
+	bh=vMSCjQT2myET9suDYZEPUOmwcRvfB4t+Bz0J1v9ExsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=raHcgTWCqSrIMOrh+QhNePzymdPpPsBUD8eNeVcWJhlFLa+XYN1D4YffPvFqQgHVwpLFu0VyX+G8bEPdqkFZhKdu/VfuOZSk+w0eX9ADaoULjRGJVfEzYeocXDlGz4NWk7TXCEVH1jjKWZVQOQQqphi6ALTrq11bfsl4QyHdFsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vl5tW+US; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iC9iw0e8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712578165; x=1744114165;
-  h=from:to:cc:subject:date:message-id;
-  bh=jMhyIsACrXJPq53fcYvr3d0wlQI+edXLZWNObmw9AEU=;
-  b=iC9iw0e8sQegLjGdWuR8hWOT4gN2X1+Uj5V8prrIaV8ff7Reo8YhciZ0
-   vIDo8QGgYgQztzHJsKaG/0cSYr3v7TMAZiE2mz7m5QUh7Nd/s80aLRgUP
-   pRFUpf6lxZogNnKoLsOEojOYuB4pNCupIVGQwbnA1qIIQqSweCRDFPy8j
-   ucxpm5GZFRft03PUPz3SM+5gDmIh/Fh4jFBPxYQJ27aahF8RgoHB245YT
-   49ppczSVri01YjLBF8QKJ9os/gIIkkbBvypftrWdgfeHiaTpOm0uk27e/
-   WsCT6HYl0z2RDjN5ziUnW5vPn40r5tmSuiVc5iDDLqvALVoOQFSECRpnu
-   g==;
-X-CSE-ConnectionGUID: B1oEyCpeTkyBe5bQaYPKVQ==
-X-CSE-MsgGUID: /rga3l4HR9uAFSj+8HN8DA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="18463659"
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="18463659"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 05:09:24 -0700
-X-CSE-ConnectionGUID: M5fgWsTQQRKekXUmxflf9g==
-X-CSE-MsgGUID: Z3t4AKR7S8mEqSiz4pwDBg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="57334813"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 05:09:23 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Aristeu Rozanski <aris@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] EDAC/skx_common: Allow decoding of SGX addresses
-Date: Mon,  8 Apr 2024 20:04:19 +0800
-Message-Id: <20240408120419.50234-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.17.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vl5tW+US"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419B3C433F1;
+	Mon,  8 Apr 2024 12:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712578347;
+	bh=vMSCjQT2myET9suDYZEPUOmwcRvfB4t+Bz0J1v9ExsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vl5tW+USe5BvdmV9SiYYIe5EsZpjpNVcWf0jbWr503WM7zUifY49LcCKCKS+zjQVj
+	 1csscUtgIq486b42/UbxdrA+bWgmFqGCOz9iwkAJ1Uhoopk4QOOruopsFivzir/Yrl
+	 6I1p5/Jd/ngDk71tDTBVrP0RSjRfzEeeCcCWgikAgm17pRxPBHwLoGsNpvga/wEu1r
+	 cFER3AQF+kgCxi4M00h/ODs6CGnho3jn54xsBIJe/hZnrHbq2joLHmlZWnrvdC2Pjw
+	 ay+9i5KHG7od/6/EioJh44kqV5E1XJnGLJFfRVfKsIxJb9mqy6tTxir8R84kpYXsSJ
+	 KD687eAWpfZ0A==
+Date: Mon, 8 Apr 2024 13:12:21 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: Dev Jain <dev.jain@arm.com>, shuah@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Anshuman.Khandual@arm.com, suzuki.poulose@arm.com,
+	ryan.roberts@arm.com, rob.herring@arm.com, Catalin.Marinas@arm.com,
+	will@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH 2/4] selftests/arm: Add signal tests
+Message-ID: <f673314c-3a22-4a62-a994-ce6262593914@sirena.org.uk>
+References: <20240405084410.256788-1-dev.jain@arm.com>
+ <20240405084410.256788-3-dev.jain@arm.com>
+ <1ce0e9c7-0bd3-47c1-893c-3ea5aa95fef5@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qZP1wOhkGWh/mDjB"
+Content-Disposition: inline
+In-Reply-To: <1ce0e9c7-0bd3-47c1-893c-3ea5aa95fef5@collabora.com>
+X-Cookie: Drive defensively.  Buy a tank.
 
-There are no "struct page" associations with SGX pages, causing the check
-pfn_to_online_page() to fail. This results in the inability to decode the
-SGX addresses and warning messages like:
 
-  Invalid address 0x34cc9a98840 in IA32_MC17_ADDR
+--qZP1wOhkGWh/mDjB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add an additional check to allow the decoding of the error address and to
-skip the warning message, if the error address is an SGX address.
+On Sun, Apr 07, 2024 at 02:28:06AM +0500, Muhammad Usama Anjum wrote:
+> On 4/5/24 1:44 PM, Dev Jain wrote:
 
-Fixes: 1e92af09fab1 ("EDAC/skx_common: Filter out the invalid address")
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
----
- drivers/edac/skx_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > +	ksft_print_msg("%s :: %s\n", current->name, current->descr);
+> > +	if (test_setup(current) && test_init(current)) {
+> > +		test_run(current);
+> > +		test_cleanup(current);
+> > +	}
+> > +	test_result(current);
+> > +
+> > +	return current->result;
+> > +}
 
-diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-index 9c5b6f8bd8bd..27996b7924c8 100644
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -648,7 +648,7 @@ int skx_mce_check_error(struct notifier_block *nb, unsigned long val,
- 	memset(&res, 0, sizeof(res));
- 	res.mce  = mce;
- 	res.addr = mce->addr & MCI_ADDR_PHYSADDR;
--	if (!pfn_to_online_page(res.addr >> PAGE_SHIFT)) {
-+	if (!pfn_to_online_page(res.addr >> PAGE_SHIFT) && !arch_is_platform_page(res.addr)) {
- 		pr_err("Invalid address 0x%llx in IA32_MC%d_ADDR\n", mce->addr, mce->bank);
- 		return NOTIFY_DONE;
- 	}
--- 
-2.17.1
+> This test isn't TAP compliant. Please make this and all tests TAP
+> compilant. The 1/4 patch has example of TAP usage.
 
+It's based on the 64 bit version of these tests which are also not TAP
+compliant.  TBH I'm not sure how worthwile it is to fix at all given
+that they're all single test executables anyway, if it does get fixed
+it'd be good to do the arm64 ones as well.
+
+> > +	} else {
+> > +		fprintf(stdout, "==>> completed. FAIL(0)\n");
+> > +		td->result = KSFT_FAIL;
+> > +	}
+> > +
+> > +	if (force_exit)
+> > +		exit(td->result);
+> > +}
+> > +
+
+Please delete unneeded context from mails when replying.  Doing this
+makes it much easier to find your reply in the message, helping ensure
+it won't be missed by people scrolling through the irrelevant quoted
+material.
+
+--qZP1wOhkGWh/mDjB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYT3yQACgkQJNaLcl1U
+h9DmvQf+LUmNX3wMgRZgOE8R5TMnKhRAImfgyCZZmViWqco8+Iqo5qlwkW+t3Rfv
+xoKtvMzrLCdMKSu1w7tUCufvf+US2FnAicHbeZkvkssDbORrrWLRm25AH4K0ooCp
+du0W9s6tJJQa9+cEnPtPQEdu3SbZ9WdPdUIEVBhboyGpLLkFCNFjppiP5x6MMnE4
+QNDoEMXIqwD/ycfVpEMTHmV5yz/fJGyiIeLJ/++wRthcHhXihuAA0pz0WEIuqwtU
+ZMfcjNQM2EZtduAefDtoQIW8SITEifs2eLkkpzRH2cKm3sSnurQO/4Ofl74lCEkD
+JXVCD3PQpvxS1v37IxUn+vXbT3mztg==
+=tYml
+-----END PGP SIGNATURE-----
+
+--qZP1wOhkGWh/mDjB--
