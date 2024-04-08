@@ -1,61 +1,61 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27404C90
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 02:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E005244
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 02:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712543650; cv=none; b=SAUaihgu2zixAsb7FA1sWWTq6fXqMREpGXIDFbDpzU9ZVr0LLOv0rwtTcmVFRY6/MuKuj6466Xf8+QIlR3oycxkJAPzDyM6OU/tUMGB14HpPlSrgiLm9dlFRBNzz1aSf0jWlN/TYMbBAwbkAB+Az01kOylah1WOqiNQjGV8Hv4c=
+	t=1712543650; cv=none; b=Iet4rPXS1l+CDy+PCXepd40DyG7kSopHQWcG9JWswNdz7ulOFaNLRGLn3X5WdggTKsQjCldVyAihrmV3P/WJqWTVzhGnUwwKpEC2hhy7qlljw4Uu0c8wU98LB58eByCOSLzj5fI5N6gAoyEPNl8ANYGQNi+88Dp7SMKXRHcj5Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712543650; c=relaxed/simple;
-	bh=ACDX9UzrbGqFhCF5KLJs22fVKRsQhdGkigM5kxbDOXk=;
+	bh=HK+pQGlyEMASzaLMUZhoZ4LQ1b2xuwD3oB+E8BsoQRA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UMuWgHVRZ8M+UE1eCIFev85b8IGrpW1WnF9Y+ez+pe74p7GI+/2rOA4BWQNBEkrTt5ImnYZjdIa7Xa31NxszaFmdHU+x/V1vzTFx+DCAnfTIc7AZpcR1kUVgLNxkGZ8hay7Qd/b4VdPXY9/ZJCuFddc8BB6aWgsVdQhV+d7tP0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tg7ICZWU; arc=none smtp.client-ip=209.85.167.54
+	 In-Reply-To:To:Cc; b=QSPemDHM8cCth/YxBqdtsi3U2kzFFRLBCgDJEfO3V00BQFh0VZEMvIRxlqI4pOTgp54AS9ztKKEgQE5U+bBq/1oJHO5/y2kmoO7ETxISZOErAaqfUTtg4pcGrX/E6aju4ecuGejIovjPrDEKjHeZszJH5LmVOC3gVBkrnPBdiJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MiQQN8UI; arc=none smtp.client-ip=209.85.167.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tg7ICZWU"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d756eb74so2622113e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 19:34:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MiQQN8UI"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516f2e0edb7so961212e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 19:34:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712543645; x=1713148445; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712543646; x=1713148446; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=v8fT6Gbci0qUXzI+tVhQnGd6IaJYXtCzzGcVOEtNpI0=;
-        b=Tg7ICZWU2qsBYXI2ZGbDGqADwlTx3/HkYSX9hMPHc2J5YJ4M1AwJp+OF2ZIXi0GcqI
-         r5zWVeO/q+0byerIJjLbIpQ9DK6QQsxVwPWYlZOcX+pZxEk4178MUDTWI6hCMZn4GlYL
-         XwGkHfTCSVB2Xp29OqJCnvhHbCdjFPruQjm4R1BWDhWbbpdh0GcH8lKGlUzlsxuHphU0
-         qCK2YmhfQU8BDMBwnTGLdiPpix4O7mgSeE+Y7aLtWpK+P9ySINMnU8Q6fyVB6AHkqGIy
-         K4c8+5TLSeOrgRPLPohGxqnJZDnyov557R1NbODJkAQGENkMosebolROePqLag/Wpoms
-         8Z3g==
+        bh=BBs+x784L93t5mpvshVcosruv/wnrHW9FZoVJjVQz+U=;
+        b=MiQQN8UIx7E2c2bvpfnGqBKPQS27SLdozmHcwDm4mQkg4FFaBXIMLNo7877amfXATW
+         nUuevsUmu3xMCwAWiBLBwdTxtLiv+7w+gz8mVm13orVnMh1TihkUrAEcjWT1yOfbItKV
+         if/ui3yBBc0OnReTEv4c46ifCcjxkesNU/YdI8IYRjpBr/EFzyhFTN0godZYw9D3h2HJ
+         XJXFK3SjcH2eA2ZLDwbI/JyTuTamMHKOJgD6ixiBtOlLPOgOiq0qdzS4+8Jsx2uwMytH
+         THaJMUJRvQG91oD00w0pKVWnXn3zRPj9Kg5Qr+XtOOTfMrqddVnEjuARMr5M8vdirvwU
+         2VYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712543645; x=1713148445;
+        d=1e100.net; s=20230601; t=1712543646; x=1713148446;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v8fT6Gbci0qUXzI+tVhQnGd6IaJYXtCzzGcVOEtNpI0=;
-        b=OmtbHKsMa6nHbaRmfj5fzX08aRuvLcP2X1OMAFFrzWg73R9EpWNKNy0vp+1j1mDqGp
-         a3+A2eHPSD01TVWX7ZRdgQj2rYTXFjsw/7MAkvZAaM+K9n/g+ab0XEUImjqNZp9wXSM+
-         9G2dmyjNMLmKkI+2zmqNMqvJyhTKxJauUMlAOIyJKmU7iVp1/sWYbgZMpZalX03YdfzU
-         AcbTB1MZUk7omvOfguDuQM6vnyM684bVYb/DUa3vULfYX+bgSA5R4gdPhTWxL0mtxAwx
-         US5ZFO5SEuLOURLssXvipicHOwK1BFjILXxTLDgcDYTwIl1eQMcd0HH34/a+4ZW87xIQ
-         Sjkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXClSfAuaunttdGbh3QAzp824Xz9o3WQ/d8cO80p8JW4yrjc/GB3180v/8qyTQySsGH22ieS1m8S1LT8xPqpJ2fVW3plvrg7/5lkVKz
-X-Gm-Message-State: AOJu0YwpJFMubM4Gtt2LVoSGjX1SHmPYMJOrPiv/7ppK3fnZ3ukCEUmP
-	4a0D7dz0qA5f0DOlOjWzopUfNuVjp2TNIcKlnI/coYm8uQFAhokdMqkYSJav/YY=
-X-Google-Smtp-Source: AGHT+IHrI6SZm3Bbb2zoGlXcnWKoeuFaIjqWT66Hnqq3rMbOfHUiwqus07OJeF71R1qU8PyvWgO0wQ==
-X-Received: by 2002:a05:6512:3e17:b0:516:c764:b3e7 with SMTP id i23-20020a0565123e1700b00516c764b3e7mr6222577lfv.9.1712543645120;
-        Sun, 07 Apr 2024 19:34:05 -0700 (PDT)
+        bh=BBs+x784L93t5mpvshVcosruv/wnrHW9FZoVJjVQz+U=;
+        b=s3gQJqydIEKOqNdiOIVvY3lpS2vodbSWePRWsAHijvSLp6XlgP6LMmnVeMWm6M0O6B
+         CdJAcuoidvjlBTWjpPr/PMt4DL5UyTZlV1KCRHu2vpF6pXVS0n47prcpvN/yCCdUJ22d
+         uBtEj/IOKZQGp7i3vOcZ8EYkkgrhXbvhIbRQ2s5k0tU0PihHX5fnhW2WRY3Uj1dYlS1z
+         2h65fceEpgw384P7J9YMcdiSgzw9NatRiVKjvOjctUSxMdcJNnUcshlVMT4dK9asyZzk
+         gRq0NpUVqWsZHt0lQTU21imZsx710wdDvgdvlvQiilLbpkqMsYjX0pOlCMXpA/2mIh26
+         eR0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWtwvkQrEh2mtWGPRvdqHFx/0DnH7MakfB05cvSlHVW3lrX23RTIyuU60VYFhWFpYtrZ62inPrULI08OPc8Mg4AV3VzUzvhTBKP8S52
+X-Gm-Message-State: AOJu0YyACBRJeCmDypH/GlTdDzrDNUuuIP0j9V7cJrRvt8mpuKqRz7b2
+	s8vdc46cZxneG8hSEoLmo3wAGM56KiM6QV8zDIvSWdS4Qk1oxxNlei8Tw3ouUvM=
+X-Google-Smtp-Source: AGHT+IF273No/DR0tZe/NTluGkCrXKX17/405defJ+ZsgcEbWZqOdPptI4fSBPwN6qMNQeds2rFJbQ==
+X-Received: by 2002:ac2:5592:0:b0:516:c5b0:c5ce with SMTP id v18-20020ac25592000000b00516c5b0c5cemr4538598lfg.45.1712543646645;
+        Sun, 07 Apr 2024 19:34:06 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id h5-20020a0565123c8500b00516d58590e1sm943673lfv.250.2024.04.07.19.34.04
+        by smtp.gmail.com with ESMTPSA id h5-20020a0565123c8500b00516d58590e1sm943673lfv.250.2024.04.07.19.34.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 19:34:04 -0700 (PDT)
+        Sun, 07 Apr 2024 19:34:06 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 08 Apr 2024 05:33:59 +0300
-Subject: [PATCH 1/4] arm64: dts: qcom: sm8350-hdk: add USB-C orientation
- GPIO
+Date: Mon, 08 Apr 2024 05:34:01 +0300
+Subject: [PATCH 3/4] arm64: dts: qcom: sc8280xp-lenovo-thinkpad-x13s: add
+ USB-C orientation GPIOs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-hdk-orientation-gpios-v1-1-8064ba43e52a@linaro.org>
+Message-Id: <20240408-hdk-orientation-gpios-v1-3-8064ba43e52a@linaro.org>
 References: <20240408-hdk-orientation-gpios-v1-0-8064ba43e52a@linaro.org>
 In-Reply-To: <20240408-hdk-orientation-gpios-v1-0-8064ba43e52a@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -74,36 +74,37 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=788;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=870;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=ACDX9UzrbGqFhCF5KLJs22fVKRsQhdGkigM5kxbDOXk=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQ5pw+OxprjlWa+8ZaEge5N+fsP/s3ePZk02Yrd88T3hV/
- KZx2cbyTkZjFgZGLgZZMUUWn4KWqTGbksM+7JhaDzOIlQlkCgMXpwBMJP0MB8Omj1KHud+I+e30
- EBGbJvN/fublv6pRnCsP8B1dulDIU6/dPPmV64/itbVM7LnLHpkfC1AUuNl+sHdNpBfnjAusjNu
- q9vzuvtcmK7SW/8Pqoj1fpI+wFu5YeGSa5uzbDJUldYWZHxw7ml71Zc4oK72pXLvaRm99b/iZGf
- nN/aat2mLG8S51CcqvRA40N6cwhgh+cGR43eS09JDeTZ6c+ILb2zOkZye5PmWaW8+0+o9zWYbNh
- rsmNcaWu0vmKBW1en4R66wK2OY6+2eoRTHH3T8KbJ0bfU4+cv/65OQNr7Z2hsmbPkm843Tdo8np
- qrpixocPpiuEGxW/sWpbFU3nW3FSeGLv6vJv7lE/dWSKAQ==
+ bh=HK+pQGlyEMASzaLMUZhoZ4LQ1b2xuwD3oB+E8BsoQRA=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmE1ebUhDBlydO8D1zI2fM/6uEO0Q5rw7D5nTG1
+ wnQFoifBwuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZhNXmwAKCRCLPIo+Aiko
+ 1esUB/wN6zESnknR6RsbV/tQreEyqFoWmKdTs3tw8WrO+TFp0birsh5c9JqftXJXlfnPPQ/6c57
+ 8w6qwFMFXNvSLV2RDY0TGO/EQF/NrMNIvRi7C8Sdm4u9G5qdoachIXeeo33s4JD1inuQlmzYg3G
+ LcYr8WQVxsGvF1uqVxEsqXpZ7kvVT5Gfa7VdZhXUM2u6J+xAhbrx7Mv4VpbRteNRTB9d30ToBBF
+ 0lmQoGuXBPjE10NCkQQK57Xli0tAleXjinYikb+oAr1YxBBF8itg+qAu59ft5tGOqtOB4HKs40C
+ +bsA8+ouwTERTZqHRjbuFxLzS4ABnX9PBvBNfsY9iIPDau6B
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Define the USB-C orientation GPIO so that the USB-C port orientation is
-known without having to resort to the altmode notifications.
+Define the USB-C orientation GPIOs so that the USB-C ports orientation
+is known without having to resort to the altmode notifications.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sm8350-hdk.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-index b43d264ed42b..4c25ab2f5670 100644
---- a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
-@@ -42,6 +42,7 @@ pmic-glink {
- 		compatible = "qcom,sm8350-pmic-glink", "qcom,pmic-glink";
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index 15ae94c1602d..2806aa8ec497 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -100,6 +100,8 @@ pmic-glink {
+ 
  		#address-cells = <1>;
  		#size-cells = <0>;
-+		orientation-gpios = <&tlmm 81 GPIO_ACTIVE_HIGH>;
++		orientation-gpios = <&tlmm 166 GPIO_ACTIVE_HIGH>,
++				    <&tlmm 49 GPIO_ACTIVE_HIGH>;
  
  		connector@0 {
  			compatible = "usb-c-connector";
