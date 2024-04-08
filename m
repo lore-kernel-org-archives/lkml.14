@@ -1,165 +1,121 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1E41419A9
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BA7433BD
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602138; cv=none; b=hl26060Dip5bVhZNQ1RSOTuQWTrHei7k9xdmdslY96X0VpRYT9Euwkz1mZNdy+1hpVC+92OwfZQzbruQbtE130II4uQKYP3oJ8XCE1EX4O/RevEXjGg61NoIfvkOvU12nXScbrU1fQDSznEx4Mjf2Km/FrxMSwRNDaKBMXWecOI=
+	t=1712602304; cv=none; b=gX0s/DygNCTqZb+haGJV3oHQdb9YTStI/XSqF84/3M1pd2QfG/6r/tuGWRXFvOPndDfjQBAihlH1UbtRu/A4KAweWMnaCymwp2fDN4e5P7BOjKrcF7TYzs3qm/GIaGXsq5e24m7BrWrhPCYxYN7LFdj0C2dyHmravUFM95p1BUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602138; c=relaxed/simple;
-	bh=qtrTZPVJnDWvjZ/bNpqt1kAPUsC/tYujbJUF4w+jUBw=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=Qdgektd+Y2im9/zoU+9X7KRfYmII4NGwli5p747FOnuRvMggKwUyvZQmFpa1zN7EbgKmoHv7mXzveIFMER0e5RMd3xYO4D4JWU4480Ei0ZUoY6wgd1yDKs9V6JpkxQUBhGY2wlToqdlSBs8Z88rdP/frruAE4jqaadBCCHiDHWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3DtYl5ac; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712602304; c=relaxed/simple;
+	bh=1avNKwwiDh2vBNJhsj9DLMz82UH9nkJvd8D2qwe1iNc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mNAsO5uIRug3E2faONYAQNIRgMN0yRGIohWjPSq4v0ZQ6pkPDm3fj5QG2xvzc/tmCyQC0r9QxDwaant4rzvjSPDCz5tlwNnom8kqdvIiOCfPx2gt9j/Zez1ilmeOb7vhve8tO57Pto+Tx0ANk894ykD5U5dtDUkJJVlzFhj8QkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mkgfv8f1; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3DtYl5ac"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-343c891bca5so3092663f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 11:48:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mkgfv8f1"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ea80a33cf6so4517780b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 11:51:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712602135; x=1713206935; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5O9U718NHGvhBsjamAS1sHo9zrNE6S5TEc1aVEiLaU=;
-        b=3DtYl5ac1yoh7J8kHGQOF0ZM90DGc6yvJynBnaGtrxL7yOaYG+02GXrgDj37MxKpFA
-         ev/FSvvixxDjpxczZXNitqWSgCdBtYj6q4TwDDRfxO990a6WW0t53s05ZL24ZH7nEJ4u
-         P/2+7KlMXUyO6lQsqG7i9wfksxCeEDkyEauTNAzHa9GUBrAFKeKu6ofUkP9ShE6B+xjP
-         l4hNhheAAXTN3gdRD8jywiRw1uORSa/yPciFQwU3KzJmPxdthb6ey0BMVANECf7VWiXw
-         0kIhWcgxz9dbF0jG5xdtnfQCtwyxURX5afOBtfd+XYBw8moctxc3r8kTh/lM3xq0DqjH
-         w7aQ==
+        d=google.com; s=20230601; t=1712602302; x=1713207102; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K/yxqBlI0VvymlOKCCFzRFh5RuQygtpsmmsY/Zf5/fk=;
+        b=mkgfv8f1ZcVD+rulw1XTRN+v6MRGD+CSUANg1HuiMZJdNAG/2KOBJTQI/H+hsCVxbJ
+         d5n1iw1LVe9AMotlz9xq8ilYNmj/RKjF85zKgT8XAvKPxsB9YV7C9Y1mYHr/2kd4DAhL
+         FtZ5KsAz3eRacd3vyvpi4ZdNa4quxRJARUul0587QsikT25qxMn7wvDbBB15lUKIEE6U
+         2DCCJap6C43LeREEEnCMxT4XHKpPrgyycGeOP/7EcWUJvRayRHHMjIBabyPx8+4J+8my
+         esC7SYdssZ8a0eEG7JVX2klK8LWh26fRqWbLoa0Mu/x2SvXAnR3OrIoe71TUzVOi2duH
+         //Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712602135; x=1713206935;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5O9U718NHGvhBsjamAS1sHo9zrNE6S5TEc1aVEiLaU=;
-        b=VZIogtXH7jc1ezur1fLVTIZWqctSyWfquPdQsBvK+ZVJdWBTmZ5DNU9hEavHWCjuEN
-         4W4V+IXcWFQzL699jD1TW0klLkLtQO8NaCGoav1pdvZwrx3TpSDyjkgkEwzySKSIAzaM
-         pYd6ddapfNbouzupsAJEErHHqVH2T87q083EFFnZTCB3k5qkKCsX0L80BspU1ufBW0ye
-         6RkhSg2rm/spO36t2n8cjqGKz06YpZsej/3xSy63Zha10+voBBrAWEuWC2zYuxWwfTkT
-         CLSvCAQM+Qaajgdc+RzP4Pp0DS17/pfYhGAhnPVpT1iqwC4pxfyn6V3uaxEzCEPAuxKm
-         w61w==
-X-Forwarded-Encrypted: i=1; AJvYcCW0EGrtlPJIglRAgXUSsAXVJFcJMBTl4qShhBQymqmycTyxUh3hVNfUB63HxLigVQkDGN5uHv2Ksa0COM/uP5V+N8X1ikCl0Nei661K
-X-Gm-Message-State: AOJu0YweJcERg9gwwA81sCsKsC6gqgdjBqFAnKb83q8r9FwVbyWGp+gZ
-	lqh6mJHzOY+RZLpcKU2fiRCWhgEQmL7WsTpFG1sDce9lQQYPjKTYqWDjG3VgdQA=
-X-Google-Smtp-Source: AGHT+IG3Lg7mm8hPe5LwKDEb0DtuBWPIrOCUnl2T2Z41lBT6Pyv73n0DcdIqqnsFwOJp3c6VQ0kGmA==
-X-Received: by 2002:a5d:64cf:0:b0:341:d7b5:27 with SMTP id f15-20020a5d64cf000000b00341d7b50027mr8950388wri.6.1712602134884;
-        Mon, 08 Apr 2024 11:48:54 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:90bc:1f0d:aae2:3c66])
-        by smtp.gmail.com with ESMTPSA id m6-20020adff386000000b00343300a4eb8sm9561770wro.49.2024.04.08.11.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 11:48:54 -0700 (PDT)
-References: <20240408164947.30717-1-ddrokosov@salutedevices.com>
- <20240408164947.30717-2-ddrokosov@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: neil.armstrong@linaro.org, lgirdwood@gmail.com, jbrunet@baylibre.com,
- broonie@kernel.org, conor+dt@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, perex@perex.cz, tiwai@suse.com,
- khilman@baylibre.com, martin.blumenstingl@googlemail.com,
- kernel@salutedevices.com, rockosov@gmail.com,
- linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 1/2] ASoC: dt-bindings: meson: introduce link-name
- optional property
-Date: Mon, 08 Apr 2024 20:44:36 +0200
-In-reply-to: <20240408164947.30717-2-ddrokosov@salutedevices.com>
-Message-ID: <1jsezvofl5.fsf@starbuckisacylon.baylibre.com>
+        d=1e100.net; s=20230601; t=1712602302; x=1713207102;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K/yxqBlI0VvymlOKCCFzRFh5RuQygtpsmmsY/Zf5/fk=;
+        b=KJz9wTVa92ftdsCfkIad8WM7kg00Lv1i7Y+3wNMJpbE7SSstHZ4thtpmWIRP7ztiSJ
+         O3OBqhifRnDMPac4Kz2xlzELbSmVjQ4RC6t+fbc0tu/HmN4V/kAn43gqQ3JYm0GOUOKU
+         VJ8Eyuymu5Ndr0lQlVzAwAs40pmnfyEF13GlHj5jAMi4P9rch0AdQlglCLuYMuu9dQoV
+         KkI47jhsDSTQL9tWVom3YaJyn4TwfGZu61ynr1H0rbCRQfOLTj1LcCODbKxC2SQgkry9
+         t6fpCn9xUzBjwnRX0EbWq3RvJT46nCYcC/OrJ2gi7s0CXDxOpEXT1AvTU7VlwKsij7aw
+         8QZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuWHe5YtOdU582vRaaCiUUbd2qJUtUmin1hGk6ShstpuLsgjCcuhwk1snnDh82kHa2ODC+7dBeoIAE0YizDMEHU+KynwQoCFT7Iiz8
+X-Gm-Message-State: AOJu0YzKXU+e3pIQtKuKiQnqzS+1Bio3fH+3PNXxmumUMqG8RO0WE3wD
+	YxVgBN51olEfmv2O/qvZgqGQ601sL69O2QmTj73BaDHLFlLu3Xip+t8V6c2d4scfXgWrEeybEKu
+	Z9A==
+X-Google-Smtp-Source: AGHT+IFIZ89r2xcZjl3lX5o7HwjptwKZXoT6ylwgH1ZLbk5qUwIUkSMLXCRpN/p40yyWtCdfKVhhiE6ZYuM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a00:9288:b0:6ea:b999:4de1 with SMTP id
+ jw8-20020a056a00928800b006eab9994de1mr1150525pfb.5.1712602302196; Mon, 08 Apr
+ 2024 11:51:42 -0700 (PDT)
+Date: Mon, 8 Apr 2024 18:51:40 +0000
+In-Reply-To: <a17c6f2a3b3fc6953eb64a0c181b947e28bb1de9.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+References: <20240405165844.1018872-1-seanjc@google.com> <73b40363-1063-4cb3-b744-9c90bae900b5@intel.com>
+ <ZhQZYzkDPMxXe2RN@google.com> <a17c6f2a3b3fc6953eb64a0c181b947e28bb1de9.camel@intel.com>
+Message-ID: <ZhQ8UCf40UeGyfE_@google.com>
+Subject: Re: [ANNOUNCE] PUCK Notes - 2024.04.03 - TDX Upstreaming Strategy
+From: Sean Christopherson <seanjc@google.com>
+To: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Xiaoyao Li <xiaoyao.li@intel.com>, 
+	"davidskidmore@google.com" <davidskidmore@google.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"pankaj.gupta@amd.com" <pankaj.gupta@amd.com>, "srutherford@google.com" <srutherford@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wei Wang <wei.w.wang@intel.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Apr 08, 2024, Edgecombe, Rick P wrote:
+> On Mon, 2024-04-08 at 09:20 -0700, Sean Christopherson wrote:
+> > > Another option is that, KVM doesn't allow userspace to configure
+> > > CPUID(0x8000_0008).EAX[7:0]. Instead, it provides a gpaw field in str=
+uct
+> > > kvm_tdx_init_vm for userspace to configure directly.
+> > >=20
+> > > What do you prefer?
+> >=20
+> > Hmm, neither.=C2=A0 I think the best approach is to build on Gerd's ser=
+ies to have KVM
+> > select 4-level vs. 5-level based on the enumerated guest.MAXPHYADDR, no=
+t on
+> > host.MAXPHYADDR.
+>=20
+> So then GPAW would be coded to basically best fit the supported guest.MAX=
+PHYADDR within KVM. QEMU
+> could look at the supported guest.MAXPHYADDR and use matching logic to de=
+termine GPAW.
 
-On Mon 08 Apr 2024 at 19:49, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+Off topic, any chance I can bribe/convince you to wrap your email replies c=
+loser
+to 80 chars, not 100?  Yeah, checkpath no longer complains when code exceed=
+s 80
+chars, but my brain is so well trained for 80 that it actually slows me dow=
+n a
+bit when reading mails that are wrapped at 100 chars.
 
-> The 'link-name' property is an optional DT property that allows for the
-> customization of the name associated with the DAI link and PCM stream.
-> This functionality mirrors the approach commonly utilized in Qualcomm
-> audio cards, providing flexibility in DAI naming conventions for
-> improved system integration and userspace experience.
+> Or are you suggesting that KVM should look at the value of CPUID(0X8000_0=
+008).eax[23:16] passed from
+> userspace?
 
-As explained in patch #2, I think this change is wrong.
-The names below describe a possible userspace usage of the interface,
-not HW. This does not belong in DT.
+This.  Note, my pseudo-patch incorrectly looked at bits 15:8, that was just=
+ me
+trying to go off memory.
 
-The only valid name for the interface is one that helps map the PCM
-interface and the kcontrols exposed in userspace.
+> I'm not following the code examples involving struct kvm_vcpu. Since TDX
+> configures these at a VM level, there isn't a vcpu.
 
-This information is already available through dai_name, prefixes, etc.
-
-Using DT for this is bad, in the context of these particular sound
-cards at least.
-
->
-> It allows userspace program to easy determine PCM stream purpose, e.g.:
->     ~ # cat /proc/asound/pcm
->     00-00: speaker (*) :  : playback 1
->     00-01: mics (*) :  : capture 1
->     00-02: loopback (*) :  : capture 1
->
-> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> ---
->  .../devicetree/bindings/sound/amlogic,axg-sound-card.yaml   | 6 ++++++
->  .../devicetree/bindings/sound/amlogic,gx-sound-card.yaml    | 6 ++++++
->  2 files changed, 12 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
-> index 492b41cc8ccd..46774a3e4b1d 100644
-> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-sound-card.yaml
-> @@ -66,6 +66,11 @@ patternProperties:
->          maxItems: 1
->          description: phandle of the CPU DAI
->  
-> +      link-name:
-> +        description: Indicates dai-link name and PCM stream name.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        maxItems: 1
-> +
->      patternProperties:
->        "^dai-tdm-slot-(t|r)x-mask-[0-3]$":
->          $ref: /schemas/types.yaml#/definitions/uint32-array
-> @@ -137,6 +142,7 @@ examples:
->  
->          dai-link-0 {
->              sound-dai = <&frddr_a>;
-> +            link-name = "speaker";
->          };
->  
->          dai-link-1 {
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml b/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
-> index d4277d342e69..975c148f9712 100644
-> --- a/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,gx-sound-card.yaml
-> @@ -52,6 +52,11 @@ patternProperties:
->          maxItems: 1
->          description: phandle of the CPU DAI
->  
-> +      link-name:
-> +        description: Indicates dai-link name and PCM stream name.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        maxItems: 1
-> +
->      patternProperties:
->        "^codec(-[0-9]+)?$":
->          type: object
-> @@ -89,6 +94,7 @@ examples:
->  
->          dai-link-0 {
->                 sound-dai = <&i2s_fifo>;
-> +               link-name = "speaker";
->          };
->  
->          dai-link-1 {
-
-
--- 
-Jerome
+Ah, I take it GPAW is a VM-scope knob?  I forget where we ended up with the=
+ ordering
+of TDX commands vs. creating vCPUs.  Does KVM allow creating vCPU structure=
+s in
+advance of the TDX INIT call?  If so, the least awful solution might be to =
+use
+vCPU0's CPUID.
