@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72730140E29
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 15:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F231420C6
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 15:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712590208; cv=none; b=PaPt+iOTX5jScWlnPFGbl+9yw281N2Y0xwgmUs9MnpQ0vXrsYE8AGE1CNzG3v9rytE52jGMVQptLG8Qm8IJXuBxL7glYxHO3NfpZ3Z9jYDybuhTZb2nlGfN/ZGfnAS5SNRCUwY5cxGSBXJvbmGmx87Nk/L6ISvONXHXyO8bfgCY=
+	t=1712590212; cv=none; b=Y0MZHKjRL554Finp7cgAHQ1bsQl1X/6UTTuyIqJKxWHWFLIUsYIXJqIerM+HkpB1g+BUe5ETm2sFJC7fS+3lQrykUU4WMuIbDRJn6reftzfL1v3C8dTolDRTH8mAc3leUxVCAF2n+ZoPEJKkjmrj3chUtTTWocw5MiVoZVA6Dd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712590208; c=relaxed/simple;
-	bh=Smf4aywmigwysrSIcOcqw9bvaWWtvxCh+z00bSuHAcY=;
+	s=arc-20240116; t=1712590212; c=relaxed/simple;
+	bh=NDYzyHSUEz+bbz7ZtE+Jug/pzyRM5rfU190IW5ZReg8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hrQut2OPBZM6RJlRFVADZarnYUPdAdLQtKwiIb5ms1eDsDqYXb1QjpJhL7otg5esbvtBY4rq6rvEj3feslCQTuksXwyT8oitLE1RXugRlWqVy3B67xvTKhQyLzpOoZNs+lKMfpdB3/dLdSVYgTNT1JAcY/aD0gf1RmXgkEoiuUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DTY9sboM; arc=none smtp.client-ip=209.85.128.202
+	 To:Cc:Content-Type; b=pNiQs0kpE21tw9y7DXU7AG8iZZAJKD7jsgCwBnFD86ghiG4sXvI3KQEbkm5okEMbFAvm+zlay20wd4TabJhBmwXZzBZL44sbrHpg+9EwtIhQ3esHWUo7kgiKIVawT5mFO4XngCn5gQ/oYqXfZATdDkM8vtrJ9BJE74uka1y0aO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fflNLI5C; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DTY9sboM"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-617fffab703so20542447b3.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 08:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fflNLI5C"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so5224590276.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 08:30:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712590205; x=1713195005; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1712590209; x=1713195009; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ASL93255NaCWCo+CYsAiAClfDvlTbN+MqYwKv6ZLMw=;
-        b=DTY9sboMOAOcwqlrn3sZHNftQ2BkhbFHzYAvsZNA/gLR7+w4BOI1usMRk2TOG3vLDT
-         WMFLaxI6BX+4faSeTIDZ85Cdo+yQRjh2qKCGyjXbU/LQSMWaMAFdn+VjUB2/9J+8ml4P
-         yAlAZSxHDbvFukxxhi/MmGf5JBYIVixyvVB+S1TvFJHQBtt7dkK2kId6bbwQGsl2TOsM
-         TYC1qoTbIzjL1kLz2KFjP/kyLGRKi5byYkUMrvNt4LFWakFGD4yxYlCBYsYyUb0mqxSB
-         FvDHv3Ktug+l3RMjq2y2GBwG0xrFbhEpGnEeQlqnBqJnBrkhX6LHLoOKNrQWxYxfe3Lz
-         3jXw==
+        bh=Xm7z+KL73iPrkFgDvs1nsRXYHlgtAjFxvC1NZB/hNSc=;
+        b=fflNLI5CgIlqo6YvU8JEfwzK6EwJNZEfZO0XkdcTGKoxDeRWEXyDbZwMSDxHxiEp6D
+         Zalx0Zmx6iFCB07qxft0FHfiglTtKN/MyBVFCLqdBu6/YYDXA/+ObNEzfYp9dybWodyz
+         tWxeDEZu9wGH1sAxw0C+DJlUulBnngiQS3ibH5v7vRrEiwz1iHehVilTHh9JsH5jbKv8
+         W19NDcuULqCjhXRr7R364Lb1gcYfBx8y4tgB3qDZMg4j2fWjIUe/4gS3WfJNU8fw8zTI
+         5shsoFsCbjMHQ5cYtZZdRur7UBVzB/VkUTI5bUdAxXwguha+RGhelHD43BTCe5n7BSex
+         j0Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712590205; x=1713195005;
+        d=1e100.net; s=20230601; t=1712590209; x=1713195009;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ASL93255NaCWCo+CYsAiAClfDvlTbN+MqYwKv6ZLMw=;
-        b=ITaX0hB/IeXbULZz32GV1QUfjaP7tk4r4mzz3+SBThs34uhWtxxt33TzKQ0kE2EWf0
-         Vmbm827Krfa5fp17IYjF8qEVkC8gAuFZj0bae9NgHRKl3WkJR+k2n+2cSwr5PzmYGg+u
-         W11KDTMU/52K54ltOlChtx+Eohjg4YH8p+bZGNVT6mKupbHxZtEMOt68pWxE2UPM0qsp
-         OnB9l3BrHuoI52bqedtOMJQI6X9L+m/RXVmZe/b6QYD9ri3Dyfdn0cQ/79F116yHZM2j
-         DsF5cwTTRS0GlJf7f6GIqQE7lf8pAx7yts46A9oLGWcvoVQWwJXpFTXuub4EHHMftir/
-         wSuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXIp4JXmOd79jlA8R2SJuQ6El/z0ONl5d6sYdpwEmLPYAueNkoRBlP2nr+GhcDNkhMNVntgMvN8nISMUG7j2/ZfM3Xr7oZ+Z++UnUTq
-X-Gm-Message-State: AOJu0Ywhqc/AySo4xUfhSOrYU/TUdgsP/ymaanIfN+AwdaQz78Jokoy5
-	lPmgd5jq7carG9Zc27z43/K9prYMCpxo4oxAP+LpT5IF6B6gZwfQAjmQwLkLSPtkkkeZsgRDZ+Q
-	K4SM+bS/RrSAy5MH7zWFDyw==
-X-Google-Smtp-Source: AGHT+IHXvDrx0RfrpDfk+CeWB/a5GDfltDvqCr1L7MJCzD0FqFc/C0bRoo7LD/8GYLg36JJS/efD6eFuQ7KRgW6Ebw==
+        bh=Xm7z+KL73iPrkFgDvs1nsRXYHlgtAjFxvC1NZB/hNSc=;
+        b=dnzLYiZ/7gTm9fZkc1NNdUiUH4t+AOCxas1+Q3hM4sHuJEl4tjERNgLIO5YsRI0a1r
+         o4x+NRCuhJakmObKXp0b17QC8vz7E+qSmpYBEv3R6n1XiKyl69WbZWgLMrEuDUAdFPqg
+         gVkgi/xPVaG80pOIucl80aVCnmaZW6ocjW0FVW9QQEDGdXRB1djYgE7PIhHx2HMYWtUt
+         /rKJ+FuHO9quxPgvIGEj+TbPyU3Bv+l3XInPKtKdFcx93TLIH7pAWHz3K0QD3RuKGW0s
+         Dq6Crzwzr5650E9VH42e+K11iNZL/l20jcCNx0hLKsfLk7WzhRAZBORmjFXHHgSBJJC6
+         0omw==
+X-Forwarded-Encrypted: i=1; AJvYcCXY6HUSWwbIy9dc3DYv5FDsR+DR1lrWUtLmuYQprQwZoCXwJQXKbZ6PqzcQE5A5h7tGde58dPahOaY4HBdyfQiN2yN/lcYTpCsAwgyJ
+X-Gm-Message-State: AOJu0Ywzu21yY3FGhFEigGlpqaeSNZ4Rsju6Gv8tCqxkb34dgoCvYPOx
+	WCsCQJiPPaIHMDzx1PvwrytNzPWKtJezdDyNCgaKxHUcypjMdcJt5jMUMbgqNdoDTN8iTnSUD/B
+	7Bs0P35SDXmV6JtmvoDShag==
+X-Google-Smtp-Source: AGHT+IHEL0+TarXvLMGMrfBR4gZxn2J1EmL7QHPTCXuCCsv9uL1aBkHapD0+r2rKvIYCP/4rgQxRmAFLB1Eep03fqg==
 X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:ca23:d62d:de32:7c93])
- (user=almasrymina job=sendgmr) by 2002:a05:6902:1108:b0:dc7:865b:22c6 with
- SMTP id o8-20020a056902110800b00dc7865b22c6mr721592ybu.8.1712590205499; Mon,
- 08 Apr 2024 08:30:05 -0700 (PDT)
-Date: Mon,  8 Apr 2024 08:29:56 -0700
+ (user=almasrymina job=sendgmr) by 2002:a05:6902:18c8:b0:dcd:59a5:7545 with
+ SMTP id ck8-20020a05690218c800b00dcd59a57545mr683253ybb.10.1712590209659;
+ Mon, 08 Apr 2024 08:30:09 -0700 (PDT)
+Date: Mon,  8 Apr 2024 08:29:58 -0700
 In-Reply-To: <20240408153000.2152844-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240408153000.2152844-1-almasrymina@google.com>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240408153000.2152844-2-almasrymina@google.com>
-Subject: [PATCH net-next v5 1/3] net: make napi_frag_unref reuse skb_page_unref
+Message-ID: <20240408153000.2152844-4-almasrymina@google.com>
+Subject: [PATCH net-next v5 3/3] net: remove napi_frag_unref
 From: Mina Almasry <almasrymina@google.com>
 To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Mina Almasry <almasrymina@google.com>, Ayush Sawal <ayush.sawal@chelsio.com>, 
@@ -72,77 +72,57 @@ Cc: Mina Almasry <almasrymina@google.com>, Ayush Sawal <ayush.sawal@chelsio.com>
 	John Fastabend <john.fastabend@gmail.com>, Dragos Tatulea <dtatulea@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The implementations of these 2 functions are almost identical. Remove
-the implementation of napi_frag_unref, and make it a call into
-skb_page_unref so we don't duplicate the implementation.
+With the changes in the last patches, napi_frag_unref() is now
+reduandant. Remove it and use skb_page_unref directly.
 
 Signed-off-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
 Reviewed-by: Eric Dumazet <edumazet@google.com>
 
 ---
- include/linux/skbuff.h | 12 +++---------
- net/ipv4/esp4.c        |  2 +-
- net/ipv6/esp6.c        |  2 +-
- 3 files changed, 5 insertions(+), 11 deletions(-)
+ include/linux/skbuff.h | 8 +-------
+ net/core/skbuff.c      | 2 +-
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 7dfb906d92f7..c0ff85bb087a 100644
+index 2e6a77c398e6..182371f4834d 100644
 --- a/include/linux/skbuff.h
 +++ b/include/linux/skbuff.h
-@@ -3522,10 +3522,10 @@ int skb_cow_data_for_xdp(struct page_pool *pool, struct sk_buff **pskb,
- bool napi_pp_put_page(struct page *page);
- 
- static inline void
--skb_page_unref(const struct sk_buff *skb, struct page *page)
-+skb_page_unref(struct page *page, bool recycle)
- {
- #ifdef CONFIG_PAGE_POOL
--	if (skb->pp_recycle && napi_pp_put_page(page))
-+	if (recycle && napi_pp_put_page(page))
- 		return;
- #endif
+@@ -3567,12 +3567,6 @@ skb_page_unref(struct page *page, bool recycle)
  	put_page(page);
-@@ -3534,13 +3534,7 @@ skb_page_unref(const struct sk_buff *skb, struct page *page)
- static inline void
- napi_frag_unref(skb_frag_t *frag, bool recycle)
- {
--	struct page *page = skb_frag_page(frag);
+ }
+ 
+-static inline void
+-napi_frag_unref(skb_frag_t *frag, bool recycle)
+-{
+-	skb_page_unref(skb_frag_page(frag), recycle);
+-}
 -
--#ifdef CONFIG_PAGE_POOL
--	if (recycle && napi_pp_put_page(page))
--		return;
--#endif
--	put_page(page);
+ /**
+  * __skb_frag_unref - release a reference on a paged fragment.
+  * @frag: the paged fragment
+@@ -3583,7 +3577,7 @@ napi_frag_unref(skb_frag_t *frag, bool recycle)
+  */
+ static inline void __skb_frag_unref(skb_frag_t *frag, bool recycle)
+ {
+-	napi_frag_unref(frag, recycle);
 +	skb_page_unref(skb_frag_page(frag), recycle);
  }
  
  /**
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 3d647c9a7a21..40330253f076 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -114,7 +114,7 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			skb_page_unref(skb, sg_page(sg));
-+			skb_page_unref(sg_page(sg), skb->pp_recycle);
- }
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 928c615b0fd8..38c20b44cb14 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -1065,7 +1065,7 @@ static void skb_release_data(struct sk_buff *skb, enum skb_drop_reason reason)
+ 	}
  
- #ifdef CONFIG_INET_ESPINTCP
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index fe8d53f5a5ee..fb431d0a3475 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -131,7 +131,7 @@ static void esp_ssg_unref(struct xfrm_state *x, void *tmp, struct sk_buff *skb)
- 	 */
- 	if (req->src != req->dst)
- 		for (sg = sg_next(req->src); sg; sg = sg_next(sg))
--			skb_page_unref(skb, sg_page(sg));
-+			skb_page_unref(sg_page(sg), skb->pp_recycle);
- }
+ 	for (i = 0; i < shinfo->nr_frags; i++)
+-		napi_frag_unref(&shinfo->frags[i], skb->pp_recycle);
++		__skb_frag_unref(&shinfo->frags[i], skb->pp_recycle);
  
- #ifdef CONFIG_INET6_ESPINTCP
+ free_head:
+ 	if (shinfo->frag_list)
 -- 
 2.44.0.478.gd926399ef9-goog
 
