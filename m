@@ -1,428 +1,162 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DD579F0
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3182A481A6
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:29:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712582938; cv=none; b=udGfsKWFKwJflja6oAzXpqpBB+Lsww73SR1XuLrxHI3RRiWfWvtJCQeLPGwU74Ueo0A4AaqsKQfARYBeV0oOWYnu0FSZksWL1caIX7bnq3E0pCQeAsPC52/1zCldy3LCk0qlQqsWqJ/SnFAq2RgZXy6sBld6PWRJY/jrWjJ8b8I=
+	t=1712582979; cv=none; b=euJJOFJQdjzJqRalAsGVDfmjmJBBMHWW9FsoZbF9jml2e1FqP1IhePjhmzA4T9YCg4wuL0Ns+vV1LCfKjG06tiX4hxw35CRiB84K4tTCCI32Yyv8rUAUkbk749jGcxTd450EANDrghIJmsEeQ8lwwoLvWz6jZ5QEobo/Kcs2+IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712582938; c=relaxed/simple;
-	bh=c3bcYPH8cKOfU8LeqAkSpeapOprkIO8IdRdgOkvDSJ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l+I3WhH1bjBgPdAOOnclgYJK4flCP4TBivc+ViwHH52oftbKEB+cnguGix3t8LYswYWJPrvtg+MTAmZRoOuMpCezwSO4qaDseloEYXuSx8VnZtxChQBCL9ZKh4AcOw06/qi/Vf+pLek+A5AR6AvozRzzdAYDkAYS85ziXNo5IVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cxHfJGpf; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1712582979; c=relaxed/simple;
+	bh=nLwkBY0IJdp7WkhBU1xBNDsEWrWcIRH6GKAATVBg19Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oH80l1vAvAvpBj0462VOjsdycqO/Nrj/hohRGK7JFxbtXsFCkLDydzGiwSMmU4exmJxcLfEG5UV5SOxblF/s8YwwSG0ni76HqxfKDdo1n73dIt9v1DCYrCt8DhvyVn1o1+Y7+0jWJWBe8fdY5ryEDD72UznspHWJ5cZrfVYkyMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XPGJN5Tg; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cxHfJGpf"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5dbf7b74402so2648427a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:28:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPGJN5Tg"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a450bedffdfso626992566b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712582936; x=1713187736; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=arKMjWP9roAHegrN3zs4cRJ6a4jU7sjNs1NHFOpDfSk=;
-        b=cxHfJGpfpDpHuVdDBQjmH7S2h092/BmeOE5r1lb2Hi/qAf4cbzorgbYWjn/+UMHZLk
-         W1Ci15AncDrIKQQFIz2tMCe8giNqTkU/wlqgNUsT7cuK2buQnc5iVvOi9EcF3bdqQLTi
-         iwjrtnKUPOtFI+PoKvipw1bBAIhej5Byt1O5dv3ki57KRdIIUKYvBHgs91/0wmtVTTQW
-         ADi3GduKtO6fUA1U9xvNeJlRGb9jIrTTPMKsSpJ3ZbOzLec8vYXRXNCRtHEm8EqmQJLJ
-         WPot8WmgfBfNcK4elphGFI2aK8j9BZUmjzQkLS5s007gh/kVGA2khkYxyj6TmDTiWPZL
-         7zGQ==
+        d=linaro.org; s=google; t=1712582975; x=1713187775; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4YPJ3fd+qPCCn4IIp6HubRp71Poa96GQ8D6SPvhLItM=;
+        b=XPGJN5TgqGc/a3s3BU1xLe91YvBpcXXM5fX1/0/MLf2koXbatzo7WugPxmvUhmiJui
+         6t50OgTIUWqzl9O/qi+3muOYSOkOd1GzmkqtsE+PjwJtPMk1IDRAYE0GpztQHdizgITZ
+         NyfT7PR835kvC3z3dGEOVg693rZdvWggD2QBJgJf8Mf9VDVyi/MbJHaTl5jNsSBFc6zv
+         JsGPe+7qhe6UINgZQdHG6+bg04ioT7fZDQ0pwTJby1m66ZEiue4OGxgdCYno/q/CQJcX
+         /DkRLoPLAtkqqTxSnRIcfEt78ydgc1pI3yHyWU3Y2YNeOYf9OF3gj0ig5pvb1s1kc4M7
+         +bRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712582936; x=1713187736;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=arKMjWP9roAHegrN3zs4cRJ6a4jU7sjNs1NHFOpDfSk=;
-        b=jT227jkngsbVrzUJ0f/UWlJh9RVbQ6ZIl4j+C685orx9c3UqJTdIcMYVYfBSzyqDQf
-         SZ1w7MdFIptlg/VeNdI1WTQyC/tXq4H9b8LCNE/eHiQrvrOTyZJD16FmFlEUa6s/dTOL
-         ZFcg5gHDj7Vw/s6sYxae597nBasWGn/CuYgMV5iNvew52E/5WezpySOp6mlJEfg4sQoD
-         lZYU4rekSVbFNn0GxXJ7pFO3l3zgyNaFJcSTKzDWBFMTGszWRJ50PEaMXc2g11hFRCrt
-         WMj7tU9Y6wUrPZzpixSnWj5oPynQdzTHyQ8iINpuZbAUay5c+Khy3z9o7Gpdq8VbPvXQ
-         rziw==
-X-Forwarded-Encrypted: i=1; AJvYcCW7RijEfzCFjpF4O0wv4lVCgKza7JJhh1SnlH1Fxq0PkMGDF4X6qbtcIysjH4SbxEyiqvInd6EqLoeF46H9DTsUVbxBxY+4TpwIfQV8
-X-Gm-Message-State: AOJu0Yzp7NCLYWDU0cH8igXi8etTxOF/xT4eN4uS/lYAcpVg0dNDef5G
-	0du/wuZG6gY0bFbqsPejhCOOWrBieCEAMEISPZiM/1k11IaL4JqWEByA0DMQHWuBJWC2r7ngNNo
-	RVtOmRigDvYUL8WD6til9qHK6LZ9Hug69/R2YsA==
-X-Google-Smtp-Source: AGHT+IFaPBzK+DllLD8jOm2vrPrnjJqDhee94sQFIFxUjDg6mWcqHAeDY1Cn+x/SkqZx1tLbuP0TbiH837JpPzCDLEI=
-X-Received: by 2002:a17:90b:4004:b0:2a2:9f46:439 with SMTP id
- ie4-20020a17090b400400b002a29f460439mr6962873pjb.9.1712582936227; Mon, 08 Apr
- 2024 06:28:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712582975; x=1713187775;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4YPJ3fd+qPCCn4IIp6HubRp71Poa96GQ8D6SPvhLItM=;
+        b=GGgDZI2DaGMHpPIUUJg3aoT7j6GMikfJ/ObPeIQ3CsrnS76FYkFs8gIlgiu/yc2vCc
+         lkyBUrOETH6iO6d39AsYGmLoSILmVBj2dmlHt/a4AUA7+wTMlbN69518/kRNF+j3ECmE
+         IgjlAhjv84zqN2811jCkHuHpkOr8Wk0E6TIahgJUnELlks4RWzdwUa2hhp15IEp7Bog/
+         uN2/Kh6QkZOiGTOrhdvw16Ka5FmgfdOLGgViq9e/ncvsTDZaNxuONgLXio4irHY/5gVU
+         UWCsBeoiukI0QKbKHoZxG5rYQRKLMeIkkurywZFDyjAu8n0aCQjSrloHhHMY+172zckm
+         Ui+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWdwT7y0YhXJRgere+kuniSXqlpVyoRjghXRcJeJqWSYiGY8hR0n31HT+4icZWGilLKXJJZd1e4CR7YC/Pd4Sq0MIa2tzeXMVn1K3aQ
+X-Gm-Message-State: AOJu0Yy8/A+gcs70NtKAFF8/u3kBIINaKRQ6T50CMEIFusRS2U9XS60r
+	VXubxdsKV6ttG0O5ODiLCkxM7IqJr25P6x92/fk88MX1lxnxckac5S5+OjsBPG8=
+X-Google-Smtp-Source: AGHT+IE2D86+FJty6CUm61puzTNbI8iTEjNlZL2b2nSLyfWkOLFTEQ+P/TySdQeQ+ByDSLq8GhnEbw==
+X-Received: by 2002:a17:907:2d91:b0:a51:b008:dc66 with SMTP id gt17-20020a1709072d9100b00a51b008dc66mr6768484ejc.0.1712582975487;
+        Mon, 08 Apr 2024 06:29:35 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id dm14-20020a170907948e00b00a4e24d259edsm4389646ejc.167.2024.04.08.06.29.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 06:29:34 -0700 (PDT)
+Message-ID: <e9cef5dd-c4fc-43c0-839b-d311d87a28ca@linaro.org>
+Date: Mon, 8 Apr 2024 15:29:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1711009927-17873-1-git-send-email-quic_taozha@quicinc.com>
- <1711009927-17873-3-git-send-email-quic_taozha@quicinc.com>
- <8d381e6e-9328-46ff-83fe-efbe5bb4363e@arm.com> <ffce4577-b0f9-4af3-a379-0385a02ddae8@quicinc.com>
-In-Reply-To: <ffce4577-b0f9-4af3-a379-0385a02ddae8@quicinc.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Mon, 8 Apr 2024 14:28:45 +0100
-Message-ID: <CAJ9a7VieUqm_Qakqqsm9F=znqunu8EMaccKxzRWMz244NiHpqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] coresight: Add support for multiple output ports on
- the funnel
-To: Tao Zhang <quic_taozha@quicinc.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Konrad Dybcio <konradybcio@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
-	Leo Yan <leo.yan@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Tingwei Zhang <quic_tingweiz@quicinc.com>, Yuanfang Zhang <quic_yuanfang@quicinc.com>, 
-	Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, andersson@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: bluetooth: btnxpuart: Add
+ firmware-name property
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>, marcel@holtmann.org,
+ luiz.dentz@gmail.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ amitkumar.karwar@nxp.com, rohit.fule@nxp.com, sherry.sun@nxp.com,
+ ziniu.wang_1@nxp.com, haibo.chen@nxp.com, LnxRevLi@nxp.com
+References: <20240408132241.750792-1-neeraj.sanjaykale@nxp.com>
+ <20240408132241.750792-2-neeraj.sanjaykale@nxp.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240408132241.750792-2-neeraj.sanjaykale@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Tao,
+On 08/04/2024 15:22, Neeraj Sanjay Kale wrote:
+> This adds a new optional device tree property called firware-name.
+> 
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 
-Using a DT label in this way is not how connections should be
-described in device tree, The association needs to be between the
-input and output ports of the component not and extra link back to the
-source.
+BTW, there is no such device as btnxpuart. Bindings are for hardware.
+With corrected subject:
 
-If your "funnel"  has multiple input and output ports, then it is no
-longer a funnel.  As you describe it - the input ports are statically
-associated with an output port, so the device is effectively a set of
-individual funnels.
-Given that the association between the inputs and outputs is known at
-time of compilation - then these can be inferred from the components
-compatible string and handled internally during driver probe.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-This component should therefore really have its own driver, and not be
-described as a standard  funnel. In this way you can handle the input
-and output associations within the driver and create a path in the
-normal way, avoiding the need for large changes to the coresight API.
-Having a specific driver will allow creation of sets of associated
-input and output connections.
+> ---
+> v2: Add maxItems, simplify description, remove "nxp/". (Krzysztof)
+> ---
+>  .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml   | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> index f01a3988538c..6774cc4d6a9e 100644
+> --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> @@ -31,6 +31,11 @@ properties:
+>        This property depends on the module vendor's
+>        configuration.
+>  
+> +  firmware-name:
+> +    maxItems: 1
+> +    description:
+> +      Specify firmware file name.
 
-Regards
-
-Mike
-
-
-
-
-
-
-
-On Fri, 29 Mar 2024 at 09:27, Tao Zhang <quic_taozha@quicinc.com> wrote:
->
->
-> On 3/22/2024 12:41 AM, Suzuki K Poulose wrote:
-> > On 21/03/2024 08:32, Tao Zhang wrote:
-> >> Funnel devices are now capable of supporting multiple-inputs and
-> >> multiple-outputs configuration with in built hardware filtering
-> >> for TPDM devices. Add software support to this function. Output
-> >> port is selected according to the source in the trace path.
-> >>
-> >> The source of the input port on funnels will be marked in the
-> >> device tree.
-> >> e.g.
-> >> tpdm@xxxxxxx {
-> >>      ... ... ... ...
-> >> };
-> >>
-> >> funnel_XXX: funnel@xxxxxxx {
-> >>      ... ... ... ...
-> >>      out-ports {
-> >>          ... ... ... ...
-> >>          port@x {
-> >>              ... ... ... ...
-> >>              label = "xxxxxxx.tpdm"; <-- To label the source
-> >>          };                           corresponding to the output
-> >>      ... ... ... ...                  connection "port@x". And this
-> >>      };                               is a hardware static connections.
-> >>      ... ... ... ...                  Here needs to refer to hardware
-> >> };                                   design.
-> >>
-> >> Then driver will parse the source label marked in the device tree, and
-> >> save it to the coresight path. When the function needs to know the
-> >> source label, it could obtain it from coresight path parameter. Finally,
-> >> the output port knows which source it corresponds to, and it also knows
-> >> which input port it corresponds to.
-> >
-> > Why do we need labels ? We have connection information for all devices
-> > (both in and out), so, why do we need this label to find a device ?
->
-> Because our funnel's design has multi-output ports, the data stream will not
->
-> know which output port should pass in building the data trace path. This
-> source
->
-> label can make the data stream find the right output port to go.
->
-> >
-> > And also, I thought TPDM is a source device, why does a funnel output
-> > port link to a source ?
->
-> No, this label doesn't mean this funnel output port link to a source, it
-> just let
->
-> the output port know its data source.
->
-> >
-> > Are these funnels programmable ? Or, are they static ? If they are
-> > static, do these need to be described in the DT ? If they are simply
-> > acting as a "LINK" (or HWFIFO ?)
->
-> These funnels are static, and we will add the "label" to the DT to
-> describe the
->
-> multi-output ports for these funnels.
->
-> "If they are simply acting as a "LINK" (or HWFIFO ?) " I'm not sure
-> what's the meaning
->
-> of this. Could you describe it in detail?
->
->
-> Best,
->
-> Tao
->
-> >
-> > Suzuki
-> >
-> >>
-> >> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
-> >> ---
-> >>   drivers/hwtracing/coresight/coresight-core.c  | 81 ++++++++++++++++---
-> >>   .../hwtracing/coresight/coresight-platform.c  |  5 ++
-> >>   include/linux/coresight.h                     |  2 +
-> >>   3 files changed, 75 insertions(+), 13 deletions(-)
-> >>
-> >> diff --git a/drivers/hwtracing/coresight/coresight-core.c
-> >> b/drivers/hwtracing/coresight/coresight-core.c
-> >> index 5dde597403b3..b1b5e6d9ec7a 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-core.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> >> @@ -113,15 +113,63 @@ struct coresight_device
-> >> *coresight_get_percpu_sink(int cpu)
-> >>   }
-> >>   EXPORT_SYMBOL_GPL(coresight_get_percpu_sink);
-> >>   +static struct coresight_device *coresight_get_source(struct
-> >> list_head *path)
-> >> +{
-> >> +    struct coresight_device *csdev;
-> >> +
-> >> +    if (!path)
-> >> +        return NULL;
-> >> +
-> >> +    csdev = list_first_entry(path, struct coresight_node, link)->csdev;
-> >> +    if (csdev->type != CORESIGHT_DEV_TYPE_SOURCE)
-> >> +        return NULL;
-> >> +
-> >> +    return csdev;
-> >> +}
-> >> +
-> >> +/**
-> >> + * coresight_source_filter - checks whether the connection matches
-> >> the source
-> >> + * of path if connection is binded to specific source.
-> >> + * @path:    The list of devices
-> >> + * @conn:    The connection of one outport
-> >> + *
-> >> + * Return zero if the connection doesn't have a source binded or
-> >> source of the
-> >> + * path matches the source binds to connection.
-> >> + */
-> >> +static int coresight_source_filter(struct list_head *path,
-> >> +            struct coresight_connection *conn)
-> >> +{
-> >> +    int ret = 0;
-> >> +    struct coresight_device *source = NULL;
-> >> +
-> >> +    if (conn->source_label == NULL)
-> >> +        return ret;
-> >> +
-> >> +    source = coresight_get_source(path);
-> >> +    if (source == NULL)
-> >> +        return ret;
-> >> +
-> >> +    if (strstr(kobject_get_path(&source->dev.kobj, GFP_KERNEL),
-> >> +            conn->source_label))
-> >> +        ret = 0;
-> >> +    else
-> >> +        ret = -1;
-> >> +
-> >> +    return ret;
-> >> +}
-> >> +
-> >>   static struct coresight_connection *
-> >>   coresight_find_out_connection(struct coresight_device *src_dev,
-> >> -                  struct coresight_device *dest_dev)
-> >> +                  struct coresight_device *dest_dev,
-> >> +                  struct list_head *path)
-> >>   {
-> >>       int i;
-> >>       struct coresight_connection *conn;
-> >>         for (i = 0; i < src_dev->pdata->nr_outconns; i++) {
-> >>           conn = src_dev->pdata->out_conns[i];
-> >> +        if (coresight_source_filter(path, conn))
-> >> +            continue;
-> >>           if (conn->dest_dev == dest_dev)
-> >>               return conn;
-> >>       }
-> >> @@ -312,7 +360,8 @@ static void coresight_disable_sink(struct
-> >> coresight_device *csdev)
-> >>     static int coresight_enable_link(struct coresight_device *csdev,
-> >>                    struct coresight_device *parent,
-> >> -                 struct coresight_device *child)
-> >> +                 struct coresight_device *child,
-> >> +                 struct list_head *path)
-> >>   {
-> >>       int ret = 0;
-> >>       int link_subtype;
-> >> @@ -321,8 +370,8 @@ static int coresight_enable_link(struct
-> >> coresight_device *csdev,
-> >>       if (!parent || !child)
-> >>           return -EINVAL;
-> >>   -    inconn = coresight_find_out_connection(parent, csdev);
-> >> -    outconn = coresight_find_out_connection(csdev, child);
-> >> +    inconn = coresight_find_out_connection(parent, csdev, path);
-> >> +    outconn = coresight_find_out_connection(csdev, child, path);
-> >>       link_subtype = csdev->subtype.link_subtype;
-> >>         if (link_subtype == CORESIGHT_DEV_SUBTYPE_LINK_MERG &&
-> >> IS_ERR(inconn))
-> >> @@ -341,7 +390,8 @@ static int coresight_enable_link(struct
-> >> coresight_device *csdev,
-> >>     static void coresight_disable_link(struct coresight_device *csdev,
-> >>                      struct coresight_device *parent,
-> >> -                   struct coresight_device *child)
-> >> +                   struct coresight_device *child,
-> >> +                   struct list_head *path)
-> >>   {
-> >>       int i;
-> >>       int link_subtype;
-> >> @@ -350,8 +400,8 @@ static void coresight_disable_link(struct
-> >> coresight_device *csdev,
-> >>       if (!parent || !child)
-> >>           return;
-> >>   -    inconn = coresight_find_out_connection(parent, csdev);
-> >> -    outconn = coresight_find_out_connection(csdev, child);
-> >> +    inconn = coresight_find_out_connection(parent, csdev, path);
-> >> +    outconn = coresight_find_out_connection(csdev, child, path);
-> >>       link_subtype = csdev->subtype.link_subtype;
-> >>         if (link_ops(csdev)->disable) {
-> >> @@ -507,7 +557,7 @@ static void coresight_disable_path_from(struct
-> >> list_head *path,
-> >>           case CORESIGHT_DEV_TYPE_LINK:
-> >>               parent = list_prev_entry(nd, link)->csdev;
-> >>               child = list_next_entry(nd, link)->csdev;
-> >> -            coresight_disable_link(csdev, parent, child);
-> >> +            coresight_disable_link(csdev, parent, child, path);
-> >>               break;
-> >>           default:
-> >>               break;
-> >> @@ -588,7 +638,7 @@ int coresight_enable_path(struct list_head *path,
-> >> enum cs_mode mode,
-> >>           case CORESIGHT_DEV_TYPE_LINK:
-> >>               parent = list_prev_entry(nd, link)->csdev;
-> >>               child = list_next_entry(nd, link)->csdev;
-> >> -            ret = coresight_enable_link(csdev, parent, child);
-> >> +            ret = coresight_enable_link(csdev, parent, child, path);
-> >>               if (ret)
-> >>                   goto err;
-> >>               break;
-> >> @@ -802,7 +852,8 @@ static void coresight_drop_device(struct
-> >> coresight_device *csdev)
-> >>    */
-> >>   static int _coresight_build_path(struct coresight_device *csdev,
-> >>                    struct coresight_device *sink,
-> >> -                 struct list_head *path)
-> >> +                 struct list_head *path,
-> >> +                 struct coresight_device *source)
-> >>   {
-> >>       int i, ret;
-> >>       bool found = false;
-> >> @@ -814,7 +865,7 @@ static int _coresight_build_path(struct
-> >> coresight_device *csdev,
-> >>         if (coresight_is_percpu_source(csdev) &&
-> >> coresight_is_percpu_sink(sink) &&
-> >>           sink == per_cpu(csdev_sink,
-> >> source_ops(csdev)->cpu_id(csdev))) {
-> >> -        if (_coresight_build_path(sink, sink, path) == 0) {
-> >> +        if (_coresight_build_path(sink, sink, path, source) == 0) {
-> >>               found = true;
-> >>               goto out;
-> >>           }
-> >> @@ -825,8 +876,12 @@ static int _coresight_build_path(struct
-> >> coresight_device *csdev,
-> >>           struct coresight_device *child_dev;
-> >>             child_dev = csdev->pdata->out_conns[i]->dest_dev;
-> >> +        if (csdev->pdata->out_conns[i]->source_label &&
-> >> +            !strstr(kobject_get_path(&source->dev.kobj, GFP_KERNEL),
-> >> + csdev->pdata->out_conns[i]->source_label))
-> >> +            continue;
-> >>           if (child_dev &&
-> >> -            _coresight_build_path(child_dev, sink, path) == 0) {
-> >> +            _coresight_build_path(child_dev, sink, path, source) ==
-> >> 0) {
-> >>               found = true;
-> >>               break;
-> >>           }
-> >> @@ -871,7 +926,7 @@ struct list_head *coresight_build_path(struct
-> >> coresight_device *source,
-> >>         INIT_LIST_HEAD(path);
-> >>   -    rc = _coresight_build_path(source, sink, path);
-> >> +    rc = _coresight_build_path(source, sink, path, source);
-> >>       if (rc) {
-> >>           kfree(path);
-> >>           return ERR_PTR(rc);
-> >> diff --git a/drivers/hwtracing/coresight/coresight-platform.c
-> >> b/drivers/hwtracing/coresight/coresight-platform.c
-> >> index 9d550f5697fa..f553fb20966d 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> >> @@ -205,6 +205,7 @@ static int of_coresight_parse_endpoint(struct
-> >> device *dev,
-> >>       struct fwnode_handle *rdev_fwnode;
-> >>       struct coresight_connection conn = {};
-> >>       struct coresight_connection *new_conn;
-> >> +    const char *label;
-> >>         do {
-> >>           /* Parse the local port details */
-> >> @@ -243,6 +244,10 @@ static int of_coresight_parse_endpoint(struct
-> >> device *dev,
-> >>           conn.dest_fwnode = fwnode_handle_get(rdev_fwnode);
-> >>           conn.dest_port = rendpoint.port;
-> >>   +        conn.source_label = NULL;
-> >> +        if (!of_property_read_string(ep, "label", &label))
-> >> +            conn.source_label = label;
-> >> +
-> >>           new_conn = coresight_add_out_conn(dev, pdata, &conn);
-> >>           if (IS_ERR_VALUE(new_conn)) {
-> >>               fwnode_handle_put(conn.dest_fwnode);
-> >> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> >> index e8b6e388218c..a9c06ef9bbb2 100644
-> >> --- a/include/linux/coresight.h
-> >> +++ b/include/linux/coresight.h
-> >> @@ -167,6 +167,7 @@ struct coresight_desc {
-> >>    * struct coresight_connection - representation of a single connection
-> >>    * @src_port:    a connection's output port number.
-> >>    * @dest_port:    destination's input port number @src_port is
-> >> connected to.
-> >> + * @source_label: source component's label.
-> >>    * @dest_fwnode: destination component's fwnode handle.
-> >>    * @dest_dev:    a @coresight_device representation of the component
-> >>           connected to @src_port. NULL until the device is created
-> >> @@ -195,6 +196,7 @@ struct coresight_desc {
-> >>   struct coresight_connection {
-> >>       int src_port;
-> >>       int dest_port;
-> >> +    const char *source_label;
-> >>       struct fwnode_handle *dest_fwnode;
-> >>       struct coresight_device *dest_dev;
-> >>       struct coresight_sysfs_link *link;
-> >
+Drop description, redundant. You did not say anything different than
+property is saying already.
 
 
+Best regards,
+Krzysztof
 
---
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
