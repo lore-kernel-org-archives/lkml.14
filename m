@@ -1,92 +1,85 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4556A348
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFDB73528;
+	Mon,  8 Apr 2024 12:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580186; cv=none; b=GoUy+D/SoYFkkgBQfcGRr440fSEQ9qtXxQA5/Qjp8KmxF2lU+w76w3x4OfUqY6JiUCyzabe/VGxuVYdxSvyOkEJriYE9tk1A9g9W5tQJmZCir5xB4daRh24KUnRdioU44hPNcc3erWCA3YlhmK9IV+m5dxkYr9PLzzD8meZHfAY=
+	t=1712580194; cv=none; b=s4SYEfJt5D0e9ngMvSi/WiNqe/4Kx0Gg6C4vabdNoM4roUEvUkEjKwbsT+vxkTDSa2vT8hRiqfCkd/xfDCdMJ7IGzz5ZnWOA28KlV+yXT0K3vDrefCvEzhouyI+NAYnxy71r57pnwc+JpvJXvBSRKcCxCploFVzj4S1MJFERvyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580186; c=relaxed/simple;
-	bh=bj+zCFiaSngsf1RnmUNrOHE0R/4I7AH4K4X2+QbvPnA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=llK+rWznzHQ+t6wGafj4l/QnQvHKnklbzzekJ5hJbLBfCBySz2opj3gD4nn9yLLvqLvygBxj/fhKHnjoOQlC6PmOobowpmjhjE20/5M+XPxEXFLXoNnVgvqEEvKDCJWCYJcOzLU6K6H/U/ooOMCBLqWDDt2zfvEKMxLH5MNnP18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=foj/BEl8; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712580194; c=relaxed/simple;
+	bh=o/n/XAccFgkV88Qr6FGsWOys2YM7DrCPsQ3Jhs046CA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ni8NfMjaSWAJJkCoztRDWiz77ci3H5ln0fsq8XcG6ToG6aI5Ijf5i6w+oU/18ZeaevvJRKaeDLTWKLbNr65rSmNLTcheAJk/yNs/g8JuLlrlIBKZtXBa49S9drN/I8+5/MNb/y5Qhij2x0ylP+JTb5G3QFYzdVoQYjFKUW/lXcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UfnYN5dG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="foj/BEl8"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a51d05c50b2so149481866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 05:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712580183; x=1713184983; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bj+zCFiaSngsf1RnmUNrOHE0R/4I7AH4K4X2+QbvPnA=;
-        b=foj/BEl8mHLsFcxY/4hSaHE9Z0jZARB2tEr+pyWbtIJzZll6jgyar4fp/dtIubnUFl
-         pZsfy/2FTWZ2hXEWkUsRazxX5YgjS9ejzO3ggVcjbu3WpQJI9jG6gGJUkyp+NcVSl7gI
-         wIVEukPyCjfU0pGJ5IvrAAnIlzsfhDw4xjF+ceEIaDqh0m3PQbyOBLrjFERf8K8JndMe
-         wmTm8Kiw1tPTC0gRyfD5CgIcb4Ppn2/Y8eUdv6iP/+eYwdIGujph6YSxeSLTPGX7K/LF
-         BSlgXDlk8Z8qsqCvIb02JXBvlo3CqAiK1CD+dzpbyrjNrlReVp29DgvaNzo37zUaaxos
-         Rk0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712580183; x=1713184983;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bj+zCFiaSngsf1RnmUNrOHE0R/4I7AH4K4X2+QbvPnA=;
-        b=vmxtfjgC2rsr5g+GJUTnmt9pSouC1YkDwefByASrdcaKIIhGoF8cEXlXP3g8vSJJ/R
-         ygVputy86WPC9Y+4+cEzTuWci8+OB/YBHjp68aRiLTaLbG4PEQxiaW80GDdkB9SL844n
-         6nsimGSg2DclbIbKAukU/yOPMPrd7KXsg0i6MmyccrQXOxX2cIlwZpScI8GNFfkoyIpm
-         ZZ1QbslFg9Z92wg7dMxxicrkPU+hjecfrqhNpAa6zlA06WhEV9WARpAIpTMU+ZH6fTzF
-         kcMlgwrZNhEctGM8TVXtqKbl6NYV/LUUT1mx8rctgEZUgsWJXl41XzDa1HZEqgs7nK/h
-         4PJw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMnQbsJnHZ9M0IJwVj1FkvjnQk030JWhGttPqg5B7USjCReT4Sbbur+qBIqM6rc0dtKRqxrWhw02yrI8FvslAGcxYQMB0xF1IEFuId
-X-Gm-Message-State: AOJu0Yy660kq9maNdB23Ovz+mppnleTCkkQEo7kEnEyz76bdWcdxxLFS
-	tjqu/Uawd8hTgOeipCDK5u9h/2yCH3ygyRnF/EsisjhyZYTohk9a/PVRWr1zI3M=
-X-Google-Smtp-Source: AGHT+IGDD2DAXc57z2cnZ7DXnGu+eOjPdA/p1faP571apS05EgwVdkCDrTge5mJIsjcO3AGCGFfWPw==
-X-Received: by 2002:a17:907:9496:b0:a51:bc68:fa94 with SMTP id dm22-20020a170907949600b00a51bc68fa94mr5218668ejc.21.1712580183218;
-        Mon, 08 Apr 2024 05:43:03 -0700 (PDT)
-Received: from smtpclient.apple ([2001:a61:10c6:ce01:bd98:da4e:9b4c:75b3])
-        by smtp.gmail.com with ESMTPSA id d21-20020a170906c21500b00a4e28cacbddsm4384024ejz.57.2024.04.08.05.43.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 08 Apr 2024 05:43:02 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UfnYN5dG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 524EFC43390;
+	Mon,  8 Apr 2024 12:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712580194;
+	bh=o/n/XAccFgkV88Qr6FGsWOys2YM7DrCPsQ3Jhs046CA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UfnYN5dG9atj25XdUli0yLnXOk6I6s2dpUmII/5SkH8ba38vp7aNeHO2xbJqK+fps
+	 sJ9NLYw8oXcjFWoI+4AIF+DC/PgfSq66WgXrFYFAMAhjOFA78jTi8Znq4ACGF+nwk/
+	 T4UG8o25SS0L2scTMoCVtdeRrtV9UmJeH/PIo14w0s8MYhScGevnfZXkuwDNU3+hkk
+	 yCn96Q95g1T5k5WnMPgPfJK+Cg9EVo+mnTfxo+KnDLn6PnF2lcml+8YQu/x4Unblw/
+	 DQvI7O4qlrhfmqCkil47MVQjOQ76zZbhJdRbc9DtDjfjGSmKW/u3zVkHPgHGauS/KN
+	 g49JeLf3Sh8mg==
+Date: Mon, 8 Apr 2024 13:43:09 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] ASoC: soc-card: Fix a reversed if condition
+Message-ID: <25771b56-8564-42c1-9a2d-408d91f23618@sirena.org.uk>
+References: <155bb76e-dc57-4a5c-b0eb-acee5ebde9f4@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH] s390/tools: Use ARRAY_SIZE() to fix Coccinelle warnings
-From: Thorsten Blum <thorsten.blum@toblux.com>
-In-Reply-To: <20240408115104.9447-C-hca@linux.ibm.com>
-Date: Mon, 8 Apr 2024 14:42:51 +0200
-Cc: Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- linux-s390@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UBthYBJrUXVgQDT2"
+Content-Disposition: inline
+In-Reply-To: <155bb76e-dc57-4a5c-b0eb-acee5ebde9f4@moroto.mountain>
+X-Cookie: Drive defensively.  Buy a tank.
+
+
+--UBthYBJrUXVgQDT2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <7934000F-958F-4B64-BCC1-2686DCAF87B5@toblux.com>
-References: <20240408105515.2328-3-thorsten.blum@toblux.com>
- <20240408115104.9447-C-hca@linux.ibm.com>
-To: Heiko Carstens <hca@linux.ibm.com>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-On 8. Apr 2024, at 13:51, Heiko Carstens <hca@linux.ibm.com> wrote:
->=20
-> Let's wait until a compile bot reports compile error. It would be
-> helpful to at least compile patches, before sending them.
+On Mon, Apr 08, 2024 at 10:38:02AM +0300, Dan Carpenter wrote:
 
-Sorry about that. I usually compile the patch before submitting it, but =
-missed
-this one somehow.
+>  	ret =3D snd_soc_register_card(priv->card);
+> -	if (!ret)
+> +	if (ret)
+>  		return ret;
+> =20
+>  	return 0;
 
-Just including the missing header file also doesn't work.
+Clearly a better fix here would just be to remove the conditional
+entirely.
 
-Please ignore this patch for now.=
+--UBthYBJrUXVgQDT2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYT5lwACgkQJNaLcl1U
+h9BdVgf9Gspq62woabsu/dxrXY/4ffmusjwWnUNxtVs9udrENILi2P80owdU/EAZ
+/bEa1yhMg3mZrA0JkXwUkWwDE0ZEeH+e2mSmSsfxDiwlkgGhvuHo61fyuU/mql+n
+0v4LLqn9eOcT+B5+m+CU5cKkmUY2+zo7j5k06McNS+NK39PxXJxNX6OEZfTB+mTK
+JSQqCDkYV7R8UXe0WNIE2IkfrMcSMP7EHVt8itGe0P3J+1WtqR/ch/CmkrIZtYyn
+ca8u3XpfLWyiLu+lON4vs0QzLvTN1b2UId7XS+gZO4SteUiv3NqUOuABKl6Kgkoh
+Cz7Es53alHDgiEFj1/TZ8VkvzmhaRQ==
+=I361
+-----END PGP SIGNATURE-----
+
+--UBthYBJrUXVgQDT2--
