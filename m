@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A66C22C859
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837DF2C698
 	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712562493; cv=none; b=LETjB4rH3Pqxptjv1L41s0uos6BbJ7Pj4P4VaQtweSdbO0YKzecqBZbrUD5VqpStsaKzA0ZeOzp7gVid+XMlvycmCX6LjAlgQ/9fIqV6mC2Fctfn/nGgC20MGoBuh09pmnnJGiBP5IZ0PdFrPptUQJsV0ifMV+4Jvuyl2qSCmyA=
+	t=1712562493; cv=none; b=kT6j7PVLmrBXLAyGRWCuamXb4KMJvVxGhuDR1bM3guAc20xtQxc5HLeB4zZyEuxV9k+16dDl2kpon24chX/r2N3VCwKxL6B/dtfvNqQRt0WFeQak0Kf3EtL+IRz9K1rRy/3QNKCojJsVJRvXTmxDV679T4PEdvFIrc+KNDZePcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712562493; c=relaxed/simple;
-	bh=wkmzICOci8CDrvfdldNFXBU4+TxY2LbRtIR4tZw8PmU=;
+	bh=sNE1b3SbadPF5vis67y6Aj9iPjz3/xBvmFz49Jk2sGM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h1zOgyhWK7q2u4blPS7h+fyUVH9YqRYWRSDg8LgOYPYc4zuodVosAbSFcmOu60d/RuZGxR9urJ9orqysG3+xT8hzL+sjTj0XRX9Fxy0GR1VWZA8HqmBrv6oMTtrjUtljcNyst6PMkpJa5NzHtpcrWz5qmPk6l8egntkC+SjBKN0=
+	 MIME-Version; b=STHuD5nKkJxGRVR7sUqeyTit04YQRDwH9YcOeYKHq+ou45p7YZRdEu6tzTMK38hiE4dmZzqkz0fP2juxUIuTsvemkOgZ488tKJANXzq4R+JCZj2cRE1Eby/i+Jk/T/rH1FIwiKHnT714h3GUcl+ThhVQNW1syOUwLXAqNB50JP4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjY-0005If-4f; Mon, 08 Apr 2024 09:48:04 +0200
+	id 1rtjjY-0005Ig-4e; Mon, 08 Apr 2024 09:48:04 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjV-00B4Jw-3J; Mon, 08 Apr 2024 09:48:01 +0200
+	id 1rtjjV-00B4Js-2N; Mon, 08 Apr 2024 09:48:01 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rtjjU-007exw-3D;
+	id 1rtjjU-007exb-35;
 	Mon, 08 Apr 2024 09:48:00 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v4 6/9] net: dsa: microchip: dcb: add special handling for KSZ88X3 family
-Date: Mon,  8 Apr 2024 09:47:55 +0200
-Message-Id: <20240408074758.1825674-7-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v4 4/9] net: dsa: microchip: add multi queue support for KSZ88X3 variants
+Date: Mon,  8 Apr 2024 09:47:53 +0200
+Message-Id: <20240408074758.1825674-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240408074758.1825674-1-o.rempel@pengutronix.de>
 References: <20240408074758.1825674-1-o.rempel@pengutronix.de>
@@ -65,312 +65,168 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-KSZ88X3 switches have different behavior on different ports:
-- It seems to be not possible to disable VLAN PCP classification on port
-  2. It means, as soon as mutliqueue support is enabled, frames with
-     VLAN tag will get PCP prios. This behavior do not affect Port 1 -
-     it is possible to disable PCP prios.
-- DSCP classification is not working on Port 2.
+KSZ88X3 switches support up to 4 queues. Rework ksz8795_set_prio_queue()
+to support KSZ8795 and KSZ88X3 families of switches.
 
-Since there are still usable configuration combinations, I added some
-quirks to make sure user will get appropriate error message if not
-possible configuration is chosen.
+Per default, configure KSZ88X3 to use one queue, since it need special
+handling due to priority related errata. Errata handling is implemented
+in a separate patch.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
-changes v3:
-- move ksz8_port2_supported_apptrust[] to this patch, where it is
-  actually used.
----
- drivers/net/dsa/microchip/ksz8.h    |   1 +
- drivers/net/dsa/microchip/ksz8795.c |  14 +++
- drivers/net/dsa/microchip/ksz_dcb.c | 189 +++++++++++++++++++++++++++-
- 3 files changed, 201 insertions(+), 3 deletions(-)
+ drivers/net/dsa/microchip/ksz8795.c     | 87 ++++++++++++++++---------
+ drivers/net/dsa/microchip/ksz8795_reg.h |  9 ++-
+ 2 files changed, 61 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz8.h b/drivers/net/dsa/microchip/ksz8.h
-index 571c26ce71e47..6332751f96bdb 100644
---- a/drivers/net/dsa/microchip/ksz8.h
-+++ b/drivers/net/dsa/microchip/ksz8.h
-@@ -58,5 +58,6 @@ void ksz8_phylink_mac_link_up(struct ksz_device *dev, int port,
- 			      unsigned int mode, phy_interface_t interface,
- 			      struct phy_device *phydev, int speed, int duplex,
- 			      bool tx_pause, bool rx_pause);
-+int ksz8_all_queues_split(struct ksz_device *dev, int queues);
- 
- #endif
 diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index afe61c75944d4..b3e256ffe98f8 100644
+index ecef6f6f830b3..afe61c75944d4 100644
 --- a/drivers/net/dsa/microchip/ksz8795.c
 +++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -179,6 +179,20 @@ static int ksz8_port_queue_split(struct ksz_device *dev, int port, int queues)
- 	return ksz_prmw8(dev, port, reg_2q, mask_2q, data_2q);
+@@ -127,37 +127,56 @@ int ksz8_change_mtu(struct ksz_device *dev, int port, int mtu)
+ 	return -EOPNOTSUPP;
  }
  
-+int ksz8_all_queues_split(struct ksz_device *dev, int queues)
-+{
-+	struct dsa_switch *ds = dev->ds;
-+	const struct dsa_port *dp;
-+
-+	dsa_switch_for_each_port(dp, ds) {
-+		int ret = ksz8_port_queue_split(dev, dp->index, queues);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt)
+-static void ksz8795_set_prio_queue(struct ksz_device *dev, int port, int queue)
++static int ksz8_port_queue_split(struct ksz_device *dev, int port, int queues)
  {
- 	const u32 *masks;
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-index 46491c6dd6f60..2c28c4ed288a9 100644
---- a/drivers/net/dsa/microchip/ksz_dcb.c
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -83,6 +83,10 @@ static const u8 ksz_supported_apptrust[] = {
- 	IEEE_8021QAZ_APP_SEL_DSCP,
- };
- 
-+static const u8 ksz8_port2_supported_apptrust[] = {
-+	DCB_APP_SEL_PCP,
-+};
-+
- static const char * const ksz_supported_apptrust_variants[] = {
- 	"empty", "dscp", "pcp", "dscp pcp"
- };
-@@ -128,6 +132,48 @@ int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
- 	return (data & mask) >> shift;
- }
- 
-+/**
-+ * ksz88x3_port_set_default_prio_quirks - Quirks for default priority
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the default priority
-+ * @prio: Priority value to set
-+ *
-+ * This function implements quirks for setting the default priority on KSZ88x3
-+ * devices. On Port 2 (port == 1), no other priority providers are working
-+ * except of PCP. So, configuring default priority on Port 2 is not possible.
-+ * On Port 1 (port == 0), it is not possible to configure port priority if PCP
-+ * apptrust on Port 2 is disabled. Since we disable multiple queues on the
-+ * switch to disable PCP on Port 2, we need to ensure that the default priority
-+ * configuration on Port 1 is in agreement with the configuration on Port 2.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz88x3_port_set_default_prio_quirks(struct ksz_device *dev, int port,
-+						u8 prio)
-+{
-+	if (!prio)
-+		return 0;
-+
-+	if (port == 1) {
-+		dev_err(dev->dev, "Port priority configuration is not working on Port 2\n");
-+		return -EINVAL;
-+	} else if (port == 0) {
-+		u8 port1_data;
-+		int ret;
-+
-+		ret = ksz_pread8(dev, 1, KSZ8_REG_PORT_1_CTRL_0, &port1_data);
-+		if (ret)
-+			return ret;
-+
-+		if (!(port1_data & KSZ8_PORT_802_1P_ENABLE)) {
-+			dev_err(dev->dev, "Not possible to configur port priority on Port 1 if PCP apptrust on Port 2 is disabled\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * ksz_port_set_default_prio - Sets the default priority for a port on a KSZ
-  *			       switch
-@@ -143,12 +189,19 @@ int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
- int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio)
- {
- 	struct ksz_device *dev = ds->priv;
--	int reg, shift;
-+	int reg, shift, ret;
- 	u8 mask;
- 
- 	if (prio >= dev->info->num_tx_queues)
- 		return -EINVAL;
- 
-+
-+	if (ksz_is_ksz88x3(dev)) {
-+		ret = ksz88x3_port_set_default_prio_quirks(dev, port, prio);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
- 
- 	return ksz_prmw8(dev, port, reg, mask, (prio << shift) & mask);
-@@ -409,6 +462,118 @@ static void ksz_get_apptrus_map_and_reg(struct ksz_device *dev,
- 	}
- }
- 
-+/**
-+ * ksz88x3_port0_apptrust_quirk - Quirk for apptrust configuration on Port 1
-+ *				  (port == 0) of KSZ88x3 devices
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @reg: Register address for the apptrust configuration
-+ * @data: Data to set for the apptrust configuration
-+ *
-+ * This function implements a quirk for apptrust configuration on Port 1 of
-+ * KSZ88x3 devices. It ensures that apptrust configuration on Port 1 is not
-+ * possible if PCP apptrust on Port 2 is disabled. This is because the Port 2
-+ * seems to be permanently hardwired to PCP classification, so we need to
-+ * do Port 1 configuration always in agreement with Port 2 configuration.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz88x3_port0_apptrust_quirk(struct ksz_device *dev, int port,
-+					int reg, u8 data)
-+{
-+	u8 port1_data;
+-	u8 hi, lo;
++	u8 mask_4q, mask_2q;
++	u8 reg_4q, reg_2q;
++	u8 data_4q = 0;
++	u8 data_2q = 0;
 +	int ret;
-+
-+	if (!(data & (KSZ8_PORT_802_1P_ENABLE | KSZ8_PORT_DIFFSERV_ENABLE)))
-+		return 0;
-+
-+	ret = ksz_pread8(dev, 1, reg, &port1_data);
-+	if (ret)
-+		return ret;
-+
-+	if (!(port1_data & KSZ8_PORT_802_1P_ENABLE)) {
-+		dev_err(dev->dev, "Not possible to enable any apptrust on Port 1 if PCP apptrust on Port 2 is disabled\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ksz88x3_port1_apptrust_quirk - Quirk for apptrust configuration on Port 2
-+ *				  (port == 1) of KSZ88x3 devices
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @reg: Register address for the apptrust configuration
-+ * @data: Data to set for the apptrust configuration
-+ *
-+ * This function implements a quirk for apptrust configuration on Port 2 of
-+ * KSZ88x3 devices. It ensures that DSCP apptrust is not working on Port 2 and
-+ * that it is not possible to disable PCP on Port 2. The only way to disable PCP
-+ * on Port 2 is to disable multiple queues on the switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz88x3_port1_apptrust_quirk(struct ksz_device *dev, int port,
-+					int reg, u8 data)
-+{
-+	struct dsa_switch *ds = dev->ds;
-+	u8 port0_data;
-+	int ret;
-+
-+	if (data & KSZ8_PORT_DIFFSERV_ENABLE) {
-+		dev_err(dev->dev, "DSCP apptrust is not working on Port 2\n");
-+		return -EINVAL;
-+	}
-+
-+	if (data & KSZ8_PORT_802_1P_ENABLE)
-+		return ksz8_all_queues_split(dev, dev->info->num_tx_queues);
-+
-+	ret = ksz_pread8(dev, 0, reg, &port0_data);
-+	if (ret)
-+		return ret;
-+
-+	if (port0_data & (KSZ8_PORT_802_1P_ENABLE | KSZ8_PORT_DIFFSERV_ENABLE)) {
-+		dev_err(dev->dev, "Not possible to disable PCP on Port 2 if any apptrust is enabled on Port 1\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = ksz_port_get_default_prio(ds, 0);
-+	if (ret < 0) {
-+		return ret;
-+	} else if (ret) {
-+		dev_err(dev->dev, "Not possible to disable PCP on Port 2 if non zero default priority is set on Port 1\n");
-+		return -EINVAL;
-+	}
-+
-+	return ksz8_all_queues_split(dev, 1);
-+}
-+
-+/**
-+ * ksz88x3_port_apptrust_quirk - Quirk for apptrust configuration on KSZ88x3
-+ *			       devices
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @reg: Register address for the apptrust configuration
-+ * @data: Data to set for the apptrust configuration
-+ *
-+ * This function implements a quirk for apptrust configuration on KSZ88x3
-+ * devices. It ensures that apptrust configuration on Port 1 (port == 0) and
-+ * Port 2 (port == 1) is done in agreement with each other.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz88x3_port_apptrust_quirk(struct ksz_device *dev, int port,
-+				       int reg, u8 data)
-+{
-+	if (port == 0) {
-+		return ksz88x3_port0_apptrust_quirk(dev, port, reg, data);
-+	} else if (port == 1)
-+		return ksz88x3_port1_apptrust_quirk(dev, port, reg, data);
-+
-+	return 0;
-+}
-+
- /**
-  * ksz_port_set_apptrust - Sets the apptrust selectors for a port on a KSZ
-  *			   switch
-@@ -449,6 +614,12 @@ int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
- 		}
- 	}
  
+-	/* Number of queues can only be 1, 2, or 4. */
+-	switch (queue) {
+-	case 4:
+-	case 3:
+-		queue = PORT_QUEUE_SPLIT_4;
+-		break;
+-	case 2:
+-		queue = PORT_QUEUE_SPLIT_2;
+-		break;
+-	default:
+-		queue = PORT_QUEUE_SPLIT_1;
 +	if (ksz_is_ksz88x3(dev)) {
-+		ret = ksz88x3_port_apptrust_quirk(dev, port, reg, data);
-+		if (ret)
-+			return ret;
-+	}
++		mask_4q = KSZ8873_PORT_4QUEUE_SPLIT_EN;
++		mask_2q = KSZ8873_PORT_2QUEUE_SPLIT_EN;
++		reg_4q = REG_PORT_CTRL_0;
++		reg_2q = REG_PORT_CTRL_2;
 +
- 	return ksz_prmw8(dev, port, reg, mask, data);
- }
- 
-@@ -503,7 +674,9 @@ int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
-  */
- int ksz_dcb_init_port(struct ksz_device *dev, int port)
- {
-+	const u8 *sel;
- 	int ret, ipv;
-+	int sel_len;
- 
- 	if (is_ksz8(dev)) {
- 		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
-@@ -519,8 +692,18 @@ int ksz_dcb_init_port(struct ksz_device *dev, int port)
- 	if (ret)
- 		return ret;
- 
--	return ksz_port_set_apptrust(dev->ds, port, ksz_supported_apptrust,
--				     ARRAY_SIZE(ksz_supported_apptrust));
-+	if (ksz_is_ksz88x3(dev) && port == 1) {
-+		/* KSZ88x3 devices do not support DSCP classification on
-+		 * "Port 2" (port == 1).
++		/* KSZ8795 family switches have Weighted Fair Queueing (WFQ)
++		 * enabled by default. Enable it for KSZ8873 family switches
++		 * too. Default value for KSZ8873 family is strict priority,
++		 * which should be enabled by using TC_SETUP_QDISC_ETS, not
++		 * by default.
 +		 */
-+		sel = ksz8_port2_supported_apptrust;
-+		sel_len = ARRAY_SIZE(ksz8_port2_supported_apptrust);
++		ret = ksz_rmw8(dev, REG_SW_CTRL_3, WEIGHTED_FAIR_QUEUE_ENABLE,
++			       WEIGHTED_FAIR_QUEUE_ENABLE);
++		if (ret)
++			return ret;
 +	} else {
-+		sel = ksz_supported_apptrust;
-+		sel_len = ARRAY_SIZE(ksz_supported_apptrust);
-+	}
++		mask_4q = KSZ8795_PORT_4QUEUE_SPLIT_EN;
++		mask_2q = KSZ8795_PORT_2QUEUE_SPLIT_EN;
++		reg_4q = REG_PORT_CTRL_13;
++		reg_2q = REG_PORT_CTRL_0;
 +
-+	return ksz_port_set_apptrust(dev->ds, port, sel, sel_len);
++		/* TODO: this is legacy from initial KSZ8795 driver, should be
++		 * moved to appropriate place in the future.
++		 */
++		ret = ksz_rmw8(dev, REG_SW_CTRL_19,
++			       SW_OUT_RATE_LIMIT_QUEUE_BASED,
++			       SW_OUT_RATE_LIMIT_QUEUE_BASED);
++		if (ret)
++			return ret;
+ 	}
+-	ksz_pread8(dev, port, REG_PORT_CTRL_0, &lo);
+-	ksz_pread8(dev, port, P_DROP_TAG_CTRL, &hi);
+-	lo &= ~PORT_QUEUE_SPLIT_L;
+-	if (queue & PORT_QUEUE_SPLIT_2)
+-		lo |= PORT_QUEUE_SPLIT_L;
+-	hi &= ~PORT_QUEUE_SPLIT_H;
+-	if (queue & PORT_QUEUE_SPLIT_4)
+-		hi |= PORT_QUEUE_SPLIT_H;
+-	ksz_pwrite8(dev, port, REG_PORT_CTRL_0, lo);
+-	ksz_pwrite8(dev, port, P_DROP_TAG_CTRL, hi);
+-
+-	/* Default is port based for egress rate limit. */
+-	if (queue != PORT_QUEUE_SPLIT_1)
+-		ksz_cfg(dev, REG_SW_CTRL_19, SW_OUT_RATE_LIMIT_QUEUE_BASED,
+-			true);
++
++	if (queues == 4)
++		data_4q = mask_4q;
++	if (queues == 2)
++		data_2q = mask_2q;
++
++	ret = ksz_prmw8(dev, port, reg_4q, mask_4q, data_4q);
++	if (ret)
++		return ret;
++
++	return ksz_prmw8(dev, port, reg_2q, mask_2q, data_2q);
  }
  
- /**
+ void ksz8_r_mib_cnt(struct ksz_device *dev, int port, u16 addr, u64 *cnt)
+@@ -1513,6 +1532,7 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ {
+ 	struct dsa_switch *ds = dev->ds;
+ 	const u32 *masks;
++	int queues;
+ 	u8 member;
+ 
+ 	masks = dev->info->masks;
+@@ -1520,8 +1540,15 @@ void ksz8_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	/* enable broadcast storm limit */
+ 	ksz_port_cfg(dev, port, P_BCAST_STORM_CTRL, PORT_BROADCAST_STORM, true);
+ 
+-	if (!ksz_is_ksz88x3(dev))
+-		ksz8795_set_prio_queue(dev, port, 4);
++	/* For KSZ88x3 enable only one queue by default, otherwise we won't
++	 * be able to get rid of PCP prios on Port 2.
++	 */
++	if (ksz_is_ksz88x3(dev))
++		queues = 1;
++	else
++		queues = dev->info->num_tx_queues;
++
++	ksz8_port_queue_split(dev, port, queues);
+ 
+ 	/* disable DiffServ priority */
+ 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_DIFFSERV_ENABLE, false);
+diff --git a/drivers/net/dsa/microchip/ksz8795_reg.h b/drivers/net/dsa/microchip/ksz8795_reg.h
+index 0d13a6e29b0e6..69566a5d9cda1 100644
+--- a/drivers/net/dsa/microchip/ksz8795_reg.h
++++ b/drivers/net/dsa/microchip/ksz8795_reg.h
+@@ -124,7 +124,8 @@
+ #define PORT_BASED_PRIO_3		3
+ #define PORT_INSERT_TAG			BIT(2)
+ #define PORT_REMOVE_TAG			BIT(1)
+-#define PORT_QUEUE_SPLIT_L		BIT(0)
++#define KSZ8795_PORT_2QUEUE_SPLIT_EN	BIT(0)
++#define KSZ8873_PORT_4QUEUE_SPLIT_EN	BIT(0)
+ 
+ #define REG_PORT_1_CTRL_1		0x11
+ #define REG_PORT_2_CTRL_1		0x21
+@@ -143,6 +144,7 @@
+ #define REG_PORT_4_CTRL_2		0x42
+ #define REG_PORT_5_CTRL_2		0x52
+ 
++#define KSZ8873_PORT_2QUEUE_SPLIT_EN	BIT(7)
+ #define PORT_INGRESS_FILTER		BIT(6)
+ #define PORT_DISCARD_NON_VID		BIT(5)
+ #define PORT_FORCE_FLOW_CTRL		BIT(4)
+@@ -463,10 +465,7 @@
+ #define REG_PORT_4_CTRL_13		0xE1
+ #define REG_PORT_5_CTRL_13		0xF1
+ 
+-#define PORT_QUEUE_SPLIT_H		BIT(1)
+-#define PORT_QUEUE_SPLIT_1		0
+-#define PORT_QUEUE_SPLIT_2		1
+-#define PORT_QUEUE_SPLIT_4		2
++#define KSZ8795_PORT_4QUEUE_SPLIT_EN	BIT(1)
+ #define PORT_DROP_TAG			BIT(0)
+ 
+ #define REG_PORT_1_CTRL_14		0xB2
 -- 
 2.39.2
 
