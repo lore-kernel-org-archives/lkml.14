@@ -1,125 +1,107 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528BF69E07;
-	Mon,  8 Apr 2024 11:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F48657CB;
+	Mon,  8 Apr 2024 11:52:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712577090; cv=none; b=GEpGfGvBRwYiBiZl0fF0xJ01GxfcJguChmP5/oAKQHAWRlBOY2uLDnc1YBga0nQ9AAY/O2gi3Wchvf7U9Dcwx1Bz9V/oENY41lrmLXtx+KFjwplake7DoT3LDvhd9TD9e45wv+XGG6Ityo8rxHNG7CAWuA0uRsDdYSjfv3GgRpg=
+	t=1712577168; cv=none; b=gbeGS662RWZiAAmiweNb8DeA+Ngw9w5f8Ner2IdAVRCRKN+yxrReVAI15PDP3eJkmc57M5YNbhJW/swibM6ykYJwN7eqOJeO2gHgNmCcI6rehrPm9cpPwtoz8uDHAl0/odIqqZcAq6NbnaToA7KfvYfOZF4OYxSIUTWRUwEjWts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712577090; c=relaxed/simple;
-	bh=I5yljxzZzXYcwlpP5I426+Gg1XBkRYcBytW1okcfLJc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VGd44+tcMp87g9Ks4wJE2N++Kpgp0JMt7c3zzP4W6NqXpXSTiZhGr8Tql8cH1FzaakSLEJdZfSx/sn9hQrmF/TuEPm4lw8CCwbj8jZVf/x1PDs9ATYV/Yt16y2w+EcLHQkvnQkihWuc6Gqz21KNUXFJPK5Niz9JjsJZz9PAy0NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=rxDSbYHW; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1712577168; c=relaxed/simple;
+	bh=9TcqgVCdebpUEtPloXV2xwkuH5UyaU8oSE1S2N9IZMw=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uKeDazVsSghEC63BCw31/7Wn9t0cto6tPzGUl0B95IVinuBtRPeMP9j+K1W0nTZCEkMuShjjm7zzB6UbAmC7nOOoTAjB7M9MYmTjZnDYHMQn1yfpchh/JyZgpLErtGnxSHkS3ADymcq2UGtuDF83j+PxRq5xamwNbRaX5lXqVF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LOVQ3p/3; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="rxDSbYHW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1712577078; bh=I5yljxzZzXYcwlpP5I426+Gg1XBkRYcBytW1okcfLJc=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=rxDSbYHWltTdqEXQq3e2/NVcU5m38sByYCxFziUb6aFv88v9TSrHQGWkO7ZnOJlLf
-	 9pBS6jQO02xwbKyxnIK1MYOP3/5t4khGbOOWoI4P1bD3R1D9knXzZ5ve898ZcZcdD4
-	 +z6mwTIo5pDtgMunTvW9yJhVtlHUCskppb9JaebI=
-Date: Mon, 8 Apr 2024 13:51:18 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
-	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
-	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 1/2] dt-bindings: usb: typec: anx7688: start a binding
- document
-Message-ID: <35tqaktf533qtpaquvzb7p5juupjyakktstlqgr2hqretnt7lv@chubnabkyqjz>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
-	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
-	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
- <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LOVQ3p/3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712577164;
+	bh=9TcqgVCdebpUEtPloXV2xwkuH5UyaU8oSE1S2N9IZMw=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=LOVQ3p/31BEegWocwBzMmKRuGOXUjKNbDGMyX1aUKsjGFNyGJH0UFM8mCzKZb6dbz
+	 AWa3bMlprII5kWnXhjSM0u6BwoHzrQGrK+YN0qvLbunMm6sntZMW3uBVTtgtvsvpku
+	 TtmscyRlvZvz0a7X0jePsuQNa+6ckn5O8gxBVRM0Fx2vRYeQ7RZHLFI8yL13yr1ofl
+	 ekda8FQp4FMAyocuhVl5Ai2fXshSvbqBgbaVRjf5cjqUQd2Fgkr29ugbzl5A8cizsb
+	 YT0jJXE3PcAUcUFz4XuRaZYIgkLtcD7xWU0aj0nqlx1+SiqDW9wo1WyDps9brkjqLD
+	 QLD9QUOmaBUUQ==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6E5753780894;
+	Mon,  8 Apr 2024 11:52:39 +0000 (UTC)
+Message-ID: <41dd9c5a-0e07-4b98-9dfb-fb57eaa74fa2@collabora.com>
+Date: Mon, 8 Apr 2024 16:53:11 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <shuah@kernel.org>
+Subject: Re: [RFC PATCH v3 6/9] selftests: cgroup: Add basic tests for pids
+ controller
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+References: <20240405170548.15234-1-mkoutny@suse.com>
+ <20240405170548.15234-7-mkoutny@suse.com>
+ <a45c2ece-acb4-4cff-9d53-f5c007c9b905@collabora.com>
+ <qweowkm4wlfzovp3qhtkzbybeampodtwmpbp2kbtiqcrhmjtdt@syk4itfkpmfr>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <qweowkm4wlfzovp3qhtkzbybeampodtwmpbp2kbtiqcrhmjtdt@syk4itfkpmfr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
-
-On Mon, Apr 08, 2024 at 01:17:32PM GMT, Krzysztof Kozlowski wrote:
-> On 08/04/2024 12:51, Pavel Machek wrote:
-> > Add binding for anx7688 usb type-c bridge. I don't have a datasheet,
-> > but I did best I could.
-> > 
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+On 4/8/24 4:29 PM, Michal Koutný wrote:
+> On Sun, Apr 07, 2024 at 02:37:44AM +0500, Muhammad Usama Anjum <usama.anjum@collabora.com> wrote:
+>> The
+>> 	ksft_print_header();
+>> 	ksft_set_plan(total_number_of_tests);
+>> are missing. Please use all of the ksft APIs to make the test TAP compliant.
 > 
-> ...
+> Will do.
 > 
-> > +  cabledet-gpios:
-> > +    maxItems: 1
-> > +    description: GPIO controlling CABLE_DET (C3) pin.
-> > +
-> > +  avdd10-supply:
-> > +    description: 1.0V power supply going to AVDD10 (A4, ...) pins
-> > +
-> > +  dvdd10-supply:
-> > +    description: 1.0V power supply going to DVDD10 (D6, ...) pins
-> > +
-> > +  avdd18-supply:
-> > +    description: 1.8V power supply going to AVDD18 (E3, ...) pins
-> > +
-> > +  dvdd18-supply:
-> > +    description: 1.8V power supply going to DVDD18 (G4, ...) pins
-> > +
-> > +  avdd33-supply:
-> > +    description: 3.3V power supply going to AVDD33 (C4, ...) pins
-> > +
-> > +  i2c-supply: true
-> > +  vconn-supply: true
+>>> +	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+>>> +		switch (tests[i].fn(root)) {
+>>> +		case KSFT_PASS:
+>>> +			ksft_test_result_pass("%s\n", tests[i].name);
+>>> +			break;
+>>> +		case KSFT_SKIP:
+>>> +			ksft_test_result_skip("%s\n", tests[i].name);
+>>> +			break;
+>>> +		default:
+>>> +			ret = EXIT_FAILURE;
+>>> +			ksft_test_result_fail("%s\n", tests[i].name);
+>>> +			break;
+>> Use ksft_test_result_report() instead of swith-case here.
 > 
-> There are no such supplies like i2c and vconn on the schematics.
+> Do you mean ksft_test_result()? That one cannot distinguish the
+> KSFT_SKIP case.
+> Or ksft_test_result_code(tests[i].fn(root), tests[i].name)?
+No, this doesn't seem useful here.
 
-Which schematics?
-
-ANX7688 has VCONN1/2_EN GPIOs that control a switching of VCONN power supply
-to resective CCx pins. That's just a switch signal. Power for VCONN needs
-to come from somewhere and the driver needs to enable the regulator at
-the appropriate time only.
-
-On Pinephone it can't be an always on power supply and needs to be enabled
-only when used due to HW design of the circuit. (default without ANX driver
-initialized would be to shove 5V to both CC pins, which breaks Type-C spec)
-
-I2C supply is needed for I2C bus to work, apparently. There's nothing
-that says that I2C pull-ups supply has to come from supplies powering the
-chip. I2C I/O is open drain and the device needs to enable a bus supply
-in order to communicate.
-
-You can say that bus master should be managing the bus supply, but you'd still
-have a problem that each device may be behind a voltage translator, and
-logically, bus master driver should care only about its side of the bus then.
-Both side of level shifter need the pull-up power enabled.
-
-You can also make an argument that bus supply can be always on, but that
-causes several other issues on Pinephone due to shared nature of most
-resources like these. There are other devices on shared power rails, that
-need to be turned off during sleep, etc.
-
-Kind regards,
-	o.
-
-> I think this represents some other part of component which was added
-> here only for convenience.
 > 
+> Would the existing ksft_test_resul_*() calls inside switch-case still
+> TAP-work?
+This part of your switch-case are correct. It just that by using
+ksft_test_result_report you can achieve the same thing. It has has SKIP
+support.
+
+ksft_test_result_report(tests[i].fn(root), tests[i].name)
+
 > 
-> 
-> Best regards,
-> Krzysztof
-> 
+> Thanks,
+> Michal
+
+-- 
+BR,
+Muhammad Usama Anjum
