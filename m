@@ -1,36 +1,35 @@
-Received: from sxb1plsmtpa01-06.prod.sxb1.secureserver.net (sxb1plsmtpa01-06.prod.sxb1.secureserver.net [188.121.53.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606621442F3
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 22:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FC9146A74;
+	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712614199; cv=none; b=WFdZwyRBeXLAk929EbADTGoIyeaJwtRSB4ke8M+nhzZhWh9K55nOFbZCT4KcdN7YZMNZQyPC0fySU7rrafFwVc/q40UA93A4Fawk4RmsDY2GTM5jyjfZSe0c6kMOP1p6E2nvG8an4I1ve6T9+sDYSyJEDgpKnWRDpj5pKPJ3i+Y=
+	t=1712614283; cv=none; b=Bxhki92fi/+RC8ptq8BJ/wmhYWav51w5IP5pU3SPDIkxa7oOK+Iisp/Ys6m7x1mmCcfUDoSEWgcM4IlUbgHa1Og6v3iFvxsccO6MbMziXzt1eCZEVFHuwPLdRxgTPEbbB80RI+JdwvbDzWyhH84KFkoGSv6mATbpuTWcczf+4Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712614199; c=relaxed/simple;
-	bh=FA1l+1VWT7YtpMTlmBruM8zQe16BLG+YQjp9MvtRRjg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U1rVbXfvNI2S8Y/Q0ih/dpj/1yzanXZYCkvZv63bksMRM7EXWpzrfyuyHPVnWRw046n5c6i+yeGnM76qJw7PLjap5D3u8/T7Ro6aqZ3d9ovPwKMGKtO9ScVr0KNjcg77IEAXF448Rs95i2mgHEsQeyGMTGvE/BBL8HxBbv2aeuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
-Received: from phoenix.fritz.box ([82.69.79.175])
-	by :SMTPAUTH: with ESMTPA
-	id tx44reUu3RNGctx4FrdXqh; Mon, 08 Apr 2024 15:02:20 -0700
-X-CMAE-Analysis: v=2.4 cv=bvaHB1ai c=1 sm=1 tr=0 ts=6614696d
- a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=XJTnSpgKjpJfBdNX:21 a=1T6qrdwwAAAA:8 a=FXvPX3liAAAA:8 a=VwQbUJbxAAAA:8
- a=OU3_bkaUkIPW1OEudewA:9 a=pdM9UVT-CToajMN3hxJJ:22 a=UObqyxdv-6Yh2QiB9mM_:22
- a=AjGcO6oz07-iQ99wixmX:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk
-From: Phillip Lougher <phillip@squashfs.org.uk>
-To: akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org
-Cc: Phillip Lougher <phillip@squashfs.org.uk>,
-	"Ubisectech Sirius" <bugreport@ubisectech.com>
-Subject: [PATCH] Squashfs: check the inode number is not the invalid value of zero
-Date: Mon,  8 Apr 2024 23:02:06 +0100
-Message-Id: <20240408220206.435788-1-phillip@squashfs.org.uk>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712614283; c=relaxed/simple;
+	bh=lW11RI+KDUxz+R1JazYwSEvVHMXg9ftxGnF6AdTgkjo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=T4G4iY9gqGcPRbB3n5uxFjEsgBJddVvOK8VyNpxVtOC7Jv0iP+CyTf7YZx+rlDXixUUkUiUPyXra11FbcuVAsz4pldHXQd0e61b0aSxg/9S0M6qWBzRTVbdQpPlwMqoRa2+FesDWB4yk/WCfhe9n0pEPiHw33JAgGYPVuFhDS2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZpzjLU0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZpzjLU0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CAAA2C433F1;
+	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712614282;
+	bh=lW11RI+KDUxz+R1JazYwSEvVHMXg9ftxGnF6AdTgkjo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oZpzjLU04UMqo3DHGNXPncnDOgiUKHS8aSf8pL34SWiBTw0MJJbQ5e4igv7PF8D69
+	 biNOVVfC6nyaMXtDZoT9W+oyqE6kJVglUBhuVeECJBAxqoaUK5ue7I44nGof7+Ir1L
+	 nH6WldASjQ/sFfzYbQWd5IWSGrDUo4EYAXcntX32hjJZCGmNYqu90RNKwIW+2Ykobb
+	 myYl9PStsHQGp/NDFPwgRsmX4GhIJY5t36Z1T5tRQGpiG1yQ0OL/hbntQuPXR4K7t1
+	 EukB9azhaYEvwnUDFEE+zhDqg6xJOCbmySeXle4+K91Zbm1rQF/kDYzDYpeqKIhpeV
+	 VcvUp4CzpGppw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B3B58C54BD6;
+	Mon,  8 Apr 2024 22:11:22 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,63 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfMWAN3UN0Lo1ziq/4OsLPusrCyJ5+60LKkmiy7J6Jh8MzFLtDThvtVdUr4knNCSUVIAcFcmdaK6aKbfKRK5M0CvqowHtW2HvSjF3tosQB1TzJzeS0dzj
- 55S/nG0Yn5Qa0KHAH8iNoVZClKAGTgDRP4WHX4Eg862oyDx1iro4xH5A3662+seQeDjoae/kpSnnWKdbeN6YsRzvu2NYgaLN//bL6cZLSv+MOFWey1Rp+wRD
- yNNx4bg3ZxXTt+F1n1SqJ+b3FnOGf21rpPM9Euv5BckN0cmYL3jHXOi8g78/gfVxkDV+hxwou9XPvS4bqkwV0g==
+Subject: Re: [PATCH v2][next] Bluetooth: L2CAP: Avoid
+ -Wflex-array-member-not-at-end warnings
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <171261428272.29448.1603633433425207397.git-patchwork-notify@kernel.org>
+Date: Mon, 08 Apr 2024 22:11:22 +0000
+References: <ZgRIF1bkXlZlaK22@neat>
+In-Reply-To: <ZgRIF1bkXlZlaK22@neat>
+To: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 
-Syskiller has produced an out of bounds access in fill_meta_index().
+Hello:
 
-That out of bounds access is ultimately caused because the inode
-has an inode number with the invalid value of zero, which was not checked.
+This patch was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-The reason this causes the out of bounds access is due to following
-sequence of events:
+On Wed, 27 Mar 2024 10:23:51 -0600 you wrote:
+> -Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+> ready to enable it globally.
+> 
+> There are currently a couple of objects (`req` and `rsp`), in a couple
+> of structures, that contain flexible structures (`struct l2cap_ecred_conn_req`
+> and `struct l2cap_ecred_conn_rsp`), for example:
+> 
+> [...]
 
-1. Fill_meta_index() is called to allocate (via empty_meta_index())
-   and fill a metadata index.  It however suffers a data read error
-   and aborts, invalidating the newly returned empty metadata index.
-   It does this by setting the inode number of the index to zero,
-   which means unused (zero is not a valid inode number).
+Here is the summary with links:
+  - [v2,next] Bluetooth: L2CAP: Avoid -Wflex-array-member-not-at-end warnings
+    https://git.kernel.org/bluetooth/bluetooth-next/c/215c4704208b
 
-2. When fill_meta_index() is subsequently called again on another
-   read operation, locate_meta_index() returns the previous index
-   because it matches the inode number of 0.  Because this index
-   has been returned it is expected to have been filled, and because
-   it hasn't been, an out of bounds access is performed.
-
-This patch adds a sanity check which checks that the inode number
-is not zero when the inode is created and returns -EINVAL if it is.
-
-Reported-by: "Ubisectech Sirius" <bugreport@ubisectech.com>
-Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
-Closes: https://lore.kernel.org/lkml/87f5c007-b8a5-41ae-8b57-431e924c5915.bugreport@ubisectech.com/
----
- fs/squashfs/inode.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/fs/squashfs/inode.c b/fs/squashfs/inode.c
-index aa3411354e66..e0896d8a3cc6 100644
---- a/fs/squashfs/inode.c
-+++ b/fs/squashfs/inode.c
-@@ -48,6 +48,10 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
- 	gid_t i_gid;
- 	int err;
- 
-+	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
-+	if(inode->i_ino == 0)
-+		return -EINVAL;
-+
- 	err = squashfs_get_id(sb, le16_to_cpu(sqsh_ino->uid), &i_uid);
- 	if (err)
- 		return err;
-@@ -58,7 +62,6 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
- 
- 	i_uid_write(inode, i_uid);
- 	i_gid_write(inode, i_gid);
--	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
- 	inode_set_mtime(inode, le32_to_cpu(sqsh_ino->mtime), 0);
- 	inode_set_atime(inode, inode_get_mtime_sec(inode), 0);
- 	inode_set_ctime(inode, inode_get_mtime_sec(inode), 0);
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
