@@ -1,37 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41ED547F78;
-	Mon,  8 Apr 2024 08:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8727550261;
+	Mon,  8 Apr 2024 08:10:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712563810; cv=none; b=sDJKj3We38da7RBHP6uWAu18ZxG1OdjSFBynDOrgB86uDRz9HkUav2P8kvqFcD/Rj3nSRPQE3wKnDGVMe23ZmXlVgSUT5HxAHqkrfkhD7/ACRUdDg+ui78jXKuq00x+ZKKR1bUS+sS06Q2obzihP4D9iKWWaF1aRE3/WlQSAPB4=
+	t=1712563814; cv=none; b=BkH3oZyv5kE793ikygLvdYCBB39oQ/uPi245+Hxj9S6Bh9oVMRhzxgDF3vfqafo61/m2iagPeDtWG16fO1L1WXC6qgBAdl5B+P0F17dZOIW3MRi5W6Kfyofh75nSTO10mF7/EIrLonvDf3LiJE4gLTTzDrz+sPrI8sfSpRv+txk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712563810; c=relaxed/simple;
-	bh=8f5AJcVyMCVdBGpRh/cMNojGmtTLT2eU0t/+WqpiVo0=;
+	s=arc-20240116; t=1712563814; c=relaxed/simple;
+	bh=VK5TMS1RBt4n3wTN5emOMrl/EafXnUKW81ujAeZ/zaQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fv+oIUtHK4VZM9flB0pLlYcJd79bDqnvaCr+Efa+skrcwIUtgNbXbW/jW1diXbXq53ArSYGfc2GxYrsgZQhi1rk76768bXPlOEL42CZ6rTvozUELGma9V+/oaCsK1TgsGZSWNp77tUaBcq7omukfSRktMOw1OidkTt9rEB6OVvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfkfWdF8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tKUNF/gM7iua3JR3zZadGJ2E0Iqs15tKvComVVnQYiMzECnrhG0Z21jWCd8GasKndFk7YGF80q/3S/OGFgQYaJhHwzoMmsy0dZ9gUgJGbQZx4AQcTjaJFqeGDRwf+oFwh7GR0B2IMLPTLsJZS9NrjFWWRNMy+TZOyrhiCj5C6cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aly/g6MA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfkfWdF8"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DFD67C43141;
-	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aly/g6MA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD2F1C433C7;
+	Mon,  8 Apr 2024 08:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712563809;
-	bh=8f5AJcVyMCVdBGpRh/cMNojGmtTLT2eU0t/+WqpiVo0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mfkfWdF8YdwEtDvU5yvb5IvVL9SnxNEC3VGhFTrmnDpDzAJhk4fIypo5wYMT2vi+C
-	 11XXBSwZLbFu6JnsTd/iI1FTLmUID4voqLhKkoo/XsyqsiKtT0RDfWt77u24Xyilu5
-	 gkNuXdjKx3B/I01LP/UWhn+7uNR6JwHwGSstyz1Mwj09YnrxUW+FmRbnBPUDGZeGKP
-	 QmZYE+1BQ/FJiOR/pZXDV4tn7cUoFV1CFgfR2DIptnNjStcakFB9jHpC4VzMYNTimg
-	 gp57c1nI6rlrk5UC45Srl1w1sk5ucLguGDAj9d8C8h33QyfluhU5aWkBP5P6m8OWcz
-	 GNwIZUDCIyPQg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8656CD1296;
-	Mon,  8 Apr 2024 08:10:09 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 08 Apr 2024 11:09:54 +0300
-Subject: [PATCH 2/4] clk: ep93xx: add DT support for Cirrus EP93xx
+	s=k20201202; t=1712563814;
+	bh=VK5TMS1RBt4n3wTN5emOMrl/EafXnUKW81ujAeZ/zaQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=aly/g6MAD0Joz022TK5sZ9ySr8NS3Gg2ZjmhgV9eUlJJq2Th/WS1AvTi0gHlnqWAD
+	 M7z1TjSgkjqnnf8o80InKUs1yDnwvKB0ZtgMxDdSbL59po7T4zGGw7xsKd5zErHN+M
+	 AwzoDToAUCDwxJwkxwhS/Tz2lOEc2Dz/IDfN3FQoyuXHTeXM8DxFZzyORFxcDsU+JZ
+	 +PMKfmVf9TPJJP7THWRxp2Adt4qHJBJQzriHT+Tf9mbsgTJ+GmRw5dDP1s35yLYAJg
+	 zzXpQmwlSSrvMEDoF8rpyBRt0MVRNqXmbrDybjuNAKafjNFinJZj8OZzpYhkefd4ls
+	 lmuNsrdOsIrEQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Mon, 08 Apr 2024 10:09:31 +0200
+Subject: [PATCH RFC bpf-next v6 6/6] selftests/bpf: add sleepable timer
+ tests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,928 +37,384 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240408-ep93xx-clk-v1-2-1d0f4c324647@maquefel.me>
-References: <20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.me>
-In-Reply-To: <20240408-ep93xx-clk-v1-0-1d0f4c324647@maquefel.me>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, Nikita Shubin <nikita.shubin@maquefel.me>, 
- Arnd Bergmann <arnd@arndb.de>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563809; l=26984;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=h7GiU8wI0jMwul7wD4UwyuKgcvj8MOS5kFkB97J8Lt8=;
- b=3ADsdVM1yxaaakk+oqn2eH46V7PZExkB0Ij4tH+gEm7JP6M1WSJ2M9LF9kcSlG0eyDY41IU6K23x
- Sb1fG9fdAFs7RnjrJzVzVHuIkhMacfTRDiy5G0SLDxixxbSy8kV/
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240408-hid-bpf-sleepable-v6-6-0499ddd91b94@kernel.org>
+References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+In-Reply-To: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, bpf@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712563787; l=10863;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=VK5TMS1RBt4n3wTN5emOMrl/EafXnUKW81ujAeZ/zaQ=;
+ b=DkDztKSSM7lLUnbAHdGqP2rfKfHFrniK23AmOurdhWu2n1ngDjhSbKcRfGY08H+huRvSX8YNF
+ DafjdkIw+xHDY0WMCUKiwZoi0dO0lrq27KPkm5BiTlAhm39gffESED5
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+bpf_experimental.h and ../bpf_testmod/bpf_testmod_kfunc.h are both
+including vmlinux.h, which is not compatible with including time.h
+or bpf_tcp_helpers.h.
 
-Rewrite EP93xx clock driver located in arch/arm/mach-ep93xx/clock.c
-trying to do everything the device tree way:
+So keep sleepable tests in a separate bpf source file.
 
-- provide clock acces via of
-- drop clk_hw_register_clkdev
-- drop init code and use module_auxiliary_driver
+The first correct test is run twice for convenience:
+- first through RUN_TESTS
+- then we ensure that the timer was actually executed, in a manual
+  load/attach/run
 
-Co-developed-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+
 ---
- drivers/clk/Kconfig      |   8 +
- drivers/clk/Makefile     |   1 +
- drivers/clk/clk-ep93xx.c | 840 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 849 insertions(+)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 50af5fc7f570..0f0351251285 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -218,6 +218,14 @@ config COMMON_CLK_EN7523
- 	  This driver provides the fixed clocks and gates present on Airoha
- 	  ARM silicon.
+changes in v6:
+- use of new _init API with BPF_F_TIMER_SLEEPABLE
+
+changes in v5b:
+- do not use SEC(syscall) as they are run in a sleepable context
+  already
+- duplicate test_call_sleepable() so we can test if the callback gets
+  called
+
+changes in v5:
+- keep sleepable test separate
+
+new in v4
+---
+ tools/testing/selftests/bpf/bpf_experimental.h     |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod.c        |   5 +
+ .../selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h  |   1 +
+ tools/testing/selftests/bpf/prog_tests/timer.c     |  34 ++++
+ .../testing/selftests/bpf/progs/timer_sleepable.c  | 213 +++++++++++++++++++++
+ 5 files changed, 258 insertions(+)
+
+diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
+index a5b9df38c162..06ed98b3bc51 100644
+--- a/tools/testing/selftests/bpf/bpf_experimental.h
++++ b/tools/testing/selftests/bpf/bpf_experimental.h
+@@ -459,4 +459,9 @@ extern int bpf_iter_css_new(struct bpf_iter_css *it,
+ extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __weak __ksym;
+ extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
  
-+config COMMON_CLK_EP93XX
-+	bool "Clock driver for Cirrus Logic ep93xx SoC"
-+	depends on ARCH_EP93XX || COMPILE_TEST
-+	select MFD_SYSCON
-+	select REGMAP
-+	help
-+	  This driver supports the SoC clocks on the Cirrus Logic ep93xx.
++extern int bpf_timer_set_sleepable_cb_impl(struct bpf_timer *timer,
++		int (callback_fn)(void *map, int *key, struct bpf_timer *timer),
++		void *aux__ign) __ksym;
++#define bpf_timer_set_sleepable_cb(timer, cb) \
++	bpf_timer_set_sleepable_cb_impl(timer, cb, NULL)
+ #endif
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+index 39ad96a18123..eb2b78552ca2 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c
+@@ -494,6 +494,10 @@ __bpf_kfunc static u32 bpf_kfunc_call_test_static_unused_arg(u32 arg, u32 unused
+ 	return arg;
+ }
+ 
++__bpf_kfunc void bpf_kfunc_call_test_sleepable(void)
++{
++}
 +
- config COMMON_CLK_FSL_FLEXSPI
- 	tristate "Clock driver for FlexSPI on Layerscape SoCs"
- 	depends on ARCH_LAYERSCAPE || COMPILE_TEST
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 14fa8d4ecc1f..bfb8827deda7 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -30,6 +30,7 @@ obj-$(CONFIG_COMMON_CLK_CDCE706)	+= clk-cdce706.o
- obj-$(CONFIG_COMMON_CLK_CDCE925)	+= clk-cdce925.o
- obj-$(CONFIG_ARCH_CLPS711X)		+= clk-clps711x.o
- obj-$(CONFIG_COMMON_CLK_CS2000_CP)	+= clk-cs2000-cp.o
-+obj-$(CONFIG_COMMON_CLK_EP93XX)		+= clk-ep93xx.o
- obj-$(CONFIG_ARCH_SPARX5)		+= clk-sparx5.o
- obj-$(CONFIG_COMMON_CLK_EN7523)		+= clk-en7523.o
- obj-$(CONFIG_COMMON_CLK_FIXED_MMIO)	+= clk-fixed-mmio.o
-diff --git a/drivers/clk/clk-ep93xx.c b/drivers/clk/clk-ep93xx.c
+ BTF_KFUNCS_START(bpf_testmod_check_kfunc_ids)
+ BTF_ID_FLAGS(func, bpf_testmod_test_mod_kfunc)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test1)
+@@ -520,6 +524,7 @@ BTF_ID_FLAGS(func, bpf_kfunc_call_test_ref, KF_TRUSTED_ARGS | KF_RCU)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_destructive, KF_DESTRUCTIVE)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_static_unused_arg)
+ BTF_ID_FLAGS(func, bpf_kfunc_call_test_offset)
++BTF_ID_FLAGS(func, bpf_kfunc_call_test_sleepable, KF_SLEEPABLE)
+ BTF_KFUNCS_END(bpf_testmod_check_kfunc_ids)
+ 
+ static int bpf_testmod_ops_init(struct btf *btf)
+diff --git a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
+index 7c664dd61059..ce5cd763561c 100644
+--- a/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
++++ b/tools/testing/selftests/bpf/bpf_testmod/bpf_testmod_kfunc.h
+@@ -96,6 +96,7 @@ void bpf_kfunc_call_test_pass2(struct prog_test_pass2 *p) __ksym;
+ void bpf_kfunc_call_test_mem_len_fail2(__u64 *mem, int len) __ksym;
+ 
+ void bpf_kfunc_call_test_destructive(void) __ksym;
++void bpf_kfunc_call_test_sleepable(void) __ksym;
+ 
+ void bpf_kfunc_call_test_offset(struct prog_test_ref_kfunc *p);
+ struct prog_test_member *bpf_kfunc_call_memb_acquire(void);
+diff --git a/tools/testing/selftests/bpf/prog_tests/timer.c b/tools/testing/selftests/bpf/prog_tests/timer.c
+index d66687f1ee6a..c6c7c623b31c 100644
+--- a/tools/testing/selftests/bpf/prog_tests/timer.c
++++ b/tools/testing/selftests/bpf/prog_tests/timer.c
+@@ -3,6 +3,7 @@
+ #include <test_progs.h>
+ #include "timer.skel.h"
+ #include "timer_failure.skel.h"
++#include "timer_sleepable.skel.h"
+ 
+ #define NUM_THR 8
+ 
+@@ -95,3 +96,36 @@ void serial_test_timer(void)
+ 
+ 	RUN_TESTS(timer_failure);
+ }
++
++/* isolate sleepable tests from main timer tests
++ * because if test_timer fails, it spews the console
++ * with 10000 * 5 "spin_lock_thread:PASS:test_run_opts retval 0 nsec"
++ */
++void serial_test_sleepable_timer(void)
++{
++	struct timer_sleepable *timer_sleepable_skel = NULL;
++	int err, prog_fd;
++
++	LIBBPF_OPTS(bpf_test_run_opts, topts);
++
++	RUN_TESTS(timer_sleepable);
++
++	/* re-run the success test to check if the timer was actually executed */
++
++	timer_sleepable_skel = timer_sleepable__open_and_load();
++	if (!ASSERT_OK_PTR(timer_sleepable_skel, "timer_sleepable_skel_load"))
++		return;
++
++	err = timer_sleepable__attach(timer_sleepable_skel);
++	if (!ASSERT_OK(err, "timer_sleepable_attach"))
++		return;
++
++	prog_fd = bpf_program__fd(timer_sleepable_skel->progs.test_syscall_sleepable);
++	err = bpf_prog_test_run_opts(prog_fd, &topts);
++	ASSERT_OK(err, "test_run");
++	ASSERT_EQ(topts.retval, 0, "test_run");
++
++	usleep(50); /* 10 usecs should be enough, but give it extra */
++
++	ASSERT_EQ(timer_sleepable_skel->bss->ok_sleepable, 1, "ok_sleepable");
++}
+diff --git a/tools/testing/selftests/bpf/progs/timer_sleepable.c b/tools/testing/selftests/bpf/progs/timer_sleepable.c
 new file mode 100644
-index 000000000000..601acb4402be
+index 000000000000..fc7829d8b6c4
 --- /dev/null
-+++ b/drivers/clk/clk-ep93xx.c
-@@ -0,0 +1,840 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Clock control for Cirrus EP93xx chips.
-+ * Copyright (C) 2021 Nikita Shubin <nikita.shubin@maquefel.me>
-+ *
-+ * Based on a rewrite of arch/arm/mach-ep93xx/clock.c:
-+ * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
++++ b/tools/testing/selftests/bpf/progs/timer_sleepable.c
+@@ -0,0 +1,213 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2021 Facebook
++ * Copyright (c) 2024 Benjamin Tissoires
 + */
-+#define pr_fmt(fmt) "ep93xx " KBUILD_MODNAME ": " fmt
 +
-+#include <linux/bits.h>
-+#include <linux/cleanup.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/math.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/spinlock.h>
-+#include <linux/sys_soc.h>
++#include "bpf_experimental.h"
++#include <bpf/bpf_helpers.h>
++#include "bpf_misc.h"
++#include "../bpf_testmod/bpf_testmod_kfunc.h"
 +
-+#include <linux/soc/cirrus/ep93xx.h>
-+#include <dt-bindings/clock/cirrus,ep9301-syscon.h>
++char _license[] SEC("license") = "GPL";
 +
-+#include <asm/div64.h>
++#define CLOCK_MONOTONIC 1
 +
-+#define EP93XX_EXT_CLK_RATE		14745600
-+#define EP93XX_EXT_RTC_RATE		32768
-+
-+#define EP93XX_SYSCON_POWER_STATE	0x00
-+#define EP93XX_SYSCON_PWRCNT		0x04
-+#define EP93XX_SYSCON_PWRCNT_UARTBAUD	BIT(29)
-+#define EP93XX_SYSCON_PWRCNT_USH_EN	28
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2M1	27
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2M0	26
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P8	25
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P9	24
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P6	23
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P7	22
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P4	21
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P5	20
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P2	19
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P3	18
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P0	17
-+#define EP93XX_SYSCON_PWRCNT_DMA_M2P1	16
-+#define EP93XX_SYSCON_CLKSET1		0x20
-+#define EP93XX_SYSCON_CLKSET1_NBYP1	BIT(23)
-+#define EP93XX_SYSCON_CLKSET2		0x24
-+#define EP93XX_SYSCON_CLKSET2_NBYP2	BIT(19)
-+#define EP93XX_SYSCON_CLKSET2_PLL2_EN	BIT(18)
-+#define EP93XX_SYSCON_DEVCFG		0x80
-+#define EP93XX_SYSCON_DEVCFG_U3EN	24
-+#define EP93XX_SYSCON_DEVCFG_U2EN	20
-+#define EP93XX_SYSCON_DEVCFG_U1EN	18
-+#define EP93XX_SYSCON_VIDCLKDIV		0x84
-+#define EP93XX_SYSCON_CLKDIV_ENABLE	15
-+#define EP93XX_SYSCON_CLKDIV_ESEL	BIT(14)
-+#define EP93XX_SYSCON_CLKDIV_PSEL	BIT(13)
-+#define EP93XX_SYSCON_CLKDIV_MASK	GENMASK(14, 13)
-+#define EP93XX_SYSCON_CLKDIV_PDIV_SHIFT	8
-+#define EP93XX_SYSCON_I2SCLKDIV		0x8c
-+#define EP93XX_SYSCON_I2SCLKDIV_SENA	31
-+#define EP93XX_SYSCON_I2SCLKDIV_ORIDE	BIT(29)
-+#define EP93XX_SYSCON_I2SCLKDIV_SPOL	BIT(19)
-+#define EP93XX_SYSCON_KEYTCHCLKDIV	0x90
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_TSEN	31
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_ADIV	16
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_KEN	15
-+#define EP93XX_SYSCON_KEYTCHCLKDIV_KDIV	0
-+#define EP93XX_SYSCON_CHIPID		0x94
-+#define EP93XX_SYSCON_CHIPID_ID		0x9213
-+
-+static const char adc_divisors[] = { 16, 4 };
-+static const char sclk_divisors[] = { 2, 4 };
-+static const char lrclk_divisors[] = { 32, 64, 128 };
-+
-+struct ep93xx_clk {
-+	struct clk_hw hw;
-+	u16 idx;
-+	u16 reg;
-+	u32 mask;
-+	u8 bit_idx;
-+	u8 shift;
-+	u8 width;
-+	u8 num_div;
-+	const char *div;
++struct elem {
++	struct bpf_timer t;
 +};
 +
-+struct ep93xx_clk_priv {
-+	spinlock_t lock;
-+	struct ep93xx_regmap_adev *aux_dev;
-+	struct device *dev;
-+	void __iomem *base;
-+	struct regmap *map;
-+	struct clk_hw *fixed[21];
-+	struct ep93xx_clk reg[];
-+};
++struct {
++	__uint(type, BPF_MAP_TYPE_ARRAY);
++	__uint(max_entries, 3);
++	__type(key, int);
++	__type(value, struct elem);
++} timer_map SEC(".maps");
 +
-+static struct ep93xx_clk *ep93xx_clk_from(struct clk_hw *hw)
++__u32 ok_sleepable;
++
++/* callback for sleepable timer */
++static int timer_cb_sleepable(void *map, int *key, struct bpf_timer *timer)
 +{
-+	return container_of(hw, struct ep93xx_clk, hw);
-+}
-+
-+static struct ep93xx_clk_priv *ep93xx_priv_from(struct ep93xx_clk *clk)
-+{
-+	return container_of(clk, struct ep93xx_clk_priv, reg[clk->idx]);
-+}
-+
-+static void ep93xx_clk_write(struct ep93xx_clk_priv *priv, unsigned int reg, unsigned int val)
-+{
-+	struct ep93xx_regmap_adev *aux = priv->aux_dev;
-+
-+	aux->write(aux->map, aux->lock, reg, val);
-+}
-+
-+static int ep93xx_clk_is_enabled(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+
-+	return !!(val & BIT(clk->bit_idx));
-+}
-+
-+static int ep93xx_clk_enable(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val |= BIT(clk->bit_idx);
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
++	bpf_kfunc_call_test_sleepable();
++	ok_sleepable |= (1 << *key);
 +	return 0;
 +}
 +
-+static void ep93xx_clk_disable(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~BIT(clk->bit_idx);
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+}
-+
-+static const struct clk_ops clk_ep93xx_gate_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
-+};
-+
-+static int ep93xx_clk_register_gate(struct ep93xx_clk *clk,
-+				    const char *name,
-+				    struct clk_parent_data *parent_data,
-+				    unsigned long flags,
-+				    unsigned int reg,
-+				    u8 bit_idx)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
-+
-+	init.name = name;
-+	init.ops = &clk_ep93xx_gate_ops;
-+	init.flags = flags;
-+	init.parent_data = parent_data;
-+	init.num_parents = 1;
-+
-+	clk->reg = reg;
-+	clk->bit_idx = bit_idx;
-+	clk->hw.init = &init;
-+
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
-+}
-+
-+static u8 ep93xx_mux_get_parent(struct clk_hw *hw)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+
-+	val &= EP93XX_SYSCON_CLKDIV_MASK;
-+
-+	switch (val) {
-+	case EP93XX_SYSCON_CLKDIV_ESEL:
-+		return 1; /* PLL1 */
-+	case EP93XX_SYSCON_CLKDIV_MASK:
-+		return 2; /* PLL2 */
-+	default:
-+		return 0; /* XTALI */
-+	};
-+}
-+
-+static int ep93xx_mux_set_parent_lock(struct clk_hw *hw, u8 index)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+
-+	if (index >= 3)
-+		return -EINVAL;
-+
-+	guard(spinlock_irqsave)(&priv->lock);
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~(EP93XX_SYSCON_CLKDIV_MASK);
-+	val |= index > 0 ? EP93XX_SYSCON_CLKDIV_ESEL : 0;
-+	val |= index > 1 ? EP93XX_SYSCON_CLKDIV_PSEL : 0;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static bool is_best(unsigned long rate, unsigned long now,
-+		     unsigned long best)
-+{
-+	return abs_diff(rate, now) < abs_diff(rate, best);
-+}
-+
-+static int ep93xx_mux_determine_rate(struct clk_hw *hw,
-+				struct clk_rate_request *req)
-+{
-+	unsigned long best_rate = 0, actual_rate, mclk_rate;
-+	unsigned long rate = req->rate;
-+	struct clk_hw *parent_best = NULL;
-+	unsigned long parent_rate_best;
-+	unsigned long parent_rate;
-+	int div, pdiv;
-+	unsigned int i;
-+
-+	/*
-+	 * Try the two pll's and the external clock,
-+	 * because the valid predividers are 2, 2.5 and 3, we multiply
-+	 * all the clocks by 2 to avoid floating point math.
-+	 *
-+	 * This is based on the algorithm in the ep93xx raster guide:
-+	 * http://be-a-maverick.com/en/pubs/appNote/AN269REV1.pdf
-+	 *
-+	 */
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+
-+		parent_rate = clk_hw_get_rate(parent);
-+		mclk_rate = parent_rate * 2;
-+
-+		/* Try each predivider value */
-+		for (pdiv = 4; pdiv <= 6; pdiv++) {
-+			div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
-+			if (!in_range(div, 1, 127))
-+				continue;
-+
-+			actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
-+			if (is_best(rate, actual_rate, best_rate)) {
-+				best_rate = actual_rate;
-+				parent_rate_best = parent_rate;
-+				parent_best = parent;
-+			}
-+		}
-+	}
-+
-+	if (!parent_best)
-+		return -EINVAL;
-+
-+	req->best_parent_rate = parent_rate_best;
-+	req->best_parent_hw = parent_best;
-+	req->rate = best_rate;
-+
-+	return 0;
-+}
-+
-+static unsigned long ep93xx_ddiv_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	unsigned int pdiv, div;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	pdiv = (val >> EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) & GENMASK(1, 0);
-+	div = val & GENMASK(6, 0);
-+	if (!div)
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(parent_rate * 2, (pdiv + 3) * div);
-+}
-+
-+static int ep93xx_ddiv_set_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	int pdiv, div, npdiv, ndiv;
-+	unsigned long actual_rate, mclk_rate, rate_err = ULONG_MAX;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	mclk_rate = parent_rate * 2;
-+
-+	for (pdiv = 4; pdiv <= 6; pdiv++) {
-+		div = DIV_ROUND_CLOSEST(mclk_rate, rate * pdiv);
-+		if (!in_range(div, 1, 127))
-+			continue;
-+
-+		actual_rate = DIV_ROUND_CLOSEST(mclk_rate, pdiv * div);
-+		if (abs(actual_rate - rate) < rate_err) {
-+			npdiv = pdiv - 3;
-+			ndiv = div;
-+			rate_err = abs(actual_rate - rate);
-+		}
-+	}
-+
-+	if (rate_err == ULONG_MAX)
-+		return -EINVAL;
-+
-+	/*
-+	 * Clear old dividers.
-+	 * Bit 7 is reserved bit in all ClkDiv registers.
-+	 */
-+	val &= ~(GENMASK(9, 0) & ~BIT(7));
-+
-+	/* Set the new pdiv and div bits for the new clock rate */
-+	val |= (npdiv << EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | ndiv;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops clk_ddiv_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
-+	.get_parent = ep93xx_mux_get_parent,
-+	.set_parent = ep93xx_mux_set_parent_lock,
-+	.determine_rate = ep93xx_mux_determine_rate,
-+	.recalc_rate = ep93xx_ddiv_recalc_rate,
-+	.set_rate = ep93xx_ddiv_set_rate,
-+};
-+
-+static int clk_hw_register_ddiv(struct ep93xx_clk *clk,
-+				const char *name,
-+				struct clk_parent_data *parent_data,
-+				u8 num_parents,
-+				unsigned int reg,
-+				u8 bit_idx)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
-+
-+	init.name = name;
-+	init.ops = &clk_ddiv_ops;
-+	init.flags = 0;
-+	init.parent_data = parent_data;
-+	init.num_parents = num_parents;
-+
-+	clk->reg = reg;
-+	clk->bit_idx = bit_idx;
-+	clk->hw.init = &init;
-+
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
-+}
-+
-+static unsigned long ep93xx_div_recalc_rate(struct clk_hw *hw,
-+					    unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	u32 val;
-+	u8 index;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	index = (val & clk->mask) >> clk->shift;
-+	if (index > clk->num_div)
-+		return 0;
-+
-+	return DIV_ROUND_CLOSEST(parent_rate, clk->div[index]);
-+}
-+
-+static long ep93xx_div_round_rate(struct clk_hw *hw, unsigned long rate,
-+				   unsigned long *parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	unsigned long best = 0, now;
-+	unsigned int i;
-+
-+	for (i = 0; i < clk->num_div; i++) {
-+		if ((rate * clk->div[i]) == *parent_rate)
-+			return rate;
-+
-+		now = DIV_ROUND_CLOSEST(*parent_rate, clk->div[i]);
-+		if (!best || is_best(rate, now, best))
-+			best = now;
-+	}
-+
-+	return best;
-+}
-+
-+static int ep93xx_div_set_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long parent_rate)
-+{
-+	struct ep93xx_clk *clk = ep93xx_clk_from(hw);
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	unsigned int i;
-+	u32 val;
-+
-+	regmap_read(priv->map, clk->reg, &val);
-+	val &= ~clk->mask;
-+	for (i = 0; i < clk->num_div; i++)
-+		if (rate == DIV_ROUND_CLOSEST(parent_rate, clk->div[i]))
-+			break;
-+
-+	if (i == clk->num_div)
-+		return -EINVAL;
-+
-+	val |= i << clk->shift;
-+
-+	ep93xx_clk_write(priv, clk->reg, val);
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops ep93xx_div_ops = {
-+	.enable = ep93xx_clk_enable,
-+	.disable = ep93xx_clk_disable,
-+	.is_enabled = ep93xx_clk_is_enabled,
-+	.recalc_rate = ep93xx_div_recalc_rate,
-+	.round_rate = ep93xx_div_round_rate,
-+	.set_rate = ep93xx_div_set_rate,
-+};
-+
-+static int clk_hw_register_div(struct ep93xx_clk *clk,
-+			       const char *name,
-+			       struct clk_parent_data *parent_data,
-+			       unsigned int reg,
-+			       u8 enable_bit,
-+			       u8 shift,
-+			       u8 width,
-+			       const char *clk_divisors,
-+			       u8 num_div)
-+{
-+	struct ep93xx_clk_priv *priv = ep93xx_priv_from(clk);
-+	struct clk_init_data init = { };
-+
-+	init.name = name;
-+	init.ops = &ep93xx_div_ops;
-+	init.flags = 0;
-+	init.parent_data = parent_data;
-+	init.num_parents = 1;
-+
-+	clk->reg = reg;
-+	clk->bit_idx = enable_bit;
-+	clk->mask = GENMASK(shift + width - 1, shift);
-+	clk->shift = shift;
-+	clk->div = clk_divisors;
-+	clk->num_div = num_div;
-+	clk->hw.init = &init;
-+
-+	return devm_clk_hw_register(priv->dev, &clk->hw);
-+}
-+
-+struct ep93xx_gate {
-+	unsigned int idx;
-+	unsigned int bit;
-+	const char *name;
-+};
-+
-+static const struct ep93xx_gate ep93xx_uarts[] = {
-+	{ EP93XX_CLK_UART1, EP93XX_SYSCON_DEVCFG_U1EN, "uart1" },
-+	{ EP93XX_CLK_UART2, EP93XX_SYSCON_DEVCFG_U2EN, "uart2" },
-+	{ EP93XX_CLK_UART3, EP93XX_SYSCON_DEVCFG_U3EN, "uart3" },
-+};
-+
-+static int ep93xx_uart_clock_init(struct ep93xx_clk_priv *priv)
-+{
-+	struct clk_parent_data parent_data = { };
-+	unsigned int i, idx, ret, clk_uart_div;
-+	struct ep93xx_clk *clk;
-+	u32 val;
-+
-+	regmap_read(priv->map, EP93XX_SYSCON_PWRCNT, &val);
-+	if (val & EP93XX_SYSCON_PWRCNT_UARTBAUD)
-+		clk_uart_div = 1;
-+	else
-+		clk_uart_div = 2;
-+
-+	priv->fixed[EP93XX_CLK_UART] =
-+		clk_hw_register_fixed_factor(NULL, "uart", "xtali", 0, 1, clk_uart_div);
-+	parent_data.hw = priv->fixed[EP93XX_CLK_UART];
-+
-+	/* parenting uart gate clocks to uart clock */
-+	for (i = 0; i < ARRAY_SIZE(ep93xx_uarts); i++) {
-+		idx = ep93xx_uarts[i].idx - EP93XX_CLK_UART1;
-+		clk = &priv->reg[idx];
-+		clk->idx = idx;
-+		ret = ep93xx_clk_register_gate(clk,
-+					ep93xx_uarts[i].name,
-+					&parent_data, CLK_SET_RATE_PARENT,
-+					EP93XX_SYSCON_DEVCFG,
-+					ep93xx_uarts[i].bit);
-+		if (ret)
-+			return dev_err_probe(priv->dev, ret,
-+					     "failed to register uart[%d] clock\n", i);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct ep93xx_gate ep93xx_dmas[] = {
-+	{ EP93XX_CLK_M2M0, EP93XX_SYSCON_PWRCNT_DMA_M2M0, "m2m0" },
-+	{ EP93XX_CLK_M2M1, EP93XX_SYSCON_PWRCNT_DMA_M2M1, "m2m1" },
-+	{ EP93XX_CLK_M2P0, EP93XX_SYSCON_PWRCNT_DMA_M2P0, "m2p0" },
-+	{ EP93XX_CLK_M2P1, EP93XX_SYSCON_PWRCNT_DMA_M2P1, "m2p1" },
-+	{ EP93XX_CLK_M2P2, EP93XX_SYSCON_PWRCNT_DMA_M2P2, "m2p2" },
-+	{ EP93XX_CLK_M2P3, EP93XX_SYSCON_PWRCNT_DMA_M2P3, "m2p3" },
-+	{ EP93XX_CLK_M2P4, EP93XX_SYSCON_PWRCNT_DMA_M2P4, "m2p4" },
-+	{ EP93XX_CLK_M2P5, EP93XX_SYSCON_PWRCNT_DMA_M2P5, "m2p5" },
-+	{ EP93XX_CLK_M2P6, EP93XX_SYSCON_PWRCNT_DMA_M2P6, "m2p6" },
-+	{ EP93XX_CLK_M2P7, EP93XX_SYSCON_PWRCNT_DMA_M2P7, "m2p7" },
-+	{ EP93XX_CLK_M2P8, EP93XX_SYSCON_PWRCNT_DMA_M2P8, "m2p8" },
-+	{ EP93XX_CLK_M2P9, EP93XX_SYSCON_PWRCNT_DMA_M2P9, "m2p9" },
-+};
-+
-+static int ep93xx_dma_clock_init(struct ep93xx_clk_priv *priv)
-+{
-+	struct clk_parent_data parent_data = { };
-+	unsigned int i, idx;
-+
-+	parent_data.hw = priv->fixed[EP93XX_CLK_HCLK];
-+	for (i = 0; i < ARRAY_SIZE(ep93xx_dmas); i++) {
-+		idx = ep93xx_dmas[i].idx;
-+		priv->fixed[idx] = devm_clk_hw_register_gate_parent_data(priv->dev,
-+					ep93xx_dmas[i].name,
-+					&parent_data, 0,
-+					priv->base + EP93XX_SYSCON_PWRCNT,
-+					ep93xx_dmas[i].bit,
-+					0,
-+					&priv->lock);
-+		if (IS_ERR(priv->fixed[idx]))
-+			return PTR_ERR(priv->fixed[idx]);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct clk_hw *of_clk_ep93xx_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct ep93xx_clk_priv *priv = data;
-+	unsigned int idx = clkspec->args[0];
-+
-+	if (idx < EP93XX_CLK_UART1)
-+		return priv->fixed[idx];
-+
-+	if (idx <= EP93XX_CLK_I2S_LRCLK)
-+		return &priv->reg[idx - EP93XX_CLK_UART1].hw;
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+/*
-+ * PLL rate = 14.7456 MHz * (X1FBD + 1) * (X2FBD + 1) / (X2IPD + 1) / 2^PS
++SEC("tc")
++/* check that calling bpf_timer_start() with BPF_F_TIMER_SLEEPABLE on a sleepable
++ * callback works
 + */
-+static unsigned long calc_pll_rate(u64 rate, u32 config_word)
++__retval(0)
++long test_call_sleepable(void *ctx)
 +{
-+	rate *= ((config_word >> 11) & GENMASK(4, 0)) + 1;	/* X1FBD */
-+	rate *= ((config_word >> 5) & GENMASK(5, 0)) + 1;	/* X2FBD */
-+	do_div(rate, (config_word & GENMASK(4, 0)) + 1);	/* X2IPD */
-+	rate >>= (config_word >> 16) & GENMASK(1, 0);		/* PS */
++	int key = 0;
++	struct bpf_timer *timer;
 +
-+	return rate;
++	if (ok_sleepable & 1)
++		return -1;
++
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (timer) {
++		if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE) != 0)
++			return -2;
++		bpf_timer_set_sleepable_cb(timer, timer_cb_sleepable);
++		if (bpf_timer_start(timer, 0, 0))
++			return -3;
++	} else {
++		return -4;
++	}
++
++	return 0;
 +}
 +
-+static const struct soc_device_attribute ep93xx_soc_table[] = {
-+	{ .revision = "E2", .data = (void *)1 },
-+	{ /* sentinel */ }
-+};
-+
-+static int ep93xx_clk_probe(struct auxiliary_device *adev,
-+			       const struct auxiliary_device_id *id)
++SEC("syscall")
++/* check that calling bpf_timer_start() with BPF_F_TIMER_SLEEPABLE on a sleepable
++ * callback works.
++ */
++__retval(0)
++long test_syscall_sleepable(void *ctx)
 +{
-+	struct ep93xx_regmap_adev *rdev = to_ep93xx_regmap_adev(adev);
-+	unsigned int clk_f_div, clk_h_div, clk_p_div, clk_usb_div;
-+	const char fclk_divisors[] = { 1, 2, 4, 8, 16, 1, 1, 1 };
-+	const char hclk_divisors[] = { 1, 2, 4, 5, 6, 8, 16, 32 };
-+	const char pclk_divisors[] = { 1, 2, 4, 8 };
-+	struct clk_parent_data xtali = { .index = 0 };
-+	struct clk_parent_data ddiv_pdata[3] = { };
-+	unsigned long clk_pll1_rate, clk_pll2_rate, clk_spi_div;
-+	const struct soc_device_attribute *match;
-+	struct clk_parent_data pdata = {};
-+	struct device *dev = &adev->dev;
-+	struct ep93xx_clk_priv *priv;
-+	struct ep93xx_clk *clk;
-+	struct clk_hw *hw, *pll1;
-+	unsigned int idx;
-+	int ret;
-+	u32 value;
++	int key = 0;
++	struct bpf_timer *timer;
 +
-+	priv = devm_kzalloc(dev, struct_size(priv, reg, 10), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++	if (ok_sleepable & 1)
++		return -1;
 +
-+	spin_lock_init(&priv->lock);
-+	priv->dev = dev;
-+	priv->aux_dev = rdev;
-+	priv->map = rdev->map;
-+	priv->base = rdev->base;
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (timer) {
++		if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE) != 0)
++			return -2;
++		bpf_timer_set_sleepable_cb(timer, timer_cb_sleepable);
++		if (bpf_timer_start(timer, 0, 0))
++			return -3;
++	} else {
++		return -4;
++	}
 +
-+	/* Determine the bootloader configured pll1 rate */
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET1, &value);
-+
-+	if (value & EP93XX_SYSCON_CLKSET1_NBYP1)
-+		clk_pll1_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
-+	else
-+		clk_pll1_rate = EP93XX_EXT_CLK_RATE;
-+
-+	pll1 = devm_clk_hw_register_fixed_rate(dev, "pll1", "xtali", 0, clk_pll1_rate);
-+	if (IS_ERR(pll1))
-+		return PTR_ERR(pll1);
-+
-+	priv->fixed[EP93XX_CLK_PLL1] = pll1;
-+
-+	/* Initialize the pll1 derived clocks */
-+	clk_f_div = fclk_divisors[(value >> 25) & GENMASK(2, 0)];
-+	clk_h_div = hclk_divisors[(value >> 20) & GENMASK(2, 0)];
-+	clk_p_div = pclk_divisors[(value >> 18) & GENMASK(1, 0)];
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "fclk", pll1, 0, 1, clk_f_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_FCLK] = hw;
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "hclk", pll1, 0, 1, clk_h_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_HCLK] = hw;
-+
-+	hw = devm_clk_hw_register_fixed_factor_parent_hw(dev, "pclk", hw, 0, 1, clk_p_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_PCLK] = hw;
-+
-+	/* Determine the bootloader configured pll2 rate */
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
-+	if (!(value & EP93XX_SYSCON_CLKSET2_NBYP2))
-+		clk_pll2_rate = EP93XX_EXT_CLK_RATE;
-+	else if (value & EP93XX_SYSCON_CLKSET2_PLL2_EN)
-+		clk_pll2_rate = calc_pll_rate(EP93XX_EXT_CLK_RATE, value);
-+	else
-+		clk_pll2_rate = 0;
-+
-+	hw = devm_clk_hw_register_fixed_rate(dev, "pll2", "xtali", 0, clk_pll2_rate);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_PLL2] = hw;
-+
-+	regmap_read(priv->map, EP93XX_SYSCON_CLKSET2, &value);
-+	clk_usb_div = (value >> 28 & GENMASK(3, 0)) + 1;
-+	hw = devm_clk_hw_register_fixed_factor(dev, "usb_clk", "pll2", 0, 1, clk_usb_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_USB] = hw;
-+
-+	ret = ep93xx_uart_clock_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = ep93xx_dma_clock_init(priv);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * EP93xx SSP clock rate was doubled in version E2. For more information
-+	 * see section 6 "2x SSP (Synchronous Serial Port) Clock – Revision E2 only":
-+	 *     http://www.cirrus.com/en/pubs/appNote/AN273REV4.pdf
-+	 */
-+	clk_spi_div = 2;
-+	match = soc_device_match(ep93xx_soc_table);
-+	if (match)
-+		clk_spi_div = (unsigned long)match->data;
-+
-+	hw = devm_clk_hw_register_fixed_factor(dev, "ep93xx-spi.0", "xtali",
-+					       0, 1, clk_spi_div);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_SPI] = hw;
-+
-+	/* PWM clock */
-+	hw = devm_clk_hw_register_fixed_factor(dev, "pwm_clk", "xtali", 0, 1, 1);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_PWM] = hw;
-+
-+	/* USB clock */
-+	hw = devm_clk_hw_register_gate(priv->dev, "ohci-platform", "usb_clk",
-+				       0, priv->base + EP93XX_SYSCON_PWRCNT,
-+				       EP93XX_SYSCON_PWRCNT_USH_EN, 0,
-+				       &priv->lock);
-+	if (IS_ERR(hw))
-+		return PTR_ERR(hw);
-+
-+	priv->fixed[EP93XX_CLK_USB] = hw;
-+
-+	ddiv_pdata[0].index = 0; /* XTALI external clock */
-+	ddiv_pdata[1].hw = priv->fixed[EP93XX_CLK_PLL1];
-+	ddiv_pdata[2].hw = priv->fixed[EP93XX_CLK_PLL2];
-+
-+	/* touchscreen/ADC clock */
-+	idx = EP93XX_CLK_ADC - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_div(clk, "ep93xx-adc", &xtali,
-+				EP93XX_SYSCON_KEYTCHCLKDIV,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_TSEN,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_ADIV,
-+				1,
-+				adc_divisors,
-+				ARRAY_SIZE(adc_divisors));
-+
-+
-+	/* keypad clock */
-+	idx = EP93XX_CLK_KEYPAD - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_div(clk, "ep93xx-keypad", &xtali,
-+				EP93XX_SYSCON_KEYTCHCLKDIV,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_KEN,
-+				EP93XX_SYSCON_KEYTCHCLKDIV_KDIV,
-+				1,
-+				adc_divisors,
-+				ARRAY_SIZE(adc_divisors));
-+
-+	/*
-+	 * On reset PDIV and VDIV is set to zero, while PDIV zero
-+	 * means clock disable, VDIV shouldn't be zero.
-+	 * So we set both video and i2s dividers to minimum.
-+	 * ENA - Enable CLK divider.
-+	 * PDIV - 00 - Disable clock
-+	 * VDIV - at least 2
-+	 */
-+
-+	/* Check and enable video clk registers */
-+	regmap_read(priv->map, EP93XX_SYSCON_VIDCLKDIV, &value);
-+	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
-+	ep93xx_clk_write(priv, EP93XX_SYSCON_VIDCLKDIV, value);
-+
-+	/* Check and enable i2s clk registers */
-+	regmap_read(priv->map, EP93XX_SYSCON_I2SCLKDIV, &value);
-+	value |= BIT(EP93XX_SYSCON_CLKDIV_PDIV_SHIFT) | 2;
-+
-+	/*
-+	 * Override the SAI_MSTR_CLK_CFG from the I2S block and use the
-+	 * I2SClkDiv Register settings. LRCLK transitions on the falling SCLK
-+	 * edge.
-+	 */
-+	value |= EP93XX_SYSCON_I2SCLKDIV_ORIDE | EP93XX_SYSCON_I2SCLKDIV_SPOL;
-+	ep93xx_clk_write(priv, EP93XX_SYSCON_I2SCLKDIV, value);
-+
-+	/* video clk */
-+	idx = EP93XX_CLK_VIDEO - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_ddiv(clk, "ep93xx-fb",
-+				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
-+				EP93XX_SYSCON_VIDCLKDIV,
-+				EP93XX_SYSCON_CLKDIV_ENABLE);
-+
-+	/* i2s clk */
-+	idx = EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	ret = clk_hw_register_ddiv(clk, "mclk",
-+				ddiv_pdata, ARRAY_SIZE(ddiv_pdata),
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_CLKDIV_ENABLE);
-+
-+	/* i2s sclk */
-+	idx = EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	pdata.hw = &priv->reg[EP93XX_CLK_I2S_MCLK - EP93XX_CLK_UART1].hw;
-+	ret = clk_hw_register_div(clk, "sclk", &pdata,
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_I2SCLKDIV_SENA,
-+				16, /* EP93XX_I2SCLKDIV_SDIV_SHIFT */
-+				1,  /* EP93XX_I2SCLKDIV_SDIV_WIDTH */
-+				sclk_divisors,
-+				ARRAY_SIZE(sclk_divisors));
-+
-+	/* i2s lrclk */
-+	idx = EP93XX_CLK_I2S_LRCLK - EP93XX_CLK_UART1;
-+	clk = &priv->reg[idx];
-+	clk->idx = idx;
-+	pdata.hw = &priv->reg[EP93XX_CLK_I2S_SCLK - EP93XX_CLK_UART1].hw;
-+	ret = clk_hw_register_div(clk, "lrclk", &pdata,
-+				EP93XX_SYSCON_I2SCLKDIV,
-+				EP93XX_SYSCON_I2SCLKDIV_SENA,
-+				17, /* EP93XX_I2SCLKDIV_LRDIV32_SHIFT */
-+				2,  /* EP93XX_I2SCLKDIV_LRDIV32_WIDTH */
-+				lrclk_divisors,
-+				ARRAY_SIZE(lrclk_divisors));
-+
-+	/* IrDa clk uses same pattern but no init code presents in original clock driver */
-+	return devm_of_clk_add_hw_provider(priv->dev, of_clk_ep93xx_get, priv);
++	return 0;
 +}
 +
-+static const struct auxiliary_device_id ep93xx_clk_ids[] = {
-+	{
-+		.name = "soc_ep93xx.clk-ep93xx",
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, ep93xx_clk_ids);
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that bpf_timer_set_callback() can not be called with a
++ * sleepable callback
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_kfunc_call_test_sleepable#") /* anchor message */
++__msg("program must be sleepable to call sleepable kfunc bpf_kfunc_call_test_sleepable")
++long test_non_sleepable_sleepable_callback(void *ctx)
++{
++	int key = 0;
++	struct bpf_timer *timer;
 +
-+static struct auxiliary_driver ep93xx_clk_driver = {
-+	.probe		= ep93xx_clk_probe,
-+	.id_table	= ep93xx_clk_ids,
-+};
-+module_auxiliary_driver(ep93xx_clk_driver);
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (timer) {
++		bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE);
++		bpf_timer_set_callback(timer, timer_cb_sleepable);
++		bpf_timer_start(timer, 0, 0);
++	}
++
++	return 0;
++}
++
++SEC("tc")
++/* check that calling bpf_timer_set_sleepable_cb() without a sleepable timer
++ * initialized with BPF_F_TIMER_SLEEPABLE on a sleepable
++ * callback is returning -EINVAL
++ */
++__retval(3)
++long test_call_sleepable_missing_flag(void *ctx)
++{
++	int key = 1;
++	struct bpf_timer *timer;
++
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (!timer)
++		return 1;
++
++	if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC))
++		return 2;
++
++	if (bpf_timer_set_sleepable_cb(timer, timer_cb_sleepable))
++		return 3;
++
++	return bpf_timer_start(timer, 0, 0);
++}
++
++SEC("tc")
++/* check that calling bpf_timer_start() with a delay on a sleepable
++ * callback is returning -EINVAL
++ */
++__retval(-22)
++long test_call_sleepable_delay(void *ctx)
++{
++	int key = 2;
++	struct bpf_timer *timer;
++
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (!timer)
++		return 1;
++
++	if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE))
++		return 2;
++
++	if (bpf_timer_set_sleepable_cb(timer, timer_cb_sleepable))
++		return 3;
++
++	return bpf_timer_start(timer, 1, 0);
++}
++
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that the first argument of bpf_timer_set_callback()
++ * is a correct bpf_timer pointer.
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_timer_set_sleepable_cb_impl#") /* anchor message */
++__msg("arg#0 doesn't point to a map value")
++long test_wrong_pointer(void *ctx)
++{
++	int key = 0;
++	struct bpf_timer *timer;
++
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (!timer)
++		return 1;
++
++	if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE))
++		return 2;
++
++	if (bpf_timer_set_sleepable_cb((void *)&timer, timer_cb_sleepable))
++		return 3;
++
++	return -22;
++}
++
++SEC("?tc")
++__log_level(2)
++__failure
++/* check that the first argument of bpf_timer_set_callback()
++ * is a correct bpf_timer pointer.
++ */
++__msg("mark_precise: frame0: regs=r1 stack= before")
++__msg(": (85) call bpf_timer_set_sleepable_cb_impl#") /* anchor message */
++__msg("off 1 doesn't point to 'struct bpf_timer' that is at 0")
++long test_wrong_pointer_offset(void *ctx)
++{
++	int key = 0;
++	struct bpf_timer *timer;
++
++	timer = bpf_map_lookup_elem(&timer_map, &key);
++	if (!timer)
++		return 1;
++
++	if (bpf_timer_init(timer, &timer_map, CLOCK_MONOTONIC | BPF_F_TIMER_SLEEPABLE))
++		return 2;
++
++	if (bpf_timer_set_sleepable_cb((void *)timer + 1, timer_cb_sleepable))
++		return 3;
++
++	return -22;
++}
 
 -- 
-2.41.0
-
+2.44.0
 
