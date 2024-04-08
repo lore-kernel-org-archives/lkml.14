@@ -1,127 +1,97 @@
-Received: from mx0a-00176a03.pphosted.com (mx0a-00176a03.pphosted.com [67.231.149.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69ED4176B;
-	Mon,  8 Apr 2024 09:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F33748792
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712569305; cv=none; b=sQiskNwfbnWrem2L2vzB9IRq6MdBWE1wzXcvRIatsiGB8aLbwFEqkGOtFwopddfIAFwZoRQDCGOw6c7vzYA0q4XUZeIUDRzogbqsqMMEZM8bT2FDeFQWmEki/OeM0H/2RevZlkPRVTGCoCRVU4l2dzh4marsgA4+RtpJtmeDtYs=
+	t=1712569307; cv=none; b=a5tZ7O6yKcXGOu5tsnYfxElTQBSjo3IPmqeJg/BJYXA/qwN7R/13SaNlPBESFPYWXG7FVPYn8sdqgS+sTdVe53xZuZCh4qZ1Afvf4Etwihhta39QPSibHbxGs0MfbOn2vBIf/h8TLdoNBCHqMgthtz2A0b74d9BdlEP19uPG7Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712569305; c=relaxed/simple;
-	bh=VBbyy+f6ApNNw/g8S5UqMO+gnfsVcOxeQZsix2HzRAE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dKOpjfisI8EN/1nMGskivwxOQTqzeW2vZoYxj5rZjC33zlkBRediRH5VgliWV522rmqwujR/QS4XRwXiku9x9Jwh5Eh/piowzCmJ/6dtT5thNvyhuT4WAXHN1ywLNTpJ1AqmJ5ExSnxxXTQ8EBINLkw73Brh3D6bc8eE9mynEn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gehealthcare.com; spf=pass smtp.mailfrom=gehealthcare.com; dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b=o4vdlasY; arc=none smtp.client-ip=67.231.149.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gehealthcare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gehealthcare.com
+	s=arc-20240116; t=1712569307; c=relaxed/simple;
+	bh=2OSuI87qeGvpN4vzsuqcY61LwKCgIvnMstgmBULzKjc=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p1zEsbMxIxNB9LmiLF6dnLJoJTkEagIa44z2yB727CUIS6BULDtZHOmcdCwMNalQF0+oKOrhCncm+Q64/7wrESiL0wGpQKYAjjnOtfVHikwyFANdW/oGo8DnSLMRJsq9v5FNb2dP5H3yYi/jb35gE1cMXgPtXJ15RbFsIP80gOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jueTwUG9; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gehealthcare.com header.i=@gehealthcare.com header.b="o4vdlasY"
-Received: from pps.filterd (m0048274.ppops.net [127.0.0.1])
-	by m0048274.ppops.net-00176a03. (8.17.1.24/8.17.1.24) with ESMTP id 4386aW4c011966;
-	Mon, 8 Apr 2024 05:25:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	gehealthcare.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=outbound; bh=qYN2gTSX
-	hF9fQTvXvqjS4pLs+E5SrnBzBEJm94NG1bk=; b=o4vdlasYAGzFSXaGpDDp754F
-	VPkKd1iB60geg86+mCnlAq2BH7pzAV1yC2+cFKO4kw15IhVaEhLlCcsoETCzsy5g
-	1rk4HqxtLv/JccHcfNQ6ydnIRYQbadwzdIThr0OIfvGW4DJppG2xaWqEgk2j+Yu2
-	h+SIktSytYfKvkf6Q5vsHqctUZZKLRcBIHXQajKl3BlhHOW+7SxJ5X0o/WvBT1fR
-	n+yw+MJNPKvWdpd5D2fYFENufmBOZ7rRw22uny64qXREkrDurN8sv3rNLidICzW8
-	zX+yWMEp4pBx4V+iJ4Q5+NaztVbSulQU8ElkSlcQbG2oplH++OZbAIGzCryQng==
-From: Ian Ray <ian.ray@gehealthcare.com>
-To: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Cc: Ian Ray <ian.ray@gehealthcare.com>, devicetree@vger.kernel.org,
-        imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: imx8mp-msc-sm2s: Add i2c{1,6} sda-/scl-gpios
-Date: Mon,  8 Apr 2024 12:24:49 +0300
-Message-Id: <20240408092449.6-1-ian.ray@gehealthcare.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jueTwUG9"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d6fc3adaacso53560061fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:41:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712569304; x=1713174104; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P1sjyF9zPEl2TEamRL6KiFbzsyaAM9a2KSULoVj+d9A=;
+        b=jueTwUG9hNYGikyha+uMGTbLG5g43pwY/7JHCeMZkTaizz9DuCVjG8sKWTciiDMc8x
+         A0kdBc+KcCRky2XyPawS937Shcz1NHCnengA32ZqrRx+VrWsitesxxCUYf+1c08NkBvf
+         cJblrxfC6JNx/9l1OSg1IwpCBinuk0txLwCZQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712569304; x=1713174104;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P1sjyF9zPEl2TEamRL6KiFbzsyaAM9a2KSULoVj+d9A=;
+        b=EehJSnVVHKD4XKaOhdyCnP1knDDJ8M+Phu+S5XgByPW6SjwgMUixKipxnj1wMv8nh7
+         zgjaFYNqplabBjmn/2OMBOg2a4jBP7QE8DGJIv7P/hIlCTM72RnyUmQv8T/paZEhIbos
+         dhTSCK9G30QfrEng7GdZkgoQwJCl88JVkGy4NvtGxORj3HohnOTqTwI6K/AIkQzwus3Z
+         YfgPYT+K5zWbKnzfi0itYDHVot5XeLVLzTEUdaQ9MAq5XGMZYXaPy2/g1/Rv9MATdFCh
+         /S4ozP3qUwbnz2HYj06fHfS5otv5xAyv+2BR6wTosNkzboMVfWzRifuNo821xbESDZ7u
+         FP1A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9xWQXLbB5kKAfHV1teQTsFrN0PJbrIEqrdBCZtMW6VJK46MUM3segBNVXGnthErtyFjJhuZiU3RMAhLPn2Qwsqt6zrcAfbAvtd8AF
+X-Gm-Message-State: AOJu0YyqejUDtifcZ8aY/ajbdGYGxB/AhvQhxEPGX1CMpxMKDfQahBOz
+	SOS06FOBZpQzfSe8CpsHDmYCrSXxN0LvBNA7VFFZgOnqwq0l1i3Pwu2lVweLupjWc0LwQ6en6qw
+	DhL0NEsShdqZTqRbFmcPSBMSLlQfWtsflb21N
+X-Google-Smtp-Source: AGHT+IF9NjrwqKlld09cONkAoXbGH6b8es74pe1Um/RUmrsKTi3n/+lKueJeNAGkqsUBxbs47mKMH0KhlmofkKRnCCk=
+X-Received: by 2002:a05:651c:42:b0:2d4:77c0:d61c with SMTP id
+ d2-20020a05651c004200b002d477c0d61cmr4901918ljd.35.1712569303584; Mon, 08 Apr
+ 2024 02:41:43 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 8 Apr 2024 02:41:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: w2OUKmRIns4E--hL0KlioGlPlTKoGXpb
-X-Proofpoint-ORIG-GUID: w2OUKmRIns4E--hL0KlioGlPlTKoGXpb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 phishscore=0
- spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 clxscore=1011 impostorscore=0 lowpriorityscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404080072
+In-Reply-To: <20240408093023.506-1-johan+linaro@kernel.org>
+References: <20240408093023.506-1-johan+linaro@kernel.org>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Mon, 8 Apr 2024 02:41:42 -0700
+Message-ID: <CAE-0n50cZ0MoT6M97NAXPNfejk46MkLxQgvBELxFVGgNRRaP9g@mail.gmail.com>
+Subject: Re: [PATCH] phy: qcom: qmp-combo: fix VCO div offset on v5_5nm and v6
+To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Add i2c{1,6} sda-/scl-gpios with the corresponding pinmux entries.
+Quoting Johan Hovold (2024-04-08 02:30:23)
+> Commit 5abed58a8bde ("phy: qcom: qmp-combo: Fix VCO div offset on v3")
+> fixed a regression introduced in 6.5 by making sure that the correct
+> offset is used for the DP_PHY_VCO_DIV register on v3 hardware.
+>
+> Unfortunately, that fix instead broke DisplayPort on v5_5nm and v6
+> hardware as it failed to add the corresponding offsets also to those
+> register tables.
+>
+> Fixes: 815891eee668 ("phy: qcom-qmp-combo: Introduce orientation variable")
+> Fixes: 5abed58a8bde ("phy: qcom: qmp-combo: Fix VCO div offset on v3")
+> Cc: stable@vger.kernel.org      # 6.5: 5abed58a8bde
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
 
-Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
----
- .../boot/dts/freescale/imx8mp-msc-sm2s.dtsi   | 22 +++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+Thanks! I didn't know the qmp_v4_configure_dp_phy() function was used by
+v5 or v6, but upon further inspection that seems to be the case. Maybe
+that should be renamed to qmp_v456_configure_dp_phy() to match and then
+qmp_v456_configure_dp_phy() get inlined into qmp_v4_configure_dp_phy().
+Either way:
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-msc-sm2s.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-msc-sm2s.dtsi
-index 61c2a63efc6d..7e4327084d26 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-msc-sm2s.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-msc-sm2s.dtsi
-@@ -200,8 +200,11 @@ ethphy1: ethernet-phy@1 {
- };
- 
- &i2c1 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c1>;
-+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+	scl-gpios = <&gpio5 14 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	sda-gpios = <&gpio5 15 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 	clock-frequency = <400000>;
- 	status = "okay";
- 
-@@ -241,8 +244,11 @@ &i2c5 {
- };
- 
- &i2c6 {
--	pinctrl-names = "default";
-+	pinctrl-names = "default", "gpio";
- 	pinctrl-0 = <&pinctrl_i2c6>;
-+	pinctrl-1 = <&pinctrl_i2c6_gpio>;
-+	scl-gpios = <&gpio3 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	sda-gpios = <&gpio3 20 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 	clock-frequency = <400000>;
- 	status = "okay";
- 
-@@ -606,6 +612,12 @@ pinctrl_i2c1: i2c1grp {
- 			<MX8MP_IOMUXC_I2C1_SDA__I2C1_SDA		0x400001c3>;
- 	};
- 
-+	pinctrl_i2c1_gpio: i2c1gpiogrp {
-+		fsl,pins =
-+			<MX8MP_IOMUXC_I2C1_SCL__GPIO5_IO14		0x400001c3>,
-+			<MX8MP_IOMUXC_I2C1_SDA__GPIO5_IO15		0x400001c3>;
-+	};
-+
- 	pinctrl_i2c2: i2c2grp {
- 		fsl,pins =
- 			<MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL		0x400001c3>,
-@@ -636,6 +648,12 @@ pinctrl_i2c6: i2c6grp {
- 			<MX8MP_IOMUXC_SAI5_RXC__I2C6_SDA		0x400001c3>;
- 	};
- 
-+	pinctrl_i2c6_gpio: i2c5gpiogrp {
-+		fsl,pins =
-+			<MX8MP_IOMUXC_SAI5_RXFS__GPIO3_IO19		0x400001c3>,
-+			<MX8MP_IOMUXC_SAI5_RXC__GPIO3_IO20		0x400001c3>;
-+	};
-+
- 	pinctrl_lcd0_backlight: lcd0-backlightgrp {
- 		fsl,pins =
- 			<MX8MP_IOMUXC_GPIO1_IO05__GPIO1_IO05		0x41>;
--- 
-2.39.2
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
