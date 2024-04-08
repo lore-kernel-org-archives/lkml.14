@@ -1,281 +1,362 @@
-Received: from smtp.smtpout.orange.fr (smtp-25.smtpout.orange.fr [80.12.242.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD437482;
-	Mon,  8 Apr 2024 20:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA681465BC;
+	Mon,  8 Apr 2024 20:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712608518; cv=none; b=NpTWQdWqfq0pUKB5aI9cJZFOOgpUoWhNcaduRTIZJpC1d3TGbtxpKWkTc+uEVYU6QTSP0jysP9BVLDI6BQ2J7XKjPdNUR2H2sV5oeDydXN+W61ZzsCR9Z9q6zOkBdywg23I5g78lNbCmJDGF+IgZQpGTI3Xh+/HDDrOgUBtJGrU=
+	t=1712608556; cv=none; b=dqP7bmj2wzyNXheJ9K+rEiNwjPzGO/WEyCxF8rU54aEAMrSYR+5PqqEP9cybEo+c7qEOwQToV/UctObt8Pe7U60xDgl9rw53/i9ZmXx1kvl9+M7lR64I4EcgrYkvOzerPwVQpW9klLKFgFov7hZ89BH6FazH5XS4boQkJi/3ROY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712608518; c=relaxed/simple;
-	bh=6wIbXijNZnjnOQq/sRLb9m1wVYCIfcRdMHTfHRaLA0s=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SLkOaSd71aTTkUPKQGK1nsBHMmjJ1LR+uL4nbLgxX1t1+ZUlN/rfHjzoqVOK3A9yGz98cNKEODt3GwJKXcAFy0DnZ6lyvA6E6Z4P3O9LqttgYolDW3YxFOr/Mkrezpk09jibI7ED7EOrCTe35CPBKLqQ5aq1BJEso9oPr3ZVtE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=V+c/5SYg; arc=none smtp.client-ip=80.12.242.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1712608556; c=relaxed/simple;
+	bh=y1JwbyVZ5NrQUheqw05/5mT5plILgguj4cqylnGnTaU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gv10dXBarH9fS9gwzdeRV/GYUYrktYDqMKp9g1QP0P6s9bkFT0NJnfd1+kPdo5aT3Yk1gPsUdA/AF1+MWI8KjtB7Itz8Rdd9WigwGdwWxTGmAlv5xTpDrxS3UcfxOHO9b0/8AonWpgzlBbjlWoEFPwcGe6Vc4aAUEeA4NcffqSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSr5crmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="V+c/5SYg"
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id tvZIrDqpwcdQQtvZIr8sCw; Mon, 08 Apr 2024 22:26:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1712607983;
-	bh=GgXY2ZURZjB5f6jznbBiGTWLjQntZx7NuXSDPoPAJoY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To;
-	b=V+c/5SYgM+nv6Z4DXzXctxKJC5zWfV353MCYZ/bLp6iRpydM5VYGzPiKynORj8fXM
-	 6CXHzEAOfpcCrnhm35VAUnbjZwus6d9tY51DBtyVZPXG3UBBr0rpW/bGBrLsVuI/do
-	 LfZzGR7qLiJKflrTNoEdH6/KBtxlDARrpTIhp97wtnnHMDmkwDBIyDgxj2TzGImrma
-	 qoW4i/SxjRF/CLUd658+iW/GUjUXvQgdbr2/+atsRYcXmSpx5/LOhk5LtCN8Mp9yp9
-	 ugbiL5thw9/W4WTUkMKsRqZWeAUULX6AyjR8ijnRMi6/KFCt1iQvGqmGgeDbj95jrB
-	 G7saZ67RahwAA==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 08 Apr 2024 22:26:23 +0200
-X-ME-IP: 86.243.17.157
-Message-ID: <6450334d-596b-4982-8a17-eefc8585e036@wanadoo.fr>
-Date: Mon, 8 Apr 2024 22:26:16 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSr5crmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8213FC433F1;
+	Mon,  8 Apr 2024 20:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712608556;
+	bh=y1JwbyVZ5NrQUheqw05/5mT5plILgguj4cqylnGnTaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qSr5crmuZZIyKRfJGHpVq0sB+tgbeWkUQr/UCivBb8q32Odn7zATTtfvMyTVu1ZdE
+	 zVRhTrdrCB/U6KPPVghTMt33HllzIGvEJUyKLwNzwACtT2tyarFv8OlIhMP5nIiGID
+	 8EM3XSWV9jm0ojdyxbL4RIosHNKFvGUaqVD57/1kH2IlO7kXmpZFL8/AZQGJIrdyMM
+	 Wf2JmrAM5A654/duL5UWr7a8oDEQsw2mtdmmo71a0TsUoBd/fyvvsJefeTlSyq+LGS
+	 VlB3GROfXOTUNfg6eh4/cY7i6p4mH0F3BgCCbB/95zkgvL4BHlOpMyvpECD6YNUnX0
+	 r4gMUzn05hxfw==
+Date: Mon, 8 Apr 2024 17:35:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+	changbin.du@huawei.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf script: Consolidate capstone print functions
+Message-ID: <ZhRVKBdymD0Nq0ro@x1>
+References: <ZfovVgjCm5oDbze9@tassilo>
+ <20240322102158.19738-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v1 3/4] usb: dwc3: exynos: Use
- devm_regulator_bulk_get_enable() helper function
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, linux-usb@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240301193831.3346-1-linux.amoon@gmail.com>
- <20240301193831.3346-4-linux.amoon@gmail.com>
- <52158bf6-16fe-4ce2-b9b6-bbc6550a6e14@wanadoo.fr>
- <CANAwSgTCaSSMN2QCw5fr=RBp0WwWaLuebzQDO=scnABNFNctJQ@mail.gmail.com>
- <e85ad80f-af7d-4eaf-9d14-dff13451f7e5@wanadoo.fr>
- <CANAwSgRrOw+6MHLPDP8RwLwzwB1EVGBTovtR2ChhqR3b5uWowA@mail.gmail.com>
- <CANAwSgQk10=K6Z5OzvT3OUncfr6BWyx7oH2JKN5CJAnS+uO7QQ@mail.gmail.com>
- <ed5153e1-f4de-4268-a9d0-e74b779d2587@wanadoo.fr>
- <CANAwSgQ6_bxpKmanPwXvKEQJ0p7AvwTs3on9ubOegaDn3nkdxw@mail.gmail.com>
-Content-Language: en-MW
-In-Reply-To: <CANAwSgQ6_bxpKmanPwXvKEQJ0p7AvwTs3on9ubOegaDn3nkdxw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240322102158.19738-1-adrian.hunter@intel.com>
 
-Le 08/04/2024 à 12:02, Anand Moon a écrit :
-> Hi Christophe,
+On Fri, Mar 22, 2024 at 12:21:58PM +0200, Adrian Hunter wrote:
+> Consolidate capstone print functions, to reduce duplication. Amend call
+> sites to use a file pointer for output, which is consistent with most
+> perf tools print functions. Add print_opts with an option to print also
+> the hex value of a resolved symbol+offset.
 > 
-> On Fri, 5 Apr 2024 at 21:42, Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
->>
->> Le 05/04/2024 à 08:10, Anand Moon a écrit :
->>>    Hi Christophe, Krzysztof,
->>>
->>> On Mon, 4 Mar 2024 at 17:16, Anand Moon <linux.amoon@gmail.com> wrote:
->>>>
->>>> Hi Christophe,
->>>>
->>>> On Sun, 3 Mar 2024 at 00:07, Christophe JAILLET
->>>> <christophe.jaillet@wanadoo.fr> wrote:
->>>>>
->>>>> Le 02/03/2024 à 17:48, Anand Moon a écrit :
->>>>>> Hi Christophe,
->>>>>>
->>>>>> On Sat, 2 Mar 2024 at 21:20, Christophe JAILLET
->>>>>> <christophe.jaillet@wanadoo.fr> wrote:
->>>>>>>
->>>>>>> Le 01/03/2024 à 20:38, Anand Moon a écrit :
->>>>>>>> Use devm_regulator_bulk_get_enable() instead of open coded
->>>>>>>> 'devm_regulator_get(), regulator_enable(), regulator_disable().
->>>>>>>>
->>>>>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
->>>>>>>> ---
->>>>>>>>      drivers/usb/dwc3/dwc3-exynos.c | 49 +++-------------------------------
->>>>>>>>      1 file changed, 4 insertions(+), 45 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
->>>>>>>> index 5d365ca51771..7c77f3c69825 100644
->>>>>>>> --- a/drivers/usb/dwc3/dwc3-exynos.c
->>>>>>>> +++ b/drivers/usb/dwc3/dwc3-exynos.c
->>>>>>>> @@ -32,9 +32,6 @@ struct dwc3_exynos {
->>>>>>>>          struct clk              *clks[DWC3_EXYNOS_MAX_CLOCKS];
->>>>>>>>          int                     num_clks;
->>>>>>>>          int                     suspend_clk_idx;
->>>>>>>> -
->>>>>>>> -     struct regulator        *vdd33;
->>>>>>>> -     struct regulator        *vdd10;
->>>>>>>>      };
->>>>>>>>
->>>>>>>>      static int dwc3_exynos_probe(struct platform_device *pdev)
->>>>>>>> @@ -44,6 +41,7 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
->>>>>>>>          struct device_node      *node = dev->of_node;
->>>>>>>>          const struct dwc3_exynos_driverdata *driver_data;
->>>>>>>>          int                     i, ret;
->>>>>>>> +     static const char * const regulators[] = { "vdd33", "vdd10" };
->>>>>>>>
->>>>>>>>          exynos = devm_kzalloc(dev, sizeof(*exynos), GFP_KERNEL);
->>>>>>>>          if (!exynos)
->>>>>>>> @@ -78,27 +76,9 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
->>>>>>>>          if (exynos->suspend_clk_idx >= 0)
->>>>>>>>                  clk_prepare_enable(exynos->clks[exynos->suspend_clk_idx]);
->>>>>>>>
->>>>>>>> -     exynos->vdd33 = devm_regulator_get(dev, "vdd33");
->>>>>>>> -     if (IS_ERR(exynos->vdd33)) {
->>>>>>>> -             ret = PTR_ERR(exynos->vdd33);
->>>>>>>> -             goto vdd33_err;
->>>>>>>> -     }
->>>>>>>> -     ret = regulator_enable(exynos->vdd33);
->>>>>>>> -     if (ret) {
->>>>>>>> -             dev_err(dev, "Failed to enable VDD33 supply\n");
->>>>>>>> -             goto vdd33_err;
->>>>>>>> -     }
->>>>>>>> -
->>>>>>>> -     exynos->vdd10 = devm_regulator_get(dev, "vdd10");
->>>>>>>> -     if (IS_ERR(exynos->vdd10)) {
->>>>>>>> -             ret = PTR_ERR(exynos->vdd10);
->>>>>>>> -             goto vdd10_err;
->>>>>>>> -     }
->>>>>>>> -     ret = regulator_enable(exynos->vdd10);
->>>>>>>> -     if (ret) {
->>>>>>>> -             dev_err(dev, "Failed to enable VDD10 supply\n");
->>>>>>>> -             goto vdd10_err;
->>>>>>>> -     }
->>>>>>>> +     ret = devm_regulator_bulk_get_enable(dev, ARRAY_SIZE(regulators), regulators);
->>>>>>>> +     if (ret)
->>>>>>>> +             return dev_err_probe(dev, ret, "Failed to enable regulators\n");
->>>>>>>>
->>>>>>>>          if (node) {
->>>>>>>>                  ret = of_platform_populate(node, NULL, NULL, dev);
->>>>>>>> @@ -115,10 +95,6 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
->>>>>>>>          return 0;
->>>>>>>>
->>>>>>>>      populate_err:
->>>>>>>> -     regulator_disable(exynos->vdd10);
->>>>>>>> -vdd10_err:
->>>>>>>> -     regulator_disable(exynos->vdd33);
->>>>>>>> -vdd33_err:
->>>>>>>>          for (i = exynos->num_clks - 1; i >= 0; i--)
->>>>>>>>                  clk_disable_unprepare(exynos->clks[i]);
->>>>>>>>
->>>>>>>> @@ -140,9 +116,6 @@ static void dwc3_exynos_remove(struct platform_device *pdev)
->>>>>>>>
->>>>>>>>          if (exynos->suspend_clk_idx >= 0)
->>>>>>>>                  clk_disable_unprepare(exynos->clks[exynos->suspend_clk_idx]);
->>>>>>>> -
->>>>>>>> -     regulator_disable(exynos->vdd33);
->>>>>>>> -     regulator_disable(exynos->vdd10);
->>>>>>>>      }
->>>>>>>>
->>>>>>>>      static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
->>>>>>>> @@ -196,9 +169,6 @@ static int dwc3_exynos_suspend(struct device *dev)
->>>>>>>>          for (i = exynos->num_clks - 1; i >= 0; i--)
->>>>>>>>                  clk_disable_unprepare(exynos->clks[i]);
->>>>>>>>
->>>>>>>> -     regulator_disable(exynos->vdd33);
->>>>>>>> -     regulator_disable(exynos->vdd10);
->>>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> Same here, I don't think that removing regulator_[en|dis]able from the
->>>>>>> suspend and resume function is correct.
->>>>>>>
->>>>>>> The goal is to stop some hardware when the system is suspended, in order
->>>>>>> to save some power.
->>>>>> Ok,
->>>>>>>
->>>>>>> Why did you removed it?
->>>>>>
->>>>>> As per the description of the function  devm_regulator_bulk_get_enable
->>>>>>
->>>>>> * This helper function allows drivers to get several regulator
->>>>>>     * consumers in one operation with management, the regulators will
->>>>>>     * automatically be freed when the device is unbound.  If any of the
->>>>>>     * regulators cannot be acquired then any regulators that were
->>>>>>     * allocated will be freed before returning to the caller.
->>>>>
->>>>> The code in suspend/resume is not about freeing some resources. It is
->>>>> about enabling/disabling some hardware to save some power.
->>>>>
->>>>> Think to the probe/remove functions as the software in the kernel that
->>>>> knows how to handle some hardawre, and the suspend/resume as the on/off
->>>>> button to power-on and off the electrical chips.
->>>>>
->>>>> When the system is suspended, the software is still around. But some
->>>>> hardware can be set in a low consumption mode to save some power.
->>>>>
->>>>> IMHO, part of the code you removed changed this behaviour and increase
->>>>> the power consumption when the system is suspended.
->>>>>
->>>>
->>>> You are correct, I have changed the regulator API from
->>>> devm_regulator_get_enable to devm_regulator_bulk_get_enable
->>>> which changes this behavior.
->>>> I will fix it in the next version.
->>>>
->>>>> CJ
->>>
->>> I could not find any example in the kernel to support
->>> devm_regulator_bulk_disable
->>> but here is my modified file.
->>>
->>> If you have any suggestions for this plz let me know.
->>
->> I don't think that your approach is correct, and I don't think that the
->> proposed patch does what you expect it to do.
->>
->> Calling a devm_ function in suspend/resume functions looks really
->> strange to me and is likely broken.
->>
->> Especially here, devm_regulator_bulk_get_enable() in the resume function
->> allocates some memory that is not freed in
->> devm_regulator_bulk_disable(), because the API is not designed to work
->> like that. So this could generate a kind of memory leak.
->>
->>
->> *I think that the code is good enough as-is*, but if you really want to
->> change something, maybe:
->>      - devm_regulator_get()+regulator_enable() in the probe could be
->> changed to devm_regulator_get_enable()
->>      - the resume/suspend function should be left as-is with
->> regulator_disable()/regulator_ensable()
->>      - remove regulator_disable() from the error handling path of the
->> probe and from the remove function.
->>
->> I *think* it would work.
->>
-> No devm_regulator_get_enable use the same logic as
-> devm_regulator_bulk_get_enable
-> to enable the regulator.
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
 
-Yes, the logic is the same, but you get a pointer to the "struct 
-regulator" which can be used to disable/enable in the suspend/resume 
-functions.
+I'll fix this:
 
-With the bulk version, you can not do that.
-
-See my first reply on your 3/4 patch.
-
+  38    11.53 ubuntu:18.04                  : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
+    util/print_insn.c: In function 'print_insn_x86':
+    util/print_insn.c:90:35: error: expected ')' before 'PRIx64'
+         printed += fprintf(fp, " [%#" PRIx64 "]", op->imm);
+                                       ^~~~~~
+    util/print_insn.c:90:32: error: conversion lacks type at end of format [-Werror=format=]
+         printed += fprintf(fp, " [%#" PRIx64 "]", op->imm);
+                                    ^
+    cc1: all warnings being treated as errors
+    /git/perf-6.8.0/tools/build/Makefile.build:158: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+ 
 > 
-> [0] https://elixir.bootlin.com/linux/latest/source/drivers/regulator/devres.c#L126
+> On 20/03/24 02:35, Andi Kleen wrote:
+> > On Tue, Mar 19, 2024 at 08:52:33AM +0200, Adrian Hunter wrote:
+> >> On 19/03/24 00:06, Andi Kleen wrote:
+> >>>> Better to factor out a function that does not depend on "sample"
+> >>>> e.g. see fprintf_insn_asm() below.
+> >>>
+> >>> this doesn't work because it completely ignores the need of the
+> >>> cs_dump_insn caller for the path that i actually need for my feature,
+> >>> which requires to return a string.  I didn't apply it.
+> >>
+> >> I would probably change the call sites because they already have a
+> >> file descriptor, but output to memory is doable:
+> > 
+> >> 	FILE *fp = fmemopen(x->out, sizeof(x->out), "w+");
+> > 
+> > I considered using this at some point, but I'm sure there is some non glibc,
+> > that people build perf with, that doesn't have fmemopen, so I didn't.
 > 
-> So as of now I am dropping the changes on the regulator in this patch series.
-
-I do agree that it is certainly the way to go here.
-
-CJ
-
+> fmemopen() is POSIX since 2008
 > 
->> CJ
->>
-> Thanks for your inputs.
+> > 
+> > Can we just use my version for now and if you prefer more refactor
+> > please submit a follow on cleanup patch?
 > 
-> Thanks
-> 
-> -Anand
+> Sure, here is a follow on cleanup patch.
 > 
 > 
-
+>  tools/perf/builtin-script.c  |  43 ++++++++++-----
+>  tools/perf/util/print_insn.c | 103 ++++++++++++-----------------------
+>  tools/perf/util/print_insn.h |   7 ++-
+>  3 files changed, 67 insertions(+), 86 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 59933bd52e0f..6384acf8dad7 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -1165,18 +1165,29 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
+>  	return ret;
+>  }
+>  
+> -static const char *any_dump_insn(struct perf_event_attr *attr __maybe_unused,
+> -			struct perf_insn *x, uint64_t ip,
+> -			u8 *inbuf, int inlen, int *lenp)
+> +static int any_dump_insn(struct perf_event_attr *attr __maybe_unused,
+> +			 struct perf_insn *x, uint64_t ip,
+> +			 u8 *inbuf, int inlen, int *lenp,
+> +			 FILE *fp)
+>  {
+>  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+>  	if (PRINT_FIELD(BRSTACKDISASM)) {
+> -		const char *p = cs_dump_insn(x, ip, inbuf, inlen, lenp);
+> -		if (p)
+> -			return p;
+> +		int printed = fprintf_insn_asm(x->machine, x->thread, x->cpumode, x->is64bit,
+> +					       (uint8_t *)inbuf, inlen, ip, lenp,
+> +					       PRINT_INSN_IMM_HEX, fp);
+> +
+> +		if (printed > 0)
+> +			return printed;
+>  	}
+>  #endif
+> -	return dump_insn(x, ip, inbuf, inlen, lenp);
+> +	return fprintf(fp, "%s", dump_insn(x, ip, inbuf, inlen, lenp));
+> +}
+> +
+> +static int add_padding(FILE *fp, int printed, int padding)
+> +{
+> +	if (printed >= 0 && printed < padding)
+> +		printed += fprintf(fp, "%*s", padding - printed, "");
+> +	return printed;
+>  }
+>  
+>  static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+> @@ -1186,8 +1197,10 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+>  			    struct thread *thread)
+>  {
+>  	int ilen = 0;
+> -	int printed = fprintf(fp, "\t%016" PRIx64 "\t%-30s\t", ip,
+> -			      any_dump_insn(attr, x, ip, inbuf, len, &ilen));
+> +	int printed = fprintf(fp, "\t%016" PRIx64 "\t", ip);
+> +
+> +	printed += add_padding(fp, any_dump_insn(attr, x, ip, inbuf, len, &ilen, fp), 30);
+> +	printed += fprintf(fp, "\t");
+>  
+>  	if (PRINT_FIELD(BRSTACKINSNLEN))
+>  		printed += fprintf(fp, "ilen: %d\t", ilen);
+> @@ -1330,8 +1343,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  				break;
+>  			} else {
+>  				ilen = 0;
+> -				printed += fprintf(fp, "\t%016" PRIx64 "\t%s", ip,
+> -						   any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen));
+> +				printed += fprintf(fp, "\t%016" PRIx64 "\t", ip);
+> +				printed += any_dump_insn(attr, &x, ip, buffer + off, len - off, &ilen, fp);
+>  				if (PRINT_FIELD(BRSTACKINSNLEN))
+>  					printed += fprintf(fp, "\tilen: %d", ilen);
+>  				printed += fprintf(fp, "\n");
+> @@ -1378,8 +1391,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  		if (len <= 0)
+>  			goto out;
+>  		ilen = 0;
+> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", sample->ip,
+> -			any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen));
+> +		printed += fprintf(fp, "\t%016" PRIx64 "\t", sample->ip);
+> +		printed += any_dump_insn(attr, &x, sample->ip, buffer, len, &ilen, fp);
+>  		if (PRINT_FIELD(BRSTACKINSNLEN))
+>  			printed += fprintf(fp, "\tilen: %d", ilen);
+>  		printed += fprintf(fp, "\n");
+> @@ -1389,8 +1402,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  	}
+>  	for (off = 0; off <= end - start; off += ilen) {
+>  		ilen = 0;
+> -		printed += fprintf(fp, "\t%016" PRIx64 "\t%s", start + off,
+> -				   any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen));
+> +		printed += fprintf(fp, "\t%016" PRIx64 "\t", start + off);
+> +		printed += any_dump_insn(attr, &x, start + off, buffer + off, len - off, &ilen, fp);
+>  		if (PRINT_FIELD(BRSTACKINSNLEN))
+>  			printed += fprintf(fp, "\tilen: %d", ilen);
+>  		printed += fprintf(fp, "\n");
+> diff --git a/tools/perf/util/print_insn.c b/tools/perf/util/print_insn.c
+> index 8825330d435f..931a2c5293c9 100644
+> --- a/tools/perf/util/print_insn.c
+> +++ b/tools/perf/util/print_insn.c
+> @@ -72,59 +72,8 @@ static int capstone_init(struct machine *machine, csh *cs_handle, bool is64)
+>  	return 0;
+>  }
+>  
+> -static void dump_insn_x86(struct thread *thread, cs_insn *insn, struct perf_insn *x)
+> -{
+> -	struct addr_location al;
+> -	bool printed = false;
+> -
+> -	if (insn->detail && insn->detail->x86.op_count == 1) {
+> -		cs_x86_op *op = &insn->detail->x86.operands[0];
+> -
+> -		addr_location__init(&al);
+> -		if (op->type == X86_OP_IMM &&
+> -		    thread__find_symbol(thread, x->cpumode, op->imm, &al) &&
+> -		    al.sym &&
+> -		    al.addr < al.sym->end) {
+> -			snprintf(x->out, sizeof(x->out), "%s %s+%#" PRIx64 " [%#" PRIx64 "]", insn[0].mnemonic,
+> -					al.sym->name, al.addr - al.sym->start, op->imm);
+> -			printed = true;
+> -		}
+> -		addr_location__exit(&al);
+> -	}
+> -
+> -	if (!printed)
+> -		snprintf(x->out, sizeof(x->out), "%s %s", insn[0].mnemonic, insn[0].op_str);
+> -}
+> -
+> -const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
+> -			 u8 *inbuf, int inlen, int *lenp)
+> -{
+> -	int ret;
+> -	int count;
+> -	cs_insn *insn;
+> -	csh cs_handle;
+> -
+> -	ret = capstone_init(x->machine, &cs_handle, x->is64bit);
+> -	if (ret < 0)
+> -		return NULL;
+> -
+> -	count = cs_disasm(cs_handle, (uint8_t *)inbuf, inlen, ip, 1, &insn);
+> -	if (count > 0) {
+> -		if (machine__normalized_is(x->machine, "x86"))
+> -			dump_insn_x86(x->thread, &insn[0], x);
+> -		else
+> -			snprintf(x->out, sizeof(x->out), "%s %s",
+> -					insn[0].mnemonic, insn[0].op_str);
+> -		*lenp = insn->size;
+> -		cs_free(insn, count);
+> -	} else {
+> -		return NULL;
+> -	}
+> -	return x->out;
+> -}
+> -
+> -static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+> -			     cs_insn *insn, FILE *fp)
+> +static size_t print_insn_x86(struct thread *thread, u8 cpumode, cs_insn *insn,
+> +			     int print_opts, FILE *fp)
+>  {
+>  	struct addr_location al;
+>  	size_t printed = 0;
+> @@ -134,9 +83,11 @@ static size_t print_insn_x86(struct perf_sample *sample, struct thread *thread,
+>  
+>  		addr_location__init(&al);
+>  		if (op->type == X86_OP_IMM &&
+> -		    thread__find_symbol(thread, sample->cpumode, op->imm, &al)) {
+> +		    thread__find_symbol(thread, cpumode, op->imm, &al)) {
+>  			printed += fprintf(fp, "%s ", insn[0].mnemonic);
+>  			printed += symbol__fprintf_symname_offs(al.sym, &al, fp);
+> +			if (print_opts & PRINT_INSN_IMM_HEX)
+> +				printed += fprintf(fp, " [%#" PRIx64 "]", op->imm);
+>  			addr_location__exit(&al);
+>  			return printed;
+>  		}
+> @@ -159,39 +110,53 @@ static bool is64bitip(struct machine *machine, struct addr_location *al)
+>  		machine__normalized_is(machine, "s390");
+>  }
+>  
+> -size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> -				struct machine *machine, FILE *fp,
+> -				struct addr_location *al)
+> +ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpumode,
+> +			 bool is64bit, const uint8_t *code, size_t code_size,
+> +			 uint64_t ip, int *lenp, int print_opts, FILE *fp)
+>  {
+> -	csh cs_handle;
+> +	size_t printed;
+>  	cs_insn *insn;
+> +	csh cs_handle;
+>  	size_t count;
+> -	size_t printed = 0;
+>  	int ret;
+> -	bool is64bit = is64bitip(machine, al);
+>  
+>  	/* TODO: Try to initiate capstone only once but need a proper place. */
+>  	ret = capstone_init(machine, &cs_handle, is64bit);
+> -	if (ret < 0) {
+> -		/* fallback */
+> -		return sample__fprintf_insn_raw(sample, fp);
+> -	}
+> +	if (ret < 0)
+> +		return ret;
+>  
+> -	count = cs_disasm(cs_handle, (uint8_t *)sample->insn, sample->insn_len,
+> -			  sample->ip, 1, &insn);
+> +	count = cs_disasm(cs_handle, code, code_size, ip, 1, &insn);
+>  	if (count > 0) {
+>  		if (machine__normalized_is(machine, "x86"))
+> -			printed += print_insn_x86(sample, thread, &insn[0], fp);
+> +			printed = print_insn_x86(thread, cpumode, &insn[0], print_opts, fp);
+>  		else
+> -			printed += fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +			printed = fprintf(fp, "%s %s", insn[0].mnemonic, insn[0].op_str);
+> +		if (lenp)
+> +			*lenp = insn->size;
+>  		cs_free(insn, count);
+>  	} else {
+> -		printed += fprintf(fp, "illegal instruction");
+> +		printed = -1;
+>  	}
+>  
+>  	cs_close(&cs_handle);
+>  	return printed;
+>  }
+> +
+> +size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+> +				struct machine *machine, FILE *fp,
+> +				struct addr_location *al)
+> +{
+> +	bool is64bit = is64bitip(machine, al);
+> +	ssize_t printed;
+> +
+> +	printed = fprintf_insn_asm(machine, thread, sample->cpumode, is64bit,
+> +				   (uint8_t *)sample->insn, sample->insn_len,
+> +				   sample->ip, NULL, 0, fp);
+> +	if (printed < 0)
+> +		return sample__fprintf_insn_raw(sample, fp);
+> +
+> +	return printed;
+> +}
+>  #else
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample __maybe_unused,
+>  				struct thread *thread __maybe_unused,
+> diff --git a/tools/perf/util/print_insn.h b/tools/perf/util/print_insn.h
+> index c2a6391a45ce..07d11af3fc1c 100644
+> --- a/tools/perf/util/print_insn.h
+> +++ b/tools/perf/util/print_insn.h
+> @@ -10,10 +10,13 @@ struct thread;
+>  struct machine;
+>  struct perf_insn;
+>  
+> +#define PRINT_INSN_IMM_HEX		(1<<0)
+> +
+>  size_t sample__fprintf_insn_asm(struct perf_sample *sample, struct thread *thread,
+>  				struct machine *machine, FILE *fp, struct addr_location *al);
+>  size_t sample__fprintf_insn_raw(struct perf_sample *sample, FILE *fp);
+> -const char *cs_dump_insn(struct perf_insn *x, uint64_t ip,
+> -                         u8 *inbuf, int inlen, int *lenp);
+> +ssize_t fprintf_insn_asm(struct machine *machine, struct thread *thread, u8 cpumode,
+> +			 bool is64bit, const uint8_t *code, size_t code_size,
+> +			 uint64_t ip, int *lenp, int print_opts, FILE *fp);
+>  
+>  #endif /* PERF_PRINT_INSN_H */
+> -- 
+> 2.34.1
