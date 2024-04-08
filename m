@@ -1,55 +1,55 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995CD381DF
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 23:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1FA381DF
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 23:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712617880; cv=none; b=PFqDqP8EGOHqfIqQWA6e+uAcGCgcvscWRtCpMVwrmaUmbuzEAG5x1GF6kKWKhktK/0rA+xr+TUT4za8zOFvw7Zn20fqh2xZo3/DA5Yo2JkUf1QUKrsuCiNjMBY78ytpzHGgM0i+LA6+D2q0b3bN6g3HO8EyaueuCM3nCwfQDsO4=
+	t=1712618003; cv=none; b=KH09SrhvSrQ3DI0bokZPD+oStQveI3wPMFvIel7vzaH0a8KiPrfTcZ35r1/yDu+M6PAAGhgrkSa4tpW5fVRXILLVinskShIJ1PI/IKgy2aubdCQBT2YNt1yAaNdIMqMvQa5hpOtIKY9K0SACbnQpcAKAXeeKFPBkffg5FPPBVeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712617880; c=relaxed/simple;
-	bh=MouoRf9cDb+jze0FcL2+No7fkAOuE5yIsddcce9/p5Q=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T7ieX/uF6RtIxdUr2oa3uQAabBRAcwAb9icKkZaQX7Fq7RuLWvw+zIstWfGgi91zScKv43uB+Srx6V3DvPakdcJetKfezMg/kZDhGHTZvi9XlhX/MzvxWH5jQnaLVFcZIhmwWXcJAp/lVO88oiBKJESGgvvg6A6ER4jayokkqf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=azWKao1g; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1712618003; c=relaxed/simple;
+	bh=x9mwVZCtRJZxj4SxW0pxGiYFzzdRxitCW4paJ8e6Vwk=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=nFZ4jLOUQ2sOrLbl65fh9FMAD11Ehkhz+CKvw9uZDWkIoXDEoUGD/2wH0j+xRcxZj4fpT5sEgOZbKD8iRD6HUDfZ3d0/Pf2Vtv0aDecwVy36PCvVicD9/hw/YTtqs/tHCbUB/xnGXLHfw8tI4qKe3sYs/ZeGKnbTtXqFZ93YJTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tfUfF1PX; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--saravanak.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="azWKao1g"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-615110c3472so92922027b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 16:11:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tfUfF1PX"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-610c23abd1fso92899127b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 16:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712617877; x=1713222677; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jI+tCmAD3FcBQOw71QJrfrrIzm9ZgxUOk5vaoaRODf0=;
-        b=azWKao1g8Q9/HqYGdP1JT+pwJHhjiXKNBCTWCY8mxOxsSHyawyyESljB3RpKP1Ky4V
-         IErJoptZ4XZRbV+FwnjaYwBINtquWqPrtmbzAOz/TObaRdih9FcajOTHCe0p+xYsQfzD
-         mJwVLZwFSkJenvKc/7AGmUG9Br6lBi4Xg59dKUXQM/A85egbebuofK293TXEQcf7xBfA
-         vKsbLmk6PpDo4hHA8non6ycsDcbGeBvZ+Mh6eeLvRsy9upMJ5/vc4RX0CiRTVDgt9KMy
-         uv4Vq5jb8Zn1p1dE1siGmKg9AxmyjNPxJmuRcAo6RRJxBDdwGP0s/kmbHD6wORyhiSh2
-         x/qw==
+        d=google.com; s=20230601; t=1712618001; x=1713222801; darn=vger.kernel.org;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8KR9ZDVpmFlaIwvKuBx+EnAZl+aysJrEDZLL4TycsvM=;
+        b=tfUfF1PX/ufUeMkiwBfJE8B2Dbxw/WmajPZ105zDKfBVIZ9eg33wauBAvVOhenKp21
+         VTV5ca2mPMiwo7MsCYkqY/lcPrZG6qt3iV7crDBTqHL0ilpvMQkJCpOJBt4wXSvXM3gq
+         QoqN/pHlRJyr8flcdomG8fpD5nybyDE3XUaxXPOUuAxUL53EZxUH1EG6kM39g+xnlsuP
+         W/uURi2mV+pHGZrnIVRJKSW9yqUAAJ2fOb5e+8T1oPFXMBIC2S2/o9PLZXmAK/cdIx/c
+         RCqsu+EW59nXMSN9ugUboQy1VxMdtz8p0HoZKGSAMmQ29lqt+dLEnrg4lc+2lbow+DBJ
+         zGGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712617877; x=1713222677;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jI+tCmAD3FcBQOw71QJrfrrIzm9ZgxUOk5vaoaRODf0=;
-        b=K2DRsbkV4SEwCppCuXJhi5wuvqqRNPcapv3ICbVFYq9CiIwiCO2BPpHWRyy2VKKXP5
-         a+a1iyEzeE28jW0jS9n/+Qel3pk1SaIOT7r17zmDq4lX8XFiQ5dayjbgukLMiNvHfL6l
-         t4OTrNva2xucxUR73TTESlGyYBUBeRj9tjSe/gx6ZIxCjVVQIC+bEFBU/IeFf5bx15SV
-         627vN+kCPl644jKbwX2Fxks+SiANho7bws/evNZHRry9xY3Kt+gECtBaJHJcM9i5r36O
-         G/lHVasIzyoPleV/Ayf7FQvuxDAdtj1xGOSlJ6Pv5T1owTBBf4u5+dhY+4kXwn4la1Tq
-         JViw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Doy8bZg+9ivI2iq/OodyJ8jToxVfkvzABETkjhZfKiRXjGMMY3RAZ+aKLKfVEvdyjGhzF46sMYH96c8sS356KbCK5DLUKv0GRDvx
-X-Gm-Message-State: AOJu0Yyi4T15yhH2jDSYibyl04lJz3ooIUKSwVrP9E1ef0P6dzLL7GAN
-	En+rvun879nUbHvNGxSGZQmy3Wjba2QyMBPUXeP4s71cRaFV9aXXheDb4inTd4ZSpk6VhCVunF6
-	W0Q==
-X-Google-Smtp-Source: AGHT+IE7/5eP4ikm/t8kd6/QNZgsT4Ba2Vxw1bSp/FKJt4MSfFmlehjcjJQ9X1yIn5Edr2YcqVSNsGmy++c=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:690c:6003:b0:617:da81:e9fd with SMTP id
- hf3-20020a05690c600300b00617da81e9fdmr2697584ywb.0.1712617877704; Mon, 08 Apr
- 2024 16:11:17 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon,  8 Apr 2024 16:11:15 -0700
+        d=1e100.net; s=20230601; t=1712618001; x=1713222801;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8KR9ZDVpmFlaIwvKuBx+EnAZl+aysJrEDZLL4TycsvM=;
+        b=PJflqu3B9HALewEscNi448NfJhJxLlsm24Q3zzcZ1hww8FJu5LaTwcFTdrlw87SwJB
+         Z6y/+LgeCjR0deHi/IZ43aTayM14gH69hWFHw0vXDOG3n68wyHCcSIRx6hcfqAhi2mAG
+         QIp83JGhi+dxwmySXwYG6zYPTKWBGG4eg2mTFJSRCNQCO7y+uBF1vj+H+6KRF7xXwfSw
+         kcflnE92Xcz8AwqApATUeE69VUMam0TZiTHf1teeGEfmsGtII1gzEQ6rakWBNzWMrbeB
+         NNP4CUueaI21qE/IF8bFLyVxeupQW5MZ5yuJgts6ZhXbUeX+sfHQpVDvm/RKFOe6CqFx
+         u4CA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbBxI6i/GqtMaZly6raFlVOa3rOsTLNH40sqFqyqJ8Pz3ZzReL6VMBn4J+m9pnF7rXYpvGWDrOAR0Na/LUbN2ekOh+MxS6PDTt0LxP
+X-Gm-Message-State: AOJu0Yy73xAJHOx+MfydwguxoFxDNU3Ar+1XEurzMrOM4KGtCxTL5H/2
+	WitvC3UC8Bka0E7rmXew1F9feGooOjDa82HPfTl6S+hbOE0oCQ8nsPBO9S07pbdDExhFyI45FXB
+	dCKOQkSyuB7BkhA==
+X-Google-Smtp-Source: AGHT+IEiBKuFp9QTgBmavvNyeuDLhVieZKacyXA60iTXYXv5owwSC1k0jFYE2SUKHElIfDGTrdBpXZCX+VZqUfk=
+X-Received: from saravanak.san.corp.google.com ([2620:15c:2d:3:96d3:321a:67f3:5322])
+ (user=saravanak job=sendgmr) by 2002:a81:73d6:0:b0:614:2c5c:d275 with SMTP id
+ o205-20020a8173d6000000b006142c5cd275mr2854389ywc.4.1712618000795; Mon, 08
+ Apr 2024 16:13:20 -0700 (PDT)
+Date: Mon,  8 Apr 2024 16:13:07 -0700
+Message-Id: <20240408231310.325451-1-saravanak@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,54 +57,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240408231115.1387279-1-seanjc@google.com>
-Subject: [PATCH] KVM: x86/mmu: Precisely invalidate MMU root_role during CPUID update
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzbot+dc308fcfcd53f987de73@syzkaller.appspotmail.com, 
-	Phi Nguyen <phind.uet@gmail.com>
+Subject: [RFC PATCH v1 0/2] fw_devlink overlay fix
+From: Saravana Kannan <saravanak@google.com>
+To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Saravana Kannan <saravanak@google.com>, Rob Herring <robh@kernel.org>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Set kvm_mmu_page_role.invalid to mark the various MMU root_roles invalid
-during CPUID update in order to force a refresh, instead of zeroing out
-the entire role.  This fixes a bug where kvm_mmu_free_roots() incorrectly
-thinks a root is indirect, i.e. not a TDP MMU, due to "direct" being
-zeroed, which in turn causes KVM to take mmu_lock for write instead of
-read.
+Don't bother review this patch. It needs to be refactored better once I
+know it works.
 
-Note, paving over the entire role was largely unintentional, commit
-7a458f0e1ba1 ("KVM: x86/mmu: remove extended bits from mmu_role, rename
-field") simply missed that "invalid" could be set.
+Geert and Herve,
 
-Fixes: 576a15de8d29 ("KVM: x86/mmu: Free TDP MMU roots while holding mmy_lock for read")
-Reported-by: syzbot+dc308fcfcd53f987de73@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/0000000000009b38080614c49bdb@google.com
-Cc: Phi Nguyen <phind.uet@gmail.com>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/mmu/mmu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This patch serious should hopefully fix both of your use cases. Can you
+please check to make sure the device links created to/from the overlay
+devices are to/from the right ones?
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 992e651540e8..1eadefdb4bf2 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5576,9 +5576,9 @@ void kvm_mmu_after_set_cpuid(struct kvm_vcpu *vcpu)
- 	 * that problem is swept under the rug; KVM's CPUID API is horrific and
- 	 * it's all but impossible to solve it without introducing a new API.
- 	 */
--	vcpu->arch.root_mmu.root_role.word = 0;
--	vcpu->arch.guest_mmu.root_role.word = 0;
--	vcpu->arch.nested_mmu.root_role.word = 0;
-+	vcpu->arch.root_mmu.root_role.invalid = 1;
-+	vcpu->arch.guest_mmu.root_role.invalid = 1;
-+	vcpu->arch.nested_mmu.root_role.invalid = 1;
- 	vcpu->arch.root_mmu.cpu_role.ext.valid = 0;
- 	vcpu->arch.guest_mmu.cpu_role.ext.valid = 0;
- 	vcpu->arch.nested_mmu.cpu_role.ext.valid = 0;
+I've only compile tested it. If I made some obvious mistake, feel free
+to fix it and give it a shot.
 
-base-commit: 8cb4a9a82b21623dbb4b3051dd30d98356cf95bc
+Cc: Rob Herring <robh@kernel.org>
+
+Thanks,
+Saravana
+
+Saravana Kannan (2):
+  Revert "treewide: Fix probing of devices in DT overlays"
+  of: dynamic: Fix probing of overlay devices
+
+ drivers/base/core.c       | 10 ++++++++++
+ drivers/bus/imx-weim.c    |  6 ------
+ drivers/i2c/i2c-core-of.c |  5 -----
+ drivers/of/dynamic.c      |  9 ++++++++-
+ drivers/of/platform.c     |  5 -----
+ drivers/spi/spi.c         |  5 -----
+ include/linux/fwnode.h    |  2 ++
+ 7 files changed, 20 insertions(+), 22 deletions(-)
+
 -- 
 2.44.0.478.gd926399ef9-goog
 
