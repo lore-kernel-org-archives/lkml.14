@@ -1,54 +1,54 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C266FBF;
-	Mon,  8 Apr 2024 09:35:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4266045958;
+	Mon,  8 Apr 2024 09:36:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712568961; cv=none; b=XDffvnkOwYTdyYXhpvHB4ECn4O+eMTh0X+LhtMpVLCGKBd6vLG6tHrn7HZSKWRhgQkK+ZqsqBDxMtYsfzEu3NHPfjzbqIcbl5vtRu25E9IMUFMMtWObw3cTg7jA25cui7DPfooZTuvHbdK4MaQz80SnTHpgm5m1kS5OuuTJG9pw=
+	t=1712569004; cv=none; b=KmHbkPjnYzSMinBZp2VA6cxfTErGmQkLO08LzoZaOLyZYMixE6XTHuymV7n578m6ek+5rUUn72I6rU7RpCLOBnptZmWxzO4FqypG/KD7c4xppPB4yqkkVfVwzGqD/o33Erxo6d51papSW/RpdpucyVp/HThDtO8Q+mcPksOVdZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712568961; c=relaxed/simple;
-	bh=tBs/YJ2fLDfrIVtxpGytKjKUVc/9/3IKnSLB8drjLUQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oG65I4dfc2ZM4WPMPzjY1sF4rlmJKRT3JHXwbAr+gmPpbcWhXv9gKUfYIkGtFgRnPeHiqUGto7sgNuyAxtZ2mTUcEo7jSvXq3y1K8M43XPGCQYamFiR+PAKmuqhlBEfDOpcvifj4CNHpl/qtISeRRkmEzKct4PCBBf3GB4RtLDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=bLyVljID; arc=none smtp.client-ip=67.231.148.174
+	s=arc-20240116; t=1712569004; c=relaxed/simple;
+	bh=rXoFAdo1tTS0PjGUrKhn6mS1KcUdpcQU1e2XnCLLWNA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EKHlA5WSHEuBjo6wBUgdlwVkVYDP6d2kdygRDMxIg4M6tQPJ0FLndnyIuITFfq0pfq1RE55/d8r3BQvZ/2uSkjcCN3ivqQu9cLh8JwnTuEvKOBEcdPWPeXQYdISeixjVDP43X3kSe78kfi3dFjoAd3nVxzqyj0w/UR7TllCy0g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=GfEV0U65; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="bLyVljID"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GfEV0U65"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4388rgcQ007326;
-	Mon, 8 Apr 2024 02:35:52 -0700
+	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4388rgd3007326;
+	Mon, 8 Apr 2024 02:36:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	pfpt0220; bh=j/ahPDX2/GgpboNxFpPN/xXlJANbz5Sc0e/KSoo81V4=; b=bLy
-	VljIDzHbu5HCTfy/QyWv16BJ+XGLf3ajbpNO8PMOcFn0YLDiDQlJhEDCXI5nJyws
-	FVYW8nV71rITAPwv/72X+K7ir4758gTbSsai8hBJ0szpvQerm58pjJ6xfjXkAcfj
-	kiHwkAsVD12wBvFbzpdW+mFEgg0z6WHBG2DBQTc8X/X+Rev5YxRhoPAj3MvFOJhE
-	FFnEQdQCbbXqe7OgAEj0Ch17t/7BPspt7y9/txCbiohsALZuhvkGN4+yN3OPz4QP
-	T+V7vQVL69Vd6ubmqB05rikZHEWccFiOh/458yF/uOb+cowlYU4EODYbYe851dEl
-	A7bH80poxNfVoE95Gig==
+	pfpt0220; bh=6sU5GxlK76ndUKi2361U/O6LtYlGS3aaQIWSH2fN1ig=; b=GfE
+	V0U654ipZQM9d4bChIiTSdErYMcxG7G5qgcZ4xkyOVp4Qu6RuTD5/gDEFPWJ8QFg
+	dkbMt17gvXwNUVXGJ4Qkb1zy0CvUzDAGk9dF8JY0IwXTUJ26VT3CnTGGJlyN90LK
+	EX6ZUAvOk8d79WArKpZKlftmhI9GukyRqPM+DTrYkIwWZrc8P5A9MvGXa2v2j4FF
+	jmUKpyP4WPgEfQ2C4jVqFLczT0KgK8eulp68KP9dH9au6+1SvTr46+ZCF0iIzJRB
+	hfktEzlekKL9xx/LNnphKWxkIg02HfEjtqYihW7TfVlG22c3opssL+wEVQUQHAaF
+	orIK9KDQnL9laGsdgTA==
 Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xcdff02ru-7
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xcdff02v2-15
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 02:35:52 -0700 (PDT)
+	Mon, 08 Apr 2024 02:36:37 -0700 (PDT)
 Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Sun, 7 Apr 2024 22:26:16 -0700
+ 15.2.1544.4; Mon, 8 Apr 2024 00:16:34 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
  (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Sun, 7 Apr 2024 22:26:15 -0700
+ Transport; Mon, 8 Apr 2024 00:16:34 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id AD3503F7055;
-	Sun,  7 Apr 2024 22:26:12 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id E0E733F70C8;
+	Mon,  8 Apr 2024 00:16:30 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net PATCH] octeontx2-af: Fix NIX SQ mode and BP config
-Date: Mon, 8 Apr 2024 10:56:11 +0530
-Message-ID: <20240408052611.25736-1-gakula@marvell.com>
+Subject: [net-next PATCH] octeontx2-pf: Add support for offload tc with skbedit mark action
+Date: Mon, 8 Apr 2024 12:46:29 +0530
+Message-ID: <20240408071629.26390-1-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -57,56 +57,123 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-GUID: 9HOTvIT2vNm9umZ5hshSIcRcDX3HOAak
-X-Proofpoint-ORIG-GUID: 9HOTvIT2vNm9umZ5hshSIcRcDX3HOAak
+X-Proofpoint-GUID: fC6hvAVr3Lo6pDjyfu04X-u4CtOQ9kOF
+X-Proofpoint-ORIG-GUID: fC6hvAVr3Lo6pDjyfu04X-u4CtOQ9kOF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
 
-NIX SQ mode and link backpressure configuration is required for
-all platforms. But in current driver this code is wrongly placed
-under specific platform check. This patch fixes the issue by 
-moving the code out of platform check.
+Support offloading of skbedit mark action.
 
-Fixes: 5d9b976d4480 ("octeontx2-af: Support fixed transmit scheduler topology")
+For example, to mark with 0x0008, with dest ip 60.60.60.2 on eth2
+interface:
+
+ # tc qdisc add dev eth2 ingress
+ # tc filter add dev eth2 ingress protocol ip flower \
+      dst_ip 60.60.60.2 action skbedit mark 0x0008 skip_sw
+
 Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 ---
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ .../net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c  |  2 ++
+ .../ethernet/marvell/octeontx2/nic/otx2_common.h    |  2 ++
+ .../net/ethernet/marvell/octeontx2/nic/otx2_tc.c    | 13 +++++++++++++
+ .../net/ethernet/marvell/octeontx2/nic/otx2_txrx.c  |  3 +++
+ .../net/ethernet/marvell/octeontx2/nic/otx2_txrx.h  |  3 +++
+ 5 files changed, 23 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-index d39001cdc707..00af8888e329 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_nix.c
-@@ -4819,18 +4819,18 @@ static int rvu_nix_block_init(struct rvu *rvu, struct nix_hw *nix_hw)
- 		 */
- 		rvu_write64(rvu, blkaddr, NIX_AF_CFG,
- 			    rvu_read64(rvu, blkaddr, NIX_AF_CFG) | 0x40ULL);
-+	}
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+index c75669c8fde7..6188921e9a20 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+@@ -1183,6 +1183,8 @@ static int npc_update_rx_entry(struct rvu *rvu, struct rvu_pfvf *pfvf,
+ 			action.pf_func = target;
+ 			action.op = NIX_RX_ACTIONOP_UCAST;
+ 		}
++		if (req->match_id)
++			action.match_id = req->match_id;
+ 	}
  
--		/* Set chan/link to backpressure TL3 instead of TL2 */
--		rvu_write64(rvu, blkaddr, NIX_AF_PSE_CHANNEL_LEVEL, 0x01);
-+	/* Set chan/link to backpressure TL3 instead of TL2 */
-+	rvu_write64(rvu, blkaddr, NIX_AF_PSE_CHANNEL_LEVEL, 0x01);
+ 	entry->action = *(u64 *)&action;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+index 06910307085e..815ae13c371c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+@@ -363,6 +363,7 @@ struct otx2_flow_config {
+ 	struct list_head	flow_list;
+ 	u32			dmacflt_max_flows;
+ 	u16                     max_flows;
++	u16			mark_flows;
+ 	struct list_head	flow_list_tc;
+ 	bool			ntuple;
+ };
+@@ -465,6 +466,7 @@ struct otx2_nic {
+ #define OTX2_FLAG_DMACFLTR_SUPPORT		BIT_ULL(14)
+ #define OTX2_FLAG_PTP_ONESTEP_SYNC		BIT_ULL(15)
+ #define OTX2_FLAG_ADPTV_INT_COAL_ENABLED BIT_ULL(16)
++#define OTX2_FLAG_TC_MARK_ENABLED		BIT_ULL(17)
+ 	u64			flags;
+ 	u64			*cq_op_addr;
  
--		/* Disable SQ manager's sticky mode operation (set TM6 = 0)
--		 * This sticky mode is known to cause SQ stalls when multiple
--		 * SQs are mapped to same SMQ and transmitting pkts at a time.
--		 */
--		cfg = rvu_read64(rvu, blkaddr, NIX_AF_SQM_DBG_CTL_STATUS);
--		cfg &= ~BIT_ULL(15);
--		rvu_write64(rvu, blkaddr, NIX_AF_SQM_DBG_CTL_STATUS, cfg);
--	}
-+	/* Disable SQ manager's sticky mode operation (set TM6 = 0)
-+	 * This sticky mode is known to cause SQ stalls when multiple
-+	 * SQs are mapped to same SMQ and transmitting pkts at a time.
-+	 */
-+	cfg = rvu_read64(rvu, blkaddr, NIX_AF_SQM_DBG_CTL_STATUS);
-+	cfg &= ~BIT_ULL(15);
-+	rvu_write64(rvu, blkaddr, NIX_AF_SQM_DBG_CTL_STATUS, cfg);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
+index 4fd44b6eecea..fd1d78601811 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_tc.c
+@@ -511,7 +511,15 @@ static int otx2_tc_parse_actions(struct otx2_nic *nic,
+ 			nr_police++;
+ 			break;
+ 		case FLOW_ACTION_MARK:
++			if (act->mark & ~OTX2_RX_MATCH_ID_MASK) {
++				NL_SET_ERR_MSG_MOD(extack, "Bad flow mark, only 16 bit supported");
++				return -EOPNOTSUPP;
++			}
+ 			mark = act->mark;
++			req->match_id = mark & 0xFFFFULL;
++			req->op = NIX_RX_ACTION_DEFAULT;
++			nic->flags |= OTX2_FLAG_TC_MARK_ENABLED;
++			nic->flow_cfg->mark_flows++;
+ 			break;
  
- 	ltdefs = rvu->kpu.lt_def;
- 	/* Calibrate X2P bus to check if CGX/LBK links are fine */
+ 		case FLOW_ACTION_RX_QUEUE_MAPPING:
+@@ -1173,6 +1181,11 @@ static int otx2_tc_del_flow(struct otx2_nic *nic,
+ 		return -EINVAL;
+ 	}
+ 
++	/* Disable TC MARK flag if they are no rules with skbedit mark action */
++	if (flow_node->req.match_id)
++		if (!(--flow_cfg->mark_flows))
++			nic->flags &= ~OTX2_FLAG_TC_MARK_ENABLED;
++
+ 	if (flow_node->is_act_police) {
+ 		__clear_bit(flow_node->rq, &nic->rq_bmap);
+ 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+index 4d519ea833b2..d3c9759c9f06 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.c
+@@ -380,6 +380,9 @@ static void otx2_rcv_pkt_handler(struct otx2_nic *pfvf,
+ 	if (pfvf->netdev->features & NETIF_F_RXCSUM)
+ 		skb->ip_summed = CHECKSUM_UNNECESSARY;
+ 
++	if (pfvf->flags & OTX2_FLAG_TC_MARK_ENABLED)
++		skb->mark = parse->match_id;
++
+ 	skb_mark_for_recycle(skb);
+ 
+ 	napi_gro_frags(napi);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.h b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.h
+index a82ffca8ce1b..3f1d2655ff77 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.h
+@@ -62,6 +62,9 @@
+ #define CQ_OP_STAT_OP_ERR       63
+ #define CQ_OP_STAT_CQ_ERR       46
+ 
++/* Packet mark mask */
++#define OTX2_RX_MATCH_ID_MASK 0x0000ffff
++
+ struct queue_stats {
+ 	u64	bytes;
+ 	u64	pkts;
 -- 
 2.25.1
 
