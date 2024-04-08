@@ -1,241 +1,156 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A119A52F87;
-	Mon,  8 Apr 2024 10:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37C552F82;
+	Mon,  8 Apr 2024 10:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712571513; cv=none; b=sBtr9N3+KxEt2/30hR1LmpnDvlFT8LIMJZTVainQT1XM85VhmMq9jhT2YnnOEMK9JS4D58R5riR5dcGxYel7y/uOSFRcoca/Lmsz2+nMBOauS/yhrBkzhmS83gF/QyMx+E0aM1U9bFLt4tIwLCTvFv9U9nVUBUy9V9clP6/uhFw=
+	t=1712571807; cv=none; b=PldBBv1OywN+lAzWXUjzeeTwdtNJGE3m3uM/CcPY9gGXtYcCEellRegxpTFquIqE4gMiquo1i/FL1WA0Pcl6g52PJIiv05Y97oyfe9L8SbxXtam4C93SA5yaAO9s6cVN8O17V2sk5tvlfF4Euj+GuLA/UI+I1GichZM9V/AMfH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712571513; c=relaxed/simple;
-	bh=qa6qtoo91LrB1qaXiQb/QiFYyJioLMK1RUVQhdD5UvE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=twMMPEIGlIZr4Decqsxve+LLFy/tkB05Fct43aoi3Bzb774cMoXTz692H167amStRwxEqvwMOAGOSG+wwolQ/kRguwkj3bvmnfk5pB70gSmfx+2hh0aDsZqphsh6RyT13TKZHU1JY9Y8qLGbVKjzyqr7yBOmV+EE0qEOa5Ya6Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=ALgZkFIr; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1712571807; c=relaxed/simple;
+	bh=defNepUeNvybDxA+Wcux2NfPpGp5OU/cEgHKGppWtpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4SaiabWixKYKNwLEO4vsG352rRDE6c3w+bn60cPn+QUPlPhbhdTDYZ8fvE8EjND6tuqdJ8aG/YgFmvIvBxY73zgoHrJWAGGNP6SYZW+dBULTTOsxEFwP9hLIzJm1GeC+Ndo5H3gYQ479QOZ0pE6o0d0AOHEv+OThDxjFxX94uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAPrg+vz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ALgZkFIr"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43850rVC005178;
-	Mon, 8 Apr 2024 05:18:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=HP5jOhe9Z2fx8yJ8S42D1z6FwLnTIVOPjHt3pv7FB0Q=; b=
-	ALgZkFIr4XGDzWgvdCzkdNoWt4KyeDfgvoEjrjJ4SuXVwppwSpduMxn5lPpWCpve
-	ootVn4qB0shCwYhKWnI5zfT0V4U5TQCChPcM+Omr9feH/8FngpCarcs2BwhpX9t/
-	67rCSp52NoSkpXuef+J+Tx0Ece82vupw1I5YSTGyHCPW943WZ2MRiKjeSmaU9qxN
-	+MRoDYfhl2KRihXN19RUmppSbMHNSEykj8ivIIdGsR8/7lPLccLdyb61B52tnqXM
-	128vVtDWUq4D/ps4bGDCfuFysuQ4Q6GJT1iuYUPbgv5whF0w3SGRwtF+V8srEZaf
-	xuT4Rv1yQgc6q2QxdAg0yA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxhbbq-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 05:18:07 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
- 11:18:03 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 8 Apr 2024 11:18:03 +0100
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 43ADE820258;
-	Mon,  8 Apr 2024 10:18:03 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>, <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH 3/4] ASoC: cs35l56: Fix unintended bus access while resetting amp
-Date: Mon, 8 Apr 2024 11:18:02 +0100
-Message-ID: <20240408101803.43183-4-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240408101803.43183-1-rf@opensource.cirrus.com>
-References: <20240408101803.43183-1-rf@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAPrg+vz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE42AC433C7;
+	Mon,  8 Apr 2024 10:23:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712571806;
+	bh=defNepUeNvybDxA+Wcux2NfPpGp5OU/cEgHKGppWtpY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EAPrg+vz9vTL8BRa2VrU7ReqAihVd/FPmXJpiQPsYyenZCWAkINg9JFQiR9owc32h
+	 T87XUqhIIrk3HsOuTGnZBGPKj1nqnjDroseCR08NpC7TFvtp7vaCX5lLsNx2KGKBW7
+	 KOIBoVYlo/jilRYigckQWUr0Lpq8OyZRVt5/fXGplIw1Gvd52ZxH+AjZBVQp3pB7Fj
+	 EwaEBOKvWNyCG4rFJ7u+T36J4ojsGJ43GLw9TAz7Yi1R06KpDym6WVQRWQTPpcBCYM
+	 fcXoiZtsB1aPdYLi8tZE0N/Q5DdXYkxoZi9DalXL4o8VasPuv/COWVIPQvOvPRfzqo
+	 H7ZW1kb1cIduQ==
+Date: Mon, 8 Apr 2024 12:23:20 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: helgaas@kernel.org, bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+	imx@lists.linux.dev, jdmason@kudzu.us, jingoohan1@gmail.com,
+	kw@linux.com, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, lpieralisi@kernel.org, mani@kernel.org,
+	robh@kernel.org
+Subject: Re: [PATCH v3 1/1] PCI: dwc: Fix index 0 incorrectly being
+ interpreted as a free ATU slot
+Message-ID: <ZhPFmFYorWa-sfLp@ryzen>
+References: <20240326193540.3610570-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Us6V62P_agtVZ1KfO10K_Oxc05tnbEsy
-X-Proofpoint-GUID: Us6V62P_agtVZ1KfO10K_Oxc05tnbEsy
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240326193540.3610570-1-Frank.Li@nxp.com>
 
-Use the new regmap_read_bypassed() so that the regmap can be left
-in cache-only mode while it is booting, but the driver can still
-read boot-status and chip-id information during this time.
+On Tue, Mar 26, 2024 at 03:35:40PM -0400, Frank Li wrote:
+> When PERST# assert and deassert happens on the PERST# supported platforms,
+> the both iATU0 and iATU6 will map inbound window to BAR0. DMA will access
+> to the area that was previously allocated (iATU0) for BAR0, instead of the
+> new area (iATU6) for BAR0.
 
-This fixes race conditions where some writes could be issued to the
-silicon while it is still rebooting, before the driver has determined
-that the boot is complete.
+Nit: If we want additional clarity, we could also add:
+""
+Right now, we dodge the bullet because both iATU0 and iATU6 should currently
+translate inbound accesses to BAR0 to the same allocated memory area. However,
+having two separate inbound mappings for the same BAR is a disaster waiting to
+happen.
+""
 
-This is typically prevented by putting regmap into cache-only until the
-hardware is ready. But this assumes that the driver does not need to
-access device registers to determine when it is "ready". For cs35l56
-this involves polling a register and the original implementation relied
-on having special handlers to block racing callbacks until dsp_work()
-is complete. However, some cases were missed, most notably the ASP DAI
-functions.
+If the maintainers feel like this additional information is important, I think
+it could be added while applying. (But I also think that the existing commit
+message is detailed enough to be applied as is.)
 
-The regmap_read_bypassed() function allows the fix for this to be
-simplified to putting regmap into cache-only during the reset. The
-initial boot stages (poll HALO_STATE and read the chip ID) are all done
-bypassed. Only when the amp is seen to be booted is the cache-only
-revoked.
 
-Changes are:
-- cs35l56_system_reset() now leaves the regmap in cache-only status.
-
-- cs35l56_wait_for_firmware_boot() polls using regmap_read_bypassed().
-
-- cs35l56_init() revokes cache-only either via cs35l56_hw_init() or
-  when firmware has rebooted after a soft reset.
-
-- cs35l56_hw_init() exits cache-only after it has determined that the
-  amp has booted.
-
-- cs35l56_sdw_init() doesn't disable cache-only, since this must be
-  deferred to cs35l56_init().
-
-- cs35l56_runtime_resume_common() waits for firmware boot before exiting
-  cache-only.
-
-These changes cover three situations where the registers are not
-accessible:
-
-1) SoundWire first-time enumeration. The regmap is kept in cache-only
-   until the chip is fully booted. The original code had to exit
-   cache-only to read chip status in cs35l56_init() and cs35l56_hw_init()
-   but this is now deferred to after the firmware has rebooted.
-
-   In this case cs35l56_sdw_probe() leaves regmap in cache-only
-   (unchanged behaviour) and cs35l56_hw_init() exits cache-only after the
-   firmware is booted and the chip identified.
-
-2) Soft reset during first-time initialization. cs35l56_init() calls
-   cs35l56_system_reset(), which puts regmap into cache-only.
-   On I2C/SPI cs35l56_init() then flows through to call
-   cs35l56_wait_for_firmware_boot() and exit cache-only. On SoundWire
-   the re-enumeration will enter cs35l56_init() again, which then drops
-   down to call cs35l56_wait_for_firmware_boot() and exit cache-only.
-
-3) Soft reset after firmware download. dsp_work() calls
-   cs35l56_system_reset(), which puts regmap into cache-only. After this
-   the flow is the same as (2).
-
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 8a731fd37f8b ("ASoC: cs35l56: Move utility functions to shared file")
----
- sound/soc/codecs/cs35l56-sdw.c    |  2 --
- sound/soc/codecs/cs35l56-shared.c | 20 ++++++++++++--------
- sound/soc/codecs/cs35l56.c        |  2 ++
- 3 files changed, 14 insertions(+), 10 deletions(-)
-
-diff --git a/sound/soc/codecs/cs35l56-sdw.c b/sound/soc/codecs/cs35l56-sdw.c
-index 14a5f86019aa..70ff55c1517f 100644
---- a/sound/soc/codecs/cs35l56-sdw.c
-+++ b/sound/soc/codecs/cs35l56-sdw.c
-@@ -188,8 +188,6 @@ static void cs35l56_sdw_init(struct sdw_slave *peripheral)
- 			goto out;
- 	}
- 
--	regcache_cache_only(cs35l56->base.regmap, false);
--
- 	ret = cs35l56_init(cs35l56);
- 	if (ret < 0) {
- 		regcache_cache_only(cs35l56->base.regmap, true);
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index 08cac58e3ab2..a83317db75ed 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -307,10 +307,10 @@ int cs35l56_wait_for_firmware_boot(struct cs35l56_base *cs35l56_base)
- 		reg = CS35L56_DSP1_HALO_STATE;
- 
- 	/*
--	 * This can't be a regmap_read_poll_timeout() because cs35l56 will NAK
--	 * I2C until it has booted which would terminate the poll
-+	 * The regmap must remain in cache-only until the chip has
-+	 * booted, so use a bypassed read of the status register.
- 	 */
--	poll_ret = read_poll_timeout(regmap_read, read_ret,
-+	poll_ret = read_poll_timeout(regmap_read_bypassed, read_ret,
- 				     (val < 0xFFFF) && (val >= CS35L56_HALO_STATE_BOOT_DONE),
- 				     CS35L56_HALO_STATE_POLL_US,
- 				     CS35L56_HALO_STATE_TIMEOUT_US,
-@@ -362,7 +362,8 @@ void cs35l56_system_reset(struct cs35l56_base *cs35l56_base, bool is_soundwire)
- 		return;
- 
- 	cs35l56_wait_control_port_ready();
--	regcache_cache_only(cs35l56_base->regmap, false);
-+
-+	/* Leave in cache-only. This will be revoked when the chip has rebooted. */
- }
- EXPORT_SYMBOL_NS_GPL(cs35l56_system_reset, SND_SOC_CS35L56_SHARED);
- 
-@@ -577,14 +578,14 @@ int cs35l56_runtime_resume_common(struct cs35l56_base *cs35l56_base, bool is_sou
- 		cs35l56_issue_wake_event(cs35l56_base);
- 
- out_sync:
--	regcache_cache_only(cs35l56_base->regmap, false);
--
- 	ret = cs35l56_wait_for_firmware_boot(cs35l56_base);
- 	if (ret) {
- 		dev_err(cs35l56_base->dev, "Hibernate wake failed: %d\n", ret);
- 		goto err;
- 	}
- 
-+	regcache_cache_only(cs35l56_base->regmap, false);
-+
- 	ret = cs35l56_mbox_send(cs35l56_base, CS35L56_MBOX_CMD_PREVENT_AUTO_HIBERNATE);
- 	if (ret)
- 		goto err;
-@@ -757,7 +758,7 @@ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base)
- 	 * devices so the REVID needs to be determined before waiting for the
- 	 * firmware to boot.
- 	 */
--	ret = regmap_read(cs35l56_base->regmap, CS35L56_REVID, &revid);
-+	ret = regmap_read_bypassed(cs35l56_base->regmap, CS35L56_REVID, &revid);
- 	if (ret < 0) {
- 		dev_err(cs35l56_base->dev, "Get Revision ID failed\n");
- 		return ret;
-@@ -768,7 +769,7 @@ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base)
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_read(cs35l56_base->regmap, CS35L56_DEVID, &devid);
-+	ret = regmap_read_bypassed(cs35l56_base->regmap, CS35L56_DEVID, &devid);
- 	if (ret < 0) {
- 		dev_err(cs35l56_base->dev, "Get Device ID failed\n");
- 		return ret;
-@@ -787,6 +788,9 @@ int cs35l56_hw_init(struct cs35l56_base *cs35l56_base)
- 
- 	cs35l56_base->type = devid & 0xFF;
- 
-+	/* Silicon is now identified and booted so exit cache-only */
-+	regcache_cache_only(cs35l56_base->regmap, false);
-+
- 	ret = regmap_read(cs35l56_base->regmap, CS35L56_DSP_RESTRICT_STS1, &secured);
- 	if (ret) {
- 		dev_err(cs35l56_base->dev, "Get Secure status failed\n");
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 8d2f021fb362..5a4e0e479414 100644
---- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -1531,6 +1531,8 @@ int cs35l56_init(struct cs35l56_private *cs35l56)
- 			return ret;
- 
- 		dev_dbg(cs35l56->base.dev, "Firmware rebooted after soft reset\n");
-+
-+		regcache_cache_only(cs35l56->base.regmap, false);
- 	}
- 
- 	/* Disable auto-hibernate so that runtime_pm has control */
--- 
-2.39.2
-
+> 
+> The mapping between PCI BAR and iATU inbound window are maintained in the
+> dw_pcie_ep::bar_to_atu[] array. While allocating a new inbound iATU map for
+> a BAR, dw_pcie_ep_inbound_atu() API will first check for the availability
+> of the existing mapping in the array and if it is not found (i.e., value in
+> the array indexed by the BAR is found to be 0), then it will allocate a new
+> map value using find_first_zero_bit().
+> 
+> The issue here is, the existing logic failed to consider the fact that the
+> map value '0' is a valid value for BAR0. Because, find_first_zero_bit()
+> will return '0' as the map value for BAR0 (note that it returns the first
+> zero bit position).
+> 
+> Due to this, when PERST# assert + deassert happens on the PERST# supported
+> platforms, the inbound window allocation restarts from BAR0 and the
+> existing logic to find the BAR mapping will return '6' for BAR0 instead of
+> '0' due to the fact that it considers '0' as an invalid map value.
+> 
+> So fix this issue by always incrementing the map value before assigning to
+> bar_to_atu[] array and then decrementing it while fetching. This will make
+> sure that the map value '0' always represents the invalid mapping."
+> 
+> Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+> Closes: https://lore.kernel.org/linux-pci/ZXsRp+Lzg3x%2Fnhk3@x1-carbon/
+> Tested-by: Niklas Cassel <niklas.cassel@wdc.com>
+> Fixes: 4284c88fff0e ("PCI: designware-ep: Allow pci_epc_set_bar() update inbound map address")
+> Reviewed-by: Niklas Cassel <niklas.cassel@wdc.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> 
+> Notes:
+>     Change from v2 to v3
+>     - Add impact in commit message
+>     - Add mani's detail description
+>     - Fix Closes link
+>     
+>     Change from v1 to v2
+>     - update subject
+>     - use free_win + 1 solution
+>     - still leave MAX_IATU_IN as 256. I am not sure if there are platfrom have
+>     256 ATU. Suppose it only use max 6 in current EP framework.
+>     - @Niklas, can you help test it. My platform become unstable today.
+> 
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 5befed2dc02b7..ba932bafdb230 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -139,7 +139,7 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+>  	if (!ep->bar_to_atu[bar])
+>  		free_win = find_first_zero_bit(ep->ib_window_map, pci->num_ib_windows);
+>  	else
+> -		free_win = ep->bar_to_atu[bar];
+> +		free_win = ep->bar_to_atu[bar] - 1;
+>  
+>  	if (free_win >= pci->num_ib_windows) {
+>  		dev_err(pci->dev, "No free inbound window\n");
+> @@ -153,7 +153,11 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
+>  		return ret;
+>  	}
+>  
+> -	ep->bar_to_atu[bar] = free_win;
+> +	/*
+> +	 * Always increment free_win before assignment, since value 0 is used to identify
+> +	 * unallocated mapping.
+> +	 */
+> +	ep->bar_to_atu[bar] = free_win + 1;
+>  	set_bit(free_win, ep->ib_window_map);
+>  
+>  	return 0;
+> @@ -190,7 +194,10 @@ static void dw_pcie_ep_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
+>  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+>  	enum pci_barno bar = epf_bar->barno;
+> -	u32 atu_index = ep->bar_to_atu[bar];
+> +	u32 atu_index = ep->bar_to_atu[bar] - 1;
+> +
+> +	if (!ep->bar_to_atu[bar])
+> +		return;
+>  
+>  	__dw_pcie_ep_reset_bar(pci, func_no, bar, epf_bar->flags);
+>  
+> -- 
+> 2.34.1
+> 
