@@ -1,272 +1,130 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928957D3E8
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB667F47E;
+	Mon,  8 Apr 2024 14:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712584784; cv=none; b=GWXBZ4cnklUgBjQU4xKUVgB5TLVrOBi27LO6xqo/ik05pVXfk2uDS6oG4aWq9ANRapH9Ksc1QqIguQJpuFHsDYQRXmTtdaD2zv2VLndHpZ7Ys2aUxLjAufzj9IsqCZxRRkeSlqzEc9OKYsIOwqx2tvJ/ACtb45pUbhg8P3g/dlo=
+	t=1712584860; cv=none; b=HH6glVVfF0dTCSfTwjEVvuw0O2Xy5qGMTrfl0HVauhTVeH3H+0dIMJYlaMwtqlby+kA4nY0Z/yJy8+zihICR2OntpuJjomLmE30VDa/vRIcdtPc5POYvwtInHUqHXpC6xO3punFUq1rD7UPwnZAqrALVkVneeWN1KOcQLmA7R3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712584784; c=relaxed/simple;
-	bh=lbVTY91IwFFIb6sbUTf2Z6WUddRDSgvFYfQik2bdU5s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EeKKzlrksqqfFVaXNHbaag4rQAFvPfgEa+7HyW0UJOeISGHiysrRuREBOgdcV/c0La7qdERzdWhbgBShYVRBtK9uqP58zPVf7TuhpnKigDNcMynD6zlpMVMsI73fDuWVLSpXoy2ESuAjrkT6tubVKDfat1cJP/c8WPufeUcyleI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=IpyLp1h3; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
+	s=arc-20240116; t=1712584860; c=relaxed/simple;
+	bh=LRkUGtbdysI7/tiFWsFk0skJui/QKklnMkcGgNPr+6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a9X+5MIZ/vvDOTZIm12zn1Mn8ReQuioOztoUpYRL/BccLxn5UtfjmyrzLVvQOWWCsTFFHd8x8gEhcegaEuBDeXGJvne/KRyHwtOObo6U1/AxJFGtZruV7DAOf2dqma3+z9ISub/NrMKLcG3p0+/NhyhXSOygMPX3BIQXxrfSceo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M67WO3MO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="IpyLp1h3"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso4340833276.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitbyteword.org; s=google; t=1712584781; x=1713189581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2coaQxB0F90mD/VO/63txYCW7fbnXdz4Og49R0bnS0Q=;
-        b=IpyLp1h3XLmltMszTAcxVWHS6ZFLH/1mNbEnJhbxRzfgDqnuBZix6GaXxkPbZRn++j
-         GwSzUc0K42qlfV9ozuQ2trE3fpz6b4LFuXTDSaNdIsbZgJGQEpZjZin8pCdRFaHOem7n
-         xcrOU/UFn4zxyjB3RodCT5zMwLFQ4ii06grSDEf7iJUtOq5JDnDq0DPeWAvKrrtDZKg9
-         nfvmDX8R3vNBjIFBgCZYHb2dmWPA5F9Ag46LO03n5wACybE+mebMDc7g7rseMNC79Gxc
-         B7/picFwhBGPBUsUmWXe2q4hKHMuvPLfJpIbnnj3fA5BpqAiQttD7Bw9rLwo10EepvvK
-         uleA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712584781; x=1713189581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2coaQxB0F90mD/VO/63txYCW7fbnXdz4Og49R0bnS0Q=;
-        b=E5oRpMYX7/Gbn98r0Syw05UUtTPwaIXXwf55CgY2PDATrxvouu7ZMTq4DRubJywR9E
-         Pqkv2eLILwivGO90moG7K1NmrB3hHHXTuzXSeGkeGPOj6i+aAwWXr63Zz6AA9NUlSqFH
-         WZC9ecM0Jc8N1DfJJS9R9IFna8qjJTyjXFn7o32XkKOMJkUSxumBGYX/wr1OgGNiYTeP
-         BBdoIFDrUjDnc1UE1hy9Aem3q0r1UJgDSjDgmUuApyt8ZUQ3dOkqhVfkYiQIsHnd8ri7
-         lvjynlUazy+w2QIOHtqzlhhLtdtefHz7yyHewXte7/QEAuAnfdQtqqsoHw+h/iS5HSP1
-         HqxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQP40k4Myqxu3RUTuVfIreGafuOf2AE6DGJYd0oYxYxC5AnspSn+wgUiQUxy4psmV02Xh4V9l7T7u48x4SZfABzHuNJLSWyNnR3gwC
-X-Gm-Message-State: AOJu0YwwNkQhCXH7sAq9RBYAkID/4qIQzx0P7IQfRpK1smkwvENnfn6d
-	Ej0eh9LoDhwab3NT/65NNK7TdA32TD4MtPMyJpGus5FQ2JlM1eAlFOJepflNmpxbVC5NM0ZF27y
-	ZZWI6s72o/EhFQFDGimTzD3Wpg/zo4cwVlLY63rT8lXhE22YGK80=
-X-Google-Smtp-Source: AGHT+IHnQETxLjZU27DkaVuL2NPrz1AKM7HMA3QiyMhApsYgRMKp85PK/KLql+aHldblJDUfaYizBvoO1T3a4j8BLmw=
-X-Received: by 2002:a5b:843:0:b0:dcd:af3f:c7fc with SMTP id
- v3-20020a5b0843000000b00dcdaf3fc7fcmr6978574ybq.9.1712584781543; Mon, 08 Apr
- 2024 06:59:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M67WO3MO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60730C433B2;
+	Mon,  8 Apr 2024 14:00:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712584859;
+	bh=LRkUGtbdysI7/tiFWsFk0skJui/QKklnMkcGgNPr+6s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M67WO3MO0MT2zVXUR1oJb50r0ESEjtLzRA4KqexN2iQUrs4lX9EEjjnwoQ7T3iuo9
+	 967pWN9c0uup1rjOl3TRrWLV1XxCDsgMtSIQoJmqgjOM1e4ni91pUN1SAAiLjTgb6h
+	 7wbrxE2MWafJ7nJ9AwsXSG2hXE2FqmB4ptdM+o7eExNvxndFJ9k3v9kz48y2IK0vpk
+	 ucl5sZsBQT/03NK3C6EDV2OfsSeoCTM+S6QhJ85J/7tAAEBEGARNw/ksf2m4STgAXL
+	 ZVnuEB5CpYwLdFDPG1UcoV/KpKeMQKC/HjhGBKZYYbqzT24R2BNL6T85ZMrtktJZ2j
+	 N2fgUWgIlu68Q==
+Date: Mon, 8 Apr 2024 17:00:55 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Konstantin Taranov <kotaranov@microsoft.com>
+Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
+	"sharmaajay@microsoft.com" <sharmaajay@microsoft.com>,
+	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH rdma-next v4 0/4] Define and use mana queues for CQs and
+ WQs
+Message-ID: <20240408140055.GH8764@unreal>
+References: <1712567646-5247-1-git-send-email-kotaranov@linux.microsoft.com>
+ <20240408112533.GF8764@unreal>
+ <PAXPR83MB05570E9EE9853B2E6F66703DB4002@PAXPR83MB0557.EURPRD83.prod.outlook.com>
+ <20240408130024.GG8764@unreal>
+ <PAXPR83MB05573802DE8859318A7B1435B4002@PAXPR83MB0557.EURPRD83.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403140116.3002809-1-vineeth@bitbyteword.org> <20240403140116.3002809-4-vineeth@bitbyteword.org>
-In-Reply-To: <20240403140116.3002809-4-vineeth@bitbyteword.org>
-From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
-Date: Mon, 8 Apr 2024 09:59:31 -0400
-Message-ID: <CAO7JXPjwEBPqCLcz8ErpgZU5VYdMnz4YORwbuMPM5=qRjOZBBQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/5] kvm: interface for managing pvsched driver for
- guest VMs
-To: Ben Segall <bsegall@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Sean Christopherson <seanjc@google.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Suleiman Souhlal <suleiman@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, himadrics@inria.fr, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Tejun Heo <tj@kernel.org>, Barret Rhoden <brho@google.com>, David Vernet <dvernet@meta.com>, 
-	Josh Don <joshdon@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR83MB05573802DE8859318A7B1435B4002@PAXPR83MB0557.EURPRD83.prod.outlook.com>
 
-Adding sched_ext folks
+On Mon, Apr 08, 2024 at 01:47:45PM +0000, Konstantin Taranov wrote:
+> > From: Leon Romanovsky <leon@kernel.org>
+> > On Mon, Apr 08, 2024 at 12:50:12PM +0000, Konstantin Taranov wrote:
+> > > > From: Leon Romanovsky <leon@kernel.org> On Mon, Apr 08, 2024 at
+> > > > 02:14:02AM -0700, Konstantin Taranov wrote:
+> > > > > From: Konstantin Taranov <kotaranov@microsoft.com>
+> > > > >
+> > > > > This patch series aims to reduce code duplication by introducing a
+> > > > > notion of mana ib queues and corresponding helpers to create and
+> > > > > destroy them.
+> > > > >
+> > > > > v3->v4:
+> > > > > * Removed debug prints in patches, as asked by Leon
+> > > > >
+> > > > > v2->v3:
+> > > > > * [in 4/4] Do not define an additional struct for a raw qp
+> > > > >
+> > > > > v1->v2:
+> > > > > * [in 1/4] Added a comment about the ignored return value
+> > > > > * [in 2/4] Replaced RDMA:mana_ib to RDMA/mana_ib in the subject
+> > > > > * [in 4/4] Renamed mana_ib_raw_qp to mana_ib_raw_sq
+> > > > >
+> > > > > Konstantin Taranov (4):
+> > > > >   RDMA/mana_ib: Introduce helpers to create and destroy mana queues
+> > > > >   RDMA/mana_ib: Use struct mana_ib_queue for CQs
+> > > > >   RDMA/mana_ib: Use struct mana_ib_queue for WQs
+> > > > >   RDMA/mana_ib: Use struct mana_ib_queue for RAW QPs
+> > > > >
+> > > > >  drivers/infiniband/hw/mana/cq.c      | 52 +++-------------
+> > > > >  drivers/infiniband/hw/mana/main.c    | 39 ++++++++++++
+> > > > >  drivers/infiniband/hw/mana/mana_ib.h | 26 ++++----
+> > > > >  drivers/infiniband/hw/mana/qp.c      | 93 +++++++++-------------------
+> > > > >  drivers/infiniband/hw/mana/wq.c      | 33 ++--------
+> > > > >  5 files changed, 96 insertions(+), 147 deletions(-)
+> > > >
+> > > > It doesn't apply.
+> > > >
+> > >
+> > > I guess there was some mis-synchronisation between us.
+> > > I see that you have already applied the patch 6 days ago:
+> > > https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.
+> > >
+> > kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Frdma%2Frdma.git%2
+> > Flog%
+> > >
+> > 2F&data=05%7C02%7Ckotaranov%40microsoft.com%7C09ea6de381194295c
+> > 4ae08dc
+> > >
+> > 57cbe121%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C63848178
+> > 04102717
+> > >
+> > 33%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMz
+> > IiLCJBTiI
+> > >
+> > 6Ik1haWwiLCJXVCI6Mn0%3D%7C0%7C%7C%7C&sdata=jwGGhmatHqdN4bW
+> > Xc%2FtyXtubD
+> > > ZxxCXpnyL26S5lEKd0%3D&reserved=0
+> > >
+> > > I am sorry for sending a newer version after the patch has been applied.
+> > > I have not checked this before sending.
+> > > I can take care of useless debug prints in a future cleanup patch.
+> > 
+> > Please rebase your series, and resend.
+> 
+> Sorry for a confusion. I mean you have already applied this patch series (v3) 6 days ago.
+> See commits:
+> 46f5be7cd4bceb3a503c544b3dab7b75fe4bb96b
+> 60a7ac0b8bec5df9764b7460ffee91fc981e8a31
+> 688bac28e3dc9eb795ae8ea5aa40cb637e289faa
+> f10242b3da908dc9d4bfa040e6511a5b86522499
+> 
+> As a result, I cannot rebase. I could send a completely new patch that removes some debug prints.
 
-On Wed, Apr 3, 2024 at 10:01=E2=80=AFAM Vineeth Pillai (Google)
-<vineeth@bitbyteword.org> wrote:
->
-> Implement ioctl for assigning and unassigning pvsched driver for a
-> guest. VMMs would need to adopt this ioctls for supporting the feature.
-> Also add a temporary debugfs interface for managing this.
->
-> Ideally, the hypervisor would be able to determine the pvsched driver
-> based on the information received from the guest. Guest VMs with the
-> feature enabled would request hypervisor to select a pvsched driver.
-> ioctl api is an override mechanism to give more control to the admin.
->
-> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  include/uapi/linux/kvm.h |   6 ++
->  virt/kvm/kvm_main.c      | 117 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 123 insertions(+)
->
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index c3308536482b..4b29bdad4188 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -2227,4 +2227,10 @@ struct kvm_create_guest_memfd {
->         __u64 reserved[6];
->  };
->
-> +struct kvm_pvsched_ops {
-> +       __u8 ops_name[32]; /* PVSCHED_NAME_MAX */
-> +};
-> +
-> +#define KVM_GET_PVSCHED_OPS            _IOR(KVMIO, 0xe4, struct kvm_pvsc=
-hed_ops)
-> +#define KVM_REPLACE_PVSCHED_OPS                _IOWR(KVMIO, 0xe5, struct=
- kvm_pvsched_ops)
->  #endif /* __LINUX_KVM_H */
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 0546814e4db7..b3d9c362d2e3 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1223,6 +1223,79 @@ static void kvm_destroy_vm_debugfs(struct kvm *kvm=
-)
->         }
->  }
->
-> +#ifdef CONFIG_PARAVIRT_SCHED_KVM
-> +static int pvsched_vcpu_ops_show(struct seq_file *m, void *data)
-> +{
-> +       char ops_name[PVSCHED_NAME_MAX];
-> +       struct pvsched_vcpu_ops *ops;
-> +       struct kvm *kvm =3D (struct kvm *) m->private;
-> +
-> +       rcu_read_lock();
-> +       ops =3D rcu_dereference(kvm->pvsched_ops);
-> +       if (ops)
-> +               strncpy(ops_name, ops->name, PVSCHED_NAME_MAX);
-> +       rcu_read_unlock();
-> +
-> +       seq_printf(m, "%s\n", ops_name);
-> +
-> +       return 0;
-> +}
-> +
-> +static ssize_t
-> +pvsched_vcpu_ops_write(struct file *filp, const char __user *ubuf,
-> +               size_t cnt, loff_t *ppos)
-> +{
-> +       int ret;
-> +       char *cmp;
-> +       char buf[PVSCHED_NAME_MAX];
-> +       struct inode *inode;
-> +       struct kvm *kvm;
-> +
-> +       if (cnt > PVSCHED_NAME_MAX)
-> +               return -EINVAL;
-> +
-> +       if (copy_from_user(&buf, ubuf, cnt))
-> +               return -EFAULT;
-> +
-> +       cmp =3D strstrip(buf);
-> +
-> +       inode =3D file_inode(filp);
-> +       inode_lock(inode);
-> +       kvm =3D (struct kvm *)inode->i_private;
-> +       ret =3D kvm_replace_pvsched_ops(kvm, cmp);
-> +       inode_unlock(inode);
-> +
-> +       if (ret)
-> +               return ret;
-> +
-> +       *ppos +=3D cnt;
-> +       return cnt;
-> +}
-> +
-> +static int pvsched_vcpu_ops_open(struct inode *inode, struct file *filp)
-> +{
-> +       return single_open(filp, pvsched_vcpu_ops_show, inode->i_private)=
-;
-> +}
-> +
-> +static const struct file_operations pvsched_vcpu_ops_fops =3D {
-> +       .open           =3D pvsched_vcpu_ops_open,
-> +       .write          =3D pvsched_vcpu_ops_write,
-> +       .read           =3D seq_read,
-> +       .llseek         =3D seq_lseek,
-> +       .release        =3D single_release,
-> +};
-> +
-> +static void kvm_create_vm_pvsched_debugfs(struct kvm *kvm)
-> +{
-> +       debugfs_create_file("pvsched_vcpu_ops", 0644, kvm->debugfs_dentry=
-, kvm,
-> +                           &pvsched_vcpu_ops_fops);
-> +}
-> +#else
-> +static void kvm_create_vm_pvsched_debugfs(struct kvm *kvm)
-> +{
-> +}
-> +#endif
-> +
->  static int kvm_create_vm_debugfs(struct kvm *kvm, const char *fdname)
->  {
->         static DEFINE_MUTEX(kvm_debugfs_lock);
-> @@ -1288,6 +1361,8 @@ static int kvm_create_vm_debugfs(struct kvm *kvm, c=
-onst char *fdname)
->                                     &stat_fops_per_vm);
->         }
->
-> +       kvm_create_vm_pvsched_debugfs(kvm);
-> +
->         ret =3D kvm_arch_create_vm_debugfs(kvm);
->         if (ret)
->                 goto out_err;
-> @@ -5474,6 +5549,48 @@ static long kvm_vm_ioctl(struct file *filp,
->                 r =3D kvm_gmem_create(kvm, &guest_memfd);
->                 break;
->         }
-> +#endif
-> +#ifdef CONFIG_PARAVIRT_SCHED_KVM
-> +       case KVM_REPLACE_PVSCHED_OPS:
-> +               struct pvsched_vcpu_ops *ops;
-> +               struct kvm_pvsched_ops in_ops, out_ops;
-> +
-> +               r =3D -EFAULT;
-> +               if (copy_from_user(&in_ops, argp, sizeof(in_ops)))
-> +                       goto out;
-> +
-> +               out_ops.ops_name[0] =3D 0;
-> +
-> +               rcu_read_lock();
-> +               ops =3D rcu_dereference(kvm->pvsched_ops);
-> +               if (ops)
-> +                       strncpy(out_ops.ops_name, ops->name, PVSCHED_NAME=
-_MAX);
-> +               rcu_read_unlock();
-> +
-> +               r =3D kvm_replace_pvsched_ops(kvm, (char *)in_ops.ops_nam=
-e);
-> +               if (r)
-> +                       goto out;
-> +
-> +               r =3D -EFAULT;
-> +               if (copy_to_user(argp, &out_ops, sizeof(out_ops)))
-> +                       goto out;
-> +
-> +               r =3D 0;
-> +               break;
-> +       case KVM_GET_PVSCHED_OPS:
-> +               out_ops.ops_name[0] =3D 0;
-> +               rcu_read_lock();
-> +               ops =3D rcu_dereference(kvm->pvsched_ops);
-> +               if (ops)
-> +                       strncpy(out_ops.ops_name, ops->name, PVSCHED_NAME=
-_MAX);
-> +               rcu_read_unlock();
-> +
-> +               r =3D -EFAULT;
-> +               if (copy_to_user(argp, &out_ops, sizeof(out_ops)))
-> +                       goto out;
-> +
-> +               r =3D 0;
-> +               break;
->  #endif
->         default:
->                 r =3D kvm_arch_vm_ioctl(filp, ioctl, arg);
-> --
-> 2.40.1
->
+Yes, sorry for not being clear. Please send a cleanup patch.
+
+Thanks
