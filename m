@@ -1,390 +1,453 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45304CE09;
-	Mon,  8 Apr 2024 09:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C12F2D05D;
+	Mon,  8 Apr 2024 09:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712569995; cv=none; b=TzZA/FAaR3h6+FaSfij+7kMoYvlFkcYAb6GkOnLkkzR6QEkfg07J8xOJbLDprf7mEasSXL6gdYF9uWnKu8N2VK0BkgOPAZ8ArXWq4wJnKFuY/SS8ICwM5RLUYYZxeUu4dOC/E7kvBWMzOcQ40iqxeVtEBsx4H3cjKAAn2rp3zcI=
+	t=1712570103; cv=none; b=dorrJrfct5eGqZqBJvE1NXZARW0TFsIiDMExXa7UsiQFGFIZCs1S5ZlsYH7K6uph2O8XDfcDprKKuz5DruIAzQKv3M5aX39nKtHY29mxLxIvnXqvxwb1zCBHa39KHYvjBmg3clqmyVvWU1hC7FL9mxigWlUgF/DH5lQ3sOneJfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712569995; c=relaxed/simple;
-	bh=3dqG+MDn1fmztumZBMOjS1/9HGAOWrrlqo4qQcvep5s=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YUfUqSNMNT2eN0dcSnYMG2XNlHSTWdSQ7Qb+ADr8mE/aQbMAw2m5AyUptp3tMerbO1fbwoZtlbwBvx1NVe2j99WNzlIZXctoiiGO0Yn+b7Z8R2eXKILvIkKoj2UoXAGQtguWAJAfQ085ji8wY3+mTZBEn8B2DLAHM6gy3JNdv8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CfmJXQ22; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1712570103; c=relaxed/simple;
+	bh=zRU6DIrbEQvMFpeknVGgz6G0vW2e1nWSaGm8bpVnnas=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=WU58bHEBxJTzOstZsRzo5ZKnTYP/sRbB+LaQcBTcQOetGRWsYFEU2Zhrrdw75FWGTKkGsqvRj42N8JIMk6W65ikMKDI0AC2xg24l0gqF9WRoiqKpFjmdT05kDU0S/P/ZXk5QKjhT1X7LELtZ7DHtu0RaJXpodVv/LrluWfIQ3nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VtTt0/gh; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CfmJXQ22"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4389qdT0076431;
-	Mon, 8 Apr 2024 04:52:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712569959;
-	bh=Ekb1pkDDGqHOyOnzyNQhFpv72C8vwJHWI0nwrs8xuaw=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=CfmJXQ22AeV3y3eBhVd7WzQrE4X0cCy8BZxAB5eoQUr1m1U/l/QIAE8F3WtckYkQt
-	 U7zxLvisfTaPA/Wx1SNGOxiQ9ASCntZH3no72mtcGcbzz/0BkvV1V72Pmv8kVWzMaJ
-	 ZyNLlthbehUHvJlEcSlqitggMbQjklkKbMzBYL84=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4389qdjH128840
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 8 Apr 2024 04:52:39 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 8
- Apr 2024 04:52:38 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 8 Apr 2024 04:52:38 -0500
-Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4389qbNk039561;
-	Mon, 8 Apr 2024 04:52:38 -0500
-Date: Mon, 8 Apr 2024 15:22:37 +0530
-From: Dhruva Gole <d-gole@ti.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi
-	<cristian.marussi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dan
- Carpenter <dan.carpenter@linaro.org>,
-        Andy Shevchenko
-	<andy.shevchenko@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Oleksii Moisieiev
-	<oleksii_moisieiev@epam.com>,
-        Tony Lindgren <tony@atomide.com>, Kevin Hilman
-	<khilman@baylibre.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v8 4/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Message-ID: <20240408095237.fc7dldg5qrlsoojt@dhruva>
-References: <20240405-pinctrl-scmi-v8-0-5fc8e33871bf@nxp.com>
- <20240405-pinctrl-scmi-v8-4-5fc8e33871bf@nxp.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VtTt0/gh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712570102; x=1744106102;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=zRU6DIrbEQvMFpeknVGgz6G0vW2e1nWSaGm8bpVnnas=;
+  b=VtTt0/ghUeV5q+iJoh7KMP2cCz4f9oCLNPbUVMvRyEBuZe8IBtkjp90U
+   JKyyGebrg5k79DflERgswnj3p9id3N3ddQDWvoEiHotoJjEIYuwdgTRDX
+   5A6nHToW5G/yiS/jBo1oWhkH/N9pOdJxw5xF109Koh7wimhI6sneJRE1W
+   6BEnI33EJGOv/AJ2zAOkvkWcQ2vGE8868jlxiJCZkn3lbm6cJZQgggAWg
+   3G4FCCHQaaNjUfCOQCTWXPdjlsvEhxmktmuHinjHQqTPHMqY/o/+DaKhv
+   X76EM2VUjXVuW2h3VjhdtO9+7tCC8IQMsZwA+s2+yYUgKOHUmeeiAJR5c
+   Q==;
+X-CSE-ConnectionGUID: b/NWrYeiT8mScMDKg8n52A==
+X-CSE-MsgGUID: 4e+wqKFmRWaP4bbIGxgu/Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="30331177"
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="30331177"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 02:55:01 -0700
+X-CSE-ConnectionGUID: jlCdP2ziRWujSMQqcVGlWA==
+X-CSE-MsgGUID: ankg6BuISL2dK8xmhilR3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="20398694"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.28])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 02:54:59 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 8 Apr 2024 12:54:54 +0300 (EEST)
+To: Niklas Schnelle <schnelle@linux.ibm.com>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, 
+    linux-serial <linux-serial@vger.kernel.org>, 
+    Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] tty: serial: handle HAS_IOPORT dependencies
+In-Reply-To: <20240405152924.252598-2-schnelle@linux.ibm.com>
+Message-ID: <1a14ac6e-30e9-048e-50cc-c1c3aacc2118@linux.intel.com>
+References: <20240405152924.252598-1-schnelle@linux.ibm.com> <20240405152924.252598-2-schnelle@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240405-pinctrl-scmi-v8-4-5fc8e33871bf@nxp.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
 
-On Apr 05, 2024 at 09:59:35 +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Fri, 5 Apr 2024, Niklas Schnelle wrote:
+
+> In a future patch HAS_IOPORT=n will disable inb()/outb() and friends at
+> compile time. We thus need to add HAS_IOPORT as dependency for those
+> drivers using them unconditionally. For 8250 based drivers some support
+> MMIO only use so fence only the parts requiring I/O ports.
 > 
-> scmi-pinctrl driver implements pinctrl driver interface and using
-> SCMI protocol to redirect messages from pinctrl subsystem SDK to
-> SCMI platform firmware, which does the changes in HW.
-> 
-> Co-developed-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
->  MAINTAINERS                    |   1 +
->  drivers/pinctrl/Kconfig        |  11 +
->  drivers/pinctrl/Makefile       |   1 +
->  drivers/pinctrl/pinctrl-scmi.c | 564 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 577 insertions(+)
+> Note: This patch does not depend any not-yet-mainline HAS_IOPORT changes
+> and may be merged via subsystem specific trees at your earliest
+> convenience.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4b511a55101c..d8270ac6651a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21457,6 +21457,7 @@ F:	drivers/cpufreq/sc[mp]i-cpufreq.c
->  F:	drivers/firmware/arm_scmi/
->  F:	drivers/firmware/arm_scpi.c
->  F:	drivers/hwmon/scmi-hwmon.c
-> +F:	drivers/pinctrl/pinctrl-scmi.c
->  F:	drivers/pmdomain/arm/
->  F:	drivers/powercap/arm_scmi_powercap.c
->  F:	drivers/regulator/scmi-regulator.c
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index d45657aa986a..4e6f65cf0e76 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -450,6 +450,17 @@ config PINCTRL_ROCKCHIP
->  	help
->            This support pinctrl and GPIO driver for Rockchip SoCs.
+> Note 2: This was previously acked here:
+> https://lore.kernel.org/all/2023053050-prodigal-shine-4d1c@gregkh/
+> Given this was almost a year ago and didn't apply then I didn't
+> carry the Ack over though.
+> 
+>  drivers/tty/Kconfig                  |  4 +--
+>  drivers/tty/serial/8250/8250_early.c |  4 +++
+>  drivers/tty/serial/8250/8250_pci.c   | 14 ++++++++++
+>  drivers/tty/serial/8250/8250_port.c  | 42 +++++++++++++++++++++++-----
+>  drivers/tty/serial/8250/Kconfig      |  7 ++---
+>  drivers/tty/serial/Kconfig           |  2 +-
+>  6 files changed, 59 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> index a45d423ad10f..63a494d36a1f 100644
+> --- a/drivers/tty/Kconfig
+> +++ b/drivers/tty/Kconfig
+> @@ -220,7 +220,7 @@ config MOXA_INTELLIO
 >  
-> +config PINCTRL_SCMI
-> +	tristate "Pinctrl driver using SCMI protocol interface"
-> +	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
-> +	select PINMUX
-> +	select GENERIC_PINCONF
-> +	help
-> +	  This driver provides support for pinctrl which is controlled
-> +	  by firmware that implements the SCMI interface.
-> +	  It uses SCMI Message Protocol to interact with the
-> +	  firmware providing all the pinctrl controls.
-> +
->  config PINCTRL_SINGLE
->  	tristate "One-register-per-pin type device tree based pinctrl driver"
->  	depends on OF
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> index 2152539b53d5..cc809669405a 100644
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-> @@ -45,6 +45,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
->  obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
->  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
->  obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
-> +obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
->  obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
->  obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
->  obj-$(CONFIG_PINCTRL_STMFX) 	+= pinctrl-stmfx.o
-> diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
-> new file mode 100644
-> index 000000000000..0f55f000a679
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-scmi.c
-> @@ -0,0 +1,564 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * System Control and Power Interface (SCMI) Protocol based pinctrl driver
-> + *
-> + * Copyright (C) 2024 EPAM
-> + * Copyright 2024 NXP
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/scmi_protocol.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/pinctrl/machine.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +
-> +#include "pinctrl-utils.h"
-> +#include "core.h"
-> +#include "pinconf.h"
-> +
-> +#define DRV_NAME "scmi-pinctrl"
-> +
-> +/* Define num configs, if not large than 4 use stack, else use kcalloc */
-> +#define SCMI_NUM_CONFIGS	4
-> +
-> +static const struct scmi_pinctrl_proto_ops *pinctrl_ops;
-> +
-> +struct scmi_pinctrl {
-> +	struct device *dev;
-> +	struct scmi_protocol_handle *ph;
-> +	struct pinctrl_dev *pctldev;
-> +	struct pinctrl_desc pctl_desc;
-> +	struct pinfunction *functions;
-> +	unsigned int nr_functions;
-> +	struct pinctrl_pin_desc *pins;
-> +	unsigned int nr_pins;
-> +};
-> +
-> +static int pinctrl_scmi_get_groups_count(struct pinctrl_dev *pctldev)
-> +{
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	return pinctrl_ops->count_get(pmx->ph, GROUP_TYPE);
-> +}
-> +
-> +static const char *pinctrl_scmi_get_group_name(struct pinctrl_dev *pctldev,
-> +					       unsigned int selector)
-> +{
-> +	int ret;
-> +	const char *name;
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	ret = pinctrl_ops->name_get(pmx->ph, selector, GROUP_TYPE, &name);
-> +	if (ret) {
-> +		dev_err(pmx->dev, "get name failed with err %d", ret);
-> +		return NULL;
-> +	}
-> +
-> +	return name;
-> +}
-> +
-> +static int pinctrl_scmi_get_group_pins(struct pinctrl_dev *pctldev,
-> +				       unsigned int selector,
-> +				       const unsigned int **pins,
-> +				       unsigned int *num_pins)
-> +{
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	return pinctrl_ops->group_pins_get(pmx->ph, selector, pins, num_pins);
-> +}
-> +
-> +static const struct pinctrl_ops pinctrl_scmi_pinctrl_ops = {
-> +	.get_groups_count = pinctrl_scmi_get_groups_count,
-> +	.get_group_name = pinctrl_scmi_get_group_name,
-> +	.get_group_pins = pinctrl_scmi_get_group_pins,
-> +#ifdef CONFIG_OF
-> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-> +	.dt_free_map = pinconf_generic_dt_free_map,
+>  config MOXA_SMARTIO
+>  	tristate "Moxa SmartIO support v. 2.0"
+> -	depends on SERIAL_NONSTANDARD && PCI
+> +	depends on SERIAL_NONSTANDARD && PCI && HAS_IOPORT
+>  	help
+>  	  Say Y here if you have a Moxa SmartIO multiport serial card and/or
+>  	  want to help develop a new version of this driver.
+> @@ -302,7 +302,7 @@ config GOLDFISH_TTY_EARLY_CONSOLE
+>  
+>  config IPWIRELESS
+>  	tristate "IPWireless 3G UMTS PCMCIA card support"
+> -	depends on PCMCIA && NETDEVICES
+> +	depends on PCMCIA && NETDEVICES && HAS_IOPORT
+>  	select PPP
+>  	help
+>  	  This is a driver for 3G UMTS PCMCIA card from IPWireless company. In
+> diff --git a/drivers/tty/serial/8250/8250_early.c b/drivers/tty/serial/8250/8250_early.c
+> index e3f482fd3de4..8f9aec2e7c7d 100644
+> --- a/drivers/tty/serial/8250/8250_early.c
+> +++ b/drivers/tty/serial/8250/8250_early.c
+> @@ -46,8 +46,10 @@ static unsigned int serial8250_early_in(struct uart_port *port, int offset)
+>  		return readl(port->membase + offset);
+>  	case UPIO_MEM32BE:
+>  		return ioread32be(port->membase + offset);
+> +#ifdef CONFIG_HAS_IOPORT
+>  	case UPIO_PORT:
+>  		return inb(port->iobase + offset);
 > +#endif
-> +};
-> +
-> +static int pinctrl_scmi_get_functions_count(struct pinctrl_dev *pctldev)
+>  	default:
+>  		return 0;
+>  	}
+> @@ -70,9 +72,11 @@ static void serial8250_early_out(struct uart_port *port, int offset, int value)
+>  	case UPIO_MEM32BE:
+>  		iowrite32be(value, port->membase + offset);
+>  		break;
+> +#ifdef CONFIG_HAS_IOPORT
+>  	case UPIO_PORT:
+>  		outb(value, port->iobase + offset);
+>  		break;
+> +#endif
+>  	}
+>  }
+>  
+> diff --git a/drivers/tty/serial/8250/8250_pci.c b/drivers/tty/serial/8250/8250_pci.c
+> index 0d35c77fad9e..38ac5236d2ea 100644
+> --- a/drivers/tty/serial/8250/8250_pci.c
+> +++ b/drivers/tty/serial/8250/8250_pci.c
+> @@ -928,6 +928,7 @@ static int pci_netmos_init(struct pci_dev *dev)
+>  	return num_serial;
+>  }
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  /*
+>   * These chips are available with optionally one parallel port and up to
+>   * two serial ports. Unfortunately they all have the same product id.
+> @@ -1054,6 +1055,7 @@ static void pci_ite887x_exit(struct pci_dev *dev)
+>  	ioport &= 0xffff;
+>  	release_region(ioport, ITE_887x_IOSIZE);
+>  }
+> +#endif /* CONFIG_HAS_IOPORT */
+>  
+>  /*
+>   * Oxford Semiconductor Inc.
+> @@ -1328,6 +1330,7 @@ static int pci_oxsemi_tornado_setup(struct serial_private *priv,
+>  #define QOPR_CLOCK_X8		0x0003
+>  #define QOPR_CLOCK_RATE_MASK	0x0003
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  /* Quatech devices have their own extra interface features */
+>  static struct pci_device_id quatech_cards[] = {
+>  	{ PCI_DEVICE_DATA(QUATECH, QSC100,   1) },
+> @@ -1547,6 +1550,7 @@ static int pci_quatech_setup(struct serial_private *priv,
+>  		pci_warn(priv->dev, "software control of RS422 features not currently supported.\n");
+>  	return pci_default_setup(priv, board, port, idx);
+>  }
+> +#endif /* CONFIG_HAS_IOPORT */
+>  
+>  static int pci_default_setup(struct serial_private *priv,
+>  		  const struct pciserial_board *board,
+> @@ -1826,6 +1830,7 @@ static int skip_tx_en_setup(struct serial_private *priv,
+>  	return pci_default_setup(priv, board, port, idx);
+>  }
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  static void kt_handle_break(struct uart_port *p)
+>  {
+>  	struct uart_8250_port *up = up_to_u8250p(p);
+> @@ -1869,6 +1874,7 @@ static int kt_serial_setup(struct serial_private *priv,
+>  	port->port.handle_break = kt_handle_break;
+>  	return skip_tx_en_setup(priv, board, port, idx);
+>  }
+> +#endif /* CONFIG_HAS_IOPORT */
+>  
+>  static int pci_eg20t_init(struct pci_dev *dev)
+>  {
+> @@ -1913,6 +1919,7 @@ pci_wch_ch38x_setup(struct serial_private *priv,
+>  #define CH384_XINT_ENABLE_REG   0xEB
+>  #define CH384_XINT_ENABLE_BIT   0x02
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  static int pci_wch_ch38x_init(struct pci_dev *dev)
+>  {
+>  	int max_port;
+> @@ -1940,6 +1947,7 @@ static void pci_wch_ch38x_exit(struct pci_dev *dev)
+>  	iobase = pci_resource_start(dev, 0);
+>  	outb(0x0, iobase + CH384_XINT_ENABLE_REG);
+>  }
+> +#endif /* CONFIG_HAS_IOPORT */
+>  
+>  
+>  static int
+> @@ -2171,6 +2179,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.subdevice	= PCI_ANY_ID,
+>  		.setup		= ce4100_serial_setup,
+>  	},
+> +#ifdef CONFIG_HAS_IOPORT
+>  	{
+>  		.vendor		= PCI_VENDOR_ID_INTEL,
+>  		.device		= PCI_DEVICE_ID_INTEL_PATSBURG_KT,
+> @@ -2190,6 +2199,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.setup		= pci_default_setup,
+>  		.exit		= pci_ite887x_exit,
+>  	},
+> +#endif
+>  	/*
+>  	 * National Instruments
+>  	 */
+> @@ -2311,6 +2321,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.exit		= pci_ni8430_exit,
+>  	},
+>  	/* Quatech */
+> +#ifdef CONFIG_HAS_IOPORT
+>  	{
+>  		.vendor		= PCI_VENDOR_ID_QUATECH,
+>  		.device		= PCI_ANY_ID,
+> @@ -2319,6 +2330,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.init		= pci_quatech_init,
+>  		.setup		= pci_quatech_setup,
+>  	},
+> +#endif
+>  	/*
+>  	 * Panacom
+>  	 */
+> @@ -2836,6 +2848,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.subdevice      = PCI_ANY_ID,
+>  		.setup          = pci_wch_ch38x_setup,
+>  	},
+> +#ifdef CONFIG_HAS_IOPORT
+>  	/* WCH CH384 8S card (16850 clone) */
+>  	{
+>  		.vendor         = PCIE_VENDOR_ID_WCH,
+> @@ -2846,6 +2859,7 @@ static struct pci_serial_quirk pci_serial_quirks[] = {
+>  		.exit		= pci_wch_ch38x_exit,
+>  		.setup          = pci_wch_ch38x_setup,
+>  	},
+> +#endif
+>  	/*
+>  	 * Broadcom TruManage (NetXtreme)
+>  	 */
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index fc9dd5d45295..1c5e39c1a469 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -338,6 +338,7 @@ static void default_serial_dl_write(struct uart_8250_port *up, u32 value)
+>  	serial_out(up, UART_DLM, value >> 8 & 0xff);
+>  }
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  static unsigned int hub6_serial_in(struct uart_port *p, int offset)
+>  {
+>  	offset = offset << p->regshift;
+> @@ -351,6 +352,7 @@ static void hub6_serial_out(struct uart_port *p, int offset, int value)
+>  	outb(p->hub6 - 1 + offset, p->iobase);
+>  	outb(value, p->iobase + 1);
+>  }
+> +#endif /* CONFIG_HAS_IOPORT */
+>  
+>  static unsigned int mem_serial_in(struct uart_port *p, int offset)
+>  {
+> @@ -400,6 +402,7 @@ static unsigned int mem32be_serial_in(struct uart_port *p, int offset)
+>  	return ioread32be(p->membase + offset);
+>  }
+>  
+> +#ifdef CONFIG_HAS_IOPORT
+>  static unsigned int io_serial_in(struct uart_port *p, int offset)
+>  {
+>  	offset = offset << p->regshift;
+> @@ -411,6 +414,24 @@ static void io_serial_out(struct uart_port *p, int offset, int value)
+>  	offset = offset << p->regshift;
+>  	outb(value, p->iobase + offset);
+>  }
+> +#endif
+> +static unsigned int no_serial_in(struct uart_port *p, int offset)
 > +{
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	return pinctrl_ops->count_get(pmx->ph, FUNCTION_TYPE);
+> +	return (unsigned int)-1;
 > +}
 > +
-> +static const char *pinctrl_scmi_get_function_name(struct pinctrl_dev *pctldev,
-> +						  unsigned int selector)
+> +static void no_serial_out(struct uart_port *p, int offset, int value)
 > +{
-> +	int ret;
-> +	const char *name;
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	ret = pinctrl_ops->name_get(pmx->ph, selector, FUNCTION_TYPE, &name);
-> +	if (ret) {
-> +		dev_err(pmx->dev, "get name failed with err %d", ret);
-> +		return NULL;
-> +	}
-> +
-> +	return name;
 > +}
 > +
-> +static int pinctrl_scmi_get_function_groups(struct pinctrl_dev *pctldev,
-> +					    unsigned int selector,
-> +					    const char * const **p_groups,
-> +					    unsigned int * const p_num_groups)
+> +#ifdef CONFIG_HAS_IOPORT
+> +static inline bool is_upf_fourport(struct uart_port *port)
 > +{
-> +	struct pinfunction *func;
-> +	const unsigned int *group_ids;
-> +	unsigned int num_groups;
-> +	const char **groups;
-> +	int ret, i;
-
-Just a nit maybe, but I would be more comfortable making i with
-num_groups as unsigned, because you're comparing them after all in the
-loop. Also, I don't see a reason for i to become negative in any case.
-
-> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> +
-> +	if (!p_groups || !p_num_groups)
-> +		return -EINVAL;
-> +
-> +	if (selector >= pmx->nr_functions)
-> +		return -EINVAL;
-> +
-> +	func = &pmx->functions[selector];
-> +	if (func->ngroups)
-> +		goto done;
-> +
-> +	ret = pinctrl_ops->function_groups_get(pmx->ph, selector, &num_groups,
-> +					       &group_ids);
-> +	if (ret) {
-> +		dev_err(pmx->dev, "Unable to get function groups, err %d", ret);
-> +		return ret;
-> +	}
-> +	if (!num_groups)
-> +		return -EINVAL;
-> +
-> +	groups = kcalloc(num_groups, sizeof(*groups), GFP_KERNEL);
-> +	if (!groups)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num_groups; i++) {
-> +		groups[i] = pinctrl_scmi_get_group_name(pctldev, group_ids[i]);
-> +		if (!groups[i]) {
-> +			ret = -EINVAL;
-> +			goto err_free;
-> +		}
-> +	}
-> +
-> +	func->ngroups = num_groups;
-> +	func->groups = groups;
-> +done:
-> +	*p_groups = func->groups;
-> +	*p_num_groups = func->ngroups;
-> +
-> +	return 0;
-> +
-> +err_free:
-> +	kfree(groups);
-> +
-> +	return ret;
+> +	return port->flags & UPF_FOURPORT;
 > +}
-> +
-[...]
-> +
-> +static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
-> +				 struct pinctrl_desc *desc)
-> +{
-> +	struct pinctrl_pin_desc *pins;
-> +	unsigned int npins;
-> +	int ret, i;
+> +#else
+> +#define is_upf_fourport(x)	false
+> +#endif
+>  
+>  static int serial8250_default_handle_irq(struct uart_port *port);
+>  
+> @@ -422,10 +443,12 @@ static void set_io_from_upio(struct uart_port *p)
+>  	up->dl_write = default_serial_dl_write;
+>  
+>  	switch (p->iotype) {
+> +#ifdef CONFIG_HAS_IOPORT
+>  	case UPIO_HUB6:
+>  		p->serial_in = hub6_serial_in;
+>  		p->serial_out = hub6_serial_out;
+>  		break;
+> +#endif
+>  
+>  	case UPIO_MEM:
+>  		p->serial_in = mem_serial_in;
+> @@ -446,11 +469,16 @@ static void set_io_from_upio(struct uart_port *p)
+>  		p->serial_in = mem32be_serial_in;
+>  		p->serial_out = mem32be_serial_out;
+>  		break;
+> -
+> -	default:
+> +#ifdef CONFIG_HAS_IOPORT
+> +	case UPIO_PORT:
+>  		p->serial_in = io_serial_in;
+>  		p->serial_out = io_serial_out;
+>  		break;
+> +#endif
+> +	default:
+> +		WARN(1, "Unsupported UART type %x\n", p->iotype);
+> +		p->serial_in = no_serial_in;
+> +		p->serial_out = no_serial_out;
+>  	}
+>  	/* Remember loaded iotype */
+>  	up->cur_iotype = p->iotype;
+> @@ -1318,7 +1346,7 @@ static void autoconfig_irq(struct uart_8250_port *up)
+>  	unsigned long irqs;
+>  	int irq;
+>  
+> -	if (port->flags & UPF_FOURPORT) {
+> +	if (is_upf_fourport(port)) {
+>  		ICP = (port->iobase & 0xfe0) | 0x1f;
+>  		save_ICP = inb_p(ICP);
+>  		outb_p(0x80, ICP);
+> @@ -1337,7 +1365,7 @@ static void autoconfig_irq(struct uart_8250_port *up)
+>  	irqs = probe_irq_on();
+>  	serial8250_out_MCR(up, 0);
+>  	udelay(10);
+> -	if (port->flags & UPF_FOURPORT) {
+> +	if (is_upf_fourport(port)) {
+>  		serial8250_out_MCR(up, UART_MCR_DTR | UART_MCR_RTS);
+>  	} else {
+>  		serial8250_out_MCR(up,
+> @@ -1361,7 +1389,7 @@ static void autoconfig_irq(struct uart_8250_port *up)
+>  	serial_out(up, UART_IER, save_ier);
+>  	uart_port_unlock_irq(port);
+>  
+> -	if (port->flags & UPF_FOURPORT)
+> +	if (is_upf_fourport(port))
+>  		outb_p(save_ICP, ICP);
+>  
+>  	port->irq = (irq > 0) ? irq : 0;
+> @@ -2438,7 +2466,7 @@ int serial8250_do_startup(struct uart_port *port)
+>  	 */
+>  	up->ier = UART_IER_RLSI | UART_IER_RDI;
+>  
+> -	if (port->flags & UPF_FOURPORT) {
+> +	if (is_upf_fourport(port)) {
+>  		unsigned int icp;
+>  		/*
+>  		 * Enable interrupts on the AST Fourport board
+> @@ -2483,7 +2511,7 @@ void serial8250_do_shutdown(struct uart_port *port)
+>  		serial8250_release_dma(up);
+>  
+>  	uart_port_lock_irqsave(port, &flags);
+> -	if (port->flags & UPF_FOURPORT) {
+> +	if (is_upf_fourport(port)) {
+>  		/* reset interrupts on the AST Fourport board */
+>  		inb((port->iobase & 0xfe0) | 0x1f);
+>  		port->mctrl |= TIOCM_OUT1;
+> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+> index 47ff50763c04..54bf98869abf 100644
+> --- a/drivers/tty/serial/8250/Kconfig
+> +++ b/drivers/tty/serial/8250/Kconfig
+> @@ -6,7 +6,6 @@
+>  
+>  config SERIAL_8250
+>  	tristate "8250/16550 and compatible serial support"
+> -	depends on !S390
 
-better unsigned i?
+Why? Your changelogs gives zero insight on this change.
 
-> +
-> +	npins = pinctrl_ops->count_get(pmx->ph, PIN_TYPE);
-> +	/*
-> +	 * npins will never be zero, the scmi pinctrl driver has bailed out
-> +	 * if npins is zero.
-> +	 */
-> +	pins = devm_kmalloc_array(pmx->dev, npins, sizeof(*pins), GFP_KERNEL);
-> +	if (!pins)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < npins; i++) {
-> +		pins[i].number = i;
-> +		/*
-> +		 * The memory for name is handled by the scmi firmware driver,
-> +		 * no need free here
-> +		 */
-> +		ret = pinctrl_ops->name_get(pmx->ph, i, PIN_TYPE, &pins[i].name);
-> +		if (ret)
-> +			return dev_err_probe(pmx->dev, ret,
-> +					     "Can't get name for pin %d", i);
-> +	}
-> +
-> +	desc->npins = npins;
-> +	desc->pins = pins;
-> +	dev_dbg(pmx->dev, "got pins %u", npins);
-> +
-> +	return 0;
-> +}
-> +
-[...]
+>  	select SERIAL_CORE
+>  	select SERIAL_MCTRL_GPIO if GPIOLIB
+>  	help
+> @@ -72,7 +71,7 @@ config SERIAL_8250_16550A_VARIANTS
+>  
+>  config SERIAL_8250_FINTEK
+>  	bool "Support for Fintek variants"
+> -	depends on SERIAL_8250
+> +	depends on SERIAL_8250 && HAS_IOPORT
+>  	help
+>  	  Selecting this option will add support for the RS232 and RS485
+>  	  capabilities of the Fintek F81216A LPC to 4 UART as well similar
+> @@ -136,7 +135,7 @@ config SERIAL_8250_PCILIB
+>  
+>  config SERIAL_8250_PCI
+>  	tristate "8250/16550 PCI device support"
+> -	depends on SERIAL_8250 && PCI
+> +	depends on SERIAL_8250 && PCI && HAS_IOPORT
+>  	select SERIAL_8250_PCILIB
+>  	default SERIAL_8250
+>  	help
+> @@ -163,7 +162,7 @@ config SERIAL_8250_HP300
+>  
+>  config SERIAL_8250_CS
+>  	tristate "8250/16550 PCMCIA device support"
+> -	depends on PCMCIA && SERIAL_8250
+> +	depends on PCMCIA && SERIAL_8250 && HAS_IOPORT
+>  	help
+>  	  Say Y here to enable support for 16-bit PCMCIA serial devices,
+>  	  including serial port cards, modems, and the modem functions of
 
-Unrelated and beyond scope of this patch series, but would've loved to
-see concept of wakeup enable and wakeup event bits inside the pinctrl
-SCMI spec like we have in pinctrl-single kernel driver. There are SOC's
-out there that support wakeup IRQ's from their padconfig controllers
-itself... But this is more of a feedback for the SCMI spec. Maybe a
-future revision can take care of this.
+What about drivers that use SERIAL8250_PORT()?
 
-The reason this needs to be
-standard and not something vendor specific is because the kernel does
-support a wake IRQ framework, and we will need to make this driver have
-wake IRQ support if a device that supports pinctrl wakeup need to use
-scmi to configure it.
-Look at Table 6-2045. Description Of The Pad Configuration Register Bit
-in [0] for further details for an example of a padconfig wakeup config
-specially bits 29,30.
+Also port provided in 8250_PNP might expect it I think.
 
-No major comments otherwise,
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-
-[0] https://www.ti.com/lit/pdf/SPRUIV7
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index ffcf4882b25f..92c85e805c2a 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -874,7 +874,7 @@ config SERIAL_TXX9_STDSERIAL
+>  
+>  config SERIAL_JSM
+>  	tristate "Digi International NEO and Classic PCI Support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select SERIAL_CORE
+>  	help
+>  	  This is a driver for Digi International's Neo and Classic series
+> 
 
 -- 
-Best regards,
-Dhruva Gole <d-gole@ti.com>
+ i.
+
