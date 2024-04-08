@@ -1,181 +1,88 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFCD1448FA
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 19:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4361420D8
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 19:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712602827; cv=none; b=kVETU2gHProQ+Mk2wMabpQCcdGO73n3nFnnVKvvJMdajSeaoyWBcE5JRRVn8AUBIJYcsBLm9ejNf73AG8yFg6x/6NHJIEETb7dXVHgJ6QZC5Kw1WlQ0g+OWcqAD8UcaPWdyj+20u7XeR4KVYsSeStJjliV96Wcu3k65CIZ2SeD0=
+	t=1712603013; cv=none; b=VsW4mD++tfUsGnQeKmWtPIeX8qEpArQr9c9Bf7oudHBeBQpwxIIOPw2DJNsHJaOrh2UCmioWwBrtk7jdYHOPCZmEIZUYjCz71t9ftiQeNw+LTOAKYnDtx2vAJguI8lSlH2rZc8QsB73Wr3eMr6nt6c1Z+xLG24EcaiV7+9xSVKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712602827; c=relaxed/simple;
-	bh=MmTPLttEIByz3LcD95QHq50+7IMTnEiOpGvyK2OjXoU=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=JxPO3V1UFtAqfZdk51E+v9fnRYKIWfWQxyHd/dciRL35joHEkgWJnQHIVnlIyHCkKmdU+AMVlrwqnsuzJNvKtXioWbw9jGRNRaSgCV2VWESfzLzuGBW3a59L3k7NlqkCArws4epMCqHl0CY7NLhYIarGWJYithEMB2rUNCTJhN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=khSkZkZh; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712603013; c=relaxed/simple;
+	bh=0HC5mYPHz5gVrurl6w8jOAjdNy8i7VxysBO3RpMEL/s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k3Pn1p/ZrCbgO+OuMgWnnnzwyk+GZ69snassvg2kaoNoaZtAOCs1U0dLIIZPWOlingfLC3srjO5ffPfoMd8aT1S857KUxJRQ0r7xhe2ITp+Bhk4m8Nmn7El9E5aRxZwJcXA6eNyWZsGehQQG1kKXwN1ylvKFrfJ+U9utsSQb4FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a9pnsVpg; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="khSkZkZh"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4163de295f9so10979495e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 12:00:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9pnsVpg"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41641a889ccso12835e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 12:03:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712602823; x=1713207623; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+B+dIHSb8yRhnSvIGZyYqGXJXmpVr8yjlKl3yu6l4I=;
-        b=khSkZkZht7W5D7HHEZ02e6lzCmKDIDWCOV8BlisozybXgkVco/nvHkS1U/+k4x0O4o
-         wr3i0U5WLnmCjHELVFKs0dfn4Uw/oNA/KBKbrWWGBr4IJAv1iHePvf8gWk/V5WrawvwK
-         QAUTHOHq/EOmThUtKy18w1cIi/j0iV/BjbGPbFz2XHzR/pRVY5Rut1V2eihT9aTt9clP
-         RjNDIRp9Pkexs3Mvm8QEFcCORJ4Zyejoaj2qK07EdwH6a4JXI3XKvQck1CJ+H/8kZ6qy
-         rLlveklq2C+hNMD/qQkL+NezsOrPUr2qHn7HuzKAjUW5k8OUmHy3+tM0izKvNP0hi92L
-         Tn0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712602823; x=1713207623;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1712603010; x=1713207810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H+B+dIHSb8yRhnSvIGZyYqGXJXmpVr8yjlKl3yu6l4I=;
-        b=pmQJxits21wrill9n96KGoMBXu5qY5WOa3uOS/nRRYfCaQsR8mB9OIPqaX/QZUc8gf
-         FkdqQxZ6PhhijG0N79GnLE+DCLgN7s03kWub00MTZM1SFd4w23fSCNiaI4D8XgARwTpf
-         g3VRKjSVby+JjUy4FwUhCju+aJUKhUASFf+9beboOdA+FrVdKBZhHviJHZy6r/IAzayU
-         6MKPgEg/8YhlEn7PNYx33gK6bsZvIq7egJgFg5W0gpIwc6RkMfQ7oftl3TOiIp/UgKcp
-         tyqEalDyfP1MVeOs36KZgR0FvEglMBC9k/CC66l83HuF2n0H3gGwOytaGAzQA+tX9aP6
-         NrQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUvTntqoUrWSlM7CSmY50c9ViX9YdJLnlDP1KDUSrv82xL76Y3Gx/1H8/boBRs1DxTA6PA2S80D2TccUYNEOc9IfhxsRKK+8SjjcfkM
-X-Gm-Message-State: AOJu0YyR7smn0SOUCe7PQffET1aZD0SN3QUbv3E++pC1bYubCTXr7aoF
-	SKcalr/gjTa1q8YXhUXWf09TQjbjGdwgbTB7WlZEfbwNyqApg5VSGeU+MWEk19A=
-X-Google-Smtp-Source: AGHT+IGP2XX1WCI1/h92HKpEVxqSPYGzlO2h896WkQD9sJo7lY2DOrCu08c0YYaiv8QAmxpQYmTAyg==
-X-Received: by 2002:a05:600c:1c8a:b0:415:666e:9438 with SMTP id k10-20020a05600c1c8a00b00415666e9438mr7600760wms.3.1712602822639;
-        Mon, 08 Apr 2024 12:00:22 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:90bc:1f0d:aae2:3c66])
-        by smtp.gmail.com with ESMTPSA id j22-20020a05600c1c1600b004165315d885sm7177799wms.11.2024.04.08.12.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 12:00:22 -0700 (PDT)
-References: <20240408164947.30717-1-ddrokosov@salutedevices.com>
- <20240408164947.30717-3-ddrokosov@salutedevices.com>
- <1j1q7fpv1n.fsf@starbuckisacylon.baylibre.com>
- <20240408184041.3jcav5tabxiblpn4@CAB-WSD-L081021>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, neil.armstrong@linaro.org,
- lgirdwood@gmail.com, broonie@kernel.org, conor+dt@kernel.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, perex@perex.cz,
- tiwai@suse.com, khilman@baylibre.com, martin.blumenstingl@googlemail.com,
- kernel@salutedevices.com, rockosov@gmail.com,
- linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 2/2] ASoC: meson: implement link-name optional
- property in meson card utils
-Date: Mon, 08 Apr 2024 20:53:42 +0200
-In-reply-to: <20240408184041.3jcav5tabxiblpn4@CAB-WSD-L081021>
-Message-ID: <1jo7ajof22.fsf@starbuckisacylon.baylibre.com>
+        bh=0HC5mYPHz5gVrurl6w8jOAjdNy8i7VxysBO3RpMEL/s=;
+        b=a9pnsVpgg8Mk2yMnmZVUEnrdl4DdUCNE3o7lfskWNlCNK6+7zLoNisztIHiUhXTrM7
+         ITVh5QMijQaIYHLsKPcbdc1+cRL1BjhLts/NhlxUOw3Mw3kfHvfu2dOzDp6tsFnj9oO/
+         p/ZeFrb8CHHNk/QkHuWF6jjWxOAWLykgPVM2nveaxAnYhXv1zVIvZ648YZ9SpsgjOGb6
+         s3gRWYJkuvL4ld3Z4r5UFf1jwl8dyglGl1WmkcCZdNwA7ukDXYMnpJGNvTl4AL7xwwfc
+         MgSovzJ9GttpdG06K/I0HET6lBGyl0zfbsb4mrSahENloM+3GDdqMI9WXc9kJ0TzGmNo
+         CcnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712603010; x=1713207810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0HC5mYPHz5gVrurl6w8jOAjdNy8i7VxysBO3RpMEL/s=;
+        b=vstvKpeNscQMlGMySVWeCfbhgaXVwi+x8LgfWeTPO8AqGzNjv2C5Y+lD8Ic+szE4zt
+         EhWMWsEiJize0bUb40emYLh06RMkP1tOfy03ibs2LThHKVEUlgqHGeR2TzIYWoD9RhBi
+         zekDRyJR+g/1xO+U/TMTyYa8ON8MdXI690USyQqS0JHVcEUBKHmZQm5CieERQdMjry2/
+         tXmbQsA4VXJ5kbUG8L5a1So4aHyyKSNFSTG0jTf7gFfikNSEQ2uueNAInYiXguLJMYcg
+         dtDDU35OW4yaZ6muzVyWTlh4ea+yBwpgMB0pOKkn9Ujw93KgAPMPH0wzy2/Bo3D/43iZ
+         YNbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWn61lz0dJ4jh6cBxGEw+XgoPbpGeXzLvaK0TPyWlA/08a7VdoBmzLKXYg8/3mgnZ3vPdFh+Kno9buVDo9uQmlfeWRQEqZA0bntjFJk
+X-Gm-Message-State: AOJu0Yxjzhr+TNQYy3PA+bjGUkhZSobeTXK8Jvh5mzIYRWVIb2NmO+d/
+	yjLp0PhCfH4cZnQBECm/v4ZN0tWLqmL7SenjuCpo5RDuNRFppvLaK9fv6evBf1Hf4ltc2HrFWkr
+	KFfGgKe/9pxHqkgHAiM8twJx40dsiApqCam0=
+X-Google-Smtp-Source: AGHT+IHjsReJwNnZwcwrj3ergbDNsoJTfOha25CxepNLW75WyxCSLMT2cP9EuT5lY9Lza3LOIM0cQDaEt8uc2pT6tK0=
+X-Received: by 2002:a05:600c:4f8a:b0:416:6d90:38fe with SMTP id
+ n10-20020a05600c4f8a00b004166d9038femr22455wmq.4.1712603009646; Mon, 08 Apr
+ 2024 12:03:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20220710164026.541466-1-r.stratiienko@gmail.com>
+ <CANDhNCpAhtgdwpSUTJ2jo2J5L6rHzQHVB9q+kkZ3ouTt12b-uw@mail.gmail.com> <CAGphcdnK8Hx-YsA-HukRKbvC-HpnLktCtq8qFicQUL-8ZHC+1w@mail.gmail.com>
+In-Reply-To: <CAGphcdnK8Hx-YsA-HukRKbvC-HpnLktCtq8qFicQUL-8ZHC+1w@mail.gmail.com>
+From: John Stultz <jstultz@google.com>
+Date: Mon, 8 Apr 2024 12:03:18 -0700
+Message-ID: <CANDhNCpN-MGXswfFV=mbMJBbHh919iTv9BMYFsk7bMgbZa1gVQ@mail.gmail.com>
+Subject: Re: [RFC] thermal/core: Disable uevent messages for cooling devices
+To: Roman Stratiienko <r.stratiienko@gmail.com>
+Cc: linux-pm@vger.kernel.org, rafael@kernel.org, daniel.lezcano@linaro.org, 
+	amitk@kernel.org, rui.zhang@intel.com, linux-kernel@vger.kernel.org, 
+	megi@xff.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On Mon 08 Apr 2024 at 21:40, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
-
-> On Mon, Apr 08, 2024 at 08:15:54PM +0200, Jerome Brunet wrote:
->> 
->> On Mon 08 Apr 2024 at 19:49, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
->> 
->> > The 'link-name' property presents an optional DT feature that empowers
->> > users to customize the name associated with the DAI link and PCM stream.
->> > This functionality reflects the approach often employed in Qualcomm
->> > audio cards, providing enhanced flexibility in DAI naming conventions
->> > for improved system integration and userspace experience.
->> >
->> > It allows userspace program to easy determine PCM stream purpose, e.g.:
->> >     ~ # cat /proc/asound/pcm
->> >     00-00: speaker (*) :  : playback 1
->> >     00-01: mics (*) :  : capture 1
->> >     00-02: loopback (*) :  : capture 1
->> 
->> The example above is exactly what you should not do with link names, at
->> least with the amlogic audio system.
->> 
->> Userspace pcm, otherwise known as DPCM frontend, are merely that:
->> frontends. What they do is entirely defined by the routing defined by
->> the userspace (amixer and friends)
->> 
->> So naming the interface in DT (the FW describing the HW) after what the
->> the userspace SW could possibly set later on is wrong.
->> 
->> Bottom line: I have mixed feeling about this change. It could allow all
->> sort of bad names to be set.
->> 
->> The only way it could make sense HW wise is if the only allowed names
->> where (fr|to)ddr_[abcd], which could help maps the interface and the
->> kcontrol.
->> 
->> Such restriction should be documented in the binding doc.
->> 
+On Mon, Apr 8, 2024 at 11:59=E2=80=AFAM Roman Stratiienko
+<r.stratiienko@gmail.com> wrote:
 >
-> The link-name is an optional parameter. Yes, you are right, it can be
-> routed in a way that it no longer functions as a speaker in most cases.
-> However, if you plan to use your board's dt for common purposes, you
-> should not change the common names for DAI links. But if you know that
-> you have a static setup for speakers, microphones, loopback, or other
-> references (you 100% know it, because you are HW developer of this
-> board), why not help the user understand the PCM device assignment in
-> the easiest way?
+> I haven't worked on it since I posted it initially. But it looks like
+> there's an alternative patch already upstreamed and backported into
+> stable:
 >
-> Ultimately, it is the responsibility of the DT board developer to define
-> specific DAIs and name them based on their own knowledge about HW and
-> understanding of the board's usage purposes.
+> https://lore.kernel.org/linux-kernel/CAJZ5v0hHTuEXmQA=3D0D90eR_KUsOsfcxYb=
+TS=3DzQYDTXuY6o_K_Q@mail.gmail.com/T/
 
-Speaker and mics are NOT statically tied to a frontend. They are tied to a
-codec (... possibly). The routing from the frontend to the backend is
-dynamic, even while streaming.
+Ah! Many thanks for the link! I'll check in with folks to better
+understand if there is a functionality gap between what you submitted
+and what landed upstream.
 
-So defining FW names based on usage in wrong.
-As Mark pointed out as well, DT is not the place for this.
-
->
->> >
->> > The previous naming approach using auto-generated fe or be strings
->> > continues to be utilized as a fallback.
->> >
->> > Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
->> > ---
->> >  sound/soc/meson/meson-card-utils.c | 12 ++++++++----
->> >  1 file changed, 8 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/sound/soc/meson/meson-card-utils.c b/sound/soc/meson/meson-card-utils.c
->> > index ed6c7e2f609c..7bae72905a9b 100644
->> > --- a/sound/soc/meson/meson-card-utils.c
->> > +++ b/sound/soc/meson/meson-card-utils.c
->> > @@ -94,10 +94,14 @@ static int meson_card_set_link_name(struct snd_soc_card *card,
->> >  				    struct device_node *node,
->> >  				    const char *prefix)
->> >  {
->> > -	char *name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
->> > -				    prefix, node->full_name);
->> > -	if (!name)
->> > -		return -ENOMEM;
->> > +	const char *name;
->> > +
->> > +	if (of_property_read_string(node, "link-name", &name)) {
->> > +		name = devm_kasprintf(card->dev, GFP_KERNEL, "%s.%s",
->> > +				      prefix, node->full_name);
->> > +		if (!name)
->> > +			return -ENOMEM;
->> > +	}
->> >  
->> >  	link->name = name;
->> >  	link->stream_name = name;
->> 
->> 
->> -- 
->> Jerome
-
-
--- 
-Jerome
+Thanks again!
+-john
