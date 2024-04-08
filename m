@@ -1,185 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB0F2BAE1
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 07:15:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898A725761;
+	Mon,  8 Apr 2024 07:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712560529; cv=none; b=BaipgIc8rme5Fr3sjyNtl1nePDVsXjVjRNn8QiUY6xlWsXHxTL4IJiWpOORttYsuucjqA0SIohaY4g0MQlXNq2+fmIahMcfGt0LILa+SwWbFDX92VCYh0okykJC0lfMcw5DGPInWJ+K7Yrx3rJJzcJJZQLZ2WNCnbUzoQmaBjZo=
+	t=1712560547; cv=none; b=E/6XX8mMqFckMHgAgWKw2mfLw0+HMoDJ4pnnfR6T0bpJUssMBb37wXPLKoTa7Im8BAn7SklA3f4sQHfVeOxVUL1icUmuwAhgRToAMRdUmZMt8AnjomQFZEPgbSmtyRLOVR3JdCjNiVoUFusmR7/g0a5g1D5AU38TlYicAcOWt4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712560529; c=relaxed/simple;
-	bh=qxQSGhtB7OI4pZbUFVPKG7+Mc0Mv8CgmSkdT8Oakzfo=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=s7wlE9Oap0ONwF4SA+bH50/a8jyBtPQrorvGBJgDAwKHjd4+pJmyIeXLsi80jBnlP3+JMDtHwNtoz45MnXaAN89g9SD440JWfWBUpcKpudWY24QN6zeJoAr0VauUo6snlY0whznl7HW0dRfKy4ckVRe4FeX0ygT+kykVsj5tHGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g2LCcLqP; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1712560547; c=relaxed/simple;
+	bh=wfBI0w2ix2dYMyVPgP0IE0+1KgiAiSMym15kBzlE+OM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
+	 In-Reply-To:Content-Type; b=ns4zDvQk/ePJsymgs2NMpfu/5LSEHaFR34Z2UqQhHwwnAlNLSOQKARo9vD6EZs47monumBF8Vpul80Krp9veP5JQ0TEVYDXjlmuX9v52VysR7wbIXK4YFvET8KBCglouhicCtgxMtOnAZ+PMWk2H9nEf9iz9HmbGW1UmhZ1V84M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zah+m34p; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g2LCcLqP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zah+m34p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712560527; x=1744096527;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qxQSGhtB7OI4pZbUFVPKG7+Mc0Mv8CgmSkdT8Oakzfo=;
-  b=g2LCcLqPOwotoseSGTN++Y2o04UzKH2s/FbzQC6rwW1eCa9wzgfjQysk
-   aFAkLLv5oZMVDmdSFncxqCXodS96WRVbqVVI/4QmPK8flp/4CC7KK2WHX
-   4LkmSzzQaWMZdcxrhjGf9eq1obW/UhIIa95Mldvfh1uuzyhPVQPEu03Hp
-   S8e2ZmtIX39CRScAEQ7XEDU2FNlcbtg5HHOKEdbESzzUPY/YcZs1D6Fz7
-   uhC8zQXnbu0X58oHK3+bIEXFCkNbd/6IwgXPPbP1e5f9wB67iZi2+VQ8w
-   Kr5pMDhm3Zax+aUYvAKJSE8KnK3V7P8VqRxd3GtM0iRvLYR2T/yjGsOtf
-   g==;
-X-CSE-ConnectionGUID: Ni2D/Z7FQw6Ojlwgb/4aEA==
-X-CSE-MsgGUID: CGYpdi3XR2S/Cp5Ope+BTw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="18394883"
+  t=1712560545; x=1744096545;
+  h=message-id:date:mime-version:to:cc:references:from:
+   subject:in-reply-to:content-transfer-encoding;
+  bh=wfBI0w2ix2dYMyVPgP0IE0+1KgiAiSMym15kBzlE+OM=;
+  b=Zah+m34p/0ICxFjDEMGmVBdCDOhXtOyhSmPqnJi38NF8H+FICffpw6tx
+   oYfCnvPhLUz2Czxgoy5RCXn6BB4SDMO15im3iHJDgKENfFGrVp1x4e28F
+   1jt/knTUCHeleBAnGhTVOLh+0GhtuLtowZRX6B+VV01tujhsXCsd4UwrP
+   2b9MIvCHKuR92ekdR0dagSGWNb7hvK19tW1CNqxE239yoGS4ydVVO0T0d
+   GnVpVQaQeQnisUzOkZwwrZ1+p/0BXAV2gsDlY0WlsAHUQtXZL7jnZwpFK
+   fnCn2Bw+VNMF/z/oZ8EcNsC7JsIwWy+R3Hv3+LA5OnGo/ju4kt1ceycRa
+   Q==;
+X-CSE-ConnectionGUID: 12evUH+ASCW3LOwcH28DAw==
+X-CSE-MsgGUID: xkvrBBI4TFeALn6BhJyMMQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="8007779"
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="18394883"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 00:15:27 -0700
-X-CSE-ConnectionGUID: lLCUzcysTSmruEBJE7PNUA==
-X-CSE-MsgGUID: CYDVEzm/S4ulUdJQNa41kQ==
+   d="scan'208";a="8007779"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 00:15:28 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="937090989"
 X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
-   d="scan'208";a="24476823"
-Received: from penghuan-mobl.ccr.corp.intel.com (HELO [10.254.211.109]) ([10.254.211.109])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 00:15:24 -0700
-Message-ID: <fafddce6-155b-4a50-b63e-46005364181e@linux.intel.com>
-Date: Mon, 8 Apr 2024 15:15:21 +0800
+   d="scan'208";a="937090989"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2024 00:15:27 -0700
+Message-ID: <1f64af9a-0618-a7da-4acc-f043b6580308@linux.intel.com>
+Date: Mon, 8 Apr 2024 10:17:15 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Jason Gunthorpe <jgg@ziepe.ca>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix WARN_ON in iommu probe path
-To: "Tian, Kevin" <kevin.tian@intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <20240407011429.136282-1-baolu.lu@linux.intel.com>
- <BN9PR11MB52760913F36DACBC612088668C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.13.0
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52760913F36DACBC612088668C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+To: =?UTF-8?Q?Micha=c5=82_Pecio?= <michal.pecio@gmail.com>,
+ Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Mathias Nyman <mathias.nyman@intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org
+References: <58bca6f2-797a-4e20-a476-2294309afdd5@molgen.mpg.de>
+ <20240405113247.743e34b2@foxbook>
+ <7090d3af-18ce-40e1-8ac2-bf18152e5c4a@molgen.mpg.de>
+ <20240406183659.3daf4fa0@foxbook>
+ <c57f2116-8c42-44fb-9c32-6115ad88f914@molgen.mpg.de>
+ <20240407142542.036fb02f@foxbook>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part
+ of current TD ep_index 1 comp_code 1
+In-Reply-To: <20240407142542.036fb02f@foxbook>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/4/8 11:52, Tian, Kevin wrote:
->> From: Lu Baolu<baolu.lu@linux.intel.com>
->> Sent: Sunday, April 7, 2024 9:14 AM
->>
->> Commit 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
->> devices") adds all devices probed by the iommu driver in a rbtree
->> indexed by the source ID of each device. It assumes that each device
->> has a unique source ID. This assumption is incorrect and the VT-d
->> spec doesn't state this requirement either.
->>
->> The reason for using a rbtree to track devices is to look up the device
->> with PCI bus and devfunc in the paths of handling ATS invalidation time
->> out error and the PRI I/O page faults. Both are PCI ATS feature related.
->>
->> Only track the devices that have PCI ATS capabilities in the rbtree to
->> avoid unnecessary WARN_ON in the iommu probe path. Otherwise, on some
->> platforms below kernel splat will be displayed and the iommu probe results
->> in failure.
-> Just be curious. What about two ATS capable devices putting behind
-> a PCI-to-PCIe bridge?
+On 7.4.2024 15.25, Michał Pecio wrote:
+> This (and the absence of any earlier errors on the endpoint) looks
+> like the hardware may be confirming a "successful" transfer twice or
+> the driver may be processing one such confirmation twice.
 
-I don't think ATS capable device putting behind a PCI-to-PCIe bridge is
-a right configuration for the ATS service. The PCIe spec requires this
-in section 10.1.1, that
-
-"
-ATS requires the following:
-- ATS capable components must interoperate with [PCIe-1.1] compliant
-   components.
-...
-"
-
-My understanding is that PCI-to-PCIe bridge is not a PCIe compliant
-device.
+It's also possible this TD/TRB was cancelled due to the disconnect.
+Could be that even if driver removes the TD from the list and cleans out the TRB
+from the ring buffer (turns TRB to no-op) hardware may have read ahead and cached the TRB,
+and process it anyway.
 
 > 
->>   WARNING: CPU: 3 PID: 166 at drivers/iommu/intel/iommu.c:158
->> intel_iommu_probe_device+0x319/0xd90
->>   Call Trace:
->>    <TASK>
->>    ? __warn+0x7e/0x180
->>    ? intel_iommu_probe_device+0x319/0xd90
->>    ? report_bug+0x1f8/0x200
->>    ? handle_bug+0x3c/0x70
->>    ? exc_invalid_op+0x18/0x70
->>    ? asm_exc_invalid_op+0x1a/0x20
->>    ? intel_iommu_probe_device+0x319/0xd90
->>    ? debug_mutex_init+0x37/0x50
->>    __iommu_probe_device+0xf2/0x4f0
->>    iommu_probe_device+0x22/0x70
->>    iommu_bus_notifier+0x1e/0x40
->>    notifier_call_chain+0x46/0x150
->>    blocking_notifier_call_chain+0x42/0x60
->>    bus_notify+0x2f/0x50
->>    device_add+0x5ed/0x7e0
->>    platform_device_add+0xf5/0x240
->>    mfd_add_devices+0x3f9/0x500
->>    ? preempt_count_add+0x4c/0xa0
->>    ? up_write+0xa2/0x1b0
->>    ? __debugfs_create_file+0xe3/0x150
->>    intel_lpss_probe+0x49f/0x5b0
->>    ? pci_conf1_write+0xa3/0xf0
->>    intel_lpss_pci_probe+0xcf/0x110 [intel_lpss_pci]
->>    pci_device_probe+0x95/0x120
->>    really_probe+0xd9/0x370
->>    ? __pfx___driver_attach+0x10/0x10
->>    __driver_probe_device+0x73/0x150
->>    driver_probe_device+0x19/0xa0
->>    __driver_attach+0xb6/0x180
->>    ? __pfx___driver_attach+0x10/0x10
->>    bus_for_each_dev+0x77/0xd0
->>    bus_add_driver+0x114/0x210
->>    driver_register+0x5b/0x110
->>    ? __pfx_intel_lpss_pci_driver_init+0x10/0x10 [intel_lpss_pci]
->>    do_one_initcall+0x57/0x2b0
->>    ? kmalloc_trace+0x21e/0x280
->>    ? do_init_module+0x1e/0x210
->>    do_init_module+0x5f/0x210
->>    load_module+0x1d37/0x1fc0
->>    ? init_module_from_file+0x86/0xd0
->>    init_module_from_file+0x86/0xd0
->>    idempotent_init_module+0x17c/0x230
->>    __x64_sys_finit_module+0x56/0xb0
->>    do_syscall_64+0x6e/0x140
->>    entry_SYSCALL_64_after_hwframe+0x71/0x79
->>
->> Fixes: 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
->> devices")
->> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 50eb9aed47cc..a7ecd90303dc 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -4299,9 +4299,11 @@ static struct iommu_device
->> *intel_iommu_probe_device(struct device *dev)
->>   	}
->>
->>   	dev_iommu_priv_set(dev, info);
->> -	ret = device_rbtree_insert(iommu, info);
->> -	if (ret)
->> -		goto free;
->> +	if (pdev && pci_ats_supported(pdev)) {
->> +		ret = device_rbtree_insert(iommu, info);
->> +		if (ret)
->> +			goto free;
->> +	}
-> probably replace device_rbtree with ats_rbtree?
+> [   94.088594] usb 1-2: USB disconnect, device number 8
+> [   94.089370] xhci_hcd 0000:00:14.0: ERROR Transfer event TRB DMA ptr not part of current TD ep_index 1 comp_code 1
+> [   94.089403] xhci_hcd 0000:00:14.0: Looking for event-dma 00000001250310f0 trb-start 0000000125031100 trb-end 0000000125031100 seg-start 0000000125031000 seg-end 0000000125031ff0
+> [   94.089427] xhci_hcd 0000:00:14.0: last xhci_td_cleanup: first_dma 1250310f0 last_dma 1250310f0 status -115 from finish_td
+> 
+> (I say "successful" but it really isn't - the device is no longer
+> listening. But there is no delivery confirmation on isochronous OUT
+> endpoints so the xHC doesn't suspect anything.)
+> 
+> Could you try again with this updated debug patch to get more info?
 
-It makes sense. Probably I need a follow-up patch to do such cleanup.
+Would also be helpful to add xhci dynamic debug and xhci tracing (two separate logs)
+These will show in detail everything that is going on.
 
-Best regards,
-baolu
+Steps:
+
+mount -t debugfs none /sys/kernel/debug
+echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
+echo 'module usbcore =p' >/sys/kernel/debug/dynamic_debug/control
+echo 81920 > /sys/kernel/debug/tracing/buffer_size_kb
+echo 1 > /sys/kernel/debug/tracing/events/xhci-hcd/enable
+echo 1 > /sys/kernel/debug/tracing/tracing_on
+< Reproduce issue >
+Send output of dmesg
+Send content of /sys/kernel/debug/tracing/trace
+
+please copy the /sys/kernel/debug/tracing/trace file somewhere as soon
+as possible after reproducing the issue. It grows fast.
+
+Thanks
+Mathias
+
