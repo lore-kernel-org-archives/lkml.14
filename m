@@ -1,96 +1,138 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A54C6CDA9
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37610EACD
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 12:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580707; cv=none; b=aCphCP5FAJ1n+0uaYca3BcOFI7XKK+lpU/Wl73hsPLwUppDr/R0/wVYcWQuNe1kUi6Mk6jqHC+I6Nc2vBaCFLx13sHrichhJl35AbwFL9YI33w/8CWs0yrd0MFLj3TzQADv+NmSU3aa8ANk4jGMku40SlDBL5W2W4JaQ7Y1/CYc=
+	t=1712580836; cv=none; b=OJ72w4aW+izBleJfPacBip4ZIftM95bjlNTaWLWPovjGFlECRbDf7hw3LhQhC5jH6ggaqCqJoksR6gl1mzPAke6kO9UO1t0d46Vj6XmtJhB3Ra5lGdir9EGbnFk08bok12kMNiTzXTwtrpUic5FL7K4q7dm8xnSvNpVNqeF3F6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580707; c=relaxed/simple;
-	bh=UlDn3u++VeRTZAzlozVhYrVIfqq8x5y6K4ftZAsXbmk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bHxVX15t6F2DbW8/jYdNXBwkTdPlgqpMaSka9Tnsf9fDUcqosRPiDaDe8yf1smVdjD/gOrZTKWl7y990v4QzbLITzitVoVjPIpG+D9xc5AOtA+9k5S+fZAN5i3+djxUwJ/aLnuPnbp8HrpVLXtFvfDVkUHYDi6RO71rm1JyIcjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36660582091so51249465ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 05:51:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712580705; x=1713185505;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1712580836; c=relaxed/simple;
+	bh=WEyYkpof9FQ9wxzmt9yxgXdvUZ5yezofqlz1rRRr7SE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C+8Rekiz1uYfEvxUmIw7tPMgI4QbSodpdCbtXx9oInQS58eSxaO4oVtMXtA2uFV3p1214vcRO/M34/hsoOos2OhwHtBQ3CFY87IUmlM9ZD/sKmfckbEmvsbudN4D8UcK+n44HkVtq2hV//UoDjhh87rErSAREMcxd1K7CaIzWNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EwY4Wpa1; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EwY4Wpa1"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4168a5d75c4so3462475e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 05:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712580833; x=1713185633; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7h8z+6KiyxOrExyagXtxcsJEsWxSoMptUt8KwlryBoo=;
-        b=NU9sJCafPwrVmCKseFYHcGdIyo8SwpKcM5oEc0cwqm1nwU4SNWlSeI8hj/q9urUp50
-         n5E3xm7RnoJ5Wi3Lh0k6Ag8nb11pWCMwADmK9GKOo6bz5ASqhjFm7/7Rxz7ZPYL4MAkt
-         AqeutfMICcudMdPk6zFzvwcOVwvYbN0TPZWDUne57T+DeMV7mtp4qVQn8D/lSstM8YAn
-         xDk3jwT58j9cu9s9W7aJ0XNohp8NDh4EHzaZGGO0/liY+K82raXmA2BSBHK71UMSxFtD
-         lfIJJc6TQmb9UcPMSagciX7bjn4zSpKwXrONSztOhjFi1YzPaTDIm28tDEBaCjYwvaEl
-         qA2A==
-X-Gm-Message-State: AOJu0YxJ5aYPSljXkHvOW1Lht/4rezdhKAUp4u9GZ+XF3Te5bJZsGBS4
-	YIT22zl0zQXMy2Yw4ODvAwl/fzU3DH7XUuTWGgb3cP3uim76AG9MSAJn0uNcDO8+iyNaPbFJgGo
-	cZsugeEPzQ56lzAD9Zwe75jxF+tLi7qpnTa9O9d26MQHN0B5/3oOEqRMjBw==
-X-Google-Smtp-Source: AGHT+IG3RXDgu1mZrMGeacXrivnfLnJeUxeVWoc6ktafOUWjoHbP13kwuCJYGVN0ahs8jANM22OwW6DLXaUcyHwM8k8ppKipmGoE
+        bh=EIfWhO56deLbZSEvQDXUk02FMIpJsCPYMFdPM9Dpyf8=;
+        b=EwY4Wpa1t0VMyrdmXjS0phBWLnbhDaR/BkShQyeHNk+FEk3kY/MEoPBk4St5YWxaeP
+         jG2/e/MFbAlC+CJ/QoTrtRjwMje6cvVfAOOV/TonalhDd4TmuaZx1xiBKCnD6jBD2l1E
+         tghjbh3+ZMTr5GXHYrJR867K+98LIyWiVH/hL8meqx2zuBs9C3AfFRXHJDqXsOl7kUVn
+         9biBwdgzmobqAdCTwQc4gBSURyilQIC/6uwuE/uxq6lySwClyykUuuREEaz3noQRCDoH
+         tEtKVo/O2Xn/OIhYRAEThW+1pLbJEHSo6QCg9GoZ82otsr+f6znTAobqZBwdSM7hIGVA
+         ibAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712580833; x=1713185633;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EIfWhO56deLbZSEvQDXUk02FMIpJsCPYMFdPM9Dpyf8=;
+        b=ZV59cBw4SJN+8y/0r35f6VUfdcwxYS+GSaxhDzlCyeaEo8pUntXoN+YHb2JUnY3zPC
+         worXklRGTqp4sVFPxoSGSzvV5eWuk+q6hqnQsQy7TTauXG/dBXvubMC1eQoSDXK0mQ3j
+         LlmlfskE764w6t/zpthoxpde2977nj6ot+PUUtXc4kjIi1qyrOP38XMhj44cy5UxUfXw
+         dkQSCsjHf5PldlycxJz+tZR14kHGQ2kYf9w9gzv9mwv0i3m6ZURTPaKjzloBhiJsiAcL
+         Kgg/7Ks4e321vZl/QCQNoCfWefEoZWTt3e8UQR3s6SDeCCIbZagHhHsRyhTTnh8sBZRY
+         WgnA==
+X-Forwarded-Encrypted: i=1; AJvYcCVe2w6FrpD0D2vW3Fn2Sk7GllnoIZmNpTMJqpaHCjc8jrvp/ZHZPqX3xUHrXbzOSjN85o37R/RQZsFaz3FKUfdtRMeUmDg22TpjS3Ki
+X-Gm-Message-State: AOJu0Yy4F0FdswcHIZxXoxOAQkT29UsKgKpXiNSBhvaEdSabEFxLPfeO
+	+Q1YZa+2Xev+EJgA3AI3+wZWt4vQLT8aJuNV1tjnuspcDbpJbGTlEYhYaLcJpq59eCwTonGakpa
+	j
+X-Google-Smtp-Source: AGHT+IHyE5Dd+kfClSIf5iATYVOm+3kL+yD0XMIPSdxm4HEG5u0fs2phS7pNvDc9p8PpDMGtMsfFfg==
+X-Received: by 2002:a05:600c:3b8b:b0:414:8889:5a2e with SMTP id n11-20020a05600c3b8b00b0041488895a2emr8878647wms.30.1712580833297;
+        Mon, 08 Apr 2024 05:53:53 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id bg8-20020a05600c3c8800b00414807ef8dfsm13342654wmb.5.2024.04.08.05.53.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 05:53:52 -0700 (PDT)
+Message-ID: <baa6543c-5e2e-4f28-a95b-a086b32d1f2d@linaro.org>
+Date: Mon, 8 Apr 2024 13:53:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2488:b0:36a:20a2:e493 with SMTP id
- bt8-20020a056e02248800b0036a20a2e493mr335683ilb.6.1712580705601; Mon, 08 Apr
- 2024 05:51:45 -0700 (PDT)
-Date: Mon, 08 Apr 2024 05:51:45 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009b56fe06159544a4@google.com>
-Subject: [syzbot] Monthly usb report (Apr 2024)
-From: syzbot <syzbot+list56b350aa6b0ae73ad4c4@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND v3 2/2] ASoC: qcom: sc8280xp: Add support for QCM6490 and
+ QCS6490
+To: Bjorn Andersson <andersson@kernel.org>,
+ Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Cc: Banajit Goswami <bgoswami@quicinc.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+ alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_rohkumar@quicinc.com
+References: <20240408042331.403103-1-quic_mohs@quicinc.com>
+ <20240408042331.403103-3-quic_mohs@quicinc.com>
+ <45yy3cvepk4uwi2jdmh4w6l5ac3dffqhbot6xzv2bwjvo637ss@pryzth2hghyu>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <45yy3cvepk4uwi2jdmh4w6l5ac3dffqhbot6xzv2bwjvo637ss@pryzth2hghyu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello usb maintainers/developers,
 
-This is a 31-day syzbot report for the usb subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/usb
 
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 72 issues are still open and 332 have been fixed so far.
+On 08/04/2024 13:45, Bjorn Andersson wrote:
+> On Mon, Apr 08, 2024 at 09:53:31AM +0530, Mohammad Rafi Shaik wrote:
+>> Add compatibles for sound card on Qualcomm QCM6490 IDP and
+>> QCS6490 RB3Gen2 boards.
+>>
+>> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+>> ---
+>>   sound/soc/qcom/sc8280xp.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
+>> index b7fd503a1666..878bd50ad4a7 100644
+>> --- a/sound/soc/qcom/sc8280xp.c
+>> +++ b/sound/soc/qcom/sc8280xp.c
+>> @@ -169,6 +169,8 @@ static int sc8280xp_platform_probe(struct platform_device *pdev)
+>>   }
+>>   
+>>   static const struct of_device_id snd_sc8280xp_dt_match[] = {
+>> +	{.compatible = "qcom,qcm6490-idp-sndcard", "qcm6490"},
+>> +	{.compatible = "qcom,qcs6490-rb3gen2-sndcard", "qcs6490"},
+> 
+> We now have 4 <platform>-sndcard and two <board>-sndcard compatibles
+> here.
+> 
+> Not saying that your patch is wrong, but is this driver board-specific
+> or soc-specific? Srinivas, Krzysztof?
 
-Some of the still happening issues:
+Normally this should be board specific.
 
-Ref  Crashes Repro Title
-<1>  3410    Yes   WARNING in firmware_fallback_sysfs
-                   https://syzkaller.appspot.com/bug?extid=95f2e2439b97575ec3c0
-<2>  2870    Yes   KMSAN: uninit-value in dib3000mb_attach (2)
-                   https://syzkaller.appspot.com/bug?extid=c88fc0ebe0d5935c70da
-<3>  866     Yes   general protection fault in ir_raw_event_store_with_filter
-                   https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
-<4>  621     Yes   INFO: task hung in usbdev_open (2)
-                   https://syzkaller.appspot.com/bug?extid=b73659f5bb96fac34820
-<5>  401     Yes   INFO: task hung in r871xu_dev_remove
-                   https://syzkaller.appspot.com/bug?extid=f39c1dad0b7db49ca4a8
-<6>  304     Yes   KASAN: use-after-free Read in v4l2_fh_init
-                   https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
-<7>  274     No    INFO: task hung in hub_event (3)
-                   https://syzkaller.appspot.com/bug?extid=a7edecbf389d11a369d4
-<8>  225     Yes   INFO: rcu detected stall in hub_event
-                   https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-<9>  195     Yes   WARNING in cm109_urb_irq_callback/usb_submit_urb
-                   https://syzkaller.appspot.com/bug?extid=2d6d691af5ab4b7e66df
-<10> 189     Yes   INFO: rcu detected stall in syscall_exit_to_user_mode (2)
-                   https://syzkaller.appspot.com/bug?extid=a68ef3b1f46bc3aced5c
+In the past we made them SoC specific and provided a way to do board 
+specific changes based on compatible. Recently we stopped adding new 
+drivers as most of these drivers turned out to be identical and lots of 
+code duplication.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Having these compatibles will help both the userspace UCM and provide 
+hooks to do any board/soc specific configurations.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+thanks,
+Srini
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+> 
+> Regards,
+> Bjorn
+> 
+>>   	{.compatible = "qcom,sc8280xp-sndcard", "sc8280xp"},
+>>   	{.compatible = "qcom,sm8450-sndcard", "sm8450"},
+>>   	{.compatible = "qcom,sm8550-sndcard", "sm8550"},
+>> -- 
+>> 2.25.1
+>>
+>>
