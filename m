@@ -1,35 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1140C81751;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1135862148;
 	Mon,  8 Apr 2024 13:20:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712582416; cv=none; b=u80iUl325B3IcBtIvB9cmCB8g1BkO7ZxEfVxY/r2wGe6u9qOT0RQpv/8PhKa/Jypqc3O+joJEG0wuHafXCmHQjuNV26kJpf9VN2nRRoftwL7+LSk2Ciz22Nl61dYusYixe468mIaGt1Kng/dQTE8nDrrvtL9zM8mhVtQb9zaHf8=
+	t=1712582416; cv=none; b=BNXvUscJdEzUTPwk+dnyV0BoR6CLODkKllcD4AVFruV9EhPId+vfQ3RPfgASMWboLHnIIduYjEmw36iFKQeGh5kxoS4a7XligT2u8o682tFWTYAnsyWpVUSxoy2m9zeydAreFrz3yAU0j4MBLvQ5N9P1h1uidZd06+/rfHkbH1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712582416; c=relaxed/simple;
-	bh=74BQp+QZEt52EbEIHiebD1Hx7WP7XpuqHyEEfMZoggA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gfxurNQcGaDSxDETZdmM8HZK4+DTUwUyEd+/EW7tHRyulKD2czLnxuQgV3ttos3/IRCLxxtyKnbeFGyAqqZnEc5GW0OzsD53SN+IW37AW8Xp9B1gZTuJaEzzJuSdAp9A7xkX9AdjvzSNLJiIOAATEnuW77dAOHrxOt2U+IJuomI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Id7iXKTX; arc=none smtp.client-ip=193.104.135.124
+	bh=Lg7MpZIv/xYXPJQLm776tfjlApa0oKTGhqiiIowID+0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PbD0TLboJpL0GLu77qyOSojNH53xGPEkU2D830PCAwUUCHeU8rg2CuoLrYsQ8O2+X8Hcr+0fmGXWnJNSki+mhpfEckX6PtLXKdqQWTSJvpjiLpZdSfjadyVkuzFu7K0ZW01ExVTQqvhX7E2tilRNpMYfyK6bjd04G4lIBGUjWCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=ukQgap4V; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Id7iXKTX"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="ukQgap4V"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 8C328600A9;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 7791E600A2;
 	Mon,  8 Apr 2024 13:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1712581838;
-	bh=74BQp+QZEt52EbEIHiebD1Hx7WP7XpuqHyEEfMZoggA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Id7iXKTXfwMFB8wguFS5+yCiChwgmKuJe4GqKSjloYg8oINLF/k7S40xH9N64xQ3r
-	 RS0jY7bxsCjUd5AFKhE0NcwXdfI4uARQ+/P7JQ1FgGW1IKOTNhkgT8mi51oUxr+cdA
-	 Day8I6efxwUC2JqC537nZ/gWO4EC/iFux7EJEezkfD54Tscy2WkAzH1dMQQ9xD+YCR
-	 wCdVnogKmFEe5g1eUE3E0oXfStpGN2tIYLlTv+m66WbywLP8zd2CxAiECePa/mVr6m
-	 QS5lhsELKBuL8YSQjW3w/xfv3VXH1ROsO5YM24shbFalicbPFgA/o4aSX+NVjIdJ7y
-	 IHg50Iyv9c8yQ==
+	bh=Lg7MpZIv/xYXPJQLm776tfjlApa0oKTGhqiiIowID+0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ukQgap4VNE/vEA18w+LsctfzZJVVbH5993hCpyEXFwbO5RsxzLSdiYuvYQdSZSSBr
+	 0Zwu+kMItoPPBwuiVadpvYwGoAyGRfMwC62RwOIMI6Vr14reFCwrdT4iqYeo3z31ek
+	 lrpFvy8acFixr7vXWudQheEMb4t3ZaIzkKLTevsFUgej9H/l6x6ZqrRlG+eMmBgm8L
+	 X3d5xObHrLSUacMgbYs3fYwQ87bCWJsYjIgPvQJUJ/xpv7kd+5IQOBvppvgq7rB3OL
+	 44KJjW1ifhYrLrm2/uX4n7kdckW1L/D2o9p34JkeUKkyVGd7BEJRMDS0IH28O7WadB
+	 kPdBkZjsvE+Ww==
 Received: by x201s (Postfix, from userid 1000)
-	id 21A71201CE7; Mon, 08 Apr 2024 13:09:31 +0000 (UTC)
+	id F02F5205049; Mon, 08 Apr 2024 13:09:39 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -51,10 +52,12 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Jamal Hadi Salim <jhs@mojatatu.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
 	Jiri Pirko <jiri@resnulli.us>
-Subject: [PATCH net-next 0/6] flower: validate control flags
-Date: Mon,  8 Apr 2024 13:09:18 +0000
-Message-ID: <20240408130927.78594-1-ast@fiberby.net>
+Subject: [PATCH net-next 3/6] flow_offload: add flow_rule_no_control_flags()
+Date: Mon,  8 Apr 2024 13:09:21 +0000
+Message-ID: <20240408130927.78594-4-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240408130927.78594-1-ast@fiberby.net>
+References: <20240408130927.78594-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,34 +67,44 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I have reviewed the flower control flags code.
-In all, but one (sfc), the flags field wasn't
-checked properly for unsupported flags.
+This helper can be used by drivers, that doesn't support
+any control flags, to reject any attempt to install rules
+with control flags.
 
-In this series I have only included a single example
-user for each helper function. Once the helpers are in,
-I will submit patches for all other drivers implementing
-flower.
+This is aimed at drivers, which uses flow_rule_match_control(),
+but doesn't implement any control flags.
 
-After which there will be:
-- 6 drivers using flow_rule_no_unsupp_control_flags
-- 8 drivers using flow_rule_no_control_flags
-- 11 drivers using flow_rule_match_no_control_flags
+Only compile-tested.
 
-Asbjørn Sloth Tønnesen (6):
-  flow_offload: add flow_rule_no_unsupp_control_flags()
-  nfp: flower: fix check for unsupported control flags
-  flow_offload: add flow_rule_no_control_flags()
-  net: prestera: flower: validate control flags
-  flow_offload: add flow_rule_match_no_control_flags()
-  net: dsa: microchip: ksz9477: flower: validate control flags
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+---
+ include/net/flow_offload.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- drivers/net/dsa/microchip/ksz9477_tc_flower.c |  3 +
- .../marvell/prestera/prestera_flower.c        |  4 ++
- .../ethernet/netronome/nfp/flower/offload.c   |  6 +-
- include/net/flow_offload.h                    | 55 +++++++++++++++++++
- 4 files changed, 65 insertions(+), 3 deletions(-)
-
+diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
+index c1317b14da08c..415d225204a1f 100644
+--- a/include/net/flow_offload.h
++++ b/include/net/flow_offload.h
+@@ -471,6 +471,19 @@ static inline bool flow_rule_no_unsupp_control_flags(const u32 supp_flags,
+ 	return false;
+ }
+ 
++/**
++ * flow_rule_no_control_flags() - check for presence of any control flags
++ * @flags: flags present in rule
++ * @extack: The netlink extended ACK for reporting errors.
++ *
++ * Returns true if no control flags are set, false otherwise.
++ */
++static inline bool flow_rule_no_control_flags(const u32 flags,
++					      struct netlink_ext_ack *extack)
++{
++	return flow_rule_no_unsupp_control_flags(0, flags, extack);
++}
++
+ struct flow_stats {
+ 	u64	pkts;
+ 	u64	bytes;
 -- 
 2.43.0
 
