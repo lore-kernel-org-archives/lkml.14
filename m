@@ -1,185 +1,161 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143733BB22;
-	Mon,  8 Apr 2024 09:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9B5446A9;
+	Mon,  8 Apr 2024 09:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712566931; cv=none; b=pxHGHKs0DcJHgdFpm44p/lLAiAEC7C2pyjVFmeEaqD04VA51OjMdtVFGM8690apbtAx55/RUfz8GRGJFFRNmOJL/fDoLhCYnMeghUJHUXJUyDylUBpqkI2Bd3WAvz+er/SBO2fcMpyxN2g0ZwM9EoIYOgSLv8B/oKpocFUbVxQ8=
+	t=1712566957; cv=none; b=fpAoEHtt+RHM085UJ4uU6NL2d3dm+tK8Hxo546ocsi45ZE34qEn5yvcj2/m6tmTbSsgAaqUI++3CXexduvEjmDkHXJ8dWdbX73bJsbBP1SVoQ8f2t/nvubeynWtTJiFsH8f6cnAXxi4OpC1IpeAcLnPxNZ8eSXhUym0u6icSYww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712566931; c=relaxed/simple;
-	bh=7VV0jGdXvYvmwftVVSl1G0fiatJCoVjKvd7HpTiJ0JM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k7qpV/AXJ3dXjuRGAt7GTd1ixUMg5ga7b4DLmDkyfRynhZR5ceeWnn0jNdHejlAd/0pKoeIouCtMYWqxp4QKMESN2xkVtoVrz1tFVCDrAEtFoFwV41GbLgFnAkHVMb5wy8ygyAmem1jQ3jU2c4+C6r65vDaMrMkxax/Xi0VyYLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEgNQ3Rt; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712566957; c=relaxed/simple;
+	bh=TDGauOcLG2BfMc6m3cUVshzIqhFm4EOci2WhmMVSP5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aqz82Wft1KC5bfcCZ22gKvH7tFqksR98J2UKaBYbAD3a7p08LKfelo20NidHtIwH+pook6ln0R4zs6JvwtaXqWKb76HBXS2XxB9cQ8CTttP9ZeBWPHLeBylUNAlvAG51N5naP++hwtVzbjDFdwvrc08SHtTB34yx+ahn42FRNjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DylO+5hu; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEgNQ3Rt"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d47ce662so4471663e87.1;
-        Mon, 08 Apr 2024 02:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712566928; x=1713171728; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7Qdsh0d4hfPBGFN5vOtVBcqubXHngsXIt2VO3gViJqA=;
-        b=IEgNQ3RtTGKU5yseFvEKDD6EcxPSUUz06ZD6rB4DKLgAXbp2it/ohT3z/w5zBeozqC
-         5ug+Xg4Wa6gbeIamct5+wqVG0joVuPiIrwt1hT//BFc9+pMXGTSt7TBzYLRP1gC3uwyq
-         AIo4mZapge6ySK6zrmKWtNrHEKOx2gfwHMVrOGPephE7f2ydha0OnpnM66wVct3P9hCW
-         n3R/JpoDrn9l8/NjvrN5Dgc73FOk/3MfLVQvxp6iJITahJuY6z3KCGlHICWhx3RIYduC
-         ZLx5oAcoeEO8oes0CpoyyKRl4uL25XKymwyYZuLEeu66Bb2prRmx2Exhlysz7XnuxJ3T
-         /5nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712566928; x=1713171728;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Qdsh0d4hfPBGFN5vOtVBcqubXHngsXIt2VO3gViJqA=;
-        b=Ujeus0Zx6zLv95YlV0j88Sd9ZO+lJghG5/76irZrULS/ikPzhf6win95juC049JPot
-         u1J0IDdsGtkAPk4yhrQPORis7JvqgpBaA8Ce5+88zq/T7oaNdUL5Ecwf6kha8h4PATMB
-         BiDRl7RWwHh1qKvQz410m/0Z6zKhdBHBRQPkuuUwVZhME0hAu4fEX295nE+SqfzFNqW5
-         iB0A+kfRyOCiRbOHLoFqdOF6ANWDLuucrTpuASPc7y9OTlTXc5J+G80mbHo2hpi6PPFe
-         TcUtMnoY+EQ+b6/OKQXhpJdd8+YEL0GlpbCysPwZ/Ba8BUf5mom8isFyUWtAYk7y9ICx
-         dWsg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Bk7zeXHU1zD6PU14u+k4m0L9F3nXsx/Zn90UwVnXG0xO2THOc1t1UEGjXLvPlyRvaGwapo63KWf1II2JfBvBc7DwnEVXG0F2rJNsHrBag+Mxc1ePdIKlVfpA97QfHdDuU93E1kGJ
-X-Gm-Message-State: AOJu0Yx8ml45ngzdWNoJF/tYkc5nLZoirj8RVlJkAQFyLymzJeq0k7Lr
-	ZqL8yx80SykeZWsV/jvJClC6UFyrFlm5k6GZGs7i+w0B8nHlqm1K
-X-Google-Smtp-Source: AGHT+IEm59FOtvdu0BH6VqTsDXFQBTsbwNkhEZgSkr9j1F+KkgvMyk1/6ThJwaxOvCs1K1IZ/YJReg==
-X-Received: by 2002:a05:6512:52b:b0:516:c1b9:316b with SMTP id o11-20020a056512052b00b00516c1b9316bmr6943381lfc.15.1712566927827;
-        Mon, 08 Apr 2024 02:02:07 -0700 (PDT)
-Received: from ?IPv6:2003:f6:ef1c:c500:ee59:d953:f148:40ba? (p200300f6ef1cc500ee59d953f14840ba.dip0.t-ipconnect.de. [2003:f6:ef1c:c500:ee59:d953:f148:40ba])
-        by smtp.gmail.com with ESMTPSA id a23-20020a1709062b1700b00a51dd26f6dcsm544255ejg.51.2024.04.08.02.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 02:02:07 -0700 (PDT)
-Message-ID: <5264b2cddd5d3cbba5e9d5e55f8c7069347ec38b.camel@gmail.com>
-Subject: Re: [PATCH 3/4] iio: backend: make use of dev_errp_probe()
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Nuno Sa
- <nuno.sa@analog.com>, Petr Mladek <pmladek@suse.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Olivier Moysan <olivier.moysan@foss.st.com>, Jyoti
- Bhayana <jbhayana@google.com>, Chris Down <chris@chrisdown.name>, John
- Ogness <john.ogness@linutronix.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Date: Mon, 08 Apr 2024 11:05:39 +0200
-In-Reply-To: <7ejh2r6zcripnptn3nbw2sa3mlfyleg4qg74rryxlut3fysneg@kuqwo5z2l65n>
-References: <20240404-dev-add_dev_errp_probe-v1-0-d18e3eb7ec3f@analog.com>
-	 <20240404-dev-add_dev_errp_probe-v1-3-d18e3eb7ec3f@analog.com>
-	 <Zg6bsS3WMvp-nY3S@smile.fi.intel.com>
-	 <9f91388faee750e16021f2c0544e7a158a16202b.camel@gmail.com>
-	 <Zg7DWQtY6SP9E_1m@smile.fi.intel.com>
-	 <20240406170717.31ab7e47@jic23-huawei>
-	 <7ejh2r6zcripnptn3nbw2sa3mlfyleg4qg74rryxlut3fysneg@kuqwo5z2l65n>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.0 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DylO+5hu"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4386cNop003343;
+	Mon, 8 Apr 2024 09:02:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=nvdyCAqfLU/2Ca51uzFJ00kFxRtGfYw+A+Q3K6kXutk=; b=Dy
+	lO+5hun45wjmWmbeUJsIui1AoDKgFXW1f/dX/4+1dGinLnGzWJDls2G2J4xhRUHE
+	aeORdIyZbkUidNgU3wvGRnbxegqGSZDHWGGKgjdd2uYkm44LxB/ywdKtLjgAxhVR
+	3BuyOrnUaPVln8FV6WTQPlxiCuhvdHnbdFuDZ5BLA2JRcl0zE6dS/JckYuM0umrv
+	NvEQYs6k7kgDY5hVAc5fUskLL3aS0p3px56DQhx7jRIHrfCbIbNcP10IbLOT+XD5
+	yGC7Q2midjrGwicp6T6nV7AUoSetCkZb9lz6wmKL8co9r1B1C/Kp/AXJOdCtKw3s
+	fEflLi2I1L+JgN16HLyg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcbg3g8dn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 09:02:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43892SUt030143
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Apr 2024 09:02:28 GMT
+Received: from [10.238.176.241] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 8 Apr 2024
+ 02:02:26 -0700
+Message-ID: <9ef5318a-e198-9a91-6538-2afa8196d66a@quicinc.com>
+Date: Mon, 8 Apr 2024 17:01:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V4 1/2] rtc-pm8xxx: clear the triggered alarm interrupt
+ during driver probe
+Content-Language: en-US
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-0-aab2cd6ddab8@quicinc.com>
+ <20240401-fix-rtc-alarm-which-fired-before-driver-probe-not-be-cleard-v1-1-aab2cd6ddab8@quicinc.com>
+ <Zg9l0cTBgoibIaDQ@hu-bjorande-lv.qualcomm.com>
+From: jianbin zhang <quic_jianbinz@quicinc.com>
+In-Reply-To: <Zg9l0cTBgoibIaDQ@hu-bjorande-lv.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 30um-g3cfX74Awa8Jre72435khMk0rTi
+X-Proofpoint-ORIG-GUID: 30um-g3cfX74Awa8Jre72435khMk0rTi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_07,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1015 priorityscore=1501 suspectscore=0 impostorscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404080068
 
-On Sat, 2024-04-06 at 20:54 +0200, Andi Shyti wrote:
-> Hi,
->=20
-> On Sat, Apr 06, 2024 at 05:07:17PM +0100, Jonathan Cameron wrote:
-> > On Thu, 4 Apr 2024 18:12:25 +0300
-> > Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> >=20
-> > > On Thu, Apr 04, 2024 at 04:58:27PM +0200, Nuno S=C3=A1 wrote:
-> > > > On Thu, 2024-04-04 at 15:23 +0300, Andy Shevchenko wrote:=C2=A0=20
-> > > > > On Thu, Apr 04, 2024 at 01:06:25PM +0200, Nuno Sa wrote:=C2=A0=
-=20
-> > > > > > Using dev_errp_probe() to simplify the code.=C2=A0=20
-> > >=20
-> > > ...
-> > >=20
-> > > > > > +	if (IS_ERR(fwnode))
-> > > > > > +		return dev_errp_probe(dev, PTR_ERR(fwnode),
-> > > > > > +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Cannot get Firmware
-> > > > > > reference\n");=C2=A0=20
-> > > > >=20
-> > > > > ERR_CAST() seems quite good candidate to have here.
-> > > > >=20
-> > > > > 		return dev_errp_probe(dev, fwnode, "Cannot get
-> > > > > Firmware
-> > > > > reference\n");
-> > > > >=20
-> > > > > (Assuming dev_errp_probe() magically understands that, note you m=
-ay
-> > > > > have it as
-> > > > > =C2=A0a macro and distinguish parameter type with _Generic() or s=
-o and
-> > > > > behave
-> > > > > =C2=A0differently: ERR_PTR() vs. ERR_CAST(), see acpi_dev_hid_uid=
-_match()
-> > > > > =C2=A0implementation, but also keep in mind that it doesn't disti=
-nguish
-> > > > > NULL/0,
-> > > > > there
-> > > > > =C2=A0is a patch available in the mailing list to fix that, thoug=
-h.)=C2=A0=20
-> > > >=20
-> > > > Do we care that much for going with that trouble?=C2=A0=20
-> > >=20
-> > > I don't think we do. We are not supposed to be called with ret =3D=3D=
- 0/NULL.
-> > > That's why I pointed out to the current version.
-> > >=20
-> > > > I understand like this we go
-> > > > PTR_ERR() to then comeback to ERR_PTR() but this for probe() which =
-is
-> > > > not a
-> > > > fastpath. So perhaps we could just keep it simple?=C2=A0=20
-> > >=20
-> > > It's not about performance, it's about readability. See the differenc=
-e
-> > > between
-> > > yours and mine.
-> > >=20
-> >=20
-> > You are suggesting making it transparently take an error ptr or an inte=
-ger?
-> > Whilst clever, I'm not seeing that as a good idea for readability /
-> > reviewability.
-> > I expect something that looks like a function to take the same paramete=
-rs
-> > (other vargs)
-> > always.=C2=A0 _Generic messes with that.
-> >=20
-> > Maybe I just don't like to learn new things!=C2=A0 If consensus comes d=
-own in
-> > favour
-> > of _Generic trickery then I'll get used to it eventually.
->=20
-> the whole point of the dev_err_...() functions is to add trickery
-> in order to reduce code and brackets.
->=20
 
-I'm not sure I'm completely convinced on having more helpers but also no st=
-rong
-opinion tbh. But see below...
-
-> The way I see this is to have a combination of functions:
->=20
-> =C2=A0- takes integer, returns integer -> dev_err_probe()
-> =C2=A0- takes integer, returns pointer -> dev_errp_probe() (or dev_err_pt=
-r_probe())
-> =C2=A0- takes pointer, return integer -> ? dev_ptr_err_probe()
-
-This is pretty much all the dev_err_probe(dev, PTR_ERR(), ...) we already h=
-ave
-out there. Do we really want to have this variant?
-
-> =C2=A0- takes pointer, returns pointer -> ? dev_ptr_probe()
-
-dev_ptr_probe() misses to be clear about being an error and think this is p=
-retty
-much the ERR_CAST() case right? Maybe dev_err_cast_ptr_probe()? Or
-dev_err_cast_probe()?
-
-- Nuno S=C3=A1
-
+On 4/5/24 10:45, Bjorn Andersson wrote:
+> On Mon, Apr 01, 2024 at 09:56:29AM +0800, jianbin zhang wrote:
+>
+> Sorry, I think the patch looks good now, but the subject prefix
+> (rtc-pm8xxx) does not match other changes to this file.
+>
+Sure, thanks for reviewing, I will update the subject prefix to "rtc: 
+pm8xxx:" as other changes to this file.
+>> If the alarm is triggered before the driver gets probed, the alarm interrupt
+>> will be missed and it won't be detected, and the stale alarm settings will
+>> be still retained because of not being cleared.
+>>
+>> Issue reproduce step:
+>> (1) set the alarm and poweroff the device
+>> (2) alarm happens and the device boots
+>> (3) poweroff the device again
+>> (4) alarm irq not be cleard, device boots again
+>>
+>> the fixing here is clear the interrupt during the step(3) unconditionally.
+>>
+>> Signed-off-by: jianbin zhang <quic_jianbinz@quicinc.com>
+>> ---
+>> Changes in v4:
+>> - add the cover letter
+>> - modify the patch to conform to the specification
+>>
+>> Changes in v3:
+>> - clear the interrupt in driver probe unconditionally
+>> - link: https://lore.kernel.org/linux-rtc/20240319191037.GA3796206@hu-bjorande-lv.qualcomm.com/T/#t
+> These are expected to be links to the previous revisions of your patch,
+> not people's answers.
+>
+> Please consult go/upstream and switch to b4 for the future, which does
+> this automatically for you. Please also use the internal review list!
+>
+> Regards,
+> Bjorn
+Yeah, will use the internal review list in next patch version and will 
+switch to b4 in the future.
+>> Changes in v2:
+>> - Adapt the V1 patch according to the newest rtc-pm8xxx
+>> - link: https://lore.kernel.org/linux-rtc/20240124024023df15ef6e@mail.local/
+>>
+>> Changes in v1:
+>> - fixing is as below logic, During driver probe: read ALARM_EN, read ALARM_DATA, read RTC_RDATA,
+>>    if (ALARM_DATA < RTC_DATA), Trigger the alarm event and clear the alarm settins
+>> - link: https://lore.kernel.org/linux-rtc/20220321090514.4523-1-quic_jianbinz@quicinc.com/
+>>
+>> Changes in original:
+>> - link to original: https://lore.kernel.org/linux-rtc/YTusgJlMUdXOKQaL@piout.net/
+>> ---
+>>   drivers/rtc/rtc-pm8xxx.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/rtc/rtc-pm8xxx.c b/drivers/rtc/rtc-pm8xxx.c
+>> index f6b779c12ca7..e4e2307445cf 100644
+>> --- a/drivers/rtc/rtc-pm8xxx.c
+>> +++ b/drivers/rtc/rtc-pm8xxx.c
+>> @@ -527,6 +527,11 @@ static int pm8xxx_rtc_probe(struct platform_device *pdev)
+>>   	if (rc)
+>>   		return rc;
+>>   
+>> +	rc = regmap_update_bits(rtc_dd->regmap, rtc_dd->regs->alarm_ctrl2,
+>> +					  PM8xxx_RTC_ALARM_CLEAR, 1);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>>   	return 0;
+>>   }
+>>   
+>>
+>> -- 
+>> 2.43.2
+>>
