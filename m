@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DE83145356
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A7DA1465AB
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 18:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712601612; cv=none; b=EhfeGUUnU+qiVqch/JlXondpnrlx/KPTLpHOFTST0nFKC0w/d6Yw9R0PpfQeMKPoSgmo4qCGI0ylbFyep7zaYZ4ADErcYuurKRV0uBJ+y4rCYV4ZW2f0SwmXhge6Y2EjJ2ywrcJ0Sq5ILuF8E+OvupcdbaXZ3DEm7E2eiUkzt8k=
+	t=1712601616; cv=none; b=uxLlYZvuxaaTknihcwgYm8bgoNiKnXqjZc5TqursXlmwgysfBNzeFJWj47ukySeFIyZHRCMjrOQE3MJRY4iEOGvWnKE0NQWFKLM7TmwSwK5ygcfGNBn4q8QoofL3MT5O/Y+/Ax+RddlbOEDENMKGf/mIeiErkhZtAeGZImMaI2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712601612; c=relaxed/simple;
-	bh=JC5p1hM64uLVhgA2xiBNpbTKSx6Qsa8ZUeHJZ687VcQ=;
+	s=arc-20240116; t=1712601616; c=relaxed/simple;
+	bh=MZRwW5x7+d+S2iAI/YUVm/yJDJuEfX89z0v9DiQjItE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GkRgoMl0czJSoUHzhx2r7tchlmy0FHeptGFHESR2o5NNNdVMsPg4pHEpuvgR6QzZzrradUbD4A0z5VHGx/XZbnPY1RlxTEwB8RveHyp2QsOiGz+A77SjP3oq5rJ+OeDt760216/RywWuszKKyI54f0bfE30YgZHEZ7VYuWwMfOY=
+	 MIME-Version; b=d1pTf0qaEYUYMY/WfBDrXIgj+cWj6dewwCJthTl+VEoJO8D/SZx9vb4wU1wkVg8HSk1ZPO+6FjIYxtLMonmOX/0TNxy8WvBDR6mdSNxDrA/EHIVPbIMYNK68RBGrgLoknPqpwemmkRJgW01rNuUizdYoa0aJlYE0yMKqQxPhbOY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D363DA7;
-	Mon,  8 Apr 2024 11:40:40 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4EBDDA7;
+	Mon,  8 Apr 2024 11:40:44 -0700 (PDT)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4CC963F766;
-	Mon,  8 Apr 2024 11:40:08 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A0EB3F766;
+	Mon,  8 Apr 2024 11:40:12 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	David Hildenbrand <david@redhat.com>,
@@ -33,10 +33,11 @@ To: Andrew Morton <akpm@linux-foundation.org>,
 	Lance Yang <ioworker0@gmail.com>
 Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v7 4/7] mm: swap: Update get_swap_pages() to take folio order
-Date: Mon,  8 Apr 2024 19:39:43 +0100
-Message-Id: <20240408183946.2991168-5-ryan.roberts@arm.com>
+	linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>
+Subject: [PATCH v7 6/7] mm: vmscan: Avoid split during shrink_folio_list()
+Date: Mon,  8 Apr 2024 19:39:45 +0100
+Message-Id: <20240408183946.2991168-7-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240408183946.2991168-1-ryan.roberts@arm.com>
 References: <20240408183946.2991168-1-ryan.roberts@arm.com>
@@ -48,109 +49,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We are about to allow swap storage of any mTHP size. To prepare for
-that, let's change get_swap_pages() to take a folio order parameter
-instead of nr_pages. This makes the interface self-documenting; a
-power-of-2 number of pages must be provided. We will also need the order
-internally so this simplifies accessing it.
+Now that swap supports storing all mTHP sizes, avoid splitting large
+folios before swap-out. This benefits performance of the swap-out path
+by eliding split_folio_to_list(), which is expensive, and also sets us
+up for swapping in large folios in a future series.
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+If the folio is partially mapped, we continue to split it since we want
+to avoid the extra IO overhead and storage of writing out pages
+uneccessarily.
+
+THP_SWPOUT and THP_SWPOUT_FALLBACK counters should continue to count
+events only for PMD-mappable folios to avoid user confusion. THP_SWPOUT
+already has the appropriate guard. Add a guard for THP_SWPOUT_FALLBACK.
+It may be appropriate to add per-size counters in future.
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Barry Song <v-songbaohua@oppo.com>
 Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- include/linux/swap.h |  2 +-
- mm/swap_slots.c      |  6 +++---
- mm/swapfile.c        | 13 +++++++------
- 3 files changed, 11 insertions(+), 10 deletions(-)
+ mm/vmscan.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 5e1e4f5bf0cb..b888e1080a94 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -471,7 +471,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio);
- bool folio_free_swap(struct folio *folio);
- void put_swap_folio(struct folio *folio, swp_entry_t entry);
- extern swp_entry_t get_swap_page_of_type(int);
--extern int get_swap_pages(int n, swp_entry_t swp_entries[], int entry_size);
-+extern int get_swap_pages(int n, swp_entry_t swp_entries[], int order);
- extern int add_swap_count_continuation(swp_entry_t, gfp_t);
- extern void swap_shmem_alloc(swp_entry_t);
- extern int swap_duplicate(swp_entry_t);
-diff --git a/mm/swap_slots.c b/mm/swap_slots.c
-index 53abeaf1371d..13ab3b771409 100644
---- a/mm/swap_slots.c
-+++ b/mm/swap_slots.c
-@@ -264,7 +264,7 @@ static int refill_swap_slots_cache(struct swap_slots_cache *cache)
- 	cache->cur = 0;
- 	if (swap_slot_cache_active)
- 		cache->nr = get_swap_pages(SWAP_SLOTS_CACHE_SIZE,
--					   cache->slots, 1);
-+					   cache->slots, 0);
- 
- 	return cache->nr;
- }
-@@ -311,7 +311,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio)
- 
- 	if (folio_test_large(folio)) {
- 		if (IS_ENABLED(CONFIG_THP_SWAP))
--			get_swap_pages(1, &entry, folio_nr_pages(folio));
-+			get_swap_pages(1, &entry, folio_order(folio));
- 		goto out;
- 	}
- 
-@@ -343,7 +343,7 @@ swp_entry_t folio_alloc_swap(struct folio *folio)
- 			goto out;
- 	}
- 
--	get_swap_pages(1, &entry, 1);
-+	get_swap_pages(1, &entry, 0);
- out:
- 	if (mem_cgroup_try_charge_swap(folio, entry)) {
- 		put_swap_folio(folio, entry);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index e3f855475278..d2e3d3cd439f 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -278,15 +278,15 @@ static void discard_swap_cluster(struct swap_info_struct *si,
- #ifdef CONFIG_THP_SWAP
- #define SWAPFILE_CLUSTER	HPAGE_PMD_NR
- 
--#define swap_entry_size(size)	(size)
-+#define swap_entry_order(order)	(order)
- #else
- #define SWAPFILE_CLUSTER	256
- 
- /*
-- * Define swap_entry_size() as constant to let compiler to optimize
-+ * Define swap_entry_order() as constant to let compiler to optimize
-  * out some code if !CONFIG_THP_SWAP
-  */
--#define swap_entry_size(size)	1
-+#define swap_entry_order(order)	0
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 00adaf1cb2c3..bca2d9981c95 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1223,25 +1223,25 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 					if (!can_split_folio(folio, NULL))
+ 						goto activate_locked;
+ 					/*
+-					 * Split folios without a PMD map right
+-					 * away. Chances are some or all of the
+-					 * tail pages can be freed without IO.
++					 * Split partially mapped folios right away.
++					 * We can free the unmapped pages without IO.
+ 					 */
+-					if (!folio_entire_mapcount(folio) &&
+-					    split_folio_to_list(folio,
+-								folio_list))
++					if (data_race(!list_empty(&folio->_deferred_list)) &&
++					    split_folio_to_list(folio, folio_list))
+ 						goto activate_locked;
+ 				}
+ 				if (!add_to_swap(folio)) {
+ 					if (!folio_test_large(folio))
+ 						goto activate_locked_split;
+ 					/* Fallback to swap normal pages */
+-					if (split_folio_to_list(folio,
+-								folio_list))
++					if (split_folio_to_list(folio, folio_list))
+ 						goto activate_locked;
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-					count_memcg_folio_events(folio, THP_SWPOUT_FALLBACK, 1);
+-					count_vm_event(THP_SWPOUT_FALLBACK);
++					if (nr_pages >= HPAGE_PMD_NR) {
++						count_memcg_folio_events(folio,
++							THP_SWPOUT_FALLBACK, 1);
++						count_vm_event(THP_SWPOUT_FALLBACK);
++					}
  #endif
- #define LATENCY_LIMIT		256
- 
-@@ -1042,9 +1042,10 @@ static void swap_free_cluster(struct swap_info_struct *si, unsigned long idx)
- 	swap_range_free(si, offset, SWAPFILE_CLUSTER);
- }
- 
--int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
-+int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
- {
--	unsigned long size = swap_entry_size(entry_size);
-+	int order = swap_entry_order(entry_order);
-+	unsigned long size = 1 << order;
- 	struct swap_info_struct *si, *next;
- 	long avail_pgs;
- 	int n_ret = 0;
-@@ -1349,7 +1350,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
- 	unsigned char *map;
- 	unsigned int i, free_entries = 0;
- 	unsigned char val;
--	int size = swap_entry_size(folio_nr_pages(folio));
-+	int size = 1 << swap_entry_order(folio_order(folio));
- 
- 	si = _swap_info_get(entry);
- 	if (!si)
+ 					if (!add_to_swap(folio))
+ 						goto activate_locked_split;
 -- 
 2.25.1
 
