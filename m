@@ -1,78 +1,98 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA56657C4;
-	Mon,  8 Apr 2024 11:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD321657C4;
+	Mon,  8 Apr 2024 11:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712575928; cv=none; b=m3i9am2yJJnumkAekcTtPa4Kad3xIIk1VGrBHQcFI/qbleDKQRgqSp6jjYUUaynnHMK+jac8r2b/AI9ZJT9oBDEbVc2+KOAyGIseCWcGoVB93Bm0rqwpyi1/basw8Cl68q3KAZIrs/B9lV4LCXcKUT2qETU3bLCFN3QVnbE2yu0=
+	t=1712575953; cv=none; b=qOgRC9JX60SXgW5qYE0kSShiBzRg/uBhauvveoduuriy61F8OC7KBtX5Kavk/+KUnr1gdgCFASi0txWHbtWNi/qf2H+4JUvsFeh/HjT6XNyRjlJBrpN5slLxzxWkZ1A/kDNivak/4Z586OHYLt1BCJUATECReMPUkJSVo2r3/Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712575928; c=relaxed/simple;
-	bh=NMC3WWzWIj1cVvm+tSzJA8DZM1+0DETwbcajhb95PCo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hLBvDgKnEvI2bN20ecZU7YTShnnfcuzSkYyc/U3z0AG2SnswznSNLDl812rYHM5bLJkkZB/eRDp6uGzgS8xFYLbuIRzg5Rev6/Iei7Qnr6s2s1rwFcgO6k+iTEL5qeVbaW84qV0eswUpGUlrNHyI7vGq6cFxFQNnnyVRu90Okl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g/O4cwmq; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712575953; c=relaxed/simple;
+	bh=r4cliyGIwQDyX7Z9XcP+g//foiYQAn/zmPh0DKaJH7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uG9b9YzxnIRQ+qsvOJ0BalPH96ZiUE8Ur1i8NmuQNNEQI9mSZlyBB81YIOap8DTVP4De6cXz1cxii/JsBEJqNABbtkLD/F5nOA3IqiDuukyndte/AgtVTaqg9qdMtJgSx/qB1h5YxQig41fYy6LJo+5hkmgXyqClYOgyI4yuPvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KkprdfwS; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/O4cwmq"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2a2cced7482so1227044a91.0;
-        Mon, 08 Apr 2024 04:32:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712575926; x=1713180726; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=UCdmzeMLSBkXEEXH5D1ENzq3ZEPECLv63bbf/w1/YSc=;
-        b=g/O4cwmqBorEqgKAGD25+ZoJVaxSdI4FsN6MhDkowUWpCRtO5jYWlksrk2ws4Gmhm8
-         24Kdi5gxa/O075RhW8ZZePNCBXLrB2pml3LOCY+EjstFh8TIFndvji6bNvxxsYy7Omyh
-         sw5b67dQ981ct+pF67KVBCqaEoPrsCnR2kNSIYu5CYmN3XdOb5Y523rHunA/JsLKBcMf
-         CIXq7jMtgQPZqHGDijIQNd3rP2raVVGPOH35beiWIUsPkuR6fV1oRN7Hf4tfqi8ZEbrI
-         YqECCOwWukq0OlVqbkh40Lf7JtxRkPKG+PTPfURYTph9KO/bFkGwJKI5p41bkiF2rsAX
-         zeuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712575926; x=1713180726;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UCdmzeMLSBkXEEXH5D1ENzq3ZEPECLv63bbf/w1/YSc=;
-        b=IMiamVKKw4nUlaoGdhxtynHlJCpsqo4mU/eeJ5CcQBVNz6Vyq+7yu1OCDqNeMfM3bb
-         dxLI/67tcLFP9q7uUTzmZjF0bh6LxOgO0Q3dMqZduXY/VhOhV8yhshtz2MIznNsqUa/W
-         6VeuDhr7CXUZ6bcS0KKWDVPKfW94At4MTmBGJ2KYKoF3vPeZBLz/0xoXb2HEy/zxxerR
-         d57fzROjMKOLQyNje9SbUB02e+xryL4sp1UhRQ6aQrap8Kl7MWUr8BVFUsJJdiybhoad
-         SefAaWzpY9UBPnZA07xIngo2PlAqfKskVA9VOqzoaqjulFvGa85zOQFiDvEGOL7vyfu8
-         npfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVK3yz1GOKxcrmn15Yg9QwptTNTYP7KZDiwt+yYp3N8BdTvoOb2L9NasxGADG+at0rR0MgLktmOS9vwXWJRdHlzYdNBeTGVAQ76Y8+N+RAtAYmh0OCJTyMHvGEEhSMSNQl75nuculFj5Q==
-X-Gm-Message-State: AOJu0YxI1PWPKxI08EDDmQOGzlC4vtTYF0H4I1R+jAGRAnwu6IuCYyEm
-	4w+RxN8LCjeJU1KEGVswWL+XKAyDqs7nJZdAdPBhn5PsTWKOfUwOXSkyt2EVnc+pdD7TGuXPwZj
-	jR9OvAYCsPMklnrX2FEEirLq3tJ8=
-X-Google-Smtp-Source: AGHT+IHtRrXqvgdQjO1xoCVveYgBS1g2kOJwaGacmWBBIY8sfhWT2cTP4+14GnDQVQW9yZRcH+Pwi+i4RsN3e7/vicg=
-X-Received: by 2002:a17:90b:2292:b0:2a2:afca:c635 with SMTP id
- kx18-20020a17090b229200b002a2afcac635mr7399934pjb.0.1712575926321; Mon, 08
- Apr 2024 04:32:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KkprdfwS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712575952; x=1744111952;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=r4cliyGIwQDyX7Z9XcP+g//foiYQAn/zmPh0DKaJH7s=;
+  b=KkprdfwSOFCBIjO5U180C2GaxW8SrAfzCwEdbltIzRkKSJX1L1boEuMc
+   Iud+W7yp7a/EmgNj4OiJKknB/fr9Rw9AFiFCRdvz/bIWQfomk2NiMlcTC
+   z1+HNK0rQ6CzVQnUezhT4Q+qF3rvEaco3LPtegqNndttAh5p3og+MAvX1
+   bEaqcWa9I4uI4fqRZT8eAnREeJp+8JEAiewJL3qGGHOUnB8tjCghV7FvP
+   DPHTOBzTaQeAm+GdckQDk/bNnOK7K56bPVuYtEdL/dcqv6AVgT4QGrMf3
+   cCCpjZ0VVZclVBQdbQc777nyaXaA38gZWz3C71HkbGOCMnRV3uMXIsZHM
+   Q==;
+X-CSE-ConnectionGUID: kPmrr3xJSLm33cLb+tr1RA==
+X-CSE-MsgGUID: Ri9pynbqQNuwLLeVo3ayzw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11037"; a="7719787"
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="7719787"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 04:32:31 -0700
+X-CSE-ConnectionGUID: YFNNf0xYSsqa5EBoqvlKtQ==
+X-CSE-MsgGUID: faB8glgyQ5WMfqxdzjvOfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,186,1708416000"; 
+   d="scan'208";a="20294427"
+Received: from naamamex-mobl.ger.corp.intel.com (HELO [10.12.48.215]) ([10.12.48.215])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 04:32:27 -0700
+Message-ID: <8ac80d7b-340b-4b3f-b854-98a6a3c1fe41@linux.intel.com>
+Date: Mon, 8 Apr 2024 14:32:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408092449.6-1-ian.ray@gehealthcare.com>
-In-Reply-To: <20240408092449.6-1-ian.ray@gehealthcare.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Mon, 8 Apr 2024 08:31:53 -0300
-Message-ID: <CAOMZO5B-vTRSfi=tNc_iZxnxYstL8JJOd_1rMf4ps9WHyfx0GQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mp-msc-sm2s: Add i2c{1,6} sda-/scl-gpios
-To: Ian Ray <ian.ray@gehealthcare.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH 3/3] igc: Remove redundant runtime
+ resume for ethtool ops
+To: Bjorn Helgaas <helgaas@kernel.org>,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Sasha Neftin <sasha.neftin@intel.com>, netdev@vger.kernel.org,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+ intel-wired-lan@lists.osuosl.org, Zheng Yan <zheng.z.yan@intel.com>,
+ Konstantin Khlebnikov <khlebnikov@openvz.org>,
+ Heiner Kallweit <hkallweit1@gmail.com>
+References: <20240325222951.1460656-1-helgaas@kernel.org>
+ <20240325222951.1460656-4-helgaas@kernel.org>
+Content-Language: en-US
+From: "naamax.meir" <naamax.meir@linux.intel.com>
+In-Reply-To: <20240325222951.1460656-4-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Ian,
+On 3/26/2024 00:29, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> 8c5ad0dae93c ("igc: Add ethtool support") added ethtool_ops.begin() and
+> .complete(), which used pm_runtime_get_sync() to resume suspended devices
+> before any ethtool_ops callback and allow suspend after it completed.
+> 
+> Subsequently, f32a21376573 ("ethtool: runtime-resume netdev parent before
+> ethtool ioctl ops") added pm_runtime_get_sync() in the dev_ethtool() path,
+> so the device is resumed before any ethtool_ops callback even if the driver
+> didn't supply a .begin() callback.
+> 
+> Remove the .begin() and .complete() callbacks, which are now redundant
+> because dev_ethtool() already resumes the device.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>   drivers/net/ethernet/intel/igc/igc_ethtool.c | 17 -----------------
+>   1 file changed, 17 deletions(-)
 
-> +       pinctrl_i2c1_gpio: i2c1gpiogrp {
-> +               fsl,pins =
-> +                       <MX8MP_IOMUXC_I2C1_SCL__GPIO5_IO14              0x400001c3>,
 
-The Sion bit is unnecessary in the GPIO mode so you could pass 0x1c3 instead.
+Tested-by: Naama Meir <naamax.meir@linux.intel.com>
