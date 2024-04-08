@@ -1,234 +1,564 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA007EEF2;
-	Mon,  8 Apr 2024 13:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712584599; cv=fail; b=cnsALAd43vmuSgeIcCahl47UZa43BNcAMWPudHLktMNuX5iVoH5H+pEJKc8VU8EVpijwPnHnZ4dusogxlp0yPBhjnQ6Ut7wtUiu5qwlqsa8RoPOMaDfsRsmZEqL0TQ9++zME25CDqifaUgzpnxIAbBVIGFBCHoyydNIjZfnYWqM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712584599; c=relaxed/simple;
-	bh=gxVnXcu376VcyunHWBhMFIh2tXtG6YOp6B/A7J+6ZK8=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=mEgzCat3u/QsTwiKLncMgIOCtQpCayoYf4t0zDDlnuWqJz1Liu3aF5evaAABkkmSlDHRHV9Z9FdrVR6ijF9rrxG4MblY6zPxKaloXYWEtiClrTt7Bpey1zgHdG06/xOH+q1mDOflEeqgj7h7v2aO1VJCe6Tkb7/FZc67aKqEFvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kJxljgJ2; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82CF7D408
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 13:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712584650; cv=none; b=h7A0NqUAFb4EMx7YJGdzaAiXxgcJiOiDTfCbZXDNKTTRi9MS8bA2LJiIfFKTlLs8dMlt70la1S5314vxDBIz8gSiAANKBtbIB4/Sn3F9tN1JEFzWYyOqAjoJuC6JrUQ2vFupHtMECdixLM6+7Jq8aE4cihXWB9fU7DIm6g3RyWI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712584650; c=relaxed/simple;
+	bh=fcm0rR+VFa6I5t56wMuVdz4ik9Y9MFtr+ZTAeE7d6KM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Snsdi6kjwUAZfQd9ajVsyWdcjV2d26GvBvhQcbImep1CaSu0XgVf0Mh4fYkO+442bQ3hEcswKkAkuimqAugR79RGNH9qmZniYGwOPVYoZQIIg+uRqz0pXjhB5iuU+pm228z/HYmJFV6B3UriMTsLfOVlCedffYF01eEamD8W9eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org; spf=pass smtp.mailfrom=bitbyteword.org; dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b=bxmlN9n5; arc=none smtp.client-ip=209.85.128.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bitbyteword.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bitbyteword.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kJxljgJ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712584598; x=1744120598;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=gxVnXcu376VcyunHWBhMFIh2tXtG6YOp6B/A7J+6ZK8=;
-  b=kJxljgJ25QLQ9LI9//gxE/Tgkgj5IFLq4YkkRQGzAyfFoYttQZBeL1hy
-   BMOhjMovBVU4WqvIgHZnzyyPVxSBxxBK4waucILn8Q14tpqrXRatAapdW
-   FpWzTtyo4rVXHHb+WbRmgN2uLvHru+s+rXQowlzmBFoT1Oe0qVQz/RZQX
-   pb5AjE29lWl9+4PYOpgqU5F/A28VDqFf3d6qvUizmjmuLuba8ia0HSTS7
-   u8vJM1NeQBUOkDAyGMWx3vTi5dSJP1X9O3r1/uTzrlphOBn5JpMQybm42
-   ePghMhfxLqdQoxLW0izQ9My744KByGVSph8ITvdsCc9GOisCmsrtfm2MM
-   Q==;
-X-CSE-ConnectionGUID: atiUTno7QOWK/Ksxo1aeTQ==
-X-CSE-MsgGUID: VopUolHtQOiGlEmLyVzP/w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7770773"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="7770773"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 06:56:33 -0700
-X-CSE-ConnectionGUID: OUYD2HW4Ti+9dp5fTXuagA==
-X-CSE-MsgGUID: HdJ4vo81QFCZ9ApxKhJJJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="24666640"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Apr 2024 06:56:28 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 06:56:28 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 06:56:27 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Apr 2024 06:56:27 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.169)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 06:56:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MEtUjRFUJIzGKp11PATgOtena8w9Mp/V6zl25HrAlb5hIUrg/Xodyot7+SNBCREGOhOBqmp3iS3g8lpeCOdPshPN7niKH84Iobib4xqHyyx831w+5It4dA44KzRh+8bIbtxAlilybB1yj8iK1InGfph+5CwCy+0xMO22jyox5eA3sH4TKWh6ufHwHt97RdOmAMFeZy9ljvF4GE4iaC/c2YBhPenHtQMhOP0qaPh1Hegu1uEq7fGI9vjiykr/tqEb7OqUSb2ubNsHKpi3rdrR/Nty6KcHStwjSLcR3ujEijKKn6Q7bAKk5xEIT8MaH4B6yurAbZb5HHOp/+Fldwr70A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jdX8ezm4O0NdC40qsvz4e5ZkqRvSj5XAxKo4I8CzcMk=;
- b=FkmGT8cxjNaF0Di+AYagVvnsnTVGWFGgzD+RTNLiTu0xJ2Jk9pYaYRtSCWZ/VV4RGVh8G7vKXrvRRVADY2BM9R623w01113EGthWlza/mkbJ8Z4YiKbCyeGo7J5ixGgAXSe7TZTKFhXpyD/3gEcJrHVp/ZgNk6wBeJq0wOk/v7VYHVRiasxr/CFfIYUVzjwKXu0Xeaexy1xNQ5Bvs3YoGM1t1eL7GIIdvDCagWOs2iIdajFwtqY/kGDQFgkGfy9yd1ywpIXbZxBN4YATPrlAXJWfUU6+JmYcevDd2OcBsRDnlEnb1gfbk3vnTWiZcsQJcaEcf1DkOLLzVpgU89SMSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB6375.namprd11.prod.outlook.com (2603:10b6:8:c9::21) by
- MW3PR11MB4746.namprd11.prod.outlook.com (2603:10b6:303:5f::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.26; Mon, 8 Apr 2024 13:56:26 +0000
-Received: from DS0PR11MB6375.namprd11.prod.outlook.com
- ([fe80::cb11:e68c:53db:aba5]) by DS0PR11MB6375.namprd11.prod.outlook.com
- ([fe80::cb11:e68c:53db:aba5%7]) with mapi id 15.20.7452.019; Mon, 8 Apr 2024
- 13:56:26 +0000
-Message-ID: <ef3dfc2a-fe7d-468f-828e-a97ee30f7549@intel.com>
-Date: Mon, 8 Apr 2024 15:56:21 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the sound-asoc tree
-To: Mark Brown <broonie@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, Linux Next Mailing List
-	<linux-next@vger.kernel.org>, =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
-	<amadeuszx.slawinski@linux.intel.com>, <linux-sound@vger.kernel.org>
-References: <20240408141216.3eb1128c@canb.auug.org.au>
- <ccfe882c-652d-45d2-a9e3-d320ebe01834@sirena.org.uk>
-Content-Language: en-US
-From: Cezary Rojewski <cezary.rojewski@intel.com>
-In-Reply-To: <ccfe882c-652d-45d2-a9e3-d320ebe01834@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0177.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b3::26) To DS0PR11MB6375.namprd11.prod.outlook.com
- (2603:10b6:8:c9::21)
+	dkim=pass (2048-bit key) header.d=bitbyteword.org header.i=@bitbyteword.org header.b="bxmlN9n5"
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-61804067da0so11025907b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 06:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bitbyteword.org; s=google; t=1712584647; x=1713189447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4PKpGR+hikgIIApkYBWwcp7qOeAc0n1wCBYJDkNV8qk=;
+        b=bxmlN9n5Wv2XAuBEboql4/AjftDvbrt1t6ewGcpnLUJmrvYQBVZOiaYHPTxow8Zhru
+         m+YNj1mkxSQNFrLV8uIPyKvCuiErAuTaGJB2Gfdx+yWshNUf6ZdEL6GG8li9iHTo/z51
+         630r/OSh3skJTzYL54MNVYgT7uymakKjEwhE2PM5HeT59j104qKckuJ8qBuDfxBJ/vwR
+         9uNliDKHzesrLD0RB3Zc3Jz9FMUr4Fc27qaprHh6AhY3nafwRRbXBgBZCss3sfE6KwlA
+         oHHe2cQ1+G3kXv6s6KIdTMJO9ZOriYXCCJ49rxUi24NyX06RrMwcDCii461Xs0GNDw4T
+         Jz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712584647; x=1713189447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4PKpGR+hikgIIApkYBWwcp7qOeAc0n1wCBYJDkNV8qk=;
+        b=k8Ptw3MG0DeiHJ2WnhXkVurPtIN34JVI9QQSdh2SLfgWbqZK2L5x3Ijr/uFz9ToOl5
+         iQzICsuymdlJYL5ycCjpXpvWxwUqhZutY07sYJ0rOFWDnEFt13/g8VgB9ks+h+CpcrGo
+         UmiPUAjcLKKRxQOGHOcpeDGLT72CcjYMsGS8dYeMscHS8ki5FVAahNQzip7CiXqCQmDB
+         2RpNs2yf05NDVh6AGpq9Ij/JiLlsN0PpsDh1RnUgztaA2RA8czWnYHeuLgQs96+WHDvH
+         jCep5U+yAPlq+RjFs1JOUFQv8E1OMTq7TYnxbtKxUJzSMzwdA8DElUeFGD8RUI0oiiig
+         S1tg==
+X-Forwarded-Encrypted: i=1; AJvYcCXnZo4HPRWt3w9jzMl5PIZf5p1D12aIXJW4ABkAUKKy/twyBUnD2ZB88dNxggzvRVH3zhCM93G3f6aJ7tXjQBJVjT8weBhowxujZjb4
+X-Gm-Message-State: AOJu0YxTDOC6Ds+icDJ880gxh/v8d+qNWZ8htpc0YtVdjGxZ10EPlEPq
+	/SE2s6wC0lgYOCIUdVxajSD9lSzBXl4J+CyKWjQ4up4KxuBnPTMLmyN/R35nQeQLaCnziOkJ2FZ
+	woezTlywDyp/E4ZusEh/c6BZ+MMXq2zI374Vl+A==
+X-Google-Smtp-Source: AGHT+IH/15TMOu4uAVgWlsFYin9REzLPhRddHH40hBtCDR3UkZW2jsspsAZmCdPO2KE4hZGNfvZbV1ucoL6wCUKbOL8=
+X-Received: by 2002:a05:6902:f82:b0:dd0:972b:d218 with SMTP id
+ ft2-20020a0569020f8200b00dd0972bd218mr7993576ybb.41.1712584647554; Mon, 08
+ Apr 2024 06:57:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB6375:EE_|MW3PR11MB4746:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KJx5RUmEUiZATuCm4+BSvFKkQAQ3lZ2TFBbiTa2QR/5l5wqnljtRurenv7cqKadtuWUlkUcRZxP1Mj6+pEV6LRR1YExlxRQLhfptUsoLVgv9tZXTXjog+9jNclSvovgyhGjvaKEfwi21J3t7pvzy6pIGrV5xildiz+hqihtZU9US804XxAOH8+dR6GnPz3jEjkFgji3bEQ47ZOCIWjGNR57Od/sYX3gVaYnhqgiuRo7pU7fOyweHeIKhSTahtHwShvBXGpFzFA4z4kSFDsDRWLiQ05lcgAUKiAKgnQxQeIlL4RIxV2rO9WG9jcsZB9ozJ7MCKv8LalAHuufT4S8NBniT+lnia+e06QCfgtTp8mzqQmgax3PVtsC8wYV2D0ZxnZGhIvHmR4kdViIdwh5g7ennbqBT26aNM5Ti/JG7njAK2kILT/1QxoCUBLy8jew38vwPYKaGb9HwEw5N25k1y8mPNLWXtpwcs9IZ7/ZEYvhd4LlP+Is4wRWqfreeK3mSFmmYVr4LgRLXKyfFRoBwxOmWVSP/HzUEndLrhy4223ZXl5t3HxN/9m3SXWGG3qriL7Ty6i4RdIbW6k+zcasmS6ZePuieWjzn3WjfqGXYboI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB6375.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WFdrSFlOQmNLMlV3d3JrL2NoOXJsYTZ5YUJvR2Z5dFFHb21NcFl1SFlDZHhx?=
- =?utf-8?B?VUFQd0VtZ3VLVFhOcHh2ZnRsc1pjaDhpR0kzYUxyZzVKRHpxN3VIK0NuMEQz?=
- =?utf-8?B?ZjRucHRBeEhJR3l6ZEJySXhVNlRNcEYxenEzT2x5WGRlb2dYS21PcGlsRmZq?=
- =?utf-8?B?bVVJUDZZemgvc1liWEQxSkl3RU5udEZzM09PNnpPeUtXaDV2cXRheHBiKzBu?=
- =?utf-8?B?VmZQSW9mZHFSUzBRK3JXVjhoT1dQbWpsc2VsMlJvUFYyQXV1U3JFRjhoWGl2?=
- =?utf-8?B?TXQ3VXlZMzlvaWQ1ZFM3by91SlhuRjY5WVhhSzNlVnE1SzhreGdhS1huY0R2?=
- =?utf-8?B?T01ZSEFIdkRsSVdGZzBRa0ZvcSthbWZpR3F2enBJdjBjSjBrZTdOWXJ3YkZ0?=
- =?utf-8?B?QWtGUElwZjJuZUZGQTFzTm93SHhWK2laQnVJT1lNU0ZTZE0xYXNlRDRvVTZH?=
- =?utf-8?B?cUk0QnNpVUJrRE9WWmdENmtVeHlCdmVKWUpuYTdrc0tUc1JRd3pTSlRzRlZ6?=
- =?utf-8?B?dW5SOUFBYlNWZXZNYldGaDBXM2pPbjlrWmg5ZldNbmJsTHhQdDgxdU91STA3?=
- =?utf-8?B?VWJQM2xFYTQybk94R2crdDFNVVVIS2k5N3k2NjhQREowcVh4bEYvaHA2aXVi?=
- =?utf-8?B?TWNKb0FhTVZZZ3ZMc0hyc3RkOWNLUDdZNE41S0liVWI5dGV2M3YwVnZBQTZh?=
- =?utf-8?B?OWw2VE8wTmZEcGh5dExDSWxkeGJEaGJGRENHK3NrU0tiZk9YY2JKaXpUemFr?=
- =?utf-8?B?VUlmTjdUR0wzMUhDclhicjNUSHlmaTJZcVhnZGRhQ3krMUpadW1NOUJrUWRF?=
- =?utf-8?B?aVNJNnpQaHNieHJ2bXM2d2NLVGhOTWJzUlF4cjVQMmhWNUdNU2hZeGpZU1FD?=
- =?utf-8?B?VlcwZ2dVNjVxVWlCRXA1Sm8vU0NsUi94YzJ3alFkNWx2VE1oZVJEQi85MnBF?=
- =?utf-8?B?b0RUYVhjYW5NYmhCZE95bjJxVk94dlAzNkNZR1NHdFFXZTVRcTZFWkdET1d6?=
- =?utf-8?B?dldwTVFFcm43T2VYc3VyNWlPT2djQTNOZmFDRWtaMVYyZzR4dmxFVk5vQ0pB?=
- =?utf-8?B?d1V3cUxtOGd1eWk5U21tVUZBcW5rK0pvN1hwRkxGbGRiajErTmVDakVxMEh6?=
- =?utf-8?B?ZVVKY3lvamdLYW5pNzhVVUwrN1JqbzB3ZU9RMVJOVDJaOVpMLzcyY2Nkanhr?=
- =?utf-8?B?WXFGcnY5VVA1WTMybWVFc25NS3h5SXE3eVNlenkwR0k1REZWdW5YNHI4Y1d2?=
- =?utf-8?B?TXpnL2F6cGhaYWhxcUtSa2JXbkplTmZzUmpUcjcza1d3N2dHV1ltcFJCT3NB?=
- =?utf-8?B?MHhoclNHMzRWRHRmU2pob3FZTHE2cTR3MndHWVBBMmFUZ1JaYS9hblZGSTVX?=
- =?utf-8?B?YUNwMTlwQmlWdnBiM2lLTWhmczU5YjlKTGI1QStHVldUMXpOSGpqZU1uSnMx?=
- =?utf-8?B?OGlDQ0kwMGdZUFhXZktiTXJtOU5MSGdUQWxhUmVXRG9mTHlyckh4QTNEaXVn?=
- =?utf-8?B?ZkpqbHByUDI2SFplZGNCSjRUL040cS9jK0xscE45UjlDOEFBOGM0bVFNc3hv?=
- =?utf-8?B?OFBsU0pwYkdMS0RhL2I4Q1lHcGJYdHpmSjcveHNJNTMvSWhpT1pqdXNPNDRD?=
- =?utf-8?B?WTZPUGJaVE95SGNKVzhCQ2hpSUhYY3Q3cStUMVdEZDVCUHRLUmM0TWNxbzR5?=
- =?utf-8?B?eW1OTjRCazdBekJ6ZXUwWm80cUswNmc3aGFRSm5zTXFBL0UyU3IyNUQ5V1pj?=
- =?utf-8?B?MXlZTVpZODB5SGxtUHBkRXhsN0t6dU9Xd1hhQnM2dVBKME5ZUHd1MjBZUkZB?=
- =?utf-8?B?U3dROEJrMVBTSzlnaHBnTlVkS0VkcUlPTGd6YzFmTmJiSHR3aE9HVjBKVWFn?=
- =?utf-8?B?bEhGcnora2UwcERpcHdPN1VXZFpLZjdUSnNYaTVJS3R4cDZNYkxQMDY2UnhU?=
- =?utf-8?B?aDJkSnhNSWJDOW4yajUrKzJpYXVaUkEzdFN3eFQ5Q0RtVFA5Q3dGQWVRd0lS?=
- =?utf-8?B?UmU1alRmMFJPOW9QZ0dFSytKZ285OEZScG5ad1QvL1V1a01XbnFOTmNTaDZh?=
- =?utf-8?B?ZnBpbldPajZ3UGJPajdjcUYycE5pTXdiQzkwNjdEcS9vWGkwMm14Z0ZUbmhG?=
- =?utf-8?B?M1JLVEs5ZTBSRzdNZXZRVW9wZE0yZ3JNTXlkRTNLZU9RQ0xSdjMyZkVZdGp2?=
- =?utf-8?B?VGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14a530dc-ae58-4f89-0f3a-08dc57d3ae9a
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB6375.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 13:56:26.0794
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gCM2h5akEjKxjPzqjuorgoI1RecSxbqgFUEDzL4tCy/Ufs31Jgtf7+dJxQrV/unzAzMn1rM8ikA5QyjPhoHiFhJyLasBIBBiE2NRMPJZI7c=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4746
-X-OriginatorOrg: intel.com
+References: <20240403140116.3002809-1-vineeth@bitbyteword.org> <20240403140116.3002809-2-vineeth@bitbyteword.org>
+In-Reply-To: <20240403140116.3002809-2-vineeth@bitbyteword.org>
+From: Vineeth Remanan Pillai <vineeth@bitbyteword.org>
+Date: Mon, 8 Apr 2024 09:57:17 -0400
+Message-ID: <CAO7JXPh1-iqwjEnSDDJE5OophbeFS5dghOuQhUesLVJoKX_wAw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/5] pvsched: paravirt scheduling framework
+To: Ben Segall <bsegall@google.com>, Borislav Petkov <bp@alien8.de>, 
+	Daniel Bristot de Oliveira <bristot@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Sean Christopherson <seanjc@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Wanpeng Li <wanpengli@tencent.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Joel Fernandes <joel@joelfernandes.org>, 
+	Suleiman Souhlal <suleiman@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, himadrics@inria.fr, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Tejun Heo <tj@kernel.org>, Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, 
+	David Vernet <dvernet@meta.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024-04-08 2:28 PM, Mark Brown wrote:
-> On Mon, Apr 08, 2024 at 02:12:16PM +1000, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the sound-asoc tree, today's linux-next build (powerpc
->> allyesconfig) failed like this:
-> 
-> Copying in Amadeusz and Cezary, this is from the recent AVS changes.
+Adding sched_ext folks
 
-Hello Mark,
-
-Sorry for the trouble caused by one of my changes. I've replied earlier 
-today in this very topic and provided a patch [1] which I believe 
-addresses the problem properly.
-
-
-[1]: 
-https://lore.kernel.org/alsa-devel/20240408081840.1319431-1-cezary.rojewski@intel.com/
-
->>
->> In file included from include/linux/bits.h:22,
->>                   from include/linux/gfp_types.h:5,
->>                   from include/linux/gfp.h:5,
->>                   from include/linux/slab.h:16,
->>                   from sound/soc/intel/avs/icl.c:9:
->> include/linux/build_bug.h:78:41: error: static assertion failed: "sizeof(struct avs_icl_memwnd2) == 65536"
->>     78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
->>        |                                         ^~~~~~~~~~~~~~
->> include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
->>     77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
->>        |                                  ^~~~~~~~~~~~~~~
->> sound/soc/intel/avs/icl.c:73:1: note: in expansion of macro 'static_assert'
->>     73 | static_assert(sizeof(struct avs_icl_memwnd2) == 65536);
->>        | ^~~~~~~~~~~~~
->>
->> Caused by commit
->>
->>    c2b10acb62c1 ("ASoC: Intel: avs: Add assert_static to guarantee ABI sizes")
->>
->> PAGE_SIZE is 64K for this build.
->>
->> I have applied this patch for today:
->>
->> From: Stephen Rothwell <sfr@canb.auug.org.au>
->> Date: Mon, 8 Apr 2024 13:50:53 +1000
->> Subject: [PATCH] ASoC: Intel: avs: stop building when PAGE_SIZE == 64K
->>
->> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
->> ---
->>   sound/soc/intel/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/sound/soc/intel/Kconfig b/sound/soc/intel/Kconfig
->> index 4b9e498e3303..abe5cba82d50 100644
->> --- a/sound/soc/intel/Kconfig
->> +++ b/sound/soc/intel/Kconfig
->> @@ -211,7 +211,7 @@ config SND_SOC_INTEL_KEEMBAY
->>   
->>   config SND_SOC_INTEL_AVS
->>   	tristate "Intel AVS driver"
->> -	depends on X86 || COMPILE_TEST
->> +	depends on X86
->>   	depends on PCI
->>   	depends on COMMON_CLK
->>   	select SND_SOC_ACPI if ACPI
->> -- 
->> 2.43.0
->>
->> -- 
->> Cheers,
->> Stephen Rothwell
-> 
-> 
+On Wed, Apr 3, 2024 at 10:01=E2=80=AFAM Vineeth Pillai (Google)
+<vineeth@bitbyteword.org> wrote:
+>
+> Implement a paravirt scheduling framework for linux kernel.
+>
+> The framework allows for pvsched driver to register to the kernel and
+> receive callbacks from hypervisor(eg: kvm) for interested vcpu events
+> like VMENTER, VMEXIT etc.
+>
+> The framework also allows hypervisor to select a pvsched driver (from
+> the available list of registered drivers) for each guest.
+>
+> Also implement a sysctl for listing the available pvsched drivers.
+>
+> Signed-off-by: Vineeth Pillai (Google) <vineeth@bitbyteword.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  Kconfig                 |   2 +
+>  include/linux/pvsched.h | 102 +++++++++++++++++++
+>  kernel/sysctl.c         |  27 +++++
+>  virt/Makefile           |   2 +-
+>  virt/pvsched/Kconfig    |  12 +++
+>  virt/pvsched/Makefile   |   2 +
+>  virt/pvsched/pvsched.c  | 215 ++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 361 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/pvsched.h
+>  create mode 100644 virt/pvsched/Kconfig
+>  create mode 100644 virt/pvsched/Makefile
+>  create mode 100644 virt/pvsched/pvsched.c
+>
+> diff --git a/Kconfig b/Kconfig
+> index 745bc773f567..4a52eaa21166 100644
+> --- a/Kconfig
+> +++ b/Kconfig
+> @@ -29,4 +29,6 @@ source "lib/Kconfig"
+>
+>  source "lib/Kconfig.debug"
+>
+> +source "virt/pvsched/Kconfig"
+> +
+>  source "Documentation/Kconfig"
+> diff --git a/include/linux/pvsched.h b/include/linux/pvsched.h
+> new file mode 100644
+> index 000000000000..59df6b44aacb
+> --- /dev/null
+> +++ b/include/linux/pvsched.h
+> @@ -0,0 +1,102 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (c) 2024 Google  */
+> +
+> +#ifndef _LINUX_PVSCHED_H
+> +#define _LINUX_PVSCHED_H 1
+> +
+> +/*
+> + * List of events for which hypervisor calls back into pvsched driver.
+> + * Driver can specify the events it is interested in.
+> + */
+> +enum pvsched_vcpu_events {
+> +       PVSCHED_VCPU_VMENTER =3D 0x1,
+> +       PVSCHED_VCPU_VMEXIT =3D 0x2,
+> +       PVSCHED_VCPU_HALT =3D 0x4,
+> +       PVSCHED_VCPU_INTR_INJ =3D 0x8,
+> +};
+> +
+> +#define PVSCHED_NAME_MAX       32
+> +#define PVSCHED_MAX            8
+> +#define PVSCHED_DRV_BUF_MAX    (PVSCHED_NAME_MAX * PVSCHED_MAX + PVSCHED=
+_MAX)
+> +
+> +/*
+> + * pvsched driver callbacks.
+> + * TODO: versioning support for better compatibility with the guest
+> + *       component implementing this feature.
+> + */
+> +struct pvsched_vcpu_ops {
+> +       /*
+> +        * pvsched_vcpu_register() - Register the vcpu with pvsched drive=
+r.
+> +        * @pid: pid of the vcpu task.
+> +        *
+> +        * pvsched driver can store the pid internally and initialize
+> +        * itself to prepare for receiving callbacks from thsi vcpu.
+> +        */
+> +       int (*pvsched_vcpu_register)(struct pid *pid);
+> +
+> +       /*
+> +        * pvsched_vcpu_unregister() - Un-register the vcpu with pvsched =
+driver.
+> +        * @pid: pid of the vcpu task.
+> +        */
+> +       void (*pvsched_vcpu_unregister)(struct pid *pid);
+> +
+> +       /*
+> +        * pvsched_vcpu_notify_event() - Callback for pvsched events
+> +        * @addr: Address of the memory region shared with guest
+> +        * @pid: pid of the vcpu task.
+> +        * @events: bit mask of the events that hypervisor wants to notif=
+y.
+> +        */
+> +       void (*pvsched_vcpu_notify_event)(void *addr, struct pid *pid, u3=
+2 event);
+> +
+> +       char name[PVSCHED_NAME_MAX];
+> +       struct module *owner;
+> +       struct list_head list;
+> +       u32 events;
+> +       u32 key;
+> +};
+> +
+> +#ifdef CONFIG_PARAVIRT_SCHED_HOST
+> +int pvsched_get_available_drivers(char *buf, size_t maxlen);
+> +
+> +int pvsched_register_vcpu_ops(struct pvsched_vcpu_ops *ops);
+> +void pvsched_unregister_vcpu_ops(struct pvsched_vcpu_ops *ops);
+> +
+> +struct pvsched_vcpu_ops *pvsched_get_vcpu_ops(char *name);
+> +void pvsched_put_vcpu_ops(struct pvsched_vcpu_ops *ops);
+> +
+> +static inline int pvsched_validate_vcpu_ops(struct pvsched_vcpu_ops *ops=
+)
+> +{
+> +       /*
+> +        * All callbacks are mandatory.
+> +        */
+> +       if (!ops->pvsched_vcpu_register || !ops->pvsched_vcpu_unregister =
+||
+> +                       !ops->pvsched_vcpu_notify_event)
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +#else
+> +static inline void pvsched_get_available_drivers(char *buf, size_t maxle=
+n)
+> +{
+> +}
+> +
+> +static inline int pvsched_register_vcpu_ops(struct pvsched_vcpu_ops *ops=
+)
+> +{
+> +       return -ENOTSUPP;
+> +}
+> +
+> +static inline void pvsched_unregister_vcpu_ops(struct pvsched_vcpu_ops *=
+ops)
+> +{
+> +}
+> +
+> +static inline struct pvsched_vcpu_ops *pvsched_get_vcpu_ops(char *name)
+> +{
+> +       return NULL;
+> +}
+> +
+> +static inline void pvsched_put_vcpu_ops(struct pvsched_vcpu_ops *ops)
+> +{
+> +}
+> +#endif
+> +
+> +#endif
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 157f7ce2942d..10a18a791b4f 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -63,6 +63,7 @@
+>  #include <linux/mount.h>
+>  #include <linux/userfaultfd_k.h>
+>  #include <linux/pid.h>
+> +#include <linux/pvsched.h>
+>
+>  #include "../lib/kstrtox.h"
+>
+> @@ -1615,6 +1616,24 @@ int proc_do_static_key(struct ctl_table *table, in=
+t write,
+>         return ret;
+>  }
+>
+> +#ifdef CONFIG_PARAVIRT_SCHED_HOST
+> +static int proc_pvsched_available_drivers(struct ctl_table *ctl,
+> +                                                int write, void *buffer,
+> +                                                size_t *lenp, loff_t *pp=
+os)
+> +{
+> +       struct ctl_table tbl =3D { .maxlen =3D PVSCHED_DRV_BUF_MAX, };
+> +       int ret;
+> +
+> +       tbl.data =3D kmalloc(tbl.maxlen, GFP_USER);
+> +       if (!tbl.data)
+> +               return -ENOMEM;
+> +       pvsched_get_available_drivers(tbl.data, PVSCHED_DRV_BUF_MAX);
+> +       ret =3D proc_dostring(&tbl, write, buffer, lenp, ppos);
+> +       kfree(tbl.data);
+> +       return ret;
+> +}
+> +#endif
+> +
+>  static struct ctl_table kern_table[] =3D {
+>         {
+>                 .procname       =3D "panic",
+> @@ -2033,6 +2052,14 @@ static struct ctl_table kern_table[] =3D {
+>                 .extra1         =3D SYSCTL_ONE,
+>                 .extra2         =3D SYSCTL_INT_MAX,
+>         },
+> +#endif
+> +#ifdef CONFIG_PARAVIRT_SCHED_HOST
+> +       {
+> +               .procname       =3D "pvsched_available_drivers",
+> +               .maxlen         =3D PVSCHED_DRV_BUF_MAX,
+> +               .mode           =3D 0444,
+> +               .proc_handler   =3D proc_pvsched_available_drivers,
+> +       },
+>  #endif
+>         { }
+>  };
+> diff --git a/virt/Makefile b/virt/Makefile
+> index 1cfea9436af9..9d0f32d775a1 100644
+> --- a/virt/Makefile
+> +++ b/virt/Makefile
+> @@ -1,2 +1,2 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -obj-y  +=3D lib/
+> +obj-y  +=3D lib/ pvsched/
+> diff --git a/virt/pvsched/Kconfig b/virt/pvsched/Kconfig
+> new file mode 100644
+> index 000000000000..5ca2669060cb
+> --- /dev/null
+> +++ b/virt/pvsched/Kconfig
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +config PARAVIRT_SCHED_HOST
+> +       bool "Paravirt scheduling framework in the host kernel"
+> +       default n
+> +       help
+> +         Paravirtualized scheduling facilitates the exchange of scheduli=
+ng
+> +         related information between the host and guest through shared m=
+emory,
+> +         enhancing the efficiency of vCPU thread scheduling by the hyper=
+visor.
+> +         An illustrative use case involves dynamically boosting the prio=
+rity of
+> +         a vCPU thread when the guest is executing a latency-sensitive w=
+orkload
+> +         on that specific vCPU.
+> +         This config enables paravirt scheduling framework in the host k=
+ernel.
+> diff --git a/virt/pvsched/Makefile b/virt/pvsched/Makefile
+> new file mode 100644
+> index 000000000000..4ca38e30479b
+> --- /dev/null
+> +++ b/virt/pvsched/Makefile
+> @@ -0,0 +1,2 @@
+> +
+> +obj-$(CONFIG_PARAVIRT_SCHED_HOST) +=3D pvsched.o
+> diff --git a/virt/pvsched/pvsched.c b/virt/pvsched/pvsched.c
+> new file mode 100644
+> index 000000000000..610c85cf90d2
+> --- /dev/null
+> +++ b/virt/pvsched/pvsched.c
+> @@ -0,0 +1,215 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/* Copyright (c) 2024 Google  */
+> +
+> +/*
+> + *  Paravirt scheduling framework
+> + *
+> + */
+> +
+> +/*
+> + * Heavily inspired from tcp congestion avoidance implementation.
+> + * (net/ipv4/tcp_cong.c)
+> + */
+> +
+> +#define pr_fmt(fmt) "PVSCHED: " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/bpf.h>
+> +#include <linux/gfp.h>
+> +#include <linux/types.h>
+> +#include <linux/list.h>
+> +#include <linux/jhash.h>
+> +#include <linux/pvsched.h>
+> +
+> +static DEFINE_SPINLOCK(pvsched_drv_list_lock);
+> +static int nr_pvsched_drivers =3D 0;
+> +static LIST_HEAD(pvsched_drv_list);
+> +
+> +/*
+> + * Retrieve pvsched_vcpu_ops given the name.
+> + */
+> +static struct pvsched_vcpu_ops *pvsched_find_vcpu_ops_name(char *name)
+> +{
+> +       struct pvsched_vcpu_ops *ops;
+> +
+> +       list_for_each_entry_rcu(ops, &pvsched_drv_list, list) {
+> +               if (strcmp(ops->name, name) =3D=3D 0)
+> +                       return ops;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +/*
+> + * Retrieve pvsched_vcpu_ops given the hash key.
+> + */
+> +static struct pvsched_vcpu_ops *pvsched_find_vcpu_ops_key(u32 key)
+> +{
+> +       struct pvsched_vcpu_ops *ops;
+> +
+> +       list_for_each_entry_rcu(ops, &pvsched_drv_list, list) {
+> +               if (ops->key =3D=3D key)
+> +                       return ops;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +/*
+> + * pvsched_get_available_drivers() - Copy space separated list of pvsche=
+d
+> + * driver names.
+> + * @buf: buffer to store the list of driver names
+> + * @maxlen: size of the buffer
+> + *
+> + * Return: 0 on success, negative value on error.
+> + */
+> +int pvsched_get_available_drivers(char *buf, size_t maxlen)
+> +{
+> +       struct pvsched_vcpu_ops *ops;
+> +       size_t offs =3D 0;
+> +
+> +       if (!buf)
+> +               return -EINVAL;
+> +
+> +       if (maxlen > PVSCHED_DRV_BUF_MAX)
+> +               maxlen =3D PVSCHED_DRV_BUF_MAX;
+> +
+> +       rcu_read_lock();
+> +       list_for_each_entry_rcu(ops, &pvsched_drv_list, list) {
+> +               offs +=3D snprintf(buf + offs, maxlen - offs,
+> +                                "%s%s",
+> +                                offs =3D=3D 0 ? "" : " ", ops->name);
+> +
+> +               if (WARN_ON_ONCE(offs >=3D maxlen))
+> +                       break;
+> +       }
+> +       rcu_read_unlock();
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(pvsched_get_available_drivers);
+> +
+> +/*
+> + * pvsched_register_vcpu_ops() - Register the driver in the kernel.
+> + * @ops: Driver data(callbacks)
+> + *
+> + * After the registration, driver will be exposed to the hypervisor
+> + * for assignment to the guest VMs.
+> + *
+> + * Return: 0 on success, negative value on error.
+> + */
+> +int pvsched_register_vcpu_ops(struct pvsched_vcpu_ops *ops)
+> +{
+> +       int ret =3D 0;
+> +
+> +       ops->key =3D jhash(ops->name, sizeof(ops->name), strlen(ops->name=
+));
+> +       spin_lock(&pvsched_drv_list_lock);
+> +       if (nr_pvsched_drivers > PVSCHED_MAX) {
+> +               ret =3D -ENOSPC;
+> +       } if (pvsched_find_vcpu_ops_key(ops->key)) {
+> +               ret =3D -EEXIST;
+> +       } else if (!(ret =3D pvsched_validate_vcpu_ops(ops))) {
+> +               list_add_tail_rcu(&ops->list, &pvsched_drv_list);
+> +               nr_pvsched_drivers++;
+> +       }
+> +       spin_unlock(&pvsched_drv_list_lock);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(pvsched_register_vcpu_ops);
+> +
+> +/*
+> + * pvsched_register_vcpu_ops() - Un-register the driver from the kernel.
+> + * @ops: Driver data(callbacks)
+> + *
+> + * After un-registration, driver will not be visible to hypervisor.
+> + */
+> +void pvsched_unregister_vcpu_ops(struct pvsched_vcpu_ops *ops)
+> +{
+> +       spin_lock(&pvsched_drv_list_lock);
+> +       list_del_rcu(&ops->list);
+> +       nr_pvsched_drivers--;
+> +       spin_unlock(&pvsched_drv_list_lock);
+> +
+> +       synchronize_rcu();
+> +}
+> +EXPORT_SYMBOL_GPL(pvsched_unregister_vcpu_ops);
+> +
+> +/*
+> + * pvsched_get_vcpu_ops: Acquire the driver.
+> + * @name: Name of the driver to be acquired.
+> + *
+> + * Hypervisor can use this API to get the driver structure for
+> + * assigning it to guest VMs. This API takes a reference on the
+> + * module/bpf program so that driver doesn't vanish under the
+> + * hypervisor.
+> + *
+> + * Return: driver structure if found, else NULL.
+> + */
+> +struct pvsched_vcpu_ops *pvsched_get_vcpu_ops(char *name)
+> +{
+> +       struct pvsched_vcpu_ops *ops;
+> +
+> +       if (!name || (strlen(name) >=3D PVSCHED_NAME_MAX))
+> +               return NULL;
+> +
+> +       rcu_read_lock();
+> +       ops =3D pvsched_find_vcpu_ops_name(name);
+> +       if (!ops)
+> +               goto out;
+> +
+> +       if (unlikely(!bpf_try_module_get(ops, ops->owner))) {
+> +               ops =3D NULL;
+> +               goto out;
+> +       }
+> +
+> +out:
+> +       rcu_read_unlock();
+> +       return ops;
+> +}
+> +EXPORT_SYMBOL_GPL(pvsched_get_vcpu_ops);
+> +
+> +/*
+> + * pvsched_put_vcpu_ops: Release the driver.
+> + * @name: Name of the driver to be releases.
+> + *
+> + * Hypervisor can use this API to release the driver.
+> + */
+> +void pvsched_put_vcpu_ops(struct pvsched_vcpu_ops *ops)
+> +{
+> +       bpf_module_put(ops, ops->owner);
+> +}
+> +EXPORT_SYMBOL_GPL(pvsched_put_vcpu_ops);
+> +
+> +/*
+> + * NOP vm_ops Sample implementation.
+> + * This driver doesn't do anything other than registering itself.
+> + * Placeholder for adding some default logic when the feature is
+> + * complete.
+> + */
+> +static int nop_pvsched_vcpu_register(struct pid *pid)
+> +{
+> +       return 0;
+> +}
+> +static void nop_pvsched_vcpu_unregister(struct pid *pid)
+> +{
+> +}
+> +static void nop_pvsched_notify_event(void *addr, struct pid *pid, u32 ev=
+ent)
+> +{
+> +}
+> +
+> +struct pvsched_vcpu_ops nop_vcpu_ops =3D {
+> +       .events =3D PVSCHED_VCPU_VMENTER | PVSCHED_VCPU_VMEXIT | PVSCHED_=
+VCPU_HALT,
+> +       .pvsched_vcpu_register =3D nop_pvsched_vcpu_register,
+> +       .pvsched_vcpu_unregister =3D nop_pvsched_vcpu_unregister,
+> +       .pvsched_vcpu_notify_event =3D nop_pvsched_notify_event,
+> +       .name =3D "pvsched_nop",
+> +       .owner =3D THIS_MODULE,
+> +};
+> +
+> +static int __init pvsched_init(void)
+> +{
+> +       return WARN_ON(pvsched_register_vcpu_ops(&nop_vcpu_ops));
+> +}
+> +
+> +late_initcall(pvsched_init);
+> --
+> 2.40.1
+>
