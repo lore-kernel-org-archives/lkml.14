@@ -1,128 +1,208 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AE3749C
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 04:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B2F63AE;
+	Mon,  8 Apr 2024 04:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712550660; cv=none; b=TZ69nQdEnezvBi4NaLFzLF6/EjC46CmVKtyFB/WcBZoAm/ZtAC99eTQZprnN6QzqQCP1FPJlRFc8LmeLKfGS/AgKR4n/3BEhRQH9q7dzAwdzALbCE/9o7X/ohCZAApIabvVE2c7Q/XwMtujcLWu3a2syNoU4SxEKxz/tuAtdjQc=
+	t=1712551129; cv=none; b=rLDdvNaajz6L5pp9bjXzHhY7H/rqHD/uU0yhw4SQTlukKpKadOCTKcIymeAtkd6YJtj/Fdfnxn+AvRQ3JqVJDunEDFWMaoDNJ1aum4l2BOS6MkP2BmqYMgWtYNZ+Vfr8w7dfgYUqGVG99aTVttS0Z0TnL4hGxQsFBLB4dVAtPRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712550660; c=relaxed/simple;
-	bh=AiMHop6LtWh5la59tUhjUjvEK/UQiD8uM+1Bb2RGdcc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CRhe04/qEjdEEALbxcnzwgRRMO2GsMrVsXnsVjSBnYD7B9YOnG22ChzIQopsmBVq4eWbIuFNpvHfGv+yi7ZTfOrLwVZJnCIHPAmrcJN8ORTzA4GprPexri15wSknR9T5cB21wmnRl0xwCYVDZ9M/hwYF33lEjL/XmKr1bV6HOYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oprSFMRv; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712551129; c=relaxed/simple;
+	bh=jW0HOzZx0chmSo4CS4bYPAqUuVJL9YFJVxgudK72DAk=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=njzYDA8egUimrJ+YOEWuocZBM5iKzET7tIKbPNEO/v36KcC2/kGup4jrUP/IDZ0glLeKs0SihLzqwDAPcmljj84r07jjxwwAEXHCDU4AhVFA7NBk5nMbmmJZc0nqoT96ZBCE7l9y3biGkS/S/SLGpgh1ViJ8Hu56Naugo6/ZD9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t57GBb19; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oprSFMRv"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d0162fa1so4637308e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 07 Apr 2024 21:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712550655; x=1713155455; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aWjHFP4FIwQxUWAPVoONDZq/MeuxzTLfwG/YafjPU/Y=;
-        b=oprSFMRvTiJHEr15KFMeVH6QzEY8VIK5o6rXJOV9drS8/jr/Gcat7RmxgnQUw0r8f9
-         /ZAMr3XUYmuMQT9hkqRvrG0XaLmDchMZq6+d1DwLGF/073mgvM36Fl9lChwudvr7D+yI
-         ScKMSgyXvEemCk53MIdRWoAPAobSemwSEW5QMbpxKAV66wIxmxu5wz6fbHzQ1/1KSGtj
-         onoBRaExBfQN8PBMRF0oQadN7tmFpvT/ty3cxSxhWMbIqTT/DMGw8lUfiGJKTI5hUB2I
-         KgBZVjOuApNDR0nm5GLtNmFKAbI10fakqP/SktnJ7Qzac95mz+2oXsjfQhAz88DUeeIt
-         VxVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712550655; x=1713155455;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aWjHFP4FIwQxUWAPVoONDZq/MeuxzTLfwG/YafjPU/Y=;
-        b=Ts3te+Nxp91xIiGxtTOyYySFrg6Q/39pe+FztF6k5dNeCLRkkR8x+wYgWQpdD4VAjq
-         MilHMhnRfBwdfIoxuSBexblJDjYp794gqMz9OtKzJK3vaZl8hVGkLT5W6KMzXWfpVq72
-         my4K1V7nd1DND995aRXWFQBjGXqy9ge52G7HnZVoPAFFuTHxIZtsBZz8n+v6QIOYwRch
-         seZdXROJHVDpDR+osbvCDeKIEU154rWb+BQfZ/KzI/HmbXVO+mXhZnHBIU4DTh4+NPp9
-         pwQq3glN1WPDT2GXgll/2ZDj4RUDx4WkFRhXgczqjWeqLh51L6k5H/9XnyoyemSFsoUh
-         CRwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHzUnMLLNpTJiygOiF28XuWwkHvlfYb/QXAJSkAi5A6R6dvnBwKArFPHHgTsljipE7pcx6chGQ3Z/teTy08flb1zZEydYbPADbYVZr
-X-Gm-Message-State: AOJu0YyuPJgCyfEUPPh85zeUYFqP0/6CemrQ07s4i9+Flx0GnNlv4Q47
-	5j/kD2x3HxE6Au4W/3ixLITw7wxPjHnBxd+ZuRvpCyh+e279LeLiCi+U2AqdLkg=
-X-Google-Smtp-Source: AGHT+IFIO6xNYoZfEPFKmXNYH/a6iz/UGLcCNim2Ck9xD7LkNwZBRVFMJ1PDf5p1BbUMWec2ZXfO4A==
-X-Received: by 2002:a19:644e:0:b0:513:aef9:7159 with SMTP id b14-20020a19644e000000b00513aef97159mr5407151lfj.39.1712550655691;
-        Sun, 07 Apr 2024 21:30:55 -0700 (PDT)
-Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id g13-20020ac2538d000000b005132f12ee7asm1033207lfh.174.2024.04.07.21.30.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 21:30:55 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 08 Apr 2024 07:30:52 +0300
-Subject: [PATCH 4/5] usb: typec: ucsi: make it orientation-aware
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t57GBb19"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D03C433F1;
+	Mon,  8 Apr 2024 04:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712551128;
+	bh=jW0HOzZx0chmSo4CS4bYPAqUuVJL9YFJVxgudK72DAk=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=t57GBb195OPD/sUJ2TG40eUgBFGHeRKNJpB7nX/Rhb/5ZhlKQwQe6PoqSVCqoe3jj
+	 Akusy1fvhtQUzSgWXCl9ToFI6NyHJYz2JL0Gw0I3xn1LeggAIk5dKS3DMb8W9FkgQP
+	 ZDCSGY5zUHXgb0tJlaPXjrobfjr4NuTuQVcRY7hm3yBoDd4rRWIzLNocsbnkSZP0an
+	 ukZmRSPbB4yx6aF3vB/p7kN3zzhD4qzI8P5MdKXtyCXEqbMjoGeEvWD7K8IK7zCFFB
+	 0KA8RqLjpNnqgMhUb++WlZfkC0n0cMTD6VKla/lvpgnC1jJxPF14pmCOqSUbb1LwzD
+	 i2yTElggYFz5Q==
+Message-ID: <7027a28723d2597d9f620f4e0e1da97e.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-ucsi-orient-aware-v1-4-95a74a163a10@linaro.org>
-References: <20240408-ucsi-orient-aware-v1-0-95a74a163a10@linaro.org>
-In-Reply-To: <20240408-ucsi-orient-aware-v1-0-95a74a163a10@linaro.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1643;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=AiMHop6LtWh5la59tUhjUjvEK/UQiD8uM+1Bb2RGdcc=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmE3L7IPs4Dy2cixnuxh6PbWMygAc34bJSsBTiS
- g87Qu8asz6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZhNy+wAKCRCLPIo+Aiko
- 1Wx+B/wL9D5rVVtyDGr8tJVBflDFYn+l/8QkHU+8lO8IayWT9KG+uOtsC1LnOmRspt6imRaDueZ
- JhbpbaOf6eL12HEDTo1MdSVR17h7wlk2hOaR4eBhVmbHocM50U7svsxLYiQ3GQFIQc7z+fBZJLk
- R7rf5B/Jt3TmYSG/ccUI4k6N8fK3QBLZJNPypICKqxXJmSjiol0fTJV+fH01FioNAA/f+YtFUnW
- mbzFsQid+kMnK7VL3ETL8JrCDzX8BciHnn4feM+b+h+d4bY1RurXYkwXX8lKLz6WV7eyEiydsJg
- Hp6tpehb5SQJcETvzry2zv3gtbe5SA3MGnxwc7QNWKIOQbFr
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240325210025.1448717-2-cristian.marussi@arm.com>
+References: <20240325210025.1448717-1-cristian.marussi@arm.com> <20240325210025.1448717-2-cristian.marussi@arm.com>
+Subject: Re: [PATCH v2 1/5] clk: scmi: Allocate CLK operations dynamically
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: sudeep.holla@arm.com, james.quinlan@broadcom.com, f.fainelli@gmail.com, vincent.guittot@linaro.org, peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com, quic_nkela@quicinc.com, souvik.chakravarty@arm.com, mturquette@baylibre.com, Cristian Marussi <cristian.marussi@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sun, 07 Apr 2024 21:38:46 -0700
+User-Agent: alot/0.10
 
-The UCSI 1.0 is not orientation aware. Only UCSI 2.0 has added
-orientation status to GET_CONNECTOR_STATUS data. However the glue code
-can be able to detect cable orientation on its own (and report it via
-corresponding typec API). Add a flag to let UCSI mark registered ports
-as orientation aware.
+Quoting Cristian Marussi (2024-03-25 14:00:21)
+> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+> index 8cbe24789c24..d5d369b052bd 100644
+> --- a/drivers/clk/clk-scmi.c
+> +++ b/drivers/clk/clk-scmi.c
+> @@ -16,6 +16,14 @@
+>  #define NOT_ATOMIC     false
+>  #define ATOMIC         true
+> =20
+> +enum scmi_clk_feats {
+> +       SCMI_CLK_ATOMIC_SUPPORTED,
+> +       SCMI_CLK_MAX_FEATS
+> +};
+> +
+> +#define SCMI_MAX_CLK_OPS       (1 << SCMI_CLK_MAX_FEATS)
+> +
+> +static const struct clk_ops *clk_ops_db[SCMI_MAX_CLK_OPS];
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/usb/typec/ucsi/ucsi.c | 2 ++
- drivers/usb/typec/ucsi/ucsi.h | 1 +
- 2 files changed, 3 insertions(+)
+Can it be 'scmi_clk_ops_db' for some name spacing?
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index 7ad544c968e4..6f5adc335980 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -1551,6 +1551,8 @@ static int ucsi_register_port(struct ucsi *ucsi, struct ucsi_connector *con)
- 	cap->svdm_version = SVDM_VER_2_0;
- 	cap->prefer_role = TYPEC_NO_PREFERRED_ROLE;
- 
-+	cap->orientation_aware = !!(ucsi->quirks & UCSI_ORIENTATION_AWARE);
-+
- 	if (con->cap.op_mode & UCSI_CONCAP_OPMODE_AUDIO_ACCESSORY)
- 		*accessory++ = TYPEC_ACCESSORY_AUDIO;
- 	if (con->cap.op_mode & UCSI_CONCAP_OPMODE_DEBUG_ACCESSORY)
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index 6599fbd09bee..e92be45e4c1c 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -410,6 +410,7 @@ struct ucsi {
- 	unsigned long quirks;
- #define UCSI_NO_PARTNER_PDOS	BIT(0)	/* Don't read partner's PDOs */
- #define UCSI_DELAY_DEVICE_PDOS	BIT(1)	/* Reading PDOs fails until the parter is in PD mode */
-+#define UCSI_ORIENTATION_AWARE	BIT(2)	/* UCSI is orientation aware */
- };
- 
- #define UCSI_MAX_SVID		5
+>  static const struct scmi_clk_proto_ops *scmi_proto_clk_ops;
+> =20
+>  struct scmi_clk {
+> @@ -230,6 +202,106 @@ static int scmi_clk_ops_init(struct device *dev, st=
+ruct scmi_clk *sclk,
+>         return ret;
+>  }
+> =20
+> +/**
+> + * scmi_clk_ops_alloc() - Alloc and configure clock operations
+> + * @dev: A device reference for devres
+> + * @feats_key: A bitmap representing the desired clk_ops capabilities.
 
--- 
-2.39.2
+Drop the period please because it's not consistent with the previous
+argument descriptor.
 
+> + *
+> + * Allocate and configure a proper set of clock operations depending on =
+the
+> + * specifically required SCMI clock features.
+> + *
+> + * Return: A pointer to the allocated and configured clk_ops on Success,
+
+Lowercase 'Success'.
+
+> +
+> +/**
+> + * scmi_clk_ops_select() - Select a proper set of clock operations
+> + * @sclk: A reference to an SCMI clock descriptor
+> + * @atomic_capable: A flag to indicate if atomic mode is supported by the
+> + *                 transport
+> + * @atomic_threshold: Platform atomic threshold value
+
+Is this in nanoseconds, microseconds, or ??? Maybe a better description is
+"clk_ops are atomic when clk enable_latency is less than X [time unit]"=20
+
+> + *
+> + * After having built a bitmap descriptor to represent the set of featur=
+es
+> + * needed by this SCMI clock, at first use it to lookup into the set of
+> + * previously allocated clk_ops to check if a suitable combination of cl=
+ock
+> + * operations was already created; when no match is found allocate a bra=
+nd new
+> + * set of clk_ops satisfying the required combination of features and sa=
+ve it
+> + * for future references.
+> + *
+> + * In this way only one set of clk_ops is ever created for each different
+> + * combination that is effectively needed.
+> + *
+> + * Return: A pointer to the allocated and configured clk_ops on Success,=
+ or
+
+Lowercase 'Success'.
+
+> + *        NULL otherwise.
+> + */
+> +static const struct clk_ops *
+> +scmi_clk_ops_select(struct scmi_clk *sclk, bool atomic_capable,
+> +                   unsigned int atomic_threshold)
+> +{
+> +       const struct scmi_clock_info *ci =3D sclk->info;
+> +       unsigned int feats_key =3D 0;
+> +       const struct clk_ops *ops;
+> +
+> +       /*
+> +        * Note that when transport is atomic but SCMI protocol did not
+> +        * specify (or support) an enable_latency associated with a
+> +        * clock, we default to use atomic operations mode.
+> +        */
+> +       if (atomic_capable && ci->enable_latency <=3D atomic_threshold)
+> +               feats_key |=3D BIT(SCMI_CLK_ATOMIC_SUPPORTED);
+> +
+
+Can we have a static_assert() here that makes sure 'feats_key' isn't
+larger than the size of clk_ops_db?
+
+	static_assert(ARRAY_SIZE(clk_ops_db) >=3D feats_key);
+
+> +       /* Lookup previously allocated ops */
+> +       ops =3D clk_ops_db[feats_key];
+> +       if (!ops) {
+> +               ops =3D scmi_clk_ops_alloc(sclk->dev, feats_key);
+> +               if (!ops)
+> +                       return NULL;
+
+This could be less nested if the first lookup is put in
+scmi_clk_ops_alloc() and the store below is folded in. Or an early
+return if found.
+
+	ops =3D clk_ops_db[feats_key];
+	if (ops)
+		return ops;
+
+	/* Didn't find one */
+	ops =3D scmi_clk_ops_alloc(...)
+	if (!ops)
+		return NULL;
+
+	clk_ops_db[feats_key] =3D ops;
+	return ops;
+	=09
+> +
+> +               /* Store new ops combinations */
+> +               clk_ops_db[feats_key] =3D ops;
+> +       }
+> +
+> +       return ops;
+> +}
+> +
+>  static int scmi_clocks_probe(struct scmi_device *sdev)
+>  {
+>         int idx, count, err;
+> @@ -285,16 +357,10 @@ static int scmi_clocks_probe(struct scmi_device *sd=
+ev)
+>                 sclk->ph =3D ph;
+>                 sclk->dev =3D dev;
+> =20
+> -               /*
+> -                * Note that when transport is atomic but SCMI protocol d=
+id not
+> -                * specify (or support) an enable_latency associated with=
+ a
+> -                * clock, we default to use atomic operations mode.
+> -                */
+> -               if (is_atomic &&
+> -                   sclk->info->enable_latency <=3D atomic_threshold)
+> -                       scmi_ops =3D &scmi_atomic_clk_ops;
+> -               else
+> -                       scmi_ops =3D &scmi_clk_ops;
+> +               scmi_ops =3D scmi_clk_ops_select(sclk, is_atomic,
+
+'is_atomic' should probably be 'transport_is_atomic' so this reads
+easier.
+
+> +                                              atomic_threshold);
+> +               if (!scmi_ops)
+> +                       return -ENOMEM;
+> =20
+>                 /* Initialize clock parent data. */
+>                 if (sclk->info->num_parents > 0) {
