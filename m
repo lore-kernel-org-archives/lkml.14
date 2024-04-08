@@ -1,114 +1,75 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8706B6AAD
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 05:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7066469D;
+	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712552452; cv=none; b=gcpsJ3gBfkPbTMaaFo1WjMXAx+VCa2gAOfdZDaUoDyGYO60OYdTWx0Y1iisjrcqN535eGyf5yZV9yUkulAa8U23LXkRU3ITk0I/vJjfm58Ge2BYn0hAzPizKggmGxrYwTVF6+2AQd3bYKBfT0slJ+oQwrlpg/9MDpWNv2QNvxik=
+	t=1712553026; cv=none; b=ZrC47PTxfjcikelDILj4GwmPnUKgNBWFv125Dx85PgXy6nhVlgO3KUqwZglxXiQAzKiJbK2DuR+GdZwd1JbJTKXaS8K8HYU3yJgNboyghTIg1h1ACFWU6cFqhhqeeqCoc+D3TA3xnMabF437mBes5GVEptB7n7GzuOgWCs8PIoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712552452; c=relaxed/simple;
-	bh=Lx1V6M0BioLigvCbQ2iqx57L9H4L/71UdUoauDEbTf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IaKJLYzQDuI5603RiVCIpHEHs/I5Ij1ZMISKMC2nAWeKLzmaBVFn/gVW7Ci3r1uIEn3tWQuEW78D+y0Pin7sqi+NsxHglcpI4ILalFrhkim/DL19TWZATz70Dk+U4Mys0BBc5S9iESxvLhNnHyJvBKuLLUeKv9AXPJgZC/ZGnNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rth7a-0007AY-Hh; Mon, 08 Apr 2024 07:00:42 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rth7X-00B2qd-9t; Mon, 08 Apr 2024 07:00:39 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rth7X-002iiJ-0d;
-	Mon, 08 Apr 2024 07:00:39 +0200
-Date: Mon, 8 Apr 2024 07:00:39 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Arun.Ramadoss@microchip.com
-Cc: andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net,
-	Woojung.Huh@microchip.com, pabeni@redhat.com, edumazet@google.com,
-	f.fainelli@gmail.com, kuba@kernel.org, kernel@pengutronix.de,
-	dsahern@kernel.org, san@skov.dk, willemb@google.com,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	horms@kernel.org, UNGLinuxDriver@microchip.com
-Subject: Re: [PATCH net-next v3 8/9] net: dsa: microchip: init predictable
- IPV to queue mapping for all non KSZ8xxx variants
-Message-ID: <ZhN5923xUnC3LI0M@pengutronix.de>
-References: <20240405095216.353829-1-o.rempel@pengutronix.de>
- <20240405095216.353829-9-o.rempel@pengutronix.de>
- <39a736262d87b06ad65e67753c440a1d489c8f8c.camel@microchip.com>
+	s=arc-20240116; t=1712553026; c=relaxed/simple;
+	bh=1kX66vyCrAByxwUXWQGaZQVW+/pupHdgUPNdbCuCzJY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=LlEcB8rS7sWf93jROp2XwMrMeLX2pjLzzcMTltvTDp+o607zqhB+obKL7l1XyiE8gDAnHI4ZhV5pMLrX2GdjBl8wugBF2FyrIbdZ3ZWqhcGdLzvU5dj0G3xwZlmr0std6TP0BJp4tY5WQiSJU9/uAun56Dwn3S8CiNTSHM6Y2qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6IewcKo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6IewcKo"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 36132C43390;
+	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712553026;
+	bh=1kX66vyCrAByxwUXWQGaZQVW+/pupHdgUPNdbCuCzJY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=u6IewcKo+flXSXAQBhQBXrD8N3Hagwh8hNqtACDaQjqR6hr1IG9itvqUP3tJQIKjB
+	 hurb1AJSMrzrrsrH6nNdgRfq40PA4rSiS9TmHoQvzghAKNgb6ofk860bqaJ6zdEtI5
+	 nuc8YUosMg+E6UJCiupFnlIqJkvS+BjrA29WCMBXy3h04qXF7pxnI3WT77ey5ULKE3
+	 1VgO2N+d/RnmLsmI/VfxpuaBAgpG+jnsfQB1BQFfSXaqh314rzRgLoI70R6iiTARty
+	 LFklUmq9K0j1x8nYOctNSJye/ltdFC/YahZ9GoF2phpKZH5GrgBqSNmxcyRsDVT67c
+	 HCGSxx3V7tTVw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2882DD7982D;
+	Mon,  8 Apr 2024 05:10:26 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <39a736262d87b06ad65e67753c440a1d489c8f8c.camel@microchip.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v1 1/1] platform/chrome: cros_hps_i2c: Replace deprecated
+ UNIVERSAL_DEV_PM_OPS()
+From: patchwork-bot+chrome-platform@kernel.org
+Message-Id: 
+ <171255302616.29950.2779417612801311494.git-patchwork-notify@kernel.org>
+Date: Mon, 08 Apr 2024 05:10:26 +0000
+References: <20240403105502.558351-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240403105502.558351-1-andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dcallagh@chromium.org, skyostil@chromium.org, bleung@chromium.org,
+ tzungbi@kernel.org
 
-Hi Arun,
+Hello:
 
-On Mon, Apr 08, 2024 at 03:41:46AM +0000, Arun.Ramadoss@microchip.com wrote:
-> Hi Oleksij,
+This patch was applied to chrome-platform/linux.git (for-kernelci)
+by Tzung-Bi Shih <tzungbi@kernel.org>:
+
+On Wed,  3 Apr 2024 13:55:02 +0300 you wrote:
+> The UNIVERSAL_DEV_PM_OPS() macro is deprecated. Replace it.
 > 
-> > +static int ksz9477_set_default_prio_queue_mapping(struct ksz_device
-> > *dev,
-> > +                                                 int port)
-> > +{
-> > +       u32 queue_map = 0;
-> > +       int ipv;
-> 
-> Just a suggestion for readability: if you can use common variable for
-> counter variable like cnt or n similar to return variable ret, it will
-> be easier to follow instead of ipv here, queue in other function. 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/platform/chrome/cros_hps_i2c.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sorry, I disagree here. Variable name should describe the purpose of it,
-especially if things got complicated. If other function uses "queue" as
-variable name but actually ipv is the meaning of it, then it should be
-renamed.
+Here is the summary with links:
+  - [v1,1/1] platform/chrome: cros_hps_i2c: Replace deprecated UNIVERSAL_DEV_PM_OPS()
+    https://git.kernel.org/chrome-platform/c/1af853cb6e4d
 
-> > +
-> > +       for (ipv = 0; ipv < dev->info->num_ipvs; ipv++) {
-> > +               int queue;
-> > +
-> > +               /* Traffic Type (TT) is corresponding to the Internal
-> > Priority
-> > +                * Value (IPV) in the switch. Traffic Class (TC) is
-> > +                * corresponding to the queue in the switch.
-> > +                */
-> > +               queue = ieee8021q_tt_to_tc(ipv, dev->info-
-> > >num_tx_queues);
-> > +               if (queue < 0)
-> > +                       return queue;
-> 
-> what happens if the num_tx_queues value passed is other than 1 to 8.
-> For ex: if it is 9, then ieee8021q_tt_to_tc( ) generates pr_warn as
-> invalid number of queue and return queue as 0. if will not execute, so
-> queue_map will be updated. Do we need check for valid range of values
-> instead of just queue < 0. 
-> 
-> Not sure this scenario can occur.  
-
-Good point, I should fix ieee8021q_tt_to_tc(), it should return -EINVAL
-instead.
-
+You are awesome, thank you!
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
