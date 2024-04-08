@@ -1,461 +1,363 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2134.outbound.protection.outlook.com [40.107.8.134])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4E448CFC;
-	Mon,  8 Apr 2024 09:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712569334; cv=fail; b=QIbaFVXLX75aIm/jIq5Emk7yUTO7kLCYdbkuLn7A+A5fDgecZ8od0tOZH6Weohb0xEWfNgu2xsRVrR7a6r31HzBFcATMrTxpcwNp38vNrgBYsWZ9GnwsyITzh9wb2A5HZTjuikWbGl0AIkOhUaYBpT4fYjrgoJFsFG+K8oup/cI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712569334; c=relaxed/simple;
-	bh=P39wapwnd0nF2lfl/ghQZ29y/uniaw3RlCGI6dY9v/0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HIFCU+I1cyd9DZApDvpsqoHItmmXo/6Vx5Qp8rwy5LLCEaLNPy/3u3IPyRdp9s98F9XaRSzJCCIrxQjWNXX/iRB7GUyBXAG+2cuHGTyXkSyVM/14fFU36fs6fFGNL/qb1i6YIHJRSFqjjyVoinRkz2F7ufEWc+ruhUTjnH7ykLw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surban.net; spf=pass smtp.mailfrom=surban.net; dkim=pass (1024-bit key) header.d=surbannet.onmicrosoft.com header.i=@surbannet.onmicrosoft.com header.b=EqcydbrQ; arc=fail smtp.client-ip=40.107.8.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surban.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surban.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3896482E6
+	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 09:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712569395; cv=none; b=IKY7tD4rtO0RZYVsA9W5wcm8iEHMtTJ51XBPwWZ1wXPzHhlVW1BYjK4NwcfGFmGIGG/8W038QkGchx8BpD63dCDjsqpmwy4dBQJ7S/SxM8/VGq0Jjd7JzKRA9RvHGobXbBE9naDXhQjqHUnFGIF7hKZrgX7ZfbPlm4QgWqcJXSc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712569395; c=relaxed/simple;
+	bh=udf6g1jEAfrNsPoOI1GPqWvk2brHOLEviiHyA7ph0PQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eapnw+fHRJl00vQqLKsZ4JEtuEXBV9Tt96N8Oknju2QrsTsoQv4/xmnTIlLNphorblTitK6bTC/hJznFDLT1BBQc6GBGdlfV9HyZRVohdH2qZb4uSJJL1beFA/kL4sCSeEYxtvwOIdvK+Z1Bmp5oHU1IgeOIgcjed99fII12H/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VbNXq6J0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=surbannet.onmicrosoft.com header.i=@surbannet.onmicrosoft.com header.b="EqcydbrQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a78D9clNiVVZB3kVHlYmQO1xsYzswIovTboaRuEHdtjORK/2QQDsdkU/jn47z8WqO67q3QOmQ/3GlhKlmrJlgBz41hcsONWmWMnczN6CZmkIhP8NHTeJLMsqAVu+Ex09FoU3wKPP90p5Zp+aQoyhGop1AlStn9i1wKiiyGl0QLn+SbTB1uNBpBLOKC84VBHsIc1y4a3aYhHSjS0MHvIo8TIWOKMCeicPIsreZey1wBhRrZv6ZEV+6WhQ0EjzciLU8dCUl2ZWNCDI4e5S7yMeGd68pxTIMeq76MTW2u6D4MSei93dh9fAdptL7mgIsdaGYrcyFrZi9UyRigbEeUfQKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SlB4tCKJYvukhLevB9WcB8uLtEBHFOD3C+/0QzfDEYA=;
- b=kp0Sv1xGiz9WIMS3SrklCpRO43nJGKUUTAjVrL100383gv8mUhE0UKpoPip6IsPR9Am658SuuR098/DmOtHGr6bDKGKA06gf5UYrb2q4JIu68mRO2yOyie2BR/W9WoHIRZ3uxxuGkQp4jaYALITCDLfQ3ta6dK0jVDZ9B3/Vy0cCQ82giobLFfEKGoObUOv4GVyaM3BA8Wr47Tmaffr4fnhz+sdmN51wwasN6fJMaW4Y1e8D9jzF6qVZ+12N+2n4tMkdBPFmHeD3BJvhXR4o7gJWzqoc3oSx7uha4+yNeCSDyPmBY1YXJqoI0gl+TyLHFSq8XLxBwtI6uRnkkxHUow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=surban.net; dmarc=pass action=none header.from=surban.net;
- dkim=pass header.d=surban.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=surbannet.onmicrosoft.com; s=selector2-surbannet-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SlB4tCKJYvukhLevB9WcB8uLtEBHFOD3C+/0QzfDEYA=;
- b=EqcydbrQsBtPbVkCaaopzsZU9l8y1l6GnV9Vn1pCkaElNR7GSojvzySMSiWLFPY5+6kaWjtcKpP1Xz4iDxzn7tIIeAjebKMRAAnQgamgqsPFyNP+8vHclpoKUuOJHD/QnYsEIxTWdX+aDxxHrF4pYv2qHJg1l8oFi7FgOXK0DrE=
-Received: from DB9P189MB1978.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:37d::18)
- by DB9P189MB2003.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:37e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Mon, 8 Apr
- 2024 09:42:08 +0000
-Received: from DB9P189MB1978.EURP189.PROD.OUTLOOK.COM
- ([fe80::7185:1ee3:7e5f:f9b1]) by DB9P189MB1978.EURP189.PROD.OUTLOOK.COM
- ([fe80::7185:1ee3:7e5f:f9b1%3]) with mapi id 15.20.7409.042; Mon, 8 Apr 2024
- 09:42:08 +0000
-From: Sebastian Urban <surban@surban.net>
-To:
-Cc: Sebastian Urban <surban@surban.net>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] Bluetooth: compute LE flow credits based on recvbuf space
-Date: Mon,  8 Apr 2024 11:41:41 +0200
-Message-Id: <20240408094141.720096-1-surban@surban.net>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240408005625.57115-1-surban@surban.net>
-References: <20240408005625.57115-1-surban@surban.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0038.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1d::7) To DB9P189MB1978.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:10:37d::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VbNXq6J0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712569392;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=oDKVP4tSy5mA1Zy7wlGp9bJFSTqUjr7hFSZJjvoIP7E=;
+	b=VbNXq6J05lAAq/QNr8gZfpKU7pInCYYLK7MnHzBqEvqUWrrGwcd0/0Lsrs9a7b7YLZ8x8+
+	p/EK5VajcGpJQMEdk4VbkhXUeql+YHtBfbnigSVi/SMvDixzdmYdQlJ1orc/Wsgpcczaip
+	YS9dOiA7nGJtsIElifzTZ6FidJ1c8vM=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-118-1vIVd1KPNW2rogyJI9i53Q-1; Mon, 08 Apr 2024 05:43:10 -0400
+X-MC-Unique: 1vIVd1KPNW2rogyJI9i53Q-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4166b96002dso3377575e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 02:43:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712569389; x=1713174189;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oDKVP4tSy5mA1Zy7wlGp9bJFSTqUjr7hFSZJjvoIP7E=;
+        b=R2htlSgxNp8kuJOPOwW4kY5bb6qXddvE69T5DwDNVlZhVzYfYbpfSEHAYMXQElgVd/
+         o+jpQuv3yutTgygjdf6tYYDGqj6qiSb2+LNnt5jd4DfNuWp4OT4qKNBUfqYBc73qf3wb
+         YKqb26cO8fSHepM2Yo/bam+MG4dMJLVD2T4vHkX4BuuakippHU03Fm01TyadrL1Evs3I
+         XvwGCLB0jFngc+pT/fpt1VCAjoh601n72FhyCvI7yNbjc0yWFQ+MVNGS8S6aIZY4VrEM
+         dICS8ZZmqAk6osTFzAo8BadfufD2xQpNJBuHrPLISWNq6B04Rfy7SxzvS3MdkKXNs4RH
+         wriA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkmDz3p0k62tSzpffXhlU93tfnTIDcikguBqHbESjk9Iz+Rfz6FcXvyDCNpy8o2vHzTO5tGwbYQ8wX8USEujGmD71MKnX0fW6I/3Au
+X-Gm-Message-State: AOJu0YzT/A/bNm7kp/NHTI88wFy0nDp3JsG2Rf5osJNU7H+Y7aSJsKkg
+	Df7dZL5X3RsQf0YnEc+G0HXlqCK+eTM7KQZqxl9JvXQr4VXzvTWns521+nV2LJCw29Gg/U/tRZo
+	QSRNTg9nKVFKC/F9zRX61gbJEb1Tj3gUCKv/gvZtVob0iES5/XBlKKSr6dQNVNg==
+X-Received: by 2002:a05:600c:4f4d:b0:416:6c39:5a9d with SMTP id m13-20020a05600c4f4d00b004166c395a9dmr1866986wmq.39.1712569389597;
+        Mon, 08 Apr 2024 02:43:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFfRwQ0XRB019oNyTQm1aZBBOCEBpP9yFi4ws4kW+mjxRQGoz3WHgi76X4dCSvtCg2EvkZqbg==
+X-Received: by 2002:a05:600c:4f4d:b0:416:6c39:5a9d with SMTP id m13-20020a05600c4f4d00b004166c395a9dmr1866962wmq.39.1712569389129;
+        Mon, 08 Apr 2024 02:43:09 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c718:1300:9860:66a2:fe4d:c379? (p200300cbc7181300986066a2fe4dc379.dip0.t-ipconnect.de. [2003:cb:c718:1300:9860:66a2:fe4d:c379])
+        by smtp.gmail.com with ESMTPSA id fc9-20020a05600c524900b004162a9f03a6sm15928122wmb.7.2024.04.08.02.43.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 02:43:08 -0700 (PDT)
+Message-ID: <7d3d3c58-1bb1-4d70-9ae3-fa96f6d624d8@redhat.com>
+Date: Mon, 8 Apr 2024 11:43:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9P189MB1978:EE_|DB9P189MB2003:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	viDrF12Lqpal08IdZlvSkoecCT8t3QZr6AARkHdlRYZoCpZKo8YQyFf+WuItQwSe2il/eGAWkXBHLjTw994gkgfooNcVzL4trANMjCZmIPrgGvMtVWDAAWROgH4CL1m+tiFc5NWzkoiI0PnuICtYGcvwrY13WB3EpT5wFMZ49XCsVK/V0WLHjOvn3/vAE+xCfz1S5ytpb4xsKjc4qwOALeCunEPleVcoRa6k4oFYz8tdhFBywEXyEnwqG3d6TtQK+SRE21vCscogZwmVbQeJQhj4PalrtR0Y3W4uOXXeoxf3gwqMhxCgD/zT78WbFeJq8bKViP0pNfRQVxGaU3OS3FOfJu3mmibtVnViXrcjVsP3rBkPTRi4sD3zgpvV+YUTcd9RGrUwC5b3np5lGyHCuWvka4859VvVUfIUh+5MS+8eN5FXxq3mwKvcn0PCwJIaMfxosyUeKSRiFjP83gxBqFHBnUuBy1cER0SLDs/BhkQNnb7fnF5jpuYr8KOYsl8GCI2kYA88GxAIG0f6iZs0SL/jjg8JRt2/muFth1Pu7mHXd5vXILwnR6LtHhiE51kFYzcPIe/wz7T1CWchb8YGwZPGNhf6Tkr8NIA151uq8Q5rAz7y0Pj+uCzIqGnPFvl3BZjZCguohUZ05fGrVWOOGBmZ0i482yJH3Wf2x7eC0qQ=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9P189MB1978.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(52116005)(376005)(366007)(7416005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?scri8qN6WnlWQHJVHtuJlIc8H/J+nBCS9328RT2j3opc16wUnKvKRnTnBnfi?=
- =?us-ascii?Q?VEFV+FbHwgnF2JGPcdsAKf/Bk3B+qSyHkkC9md0P4Z21E1I2WQDBdEr2wlFk?=
- =?us-ascii?Q?d9mdo8p/UR+qwArgUPV787Ul15UwcMnP1s4roS7Si9WNyxTO54gVUyLr7X7y?=
- =?us-ascii?Q?Fx85p/TdW9aVosdHpk2Lygip5OPjIxeZXjLCh2/aYuTLPS0ITIKCxrm4AxxN?=
- =?us-ascii?Q?a0bay1ih3+OInJPACFHecFoVSq0rUOAdvHvhH0c+k0USNjWaiCoTBlbwy4EB?=
- =?us-ascii?Q?pIJtkUUtcULbsjwAxn1Mf4hgeld6j0+EVgdR3A8miLhMnr0EDL7R6VCzLbYJ?=
- =?us-ascii?Q?NHyqZHVp9Llvd5y66yvDdaz8d/+nTgoVYOTKaItwBdpt4U+8hVn30fnexCZg?=
- =?us-ascii?Q?nuCScrfZeLi+qX8mwI0/dwXTLZyxb6qF7l/dJQ4YpTmnfLNCJthFVZ7dWG2C?=
- =?us-ascii?Q?oUdvR+qNhtxD1rwzhxFTe8kyI9Fi0vJmxzljWIrwF3tvTsyTSzyVxfrbQu0U?=
- =?us-ascii?Q?V6tyhWjG+qAaVzlsDZ+M6vzco/jFGXICcieQwRMyWBFnMHQn4XF2BlIj0KY1?=
- =?us-ascii?Q?/4y17B7gCgJBnJ9X8Bhez1muJ07SvrjI+r55dt6rFRCw0DblPOoguYO47Dr+?=
- =?us-ascii?Q?Xn6LOq+guB3UJx0kurM3h40mnxSe6ykkZg9++7SREZWoQ3mXXdeZjWpnKmK2?=
- =?us-ascii?Q?Uvixld0ZgkCfCtp/Zn2ASYr8Av0Q3p96EW6u/NCvyk3a3G/Wxam7ZdwE/YOg?=
- =?us-ascii?Q?emOKHtXJRnQ4rovukj/nmWvfo2gzPDcNS/rzq+bN/tzKyhNZpyj9dZ7ojo1e?=
- =?us-ascii?Q?94EF6vzHnUesZC9Xi4Bp2/WYc851FbHb4RQz9iCBHHqU0o0dBbYtyZJ/9tcR?=
- =?us-ascii?Q?TRglwpkEBc/dIb6L7ADLaKoqb8anVjfQH9t3OnofrOwSIoS2euvXJI65juyF?=
- =?us-ascii?Q?r3jSR05XybG7xP8ZJ9fATURdVaNc3ZKadTAXIpAzT3ZJytBeRW7whvxmND9P?=
- =?us-ascii?Q?O4TdObN+VY5ztt7A9h69euTkmqNtgBehlNYsg3jgGVakRSFtlt2qzHpCxKSl?=
- =?us-ascii?Q?9jFp/JPK99S340x1SdBv6ZzeodKyhHR3Mh9SB/nKj2WIPUzRI+ENUl/50q5t?=
- =?us-ascii?Q?wbKBr5Cy5wf7A8z9xuDrx+Zk+Um19HJjqFNStNz3Funt/eg3cjodAKXaVeGn?=
- =?us-ascii?Q?QSnBi0koXviobLoHbR+skPHm+qLPFIZ/7kzrlKgD+comW1J44JBfIPOGH1QJ?=
- =?us-ascii?Q?Kh5O1/kjBVrxHc3NCojSiYMfS7N4rSXJGtpA7K1NDxxPo6nHibP4gmuJZtSv?=
- =?us-ascii?Q?sIQ6/wwmep0q6g+3VS33s+nsUpKn39MwgmlGRCjVz98FFPXum3lkTahLz67v?=
- =?us-ascii?Q?mnPpBZbk2CPsNfFG0wsI8LVCD+PRpmeoAYPTjPHoCIxqcYUIkVHltB+wXYMs?=
- =?us-ascii?Q?Rt5OyM2Wm+GifGBqei3J6o59H+u80FhURZLHU9uJlIZW0EQn+NsMYi7l8Ll6?=
- =?us-ascii?Q?6oBUsrIuniCKa7fakdBzAU72aNaJ64SRFuWXCPx+lF8VUreJ5/OMYlIXVeis?=
- =?us-ascii?Q?FI5QXkQG+6slDeFufzQIiUKGqrcm+O5waV3jh/nqhXkjMtciIi2db+2rG2AE?=
- =?us-ascii?Q?idCwOI6PsCIILxNLgt30ZF8pc729EbZ54TpAF3Tbzaac?=
-X-OriginatorOrg: surban.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: b25446af-62c3-4462-15c4-08dc57b02851
-X-MS-Exchange-CrossTenant-AuthSource: DB9P189MB1978.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2024 09:42:08.4673
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a27af4ff-c4b3-4dec-be8d-845345d2ab67
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oIxgbukc6A6kJlP3MgzN+iuCdevkFbkTYxxHfx8E+gdi2Ab0UwM8SuqZzIi/IJXGwIpeinn5BpG5xHxRb7rNmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9P189MB2003
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/6] mm: swap: free_swap_and_cache_nr() as batched
+ free_swap_and_cache()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>,
+ Gao Xiang <xiang@kernel.org>, Yu Zhao <yuzhao@google.com>,
+ Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>, Barry Song <21cnbao@gmail.com>,
+ Chris Li <chrisl@kernel.org>, Lance Yang <ioworker0@gmail.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240403114032.1162100-1-ryan.roberts@arm.com>
+ <20240403114032.1162100-3-ryan.roberts@arm.com>
+ <051052af-3b56-4290-98d3-fd5a1eb11ce1@redhat.com>
+ <73adae65-4429-41d7-bbb6-4c58156060d3@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <73adae65-4429-41d7-bbb6-4c58156060d3@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Previously LE flow credits were returned to the
-sender even if the socket's receive buffer was
-full. This meant that no back-pressure
-was applied to the sender, thus it continued to
-send data, resulting in data loss without any
-error being reported. Furthermore, the amount
-of credits was essentially fixed to a small amount,
-leading to reduced performance.
 
-This is fixed by computing the number of returned
-LE flow credits based on the available space in the
-receive buffer of an L2CAP socket. Consequently,
-if the receive buffer is full, no credits are returned
-until the buffer is read and thus cleared by user-space.
+>>> +
+>>> +/**
+>>> + * swap_pte_batch - detect a PTE batch for a set of contiguous swap entries
+>>> + * @start_ptep: Page table pointer for the first entry.
+>>> + * @max_nr: The maximum number of table entries to consider.
+>>> + * @entry: Swap entry recovered from the first table entry.
+>>> + *
+>>> + * Detect a batch of contiguous swap entries: consecutive (non-present) PTEs
+>>> + * containing swap entries all with consecutive offsets and targeting the same
+>>> + * swap type.
+>>> + *
+>>
+>> Likely you should document that any swp pte bits are ignored? ()
+> 
+> Sorry I don't understand this comment. I thought any non-none, non-present PTE
+> was always considered to contain only a "swap entry" and a swap entry consists
+> of a "type" and an "offset" only. (and its a special "non-swap" swap entry if
+> type > SOME_CONSTANT) Are you saying there are additional fields in the PTE that
+> are not part of the swap entry?
 
-Since the computation of available
-receive buffer space can only be performed
-approximately, i.e. sk_buff overhead is ignored,
-and the receive buffer size may be changed by
-user-space after flow credits have been sent,
-superfluous received data is temporary stored within
-l2cap_pinfo. This is necessary because Bluetooth LE
-provides no retransmission mechanism once the
-data has been acked by the physical layer.
 
-Signed-off-by: Sebastian Urban <surban@surban.net>
----
- include/net/bluetooth/l2cap.h | 10 +++++-
- net/bluetooth/l2cap_core.c    | 50 ++++++++++++++++++++++----
- net/bluetooth/l2cap_sock.c    | 67 +++++++++++++++++++++++++----------
- 3 files changed, 102 insertions(+), 25 deletions(-)
+pte_swp_soft_dirty()
+pte_swp_clear_exclusive()
+pte_swp_uffd_wp()
 
-diff --git a/include/net/bluetooth/l2cap.h b/include/net/bluetooth/l2cap.h
-index 3f4057ced971..bc6ff40ebc9f 100644
---- a/include/net/bluetooth/l2cap.h
-+++ b/include/net/bluetooth/l2cap.h
-@@ -547,6 +547,8 @@ struct l2cap_chan {
- 
- 	__u16		tx_credits;
- 	__u16		rx_credits;
-+	int		rx_avail;
-+	int		rx_staged;
- 
- 	__u8		tx_state;
- 	__u8		rx_state;
-@@ -682,10 +684,15 @@ struct l2cap_user {
- /* ----- L2CAP socket info ----- */
- #define l2cap_pi(sk) ((struct l2cap_pinfo *) sk)
- 
-+struct l2cap_rx_busy {
-+	struct list_head	list;
-+	struct sk_buff		*skb;
-+};
-+
- struct l2cap_pinfo {
- 	struct bt_sock		bt;
- 	struct l2cap_chan	*chan;
--	struct sk_buff		*rx_busy_skb;
-+	struct list_head	rx_busy;
- };
- 
- enum {
-@@ -944,6 +951,7 @@ int l2cap_chan_reconfigure(struct l2cap_chan *chan, __u16 mtu);
- int l2cap_chan_send(struct l2cap_chan *chan, struct msghdr *msg, size_t len,
- 		    const struct sockcm_cookie *sockc);
- void l2cap_chan_busy(struct l2cap_chan *chan, int busy);
-+void l2cap_chan_rx_avail(struct l2cap_chan *chan, int rx_avail);
- int l2cap_chan_check_security(struct l2cap_chan *chan, bool initiator);
- void l2cap_chan_set_defaults(struct l2cap_chan *chan);
- int l2cap_ertm_init(struct l2cap_chan *chan);
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index b0970462a689..f3fc63992b00 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -454,6 +454,9 @@ struct l2cap_chan *l2cap_chan_create(void)
- 	/* Set default lock nesting level */
- 	atomic_set(&chan->nesting, L2CAP_NESTING_NORMAL);
- 
-+	/* Available receive buffer space is initially unknown */
-+	chan->rx_avail = -1;
-+
- 	write_lock(&chan_list_lock);
- 	list_add(&chan->global_l, &chan_list);
- 	write_unlock(&chan_list_lock);
-@@ -535,6 +538,26 @@ void l2cap_chan_set_defaults(struct l2cap_chan *chan)
- }
- EXPORT_SYMBOL_GPL(l2cap_chan_set_defaults);
- 
-+static __u16 l2cap_le_rx_credits(struct l2cap_chan *chan)
-+{
-+	if (chan->mps == 0)
-+		return 0;
-+
-+	/* If we don't know the available space in the receiver buffer, give
-+	 * enough credits for a full packet.
-+	 */
-+	if (chan->rx_avail == -1)
-+		return (chan->imtu / chan->mps) + 1;
-+
-+	/* If we know how much space is available in the receive buffer, give
-+	 * out as many credits as would fill the buffer.
-+	 */
-+	if (chan->rx_avail <= chan->rx_staged)
-+		return 0;
-+	return min_t(int, U16_MAX,
-+		     (chan->rx_avail - chan->rx_staged) / chan->mps);
-+}
-+
- static void l2cap_le_flowctl_init(struct l2cap_chan *chan, u16 tx_credits)
- {
- 	chan->sdu = NULL;
-@@ -543,8 +566,7 @@ static void l2cap_le_flowctl_init(struct l2cap_chan *chan, u16 tx_credits)
- 	chan->tx_credits = tx_credits;
- 	/* Derive MPS from connection MTU to stop HCI fragmentation */
- 	chan->mps = min_t(u16, chan->imtu, chan->conn->mtu - L2CAP_HDR_SIZE);
--	/* Give enough credits for a full packet */
--	chan->rx_credits = (chan->imtu / chan->mps) + 1;
-+	chan->rx_credits = l2cap_le_rx_credits(chan);
- 
- 	skb_queue_head_init(&chan->tx_q);
- }
-@@ -556,7 +578,7 @@ static void l2cap_ecred_init(struct l2cap_chan *chan, u16 tx_credits)
- 	/* L2CAP implementations shall support a minimum MPS of 64 octets */
- 	if (chan->mps < L2CAP_ECRED_MIN_MPS) {
- 		chan->mps = L2CAP_ECRED_MIN_MPS;
--		chan->rx_credits = (chan->imtu / chan->mps) + 1;
-+		chan->rx_credits = l2cap_le_rx_credits(chan);
- 	}
- }
- 
-@@ -6520,9 +6542,7 @@ static void l2cap_chan_le_send_credits(struct l2cap_chan *chan)
- {
- 	struct l2cap_conn *conn = chan->conn;
- 	struct l2cap_le_credits pkt;
--	u16 return_credits;
--
--	return_credits = (chan->imtu / chan->mps) + 1;
-+	u16 return_credits = l2cap_le_rx_credits(chan);
- 
- 	if (chan->rx_credits >= return_credits)
- 		return;
-@@ -6541,6 +6561,15 @@ static void l2cap_chan_le_send_credits(struct l2cap_chan *chan)
- 	l2cap_send_cmd(conn, chan->ident, L2CAP_LE_CREDITS, sizeof(pkt), &pkt);
- }
- 
-+void l2cap_chan_rx_avail(struct l2cap_chan *chan, int rx_avail)
-+{
-+	BT_DBG("chan %p has %d bytes avail for rx", chan, rx_avail);
-+
-+	chan->rx_avail = rx_avail;
-+
-+	l2cap_chan_le_send_credits(chan);
-+}
-+
- static int l2cap_ecred_recv(struct l2cap_chan *chan, struct sk_buff *skb)
- {
- 	int err;
-@@ -6550,6 +6579,14 @@ static int l2cap_ecred_recv(struct l2cap_chan *chan, struct sk_buff *skb)
- 	/* Wait recv to confirm reception before updating the credits */
- 	err = chan->ops->recv(chan, skb);
- 
-+	chan->rx_staged = 0;
-+
-+	if (err < 0 && chan->rx_avail != -1) {
-+		BT_ERR("Queueing received LE L2CAP data failed");
-+		l2cap_send_disconn_req(chan, ECONNRESET);
-+		return err;
-+	}
-+
- 	/* Update credits whenever an SDU is received */
- 	l2cap_chan_le_send_credits(chan);
- 
-@@ -6571,6 +6608,7 @@ static int l2cap_ecred_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
- 		return -ENOBUFS;
- 	}
- 
-+	chan->rx_staged += skb->len;
- 	chan->rx_credits--;
- 	BT_DBG("rx_credits %u -> %u", chan->rx_credits + 1, chan->rx_credits);
- 
-diff --git a/net/bluetooth/l2cap_sock.c b/net/bluetooth/l2cap_sock.c
-index 7846a068bf60..46603605cb69 100644
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1157,6 +1157,7 @@ static int l2cap_sock_recvmsg(struct socket *sock, struct msghdr *msg,
- {
- 	struct sock *sk = sock->sk;
- 	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	int avail;
- 	int err;
- 
- 	if (unlikely(flags & MSG_ERRQUEUE))
-@@ -1192,28 +1193,34 @@ static int l2cap_sock_recvmsg(struct socket *sock, struct msghdr *msg,
- 	else
- 		err = bt_sock_recvmsg(sock, msg, len, flags);
- 
--	if (pi->chan->mode != L2CAP_MODE_ERTM)
-+	if (pi->chan->mode != L2CAP_MODE_ERTM &&
-+	    pi->chan->mode != L2CAP_MODE_LE_FLOWCTL &&
-+	    pi->chan->mode != L2CAP_MODE_EXT_FLOWCTL)
- 		return err;
- 
--	/* Attempt to put pending rx data in the socket buffer */
--
- 	lock_sock(sk);
- 
--	if (!test_bit(CONN_LOCAL_BUSY, &pi->chan->conn_state))
--		goto done;
-+	avail = max(0, sk->sk_rcvbuf - atomic_read(&sk->sk_rmem_alloc));
-+	l2cap_chan_rx_avail(pi->chan, avail);
- 
--	if (pi->rx_busy_skb) {
--		if (!__sock_queue_rcv_skb(sk, pi->rx_busy_skb))
--			pi->rx_busy_skb = NULL;
--		else
-+	/* Attempt to put pending rx data in the socket buffer */
-+	while (!list_empty(&pi->rx_busy)) {
-+		struct l2cap_rx_busy *rx_busy =
-+			list_first_entry(&pi->rx_busy,
-+					 struct l2cap_rx_busy,
-+					 list);
-+		if (__sock_queue_rcv_skb(sk, rx_busy->skb) < 0)
- 			goto done;
-+		list_del(&rx_busy->list);
-+		kfree(rx_busy);
- 	}
- 
- 	/* Restore data flow when half of the receive buffer is
- 	 * available.  This avoids resending large numbers of
- 	 * frames.
- 	 */
--	if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf >> 1)
-+	if (test_bit(CONN_LOCAL_BUSY, &pi->chan->conn_state) &&
-+	    atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf >> 1)
- 		l2cap_chan_busy(pi->chan, 0);
- 
- done:
-@@ -1474,17 +1481,21 @@ static struct l2cap_chan *l2cap_sock_new_connection_cb(struct l2cap_chan *chan)
- static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- {
- 	struct sock *sk = chan->data;
-+	struct l2cap_pinfo *pi = l2cap_pi(sk);
-+	int avail;
- 	int err;
- 
- 	lock_sock(sk);
- 
--	if (l2cap_pi(sk)->rx_busy_skb) {
-+	if (chan->mode == L2CAP_MODE_ERTM && !list_empty(&pi->rx_busy)) {
- 		err = -ENOMEM;
- 		goto done;
- 	}
- 
- 	if (chan->mode != L2CAP_MODE_ERTM &&
--	    chan->mode != L2CAP_MODE_STREAMING) {
-+	    chan->mode != L2CAP_MODE_STREAMING &&
-+	    chan->mode != L2CAP_MODE_LE_FLOWCTL &&
-+	    chan->mode != L2CAP_MODE_EXT_FLOWCTL) {
- 		/* Even if no filter is attached, we could potentially
- 		 * get errors from security modules, etc.
- 		 */
-@@ -1495,7 +1506,10 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 
- 	err = __sock_queue_rcv_skb(sk, skb);
- 
--	/* For ERTM, handle one skb that doesn't fit into the recv
-+	avail = max(0, sk->sk_rcvbuf - atomic_read(&sk->sk_rmem_alloc));
-+	l2cap_chan_rx_avail(chan, avail);
-+
-+	/* For ERTM and LE, handle a skb that doesn't fit into the recv
- 	 * buffer.  This is important to do because the data frames
- 	 * have already been acked, so the skb cannot be discarded.
- 	 *
-@@ -1504,8 +1518,18 @@ static int l2cap_sock_recv_cb(struct l2cap_chan *chan, struct sk_buff *skb)
- 	 * acked and reassembled until there is buffer space
- 	 * available.
- 	 */
--	if (err < 0 && chan->mode == L2CAP_MODE_ERTM) {
--		l2cap_pi(sk)->rx_busy_skb = skb;
-+	if (err < 0 &&
-+	    (chan->mode == L2CAP_MODE_ERTM ||
-+	     chan->mode == L2CAP_MODE_LE_FLOWCTL ||
-+	     chan->mode == L2CAP_MODE_EXT_FLOWCTL)) {
-+		struct l2cap_rx_busy *rx_busy =
-+			kmalloc(sizeof(*rx_busy), GFP_KERNEL);
-+		if (!rx_busy) {
-+			err = -ENOMEM;
-+			goto done;
-+		}
-+		rx_busy->skb = skb;
-+		list_add_tail(&rx_busy->list, &pi->rx_busy);
- 		l2cap_chan_busy(chan, 1);
- 		err = 0;
- 	}
-@@ -1731,6 +1755,8 @@ static const struct l2cap_ops l2cap_chan_ops = {
- 
- static void l2cap_sock_destruct(struct sock *sk)
- {
-+	struct l2cap_rx_busy *rx_busy, *next;
-+
- 	BT_DBG("sk %p", sk);
- 
- 	if (l2cap_pi(sk)->chan) {
-@@ -1738,9 +1764,10 @@ static void l2cap_sock_destruct(struct sock *sk)
- 		l2cap_chan_put(l2cap_pi(sk)->chan);
- 	}
- 
--	if (l2cap_pi(sk)->rx_busy_skb) {
--		kfree_skb(l2cap_pi(sk)->rx_busy_skb);
--		l2cap_pi(sk)->rx_busy_skb = NULL;
-+	list_for_each_entry_safe(rx_busy, next, &l2cap_pi(sk)->rx_busy, list) {
-+		kfree_skb(rx_busy->skb);
-+		list_del(&rx_busy->list);
-+		kfree(rx_busy);
- 	}
- 
- 	skb_queue_purge(&sk->sk_receive_queue);
-@@ -1845,6 +1872,8 @@ static struct sock *l2cap_sock_alloc(struct net *net, struct socket *sock,
- 	sk->sk_destruct = l2cap_sock_destruct;
- 	sk->sk_sndtimeo = L2CAP_CONN_TIMEOUT;
- 
-+	INIT_LIST_HEAD(&l2cap_pi(sk)->rx_busy);
-+
- 	chan = l2cap_chan_create();
- 	if (!chan) {
- 		sk_free(sk);
-@@ -1853,6 +1882,8 @@ static struct sock *l2cap_sock_alloc(struct net *net, struct socket *sock,
- 
- 	l2cap_chan_hold(chan);
- 
-+	l2cap_chan_rx_avail(chan, sk->sk_rcvbuf);
-+
- 	l2cap_pi(sk)->chan = chan;
- 
- 	return sk;
+Are PTE bits used for swp PTE.
+
+There is also dirty/young for migration entries, but that's not of a 
+concern here, because we stop for non_swap_entry().
+
+> 
+> 
+>>
+>>> + * max_nr must be at least one and must be limited by the caller so scanning
+>>> + * cannot exceed a single page table.
+>>> + *
+>>> + * Return: the number of table entries in the batch.
+>>> + */
+>>> +static inline int swap_pte_batch(pte_t *start_ptep, int max_nr,
+>>> +                 swp_entry_t entry)
+>>> +{
+>>> +    const pte_t *end_ptep = start_ptep + max_nr;
+>>> +    unsigned long expected_offset = swp_offset(entry) + 1;
+>>> +    unsigned int expected_type = swp_type(entry);
+>>> +    pte_t *ptep = start_ptep + 1;
+>>> +
+>>> +    VM_WARN_ON(max_nr < 1);
+>>> +    VM_WARN_ON(non_swap_entry(entry));
+>>> +
+>>> +    while (ptep < end_ptep) {
+>>> +        pte_t pte = ptep_get(ptep);
+>>> +
+>>> +        if (pte_none(pte) || pte_present(pte))
+>>> +            break;
+>>> +
+>>> +        entry = pte_to_swp_entry(pte);
+>>> +
+>>> +        if (non_swap_entry(entry) ||
+>>> +            swp_type(entry) != expected_type ||
+>>> +            swp_offset(entry) != expected_offset)
+>>> +            break;
+>>> +
+>>> +        expected_offset++;
+>>> +        ptep++;
+>>> +    }
+>>> +
+>>> +    return ptep - start_ptep;
+>>> +}
+>>
+>> Looks very clean :)
+>>
+>> I was wondering whether we could similarly construct the expected swp PTE and
+>> only check pte_same.
+>>
+>> expected_pte = __swp_entry_to_pte(__swp_entry(expected_type, expected_offset));
+>>
+>> ... or have a variant to increase only the swp offset for an existing pte. But
+>> non-trivial due to the arch-dependent format.
+>>
+>> But then, we'd fail on mismatch of other swp pte bits.
+> 
+> Hmm, perhaps I have a misunderstanding regarding "swp pte bits"...
+> 
+>>
+>>
+>> On swapin, when reusing this function (likely!), we'll might to make sure that
+>> the PTE bits match as well.
+>>
+>> See below regarding uffd-wp.
+>>
+>>
+>>>    #endif /* CONFIG_MMU */
+>>>      void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
+>>> diff --git a/mm/madvise.c b/mm/madvise.c
+>>> index 1f77a51baaac..070bedb4996e 100644
+>>> --- a/mm/madvise.c
+>>> +++ b/mm/madvise.c
+>>> @@ -628,6 +628,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
+>>> long addr,
+>>>        struct folio *folio;
+>>>        int nr_swap = 0;
+>>>        unsigned long next;
+>>> +    int nr, max_nr;
+>>>          next = pmd_addr_end(addr, end);
+>>>        if (pmd_trans_huge(*pmd))
+>>> @@ -640,7 +641,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
+>>> long addr,
+>>>            return 0;
+>>>        flush_tlb_batched_pending(mm);
+>>>        arch_enter_lazy_mmu_mode();
+>>> -    for (; addr != end; pte++, addr += PAGE_SIZE) {
+>>> +    for (; addr != end; pte += nr, addr += PAGE_SIZE * nr) {
+>>> +        nr = 1;
+>>>            ptent = ptep_get(pte);
+>>>              if (pte_none(ptent))
+>>> @@ -655,9 +657,11 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned
+>>> long addr,
+>>>                  entry = pte_to_swp_entry(ptent);
+>>>                if (!non_swap_entry(entry)) {
+>>> -                nr_swap--;
+>>> -                free_swap_and_cache(entry);
+>>> -                pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
+>>> +                max_nr = (end - addr) / PAGE_SIZE;
+>>> +                nr = swap_pte_batch(pte, max_nr, entry);
+>>> +                nr_swap -= nr;
+>>> +                free_swap_and_cache_nr(entry, nr);
+>>> +                clear_not_present_full_ptes(mm, addr, pte, nr, tlb->fullmm);
+>>>                } else if (is_hwpoison_entry(entry) ||
+>>>                       is_poisoned_swp_entry(entry)) {
+>>>                    pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
+>>> diff --git a/mm/memory.c b/mm/memory.c
+>>> index 7dc6c3d9fa83..ef2968894718 100644
+>>> --- a/mm/memory.c
+>>> +++ b/mm/memory.c
+>>> @@ -1637,12 +1637,13 @@ static unsigned long zap_pte_range(struct mmu_gather
+>>> *tlb,
+>>>                    folio_remove_rmap_pte(folio, page, vma);
+>>>                folio_put(folio);
+>>>            } else if (!non_swap_entry(entry)) {
+>>> -            /* Genuine swap entry, hence a private anon page */
+>>> +            max_nr = (end - addr) / PAGE_SIZE;
+>>> +            nr = swap_pte_batch(pte, max_nr, entry);
+>>> +            /* Genuine swap entries, hence a private anon pages */
+>>>                if (!should_zap_cows(details))
+>>>                    continue;
+>>> -            rss[MM_SWAPENTS]--;
+>>> -            if (unlikely(!free_swap_and_cache(entry)))
+>>> -                print_bad_pte(vma, addr, ptent, NULL);
+>>> +            rss[MM_SWAPENTS] -= nr;
+>>> +            free_swap_and_cache_nr(entry, nr);
+>>>            } else if (is_migration_entry(entry)) {
+>>>                folio = pfn_swap_entry_folio(entry);
+>>>                if (!should_zap_folio(details, folio))
+>>> @@ -1665,8 +1666,8 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+>>>                pr_alert("unrecognized swap entry 0x%lx\n", entry.val);
+>>>                WARN_ON_ONCE(1);
+>>>            }
+>>> -        pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
+>>> -        zap_install_uffd_wp_if_needed(vma, addr, pte, 1, details, ptent);
+>>> +        clear_not_present_full_ptes(mm, addr, pte, nr, tlb->fullmm);
+>>
+>> For zap_install_uffd_wp_if_needed(), the uffd-wp bit has to match.
+>>
+>> zap_install_uffd_wp_if_needed() will use the uffd-wp information in
+>> ptent->pteval to make a decision whether to place PTE_MARKER_UFFD_WP markers.
+>>
+>> On mixture, you either lose some or place too many markers.
+> 
+> What path are you concerned about here? I don't get how what you describe can
+> happen? swap_pte_batch() will only give me a batch of actual swap entries and
+> actual swap entries don't contain uffd-wp info, IIUC. If the function gets to a
+> "non-swap" swap entry, it bails. I thought the uffd-wp info was populated based
+> on the VMA state at swap-in? I think you are telling me that it's persisted
+> across the swap per-pte?
+
+Please see zap_install_uffd_wp_if_needed():
+
+if (unlikely(pte_swp_uffd_wp_any(pteval)))
+	arm_uffd_pte = true;
+
+The PTEs (swp PTEs to be precise) contain uffd-wp informtation.
+
+[...]
+
+>>> +    /*
+>>> +     * Short-circuit the below loop if none of the entries had their
+>>> +     * reference drop to zero.
+>>> +     */
+>>> +    if (!any_only_cache)
+>>> +        goto out;
+>>>    -        count = __swap_entry_free(p, entry);
+>>> -        if (count == SWAP_HAS_CACHE)
+>>> -            __try_to_reclaim_swap(p, swp_offset(entry),
+>>> +    /*
+>>> +     * Now go back over the range trying to reclaim the swap cache. This is
+>>> +     * more efficient for large folios because we will only try to reclaim
+>>> +     * the swap once per folio in the common case. If we do
+>>> +     * __swap_entry_free() and __try_to_reclaim_swap() in the same loop, the
+>>> +     * latter will get a reference and lock the folio for every individual
+>>> +     * page but will only succeed once the swap slot for every subpage is
+>>> +     * zero.
+>>> +     */
+>>> +    for (offset = swp_offset(entry); offset < end; offset += nr) {
+>>> +        nr = 1;
+>>> +        if (READ_ONCE(si->swap_map[offset]) == SWAP_HAS_CACHE) {
+>>
+>> Here we use READ_ONCE() only, above data_race(). Hmmm.
+> 
+> Yes. I think this is correct.
+> 
+> READ_ONCE() is a "marked access" which KCSAN understands, so it won't complain
+> about it. So data_race() isn't required when READ_ONCE() (or WRITE_ONCE()) is
+> used. I believe READ_ONCE() is required here because we don't have a lock and we
+> want to make sure we read it in a non-tearing manner.
+> 
+> We don't need the READ_ONCE() above since we don't care about the exact value -
+> only that it's not 0 (because we should be holding a ref). So do a plain access
+> to give the compiler a bit more freedom. But we need to mark that with
+> data_race() to stop KCSAN from complaining.
+
+Okay.
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
