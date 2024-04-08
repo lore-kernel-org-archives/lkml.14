@@ -1,129 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDE97C097;
-	Mon,  8 Apr 2024 14:06:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EFF82D62;
+	Mon,  8 Apr 2024 14:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712585213; cv=none; b=h6KNDGZQmEKe1yoG8spWFHC588hAuKwXe7TvO3avAKz74ZOholJDYXXMQ9L2kbXptF/6tprBpkpd18HrziPeOahTwGt+08h/W8ZzugESkClJLm75gE7DUxDoO/m9ciOXpVoYzUdBklmtJMcGdHl3UfMGTlhoqMXpZa1jRdLEvRA=
+	t=1712585435; cv=none; b=KauFk3My9C7NbaarVEyKTUsorsLs8S23V5pn/0+5y4DXHfMxmjbYnvvqrEl/zAHfZiZgPuAp33yY5CZgRdsHtIvOrEFohtI4zqLk/vWkFken5drB6vWWH4sBd+80PvV/J2kU4kaXVpYu/WIe7+ql5E7N/s7LwhD75XZ+Xo3Blc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712585213; c=relaxed/simple;
-	bh=kJRZax7tKQw/4aGj608DFmiz3SzBrQfRW1Czn6YXsFM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lBsmf+TBO+8jNKV09d1R7g17Zt6jTcgQ5w3h+pTCH/umds2m+CBGJ8DlRxEiWO+rVt0Hhe60rWVxmTaLNlKcJHmq+4T89E8DoYszCaalFIeIqJnBTLUqUJqojBHY0zHA2VydY265YzUp/u0Zp1Qu6zWOWwIQueL58IoaYEzdr6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaNLfay3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712585435; c=relaxed/simple;
+	bh=i/IeI3uOGzEG5noySiGDDBuECVA5WT3ZW1ulNIYuqyw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUg5kmc8Oq6fS9EQiarGFIxgFKEYBINACv+i4mD3eSoOA7Y5IWzzu561DVoakWLRYDnnTJa+ynKeACfF8xdW1kNE6SVNbrCTJ2vg+iRPxeWgwbMxMhhqwpsWhzrMxRDxgZTJ16w82To6a63es7/mKFcESwIh7MxNCtODDEe0Dk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UE7EPjCl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaNLfay3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94005C433C7;
-	Mon,  8 Apr 2024 14:06:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UE7EPjCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748F1C433C7;
+	Mon,  8 Apr 2024 14:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712585213;
-	bh=kJRZax7tKQw/4aGj608DFmiz3SzBrQfRW1Czn6YXsFM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iaNLfay3XcHLZIpaCy2Tg5KiN9C3T5cq/wYk6+Alx80Fm/p5jZv6aRCZll9Kz4KXQ
-	 +1umEhFvpMDhygvSnwrGi9eHUz3JhVFewNicg4vs5ZfvNqvF70YPp7weJcsIgssSmU
-	 1YUW1VYVR5YeCyV4p8KHNZbAEMkhNg/xbY0fdSjGw+M6v/mJ0ABsmTPOSECekQV46t
-	 ofuMtPwfaSrvSagJ8G332KuTNnPDZGMzGoBzALD12Tzt68P4lMSy5Io6zjToMmO75z
-	 g1OjDlOYV4RmVRBsFu0PyHTitXZMoV5SnnXcqHi41q87Dqn0TDHtavTSJk/lHAYnyZ
-	 jLydp/j7C2+ZA==
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5aa327a5514so62092eaf.0;
-        Mon, 08 Apr 2024 07:06:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWS6Hq0met6ef5CV5XhojOX/n6pkk2S+IKXYRRPnVt7XEvdYf8bfLX6WExx+8NI41IJHk9yPZPXkHC2lyZ7/YfuumatxNQaChNMQ133mzMRcb7ooUutzWOnyI12L+Z1agDMhfABzad1CGdj7g==
-X-Gm-Message-State: AOJu0Yww8oFUE3aJSdxFWqcENr4QxTTKpWCyUMgSFJsuIuUE7gb5jIs5
-	kNasAJciUTU9LGlkGSZE3lauxAQiX7cdYCS55W33laMnebaPh4LCew85eCqLzPXm+Jo2ltkFvlu
-	u//hgfFffO5QbYbzX5oeMsbANrCc=
-X-Google-Smtp-Source: AGHT+IEbfthzZ79XuDvyUQLEJLfFsf+aggAbvd3kcXbcCcp/nApsYYrvB2ACXv1jcTNPI8mdNwRCkjBg8LGXi0Cz1m8=
-X-Received: by 2002:a05:6870:1651:b0:220:bd4d:674d with SMTP id
- c17-20020a056870165100b00220bd4d674dmr9057467oae.5.1712585212959; Mon, 08 Apr
- 2024 07:06:52 -0700 (PDT)
+	s=k20201202; t=1712585434;
+	bh=i/IeI3uOGzEG5noySiGDDBuECVA5WT3ZW1ulNIYuqyw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UE7EPjClC2bkA0lXIlpi8pb8hs0uR5e4DiMzoppFcNv3/+dd+Vj1dPFKKuAuQ8IlM
+	 hWzrlBJ5TWVobqIHaX+NUgDSCDYy5rv6BBrbHNu/pswbLWnR+daM5eKukG6KRQOWoe
+	 oTmrD3tj9Tb6vstX+XxLoCB1qFYARjNwUnBDlnJ9yOzW/Fu7355E6wNck+Rv4E+VZg
+	 73TNZoVg7cFwSBzkVD38q2FC5cuG48A8maa7ap1MbKgGKQneG+eyE8t6/9/1AzjTI6
+	 eCKLNIwJTF48B5R7944m5lbK0vYSH4Y7CaejhZZDOlfEQXUTRpbP5Rc8fAcnfjjYiR
+	 UU2BqWdruPVWw==
+Date: Mon, 8 Apr 2024 15:10:28 +0100
+From: Mark Brown <broonie@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vaishnav Achath <vaishnav.a@ti.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Rob Herring <robh@kernel.org>, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH v2 05/11] spi: cadence-qspi: add FIFO depth detection
+ quirk
+Message-ID: <551bea0a-1c9e-4e04-87db-c643fdaee85e@sirena.org.uk>
+References: <20240405-cdns-qspi-mbly-v2-0-956679866d6d@bootlin.com>
+ <20240405-cdns-qspi-mbly-v2-5-956679866d6d@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403154907.1420245-1-lukasz.luba@arm.com>
-In-Reply-To: <20240403154907.1420245-1-lukasz.luba@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 8 Apr 2024 16:06:41 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jP8j3kcUFHx45_qpeOTa9THtP3qztC0oxuiohcYs5PPQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jP8j3kcUFHx45_qpeOTa9THtP3qztC0oxuiohcYs5PPQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/4] Update Energy Model after chip binning adjusted voltages
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rafael@kernel.org, 
-	dietmar.eggemann@arm.com, linux-arm-kernel@lists.infradead.org, 
-	sboyd@kernel.org, nm@ti.com, linux-samsung-soc@vger.kernel.org, 
-	daniel.lezcano@linaro.org, viresh.kumar@linaro.org, 
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com, 
-	m.szyprowski@samsung.com, mhiramat@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="97Qcf0iyghKpwfU3"
+Content-Disposition: inline
+In-Reply-To: <20240405-cdns-qspi-mbly-v2-5-956679866d6d@bootlin.com>
+X-Cookie: Drive defensively.  Buy a tank.
+
+
+--97Qcf0iyghKpwfU3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 3, 2024 at 5:49=E2=80=AFPM Lukasz Luba <lukasz.luba@arm.com> wr=
-ote:
->
-> Hi all,
->
-> This is a follow-up patch aiming to add EM modification due to chip binni=
-ng.
-> The first RFC and the discussion can be found here [1].
->
-> It uses Exynos chip driver code as a 1st user. The EM framework has been
-> extended to handle this use case easily, when the voltage has been change=
-d
-> after setup. On my Odroid-xu4 in some OPPs I can observe ~20% power diffe=
-rence.
-> According to that data in driver tables it could be up to ~29%.
->
-> This chip binning is applicable to a lot of SoCs, so the EM framework sho=
-uld
-> make it easy to update. It uses the existing OPP and DT information to
-> re-calculate the new power values.
->
-> It has dependency on Exynos SoC driver tree.
->
-> Changes:
-> v5:
-> - adjusted aligning of the function arguments in patch 1/4 (Dietmar)
-> - adjusted the in-code comment patch 4/4 (Dietmar)
-> - added Reviewed-by to all patches (Dietmar)
-> v4:
-> - added asterisk in the comment section (test robot)
-> - change the patch 2/4 header name and use 'Refactor'
-> v3:
-> - updated header description patch 2/4 (Dietmar)
-> - removed 2 sentences from comment and adjusted in patch 3/4 (Dietmar)
-> - patch 4/4 re-phrased code comment (Dietmar)
-> - collected tags (Krzysztof, Viresh)
-> v2:
-> - removed 'ret' from error message which wasn't initialized (Christian)
-> v1:
-> - exported the OPP calculation function from the OPP/OF so it can be
->   used from EM fwk (Viresh)
-> - refactored EM updating function to re-use common code
-> - added new EM function which can be used by chip device drivers which
->   modify the voltage in OPPs
-> RFC is at [1]
->
-> Regards,
-> Lukasz Luba
->
-> [1] https://lore.kernel.org/lkml/20231220110339.1065505-1-lukasz.luba@arm=
-.com/
->
-> Lukasz Luba (4):
->   OPP: OF: Export dev_opp_pm_calc_power() for usage from EM
->   PM: EM: Refactor em_adjust_new_capacity()
->   PM: EM: Add em_dev_update_chip_binning()
->   soc: samsung: exynos-asv: Update Energy Model after adjusting voltage
->
->  drivers/opp/of.c                 |  17 +++--
->  drivers/soc/samsung/exynos-asv.c |  10 ++-
->  include/linux/energy_model.h     |   5 ++
->  include/linux/pm_opp.h           |   8 +++
->  kernel/power/energy_model.c      | 106 +++++++++++++++++++++++++------
->  5 files changed, 121 insertions(+), 25 deletions(-)
->
-> --
+On Fri, Apr 05, 2024 at 05:02:15PM +0200, Th=E9o Lebrun wrote:
 
-All patches in the series applied as 6.10 material, thanks!
+> Use hardware ability to read the FIFO depth thanks to
+> CQSPI_REG_SRAMPARTITION that is partially read-only. Keep current
+> behavior identical for existing compatibles.
+
+The behaviour is not identical here - we now unconditionally probe the
+FIFO depth on all hardware, the difference with the quirk is that we
+will ignore any DT property specifying the depth.
+
+> -	if (of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_depth)) {
+> +	if (!(ddata && ddata->quirks & CQSPI_DETECT_FIFO_DEPTH) &&
+> +	    of_property_read_u32(np, "cdns,fifo-depth", &cqspi->fifo_depth)) {
+>  		dev_err(dev, "couldn't determine fifo-depth\n");
+
+It's not obvious from just the code that we do handle having a FIFO
+depth property and detection in the detection code, at least a comment
+would be good.
+
+> +static void cqspi_controller_detect_fifo_depth(struct cqspi_st *cqspi)
+> +{
+> +	const struct cqspi_driver_platdata *ddata =3D cqspi->ddata;
+> +	struct device *dev =3D &cqspi->pdev->dev;
+> +	u32 reg, fifo_depth;
+> +
+> +	/*
+> +	 * Bits N-1:0 are writable while bits 31:N are read as zero, with 2^N
+> +	 * the FIFO depth.
+> +	 */
+> +	writel(U32_MAX, cqspi->iobase + CQSPI_REG_SRAMPARTITION);
+> +	reg =3D readl(cqspi->iobase + CQSPI_REG_SRAMPARTITION);
+> +	fifo_depth =3D reg + 1;
+> +
+> +	if (ddata && ddata->quirks & CQSPI_DETECT_FIFO_DEPTH) {
+> +		cqspi->fifo_depth =3D fifo_depth;
+> +		dev_dbg(dev, "using FIFO depth of %u\n", fifo_depth);
+> +	} else if (fifo_depth !=3D cqspi->fifo_depth) {
+> +		dev_warn(dev, "detected FIFO depth (%u) different from config (%u)\n",
+> +			 fifo_depth, cqspi->fifo_depth);
+> +	}
+
+It's not obvious to me that we should ignore an explicitly specified
+property if the quirk is present - if anything I'd more expect to see
+the new warning in that case, possibly with a higher severity if we're
+saying that the quirk means we're more confident that the data reported
+by the hardware is reliable.  I think what I'd expect is that we always
+use an explicitly specified depth (hopefully the user was specifying it
+for a reason?).
+
+Pulling all the above together can we just drop the quirk and always do
+the detection, or leave the quirk as just controlling the severity with
+which we log any difference between detected and explicitly configured
+depths?
+
+--97Qcf0iyghKpwfU3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYT+tMACgkQJNaLcl1U
+h9BRWwf+Nn0TIUbAm2J8N2ADxHV5QvboVoCubMNpoS/qRWdNjo5kgnkbDgAqrTZU
+Ms8Fp3rg41VV9aJw+eP1lypgpPLunatteZi6o4FzmEn5XL1s0K6+fkZ5MKkgBfhW
+H03cNHSc9lhh4CJsYZy9naA+M/yaJC1c6Cjr7pW+h3EQfN2voDa2JG1cbEA1JB7q
+PBKJTq7l7s5gpG/y49WdI4A7c+O4U0Zab36uOffPEypTE1drcZNPWZhJn8Yngv5b
+lzcQzrF6vTaAqFwYG05pCLM8Fmh59SWLoNPseI7RmN+y0VGyHUdrfxVGVreApgYn
+mZo0Eifdsts/a/IPS7iZHNlxo49wtg==
+=xaan
+-----END PGP SIGNATURE-----
+
+--97Qcf0iyghKpwfU3--
