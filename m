@@ -1,159 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCBF22091
-	for <linux-kernel@vger.kernel.org>; Mon,  8 Apr 2024 16:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773871422BA;
+	Mon,  8 Apr 2024 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712592093; cv=none; b=PJyiqiFDROGTkma3x/YiQZ5NF3nBQNwzKsMw7cDNSkH2i1fuCWZSQ9gvdr5ghB1LARkHYuI+sppqn5pjdUFqYX8+pFJiDqS63OsmWHmIhd/WhT49t+VJ8Pwzbhu2NxLNOzL+aOvnxampiqS9jocxsRwl0mMc4kX8Vaol1mlp/XA=
+	t=1712592139; cv=none; b=fD0scmo/D16/9XhLHEDharW4faIcwgpIEncDihcBaaFeib55WQ/U2/f6IDDbJ44Wpos+0nXI1FETJV130s889xEg156Q4M1fR3s5D6TVf+uvZeomFTtMXzFcsc7v+WByCxJ0sv3txX1t3FaEAqXdgvDmJr/u28zR9RG95KtEUzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712592093; c=relaxed/simple;
-	bh=Ygi3/4LFZQsuI5V6cl+E49vdQAx7C3y5XXwlxvBn2is=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DCXViUeFC1Uhh/lHytkW83YNiX4HmiWAtQXRv060vNPLIiayJmKeWv51aY5w36oOPLhOKQslhOCgNCf3NLdD5h7z8AA/LKO2YIUiyTPRh4qkHSJYqYUkpbJWUi30cvCSjkEoF2u+UGf6Cb/LOhONiqICQI7oZVQnm2QjDA8EkYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJFUlIKe; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712592139; c=relaxed/simple;
+	bh=ipJuww1ndidw63caquJ6tDL3B0VB+7HW4TINvZ2UjVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dmYsepsOcVn75T/Tpt2LGLgDfUCIn9syTd7NHIQ8cM4LaVSf1OO5oIG7ZVyOwNk4azM0Ars9DLfdQfXKrdsQF4e1DM6b8935NKhGLXs1ztRG/7pT8O6n0AKehhvFvzqJtuv9dJsFBckW5UxwcnmkhagP0/QrSo2ewDXpUIp/KJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffNbVrFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJFUlIKe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712592091; x=1744128091;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Ygi3/4LFZQsuI5V6cl+E49vdQAx7C3y5XXwlxvBn2is=;
-  b=jJFUlIKeCD8fik/sMmsC0Tq/aka9fnhwTMoK4sG5Fvb2++ZTpOHJm8Bv
-   IxmovYgqxvjzBMJxKXASgMvCulxp3Rn8SX6kqjvdv1XkLkBsIWxDRS2ZJ
-   s7ELLfuTbSnIXIq/xayY+JC/jl06jB3vRM0ia7jtEM88cQJRsMauBH2U6
-   ASePbOdPvuaSgcdvhv8+8kns6fNFD+hwNxLvC4EqQum6I67qjgxqfktJp
-   jIEz4sOkr3put4Q/6zO9OsQGz/m/qOwZefDWlnG45Ix+DdNMCai4yAPoi
-   SF+RUK1PHpEoFQtOVPkCx1P2fqL1wD528uOJhEOz0rFqgx9xYAD8OixDv
-   Q==;
-X-CSE-ConnectionGUID: g6jaeGAySxGMUDsc3Lsb4w==
-X-CSE-MsgGUID: J3XNDgoxTs690Qv5G5PRjA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="11656105"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="11656105"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:01:31 -0700
-X-CSE-ConnectionGUID: INLreHreTUSw5gvULrK0Mw==
-X-CSE-MsgGUID: e2IUKgdJRnS2RmR0O3qmPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="20054868"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 09:01:27 -0700
-Date: Mon, 8 Apr 2024 09:05:56 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "sivanich@hpe.com" <sivanich@hpe.com>, Thomas Gleixner
- <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>, Lu Baolu
- <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Liu, Yi L"
- <yi.l.liu@intel.com>, "steve.wahl@hpe.com" <steve.wahl@hpe.com>, "Anderson,
- Russ" <russ.anderson@hpe.com>, "Peter Zijlstra" <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 2/2] iommu/vt-d: Share DMAR fault IRQ to prevent vector
- exhaustion
-Message-ID: <20240408090556.6165e603@jacob-builder>
-In-Reply-To: <BN9PR11MB527677A69A2004A951165CC38C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240403234548.989061-1-jacob.jun.pan@linux.intel.com>
-	<20240403234548.989061-2-jacob.jun.pan@linux.intel.com>
-	<BN9PR11MB527677A69A2004A951165CC38C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffNbVrFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929A6C433C7;
+	Mon,  8 Apr 2024 16:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712592139;
+	bh=ipJuww1ndidw63caquJ6tDL3B0VB+7HW4TINvZ2UjVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ffNbVrFN+q2m8pyqLML6+DLMCxPr7L/hs4qh5BmeJGCpaFELcB7r0g1qe9knYyjpv
+	 yEcceoV4lLaZV3KBJPvbc2KLHEJcrwXrIgXZAl/K+lK6Jt6ErT8G5V2r5wOQ2sdmDv
+	 HuL4Wu+e+AUa2N5nfbDayTspRel9n0EtMBptWwDO5F7dfWCVg4aQ2+6kNI5WMHG5Pz
+	 Q+zUB3GR6uVgkpn+LNRUsfNoaFxz/5yQV+8RbHrsRh39Pd28EYCCE4TciW1w2t9Obb
+	 NTGLfcPyTfkGyye0Ms+WT0ij8l0GSAOnDCxVCJ6RndIQEX1/eL8QNubkZm/IenF0Lx
+	 AXpQ2R74I0TIQ==
+From: Conor Dooley <conor@kernel.org>
+To: Conor Dooley <conor@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Bjarni Jonasson <bjarni.jonasson@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	horatiu.vultur@microchip.com,
+	steen.hegelund@microchip.com
+Subject: Re: [PATCH v2 01/10] arm64: dts: microchip: sparx5: fix mdio reg
+Date: Mon,  8 Apr 2024 17:00:40 +0100
+Message-ID: <20240408-okay-deserving-8d06e76c2183@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240405190419.74162-1-krzk@kernel.org>
+References: <20240405190419.74162-1-krzk@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1759; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=KA9ih6u3mBi75U8iJUf9RHVwjiBPZpzGXCIcfRNCroo=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkiIissMo//8H4vX5VzuOMm7+z5Qptmr5/+MMIzZ6bwv 0mnnfhvdpSyMIhxMMiKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiG5gZGTbeU3jFtmLqwvB7 uxkyjrH1WBu+3PHj6l6bgO8Wbin15/cy/BX4+6rPaUUEe0TRze3vYte7b+neY7Jj0qxdG5/5BL3 2SeMFAA==
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-Hi Kevin,
+From: Conor Dooley <conor.dooley@microchip.com>
 
-On Mon, 8 Apr 2024 08:48:54 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+On Fri, 05 Apr 2024 21:04:10 +0200, Krzysztof Kozlowski wrote:
+> Correct the reg address of mdio node to match unit address.  Assume the
+> reg is not correct and unit address was correct, because there is
+> already node using the existing reg 0x110102d4.
+> 
+>   sparx5.dtsi:443.25-451.5: Warning (simple_bus_reg): /axi@600000000/mdio@6110102f8: simple-bus unit address format error, expected "6110102d4"
+> 
+> 
+> [...]
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Thursday, April 4, 2024 7:46 AM
-> > 
-> > DMAR fault interrupt is used for per-IOMMU unrecoverable fault
-> > reporting, it occurs only if there is a kernel programming error or
-> > serious hardware failure. In other words, they should never occur under
-> > normal circumstances.  
-> 
-> this is not accurate. When a device is assigned to a malicious guest then
-> it's not unusual to observe faults.
-> 
-Right, a malicious guest kernel could cause unrecoverable faults, e.g.
-wrong privilege.
+Applied to microchip-dt64, thanks! I'll re-direct it to fixes either if
+some wider cleanup needs some of these warnings gone before v6.10-rc1.
 
-> in this context you probably meant that it's not a performance path hence
-> sharing the vector is acceptable.
-> 
-Yes.
-> >
-> > @@ -1182,7 +1182,6 @@ static void free_iommu(struct intel_iommu
-> > *iommu)
-> >  			iommu->pr_irq = 0;
-> >  		}
-> >  		free_irq(iommu->fault_irq, iommu);
-> > -		dmar_free_hwirq(iommu->fault_irq);  
-> 
-> You still want to free the vector for the iommu which first gets the
-> vector allocated.
-> 
-I think we always want to keep this vector since the system always needs
-one vector to share. We will never offline all the IOMMUs, right?
-
-> > @@ -1956,9 +1955,8 @@ void dmar_msi_mask(struct irq_data *data)
-> >  	raw_spin_unlock_irqrestore(&iommu->register_lock, flag);
-> >  }
-> > 
-> > -void dmar_msi_write(int irq, struct msi_msg *msg)
-> > +static void dmar_msi_write_msg(struct intel_iommu *iommu, int irq,
-> > struct msi_msg *msg)
-> >  {  
-> 
-> what about iommu_msi_write_msg() to match the first parameter?
-> 
-> otherwise it leads to a slightly circled calltrace:
-> 	dmar_msi_write_msg()
-> 		dmar_msi_write()
-> 			dmar_msi_write_msg()
-> 
-Good point, will do.
-
-> > +
-> > +	/*
-> > +	 * Only the owner IOMMU of the shared IRQ has its fault event
-> > +	 * interrupt unmasked after request_irq(), the rest are
-> > explicitly
-> > +	 * unmasked.
-> > +	 */
-> > +	if (!(iommu->flags & VTD_FLAG_FAULT_IRQ_OWNER))
-> > +		dmar_fault_irq_unmask(iommu);
-> > +  
-> 
-> em there is a problem in dmar_msi_mask() and dmar_msi_mask()
-> which only touches the owner IOMMU. With this shared vector
-> approach we should mask/unmask all IOMMU's together. 
-I thought about this as well, in addition to fault_irq,
-dmar_msi_mask/unmask() are used for other DMAR irqs, page request and
-perfmon. So we need a special case for fault_irq there, it is not pretty.
-
-I added a special case here in this patch, thinking we never mask the
-fault_irq since we need to cover the lifetime of the system. I have looked
-at:
-1.IOMMU suspend/resume, no mask/unmask
-2.IRQ migration, added IRQF_NOBALANCING
-
-maybe I missed some cases?
-
+[01/10] arm64: dts: microchip: sparx5: fix mdio reg
+        https://git.kernel.org/at91/c/5d83b9cbe7cf
+[02/10] arm64: dts: microchip: sparx5: correct serdes unit address
+        https://git.kernel.org/at91/c/013627825bbe
+[03/10] arm64: dts: microchip: sparx5_pcb134: add missing I2C mux unit addresses
+        https://git.kernel.org/at91/c/9dcf4ec57700
+[04/10] arm64: dts: microchip: sparx5_pcb135: add missing I2C mux unit addresses
+        https://git.kernel.org/at91/c/5150c3df4c2e
+[05/10] arm64: dts: microchip: sparx5_pcb134: align I2C mux node name with bindings
+        https://git.kernel.org/at91/c/d3dd7bed4210
+[06/10] arm64: dts: microchip: sparx5_pcb135: align I2C mux node name with bindings
+        https://git.kernel.org/at91/c/b0d5a3ce782a
+[07/10] arm64: dts: microchip: sparx5_pcb134: drop LED unit addresses
+        https://git.kernel.org/at91/c/55fb5a97ebe0
+[08/10] arm64: dts: microchip: sparx5_pcb135: drop LED unit addresses
+        https://git.kernel.org/at91/c/5945df4de0e2
+[09/10] arm64: dts: microchip: sparx5_pcb134: drop duplicated NOR flash
+        https://git.kernel.org/at91/c/f1595d501ea4
+[10/10] arm64: dts: microchip: sparx5_pcb135: drop duplicated NOR flash
+        https://git.kernel.org/at91/c/6c7c4b91aa43
 
 Thanks,
-
-Jacob
+Conor.
