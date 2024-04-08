@@ -1,90 +1,314 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mr3.vodafonemail.de (mr3.vodafonemail.de [145.253.228.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4D914F9C4;
-	Thu, 11 Apr 2024 13:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB8185C62;
+	Mon,  8 Apr 2024 14:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842388; cv=none; b=kPVs2v2zHLbVM8d5iq/Oh+IwgTsheeneEzJkysY3wm1xs7yY+q2o/5migwcKvIsIdp+7eTcKKzIxeOrBbKY1Y+hcsNtxRoF7lvnmDChgPvSfuzck1GH1wDu5XK2OCB91nAQ35nVtfI1woDxab4ka/jUC+DK3xGtgMxlOeyTIkYY=
+	t=1712585863; cv=none; b=O0/cenGmZSxnVDXYF1s8pxF0DrZ78DbmUJb2ZR7uHIOBVAlbLLTEF9FR56QSxseo5eEbLObgzzQ9eJjs0WfxaBwZYf/pSKCATP7hKTpOHhf7EWxtBpoumHoABx+B+MgqVst3rgkXo2tDEVckK5oua2uaqOelrGYivhtrl5QS6qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842388; c=relaxed/simple;
-	bh=Hu1xN2JiY9qMgKFHZgQq9iT0bgOzpOMrTuCFIleiTJA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cPWuSPXnqC29ZMS6bqTuWu2Gt8po9C7OUDZ0gCGtDHit64tsoDbz6DL3HEikCSxTuyjDQNbb6JFJ0bD0cUmTra10u3wtPsV6aFWVFbr6tlEVUPONxFYwG63OIQ0Mnz2p9Y7JnrZI925bzbIqLeo0TMwFfzAF1rqx5E93PFV0F9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d89346eb45so56129561fa.0;
-        Thu, 11 Apr 2024 06:33:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712842385; x=1713447185;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VoFgjJ32tsxlVGtTa5gGB28oxhJFPr7M0nD6tH1rarM=;
-        b=PthL68uElizIUQwzTwjN6yt6Z+fgLYo2II/YyW9w9F7lZGndqBecamnVOqaAwcKrND
-         xBOqBXSL241mDE2ugZXfCuHH4FZ9Ddxq+Q3mGT4rvnskW7of55e+W5KvcpQ1YPJnom1I
-         0ssBBHGUf/zxrrrLGlnUJ/5qvPtwDL6tUQlEkGQw7zfqvefBcBlYLKROY/nVBMUJpmyv
-         lKx2n26T0tuqSBt/Sy/ASaxBcgp02s7lyXAjtroA942eVaMHt/C9WgKsfYwtGMGRX5CN
-         dpQ3QMQU46orcXTr5tMevtaJdlrj2InYYkBs421ZIEg76YtQpBhNJJpQ9whc46B1Dp03
-         HObg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUAFWStBALYBLNHU3G4xfitcdID/AgO2mDiYUQnRCXrpLNe5SHC1XIIOPT9PEyzigLnKXaeTm5G3ZDRzsVlARN5ugcPCVsFrMCwjh8KQABSbPzouYU2Pr8K1mmdHId/u05jvkbzGNPqW6hS4KYOfSPG0q83+QXdg7a7ZU4DlZBpQ+1
-X-Gm-Message-State: AOJu0YzUP/9fuTJSr3nvDR9kud+gnYG5VCHHOhgJgFVRtY+L6daVG5k8
-	vvwzMfHkJUxsQSoX1ktQs0qKgxdTH3zv7fUOKTnPgTx4khWI9dRf
-X-Google-Smtp-Source: AGHT+IFByJfC9hbYBeCLoTSUE6m3SAZ56TJRBSVxKGqApn7flbJoLNyy3Sp4kVZ3NmAPlJJgNRuidw==
-X-Received: by 2002:a2e:a9a6:0:b0:2d8:8633:ff70 with SMTP id x38-20020a2ea9a6000000b002d88633ff70mr6469091ljq.30.1712842385060;
-        Thu, 11 Apr 2024 06:33:05 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
-        by smtp.gmail.com with ESMTPSA id k11-20020a170906578b00b00a51be2b75f3sm760606ejq.35.2024.04.11.06.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 06:33:04 -0700 (PDT)
-Date: Thu, 11 Apr 2024 06:33:02 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
-	leit@meta.com,
-	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <cgroups@vger.kernel.org>,
-	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <linux-block@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] blk-iocost: Fix shift-out-of-bounds in iocg_kick_delay()
-Message-ID: <Zhfmjoa2l04fXIVr@gmail.com>
-References: <20240410193642.1303741-1-leitao@debian.org>
- <ZhbuUKXQwBwye1_r@slm.duckdns.org>
+	s=arc-20240116; t=1712585863; c=relaxed/simple;
+	bh=8YqxLBOsMzMuFEOR2Ah2D/5AjtW1EpVMQ54Y10ln54I=;
+	h=From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=C0xFCM1u0v/ksBOXnjlX/4mOEE8xfDeCbhYAHPX7eDlmePmZAcTxoxC5RtUaOR/6ESOcWKqFDXaPzEuSGf2v4Vpj/6n2RmXP0Kd+JY21/I9mejyrtu7tX6CnATpXMmK63geZUWkvEk+xL5fS9t5XgJpfldUCoJwNw6jZYqDqltI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=XUKiTUDK; arc=none smtp.client-ip=145.253.228.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="XUKiTUDK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
+	s=vfde-mb-mr2-23sep; t=1712585858;
+	bh=ex5q/rKxiClRhuNx+/psXbPzdEsLjYS4wEnJr37eQlc=;
+	h=From:To:Subject:Date:Content-Type:From;
+	b=XUKiTUDKt0NPY8lG+Ir3Zj1c81LgMDwP68CyHZShmSlmFinWHM0HDnrfb2jrlYMlA
+	 BAnFluqYUuoVntnRKB8n0hwBw3QPM1vp6LaiPSWfKmz8SOQrIqJdMigEMWJSr74/yt
+	 +gWjkgCWUg1JxWsZHaSBdnt8xZVLHeQ8cDdmRIDw=
+Received: from smtp.vodafone.de (unknown [10.0.0.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mr3.vodafonemail.de (Postfix) with ESMTPS id 4VCrlQ71h1z1yDK;
+	Mon,  8 Apr 2024 14:17:38 +0000 (UTC)
+Received: from sha256_ni_asm.patch (p5de6d4c4.dip0.t-ipconnect.de [93.230.212.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VCrl60pyGzHpxh;
+	Mon,  8 Apr 2024 14:17:19 +0000 (UTC)
+From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
+To: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Cc: <tim.c.chen@linux.intel.com>, "Eric Biggers" <ebiggers@kernel.org>
+Subject: [PATCH v2 1/2] crypto: s(h)aving 40+ bytes off arch/x86/crypto/sha256_ni_asm.S
+Date: Mon, 8 Apr 2024 16:08:52 +0200
+Organization: Me, myself & IT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhbuUKXQwBwye1_r@slm.duckdns.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-purgate-type: clean
+X-purgate: clean
+X-purgate-size: 7521
+X-purgate-ID: 155817::1712585854-F2FFBA77-283C08E7/0/0
+Message-ID: <20240408140852.RskXwnod7hCkdtYE902ZkKih8SiQytD_B0tynIjrABE@z>
 
-On Wed, Apr 10, 2024 at 09:53:52AM -1000, Tejun Heo wrote:
-> Hello, Breno.
-> 
-> On Wed, Apr 10, 2024 at 12:36:41PM -0700, Breno Leitao wrote:
-> > When running iocg_kick_delay(), iocg->delay_at could be way behind "now",
-> > which causes a huge tdelta difference.
-> > 
-> > The tdelta value is used to shift some bits around, raising the
-> > following UBSAN splat:
-> > 
-> > 	UBSAN: shift-out-of-bounds in block/blk-iocost.c:1366:23
-> > 
-> > Debugging this, these are some values I got in my machine with 6.9-rc3.
-> > 
-> >  now = 3626064295
-> >  iocg->delay_at = 3275794093
-> > 
-> > Fix this by validating that the shift if valid, otherwise bail out,
-> > similarly to commit 2a427b49d029 ("blk-iocost: Fix an UBSAN
-> > shift-out-of-bounds warning")
-> 
-> Rik alreaady sent a fix:
-> 
->   http://lkml.kernel.org/r/20240404123253.0f58010f@imladris.surriel.com
-> 
-> which got commited as beaa51b36012fad5a4d3c18b88a617aea7a9b96d.
+Use shorter SSE2 instructions instead of some SSE4.1
+use short displacements into K256
 
-Even easier then. Thanks!
+--- -/arch/x86/crypto/sha256_ni_asm.S
++++ +/arch/x86/crypto/sha256_ni_asm.S
+@@ -108,17 +108,17 @@
+ 	 * Need to reorder these appropriately
+ 	 * DCBA, HGFE -> ABEF, CDGH
+ 	 */
+-	movdqu		0*16(DIGEST_PTR), STATE0
+-	movdqu		1*16(DIGEST_PTR), STATE1
++	movdqu		0*16(DIGEST_PTR), STATE0	/* DCBA */
++	movdqu		1*16(DIGEST_PTR), STATE1	/* HGFE */
+ 
+-	pshufd		$0xB1, STATE0,  STATE0		/* CDAB */
+-	pshufd		$0x1B, STATE1,  STATE1		/* EFGH */
+ 	movdqa		STATE0, MSGTMP4
+-	palignr		$8, STATE1,  STATE0		/* ABEF */
+-	pblendw		$0xF0, MSGTMP4, STATE1		/* CDGH */
++	punpcklqdq	STATE1, STATE0			/* FEBA */
++	punpckhqdq	MSGTMP4, STATE1			/* DCHG */
++	pshufd		$0x1B, STATE0,  STATE0		/* ABEF */
++	pshufd		$0xB1, STATE1,  STATE1		/* CDGH */
+ 
+ 	movdqa		PSHUFFLE_BYTE_FLIP_MASK(%rip), SHUF_MASK
+-	lea		K256(%rip), SHA256CONSTANTS
++	lea		K256+8*16(%rip), SHA256CONSTANTS
+ 
+ .Lloop0:
+ 	/* Save hash values for addition after rounds */
+@@ -129,18 +129,18 @@
+ 	movdqu		0*16(DATA_PTR), MSG
+ 	pshufb		SHUF_MASK, MSG
+ 	movdqa		MSG, MSGTMP0
+-		paddd		0*16(SHA256CONSTANTS), MSG
++		paddd		-8*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 
+ 	/* Rounds 4-7 */
+ 	movdqu		1*16(DATA_PTR), MSG
+ 	pshufb		SHUF_MASK, MSG
+ 	movdqa		MSG, MSGTMP1
+-		paddd		1*16(SHA256CONSTANTS), MSG
++		paddd		-7*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP1, MSGTMP0
+ 
+@@ -148,9 +148,9 @@
+ 	movdqu		2*16(DATA_PTR), MSG
+ 	pshufb		SHUF_MASK, MSG
+ 	movdqa		MSG, MSGTMP2
+-		paddd		2*16(SHA256CONSTANTS), MSG
++		paddd		-6*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP2, MSGTMP1
+ 
+@@ -158,151 +158,151 @@
+ 	movdqu		3*16(DATA_PTR), MSG
+ 	pshufb		SHUF_MASK, MSG
+ 	movdqa		MSG, MSGTMP3
+-		paddd		3*16(SHA256CONSTANTS), MSG
++		paddd		-5*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP3, MSGTMP4
+ 	palignr		$4, MSGTMP2, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP0
+ 	sha256msg2	MSGTMP3, MSGTMP0
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP3, MSGTMP2
+ 
+ 	/* Rounds 16-19 */
+ 	movdqa		MSGTMP0, MSG
+-		paddd		4*16(SHA256CONSTANTS), MSG
++		paddd		-4*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP0, MSGTMP4
+ 	palignr		$4, MSGTMP3, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP1
+ 	sha256msg2	MSGTMP0, MSGTMP1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP0, MSGTMP3
+ 
+ 	/* Rounds 20-23 */
+ 	movdqa		MSGTMP1, MSG
+-		paddd		5*16(SHA256CONSTANTS), MSG
++		paddd		-3*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP1, MSGTMP4
+ 	palignr		$4, MSGTMP0, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP2
+ 	sha256msg2	MSGTMP1, MSGTMP2
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP1, MSGTMP0
+ 
+ 	/* Rounds 24-27 */
+ 	movdqa		MSGTMP2, MSG
+-		paddd		6*16(SHA256CONSTANTS), MSG
++		paddd		-2*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP2, MSGTMP4
+ 	palignr		$4, MSGTMP1, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP3
+ 	sha256msg2	MSGTMP2, MSGTMP3
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP2, MSGTMP1
+ 
+ 	/* Rounds 28-31 */
+ 	movdqa		MSGTMP3, MSG
+-		paddd		7*16(SHA256CONSTANTS), MSG
++		paddd		-1*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP3, MSGTMP4
+ 	palignr		$4, MSGTMP2, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP0
+ 	sha256msg2	MSGTMP3, MSGTMP0
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP3, MSGTMP2
+ 
+ 	/* Rounds 32-35 */
+ 	movdqa		MSGTMP0, MSG
+-		paddd		8*16(SHA256CONSTANTS), MSG
++		paddd		0*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP0, MSGTMP4
+ 	palignr		$4, MSGTMP3, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP1
+ 	sha256msg2	MSGTMP0, MSGTMP1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP0, MSGTMP3
+ 
+ 	/* Rounds 36-39 */
+ 	movdqa		MSGTMP1, MSG
+-		paddd		9*16(SHA256CONSTANTS), MSG
++		paddd		1*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP1, MSGTMP4
+ 	palignr		$4, MSGTMP0, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP2
+ 	sha256msg2	MSGTMP1, MSGTMP2
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP1, MSGTMP0
+ 
+ 	/* Rounds 40-43 */
+ 	movdqa		MSGTMP2, MSG
+-		paddd		10*16(SHA256CONSTANTS), MSG
++		paddd		2*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP2, MSGTMP4
+ 	palignr		$4, MSGTMP1, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP3
+ 	sha256msg2	MSGTMP2, MSGTMP3
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP2, MSGTMP1
+ 
+ 	/* Rounds 44-47 */
+ 	movdqa		MSGTMP3, MSG
+-		paddd		11*16(SHA256CONSTANTS), MSG
++		paddd		3*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP3, MSGTMP4
+ 	palignr		$4, MSGTMP2, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP0
+ 	sha256msg2	MSGTMP3, MSGTMP0
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP3, MSGTMP2
+ 
+ 	/* Rounds 48-51 */
+ 	movdqa		MSGTMP0, MSG
+-		paddd		12*16(SHA256CONSTANTS), MSG
++		paddd		4*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP0, MSGTMP4
+ 	palignr		$4, MSGTMP3, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP1
+ 	sha256msg2	MSGTMP0, MSGTMP1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 	sha256msg1	MSGTMP0, MSGTMP3
+ 
+ 	/* Rounds 52-55 */
+ 	movdqa		MSGTMP1, MSG
+-		paddd		13*16(SHA256CONSTANTS), MSG
++		paddd		5*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP1, MSGTMP4
+ 	palignr		$4, MSGTMP0, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP2
+ 	sha256msg2	MSGTMP1, MSGTMP2
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 
+ 	/* Rounds 56-59 */
+ 	movdqa		MSGTMP2, MSG
+-		paddd		14*16(SHA256CONSTANTS), MSG
++		paddd		6*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+ 	movdqa		MSGTMP2, MSGTMP4
+ 	palignr		$4, MSGTMP1, MSGTMP4
+ 	paddd		MSGTMP4, MSGTMP3
+ 	sha256msg2	MSGTMP2, MSGTMP3
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 
+ 	/* Rounds 60-63 */
+ 	movdqa		MSGTMP3, MSG
+-		paddd		15*16(SHA256CONSTANTS), MSG
++		paddd		7*16(SHA256CONSTANTS), MSG
+ 		sha256rnds2	STATE0, STATE1
+-		pshufd 		$0x0E, MSG, MSG
++		punpckhqdq	MSG, MSG
+ 		sha256rnds2	STATE1, STATE0
+ 
+ 	/* Add current hash values with previously saved */
+@@ -315,11 +315,11 @@
+ 	jne		.Lloop0
+ 
+ 	/* Write hash values back in the correct order */
+-	pshufd		$0x1B, STATE0,  STATE0		/* FEBA */
+-	pshufd		$0xB1, STATE1,  STATE1		/* DCHG */
+ 	movdqa		STATE1, MSGTMP4
+-	pblendw		$0xF0, STATE1,  STATE0		/* DCBA */
+-	palignr		$8, MSGTMP4, STATE1		/* HGFE */
++	punpcklqdq	STATE0, STATE1			/* EFGH */
++	punpckhqdq	MSGTMP4, STATE0			/* CDAB */
++	pshufd		$0x1B, STATE0,  STATE0		/* HGFE */
++	pshufd		$0xB1, STATE1,  STATE1		/* DCBA */
+ 
+ 	movdqu		STATE0, 0*16(DIGEST_PTR)
+ 	movdqu		STATE1, 1*16(DIGEST_PTR)
