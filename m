@@ -1,110 +1,80 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1135862148;
-	Mon,  8 Apr 2024 13:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5502C7E0E4;
+	Mon,  8 Apr 2024 13:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712582416; cv=none; b=BNXvUscJdEzUTPwk+dnyV0BoR6CLODkKllcD4AVFruV9EhPId+vfQ3RPfgASMWboLHnIIduYjEmw36iFKQeGh5kxoS4a7XligT2u8o682tFWTYAnsyWpVUSxoy2m9zeydAreFrz3yAU0j4MBLvQ5N9P1h1uidZd06+/rfHkbH1w=
+	t=1712582589; cv=none; b=JkHBmx2/etx6B3xz6zKKiRSPC0bgWY4HTOy4zlMYf+8WwEToi0Z1ffiP96pACS142g00JvbwGbGLz1hILGw4PMDY5eORMjKHXtrRimiWLw3yKWzG4C+Ziku1bnfHUc37N28L7S8sniiuvbtDYQVLv8SFKkjo1Lwskl9t7pgTo5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712582416; c=relaxed/simple;
-	bh=Lg7MpZIv/xYXPJQLm776tfjlApa0oKTGhqiiIowID+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PbD0TLboJpL0GLu77qyOSojNH53xGPEkU2D830PCAwUUCHeU8rg2CuoLrYsQ8O2+X8Hcr+0fmGXWnJNSki+mhpfEckX6PtLXKdqQWTSJvpjiLpZdSfjadyVkuzFu7K0ZW01ExVTQqvhX7E2tilRNpMYfyK6bjd04G4lIBGUjWCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=ukQgap4V; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="ukQgap4V"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 7791E600A2;
-	Mon,  8 Apr 2024 13:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1712581838;
-	bh=Lg7MpZIv/xYXPJQLm776tfjlApa0oKTGhqiiIowID+0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ukQgap4VNE/vEA18w+LsctfzZJVVbH5993hCpyEXFwbO5RsxzLSdiYuvYQdSZSSBr
-	 0Zwu+kMItoPPBwuiVadpvYwGoAyGRfMwC62RwOIMI6Vr14reFCwrdT4iqYeo3z31ek
-	 lrpFvy8acFixr7vXWudQheEMb4t3ZaIzkKLTevsFUgej9H/l6x6ZqrRlG+eMmBgm8L
-	 X3d5xObHrLSUacMgbYs3fYwQ87bCWJsYjIgPvQJUJ/xpv7kd+5IQOBvppvgq7rB3OL
-	 44KJjW1ifhYrLrm2/uX4n7kdckW1L/D2o9p34JkeUKkyVGd7BEJRMDS0IH28O7WadB
-	 kPdBkZjsvE+Ww==
-Received: by x201s (Postfix, from userid 1000)
-	id F02F5205049; Mon, 08 Apr 2024 13:09:39 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Louis Peens <louis.peens@corigine.com>,
-	Taras Chornyi <taras.chornyi@plvision.eu>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
+	s=arc-20240116; t=1712582589; c=relaxed/simple;
+	bh=z6kMTjY5qXKBn2JvGsBepTnGV0+FurDhLE8/eSDMU9Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hpn7gQ/JZ1QFVhUWlGvGhToXhPTj8bY0mCm8SEG2rElRblP2djnT/ROQe13XQhk/eub+P8ycEnE4sakSzi/xoEXqaw/vG/UEUdR4QmO4S2Edw4cj3Xh4OJi3+8UTndfxUIdjwknywRnucZBNHebtDfzmyDLd+pFH3z58VWlSxfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 996C41A1315;
+	Mon,  8 Apr 2024 15:23:06 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 593931A14D9;
+	Mon,  8 Apr 2024 15:23:06 +0200 (CEST)
+Received: from pe-lt8779.in-pnq01.nxp.com (pe-lt8779.in-pnq01.nxp.com [10.17.104.141])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6346E1802200;
+	Mon,  8 Apr 2024 21:23:04 +0800 (+08)
+From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+To: marcel@holtmann.org,
+	luiz.dentz@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: linux-bluetooth@vger.kernel.org,
 	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Yanguo Li <yanguo.li@corigine.com>,
-	oss-drivers@corigine.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>
-Subject: [PATCH net-next 3/6] flow_offload: add flow_rule_no_control_flags()
-Date: Mon,  8 Apr 2024 13:09:21 +0000
-Message-ID: <20240408130927.78594-4-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240408130927.78594-1-ast@fiberby.net>
-References: <20240408130927.78594-1-ast@fiberby.net>
+	amitkumar.karwar@nxp.com,
+	rohit.fule@nxp.com,
+	neeraj.sanjaykale@nxp.com,
+	sherry.sun@nxp.com,
+	ziniu.wang_1@nxp.com,
+	haibo.chen@nxp.com,
+	LnxRevLi@nxp.com
+Subject: [PATCH v2 0/2] Bluetooth: btnxpuart: Update firmware names
+Date: Mon,  8 Apr 2024 18:52:39 +0530
+Message-Id: <20240408132241.750792-1-neeraj.sanjaykale@nxp.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-This helper can be used by drivers, that doesn't support
-any control flags, to reject any attempt to install rules
-with control flags.
+This patch series updates the BT firmware file names in BTNXPUART
+driver, and adds a new optional firmware-name device tree property to
+override the firmware file names hardcoded in the driver. This will
+allow user to continue using the older firmware files.
 
-This is aimed at drivers, which uses flow_rule_match_control(),
-but doesn't implement any control flags.
+This change is necessary as newer firmware releases will have
+standardized naming convention aligned across all newer and legacy
+chipsets.
 
-Only compile-tested.
+Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- include/net/flow_offload.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Neeraj Sanjay Kale (2):
+  dt-bindings: net: bluetooth: btnxpuart: Add firmware-name property
+  Bluetooth: btnxpuart: Update firmware names
 
-diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-index c1317b14da08c..415d225204a1f 100644
---- a/include/net/flow_offload.h
-+++ b/include/net/flow_offload.h
-@@ -471,6 +471,19 @@ static inline bool flow_rule_no_unsupp_control_flags(const u32 supp_flags,
- 	return false;
- }
- 
-+/**
-+ * flow_rule_no_control_flags() - check for presence of any control flags
-+ * @flags: flags present in rule
-+ * @extack: The netlink extended ACK for reporting errors.
-+ *
-+ * Returns true if no control flags are set, false otherwise.
-+ */
-+static inline bool flow_rule_no_control_flags(const u32 flags,
-+					      struct netlink_ext_ack *extack)
-+{
-+	return flow_rule_no_unsupp_control_flags(0, flags, extack);
-+}
-+
- struct flow_stats {
- 	u64	pkts;
- 	u64	bytes;
+ .../net/bluetooth/nxp,88w8987-bt.yaml         |  6 ++++
+ drivers/bluetooth/btnxpuart.c                 | 28 +++++++++++--------
+ 2 files changed, 23 insertions(+), 11 deletions(-)
+
 -- 
-2.43.0
+2.34.1
 
