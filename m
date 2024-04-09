@@ -1,140 +1,80 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2F913D53B;
-	Tue,  9 Apr 2024 15:59:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CBF135A6C;
+	Tue,  9 Apr 2024 16:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712678349; cv=none; b=o3UT8vLVOouUmQXkkjR1c+wak48tm3Cl0QKbVsrk9SoVO0oVqUUTA3siKGFFu7fci3vokvro64KYR5ahzyFaASczCQomLQxkIwBcdzzdNCQoML5u8Bmrl81eECdNLCTr2bMa77kU4fu5aYUleyKdPSTpuA7Si0buUqzs1hJ5eUA=
+	t=1712678405; cv=none; b=JkWvu49cs5TSiJJ3YRgaNqcykTow80Vo08cQxBUbd0rg2sNnhzWS5QvJ+2/8hD7ViHV5JaxqFwyTcODidR4Meok0S/8GcHnvklZ/XbA36McV7WVBmDHJ0/QAZU7tHRoaACYD+yP8YNYl9WntcpxngJqJ39FS08YIiJErEDmWj0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712678349; c=relaxed/simple;
-	bh=m8H9joEIptmRTW9J5ds/aLheZ/X7urtgRu5eARksGZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVnemh3v2Px3x9uP46HIMzHgbT21fmC+qkGCi+mv1zrwCiXxf1RgLyAkWKpktwkC5PjMUUhcnqzngVF1UhnTZ6lHFOfJx7y8J0y5BWnthoO0n1QQ8ERHxIGCms7XkbgOkW07p4pwPUvtfCu2vpUYRRUx0zLBQAFZh4V1mOXNz1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e3f17c6491so22828855ad.2;
-        Tue, 09 Apr 2024 08:59:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712678348; x=1713283148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AaAFxDesLCp1J9HNjP5kNxfAXTppheD2uL+QLjtaWsY=;
-        b=Vlwu+pv5A3ENGHYaWMiRlP/IwJrgrh14zeZvX9PkejTWEJMHS2xEcx1zcwbDqOxT1K
-         lGNSqYah+VKlq3oxzhQGZYIbHlrm6TwQcmd7I5HbpR4UgXTZZebKcTc5puAorIv/5Qu2
-         WC2YPPq/7qUdG9Kly9jhBhMnnp1QHgSPf0p7qCsZXmO1dR7BKkqKGPmflFhsqUaGB4Ka
-         yyA+XuhXSpuMBPEg1cTOPPiNC/QP/YqsoNANShgK1el0TcKb5jLW3mfTvYpN3SZLjf3U
-         aYZlJuyC9Gq1WbnmXYcipp1I0kDCOj6lx8XWEIQ2T4P5484eo5HeNDyHodAjKPV+T9u/
-         ISIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlu6lGmt97G8HCX4Q7ziULPLzt2JwjGIJ1IAfNE3TKNaae6pvdvI94tQqta/OG3DClA69aIXTqubremuo4Z2XgsCxy8o6dUcmDnR0FxgFqaXd2v7vwicDlJ9qgu30foynS3KdLc9Z9g2vdVRU+oQ==
-X-Gm-Message-State: AOJu0Yzy7GcCn0utrObmCDPccomn/EiQO96awCgaw7eTkE7SIYzng43S
-	ydVdY7Nwj8pysPJbxxXbwnDaHvpEWEzBF48z2s6wUcd5pQaTXjDJH4cMPiHcIjHGpf6eJm5b8FM
-	ze20aXvu3rr5xkfTUFg6EVy/aGPo=
-X-Google-Smtp-Source: AGHT+IEoB3gl4csO3v2Yp3hXSGaET+RnrA2EP5yYdzwofOI00wbretEX9XVxg9tqhSnaCcQ3YUvMKRHsLVEF+2Slp70=
-X-Received: by 2002:a17:903:240b:b0:1e3:e257:2c8d with SMTP id
- e11-20020a170903240b00b001e3e2572c8dmr182741plo.11.1712678347692; Tue, 09 Apr
- 2024 08:59:07 -0700 (PDT)
+	s=arc-20240116; t=1712678405; c=relaxed/simple;
+	bh=Imb3C4vpp1D0w3rjX86j5aQFa1wiZZ4Mney1e/DlfPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=podVTy5nsUOQMeooiFyPxUl1n6paop+MVB8wbK3NnmC4xs9dmN4+jC5or5tc4tpazCWF6Aj6vjPGd9p9DZyhMFDAj9lULVU9jaKp7CQN/tBr5Gi1egI6A5S1BBzDhC1YFUeQZAvjn8I7vHaDQsTJ4J2wrv3roGDhYh0kUgXfZdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCr/P827; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCr/P827"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DC1BC433C7;
+	Tue,  9 Apr 2024 16:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712678404;
+	bh=Imb3C4vpp1D0w3rjX86j5aQFa1wiZZ4Mney1e/DlfPg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=CCr/P827b4dfsdZsCyYGTzQePrrEMBjvGijOUuXPgUvVwUfIHglPWUfMXahZTJMDc
+	 3z2qn+QczQb6NMSa/UsN6EradUXPBD5i+9L5NOQVfbXd4bnAc039UO+xpjRjMdOk8y
+	 vPTQkbvLEV9Ged3WPv3V77m/ca40lZ/NUNuei+CJYT0m9chJQCnTZ4E2OaDEmox1XO
+	 fkHVj3YkggF4Hj5rnfnEzygVMi+8dcE3OC/L5yJsBYVYJnMHz08Z8H1r+UfszNJc6S
+	 468Az/QvH4+lUF4MNx2QDp4Se3p54/iS1n32fYHyInGCcZT7X1L15qAOkqkTADvLTi
+	 dq/e6l7D2MLWw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 42410CE2D22; Tue,  9 Apr 2024 09:00:04 -0700 (PDT)
+Date: Tue, 9 Apr 2024 09:00:04 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [paulmck-rcu:dev.2024.04.04b 59/65] controller.c:undefined
+ reference to `cmpxchg_emu_u8'
+Message-ID: <1e4d7011-7dda-4384-96d5-2eedcf9383fd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <202404091402.CYa0g4R6-lkp@intel.com>
+ <69d190ae-32c8-4064-b064-358acc2fa7c6@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408185520.1550865-1-namhyung@kernel.org> <20240408185520.1550865-2-namhyung@kernel.org>
- <874jcb9etk.fsf@intel.com> <ZhTwPLliHXKPAJUQ@gmail.com> <87pluy972m.fsf@intel.com>
-In-Reply-To: <87pluy972m.fsf@intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 9 Apr 2024 08:58:55 -0700
-Message-ID: <CAM9d7cizO8j3tLjxiVKh4qw3dOzqKmUKZg8BZwaCF=ChmbX81A@mail.gmail.com>
-Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
- kernel sources
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69d190ae-32c8-4064-b064-358acc2fa7c6@paulmck-laptop>
 
-Hello,
+On Tue, Apr 09, 2024 at 08:56:05AM -0700, Paul E. McKenney wrote:
+> On Tue, Apr 09, 2024 at 02:44:49PM +0800, kernel test robot wrote:
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.04.04b
+> > head:   e2a520f3f3921cb5d3c9631917fccf8c215991ce
+> > commit: 5ce37a62e3d207bd20d4c850c4547816c0dd9c22 [59/65] EXP arch/x86: Test one-byte cmpxchg emulation
+> > config: i386-buildonly-randconfig-006-20240409 (https://download.01.org/0day-ci/archive/20240409/202404091402.CYa0g4R6-lkp@intel.com/config)
+> > compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+> > reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240409/202404091402.CYa0g4R6-lkp@intel.com/reproduce)
+> > 
+> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > the same patch/commit), kindly add following tags
+> > | Reported-by: kernel test robot <lkp@intel.com>
+> > | Closes: https://lore.kernel.org/oe-kbuild-all/202404091402.CYa0g4R6-lkp@intel.com/
+> > 
+> > All errors (new ones prefixed by >>):
+> > 
+> >    ld: drivers/platform/surface/aggregator/controller.o: in function `ssam_request_write_data':
+> > >> controller.c:(.text+0xcdf): undefined reference to `cmpxchg_emu_u8'
+> 
+> I believe that this is fixed in this updated version:
+> 
+> b8eb8a06afe1 ("EXP arch/x86: Test one-byte cmpxchg emulation")
+> 
+> But please let me know if I am missing something here.
 
-On Tue, Apr 9, 2024 at 3:14=E2=80=AFAM Jani Nikula <jani.nikula@linux.intel=
-.com> wrote:
->
-> On Tue, 09 Apr 2024, Ingo Molnar <mingo@kernel.org> wrote:
-> > * Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> >
-> >> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
-> >> > To pick up changes from:
-> >> >
-> >> >    b112364867499 ("drm/i915: Add GuC submission interface version qu=
-ery")
-> >> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
-> >> >
-> >> > This should be used to beautify DRM syscall arguments and it address=
-es
-> >> > these tools/perf build warnings:
-> >> >
-> >> >   Warning: Kernel ABI header differences:
-> >> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_=
-drm.h
-> >>
-> >> All these years and I never realized there are header copies
-> >> there. But... why copies?
-> >
-> > It's better than all the alternatives we tried so far:
-> >
-> >  - Symbolic links and direct #includes: this was the original approach =
-but
-> >    was pushed back on from the kernel side, when tooling modified the
-> >    headers and broke them accidentally for kernel builds.
-> >
-> >  - Duplicate self-defined ABI headers like glibc: double the maintenanc=
-e
-> >    burden, double the chance for mistakes, plus there's no tech-driven
-> >    notification mechanism to look at new kernel side changes.
-> >
-> > What we are doing now is a third option:
-> >
-> >  - A software-enforced copy-on-write mechanism of kernel headers to
-> >    tooling, driven by non-fatal warnings on the tooling side build when
-> >    kernel headers get modified:
-> >
-> >     Warning: Kernel ABI header differences:
-> >       diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_d=
-rm.h
-> >       diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
-> >       diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-> >       ...
-> >
-> >    The tooling policy is to always pick up the kernel side headers as-i=
-s,
-> >    and integate them into the tooling build. The warnings above serve a=
-s a
-> >    notification to tooling maintainers that there's changes on the kern=
-el
-> >    side.
-> >
-> > We've been using this for many years now, and it might seem hacky, but
-> > works surprisingly well.
-> >
-> > Does this make sense to you?
->
-> Yes, although there are probably pieces of the puzzle I'm missing.
-> Thanks for the explanation! (That might work almost as-is copied to
-> tools/include/uapi/README. ;)
->
-> It's also kind of funny to find this kind of back alleys of the kernel
-> repo I've never wandered to before.
+OK, what I am missing is my failure to have changed ARCH_NEED_CMPXCHG_1_2_EMU
+to ARCH_NEED_CMPXCHG_1_EMU.  On it!  And yet again, thank you for your testing
+efforts.
 
-I have some explanation in the cover letter of the series but I forgot
-to mention that in each commit message.  Probably I can update the
-explanation with Ingo's reply.
-
-Thanks,
-Namhyung
+							Thanx, Paul
