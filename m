@@ -1,198 +1,208 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2139.outbound.protection.outlook.com [40.107.102.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CDF134CE3;
-	Tue,  9 Apr 2024 15:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676911; cv=fail; b=KAH9la57g03frlsh92YwAewlVcx4JzFnSA8cCARlxKDw9ky5eMV9WNPbotyuXgW0J9m6CV0iNDQGhwFBml6lFeTAUouQIgcyIKpUkj/i6Q+DZ5ZHUhd82HDMwXh/htMhxJDIIL6JMhayzQISBGOPPRms6x5+MR5LwXZeRd/+C4g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676911; c=relaxed/simple;
-	bh=JFh9pDAum54grqrqE9u6diVkC+S6Hg+Ug5qANMKzLKI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hm1i3ilE+YCiAbdHkY9VGn6oGGJAMAYdn7b92K+auUHFHrTgUEdEvIy5RMU5zdYyrk9pNwsfRQfU1xMv+3Nsw0MgjqRfkxccwMB0evTKBCwAfBwIpUsi7C4RpM4NqJN8o9+SqedAfij6axPaXb68bgeqsSlFwyuEYgxl61mxGWI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BeLT0oNN; arc=fail smtp.client-ip=40.107.102.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1977113D511
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712676952; cv=none; b=uAJfoF34dmW53BG2ghxjEh1OMiiq7qt3lE+cpeySbOEcezmu3oSuHnQFob3cfpHxbOJeaw+6klWy7ohVNTWKrYv5LxLH2xqOI8MLpIQea7yn9HLx3SFAckbjcVEj7k+uzFtz9eMfJwa1GjBKsEdO3zNe3m+00SZb13jbmnzdxHY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712676952; c=relaxed/simple;
+	bh=0pjTPnekrZ6Mo2O3A8pGX4AK75zIDzNbFZm+tv/AiyM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h+8VkL+2+9mWk5ncmKkvZ4OmZtUjwgsjYmpobsHfV6FCi+K+6I/Qn3IldUwoWxrI/7usVFyQ15oP53IaCTLVIBsJYTnaEAiyMG01mHo2MW91Kif0xHNssEcXgP6nkl6CqPSX3yvBe1z9Jr9f84ymNjmPmV0RolZxRfuvDe65cnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=M8RQIUlD; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BeLT0oNN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TXY7YebFidL3ljwwGxw7QhmtW1P/lcmn94vKqxIpQnpJq2xnljCH4HyLfskCYJ0HO8U4LbwAF/4R1F6SiIGAYSXmSec3k2DbvrWuJAFyMNU6me0gFkIj2Vk/Gr1xpzXiECuPej1nHoukhzKEEdxE3zZoeCWj/xDCMy4UfSvbyo6wBZs89mAWFbuEbqr9wq1xKvafuY7tTMsROlBq3yXvuw49O+lt6t64uKKtksOCFwH8fusM97Y7aI/TUc4K8AgLhbbYsjlGJqHi68FA/JbCUszRyEvokTn2N88n/TrgKkeUAy81XY/U9RPvwimLmsEyKkCJinvPCC7N9gTvpFoiqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IzJMaBu9yeXpH7IyyNCB9XetP04HG0RmYP5kALA8sI4=;
- b=gAjjxQ3BHNP149hudqpVHXFJRMEDbGLIELd/4+9cgU/WH7p6zVmpflO9NpmjOMrSQFSzI4ZErey4wHH7tEahhq0JQ2/EZBAREkUQ9lwRNIuqQUEiKHC6fQCZv9KZ+4wy9suonwNKvvKMnRm7uxYrkX8UUf77AEaFvI/LuG2qLP0lbngcQl2qnYilpypfnoF/wWwDcu19lZqBOVBowGqhXnAQvdhbdoMX7GtAvgeadmh/zzDBqAjHQH9NQQC4rfQuD4rcxiRWOKwgVVELTtrSKbi+BT2SyjWx0zoPMmc3a3975/2CcCoc+gtjgwtdk1ZUmZ0WnIwMOoUbmRZbz328jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IzJMaBu9yeXpH7IyyNCB9XetP04HG0RmYP5kALA8sI4=;
- b=BeLT0oNNCaFHx2W8ldwnfc2f+fCpqMn5VrHjNVACCTzr31yHvzTIYv3/TN6tzvSbzSvHZpQXCYLKkvDRDZO5CF58afN498eBGgidTPpo4PSKp64G4Y/b9bRNr1kkk4l0q8g6fN6ES4xXrE47bL0CJDyn87v32z5ID7jIRPCbwVw=
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by PH7PR12MB6935.namprd12.prod.outlook.com (2603:10b6:510:1b9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
- 2024 15:35:05 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::f2b6:1034:76e8:f15a]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::f2b6:1034:76e8:f15a%6]) with mapi id 15.20.7409.042; Tue, 9 Apr 2024
- 15:35:05 +0000
-Message-ID: <42aea61f-52d7-4cea-9944-7130ffcf9c15@amd.com>
-Date: Tue, 9 Apr 2024 17:34:58 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-buf: add DMA_BUF_IOCTL_SYNC_PARTIAL support
-To: Rong Qianfeng <11065417@vivo.com>, Rong Qianfeng <rongqianfeng@vivo.com>,
- Jianqun Xu <jay.xu@rock-chips.com>, sumit.semwal@linaro.org
-Cc: pekka.paalanen@collabora.com, daniel.vetter@ffwll.ch,
- jason@jlekstrand.net, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
- linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
-References: <20211113062222.3743909-1-jay.xu@rock-chips.com>
- <1da5cdf0-ccb8-3740-cf96-794c4d5b2eb4@amd.com>
- <3175d41a-fc44-4741-91ac-005c8f21abb8@vivo.com>
- <9e6f1f52-db49-43bb-a0c2-b0ad12c28aa1@amd.com>
- <5c7ac24c-79fa-45fc-a4fd-5b8fc77a741b@vivo.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <5c7ac24c-79fa-45fc-a4fd-5b8fc77a741b@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0144.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:96::19) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="M8RQIUlD"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d8b194341eso5801841fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712676948; x=1713281748; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nARArI/JGxcqeVSW+91I3DRTdX+G+3rkUWRdOGuyuMs=;
+        b=M8RQIUlDboOKc3mYlmgZamgiQC/aqLQdEjingQuXqsMIhm0B833yg2d/kFvFgYpdcs
+         uI+RCkeL7K7XLOF/96xLDwC4TbsVVRzLdv3icLl0LbRBslasba4tb2KPocIze+zr9O24
+         tGobTO82QFpSI01PDd9R/PIqqdqEHl3XFIhJxdf+MiL+I2oPBRvjlk2cSkwsLYvgqoR/
+         YW58TtOa+ApGdF7yexxbzbmvIHajgQlMIMa9jTil8T4fJg2HAARCZpAsJmdTktmgwkRc
+         qXPZOxCylHAAHTn1sCxK5OWt2JuGhCGFF2KvvdtpBvYSXePb/br+ec+iNyk53+5Z65uH
+         WihA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712676948; x=1713281748;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nARArI/JGxcqeVSW+91I3DRTdX+G+3rkUWRdOGuyuMs=;
+        b=RFVbwR4gFJ50V8yPwElFWASbPzh7m5x04NFo3ke3tEjccmKwFeSe+326MEgLpZELqa
+         fLRQNtIIG8SUkL3TdFeCrOWdBjHHO3g6zO/MJ7FHDcFbkKTkt+BSiP7Nyw0oURm28jwQ
+         Aefx0JRnMVvXYb5cypaghQci+ZnEZ00rXDhQ9VhIrey7GUPU1V8g2ExvvaPeIG7DwJue
+         Ouptq2i3RQSzawyhf49udK76qI7tMlYN+DW9MhCWQhzFAUUfZOD9TYN1hgm3thDmzS8H
+         YAWki61RUZ0ssYpvwZK5cUk4wITeY30KVe3OW5YDX/try0RgdwvCrOsyOUCo0Sd/Wxtr
+         P84g==
+X-Forwarded-Encrypted: i=1; AJvYcCX/kKLKxA5edGbSHBmr7ytp8gCBlW/QPMZdZjLSX9Q+sQmGr5GSwihfw4IpFJNoAtGjs2umDjOkuRnfO5aK/gDJWqHhOMdgPW+JTxyt
+X-Gm-Message-State: AOJu0YzO/8Z2E7ZZRJr5H3DBg0UpVVh8x/oSyTkCW87QgTJz/eW1ILfq
+	AlLDxgggPO8Hh8TRUiBSPwaE4fZ0D0z5XzdavgeqlO5xw7aK7pa0tGYu8SBczuxjN9Ws0Cqjg+3
+	qyaJHU+3xV9NXn5vIvubc7Op4RpXX5mVUDil0sg==
+X-Google-Smtp-Source: AGHT+IGYR0H515M8Yuyw6jAM8maTiRT7zQOgLaut79Nmzv6VqTS4JpTG+pUsMdsTdhL2wX5eqAgRDApWqIUOQCBytW4=
+X-Received: by 2002:a2e:b8c3:0:b0:2d8:a814:583d with SMTP id
+ s3-20020a2eb8c3000000b002d8a814583dmr166320ljp.30.1712676947967; Tue, 09 Apr
+ 2024 08:35:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|PH7PR12MB6935:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	LQwPNWDYyrUqKxONMsorqS+LM1yAzs46r3dJir9uH5EzWYtsZ76S0rRFYYxJBd4nzaSCfzdOYlBsY3Oy/OmrpO16o3lA+41QvPq04bB/986zx05HzKc395n2jUr0iW2Ser5xF4XrTKisInxb/Vko66QGR0aCWWQOqiXk0/YCv0j2ZbdOhWaUt1nT04c2ucLezvvB9MTL3fmQOukU4osyOYWnzMn+glqfd853g/+r4vrDEiHnVduS/rkW2KGkwyr8/UO/AodT/Dlr4CaYis74VFhjK3Mc9QUV0HeBA06HgBYxTcZh+OHfw6oOshScITNZLmZOlQVXY9Mvl4IQut1HeX3OBSu2Rtio7JXayBkYXgaCR7FkK2ulqYcfD/DhzynnN6HooynJmfPirCix0IFAJsUvViiBJ321xhCkql8Vhq52Xt0rizazBzmYFLSG/Fi58/5EcleP6OsVuI0oT6UN0LUirKRCdJ2E6690lwgIhB6H+AUgGgVeJV6LKDIQjlvQqrwqVzS7znypeucRjbOTWb8zQ1X2qJZ/fmRJsVuBHm4AFjwyFhbOUWDAn+cI0iBN70AS9jWU2TADP0uTwmFlSBUZEKR08c18kEL6RgfLcCDirfZCoPRpWp3pJWVAwW75dreiMAenvD3gSI9O2HLcev2Vi1xLcb6qLbmirJnOMUk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SVc4czlmR3lDMCswWU9LQXRHVXo4RHF5ZiszYkI2bnNmZEc5K1g4S3NKY2xm?=
- =?utf-8?B?QS9QV0lib1NIQlY4eDZBZFZWM2pJTXZ3UWdiN2hPanA1NDNKN3VNTzYvVEFW?=
- =?utf-8?B?YnNqTWxJeFcrWUxLdzAwRWFvdCs4NDNCL1dYaWhHeVJmc1hwQ0VKSGFxSDQ0?=
- =?utf-8?B?QVU0OFpnSWkzY2lOeVEvWEdvOHdhZnhRS3hpWXpBSytWOUNQV3NMVWk5cDRS?=
- =?utf-8?B?L1FKUFJwYk5LOVZ1NFlGU3RKeDdnY2ZsWnJscU9MZmtINlNzMERJSFkvNFhx?=
- =?utf-8?B?SmZlUXJNUTdBL2ZCTEFKYzdjNDRSSHpXSTE5L1BDZE9FVFFmRHZaRE85eXFP?=
- =?utf-8?B?dzNDdEpXbk5sOGYwZWY1VTRSVTVGVFd0K3dDVEkwN29ZblM1Yk1wUEl4Szd6?=
- =?utf-8?B?THU1ZmVTTUJveFpWNTM5TVB0d3ppcjR0UVlLTWhpRmt0UC9TeHhpTWIzMGJh?=
- =?utf-8?B?M0FjbHVLNVJGR0NXNTBzVG9kMS96QlJROUhUUUF4a0FtQzVCUTJDeFU5a3pa?=
- =?utf-8?B?bWQ1SWc5ZnlBbjBwZEhtQ0dySUdxdnNvVUdjQytEZTNsb1NxVURQSEk0MCtS?=
- =?utf-8?B?TlpJL091Q3RmbWFxcXJYc1RGb3ZET0tsZUh3aXorcUtyVjdXT1NuT0hCNE1C?=
- =?utf-8?B?Kzk0dmRGV1dOS2hiSXNyOHVITElUWEVKSVRQVGlyUHFXTDVNbGRXNlVMQjNJ?=
- =?utf-8?B?SjZmeERsTjJuRWVkU3NpdkRVSVNIQ2dIMTFCNEZmQVpRVmRXOVFUcERpMW15?=
- =?utf-8?B?VTNwa1FYaXNCQTFmN2g4aExGN2NpQVFYcWVyK3N6Y1p0MlZ2cFlLamVkQXlk?=
- =?utf-8?B?Q0NqMEJvWkJIOXpxSzRzdlNBY05YN3Y2N3FnTkpRejJIUG5zcm5zVTBKMkhv?=
- =?utf-8?B?ZC8ycUpLRy83UjRPQmI3QUFLb0Q0cFpKRlVFM1czZkVrQXNFSkY1U1QzQ0Fj?=
- =?utf-8?B?dEZzc0k1Z3lycVZ2aDhIeW1iZk1iZ3ltYzVnaWVMZkhwZXNrMGdHSnVhYUhX?=
- =?utf-8?B?YW9WZDFCVUlZcFBhcnZEWmlhbmhCUXdqcUNpRk9Ec2g4czI0ZHJ6a3JJRVl6?=
- =?utf-8?B?S25uZTMzcExINE1zVHAyendaZy9oVXJ5TnRZanp6TGNucnduZXRpK3RwYjBQ?=
- =?utf-8?B?bWs3b2x0MVBIbkptcVhxR0l3dDFUZFJQL0wvVHRyb3A3SHkwM3lXSnlRVkNv?=
- =?utf-8?B?dDRkQWNpRVhMNWtOd3F4L3l0djhkc3ZLZFVDVDBQUG0xNURLd3V3bjRET2wy?=
- =?utf-8?B?NlVZNVovLzErRksyYjhzcEFmeFhvOGdCeXMwN09qdHZDNGZNR2w0ZXRjR3BS?=
- =?utf-8?B?TXl6SUNmTys2QUJwcGM4THpUblFmVXZaN0wyVUFDN1crOWNYSk9tZ0pSa3F5?=
- =?utf-8?B?NCs5Uk1SM2tSWktxWVNWaXh1QStraU1FOG90cVZZNkRwbHoycWtOL3BhLzhw?=
- =?utf-8?B?cHprb3NOYWNKOURUMzRDSk8vc00rTnM4cGdCVVFMVWNrdit5c01KL0tsQjc5?=
- =?utf-8?B?UnNrQmZ6cFBjYm5ldm5FeG8ycWpWWWNYa3ZDWE1hZVJGN3VQdktuR1QzZXRa?=
- =?utf-8?B?NDdnMU1BNk82T3orOWdXdHdRWTdyT1RQR05yQUtnUU90Qkg1bHdWS0E5M0NH?=
- =?utf-8?B?bHNvTFc4OVAyMHVmMkhLT0tKaExLSnlvay9VS3I4YVQydklSMGVGa09SNWxy?=
- =?utf-8?B?VzZmVHpMMzJMaFk3cnlaOXlEUFJ3YncrRVFJSVRZbklzaVZ1T3NQTGIzU3F1?=
- =?utf-8?B?WEtMaDB0RTJFK0p6Mk9uZksyVXgrNWJWZmVtYTBSMjNIRUtOYWpobVYvTys0?=
- =?utf-8?B?UnhRUkVPT0pySnNRNTN3dUpQN0N4cG80d001UG8xYkFiWjZCNm91OVgrZExy?=
- =?utf-8?B?ck4yemJwNytmbWVLSCtndW8wWW1CcHpiUUxTRWpMVktVOHJZQ3o0VzVka0pU?=
- =?utf-8?B?NGpZS0VTTVY1aFgwQXlpWmp5akJrVi9Pd2RlaTBYYnBaMTduc2g0a2NBNE5D?=
- =?utf-8?B?alJDbTEvZEtNZ3gxelNXMlh4anVWUFlmRlg5bTBWM0xQR0FMaE93T3ZUWlhl?=
- =?utf-8?B?ejE2MkY5YWw4U1kxL2dtWXlrOGxnTHdiaWd3bGdWeEJUZy9PenI2ZGNORGpi?=
- =?utf-8?Q?6ZFrgaJqwYxD0OtJtShE/LfFi?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd98731f-1ac4-41f3-a20c-08dc58aaa11c
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 15:35:05.3677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XNDwPIN0nNSmxS9YJcOVy7Hv9+yHXg9YW4W5+Uto/FmZfbxgfvqm8XwVpGgQsScm
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6935
+References: <20240325131624.26023-1-brgl@bgdev.pl> <6b63d5d2-5f30-4fbd-a872-91f32dc32c87@gmail.com>
+In-Reply-To: <6b63d5d2-5f30-4fbd-a872-91f32dc32c87@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 9 Apr 2024 17:35:36 +0200
+Message-ID: <CAMRc=McWdU-=MoGe+yVnj4OKzM-2D9KUZnQuj0MmtxDG10e3kw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/16] power: sequencing: implement the subsystem and
+ add first users
+To: Xilin Wu <wuxilin123@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kalle Valo <kvalo@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Saravana Kannan <saravanak@google.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Alex Elder <elder@linaro.org>, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Abel Vesa <abel.vesa@linaro.org>, 
+	Manivannan Sadhasivam <mani@kernel.org>, Lukas Wunner <lukas@wunner.de>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, linux-bluetooth@vger.kernel.org, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Am 09.04.24 um 09:32 schrieb Rong Qianfeng:
+On Sat, Apr 6, 2024 at 5:03=E2=80=AFAM Xilin Wu <wuxilin123@gmail.com> wrot=
+e:
 >
-> 在 2024/4/8 15:58, Christian König 写道:
->> Am 07.04.24 um 09:50 schrieb Rong Qianfeng:
->>> [SNIP]
->>>> Am 13.11.21 um 07:22 schrieb Jianqun Xu:
->>>>> Add DMA_BUF_IOCTL_SYNC_PARTIAL support for user to sync dma-buf with
->>>>> offset and len.
->>>>
->>>> You have not given an use case for this so it is a bit hard to 
->>>> review. And from the existing use cases I don't see why this should 
->>>> be necessary.
->>>>
->>>> Even worse from the existing backend implementation I don't even 
->>>> see how drivers should be able to fulfill this semantics.
->>>>
->>>> Please explain further,
->>>> Christian.
->>> Here is a practical case:
->>> The user space can allocate a large chunk of dma-buf for 
->>> self-management, used as a shared memory pool.
->>> Small dma-buf can be allocated from this shared memory pool and 
->>> released back to it after use, thus improving the speed of dma-buf 
->>> allocation and release.
->>> Additionally, custom functionalities such as memory statistics and 
->>> boundary checking can be implemented in the user space.
->>> Of course, the above-mentioned functionalities require the 
->>> implementation of a partial cache sync interface.
->>
->> Well that is obvious, but where is the code doing that?
->>
->> You can't send out code without an actual user of it. That will 
->> obviously be rejected.
->>
->> Regards,
->> Christian.
+> I tested the patchset on SM8550 and it does give me working WiFi. However=
+ I
+> seethe following warnings during boot.
 >
-> In fact, we have already used the user-level dma-buf memory pool in 
-> the camera shooting scenario on the phone.
+> [    5.973011] mhi mhi0: Requested to power ON
+> [    6.597591] mhi mhi0: Power on setup success
+> [    6.597631] sysfs: cannot create duplicate filename '/devices/platform=
+/soc@0/1c00000.pcie/pci0000:00/0000:00:00.0/resource0'
+> [    6.597634] CPU: 7 PID: 154 Comm: kworker/u32:5 Tainted: G S          =
+       6.9.0-rc1-next-20240328-g955237c9980c #1
+> [    6.597635] Hardware name: AYN Odin 2 (DT)
+> [    6.597637] Workqueue: async async_run_entry_fn
+> [    6.597645] Call trace:
+> [    6.597646]  dump_backtrace+0xa0/0x128
+> [    6.597649]  show_stack+0x20/0x38
+> [    6.597650]  dump_stack_lvl+0x74/0x90
+> [    6.597653]  dump_stack+0x18/0x28
+> [    6.597654]  sysfs_warn_dup+0x6c/0x90
+> [    6.597658]  sysfs_add_bin_file_mode_ns+0xdc/0x100
+> [    6.597660]  sysfs_create_bin_file+0x7c/0xb8
+> [    6.597662]  pci_create_attr+0xb4/0x1a8
+> [    6.597665]  pci_create_resource_files+0x64/0xd0
+> [    6.597667]  pci_create_sysfs_dev_files+0x24/0x40
+> [    6.597669]  pci_bus_add_device+0x54/0x138
+> [    6.597670]  pci_bus_add_devices+0x40/0x98
+> [    6.597672]  pci_host_probe+0x70/0xf0
+> [    6.597673]  dw_pcie_host_init+0x248/0x658
+> [    6.597676]  qcom_pcie_probe+0x234/0x330
+> [    6.597677]  platform_probe+0x70/0xd8
+> [    6.597680]  really_probe+0xc8/0x3a0
+> [    6.597681]  __driver_probe_device+0x84/0x170
+> [    6.597682]  driver_probe_device+0x44/0x120
+> [    6.597683]  __device_attach_driver+0xc4/0x168
+> [    6.597684]  bus_for_each_drv+0x8c/0xf0
+> [    6.597686]  __device_attach_async_helper+0xb4/0x118
+> [    6.597687]  async_run_entry_fn+0x40/0x178
+> [    6.597689]  process_one_work+0x16c/0x410
+> [    6.597691]  worker_thread+0x284/0x3a0
+> [    6.597693]  kthread+0x118/0x128
+> [    6.597693]  ret_from_fork+0x10/0x20
+> [    6.597698] ------------[ cut here ]------------
+> [    6.597698] proc_dir_entry '0000:00/00.0' already registered
+> [    6.597710] WARNING: CPU: 7 PID: 154 at fs/proc/generic.c:375 proc_reg=
+ister+0x138/0x1d0
+> [    6.597713] Modules linked in:
+> [    6.597714] CPU: 7 PID: 154 Comm: kworker/u32:5 Tainted: G S          =
+       6.9.0-rc1-next-20240328-g955237c9980c #1
+> [    6.597715] Hardware name: AYN Odin 2 (DT)
+> [    6.597716] Workqueue: async async_run_entry_fn
+> [    6.597718] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYP=
+E=3D--)
+> [    6.597719] pc : proc_register+0x138/0x1d0
+> [    6.597721] lr : proc_register+0x138/0x1d0
+> [    6.597723] sp : ffff800081e3b9a0
+> [    6.597723] x29: ffff800081e3b9a0 x28: 0000000000000000 x27: ffffddb2a=
+28eabe0
+> [    6.597725] x26: ffff3425c9ada5c0 x25: ffffddb2a2d4eef0 x24: ffff3425c=
+9ada540
+> [    6.597726] x23: 0000000000000004 x22: ffff3425c7b1822c x21: 000000000=
+0000004
+> [    6.597727] x20: ffff3425c7b18180 x19: ffff3425c9adaec8 x18: fffffffff=
+fffffff
+> [    6.597729] x17: 3040636f732f6d72 x16: 6f6674616c702f73 x15: ffff80008=
+1e3b910
+> [    6.597730] x14: 0000000000000000 x13: 0a64657265747369 x12: 676572207=
+9646165
+> [    6.597731] x11: fffffffffff00000 x10: ffffddb2a27c4fb0 x9 : ffffddb29=
+f5d7528
+> [    6.597733] x8 : 00000000ffff7fff x7 : ffffddb2a27c4fb0 x6 : 80000000f=
+fff8000
+> [    6.597734] x5 : 0000000000000358 x4 : 0000000000000000 x3 : 00000000f=
+fffffff
+> [    6.597736] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff3425c=
+5ce0000
+> [    6.597737] Call trace:
+> [    6.597737]  proc_register+0x138/0x1d0
+> [    6.597739]  proc_create_data+0x48/0x78
+> [    6.597741]  pci_proc_attach_device+0x84/0x118
+> [    6.597743]  pci_bus_add_device+0x5c/0x138
+> [    6.597744]  pci_bus_add_devices+0x40/0x98
+> [    6.597745]  pci_host_probe+0x70/0xf0
+> [    6.597746]  dw_pcie_host_init+0x248/0x658
+> [    6.597748]  qcom_pcie_probe+0x234/0x330
+> [    6.597749]  platform_probe+0x70/0xd8
+> [    6.597750]  really_probe+0xc8/0x3a0
+> [    6.597751]  __driver_probe_device+0x84/0x170
+> [    6.597752]  driver_probe_device+0x44/0x120
+> [    6.597753]  __device_attach_driver+0xc4/0x168
+> [    6.597754]  bus_for_each_drv+0x8c/0xf0
+> [    6.597756]  __device_attach_async_helper+0xb4/0x118
+> [    6.597757]  async_run_entry_fn+0x40/0x178
+> [    6.597759]  process_one_work+0x16c/0x410
+> [    6.597760]  worker_thread+0x284/0x3a0
+> [    6.597761]  kthread+0x118/0x128
+> [    6.597762]  ret_from_fork+0x10/0x20
+> [    6.597763] ---[ end trace 0000000000000000 ]---
 >
-> From the test results, The execution time of the photo shooting 
-> algorithm has been reduced from 3.8s to 3s.
+> This probably only occurs when the relevant drivers on compiled as built-=
+in.
+> Similar behavior has been noticed before as well:
 >
-> To be honest, I didn't understand your concern "...how drivers should 
-> be able to fulfill this semantics." Can you please help explain it in 
-> more detail?
-
-Well you don't give any upstream driver code which actually uses this 
-interface.
-
-If you want to suggest some changes to the core Linux kernel your driver 
-actually needs to be upstream.
-
-As long as that isn't the case this approach here is a completely no-go.
-
-Regards,
-Christian.
-
+> https://lore.kernel.org/lkml/20240201155532.49707-1-brgl@bgdev.pl/T/#mdee=
+ca9bc8e19458787d53738298abcfff443068a
 >
 > Thanks,
+> Xilin
 >
-> Rong Qianfeng.
->
->>
->>>
->>> Thanks
->>> Rong Qianfeng.
->>
 
+Thanks for the report. The reason for this was populating the platform
+devices before the bridge device was fully added. In case of loadable
+modules this meant the pwrctl probe would be deferred long enough for
+that to complete so I didn't see it but with pwrctl built-in this
+would trigger the problem. I fixed it locally and will resend with
+that addressed.
+
+Bart
