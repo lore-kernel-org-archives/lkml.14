@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589DC181;
-	Tue,  9 Apr 2024 00:07:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C91B10F2;
+	Tue,  9 Apr 2024 00:07:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712621221; cv=none; b=syia55RwYGB7o9GFupU+vN7uGhqTSs2NA/VCsPUaTGpq46NdBZYuAkxDBgnjz6DHFj2mvB1fstqPiFAMPiWOdsA6s0XeCrrLPtHroHUVllsLSusmhqRBqDNHPOyrHxrz1N8o7gU3YVAcvjjo8mgWjT+KvABH4B61KEKJyogwqOs=
+	t=1712621222; cv=none; b=jYo72tL+SsSJKCVb46XtTSnb3W4Z5pNVLGvBYitOI9ZP4GAtmrISe7XhmwH3uw+JF+ppliPk8AZ1T5aGwVpKepIZ3q/HQkVK4O2RN1fTh391u7RRj7OzrvzfiB99n2ckEcQfNQCAxk0nZJfjgaD3iHJ8g8tMbJPSicZ3hcElgGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712621221; c=relaxed/simple;
-	bh=hnbsX2qpaf7teU63lYgBX1t6T5W3Z3IYurbU6/sqTF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RVmfsbmBrcYMJzZMuFcke8BKhVCeWtr4fZqnCQV2XAVyeTShLVL8N1/5Y4O2vfG88T363NiuIl6CHQ/qP01ypbOMrjM9tRlxhVm5DmJvA3XpkzpA6jeVbA8P8dfG90/bvlZDPLSC01+32sToUKQhEMFIuXt/lCmNhF+oof+K6o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pz+HFaI1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712621222; c=relaxed/simple;
+	bh=k3PAt6RB4aQhTDZqROsa1ewlfKf/wWXMCfnMseif7wY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ArTiw94neb9G1YU+YcVF9V3nbKAWam3zElEV1u30wracmfkELb3dQ5zXpNa0A6YgV33KU3p2Cl75EGVCNTZC6LK7eiUkpDo8BmFsDtLC1FU70/sRMVgQscCdxu4X9wBJx9OgDedmOytKaPkVOPvltb+6kS8MwMGMOAUDeQlN9I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GR3wUxeW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pz+HFaI1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BFD6C433C7;
-	Tue,  9 Apr 2024 00:07:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GR3wUxeW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C389C433C7;
+	Tue,  9 Apr 2024 00:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712621220;
-	bh=hnbsX2qpaf7teU63lYgBX1t6T5W3Z3IYurbU6/sqTF8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Pz+HFaI15WuJTl0skg1ObQ6TWfPdoLV1fppH5DuDIwF4bdRrpPOd648w1rXxv+k5f
-	 tqGkPa6tyYXum+jX1/r7KeS2guVEqlXx7+ma6h9XGUJ7UvUunTKUI/u2shDKQpGbhW
-	 uQXU+JeFfZrU8n+SHsHXLs0FwHJVvfZb8lJRwD8iJao2T8FB8w/vFBT6SvAN94doLI
-	 wrkv72fJv2EGu7xoHc0lhvoQAIGM4K4QN7HIP2aHKvwFNGZarzNxDdqpMF2stWhoW4
-	 kRw9NxeB1Io71Td9m+GQCcULooOQ0YpP6ncgzOohh44mfg8DVVlyykN4C7wtMEBhEU
-	 CUYbLTyaLZCXw==
+	s=k20201202; t=1712621222;
+	bh=k3PAt6RB4aQhTDZqROsa1ewlfKf/wWXMCfnMseif7wY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GR3wUxeWiwF0QsDCV7hYlEMB82nEVGY+TPnMJtSm+5+V4cK+K3JpSpY4CntTLv/Hc
+	 cPzH8nV4r4wvapI16QIzvm8r9P79Hi54A9vbSpZZU1bDnsK39uZD9RRbfSUVe8SVkw
+	 7XdYN5QBGKrzQgPHFKmQ4HVDnGH2C0kYX1Gnx2O7mlKrMgZB+bP6bjXSgN79ddHdJO
+	 Y/Z/1Pp+BDKi+zPJ1ITryXA9oju4WtCXAAcJotQD2cLjbbuSs4H0Qiq4818QnZWrF9
+	 DKDRTKdzb5/Gni8TWEoPM673EuZRVCUT+J9Hhb+izH/T09jW5A57q0BvJZ7rTF0f80
+	 hT6cQrxh6c2aQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,10 +39,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Stephane Eranian <eranian@google.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 1/3] perf hist: Move histogram related code to hist.h
-Date: Mon,  8 Apr 2024 17:06:57 -0700
-Message-ID: <20240409000659.1727785-1-namhyung@kernel.org>
+Subject: [PATCH 3/3] perf report: Add weight[123] output fields
+Date: Mon,  8 Apr 2024 17:06:59 -0700
+Message-ID: <20240409000659.1727785-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+In-Reply-To: <20240409000659.1727785-1-namhyung@kernel.org>
+References: <20240409000659.1727785-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,490 +53,472 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's strange that sort.h has the definition of struct hist_entry.  As
-sort.h already includes hist.h, let's move the data structure to hist.h.
+Add weight1, weight2 and weight3 fields to -F/--fields and their aliases
+like 'ins_lat', 'p_stage_cyc' and 'retire_lat'.  Note that they are in
+the sort keys too but the difference is that output fields will sum up
+the weight values and display the average.
+
+In the sort key, users can see the distribution of weight value and I
+think it's confusing we have local vs. global weight for the same weight.
+
+For example, I experiment with mem-loads events to get the weights.  On
+my laptop, it seems only weight1 field is supported.
+
+  $ perf mem record -- perf test -w noploop
+
+Let's look at the noploop function only.  It has 7 samples.
+
+  $ perf script -F event,ip,sym,weight | grep noploop
+  # event                         weight     ip           sym
+  cpu/mem-loads,ldlat=30/P:           43     55b3c122bffc noploop
+  cpu/mem-loads,ldlat=30/P:           48     55b3c122bffc noploop
+  cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
+  cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
+  cpu/mem-loads,ldlat=30/P:           59     55b3c122bffc noploop
+  cpu/mem-loads,ldlat=30/P:           33     55b3c122bffc noploop
+  cpu/mem-loads,ldlat=30/P:           38     55b3c122bffc noploop    <--- same weight
+
+When you use the 'weight' sort key, it'd show entries with a separate
+weight value separately.  Also note that the first entry has 3 samples
+with weight value 38, so they are displayed together and the weight
+value is the sum of 3 samples (114 = 38 * 3).
+
+  $ perf report -n -s +weight | grep -e Weight -e noploop
+  # Overhead  Samples  Command   Shared Object   Symbol         Weight
+       0.53%        3     perf   perf            [.] noploop    114
+       0.18%        1     perf   perf            [.] noploop    59
+       0.18%        1     perf   perf            [.] noploop    48
+       0.18%        1     perf   perf            [.] noploop    43
+       0.18%        1     perf   perf            [.] noploop    33
+
+If you use 'local_weight' sort key, you can see the actualy weight.
+
+  $ perf report -n -s +local_weight | grep -e Weight -e noploop
+  # Overhead  Samples  Command   Shared Object   Symbol         Local Weight
+       0.53%        3     perf   perf            [.] noploop    38
+       0.18%        1     perf   perf            [.] noploop    59
+       0.18%        1     perf   perf            [.] noploop    48
+       0.18%        1     perf   perf            [.] noploop    43
+       0.18%        1     perf   perf            [.] noploop    33
+
+But when you use the -F/--field option instead, you can see the average
+weight for the while noploop funciton (as it won't group samples by
+weight value and use the default 'comm,dso,sym' sort keys).
+
+  $ perf report -n -F +weight | grep -e Weight -e noploop
+  # Overhead  Samples  Weight1  Command  Shared Object  Symbol
+       1.23%        7     42.4  perf     perf           [.] noploop
+
+The weight1 field shows the average value:
+  (38 * 3 + 59 + 48 + 43 + 33) / 7 = 42.4
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/hist.h   | 191 +++++++++++++++++++++++++++++++++++++--
- tools/perf/util/sort.h   | 188 --------------------------------------
- tools/perf/util/values.h |   1 +
- 3 files changed, 184 insertions(+), 196 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  9 ++-
+ tools/perf/ui/hist.c                     | 92 +++++++++++++++++++-----
+ tools/perf/util/hist.h                   | 15 +++-
+ tools/perf/util/sort.c                   | 25 ++++---
+ tools/perf/util/sort.h                   |  2 +-
+ 5 files changed, 112 insertions(+), 31 deletions(-)
 
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index d8b863e01fe0..d2b1593ef700 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -121,6 +121,9 @@ OPTIONS
+ 	- type: Data type of sample memory access.
+ 	- typeoff: Offset in the data type of sample memory access.
+ 	- symoff: Offset in the symbol.
++	- weight1: Average value of event specific weight (1st field of weight_struct).
++	- weight2: Average value of event specific weight (2nd field of weight_struct).
++	- weight3: Average value of event specific weight (3rd field of weight_struct).
+ 
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+@@ -198,7 +201,11 @@ OPTIONS
+ --fields=::
+ 	Specify output field - multiple keys can be specified in CSV format.
+ 	Following fields are available:
+-	overhead, overhead_sys, overhead_us, overhead_children, sample and period.
++	overhead, overhead_sys, overhead_us, overhead_children, sample, period,
++	weight1, weight2, weight3, ins_lat, p_stage_cyc and retire_lat.  The
++	last 3 names are alias for the corresponding weights.  When the weight
++	fields are used, they will show the average value of the weight.
++
+ 	Also it can contain any sort key(s).
+ 
+ 	By default, every sort keys not specified in -F will be appended
+diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+index 2bf959d08354..685ba2a54fd8 100644
+--- a/tools/perf/ui/hist.c
++++ b/tools/perf/ui/hist.c
+@@ -25,7 +25,7 @@
+ 
+ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 		      hpp_field_fn get_field, const char *fmt, int len,
+-		      hpp_snprint_fn print_fn, bool fmt_percent)
++		      hpp_snprint_fn print_fn, enum perf_hpp_fmt_type fmtype)
+ {
+ 	int ret;
+ 	struct hists *hists = he->hists;
+@@ -33,7 +33,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 	char *buf = hpp->buf;
+ 	size_t size = hpp->size;
+ 
+-	if (fmt_percent) {
++	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
+ 		double percent = 0.0;
+ 		u64 total = hists__total_period(hists);
+ 
+@@ -41,8 +41,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 			percent = 100.0 * get_field(he) / total;
+ 
+ 		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, percent);
+-	} else
++	} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
++		double average = 0;
++
++		if (he->stat.nr_events)
++			average = 1.0 * get_field(he) / he->stat.nr_events;
++
++		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, average);
++	} else {
+ 		ret = hpp__call_print_fn(hpp, print_fn, fmt, len, get_field(he));
++	}
+ 
+ 	if (evsel__is_group_event(evsel)) {
+ 		int prev_idx, idx_delta;
+@@ -54,6 +62,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 		list_for_each_entry(pair, &he->pairs.head, pairs.node) {
+ 			u64 period = get_field(pair);
+ 			u64 total = hists__total_period(pair->hists);
++			int nr_samples = pair->stat.nr_events;
+ 
+ 			if (!total)
+ 				continue;
+@@ -66,7 +75,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 				 * zero-fill group members in the middle which
+ 				 * have no sample
+ 				 */
+-				if (fmt_percent) {
++				if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
+ 					ret += hpp__call_print_fn(hpp, print_fn,
+ 								  fmt, len, 0.0);
+ 				} else {
+@@ -75,9 +84,14 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 				}
+ 			}
+ 
+-			if (fmt_percent) {
++			if (fmtype == PERF_HPP_FMT_TYPE__PERCENT) {
+ 				ret += hpp__call_print_fn(hpp, print_fn, fmt, len,
+ 							  100.0 * period / total);
++			} else if (fmtype == PERF_HPP_FMT_TYPE__AVERAGE) {
++				double avg = nr_samples ? (period / nr_samples) : 0;
++
++				ret += hpp__call_print_fn(hpp, print_fn, fmt,
++							  len, avg);
+ 			} else {
+ 				ret += hpp__call_print_fn(hpp, print_fn, fmt,
+ 							  len, period);
+@@ -92,7 +106,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 			/*
+ 			 * zero-fill group members at last which have no sample
+ 			 */
+-			if (fmt_percent) {
++			if (fmtype != PERF_HPP_FMT_TYPE__RAW) {
+ 				ret += hpp__call_print_fn(hpp, print_fn,
+ 							  fmt, len, 0.0);
+ 			} else {
+@@ -114,33 +128,35 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
+ 
+ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	     struct hist_entry *he, hpp_field_fn get_field,
+-	     const char *fmtstr, hpp_snprint_fn print_fn, bool fmt_percent)
++	     const char *fmtstr, hpp_snprint_fn print_fn,
++	     enum perf_hpp_fmt_type fmtype)
+ {
+ 	int len = fmt->user_len ?: fmt->len;
+ 
+ 	if (symbol_conf.field_sep) {
+ 		return __hpp__fmt(hpp, he, get_field, fmtstr, 1,
+-				  print_fn, fmt_percent);
++				  print_fn, fmtype);
+ 	}
+ 
+-	if (fmt_percent)
++	if (fmtype == PERF_HPP_FMT_TYPE__PERCENT)
+ 		len -= 2; /* 2 for a space and a % sign */
+ 	else
+ 		len -= 1;
+ 
+-	return  __hpp__fmt(hpp, he, get_field, fmtstr, len, print_fn, fmt_percent);
++	return  __hpp__fmt(hpp, he, get_field, fmtstr, len, print_fn, fmtype);
+ }
+ 
+ int hpp__fmt_acc(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 		 struct hist_entry *he, hpp_field_fn get_field,
+-		 const char *fmtstr, hpp_snprint_fn print_fn, bool fmt_percent)
++		 const char *fmtstr, hpp_snprint_fn print_fn,
++		 enum perf_hpp_fmt_type fmtype)
+ {
+ 	if (!symbol_conf.cumulate_callchain) {
+ 		int len = fmt->user_len ?: fmt->len;
+ 		return snprintf(hpp->buf, hpp->size, " %*s", len - 1, "N/A");
+ 	}
+ 
+-	return hpp__fmt(fmt, hpp, he, get_field, fmtstr, print_fn, fmt_percent);
++	return hpp__fmt(fmt, hpp, he, get_field, fmtstr, print_fn, fmtype);
+ }
+ 
+ static int field_cmp(u64 field_a, u64 field_b)
+@@ -350,7 +366,7 @@ static int hpp__color_##_type(struct perf_hpp_fmt *fmt,				\
+ 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
+ {										\
+ 	return hpp__fmt(fmt, hpp, he, he_get_##_field, " %*.2f%%",		\
+-			hpp_color_scnprintf, true);				\
++			hpp_color_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
+ }
+ 
+ #define __HPP_ENTRY_PERCENT_FN(_type, _field)					\
+@@ -358,7 +374,7 @@ static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
+ 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
+ {										\
+ 	return hpp__fmt(fmt, hpp, he, he_get_##_field, " %*.2f%%",		\
+-			hpp_entry_scnprintf, true);				\
++			hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
+ }
+ 
+ #define __HPP_SORT_FN(_type, _field)						\
+@@ -378,7 +394,7 @@ static int hpp__color_##_type(struct perf_hpp_fmt *fmt,				\
+ 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
+ {										\
+ 	return hpp__fmt_acc(fmt, hpp, he, he_get_acc_##_field, " %*.2f%%", 	\
+-			    hpp_color_scnprintf, true);				\
++			    hpp_color_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
+ }
+ 
+ #define __HPP_ENTRY_ACC_PERCENT_FN(_type, _field)				\
+@@ -386,7 +402,7 @@ static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
+ 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
+ {										\
+ 	return hpp__fmt_acc(fmt, hpp, he, he_get_acc_##_field, " %*.2f%%",	\
+-			    hpp_entry_scnprintf, true);				\
++			    hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__PERCENT);	\
+ }
+ 
+ #define __HPP_SORT_ACC_FN(_type, _field)					\
+@@ -406,7 +422,7 @@ static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
+ 			      struct perf_hpp *hpp, struct hist_entry *he) 	\
+ {										\
+ 	return hpp__fmt(fmt, hpp, he, he_get_raw_##_field, " %*"PRIu64, 	\
+-			hpp_entry_scnprintf, false);				\
++			hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__RAW);		\
+ }
+ 
+ #define __HPP_SORT_RAW_FN(_type, _field)					\
+@@ -416,6 +432,26 @@ static int64_t hpp__sort_##_type(struct perf_hpp_fmt *fmt __maybe_unused, 	\
+ 	return __hpp__sort(a, b, he_get_raw_##_field);				\
+ }
+ 
++#define __HPP_ENTRY_AVERAGE_FN(_type, _field)					\
++static u64 he_get_##_field(struct hist_entry *he)				\
++{										\
++	return he->stat._field;							\
++}										\
++										\
++static int hpp__entry_##_type(struct perf_hpp_fmt *fmt,				\
++			      struct perf_hpp *hpp, struct hist_entry *he) 	\
++{										\
++	return hpp__fmt(fmt, hpp, he, he_get_##_field, " %*.1f",		\
++			hpp_entry_scnprintf, PERF_HPP_FMT_TYPE__AVERAGE);	\
++}
++
++#define __HPP_SORT_AVERAGE_FN(_type, _field)					\
++static int64_t hpp__sort_##_type(struct perf_hpp_fmt *fmt __maybe_unused, 	\
++				 struct hist_entry *a, struct hist_entry *b) 	\
++{										\
++	return __hpp__sort(a, b, he_get_##_field);				\
++}
++
+ 
+ #define HPP_PERCENT_FNS(_type, _field)					\
+ __HPP_COLOR_PERCENT_FN(_type, _field)					\
+@@ -431,6 +467,10 @@ __HPP_SORT_ACC_FN(_type, _field)
+ __HPP_ENTRY_RAW_FN(_type, _field)					\
+ __HPP_SORT_RAW_FN(_type, _field)
+ 
++#define HPP_AVERAGE_FNS(_type, _field)					\
++__HPP_ENTRY_AVERAGE_FN(_type, _field)					\
++__HPP_SORT_AVERAGE_FN(_type, _field)
++
+ HPP_PERCENT_FNS(overhead, period)
+ HPP_PERCENT_FNS(overhead_sys, period_sys)
+ HPP_PERCENT_FNS(overhead_us, period_us)
+@@ -441,6 +481,10 @@ HPP_PERCENT_ACC_FNS(overhead_acc, period)
+ HPP_RAW_FNS(samples, nr_events)
+ HPP_RAW_FNS(period, period)
+ 
++HPP_AVERAGE_FNS(weight1, weight1)
++HPP_AVERAGE_FNS(weight2, weight2)
++HPP_AVERAGE_FNS(weight3, weight3)
++
+ static int64_t hpp__nop_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 			    struct hist_entry *a __maybe_unused,
+ 			    struct hist_entry *b __maybe_unused)
+@@ -510,7 +554,10 @@ struct perf_hpp_fmt perf_hpp__format[] = {
+ 	HPP__COLOR_PRINT_FNS("guest usr", overhead_guest_us, OVERHEAD_GUEST_US),
+ 	HPP__COLOR_ACC_PRINT_FNS("Children", overhead_acc, OVERHEAD_ACC),
+ 	HPP__PRINT_FNS("Samples", samples, SAMPLES),
+-	HPP__PRINT_FNS("Period", period, PERIOD)
++	HPP__PRINT_FNS("Period", period, PERIOD),
++	HPP__PRINT_FNS("Weight1", weight1, WEIGHT1),
++	HPP__PRINT_FNS("Weight2", weight2, WEIGHT2),
++	HPP__PRINT_FNS("Weight3", weight3, WEIGHT3),
+ };
+ 
+ struct perf_hpp_list perf_hpp_list = {
+@@ -526,6 +573,7 @@ struct perf_hpp_list perf_hpp_list = {
+ #undef HPP_PERCENT_FNS
+ #undef HPP_PERCENT_ACC_FNS
+ #undef HPP_RAW_FNS
++#undef HPP_AVERAGE_FNS
+ 
+ #undef __HPP_HEADER_FN
+ #undef __HPP_WIDTH_FN
+@@ -534,9 +582,11 @@ struct perf_hpp_list perf_hpp_list = {
+ #undef __HPP_COLOR_ACC_PERCENT_FN
+ #undef __HPP_ENTRY_ACC_PERCENT_FN
+ #undef __HPP_ENTRY_RAW_FN
++#undef __HPP_ENTRY_AVERAGE_FN
+ #undef __HPP_SORT_FN
+ #undef __HPP_SORT_ACC_FN
+ #undef __HPP_SORT_RAW_FN
++#undef __HPP_SORT_AVERAGE_FN
+ 
+ static void fmt_free(struct perf_hpp_fmt *fmt)
+ {
+@@ -785,6 +835,12 @@ void perf_hpp__reset_width(struct perf_hpp_fmt *fmt, struct hists *hists)
+ 		fmt->len = 12;
+ 		break;
+ 
++	case PERF_HPP__WEIGHT1:
++	case PERF_HPP__WEIGHT2:
++	case PERF_HPP__WEIGHT3:
++		fmt->len = 8;
++		break;
++
+ 	default:
+ 		break;
+ 	}
 diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4a0aea0c9e00..8f072f3749eb 100644
+index f34f101c36c2..5260822b9773 100644
 --- a/tools/perf/util/hist.h
 +++ b/tools/perf/util/hist.h
-@@ -4,21 +4,22 @@
+@@ -550,6 +550,9 @@ enum {
+ 	PERF_HPP__OVERHEAD_ACC,
+ 	PERF_HPP__SAMPLES,
+ 	PERF_HPP__PERIOD,
++	PERF_HPP__WEIGHT1,
++	PERF_HPP__WEIGHT2,
++	PERF_HPP__WEIGHT3,
  
- #include <linux/rbtree.h>
- #include <linux/types.h>
--#include "evsel.h"
-+#include "callchain.h"
- #include "color.h"
- #include "events_stats.h"
-+#include "evsel.h"
-+#include "map_symbol.h"
- #include "mutex.h"
-+#include "sample.h"
-+#include "spark.h"
-+#include "stat.h"
+ 	PERF_HPP__MAX_INDEX
+ };
+@@ -596,16 +599,24 @@ void perf_hpp__reset_sort_width(struct perf_hpp_fmt *fmt, struct hists *hists);
+ void perf_hpp__set_user_width(const char *width_list_str);
+ void hists__reset_column_width(struct hists *hists);
  
--struct hist_entry;
--struct hist_entry_ops;
- struct addr_location;
--struct map_symbol;
- struct mem_info;
- struct kvm_info;
- struct branch_info;
- struct branch_stack;
- struct block_info;
--struct symbol;
- struct ui_progress;
- 
- enum hist_filter {
-@@ -150,6 +151,159 @@ extern const struct hist_iter_ops hist_iter_branch;
- extern const struct hist_iter_ops hist_iter_mem;
- extern const struct hist_iter_ops hist_iter_cumulative;
- 
-+struct res_sample {
-+	u64 time;
-+	int cpu;
-+	int tid;
++enum perf_hpp_fmt_type {
++	PERF_HPP_FMT_TYPE__RAW,
++	PERF_HPP_FMT_TYPE__PERCENT,
++	PERF_HPP_FMT_TYPE__AVERAGE,
 +};
 +
-+struct he_stat {
-+	u64			period;
-+	u64			period_sys;
-+	u64			period_us;
-+	u64			period_guest_sys;
-+	u64			period_guest_us;
-+	u32			nr_events;
-+};
-+
-+struct namespace_id {
-+	u64			dev;
-+	u64			ino;
-+};
-+
-+struct hist_entry_diff {
-+	bool	computed;
-+	union {
-+		/* PERF_HPP__DELTA */
-+		double	period_ratio_delta;
-+
-+		/* PERF_HPP__RATIO */
-+		double	period_ratio;
-+
-+		/* HISTC_WEIGHTED_DIFF */
-+		s64	wdiff;
-+
-+		/* PERF_HPP_DIFF__CYCLES */
-+		s64	cycles;
-+	};
-+	struct stats	stats;
-+	unsigned long	svals[NUM_SPARKS];
-+};
-+
-+struct hist_entry_ops {
-+	void	*(*new)(size_t size);
-+	void	(*free)(void *ptr);
-+};
-+
-+/**
-+ * struct hist_entry - histogram entry
-+ *
-+ * @row_offset - offset from the first callchain expanded to appear on screen
-+ * @nr_rows - rows expanded in callchain, recalculated on folding/unfolding
-+ */
-+struct hist_entry {
-+	struct rb_node		rb_node_in;
-+	struct rb_node		rb_node;
-+	union {
-+		struct list_head node;
-+		struct list_head head;
-+	} pairs;
-+	struct he_stat		stat;
-+	struct he_stat		*stat_acc;
-+	struct map_symbol	ms;
-+	struct thread		*thread;
-+	struct comm		*comm;
-+	struct namespace_id	cgroup_id;
-+	u64			cgroup;
-+	u64			ip;
-+	u64			transaction;
-+	s32			socket;
-+	s32			cpu;
-+	u64			code_page_size;
-+	u64			weight;
-+	u64			ins_lat;
-+	u64			p_stage_cyc;
-+	u8			cpumode;
-+	u8			depth;
-+	int			mem_type_off;
-+	struct simd_flags	simd_flags;
-+
-+	/* We are added by hists__add_dummy_entry. */
-+	bool			dummy;
-+	bool			leaf;
-+
-+	char			level;
-+	u8			filtered;
-+
-+	u16			callchain_size;
-+	union {
-+		/*
-+		 * Since perf diff only supports the stdio output, TUI
-+		 * fields are only accessed from perf report (or perf
-+		 * top).  So make it a union to reduce memory usage.
-+		 */
-+		struct hist_entry_diff	diff;
-+		struct /* for TUI */ {
-+			u16	row_offset;
-+			u16	nr_rows;
-+			bool	init_have_children;
-+			bool	unfolded;
-+			bool	has_children;
-+			bool	has_no_entry;
-+		};
-+	};
-+	char			*srcline;
-+	char			*srcfile;
-+	struct symbol		*parent;
-+	struct branch_info	*branch_info;
-+	long			time;
-+	struct hists		*hists;
-+	struct mem_info		*mem_info;
-+	struct block_info	*block_info;
-+	struct kvm_info		*kvm_info;
-+	void			*raw_data;
-+	u32			raw_size;
-+	int			num_res;
-+	struct res_sample	*res_samples;
-+	void			*trace_output;
-+	struct perf_hpp_list	*hpp_list;
-+	struct hist_entry	*parent_he;
-+	struct hist_entry_ops	*ops;
-+	struct annotated_data_type *mem_type;
-+	union {
-+		/* this is for hierarchical entry structure */
-+		struct {
-+			struct rb_root_cached	hroot_in;
-+			struct rb_root_cached   hroot_out;
-+		};				/* non-leaf entries */
-+		struct rb_root	sorted_chain;	/* leaf entry has callchains */
-+	};
-+	struct callchain_root	callchain[0]; /* must be last member */
-+};
-+
-+static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
-+{
-+	return he->callchain_size != 0;
-+}
-+
-+static inline bool hist_entry__has_pairs(struct hist_entry *he)
-+{
-+	return !list_empty(&he->pairs.node);
-+}
-+
-+static inline struct hist_entry *hist_entry__next_pair(struct hist_entry *he)
-+{
-+	if (hist_entry__has_pairs(he))
-+		return list_entry(he->pairs.node.next, struct hist_entry, pairs.node);
-+	return NULL;
-+}
-+
-+static inline void hist_entry__add_pair(struct hist_entry *pair,
-+					struct hist_entry *he)
-+{
-+	list_add_tail(&pair->pairs.node, &he->pairs.head);
-+}
-+
- struct hist_entry *hists__add_entry(struct hists *hists,
- 				    struct addr_location *al,
- 				    struct symbol *parent,
-@@ -186,6 +340,8 @@ int hist_entry__sort_snprintf(struct hist_entry *he, char *bf, size_t size,
- 			      struct hists *hists);
- int hist_entry__snprintf_alignment(struct hist_entry *he, struct perf_hpp *hpp,
- 				   struct perf_hpp_fmt *fmt, int printed);
-+int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size,
-+			     unsigned int width);
- void hist_entry__delete(struct hist_entry *he);
+ typedef u64 (*hpp_field_fn)(struct hist_entry *he);
+ typedef int (*hpp_callback_fn)(struct perf_hpp *hpp, bool front);
+ typedef int (*hpp_snprint_fn)(struct perf_hpp *hpp, const char *fmt, ...);
  
- typedef int (*hists__resort_cb_t)(struct hist_entry *he, void *arg);
-@@ -238,6 +394,20 @@ void hists__match(struct hists *leader, struct hists *other);
- int hists__link(struct hists *leader, struct hists *other);
- int hists__unlink(struct hists *hists);
+ int hpp__fmt(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	     struct hist_entry *he, hpp_field_fn get_field,
+-	     const char *fmtstr, hpp_snprint_fn print_fn, bool fmt_percent);
++	     const char *fmtstr, hpp_snprint_fn print_fn,
++	     enum perf_hpp_fmt_type fmtype);
+ int hpp__fmt_acc(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 		 struct hist_entry *he, hpp_field_fn get_field,
+-		 const char *fmtstr, hpp_snprint_fn print_fn, bool fmt_percent);
++		 const char *fmtstr, hpp_snprint_fn print_fn,
++		 enum perf_hpp_fmt_type fmtype);
  
-+static inline float hist_entry__get_percent_limit(struct hist_entry *he)
-+{
-+	u64 period = he->stat.period;
-+	u64 total_period = hists__total_period(he->hists);
-+
-+	if (unlikely(total_period == 0))
-+		return 0;
-+
-+	if (symbol_conf.cumulate_callchain)
-+		period = he->stat_acc->period;
-+
-+	return period * 100.0 / total_period;
-+}
-+
- struct hists_evsel {
- 	struct evsel evsel;
- 	struct hists	  hists;
-@@ -460,15 +630,20 @@ struct hist_browser_timer {
- 	int refresh;
+ static inline void advance_hpp(struct perf_hpp *hpp, int inc)
+ {
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 92a1bd695e8a..e43558bbca38 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -2441,6 +2441,13 @@ static struct hpp_dimension hpp_sort_dimensions[] = {
+ 	DIM(PERF_HPP__OVERHEAD_ACC, "overhead_children"),
+ 	DIM(PERF_HPP__SAMPLES, "sample"),
+ 	DIM(PERF_HPP__PERIOD, "period"),
++	DIM(PERF_HPP__WEIGHT1, "weight1"),
++	DIM(PERF_HPP__WEIGHT2, "weight2"),
++	DIM(PERF_HPP__WEIGHT3, "weight3"),
++	/* aliases for weight_struct */
++	DIM(PERF_HPP__WEIGHT2, "ins_lat"),
++	DIM(PERF_HPP__WEIGHT3, "retire_lat"),
++	DIM(PERF_HPP__WEIGHT3, "p_stage_cyc"),
  };
  
--struct res_sample;
--
- enum rstype {
- 	A_NORMAL,
- 	A_ASM,
- 	A_SOURCE
- };
+ #undef DIM
+@@ -3743,26 +3750,26 @@ void sort__setup_elide(FILE *output)
+ 	}
+ }
  
--struct block_hist;
-+struct block_hist {
-+	struct hists		block_hists;
-+	struct perf_hpp_list	block_list;
-+	struct perf_hpp_fmt	block_fmt;
-+	int			block_idx;
-+	bool			valid;
-+	struct hist_entry	he;
-+};
+-int output_field_add(struct perf_hpp_list *list, char *tok)
++int output_field_add(struct perf_hpp_list *list, const char *tok)
+ {
+ 	unsigned int i;
  
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
+-	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
+-		struct sort_dimension *sd = &common_sort_dimensions[i];
++	for (i = 0; i < ARRAY_SIZE(hpp_sort_dimensions); i++) {
++		struct hpp_dimension *hd = &hpp_sort_dimensions[i];
+ 
+-		if (!sd->name || strncasecmp(tok, sd->name, strlen(tok)))
++		if (strncasecmp(tok, hd->name, strlen(tok)))
+ 			continue;
+ 
+-		return __sort_dimension__add_output(list, sd);
++		return __hpp_dimension__add_output(list, hd);
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(hpp_sort_dimensions); i++) {
+-		struct hpp_dimension *hd = &hpp_sort_dimensions[i];
++	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
++		struct sort_dimension *sd = &common_sort_dimensions[i];
+ 
+-		if (strncasecmp(tok, hd->name, strlen(tok)))
++		if (!sd->name || strncasecmp(tok, sd->name, strlen(tok)))
+ 			continue;
+ 
+-		return __hpp_dimension__add_output(list, hd);
++		return __sort_dimension__add_output(list, sd);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(bstack_sort_dimensions); i++) {
 diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 6f6b4189a389..690892a92cf3 100644
+index 690892a92cf3..0bd0ee3ae76b 100644
 --- a/tools/perf/util/sort.h
 +++ b/tools/perf/util/sort.h
-@@ -3,19 +3,9 @@
- #define __PERF_SORT_H
- #include <regex.h>
- #include <stdbool.h>
--#include <linux/list.h>
--#include <linux/rbtree.h>
--#include "map_symbol.h"
--#include "symbol_conf.h"
--#include "callchain.h"
--#include "values.h"
- #include "hist.h"
--#include "stat.h"
--#include "spark.h"
- 
- struct option;
--struct thread;
--struct annotated_data_type;
- 
- extern regex_t parent_regex;
- extern const char *sort_order;
-@@ -39,175 +29,6 @@ extern struct sort_entry sort_type;
- extern const char default_mem_sort_order[];
- extern bool chk_double_cl;
- 
--struct res_sample {
--	u64 time;
--	int cpu;
--	int tid;
--};
--
--struct he_stat {
--	u64			period;
--	u64			period_sys;
--	u64			period_us;
--	u64			period_guest_sys;
--	u64			period_guest_us;
--	u32			nr_events;
--};
--
--struct namespace_id {
--	u64			dev;
--	u64			ino;
--};
--
--struct hist_entry_diff {
--	bool	computed;
--	union {
--		/* PERF_HPP__DELTA */
--		double	period_ratio_delta;
--
--		/* PERF_HPP__RATIO */
--		double	period_ratio;
--
--		/* HISTC_WEIGHTED_DIFF */
--		s64	wdiff;
--
--		/* PERF_HPP_DIFF__CYCLES */
--		s64	cycles;
--	};
--	struct stats	stats;
--	unsigned long	svals[NUM_SPARKS];
--};
--
--struct hist_entry_ops {
--	void	*(*new)(size_t size);
--	void	(*free)(void *ptr);
--};
--
--/**
-- * struct hist_entry - histogram entry
-- *
-- * @row_offset - offset from the first callchain expanded to appear on screen
-- * @nr_rows - rows expanded in callchain, recalculated on folding/unfolding
-- */
--struct hist_entry {
--	struct rb_node		rb_node_in;
--	struct rb_node		rb_node;
--	union {
--		struct list_head node;
--		struct list_head head;
--	} pairs;
--	struct he_stat		stat;
--	struct he_stat		*stat_acc;
--	struct map_symbol	ms;
--	struct thread		*thread;
--	struct comm		*comm;
--	struct namespace_id	cgroup_id;
--	u64			cgroup;
--	u64			ip;
--	u64			transaction;
--	s32			socket;
--	s32			cpu;
--	u64			code_page_size;
--	u64			weight;
--	u64			ins_lat;
--	u64			p_stage_cyc;
--	u8			cpumode;
--	u8			depth;
--	int			mem_type_off;
--	struct simd_flags	simd_flags;
--
--	/* We are added by hists__add_dummy_entry. */
--	bool			dummy;
--	bool			leaf;
--
--	char			level;
--	u8			filtered;
--
--	u16			callchain_size;
--	union {
--		/*
--		 * Since perf diff only supports the stdio output, TUI
--		 * fields are only accessed from perf report (or perf
--		 * top).  So make it a union to reduce memory usage.
--		 */
--		struct hist_entry_diff	diff;
--		struct /* for TUI */ {
--			u16	row_offset;
--			u16	nr_rows;
--			bool	init_have_children;
--			bool	unfolded;
--			bool	has_children;
--			bool	has_no_entry;
--		};
--	};
--	char			*srcline;
--	char			*srcfile;
--	struct symbol		*parent;
--	struct branch_info	*branch_info;
--	long			time;
--	struct hists		*hists;
--	struct mem_info		*mem_info;
--	struct block_info	*block_info;
--	struct kvm_info		*kvm_info;
--	void			*raw_data;
--	u32			raw_size;
--	int			num_res;
--	struct res_sample	*res_samples;
--	void			*trace_output;
--	struct perf_hpp_list	*hpp_list;
--	struct hist_entry	*parent_he;
--	struct hist_entry_ops	*ops;
--	struct annotated_data_type *mem_type;
--	union {
--		/* this is for hierarchical entry structure */
--		struct {
--			struct rb_root_cached	hroot_in;
--			struct rb_root_cached   hroot_out;
--		};				/* non-leaf entries */
--		struct rb_root	sorted_chain;	/* leaf entry has callchains */
--	};
--	struct callchain_root	callchain[0]; /* must be last member */
--};
--
--static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
--{
--	return he->callchain_size != 0;
--}
--
--int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width);
--
--static inline bool hist_entry__has_pairs(struct hist_entry *he)
--{
--	return !list_empty(&he->pairs.node);
--}
--
--static inline struct hist_entry *hist_entry__next_pair(struct hist_entry *he)
--{
--	if (hist_entry__has_pairs(he))
--		return list_entry(he->pairs.node.next, struct hist_entry, pairs.node);
--	return NULL;
--}
--
--static inline void hist_entry__add_pair(struct hist_entry *pair,
--					struct hist_entry *he)
--{
--	list_add_tail(&pair->pairs.node, &he->pairs.head);
--}
--
--static inline float hist_entry__get_percent_limit(struct hist_entry *he)
--{
--	u64 period = he->stat.period;
--	u64 total_period = hists__total_period(he->hists);
--
--	if (unlikely(total_period == 0))
--		return 0;
--
--	if (symbol_conf.cumulate_callchain)
--		period = he->stat_acc->period;
--
--	return period * 100.0 / total_period;
--}
--
- enum sort_mode {
- 	SORT_MODE__NORMAL,
- 	SORT_MODE__BRANCH,
-@@ -299,15 +120,6 @@ struct sort_entry {
- 	u8	se_width_idx;
- };
- 
--struct block_hist {
--	struct hists		block_hists;
--	struct perf_hpp_list	block_list;
--	struct perf_hpp_fmt	block_fmt;
--	int			block_idx;
--	bool			valid;
--	struct hist_entry	he;
--};
--
- extern struct sort_entry sort_thread;
- 
- struct evlist;
-diff --git a/tools/perf/util/values.h b/tools/perf/util/values.h
-index 8c41f22f42cf..791c1ad606c2 100644
---- a/tools/perf/util/values.h
-+++ b/tools/perf/util/values.h
-@@ -2,6 +2,7 @@
- #ifndef __PERF_VALUES_H
- #define __PERF_VALUES_H
- 
-+#include <stdio.h>
- #include <linux/types.h>
- 
- struct perf_read_values {
+@@ -141,7 +141,7 @@ void reset_dimensions(void);
+ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+ 			struct evlist *evlist,
+ 			int level);
+-int output_field_add(struct perf_hpp_list *list, char *tok);
++int output_field_add(struct perf_hpp_list *list, const char *tok);
+ int64_t
+ sort__iaddr_cmp(struct hist_entry *left, struct hist_entry *right);
+ int64_t
 -- 
 2.44.0.478.gd926399ef9-goog
 
