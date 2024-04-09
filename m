@@ -1,50 +1,62 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010E512F582;
-	Tue,  9 Apr 2024 10:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D007812F379
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657643; cv=none; b=cp9eovMedcIpSB8LgInEvJ7W7vdhvg8NRqn7Sbekaov9IiNy4yfSM6L6GDMhUO7/gbDaPJwZyKSWZRlm7WpkAhEM2uf+BujGPsVWuha/WAhDYhKd3S+5RUTdKALtLSEFylskksTPe6M5z82npW8UPOSBiZMzbudtrtJDUDSKLXg=
+	t=1712657642; cv=none; b=CZn5INLH6/9q2noRg4S7xQ8N9V4ud81xazLNuKOhSuoDI83fIB6O7FdiPVAnGvZvGgaF4dD9VvNgzBexPpHxpF2fvrj/dOnBPvmOiXHJDrh2AQ/MNX7Sko98bUp44oqaqX9+vjT5yc4/grENguECafM0T1T/w9LInbhUsO9TLLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657643; c=relaxed/simple;
-	bh=doTlu9hJMteNLLn17emxRLL3Aqbs4pHtWminEV2S2ag=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=TNXWphNy/59gn9oDH0Gb0D1QbflhCbHaFWS1yHxtDmYtB+6W9uvn5SHdSBGRJE85LZDVxywmSbalZ0u7kwoy5UbS0ZI2hII69K73h9DJGGS/GGKmroW1HR/p/bWRGmnFnz/WkIZQ+Yk802MVuCKPtfcDmAG3ub9aO6H2p0jRZYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WWrELiyJ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712657642; c=relaxed/simple;
+	bh=Lr5R5c2GWQBqz7SCUnEVa3ivVYsrBqYFYNhsN9ZUZk0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZJ142I3i0sEJi2HxnuJCUrIF74h9+u1OdPLWgjZZ3r056dshKOAFpZNUBdWLXjHHMLBb+EgQuhKmIIza2dBeu7DAgScshaoCD+RIwBwV29jwr40vNWF5baPs2Z0m5WKpUajmY4zvraKDauLEHEmKnDvBuhXRA9g5YYOJx1slHmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=xbyOFDAk; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WWrELiyJ"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4399gwqb008002;
-	Tue, 9 Apr 2024 10:13:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:date:subject:mime-version:content-type
-	:content-transfer-encoding:message-id:references:in-reply-to:to
-	:cc; s=qcppdkim1; bh=pIXUiWeNABMgCXpXoHnncdRYT8+KmyyXAwxmQPprqWg
-	=; b=WWrELiyJJrcqT6zHZpgtlldZtYHAwUwmHnM29VMHQ9n5gz1UxwdW4psin5T
-	xsD8VHjE8X0BwW+2UbbqiklmkZs4xORzcVGH7EEOMjtkQEIjw/4v++bu7kXv9p32
-	BfrHWaLyRXJdrCf5c/WzP6MD0bEJR2T9S/7VLf8TBs0f3c8fBkNlYs6zRAHtKTm4
-	EVCVyfFprG2ZKH4Cx2O2Wtsvb4Z7INnQo5eIIuFOeWsQzQ9cZW3KZIr6tG45Jt/E
-	ABf4Ni72iKDrqInItIMfJAHeU5qI155u9YWRZqcPDgPXRgtpnAyvHPDuSf8PKwdn
-	3skytk37hTRhzmtG+qSOClX23Nw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xd39q01vj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 10:13:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439ADmw0007891
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Apr 2024 10:13:48 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 9 Apr 2024 03:13:42 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Date: Tue, 9 Apr 2024 15:43:20 +0530
-Subject: [PATCH v10 2/6] PCI: qcom: Add ICC bandwidth vote for CPU to PCIe
- path
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="xbyOFDAk"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41663330f9dso13871985e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712657638; x=1713262438; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vaOPptAkDAr7UZe0kfx5Sw+wAFzpeWgd0I8ED1nhO2M=;
+        b=xbyOFDAk39at/kWFO3QgBEFZSr2VunY8v94DJ0j7fVBeMoJEWo/HAmYgIgX5z66xLB
+         aai4h+6BQHLehQHprbdDoGEaVVX0vKyDCuTTd0A5UKetM0UfIFJ79D2qN6bNmC6egpfI
+         a7T6a3tM5uk3oD+N+2lMrqxSp6+fpc6GmgWjX0Jl6vSKZrU7YtT4QtbQ5z2hCB0vIUSs
+         RKA/eMBvwYBtc4V46TUS+D0Ou7krX0C95T0SrmtRxyfxSIOYa9ra1/AhLkqt1VnnP2xz
+         BzyCP3dgXTI0aoJmHlj7osFxNDGaqgW+Dugj35f4LzqnSpgeAZYUroWt1o5S4miZl5cv
+         ws5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712657638; x=1713262438;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vaOPptAkDAr7UZe0kfx5Sw+wAFzpeWgd0I8ED1nhO2M=;
+        b=L3AboDN8nOfucJFpSPBMbBIryCXVYj8pOFk6YXJTXtyAWJV2e+Pytq2Vdy5cBlIM0v
+         prbXdx/MwuMINLvQxBDlrLsr6Tm0rBdVn7c5/aPpIBQJ0yDpsAU3OX4ekMGBpllXnhL1
+         7Q5gBsA2RGLty9Sx1vEi73/Y+XOKp0hZbqb006wi2bhrwO93uA5ufbJphIC9fnQ1nTCg
+         ZJS0cZjkRw0Co+9cUMq5rrpE8TBCbgsGbtMSi+A3In1BTdoaRgtF2oiuCX8TGSd+6j5w
+         kUVEHTmlnxetpRLiRGFtf7bP2IfMov14YJTiwwPlltnxTTic9i/qCoD9J5x1Qmd1fMcP
+         T1lg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpsero1LnPuGSAOgp6c9IaOqY3v+UmddHJE2g2ad55zoxaLCrfX0ZjqjP4AobYqTDrqo7i4Yq7JS2UqxOpd2yrf61MpffFdo2UXrGF
+X-Gm-Message-State: AOJu0Yya9KHYUpwIfatrI+KUB5c/rhKcewOv0tQXW/oZoqra5nKtlHjT
+	6n3nESMWQt146q4bcIxCsPOdzrm7XmnCKSJo6Ni6Iw4hUBPYWYN1eCo+vVc9OInBYivfpmG+v0y
+	SasI=
+X-Google-Smtp-Source: AGHT+IGOIUfYe5wa5Xya9A7gMLCVRtVJkmJvbHFPsuCbSNvd2IrbeOrFFh0pnZxWtHAUBiSbpPv7Pg==
+X-Received: by 2002:a05:600c:5253:b0:416:7396:6b14 with SMTP id fc19-20020a05600c525300b0041673966b14mr2994570wmb.5.1712657637870;
+        Tue, 09 Apr 2024 03:13:57 -0700 (PDT)
+Received: from [127.0.1.1] ([93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id r7-20020a05600c458700b00416b035c2d8sm1124149wmo.3.2024.04.09.03.13.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 03:13:57 -0700 (PDT)
+From: amergnat@baylibre.com
+Date: Tue, 09 Apr 2024 12:13:32 +0200
+Subject: [PATCH v2 11/18] ASoc: mediatek: mt8365: Add a specific soundcard
+ for EVK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,172 +65,411 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20240409-opp_support-v10-2-1956e6be343f@quicinc.com>
-References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
-In-Reply-To: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712657607; l=4274;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=doTlu9hJMteNLLn17emxRLL3Aqbs4pHtWminEV2S2ag=;
- b=SmcBuYldTtRAJDZKGewM+TS45NYrvTlAVdCZCEYOOiMs8Zjxw3law3lbq2zK9fx+rP81VQPFM
- BKFHUGLIuR8AWzwBG0wG6hcLcT9jcb2hlulBGnJPPvqPEVGT7LFSv2M
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: p3eq3Doj3zHHHrpN6RhXx-P8wVgSiEck
-X-Proofpoint-ORIG-GUID: p3eq3Doj3zHHHrpN6RhXx-P8wVgSiEck
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_06,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 suspectscore=0 adultscore=0 bulkscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404090065
+Message-Id: <20240226-audio-i350-v2-11-3043d483de0d@baylibre.com>
+References: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+In-Reply-To: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>, 
+ Nicolas Belin <nbelin@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10412;
+ i=amergnat@baylibre.com; h=from:subject:message-id;
+ bh=StbcbcNjCboJVA2ZtaKY54PzLiOMhLbRuvUI8afProg=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmFRTT76wYmx7NoZQMV4zN21YqVQ2XTDcCqmXPUxhm
+ RmgzLfuJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZhUU0wAKCRArRkmdfjHURVkiD/
+ 9rAjIWgoRCkfEPEmpWWyrBcgtMb+SAyc4FGt9Kw6bLdpNZYNmuchn8ub9AJXFQIW1T4/5jdneba+6d
+ yEurN8ws4PGlwnS3jEG/ZHJ/BD0cEJbSWWodi2bKAN7lamNPfJdzsS4b7w47/S6nmatfANLAQu1JgE
+ 3bbYzQpTveh+7Y9jXVgYcW1QjI6ez/CZWAe998FaU6BbcyTtgO7g0EPXg0AdvYUHbpp8/NtLzZgTgK
+ ks65E1MmWXfsb36HcaNVFSARYsDGKLKzVHiIbvIibocpI/8rWIXA8d1PgdYx7MJCHNMgFjEDj8aIDX
+ LjrgmtgdiOK9V5/Kkujf/aa6I56nFkiTG7z1OyNb6cnPip+YN0QAHjWbFSTIse0sV9hUvfVBO31wZh
+ Q6v6hrVwraXOyfWaMIkkw/MQ0JTAyAAgQJy+gF1/rJGLPEPo3J1FDbjZwhrb9j3bqox2eC8M+xboj8
+ w+vURGaou7Ja8c+fR28t/NcsmjZl0wDqzrlWK1QIWTAG64qKQTDmxsxzJ+oMmtgQ4YMnhcPeeXuWwZ
+ xxkZ9gLttP7/r8psaf09y5dhKrzZJH+ymqKlbaleyb2/3XRFFiXlD/TpQPED5KnnGcjrJKPTeVi69R
+ z2nPlu+dR4vlIqAKNEw3Th6XmZYSQC73kIwp2zI9JEjCJ5q7P2B0+n57JUHQ==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-To access PCIe registers of the host controller and endpoint PCIe
-BAR space, config space the CPU-PCIe ICC (interconnect) path should
-be voted otherwise it may lead to NoC (Network on chip) timeout.
-We are surviving because of other driver voting for this path.
+From: Nicolas Belin <nbelin@baylibre.com>
 
-As there is less access on this path compared to PCIe to mem path
-add minimum vote i.e 1KBps bandwidth always which is sufficient enough
-to keep the path active and is recommended by HW team.
+Add a specific soundcard for mt8365-evk. It supports audio jack
+in/out, dmics, the amic and lineout.
 
-In suspend to ram case there can be some DBI access. Except in suspend
-to ram case disable CPU-PCIe ICC path after register space access
-is done.
-
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 43 ++++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ sound/soc/mediatek/mt8365/mt8365-mt6357.c | 348 ++++++++++++++++++++++++++++++
+ 1 file changed, 348 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 14772edcf0d3..e53422171c01 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -245,6 +245,7 @@ struct qcom_pcie {
- 	struct phy *phy;
- 	struct gpio_desc *reset;
- 	struct icc_path *icc_mem;
-+	struct icc_path *icc_cpu;
- 	const struct qcom_pcie_cfg *cfg;
- 	struct dentry *debugfs;
- 	bool suspended;
-@@ -1409,6 +1410,9 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
- 	if (IS_ERR(pcie->icc_mem))
- 		return PTR_ERR(pcie->icc_mem);
- 
-+	pcie->icc_cpu = devm_of_icc_get(pci->dev, "cpu-pcie");
-+	if (IS_ERR(pcie->icc_cpu))
-+		return PTR_ERR(pcie->icc_cpu);
- 	/*
- 	 * Some Qualcomm platforms require interconnect bandwidth constraints
- 	 * to be set before enabling interconnect clocks.
-@@ -1418,7 +1422,20 @@ static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
- 	 */
- 	ret = icc_set_bw(pcie->icc_mem, 0, QCOM_PCIE_LINK_SPEED_TO_BW(1));
- 	if (ret) {
--		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-+		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
-+			ret);
-+		return ret;
+diff --git a/sound/soc/mediatek/mt8365/mt8365-mt6357.c b/sound/soc/mediatek/mt8365/mt8365-mt6357.c
+new file mode 100644
+index 000000000000..9f1be194fe34
+--- /dev/null
++++ b/sound/soc/mediatek/mt8365/mt8365-mt6357.c
+@@ -0,0 +1,348 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Mediatek MT8365 Sound Card driver
++ *
++ * Copyright (c) 2024 MediaTek Inc.
++ * Authors: Nicolas Belin <nbelin@baylibre.com>
++ */
++
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
++#include "mt8365-afe-common.h"
++#include <linux/pinctrl/consumer.h>
++#include "../common/mtk-soc-card.h"
++#include "../common/mtk-soundcard-driver.h"
++
++enum pinctrl_pin_state {
++	PIN_STATE_DEFAULT,
++	PIN_STATE_DMIC,
++	PIN_STATE_MISO_OFF,
++	PIN_STATE_MISO_ON,
++	PIN_STATE_MOSI_OFF,
++	PIN_STATE_MOSI_ON,
++	PIN_STATE_MAX
++};
++
++static const char * const mt8365_mt6357_pin_str[PIN_STATE_MAX] = {
++	"default",
++	"dmic",
++	"miso_off",
++	"miso_on",
++	"mosi_off",
++	"mosi_on",
++};
++
++struct mt8365_mt6357_priv {
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *pin_states[PIN_STATE_MAX];
++};
++
++enum {
++	/* FE */
++	DAI_LINK_DL1_PLAYBACK = 0,
++	DAI_LINK_DL2_PLAYBACK,
++	DAI_LINK_AWB_CAPTURE,
++	DAI_LINK_VUL_CAPTURE,
++	/* BE */
++	DAI_LINK_2ND_I2S_INTF,
++	DAI_LINK_DMIC,
++	DAI_LINK_INT_ADDA,
++	DAI_LINK_NUM
++};
++
++static const struct snd_soc_dapm_widget mt8365_mt6357_widgets[] = {
++	SND_SOC_DAPM_OUTPUT("HDMI Out"),
++};
++
++static const struct snd_soc_dapm_route mt8365_mt6357_routes[] = {
++	{"HDMI Out", NULL, "2ND I2S Playback"},
++	{"DMIC In", NULL, "MICBIAS0"},
++};
++
++static int mt8365_mt6357_int_adda_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct mt8365_mt6357_priv *priv = snd_soc_card_get_drvdata(rtd->card);
++	int ret = 0;
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		if (IS_ERR(priv->pin_states[PIN_STATE_MOSI_ON]))
++			return ret;
++
++		ret = pinctrl_select_state(priv->pinctrl,
++					   priv->pin_states[PIN_STATE_MOSI_ON]);
++		if (ret)
++			dev_err(rtd->card->dev, "%s failed to select state %d\n",
++				__func__, ret);
 +	}
 +
-+	/*
-+	 * Since the CPU-PCIe path is only used for activities like register
-+	 * access of the host controller and endpoint Config/BAR space access,
-+	 * HW team has recommended to use a  minimal bandwidth of 1KBps just to
-+	 * keep the path active.
-+	 */
-+	ret = icc_set_bw(pcie->icc_cpu, 0, kBps_to_icc(1));
-+	if (ret) {
-+		dev_err(pci->dev, "Failed to set interconnect bandwidth for CPU-PCIe: %d\n",
- 			ret);
- 		return ret;
- 	}
-@@ -1448,7 +1465,7 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
- 
- 	ret = icc_set_bw(pcie->icc_mem, 0, width * QCOM_PCIE_LINK_SPEED_TO_BW(speed));
- 	if (ret) {
--		dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-+		dev_err(pci->dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n",
- 			ret);
- 	}
- }
-@@ -1610,7 +1627,7 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 	 */
- 	ret = icc_set_bw(pcie->icc_mem, 0, kBps_to_icc(1));
- 	if (ret) {
--		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
-+		dev_err(dev, "Failed to set interconnect bandwidth for PCIe-MEM: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -1634,7 +1651,17 @@ static int qcom_pcie_suspend_noirq(struct device *dev)
- 		pcie->suspended = true;
- 	}
- 
--	return 0;
-+	/*
-+	 * In suspend to ram case there are DBI access, except in suspend to ram case
-+	 * remove the vote for CPU-PCIe path now, since at this point onwards,
-+	 * no register access will be done.
-+	 */
-+	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
-+		ret = icc_disable(pcie->icc_cpu);
-+		if (ret)
-+			dev_err(dev, "Failed to disable Interconnect path of CPU-PCIe: %d\n", ret);
-+	}
-+	return ret;
- }
- 
- static int qcom_pcie_resume_noirq(struct device *dev)
-@@ -1642,6 +1669,14 @@ static int qcom_pcie_resume_noirq(struct device *dev)
- 	struct qcom_pcie *pcie = dev_get_drvdata(dev);
- 	int ret;
- 
-+	if (pm_suspend_target_state != PM_SUSPEND_MEM) {
-+		ret = icc_enable(pcie->icc_cpu);
-+		if (ret) {
-+			dev_err(dev, "Failed to enable Interconnect path of CPU-PCIe: %d\n", ret);
++	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
++		if (IS_ERR(priv->pin_states[PIN_STATE_MISO_ON]))
 +			return ret;
++
++		ret = pinctrl_select_state(priv->pinctrl,
++					   priv->pin_states[PIN_STATE_MISO_ON]);
++		if (ret)
++			dev_err(rtd->card->dev, "%s failed to select state %d\n",
++				__func__, ret);
++	}
++
++	return 0;
++}
++
++static void mt8365_mt6357_int_adda_shutdown(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct mt8365_mt6357_priv *priv = snd_soc_card_get_drvdata(rtd->card);
++	int ret = 0;
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		if (IS_ERR(priv->pin_states[PIN_STATE_MOSI_OFF]))
++			return;
++
++		ret = pinctrl_select_state(priv->pinctrl,
++					   priv->pin_states[PIN_STATE_MOSI_OFF]);
++		if (ret)
++			dev_err(rtd->card->dev, "%s failed to select state %d\n",
++				__func__, ret);
++	}
++
++	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
++		if (IS_ERR(priv->pin_states[PIN_STATE_MISO_OFF]))
++			return;
++
++		ret = pinctrl_select_state(priv->pinctrl,
++					   priv->pin_states[PIN_STATE_MISO_OFF]);
++		if (ret)
++			dev_err(rtd->card->dev, "%s failed to select state %d\n",
++				__func__, ret);
++	}
++}
++
++static const struct snd_soc_ops mt8365_mt6357_int_adda_ops = {
++	.startup = mt8365_mt6357_int_adda_startup,
++	.shutdown = mt8365_mt6357_int_adda_shutdown,
++};
++
++SND_SOC_DAILINK_DEFS(playback1,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DL1")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(playback2,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DL2")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(awb_capture,
++		     DAILINK_COMP_ARRAY(COMP_CPU("AWB")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(vul,
++		     DAILINK_COMP_ARRAY(COMP_CPU("VUL")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++
++SND_SOC_DAILINK_DEFS(i2s3,
++		     DAILINK_COMP_ARRAY(COMP_CPU("2ND I2S")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(dmic,
++		     DAILINK_COMP_ARRAY(COMP_CPU("DMIC")),
++		     DAILINK_COMP_ARRAY(COMP_DUMMY()),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++SND_SOC_DAILINK_DEFS(primary_codec,
++		     DAILINK_COMP_ARRAY(COMP_CPU("INT ADDA")),
++		     DAILINK_COMP_ARRAY(COMP_CODEC("mt6357-sound", "mt6357-snd-codec-aif1")),
++		     DAILINK_COMP_ARRAY(COMP_EMPTY()));
++
++/* Digital audio interface glue - connects codec <---> CPU */
++static struct snd_soc_dai_link mt8365_mt6357_dais[] = {
++	/* Front End DAI links */
++	[DAI_LINK_DL1_PLAYBACK] = {
++		.name = "DL1_FE",
++		.stream_name = "MultiMedia1_PLayback",
++		.id = DAI_LINK_DL1_PLAYBACK,
++		.trigger = {
++			SND_SOC_DPCM_TRIGGER_POST,
++			SND_SOC_DPCM_TRIGGER_POST
++		},
++		.dynamic = 1,
++		.dpcm_playback = 1,
++		.dpcm_merged_rate = 1,
++		SND_SOC_DAILINK_REG(playback1),
++	},
++	[DAI_LINK_DL2_PLAYBACK] = {
++		.name = "DL2_FE",
++		.stream_name = "MultiMedia2_PLayback",
++		.id = DAI_LINK_DL2_PLAYBACK,
++		.trigger = {
++			SND_SOC_DPCM_TRIGGER_POST,
++			SND_SOC_DPCM_TRIGGER_POST
++		},
++		.dynamic = 1,
++		.dpcm_playback = 1,
++		.dpcm_merged_rate = 1,
++		SND_SOC_DAILINK_REG(playback2),
++	},
++	[DAI_LINK_AWB_CAPTURE] = {
++		.name = "AWB_FE",
++		.stream_name = "DL1_AWB_Record",
++		.id = DAI_LINK_AWB_CAPTURE,
++		.trigger = {
++			SND_SOC_DPCM_TRIGGER_POST,
++			SND_SOC_DPCM_TRIGGER_POST
++		},
++		.dynamic = 1,
++		.dpcm_capture = 1,
++		.dpcm_merged_rate = 1,
++		SND_SOC_DAILINK_REG(awb_capture),
++	},
++	[DAI_LINK_VUL_CAPTURE] = {
++		.name = "VUL_FE",
++		.stream_name = "MultiMedia1_Capture",
++		.id = DAI_LINK_VUL_CAPTURE,
++		.trigger = {
++			SND_SOC_DPCM_TRIGGER_POST,
++			SND_SOC_DPCM_TRIGGER_POST
++		},
++		.dynamic = 1,
++		.dpcm_capture = 1,
++		.dpcm_merged_rate = 1,
++		SND_SOC_DAILINK_REG(vul),
++	},
++	/* Back End DAI links */
++	[DAI_LINK_2ND_I2S_INTF] = {
++		.name = "2ND_I2S_BE",
++		.no_pcm = 1,
++		.id = DAI_LINK_2ND_I2S_INTF,
++		.dai_fmt = SND_SOC_DAIFMT_I2S |
++				SND_SOC_DAIFMT_NB_NF |
++				SND_SOC_DAIFMT_CBS_CFS,
++		.dpcm_playback = 1,
++		.dpcm_capture = 1,
++		SND_SOC_DAILINK_REG(i2s3),
++	},
++	[DAI_LINK_DMIC] = {
++		.name = "DMIC_BE",
++		.no_pcm = 1,
++		.id = DAI_LINK_DMIC,
++		.dpcm_capture = 1,
++		SND_SOC_DAILINK_REG(dmic),
++	},
++	[DAI_LINK_INT_ADDA] = {
++		.name = "MTK_Codec",
++		.no_pcm = 1,
++		.id = DAI_LINK_INT_ADDA,
++		.dpcm_playback = 1,
++		.dpcm_capture = 1,
++		.ops = &mt8365_mt6357_int_adda_ops,
++		SND_SOC_DAILINK_REG(primary_codec),
++	},
++};
++
++static int mt8365_mt6357_gpio_probe(struct snd_soc_card *card)
++{
++	struct mt8365_mt6357_priv *priv = snd_soc_card_get_drvdata(card);
++	int ret, i;
++
++	priv->pinctrl = devm_pinctrl_get(card->dev);
++	if (IS_ERR(priv->pinctrl)) {
++		ret = PTR_ERR(priv->pinctrl);
++		return dev_err_probe(card->dev, ret,
++				     "Failed to get pinctrl\n");
++	}
++
++	for (i = PIN_STATE_DEFAULT ; i < PIN_STATE_MAX ; i++) {
++		priv->pin_states[i] = pinctrl_lookup_state(priv->pinctrl,
++							   mt8365_mt6357_pin_str[i]);
++		if (IS_ERR(priv->pin_states[i])) {
++			ret = PTR_ERR(priv->pin_states[i]);
++			dev_warn(card->dev, "No pin state for %s\n",
++				 mt8365_mt6357_pin_str[i]);
++		} else {
++			ret = pinctrl_select_state(priv->pinctrl,
++						   priv->pin_states[i]);
++			if (ret) {
++				dev_err_probe(card->dev, ret,
++					      "Failed to select pin state %s\n",
++					      mt8365_mt6357_pin_str[i]);
++				return ret;
++			}
 +		}
 +	}
++	return 0;
++}
 +
- 	if (pcie->suspended) {
- 		ret = qcom_pcie_host_init(&pcie->pci->pp);
- 		if (ret)
++static struct snd_soc_card mt8365_mt6357_soc_card = {
++	.name = "mt8365-evk",
++	.owner = THIS_MODULE,
++	.dai_link = mt8365_mt6357_dais,
++	.num_links = ARRAY_SIZE(mt8365_mt6357_dais),
++	.dapm_widgets = mt8365_mt6357_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(mt8365_mt6357_widgets),
++	.dapm_routes = mt8365_mt6357_routes,
++	.num_dapm_routes = ARRAY_SIZE(mt8365_mt6357_routes),
++};
++
++static int mt8365_mt6357_dev_probe(struct mtk_soc_card_data *soc_card_data, bool legacy)
++{
++	struct mtk_platform_card_data *card_data = soc_card_data->card_data;
++	struct snd_soc_card *card = card_data->card;
++	struct device *dev = card->dev;
++	struct device_node *platform_node;
++	struct mt8365_mt6357_priv *mach_priv;
++	int i, ret;
++
++	card->dev = dev;
++	ret = parse_dai_link_info(card);
++	if (ret)
++		goto err;
++
++	mach_priv = devm_kzalloc(dev, sizeof(*mach_priv),
++				 GFP_KERNEL);
++	if (!mach_priv)
++		return -ENOMEM;
++	soc_card_data->mach_priv = mach_priv;
++	snd_soc_card_set_drvdata(card, soc_card_data);
++	mt8365_mt6357_gpio_probe(card);
++	return 0;
++
++err:
++	clean_card_reference(card);
++	return ret;
++}
++
++static const struct mtk_soundcard_pdata mt8365_mt6357_card = {
++	.card_name = "mt8365-mt6357",
++	.card_data = &(struct mtk_platform_card_data) {
++		.card = &mt8365_mt6357_soc_card,
++	},
++	.soc_probe = mt8365_mt6357_dev_probe
++};
++
++static const struct of_device_id mt8365_mt6357_dt_match[] = {
++	{
++		.compatible = "mediatek,mt8365-mt6357",
++		.data = &mt8365_mt6357_card,
++	},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, mt8365_mt6357_dt_match);
++
++static struct platform_driver mt8365_mt6357_driver = {
++	.driver = {
++		   .name = "mt8365_mt6357",
++		   .of_match_table = mt8365_mt6357_dt_match,
++		   .pm = &snd_soc_pm_ops,
++	},
++	.probe = mtk_soundcard_common_probe,
++};
++
++module_platform_driver(mt8365_mt6357_driver);
++
++/* Module information */
++MODULE_DESCRIPTION("MT8365 EVK SoC machine driver");
++MODULE_AUTHOR("Nicolas Belin <nbelin@baylibre.com>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform: mt8365_mt6357");
 
 -- 
-2.42.0
+2.25.1
 
