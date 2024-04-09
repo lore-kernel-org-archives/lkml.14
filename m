@@ -1,111 +1,99 @@
-Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E460B13BACD;
-	Tue,  9 Apr 2024 15:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4C7135A4C;
+	Tue,  9 Apr 2024 15:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675131; cv=none; b=mBwIIohLRX4+Svs98vqcqmbMOgmoj34YDa5LXpcs//D8B3gUu0Tq2HP0nK9sofPoP3w2PLX8BXQ/4ZoR2pMFMUcD34WZIJI1O5uFl7am/tXiCfrS6s2hFuh3WccGXuqAh+3wR5m6BtDU5ir5NkAPIJKalJ74RrmchnR6S+7L7Xc=
+	t=1712675149; cv=none; b=Kt8y0eWjHnRzOh2BX/z6+GDA3YYAOTmzXzREaAJKFG49k9CfA4F/fMUt6zDAG+PW+2rc/yrineCzPVDh1+SlZqTWcAY01ZAR+F43rTlwYif1Kos4JccpvoH0cpHl5nj1TcC/xaCRB6PETcd6DJVQKHo/zLQt0O13dXQSIFwcqBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675131; c=relaxed/simple;
-	bh=BRuB4UKpiBNByIq5UG25bS2+dgxfikOk79EzTalBWB0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=c7GsqqKvU/yBnQnlMPdnLu2rtIXBLg08oh7Rlp0CNKitSUmhJIJW1aiEJnPTRNCEn98fMoISWT8JzS/2FIkbt2aRauRFNZv3851g++9FeNlsE1mvx+XKCsCYSA6Bbj/OeXJLO8AqCBPtydT/kBg7diSNIqqjhOCGytxuEQLKNXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=SfFQjHod; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ef0PFokv; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712675149; c=relaxed/simple;
+	bh=gfygpdlZBA/UR+d6jNGrfUkHe5v/BqLsPvdwuu6LPOI=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=qP8pMGCde3x6F6e0gT5bV3HS6jeVjFnPF6dt+5z1CKeSB9VdTjGlOwpS/3ikNAFindf9TCNeUz//yWDighREF/vhnWHHiRb8dKYDEYyCqOXSTFaBlUeSCXMcjy41x0hP2HdHpV/7OtSCSZ2eaAVSLHnlzMFsG77kbpefVJHU8dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ez19ziXD; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="SfFQjHod";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ef0PFokv"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 06B801140193;
-	Tue,  9 Apr 2024 11:05:29 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute2.internal (MEProxy); Tue, 09 Apr 2024 11:05:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1712675129; x=1712761529; bh=BRuB4UKpiB
-	NByIq5UG25bS2+dgxfikOk79EzTalBWB0=; b=SfFQjHodMy4wHc/7Hwneo7e6ym
-	E8E50/C3wm/DXFR2krf3ZaIFAuJp8dq3KeP/bmTag5bqJ2qgznRgzUmHdZpvPzYF
-	HiNN6uqsTLlUcHVbhGaCE61tQTR1G7PATqfFLZyT6Z/SqfFS9QoQkMFUJ/aaa1vL
-	Bff0NW6osSw1a3SOCQ0hpZSuLMMYyfbj/ZEad8PgsiuiA0dk9p65Vqkyuw1VngmP
-	RKhqrp0bV03yTWp7CntUJtBFGm0hV/hVyunkEjHrF4DS4Ze/v12vJGC9Jh7y9KEy
-	aQ6fvM3zqsMvWehZUUchBdx9GFtoszvedaoz6k+Kqo4YJJ8/QAQ2RAQdFxtQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712675129; x=1712761529; bh=BRuB4UKpiBNByIq5UG25bS2+dgxf
-	ikOk79EzTalBWB0=; b=Ef0PFokvTD6zcZNbpgYWGwiG5tb0z3tH4RKUwV1BcnOA
-	LU55sK6DHPcIixL7d+ocbFjLyuKgyjk6t8WSkbHyAmB6Fk/Yhdq1iBcbG5ktwK1W
-	Vdp2tkSlqPIGaPpjs+hf8Y47V1agAFjUezogUnWV7MC/8tt3xE4MVXUldis12au+
-	5wO5e8APojGNViA7hoHehOQB/RGvPY3MPsU1ezN0Uay5fos05hCdbkmL8gJKuHvq
-	j1jRgVIOj94mFUuaYi8QgnRtdO4KE7XfYpmZ06MXTPlnxqOhDVGlAauKNzWg/LjQ
-	YmOOcfFW8fUeGF05V0O/XHG8Jp5iLt73t0/uiFIrUQ==
-X-ME-Sender: <xms:OFkVZu0Rsk9E-4wgeolKdkfyRkZkktAQ_nwi90wpywPJECrcnp-xRQ>
-    <xme:OFkVZtZ8E7n0QrrrKCWDTBwFI11uOolA1CyI3MTRjtaaXbZmB_3MSqCt6Am9uCAv5
-    RPFkWA46jtfV2z5aW8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehvddgudeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:OFkVZpp0uweMVBe4mmv9NW5UTNyoys7sI81g1sZ10cCG-ZxWmhaSQQ>
-    <xmx:OFkVZhqhHpgYAZzObLm-mMSA97VqEN7nUWTJHqv2EnUtO8uMV8Nm0g>
-    <xmx:OFkVZj3qCI5_0Z9qhwv8FivbGBSHkYtJLI47daNJFbOu9tZ3r_WR-A>
-    <xmx:OFkVZgDTVHrnffOvSW3qUIcqx_TBrTFj8dIpvFFmofUrTguf6f5txA>
-    <xmx:OFkVZlw730G3knSjl4M9c5cTKK3CRiFbZBBn-zYvW7qImYlwh_S02HmI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 67E1AB6008D; Tue,  9 Apr 2024 11:05:28 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez19ziXD"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78d6bc947aeso76275185a.0;
+        Tue, 09 Apr 2024 08:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712675147; x=1713279947; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d1JiqW17Thx4tVhGhPVb84r7nRSgwjiyVwzWN22hbKg=;
+        b=ez19ziXDAM+WKatxF90Bdg8tYuAu4KnIge/YVXX4hxCvdS0WkXAdMZBHeOk1x4jep9
+         rO+XKjlE9li/i9mc2pf7ynUE6+kpUJPGJEXG0m4jVgIC6aNTipXOrNGaCXK8qJQk78Jg
+         /n/aqgMj9ekwoBe9G+jeKuGvBzM9tfkpU4uK5F2d5rJ+5k0+GMDpNU5XpVjS4m8mQmLq
+         dGp/gJMeP78ua5TJoQFCvn6TyUGh+uTw8jBjkcozzhvcgv50Evkg+EffB3VkcNSeVz85
+         YzLZILVxJ653RIpk/VzpF8s/rghKDY71WewKy6SX+dcxytwtScpYqhDM6Gjb8LbwMV+p
+         wyEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712675147; x=1713279947;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=d1JiqW17Thx4tVhGhPVb84r7nRSgwjiyVwzWN22hbKg=;
+        b=l9YX++rHUf1nWIyXx0lcD7JUAKehvqQ9FOn74loNm3ARabG+31C91LlqgRldxuOmza
+         Jbsu5hX+RWyDxjgj3/5zUR5Rdh+cR2diDRWiToZK4R4qpQk315j9NrAzVnV37ooMuCtK
+         FqP4EDYBfQAhVHrO1EvfaMVwncm9krLr5wXBuJW9ws9FopIMAJuCIkyHN5SL+lG8eiku
+         ZhMUosYjTRdhT4FSF+oEDIlLDZc0KSRGe5Hf6sJeRkmmuDq+Kg0XyqWQRVP3V5riiPja
+         /EItXNANduihepap1tuxDDuv4RkXcKqbcur6xqp1JUawcGdMmDs2Pz6IVFnVSaZXrwJC
+         FRJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCViiW3bab6WvzIheIGjUU6OlVah9B85qZuntTKrl6NmPdDqCzQzqm1RLyqQC9pB6oEvd8VIkinRMhCSgxeNl5qPHUcsjx0DlB05u1iJV0JlQaMqjY9cY8qVe9NY16cp4DRnGgrRw6XqjnZIVMu+EhrK9Txx7STJBcXcpPE60AWepZTI4pu+
+X-Gm-Message-State: AOJu0YwF51qe2kucvVcOkJcXwTNiUEC4S6u82ai10sA33jUKcIPBk67i
+	Rg/MOYIpe72Ksw/xwsu7WceJper9KRZA6+DU/lYKqFLvaEPpI9Bd
+X-Google-Smtp-Source: AGHT+IFbologFtzoOOVUCXskYwR2w+4QFcNb2kah9xNwJh9qv0RtRxIZj6M7sP0k18mo4GXpwrAXcA==
+X-Received: by 2002:a05:620a:84a:b0:78d:5d7e:9d0c with SMTP id u10-20020a05620a084a00b0078d5d7e9d0cmr8938132qku.10.1712675147348;
+        Tue, 09 Apr 2024 08:05:47 -0700 (PDT)
+Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
+        by smtp.gmail.com with ESMTPSA id o8-20020a05620a110800b0078d67d40c49sm1693556qkk.70.2024.04.09.08.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 08:05:47 -0700 (PDT)
+Date: Tue, 09 Apr 2024 11:05:46 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Richard Gobert <richardbgobert@gmail.com>, 
+ davem@davemloft.net, 
+ edumazet@google.com, 
+ kuba@kernel.org, 
+ pabeni@redhat.com, 
+ willemdebruijn.kernel@gmail.com, 
+ dsahern@kernel.org, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Message-ID: <6615594ab06f2_23a2b22945@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240408141720.98832-5-richardbgobert@gmail.com>
+References: <20240408141720.98832-1-richardbgobert@gmail.com>
+ <20240408141720.98832-5-richardbgobert@gmail.com>
+Subject: Re: [PATCH net-next v5 4/6] net: gro: add {inner_}network_offset to
+ napi_gro_cb
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <fe75de1c-f500-42f3-bef0-8830d9f45ea1@app.fastmail.com>
-In-Reply-To: <20240409150132.4097042-8-ardb+git@google.com>
-References: <20240409150132.4097042-5-ardb+git@google.com>
- <20240409150132.4097042-8-ardb+git@google.com>
-Date: Tue, 09 Apr 2024 17:05:08 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ard Biesheuvel" <ardb+git@google.com>, linux-kernel@vger.kernel.org
-Cc: "Ard Biesheuvel" <ardb@kernel.org>,
- "Masahiro Yamada" <masahiroy@kernel.org>,
- "Martin KaFai Lau" <martin.lau@linux.dev>,
- Linux-Arch <linux-arch@vger.kernel.org>, linux-kbuild@vger.kernel.org,
- bpf@vger.kernel.org, "Andrii Nakryiko" <andrii@kernel.org>
-Subject: Re: [PATCH v2 3/3] btf: Avoid weak external references
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 9, 2024, at 17:01, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->
-> If the BTF code is enabled in the build configuration, the start/stop
-> BTF markers are guaranteed to exist in the final link but not during the
-> first linker pass.
->
-> Avoid GOT based relocations to these markers in the final executable by
-> providing preliminary definitions that will be used by the first linker
-> pass, and superseded by the actual definitions in the subsequent ones.
->
-> Make the preliminary definitions dependent on CONFIG_DEBUG_INFO_BTF so
-> that inadvertent references to this section will trigger a link failure
-> if they occur in code that does not honour CONFIG_DEBUG_INFO_BTF.
->
-> Note that Clang will notice that taking the address of__start_BTF cannot
-> yield NULL any longer, so testing for that condition is no longer
-> needed.
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Richard Gobert wrote:
+> This patch adds network_offset and inner_network_offset to napi_gro_cb, and
+> makes sure both are set correctly. In the common path there's only one
+> write (skb_gro_reset_offset).
+> 
+> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+> ---
+>  include/net/gro.h      | 18 ++++++++++++++++--
+>  net/8021q/vlan_core.c  |  2 ++
+>  net/core/gro.c         |  1 +
+>  net/ethernet/eth.c     |  1 +
+>  net/ipv4/af_inet.c     |  5 +----
+>  net/ipv4/gre_offload.c |  1 +
+>  net/ipv6/ip6_offload.c |  8 ++++----
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Should this cover more protocols, like geneve, ipsec?
