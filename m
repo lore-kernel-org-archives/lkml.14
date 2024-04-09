@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A822C132810;
-	Tue,  9 Apr 2024 13:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93852135A6D;
+	Tue,  9 Apr 2024 13:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669940; cv=none; b=O5E4P3/xms5joeDHhrJ1/G8N60mmTWqD84gVRvfyZhOdRtjIs4T/zocBJmT9RCr7xSRgMfYyMNtHn404TaqygpArEGrL3B6i2uOJoQe8SksFDUxIW6pnjNUg0hawusGCYQulyNimfjQFipTAJjranwir9AL+PvSV1wz84Ydv0GY=
+	t=1712669945; cv=none; b=lF3dH1HmPKkrNUIxEExif3RSEOR4xB1P9BCb2mCk2EOIxipz0VsWKD9YqNIg5Q5i1VoXWBhWGy1IZcvR1b3NBrjLR9pLweg562NWj8OQSN2D7rGA6rrjpF4774mLgddtem4r1cw2jT82UZCF4KVgi1slpXK3mk8HpAx9ytcgEH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669940; c=relaxed/simple;
-	bh=pTH7BO4el6rKEVr/dq4/+cLXqiAhvAeRhttJp5b1JT8=;
+	s=arc-20240116; t=1712669945; c=relaxed/simple;
+	bh=7hrNrvhSRHtyZ6X1D6pysKCJsCiJsdLaYXC8yh0wAUM=;
 	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=p5Sd2FEMfwqD+tpg+Y7ys6jcYAucq/cfQajeSHUwpLIzuJ/6frmOlEkI3I4sDaghMVITvACX7tJKdXmb3qrhB1I7tXVrpFNcPxo9O3osLTdbnOaPLUgaAhwDorcu7fCJvhRe9YsyAltqVm/zP5sGxUlRiH+k3YMRvnu4JuotnJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TB+Dgk6J; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=ABxHq51penHKXuPMuqrxHv9HatQln4WJdLdAUykWlPHAYiMoMnLyUTtUH2+5Ka16szTwKZ8jlQhL0torGHOrx+774w4vRiYbOl8w82i9TJzuAlgsEKT2y+rYoTSqjb/1tftW3pkQjI2upEarPTvIDI8HsV64fRmiblxAV+D/NOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HEOHTdUf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TB+Dgk6J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58217C433C7;
-	Tue,  9 Apr 2024 13:39:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HEOHTdUf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25F34C43399;
+	Tue,  9 Apr 2024 13:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712669940;
-	bh=pTH7BO4el6rKEVr/dq4/+cLXqiAhvAeRhttJp5b1JT8=;
+	s=k20201202; t=1712669945;
+	bh=7hrNrvhSRHtyZ6X1D6pysKCJsCiJsdLaYXC8yh0wAUM=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=TB+Dgk6JrdxIOGEplVMcgrE8KE1fFozP5xR2R8hEJNB4vM2/WlHsEfTrKLe6GLrp8
-	 8aepaDluNmT61/iczRzmiP3V3QMA8FJcURyeoi7D/ICl5MYEQSiO/ARcSK/V8AYMh6
-	 nSmb/zFdx4gq3dhYBdATdBxoORqjvEAHDMHnT4oqeNFeaj9nLP3G1JVG6BfD3wsVjr
-	 Up2LEga5g4BXqMGMocwhRoY02oZuJRe9TQCtleZKFhKHazjSfr5qEe79h5fbtmdgcW
-	 ry8SqSwsRCapheez3cZYm6tt1g1VBZKmYis9mWPSeHarqqzphZ9OYD2N79alM8izKl
-	 UqtNK1mYqWG0g==
-Date: Tue, 09 Apr 2024 08:38:59 -0500
+	b=HEOHTdUfT40MII2SsTPC3kxPREzZm2W/lVyEe9od6xbqeWv+E+CnLbDZ4XpYgcJvS
+	 NGI8fSoLiC6wAKLnSlvi2QosYG5cKatT8ATrPC+Gxnl5uWX8ov14lzpj+X4GqfNh9U
+	 RUtx+AYrx9o7CTLirh6h10eh+hJRy9k3aU2iPezhwGymSkIyL6oTIT543hHDjbC1q9
+	 jMo4X+2mUz8rvpXKXGTei/TMySmwQJxzli35BeyfxLwgA5fF6S1Sio9ZupIHzUeufa
+	 xW3V5AqNVXfLZk7+xw+fILjgw+zgISok7gWaUSEW1IGzOKJkYq6E4Zj0g+ZnCZlYd0
+	 DN4xtgiXsi4qQ==
+Date: Tue, 09 Apr 2024 08:39:04 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,39 +36,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: Rob Herring <robh@kernel.org>
-To: michael.opdenacker@bootlin.com
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
- Chen Wang <unicorn_wang@outlook.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Inochi Amaoto <inochiama@outlook.com>
-In-Reply-To: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
-References: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
-Message-Id: <171266958507.1032617.9460749136730849811.robh@kernel.org>
-Subject: Re: [PATCH] riscv: dts: sophgo: add initial Milk-V Duo S board
- device tree
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-kernel@vger.kernel.org, 
+ kernel@collabora.com, matthias.bgg@gmail.com, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20240409114211.310462-1-angelogioacchino.delregno@collabora.com>
+References: <20240409114211.310462-1-angelogioacchino.delregno@collabora.com>
+Message-Id: <171266958557.1032651.3727332046208008120.robh@kernel.org>
+Subject: Re: [PATCH 0/5] Radxa NIO-12L: Supplies for CPU/GPU and
+ improvements
 
 
-On Tue, 09 Apr 2024 08:45:04 +0200, michael.opdenacker@bootlin.com wrote:
-> From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+On Tue, 09 Apr 2024 13:42:06 +0200, AngeloGioacchino Del Regno wrote:
+> This series performs various improvements and enables PHYs and USB Role
+> Switching for proper PM support and to stop relying on the bootloader's
+> pre-boot configuration.
+> USB Role Switching doesn't include Alternate Modes yet, as this needs
+> some more work.
 > 
-> This adds initial support for the Milk-V Duo S board
-> (https://milkv.io/duo-s), enabling the serial port and
-> read-only SD card support, allowing to boot Linux to the
-> command line.
+> As for the regulator nodes, those were not probing correctly, producing
+> unability to resume after PM suspend.
 > 
-> Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> AngeloGioacchino Del Regno (5):
+>   arm64: dts: mediatek: mt8395-nio-12l: Fix MT6360 regulator nodes names
+>   arm64: dts: medaitek: mt8395-nio-12l: Set i2c6 pins to bias-disable
+>   arm64: dts: mediatek: mt8395-nio-12l: Define RSEL in microamperes
+>   arm64: dts: mediatek: mt8395-nio-12l: Enable PHYs and USB role switch
+>   arm64: dts: mediatek: mt8395-nio-12l: Add power supplies for CPU/GPU
+>     scaling
 > 
-> ---
+>  .../dts/mediatek/mt8395-radxa-nio-12l.dts     | 106 ++++++++++++++++--
+>  1 file changed, 94 insertions(+), 12 deletions(-)
 > 
-> Tested with linux-next as of Apr 9, 2024,
-> using the risc-v "defconfig" configuration.
-> ---
->  arch/riscv/boot/dts/sophgo/Makefile           |  1 +
->  .../boot/dts/sophgo/sg2000-milkv-duos.dts     | 38 +++++++++++++++++++
->  2 files changed, 39 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
+> --
+> 2.44.0
+> 
+> 
 > 
 
 
@@ -86,10 +90,20 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y sophgo/sg2000-milkv-duos.dtb' for 20240409064504.4010353-1-michael.opdenacker@bootlin.com:
+New warnings running 'make CHECK_DTBS=y mediatek/mt8395-radxa-nio-12l.dtb' for 20240409114211.310462-1-angelogioacchino.delregno@collabora.com:
 
-arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dtb: /: failed to match any schema with compatible: ['milkv,duos', 'sophgo,sg2000']
-arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dtb: /: failed to match any schema with compatible: ['milkv,duos', 'sophgo,sg2000']
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: soc: jpgdec-master: {'compatible': ['mediatek,mt8195-jpgdec'], 'power-domains': [[47, 24]], 'iommus': [[137, 621], [137, 622], [137, 626], [137, 627], [137, 628], [137, 629]], '#address-cells': [[2]], '#size-cells': [[2]], 'ranges': True, 'jpgdec@1a040000': {'compatible': ['mediatek,mt8195-jpgdec-hw'], 'reg': [[0, 436469760, 0, 65536]], 'iommus': [[137, 621], [137, 622], [137, 626], [137, 627], [137, 628], [137, 629]], 'interrupts': [[0, 343, 4, 0]], 'clocks': [[38, 3]], 'clock-names': ['jpgdec'], 'power-domains': [[47, 23]]}, 'jpgdec@1a050000': {'compatible': ['mediatek,mt8195-jpgdec-hw'], 'reg': [[0, 436535296, 0, 65536]], 'iommus': [[137, 621], [137, 622], [137, 626], [137, 627], [137, 628], [137, 629]], 'interrupts': [[0, 344, 4, 0]], 'clocks': [[38, 4]], 'clock-names': ['jpgdec'], 'power-domains': [[47, 24]]}, 'jpgdec@1b040000': {'compatible': ['mediatek,mt8195-jpgdec-hw'], 'reg': [[0, 453246976, 0, 65536]], 'iommus': [[119, 653], [119, 654], [119, 658], [119, 659], [119, 660], [119, 661]], 'interrupts': [[0, 348, 4, 0]], 'clocks': [[32, 3]], 'clock-names': ['jpgdec'], 'power-domains': [[47, 25]]}} should not be valid under {'type': 'object'}
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: soc: jpgenc-master: {'compatible': ['mediatek,mt8195-jpgenc'], 'power-domains': [[47, 27]], 'iommus': [[119, 647], [119, 648], [119, 649], [119, 652]], '#address-cells': [[2]], '#size-cells': [[2]], 'ranges': True, 'jpgenc@1a030000': {'compatible': ['mediatek,mt8195-jpgenc-hw'], 'reg': [[0, 436404224, 0, 65536]], 'iommus': [[137, 615], [137, 616], [137, 617], [137, 620]], 'interrupts': [[0, 342, 4, 0]], 'clocks': [[38, 2]], 'clock-names': ['jpgenc'], 'power-domains': [[47, 26]]}, 'jpgenc@1b030000': {'compatible': ['mediatek,mt8195-jpgenc-hw'], 'reg': [[0, 453181440, 0, 65536]], 'iommus': [[119, 647], [119, 648], [119, 649], [119, 652]], 'interrupts': [[0, 347, 4, 0]], 'clocks': [[32, 2]], 'clock-names': ['jpgenc'], 'power-domains': [[47, 27]]}} should not be valid under {'type': 'object'}
+	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: pmic@34: charger: 'usb-otg-vbus' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6360.yaml#
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: charger: 'usb-otg-vbus' does not match any of the regexes: 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/power/supply/mt6360_charger.yaml#
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: regulator: 'BUCK1', 'BUCK2', 'LDO1', 'LDO2', 'LDO3', 'LDO5', 'LDO6', 'LDO7' do not match any of the regexes: '^buck[12]$', '^ldo[123567]$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/regulator/mt6360-regulator.yaml#
+arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dtb: display@14f06000: clocks: [[34, 14], [34, 43], [34, 44]] is too long
+	from schema $id: http://devicetree.org/schemas/display/mediatek/mediatek,split.yaml#
 
 
 
