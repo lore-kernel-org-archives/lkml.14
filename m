@@ -1,741 +1,224 @@
-Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA2B13D602;
-	Tue,  9 Apr 2024 15:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B84136E1F
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712677591; cv=none; b=QAhhz18WtMnkS06Qia9mQD1L4TR+5Z69ynONmXMtZ44TR3SfnkbOerLy76hHEImc7twVCwAnKEYUmmzuII/KVVQerGr5FEy1Dbjl4ZxjV/0GPISB0yJHtRqi9ObWrEJJ8V2el9s0+ZHBvTa/HnCqelVESe/TAZOo253dSVHVV9s=
+	t=1712677605; cv=none; b=U6b3jvwbdKRgC1mk23dr2WNb1PvysZSfO5G3Ay7STsialfqmAK5bP/a3zcWj6N7WCLT2QyNp081IIIono0ZdaoaKomhE3GAsKw3Qw15o+gcRfuBctIDNotRxUwPzWX80bex+iVACyq7PvZdwhMoLOeCEjDBt0yIOkpzsb1Xnfoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712677591; c=relaxed/simple;
-	bh=SNlPweSWtVU73doNPQfknsWEGcCGz3Kp9UCuxAbiQrs=;
-	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	 Subject; b=GBk6c1uy/5U7HG6agjZWs1pUmUyYuwiyQkZPxi+ttTjjQLYC671LqkK/SOn8w9AgBNXoiA4Rb1LrPo0S3wyTk3HIcVJp442bAaDAjQSHC9RHt0BDw1OP9AlCYRbd/mZlSS6NhF4QEv0Q7zDQhFMtD6z6ZLKiryk4Mc1roIgQJPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=0TPtqiv+; arc=none smtp.client-ip=162.243.120.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+	s=arc-20240116; t=1712677605; c=relaxed/simple;
+	bh=ImqAvE5DqPsCmdddnql+7QuydKOmyUgd30+SWAWpb6Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KfUltLRSfnPf97CzroaQRTdwLSDQ8J37GfWOAqdgLnBgzlqv/BghEFzb4ogPAG6dFYgrqWolCdd1smPdF3zodvj57J286I8OHHt4QuR11qHaEvGvjaets7nNVUFSQjd2kzgWqaivh6ixKxnp7MDkF7/qaoU0FkzOaoR0r8dndrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=knhlVV0a; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="0TPtqiv+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
-	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
-	:From:subject:date:message-id:reply-to;
-	bh=xismI6/UN76dXowjytnEE6ImFlGBnNQlstjuySv9/Gg=; b=0TPtqiv+eh6cwRfLpmIq7OyP5f
-	UHYyrsWLnrK2oi19UeZ2GPSxW/oU1/66izgJg0jBD42YmCAMbnDmKg7aW4CF2OW5n3dKEpO+NG8ln
-	XQP19YGqKMl8fcxnx+me/eAO8iGXrHqe/BRTyZRUwFELRHiOGvlKcSMh+4AWlHaTa8z0=;
-Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:44750 helo=pettiford.lan)
-	by mail.hugovil.com with esmtpa (Exim 4.92)
-	(envelope-from <hugo@hugovil.com>)
-	id 1ruDfs-0002NM-Lf; Tue, 09 Apr 2024 11:46:18 -0400
-From: Hugo Villeneuve <hugo@hugovil.com>
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	peterz@infradead.org,
-	mingo@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	hugo@hugovil.com,
-	andy.shevchenko@gmail.com,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Date: Tue,  9 Apr 2024 11:42:51 -0400
-Message-Id: <20240409154253.3043822-4-hugo@hugovil.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240409154253.3043822-1-hugo@hugovil.com>
-References: <20240409154253.3043822-1-hugo@hugovil.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="knhlVV0a"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36a0c8c5f18so194885ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712677603; x=1713282403; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E0puCatRq0DqyA1/imYz3YosP+4LfQJpZakwVvO0S4E=;
+        b=knhlVV0ato9jox8yYj+LB9o1aM3GDjt+Hune3nawzFPLts2+747Ut/nIsL/6RfLrNn
+         RLkU1mAZ5AbLg2H8/8T4W5hjAM7PWz3Yq4ARmtZ0ykaB+M6nCAhkMsNcmspKJ8p+FNaW
+         PhstDOHW30yF+nM/uyZ8j4K1hH0JKYqH9uVvEnmRhY9AB2Jexj/FYYvPBx852pB8xmJQ
+         4wYyTnNNcmm9fl/LaUQejmcPUnWtmZzK1T3ASowxk8gyio9Kh5LOgwAD8w1yY9UoCp8u
+         36mpyu95CrCqzuEWMctdWhFXldsiruRQPlXKLqahKOKWG/eB25InyIx1AGyP56QuRpyt
+         EkNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712677603; x=1713282403;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E0puCatRq0DqyA1/imYz3YosP+4LfQJpZakwVvO0S4E=;
+        b=EvEAdSifQyJE8/VHcintTAf2B6KmPQli/bA9oxp6tLutheFPZrF0EeA0/eBrd39pgA
+         Vd2q6OTOLT/9LrHl7w+tEG1Mm4PGiHm5PPbJA1UFn+kYAvQLEM2FfEgp2nsjyRM/Lefs
+         XpAMbcMpVmzV1+yjDRnZrV22w+fyA8kKepdcPfks3gu4gfDlSIW/aojxFJQyH/t+IxMK
+         1smPEj1YkZp7B7f9nzS0Mof78W/T+SZuF/01BwlUphmu9ZOG4GaDQzvyi6+CgHZt7vrK
+         5dJslVYJau7MIQ5YYoODhhh+PnO5oYjEvsWpZ01bnGs43asY/Va82h+BIl+8ONO3/juH
+         w0Pg==
+X-Forwarded-Encrypted: i=1; AJvYcCU76NjBmnyUctHCDLElk+Y8781/LIU4pctwrO8ySM78SPTVsWxre/coQLDJaF3QZz/86JB9joQThWN9JzVDoCFknVp8PVZowRlmKqLj
+X-Gm-Message-State: AOJu0YxBktlIKQk7d78ww7IxO5Re36xgcLIiO5BTvgsbYA8/6Ai9hXSP
+	vH6cDYn2qsSAKCdBXGhhjqAYoSJSZOZRFu0IwWoRRdvkQXCCi+50cDmgEl3Ye3hkC7FsINRhoGc
+	m8Ub8jORdLvMQwSKRkbZX5DMHyZssJ/yW6HAN
+X-Google-Smtp-Source: AGHT+IE4MNU0jEp18FzZk97qTk/n3dSHqzgLpj63SE+bgTmWvUMttM0EQOKPZ9WtIcMPRFd7N6cTAlH4UqUwtCKzkYg=
+X-Received: by 2002:a05:6e02:1d02:b0:369:eca2:1a43 with SMTP id
+ i2-20020a056e021d0200b00369eca21a43mr307178ila.8.1712677602814; Tue, 09 Apr
+ 2024 08:46:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.80.174.168
-X-SA-Exim-Mail-From: hugo@hugovil.com
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-Subject: [PATCH v4 3/5] serial: sc16is7xx: split into core and I2C/SPI parts (core)
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
+References: <ZhVfc5jYLarnGzKa@x1> <ZhVf9rO-b3xTqZEK@x1>
+In-Reply-To: <ZhVf9rO-b3xTqZEK@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 9 Apr 2024 08:46:31 -0700
+Message-ID: <CAP-5=fVbkj74K3w0cOfpbKe2=9wK1AJYkGQmbHLD4SKzc=dVBw@mail.gmail.com>
+Subject: Re: BISECTED: perf test 'Miscellaneous Intel PT' failing on Intel
+ hybrid machines
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Tue, Apr 9, 2024 at 8:34=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Apr 09, 2024 at 12:32:06PM -0300, Arnaldo Carvalho de Melo wrote:
+> > root@x1:~# perf test "Miscellaneous Intel PT testing"
+> > 112: Miscellaneous Intel PT testing                                  : =
+FAILED!
+> > root@x1:~#
+> >
+> > then I revert:
+> >
+> > commit 642e1ac96aaa12aeb41402e68eac7faf5917a67a (HEAD -> perf-tools-nex=
+t)
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Tue Apr 9 12:28:49 2024 -0300
+> >
+> >     Revert "perf pmus: Check if we can encode the PMU number in perf_ev=
+ent_attr.type"
+> >
+> >     This reverts commit 82fe2e45cdb00de4fa648050ae33bdadf9b3294a.
+> > =E2=AC=A2[acme@toolbox perf-tools-next]$
+> >
+> > It works now:
+> >
+> > root@x1:~# perf -v
+> > perf version 6.8.g642e1ac96aaa
+> > root@x1:~# perf test "Miscellaneous Intel PT testing"
+> > 117: Miscellaneous Intel PT testing                                  : =
+Ok
+> > root@x1:~#
+> >
+> > Investigating, if you come up with ideas, lemme know.
+>
+> Some more context:
+>
+> When this patch was implemented/tested I had access only to an ARM64
+> hybrid machine, now my notebook is a Rocket Lake lenovo (13th gen), that
+> is hybrid and the test is failing with:
+>
+> root@x1:~# perf test -v "Miscellaneous Intel PT testing"
+> 112: Miscellaneous Intel PT testing                                  :
+> --- start ---
+> test child forked, pid 304355
+> --- Test system-wide sideband ---
+> Checking for CPU-wide recording on CPU 0
+> OK
+> Checking for CPU-wide recording on CPU 1
+> OK
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 1.934 MB /tmp/perf-test-intel-pt-sh.xAC=
+V6V7Hn4/test-perf.data ]
+> OK
+> --- Test per-thread recording ---
+> Workload PIDs are 304377 and 304378
+> perf PID is 304389
+> Waiting for "perf record has started" message
+> OK
+> pid 0 cpu -1 fd 5 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flag=
+s 0x8 =3D 5
+> pid 0 cpu -1 fd 6 : sys_perf_event_open: pid 0  cpu -1  group_fd -1  flag=
+s 0x8 =3D 6
+> pid 304377 cpu -1 fd 7 : sys_perf_event_open: pid 304377  cpu -1  group_f=
+d -1  flags 0x8 =3D 7
+> pid 304380 cpu -1 fd 8 : sys_perf_event_open: pid 304380  cpu -1  group_f=
+d -1  flags 0x8 =3D 8
+> pid 304378 cpu -1 fd 9 : sys_perf_event_open: pid 304378  cpu -1  group_f=
+d -1  flags 0x8 =3D 9
+> pid 304381 cpu -1 fd 10 : sys_perf_event_open: pid 304381  cpu -1  group_=
+fd -1  flags 0x8 =3D 10
+> pid 304377 cpu -1 fd 11 : sys_perf_event_open: pid 304377  cpu -1  group_=
+fd -1  flags 0x8 =3D 11
+> pid 304380 cpu -1 fd 12 : sys_perf_event_open: pid 304380  cpu -1  group_=
+fd -1  flags 0x8 =3D 12
+> pid 304378 cpu -1 fd 13 : sys_perf_event_open: pid 304378  cpu -1  group_=
+fd -1  flags 0x8 =3D 13
+> pid 304381 cpu -1 fd 14 : sys_perf_event_open: pid 304381  cpu -1  group_=
+fd -1  flags 0x8 =3D 14
+> fd 7 : idx 0: mmapping fd 7
+> fd 11 fd_to 7 : idx 0: set output fd 11 -> 7
+> fd 8 : idx 1: mmapping fd 8
+> fd 12 fd_to 8 : idx 1: set output fd 12 -> 8
+> fd 9 : idx 2: mmapping fd 9
+> fd 13 fd_to 9 : idx 2: set output fd 13 -> 9
+> fd 10 : idx 3: mmapping fd 10
+> fd 14 fd_to 10 : idx 3: set output fd 14 -> 10
+> Checking 10 fds
+> No mmap for fd 5
 
-Split the common code from sc16is7xx driver and move the I2C and SPI bus
-parts into interface-specific source files.
+Thanks Arnaldo, so the reverted change is:
+```
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -4,6 +4,7 @@
+#include <subcmd/pager.h>
+#include <sys/types.h>
+#include <dirent.h>
++#include <pthread.h>
+#include <string.h>
+#include <unistd.h>
+#include "debug.h"
+@@ -492,9 +493,35 @@ int perf_pmus__num_core_pmus(void)
+       return count;
+}
 
-sc16is7xx becomes the core functions which can support multiple bus
-interfaces like I2C and SPI.
-
-No functional changes intended.
-
-Also simplify and improve Kconfig entries.
-  - Capitalize SPI keyword for consistency
-  - Display list of supported ICs each on a separate line (and aligned) to
-    facilitate locating a specific IC model
-  - Add Manufacturer name at start of description string
-  - Add UART keyword to description string
-
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/tty/serial/Kconfig         |  47 +++---
- drivers/tty/serial/Makefile        |   2 +
- drivers/tty/serial/sc16is7xx.c     | 225 +++++------------------------
- drivers/tty/serial/sc16is7xx.h     |  41 ++++++
- drivers/tty/serial/sc16is7xx_i2c.c |  64 ++++++++
- drivers/tty/serial/sc16is7xx_spi.c |  87 +++++++++++
- 6 files changed, 248 insertions(+), 218 deletions(-)
- create mode 100644 drivers/tty/serial/sc16is7xx.h
- create mode 100644 drivers/tty/serial/sc16is7xx_i2c.c
- create mode 100644 drivers/tty/serial/sc16is7xx_spi.c
-
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index ffcf4882b25f9..9b5a65ea8ede3 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1021,41 +1021,30 @@ config SERIAL_SCCNXP_CONSOLE
- 	  Support for console on SCCNXP serial ports.
- 
- config SERIAL_SC16IS7XX_CORE
--	tristate
--
--config SERIAL_SC16IS7XX
--	tristate "SC16IS7xx serial support"
-+	tristate "NXP SC16IS7xx UART support"
- 	select SERIAL_CORE
--	depends on (SPI_MASTER && !I2C) || I2C
-+	select SERIAL_SC16IS7XX_SPI if SPI_MASTER
-+	select SERIAL_SC16IS7XX_I2C if I2C
- 	help
--	  This selects support for SC16IS7xx serial ports.
--	  Supported ICs are SC16IS740, SC16IS741, SC16IS750, SC16IS752,
--	  SC16IS760 and SC16IS762. Select supported buses using options below.
-+	  Core driver for NXP SC16IS7xx UARTs.
-+	  Supported ICs are:
-+
-+	    SC16IS740
-+	    SC16IS741
-+	    SC16IS750
-+	    SC16IS752
-+	    SC16IS760
-+	    SC16IS762
-+
-+	  The driver supports both I2C and SPI interfaces.
- 
- config SERIAL_SC16IS7XX_I2C
--	bool "SC16IS7xx for I2C interface"
--	depends on SERIAL_SC16IS7XX
--	depends on I2C
--	select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
--	select REGMAP_I2C if I2C
--	default y
--	help
--	  Enable SC16IS7xx driver on I2C bus,
--	  If required say y, and say n to i2c if not required,
--	  Enabled by default to support oldconfig.
--	  You must select at least one bus for the driver to be built.
-+	tristate
-+	select REGMAP_I2C
- 
- config SERIAL_SC16IS7XX_SPI
--	bool "SC16IS7xx for spi interface"
--	depends on SERIAL_SC16IS7XX
--	depends on SPI_MASTER
--	select SERIAL_SC16IS7XX_CORE if SERIAL_SC16IS7XX
--	select REGMAP_SPI if SPI_MASTER
--	help
--	  Enable SC16IS7xx driver on SPI bus,
--	  If required say y, and say n to spi if not required,
--	  This is additional support to existing driver.
--	  You must select at least one bus for the driver to be built.
-+	tristate
-+	select REGMAP_SPI
- 
- config SERIAL_TIMBERDALE
- 	tristate "Support for timberdale UART"
-diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
-index b25e9b54a6609..faa45f2b8bb05 100644
---- a/drivers/tty/serial/Makefile
-+++ b/drivers/tty/serial/Makefile
-@@ -76,6 +76,8 @@ obj-$(CONFIG_SERIAL_SAMSUNG)		+= samsung_tty.o
- obj-$(CONFIG_SERIAL_SB1250_DUART)	+= sb1250-duart.o
- obj-$(CONFIG_SERIAL_SCCNXP)		+= sccnxp.o
- obj-$(CONFIG_SERIAL_SC16IS7XX_CORE)	+= sc16is7xx.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX_SPI)	+= sc16is7xx_spi.o
-+obj-$(CONFIG_SERIAL_SC16IS7XX_I2C)	+= sc16is7xx_i2c.o
- obj-$(CONFIG_SERIAL_SH_SCI)		+= sh-sci.o
- obj-$(CONFIG_SERIAL_SIFIVE)		+= sifive.o
- obj-$(CONFIG_SERIAL_SPRD)		+= sprd_serial.o
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index b971fd2a9a77e..51fb1c95d3826 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1,19 +1,22 @@
- // SPDX-License-Identifier: GPL-2.0+
- /*
-- * SC16IS7xx tty serial driver - Copyright (C) 2014 GridPoint
-- * Author: Jon Ringle <jringle@gridpoint.com>
-+ * SC16IS7xx tty serial driver - common code
-  *
-- *  Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
-+ * Copyright (C) 2014 GridPoint
-+ * Author: Jon Ringle <jringle@gridpoint.com>
-+ * Based on max310x.c, by Alexander Shiyan <shc_work@mail.ru>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+#undef DEFAULT_SYMBOL_NAMESPACE
-+#define DEFAULT_SYMBOL_NAMESPACE SERIAL_NXP_SC16IS7XX
- 
- #include <linux/bitops.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/device.h>
-+#include <linux/export.h>
- #include <linux/gpio/driver.h>
--#include <linux/i2c.h>
-+#include <linux/kthread.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/property.h>
-@@ -21,15 +24,15 @@
- #include <linux/sched.h>
- #include <linux/serial_core.h>
- #include <linux/serial.h>
-+#include <linux/string.h>
- #include <linux/tty.h>
- #include <linux/tty_flip.h>
--#include <linux/spi/spi.h>
- #include <linux/uaccess.h>
- #include <linux/units.h>
- 
--#define SC16IS7XX_NAME			"sc16is7xx"
-+#include "sc16is7xx.h"
-+
- #define SC16IS7XX_MAX_DEVS		8
--#define SC16IS7XX_MAX_PORTS		2 /* Maximum number of UART ports per IC. */
- 
- /* SC16IS7XX register definitions */
- #define SC16IS7XX_RHR_REG		(0x00) /* RX FIFO */
-@@ -302,16 +305,9 @@
- 
- 
- /* Misc definitions */
--#define SC16IS7XX_SPI_READ_BIT		BIT(7)
- #define SC16IS7XX_FIFO_SIZE		(64)
- #define SC16IS7XX_GPIOS_PER_BANK	4
- 
--struct sc16is7xx_devtype {
--	char	name[10];
--	int	nr_gpio;
--	int	nr_uart;
--};
--
- #define SC16IS7XX_RECONF_MD		(1 << 0)
- #define SC16IS7XX_RECONF_IER		(1 << 1)
- #define SC16IS7XX_RECONF_RS485		(1 << 2)
-@@ -492,35 +488,40 @@ static void sc16is7xx_stop_rx(struct uart_port *port)
- 	sc16is7xx_ier_clear(port, SC16IS7XX_IER_RDI_BIT);
- }
- 
--static const struct sc16is7xx_devtype sc16is74x_devtype = {
-+const struct sc16is7xx_devtype sc16is74x_devtype = {
- 	.name		= "SC16IS74X",
- 	.nr_gpio	= 0,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is74x_devtype);
- 
--static const struct sc16is7xx_devtype sc16is750_devtype = {
-+const struct sc16is7xx_devtype sc16is750_devtype = {
- 	.name		= "SC16IS750",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is750_devtype);
- 
--static const struct sc16is7xx_devtype sc16is752_devtype = {
-+const struct sc16is7xx_devtype sc16is752_devtype = {
- 	.name		= "SC16IS752",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 2,
- };
-+EXPORT_SYMBOL_GPL(sc16is752_devtype);
- 
--static const struct sc16is7xx_devtype sc16is760_devtype = {
-+const struct sc16is7xx_devtype sc16is760_devtype = {
- 	.name		= "SC16IS760",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 1,
- };
-+EXPORT_SYMBOL_GPL(sc16is760_devtype);
- 
--static const struct sc16is7xx_devtype sc16is762_devtype = {
-+const struct sc16is7xx_devtype sc16is762_devtype = {
- 	.name		= "SC16IS762",
- 	.nr_gpio	= 8,
- 	.nr_uart	= 2,
- };
-+EXPORT_SYMBOL_GPL(sc16is762_devtype);
- 
- static bool sc16is7xx_regmap_volatile(struct device *dev, unsigned int reg)
- {
-@@ -1463,9 +1464,8 @@ static const struct serial_rs485 sc16is7xx_rs485_supported = {
- 	.delay_rts_after_send = 1,	/* Not supported but keep returning -EINVAL */
- };
- 
--static int sc16is7xx_probe(struct device *dev,
--			   const struct sc16is7xx_devtype *devtype,
--			   struct regmap *regmaps[], int irq)
-+int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
-+		    struct regmap *regmaps[], int irq)
- {
- 	unsigned long freq = 0, *pfreq = dev_get_platdata(dev);
- 	unsigned int val;
-@@ -1657,8 +1657,9 @@ static int sc16is7xx_probe(struct device *dev,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_probe);
- 
--static void sc16is7xx_remove(struct device *dev)
-+void sc16is7xx_remove(struct device *dev)
- {
- 	struct sc16is7xx_port *s = dev_get_drvdata(dev);
- 	int i;
-@@ -1680,8 +1681,9 @@ static void sc16is7xx_remove(struct device *dev)
- 
- 	clk_disable_unprepare(s->clk);
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_remove);
- 
--static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
-+const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- 	{ .compatible = "nxp,sc16is740",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is741",	.data = &sc16is74x_devtype, },
- 	{ .compatible = "nxp,sc16is750",	.data = &sc16is750_devtype, },
-@@ -1690,9 +1692,10 @@ static const struct of_device_id __maybe_unused sc16is7xx_dt_ids[] = {
- 	{ .compatible = "nxp,sc16is762",	.data = &sc16is762_devtype, },
- 	{ }
- };
-+EXPORT_SYMBOL_GPL(sc16is7xx_dt_ids);
- MODULE_DEVICE_TABLE(of, sc16is7xx_dt_ids);
- 
--static struct regmap_config regcfg = {
-+struct regmap_config sc16is7xx_regcfg = {
- 	.reg_bits = 5,
- 	.pad_bits = 3,
- 	.val_bits = 8,
-@@ -1705,8 +1708,9 @@ static struct regmap_config regcfg = {
- 	.max_raw_write = SC16IS7XX_FIFO_SIZE,
- 	.max_register = SC16IS7XX_EFCR_REG,
- };
-+EXPORT_SYMBOL_GPL(sc16is7xx_regcfg);
- 
--static const char *sc16is7xx_regmap_name(u8 port_id)
-+const char *sc16is7xx_regmap_name(u8 port_id)
- {
- 	switch (port_id) {
- 	case 0:	return "port0";
-@@ -1716,184 +1720,27 @@ static const char *sc16is7xx_regmap_name(u8 port_id)
- 		return NULL;
- 	}
- }
-+EXPORT_SYMBOL_GPL(sc16is7xx_regmap_name);
- 
--static unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id)
-+unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id)
- {
- 	/* CH1,CH0 are at bits 2:1. */
- 	return port_id << 1;
- }
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--static int sc16is7xx_spi_probe(struct spi_device *spi)
--{
--	const struct sc16is7xx_devtype *devtype;
--	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
--	unsigned int i;
--	int ret;
--
--	/* Setup SPI bus */
--	spi->bits_per_word	= 8;
--	/* For all variants, only mode 0 is supported */
--	if ((spi->mode & SPI_MODE_X_MASK) != SPI_MODE_0)
--		return dev_err_probe(&spi->dev, -EINVAL, "Unsupported SPI mode\n");
--
--	spi->mode		= spi->mode ? : SPI_MODE_0;
--	spi->max_speed_hz	= spi->max_speed_hz ? : 4 * HZ_PER_MHZ;
--	ret = spi_setup(spi);
--	if (ret)
--		return ret;
--
--	devtype = spi_get_device_match_data(spi);
--	if (!devtype)
--		return dev_err_probe(&spi->dev, -ENODEV, "Failed to match device\n");
--
--	for (i = 0; i < devtype->nr_uart; i++) {
--		regcfg.name = sc16is7xx_regmap_name(i);
--		/*
--		 * If read_flag_mask is 0, the regmap code sets it to a default
--		 * of 0x80. Since we specify our own mask, we must add the READ
--		 * bit ourselves:
--		 */
--		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
--			SC16IS7XX_SPI_READ_BIT;
--		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_spi(spi, &regcfg);
--	}
--
--	return sc16is7xx_probe(&spi->dev, devtype, regmaps, spi->irq);
--}
--
--static void sc16is7xx_spi_remove(struct spi_device *spi)
--{
--	sc16is7xx_remove(&spi->dev);
--}
--
--static const struct spi_device_id sc16is7xx_spi_id_table[] = {
--	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
--	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
--	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
--	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
--	{ }
--};
--
--MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
--
--static struct spi_driver sc16is7xx_spi_uart_driver = {
--	.driver = {
--		.name		= SC16IS7XX_NAME,
--		.of_match_table	= sc16is7xx_dt_ids,
--	},
--	.probe		= sc16is7xx_spi_probe,
--	.remove		= sc16is7xx_spi_remove,
--	.id_table	= sc16is7xx_spi_id_table,
--};
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--static int sc16is7xx_i2c_probe(struct i2c_client *i2c)
--{
--	const struct sc16is7xx_devtype *devtype;
--	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
--	unsigned int i;
--
--	devtype = i2c_get_match_data(i2c);
--	if (!devtype)
--		return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
--
--	for (i = 0; i < devtype->nr_uart; i++) {
--		regcfg.name = sc16is7xx_regmap_name(i);
--		regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
--		regmaps[i] = devm_regmap_init_i2c(i2c, &regcfg);
--	}
--
--	return sc16is7xx_probe(&i2c->dev, devtype, regmaps, i2c->irq);
--}
--
--static void sc16is7xx_i2c_remove(struct i2c_client *client)
--{
--	sc16is7xx_remove(&client->dev);
--}
--
--static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
--	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
--	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
--	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
--	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
--	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
--	{ }
--};
--MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
--
--static struct i2c_driver sc16is7xx_i2c_uart_driver = {
--	.driver = {
--		.name		= SC16IS7XX_NAME,
--		.of_match_table	= sc16is7xx_dt_ids,
--	},
--	.probe		= sc16is7xx_i2c_probe,
--	.remove		= sc16is7xx_i2c_remove,
--	.id_table	= sc16is7xx_i2c_id_table,
--};
--
--#endif
-+EXPORT_SYMBOL_GPL(sc16is7xx_regmap_port_mask);
- 
- static int __init sc16is7xx_init(void)
- {
--	int ret;
--
--	ret = uart_register_driver(&sc16is7xx_uart);
--	if (ret) {
--		pr_err("Registering UART driver failed\n");
--		return ret;
--	}
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
--	if (ret < 0) {
--		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
--		goto err_i2c;
--	}
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
--	if (ret < 0) {
--		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
--		goto err_spi;
--	}
--#endif
--	return ret;
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--err_spi:
--#endif
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
--err_i2c:
--#endif
--	uart_unregister_driver(&sc16is7xx_uart);
--	return ret;
-+	return uart_register_driver(&sc16is7xx_uart);
- }
- module_init(sc16is7xx_init);
- 
- static void __exit sc16is7xx_exit(void)
- {
--#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
--	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
--#endif
--
--#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
--	spi_unregister_driver(&sc16is7xx_spi_uart_driver);
--#endif
- 	uart_unregister_driver(&sc16is7xx_uart);
- }
- module_exit(sc16is7xx_exit);
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Jon Ringle <jringle@gridpoint.com>");
--MODULE_DESCRIPTION("SC16IS7XX serial driver");
-+MODULE_DESCRIPTION("SC16IS7xx tty serial core driver");
-diff --git a/drivers/tty/serial/sc16is7xx.h b/drivers/tty/serial/sc16is7xx.h
-new file mode 100644
-index 0000000000000..2ee3ce83d95a4
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/* SC16IS7xx SPI/I2C tty serial driver */
-+
-+#ifndef _SC16IS7XX_H_
-+#define _SC16IS7XX_H_
-+
-+#include <linux/mod_devicetable.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#define SC16IS7XX_NAME		"sc16is7xx"
-+#define SC16IS7XX_MAX_PORTS	2 /* Maximum number of UART ports per IC. */
-+
-+struct device;
-+
-+struct sc16is7xx_devtype {
-+	char	name[10];
-+	int	nr_gpio;
-+	int	nr_uart;
-+};
-+
-+extern struct regmap_config sc16is7xx_regcfg;
-+
-+extern const struct of_device_id sc16is7xx_dt_ids[];
-+
-+extern const struct sc16is7xx_devtype sc16is74x_devtype;
-+extern const struct sc16is7xx_devtype sc16is750_devtype;
-+extern const struct sc16is7xx_devtype sc16is752_devtype;
-+extern const struct sc16is7xx_devtype sc16is760_devtype;
-+extern const struct sc16is7xx_devtype sc16is762_devtype;
-+
-+const char *sc16is7xx_regmap_name(u8 port_id);
-+
-+unsigned int sc16is7xx_regmap_port_mask(unsigned int port_id);
-+
-+int sc16is7xx_probe(struct device *dev, const struct sc16is7xx_devtype *devtype,
-+		    struct regmap *regmaps[], int irq);
-+
-+void sc16is7xx_remove(struct device *dev);
-+
-+#endif /* _SC16IS7XX_H_ */
-diff --git a/drivers/tty/serial/sc16is7xx_i2c.c b/drivers/tty/serial/sc16is7xx_i2c.c
-new file mode 100644
-index 0000000000000..de51d1675abfd
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx_i2c.c
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* SC16IS7xx I2C interface driver */
-+
-+#include <linux/dev_printk.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/string.h>
-+
-+#include "sc16is7xx.h"
-+
-+static int sc16is7xx_i2c_probe(struct i2c_client *i2c)
++static bool __perf_pmus__supports_extended_type(void)
 +{
-+	const struct sc16is7xx_devtype *devtype;
-+	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	unsigned int i;
++       struct perf_pmu *pmu =3D NULL;
 +
-+	devtype = i2c_get_match_data(i2c);
-+	if (!devtype)
-+		return dev_err_probe(&i2c->dev, -ENODEV, "Failed to match device\n");
++       if (perf_pmus__num_core_pmus() <=3D 1)
++               return false;
 +
-+	for (i = 0; i < devtype->nr_uart; i++) {
-+		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
-+		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_i2c(i2c, &sc16is7xx_regcfg);
-+	}
++       while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
++               if (!is_event_supported(PERF_TYPE_HARDWARE,
+PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->
+type << PERF_PMU_TYPE_SHIFT)))
++                       return false;
++       }
 +
-+	return sc16is7xx_probe(&i2c->dev, devtype, regmaps, i2c->irq);
++       return true;
 +}
 +
-+static void sc16is7xx_i2c_remove(struct i2c_client *client)
++static bool perf_pmus__do_support_extended_type;
++
++static void perf_pmus__init_supports_extended_type(void)
 +{
-+	sc16is7xx_remove(&client->dev);
++       perf_pmus__do_support_extended_type =3D
+__perf_pmus__supports_extended_type();
 +}
 +
-+static const struct i2c_device_id sc16is7xx_i2c_id_table[] = {
-+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, sc16is7xx_i2c_id_table);
+bool perf_pmus__supports_extended_type(void)
+{
+-       return perf_pmus__num_core_pmus() > 1;
++       static pthread_once_t extended_type_once =3D PTHREAD_ONCE_INIT;
 +
-+static struct i2c_driver sc16is7xx_i2c_driver = {
-+	.driver = {
-+		.name		= SC16IS7XX_NAME,
-+		.of_match_table	= sc16is7xx_dt_ids,
-+	},
-+	.probe		= sc16is7xx_i2c_probe,
-+	.remove		= sc16is7xx_i2c_remove,
-+	.id_table	= sc16is7xx_i2c_id_table,
-+};
++       pthread_once(&extended_type_once,
+perf_pmus__init_supports_extended_type);
 +
-+module_i2c_driver(sc16is7xx_i2c_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SC16IS7xx I2C interface driver");
-+MODULE_IMPORT_NS(SERIAL_NXP_SC16IS7XX);
-diff --git a/drivers/tty/serial/sc16is7xx_spi.c b/drivers/tty/serial/sc16is7xx_spi.c
-new file mode 100644
-index 0000000000000..f110c4e6dce63
---- /dev/null
-+++ b/drivers/tty/serial/sc16is7xx_spi.c
-@@ -0,0 +1,87 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* SC16IS7xx SPI interface driver */
-+
-+#include <linux/dev_printk.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+#include <linux/string.h>
-+#include <linux/units.h>
-+
-+#include "sc16is7xx.h"
-+
-+/* SPI definitions */
-+#define SC16IS7XX_SPI_READ_BIT	BIT(7)
-+
-+static int sc16is7xx_spi_probe(struct spi_device *spi)
-+{
-+	const struct sc16is7xx_devtype *devtype;
-+	struct regmap *regmaps[SC16IS7XX_MAX_PORTS];
-+	unsigned int i;
-+	int ret;
-+
-+	/* Setup SPI bus */
-+	spi->bits_per_word	= 8;
-+	/* For all variants, only mode 0 is supported */
-+	if ((spi->mode & SPI_MODE_X_MASK) != SPI_MODE_0)
-+		return dev_err_probe(&spi->dev, -EINVAL, "Unsupported SPI mode\n");
-+
-+	spi->mode		= spi->mode ? : SPI_MODE_0;
-+	spi->max_speed_hz	= spi->max_speed_hz ? : 4 * HZ_PER_MHZ;
-+	ret = spi_setup(spi);
-+	if (ret)
-+		return ret;
-+
-+	devtype = spi_get_device_match_data(spi);
-+	if (!devtype)
-+		return dev_err_probe(&spi->dev, -ENODEV, "Failed to match device\n");
-+
-+	for (i = 0; i < devtype->nr_uart; i++) {
-+		sc16is7xx_regcfg.name = sc16is7xx_regmap_name(i);
-+		/*
-+		 * If read_flag_mask is 0, the regmap code sets it to a default
-+		 * of 0x80. Since we specify our own mask, we must add the READ
-+		 * bit ourselves:
-+		 */
-+		sc16is7xx_regcfg.read_flag_mask = sc16is7xx_regmap_port_mask(i) |
-+			SC16IS7XX_SPI_READ_BIT;
-+		sc16is7xx_regcfg.write_flag_mask = sc16is7xx_regmap_port_mask(i);
-+		regmaps[i] = devm_regmap_init_spi(spi, &sc16is7xx_regcfg);
-+	}
-+
-+	return sc16is7xx_probe(&spi->dev, devtype, regmaps, spi->irq);
-+}
-+
-+static void sc16is7xx_spi_remove(struct spi_device *spi)
-+{
-+	sc16is7xx_remove(&spi->dev);
-+}
-+
-+static const struct spi_device_id sc16is7xx_spi_id_table[] = {
-+	{ "sc16is74x",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is740",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is741",	(kernel_ulong_t)&sc16is74x_devtype, },
-+	{ "sc16is750",	(kernel_ulong_t)&sc16is750_devtype, },
-+	{ "sc16is752",	(kernel_ulong_t)&sc16is752_devtype, },
-+	{ "sc16is760",	(kernel_ulong_t)&sc16is760_devtype, },
-+	{ "sc16is762",	(kernel_ulong_t)&sc16is762_devtype, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, sc16is7xx_spi_id_table);
-+
-+static struct spi_driver sc16is7xx_spi_driver = {
-+	.driver = {
-+		.name		= SC16IS7XX_NAME,
-+		.of_match_table	= sc16is7xx_dt_ids,
-+	},
-+	.probe		= sc16is7xx_spi_probe,
-+	.remove		= sc16is7xx_spi_remove,
-+	.id_table	= sc16is7xx_spi_id_table,
-+};
-+
-+module_spi_driver(sc16is7xx_spi_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("SC16IS7xx SPI interface driver");
-+MODULE_IMPORT_NS(SERIAL_NXP_SC16IS7XX);
--- 
-2.39.2
++       return perf_pmus__do_support_extended_type;
+}
 
+struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+```
+On your Intel this should have previously returned true as
+"perf_pmus__num_core_pmus() > 1", and with the new code presumably
+is_event_supported is returning false. Could you dump the PMU's name
+at that point? Is cpu_core or cpu_atom looking like it doesn't support
+the event? Is the test failing when run as root (ie is
+is_event_supported failing to have expected fallback paths)?
+
+Thanks,
+Ian
