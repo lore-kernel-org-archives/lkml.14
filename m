@@ -1,274 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3E11311BB;
-	Tue,  9 Apr 2024 14:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC48136E17;
+	Tue,  9 Apr 2024 14:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712674057; cv=none; b=m8Xi29A4tQFkMu58i/JhGDCjHQxxg8trd4p8jwzlDt3zEIVSaqGBEG0aO/KfPZis1om3x51O+byzkhkDELl5BSlg6Pml7sbd0CDTGsB/5eWl67rPLpqg/niRFqWeR7wbuTah8bUgAttIEXobqdJh8QiLs1XRb1yvhuavPplGfLc=
+	t=1712674086; cv=none; b=dNQ1PVfhmuAYCAECUbzSROP4S4bWF0FBTwzdBYRNTKip87hvQQHtEUYoNRaJE8+EvQ0LRD6wK6L1K/WebkOCKQyCG6LLkX+b5ZhnxrZrK4clti1zzWgSQVx9jVMz/YxK4xbkQPcUGiFfAZ7XUd75xE4uzaumR/9Fj8wrE2YBVrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712674057; c=relaxed/simple;
-	bh=g0TObzXZAJf9fT1d6X4ImoYo9aLCppDtNsERfaj9vNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BpbuTLRbs+he6Ff8DXtx8wMZSXAVWGW4v2C7evkTYdSe8p6tl5rcqOeh/b1TB/enJ2IFt1hsnwLYhxC9rZhUMSBpPHM2SMVGti/E8zHoYANslrhLPVimUk71BJN9+/UbnsFzTBJxeFYCU6NTVF1CbdzVm8ShpVC74HYuhaqujdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dpYKW9jC; arc=none smtp.client-ip=198.175.65.21
+	s=arc-20240116; t=1712674086; c=relaxed/simple;
+	bh=qXiImrPjk9pciUK+qkOQS8Qk++NVZZHB0HTKd0iJ9jc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9hLzSFYwwyZeAE4Vw53nnS1dNnZ3ehiOlAo4eHGj9N62i2Q64Z8s1dKHt+P+OQ99LsgFnQy1cuP1J4nwpwGZ298E6871KxI6T7rsfq7HJp50X+MIUQbev2Y4xJUrykNarUSMtd0kCUctEANTj3hid2PIvDc8N711SUy0GuxS4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yt5oK5c5; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dpYKW9jC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yt5oK5c5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712674056; x=1744210056;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g0TObzXZAJf9fT1d6X4ImoYo9aLCppDtNsERfaj9vNs=;
-  b=dpYKW9jCsBOv/YYxVLrvvPY7LFL0utEFHcz+nvcdbWVrPvqmoLuPm5ne
-   Skej2/syzDhfs8oQPZaFsJiGI0yHEz+IB0FlpY0pgZg8MLNBTrjwpJ1Au
-   Qwd5psCo68wWBcorLgfUQnxZNi4qet38GVcJDB/SAwWEIWWgEj7GWmSyI
-   P86X1zys+aV1v61pkt4y/N4OIM6kHYS8/VUWMZYzdqMQYdUOmcydzg/J0
-   nBAOXv/Wp3mJAAm4Rw/b676dtXLo3f30j2EU3seSkhzND/XUZXvTUz+wK
-   Vpj8qhTp3EpDj7Evp49mkohEPn+RmTEPaKhj2FPUeZBVkl0r+MaCxxt4Y
-   A==;
-X-CSE-ConnectionGUID: ehiOM+FAQFiery9ZLUSQOw==
-X-CSE-MsgGUID: pja6vvTlTEO67Gj9YSMgsQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7905545"
+  t=1712674085; x=1744210085;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qXiImrPjk9pciUK+qkOQS8Qk++NVZZHB0HTKd0iJ9jc=;
+  b=Yt5oK5c5HVUKIUlYMIxTv7sA16AdSarSi3Xb1TBzjW6r0GoY6TFEtFPg
+   4ZWaqz9h1hqYR/H0UJ2GjjKYBmKSMzSdyqVI9XW39JfcMT7xfxej3YEos
+   0UixIj/1KOQSmvDzhxh/TE3Ui9r9lHg0R07Lmk5Uf5ScZ9IAt6A5ZT1pS
+   yYzTBsM9GGIq1d4a+jHX5PG1d+Tf9uFm62EekzgMb1Mw6bvqmSEMBinlD
+   vrw6V0JKFwiw4AC5JkJW/2F6jjLScA6JEH/2cEZgMR/W+gDbIfV/1QJhb
+   qutdhqewaCGzq5f9eyDRw1hP9Lc/bdqQOFWPzsqou+HG6USe1yiy5AzYh
+   w==;
+X-CSE-ConnectionGUID: Qqd54Ye4QHKMCFNo96nAYA==
+X-CSE-MsgGUID: COLdtpSeRJKYk/pZmAkP4Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25489948"
 X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="7905545"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:47:32 -0700
+   d="scan'208";a="25489948"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:48:04 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="937093490"
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915401658"
 X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="937093490"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2024 07:47:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 72413A70; Tue,  9 Apr 2024 17:47:27 +0300 (EEST)
+   d="scan'208";a="915401658"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:48:03 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ruClU-00000002pl6-2uK6;
+	Tue, 09 Apr 2024 17:48:00 +0300
+Date: Tue, 9 Apr 2024 17:48:00 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
 	Jiri Slaby <jirislaby@kernel.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Subject: [PATCH v3 7/8] serial: max3100: Extract to_max3100_port() helper macro
-Date: Tue,  9 Apr 2024 17:45:54 +0300
-Message-ID: <20240409144721.638326-8-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240409144721.638326-1-andriy.shevchenko@linux.intel.com>
-References: <20240409144721.638326-1-andriy.shevchenko@linux.intel.com>
+	Hugo Villeneuve <hugo@hugovil.com>
+Subject: Re: [PATCH v2 00/16] serial: max3100: Put into shape
+Message-ID: <ZhVVILIFP3VKb4b7@smile.fi.intel.com>
+References: <20240402195306.269276-1-andriy.shevchenko@linux.intel.com>
+ <2024040903-handcuff-lanky-cc13@gregkh>
+ <ZhVI7wzYKrutk1LA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhVI7wzYKrutk1LA@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Instead of using container_of() explicitly, introduce a helper macro.
-This saves a lot of lines of code.
+On Tue, Apr 09, 2024 at 04:55:59PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 09, 2024 at 03:52:19PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 02, 2024 at 10:50:27PM +0300, Andy Shevchenko wrote:
+> > > Put the driver into the shape with all new bells and whistles
+> > > from the kernel.
+> > > 
+> > > The first three patches marked as fixes, but there is no hurry (as it
+> > > was for ages like this in the kernel) to pipe them to stable. That's
+> > > why I sent all in one series and it's good for tty-next.
+> > > 
+> > > Tested on Intel Merrifield with MAX3111e connected.
+> > > 
+> > > In v2:
+> > > - fixed a few typos in the commit messages (Hugo)
+> > > - added an additional fix to patch 2 (Hugo)
+> > > - appended tag to patch 13 (Hugo)
+> > > - v1 (20240402154219.3583679-1-andriy.shevchenko@linux.intel.com)
+> > 
+> > Only a portion of this series applied to my tree.  Can you please rebase
+> > and resend the remaining bits?
+> 
+> Sure, thanks!
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
----
- drivers/tty/serial/max3100.c | 67 ++++++++++--------------------------
- 1 file changed, 19 insertions(+), 48 deletions(-)
+v3 just has been sent: 20240409144721.638326-1-andriy.shevchenko@linux.intel.com
 
-diff --git a/drivers/tty/serial/max3100.c b/drivers/tty/serial/max3100.c
-index db543eaa39c8..4e7cd037cfc2 100644
---- a/drivers/tty/serial/max3100.c
-+++ b/drivers/tty/serial/max3100.c
-@@ -16,6 +16,7 @@
- /* 4 MAX3100s should be enough for everyone */
- #define MAX_MAX3100 4
- 
-+#include <linux/container_of.h>
- #include <linux/delay.h>
- #include <linux/slab.h>
- #include <linux/device.h>
-@@ -110,6 +111,8 @@ struct max3100_port {
- 	struct timer_list	timer;
- };
- 
-+#define to_max3100_port(port)	container_of(port, struct max3100_port, port)
-+
- static struct max3100_port *max3100s[MAX_MAX3100]; /* the chips */
- static DEFINE_MUTEX(max3100s_lock);		   /* race on probe */
- 
-@@ -320,9 +323,7 @@ static irqreturn_t max3100_irq(int irqno, void *dev_id)
- 
- static void max3100_enable_ms(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	mod_timer(&s->timer, jiffies);
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
-@@ -330,9 +331,7 @@ static void max3100_enable_ms(struct uart_port *port)
- 
- static void max3100_start_tx(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -341,9 +340,7 @@ static void max3100_start_tx(struct uart_port *port)
- 
- static void max3100_stop_rx(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -357,9 +354,7 @@ static void max3100_stop_rx(struct uart_port *port)
- 
- static unsigned int max3100_tx_empty(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -370,9 +365,7 @@ static unsigned int max3100_tx_empty(struct uart_port *port)
- 
- static unsigned int max3100_get_mctrl(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -384,9 +377,7 @@ static unsigned int max3100_get_mctrl(struct uart_port *port)
- 
- static void max3100_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 	int loopback, rts;
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
-@@ -412,9 +403,7 @@ static void
- max3100_set_termios(struct uart_port *port, struct ktermios *termios,
- 		    const struct ktermios *old)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 	unsigned int baud = port->uartclk / 16;
- 	unsigned int baud230400 = (baud == 230400) ? 1 : 0;
- 	unsigned cflag;
-@@ -530,9 +519,7 @@ max3100_set_termios(struct uart_port *port, struct ktermios *termios,
- 
- static void max3100_shutdown(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 	u16 rx;
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
-@@ -557,9 +544,7 @@ static void max3100_shutdown(struct uart_port *port)
- 
- static int max3100_startup(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 	char b[12];
- 	int ret;
- 
-@@ -605,9 +590,7 @@ static int max3100_startup(struct uart_port *port)
- 
- static const char *max3100_type(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -616,18 +599,14 @@ static const char *max3100_type(struct uart_port *port)
- 
- static void max3100_release_port(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- }
- 
- static void max3100_config_port(struct uart_port *port, int flags)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 
-@@ -638,9 +617,7 @@ static void max3100_config_port(struct uart_port *port, int flags)
- static int max3100_verify_port(struct uart_port *port,
- 			       struct serial_struct *ser)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 	int ret = -EINVAL;
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
-@@ -652,18 +629,14 @@ static int max3100_verify_port(struct uart_port *port,
- 
- static void max3100_stop_tx(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- }
- 
- static int max3100_request_port(struct uart_port *port)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- 	return 0;
-@@ -671,9 +644,7 @@ static int max3100_request_port(struct uart_port *port)
- 
- static void max3100_break_ctl(struct uart_port *port, int break_state)
- {
--	struct max3100_port *s = container_of(port,
--					      struct max3100_port,
--					      port);
-+	struct max3100_port *s = to_max3100_port(port);
- 
- 	dev_dbg(&s->spi->dev, "%s\n", __func__);
- }
 -- 
-2.43.0.rc1.1.gbec44491f096
+With Best Regards,
+Andy Shevchenko
+
 
