@@ -1,102 +1,155 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E405C136E16
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7135913AD17
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676988; cv=none; b=Y2HXiM/pVA9XRL4KxG1M16IrxgqG5mLH0RBxP7II958jD2lH4gD8WILTyXBOAF7p0zQQ4dqWvKG+AfhJc7fI77jLNz8rvaloUBvmoQjWs1DuKcTPYLe1vr2hnHNl/HkHjynXGma3Up1OJtoKuK9aG/9wW8FBg7tRFflyCQHfTXg=
+	t=1712677048; cv=none; b=TDPBRoGn+xLgvAqql46R4tKL9NNTohl9DyofjK1r/AMJiHJ10kN6QitNieY5bewcUe1pa1m9CsSyC3x1U4febVEJtOWp2tITJQf16WqUyfTllXoUKqDPHiDbNrRtsHJES4e4afZF2RP5HQfVJ0xh6n9TAzLpOYW7I+d/a8FpOTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676988; c=relaxed/simple;
-	bh=0quX4igVUBv0PjMU/FXlfx9DZgCOO6LJrjDtLL6paP0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fvPwtr3Odh0aPaTRcPjOlnO7qaylelN61yKf8XmSbzkLc54dMStmhNLuV+Qqbo4ATa8h2WP64qS/lqPXql1LJ5Vvm93v2WrBDetBM1dHby05ZfXRww/gcJsPhN5c3pVk1Mnc90rxn71o/ToMeJ1fhZ91NCXbqKQbDJ+nOdnW1vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ldJj2zY8; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712677048; c=relaxed/simple;
+	bh=Aqminu13BA5RfzICIWKV4tMcJYaOt32oW1/5Ll0JWxk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rrzaF4gIyCRBrNRF2LX5dkBollPPAaOdOfvb0NswQRyHhvLT2TVSVzR3hrMKQ6UkSXzxnv9nru+HHsrXnNIY0qBF1l9Qiy2a/doPWxQ3ErxzSLbt7geHcVu0VGSgCIefDbSkOZ31ntfUUilHtscfdBH9NTph1Av56E1o+U/jc20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gmiOk1oY; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ldJj2zY8"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e6f4ee104so1614420a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:36:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gmiOk1oY"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-34641b7c49aso344006f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712676985; x=1713281785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oOph0FaIWn1WLk74ILFxXXN8KiIBmlIobvlKfK86XFk=;
-        b=ldJj2zY8DuAuD989VdUOp+44AYSjj6WZCLsytjTumhz9I3rGGY9rCNDvcmKPqYTSa4
-         zY4qZk2gJ4fB0GjDirSPfpMqwoqli7iFtdlB7jQNDzKzX5WFQ2wz7xKWKBTueSjZ2RM0
-         J3DXOuu3D/tYuazQRj8ZXSlSC76QV0gu0ERKR2+9jtv/4KNKZuKOnZhIelZV9Vp3Xv8A
-         YTUj60yL5zAeFruFJK5zjnIOBwOnNqv8Qf/ZmEMVgP7eTR+PEzBMbLqWXEPhodPBSOxa
-         q71h9vj2fOYP8kfB8PcCmK0y47TkSz4c1ZWtxI1O3ukaSazdefn0w1upgR2hNycZQXvg
-         Voug==
+        d=google.com; s=20230601; t=1712677045; x=1713281845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O3wHvYb+xH1G7TOL58ej8375ZusY8e96JWmR5Aw1tE4=;
+        b=gmiOk1oYSBunqK3ErTTHgzFtPqAjq1VzuV3RShmBJNsj5JMsyqqfi1tOU5EVF6zVtb
+         B7kOnT9nlSc6xdLpAfwM1XE07m2yr3xMKrazayG+ZTdw5TBmgRsSYq/HUbH1l0pM1MZX
+         dQjHK58SvJgP2BubR5/0mya3hylLzINvF2yNBUpUQJ1MCUaZk4U+y0R6D5ybf7Bbr1mU
+         SGDNcWUyMcV1PUJGlHMWY0mqigE8d/9uC8uNTvp6sgmh8+oD+J0m9bkRLnWDcOjV36J5
+         j+iUaG5/7/AUDWhZRXI4rlExegyiRUsv9saMhbO0reki/hZl/SaP+45qb7SHncRfpAG/
+         6uew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712676985; x=1713281785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oOph0FaIWn1WLk74ILFxXXN8KiIBmlIobvlKfK86XFk=;
-        b=Qzj6L4SBOFhvkNijchwdraOctfBqh50ZA08yWJdxl19SUYOBFEojmY207ViJGEe8Kn
-         tDqtQc04YPJKeg2EE8NjFhxcmxxBK1ibMxwN6Qq+IhYBhdD2HMJ1n+5lwMu61Za+y+8x
-         TjSCzPddBsv/XLta2LrvpF7bG7+yoVKYfaZsADGAaf4v1+spgjS0zLdwLbARNkH4V48G
-         MMqXXBevqsTZ7KjE53FOnkyOCxyt9Wj5QcaY3dcp+1e08NM/NV/xbeM/0nusI7RfIUdK
-         XD5jnHQgc6oCVKQej0xgVC2aQP/d+RMK7QvhSowM3fgOHVStsqwkdggKsEOe9QBVvQn7
-         R32w==
-X-Forwarded-Encrypted: i=1; AJvYcCUbN+qtY22kdTmVrjnXvjNqOh8YnRxVcmGzGVdjRxd5+V97nU3Nxktzn4Bbx48yzOfobORsK6hcXGhkLVzjJ9aWEOdyZ3KV4yCZnZlU
-X-Gm-Message-State: AOJu0Yz5yipHhW00sG3w1yZ5z3lnCMAOSLgyp/n8U+uVc1S3rnYZ9YbK
-	Ib2kBNqhcRR9IMs6X5/pgFfgqKHZHBbh8fYK1A6vSdKjmseHXbSHINLxzL5RfHF4bfE1tMHFyyg
-	j
-X-Google-Smtp-Source: AGHT+IEjc6dYjz2VkqbE4sv+esMTP2o8UAMrIoQVAD1/6yseAStzbyBLZZBf89n2JUrtgOdfCYDWNA==
-X-Received: by 2002:a50:c348:0:b0:56d:c6e9:ca01 with SMTP id q8-20020a50c348000000b0056dc6e9ca01mr8509919edb.15.1712676985086;
-        Tue, 09 Apr 2024 08:36:25 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id r8-20020aa7c148000000b0056e78e90a1dsm320344edp.49.2024.04.09.08.36.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 08:36:24 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: John Crispin <john@phrozen.org>,
-	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] MIPS: ralink: Use min() to fix Coccinelle warning
-Date: Tue,  9 Apr 2024 17:35:20 +0200
-Message-ID: <20240409153519.291205-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+        d=1e100.net; s=20230601; t=1712677045; x=1713281845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O3wHvYb+xH1G7TOL58ej8375ZusY8e96JWmR5Aw1tE4=;
+        b=I6EEINP8B0bMoy5JrR8sY1FPCshyxeSuq4G4hTwpI7YFtSw8N3RTPnZ9GxHVct+D97
+         s2JB410/kF9b94lbgeIJH5xE/bjxzeqCsHmRoCtzMN/XErr+HEBioYNrboa650Ub1rZ3
+         cLfZXNBKQ0Iss+m/zVP0cxjDjFB0xz6J7zy9GHpoxcVWezsoQxtDW0LqmOHQ9nInD5FV
+         wqgoDcailkiWJrQcZmKny8wycgoMSkx5lbrt/Umgx2oNUiRppimmJrJqvHvWIjrdi4q3
+         SPbgZH+e2JBXB/xZFs0Bs+bZuWUSA/j8lsSuDTuLo6vRBWmeonFgkbEUSynbCfkl/i9E
+         P3jA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfM/o6cvvIj6tQEWcIAViDr52dNFc85ZigMgh+IWe0bCTyzufvvOkZEqoqqvLjFlvHw4sebCQ6NOoBV3W1NYhd7xKmJ7X7adElyFtA
+X-Gm-Message-State: AOJu0YxP8VyRBwYw4c4xAfd3+EbIvNk5AG7i90KnCWc/zKPo857shJxc
+	CPnqrD9s03UsEYxGuYLiQVhLTBUTi7IFjkjefYY62mpj13KjfmqO/O1eKHZiQy2f+f1/c45vOLN
+	9gSF73Kuarww9MrFiT7SiUBLD6AwQivfRPsyw
+X-Google-Smtp-Source: AGHT+IEATApo3o8XfWViXxHA3nBf59pbXIp4qO5W17tsNOoEx8kff/kEukGenu4hXqklT5aG6y50jY3+j+NZ6v/SAgs=
+X-Received: by 2002:adf:ec50:0:b0:33e:8aba:cd0a with SMTP id
+ w16-20020adfec50000000b0033e8abacd0amr75524wrn.9.1712677044575; Tue, 09 Apr
+ 2024 08:37:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=whHWjKK1TOMT1XvxFj8e-_uctJnXPxM=SyWHmW63B_EDw@mail.gmail.com>
+ <20240408084934.GC21904@noisy.programming.kicks-ass.net> <CAHk-=witEwVvJ6Wh4xdP-sUkLQSwcRTtg_NSuGMMgvYmcs3teQ@mail.gmail.com>
+ <CAHk-=wg=Wdct5f9W2-tvwfRefv3xmw1-9Ko+RG+6=xjLu4ndFg@mail.gmail.com> <20240409104540.GB21779@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240409104540.GB21779@noisy.programming.kicks-ass.net>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Tue, 9 Apr 2024 08:37:10 -0700
+Message-ID: <CAKwvOdktV5vnKwET1PhM8x0urK+LUhAC=uc28RXHUsvq-7_vbA@mail.gmail.com>
+Subject: Re: More annoying code generation by clang
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Peter Anvin <hpa@zytor.com>, 
+	"the arch/x86 maintainers" <x86@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes the following Coccinelle/coccicheck warning reported by
-minmax.cocci:
+On Tue, Apr 9, 2024 at 3:45=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+> On Mon, Apr 08, 2024 at 12:42:31PM -0700, Linus Torvalds wrote:
+>
+> > Actually, one of the github issues pages has more of an explanation
+> > (and yes, it's tied to impedance issues between the inline asm syntax
+> > and how clang works):
+> >
+> >       https://github.com/llvm/llvm-project/issues/20571#issuecomment-98=
+0933442
+> >
+>
+> So that same issue seems to suggest Nick is actually working on this and
+> got stuff merged. Nick, what is the status of your efforts and should we
+> indeed do the below as Linus suggests or should he upgrade his compiler?
 
-	WARNING opportunity for min()
+Sorry, I'm no longer working on the issue.  I should mark that as such.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/mips/ralink/timer.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+The feature got hung up on rewriting one of the register allocation
+frameworks in llvm.
+https://github.com/llvm/llvm-project/pull/74344
 
-diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
-index 54094f6e033e..d271ac98312a 100644
---- a/arch/mips/ralink/timer.c
-+++ b/arch/mips/ralink/timer.c
-@@ -75,11 +75,7 @@ static int rt_timer_request(struct rt_timer *rt)
- 
- static int rt_timer_config(struct rt_timer *rt, unsigned long divisor)
- {
--	if (rt->timer_freq < divisor)
--		rt->timer_div = rt->timer_freq;
--	else
--		rt->timer_div = divisor;
--
-+	rt->timer_div = min(rt->timer_freq, divisor);
- 	rt_timer_w32(rt, TIMER_REG_TMR0LOAD, rt->timer_freq / rt->timer_div);
- 
- 	return 0;
--- 
-2.44.0
+I have a new set of responsibilities at work so I probably wont be
+working on that issue any time soon.
 
+>
+> > diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-cl=
+ang.h
+> > index 49feac0162a5..0dee061fd7a6 100644
+> > --- a/include/linux/compiler-clang.h
+> > +++ b/include/linux/compiler-clang.h
+> > @@ -118,3 +118,15 @@
+> >
+> >  #define __diag_ignore_all(option, comment) \
+> >       __diag_clang(13, ignore, option)
+> > +
+> > +/*
+> > + * clang has horrible behavior with "g" or "rm" constraints for asm
+> > + * inputs, turning them into something worse than "m". Avoid using
+> > + * constraints with multiple possible uses (but "ir" seems to be ok):
+> > + *
+> > + *   https://github.com/llvm/llvm-project/issues/20571
+> > + *   https://github.com/llvm/llvm-project/issues/30873
+> > + *   https://github.com/llvm/llvm-project/issues/34837
+
+20571 is the cannonical bug for this.
+
+> > + */
+> > +#define ASM_INPUT_G "ir"
+> > +#define ASM_INPUT_RM "r"
+> > diff --git a/include/linux/compiler_types.h b/include/linux/compiler_ty=
+pes.h
+> > index 2abaa3a825a9..e53acd310545 100644
+> > --- a/include/linux/compiler_types.h
+> > +++ b/include/linux/compiler_types.h
+> > @@ -380,6 +380,15 @@ struct ftrace_likely_data {
+> >  #define asm_goto_output(x...) asm volatile goto(x)
+> >  #endif
+> >
+> > +/*
+> > + * Clang has trouble with constraints with multiple
+> > + * alternative behaviors (mainly "g" and "rm").
+> > + */
+> > +#ifndef ASM_INPUT_G
+> > +  #define ASM_INPUT_G "g"
+> > +  #define ASM_INPUT_RM "rm"
+> > +#endif
+> > +
+> >  #ifdef CONFIG_CC_HAS_ASM_INLINE
+> >  #define asm_inline asm __inline
+> >  #else
+> > --
+> > 2.44.0.330.g4d18c88175
+> >
+>
+
+
+--=20
+Thanks,
+~Nick Desaulniers
