@@ -1,84 +1,95 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A13312D74E;
-	Tue,  9 Apr 2024 12:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8631F12D74E;
+	Tue,  9 Apr 2024 12:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712667100; cv=none; b=KVV8epURTaC3x1fQZVBrMVoJ096w6P61wBCSnGMVZJfLgoGj3MmFH3vSij7vZw8lUp+3R/b5TguLBhnErpJO4/TfUPItC+IPkyHRRSDeIuFvGgqWw+iPPEJ+isEdOZuC4KKo2wyNL8xbd+ozXFjaZWLf9rvKIrQHTIn2KA64rJQ=
+	t=1712667127; cv=none; b=TZOPWIw2TxQX5n/moMzRHWNiUklaLRZeJvXJZmixDaeH1wsXpBXRzXRpVsxHed8ef/3z5f+OVcCZ/sBA9CNBG9svqOscmQGGEq2bVM1PwLB0Q8YXz2Mtyr+3VYbC1nGOLb2XbJhh0VnAWHpWm/a/6fSG+p7MpNBSQUxwcuH5Nfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712667100; c=relaxed/simple;
-	bh=DYX4vIIIOWQc+9yScerhkr5DQdAMibuqO+5fAhz/7SQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jl7cXoHS7B0po99Xo2XBiZFUdGor6SmYHjjvFPpBH5HPEZGSFqul+mFwqlkCEgw8FUnvhFe6azG5NCyL0OM/RCtG594UsqPp65Iw3QM0cWcjD+pTNwrWW+V52YFihLHnOAVZCaIXpoRHJyHCroe5BUk83HGy0KJUZQZOoa4t9JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HiYwBjzH; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1712667127; c=relaxed/simple;
+	bh=hy2lwU0g3yjobcG30ZSLKCrav3rYwNPP3S/donc4pYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=quI13dnGZp53igHCZH4kYLzmAS0eAqkrbWN1QVvBTBnjy3HFO9wrc/a4RPJ+fiY3glWvrSmlYESWZJN5tfFOgXqdf+0cLcOPByZOJoldgr9ta+RZ7QJsYlk1bHPIHnyK7Mfcn7+d4m/+aQKdwMfpx/OCfaC5YcNJqf5Nmpq+bSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HwsfChMo; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HiYwBjzH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=WZivz
-	wtwPwc9kG+G0Vu61F+ka3jn+iKxoNnbOmG8MBQ=; b=HiYwBjzHMXzn90wwkRVrs
-	I26kNBLc5BLIhBVnj+TflXJM3u/IJPjjE8n0b7DpAUoIK53jOrz8ak0z6TL6vCqI
-	bGzeKgxk6zaROx2q+2kjlTV9Fwtoz2BDdHi18N3r+EjLldOsUJQNHOpM3f7vJpn+
-	oDfb/4vrqiMCN9TpwbSlso=
-Received: from localhost.localdomain (unknown [101.86.11.106])
-	by gzga-smtp-mta-g2-5 (Coremail) with SMTP id _____wDXL2GEORVm3QVrAg--.35825S4;
-	Tue, 09 Apr 2024 20:50:47 +0800 (CST)
-From: Lizhe <sensor1010@163.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org,
-	ilpo.jarvinen@linux.intel.com
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lizhe <sensor1010@163.com>
-Subject: [PATCH] cpufreq: pcc-cpufreq: Remove redundant exit() functions
-Date: Tue,  9 Apr 2024 05:50:03 -0700
-Message-Id: <20240409125003.3444-1-sensor1010@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HwsfChMo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712667126; x=1744203126;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hy2lwU0g3yjobcG30ZSLKCrav3rYwNPP3S/donc4pYw=;
+  b=HwsfChMoJ5RIfiTKZowS8aM0Nq75b0nFkLOPkTlHXpUpbiBm1hWOTloF
+   1PK0FaHo9c5E3i63kQ9TcKYi6eAcFoHq2hzQzTgTGoD/fhP3hlQWEs2t2
+   NYyKE5Pjjmd1fQ/9yPWGAFKgvtq/e3vyIKV/Z+HaHkk5T0JXKSQMWsq0I
+   Tsw2WLltZBLIbjsqpSpJB8I3rxwqzSaNUt1CFODTUF8TqEgQ4f8bWGkbE
+   nd+fpLu8aHADEkhqo1UtOw8eFohkFUrQ3BUXwpGz/6x4lfYsBO7GGnDZh
+   o5aISR/5EA4KSCmCmBzMJAyFbe/YocvTZfuUkh5AgRoAaqvuXrOgg72Dk
+   g==;
+X-CSE-ConnectionGUID: VTiUlIW5TY2IFlSCEoV9Pw==
+X-CSE-MsgGUID: Sh7uzmLTS2C7vlU5sBkKgA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8080715"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="8080715"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 05:52:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="915399092"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="915399092"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 05:52:01 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ruAxC-00000002o6w-1HKO;
+	Tue, 09 Apr 2024 15:51:58 +0300
+Date: Tue, 9 Apr 2024 15:51:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 2/2] gpiolib: Update the kernel documentation - add
+ Return sections
+Message-ID: <ZhU57jB_pVvDz0ZR@smile.fi.intel.com>
+References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
+ <20240408231727.396452-3-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXL2GEORVm3QVrAg--.35825S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jw1xZF4rGr4ftry5Gr1xZrb_yoWDGrg_C3
-	y3ur17GrWj9w1DtF17Gr48tryaya12qr1v9F10y39IkF17Ar9Yvr1kWr17WrW8Xw4rGF9r
-	A3y0vF17uw4UAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sREvtAtUUUUU==
-X-CM-SenderInfo: 5vhq20jurqiii6rwjhhfrp/1tbiSAe7q2XAk0aYWgAAst
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408231727.396452-3-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The return value of exit() is 0 and it performs no action.
-This function can be omitted. Please refer to the end condition
-check in the __cpufreq_offline() function.
+On Tue, Apr 09, 2024 at 02:12:51AM +0300, Andy Shevchenko wrote:
+> $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
+> 67
+> 
+> Fix these by adding Return sections. While at it, make sure all of
+> Return sections use the same style.
 
-Signed-off-by: Lizhe <sensor1010@163.com>
----
- drivers/cpufreq/pcc-cpufreq.c | 6 ------
- 1 file changed, 6 deletions(-)
+Since there shouldn't be hard dependency to the first one, can you consider
+applying this one, so it unblocks me?
 
-diff --git a/drivers/cpufreq/pcc-cpufreq.c b/drivers/cpufreq/pcc-cpufreq.c
-index 6f8b5ea7aeae..771efbf51a48 100644
---- a/drivers/cpufreq/pcc-cpufreq.c
-+++ b/drivers/cpufreq/pcc-cpufreq.c
-@@ -562,18 +562,12 @@ static int pcc_cpufreq_cpu_init(struct cpufreq_policy *policy)
- 	return result;
- }
- 
--static int pcc_cpufreq_cpu_exit(struct cpufreq_policy *policy)
--{
--	return 0;
--}
--
- static struct cpufreq_driver pcc_cpufreq_driver = {
- 	.flags = CPUFREQ_CONST_LOOPS,
- 	.get = pcc_get_freq,
- 	.verify = pcc_cpufreq_verify,
- 	.target = pcc_cpufreq_target,
- 	.init = pcc_cpufreq_cpu_init,
--	.exit = pcc_cpufreq_cpu_exit,
- 	.name = "pcc-cpufreq",
- };
- 
+Thank you!
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
