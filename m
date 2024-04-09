@@ -1,241 +1,127 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AFE2B2DD
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41E17E798;
+	Tue,  9 Apr 2024 09:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654449; cv=none; b=BxkpeeW91/Pd3qolys+qvDbkCuW8FKlHuWdaGHJyDktSEGqlf7bVMBlZhA7zR6nckbOaZ2FGLf0XfLtJ4jVI+DfnmsGWe99idCqxhgdeq4C0OU8TtD6r9mV/CUKe5sVZHGZ+ooGxhU1KggWy0Qjjo8UtPW4AHGnB+vTIjbb3DJA=
+	t=1712654481; cv=none; b=qir1HSKB2vDlXf7gdvZBuAr9zbL4g42pzb7HBwMckQ1haU9XTOeVkvm3uktKayKm7L/CvzPIM+VxxmHFBRupPdbP2OZS/xToS22nJ+9GTaq8s4+RLnLpIrauMIwyAFU0ECKhemKdiuUHbv8DlWBjW57JT31sTy+bOdpO733y/HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654449; c=relaxed/simple;
-	bh=dzWgJIr+elQQqzhnrLVPNLwsqNmviyJGgqIUxcUQWqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K2ZEvPsJx4DdzzcDmvaViETdj0TiqbEJ+92GYRJkGdl2/6Edu7bQp3GSp8gWDbuqi+ZrNw0e48N8SL6P0aWOEo7zGGQEt61D4GTGXJ8LQ3vWHK5/AY5vWc94R6muBrsoBXcV6KvrDODjTWgxiXZPS8EjZgtqVo1ENAbGHAmF+YM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f9kS6DsV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712654481; c=relaxed/simple;
+	bh=L55iLpsbIZ+5RYaT9LyDbQhxY6Gq3oW3OyLMYDl+CcE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WcrNxabkEYiEmPjNp4NwVTMGne7VsJkL8u66UZ12l4KKDO3FIrqr5ZGtKzMZN8UY9gW46Y9X3ADMtlNg9U8tw0NRnF5qGNiDanbWzJ36mNO4WpgLnAq6JaQHwJtk/0EggwFVlaBuW/4jDq6J++sNA75KU1Fg5KOhsXqZ5H0pc8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CJaUxvWu; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f9kS6DsV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so3953187f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 02:20:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1712654445; x=1713259245; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/AT6TTk+LhAPd9pV/ZdmRWE2NJwTKZCbDeN6oR+wQ/4=;
-        b=f9kS6DsVb4DnrdEPxPn7uNsk2hFTpMIzxf8wQWKBMrIU7eahlx1FCq7ncmDtaukraG
-         ARFQipqYhAjc0Ww8yxGs/D0M28f21aiUJ8PfSZoj5TN2ysTfY4k7poH5fqz0YiX1Rz3m
-         Qp4LLwJotQ4ASKewISiCP6MgqlXpNFQtGnmQkWr35Z2K9va4MmZ3elnigJhls7Z3pN+b
-         MM+czGavSroLjIjBClwN1hizPGeXGXXsuvVxFb/HOJyxkZPDWPOIo5GKwwND18ieT0DY
-         EvXfYIFvSQ5uFCTPqM2cIZg+QUHI77zJ7EFOcwmiM9B9odj3BBGRN22s8Aaak/y//WS3
-         LrtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712654445; x=1713259245;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/AT6TTk+LhAPd9pV/ZdmRWE2NJwTKZCbDeN6oR+wQ/4=;
-        b=vwH+iSPgABepCmZK8NUiU2KFArw1z6+9PM9TjS2n9QYPQ17GpO7zGl0Oyfb4lKZt5q
-         xecr+l3HFXzJYCI0Td19jvQetKq3SHbvkqgaDr+pu/M7BGVEICxhKcAl0/rEyVkqm9PO
-         CC3T/3Gv9zv9/6IUOhI3pLttLIkuE3yUoRQrk5dQPbpATZaBMj0CvmBUC3TxUHD6gnsg
-         IaFj/CDh0Z/k3cndjeADM7PSGLnfDb2ZAvUvKGSyqYJLufquHqS0ak19vQymohjwjg5s
-         LpuyjwiDIBsYV5IhL/WtbJNVKIZo5hDV5mnzUAyOezuDR7BbPyEDDo6VH5MDTMAlmRO/
-         GrIA==
-X-Forwarded-Encrypted: i=1; AJvYcCXghamnI4Gr2d3qbZa11FNgoCg3G2nY1r9pVu+Q2PINXuWtahya+9rYHyOWjzqgncbP41ivN6juz/RylwyQVJ1caCIZhTikhyeUHfcN
-X-Gm-Message-State: AOJu0YwqFPdhyPxQT2G7Q16pIViOZZBu5pm9tQu9vmKvT99XldTbTwc9
-	7WdGRIfxpVIiunhgcG/32bpYk6qzwc6opOgbYWzYUpLRq5OtTDioeJ2MfVwiKzWSKFJGNN85OtO
-	j
-X-Google-Smtp-Source: AGHT+IFihTpQSWOgUGCFfZeSy+hQwBLIikiwaB5BmDMXbwBdPJSCfJ9GxBk3l9MRH2zrv22ix/1dDg==
-X-Received: by 2002:a05:6000:152:b0:343:96a0:cccd with SMTP id r18-20020a056000015200b0034396a0cccdmr10005535wrx.33.1712654444898;
-        Tue, 09 Apr 2024 02:20:44 -0700 (PDT)
-Received: from localhost.localdomain ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id z13-20020a056000110d00b0034174875850sm11036893wrw.70.2024.04.09.02.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 02:20:44 -0700 (PDT)
-Date: Tue, 9 Apr 2024 11:20:42 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH printk v4 06/27] printk: nbcon: Add callbacks to
- synchronize with driver
-Message-ID: <ZhUIatzxietD4F-m@localhost.localdomain>
-References: <20240402221129.2613843-1-john.ogness@linutronix.de>
- <20240402221129.2613843-7-john.ogness@linutronix.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CJaUxvWu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 806581BF208;
+	Tue,  9 Apr 2024 09:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712654471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=WpIo0b1UVsh1fxNr1ZZUxhvbWy3Yo7lP2Ma4USOQd64=;
+	b=CJaUxvWuQ9VDKqKT3pQ+nyvMW7jY+Uu5yxmuLr+CmqaAdjPnS1vynele/n4HfYG2L1nUq0
+	SNMzzr1sFIrEBUXddWM9bvDZrURAMxb7lSVEiUdvE8JsUS/gNyW1Ds5HRccPvITxREPBXv
+	0QHdUCsgFVLUSIAc5IPKjkDezC2+0mqNprgvUZXaCz8VMudfSnrcVjZ4OVEMbvYHnfYq5E
+	nl2UklAtQNLQbtY3TZvn1/4v0PMO8Mz6abSN/F1OULIJsibGLzeI/lBx1oVsgQ/StaUlUG
+	iYhTlB2I4XhBhX7X3FmNV17L0nsHm/VOl+jm0LxDVQgpqW1/SjZGsGd7MpJF2g==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v2 0/5] net: stmmac: Add support for RZN1 GMAC
+ devices
+Date: Tue, 09 Apr 2024 11:21:43 +0200
+Message-Id: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402221129.2613843-7-john.ogness@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKgIFWYC/22NQQ6CMBBFr0Jm7Zi2ghZX3sOwgHaASaQ1bUNQw
+ t1tunb58vLf3yFSYIpwr3YItHJk7zKoUwVm7t1EyDYzKKFqUQuF4eskTktvJF51Y0Z9ay9WEOT
+ BO9DIW4k9wVFCR1uCLpuZY/LhU15WWfy/4CpRYDOQGpRua6vNY/A+vdidjV+gO47jB8GCFH+wA
+ AAA
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Wed 2024-04-03 00:17:08, John Ogness wrote:
-> Console drivers typically must deal with access to the hardware
-> via user input/output (such as an interactive login shell) and
-> output of kernel messages via printk() calls.
-> 
-> Follow-up commits require that the printk subsystem is able to
-> synchronize with the driver. Require nbcon consoles to implement
-> two new callbacks (device_lock(), device_unlock()) that will
-> use whatever synchronization mechanism the driver is using for
-> itself (for example, the port lock for uart serial consoles).
+Hello everyone,
 
-We should explain here the bigger picture, see my comment
-of the word "whenever" below.
+This is version two of my series that adds support for a Gigabit Ethernet
+controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
+GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
 
-<proposal>
-Console drivers typically have to deal with access to the hardware
-via user input/output (such as an interactive login shell) and
-output of kernel messages via printk() calls.
+My former colleague Clément Léger originally sent a series for this driver,
+but an issue in bringing up the PCS clock had blocked the upstreaming
+process. This issue has since been resolved by the following series:
 
-They use some classic locking mechanism in most situations. But
-console->write_atomic() callbacks, used by nbcon consoles,
-must be synchronized only by acquiring the console context.
+https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
 
-The synchronization via the console context ownership is possible
-only when the console driver is registered. It is when a particular
-device driver is connected with a particular console driver.
+This series consists of a devicetree binding describing the RZN1 GMAC
+controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
+tree, and the GMAC driver itself which is a glue layer in stmmac.
 
-The two synchronization mechanisms must be synchronized between
-each other. It is tricky because the console context ownership
-is quite special. It might be taken over by a higher priority
-context. Also CPU migration has to be disabled.
-
-The most tricky part is to (dis)connect these two mechanism during
-the console (un)registration. Let's make it easier by adding two new
-callbacks: device_lock(), device_unlock(). They would allow
-to take the device-specific lock while the device is being
-(un)registered by the related console driver.
-
-For example, these callbacks would lock/unlock the port lock
-for serial port drivers.
-</proposal>
-
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->  include/linux/console.h | 42 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/include/linux/console.h b/include/linux/console.h
-> index e4028d4079e1..ad85594e070e 100644
-> --- a/include/linux/console.h
-> +++ b/include/linux/console.h
-> @@ -352,6 +352,48 @@ struct console {
->  	 */
->  	void (*write_atomic)(struct console *con, struct nbcon_write_context *wctxt);
->  
-> +	/**
-> +	 * @device_lock:
-> +	 *
-> +	 * NBCON callback to begin synchronization with driver code.
-> +	 *
-> +	 * Console drivers typically must deal with access to the hardware
-> +	 * via user input/output (such as an interactive login shell) and
-> +	 * output of kernel messages via printk() calls. This callback is
-> +	 * called by the printk-subsystem whenever it needs to synchronize
-> +	 * with hardware access by the driver.
-
-The word "whenever" can be translated as "always" (by dictionary
-and by my head ;-) Then the description sounds like this would be
-the primary synchronization mechanism between printk and the driver.
-
-In fact, this API would have only one purpose to synchronize
-the console registration/unregistration.
-
-IMHO, we should explain here the relation between the driver-specific
-locking and nbcon console context locking. It would describe the big
-picture and hopefully reduce confusion and eventual misuse.
-
-
-> + It should be implemented to
-> +	 * use whatever synchronization mechanism the driver is using for
-> +	 * itself (for example, the port lock for uart serial consoles).
-> +	 *
-> +	 * This callback is always called from task context. It may use any
-> +	 * synchronization method required by the driver. BUT this callback
-> +	 * MUST also disable migration. The console driver may be using a
-> +	 * synchronization mechanism that already takes care of this (such as
-> +	 * spinlocks). Otherwise this function must explicitly call
-> +	 * migrate_disable().
-> +	 *
-> +	 * The flags argument is provided as a convenience to the driver. It
-> +	 * will be passed again to device_unlock(). It can be ignored if the
-> +	 * driver does not need it.
-> +	 */
-
-<proposal>
-	/**
-	 * @device_lock:
-	 *
-	 * NBCON callback to serialize registration of a device driver
-	 * for a console driver.
-	 *
-	 * Console drivers typically have to deal with access to the hardware
-	 * via user input/output (such as an interactive login shell) and
-	 * Output of kernel messages via printk() calls.
-	 *
-	 * They use some classic locking mechanism in most situations. But
-	 * console->write_atomic() callbacks, used by nbcon consoles,
-	 * must be synchronized only by acquiring the console context.
-	 *
-	 * The synchronization via the console context ownership is possible
-	 * only when the console driver is registered. It is when a particular
-	 * device driver is connected with a particular console driver.
-	 *
-	 * The device_lock() callback must block operations on the device
-	 * while it is being (un)registered as a console driver. It will
-	 * make sure that the classic device locking is aware of the console
-	 * context locking when it might be acquired by the related nbcon
-	 * console driver.
-	 *
-	 * This callback is always called from task context. It may use any
-	 * synchronization method required by the driver, for example
-	 * port lock for serial ports.
-	 *
-	 * IMPORTANT: This callback MUST also disable migration. The console
-	 *	driver may be using a synchronization mechanism that already
-	 *	takes care of this (such as spinlocks). Otherwise this function
-	 *	must explicitly call migrate_disable().
-	 *
-	 *	The flags argument is provided as a convenience to the driver.
-	 *	It will be passed again to device_unlock(). It can be ignored
-	 *	if the driver does not need it.
-	 */
-</proposal>
-
-
-> +	void (*device_lock)(struct console *con, unsigned long *flags);
-> +
-> +	/**
-> +	 * @device_unlock:
-> +	 *
-> +	 * NBCON callback to finish synchronization with driver code.
-> +	 *
-> +	 * It is the counterpart to device_lock().
-> +	 *
-> +	 * This callback is always called from task context. It must
-> +	 * appropriately re-enable migration (depending on how device_lock()
-> +	 * disabled migration).
-> +	 *
-> +	 * The flags argument is the value of the same variable that was
-> +	 * passed to device_lock().
-> +	 */
-> +	void (*device_unlock)(struct console *con, unsigned long flags);
-> +
->  	atomic_t		__private nbcon_state;
->  	atomic_long_t		__private nbcon_seq;
->  	struct printk_buffers	*pbufs;
-
-With the updated commit message and comment:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+There are also two patches by Russell that improve pcs initialization handling
+in stmmac.
 
 Best Regards,
-Petr
+
+Romain Gantois
+
+---
+Changes in v2:
+- Add pcs_init/exit callbacks in stmmac to solve race condition
+- Use pcs_init/exit callbacks in dwmac_socfpga glue layer
+- Miscellaneous device tree binding corrections
+- Link to v1: https://lore.kernel.org/r/20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com
+
+---
+Clément Léger (3):
+      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
+      net: stmmac: add support for RZ/N1 GMAC
+      ARM: dts: r9a06g032: describe GMAC1
+
+Russell King (Oracle) (2):
+      net: stmmac: introduce pcs_init/pcs_exit stmmac operations
+      net: stmmac: dwmac-socfpga: use pcs_init/pcs_exit
+
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml |  66 +++++++++++++
+ MAINTAINERS                                        |   6 ++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi           |  19 ++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 +++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   |  88 +++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 109 +++++++++++----------
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  14 +++
+ include/linux/stmmac.h                             |   2 +
+ 9 files changed, 263 insertions(+), 54 deletions(-)
+---
+base-commit: 87c33315af380ca12a2e59ac94edad4fe0481b4c
+change-id: 20240402-rzn1-gmac1-685cf8793d0e
+
+Best regards,
+-- 
+Romain Gantois <romain.gantois@bootlin.com>
 
