@@ -1,69 +1,78 @@
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5CE7FBB7
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C8A7FBC0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712655318; cv=none; b=PlGFYeOidpKECQKNQ52NFX3UTAFikCoG8Q1UZZRdS62bGRsQCs6Nun1FEOpcCunW9VWMSV8K6f1ZMhtNFSfaDI1W3IHLJmj70ODCCcxcq2HIuHQ+hnpSMlk5snEubZKgtjcHB6hOC/3xivubB6S3tAQZkuYT1209lfIMNwxl6iI=
+	t=1712655319; cv=none; b=MyzZ10wQ48jOBmRAqZHzclNqrgKqYO5mqAJgWOMntbUI734yHjJlnbb/eycraaHH8rTl7hIigFFKzOkXt0npGWZ6Rn9u65Nx3ML65BN2HGI3nDWLxfImDH8p7SGVYXmhyDs21Sl8LEyKJBcLlvQNe12paercZo1vq0ZWUY+jhHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712655318; c=relaxed/simple;
-	bh=W4G1L4cCnOa4i8P36RJ4sjCMcziVLH98tb8WqTxnQiQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g9Q7BIP+rl5NAvoaSCZPpyLFKH+REH6EfgLh7LTtTjMD3J1MhzuC05VirzLENMIKFit1SplRKbeD9gW59gBrRk0sh1tyv4NUQE3Gf7iUcElKmKWCfr3ZMmHQZNRwA840tju8Cz03skVv1W79hinLxuW0Zu1jrVPWL6JjBB9Gi9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fFKQLJxF; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FNABl6cJ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=KtPOUBoJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gkScyaKV; arc=none smtp.client-ip=195.135.223.130
+	s=arc-20240116; t=1712655319; c=relaxed/simple;
+	bh=2pEw6VivEu28Mo3DUny6NNh9kyZmW0ocFsTrPvhuHtI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DU4iYL2LA/oK+8P087I5dc4tD4jRdCdK9Y6GXuBvd8SzrGolsmxWEF5HWheARoXdAazdFzLDSGl/gSTgQKOaIGL9GXprGKt6u8gqJBNpNVqUJ2novlJTWB0KVXDHzDqXNTaR+gVegt6kQ8UdCdCe5xbHtxkP4LXULVPLrbwsQeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=t5ryuIqA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mOwXzlcI; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=t5ryuIqA; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mOwXzlcI; arc=none smtp.client-ip=195.135.223.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fFKQLJxF";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FNABl6cJ";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="KtPOUBoJ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gkScyaKV"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="t5ryuIqA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mOwXzlcI";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="t5ryuIqA";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mOwXzlcI"
 Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D6A49338F0;
-	Tue,  9 Apr 2024 09:35:14 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1E82F338F2;
+	Tue,  9 Apr 2024 09:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712655315; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nUZ9ROs7tpTwP9jEjvqFK44yrx0e5Jmd5Sv60LZqK4I=;
-	b=fFKQLJxF5Sx9Z3WCfDQGHeQqkPfTBdPiVS9uaQu0ZmROvDf6pGO6QcVstd2qYpEeiig+TK
-	tEn2Ljx7YENoCfxW8C4ca+ikub6UBXlIWEnBHf1z/Zje83fX4MhLagrQTBpXIpTcWAubDp
-	PcIhcq7CzWd7Ft3/V+WxC8HY/BFdkXQ=
+	t=1712655316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8kHuZ0DDHSIPFjpB94qJZpVkKgyPiQEkg0Af+hvjw3M=;
+	b=t5ryuIqAw7BKUldJfUKMXAxydTF1ZPi05sBpew6CXU5Gn6uy3lrIcoRvJB/hITpcvZ47Pq
+	4GHDJQR73HStXrhV87dn+kCwS6BLGXVyfl0DkIFg0SJkV19PYeaBet5MkZL3sYv2zO21uE
+	irXzTn/6UhheisS8ImbUYdJDfaI5grM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712655315;
+	s=susede2_ed25519; t=1712655316;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nUZ9ROs7tpTwP9jEjvqFK44yrx0e5Jmd5Sv60LZqK4I=;
-	b=FNABl6cJGpeEBQlBU/K8Mm09lKZzNt788E9+9MYt1gI/5LQtNb/wyn3Jd2G6hJV6mIxIyD
-	QO7xh8Oy1gBBsIAA==
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8kHuZ0DDHSIPFjpB94qJZpVkKgyPiQEkg0Af+hvjw3M=;
+	b=mOwXzlcIhKqeTSMItjRNphMBfeoxnUCWnn3fKGZnfxvsc5Qxh3hkYe1Aj7+uoRG6c/9i9z
+	9P7+5PLAKMCJDUBw==
 Authentication-Results: smtp-out1.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712655314; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nUZ9ROs7tpTwP9jEjvqFK44yrx0e5Jmd5Sv60LZqK4I=;
-	b=KtPOUBoJmAiexeFmHfU8KA1zrBu/2kSzD5CRBSH7RJCFm2UYWKdvOaSFFxUzFAWTtLbWDB
-	2NsOX2TOCeLJb2Ix4tY+tiXGYKWfWinE0Um4NWHszr6XHLmnzKMHYMwdqEuNjnFTf0FoA+
-	Gb6moj7hScC1HYaLeRHqF2/cdfaN0sY=
+	t=1712655316; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8kHuZ0DDHSIPFjpB94qJZpVkKgyPiQEkg0Af+hvjw3M=;
+	b=t5ryuIqAw7BKUldJfUKMXAxydTF1ZPi05sBpew6CXU5Gn6uy3lrIcoRvJB/hITpcvZ47Pq
+	4GHDJQR73HStXrhV87dn+kCwS6BLGXVyfl0DkIFg0SJkV19PYeaBet5MkZL3sYv2zO21uE
+	irXzTn/6UhheisS8ImbUYdJDfaI5grM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712655314;
+	s=susede2_ed25519; t=1712655316;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=nUZ9ROs7tpTwP9jEjvqFK44yrx0e5Jmd5Sv60LZqK4I=;
-	b=gkScyaKVjDdusLWMjbQaatRFk/hyna8IDDuS1PE+rgpQBinJu39SYTbW3Ellcyjj2u3Ktn
-	qcNTy0jSMErfrhAg==
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8kHuZ0DDHSIPFjpB94qJZpVkKgyPiQEkg0Af+hvjw3M=;
+	b=mOwXzlcIhKqeTSMItjRNphMBfeoxnUCWnn3fKGZnfxvsc5Qxh3hkYe1Aj7+uoRG6c/9i9z
+	9P7+5PLAKMCJDUBw==
 Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id BF7A81332F;
-	Tue,  9 Apr 2024 09:35:14 +0000 (UTC)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A5521332F;
+	Tue,  9 Apr 2024 09:35:16 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id +bcWLtILFWafRwAAn2gu4w
-	(envelope-from <dwagner@suse.de>); Tue, 09 Apr 2024 09:35:14 +0000
+	id NfIPAdQLFWapRwAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Tue, 09 Apr 2024 09:35:16 +0000
 From: Daniel Wagner <dwagner@suse.de>
 To: Christoph Hellwig <hch@lst.de>
 Cc: Keith Busch <kbusch@kernel.org>,
@@ -72,11 +81,14 @@ Cc: Keith Busch <kbusch@kernel.org>,
 	Hannes Reinecke <hare@suse.de>,
 	linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
+	Hannes Reinecke <hare@kernel.org>,
 	Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v5 0/6]  nvme-fabrics: short-circuit connect retries
-Date: Tue,  9 Apr 2024 11:35:04 +0200
-Message-ID: <20240409093510.12321-1-dwagner@suse.de>
+Subject: [PATCH v5 2/6] nvmet: lock config semaphore when accessing DH-HMAC-CHAP key
+Date: Tue,  9 Apr 2024 11:35:06 +0200
+Message-ID: <20240409093510.12321-3-dwagner@suse.de>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240409093510.12321-1-dwagner@suse.de>
+References: <20240409093510.12321-1-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,14 +97,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
+X-Spamd-Result: default: False [-6.80 / 50.00];
+	REPLY(-4.00)[];
 	BAYES_HAM(-3.00)[100.00%];
 	MID_CONTAINS_FROM(1.00)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	R_MISSING_CHARSET(0.50)[];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	ARC_NA(0.00)[];
@@ -101,75 +114,91 @@ X-Spamd-Result: default: False [-2.80 / 50.00];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap2.dmz-prg2.suse.org:helo,imap2.dmz-prg2.suse.org:rdns];
 	RCVD_TLS_ALL(0.00)[]
-X-Spam-Score: -2.80
+X-Spam-Score: -6.80
 X-Spam-Flag: NO
 
-The first patch returns only kernel error codes now and avoids overwriting error
-codes later. Thje newly introduced helper for deciding if a reconnect should be
-attempted is the only place where we have the logic (and documentation).
+From: Hannes Reinecke <hare@kernel.org>
 
-On the target side I've separate the nvme status from the dhchap status handling
-which made it a bit clearer. I was tempted to refactor the code in
-nvmet_execute_auth_send to avoid hitting the 80 chars limit but didn't came up
-with something nice yet. So let's keep this change at a minimum before any
-refactoring attempts.
+When the DH-HMAC-CHAP key is accessed via configfs we need to take the
+config semaphore as a reconnect might be running at the same time.
 
-I've tested with blktests and also an real hardware for nvme-fc.
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/nvme/target/auth.c     |  2 ++
+ drivers/nvme/target/configfs.c | 22 +++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-changes:
-v5:
-  - nvme: do not mix kernel error code with nvme status
-  - nvmet: separate nvme status from dhchap status
-  - https://lore.kernel.org/all/20240404154500.2101-1-dwagner@suse.de/
-
-v4:
-  - rebased
-  - added 'nvme: fixes for authentication errors' series
-    https://lore.kernel.org/linux-nvme/20240301112823.132570-1-hare@kernel.org/
-
-v3:
-  - added my SOB tag
-  - fixed indention
-  - https://lore.kernel.org/linux-nvme/20240305080005.3638-1-dwagner@suse.de/
-
-v2:
-  - refresh/rebase on current head
-  - extended blktests (nvme/045) to cover this case
-    (see separate post)
-  - https://lore.kernel.org/linux-nvme/20240304161006.19328-1-dwagner@suse.de/
-  
-v1:
-  - initial version
-  - https://lore.kernel.org/linux-nvme/20210623143250.82445-1-hare@suse.de/
-
-
-Daniel Wagner (1):
-  nvme-fc: use nvme_ctrl_reconnect to decide reconnect attempts
-
-Hannes Reinecke (5):
-  nvme: authentication error are always non-retryable
-  nvmet: lock config semaphore when accessing DH-HMAC-CHAP key
-  nvme-tcp: short-circuit reconnect retries
-  nvme-rdma: short-circuit reconnect retries
-  nvmet: return DHCHAP status codes from nvmet_setup_auth()
-
- drivers/nvme/host/core.c               |  6 ++--
- drivers/nvme/host/fabrics.c            | 25 ++++++-------
- drivers/nvme/host/fc.c                 |  4 +--
- drivers/nvme/host/nvme.h               | 26 +++++++++++++-
- drivers/nvme/host/rdma.c               | 22 ++++++++----
- drivers/nvme/host/tcp.c                | 23 +++++++-----
- drivers/nvme/target/auth.c             | 22 ++++++------
- drivers/nvme/target/configfs.c         | 22 +++++++++---
- drivers/nvme/target/fabrics-cmd-auth.c | 49 +++++++++++++-------------
- drivers/nvme/target/fabrics-cmd.c      | 11 +++---
- drivers/nvme/target/nvmet.h            |  8 ++---
- 11 files changed, 134 insertions(+), 84 deletions(-)
-
+diff --git a/drivers/nvme/target/auth.c b/drivers/nvme/target/auth.c
+index 3ddbc3880cac..9afc28f1ffac 100644
+--- a/drivers/nvme/target/auth.c
++++ b/drivers/nvme/target/auth.c
+@@ -44,6 +44,7 @@ int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
+ 	dhchap_secret = kstrdup(secret, GFP_KERNEL);
+ 	if (!dhchap_secret)
+ 		return -ENOMEM;
++	down_write(&nvmet_config_sem);
+ 	if (set_ctrl) {
+ 		kfree(host->dhchap_ctrl_secret);
+ 		host->dhchap_ctrl_secret = strim(dhchap_secret);
+@@ -53,6 +54,7 @@ int nvmet_auth_set_key(struct nvmet_host *host, const char *secret,
+ 		host->dhchap_secret = strim(dhchap_secret);
+ 		host->dhchap_key_hash = key_hash;
+ 	}
++	up_write(&nvmet_config_sem);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index 77a6e817b315..7c28b9c0ee57 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -1990,11 +1990,17 @@ static struct config_group nvmet_ports_group;
+ static ssize_t nvmet_host_dhchap_key_show(struct config_item *item,
+ 		char *page)
+ {
+-	u8 *dhchap_secret = to_host(item)->dhchap_secret;
++	u8 *dhchap_secret;
++	ssize_t ret;
+ 
++	down_read(&nvmet_config_sem);
++	dhchap_secret = to_host(item)->dhchap_secret;
+ 	if (!dhchap_secret)
+-		return sprintf(page, "\n");
+-	return sprintf(page, "%s\n", dhchap_secret);
++		ret = sprintf(page, "\n");
++	else
++		ret = sprintf(page, "%s\n", dhchap_secret);
++	up_read(&nvmet_config_sem);
++	return ret;
+ }
+ 
+ static ssize_t nvmet_host_dhchap_key_store(struct config_item *item,
+@@ -2018,10 +2024,16 @@ static ssize_t nvmet_host_dhchap_ctrl_key_show(struct config_item *item,
+ 		char *page)
+ {
+ 	u8 *dhchap_secret = to_host(item)->dhchap_ctrl_secret;
++	ssize_t ret;
+ 
++	down_read(&nvmet_config_sem);
++	dhchap_secret = to_host(item)->dhchap_ctrl_secret;
+ 	if (!dhchap_secret)
+-		return sprintf(page, "\n");
+-	return sprintf(page, "%s\n", dhchap_secret);
++		ret = sprintf(page, "\n");
++	else
++		ret = sprintf(page, "%s\n", dhchap_secret);
++	up_read(&nvmet_config_sem);
++	return ret;
+ }
+ 
+ static ssize_t nvmet_host_dhchap_ctrl_key_store(struct config_item *item,
 -- 
 2.44.0
 
