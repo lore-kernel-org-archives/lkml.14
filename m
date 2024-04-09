@@ -1,35 +1,35 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9321B7C0A6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931AA7BAFE;
 	Tue,  9 Apr 2024 07:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712647858; cv=none; b=fP2pkBMfL+wbk6Zil0/fIr1Z0w3tbiRoHbfpxazXmxx2589NWxn5dOdsxfRe6qe68zwYE/u+xkUcHK9b8Wp2/dlO1ub72dNTR9MSonjhTGZJDdfx/hByA2qDH1pmLL+f9bg7QL2LK8zp6B/Biw0sV66LChL2SfpZ9bcJsCREavs=
+	t=1712647858; cv=none; b=ZKgsvupKV+F8TWpNZwFbXKxEQBj1+FPfCq2U8fkMnboiDqB02WZkCPJYIFZBpob5T1JQxoQEPkZitOQpFGkaf0ZoRbkapz7ijAweJkNrEhld2TyzeDMIcvswRwGUxbLgBBgW5Sibu4Z66UuZ8sLiabacRFAOCWUZZzs49LxXL90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712647858; c=relaxed/simple;
-	bh=Z7oJ0ojzxvgN6IlNaV9Gw82cLAFxnX0SPwkszNBnPDw=;
+	bh=j4STcrPuuHe6kQK78UyT+7uWG0z053vYmOT+DzSljc0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VUjL9h3KIOFed0mednWNY3eryJtkWEAAKOY9rajg5ULNSYIdh4jQvYoZY6Yi0MNZ5Perb/e64koeAigwn1q5YEweW7J5SEezFMERevYEV9+qYjhUjMfTakJ91lj/SPJCpcls4mCtgrLR89tEWETn42vyFSsSybAf0NUjSNNB0+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=dhxGVrzX; arc=none smtp.client-ip=80.237.130.52
+	 MIME-Version; b=TQDqU65Mx1vfC86alXYOjxRP5phiG4NsSOFjPOJGNGXwf7f3LcRK+PbOS59wckdq0yNFeBpp0LVquSKvqB/gkpKzaFoT0LFcnI1ODoqUGOtEqu3aDQjDAk2UTXB57pzLj2pHkofmmNF/ATQdFPVEJ9bqrHP+WWe3vADEZW5an2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=HZquhLkV; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="dhxGVrzX"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="HZquhLkV"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
 	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
 	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=uCCHKQw/1e/VvfCrnRGy2B0smnW1Q61lxcP9UuK98Q8=; t=1712647855;
-	x=1713079855; b=dhxGVrzXWpFtkaaAyeN6WjFd3bp/Jbf2XDdvHgkByRX5av70OaRzkfD1R7hq0
-	2bPkMdfaM9u3o6/aR5EnFTAbS/j2TKR/DpnTYYVA/noL+3gqbyJ2TWT0T0kziIbqJzcW3rWNhKjM7
-	xpCRWklc3ZwMRVM1WUzoHJFsUydBAgL98Wmgr/vVVgUwsnFa2FkswSi0SSP3GwpKZmRwEntgQGSUS
-	OEEVhM9jbbDDVYEBXHHfS4o359txMB9T6srYcb1KQ5intSgM5smAYFdIqBLixD99CcgF6OwGZrN88
-	4HXdMz7g/bk65ropsgMJBpf07hN4NGhiW0PUNK962TUySTczhQ==;
+	References; bh=LGeHfhhpbX0NVOpB0WHhcEnxl/s/Lvh5IZ1Wpx5G0xY=; t=1712647855;
+	x=1713079855; b=HZquhLkVzd1582+mrANxa+lFQZY0BrVsFfvIINnOBWD/HER7bPjXZCcX72yGq
+	a76cdVIs+LJnJcgV5VymzRPuC8ZBTnHcL3pSLpSSL0AXTwdBcVs/KaNOzpoY4N/lR38xonLRvdhqk
+	nS9ZcuPHcaq5uSjgwoY0fxZnPR7pXTkSiZiuqMipjhqI1O/wG1/5FcdMEM8IwxY8TCGOyCAYLWqa4
+	7cIlA1fY2KlUAIwH3gI4q2C9R+OLbBvPh5sngAWkOB+6yJ/ntr5RPAIGeVUIqUfqjZiSndvoNrVh2
+	Zj1A26eb9uAYVRs8rQEJia2jSpjJyaItkE1naC7YXyJqHS1q+Q==;
 Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1ru5wR-0006Ld-Ny; Tue, 09 Apr 2024 09:30:51 +0200
+	id 1ru5wR-0006Ld-6C; Tue, 09 Apr 2024 09:30:51 +0200
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: regressions@lists.linux.dev,
@@ -37,9 +37,9 @@ Cc: regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Bagas Sanjaya <bagasdotme@gmail.com>,
 	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
-Subject: [PATCH v2 6/6] docs: verify/bisect: stable regressions: first stable, then mainline
-Date: Tue,  9 Apr 2024 09:30:49 +0200
-Message-ID: <efd3cb9c68db450091021326bf9c334553df0ec2.1712647788.git.linux@leemhuis.info>
+Subject: [PATCH v2 4/6] docs: verify/bisect: explain testing reverts, patches and newer code
+Date: Tue,  9 Apr 2024 09:30:47 +0200
+Message-ID: <dacf26a4c48e9e8f04ecbc77e0a74c9b2a6a1103.1712647788.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <cover.1712647788.git.linux@leemhuis.info>
 References: <cover.1712647788.git.linux@leemhuis.info>
@@ -51,161 +51,212 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1712647855;18e5c630;
-X-HE-SMSGID: 1ru5wR-0006Ld-Ny
+X-HE-SMSGID: 1ru5wR-0006Ld-6C
 
-Rearrange the instructions so that readers facing a regression within a
-stable or longterm series first test its latest release before testing
-mainline. This is less scary for some people. It also reduces the chance
-that something goes sideways for readers that compile their first
-kernel, as mainline can cause slightly more trouble.
+Rename 'Supplementary tasks' to 'Complementary tasks' while introducing
+a section 'Optional tasks: test reverts, patches, or later versions':
+the latter is something readers occasionally will have to do after
+reporting a bug and thus is best covered here.
 
 Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
- .../verify-bugs-and-bisect-regressions.rst    | 91 +++++++++++--------
- 1 file changed, 51 insertions(+), 40 deletions(-)
+ .../verify-bugs-and-bisect-regressions.rst    | 128 ++++++++++++++++--
+ 1 file changed, 115 insertions(+), 13 deletions(-)
 
 diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-index 6193c797642732..c389d4fd7599df 100644
+index 355c2cea5230d9..1987c827211fce 100644
 --- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
 +++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
-@@ -309,31 +309,32 @@ machine; if you want to compile the kernel on another system, check
- .. _rangecheck_bissbs:
+@@ -160,7 +160,7 @@ will be considered the 'good' release and used to prepare the .config file.
+      this step (e.g. build, install, boot, and test a kernel to then tell Git
+      the outcome). Do so again and again until Git shows which commit broke
+      things. If you run short of disk space during this process, check the
+-     section 'Supplementary tasks: cleanup during and after the process'
++     section 'Complementary tasks: cleanup during and after the process'
+      below.
  
- * Determine the kernel versions considered 'good' and 'bad' throughout this
--  guide.
-+  guide:
+   d) Once your finished the bisection, put a few things away::
+@@ -182,7 +182,7 @@ will be considered the 'good' release and used to prepare the .config file.
+     kernel; just this time skip the first command copying the base .config file
+     over, as that already has been taken care off.
  
--  Do you follow this guide to verify if a bug is present in the code developers
--  care for? Then consider the mainline release your 'working' kernel (the newest
--  one you regularly use) is based on to be the 'good' version; if your 'working'
--  kernel for example is 6.0.13, then your 'good' kernel is 6.0.
-+  * Do you follow this guide to verify if a bug is present in the code the
-+    primary developers care for? Then consider the version of the newest kernel
-+    you regularly use currently as 'good' (e.g. 6.0, 6.0.13, or 6.1-rc2).
+-* **Supplementary tasks**: cleanup during and after the process.
++* **Complementary tasks**: cleanup during and after the process.
  
--  In case you face a regression, it depends on the version range where the
--  regression was introduced:
-+  * Do you face a regression, e.g. something broke or works worse after
-+    switching to a newer kernel version? In that case it depends on the version
-+    range during which the problem appeared:
+   a) To avoid running out of disk space during a bisection, you might need to
+      remove some kernels you built earlier. You most likely want to keep those
+@@ -205,6 +205,18 @@ will be considered the 'good' release and used to prepare the .config file.
+      the kernels you built earlier and later you might want to keep around for
+      a week or two.
  
--  * Something which used to work in Linux 6.0 broke when switching to Linux
--    6.1-rc1? Then henceforth regard 6.0 as the last known 'good' version
--    and 6.1-rc1 as the first 'bad' one.
-+    * Something regressed when updating from a stable/longterm release
-+      (say 6.0.13) to a newer mainline series (like 6.1-rc7 or 6.1) or a
-+      stable/longterm version based on one (say 6.1.5)? Then consider the
-+      mainline release your working kernel is based on to be the 'good'
-+      version (e.g. 6.0) and the first version to be broken as the 'bad' one
-+      (e.g. 6.1-rc7, 6.1, or 6.1.5). Note, at this point it is merely assumed
-+      that 6.0 is fine; this hypothesis will be checked in segment 2.
- 
--  * Some function stopped working when updating from 6.0.13 to 6.1.5? Then for
--    the time being consider 6.0 as the last 'good' version and 6.1.5 as
--    the 'bad' one. Note, at this point it is merely assumed that 6.0 is fine;
--    this assumption will be checked in segment 2.
-+    * Something regressed when switching from one mainline version (say 6.0) to
-+      a later one (like 6.1-rc1) or a stable/longterm release based on it
-+      (say 6.1.5)? Then regard the last working version (e.g. 6.0) as 'good' and
-+      the first broken (e.g. 6.1-rc1 or 6.1.5) as 'bad'.
- 
--  * A feature you used in 6.0.13 does not work at all or worse in 6.1.15? In
--    that case you want to bisect within a stable/longterm series: consider
--    6.0.13 as the last known 'good' version and 6.0.15 as the first 'bad'
--    one. Note, in this case you still want to compile and test a mainline kernel
--    as explained in segment 1: the outcome will determine if you need to report
--    your issue to the regular developers or the stable team.
-+    * Something regressed when updating within a stable/longterm series (say
-+      from 6.0.13 to 6.0.15)? Then consider those versions as 'good' and 'bad'
-+      (e.g. 6.0.13 and 6.0.15), as you need to bisect within that series.
- 
-   *Note, do not confuse 'good' version with 'working' kernel; the latter term
-   throughout this guide will refer to the last kernel that has been working
-@@ -392,19 +393,13 @@ machine; if you want to compile the kernel on another system, check
- 
- .. _stablesources_bissbs:
- 
--* Retrieve the sources for any stable or longterm series you might need.
--
--  Is the version you earlier established as 'bad' a stable or longterm release?
--  Then download the code for the series it belongs to ('linux-6.1.y' in this
--  example)::
-+* Is one of the versions you earlier established as 'good' or 'bad' a stable or
-+  longterm release (say 6.1.5)? Then download the code for the series it belongs
-+  to ('linux-6.1.y' in this example)::
- 
-     git remote set-branches --add stable linux-6.1.y
-     git fetch stable
- 
--  If the version earlier established as 'good' is from a different stable or
--  longterm series (say 6.0.13), repeat the previous step, but this time for the
--  branch holding the series the 'good' version belongs to (e.g. linux-6.0.y).
--
- .. _oldconfig_bissbs:
- 
- * Start preparing a kernel build configuration (the '.config' file).
-@@ -545,10 +540,24 @@ be a waste of time. [:ref:`details <introlatestcheck_bisref>`]
- 
- .. _checkoutmaster_bissbs:
- 
--* Check out the latest Linux codebase::
-+* Check out the latest Linux codebase.
- 
--    cd ~/linux/
--    git switch --discard-changes --detach mainline/master
-+  * Are your 'good' and 'bad' versions from the same stable or longterm series?
-+    Then check the `front page of kernel.org <https://kernel.org/>`_: if it
-+    lists a release from that series without an '[EOL]' tag, checkout the series
-+    latest version ('linux-6.1.y' in the following example)::
++* **Optional task**: test a debug patch or a proposed fix later::
 +
-+      cd ~/linux/
-+      git switch --discard-changes --detach stable/linux-6.1.y
-+
-+    Your series is unsupported, if is not listed or carrying a 'end of life'
-+    tag. In that case you might want to check if a successor series (say
-+    linux-6.2.y) or mainline (see next point) fix the bug.
-+
-+  * In all other cases, run::
-+
-+      cd ~/linux/
-+      git switch --discard-changes --detach mainline/master
- 
-   [:ref:`details <checkoutmaster_bisref>`]
- 
-@@ -650,15 +659,15 @@ be a waste of time. [:ref:`details <introlatestcheck_bisref>`]
- 
- .. _recheckstablebroken_bissbs:
- 
--* Are you facing a problem within a stable/longterm series, but failed to
--  reproduce it with the mainline kernel you just built? One that according to
--  the `front page of kernel.org <https://kernel.org/>`_ is still supported? Then
--  check if the latest codebase for the particular series might already fix the
--  problem. To do so, check out that series latest version (again, this here is
--  assumed to be 6.0)::
-+* Did you just built a stable or longterm kernel? And were you able to reproduce
-+  the regression with it? Then you should test the latest mainline codebase as
-+  well, because the result determines which developers the bug must be submitted
-+  to.
-+
-+  To prepare that test, check out current mainline::
- 
-     cd ~/linux/
--    git switch --discard-changes --detach linux-6.0.y
++    git fetch mainline
 +    git switch --discard-changes --detach mainline/master
++    git apply /tmp/foobars-proposed-fix-v1.patch
++    cp ~/kernel-config-working .config
++    ./scripts/config --set-str CONFIG_LOCALVERSION '-local-foobars-fix-v1'
++
++  Build, install, and boot a kernel as described in *segment 1, section b* --
++  but this time omit the first command copying the build configuration over,
++  as that has been taken care of already.
++
+ .. _introguide_bissbs:
  
-   Now use the checked out code to build and install another kernel using the
-   commands the earlier steps already described in more detail::
-@@ -680,7 +689,9 @@ be a waste of time. [:ref:`details <introlatestcheck_bisref>`]
-     uname -r
-     cat /proc/sys/kernel/tainted
+ Step-by-step guide on how to verify bugs and bisect regressions
+@@ -232,7 +244,9 @@ developers are obliged to act upon.
  
--  Now verify if this kernel is showing the problem.
-+  Now verify if this kernel is showing the problem. If it does, then you need
-+  to report the bug to the primary developers; if it does not, report it to the
-+  stable team. See Documentation/admin-guide/reporting-issues.rst for details.
+  :ref:`Segment 3: perform a bisection and validate the result <introbisect_bissbs>`.
  
-   [:ref:`details <recheckstablebroken_bisref>`]
+- :ref:`Supplementary tasks: cleanup during and after following this guide <introclosure_bissbs>`.
++ :ref:`Complementary tasks: cleanup during and after following this guide <introclosure_bissbs>`.
++
++ :ref:`Optional tasks: test reverts, patches, or later versions <introoptional_bissbs>`.
  
+ The steps in each segment illustrate the important aspects of the process, while
+ a comprehensive reference section holds additional details for almost all of the
+@@ -669,7 +683,7 @@ be a waste of time. [:ref:`details <introlatestcheck_bisref>`]
+ Do you follow this guide to verify if a problem is present in the code
+ currently supported by Linux kernel developers? Then you are done at this
+ point. If you later want to remove the kernel you just built, check out
+-:ref:`Supplementary tasks: cleanup during and after following this guide <introclosure_bissbs>`.
++:ref:`Complementary tasks: cleanup during and after following this guide <introclosure_bissbs>`.
+ 
+ In case you face a regression, move on and execute at least the next segment
+ as well.
+@@ -888,7 +902,7 @@ each kernel on commodity x86 machines.
+ 
+ .. _introclosure_bissbs:
+ 
+-Supplementary tasks: cleanup during and after the bisection
++Complementary tasks: cleanup during and after the bisection
+ -----------------------------------------------------------
+ 
+ During and after following this guide you might want or need to remove some of
+@@ -950,6 +964,81 @@ space might run out.
+ 
+   [:ref:`details <finishingtouch_bisref>`]
+ 
++.. _introoptional_bissbs:
++
++Optional: test reverts, patches, or later versions
++--------------------------------------------------
++
++While or after reporting a bug, you might want or potentially will be asked to
++test reverts, debug patches, proposed fixes, or other versions. In that case
++follow these instructions.
++
++* Update your Git clone and check out the latest code.
++
++  * In case you want to test mainline, fetch its latest changes before checking
++    its code out::
++
++      git fetch mainline
++      git switch --discard-changes --detach mainline/master
++
++  * In case you want to test a stable or longterm kernel, first add the branch
++    holding the series you are interested in (6.2 in the example), unless you
++    already did so earlier::
++
++      git remote set-branches --add stable linux-6.2.y
++
++    Then fetch the latest changes and check out the latest version from the
++    series::
++
++      git fetch stable
++      git switch --discard-changes --detach stable/linux-6.2.y
++
++* Copy your kernel build configuration over::
++
++    cp ~/kernel-config-working .config
++
++* Your next step depends on what you want to do:
++
++  * In case you just want to test the latest codebase, head to the next step,
++    you are already all set.
++
++  * In case you want to test if a revert fixes an issue, revert one or multiple
++    changes by specifying their commit ids::
++
++      git revert --no-edit cafec0cacaca0
++
++    Now give that kernel a special tag to facilitates its identification and
++    prevent accidentally overwriting another kernel::
++
++      ./scripts/config --set-str CONFIG_LOCALVERSION '-local-cafec0cacaca0-reverted'
++
++  * In case you want to test a patch, store the patch in a file like
++    '/tmp/foobars-proposed-fix-v1.patch' and apply it like this::
++
++      git apply /tmp/foobars-proposed-fix-v1.patch
++
++    In case of multiple patches, repeat this step with the others.
++
++    Now give that kernel a special tag to facilitates its identification and
++    prevent accidentally overwriting another kernel::
++
++    ./scripts/config --set-str CONFIG_LOCALVERSION '-local-foobars-fix-v1'
++
++* Build a kernel using the familiar commands, just without copying the kernel
++  build configuration over, as that has been taken care of already::
++
++    make olddefconfig &&
++    make -j $(nproc --all)
++    # * Check if the free space suffices holding another kernel:
++    df -h /boot/ /lib/modules/
++    sudo make modules_install
++    command -v installkernel && sudo make install
++    make -s kernelrelease | tee -a ~/kernels-built
++    reboot
++
++* Now verify you booted the newly built kernel and check it.
++
++[:ref:`details <introoptional_bisref>`]
+ 
+ .. _submit_improvements:
+ 
+@@ -1986,20 +2075,33 @@ build artifacts and the Linux sources, but will leave the Git repository
+ (~/linux/.git/) behind -- a simple ``git reset --hard`` thus will bring the
+ sources back.
+ 
+-Removing the repository as well would likely be unwise at this point: there is a
+-decent chance developers will ask you to build another kernel to perform
+-additional tests. This is often required to debug an issue or check proposed
+-fixes. Before doing so you want to run the ``git fetch mainline`` command again
+-followed by ``git checkout mainline/master`` to bring your clone up to date and
+-checkout the latest codebase. Then apply the patch using ``git apply
+-<filename>`` or ``git am <filename>`` and build yet another kernel using the
+-familiar commands.
++Removing the repository as well would likely be unwise at this point: there
++is a decent chance developers will ask you to build another kernel to
++perform additional tests -- like testing a debug patch or a proposed fix.
++Details on how to perform those can be found in the section :ref:`Optional
++tasks: test reverts, patches, or later versions <introoptional_bissbs>`.
+ 
+ Additional tests are also the reason why you want to keep the
+ ~/kernel-config-working file around for a few weeks.
+ 
+ [:ref:`back to step-by-step guide <finishingtouch_bissbs>`]
+ 
++.. _introoptional_bisref:
++
++Test reverts, patches, or later versions
++----------------------------------------
++
++  *While or after reporting a bug, you might want or potentially will be asked
++  to test reverts, patches, proposed fixes, or other versions.*
++  [:ref:`... <introoptional_bissbs>`]
++
++All the commands used in this section should be pretty straight forward, so
++there is not much to add except one thing: when setting a kernel tag as
++instructed, ensure it is not much longer than the one used in the example, as
++problems will arise if the kernelrelease identifier exceeds 63 characters.
++
++[:ref:`back to step-by-step guide <introoptional_bissbs>`].
++
+ 
+ Additional reading material
+ ===========================
 -- 
 2.44.0
 
