@@ -1,68 +1,36 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sxb1plsmtpa01-01.prod.sxb1.secureserver.net (sxb1plsmtpa01-01.prod.sxb1.secureserver.net [188.121.53.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF36370
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 20:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BCD2905
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 20:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712695581; cv=none; b=IBSeI5ckbtlD26BgHw9fPFYtdt/zI1g7hj0vC9TQr7ceI5UBJ1lKeIyGYiYpsA4lq+dM0JsSc7HtWhY9Qo2RjcWvmNtxjF/idkKD/iO4UNcHbECgM/jPWJZcsg6DY87VlVS105TtZFs0bB9DyHbz+fPzOTjiqAFd/7fT/TxYbSI=
+	t=1712695620; cv=none; b=Q13rE6PYqCsCXaPPZA/+JPtqeH94mpPiGzlge1eQ0/sB/p1m0kVEHq9YA5gXkoMwlPvMBK64rh7HcvSRWtpJNbubTr/d/wcsuZTxbeuv6Ij4xJR3lYc3MihR71DEYfN7f0GQrvM0tAoBUtNcRKYdMqVqIX/+4Kgkc72sE1lkeHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712695581; c=relaxed/simple;
-	bh=qN/mBxNt7g9rxa83v8IAquoYvQSJnRdAChcabeHZe+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JsOFR21l6vwgDyOdp55XUe4z94YKHLhbuGHHUlvuhK2DjCAFnYfxrc+s0gC8b9hmd43ZoRxOGV4at+1NroZfHFLF7/6buZ9u0RN4OQfOVIO/SnhdNEcQ7RwLysIUxHf7QCrzjfF/tbIFkUyAvIVgoYdaJFlWYeA4In/qRmtMGBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k/xVzeX1; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k/xVzeX1"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4163de295f9so19091085e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 13:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712695578; x=1713300378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i43Qoe3uynySrUsRFuf2GYuYz97ru+fsThJj/fZfzpk=;
-        b=k/xVzeX1gfwiaAjwJ6TfxTWfFkS7LslFu62VARB/K7fUzKKKfJ2ZNePfCGFM9zsuSi
-         K8tttYBpqVaeOt32KSsCIDw0cr1x+4SzQ4CIOKE7YydjGTv0eTOWYAznuhej9eazcedT
-         xZ+SLWPGMbYUn43xjwbyLp5hBfLvQA3TaRpqW+8LIjuKpa8SLmaAVD1R6zXQsj+C3J9n
-         OrM4ypweOWJ2imwuWN1U7VHCFbAoryd9h1ytJb423NItmlDIkSZNHjj0zDWnPk4lcEsN
-         mj1PXprlnR5xeP/WB9Wqu8jeXdUILJiV7ZxPRrZyhrP1ZMxFOLuca8xCAMMJYkR9eBnD
-         0fDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712695578; x=1713300378;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i43Qoe3uynySrUsRFuf2GYuYz97ru+fsThJj/fZfzpk=;
-        b=suu9mhmM0IY06C+mBXEro8G/v7Zq+BzKXlz97EH5BEfCwjBSn8HYRY/apC4m0SK13P
-         AdRzOIdqevg8CQjHwetJEMf3AqppeLmnJ45NeJa/Q6JKPcAtlHeH36Kp7nRIXY7wGK4k
-         tuqvfpvN1ZxeoaSHG2JphrUxYP/xsTAPiJpy/WohpASTM0wY4M3DsOImyq/oSKedq7x7
-         7wwFXIdwqLAe5S3nTiXkMp9rWNPQ7v9i/2vTv69hORjO3RSgC52x9wM1CesaIU7Xwba4
-         ITs9kdZkAZdDDgJWZVf7AB6jqHUkdvM155s2exEaJC94ecoJCDxRhXMEfVGIR3bcq6QD
-         Q8hw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8jJRymixKiFfeK9t/b1jMFWB5AJdudWc3O3k4jPteEIieeH2M4LwJ8Ju6Ad27EMjwJvHMt3qVrAIMoqat7vZVjQDVYQz2vne2Inis
-X-Gm-Message-State: AOJu0YxIjN8U1DfkspejXnYPqKCaRYHpvVgi/FI9CAkFmMlqitzo/5hp
-	5YwxOmLA35+UxViXMCZYUAwLJK2rwTBbh9GQWcf+Tc0NZQJR3SvYaEEmR/oiYoo=
-X-Google-Smtp-Source: AGHT+IEVjpkHhTrvTCwgAGLWn5pfP5EWuqX0zQ5BVYZj6xofDz5oktA9j+XSpVN8O/GHhTwaZy3q+Q==
-X-Received: by 2002:a05:600c:1c8d:b0:414:8e7:cd60 with SMTP id k13-20020a05600c1c8d00b0041408e7cd60mr507040wms.8.1712695578080;
-        Tue, 09 Apr 2024 13:46:18 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id l23-20020a05600c1d1700b004163ee3922csm43467wms.38.2024.04.09.13.46.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 13:46:17 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Yong Wu <yong.wu@mediatek.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] memory: mtk-smi: fix module autoloading
-Date: Tue,  9 Apr 2024 22:46:15 +0200
-Message-Id: <20240409204615.83928-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712695620; c=relaxed/simple;
+	bh=QTM+LP0YD0A7dbv3jscQrPsB8DT7gPc3um5gzm+C+tI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p8xr7AZ2ZHZecOU1gUdp82ENhUIOoVxiePUWSDvR2i7fvx2H5/35RFX4ZnE+vbus+UD1034LtQzQaGu5mxGSYIyieAJF0B2IfA3jXJc7HTDn6elSrJQcSiDC74DZc2E7xOSd0LYBHmlyHH5zmAcWPsucA3sgyhKZ4RJpNFie30s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from phoenix.fritz.box ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPA
+	id uIMXrvVZ9defduIMirCrSi; Tue, 09 Apr 2024 13:46:49 -0700
+X-CMAE-Analysis: v=2.4 cv=GuaJ+V1C c=1 sm=1 tr=0 ts=6615a939
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=XJTnSpgKjpJfBdNX:21 a=1T6qrdwwAAAA:8 a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8
+ a=OU3_bkaUkIPW1OEudewA:9 a=pdM9UVT-CToajMN3hxJJ:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=UObqyxdv-6Yh2QiB9mM_:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+From: Phillip Lougher <phillip@squashfs.org.uk>
+To: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org
+Cc: Phillip Lougher <phillip@squashfs.org.uk>,
+	"Ubisectech Sirius" <bugreport@ubisectech.com>
+Subject: [PATCH V2] Squashfs: check the inode number is not the invalid value of zero
+Date: Tue,  9 Apr 2024 21:47:23 +0100
+Message-Id: <20240409204723.446925-1-phillip@squashfs.org.uk>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,35 +38,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfL/wfjlBWDoeFH1N6AfOORQApCtH1tdsbN+46ujuZyxFfgxQ1pKDNuV9an83pXR24MCs0k4vZl6AeSdj/UQ9GIv8fb2nfc+rB1YO58nBcd2pX/0ILyBw
+ wKom7pWc72NgjOKBHB49bYI8m6N4ZyRhk6IQKiAbySP06hTGkceA2D0qyKF9uGFWNl/Bt602NJNsbpEy78AjZTkeeqym4BXrVFQHH4JqbnRb5s3hDYNcSMSR
+ /1esuSxj6FTtikF5dc2vfn0o7aY4FLhAVjSKfyYw/6SK/5GenX/OdRagm50twvZRpbzVwvZb5oFjSThat45jww==
 
-Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-based on the alias from of_device_id table.
+Syskiller has produced an out of bounds access in fill_meta_index().
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+That out of bounds access is ultimately caused because the inode
+has an inode number with the invalid value of zero, which was not checked.
+
+The reason this causes the out of bounds access is due to following
+sequence of events:
+
+1. Fill_meta_index() is called to allocate (via empty_meta_index())
+   and fill a metadata index.  It however suffers a data read error
+   and aborts, invalidating the newly returned empty metadata index.
+   It does this by setting the inode number of the index to zero,
+   which means unused (zero is not a valid inode number).
+
+2. When fill_meta_index() is subsequently called again on another
+   read operation, locate_meta_index() returns the previous index
+   because it matches the inode number of 0.  Because this index
+   has been returned it is expected to have been filled, and because
+   it hasn't been, an out of bounds access is performed.
+
+This patch adds a sanity check which checks that the inode number
+is not zero when the inode is created and returns -EINVAL if it is.
+
+Reported-by: "Ubisectech Sirius" <bugreport@ubisectech.com>
+Closes: https://lore.kernel.org/lkml/87f5c007-b8a5-41ae-8b57-431e924c5915.bugreport@ubisectech.com/
+Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+--
+V2: add space between "if" and "(".  Move Closes: to after Reported-by:.
 ---
- drivers/memory/mtk-smi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/squashfs/inode.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 572c7fbdcfd3..fbe52ecc0eca 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -450,6 +450,7 @@ static const struct of_device_id mtk_smi_larb_of_ids[] = {
- 	{.compatible = "mediatek,mt8195-smi-larb", .data = &mtk_smi_larb_mt8195},
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, mtk_smi_larb_of_ids);
+diff --git a/fs/squashfs/inode.c b/fs/squashfs/inode.c
+index aa3411354e66..16bd693d0b3a 100644
+--- a/fs/squashfs/inode.c
++++ b/fs/squashfs/inode.c
+@@ -48,6 +48,10 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
+ 	gid_t i_gid;
+ 	int err;
  
- static int mtk_smi_larb_sleep_ctrl_enable(struct mtk_smi_larb *larb)
- {
-@@ -735,6 +736,7 @@ static const struct of_device_id mtk_smi_common_of_ids[] = {
- 	{.compatible = "mediatek,mt8365-smi-common", .data = &mtk_smi_common_mt8365},
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, mtk_smi_common_of_ids);
++	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
++	if (inode->i_ino == 0)
++		return -EINVAL;
++
+ 	err = squashfs_get_id(sb, le16_to_cpu(sqsh_ino->uid), &i_uid);
+ 	if (err)
+ 		return err;
+@@ -58,7 +62,6 @@ static int squashfs_new_inode(struct super_block *sb, struct inode *inode,
  
- static int mtk_smi_common_probe(struct platform_device *pdev)
- {
+ 	i_uid_write(inode, i_uid);
+ 	i_gid_write(inode, i_gid);
+-	inode->i_ino = le32_to_cpu(sqsh_ino->inode_number);
+ 	inode_set_mtime(inode, le32_to_cpu(sqsh_ino->mtime), 0);
+ 	inode_set_atime(inode, inode_get_mtime_sec(inode), 0);
+ 	inode_set_ctime(inode, inode_get_mtime_sec(inode), 0);
 -- 
-2.34.1
+2.39.2
 
