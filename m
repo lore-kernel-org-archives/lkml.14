@@ -1,129 +1,64 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D96113541F;
-	Tue,  9 Apr 2024 15:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73FD132810;
+	Tue,  9 Apr 2024 15:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676497; cv=none; b=ifc71VwP9uofLxvHBrQzQDiHgrDTfmxmf98JLtv3NUt/2Woovj6LsBB6eMYTNVzVVZFlidK9A/oeMWR2fLm2+f7V++5ULMfuPxwMu3y9mo8o+h2KOGeA/TAeYRS9GTLTBrr5DWM8LzrZxmau0RDJn5YDiIX/PKHHFiM6X9EIiEk=
+	t=1712676552; cv=none; b=XLQDJVt/KTLA7Q/QHWTXiRvMPdsu+Jz5s+ePUyrP0qWAP2kuk0pFJujV0TZT//s59IpvXdozOzggDC6hwUrjHwKg60DchOcnKhOrIlim6F/us9oDFD4ReA0JE6xWJTbEy4rpeZm+CK4BjgcQoDlQBpF3Q67bgl7mWzLESZA/LbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676497; c=relaxed/simple;
-	bh=5CBoTmLG4y7e/KRyazSSY1LYpq2J5NObpY/pXkbyRWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dX78Y257OvBpAqjQpbuzPUn7IRQjU+Gfqkpt0MGMXwlCVsLGDJdQ6z0YeyJ4sgAgI+Fzv/fLVut8xh2TRKUvJYSUzrP3P+RdM3usedXCFEzsi+w/3TCEf2Yr8JjiSldOwjVRREPPfJuA3xxBmOv7oG15i+xmXwV5kYC+je14mV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-617ddc988f5so45721007b3.2;
-        Tue, 09 Apr 2024 08:28:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712676493; x=1713281293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9fHLaOg0xQHrvlM1IV1UTtnZ4u0DmXFhb6dRTtO4eE=;
-        b=TSAgnPt+H85F7Om0hUUhfEv+n9CNj7eugrFT1uTkf/7nLZRWnQ6UCs/kMQzfuhdxjL
-         XMy5Qri4yV5gZYeFHDrzYAYb7kzG/EapSX9jo91oLZYOfY2WvbbPxiAVPTLc3Nw3Ga6s
-         umq5Wv+CHuIWefh3DmPyb4NKFcyQWt1WqxqCO9py3zrkG4w2sGe5D2LluxuUtuA1gIRC
-         SZir9sEABstTkvOSQij6msr8G4pGr9zwZL6Dh22LaJovdt0lm8FyW6Iyd9oNAiUQZRos
-         Ht1UPBlHqTkHInziqavmmfGBYckL8zA6YIgluDYIVhOSYBza5tPYDIIOCqHWODoYnFrg
-         K2Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhWKcOpKHsSyjaMdfcym8qov+V5l9VvdB57cC8obQXUXL19s2D5BaPQsyyj5wvkWmh1r3hAPfZHD3i7/IYEcFJ0VKhiQOsRI6ORZGQwRnRc+LPWPRxoDHVPHMNsANxmMMKgudD6StHY5VF5RyghdBmmWXcCGiDVWe3E1purju2r7hSc1/39sPozjuowWLxwJpuW2F9ZtonHW1UxQkZ3v59uvEF
-X-Gm-Message-State: AOJu0Yy8gTuKAHRs3VSr6FJJ2uvjKXNnF0AX3MSPGOzfpjAZ0zeBAPTR
-	Ie0ScHNzhUzNnVV76EMDA+DrJwtD/k1FkSyD9db+qiviW4UD450uPERBL3ITqOk=
-X-Google-Smtp-Source: AGHT+IGEdiWWT0vLFsfDZbjn7QIX2MQqmNy+Wk/VC1Hli3HWTQZo8BsD8oiAyaxT0pIEAgpjhIex/A==
-X-Received: by 2002:a81:7b85:0:b0:615:1dee:6b0e with SMTP id w127-20020a817b85000000b006151dee6b0emr11379477ywc.39.1712676491686;
-        Tue, 09 Apr 2024 08:28:11 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id jx4-20020a05690c380400b00615bd0701c7sm2206364ywb.118.2024.04.09.08.28.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 08:28:11 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso6157781276.0;
-        Tue, 09 Apr 2024 08:28:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXk8AV9QMHJtuhhi7TayLP5vDD2j7F+AQI0+C5m8FgMfIqPIrsCZCgvWsmI2XZ1M/4vbDq/F0OTeyMxQRkd6XoqhEjYoHFuy4Yo0nsAZh/UfpPA2vBnrwxGFejEovwY3JIucM7V7kqBq3gJE9oO78mD+f1MaRBIETrcG2IL84RRFQJweOxvAq/amNE54z1IZBD0mJI2P2TyK4+SvCCT/nNrZhxQ
-X-Received: by 2002:a25:a249:0:b0:dcc:56b6:6606 with SMTP id
- b67-20020a25a249000000b00dcc56b66606mr69104ybi.40.1712676490322; Tue, 09 Apr
- 2024 08:28:10 -0700 (PDT)
+	s=arc-20240116; t=1712676552; c=relaxed/simple;
+	bh=Ovk2lUwjKUquZfwSJWiaIX5okILvbbqLtD2JU+sKtBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DWiY4efN/4drZ41XveJCtpXZi+9uNlTYMfaIKGaF0dJcVTezRasdtrIlMC4DXjKtNRcBKc1/2DjujI+1Aa3+x4gsK+0MC8Ib/dPnyKjE6MaMzsly6tFUYYt9Lu9LOz2Qzw6nB/hMCW3cUAEAz/BimzM5MsA79ibHQYglhoZ3z1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OLNfYIny; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OLNfYIny"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00B7C433B2;
+	Tue,  9 Apr 2024 15:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712676552;
+	bh=Ovk2lUwjKUquZfwSJWiaIX5okILvbbqLtD2JU+sKtBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OLNfYInyzbhsqmRMj/3UG1QI0lozVIA4uWkNe/Hi2oZGow6UfdzOXiclixq2ehR9Y
+	 qovYUtwIkplTpxtXhZFvsqFHakOxeax2VoKXgcATs1A0fEted1/KJF3AUD6BrEqlk3
+	 P0hANRCvsCu+YKxyZ+c2PT6prHysJrynCz9VQg3M=
+Date: Tue, 9 Apr 2024 17:29:09 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: mka@chromium.org, frieder.schrempf@kontron.de,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Fabio Estevam <festevam@denx.de>
+Subject: Re: [PATCH] usb: misc: onboard_usb_hub: Disable the USB hub clock on
+ failure
+Message-ID: <2024040940-resume-polygraph-5800@gregkh>
+References: <20240408151700.1761009-1-festevam@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com> <20240409-rzn1-gmac1-v2-4-79ca45f2fc79@bootlin.com>
-In-Reply-To: <20240409-rzn1-gmac1-v2-4-79ca45f2fc79@bootlin.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 9 Apr 2024 17:27:58 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX-F8LXWx=Ras4f+Dt_r485HKjRDLydDXZsnZBW8HJzxw@mail.gmail.com>
-Message-ID: <CAMuHMdX-F8LXWx=Ras4f+Dt_r485HKjRDLydDXZsnZBW8HJzxw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 4/5] net: stmmac: add support for RZ/N1 GMAC
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408151700.1761009-1-festevam@gmail.com>
 
-Hi Romain,
+On Mon, Apr 08, 2024 at 12:17:00PM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <festevam@denx.de>
+> 
+> In case regulator_bulk_enable() fails, the previously enabled USB hub
+> clock should be disabled.
+> 
+> Fix it accordingly.
+> 
+> Fixes: 65e62b8a955a ("usb: misc: onboard_usb_hub: Add support for clock input")
+> Signed-off-by: Fabio Estevam <festevam@denx.de>
+> ---
+>  drivers/usb/misc/onboard_usb_dev.c | 6 +++++-
 
-On Tue, Apr 9, 2024 at 11:21=E2=80=AFAM Romain Gantois
-<romain.gantois@bootlin.com> wrote:
-> From: Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.com>
->
-> Add support for the Renesas RZ/N1 GMAC. This support can make use of a
-> custom RZ/N1 PCS which is fetched by parsing the pcs-handle device tree
-> property.
->
-> Signed-off-by: "Cl=C3=A9ment L=C3=A9ger" <clement.leger@bootlin.com>
-> Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
-> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+This file is not in the tree for 6.9-rc2, can you please fix this up and
+resend?
 
-Thanks for your patch!
+thanks,
 
-> --- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> +++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-> @@ -142,6 +142,18 @@ config DWMAC_ROCKCHIP
->           This selects the Rockchip RK3288 SoC glue layer support for
->           the stmmac device driver.
->
-> +config DWMAC_RZN1
-> +       tristate "Renesas RZ/N1 dwmac support"
-> +       default ARCH_RZN1
-
-Why default to enabled?
-
-> +       depends on OF && (ARCH_RZN1 || COMPILE_TEST)
-> +       select PCS_RZN1_MIIC
-> +       help
-> +         Support for Ethernet controller on Renesas RZ/N1 SoC family.
-> +
-> +         This selects the Renesas RZ/N1 SoC glue layer support for
-> +         the stmmac device driver. This support can make use of a custom=
- MII
-> +         converter PCS device.
-> +
->  config DWMAC_SOCFPGA
->         tristate "SOCFPGA dwmac support"
->         default ARCH_INTEL_SOCFPGA
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+greg k-h
