@@ -1,141 +1,125 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2103.outbound.protection.outlook.com [40.107.6.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD08B12AAD3;
-	Tue,  9 Apr 2024 12:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664386; cv=none; b=fhFD+2aRngxCnrh4lMkB+zXL95LhN9ysIw5fgkvCNkSVEqsmIG5P9b3bmHvN1SOU+iXK6ljcmpztmHjO8rWql7zi2uLqESVYTF7mP9dECLamK7nS8BaLcUsWxdahG4iI2uWwcMv7X4Vo9CQdKi/1X71FqRxiD3uxTqZTFI67fFo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664386; c=relaxed/simple;
-	bh=3AO53c9WLONX6THJEZDEWKPYefXDqN2JEENGhVOOsG8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fEo0qg0100Qbj2IKHqxZwlj4qWHYGs5cpXeOVlbX78Wo6ruHtC2fRgWxz4PI21qbIpxJPz9eHONrERFKOV4Rnqib+nfFdQIrdhqg/JiOeullQMrukh0/pDkxeW13reEAFs/LfH7iy3miruDCpZEu7f431iEHWUyYkZFQSXRu2Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NgiVxh91; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9741412BEBE
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 12:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712664388; cv=fail; b=Qpzy+puQOID+DSEzXAGVi9m3MLqGVUbGPt3175WCw+F+S3FfKOLnnXSapY+CqiLy0jVz++f9u7XpYXyWM/kvuX8Kt5DmMo4QqmlLFzwwJu4Zhq2HWjYIzLTdIkiC/ThWe+oAxTvLZ/kqFgn0nZm28sNdqsjxkQv8HBWZYWe7Wso=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712664388; c=relaxed/simple;
+	bh=h8gcV/p/aqOmdw/KcW17TmReXdCBgxLYAAOVYRWVZvQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SlGO5NCD5+1GI3yKos5y0+yqXH9GAGZkVhl1ONutiEcmjbFFk7bCd+LcgfP+G0vqcOvG1kSwqsqusXGVdMy4v8H46M3Yfp1IlMSEqyPnQ3u/TWlm0YPIiQLqTpXnfBDWUzRJ3sZ3A/UazsXsWuseEyHY7KUq7DN8MZS7OeSQwEk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bachmann.info; spf=pass smtp.mailfrom=bachmann.info; dkim=pass (1024-bit key) header.d=bachmann.info header.i=@bachmann.info header.b=aeV9EwvV; arc=fail smtp.client-ip=40.107.6.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bachmann.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bachmann.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NgiVxh91"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d895138ce6so25936351fa.0;
-        Tue, 09 Apr 2024 05:06:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712664383; x=1713269183; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B2e3wrJjk3kEfLUNGf9zPzelRPu7eNx73fHKPEVAegg=;
-        b=NgiVxh918xP91PR9FUwnS8ND0DE+fGfuyjGC7duih6kWsVJj8w+2PLA5S5zjIxwF4l
-         2RgjgM/AWE5WWPUwelLEXL+qP0647fy6QAwFY+tIL8QTfQmOYcGL1LaQduHnQBjSV6Ak
-         qZ11hQKBIWYorSFbQxKXe0Eq8tF5mU25//1HMpiblwwjGN8kJ3rkrQJqMbYrixtt/okK
-         iy1x5W+ngtJ2SEjKxr110EAZfM0N/UiQs7tY/34HH6yg3BWNPIGq1jT5yuya4WZGPb92
-         1Vb22zMxJ+ltorLZteDpN8SJ+8OJVH2WUOPqJKyVhQH/mTYx1x6it7AyQ368z8z6maFx
-         FHfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712664383; x=1713269183;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B2e3wrJjk3kEfLUNGf9zPzelRPu7eNx73fHKPEVAegg=;
-        b=Ey9cWttVvXzd6YQIN/licnw5av5gppo9qADQMUg4LtTWSjHPm7VDF0x874bSHdcgjD
-         OVoKmPMcLHzDzwUm4OGVBnyjRc4A64zo8KZ8AlkBLeyCI+TclabuMAeKDyEukV00WX9F
-         35qopUUnGxIOya7rzp81IpKY4nmgm8hvSP/PoMhbpdhMlEwgNtd7EcJ6UHyqR/RxGcyL
-         Goyj741l6RDExo4/lfSTJEA35fGgSituvKg3lrx4llPQ+4SxBh9WVftHk9fx2oyo4/0p
-         feYSFPMiTSO8huP5cVn4pZMe6IEQlmZ88pceEnQvxNOUwbfUA+LbpOLlSZlMG9LDwTrS
-         vEZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHU6GPHqBMEyouL6qH7KyiSsjP9dcqy9ZZ+Ors2PFH1+7QnHw7rE8IXbKyAQu3kXOH7ZogRm8270cX3oZ5mGksWrZUy5j+46rXHeJTb4B+7b6Q94mI1Qes4mvzknBW5pJRFVjwhb/+C9V4E0aBh+2/msn/Wv9cbSKQzmTLwTn5NZRj46OspIZTCSjUaZMCKKEF7e5bPeSdxSW6SVqWfgcg
-X-Gm-Message-State: AOJu0YyFsZICz32jkfSiRa2MqdtQia9CMna976bFJCoxWPES3++lrlPh
-	u0q3JP9SnaT/7u058a8e6ug6F2fBJEbdmPmGdYgpyJReHqzwHM20
-X-Google-Smtp-Source: AGHT+IHXzOkvkWMebnxceaPO+vdv3DDY9CB9H7+Am5m9tWr9T3xJlv7LNxMmkT69DJVbV3CHB7waIw==
-X-Received: by 2002:a2e:890f:0:b0:2d8:2cd3:aa59 with SMTP id d15-20020a2e890f000000b002d82cd3aa59mr7789697lji.37.1712664382786;
-        Tue, 09 Apr 2024 05:06:22 -0700 (PDT)
-Received: from krava ([2a02:168:f656:0:bbb9:17bc:93d7:223])
-        by smtp.gmail.com with ESMTPSA id w15-20020a05600c474f00b0041668770f37sm8111100wmo.17.2024.04.09.05.06.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 05:06:22 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 9 Apr 2024 14:06:19 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
- probe
-Message-ID: <ZhUvO4lHn-xh3jDm@krava>
-References: <CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
- <20240404095829.ec5db177f29cd29e849169fa@kernel.org>
- <CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
- <20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
- <20240404161108.GG7153@redhat.com>
- <20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
- <Zg-8r63tPSkuhN7p@krava>
- <20240405110230.GA22839@redhat.com>
- <ZhQVBYQYr5ph33Uu@krava>
- <20240408162258.GC25058@redhat.com>
+	dkim=pass (1024-bit key) header.d=bachmann.info header.i=@bachmann.info header.b="aeV9EwvV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=irxXPvwvAPxEaquIz0y4bj98WPFA3cR7r6TD9qwoZaYIK/68OnVMDN2D22F4qXb+EBIbyqAnb94HTW77TJ+hvbhR0a7fuMKFS0Cn+0vXUkEgf1P5NjVHWoseUB7HFDeGukCE4RTXNt5aCFd0iw/UcGEnpcJYgXlMGxjKjcIuSnbh5iROwcreTOVyAQdLPmt3HWcySHiHej/0czKpTCOGZbECoYm3yi6g9CX8XuE+fjR5jlnH5Gisd5b5h8yfeyD+g2H486c9WkLQokD9PSZ7DMsJtCfgLcUaMgwBdsekQbW+5siLfrxztFaqaADHp1sC3pWV+goafmezY+oO5hTVLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sbRWLz7Bb5sO3Y4RuHdIktFrBAjI7D16udTJMmrnh60=;
+ b=A+dxiLma6v67zNGYBAaH650r64W49IbKKiDjmeKM25qOUosdqkFebaIBXX1JmUOuslVPIsEI/YshrJG54gMlVS9LbxOUM6I0E8x/kzjecwcHLNKHmskEGvY4O5JRJpsA4y8iycZr7gWKhoxgDNJOtg89r0dsX0JW2V7WAuDdOjkXU3u/SvGV3JyjjmhItAe6eI1j6rPZRZGUfCrHbutx1CV3pK40n5f2T+BVzpHejXQO3er2FFmT+CwIfbswF4oI0/gc/usIre4L2zGZ5me0/Hd+JusohfykHI/zDLPs+YHHg2ChRtGIa0LEmfx/rglxRTHoL1fNSTJcVXpqX/DEBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 185.67.228.71) smtp.rcpttodomain=vger.kernel.org
+ smtp.mailfrom=bachmann.info; dmarc=fail (p=quarantine sp=quarantine pct=100)
+ action=quarantine header.from=bachmann.info; dkim=none (message not signed);
+ arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bachmann.info;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sbRWLz7Bb5sO3Y4RuHdIktFrBAjI7D16udTJMmrnh60=;
+ b=aeV9EwvVtxdNDBQgk3L7W2fddwcJ7PU586LnjwsTeWwzrKf3ipvrahDLEUmVNA4l9jFVW6PXwxBaUbbcKbt8GvoOX5HzOwbqPynvveWQItP+DKLfIOXNloW+VmTldW3YED9uzPotVcPRZOuUp4Y8O6NjpRcQTu3Zfo90YnY1bQ4=
+Received: from AM6P195CA0026.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:81::39)
+ by AM8PR05MB7314.eurprd05.prod.outlook.com (2603:10a6:20b:1d6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Tue, 9 Apr
+ 2024 12:06:22 +0000
+Received: from AMS0EPF0000019D.eurprd05.prod.outlook.com
+ (2603:10a6:209:81:cafe::53) by AM6P195CA0026.outlook.office365.com
+ (2603:10a6:209:81::39) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.36 via Frontend
+ Transport; Tue, 9 Apr 2024 12:06:21 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 185.67.228.71) smtp.mailfrom=bachmann.info; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=bachmann.info;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ bachmann.info discourages use of 185.67.228.71 as permitted sender)
+Received: from webmail.bachmann.info (185.67.228.71) by
+ AMS0EPF0000019D.mail.protection.outlook.com (10.167.16.249) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7452.22 via Frontend Transport; Tue, 9 Apr 2024 12:06:20 +0000
+Received: from ATFKPCLXPAFO.bachmann.at (10.204.124.241) by
+ atfkex03.bachmann.at (10.10.10.31) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 9 Apr 2024 14:06:19 +0200
+From: Pascal FONTAIN <Pascal.FONTAIN@bachmann.info>
+To: <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>
+CC: <afd@ti.com>, Pascal Fontain <pascal.fontain@bachmann.info>
+Subject: [PATCH v3 1/2] misc: sram: Move probe of sram subsystem
+Date: Tue, 9 Apr 2024 14:06:04 +0200
+Message-ID: <20240409120605.4138472-2-Pascal.FONTAIN@bachmann.info>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240409120605.4138472-1-Pascal.FONTAIN@bachmann.info>
+References: <20240409120605.4138472-1-Pascal.FONTAIN@bachmann.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240408162258.GC25058@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: atfkex03.bachmann.at (10.10.10.31) To atfkex03.bachmann.at
+ (10.10.10.31)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF0000019D:EE_|AM8PR05MB7314:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b639799-9506-4930-15ae-08dc588d780b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Pi9nP01jXltjWLPh/hDeAh1gUWSGRX/KnjmymOlXbiGGCgkcCUtMYMSnknRMKN7UPhReL61TccxYy2mIl5a/mPTr0rAILIkZdKakEhg/1pWdVHcoKB6KToEyoceWe/Qjy6HxT+BD/50Q6Nmm7I2gwd+kBnB9k4KmcCOsYH+gpP9bdLulYHstf4dpliefP0gW3H57sVAKuypKLPsQcL1O0JhZYGuetPDHWXY/6xS0m6X/g/HFKJpc/JcpfI7M6idQVDro2qdkdDrRBnrPLc2RE4lhOD4avgQxPubZCC+wO06a3/jUBRyIazTZMxNxflwgADtoMRL8dwiPGioPea28PrP8xd8mIzMWdItO3OqG4AuVN+qaE9G9+XieTF0PbIl1glJU+5tN3BaiBDIEFeRL6pVLIdG5t8owLbSUraltzdnZA+dhSJgo1+OgOpWc7zoRKQgq7YclFuxLBlzCpYPC5+WEVl4gSJzjEfa6cLkiEadYcuVVUGtg19oQVYuYMhE64NmtEqu4GzxDXRqYkhERWhaV5vqTHYW+AoY6l764VsrcneabqCKdojBxato8Vz0d58wU8d9MY7rxvq7eL+GG8yEEzwwejc+7NrD084K1D1IRFsI+K8xtkS0mShteN1JvZxc3LSdp7Pi5psFwoTBi/MF23vkoYCVOFQ4F0DrpWASx8V3OL+10wHgzdkVFJyq5OK7ViUMpjgzqy8QufXuuqpmPLOkYU39yMBQ0F1iL+QWNlTMS3N8bxT8k1H2BZA4o
+X-Forefront-Antispam-Report:
+	CIP:185.67.228.71;CTRY:AT;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:webmail.bachmann.info;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(82310400014)(376005);DIR:OUT;SFP:1102;
+X-OriginatorOrg: bachmann.info
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 12:06:20.6611
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b639799-9506-4930-15ae-08dc588d780b
+X-MS-Exchange-CrossTenant-Id: e3bace4d-d2e7-4d8f-afb8-152509ee3f1a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e3bace4d-d2e7-4d8f-afb8-152509ee3f1a;Ip=[185.67.228.71];Helo=[webmail.bachmann.info]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF0000019D.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR05MB7314
 
-On Mon, Apr 08, 2024 at 06:22:59PM +0200, Oleg Nesterov wrote:
-> On 04/08, Jiri Olsa wrote:
-> >
-> > On Fri, Apr 05, 2024 at 01:02:30PM +0200, Oleg Nesterov wrote:
-> > >
-> > > And what should sys_uretprobe() do if it is not called from the trampoline?
-> > > I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
-> >
-> > so the similar behaviour with int3 ends up with immediate SIGTRAP
-> > and not invoking pending uretprobe consumers, like:
-> >
-> >   - setup uretprobe for foo
-> >   - foo() {
-> >       executes int 3 -> sends SIGTRAP
-> >     }
-> >
-> > because the int3 handler checks if it got executed from the uretprobe's
-> > trampoline.
-> 
-> ... or the task has uprobe at this address
-> 
-> > if not it treats that int3 as regular trap
-> 
-> Yes this mimics the "default" behaviour without uprobes/uretprobes
-> 
-> > so I think we should mimic int3 behaviour and:
-> >
-> >   - setup uretprobe for foo
-> >   - foo() {
-> >      uretprobe_syscall -> check if we got executed from uretprobe's
-> >      trampoline and send SIGILL if that's not the case
-> 
-> Agreed,
-> 
-> > I think it's better to have the offending process killed right away,
-> > rather than having more undefined behaviour, waiting for final 'ret'
-> > instruction that jumps to uretprobe trampoline and causes SIGILL
-> 
-> Agreed. In fact I think it should be also killed if copy_to/from_user()
-> fails by the same reason.
+From: Pascal Fontain <pascal.fontain@bachmann.info>
 
-+1 makes sense
+The sram subsystem might use the dma-buf subsystem which only gets
+initialized in subsys_initcall phase. Because of this we move the sram
+initcall into the device phase.
 
-jirka
+Signed-off-by: Pascal Fontain <pascal.fontain@bachmann.info>
+---
+ drivers/misc/sram.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Oleg.
-> 
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index e248c0a8882f..632f90d9bcea 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -461,4 +461,4 @@ static int __init sram_init(void)
+ 	return platform_driver_register(&sram_driver);
+ }
+ 
+-postcore_initcall(sram_init);
++device_initcall(sram_init);
+-- 
+2.39.2
+
