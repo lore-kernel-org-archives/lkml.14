@@ -1,125 +1,86 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6312E1D5;
-	Tue,  9 Apr 2024 17:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B4915539C;
+	Tue,  9 Apr 2024 17:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682735; cv=none; b=VYBjRbEqMPSIU8AzBaGXC6CBNXQrBm0QZMxkyaJknn3JfClAZD93wcmtKT/uF6f0QHw6eQFlgxL/LKE2ScefDP4XLUPrQWCoqPZjhl17lv22I3QswAJtFZKTlmkRatl9lUgEfNWBr38GsHKeTdA8DMG+kii0lb17NUbowIeM2DI=
+	t=1712682844; cv=none; b=F+MAwZLqEfP3UyfQCRhaJIGk990iEikkC5NVq1eZadAN6YXx2nq6DyUQNJqfXDr5ILIisyrBV0BRemNObxjvJruCt9+yh9pDi5lcUWcrLjtx3nnqq67XQoRN5S/eK8hredTMkua2CgCN5N9jFcb/r2lasQoik92+Zcgb/vjg9Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682735; c=relaxed/simple;
-	bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fA5DTzNjVWzDlA+CySAg8GT2+JWRYfFXJXALXrkoBHHcD8inBsDSU005AGQHqL0Nwvxil90MwNgH2t3LjtZFniPQcrbEFysNSav/WZxsHuIUd8IBYK9I1ovLB9h4IQ2pFYjBwqBMdHuuzplfNBIqHnTsmgxUr3c2QJ5HHkqZwcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgpnfeFN; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712682844; c=relaxed/simple;
+	bh=eLVIl7iYW4+J9rJxM3YqwKEmIf8e95ULiezgmaMUibw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=U7m+g9fXm6QhbjuEpFcgaQ1MeRtLi21h2oUeMkm3o3JzaxqvEdIVpOpamoPua+Szj/PBYkoKkOpj0asuEr8C7qlaeJrdIfbPCa8tv6Ya8MhvH3/FSrf4OmevBP/Md75kPw0sOzPrXmSRkSb3Mw0lVAVjrsso7nA793HenO4R9B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Symclgfc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgpnfeFN"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso7900714a12.2;
-        Tue, 09 Apr 2024 10:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712682732; x=1713287532; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
-        b=RgpnfeFN5RTt9XLtfwViH4g2S0SpXVv5rBHVXvdfPEP44G0gSYJrkp2+2pDyn3CjBK
-         GSy7G6JE1PzB4haSCZ9VqMIKOh1kRNASZrZ5rp7jDWIEEqaDwqwYDgnA//5XS12/iCYE
-         LwB9cDmz0V3CBq7w3sHHcaLtF2m8nFQtbc5+IgJkEGP8rGX5e8+Bcwg+0DrS8ZkWdVEX
-         AgrJR3B27DHM+VWIugiV1URbz+O9Ug8SS2CNwJXYd8wtwwhIFr1GS85tCPuTerMQ4V12
-         gdx/sX3yadrDm4nsjsP7Tk8xNVmb6h4G7MVftJbEGbci27cOX+eZlAZaEW9y6DWbzDlL
-         NayA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712682732; x=1713287532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
-        b=k/YQ3z4n9xQd+huRLLWpp9G7k7zaHxIvH4vklN1UZNMrwcVP2bZ8fufJmP9AeNXIqD
-         R7q474k+ybnLqtBAs4ckFGxDGshJxOIXGCdWRt+ZNpvQtMB/36dJNcukkw00dJfNUBRR
-         pAgBOJdUusQO+beHVm61uetnjs7o2NauVleUyqG9xTclayMxo2p7F0SjztDP5YYbaXP7
-         2s66TN5Q9B84/zQa2Y9ERoulIz7Azk695DwaZA4oATW65F0AnN8KCyY497DfuPxQf7A9
-         gIvqpVxpHkgN/+uNJxQiB30E0DaEV3gWIc3OJu2eyOcCK6gEmQsT6qc1TSHjryLETvQw
-         YNEw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8l1o7VpMMEyLxFnDr/zdUZN3pvYzF4HimJwwdgmsUpllBS7KGLt/xmUgok76kFLE0agXaoLnSsSqn50kjIWx6S46/R65sdPV5hlFniS/q7DwMFXV1B5KX3aEXkEeb4kBbXPNz8FxgQKlpKl71aI3/pXmg1UBFH+SO6gz/w4PfyRgxJboIh4o=
-X-Gm-Message-State: AOJu0YybLNUc++3WQ6kjbMugMrtOssRSU/e+SQHdNqEqldc420PVsLQ3
-	sTW/mmnqs6S8TW8JMUpnEsWg62c1s0Nj4OBkPq3eqzcozE84vuSQtOrOAsSRRzfdiVUJ7aBoxk+
-	872PVo/jL6Jsh5wRrfNKPphoWOag=
-X-Google-Smtp-Source: AGHT+IHDsDzpN80Q+dT8Z1O9ekHUAbkM8i2z9y0uAzBM2Co9XDpeUNjqG0qPrG/s7Ymg03pkuU0oARufzvBH2JCkaX0=
-X-Received: by 2002:a50:c305:0:b0:568:b622:f225 with SMTP id
- a5-20020a50c305000000b00568b622f225mr85452edb.30.1712682732145; Tue, 09 Apr
- 2024 10:12:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Symclgfc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D516AC433F1;
+	Tue,  9 Apr 2024 17:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712682843;
+	bh=eLVIl7iYW4+J9rJxM3YqwKEmIf8e95ULiezgmaMUibw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SymclgfcWVlic2Xo9YSpojdep8sD9sMRPugZF6LFfE2883Nq40JAB53fA5/6hzp9Y
+	 uWTNQ8wCXZ8Wc7nO0XqoofySluyiJSm127DmOuYYGQ/X3b+Z2CDD/pSu774EultFi7
+	 O3q8k2JBQTFAsheXDuaaTMOhTGfKYzEEaGfsV4XUJkhwpQZ/tGlU3Tfhd9wjN/ndEh
+	 NZejBTbED3PU42oWTX9BMCga6rgtgt2D5x03QiHuVp5AuETc/amP5vJGvlwCZMbyGi
+	 kLOD3QP0qiGdedKTkw22UgqDEIq7AY4sOv8lu+MwlcC1sCGefo+zRqXFrlcrwrV1KW
+	 53j+67mlzCoqA==
+From: Mark Brown <broonie@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-sound@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <6cdbaf4afcf4d2059b257f6cb3a8a61bf5e17688.1712676714.git.geert+renesas@glider.be>
+References: <6cdbaf4afcf4d2059b257f6cb3a8a61bf5e17688.1712676714.git.geert+renesas@glider.be>
+Subject: Re: [PATCH] ASoC: codecs: Rockchip on-SoC codecs should depend on
+ ARCH_ROCKCHIP
+Message-Id: <171268284155.51610.12348972415810451410.b4-ty@kernel.org>
+Date: Tue, 09 Apr 2024 18:14:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
- <20240405-topic-smem_speedbin-v1-3-ce2b864251b1@linaro.org>
- <pncr7ecf4eir36skul3iwt2nf5bpuwd5zjfzzfwwnxjwe4hoes@6z2xe54crijp>
- <d8a2ef87-f29e-4bdb-a9b8-591b8bd5d2b2@linaro.org> <tkcbl2iwcy3feoggbk737gx32qsxe5p4ad6lfrujy2pazccrhm@kif3guuzay6h>
-In-Reply-To: <tkcbl2iwcy3feoggbk737gx32qsxe5p4ad6lfrujy2pazccrhm@kif3guuzay6h>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 9 Apr 2024 10:12:00 -0700
-Message-ID: <CAF6AEGsg2xCCC27t_Gqu=MMQ6tckVw=Zj90p4x7EuOm+VKA=ig@mail.gmail.com>
-Subject: Re: [PATCH 3/6] drm/msm/adreno: Allow specifying default speedbin value
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14-dev
 
-On Tue, Apr 9, 2024 at 8:23=E2=80=AFAM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Tue, Apr 09, 2024 at 05:12:46PM +0200, Konrad Dybcio wrote:
-> >
-> >
-> > On 4/6/24 04:56, Dmitry Baryshkov wrote:
-> > > On Fri, Apr 05, 2024 at 10:41:31AM +0200, Konrad Dybcio wrote:
-> > > > From: Neil Armstrong <neil.armstrong@linaro.org>
-> > > >
-> > > > Usually, speedbin 0 is the "super SKU", a.k.a the one which can clo=
-ck
-> > > > the highest. Falling back to it when things go wrong is largely
-> > > > suboptimal, as more often than not, the top frequencies are not
-> > > > supposed to work on other bins.
-> > >
-> > > Isn't it better to just return an error here instead of trying to gue=
-ss
-> > > which speedbin to use?
-> >
-> > Not sure. I'd rather better compatibility for e.g. booting up a new
-> > laptop with just dt.
->
-> New speedbin can have lower max speed, so by attempting to run it at
-> higher freq you might be breaking it.
+On Tue, 09 Apr 2024 17:34:56 +0200, Geert Uytterhoeven wrote:
+> The various Rockchip embedded audio codecs are only present on Rockchip
+> SoCs.  Hence add dependencies on ARCH_ROCKCHIP, to prevent asking the
+> user about these drivers when configuring a kernel without Rockchip SoC
+> support.
+> 
+> 
 
-Usually there are some OPPs in common to all speedbins, so picking a
-freq from that set would seem like the safe thing to do
+Applied to
 
-BR,
--R
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
->
-> >
-> > >
-> > > If that's not the case, I think the commit should be expanded with
-> > > actually setting default_speedbin for the existing GPUs.
-> >
-> > I think that should be addressed, although separately.
->
-> I'd prefer to have it as a part of this patch, but I'd not NAK it just
-> for this reason.
->
-> --
-> With best wishes
-> Dmitry
+Thanks!
+
+[1/1] ASoC: codecs: Rockchip on-SoC codecs should depend on ARCH_ROCKCHIP
+      commit: 9fd60615ad2835d8e0081fd2458721c8b994f28f
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
