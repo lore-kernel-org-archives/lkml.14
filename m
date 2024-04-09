@@ -1,186 +1,70 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600754BCA
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 03:39:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0E754BEF
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 03:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712633988; cv=none; b=AcPuka3SR5JB7OtWXYvRUm5Ol6BhHnUz44J1F+qzRiAdiJEpNNjiI1EvCLLI9Y7TDty1QhIwOROlbJyTKQ7a6dv5matBemT2PAY92k+7YBk4kFPanVJHo/j/a2W9MJnsdkhpDrYD1T735utEBX9LxzgLuUvTx2FfEzlFS0APaa4=
+	t=1712634012; cv=none; b=CaI2/UeyuQn5cJMEYohbcoF/MFMcHE0B+hkrsRwoNASePa4/uAfEHPNfvB2U0V4F6yk707gbuzDPo6pJOZcv80+W2OPNY3Y1C6TsdrJ6K3Ll14hzGlzwQHUisLDdtW6PPiloyg7HV93EII5FeRnsJmNoECO7PiZuzTKq6IKvN24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712633988; c=relaxed/simple;
-	bh=EZ2T9kzzpeOrUuGVLRbShAImR8PnmT1WmVOGSUHPYL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f3eiFGnfzJdVm6I96GjY1mlsxy9ZwKaN5PuMI3VFvW6xoIvckySxhAeHe3npgd+9a+ijCRW6DOy7HYxGW0V8P5bjLsOfyD8WbjyR6UDiJNAPiASeCPuILzOuWp2VXTCcwp6yn3EN2FFk1te3HhWz2jzxfHmEbgFER6mwglE23jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aWvnMbHK; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712634012; c=relaxed/simple;
+	bh=fFF78VPngM7y/us+qOuPjusOESrskdwFUvjmvDF+A5w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2dkd0MqMM7DL+cRqX7ZXFZzowH+SMtVMw6AeyaxrZ7t0CF/DduQFu428eP623D6LtQPngRXkIBUptfQZPmdoJpC7EykezpqVKpbI25gauOg3JDCMONP4SNuX8G57HO4I5IrqqKpzcMFDa+teEuYCG4cQn6kh8vftmtZSU4Kdtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IybSXFxI; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aWvnMbHK"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516b6e75dc3so6492629e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 20:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712633984; x=1713238784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RKPZzs2J4lIrxwzL7Z1BludJY/XdSD/M6/ANxlIo6/0=;
-        b=aWvnMbHKE0MGGIeoM1pwulgW1s0Muup4TuzdwLMJVccdlTbOSkxAcXwmfFupLApytw
-         jQ4yMp+KqwekOEpBgwiNVCzjha/0MztfpSIUVqptFeBWoZh8A5IbhywdB9ZD3lROYcUL
-         q6vDkpzw91gq0Q33n/O3XYtncm34njSP7H+7w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712633984; x=1713238784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RKPZzs2J4lIrxwzL7Z1BludJY/XdSD/M6/ANxlIo6/0=;
-        b=iicpzVBFcsU/NB6lcYR7wSWHup6pKmyYwlVeJ9DUECirOEtC94Qh2qhhqO4+LpPj1M
-         BiGKlH88vKBsWK65jHCodt2LiXGFBk2bDjnFzE1nCMPeWkVKKX0zou9+ZCtZFNIfNBm0
-         CT10VJf3SH8HYjj6E+tU2AX6SNQ5KY56a6hKv8eDOh6hQvvv9NOiK0FSYJ5HsFHS3zG8
-         8lr7OY2LvQSd7uuibPqjU9FJbxoTcHGResOl0NOneu/5Z2kBHyBCA/T3p1rIxDw/42FU
-         0ebKluybIWT+BWpqOaDpAG1T8P+em1jbKOUpvwOGuTEeeJOtR5CLULsQyTsWOMcyBGZv
-         Fp3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW18QlzzIBU2aTcR90eTu9gad32FqjLCNsqXBaED5vo198a07+C0I9GrdTpEVRIxIP2evtScmxOPydyvxc2xMjPZ5RFZ3f9MZ55Sr5A
-X-Gm-Message-State: AOJu0YySOwfYTbn1V7sG5cuACYqoIbgv8+mc8cFAINLpz/c54CCpJ3YU
-	AjU/I0kC4x+rrfRPXBJcPYGk+mY+oFC7dMCaZI56q/4azTDmN9UtRG4uRh1M/8aky3RpZ1qrsT9
-	rygDJdqTA5+Zt3m2uBMWB1Qi/QL4kXK/PSFK6
-X-Google-Smtp-Source: AGHT+IFba+BrwCMiOouL0a7dqzF+zOfyVTmCHkiqgDT24USb8iVyp548tZZRYidWDUI6/w60evjxT4xx96AaXSCW7qY=
-X-Received: by 2002:ac2:43b6:0:b0:516:c099:e785 with SMTP id
- t22-20020ac243b6000000b00516c099e785mr6549819lfl.20.1712633983546; Mon, 08
- Apr 2024 20:39:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IybSXFxI"
+Date: Mon, 8 Apr 2024 23:40:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712634008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pJRkboi1XfUhwyGSGsoCmSy3Kg0vHEU0PUHEGOzc2K4=;
+	b=IybSXFxIG7G4z7NZL+lJGPg3IP8nE6mX+nildWlX3cc2xvghUUnsiz25bQ9ZJHtE/jiBQJ
+	oOjHPj4AbaXKZ77GaqwLNwsodiSXm9Jvw9uh5krnkCXS2gJyMAjONervwTyIj//5sAqmTC
+	54/zO9xkgRXwbddjtU2UOjvsrrFfF9A=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: colyli@suse.de, msakai@redhat.com, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, akpm@linux-foundation.org, 
+	bfoster@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	jserv@ccns.ncku.edu.tw, linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dm-devel@lists.linux.dev, linux-bcachefs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 00/17] treewide: Refactor heap related implementation
+Message-ID: <i2qewo34mvw7bizhefwz5s3fc4nlc4zk7eijglkieuci5iradm@zgcks3u5omhw>
+References: <20240406164727.577914-1-visitorckw@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404081635.91412-1-angelogioacchino.delregno@collabora.com>
- <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
- <CAGXv+5F9rfTVDExKSCF7fBKwR+HijNzFYE6+4aHKw3ZP81DG9w@mail.gmail.com> <5e385c2e-6509-4347-96a5-4606b32d20ff@collabora.com>
-In-Reply-To: <5e385c2e-6509-4347-96a5-4606b32d20ff@collabora.com>
-From: Chen-Yu Tsai <wenst@chromium.org>
-Date: Tue, 9 Apr 2024 11:39:32 +0800
-Message-ID: <CAGXv+5HkKZr0tDPhS9qVs=Uw7YYpfFYaC2Qf4Suv7RznUNWVsQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
- support for board path
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com, 
-	ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240406164727.577914-1-visitorckw@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Apr 8, 2024 at 6:16=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 08/04/24 05:20, Chen-Yu Tsai ha scritto:
-> > On Thu, Apr 4, 2024 at 4:16=E2=80=AFPM AngeloGioacchino Del Regno
-> > <angelogioacchino.delregno@collabora.com> wrote:
-> >>
-> >> Document OF graph on MMSYS/VDOSYS: this supports up to three DDP paths
-> >> per HW instance (so potentially up to six displays for multi-vdo SoCs)=
-.
-> >>
-> >> The MMSYS or VDOSYS is always the first component in the DDP pipeline,
-> >> so it only supports an output port with multiple endpoints - where eac=
-h
-> >> endpoint defines the starting point for one of the (currently three)
-> >> possible hardware paths.
-> >>
-> >> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@c=
-ollabora.com>
-> >> ---
-> >>   .../bindings/arm/mediatek/mediatek,mmsys.yaml | 23 +++++++++++++++++=
-++
-> >>   1 file changed, 23 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,m=
-msys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.y=
-aml
-> >> index b3c6888c1457..90758bb5bcb1 100644
-> >> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.ya=
-ml
-> >> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.ya=
-ml
-> >> @@ -93,6 +93,29 @@ properties:
-> >>     '#reset-cells':
-> >>       const: 1
-> >>
-> >> +  port:
-> >> +    $ref: /schemas/graph.yaml#/properties/port
-> >> +    description:
-> >> +      Output port node. This port connects the MMSYS/VDOSYS output to
-> >> +      the first component of one display pipeline, for example one of
-> >> +      the available OVL or RDMA blocks.
-> >> +      Some MediaTek SoCs support up to three display outputs per MMSY=
-S.
-> >> +    properties:
-> >> +      endpoint@0:
-> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
-> >> +        description: Output to the primary display pipeline
-> >> +
-> >> +      endpoint@1:
-> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
-> >> +        description: Output to the secondary display pipeline
-> >> +
-> >> +      endpoint@2:
-> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
-> >> +        description: Output to the tertiary display pipeline
-> >> +
-> >> +      required:
-> >> +        - endpoint@0
-> >> +
-> >
-> > Technically the mmsys device serves as an glue layer for the display
-> > pipeline, providing things like clock control and signal routing; the
-> > device itself is not part of the pipeline, and probably shouldn't be
-> > part of the graph?
-> >
->
-> That is (only) partially true: in the case of older SoCs, the MMSYS can o=
-nly
-> connect to a single first IP of the pipeline, but in the case of newer on=
-es,
-> and especially (but not limited to) MT8195 onwards having multiple instan=
-ces
-> of VDOSYS, that really becomes part of the pipeline.
->
-> This is not because of the possible different first IP in the pipeline, b=
-ut
-> because of support for dual-interface (DSI and DP) that, in even newer So=
-Cs,
-> can be done with cross-mmsys (cross-vdosys, actually...) as some of those=
- do
-> have the two in different VDOs.
->
-> So yes, this can be done without the graph in MMSYS *in this precise mome=
-nt in
-> time*, but we'll anyway end up adding it sooner than later - and I'm doin=
-g this
-> right now, instead of later, because it's also simplifying the implementa=
-tion
-> so like that I'm "catching two birds with one stone" :-)
+On Sun, Apr 07, 2024 at 12:47:10AM +0800, Kuan-Wei Chiu wrote:
+> This patch series focuses on several adjustments related to heap
+> implementation. Firstly, a type-safe interface has been added to the
+> min_heap, along with the introduction of several new functions to
+> enhance its functionality. Additionally, the heap implementation for
+> bcache and bcachefs has been replaced with the generic min_heap
+> implementation from include/linux. Furthermore, several typos have been
+> corrected.
+> 
+> Previous discussion with Kent Overstreet:
+> https://lkml.kernel.org/ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu
+> 
+> Regards,
+> Kuan-Wei
 
-I see. Thanks for sorting it out. We had something similar on Allwinner
-platforms but it was never as complex or flexible as this.
+pointing test automation at it now:
+https://evilpiepirate.org/~testdashboard/ci?branch=refactor-heap-v3
 
-ChenYu
-
-> Cheers,
-> Angelo
->
-> > ChenYu
-> >
-> >>   required:
-> >>     - compatible
-> >>     - reg
-> >> --
-> >> 2.44.0
-> >>
->
->
+Coli, could I get some acks from you?
