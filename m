@@ -1,93 +1,99 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1886FE35
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC021EB46;
+	Tue,  9 Apr 2024 10:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712658912; cv=none; b=as/MPnJxawn1ObX/6aCMvUpIfghFAtMZaIxmu8pFb3ApGH6+5AP291ilnoHdvPa5u6IE4Nn3ubTvB6rzFNI8lkEngOXRaI2j4BRkJTc2uuk1MUJLpoGd6KcioOmubA0GeKC2QDJWJgH6oD1N5xxt63qIu8lARAmVyPEJeFWhr9U=
+	t=1712658949; cv=none; b=tpbUVzal3+ppzplFr+849cSaLQnoomBnKvtj7M30v+hi6Aok+OLWVaDA61pxWogTqhC34ohrIR/u9qie6ME45CCPqRSx+1tDwJwS88cUe3MlK5gcr55shwtjIbq/yTORFJCLilcV3gBnTglvloS+j6hGsVr2lgcDC2pzEAIBTCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712658912; c=relaxed/simple;
-	bh=1AHrXbIZ3eGQQR47I0qE8KEMGPbucn2qvMQSr69WzXo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DvH4O5ldnfuH8UtzgxzkRLYB+tjXN0MBVNl1mR1+mU2sYEJrH6N0B5a2WN7L9RUgXiT4tpdm9CVW+kgEJpLrFYfqCWspRVvn7E3RA2MDk+g+PxoShIhY6tON/Hd4xj70ACHpVJmQHctUoJpiV9WX3+UC+2AmH+AU09tkacNi6uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=Rz++QTeE; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712658949; c=relaxed/simple;
+	bh=VtU83v3DWvkdgwKB+G89/DK3CwaUjxGtmhjxn0puGsE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ver0O2a7yPSohgHutzDNssst6689gmdH6LqvJ6VZEbNc2nkLWbddwWoz+pgGY3ba3AhTdAQJ5dBly8aaw8VejiTg2fprOYdO+SSw/Uxzv5GN39PFhPWIE2Ot4JtJ24jar8wK6J3MdFE7xTE+szPqA04ikuILGF4XTMVph6mRF+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tg43mS9k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="Rz++QTeE"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a51a1c8d931so482961066b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712658908; x=1713263708; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PtYVHN7iPlZaeHuaYSOGLo5JJa2pbdnexsUotoq1x28=;
-        b=Rz++QTeE0vUoRsCBBv64iElqiMJx0ermxGPKf+uCzpXijMQXgwPAwyVQ5Hal5H/D1I
-         Fhmvxz/7J5XG5iE1w5DcWMksEecA1ogk4eg1yfVAP/RxMNiY1NMID6vmVZoErIKGenrn
-         gUtcUhG/O0//qwa0N6Ks5zsPq4VSQJ6Z8jmP7QuIaG5l/kBdwRILxzgnJY3RT/OKPEiB
-         xKRffs1slpKurTdRZIK6rEzyXFg9eoOaxjjz+sMa68eSSzKdvZKC8tQTrR7ClL/yGWNc
-         L349e7UH1TzfvyXIGnVHVuGrtYOKvNKZYqTWZLp0aQLxpymME9bA9jDp/c54pg8I/rgI
-         HZ4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712658908; x=1713263708;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PtYVHN7iPlZaeHuaYSOGLo5JJa2pbdnexsUotoq1x28=;
-        b=OR0DRTWoP2AZiA+Wy7JzvQxpJaoZJWnlpHtXkiLtr9J7mm9MFSb/DkD0UQTrV3CAAS
-         aOFys+lGMpkg6yA0zQHD1hy9Cr9VitGz167t16e9iYFBPfV3FXJ1Lah3RKk66pPbJAdN
-         zhYL7J4gLSFqaRKC6SfHsy7UBKkM5APUct5YvP8kfBPG5FvqInjyU/pJEpG/KB1MUTmJ
-         LLcEXgC6bR/3s68STHCJSkACxmfZBEnLScvxqMt5leb/1CdRm1A/jfB3OceBOFNwz1sP
-         AWPrlgTt5R1+u6HXn1sl7viEPjBd2GgXbov1KFObUoumYJGo1AZS9BIXjZ+GEN6VIZtx
-         aDwQ==
-X-Gm-Message-State: AOJu0Yy5hqVfQO5NU67lGtG0s4VCFooNpkO0Wz8ScvSSTkvHD4mQ07wI
-	KwxdoESPvX94DKiy/t0YyrW3LhBMLXhzIgSzeDGIfEVJ5REHg68UdjGwDAxFCdw=
-X-Google-Smtp-Source: AGHT+IEPU/tRTIXzOBmObS4jAZfLz7xPbAoVVG7G1adP2HccyRh9T7Wb1nKjtFgUBWo4XYI9T9pcew==
-X-Received: by 2002:a17:907:d8a:b0:a51:ce92:1e1b with SMTP id go10-20020a1709070d8a00b00a51ce921e1bmr5577555ejc.72.1712658907862;
-        Tue, 09 Apr 2024 03:35:07 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id q19-20020a1709060f9300b00a51983e6190sm5484590ejj.205.2024.04.09.03.35.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 03:35:07 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Michal Simek <monstr@monstr.eu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>
-Cc: linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] microblaze: Improve data type of return variable
-Date: Tue,  9 Apr 2024 12:31:49 +0200
-Message-ID: <20240409103144.175377-6-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tg43mS9k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6876AC433F1;
+	Tue,  9 Apr 2024 10:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712658948;
+	bh=VtU83v3DWvkdgwKB+G89/DK3CwaUjxGtmhjxn0puGsE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tg43mS9kXZIXZvrq/9CZMbPD0lSXpOJRDmWZ2vTZcZNmU1Ydu6b7qkeTOrg7EqsU5
+	 NpOaqhJOcnWbi0E1cZ4rc7RWiMsMZDfu+FLsrebBVGmeHXC9NnnQQql/98iMOEC+bT
+	 9Vt3oPrIfe/6rvxEhoHlUxW4N1FxjjCIJNe5NMgEhDwMGKPTJNsevaHqSyjyPnJSR/
+	 ChvnkD/69zdi8BwIkb1LlW8YHqlGW2GxkLYFACLate0fJ0mxnolEtyMncr1evVV4Ir
+	 yw7CtSp/KUgH4auNBkn7JcPZTvsu4fmr+Ny0NPStYt7lGslfhmbrZvYl/0hVRTGE8b
+	 IA0IWtYJZINnw==
+Date: Tue, 9 Apr 2024 12:35:46 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
+ from perf_pending_task().
+Message-ID: <ZhUaAjhQXN6ahtpS@localhost.localdomain>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-4-bigeasy@linutronix.de>
+ <ZhRqSEbyd1rqVwfN@pavilion.home>
+ <20240409062501.h4rA_ck4@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409062501.h4rA_ck4@linutronix.de>
 
-Since restore_sigcontext() returns an int and err is its return variable,
-which can be negative, it should be of type int instead of unsigned int.
+Le Tue, Apr 09, 2024 at 08:25:01AM +0200, Sebastian Andrzej Siewior a écrit :
+> On 2024-04-09 00:06:00 [+0200], Frederic Weisbecker wrote:
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index e0b2da8de485f..5400f7ed2f98b 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -6785,14 +6785,6 @@ static void perf_pending_irq(struct irq_work *entry)
+> > >  static void perf_pending_task(struct callback_head *head)
+> > >  {
+> > >  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
+> > > -	int rctx;
+> > > -
+> > > -	/*
+> > > -	 * If we 'fail' here, that's OK, it means recursion is already disabled
+> > > -	 * and we won't recurse 'further'.
+> > > -	 */
+> > > -	preempt_disable_notrace();
+> > > -	rctx = perf_swevent_get_recursion_context();
+> > >  
+> > >  	if (event->pending_work) {
+> > >  		event->pending_work = 0;
+> > > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *head)
+> > >  		local_dec(&event->ctx->nr_pending);
+> > >  	}
+> > >  
+> > > -	if (rctx >= 0)
+> > > -		perf_swevent_put_recursion_context(rctx);
+> > > -	preempt_enable_notrace();
+> > 
+> > Well, if a software event happens during perf_sigtrap(), the task work
+> > may be requeued endlessly and the task may get stuck in task_work_run()...
+> 
+> The last time I checked it had no users in the task context. How would
+> that happen?
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- arch/microblaze/kernel/signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess many tracepoint events would do the trick. Such as trace_lock_acquire()
+for example.
 
-diff --git a/arch/microblaze/kernel/signal.c b/arch/microblaze/kernel/signal.c
-index c78a0ff48066..51f718a42e2c 100644
---- a/arch/microblaze/kernel/signal.c
-+++ b/arch/microblaze/kernel/signal.c
-@@ -57,7 +57,7 @@ struct rt_sigframe {
- static int restore_sigcontext(struct pt_regs *regs,
- 				struct sigcontext __user *sc, int *rval_p)
- {
--	unsigned int err = 0;
-+	int err = 0;
- 
- #define COPY(x)		{err |= __get_user(regs->x, &sc->regs.x); }
- 	COPY(r0);
--- 
-2.44.0
-
+Thanks.
