@@ -1,135 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82B4134416;
-	Tue,  9 Apr 2024 10:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9086185281;
+	Tue,  9 Apr 2024 10:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657660; cv=none; b=hgLe6868jtVlJDbTnXqntMIdURIdwbdoxc0QgMBYpOgkgqLLXXX/H/ghFf09+3y0wo7A38hW9Fo6H4No0KNvTaA82uHKmYrUQbNUBi06drWjAk1HQ8Nxj4rx15T2JF1VnG/ZTQljBc32UMvtPLaG4Mxt1ljQRycGxIcszKyF8Cc=
+	t=1712657661; cv=none; b=QeUSFHZhyMSN6zzD5dbN9rRuSQHicmqQTdUrzCBF20/kafJuJC7x+lFnNF7sse0mHYeHit6KUS/gVwNCBK+c3Q+5YpfbOhWqGAVq5O5ldmB2rHZ8AWCSJh83UJo54X586pGhL8jCclS3mAtJMENVnfV6QvV94zVe36yNGAjJXVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657660; c=relaxed/simple;
-	bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=u6BRQYGhJbj7Em1aSfQhp6+v5469lFahbP3kTHv38W37EnhdcohqwGzVePb1wSBIKydygWkSAYNyiURbZKy8plk5qJcfIArQrMgTn2qcUBYQIXyVq7Ge09Ll6bqTPZeQx3rqC9JZdklLi8B70HwzWZJPZumUNEvCEZRatonE8f0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5AQpQ5k; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712657661; c=relaxed/simple;
+	bh=FG21nJMzDgQVBPiWDAMRoSDJCoh5DoD48CK6U3Qv5f8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=Wd7irpKMXHFwWXSaktvOtS6cRzff7IqYny57qso1AIRyRk3fLPZ5RP5zxuVmlxNH78V+eeoK2pzx61cK3Km3VbbFei82jq3DwzADszWG9Rj+0u9g9Fm3FIdfoh4eBeqPiQT0DfIIHJELua34MqB50KCSFfg0vfgHps5uKDipWvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Qv3S/r3j; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5AQpQ5k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712657658; x=1744193658;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=/HdsMnAppID2c/T4mP9olHUzTPjv3yVarzfCvUZ29fg=;
-  b=I5AQpQ5koz4IMx09Emdru1FfHW6sOe9OgDS7XKmjFyJPH6zDZOunrLbc
-   ezbmtxeyyPJp3I28YSfbMD9GPcf3Q/VCmbEwWle773LHHb9RhzUsg6TVN
-   0lCke7lzMf55Khq9oiKeMhsTMUgStLOawQ4X423LbaTNybqUFOgA5zKTv
-   pXsx//Zc0NUE9OAq6qOjchalJv2SvXALyCRllIW7aLZA3cO4dRCzodqTG
-   +0rbz3DBtujYbkqIJITmsNbg2/EoGdo96wFezmQNaBKak2H1SZ5Zq91Nv
-   wX6sL0pHLg1sVawt5kbX7ehJYck7/zW2mkTfGtQgtMvcp9Czt9spQDGXX
-   Q==;
-X-CSE-ConnectionGUID: Z3Drv98YT6iP1WvZtHyPFw==
-X-CSE-MsgGUID: CAp3ioGRRKW+Is6znYeMBQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8193955"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="8193955"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:17 -0700
-X-CSE-ConnectionGUID: h6vK66UbSkiXc+RIBnnazw==
-X-CSE-MsgGUID: NfhpuIMUS02Pkod9R4umgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="51180842"
-Received: from mserban-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.59.228])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 03:14:11 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
- <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
- <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 1/9] tools/include: Sync uapi/drm/i915_drm.h with the
- kernel sources
-In-Reply-To: <ZhTwPLliHXKPAJUQ@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240408185520.1550865-1-namhyung@kernel.org>
- <20240408185520.1550865-2-namhyung@kernel.org> <874jcb9etk.fsf@intel.com>
- <ZhTwPLliHXKPAJUQ@gmail.com>
-Date: Tue, 09 Apr 2024 13:14:09 +0300
-Message-ID: <87pluy972m.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Qv3S/r3j"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4397m76x018643;
+	Tue, 9 Apr 2024 10:13:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=ljGBYLQFC3HKRQ9g+LrdPl9BYHhm2n7q5flQqnt1vP8
+	=; b=Qv3S/r3j8bkzQnRlIA+FSK6aYlN4aG6sLhb/Ie6cu3AuDl+M1m56DrkHayq
+	xBJIMAVnwSkOQQ9BgVwmfNB1OM33PsMG4YRdrVWj9bmOynK+t5HGPxSgwcJdgL3U
+	oE17m/+M5fF2JHScAwubD8xsLSVIKXydC9O+3yb/IcHtzSSIdQ3BgBRdPuJ3X1eG
+	2F5/m9Yb+vi3TXiE8TsQ9NpVrmtK+mienisSp+yTRuMaLUHNWTF69KBYv4iycPwQ
+	XWKiVD/b0UnAnA5Tn8lXgEWrPYF+R2+TT/Sq41J0thMJM3Yvu7YCkhMzkN6lsVYI
+	HR/rgxpCEuu8HBjKJPiPa2xWy7g==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xd0kr0d3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Apr 2024 10:13:56 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439ADtYb007018
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Apr 2024 10:13:55 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 9 Apr 2024 03:13:48 -0700
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Tue, 9 Apr 2024 15:43:21 +0530
+Subject: [PATCH v10 3/6] dt-bindings: pci: qcom: Add OPP table
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240409-opp_support-v10-3-1956e6be343f@quicinc.com>
+References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+In-Reply-To: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712657607; l=1082;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=FG21nJMzDgQVBPiWDAMRoSDJCoh5DoD48CK6U3Qv5f8=;
+ b=2tzuYqm50xrOy67emmVZ6lFMnhwb7zcg7q5Q4h5etwxKJH4ody2kvAb9knukpDI9pHZxerEjI
+ wDvPoN+DcSMDCk6GH8mwAJwZIU0F2aScQmKLcYgH5xQ8VTLUdhyKZeo
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: lUzCsTmTfrPpDMcKie2JdGylYHDxXL2L
+X-Proofpoint-GUID: lUzCsTmTfrPpDMcKie2JdGylYHDxXL2L
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-09_06,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 bulkscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 malwarescore=0 phishscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
+ definitions=main-2404090065
 
-On Tue, 09 Apr 2024, Ingo Molnar <mingo@kernel.org> wrote:
-> * Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
->> On Mon, 08 Apr 2024, Namhyung Kim <namhyung@kernel.org> wrote:
->> > To pick up changes from:
->> >
->> >    b112364867499 ("drm/i915: Add GuC submission interface version query")
->> >    5cf0fbf763741 ("drm/i915: Add some boring kerneldoc")
->> >
->> > This should be used to beautify DRM syscall arguments and it addresses
->> > these tools/perf build warnings:
->> >
->> >   Warning: Kernel ABI header differences:
->> >     diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
->> 
->> All these years and I never realized there are header copies
->> there. But... why copies?
->
-> It's better than all the alternatives we tried so far:
->
->  - Symbolic links and direct #includes: this was the original approach but 
->    was pushed back on from the kernel side, when tooling modified the 
->    headers and broke them accidentally for kernel builds.
->
->  - Duplicate self-defined ABI headers like glibc: double the maintenance 
->    burden, double the chance for mistakes, plus there's no tech-driven 
->    notification mechanism to look at new kernel side changes.
->
-> What we are doing now is a third option:
->
->  - A software-enforced copy-on-write mechanism of kernel headers to 
->    tooling, driven by non-fatal warnings on the tooling side build when 
->    kernel headers get modified:
->
->     Warning: Kernel ABI header differences:
->       diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
->       diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
->       diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
->       ...
->
->    The tooling policy is to always pick up the kernel side headers as-is, 
->    and integate them into the tooling build. The warnings above serve as a 
->    notification to tooling maintainers that there's changes on the kernel 
->    side.
->
-> We've been using this for many years now, and it might seem hacky, but 
-> works surprisingly well.
->
-> Does this make sense to you?
+PCIe needs to choose the appropriate performance state of RPMh power
+domain based on the PCIe gen speed.
 
-Yes, although there are probably pieces of the puzzle I'm missing.
-Thanks for the explanation! (That might work almost as-is copied to
-tools/include/uapi/README. ;)
+Adding the Operating Performance Points table allows to adjust power
+domain performance state and ICC peak bw, depending on the PCIe data
+rate and link width.
 
-It's also kind of funny to find this kind of back alleys of the kernel
-repo I've never wandered to before.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-BR,
-Jani.
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
+index 1496d6993ab4..d8c0afaa4b19 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.yaml
+@@ -69,6 +69,10 @@ properties:
+       - const: msi6
+       - const: msi7
+ 
++  operating-points-v2: true
++  opp-table:
++    type: object
++
+   resets:
+     maxItems: 1
+ 
 
 -- 
-Jani Nikula, Intel
+2.42.0
+
