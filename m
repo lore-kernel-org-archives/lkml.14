@@ -1,90 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C294158A06;
-	Tue,  9 Apr 2024 19:09:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3651157E9F;
+	Tue,  9 Apr 2024 19:10:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712689769; cv=none; b=ec1k3Do5bHdIFEknhE323HPsoJQgxkDzWAuoVMwQo57uHhtlCngLf9rAL/u2LIODili/xzUbDSFmzZUnUtScI/xkP/V3Ii6ZeSG94DXyyDjzf9v2rnv0xcP04zz3Ma1JGwkM3O1S0gzNsBpMXz8yA0gP4EpXesvFqyzlCiKLaGs=
+	t=1712689836; cv=none; b=oc2pJ9WBx9bo83+blcBgxhFfL4eDUiLD8D5+CLRkEB6nDKWP3hC4QqvG9ggwlgeOfKYJgyw45/FgCg1Xhq0aU7YaO9o/V3bkefsY8Tl6c5JW6LxLcPRApgrywNFYYyiLluIB1QTnMxuKBS1XX1faE2FQQW1H+XfJGWvC1InNRIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712689769; c=relaxed/simple;
-	bh=uK/g3z0UXgcBV0TMzjwb41q+mX0RX+rzuFNb8X03ea8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YEkM8KNPOX6EZwARJkiKDq+D8Q62aLDd8/UiHxD/r0kFOmivVQa7p6sYG65OmtMda3aFoijQUsCqWQdSJsytRJxXIIx3tkuEf53WzYYMk1aYSKxaLhPj6aL9BuLCZ8TVlK5hnVzD7BkNwxYJzbTLRwQyDerExKAvYpiRLIVWlBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnlQmmQC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnlQmmQC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C10CFC433C7;
-	Tue,  9 Apr 2024 19:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712689768;
-	bh=uK/g3z0UXgcBV0TMzjwb41q+mX0RX+rzuFNb8X03ea8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZnlQmmQCrd2VTu8MwIVcsiUHzECbqm2BLbX3XOyF/mLruYS7HM5x3TRmKlcCn1hAh
-	 WI97stv+lDSJHaBIv0Me05yzPq353ARF0vOqP/zGps6IfvzyAvCKeXG4GXmKzfIktF
-	 e/xNUfvjzFyhfeDIXcPHLOPipDNZF1PjrCDBcjWcVynudOrhiMrER1t5bG0oMrnvUz
-	 apZusqcn7Uc22V1FZqmyq4keZCeWL4kDCFFQxWRdBLdq+j64PqPJFu+GWY7Vs6fXTv
-	 Nr9VAQec4hs87D0lItFPPy/yFK1g/4KYI3Oi3XrVdf0GcpXhznLmf1ziTid5BD85G9
-	 T9Cr5xu16sm6w==
-Date: Tue, 9 Apr 2024 20:09:24 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Ruben Wauters <rubenru09@aol.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH] spi: Add documentation for last_cs_index_mask
-Message-ID: <1ec0fe6c-6af0-4cee-98ba-25fb2c67ef1d@sirena.org.uk>
-References: <20240409184106.22715-1-rubenru09.ref@aol.com>
- <20240409184106.22715-1-rubenru09@aol.com>
+	s=arc-20240116; t=1712689836; c=relaxed/simple;
+	bh=40pMLAjuY85R1jd9YK3z5hduTrwij5o0IKhxYs6j88A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gRLGQn0wrGU8YEcTFXQTV9dOW20uT6SVU6bnqB4GUnR+93/iYs3Hlu/zyLPL0UTcLvep/SxoHT+Osr553RtM8TqaE6yL1adLoGW0kn5NR10jjNXCZv6SqcdfdDziDpoddoyUsXj+OlT420ZNerhQ25fTtYuCIxnmAio9+zhuZ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC73C43390;
+	Tue,  9 Apr 2024 19:10:35 +0000 (UTC)
+Date: Tue, 9 Apr 2024 15:13:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, rsavitski@google.com
+Subject: [PATCH] ring-buffer: Only update pages_touched when a new page is
+ touched
+Message-ID: <20240409151309.0d0e5056@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="HPlUWP5Ja3od6VbS"
-Content-Disposition: inline
-In-Reply-To: <20240409184106.22715-1-rubenru09@aol.com>
-X-Cookie: Everything you know is wrong!
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
---HPlUWP5Ja3od6VbS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The "buffer_percent" logic that is used by the ring buffer splice code to
+only wake up the tasks when there's no data after the buffer is filled to
+the percentage of the "buffer_percent" file is dependent on three
+variables that determine the amount of data that is in the ring buffer:
 
-On Tue, Apr 09, 2024 at 07:41:05PM +0100, Ruben Wauters wrote:
+ 1) pages_read - incremented whenever a new sub-buffer is consumed
+ 2) pages_lost - incremented every time a writer overwrites a sub-buffer
+ 3) pages_touched - incremented when a write goes to a new sub-buffer
 
-> This is my first patch, so I hope I did everything right, please let
-> me know if I need to change something, and I shall endevour to do it
-> properly.
+The percentage is the calculation of:
 
-Everything looks good, only issue I can see is that this question (which
-is adminstrative stuff rather than part of the changelog) should have
-gone after the --- below:
+  (pages_touched - (pages_lost + pages_read)) / nr_pages
 
->=20
-> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-> ---
+Basically, the amount of data is the total number of sub-bufs that have been
+touched, minus the number of sub-bufs lost and sub-bufs consumed. This is
+divided by the total count to give the buffer percentage. When the
+percentage is greater than the value in the "buffer_percent" file, it
+wakes up splice readers waiting for that amount.
 
-so that tooling can automatically remove it when applying.
+It was observed that over time, the amount read from the splice was
+constantly decreasing the longer the trace was running. That is, if one
+asked for 60%, it would read over 60% when it first starts tracing, but
+then it would be woken up at under 60% and would slowly decrease the
+amount of data read after being woken up, where the amount becomes much
+less than the buffer percent.
 
-However a patch for this issue has already been applied but not yet
-merged into Linus' tree.
+This was due to an accounting of the pages_touched incrementation. This
+value is incremented whenever a writer transfers to a new sub-buffer. But
+the place where it was incremented was incorrect. If a writer overflowed
+the current sub-buffer it would go to the next one. If it gets preempted
+by an interrupt at that time, and the interrupt performs a trace, it too
+will end up going to the next sub-buffer. But only one should increment
+the counter. Unfortunately, that was not the case.
 
---HPlUWP5Ja3od6VbS
-Content-Type: application/pgp-signature; name="signature.asc"
+Change the cmpxchg() that does the real switch of the tail-page into a
+try_cmpxchg(), and on success, perform the increment of pages_touched. This
+will only increment the counter once for when the writer moves to a new
+sub-buffer, and not when there's a race and is incremented for when a
+writer and its preempting writer both move to the same new sub-buffer.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYVkmQACgkQJNaLcl1U
-h9AAUQf/eUxe0KKXZ5sarYJLYfRMjT5Zb6KzM3vAQbWIMGEDVQbzTGGFiHNGjsET
-E2quP77MW0ndkVbgexUMbLeuUko4X5mEsNlu1mCBfOvsb0MzFmn/Oddc236U9ota
-r9ymXI0xE26GB2ZmmWgItb8SWMSd/bv5iDsEom4FKTXydGydrWGTAr+odQB7RwwA
-uVfcLrS6x7Ty0L3t6uJVS9Moat54ER39JNyzTTOAuzFbtlEyWYb0Xxp2Ypx+2Mi8
-xVw4J/U4JOHnv50kyH0P4abOIJNmiV88FYCXnUqOCksIVw7T+B43zPgS8CwGoxoi
-4SRgsgl8frJd0FfTxHVfF318TGg9Ag==
-=9dCy
------END PGP SIGNATURE-----
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 25476ead681b..6511dc3a00da 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1393,7 +1393,6 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+ 	old_write = local_add_return(RB_WRITE_INTCNT, &next_page->write);
+ 	old_entries = local_add_return(RB_WRITE_INTCNT, &next_page->entries);
+ 
+-	local_inc(&cpu_buffer->pages_touched);
+ 	/*
+ 	 * Just make sure we have seen our old_write and synchronize
+ 	 * with any interrupts that come in.
+@@ -1430,8 +1429,9 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 */
+ 		local_set(&next_page->page->commit, 0);
+ 
+-		/* Again, either we update tail_page or an interrupt does */
+-		(void)cmpxchg(&cpu_buffer->tail_page, tail_page, next_page);
++		/* Either we update tail_page or an interrupt does */
++		if (try_cmpxchg(&cpu_buffer->tail_page, &tail_page, next_page))
++			local_inc(&cpu_buffer->pages_touched);
+ 	}
+ }
+ 
+-- 
+2.43.0
 
---HPlUWP5Ja3od6VbS--
