@@ -1,91 +1,101 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC996158D9B;
-	Tue,  9 Apr 2024 23:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42DA158DB0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 23:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712703913; cv=none; b=mdXy/buMTb7NLJ4CtaXezRKmfUpfIrwv/CLTe1kOVSNzQXdJRT7d5OEdg1kFxSiIIjFjUWK0g7YvgbddxhTI+v+ncACLqDtxiM8DNPSsR2oJZ0zqWmZBK2+3Gw5bzeKly8NeL0U5xEXTPznzL0vRjz9Hyg3bpQQlaOirSblYoak=
+	t=1712704097; cv=none; b=bgsiGMnLbycBJ+V+U8ZnXsaMCP0vRhcYsFztxwLA/caqnnOfUTPJi8JJWPXRK/VlL+p8lijQvki0flwl9KnB1sWdVLjYbv55zncLgDEPFkP2s3X0Us9SeHQ6Ckyk8+MC86KcAN5rIPkDc1c8wBUe57KsUmm2xVsR9th2WHsf8a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712703913; c=relaxed/simple;
-	bh=6zF5YooyCsfpmE0BWmrEU0IfZ+u+69VzuF8AtWFfHOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ONdORhUG8IOX4w+hqLYZTZDV0byFW/gMdFAc88gxqTlidTAggcD8pswXXdGKYvw1dLn9qW/aONIuU5+Mm6uJcslSyFJRU5GD8fyj+/jYARvpImsvM7KaLYcMCe/QdWo13QTneW/cDZBtB/9sD+7CFgg8E9aEM1mHmNVXOATZwBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=n2dljnVZ; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1712704097; c=relaxed/simple;
+	bh=bE/hIdyAlZdQeLhR3fmMMG7I2XnJCRfk8VGKhousyJs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=suSUBu7oit8GkcnzttVVYQ/0ds++YhCTPHCXU6JI41HoT1MVftXCck0GkD+FeQTQZmcMG2KRWw0e0wk+8PZE3FaNMwx/fuCElqEOqp7btT78ZOr/mDunQOe6QyMTITtTjOvVGrxAQEcNSS/inRAXzsvuFvgky0S0QbRjlMQAe9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSRMeQoU; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="n2dljnVZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1712703902;
-	bh=m4aSe3eXvdJ364oYuaB9qdyFtcfbMXUheiXw1fUAsao=;
-	h=Date:From:To:Cc:Subject:From;
-	b=n2dljnVZpPsB3lGuTlRECWPt3eg2LFOiqR5GIrb4TWxLSxXtauICVQjNiyXlcIrzU
-	 F822Ws7C+2g4IRibYegwtDjHCUygddf/Dx9ugkKkzKZh09PAf4oMN6X1BMSewOGLea
-	 v10hMTnQ68y4Xna4pM6OUatJi4QYWfw0VJkh4EkwMl3u9YbokVIWpG8yYl5vw1PGde
-	 MFJLJN0abj/fHzP3DcW3QUxU5V9nxu1OY2/Tv6WVl0UZ1WtV1PPB0TUlg9F7YQQS+G
-	 2W2ThuAeWOLtysJVwDXOGUbHVmwG1rhPmdOfgw29ui2BO/najHMvcNmB/tPXCEYoD/
-	 6a6UtDI0ywLDQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VDhPT723Vz4wc5;
-	Wed, 10 Apr 2024 09:05:01 +1000 (AEST)
-Date: Wed, 10 Apr 2024 09:05:00 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>, David Miller <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: duplicate patch in the usb.current tree
-Message-ID: <20240410090500.4018b9a0@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSRMeQoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712704096; x=1744240096;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bE/hIdyAlZdQeLhR3fmMMG7I2XnJCRfk8VGKhousyJs=;
+  b=kSRMeQoUrNtDEjJpdY0BFm57uWhO9CkchIr99aRqh4bV3RIFb7JNY9YH
+   /IafvXjFq25g+bLS3xtLPlW7I9gAG0fWjDVVCXmRBNk4aJIrXimdcuptA
+   G7U6ioyLUePN13UeOQKBGbHxvhmS6W+XVc04qp4uZ2MmsAhOP0yuLlD/p
+   0f/1kaU9Kc8vC63CrI8olp5ca0ta8PQCHNfrvnNvO8SvD/enfA6AAVgMa
+   2/6sHnZ1N0IKkf87wzhGRN3RR/YJ4/tm8rMwdom67ZDT/2+3MLNbusupK
+   7aZp7z08bpJG12wccdkjrHHTGDME8u/P63O4p2qCcHwkDBK+9Bk2m1ulu
+   w==;
+X-CSE-ConnectionGUID: Ft1LuY6SQx6JTZAfePmouw==
+X-CSE-MsgGUID: O7iNs5mfThayExjgJMtPAw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7959626"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7959626"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:08:16 -0700
+X-CSE-ConnectionGUID: JN2XrYyxRSCJYvtz9sLdLw==
+X-CSE-MsgGUID: 6KLXRYpxQkCBWi3qq7uD7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="51345967"
+Received: from kmarkley-mobl1.amr.corp.intel.com (HELO dsneddon-desk.sneddon.lan) ([10.125.17.174])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:08:15 -0700
+From: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))
+Subject: [PATCH] x86/bugs: Fix return type of spectre_bhi_state()
+Date: Tue,  9 Apr 2024 16:08:05 -0700
+Message-Id: <20240409230806.1545822-1-daniel.sneddon@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PD4=+Su.GmnavOII5I9PHSi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/PD4=+Su.GmnavOII5I9PHSi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The definition of spectre_bhi_state() incorrectly returns a const char
+* const.  This causes the a compiler warning when building with W=1.
 
-Hi all,
+ warning: type qualifiers ignored on function return type [-Wignored-qualifiers]
+ 2812 | static const char * const spectre_bhi_state(void)
 
-The following commit is also in the net tree as a different commit
-(but the same patch):
+Remove the const qualifier from the pointer.
 
-  fbdd90334a62 ("MAINTAINERS: Drop Li Yang as their email address stopped w=
-orking")
+Fixes: ec9404e40e8f ("x86/bhi: Add BHI mitigation knob")
+Reported-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+---
+ arch/x86/kernel/cpu/bugs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is commit
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index e1775debeafe..7e4a706cad80 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -2809,7 +2809,7 @@ static char *pbrsb_eibrs_state(void)
+ 	}
+ }
+ 
+-static const char * const spectre_bhi_state(void)
++static const char *spectre_bhi_state(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_BHI))
+ 		return "; BHI: Not affected";
+-- 
+2.25.1
 
-  eaac25d026a1 ("MAINTAINERS: Drop Li Yang as their email address stopped w=
-orking")
-
-in the net tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/PD4=+Su.GmnavOII5I9PHSi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYVyZwACgkQAVBC80lX
-0GyA8AgAozQu1zovR4LIvcLiO4YXYKoMRXk2sDIh+OHD4atSqQS9li4uEV4PG+D/
-hhKkpZazyJE4EQy2OMBBIOCZ6zqrE2pU2AuofukuJnMELF94frg3kfqc5PrC1dU7
-zwIsqGOkvGnGBpfGQl/IYQnHxoICETqgWcUvUm00qP+o0XX2YJugmVWOUMrkV+sn
-Ov+jA0DGLZR5jOILTlifjxisAaSc72yOBzJ3HPbeGB5b0+Vjd4q7QxJ+zY6tnKkL
-+rdsJOSBEDR7IldC2ImXTHlhw00isWD0OA9x3OYu2Hbj9jNEM0JV/GVlxIR52EfF
-y3+qnxD1KS7mkiOC+g4yI1YuPGFjGQ==
-=vvpf
------END PGP SIGNATURE-----
-
---Sig_/PD4=+Su.GmnavOII5I9PHSi--
