@@ -1,84 +1,65 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED75E12F592;
-	Tue,  9 Apr 2024 13:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D70312F37F;
+	Tue,  9 Apr 2024 13:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712668966; cv=none; b=AgBG+WTx5CqigB4VkQcwm06XCeLRCFS/6ofxppqFHll72kAL2Pzcpp4cJC8YNszgt4ArzL+y/k4HuxqAmJLne16emH5JZUkXrsVgu7GDhMcQAbtiXhKTdORNMm67mSqfk8VHMnsuHlXI7dUTPX7nS1wJUgLl1OYS/4M+aAalKNU=
+	t=1712668993; cv=none; b=kXIgJWNPgPcEp0tAijRkbIObz9vEZ5aMacP3rc2dUFzd23Y1w9rcT+XoHcPHF2JeQAbNzrJKQalvfyh8uESTciROPtcfmZyIBkSNeZ1/z+OEya+8Ge2wEp81hoj369XQvbwuM2HBrjxyC7Vgmla+MvAdy3+VUtE6sCudOFsHjgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712668966; c=relaxed/simple;
-	bh=n8lMrvoOAZr4zQFT/jywmQXSwhUzFGLvlnoZwlXr8Y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nYZnwan+rfTdGfltaBMVm9/YsEY6Iu6Ww/V3KqOI0S8aSP9IphtehEQccZT4v1Bq73uLivTG3FnhhFKgos36sMXL06z5BPxroApTxWPFeRoj8o5af5X0e90swSqxc5DZt5enpfTCT4UWznp6iAzdwFDUHjjTd3lc3UrDiBKF5r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pJqQuZNF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/ndUaydY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712668993; c=relaxed/simple;
+	bh=7SxGLOMEl/NIZezLT1wZsWVVVZ6kZmZI1q3BxM/hXrU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYzax3KqVg0VDbCwahqnWenPTr0azq1jdS1HWjHQHcM8cDDVPmrDwujjOmmr7UyS1Jg1pGvmbY9S+sCF3reYX3ism0oyD9DxPsvFwZNUn1J+XfRmM8tEFYA7CJs0O80b+pT88jM7ANNwyfdC1VZSFD/Q4XslEetkzRYRULgrPYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yza+R/ef; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pJqQuZNF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/ndUaydY"
-Date: Tue, 9 Apr 2024 15:22:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712668962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2m0Auujs2P8xmXDlDR/Z+F4/NBU8yQjw72yULiEyoFg=;
-	b=pJqQuZNFMXmg3nAL8VwURA0FNzNMzYzlodq1a8wDtMal/m4mI0sNLc7uujYISaXeTRYoL0
-	XdIdONL+qE3cjpVMCrDn2HuNh0Ik0c7Dig9eYLt91XgYMvFD2V4AXwIJNMuiLoVDsims9x
-	OC+MFADulGFst/qqw7jogSHsv6x0ycrgnr2x+Pnt3Q3wpdMzhv6k7QYueFA/eShxOVoBkT
-	C6uZJHwuOav4vH+6lfoqNRpuvbe5cSTcvGh0K3LNGq8QAM+TvEhEui8jRr9vui0RrnatdV
-	E2b3WnFiPakukYOvPTSa3QtKfJ2uwIcmdziYnEtTFeIJF9ByVBHK8PbPnQzU8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712668962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2m0Auujs2P8xmXDlDR/Z+F4/NBU8yQjw72yULiEyoFg=;
-	b=/ndUaydYh8prkaW7KAhCQbQdM4GWF00KJgFSnOtVLCEMxbvHQjM32ljYlPEmPmCR3WvKYo
-	w15ydUBdG7owi/Dg==
-From: Nam Cao <namcao@linutronix.de>
-To: topcat <bfonseca@ime.usp.br>
-Cc: Marc Dietrich <marvin24@gmx.de>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, topcat <bfonseca@ipt.br>,
- ac100@lists.launchpad.net, linux-tegra@vger.kernel.org,
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fixed spelling mistake
-Message-ID: <20240409152238.31820642@namcao>
-In-Reply-To: <20240409114045.13872-1-bfonseca@ipt.br>
-References: <20240409114045.13872-1-bfonseca@ipt.br>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yza+R/ef"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B508EC433C7;
+	Tue,  9 Apr 2024 13:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712668993;
+	bh=7SxGLOMEl/NIZezLT1wZsWVVVZ6kZmZI1q3BxM/hXrU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=yza+R/efqfMzJXuaKvHTy/xH5WuJk9MVyjFKexp2bijV7avliKF3gyvQmSSU3Qyex
+	 dnWYwnJbCUsDOGq79KyHqggbyvtRSp6wgJepe9+oyPzJ6CJK7sNxItXoGPuoE1FLj7
+	 wWh1NNaaMiVHPUn3KwcZqI8qmdq5I4M9odDIxWig=
+Date: Tue, 9 Apr 2024 15:23:10 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>, linux-serial@vger.kernel.org
+Subject: Re: [PATCH printk v4 08/27] serial: core: Provide low-level
+ functions to lock port
+Message-ID: <2024040900-pavestone-flagman-fbf9@gregkh>
+References: <20240402221129.2613843-1-john.ogness@linutronix.de>
+ <20240402221129.2613843-9-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402221129.2613843-9-john.ogness@linutronix.de>
 
-On 09/Apr/2024 topcat wrote:
-> ---
->  drivers/staging/nvec/nvec.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Apr 03, 2024 at 12:17:10AM +0206, John Ogness wrote:
+> It will be necessary at times for the uart nbcon console
+> drivers to acquire the port lock directly (without the
+> additional nbcon functionality of the port lock wrappers).
+> These are special cases such as the implementation of the
+> device_lock()/device_unlock() callbacks or for internal
+> port lock wrapper synchronization.
 > 
-> diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-> index 282a664c9176..b4485b10beb8 100644
-> --- a/drivers/staging/nvec/nvec.c
-> +++ b/drivers/staging/nvec/nvec.c
-> @@ -712,7 +712,7 @@ static irqreturn_t nvec_interrupt(int irq, void *dev)
->  	 * TODO: replace the udelay with a read back after each writel above
->  	 * in order to work around a hardware issue, see i2c-tegra.c
->  	 *
-> -	 * Unfortunately, this change causes an intialisation issue with the
-> +	 * Unfortunately, this change causes an initialisation issue with the
->  	 * touchpad, which needs to be fixed first.
->  	 */
->  	udelay(100);
+> Provide low-level variants __uart_port_lock_irqsave() and
+> __uart_port_unlock_irqrestore() for this purpose.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> ---
+>  include/linux/serial_core.h | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 
-A patch has already been sent to fix the exact same problem:
-https://lore.kernel.org/linux-staging/20240331170548.81409-1-dorine.a.tipo@gmail.com/T/#u
-
-Best regards,
-Nam
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
