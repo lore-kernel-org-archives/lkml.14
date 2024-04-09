@@ -1,205 +1,190 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F86D10F2
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 00:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C272A934;
+	Tue,  9 Apr 2024 00:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712622795; cv=none; b=lmDKp40HJUJddHYTPzVU3GPHSGyl5SfcT9CVhdxIE2PEpG761oa4smmCHoZ7A+V9MLGZHt9Sy+Cvi4OkDFrAIBwQdWsdcmsQpJ67DZ7NjRCD/3j++GwD519hRecrx1RYMc/7BwiFHso0EtH6YAcika9J6D9DEuWc9sTdB4yK8XY=
+	t=1712622885; cv=none; b=eliMdUXuj1ZOun4KcqP2pyXlVuTvP4jLTHbiDOpwCEq5a9/QzXW208O4RXCj5avobDLMmJ4dFN7EGBKcll4MkXAHgrmzmz6xN+NyxTMSUCLRJxfej2B9ALuzP+EAT7uPV9ODRTfdLcX3DjXnk0gJuCAn4qUtxBGc7cRMW87fJ4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712622795; c=relaxed/simple;
-	bh=DJ/hQ2jxsHQO4QqjkfXY3cUKzfZdwjLfN1fz+yoHqxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rwiwo352xy0Oa8RKb9In0c1vo5vR1Mj42YjNEx6JsIULaJP7EBVHF+2DCfbRjVd4Rj9qh8bF51Fb2aCUpi5+MzDOa8uknI4goVnj7GhCtiRHkNn9p7kE4s+j281PIngHzwFH1lqAG7BfC9HTtcZVFnmqpSIAMU+gnK+OLdUnEtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xxjMqRFJ; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712622885; c=relaxed/simple;
+	bh=6KWBXWrsN0Smo6wkHN8i3FqroEDuIHPvzii2D1XYW/8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ViVFTSchiKOgJgo5I/YCc1zUVdE3eKIJDVsdqACjDIlAHELQgqBBFEhOIudaKP1PAqCHee6obX/ZoUylvNXE1LoP3tqeb1RRkr904xY66zRNIZivdLnW+GGNv0JRo1eIA++duxeudugBtc8bbclfJjRimJElo/DfkEI92lEP9Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4xZ/DCy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xxjMqRFJ"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e4149e7695so12194765ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 17:33:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712622793; x=1713227593; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f/CJmT3YaooE8CB2QIvUgCnYPke09ytqabQq9mjiodg=;
-        b=xxjMqRFJX1wc7+u49+U3+8x4Pqk2B9OVV5fbFWwUO0aym8a7lbG27R2Jfo5QDgbCVc
-         9QoP3iiqOXwRqbneH+3iWosL/p+xAwh3Hq7f1p0LywVzeRmq2lgFNM32OlwinE7UzbVX
-         yMW9teTKnrj1Al46kiue0AB2n3296lIF42hqhQFGgeE1vYpTHhiuXQuxwc2hZ4nNKwRH
-         isA0vOLM6Aa4TQeEtVhR2R81nZamtF1/iOsjZOC3ar487+3vl16xMVtexSifyI/awolf
-         +wrULRrO5VVEyPLcc+k6aohGJJjWcxCSy9zQwhsImkE65xdVBXi8GyYTRLgqnsLsV/Cc
-         G8gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712622793; x=1713227593;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f/CJmT3YaooE8CB2QIvUgCnYPke09ytqabQq9mjiodg=;
-        b=kXLKfWyUwFPEMxJkSyZ/PxTsQvppzBjgEbV7GKWouT6DtOHiMBnt6b+9ckfisbND3W
-         P2jCrp5XAP75TKNfbRkx68ViliQiGpkK5fFtmki0txkrDNrtTlOZj95Czf5cuZOslmzD
-         PeM+aV8hHAZllI3fIiykYz1UZAzqO8MeFuFBcTQ9A66KYRi/5ceyrP8B7bTUx4s+tU9b
-         Wv7lzasH7Ne4OQu9IM1ymcWIONb89gH2L9MPYByU4Y09hC3CUYjRFCHEGEUD75MeseRa
-         1YY6rVa9skpaxt8kFrIqPfes3Rn6spCzwPZYCNoGGMBG6zhaL9Aek4wNyYgdIKMXNrN3
-         ltkQ==
-X-Gm-Message-State: AOJu0Yxm4+LO6TWcgKBfpAKhYXSuM2vZQzQFlcpL/5L/T741wVZrI3fh
-	ANMEM90JZf8+bNwfiWN4y1RJSxmfO4533XCFNLyrgqo0NA7frbCVVdHtBR8v640=
-X-Google-Smtp-Source: AGHT+IEvUCM8edq+BJU6njmxP2S88uAHY8Y4uoAWuaqv8e2rJW7YxBXFjZFMDPCzo+f8OYSJfA0hYA==
-X-Received: by 2002:a17:903:404b:b0:1e4:35b9:f150 with SMTP id n11-20020a170903404b00b001e435b9f150mr2977778pla.11.1712622792665;
-        Mon, 08 Apr 2024 17:33:12 -0700 (PDT)
-Received: from ?IPV6:2601:647:4180:9630::e8c1? ([2601:647:4180:9630::e8c1])
-        by smtp.gmail.com with ESMTPSA id m10-20020a170902db0a00b001e0e977f655sm7621722plx.159.2024.04.08.17.33.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 17:33:12 -0700 (PDT)
-Message-ID: <a50d426c-a7c0-49d9-8bdf-d15ba53ba40f@rivosinc.com>
-Date: Mon, 8 Apr 2024 17:33:10 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4xZ/DCy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EBFC43390;
+	Tue,  9 Apr 2024 00:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712622885;
+	bh=6KWBXWrsN0Smo6wkHN8i3FqroEDuIHPvzii2D1XYW/8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=X4xZ/DCyG/081aBtw0KeHHzb01Qn/FrvDbzH0uG0KgXH8TGJPjfqlM9e1csL16R8a
+	 tzwcV2I8Xp9BXsh7zbN7ZkYszRKkpOlpV+MjRjtGIZJEPORDJCrNB8u/FtxxhafWE3
+	 D7U5f43UojQDsJa+kFdGmOwbQdstenO7G6T7L0xBd43ingrG1FZS2ArlVuzTFjktSn
+	 zsfM98Tb2qjqBACkUQ5jS73wdwwFlt1kRHZFp6OFpE6/rEXz0cSGlZk/6vGGcVECP5
+	 oJBKjqKJ1f+G0/rF+DYMf+VHwaVkDyHKIJKu1DavcIaAgBYomCvvhJxERjwfVP9C8G
+	 h4ALSHHDYNufw==
+Date: Tue, 9 Apr 2024 09:34:39 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-api@vger.kernel.org
+Subject: Re: [PATCHv2 1/3] uprobe: Add uretprobe syscall to speed up return
+ probe
+Message-Id: <20240409093439.3906e3783ab1f5280146934e@kernel.org>
+In-Reply-To: <ZhQVBYQYr5ph33Uu@krava>
+References: <Zg0lvUIB4WdRUGw_@krava>
+	<20240403230937.c3bd47ee47c102cd89713ee8@kernel.org>
+	<CAEf4BzZ2RFfz8PNgJ4ENZ0us4uX=DWhYFimXdtWms-VvGXOjgQ@mail.gmail.com>
+	<20240404095829.ec5db177f29cd29e849169fa@kernel.org>
+	<CAEf4BzYH60TwvBipHWB_kUqZZ6D-iUVnnFsBv06imRikK3o-bg@mail.gmail.com>
+	<20240405005405.9bcbe5072d2f32967501edb3@kernel.org>
+	<20240404161108.GG7153@redhat.com>
+	<20240405102203.825c4a2e9d1c2be5b2bffe96@kernel.org>
+	<Zg-8r63tPSkuhN7p@krava>
+	<20240405110230.GA22839@redhat.com>
+	<ZhQVBYQYr5ph33Uu@krava>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 12/22] RISC-V: KVM: Implement SBI PMU Snapshot feature
-Content-Language: en-US
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>,
- Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Alexey Makhalov <amakhalov@vmware.com>,
- Conor Dooley <conor.dooley@microchip.com>, Juergen Gross <jgross@suse.com>,
- kvm-riscv@lists.infradead.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
- Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>,
- virtualization@lists.linux.dev,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20240403080452.1007601-1-atishp@rivosinc.com>
- <20240403080452.1007601-13-atishp@rivosinc.com>
- <20240405-1060c986299eaac3528c7d4f@orel>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20240405-1060c986299eaac3528c7d4f@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/5/24 04:23, Andrew Jones wrote:
-> On Wed, Apr 03, 2024 at 01:04:41AM -0700, Atish Patra wrote:
->> PMU Snapshot function allows to minimize the number of traps when the
->> guest access configures/access the hpmcounters. If the snapshot feature
->> is enabled, the hypervisor updates the shared memory with counter
->> data and state of overflown counters. The guest can just read the
->> shared memory instead of trap & emulate done by the hypervisor.
->>
->> This patch doesn't implement the counter overflow yet.
->>
->> Reviewed-by: Anup Patel <anup@brainfault.org>
->> Signed-off-by: Atish Patra <atishp@rivosinc.com>
->> ---
->>   arch/riscv/include/asm/kvm_vcpu_pmu.h |   7 ++
->>   arch/riscv/kvm/vcpu_pmu.c             | 121 +++++++++++++++++++++++++-
->>   arch/riscv/kvm/vcpu_sbi_pmu.c         |   3 +
->>   3 files changed, 130 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/riscv/include/asm/kvm_vcpu_pmu.h b/arch/riscv/include/asm/kvm_vcpu_pmu.h
->> index 395518a1664e..77a1fc4d203d 100644
->> --- a/arch/riscv/include/asm/kvm_vcpu_pmu.h
->> +++ b/arch/riscv/include/asm/kvm_vcpu_pmu.h
->> @@ -50,6 +50,10 @@ struct kvm_pmu {
->>   	bool init_done;
->>   	/* Bit map of all the virtual counter used */
->>   	DECLARE_BITMAP(pmc_in_use, RISCV_KVM_MAX_COUNTERS);
->> +	/* The address of the counter snapshot area (guest physical address) */
->> +	gpa_t snapshot_addr;
->> +	/* The actual data of the snapshot */
->> +	struct riscv_pmu_snapshot_data *sdata;
->>   };
->>   
->>   #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu_context)
->> @@ -85,6 +89,9 @@ int kvm_riscv_vcpu_pmu_ctr_cfg_match(struct kvm_vcpu *vcpu, unsigned long ctr_ba
->>   int kvm_riscv_vcpu_pmu_ctr_read(struct kvm_vcpu *vcpu, unsigned long cidx,
->>   				struct kvm_vcpu_sbi_return *retdata);
->>   void kvm_riscv_vcpu_pmu_init(struct kvm_vcpu *vcpu);
->> +int kvm_riscv_vcpu_pmu_snapshot_set_shmem(struct kvm_vcpu *vcpu, unsigned long saddr_low,
->> +				      unsigned long saddr_high, unsigned long flags,
->> +				      struct kvm_vcpu_sbi_return *retdata);
->>   void kvm_riscv_vcpu_pmu_deinit(struct kvm_vcpu *vcpu);
->>   void kvm_riscv_vcpu_pmu_reset(struct kvm_vcpu *vcpu);
->>   
->> diff --git a/arch/riscv/kvm/vcpu_pmu.c b/arch/riscv/kvm/vcpu_pmu.c
->> index 2d9929bbc2c8..f706c688b338 100644
->> --- a/arch/riscv/kvm/vcpu_pmu.c
->> +++ b/arch/riscv/kvm/vcpu_pmu.c
->> @@ -14,6 +14,7 @@
->>   #include <asm/csr.h>
->>   #include <asm/kvm_vcpu_sbi.h>
->>   #include <asm/kvm_vcpu_pmu.h>
->> +#include <asm/sbi.h>
->>   #include <linux/bitops.h>
->>   
->>   #define kvm_pmu_num_counters(pmu) ((pmu)->num_hw_ctrs + (pmu)->num_fw_ctrs)
->> @@ -311,6 +312,80 @@ int kvm_riscv_vcpu_pmu_read_hpm(struct kvm_vcpu *vcpu, unsigned int csr_num,
->>   	return ret;
->>   }
->>   
->> +static void kvm_pmu_clear_snapshot_area(struct kvm_vcpu *vcpu)
->> +{
->> +	struct kvm_pmu *kvpmu = vcpu_to_pmu(vcpu);
->> +	int snapshot_area_size = sizeof(struct riscv_pmu_snapshot_data);
->> +
->> +	if (kvpmu->sdata) {
->> +		if (kvpmu->snapshot_addr != INVALID_GPA) {
->> +			memset(kvpmu->sdata, 0, snapshot_area_size);
->> +			kvm_vcpu_write_guest(vcpu, kvpmu->snapshot_addr,
->> +					     kvpmu->sdata, snapshot_area_size);
->> +		} else {
->> +			pr_warn("snapshot address invalid\n");
->> +		}
->> +		kfree(kvpmu->sdata);
->> +		kvpmu->sdata = NULL;
->> +	}
->> +	kvpmu->snapshot_addr = INVALID_GPA;
->> +}
->> +
->> +int kvm_riscv_vcpu_pmu_snapshot_set_shmem(struct kvm_vcpu *vcpu, unsigned long saddr_low,
->> +				      unsigned long saddr_high, unsigned long flags,
->> +				      struct kvm_vcpu_sbi_return *retdata)
->> +{
->> +	struct kvm_pmu *kvpmu = vcpu_to_pmu(vcpu);
->> +	int snapshot_area_size = sizeof(struct riscv_pmu_snapshot_data);
->> +	int sbiret = 0;
->> +	gpa_t saddr;
->> +	unsigned long hva;
->> +	bool writable;
->> +
->> +	if (!kvpmu || flags) {
->> +		sbiret = SBI_ERR_INVALID_PARAM;
->> +		goto out;
->> +	}
->> +
->> +	if (saddr_low == SBI_SHMEM_DISABLE && saddr_high == SBI_SHMEM_DISABLE) {
->> +		kvm_pmu_clear_snapshot_area(vcpu);
->> +		return 0;
->> +	}
->> +
->> +	saddr = saddr_low;
->> +
->> +	if (saddr_high != 0) {
->> +		if (IS_ENABLED(CONFIG_32BIT))
->> +			saddr |= ((gpa_t)saddr << 32);
+On Mon, 8 Apr 2024 18:02:13 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> On Fri, Apr 05, 2024 at 01:02:30PM +0200, Oleg Nesterov wrote:
+> > On 04/05, Jiri Olsa wrote:
+> > >
+> > > On Fri, Apr 05, 2024 at 10:22:03AM +0900, Masami Hiramatsu wrote:
+> > > >
+> > > > I think this expects setjmp/longjmp as below
+> > > >
+> > > > foo() { <- retprobe1
+> > > > 	setjmp()
+> > > > 	bar() { <- retprobe2
+> > > > 		longjmp()
+> > > > 	}
+> > > > } <- return to trampoline
+> > > >
+> > > > In this case, we need to skip retprobe2's instance.
+> > 
+> > Yes,
+> > 
+> > > > My concern is, if we can not find appropriate return instance, what happen?
+> > > > e.g.
+> > > >
+> > > > foo() { <-- retprobe1
+> > > >    bar() { # sp is decremented
+> > > >        sys_uretprobe() <-- ??
+> > > >     }
+> > > > }
+> > > >
+> > > > It seems sys_uretprobe() will handle retprobe1 at that point instead of
+> > > > SIGILL.
+> > >
+> > > yes, and I think it's fine, you get the consumer called in wrong place,
+> > > but it's your fault and kernel won't crash
+> > 
+> > Agreed.
+> > 
+> > With or without this patch userpace can also do
+> > 
+> > 	foo() { <-- retprobe1
+> > 		bar() {
+> > 			jump to xol_area
+> > 		}
+> > 	}
+> > 
+> > handle_trampoline() will handle retprobe1.
+> > 
+> > > this can be fixed by checking the syscall is called from the trampoline
+> > > and prevent handle_trampoline call if it's not
+> > 
+> > Yes, but I still do not think this makes a lot of sense. But I won't argue.
+> > 
+> > And what should sys_uretprobe() do if it is not called from the trampoline?
+> > I'd prefer force_sig(SIGILL) to punish the abuser ;) OK, OK, EINVAL.
 > 
-> saddr |= ((gpa_t)saddr_high << 32)
+> so the similar behaviour with int3 ends up with immediate SIGTRAP
+> and not invoking pending uretprobe consumers, like:
 > 
-
-Oops. Thanks for catching it. Fixed.
-
-
->> +		else
->> +			sbiret = SBI_ERR_INVALID_ADDRESS;
->> +		goto out;
->> +	}
->> +
+>   - setup uretprobe for foo
+>   - foo() {
+>       executes int 3 -> sends SIGTRAP
+>     }
 > 
-> Thanks,
-> drew
+> because the int3 handler checks if it got executed from the uretprobe's
+> trampoline.. if not it treats that int3 as regular trap
 
+Yeah, that is consistent behavior. Sounds good to me.
+
+> 
+> while for uretprobe syscall we have at the moment following behaviour:
+> 
+>   - setup uretprobe for foo
+>   - foo() {
+>      uretprobe_syscall -> executes foo's uretprobe consumers
+>     }
+>   - at some point we get to the 'ret' instruction that jump into uretprobe
+>     trampoline and the uretprobe_syscall won't find pending uretprobe and
+>     will send SIGILL
+> 
+> 
+> so I think we should mimic int3 behaviour and:
+> 
+>   - setup uretprobe for foo
+>   - foo() {
+>      uretprobe_syscall -> check if we got executed from uretprobe's
+>      trampoline and send SIGILL if that's not the case
+
+OK, this looks good to me.
+
+> 
+> I think it's better to have the offending process killed right away,
+> rather than having more undefined behaviour, waiting for final 'ret'
+> instruction that jumps to uretprobe trampoline and causes SIGILL
+> 
+> > 
+> > I agree very much with Andrii,
+> > 
+> >        sigreturn()  exists only to allow the implementation of signal handlers.  It should never be
+> >        called directly.  Details of the arguments (if any) passed to sigreturn() vary depending  on
+> >        the architecture.
+> > 
+> > this is how sys_uretprobe() should be treated/documented.
+> 
+> yes, will include man page patch in new version
+
+And please follow Documentation/process/adding-syscalls.rst in new version,
+then we can avoid repeating the same discussion :-)
+
+Thank you!
+
+> 
+> jirka
+> 
+> > 
+> > sigreturn() can be "improved" too. Say, it could validate sigcontext->ip
+> > and return -EINVAL if this addr is not valid. But why?
+> > 
+> > Oleg.
+> > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
