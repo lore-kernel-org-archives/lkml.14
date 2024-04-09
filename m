@@ -1,104 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A624F883;
-	Tue,  9 Apr 2024 12:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19074F883;
+	Tue,  9 Apr 2024 12:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712665055; cv=none; b=qY/u6LkJnOp9bc7WJai7SSuPWapMljuvAupFnpKQScD9WvFF92Ic9g//gfkCiL0kmE+U0Z3qh4pzHRXKyStSD8/zEGkZ8TpvFIGOesK1qyL7pPXcib5lW4SJZ8ZHZHLIsJRMawJ5nztdPbyv/HXmsWu75Js/i4bJDaMX8yGlfEI=
+	t=1712665061; cv=none; b=d2OHnBbt64FZy+2Y3Oti7GA2xiAWHn4KG0oMxXHCC/qUA/H2XczStoeVmkD5lLf0lpsEqY9qYTEwIREeBrE+AeVNreNnrCZzoHaFQ4kSqJHL2TW3Gm2SrMr+6mcovfiOV3YH4tOu/ZpNfvjllg6YkdfirDqaSOWeqABetgo4gaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712665055; c=relaxed/simple;
-	bh=fH+pqInuqCP8bPr3hH0Y8Q86LVIvkMeVKXe0pif5V9c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLws1CWK3JJ8GVC3bQTiPBwMbIYaLgZ27zs+WrA/a+BkktBKHFSRajp3K+HX8RIc+g/6h8hg7T6mN188fjAkS01RCY9PdjUROLC6knZlNBvNgIeC9jmUk0dcHd8Iark9reFMO/8d3sEH7dQqOqivQtZq0oIog+bDqaE6uDz2lQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0EWtxBMo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712665061; c=relaxed/simple;
+	bh=yTpd+BWqGy/dzKhGoAtCV3M5u9DuLZOaQnFsBurj/hA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hHsjUWJnCSY+DOf0Img3ZJCicWX6HFSMwxq7Mkd89gow0x4xxTr3PKUFy21EtG/PlH7Xf10MMwDMGHI5JdGvMA/OwIq+iPjwWHcMqOfx2A2MN/BpTtO/RZxFfX/q+mq4OH8DDpOYbdM53G6iOGSo4d3KU/UlhCHfC/pJEnmKV/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Lt5fXBfk; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0EWtxBMo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DB4C433F1;
-	Tue,  9 Apr 2024 12:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712665054;
-	bh=fH+pqInuqCP8bPr3hH0Y8Q86LVIvkMeVKXe0pif5V9c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0EWtxBMoqzphz7amkYmvLeLupc2mz5UF6CXnZt1n6bkV5RlOez9HF4pe9jifCU4Fh
-	 a5ihOtuJpxsDI9TX2knf3Nl2NS9d4dQJlGOfeCLqmqVvKhp6XAQlOehOvPz7x0awI9
-	 TUiUYJzJ18gZh9Unq9ncbHzICF+PO9DDY+A5SAgY=
-Date: Tue, 9 Apr 2024 14:17:31 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Sumanth Korikkar <sumanthk@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 6.6 000/252] 6.6.26-rc1 review
-Message-ID: <2024040912-item-nearby-d068@gregkh>
-References: <20240408125306.643546457@linuxfoundation.org>
- <CA+G9fYsvgN2ixfmDKc_x8yFnZ3SfrmSV5Ck1QC5KfmYN89CFYQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lt5fXBfk"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e6acb39d4so2055943a12.1;
+        Tue, 09 Apr 2024 05:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712665058; x=1713269858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Jqx/icbU3jj6O8zCfgxgC+Ni+cIZc9toLFwd7zueOI=;
+        b=Lt5fXBfkl+IKU/4tqZJITFwW69YkKlbg7OzveqkA5DfFCC2EG9BFxoiBATNjwnK3wu
+         28FTc5XArVAaLNByI1+j2iH3gruMGLAn9oicdlOdSCsmU9kkbmgXrpBHbedovK4PTAv5
+         wkl2aefTS7MBCJN2M4/Wtp0lXiBGjK62JOTsBlU47kQ4s92aOJkk0JCoBACkB40ltFXQ
+         ZxeZAwGKl9o2htl/YBkqFpkj55s6Xi9pvC5bdA5GQMrWUbPum+IjStT97ZIwWI4k/WbY
+         /+GAG1rJSQZgsawdiEfUM62HcS5B8GNHo6MJtp2gMXDAFLMTPcCFZDqE9cOC/vJ62BMQ
+         m8Tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712665058; x=1713269858;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Jqx/icbU3jj6O8zCfgxgC+Ni+cIZc9toLFwd7zueOI=;
+        b=nryobRCXbJ8ANXL7iV3noYzk0w89X1js6X5kqjo5l+6SLsn0zia7onexGQeayalcsv
+         15HY8xWlx0cpQyPnMWFwCqJZ2LwRUtRtts1EMMySajulE0b4KgBLJkoWiOWGO+Zj81/j
+         kiLoBEXIarGQMmk5pqQeyf7mNKJo2Y9DcbaubENSU2cD9t/ZIStOM1uajle46uIbh1B3
+         OftSeYYVdka5ORSql66jIfjDtY0KfnbXJTboLdHUOJCsXhPu/wdmyJ2sS9fiFJrZae/w
+         K76IMjsprcvPgygQq7xFgu1223zihNUTtRL1Upevq/Sj6uA0f+p7k4JwvZQvjzIh6j5A
+         nhvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEpg+R10/baIOst3Jl3RFXbtFDQHLbjNiqchFk7tV92hBUl0OKHLWgnZK7VbRQxjVYCWzXAHVTbuiRESJmisRQzvdtUAt6rRJj/FdP
+X-Gm-Message-State: AOJu0Yxe0FB/IWjygRZ0HNK1jgBn4tpWSPq+KC19p9et6rya9Cn9u59Q
+	t2EqMyDzMZ3Mh+DAnCi+6Ju83Y/iO0F0QDPT4jZVrPvmXsovPc2JWRTpJbuIZH0=
+X-Google-Smtp-Source: AGHT+IHb0aiM6x4hHUXi5dInTdRuPrj0DpsSGhZ+3F8jUx7rtLw7EPUKxknUPhwEqWysDtEgwfQacg==
+X-Received: by 2002:a17:906:e0cd:b0:a51:ae52:19d8 with SMTP id gl13-20020a170906e0cd00b00a51ae5219d8mr6615237ejb.6.1712665057395;
+        Tue, 09 Apr 2024 05:17:37 -0700 (PDT)
+Received: from andrejs-nb.int.toradex.com (77-59-154-235.dclient.hispeed.ch. [77.59.154.235])
+        by smtp.gmail.com with ESMTPSA id en1-20020a17090728c100b00a51adace6ebsm5030412ejc.79.2024.04.09.05.17.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 05:17:36 -0700 (PDT)
+From: Andrejs Cainikovs <andrejs.cainikovs@gmail.com>
+To: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
+Subject: [PATCH v1 0/2] ASoC: nau8822: add MCLK support
+Date: Tue,  9 Apr 2024 14:17:17 +0200
+Message-Id: <20240409121719.337709-1-andrejs.cainikovs@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsvgN2ixfmDKc_x8yFnZ3SfrmSV5Ck1QC5KfmYN89CFYQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 08, 2024 at 10:45:44PM +0530, Naresh Kamboju wrote:
-> On Mon, 8 Apr 2024 at 18:30, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.6.26 release.
-> > There are 252 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed, 10 Apr 2024 12:52:23 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.26-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> The s390 defconfig build failed with gcc-13 and clang-17 due following
-> build warning / errors on Linux stable-rc linux-6.6.y.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build error:
-> --------
-> arch/s390/kernel/perf_pai_crypto.c: In function 'paicrypt_stop':
-> arch/s390/kernel/perf_pai_crypto.c:280:51: error: 'paicrypt_root'
-> undeclared (first use in this function); did you mean 'paicrypt_stop'?
->   280 |         struct paicrypt_mapptr *mp = this_cpu_ptr(paicrypt_root.mapptr);
->       |                                                   ^~~~~~~~~~~~~
-> 
-> Commit detail,
->   s390/pai: fix sampling event removal for PMU device driver
->   [ Upstream commit e9f3af02f63909f41b43c28330434cc437639c5c ]
-> 
-> Steps to reproduce:
-> # tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
-> --kconfig defconfig
-> 
-> Links:
->   - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.25-253-gec59b99017e9/testrun/23347738/suite/build/test/gcc-13-defconfig/log
->   - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.25-253-gec59b99017e9/testrun/23347738/suite/build/test/gcc-13-defconfig/details/
->   - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eozoS8GQGxb94EUWNTPuXvYjVU/
+From: Andrejs Cainikovs <andrejs.cainikovs@toradex.com>
 
-Thanks, I'll go drop a bunch of s390 patches from this tree and push out
-a -rc2 later tonight.
+This change adds local MCLK handling, which would cover a case when a
+reference audio clock is present in a system, but is not allowed to be
+changed, see [1].
 
-greg k-h
+[1]: https://lore.kernel.org/all/ZfBdxrzX3EnPuGOn@ediswmail9.ad.cirrus.com/
+
+Andrejs Cainikovs (2):
+  ASoC: nau8822: move nau8822_set_dai_sysclk()
+  ASoC: nau8822: add MCLK support
+
+ sound/soc/codecs/nau8822.c | 69 ++++++++++++++++++++++++++++----------
+ sound/soc/codecs/nau8822.h |  1 +
+ 2 files changed, 53 insertions(+), 17 deletions(-)
+
+-- 
+2.34.1
+
