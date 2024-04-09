@@ -1,57 +1,57 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE277E777
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:27:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3B97F46A
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651225; cv=none; b=LZR95tm7RrqdVfmah885tOXptSjW4HYznXSNqCDIrSMbImqdsh/ePmMdZOKd/EmdTtgei51J4ztLowmr+lW1nIoy5U70Va9xZtvWF4vtrKvmPzDSSW9w0zDmsjp1/hep2pBI4vd5PTjK97aDlHa/LqNqnyNCHO0NJy/kVfNy5Nc=
+	t=1712651232; cv=none; b=q41fG2vl5eFDQzZV/hrIG4PxpwAJlSFpRXNHEuveXmnDjFHZvExFFNJUEG7blB2J75W5WqLF1iPgznt6TueP+BKxfor6YUS2x03lELOi9FLk3zbTngyDQTzgmdx2YpBNE5yVLPir5sJLGyug3E2wxSoymwSaMhk97QToOPzFt3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651225; c=relaxed/simple;
-	bh=ETs94iqJVrHJRgz2q3MMrYy7MrAw5n0uJJNve7xN6Vc=;
+	s=arc-20240116; t=1712651232; c=relaxed/simple;
+	bh=D+Ww0cHxH7lNQifArSTX5yyjcFVuKM5MIm3KMR2gH30=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mVW3jNxaYSjOgtLsEk0hIzBwrVQSSjl5aJZBNwzoXAZpXSGpQ3aQCDIe3SDm8X9/9FqBFBXGPhf3t5EOZ7PLXRdWNoKfPCoqlv3WGwbikNIQ6AUR3ax4LFAjwzFrA3CY5szTyjmsJcI3+PstF1ChEvAwhpKBG7+xUoNxVMpXiDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ag3lGwdW; arc=none smtp.client-ip=209.85.210.172
+	 MIME-Version; b=j/cPn+gwvAVtri9nix8HjO1Cu42sKb3N10vShz9tV8Tu5ArtTNZbBEbVOqnwiGUK7M4hCnIDk3ALxDANM9uOyyhZGKc5krW4phozvVPahen0dDo5tv6wVz07T/vxaKJ/GSPdT+iwL2D3YAzRPNUaALCPHV5Z75k6zlPU/hkDc0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uq0NgBcp; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ag3lGwdW"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed267f2936so1561892b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:27:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uq0NgBcp"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a52c544077so1216802a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:27:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712651223; x=1713256023; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712651230; x=1713256030; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GpjEhAQtgqO+DLm71KCeo2y5Y8KyQFcwcH3a5IWajwE=;
-        b=ag3lGwdWc6YYsw/CUW1Xsv/oHfwC0QSSFCwZ0fsAp7v4g2TnbtaNOhnAjYCtILTtzm
-         sZ+5c6ysXbZEJhHX1aq+npXHk+UqBGFiUT/v3b+KZ+OvHQGXx/4dCzhMAuLs5NVNtgRM
-         YyV+Jogoof1E4Xa98XrHehxaGOeY+58OzcPIVr5vm9o3+NikxHU4Qdpjng4A8ow3sAdW
-         mxsH61jkY3sYTxPflfJ1BTrrfcuOnGOoeEZsWKiqmpIPtCeef2IBSHb1ugK9ik0X4Qb4
-         TMjcu23agxAs1Cz4YPysXsWOVL58epyurVduXWLFf6ZLrL2CHdb+vbRn7VugobyuUz26
-         uKZg==
+        bh=9ZXg/AhadeS891XoBBBMkIgTpnMXwbdxyyz0Yc4z5x8=;
+        b=Uq0NgBcpYXI3lH/FTTF0NJI/iuwRHrRENxNLK0nDkygKeYShFDRAmii5YqmrjDigom
+         2AUhJTBei8SCUjxhtTgZElYaO2XrEDxKXFrG0JrQYp/41U6BYkd0BQBm1FN6VB5uBuil
+         BCYwnensFDXNmPR39WF2PGkySE7H/GsoPpUTjj13fhEFLV0lbYUK6QE0XUQcODSm9RLI
+         YUgzPrQMBxkwV849TSRqO/S8eqPsEpGFs81MlruSnntDyiJ4dti5b/+cbxDkINRPLymf
+         8L9JOktRBANxoKdhwbZcI2L2fNmCA/FBLx1rE/1aR7NYPZNxXbatm0GruFZBg5bwnYoq
+         IX7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712651223; x=1713256023;
+        d=1e100.net; s=20230601; t=1712651230; x=1713256030;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GpjEhAQtgqO+DLm71KCeo2y5Y8KyQFcwcH3a5IWajwE=;
-        b=BNBiT1PZQmeQ7yHikUBMyUiDVEEyRQ6nAVdGtfBOVHfRlpxCMEsA7AJi3JiHqrtHuL
-         JVEkHZwwULZiZHaoFQNjyedu9apAMEOZQ41XMq8kHALcmS3T3OuTNvMFQZhLsmrwqpiy
-         uaZYyuNPiGyLhsBIJgkjWL00C+DIJ/WqRR80fWHcBjXPWY8D34okda1VPa6VhOcQf/6G
-         650bdn3T7woNk1clUtHOAygWBKD7EpfHhV/nMmo0gDYYa1yCNWQNTSVQVNK3u3hLkj9g
-         bHUtXpHLGfqxHQlab6LC7YeEV+tvRQ4s3/XnHXbybqIi0qphBqmNXGDEwO1F523pBaLH
-         BsrA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ+ls24MdE6j0h2yZhNbamZciPc3pr3E2bpBXjeYs+jr4jX/h4DEn39LpviDnSLfE2jtC46xZInEC4rhDb6E7HWvVDgQsmkv33jTwK
-X-Gm-Message-State: AOJu0YxED2dEeL0Ee5+j1RheI3F9FaZlZZmAf0dltUJfjE/VgxY8ww9/
-	DXUn/FBvaY8mKKFhgKOT2aKBXJ5k2s+KYUEnGt0Qb+u1jDdjzQ/u
-X-Google-Smtp-Source: AGHT+IGLXAZ+gunF7hyCXzEaTPUaO18uUbecCeYC/lMFr9OrqEyLkgxoorBwDY+pMLEp+CyQ1vQJpw==
-X-Received: by 2002:a05:6a00:4f84:b0:6ea:afd1:90e6 with SMTP id ld4-20020a056a004f8400b006eaafd190e6mr11705280pfb.6.1712651223528;
-        Tue, 09 Apr 2024 01:27:03 -0700 (PDT)
+        bh=9ZXg/AhadeS891XoBBBMkIgTpnMXwbdxyyz0Yc4z5x8=;
+        b=LvPpauAdyf1PbCOO1BTvNb+4n8XCBBWDpiaVkZXVVyR4HcseSHdPzPsMdWVOJeDE+F
+         /dAV2hsdKZI9CGQZEqaeCMLwjSHQGtiP8wOgkgvJ5JIPthO/H21DsW6RPo1YnwbTqwqW
+         Q2CfgcveNW8ivhIzrESmZytLiUrMBaaH2T7WjbvPlCynnKMbhgw9HhopiNqn5/CZrfht
+         LQxAPB2N1J8HwU7IFry0GSmDmtVJM7zRw6/YtmMCTBdStasK52T5fy4ZaFm9Lu08ggjS
+         TVfHiJ7ZrFHBhprNzVnVO54lGF65jf7N7Zej2NoXN0KL0q4faXXRxed4QAAW14L+btJg
+         vFpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpxRWeuiBmx4a3PwyNplFWYbbu957q7v/wv7Btdrd7wubzTpEqv8Uap9jdlG5uIZH1+wTU55izUUM+kxNkmql0abnMWf0BvikIteag
+X-Gm-Message-State: AOJu0YzYaZc7P9CtVJV3c4I5jRBcwETyXTfKI9PrihYNyGKimDMunEGf
+	02TOP6UDHTJwkeVy9eO9zXXbLGr26YgbSzIk+GKf9TTdr7AJtbEL
+X-Google-Smtp-Source: AGHT+IFg5AbIygO1G/4Sf/xhmF54Nd1zJbM7cGgBTgS8FOC9fn0UWuAxj2wjNfCbUfjBKgj68N+xMw==
+X-Received: by 2002:a17:90b:3587:b0:2a4:e962:b62c with SMTP id mm7-20020a17090b358700b002a4e962b62cmr4228631pjb.49.1712651230311;
+        Tue, 09 Apr 2024 01:27:10 -0700 (PDT)
 Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.26.56
+        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.27.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 01:27:02 -0700 (PDT)
+        Tue, 09 Apr 2024 01:27:09 -0700 (PDT)
 From: Barry Song <21cnbao@gmail.com>
 To: akpm@linux-foundation.org,
 	linux-mm@kvack.org
@@ -72,9 +72,9 @@ Cc: baolin.wang@linux.alibaba.com,
 	yuzhao@google.com,
 	ziy@nvidia.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/5] mm: swap: make should_try_to_free_swap() support large-folio
-Date: Tue,  9 Apr 2024 20:26:28 +1200
-Message-Id: <20240409082631.187483-3-21cnbao@gmail.com>
+Subject: [PATCH v2 3/5] mm: swap_pte_batch: add an output argument to reture if all swap entries are exclusive
+Date: Tue,  9 Apr 2024 20:26:29 +1200
+Message-Id: <20240409082631.187483-4-21cnbao@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240409082631.187483-1-21cnbao@gmail.com>
 References: <20240409082631.187483-1-21cnbao@gmail.com>
@@ -86,36 +86,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chuanhua Han <hanchuanhua@oppo.com>
+From: Barry Song <v-songbaohua@oppo.com>
 
-The function should_try_to_free_swap() operates under the assumption that
-swap-in always occurs at the normal page granularity, i.e., folio_nr_pages
-= 1. However, in reality, for large folios, add_to_swap_cache() will
-invoke folio_ref_add(folio, nr). To accommodate large folio swap-in,
-this patch eliminates this assumption.
+Add a boolean argument named any_shared. If any of the swap entries are
+non-exclusive, set any_shared to true. The function do_swap_page() can
+then utilize this information to determine whether the entire large
+folio can be reused.
 
-Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
-Co-developed-by: Barry Song <v-songbaohua@oppo.com>
 Signed-off-by: Barry Song <v-songbaohua@oppo.com>
-Acked-by: Chris Li <chrisl@kernel.org>
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/internal.h | 9 ++++++++-
+ mm/madvise.c  | 2 +-
+ mm/memory.c   | 2 +-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
+diff --git a/mm/internal.h b/mm/internal.h
+index 9d3250b4a08a..cae39c372bfc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -238,7 +238,8 @@ static inline pte_t pte_next_swp_offset(pte_t pte)
+  *
+  * Return: the number of table entries in the batch.
+  */
+-static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t pte)
++static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t pte,
++				bool *any_shared)
+ {
+ 	pte_t expected_pte = pte_next_swp_offset(pte);
+ 	const pte_t *end_ptep = start_ptep + max_nr;
+@@ -248,12 +249,18 @@ static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t pte)
+ 	VM_WARN_ON(!is_swap_pte(pte));
+ 	VM_WARN_ON(non_swap_entry(pte_to_swp_entry(pte)));
+ 
++	if (any_shared)
++		*any_shared |= !pte_swp_exclusive(pte);
++
+ 	while (ptep < end_ptep) {
+ 		pte = ptep_get(ptep);
+ 
+ 		if (!pte_same(pte, expected_pte))
+ 			break;
+ 
++		if (any_shared)
++			*any_shared |= !pte_swp_exclusive(pte);
++
+ 		expected_pte = pte_next_swp_offset(expected_pte);
+ 		ptep++;
+ 	}
+diff --git a/mm/madvise.c b/mm/madvise.c
+index f59169888b8e..d34ca6983227 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -671,7 +671,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+ 			entry = pte_to_swp_entry(ptent);
+ 			if (!non_swap_entry(entry)) {
+ 				max_nr = (end - addr) / PAGE_SIZE;
+-				nr = swap_pte_batch(pte, max_nr, ptent);
++				nr = swap_pte_batch(pte, max_nr, ptent, NULL);
+ 				nr_swap -= nr;
+ 				free_swap_and_cache_nr(entry, nr);
+ 				clear_not_present_full_ptes(mm, addr, pte, nr, tlb->fullmm);
 diff --git a/mm/memory.c b/mm/memory.c
-index 78422d1c7381..2702d449880e 100644
+index 2702d449880e..c4a52e8d740a 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -3856,7 +3856,7 @@ static inline bool should_try_to_free_swap(struct folio *folio,
- 	 * reference only in case it's likely that we'll be the exlusive user.
- 	 */
- 	return (fault_flags & FAULT_FLAG_WRITE) && !folio_test_ksm(folio) &&
--		folio_ref_count(folio) == 2;
-+		folio_ref_count(folio) == (1 + folio_nr_pages(folio));
- }
- 
- static vm_fault_t pte_marker_clear(struct vm_fault *vmf)
+@@ -1638,7 +1638,7 @@ static unsigned long zap_pte_range(struct mmu_gather *tlb,
+ 			folio_put(folio);
+ 		} else if (!non_swap_entry(entry)) {
+ 			max_nr = (end - addr) / PAGE_SIZE;
+-			nr = swap_pte_batch(pte, max_nr, ptent);
++			nr = swap_pte_batch(pte, max_nr, ptent, NULL);
+ 			/* Genuine swap entries, hence a private anon pages */
+ 			if (!should_zap_cows(details))
+ 				continue;
 -- 
 2.34.1
 
