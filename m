@@ -1,460 +1,130 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19977D3F4
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EAF69DF4;
+	Tue,  9 Apr 2024 08:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712649763; cv=none; b=AFjP1n1YGgZwJikIZUNi8bASSBOgb9q2RkCoSY2nQS98vY4oc2a3lw8fUi6gffBMf3Xq1ctEP5eOcjUKUq30tkaNJnAyy2Rdhdw6dN1zsqcLoiXI4pSp/0XdrTXDia+qDqx5TZnBz4uTBxPJGTgUMjDImGE4T2/XdDYcspi0MFM=
+	t=1712649897; cv=none; b=jMAbgI4Gl695ikbqBOijXdPQUPVjxL6Jp2N1mDGUi+EuTJmo3K4s/PVp4uDIo3K2+Ec+n+ZcnxJUSf9pA7cw9OO7p1Ghc/3N0ESrV3T9Q4qaNklEKqYtTp2FSr33KiW7WzGuZ6oewGaBNq/WRfaiJUQUaF2dFrxwzohj1/0cbJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712649763; c=relaxed/simple;
-	bh=RMkmPex3frTv0AyXuez6OuNGGaWoHALG4+NitHzLX0E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IxrqbW1w56JIhZy0whhlZ2npYqdbAfqUvrRMs1T8LPSpGiq/GRN0pjbwCeOPoLhHvXODggKeXV6vCFPOtoTphZP+LCl+n+s7dyRQJY/BatlyKDWva0OzODxUXXvpQCgD0FDLNVLIuPaOulFHViZd9T1tYFMti/Uc7HC1slArRdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=G1reIxae; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712649897; c=relaxed/simple;
+	bh=cCaMo1+fUxFrVXXV1Xzdl9z/C7bdZto8r66DdOhDa5w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l/ccNNnuT127H5qrbWhcS49o8JUMmpGMq+UdowvWsUMwHXf4UM+NEtce8sLFcDGfbR+UkB7k7SWsYQj608e3Ce3poaajsz6IWPLyNHfVdQHd/WYv3O4OciGR5v3xTJ6vVMMcL7/YsQYnwhxHsXYcZ5ve+XezqtpkmSwndccaCeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=LNBLii2l; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="G1reIxae"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4397xoOD011668;
-	Tue, 9 Apr 2024 08:02:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	qcppdkim1; bh=AAyI8Q+pk2JwYrExyFP1SzDHgM54T10yf2PF96bdp/Q=; b=G1
-	reIxaeknfGkH6+LRJnfzl8pG7bdHH1qrGUdE/Jr2Fk1nYKsUD+hofb4GOVhnoqOk
-	/dXNT4JbISYV5UrolYZ0fiBNUuinFO38qi361NCQF8B2AEKqFNSLOzIF3EDyanwK
-	syR+tc4dc1yjVo2FhwTdhkXuutfdGuizMpfTANktvwv2MfDDnMvDiSlKpbkbsR+n
-	c2ahtvJHTAx4taKLSCIedzpF5vzT5rF/LyL6goQZph/TfggSnXZy7C5Po8fo0U03
-	vFBNUG51ympeYPD5YuZklbON7oOFF9qTvvHqIxPpDG4PBw3g7YBWrvlimczx7HXu
-	7f7TJ2nRzuX8JNedE6lg==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xctku0nt8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 08:02:37 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43982Z0B032522
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Apr 2024 08:02:35 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 9 Apr 2024 01:02:34 -0700
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <linux-kernel@vger.kernel.org>, <paulmck@kernel.org>
-CC: Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH] stop_machine: call rcu_momentary_dyntick_idle() from irq disable path
-Date: Tue, 9 Apr 2024 13:32:16 +0530
-Message-ID: <1712649736-27058-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="LNBLii2l"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=8QDe2x01Jl30GauNep5LKLXloCu2mfNe49QJ7ZfgzCA=;
+	t=1712649895; x=1713081895; b=LNBLii2l+46qlTbl5K0o7mTkN+cMdzXfF8G1LRRDPtBFi3k
+	3wlfBwtiaVkCvsE6l9X6khKXpDmYk35AMBXvOmxqy+yKeu603W+RBnNgmx8G069hEDxOEcYdO0ubO
+	Q6UC9AkxcKxbg8JTKrHW50+K2xV8YnpQvi+++7N/HPuW4OF3DDjLh9KqmJFGY93RQVmhD2brwA78x
+	2+ujQlalRejBwspCiT2SiahwoAvwh9UyFP/pO+l+3h7oucoOkIJJFCKrZSAmKXJwuVWap1U6nhPpU
+	ECYz7JrXy889zQMKi7vwqvjaFALABunRKAB8KO++1MUKtVC1AGvPb7TYMBcoHtbQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ru6TL-0006TY-40; Tue, 09 Apr 2024 10:04:51 +0200
+Message-ID: <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
+Date: Tue, 9 Apr 2024 10:04:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zZSWVRbQdnNTK9h2e1ZWDbJBRWmXZSeV
-X-Proofpoint-GUID: zZSWVRbQdnNTK9h2e1ZWDbJBRWmXZSeV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_04,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxscore=0 priorityscore=1501 phishscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 mlxlogscore=751 adultscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404090048
+User-Agent: Mozilla Thunderbird
+Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
+ Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+ Daniel <dmanlfc@gmail.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Sound System <linux-sound@vger.kernel.org>
+References: <ZhFJZoful6nEFskW@archie.me>
+ <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
+ <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
+ <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
+ <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712649895;6540c33d;
+X-HE-SMSGID: 1ru6TL-0006TY-40
 
-rcu_momentary_dyntick_idle() is getting called from all the irq
-disable path(also documented in rcu_momentary_dyntick_idle())
-however, in multi_cpu_stop() it is not.
+On 09.04.24 09:42, Cristian Ciocaltea wrote:
+> On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 09.04.24 01:44, Cristian Ciocaltea wrote:
+>>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
+>>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
+>>>>> on Steam Deck OLED [1]. He wrote:
+>>>
+>>>>>> I'm adding this here, I hope it's the correct place.
+>>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
+>>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
+>>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
+>>>> A quick search made me find these posts/threads that foreshadow the problem:
+>>>>
+>>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
+>>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
+>>>>
+>>>> From a quick look at the second discussion it seems a bit like we are
+>>>> screwed, as iiutc topology files are out in the wild for one or the
+>>>> other approach. So we might have to bite a bullet there and accept the
+>>>> regression -- but I might easily be totally mistaken here. Would be good
+>>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
+>>>> explain what's up here.
+>>>
+>>> The problem here is that Steam Deck OLED provides a topology file which
+>>> uses an incorrect DAI link ID for BT codec. 
+>>>
+>>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
+>>> topology, but this is not a change that can be accepted upstream as it
+>>> would break other devices which rely on BT_BE_ID set to 3.  
+>>>
+>>> The proper solution would be to update the topology file on Steam Deck,
+>>> but this is probably not straightforward to be accomplished as it would
+>>> break the compatibility with the currently released (downstream)
+>>> kernels.
+>>>
+>>> Hopefully, this sheds some more light on the matter.
+>>>
+>>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
+>>
+>> Many thx, yes, this sheds some light on the matter. But there is one
+>> remaining question: can we make both camps happy somehow? E.g. something
+>> along the lines of "first detect if the topology file has BT_BE_ID in
+>> position 2 or 3 and then act accordingly?
+> 
+> Right, I have this on my TODOs list but haven't managed to dig into it
+> yet. However, that would be most likely just another hack to be carried
+> on until the transition to a fixed topology is completed.
 
-"
+Well, sure it's a hack, but the thing is, our number one rule is "no
+regressions" and the reporter apparently faces one (see start of the
+thread). So to fulfill this rule it would be ideal to have a fix
+available soonish or revert the culprit and reply it later together with
+the fix.
 
- * Let the RCU core know that this CPU has gone through the scheduler,
- * which is a quiescent state.  This is called when the need for a
- * quiescent state is urgent, so we burn an atomic operation and full
- * memory barriers to let the RCU core know about it, regardless of what
- * this CPU might (or might not) do in the near future.
- *
- * We inform the RCU core by emulating a zero-duration dyntick-idle period.
- *
- * The caller must have disabled interrupts and must not be idle.
+Do we know which change that went into 6.8 caused this? Or is a revert
+out-of-the question as it will likely break things for other users that
+already upgraded to 6.8 and have a matching topology file? (/me fears
+the answer to the latter question is "yes", but I have to ask :-/)
 
-"
-
-
-Let's fix this as it is possible that during stop_machine() call for
-a kprobe registration[1] can get stuck when one cpu(cpu4) calls
-rcu_momentary_dyntick_idle() after acking MULTI_STOP_PREPARE state[2]
-and other cpus have acked MULTI_STOP_DISABLE_IRQ and waiting for earlier
-cpu to reach to next state [3].
-
-
-[1]
-
-    [<ffffffdb78c75c54>] __switch_to+0x1e8
-    [<ffffffdb78c76520>] __schedule+0x6bc
-    [<ffffffdb78c76af0>] preempt_schedule_common+0xb4
-    [<ffffffdb78c75e60>] preempt_schedule[jt]+0x20
-    [<ffffffdb77dd7bd0>] queue_stop_cpus_work[jt]+0xdc
-    [<ffffffdb77dd781c>] stop_machine_cpuslocked+0xdc
-    [<ffffffdb78c816f8>] aarch64_insn_patch_text[jt]+0x4c
-    [<ffffffdb78c81938>] arch_arm_kprobe+0x40
-    [<ffffffdb77de88c0>] arm_kprobe+0x3c
-    [<ffffffdb77de84f4>] register_kprobe+0x3fc
-
-
-[2]
-000|check_preemption_disabled(what1 = 0xFFFFFFDB79153D0B, what2 = 0xFFFFFFDB7912A911)
-    |  what1 = 0xFFFFFFDB79153D0B
-    |  what2 = 0xFFFFFFDB7912A911
--001|__this_cpu_preempt_check(op = ?)
--002|rcu_preempt_need_deferred_qs(inline)
-    |  t = 0xFFFFFF8806879F80
-    |  pscr_ret__ = 0
--002|rcu_preempt_deferred_qs(inline)
-    |  t = 0xFFFFFF8806879F80
-    |  flags = 0
--002|rcu_momentary_dyntick_idle()
--003|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_PREPARE     ==> This seems to have acked MULTI_STOP_PREPARE
-                                             state and calls rcu_momentary_dyntick_idle()
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--004|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6D812F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--005|smpboot_thread_fn(:data = 0xFFFFFF8805C063C0)
-    |  data = 0xFFFFFF8805C063C0
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--006|kthread(_create = 0xFFFFFF8806B7EC00)
-    |  _create = 0xFFFFFF8806B7EC00
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C063C0
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806402F00
-    |  done = 0xFFFFFFC08005BA98
--007|ret_from_fork(asm)
-
-[3]
-000|touch_softlockup_watchdog()                                                    
--001|touch_nmi_watchdog(inline)                                             
--001|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  newstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--002|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6D04EF28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--003|smpboot_thread_fn(:data = 0xFFFFFF8805C06230)
-    |  data = 0xFFFFFF8805C06230
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--004|kthread(_create = 0xFFFFFF8806469D80)
-    |  _create = 0xFFFFFF8806469D80
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C06230
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806401500
-    |  done = 0xFFFFFFC08005B888
--005|ret_from_fork(asm)
----|end of frame
- 
-cpu1:
- 
--000|touch_softlockup_watchdog()
--001|touch_nmi_watchdog(inline)
--001|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  newstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--002|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6D23FF28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--003|smpboot_thread_fn(:data = 0xFFFFFF8805C06270)
-    |  data = 0xFFFFFF8805C06270
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--004|kthread(_create = 0xFFFFFF88066119C0)
-    |  _create = 0xFFFFFF88066119C0
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C06270
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806401000
-    |  done = 0xFFFFFFC08005BA98
--005|ret_from_fork(asm)
----|end of frame
- 
-cpu2:
- 
--000|touch_softlockup_watchdog()
--001|touch_nmi_watchdog(inline)
--001|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  newstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--002|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6D430F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--003|smpboot_thread_fn(:data = 0xFFFFFF8805C062E0)
-    |  data = 0xFFFFFF8805C062E0
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--004|kthread(_create = 0xFFFFFF88067D5B80)
-    |  _create = 0xFFFFFF88067D5B80
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C062E0
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806403F00
-    |  done = 0xFFFFFFC08005BA98
--005|ret_from_fork(asm)
----|end of frame
- 
-cpu3:
- 
--000|touch_softlockup_watchdog_sched(inline)
-    |  __ptr = 18446743916840366040
--000|touch_softlockup_watchdog()
--001|touch_nmi_watchdog(inline)
--001|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  newstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--002|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6D621F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--003|smpboot_thread_fn(:data = 0xFFFFFF8805C06350)
-    |  data = 0xFFFFFF8805C06350
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--004|kthread(_create = 0xFFFFFF88069E7300)
-    |  _create = 0xFFFFFF88069E7300
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C06350
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806403300
-    |  done = 0xFFFFFFC08005BA98
--005|ret_from_fork(asm)
----|end of frame
- 
- 
-Cpu5:
- 
--000|check_preemption_disabled(what1 = ?, what2 = ?)
-    |  what1 = ?
-    |  what2 = ?
--001|debug_smp_processor_id()
--002|ct_state_inc(inline)
-    |  incby = 8
-    |  __ptr = 0
--002|rcu_momentary_dyntick_idle()
-    |  seq = 0
--003|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--004|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6DA03F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--005|smpboot_thread_fn(:data = 0xFFFFFF8805C06430)
-    |  data = 0xFFFFFF8805C06430
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--006|kthread(_create = 0xFFFFFF8806D58180)
-    |  _create = 0xFFFFFF8806D58180
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C06430
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806402400
-    |  done = 0xFFFFFFC08005BA98
--007|ret_from_fork(asm)
----|end of frame
- 
-Cpu6:
- 
--000|check_preemption_disabled(what1 = ?, what2 = ?)
-    |  what1 = ?
-    |  what2 = ?
--001|__this_cpu_preempt_check(op = ?)
--002|rcu_preempt_need_deferred_qs(inline)
-    |  t = 0xFFFFFF8806E03F00
-    |  pscr_ret__ = 0
--002|rcu_preempt_deferred_qs(inline)
-    |  t = 0xFFFFFF8806E03F00
-    |  flags = 0
--002|rcu_momentary_dyntick_idle()
--003|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--004|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6DBF4F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--005|smpboot_thread_fn(:data = 0xFFFFFF8805C064A0)
-    |  data = 0xFFFFFF8805C064A0
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--006|kthread(_create = 0xFFFFFF8806F67D00)
-    |  _create = 0xFFFFFF8806F67D00
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C064A0
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806402600
-    |  done = 0xFFFFFFC08005BA98
--007|ret_from_fork(asm)
----|end of frame
- 
-Cpu7:
- 
--000|check_preemption_disabled(what1 = ?, what2 = ?)
-    |  what1 = ?
-    |  what2 = ?
--001|__this_cpu_preempt_check(op = ?)
--002|rcu_preempt_need_deferred_qs(inline)
-    |  t = 0xFFFFFF8806E1DE80
-    |  pscr_ret__ = 0
--002|rcu_preempt_deferred_qs(inline)
-    |  t = 0xFFFFFF8806E1DE80
-    |  flags = 0
--002|rcu_momentary_dyntick_idle()
--003|multi_cpu_stop(:data = 0xFFFFFFC084343478)
-    |  data = 0xFFFFFFC084343478
-    |  msdata = 0x0
-    |  curstate = MULTI_STOP_DISABLE_IRQ
-    |  flags = 0
-    |  is_active = TRUE
-    |  cpumask = 0xFFFFFFDB79E37718
-    |  err = 0
--004|cpu_stopper_thread(cpu = ?)
-    |  cpu = ?
-    |  __already_done = FALSE
-    |  stopper = 0xFFFFFF8B6DDE5F28
-    |  fn = 0xFFFFFFDB77DD74C4
-    |  arg = 0xFFFFFFC084343478
-    |  done = 0xFFFFFFC0843434A0
-    |  ret = ???
--005|smpboot_thread_fn(:data = 0xFFFFFF8805C06510)
-    |  data = 0xFFFFFF8805C06510
-    |  td = 0x0
-    |  ht = 0xFFFFFFDB79EE8B40
--006|kthread(_create = 0xFFFFFF88070FF300)
-    |  _create = 0xFFFFFF88070FF300
-    |  param = (sched_priority = 0)
-    |  create = 0x0
-    |  data = 0xFFFFFF8805C06510
-    |  threadfn = 0x0
-    |  ret = ???
-    |  self = 0xFFFFFF8806407D00
-    |  done = 0xFFFFFFC08005BA98
--007|ret_from_fork(asm)
----|end of frame
-
-
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- kernel/stop_machine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/stop_machine.c b/kernel/stop_machine.c
-index cedb17ba158a..f93e6deb8150 100644
---- a/kernel/stop_machine.c
-+++ b/kernel/stop_machine.c
-@@ -250,8 +250,8 @@ static int multi_cpu_stop(void *data)
- 			 * be detected and reported on their side.
- 			 */
- 			touch_nmi_watchdog();
-+			rcu_momentary_dyntick_idle();
- 		}
--		rcu_momentary_dyntick_idle();
- 	} while (curstate != MULTI_STOP_EXIT);
- 
- 	local_irq_restore(flags);
--- 
-2.7.4
-
+Ciao, Thorsten
