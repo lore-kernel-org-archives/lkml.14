@@ -1,176 +1,128 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069C519B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 00:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B4C19B;
+	Tue,  9 Apr 2024 00:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712621086; cv=none; b=TDcgB7uVJ66a8aUFWkDBbl6tYAawfoxlD8nXIb8wzIXXLaeKzpxz5RS+fghlFQ14+BmOAn4nHEmYYglHg7sbcXUaHSNbONnvutzer3e7cPyAKpMs0Ozh6KgZcH/pJv95fG9C+/2wGt8mAkIXUMQp9dLgG48XzByxzZheYSel7g4=
+	t=1712621221; cv=none; b=JP3vlgnlEQj1GA77rIApXesV6/QN9Ov8+KU832K/XC2UFxEQQDQIi77f4YypJDS3iYl7sOOWOctRnBfxSNIOlFsBf9nz2Nm7bNGs3L/txHaC7U3xtwtSaxBb8MZ2UvEdvB6NmlC9PcP80SbFtHCyyUF5l4BFTLkdy9YKo5oZINg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712621086; c=relaxed/simple;
-	bh=tGemAdGs1i/th5kpM2ts3FwXyK6yltFMw9jonLi8+1s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RCRjTptzkhUOdMST9xb28i2ZJLlUy/Cga83dWwXhHPMxsvfvUqmoQeRIhnOZ9CsYmP2mNAH6cIZy8g06c75h2orh4N3JVtcc7KWqK8sFZe0OLbdx3Q7Jel3cj0e9K7t60UyquEkoE4SHBpxL0xiCT0kExEu7wzkw0py0W2zCxkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ag5YBuC4; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712621221; c=relaxed/simple;
+	bh=1Je+KDKrrgG2RiL1DsJQO7r/yZ910Uu/gCpX0BrhBQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gyR91BS18sDelbBuksZCOJ94xD3BL1cy6gXGnvQF4HhAtqS/Rf6kfrf+72rayVOFX2fg8R7Y21IHC5Hs3HpKFzHMN8GZ+wsDLecht61ScRiGYVGbPiAxotQZMOTHjTvnHJJBoD/Aob+E3xrbgZFWYkKrl/CLVpCcZ7qV1jiIVhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r2dyQa/5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ag5YBuC4"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e3e56c9d2cso19261185ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 17:04:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712621084; x=1713225884; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xd+FWiZlX/lpCLCXGGzdHlU3p21YETfnnn9ljhWHF9I=;
-        b=ag5YBuC4jZYDWk+vcemFhfpKim+usl0i89xx/mLRK/sZ5KhQu4noBx6ZHCWYMvbb3z
-         1HberzLuUvZ17p8Xp5sTpijGt+9K+T787qIibS53AIQnhGEsCskhHiJHhqTaHTdGbdJB
-         4WOrHva4e8dWwlu0Fp50P+XxdpZJEP7HxVU2wenl4GV9nFd6Us/ONeBn8hzAUTCSy0rP
-         DM9/owVNWzWVhxY04snMMIxglq4qND5KGAp/5eMeEQb8D8lDXqSzvtKnhAPVRi11mC/P
-         xr4qRFRV01w8gYyXp4yy0SLWXIcQUf4OcVnbSIGue3lSE1x4W9UhZEdev9rED215ppxZ
-         BJcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712621084; x=1713225884;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xd+FWiZlX/lpCLCXGGzdHlU3p21YETfnnn9ljhWHF9I=;
-        b=DuO2sFEqqgPg8jpw8SUv9aX58RHZp65MJZd/ztXUaQjEDAUOvsP2Mhl6/S09O9ilbQ
-         bIQoJ80mMzSJtYusYT6fsCQA6abovuPAxffhTz4EE0/7RVfKaPk8fgvKZ+5JXgMhDJqQ
-         MWpSx8ifTln+p7m2DUomVhqv2IxxC1wsRtyhtI75ct5gz9UBbEhM3LBF4ChCYBd1YWtP
-         X1umRi61Y2m6W2NhTZzwVccCTPUXpBafbTCsf39Ac/C5kaxXR9jr43Qjix6xb9bhF9RG
-         YibPARsas4oef6b+9AkjvCXfr5y08pgPDswLMx1FTCo0ihuOFzkB4gdBkRD2xdA+hN9/
-         /uPg==
-X-Gm-Message-State: AOJu0Yz+T/zLIF/1rP3sFlqK5hGEFIu+AXWcNU6gHv7tdofKk8jvjCb1
-	ry2VmY6UiMLmqJnvAlOIcsPv7pc79cT7Y+DwawN0JJv/DovSHH7hnORNUSCON2c=
-X-Google-Smtp-Source: AGHT+IG0OLdQkdZe7TuiqVfC4hYuT4+LNj+NNHp96L1eyYQkeOCssr3BNq26TdksuIIDjP/3fRra5A==
-X-Received: by 2002:a17:902:d2ca:b0:1e4:1932:b0a5 with SMTP id n10-20020a170902d2ca00b001e41932b0a5mr5371923plc.68.1712621084126;
-        Mon, 08 Apr 2024 17:04:44 -0700 (PDT)
-Received: from ?IPV6:2601:647:4180:9630::e8c1? ([2601:647:4180:9630::e8c1])
-        by smtp.gmail.com with ESMTPSA id c17-20020a170902d49100b001e1071cf0bbsm4411011plg.302.2024.04.08.17.04.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 17:04:43 -0700 (PDT)
-Message-ID: <e95f9821-e83c-4abb-941d-60ce24b9c0a3@rivosinc.com>
-Date: Mon, 8 Apr 2024 17:04:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r2dyQa/5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE5BC43390;
+	Tue,  9 Apr 2024 00:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712621221;
+	bh=1Je+KDKrrgG2RiL1DsJQO7r/yZ910Uu/gCpX0BrhBQc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r2dyQa/5V+n0eKk8ovdczV5xdCpQxxXMRHy3jsBxpc4OpJNNGZSH7FyA7HmUYEHjX
+	 tvseeoHFd4ZSez0emtn/Gw+1nq6MIz2gh4NVX0uLAz7w7Ggj9QayUh9pkbgMw9WT/U
+	 eCcyv1JM12FrmerO6PJT3A99bq4oQeiQajBPQoXnMADxaGD6HsECBMuxx6pZOr5VWd
+	 9qFCykJHJDFIwGNGPX33Fkos5Sy7p4i7xYBqrmD4bhAzChmLZ5M/IHGLsBSzV3nn6K
+	 2t8EEkdWP1bfjoPuYQhCLhbETKktDVVrRwNhOuvzuY1/Dw5ra0T0gHz3pWx1gAZrl6
+	 vBhClGcluhHrA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH 2/3] perf hist: Add weight fields to hist entry stats
+Date: Mon,  8 Apr 2024 17:06:58 -0700
+Message-ID: <20240409000659.1727785-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+In-Reply-To: <20240409000659.1727785-1-namhyung@kernel.org>
+References: <20240409000659.1727785-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 03/22] drivers/perf: riscv: Read upper bits of a
- firmware counter
-Content-Language: en-US
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
- Conor Dooley <conor.dooley@microchip.com>, Anup Patel <anup@brainfault.org>,
- Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Alexey Makhalov <amakhalov@vmware.com>, Juergen Gross <jgross@suse.com>,
- kvm-riscv@lists.infradead.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org,
- Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley
- <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>,
- virtualization@lists.linux.dev,
- VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
- Will Deacon <will@kernel.org>, x86@kernel.org
-References: <20240403080452.1007601-1-atishp@rivosinc.com>
- <20240403080452.1007601-4-atishp@rivosinc.com>
- <20240404-89ee7d7f90a5fcc91809065e@orel>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20240404-89ee7d7f90a5fcc91809065e@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/4/24 04:02, Andrew Jones wrote:
-> On Wed, Apr 03, 2024 at 01:04:32AM -0700, Atish Patra wrote:
->> SBI v2.0 introduced a explicit function to read the upper 32 bits
->> for any firmware counter width that is longer than 32bits.
->> This is only applicable for RV32 where firmware counter can be
->> 64 bit.
->>
->> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
->> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
->> Reviewed-by: Anup Patel <anup@brainfault.org>
->> Signed-off-by: Atish Patra <atishp@rivosinc.com>
->> ---
->>   drivers/perf/riscv_pmu_sbi.c | 25 ++++++++++++++++++++-----
->>   1 file changed, 20 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
->> index 3e44d2fb8bf8..babf1b9a4dbe 100644
->> --- a/drivers/perf/riscv_pmu_sbi.c
->> +++ b/drivers/perf/riscv_pmu_sbi.c
->> @@ -57,6 +57,8 @@ asm volatile(ALTERNATIVE(						\
->>   PMU_FORMAT_ATTR(event, "config:0-47");
->>   PMU_FORMAT_ATTR(firmware, "config:63");
->>   
->> +static bool sbi_v2_available;
->> +
->>   static struct attribute *riscv_arch_formats_attr[] = {
->>   	&format_attr_event.attr,
->>   	&format_attr_firmware.attr,
->> @@ -511,19 +513,29 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
->>   	struct hw_perf_event *hwc = &event->hw;
->>   	int idx = hwc->idx;
->>   	struct sbiret ret;
->> -	union sbi_pmu_ctr_info info;
->>   	u64 val = 0;
->> +	union sbi_pmu_ctr_info info = pmu_ctr_list[idx];
->>   
->>   	if (pmu_sbi_is_fw_event(event)) {
->>   		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ,
->>   				hwc->idx, 0, 0, 0, 0, 0);
->> -		if (!ret.error)
->> -			val = ret.value;
->> +		if (ret.error)
->> +			return 0;
->> +
->> +		val = ret.value;
->> +		if (IS_ENABLED(CONFIG_32BIT) && sbi_v2_available && info.width >= 32) {
->> +			ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_FW_READ_HI,
->> +					hwc->idx, 0, 0, 0, 0, 0);
->> +			if (!ret.error)
->> +				val |= ((u64)ret.value << 32);
->> +			else
->> +				WARN_ONCE(1, "Unable to read upper 32 bits of firmware counter error: %d\n",
->> +					  sbi_err_map_linux_errno(ret.error));
-> 
-> I don't think we should use sbi_err_map_linux_errno() in this case since
-> we don't have a 1:1 mapping of SBI errors to Linux errors and we don't
-> propagate the error as a Linux error. For warnings, it's better to output
-> the exact SBI error.
-> 
+Like period and sample numbers, it'd be better to track weight values
+and display them in the output rather than having them as sort keys.
 
-Sure. Fixed it.
+This patch just adds a few more fields to save the weights in a hist
+entry.  It'll be displayed as new output fields in the later patch.
 
->> +		}
->>   	} else {
->> -		info = pmu_ctr_list[idx];
->>   		val = riscv_pmu_ctr_read_csr(info.csr);
->>   		if (IS_ENABLED(CONFIG_32BIT))
->> -			val = ((u64)riscv_pmu_ctr_read_csr(info.csr + 0x80)) << 31 | val;
->> +			val |= ((u64)riscv_pmu_ctr_read_csr(info.csr + 0x80)) << 32;
->>   	}
->>   
->>   	return val;
->> @@ -1135,6 +1147,9 @@ static int __init pmu_sbi_devinit(void)
->>   		return 0;
->>   	}
->>   
->> +	if (sbi_spec_version >= sbi_mk_version(2, 0))
->> +		sbi_v2_available = true;
->> +
->>   	ret = cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_STARTING,
->>   				      "perf/riscv/pmu:starting",
->>   				      pmu_sbi_starting_cpu, pmu_sbi_dying_cpu);
->> -- 
->> 2.34.1
->>
-> 
-> Thanks,
-> drew
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.c | 12 ++++++++++--
+ tools/perf/util/hist.h |  3 +++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index fa359180ebf8..9d43f8ae412d 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -308,6 +308,9 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
+ 	dest->period_us		+= src->period_us;
+ 	dest->period_guest_sys	+= src->period_guest_sys;
+ 	dest->period_guest_us	+= src->period_guest_us;
++	dest->weight1		+= src->weight1;
++	dest->weight2		+= src->weight2;
++	dest->weight3		+= src->weight3;
+ 	dest->nr_events		+= src->nr_events;
+ }
+ 
+@@ -315,7 +318,9 @@ static void he_stat__decay(struct he_stat *he_stat)
+ {
+ 	he_stat->period = (he_stat->period * 7) / 8;
+ 	he_stat->nr_events = (he_stat->nr_events * 7) / 8;
+-	/* XXX need decay for weight too? */
++	he_stat->weight1 = (he_stat->weight1 * 7) / 8;
++	he_stat->weight2 = (he_stat->weight2 * 7) / 8;
++	he_stat->weight3 = (he_stat->weight3 * 7) / 8;
+ }
+ 
+ static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
+@@ -614,7 +619,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 		cmp = hist_entry__cmp(he, entry);
+ 		if (!cmp) {
+ 			if (sample_self) {
+-				he_stat__add_period(&he->stat, period);
++				he_stat__add_stat(&he->stat, &entry->stat);
+ 				hist_entry__add_callchain_period(he, period);
+ 			}
+ 			if (symbol_conf.cumulate_callchain)
+@@ -731,6 +736,9 @@ __hists__add_entry(struct hists *hists,
+ 		.stat = {
+ 			.nr_events = 1,
+ 			.period	= sample->period,
++			.weight1 = sample->weight,
++			.weight2 = sample->ins_lat,
++			.weight3 = sample->p_stage_cyc,
+ 		},
+ 		.parent = sym_parent,
+ 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 8f072f3749eb..f34f101c36c2 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -163,6 +163,9 @@ struct he_stat {
+ 	u64			period_us;
+ 	u64			period_guest_sys;
+ 	u64			period_guest_us;
++	u64			weight1;
++	u64			weight2;
++	u64			weight3;
+ 	u32			nr_events;
+ };
+ 
+-- 
+2.44.0.478.gd926399ef9-goog
 
