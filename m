@@ -1,380 +1,178 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078DA6A033
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 06:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CE06EB72
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 06:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712643083; cv=none; b=RciCFyvUnQ8NKLu9AVJ8z7X3MeS8QWLSiy5lW/htX6vXzuZxDc6CeDWcitknwTdEDTEwYF+gD3VtDMBLk1h8cYjeSdGoA6/xCs0Gm5DnIiSL2g49aBBlCui2xj3DVimmMAiDEzZYNP1ObsvwP8RPK8m13I7oTE/8SrHbr2SoqFQ=
+	t=1712643119; cv=none; b=KeNOVn56Nee9GrKHwO17IlFhKwfb/tQ8AdQDEY+iSHIXjkvTSkaXJk33aGJsa2oJ8mowPAVGuAACSQ0oF5Wv5G38ynad6kk0/Vvt4zOp9YZU7pCW3kW+xWk5gNZgYPL7XtnUnMI1mfTygW2PZy3iWCdQ89u/VHVr/YZr5PjN5RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712643083; c=relaxed/simple;
-	bh=FeGJhwdCRoYiR7gWBRDEHf6ksBD8EYGCjDCGZB1cG1k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=pyJ3nasdll7XmcnVheSkUmsmii/Gq/GzmsvLZTSSu6VtwRA7iPF7WARDDWI+wjXjS9sPkZOffu9IlBkPBdS3tAmcjN34phGPyeqlP6w/jAYEYsZDpgE5XKkYEOwixdJ9KBOqKvlgEq3GAlpzhHxzK6hqYSYz/iR3A9q9eG8wIOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XQdrfIcv; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1712643119; c=relaxed/simple;
+	bh=I9xVI12IPjLWrDdUcoDuZ65TsSjC6yYu8PIgdN/YZ0I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JGZO1dp3s9neLNwDEoQkeZq2DTqDJI7k4BWRgoi7VmJFNPMWraTipOgCZeKHMM5FIdd/sQwWqG3dTwBdZM7OgEQalaFtJpAeeG8pwV9DWrAszF6M6rlVWYGGGHy0C7OmME+J7iuKq1pW6Xd3KmPtLxiGz0tPRhFh7yfHexSqYgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=fJynFljQ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XQdrfIcv"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-22f078f1aecso1445070fac.3
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 23:11:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="fJynFljQ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e36b7e7dd2so31353545ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 23:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1712643079; x=1713247879; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mBHuIUhNOhdsdT4E1VbYuT6s0TqYlSkEpMfCY4cxP8I=;
-        b=XQdrfIcvgoi1Dg2XP37+n/69SkHbOIy5Wy7USaOoJBxt/TAZCGDfAKmQTVTK1sMwFp
-         ceIzBs41ST5tKLhTZFHVD3E9eX62ynm5bGXvP59HD9xOsrBjp9Pk/iZ1FmLXGpao2LxI
-         RcKULfVcL+XPsNWgeSBUxa58maGN86N3wEQvgrFcjG8qYwYC4JPdkGgCd07ruh0G/5+B
-         fMTQLkyd4OzjOF0N2S2WQGTAjojnESyOjaKoiFQzd8zpDzk2z50dt4OHb2E0HFGIGRpI
-         G7oNFEdbX9U/Op+cbaS7+gVAqYPO99NHwVK9fwvZEqc5WxfjkFuR5FBBU7cbjw5NrEFr
-         1r6Q==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712643117; x=1713247917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LNu+GMI0LnpE6OoNqPaNP2xIRA7y3ywXaMFD3+hEy+U=;
+        b=fJynFljQzLD46vIpZsXNf5UHdkkcaiZR3genPfSsleAJqy9yOxWWQ1h02DrYMC50hY
+         OrAP+LswTnZ7K6zskTultFVXodIyR0vC/cPxo983CU0tKpgT3tN4YadllWGIFtWUgrSH
+         RYQWqhxM5d04O7mbpmamjpJU6Flr1Oy75opkxR1d0+oiICG859672mYFXKV3QxSf1YCb
+         LYdQLXJFi5ala29Pd0D0V+FHa6weAD5BG4gM1gGM7OvpBUym0cdKcMm7J4FYcGsW1z3z
+         pMD+go6lBLAm8XtiJ4bmu+H6ZSQh7q3foSVt5kYohxuNw4NVpUF6+qoYKYv6he0iVdfs
+         w6JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712643079; x=1713247879;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mBHuIUhNOhdsdT4E1VbYuT6s0TqYlSkEpMfCY4cxP8I=;
-        b=uZfvUfZ8MSgi6p0FWisuuvI/4/2vzBQDuzbid2zsRaT8GPRES7sHkVW/P9b10wC+KU
-         XqlEe4g9+1+w4lNLa0+yeoZBh2sU3AxETcRxqPdAtI1XdPAH7ILKduis+f/C6AiMqin1
-         qEi2HyPCqdY3Em6G+0UjXYm8ZaxfHz/vxQYcGcN/ei/rU+tTa/91GU5jmMxsaAQxb7QT
-         ZmuHrmYSoQusbrXkj1NxTO+XwxNO0e5iU0ffmtu8P51oXg24M6kzAlhkuKymnQk7ehI7
-         RLBlBS9+vUS+w5ehO7dri2ACgWlsULPidRVkRLfGbkjd1oKGrCvRpkb5simt1ePdQeow
-         IUbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUweEqR7XoM1o9d9P8/Wy4jmrt6NX/X36bqxrCDSiU9dozYw9qOeaFr5QLfDCU/pojSoJej9vEDYsQZKjzzO+5bFXo6/ATkifIIZoDd
-X-Gm-Message-State: AOJu0Yz24O4uRXQc0ifl6FtPsBf/7IG6JOX4yArkDM+FR9gPqFVQgPzq
-	MKha67FKYntTLit36luVTnUVuiSMSSRZqb7K+U5UjzNZXrJPCnRG6vvmgs7ers3R+/ezvjKgS8/
-	2g5ecyAKibP0E5UxXZm4ulEiqqihzPjaLhwUJlA==
-X-Google-Smtp-Source: AGHT+IFvudyBofLrHAmCHcvrirjTPeOh/LfBkROqNxC8jYZnxveaUfivrBknhs9HXAiY/b7ilrHkQVPl/uePqbz67jU=
-X-Received: by 2002:a05:6870:d286:b0:22a:7c81:1e2e with SMTP id
- d6-20020a056870d28600b0022a7c811e2emr12163359oae.16.1712643078963; Mon, 08
- Apr 2024 23:11:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712643117; x=1713247917;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LNu+GMI0LnpE6OoNqPaNP2xIRA7y3ywXaMFD3+hEy+U=;
+        b=DlEamZqAFu2CcL7wxKlAgUQlOZ4WT6/s4PoXoMa1BHYzYLJRh3B66ZtWNv/EDpLtuL
+         Tn/0fAaaaChJMyZuDoPibQQmgsHwpdy6aS7vk0X585+pdGLxnNEQvJxWZooQiTolqhil
+         l3si92IWjrIC49W5tvtsxMAJEKF7dAnq3gqFzsgoyiPC9wsjy89U7+kYSdfBfQwvOmev
+         6meoqiTTXru9WEstsVcNcNWmvpHuzmwcNP7/fBcDC99AZ8XrxJ1D5rlAvOFFTJT2ZCSz
+         n69TUSMAdxgXlmbnPk1m3g5m68Sad8gAIOHJU/WE/tSG4AjsuNg/QT4zLc+AdEB30Epr
+         6Skw==
+X-Forwarded-Encrypted: i=1; AJvYcCVq1Ex4dCe87hYPJn0850ddYT1UtKL1galUmtiKXxs2tvXYIf7xM5rxzY5babqKdD6HrdmMCPBOUVTNXpso0uf/vDYQLcGklTeD55M4
+X-Gm-Message-State: AOJu0Yxg9/fvcZfMizV+3/3oNBuBkevHi2ehiNeKCNVv4L+hhxsUL9q3
+	IWANtr4mivD+43vZxwbtzUWwkrFPF/egP1MYUZ6V8jnzO9qvYanoDirnk2kMCs8=
+X-Google-Smtp-Source: AGHT+IFAEx2oWQm/CjdpGB2Fg/5zWgfQFm9z3OMamljMoc1Ud/BPFjN+0/Vy6Ix6zi2EHTDC9jxG0Q==
+X-Received: by 2002:a17:902:cecc:b0:1e2:ac38:2657 with SMTP id d12-20020a170902cecc00b001e2ac382657mr10867433plg.24.1712643117037;
+        Mon, 08 Apr 2024 23:11:57 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id n3-20020a170902e54300b001e3dd5972ccsm5775564plf.185.2024.04.08.23.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 23:11:56 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Cc: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	andy.chiu@sifive.com,
+	debug@rivosinc.com,
+	hankuan.chen@sifive.com,
+	guoren@kernel.org,
+	greentime.hu@sifive.com,
+	samitolvanen@google.com,
+	cleger@rivosinc.com,
+	apatel@ventanamicro.com,
+	ajones@ventanamicro.com,
+	conor.dooley@microchip.com,
+	mchitale@ventanamicro.com,
+	dbarboza@ventanamicro.com,
+	waylingii@gmail.com,
+	sameo@rivosinc.com,
+	alexghiti@rivosinc.com,
+	akpm@linux-foundation.org,
+	shikemeng@huaweicloud.com,
+	rppt@kernel.org,
+	charlie@rivosinc.com,
+	xiao.w.wang@intel.com,
+	willy@infradead.org,
+	jszhang@kernel.org,
+	leobras@redhat.com,
+	songshuaishuai@tinylab.org,
+	haxel@fzi.de,
+	samuel.holland@sifive.com,
+	namcaov@gmail.com,
+	bjorn@rivosinc.com,
+	cuiyunhui@bytedance.com,
+	wangkefeng.wang@huawei.com,
+	falcon@tinylab.org,
+	viro@zeniv.linux.org.uk,
+	bhe@redhat.com,
+	chenjiahao16@huawei.com,
+	hca@linux.ibm.com,
+	arnd@arndb.de,
+	kent.overstreet@linux.dev,
+	boqun.feng@gmail.com,
+	oleg@redhat.com,
+	paulmck@kernel.org,
+	broonie@kernel.org,
+	rick.p.edgecombe@intel.com
+Subject: [RFC PATCH v1] riscv kernel control flow integrity
+Date: Mon,  8 Apr 2024 23:10:31 -0700
+Message-Id: <20240409061043.3269676-1-debug@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407123829.36474-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20240407123829.36474-1-cuiyunhui@bytedance.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Tue, 9 Apr 2024 14:11:07 +0800
-Message-ID: <CAEEQ3wnsOJXEMspM=A1jLkuLC-Ny5DA0_W-8ngE6n-jiJcDEnw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: PPTT: Populate cacheinfo entirely with PPTT
-To: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, bhelgaas@google.com, 
-	james.morse@arm.com, jhugo@codeaurora.org, jeremy.linton@arm.com, 
-	john.garry@huawei.com, Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, 
-	sudeep.holla@arm.com, tiantao6@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Added committers of pptt.c. Could you give some comments? thanks.
+Basic overview
+---------------
+This is a RFC patch series for enabling kernel control flow integrity on
+riscv architecture. This patch series enables kernel control flow
+integrity using proposed riscv cpu extensions `zicfilp` and `zicfiss` [1].
 
-On Sun, Apr 7, 2024 at 8:39=E2=80=AFPM Yunhui Cui <cuiyunhui@bytedance.com>=
- wrote:
->
-> When the type and level information of this_leaf cannot be obtained
-> from arch, cacheinfo is completely filled in with the content of PPTT.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  drivers/acpi/pptt.c | 135 ++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 124 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-> index a35dd0e41c27..6c54fc8e3039 100644
-> --- a/drivers/acpi/pptt.c
-> +++ b/drivers/acpi/pptt.c
-> @@ -21,6 +21,9 @@
->  #include <linux/cacheinfo.h>
->  #include <acpi/processor.h>
->
-> +void acpi_fill_cacheinfo(struct acpi_pptt_cache *cache, struct acpi_tabl=
-e_header *table,
-> +                        int cpu, int level, int *index);
-> +
->  static struct acpi_subtable_header *fetch_pptt_subtable(struct acpi_tabl=
-e_header *table_hdr,
->                                                         u32 pptt_ref)
->  {
-> @@ -77,6 +80,18 @@ static inline bool acpi_pptt_match_type(int table_type=
-, int type)
->                 table_type & ACPI_PPTT_CACHE_TYPE_UNIFIED & type);
->  }
->
-> +static inline u32 get_cache_id(struct acpi_pptt_cache *cache)
-> +{
-> +       struct acpi_pptt_cache_v1 *cache_v1;
-> +
-> +       if (cache->flags & ACPI_PPTT_CACHE_ID_VALID) {
-> +               cache_v1 =3D ACPI_ADD_PTR(struct acpi_pptt_cache_v1,
-> +                                       cache, sizeof(struct acpi_pptt_ca=
-che));
-> +               return cache_v1->cache_id;
-> +       }
-> +       return 0;
-> +}
-> +
->  /**
->   * acpi_pptt_walk_cache() - Attempt to find the requested acpi_pptt_cach=
-e
->   * @table_hdr: Pointer to the head of the PPTT table
-> @@ -104,7 +119,7 @@ static unsigned int acpi_pptt_walk_cache(struct acpi_=
-table_header *table_hdr,
->                                          unsigned int *split_levels,
->                                          struct acpi_subtable_header *res=
-,
->                                          struct acpi_pptt_cache **found,
-> -                                        unsigned int level, int type)
-> +                                        unsigned int level, int type, in=
-t cpu, int *index)
->  {
->         struct acpi_pptt_cache *cache;
->
-> @@ -125,7 +140,7 @@ static unsigned int acpi_pptt_walk_cache(struct acpi_=
-table_header *table_hdr,
->                      acpi_pptt_match_type(cache->attributes, ACPI_PPTT_CA=
-CHE_TYPE_INSTR)))
->                         *split_levels =3D local_level;
->
-> -               if (local_level =3D=3D level &&
-> +               if (level && local_level =3D=3D level &&
->                     acpi_pptt_match_type(cache->attributes, type)) {
->                         if (*found !=3D NULL && cache !=3D *found)
->                                 pr_warn("Found duplicate cache level/type=
- unable to determine uniqueness\n");
-> @@ -137,7 +152,9 @@ static unsigned int acpi_pptt_walk_cache(struct acpi_=
-table_header *table_hdr,
->                          * to verify that we don't find a duplicate
->                          * cache node.
->                          */
-> -               }
-> +               } else
-> +                       acpi_fill_cacheinfo(cache, table_hdr, cpu, local_=
-level, index);
-> +
->                 cache =3D fetch_pptt_cache(table_hdr, cache->next_level_o=
-f_cache);
->         }
->         return local_level;
-> @@ -147,7 +164,7 @@ static struct acpi_pptt_cache *
->  acpi_find_cache_level(struct acpi_table_header *table_hdr,
->                       struct acpi_pptt_processor *cpu_node,
->                       unsigned int *starting_level, unsigned int *split_l=
-evels,
-> -                     unsigned int level, int type)
-> +                     unsigned int level, int type, int cpu, int *index)
->  {
->         struct acpi_subtable_header *res;
->         unsigned int number_of_levels =3D *starting_level;
-> @@ -161,7 +178,8 @@ acpi_find_cache_level(struct acpi_table_header *table=
-_hdr,
->
->                 local_level =3D acpi_pptt_walk_cache(table_hdr, *starting=
-_level,
->                                                    split_levels, res, &re=
-t,
-> -                                                  level, type);
-> +                                                  level, type, cpu, inde=
-x);
-> +
->                 /*
->                  * we are looking for the max depth. Since its potentiall=
-y
->                  * possible for a given node to have resources with diffe=
-ring
-> @@ -197,7 +215,7 @@ static void acpi_count_levels(struct acpi_table_heade=
-r *table_hdr,
->                               unsigned int *levels, unsigned int *split_l=
-evels)
->  {
->         do {
-> -               acpi_find_cache_level(table_hdr, cpu_node, levels, split_=
-levels, 0, 0);
-> +               acpi_find_cache_level(table_hdr, cpu_node, levels, split_=
-levels, 0, 0, 0, NULL);
->                 cpu_node =3D fetch_pptt_node(table_hdr, cpu_node->parent)=
-;
->         } while (cpu_node);
->  }
-> @@ -316,6 +334,7 @@ static u8 acpi_cache_type(enum cache_type type)
->  }
->
->  static struct acpi_pptt_cache *acpi_find_cache_node(struct acpi_table_he=
-ader *table_hdr,
-> +                                                   int cpu,
->                                                     u32 acpi_cpu_id,
->                                                     enum cache_type type,
->                                                     unsigned int level,
-> @@ -325,6 +344,7 @@ static struct acpi_pptt_cache *acpi_find_cache_node(s=
-truct acpi_table_header *ta
->         struct acpi_pptt_cache *found =3D NULL;
->         struct acpi_pptt_processor *cpu_node;
->         u8 acpi_type =3D acpi_cache_type(type);
-> +       int index =3D 0;
->
->         pr_debug("Looking for CPU %d's level %u cache type %d\n",
->                  acpi_cpu_id, level, acpi_type);
-> @@ -333,7 +353,7 @@ static struct acpi_pptt_cache *acpi_find_cache_node(s=
-truct acpi_table_header *ta
->
->         while (cpu_node && !found) {
->                 found =3D acpi_find_cache_level(table_hdr, cpu_node,
-> -                                             &total_levels, NULL, level,=
- acpi_type);
-> +                                             &total_levels, NULL, level,=
- acpi_type, cpu, &index);
->                 *node =3D cpu_node;
->                 cpu_node =3D fetch_pptt_node(table_hdr, cpu_node->parent)=
-;
->         }
-> @@ -406,8 +426,14 @@ static void update_cache_properties(struct cacheinfo=
- *this_leaf,
->          * specified in PPTT.
->          */
->         if (this_leaf->type =3D=3D CACHE_TYPE_NOCACHE &&
-> -           found_cache->flags & ACPI_PPTT_CACHE_TYPE_VALID)
-> -               this_leaf->type =3D CACHE_TYPE_UNIFIED;
-> +           found_cache->flags & ACPI_PPTT_CACHE_TYPE_VALID) {
-> +               if (acpi_pptt_match_type(found_cache->attributes, ACPI_PP=
-TT_CACHE_TYPE_DATA))
-> +                       this_leaf->type =3D CACHE_TYPE_DATA;
-> +               if (acpi_pptt_match_type(found_cache->attributes, ACPI_PP=
-TT_CACHE_TYPE_INSTR))
-> +                       this_leaf->type =3D CACHE_TYPE_INST;
-> +               if (acpi_pptt_match_type(found_cache->attributes, ACPI_PP=
-TT_CACHE_TYPE_UNIFIED))
-> +                       this_leaf->type =3D CACHE_TYPE_UNIFIED;
-> +       }
->
->         if (revision >=3D 3 && (found_cache->flags & ACPI_PPTT_CACHE_ID_V=
-ALID)) {
->                 found_cache_v1 =3D ACPI_ADD_PTR(struct acpi_pptt_cache_v1=
-,
-> @@ -417,19 +443,106 @@ static void update_cache_properties(struct cachein=
-fo *this_leaf,
->         }
->  }
->
-> +static bool cache_is_filled_id(struct acpi_pptt_cache *cache, int cpu)
-> +{
-> +       u32 id =3D get_cache_id(cache);
-> +       struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
-> +       struct cacheinfo *this_leaf;
-> +       int index =3D 0;
-> +
-> +       while (index < get_cpu_cacheinfo(cpu)->num_leaves) {
-> +               this_leaf =3D this_cpu_ci->info_list + index;
-> +               if (this_leaf->id =3D=3D id)
-> +                       return true;
-> +               index++;
-> +       }
-> +       return false;
-> +}
-> +
-> +static bool cache_is_filled_content(struct acpi_pptt_cache *cache,
-> +                                   struct acpi_table_header *table,
-> +                                   int cpu, int level, u8 revision)
-> +{
-> +       struct acpi_pptt_processor *cpu_node;
-> +       struct cacheinfo *this_leaf, *tleaf;
-> +       struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
-> +       struct cacheinfo tmp_leaf =3D {0};
-> +       int index =3D 0;
-> +
-> +       cpu_node =3D acpi_find_processor_node(table, get_acpi_id_for_cpu(=
-cpu));
-> +       tleaf =3D &tmp_leaf;
-> +       tleaf->level =3D level;
-> +
-> +       while (index < get_cpu_cacheinfo(cpu)->num_leaves) {
-> +               this_leaf =3D this_cpu_ci->info_list + index;
-> +               update_cache_properties(tleaf, cache,
-> +                                       ACPI_TO_POINTER(ACPI_PTR_DIFF(cpu=
-_node, table)),
-> +                                       revision);
-> +               if (!memcmp(this_leaf, tleaf, sizeof(struct cacheinfo)))
-> +                       return true;
-> +               index++;
-> +       }
-> +       return false;
-> +}
-> +
-> +static bool cache_is_filled(struct acpi_pptt_cache *cache, struct acpi_t=
-able_header *table,
-> +                                  int cpu, int level)
-> +{
-> +       u8 revision =3D table->revision;
-> +
-> +       /*
-> +        * If revision >=3D 3, compare the cacheid directly,
-> +        * otherwise compare the entire contents of the cache.
-> +        */
-> +       if (revision >=3D 3)
-> +               return cache_is_filled_id(cache, cpu);
-> +       else
-> +               return cache_is_filled_content(cache, table, cpu, level, =
-revision);
-> +}
-> +
-> +void acpi_fill_cacheinfo(struct acpi_pptt_cache *cache,
-> +                               struct acpi_table_header *table,
-> +                               int cpu, int level, int *index)
-> +{
-> +       struct cacheinfo *this_leaf;
-> +       struct acpi_pptt_processor *cpu_node;
-> +       struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
-> +
-> +       if (!index)
-> +               return;
-> +
-> +       cpu_node =3D acpi_find_processor_node(table, get_acpi_id_for_cpu(=
-cpu));
-> +       this_leaf =3D this_cpu_ci->info_list + *index;
-> +       if (this_leaf) {
-> +               this_leaf->level =3D level;
-> +               if (cache_is_filled(cache, table, cpu, level))
-> +                       return;
-> +               update_cache_properties(this_leaf, cache,
-> +                                       ACPI_TO_POINTER(ACPI_PTR_DIFF(cpu=
-_node,
-> +                                                       table)),
-> +                                       table->revision);
-> +               *index +=3D 1;
-> +       }
-> +}
-> +
->  static void cache_setup_acpi_cpu(struct acpi_table_header *table,
->                                  unsigned int cpu)
->  {
->         struct acpi_pptt_cache *found_cache;
->         struct cpu_cacheinfo *this_cpu_ci =3D get_cpu_cacheinfo(cpu);
->         u32 acpi_cpu_id =3D get_acpi_id_for_cpu(cpu);
-> -       struct cacheinfo *this_leaf;
-> +       struct cacheinfo *this_leaf =3D this_cpu_ci->info_list;
->         unsigned int index =3D 0;
->         struct acpi_pptt_processor *cpu_node =3D NULL;
->
-> +       if (!this_leaf->type && !this_leaf->level) {
-> +               acpi_find_cache_node(table, acpi_cpu_id, cpu, 0, 0, &cpu_=
-node);
-> +               return;
-> +       }
-> +
->         while (index < get_cpu_cacheinfo(cpu)->num_leaves) {
->                 this_leaf =3D this_cpu_ci->info_list + index;
-> -               found_cache =3D acpi_find_cache_node(table, acpi_cpu_id,
-> +               found_cache =3D acpi_find_cache_node(table, acpi_cpu_id, =
-cpu,
->                                                    this_leaf->type,
->                                                    this_leaf->level,
->                                                    &cpu_node);
-> --
-> 2.20.1
->
+`zicfilp` enforces that all indirect calls and jumps must land on a landing
+pad instruction (`lpad`). Additionally `lpad` has 20bit encoded value as
+part of instruction and cpu will check this 20bit value with t2/x7 register
+, if they mismatch then cpu will raise an exception `software check
+exception` (a new exception with cause=18). In this patch series, a
+constant label value of 0x1 is used. As series will mature, it will switch
+to a 20 bit truncated hash over function signature. Label based on function
+signature allows stricter control flow and fewer call/jmp locations from a
+callsite.
 
-Thanks,
-Yunhui
+`zicfiss` protects the return path from functions where return relies on
+obtaining return address from stack which is corruptible. `zicfiss`
+provides a shadow stack which can be used by software to place return
+addresses on shadow stack and while returning from function it can be used
+to compare against return address from regular stack. If they dont match,
+cpu will raise software check exception. `zicfiss` based shadow stack are
+protected against tampering using special page table encodings (please
+refer to [1])
+
+To obtain more details about `zicfiss` and `zicfilp` ISA extension, please
+refer to [1]. There is an ongoing patchsets for enabling this feature for
+user mode software here [2]
+
+Enabling on kernel
+===================
+This patch series introduces new riscv config `CONFIG_RISCV_KERNEL_CFI`.
+If this config is selected, it turns on 
+	- forward control flow for kernel using `zicfilp`
+	- selects `CONFIG_SHADOW_CALL_STACK` /w `CONFIG_DYNAMIC_SCS` to enable
+	  backward control flow.
+
+forward control flow for kernel
+================================
+This patch series simply compiles kernel with `march=_zicfilp` compiler
+option. Currently toolchain uses constant label scheme of label = 0x1.
+This patch series manually fixes some of the assembly callsites and
+sequences to make sure they are not breaking rules setup by `zicfilp`.
+
+backward control flow for kernel
+=================================
+There is an existing support for riscv kernel for shadow call stack [3],
+which is a software based shadow stack and uses clang /w instrumentation
+to push/pop return address in prolog and epilog of functions. Although
+software based shadow stack lacks memory protections and thus suffers from
+same issue of return address susceptible to hijacking. shadow call stack
+uses `CONFIG_SHADOW_CALL_STACK` /w option of `CONFIG_DYNAMIC_SCS` so that
+hardware vendors hook into the flow to provide stronger guarantees. This
+patch uses `CONFIG_SHADOW_CALL_STACK` flow along with `CONFIG_DYNAMIC_SCS`
+to enable return control flow integrity on riscv kernel.
+
+[1] - https://github.com/riscv/riscv-cfi
+[2] - https://lore.kernel.org/all/20240403234054.2020347-1-debug@rivosinc.com/ 
+[3] - https://lore.kernel.org/all/20230927224757.1154247-8-samitolvanen@google.com/
+
+
