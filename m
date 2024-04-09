@@ -1,118 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95DD12FF93;
-	Tue,  9 Apr 2024 15:24:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE2E131180
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676281; cv=none; b=fqGw562XNTeDFST35Gmu/PEs1+iuPv6FiGAekszsJjbMz+aFBGPeEJzX/zSjTWNXR0tcfJfs8GiNwutZGVjMrOSiGK1Oo9d0PFILtleaOuz4pjuRVJXDyGfST0epInKj/jikp/cqq2J9Q6ouLgnREQDr5VLEsDlbxTS6BSoo5fo=
+	t=1712676283; cv=none; b=R3eVBp3gCyBp1aQAYEoYefGu3L0ja0/wo40MenMaPjEAcBwHAVETNo7HLYv084cFEG888TIz96DgGJSBsYclK9erFYmgc0/Ptk/EpZXabXZnUWJGVXTewOFw/BcvOfHtdVJ4NT8m9PE7ECxDnHL1ftsbV3gdxsULCxlvqMUrEmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676281; c=relaxed/simple;
-	bh=GYhUMYcuopyTTsXZocs09eC4l4ecRuEg28Z8oo3DJDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lIcjrvtsl6nrkenheP/gY7sTHb6kUL22JzhCSfFrr+NkbEiOlPh252AOWMCyubDXRQWCx1S9CXrRCc97bCfpiwA9nzZXBiZHe1DQF4eZInSyamikzt1ebcP5T38BgLfT6O1o42oNDcu90w9DzKX2fxxI5eH9d094BqiMracZqw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvEJm3Ox; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712676283; c=relaxed/simple;
+	bh=7BLajVZFd0QKk5l7C4doy3ipUMapbfe/gYRUU4rDJQ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EbOoa2oFYd7BiQ2CGipJEQt2T5o5hXRlQ9pHAjAQkSabVVL1e9fTztywtSXxSQ+CguQ6LTC1ZlUJMCqcmvTNqq+RGptU4k3KcIC3t+wg0jOi/ZFhEISSlO5wBYuXOfZoPb1FGMMorKGmsgT3q8rUyHf4WuYiOygRh1M3NZc3uO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=P0t9ALNa; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvEJm3Ox"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61C5AC43390;
-	Tue,  9 Apr 2024 15:24:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712676281;
-	bh=GYhUMYcuopyTTsXZocs09eC4l4ecRuEg28Z8oo3DJDg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uvEJm3OxeJsz20Wg45vymQiE31AfCrNGbzGYu9fxvx7v25A8to4o8663gLuEQP6kc
-	 D1LbChA9runpUpskT9BeY/BXUrAoHLKy/HCpG8Uw7p5/wlzYhzHbYBWg21NreDrNZ+
-	 2wwxB4tTkhbuEfN4ZZRT4CSLD1d0BnrNPNDdtoW4YH1vMSqYLuYJwWdvaMCtSA11r9
-	 x4WRy3D4wovEURW33pEzwp4xsbB9ZzE4BGvWDcplalEkx0L8wX7bcO2zPM9rsfOucm
-	 p3zWHN0040b1J2xkM4/+gQzY++sxkv2dNdugqzT5i1YTm6BLGoMiM+4kGLNkqZWY3Q
-	 4ebj7HWojvSnw==
-Date: Tue, 9 Apr 2024 10:24:38 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	Andy Gross <agross@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] arm64: dts: qcom: msm8976: Add MDSS nodes
-Message-ID: <463qtzv2z4hbazjmis6xf5p7j44eafeqtpw4qb22sddeolig3i@eujjyfwqxycs>
-References: <20240401172153.9231-1-a39.skl@gmail.com>
- <20240401172153.9231-3-a39.skl@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="P0t9ALNa"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2a52b2ed8c9so466682a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712676281; x=1713281081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDJXJ51rzP1aYXUKz2+GObI2WIW0feKWF6cd4rFM5KU=;
+        b=P0t9ALNazlqVqJ0zMCVjmhPIdSpBeIbh50qj9wozyG7+C15z40VnHBqtNfVraQ3ztm
+         coJVNJBztLnUALHLDhevJ/2AwwwvtIZT7MDxuWRte3ZrWSUgfoqs3bYI31f/8qbK0uXk
+         TQB/TN8YJ38dM5U5Yp4M1/bEbKRKeSSoDDUMrN1NMu915DvIPifBldA7YvYojm/gJlnn
+         LczFaIVlIv5iilv4TL6Ofyhpy7Ml7sU2q5qvg5rPeVEpJZbBYqZYhQs6EBJgfFCXGV2W
+         wDM/RWcsN5n3hK0DDnJugeqrhsRHXrGl4o7AkqZcqtrVkXzLvDYth3FRkJdwN1pRhR9M
+         C18A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712676281; x=1713281081;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qDJXJ51rzP1aYXUKz2+GObI2WIW0feKWF6cd4rFM5KU=;
+        b=Q/kya2Xo9nRNZUDDoFcWsBmWUye/Es0yL88sS4kf8diZPlzeDcVbPSaWoWfAi5LbxH
+         whD1yJPEzPL+of+5kPO3qeQ0DxFthSqrz8he3tt8206XkvXhdHrETibefQlVJieGVjrZ
+         C9AcVqxLNYVACTDvBENpAhvQlEHaK9W+SFKzrjh1jCH0QGe8guQdLW2Lv8g/UmK9HOBa
+         xC0DtMiFeQmMUuKHmSFK4M4IuBzI8KJkZVyV7BPY0OVztGcb8XO463if+pojaj/CADmk
+         +qS1X20Xkh0pwBax5C20x05uji18j5VgNPrERIpexbjVzUO8m+zEsAhvh2v8eJOws7my
+         HTeA==
+X-Forwarded-Encrypted: i=1; AJvYcCXzFhIAGiyNp5ywioGwPfsrFiPDFiaVeldkTF0CqOoGfHtZbRtp5J4BUjrzK78ZyOeZmqNYVryELBVYVkswJab0Lv4xti6LQ82aQ7lc
+X-Gm-Message-State: AOJu0Yzj4i/xS6JVxd5PGhFmOvh9PKWje1880sQ74NttvLTJNwbdbN13
+	92KhuIU1e3aJuCI+VUpfjL29xFYT5gebU0JqrZilFafKdVx62VrL5CkrpO4Zl08=
+X-Google-Smtp-Source: AGHT+IGIP3a+pt+XzlPtW5+4qBhJEScnL/xM2e5DEQUmMepw7bO/QGd1541AD8a4Tz+W/drzk1SXuA==
+X-Received: by 2002:a17:90a:c695:b0:2a4:949f:3220 with SMTP id n21-20020a17090ac69500b002a4949f3220mr9216053pjt.3.1712676280958;
+        Tue, 09 Apr 2024 08:24:40 -0700 (PDT)
+Received: from localhost.localdomain ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id ev6-20020a17090aeac600b002a513cc466esm3945558pjb.45.2024.04.09.08.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 08:24:40 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-fsdevel@vger.kernel.org
+Cc: brauner@kernel.org,
+	linux-kernel@vger.kernel.org,
+	viro@zeniv.linux.org.uk
+Subject: [PATCHSET v3 0/3] Convert fs drivers to ->read_iter()
+Date: Tue,  9 Apr 2024 09:22:14 -0600
+Message-ID: <20240409152438.77960-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240401172153.9231-3-a39.skl@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 01, 2024 at 07:21:51PM +0200, Adam Skladowski wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-[..]
-> +		mdss: display-subsystem@1a00000 {
-[..]
-> +			mdss_dsi0: dsi@1a94000 {
-> +				compatible = "qcom,msm8976-dsi-ctrl", "qcom,mdss-dsi-ctrl";
-> +				reg = <0x01a94000 0x25c>;
-> +				reg-names = "dsi_ctrl";
-> +
-> +				interrupt-parent = <&mdss>;
-> +				interrupts = <4>;
-> +
-> +				clocks = <&gcc GCC_MDSS_MDP_CLK>,
-> +					 <&gcc GCC_MDSS_AHB_CLK>,
-> +					 <&gcc GCC_MDSS_AXI_CLK>,
-> +					 <&gcc GCC_MDSS_BYTE0_CLK>,
-> +					 <&gcc GCC_MDSS_PCLK0_CLK>,
-> +					 <&gcc GCC_MDSS_ESC0_CLK>;
-> +				clock-names = "mdp_core",
-> +					      "iface",
-> +					      "bus",
-> +					      "byte",
-> +					      "pixel",
-> +					      "core";
-> +
-> +				assigned-clocks = <&gcc GCC_MDSS_BYTE0_CLK_SRC>,
-> +						  <&gcc GCC_MDSS_PCLK0_CLK_SRC>;
-> +				assigned-clock-parents = <&mdss_dsi0_phy 0>,
-> +							 <&mdss_dsi0_phy 1>;
-> +
-> +				phys = <&mdss_dsi0_phy>;
-> +
-> +				operating-points-v2 = <&dsi0_opp_table>;
-> +				power-domains = <&gcc MDSS_GDSC>;
-> +
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
+Hi,
 
-Seems reasonable to keep this disabled as well. Further more &mdss_dsi0
-depends on &mdss_dsi0_phy which is disabled.
+There are still a few users of fops->read() in the core parts of the
+fs stack. Which is a shame, since it'd be nice to get rid of the
+non-iterator parts of down the line, and reclaim that part of the
+file_operations struct.
 
-> +				ports {
-[..]
-> +			mdss_dsi0_phy: phy@1a94a00 {
-> +				compatible = "qcom,dsi-phy-28nm-hpm-fam-b";
-> +				reg = <0x01a94a00 0xd4>,
-> +				      <0x01a94400 0x280>,
-> +				      <0x01a94b80 0x30>;
-> +				reg-names = "dsi_pll",
-> +					    "dsi_phy",
-> +					    "dsi_phy_regulator";
-> +
-> +				#clock-cells = <1>;
-> +				#phy-cells = <0>;
-> +
-> +				clocks = <&gcc GCC_MDSS_AHB_CLK>,
-> +					 <&rpmcc RPM_SMD_XO_CLK_SRC>;
-> +				clock-names = "iface", "ref";
-> +
-> +				status = "disabled";
-> +			};
+Outside of moving in that direction as a cleanup, using ->read_iter()
+enables us to mark them with FMODE_NOWAIT. This is important for users
+like io_uring, where per-IO nonblocking hints make a difference in how
+efficiently IO can be done.
 
-PS. Leave &mdss_mdp enabled...
+Those two things are my main motivation for starting this work, with
+hopefully more to come down the line.
 
-Regards,
-Bjorn
+All patches have been booted and tested, and the corresponding test
+cases from ltp have been run.
+
+Since v2:
+- Pass appropriate flags to get_unused_fd() and anon_inode_getfile().
+  Doesn't change anything, but it does convey more closely what each
+  of them look at.
+- Add copy_to_iter_full() helper and use it for all conversions
+
+ fs/signalfd.c       | 44 ++++++++++++++++++++++++++++----------------
+ fs/timerfd.c        | 33 +++++++++++++++++++++++----------
+ fs/userfaultfd.c    | 44 ++++++++++++++++++++++++++++----------------
+ include/linux/uio.h | 10 ++++++++++
+ 4 files changed, 89 insertions(+), 42 deletions(-)
+
+-- 
+Jens Axboe
+
