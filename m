@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFD413329C;
-	Tue,  9 Apr 2024 15:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCEF137C23;
+	Tue,  9 Apr 2024 15:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675073; cv=none; b=G40PU3nj4Zy//tu6T6ODrqOmRCGRRLTdyLymKqovtOgZ6MSz3oMoKR4xF7OxrKLlNStYp8FkcpgYFwqY2OzHH4Qn6JO23RujxUjL8PFvpLQh6g0C5/HBiH7x1a/HqNSykIWXpq4RXAjeV/w6/027wN1cjSmehZ6hZAL2A1AEptg=
+	t=1712675076; cv=none; b=QtLj+oM3Z+Cw9KG1blGDNSWWLrPNKSJip7XZ2UUXmJWU0o7IGqQ7mo5abRNNgDpotkyuUU8pvmCTyRUE/3CtnNE4Yn9ie3ERU0+5Yz+cQrG1JMiV91eZf83Tqt7nDrlaNnfwGIToIPSywrb4FLcB2cO08q/6TsTINO+1/8cwp5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675073; c=relaxed/simple;
-	bh=5rJBQL9W4c23cFyKDiMazSItHw8/Ze0y4gqR4/1+9x8=;
+	s=arc-20240116; t=1712675076; c=relaxed/simple;
+	bh=FrzzIw0YtfKARrmwVKjGaGKrYFiA6koxlrMYcoMB5rE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QTc6nVmEWrqHLXtWHvWaWgq5BIZg9AwgXy8ACpq1hQY/FxBzRxlCDMCldZAiFu4vqAfQP1nVr3GyrFvenwlVbWd2RNTp4oIYq69P4NTnzdaoG/bv0y9/QCdUEstnihdxk+8ZkWjQogf0SDN33MRV3R39v0RahnoqMH0n76rUXaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lIm6B6F8; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=E1ipX5UmExyvyF3gVMnQYA0sWRr8CinWwBqnCYsOLPwqGRmRLko/XIRGc8IvtbMkuAsLz1UXcn9fZl0klwfSKwVIH0RkzUYW6zIgIKqglsMEchzLDV48+XuIqHkOZ6S5VS4F8ik9KpZT1eF0S8/wjn4odZb9PSftO9epDRsW0nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cAtXxPcx; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lIm6B6F8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C5A45C0009;
-	Tue,  9 Apr 2024 15:04:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cAtXxPcx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id DFB9CC0003;
+	Tue,  9 Apr 2024 15:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712675061;
+	t=1712675072;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Mfjnd/jmwSmdNqKx68d1jHwlBJ65ByZrCnoxiBN0fyA=;
-	b=lIm6B6F8Uurwx1/NNXbcDwjESQizvBOH4XX/vA1P/edzgE/D0hNDpfcTkPklSijpdqLmeh
-	5MTydy5DVOzReqM67M+L8dukFY9I17QKgJ65Fc7MCmB4ZZGuhJNNKTU6ta04HCEBzGrkRi
-	lr99SPiXpek2B3zGgYVkDWOJTAsxi8A9gHwC9dYvG+AD+onJufU9+X9EmOTwTdTly5BPpR
-	H5JuuBSIuNCm4Tq/VQKtq/uDnWL3iCPp+xLe1xKdkAN6vAGDQz+bfRXLeYGXVZ49p3Wt9i
-	tma4SwQW2ZnCZZwA3YVHt1DLr92KsCnLIhy2aBSQE0jKl4xh8tZFqd1r00UNLw==
+	bh=QLcp3+Va9cwx+JRBSgkLkETkMLQZVOvTAFT/4LP/EV8=;
+	b=cAtXxPcxVAvU0XcxurgPyIBKq8ezUHUYIn8j7RKZB/yzQj0/2gag3Q7jxtDptdvhTbWC7H
+	A7QHqDhNwREIXd+sg02/4rCUWJsgyWqAS42CeGoU+lcSfNOG2r8YqgGs7MVWfMTVCygo2k
+	HSidhpdXc9C1Jt7kxSy1RHjlLNNzBAc867vSaQTF7FcKMzcnRLImQ/CN1G0lEp78Rjr7P8
+	2CSfLu7Tv689ds6tONVStI+0UBXRIzJe7O0TEF4P+K5FX3GhZiyvHXHWuQ0q8e0YUMZTid
+	e+wXDi23r+QyKl39nIfYwWW356PgzxCYXzOXrf9S5KKgw8u3wrDRjmsg9TvxvQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Apr 2024 17:03:53 +0200
-Subject: [PATCH net-next v7 03/17] net: pse-pd: Rectify and adapt the
- naming of admin_cotrol member of struct pse_control_config
+Date: Tue, 09 Apr 2024 17:04:01 +0200
+Subject: [PATCH net-next v7 11/17] dt-bindings: net: pse-pd: Add another
+ way of describing several PSE PIs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240409-feature_poe-v7-3-11e38efd4dee@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240409-feature_poe-v7-11-11e38efd4dee@bootlin.com>
 References: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 In-Reply-To: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -67,93 +67,170 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-In commit 18ff0bcda6d1 ("ethtool: add interface to interact with Ethernet
-Power Equipment"), the 'pse_control_config' structure was introduced,
-housing a single member labeled 'admin_cotrol' responsible for maintaining
-the operational state of the PoDL PSE functions.
+PSE PI setup may encompass multiple PSE controllers or auxiliary circuits
+that collectively manage power delivery to one Ethernet port.
+Such configurations might support a range of PoE standards and require
+the capability to dynamically configure power delivery based on the
+operational mode (e.g., PoE2 versus PoE4) or specific requirements of
+connected devices. In these instances, a dedicated PSE PI node becomes
+essential for accurately documenting the system architecture. This node
+would serve to detail the interactions between different PSE controllers,
+the support for various PoE modes, and any additional logic required to
+coordinate power delivery across the network infrastructure.
 
-A noticeable typographical error exists in the naming of this field
-('cotrol' should be corrected to 'control'), which this commit aims to
-rectify.
+The old usage of "#pse-cells" is unsuficient as it carries only the PSE PI
+index information.
 
-Furthermore, with upcoming extensions of this structure to encompass PoE
-functionalities, the field is being renamed to 'podl_admin_state' to
-distinctly indicate that this state is tailored specifically for PoDL."
-
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- drivers/net/pse-pd/pse_regulator.c | 8 ++++----
- include/linux/pse-pd/pse.h         | 4 ++--
- net/ethtool/pse-pd.c               | 2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/pse-pd/pse_regulator.c b/drivers/net/pse-pd/pse_regulator.c
-index e2bf8306ca90..1dedf4de296e 100644
---- a/drivers/net/pse-pd/pse_regulator.c
-+++ b/drivers/net/pse-pd/pse_regulator.c
-@@ -31,10 +31,10 @@ pse_reg_ethtool_set_config(struct pse_controller_dev *pcdev, unsigned long id,
- 	struct pse_reg_priv *priv = to_pse_reg(pcdev);
- 	int ret;
+Changes in v3:
+- New patch
+
+Changes in v4:
+- Remove $def
+- Fix pairset-names item list
+- Upgrade few properties description
+- Update the commit message
+
+Changes in v5:
+- Fix yamllint error.
+- Replace underscore by dash in properties names.
+- Add polarity-supported property.
+
+Changes in v6:
+- Reorder the pairset pinout table documentation to shrink the lines size.
+- Remove pairset and polarity as required fields.
+- Add vpwr-supply regulator supply.
+
+Changes in v7:
+- Fix weird characters issue.
+- Fix documentation nit.
+---
+ .../bindings/net/pse-pd/pse-controller.yaml        | 101 ++++++++++++++++++++-
+ 1 file changed, 98 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
+index 2d382faca0e6..f5c37e05731d 100644
+--- a/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
++++ b/Documentation/devicetree/bindings/net/pse-pd/pse-controller.yaml
+@@ -13,6 +13,7 @@ description: Binding for the Power Sourcing Equipment (PSE) as defined in the
  
--	if (priv->admin_state == config->admin_cotrol)
-+	if (priv->admin_state == config->podl_admin_control)
- 		return 0;
+ maintainers:
+   - Oleksij Rempel <o.rempel@pengutronix.de>
++  - Kory Maincent <kory.maincent@bootlin.com>
  
--	switch (config->admin_cotrol) {
-+	switch (config->podl_admin_control) {
- 	case ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED:
- 		ret = regulator_enable(priv->ps);
- 		break;
-@@ -43,14 +43,14 @@ pse_reg_ethtool_set_config(struct pse_controller_dev *pcdev, unsigned long id,
- 		break;
- 	default:
- 		dev_err(pcdev->dev, "Unknown admin state %i\n",
--			config->admin_cotrol);
-+			config->podl_admin_control);
- 		ret = -ENOTSUPP;
- 	}
+ properties:
+   $nodename:
+@@ -22,11 +23,105 @@ properties:
+     description:
+       Used to uniquely identify a PSE instance within an IC. Will be
+       0 on PSE nodes with only a single output and at least 1 on nodes
+-      controlling several outputs.
++      controlling several outputs which are not described in the pse-pis
++      subnode. This property is deprecated, please use pse-pis instead.
+     enum: [0, 1]
  
- 	if (ret)
- 		return ret;
+-required:
+-  - "#pse-cells"
++  pse-pis:
++    type: object
++    description:
++      Overview of the PSE PIs provided by the controller.
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++
++    patternProperties:
++      "^pse-pi@[0-9a-f]+$":
++        type: object
++        description:
++          PSE PI for power delivery via pairsets, compliant with IEEE
++          802.3-2022, Section 145.2.4. Each pairset comprises a positive and
++          a negative VPSE pair, adhering to the pinout configurations
++          detailed in the standard.
++          See Documentation/networking/pse-pd/pse-pi.rst for details.
++
++        properties:
++          reg:
++            description:
++              Address describing the PSE PI index.
++            maxItems: 1
++
++          "#pse-cells":
++            const: 0
++
++          pairset-names:
++            $ref: /schemas/types.yaml#/definitions/string-array
++            description:
++              Names of the pairsets as per IEEE 802.3-2022, Section 145.2.4.
++              Each name should correspond to a phandle in the 'pairset'
++              property pointing to the power supply for that pairset.
++            minItems: 1
++            maxItems: 2
++            items:
++              enum:
++                - alternative-a
++                - alternative-b
++
++          pairsets:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++            description:
++              List of phandles, each pointing to the power supply for the
++              corresponding pairset named in 'pairset-names'. This property
++              aligns with IEEE 802.3-2022, Section 33.2.3 and 145.2.4.
++              PSE Pinout Alternatives (as per IEEE 802.3-2022 Table 145\u20133)
++              |-----------|---------------|---------------|---------------|---------------|
++              | Conductor | Alternative A | Alternative A | Alternative B | Alternative B |
++              |           |    (MDI-X)    |     (MDI)     |      (X)      |      (S)      |
++              |-----------|---------------|---------------|---------------|---------------|
++              | 1         | Negative VPSE | Positive VPSE | -             | -             |
++              | 2         | Negative VPSE | Positive VPSE | -             | -             |
++              | 3         | Positive VPSE | Negative VPSE | -             | -             |
++              | 4         | -             | -             | Negative VPSE | Positive VPSE |
++              | 5         | -             | -             | Negative VPSE | Positive VPSE |
++              | 6         | Positive VPSE | Negative VPSE | -             | -             |
++              | 7         | -             | -             | Positive VPSE | Negative VPSE |
++              | 8         | -             | -             | Positive VPSE | Negative VPSE |
++            minItems: 1
++            maxItems: 2
++
++          polarity-supported:
++            $ref: /schemas/types.yaml#/definitions/string-array
++            description:
++              Polarity configuration supported by the PSE PI pairsets.
++            minItems: 1
++            maxItems: 4
++            items:
++              enum:
++                - MDI-X
++                - MDI
++                - X
++                - S
++
++          vpwr-supply:
++            description: Regulator power supply for the PSE PI.
++
++        required:
++          - reg
++          - "#pse-cells"
++
++oneOf:
++  - required:
++      - "#pse-cells"
++  - required:
++      - pse-pis
  
--	priv->admin_state = config->admin_cotrol;
-+	priv->admin_state = config->podl_admin_control;
+ additionalProperties: true
  
- 	return 0;
- }
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index fb724c65c77b..199cf4ae3cf2 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -15,11 +15,11 @@ struct pse_controller_dev;
- /**
-  * struct pse_control_config - PSE control/channel configuration.
-  *
-- * @admin_cotrol: set PoDL PSE admin control as described in
-+ * @podl_admin_control: set PoDL PSE admin control as described in
-  *	IEEE 802.3-2018 30.15.1.2.1 acPoDLPSEAdminControl
-  */
- struct pse_control_config {
--	enum ethtool_podl_pse_admin_state admin_cotrol;
-+	enum ethtool_podl_pse_admin_state podl_admin_control;
- };
- 
- /**
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index cc478af77111..aef57a058f0d 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -130,7 +130,7 @@ ethnl_set_pse(struct ethnl_req_info *req_info, struct genl_info *info)
- 	struct phy_device *phydev;
- 
- 	/* this values are already validated by the ethnl_pse_set_policy */
--	config.admin_cotrol = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
-+	config.podl_admin_control = nla_get_u32(tb[ETHTOOL_A_PODL_PSE_ADMIN_CONTROL]);
- 
- 	phydev = dev->phydev;
- 	if (!phydev) {
 
 -- 
 2.34.1
