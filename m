@@ -1,48 +1,62 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3647823AF;
-	Tue,  9 Apr 2024 10:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1E683A08
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:13:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657627; cv=none; b=s6T4Tkzo+pVUGDgf26TMCAgvskw660e6aSRJUCFWcDuZafjA8Eb+bwoGVFsbiXBTcIqfea38DwrAFp8zPM6DvCbJ007hzs+CSFnpx3c7AHrvQY1uaj9vhw2kZsiRq85O7eH6oaNWbGXCtQ9d0vsmfuOqn+7naVg/qQODDK8Z3F0=
+	t=1712657630; cv=none; b=NeHe/4BX1AUDNA51RjDpW/ZRjiPCclONvnCPSOGmMq/EpCJfBKx4MoEEI69zqx/ikB0xeiM4rzuZfoh119ntnuHuMuP0qtFwDpValfPWXEb0iuvXCgLf5LCxpCKnUgKFvgqtWbvkYFGLIW4G0rR8WV0IMeKbOFpNa5f27dgN53A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657627; c=relaxed/simple;
-	bh=gOk053Nj2YpNQ8qSJDFsvZyhErKw8CiITAiCyJVqZcM=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=L0yWOcBFAYXd5LUhih83zzaf0PXoWBGQRqHnEg5GQcn2NzX4PRU4MHLZkUHCXX9BHoqM+IQTHiAHgiZs2k9EZhP/1CToVDJ4TVExlQGOBpd47KvC1J2xIX6eFlylPLic4qL/OESgGdB8RFmZ5KeOePxYmV8nxssbKr+IDbRP9hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JaWWFXZk; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712657630; c=relaxed/simple;
+	bh=ufC03TRzyDk5YR8DEBKesMFjVbHSKso6JjQ31AKWDaQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=sOHTM5lddM5NLAAuqQBL7auB/cm3P++IdSDpRzZWBQwWOYXBs5NTMgon46S7SVdwi8o+ItW3DW6/omVytZSW4bCEbxeqy1rW0d5Ml2qD5ZkousI/73Qqb++1/3rjzu1M92lxERf9uhm2q9HoeC8p9Nx9LKLD/51a49A1DD4TBYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oA8Y/Hx9; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JaWWFXZk"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 439ABbZm018708;
-	Tue, 9 Apr 2024 10:13:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=9cKbEPnjd0CjaG
-	BhLjR89nYH8dBY5DMmOkJqVUHSE90=; b=JaWWFXZkrtKULlARvIqz52D1mVT2LQ
-	HHhL6pL8Oas+G4PZLlOfFCbUskjhLpi9kSjABORsxYwK7X8F7sZf2M/SwmJ8jxhd
-	2ZaZyZ7DaXqN5HNn66SgF615fCUOaFkfKdpctaJbdRqGzKxO7+7HFIzsM6uDfi8W
-	qZcp1g3PAuCQ6gjUu6zFvA6FOaLilF7o5YDi/W0jFVfcsU95WGGZCWKHhaopfsjm
-	Pkbg32HBE6CVe9Gr1bfLpt/SmBI/qXOCUqtke3n9m9y7+P1Ap//ENDvNh4sm6vqD
-	BlRG2P8SsifKlVfrAYsuh/O3vG6PTL7ra/vL6NUJM+bkibxDzifvRBzA==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xd3nbr0a1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 10:13:36 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439ADZCc007842
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Apr 2024 10:13:35 GMT
-Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 9 Apr 2024 03:13:28 -0700
-From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Subject: [PATCH v10 0/6] PCI: qcom: Add support for OPP
-Date: Tue, 9 Apr 2024 15:43:18 +0530
-Message-ID: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oA8Y/Hx9"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41663330f9dso13870845e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:13:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712657626; x=1713262426; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ORjGCzH/z+0lccA7K6wZO54EFsOktZ+W05TnMMd8cIg=;
+        b=oA8Y/Hx9QKMALa2bhCr0Kj7jQwwU6UYu51peMOIC5lrTeuruE1f48Pw0CGGs5DruJB
+         09BnYbc3BRTC+iudwZx9SLxhre4m9mcJZSNfj+OJcj8bQLOkW6tWjeejCaRX4r8uX/Xp
+         YqBrqeIpHVihNRsI/tDN3R6WT7v7GygKJcXNSNr2k7HaJTsAuN5raPNqZY9ypkOKe72I
+         6YlfKOJD3IiElIhHKJXUkyONnvMh+zkcIPolYs6tmOtqFzyfmK6mAjpDPEn3VFYJAvlq
+         ToTWqrQ+HUxjV8XYUSkgOm1KTfS0/PybtboKZyFkz+pw9KJvdNzpNVD5QM9hEhOv3Fa2
+         Vo1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712657626; x=1713262426;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ORjGCzH/z+0lccA7K6wZO54EFsOktZ+W05TnMMd8cIg=;
+        b=hIu8wCV0AeV2suQ8s3t9L6zKvJSXWaoyeR9o9+LqDIFYLHhCjyUXt/wlkgB6d18LyD
+         dEdXaopHsLyu+whfZ5ZBETLUebmXQcN22PwyQg8bziUfvU5gnWIFwEYrA8xhGJ4vJo13
+         sMk+On2rtz21jXV04FE6vXw+fhMP06ddEVIH2ooOrVPYcahO0ZQ/7DI2uI7Cw7OxSkgA
+         sCiFDvapDErXrw+fAwQGJhVRuw2SCOq6quPUXGNFfm5fnLexhsAgtJJe9d/UhLWdmRnS
+         bWrJrj7ieDW1Xmy2PZPB18lv1S+0j0BQ/wTYlLfYNLN6eaXRP2uy5CO4SFi5VnpCy3Cu
+         ZLoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVc8gg2Co0DmcGfEFg0RAoJjMlelJCxvjGXrnAQDZaw4zPOZ4poVExEiKQpW96e9SSE63fA42N+LydALUkwSAadOLrYMcY2Em4u3/IF
+X-Gm-Message-State: AOJu0YwwD/8VYUjEs5jgxlttTcQzM+fRXUnX6H4UCIxg/jLn7Z+qqgHP
+	NXzPBv1qiF7+/p5As5W6MEdnEYLjkBWal+JlvjcXDnCIpwgENBMrGOxtP5hyKrZHVHZK98MOvW3
+	i+g8=
+X-Google-Smtp-Source: AGHT+IEsJPu/054QzozXEcR3cAKbGmgbpg6X8FhQfUnUAHkjL52ZMV/yQQbc2f2sdvpHT1vGB9wzLA==
+X-Received: by 2002:a05:600c:350c:b0:416:667d:4691 with SMTP id h12-20020a05600c350c00b00416667d4691mr4530196wmq.25.1712657626644;
+        Tue, 09 Apr 2024 03:13:46 -0700 (PDT)
+Received: from [127.0.1.1] ([93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id r7-20020a05600c458700b00416b035c2d8sm1124149wmo.3.2024.04.09.03.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 03:13:46 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Tue, 09 Apr 2024 12:13:25 +0200
+Subject: [PATCH v2 04/18] ASoC: dt-bindings: mt6357: Add audio codec
+ document
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,176 +65,116 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMAUFWYC/1XMQQ7CIBCF4as0sxYzRdqKK+9hGtMC2lkICC3RN
- NxdbOLC5fuT960QTSAT4VStEEyiSM6WUeOuAjUN9m4Y6RKAIxcosGXO+2tcvHdhZmpA2ZgRD3w
- UUB4+mBu9Nu7Slz1RnF14b3qS3/pzuj8nSYZMyLY+Cq1Eo7vzcyFFVu2Ve0Cfc/4AakSpTKkAA
- AA=
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
-        <bmasney@redhat.com>, <djakov@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
-        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
-        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
-        <krzysztof.kozlowski@linaro.org>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712657607; l=5988;
- i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
- bh=gOk053Nj2YpNQ8qSJDFsvZyhErKw8CiITAiCyJVqZcM=;
- b=fiGCnHGsnMQ91tszpe7VO6BdY7AIToMYjkDfhI/IsbX215mafhsdkL/NBz8A7mjAGQkFOCKKQ
- JDEEBEoclNUB5YkuIGwCoI/kpV9AyXrcVLLQ0qtC0KvwxQ3D++CKF5r
-X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: MRTkcap_n2OPWvfMTSkZzXRgkkQdI0ey
-X-Proofpoint-GUID: MRTkcap_n2OPWvfMTSkZzXRgkkQdI0ey
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_06,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- lowpriorityscore=0 clxscore=1011 phishscore=0 impostorscore=0 bulkscore=0
- spamscore=0 adultscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404090065
+Message-Id: <20240226-audio-i350-v2-4-3043d483de0d@baylibre.com>
+References: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+In-Reply-To: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2299; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=ufC03TRzyDk5YR8DEBKesMFjVbHSKso6JjQ31AKWDaQ=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmFRTTFKmit1LRHBjD3sVBNy1AD+EFSPxUwuPh5hBL
+ llo/QJCJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZhUU0wAKCRArRkmdfjHURRLrD/
+ 0UItyg9zwrmDQpm/gbTeRtQNNsOjxAl8PQIWG8EqnsHgcHKNZrT5vEhV+q6JscmsLBfKi1MnE3f3HX
+ t2UyIjSKZTzyYdGRsCJEqMicDSryyY7IckznV0K7tVh8PNPNcCAtcS5y0BswhRRY/MsqEscAGm4X9Q
+ 0xfJfWpCXqVnfEz35io+YGQYh1pNdw+Sua5QmPXzWAJrd2ZMadxK6f6rjLEVPTjIrq16VYfEJuIlq3
+ PPr/0cJx5AYi/70kI6NW1qds/TkjhJHMhcyVzG0yI6f2QGmhlru4byON2sRKKnoy/SKeqI7UJxW2bd
+ ssbzSx4dxbtlzGwy0bFGjL9X5m3EN4oYAP5UTd5xR8pyG16Orv+/tLJaLX4dFEzkqtdCZXgnlY9Gki
+ B4ohzq/yeLtxcLfZQwiIegbQWxTVOAxHIP+Q4uPLxCYD+FR/ZHVlVEbJ6QCmpK+sOGRzqiBv0kqY1C
+ MUT1f6xaRnTvjkx3EfDKaXGUUV1sv71+gHTlrMz7q3gKyVaRHH6zYSWfIRD2PrzRfiZ66J5SU7IMxc
+ FyKZHs9k/OWQ0E5jN0npkOcn0mqcrZ6iFWA1qK6xhyHu+61Xa6DKEkM6YcMLUQYwtP3/6o+JsQYnuN
+ 8a4gQu4guSBQODpZf9+jzZFOd1nf7gCoacIRWppbgdHhnfS9tvBXBVOcVI/A==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-This patch adds support for OPP to vote for the performance state of RPMH
-power domain based upon PCIe speed it got enumerated.
+Add MT8365 audio codec bindings to set required
+and optional voltage properties between the codec and the board.
+The properties are:
+- phandle of the requiered power supply.
+- Setup of microphone bias voltage.
+- Setup of the speaker pin pull-down.
 
-QCOM Resource Power Manager-hardened (RPMh) is a hardware block which
-maintains hardware state of a regulator by performing max aggregation of
-the requests made by all of the processors.
-
-PCIe controller can operate on different RPMh performance state of power
-domain based up on the speed of the link. And this performance state varies
-from target to target.
-
-It is manadate to scale the performance state based up on the PCIe speed
-link operates so that SoC can run under optimum power conditions.
-
-Add Operating Performance Points(OPP) support to vote for RPMh state based
-upon GEN speed link is operating.
-
-Before link up PCIe driver will vote for the maximum performance state.
-
-As now we are adding ICC BW vote in OPP, the ICC BW voting depends both
-GEN speed and link width using opp-level to indicate the opp entry table
-will be difficult.
-
-In PCIe certain gen speeds like 2.5GT/s x2 & 5.0 GT/s X1 or 8.0 GT/s x2 &
-16GT/s x1 use same ICC bw if we use freq in the OPP table to represent the
-PCIe speed number of PCIe entries can reduced.
-
-So going back to use freq in the OPP table instead of level.
-
-To access PCIe registers of the host controller and endpoint PCIe
-BAR space, config space the CPU-PCIe ICC (interconnect) path should
-be voted otherwise it may lead to NoC (Network on chip) timeout.
-We are surviving because of other driver voting for this path.
-
-As there is less access on this path compared to PCIe to mem path
-add minimum vote i.e 1KBps bandwidth always which is sufficient enough
-to keep the path active and is recommended by HW team.
-
-In suspend to ram case there can be some DBI access. Except in suspend
-to ram case disable CPU-PCIe ICC path after register space access
-is done.
-
-Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
-Changes from v9:
-	- Disable interconnect CPU-PCIe path only system is not suspend to ram case.
-	- If opp find freq fails in the probe fail the probe as suggested by mani.
-	- Modify comments as suggested by mani
-	- Link to v9: https://lore.kernel.org/r/20240407-opp_support-v9-0-496184dc45d7@quicinc.com
-Changes from v8:
-	- Removed the ack-by and reviewed by on dt-bindings as dt-bindings moved to new files.
-	- Removed dt-binding patch for interconnects as it is added in the common file.
-	- Added tags for interconnect as suggested by konrad
-	- Added the comments as suggested by mani
-	- In ICC BW vote for CPU to PCIe path if icc_disable() fails log error and return instead of re-init.
-	- Link to v8: https://lore.kernel.org/linux-arm-msm/20240302-opp_support-v8-0-158285b86b10@quicinc.com/
-Changes from v7:
-	- Fix the compilation issue in patch3
-	- Change the commit text and wrap the comments to 80 columns as suggested by bjorn
-	- remove PCIE_MBS2FREQ macro as this is being used by only qcom drivers.
-	- Link to v7: https://lore.kernel.org/r/20240223-opp_support-v7-0-10b4363d7e71@quicinc.com
-Changes from v6:
-	- change CPU-PCIe bandwidth to 1KBps as suggested by HW team.
-	- Create a new API to get frequency based upon PCIe speed as suggested
-	  by mani.
-	- Updated few commit texts and comments.
-	- Setting opp to NULL in suspend to remove any votes.
-	- Link for v6: https://lore.kernel.org/linux-arm-msm/20240112-opp_support-v6-0-77bbf7d0cc37@quicinc.com/
-Changes from v5:
-	- Add ICC BW voting as part of OPP, rebase the latest kernel, and only
-	- either OPP or ICC BW voting will supported we removed the patch to
-	- return error for icc opp update patch.
-	- As we added the icc bw voting in opp table I am not including reviewed
-	- by tags given in previous patch.
-	- Use opp freq to find opp entries as now we need to include pcie link
-	- also in to considerations.
-	- Add CPU-PCIe BW voting which is not present till now.
-	- Drop  PCI: qcom: Return error from 'qcom_pcie_icc_update' as either opp or icc bw
-	- only one executes and there is no need to fail if opp or icc update fails.
-	- Link for v5: https://lore.kernel.org/linux-arm-msm/20231101063323.GH2897@thinkpad/T/
-Changes from v4:
-	- Added a separate patch for returning error from the qcom_pcie_upadate
-	  and moved opp update logic to icc_update and used a bool variable to 
-	  update the opp.
-	- Addressed comments made by pavan.
-changes from v3:
-	- Removing the opp vote on suspend when the link is not up and link is not
-	  up and add debug prints as suggested by pavan.
-	- Added dev_pm_opp_find_level_floor API to find the highest opp to vote.
-changes from v2:
-	- Instead of using the freq based opp search use level based as suggested
-	  by Dmitry Baryshkov.
-Changes from v1:
-        - Addressed comments from Krzysztof Kozlowski.
-        - Added the rpmhpd_opp_xxx phandle as suggested by pavan.
-        - Added dev_pm_opp_set_opp API call which was missed on previous patch.
----
+ .../devicetree/bindings/sound/mt6357.yaml          | 54 ++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
----
-Krishna chaitanya chundru (6):
-      arm64: dts: qcom: sm8450: Add interconnect path to PCIe node
-      PCI: qcom: Add ICC bandwidth vote for CPU to PCIe path
-      dt-bindings: pci: qcom: Add OPP table
-      arm64: dts: qcom: sm8450: Add OPP table support to PCIe
-      PCI: Bring the PCIe speed to MBps logic to new pcie_link_speed_to_mbps()
-      PCI: qcom: Add OPP support to scale performance state of power domain
+diff --git a/Documentation/devicetree/bindings/sound/mt6357.yaml b/Documentation/devicetree/bindings/sound/mt6357.yaml
+new file mode 100644
+index 000000000000..f532a9e7dff5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/mt6357.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/mt6357.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Mediatek MT6357 Codec
++
++maintainers:
++  - Alexandre Mergnat <amergnat@baylibre.com>
++
++description: |
++  This is the required and optional voltage properties for this subdevice.
++  The communication between MT6357 and SoC is through Mediatek PMIC wrapper.
++  For more detail, please visit Mediatek PMIC wrapper documentation.
++  Must be a child node of PMIC wrapper.
++
++properties:
++  vaud28-supply:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: 2.8 volt supply for the audio codec
++
++  mediatek,hp-pull-down:
++    description:
++      Earphone driver positive output stage short to
++      the audio reference ground.
++    type: boolean
++
++  mediatek,micbias0-microvolt:
++    description: Selects MIC Bias 0 output voltage.
++    enum: [1700000, 1800000, 1900000, 2000000,
++           2100000, 2500000, 2600000, 2700000]
++    default: 1700000
++
++  mediatek,micbias1-microvolt:
++    description: Selects MIC Bias 1 output voltage.
++    enum: [1700000, 1800000, 1900000, 2000000,
++           2100000, 2500000, 2600000, 2700000]
++    default: 1700000
++
++required:
++  - vaud28-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    codec {
++        vaud28-supply = <&mt6357_vaud28_reg>;
++        mediatek,micbias0-microvolt = <1900000>;
++        mediatek,micbias1-microvolt = <1700000>;
++    };
++
++...
 
- .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  |   4 +
- arch/arm64/boot/dts/qcom/sm8450.dtsi               |  89 +++++++++++++++
- drivers/pci/controller/dwc/pcie-qcom.c             | 122 ++++++++++++++++++---
- drivers/pci/pci.c                                  |  19 +---
- drivers/pci/pci.h                                  |  22 ++++
- 5 files changed, 221 insertions(+), 35 deletions(-)
----
-base-commit: 6c6e47d69d821047097909288b6d7f1aafb3b9b1
-change-id: 20240406-opp_support-ca095eb032b4
-
-Best regards,
 -- 
-Krishna chaitanya chundru <quic_krichai@quicinc.com>
+2.25.1
 
