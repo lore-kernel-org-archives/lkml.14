@@ -1,207 +1,115 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2047.outbound.protection.outlook.com [40.107.6.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4BC85924;
-	Tue,  9 Apr 2024 11:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712661887; cv=none; b=hvm2pKvgAc9JSlgf80OFgS/xpUOPduVh6vT4J5TDThI71hdQdQT9k/xsX43wlAW/gIZUcpJqBxj9851p00qiZF/jauBoD3H+a+78iEb7PGbUxVDgUnFBt1BRbQYcC8syCQc3g3uqy4euk4WgaFoHbRQBxu65SsOc4hqyI5OnIJY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712661887; c=relaxed/simple;
-	bh=Ckfn3lhSMsxc3tYHdzLvbf6Mj6u8EAJd/Zx2bpYCPj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M1ktE/u1TWVD9oDT/VHaO11n3jD39tNrZwpDexRhj6BZjnrAL/uBQKz5KYoM1DQIkb3WLxPa6o0hD6kLYvIdrNEAfBmM6DfxdjZtuDxng2Fz5OC5swrx7PLtr2dbuKKTw2yUmJA/84lbqLwA8Wn0Jkq4e1UfTx9IGLLlvw6f0Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JMReNs8q; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F56F8594B;
+	Tue,  9 Apr 2024 11:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712662101; cv=fail; b=elBg/c4gW0SRQij2XcnyLgZ9VPVkVOPtD0QWbUMRxlqd7D+HDWj2WtBm8cWwqwQEVhLe7hHrfBUI+FOdXR0pAUMaZ/8SSeb8xV6R5EqTmk2+RgSAiljrNWDymUFR+oiD2KR8LPbU372vray3zKH1aBJrIVHuy3gIR7Sai0qvB1s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712662101; c=relaxed/simple;
+	bh=xwRgh0FAAWVlWlc8+FfKs7qRxK+7fH1en/N4Rk8n4MU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lN342xHyFlH7ossqD8gJZCmANjmu3UAT7hpM48e86JIAlJXs4O9ED5pxrCCK5YduVo0nYlV42keA1yr1aKCXEs3IsoOrCIYFd8AJglJOv//pFbv52gYKo/6gCdxU8DUG6S01Zb+bhm8Y5jWM6b4EJkG9/XJ/2o3lIZ1v5mM93mI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=oBI1jSGN; arc=fail smtp.client-ip=40.107.6.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JMReNs8q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712661877;
-	bh=Ckfn3lhSMsxc3tYHdzLvbf6Mj6u8EAJd/Zx2bpYCPj0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JMReNs8qAH/eAZyQSNOCDwUVe25arupPfkXPnKSTJz4AX381dB8ntoim0AfiyRVe8
-	 K0qJWglo2029tkGrWq94bQCeyFqMjCqPFBrZn2xId8GiIXJe5GBKfI1GVVL3j3j/7R
-	 s61jZA+FSM2Ms18hkdIRK8GSr2x5y2Z2iZhxC/+/x4WLiTfG2GS/bRaCwTYSEXI1sS
-	 P5KD07K8vNrzO5ud6kIHEHHQVGTYPMSIQIGlmczhUIvt/E7PjME8l0tAVr2ZKSpVDg
-	 CTi+R85CAHcBLmJ5ZcSHF3jEcdurkAN1KnyEAWqngWOvtEe7MoyatVNcobRGBNbUae
-	 SraAE8NaHXFMA==
-Received: from [100.115.223.179] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D479237820F3;
-	Tue,  9 Apr 2024 11:24:36 +0000 (UTC)
-Message-ID: <ec527f77-3bf8-4173-b648-ade31c2a7f2f@collabora.com>
-Date: Tue, 9 Apr 2024 14:24:36 +0300
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="oBI1jSGN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UMjBLK8vQpkAlZzC1SEhXebz7prS1AaGKhLh0Uo6ccgQBRJY9Ox4PPSiaqZaCfUVcKBbo+nPqrFlUkZ4rVuUPpV1sxwtAyXFvnYj8vN6pcUfRnDBphNjR7dvFMCdmutRL72w4Kry/lmsaRBSlBBmKsFPOwWVUutCI9xbqcVsGFrsNG1OCmIXHcV0f9RuLNhS4akNAdhS3C/ucrMLqsgjryV7xNwkpjt1QAHyByzmRR3p6EUQNuJCJcKUNnIbtnbcz6PUVlfgRd1GiES7GTJgw7uT8PxrjGTrAroE7r9TlCca4jm8MuudFIRdk3u+ImwwuuNJXsqkPiNSE3dg6Qex1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JAoiTJu58YGiL5bszvz0adIiRLBgssFaAX4OsNFB2nk=;
+ b=RWdkkUjvtlRMkcnEpTKQYhz7SZ900nxmpT/9JmUBPFcBHB9QYK2Xi9oRZOVXemZJwectqgXcBvOZqWJEp93On7kcZgTdSLyu3tIWCv2J0hT3Sd9pSWI4jNwPVmqWh/o17Y4Wb0xR0T9oslAeGQGAJMkVZ5GkYwwMfftHzGLaNBFrDyY703BC0M4FsS5YqMtYMIbWtB1C4ba1S0YGLiLpY9eQJf0FJGg2H1aEZLJtWuqvTx80nR/rBrVZv3SHCM/bnPiWsxpOMcik1avz42ypJRY95XBD5TL/vrFXrRE7BJTqJ9xrYExIn1CTiHCyd5dZExJIdJJobMppayrmX2Xppw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JAoiTJu58YGiL5bszvz0adIiRLBgssFaAX4OsNFB2nk=;
+ b=oBI1jSGN105u8UJCLq+OlO/IfwXNTozibIRlMe2rjJ5oLhzyaYK/kr5iPfwrf/Pi0xhJwO8Dg3LaPfxtPlZC6N7afoAavR2tvM+lO0Cd+ue9yH49AASo9ccd6rw+PcFF5DP7TQUNQHSQ8MpzBJM69jhY0ImeV3uhytKuRNcm0Ew=
+Received: from AS9PR06CA0413.eurprd06.prod.outlook.com (2603:10a6:20b:461::22)
+ by PAXPR02MB7910.eurprd02.prod.outlook.com (2603:10a6:102:283::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
+ 2024 11:28:15 +0000
+Received: from AMS0EPF000001B7.eurprd05.prod.outlook.com
+ (2603:10a6:20b:461:cafe::ca) by AS9PR06CA0413.outlook.office365.com
+ (2603:10a6:20b:461::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.34 via Frontend
+ Transport; Tue, 9 Apr 2024 11:28:15 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF000001B7.mail.protection.outlook.com (10.167.16.171) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7452.22 via Frontend Transport; Tue, 9 Apr 2024 11:28:15 +0000
+Received: from pc50632-2232.se.axis.com (10.0.5.60) by se-mail01w.axis.com
+ (10.20.40.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 9 Apr
+ 2024 13:28:14 +0200
+From: Rickard Andersson <rickaran@axis.com>
+To: <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
+	<sfrench@samba.org>, <pc@manguebit.com>, <ronniesahlberg@gmail.com>,
+	<sprasad@microsoft.com>, <tom@talpey.com>
+CC: <linux-kernel@vger.kernel.org>, <rickaran@axis.com>,
+	<rickard314.andersson@gmail.com>, <kernel@axis.com>
+Subject: [PATCH v2 0/1] smb client hang
+Date: Tue, 9 Apr 2024 13:27:57 +0200
+Message-ID: <20240409112758.467112-1-rickaran@axis.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-To: Daniel Martin <dmanlfc@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
- <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
- <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
- <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
- <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
- <41b7170d-65b8-4d64-a1d3-7a0d09d79c45@collabora.com>
- <fa076f6f-5a19-4a6a-aaf4-8d9e36df8fea@leemhuis.info>
- <682dfcc5-056c-4170-910b-64ae42370c52@collabora.com>
- <CAOyTmd0OWyOJGK3b5J322Ftxz=S8_qRmO=aC7mMeYXe76=w+Mg@mail.gmail.com>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <CAOyTmd0OWyOJGK3b5J322Ftxz=S8_qRmO=aC7mMeYXe76=w+Mg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001B7:EE_|PAXPR02MB7910:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7b3d8131-0dc7-46e4-0f2a-08dc588825b2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Hsl/B87IJ+8byIpJ8r7apMGMJ8PzUiDSjSrCXM/1eBjTrhXhZPATZpduT/pWdwmQbipHgt5hu8/0DpJQhL0MaItncHbldezVSR4nfsJEoBCp3pBqe7I/1Dn4J84Opy5QtUpYjBD4eSCrqXCkceGa2ipZHFtT8UOIFnG9ShIY/1JQ2efNozUZqn/R8yU6kjVkkPYTr6qwZSMXCNdAKelIX6xDIy5zhMo9tu1AT2fcB8ljVafSrfYuV1rIH2NuC7ud00pGzWPkp9AyggJ59ENjtzASzcDLsEpr2bsUtAB+Tud6uRWn4ZWgfhlaPIgDO06EO2SDUtybu1bedPTeywqxRNGs8HruBdTZTSS4m2Wn7n2QC7auKqmCO7Ej8f2PzqbK9FSiTMSDgXDseurLGjBd8hfjcqNAsg6Q1V+QJ91qBFyxDGpr58ogrwtsG21Wc+0vLS12F1t2/dNGWAqDf9vWj0b8NU5gep3AHwz02owJ8VU2cDfNEIF/TA2DIP+lMLZW7nlztmqleTaiDZthu+xfRcCZ6HEyI+WDXpxAVMSGeVSsaV3rlTcECYKTbd8aZnnuCV1v3zll9mrNkDfAURz0o4bMnnFTsF/D0GgP6zHSRuSTmawuR9uUOeIMVpt33tTvNlrLlDLkOALuRte8uY/KdYzbXBMS3e7lZUg/4pwa1Vobp33uk1jF3lAX3gt6fQPwAezpid7Od1919yBLXwXj77ztqaYRwCZln0g1oenj7Vh1ilPvYMgBz2kd4zl21H3H
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400014)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 11:28:15.0678
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b3d8131-0dc7-46e4-0f2a-08dc588825b2
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001B7.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR02MB7910
 
-On 4/9/24 1:57 PM, Daniel Martin wrote:
-> The manual patches were worked from the Steam Deck kernel, trial &
-> error with partial support in 6.6 at the time.
-> 6.8 sources where this has been implemented recently were not yet
-> available or in linux-next.
-> Suffice to say the code matches up almost perfectly apart from the
-> enum issues which are thus being discussed.
-> I still go back to the point, apart from the Steam Deck, who else is
-> using this named topology file?
-> I don't think anyone is, therefore the enum numbering should match the
-> current Steam Deck kernel implementation & topology file.
+From: Rickard x Andersson <rickaran@axis.com>
 
-The entries of enum be_id cannot be changed in mainline without breaking
-devices which are not part of the Steam Deck family.
+When applied to Linx 6.8.2 this patch makes one of our test cases work.
+I sent a first version of this patch for Linux 6.1 in October without
+getting any feedback. I have now tested and the error is still
+existing in the latest kernel versions.
 
-I do not have additional details other than the information provided by
-AMD in the context of the initial patch submission:
+Rickard x Andersson (1):
+  smb: client: Fix hang in smb2_reconnect
 
-https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
- 
-> 
-> On Tue, 9 Apr 2024 at 19:55, Cristian Ciocaltea
-> <cristian.ciocaltea@collabora.com> wrote:
->>
->> On 4/9/24 12:19 PM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>> On 09.04.24 10:47, Cristian Ciocaltea wrote:
->>>> On 4/9/24 11:04 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>> On 09.04.24 09:42, Cristian Ciocaltea wrote:
->>>>>> On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>>> On 09.04.24 01:44, Cristian Ciocaltea wrote:
->>>>>>>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>>>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
->>>>>>>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
->>>>>>>>>> on Steam Deck OLED [1]. He wrote:
->>>>>>>>
->>>>>>>>>>> I'm adding this here, I hope it's the correct place.
->>>>>>>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
->>>>>>>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
->>>>>>>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
->>>>>>>>> A quick search made me find these posts/threads that foreshadow the problem:
->>>>>>>>>
->>>>>>>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
->>>>>>>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
->>>>>>>>>
->>>>>>>>> From a quick look at the second discussion it seems a bit like we are
->>>>>>>>> screwed, as iiutc topology files are out in the wild for one or the
->>>>>>>>> other approach. So we might have to bite a bullet there and accept the
->>>>>>>>> regression -- but I might easily be totally mistaken here. Would be good
->>>>>>>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
->>>>>>>>> explain what's up here.
->>>>>>>>
->>>>>>>> The problem here is that Steam Deck OLED provides a topology file which
->>>>>>>> uses an incorrect DAI link ID for BT codec.
->>>>>>>>
->>>>>>>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
->>>>>>>> topology, but this is not a change that can be accepted upstream as it
->>>>>>>> would break other devices which rely on BT_BE_ID set to 3.
->>>>>>>>
->>>>>>>> The proper solution would be to update the topology file on Steam Deck,
->>>>>>>> but this is probably not straightforward to be accomplished as it would
->>>>>>>> break the compatibility with the currently released (downstream)
->>>>>>>> kernels.
->>>>>>>>
->>>>>>>> Hopefully, this sheds some more light on the matter.
->>>>>>>>
->>>>>>>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
->>>>>>>
->>>>>>> Many thx, yes, this sheds some light on the matter. But there is one
->>>>>>> remaining question: can we make both camps happy somehow? E.g. something
->>>>>>> along the lines of "first detect if the topology file has BT_BE_ID in
->>>>>>> position 2 or 3 and then act accordingly?
->>>>>>
->>>>>> Right, I have this on my TODOs list but haven't managed to dig into it
->>>>>> yet. However, that would be most likely just another hack to be carried
->>>>>> on until the transition to a fixed topology is completed.
->>>>>
->>>>> Well, sure it's a hack, but the thing is, our number one rule is "no
->>>>> regressions" and the reporter apparently faces one (see start of the
->>>>> thread). So to fulfill this rule it would be ideal to have a fix
->>>>> available soonish or revert the culprit and reply it later together with
->>>>> the fix.
->>>>
->>>> Hmm, unless I'm missing something, this shouldn't been considered a
->>>> regression.  As I explained previously, the OLED model was launched with
->>>>  a downstream implementation of the Vangogh SOF drivers on top of v6.1,
->>>> as there was no upstream support back then.
->>>>
->>>> When AMD eventually completed the upstreaming process of their SOF
->>>> drivers in v6.6, we ended up with this unfortunate ID assignments
->>>> incompatibility.  Hence I cannot see how the mainline kernel would have
->>>> worked without applying patch [1] above, unless the reporter
->>>> experimented with a different topology (which is not the case if I got
->>>> this right).
->>>>
->>>>> Do we know which change that went into 6.8 caused this? Or is a revert
->>>>> out-of-the question as it will likely break things for other users that
->>>>> already upgraded to 6.8 and have a matching topology file? (/me fears
->>>>> the answer to the latter question is "yes", but I have to ask :-/)
->>>>
->>>> We need to understand how the reporter got this working with mainline
->>>> kernels without applying any out-of-tree patches.
->>>
->>> Ahh, okay, thx, now I understand this better. You are most likely
->>> correct. It also made me look at the initial report again where I
->>> noticed "When *I manually patched support* for the 6.6 or 6.7 mainline
->>> kernel it worked fine.", so yes, this likely is not a regression.
->>
->> It would be interesting to find out what the *manually patched support*
->> involved. FWIW, to get audio working with v6.8, it's also necessary to
->> backport several patches from v6.9-rc1 - I would consider the following:
->>
->> Fixes: f0f1021fc9cb ("ASoC: amd: acp: Drop redundant initialization of machine driver data")
->> Fixes: 68ab29426d88 ("ASoC: amd: acp: Make use of existing *_CODEC_DAI macros")
->> Fixes: d0ada20279db ("ASoC: amd: acp: Add missing error handling in sof-mach")
->> Fixes: 222be59e5eed ("ASoC: SOF: amd: Fix memory leak in amd_sof_acp_probe()")
->> Fixes: a13f0c3c0e8f ("ASoC: SOF: amd: Optimize quirk for Valve Galileo")
->> Fixes: 369b997a1371 ("ASoC: SOF: core: Skip firmware test for custom loaders")
->> Fixes: d9cacc1a2af2 ("ASoC: SOF: amd: Compute file paths on firmware load")
->> Fixes: 33c3d8133307 ("ASoC: SOF: amd: Move signed_fw_image to struct acp_quirk_entry")
->> Fixes: 094d11768f74 ("ASoC: SOF: amd: Skip IRAM/DRAM size modification for Steam Deck OLED")
->>
->> I think most if not all of the mandatory fixes from the list above have been
->> already included in the latest v6.8 stable updates, but I haven't actually
->> tested.
->>
->>>
->>> Thx for your help and sorry for the trouble I caused!
->>
->> No problem at all!
->>
->> Regards,
->> Cristian
-> 
-> 
-> 
+ fs/smb/client/transport.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+-- 
+2.30.2
+
