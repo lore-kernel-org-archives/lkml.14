@@ -1,92 +1,87 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E8A139D0D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7BD135A6C;
+	Tue,  9 Apr 2024 15:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712677632; cv=none; b=lup4kFPUKMLqu5uMMJqIBIyQ5ZSuJhr5ZjQ+MfPrfnuJqu/QRXfJaN23yJGYO8ypSddOKth2VG0CoXRhoVvQPESf24pIQhK5VVzHaK7KKCI8/x0uTk9edHDu/cWycfaR9PkPu6ARF+kiPCUoVyYvfQ4exYJHJquvI5lpNtOb3jo=
+	t=1712677707; cv=none; b=qnB9QcQd9luUe2pDAAqcaappS61K2MugXiWueamM+7VQPtWVxrvIhNsoJZMaMjlW4BTFqJlgL6tWBUR556zKfAJIODmfGXVGbiNv2/D5rNR36stsQlxIXgyTmH1ZQXIA6NIKa1Qen7Ek7hh7ZzgjRL3irkQcJGbbSaC1MS2qaVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712677632; c=relaxed/simple;
-	bh=kjJfIRkcWjD4d/a8pBP5UFxEbKD7w/PFPgvdNrBqNOQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M/SFUxGfHEPBpVSghCAGwQxbkDUYh2m7VH/eUpcU9AwOtoUN10HE9BvvRFWhjvl5APOkCH6j5HRSBYLOWxzG8ih77EBj1exGkSl0rwepxMecKh4RVKvyAJZx69gvYIUUUbnulUWr3o16yrLiZZqxcaxRtv2+ZAIutrCCGv8a9Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=vJJQ40nB; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1712677707; c=relaxed/simple;
+	bh=eAvKh6eqc1wAK0+874dWwmF7seYGKqPybSL7QY7bLNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FbJw+2J5WgJc+iQRJaQ/oaWqQUbshILaL+xwOnTkkSXhYMlpN9ZDimnaEjd46X+f02/dFElSZStYgjnKikaLaE+UoiTHgOsGrIqmtKk8Opf0OUcg453scWS5C+yz+/hhlANObdglqLnVRrP4ra971u6imRcX1rcyIOFZ50z3560=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjzMzTx8; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="vJJQ40nB"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e136cbcecso8061295a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjzMzTx8"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7e3c4736d6dso1149045241.2;
+        Tue, 09 Apr 2024 08:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712677628; x=1713282428; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4203k0MNU0Fkt9KNemdvsHXqtx/8jnD0MSO6/g9ASP8=;
-        b=vJJQ40nBwXSM0563d+h2sICVkvf/ZKTykmtMukj+6+8ODli98r4bJsqLEepr+KTz03
-         8yFRtGUr7XcWMC2IaWBrJCEWtFjKmv9lT0uVUpGjSgjx4hzwn1EFkckTe1g+8sqGRrJr
-         5wsSpVGeXN1vjVTTmbckq0NogU3d3aFpMiwAQP1a+cPMOWUtct1Az9GdrmTNbU593PXI
-         sD8ICxCPmyDD2p0cIvfO6r4ShtztwH3k30kMGVSkvvJiIiFsEcdfEhrYkoQCF1b144Qt
-         ujROY6/ugZWyo7tvvdf1RmWIkV7JfQkDOd4d/a/2Zve2yQDaBb4R0y9+zbVJ4lWTCxOC
-         xI2w==
+        d=gmail.com; s=20230601; t=1712677705; x=1713282505; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eAvKh6eqc1wAK0+874dWwmF7seYGKqPybSL7QY7bLNg=;
+        b=BjzMzTx87/3YpS288k9v2S7RDYo/4j47YPreIAqjQ5F4wVbf0o3w/bgcDBLiEI6/8U
+         4sKNNZl0WrbzVm/cnFXiaqSwnt+OhmwrOPeiZQE7jBD+XkNkqR63cpAMJZI6hm/f8P5m
+         jO4MAn97DKWlgjns8vyWAPNn4HFS4UMFM65Bcnx7YD2/rsUMWm69ExLW084c+uBhsraG
+         wPuQcDatVTaIZZ4uY2hRWfpwlkICpxwqz/1fgEmLH6hJEcydsai3etwFCtg7q6Oo6Z1G
+         YC2CoxQTIss2qry5k4yIRigiBZU3dlnv1KRLYgBktO0GS9FTKfjpmzKXrjwBSaqZZEQt
+         Uobg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712677628; x=1713282428;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1712677705; x=1713282505;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4203k0MNU0Fkt9KNemdvsHXqtx/8jnD0MSO6/g9ASP8=;
-        b=tiDUlK/puFoa+aLeQPnvYFYSPWLsdEO3JghsgDd3vy8iFhuMFvXo5l+wo+aDcYZvd5
-         FbNa5UKFwA9YXKd6rQDNL4e5n1qV7E43jkCtpTRiqCCJVVPitLJ71zEQLCTHNEqdNfqs
-         w76vWJmgQgYR2BxBLM3hxN5+lhLlQqMmY3XJ5BIJlDDKqF++mXi+jNhjkMYgquyI4n3b
-         rTYz7oBnxihbZ8isrhYZBUPrNxfVmdq9gKreIE+HecHqrsAi1J3eq9rcVw7XeFl6/wsY
-         JvD5OeRQq+kyf1ZKB7U9XZY4wGhvsshtuXSb+rZD+4Wld7OtP63w3XHQAvJIaGJGykuT
-         zOeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu5pR3JZOgEuRsQqJUYdcLrds0S4ONUd9cx7LRS/mJEQG5V+eXW9QLd2WXg6/Z/Lp/42+LJYvSb0lrbAjQm95xOap1nvbkldcBt5ov
-X-Gm-Message-State: AOJu0YzgjsP62XYjrTvsfS/tACQfrHlwP60rtL6tTm1VLkbxbAEU2uGy
-	z0Dj8Hj2rs0IWj+TlqE5tiakhNKgKUSUUP4xQEL7J++UDnkAQj5zhjlKAV2biaM=
-X-Google-Smtp-Source: AGHT+IEl+n0rpgPm8cfDPldPrbHhnQWaxn0ZzPLoB5/WAvh5CKYozK0O5M/N9gg8TNXebyyMOttA3g==
-X-Received: by 2002:a50:c056:0:b0:565:6c72:40a9 with SMTP id u22-20020a50c056000000b005656c7240a9mr9158168edd.28.1712677627742;
-        Tue, 09 Apr 2024 08:47:07 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id 12-20020a0564021f4c00b0056e62c8e3bcsm2415595edz.54.2024.04.09.08.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 08:47:07 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc: linux-sparse@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] compiler.h: Add missing quote in macro comment
-Date: Tue,  9 Apr 2024 17:46:23 +0200
-Message-ID: <20240409154622.292163-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+        bh=eAvKh6eqc1wAK0+874dWwmF7seYGKqPybSL7QY7bLNg=;
+        b=Pou9lvB8NWLuNOE8Ym6X5o9KMku3BC9g1U2JCP9tfrGchfI543+2dtOmrnduVnhkrs
+         AF6zNVfPca0bZlQ9t2HWWSvz6f0RuUnnJ8TxnMUC/e2n2HE6X2lX8lQCcw1yCn1ryTZO
+         v5Y0kY77gQuA0t7bKbatzHN+a9+SVqzNWU9Kc2TLfpOWfS9stDYjaw1ZQGUQHT0jFJK/
+         LNgLgPSNYxcS0db7ah6k0Kk0/mplSNVkAuIup6ohkKxnxqh8EHpzXoBxOqLDhqj/a3A9
+         FaemgOItbnpwal4Z0N1rZhA6+vheQMmVz8/fxiAg4u7Rzq1AsWPT/Q4qNca/Jp0Yw7Er
+         Yy4g==
+X-Forwarded-Encrypted: i=1; AJvYcCULguOf1+HQgSAXO0CQN/Rv+lTq0qbmW2omjT07hxExGE6IGLJD97tzQ1C/5kBwOWXpufd8wR8YE/uVcIYcbvgUN6Kdn6Vrbdax8a0kNx2FnLwn0mvsz7j4p+rw3Z8H0+4wcwbZiiA6I2OS
+X-Gm-Message-State: AOJu0YwjEGJDRIab+n3vcwMGrGY+rVmCSW2ktsd3vqJgnIYv3fPSmozS
+	BDeHI3ftbR/zySeZExXtGFOC0Ea01UEbgIa+bkylSsvJiDVh23yRvFi4wVSEYjUV8Ne3M48hrIJ
+	QTPPiF7rET4/af51H3YDyPpAPOiM=
+X-Google-Smtp-Source: AGHT+IFS2mvcddKNspVYdssJARe9I7BdEwwxCNlX1LVamupkex1tiGvtbAsY8MM0xLcMmRQFzdfoDyuUwwm6kV4/T+A=
+X-Received: by 2002:a05:6122:2016:b0:4da:a82e:95f5 with SMTP id
+ l22-20020a056122201600b004daa82e95f5mr284978vkd.5.1712677704783; Tue, 09 Apr
+ 2024 08:48:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240403161559.19970-1-apais@linux.microsoft.com> <3358869b-db3a-40f3-b02b-4f1b46d5d724@kernel.org>
+In-Reply-To: <3358869b-db3a-40f3-b02b-4f1b46d5d724@kernel.org>
+From: Allen <allen.lkml@gmail.com>
+Date: Tue, 9 Apr 2024 08:48:12 -0700
+Message-ID: <CAOMdWS+fq=hW0MpcCKYrJ5tYHBqVDPRu85cfpH215RwJWQz_HQ@mail.gmail.com>
+Subject: Re: [PATCH] tty: Convert from tasklet to BH workqueue
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Allen Pais <apais@linux.microsoft.com>, linux-kernel@vger.kernel.org, tj@kernel.org, 
+	keescook@chromium.org, gregkh@linuxfoundation.org, richard.genoud@gmail.com, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Add a missing doublequote in the __is_constexpr() macro comment.
+> > The only generic interface to execute asynchronously in the BH context is
+> > tasklet; however, it's marked deprecated and has some design flaws. To
+> > replace tasklets, BH workqueue support was recently added. A BH workqueue
+> > behaves similarly to regular workqueues except that the queued work items
+> > are executed in the BH context.
+> >
+> > This patch converts drivers/tty/* from tasklet to BH workqueue.
+>
+> Quickly looking into the changes, could you also elaborate why not to
+> convert most (all?) of them to (non-BH) wq? Or threaded IRQs. Much of
+> the code comes from the pre-WQ era.
+>
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ You are right. The idea I had was to convert every instance of tasklet to
+bh workqueues in the kernel. I will send out a v2, which will use
+threaded IRQ's.
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index c00cc6c0878a..8c252e073bd8 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -268,7 +268,7 @@ static inline void *offset_to_ptr(const int *off)
-  *   - When one operand is a null pointer constant (i.e. when x is an integer
-  *     constant expression) and the other is an object pointer (i.e. our
-  *     third operand), the conditional operator returns the type of the
-- *     object pointer operand (i.e. "int *). Here, within the sizeof(), we
-+ *     object pointer operand (i.e. "int *"). Here, within the sizeof(), we
-  *     would then get:
-  *       sizeof(*((int *)(...))  == sizeof(int)  == 4
-  *   - When one operand is a void pointer (i.e. when x is not an integer
--- 
-2.44.0
-
+Thanks.
