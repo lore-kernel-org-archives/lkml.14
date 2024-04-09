@@ -1,37 +1,32 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75DC1EA6E;
-	Tue,  9 Apr 2024 08:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9495466E
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712652459; cv=none; b=PBABZiOrpm/ahJ/aTX0Oy+xIsCofcXrwkqO+TKJ7Ji6L7WqMFziK7rPad+NMW6Scf6QEzP49h5ctKFAo6dGnBGJ6Ox2s+QGIvNErY2/YUBcmobzuCXU2vwd1qU8m6PiYsGoguu8FKli1ijXA9BdKZG9HZFPKne87hG7lX4eKWxA=
+	t=1712652477; cv=none; b=K8yzbPWk7ODAIZttO2FZFdIWVf63K7it7tAJz7hgkhr0qFbM+ZFeHUPl2JRuJvNveeO8GQdbWUL5AznA4L+uu5Wca0SPtGxyy/U4492ml4kwFwYlFbA8TvYzowQHIHxjJuxLv+Rz71mqf24djoQWg8Gso+VI2oAFaTnKyufFPF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712652459; c=relaxed/simple;
-	bh=toTafaLbEIkQZDdlb3VP4CE1biVwrTMD83oodJzhGeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l+RLS2NSmzdHhN5rTy2maquEX+EycLxzFSYjP6llRm0zlYiDM6MJ0bDmQxVb+0nbpVuuE0unWWV5bPix5HTJ5S1R6hj/ckQM6izAUfON4eUaKkvbZrbK8RJLmvh7aHbODWL8dVVNZl51kA0pO/TUE3Zii2DBfhdAT6WXTr/t/kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=nYgd725y; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712652477; c=relaxed/simple;
+	bh=el3TXw5D31KKwUR3W4iZvt+PANl/VSX8X2P72QHQ6I4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ovV1z13iYXZxw5wNR29IBlzYgiH9RKM14h/X3tAd7S0xpeHwH5eN97K0WB3AkIIO8VzgTz4LTmP2OfAp7D9TQ7Uy8NcJKB+GMJtdQlYmfT5knrUaNvDQcr2PLLi1n71wfmThkeia5fWqYjWtiOYAzCGk0Mo8TQGSrakgodfRl/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=n+3nZD00; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="nYgd725y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:Reply-To:MIME-Version:Date:Message-ID:
-	From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=H/07XNt3AU4Wqk/vGpIEoTskvG7+O+ExSifSn/hGscA=; t=1712652457;
-	x=1713084457; b=nYgd725y9emv12j4zO39g43lWDcxZrinOqnxYXg1Ff84u0+0iXxY8uIBZP6+p
-	MyH3YacK4KJ2KNCrSBrx7h2TluehNWwG0bQfLNb1Bpg+LlVUnmaYp8edpVaIjtjnBZtPqr+c9e5nP
-	5ALuMAv6lN0H/GgbrC+t71eEQEV2j+k9W64lyAWphQBhksgQ00BVSRHpe+SSs3pCheLyw1ykxjf1+
-	nKIOjnQCAIB/fu3amwT85vVmofBktT+UbNZDi7F/FnlbCJar5Wqjt8X/h3zd3bffDZ0+26d0SCIEX
-	yZu7la4irFstrN63nuME0+6+mckW4wIHXuPjECrSKLdyHL1Wkw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ru78g-0005TG-M8; Tue, 09 Apr 2024 10:47:34 +0200
-Message-ID: <93494f0b-ad05-4566-b454-fa36a7dac248@leemhuis.info>
-Date: Tue, 9 Apr 2024 10:47:34 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="n+3nZD00"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712652466; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=NLmQBJY/YAR0kMQs21Xq2pa2nHPXvvDmIRP/f0OQLFw=;
+	b=n+3nZD00jTkSfMN5CsxOR+vqo34YQRfEQzuVa7b95pOPeSp/Ph/CBJc3VZHXsu85OthO1bktIIrShcrH5eYuATTYO689WPHetEbzlfacNYc7N3Y2SCX1TVEE12AutkpUVECtHBmFYxmo5J+7uFuBIvWc/sGag8zaBoSOUpNy7GA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W4E2Dby_1712652464;
+Received: from 30.97.48.141(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W4E2Dby_1712652464)
+          by smtp.aliyun-inc.com;
+          Tue, 09 Apr 2024 16:47:46 +0800
+Message-ID: <51fd6e0b-6fa2-4473-b22b-68c11230b2f5@linux.alibaba.com>
+Date: Tue, 9 Apr 2024 16:47:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,63 +34,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
-To: Johannes Berg <johannes@sipsolutions.net>,
- Ben Greear <greearb@candelatech.com>, LKML <linux-kernel@vger.kernel.org>,
- linux-leds@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com>
- <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
- <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
- <05545ecdd2b05223b9204131b0ce9ba33460f44c.camel@sipsolutions.net>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <05545ecdd2b05223b9204131b0ce9ba33460f44c.camel@sipsolutions.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712652457;e048850d;
-X-HE-SMSGID: 1ru78g-0005TG-M8
+Subject: Re: [PATCH] erofs: derive fsid from on-disk UUID for .statfs() if
+ possible
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, jefflexu@linux.alibaba.com, dhavale@google.com,
+ linux-kernel@vger.kernel.org
+References: <20240409081135.6102-1-hongzhen@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240409081135.6102-1-hongzhen@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 08.04.24 18:35, Johannes Berg wrote:
-> On Wed, 2024-04-03 at 12:35 -0700, Ben Greear wrote:
->>>
->>> So, deadlock I guess....
->>>
->>>   INFO: task kworker/5:13:648 blocked for more than 180 seconds.
->>>        Not tainted 6.9.0-rc2+ #23
->>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->>> task:kworker/5:13    state:D stack:0     pid:648   tgid:648   ppid:2      flags:0x00004000
->>> Workqueue: events deferred_probe_timeout_work_func
->>> Call Trace:
->>>   <TASK>
->>>   __schedule+0x43d/0xe20
->>>   schedule+0x31/0x130
->>>   schedule_timeout+0x1b9/0x1d0
->>>   ? mark_held_locks+0x49/0x70
->>>   ? lockdep_hardirqs_on_prepare+0xd6/0x170
->>>   __wait_for_common+0xb9/0x1d0
->>>   ? usleep_range_state+0xb0/0xb0
->>>   ? __flush_work+0x1ff/0x460
->>>   __flush_work+0x287/0x460
->>>   ? flush_workqueue_prep_pwqs+0x120/0x120
->>>   deferred_probe_timeout_work_func+0x2b/0xa0
+
+
+On 2024/4/9 16:11, Hongzhen Luo wrote:
+> Use the superblock's UUID to generate the fsid when it's non-null.
 > 
-> This seems ... complex.
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+Thanks,
+Gao Xiang
+
+> ---
+>   fs/erofs/super.c | 12 +++++-------
+>   1 file changed, 5 insertions(+), 7 deletions(-)
 > 
-> Does changing iwlwifi's request_module() to request_module_nowait() in
-> iwl_req_fw_callback() (only) fix it? I think we can do that, we don't
-> really care at that point, and the issue here seems to be waiting for it
-> while also other modules are loading and due to the hashing in
-> idempotent() (kernel/module/main.c) it can't make progress.
-
-Not my area of expertise, so listening to me my send you off-track.
-
-Might this be related to the issue discussed here:
-https://lore.kernel.org/all/ZhRD3cOtz5i-61PB@mail-itl/
-
-See also:
-https://lore.kernel.org/all/2695e9db-a5a0-4564-9812-a50b91fb1b46@gmail.com/
-
-Ciao, Thorsten
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index c0eb139adb07..83bd8ee3b5ba 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -923,22 +923,20 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
+>   {
+>   	struct super_block *sb = dentry->d_sb;
+>   	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> -	u64 id = 0;
+> -
+> -	if (!erofs_is_fscache_mode(sb))
+> -		id = huge_encode_dev(sb->s_bdev->bd_dev);
+>   
+>   	buf->f_type = sb->s_magic;
+>   	buf->f_bsize = sb->s_blocksize;
+>   	buf->f_blocks = sbi->total_blocks;
+>   	buf->f_bfree = buf->f_bavail = 0;
+> -
+>   	buf->f_files = ULLONG_MAX;
+>   	buf->f_ffree = ULLONG_MAX - sbi->inos;
+> -
+>   	buf->f_namelen = EROFS_NAME_LEN;
+>   
+> -	buf->f_fsid    = u64_to_fsid(id);
+> +	if (uuid_is_null(&sb->s_uuid))
+> +		buf->f_fsid = u64_to_fsid(erofs_is_fscache_mode(sb) ? 0 :
+> +				huge_encode_dev(sb->s_bdev->bd_dev));
+> +	else
+> +		buf->f_fsid = uuid_to_fsid((__u8 *)&sb->s_uuid);
+>   	return 0;
+>   }
+>   
