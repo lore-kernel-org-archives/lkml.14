@@ -1,73 +1,93 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652CB7FBD3;
-	Tue,  9 Apr 2024 13:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7423412EBF7;
+	Tue,  9 Apr 2024 13:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669571; cv=none; b=mJ883A1doDz4FmgO1WTRtTMwE3A3w44gb/VRvcCJPyJ+P+ROSQFbKIgnZE2qsXULkqEwAXNeurV/PxLTjjCVy45vRqawLmuszWBghP3PMUJbsar7ta4hh16xgH/wM4q53jYz/SqaeYL46nYvTFNnUb/59tazddH7ybuGAmL6mOQ=
+	t=1712669594; cv=none; b=QC3Yr2v0hp85a0OOkvVDpsRcmtPWG0VZYrwK4exsxNespWyAGLXJfwIVpPjPQ4IGNoSNX8Oee39Oo/SQOHhfpTuvm3hWudceTVkfYc6zJXBxpJ962LCamvKF+n8jdqi9uEJSaj68Q0OAMv+rHd/MBF6sclIw5y+kcvTOUzDc5wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669571; c=relaxed/simple;
-	bh=RiIwGLCd0WmHcv9dwUh7ZyBlB74tyvzcwHjtFnzVHoo=;
+	s=arc-20240116; t=1712669594; c=relaxed/simple;
+	bh=dIMLKmF8QMvsWVI+FEoCYWgHq7jZ/1UVqaTJ39fpZHU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nb3sBpqh1/R2t40gbQnDGfflTjzNJtJ8Tik6WaXmPRS4tul8Iz2yTPE1ekEnixefEzCLBONVz7MwpFsJL7WYpQTN/n4EQF05StnuiAQtrBjQpY+NF/JNBCRscy2PW0CIe6Gyuz1xcxCbPhxw6e0N5zw87tqJQNFIRlRtOenLdGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xKkGsbU4; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xKkGsbU4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=tEIbor9pEQA30BeptpyPyxQfeq6lHOGOFBBdte10kwc=; b=xKkGsbU4yDo8cQiMtUTZFLfVV6
-	EW1omNWvMb2sqkmhkizSWTq8vqEdToNCE5w2vIYW8cS5nXnm9oMx6dCTElFXWKGQFX5Z/Vcyhg3wB
-	/OBCRuVg3bplmpxTN6qRTJqTVIKD575IWhWsYooFihI9r4OHKSMrCe2u2tlYc15jhXJDy8mtJVFqD
-	cdBkrkOk9F67cSdr46++B4aVEq6YPdNkgTBxZKKtKpc5V3xVpwQBMOz0P4aUb8/qYtsfR7yHMn0lT
-	rwv0X0L3PPhKw5mGSkHQhaLUtDVeI8asmrM1/99gk6iYF7hSrnEJeZuaumcZSGlbeYXCbDOpLO9ST
-	M485Stbw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ruBaj-000000028qr-3OZQ;
-	Tue, 09 Apr 2024 13:32:49 +0000
-Date: Tue, 9 Apr 2024 06:32:49 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xfs: xattr: replace strncpy and check for truncation
-Message-ID: <ZhVDgbRoF9X7JSdt@infradead.org>
-References: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=A66wcOSPuDyW2jJRXGBY1Heq5YN/ziu94NYPCjOxOiOOlo9xtLf3Ple7M738uafkaM23Vh0WKIQ1CqM2wmVyorETmPPYzqXfMF8KeAeD7nZ0LaUYUBU428RCTT9GuBhYnElYcaBLlEPFSsquTJaQ6+lUv8DSrqGwmsBRdDRCQQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: DHXifDb1StaVzDuwMDjTAg==
+X-CSE-MsgGUID: qT7JqERoS+CCJ8vil5uI4g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25424037"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="25424037"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 06:33:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915399959"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="915399959"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 06:33:08 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1ruBaz-00000002od9-1FNV;
+	Tue, 09 Apr 2024 16:33:05 +0300
+Date: Tue, 9 Apr 2024 16:33:05 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Werner Sembach <wse@tuxedocomputers.com>,
+	Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
+	Jelle van der Waa <jelle@vdwaa.nl>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	linux-input@vger.kernel.org, ojeda@kernel.org,
+	linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+	Gregor Riepl <onitake@gmail.com>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: In kernel virtual HID devices (was Future handling of complex
+ RGB devices on Linux v3)
+Message-ID: <ZhVDkf0P6vRLy-Ql@smile.fi.intel.com>
+References: <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
+ <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
+ <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
+ <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
+ <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
+ <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
+ <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
+ <1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com>
+ <aec1d22d-9e59-4dfc-b108-5ba339b0e76a@redhat.com>
+ <CANiq72kPXsTjzptK7tSC=RygEpWHJHz1-QXuZv8qPHfGLyzrDw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72kPXsTjzptK7tSC=RygEpWHJHz1-QXuZv8qPHfGLyzrDw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 05, 2024 at 07:45:08PM +0000, Justin Stitt wrote:
-> -	memcpy(offset, prefix, prefix_len);
-> -	offset += prefix_len;
-> -	strncpy(offset, (char *)name, namelen);			/* real name */
-> -	offset += namelen;
-> -	*offset = '\0';
-> +
-> +	combined_len = prefix_len + namelen;
-> +
-> +	/* plus one byte for \0 */
-> +	actual_len = scnprintf(offset, combined_len + 1, "%s%s", prefix, name);
-> +
-> +	if (actual_len < combined_len)
+On Mon, Mar 25, 2024 at 07:38:46PM +0100, Miguel Ojeda wrote:
+> On Mon, Mar 25, 2024 at 3:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > +Cc: Bentiss, Jiri
+> 
+> Cc'ing Andy and Geert as well who recently became the
+> maintainers/reviewers of auxdisplay, in case they are interested in
+> these threads (one of the initial solutions discussed in a past thread
+> a while ago was to extend auxdisplay).
 
-Shouldn't this be a != ?
+Without diving into this, just sharing my view on auxdisplay subsystem:
+I consider it _mostly_ (like lim->100% mathematically speaking) as for
+7-segment and alike displays, not any comples RGB or so devices. If
+those devices are capable of representing characters/digits in similar
+way, we may export linedisp library for them to utilise.
 
-That being said I think this is actually wrong - the attr names are
-not NULL-terminated on disk, which is why we have the explicit
-zero terminataion above.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-How was this tested?
 
