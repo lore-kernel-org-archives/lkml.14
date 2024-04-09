@@ -1,73 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1B15339A;
-	Tue,  9 Apr 2024 10:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2A280619;
+	Tue,  9 Apr 2024 10:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656984; cv=none; b=DVE1vfQN3vmXNM/p1h7f7H5UOHWd3fom12stDxdEA1i7hWzaOEXH2H3dHMNfK1yZK4jXog1gEMzRcDOQcNI8Jmi2l0om2aOT++akPkSvjf819/obehYLeLtCTX+1SUCVvAltqGX9gqeIzIxN06HwnvxqggScoYEKzsHsaBKQsqw=
+	t=1712657005; cv=none; b=VkpINaxxZtVlpwfjAFQ0GTfwo8+FLwcl61QUJ0p9lJIB9KoQsZ11gIRmr+6lUVx0/EQGhm38UPR8uc77OIjSRwfXuoT/7YAxCszrHA4/QPrBrvzM4RU/c7l+cKr/wyGpyu9deJX71k3s2AiF/4Vgnx7ywVsQOs9quMOXPSX8dJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656984; c=relaxed/simple;
-	bh=dS7hsHyjh0MX9By0wsckkuyBat67T/GfrBNQX6U/xRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=MCuCoycrJnWjcUCP3iD1hs+00Zwy2wS6nnUpD4uOga/6w5LmyWatgCNrMY24i1US9MDCOPOivEu6vLUa5zlgYdmeGpSkIB/eqIlwovkVAUw2t5JPVcsDlqthpcbkx4E4sH98CO/N4hARE/Y1Lz5XX3aHGEfpCYQZWSsTPT2lRSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FEC5DA7;
-	Tue,  9 Apr 2024 03:03:33 -0700 (PDT)
-Received: from [10.57.52.202] (unknown [10.57.52.202])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AF203F6C4;
-	Tue,  9 Apr 2024 03:03:00 -0700 (PDT)
-Message-ID: <4949d61b-6b25-4433-bd2b-a50b4f22ff42@arm.com>
-Date: Tue, 9 Apr 2024 11:02:58 +0100
+	s=arc-20240116; t=1712657005; c=relaxed/simple;
+	bh=iTNCMmIBrqKAd1ZLJrqU0oi+mUhYpPEw/iRl1+vEJFM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=n+iwzPZ9ZbwZ42WbYs2tOxg4e2oHqf/zz/aXUMNJEIZSF45NfY+pJMEqLWlEk16FuSRQeS84pSh/F2BHiYBBAZTwVMLXcCsj7MrrqwoKGfwYONxXJg+JG406KNxmVhk/adNxwMR3b3V/0HphebSfwIYITdGF6hgNaYtTl4pp/OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaS3hDVH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaS3hDVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C6CC433F1;
+	Tue,  9 Apr 2024 10:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712657004;
+	bh=iTNCMmIBrqKAd1ZLJrqU0oi+mUhYpPEw/iRl1+vEJFM=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=CaS3hDVH0ZSF6klcFqrO4Ey1bc/QKOA07ywyZGABJzEipRFSqFG8Lp9ZluAu+PVYW
+	 msvEMtYrfeQIiDeSGp3iL/bvKf8pFCOh3gI2sz1/perPxta+N1ubLmp/MHXJH2EzZC
+	 TlFDXjJ5KwjWkWEpA0HM7cMk7jywfJ8Ir0R4UuAOAQCshGgdg0HImae39J7aqZMxNG
+	 MuGh0G5azU7jBbpQ2dRXDUXvrVKy16FCZXv18+ZR7Dh/vz3+0s9cOdzyTu1mENJ70C
+	 EpwTbekjNbVRLfdBDrXml9uXi8G2zauJCrkdjYaI4qe5j0pvKeiZPcQUeSJ5vZ+xWH
+	 LctGFMmx4zI9A==
+From: Kalle Valo <kvalo@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: kuba@kernel.org,  ath11k@lists.infradead.org,
+  ath10k@lists.infradead.org,  linux-wireless@vger.kernel.org,
+  imitsyanko@quantenna.com,  geomatsi@gmail.com,
+  linux-kernel@vger.kernel.org,  netdev@vger.kernel.org
+Subject: Re: [PATCH 0/3] wifi: Un-embed ath10k and ath11k dummy netdev
+References: <20240405122123.4156104-1-leitao@debian.org>
+	<87y19r264m.fsf@kernel.org> <ZhPyRHHlVot+a8Xq@gmail.com>
+	<87pluz24ap.fsf@kernel.org> <ZhRGo3I57rXxsMV/@gmail.com>
+Date: Tue, 09 Apr 2024 13:03:21 +0300
+In-Reply-To: <ZhRGo3I57rXxsMV/@gmail.com> (Breno Leitao's message of "Mon, 8
+	Apr 2024 12:33:55 -0700")
+Message-ID: <87edbe26qe.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/4] Add shellcheck beyond perf/tests
-To: Ian Rogers <irogers@google.com>
-References: <20240409023216.2342032-1-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria
- <ravi.bangoria@amd.com>, Kajol Jain <kjain@linux.ibm.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Oliver Upton <oliver.upton@linux.dev>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240409023216.2342032-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+Breno Leitao <leitao@debian.org> writes:
 
+>> > Reading the issue, I am afraid that freeing netdev explicitly
+>> > (free_netdev()) might not be the best approach at the exit path.
+>> >
+>> > I would like to try to leverage the ->needs_free_netdev netdev
+>> > mechanism to do the clean-up, if that makes sense. I've updated the
+>> > ath11k patch, and I am curious if that is what we want.
+>> >
+>> > Would you mind testing a net patch I have, please?
+>> >
+>> >   https://github.com/leitao/linux/tree/wireless-dummy_v2
+>> 
+>> I tested this again with my WCN6855 hw2.0 x86 test box on this commit:
+>> 
+>> a87674ac820e wifi: ath11k: allocate dummy net_device dynamically
+>> 
+>> It passes my tests and doesn't crash, but I see this kmemleak warning a
+>> lot:
+>
+> Thanks Kalle, that was helpful. The device is not being clean-up
+> automatically.
+>
+> Chatting with Jakub, he suggested coming back to the original approach,
+> but, adding a additional patch, at the free_netdev().
+>
+> Would you mind running another test, please?
+>
+> 	https://github.com/leitao/linux/tree/wireless-dummy_v3
+>
+> The branch above is basically the original branch (as in this patch
+> series), with this additional patch:
+>
+> 	Author: Breno Leitao <leitao@debian.org>
+> 	Date:   Mon Apr 8 11:37:32 2024 -0700
+>
+> 	    net: free_netdev: exit earlier if dummy
 
-On 09/04/2024 03:32, Ian Rogers wrote:
-> Add shellcheck to other locations of shell scripts, not just
-> tools/perf/tests. Fix issues detected by shellcheck.
-> 
-> Ian Rogers (4):
->   perf build: Add shellcheck to tools/perf scripts
->   perf arch x86: Add shellcheck to build
->   perf util: Add shellcheck to generate-cmdlist.sh
->   perf trace beauty: Add shellcheck to scripts
-> 
->  tools/perf/Build                              | 14 +++++++++++
->  tools/perf/arch/x86/Build                     | 14 +++++++++++
->  tools/perf/arch/x86/tests/Build               | 14 +++++++++++
->  tools/perf/arch/x86/tests/gen-insn-x86-dat.sh |  2 +-
->  tools/perf/perf-archive.sh                    |  2 +-
->  tools/perf/perf-completion.sh                 | 23 +++++++++++++------
->  tools/perf/trace/beauty/Build                 | 14 +++++++++++
->  tools/perf/trace/beauty/arch_errno_names.sh   |  8 ++++---
->  tools/perf/util/Build                         | 14 +++++++++++
->  9 files changed, 93 insertions(+), 12 deletions(-)
-> 
+I tested with the same ath11k hardware and this one passes all my
+(simple) ath11k tests, no issues found. I used this commit:
 
-Reviewed-by: James Clark <james.clark@arm.com>
+1c10aebaa8ce net: free_netdev: exit earlier if dummy
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
