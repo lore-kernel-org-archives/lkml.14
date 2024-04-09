@@ -1,258 +1,195 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871F180629
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5647D81ACA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712658556; cv=none; b=M5YBwqpv/SVf31v+VU6khHTF00eggkbZ9HWPqQO1OwQXfoSjrPjCdz8UEkstrg8ylt9xPL0uyY2sjQCEXsKsKk1qcwV3zKWP/egRVNgHNCzBgVMAqGNr8GV1A3VElFbE7DciF0VevR0wursIlcn+i+NeyZUNsoX5v4j72/WA/8E=
+	t=1712658573; cv=none; b=bkd4qexmzI8KW+4kBJ4KFAT1rHVhmtf2A+LVXU7jFqOLJ+PSP+lhgFbFrvGC3AONMqPEgY6I0Hb2iP3t0eGiMjssmzehcqntibBlWXj4j0IysS9RrAIyg78KuTYSkUri2JPXXkbjqfq/be1uH1hSi7D9pKyi8Ex1BomwlYW5T80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712658556; c=relaxed/simple;
-	bh=XNnyP8qVi1HgN7u6NP7Q7yseLfpjzGBeNAOYFNuri88=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RZzhbBisiyO+IiR8jQc2nFJN22vw4mn/jnQki47I4ILeY0W5njXmUusjaw+o+kCU9AVAip+RMoOissGq83EJGBsgvph4DLy/PQye80AvV7OHSOhqdkm4VAk71mmQ64E7t3yo+I7aUEq79VSsh3dONLeAqnhryuPecbUOQHA3Q+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lYZJJGS1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0pcujErO; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712658573; c=relaxed/simple;
+	bh=dYhAReZ1vmDiZdobsjqXxIQmDiSdY/KMsiiQ8xms4CI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XssRSBcTIE5tVEr2ZEQWYUggRbCjE9jLLXSnt23c1vD998aAdgrOsEJ9tjFuusP0/Uzet1aq5VzoIq3BwuWGmGTdGWtUB/7Y4GV/RzK5zL5FlrKQaOaaupmZNCsRlx59gKVetfOvse8yAOgtjMXAbrZETcmb4Bg8MhKvAKYamVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HlygIwUu; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lYZJJGS1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0pcujErO"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712658552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EF6ovFLdWNLhvSGuwEQg4yxIeTGiTX0nsnyNSwoTsr0=;
-	b=lYZJJGS1T08kmtgYpWSzPd3Ox4L8SjKZOeTLqC4dEC0cQJRdfztnNIOhWhxc4wW7X+g4H7
-	+iPdkT5l3MdTExFEjZREIrunsdd0R9L135tv4I+eZ79Wxs7yXHNwTLegUDWefjN49wctZI
-	wtfz12cfp71zTWVC7tMsokckBTfNGn42SJp2Q2S6mzNTu94rTfO5P+oEBLyJJ5CpvEAnfy
-	aiudqhaOglPtSmPR+dHj4++m5/aHeMK7H+l9V3KCrPEhgicbkOvqKH5Fd6zsjXt5DqkKvj
-	rZ9sobL+RXRwaglGNRrv71dWI0Ttu4bLKWcaCfwMLD9g0CCpkpFSnCXXNwGtMg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712658552;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EF6ovFLdWNLhvSGuwEQg4yxIeTGiTX0nsnyNSwoTsr0=;
-	b=0pcujErOj0KtWGpK/4UyeHbcdqpP0+9z5skGuaH7NrgnggkFNteBp3Z2wrETC/NgE+lN3+
-	l2cL83BopLDVphCQ==
-To: Sean Anderson <sean.anderson@seco.com>, Mirsad Todorovac
- <mirsad.todorovac@alu.unizg.hr>, linux-kernel@vger.kernel.org
-Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: timekeeping: Use READ/WRITE_ONCE() for tick_do_timer_cpu
-In-Reply-To: <ab147205-41cc-4c1b-8280-000e638b6534@seco.com>
-References: <40ac9903-469a-b1ea-4339-8b06f855450e@alu.unizg.hr>
- <3993c468-fdac-2ff2-c3ee-9784c098694c@alu.unizg.hr>
- <83b3c900-d4eb-457f-99e6-cb21e0eae4cb@seco.com> <87a5n4rfhu.ffs@tglx>
- <ab147205-41cc-4c1b-8280-000e638b6534@seco.com>
-Date: Tue, 09 Apr 2024 12:29:12 +0200
-Message-ID: <87cyqy7rt3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HlygIwUu"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3455ff1339dso1829591f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:29:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712658569; x=1713263369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ykat5P5LfbO5un7nzciIKTkPn6WaTsCCKh0bvskUEKE=;
+        b=HlygIwUuxg8AsqWE8aR998va7qcfw2UU4WcrocBefN+UUj3Y6rlSwoS/6ztu1hKEYF
+         dY0vsuePXZGOUZlVQxFLeRDNUL0b6g2WnpDbO/wONGxMC4d3q27S4QadgwWGrmKH8lsO
+         kGXsF40qvs/4mHD6SMOWHFEyljYbrwXEmvYebLD61wSKe5BoPGkYPnB0LbNCtgjD5TkS
+         N6jLdtC2f13jO13uAzxZm8+a3FrN3cWi0mUfw5HZ3nUCWVdfmxlU0QWf1HrILqr8GIDJ
+         u7KY2Y1R3Utwz9raLtPFPGOhtsSARwqecJ6kfbGL63amfdDqrXNwmcX8lBF/ViENt1bP
+         Hs2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712658569; x=1713263369;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ykat5P5LfbO5un7nzciIKTkPn6WaTsCCKh0bvskUEKE=;
+        b=X+ye/imv1aK3ErJf0Bjts5poDX43nYerpIzEszt0UIFrok+6CLZbFvkchu0HnJRJVT
+         JJsa8b7tp0vYBtoELyA1+ByMzdJ7nr6verFBLkNIj74xOJu34QVRdY+4sGUyyLXWDNDV
+         cfr7pTTxpdMPBwvUYbvSg/0IsIHvQAfFeKz4KLfKwTSg4558GzNDRXxCejOVemRTQaGR
+         fhNe/cyKHb50mWBZGMzcmSHudpySUMpDPjELXFMmMVDLuvn+6ARlriFqgtAvv8pwSw14
+         HTE0G7phfMkIPnZR3P8xXyr7i6/2xr4vpeOofMdL5mXIGAH1B3xqXugJr4c4MpIwxjEt
+         X+4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUZiKd/ctjghPcKyG2EqPkLwzw7DaNwM0nI2wJEVmeKWodBF/A62o5bP54BuJmPbsOLj+eN3MfxWL+gBzBC3K30VzR+np+FEjL/Ye60
+X-Gm-Message-State: AOJu0YwinhVTFGuAxtT2H39PuRfNhi7nT6VMdFcyYw/CIaWY+anmrLMt
+	faTaC19cj2mXLAfbPpvRIGsihHpLaPuT3uFJl+vEZQsG06oPxPom+O1HZw2ozFs=
+X-Google-Smtp-Source: AGHT+IHg/SYP1OwSQx1phS0Gr4gHr1mGzi2LrzlNYbGgaKVxscSxC6soUmqvYC9x1+rD989bWNX8kw==
+X-Received: by 2002:adf:e849:0:b0:343:e031:69b8 with SMTP id d9-20020adfe849000000b00343e03169b8mr9659991wrn.41.1712658568536;
+        Tue, 09 Apr 2024 03:29:28 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id r18-20020adfce92000000b00343d1d09550sm11145900wrn.60.2024.04.09.03.29.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 03:29:27 -0700 (PDT)
+Message-ID: <bad43869-b6d3-43ba-9509-8b1606c12969@linaro.org>
+Date: Tue, 9 Apr 2024 12:29:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: imx-audio-spdif: convert to
+ YAML
+To: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+ broonie@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, shengjiu.wang@gmail.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+ festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
+References: <1712652644-28887-1-git-send-email-shengjiu.wang@nxp.com>
+ <1712652644-28887-2-git-send-email-shengjiu.wang@nxp.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1712652644-28887-2-git-send-email-shengjiu.wang@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tick_do_timer_cpu is used lockless to check which CPU needs to take care
-of the per tick timekeeping duty. This is done to avoid a thundering
-herd problem on jiffies_lock.
+On 09/04/2024 10:50, Shengjiu Wang wrote:
+> Convert the imx-audio-spdif binding to YAML.
+> 
+> When testing dtbs_check, found below compatible strings
+> are not listed in document:
+> 
+> fsl,imx-sabreauto-spdif
+> fsl,imx6sx-sdb-spdif
+> 
+> So add them in yaml file to pass the test.
+> 
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> ---
+>  .../bindings/sound/fsl,imx-audio-spdif.yaml   | 67 +++++++++++++++++++
+>  .../bindings/sound/imx-audio-spdif.txt        | 36 ----------
+>  2 files changed, 67 insertions(+), 36 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml b/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
+> new file mode 100644
+> index 000000000000..fec008ffae43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/fsl,imx-audio-spdif.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale i.MX audio complex with S/PDIF transceiver
+> +
+> +maintainers:
+> +  - Shengjiu Wang <shengjiu.wang@nxp.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - fsl,imx-sabreauto-spdif
+> +              - fsl,imx6sx-sdb-spdif
+> +          - enum:
+> +              - fsl,imx-audio-spdif
 
-The read and writes are not annotated so KCSAN complains about data races:
+If there is going to be any new version/resend:
+This one should be const, not enum.
 
-  BUG: KCSAN: data-race in tick_nohz_idle_stop_tick / tick_nohz_next_event                                                                                                                                                       
-                                                                                                                                                                                                                                 
-  write to 0xffffffff8a2bda30 of 4 bytes by task 0 on cpu 26:                                                                                                                                                                    
-   tick_nohz_idle_stop_tick+0x3b1/0x4a0                                                                                                                                                                                          
-   do_idle+0x1e3/0x250                                                                                                                                                                                                           
-                                                                                                                                                                                                                                 
-  read to 0xffffffff8a2bda30 of 4 bytes by task 0 on cpu 16:                                                                                                                                                                     
-   tick_nohz_next_event+0xe7/0x1e0                                                                                                                                                                                               
-   tick_nohz_get_sleep_length+0xa7/0xe0                                                                                                                                                                                          
-   menu_select+0x82/0xb90                                                                                                                                                                                                        
-   cpuidle_select+0x44/0x60                                                                                                                                                                                                      
-   do_idle+0x1c2/0x250                                                                                                                                                                                                           
-                                                                                                                                                                                                                                 
-  value changed: 0x0000001a -> 0xffffffff                  
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Annotate them with READ/WRITE_ONCE() to document the intentional data race.
 
-Reported-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Sean Anderson <sean.anderson@seco.com>
 ---
- kernel/time/tick-common.c |   17 +++++++++--------
- kernel/time/tick-sched.c  |   36 ++++++++++++++++++++++--------------
- 2 files changed, 31 insertions(+), 22 deletions(-)
 
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -7,6 +7,7 @@
-  * Copyright(C) 2005-2007, Red Hat, Inc., Ingo Molnar
-  * Copyright(C) 2006-2007, Timesys Corp., Thomas Gleixner
-  */
-+#include <linux/compiler.h>
- #include <linux/cpu.h>
- #include <linux/err.h>
- #include <linux/hrtimer.h>
-@@ -84,7 +85,7 @@ int tick_is_oneshot_available(void)
-  */
- static void tick_periodic(int cpu)
- {
--	if (tick_do_timer_cpu == cpu) {
-+	if (READ_ONCE(tick_do_timer_cpu) == cpu) {
- 		raw_spin_lock(&jiffies_lock);
- 		write_seqcount_begin(&jiffies_seq);
- 
-@@ -215,8 +216,8 @@ static void tick_setup_device(struct tic
- 		 * If no cpu took the do_timer update, assign it to
- 		 * this cpu:
- 		 */
--		if (tick_do_timer_cpu == TICK_DO_TIMER_BOOT) {
--			tick_do_timer_cpu = cpu;
-+		if (READ_ONCE(tick_do_timer_cpu) == TICK_DO_TIMER_BOOT) {
-+			WRITE_ONCE(tick_do_timer_cpu, cpu);
- 			tick_next_period = ktime_get();
- #ifdef CONFIG_NO_HZ_FULL
- 			/*
-@@ -232,7 +233,7 @@ static void tick_setup_device(struct tic
- 						!tick_nohz_full_cpu(cpu)) {
- 			tick_take_do_timer_from_boot();
- 			tick_do_timer_boot_cpu = -1;
--			WARN_ON(tick_do_timer_cpu != cpu);
-+			WARN_ON(READ_ON_ONCE(tick_do_timer_cpu) != cpu);
- #endif
- 		}
- 
-@@ -406,10 +407,10 @@ void tick_assert_timekeeping_handover(vo
- int tick_cpu_dying(unsigned int dying_cpu)
- {
- 	/*
--	 * If the current CPU is the timekeeper, it's the only one that
--	 * can safely hand over its duty. Also all online CPUs are in
--	 * stop machine, guaranteed not to be idle, therefore it's safe
--	 * to pick any online successor.
-+	 * If the current CPU is the timekeeper, it's the only one that can
-+	 * safely hand over its duty. Also all online CPUs are in stop
-+	 * machine, guaranteed not to be idle, therefore there is no
-+	 * concurrency and it's safe to pick any online successor.
- 	 */
- 	if (tick_do_timer_cpu == dying_cpu)
- 		tick_do_timer_cpu = cpumask_first(cpu_online_mask);
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -8,6 +8,7 @@
-  *
-  *  Started by: Thomas Gleixner and Ingo Molnar
-  */
-+#include <linux/compiler.h>
- #include <linux/cpu.h>
- #include <linux/err.h>
- #include <linux/hrtimer.h>
-@@ -204,7 +205,7 @@ static inline void tick_sched_flag_clear
- 
- static void tick_sched_do_timer(struct tick_sched *ts, ktime_t now)
- {
--	int cpu = smp_processor_id();
-+	int tick_cpu, cpu = smp_processor_id();
- 
- 	/*
- 	 * Check if the do_timer duty was dropped. We don't care about
-@@ -216,16 +217,18 @@ static void tick_sched_do_timer(struct t
- 	 * If nohz_full is enabled, this should not happen because the
- 	 * 'tick_do_timer_cpu' CPU never relinquishes.
- 	 */
--	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) &&
--	    unlikely(tick_do_timer_cpu == TICK_DO_TIMER_NONE)) {
-+	tick_cpu = READ_ONCE(tick_do_timer_cpu);
-+
-+	if (IS_ENABLED(CONFIG_NO_HZ_COMMON) && unlikely(tick_cpu == TICK_DO_TIMER_NONE)) {
- #ifdef CONFIG_NO_HZ_FULL
- 		WARN_ON_ONCE(tick_nohz_full_running);
- #endif
--		tick_do_timer_cpu = cpu;
-+		WRITE_ONCE(tick_do_timer_cpu, cpu);
-+		tick_cpu = cpu;
- 	}
- 
- 	/* Check if jiffies need an update */
--	if (tick_do_timer_cpu == cpu)
-+	if (tick_cpu == cpu)
- 		tick_do_update_jiffies64(now);
- 
- 	/*
-@@ -610,7 +613,7 @@ bool tick_nohz_cpu_hotpluggable(unsigned
- 	 * timers, workqueues, timekeeping, ...) on behalf of full dynticks
- 	 * CPUs. It must remain online when nohz full is enabled.
- 	 */
--	if (tick_nohz_full_running && tick_do_timer_cpu == cpu)
-+	if (tick_nohz_full_running && READ_ONCE(tick_do_timer_cpu) == cpu)
- 		return false;
- 	return true;
- }
-@@ -891,6 +894,7 @@ static ktime_t tick_nohz_next_event(stru
- {
- 	u64 basemono, next_tick, delta, expires;
- 	unsigned long basejiff;
-+	int tick_cpu;
- 
- 	basemono = get_jiffies_update(&basejiff);
- 	ts->last_jiffies = basejiff;
-@@ -947,9 +951,9 @@ static ktime_t tick_nohz_next_event(stru
- 	 * Otherwise we can sleep as long as we want.
- 	 */
- 	delta = timekeeping_max_deferment();
--	if (cpu != tick_do_timer_cpu &&
--	    (tick_do_timer_cpu != TICK_DO_TIMER_NONE ||
--	     !tick_sched_flag_test(ts, TS_FLAG_DO_TIMER_LAST)))
-+	tick_cpu = READ_ONCE(tick_do_timer_cpu);
-+	if (tick_cpu != cpu &&
-+	    (tick_cpu != TICK_DO_TIMER_NONE || !tick_sched_flag_test(ts, TS_FLAG_DO_TIMER_LAST)))
- 		delta = KTIME_MAX;
- 
- 	/* Calculate the next expiry time */
-@@ -970,6 +974,7 @@ static void tick_nohz_stop_tick(struct t
- 	unsigned long basejiff = ts->last_jiffies;
- 	u64 basemono = ts->timer_expires_base;
- 	bool timer_idle = tick_sched_flag_test(ts, TS_FLAG_STOPPED);
-+	int tick_cpu;
- 	u64 expires;
- 
- 	/* Make sure we won't be trying to stop it twice in a row. */
-@@ -1007,10 +1012,11 @@ static void tick_nohz_stop_tick(struct t
- 	 * do_timer() never gets invoked. Keep track of the fact that it
- 	 * was the one which had the do_timer() duty last.
- 	 */
--	if (cpu == tick_do_timer_cpu) {
--		tick_do_timer_cpu = TICK_DO_TIMER_NONE;
-+	tick_cpu = READ_ONCE(tick_do_timer_cpu);
-+	if (tick_cpu == cpu) {
-+		WRITE_ONCE(tick_do_timer_cpu, TICK_DO_TIMER_NONE);
- 		tick_sched_flag_set(ts, TS_FLAG_DO_TIMER_LAST);
--	} else if (tick_do_timer_cpu != TICK_DO_TIMER_NONE) {
-+	} else if (tick_cpu != TICK_DO_TIMER_NONE) {
- 		tick_sched_flag_clear(ts, TS_FLAG_DO_TIMER_LAST);
- 	}
- 
-@@ -1173,15 +1179,17 @@ static bool can_stop_idle_tick(int cpu,
- 		return false;
- 
- 	if (tick_nohz_full_enabled()) {
-+		int tick_cpu = READ_ONCE(tick_do_timer_cpu);
-+
- 		/*
- 		 * Keep the tick alive to guarantee timekeeping progression
- 		 * if there are full dynticks CPUs around
- 		 */
--		if (tick_do_timer_cpu == cpu)
-+		if (tick_cpu == cpu)
- 			return false;
- 
- 		/* Should not happen for nohz-full */
--		if (WARN_ON_ONCE(tick_do_timer_cpu == TICK_DO_TIMER_NONE))
-+		if (WARN_ON_ONCE(tick_cpu == TICK_DO_TIMER_NONE))
- 			return false;
- 	}
- 
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions, under or above your Signed-off-by tag. Tag is "received", when
+provided in a message replied to you on the mailing list. Tools like b4
+can help here. However, there's no need to repost patches *only* to add
+the tags. The upstream maintainer will do that for tags received on the
+version they apply.
+
+https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+
+Best regards,
+Krzysztof
+
