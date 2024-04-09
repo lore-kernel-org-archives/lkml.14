@@ -1,79 +1,93 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E00F153826
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D78B153BD8
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682591; cv=none; b=FWx22334qyCsU6MA3ftNFXLzBjIRc+78PG8pDjZaOZuLVH8JBFo5PpguLBi3FKe/0g6GnMJbrAb6Qt1nWOdwtOMma2QLl6wNiB+ZVC3PaKNRL6DfRnDRPnGQzpY9daTwr05LeXIUdlchC/l75lK/XlCKhl7fiNbfItTxIcEQmRg=
+	t=1712682644; cv=none; b=EtpUWQKZlfXKEal/oaCA/oqElh6fF6bOc8PjS24JohZfNTBXtIrEpDNZfmZSCBvpTZ81BJCfGqbQAYlW5na+wBkQ9Ub4OUXGWB5hhZ8/eDxTalwIEjSQ1FbLZMw2C3cJGN69NEftFU/SsrHCXnzGDR7zSZMpDwzsRCR1CNOvlNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682591; c=relaxed/simple;
-	bh=auzz5duMFq+QgDwdD2uySQTTN2yYy3Ubzon6A1IEd3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8H94WNElvVB5qv7b3hsbW9Qq4wxX7Tu9SBpVP+0PP75mT+eoTwOTPJLri6tzMQbFzTOjDPjd+2aSzdXWjStbvPFdo+q7jLs+S/C7nli4A+I1arjZb0Ad7d+XO8LcjS4e/TeSyNv98XfcmxJjKk5hc9DCjumuLxWwEmdrAZsyi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DB87640E01C5;
-	Tue,  9 Apr 2024 17:09:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id djey4s2-02-2; Tue,  9 Apr 2024 17:09:37 +0000 (UTC)
-Received: from zn.tnic (p5de8ecf7.dip0.t-ipconnect.de [93.232.236.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CAB5A40E00B2;
-	Tue,  9 Apr 2024 17:09:22 +0000 (UTC)
-Date: Tue, 9 Apr 2024 19:09:17 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Ashish Kalra <ashish.kalra@amd.com>
-Subject: Re: [PATCH v3 01/14] x86/sev: Rename snp_init() in the
- boot/compressed/sev.c file
-Message-ID: <20240409170917.GCZhV2PWPhmzTHhMRO@fat_crate.local>
-References: <cover.1711405593.git.thomas.lendacky@amd.com>
- <425afa6512994b1ca1bb366eb7abfb24d65175aa.1711405593.git.thomas.lendacky@amd.com>
+	s=arc-20240116; t=1712682644; c=relaxed/simple;
+	bh=DaPCXUGC5SI+VvCrK6iY6VKR70jtnLy+38KfZddgl/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ggkikmI/2lo8IPMAzYjF0q6NO2uIGu6lAWwmy80BOyAyS7Mf0m5YdW+QOSXk5tJIR/Eatwvnb4LzP05cbxzkGJUgImjahW/tzWg7rTYODxIaGJa2Rb+dqRO9ZJFJAlPxyLNKFedLgx3lONyM1bsctgUQs1gh0pins/2FNLpZ4QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=iBzYfnWv; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iBzYfnWv"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5aa34ec9a54so76983eaf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 10:10:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712682640; x=1713287440; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rCF4brmK1xna8X9dl4JbyVl4tAdSfSlHlPsOdrXYGDA=;
+        b=iBzYfnWvTTgUTCdTUIKYJcav2CXcE99UyyXqPEFifHVrBSQNBC+wDwuPXNyuR9FGEP
+         /UfI+b4bmsZdxJpOE1wKPvvGFiForg+zpX6Gv3ZP0EJd239nTI/GrYAKi5TfZX1pQXny
+         r4mMlAoMaB87vKLH8H/xjCt0x140+VvoQHB9vF6HQGuK/27Z/vrlp03HG6coqqqd5xXm
+         SxosxqAYJtmI0NfPgSbYLhrBSQqQXz9MsithjCwyzGOBYU6E36exuhkOsd5wJ9aUgyS7
+         4oAcZ4l82d50odbKdEDGZ2KRC0WPK89VMcEl7H1wqbyyYPBnADO7CbdG8ZMegtPjkVT0
+         w0rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712682640; x=1713287440;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rCF4brmK1xna8X9dl4JbyVl4tAdSfSlHlPsOdrXYGDA=;
+        b=PGwuuCx76CG2XUMeUrY+ongcCTZzIuuvyTrdnDK2BJuqivO1+bfKiKk5GdgD1ODW4o
+         EsS764YL1kKbOX9ymCmxLh9mlIE9lb5G/Ppzhjn8lqE3/hAtqQemIWysOnVNySCUcH5l
+         56vdS/JwopkgqnoLpFqf0vjTxsey3k7MEfB3DWgaMh4BSlCicslceYI4GeQxreqI89dw
+         VBBl8E7vZJpCQk0VEOyNcwnGFQ6a4k0PLU9qIFUuuG3oGvX/oNUjvMX+U5vUkuN92L3T
+         j/xRgNWxBkocPlnqmhIGbPUKfApaGIONCr26XIV8sLy/dYLcgG1mGkvw0CD2+OYriKz3
+         VszA==
+X-Forwarded-Encrypted: i=1; AJvYcCUGWvdNadFXHzHZ3DdYddIYKqKN7okDFTFvi0mMsLSdSgMnRL2AyXE57Ej8vKZCkA7C92J/2CY7C75O2RCtAvWx0Q9mFl+1tWUGpAzQ
+X-Gm-Message-State: AOJu0YzBKQ5ukd7OEpJ6gzmmMo9Fn+gQyeQ0/S+jfx+xOKosLhcnNQX1
+	4DX9mc/q12i1rMwnKPaVS+6LxAhrtGS9fWCdSQz00k6WFTGhInN9ZP34twRiU4o=
+X-Google-Smtp-Source: AGHT+IG0Q+2GTIz4xzJKQZb4/LaRz7TK4ronqVobmO/AKkEHPaGT79eQEbnXx4hY8yxj2ScSHCLFlA==
+X-Received: by 2002:a05:6359:2ea3:b0:186:10ee:b04 with SMTP id rp35-20020a0563592ea300b0018610ee0b04mr431149rwb.1.1712682640194;
+        Tue, 09 Apr 2024 10:10:40 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id w9-20020a63fb49000000b005bd980cca56sm8397770pgj.29.2024.04.09.10.10.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 10:10:39 -0700 (PDT)
+Message-ID: <8187c490-b1e1-4c7d-9f7c-590ade4777c4@kernel.dk>
+Date: Tue, 9 Apr 2024 11:10:38 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <425afa6512994b1ca1bb366eb7abfb24d65175aa.1711405593.git.thomas.lendacky@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] iov_iter: add copy_to_iter_full()
+Content-Language: en-US
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org, brauner@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240409152438.77960-1-axboe@kernel.dk>
+ <20240409152438.77960-2-axboe@kernel.dk> <20240409170644.GE2118490@ZenIV>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240409170644.GE2118490@ZenIV>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25, 2024 at 05:26:20PM -0500, Tom Lendacky wrote:
-> The snp_init() in boot/compressed/sev.c is local to that file and is not
-> called from outside of the file. Change the name so that it is not tied
-> to the function definition in arch/x86/include/asm/sev.h.
+On 4/9/24 11:06 AM, Al Viro wrote:
+> On Tue, Apr 09, 2024 at 09:22:15AM -0600, Jens Axboe wrote:
+>> Add variant of copy_to_iter() that either copies the full amount asked
+>> for and return success, or ensures that the iov_iter is back to where
+>> it started on failure and returns false.
+> 
+> FWIW, see git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #work.iov_iter
+> 
+> There was an open-coded instance (skb_copy_linear()) that I'd converted to
+> that helper in the same commit; I can split it, of course, but I don't
+> see much point in that.
 
-That part I don't understand: I can rename the function without making
-it static and it builds fine, so where is it "tied" to the function
-definition in kernel proper?
-
-Don't get me wrong - leaking kernel proper symbols into the decompressor
-has been a pet peeve of mine for a while now but this is not the case
-here, is it?
-
-And yes, the patch is fine - I'm just asking...
-
-Thx.
+No reason to split it, I'll have a dependency regardless. I'll just pull
+your branch in, so ignore patch 1 here, 2-4 will remain the same.
 
 -- 
-Regards/Gruss,
-    Boris.
+Jens Axboe
 
-https://people.kernel.org/tglx/notes-about-netiquette
