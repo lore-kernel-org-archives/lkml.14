@@ -1,48 +1,59 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0063485652;
-	Tue,  9 Apr 2024 14:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031008F77;
+	Tue,  9 Apr 2024 14:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712673514; cv=none; b=h66pf4D6eFf4juPFNF03Q/xPmh6ZpoRB9LfMgRklS4zunTk8QDpNv5R9SG4yzNPmTRLpFjasZAWfSV3N4YJesQzU3/b5j/aXsUiKrzrsPvvSnU6dBT1ZRlzYsTBzZBf3szNYjsXpgB6tbr2VSYjamQnCi3IFFbWYo/+730rvK8g=
+	t=1712673569; cv=none; b=eATvGXoGIU0qY4q7Hr2N6T0gnhXZuDF/hqtFE8PLtuHXCBi8k3xmA96CzKtiGQs/5J/pH6J5SR9gyqTZxdkx7oEVxgtfNy6FcZtXpehiLLdwqI6m3EiRFKsVe6Q+nHpqGleBd2SeyHfoq9xhjD/KJ2Z6W5qwUtqqYam83CYJ9LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712673514; c=relaxed/simple;
-	bh=ipY0k1EXJLopR2TB/j1i2URCq+Jnt9wZIjipMzoK3TY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZS/6K44VTUXNVPbNNAMaNMl39tz9ODJ6aDWAIoe6ZDYaM4JWuAwUcsjZicn58RXrg2nu4oBGupGKMDA4mdbWtOaMHaCIjn1ZFaDR6E/hnVP5urAbNp6jlgkVNd7MS6jfF99aSLIToGzK3iwxZriyROUq5irrR+68KcbM6w4U8mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=h3GNJ4vb; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1712673569; c=relaxed/simple;
+	bh=VsIhIpo9XbPHMfhPqNlNwCHGDoqMfYE2kWZHJaXVHvw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Cge/6AJxLzbbwZqo0ynqyX3WzodxoEEZdjrXNlxvA2UB+pN7AsgI3u/2q136Wd4DN3ydIBCKDpTinksQ6SeOF4pL25eZxbiZ0oNGsZHN9xy307IbNKD6vm+EcnfccrNJ/WI8vN+ktUKV2iTxVAv58q3pNEZsRUl8zpu5OT0VSYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIWFznCp; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="h3GNJ4vb"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 439EcAgL079405;
-	Tue, 9 Apr 2024 09:38:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712673490;
-	bh=haEpmy5VhtEasqeLLSLULQyED9X5Xlmx8DrgXvQysfQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=h3GNJ4vbNk4R79xkgSdUjOZcLEgCi/LUM3Ojj2nG7jw/60V4TcQIlc0rICQ4Cpxya
-	 JlZkXiSgVGX8KeXUMFzRUni9In8fY/gDNqbMDVCz8a0nG7AW0U7DldBXoxwBnFMgx8
-	 hbo/kvwmzUthkHlvIRxE51R8XWvRb6nhmPACpuv8=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 439EcAgF012015
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 9 Apr 2024 09:38:10 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
- Apr 2024 09:38:09 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 9 Apr 2024 09:38:09 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 439Ec9xP024183;
-	Tue, 9 Apr 2024 09:38:09 -0500
-Message-ID: <17f4e562-a218-466c-9ac7-171e8780af60@ti.com>
-Date: Tue, 9 Apr 2024 09:38:09 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIWFznCp"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-51381021af1so9200204e87.0;
+        Tue, 09 Apr 2024 07:39:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712673566; x=1713278366; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YKneFpmrGWPkDYn40mrK/8lEAAuKeHF1X4WijCDVMIA=;
+        b=IIWFznCpURG66mpAy25tpJPS85vue2XNm1N7lv/7WcuI9aaFvn2DvQ1zTYzCkpG3XM
+         NbmXUS19evI1OGD3hLtDiJ4GekKbWepD4E//ZDBY8f63zyBuuuiJAjA85O5fS6Nh+h93
+         0X8uTW0seg+JSK84T48xAx5+oTtVVQ9ktkKL7MA0zs0mCdduj0EOnYDqojFlGkdU97YL
+         jzyFfwY2bUq9/pCNSJ4yxF2tESIB6v/+omBk1c73k2l2Y/KPAIFT+rMeuu+J1jHdRfek
+         ptNQz1BhStLU3PUFHQU3BcLWfer+1vvTBaAYFZdLX0Pp57AK9lhXkrDgoccc/7pakJQU
+         JTvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712673566; x=1713278366;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YKneFpmrGWPkDYn40mrK/8lEAAuKeHF1X4WijCDVMIA=;
+        b=UaC5SRR0sDPP6bJIf5qwMgZ5J6lOgV03qTDRqAvPOTBrRpQt757SyO2+Tsp0l2Q5Nn
+         LAFPKs9bX5xRYLKO0Rf4CVEWdlcgQW7napLzFyaag4sT+pu4MkmsKcmKzjxOnmDNQRfm
+         Ho4r6XXdPiDUrK9SWqSc+dAcmS+LOKWj44ML/T/o0rCBgIRHkjjl7rVmHQ9XYen6N0k8
+         FOw0hJoZClryCyWTjQrA3FGbqVVWYoo+FuaP5cG0V527R1NWKfWsFkKbZVFyCuhnVcel
+         75btBTnPyTo8DOuB7lA55w0XlJvkSnrRbKH2nGzRalSXp1In7VLil4cKmLAIrP3pbQAI
+         cCgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiX0oeuiqPkyUM8KKOjf8mESPaanaRJ1VX5thDmy1JJYO3HiUIPGP3A3D1PB4DAHBs/ujZQ9ioL/oNA0oiNpfqCe4Pt2P+Mn/1XUKcp8kx5W4UFpf7dO+LC/35Oc7rRPscehaFyPluWw==
+X-Gm-Message-State: AOJu0Yy+vJimRWCJtLx24UeAz/TTy0aZmZDe4JasVHUq92R4Jac64vnN
+	QMO+qJgXAJ+JUFvznQRjkZgZkec5c9S0e5c9WQdeTZbDFSjkva3q
+X-Google-Smtp-Source: AGHT+IFNvQ/ssefNKErjmnIGx6yZ1F9nt1Qiw7IcOB3RIUN0vBkaXWO1MGpGc6B7hXDExOz5QM8pow==
+X-Received: by 2002:a05:6512:1188:b0:515:af1f:5bad with SMTP id g8-20020a056512118800b00515af1f5badmr12034231lfr.28.1712673565917;
+        Tue, 09 Apr 2024 07:39:25 -0700 (PDT)
+Received: from ?IPV6:2001:999:588:88e2:b205:90f0:e68f:63c6? ([2001:999:588:88e2:b205:90f0:e68f:63c6])
+        by smtp.gmail.com with ESMTPSA id a22-20020a195f56000000b00516d0aecc5esm1594774lfj.141.2024.04.09.07.39.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 07:39:25 -0700 (PDT)
+Message-ID: <e15d8d41-c4ad-4cfb-b10a-89e06a4ece11@gmail.com>
+Date: Tue, 9 Apr 2024 17:39:31 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,386 +61,109 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] misc: sram: Add DMA-BUF Heap exporting of SRAM
- areas
-To: Pascal FONTAIN <Pascal.FONTAIN@bachmann.info>,
-        <linux-kernel@vger.kernel.org>, Derek Kiernan <derek.kiernan@amd.com>,
-        Dragan
- Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?=
-	<christian.koenig@amd.com>,
-        Robin Murphy <robin.murphy@arm.com>
-CC: <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-References: <20240409120605.4138472-1-Pascal.FONTAIN@bachmann.info>
- <20240409120605.4138472-3-Pascal.FONTAIN@bachmann.info>
+Subject: Re: [PATCH v2 00/13] ASoC: ti: davinci-i2s: Add features to McBSP
+ driver
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240402071213.11671-1-bastien.curutchet@bootlin.com>
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@gmail.com>
 Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20240409120605.4138472-3-Pascal.FONTAIN@bachmann.info>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20240402071213.11671-1-bastien.curutchet@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 4/9/24 7:06 AM, Pascal FONTAIN wrote:
-> From: Andrew Davis <afd@ti.com>
+Hi Bastien,
+
+On 02/04/2024 10:12, Bastien Curutchet wrote:
+> This series aims to add some features to McBSP driver.
 > 
-> This new export type exposes to userspace the SRAM area as a DMA-BUF
-> Heap,
-> this allows for allocations of DMA-BUFs that can be consumed by various
-> DMA-BUF supporting devices.
+> Convert bindings from .txt to .yaml.
+> Add possibility to use an external clock as sample rate generator's
+> input.
+> Add handling of new formats (TDM, S24_LE, BP_FC).
+> Enable the detection of unexpected frame pulses.
+> Set the clock free-running mode according to SND_SOC_DAIFMT_[GATED/CONT]
+> configuration in DAI format.
+> Add ti,T1-framing[tx/rx] properties in DT. They allow to set the data
+> delay to two bit-clock periods.
 > 
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> Tested-by: Pascal Fontain <pascal.fontain@bachmann.info>
-> ---
+> This has been tested on a platform designed off of the DAVINCI/OMAP-L138
+> connected to 3 daisy-chained AD7767. An external clock drives the
+> sample rate generator through the CLKS pin.
+> The hardware I have only allowed me to test acquisition side of McBSP.
+> It is connected to a 6 channels TDM and acts as Bit clock provider and
+> Frame clock consumer.
 
-The last time I posted this I got this comment[0], for which I
-didn't really have a good response and so haven't reposted this
-since then.
+Nice and clean, thank you for the updates!
 
-Bacically this driver is backed by something other than "normal"
-memory. So we really need to be careful here, the page pointer is
-really just a cookie to keep track for the real mappings. We might
-be able to use something similar to dma_get_sgtable() to hide that,
-but under the hood it would still a bit unsafe[1].
+Acked-by: Peter Ujfalusi <peter.ujfalusi@gmail.com>
 
-Andrew
+PS: sorry for the delay.
 
-[0] https://patchwork.kernel.org/project/linux-media/patch/20230713191316.116019-1-afd@ti.com/#25475464
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/dma/mapping.c#n388
-
->   drivers/misc/Kconfig         |   7 +
->   drivers/misc/Makefile        |   1 +
->   drivers/misc/sram-dma-heap.c | 246 +++++++++++++++++++++++++++++++++++
->   drivers/misc/sram.c          |   6 +
->   drivers/misc/sram.h          |  16 +++
->   5 files changed, 276 insertions(+)
->   create mode 100644 drivers/misc/sram-dma-heap.c
 > 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 9e4ad4d61f06..e6674e913168 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -448,6 +448,13 @@ config SRAM
->   config SRAM_EXEC
->   	bool
->   
-> +config SRAM_DMA_HEAP
-> +	bool "Export on-chip SRAM pools using DMA-Heaps"
-> +	depends on DMABUF_HEAPS && SRAM
-> +	help
-> +	  This driver allows the export of on-chip SRAM marked as both pool
-> +	  and exportable to userspace using the DMA-Heaps interface.
-> +
->   config DW_XDATA_PCIE
->   	depends on PCI
->   	tristate "Synopsys DesignWare xData PCIe driver"
-> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-> index cdc6405584e3..63effdde5163 100644
-> --- a/drivers/misc/Makefile
-> +++ b/drivers/misc/Makefile
-> @@ -47,6 +47,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
->   obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
->   obj-$(CONFIG_SRAM)		+= sram.o
->   obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
-> +obj-$(CONFIG_SRAM_DMA_HEAP)	+= sram-dma-heap.o
->   obj-$(CONFIG_GENWQE)		+= genwqe/
->   obj-$(CONFIG_ECHO)		+= echo/
->   obj-$(CONFIG_CXL_BASE)		+= cxl/
-> diff --git a/drivers/misc/sram-dma-heap.c b/drivers/misc/sram-dma-heap.c
-> new file mode 100644
-> index 000000000000..e5a0bafe8cb9
-> --- /dev/null
-> +++ b/drivers/misc/sram-dma-heap.c
-> @@ -0,0 +1,246 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SRAM DMA-Heap userspace exporter
-> + *
-> + * Copyright (C) 2019-2022 Texas Instruments Incorporated - https://www.ti.com/
-> + *	Andrew Davis <afd@ti.com>
-> + */
-> +
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/io.h>
-> +#include <linux/mm.h>
-> +#include <linux/scatterlist.h>
-> +#include <linux/slab.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-heap.h>
-> +
-> +#include "sram.h"
-> +
-> +struct sram_dma_heap {
-> +	struct dma_heap *heap;
-> +	struct gen_pool *pool;
-> +};
-> +
-> +struct sram_dma_heap_buffer {
-> +	struct gen_pool *pool;
-> +	struct list_head attachments;
-> +	struct mutex attachments_lock;
-> +	unsigned long len;
-> +	void *vaddr;
-> +	phys_addr_t paddr;
-> +};
-> +
-> +struct dma_heap_attachment {
-> +	struct device *dev;
-> +	struct sg_table *table;
-> +	struct list_head list;
-> +};
-> +
-> +static int dma_heap_attach(struct dma_buf *dmabuf,
-> +			   struct dma_buf_attachment *attachment)
-> +{
-> +	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-> +	struct dma_heap_attachment *a;
-> +	struct sg_table *table;
-> +
-> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
-> +	if (!a)
-> +		return -ENOMEM;
-> +
-> +	table = kmalloc(sizeof(*table), GFP_KERNEL);
-> +	if (!table) {
-> +		kfree(a);
-> +		return -ENOMEM;
-> +	}
-> +	if (sg_alloc_table(table, 1, GFP_KERNEL)) {
-> +		kfree(table);
-> +		kfree(a);
-> +		return -ENOMEM;
-> +	}
-> +	sg_set_page(table->sgl, pfn_to_page(PFN_DOWN(buffer->paddr)), buffer->len, 0);
-> +
-> +	a->table = table;
-> +	a->dev = attachment->dev;
-> +	INIT_LIST_HEAD(&a->list);
-> +
-> +	attachment->priv = a;
-> +
-> +	mutex_lock(&buffer->attachments_lock);
-> +	list_add(&a->list, &buffer->attachments);
-> +	mutex_unlock(&buffer->attachments_lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void dma_heap_detatch(struct dma_buf *dmabuf,
-> +			     struct dma_buf_attachment *attachment)
-> +{
-> +	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-> +	struct dma_heap_attachment *a = attachment->priv;
-> +
-> +	mutex_lock(&buffer->attachments_lock);
-> +	list_del(&a->list);
-> +	mutex_unlock(&buffer->attachments_lock);
-> +
-> +	sg_free_table(a->table);
-> +	kfree(a->table);
-> +	kfree(a);
-> +}
-> +
-> +static struct sg_table *dma_heap_map_dma_buf(struct dma_buf_attachment *attachment,
-> +					     enum dma_data_direction direction)
-> +{
-> +	struct dma_heap_attachment *a = attachment->priv;
-> +	struct sg_table *table = a->table;
-> +
-> +	/*
-> +	 * As this heap is backed by uncached SRAM memory we do not need to
-> +	 * perform any sync operations on the buffer before allowing device
-> +	 * domain access. For this reason we use SKIP_CPU_SYNC and also do
-> +	 * not use or provide begin/end_cpu_access() dma-buf functions.
-> +	 */
-> +	if (!dma_map_sg_attrs(attachment->dev, table->sgl, table->nents,
-> +			      direction, DMA_ATTR_SKIP_CPU_SYNC))
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	return table;
-> +}
-> +
-> +static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
-> +				   struct sg_table *table,
-> +				   enum dma_data_direction direction)
-> +{
-> +	dma_unmap_sg_attrs(attachment->dev, table->sgl, table->nents,
-> +			   direction, DMA_ATTR_SKIP_CPU_SYNC);
-> +}
-> +
-> +static void dma_heap_dma_buf_release(struct dma_buf *dmabuf)
-> +{
-> +	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-> +
-> +	gen_pool_free(buffer->pool, (unsigned long)buffer->vaddr, buffer->len);
-> +	kfree(buffer);
-> +}
-> +
-> +static int dma_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
-> +{
-> +	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-> +	int ret;
-> +
-> +	/* SRAM mappings are not cached */
-> +	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-> +
-> +	ret = vm_iomap_memory(vma, buffer->paddr, buffer->len);
-> +	if (ret)
-> +		pr_err("Could not map buffer to userspace\n");
-> +
-> +	return ret;
-> +}
-> +
-> +static int dma_heap_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
-> +{
-> +	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-> +
-> +	iosys_map_set_vaddr(map, buffer->vaddr);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dma_buf_ops sram_dma_heap_buf_ops = {
-> +	.attach = dma_heap_attach,
-> +	.detach = dma_heap_detatch,
-> +	.map_dma_buf = dma_heap_map_dma_buf,
-> +	.unmap_dma_buf = dma_heap_unmap_dma_buf,
-> +	.release = dma_heap_dma_buf_release,
-> +	.mmap = dma_heap_mmap,
-> +	.vmap = dma_heap_vmap,
-> +};
-> +
-> +static struct dma_buf *sram_dma_heap_allocate(struct dma_heap *heap,
-> +					      unsigned long len,
-> +					      unsigned long fd_flags,
-> +					      unsigned long heap_flags)
-> +{
-> +	struct sram_dma_heap *sram_dma_heap = dma_heap_get_drvdata(heap);
-> +	struct sram_dma_heap_buffer *buffer;
-> +
-> +	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> +	struct dma_buf *dmabuf;
-> +	int ret;
-> +
-> +	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-> +	if (!buffer)
-> +		return ERR_PTR(-ENOMEM);
-> +	buffer->pool = sram_dma_heap->pool;
-> +	INIT_LIST_HEAD(&buffer->attachments);
-> +	mutex_init(&buffer->attachments_lock);
-> +	buffer->len = len;
-> +
-> +	buffer->vaddr = (void *)gen_pool_alloc(buffer->pool, buffer->len);
-> +	if (!buffer->vaddr) {
-> +		ret = -ENOMEM;
-> +		goto free_buffer;
-> +	}
-> +
-> +	buffer->paddr = gen_pool_virt_to_phys(buffer->pool, (unsigned long)buffer->vaddr);
-> +	if (buffer->paddr == -1) {
-> +		ret = -ENOMEM;
-> +		goto free_pool;
-> +	}
-> +
-> +	/* create the dmabuf */
-> +	exp_info.exp_name = dma_heap_get_name(heap);
-> +	exp_info.ops = &sram_dma_heap_buf_ops;
-> +	exp_info.size = buffer->len;
-> +	exp_info.flags = fd_flags;
-> +	exp_info.priv = buffer;
-> +	dmabuf = dma_buf_export(&exp_info);
-> +	if (IS_ERR(dmabuf)) {
-> +		ret = PTR_ERR(dmabuf);
-> +		goto free_pool;
-> +	}
-> +
-> +	return dmabuf;
-> +
-> +free_pool:
-> +	gen_pool_free(buffer->pool, (unsigned long)buffer->vaddr, buffer->len);
-> +free_buffer:
-> +	kfree(buffer);
-> +
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static struct dma_heap_ops sram_dma_heap_ops = {
-> +	.allocate = sram_dma_heap_allocate,
-> +};
-> +
-> +int sram_add_dma_heap(struct sram_dev *sram,
-> +		      struct sram_reserve *block,
-> +		      phys_addr_t start,
-> +		      struct sram_partition *part)
-> +{
-> +	struct sram_dma_heap *sram_dma_heap;
-> +	struct dma_heap_export_info exp_info;
-> +
-> +	dev_info(sram->dev, "Exporting SRAM Heap '%s'\n", block->label);
-> +
-> +	sram_dma_heap = kzalloc(sizeof(*sram_dma_heap), GFP_KERNEL);
-> +	if (!sram_dma_heap)
-> +		return -ENOMEM;
-> +	sram_dma_heap->pool = part->pool;
-> +
-> +	exp_info.name = kasprintf(GFP_KERNEL, "sram_%s", block->label);
-> +	exp_info.ops = &sram_dma_heap_ops;
-> +	exp_info.priv = sram_dma_heap;
-> +	sram_dma_heap->heap = dma_heap_add(&exp_info);
-> +	if (IS_ERR(sram_dma_heap->heap)) {
-> +		int ret = PTR_ERR(sram_dma_heap->heap);
-> +
-> +		kfree(sram_dma_heap);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-> index 632f90d9bcea..643c77598beb 100644
-> --- a/drivers/misc/sram.c
-> +++ b/drivers/misc/sram.c
-> @@ -120,6 +120,12 @@ static int sram_add_partition(struct sram_dev *sram, struct sram_reserve *block,
->   		ret = sram_add_pool(sram, block, start, part);
->   		if (ret)
->   			return ret;
-> +
-> +		if (block->export) {
-> +			ret = sram_add_dma_heap(sram, block, start, part);
-> +			if (ret)
-> +				return ret;
-> +		}
->   	}
->   	if (block->export) {
->   		ret = sram_add_export(sram, block, start, part);
-> diff --git a/drivers/misc/sram.h b/drivers/misc/sram.h
-> index 397205b8bf6f..062bdd25fa06 100644
-> --- a/drivers/misc/sram.h
-> +++ b/drivers/misc/sram.h
-> @@ -60,4 +60,20 @@ static inline int sram_add_protect_exec(struct sram_partition *part)
->   	return -ENODEV;
->   }
->   #endif /* CONFIG_SRAM_EXEC */
-> +
-> +#ifdef CONFIG_SRAM_DMA_HEAP
-> +int sram_add_dma_heap(struct sram_dev *sram,
-> +		      struct sram_reserve *block,
-> +		      phys_addr_t start,
-> +		      struct sram_partition *part);
-> +#else
-> +static inline int sram_add_dma_heap(struct sram_dev *sram,
-> +				    struct sram_reserve *block,
-> +				    phys_addr_t start,
-> +				    struct sram_partition *part)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_SRAM_DMA_HEAP */
-> +
->   #endif /* __SRAM_H */
+> Change log v1 -> v2:
+>   PATCH 1 (bindings):
+>      * Drop power-domains property's description
+>      * Drop the unused label 'mcbsp0' in example
+>      * Add <> around each entry of the 'dmas' property
+>      * Add 'Reviewed-by: Rob Herring <robh@kernel.org>'
+>   PATCH 2 (bindings):
+>      * Drop the 'ti,enable-sync-err' flag
+>      * Drop the 'ti,disable-free-run' flag
+>      * Add 'Reviewed-by: Rob Herring <robh@kernel.org>'
+>   PATCH 4:
+>      * In probe() use dev_err for fixed error
+>   PATCH 7 (TDM):
+>      * set playback.max_channels to 128
+>      * Add a check on tx_mask as the one done for rx_mask
+>      * Allow TDM with BP_FP format
+>   PATCH 9:
+>      * Detection of unexpected frame pulses is enabled by default
+>   PATCH 10:
+>      * Free-running mode is selected by the DAI format through
+>        SND_SOC_DAIFMT_[CONT/GATED]
+>   PATCH 12:
+>      * drop the 'ti,drive-dx' property
+>      * add 'ti,T1-framing-[rx/tx]' properties
+>   PATCH 13:
+>      * Drop the drive_dx part
+>      * Add support for 'T1 framing' with data delay set to 2 bit-clock
+>        periods
+> Bastien Curutchet (13):
+>   ASoC: dt-bindings: davinci-mcbsp: convert McBSP bindings to yaml
+>     schema
+>   ASoC: dt-bindings: davinci-mcbsp: Add optional clock
+>   ASoC: ti: davinci-i2s: Remove the unused clk_input_pin attribute
+>   ASoC: ti: davinci-i2s: Replace dev_err with dev_err_probe
+>   ASoC: ti: davinci-i2s: Use external clock to drive sample rate
+>     generator
+>   ASoC: ti: davinci-i2s: Delete unnecessary assignment
+>   ASoC: ti: davinci-i2s: Add TDM support
+>   ASoC: ti: davinci-i2s: Add handling of BP_FC format
+>   ASoC: ti: davinci-i2s: Enable unexpected frame pulses detection
+>   ASoC: ti: davinci-i2s: Link free-run mode to
+>     SND_SOC_DAIFMT_[GATED/CONT]
+>   ASoC: ti: davinci-i2s: Add S24_LE to supported formats
+>   ASoC: dt-bindings: davinci-mcbsp: Add the 'ti,T1-framing-{rx/tx}'
+>     flags
+>   ASoC: ti: davinci-i2s: Add T1 framing support
+> 
+>  .../bindings/sound/davinci-mcbsp.txt          |  50 ----
+>  .../bindings/sound/davinci-mcbsp.yaml         | 113 +++++++
+>  include/linux/platform_data/davinci_asp.h     |  15 -
+>  sound/soc/ti/davinci-i2s.c                    | 278 ++++++++++++++----
+>  4 files changed, 333 insertions(+), 123 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/davinci-mcbsp.yaml
+> 
+
+-- 
+Péter
