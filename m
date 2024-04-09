@@ -1,98 +1,172 @@
-Received: from relay162.nicmail.ru (relay162.nicmail.ru [91.189.117.6])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2133.outbound.protection.outlook.com [40.107.20.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21639156F2D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 18:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712688651; cv=none; b=AjfqJa4KlXELu/KSytT6xZeBdRONRUjeLM0sAMCwd9gRY/lDOD595w4jBytw19xLzMByMffKOYUY/h/RpY04t5uceECkWyqPkwV3n9y6jy1QmnIfC7US80Xk2xiIeV3Ip1eMa343bpRPzWBAi5BqeaLOPA+n/E4YYJkOpofh4Ds=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712688651; c=relaxed/simple;
-	bh=7mpDaExakoQ07v+dHggo5nRAbVx93Whw/EtsFEU4P3c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AaoA/Kmrbr6iXhHAunR0pw5vaEbAqcFAd4QdqGBKgV6zkKLxHsELB8nP2iXD0ir7m2hLLGQeIlGvxTuKyc0mJzPErDIAyFrWMotmWBH3L1aM3I9yyK91yB7OAlB0D91p20WQUznhFYUjohbQTeCtMf8KIR/I8nmMxfAoc1ATfuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
-Received: from [10.28.136.255] (port=5328 helo=mitx-gfx..)
-	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
-	(envelope-from <kiryushin@ancud.ru>)
-	id 1ruGEe-00014w-9e;
-	Tue, 09 Apr 2024 21:30:21 +0300
-Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO mitx-gfx..)
-	by incarp1105.mail.hosting.nic.ru (Exim 5.55)
-	with id 1ruGEe-007wXR-2s;
-	Tue, 09 Apr 2024 21:30:20 +0300
-From: Nikita Kiryushin <kiryushin@ancud.ru>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Nikita Kiryushin <kiryushin@ancud.ru>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ashok Raj <ashok.raj@intel.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF04A15699A;
+	Tue,  9 Apr 2024 18:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.133
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712688875; cv=fail; b=ieD4qr5BPGPklgIJPwkgQC01WSrFj8qMbGkQlGAANFRRGgolhOJeQPGODzRY8KvrME3sl0f7b505WDeuQRoFQZDCeq1u27mCznh+aT/TKnCq1ko/y2NAFj73Fa5ScxjK+t3lynEfwnt6ghzCquPN/BTlUrJaDA7kvdfXbI62esA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712688875; c=relaxed/simple;
+	bh=79lyNS3ci/t+H/rqhQ5okiAHzbqkT+xFcfP0/8kGJ70=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=k22S7KYdNQ5J33YKnc3uGOQgfDoXdGd35TIcWgzHnLzrsu5GO1gKV++txKx6fS5eHzpQP+Poac/4AotIkCMZy7ihY4IKqS6MfUN7zIdgc9c3+kBfhnmbRYCD3cG406iV1OCdgT+dnOV/r3cqGRw5acxQDTOdEv+JuYKhXN4n4Xk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Avj3WLlW; arc=fail smtp.client-ip=40.107.20.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Avj3WLlW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OSQSndHr3ZsmTU2W/6po+3qsYBU8Z63ZozZ/JAdtdYFtfpAFTwcMuraA3JPhaxjynsbHXrH12a7cZwoN81LwvD0j33uf/dCrDGQxYOtsIaXidJ/HtkAxmm5vkwyuRpJUDN6su4oxSsF0FSxKSM7V+Brj4YYCJl6j3RGtrOuDzYA51QhlqJse/wo50cQFmHanY2G2xk4pj9mzEpjT32dMOIDWkBCkH2RcpRNoMwxNYy0xJBTn7GLzn/jCi+J59IeouHkNyRfSupdV4pbKVHzHe5MwvqCm2Knw8nUoCm+QR5V0csqAGqj95T5Lzlr6F6PVWVuLiTySNKNTh1VPuz6sbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9TcuymeBOUvbxg3qeFpQuyhvrHUg9/ZmWuSI9+B5ab8=;
+ b=Y1Mu2+SAkKif8Q5FoDlS+2Cs1PhCD2/0DaHTY1PTZePV13aqA0/2PADX6Q21lYvulRQiptkCpkypdNAml9d09qBl1945k6EUZ2nf20EhoYwS1CLga/9rd3/exLZS/XtZAaVjUb734jIDmMAELW/Uh9+JcfwLFtCvugsA4Y7BFBqTRU7vALp4I3uVTgH5SZnlTC4QwsArEd0E+q0b1A6wBO7koP9hKsPc8Gw8CxygkJ3nL8NotGK5i+c1BZpYrQ2+zvxJB8GmqpoXGMd6AQzSd+TNDBcYj9p4uYlXRIsC5JpOMIR8f+xoo8jhQsARKT3CV0BEjR32w1uEAJXZyQkITA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9TcuymeBOUvbxg3qeFpQuyhvrHUg9/ZmWuSI9+B5ab8=;
+ b=Avj3WLlWpGRVL2wwlk3m/A5tuoGPOxCIq+y8hV1i3TVP5DvMh4YBgTZ+VdpPHUEja2QKE6AL3dn+AFS2WcMq6QdZ/O3aSogwWQp2k0n5Cx1XxmEeEofzJQYsZZ8D5Feq/N9G1R32JhsxXBhxd4SmQc7bn1myci5JglxY2q3OYmU=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AM7PR04MB6998.eurprd04.prod.outlook.com (2603:10a6:20b:10a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Tue, 9 Apr
+ 2024 18:54:30 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Tue, 9 Apr 2024
+ 18:54:30 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: krzysztof.kozlowski@linaro.org
+Cc: Frank.li@nxp.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org,
+	imx@lists.linux.dev,
+	krzysztof.kozlowski+dt@linaro.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH] x86/smpboot: Add map vars allocation check in smp_prepare_cpus_common
-Date: Tue,  9 Apr 2024 21:29:39 +0300
-Message-Id: <20240409182940.664482-1-kiryushin@ancud.ru>
+	peng.fan@nxp.com,
+	robh@kernel.org,
+	vkoul@kernel.org
+Subject: [PATCH v3 1/2] dt-bindings: dma: fsl-edma: remove 'clocks' from required
+Date: Tue,  9 Apr 2024 14:54:15 -0400
+Message-Id: <20240409185416.2224609-1-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SA9PR13CA0135.namprd13.prod.outlook.com
+ (2603:10b6:806:27::20) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MS-Exchange-Organization-SCL: -1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AM7PR04MB6998:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+LFawA6WBgl31O2O1sPxyH5SKOlcBwBqIX4tGaaAtfGSAmGHtH0hTzoaCQJgQZDGBHL6Ftpl0Vvw2TzorDk6f/Xmt+ESjaL8+y8k1EbQBjzcbxcYLf/DAJwvX9C8ZZkgRNZqDh6cK/3FLAVPMpNigXwvMtEfhRh4pRI0Uoz6Hu0FrR7EDrV2RNDiGdB/JPixM1KCNlj6z9A2Za64Gk9Y+9AMcIeP4kwG0Trtdy5fRjp9zkdVulf5rhNkYgl2wCQLe8LgG1DoeRXDKzZVkLmVIYGB4qekcNhCEPdMiYekarQ22Khw8mAxCKU5ymp5+wex2f57y7Dzx9Ohbx/jujc/B1ZQ5HMIdiWanajf2RdPh2Ii3+8nVo/o1MWWuAiZUI1VNpAPcaikfffmAgMY2hX6S+JyP3TwdjXjUxW1NRl9qGyxQkWoaBL5KyJlA6d8PBunfn6FJ4gQF5EE/UVmwUT6hufOLp1yZnV4vIqzg7DewcfjRaDsbKU9bc7Ktf/abWfBCf+fI+C+vEwATDy23gho4VRKbjjDWDEmbL1HKV5adE9x/iw586P236I/J//BzlVdKx1Mx3yh10xUGGPVTfulUQ1m3GicT4bYJGnV0XE3uIG1jHRG+e5XUpzxRGLGqsA6CYjQGZvzja2LNrQg/5GO01rRLrjzG2BL4WbGAgxtiW9JV/ShpxEvDHu5jCb3WHoKlPuVP1u9nUT7JM7tqy1+1A==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(376005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?i3genjN9vhx6dkrHrjoOXsJ4CVSMsdcrkEL0wTXR4FpxTeCcCIyw5JjSfBwt?=
+ =?us-ascii?Q?5MlDu54JHHKsD25Dy6e4hHceMdd7T2l2wBWQ30G+F04IGiSorhRKMm4AAoFr?=
+ =?us-ascii?Q?rq/6hvjHxa2tXR9L2uGhNR9imkql64mDCoOAxkkdRA4w117vUxtjScnFMNIr?=
+ =?us-ascii?Q?uuvbBIFtK3UFDPkpWNeyxpdCS7oVpaWALspWQseO2dmZH4Sko6UjZkhnOP6c?=
+ =?us-ascii?Q?KMMvUK+Ju8NtQ2uHeCOdeqVH+V2V3FR+PM7GcEFIUTfyZaiHK5/kJr5wYbv4?=
+ =?us-ascii?Q?Uh/Pt5e1Tr9SjrL44PBH0WHUeSfNTnTQnXducpAWZb3foMJs8zk3th830iyB?=
+ =?us-ascii?Q?9oh7U8tppByhqOBXsQsdtUGGoeO6t2wXqi5V4y6qFnThEwJOYKa8QuQyCLQO?=
+ =?us-ascii?Q?VPwqlVAcX+PjkUob6NNTeJvTYUvkLeVk8QaW/nivvj7LYyaBP4H+jyVddCeu?=
+ =?us-ascii?Q?RI8rSr9SJLMCADNqjn3Z3EwqPDkoKc2IV4OJBMOxFb1YbYqeB+wBLZTJewDd?=
+ =?us-ascii?Q?/z+qvZKuQuI3Jjq9XjtQuHbZ+UDhyCG9F8NGOKT04O/U2QkBiFZVcVcKUAc+?=
+ =?us-ascii?Q?ro4+3WISa6bjTqkYvWfLP0r3bYi+rIN6BbIA5TNQZoTfKTE9nFlRV5zRi8T+?=
+ =?us-ascii?Q?wyiTqqlhusZpZat7heiXuAkOUNEA9HY6x/CVDztXiaH8fSGfBFwtOXG0O5v5?=
+ =?us-ascii?Q?M+OFwf2dKA4OO7PoUDySzrjUlhSRg1ALKFsME82vmDel9JoMBYxnYUgHEIDD?=
+ =?us-ascii?Q?KrCApudpx+9owKKcSzAZZh7UQLp8D5fOGHK9SIw4vGPWufEphFcyBAtkEzqh?=
+ =?us-ascii?Q?vgMCYcMAQwSd0AuqHxSY+4YxpH6qXFfFzwX11zu1y0PPqknnc+8DjohDjLlS?=
+ =?us-ascii?Q?8ymGd9TsgwL7JGfy1qgN9XPe8j57bArGpt4bsrirIDIRsmEeOIVyY78+boet?=
+ =?us-ascii?Q?l8IgsfWzJlHnBBIeg/0eJpIgOn9IYvHwUcfuvVZrNpABR3IFxNkmoqyEKMlI?=
+ =?us-ascii?Q?qakERzWDKRLVahb/hBjmUQnNd8tt8iSyKhzDuaCbfmTEhlvwWp+fOJ57og82?=
+ =?us-ascii?Q?EIvZbyXpZBNokt1kop7e2mg9tKalBRdD5Q8k9R1AJ2z8SYDw54grl3iNUKXJ?=
+ =?us-ascii?Q?gfAdxnZ23IrduKyk/sRqEAV0yIiUUoRiA/JgGnI62MJOfnF68VM6ukgx7uIE?=
+ =?us-ascii?Q?uaEo6D+a23VY2nNZYSmuCcZHRImlAIUZCgtRZKr13Mc3rE7y/baJOGeA7pzp?=
+ =?us-ascii?Q?It0u2AuZW7pUNNI4zGXa5efBJj8Zg5KWM4iCpXICYGurXYMdFqJnW+QSDX2f?=
+ =?us-ascii?Q?Gghbd64l9GfnoCyA0YkYj+KG3EyoFL5IbIUNZOmfIRrVdq8FPEhckD3CoyBu?=
+ =?us-ascii?Q?yGhSQ1UiggYjqfqTgVl9agoWCrkAWRfMx2Zq89aVvSRWV15NCgPYn3RJ6cRv?=
+ =?us-ascii?Q?diJMpFp1fcdZHICCjpnRdpdgEmLuA9my+fYezJwm4+EwSFJoXwoOxkliidKM?=
+ =?us-ascii?Q?7llloqhm9uvPYx5VtzcWk88pmVYleqcaykYlQw21TGg0swj0NRRsD8WoB8XQ?=
+ =?us-ascii?Q?gUQXBY2LYcr9msQQNcnQTnVGhkznuhmAE9QtYYnw?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33df43e1-b2f8-4217-80b1-08dc58c67cdf
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 18:54:30.2655
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: i1jge9ODtpdIq/rPW9t3qebgDiXufluag/tzZ/RpLYMQfiOZ+c3ajBHx7woL9kTyd3MA2Q0nH5wF9sMhwhf86A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6998
 
-As of now, zalloc_cpumask_var for various maps in smp_prepare_cpus_common
-is not checked.
+fsl,imx8qm-adma and fsl,imx8qm-edma don't require 'clocks'. Remove it from
+required and add 'if' block for other compatible string to keep the same
+restrictions.
 
-If allocation fails, it will not be known, unless the not-allocated map
-will be accessed. The situation seems not very realistic now, but could
-get more relevant in the future, as number of cores (and amount of
-allocated resources) grows.
-
-Add a cumulative status for all zalloc_cpumask_var() calls in
-smp_prepare_cpus_common() and error message in case the status signals
-that any of the map var allocations failed (per cpu).
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Signed-off-by: Nikita Kiryushin <kiryushin@ancud.ru>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- arch/x86/kernel/smpboot.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 76bb65045c64..3b24c2e1fa3b 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1042,11 +1042,16 @@ void __init smp_prepare_cpus_common(void)
- 	}
+Notes:
+    Change from v2 to v3
+      - rebase to dmaengine/next
+    Change from v1 to v2
+      - add Krzysztof's ACK.
+
+ .../devicetree/bindings/dma/fsl,edma.yaml       | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+index 825f4715499e5..657a7d3ebf857 100644
+--- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
++++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+@@ -82,7 +82,6 @@ required:
+   - compatible
+   - reg
+   - interrupts
+-  - clocks
+   - dma-channels
  
- 	for_each_possible_cpu(i) {
--		zalloc_cpumask_var(&per_cpu(cpu_sibling_map, i), GFP_KERNEL);
--		zalloc_cpumask_var(&per_cpu(cpu_core_map, i), GFP_KERNEL);
--		zalloc_cpumask_var(&per_cpu(cpu_die_map, i), GFP_KERNEL);
--		zalloc_cpumask_var(&per_cpu(cpu_llc_shared_map, i), GFP_KERNEL);
--		zalloc_cpumask_var(&per_cpu(cpu_l2c_shared_map, i), GFP_KERNEL);
-+		bool ret = true;
-+
-+		ret &= zalloc_cpumask_var(&per_cpu(cpu_sibling_map, i), GFP_KERNEL);
-+		ret &= zalloc_cpumask_var(&per_cpu(cpu_core_map, i), GFP_KERNEL);
-+		ret &= zalloc_cpumask_var(&per_cpu(cpu_die_map, i), GFP_KERNEL);
-+		ret &= zalloc_cpumask_var(&per_cpu(cpu_llc_shared_map, i), GFP_KERNEL);
-+		ret &= zalloc_cpumask_var(&per_cpu(cpu_l2c_shared_map, i), GFP_KERNEL);
-+
-+		if (!ret)
-+			pr_err("Failed to allocate map for CPU%u\n", i);
- 	}
+ allOf:
+@@ -187,6 +186,22 @@ allOf:
+         "#dma-cells":
+           const: 3
  
- 	set_cpu_sibling_map(0);
++  - if:
++      properties:
++        compatible:
++	  contains:
++            enum:
++              - fsl,vf610-edma
++              - fsl,imx7ulp-edma
++              - fsl,imx93-edma3
++              - fsl,imx93-edma4
++              - fsl,imx95-edma5
++              - fsl,imx8ulp-edma
++              - fsl,ls1028a-edma
++    then:
++      required:
++        - clocks
++
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.34.1
 
