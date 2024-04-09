@@ -1,48 +1,42 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5414E7F499;
-	Tue,  9 Apr 2024 18:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327607F499;
+	Tue,  9 Apr 2024 18:07:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712685985; cv=none; b=BjBdu9GTly3w1t2sdh4aoWJQSe3wa986qnoiVMYrKqfsTS42MBbrF9tE7ODZUrFPECpy2+jEjCUiBBfX6G42/YuULrPpMiCS0qrJe4qK4wFwU+UxnqvuZCZUdU4f35CGt3ug+99K3VZwO1wo8SQl8nA9lSXw+VSJyJLnlcIIzGM=
+	t=1712686045; cv=none; b=kTzBnh27ekbuLkLLwynPdNjeLRq3vOkNO4FF6g5jFLtL5ziaDpEuruX6BjH6GyowqyR8BH7+9pTepyQ+iOwMJ4kCsuPLnFp0J+D2/HV4xbHPOx1FBeahQZ4nQOSVkBsJk9Mzx1ehYTDhSTarndX4m4Yyt5ERhJQ7Icbe7La1KRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712685985; c=relaxed/simple;
-	bh=lKbdrlQEuosracHTbXqyG8nrGq4aKB8F7ccRPnmbiqg=;
+	s=arc-20240116; t=1712686045; c=relaxed/simple;
+	bh=tYIcoz0wchts/Gtp2iRLf9iduerku6Apdgx2vlKtfFU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hz7ccihp6BGvcsIfdptSoAab2lG4HyXz3RZgfvGLyuq5FdmSkHlg2mDGAuEjXYdAWmEjTgqRedoc0TILeoo/qW52O6bMKz7b5KrTmrZZjWnPh5/DEcCsplVKRpu5dBj/wJhJiUF70gMqLdzBcWf6ioy4sDMskQ9uZm5NYUog5NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bem9nJen; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 In-Reply-To:Content-Type; b=ozfoXuIwEP4flzEryE5RMKQxgeLoVqBva+AC9mM0vy8WKxWyaLsRoUUkhruNDwoobh7WS5V/zUuFzQ/J0mWR+g07ZIpTZeRWT7SrmlN3WNd5r/IthieEf1o7aUy80QdmQAc0LDVZcr6BMRdf8WlCnxEF3QZPr2Heior+/apW2hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=jH1HgOpB; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bem9nJen"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 439CQYJC028241;
-	Tue, 9 Apr 2024 17:43:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=XJsZh8rurWgQGYHWAum585/lnINVNpaEUluO+e+7ONY=; b=be
-	m9nJenTC4dpWBKe1hFZCXtd+AXYzNpN5ASZOa/1A0rW1LC0jbQ9n5RfRtBiR7NVR
-	znXBsnCjkPzuKrRbj57eFSMH6RpYooO6/0ntzKdgLkUa41vNf5uZGnkCU9Zl/Ipv
-	nUw2EazapN9n2igk4IouRgwuQbUvlzySvZVfbsRTNbEnd/qzw8Pv05SheIzERvtT
-	237Gw1WUC2M5FAt6PIn0RSJrcgrajnm9NKYM6YjnThZN8QqzreysKHVGKDee27dZ
-	yLPLGLRmka0+DZfIwzJQToqUt5b5JK74fv6Tt3caStSEUGDdS5R9F1o8SO/IjrJe
-	Vdk+SykLkICIZvYOPMBw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcv3khu64-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 17:43:06 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439Hh5SM025586
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Apr 2024 17:43:05 GMT
-Received: from [10.216.62.42] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 9 Apr 2024
- 10:42:59 -0700
-Message-ID: <3ab9badd-2cf6-4fe0-aaf0-d08614418968@quicinc.com>
-Date: Tue, 9 Apr 2024 23:12:54 +0530
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="jH1HgOpB"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 839D7100002;
+	Tue,  9 Apr 2024 21:07:00 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1712686020; bh=RFwbyFvj6nYarjY+Ujb977cApsg0/oYvU6Fkzw6g2QA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=jH1HgOpBJSPPtG5Q/nmkFX7x9hWXSVqxu3SD6zU1gLZzeze/lAR/ODu6+EJPEmoop
+	 Xy4mnbXKxU76+XQgOW7y+Acu9dhtp8zQJ4Xcpk2onfl4FB8m4h9eX1CG+RGP/qLKCm
+	 9WVfP5dgRkSt33V+sppeejz8qnZAidNTAnXMvMinUn1O/DNKtDd0tVfmoB79Z2iaUT
+	 l2ZT6NPY9if6E4GHBUP9wK96ecu+TqnCCfyKP+qg4fYPVmLdZVyUUeFiFcqiSqsSob
+	 XZw0wUrbPE7vM5BLyDINajThKhp5eCIz3lTClrqv0gpGOyUrW/2HgViIqpcBuIEPzt
+	 VFswAgoEXAGXA==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Tue,  9 Apr 2024 21:05:54 +0300 (MSK)
+Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Apr 2024
+ 21:05:03 +0300
+Message-ID: <1a96d3be-cc40-4aef-bd4d-bb3a9ef3a7d4@t-argos.ru>
+Date: Tue, 9 Apr 2024 21:01:38 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,152 +44,143 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 4/9] usb: dwc3: core: Refactor PHY logic to support
- Multiport Controller
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring
-	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Wesley Cheng
-	<quic_wcheng@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
-        Johan Hovold
-	<johan@kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org"
-	<linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "quic_ppratap@quicinc.com"
-	<quic_ppratap@quicinc.com>,
-        "quic_jackp@quicinc.com"
-	<quic_jackp@quicinc.com>,
-        Johan Hovold <johan+linaro@kernel.org>
-References: <20240408132925.1880571-1-quic_kriskura@quicinc.com>
- <20240408132925.1880571-5-quic_kriskura@quicinc.com>
- <20240409011046.zgjqvhewldch3snu@synopsys.com>
-Content-Language: en-US
-From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
-In-Reply-To: <20240409011046.zgjqvhewldch3snu@synopsys.com>
+Subject: Re: [PATCH] RDMA: hns: Fix possible null pointer dereference
+To: Junxian Huang <huangjunxian6@hisilicon.com>, Leon Romanovsky
+	<leon@kernel.org>
+CC: Wei Xu <xuwei5@hisilicon.com>, Chengchang Tang
+	<tangchengchang@huawei.com>, Jason Gunthorpe <jgg@ziepe.ca>, Xi Wang
+	<wangxi11@huawei.com>, Shengming Shu <shushengming1@huawei.com>, Weihang Li
+	<liweihang@huawei.com>, <linux-rdma@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+References: <20240409083047.15784-1-amishin@t-argos.ru>
+ <20240409092601.GG4195@unreal>
+ <1476bb96-c0a9-379a-546b-98fc8a06beea@hisilicon.com>
+Content-Language: ru
+From: Aleksandr Mishin <amishin@t-argos.ru>
+In-Reply-To: <1476bb96-c0a9-379a-546b-98fc8a06beea@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2kjLBKEa1gL6vBwM6ThsQydqycEfkkho
-X-Proofpoint-GUID: 2kjLBKEa1gL6vBwM6ThsQydqycEfkkho
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_12,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 impostorscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404090116
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184641 [Apr 09 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1;t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/09 13:26:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/09 13:05:00 #24719238
+X-KSMG-AntiVirus-Status: Clean, skipped
 
 
+Thank you! I assumed something like this, but I couldn't find any 
+confirmations and offered a patch as a solution.
 
-On 4/9/2024 6:41 AM, Thinh Nguyen wrote:
-> On Mon, Apr 08, 2024, Krishna Kurapati wrote:
->> Currently the DWC3 driver supports only single port controller
->> which requires at least one HS PHY and at most one SS PHY.
+On 09.04.2024 14:10, Junxian Huang wrote:
+> 
+> 
+> On 2024/4/9 17:26, Leon Romanovsky wrote:
+>> On Tue, Apr 09, 2024 at 11:30:47AM +0300, Aleksandr Mishin wrote:
+>>> In hns_roce_hw_v2_get_cfg() pci_match_id() may return
+>>> NULL which is later dereferenced. Fix this bug by adding NULL check.
 >>
->> But the DWC3 USB controller can be connected to multiple ports and
->> each port can have their own PHYs. Each port of the multiport
->> controller can either be HS+SS capable or HS only capable
->> Proper quantification of them is required to modify GUSB2PHYCFG
->> and GUSB3PIPECTL registers appropriately.
+>> I don't know, this NULL can't happen in this flow.
 >>
->> Add support for detecting, obtaining and configuring PHYs supported
->> by a multiport controller. Limit support to multiport controllers
->> with up to four ports for now (e.g. as needed for SC8280XP).
->>
->> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
->> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
->> ---
->>   drivers/usb/dwc3/core.c | 251 ++++++++++++++++++++++++++++------------
->>   drivers/usb/dwc3/core.h |  14 ++-
->>   drivers/usb/dwc3/drd.c  |  15 ++-
->>   3 files changed, 193 insertions(+), 87 deletions(-)
+>> Thanks
 >>
 > 
-> <snip>
+> Yeah, it's already checked here:
 > 
->> @@ -1937,6 +2020,10 @@ static int dwc3_get_num_ports(struct dwc3 *dwc)
->>   
->>   	iounmap(base);
->>   
->> +	if (dwc->num_usb2_ports > DWC3_MAX_PORTS ||
->> +	    dwc->num_usb3_ports > DWC3_MAX_PORTS)
->> +		return -ENOMEM;
+> 6911 static int hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+> 6912 {
+> 6913         const struct hnae3_ae_ops *ops = handle->ae_algo->ops;
+> 6914         const struct pci_device_id *id;
+> 6915         struct device *dev = &handle->pdev->dev;
+> 6916         int ret;
+> 6917
+> 6918         handle->rinfo.instance_state = HNS_ROCE_STATE_INIT;
+> 6919
+> 6920         if (ops->ae_dev_resetting(handle) || ops->get_hw_reset_stat(handle)) {
+> 6921                 handle->rinfo.instance_state = HNS_ROCE_STATE_NON_INIT;
+> 6922                 goto reset_chk_err;
+> 6923         }
+> 6924
+> 6925         id = pci_match_id(hns_roce_hw_v2_pci_tbl, handle->pdev);
+> 6926         if (!id)
+> 6927                 return 0;
+> 6928
+> 6929         if (id->driver_data && handle->pdev->revision == PCI_REVISION_ID_HIP08)
+> 6930                 return 0;
+> 6931
+> 6932         ret = __hns_roce_hw_v2_init_instance(handle);
 > 
-> This should be -EINVAL.
+> Junxian
 > 
->> +
->>   	return 0;
->>   }
-> 
-> <snip>
-> 
->> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
->> index 341e4c73cb2e..df2e111aa848 100644
->> --- a/drivers/usb/dwc3/core.h
->> +++ b/drivers/usb/dwc3/core.h
->> @@ -33,6 +33,12 @@
->>   
->>   #include <linux/power_supply.h>
->>   
->> +/*
->> + * Maximum number of ports currently supported for multiport
->> + * controllers.
-> 
-> This macro here is being used per USB2 vs USB3 ports rather than USB2 +
-> USB3, unlike the xHCI MAXPORTS. You can clarify in the comment and
-> rename the macro to avoid any confusion. You can also create 2 separate
-> macros for number of USB2 and USB3 ports even if they share the same
-> value.
-> 
-> As noted[*], we support have different max number of usb2 ports vs usb3
-> ports. I would suggest splitting the macros.
+>>>
+>>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>>
+>>> Fixes: 0b567cde9d7a ("RDMA/hns: Enable RoCE on virtual functions")
+>>> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+>>> ---
+>>>   drivers/infiniband/hw/hns/hns_roce_hw_v2.c | 13 +++++++++++--
+>>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>> index ba7ae792d279..31a2093334d9 100644
+>>> --- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>> +++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+>>> @@ -6754,7 +6754,7 @@ static const struct pci_device_id hns_roce_hw_v2_pci_tbl[] = {
+>>>   
+>>>   MODULE_DEVICE_TABLE(pci, hns_roce_hw_v2_pci_tbl);
+>>>   
+>>> -static void hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+>>> +static int hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+>>>   				  struct hnae3_handle *handle)
+>>>   {
+>>>   	struct hns_roce_v2_priv *priv = hr_dev->priv;
+>>> @@ -6763,6 +6763,9 @@ static void hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+>>>   
+>>>   	hr_dev->pci_dev = handle->pdev;
+>>>   	id = pci_match_id(hns_roce_hw_v2_pci_tbl, hr_dev->pci_dev);
+>>> +	if (!id)
+>>> +		return -ENXIO;
+>>> +
+>>>   	hr_dev->is_vf = id->driver_data;
+>>>   	hr_dev->dev = &handle->pdev->dev;
+>>>   	hr_dev->hw = &hns_roce_hw_v2;
+>>> @@ -6789,6 +6792,8 @@ static void hns_roce_hw_v2_get_cfg(struct hns_roce_dev *hr_dev,
+>>>   
+>>>   	hr_dev->reset_cnt = handle->ae_algo->ops->ae_dev_reset_cnt(handle);
+>>>   	priv->handle = handle;
+>>> +
+>>> +	return 0;
+>>>   }
+>>>   
+>>>   static int __hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+>>> @@ -6806,7 +6811,11 @@ static int __hns_roce_hw_v2_init_instance(struct hnae3_handle *handle)
+>>>   		goto error_failed_kzalloc;
+>>>   	}
+>>>   
+>>> -	hns_roce_hw_v2_get_cfg(hr_dev, handle);
+>>> +	ret = hns_roce_hw_v2_get_cfg(hr_dev, handle);
+>>> +	if (ret) {
+>>> +		dev_err(hr_dev->dev, "RoCE Engine cfg failed!\n");
+>>> +		goto error_failed_roce_init;
+>>> +	}
+>>>   
+>>>   	ret = hns_roce_init(hr_dev);
+>>>   	if (ret) {
+>>> -- 
+>>> 2.30.2
+>>>
 > 
 
-Hi Thinh,
-
-  This macro was intended only to identify how many USB2 (or USB3) Phy's 
-were serviced/operated by this driver, not how many logical ports 
-present (like in xHCI). I don't think it would be confusing currently 
-given that it is only used to identify number of generic phy instances 
-to allocate and not used for any other purpose. Once the num_usb2_ports 
-and num_usb3_ports are read by get_num_ports(...) call, they directly 
-indicate how many ports are HS and SS respectively. Keeping the same in 
-mind, I returned ENOMEM above (as you mentioned) because we don't 
-allocate more than DWC3_MAX_PORTS and if the number of hs or ss ports is 
-more than that, we simply return ENOMEM saying the driver doesn't 
-support operating those many phy's.
-
-> [*] https://lore.kernel.org/linux-usb/20230801013031.ft3zpoatiyfegmh6@synopsys.com/
-> 
->> + */
->> +#define DWC3_MAX_PORTS 4
->> +
->>
-> 
-> But it's not a big issue whether you decided to push a new version or a
-> create a separate patch for the comments above. Here's my Ack:
-> 
-
-Since this is not a bug, I would prefer to make a separate patch to 
-rename the macros. (If that is fine).
-
-> Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-> 
-> Thanks,
-> Thinh
+-- 
+Kind regards
+Aleksandr
