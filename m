@@ -1,147 +1,118 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9A5156C52
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 18:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BE9156C50;
+	Tue,  9 Apr 2024 18:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712687248; cv=none; b=u90p/33QEuqGOKjmvEWDqYlUffYVTXQU6/xDM27u+KGfkO25MxIrLEPCVmTXUNC/6PnCQFclGPeoYMGcAhkDM1FfNtvEtYnuDuxOr7U6r5Og8z2ai5f4mr+aRobKSejpYOUqicoqOrY/4oMBK/Nd1HnCvcUs0ti0Mt/mh0hbw4I=
+	t=1712687265; cv=none; b=OMOOKs/8unFV2P7PX0wDWn84T6ps9p4BisK1QY5LVnq1SfQnlWxgpCP5PPdT5aLH1pPZUCq4N2vVqHs4CkxWCy9bxyew2eo2nu8iqKMYvmPmdbbG97oeZb6718sDlAiguoCi9vU/WbtclxzUHkmSndxGtuDzbmlabvpIE2ROT64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712687248; c=relaxed/simple;
-	bh=0JJDZcx+eKBXpMEkk77fdwILoU0kLYfp33XNimwQfac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FJNE2cjM0ggfz4sGOlsa7vJqa/JAUyHPwy7UnXbrRk9HRI6HB6AMKyamGcIHwlKO4vVh+TqGTSc/xSk8pKADc20UD/kJdRs5QgMJ4BWWf3OPWTyQunBQ6c3qztOrfkZm/mBIUBFNnnytNo4wU7NpSW+L+21wkFUH/vpOVQ7rNtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cq55X6x6; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cq55X6x6"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-516d68d7a8bso3985573e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 11:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712687245; x=1713292045; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WDNDpKN5v2yIo8s3DyudTdW+0pg87u/NiQ3pUkTGC6c=;
-        b=cq55X6x691gYbu0L53OJk1Rbn4fL9MM1Gi6M3l5yXYKJMe4H4wqSAw3OqiFu+hxMMM
-         0tPrcpZk4hDcAINPzuWB/X5/NAe8Pz+vHr+g2ojxmcsDxgkl5/pVVQwQkNI3nkuaV9C0
-         OUJnACQnbARlTg8blwxqOFpEduCta9Se9vIUmYoAfO5HCA9B2isMYQyZIhkTfkDytas8
-         ur5HamHjr8kOiU0Fi+By5fKlMICEaRxT9L3q0mMDyNsLAf60Ahlnj0cfO9UsYl0j+jIv
-         kCTjJqSp8E5ZaxBCb+aEco4+sbEYYL4CbuIV2LJONtpV1stClyrEtLK/ThhntkqXgWXP
-         eM0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712687245; x=1713292045;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WDNDpKN5v2yIo8s3DyudTdW+0pg87u/NiQ3pUkTGC6c=;
-        b=JhXUfsohLGqh325V6ZJOYMrbY9h9+1adnlMo2PjwCy0NMGQRvMLla2FOxEO0GvMqMD
-         y+HWsIMj7GWjggumNr5IKaUiQaOuka1dAkB/6UDS7az1p5i6IBlgvXSEdO55tOuqcMcY
-         MfozVP7A8mkOSwFp9wijUTQEBS82nWq+SVFaXu5LTt4XsqPR9qlTMiBzkXMeFkkdhF1o
-         RIEKH9FncD2ZJTgv8hkeUFhKW6Z6X5Y3yo6SPSvUBMmKukmirNRkGSN2ZNmTAKTTt0U4
-         mMSt7x5WOAMg9lLAP2seR6d5pW7I8ZHWf9CbndWK9DOfyP2pDsdyQjYtbak8GoyYUtvm
-         wztg==
-X-Forwarded-Encrypted: i=1; AJvYcCXKBMwcAAHwmY0w9yZxFmS+VWy6EXUy7y9txG5R+lM3TkyA+TlWUup7OTPceivt44naQAtps/kzJGssq2yKqFuiH/6cnConoiwf/VdL
-X-Gm-Message-State: AOJu0YxD3kmN9nt4L+lEaESHSaS0+0O72bsL3+oW1DAjAZ0Std7PZKgX
-	7hl6UHceN4BfsHur0/qUgLCzgXfZHEAhhK3OhepL6zAhpQgKyUmt3JTelkHzGu8=
-X-Google-Smtp-Source: AGHT+IGRKkADZsJNiIkww/uuH4jc36SsQcakLssDRn6++Y7zOSTbpO9G9O8NJi1Dv7B/S7r6n5ZnZg==
-X-Received: by 2002:a05:6512:548:b0:517:30a3:d000 with SMTP id h8-20020a056512054800b0051730a3d000mr129934lfl.28.1712687245126;
-        Tue, 09 Apr 2024 11:27:25 -0700 (PDT)
-Received: from [172.30.205.99] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id c5-20020ac24145000000b00516c8826719sm1607013lfi.197.2024.04.09.11.27.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 11:27:24 -0700 (PDT)
-Message-ID: <74ebd488-15c1-47a5-86f4-14263e3a914e@linaro.org>
-Date: Tue, 9 Apr 2024 20:27:22 +0200
+	s=arc-20240116; t=1712687265; c=relaxed/simple;
+	bh=+e4o3Key427s9PGCVpm+yJBrEgVTXiMxI86rVYGWrbI=;
+	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type:Subject; b=UbNlBVbQqJgtgtuqFnH7036xygrCII03Li9HfugCyxLbJ3LiwNJJ6C7dIcOsDSJKhQhtS3nXwXgUtcHyHt3iwUT7FrBVCkdSZam9HVxMwafbtzW6Edr1+B9ePoXIr7ez6rAz+z59Ua4GSdA8xcqAHKuJaB+NbNSMNpY62lsyUfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
+Received: from in02.mta.xmission.com ([166.70.13.52]:38406)
+	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1ruFQF-007Aen-3v; Tue, 09 Apr 2024 11:38:15 -0600
+Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:58962 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1ruFQE-009VSq-7G; Tue, 09 Apr 2024 11:38:14 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,  Linus Torvalds
+ <torvalds@linux-foundation.org>,  Roberto Sassu
+ <roberto.sassu@huaweicloud.com>,  linux-integrity@vger.kernel.org,
+  linux-security-module@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+  linux-cifs@vger.kernel.org,  linux-kernel@vger.kernel.org,  Roberto Sassu
+ <roberto.sassu@huawei.com>
+References: <20240402141145.2685631-1-roberto.sassu@huaweicloud.com>
+	<CAHk-=wgepVMJCYj9s7J50_Tpb5BWq9buBoF0J5HAa1xjet6B8A@mail.gmail.com>
+	<CAHk-=wjjx3oZ55Uyaw9N_kboHdiScLkXAu05CmPF_p_UhQ-tbw@mail.gmail.com>
+	<20240402210035.GI538574@ZenIV>
+	<CAHC9VhSWiQQ3shgczkNr+xYX6G5PX+LgeP3bsMepnM_cp4Gd4g@mail.gmail.com>
+Date: Tue, 09 Apr 2024 12:37:21 -0500
+In-Reply-To: <CAHC9VhSWiQQ3shgczkNr+xYX6G5PX+LgeP3bsMepnM_cp4Gd4g@mail.gmail.com>
+	(Paul Moore's message of "Tue, 2 Apr 2024 17:36:30 -0400")
+Message-ID: <87le5mxwry.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/6] drm/msm/adreno: Allow specifying default speedbin
- value
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- Neil Armstrong <neil.armstrong@linaro.org>
-References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
- <20240405-topic-smem_speedbin-v1-3-ce2b864251b1@linaro.org>
- <pncr7ecf4eir36skul3iwt2nf5bpuwd5zjfzzfwwnxjwe4hoes@6z2xe54crijp>
- <d8a2ef87-f29e-4bdb-a9b8-591b8bd5d2b2@linaro.org>
- <tkcbl2iwcy3feoggbk737gx32qsxe5p4ad6lfrujy2pazccrhm@kif3guuzay6h>
- <CAF6AEGsg2xCCC27t_Gqu=MMQ6tckVw=Zj90p4x7EuOm+VKA=ig@mail.gmail.com>
- <quil2y6tbilihgont2xekay4joxgnsanu3khgo77omtwkolslp@ozuaajpv5uon>
- <b77a3161-9a18-4523-8528-31c2f2f4f476@linaro.org>
- <x4sgmdodoacsu6culbjjsw52ucaylpqj2ll6tkeppllzhfqiqn@lysclxogvcfq>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <x4sgmdodoacsu6culbjjsw52ucaylpqj2ll6tkeppllzhfqiqn@lysclxogvcfq>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1ruFQE-009VSq-7G;;;mid=<87le5mxwry.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
+X-XM-AID: U2FsdGVkX19gMkca3jYcuCNyXyTaOnFXicdzcwRWtZ4=
+X-SA-Exim-Connect-IP: 68.227.168.167
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+X-Spam-Level: **
+X-Spam-Virus: No
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+	*      [score: 0.4480]
+	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
+	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
+	*      [sa02 1397; Body=1 Fuz1=1 Fuz2=1]
+	*  1.2 XMSubMetaSxObfu_03 Obfuscated Sexy Noun-People
+	*  0.0 T_TooManySym_01 4+ unique symbols in subject
+	*  1.0 XMSubMetaSx_00 1+ Sexy Words
+	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
+X-Spam-DCC: XMission; sa02 1397; Body=1 Fuz1=1 Fuz2=1 
+X-Spam-Combo: **;Paul Moore <paul@paul-moore.com>
+X-Spam-Relay-Country: 
+X-Spam-Timing: total 277 ms - load_scoreonly_sql: 0.03 (0.0%),
+	signal_user_changed: 4.1 (1.5%), b_tie_ro: 2.8 (1.0%), parse: 0.71
+	(0.3%), extract_message_metadata: 8 (3.1%), get_uri_detail_list: 0.70
+	(0.3%), tests_pri_-2000: 6 (2.2%), tests_pri_-1000: 1.97 (0.7%),
+	tests_pri_-950: 1.05 (0.4%), tests_pri_-900: 0.80 (0.3%),
+	tests_pri_-90: 59 (21.3%), check_bayes: 57 (20.7%), b_tokenize: 4.6
+	(1.7%), b_tok_get_all: 6 (2.1%), b_comp_prob: 1.51 (0.5%),
+	b_tok_touch_all: 42 (15.1%), b_finish: 0.87 (0.3%), tests_pri_0: 181
+	(65.3%), check_dkim_signature: 0.37 (0.1%), check_dkim_adsp: 7 (2.6%),
+	poll_dns_idle: 0.53 (0.2%), tests_pri_10: 2.7 (1.0%), tests_pri_500: 9
+	(3.1%), rewrite_mail: 0.00 (0.0%)
+Subject: Re: [GIT PULL] security changes for v6.9-rc3
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 
 
+Paul Moore <paul@paul-moore.com> writes:
 
-On 4/9/24 20:15, Dmitry Baryshkov wrote:
-> On Tue, Apr 09, 2024 at 08:07:56PM +0200, Konrad Dybcio wrote:
->>
->>
->> On 4/9/24 20:04, Dmitry Baryshkov wrote:
->>> On Tue, Apr 09, 2024 at 10:12:00AM -0700, Rob Clark wrote:
->>>> On Tue, Apr 9, 2024 at 8:23 AM Dmitry Baryshkov
->>>> <dmitry.baryshkov@linaro.org> wrote:
->>>>>
->>>>> On Tue, Apr 09, 2024 at 05:12:46PM +0200, Konrad Dybcio wrote:
->>>>>>
->>>>>>
->>>>>> On 4/6/24 04:56, Dmitry Baryshkov wrote:
->>>>>>> On Fri, Apr 05, 2024 at 10:41:31AM +0200, Konrad Dybcio wrote:
->>>>>>>> From: Neil Armstrong <neil.armstrong@linaro.org>
->>>>>>>>
->>>>>>>> Usually, speedbin 0 is the "super SKU", a.k.a the one which can clock
->>>>>>>> the highest. Falling back to it when things go wrong is largely
->>>>>>>> suboptimal, as more often than not, the top frequencies are not
->>>>>>>> supposed to work on other bins.
->>>>>>>
->>>>>>> Isn't it better to just return an error here instead of trying to guess
->>>>>>> which speedbin to use?
->>>>>>
->>>>>> Not sure. I'd rather better compatibility for e.g. booting up a new
->>>>>> laptop with just dt.
->>>>>
->>>>> New speedbin can have lower max speed, so by attempting to run it at
->>>>> higher freq you might be breaking it.
->>>>
->>>> Usually there are some OPPs in common to all speedbins, so picking a
->>>> freq from that set would seem like the safe thing to do
->>>
->>> Well, the issue is about an uknown speed bin. So in theory we know
->>> nothing about the set of speeds itsupports. My point is that we should
->>> simplfy fail in such case.
->>
->> Or we could allow e.g. the lowest frequency (or 2) which if often shared
->> across the board to work, giving a compromise between OOBE and sanity
-> 
-> That's also an option. But we should not be using existing speed table for
-> the unknown bin.
+> I know it's everyone's favorite hobby to bash the LSM and LSM devs,
+> but it's important to note that we don't add hooks without working
+> with the associated subsystem devs to get approval.
 
-I derived this logic from msm-5.15 where it's "intended behavior".. I
-suppose we can do better as you said though
+Hah!!!!
 
-There have been cases in the past where the default speed bin ended up
-having a higher max freq than subsequent ones, and I don't think I can
-trust this product/feature code approach to guarantee this never
-happening again.
+> In the cases
+> where we don't get an explicit ACK, there is an on-list approval, or
+> several ignored on-list attempts over weeks/months/years.  We want to
+> be good neighbors.
 
-So. I think sticking to a single lowest freq and printing a big red line
-in dmesg makes sense here
+Hah!!!!
 
-Konrad
+You merged a LSM hook that is only good for breaking chrome's sandbox,
+over my expressed objections.  After I tested and verified that
+is what it does.
+
+I asked for testing. None was done.  It was claimed that no
+security sensitive code would ever fail to check and deal with
+all return codes, so no testing was necessary.  Then later a
+whole bunch of security sensitive code that didn't was found.
+
+The only redeeming grace has been that no-one ever actually uses
+that misbegotten security hook.
+
+P.S.  Sorry for this off topic rant but sheesh.   At least from
+my perspective you deserve plenty of bashing.
+
+Eric
