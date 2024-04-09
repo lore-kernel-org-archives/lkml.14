@@ -1,51 +1,113 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3B112F58C
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 14:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5012F38D;
+	Tue,  9 Apr 2024 14:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712671259; cv=none; b=D7D3/hgt0V6+aXk/h3zVtsndh0Lp1btkD3wadp4YgiV+TQ4N6PY1eLIj1xkRtAqZD+ZdRULL6eepLpKBYW7uhwXvRZ3mP51h0s8IgM7TuqUpDNS4mLfd3qJAqpBkIzONi6YL2fpODCeKlWW3FjmYGP3dceKI+I4aAw3xl+BofJ4=
+	t=1712671268; cv=none; b=QMsoU/iHfLeaCRRiwLHzRraDu/6rkc8It85x4VK0POM/7MXBM5A4ltrfVjAe59bzY//mHdsFjRZYHK9hrFi8lgJ+ap3T/rUjnSpV4c8DeDB8/oHe2Sn+q8GexI6XhbGqTEwbHXMnafmdds+zzN/AHVvDJfVUgL2iPTW9pIetyJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712671259; c=relaxed/simple;
-	bh=ronNM7eHHbMgozldHtmyQ8+LOdltNvBq/DzQX5wuWgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aG/zB21JMZlabfSMl0XjtTEchBuZoFl5cJXKXTN+GAKYqDJIiy79jRHxxwR2CFmFhuvn/HnqTfBCLF76ia8/WYtUwtJkPlSw8Fp+j2jyqd/m1CGtlkIzDnBzKXQJkCLF/AUv8KFP3gRJKC/CT13KwuvwAKhJsyBkbFp1VX4hwsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 9CE6468B05; Tue,  9 Apr 2024 16:00:54 +0200 (CEST)
-Date: Tue, 9 Apr 2024 16:00:54 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v5 4/6] nvme-rdma: short-circuit reconnect retries
-Message-ID: <20240409140054.GC20883@lst.de>
-References: <20240409093510.12321-1-dwagner@suse.de> <20240409093510.12321-5-dwagner@suse.de>
+	s=arc-20240116; t=1712671268; c=relaxed/simple;
+	bh=OwmOVUjCxv1ceoUcK0JKEZS/f6zK2xJ2fR3OQpIwvAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UGQgl0mZWrt53GcmeNVpLhbF9VgX3ufS46qTVlT9ZFgsvbg8UIe8zllnDKQSiXb/+AiKEKCdOXtm4XhHFlqgdlna7z7xEiRmDPd747co6EFtXXOXoij+AxgYJBWnq3Exhj8kyzqX81dyMcRZqzk0aXTeRozczoYtm2QgDixh9pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/vZLIAo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/vZLIAo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02D32C433F1;
+	Tue,  9 Apr 2024 14:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712671268;
+	bh=OwmOVUjCxv1ceoUcK0JKEZS/f6zK2xJ2fR3OQpIwvAk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=o/vZLIAowEbtnS5yLJVyXyO73vrmHagQ76P0tGPcQ70MLclvTK2i/UKemgdQ3Nro+
+	 P/xczUtUI+2b3ID1wswWAz7p25VS4eVvJHj9mpZ7i4Pzdska69X+Q5ofmrHEN8SyM1
+	 syUL0xPahY5GjXe4iQ99mDr4Ut3fDHcLJjjz8yRKwoBLahebfCMyqLUiGFo2UojABY
+	 JnQy77wbUltj1iCFq74CbM7s6WoPhAWUzelnqDjAubKqhwaBnuSSvW6fNxUzGAxOXo
+	 qQ4qTT+0Z+JABWRWbiGjufXRHzpEhOY1rbLuhCDh9dby0QgI5Q/OcWG3RK4l2EIecL
+	 VIZSyv6cK7O7g==
+From: Arnd Bergmann <arnd@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	"Richard Russon" <ldm@flatcap.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Robert Moore <robert.moore@intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Len Brown <lenb@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Lin Ming <ming.m.lin@intel.com>,
+	Alexey Starikovskiy <astarikovskiy@suse.de>,
+	linux-ntfs-dev@lists.sourceforge.net,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/5 v2] address remaining stringop-truncation warnings
+Date: Tue,  9 Apr 2024 16:00:53 +0200
+Message-Id: <20240409140059.3806717-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409093510.12321-5-dwagner@suse.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 11:35:08AM +0200, Daniel Wagner wrote:
-> From: Hannes Reinecke <hare@suse.de>
-> 
-> Returning an nvme status from nvme_rdma_setup_ctrl() indicates that the
+From: Arnd Bergmann <arnd@arndb.de>
 
-Shouldn't this an be an a based on my highschool english.  Or does
-Eeenvme count as a vowel?
+We are close to being able to turn on -Wstringop-truncation
+unconditionally instead of only at the 'make W=1' level, these five
+warnings remain after the previous round and three patches I sent
+separately for drivers/staging.
 
-Otherwise looks good:
+I hope I managed to include all the feedback on v1, so please apply
+directly to subsystem trees if v2 looks ok to you.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+     Arnd
+
+Arnd Bergmann (5):
+  [v2] test_hexdump: avoid string truncation warning
+  [v2] acpi: disable -Wstringop-truncation
+  [v2] block/partitions/ldm: convert strncpy() to strscpy()
+  [v2] blktrace: convert strncpy() to strscpy_pad()
+  [v2] kbuild: enable -Wstringop-truncation globally
+
+ block/partitions/ldm.c       | 6 ++----
+ drivers/acpi/acpica/Makefile | 1 +
+ kernel/trace/blktrace.c      | 3 +--
+ lib/test_hexdump.c           | 2 +-
+ scripts/Makefile.extrawarn   | 1 -
+ 5 files changed, 5 insertions(+), 8 deletions(-)
+
+-- 
+2.39.2
+
+Cc: "Richard Russon" <ldm@flatcap.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Robert Moore <robert.moore@intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Lin Ming <ming.m.lin@intel.com>
+Cc: Alexey Starikovskiy <astarikovskiy@suse.de>
+Cc: linux-ntfs-dev@lists.sourceforge.net
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org
+Cc: acpica-devel@lists.linux.dev
+Cc: linux-trace-kernel@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
+
