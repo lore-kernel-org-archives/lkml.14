@@ -1,348 +1,147 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0CE50A93
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 01:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F369063B9;
+	Tue,  9 Apr 2024 01:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712626212; cv=none; b=cgABntil3Us0KOQbhx9jjIcKAN3fuKjatnvZ9vjto7Oh6NRqgTJGdp6ZuCQ47B/yF34hf/P3wwNHDb8/v797bqGM0/Uhj33TTDOjREaNmr38RQ8V8TiERW7QXNFM39GpVyoYB1aASDbCXglW9YiVRWtQie9ZNTARaK78knABFDw=
+	t=1712626441; cv=none; b=hxfXYrtVp4+j6T6Nxu7NUOUWH/b0g+q2whdIDjXAVTm6xPgBNkj0HshDakBv9t2df3/7oPzz4yOtB1MTDsuaSxGx2rNLF0btDeMZSXoLSrTQJkJxviBCDV3j0yi9aDQmBX16oTCffwSIEMDrZPRRY7tCasLMC9h19dHsTH9wyUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712626212; c=relaxed/simple;
-	bh=DUknK6OMkLGCAt736I9+KxRyeX2BT6UFivLu3n5tfos=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c0O1mfVzLssrnwUJzCXBUjEQ7iSbL6YV3HyVPkCcWvq4vQzMzd/9LLmrXXVJvSii3VmKZkcmQ/4//odP3M+SoW4+dvIsjpDwvGrhOzGsdgsCD7W+JNDVVHG7iNkPatReudMuisPCJE3RtY2X7Ajd2fgaN3rCKp8NNPlo1w/509E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VD7c92C0zz1R5Sv;
-	Tue,  9 Apr 2024 09:27:21 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id BB80B14059C;
-	Tue,  9 Apr 2024 09:30:02 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Tue, 9 Apr
- 2024 09:30:01 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
-	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
-	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
-	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>, <liwei391@huawei.com>,
-	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>,
-	<kristina.martsenko@arm.com>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
-	<robh@kernel.org>, <scott@os.amperecomputing.com>,
-	<songshuaishuai@tinylab.org>, <shijie@os.amperecomputing.com>,
-	<bhe@redhat.com>, <akpm@linux-foundation.org>, <thunder.leizhen@huawei.com>,
-	<horms@kernel.org>, <rmk+kernel@armlinux.org.uk>, <takakura@valinux.co.jp>,
-	<dianders@chromium.org>, <swboyd@chromium.org>, <frederic@kernel.org>,
-	<reijiw@google.com>, <akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-Subject: [PATCH 6/9] arm64: daifflags: Add logical exception masks covering DAIF + PMR + ALLINT
-Date: Tue, 9 Apr 2024 01:23:41 +0000
-Message-ID: <20240409012344.3194724-7-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240409012344.3194724-1-liaochang1@huawei.com>
-References: <20240409012344.3194724-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1712626441; c=relaxed/simple;
+	bh=PPxo80tMq48XusKoYr/9kv1dS8U/O01FuT389qNTZXk=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CP3cZVZotlPghs1PVOZ6Zkk5dWHWWNQI1VRHJdLcAUr85tgBx7y6RapZbZMEmeAH8cL0hhUb4m9ZQuGwE4HoR0Hib3RPm9mciizIF2FuwpaUCkHWb/45TZnMPPkc9wrjws4h5lftTkVMObS+okeYnrJiFbhz62/daOz4cnv4xGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YwYdHQJ6; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YwYdHQJ6"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-343c891bca5so3257614f8f.2;
+        Mon, 08 Apr 2024 18:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712626438; x=1713231238; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PPxo80tMq48XusKoYr/9kv1dS8U/O01FuT389qNTZXk=;
+        b=YwYdHQJ61I8pRCUyB3C1XyellJ8JYekMLfgoMsIxBhsYqLHtkKig9lNaFlSfLd9LOz
+         uGOxolACzTstL3eivIOyWOTRWK43l3PYaU0/n3PWXGTIJMgPsBvbjw/sT7NyHca9V3l6
+         JciZvAllX2xIOYf9Uaz5t9qOk1aPedDPFZbUb6tdGEBM+bZqZQ0gML+jFMieDfYYzO2L
+         oUGQI+wFlLPcHGAA53ct3DyCHly7wYnlj0qmLzGGK4BOxSO24g51K1tc+z19Co9MuzDW
+         CRKlH6dliiBIBXLYbF8sglAIuQV2tcNQfmKhnxoaVPAz+94GEyOPRXBhrWv6uyLMO6yb
+         w1dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712626438; x=1713231238;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PPxo80tMq48XusKoYr/9kv1dS8U/O01FuT389qNTZXk=;
+        b=eTJABH0ltDubOzG3ceufw9i8erJVrjh7GptMXJjQnBv4X31ay9FDwEYSHV8YZrBw0a
+         pQIY4icmc1f3XCWnZduLDrogXTfDYvSIJ0RfsC7UFR0owc/Doc1+vjPsgcgVIYp9zZFJ
+         wmkq6g1sOjZE1pO1sz+548/crc72NG0+Hwrk09vQS980yXykb2RmR5JijhtXGkGxIVrO
+         PooBtlNhlwM5mpaH+U1pvtaWQO3js+vBDBCLAEuyTj6UcP6veCSMmKG1Bi5g6LcyIZe5
+         mWHyoSoD9h9Ut3SiT1uh20iG3zmt+BpporeJPIQ+uww1aIAwBa2ReaCEJR4tnh1DrQd9
+         WPUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUM6dn6grciiFEnso7IDZ8HdF9L//n0jxmQ9AZHFddBKzKZAf1NlLGZJKlnskjRhr8seNarSkcdaXVST5Sltwd8Kva53LZbGnsPT9Dz
+X-Gm-Message-State: AOJu0YxeWyQ9lcuuVhtactIlgeRxKXY2kDTUe6zDn6Jy5ZVTKUGP3G+y
+	YjhPdcWO+3+knH2CywIjFisk5e2LVYy63gysZmGcN+GrfVZlfSGYvAAHNK4jS1Ec57GZJuZFQNK
+	SuFX6+6oWb62rFoiMxCnmwy/LZ43mJKYU
+X-Google-Smtp-Source: AGHT+IEucF8z+p4Sz7cDqqb4vdKDhos/5GxTXMNJiXE0CjpEQsFfVP1Vgb+FSX7dZvoSIX0P5q79g+tCa7n6zNjvFzk=
+X-Received: by 2002:a5d:64ec:0:b0:343:8026:1180 with SMTP id
+ g12-20020a5d64ec000000b0034380261180mr11642902wri.4.1712626438104; Mon, 08
+ Apr 2024 18:33:58 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 8 Apr 2024 18:33:57 -0700
+From: Oliver Crumrine <ozlinuxc@gmail.com>
+In-Reply-To: <09f1a8e9-d9ad-4b40-885b-21e1c2ba147b@gmail.com>
+References: <cover.1712268605.git.ozlinuxc@gmail.com> <b1a047a1b2d55c1c245a78ca9772c31a9b3ceb12.1712268605.git.ozlinuxc@gmail.com>
+ <6850f08d-0e89-4eb3-bbfb-bdcc5d4e1b78@gmail.com> <CAK1VsR17Ea6cmks7BcdvS4ZHQMRz_kWd1NhPh8J1fUpsgC7WFg@mail.gmail.com>
+ <c2e63753-5901-47b2-8def-1a98d8fcdd41@gmail.com> <CAK1VsR210nrqtxWaVbQh00t_=7rhq9bwucFygGZaT=7N-t7E5Q@mail.gmail.com>
+ <CAK1VsR1b-dbAa8pMqGvfcAAcVP3ZkTYZdyqcaK4wJdbuAZtJsA@mail.gmail.com> <09f1a8e9-d9ad-4b40-885b-21e1c2ba147b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Mime-Version: 1.0
+Date: Mon, 8 Apr 2024 18:33:57 -0700
+Message-ID: <CAK1VsR3QDh3WiR+r=30f0YQkiYN3hw071Hi9=dkd_xLQ2itdvw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] io_uring: Add REQ_F_CQE_SKIP support for io_uring zerocopy
+To: Pavel Begunkov <asml.silence@gmail.com>, Oliver Crumrine <ozlinuxc@gmail.com>, axboe@kernel.dk
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In Mark Brown's support for FEAT_NMI patchset [1], Mark Rutland suggest
-to refactor the way of DAIF management via adding new "logical exception
-mask" helpers that treat DAIF + PMR + ALLINT as separate elements.
-
-A series of new exception mask helpers that has a similar interface as
-the existing counterparts, which starts with "local_allint_". The usage
-and behavior of new ones suppose to align with the old ones, otherwise,
-some unexpected result will occurs.
-
-[1] https://lore.kernel.org/linux-arm-kernel/Y4sH5qX5bK9xfEBp@lpieralisi/
-
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/daifflags.h   | 240 +++++++++++++++++++++++++++
- arch/arm64/include/uapi/asm/ptrace.h |   1 +
- 2 files changed, 241 insertions(+)
-
-diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-index 55f57dfa8e2f..df4c4989babd 100644
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -11,6 +11,7 @@
- #include <asm/barrier.h>
- #include <asm/cpufeature.h>
- #include <asm/ptrace.h>
-+#include <asm/nmi.h>
- 
- #define DAIF_PROCCTX		0
- #define DAIF_PROCCTX_NOIRQ	(PSR_I_BIT | PSR_F_BIT)
-@@ -141,4 +142,243 @@ static inline void local_daif_inherit(struct pt_regs *regs)
- 	 */
- 	write_sysreg(flags, daif);
- }
-+
-+/*
-+ * For Arm64 processor support Armv8.8 or later, kernel supports three types
-+ * of irqflags, they used for corresponding configuration depicted as below:
-+ *
-+ * 1. When CONFIG_ARM64_PSEUDO_NMI and CONFIG_ARM64_NMI are not 'y', kernel
-+ *    does not support handling NMI.
-+ *
-+ * 2. When CONFIG_ARM64_PSEUDO_NMI=y and irqchip.gicv3_pseudo_nmi=1, kernel
-+ *    makes use of the CPU Interface PMR and GIC priority feature to support
-+ *    handling NMI.
-+ *
-+ * 3. When CONFIG_ARM64_NMI=y and irqchip.gicv3_pseudo_nmi is not enabled,
-+ *    kernel makes use of the FEAT_NMI extension added since Armv8.8 to
-+ *    support handling NMI.
-+ */
-+union arch_irqflags {
-+	unsigned long flags;
-+	struct {
-+		unsigned long pmr : 8;     // SYS_ICC_PMR_EL1
-+		unsigned long daif : 10;   // PSTATE.DAIF at bits[6-9]
-+		unsigned long allint : 14; // PSTATE.ALLINT at bits[13]
-+	} fields;
-+};
-+
-+typedef union arch_irqflags arch_irqflags_t;
-+
-+static inline void __pmr_local_allint_mask(void)
-+{
-+	WARN_ON(system_has_prio_mask_debugging() &&
-+		(read_sysreg_s(SYS_ICC_PMR_EL1) ==
-+		 (GIC_PRIO_IRQOFF | GIC_PRIO_PSR_I_SET)));
-+	/*
-+	 * Don't really care for a dsb here, we don't intend to enable
-+	 * IRQs.
-+	 */
-+	gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET);
-+}
-+
-+static inline void __nmi_local_allint_mask(void)
-+{
-+	_allint_set();
-+}
-+
-+static inline void local_allint_mask(void)
-+{
-+	asm volatile(
-+		"msr	daifset, #0xf		// local_daif_mask\n"
-+		:
-+		:
-+		: "memory");
-+
-+	if (system_uses_irq_prio_masking())
-+		__pmr_local_allint_mask();
-+	else if (system_uses_nmi())
-+		__nmi_local_allint_mask();
-+
-+	trace_hardirqs_off();
-+}
-+
-+static inline arch_irqflags_t __pmr_local_allint_save_flags(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags.fields.pmr = read_sysreg_s(SYS_ICC_PMR_EL1);
-+	irqflags.fields.daif = read_sysreg(daif);
-+	irqflags.fields.allint = 0;
-+	/*
-+	 * If IRQs are masked with PMR, reflect it in the daif of irqflags.
-+	 * If NMIs and IRQs are masked with PMR, reflect it in the daif and
-+	 * allint of irqflags, this avoid the need of checking PSTATE.A in
-+	 * local_allint_restore() to determine if NMIs are masked.
-+	 */
-+	switch (irqflags.fields.pmr) {
-+	case GIC_PRIO_IRQON:
-+		break;
-+
-+	case __GIC_PRIO_IRQOFF:
-+	case __GIC_PRIO_IRQOFF_NS:
-+		irqflags.fields.daif |= PSR_I_BIT | PSR_F_BIT;
-+		break;
-+
-+	case GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET:
-+		irqflags.fields.allint = 1;
-+		break;
-+
-+	default:
-+		WARN_ON(1);
-+	}
-+
-+	return irqflags;
-+}
-+
-+static inline arch_irqflags_t __nmi_local_allint_save_flags(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags.fields.daif = read_sysreg(daif);
-+	irqflags.fields.allint = read_sysreg_s(SYS_ALLINT);
-+
-+	return irqflags;
-+}
-+
-+static inline arch_irqflags_t local_allint_save_flags(void)
-+{
-+	arch_irqflags_t irqflags = { .flags = 0UL };
-+
-+	if (system_uses_irq_prio_masking())
-+		return __pmr_local_allint_save_flags();
-+	else if (system_uses_nmi())
-+		return __nmi_local_allint_save_flags();
-+
-+	irqflags.fields.daif = read_sysreg(daif);
-+	return irqflags;
-+}
-+
-+static inline arch_irqflags_t local_allint_save(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags = local_allint_save_flags();
-+
-+	local_allint_mask();
-+
-+	return irqflags;
-+}
-+
-+static inline void gic_pmr_prio_check(void)
-+{
-+	WARN_ON(system_has_prio_mask_debugging() &&
-+		(read_sysreg(daif) & (PSR_I_BIT | PSR_F_BIT)) !=
-+		(PSR_I_BIT | PSR_F_BIT));
-+}
-+
-+static inline void __pmr_local_allint_restore(arch_irqflags_t irqflags)
-+{
-+	unsigned long pmr = irqflags.fields.pmr;
-+	unsigned long daif = irqflags.fields.daif;
-+	unsigned long allint = irqflags.fields.allint;
-+
-+	gic_pmr_prio_check();
-+
-+	gic_write_pmr(pmr);
-+
-+	if (!(daif & PSR_I_BIT)) {
-+		pmr_sync();
-+	} else if (!allint) {
-+		/*
-+		 * Use arch_allint.fields.allint to indicates we can take
-+		 * NMIs, instead of the old hacking style that use PSTATE.A.
-+		 *
-+		 * There has been concern that the write to daif
-+		 * might be reordered before this write to PMR.
-+		 * From the ARM ARM DDI 0487D.a, section D1.7.1
-+		 * "Accessing PSTATE fields":
-+		 *   Writes to the PSTATE fields have side-effects on
-+		 *   various aspects of the PE operation. All of these
-+		 *   side-effects are guaranteed:
-+		 *     - Not to be visible to earlier instructions in
-+		 *       the execution stream.
-+		 *     - To be visible to later instructions in the
-+		 *       execution stream
-+		 *
-+		 * Also, writes to PMR are self-synchronizing, so no
-+		 * interrupts with a lower priority than PMR is signaled
-+		 * to the PE after the write.
-+		 *
-+		 * So we don't need additional synchronization here.
-+		 */
-+		daif &= ~(PSR_I_BIT | PSR_F_BIT);
-+	}
-+	write_sysreg(daif, daif);
-+}
-+
-+static inline void __nmi_local_allint_restore(arch_irqflags_t irqflags)
-+{
-+	if (irqflags.fields.allint)
-+		_allint_set();
-+	else
-+		_allint_clear();
-+
-+	write_sysreg(irqflags.fields.daif, daif);
-+}
-+
-+static inline int local_allint_disabled(arch_irqflags_t irqflags)
-+{
-+	return irqflags.fields.allint || (irqflags.fields.daif & PSR_I_BIT);
-+}
-+
-+/*
-+ * It has to conside the different kernel configure and parameters, that need
-+ * to use coresspoding operations to mask interrupts properly. For example, the
-+ * kernel disable PSEUDO_NMI, the kernel uses prio masking to support
-+ * PSEUDO_NMI, or the kernel uses FEAT_NMI extension to support PSEUDO_NMI.
-+ */
-+static inline void local_allint_restore(arch_irqflags_t irqflags)
-+{
-+	int irq_disabled = local_allint_disabled(irqflags);
-+
-+	if (!irq_disabled)
-+		trace_hardirqs_on();
-+
-+	if (system_uses_irq_prio_masking())
-+		__pmr_local_allint_restore(irqflags);
-+	else if (system_uses_nmi())
-+		__nmi_local_allint_restore(irqflags);
-+	else
-+		write_sysreg(irqflags.fields.daif, daif);
-+
-+	if (irq_disabled)
-+		trace_hardirqs_off();
-+}
-+
-+/*
-+ * Called by synchronous exception handlers to restore the DAIF bits that were
-+ * modified by taking an exception.
-+ */
-+static inline void local_allint_inherit(struct pt_regs *regs)
-+{
-+	if (interrupts_enabled(regs))
-+		trace_hardirqs_on();
-+
-+	if (system_uses_irq_prio_masking())
-+		gic_write_pmr(regs->pmr_save);
-+
-+	/*
-+	 * We can't use local_daif_restore(regs->pstate) here as
-+	 * system_has_prio_mask_debugging() won't restore the I bit if it can
-+	 * use the pmr instead.
-+	 */
-+	write_sysreg(regs->pstate & DAIF_MASK, daif);
-+
-+	if (system_uses_nmi()) {
-+		if (regs->pstate & PSR_ALLINT_BIT)
-+			_allint_set();
-+		else
-+			_allint_clear();
-+	}
-+}
- #endif
-diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-index 7fa2f7036aa7..8a125a1986be 100644
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -48,6 +48,7 @@
- #define PSR_D_BIT	0x00000200
- #define PSR_BTYPE_MASK	0x00000c00
- #define PSR_SSBS_BIT	0x00001000
-+#define PSR_ALLINT_BIT	0x00002000
- #define PSR_PAN_BIT	0x00400000
- #define PSR_UAO_BIT	0x00800000
- #define PSR_DIT_BIT	0x01000000
--- 
-2.34.1
-
+Pavel Begunkov wrote:
+> On 4/7/24 20:14, Oliver Crumrine wrote:
+> > Oliver Crumrine wrote:
+> >> Pavel Begunkov wrote:
+> >>> On 4/5/24 21:04, Oliver Crumrine wrote:
+> >>>> Pavel Begunkov wrote:
+> >>>>> On 4/4/24 23:17, Oliver Crumrine wrote:
+> >>>>>> In his patch to enable zerocopy networking for io_uring, Pavel Begunkov
+> >>>>>> specifically disabled REQ_F_CQE_SKIP, as (at least from my
+> >>>>>> understanding) the userspace program wouldn't receive the
+> >>>>>> IORING_CQE_F_MORE flag in the result value.
+> >>>>>
+> >>>>> No. IORING_CQE_F_MORE means there will be another CQE from this
+> >>>>> request, so a single CQE without IORING_CQE_F_MORE is trivially
+> >>>>> fine.
+> >>>>>
+> >>>>> The problem is the semantics, because by suppressing the first
+> >>>>> CQE you're loosing the result value. You might rely on WAITALL
+> >>>> That's already happening with io_send.
+> >>>
+> >>> Right, and it's still annoying and hard to use
+> >> Another solution might be something where there is a counter that stores
+> >> how many CQEs with REQ_F_CQE_SKIP have been processed. Before exiting,
+> >> userspace could call a function like: io_wait_completions(int completions)
+> >> which would wait until everything is done, and then userspace could peek
+> >> the completion ring.
+> >>>
+> >>>>> as other sends and "fail" (in terms of io_uring) the request
+> >>>>> in case of a partial send posting 2 CQEs, but that's not a great
+> >>>>> way and it's getting userspace complicated pretty easily.
+> >>>>>
+> >>>>> In short, it was left out for later because there is a
+> >>>>> better way to implement it, but it should be done carefully
+> >>>> Maybe we could put the return values in the notifs? That would be a
+> >>>> discrepancy between io_send and io_send_zc, though.
+> >>>
+> >>> Yes. And yes, having a custom flavour is not good. It'd only
+> >>> be well usable if apart from returning the actual result
+> >>> it also guarantees there will be one and only one CQE, then
+> >>> the userspace doesn't have to do the dancing with counting
+> >>> and checking F_MORE. In fact, I outlined before how a generic
+> >>> solution may looks like:
+> >>>
+> >>> https://github.com/axboe/liburing/issues/824
+> >>>
+> >>> The only interesting part, IMHO, is to be able to merge the
+> >>> main completion with its notification. Below is an old stash
+> >>> rebased onto for-6.10. The only thing missing is relinking,
+> >>> but maybe we don't even care about it. I need to cover it
+> >>> well with tests.
+> >> The patch looks pretty good. The only potential issue is that you store
+> >> the res of the normal CQE into the notif CQE. This overwrites the
+> >> IORING_CQE_F_NOTIF with IORING_CQE_F_MORE. This means that the notif would
+> >> indicate to userspace that there will be another CQE, of which there
+> >> won't.
+> > I was wrong here; Mixed up flags and result value.
+>
+> Right, it's fine. And it's synchronised by the ubuf refcounting,
+> though it might get more complicated if I'd try out some counting
+> optimisations.
+>
+> FWIW, it shouldn't give any performance wins. The heavy stuff is
+> notifications waking the task, which is still there. I can even
+> imagine that having separate CQEs might be more flexible and would
+> allow more efficient CQ batching.
+I've actaully been working on this issue for a little while now. My current
+idea is that an id is put into the optval section of the SQE, and then it
+can be used to tag that req with a certain group. When a req has a flag
+set on it, it can request for all of group's notifs to be "flushed" in one
+notif that encompasses that entire group. If the id is zero, it won't be
+associated with a group and will generate a notif. LMK if you see anything
+in here that could overcomplicate userspace. I think it's pretty simple,
+but you've had a crack at this before so I'd like to hear your opinion.
+>
+> --
+> Pavel Begunkov
