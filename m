@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A6D7F495
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 603C085631
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:25:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654733; cv=none; b=JCAXMESnMEraH4E+L0//rSdY0LqtNHIJrnTTxD531M55T5BsOpnB3uAByMbig4MWqtOcUWkQG1gnYiq5NzyZBlqTjb7Q0yxP8y7wuF57XPbPYQ0GWf/rV8S76R/3+mVGf0GBj6uMXPsVWCv85Os/1jMRattPzdiniSIP6QoFTO8=
+	t=1712654739; cv=none; b=M5gdWb25NR3BoFyn3OpD+gLYxaal3amaT6SdFKQDZoq5SzYGb5H9oBzNDNISqt6NfdwUywFIdDrQ6M8sp1uV8O+VOo0JgzDQA2K0/0X6qk8HCtfV17GkDZSHPDjRBhx7XALroBpd3rqEyBKnBGd1wA6VHCD3ebszeBJOhObNp+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654733; c=relaxed/simple;
-	bh=kQN6FVtHG3hCQ1muL4e6/z5sNInnsnuhNQpT8qXQDKE=;
+	s=arc-20240116; t=1712654739; c=relaxed/simple;
+	bh=MGM8cnYOc2xUfzqiaHDKMMd1O2BaUHSekMXG68vTT9g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tqpv1NgfoTsF/82UrZAXOoTMYzbl/lvXpCidvfUZmaW14LGgyTKSzuI4gP56rDxR3ooacCQbYBcPYBzqq0p+VdTbeQjwNyimyuhC2+ks7DFFajAPO/L410J5jH7eGfgRNTX8xQXluMrmoHGjQqFFs/5EL/7rHx3cLOwl1BVzUnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXbjGhv4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MSaajEa6hajevLHAjOtlhvzMjB6hexh5VQmA1mJSCJh2WxCWZfgB4BBnzehPFzYJUGZUFFPtwjNBNURmoQ1GfJBSW37n7ULjZ1G/nmoM+cE485l7vBFq1sAFd3MhAKdlHbB9wLwl94cZIzYs04QgQb4O8nZhS0m1+K02aJvwDT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WssjhCxI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXbjGhv4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4145FC433F1;
-	Tue,  9 Apr 2024 09:25:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WssjhCxI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9AEBC43390;
+	Tue,  9 Apr 2024 09:25:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712654733;
-	bh=kQN6FVtHG3hCQ1muL4e6/z5sNInnsnuhNQpT8qXQDKE=;
+	s=k20201202; t=1712654739;
+	bh=MGM8cnYOc2xUfzqiaHDKMMd1O2BaUHSekMXG68vTT9g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eXbjGhv4j5QR/j+cdEHV+7W1koJXqWz0Rb1a9u1mejXGAL6dCIqJ9poZ+7mJMyPUQ
-	 MehaKYskrhsNlDJYo7S+wZ7vfMjpdOoT6Pq4ShQfZjkvD0QIDex94hl7XsYYf2E9YJ
-	 j57kxizvU1otNbZOiGJrxz3y4Q3QnaD794ZR/3Jn8aGO/lzghT3lAFBA1h8WHB26mj
-	 VZFsfFvXHGVlVtDCsaupYUkBkOCzGZwUDifeCCNVvwdKV/sRVIA8vQZsnCorU89iyF
-	 u9xuYV0nQrm7N4XH8chMU/kdGbvnuUZCWJxqY/AqNRoCE5Rn/gVb0ViQXJgFTgAhdF
-	 6x1JKxmdZ52rA==
+	b=WssjhCxIFV/yIm+DWR08ghSxRH0lwhxnaD1vS2T9rvquOXkj3qGcbCZmtRVCMugbx
+	 IpWPk8pGp412gnIoQ31Hh+Nj/nr0kRrJQXzBuprxRcKWtx46uGS3zwlAVGzzAnLZOa
+	 52pTuciC59Q7qvfrK/iyC4ieJiOEUd4NAdFCWYHbq3mk8cYivLFFarlmlmJQ3ANn4L
+	 vJKWBxpUoAfA+1TuCAgUsamwLOWgCzpz3n7rfQU0g534XfH/f/OuaqzHk9rvsWc4Go
+	 6wBLSxMwmhQEKLpYL8rYKa8MXVHlvfAV/2jf/n0c8537CHdVO8iTIdYeth+9BA3DNQ
+	 yLoovR8/YKs9Q==
 From: alexs@kernel.org
 To: Andrew Morton <akpm@linux-foundation.org>,
 	linux-mm@kvack.org,
@@ -37,9 +37,9 @@ Cc: "Alex Shi (tencent)" <alexs@kernel.org>,
 	Hugh Dickins <hughd@google.com>,
 	Chris Wright <chrisw@sous-sol.org>,
 	David Hildenbrand <david@redhat.com>
-Subject: [PATCH v4 7/9] mm/ksm: use folio in write_protect_page
-Date: Tue,  9 Apr 2024 17:28:22 +0800
-Message-ID: <20240409092826.1733637-8-alexs@kernel.org>
+Subject: [PATCH v4 9/9] mm/ksm: replace set_page_stable_node by folio_set_stable_node
+Date: Tue,  9 Apr 2024 17:28:24 +0800
+Message-ID: <20240409092826.1733637-10-alexs@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240409092826.1733637-1-alexs@kernel.org>
 References: <20240409092826.1733637-1-alexs@kernel.org>
@@ -53,8 +53,9 @@ Content-Transfer-Encoding: 8bit
 
 From: "Alex Shi (tencent)" <alexs@kernel.org>
 
-Compound page is checked and skipped before write_protect_page() called,
-use folio to save a few compound_head checking.
+Only single page could be reached where we set stable node after write
+protect, so use folio converted func to replace page's. And remove the
+unused func set_page_stable_node().
 
 Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
 Cc: Izik Eidus <izik.eidus@ravellosystems.com>
@@ -64,92 +65,42 @@ Cc: Hugh Dickins <hughd@google.com>
 Cc: Chris Wright <chrisw@sous-sol.org>
 Reviewed-by: David Hildenbrand <david@redhat.com>
 ---
- mm/ksm.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ mm/ksm.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/mm/ksm.c b/mm/ksm.c
-index 95a487a21eed..776094fab34e 100644
+index a705ed16aa1b..0d703c3da9d8 100644
 --- a/mm/ksm.c
 +++ b/mm/ksm.c
-@@ -1289,23 +1289,24 @@ static u32 calc_checksum(struct page *page)
- 	return checksum;
+@@ -1094,17 +1094,11 @@ static inline struct ksm_stable_node *page_stable_node(struct page *page)
+ 	return folio_stable_node(page_folio(page));
  }
  
--static int write_protect_page(struct vm_area_struct *vma, struct page *page,
-+static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
- 			      pte_t *orig_pte)
- {
- 	struct mm_struct *mm = vma->vm_mm;
--	DEFINE_PAGE_VMA_WALK(pvmw, page, vma, 0, 0);
-+	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, 0, 0);
- 	int swapped;
- 	int err = -EFAULT;
- 	struct mmu_notifier_range range;
- 	bool anon_exclusive;
- 	pte_t entry;
- 
--	pvmw.address = page_address_in_vma(page, vma);
-+	if (WARN_ON_ONCE(folio_test_large(folio)))
-+		return err;
-+
-+	pvmw.address = page_address_in_vma(&folio->page, vma);
- 	if (pvmw.address == -EFAULT)
- 		goto out;
- 
--	BUG_ON(PageTransCompound(page));
+-static inline void set_page_stable_node(struct page *page,
+-					struct ksm_stable_node *stable_node)
+-{
+-	VM_BUG_ON_PAGE(PageAnon(page) && PageAnonExclusive(page), page);
+-	page->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
+-}
 -
- 	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, pvmw.address,
- 				pvmw.address + PAGE_SIZE);
- 	mmu_notifier_invalidate_range_start(&range);
-@@ -1315,12 +1316,12 @@ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
- 	if (WARN_ONCE(!pvmw.pte, "Unexpected PMD mapping?"))
- 		goto out_unlock;
+ static inline void folio_set_stable_node(struct folio *folio,
+ 					 struct ksm_stable_node *stable_node)
+ {
+-	set_page_stable_node(&folio->page, stable_node);
++	VM_WARN_ON_FOLIO(folio_test_anon(folio) && PageAnonExclusive(&folio->page), folio);
++	folio->mapping = (void *)((unsigned long)stable_node | PAGE_MAPPING_KSM);
+ }
  
--	anon_exclusive = PageAnonExclusive(page);
-+	anon_exclusive = PageAnonExclusive(&folio->page);
- 	entry = ptep_get(pvmw.pte);
- 	if (pte_write(entry) || pte_dirty(entry) ||
- 	    anon_exclusive || mm_tlb_flush_pending(mm)) {
--		swapped = PageSwapCache(page);
--		flush_cache_page(vma, pvmw.address, page_to_pfn(page));
-+		swapped = folio_test_swapcache(folio);
-+		flush_cache_page(vma, pvmw.address, folio_pfn(folio));
- 		/*
- 		 * Ok this is tricky, when get_user_pages_fast() run it doesn't
- 		 * take any lock, therefore the check that we are going to make
-@@ -1340,20 +1341,20 @@ static int write_protect_page(struct vm_area_struct *vma, struct page *page,
- 		 * Check that no O_DIRECT or similar I/O is in progress on the
- 		 * page
- 		 */
--		if (page_mapcount(page) + 1 + swapped != page_count(page)) {
-+		if (folio_mapcount(folio) + 1 + swapped != folio_ref_count(folio)) {
- 			set_pte_at(mm, pvmw.address, pvmw.pte, entry);
- 			goto out_unlock;
- 		}
- 
- 		/* See folio_try_share_anon_rmap_pte(): clear PTE first. */
- 		if (anon_exclusive &&
--		    folio_try_share_anon_rmap_pte(page_folio(page), page)) {
-+		    folio_try_share_anon_rmap_pte(folio, &folio->page)) {
- 			set_pte_at(mm, pvmw.address, pvmw.pte, entry);
- 			goto out_unlock;
- 		}
- 
- 		if (pte_dirty(entry))
--			set_page_dirty(page);
-+			folio_mark_dirty(folio);
- 		entry = pte_mkclean(entry);
- 
- 		if (pte_write(entry))
-@@ -1519,7 +1520,7 @@ static int try_to_merge_one_page(struct vm_area_struct *vma,
- 	 * ptes are necessarily already write-protected.  But in either
- 	 * case, we need to lock and check page_count is not raised.
- 	 */
--	if (write_protect_page(vma, page, &orig_pte) == 0) {
-+	if (write_protect_page(vma, page_folio(page), &orig_pte) == 0) {
- 		if (!kpage) {
+ #ifdef CONFIG_SYSFS
+@@ -1519,7 +1513,7 @@ static int try_to_merge_one_page(struct vm_area_struct *vma,
+ 			 * PageAnon+anon_vma to PageKsm+NULL stable_node:
+ 			 * stable_tree_insert() will update stable_node.
+ 			 */
+-			set_page_stable_node(page, NULL);
++			folio_set_stable_node(page_folio(page), NULL);
+ 			mark_page_accessed(page);
  			/*
- 			 * While we hold page lock, upgrade page from
+ 			 * Page reclaim just frees a clean page with no dirty
 -- 
 2.43.0
 
