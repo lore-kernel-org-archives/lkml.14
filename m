@@ -1,141 +1,131 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87521155A33;
-	Tue,  9 Apr 2024 17:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ACE156244;
+	Tue,  9 Apr 2024 17:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682134; cv=none; b=TDJrdjy0eQ1GlcBGbKJBDl1O/B8w855WjKLEfoVudof850Ki/ro6Mxbf7graEgVlcB4Rax6Q5MvgLdp4+cF0sck603OOpX47XwQuOZk4Kuv5WRDxmvkbBSEo4RrZ50xjtXmOAp/hrkygahX+j+yEJl0FfBkUpbt1+dzyPMhPEO8=
+	t=1712682137; cv=none; b=Y/K5EMpOctEE1Co/Pez5v8kLdOFRnsCO5JHcrmLYJlV04TKIVPgliOuEZ9SBM+jN07OnkXPN7LZUUwxrMjIDD5aTZSq9wwdjkHbZ495tM5xP0xPa0nwkKtsNJo+SbE7/RS/GGcK0vriXokZ77pdS9O7CoQcmnh4hRophUES/Hqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682134; c=relaxed/simple;
-	bh=EcZlkq4mhkJTecvlYLJiT9xew1ftS1oIMx4P6vr0rwc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GnhVLiC72Z2uwfjicKeHEupnTgFT0LAVyEQHorf3zD9WsWvt4LNFsAQOt/3vZSh55vIeGu/R1Zv5rQIY/4hzVNyN8oP4fx2zsWysJbwv6P8we5XX2J5GxkHU8VSVJYgknIvs5fs8bIvUxbr4ctnwLdL2iOLUYxSSGbl/Mvp6ePs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=nJrWZZas; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nJrWZZas"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1712682133; x=1744218133;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=JxlOcBDU6r908oKknpBe0s7bQqLQWVDeva8VVC0aQbE=;
-  b=nJrWZZasF1NWhKz6tX8Ybk4a37fTW2Q0pIaYaoLwB6nT0NGe/Wvwd8fw
-   qp9ZHo14eVYDRQZ8Be2CgH+D/jtnsr+njMXIjzaqfvJQ9iS0rNG88Imfz
-   qeGfXqlPLFGdA9BgNz9ErKkHjaknk+Ephy921MgmjQQiJwGUwz7xsbHgk
-   U=;
-X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
-   d="scan'208";a="646642541"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 17:02:12 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:2366]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.47.234:2525] with esmtp (Farcaster)
- id 80dc4823-351c-441e-ad33-11ab3022cf0f; Tue, 9 Apr 2024 17:02:11 +0000 (UTC)
-X-Farcaster-Flow-ID: 80dc4823-351c-441e-ad33-11ab3022cf0f
-Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 17:02:10 +0000
-Received: from bcd074994f7f.amazon.com (10.95.97.144) by
- EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 17:02:06 +0000
-From: Sudan Landge <sudanl@amazon.com>
-To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
-	<xmarcalx@amazon.co.uk>
-Subject: [PATCH v4 3/5] virt: vmgenid: enable driver regardless of ACPI config
-Date: Tue, 9 Apr 2024 18:01:35 +0100
-Message-ID: <20240409170137.79197-4-sudanl@amazon.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240409170137.79197-1-sudanl@amazon.com>
-References: <20240409170137.79197-1-sudanl@amazon.com>
+	s=arc-20240116; t=1712682137; c=relaxed/simple;
+	bh=Ld1GNPh7eliglJwz4JBGCOxXq7qQT41qVZlmJL8DJ24=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W61KxIYvN21Hi4Flg2vqdvYEvlMB0JS1LvomCHbYY4Y4GMbEcRGadq8vcxlCeCNMpT6f6rrjJmW+Tzqg+Hd/BNq4HECzHxAK9qj2ScNX2hDT9OLjBIQK57JyjNmlW77mIwn3n0zp2+kP/1zwbXx1kCigA298wXq/r2UBVq5rm2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e3c7549078so25623965ad.0;
+        Tue, 09 Apr 2024 10:02:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712682135; x=1713286935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NU+IDV5MPL7YcPa1Of4+Gylt4ybk+lO5OFWOj3lGe3I=;
+        b=hOE1bzQ2VZQ9f1nstzmBkuhgq+9PCpRoY+D3G6/51B9AE+rvoTxGU1PoJUNyLJvPGi
+         kSmOgtSxPqJaE9rN6Eq1f1F2U/ateC7pSc13H2JRDpNkzu4dpFHyRF9DPbiKVEcQz5K/
+         tBexZrHT7CrG39pPH944VEDRhFysVvLzb1mivBKIsOKyCCzPKFhM5TrRWvDwhSV9R3cn
+         YwRgM+2Tvu3nxEbD0m9U0keqgWMN1o4KTgweX+KpK/yfFfQdmdIOOIKwVr+jlfVi6X8y
+         +Tj41BnIePcqwKinOoPAYBJDLXnVqQBExIuFxNCwl4/5WzlSrJppQaLEZB23LbdUrFQB
+         AgYA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0xs0nIZAiAWoBz8MVpTjuAtJAWTUOAU6kKQXvvycrQSADzPRWe4LfoP0nIlUs+G/a6TADQhHkbhNjPHOXxwo+q4nl2cKv+HsESDzQNcm2VGhYfmf3u0+i32/RdnnhPOv4cg6l1gGuZVquOm3wOw==
+X-Gm-Message-State: AOJu0YysDRYesbEal26z/qjMBpp5YxIwo7767blWHc6/moPZeSRhD3k4
+	6DiCMHgPsrLfooz//ijF4B9s1EYS/tmeL2j9UgFPgXGfD2ZpRiSBcg+/G/gHA08Y2Xz9UsTHyCI
+	isE0xiUZ49P8m0OmMA1LurM5zVn8=
+X-Google-Smtp-Source: AGHT+IEpJNTORpTm1ddk7PF/G0t6Ihuam5TpPLhreBZHNaS0kqHtFWmIzr2KECl8i2g5CiMZixMScHe0Kk2GD+Fw5Sk=
+X-Received: by 2002:a17:902:a3c5:b0:1e4:39e0:660c with SMTP id
+ q5-20020a170902a3c500b001e439e0660cmr4030195plb.23.1712682135001; Tue, 09 Apr
+ 2024 10:02:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA001.ant.amazon.com (10.13.139.100) To
- EX19D036EUC002.ant.amazon.com (10.252.61.191)
+References: <20240401160805.51277-1-yakoyoku@gmail.com> <CAP-5=fXu4uM=cU8Q=1JP19sELfarNE9BtBmbFW0Uyq2e_HJ6QA@mail.gmail.com>
+ <CAM9d7cjgfQpo6dgV4f5Wm4shVpknzP4_m36AkTwaUaF4jLrV1w@mail.gmail.com> <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
+In-Reply-To: <3485d1b1-7824-4e62-82b4-ed52360122dd@gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 10:02:03 -0700
+Message-ID: <CAM9d7chCGcPQrHbpX0aDWy127a=RG5uFRpVBQ4Lc+jYgRy5uLQ@mail.gmail.com>
+Subject: Re: [PATCH] perf srcline: Implement addr2line using libdw
+To: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Since with next commits vmgenid driver will support both ACPI and
-devicetree, and since either one of CONFIG_ACPI or CONFIG_OF will
-always be enabled, there is no need for the driver compilation to
-depend on ACPI/OF. So, remove ACPI dependency for compiling the driver.
+Hello,
 
-Signed-off-by: Sudan Landge <sudanl@amazon.com>
----
- drivers/virt/Kconfig   |  1 -
- drivers/virt/vmgenid.c | 16 +++++++++++-----
- 2 files changed, 11 insertions(+), 6 deletions(-)
+On Thu, Apr 4, 2024 at 5:10=E2=80=AFPM Martin Rodriguez Reboredo
+<yakoyoku@gmail.com> wrote:
+>
+> On 4/1/24 8:31 PM, Namhyung Kim wrote:
+> > [...]
+> >
+> > Thanks for doing this!  Yep, we could unset the env temporarily.
+> >
+> > As a general comment, perf has some helper functions for libdw
+> > in util/dwarf-aux.[ch].  Please take a look and use/update them.
+>
+> Whoops! I haven't seen that file, thanks for mentioning it.
+>
+> > [...]
+> >
+> > Probably we can use cu_find_lineinfo().
+>
+> I could use that, I'll see.
+>
+> > [...]
+> >
+> >>> +static struct a2l_data *addr2line_init(const char *path)
+> >
+> > debuginfo__new()?
+>
+> `libdw_a2l_new` can be another option too.
+>
+> > [...]
+> >
+> >>> +static int get_inline_function(struct dso *dso, struct inline_node *=
+node,
+> >>> +                              struct symbol *sym)
+> >>> +{
+> >>> +       struct a2l_data *a2l =3D dso->a2l;
+> >>> +       Dwarf_Addr addr =3D a2l->addr + a2l->bias;
+> >>> +       Dwarf_Addr bias =3D 0;
+> >>> +       Dwarf_Die *cudie =3D dwfl_module_addrdie(a2l->mod, addr, &bia=
+s);
+> >>> +
+> >>> +       Dwarf_Die *scopes =3D NULL;
+> >>> +       int nscopes =3D dwarf_getscopes(cudie, addr - bias, &scopes);
+> >
+> > It's not clear to me how this dwarf_getscopes() and later
+> > dwarf_getscopes_die() work together.  Can you please add some
+> > comment?  Also we have die_get_scopes() and I think it's simpler.
+>
+> I think the first is to get the scopes at an address and the second is
+> for the scopes with the addr offset at that DIE. Off the top of my head.
+>
+> > [...]
+> >
+> > Why not get the function name from the abstract origin?
+>
+> I'm not getting it, where's that abstract origin?
 
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index 40129b6f0eca..d8c848cf09a6 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -16,7 +16,6 @@ if VIRT_DRIVERS
- config VMGENID
- 	tristate "Virtual Machine Generation ID driver"
- 	default y
--	depends on ACPI
- 	help
- 	  Say Y here to use the hypervisor-provided Virtual Machine Generation ID
- 	  to reseed the RNG when the VM is cloned. This is highly recommended if
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index c028e2064fdd..3d93e3fb94c4 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -36,13 +36,15 @@ static void vmgenid_notify(struct device *device)
- 	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
- }
- 
--static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
--				 u32 __always_unused event, void *dev)
-+static void __maybe_unused
-+vmgenid_acpi_handler(acpi_handle __always_unused handle,
-+		     u32 __always_unused event, void *dev)
- {
- 	vmgenid_notify(dev);
- }
- 
--static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
-+static int __maybe_unused
-+setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
- {
- 	if (IS_ERR(next_id))
- 		return PTR_ERR(next_id);
-@@ -53,9 +55,10 @@ static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
- 	return 0;
- }
- 
--static int vmgenid_add_acpi(struct device *dev,
--			    struct vmgenid_state *state)
-+static int vmgenid_add_acpi(struct device __maybe_unused *dev,
-+			    struct vmgenid_state __maybe_unused *state)
- {
-+#if IS_ENABLED(CONFIG_ACPI)
- 	struct acpi_device *device = ACPI_COMPANION(dev);
- 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
- 	union acpi_object *obj;
-@@ -98,6 +101,9 @@ static int vmgenid_add_acpi(struct device *dev,
- out:
- 	ACPI_FREE(parsed.pointer);
- 	return ret;
-+#else
-+	return -EINVAL;
-+#endif
- }
- 
- static int vmgenid_add(struct platform_device *pdev)
--- 
-2.34.1
+IIUC DW_TAG_inlined_subroutine has DW_AT_abstract_origin
+to point to the original definition of the function.  It should have
+the name of the function.
 
+ <2><5ca8>: Abbrev Number: 40 (DW_TAG_inlined_subroutine)
+    <5ca9>   DW_AT_abstract_origin: <0x5eeb>
+    <5cad>   DW_AT_low_pc      : 0x24efc6
+    <5cb5>   DW_AT_high_pc     : 0x2d
+    <5cbd>   DW_AT_call_file   : 3
+    <5cbe>   DW_AT_call_line   : 135
+    <5cbf>   DW_AT_call_column : 9
+
+Thanks,
+Namhyung
