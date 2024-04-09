@@ -1,179 +1,147 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DC612EBCC;
-	Tue,  9 Apr 2024 08:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C3A12F383
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:27:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651245; cv=none; b=WJK1CgIcrZUi7ikVboqlVQC1jWydTRHjz9ZEO3LUCKNVrB8vYNao32dzDb4WSQa5KrPWHf9T2RRGLenTQPLvgOHkwc8q43WWxP9Reu7r1kLkXqyjKXpBlz1xPyNwjjqAF918ThuygSogtOBf6tgYSzFSAdOEf8EQbeybot8Qv+E=
+	t=1712651246; cv=none; b=trxGZ76nWFQJknYo4qa2aH8/+Zt2K+LWy+RMDrFg0TK/sixjaZ4EZVaLze9O1hSvQ/ovcvxu+SwrhozFyjT0EavMHmEVj3EhwpNNGBQP6xX6oKHh9lETYPQjpg6ZWIm226wgLfXZAMuO80TPp92ovK2/lHizjWIKG/4oeEiKddg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651245; c=relaxed/simple;
-	bh=lVKdy+zL61P8enGhACiE9sR/DJgbSrt7UuNC0MvCIWc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SKIUqbt6EbncYKhrP4fSOgnFrfWHG2QTL8zpLJlg8ZjjqTNtDRfjGaC8PagTL5ywQ0/Lnb/rLbi1ZjMdObsRSYcuyc9HGDW+ivZ7Qe0KgSlr5Y9TOGTL/HHsMy4igZRTOvck1gHDp1NOhRZMtcTDj8PpedF7xsdv4N7FuLMhKIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GU1+2ygD; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712651246; c=relaxed/simple;
+	bh=NInqBO3mqli5kAaFy5yCoXoiS3x2iM4UBcvy+GAsVlo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GrlFx6u2VuhOJy6Jm4QRWVmoqG3wRfgHQY21LNJn6RvPPMT0y4xsEo4C2JiZTS9aq9yKoXQn11r6OmQZcT+7RRJi0KNlSX5k5ZaPKhaLP3z4XbgOHvtsesjzEXPFKK6f2VmkhZwgkSheABJa6Rqm2AZkwRHog7GSYufziNgpCcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hPz7Hmr+; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GU1+2ygD"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 59509FF817;
-	Tue,  9 Apr 2024 08:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712651241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bjZRi8Zkv66lwdYQr99nMh1oJn0CswxTAnZJcH9dKfc=;
-	b=GU1+2ygDSQFUFlNbw3x8ub+BWB5Nj4ib2GewbXkRK4ohQH8DtaEkAw9rRKLyUCt4Lp560F
-	Au1ft1kffQhnCSK67+h4VVX37Ghy0vcwfBl6JLrWmprwJKRu+G2zUpfQo2fcewdi29nP9y
-	y5E2Hw4EGaUcAiLLXS1FPuTBw9FZ9/q7Mfk0Y6M4M72GkFPKs6u9DROpPNzAdOSdkn4Bjd
-	Gh58zQEDcKn7PcCdgnd8+wc1l0rFyUfM4vBBMmmdX9/syVhLp6Jx4hI17iTqqKupGsiqKb
-	XmsZN02Fd5fyc64r50eLu/xY6ZnuaQdPIeuii+IA6S4b108snumSt1lYEGM7kQ==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Apr 2024 10:26:35 +0200
-Subject: [PATCH net-next v10 13/13] netlink: specs: tsinfo: Enhance netlink
- attributes and add a set command
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hPz7Hmr+"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5aa362cc2ccso1750910eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712651244; x=1713256044; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VvJHnREnFZ1cH5hEIu5QcKzQyYhaFholreUs1EUriRY=;
+        b=hPz7Hmr+4DxDSD6V4Ax4T3+darDvLJjsik/x8oswVLk2+hxUQxcfYwRDK4pwgv67gs
+         Ch3QAm+f4gr3DrtPBa9F+081nIokKqClGBQB0NXdO7KdUP+AB6yTLRAZru1pgjnoNBtW
+         R9ohOkpd/ncn901W9pQENVOWkLrpXsCRAYDLWMkRGhQz232LUzQPAmZGkFZxo4T2C3pf
+         ZRaOgTBhWvATd1X9zmM8q8jNF/5hgV7YaRswsTkFHyOpXLQC1sVVgTkFT9C3r5CBLVpj
+         zTn8Y0SDTsqXmklGwNAYhUOP649W9teqEV3Ge7R5uZQqN37P1rrMb4TAzLa5fuYqa6tK
+         +77g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712651244; x=1713256044;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VvJHnREnFZ1cH5hEIu5QcKzQyYhaFholreUs1EUriRY=;
+        b=iAY6bCNJaXsJ0bL4mJW0r+0cBrXVl6XUXiQ0qHPqC/O20F3HhtTYk8v+jt5xDSp8u5
+         c4x8+O0rRwoJ8mMp6r304n9xFhve96PYI4ZRW8xhKRGq/o1V8T3HlmoImvH2v+TEdxG9
+         HMq1AmOa+lXVJjhX6nFOAGNLy1qF9aKhJUbiQ0INRNvbAqMD9WH4w/iTCl5ZiiYZrq6a
+         QK91CYzguVph5NhxwUprOQss/itRfknHsSqVeavHCF1UNVj9NvqaIFrzdDmT8V6N2ZlM
+         xBYXDkKcDdhVM4iQNCzl3UTmjeed5Yg6WssjNLOcWHxVv3lj1TNLPQnK5JvfnJIAJkOo
+         urKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVo0RS/DQ2lnJb8xNZgyZQ68hgR88o4CDZMnlq+4JWg4xXpQYb6SJl3A2tzSLOhr5z6H2Vr9qs4JEUAIkENK3wpTPqsfuzZndO2ZLCU
+X-Gm-Message-State: AOJu0YyS52DeHbTzR+gP47r3q9cgKQWUBQXrKfeMHSNPrZk5rEoaRaxs
+	IQjOUFj2ORqGY59rqSgSyccp4Z7FWVYgFKdHPQBlcKtTrJwPAUNf
+X-Google-Smtp-Source: AGHT+IFBs0lnKgGergw9nSynKWYDcWV9NAHxsayy25kkPHq1gK1xpsfE+xyR/l1fPI85a7fcICPnHg==
+X-Received: by 2002:a05:6358:d39f:b0:186:102b:777 with SMTP id mp31-20020a056358d39f00b00186102b0777mr9881254rwb.10.1712651243980;
+        Tue, 09 Apr 2024 01:27:23 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 01:27:23 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: baolin.wang@linux.alibaba.com,
+	chrisl@kernel.org,
+	david@redhat.com,
+	hanchuanhua@oppo.com,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	kasong@tencent.com,
+	ryan.roberts@arm.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	willy@infradead.org,
+	xiang@kernel.org,
+	ying.huang@intel.com,
+	yosryahmed@google.com,
+	yuzhao@google.com,
+	ziy@nvidia.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/5] mm: add per-order mTHP swpin_refault counter
+Date: Tue,  9 Apr 2024 20:26:31 +1200
+Message-Id: <20240409082631.187483-6-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240409082631.187483-1-21cnbao@gmail.com>
+References: <20240409082631.187483-1-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240409-feature_ptp_netnext-v10-13-0fa2ea5c89a9@bootlin.com>
-References: <20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com>
-In-Reply-To: <20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com>
-To: Florian Fainelli <florian.fainelli@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Richard Cochran <richardcochran@gmail.com>, 
- Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
- Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
- Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Add new attributed to tsinfo allowing to get the tsinfo and the hwtstamp
-from a phc provider (composed by a phc index and a phc qualifier) on a
-netdevice's link.
-Add simultaneously a set command to be able to set hwtstamp configuration
-for a specified phc provider.
+From: Barry Song <v-songbaohua@oppo.com>
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Currently, we are handling the scenario where we've hit a
+large folio in the swapcache, and the reclaiming process
+for this large folio is still ongoing.
+
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
 ---
+ include/linux/huge_mm.h | 1 +
+ mm/huge_memory.c        | 2 ++
+ mm/memory.c             | 1 +
+ 3 files changed, 4 insertions(+)
 
-Changes in v8:
-- New patch
-
-Changes in v10:
-- Add ghwtstamp attributes
-- Add tsinfo ntf command
----
- Documentation/netlink/specs/ethtool.yaml | 43 +++++++++++++++++++++++++++++++-
- 1 file changed, 42 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 87ae7b397984..fcdedab4607c 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -576,6 +576,15 @@ attribute-sets:
-       -
-         name: tx-err
-         type: uint
-+  -
-+    name: tsinfo-hwtst-provider
-+    attributes:
-+      -
-+        name: index
-+        type: u32
-+      -
-+        name: qualifier
-+        type: u32
-   -
-     name: tsinfo
-     attributes:
-@@ -602,6 +611,16 @@ attribute-sets:
-         name: stats
-         type: nest
-         nested-attributes: ts-stat
-+      -
-+        name: ghwtstamp
-+        type: u8
-+      -
-+        name: hwtst-provider
-+        type: nest
-+        nested-attributes: tsinfo-hwtst-provider
-+      -
-+        name: hwtst-flags
-+        type: u32
-   -
-     name: cable-result
-     attributes:
-@@ -1394,7 +1413,7 @@ operations:
-       notify: eee-get
-     -
-       name: tsinfo-get
--      doc: Get tsinfo params.
-+      doc: Get tsinfo params or hwtstamp config.
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index c8256af83e33..b67294d5814f 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -269,6 +269,7 @@ enum mthp_stat_item {
+ 	MTHP_STAT_ANON_ALLOC_FALLBACK,
+ 	MTHP_STAT_ANON_SWPOUT,
+ 	MTHP_STAT_ANON_SWPOUT_FALLBACK,
++	MTHP_STAT_ANON_SWPIN_REFAULT,
+ 	__MTHP_STAT_COUNT
+ };
  
-       attribute-set: tsinfo
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d8d2ed80b0bf..fb95345b0bde 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -556,12 +556,14 @@ DEFINE_MTHP_STAT_ATTR(anon_alloc, MTHP_STAT_ANON_ALLOC);
+ DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback, MTHP_STAT_ANON_ALLOC_FALLBACK);
+ DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
+ DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
++DEFINE_MTHP_STAT_ATTR(anon_swpin_refault, MTHP_STAT_ANON_SWPIN_REFAULT);
  
-@@ -1402,6 +1421,8 @@ operations:
-         request:
-           attributes:
-             - header
-+            - ghwtstamp
-+            - hwtst-provider
-         reply:
-           attributes:
-             - header
-@@ -1410,6 +1431,8 @@ operations:
-             - rx-filters
-             - phc-index
-             - stats
-+            - hwtst-provider
-+            - hwtst-flags
-       dump: *tsinfo-get-op
-     -
-       name: cable-test-act
-@@ -1715,3 +1738,21 @@ operations:
-       name: mm-ntf
-       doc: Notification for change in MAC Merge configuration.
-       notify: mm-get
-+    -
-+      name: tsinfo-set
-+      doc: Set hwtstamp.
-+
-+      attribute-set: tsinfo
-+
-+      do:
-+        request:
-+          attributes:
-+            - header
-+            - tx-types
-+            - rx-filters
-+            - hwtst-provider
-+            - hwtst-flags
-+    -
-+      name: tsinfo-ntf
-+      doc: Notification for change in tsinfo configuration.
-+      notify: tsinfo-get
-
+ static struct attribute *stats_attrs[] = {
+ 	&anon_alloc_attr.attr,
+ 	&anon_alloc_fallback_attr.attr,
+ 	&anon_swpout_attr.attr,
+ 	&anon_swpout_fallback_attr.attr,
++	&anon_swpin_refault_attr.attr,
+ 	NULL,
+ };
+ 
+diff --git a/mm/memory.c b/mm/memory.c
+index 9818dc1893c8..acc023795a4d 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4167,6 +4167,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		nr_pages = nr;
+ 		entry = folio->swap;
+ 		page = &folio->page;
++		count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPIN_REFAULT);
+ 	}
+ 
+ check_pte:
 -- 
 2.34.1
 
