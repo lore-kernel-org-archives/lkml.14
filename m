@@ -1,494 +1,177 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2101.outbound.protection.outlook.com [40.107.21.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11E715887D;
-	Tue,  9 Apr 2024 21:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712696773; cv=none; b=dyLLWjYAw3YLxlwBesI5nbYATc1pD8fKHQ1Fo1CaMyW441tPPLlT2PUcOVaQRkSk4L2/XOmdqR//sBA9vZdEBF4+PDLIv3I22j/btkYnKjrJaDhZC3q+OdukrTaO0HT10t0dAntE2eqspW10B+0L4xDHH1PyzFliAxMPyk8m/kM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712696773; c=relaxed/simple;
-	bh=iZHJLR1SuTJdJQ9BPDYmdlItUzaWAVHa0JuV7kmLPIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ma5du0aJ9gJp2gRR4g9pLQUGEsBy3CF85LNI8aDhKkncAfGzOJ+Xgmn4Tq8szjjb5Dccmj3g8vKa/xzTRwPyv7qNAOlSDF3EQFdn/MJdOlC04V4ncDq1P/97DR5A+sNtEK7CcXRZPRhF8Kxj3sK7LQo93XFDM2eS57o+ZNGfSCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=n6Zrtl9H; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39FC38DC9;
+	Tue,  9 Apr 2024 21:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.101
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712696968; cv=fail; b=Mkxjlv0kXtjyZ7kor+k+qlVPoi8xS4/7cN4rZ+fkbNtcVj6Y+qRkFLb9kGe+NI6i6/3iheMHT6lksiwX9el1TZUwcK2GM5zgeAwRIrtIhA7CM0EktIOwYnvDV31/iRK+S9/YVCNbCckIkkTVb1apzhXDLELMWhzma/HrxIqEHSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712696968; c=relaxed/simple;
+	bh=oAMKworDRt11dzlP1OVxcAOYcqXZx/XYGkKIbVk6mR0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EX6h2BKu0FAsxLjOMTw1KDi6hsnlkLbhstSjTYbLNaEK8hIR06UdxpMiRmhWpw/OR0OoMrnkgp0R4ydehAUm4swKhcUJDfkeOsMorCJHduD5FKAisGPslX0mBUtaa4oC7massYsLSo7s9i0nbFjQCtzwyDFdQN0iMYsIoPP7NmI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=gOn3AdAh; arc=fail smtp.client-ip=40.107.21.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="n6Zrtl9H"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 439K7S1x022589;
-	Tue, 9 Apr 2024 21:05:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=qcppdkim1; bh=az0UmuM
-	dy1ndrb6e/M+CnXUvWjiHeqo3eDsWdUoepPw=; b=n6Zrtl9HHMr4MQzdtKE9JX/
-	oaqiPOjjiULNJCAdL1trFiG0nTvwuByjTMrsLIfcRQRZomlImx0QoY+7mgeljx/6
-	5T85CtsqYOy9es21VYBWLtJqW6366Tx90kPzCisfuDndKwdW6mw46UzVB7L3iKbx
-	WTitdKTmrmZFpqvBxjktRyBnSOaVk394Yb8Oq8d9R8sGew/ZGmgLjTah5xdri9k3
-	4uazRaftjZeEOpVJ7/7/bFOuyiRLwSyul0bjfC9JSPm63zWvjgSy8tOl9Zta3KnO
-	Mryh3aDDyRBMjee/TU/kJxpXakuU/5qGvXGDl9NTOreyqXkTcw1zwU+aXe5gBOg=
-	=
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xd3dy9f7v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 21:05:49 +0000 (GMT)
-Received: from pps.filterd (NALASPPMTA05.qualcomm.com [127.0.0.1])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 439L5mhJ011057;
-	Tue, 9 Apr 2024 21:05:48 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by NALASPPMTA05.qualcomm.com (PPS) with ESMTPS id 3xayfmb91g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 21:05:47 +0000
-Received: from NALASPPMTA05.qualcomm.com (NALASPPMTA05.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 439L5lCW011047;
-	Tue, 9 Apr 2024 21:05:47 GMT
-Received: from hu-devc-lv-u20-a-new.qualcomm.com (hu-abchauha-lv.qualcomm.com [10.81.25.35])
-	by NALASPPMTA05.qualcomm.com (PPS) with ESMTPS id 439L5lY1011046
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 21:05:47 +0000
-Received: by hu-devc-lv-u20-a-new.qualcomm.com (Postfix, from userid 214165)
-	id 5106A21C27; Tue,  9 Apr 2024 14:05:47 -0700 (PDT)
-From: Abhishek Chauhan <quic_abchauha@quicinc.com>
-To: "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin KaFai Lau <martin.lau@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-Cc: kernel@quicinc.com
-Subject: [RFC PATCH bpf-next v1 1/3] net: Rename mono_delivery_time to tstamp_type for scalabilty
-Date: Tue,  9 Apr 2024 14:05:45 -0700
-Message-Id: <20240409210547.3815806-2-quic_abchauha@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240409210547.3815806-1-quic_abchauha@quicinc.com>
-References: <20240409210547.3815806-1-quic_abchauha@quicinc.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gOn3AdAh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TV7NEcxYzJxu/qvdR7fjXqiGFXa7g9M9XAluVPWxZeM3MGMAz4pl6WFMTcUIQqbCihhCTLTsGjco3JYois5XxEgpEe8LwPjOJ/44mxYCwIBJpmJ8Oh74WpkAUsoTXw1m+FL2wkWpKsWa2jSJb/g4uPSxRZU0wv1d7Z8fJZ91vJ2cpRBR2IeXuFmEJYTQ4h3bnmusontuhCH3iC0uxScoTYa86Wkm2OL1hRjYQm4tDjjWqRc2umB5e2XWurEV89xHcnowLdpBnWrfTAlrEwd3J8f0hHLfbaKbhvH7klDS4GotqUP5r9oMYbHG4ip08PfOh6UClhCN0w+1vOCuJd3xWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R/ynDWqLwLsFT8FQP1CHE3eODVWniy86P+ucBmar7rE=;
+ b=lDRp5q1omKCHFTyUHs/rQrDIoX2/YMFzQG+NDUAhwx/pzAUd8h4VQI9Nw7bDDeYde6+oe7ggJni58LtlGHOkNfuD9K0Jui+sRZKsLJCB2kquacgn79bIUr6gaPbeo1E2uAnIYvF0l4wEYUEF8S6cD4CgXlv6DeWkGj2gB52lnNzTEbtjznMYF8dD+LpfCqIQaavC8rFEc2XTM9G+Z2NqM/R31yzxweFAkmmGIAaiGoPB337ZwbLi1LcNoPvWek8NUqHGvZUTp1wSZeUi7aDd/iM62OMAWCV3NDzfDPy+KUK0IeRP8zlGlvZutQ0phuzmI2nGMkjzxobZk4jrvajtnQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R/ynDWqLwLsFT8FQP1CHE3eODVWniy86P+ucBmar7rE=;
+ b=gOn3AdAhKeNkSL0v/Zs5ERZndiKdWDv8jCl42S2VspmCg1kKnLu4H7Xuh0mo2N57p3trPtATXw4DDtoO89F6pHANOmamji/YjmuJfe+aKiPHPp0OoY8UmFM8K+r4dZsK0DjvU/l/vFLwUAc9UPKX0Vt+agJeJVB5iRFsWQmh1DA=
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DBBPR04MB7674.eurprd04.prod.outlook.com (2603:10a6:10:1f5::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Tue, 9 Apr
+ 2024 21:09:22 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::3168:91:27c6:edf6%3]) with mapi id 15.20.7409.042; Tue, 9 Apr 2024
+ 21:09:21 +0000
+Date: Tue, 9 Apr 2024 17:09:14 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: conor+dt@kernel.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, imx@lists.linux.dev,
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+	peng.fan@nxp.com, robh@kernel.org, vkoul@kernel.org
+Subject: Re: [PATCH v3 1/2] dt-bindings: dma: fsl-edma: remove 'clocks' from
+ required
+Message-ID: <ZhWuetC8bRvDyxgX@lizhi-Precision-Tower-5810>
+References: <20240409185416.2224609-1-Frank.Li@nxp.com>
+ <b15ad271-037e-4ee3-ad88-e8068d31c8c8@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b15ad271-037e-4ee3-ad88-e8068d31c8c8@linaro.org>
+X-ClientProxiedBy: SJ0PR03CA0095.namprd03.prod.outlook.com
+ (2603:10b6:a03:333::10) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: M8FnREtlmFgv5Rug7-NPJLhOJ9dhMmYD
-X-Proofpoint-ORIG-GUID: M8FnREtlmFgv5Rug7-NPJLhOJ9dhMmYD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_12,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 phishscore=0 bulkscore=0 clxscore=1015
- adultscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404090142
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7674:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	9HgSZrCXH/Krd+cZtlEK4o3XGv4OaasPJbaYGCWhH8ZdRwRwioeIFqiVBa5vhqkv4xMsffXsTZoqL/cyAMs9e2+h+slfrmiS3oRKLWToWccKNaN3e8M0VR9SvzX2/8daDneUACYBWPCjF7xjrHGCcjenkY+FqKiyK/7fXwpFfev/ymZ388MAAvY7ix1nTER+r/IUCNApnJWszRzj35CLuYNkBUbbBivums8D2TYSpmJ/upANA7YwkTnnANa+UiwZv8nTdpMkKuH7wjuBLV8+lr3Q3loidNyz8zQ4hnKQnSbg1j6jx0twLT4y61QPCVuDxAIv3nGm9hVzSTH1d8o1AbLPCHqIcqvfHRu0+V6sr2aS7DSrdCfMXQAJFIvUNa6rXXiSLnxX56KhW80KCvwQK7qVlSd8KTVFBENsMkG6jSw4bhC2SQu2pOh3ZMrl3euAeqUw0sl23VIduJn9xm2KcTPmn3P5cu561P9JjR+98OARCB/jS34YoiA6ZXShvB5l/Akwtd/MsXE4wdsnE1EKMVK9sTAUkaNs8mSEIXIPvxjZVH6K+G4hFFOS0HWdplV+rDEF7U7Aoj49YKZmxhivr3gWL3WwhrcjvT9HDCad+x3tWJVpSIqzA5PeexXx9xse0Y8UYtl3Th8sA2/tC5NCyXE4+cSd5bcB11F5ZdWGu7+uuoNHh4TAZXkDp9q5q39D/rdRU+YxDqJIxMiaCvCgtrzqVEwOBAUJGvFco8xwbr8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?plDyUr8EggZ3upl7de4T55lnUavc7BY4w+qB0DtQwViduHFFtb5rLuD/Di9n?=
+ =?us-ascii?Q?IpEfUSqH3FLqDvauaAnBnDvMDdqWlfzNcAuT0NndafZ/7dm/eFYzdV/9WHek?=
+ =?us-ascii?Q?sEZBmAkne6V2Xtz/MxiqqXweOanQgkkU6zLmIO0Oxd64mQii2G7D85AB79KC?=
+ =?us-ascii?Q?CoqHfKDxQ2rYoDP/VSaaIAp+ahPX6sXR91/S+KsFYE0VqvAgvKZf6cYsCpGE?=
+ =?us-ascii?Q?KBWU3luuWSr55TkMDED4Hvy6+H1/UNHMG3FioLMCFaumnpzIc1zOsV4wH2MO?=
+ =?us-ascii?Q?2kApnmMqE8RxSqqS6P9NYW1SNOhUkKP7z1srImgogQ1a4zaULFo96CfdaYu4?=
+ =?us-ascii?Q?4pJOwEu0ZlvWqgKsTxn4JrnUWDai+bqVA41Wmh/oXKIZYGcUvXwikOgF7Zk/?=
+ =?us-ascii?Q?SiMSV1+jGpNDw/lMKVd/WcmfKhXdvyQQItfNAGWncHD8KOSZk3cr6iDALB30?=
+ =?us-ascii?Q?JV8M68VqGu3l+KnQLdUOcTXBvZpnIe/w3EipjYY+OZmGwuEs11xp2NF42VVO?=
+ =?us-ascii?Q?dpWHHl6jEiAjGbHbwteX0xovc+XD9WlD5tcRcDfBeL6dFN0fe8o11+ukUSHF?=
+ =?us-ascii?Q?mQLQH3MBNLNAA6TRNjMj/bfLVNjJsqD1q+3BF/4t+aUFeNGvgl+/sog8fgby?=
+ =?us-ascii?Q?k1x2ImNgmUbHAecjbLotR/gcXf04yzoPFrsQ6u41Tb3r2u6r2BNZopy2mxM3?=
+ =?us-ascii?Q?MpMLGnDku6pHN06ZzoQmsuHjllIVhiBpNyLULumS9I5QNnXqL5zXQgNbldB1?=
+ =?us-ascii?Q?by6TCyceJvpepOvI7qaLgZO6I1XFKefuRpjCAnmb/Vwlmf+HoEzcy9DZvIrz?=
+ =?us-ascii?Q?WKokKQE8wH2wjOFmHfzrfLhof7okDn8R06dIKjUYfNFGCDYXzvn3LGClhFA8?=
+ =?us-ascii?Q?/4lc0yy32eY9yC85hY5lYwv1OlIBtlFvvXVaMQ9I7971yR9jkrPiX2q+2P3M?=
+ =?us-ascii?Q?+bq/FWzw7japFjSbklTqIT2IPqeYD05+ATsed1j4BJEtsXZ1o8vFGVcoMP/b?=
+ =?us-ascii?Q?MjYuDENdpF17vdAHXVYEziZ9P8cbj6YzDMHM38ATOb8+4wHeRkcV5Skn6fri?=
+ =?us-ascii?Q?zBhSIAXPkjYFa3IeuNTlYXPwOCYzFTDF1Vb5xqWAT4fGBuCMOZ8j4osNb4lT?=
+ =?us-ascii?Q?OIyqQiSGYouXUAfcJBKEHEK3b8kxXgXtGskNTpRNxkN1WNViou5ZleOMyeLm?=
+ =?us-ascii?Q?6bIkvIX3lB4pnlqZRyWVEOnzHuEGEofQLEvrcL2RJA/T8eP00qbNxVF39yzg?=
+ =?us-ascii?Q?fYkesP0bG0YitYfQ4dH2lGLMmBwGKPNljrJLyLIc/VlfSL/a0XhPyYnHQzSy?=
+ =?us-ascii?Q?QDFdYdE9ZOnVLiTScyrlmCCaPPVujW9/g08ka7mf9H8oxpoC7MmraUz5t6BW?=
+ =?us-ascii?Q?ZcWV2DKyl6D7VE375Lp7OSdoD5PldnnhWsoHENs3DlpKxROETUX2Mg8/gv/P?=
+ =?us-ascii?Q?upKoI1Kt6hGO+TNMRhqzFiEvEN/tdLwA7s11H6Q3Rd1GD9wnAXOnjT7CUMQT?=
+ =?us-ascii?Q?FZEK10X+7UrBQMPeLMM5NH11fRGXwK3U58L51NPv9dY3wLBIxGzv/DS5Gw4u?=
+ =?us-ascii?Q?v8OcKNwb0seAeE6Pf+g=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe136f2c-050e-492f-4e34-08dc58d953ba
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 21:09:21.6910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Og21lrFMeAEb1w0BkWiiOIw9ganaN91fujG1vDdFfM5bHT5C72nOewyDmZp+TL/7/9nI2/8Bwzto5hpA+2aWtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7674
 
-mono_delivery_time was added to check if skb->tstamp has delivery
-time in mono clock base (i.e. EDT) otherwise skb->tstamp has
-timestamp in ingress and delivery_time at egress.
+On Tue, Apr 09, 2024 at 10:02:32PM +0200, Krzysztof Kozlowski wrote:
+> On 09/04/2024 20:54, Frank Li wrote:
+> > fsl,imx8qm-adma and fsl,imx8qm-edma don't require 'clocks'. Remove it from
+> > required and add 'if' block for other compatible string to keep the same
+> > restrictions.
+> > 
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> > 
+> > Notes:
+> >     Change from v2 to v3
+> >       - rebase to dmaengine/next
+> 
+> This fails...
 
-Renaming the bitfield from mono_delivery_time to tstamp_type is for
-extensibilty for other timestamps such as userspace timestamp
-(i.e. SO_TXTIME) set via sock opts.
+What's wrong? 
 
-Bridge driver today has no support to forward the userspace timestamp
-packets and ends up resetting the timestamp. ETF qdisc checks the
-packet coming from userspace and encounters to be 0 thereby dropping
-time sensitive packets. These changes will allow userspace timestamps
-packets to be forwarded from the bridge to NIC drivers.
+https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git/log/?h=next
 
-In future tstamp_type:1 can be extended to support userspace timestamp
-by increasing the bitfield.
+> 
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/fsl,edma.yaml b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> > index 825f4715499e5..657a7d3ebf857 100644
+> > --- a/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> > +++ b/Documentation/devicetree/bindings/dma/fsl,edma.yaml
+> > @@ -82,7 +82,6 @@ required:
+> >    - compatible
+> >    - reg
+> >    - interrupts
+> > -  - clocks
+> >    - dma-channels
+> >  
+> >  allOf:
+> > @@ -187,6 +186,22 @@ allOf:
+> >          "#dma-cells":
+> >            const: 3
+> >  
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +	  contains:
+> 
+> It does not look like you tested the bindings, at least after quick
+> look. Please run `make dt_binding_check` (see
+> Documentation/devicetree/bindings/writing-schema.rst for instructions).
+> Maybe you need to update your dtschema and yamllint.
 
-Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
-Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
----
- include/linux/skbuff.h                     | 18 +++++++++---------
- include/net/inet_frag.h                    |  4 ++--
- net/bridge/netfilter/nf_conntrack_bridge.c |  6 +++---
- net/core/dev.c                             |  2 +-
- net/core/filter.c                          |  8 ++++----
- net/ipv4/inet_fragment.c                   |  2 +-
- net/ipv4/ip_fragment.c                     |  2 +-
- net/ipv4/ip_output.c                       |  8 ++++----
- net/ipv6/ip6_output.c                      |  6 +++---
- net/ipv6/netfilter.c                       |  6 +++---
- net/ipv6/netfilter/nf_conntrack_reasm.c    |  2 +-
- net/ipv6/reassembly.c                      |  2 +-
- net/sched/act_bpf.c                        |  4 ++--
- net/sched/cls_bpf.c                        |  4 ++--
- 14 files changed, 37 insertions(+), 37 deletions(-)
+Strange, Test passed
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 0c7c67b3a87b..8210d699d8e9 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -821,7 +821,7 @@ typedef unsigned char *sk_buff_data_t;
-  *	@dst_pending_confirm: need to confirm neighbour
-  *	@decrypted: Decrypted SKB
-  *	@slow_gro: state present at GRO time, slower prepare step required
-- *	@mono_delivery_time: When set, skb->tstamp has the
-+ *	@tstamp_type: When set, skb->tstamp has the
-  *		delivery_time in mono clock base (i.e. EDT).  Otherwise, the
-  *		skb->tstamp has the (rcv) timestamp at ingress and
-  *		delivery_time at egress.
-@@ -955,7 +955,7 @@ struct sk_buff {
- 	/* private: */
- 	__u8			__mono_tc_offset[0];
- 	/* public: */
--	__u8			mono_delivery_time:1;	/* See SKB_MONO_DELIVERY_TIME_MASK */
-+	__u8			tstamp_type:1;	/* See SKB_MONO_DELIVERY_TIME_MASK */
- #ifdef CONFIG_NET_XGRESS
- 	__u8			tc_at_ingress:1;	/* See TC_AT_INGRESS_MASK */
- 	__u8			tc_skip_classify:1;
-@@ -4257,7 +4257,7 @@ static inline void skb_get_new_timestampns(const struct sk_buff *skb,
- static inline void __net_timestamp(struct sk_buff *skb)
- {
- 	skb->tstamp = ktime_get_real();
--	skb->mono_delivery_time = 0;
-+	skb->tstamp_type = 0;
- }
- 
- static inline ktime_t net_timedelta(ktime_t t)
-@@ -4269,7 +4269,7 @@ static inline void skb_set_delivery_time(struct sk_buff *skb, ktime_t kt,
- 					 bool mono)
- {
- 	skb->tstamp = kt;
--	skb->mono_delivery_time = kt && mono;
-+	skb->tstamp_type = kt && mono;
- }
- 
- DECLARE_STATIC_KEY_FALSE(netstamp_needed_key);
-@@ -4279,8 +4279,8 @@ DECLARE_STATIC_KEY_FALSE(netstamp_needed_key);
-  */
- static inline void skb_clear_delivery_time(struct sk_buff *skb)
- {
--	if (skb->mono_delivery_time) {
--		skb->mono_delivery_time = 0;
-+	if (skb->tstamp_type) {
-+		skb->tstamp_type = 0;
- 		if (static_branch_unlikely(&netstamp_needed_key))
- 			skb->tstamp = ktime_get_real();
- 		else
-@@ -4290,7 +4290,7 @@ static inline void skb_clear_delivery_time(struct sk_buff *skb)
- 
- static inline void skb_clear_tstamp(struct sk_buff *skb)
- {
--	if (skb->mono_delivery_time)
-+	if (skb->tstamp_type)
- 		return;
- 
- 	skb->tstamp = 0;
-@@ -4298,7 +4298,7 @@ static inline void skb_clear_tstamp(struct sk_buff *skb)
- 
- static inline ktime_t skb_tstamp(const struct sk_buff *skb)
- {
--	if (skb->mono_delivery_time)
-+	if (skb->tstamp_type)
- 		return 0;
- 
- 	return skb->tstamp;
-@@ -4306,7 +4306,7 @@ static inline ktime_t skb_tstamp(const struct sk_buff *skb)
- 
- static inline ktime_t skb_tstamp_cond(const struct sk_buff *skb, bool cond)
- {
--	if (!skb->mono_delivery_time && skb->tstamp)
-+	if (!skb->tstamp_type && skb->tstamp)
- 		return skb->tstamp;
- 
- 	if (static_branch_unlikely(&netstamp_needed_key) || cond)
-diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
-index 153960663ce4..5af6eb14c5db 100644
---- a/include/net/inet_frag.h
-+++ b/include/net/inet_frag.h
-@@ -76,7 +76,7 @@ struct frag_v6_compare_key {
-  * @stamp: timestamp of the last received fragment
-  * @len: total length of the original datagram
-  * @meat: length of received fragments so far
-- * @mono_delivery_time: stamp has a mono delivery time (EDT)
-+ * @tstamp_type: stamp has a mono delivery time (EDT)
-  * @flags: fragment queue flags
-  * @max_size: maximum received fragment size
-  * @fqdir: pointer to struct fqdir
-@@ -97,7 +97,7 @@ struct inet_frag_queue {
- 	ktime_t			stamp;
- 	int			len;
- 	int			meat;
--	u8			mono_delivery_time;
-+	u8			tstamp_type;
- 	__u8			flags;
- 	u16			max_size;
- 	struct fqdir		*fqdir;
-diff --git a/net/bridge/netfilter/nf_conntrack_bridge.c b/net/bridge/netfilter/nf_conntrack_bridge.c
-index 6f877e31709b..989435bd1690 100644
---- a/net/bridge/netfilter/nf_conntrack_bridge.c
-+++ b/net/bridge/netfilter/nf_conntrack_bridge.c
-@@ -32,7 +32,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
- 					   struct sk_buff *))
- {
- 	int frag_max_size = BR_INPUT_SKB_CB(skb)->frag_max_size;
--	bool mono_delivery_time = skb->mono_delivery_time;
-+	bool tstamp_type = skb->tstamp_type;
- 	unsigned int hlen, ll_rs, mtu;
- 	ktime_t tstamp = skb->tstamp;
- 	struct ip_frag_state state;
-@@ -82,7 +82,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
- 			if (iter.frag)
- 				ip_fraglist_prepare(skb, &iter);
- 
--			skb_set_delivery_time(skb, tstamp, mono_delivery_time);
-+			skb_set_delivery_time(skb, tstamp, tstamp_type);
- 			err = output(net, sk, data, skb);
- 			if (err || !iter.frag)
- 				break;
-@@ -113,7 +113,7 @@ static int nf_br_ip_fragment(struct net *net, struct sock *sk,
- 			goto blackhole;
- 		}
- 
--		skb_set_delivery_time(skb2, tstamp, mono_delivery_time);
-+		skb_set_delivery_time(skb2, tstamp, tstamp_type);
- 		err = output(net, sk, data, skb2);
- 		if (err)
- 			goto blackhole;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 303a6ff46e4e..8b88f8118052 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -2113,7 +2113,7 @@ EXPORT_SYMBOL(net_disable_timestamp);
- static inline void net_timestamp_set(struct sk_buff *skb)
- {
- 	skb->tstamp = 0;
--	skb->mono_delivery_time = 0;
-+	skb->tstamp_type = 0;
- 	if (static_branch_unlikely(&netstamp_needed_key))
- 		skb->tstamp = ktime_get_real();
- }
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 8adf95765cdd..0f535defdd2c 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -7698,13 +7698,13 @@ BPF_CALL_3(bpf_skb_set_tstamp, struct sk_buff *, skb,
- 		if (!tstamp)
- 			return -EINVAL;
- 		skb->tstamp = tstamp;
--		skb->mono_delivery_time = 1;
-+		skb->tstamp_type = 1;
- 		break;
- 	case BPF_SKB_TSTAMP_UNSPEC:
- 		if (tstamp)
- 			return -EINVAL;
- 		skb->tstamp = 0;
--		skb->mono_delivery_time = 0;
-+		skb->tstamp_type = 0;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -9413,7 +9413,7 @@ static struct bpf_insn *bpf_convert_tstamp_read(const struct bpf_prog *prog,
- 					TC_AT_INGRESS_MASK | SKB_MONO_DELIVERY_TIME_MASK);
- 		*insn++ = BPF_JMP32_IMM(BPF_JNE, tmp_reg,
- 					TC_AT_INGRESS_MASK | SKB_MONO_DELIVERY_TIME_MASK, 2);
--		/* skb->tc_at_ingress && skb->mono_delivery_time,
-+		/* skb->tc_at_ingress && skb->tstamp_type:1,
- 		 * read 0 as the (rcv) timestamp.
- 		 */
- 		*insn++ = BPF_MOV64_IMM(value_reg, 0);
-@@ -9438,7 +9438,7 @@ static struct bpf_insn *bpf_convert_tstamp_write(const struct bpf_prog *prog,
- 	 * the bpf prog is aware the tstamp could have delivery time.
- 	 * Thus, write skb->tstamp as is if tstamp_type_access is true.
- 	 * Otherwise, writing at ingress will have to clear the
--	 * mono_delivery_time bit also.
-+	 * mono_delivery_time (skb->tstamp_type:1)bit also.
- 	 */
- 	if (!prog->tstamp_type_access) {
- 		__u8 tmp_reg = BPF_REG_AX;
-diff --git a/net/ipv4/inet_fragment.c b/net/ipv4/inet_fragment.c
-index 7072fc0783ef..25f8ee14ea73 100644
---- a/net/ipv4/inet_fragment.c
-+++ b/net/ipv4/inet_fragment.c
-@@ -578,7 +578,7 @@ void inet_frag_reasm_finish(struct inet_frag_queue *q, struct sk_buff *head,
- 	skb_mark_not_on_list(head);
- 	head->prev = NULL;
- 	head->tstamp = q->stamp;
--	head->mono_delivery_time = q->mono_delivery_time;
-+	head->tstamp_type = q->tstamp_type;
- }
- EXPORT_SYMBOL(inet_frag_reasm_finish);
- 
-diff --git a/net/ipv4/ip_fragment.c b/net/ipv4/ip_fragment.c
-index a4941f53b523..1edba0d0ae90 100644
---- a/net/ipv4/ip_fragment.c
-+++ b/net/ipv4/ip_fragment.c
-@@ -355,7 +355,7 @@ static int ip_frag_queue(struct ipq *qp, struct sk_buff *skb)
- 		qp->iif = dev->ifindex;
- 
- 	qp->q.stamp = skb->tstamp;
--	qp->q.mono_delivery_time = skb->mono_delivery_time;
-+	qp->q.tstamp_type = skb->tstamp_type;
- 	qp->q.meat += skb->len;
- 	qp->ecn |= ecn;
- 	add_frag_mem_limit(qp->q.fqdir, skb->truesize);
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 1fe794967211..e8ec7e8ae2e0 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -764,7 +764,7 @@ int ip_do_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- {
- 	struct iphdr *iph;
- 	struct sk_buff *skb2;
--	bool mono_delivery_time = skb->mono_delivery_time;
-+	bool tstamp_type = skb->tstamp_type;
- 	struct rtable *rt = skb_rtable(skb);
- 	unsigned int mtu, hlen, ll_rs;
- 	struct ip_fraglist_iter iter;
-@@ -856,7 +856,7 @@ int ip_do_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 				}
- 			}
- 
--			skb_set_delivery_time(skb, tstamp, mono_delivery_time);
-+			skb_set_delivery_time(skb, tstamp, tstamp_type);
- 			err = output(net, sk, skb);
- 
- 			if (!err)
-@@ -912,7 +912,7 @@ int ip_do_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 		/*
- 		 *	Put this fragment into the sending queue.
- 		 */
--		skb_set_delivery_time(skb2, tstamp, mono_delivery_time);
-+		skb_set_delivery_time(skb2, tstamp, tstamp_type);
- 		err = output(net, sk, skb2);
- 		if (err)
- 			goto fail;
-@@ -1649,7 +1649,7 @@ void ip_send_unicast_reply(struct sock *sk, struct sk_buff *skb,
- 			  arg->csumoffset) = csum_fold(csum_add(nskb->csum,
- 								arg->csum));
- 		nskb->ip_summed = CHECKSUM_NONE;
--		nskb->mono_delivery_time = !!transmit_time;
-+		nskb->tstamp_type = !!transmit_time;
- 		if (txhash)
- 			skb_set_hash(nskb, txhash, PKT_HASH_TYPE_L4);
- 		ip_push_pending_frames(sk, &fl4);
-diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
-index b9dd3a66e423..61ddc9549160 100644
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -859,7 +859,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 	struct rt6_info *rt = (struct rt6_info *)skb_dst(skb);
- 	struct ipv6_pinfo *np = skb->sk && !dev_recursion_level() ?
- 				inet6_sk(skb->sk) : NULL;
--	bool mono_delivery_time = skb->mono_delivery_time;
-+	bool tstamp_type = skb->tstamp_type;
- 	struct ip6_frag_state state;
- 	unsigned int mtu, hlen, nexthdr_offset;
- 	ktime_t tstamp = skb->tstamp;
-@@ -955,7 +955,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 			if (iter.frag)
- 				ip6_fraglist_prepare(skb, &iter);
- 
--			skb_set_delivery_time(skb, tstamp, mono_delivery_time);
-+			skb_set_delivery_time(skb, tstamp, tstamp_type);
- 			err = output(net, sk, skb);
- 			if (!err)
- 				IP6_INC_STATS(net, ip6_dst_idev(&rt->dst),
-@@ -1016,7 +1016,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 		/*
- 		 *	Put this fragment into the sending queue.
- 		 */
--		skb_set_delivery_time(frag, tstamp, mono_delivery_time);
-+		skb_set_delivery_time(frag, tstamp, tstamp_type);
- 		err = output(net, sk, frag);
- 		if (err)
- 			goto fail;
-diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
-index 53d255838e6a..61f28b9a2d34 100644
---- a/net/ipv6/netfilter.c
-+++ b/net/ipv6/netfilter.c
-@@ -126,7 +126,7 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 				  struct sk_buff *))
- {
- 	int frag_max_size = BR_INPUT_SKB_CB(skb)->frag_max_size;
--	bool mono_delivery_time = skb->mono_delivery_time;
-+	bool tstamp_type = skb->tstamp_type;
- 	ktime_t tstamp = skb->tstamp;
- 	struct ip6_frag_state state;
- 	u8 *prevhdr, nexthdr = 0;
-@@ -192,7 +192,7 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 			if (iter.frag)
- 				ip6_fraglist_prepare(skb, &iter);
- 
--			skb_set_delivery_time(skb, tstamp, mono_delivery_time);
-+			skb_set_delivery_time(skb, tstamp, tstamp_type);
- 			err = output(net, sk, data, skb);
- 			if (err || !iter.frag)
- 				break;
-@@ -225,7 +225,7 @@ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
- 			goto blackhole;
- 		}
- 
--		skb_set_delivery_time(skb2, tstamp, mono_delivery_time);
-+		skb_set_delivery_time(skb2, tstamp, tstamp_type);
- 		err = output(net, sk, data, skb2);
- 		if (err)
- 			goto blackhole;
-diff --git a/net/ipv6/netfilter/nf_conntrack_reasm.c b/net/ipv6/netfilter/nf_conntrack_reasm.c
-index 1a51a44571c3..6376555de1ae 100644
---- a/net/ipv6/netfilter/nf_conntrack_reasm.c
-+++ b/net/ipv6/netfilter/nf_conntrack_reasm.c
-@@ -264,7 +264,7 @@ static int nf_ct_frag6_queue(struct frag_queue *fq, struct sk_buff *skb,
- 		fq->iif = dev->ifindex;
- 
- 	fq->q.stamp = skb->tstamp;
--	fq->q.mono_delivery_time = skb->mono_delivery_time;
-+	fq->q.tstamp_type = skb->tstamp_type;
- 	fq->q.meat += skb->len;
- 	fq->ecn |= ecn;
- 	if (payload_len > fq->q.max_size)
-diff --git a/net/ipv6/reassembly.c b/net/ipv6/reassembly.c
-index acb4f119e11f..ea724ff558b4 100644
---- a/net/ipv6/reassembly.c
-+++ b/net/ipv6/reassembly.c
-@@ -198,7 +198,7 @@ static int ip6_frag_queue(struct frag_queue *fq, struct sk_buff *skb,
- 		fq->iif = dev->ifindex;
- 
- 	fq->q.stamp = skb->tstamp;
--	fq->q.mono_delivery_time = skb->mono_delivery_time;
-+	fq->q.tstamp_type = skb->tstamp_type;
- 	fq->q.meat += skb->len;
- 	fq->ecn |= ecn;
- 	add_frag_mem_limit(fq->q.fqdir, skb->truesize);
-diff --git a/net/sched/act_bpf.c b/net/sched/act_bpf.c
-index 0e3cf11ae5fc..d62edd36b455 100644
---- a/net/sched/act_bpf.c
-+++ b/net/sched/act_bpf.c
-@@ -54,8 +54,8 @@ TC_INDIRECT_SCOPE int tcf_bpf_act(struct sk_buff *skb,
- 		bpf_compute_data_pointers(skb);
- 		filter_res = bpf_prog_run(filter, skb);
- 	}
--	if (unlikely(!skb->tstamp && skb->mono_delivery_time))
--		skb->mono_delivery_time = 0;
-+	if (unlikely(!skb->tstamp && skb->tstamp_type))
-+		skb->tstamp_type = 0;
- 	if (skb_sk_is_prefetched(skb) && filter_res != TC_ACT_OK)
- 		skb_orphan(skb);
- 
-diff --git a/net/sched/cls_bpf.c b/net/sched/cls_bpf.c
-index 5e83e890f6a4..f9cb4378c754 100644
---- a/net/sched/cls_bpf.c
-+++ b/net/sched/cls_bpf.c
-@@ -104,8 +104,8 @@ TC_INDIRECT_SCOPE int cls_bpf_classify(struct sk_buff *skb,
- 			bpf_compute_data_pointers(skb);
- 			filter_res = bpf_prog_run(prog->filter, skb);
- 		}
--		if (unlikely(!skb->tstamp && skb->mono_delivery_time))
--			skb->mono_delivery_time = 0;
-+		if (unlikely(!skb->tstamp && skb->tstamp_type))
-+			skb->tstamp_type = 0;
- 
- 		if (prog->exts_integrated) {
- 			res->class   = 0;
--- 
-2.25.1
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -j8  dt_binding_check DT_SCHEMA_FILES=fsl,edma.yaml
+  LINT    Documentation/devicetree/bindings
+  DTEX    Documentation/devicetree/bindings/dma/fsl,edma.example.dts
+  CHKDT   Documentation/devicetree/bindings/processed-schema.json
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+  DTC_CHK Documentation/devicetree/bindings/dma/fsl,edma.example.dtb
 
+
+> 
+> Best regards,
+> Krzysztof
+> 
