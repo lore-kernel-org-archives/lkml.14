@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C13158D95;
-	Tue,  9 Apr 2024 23:09:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDEC158DBF;
+	Tue,  9 Apr 2024 23:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712704162; cv=none; b=TuldzEoBiz31a0NWHijPycLQSm38TVJoNsInpm9DTS1ttS+SU8cu+3F0b/Qklb8/Doi5nRQqhOmU5/ZdT6EBVUDXkkw/srs9MhMZuo5YKcz/MmrueQzQ+D+Zr2FCcAYc2t28jaCKVjiqGtGvFbwKz0pymfW1dURpzWuMl5IVt/k=
+	t=1712704164; cv=none; b=FPkkuv67qnd/CdteoUa/g+PjU82RTI6o+j1ROZNrXwy+6YesuCeFt8HruJM07uohzJsYbYHfLLzFFeo/3yBOi3mx/lcrKm1KOUYVM8/fCUo91duRK9V7gvw8zfc+G2ZNGiSCZ7yDDRDHg6+8GJpYEzH07e3WTXUWlfHWdEucRwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712704162; c=relaxed/simple;
-	bh=44f1BURDVDavtHs5VgCDimxWZS2jWuTMtVWaaTmGnks=;
+	s=arc-20240116; t=1712704164; c=relaxed/simple;
+	bh=9fQdU5nAO7R939RxH7SSdOIQ3j5lyXRYukuzfa+NXNE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fGW8WDUBUbzXdHdgXsXPNXuQIAEQLnITUEWAr0nwApZqi8jKcmV6nHPmq8q5njhRj0QTHsI3voFksOsBoII5WvREWmzM5lTEmry+u4zdIvkB5b1Rq17/Z/HRomOWClzMl0fyxX7aDnsmmkvgx1L8R/jmvp1icpmK7E9cva2yR9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCSlAEXM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCSlAEXM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDD7C433F1;
+	 MIME-Version:Content-Type; b=blyn0vpdpCIWQkgS5qyUmw08s72EvbubneMG8yfoZBRmzxVvARjmtgF3e0P4iTC1uhHOdVtAOof5zFObN/6XZNcXHoJP6bRCitccTJCMqrSpbJvtI7KwwJ+EfYQRPWzHLykT9JAjexQFB1YHWfGpzrtn+mm96UlczuKO/69Ge2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4227CC433C7;
 	Tue,  9 Apr 2024 23:09:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712704162;
-	bh=44f1BURDVDavtHs5VgCDimxWZS2jWuTMtVWaaTmGnks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eCSlAEXMyKvNcSJxudd6yoYMUYQ1HJHm298Ahmq93A2l00Mt63iOwFmxr2YoaLzo2
-	 2Vx1pMf1s+fzRX6MQH8NXMfRrlhB7ITaGx4WrZsorSyfXYLRInSJ5zc7M7Ng0Xlvau
-	 hpBWlVcBDLvsaLfU4vm0G/8gSmfRuD/KE9Li9UtNJ/nLNoPkv4xosoWlEXS1SEwVlm
-	 GsDlkPQpH8UngBnFA/utF5K2r1YTl9q5GIq6Pc0fWjQx3zV8mWuhT78G8iFTokZ+7+
-	 UUrQe6ZXl2rG07kwq0IG10r3o0HUhoNh/Qtg9ihkc5zoATkEiAFS0/vJsWLw2OlY7f
-	 xUiFRqESA56gA==
-Date: Tue, 9 Apr 2024 16:09:20 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Kees Cook <keescook@chromium.org>, Shuah Khan <shuah@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, linux-kselftest@vger.kernel.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: kselftest_harness: Print empty string, not
- empty fmt on PASS/FAIL
-Message-ID: <20240409160920.3bfe3eeb@kernel.org>
-In-Reply-To: <20240409224256.1581292-1-seanjc@google.com>
-References: <20240409224256.1581292-1-seanjc@google.com>
+Date: Tue, 9 Apr 2024 19:11:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
+ linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, Tony Luck
+ <tony.luck@intel.com>, "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+ linux-hardening@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Ross
+ Zwisler <zwisler@google.com>, wklin@google.com, Vineeth Remanan Pillai
+ <vineeth@bitbyteword.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Linus Torvalds
+ <torvalds@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>
+Subject: Re: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as
+ memmap=nn*align:name
+Message-ID: <20240409191156.5f92a15c@gandalf.local.home>
+In-Reply-To: <202404091521.B63E85D@keescook>
+References: <20240409210254.660888920@goodmis.org>
+	<20240409211351.075320273@goodmis.org>
+	<202404091521.B63E85D@keescook>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,11 +50,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  9 Apr 2024 15:42:56 -0700 Sean Christopherson wrote:
-> -	ksft_test_result_code(t->exit_code, test_name,
-> -			      diagnostic ? "%s" : "", diagnostic);
-> +	ksft_test_result_code(t->exit_code, test_name, "%s", diagnostic);
+On Tue, 9 Apr 2024 15:23:07 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Have you tested that to make sure it doesn't change the output?
+> Do we need to involve e820 at all? I think it might be possible to just
+> have pstore call request_mem_region() very early? Or does KASLR make
+> that unstable?
 
-.. warning: ^^ leading question ;)
+Yeah, would that give the same physical memory each boot, and can we
+guarantee that KASLR will not map the kernel over the previous location?
+
+-- Steve
