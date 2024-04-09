@@ -1,190 +1,152 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2117.outbound.protection.outlook.com [40.107.215.117])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC847E777
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651218; cv=none; b=Fbw1OV2tfRpOnGCU3u5MRH3dtDYBSdobT9W1W+mCAgywEUILDqC4KWMMopCPoptBRLtBeu7qZEctEQDf9m9Fxcp84Y8ZJRTdQBvUQbim8vrVNmECC9TV/90PQq9eJW77yAmaE1rwkinr7/khV3w1BKVaA/1a5wdRoe0J4ecGPKA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651218; c=relaxed/simple;
-	bh=ZVVZQhufHZgVYRPoViiMgUgHDRKoZRsicNrqLop/teo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=grgF4NKNskq4tBgDzafFAvkdvchC4rifvJGjMu87DbGW406Xiei3R5xJBuDUPD0nvZtzdD/cmnhdTammLbkhTsUtHQ326cqu9QuCDhc/ODYAXd3DryHZ20mhbjXXhnt/aTEzSg9kTh3+oiln67Y6awhgpsQA4MoPWY+u2pjEX3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2Ghk5W2; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2Ghk5W2"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ecfeefe94cso2614593b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:26:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712651216; x=1713256016; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ei1Crh3xKYkUssDLy2Y3ak8IjHOYPwPhmj2M8HC/g7Q=;
-        b=J2Ghk5W2gCEB0aYkxGY2E322Cjo94GTTUh0IJMz9+MLDbJb7m40yi3aAdRdajuqDD/
-         mrlcCOps9dNdzV4Qikq1ouFrVvsQUStKNWaCvuwWXkSnBUuJI7uS+xtmTrm7bi/hLv1E
-         BshgUb90wMhKiML0Q3BZ63jdNZqFXMB+IsuFpZXP9ekabxWdGd9NLawnyQR0IX5sv8Ry
-         eipjO12gFqXzOi+tCTABUKexhnpcnkaZdqYjIL4CBVXYIwT8yzgI76eNnT/QPDhYScND
-         2JMXz4sUwgj8OIoz/51CZJBw3XYRTC8KLGn16cqFICuQzJ5kbZgOjV2HdDCHFC+47mAu
-         Wgcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712651216; x=1713256016;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ei1Crh3xKYkUssDLy2Y3ak8IjHOYPwPhmj2M8HC/g7Q=;
-        b=ksnQ8nm3eFyosLmWbeCx+ZNZgJm3MULNEEJHmx4icbRl65FQFzDaJ6tvSLo5oh6UyR
-         tyNq1sz+4irgijBm5/LIZ0H3lO/rvmAi7G2W+6elfqtERjr40bhlpkbBz4xEcFE38UUf
-         dAjE8GeDzUu87yCqUIR/baT4BMAQku/hNR9NFRtahVoqMohBBdyCG64nAkwguheoZwIY
-         Y0i2Eh6PO4Y5wRKxkiOocoz0/Wct769N53gj3MmIwHu5lCti5ZCwu7NDJkxNcVba5umf
-         3AHWeGkuN8GpcUAUfRvwV6CWWiGN0VcexJoa+5mUqDQXyjRMo6p3pHMpgOgiDaIM5ME1
-         T3Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVk3GnYitxYAUnLZyiWEWUD1B3fRzbVnuLfEXWOSdGnrikN7Kyz5u13ScdHPyFhkmjVbtf2dbHXte3FbWHMKHDG7+5FYfQunuQhtkEu
-X-Gm-Message-State: AOJu0YwTqQiv3pqvYonUUaVtTL2ucqlZOgP4MFWpL6SECrIjRdIQPoWo
-	4Ma3gHRyWzLvrfzxrZxebiEio4MJRRRMQQEEnMAfQHpjhM+S5WNRs9SdR7m9GTM=
-X-Google-Smtp-Source: AGHT+IHZGO/8Oq5G4AI8d7uAa0Xfd/UfJnN/mN1F1Zgkmt5jIyqoC0gKP++Z8vrGbui309CoYrBrbQ==
-X-Received: by 2002:a05:6a20:430c:b0:1a7:5413:1e6d with SMTP id h12-20020a056a20430c00b001a754131e6dmr3319733pzk.4.1712651216427;
-        Tue, 09 Apr 2024 01:26:56 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 01:26:56 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: baolin.wang@linux.alibaba.com,
-	chrisl@kernel.org,
-	david@redhat.com,
-	hanchuanhua@oppo.com,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	kasong@tencent.com,
-	ryan.roberts@arm.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	willy@infradead.org,
-	xiang@kernel.org,
-	ying.huang@intel.com,
-	yosryahmed@google.com,
-	yuzhao@google.com,
-	ziy@nvidia.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched swap_free()
-Date: Tue,  9 Apr 2024 20:26:27 +1200
-Message-Id: <20240409082631.187483-2-21cnbao@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0220B7FBD7;
+	Tue,  9 Apr 2024 08:27:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.215.117
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712651223; cv=fail; b=XdNgO9b4QLqym1cNBNsN0qbL3xm69L9tMwShx56EdyYcCZ2Pj4a1xga3sa6Z7URB6K2rQMMK7plina2PkIhzMtmyamSsOGpkhHqYz8VkjAXEaPqPSv3qE693XcwICBXhCcteDmU5n5pNEESnrtbNd/i2UzySEm8f7bDq7+kOjHw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712651223; c=relaxed/simple;
+	bh=TmZWYyicXG37+LTfCZZrtm3PGbmycE3JYAMCwFeACT8=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=S7iUT0+ChEYUpV6AjZpDqnuXOhNRVsjZ8mPlx/AFDZAtifewPejsSnohIMVs2D9u4POFY3m7/4sWeDPJruHXK6NpPOKh9GAzgbY8s+les1EAjEsTvFvkY0kvqMGp+eYInvgYdNQ+iTpFXLZdiVST1BPhx17UdIrBlkx6B5y6BwI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com; spf=pass smtp.mailfrom=wesion.com; arc=fail smtp.client-ip=40.107.215.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wesion.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wesion.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T/9i/GfcCCJvvZUgX988smsZ+qDBj0DjqOcov7eNu5j6yZanN74JNkTWspA6+sMMWPDFmjoghuklIizCto4pCGr3AdfFrIRdgqetEsMVBRR9PiPiIUjXrGHLojmLWyzdQ3porbTC8nGsMNF44x2VG6kjCAK6rvlxrFzcHbIIa97dwIEEgOlf8/Vpb6K6J2VFkWNEktIGQcBB7PsouGex0zVTrLLfSSgjNf2kASu0snxSHnOuu00YvJ407SvnBaWSM59rCDlwalZhuvXHeC9R5X0KAKVsPskyBePqsI4fbeozauoU5pCs8gxxCshMVO37R41Yu4gO9wevuUmmmriuog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bH0GRc/H/DLf7+uJGT/IyjQljXh2DM8YRGEjSfdu8JE=;
+ b=kUKmt79BRMtIECebP/5L4r+pfSxwMFDWIZ6fFBdN1HGvxHVuNaFSr4g1Eh/fjeKfqkMIRHpcJ0B2anmgWQrSO6kodi/bPGZCnLY6vAW2ZHWzOtnQgMFnAPugAvsVk3DXjWtPxnlMowxmfxsV24a4QbvI+JtDVeF83nN/zv2iTAWMTiwJmbO79ORd1bY5+A/ZJiOlqAlIkwUK4T2RqXG93V87/Jl0l3Sxfw9EwzOlpdXAyDy2t+Ov5CaiJP5LQcKOrkkV26unV8QMuIUszhnnzw+By7C4MGiJIxLGCoCwCeSFFz8tN6wR3QVZmNZuezYOH5d5+159/tM55cTli26Qcw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wesion.com; dmarc=pass action=none header.from=wesion.com;
+ dkim=pass header.d=wesion.com; arc=none
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com (2603:1096:400:26a::14)
+ by SEYPR03MB6880.apcprd03.prod.outlook.com (2603:1096:101:b5::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
+ 2024 08:26:55 +0000
+Received: from TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::c4f9:d4f1:c115:f1ca]) by TYZPR03MB7001.apcprd03.prod.outlook.com
+ ([fe80::c4f9:d4f1:c115:f1ca%6]) with mapi id 15.20.7409.042; Tue, 9 Apr 2024
+ 08:26:55 +0000
+From: Jacobe Zang <jacobe.zang@wesion.com>
+To: neil.armstrong@linaro.org,
+	narmstrong@baylibre.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: quic_jesszhan@quicinc.com,
+	sam@ravnborg.org,
+	nick@khadas.com,
+	thierry.reding@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-amlogic@lists.infradead.org,
+	Jacobe Zang <jacobe.zang@wesion.com>
+Subject: [PATCH 1/2] dt-bindings: panel-simple-dsi: add New Khadas TS050 panel bindings
+Date: Tue,  9 Apr 2024 16:26:41 +0800
+Message-Id: <20240409082641.359627-1-jacobe.zang@wesion.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240409082631.187483-1-21cnbao@gmail.com>
-References: <20240409082631.187483-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYCPR01CA0070.jpnprd01.prod.outlook.com
+ (2603:1096:405:2::34) To TYZPR03MB7001.apcprd03.prod.outlook.com
+ (2603:1096:400:26a::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB7001:EE_|SEYPR03MB6880:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	mcQi3yi8vMqi+7nEg17bEc4eS5kWeUBbMD6syID1CteEiBVKh/guq9EI5oUVQbP9gLkC0kYdV+N8wlgUkz/93RFhs6zOyBGer+f87lLniMl3Y4vXYDePTC3AgrJU7q2JJF0pbGlcuX46P62T0vJxS9iqze8UOEmB+RTGjfvohF8HF1nZBB5SrOQEc70WdeczLSBeWmvEGVfD+p6SXDPEvUVaM2iInQWDfQc9IgeCINovkTosWup8QShiCyF3UEXfzvFcVQBhky5eojk96eA/D4EA8/4OGYojgckaHMI802XHpN8OKM0QIpf0/7Zby4dqxu39aLO8IaNdLGoXsmGii2vxsgVKdFiGEda+LGAtcYNgC1b2RBlRqg9YsnEnEr2d9O2lM3IAmnsgtFh9qglHApJFTrxA97mrSlr/zetj725MiJWlrrnqhITo6KSjxEJ2KzZtutifke6YiB22A+ZrdgKSVqrBfAq4NxH0u7837CYRCqDVcrqq1ZN45aaGpWcs7G8a5VE0XMQMk0oteWqbSL6hXyoKamAWyBYFLUT9dCUa2ZdvIk7gXcGZXMb9Kq3sb/mGZ7YAVq3dIboMHA7v2LiFa/o+fbO4MxO1/dv4VD0+rn+oNaVbINrtYKTDI4ut9fmFY5hbPuxP5Ro+cDWb0XHFaCrLyiKXptbwnCz3dhjXUUX1hnx3NDC/Qx1bnyEroBSnlUFwP6dXjfjnxZPAGOHD67VX3+YXh8VqFSNRV7w=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7001.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(376005)(366007)(1800799015)(7416005)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cTdRTXdCbm1BaUJ2SmZrbHFpN3E3VFpnMmFscE9mQ0doeGN2NTF0d1NQSHJI?=
+ =?utf-8?B?eW81b1hVQmJNYW9KSHVCSUpNUWlPdXZVa0lUSlVMS0ordmU5TU1MZEk2T21l?=
+ =?utf-8?B?b2UrSjFkSTBRZ0FZM1AwSDZyNFBWY3gxWXRDQVU0ejdGVnFrSlZMMndxVEFs?=
+ =?utf-8?B?MXhVOVFqSmxjRmRZekw3K2RuMStLMkk2SGovd093NWppWEVyRS80SklnSWFn?=
+ =?utf-8?B?ZWphb0dXc1JRZC9MUGFIYjRPRUFvMnhjdW55RVVsOTJiOEsveXVFb3pDVmw5?=
+ =?utf-8?B?SjJVM2JObkpaeDNWeHIzRVloRUJvbFJYR0ZhSFpIWTg2dXRob04rYlY4M1Q1?=
+ =?utf-8?B?eitiNFBuaWpKQ285YWpFRUZpUndnSmlCMTgxZ2MyZmdCNTlrT1hIN3N4UjZW?=
+ =?utf-8?B?bU8rV2JXa2FMRzRsTDllRDNpM0MvbjFCWUdJVTIxNWlzeE5TSTdic2NnVzhx?=
+ =?utf-8?B?QnJDQUxGdTl3c0liY0xZQzMwNlJxMFU2dk5IZGRjWUpsQkpjbVliTnRZZmRJ?=
+ =?utf-8?B?V1FxL1BjeTJQTzgxS1JMSGovbjJjVFZxdnJFT0dDK0NsYlA4K3lmSkFUalpE?=
+ =?utf-8?B?bWdOdHNOMTI0VGwvaWhDTGpDMlFGaHJuTGE0Z3BTeTlIR1M2SDRvaktJRFV6?=
+ =?utf-8?B?MGFDcklyQ1J0UDdVbmVzMnk2MmI5eXZFYjZMOTFmYmY4MnRTWmYvYUl1ZjAr?=
+ =?utf-8?B?THhaOTRtaVdDTWt0UEliRmQxazEyek1BbnVqY2JNaWlVK0VKS01RbjdRVWpo?=
+ =?utf-8?B?OEtIM25vd3orRGd1TDNGS0paLzlGb0JyT2xEQzg5aEwrVmFrNWFDUlBDNXBN?=
+ =?utf-8?B?ZnZVV1V1U0Q1ZERtM0FtVUpBMDM1b1FrT0I4dnVpVDBVM29pcU01eXlSaTkr?=
+ =?utf-8?B?Ukttc0ZZMGozdkh0RUZtOHhqNU5MT1p5T2hiNTRHcjJsZ2FaMUI0M3BuNXhp?=
+ =?utf-8?B?NGlxOXdOUHVGQ01LRy9PQ2g5SmlpUEhzWU9FaExLVHZ3cThDQUEvYnZVOWY5?=
+ =?utf-8?B?K1RNZmgzaHluSzJ0bVROTjA5YVV6TjFSQ2RrR3Y0THpGZGFtM1p0RE5SNUt3?=
+ =?utf-8?B?ZFhIdHFObG1aKzBJc0ovVmoxRVlxT0diZmY3NnRKN0V3cUFVcVh0N2I0aDc4?=
+ =?utf-8?B?djNXcmpwRUQ0MXJObmZxcVZydHJ0K295dHp2eWI3dEZYOEthSm5MMmtSSWFN?=
+ =?utf-8?B?ZUFjRTVQTDlJeHlTTmhxVVZpS0hGblBJRUliUUtWOU1IOWlSRHp5K2xFa2t1?=
+ =?utf-8?B?SWNTZ2xpNlpvSG9TVGVGYlFZVEJXM04zYVA5azgzc0NkS1FwbDc2WmJoalh1?=
+ =?utf-8?B?RXcvZW5YWjROSXFramdyTkJvQUF3L0gyTldMZjVoZGJXK1hqeFlsd2tkVENq?=
+ =?utf-8?B?TVgwTWZUeFZXejlqZEVoWWNFVU9DUDdieUpwTGcxSUo3eVpraUdrTW1HZ1Ju?=
+ =?utf-8?B?cjkwY2xMQ3E1UWhmNmpQNnJXWDYvaTlGTlgra2Y1Nkh4cWFoOExISDM5Z3pQ?=
+ =?utf-8?B?NGY0cHJTazZzS3VrVkVuZVo3S0o0OWt3RGlkR29UNTlpQUhFakx2SFpyb3Ew?=
+ =?utf-8?B?U25YTDZqbm9XYlFTSEZ0S0ZGbDNEekxQQnhOckdtT1hlaEQ2QjNtS3ZsNXk0?=
+ =?utf-8?B?TElnWXRhV001MWNFaks4VTFTUmV2RnN3SFpUZXh5Q2dJWDdNSGEvYm5ocUR4?=
+ =?utf-8?B?SkV1S2gzSG0yYTA1MUs5ZWxIdnB2ekVNRTRoemRTTDhjR0tmQXBYNldwSXk2?=
+ =?utf-8?B?MEU2aG10U2NtNmVUZXBtSzlReEZIdEVMMjFHT0hhN1RzcGg1L1Bsckd0Kzhv?=
+ =?utf-8?B?UVpzc1hrYktWS1luZllqbllYUFc4NmRVeWN4ZTNSWXhlcVFhWXFmTDZsc2dD?=
+ =?utf-8?B?aTAvL1VwT3V6UnZzS0tETG9XUHBSY1RYZUh5TXNtVyt6WStxRSttUGdaQzB1?=
+ =?utf-8?B?THV0M0UvdStTS0UrZnk2OGV5NForcDdQalNWaWJEb0RiVGlpOEQxV0ZiNWhF?=
+ =?utf-8?B?VkIraUhBVlpFd1dBMEJqKzZZSFRuTmIva0dldWpwc01sTVV6dGh5c1dyZTZo?=
+ =?utf-8?B?TWg1YjE1Q1RBakxnVVF6eGNlYmFOZ0pETkhYNGgwRnNKMUwwTHg4VDVDRkNx?=
+ =?utf-8?Q?BhNErla7Wlvf1o+V2CP5tB717?=
+X-OriginatorOrg: wesion.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 209dcff2-5c3e-4c6f-90f2-08dc586ed0c7
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7001.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 08:26:55.4281
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2dc3bd76-7ac2-4780-a5b7-6c6cc6b5af9b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wcdiWu3UIL9+jzFpAp8bgnRNXmMimvMEEwVM7ATNNCoxN5/9WqEB1E0GIxpSeZwD6+BU78tOUwAPf2vgsOfTOg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB6880
 
-From: Chuanhua Han <hanchuanhua@oppo.com>
+This add the bindings for the New Khadas TS050 1080x1920 5" LCD DSI panel
+designed to work with the Khadas VIM3 and VIM3L Single Board Computers.
 
-While swapping in a large folio, we need to free swaps related to the whole
-folio. To avoid frequently acquiring and releasing swap locks, it is better
-to introduce an API for batched free.
-
-Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
-Co-developed-by: Barry Song <v-songbaohua@oppo.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
 ---
- include/linux/swap.h |  5 +++++
- mm/swapfile.c        | 51 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
+ .../devicetree/bindings/display/panel/panel-simple-dsi.yaml     | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 11c53692f65f..b7a107e983b8 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
- extern int swap_duplicate(swp_entry_t);
- extern int swapcache_prepare(swp_entry_t);
- extern void swap_free(swp_entry_t);
-+extern void swap_free_nr(swp_entry_t entry, int nr_pages);
- extern void swapcache_free_entries(swp_entry_t *entries, int n);
- extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
- int swap_type_of(dev_t device, sector_t offset);
-@@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t swp)
- {
- }
- 
-+void swap_free_nr(swp_entry_t entry, int nr_pages)
-+{
-+}
-+
- static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
- {
- }
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 28642c188c93..f4c65aeb088d 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t entry)
- 		__swap_entry_free(p, entry);
- }
- 
-+/*
-+ * Free up the maximum number of swap entries at once to limit the
-+ * maximum kernel stack usage.
-+ */
-+#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_CLUSTER)
-+
-+/*
-+ * Called after swapping in a large folio, batched free swap entries
-+ * for this large folio, entry should be for the first subpage and
-+ * its offset is aligned with nr_pages
-+ */
-+void swap_free_nr(swp_entry_t entry, int nr_pages)
-+{
-+	int i, j;
-+	struct swap_cluster_info *ci;
-+	struct swap_info_struct *p;
-+	unsigned int type = swp_type(entry);
-+	unsigned long offset = swp_offset(entry);
-+	int batch_nr, remain_nr;
-+	DECLARE_BITMAP(usage, SWAP_BATCH_NR) = { 0 };
-+
-+	/* all swap entries are within a cluster for mTHP */
-+	VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUSTER);
-+
-+	if (nr_pages == 1) {
-+		swap_free(entry);
-+		return;
-+	}
-+
-+	remain_nr = nr_pages;
-+	p = _swap_info_get(entry);
-+	if (p) {
-+		for (i = 0; i < nr_pages; i += batch_nr) {
-+			batch_nr = min_t(int, SWAP_BATCH_NR, remain_nr);
-+
-+			ci = lock_cluster_or_swap_info(p, offset);
-+			for (j = 0; j < batch_nr; j++) {
-+				if (__swap_entry_free_locked(p, offset + i * SWAP_BATCH_NR + j, 1))
-+					__bitmap_set(usage, j, 1);
-+			}
-+			unlock_cluster_or_swap_info(p, ci);
-+
-+			for_each_clear_bit(j, usage, batch_nr)
-+				free_swap_slot(swp_entry(type, offset + i * SWAP_BATCH_NR + j));
-+
-+			bitmap_clear(usage, 0, SWAP_BATCH_NR);
-+			remain_nr -= batch_nr;
-+		}
-+	}
-+}
-+
- /*
-  * Called after dropping swapcache to decrease refcnt to swap entries.
-  */
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+index f9160d7bac3ca..e194309f31b72 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+@@ -36,6 +36,8 @@ properties:
+       - jdi,fhd-r63452
+         # Khadas TS050 5" 1080x1920 LCD panel
+       - khadas,ts050
++        # Khadas NEW TS050 5" 1080x1920 LCD panel
++      - khadas,newts050
+         # Kingdisplay KD097D04 9.7" 1536x2048 TFT LCD panel
+       - kingdisplay,kd097d04
+         # LG ACX467AKM-7 4.95" 1080×1920 LCD Panel
 -- 
 2.34.1
 
