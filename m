@@ -1,132 +1,141 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C39679CC;
-	Tue,  9 Apr 2024 06:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DC679CC;
+	Tue,  9 Apr 2024 06:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712645219; cv=none; b=NHoUhM0g077DiNHvPTpopyxiq3G65vwaPCLPitLX8dSlGuDCjzrfZe7lJIeWR7kGh/f9suder2+VUHbLyFYq6k44Zs9Fm/DZJDBpGmKurXUzRGpEnGqZ5M/NGpCjLb8c6OV3uEiBB6Dnojtr3mF7ocDOZ09wR56cEbmYKcR00VU=
+	t=1712645553; cv=none; b=GK3rosStEUp9BXUF74vLtfzBBlMwFQSnMrKvv9ALJ5QNgDQjbI9H253SBJQ1H4HwalLmAt/5siZKAl5LdFQdwUwglPzFFaB3OCNYknC16j8OFOVhX5stWYXSW532Q16eMhfLCwoSeXuuNtal5dqTsnmx0V2AvR4NDQsybcd0JVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712645219; c=relaxed/simple;
-	bh=6B0Ymq5uRpwiiFS6gQ99BSAtE8O9TZ3H8I3TtZjcVoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jpQj9pD7347FQNVJyAO2M4Cy8o96kl7Gd9NzWxsN//YHaHT5A466VRjbhA0af4Lfllc2qv/CU1Qp5Mt68mxQ9+pkym6bhQVUOf62dSJLVbcJpYQ4IcpW+Mzdyj8jBQQlgu8RYHkaDRJoDbIc0xgohYePYJWdLbT0fZLHLROL8Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=E5uSnUx7; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712645553; c=relaxed/simple;
+	bh=xoULbzlytF5RGrLomSCcvTJXxEPOJ61JtuUKMiYDaX0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vls1WuvJ6kpTx3+bm4gPRFwbY2PZCzNEKzPgaZkBhiY6YUGExqxeLm/Mx67eJdtuVXT8ruShTKlIfLO8xm+MvMM5y1sLc6wLjYlQi8C1Kw9ui0+TCoEh1KNHtyAw1sIOoju3Uq4gCAu5lGHGDVJIFH/dnr1Om+LO7thJAvpkG5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aojo4/BD; arc=none smtp.client-ip=209.85.166.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="E5uSnUx7"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 04B2AFF807;
-	Tue,  9 Apr 2024 06:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712645214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=6ryoNB5XpSfloz/6q8pX2eMqwyZYr/QlxtN0Gg+K+v4=;
-	b=E5uSnUx7BqUopQsp6ozzcgkCtcsjKkTgQQQyQ+wBwuE+uj9lHySZO1iUQ9b2o7+P0u89PH
-	2LAX5RZvUhgIPKEeIC2EvxuLYCV3/90NsUohDmxPZvqhkn7nxzg0awuHEH9kegMILNnSyO
-	+t2xm2w4BKEqiCH1CRYK20/rxyLsdySXXt+GwZ9g6b3ARfxAe1KNlG0U8mdY0hT3ufcVeu
-	AuyLZ9uHy5IRCOwNL9hB7kkYIeELzK1ASZ5CLUwjH6VJtY6bDqgJbPT9RHJHDQD6tqRdRP
-	G+2jGiHTCyDKiINh/P7U+q7ibBdpbCbO/eLKygVyjYM8b7XnON+2NGJEqn8e4w==
-From: michael.opdenacker@bootlin.com
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] riscv: dts: sophgo: add initial Milk-V Duo S board device tree
-Date: Tue,  9 Apr 2024 08:45:04 +0200
-Message-Id: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aojo4/BD"
+Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-36a2fcb4075so2209655ab.2;
+        Mon, 08 Apr 2024 23:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712645551; x=1713250351; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b352HOzGF/NbEGXGXSDOWNzIVRBqY7hL8lL0mia73U8=;
+        b=aojo4/BDZvxmy9ZRpJ2jFkxMnncBYVcIO7EeaASKa35NqhK7o9HGxyXMUeM9eXeUCu
+         YNIH0gCcuaAOWa40Ar7NkJzXnTtR7dIOyLp4zAP4goptQ0I+wJ/JXJZkvqzezCYwwOL1
+         ZkOAh12YgTLrGeWoo6sh6uvcb16bY7pD22Jew7a3+39ZytK/ssuy3Nw80VuKtFyKNNLH
+         LVdFlZDV9EiOtUStmBJScZGimhf368S/WcQbmOqKEBImjuRD1X96hZpHlUVytdZcEZfF
+         zC9T9NK6H3MBHCbDKDQGAfwYYeUBwrgheMB+nv7LEQX3vFb34b6a2yjA/O8Q4qRaXQH6
+         n5LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712645551; x=1713250351;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b352HOzGF/NbEGXGXSDOWNzIVRBqY7hL8lL0mia73U8=;
+        b=KA9bxIpjZ8M+Ajcig/bLouN40nyms1YL0yYpN2yIDkb3BWiVG6psuzrfMEyCwI5Loc
+         s+FxIDAbQQHNKOBaC7ijiKtS6T50PlOFC7sY3o3L/7Q+ISP2NZlAsutG/DmG0hxZ4ZIP
+         DvP8KEyfOUVwhTnjazdvil116ApVEqZkDl9y3EUM2LjBi5AiGZm2igd4njot6W6qVL7d
+         3tHXssMMn4FCizNMvq9QHp/Bupjofzzu0x6lGdpgi9ZHFrm5qxz9XwB8VdjtKLQwGufS
+         60yYw7nxb+xSAAhxZ5CZI1J93FTfo5MyzTihJl2VMTKHvwjY+BeDarmyglcYaxMhq6WA
+         x8JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV7APQwVpFyptlfoV2l1Vk0kPac8VqrPRartncrn/GafZyW2WAuSA+4r23wNXYOpOnCBvUrinXTQUnxi+7bjXxfcXYh4aLgE3TInGNPqWhRMWkGwTxlqTYwTIQv3Jet7WRZDq5XGzD7RClBP9sMPmGnpwAdHXagmoOpzOqeGzPYaVWXuGai
+X-Gm-Message-State: AOJu0YwnhIn0T4HSKBnDyZfINBxEjkCg2nGeSfLTZVrmbcLkVSzAwT8c
+	mT8c+f7pAlAp2XMmuqB6oqA7vxfsuSrxDVMk/aZt8EGqcbhhloF+6vrSRk0A3cvJbimp3Rhxz56
+	rJJgr+anmWQwl5ao7+SxMQuEMtpE=
+X-Google-Smtp-Source: AGHT+IHMPxlU5dxKgUHu5K8XuZe+qftwM2k80rxd63c4T1s7URnjvCONzf8sqUJd4pD7fgxGFHmmOvmrnrNpio20lb8=
+X-Received: by 2002:a05:6e02:13a8:b0:36a:2351:60a with SMTP id
+ h8-20020a056e0213a800b0036a2351060amr6153201ilo.25.1712645550968; Mon, 08 Apr
+ 2024 23:52:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: michael.opdenacker@bootlin.com
+References: <1712561233-27250-1-git-send-email-shengjiu.wang@nxp.com>
+ <01734d96-bed2-4f7e-bbba-7068f14c822b@linaro.org> <CAA+D8ANiKH7Oc+KAjD_BMp9P2EVeM8Q6dLGFCC8a83bJXUpPEA@mail.gmail.com>
+ <69ab2bd9-401a-42ff-90fa-6600dd071722@linaro.org> <CAA+D8AOP6D+xUNF_XJXt-8dMi2qFyVh-Sbe8k67CzvUbnzrwoQ@mail.gmail.com>
+ <51e482b3-ffbf-46f9-972d-875d106c2474@linaro.org>
+In-Reply-To: <51e482b3-ffbf-46f9-972d-875d106c2474@linaro.org>
+From: Shengjiu Wang <shengjiu.wang@gmail.com>
+Date: Tue, 9 Apr 2024 14:52:19 +0800
+Message-ID: <CAA+D8AOTtCvsaU4efkEq-7LwSACzuP9qf+e5KeV4OGFgU7OdBQ@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: dt-bindings: imx-audio-spdif: convert to YAML
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com, broonie@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+On Tue, Apr 9, 2024 at 2:30=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 09/04/2024 03:37, Shengjiu Wang wrote:
+> > On Mon, Apr 8, 2024 at 11:06=E2=80=AFPM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 08/04/2024 10:01, Shengjiu Wang wrote:
+> >>>>> +
+> >>>>> +anyOf:
+> >>>>> +  - required:
+> >>>>> +      - spdif-in
+> >>>>> +  - required:
+> >>>>> +      - spdif-out
+> >>>>> +  - required:
+> >>>>> +      - spdif-out
+> >>>>> +      - spdif-in
+> >>>>
+> >>>> Do you need the last required block?
+> >>>
+> >>> Yes,  one of them or both are required.
+> >>
+> >> And? It's already there: that's the meaning of any. It is not oneOf...
+> >> Before answering please test your changes and ideas. I pointed issue
+> >> here and you responded just to close my comment. That does not make me
+> >> happy, just wastes my time.
+> >
+> > Maybe I didn't express clearly.
+> >
+> > we need at least one of them (spdif-in, spdif-out) in the node.  which =
+means
+> > that we need to select  "spdif-in",  or "spdif-out",  or "spdif-in and
+> > spdif-out".
+> >
+> > So my understanding is that need to use "anyOf", if it is wrong, please=
+ let
+> > me know.
+>
+> Third time: it is wrong.
+>
+> Can you test the code instead continuing this discussion
 
-This adds initial support for the Milk-V Duo S board
-(https://milkv.io/duo-s), enabling the serial port and
-read-only SD card support, allowing to boot Linux to the
-command line.
+Every time I change I definitely do dtbs_check test.
+But There is no error reported by dtbs_check.
 
-Signed-off-by: Michael Opdenacker <michael.opdenacker@bootlin.com>
+But finally I understand that
+anyOf:
+  - required:
+      - spdif-in
+  - required:
+      - spdif-out
+  - required:
+      - spdif-out
+      - spdif-in
 
----
+is equal to:
+anyOf:
+  - required:
+      - spdif-in
+  - required:
+      - spdif-out
 
-Tested with linux-next as of Apr 9, 2024,
-using the risc-v "defconfig" configuration.
----
- arch/riscv/boot/dts/sophgo/Makefile           |  1 +
- .../boot/dts/sophgo/sg2000-milkv-duos.dts     | 38 +++++++++++++++++++
- 2 files changed, 39 insertions(+)
- create mode 100644 arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-
-diff --git a/arch/riscv/boot/dts/sophgo/Makefile b/arch/riscv/boot/dts/sophgo/Makefile
-index 57ad82a61ea6..e008acb5240f 100644
---- a/arch/riscv/boot/dts/sophgo/Makefile
-+++ b/arch/riscv/boot/dts/sophgo/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_ARCH_SOPHGO) += cv1800b-milkv-duo.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += cv1812h-huashan-pi.dtb
-+dtb-$(CONFIG_ARCH_SOPHGO) += sg2000-milkv-duos.dtb
- dtb-$(CONFIG_ARCH_SOPHGO) += sg2042-milkv-pioneer.dtb
-diff --git a/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-new file mode 100644
-index 000000000000..cf2cec3cc369
---- /dev/null
-+++ b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts
-@@ -0,0 +1,38 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2024 Michael Opdenacker <michael.opdenacker@bootlin.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "cv1800b.dtsi"
-+
-+/ {
-+	model = "Milk-V Duo S";
-+	compatible = "milkv,duos", "sophgo,sg2000";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+};
-+
-+&osc {
-+	clock-frequency = <25000000>;
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-2.34.1
-
+best regards
+Shengjiu Wang
