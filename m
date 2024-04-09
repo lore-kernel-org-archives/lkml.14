@@ -1,96 +1,64 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9495466E
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C47C74435;
+	Tue,  9 Apr 2024 08:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712652477; cv=none; b=K8yzbPWk7ODAIZttO2FZFdIWVf63K7it7tAJz7hgkhr0qFbM+ZFeHUPl2JRuJvNveeO8GQdbWUL5AznA4L+uu5Wca0SPtGxyy/U4492ml4kwFwYlFbA8TvYzowQHIHxjJuxLv+Rz71mqf24djoQWg8Gso+VI2oAFaTnKyufFPF4=
+	t=1712652485; cv=none; b=SALegB6iUmwWfmWV0lj20AF95x7yoGhL00oDlf/PqxN3zpk5N6GbDcMozRn4gi3wZRmdjkSTVajIoOwccXKnNvGWmVhl5Bd9lL8ey5wbixphULAJs+4YdaNyQYuH550ssBjhx3B3eJtzC5y51f2ggbWRUIlYi+C2mnWVzHbwqV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712652477; c=relaxed/simple;
-	bh=el3TXw5D31KKwUR3W4iZvt+PANl/VSX8X2P72QHQ6I4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ovV1z13iYXZxw5wNR29IBlzYgiH9RKM14h/X3tAd7S0xpeHwH5eN97K0WB3AkIIO8VzgTz4LTmP2OfAp7D9TQ7Uy8NcJKB+GMJtdQlYmfT5knrUaNvDQcr2PLLi1n71wfmThkeia5fWqYjWtiOYAzCGk0Mo8TQGSrakgodfRl/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=n+3nZD00; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="n+3nZD00"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712652466; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=NLmQBJY/YAR0kMQs21Xq2pa2nHPXvvDmIRP/f0OQLFw=;
-	b=n+3nZD00jTkSfMN5CsxOR+vqo34YQRfEQzuVa7b95pOPeSp/Ph/CBJc3VZHXsu85OthO1bktIIrShcrH5eYuATTYO689WPHetEbzlfacNYc7N3Y2SCX1TVEE12AutkpUVECtHBmFYxmo5J+7uFuBIvWc/sGag8zaBoSOUpNy7GA=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W4E2Dby_1712652464;
-Received: from 30.97.48.141(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W4E2Dby_1712652464)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Apr 2024 16:47:46 +0800
-Message-ID: <51fd6e0b-6fa2-4473-b22b-68c11230b2f5@linux.alibaba.com>
-Date: Tue, 9 Apr 2024 16:47:44 +0800
+	s=arc-20240116; t=1712652485; c=relaxed/simple;
+	bh=5UtZwVwg0+eLbI4V2GVivZZc1pMjPWaJxNjlZleeagw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ysnm4osUUpLlmZhQRU3DQUgglJFFotIPH72J3yKbcix0mzglQCQj401HWgW/4WGR/mdKs7gkxzf9DhV9VPNmkjAvLtq/q9VTTtFfhX5Hljw1RJvhMmAUmWS5B24FvUdS+clrr0tq20lLyWtayMmYl64mPp5ZttMy2ubIgeNmeYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92F14DA7;
+	Tue,  9 Apr 2024 01:48:32 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A7FB3F6C4;
+	Tue,  9 Apr 2024 01:47:59 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf test: "object code reading" test fixes
+Date: Tue,  9 Apr 2024 09:47:36 +0100
+Message-Id: <20240409084741.405433-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: derive fsid from on-disk UUID for .statfs() if
- possible
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, xiang@kernel.org,
- chao@kernel.org, linux-erofs@lists.ozlabs.org
-Cc: huyue2@coolpad.com, jefflexu@linux.alibaba.com, dhavale@google.com,
- linux-kernel@vger.kernel.org
-References: <20240409081135.6102-1-hongzhen@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240409081135.6102-1-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+A few fixes around the object code reading test. The third patch
+appears to be unrelated, but in this case the data symbol test was
+broken on Arm N1 by the first commit.
 
+James Clark (3):
+  perf tests: Apply attributes to all events in object code reading test
+  perf map: Remove kernel map before updating start and end addresses
+  perf tests: Skip "test data symbol" on Neoverse N1
 
-On 2024/4/9 16:11, Hongzhen Luo wrote:
-> Use the superblock's UUID to generate the fsid when it's non-null.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+ tools/perf/tests/code-reading.c            | 10 +++++-----
+ tools/perf/tests/shell/test_data_symbol.sh |  6 ++++++
+ tools/perf/util/machine.c                  |  2 +-
+ 3 files changed, 12 insertions(+), 6 deletions(-)
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+-- 
+2.34.1
 
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/super.c | 12 +++++-------
->   1 file changed, 5 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index c0eb139adb07..83bd8ee3b5ba 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -923,22 +923,20 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
->   {
->   	struct super_block *sb = dentry->d_sb;
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> -	u64 id = 0;
-> -
-> -	if (!erofs_is_fscache_mode(sb))
-> -		id = huge_encode_dev(sb->s_bdev->bd_dev);
->   
->   	buf->f_type = sb->s_magic;
->   	buf->f_bsize = sb->s_blocksize;
->   	buf->f_blocks = sbi->total_blocks;
->   	buf->f_bfree = buf->f_bavail = 0;
-> -
->   	buf->f_files = ULLONG_MAX;
->   	buf->f_ffree = ULLONG_MAX - sbi->inos;
-> -
->   	buf->f_namelen = EROFS_NAME_LEN;
->   
-> -	buf->f_fsid    = u64_to_fsid(id);
-> +	if (uuid_is_null(&sb->s_uuid))
-> +		buf->f_fsid = u64_to_fsid(erofs_is_fscache_mode(sb) ? 0 :
-> +				huge_encode_dev(sb->s_bdev->bd_dev));
-> +	else
-> +		buf->f_fsid = uuid_to_fsid((__u8 *)&sb->s_uuid);
->   	return 0;
->   }
->   
