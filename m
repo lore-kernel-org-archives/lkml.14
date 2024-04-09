@@ -1,170 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC681156F5D;
-	Tue,  9 Apr 2024 19:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D131386C0;
+	Tue,  9 Apr 2024 19:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712689957; cv=none; b=AqK+fYCDcQc6FeCzQpXERwbGexl+XaQdb0Quwld1ffliMQIviv0oIdIapqLvK1h+W1RtSO6Doz6E9gjVvQss46agbVeaif6wxFrDjL1Alx+bIhP/3rgPfzsZ3WvU4RrbpUAyKpnO4UBbWR21BP/7dbtU/GIKJI903NUHu9JH25A=
+	t=1712690300; cv=none; b=u6pbo4nnSC/YKdXvjd5qBq9z/1ZCFfa1bckh95QNgOCylPILruYU5EwDacSUlF3WxaZEr+W0+TalAu9TKMlmw8ZbV75/3BpdFujJ8MLXfu1ODzBquiVGBBzAJbgf30CguwOAF2Pkpw3nbKLn+rf511Ci6lpGHxvSltmgvOybg1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712689957; c=relaxed/simple;
-	bh=DfuXTGkraLWHkNJuO+9SBnAAUaw6k8nUYkhO8ZyCDKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=ckmDcL87brtxbnPGOwQUBM2/qSPMdJY+gKNyebvYFOVilfduc5c/loYldwU554cBj+hz0mUxPQSpjbZfyx4zW3FA1JF5i2QuTcCdlJr31mGQOu0ZYaTFBxkmlBUHomK9wW+qAZjVAB5Q9oUt2/4pWNA3w677LMDmDOCfyk3dppU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u5vtu7Tk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712690300; c=relaxed/simple;
+	bh=vIPEq0qMiHclQVvq8xpETzbQ931z4s7f7vlrnFlBVzw=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=pYEBQYc0h9O6PcdGDfNsNFl6uqkst62tjhDSMWlGO4OlnZFxvZ0l72gU0YUPx79SXW4K7XDscWZr5nwpq/UFlALbFb9t1YSzOu5HsA4JitcNdlNc+UabDeRZe6NIzUCd04R2waCZoASF3AO+9IG0n4+RjnxKw52TToi6krSLHHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=BN+2ubYN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PqsFDpNi; arc=none smtp.client-ip=64.147.123.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u5vtu7Tk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69D7C433F1;
-	Tue,  9 Apr 2024 19:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712689957;
-	bh=DfuXTGkraLWHkNJuO+9SBnAAUaw6k8nUYkhO8ZyCDKM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=u5vtu7TkhAT4Whr3XXyEt7LbQMEwCqFiFl3pUziIPU1kp8AGW7WDFIof0cHHjpHcL
-	 X0BlnbIX68Z6vz3irSxDq0XI7SP9nkanqb0Efexz1n64JWM4XWeW9FItbBdMyYQUB7
-	 OHOofB+P5raIG8wSWpNGyHecFaOtCz9eNaZqKeSjq7M8ZljQOi+fOhtR8Rb9Fmc6dN
-	 i9pjJxtEq9+bY7HpQbFVKAXnfw0w8LAB2IQlL0gpIo76MN1duPZDhOAuoTCyCRX6aR
-	 0+WPQsylN8Zm6grDseHtdReZmCAFN9X7ypdq22Om0vrlvNEdzHDT0GaS3/u1jYfkPF
-	 QnbS/56STmeDA==
-Date: Tue, 9 Apr 2024 16:12:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: BISECTED: perf test -v "Test data symbol" failing on Intel Hybrid
- systems
-Message-ID: <ZhWTIuyB9p1ORbQH@x1>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="BN+2ubYN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PqsFDpNi"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfhigh.west.internal (Postfix) with ESMTP id EB7F3180013F;
+	Tue,  9 Apr 2024 15:18:16 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 09 Apr 2024 15:18:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1712690296; x=1712776696; bh=o8lxh9R6h5
+	L5tAhymZmWIAm7eTkGHdYv7aBWmufujxo=; b=BN+2ubYNzJbcOg64RW9QkZWmZY
+	vKXfdXM6cPnX4GZW1Px+oZkJm6qvDk5wj/eVxTo99Sz9jSsk7f/B6rmlIfZQSsbA
+	ksf6e9kRTyp+aZcV695TiOefx+LP136U8nIVWIW/P6p5vE/EnjtmOHH6k4QwmhXH
+	KS6Mj5YGFNhyWkhZ7ENkv9ekchR4AEpF57hukM+fnqbwmoF1TT7DH23gHXsmlRCZ
+	1u2miU9/NvQzK+MQmjX5pm/qEKbfP304ShI4lso1Z3+/JP4N1nkRdCMrw4gJ5Jwp
+	t/aE8qlFBAr+5pSKouUEklJDGj6j1Byp0we7cXMA1B1Fw+XWxp3ZarJn1bGQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1712690296; x=1712776696; bh=o8lxh9R6h5L5tAhymZmWIAm7eTkG
+	HdYv7aBWmufujxo=; b=PqsFDpNi6OfyhZ3pP+Q+OOSkeeGlHrolUQ175qlMQdy3
+	I+A1GIYKKDyM3rV5gY4FyKpINAfFDpnDD+T6XLLkevn6V23qx9r0aC2dgS7q5jsD
+	l2c/FOCnKYalqtVU9LkBCzUObjDOFcHhUVaUtrjhlhcb5AZEWZz7wX3frHPkqGT+
+	h82Fhm6DUxrOMegjoCQLvTHSD2K7iIO31uYi7qhthsFqh4azm10ZWcB4haW/PIWL
+	dEBO8QqsgtfDHOuKKJUzaakHr/5+fzRpJRmTlAbLUm5ohQExhLT8KQKhp1oPGzd7
+	q6YiBvxx7wBgeE3/H0bMaBaBxBPzVnlBrm4UMZ9KMg==
+X-ME-Sender: <xms:d5QVZniExI9Sel0DM1-NxYGXRs7oyhqA5HFohICGhH78p-IsBNbDkg>
+    <xme:d5QVZkBTRjxj6yeFrsxCjK5sa9JDGPEZFYzbYFEZPpaVqI2Y2OZhiXENrXPhG3gxK
+    HWppJ0ObDIcqSfuwck>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehgedgtdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:d5QVZnFKHQ8CutuWgJqFzzWTdreE7d9vyedoUUMHBZquqH06UOZXMw>
+    <xmx:d5QVZkSkaaPr8X68unUCUfRODOCsDau2OgPHpeUvXDSHDYrk_rUTRQ>
+    <xmx:d5QVZkzNgyArw6vyoDlKsTYL2pf_aSt4DGX0VM0ScXID_M1v_PN3OQ>
+    <xmx:d5QVZq5Nh-35WCDSryDKskyaozM_iHkNM_liZRrB9lAMKr2pN6qTGA>
+    <xmx:eJQVZrn3u7uGmA3JyNa65s45Fr1C6vaem8M6Q8ATYbHUMO53GcGccKmn>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 219A5B6008D; Tue,  9 Apr 2024 15:18:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-Id: <1f2e1994-408a-41d3-9b0b-a08d9478e8b8@app.fastmail.com>
+In-Reply-To: <20240409162521.GB3219862@dev-arch.thelio-3990X>
+References: <20240404151713.3493098-1-arnd@kernel.org>
+ <20240404151713.3493098-2-arnd@kernel.org>
+ <20240409162521.GB3219862@dev-arch.thelio-3990X>
+Date: Tue, 09 Apr 2024 20:42:23 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Nathan Chancellor" <nathan@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
+Cc: "Masahiro Yamada" <masahiroy@kernel.org>,
+ "Nicolas Schier" <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH 1/4] kbuild: turn on -Wextra by default
+Content-Type: text/plain
 
-root@x1:~# grep -m1 "model name" /proc/cpuinfo 
-model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-root@x1:~# uname -a
-Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
-root@x1:~#
+On Tue, Apr 9, 2024, at 18:25, Nathan Chancellor wrote:
+> On Thu, Apr 04, 2024 at 05:16:54PM +0200, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>
+> I have not done any LLVM builds with this change but if this is going to
+> be in -next for a little bit, we should be able to get any regressions
+> handled quickly.
+>
+> I am in favor of more warnings but I am a little nervous this will make
+> compiler upgrades (or tracking their mainline) even more difficult. I do
+> not have a feeling for how often warnings are added to -Wall and -Wextra
+> so this may be unfounded but the kernel's -Werror use complicates this
+> in my opinion. I can engage with the clang folks to try and be given a
+> heads up when a warning is going to be added to -Wextra, it would be
+> good to have someone do something similar for GCC, so that those
+> upgrades do not cause something like this change to be rolled back.
 
-Bisected down to:
+My impression is that most new warnings get added to -Wall rather than
+-Wextra anyway. If they are added to -Wextra, it's still easy enough
+to turn them off individually unless W=1 is set.
 
-commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
-Author: Ravi Bangoria <ravi.bangoria@amd.com>
-Date:   Thu Jun 15 10:47:00 2023 +0530
+> It is easy enough to back out of this if necessary though, so:
+>
+> Acked-by: Nathan Chancellor <nathan@kernel.org>
 
-    perf mem: Scan all PMUs instead of just core ones
-    
-    Scanning only core PMUs is not sufficient on platforms like AMD since
-    perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
-    Scan all PMUs instead of just core PMUs. There should be negligible
-    performance overhead because of scanning all PMUs, so we should be okay.
-    
-    Reviewed-by: Ian Rogers <irogers@google.com>
-    Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Thanks!
 
-root@x1:~# perf -v ; perf test -v "Test data symbol"
-perf version 6.4.rc3.g5752c20f3787
-111: Test data symbol                                                :
---- start ---
-test child forked, pid 522202
-Recording workload...
-malloc_consolidate(): invalid chunk size
-/home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 522208 Aborted                 (core dumped) perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM
-/home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: kill: (522208) - No such process
-Cleaning up files...
-test child finished with -1
----- end ----
-Test data symbol: FAILED!
-root@x1:~# perf -v ; perf test -v "Test data symbol"
-perf version 6.8.g63c22868714b
-116: Test data symbol:
---- start ---
-test child forked, pid 526540
- 954300-954339 l buf1
-perf does have symbol 'buf1'
-Recording workload...
-Waiting for "perf record has started" message
-OK
-Cleaning up files...
----- end(-1) ----
-116: Test data symbol                                                : FAILED!
-root@x1:~#
-
-Further details:
-
-(gdb) run mem record --all-user sleep 1
-Starting program: /root/bin/perf mem record --all-user sleep 1
-
-
-This GDB supports auto-downloading debuginfo from the following URLs:
-  <https://debuginfod.fedoraproject.org/>
-Enable debuginfod for this session? (y or [n]) y
-Debuginfod has been enabled.
-To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
-[Thread debugging using libthread_db enabled]                                                                                                                                                  
-Using host libthread_db library "/lib64/libthread_db.so.1".
-                                                                                                                                                                                               
-Program received signal SIGSEGV, Segmentation fault.
-0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-213					s = perf_mem_events__name(j, pmu->name);
-(gdb) bt
-#0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
-#1  0x000000000045c47f in __cmd_record (argc=2, argv=0x7fffffffe420, mem=0x7fffffffda20) at builtin-mem.c:152
-#2  0x000000000045d69b in cmd_mem (argc=4, argv=0x7fffffffe420) at builtin-mem.c:514
-#3  0x00000000004ffe38 in run_builtin (p=0xe08aa0 <commands+672>, argc=5, argv=0x7fffffffe420) at perf.c:323
-#4  0x00000000005000ac in handle_internal_command (argc=5, argv=0x7fffffffe420) at perf.c:377
-#5  0x00000000005001fb in run_argv (argcp=0x7fffffffe23c, argv=0x7fffffffe230) at perf.c:421
-#6  0x00000000005004e8 in main (argc=5, argv=0x7fffffffe420) at perf.c:537
-(gdb) list -5
-file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-(gdb) 
-
-
-
-(gdb) list -5
-file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
-Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
-(gdb) p j
-$1 = 0
-(gdb) p pmu->name
-Cannot access memory at address 0x64ffffff9c
-(gdb) 
-
-183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-184                                  char **rec_tmp, int *tmp_nr)
-185 {
-186         int i = *argv_nr, k = 0;
-187         struct perf_mem_event *e;
-188         struct perf_pmu *pmu;
-189         char *s;
-190 
-191         for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-192                 e = perf_mem_events__ptr(j);
-193                 if (!e->record)
-194                         continue;
-195 
-196                 if (perf_pmus__num_mem_pmus() == 1) {
-197                         if (!e->supported) {
-198                                 pr_err("failed: event '%s' not supported\n",
-199                                        perf_mem_events__name(j, NULL));
-200                                 return -1;
-201                         }
-202 
-203                         rec_argv[i++] = "-e";
-204                         rec_argv[i++] = perf_mem_events__name(j, NULL);
-205                 } else {
-206                         if (!e->supported) {
-207                                 perf_mem_events__print_unsupport_hybrid(e, j);
-208                                 return -1;
-209                         }
-210 
-211                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-212                                 rec_argv[i++] = "-e";
-213                                 s = perf_mem_events__name(j, pmu->name);
-214                                 if (s) {
-215                                         s = strdup(s);
+     Arnd
