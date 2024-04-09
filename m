@@ -1,570 +1,188 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2105.outbound.protection.outlook.com [40.107.13.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C332B7F49F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654554; cv=none; b=tjd88QVEvGNs0sqdHOnTaRakTOuvRgLk36ns4UE8c3q+fiJ/PgvcJ5xM97GCJTp0QPDS3v9gN5uYeFhnqVkC7D0PtpHs+M2EsLHokwFrXe4mU6m6XbhQ1da6KTRdQ0NSiuhjD7YARfmAFCdSIFn9/Pfnsic+m8KyKCFAfROl9SY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654554; c=relaxed/simple;
-	bh=fsnS/YV1NWziysEQgeTQ1jNdZoYf9cXsu0mSloilZqc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NVKxEuJ/zkdkNjsLVziAjOfnE4XioETYfvYVQqkt9jldOClS6oe8TGOuc8f86gKRj5bI6g4k/wPnSczUxjX2AHb/QUsZG+i84iFqpZEYJ1FM4GK2BJIinencgjmq1d6oO2j8Jlnxr50Txpvx3nNpTIsiTD7bHRLJJp1YVJ7XBRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8FtmcG6; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856C08061D;
+	Tue,  9 Apr 2024 09:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.105
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712654577; cv=fail; b=o5rOEwunDrpgl7+ligsP6JUHOpsQVFLlhJQSvKS1aRLr0OABasxw/HDM+kOxMD7WQu3qNtQAlVUEhQTNy99A7ZDF9nf3oeE29412aDWeVZsLzc0OL3Y4FsVyjU/Nkyzqs86dAxWMzb4Z3D2aJyXRyp38le6TXdcQ3/Isx1SL2dM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712654577; c=relaxed/simple;
+	bh=Gzc+z0v/RIB1UUQ4IGJiK+C6fBFgEW68d4jBUvf9Zfg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lt7xnrodWZ5NDnztQejdduXC/rkDV+iQN72Nr0FDPsqwNNunXP9rCX+SDIZmQdm+4/MNhucpBjO93JOzpwmk2PzY6eXxnLqE5EIGun0Yt1kRc3kkTGNLdeqqoyPx11qb8iqPq03Uwfn25H9Q1fQn3JvDl09NhlVqkLyjM5Fprk4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=oKEp2fOb; arc=fail smtp.client-ip=40.107.13.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8FtmcG6"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-479ccc89792so3266433137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 02:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712654551; x=1713259351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HFje2M9/40QnlMN6BEmY41lT0dxyYIrB11kfQDhgWsc=;
-        b=H8FtmcG6kxWiLEKUGm6XdxOrLURgstmQIy0FDD+9wWS0kEPY05TTkjXFge56ejB1pW
-         TX9N8aKZ/qZ/4bttAqlbdi9zgaxLaIQWZUTKJYk8gVIcbqdmybMB56ReWFsPCSzQsIug
-         ybwLSdmUZU8le2HWe3yQexmmwcYGpkZ1dhP8mdT/pgY3MN6tMO7bmE7WLYffuAFm9ZIm
-         FVj8wHw3qq7YbFiMl381tue8LKoHivqcuBTZf/aQ0gaXlVPQ4qh/7YSescpZGh2ocnFg
-         95qWsPyBoFbyVW9IgxZ0zfoyFHdyy/YcWc5oajQL08+KKE92y/5WOULxeB+mqUYxZjar
-         GSzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712654551; x=1713259351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HFje2M9/40QnlMN6BEmY41lT0dxyYIrB11kfQDhgWsc=;
-        b=TyCVtqwzlw1t1M57yu3xYU2M+AI7zAMT9Ga8cKB3fZa+/sSq/VAwiHZ6gt9/rdiKSf
-         5OsMfjKIVtMypLCT0FWb8bElg1aDufDndQle69n1mh/S9WOPaWRWmrgYucuo/xHPIrwL
-         4lCXJPETkG5nmrv/uhWU8XaZ2rAWNj/q686xx53qyOrx27PwTO2xgSZjMIvbZlewMlED
-         r33jCEEVUojDD79imnlcYVQ7bmOeAVlIRXoRR+N6a3DTA73d6pBpRfdLkQy8OYmS8UVH
-         JfYPLFjS4u4avg/rHJFYzGTBw3uep5LZbfTrvkcfEOEDLUqRZLIE/SD9doQ1S+ua4c7U
-         QwfA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+zHlqVxmGR7QEQr+H4D/IWJt8Rn46Jd50RdVPXYEM/b0QLXfbdQhNNkEvsaev0gUE7EmfdRP5EQ13IQSgFPByrsRiprG3mq/eP8j4
-X-Gm-Message-State: AOJu0YzsiUQD9u9Rz6YAoFit+7m3ibZeRVgQq4fTmB6a7RLtxQv1KfCA
-	X51+TxcMK59pnIyYQdUJ/jZioMVThdr9UWvmWbuQTBHBUFaSM4q1ZIajaKpoWsgyGMAOTJbBE+y
-	2C448XWD7OP0cEmrKR1fxR0kunac=
-X-Google-Smtp-Source: AGHT+IFBicjJw3w+HVzH6nA33AVfGdoXgqq+/dkb6zWGdAPLodbtJFmfmAbdMIJlGlAI02JJNrlrgRrAcCCDjeDIOFk=
-X-Received: by 2002:a05:6102:4716:b0:47a:150a:1fa9 with SMTP id
- ei22-20020a056102471600b0047a150a1fa9mr738879vsb.12.1712654551532; Tue, 09
- Apr 2024 02:22:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="oKEp2fOb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FdWmn7i8VjpFA08ZLGrE5q7VT489ju/77Bj1ylrNnv9SFc5LyjA9F1GKyLolxXMsqB4PBy2OndufVRL2vRY1sejVpguOd7XHz98sefEK85YGzO7GBJTrE244929X/oLQH8zCq6zIYbtw1NR5yDSlNtAecgcAWTpDbbEcH+er+vBiBXJkAhIniKTRNE4+MzgKOwJg4V6bD08XnKeXm+LbEd64YQ9Ou8651VLy/pNz9T34YdZfvL9WjVf9aqQ+YJr8/kGlThlzNxrldu02J+FX6aSGHtonibijvkr0RhP518hKz3Px5EQd1JVhUTOpUjgfvY0GOomWqgTwdcf6k5GJfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=01y7rUwcotKi72Z7yEbm1QIRBlYvdU5gNvyG0k/qEA0=;
+ b=GXagRJ14X85o7Az9P3USn+TjPzQ07y0n+597zMDXcp6YDSl8XC38mxiVfI3WiGPUNBf2WyLLXaY+gbqqku5RVUfC52TSItNNuCnjTiFsVlQyqVuA7nAVmeffHwMTrObnxJbbuGYKdVWPUMH+eYaFyDHc0MqwiVtFVMtbD05WqM75pA+PTCiG9/LfuyAKJpBYYX84HzbpK/+XiAd7fqaQ8UgjGZzAs/qpj4XBKXIX1JCSn5N+xFSvOlbkUKwTW8CZl7k0mbX+552fua1RUN/YD97h+QqBfMrQysLsKsZ9F2T5iVF4SkUlELryZhmaXOfXia3Xuaau+KTLBSpTyb6dhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=01y7rUwcotKi72Z7yEbm1QIRBlYvdU5gNvyG0k/qEA0=;
+ b=oKEp2fObv77RzJnEvSPXKeazSWM9U6pFdzpn3l2zBCuts0Ct1GhOxVaHgNR0QA5s19O5PIGdcjcxy/zrw2BopjESfzJawusn8fnmvQ4hyfwYN5dP91Zu+ZF6rLsM21YgaLjAOaZzuTKHoTI33du60jzrpsDymYrHTWTtMvWJunI=
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
+ by PA4PR04MB7679.eurprd04.prod.outlook.com (2603:10a6:102:e0::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
+ 2024 09:22:52 +0000
+Received: from AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::33cc:db75:c850:63a4]) by AM9PR04MB8604.eurprd04.prod.outlook.com
+ ([fe80::33cc:db75:c850:63a4%2]) with mapi id 15.20.7409.042; Tue, 9 Apr 2024
+ 09:22:52 +0000
+From: Pankaj Gupta <pankaj.gupta@nxp.com>
+To: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	peng.fan@nxp.com,
+	ping.bai@nxp.com,
+	haibo.chen@nxp.com,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Pankaj Gupta <pankaj.gupta@nxp.com>,
+	Varun Sethi <v.sethi@nxp.com>
+Subject: [PATCH v4] arm64: dts: imx8ulp: add caam jr
+Date: Tue,  9 Apr 2024 14:50:40 +0530
+Message-Id: <20240409092040.3870497-1-pankaj.gupta@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0023.APCP153.PROD.OUTLOOK.COM (2603:1096:4:190::6)
+ To AM9PR04MB8604.eurprd04.prod.outlook.com (2603:10a6:20b:43b::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408183946.2991168-1-ryan.roberts@arm.com>
- <20240408183946.2991168-3-ryan.roberts@arm.com> <CAGsJ_4xMaO8AWMGc4Od-FLWBhhT-u8f7QbR11VsqD0uqH3Kp6g@mail.gmail.com>
-In-Reply-To: <CAGsJ_4xMaO8AWMGc4Od-FLWBhhT-u8f7QbR11VsqD0uqH3Kp6g@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 9 Apr 2024 21:22:20 +1200
-Message-ID: <CAGsJ_4wpu2Nq0y3z7LYjPLJ1ZBi+BNRNKkyUPsXKDAg1POLjLA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/7] mm: swap: free_swap_and_cache_nr() as batched free_swap_and_cache()
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Huang Ying <ying.huang@intel.com>, Gao Xiang <xiang@kernel.org>, 
-	Yu Zhao <yuzhao@google.com>, Yang Shi <shy828301@gmail.com>, Michal Hocko <mhocko@suse.com>, 
-	Kefeng Wang <wangkefeng.wang@huawei.com>, Chris Li <chrisl@kernel.org>, 
-	Lance Yang <ioworker0@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM9PR04MB8604:EE_|PA4PR04MB7679:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	hfcD7w1IIoib/9VMBCZWdl6v0BogzXVGboUteuEUQ2T+KkdDQka5L0uIrfdSHV4wy3LI0PaAss1JCUtQIowLtemcwCimOGQn5Pg2X4MCm4PcPZHZaErewBVYRaeRVGm6oTcELDsOEHUVEZokRGtR4Q0VlpxmFcRS6aUCUHHFTe8kPdsb8c/P9kdM3xEHnUNpeN4A54hJ8nvB/N5uODYgjBq/piq8jIDg/u220mqxrQ88Qety2FK/C3Y3KP74mdvJnDsr/PUqGVG5f7cuOe6Ox9lZP2OMcQluMkktm/2MAmeNg2CnVpd8twEen/DPdIY83RbKdlilbbJdtpuBdzP6hXc3dk+GbyVbSH9fuuZs8fViX8MQ4mDDeVP2hgL0vpLcvBpcBqUjtOTqUuuFfNIPQM19X2sy0eUtgyXqMe9YRDH9EQU8FfQI8liYpAgh931vAwblJlOg1tcsc5vYwEZV9mdMistJlB/SHjuX6F3vLFsK3tes4UuupYXZTA0vqYZF/iPiVtZ+OYoxAr+6qqSgALM+7eoL38Z5B+rxGnry0yhelPHNpSYuLIPMVjk0ttHJu8stuhpDo9T9rnTZHlL1ZfCnHr+MJ/dUbZc3PsvNSpzkbcdleksAUIWk+UoPUNkw2NwiAoOGhUVeN9jzs0r6xKnUAOM7kjmAXKCPAC++XLt4VaIC0HtRNAK3tuhxgPmt5CfqUqghcSc4cyIIOrUbL9yiyy158LL8xIDmI6qDrVg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR04MB8604.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(52116005)(1800799015)(366007)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?na4qfg7w8Zt8UZL6snvLimGTbjqyUxWgXvdJCVf2Ew0iYse6I8CcSC8h+NfA?=
+ =?us-ascii?Q?lpJ00hjBvuC0arq0xh1s3ocJonPOfQT38Y+UI8DuKpP/bVIC1r//KlI20zJz?=
+ =?us-ascii?Q?Mf98oCnhZxxqGuu3UrgtzPAKh+fWkX0A3PJCYcU2/x2tu018hKT5KEdtwPKe?=
+ =?us-ascii?Q?HuyXKd7GGvUG+9OVkkibKGXcZhF5TDzAucLDFgrAQq23u6T4voiI9sQ0VTaD?=
+ =?us-ascii?Q?uKrie+WJG75DmL57iAdSmD+AufNvtpjYa1xPg8PyYHkn06RHC1tgC/ti1RaI?=
+ =?us-ascii?Q?xRoCCFG4m/c+xkvrM9tYtSDDM7dkYNLzOzDMBaXLf7RxRHqZw1rfe5epuWvH?=
+ =?us-ascii?Q?6FRTahmb9Bh6DeJm033Nnff2UOfLBBkIAJESUhgjqPMI3Xa2bOXamjE1J6zt?=
+ =?us-ascii?Q?pKQr10uzZrtEkVfxuAT/3qEVPPpUMw9J5Kk2zriwUZTgG7eq6uEK9dhMdCWi?=
+ =?us-ascii?Q?8egVPEtJGgtC06oxjYhoDF51PKc+zAlcSIvagT157tyqEYDOL98BrEgC4fVr?=
+ =?us-ascii?Q?le/KznDnzVHW/uuf0aR4R1Ujgs6EPDwFCcctGado+LU+OGpYOeFjK8Y6TJfj?=
+ =?us-ascii?Q?z0x4+0VgwD+3JAzNi1bgTUiyyLRWb6rpSPvHvPSn8nK0oHmuABAS/PlOgRp/?=
+ =?us-ascii?Q?oBcwiPSOq5LtGDckwwzu7BsXl83Mrxk08Ny6AskDfqiB2GMVYF6Yo309jYcG?=
+ =?us-ascii?Q?3sUuvW3i8EToyx+XM8ri4SBA1avImU5c/TaXF2lZiehSBkuYJpIndpBJ+EPu?=
+ =?us-ascii?Q?hF6NomLm5rr9usxcTIaqj8FKwy+XBe0wUXkliS7X8aZtYdRv+KMbPVgpKg8l?=
+ =?us-ascii?Q?jTQ0/f1ptY84RHqUOubBPhQLrCoj/0+tv1SAnDV6jQa9JuhHa4Fai6FZDfni?=
+ =?us-ascii?Q?T3nADwcQZ9lDHVktrXZeXV2jeB2mx+moxwNc60qsJ2ARHCA6gepQhkdBq1v0?=
+ =?us-ascii?Q?yQIYH3UHBeyMbuIG47mz7Z3m9OMX2OPUsGQKlODyIZoi1UAqMLOKtcVLvDp4?=
+ =?us-ascii?Q?9bNAOVSuOC8soitlHGcgAstK8IbVtc/XaHqH2tb3mJA9m4nU7Q35LpE7UB/L?=
+ =?us-ascii?Q?JadiXWISvi+UrThw4ZoUDBMXpURn3l5NYMQXYHi1wg9vyzg7beeb+QHqKC8Y?=
+ =?us-ascii?Q?5tGWMI8JD5/h0y4fWJlZS4IjX0c+VAEsFGSXPKkrWecbWg9vq6XkOdXqGxmF?=
+ =?us-ascii?Q?TfsztMYb0Vy/9Rv2G6QypjRaksFGqasxALHbJ8evXC87fuimWn1Nd5ZpM/Ah?=
+ =?us-ascii?Q?pjslx/H+7OjYWk4v338+xzafMhaol3gW01qSVeKEbBzHr4cqneaYzeBw1s3i?=
+ =?us-ascii?Q?yI8fJedOBClLHaTu3cxKQiNeK81LlvJxnsg1aJZlcJ2utpswWy3qU1D5aZdq?=
+ =?us-ascii?Q?WG9pBJfN9FCRPYNlSq6U0hdjBnYRT88fKQQtIJkgUQWE5HqsUkCOpQ0AEmmC?=
+ =?us-ascii?Q?HgW0hFiu98AXGFKyxOfiWBKebYURl7iln1NpGSTmtKFi/DPzj89isFT0IQPm?=
+ =?us-ascii?Q?htDZCUKhBYw6FkDh/X4h0PnzwS+3IWpSmIGTGERZtO5ezfpTrkW9lSd3GRcL?=
+ =?us-ascii?Q?EUmPQmD0CRThsd2nIn85+zABQkOxWr9wYXWUBWwz?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ac2f58f-e217-4e73-8122-08dc5876a181
+X-MS-Exchange-CrossTenant-AuthSource: AM9PR04MB8604.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 09:22:52.0820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 64B7H5AfIzx6yMSsWLs83cy527zEWibLj+ULuRZ3YlSe0YB5Qovp2tzYjHSz2jxdWkmG0wY4HI0jd4v0GLD8jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7679
 
-On Tue, Apr 9, 2024 at 8:51=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrote=
-:
->
-> On Tue, Apr 9, 2024 at 6:40=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com=
-> wrote:
-> >
-> > Now that we no longer have a convenient flag in the cluster to determin=
-e
-> > if a folio is large, free_swap_and_cache() will take a reference and
-> > lock a large folio much more often, which could lead to contention and
-> > (e.g.) failure to split large folios, etc.
-> >
-> > Let's solve that problem by batch freeing swap and cache with a new
-> > function, free_swap_and_cache_nr(), to free a contiguous range of swap
-> > entries together. This allows us to first drop a reference to each swap
-> > slot before we try to release the cache folio. This means we only try t=
-o
-> > release the folio once, only taking the reference and lock once - much
-> > better than the previous 512 times for the 2M THP case.
-> >
-> > Contiguous swap entries are gathered in zap_pte_range() and
-> > madvise_free_pte_range() in a similar way to how present ptes are
-> > already gathered in zap_pte_range().
-> >
-> > While we are at it, let's simplify by converting the return type of bot=
-h
-> > functions to void. The return value was used only by zap_pte_range() to
-> > print a bad pte, and was ignored by everyone else, so the extra
-> > reporting wasn't exactly guaranteed. We will still get the warning with
-> > most of the information from get_swap_device(). With the batch version,
-> > we wouldn't know which pte was bad anyway so could print the wrong one.
-> >
-> > Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> > ---
-> >  include/linux/pgtable.h | 29 ++++++++++++
-> >  include/linux/swap.h    | 12 +++--
-> >  mm/internal.h           | 63 ++++++++++++++++++++++++++
-> >  mm/madvise.c            | 12 +++--
-> >  mm/memory.c             | 13 +++---
-> >  mm/swapfile.c           | 97 +++++++++++++++++++++++++++++++++--------
-> >  6 files changed, 195 insertions(+), 31 deletions(-)
-> >
-> > diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> > index a3fc8150b047..75096025fe52 100644
-> > --- a/include/linux/pgtable.h
-> > +++ b/include/linux/pgtable.h
-> > @@ -708,6 +708,35 @@ static inline void pte_clear_not_present_full(stru=
-ct mm_struct *mm,
-> >  }
-> >  #endif
-> >
-> > +#ifndef clear_not_present_full_ptes
-> > +/**
-> > + * clear_not_present_full_ptes - Clear multiple not present PTEs which=
- are
-> > + *                              consecutive in the pgtable.
-> > + * @mm: Address space the ptes represent.
-> > + * @addr: Address of the first pte.
-> > + * @ptep: Page table pointer for the first entry.
-> > + * @nr: Number of entries to clear.
-> > + * @full: Whether we are clearing a full mm.
-> > + *
-> > + * May be overridden by the architecture; otherwise, implemented as a =
-simple
-> > + * loop over pte_clear_not_present_full().
-> > + *
-> > + * Context: The caller holds the page table lock.  The PTEs are all no=
-t present.
-> > + * The PTEs are all in the same PMD.
-> > + */
-> > +static inline void clear_not_present_full_ptes(struct mm_struct *mm,
-> > +               unsigned long addr, pte_t *ptep, unsigned int nr, int f=
-ull)
-> > +{
-> > +       for (;;) {
-> > +               pte_clear_not_present_full(mm, addr, ptep, full);
-> > +               if (--nr =3D=3D 0)
-> > +                       break;
-> > +               ptep++;
-> > +               addr +=3D PAGE_SIZE;
-> > +       }
-> > +}
-> > +#endif
-> > +
-> >  #ifndef __HAVE_ARCH_PTEP_CLEAR_FLUSH
-> >  extern pte_t ptep_clear_flush(struct vm_area_struct *vma,
-> >                               unsigned long address,
-> > diff --git a/include/linux/swap.h b/include/linux/swap.h
-> > index f6f78198f000..5737236dc3ce 100644
-> > --- a/include/linux/swap.h
-> > +++ b/include/linux/swap.h
-> > @@ -471,7 +471,7 @@ extern int swap_duplicate(swp_entry_t);
-> >  extern int swapcache_prepare(swp_entry_t);
-> >  extern void swap_free(swp_entry_t);
-> >  extern void swapcache_free_entries(swp_entry_t *entries, int n);
-> > -extern int free_swap_and_cache(swp_entry_t);
-> > +extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-> >  int swap_type_of(dev_t device, sector_t offset);
-> >  int find_first_swap(dev_t *device);
-> >  extern unsigned int count_swap_pages(int, int);
-> > @@ -520,8 +520,9 @@ static inline void put_swap_device(struct swap_info=
-_struct *si)
-> >  #define free_pages_and_swap_cache(pages, nr) \
-> >         release_pages((pages), (nr));
-> >
-> > -/* used to sanity check ptes in zap_pte_range when CONFIG_SWAP=3D0 */
-> > -#define free_swap_and_cache(e) is_pfn_swap_entry(e)
-> > +static inline void free_swap_and_cache_nr(swp_entry_t entry, int nr)
-> > +{
-> > +}
-> >
-> >  static inline void free_swap_cache(struct folio *folio)
-> >  {
-> > @@ -589,6 +590,11 @@ static inline int add_swap_extent(struct swap_info=
-_struct *sis,
-> >  }
-> >  #endif /* CONFIG_SWAP */
-> >
-> > +static inline void free_swap_and_cache(swp_entry_t entry)
-> > +{
-> > +       free_swap_and_cache_nr(entry, 1);
-> > +}
-> > +
-> >  #ifdef CONFIG_MEMCG
-> >  static inline int mem_cgroup_swappiness(struct mem_cgroup *memcg)
-> >  {
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index 3bdc8693b54f..de68705624b0 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -11,6 +11,8 @@
-> >  #include <linux/mm.h>
-> >  #include <linux/pagemap.h>
-> >  #include <linux/rmap.h>
-> > +#include <linux/swap.h>
-> > +#include <linux/swapops.h>
-> >  #include <linux/tracepoint-defs.h>
-> >
-> >  struct folio_batch;
-> > @@ -189,6 +191,67 @@ static inline int folio_pte_batch(struct folio *fo=
-lio, unsigned long addr,
-> >
-> >         return min(ptep - start_ptep, max_nr);
-> >  }
-> > +
-> > +/**
-> > + * pte_next_swp_offset - Increment the swap entry offset field of a sw=
-ap pte.
-> > + * @pte: The initial pte state; is_swap_pte(pte) must be true.
-> > + *
-> > + * Increments the swap offset, while maintaining all other fields, inc=
-luding
-> > + * swap type, and any swp pte bits. The resulting pte is returned.
-> > + */
-> > +static inline pte_t pte_next_swp_offset(pte_t pte)
-> > +{
-> > +       swp_entry_t entry =3D pte_to_swp_entry(pte);
-> > +       pte_t new =3D __swp_entry_to_pte(__swp_entry(swp_type(entry),
-> > +                                                  swp_offset(entry) + =
-1));
-> > +
-> > +       if (pte_swp_soft_dirty(pte))
-> > +               new =3D pte_swp_mksoft_dirty(new);
-> > +       if (pte_swp_exclusive(pte))
-> > +               new =3D pte_swp_mkexclusive(new);
-> > +       if (pte_swp_uffd_wp(pte))
-> > +               new =3D pte_swp_mkuffd_wp(new);
->
-> I don't quite understand this. If this page table entry is exclusive,
-> will its subsequent page table entry also be exclusive without
-> question?
-> in try_to_unmap_one, exclusive is per-subpage but not per-folio:
->
->                 anon_exclusive =3D folio_test_anon(folio) &&
->                                  PageAnonExclusive(subpage);
->
-> same questions also for diry, wp etc.
+Add crypto node in device tree for:
+- CAAM job-ring
 
-Sorry for the noise. you are right. based on your new version, I think I sh=
-ould
-entirely drop:
+Signed-off-by: Varun Sethi <v.sethi@nxp.com>
+Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
+---
 
-[PATCH v2 3/5] mm: swap_pte_batch: add an output argument to reture if
-all swap entries are exclusive
+v4:
+ - Order of node properties changed.
 
-https://lore.kernel.org/linux-mm/20240409082631.187483-4-21cnbao@gmail.com/
+v3: 
+ - Commit message title is changed from "imx8ulp-evk" to "imx8ulp".
 
->
-> > +
-> > +       return new;
-> > +}
-> > +
-> > +/**
-> > + * swap_pte_batch - detect a PTE batch for a set of contiguous swap en=
-tries
-> > + * @start_ptep: Page table pointer for the first entry.
-> > + * @max_nr: The maximum number of table entries to consider.
-> > + * @pte: Page table entry for the first entry.
-> > + *
-> > + * Detect a batch of contiguous swap entries: consecutive (non-present=
-) PTEs
-> > + * containing swap entries all with consecutive offsets and targeting =
-the same
-> > + * swap type, all with matching swp pte bits.
-> > + *
-> > + * max_nr must be at least one and must be limited by the caller so sc=
-anning
-> > + * cannot exceed a single page table.
-> > + *
-> > + * Return: the number of table entries in the batch.
-> > + */
-> > +static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t =
-pte)
-> > +{
-> > +       pte_t expected_pte =3D pte_next_swp_offset(pte);
-> > +       const pte_t *end_ptep =3D start_ptep + max_nr;
-> > +       pte_t *ptep =3D start_ptep + 1;
-> > +
-> > +       VM_WARN_ON(max_nr < 1);
-> > +       VM_WARN_ON(!is_swap_pte(pte));
-> > +       VM_WARN_ON(non_swap_entry(pte_to_swp_entry(pte)));
-> > +
-> > +       while (ptep < end_ptep) {
-> > +               pte =3D ptep_get(ptep);
-> > +
-> > +               if (!pte_same(pte, expected_pte))
-> > +                       break;
-> > +
-> > +               expected_pte =3D pte_next_swp_offset(expected_pte);
-> > +               ptep++;
-> > +       }
-> > +
-> > +       return ptep - start_ptep;
-> > +}
-> >  #endif /* CONFIG_MMU */
-> >
-> >  void __acct_reclaim_writeback(pg_data_t *pgdat, struct folio *folio,
-> > diff --git a/mm/madvise.c b/mm/madvise.c
-> > index 1f77a51baaac..5011ecb24344 100644
-> > --- a/mm/madvise.c
-> > +++ b/mm/madvise.c
-> > @@ -628,6 +628,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsig=
-ned long addr,
-> >         struct folio *folio;
-> >         int nr_swap =3D 0;
-> >         unsigned long next;
-> > +       int nr, max_nr;
-> >
-> >         next =3D pmd_addr_end(addr, end);
-> >         if (pmd_trans_huge(*pmd))
-> > @@ -640,7 +641,8 @@ static int madvise_free_pte_range(pmd_t *pmd, unsig=
-ned long addr,
-> >                 return 0;
-> >         flush_tlb_batched_pending(mm);
-> >         arch_enter_lazy_mmu_mode();
-> > -       for (; addr !=3D end; pte++, addr +=3D PAGE_SIZE) {
-> > +       for (; addr !=3D end; pte +=3D nr, addr +=3D PAGE_SIZE * nr) {
-> > +               nr =3D 1;
-> >                 ptent =3D ptep_get(pte);
-> >
-> >                 if (pte_none(ptent))
-> > @@ -655,9 +657,11 @@ static int madvise_free_pte_range(pmd_t *pmd, unsi=
-gned long addr,
-> >
-> >                         entry =3D pte_to_swp_entry(ptent);
-> >                         if (!non_swap_entry(entry)) {
-> > -                               nr_swap--;
-> > -                               free_swap_and_cache(entry);
-> > -                               pte_clear_not_present_full(mm, addr, pt=
-e, tlb->fullmm);
-> > +                               max_nr =3D (end - addr) / PAGE_SIZE;
-> > +                               nr =3D swap_pte_batch(pte, max_nr, pten=
-t);
-> > +                               nr_swap -=3D nr;
-> > +                               free_swap_and_cache_nr(entry, nr);
-> > +                               clear_not_present_full_ptes(mm, addr, p=
-te, nr, tlb->fullmm);
-> >                         } else if (is_hwpoison_entry(entry) ||
-> >                                    is_poisoned_swp_entry(entry)) {
-> >                                 pte_clear_not_present_full(mm, addr, pt=
-e, tlb->fullmm);
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index b98e4d907a14..0db2aa066a5a 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -1637,12 +1637,13 @@ static unsigned long zap_pte_range(struct mmu_g=
-ather *tlb,
-> >                                 folio_remove_rmap_pte(folio, page, vma)=
-;
-> >                         folio_put(folio);
-> >                 } else if (!non_swap_entry(entry)) {
-> > -                       /* Genuine swap entry, hence a private anon pag=
-e */
-> > +                       max_nr =3D (end - addr) / PAGE_SIZE;
-> > +                       nr =3D swap_pte_batch(pte, max_nr, ptent);
-> > +                       /* Genuine swap entries, hence a private anon p=
-ages */
-> >                         if (!should_zap_cows(details))
-> >                                 continue;
-> > -                       rss[MM_SWAPENTS]--;
-> > -                       if (unlikely(!free_swap_and_cache(entry)))
-> > -                               print_bad_pte(vma, addr, ptent, NULL);
-> > +                       rss[MM_SWAPENTS] -=3D nr;
-> > +                       free_swap_and_cache_nr(entry, nr);
-> >                 } else if (is_migration_entry(entry)) {
-> >                         folio =3D pfn_swap_entry_folio(entry);
-> >                         if (!should_zap_folio(details, folio))
-> > @@ -1665,8 +1666,8 @@ static unsigned long zap_pte_range(struct mmu_gat=
-her *tlb,
-> >                         pr_alert("unrecognized swap entry 0x%lx\n", ent=
-ry.val);
-> >                         WARN_ON_ONCE(1);
-> >                 }
-> > -               pte_clear_not_present_full(mm, addr, pte, tlb->fullmm);
-> > -               zap_install_uffd_wp_if_needed(vma, addr, pte, 1, detail=
-s, ptent);
-> > +               clear_not_present_full_ptes(mm, addr, pte, nr, tlb->ful=
-lmm);
-> > +               zap_install_uffd_wp_if_needed(vma, addr, pte, nr, detai=
-ls, ptent);
-> >         } while (pte +=3D nr, addr +=3D PAGE_SIZE * nr, addr !=3D end);
-> >
-> >         add_mm_rss_vec(mm, rss);
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index 1ded6d1dcab4..20c45757f2b2 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -130,7 +130,11 @@ static inline unsigned char swap_count(unsigned ch=
-ar ent)
-> >  /* Reclaim the swap entry if swap is getting full*/
-> >  #define TTRS_FULL              0x4
-> >
-> > -/* returns 1 if swap entry is freed */
-> > +/*
-> > + * returns number of pages in the folio that backs the swap entry. If =
-positive,
-> > + * the folio was reclaimed. If negative, the folio was not reclaimed. =
-If 0, no
-> > + * folio was associated with the swap entry.
-> > + */
-> >  static int __try_to_reclaim_swap(struct swap_info_struct *si,
-> >                                  unsigned long offset, unsigned long fl=
-ags)
-> >  {
-> > @@ -155,6 +159,7 @@ static int __try_to_reclaim_swap(struct swap_info_s=
-truct *si,
-> >                         ret =3D folio_free_swap(folio);
-> >                 folio_unlock(folio);
-> >         }
-> > +       ret =3D ret ? folio_nr_pages(folio) : -folio_nr_pages(folio);
-> >         folio_put(folio);
-> >         return ret;
-> >  }
-> > @@ -895,7 +900,7 @@ static int scan_swap_map_slots(struct swap_info_str=
-uct *si,
-> >                 swap_was_freed =3D __try_to_reclaim_swap(si, offset, TT=
-RS_ANYWAY);
-> >                 spin_lock(&si->lock);
-> >                 /* entry was freed successfully, try to use this again =
-*/
-> > -               if (swap_was_freed)
-> > +               if (swap_was_freed > 0)
-> >                         goto checks;
-> >                 goto scan; /* check next one */
-> >         }
-> > @@ -1572,32 +1577,88 @@ bool folio_free_swap(struct folio *folio)
-> >         return true;
-> >  }
-> >
-> > -/*
-> > - * Free the swap entry like above, but also try to
-> > - * free the page cache entry if it is the last user.
-> > +/**
-> > + * free_swap_and_cache_nr() - Release reference on range of swap entri=
-es and
-> > + *                            reclaim their cache if no more reference=
-s remain.
-> > + * @entry: First entry of range.
-> > + * @nr: Number of entries in range.
-> > + *
-> > + * For each swap entry in the contiguous range, release a reference. I=
-f any swap
-> > + * entries become free, try to reclaim their underlying folios, if pre=
-sent. The
-> > + * offset range is defined by [entry.offset, entry.offset + nr).
-> >   */
-> > -int free_swap_and_cache(swp_entry_t entry)
-> > +void free_swap_and_cache_nr(swp_entry_t entry, int nr)
-> >  {
-> > -       struct swap_info_struct *p;
-> > +       const unsigned long start_offset =3D swp_offset(entry);
-> > +       const unsigned long end_offset =3D start_offset + nr;
-> > +       unsigned int type =3D swp_type(entry);
-> > +       struct swap_info_struct *si;
-> > +       bool any_only_cache =3D false;
-> > +       unsigned long offset;
-> >         unsigned char count;
-> >
-> >         if (non_swap_entry(entry))
-> > -               return 1;
-> > +               return;
-> >
-> > -       p =3D get_swap_device(entry);
-> > -       if (p) {
-> > -               if (WARN_ON(data_race(!p->swap_map[swp_offset(entry)]))=
-) {
-> > -                       put_swap_device(p);
-> > -                       return 0;
-> > +       si =3D get_swap_device(entry);
-> > +       if (!si)
-> > +               return;
-> > +
-> > +       if (WARN_ON(end_offset > si->max))
-> > +               goto out;
-> > +
-> > +       /*
-> > +        * First free all entries in the range.
-> > +        */
-> > +       for (offset =3D start_offset; offset < end_offset; offset++) {
-> > +               if (data_race(si->swap_map[offset])) {
-> > +                       count =3D __swap_entry_free(si, swp_entry(type,=
- offset));
-> > +                       if (count =3D=3D SWAP_HAS_CACHE)
-> > +                               any_only_cache =3D true;
-> > +               } else {
-> > +                       WARN_ON_ONCE(1);
-> >                 }
-> > +       }
-> > +
-> > +       /*
-> > +        * Short-circuit the below loop if none of the entries had thei=
-r
-> > +        * reference drop to zero.
-> > +        */
-> > +       if (!any_only_cache)
-> > +               goto out;
-> >
-> > -               count =3D __swap_entry_free(p, entry);
-> > -               if (count =3D=3D SWAP_HAS_CACHE)
-> > -                       __try_to_reclaim_swap(p, swp_offset(entry),
-> > +       /*
-> > +        * Now go back over the range trying to reclaim the swap cache.=
- This is
-> > +        * more efficient for large folios because we will only try to =
-reclaim
-> > +        * the swap once per folio in the common case. If we do
-> > +        * __swap_entry_free() and __try_to_reclaim_swap() in the same =
-loop, the
-> > +        * latter will get a reference and lock the folio for every ind=
-ividual
-> > +        * page but will only succeed once the swap slot for every subp=
-age is
-> > +        * zero.
-> > +        */
-> > +       for (offset =3D start_offset; offset < end_offset; offset +=3D =
-nr) {
-> > +               nr =3D 1;
-> > +               if (READ_ONCE(si->swap_map[offset]) =3D=3D SWAP_HAS_CAC=
-HE) {
-> > +                       /*
-> > +                        * Folios are always naturally aligned in swap =
-so
-> > +                        * advance forward to the next boundary. Zero m=
-eans no
-> > +                        * folio was found for the swap entry, so advan=
-ce by 1
-> > +                        * in this case. Negative value means folio was=
- found
-> > +                        * but could not be reclaimed. Here we can stil=
-l advance
-> > +                        * to the next boundary.
-> > +                        */
-> > +                       nr =3D __try_to_reclaim_swap(si, offset,
-> >                                               TTRS_UNMAPPED | TTRS_FULL=
-);
-> > -               put_swap_device(p);
-> > +                       if (nr =3D=3D 0)
-> > +                               nr =3D 1;
-> > +                       else if (nr < 0)
-> > +                               nr =3D -nr;
-> > +                       nr =3D ALIGN(offset + 1, nr) - offset;
-> > +               }
-> >         }
-> > -       return p !=3D NULL;
-> > +
-> > +out:
-> > +       put_swap_device(si);
-> >  }
-> >
-> >  #ifdef CONFIG_HIBERNATION
-> > --
-> > 2.25.1
-> >
->
-> Thanks
-> Barry
+v2:
+ - As requested, this patch is separated from the larger patch-set of 9
+   patches. 
+
+Commit 
+ arch/arm64/boot/dts/freescale/imx8ulp.dtsi | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
+index 8a6596d5a581..ed86854a59c3 100644
+--- a/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8ulp.dtsi
+@@ -252,6 +252,38 @@ pcc3: clock-controller@292d0000 {
+ 				#reset-cells = <1>;
+ 			};
+ 
++			crypto: crypto@292e0000 {
++				compatible = "fsl,sec-v4.0";
++				reg = <0x292e0000 0x10000>;
++				ranges = <0 0x292e0000 0x10000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				sec_jr0: jr@1000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x1000 0x1000>;
++					interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr1: jr@2000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x2000 0x1000>;
++					interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr2: jr@3000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x3000 0x1000>;
++					interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				};
++
++				sec_jr3: jr@4000 {
++					compatible = "fsl,sec-v4.0-job-ring";
++					reg = <0x4000 0x1000>;
++					interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				};
++			};
++
+ 			tpm5: tpm@29340000 {
+ 				compatible = "fsl,imx8ulp-tpm", "fsl,imx7ulp-tpm";
+ 				reg = <0x29340000 0x1000>;
+-- 
+2.34.1
+
