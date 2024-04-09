@@ -1,368 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64CEB155759;
-	Tue,  9 Apr 2024 17:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E6312E1D5;
+	Tue,  9 Apr 2024 17:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682696; cv=none; b=JZxlEvg8XEaIz3NcziZxFdLNZKHiphAUTXvEDPfNz9XYpsltAlquXgVzqq7SGey+vrWVct6wYIb33+y3LlpbXLkRTKZglSlA8LxvI3fZHqZXf+vcwUg2VWrHHQw7WehLA1w4ha/STsj8Gujf9dfEw8bn4xuKArWlwmykdyhnyCw=
+	t=1712682735; cv=none; b=VYBjRbEqMPSIU8AzBaGXC6CBNXQrBm0QZMxkyaJknn3JfClAZD93wcmtKT/uF6f0QHw6eQFlgxL/LKE2ScefDP4XLUPrQWCoqPZjhl17lv22I3QswAJtFZKTlmkRatl9lUgEfNWBr38GsHKeTdA8DMG+kii0lb17NUbowIeM2DI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682696; c=relaxed/simple;
-	bh=TTU5LwP+BHTGxE5/boulhG9jN9eZ2E6iZrQn3KNeb0o=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YAqM7d2cYfxsozSKQC6wHHGIdJc23hdhqtdSKNNOv9Z6gwwJalSaJBJyOwuEUx1ldNkDT0N6rC96gtRcFZGV3R/4n83JOIz6EVkjM9CM53TBvcqOKHDxy2Ax4slXDbK52oQOztvEzBZPzmIMxoNUvu/FqjqRepE8Kz1eJ2epZHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YWFyEGW1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pd+soo3r; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712682735; c=relaxed/simple;
+	bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fA5DTzNjVWzDlA+CySAg8GT2+JWRYfFXJXALXrkoBHHcD8inBsDSU005AGQHqL0Nwvxil90MwNgH2t3LjtZFniPQcrbEFysNSav/WZxsHuIUd8IBYK9I1ovLB9h4IQ2pFYjBwqBMdHuuzplfNBIqHnTsmgxUr3c2QJ5HHkqZwcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RgpnfeFN; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YWFyEGW1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pd+soo3r"
-Date: Tue, 09 Apr 2024 17:11:31 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712682692;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMF+YonfauBpVyCCt7CBoFb+dxitG5lhjHywmo0GQAM=;
-	b=YWFyEGW1ThkfX1Sn5C0o7v5AyOWLOt31rNl8bNEGQpJ3m/FXgqypk6DH5DUMuUMI45kCzK
-	9ca88XojJzRkZHmar4eKBkNwB9cKjAj91yvkGzei/hBK27LuCYI14g6cnlUkxZRQGnuJLH
-	v7qhi9PhIHZikKSM0rVBFowzmdR2Sg+Ehz7XRuIV/F7vuU7TMqGHCm4kPg9DLLdh6xBEVV
-	HjfScohDDBQhAONk2edxBMXiI5K0KY1S1hd1+5vqrAYcRb7VhWYmmPpukZko4Os/onOVJi
-	gtdZplpa+NhHpo7nLoV/Xjt7E7PWm11P5uyx2PZi4jB+JMprhc3cGuXa1d7Vdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712682692;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cMF+YonfauBpVyCCt7CBoFb+dxitG5lhjHywmo0GQAM=;
-	b=pd+soo3rTE+2j9ABhRwSxsAUEtpJLBMb1a3sej3pGh0TqWPrpo3le/LKmTZTnAsMC75XT2
-	ycqhYR/GC3RU6iBg==
-From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/alternatives] x86/alternatives: Use a temporary buffer when
- optimizing NOPs
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240130105941.19707-2-bp@alien8.de>
-References: <20240130105941.19707-2-bp@alien8.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RgpnfeFN"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56845954ffeso7900714a12.2;
+        Tue, 09 Apr 2024 10:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712682732; x=1713287532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
+        b=RgpnfeFN5RTt9XLtfwViH4g2S0SpXVv5rBHVXvdfPEP44G0gSYJrkp2+2pDyn3CjBK
+         GSy7G6JE1PzB4haSCZ9VqMIKOh1kRNASZrZ5rp7jDWIEEqaDwqwYDgnA//5XS12/iCYE
+         LwB9cDmz0V3CBq7w3sHHcaLtF2m8nFQtbc5+IgJkEGP8rGX5e8+Bcwg+0DrS8ZkWdVEX
+         AgrJR3B27DHM+VWIugiV1URbz+O9Ug8SS2CNwJXYd8wtwwhIFr1GS85tCPuTerMQ4V12
+         gdx/sX3yadrDm4nsjsP7Tk8xNVmb6h4G7MVftJbEGbci27cOX+eZlAZaEW9y6DWbzDlL
+         NayA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712682732; x=1713287532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=avtQoYEPbu2+Jr0W5m1ghEuAGynrnjvGqeyVENfv9tU=;
+        b=k/YQ3z4n9xQd+huRLLWpp9G7k7zaHxIvH4vklN1UZNMrwcVP2bZ8fufJmP9AeNXIqD
+         R7q474k+ybnLqtBAs4ckFGxDGshJxOIXGCdWRt+ZNpvQtMB/36dJNcukkw00dJfNUBRR
+         pAgBOJdUusQO+beHVm61uetnjs7o2NauVleUyqG9xTclayMxo2p7F0SjztDP5YYbaXP7
+         2s66TN5Q9B84/zQa2Y9ERoulIz7Azk695DwaZA4oATW65F0AnN8KCyY497DfuPxQf7A9
+         gIvqpVxpHkgN/+uNJxQiB30E0DaEV3gWIc3OJu2eyOcCK6gEmQsT6qc1TSHjryLETvQw
+         YNEw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8l1o7VpMMEyLxFnDr/zdUZN3pvYzF4HimJwwdgmsUpllBS7KGLt/xmUgok76kFLE0agXaoLnSsSqn50kjIWx6S46/R65sdPV5hlFniS/q7DwMFXV1B5KX3aEXkEeb4kBbXPNz8FxgQKlpKl71aI3/pXmg1UBFH+SO6gz/w4PfyRgxJboIh4o=
+X-Gm-Message-State: AOJu0YybLNUc++3WQ6kjbMugMrtOssRSU/e+SQHdNqEqldc420PVsLQ3
+	sTW/mmnqs6S8TW8JMUpnEsWg62c1s0Nj4OBkPq3eqzcozE84vuSQtOrOAsSRRzfdiVUJ7aBoxk+
+	872PVo/jL6Jsh5wRrfNKPphoWOag=
+X-Google-Smtp-Source: AGHT+IHDsDzpN80Q+dT8Z1O9ekHUAbkM8i2z9y0uAzBM2Co9XDpeUNjqG0qPrG/s7Ymg03pkuU0oARufzvBH2JCkaX0=
+X-Received: by 2002:a50:c305:0:b0:568:b622:f225 with SMTP id
+ a5-20020a50c305000000b00568b622f225mr85452edb.30.1712682732145; Tue, 09 Apr
+ 2024 10:12:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171268269191.10875.7152781174116674165.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
+ <20240405-topic-smem_speedbin-v1-3-ce2b864251b1@linaro.org>
+ <pncr7ecf4eir36skul3iwt2nf5bpuwd5zjfzzfwwnxjwe4hoes@6z2xe54crijp>
+ <d8a2ef87-f29e-4bdb-a9b8-591b8bd5d2b2@linaro.org> <tkcbl2iwcy3feoggbk737gx32qsxe5p4ad6lfrujy2pazccrhm@kif3guuzay6h>
+In-Reply-To: <tkcbl2iwcy3feoggbk737gx32qsxe5p4ad6lfrujy2pazccrhm@kif3guuzay6h>
+From: Rob Clark <robdclark@gmail.com>
+Date: Tue, 9 Apr 2024 10:12:00 -0700
+Message-ID: <CAF6AEGsg2xCCC27t_Gqu=MMQ6tckVw=Zj90p4x7EuOm+VKA=ig@mail.gmail.com>
+Subject: Re: [PATCH 3/6] drm/msm/adreno: Allow specifying default speedbin value
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/alternatives branch of tip:
+On Tue, Apr 9, 2024 at 8:23=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
+>
+> On Tue, Apr 09, 2024 at 05:12:46PM +0200, Konrad Dybcio wrote:
+> >
+> >
+> > On 4/6/24 04:56, Dmitry Baryshkov wrote:
+> > > On Fri, Apr 05, 2024 at 10:41:31AM +0200, Konrad Dybcio wrote:
+> > > > From: Neil Armstrong <neil.armstrong@linaro.org>
+> > > >
+> > > > Usually, speedbin 0 is the "super SKU", a.k.a the one which can clo=
+ck
+> > > > the highest. Falling back to it when things go wrong is largely
+> > > > suboptimal, as more often than not, the top frequencies are not
+> > > > supposed to work on other bins.
+> > >
+> > > Isn't it better to just return an error here instead of trying to gue=
+ss
+> > > which speedbin to use?
+> >
+> > Not sure. I'd rather better compatibility for e.g. booting up a new
+> > laptop with just dt.
+>
+> New speedbin can have lower max speed, so by attempting to run it at
+> higher freq you might be breaking it.
 
-Commit-ID:     f796c75837623058db1ff93252b9f1681306b83d
-Gitweb:        https://git.kernel.org/tip/f796c75837623058db1ff93252b9f1681306b83d
-Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Tue, 30 Jan 2024 11:59:38 +01:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 09 Apr 2024 18:08:11 +02:00
+Usually there are some OPPs in common to all speedbins, so picking a
+freq from that set would seem like the safe thing to do
 
-x86/alternatives: Use a temporary buffer when optimizing NOPs
+BR,
+-R
 
-Instead of optimizing NOPs in-place, use a temporary buffer like the
-usual alternatives patching flow does. This obviates the need to grab
-locks when patching, see
-
-  6778977590da ("x86/alternatives: Disable interrupts and sync when optimizing NOPs in place")
-
-While at it, add nomenclature definitions clarifying and simplifying the
-naming of function-local variables in the alternatives code.
-
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240130105941.19707-2-bp@alien8.de
----
- arch/x86/include/asm/text-patching.h |  2 +-
- arch/x86/kernel/alternative.c        | 84 ++++++++++++++-------------
- arch/x86/kernel/callthunks.c         |  9 +--
- 3 files changed, 49 insertions(+), 46 deletions(-)
-
-diff --git a/arch/x86/include/asm/text-patching.h b/arch/x86/include/asm/text-patching.h
-index 345aafb..6259f19 100644
---- a/arch/x86/include/asm/text-patching.h
-+++ b/arch/x86/include/asm/text-patching.h
-@@ -15,7 +15,7 @@
- 
- extern void text_poke_early(void *addr, const void *opcode, size_t len);
- 
--extern void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len);
-+extern void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len);
- 
- /*
-  * Clear and restore the kernel write-protection flag on the local CPU.
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 45a280f..ec94f13 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -125,6 +125,20 @@ const unsigned char * const x86_nops[ASM_NOP_MAX+1] =
- };
- 
- /*
-+ * Nomenclature for variable names to simplify and clarify this code and ease
-+ * any potential staring at it:
-+ *
-+ * @instr: source address of the original instructions in the kernel text as
-+ * generated by the compiler.
-+ *
-+ * @buf: temporary buffer on which the patching operates. This buffer is
-+ * eventually text-poked into the kernel image.
-+ *
-+ * @replacement/@repl: pointer to the opcodes which are replacing @instr, located
-+ * in the .altinstr_replacement section.
-+ */
-+
-+/*
-  * Fill the buffer with a single effective instruction of size @len.
-  *
-  * In order not to issue an ORC stack depth tracking CFI entry (Call Frame Info)
-@@ -133,28 +147,28 @@ const unsigned char * const x86_nops[ASM_NOP_MAX+1] =
-  * each single-byte NOPs). If @len to fill out is > ASM_NOP_MAX, pad with INT3 and
-  * *jump* over instead of executing long and daft NOPs.
-  */
--static void add_nop(u8 *instr, unsigned int len)
-+static void add_nop(u8 *buf, unsigned int len)
- {
--	u8 *target = instr + len;
-+	u8 *target = buf + len;
- 
- 	if (!len)
- 		return;
- 
- 	if (len <= ASM_NOP_MAX) {
--		memcpy(instr, x86_nops[len], len);
-+		memcpy(buf, x86_nops[len], len);
- 		return;
- 	}
- 
- 	if (len < 128) {
--		__text_gen_insn(instr, JMP8_INSN_OPCODE, instr, target, JMP8_INSN_SIZE);
--		instr += JMP8_INSN_SIZE;
-+		__text_gen_insn(buf, JMP8_INSN_OPCODE, buf, target, JMP8_INSN_SIZE);
-+		buf += JMP8_INSN_SIZE;
- 	} else {
--		__text_gen_insn(instr, JMP32_INSN_OPCODE, instr, target, JMP32_INSN_SIZE);
--		instr += JMP32_INSN_SIZE;
-+		__text_gen_insn(buf, JMP32_INSN_OPCODE, buf, target, JMP32_INSN_SIZE);
-+		buf += JMP32_INSN_SIZE;
- 	}
- 
--	for (;instr < target; instr++)
--		*instr = INT3_INSN_OPCODE;
-+	for (;buf < target; buf++)
-+		*buf = INT3_INSN_OPCODE;
- }
- 
- extern s32 __retpoline_sites[], __retpoline_sites_end[];
-@@ -187,12 +201,12 @@ static bool insn_is_nop(struct insn *insn)
-  * Find the offset of the first non-NOP instruction starting at @offset
-  * but no further than @len.
-  */
--static int skip_nops(u8 *instr, int offset, int len)
-+static int skip_nops(u8 *buf, int offset, int len)
- {
- 	struct insn insn;
- 
- 	for (; offset < len; offset += insn.length) {
--		if (insn_decode_kernel(&insn, &instr[offset]))
-+		if (insn_decode_kernel(&insn, &buf[offset]))
- 			break;
- 
- 		if (!insn_is_nop(&insn))
-@@ -207,7 +221,7 @@ static int skip_nops(u8 *instr, int offset, int len)
-  * to the end of the NOP sequence into a single NOP.
-  */
- static bool
--__optimize_nops(u8 *instr, size_t len, struct insn *insn, int *next, int *prev, int *target)
-+__optimize_nops(const u8 * const instr, u8 *buf, size_t len, struct insn *insn, int *next, int *prev, int *target)
- {
- 	int i = *next - insn->length;
- 
-@@ -222,12 +236,12 @@ __optimize_nops(u8 *instr, size_t len, struct insn *insn, int *next, int *prev, 
- 	if (insn_is_nop(insn)) {
- 		int nop = i;
- 
--		*next = skip_nops(instr, *next, len);
-+		*next = skip_nops(buf, *next, len);
- 		if (*target && *next == *target)
- 			nop = *prev;
- 
--		add_nop(instr + nop, *next - nop);
--		DUMP_BYTES(ALT, instr, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, *next);
-+		add_nop(buf + nop, *next - nop);
-+		DUMP_BYTES(ALT, buf, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, *next);
- 		return true;
- 	}
- 
-@@ -239,32 +253,22 @@ __optimize_nops(u8 *instr, size_t len, struct insn *insn, int *next, int *prev, 
-  * "noinline" to cause control flow change and thus invalidate I$ and
-  * cause refetch after modification.
-  */
--static void __init_or_module noinline optimize_nops(u8 *instr, size_t len)
-+static void __init_or_module noinline optimize_nops(const u8 * const instr, u8 *buf, size_t len)
- {
- 	int prev, target = 0;
- 
- 	for (int next, i = 0; i < len; i = next) {
- 		struct insn insn;
- 
--		if (insn_decode_kernel(&insn, &instr[i]))
-+		if (insn_decode_kernel(&insn, &buf[i]))
- 			return;
- 
- 		next = i + insn.length;
- 
--		__optimize_nops(instr, len, &insn, &next, &prev, &target);
-+		__optimize_nops(instr, buf, len, &insn, &next, &prev, &target);
- 	}
- }
- 
--static void __init_or_module noinline optimize_nops_inplace(u8 *instr, size_t len)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	optimize_nops(instr, len);
--	sync_core();
--	local_irq_restore(flags);
--}
--
- /*
-  * In this context, "source" is where the instructions are placed in the
-  * section .altinstr_replacement, for example during kernel build by the
-@@ -335,11 +339,11 @@ bool need_reloc(unsigned long offset, u8 *src, size_t src_len)
- 	return (target < src || target > src + src_len);
- }
- 
--void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len)
-+void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
- {
- 	int prev, target = 0;
- 
--	for (int next, i = 0; i < len; i = next) {
-+	for (int next, i = 0; i < instrlen; i = next) {
- 		struct insn insn;
- 
- 		if (WARN_ON_ONCE(insn_decode_kernel(&insn, &buf[i])))
-@@ -347,7 +351,7 @@ void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len)
- 
- 		next = i + insn.length;
- 
--		if (__optimize_nops(buf, len, &insn, &next, &prev, &target))
-+		if (__optimize_nops(instr, buf, instrlen, &insn, &next, &prev, &target))
- 			continue;
- 
- 		switch (insn.opcode.bytes[0]) {
-@@ -361,10 +365,10 @@ void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len)
- 		case JMP8_INSN_OPCODE:
- 		case JMP32_INSN_OPCODE:
- 		case CALL_INSN_OPCODE:
--			if (need_reloc(next + insn.immediate.value, src, src_len)) {
-+			if (need_reloc(next + insn.immediate.value, repl, repl_len)) {
- 				apply_reloc(insn.immediate.nbytes,
- 					    buf + i + insn_offset_immediate(&insn),
--					    src - dest);
-+					    repl - instr);
- 			}
- 
- 			/*
-@@ -372,7 +376,7 @@ void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len)
- 			 */
- 			if (insn.opcode.bytes[0] == JMP32_INSN_OPCODE) {
- 				s32 imm = insn.immediate.value;
--				imm += src - dest;
-+				imm += repl - instr;
- 				imm += JMP32_INSN_SIZE - JMP8_INSN_SIZE;
- 				if ((imm >> 31) == (imm >> 7)) {
- 					buf[i+0] = JMP8_INSN_OPCODE;
-@@ -385,10 +389,10 @@ void apply_relocation(u8 *buf, size_t len, u8 *dest, u8 *src, size_t src_len)
- 		}
- 
- 		if (insn_rip_relative(&insn)) {
--			if (need_reloc(next + insn.displacement.value, src, src_len)) {
-+			if (need_reloc(next + insn.displacement.value, repl, repl_len)) {
- 				apply_reloc(insn.displacement.nbytes,
- 					    buf + i + insn_offset_displacement(&insn),
--					    src - dest);
-+					    repl - instr);
- 			}
- 		}
- 	}
-@@ -504,7 +508,9 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
- 		 *   patch if feature is *NOT* present.
- 		 */
- 		if (!boot_cpu_has(a->cpuid) == !(a->flags & ALT_FLAG_NOT)) {
--			optimize_nops_inplace(instr, a->instrlen);
-+			memcpy(insn_buff, instr, a->instrlen);
-+			optimize_nops(instr, insn_buff, a->instrlen);
-+			text_poke_early(instr, insn_buff, a->instrlen);
- 			continue;
- 		}
- 
-@@ -526,7 +532,7 @@ void __init_or_module noinline apply_alternatives(struct alt_instr *start,
- 		for (; insn_buff_sz < a->instrlen; insn_buff_sz++)
- 			insn_buff[insn_buff_sz] = 0x90;
- 
--		apply_relocation(insn_buff, a->instrlen, instr, replacement, a->replacementlen);
-+		apply_relocation(insn_buff, instr, a->instrlen, replacement, a->replacementlen);
- 
- 		DUMP_BYTES(ALT, instr, a->instrlen, "%px:   old_insn: ", instr);
- 		DUMP_BYTES(ALT, replacement, a->replacementlen, "%px:   rpl_insn: ", replacement);
-@@ -761,7 +767,7 @@ void __init_or_module noinline apply_retpolines(s32 *start, s32 *end)
- 
- 		len = patch_retpoline(addr, &insn, bytes);
- 		if (len == insn.length) {
--			optimize_nops(bytes, len);
-+			optimize_nops(addr, bytes, len);
- 			DUMP_BYTES(RETPOLINE, ((u8*)addr),  len, "%px: orig: ", addr);
- 			DUMP_BYTES(RETPOLINE, ((u8*)bytes), len, "%px: repl: ", addr);
- 			text_poke_early(addr, bytes, len);
-diff --git a/arch/x86/kernel/callthunks.c b/arch/x86/kernel/callthunks.c
-index e92ff0c..4656474 100644
---- a/arch/x86/kernel/callthunks.c
-+++ b/arch/x86/kernel/callthunks.c
-@@ -185,8 +185,7 @@ static void *patch_dest(void *dest, bool direct)
- 	u8 *pad = dest - tsize;
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tsize);
--	apply_relocation(insn_buff, tsize, pad,
--			 skl_call_thunk_template, tsize);
-+	apply_relocation(insn_buff, pad, tsize, skl_call_thunk_template, tsize);
- 
- 	/* Already patched? */
- 	if (!bcmp(pad, insn_buff, tsize))
-@@ -308,8 +307,7 @@ static bool is_callthunk(void *addr)
- 	pad = (void *)(dest - tmpl_size);
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
--	apply_relocation(insn_buff, tmpl_size, pad,
--			 skl_call_thunk_template, tmpl_size);
-+	apply_relocation(insn_buff, pad, tmpl_size, skl_call_thunk_template, tmpl_size);
- 
- 	return !bcmp(pad, insn_buff, tmpl_size);
- }
-@@ -327,8 +325,7 @@ int x86_call_depth_emit_accounting(u8 **pprog, void *func, void *ip)
- 		return 0;
- 
- 	memcpy(insn_buff, skl_call_thunk_template, tmpl_size);
--	apply_relocation(insn_buff, tmpl_size, ip,
--			 skl_call_thunk_template, tmpl_size);
-+	apply_relocation(insn_buff, ip, tmpl_size, skl_call_thunk_template, tmpl_size);
- 
- 	memcpy(*pprog, insn_buff, tmpl_size);
- 	*pprog += tmpl_size;
+>
+> >
+> > >
+> > > If that's not the case, I think the commit should be expanded with
+> > > actually setting default_speedbin for the existing GPUs.
+> >
+> > I think that should be addressed, although separately.
+>
+> I'd prefer to have it as a part of this patch, but I'd not NAK it just
+> for this reason.
+>
+> --
+> With best wishes
+> Dmitry
