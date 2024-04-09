@@ -1,35 +1,35 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE76E8529C;
-	Tue,  9 Apr 2024 10:58:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46AA127B4E;
+	Tue,  9 Apr 2024 10:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712660338; cv=none; b=oIPTJUto+2VSymDTRy4zizLNpcfd5JHwdNq2cEnJGejP6bUEI2SnryuyNEdw/LSDV56Qo6rK3WsrjV24cEmx6JfhcbS1XZY+5g0lm7GOD+peKDh279FMJ7TbaaLoYwJVbzi6WySsn5YlDDXdESYeuKhbWcHM7d6KV6hXy4BMyPQ=
+	t=1712660340; cv=none; b=dSXJ2l3lg66naS4SEKly8bx+3Lnm/xtstmdF8yvK+kJW6138VHsT2c+mUtumR53ks/JS3Cn7d2tY+mxv37kLfpGRIbcvIudNrz8TKrQpSQPEUjqfatDXisfoOkdNZ/IkKXlgQqvFFX8doVp5AjrastWZV36c2cmpWmVRMEA2RxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712660338; c=relaxed/simple;
-	bh=/ioZuY2opA9crgD3+O/NIdgBS5tBNlapFgt5HOS9l/w=;
+	s=arc-20240116; t=1712660340; c=relaxed/simple;
+	bh=EofGS1Qp4yAH6fOwtDK+5PKuoyiBpqNdDK2ROlQHoGM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NP/P3RpWWGXWqxhiuusk5L0sp0P+lXyqWG+3yxvuSJ3nvis7ZWqyCxEAV2ClQ0mc6cyi1iPLMXjEyPAycQKFeywDpvMMyhxIr3l/QhWz+4R/yvGNsaV+hCPivo+jyi80aj97GfVu4XvesNelEr2gotOesGMGfTwfr2jSHuCe8Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j40dIMXa; arc=none smtp.client-ip=217.70.183.198
+	 MIME-Version; b=GiqRVaCCohB45GvMYtqzW7A1U7PBqR/6Exn0xD0nANRbU9dTxStJ41CRUal+/ymI6iMav2Tbwnrdd2/2DHpyhpfa8vIS/iypjha4YoDgJZtHf4JtJsoEPfxKmRiEWYMmKtaAjtMP4pCEdEmCYwplyWCeVNnXGdsAf+AIFjGZRik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lzoTfGJx; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j40dIMXa"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 22ACFC0003;
-	Tue,  9 Apr 2024 10:58:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lzoTfGJx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D414DC000A;
+	Tue,  9 Apr 2024 10:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712660334;
+	t=1712660337;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=thJ8uvI2UgimyENihTVu33JjOwHGCEHl5NHGiXq0AbU=;
-	b=j40dIMXaGwyapL2aYoUuRDx/UYqjbGCLyboxaey5CI570patOpSyU5/gmmo7TmyxXFnLec
-	ngsZoB+FGw5Dnt4EOSNpBup6dEduNKkUNutXZDtb0YZp3gTsOJxGA/F/rDqFiTbkSNpksf
-	o87T5dlOhOQw6DgT/BFKm+fFuPkMcVy2WUREqt9tALowjdndI4yml5NfYwBsf4GbrPqOQc
-	Nb3FWLbRx91/yzIYSdBkxGTJu8qBuri8hCjifQgJA6XCMQqZcyTsKGhVav5p8dSad4HA/D
-	hutOrhvFAWm8xE3O46Le824Zu9SyUznwLIro66O/JcAMYyBX72ut8kO7dLjOXQ==
+	bh=IIddpNRSXNpcxhhuTPbkM7tBZUu1mbRjQLrWMtsItNE=;
+	b=lzoTfGJx2yyilbxtS5WkaVwDvdBtrYwJ52R5aTmAWdXQWd3oRhnqrZCv8lYPpfcLcgtXq1
+	Zzo5xTLq1brNoFErZgj2tUVa1xcCWnbibiSo/z0dO8XjcUxLb0WAz6HwcfXF2b287+LFDg
+	wm/bAquHu2K57VkDkmscRgDs3ctxkv8K+PeZlf4C0Ef2O+P2DSWq9/Qi7UBueTLTedUhk7
+	+JodEHXUXdgHePurG6kLq1uPCmiDWf6zWKfZRn7Q8Kj4DIoXOEWPfvau59kjLpKnKJ/wwM
+	gRqbbBC45FRzHWu/NIRUakFZVtbbnpB0ZyJ8S+L2vMR/hoyAR4R7BMxrS+Zbfg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -56,9 +56,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
 	Simon Horman <horms@kernel.org>,
 	mwojtas@chromium.org
-Subject: [PATCH net-next 1/8] netlink: specs: add phy-index as a header parameter
-Date: Tue,  9 Apr 2024 12:58:39 +0200
-Message-ID: <20240409105847.465298-2-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 3/8] netlink: specs: add ethnl PHY_GET command set
+Date: Tue,  9 Apr 2024 12:58:41 +0200
+Message-ID: <20240409105847.465298-4-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240409105847.465298-1-maxime.chevallier@bootlin.com>
 References: <20240409105847.465298-1-maxime.chevallier@bootlin.com>
@@ -71,29 +71,98 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Update the spec to take the newly introduced phy-index as a generic
-request parameter.
+The PHY_GET command, supporting both DUMP and GET operations, is used to
+retrieve the list of PHYs connected to a netdevice, and get topology
+information to know where exactly it sits on the physical link.
+
+Add the netlink specs corresponding to that command.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- Documentation/netlink/specs/ethtool.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/netlink/specs/ethtool.yaml | 59 ++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 87ae7b397984..e8bdad790e3d 100644
+index e8bdad790e3d..e33b74e9aea9 100644
 --- a/Documentation/netlink/specs/ethtool.yaml
 +++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -35,6 +35,9 @@ attribute-sets:
-         name: flags
+@@ -20,6 +20,11 @@ definitions:
+     name: header-flags
+     type: flags
+     entries: [ compact-bitsets, omit-reply, stats ]
++  -
++    name: phy-upstream-type
++    enum-name:
++    type: enum
++    entries: [ mac, phy ]
+ 
+ attribute-sets:
+   -
+@@ -966,6 +971,38 @@ attribute-sets:
+       -
+         name: burst-tmr
          type: u32
-         enum: header-flags
++  -
++    name: phy
++    attributes:
 +      -
-+        name: phy-index
++        name: header
++        type: nest
++        nested-attributes: header
++      -
++        name: index
++        type: u32
++      -
++        name: drvname
++        type: string
++      -
++        name: name
++        type: string
++      -
++        name: upstream-type
++        type: u32
++        enum: phy-upstream-type
++      -
++        name: upstream-index
++        type: u32
++      -
++        name: upstream-sfp-name
++        type: string
++      -
++        name: downstream-sfp-name
++        type: string
++      -
++        name: id
 +        type: u32
  
-   -
-     name: bitset-bit
+ operations:
+   enum-model: directional
+@@ -1718,3 +1755,25 @@ operations:
+       name: mm-ntf
+       doc: Notification for change in MAC Merge configuration.
+       notify: mm-get
++    -
++      name: phy-get
++      doc: Get PHY devices attached to an interface
++
++      attribute-set: phy
++
++      do: &phy-get-op
++        request:
++          attributes:
++            - header
++        reply:
++          attributes:
++            - header
++            - index
++            - drvname
++            - name
++            - upstream-type
++            - upstream-index
++            - upstream-sfp-name
++            - downstream-sfp-name
++            - id
++      dump: *phy-get-op
 -- 
 2.44.0
 
