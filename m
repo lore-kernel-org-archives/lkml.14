@@ -1,103 +1,117 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.tkos.co.il (wiki.tkos.co.il [84.110.109.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25CF6E5EC;
-	Tue,  9 Apr 2024 06:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CA56E5EC;
+	Tue,  9 Apr 2024 06:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.110.109.230
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712643906; cv=none; b=juLFPHUW+mR2rIgBAkeAS2QE5woNgaSoMIaV778KcSXZ/Br17WPnF11YNvT5lnqWjxB7QR3akOMsfAzy4ygmzadbXnEpBiNZNRI/C2YPf4byMVJH8xHlZCuQefg1B2e4DFS342KO1n5FdW2HIf0s4Br5ltxPLTkTZxNcmZdvt6o=
+	t=1712643940; cv=none; b=gyjOFi6dtkRW7iBG0PeZYhAb2RYdax/8B3SuAjp9BQfMriCmYPLXNFer8SN6MMQ0kie4G2CBvOYq/rah67yXDMn+8xfKR/z02XEGaDETFJhviEnYp9geu+jbwxqjLto+Wl23LezK9eo73aWZHfHf0HkEtdZ8xDqd4CZBu0SY8hQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712643906; c=relaxed/simple;
-	bh=HlmSSCVZdQmCWnjeClGFLPha+Xz2PdZIktjA8U3QIS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LO8KsOuMJlOumXKlcmnxwkEbunztd15RN+w4JJtZv4q8iieA4tRHDKG3Ug0FwtvZxbBEXhkSrQiHOATg7157VS8y6IE39eAVmLfV8tXUltjXc3DCsZthGu2vkUE+/Sx917QHzJEHVCGlO5qKFSoEZ2aiKC5nZbLrQhb4DDLF9w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qYOorJOn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DbYpmR4x; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712643940; c=relaxed/simple;
+	bh=bnuGCfoRD/GHBH5oPlzJgRbdryYdtuyyryw5PvMST3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DQIZqvm3X8KeZr+pY139s7hOL35L147hYAECCtNDAT6cf67S+Ps56K1tBYN0aG05droJK0UKWQ1xte3X9dBv1zckpOjXAdEJShlQD5Ths5oWivFvB/LdtHNuGfJdggOOmzvylvCnSUHglrZarUSqlAt5Asfcy3sr8JEpgR/D8OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il; spf=pass smtp.mailfrom=tkos.co.il; dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b=a4c9OXqG; arc=none smtp.client-ip=84.110.109.230
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tkos.co.il
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tkos.co.il
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qYOorJOn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DbYpmR4x"
-Date: Tue, 9 Apr 2024 08:25:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712643902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vPx4RdY+3a57wBnjkTS4Zn0DTC9QaePnrkvMC+kGwQ=;
-	b=qYOorJOnB6B0bVb3Ncl/WSOlP5fDi9cbsddTaUdhR6LE0B+oqKhA5wx+76CTDTIy+/Wu0v
-	kKvTQCecM840l/Xex49+GOn7Y/NM5N283Jz0RTO9dn75e8DFSvwinKvlBifp0CrfhQBZS1
-	VOOsQoRcV2IojYT/2RcBWKSdWD9c2+aWQdvFrU/UXxM4m4YAO7WAJmU+qE4XQ+ySAr6GuO
-	ybF4oapR/TpqmyDkes9ZWhidUqgDU0RY3XyOVi44tAd5l1jaVTGZqjkWRNq3lMZj18qZpZ
-	tqiW0v/EsK5/7vM/ydcrOYhUzVts5SxfF52QxJWK3J1Z44NStzKs56a9mtpDNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712643902;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/vPx4RdY+3a57wBnjkTS4Zn0DTC9QaePnrkvMC+kGwQ=;
-	b=DbYpmR4xR4ny0R77fJNWxpn/2r3X7mrHHHewwpmFJeg+zSyUnP/JV0WDaewVisFTHROSCe
-	YxW8SgW+lYxhLEDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <20240409062501.h4rA_ck4@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
+	dkim=pass (2048-bit key) header.d=tkos.co.il header.i=@tkos.co.il header.b="a4c9OXqG"
+Received: from tarshish.tkos.co.il (unknown [10.0.8.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.tkos.co.il (Postfix) with ESMTPS id 5C128440209;
+	Tue,  9 Apr 2024 09:17:42 +0300 (IDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
+	s=default; t=1712643462;
+	bh=bnuGCfoRD/GHBH5oPlzJgRbdryYdtuyyryw5PvMST3k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=a4c9OXqGbWvMqcGamtbGvNOylokFOW+P/K6pK1HJUkwAsoEkr11JAJ94N9DueCzUL
+	 Sh9pTDCYg72vzxXwwgo7aoVROdIbGvzuaSAzdizDy/f66CdkraK47/FHVX0aLnAylz
+	 bgZYDCW9qIt0nfbBWhnvW9LIjltl/WjI8PVkpsVa1LcktqpmDJo4MwsQO93eEn4bkp
+	 pD3oGKocfvAQF8y7xcMH/10bUZEagZl00KRqDBhV8dfGmtr7MUP90ka7K3D46nD30L
+	 t9hnstbzUOSxvqVeJL72Jv475/gjlo0tBTgGxCv2+6SrIF50HZzI/hnozSsPuc56BP
+	 1euAVmAgJnV3w==
+From: Baruch Siach <baruch@tkos.co.il>
+To: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>
+Cc: Baruch Siach <baruch@tkos.co.il>,
+	Robin Murphy <robin.murphy@arm.com>,
+	iommu@lists.linux.dev,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>,
+	Ramon Fried <ramon@neureality.ai>,
+	Elad Nachman <enachman@marvell.com>
+Subject: [PATCH RFC v2 0/5] arm64: support DMA zone starting above 4GB
+Date: Tue,  9 Apr 2024 09:17:53 +0300
+Message-ID: <cover.1712642324.git.baruch@tkos.co.il>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZhRqSEbyd1rqVwfN@pavilion.home>
+Content-Transfer-Encoding: 8bit
 
-On 2024-04-09 00:06:00 [+0200], Frederic Weisbecker wrote:
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index e0b2da8de485f..5400f7ed2f98b 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -6785,14 +6785,6 @@ static void perf_pending_irq(struct irq_work *entry)
-> >  static void perf_pending_task(struct callback_head *head)
-> >  {
-> >  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
-> > -	int rctx;
-> > -
-> > -	/*
-> > -	 * If we 'fail' here, that's OK, it means recursion is already disabled
-> > -	 * and we won't recurse 'further'.
-> > -	 */
-> > -	preempt_disable_notrace();
-> > -	rctx = perf_swevent_get_recursion_context();
-> >  
-> >  	if (event->pending_work) {
-> >  		event->pending_work = 0;
-> > @@ -6800,10 +6792,6 @@ static void perf_pending_task(struct callback_head *head)
-> >  		local_dec(&event->ctx->nr_pending);
-> >  	}
-> >  
-> > -	if (rctx >= 0)
-> > -		perf_swevent_put_recursion_context(rctx);
-> > -	preempt_enable_notrace();
-> 
-> Well, if a software event happens during perf_sigtrap(), the task work
-> may be requeued endlessly and the task may get stuck in task_work_run()...
+DMA zones code assumes that DMA lower limit is zero. When there is no RAM 
+below 4GB, arm64 platform code sets DMA/DMA32 zone limits to cover the entire 
+RAM[0].
 
-The last time I checked it had no users in the task context. How would
-that happen?
+The platform I have has RAM starting at 32GB. Devices with 30-bit DMA mask are 
+mapped to 1GB at the bottom of RAM, between 32GB - 33GB. A DMA zone over the 
+entire RAM breaks DMA allocation for these devices.
 
-Sebastian
+In response to a previous RFC hack[1] Catalin Marinas suggested to add a
+separate offset value as base address for the DMA zone. This RFC series 
+attempts to implement that suggestion.
+
+With this series applied, the DMA zone covers the right RAM range for my 
+platform.
+
+RFC v2:
+
+  * Add patch from Catalin[2] changing zone_dma_bits to zone_dma_limit to 
+    simplify subsequent patches
+
+  * Test on real hardware
+
+RFC v1: https://lore.kernel.org/all/cover.1703683642.git.baruch@tkos.co.il/
+
+[0] See commit 791ab8b2e3db ("arm64: Ignore any DMA offsets in the 
+    max_zone_phys() calculation")
+
+[1] https://lore.kernel.org/all/9af8a19c3398e7dc09cfc1fbafed98d795d9f83e.1699464622.git.baruch@tkos.co.il/
+
+[2] https://lore.kernel.org/all/ZZ2HnHJV3gdzu1Aj@arm.com/
+
+Baruch Siach (4):
+  of: get dma area lower limit
+  of: unittest: add test for of_dma_get_cpu_limits() 'min' param
+  dma-direct: add base offset to zone_dma_bits
+  arm64: mm: take DMA zone offset into account
+
+Catalin Marinas (1):
+  dma-mapping: replace zone_dma_bits by zone_dma_limit
+
+ arch/arm64/mm/init.c       | 34 ++++++++++++----------------------
+ arch/powerpc/mm/mem.c      |  9 ++++-----
+ arch/s390/mm/init.c        |  2 +-
+ drivers/of/address.c       | 38 +++++++++++++++++++++++++++-----------
+ drivers/of/unittest.c      | 17 ++++++++++-------
+ include/linux/dma-direct.h |  3 ++-
+ include/linux/of.h         | 11 ++++++++---
+ kernel/dma/direct.c        | 11 ++++++-----
+ kernel/dma/pool.c          |  2 +-
+ kernel/dma/swiotlb.c       |  4 ++--
+ 10 files changed, 73 insertions(+), 58 deletions(-)
+
+-- 
+2.43.0
+
