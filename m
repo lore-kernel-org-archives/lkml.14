@@ -1,79 +1,145 @@
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B8912B14A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E0B12DD9A;
+	Tue,  9 Apr 2024 10:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657634; cv=none; b=S94rmkfeV5q83IQdQN65/e0ymwhj5MGDUeeoIyvfuR5INjOvDamDC0OAogNNrN+MP/MeczFTUPP3jxWbVaGzIFC1kIf6n2Sug0TsNjswtGRzgZ7ict24zYJESI+0VfpFut0Ah7FCfgv8pJcQDab7uB13QonJDAo9UP3DeL8tfS8=
+	t=1712657638; cv=none; b=glkgLRoPsDLHMuQb574gcZpEkhyKDzaW+v0jSq8RayRyOIrTyGKS4lIaCmgd5Gave0bj7wtDqux/CAdqbdNv2M3w+4RAkkxA1GH9MbVHaecVT/ixkWHI+WtugOZHi8JL78Nd/3YUDmuWfluu6XfG7ng3A8GzXrFOmyB2ky5cwwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657634; c=relaxed/simple;
-	bh=z/e9FoRiyI9hqDwCkx3v++nqOrdtfNLDoRSEf8XPdlg=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=h8k6+sIgx/Rdgl8U/RxOTDkZiqfASuiG1IzQNsvg7QAMeQiZQ+ibhPCGLFIYxGdIS+AS65BbFhCyIm8oPUMZozLoYXLhvOiXNRywDGzg4l/G6mqMocSw6/VbGhXltUi4wczo9QObPVbq1iq1InAjZoD0m24aK66fB09U96B4oaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=DutVURL+; arc=none smtp.client-ip=203.205.221.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712657638; c=relaxed/simple;
+	bh=V+31wpy+ViuFYyPXxxni0lbwtREaNbHVwxOi2HByI6I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=A5vb06UOuBCgJO40Q4wW94JaCfatQ/Azeb9lj0NNDqofb+WnDhJZL2ZLMB/5hnpFWpyl+Q+AjEzIYQLpuUBzsJCIfYkdpXFZYjMTZibtmSCbpjYqyqvN5tzQ4QW+AWttjazAE9gB4zao3B+OmWofDYxObLfzwCKXO8OCMkrmVVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=k2AwWlKS; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="DutVURL+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712657623; bh=hOnQ/UH3aNl5tM4fI62DW07XwsLBMYR+se+Q99zyz28=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=DutVURL+k/sctzsdZSj6KKEJ/Cds4CoMp2Ak3RRt0/5QESDpdJHszEizXQ1jMsvLF
-	 XFKz+p77IrosE8XW/FYGM0sMOefKZVC1X4LLDXvpFssSmu+cMuHMtvvN22SAqmV60p
-	 EOvL4C6Bo5QlBTF6WPARmzOE91z9aq0UgypZeQRA=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb6-0.qq.com (NewEsmtp) with SMTP
-	id 15D020F0; Tue, 09 Apr 2024 18:05:29 +0800
-X-QQ-mid: xmsmtpt1712657129tkr7p4lcq
-Message-ID: <tencent_971B5DBEDDD41947CFF98DA0A5FB8D9B9207@qq.com>
-X-QQ-XMAILINFO: OQhZ3T0tjf0ae1WvG5xAKJFK3udAX0qRmFuZBPcBQ2uaCAiTj0/SN7r1Lnri+h
-	 /dGB9QAtFmv/Y+snDsZctD4y2YfREatVrBML78E55QqNvtPozjiUj2/K9DTLGQ+dOi1N0LaE/IUg
-	 BgMYa4+ebCzHNkZJdVCz35R2nPutL30DwUD8JW0FDRZhXfyUx6Xd5FJyo308xvg5ZY91S54XBJMc
-	 4c5q+bMWJ1yjcVEn8RcIyA96J2U0X4kSeeGhBBLV/4JXrw4NZm2kBMR3fVthA2p2tb60biDL3S9U
-	 U04tYNnXRld53UfG+n0T1Ag9p7thLk7qBlr5WhrmUqycVKnI98SDx7Ix/+aAhriEd5oICH6TYMoa
-	 xuYMDEVaGgz1iHAn6ealaVKFJTsN4RAnjgS0H8s9VyPdx6SrqrtZlMKQBzGVZs2mlj+W/s+br4Co
-	 2586M6knuUpB7mbD4tLfT5b+RF7+JEnaBL6Gxw1PRlc9kKg/hLqObn3n5S2byL1lRQ8Mxog3+rOe
-	 h336ZE3MBrOygKxZyZPPpi6bxv7YvJJ90Znqq0tL8NhqmJd1jcmp3O5AkX/QJWFG/P+XJ68OE8Bv
-	 Shi8T08neZgoH7bDx92yoLwLxr0nMNoueCZ1eHHXS3BRRrZXmJvNBeBh50B8fw0P40mICpu3Jctc
-	 YSSqELNJmUB+UdbxaA+1A+PnOtqN9XhYuS9cGWTT41LzTI1VwXJ8lRPbXqGTJXSLxmE8gu69ugEA
-	 a/WqPX4uSNN73SWyJ/xx1rKH19Kt5LvmqeZkMYI1sCOB5mKW/9CHuF1QyGmrAOWt1NB9K+ylduoD
-	 bsfdtidreHSNJR4NxEagnZjc9rGGlPVdde9q1fT9qycdcX5kxF+dlzWVRcjovRJ6Y/Vcf4AhyW/B
-	 bE7s3oKQcIEA5WcDtIRlRDvNIqq7dqiu4ON09DNNUoCEk85SR+66hbW4NoR2NR+ApZSMw2I+t+
-X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+01ade747b16e9c8030e0@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [hfs?] KMSAN: uninit-value in hfsplus_listxattr (2)
-Date: Tue,  9 Apr 2024 18:05:30 +0800
-X-OQ-MSGID: <20240409100529.3962578-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000fefd040615a5bef6@google.com>
-References: <000000000000fefd040615a5bef6@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="k2AwWlKS"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4399e65b028862;
+	Tue, 9 Apr 2024 10:13:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=Lge6OIRDCgkl4zCRo6LWVugfANWljw5EKDyEYyAefvo
+	=; b=k2AwWlKSQz+hnJ8gtFvvrKSSgYxVhEtEk2/8/stm+xbC9DnqHM3gvltVtO1
+	CMvdfRGIg6KZoGffU7lwvIDivBpzayZY5YFPOokYy0K8Ao6CrkWshaUHIsLEOWpp
+	pNVv8mV9YYehFZh1CsCbr7sI/fRASwcoilb39d36+9+VSIfNuOc+U67wHb2uEBy8
+	O9rWlCEZxZ3Ga83Pe7UazwWVxp9H8tsmWYUFpl++7QMvgLodyRhULzT6+ggXo/26
+	FGVLLnsyDB+GSYREl6+fmkhgfZTZO2y3zeREgBiSp7mnuh1GhRa3XRktoVdur6s1
+	4yZd21vBm/Q8t9Y4Yi0x7U9xqHg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xcvtk0r1p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Apr 2024 10:13:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439ADgY0026773
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 9 Apr 2024 10:13:42 GMT
+Received: from hu-krichai-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 9 Apr 2024 03:13:35 -0700
+From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Date: Tue, 9 Apr 2024 15:43:19 +0530
+Subject: [PATCH v10 1/6] arm64: dts: qcom: sm8450: Add interconnect path to
+ PCIe node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240409-opp_support-v10-1-1956e6be343f@quicinc.com>
+References: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+In-Reply-To: <20240409-opp_support-v10-0-1956e6be343f@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Manivannan Sadhasivam
+	<manivannan.sadhasivam@linaro.org>,
+        Lorenzo Pieralisi
+	<lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, <johan+linaro@kernel.org>,
+        <bmasney@redhat.com>, <djakov@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <vireshk@kernel.org>, <quic_vbadigan@quicinc.com>,
+        <quic_skananth@quicinc.com>, <quic_nitegupt@quicinc.com>,
+        <quic_parass@quicinc.com>, <quic_krichai@quicinc.com>,
+        <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712657607; l=1661;
+ i=quic_krichai@quicinc.com; s=20230907; h=from:subject:message-id;
+ bh=V+31wpy+ViuFYyPXxxni0lbwtREaNbHVwxOi2HByI6I=;
+ b=HhwUyucsY/xTG7xcwjO3qg7WlJIC7Bu01VgxgAv+SHx9M3rzfMO60+By2uo2OQp2v51pWomeK
+ yjpT0BF17MoDvBH/ftI7Eg1qEsRB2Vu3UwEJKLR4iZA8mULeH38bFDq
+X-Developer-Key: i=quic_krichai@quicinc.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QTCtU-YOlL9WPKYXISqfq-LiCfDoRz7o
+X-Proofpoint-ORIG-GUID: QTCtU-YOlL9WPKYXISqfq-LiCfDoRz7o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-09_06,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 suspectscore=0
+ mlxscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404090065
 
-please test uini in hfsplus_listxattr
+Add PCIe-MEM & CPU-PCIe interconnect path to the PCIe nodes.
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fec50db7033e
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
+ arch/arm64/boot/dts/qcom/sm8450.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
-index 9c9ff6b8c6f7..858029b1c173 100644
---- a/fs/hfsplus/xattr.c
-+++ b/fs/hfsplus/xattr.c
-@@ -698,7 +698,7 @@ ssize_t hfsplus_listxattr(struct dentry *dentry, char *buffer, size_t size)
- 		return err;
- 	}
+diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+index b86be34a912b..615296e13c43 100644
+--- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+@@ -1807,6 +1807,12 @@ pcie0: pcie@1c00000 {
+ 					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+ 					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
  
--	strbuf = kmalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
-+	strbuf = kzalloc(NLS_MAX_CHARSET_SIZE * HFSPLUS_ATTR_MAX_STRLEN +
- 			XATTR_MAC_OSX_PREFIX_LEN + 1, GFP_KERNEL);
- 	if (!strbuf) {
- 		res = -ENOMEM;
++			interconnects = <&pcie_noc MASTER_PCIE_0 QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
++					 &config_noc SLAVE_PCIE_0 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
++
+ 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
+ 				 <&gcc GCC_PCIE_0_PIPE_CLK_SRC>,
+ 				 <&pcie0_phy>,
+@@ -1930,6 +1936,12 @@ pcie1: pcie@1c08000 {
+ 					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+ 					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
++			interconnects = <&pcie_noc MASTER_PCIE_1 QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
++					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ALWAYS
++					 &config_noc SLAVE_PCIE_1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
++
+ 			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+ 				 <&gcc GCC_PCIE_1_PIPE_CLK_SRC>,
+ 				 <&pcie1_phy>,
+
+-- 
+2.42.0
 
