@@ -1,62 +1,186 @@
-Received: from mail-m49197.qiye.163.com (mail-m49197.qiye.163.com [45.254.49.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E86E2572;
-	Tue,  9 Apr 2024 03:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C600754BCA
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 03:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712633766; cv=none; b=V/jwDGA47MJCqMuogQ2Rfw45xLgly9gw3I/Qfuh1lR4ATimKRB2TUElV0ee5o3kSAiOMKJ3KVcMs7aIxwSAUijcPaVecQrTQpLgaDPJniCzHNSGGOIppkoLTt11hM7wdfsnddEg6lxdv13ng6Y0s3PQpZehov5dRByNq7Bz69eY=
+	t=1712633988; cv=none; b=AcPuka3SR5JB7OtWXYvRUm5Ol6BhHnUz44J1F+qzRiAdiJEpNNjiI1EvCLLI9Y7TDty1QhIwOROlbJyTKQ7a6dv5matBemT2PAY92k+7YBk4kFPanVJHo/j/a2W9MJnsdkhpDrYD1T735utEBX9LxzgLuUvTx2FfEzlFS0APaa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712633766; c=relaxed/simple;
-	bh=kpXcVusQB3TZwqAjX49PyCnBLbhQ4biBz2tJMGSOtto=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MZDWTquI6IAe9tw2n0oXsypf9+lkRQwn5nxWE49uIpnJoZyO5mFqTcQW6nRWQ+w9tCl1Nebw2w5V9ecAmngtyyn28ZQqnjKVF5UHzQS3lEHR5kBZ9hpvBhnrfn/W1qeXATbOmaehDdhe2hMgg6Uivro1URIaWtgRGCk9BIHJWC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn; spf=pass smtp.mailfrom=jmu.edu.cn; arc=none smtp.client-ip=45.254.49.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jmu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jmu.edu.cn
-Received: from amadeus-Vostro-3710.lan (unknown [IPV6:240e:3b3:2c01:8f70:2795:b738:b1bf:b2bc])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 304D97E0129;
-	Tue,  9 Apr 2024 11:28:09 +0800 (CST)
-From: Chukun Pan <amadeus@jmu.edu.cn>
-To: jonas@kwiboo.se
-Cc: amadeus@jmu.edu.cn,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	krzk+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	robh@kernel.org
-Subject: Re: [PATCH 1/1] arm64: dts: rockchip: enable onboard spi flash for rock-3a
-Date: Tue,  9 Apr 2024 11:28:05 +0800
-Message-Id: <20240409032805.19682-1-amadeus@jmu.edu.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <fb57172e-2517-498c-9412-76f62929d24a@kwiboo.se>
-References: <fb57172e-2517-498c-9412-76f62929d24a@kwiboo.se>
+	s=arc-20240116; t=1712633988; c=relaxed/simple;
+	bh=EZ2T9kzzpeOrUuGVLRbShAImR8PnmT1WmVOGSUHPYL4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f3eiFGnfzJdVm6I96GjY1mlsxy9ZwKaN5PuMI3VFvW6xoIvckySxhAeHe3npgd+9a+ijCRW6DOy7HYxGW0V8P5bjLsOfyD8WbjyR6UDiJNAPiASeCPuILzOuWp2VXTCcwp6yn3EN2FFk1te3HhWz2jzxfHmEbgFER6mwglE23jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aWvnMbHK; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aWvnMbHK"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-516b6e75dc3so6492629e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 20:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712633984; x=1713238784; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RKPZzs2J4lIrxwzL7Z1BludJY/XdSD/M6/ANxlIo6/0=;
+        b=aWvnMbHKE0MGGIeoM1pwulgW1s0Muup4TuzdwLMJVccdlTbOSkxAcXwmfFupLApytw
+         jQ4yMp+KqwekOEpBgwiNVCzjha/0MztfpSIUVqptFeBWoZh8A5IbhywdB9ZD3lROYcUL
+         q6vDkpzw91gq0Q33n/O3XYtncm34njSP7H+7w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712633984; x=1713238784;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RKPZzs2J4lIrxwzL7Z1BludJY/XdSD/M6/ANxlIo6/0=;
+        b=iicpzVBFcsU/NB6lcYR7wSWHup6pKmyYwlVeJ9DUECirOEtC94Qh2qhhqO4+LpPj1M
+         BiGKlH88vKBsWK65jHCodt2LiXGFBk2bDjnFzE1nCMPeWkVKKX0zou9+ZCtZFNIfNBm0
+         CT10VJf3SH8HYjj6E+tU2AX6SNQ5KY56a6hKv8eDOh6hQvvv9NOiK0FSYJ5HsFHS3zG8
+         8lr7OY2LvQSd7uuibPqjU9FJbxoTcHGResOl0NOneu/5Z2kBHyBCA/T3p1rIxDw/42FU
+         0ebKluybIWT+BWpqOaDpAG1T8P+em1jbKOUpvwOGuTEeeJOtR5CLULsQyTsWOMcyBGZv
+         Fp3A==
+X-Forwarded-Encrypted: i=1; AJvYcCW18QlzzIBU2aTcR90eTu9gad32FqjLCNsqXBaED5vo198a07+C0I9GrdTpEVRIxIP2evtScmxOPydyvxc2xMjPZ5RFZ3f9MZ55Sr5A
+X-Gm-Message-State: AOJu0YySOwfYTbn1V7sG5cuACYqoIbgv8+mc8cFAINLpz/c54CCpJ3YU
+	AjU/I0kC4x+rrfRPXBJcPYGk+mY+oFC7dMCaZI56q/4azTDmN9UtRG4uRh1M/8aky3RpZ1qrsT9
+	rygDJdqTA5+Zt3m2uBMWB1Qi/QL4kXK/PSFK6
+X-Google-Smtp-Source: AGHT+IFba+BrwCMiOouL0a7dqzF+zOfyVTmCHkiqgDT24USb8iVyp548tZZRYidWDUI6/w60evjxT4xx96AaXSCW7qY=
+X-Received: by 2002:ac2:43b6:0:b0:516:c099:e785 with SMTP id
+ t22-20020ac243b6000000b00516c099e785mr6549819lfl.20.1712633983546; Mon, 08
+ Apr 2024 20:39:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTUMaVh9JQxhJQ0wZHUhKTlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUlPSx5BSBlIQUkYS0pBQx1MS0FJTEJOQRlMSENBGUoZHUEZSRkYWVdZFhoPEhUdFF
-	lBWU9LSFVKSktDSEhVSktLVUtZBg++
-X-HM-Tid: 0a8ec0e61adb03a2kunm304d97e0129
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PS46UTo6PzMISiEJPBQUTSNP
-	Kw4KCTFVSlVKTEpJTUhISUNCQ0NLVTMWGhIXVRoWGh8eDgg7ERYOVR4fDlUYFUVZV1kSC1lBWUlP
-	Sx5BSBlIQUkYS0pBQx1MS0FJTEJOQRlMSENBGUoZHUEZSRkYWVdZCAFZQUpOSEM3Bg++
+References: <20240404081635.91412-1-angelogioacchino.delregno@collabora.com>
+ <20240404081635.91412-3-angelogioacchino.delregno@collabora.com>
+ <CAGXv+5F9rfTVDExKSCF7fBKwR+HijNzFYE6+4aHKw3ZP81DG9w@mail.gmail.com> <5e385c2e-6509-4347-96a5-4606b32d20ff@collabora.com>
+In-Reply-To: <5e385c2e-6509-4347-96a5-4606b32d20ff@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Tue, 9 Apr 2024 11:39:32 +0800
+Message-ID: <CAGXv+5HkKZr0tDPhS9qVs=Uw7YYpfFYaC2Qf4Suv7RznUNWVsQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
+ support for board path
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunkuang.hu@kernel.org, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com, 
+	ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> I think the on-board spi nor flash support 104/108/133 mhz
-> so 50 mhz is wrong in any case.
+On Mon, Apr 8, 2024 at 6:16=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Il 08/04/24 05:20, Chen-Yu Tsai ha scritto:
+> > On Thu, Apr 4, 2024 at 4:16=E2=80=AFPM AngeloGioacchino Del Regno
+> > <angelogioacchino.delregno@collabora.com> wrote:
+> >>
+> >> Document OF graph on MMSYS/VDOSYS: this supports up to three DDP paths
+> >> per HW instance (so potentially up to six displays for multi-vdo SoCs)=
+.
+> >>
+> >> The MMSYS or VDOSYS is always the first component in the DDP pipeline,
+> >> so it only supports an output port with multiple endpoints - where eac=
+h
+> >> endpoint defines the starting point for one of the (currently three)
+> >> possible hardware paths.
+> >>
+> >> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@c=
+ollabora.com>
+> >> ---
+> >>   .../bindings/arm/mediatek/mediatek,mmsys.yaml | 23 +++++++++++++++++=
+++
+> >>   1 file changed, 23 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,m=
+msys.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.y=
+aml
+> >> index b3c6888c1457..90758bb5bcb1 100644
+> >> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.ya=
+ml
+> >> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.ya=
+ml
+> >> @@ -93,6 +93,29 @@ properties:
+> >>     '#reset-cells':
+> >>       const: 1
+> >>
+> >> +  port:
+> >> +    $ref: /schemas/graph.yaml#/properties/port
+> >> +    description:
+> >> +      Output port node. This port connects the MMSYS/VDOSYS output to
+> >> +      the first component of one display pipeline, for example one of
+> >> +      the available OVL or RDMA blocks.
+> >> +      Some MediaTek SoCs support up to three display outputs per MMSY=
+S.
+> >> +    properties:
+> >> +      endpoint@0:
+> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
+> >> +        description: Output to the primary display pipeline
+> >> +
+> >> +      endpoint@1:
+> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
+> >> +        description: Output to the secondary display pipeline
+> >> +
+> >> +      endpoint@2:
+> >> +        $ref: /schemas/graph.yaml#/properties/endpoint
+> >> +        description: Output to the tertiary display pipeline
+> >> +
+> >> +      required:
+> >> +        - endpoint@0
+> >> +
+> >
+> > Technically the mmsys device serves as an glue layer for the display
+> > pipeline, providing things like clock control and signal routing; the
+> > device itself is not part of the pipeline, and probably shouldn't be
+> > part of the graph?
+> >
+>
+> That is (only) partially true: in the case of older SoCs, the MMSYS can o=
+nly
+> connect to a single first IP of the pipeline, but in the case of newer on=
+es,
+> and especially (but not limited to) MT8195 onwards having multiple instan=
+ces
+> of VDOSYS, that really becomes part of the pipeline.
+>
+> This is not because of the possible different first IP in the pipeline, b=
+ut
+> because of support for dual-interface (DSI and DP) that, in even newer So=
+Cs,
+> can be done with cross-mmsys (cross-vdosys, actually...) as some of those=
+ do
+> have the two in different VDOs.
+>
+> So yes, this can be done without the graph in MMSYS *in this precise mome=
+nt in
+> time*, but we'll anyway end up adding it sooner than later - and I'm doin=
+g this
+> right now, instead of later, because it's also simplifying the implementa=
+tion
+> so like that I'm "catching two birds with one stone" :-)
 
-Thanks, I tested 104MHz on linux and it works fine. As for
-133 MHz, only MX25U12835FZNI-08G supports it. And I didn't
-find it support 108MHz in the datasheet of MX25U12835F.
+I see. Thanks for sorting it out. We had something similar on Allwinner
+platforms but it was never as complex or flexible as this.
 
-Thanks,
-Chukun
+ChenYu
+
+> Cheers,
+> Angelo
+>
+> > ChenYu
+> >
+> >>   required:
+> >>     - compatible
+> >>     - reg
+> >> --
+> >> 2.44.0
+> >>
+>
+>
