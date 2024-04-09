@@ -1,130 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF0DD2905
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 20:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632FB153BDD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 20:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712695625; cv=none; b=Uevh7PtGtjtvNHTq2lFyb/5VTgW/4nCUuFsNKbTTgEdamAYCAUw5WSQUcDEwmSIN8jPT4OnWXqabUXcfPFmatwJFOAaoZ0Aznk/YWX+Wgo2NNHzKQepY8tlkb4lVfLrwgBz/kENGAT0QVHFwcpRrHtKdqowRc+cGMvbP67VczdM=
+	t=1712695735; cv=none; b=hWMRY2LQxlVsve8NDzEXCNCKgl0i7IqBBUoycj5Xbtp5J+jOwTuzZwwioBP7nmDPZDFnCfWHfDe0uq7CiBEIZHAypyJLl6fg801AFF7bzuP3XXmwTbwOKs0Dn5x53Bz1J0geZR7RD/RMhmwXiB48sAE9vGRoxB8+C2euyroAn/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712695625; c=relaxed/simple;
-	bh=QtUyiLmeuh4WXIA7zBsu7RgbNBKYIPJFxnhtfnlAPkM=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=EM1OgBi34Ip1WvDwfaIYzXbyiXjboT9F+PvWs8E1tw+HBBzemiHRLx2F84ha/yahX5XieS63to6v0OEpkuYXPTFiMU9eYkWccE737iE3AWtnC8JNzrYxgkoQilfNpCAf8RXYC55SXXG35VovDU+bfnCCwtgA+MNKTiOc/usKrEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FmLcX6Xl; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712695735; c=relaxed/simple;
+	bh=AkzPRwIJ73o3QRSvWCo1z6HvR+da50xyrwDb6AgOtP0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CHRzH/jSO/86TC0yxbCZ0BkvT5xsJ6b8TADSNe03yXDA4jhu6dYASf2jqOK43D54F5q4K6nrLItjUGpTA6pFaLrwCAuyw3gHa1NM8t8lJZfM4CnwjJXnwPqRFv9Z0s6FQUbIJ3cxJKbPC/1qffdNepKyjXLN5VO2AEvH1SdkO1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dpznEsTK; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FmLcX6Xl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712695623; x=1744231623;
-  h=date:from:to:cc:subject:message-id;
-  bh=QtUyiLmeuh4WXIA7zBsu7RgbNBKYIPJFxnhtfnlAPkM=;
-  b=FmLcX6XlN63RDKOjfYL/zZ5cb2ljLxYQ4fa0kubl2X7oT7SY0IJa1ZqO
-   Ye+GntmRTGSCVEpTGfUK8QE+Nrsm7G16DNS0IqHVSuFulKOAud2/7AMC4
-   gKyFT34jwC6Z0YW5pwqy4r1+yvscd5W4+2LuMPi3b+hoZOwwEkGf8TMt5
-   rQcE5IrgUt2IVqIUHO1CXx8VTErQGcf6biZeKZ0UNemgFWNDEAp/usO3B
-   NzQqK6QvkKj3m7GuFovPOIKaXm98GpMcAI7Qv59YXzC+PHyuDvr3lPmII
-   yKF24XR+7um/zuss+7bkyzRxYIHqx/Y7kUao28eKFsyv7O0Ts/pkEipR/
-   A==;
-X-CSE-ConnectionGUID: BRlUC+f9QoO7LeyUPtbdnQ==
-X-CSE-MsgGUID: KTTtbdMORySBmj3ufKoCJQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="19460298"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="19460298"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 13:47:03 -0700
-X-CSE-ConnectionGUID: 7Wp7JKfJTQudxtxBOxjC+Q==
-X-CSE-MsgGUID: YlgOmALPT3ijSkQaZqBGYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20779600"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 09 Apr 2024 13:47:03 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruIMt-0006Uw-36;
-	Tue, 09 Apr 2024 20:46:59 +0000
-Date: Wed, 10 Apr 2024 04:46:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- b767fe5de0b4a5057b070d8cdefdcf6740733d6e
-Message-ID: <202404100430.uwNs1rAa-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dpznEsTK"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56e346224bdso4132497a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 13:48:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712695732; x=1713300532; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r8FBvT4U9jWO7n57wctvYSnbs8wWD3G7D/bsJH6yrak=;
+        b=dpznEsTKTkI4z/SZ7icROPfOb+Xx4omuK6mA1iWdeMYqh8yvdUNjO5tBOChPDNkyYg
+         4LxH/WWjrSW14/ZRU9O2kQaSQAeaKntlAU/m26o2UB1vYdU7rEY3+jeNJdOxKvupKTbG
+         fEy4rW4bvi3A6Il2mN17wjIU0+SCQF4lp8tbpo0dIAcDGnm/Z/LPEK6RFaqmG732la8b
+         tTjrqt3HCYPQNcTVRud5wJ408YatIFu8GEY23I3CKn7Q7GomYK1oXSuxVuoGRPYLoJmR
+         Pg9qilI/K7k1Ewn8V7hggv5MDjOisEsfOLSWirZjxuX5UNQD2IecBezcn/ux+A3yDs5F
+         Q7jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712695732; x=1713300532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r8FBvT4U9jWO7n57wctvYSnbs8wWD3G7D/bsJH6yrak=;
+        b=UualnwrMZrKNxOyUSXXUyNRPxkNlakRTK/xWPmqFo212RlxUthwoGrBSE+NzirtND2
+         +Jyb4MwlKSbnT/QiY0pwVNeleVCj4WMICHOUkVj6WJ0QrsQp3JU8dIpgFc/cqaTsJOYy
+         ned0mW9SoQDixNPgBFbN3JtEWdfCeMG9yrxeP8c8tCBL+ZdvAxD1PXoOZj7oMM6czW+U
+         55IpAEH+VYjETugQ2b4XolYj/QR8bopGp5s4flOjcdmtxauTLbPI4UehSrzd8nlLxnvE
+         qSfF+VQGP8/u/4y0AoeK1UX/S6lDU1adHJ1J4PxpvDGtDouxkhaT81QFHqcI2YdyZX9l
+         eOAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUuHzyJ5CuoPse9RsD1JTMnoZcCmFT7rFeGUxxBQsOUldChf096IXs1QqXncOqnTUmPfJ+hDtefqJMVqHC9LMPYjAyIS7tbBUsvXkW
+X-Gm-Message-State: AOJu0YwlrJaVKdxLoEbkl5Bz6jz037lvTqqlTAeLufQgjt6FvmMK1N5f
+	bMKKp+3pcaJfpfJsxmnRbOLhjqGmm0cokljd/d5tlJfM2o8QTmcB54IYLqSt6CgbLeGorNKYWLj
+	93f6hhGHzJUGWmm8AfQdJv8sBsLdxLcvpGLOQ
+X-Google-Smtp-Source: AGHT+IHmdRG/nFnqS9OEuLDhWFqseJucDLixYntzV9YZk7CKKlWhzUyPbXqLfCYRT3uZPpxDKB0xkdf/1sRhAlzoBmg=
+X-Received: by 2002:a50:cddc:0:b0:56e:99e:1fac with SMTP id
+ h28-20020a50cddc000000b0056e099e1facmr383240edj.39.1712695731585; Tue, 09 Apr
+ 2024 13:48:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240405-strncpy-kernel-debug-kdb-kdb_io-c-v2-1-d0bf595ab301@google.com>
+ <20240405095144.GB2890893@aspen.lan> <CAFhGd8q99emm1SFJSs=L7Pn0A79vCtDHtTD5XUbVCNh=DDadaQ@mail.gmail.com>
+ <20240409183558.GA7510@aspen.lan>
+In-Reply-To: <20240409183558.GA7510@aspen.lan>
+From: Justin Stitt <justinstitt@google.com>
+Date: Tue, 9 Apr 2024 13:48:38 -0700
+Message-ID: <CAFhGd8qESuuifuHsNjFPR-Va3P80bxrw+LqvC8deA8GziUJLpw@mail.gmail.com>
+Subject: Re: [PATCH v2] kdb: replace deprecated strncpy
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Jason Wessel <jason.wessel@windriver.com>, Douglas Anderson <dianders@chromium.org>, 
+	kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
-branch HEAD: b767fe5de0b4a5057b070d8cdefdcf6740733d6e  x86/entry: Merge thunk_64.S and thunk_32.S into thunk.S
+Hi,
 
-elapsed time: 722m
+On Tue, Apr 9, 2024 at 11:36=E2=80=AFAM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Mon, Apr 08, 2024 at 05:46:42PM -0700, Justin Stitt wrote:
+> > On Fri, Apr 5, 2024 at 2:51=E2=80=AFAM Daniel Thompson
+> > <daniel.thompson@linaro.org> wrote:
+> > >
+> > > >                       len_tmp =3D strlen(p_tmp);
+> > > > -                     strncpy(cp, p_tmp+len, len_tmp-len + 1);
+> > > > +                     strscpy(cp, p_tmp+len, len_tmp-len + 1);
+> > >
+> > > Again, I really don't think the third argument provides the number of
+> > > characters in the destination buffer.
+> > >
+> >
+> > Right, the third argument is the length of the "remaining" characters
+> > from the completion point.
+>
+> Which is not how strscpy() is designed to be used.
+>
+>
+> > if you type "tes" and press tab then kallsyms_symbol_complete() will
+> > populate p_tmp with "test". Prior to rendering to the user, @cp points
+> > to "s", we need to catch the user up and print the rest of the symbol
+> > name since they've already typed "tes" we only need to print out "t".
+>
+> I'm more concerned about the case where you fill the buffer entirely
+> then move the cursor left until you get to the tes and then press Tab.
+> I think at the point we write too many bytes to cp.
+>
+>
+> > len_tmp is the length of the entire symbol part as returned by
+> > kallsyms_symbol_complete() and len is the length of only the
+> > user-typed symbol. Therefore, the amount of remaining characters to
+> > print is given by len_tmp-len (and +1 for a NUL-byte).
+> >
+> > So, yeah, you're right. This isn't the length of the destination but I
+> > don't see why we can't use memcpy() (or strscpy()) and have this not
+> > be considered "broken". The pointer arithmetic checks out.
+>
+> The problem with substituting strncpy() with memcpy() is that is *not*
+> obviously wrong... but it could be subtly wrong.
+>
+> We can see that the person who originally wrote this code made a pretty
+> serious mistake with strncpy() and the third argument if garbage. It is
+> therefore important to figure out what the *correct* value for argument
+> #3 should have been *before* we attempt to replace strncpy() with
+> anything.
+>
+> Transforming something we know to be broken without fixing it first
+> means it is impossible to know if the transformation is correct or not.
+> Hence the original question, how do we know there is enough space
+> after cp to store the string?
 
-configs tested: 53
-configs skipped: 134
+Gotcha, I will find time to seriously refactor/rewrite this function
+(or at the very least the tab handling part of it).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+At the end of the day, though, I just want this strncpy() gone.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-arc                         haps_hs_defconfig   gcc  
-arm                        keystone_defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240410   gcc  
-i386         buildonly-randconfig-002-20240410   clang
-i386         buildonly-randconfig-003-20240410   clang
-i386         buildonly-randconfig-004-20240410   clang
-i386         buildonly-randconfig-005-20240410   gcc  
-i386         buildonly-randconfig-006-20240410   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240410   clang
-i386                  randconfig-002-20240410   clang
-i386                  randconfig-003-20240410   gcc  
-i386                  randconfig-004-20240410   gcc  
-i386                  randconfig-005-20240410   gcc  
-i386                  randconfig-006-20240410   clang
-i386                  randconfig-011-20240410   clang
-i386                  randconfig-012-20240410   clang
-i386                  randconfig-013-20240410   gcc  
-i386                  randconfig-014-20240410   clang
-i386                  randconfig-015-20240410   gcc  
-i386                  randconfig-016-20240410   gcc  
-loongarch                        alldefconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-microblaze                      mmu_defconfig   gcc  
-mips                           ip22_defconfig   gcc  
-mips                      malta_kvm_defconfig   gcc  
-mips                          rm200_defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 xes_mpc85xx_defconfig   gcc  
-riscv                             allnoconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                                  defconfig   gcc  
-sh                        dreamcast_defconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allyesconfig   gcc  
-um                             i386_defconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
+>
+>
+> Daniel.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Justin
