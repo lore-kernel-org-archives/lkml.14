@@ -1,39 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C555A12FB33
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 13:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D5C130487
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 13:25:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669153; cv=none; b=H9tvmqu73qDmEt4UAx9GOrzsv5ZuJTT8bFMoY29uhe1jhxiR3BWkSwKdHyqy/kgXwXiCjpx+cHr4T6xYtPgfs8SCaMBgSsLR7jneDKd97A0silybjVfWroZ6iIP94C8eHsLcPJF0JYLC1HGi3gD69Px5sRBrUb9q7CkGwKB7/Uw=
+	t=1712669156; cv=none; b=HbhqDKITABkBIeI1SHgq9TkLXUS2ctGg8eEaWG6bC90qtmufZVXU07BLemnuPnAHlmCaeP2YFvI7Nv4B3ZZjcVm23bqnNOj9OHfhac+JLjONgUiqft/bSR3E64ojgGvwH69qa/21elx0gQN+Seigrzwwvvx7GZvXcfO/XXOAGxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669153; c=relaxed/simple;
-	bh=wrfbM/7ZhlgBzw2eIfyFq2UguxKdPGwVe5WR560stW4=;
+	s=arc-20240116; t=1712669156; c=relaxed/simple;
+	bh=yADtRXVKW9eJ+FMWpWTJbC0RyEvP6Fm0YKwrRfIPJKE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=B6uMkW5af60SX1qLNSPfplZTQtSQ4PqvZFaz12HSk9zZYTgNDM1QidmMP/9la6rx/rZ3WOG7U3jGmKhXoEii6VUapYQ8d8m7IzRAcOvhTRWRMzzUZCz9LqJerWzj/SBfhlQaNBHLIH2PXLbfS8ZEuxSAuDYPo5DLWwZ05Pzyzvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UJxGcM6P; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=G29wK0kbqdIZiP4v8a6nG0HjLeSOaTE1tjY0havbMWlu/IeUGpUOiholy+ctng6sZT4+SsHPCCiiEklEje4ogCDxIxpdOhwetMfydfoUci0Ccm7er3KqejH4nUL9FvwHtqDt35PMz/hVnSzGg58j1TkYrTbtNsYEowNYu7xEc4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iHAeqj2C; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UJxGcM6P"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1482C240009;
-	Tue,  9 Apr 2024 13:25:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iHAeqj2C"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7CACF240014;
+	Tue,  9 Apr 2024 13:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712669150;
+	t=1712669152;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SEB6zkSJJhnV1xPil5tjnP9+rrhWJG+icwGJTNeHQgY=;
-	b=UJxGcM6PxsnEKn47Kik77njQu/Vz/XN3WLlqHuegbgJ2fxvKvRCINg5eNtzhCboUN4YqTG
-	1svtcnw8U+WHflW4+yT/1wVFfGl07SsLeYwHyLjB0ahmtdEK5R0PpKNtcqPnOAgKyLgoO3
-	X1plVb5TGCGzoIgO1is2bWgvlKK7+2pImDKTQw0QjNxylA6yz1G5L7fi6XgDh7PilKvAdk
-	+kiFiIwB8VyX6CFPNjybpbMj/cvhQm53+hdOHVLxtcYVu7GhsagTCVGm4ebuTa0D5NoiMy
-	lFelde+QLzJrnh1wtvt8Xm4yNcUPLJDvLjJM6ox6v3H3A3Gi0/JPl5lA443qJA==
+	bh=3J4b+nj6kf4aWQDjptbnmcHrG88ny05nRttOGw9gTdw=;
+	b=iHAeqj2CiXCHWrZny388uKfqM7Rm3R6r0mQIdTwCuWEkSYDJBNJWWnczMez4yTrTqMuUkG
+	5wUiBLiiT27liOpbfs2lak0nIuE1Ewm/blagCMgttbzgzvcNo31mD5kntIMF8Sx5a/Cmj+
+	5BaVHsoeFQ/crANSEeM6EzNduaoq1T39xPczCi4SIYCyalZzO9PNpqy3lskTbe2ChdkYSM
+	M/4ldWr5Ym50OIpQmSo7GbNy/TrHv+CTB7mu5BIwOenpTPkYK2znE0A4TU1jlqoSc2ECHH
+	S7Mlohc8nKzin6z2KgV1lHsVMhBvPFobCjgKzg+MZrx6ELRjLLXmAV5NFIul8w==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Tue, 09 Apr 2024 15:25:24 +0200
-Subject: [PATCH v6 06/17] drm/vkms: Use const for input pointers in
- pixel_read an pixel_write functions
+Date: Tue, 09 Apr 2024 15:25:26 +0200
+Subject: [PATCH v6 08/17] drm/vkms: Avoid computing blending limits inside
+ pre_mul_alpha_blend
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240409-yuv-v6-6-de1c5728fd70@bootlin.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240409-yuv-v6-8-de1c5728fd70@bootlin.com>
 References: <20240409-yuv-v6-0-de1c5728fd70@bootlin.com>
 In-Reply-To: <20240409-yuv-v6-0-de1c5728fd70@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -57,174 +57,119 @@ To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
- nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>, 
- Pekka Paalanen <pekka.paalanen@collabora.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+ nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6553;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4015;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=wrfbM/7ZhlgBzw2eIfyFq2UguxKdPGwVe5WR560stW4=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmFUHReLu1TUTPGXBIoeV/hQvLaw34rmSTm5RCT
- j7D5lBLV9KJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZhVB0QAKCRAgrS7GWxAs
- 4i7iEACganlvjVU3KseR0lOtb+fL4ulJlUTvHNvUqrUJtURnUpyv301A/mxZIhsA/JyTixnEGak
- TGnV45EZGf8cK/3gJEkUy/0C8mLCr5vtbZPWydG2BLB0XOOhz9HbhsQv896JSz65956vc8ZziZz
- s9nWFfg0gsR0GgX/2Ye4nGTbK9BDZq1qU3zzpQB7h8iozp1JJgSVG3cw4rZNgPVHFT3msslK7vP
- oRWAe6IcQJ/g1fTrGUiPFod+fmRy21rbSq/hL6BH73A3bsjILKyPUfwVPubMIRDeufclv6rc+5S
- CGf/sQ6BWeaHLLxOjirOTAbTmKSFzbR6RnlKEj6OVVt8T+64F1XxM1QdTQmm/lk9WwcSQgfDup9
- l3piY3jzdllR3JDwrWYlrjKj5wRg5Mv4aRimNjep/SGr69aeFMevwbsHR+W5qPlUjZXvt2Q0Z6f
- YoNQRSgW6bpOsc97Rjyh4fMINXyI1W1dlHhztN2fUY1rAAI952RU17qeQeBaGY/rO7NPI0ax8Gg
- invVpUZqOGnbG/v3cDcVYhRPaXGHnHKC8U0Gkb/W+exXQCseUmyD8WWkt6ojvHrR0+qguGiRV0V
- xLxgt0pmiWKPw7inYnjdYlOwSSGtV0bHWt7kF+CfnBiGJFC2vrg2/WCvkXhVoulibrZi3nwuiM1
- oxevHDgFIJA4D4g==
+ bh=yADtRXVKW9eJ+FMWpWTJbC0RyEvP6Fm0YKwrRfIPJKE=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmFUHSZUQ6kMwtbBmuo01Nc0Xr4jVnXV+2t8Whm
+ wMWDpaQRqCJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZhVB0gAKCRAgrS7GWxAs
+ 4lylEAC3AIZ9FwjZinvBqAjzOOei5+h9FHfID37FkIrFcXVY157n0f5PyXglexch5q11AABgJ+t
+ nIDwFCinFfcxYPO2rI16udV7+0fo6o1Eoew8BSYdALP9eFTNOcbLXPQqLsqQ1XOssx3n7fS7M/k
+ VH5NZFrunYn3baerSKS8Stv9w1e8ChmSn6vh42FfhjdahZMM7v0XIa2d8FRD1nOi69cXORw//t9
+ sgfAw686jZnbSUNERJWq3Ce+NtDFUO573vxp2+16nCWsV0edxUktSX+WTQ5H6K3Hf2b3O2cfp4Q
+ pztI+r7mlKQqpjPKPaPgePEYnD8GtKqbiHg2y2CE+x5IHykb8BhdhUWAfuaOK2qIk9JQ88nKPTn
+ FnfryXZgwoB+9yDT1M/6GD3Wks2s/rnh2aDZd3G/JZwsRs+CPUl9613mgDBxwmgawntm1Su93wq
+ 66gYZvOGRcfNWUVucN0QfagqQUuzeub2mrEwaT6eeDK9Wd+BPoVbv8seRXYgGpcUDq7zFTGGUzz
+ ap8o/xNpcZvT1uXKWWJKSLs2J4c9AC7INVkrUpYAg56VcJbIhtZWP1rT2hyXdTPiON0nhBI5vrJ
+ YHpcDFVrjhS7LJ27wK5/OSqsWCyqpCSwgD4M+j23HZcjo5v+1wHi1Dpg6KqRpZtniSePf2u108o
+ 6Xd8346Yohxj7lg==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-As the pixel_read and pixel_write function should never modify the input
-buffer, mark those pointers const.
+The pre_mul_alpha_blend is dedicated to blending, so to avoid mixing
+different concepts (coordinate calculation and color management), extract
+the x_limit and x_dst computation outside of this helper.
+It also increases the maintainability by grouping the computation related
+to coordinates in the same place: the loop in `blend`.
 
-Reviewed-by: Pekka Paalanen <pekka.paalanen@collabora.com>
-Reviewed-by: Maíra Canal <mcanal@igalia.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_drv.h     |  4 ++--
- drivers/gpu/drm/vkms/vkms_formats.c | 24 ++++++++++++------------
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/vkms/vkms_composer.c | 40 +++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index d6fd9ff973d1..2e1a1b824a3c 100644
---- a/drivers/gpu/drm/vkms/vkms_drv.h
-+++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -61,7 +61,7 @@ struct line_buffer {
-  * @out_pixel: destination address to write the pixel
-  * @in_pixel: pixel to write
-  */
--typedef void (*pixel_write_t)(u8 *out_pixel, struct pixel_argb_u16 *in_pixel);
-+typedef void (*pixel_write_t)(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel);
- 
- struct vkms_writeback_job {
- 	struct iosys_map data[DRM_FORMAT_MAX_PLANES];
-@@ -76,7 +76,7 @@ struct vkms_writeback_job {
-  * @in_pixel: pointer to the pixel to read
-  * @out_pixel: pointer to write the converted pixel
-  */
--typedef void (*pixel_read_t)(u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
-+typedef void (*pixel_read_t)(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel);
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index da0651a94c9b..45b111c74884 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -24,34 +24,30 @@ static u16 pre_mul_blend_channel(u16 src, u16 dst, u16 alpha)
  
  /**
-  * struct vkms_plane_state - Driver specific plane state
-diff --git a/drivers/gpu/drm/vkms/vkms_formats.c b/drivers/gpu/drm/vkms/vkms_formats.c
-index c28c32b00e39..69cf9733fec5 100644
---- a/drivers/gpu/drm/vkms/vkms_formats.c
-+++ b/drivers/gpu/drm/vkms/vkms_formats.c
-@@ -75,7 +75,7 @@ static int get_x_position(const struct vkms_frame_info *frame_info, int limit, i
-  * They are used in the vkms_compose_row() function to handle multiple formats.
+  * pre_mul_alpha_blend - alpha blending equation
+- * @frame_info: Source framebuffer's metadata
+  * @stage_buffer: The line with the pixels from src_plane
+  * @output_buffer: A line buffer that receives all the blends output
++ * @x_start: The start offset
++ * @pixel_count: The number of pixels to blend
+  *
+- * Using the information from the `frame_info`, this blends only the
+- * necessary pixels from the `stage_buffer` to the `output_buffer`
+- * using premultiplied blend formula.
++ * The pixels 0..@pixel_count in stage_buffer are blended at @x_start..@x_start+@pixel_count in
++ * output_buffer.
+  *
+  * The current DRM assumption is that pixel color values have been already
+  * pre-multiplied with the alpha channel values. See more
+  * drm_plane_create_blend_mode_property(). Also, this formula assumes a
+  * completely opaque background.
   */
- 
--static void ARGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void ARGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+-static void pre_mul_alpha_blend(struct vkms_frame_info *frame_info,
+-				struct line_buffer *stage_buffer,
+-				struct line_buffer *output_buffer)
++static void pre_mul_alpha_blend(const struct line_buffer *stage_buffer,
++				struct line_buffer *output_buffer, int x_start, int pixel_count)
  {
- 	/*
- 	 * The 257 is the "conversion ratio". This number is obtained by the
-@@ -89,7 +89,7 @@ static void ARGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- 	out_pixel->b = (u16)in_pixel[0] * 257;
+-	int x_dst = frame_info->dst.x1;
+-	struct pixel_argb_u16 *out = output_buffer->pixels + x_dst;
+-	struct pixel_argb_u16 *in = stage_buffer->pixels;
+-	int x_limit = min_t(size_t, drm_rect_width(&frame_info->dst),
+-			    stage_buffer->n_pixels);
+-
+-	for (int x = 0; x < x_limit; x++) {
+-		out[x].a = (u16)0xffff;
+-		out[x].r = pre_mul_blend_channel(in[x].r, out[x].r, in[x].a);
+-		out[x].g = pre_mul_blend_channel(in[x].g, out[x].g, in[x].a);
+-		out[x].b = pre_mul_blend_channel(in[x].b, out[x].b, in[x].a);
++	struct pixel_argb_u16 *out = &output_buffer->pixels[x_start];
++	const struct pixel_argb_u16 *in = stage_buffer->pixels;
++
++	for (int i = 0; i < pixel_count; i++) {
++		out[i].a = (u16)0xffff;
++		out[i].r = pre_mul_blend_channel(in[i].r, out[i].r, in[i].a);
++		out[i].g = pre_mul_blend_channel(in[i].g, out[i].g, in[i].a);
++		out[i].b = pre_mul_blend_channel(in[i].b, out[i].b, in[i].a);
+ 	}
  }
  
--static void XRGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void XRGB8888_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
+@@ -183,7 +179,7 @@ static void blend(struct vkms_writeback_job *wb,
  {
- 	out_pixel->a = (u16)0xffff;
- 	out_pixel->r = (u16)in_pixel[2] * 257;
-@@ -97,7 +97,7 @@ static void XRGB8888_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- 	out_pixel->b = (u16)in_pixel[0] * 257;
- }
+ 	struct vkms_plane_state **plane = crtc_state->active_planes;
+ 	u32 n_active_planes = crtc_state->num_active_planes;
+-	int y_pos;
++	int y_pos, x_dst, pixel_count;
  
--static void ARGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void ARGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- {
- 	u16 *pixel = (u16 *)in_pixel;
+ 	const struct pixel_argb_u16 background_color = { .a = 0xffff };
  
-@@ -107,7 +107,7 @@ static void ARGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pi
- 	out_pixel->b = le16_to_cpu(pixel[0]);
- }
+@@ -201,14 +197,16 @@ static void blend(struct vkms_writeback_job *wb,
  
--static void XRGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void XRGB16161616_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- {
- 	u16 *pixel = (u16 *)in_pixel;
+ 		/* The active planes are composed associatively in z-order. */
+ 		for (size_t i = 0; i < n_active_planes; i++) {
++			x_dst = plane[i]->frame_info->dst.x1;
++			pixel_count = min_t(int, drm_rect_width(&plane[i]->frame_info->dst),
++					    (int)stage_buffer->n_pixels);
+ 			y_pos = get_y_pos(plane[i]->frame_info, y);
  
-@@ -117,7 +117,7 @@ static void XRGB16161616_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pi
- 	out_pixel->b = le16_to_cpu(pixel[0]);
- }
+ 			if (!check_limit(plane[i]->frame_info, y_pos))
+ 				continue;
  
--static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void RGB565_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- {
- 	u16 *pixel = (u16 *)in_pixel;
+ 			vkms_compose_row(stage_buffer, plane[i], y_pos);
+-			pre_mul_alpha_blend(plane[i]->frame_info, stage_buffer,
+-					    output_buffer);
++			pre_mul_alpha_blend(stage_buffer, output_buffer, x_dst, pixel_count);
+ 		}
  
-@@ -142,7 +142,7 @@ static void RGB565_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-  * It is used to avoid null pointer to be used as a function. In theory, this function should
-  * never be called, except if you found a bug in the driver/DRM core.
-  */
--static void magenta_to_argb_u16(u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
-+static void magenta_to_argb_u16(const u8 *in_pixel, struct pixel_argb_u16 *out_pixel)
- {
- 	out_pixel->a = (u16)0xFFFF;
- 	out_pixel->r = (u16)0xFFFF;
-@@ -188,7 +188,7 @@ void vkms_compose_row(struct line_buffer *stage_buffer, struct vkms_plane_state
-  * They are used in vkms_writeback_row() to convert and store a pixel from the src_buffer to
-  * the writeback buffer.
-  */
--static void argb_u16_to_ARGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_ARGB8888(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {
- 	/*
- 	 * This sequence below is important because the format's byte order is
-@@ -206,7 +206,7 @@ static void argb_u16_to_ARGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
- 	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
- }
- 
--static void argb_u16_to_XRGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_XRGB8888(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {
- 	out_pixel[3] = 0xff;
- 	out_pixel[2] = DIV_ROUND_CLOSEST(in_pixel->r, 257);
-@@ -214,7 +214,7 @@ static void argb_u16_to_XRGB8888(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
- 	out_pixel[0] = DIV_ROUND_CLOSEST(in_pixel->b, 257);
- }
- 
--static void argb_u16_to_ARGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_ARGB16161616(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {
- 	u16 *pixel = (u16 *)out_pixel;
- 
-@@ -224,7 +224,7 @@ static void argb_u16_to_ARGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pi
- 	pixel[0] = cpu_to_le16(in_pixel->b);
- }
- 
--static void argb_u16_to_XRGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_XRGB16161616(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {
- 	u16 *pixel = (u16 *)out_pixel;
- 
-@@ -234,7 +234,7 @@ static void argb_u16_to_XRGB16161616(u8 *out_pixel, struct pixel_argb_u16 *in_pi
- 	pixel[0] = cpu_to_le16(in_pixel->b);
- }
- 
--static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_RGB565(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {
- 	u16 *pixel = (u16 *)out_pixel;
- 
-@@ -259,7 +259,7 @@ static void argb_u16_to_RGB565(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-  * It is used to avoid null pointer to be used as a function. In theory, this should never
-  * happen, except if there is a bug in the driver
-  */
--static void argb_u16_to_nothing(u8 *out_pixel, struct pixel_argb_u16 *in_pixel)
-+static void argb_u16_to_nothing(u8 *out_pixel, const struct pixel_argb_u16 *in_pixel)
- {}
- 
- /**
+ 		apply_lut(crtc_state, output_buffer);
 
 -- 
 2.43.0
