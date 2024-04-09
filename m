@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EB31384A9;
-	Tue,  9 Apr 2024 15:04:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FF13959C;
+	Tue,  9 Apr 2024 15:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675078; cv=none; b=MzzpS/TzfqbNHZGawtE7HIhLMSPu5/9Q+Qb3xu5riqUjjQQuWNTl1+wuKaGtLDkdA1VTxFEriXLwWWCBlzlHH8K8hDj4bv41Y1jjuH+tOUrJnYaBj/cZ461PnWTHgPHrb/AEwzu/9dl6i8vV2BZIKPL0VM9gKZLilSLCdpCEK3U=
+	t=1712675080; cv=none; b=aRGLn/PIAQ7r/XMgI2b7l0bdEd04D+djqwjnmenY11eIfL6oCL+PYFTFF1Fqc2+VbRTJabRNcgLGlRL30FD2ga2hsIU+U6NAxwkcLruCv8sVNeKwKGTde8rCQ+cUZWc+BS/LE41Tm4rAdVmsG3Y/fMc5evwuCADabNtMJfUneuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675078; c=relaxed/simple;
-	bh=L1+ZRTZG1Nh0vlJyMlEqVeY2W2ashlYErOetxusNu6o=;
+	s=arc-20240116; t=1712675080; c=relaxed/simple;
+	bh=jr0C6sNwIGJdObduli6FVCaxDeCtBKhG3NSdzuSaMGY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h054IQro3JbDNbh2DNyt4XDsepYScVdbr4VtFaQaeAKNJDmtjWt9WIhNfBn6sJQvdYqiTDv7LJEwEKfZcUfnJ75AD/cnaFBbM27611uWULIxBnVbLe2zaRgyEqkDUDA3gvZx/MrNL1r7ycLVk3stBUiEVtjwHA3dLb+ObL5S+x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cdJHnYja; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=luqxXpr4udkU+1PRuS7ZqVpwOBZ/FWuyNAE0oD4VjCKG5ZXySnC4jeb73zMOGjZtQ3n1ATgC7yDYPxNqVHw/qQNHpSMYjjocdnmMmpBLiwusws5SmhCjJPEJj3NeAxMBTTyGtY/N+CldFZ9w5QLLCWw6VtNIY+5ptaBoPZZ6eoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R1M8lSj6; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cdJHnYja"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 35310C0015;
-	Tue,  9 Apr 2024 15:04:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R1M8lSj6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E25CC0007;
+	Tue,  9 Apr 2024 15:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712675073;
+	t=1712675076;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=95nZiajAyZr8E8J//x4ErRR6+h/m4huNZxtlkMrs7o4=;
-	b=cdJHnYja5/LOxkxJN7va1bIIKPVhvooJAxue14WXOM4tZeUEqggsvNtQhY+xoqMZecvLEf
-	Hy+G66GyvmItqXn5IIN1SSYYYmHYk4/jtqYE8sFJ/oluxGELAIYpRty162wrAM1B0Wmf1f
-	u4MMjseoAYLz7fgLtXRKRAVEPI4KwwgfddiyTXiq4+0dWdhr5ZjBWrt/qkLrTDFQSB3f7Y
-	GEXakF4v6WoehbAz0116IJFfew8fHEgK4lheNu74FiS0kHBaeq0Umi05yRBMNoTmaOk1Hi
-	cyNxL/v5T/FiBjyUR/vS9tYaF2pUXLlwds0vxs0Zi/WP6pLZXaTA/OwkcVagHw==
+	bh=/M7MblF5FojAIwCImILZRFXjF6A2YTa3pBx7P1LIj6g=;
+	b=R1M8lSj6xkPF5c2NZdsSsoib8nRsYpLGnc82qzknsZdq3nQR5OdxJHWzBVN8GHsnqlz9DO
+	Spr3JocX0l3psWEQ2zOp3rrQ5aUBKqYA9xwiGp1qH9R6nEleGNk4kk1F3+eIM1Cf7zTiqk
+	hz4nRmMxSjIB2/CseedYX+Eja9N9ZK8pKlhpmMeD/2AWGuw5JBa2+9wQcxN4CqMa+YhJ09
+	LPKdBkltUsLPGozRcPySNiRKdMBB/KewQXYRNO93WNe7KzDumqJcON4WKrcp8C6r1GIkY5
+	kLYpJP5uTY2woEAc2U3hOXMHLuj0JqQNd5K3Aht0c6FAegD9Eyx7FDXnZ+d7CQ==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Apr 2024 17:04:02 +0200
-Subject: [PATCH net-next v7 12/17] net: pse-pd: Add support for
- setup_pi_matrix callback
+Date: Tue, 09 Apr 2024 17:04:04 +0200
+Subject: [PATCH net-next v7 14/17] dt-bindings: net: pse-pd: Add bindings
+ for PD692x0 PSE controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240409-feature_poe-v7-12-11e38efd4dee@bootlin.com>
+Message-Id: <20240409-feature_poe-v7-14-11e38efd4dee@bootlin.com>
 References: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 In-Reply-To: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -67,58 +67,213 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Implement setup_pi_matrix callback to configure the PSE PI matrix. This
-functionality is invoked before registering the PSE and following the core
-parsing of the pse_pis devicetree subnode.
+Add the PD692x0 I2C Power Sourcing Equipment controller device tree
+bindings documentation.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 
-Changes in v3:
-- New patch
----
- drivers/net/pse-pd/pse_core.c | 6 ++++++
- include/linux/pse-pd/pse.h    | 2 ++
- 2 files changed, 8 insertions(+)
+Changes in v2:
+- Enhance ports-matrix description.
+- Replace additionalProperties by unevaluatedProperties.
+- Drop i2c suffix.
 
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index 25558158048e..28d1c4f08ffd 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -217,6 +217,12 @@ int pse_controller_register(struct pse_controller_dev *pcdev)
- 	if (ret)
- 		return ret;
- 
-+	if (pcdev->ops->setup_pi_matrix) {
-+		ret = pcdev->ops->setup_pi_matrix(pcdev);
-+		if (ret)
-+			return ret;
-+	}
+Changes in v3:
+- Remove ports-matrix parameter.
+- Add description of all physical ports and managers.
+- Add pse_pis subnode moving to the API of pse-controller binding.
+- Remove the MAINTAINERS section for this driver as I will be maintaining
+  all pse-pd subsystem.
+
+Changes in v5:
+- Remove defs used only once.
+- Replace underscore by dash.
+- Add description.
+
+Changes in v7:
+- Fix nit.
+- Add vpwr-supply property in the example.
+- Remove ports references for the manager node.
+---
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     | 169 +++++++++++++++++++++
+ 1 file changed, 169 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
+new file mode 100644
+index 000000000000..828439398fdf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/pse-pd/microchip,pd692x0.yaml
+@@ -0,0 +1,169 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/pse-pd/microchip,pd692x0.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	mutex_lock(&pse_list_mutex);
- 	list_add(&pcdev->list, &pse_controller_list);
- 	mutex_unlock(&pse_list_mutex);
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index e19d58b5e777..fa0c73da0cf1 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -49,6 +49,7 @@ struct pse_control_status {
-  *
-  * @ethtool_get_status: get PSE control status for ethtool interface
-  * @ethtool_set_config: set PSE control configuration over ethtool interface
-+ * @setup_pi_matrix: setup PI matrix of the PSE controller
-  */
- struct pse_controller_ops {
- 	int (*ethtool_get_status)(struct pse_controller_dev *pcdev,
-@@ -57,6 +58,7 @@ struct pse_controller_ops {
- 	int (*ethtool_set_config)(struct pse_controller_dev *pcdev,
- 		unsigned long id, struct netlink_ext_ack *extack,
- 		const struct pse_control_config *config);
-+	int (*setup_pi_matrix)(struct pse_controller_dev *pcdev);
- };
- 
- struct module;
++title: Microchip PD692x0 Power Sourcing Equipment controller
++
++maintainers:
++  - Kory Maincent <kory.maincent@bootlin.com>
++
++allOf:
++  - $ref: pse-controller.yaml#
++
++properties:
++  compatible:
++    enum:
++      - microchip,pd69200
++      - microchip,pd69210
++      - microchip,pd69220
++
++  reg:
++    maxItems: 1
++
++  managers:
++    type: object
++    description:
++      List of the PD69208T4/PD69204T4/PD69208M PSE managers. Each manager
++      have 4 or 8 physical ports according to the chip version. No need to
++      specify the SPI chip select as it is automatically detected by the
++      PD692x0 PSE controller. The PSE managers have to be described from
++      the lowest chip select to the greatest one, which is the detection
++      behavior of the PD692x0 PSE controller. The PD692x0 support up to
++      12 PSE managers which can expose up to 96 physical ports. All
++      physical ports available on a manager have to be described in the
++      incremental order even if they are not used.
++
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++    required:
++      - "#address-cells"
++      - "#size-cells"
++
++    patternProperties:
++      "^manager@0[0-9a-b]$":
++        type: object
++        description:
++          PD69208T4/PD69204T4/PD69208M PSE manager exposing 4 or 8 physical
++          ports.
++
++        properties:
++          reg:
++            description:
++              Incremental index of the PSE manager starting from 0, ranging
++              from lowest to highest chip select, up to 11.
++            maxItems: 1
++
++          "#address-cells":
++            const: 1
++
++          "#size-cells":
++            const: 0
++
++        patternProperties:
++          '^port@[0-7]$':
++            type: object
++            required:
++              - reg
++            additionalProperties: false
++
++        required:
++          - reg
++          - "#address-cells"
++          - "#size-cells"
++
++required:
++  - compatible
++  - reg
++  - pse-pis
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      ethernet-pse@3c {
++        compatible = "microchip,pd69200";
++        reg = <0x3c>;
++
++        managers {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          manager@0 {
++            reg = <0>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            phys0: port@0 {
++              reg = <0>;
++            };
++
++            phys1: port@1 {
++              reg = <1>;
++            };
++
++            phys2: port@2 {
++              reg = <2>;
++            };
++
++            phys3: port@3 {
++              reg = <3>;
++            };
++          };
++
++          manager@1 {
++            reg = <1>;
++            #address-cells = <1>;
++            #size-cells = <0>;
++
++            phys4: port@0 {
++              reg = <0>;
++            };
++
++            phys5: port@1 {
++              reg = <1>;
++            };
++
++            phys6: port@2 {
++              reg = <2>;
++            };
++
++            phys7: port@3 {
++              reg = <3>;
++            };
++          };
++        };
++
++        pse-pis {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          pse_pi0: pse-pi@0 {
++            reg = <0>;
++            #pse-cells = <0>;
++            pairset-names = "alternative-a", "alternative-b";
++            pairsets = <&phys0>, <&phys1>;
++            polarity-supported = "MDI", "S";
++            vpwr-supply = <&vpwr1>;
++          };
++          pse_pi1: pse-pi@1 {
++            reg = <1>;
++            #pse-cells = <0>;
++            pairset-names = "alternative-a";
++            pairsets = <&phys2>;
++            polarity-supported = "MDI";
++            vpwr-supply = <&vpwr2>;
++          };
++        };
++      };
++    };
 
 -- 
 2.34.1
