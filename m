@@ -1,238 +1,184 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEEF12880F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB4A12A14F;
+	Tue,  9 Apr 2024 08:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651240; cv=none; b=CTUNhhs0bp0uNTvcgB0pk4122J0IJBbtZ/RQdVjg1doe8RFr+80XxhOTQzzZte+zGmNo/N5+Uv/pyLyPMUX7AwIqVXL1+CjetZWDXYlQJv+pGEAy+Do3UQAxFeZU+AmquJMI05XR+jpGwwE073MZJN8C5++MAUrItYnR3tPCOq4=
+	t=1712651241; cv=none; b=Y+yZOe89OkBcPPNeAG1Fh4IdzSl2x8l7f+2gDjBhcof8dDDfXkPqkpuIX96ID+HRLXGCOK9QwhQOFTmWqgP1Pn+iF3gP6Lm0kAslhtCvyHUwEQ8mlMdnsL9XS944L2b1JUya60Dp+TPWRqVzIcJE0eWtOR2MGRfLkTrGxv8Szzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651240; c=relaxed/simple;
-	bh=itUkWLRcyPpOMmWElcAjrAh9Q4g+IKjYc56ZFGUD5Bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bw0EPSGLsIXhMZQV+bg4Q84S7dtqUduHjS3b/InEb5qjmjaEznPkQTGajO/kxdyZGWVInP9+Jz0riI0UacesXoPdFtNvIO7Sj0hxvsfXAJ2+R+PUBfXxtLdf8eHSemN4NfgpvD9lNyW5CaH9A88cZEu4oynawEwaw1/sti6UuZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CUsNWrnH; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712651241; c=relaxed/simple;
+	bh=lLjexWaZDoedCAGOjG4VuX8BKtf924kbhZ+DSXlqNb8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=STtTGb6PC5OXRjiHypVbqUFUzLSgd+v1izh/Rp4GGqgtWSN18zikBkJudJQY22uDgx0aR0iH9oud4pC/hOslku+15W5dZ79660Rm7O4KhdHbckBQdD4Lw9MrLRg27j6vVTfnwFvCp74TxvPEZJCnQV9AghxncBzTs3jfiXjQtq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KFYpal4V; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUsNWrnH"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5aa1b7a37b5so1725091eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:27:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712651237; x=1713256037; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pRaJtzo5cg/VrfJljXw5TEaEgpb4vopERkweBTeE6OA=;
-        b=CUsNWrnHx/Gh7NkMXM3Jt3H4B1Ckegy5CJA0YLlpI0CneWWQpRg8i+Q3gFkIVs2HLm
-         5n1WLukCzUSiNAGWbb4I9eCS9Aj9gvjOGUEoOWcjpmatQM8bFnQT7EaAuRAuiZ3EQgOd
-         mMOdntJ4KGa2LhG45NNtbYW8fkl94d+LVDRZrTKVCDViKzyiapTxAQmVOw7pqPnynhPw
-         0PsxcsKFrWVUpAVCgeYeQPhwoCyxXTcvG0SvMvp83w5qnVRfkPZ0BqK6hrz3MFZ4Sb7R
-         DvhIPB5WgMrw3VFkt8noULy1JzSuMon026hSrDf5BnhriN+Zp3fPD1njS0plCg8apJHA
-         156w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712651237; x=1713256037;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pRaJtzo5cg/VrfJljXw5TEaEgpb4vopERkweBTeE6OA=;
-        b=G5A0kHAkgyo1LETZE/rEw9ADSOr4rmKpWz7wMZago+cWSiguDj8zpUD4drSNxK/vB+
-         33YWD7arZ7DfPJzx8irfomO3X6dTHs801AkiZw1qaiAt1WKLkH1r/YhlwZTWjSdV1a5r
-         jfJtbqeEAfcNr2D1lPs1kuWIv6mP8rNFZRIkjvfHyKqsBSyaYOopMp0RFQ5tYRB1mKIC
-         shSgiQlY5Hhy7Lg2svZBFuU4nHs0QqvqcggklTjCYlkf+4HX6RDRfBuxmCakSnjcj56I
-         qRLBJ3y93L/wTcrl1EYRT8PJYymg5zAUVKPcd7nXmqs11XqHpzeOYgZ2eL4SINMP+2RC
-         Dg/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVyup4Kb3+OV0oFp/mIIn8/pjnpvm92tDgKbtIkutOj6smXyDUZvcTGzmn5ILO6Ix7n0oRbMm6HaPWt4noamVSDa2csckdtf99tuT55
-X-Gm-Message-State: AOJu0Yz7J1lNIS67orYcbFo3RPmjWaLPnyMfvI/0ndFTpXHniJjDC242
-	nW0A9rgRXtddtWv+WiPMyzI+1aW9CBZK1UzRbcN3pXY5jr0S+9j3
-X-Google-Smtp-Source: AGHT+IFvN5ohj5Cxouk2/0fAxnzfDvT6AqBlF178427aMryNUnuyIkM8ZO3KggJQq1sFBYMpf6zx2g==
-X-Received: by 2002:a05:6358:d59b:b0:186:45c:d6de with SMTP id ms27-20020a056358d59b00b00186045cd6demr6322611rwb.26.1712651237158;
-        Tue, 09 Apr 2024 01:27:17 -0700 (PDT)
-Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
-        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.27.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 01:27:16 -0700 (PDT)
-From: Barry Song <21cnbao@gmail.com>
-To: akpm@linux-foundation.org,
-	linux-mm@kvack.org
-Cc: baolin.wang@linux.alibaba.com,
-	chrisl@kernel.org,
-	david@redhat.com,
-	hanchuanhua@oppo.com,
-	hannes@cmpxchg.org,
-	hughd@google.com,
-	kasong@tencent.com,
-	ryan.roberts@arm.com,
-	surenb@google.com,
-	v-songbaohua@oppo.com,
-	willy@infradead.org,
-	xiang@kernel.org,
-	ying.huang@intel.com,
-	yosryahmed@google.com,
-	yuzhao@google.com,
-	ziy@nvidia.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/5] mm: swap: entirely map large folios found in swapcache
-Date: Tue,  9 Apr 2024 20:26:30 +1200
-Message-Id: <20240409082631.187483-5-21cnbao@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240409082631.187483-1-21cnbao@gmail.com>
-References: <20240409082631.187483-1-21cnbao@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KFYpal4V"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0FCA7FF813;
+	Tue,  9 Apr 2024 08:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712651237;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ES3Hzm2djU1rN6Hk2bzxHWrUY1Jv7REvk6nG0DNeQv4=;
+	b=KFYpal4V+yKK6zpC+hdeADBFAmLJy0Sab1IUme+uekQXPsIam9IB8zmOQLGx0q93KdqC9U
+	CeeblzWPDQ3Ngkr8R9CS3Iz33yGphBJswsSJX147KFJOO7FkBlCROkdoY14xgnFQdFuIgx
+	ZUj3QteJmcs293pWbcDCRlQZ9Io6U+rFuhIKEVcy556wU6uGr34UAg3GLpcfhk/YVbY4ND
+	+CvvCBsUCIwXlaj5ovZLX6O6xbZvMCoWG4PawFgp768cMeETDrkN3GFlN3DFv28gjN8FMR
+	kQ9y5T1j+ewIPnRuRHDNX+Rt/pv3mEYFsfnI+RRnY5QUShuAu4pENOesqsCqqA==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Date: Tue, 09 Apr 2024 10:26:32 +0200
+Subject: [PATCH net-next v10 10/13] net: netdevsim: ptp_mock: Convert to
+ netdev_ptp_clock_register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240409-feature_ptp_netnext-v10-10-0fa2ea5c89a9@bootlin.com>
+References: <20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com>
+In-Reply-To: <20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com>
+To: Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Radu Pirea <radu-nicolae.pirea@oss.nxp.com>, 
+ Jay Vosburgh <j.vosburgh@gmail.com>, Andy Gospodarek <andy@greyhouse.net>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jonathan Corbet <corbet@lwn.net>, 
+ Horatiu Vultur <horatiu.vultur@microchip.com>, UNGLinuxDriver@microchip.com, 
+ Simon Horman <horms@kernel.org>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: kory.maincent@bootlin.com
 
-From: Chuanhua Han <hanchuanhua@oppo.com>
+The hardware registration clock for net device is now using
+netdev_ptp_clock_register to save the net_device pointer within the PTP
+clock xarray. netdevsim is registering its ptp through the mock driver.
+It is the only driver using the mock driver to register a ptp clock.
+Convert the mock driver to the new API.
 
-When a large folio is found in the swapcache, the current implementation
-requires calling do_swap_page() nr_pages times, resulting in nr_pages
-page faults. This patch opts to map the entire large folio at once to
-minimize page faults. Additionally, redundant checks and early exits
-for ARM64 MTE restoring are removed.
-
-Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
-Co-developed-by: Barry Song <v-songbaohua@oppo.com>
-Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+Reviewed-by: Rahul Rameshbabu <rrameshbabu@nvidia.com>
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 ---
- mm/memory.c | 64 +++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 12 deletions(-)
+Changes in v8:
+- New patch
+---
+ drivers/net/netdevsim/netdev.c | 19 +++++++++++--------
+ drivers/ptp/ptp_mock.c         |  4 ++--
+ include/linux/ptp_mock.h       |  4 ++--
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index c4a52e8d740a..9818dc1893c8 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3947,6 +3947,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	pte_t pte;
- 	vm_fault_t ret = 0;
- 	void *shadow = NULL;
-+	int nr_pages = 1;
-+	unsigned long start_address = vmf->address;
-+	pte_t *start_pte = vmf->pte;
-+	bool any_swap_shared = false;
+diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+index d7ba447db17c..58bc54949956 100644
+--- a/drivers/net/netdevsim/netdev.c
++++ b/drivers/net/netdevsim/netdev.c
+@@ -402,17 +402,12 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	struct mock_phc *phc;
+ 	int err;
  
- 	if (!pte_unmap_same(vmf))
- 		goto out;
-@@ -4137,6 +4141,35 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	 */
- 	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
- 			&vmf->ptl);
+-	phc = mock_phc_create(&ns->nsim_bus_dev->dev);
+-	if (IS_ERR(phc))
+-		return PTR_ERR(phc);
+-
+-	ns->phc = phc;
+ 	ns->netdev->netdev_ops = &nsim_netdev_ops;
+ 	ns->netdev->stat_ops = &nsim_stat_ops;
+ 
+ 	err = nsim_udp_tunnels_info_create(ns->nsim_dev, ns->netdev);
+ 	if (err)
+-		goto err_phc_destroy;
++		return err;
+ 
+ 	rtnl_lock();
+ 	err = nsim_bpf_init(ns);
+@@ -426,8 +421,18 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ 	if (err)
+ 		goto err_ipsec_teardown;
+ 	rtnl_unlock();
 +
-+	/* We hit large folios in swapcache */
-+	if (start_pte && folio_test_large(folio) && folio_test_swapcache(folio)) {
-+		int nr = folio_nr_pages(folio);
-+		int idx = folio_page_idx(folio, page);
-+		unsigned long folio_start = vmf->address - idx * PAGE_SIZE;
-+		unsigned long folio_end = folio_start + nr * PAGE_SIZE;
-+		pte_t *folio_ptep;
-+		pte_t folio_pte;
-+
-+		if (unlikely(folio_start < max(vmf->address & PMD_MASK, vma->vm_start)))
-+			goto check_pte;
-+		if (unlikely(folio_end > pmd_addr_end(vmf->address, vma->vm_end)))
-+			goto check_pte;
-+
-+		folio_ptep = vmf->pte - idx;
-+		folio_pte = ptep_get(folio_ptep);
-+		if (!is_swap_pte(folio_pte) || non_swap_entry(pte_to_swp_entry(folio_pte)) ||
-+		    swap_pte_batch(folio_ptep, nr, folio_pte, &any_swap_shared) != nr)
-+			goto check_pte;
-+
-+		start_address = folio_start;
-+		start_pte = folio_ptep;
-+		nr_pages = nr;
-+		entry = folio->swap;
-+		page = &folio->page;
++	phc = mock_phc_create(ns->netdev);
++	if (IS_ERR(phc)) {
++		err = PTR_ERR(phc);
++		goto err_register_netdevice;
 +	}
 +
-+check_pte:
- 	if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte)))
- 		goto out_nomap;
++	ns->phc = phc;
+ 	return 0;
  
-@@ -4190,6 +4223,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 			 */
- 			exclusive = false;
- 		}
-+
-+		/* Reuse the whole large folio iff all entries are exclusive */
-+		if (nr_pages > 1 && any_swap_shared)
-+			exclusive = false;
- 	}
++err_register_netdevice:
++	unregister_netdevice(ns->netdev);
+ err_ipsec_teardown:
+ 	nsim_ipsec_teardown(ns);
+ 	nsim_macsec_teardown(ns);
+@@ -435,8 +440,6 @@ static int nsim_init_netdevsim(struct netdevsim *ns)
+ err_utn_destroy:
+ 	rtnl_unlock();
+ 	nsim_udp_tunnels_info_destroy(ns->netdev);
+-err_phc_destroy:
+-	mock_phc_destroy(ns->phc);
+ 	return err;
+ }
  
- 	/*
-@@ -4204,12 +4241,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	 * We're already holding a reference on the page but haven't mapped it
- 	 * yet.
- 	 */
--	swap_free(entry);
-+	swap_free_nr(entry, nr_pages);
- 	if (should_try_to_free_swap(folio, vma, vmf->flags))
- 		folio_free_swap(folio);
+diff --git a/drivers/ptp/ptp_mock.c b/drivers/ptp/ptp_mock.c
+index e7b459c846a2..1dcbe7426746 100644
+--- a/drivers/ptp/ptp_mock.c
++++ b/drivers/ptp/ptp_mock.c
+@@ -115,7 +115,7 @@ int mock_phc_index(struct mock_phc *phc)
+ }
+ EXPORT_SYMBOL_GPL(mock_phc_index);
  
--	inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
--	dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
-+	folio_ref_add(folio, nr_pages - 1);
-+	add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
-+	add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
-+
- 	pte = mk_pte(page, vma->vm_page_prot);
+-struct mock_phc *mock_phc_create(struct device *dev)
++struct mock_phc *mock_phc_create(struct net_device *dev)
+ {
+ 	struct mock_phc *phc;
+ 	int err;
+@@ -147,7 +147,7 @@ struct mock_phc *mock_phc_create(struct device *dev)
+ 	spin_lock_init(&phc->lock);
+ 	timecounter_init(&phc->tc, &phc->cc, 0);
  
- 	/*
-@@ -4219,33 +4258,34 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	 * exclusivity.
- 	 */
- 	if (!folio_test_ksm(folio) &&
--	    (exclusive || folio_ref_count(folio) == 1)) {
-+	    (exclusive || (folio_ref_count(folio) == nr_pages &&
-+			   folio_nr_pages(folio) == nr_pages))) {
- 		if (vmf->flags & FAULT_FLAG_WRITE) {
- 			pte = maybe_mkwrite(pte_mkdirty(pte), vma);
- 			vmf->flags &= ~FAULT_FLAG_WRITE;
- 		}
- 		rmap_flags |= RMAP_EXCLUSIVE;
- 	}
--	flush_icache_page(vma, page);
-+	flush_icache_pages(vma, page, nr_pages);
- 	if (pte_swp_soft_dirty(vmf->orig_pte))
- 		pte = pte_mksoft_dirty(pte);
- 	if (pte_swp_uffd_wp(vmf->orig_pte))
- 		pte = pte_mkuffd_wp(pte);
--	vmf->orig_pte = pte;
+-	phc->clock = ptp_clock_register(&phc->info, dev);
++	phc->clock = netdev_ptp_clock_register(&phc->info, dev);
+ 	if (IS_ERR(phc->clock)) {
+ 		err = PTR_ERR(phc->clock);
+ 		goto out_free_phc;
+diff --git a/include/linux/ptp_mock.h b/include/linux/ptp_mock.h
+index 72eb401034d9..e226011071f8 100644
+--- a/include/linux/ptp_mock.h
++++ b/include/linux/ptp_mock.h
+@@ -13,13 +13,13 @@ struct mock_phc;
  
- 	/* ksm created a completely new copy */
- 	if (unlikely(folio != swapcache && swapcache)) {
--		folio_add_new_anon_rmap(folio, vma, vmf->address);
-+		folio_add_new_anon_rmap(folio, vma, start_address);
- 		folio_add_lru_vma(folio, vma);
- 	} else {
--		folio_add_anon_rmap_pte(folio, page, vma, vmf->address,
--					rmap_flags);
-+		folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, start_address,
-+					 rmap_flags);
- 	}
+ #if IS_ENABLED(CONFIG_PTP_1588_CLOCK_MOCK)
  
- 	VM_BUG_ON(!folio_test_anon(folio) ||
- 			(pte_write(pte) && !PageAnonExclusive(page)));
--	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
--	arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
-+	set_ptes(vma->vm_mm, start_address, start_pte, pte, nr_pages);
-+	vmf->orig_pte = ptep_get(vmf->pte);
-+	arch_do_swap_page(vma->vm_mm, vma, start_address, pte, pte);
+-struct mock_phc *mock_phc_create(struct device *dev);
++struct mock_phc *mock_phc_create(struct net_device *dev);
+ void mock_phc_destroy(struct mock_phc *phc);
+ int mock_phc_index(struct mock_phc *phc);
  
- 	folio_unlock(folio);
- 	if (folio != swapcache && swapcache) {
-@@ -4269,7 +4309,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	}
+ #else
  
- 	/* No need to invalidate - it was non-present before */
--	update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
-+	update_mmu_cache_range(vmf, vma, start_address, start_pte, nr_pages);
- unlock:
- 	if (vmf->pte)
- 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+-static inline struct mock_phc *mock_phc_create(struct device *dev)
++static inline struct mock_phc *mock_phc_create(struct net_device *dev)
+ {
+ 	return NULL;
+ }
+
 -- 
 2.34.1
 
