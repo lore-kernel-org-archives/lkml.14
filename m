@@ -1,232 +1,125 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B1D80027;
-	Tue,  9 Apr 2024 09:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301368529E
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654484; cv=none; b=tBrOcjfqo3VN/FHOHtAaW7bNt8RONxKynGEpNIw3pBx4GFMAtc4x9ozyNaFOlBrDtFq4zt+C2ISONCB9kunsSuFPN5dDBqyqnBUcLepFKknMsjz9nNWTxK2JGb3i4KuTsgEdopzUcQHVKRozhb1sI+gvMXOUUX0rYQ8lZJuzCF4=
+	t=1712654488; cv=none; b=MoBL09LRqD/ovYsVKQ0MI+MJpTbSRmDkxq1pEx1qdDyziUbadSeqrMmHsBKRRk4ai8qQr6RUvoJ8GebLGv7LvwOfS9nhKbqRiwApVnIbHk/+hwU3H7y23HeUje62WpcE34XG3csiWWEpfk/WUjtqn2EplvTIkVFUd0M7sZAQ0/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654484; c=relaxed/simple;
-	bh=AJf5Of3kKlkAka+l9cpj2n36uGo5IzN/nGtrsDh5Z9s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Tr6YzVkBrXo24Nsml3YOcnuogiEeycmNiYUkGgiBYB5s1LTDT2egtA2Npe3lTj2mdpFnSrPmbSFvqzHuCghUL3ueiVZOM9Sli28guZ+Zx7nVZJnvTW2UbeekfrWyNFMd8UcuqwLjanie+T2FESOoZ+ih6jPLAkjp2cj/ZdQCxJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ANUe3Z+6; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712654488; c=relaxed/simple;
+	bh=kpgut7r9SoPwQ6L0e+kvqRpyFcrLlcU6aHU3tKj4qGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MbOZo6OrpMwBT4YYeGer1zhuDrqRl56XKt/NGPvTrW9q3CPeTU4M+GAsNbaKzbXlJXcX5qMr4ZYHhicjgzZq2WDe7ben9b3TSEVwd4rmGDeLhBybMd8P0U/mHngKm7YR/8dCXOsrEEqpGc0/hJUQk4duD4rZzbMrr5ujzJwaafs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S0Vw1Qcy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ANUe3Z+6"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5FB101BF20D;
-	Tue,  9 Apr 2024 09:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712654475;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dgkEencf4j8/akYYZKAAcikJgwU95AzVaQqqFLwYq+w=;
-	b=ANUe3Z+6s2nr2PPgirKQe0CzafD86+IuqA+XLBKB3otEoiImojEm/JOTPu8UIH/aB7qG4A
-	fa+UNGBGBoXnzgl+jY4bFp537Fte4PEczy4t98sEK2B/sEn6oXRieK/g2u5aW6jACHIZiX
-	/F4Pp2rEep9w++e7CvtRObrCpp5DKYd9bH5KgwvmT/7G0CeCBiOsusTcZVIhO7oYdRS2nw
-	ETVXd7PpYF3FUoNUVma67R5iWTi9tdRzGIEsxr5lLNP0a7bcWWNPkxbltWiNliR5BALaCJ
-	Kdja6F/gqeJa3W3Ff8dYBYhk35+SqHvPXFe07RpL9UEVitJ4AuOchklfkIrvlQ==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Tue, 09 Apr 2024 11:21:47 +0200
-Subject: [PATCH net-next v2 4/5] net: stmmac: add support for RZ/N1 GMAC
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0Vw1Qcy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YeC5R0Uay0C5dvbf+qarJuNA6Yc3zpuLXDofRbawIic=; b=S0Vw1Qcy2xbOmQLr3rSK5ilD4q
+	HNqv5Mbrk9qTSeb2fxO+ZEO9HdHeckXYZq2yk1LmmSDmr5PMuQVl9WJ4CAHJ/mZvPsT4VPF8daYE7
+	yRavlZarzT063qFyiI0kzrXdpaWsojrTot8ukdvVz2dUdNXSuW7YmUfvGX2L5RR9Bj1t//p9MUJkr
+	MwV7UZ6GPHjAeIZ37A/M5NTLto6pihqEhSIS5hlxiyGoE56UywfDdEvVruBA0yEK8zQoZHC4K4Hqo
+	1rrpNmj150gpscZJoxTJQW8NoWfxLU/n/Ox5KoN7C43AiVCnyQfQ2MIAvmdK25DawFfka9UUxC2XL
+	t8kCKdrQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ru7f6-00000007WWC-20I6;
+	Tue, 09 Apr 2024 09:21:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 28434300600; Tue,  9 Apr 2024 11:21:04 +0200 (CEST)
+Date: Tue, 9 Apr 2024 11:21:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chen Yu <yu.c.chen@intel.com>
+Cc: Abel Wu <wuyun.abel@bytedance.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Tim Chen <tim.c.chen@intel.com>,
+	Tiwei Bie <tiwei.btw@antgroup.com>,
+	Honglei Wang <wanghonglei@didichuxing.com>,
+	Aaron Lu <aaron.lu@intel.com>, Chen Yu <yu.chen.surf@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>
+Subject: Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf()
+ if no eligible entity is found
+Message-ID: <20240409092104.GA2665@noisy.programming.kicks-ass.net>
+References: <20240226082349.302363-1-yu.c.chen@intel.com>
+ <758ebf4e-ee84-414b-99ec-182537bcc168@bytedance.com>
+ <20240408115833.GF21904@noisy.programming.kicks-ass.net>
+ <ZhPtCyRmPxa0DpMe@chenyu5-mobl2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240409-rzn1-gmac1-v2-4-79ca45f2fc79@bootlin.com>
-References: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com>
-In-Reply-To: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Jose Abreu <joabreu@synopsys.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, 
- Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhPtCyRmPxa0DpMe@chenyu5-mobl2>
 
-From: Clément Léger <clement.leger@bootlin.com>
+On Mon, Apr 08, 2024 at 09:11:39PM +0800, Chen Yu wrote:
+> On 2024-04-08 at 13:58:33 +0200, Peter Zijlstra wrote:
+> > On Thu, Feb 29, 2024 at 05:00:18PM +0800, Abel Wu wrote:
+> > 
+> > > > According to the log, vruntime is 18435852013561943404, the
+> > > > cfs_rq->min_vruntime is 763383370431, the load is 629 + 2048 = 2677,
+> > > > thus:
+> > > > s64 delta = (s64)(18435852013561943404 - 763383370431) = -10892823530978643
+> > > >      delta * 2677 = 7733399554989275921
+> > > > that is to say, the multiply result overflow the s64, which turns the
+> > > > negative value into a positive value, thus eligible check fails.
+> > > 
+> > > Indeed.
+> > 
+> > From the data presented it looks like min_vruntime is wrong and needs
+> > update. If you can readily reproduce this, dump the vruntime of all
+> > tasks on the runqueue and see if min_vruntime is indeed correct.
+> >
+> 
+> This was the dump of all the entities on the tree, from left to right,
 
-Add support for the Renesas RZ/N1 GMAC. This support can make use of a
-custom RZ/N1 PCS which is fetched by parsing the pcs-handle device tree
-property.
+Oh, my bad, I thought it was the pick path.
 
-Signed-off-by: "Clément Léger" <clement.leger@bootlin.com>
-Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- MAINTAINERS                                      |  6 ++
- drivers/net/ethernet/stmicro/stmmac/Kconfig      | 12 ++++
- drivers/net/ethernet/stmicro/stmmac/Makefile     |  1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c | 88 ++++++++++++++++++++++++
- 4 files changed, 107 insertions(+)
+> and also from top down in middle order traverse, when this issue happens:
+> 
+> [  514.461242][ T8390] cfs_rq avg_vruntime:386638640128 avg_load:2048 cfs_rq->min_vruntime:763383370431
+> [  514.535935][ T8390] current on_rq se 0xc5851400, deadline:18435852013562231446
+> 			min_vruntime:18437121115753667698 vruntime:18435852013561943404, load:629
+> 
+> 
+> [  514.536772][ T8390] Traverse rb-tree from left to right
+> [  514.537138][ T8390]  se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible  <-- leftmost se
+> [  514.537835][ T8390]  se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
+> 
+> [  514.538539][ T8390] Traverse rb-tree from topdown
+> [  514.538877][ T8390]  middle se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible   <-- root se
+> [  514.539605][ T8390]  middle se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
+> 
+> The tree looks like:
+> 
+>           se (0xec1234e0)
+>                   |
+>                   |
+>                   ----> se (0xec4fcf20)
+> 
+> 
+> The root se 0xec1234e0 is also the leftmost se, its min_vruntime and
+> vruntime are both 763383370431, which is aligned with
+> cfs_rq->min_vruntime. It seems that the cfs_rq's min_vruntime gets
+> updated correctly, because it is monotonic increasing.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4745ea94d463..40bd3eb355fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18848,6 +18848,12 @@ F:	include/dt-bindings/net/pcs-rzn1-miic.h
- F:	include/linux/pcs-rzn1-miic.h
- F:	net/dsa/tag_rzn1_a5psw.c
- 
-+RENESAS RZ/N1 DWMAC GLUE LAYER
-+M:	Romain Gantois <romain.gantois@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/net/renesas,rzn1-gmac.yaml
-+F:	drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
-+
- RENESAS RZ/N1 RTC CONTROLLER DRIVER
- M:	Miquel Raynal <miquel.raynal@bootlin.com>
- L:	linux-rtc@vger.kernel.org
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 4ec61f1ee71a..05cc07b8f48c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -142,6 +142,18 @@ config DWMAC_ROCKCHIP
- 	  This selects the Rockchip RK3288 SoC glue layer support for
- 	  the stmmac device driver.
- 
-+config DWMAC_RZN1
-+	tristate "Renesas RZ/N1 dwmac support"
-+	default ARCH_RZN1
-+	depends on OF && (ARCH_RZN1 || COMPILE_TEST)
-+	select PCS_RZN1_MIIC
-+	help
-+	  Support for Ethernet controller on Renesas RZ/N1 SoC family.
-+
-+	  This selects the Renesas RZ/N1 SoC glue layer support for
-+	  the stmmac device driver. This support can make use of a custom MII
-+	  converter PCS device.
-+
- config DWMAC_SOCFPGA
- 	tristate "SOCFPGA dwmac support"
- 	default ARCH_INTEL_SOCFPGA
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 26cad4344701..c2f0e91f6bf8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_DWMAC_MEDIATEK)	+= dwmac-mediatek.o
- obj-$(CONFIG_DWMAC_MESON)	+= dwmac-meson.o dwmac-meson8b.o
- obj-$(CONFIG_DWMAC_QCOM_ETHQOS)	+= dwmac-qcom-ethqos.o
- obj-$(CONFIG_DWMAC_ROCKCHIP)	+= dwmac-rk.o
-+obj-$(CONFIG_DWMAC_RZN1)	+= dwmac-rzn1.o
- obj-$(CONFIG_DWMAC_SOCFPGA)	+= dwmac-altr-socfpga.o
- obj-$(CONFIG_DWMAC_STARFIVE)	+= dwmac-starfive.o
- obj-$(CONFIG_DWMAC_STI)		+= dwmac-sti.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
-new file mode 100644
-index 000000000000..e85524c2017c
---- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2024 Schneider-Electric
-+ *
-+ * Clément Léger <clement.leger@bootlin.com>
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/pcs-rzn1-miic.h>
-+#include <linux/phylink.h>
-+#include <linux/platform_device.h>
-+
-+#include "stmmac_platform.h"
-+#include "stmmac.h"
-+
-+static int rzn1_dwmac_pcs_init(struct stmmac_priv *priv,
-+			       struct mac_device_info *hw)
-+{
-+	struct device_node *np = priv->device->of_node;
-+	struct device_node *pcs_node;
-+	struct phylink_pcs *pcs;
-+
-+	pcs_node = of_parse_phandle(np, "pcs-handle", 0);
-+
-+	if (pcs_node) {
-+		pcs = miic_create(priv->device, pcs_node);
-+		of_node_put(pcs_node);
-+		if (IS_ERR(pcs))
-+			return PTR_ERR(pcs);
-+
-+		priv->hw->phylink_pcs = pcs;
-+	}
-+
-+	return 0;
-+}
-+
-+static void rzn1_dwmac_pcs_exit(struct stmmac_priv *priv,
-+				struct mac_device_info *hw)
-+{
-+	if (priv->hw->phylink_pcs)
-+		miic_destroy(priv->hw->phylink_pcs);
-+}
-+
-+static int rzn1_dwmac_probe(struct platform_device *pdev)
-+{
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (ret)
-+		return ret;
-+
-+	plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
-+	if (IS_ERR(plat_dat))
-+		return PTR_ERR(plat_dat);
-+
-+	plat_dat->bsp_priv = plat_dat;
-+	plat_dat->pcs_init = rzn1_dwmac_pcs_init;
-+	plat_dat->pcs_exit = rzn1_dwmac_pcs_exit;
-+
-+	ret = stmmac_dvr_probe(dev, plat_dat, &stmmac_res);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rzn1_dwmac_match[] = {
-+	{ .compatible = "renesas,rzn1-gmac" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rzn1_dwmac_match);
-+
-+static struct platform_driver rzn1_dwmac_driver = {
-+	.probe  = rzn1_dwmac_probe,
-+	.remove_new = stmmac_pltfr_remove,
-+	.driver = {
-+		.name           = "rzn1-dwmac",
-+		.of_match_table = rzn1_dwmac_match,
-+	},
-+};
-+module_platform_driver(rzn1_dwmac_driver);
-+
-+MODULE_AUTHOR("Clément Léger <clement.leger@bootlin.com>");
-+MODULE_DESCRIPTION("Renesas RZN1 DWMAC specific glue layer");
-+MODULE_LICENSE("GPL");
+Right.
 
--- 
-2.44.0
+> My guess is that, for some reason, one newly forked se in a newly
+> created task group, in the rb-tree has not been picked for a long
+> time(maybe not eligible). Its vruntime stopped at the negative
+> value(near (unsigned long)(-(1LL << 20)) for a long time, its vruntime
+> is long behind the cfs_rq->vruntime, thus the overflow happens.
 
+I'll have to do the math again, but that's something in the order of not
+picking a task in about a day, that would be 'bad' :-)
+
+Is there any sane way to reproduce this, and how often does it happen?
