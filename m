@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642D813248E;
-	Tue,  9 Apr 2024 11:34:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30852133286;
+	Tue,  9 Apr 2024 11:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712662442; cv=none; b=JGX9mFmKkYJZ/TGtXai/+iN5GiRiRiSY39SypyXX+1MT6nTOd00SnPgi0V3LJ5LYWicnkqg2gUCiLIds9WOJm/0xkQxyIhmJBDAS/5yOxOCFVo8o3vC9SYAhKB9fqcjeJvl50IMW9AM9HlvK+FVJ1H3OFZtbeabbmkA7s3zLec4=
+	t=1712662446; cv=none; b=Hr5ARKPvbNxJOOEntCtV6SQXk3SR2saFqywDergg/bnjCH5SynGReAHOxokDF8ar8e4n/JarAQ772DQBXYKPm2Rn/3r7dLbonNhSDoKR1/xP/yjLl/Gz3qgZMuR3YwTP3GTWiYDzRmJ7VbVm8RWos8hVRdMe8MjLHDQimEV9fvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712662442; c=relaxed/simple;
-	bh=0HO5qRG7yEUzOGGRdhqoIYa/lL7AlbvV2yD89QdBpT4=;
+	s=arc-20240116; t=1712662446; c=relaxed/simple;
+	bh=l/YgE2jHDgEGiO5tZpMnwUUm+KuVZjmQoNRva6TC6eM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DNfmmfAnPdz54s996x2rE1JU0eR7tkFmzrXUWrPdcXYstNVv2APoS2pA5/rYQL0uO246c/ay6DACylHwlGXlRkX2kQdCK+pf/8/s+kOyIG6m7S0nb7NWHfUpqwplK93I1t6JO0689606EDvy3FP+yjLAJb3GeUZFe8wWzUQ5/Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2LxECNbS; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=uRfpGlSnNvvwH5RqobItiy0Ri7Kyhui5dbpxfQinD1eylJhRAvPMOsZm8j8kvVe6AYrY07ntjpaawZcxmlV7h5rvdkdCsLFnrO6umU0LRuj4QHPM21Q4NXtFM4kmnNFPuqgYdjWT/GnuwcL4LdlM2blfbl9sZf/0a0Usovd/46I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=HjVtEb/a; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2LxECNbS"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="HjVtEb/a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712662438;
-	bh=0HO5qRG7yEUzOGGRdhqoIYa/lL7AlbvV2yD89QdBpT4=;
+	s=mail; t=1712662443;
+	bh=l/YgE2jHDgEGiO5tZpMnwUUm+KuVZjmQoNRva6TC6eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=2LxECNbStsShBe9BxdU7ykmyjzb6y4Dubr6mxyzyi696LuIFVRZ/bDA6heNJ8UcaN
-	 43QKkLN9ze/sW/XnNnwqkLYNgk9uF30JlU/X/QkzKDNjDi4OXyDh4aNWht5faLo34E
-	 HhCAJmBAaS8oF4S4OgXAl9IZlwjmFrxcgXzayVKeq92FR/sgQ8zQ5IePSSUhqdyRv9
-	 16xHQtv6Nb0I+u5JS9slYWgbjiqFXWVelC1R/nodBszN41ZEzs3JdBvR4boBF0RmmD
-	 26I04dw6GJLGBovSo72yWjRjcIzjpV9e849v6OPG41Vn1yb+pBTTKEmL3p5A6HMrbq
-	 D8HxYVSjRF5DQ==
+	b=HjVtEb/agejdcAI18+BBEgvGU+Uzpv8NUoldIg8LLDMGeugmFpOijD5yzekO1L3t9
+	 twmgZ27EGBt4uOS+w7vfDEg8NyevUB5Ang1mWt1plRZmD4YaFR2c3oGcS3c7HkOXfH
+	 f0RviRfotw9KpQk1Ore/6KDy5mTPT2C+lUnc1drIXz6xWKLIjjxCwgSgATJT9mDe2k
+	 glYbVds1VcUsx2nUNLDsOQZLsWpJjQ16TY8lecmqhaiFrP5KyNrbBcIem21ucvqr18
+	 1QbEZFIhhsIF44FqZLmQ4kmfqkVvvTMBTKMHHbNIpuqjobnHVA6dU1C/27A4aq5whr
+	 Y5MiYrAt6CSOw==
 Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 98F7A3782111;
-	Tue,  9 Apr 2024 11:33:56 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5847D3782132;
+	Tue,  9 Apr 2024 11:34:01 +0000 (UTC)
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: broonie@kernel.org
 Cc: wenst@chromium.org,
@@ -72,9 +72,9 @@ Cc: wenst@chromium.org,
 	linux-mediatek@lists.infradead.org,
 	kernel@collabora.com,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v4 12/18] ASoC: mediatek: Use common mtk_afe_pcm_platform with common probe cb
-Date: Tue,  9 Apr 2024 13:33:04 +0200
-Message-ID: <20240409113310.303261-13-angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v4 14/18] ASoC: dt-bindings: mt8195: Document audio-routing and dai-link subnode
+Date: Tue,  9 Apr 2024 13:33:06 +0200
+Message-ID: <20240409113310.303261-15-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240409113310.303261-1-angelogioacchino.delregno@collabora.com>
 References: <20240409113310.303261-1-angelogioacchino.delregno@collabora.com>
@@ -86,245 +86,206 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since the mtk-afe-platform-driver generic mtk_afe_pcm_platform now has
-a common .probe() callback, there is no reason to keep duplicating this
-function over and over in the SoC specific AFE-PCM drivers: switch over
-to register with the common bits instead.
+Document the dai-link subnodes and the audio-routing property, allowing
+to describe machine specific audio hardware and links in device tree.
 
-Note that MT8186 was left out of this because it is registering some
-extra sinegen controls in the AFE-PCM probe callback and needs extra
-cleanups to be able to use the common bits.
+While at it, also deprecate the old properties which were previously
+used with driver hardcoded configuration.
 
+Also, since describing machine specific audio hardware and links replaces
+the now deprecated old logic doing the same in a driver hardcoded fashion,
+it is not allowed to have both the old and new properties together.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- sound/soc/mediatek/mt6797/mt6797-afe-pcm.c | 14 +-----------
- sound/soc/mediatek/mt7986/mt7986-afe-pcm.c | 14 +-----------
- sound/soc/mediatek/mt8183/mt8183-afe-pcm.c | 14 +-----------
- sound/soc/mediatek/mt8188/mt8188-afe-pcm.c | 21 +-----------------
- sound/soc/mediatek/mt8192/mt8192-afe-pcm.c | 25 ++--------------------
- sound/soc/mediatek/mt8195/mt8195-afe-pcm.c | 21 +-----------------
- 6 files changed, 7 insertions(+), 102 deletions(-)
+ .../bindings/sound/mt8195-mt6359.yaml         | 134 ++++++++++++++++++
+ 1 file changed, 134 insertions(+)
 
-diff --git a/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c b/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
-index da7267c684b1..c1dee119e93a 100644
---- a/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
-+++ b/sound/soc/mediatek/mt6797/mt6797-afe-pcm.c
-@@ -704,18 +704,6 @@ static int mt6797_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/sound/mt8195-mt6359.yaml b/Documentation/devicetree/bindings/sound/mt8195-mt6359.yaml
+index c1ddbf672ca3..2af1d8ffbd8b 100644
+--- a/Documentation/devicetree/bindings/sound/mt8195-mt6359.yaml
++++ b/Documentation/devicetree/bindings/sound/mt8195-mt6359.yaml
+@@ -12,6 +12,9 @@ maintainers:
+ description:
+   This binding describes the MT8195 sound card.
  
--static int mt6797_afe_component_probe(struct snd_soc_component *component)
--{
--	return mtk_afe_add_sub_dai_control(component);
--}
--
--static const struct snd_soc_component_driver mt6797_afe_component = {
--	.name		= AFE_PCM_NAME,
--	.probe		= mt6797_afe_component_probe,
--	.pointer	= mtk_afe_pcm_pointer,
--	.pcm_construct	= mtk_afe_pcm_new,
--};
--
- static int mt6797_dai_memif_register(struct mtk_base_afe *afe)
- {
- 	struct mtk_base_afe_dai *dai;
-@@ -852,7 +840,7 @@ static int mt6797_afe_pcm_dev_probe(struct platform_device *pdev)
- 	pm_runtime_get_sync(&pdev->dev);
++allOf:
++  - $ref: sound-card-common.yaml#
++
+ properties:
+   compatible:
+     enum:
+@@ -23,6 +26,33 @@ properties:
+     $ref: /schemas/types.yaml#/definitions/string
+     description: User specified audio sound card name
  
- 	/* register component */
--	ret = devm_snd_soc_register_component(dev, &mt6797_afe_component,
-+	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
- 					      NULL, 0);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
-diff --git a/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c b/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
-index d497e1129889..c1c486e275b9 100644
---- a/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
-+++ b/sound/soc/mediatek/mt7986/mt7986-afe-pcm.c
-@@ -429,18 +429,6 @@ static int mt7986_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
++  audio-routing:
++    description:
++      A list of the connections between audio components. Each entry is a
++      pair of strings, the first being the connection's sink, the second
++      being the connection's source.
++      Valid names could be the input or output widgets of audio components,
++      power supplies, MicBias of codec and the software switch.
++    minItems: 2
++    items:
++      enum:
++        # Sinks
++        - Ext Spk
++        - Headphone
++        - IN1P
++        - Left Spk
++        - Right Spk
++
++        # Sources
++        - Headset Mic
++        - HPOL
++        - HPOR
++        - Left BE_OUT
++        - Left SPO
++        - Right BE_OUT
++        - Right SPO
++        - Speaker
++
+   mediatek,platform:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: The phandle of MT8195 ASoC platform.
+@@ -30,10 +60,12 @@ properties:
+   mediatek,dptx-codec:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: The phandle of MT8195 Display Port Tx codec node.
++    deprecated: true
  
--static int mt7986_afe_component_probe(struct snd_soc_component *component)
--{
--	return mtk_afe_add_sub_dai_control(component);
--}
--
--static const struct snd_soc_component_driver mt7986_afe_component = {
--	.name = AFE_PCM_NAME,
--	.probe = mt7986_afe_component_probe,
--	.pointer	= mtk_afe_pcm_pointer,
--	.pcm_construct	= mtk_afe_pcm_new,
--};
--
- static int mt7986_dai_memif_register(struct mtk_base_afe *afe)
- {
- 	struct mtk_base_afe_dai *dai;
-@@ -573,7 +561,7 @@ static int mt7986_afe_pcm_dev_probe(struct platform_device *pdev)
+   mediatek,hdmi-codec:
+     $ref: /schemas/types.yaml#/definitions/phandle
+     description: The phandle of MT8195 HDMI codec node.
++    deprecated: true
  
- 	/* register component */
- 	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &mt7986_afe_component,
-+					      &mtk_afe_pcm_platform,
- 					      NULL, 0);
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Cannot register AFE component\n");
-diff --git a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-index 9e432ed9124b..25348fdf75fa 100644
---- a/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8183/mt8183-afe-pcm.c
-@@ -1042,18 +1042,6 @@ static int mt8183_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
+   mediatek,adsp:
+     $ref: /schemas/types.yaml#/definitions/phandle
+@@ -45,20 +77,122 @@ properties:
+       A list of the desired dai-links in the sound card. Each entry is a
+       name defined in the machine driver.
  
--static int mt8183_afe_component_probe(struct snd_soc_component *component)
--{
--	return mtk_afe_add_sub_dai_control(component);
--}
--
--static const struct snd_soc_component_driver mt8183_afe_component = {
--	.name		= AFE_PCM_NAME,
--	.probe		= mt8183_afe_component_probe,
--	.pointer	= mtk_afe_pcm_pointer,
--	.pcm_construct	= mtk_afe_pcm_new,
--};
--
- static int mt8183_dai_memif_register(struct mtk_base_afe *afe)
- {
- 	struct mtk_base_afe_dai *dai;
-@@ -1232,7 +1220,7 @@ static int mt8183_afe_pcm_dev_probe(struct platform_device *pdev)
++patternProperties:
++  ".*-dai-link$":
++    type: object
++    additionalProperties: false
++    description:
++      Container for dai-link level properties and CODEC sub-nodes.
++
++    properties:
++      link-name:
++        description: Indicates dai-link name and PCM stream name
++        enum:
++          - DPTX_BE
++          - ETDM1_IN_BE
++          - ETDM2_IN_BE
++          - ETDM1_OUT_BE
++          - ETDM2_OUT_BE
++          - ETDM3_OUT_BE
++          - PCM1_BE
++
++      codec:
++        description: Holds subnode which indicates codec dai.
++        type: object
++        additionalProperties: false
++        properties:
++          sound-dai:
++            minItems: 1
++            maxItems: 2
++        required:
++          - sound-dai
++
++      dai-format:
++        description: audio format
++        enum: [ i2s, right_j, left_j, dsp_a, dsp_b ]
++
++      mediatek,clk-provider:
++        $ref: /schemas/types.yaml#/definitions/string
++        description: Indicates dai-link clock master.
++        enum: [ cpu, codec ]
++
++    required:
++      - link-name
++
+ additionalProperties: false
  
- 	/* register component */
- 	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &mt8183_afe_component,
-+					      &mtk_afe_pcm_platform,
- 					      NULL, 0);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
-diff --git a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-index 46d6a5540403..9647fe133dc8 100644
---- a/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8188/mt8188-afe-pcm.c
-@@ -3030,25 +3030,6 @@ static int mt8188_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
+ required:
+   - compatible
+   - mediatek,platform
  
--static int mt8188_afe_component_probe(struct snd_soc_component *component)
--{
--	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
--	int ret;
--
--	snd_soc_component_init_regmap(component, afe->regmap);
--
--	ret = mtk_afe_add_sub_dai_control(component);
--
--	return ret;
--}
--
--static const struct snd_soc_component_driver mt8188_afe_component = {
--	.name = AFE_PCM_NAME,
--	.pointer       = mtk_afe_pcm_pointer,
--	.pcm_construct = mtk_afe_pcm_new,
--	.probe         = mt8188_afe_component_probe,
--};
--
- static int init_memif_priv_data(struct mtk_base_afe *afe)
- {
- 	struct mt8188_afe_private *afe_priv = afe->platform_priv;
-@@ -3350,7 +3331,7 @@ static int mt8188_afe_pcm_dev_probe(struct platform_device *pdev)
- 	}
++# Disallow legacy properties if xxx-dai-link nodes are specified
++if:
++  not:
++    patternProperties:
++      ".*-dai-link$": false
++then:
++  properties:
++    mediatek,dptx-codec: false
++    mediatek,hdmi-codec: false
++
+ examples:
+   - |
  
- 	/* register component */
--	ret = devm_snd_soc_register_component(dev, &mt8188_afe_component,
-+	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
- 					      afe->dai_drivers, afe->num_dai_drivers);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
-diff --git a/sound/soc/mediatek/mt8192/mt8192-afe-pcm.c b/sound/soc/mediatek/mt8192/mt8192-afe-pcm.c
-index aed22baef9fb..424c5c68f78a 100644
---- a/sound/soc/mediatek/mt8192/mt8192-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8192/mt8192-afe-pcm.c
-@@ -2125,22 +2125,6 @@ static int mt8192_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
+     sound: mt8195-sound {
+         compatible = "mediatek,mt8195_mt6359_rt1019_rt5682";
++        model = "mt8195_r1019_5682";
+         mediatek,platform = <&afe>;
+         pinctrl-names = "default";
+         pinctrl-0 = <&aud_pins_default>;
++
++        audio-routing =
++                "Headphone", "HPOL",
++                "Headphone", "HPOR",
++                "IN1P", "Headset Mic",
++                "Ext Spk", "Speaker";
++
++        mm-dai-link {
++                link-name = "ETDM1_IN_BE";
++                mediatek,clk-provider = "cpu";
++        };
++
++        hs-playback-dai-link {
++                link-name = "ETDM1_OUT_BE";
++                mediatek,clk-provider = "cpu";
++                codec {
++                        sound-dai = <&headset_codec>;
++                };
++        };
++
++        hs-capture-dai-link {
++                link-name = "ETDM2_IN_BE";
++                mediatek,clk-provider = "cpu";
++                codec {
++                        sound-dai = <&headset_codec>;
++                };
++        };
++
++        spk-playback-dai-link {
++                link-name = "ETDM2_OUT_BE";
++                mediatek,clk-provider = "cpu";
++                codec {
++                        sound-dai = <&spk_amplifier>;
++                };
++        };
++
++        hdmi-dai-link {
++                link-name = "ETDM3_OUT_BE";
++                codec {
++                        sound-dai = <&hdmi_tx>;
++                };
++        };
++
++        displayport-dai-link {
++                link-name = "DPTX_BE";
++                codec {
++                        sound-dai = <&dp_tx>;
++                };
++        };
+     };
  
--static int mt8192_afe_component_probe(struct snd_soc_component *component)
--{
--	return mtk_afe_add_sub_dai_control(component);
--}
--
--static const struct snd_soc_component_driver mt8192_afe_component = {
--	.name = AFE_PCM_NAME,
--	.probe = mt8192_afe_component_probe,
--	.pointer = mtk_afe_pcm_pointer,
--	.pcm_construct = mtk_afe_pcm_new,
--};
--
--static const struct snd_soc_component_driver mt8192_afe_pcm_component = {
--	.name = "mt8192-afe-pcm-dai",
--};
--
- static int mt8192_dai_memif_register(struct mtk_base_afe *afe)
- {
- 	struct mtk_base_afe_dai *dai;
-@@ -2302,16 +2286,11 @@ static int mt8192_afe_pcm_dev_probe(struct platform_device *pdev)
- 
- 	/* register platform */
- 	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &mt8192_afe_component, NULL, 0);
--	if (ret)
--		return dev_err_probe(dev, ret, "Couldn't register AFE component\n");
--
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					      &mt8192_afe_pcm_component,
-+					      &mtk_afe_pcm_platform,
- 					      afe->dai_drivers,
- 					      afe->num_dai_drivers);
- 	if (ret)
--		return dev_err_probe(dev, ret, "Couldn't register AFE-PCM component\n");
-+		return dev_err_probe(dev, ret, "Couldn't register AFE component\n");
- 
- 	return 0;
- }
-diff --git a/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c b/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
-index 620d7ade1992..64af9bf363fd 100644
---- a/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8195/mt8195-afe-pcm.c
-@@ -2944,25 +2944,6 @@ static int mt8195_afe_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static int mt8195_afe_component_probe(struct snd_soc_component *component)
--{
--	struct mtk_base_afe *afe = snd_soc_component_get_drvdata(component);
--	int ret = 0;
--
--	snd_soc_component_init_regmap(component, afe->regmap);
--
--	ret = mtk_afe_add_sub_dai_control(component);
--
--	return ret;
--}
--
--static const struct snd_soc_component_driver mt8195_afe_component = {
--	.name = AFE_PCM_NAME,
--	.pointer = mtk_afe_pcm_pointer,
--	.pcm_construct = mtk_afe_pcm_new,
--	.probe = mt8195_afe_component_probe,
--};
--
- static int init_memif_priv_data(struct mtk_base_afe *afe)
- {
- 	struct mt8195_afe_private *afe_priv = afe->platform_priv;
-@@ -3164,7 +3145,7 @@ static int mt8195_afe_pcm_dev_probe(struct platform_device *pdev)
- 	}
- 
- 	/* register component */
--	ret = devm_snd_soc_register_component(dev, &mt8195_afe_component,
-+	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
- 					      afe->dai_drivers, afe->num_dai_drivers);
- 	if (ret) {
- 		dev_warn(dev, "err_platform\n");
+ ...
 -- 
 2.44.0
 
