@@ -1,48 +1,48 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DBA115624E;
-	Tue,  9 Apr 2024 17:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A093153BD2;
+	Tue,  9 Apr 2024 17:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712683200; cv=none; b=OnfLfnC8vYllmS2xNQSOACIO28wDy1GkA0HZzIjgd6GviSrgoxRSu9SmaerhSZ+G9coOwCahxJpyaLOTdUw1r3/Y/1uLMXPb1WlN6NSeBhhFT+t7Gx6DojorbigC+vQaMCFwF3cuy/fbhcKB7R1zQ/Ll8jBnTXmb8q+sBMUlfFI=
+	t=1712683334; cv=none; b=Qgx76LMlMRgCMjNXfHjLnC4zE2ipxxq0xQpKtWHizviB4zebj/QnjwpP6LT6UyVc7puryI0nH2gA59Xol6H6l9bfyAf4v3c6//PtdzqYQNVGtbkxv7c//cxU/i3nRXuErf/ajJVzxcIJwf7QqWcsKjUIcJIFoZQOsFWocu+rnmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712683200; c=relaxed/simple;
-	bh=MX/jaT995o39SVb4w3KWka52pzriagvfVrr3JcFpSs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dsGR/SNtly86ryZnIrnrTIFdrZ0I9/OrGDTnzcykxckt24YwyHXKfFgqDr68t+FRpvK2wFRlWzutDVQxgH6adjdYlNW/sa6TIQdZ68hN4rsdyooouyXmRk+JDuzX/gp/2Nqk5/nBGq0Dc8MNT4HmscpRlyRsMhZc2nFvgvt9CeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hw+oHEGK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712683334; c=relaxed/simple;
+	bh=FV8T5ZxL0VBdZ1fdF5/j1pGUzTmlXKhQ8ugt2RX6Zg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RAgwIviN48LiUN2otqfii1p1Gns7wbDc+D2b8dYSDsoLksdYRp9aJPAJeI3lDtvm+j1/MaUQQJMDQKT+/9VC9VfR4dFHtsaVYI+XuelT5RDWVNyEoQawcYQgcdC9ln5UjJEPaPiY5MlY207wWrRsLWhOBWsijUGWq//sfKNeS+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=HL1a5/OJ; arc=none smtp.client-ip=199.89.1.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hw+oHEGK"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 439AmgRi015186;
-	Tue, 9 Apr 2024 17:19:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=QpJxkETK9XY7FK/LiJttaU6PuwaB78Eu6bRDXhDiPMM=; b=Hw
-	+oHEGK5YUlXztdarDsrgD0ajdN2AhZZGZstZxuJLScw76F4CzSL+EtXp66vCmUxS
-	KbNeQ3aND0H6H0Lx+LSw1xwTmSq50Vj6Bzgc3SyzehT6ihQ8Hb/F8g8yv2Y11mfH
-	vwhzkd5Xq4ZYmshltqx9H/9ZyWXVsvR1rq5XNzuywL9cACVPRp7Ad+GmIFhEwbq9
-	LB1TL3eJs4tHqymGAVPM4Nc3ZfrQB+n/6o4usCKWL+0JJDLCjQ4vdW905l8omjm8
-	ooQBmybUaSx5WL6UNPj8tXca9MJ9FJLkaZcuEZrwR2xV4xUAZm5WOWnqRIcQ6vKQ
-	Shn5wgR031FRhIEqeTdQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xd0hjsbq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 17:19:40 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 439HJdo5015383
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Apr 2024 17:19:39 GMT
-Received: from [10.71.108.229] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 9 Apr 2024
- 10:19:38 -0700
-Message-ID: <bad7f3e8-38ce-4901-8f00-de32a659f0ba@quicinc.com>
-Date: Tue, 9 Apr 2024 10:19:37 -0700
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="HL1a5/OJ"
+Received: from localhost (localhost [127.0.0.1])
+	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VDXnp0mvzz6Cnk8s;
+	Tue,  9 Apr 2024 17:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:references:content-language:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1712683320; x=1715275321; bh=BmiyWVLUgBdQ3Xc8G+8c67Tu
+	AAXUVgBLzSiNGT/ygcg=; b=HL1a5/OJfAWe2ZSrZjpdwgD0xChks8N0+uSfVYeK
+	PbBlFE7LKjx4z7MkRPw11p50qXiK2/rZKN+9uUNnfDiDtrlVdgkNehUd4NP+I04q
+	TdNVQA9swVyvKDg1/avtelf6Ad2tHSD8xgc03XfLkeSVG/WQQiY5GJJzDECvdjrG
+	frfzkz6SkHBZFgs8IHHba7dg3MHbNel8OYwZsssRwL+f5okoj45ehVv19ILeeTmS
+	WgxUwaOhCNoInn85Uw4Bd2lpQeHC9/flBEj8PY0yzC4L4euz/e6ZNZFogX0L+m+B
+	ETjuqZxaVdlrsSPiytR6W1Vebf6tPZpF8Xx04Pv2hL5wqA==
+X-Virus-Scanned: by MailRoute
+Received: from 008.lax.mailroute.net ([127.0.0.1])
+ by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id TdnRVpxAjYXN; Tue,  9 Apr 2024 17:22:00 +0000 (UTC)
+Received: from [100.125.77.89] (unknown [104.132.0.89])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VDXng36pdz6Cnk8m;
+	Tue,  9 Apr 2024 17:21:59 +0000 (UTC)
+Message-ID: <7b22b4b5-ddf9-42e3-9603-4f2422c31333@acm.org>
+Date: Tue, 9 Apr 2024 10:21:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,119 +50,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] drm/mipi-dsi: use correct return type for the DSC
- functions
+Subject: Re: [PATCH v2] scsi: ufs: core: changing the status to check inflight
 Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sumit Semwal
-	<sumit.semwal@linaro.org>,
-        Caleb Connolly <caleb.connolly@linaro.org>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>, David
- Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard
-	<mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        Marijn
- Suijten <marijn.suijten@somainline.org>
-References: <20240408-lg-sw43408-panel-v5-0-4e092da22991@linaro.org>
- <20240408-lg-sw43408-panel-v5-2-4e092da22991@linaro.org>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20240408-lg-sw43408-panel-v5-2-4e092da22991@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: SEO HOYOUNG <hy50.seo@samsung.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+ jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
+ kwangwon.min@samsung.com, kwmad.kim@samsung.com, sh425.lee@samsung.com,
+ quic_nguyenb@quicinc.com, cpgs@samsung.com, h10.kim@samsung.com
+References: <CGME20240409062901epcas2p3eb8f13336c2dbf978db1ce980a75b3cb@epcas2p3.samsung.com>
+ <20240409063254.145363-1-hy50.seo@samsung.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20240409063254.145363-1-hy50.seo@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dWVaDgAEYxUcywapg5fLLapUEMvR2SY1
-X-Proofpoint-GUID: dWVaDgAEYxUcywapg5fLLapUEMvR2SY1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_12,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 clxscore=1011 spamscore=0 mlxscore=0
- phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404090113
 
-
-
-On 4/7/2024 4:53 PM, Dmitry Baryshkov wrote:
-> The functions mipi_dsi_compression_mode() and
-> mipi_dsi_picture_parameter_set() return 0-or-error rather than a buffer
-> size. Follow example of other similar MIPI DSI functions and use int
-> return type instead of size_t.
-
-Hi Dmitry,
-
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
-
-Thanks,
-
-Jessica Zhang
-
-> 
-> Fixes: f4dea1aaa9a1 ("drm/dsi: add helpers for DSI compression mode and PPS packets")
-> Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->   drivers/gpu/drm/drm_mipi_dsi.c | 6 +++---
->   include/drm/drm_mipi_dsi.h     | 6 +++---
->   2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-> index ef6e416522f8..9874ff6d4718 100644
-> --- a/drivers/gpu/drm/drm_mipi_dsi.c
-> +++ b/drivers/gpu/drm/drm_mipi_dsi.c
-> @@ -654,7 +654,7 @@ EXPORT_SYMBOL(mipi_dsi_set_maximum_return_packet_size);
->    *
->    * Return: 0 on success or a negative error code on failure.
+On 4/8/24 23:32, SEO HOYOUNG wrote:
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 21429eec1b82..c940f52d9003 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -3082,16 +3082,7 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
 >    */
-> -ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
-> +int mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable)
+>   bool ufshcd_cmd_inflight(struct scsi_cmnd *cmd)
 >   {
->   	/* Note: Needs updating for non-default PPS or algorithm */
->   	u8 tx[2] = { enable << 0, 0 };
-> @@ -679,8 +679,8 @@ EXPORT_SYMBOL(mipi_dsi_compression_mode);
->    *
->    * Return: 0 on success or a negative error code on failure.
->    */
-> -ssize_t mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
-> -				       const struct drm_dsc_picture_parameter_set *pps)
-> +int mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
-> +				   const struct drm_dsc_picture_parameter_set *pps)
->   {
->   	struct mipi_dsi_msg msg = {
->   		.channel = dsi->channel,
-> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-> index c0aec0d4d664..3011d33eccbd 100644
-> --- a/include/drm/drm_mipi_dsi.h
-> +++ b/include/drm/drm_mipi_dsi.h
-> @@ -241,9 +241,9 @@ int mipi_dsi_shutdown_peripheral(struct mipi_dsi_device *dsi);
->   int mipi_dsi_turn_on_peripheral(struct mipi_dsi_device *dsi);
->   int mipi_dsi_set_maximum_return_packet_size(struct mipi_dsi_device *dsi,
->   					    u16 value);
-> -ssize_t mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable);
-> -ssize_t mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
-> -				       const struct drm_dsc_picture_parameter_set *pps);
-> +int mipi_dsi_compression_mode(struct mipi_dsi_device *dsi, bool enable);
-> +int mipi_dsi_picture_parameter_set(struct mipi_dsi_device *dsi,
-> +				   const struct drm_dsc_picture_parameter_set *pps);
->   
->   ssize_t mipi_dsi_generic_write(struct mipi_dsi_device *dsi, const void *payload,
->   			       size_t size);
-> 
-> -- 
-> 2.39.2
-> 
+> -	struct request *rq;
+> -
+> -	if (!cmd)
+> -		return false;
+> -
+> -	rq = scsi_cmd_to_rq(cmd);
+> -	if (!blk_mq_request_started(rq))
+> -		return false;
+> -
+> -	return true;
+> +	return cmd && (blk_mq_rq_state(scsi_cmd_to_rq(cmd)) == MQ_RQ_IN_FLIGHT);
+>   }
+
+There are superfluous parentheses in the above return statement. It is
+unusual in Linux kernel code to surround equality tests with
+parentheses.
+
+Anyway:
+
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
