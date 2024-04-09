@@ -1,108 +1,146 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB2A131197;
-	Tue,  9 Apr 2024 15:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8EE13C800;
+	Tue,  9 Apr 2024 15:07:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675227; cv=none; b=TeidTuggwBQPfusXCx6iWLiWTIrpsY5FdPE2mlK/P/ysHb27FPvwSup9nDeLkeKkUjaUyd3AwWPtBlrvyuX7ERs806i/G4Adu4KKLM3OBo3gvA9bKH8u4zLulNuJ+ixb9+mL1ifvIGUrFW4wN4minCZuaUkEMkycG691vmS1ZjA=
+	t=1712675232; cv=none; b=o56TlAcubow9b0cWHWvpf6O2f540awmFz5v3Oy3wsKuzNcMm6RGdOnl3W5Vwro0QE1iVjR1+2xljGLrTws7bJRNeM8A92uttGCkxBwDC9dm/99hiUQFVa1HylyYZ9j+ox6Kd4XyPYzJuMyQCF8xoeooohEUAQ9g4piFaWtNXYB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675227; c=relaxed/simple;
-	bh=Q4qYVPeSi3pPhjTgLSE8HZmmihR2GDi75RvWnTDH1vc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ghOfeFq1NegcpJNhgZJkwnZE173J0GV6OwALq+NxcYeoID0iD4SDc8yooAULIYJraxLhXqFFwcUyhzcbHsdMllJyn4hdtluLcKXGYbOjHbwYQv7MccS5tdldUXcFUsegbvSBpYGWtbCMsmqxbDZXCJe21psNkbFZupNFvCZm6R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XOGtt7dw; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1712675232; c=relaxed/simple;
+	bh=UI4DdX3zkv0IR14xJ19mTtofNIARX96E6JHAMnPik3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=gbRH+TZuF4lThttqGqReHgVb3ybVs14qf38Mew8Fp7u0GCyWfzHK1xi8ks+itKasCVi65jx0rDBn9Ru1RPEaZLKMwYLj/sWyLRK3LCBMoHNfzVBdHqSl8QRkPjtZTfIW1IuXdh1Rvn+3YADolPy3CZZBFkyC8LcS4TAGm0zmXRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgWguIoP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XOGtt7dw"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 439BXoUc032410;
-	Tue, 9 Apr 2024 15:06:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : reply-to : mime-version :
- content-transfer-encoding; s=corp-2023-11-20;
- bh=DUkPQJEtbC1MfYFjL31WeFSt8keXRxSCErE3HPeG8Bg=;
- b=XOGtt7dwrIvLI+wZaxdQfSAKL0iqswH/KsBFqeJdCvdtQZudkvEgNhFbpyewKMhIyPIY
- xUek0Etu3AFGhDpVADCI3BTusUDnNU/uZltFIGqdciPhNDYcdnYqHQxAKnEqlgYq4gMI
- vFFzWebRvcSdB6UVLLELD6z5ih4NUvQe753rRJBhS8U1P972KAdjstwZ5jlMLdkowYq7
- eBiXr8g9NtoKEVUjJp4VFVjlEMvjc2WQKKYPK+hM+istPGUo2BsWAV6UosgfmZI2jWU2
- 1XPNW3sJPlFabfX7ZIGQmb8rsWc+RtIeOqo7uSpbGzFLJBzkcRq/R9fq/ofwosa9vhWL yA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xax0un6yp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 09 Apr 2024 15:06:48 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 439DsilR040075;
-	Tue, 9 Apr 2024 15:06:48 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xavud47f7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 09 Apr 2024 15:06:48 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 439F1w6i031745;
-	Tue, 9 Apr 2024 15:06:47 GMT
-Received: from mlluis-mac.nl.oracle.com (dhcp-10-175-24-232.vpn.oracle.com [10.175.24.232])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xavud47d2-1;
-	Tue, 09 Apr 2024 15:06:47 +0000
-From: Miguel Luis <miguel.luis@oracle.com>
-To: Jonathan.Cameron@Huawei.com, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: rmk+kernel@armlinux.org.uk, miguel.luis@oracle.com
-Subject: [RFC PATCH 0/4] ACPI: processor: refactor acpi_processor_{get_info|remove}
-Date: Tue,  9 Apr 2024 15:05:29 +0000
-Message-ID: <20240409150536.9933-1-miguel.luis@oracle.com>
-X-Mailer: git-send-email 2.43.0
-Reply-To: miguel.luis@oracle.com
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgWguIoP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E27C433C7;
+	Tue,  9 Apr 2024 15:07:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712675232;
+	bh=UI4DdX3zkv0IR14xJ19mTtofNIARX96E6JHAMnPik3k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KgWguIoPQ/tksjX/+qv2DmE54YmB689iMFlJROavHIpDMgNQU/MpjnTI1ftpfCIZW
+	 bRC4lN6q6nZEQVyeNWFqtRUZ18kZPPOKdTchIFEBgVq+cyHHzWPNPXpxBvlbSEpE/S
+	 qTpK5EF/f9l4l+mRShmJCCFahgIFPfENT8me09wfqDu9ayw8A2iQg7zqVlAN6/3HVj
+	 HHhKjBJk/EhZj5LPVwecQBjRfgzzMjC3XMaCT9cw+omBLxVfSH4G8KzZuFoi/EVSlb
+	 mrpFuFj+lTqUKvp+7l+Hte00bBuYv1oUvWHWFNknvqCYIeFHITXEYpxMVnkyYYOtPn
+	 OXNr54vx9UX0Q==
+Date: Tue, 9 Apr 2024 10:07:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, johan+linaro@kernel.org,
+	bmasney@redhat.com, djakov@kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	vireshk@kernel.org, quic_vbadigan@quicinc.com,
+	quic_skananth@quicinc.com, quic_nitegupt@quicinc.com,
+	quic_parass@quicinc.com, krzysztof.kozlowski@linaro.org
+Subject: Re: [PATCH v10 5/6] PCI: Bring the PCIe speed to MBps logic to new
+ pcie_link_speed_to_mbps()
+Message-ID: <20240409150709.GA2076210@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_10,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 mlxlogscore=873
- bulkscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404090099
-X-Proofpoint-GUID: xyldpsM4RgOe0ZsXUP53XEI911orYMx3
-X-Proofpoint-ORIG-GUID: xyldpsM4RgOe0ZsXUP53XEI911orYMx3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409-opp_support-v10-5-1956e6be343f@quicinc.com>
 
-Both acpi_processor_get_info and acpi_processor_remove functions have
-architecture dependent functionality enabled via CONFIG_ACPI_HOTPLUG_CPU.
+On Tue, Apr 09, 2024 at 03:43:23PM +0530, Krishna chaitanya chundru wrote:
+> Bring the switch case in pcie_link_speed_mbps() to new function to
+> the header file so that it can be used in other places like
+> in controller driver.
+> 
+> Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Current pre-processor guards are restricting too much of functionality which
-makes it dificult to integrate other features such as Virtual CPU
-hotplug/unplug for arm64.
+Unnecessary.  Not every code review comment needs to be acknowledged
+in the commit log :)
 
-This series, applied on top of v6.9-rc3, suggests a refactoring on these two
-functions with the intent to understand them better and hopefully ease
-integration of more functionality.
+> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Apart from patches 2/4 and 3/4, which could be squashed but left them separated
-intentionally so it would ease reviewing, changes are self-contained.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-So far I've boot tested it successfully alone and as a prefix for vCPU hotplug/unplug
-patches [1], on arm64.
-
-[1]: https://lore.kernel.org/linux-arm-kernel/Zbp5xzmFhKDAgHws@shell.armlinux.org.uk/
-
-Miguel Luis (4):
-  ACPI: processor: refactor acpi_processor_get_info: evaluation of
-    processor declaration
-  ACPI: processor: refactor acpi_processor_get_info: isolate cpu hotpug
-    init delay
-  ACPI: processor: refactor acpi_processor_get_info: isolate
-    acpi_{map|unmap}_cpu under CONFIG_ACPI_HOTPLUG_CPU
-  ACPI: processor: refactor acpi_processor_remove: isolate
-    acpi_unmap_cpu under CONFIG_ACPI_HOTPLUG_CPU
-
- drivers/acpi/acpi_processor.c | 138 ++++++++++++++++++++++------------
- 1 file changed, 91 insertions(+), 47 deletions(-)
-
---
-2.43.0
-
+> ---
+>  drivers/pci/pci.c | 19 +------------------
+>  drivers/pci/pci.h | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..40487b86a75e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5922,24 +5922,7 @@ int pcie_link_speed_mbps(struct pci_dev *pdev)
+>  	if (err)
+>  		return err;
+>  
+> -	switch (to_pcie_link_speed(lnksta)) {
+> -	case PCIE_SPEED_2_5GT:
+> -		return 2500;
+> -	case PCIE_SPEED_5_0GT:
+> -		return 5000;
+> -	case PCIE_SPEED_8_0GT:
+> -		return 8000;
+> -	case PCIE_SPEED_16_0GT:
+> -		return 16000;
+> -	case PCIE_SPEED_32_0GT:
+> -		return 32000;
+> -	case PCIE_SPEED_64_0GT:
+> -		return 64000;
+> -	default:
+> -		break;
+> -	}
+> -
+> -	return -EINVAL;
+> +	return pcie_link_speed_to_mbps(to_pcie_link_speed(lnksta));
+>  }
+>  EXPORT_SYMBOL(pcie_link_speed_mbps);
+>  
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 17fed1846847..4de10087523e 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -290,6 +290,28 @@ void pci_bus_put(struct pci_bus *bus);
+>  	 (speed) == PCIE_SPEED_2_5GT  ?  2500*8/10 : \
+>  	 0)
+>  
+> +static inline int pcie_link_speed_to_mbps(enum pci_bus_speed speed)
+> +{
+> +	switch (speed) {
+> +	case PCIE_SPEED_2_5GT:
+> +		return 2500;
+> +	case PCIE_SPEED_5_0GT:
+> +		return 5000;
+> +	case PCIE_SPEED_8_0GT:
+> +		return 8000;
+> +	case PCIE_SPEED_16_0GT:
+> +		return 16000;
+> +	case PCIE_SPEED_32_0GT:
+> +		return 32000;
+> +	case PCIE_SPEED_64_0GT:
+> +		return 64000;
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  const char *pci_speed_string(enum pci_bus_speed speed);
+>  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+>  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+> 
+> -- 
+> 2.42.0
+> 
