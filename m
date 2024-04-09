@@ -1,165 +1,63 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39567130AF0;
-	Tue,  9 Apr 2024 14:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EF2101EC;
+	Tue,  9 Apr 2024 14:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712672998; cv=none; b=fQbJl49eU4hJi+BbykUBQnAK6fnFQM6ukxeD3bwzdN0ur/A8rW+d2dvQqpfEJRSAkJKSUTIVZ8tXemWa/BKzkP4+I1mE/qwLDCQSY/v4mBYrbr4oNoBYKcRN5/Z3syKXywFrcJu7u6NkY0xtnOZa6mEMklTL4C762sEDD8ZJp7U=
+	t=1712673055; cv=none; b=gfARgFd+/s7KkoH74eiWA0Rk7u1/fRFhDcO01ZKqZJy54FPSFQIqZIcCa0vWn1jCTMDwveount5kvl/SRfjN6xjgp1l8L27E8dFUNq/TSlx4a3w/xZ7KisxHsfSQE9wYRYCfmuFQvn+WBVqHnBjxnmvKseHWRQ2MUGSqTaA5y0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712672998; c=relaxed/simple;
-	bh=Ag5XnqNucISfEvIbIkrbr8gYzPOeP7XpP2zxkk7XaU0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=cSHhj8ZBt/ysnmlnJ+08dqp1n2pw+xJfUHcfTGfnLbQ5DbBUUj7fQ8UPMYgud449G78ZbGbyZdZshuIBxC4AOSYnOm3y/mcjd/+cEy3kaLrUg4LruU8ikuHwCorTgPuRLs4o6yLf8Bi5q3NxwBWhHMsSv0lHjxOFl8ycE7c7D2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SpnTAMiZ; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SpnTAMiZ"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-69b236a942dso13135316d6.0;
-        Tue, 09 Apr 2024 07:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712672996; x=1713277796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3sM7X07lq+AmKzTRDmOr5Z6+b5U2BleqB4mAYHqNgns=;
-        b=SpnTAMiZuqMtN3llmrDk+ExAmMKiXUDe37yeWS6sQqN1aLI1To6syuKUxh8dYWtfkA
-         UVA8Nyprp+X9P3Y6UiN1kvi2bV/bNYKe3xnW8N2Y0FhY4NQBDs7w3FCB3w4hmUfphRaq
-         WSocGMXDGH9ilMgjTlJP4lr0t8pvMXsPkY0ZBO0ND7+NtjD9V99+zyf0oq5iM+Wb4YEM
-         KIJ54JhXop+xix50BJiis0RJ5cvbTyK20Dvc9E2Tx0f//9lHDlS5DN8Focf9NDvEbORw
-         Hqjgl7wJ/DYsQSQXaBK3pNFuPoNmaApbGNywVQlO9rJ1S4faK6eCx6rB613WYBcMaheb
-         mzFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712672996; x=1713277796;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3sM7X07lq+AmKzTRDmOr5Z6+b5U2BleqB4mAYHqNgns=;
-        b=eungpY9T1r/OA/u3Qnoa/7HmMKnHUwUlwEqGiyXMNvzieI5fn5I8R2aKIx1cQEb1zw
-         MqyAZWOMTSSURzWQhEtXyYOqTiG7sfCWYhHO2K/fe0PILEQcrPyG4QK6PDXjTS5dKulK
-         SOMbq+ny66trsGyxxoUiaPXln/8GhyMPl0vM3inrvRvPGKJOJuT468XCBQG/nr9ftN4f
-         w9jUv3+BrmQE+I0HYSjFGCy8Ll+UJoXPC3wS3EeKK6JB0J38EAnuba7Uwz3xjkZwVfz3
-         ZqLJ8Tbqq2NOMvF//DkAMyJeB7VHTIwM10uiVNairsj0/cUtuaUo8jfKHK/1P53wmHSq
-         Hd9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUFwlRsARLp/IPZoAoWt2g7H/HfwU9Fni84QvW9r9suQDLKNXHLYqI8zc9YYLh+rTY3+zgs4JEBhUviQFyRePRe5vi+6rzARykojSrO9Z3MHh2nqcXypZPlMjde6qzEV4lYeExQ
-X-Gm-Message-State: AOJu0YxLcMO1ZbdWNq7OkvQOhXsJzaX4UpZRyGVpTRgkTELhVguLE0T2
-	9vkx8GnSCbAvvWwgAQO0XmtVjR7lSPhDnvZ5YGfdNOD/zFjDpRvA
-X-Google-Smtp-Source: AGHT+IFtf7pUtQ/+fTY5jgpISCKcKtpbNaZFOnKa4bZ1NAaudHfzimLYNq/KM1NHzbPQoEYP/6FV+w==
-X-Received: by 2002:a05:6214:c47:b0:69b:1c3c:aed9 with SMTP id r7-20020a0562140c4700b0069b1c3caed9mr3899574qvj.18.1712672995993;
-        Tue, 09 Apr 2024 07:29:55 -0700 (PDT)
-Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
-        by smtp.gmail.com with ESMTPSA id c16-20020a0ce650000000b0069915b47bf4sm3963763qvn.146.2024.04.09.07.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 07:29:55 -0700 (PDT)
-Date: Tue, 09 Apr 2024 10:29:55 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: John Fraker <jfraker@google.com>, 
- netdev@vger.kernel.org
-Cc: John Fraker <jfraker@google.com>, 
- Praveen Kaligineedi <pkaligineedi@google.com>, 
- Harshitha Ramamurthy <hramamurthy@google.com>, 
- Shailend Chand <shailend@google.com>, 
- Willem de Bruijn <willemb@google.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Junfeng Guo <junfeng.guo@intel.com>, 
- Ziwei Xiao <ziweixiao@google.com>, 
- Jeroen de Borst <jeroendb@google.com>, 
- linux-kernel@vger.kernel.org, 
- kory.maincent@bootlin.com, 
- andrew@lunn.ch, 
- richardcochran@gmail.com
-Message-ID: <661550e348224_23a2b2294f7@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240408180918.2773238-1-jfraker@google.com>
-References: <20240408180918.2773238-1-jfraker@google.com>
-Subject: Re: [PATCH net-next] gve: Correctly report software timestamping
- capabilities
+	s=arc-20240116; t=1712673055; c=relaxed/simple;
+	bh=Jc48hF8Bi2QJFLufyPe696cWZVDXbPnfhf6kpwJkW9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IL0rrqes6PwpjaLbJMHk6jcTT5txbXosW7qi4dHEHnO9LhtCoMEh4cX9N7FB8CE0+zxwIG1pL/OVJ7aAQA/rNvdEWlpG0y/nf+C2IhfR+RUWhCU2Lfwp3Kim/TtjM9dsGlETlZPWSWZowzm5yaz5tP/vJ+r82kCOzhU534cz3+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54BCC433C7;
+	Tue,  9 Apr 2024 14:30:53 +0000 (UTC)
+Date: Tue, 9 Apr 2024 10:33:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Marco Elver <elver@google.com>
+Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook
+ <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] tracing: Add new_exec tracepoint
+Message-ID: <20240409103327.7a9012fa@gandalf.local.home>
+In-Reply-To: <20240408090205.3714934-1-elver@google.com>
+References: <20240408090205.3714934-1-elver@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-John Fraker wrote:
-> gve has supported software timestamp generation since its inception,
-> but has not advertised that support via ethtool. This patch correctly
-> advertises that support.
+On Mon,  8 Apr 2024 11:01:54 +0200
+Marco Elver <elver@google.com> wrote:
+
+> Add "new_exec" tracepoint, which is run right after the point of no
+> return but before the current task assumes its new exec identity.
 > 
-> Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-> Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-> Signed-off-by: John Fraker <jfraker@google.com>
-
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-
+> Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
+> runs before flushing the old exec, i.e. while the task still has the
+> original state (such as original MM), but when the new exec either
+> succeeds or crashes (but never returns to the original exec).
 > 
-> ---
->  drivers/net/ethernet/google/gve/gve_ethtool.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> Being able to trace this event can be helpful in a number of use cases:
 > 
-> diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
-> index 815dead..99f5aeb 100644
-> --- a/drivers/net/ethernet/google/gve/gve_ethtool.c
-> +++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
-> @@ -4,6 +4,8 @@
->   * Copyright (C) 2015-2021 Google, Inc.
->   */
->  
-> +#include <linux/ethtool.h>
-> +#include <linux/net_tstamp.h>
->  #include <linux/rtnetlink.h>
->  #include "gve.h"
->  #include "gve_adminq.h"
-> @@ -763,6 +765,15 @@ static int gve_set_coalesce(struct net_device *netdev,
->  	return 0;
->  }
->  
-> +static int gve_get_ts_info(struct net_device *netdev, struct ethtool_ts_info *info)
-> +{
-> +	info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-> +				SOF_TIMESTAMPING_TX_SOFTWARE |
-> +				SOF_TIMESTAMPING_SOFTWARE;
-> +
-> +	return 0;
-
-This device calls skb_tx_timestamp in its ndo_start_xmit: the
-prerequisite for SOF_TIMESTAMPING_TX_SOFTWARE.
-
-All devices support SOF_TIMESTAMPING_RX_SOFTWARE by virtue of
-net_timestamp_check being called in the device independent code.
-
-To ethtool timestamping maintainers: It's quite unnecessary to have
-each device advertise SOF_TIMESTAMPING_RX_SOFTWARE |
-SOF_TIMESTAMPING_SOFTWARE. In __ethtool_get_ts_info we could just
-always add those flags to the result from the callees.
-
-        if (phy_has_tsinfo(phydev))
-                return phy_ts_info(phydev, info);
-        if (ops->get_ts_info)
-                return ops->get_ts_info(dev, info);
-
-        info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
-                                SOF_TIMESTAMPING_SOFTWARE;
-
-> +}
-> +
->  const struct ethtool_ops gve_ethtool_ops = {
->  	.supported_coalesce_params = ETHTOOL_COALESCE_USECS,
->  	.supported_ring_params = ETHTOOL_RING_USE_TCP_DATA_SPLIT,
-> @@ -784,5 +795,6 @@ const struct ethtool_ops gve_ethtool_ops = {
->  	.set_tunable = gve_set_tunable,
->  	.get_priv_flags = gve_get_priv_flags,
->  	.set_priv_flags = gve_set_priv_flags,
-> -	.get_link_ksettings = gve_get_link_ksettings
-> +	.get_link_ksettings = gve_get_link_ksettings,
-> +	.get_ts_info = gve_get_ts_info
->  };
-> -- 
-> 2.44.0.478.gd926399ef9-goog
+>   * allowing tracing eBPF programs access to the original MM on exec,
+>     before current->mm is replaced;
+>   * counting exec in the original task (via perf event);
+>   * profiling flush time ("new_exec" to "sched_process_exec").
 > 
+> Example of tracing output ("new_exec" and "sched_process_exec"):
 
+How common is this? And can't you just do the same with adding a kprobe?
 
+-- Steve
