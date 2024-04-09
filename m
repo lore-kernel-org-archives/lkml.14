@@ -1,105 +1,182 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6212FF84
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:04:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0A1130AC1;
+	Tue,  9 Apr 2024 15:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675062; cv=none; b=WmfD44Tic4DvPtq441sEyHaXRzVLlGsB8S9BGoR3wSXrvFzdVLgJprnLQaXCtzPFoI04yEZAyHpqx+PeHc+CFVRdvFj32K/4EgGJvT/Ct/px7EiOGgU/cDMNelomlNrBF/zq2c90aDMTlfLOs6ck+vivvqJ5DVBd8xQdgP9Ylqk=
+	t=1712675066; cv=none; b=bYyx+Mh91vTQzKyF5YdTTAnmwnezGUkk15SdGh7vaK+sw2O3Fl0Xi1Z7vyUATq8sxa/xCvxmXUhBw4jCWb3qQsGYsxyQm+1TSMo8OaL6Yk1C6zMJ96uKHmf+AaDCxe8TM1Ck4LjM+U0TawhwmswA8iLB6DDTA1Lywf4RKL7TH0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675062; c=relaxed/simple;
-	bh=ssen+WDRW3hqF3y3gAI7KjfM6Zb3SAVS5pRaVtu5ya8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AFDH9AdOnd7gnsDuDT6l622mzJ+V1HpGV8AnuqA1qR/h27vvJ11fcfgka3GVaOEK+1YdaRAOIbOXvDWmCpJvqXRD9KSqw6gsVmB+8l1/0JpGqkWokJDvOIZPQkZPBxDGFkVzJesyhqJ7nE9dFx9EpiyGFwfVLZPa1ZrPVpla1KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ibExW2lO; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712675066; c=relaxed/simple;
+	bh=t1kYY/anDM0kTOT0TXMfDoDZdneqDGj/etfCxojQu6c=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SXyEUqbfOaoldi/DI73sCmM2CskxfOAb4OeUAAT56811MF+0OPBoNwcN8ReOmmeH+2YsUfFdxzMANYsZNC8t7IDsH4rWJhn6Sw1NodUFvoHZkeFoxX+XjXqP8Tf1SrRfep3NkDfIWQS9wU0AhU+TaN63sfH1W9zujiszYyUmkiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SRyiDSWr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ibExW2lO"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d8b2389e73so6010811fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:04:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712675058; x=1713279858; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3YM+s20cdEdse7t7bN3iKiAdYaiSxxuKdZKKsCgmaYw=;
-        b=ibExW2lOTRLTYJMF5CjRfqUXmoTJKkGQ10QXFP6JYNALJP5NdP8ZnajpNpEZXMj7HN
-         fhVrEAe5Jyr02ARfUIKLeqmBM03/wWCAt3b41O4SK5owlMmOdyDoOP+zovzC0VelOFsR
-         GL66zVe+G5NbXn3qVY1F8Hdq6JQD7pOBxtw5/k/U91ULHutRbEiltMBQDvP7Xp5nOnod
-         CH+XWbCR32sJS6xUgBD6o1tSHdhTBcT9sUMZJnTNavp2wCurVRsFCLTU1+q08qeDVVT1
-         a996YyzSCjcFsRKu7d2SJM6DhXFTETCztVDQpVqQfbh+sooUK3/8meEJOF9QN8tdx49z
-         BotA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712675058; x=1713279858;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3YM+s20cdEdse7t7bN3iKiAdYaiSxxuKdZKKsCgmaYw=;
-        b=TDyLc38iO3CWukAB5QzezsXfeUDDcIMpKwYsHDF2EwxHZH6UppKSHkd/OvKpuleDp9
-         z9GQ14mOk6H0o9EAUWsb0du5PeAiJIwPEC5/o2UjxbrZMx9y9OtShGpaJWKoRPUytTtK
-         EoTJ1j9C6AUJJH96bGd85Uujaoyx6Gkavfcn2qTch9r6CPZbvd9W5VZ1ojAO7sIkV9WZ
-         AhvSbY6rGt/LTHZvzg2BrhycyPgn0RFJgZrr1VsOgSmqg/ny84ZagPChcDxA9XwMfPQD
-         XsVwq8mr+m2Ah7ZTnVTJ/mNzku6Ntb97vkpWQcovWTJsF+lcVaIRQ79fqtUe0XrUhLyX
-         ogNw==
-X-Forwarded-Encrypted: i=1; AJvYcCW6WJXfOCscRqGeSjuOrXQ8dff9xY60LVZgpo8wbSr9zuhL+yu+hi55L0qsDhyT0QAs9P4ai1yn3iEtdOqjBfCYQuHSzYr7HJIVL7f8
-X-Gm-Message-State: AOJu0Yz/Gd+96LlNNyqOKDyGzesG17N9HzmsGHRRRkAnyntxS3O57Aki
-	b0gbBosx3Wzr/+ar7ZNqpwR2uR4+olND7ecP1Z9Y6rKceJutvKmKYYbZ/ilSiaM=
-X-Google-Smtp-Source: AGHT+IGoHv754pdfAq6TjWUEj3Tebb540y8BjG8KDvn0k1jGyKTq4jOdTq4eg0QQygBFoeLLrn8fzA==
-X-Received: by 2002:a2e:7d12:0:b0:2d8:7200:38ff with SMTP id y18-20020a2e7d12000000b002d8720038ffmr64570ljc.24.1712675058205;
-        Tue, 09 Apr 2024 08:04:18 -0700 (PDT)
-Received: from [172.30.205.99] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id j14-20020a2e850e000000b002d88d978484sm841131lji.132.2024.04.09.08.04.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 08:04:17 -0700 (PDT)
-Message-ID: <a8ea0f53-40c0-4fc5-94fc-a88f8e0319ac@linaro.org>
-Date: Tue, 9 Apr 2024 17:04:14 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SRyiDSWr"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BBB82C0006;
+	Tue,  9 Apr 2024 15:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712675056;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=KG0II9hoGXxbrkbrTfP1GifRbUwAB8owv2HJvVCiy+M=;
+	b=SRyiDSWrCeb8oKxGLKjXkm1AtBIpb/MESWk2PB5/DqpBQmnjEUgRS8FwuXSReAYllBwSOG
+	UZkq2L//l6wpMbLrL6cmWRDEmPTGb3Km6IBHthXvJ8KbE8Nyn3/b/yPLNSZhWIZTYQADb3
+	xWAgBmhqDuspywFkhUqmkwQ+MLkCrAp/goZ9zMhefG3tIDlmq6j5DO+iIVgl7hxEP82fH7
+	Wy2jVqnypaUQ/sfdGs3e7BExQuv4yeQBD4EwpteRbdG9KjwvGa7/YF6HH92mXv+zxH882L
+	lwO55VQNuEu3e0poniHc3QEieLWXqy+Sr62zhrAEhRiPX6my61B1lkO46qyXtg==
+From: Kory Maincent <kory.maincent@bootlin.com>
+Subject: [PATCH net-next v7 00/17] net: Add support for Power over Ethernet
+ (PoE)
+Date: Tue, 09 Apr 2024 17:03:50 +0200
+Message-Id: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] soc: qcom: smem: Add pcode/fcode getters
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- Neil Armstrong <neil.armstrong@linaro.org>
-References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
- <20240405-topic-smem_speedbin-v1-2-ce2b864251b1@linaro.org>
- <zc5u7ixaser6ekl3sltzxccstu63tpydxybquxz5hcasj4cmfo@csjwfifugeod>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <zc5u7ixaser6ekl3sltzxccstu63tpydxybquxz5hcasj4cmfo@csjwfifugeod>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIANdYFWYC/2XN0WrDMAyF4Vcpvp6HJCtO0qu9xyjDdpTVsMUlS
+ UNHybvPC4zW5PIgvl93NckYZVLHw12NssQppiGP+uWgwtkNn6Jjl7ciIINArHtx83WUj0sSjab
+ lFqQ2DEZlcRmlj7et9q4GmfUgt1md8uUcpzmNP9ubBbf7VkS0RXFBDdoLN8Dse+L2zac0f8XhN
+ aTvrbTQQxNgqSnrynZNcMFC3bu9Nv+agaAptfnTBjuyNbNtZa/5SWNVas7aVN5zIEPWhr2unjT
+ Vpa6ypqYH57ghtt1e24fO/VLbrAMCorfiMPhSr+v6C6Wjv7LoAQAA
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
+ Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksij Rempel <o.rempel@pengutronix.de>, Mark Brown <broonie@kernel.org>, 
+ Frank Rowand <frowand.list@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+ devicetree@vger.kernel.org, Dent Project <dentproject@linuxfoundation.org>, 
+ kernel@pengutronix.de, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
+ Kory Maincent <kory.maincent@bootlin.com>
+X-Mailer: b4 0.14-dev
+X-GND-Sasl: kory.maincent@bootlin.com
 
+From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
+This patch series aims at adding support for PoE (Power over Ethernet),
+based on the already existing support for PoDL (Power over Data Line)
+implementation. In addition, it adds support for two specific PoE
+controller, the Microchip PD692x0 and the TI TPS23881.
 
-On 4/6/24 04:21, Dmitry Baryshkov wrote:
-> On Fri, Apr 05, 2024 at 10:41:30AM +0200, Konrad Dybcio wrote:
->> Introduce getters for SoC product and feature codes and export them.
->>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
+In detail:
+- Patch 1 to 13 prepare net to support PoE devices.
+- Patch 14 and 15 add PD692x0 PoE PSE controller driver and its binding.
+- Patch 16 and 17 add TI TPS23881 PSE controller driver and its binding.
 
-[...]
+Changes in v7:
+- Fix code, doc and kdoc nit.
+- Fix few pd692x0 dt binding issues.
+- Rename *flash_fw* functions to *flash_sram_fw* in tps23881 driver.
+- Link to v6: https://lore.kernel.org/r/20240326-feature_poe-v6-0-c1011b6ea1cb@bootlin.com
 
+Changes in v6:
+- TPS23881 fix firmware management release missing.
+- Use pcdev device pointer as regulator consumer and provider.
+- Rename of_legacy to no_of_pse_pi.
+- Add kdoc, and separate functions for better readability.
+- Add vpwr-supply regulator parent.
+- Link to v5: https://lore.kernel.org/r/20240227-feature_poe-v5-0-28f0aa48246d@bootlin.com
 
->> +	/* Ensure the value makes sense */
->> +	if (raw_code >= SOCINFO_FC_INT_RESERVE)
->> +		raw_code = SOCINFO_FC_UNKNOWN;
-> 
-> This looks like a c&p from the previous function. Should we be comparing
-> the raw_code with a SOCINFO_PC_ constant?
+Changes in v5:
+- Fix bindings nit.
+- Add supported-polarity parameter to bindings.
+- Fix yamllint binding errors.
+- Remove the nested lock brought by the use of regulator framework.
+- Link to v4: https://lore.kernel.org/r/20240215-feature_poe-v4-0-35bb4c23266c@bootlin.com
 
-Looks like!
+Changes in v4:
+- Replaced sponsored-by tag by a simple sentence.
+- Fix pse_pi node bindings.
+- Add pse pi documentation written by Oleksij.
+- Link to v3: https://lore.kernel.org/r/20240208-feature_poe-v3-0-531d2674469e@bootlin.com
 
-Konrad
+Changes in v3:
+- Add patches to add Oleksij and myself to PSE MAINTAINERS.
+- Add patches to add pse devlink.
+- Add TI TPS23881 PSE controller driver with its binding.
+- Replace pse_get_types helper by pse_has_podl and pse_has_c33
+- Changed the PSE core bindings.
+- Add a setup_pi_matrix callback.
+- Register regulator for each PSE PI (Power Interface).
+- Changed the PD692x0 bindings.
+- Updated PD692x0 drivers to new bindings and PSE PI description.
+- Updated PD692x0 drivers according to the reviews and made fixes.
+- Link to v2: https://lore.kernel.org/r/20231201-feature_poe-v2-0-56d8cac607fa@bootlin.com
+
+Changes in v2:
+- Extract "firmware_loader: Expand Firmware upload error codes patches" to
+  send it alone and get it merge in an immutable branch.
+- Add "c33" prefix for PoE variables and enums.
+- Enhance few comments.
+- Add PSE Documentation.
+- Make several changes in pd692x0 driver, mainly for readibility.
+- Link to v1: https://lore.kernel.org/r/20231116-feature_poe-v1-0-be48044bf249@bootlin.com
+
+Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+---
+Kory Maincent (17):
+      MAINTAINERS: net: Add Oleksij to pse-pd maintainers
+      of: property: Add fw_devlink support for pse parent
+      net: pse-pd: Rectify and adapt the naming of admin_cotrol member of struct pse_control_config
+      ethtool: Expand Ethernet Power Equipment with c33 (PoE) alongside PoDL
+      net: pse-pd: Introduce PSE types enumeration
+      net: ethtool: pse-pd: Expand pse commands with the PSE PoE interface
+      netlink: specs: Modify pse attribute prefix
+      netlink: specs: Expand the pse netlink command with PoE interface
+      MAINTAINERS: Add myself to pse networking maintainer
+      net: pse-pd: Add support for PSE PIs
+      dt-bindings: net: pse-pd: Add another way of describing several PSE PIs
+      net: pse-pd: Add support for setup_pi_matrix callback
+      net: pse-pd: Use regulator framework within PSE framework
+      dt-bindings: net: pse-pd: Add bindings for PD692x0 PSE controller
+      net: pse-pd: Add PD692x0 PSE controller driver
+      dt-bindings: net: pse-pd: Add bindings for TPS23881 PSE controller
+      net: pse-pd: Add TI TPS23881 PSE controller driver
+
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     |  169 +++
+ .../bindings/net/pse-pd/pse-controller.yaml        |  101 +-
+ .../bindings/net/pse-pd/ti,tps23881.yaml           |   95 ++
+ Documentation/netlink/specs/ethtool.yaml           |   33 +-
+ Documentation/networking/ethtool-netlink.rst       |   20 +
+ Documentation/networking/index.rst                 |    1 +
+ Documentation/networking/pse-pd/index.rst          |   10 +
+ Documentation/networking/pse-pd/introduction.rst   |   73 ++
+ Documentation/networking/pse-pd/pse-pi.rst         |  302 +++++
+ MAINTAINERS                                        |    8 +
+ drivers/net/pse-pd/Kconfig                         |   20 +
+ drivers/net/pse-pd/Makefile                        |    2 +
+ drivers/net/pse-pd/pd692x0.c                       | 1223 ++++++++++++++++++++
+ drivers/net/pse-pd/pse_core.c                      |  513 +++++++-
+ drivers/net/pse-pd/pse_regulator.c                 |   49 +-
+ drivers/net/pse-pd/tps23881.c                      |  820 +++++++++++++
+ drivers/of/property.c                              |    2 +
+ include/linux/pse-pd/pse.h                         |   86 +-
+ include/uapi/linux/ethtool.h                       |   55 +
+ include/uapi/linux/ethtool_netlink.h               |    3 +
+ net/ethtool/pse-pd.c                               |   60 +-
+ 21 files changed, 3543 insertions(+), 102 deletions(-)
+---
+base-commit: 49ba5d653980157adbd9c6e5fd7d8f7dfe7e39b8
+change-id: 20231024-feature_poe-139490e73403
+
+Best regards,
+-- 
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
