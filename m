@@ -1,108 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4817914D2AB;
-	Tue,  9 Apr 2024 16:46:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5013A267
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 16:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712681204; cv=none; b=DzdJ0GjxiYIjseJtisOUiXGGLoUm6iHtDmKjOf3SY+qhW7nHslm5xoH51bg1uBz4huR5VMddSG/p330FbbYlHYRCmhEYu0YiL0CIVwXHS3L4d4nc8aNYqFiHxxucyMJZdzgIBSRTznENdqMAmii0lRijUA7BNBDsAd2oxu4LDMg=
+	t=1712681567; cv=none; b=QWv3p0I9uBAF5xmY82R3GarECf8Lt/jsg0R7+5TcnjiDy2u5ANP1+Y2j65jpFnOB2WzyR9IV9re3qXY9ekT72Z99JLwS0wBk5IUi1ckFuWXdrJ21oFdx4KwnWnWf5dU3QVvtWVban/PXg8iPhImoz4gS7AhwkFAJm2KGumRdRPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712681204; c=relaxed/simple;
-	bh=o0OAciAt/jXavMnT0VtNrsX62U+AXVJqJQ9T4iXq+7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H6ChrulH8EiSFcfr0N2kCgxSE3H8sAViNyrujND4YBGNOJI7OhGx58l1F8+t/zc8xWwu8LdycCT/OyUpjR4rVzkdbfGKv4uFmzR9NmZfcMuhgWPBrYfQmMNfE/ipDAaJM3DZJdFxn4DCG5cI8i9D22ZjmLpej0RSNBlt4DDifxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qj2j4il8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712681567; c=relaxed/simple;
+	bh=j2Y+94KbsbY7acQxdTX6z539hRaKkg/fO5uMKEch7SU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=o0OJF6+9isDR+H5hTUmVsZilXcJVFMlGIWgZk3Okq9RjaJioxYBJY+7Nm2bw+Xw3NNnik/f/fzA5rGMHog5JxRxulWeqcGHQXsxPhvwQeFPa/gmxzqfgSVzGu4sO7gaDbq4yVWQ+gHskYjiwfM5PvnQGwRDiM4r+UIIQ/FET1EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WE/VmO/l; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qj2j4il8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3118DC433C7;
-	Tue,  9 Apr 2024 16:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712681203;
-	bh=o0OAciAt/jXavMnT0VtNrsX62U+AXVJqJQ9T4iXq+7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qj2j4il8RUcgG+h9QuuOQyyLw5K4BETmu32EIMGukESkD6+rVLGhgu7Wo6j7f1gHI
-	 Kprshu1febqMDXtTaROJ5oOUXGjzhN8HC914Kiwarg6YGOJ+qecCtdkWjwCLCsPiWD
-	 4BfXplP3CSNLrdPwyFS0BxRPT5G36dK/+lQY0kwxK8jbd4zuFT9t1QWkCbKihBPM9x
-	 bkTC+JpcPN5XMhDoyc4m2d7ubhQHwJrQ7SQUir9GI4MydoBb2r0y0JluVaomu34jtd
-	 wm9q9aWIiGS9z8NqqogdRRtOHcHAoudKafnIjr0d0GE4G++ztQiVvDRrborxRw/9iU
-	 zzm+JkIcGTO5Q==
-Date: Tue, 9 Apr 2024 09:46:41 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: zhuqiuer <zhuqiuer1@huawei.com>
-Cc: linux@armlinux.org.uk, ndesaulniers@google.com, morbo@google.com,
-	justinstitt@google.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, ardb@kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH] ARM: Add a memory clobber to the fmrx instruction
-Message-ID: <20240409164641.GC3219862@dev-arch.thelio-3990X>
-References: <20240409113844.4813-1-zhuqiuer1@huawei.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WE/VmO/l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712681565;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+NKidzKW/DTvBc1tQ8E4kYeb8ojdS1p5BOYrq1bKV6k=;
+	b=WE/VmO/lSgEB8sVWrgRnbqY+oMv95WvOVRD7Jt52twwg4sPiPbN9eXhp+pa9mj78nIZYGO
+	9Go4efK6gXuA8mvvvBjo5DAEV0TWctW1GaWWJKr2kQ0kEF9PFkS3f06VmYTH3jU8oEEd95
+	hAQ1G1FeZH+PYMSmd45otwjlTCZFSkc=
+Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com
+ [209.85.221.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-216-Omczv-P3MNKVA1LM5H_T3Q-1; Tue, 09 Apr 2024 12:52:43 -0400
+X-MC-Unique: Omczv-P3MNKVA1LM5H_T3Q-1
+Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-4d40305ddb3so1289282e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 09:52:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712681563; x=1713286363;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+NKidzKW/DTvBc1tQ8E4kYeb8ojdS1p5BOYrq1bKV6k=;
+        b=YqFPAJoSOWKpT1CoN4F8NoI1cZHlYULpgmC/XqMzSUhu4oZk8r/0cZtoAtKKb6MtXk
+         tTPINaxrktibOPABkNos0ryHKWLIA8MaEtYjOUTKbnObgijTjge42doDV0aHs3AsfbQy
+         W4nnSJ4dDJUtiqpl/ZUsThUeaegu2wnNDi4sV50kTJp95ZIUECofeLA3szS6HOEBO/hq
+         fL8XCUDvVQx52WoIiCMy82x4Nvj90YQubqDg6/kmXCmiuZxw6vIOnoKHKWDeRr+b/0kT
+         SUpkVRk7w8qpz9tO42SMJJG5xMjSUzSeu1eJJomGOYE/k9RDGEzMldFsSKNSvtX3xWG5
+         jabg==
+X-Forwarded-Encrypted: i=1; AJvYcCVu8cZo3II0goE6COaaHDMqhKzRyyWPzS+YwzhOQY8tS+yFPbIe5PIRAlAKI0GZx6EQW1DQL0BNkHQ4em+aMLLrBFwmxxxC2PENP81A
+X-Gm-Message-State: AOJu0YxdHrOXjv2Smq7qI3ji6D0lF5jifoaWzitUOUjI+ET9PkXIQb/r
+	/hYPvAjHgRoZkynmJiNRBzhzMMCf1TavCty2j4taebzKDdfwFgpOs57Nt8I4wdllj0lemRlm2j2
+	iBBxn53MZ1gh5DmbHPM6KHc+SKpicAgz0G8b2I4dqV230sGsduhesl9QmUk04Jg==
+X-Received: by 2002:a05:6122:90c:b0:4d3:4ac2:29f4 with SMTP id j12-20020a056122090c00b004d34ac229f4mr484247vka.2.1712681563217;
+        Tue, 09 Apr 2024 09:52:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE40zvLEF0ZBb59hoel0B1fp7t336yp12pBAvKmKmGFQvM2VaoTV61WKM8Kbw1z3qCiHsrz9Q==
+X-Received: by 2002:a05:6122:90c:b0:4d3:4ac2:29f4 with SMTP id j12-20020a056122090c00b004d34ac229f4mr484208vka.2.1712681562863;
+        Tue, 09 Apr 2024 09:52:42 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
+        by smtp.gmail.com with ESMTPSA id fe4-20020a0562140b8400b00698facb19d5sm4093118qvb.106.2024.04.09.09.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 09:52:41 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Connor O'Brien <connoro@google.com>, Joel Fernandes <joelaf@google.com>,
+ Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
+ Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Youssef
+ Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
+ Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>,
+ Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, "Paul
+ E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, Xuewen
+ Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
+ Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com, John Stultz
+ <jstultz@google.com>
+Subject: Re: [RESEND][PATCH v9 5/7] sched: Consolidate pick_*_task to
+ task_is_pushable helper
+In-Reply-To: <20240401234439.834544-6-jstultz@google.com>
+References: <20240401234439.834544-1-jstultz@google.com>
+ <20240401234439.834544-6-jstultz@google.com>
+Date: Tue, 09 Apr 2024 18:52:36 +0200
+Message-ID: <xhsmh34rua36z.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409113844.4813-1-zhuqiuer1@huawei.com>
+Content-Type: text/plain
 
-+ Ard
+On 01/04/24 16:44, John Stultz wrote:
+> From: Connor O'Brien <connoro@google.com>
+>
+> This patch consolidates rt and deadline pick_*_task functions to
+> a task_is_pushable() helper
+>
+> This patch was broken out from a larger chain migration
+> patch originally by Connor O'Brien.
+>
+> Cc: Joel Fernandes <joelaf@google.com>
+> Cc: Qais Yousef <qyousef@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Zimuzo Ezeozue <zezeozue@google.com>
+> Cc: Youssef Esmat <youssefesmat@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Waiman Long <longman@redhat.com>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Metin Kaya <Metin.Kaya@arm.com>
+> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: kernel-team@android.com
+> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-On Tue, Apr 09, 2024 at 07:38:44PM +0800, zhuqiuer wrote:
-> The instruction fmrx is used throughout the kernel,
-> where it is sometimes expected to be skipped
-> by incrementing the program counter, such as in vfpmodule.c:vfp_init().
-> Therefore, the instruction should not be reordered when it is not intended.
-> Adding a barrier() instruction before and after this call cannot prevent
-> reordering by the compiler, as the fmrx instruction is constrained
-> by '=r', meaning it works on the general register but not on memory.
-> To ensure the order of the instruction after compiling,
-> adding a memory clobber is necessary.
-> 
-> Below is the code snippet disassembled from the method:
-> vfpmodule.c:vfp_init(), compiled by LLVM.
-> 
-> Before the patching:
-> xxxxx:   xxxxx    bl  c010c688 <register_undef_hook>
-> xxxxx:   xxxxx    mov r0, r4
-> xxxxx:   xxxxx    bl  c010c6e4 <unregister_undef_hook>
-> ...
-> xxxxx:   xxxxx    bl  c0791c8c <printk>
-> xxxxx:   xxxxx    movw    r5, #23132  ; 0x5a5c
-> xxxxx:   xxxxx    vmrs    r4, fpsid  <- this is the fmrx instruction
-> 
-> After the patching:
-> xxxxx:   xxxxx    bl  c010c688 <register_undef_hook>
-> xxxxx:   xxxxx    mov r0, r4
-> xxxxx:   xxxxx    vmrs    r5, fpsid  <- this is the fmrx instruction
-> xxxxx:   xxxxx    bl  c010c6e4 <unregister_undef_hook>
-> 
-> Signed-off-by: zhuqiuer <zhuqiuer1@huawei.com>
-> ---
->  arch/arm/vfp/vfpinstr.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/vfp/vfpinstr.h b/arch/arm/vfp/vfpinstr.h
-> index 3c7938fd40aa..e70129e10b8e 100644
-> --- a/arch/arm/vfp/vfpinstr.h
-> +++ b/arch/arm/vfp/vfpinstr.h
-> @@ -68,7 +68,7 @@
->  	u32 __v;			\
->  	asm(".fpu	vfpv2\n"	\
->  	    "vmrs	%0, " #_vfp_	\
-> -	    : "=r" (__v) : : "cc");	\
-> +	    : "=r" (__v) : : "memory", "cc");	\
->  	__v;				\
->   })
->  
-> -- 
-> 2.12.3
-> 
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
-This seems like the same issue that Ard was addressing with this patch
-at https://lore.kernel.org/20240318093004.117153-2-ardb+git@google.com/,
-does that change work for your situation as well? I do not really have a
-strong preference between the two approaches, Ard also mentioned using
-*current in the asm constraints as another option.
+> Signed-off-by: Connor O'Brien <connoro@google.com>
+> [jstultz: split out from larger chain migration patch,
+>  renamed helper function]
+> Signed-off-by: John Stultz <jstultz@google.com>
 
-Cheers,
-Nathan
