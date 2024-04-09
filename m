@@ -1,66 +1,59 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B877E0E8
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D1869DF4;
+	Tue,  9 Apr 2024 08:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712650168; cv=none; b=FkYd3rChMSTOCdaoUwCX10tJ4MHlr//Qrl9CJKuPHeq8bfQqAjD+amq66w4uH+sXz4DUwOcb2vc6bzxMztYStiia6YlEkD0/5j3exdqOLo9ybTaH6INuMBJM9aunTV/svlvZIim76hNJ53LCH3/GBkVjgUwseyY1m/n/srAdM2M=
+	t=1712650274; cv=none; b=BXWnyPBAYKg8reZjWlTXX6XXpnh4xlIPHepnWbYAuwaki8BENSRV/QOBm2y0zx+iPhjBqwD/CxCLfF0v5PPcVyycktGssMl1KFyzxbRIAAR24KCEkRzZ1iv10kF4i3D8M/BoL7bri8zASS5nNryiftkqrHy4PINEILRDYDjQQ1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712650168; c=relaxed/simple;
-	bh=xUo91t5hI8Cb04ItwP9naq0YtKzSZsLmPuxJ3cq5B4g=;
+	s=arc-20240116; t=1712650274; c=relaxed/simple;
+	bh=mpZ9WvBxBftWU2nvlxYc6ybVCBhBaZGYOJfzFuCKWdM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eSrTMI8Aku89C49YH1wcJpEv3osBI7UVdWWCeEFcrNQNIqDQfSwF6Zr8amYXwPxaH0kKq1eetS3L2IOzIDQq8zB9YDYPl679Madd26PXUCsiXlKNjwlBpkNPyu0aM+30+YF2mTjnjrLFPY6CUp7AgVtgEBGDNrsFESvyC7W7M3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V/JWcPO+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=itYWn23ozpv4feBEQFjTfAoDsXI8cQvD9JP6GaXfvM6Yiul2v2+j8Ff3wCbg9x8TffVi/8+g6+b2z8FGKTtgqefX692lXs7sEbY8Oo2B03V+LORtNkZkblfe4/AZ/7Oh8lX4BtWHsREOaQDEBI5VF2KLM9yvtBy/vXxHR+IinVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hM2HZjsO; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/JWcPO+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712650165;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=jPexdV4dgWou2KnabUAsmiUVZjyB+kN+kK+ahj9bwWs=;
-	b=V/JWcPO+b1dcG3LD+dGDuRiSX46I5nIANhFFJ6O5wWGB6GHJRvo6AQSQiCTn00A7WRW/gx
-	19R4jEabI9SYS4zSPiXTbpLJbMkCtCECenThQPbQY1fZLt5YKFzbOpV1OAdyDRA5q1AQKG
-	o0I4KtzDj68zfKM3UYtI11pYn76khUc=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-XrFadgGRP8GPj4JYXNfA4w-1; Tue, 09 Apr 2024 04:09:24 -0400
-X-MC-Unique: XrFadgGRP8GPj4JYXNfA4w-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-41489c04f8cso27288755e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:09:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hM2HZjsO"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-516d2b9cd69so4630753e87.2;
+        Tue, 09 Apr 2024 01:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712650271; x=1713255071; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=297Emwb2i0jClNV8FtJNZax66Kj4bzhkdODvVgQa0x0=;
+        b=hM2HZjsOySFvE34mJlCU8eyspqiQzqd+PNxuwOI7zCscAPwBNE91/OAYIrKcELPnRY
+         2UCiWEEJve5QEnKJqhfGv4/CGU0DzQ2ex6dlvYgfawJpd3RbRLATz9SidNSSHAFDeF+V
+         dGYS2W9cVR2i3tdfHaoaTHqcCTbvZaBBuwEk2f20ww5MJXoEH838EdZwSwFc/dzxKBDb
+         Jov8G4bqRO5bQrHhKbmAsY419Txa+r7chk7qCgmgJX4RROU6TRJDo8brQZE7WLv7sPLr
+         5CaCwIv4LLcWZIyPw5I1VZMLmVhKiRkrCY90lMYcqJtW0Ms0UJQp1YW/gmVuqDowTzKq
+         m8Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712650163; x=1713254963;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jPexdV4dgWou2KnabUAsmiUVZjyB+kN+kK+ahj9bwWs=;
-        b=rNMo18x21+QIvx/t+D369bqvKO5+UGlFe+aWAK8hoMRyD7N31KWrSGio8S66B9g/vP
-         UkvzqT+j1NB9ujE3vQp6+GCwoWaeVB4XVhW9b5VASGz02M8yu/PPhmZYrkXavN0jRvJK
-         PocfR2j38BcwqZduXwRTGLhaj0wDQsz5XKD75+o51J4nVc9XlovpizgzJVWinZisikHc
-         vsJMBpXOU2rNQ4/jj0+Mw6ESXyxAjawzEAZrAx0R95JZej8XlaRQ5Fxe2xzCrC16R9I6
-         xI1T6Jb9yNku94iFRhdn/TWSKDw3csmzePIiNuhEbcY0UXVpsf5U0iwp8fePp991onvg
-         6INw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHaCPrJFQQyOuhSzXW86w/vyiNxWKWTQAGKTqtRerduZFNnY/TlOLijM0+HalAybJjqEUv+pbCxZdw8A4EjufobIP0NehgTWlQ+U+5
-X-Gm-Message-State: AOJu0YxQAzQtwOiQQaKYLEybtB2rYiJPnAM4wxA7ImXezaVtko9+NeEb
-	RFUPqiMNLWcRahN8FwRMdhLxIx3IKWPBFccWM0wRuK8bgJbHAzFonjgHuJBVvyLbmTznhuZiqRw
-	Lt+a6LGDDztIqs5doEkP+Dlc51CXazL2L3N627Vw4R2XcJuGmtUrJclkR7g+ed69DcrA/BA==
-X-Received: by 2002:a05:600c:4e02:b0:416:9e38:3bdd with SMTP id b2-20020a05600c4e0200b004169e383bddmr1447744wmq.27.1712650163093;
-        Tue, 09 Apr 2024 01:09:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEbNYsh+cTWpSvmTxUzGL4BnGJ0+lBv+iHZ8pt4DUhs31jSTdu5ejnXeTG2V4Gkyn7w1PNROg==
-X-Received: by 2002:a05:600c:4e02:b0:416:9e38:3bdd with SMTP id b2-20020a05600c4e0200b004169e383bddmr1447715wmq.27.1712650162716;
-        Tue, 09 Apr 2024 01:09:22 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70a:be00:a285:bc76:307d:4eaa? (p200300cbc70abe00a285bc76307d4eaa.dip0.t-ipconnect.de. [2003:cb:c70a:be00:a285:bc76:307d:4eaa])
-        by smtp.gmail.com with ESMTPSA id o6-20020a05600c4fc600b0041663450a4asm7784798wmq.45.2024.04.09.01.09.21
+        d=1e100.net; s=20230601; t=1712650271; x=1713255071;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=297Emwb2i0jClNV8FtJNZax66Kj4bzhkdODvVgQa0x0=;
+        b=Gn28kW61KXBicmNKas8f5jeQZblOnt7gDrmVfQCgAkjxT+s9mFDV/lHau3T6wQHEid
+         zWzYA+t7/sB9Ze1wH9ma7nAfTjkAk+9GHHXwfDftNtD4dmzZRTWSi3ejmGdUWhoZ6Qnb
+         xJbeyKVC/jP56gHS6OSwne6f2lL/nYlGlrExrfcB8yuOmid1eOOrGYvzA7QB8bIOM04w
+         fDm99W4RkShaMBSwhY2q1+8vKpxKcIMOTzKwik7wXm6cJJM6rSXT3hdcIUx68ToUeixi
+         LLPyB57yE7Q1N6dEwIhsl4OXvW/64Ny9dADHUF7IeKZ69a8b6feuQYt5VTG/LaAaTOi5
+         OlNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrw1l1IK9lhg5TOPSNG9113bBTtx4cPv+Sq+xZA/GTx9w28JdGXjCmqKL4LizjyIDLeTd3XnMymVTDWP013tz1ryXYSEKD/J84xTN1UrVcZWJ4gf+VtsT/ERiGUuMrXwEKfS7SYL63K10RPKd/HJjmyrpT3W49mS+NmQlBOcS3hbQ2NA==
+X-Gm-Message-State: AOJu0Yw7bD9wIGrjipYMftZXo6WcU/uAghTYeIed1EZcn9cLN1ZDLI/W
+	Xw1wfCDASRlA4qxaZVoxUsP/zRTzW3y5QFrOn60I+Jk+M0xB1DndxDMSwQ9NDShgkg==
+X-Google-Smtp-Source: AGHT+IHQocxne5E8JOSSq+Hfi93thAi+YTnQQjQ+sc9yYHH5ggWVu3E+hrTwyp3gx8SwetYpZNSARw==
+X-Received: by 2002:ac2:42c9:0:b0:516:d538:35a4 with SMTP id n9-20020ac242c9000000b00516d53835a4mr7448893lfl.7.1712650270754;
+        Tue, 09 Apr 2024 01:11:10 -0700 (PDT)
+Received: from [10.76.84.174] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id s17-20020a195e11000000b00515d55b66acsm1469486lfb.64.2024.04.09.01.11.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 01:09:22 -0700 (PDT)
-Message-ID: <1488fa2e-9552-4f52-bcf9-aeef68049ce0@redhat.com>
-Date: Tue, 9 Apr 2024 10:09:20 +0200
+        Tue, 09 Apr 2024 01:11:10 -0700 (PDT)
+Message-ID: <47175ff9-8b05-4b6a-8689-a3d0722d7571@gmail.com>
+Date: Tue, 9 Apr 2024 11:10:57 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,100 +61,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 02/31] x86/resctrl: Add a helper to avoid reaching into
- the arch code resource list
-To: James Morse <james.morse@arm.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- Rex Nie <rex.nie@jaguarmicro.com>, Dave Martin <dave.martin@arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-3-james.morse@arm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/6] dt-bindings: adc: ad7173: add support for ad411x
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: David Lechner <dlechner@baylibre.com>, dumitru.ceclan@analog.com,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240401-ad4111-v1-0-34618a9cc502@analog.com>
+ <20240401-ad4111-v1-1-34618a9cc502@analog.com>
+ <CAMknhBHeKAQ45=5-dL1T1tv-mZcPN+bNo3vxWJYgWpEPE+8p3Q@mail.gmail.com>
+ <CAMknhBGVuMSg+OpS5QTLWi9vA=Xa33AJ+cVS8ZCDyKsAVEe-ww@mail.gmail.com>
+ <0a72de29-6d25-4d2d-9824-ca407af69153@gmail.com>
+ <CAMknhBHhxi7mN88+peU7BGkzSP2vtipCuvM-XfQzgusqKvARsg@mail.gmail.com>
+ <aa84a3c5-a3e6-4c76-9b67-624ed8d8c704@gmail.com>
+ <20240406152637.5d53c34f@jic23-huawei>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20240321165106.31602-3-james.morse@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
+In-Reply-To: <20240406152637.5d53c34f@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 21.03.24 17:50, James Morse wrote:
-> Resctrl occasionally wants to know something about a specific resource,
-> in these cases it reaches into the arch code's rdt_resources_all[]
-> array.
+On 06/04/2024 17:26, Jonathan Cameron wrote:
+> On Thu, 4 Apr 2024 16:08:56 +0300
+> "Ceclan, Dumitru" <mitrutzceclan@gmail.com> wrote:
 > 
-> Once the filesystem parts of resctrl are moved to /fs/, this means it
-> will need visibility of the architecture specific struct
-> resctrl_hw_resource definition, and the array of all resources.
-> All architectures would also need a r_resctrl member in this struct.
+>> On 03/04/2024 18:22, David Lechner wrote:
+>>> On Wed, Apr 3, 2024 at 2:50 AM Ceclan, Dumitru <mitrutzceclan@gmail.com> wrote:  
+>>>> On 02/04/2024 00:16, David Lechner wrote:  
+>>>>> On Mon, Apr 1, 2024 at 2:37 PM David Lechner <dlechner@baylibre.com> wrote:  
+>>>>>> On Mon, Apr 1, 2024 at 10:10 AM Dumitru Ceclan via B4 Relay
+>>>>>> <devnull+dumitru.ceclan.analog.com@kernel.org> wrote:  
+>>>>>>> From: Dumitru Ceclan <dumitru.ceclan@analog.com>
+>>>>>>>  
+>>>> ...
+>>>>  
+>>>>>>>      properties:
+>>>>>>>        reg:
+>>>>>>> +        description:
+>>>>>>> +          Reg values 16-19 are only permitted for ad4111/ad4112 current channels.
+>>>>>>>          minimum: 0
+>>>>>>> -        maximum: 15
+>>>>>>> +        maximum: 19  
+>>>>>> This looks wrong. Isn't reg describing the number of logical channels
+>>>>>> (# of channel config registers)?
+>>>>>>
+>>>>>> After reviewing the driver, I see that > 16 is used as a way of
+>>>>>> flagging current inputs, but still seems like the wrong way to do it.
+>>>>>> See suggestion below.
+>>>>>>  
+>>>>>>>        diff-channels:
+>>>>>>> +        description:
+>>>>>>> +          For using current channels specify only the positive channel.
+>>>>>>> +            (IIN2+, IIN2−) -> diff-channels = <2 0>  
+>>>>>> I find this a bit confusing since 2 is already VIN2 and 0 is already
+>>>>>> VIN0. I think it would make more sense to assign unique channel
+>>>>>> numbers individually to the negative and positive current inputs.
+>>>>>> Also, I think it makes sense to use the same numbers that the
+>>>>>> registers in the datasheet use (8 - 11 for negative and 12 to 15 for
+>>>>>> positive).
+>>>>>>
+>>>>>> So: (IIN2+, IIN2−) -> diff-channels = <13 10>  
+>>>>> Thinking about this a bit more...
+>>>>>
+>>>>> Since the current inputs have dedicated pins and aren't mix-and-match
+>>>>> with multiple valid wiring configurations like the voltage inputs, do
+>>>>> we even need to describe them in the devicetree?
+>>>>>
+>>>>> In the driver, the current channels would just be hard-coded like the
+>>>>> temperature channel since there isn't any application-specific
+>>>>> variation.  
+>>>>  Sure, but we still need to offer the user a way to configure which
+>>>> current inputs he wants and if they should use bipolar or unipolar coding.  
+>>> From the datasheet, it looks like only positive current input is
+>>> allowed so I'm not sure bipolar applies here. But, yes, if there is
+>>> some other variation in wiring or electrical signal that needs to be
+>>> describe here, then it makes sense to allow a channel configuration
+>>> node for it.  
+>>
+>> AD4111 datasheet pg.29:
+>> When the ADC is configured for bipolar operation, the output
+>> code is offset binary with a negative full-scale voltage resulting
+>> in a code of 000 … 000, a zero differential input voltage resulting in
+>> a code of 100 … 000, and a positive full-scale input voltage
+>> resulting in a code of 111 … 111. The output code for any
+>> analog input voltage can be represented as
+>> Code = 2^(N – 1) × ((V_IN × 0.1/V REF) + 1)
+>> The output code for any input current is represented as
+>> Code = 2^(N − 1) × ((I_IN × 50 Ω/V REF) + 1)
+>>
+>> I would say bipolar applies here, not a great idea because of the limitation on
+>>  the negative side (Input Current Range min:−0.5 max:+24 mA) so still, the option
+>>  is available.
+> Just to check I am correct in thinking you 'might' use bipolar if you want
+> to be able to measure small negative currents, but the range is much larger
+> in the positive direction?
 > 
-> Instead, abstract this via a helper to allow architectures to do
-> different things here. Move the level enum to the resctrl header and
-> add a helper to retrieve the struct rdt_resource by 'rid'.
-> 
-> resctrl_arch_get_resource() should not return NULL for any value in
-> the enum, it may instead return a dummy resource that is
-> !alloc_enabled && !mon_enabled.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
+> J
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Yes, exactly
 
--- 
-Cheers,
 
-David / dhildenb
 
