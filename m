@@ -1,107 +1,175 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEBF13E3E3;
-	Tue,  9 Apr 2024 17:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA39813E3E3;
+	Tue,  9 Apr 2024 17:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682105; cv=none; b=t5Qi2phtKjoYWc0zSdHiWxQNn7JWc38S9zwvIA/GMaIVfowbTSvu8LDcrgzb2Nqz5A+/Wm/6nmtR+Y4U4aDeCVT0hfl0X85pr0CN/jkekuxVNABLxJjF4DYuj1tVPcuOA7MWanrndGudn216s55fpwKdT0zG7YdYDOeTJ/l+8gU=
+	t=1712682123; cv=none; b=O8uDrBP3h/ZLnQ8fAfscj45OYNDt2Jq6HrSXOOByvoEv/XvSpVWUQAPgZueJiCAZm2MTH0zjFFQlWjxc+0Riv0yKUKAogQLcuIl+XBSEC5NSSvWUpi17lmjQwPEOOA4Juq9OQCnK+7LZtEL9IIdgWOQEt938YlJJAwWoXFfV93o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682105; c=relaxed/simple;
-	bh=lftnbDb228AtGqRmKG1GruD9Tdr0r/t4M1ad2PBgPI0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=rVU4Isdw3oUOfj6eaPqGmnzBPEbq3YelMor1SCZpWY8qjDU3wjGDRcMrHgN1cL37UOKSZGFAh0kEQxidFA2SvosXDqvyckoJa9v1CMVKRJhdANqgrYwSledPQECrOfcXCCarvtdQKe7e/UP4SyMwiAPmgLwv6t0fbUE5JzeiW4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiOTYIXu; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712682123; c=relaxed/simple;
+	bh=thxxt4zRIMmtKrX1Zq6SbymytnrxT37KGosR84E5MuI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kQ/8HnGQ9uA15/ueDB5yptdKxT7R1EmnCjqDSBkUxcrc9eR57drRgTvJDoa8Y/0L44MCJhIFTbLBpefCxRyknCrkjJyxZHINALjFxda4fWSIfXHT+rYZgfsBfwIlCDx9sMpzQfIBc+U6RIxMaV03o17PSugDHKgSEGteanjH2C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=vhA1kKlT; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiOTYIXu"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4165caf9b2dso26806845e9.1;
-        Tue, 09 Apr 2024 10:01:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vhA1kKlT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712682102; x=1713286902; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3GsMNEF3lUCa87J+AsjZLBs3nM/4xYgj2UZQkqon9I0=;
-        b=BiOTYIXu2TLP2gHl4EZzzZLlQ1nQ2bB56cBV1K2u06aT0qZaYJF1Lu/XUjEsEI/UO7
-         7UheVc2e8xE4gC+JuAinsYOtq1H2FPXIUsWukW8jb/8UaN5qZf5c+or5Pm19BdJtt6ro
-         NmAhj2aIOBYYImzl52lh5HFxyI24Tb0a0f0/ojY/YBMAELLrrXTREDEyTO2sQYKTJoCb
-         U/AaQaPTnaCmOJIw4BBQdrUD1r7H7M4QB2zxFCDnPLuvzPFdhP7pb0czI3ziGWGSTcx0
-         JZoy27zUciPTVW5kFdtzOHd9J495QrLetE6vlx/U01gJS6Y28fssNSUUja2eDuZ1ylSn
-         /hJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712682102; x=1713286902;
-        h=content-transfer-encoding:content-language:in-reply-to:mime-version
-         :user-agent:date:message-id:from:references:cc:to:subject
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3GsMNEF3lUCa87J+AsjZLBs3nM/4xYgj2UZQkqon9I0=;
-        b=P5mJG6RveXWWek2UG80GNmYUl4A7z3MClv2f2De2noGigbseGwBJYagkm4xB1CTzpN
-         ZbRzdYd+LKi4hxjoL2pm+XhI6Z3ixmJU9aeqBbqHQ2T4NJWjdwsjPVW62KJ7NNCnLs4b
-         0GaLaV2c8XHuYllfy07uFJ0cWwDD+judXpuObP3w6/PVsFPA13qNKlUpWM8il4hFoJUE
-         DPu08rd4xufnVvI37Bwnqw3/OX4Ugcbam4kkVAtn3lM+5Y46xEMoiHRpeYshydNfb7ep
-         vznLAh5RZBfNfpNw27Z6jYk9dZw7uS1UVtO79ptWPGqQPhhpe+h6QEMz4jdUMFvVO4/N
-         nNwg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPnEcR3z/VHFtbHPnNxUwNoUYZsTg868Hb/0ghXbzh5iN1qK4QD5rf1yTynR6QLhO11kfcpTd4isR+MgQAd0+NHtO4prVdC+CBrYyR7WOLaZ6f/gpKnmy3tNN9lJglXHaSRcZaLuWnxGg/8Xtb6FB6nQ/JPZX8C6NNCprcX4KO9i11aDy88OLms8NvVDdQ155KAQnjY5KzS7alGQlBrltKey2GOEpjKQa/2ZXwFtiA9WMWmH0VTEwE0DskZciLPQ==
-X-Gm-Message-State: AOJu0YwdXAqvUHVwOTj0OqVFhovnU9Ik7XJWfXlwmHlrEnd47qbDNPXV
-	RU729cXaocD6f6MCGu0ihQGVd8SJ86MI8vp2Fqd4hvLrOGO2W0xg
-X-Google-Smtp-Source: AGHT+IElBhBg+n7nv1ufKcp4gnBNnHktsGfVzpiFGSrsNs4iqAFH5OsrMWEV2AOFNAmH/WjJusDm8g==
-X-Received: by 2002:a05:600c:198c:b0:416:6b95:c631 with SMTP id t12-20020a05600c198c00b004166b95c631mr244269wmq.6.1712682102085;
-        Tue, 09 Apr 2024 10:01:42 -0700 (PDT)
-Received: from [192.168.1.122] (cpc159313-cmbg20-2-0-cust161.5-4.cable.virginm.net. [82.0.78.162])
-        by smtp.gmail.com with ESMTPSA id o34-20020a05600c512200b0041627ab1554sm21366717wms.22.2024.04.09.10.01.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 10:01:41 -0700 (PDT)
-Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
- mana_cfg_rx_steer_req_v2
-To: Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Long Li <longli@microsoft.com>,
- Ajay Sharma <sharmaajay@microsoft.com>, "K. Y. Srinivasan"
- <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
- Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Kees Cook <keescook@chromium.org>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jason Gunthorpe <jgg@ziepe.ca>,
- Shradha Gupta <shradhagupta@linux.microsoft.com>,
- Konstantin Taranov <kotaranov@microsoft.com>, linux-rdma@vger.kernel.org,
- linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- llvm@lists.linux.dev
-References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <20240408110730.GE8764@unreal> <20240408183657.7fb6cc35@kernel.org>
-From: Edward Cree <ecree.xilinx@gmail.com>
-Message-ID: <ca8a0df8-b178-31ff-026f-b2d298f3aa84@gmail.com>
-Date: Tue, 9 Apr 2024 18:01:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712682122; x=1744218122;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CiSkwG2jh+RHXxMnTYckZv1UIdBtz87JB37Fxc/Kq2c=;
+  b=vhA1kKlTl+TkD23+4+LZN1PNgJykETkV92n318d2ZUP7B2N2YasFouFa
+   5Iv6I9dTuptjuMv0Np7BRdrA6frkOoNXb2CLfcJqKwH43DQWPLhdYjsN7
+   78ks9SG/eFWtqAULRoYEKJyFVDkrQ9YqP9SgJPRSNX8X7XkTUC4FI9r5V
+   U=;
+X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
+   d="scan'208";a="393596262"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 17:01:57 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:18557]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.11.214:2525] with esmtp (Farcaster)
+ id 492a4388-bfc0-4754-8dbb-429ec0728dd8; Tue, 9 Apr 2024 17:01:55 +0000 (UTC)
+X-Farcaster-Flow-ID: 492a4388-bfc0-4754-8dbb-429ec0728dd8
+Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 17:01:55 +0000
+Received: from bcd074994f7f.amazon.com (10.95.97.144) by
+ EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 17:01:51 +0000
+From: Sudan Landge <sudanl@amazon.com>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
+	<xmarcalx@amazon.co.uk>
+Subject: [PATCH v4 0/5] virt: vmgenid: Add devicetree bindings support
+Date: Tue, 9 Apr 2024 18:01:32 +0100
+Message-ID: <20240409170137.79197-1-sudanl@amazon.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240408183657.7fb6cc35@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWA001.ant.amazon.com (10.13.139.100) To
+ EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
-On 09/04/2024 02:36, Jakub Kicinski wrote:
-> On Mon, 8 Apr 2024 14:07:30 +0300 Leon Romanovsky wrote:
->> Jakub, do you want shared branch for this series or should I take
->> everything through RDMA tree as netdev part is small enough?
-> 
-> Shared branch would be good. Ed has some outstanding patches 
-> to refactor the ethtool RSS API.
+This small series of patches aims to add devicetree bindings support for
+the Virtual Machine Generation ID (vmgenid).
 
-For the record I am extremely unlikely to have time to get those
- done this cycle :(
-Though in any case fwiw it doesn't look like this series touches
- anything that would conflict; mana doesn't appear to support
- custom RSS contexts and besides the changes are well away from
- the ethtool API handling.
+Virtual Machine Generation ID was introduced in commit af6b54e2b5ba
+("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
+ACPI only device.
 
--e
+VMGenID specification http://go.microsoft.com/fwlink/?LinkId=260709 defines
+a mechanism for the BIOS/hypervisors to communicate to the virtual machine
+that it is executed with a different configuration (e.g. snapshot execution
+or creation from a template).
+The guest operating system can use the notification for various purposes
+such as re-initializing its random number generator etc.
+
+More references to vmgenid specs:
+ - https://www.qemu.org/docs/master/specs/vmgenid.html
+ - https://learn.microsoft.com/en-us/windows/win32/hyperv_v2/
+ virtual-machine-generation-identifier
+
+*Reason for this change*:
+Chosing ACPI or devicetree is an intrinsic part of an hypervisor design.
+Without going into details of why a hypervisor would choose DT over ACPI,
+we would like to highlight that the hypervisors that have chosen devicetree
+and now want to make use of the vmgenid functionality cannot do so today
+because vmgenid is an ACPI only device.
+This forces these hypervisors to change their design which could have
+undesirable impacts on their use-cases, test-scenarios etc.
+
+vmgenid exposes to the guest a 16-byte cryptographically random number,
+the value of which changes every time it starts executing from a new
+configuration (snapshot, backup, etc.). During initialization, the device
+exposes to the guest the address of the generation ID and
+an interrupt number, which the device will use to notify the guest when
+the generation ID changes.
+These attributes can be trivially communicated via device tree bindings.
+
+We believe that adding a devicetree binding for vmgenid is a simpler
+alternative way to expose the device to the guest than forcing the
+hypervisors to implement ACPI.
+
+Addtional notes:
+While adding the devicetree support we considered re-using existing
+structures/code to avoid duplicating code and reduce maintenance; so,
+we used the same driver to be configured either by ACPI or by DT.
+This also meant reimplementing the existing vmgenid ACPI bus driver as a
+platform driver and making it discoverable using `driver.of_match_table`
+and `driver.acpi_match_table`.
+
+There is no user impact or change in vmgenid functionality when used
+with ACPI. We verified ACPI support of these patches on X86 and DT
+support on ARM using Firecracker hypervisor
+https://github.com/firecracker-microvm/firecracker.
+
+To check schema and syntax errors, the bindings file is verified with:
+```
+  make dt_binding_check \
+  DT_SCHEMA_FILES=\
+  Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+```
+and the patches were verified with:
+`scripts/checkpatch.pl --strict v4-000*`.
+
+Changelog with respect to version 3:
+- Changed the compatible string from "virtual,vmgenctr" to
+  "microsoft,vmgenid" as per review comments.
+- Renamed vmgenid.yaml to follow DT file naming convention.
+- Updated the description of properties and example in vmgenid yaml file.
+- Addressed the review comments to remove all ifdefs in vmgenid.c with one
+  exception which still needs to be under CONFIG_ACPI.
+- reformated the code with clang-format.
+- Tested code with W=1, Sparse, Smatch and Coccinelle tools.
+
+Changelog with respect to version 2:
+- As per review comments, used platform apis instead of "of_*" APIs,
+  removed unnecessary #include and used IF_ENABLED instead of ifdef.
+- Added more info for vmgenid buffer address and corrected the formatting.
+- Replaced the compatible string from "linux,*" to "virtual,*" because,
+  the device does not have a vendor.
+
+Changelog with respect to version 1:
+- Moved vmgenid.yaml bindings to the more related "rng" folder.
+- Removed `vmgenid_remove` to since it is unrelated to the
+  current goal of the patch.
+- Updated the cover letter and bindings commit
+  "[PATCH v2 3/4] dt-bindings: rng: Add vmgenid support" to
+  provide more information on vmgenid.
+- Compiled with and without CONFIG_OF/CONFIG_ACPI and fixed
+  compilers errors/warnings.
+
+
+Sudan Landge (5):
+  virt: vmgenid: rearrange code to make review easier
+  virt: vmgenid: change implementation to use a platform driver
+  virt: vmgenid: enable driver regardless of ACPI config
+  dt-bindings: rng: Add vmgenid support
+  virt: vmgenid: add support for devicetree bindings
+
+ .../bindings/rng/microsoft,vmgenid.yaml       |  49 +++++
+ MAINTAINERS                                   |   1 +
+ drivers/virt/Kconfig                          |   1 -
+ drivers/virt/vmgenid.c                        | 168 ++++++++++++++----
+ 4 files changed, 180 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+
+
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+-- 
+2.34.1
+
