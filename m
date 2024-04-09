@@ -1,114 +1,149 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010EC2C695
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 14:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F7583A06;
+	Tue,  9 Apr 2024 14:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712673989; cv=none; b=KXCAUws5BDaJ9CcC/82hhfKNy0DI8/HslhYBIeXNWizft38o8bt13PKbTd4ayXYsTo6qG3tvyyFU+gnwW2rusWaSPOcAiMDMBd8m247pV2d+MY1OxThdfmrEUgA+Lcbo2mm2fQzTGotAp9zWIJLtJdTg0Uo+FlFrcibngMmRJPc=
+	t=1712674023; cv=none; b=ixi8gp68s2WZ86XYY/6Iiei2wvtgqsl1jblISXLQ1HW8b4QuRXg7LF6PTy2uH8GqfR3n7Tpp3V3h3ecEcl4qnEJVUm7pv2gJuIY9A4Y5ayFXN8AmUIAMeIVT7VWI+vS9/fpPavKrn5i8lDtT9Le+DaZMDSJx+/b0xon9siTxOHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712673989; c=relaxed/simple;
-	bh=JNYWxfOdBLnkcSOg7S7k0lKm6pw5ifgueS2lI62IYsQ=;
+	s=arc-20240116; t=1712674023; c=relaxed/simple;
+	bh=0mq4p2RKJcENA+l1Y9ZRi0A1ikdFR53l9IrAV6mP5J8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V13AHHgNjHn1AC+YL0BTz34TrfWFvFfj1I9gpM/7REML2MQqfUOLrvMQyNIkFSufwzgtheQqE+pj+H2lXjqY+hg2TtZxM0uxMgcXt7dck8hk/dK7wCczmvZqdgEIdAEGelK85qiU00T4QJsNb8SqAuyp+0b/s3XXiC1+ZLoyOJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=28vxQEc2; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=tDxuXgnf6w2Y8jxt3qhT2TAxsfD2c8l1jJ/7mdHCes7pDf3lRnm0aXnVAkqcRkviZcSsRzM70rxyxbUpN3vHG/h9L1eyvLesfPvL7hL40DcYRuc8gxvV2M/nUpv6GWGkMHOwyDqsaAQm3HqL/8HdL2XRKR5n7+LCnvSyMkPXaAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b6Ie0Nos; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="28vxQEc2"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4daa68eef71so1666490e0c.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 07:46:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6Ie0Nos"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1dff837d674so48530195ad.3;
+        Tue, 09 Apr 2024 07:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712673987; x=1713278787; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JGKKqyMnDxDe7Z88TFPiX7ZbsHcnXFBE7VSZEtRsFEI=;
-        b=28vxQEc2TfpbRqxpk93+D041AjxSexs6rYQNsHGjjZ8SP1AfWYlIvrDbgi+HSQV+NY
-         hE/csZnXhzr0uDz8wJbGZuxVlzPU3tutz+RB6QDriquBTMIkj2eS5AQvPid7Z+GAudkS
-         uUo5KnnmEnv3+VRdF6XIVXQ6mleVvgpSSx9XXITKH7VS40GSIIXRLIczF2XFhkvXOVr3
-         WclMHKAwcC22dGNNFI4TPb1YDaWKAX40dLh8EXQF7bXTuV5fM10wRgaWo3PGRbMpJeqv
-         OkxRCEEK7iChk5QM4qFrwH/ywqEsaBuDZo4045Y+le2SbaY/fkDoldJctWdf9RzuNwzK
-         /Pag==
+        d=gmail.com; s=20230601; t=1712674021; x=1713278821; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t4/XbwGfv5FH7OpTEgDneuRNsxKocgdNuASa9JUfGDg=;
+        b=b6Ie0NosVMFZfbrJlY7nXD7BnM8ETWFBMQJhgPFPeqCeuUHqRw6F9cwdj4VowY5q0u
+         38luqcoCBt26Sf1jkFdMLVnX0j7NapGSH4gpOnySIcQ2tKVI3XIBUzrwgs7KmVtmA0ee
+         fmiBxxDihhqpscBK9SqZH2tUoRW9C8pqQrSk538/ETCGPFQf9vVPmXxLhki3EkH5xkPx
+         PRPVC7KOhyao3DVKaWQ0qbNCaPnkAzvnJVxAieCaEADfYwRlR739FFCy8/7l+EFvNy7g
+         7CHHCRrsYwX3dZ6FmSctOv4CYJD/RH/nimYx+e8WHR4+Fk+aw1gR36TSvcsBp2LXxcsL
+         g21g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712673987; x=1713278787;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JGKKqyMnDxDe7Z88TFPiX7ZbsHcnXFBE7VSZEtRsFEI=;
-        b=fRdZFT+ebA/j3Q+3CMfFgH9jhS8yqN0J0/PLAuf2KtHanFlkty+E/PFT54vg6KNbBh
-         XxfkfrZstG+ypoyYa/K3Z9BG/+aF65vZGzRv4NWP4v2kZZ8aSMrYV6ah7Mko3QbgnJzo
-         +BNRh5BIz/YL13LFroZn1qi0NLKjzEVuIxo7C0Tq3nUEjmWB8qsfHmvNNWTGt5qSEhq0
-         GW/pUHVAc2E6uDt7ptsTuBgaqBK6BPEDMic1rJFoIMNbSvJDDrXqOTbFs46o4g4FDssc
-         81vBRLWHyoMPgVrnhABz9qDkHcJveo4ery9duOHAuM1fuIyeAnAn6wZgsB9WN66Q1c1u
-         Bypw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLz8jibYzDp926HtzKcZjdfLs7j6uRVWAxcS1Gnca44SHQKtzCXa1INhnOBAdGQk4sGNJxv8ruwbcRHp83vD+GNrUWAKe8/aVtWo24
-X-Gm-Message-State: AOJu0YwqR7R2A0k84WvfZsbpcA4+EpjQdUWf921b4V3C1y1Lh6K84SIs
-	g7nv1okqlUN3szs/8+e6PMUP4BifTOwJbjWDrd7eLNn5SoRhttvkOlDZgLnbYQcBqAckKZCqqpO
-	jSK6Cer5LmiQoVX3AYzmzRDaTLpiluU3o8OGx
-X-Google-Smtp-Source: AGHT+IG5ZyVYbzpi7MrZFfeuZePmTlO9Cj6SrZUQgNIArSjr/qGXL8vsPlsLH60WkxdNp2m4CZry4zLpVpcPiYwzY5k=
-X-Received: by 2002:a05:6122:48a:b0:4d8:74cb:e3c2 with SMTP id
- o10-20020a056122048a00b004d874cbe3c2mr33094vkn.9.1712673986727; Tue, 09 Apr
- 2024 07:46:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712674021; x=1713278821;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t4/XbwGfv5FH7OpTEgDneuRNsxKocgdNuASa9JUfGDg=;
+        b=fWIUin9Tes4pWCHtnE6TbOVQEO4xeJ2E8Rbo7cdyYFD3N597FmKVcBulWntPg+TV2V
+         p0W/e4ekPZ43a9b9Dlj6BB34fIR3rKELTgrQIXZX9BRcynVwjWAgNvc4AJnXUwdYzFf0
+         cng/kQB7moQ4UPU0q2C4ZYPUKKEH/TiTvzqfLoFe6MuzxKKQFGwtR58TdZ3FdPKCZ0ty
+         Fesm5meVcfKiFQY0PKA+MSzJV5kfmzeeqqe+XFDB7GEcPCtJGmuZRRhFBYbSd0Ijo92B
+         iDXcAYNzYZjEWAcvlpi8NxBisBbSuXJCHJLC9ogxd+1+LAQyU7uR33azEnAeHSGBHSwa
+         vDig==
+X-Forwarded-Encrypted: i=1; AJvYcCXY2AxjYubPhF3mUdExLIxBvHaVsLHSqIx8O8ljom3XwevX57QgR8x7AkvL3MbFToLvWWhfbUonFS1hnPBT95xti/1AyYPTKp6reV0RndmH+FB8lu5Cwnh8XcNV1R3Em1x9oWyo2Gk=
+X-Gm-Message-State: AOJu0YwSF+qf6Qjl2JEpwdQSgxtmV+SIDw9G/rV7D1RVxHIcEKLKmt25
+	R6Hyy8htdNqHUSE/ADzFMZZlNavESyri+sVoRr03xhtZwRGXmKc75dnlgmejyoQ6etOBbG8/QcM
+	12Kh7Zq4FHf+mXrc2diDXtd/Xa/8=
+X-Google-Smtp-Source: AGHT+IFY9j+qoSmaEYW4Akp1KOi4FfGEeSnCSb7sIzO3txX/tFn7nbOlqb5dbAR83wpPTMIXAlFbk//FTGHP13D9Ggg=
+X-Received: by 2002:a17:902:f30c:b0:1e2:7fb2:b0b with SMTP id
+ c12-20020a170902f30c00b001e27fb20b0bmr9825211ple.68.1712674021492; Tue, 09
+ Apr 2024 07:47:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408090205.3714934-1-elver@google.com> <20240409103327.7a9012fa@gandalf.local.home>
-In-Reply-To: <20240409103327.7a9012fa@gandalf.local.home>
-From: Marco Elver <elver@google.com>
-Date: Tue, 9 Apr 2024 16:45:47 +0200
-Message-ID: <CANpmjNOv=8VBvbKBQbsBdg9y2pNsfdaA-46QB53NY-Ddmq3tmA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Add new_exec tracepoint
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+References: <20240403-gpa-no-cooling-devs-v2-0-79bdd8439449@trvn.ru> <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
+In-Reply-To: <594fdc5a-3b09-40df-98a0-43671665e55f@lausen.nl>
+From: Nikita Travkin <nikitos.tr@gmail.com>
+Date: Tue, 9 Apr 2024 19:46:50 +0500
+Message-ID: <CAN_S-bXxKBjB5knjcUXW=rVwhCx0f1-pDMjmf9V9+ZLYSGZxvg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] gov_power_allocator: Allow binding before cooling devices
+To: Leonard Lausen <leonard@lausen.nl>
+Cc: nikita@trvn.ru, Lukasz Luba <lukasz.luba@arm.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 9 Apr 2024 at 16:31, Steven Rostedt <rostedt@goodmis.org> wrote:
+=D0=B2=D1=82, 9 =D0=B0=D0=BF=D1=80. 2024=E2=80=AF=D0=B3. =D0=B2 19:42, Leon=
+ard Lausen <leonard@lausen.nl>:
 >
-> On Mon,  8 Apr 2024 11:01:54 +0200
-> Marco Elver <elver@google.com> wrote:
+> Hi Nikita, Hi =C5=81ukasz,
 >
-> > Add "new_exec" tracepoint, which is run right after the point of no
-> > return but before the current task assumes its new exec identity.
-> >
-> > Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
-> > runs before flushing the old exec, i.e. while the task still has the
-> > original state (such as original MM), but when the new exec either
-> > succeeds or crashes (but never returns to the original exec).
-> >
-> > Being able to trace this event can be helpful in a number of use cases:
-> >
-> >   * allowing tracing eBPF programs access to the original MM on exec,
-> >     before current->mm is replaced;
-> >   * counting exec in the original task (via perf event);
-> >   * profiling flush time ("new_exec" to "sched_process_exec").
-> >
-> > Example of tracing output ("new_exec" and "sched_process_exec"):
+> thank you for fixing the e83747c2f8e3 ("thermal: gov_power_allocator: Set=
+ up trip points earlier") and 912e97c67cc3 ("thermal: gov_power_allocator: =
+Move memory allocation out of throttle()") regressions as part of v6.9-rc3.=
+ As the regression was introduced in v6.8, would it be possible to include =
+the fix in a v6.8 patch release?
 >
-> How common is this? And can't you just do the same with adding a kprobe?
 
-Our main use case would be to use this in BPF programs to become
-exec-aware, where using the sched_process_exec hook is too late. This
-is particularly important where the BPF program must stop inspecting
-the user space's VM when the task does exec to become a new process.
+Hi! I think these both have already been picked for stable:
 
-kprobe (or BPF's fentry) is brittle here, because begin_new_exec()'s
-permission check can still return an error which returns to the
-original task without crashing. Only at the point of no return are we
-guaranteed that the exec either succeeds, or the task is terminated on
-failure.
+https://lore.kernel.org/r/20240408125314.939341866@linuxfoundation.org
+https://lore.kernel.org/r/20240408125314.969670696@linuxfoundation.org/
 
-I don't know if "common" is the right question here, because it's a
-chicken-egg problem: no tracepoint, we give up; we have the
-tracepoint, it unlocks a range of new use cases (that require robust
-solution to make BPF programs exec-aware, and a tracepoint is the only
-option IMHO).
+Nikita
 
-Thanks,
--- Marco
+> Thank you
+> Leonard
+>
+> (Resending with regressions@lists.linux.dev in CC)
+>
+> #regzbot introduced: 912e97c67cc3f333c4c5df8f51498c651792e658
+> #regzbot fixed-by: 1057c4c36ef8b236a2e28edef301da0801338c5f
+>
+>
+> #regzbot introduced: e83747c2f8e3cc5e284e37a8921099f1901d79d8
+> #regzbot fixed-by: da781936e7c301e6197eb6513775748e79fb2575
+>
+> On 4/3/24 07:31, Nikita Travkin via B4 Relay wrote:
+> > Recent changes in IPA made it fail probing if the TZ has no cooling
+> > devices attached on probe or no trip points defined.
+> >
+> > This series restores prior behavior to:
+> >
+> > - allow IPA to probe before cooling devices have attached;
+> > - allow IPA to probe when the TZ has no passive/active trip points.
+> >
+> > I've noticed that all thermal zones fail probing with -EINVAL on my
+> > sc7180 based Acer Aspire 1 since 6.8. This series allows me to bring
+> > them back.
+> >
+> > Additionally there is a commit that supresses the "sustainable_power
+> > will be estimated" warning on TZ that have no trip points (and thus IPA
+> > will not be able to do anything for them anyway). This allowed me to
+> > notice that some of the TZ with cooling_devices on my platform actually
+> > lack the sustainable_power value.
+> >
+> > Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> > ---
+> > Changes in v2:
+> > - Split to two changes (Lukasz)
+> > - Return 0 in allocate_actors_buffer() instead of suppressing -EINVAL
+> >   (Lukasz)
+> > - Add a change to supress "sustainable_power will be estimated" warning
+> >   on "empty" TZ
+> > - Link to v1: https://lore.kernel.org/r/20240321-gpa-no-cooling-devs-v1=
+-1-5c9e0ef2062e@trvn.ru
+> >
+> > ---
+> > Nikita Travkin (3):
+> >       thermal: gov_power_allocator: Allow binding without cooling devic=
+es
+> >       thermal: gov_power_allocator: Allow binding without trip points
+> >       thermal: gov_power_allocator: Suppress sustainable_power warning =
+without trip_points
+> >
+> >  drivers/thermal/gov_power_allocator.c | 16 ++++++----------
+> >  1 file changed, 6 insertions(+), 10 deletions(-)
+> > ---
+> > base-commit: 727900b675b749c40ba1f6669c7ae5eb7eb8e837
+> > change-id: 20240321-gpa-no-cooling-devs-c79ee3288325
+> >
+> > Best regards,
