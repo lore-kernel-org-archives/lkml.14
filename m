@@ -1,85 +1,115 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCD27F478;
-	Tue,  9 Apr 2024 09:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D4280024;
+	Tue,  9 Apr 2024 09:50:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656220; cv=none; b=uq1729g1ezaKQXMMaW1QgBqOb5VzfNv/aV/Q/L3gKrFFICdajJOJBGFnvFusuMrARBUOluqxYq9s9PoWCthp/+Vw+f+xjhJDoEOZ+GLUAe1eDqMHH8o678z8Djdss+whlNa4SaAZIIGdk/2jfP6vkMB84/LD/l3/EEofbFyT/ko=
+	t=1712656258; cv=none; b=WzcLmnxXwR/yNFQfjWE10irYFtYRoPeXY3MCe2B3BBXm2kROJHwjoWVBDAtET9Tux41CZHafSv4aBHNdZPM20atrY9VjLAUe0Jt0CICyDI44MgzmB7CQeEMbxKwYYHF1AwX5eAmNjJD08WsTUm4DUWMMHeqkgQKQO8u1lbcE2GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656220; c=relaxed/simple;
-	bh=B1hRF4wh5KsEIlNYnlONjUnwHiM/6l8Y0AGg+VjQqrI=;
-	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
-	 In-Reply-To; b=KBDO37dvkSqLpzGiADsY5gqgGVhszuv8AonQw41FiVVf39mQwSrCSsMqo16Yzo1KMEnJB6g8G0czNjr2TSDrND0mTnkGnVzF+rUKM65u0zXBrYQnx/xskClaPThMy6tPdtuwd01o+4V2t6YMX6aloY1AtUK2O7b/c1Y+dNSAmW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=UA764w1y; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+	s=arc-20240116; t=1712656258; c=relaxed/simple;
+	bh=Rbida/oaltsFG3OqFmrxLsFqLkt52ywYuO3hyKtFGgM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BSALIdq/FpVurdUnHRkLrLAnLdx72r+lFmrlLlNpCddiuF+Ai8i+eDqJxf4lCY7rDQ4XL6n0gLsBmebSmq1eUqPVwt3rDv3BWg5uQhjraH5v7lwQzSxaY+vWcqVzKQgAkHRdSe0JNfIiGtCOm93elyfwLiRBsPvcvRzqXbR9Js8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8aptbkz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="UA764w1y"
-Received: from localhost (unknown [213.135.10.150])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id 148E53D5;
-	Tue,  9 Apr 2024 11:41:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-	t=1712655668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
-	 references:references; bh=B1hRF4wh5KsEIlNYnlONjUnwHiM/6l8Y0AGg+VjQqrI=;
-	b=UA764w1yQyVsuLGF6Lk+kfDHdZhFDibWXIrnwXcrK/b2vDlQVDhehSpZhGld8VTQlDT5Wg
-	/Qx/N2KRJ477RGmQv9Qs4s+qZgpmV3kF2VXlzJ1yXarTQI6ZHpKhcmWK2pcoVjLkk/uT+N
-	gUNtI6X20YBPuXVlye++Tk8wqiJNKOv1DWOd1OYjYhYdLsPLMictRnyQ4PgWPize3PBlTP
-	7HhYb+Npmmfr3nHQOVCb12am3FVBBNbLiqS26vXz5qdBAV6GOCUyOxpSY/NzofXcM/ijeI
-	JWZpOTz2HdNwueoVBML8t6clo2yQJl34olPUELkWXN3iMANTaurzrMmE3qVrhA==
-Content-Type: multipart/signed;
- boundary=8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db;
- micalg=pgp-sha384; protocol="application/pgp-signature"
-Date: Tue, 09 Apr 2024 11:41:06 +0200
-Message-Id: <D0FHRJG05LJN.1GU1N7J0BH6S4@walle.cc>
-Subject: Re: [PATCH v4] mtd: limit OTP NVMEM Cell parse to non Nand devices
-Cc: <stable@vger.kernel.org>
-From: "Michael Walle" <michael@walle.cc>
-To: "Christian Marangi" <ansuelsmth@gmail.com>,
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Miquel Raynal"
- <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
- "Vignesh Raghavendra" <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.16.0
-References: <20240402212331.27328-1-ansuelsmth@gmail.com>
-In-Reply-To: <20240402212331.27328-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8aptbkz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417AEC433C7;
+	Tue,  9 Apr 2024 09:50:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712656257;
+	bh=Rbida/oaltsFG3OqFmrxLsFqLkt52ywYuO3hyKtFGgM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=d8aptbkz2gcqP8K4pcd5Mzyi9KWRZNJSmkyd6/LZtZtpb+l8VyhEhyPLxXXViQgPt
+	 2iY8/hpJvdSzN46KmIIpiSPOScQR/Xzp7z1pBp/yHnekqeqXFgBBzLrcIIrO2hvKYa
+	 AQUoVUqKuFJWYXw/hvHquwF6j0Kje6a4+ytD5QDJTt+9tvLCbI93VpM0q8GYmk9did
+	 fgZt80+Y64vcy5fJH9pVSLCRQE/cBKBAGztEDLPcTUHdtm35Bjdd4Ccub2b65X2Tld
+	 aGY3v2Ma2LDBRtgaNlFtPQwih1I8XAeLYbIEtosZnqN3/5iEOAYvB6QNB7lS9y3Q58
+	 HaW0SF+W3mYVg==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: puranjay12@gmail.com
+Subject: [PATCH bpf] arm32, bpf: Fix sign-extension mov instruction
+Date: Tue,  9 Apr 2024 09:50:38 +0000
+Message-ID: <20240409095038.26356-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
---8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+The current implementation of the mov instruction with sign extension
+clobbers the source register because it sign extends the source and then
+moves it to the destination.
 
-Hi,
+Fix this by moving the src to a temporary register before doing the sign
+extension only if src is not an emulated register (on the scratch stack).
 
-just a quick (non-technical) nitpick if you do a new version or
-maybe Miquel will fix it during applying:
+Also fix the emit_a32_movsx_r64() to put the register back on scratch
+stack if that register is emulated on stack.
 
-> Subject: [PATCH v4] mtd: limit OTP NVMEM Cell parse to non Nand devices
+Fixes: fc832653fa0d ("arm32, bpf: add support for sign-extension mov instruction")
+Reported-by: syzbot+186522670e6722692d86@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/000000000000e9a8d80615163f2a@google.com/
+Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+---
+ arch/arm/net/bpf_jit_32.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-subject should be "non-NAND", also cell could be lower case :)
+diff --git a/arch/arm/net/bpf_jit_32.c b/arch/arm/net/bpf_jit_32.c
+index 1d672457d02f..8fde6ab66cb4 100644
+--- a/arch/arm/net/bpf_jit_32.c
++++ b/arch/arm/net/bpf_jit_32.c
+@@ -878,6 +878,13 @@ static inline void emit_a32_mov_r(const s8 dst, const s8 src, const u8 off,
+ 
+ 	rt = arm_bpf_get_reg32(src, tmp[0], ctx);
+ 	if (off && off != 32) {
++		/* If rt is not a stacked register, move it to tmp, so it doesn't get clobbered by
++		 * the shift operations.
++		 */
++		if (rt == src) {
++			emit(ARM_MOV_R(tmp[0], rt), ctx);
++			rt = tmp[0];
++		}
+ 		emit(ARM_LSL_I(rt, rt, 32 - off), ctx);
+ 		emit(ARM_ASR_I(rt, rt, 32 - off), ctx);
+ 	}
+@@ -919,15 +926,15 @@ static inline void emit_a32_movsx_r64(const bool is64, const u8 off, const s8 ds
+ 	const s8 *tmp = bpf2a32[TMP_REG_1];
+ 	const s8 *rt;
+ 
+-	rt = arm_bpf_get_reg64(dst, tmp, ctx);
+-
+ 	emit_a32_mov_r(dst_lo, src_lo, off, ctx);
+ 	if (!is64) {
+ 		if (!ctx->prog->aux->verifier_zext)
+ 			/* Zero out high 4 bytes */
+ 			emit_a32_mov_i(dst_hi, 0, ctx);
+ 	} else {
++		rt = arm_bpf_get_reg64(dst, tmp, ctx);
+ 		emit(ARM_ASR_I(rt[0], rt[1], 31), ctx);
++		arm_bpf_put_reg64(dst, rt, ctx);
+ 	}
+ }
+ 
+-- 
+2.40.1
 
--michael
-
---8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iKcEABMJAC8WIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZhUNMhEcbWljaGFlbEB3
-YWxsZS5jYwAKCRASJzzuPgIf+LymAYDD9wmmYfgy26EJDv13ae+bC0ut1EyeUTAm
-lJ9YqLRePNYZ6DdNEEPblZqfBNUTD04BfR6m8Yg0Y/LiFSrhkmPFkcOGZroghen/
-hXr19Rz/FouCSXF2uoJ0y/cdSqW5pYZJKg==
-=wSoG
------END PGP SIGNATURE-----
-
---8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db--
