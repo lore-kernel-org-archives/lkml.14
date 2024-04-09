@@ -1,67 +1,45 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E3112B14A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 12:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A624F883;
+	Tue,  9 Apr 2024 12:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664959; cv=none; b=B9kH+Sc3EkSOxAHpVXfJwbH3A31hxTgLdbJrPPtA3OzBzueadZOY4xAX2rsbRH/l4XxzeKOQ01+09BSOiTK7Y5CiZUVA9K01+wlNIV4cQVhNt1gjhAFdAl4DxSP5N97TYdxWwqYsxhBB3be+QQQRLG0z/rDefvmgjDn7jimI1JA=
+	t=1712665055; cv=none; b=qY/u6LkJnOp9bc7WJai7SSuPWapMljuvAupFnpKQScD9WvFF92Ic9g//gfkCiL0kmE+U0Z3qh4pzHRXKyStSD8/zEGkZ8TpvFIGOesK1qyL7pPXcib5lW4SJZ8ZHZHLIsJRMawJ5nztdPbyv/HXmsWu75Js/i4bJDaMX8yGlfEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664959; c=relaxed/simple;
-	bh=yPd81M+1NfZphw3W4cYk6nOj1ArNbzmhlNz4HC9gqq0=;
+	s=arc-20240116; t=1712665055; c=relaxed/simple;
+	bh=fH+pqInuqCP8bPr3hH0Y8Q86LVIvkMeVKXe0pif5V9c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LGoX31msrbAtJv2HOO4JezJjmSEYAe8T5wt3zi5D4NIdfFdwnmL2jon38D4SQIkL7GEh6RKMlHpLuYool1hy9DcHSw0d6e+NOwwcGPQsKVnVuA+uPSTghWiXIP902nNX9ibcQ3hdZawWi6yh4AkiBqVbZZLqxjzeuz8b6zvFBGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cy4v+7po; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLws1CWK3JJ8GVC3bQTiPBwMbIYaLgZ27zs+WrA/a+BkktBKHFSRajp3K+HX8RIc+g/6h8hg7T6mN188fjAkS01RCY9PdjUROLC6knZlNBvNgIeC9jmUk0dcHd8Iark9reFMO/8d3sEH7dQqOqivQtZq0oIog+bDqaE6uDz2lQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0EWtxBMo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cy4v+7po"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a51c8274403so328014366b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 05:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712664956; x=1713269756; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N2a7zpSCWKKDFCFWBoP14IB+FQzIYEADjjepMzBJTyI=;
-        b=Cy4v+7poBRkXZpyAW9PmUxqoOSdRXm5+TD5wylJrAdZAVEtJaZPTt7YzxvRP5TNSKN
-         Kv1AoiO1Z1Iw/acNKRUXQAuRJY++yd9HX6iDT5xFuQ7mKv1kX9y7zpqn3yKMRACBKj4q
-         vOfeMUjVXRaemIWM8Bz8K4rLOWVgi0xYhH/oaKegZlGTgyWPd+fF2zws3eNhRRub5m4K
-         EJUf7mEXlt5wpPP+fx8S3NeZpCOvrghXUCi/7HZPoEPuDHU91Xu/Nx/YLQ81VI45fwOR
-         0o1xvkFVM/tgRkrjZm0OV7L9X77RBYd69Mhp391muPnVyqirwntkBXKOHue6WznuST1J
-         PmrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712664956; x=1713269756;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N2a7zpSCWKKDFCFWBoP14IB+FQzIYEADjjepMzBJTyI=;
-        b=mYe9DofsaoqIzjxcddUcrsFllYFbh3EKSww4uL0rhN+eQyUIEZYUXfuf/ohLEmuF6t
-         MWfNbHCU8Qs6DX8Z5bpN4Izw4rNOQK7k1Y0vIBVpDWLP9+mUXL5vsc3J/sUdg/U3HSBo
-         zRz3INCLjcentD5Jqg9QDUll6YpjH+9npGRVPkf4ns2jd8T5N7Qn/us4bCUNMFP36Uyo
-         gcJydicUmIFVQJ8/GG2zGwk81AFf1Tvq839t80Ns4yoY8l0WGVKtaHZBWcCzStNuoFxr
-         rSg1aC987iK9dySmfb++1K4l/NoP5UgaYzFbomwnnHEBCiN83u5KXgoUGKrzj8ywCNPZ
-         uLaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhivwarYKNKWRGb8+F80fqBhBUfRR7eO2ItmP9FBVdCy3rIDvoIRhwGhUq6lFmP+2wl0365UOv7i5uLII79+itCfEYzwWrLxqH7A2Z
-X-Gm-Message-State: AOJu0YyREHEN4aGUuzKF4Z8EY9RQcZkd+FaX5KboUE+o3qLGR5CAKyUj
-	AVf9de6mSsWUifPhifVQ5Q7YmBDoejcd3diK0X+smLMKNuAiX5D4QppEeRKX1OA=
-X-Google-Smtp-Source: AGHT+IFE/zCvPySd/Jt/cqVeIJgBn1agejVAFKR8x0SZSzXrJnJAe+FV3CiGMlIqGDswtrhwFrIX8A==
-X-Received: by 2002:a17:907:96a8:b0:a51:904a:e3ca with SMTP id hd40-20020a17090796a800b00a51904ae3camr9982209ejc.30.1712664955960;
-        Tue, 09 Apr 2024 05:15:55 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id gv18-20020a170906f11200b00a4e1a9e1ab4sm5632229ejb.157.2024.04.09.05.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 05:15:55 -0700 (PDT)
-Date: Tue, 9 Apr 2024 15:15:48 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: topcat <bfonseca@ime.usp.br>
-Cc: Marc Dietrich <marvin24@gmx.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	topcat <bfonseca@ipt.br>, ac100@lists.launchpad.net,
-	linux-tegra@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fixed spelling mistake
-Message-ID: <1204e94a-d061-41eb-984a-86a29991637f@moroto.mountain>
-References: <20240409114045.13872-1-bfonseca@ipt.br>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0EWtxBMo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DB4C433F1;
+	Tue,  9 Apr 2024 12:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712665054;
+	bh=fH+pqInuqCP8bPr3hH0Y8Q86LVIvkMeVKXe0pif5V9c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0EWtxBMoqzphz7amkYmvLeLupc2mz5UF6CXnZt1n6bkV5RlOez9HF4pe9jifCU4Fh
+	 a5ihOtuJpxsDI9TX2knf3Nl2NS9d4dQJlGOfeCLqmqVvKhp6XAQlOehOvPz7x0awI9
+	 TUiUYJzJ18gZh9Unq9ncbHzICF+PO9DDY+A5SAgY=
+Date: Tue, 9 Apr 2024 14:17:31 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Sumanth Korikkar <sumanthk@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 6.6 000/252] 6.6.26-rc1 review
+Message-ID: <2024040912-item-nearby-d068@gregkh>
+References: <20240408125306.643546457@linuxfoundation.org>
+ <CA+G9fYsvgN2ixfmDKc_x8yFnZ3SfrmSV5Ck1QC5KfmYN89CFYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,17 +48,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240409114045.13872-1-bfonseca@ipt.br>
+In-Reply-To: <CA+G9fYsvgN2ixfmDKc_x8yFnZ3SfrmSV5Ck1QC5KfmYN89CFYQ@mail.gmail.com>
 
-1) Fix your From header.  Use your real name like signing a legal
-   document.
-2) Use the subsystem prefix in the subject
-3) Add a commit message
-4) Add a Signed-off-by-line
-5) Run scripts/checkpatch.pl on your patch
+On Mon, Apr 08, 2024 at 10:45:44PM +0530, Naresh Kamboju wrote:
+> On Mon, 8 Apr 2024 at 18:30, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.6.26 release.
+> > There are 252 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 10 Apr 2024 12:52:23 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.26-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> The s390 defconfig build failed with gcc-13 and clang-17 due following
+> build warning / errors on Linux stable-rc linux-6.6.y.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Build error:
+> --------
+> arch/s390/kernel/perf_pai_crypto.c: In function 'paicrypt_stop':
+> arch/s390/kernel/perf_pai_crypto.c:280:51: error: 'paicrypt_root'
+> undeclared (first use in this function); did you mean 'paicrypt_stop'?
+>   280 |         struct paicrypt_mapptr *mp = this_cpu_ptr(paicrypt_root.mapptr);
+>       |                                                   ^~~~~~~~~~~~~
+> 
+> Commit detail,
+>   s390/pai: fix sampling event removal for PMU device driver
+>   [ Upstream commit e9f3af02f63909f41b43c28330434cc437639c5c ]
+> 
+> Steps to reproduce:
+> # tuxmake --runtime podman --target-arch s390 --toolchain gcc-13
+> --kconfig defconfig
+> 
+> Links:
+>   - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.25-253-gec59b99017e9/testrun/23347738/suite/build/test/gcc-13-defconfig/log
+>   - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.25-253-gec59b99017e9/testrun/23347738/suite/build/test/gcc-13-defconfig/details/
+>   - https://storage.tuxsuite.com/public/linaro/lkft/builds/2eozoS8GQGxb94EUWNTPuXvYjVU/
 
-https://staticthinking.wordpress.com/2022/07/27/how-to-send-a-v2-patch/
+Thanks, I'll go drop a bunch of s390 patches from this tree and push out
+a -rc2 later tonight.
 
-regards,
-dan carpenter
-
+greg k-h
