@@ -1,287 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2084A19A;
-	Tue,  9 Apr 2024 00:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B618A110A;
+	Tue,  9 Apr 2024 00:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712622345; cv=none; b=VA5/tG+PopNwTW9kFRn2QVm7sfX+fE6tMCAqTiuJd1KAuBWV/l6gFg1xEzKTVeiDalW6UyyvMkpPKfGivCqNZMRnIGxJvntO0/YDc5UHo4RCRsTdm+/nHM/i2HikG1L3I5y+fKG47u/EKzewDf5tpk4nNctVSH2/t03Wk1CIlW4=
+	t=1712622546; cv=none; b=KNGA85tRXShlZPgF4Pcq8325BTSbCPXPXIABqrqDjBM1T9DNcTY6Y1NDRfT0GGluwLj+m1jgQZRN1vnYYs5S2MiRnBJ1ESokvb7ACjXSU15gm+cQZ0Qvi6DUPhfoD+xs2Bf8ovcgfYF7fyzPDdfMgFV23ZJPizgna6JvDQ+FzPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712622345; c=relaxed/simple;
-	bh=StywMEHp3lZTMhB3jfxFcM+oYwhQGtJHvMJQGNcUSMk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FiJfuMH4AcPI/VlJQNnTHjTYSKkuSXZ9R262PkdzZJjudeozmwLpagIELOPP+3Lyav5V9RHt3eoRr29pBf/zCgQBtLrGNiCVCKvETktL2IQ4hKABh6/Ae3wWPDdVgojMyIaULvS85vQpqhNe/Pj+6ojtXl7E+g9n56iT1Vfi2kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YI+Y0uI9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712622546; c=relaxed/simple;
+	bh=omwxEjlQrrCmbYWEbZK/fq6CZo0DirAMQNhwIlouZxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hurAExDaampBnb5ynASMJ9h2KvRIRr2hYJf7IsZ3etbSaEvFFYQOlDvJWKhSxw7g810CS96jcvQC6XHkKJIM7RjCujXCKj56g4wuFZyqMIsVEWAh5Prmg/JnKrbxPriBWVO6+QAHhzyyHFMRjjYjhr0UvGrTVIJM8a6HAEHf0Mw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ClqKMTYR; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YI+Y0uI9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39D9CC433F1;
-	Tue,  9 Apr 2024 00:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712622344;
-	bh=StywMEHp3lZTMhB3jfxFcM+oYwhQGtJHvMJQGNcUSMk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YI+Y0uI9cO2v2jtxfuMsDQd8VlE56H1doSY12GhSc24kLaHXhH7V31h4fWLEfZwye
-	 oCPgxditqBeF8Mb/pJkgV4j/Cmidk1yXRRl+5Bz1vmda8ZIp80F0r5mpNgedPJ+K98
-	 YnBKTBXmKQo4U6YWMlrQ0VwtAdmToLsCteVmFUWR9YuA4n6OvG1aCPTlyLkWMXC2ZG
-	 IxoUfNqsp8YjITzl0wdxECG4w+xxlStWKU7wFzLByUKavGK4NuXnVBRViCNpMlKdwN
-	 iIto5bd/vrT07Lz3Fcs4DG61gOsY6pb42F6EMtm0rmkESw7BqTZBVeFO3+NZdAnUY3
-	 vSfm/kIIxZEEA==
-Date: Tue, 9 Apr 2024 09:25:40 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: paulmck@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Subject: Re: [PATCH fs/proc/bootconfig] remove redundant comments from
- /proc/bootconfig
-Message-Id: <20240409092540.44cadc511429545d3052fe79@kernel.org>
-In-Reply-To: <bacfd3b9-5a2a-43ee-8169-4d8bf5a3ddc8@paulmck-laptop>
-References: <f036c5b0-20cc-40c1-85f9-69fa9edd0c95@paulmck-laptop>
-	<20240404085522.63bf8cce6f961c07c8ce3f17@kernel.org>
-	<26d56fa5-2c95-46da-8268-35642f857d6d@paulmck-laptop>
-	<20240405102324.b7bb9fa052754d352cd2708e@kernel.org>
-	<20240405115745.9b95679aa3ac516995d4d885@kernel.org>
-	<ef8cf3e7-9684-4495-a70e-c8f13ad188c5@paulmck-laptop>
-	<20240406111108.e9a8b8c4cb8f44a8fb95b541@kernel.org>
-	<bacfd3b9-5a2a-43ee-8169-4d8bf5a3ddc8@paulmck-laptop>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ClqKMTYR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712622545; x=1744158545;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=omwxEjlQrrCmbYWEbZK/fq6CZo0DirAMQNhwIlouZxI=;
+  b=ClqKMTYReJwo74etqICMPSg79ydjrIePZwrHOI9O1CHB2gQ2tW7xKpVH
+   +eIxtqXnzrUEIlUxhERfq6in9+ik6CPiQMhQBalVXFDW5mlhXbce26ygv
+   7aq8/6EtAlt4wQYMPupwd52jd9IXEc4feZz4yf7ixWPYceGG+k2ociv0n
+   EqVpYaNVQYkns852uKsEGaTyS8L+xYFZt7T8rSgorHbw6Y0XE0xZ/4rhG
+   tOv7LEfWU7LxJL5TIVrVSslcie+s1D+lA3kx9YhkRGF7zIVPqfH3V+NKz
+   PdQ3rpFcdal9RmSKc3BWhzx5w1OdxTu8f/6rtWodlcJbcxeCfn3GFOpTG
+   A==;
+X-CSE-ConnectionGUID: g1mzpvFJQbqqOEZYFcoNmQ==
+X-CSE-MsgGUID: n86xc/5AQ5aXQmSy0q++0w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19072796"
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="19072796"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 17:29:04 -0700
+X-CSE-ConnectionGUID: HGZ8AKgZQ7G2VAC753p+7A==
+X-CSE-MsgGUID: FkyE1KhKRj6OIGh7R2wGTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="20009611"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.92]) ([10.124.225.92])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 17:29:01 -0700
+Message-ID: <b234ef24-042b-4f5e-90df-83cc08109077@linux.intel.com>
+Date: Tue, 9 Apr 2024 08:28:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [kvm-unit-tests Patch v3 07/11] x86: pmu: Enable and disable PMCs
+ in loop() asm blob
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Zhang Xiong
+ <xiong.y.zhang@intel.com>, Like Xu <like.xu.linux@gmail.com>,
+ Jinrong Liang <cloudliang@tencent.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240103031409.2504051-1-dapeng1.mi@linux.intel.com>
+ <20240103031409.2504051-8-dapeng1.mi@linux.intel.com>
+ <ZgO3vWIeC3sk_B5N@google.com>
+ <c509996d-fdda-4a57-b6ac-597c811f7786@linux.intel.com>
+ <ZhR7G25FX_osy8X5@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZhR7G25FX_osy8X5@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Apr 2024 12:18:19 -0700
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-> On Sat, Apr 06, 2024 at 11:11:08AM +0900, Masami Hiramatsu wrote:
-> > On Thu, 4 Apr 2024 21:25:41 -0700
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> > > On Fri, Apr 05, 2024 at 11:57:45AM +0900, Masami Hiramatsu wrote:
-> > > > On Fri, 5 Apr 2024 10:23:24 +0900
-> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > > 
-> > > > > On Thu, 4 Apr 2024 10:43:14 -0700
-> > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > 
-> > > > > > On Thu, Apr 04, 2024 at 08:55:22AM +0900, Masami Hiramatsu wrote:
-> > > > > > > On Wed, 3 Apr 2024 12:16:28 -0700
-> > > > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > > > 
-> > > > > > > > commit 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to
-> > > > > > > > /proc/bootconfig") adds bootloader argument comments into /proc/bootconfig.
-> > > > > > > > 
-> > > > > > > > /proc/bootconfig shows boot_command_line[] multiple times following
-> > > > > > > > every xbc key value pair, that's duplicated and not necessary.
-> > > > > > > > Remove redundant ones.
-> > > > > > > > 
-> > > > > > > > Output before and after the fix is like:
-> > > > > > > > key1 = value1
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > key2 = value2
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > key3 = value3
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > ...
-> > > > > > > > 
-> > > > > > > > key1 = value1
-> > > > > > > > key2 = value2
-> > > > > > > > key3 = value3
-> > > > > > > > *bootloader argument comments*
-> > > > > > > > ...
-> > > > > > > > 
-> > > > > > > > Fixes: 717c7c894d4b ("fs/proc: Add boot loader arguments as comment to /proc/bootconfig")
-> > > > > > > > Signed-off-by: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-> > > > > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > > > > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > > > > > Cc: <linux-trace-kernel@vger.kernel.org>
-> > > > > > > > Cc: <linux-fsdevel@vger.kernel.org>
-> > > > > > > 
-> > > > > > > OOps, good catch! Let me pick it.
-> > > > > > > 
-> > > > > > > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > > > 
-> > > > > > Thank you, and I have applied your ack and pulled this into its own
-> > > > > > bootconfig.2024.04.04a.
-> > > > > > 
-> > > > > > My guess is that you will push this via your own tree, and so I will
-> > > > > > drop my copy as soon as yours hits -next.
-> > > > > 
-> > > > > Thanks! I would like to make PR this soon as bootconfig fixes for v6.9-rc2.
-> > > > 
-> > > > Hmm I found that this always shows the command line comment in
-> > > > /proc/bootconfig even without "bootconfig" option.
-> > > > I think that is easier for user-tools but changes the behavior and
-> > > > a bit redundant.
-> > > > 
-> > > > We should skip showing this original argument comment if bootconfig is
-> > > > not initialized (no "bootconfig" in cmdline) as it is now.
-> > > 
-> > > So something like this folded into that patch?
-> > 
-> > Hm, I expected just checking it in the loop as below.
-> > 
-> > ------------------------------------------------------------------------
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > index e5635a6b127b..98e0780f7e07 100644
-> > --- a/fs/proc/bootconfig.c
-> > +++ b/fs/proc/bootconfig.c
-> > @@ -27,6 +27,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  {
-> >  	struct xbc_node *leaf, *vnode;
-> >  	char *key, *end = dst + size;
-> > +	bool empty = true;
-> >  	const char *val;
-> >  	char q;
-> >  	int ret = 0;
-> > @@ -62,8 +63,9 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  				break;
-> >  			dst += ret;
-> >  		}
-> > +		empty = false;
-> >  	}
-> > -	if (ret >= 0 && boot_command_line[0]) {
-> > +	if (!empty && ret >= 0 && boot_command_line[0]) {
-> >  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> >  			       boot_command_line);
-> >  		if (ret > 0)
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > The difference is checking "bootconfig" cmdline option or checking
-> > the "bootconfig" is actually empty. So the behaviors are different
-> > when the "bootconfig" is specified but there is no bootconfig data.
-> 
-> Ah, understood, the point is to avoid the comment in cases where its
-> content would be identical to /proc/cmdline.
-> 
-> > Another idea is to check whether the cmdline is actually updated by
-> > bootconfig and show original one only if it is updated.
-> > (I think this fits the purpose of the original patch better.)
-> > 
-> > ------------------------------------------------------------------------
-> > diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> > index e5635a6b127b..95d6a231210c 100644
-> > --- a/fs/proc/bootconfig.c
-> > +++ b/fs/proc/bootconfig.c
-> > @@ -10,6 +10,9 @@
-> >  #include <linux/bootconfig.h>
-> >  #include <linux/slab.h>
-> >  
-> > +/* defined in main/init.c */
-> > +bool __init cmdline_has_extra_options(void);
-> > +
-> >  static char *saved_boot_config;
-> >  
-> >  static int boot_config_proc_show(struct seq_file *m, void *v)
-> > @@ -63,7 +66,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
-> >  			dst += ret;
-> >  		}
-> >  	}
-> > -	if (ret >= 0 && boot_command_line[0]) {
-> > +	if (cmdline_has_extra_options() && ret >= 0 && boot_command_line[0]) {
-> >  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
-> >  			       boot_command_line);
-> >  		if (ret > 0)
-> > diff --git a/init/main.c b/init/main.c
-> > index 2ca52474d0c3..881f6230ee59 100644
-> > --- a/init/main.c
-> > +++ b/init/main.c
-> > @@ -487,6 +487,11 @@ static int __init warn_bootconfig(char *str)
-> >  
-> >  early_param("bootconfig", warn_bootconfig);
-> >  
-> > +bool __init cmdline_has_extra_options(void)
-> > +{
-> > +	return extra_command_line || extra_init_args;
-> > +}
-> > +
-> >  /* Change NUL term back to "=", to make "param" the whole string. */
-> >  static void __init repair_env_string(char *param, char *val)
-> >  {
-> > ------------------------------------------------------------------------
-> 
-> This one looks good to me!
-> 
-> I had to move the declaration from /fs/proc/bootconfig.c to
-> include/linux/bootconfig.h in order to avoid a build error.  (The
-> build system wants the declaration and definition to be visible as
-> a cross-check.)
-> 
-> Does the resulting patch below work for you?
+On 4/9/2024 7:17 AM, Mingwei Zhang wrote:
+> On Wed, Mar 27, 2024, Mi, Dapeng wrote:
+>> On 3/27/2024 2:07 PM, Mingwei Zhang wrote:
+>>> On Wed, Jan 03, 2024, Dapeng Mi wrote:
+>>>> Currently enabling PMCs, executing loop() and disabling PMCs are divided
+>>>> 3 separated functions. So there could be other instructions executed
+>>>> between enabling PMCS and running loop() or running loop() and disabling
+>>>> PMCs, e.g. if there are multiple counters enabled in measure_many()
+>>>> function, the instructions which enabling the 2nd and more counters
+>>>> would be counted in by the 1st counter.
+>>>>
+>>>> So current implementation can only verify the correctness of count by an
+>>>> rough range rather than a precise count even for instructions and
+>>>> branches events. Strictly speaking, this verification is meaningless as
+>>>> the test could still pass even though KVM vPMU has something wrong and
+>>>> reports an incorrect instructions or branches count which is in the rough
+>>>> range.
+>>>>
+>>>> Thus, move the PMCs enabling and disabling into the loop() asm blob and
+>>>> ensure only the loop asm instructions would be counted, then the
+>>>> instructions or branches events can be verified with an precise count
+>>>> instead of an rough range.
+>>>>
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>    x86/pmu.c | 83 +++++++++++++++++++++++++++++++++++++++++++++----------
+>>>>    1 file changed, 69 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/x86/pmu.c b/x86/pmu.c
+>>>> index 46bed66c5c9f..88b89ad889b9 100644
+>>>> --- a/x86/pmu.c
+>>>> +++ b/x86/pmu.c
+>>>> @@ -18,6 +18,20 @@
+>>>>    #define EXPECTED_INSTR 17
+>>>>    #define EXPECTED_BRNCH 5
+>>>> +// Instrustion number of LOOP_ASM code
+>>>> +#define LOOP_INSTRNS	10
+>>>> +#define LOOP_ASM					\
+>>>> +	"1: mov (%1), %2; add $64, %1;\n\t"		\
+>>>> +	"nop; nop; nop; nop; nop; nop; nop;\n\t"	\
+>>>> +	"loop 1b;\n\t"
+>>>> +
+>>>> +#define PRECISE_LOOP_ASM						\
+>>>> +	"wrmsr;\n\t"							\
+>>>> +	"mov %%ecx, %%edi; mov %%ebx, %%ecx;\n\t"			\
+>>>> +	LOOP_ASM							\
+>>>> +	"mov %%edi, %%ecx; xor %%eax, %%eax; xor %%edx, %%edx;\n\t"	\
+>>>> +	"wrmsr;\n\t"
+>>> Can we add "FEP" prefix into the above blob? This way, we can expand the
+>>> testing for emulated instructions.
+> Dapeng,
+>
+> Sorry, did not clarify that this is not a hard request. I am not
+> pushing that this need to be done in your next version if it takes
+> time to do so. (FEP is of couse nice to have :), but this test already
+> supports it in somewhere else.).
+>
+> Once your next version is ready, please send it out as soon as you can
+> and I am happy to give my reviews until it is merged.
+>
+> Thanks.
+> -Mingwei
 
-Yes, this looks good to me. BTW, shouldn't we push this with the
-previous fix (from the viewpoint of memory usage, this is a kind
-of fix for redundant memory usage)?
-
-Thank you!
-
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 8d95b50c523fba7133368650b3b5f71b169c76b5
-> Author: Masami Hiramatsu <mhiramat@kernel.org>
-> Date:   Mon Apr 8 12:10:38 2024 -0700
-> 
->     fs/proc: Skip bootloader comment if no embedded kernel parameters
->     
->     If the "bootconfig" kernel command-line argument was specified or if
->     the kernel was built with CONFIG_BOOT_CONFIG_FORCE, but if there are
->     no embedded kernel parameter, omit the "# Parameters from bootloader:"
->     comment from the /proc/bootconfig file.  This will cause automation
->     to fall back to the /proc/cmdline file, which will be identical to the
->     comment in this no-embedded-kernel-parameters case.
->     
->     Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> diff --git a/fs/proc/bootconfig.c b/fs/proc/bootconfig.c
-> index e5635a6b127b0..87dcaae32ff87 100644
-> --- a/fs/proc/bootconfig.c
-> +++ b/fs/proc/bootconfig.c
-> @@ -63,7 +63,7 @@ static int __init copy_xbc_key_value_list(char *dst, size_t size)
->  			dst += ret;
->  		}
->  	}
-> -	if (ret >= 0 && boot_command_line[0]) {
-> +	if (cmdline_has_extra_options() && ret >= 0 && boot_command_line[0]) {
->  		ret = snprintf(dst, rest(dst, end), "# Parameters from bootloader:\n# %s\n",
->  			       boot_command_line);
->  		if (ret > 0)
-> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-> index ca73940e26df8..e5ee2c694401e 100644
-> --- a/include/linux/bootconfig.h
-> +++ b/include/linux/bootconfig.h
-> @@ -10,6 +10,7 @@
->  #ifdef __KERNEL__
->  #include <linux/kernel.h>
->  #include <linux/types.h>
-> +bool __init cmdline_has_extra_options(void);
->  #else /* !__KERNEL__ */
->  /*
->   * NOTE: This is only for tools/bootconfig, because tools/bootconfig will
-> diff --git a/init/main.c b/init/main.c
-> index 2ca52474d0c30..881f6230ee59e 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -487,6 +487,11 @@ static int __init warn_bootconfig(char *str)
->  
->  early_param("bootconfig", warn_bootconfig);
->  
-> +bool __init cmdline_has_extra_options(void)
-> +{
-> +	return extra_command_line || extra_init_args;
-> +}
-> +
->  /* Change NUL term back to "=", to make "param" the whole string. */
->  static void __init repair_env_string(char *param, char *val)
->  {
+Yeah, I see there are some FEP related test cases in this test, I'm not 
+sure if it can already meet the requirement, I would look at it later. 
+Currently I'm busy on some high priority work, I suppose I have 
+bandwidth to refresh a new version in next week. Thanks.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Yeah, that sounds like a new feature request. I would add it in next
+>> version.
+>>
+>>
+>>>> +
+>>>>    typedef struct {
+>>>>    	uint32_t ctr;
+>>>>    	uint64_t config;
+>>>> @@ -54,13 +68,43 @@ char *buf;
+>>>>    static struct pmu_event *gp_events;
+>>>>    static unsigned int gp_events_size;
+>>>> -static inline void loop(void)
+>>>> +
+>>>> +static inline void __loop(void)
+>>>> +{
+>>>> +	unsigned long tmp, tmp2, tmp3;
+>>>> +
+>>>> +	asm volatile(LOOP_ASM
+>>>> +		     : "=c"(tmp), "=r"(tmp2), "=r"(tmp3)
+>>>> +		     : "0"(N), "1"(buf));
+>>>> +}
+>>>> +
+>>>> +/*
+>>>> + * Enable and disable counters in a whole asm blob to ensure
+>>>> + * no other instructions are counted in the time slot between
+>>>> + * counters enabling and really LOOP_ASM code executing.
+>>>> + * Thus counters can verify instructions and branches events
+>>>> + * against precise counts instead of a rough valid count range.
+>>>> + */
+>>>> +static inline void __precise_count_loop(u64 cntrs)
+>>>>    {
+>>>>    	unsigned long tmp, tmp2, tmp3;
+>>>> +	unsigned int global_ctl = pmu.msr_global_ctl;
+>>>> +	u32 eax = cntrs & (BIT_ULL(32) - 1);
+>>>> +	u32 edx = cntrs >> 32;
+>>>> -	asm volatile("1: mov (%1), %2; add $64, %1; nop; nop; nop; nop; nop; nop; nop; loop 1b"
+>>>> -			: "=c"(tmp), "=r"(tmp2), "=r"(tmp3): "0"(N), "1"(buf));
+>>>> +	asm volatile(PRECISE_LOOP_ASM
+>>>> +		     : "=b"(tmp), "=r"(tmp2), "=r"(tmp3)
+>>>> +		     : "a"(eax), "d"(edx), "c"(global_ctl),
+>>>> +		       "0"(N), "1"(buf)
+>>>> +		     : "edi");
+>>>> +}
+>>>> +static inline void loop(u64 cntrs)
+>>>> +{
+>>>> +	if (!this_cpu_has_perf_global_ctrl())
+>>>> +		__loop();
+>>>> +	else
+>>>> +		__precise_count_loop(cntrs);
+>>>>    }
+>>>>    volatile uint64_t irq_received;
+>>>> @@ -159,18 +203,17 @@ static void __start_event(pmu_counter_t *evt, uint64_t count)
+>>>>    	    ctrl = (ctrl & ~(0xf << shift)) | (usrospmi << shift);
+>>>>    	    wrmsr(MSR_CORE_PERF_FIXED_CTR_CTRL, ctrl);
+>>>>        }
+>>>> -    global_enable(evt);
+>>>>        apic_write(APIC_LVTPC, PMI_VECTOR);
+>>>>    }
+>>>>    static void start_event(pmu_counter_t *evt)
+>>>>    {
+>>>>    	__start_event(evt, 0);
+>>>> +	global_enable(evt);
+>>>>    }
+>>>> -static void stop_event(pmu_counter_t *evt)
+>>>> +static void __stop_event(pmu_counter_t *evt)
+>>>>    {
+>>>> -	global_disable(evt);
+>>>>    	if (is_gp(evt)) {
+>>>>    		wrmsr(MSR_GP_EVENT_SELECTx(event_to_global_idx(evt)),
+>>>>    		      evt->config & ~EVNTSEL_EN);
+>>>> @@ -182,14 +225,24 @@ static void stop_event(pmu_counter_t *evt)
+>>>>    	evt->count = rdmsr(evt->ctr);
+>>>>    }
+>>>> +static void stop_event(pmu_counter_t *evt)
+>>>> +{
+>>>> +	global_disable(evt);
+>>>> +	__stop_event(evt);
+>>>> +}
+>>>> +
+>>>>    static noinline void measure_many(pmu_counter_t *evt, int count)
+>>>>    {
+>>>>    	int i;
+>>>> +	u64 cntrs = 0;
+>>>> +
+>>>> +	for (i = 0; i < count; i++) {
+>>>> +		__start_event(&evt[i], 0);
+>>>> +		cntrs |= BIT_ULL(event_to_global_idx(&evt[i]));
+>>>> +	}
+>>>> +	loop(cntrs);
+>>>>    	for (i = 0; i < count; i++)
+>>>> -		start_event(&evt[i]);
+>>>> -	loop();
+>>>> -	for (i = 0; i < count; i++)
+>>>> -		stop_event(&evt[i]);
+>>>> +		__stop_event(&evt[i]);
+>>>>    }
+>>>>    static void measure_one(pmu_counter_t *evt)
+>>>> @@ -199,9 +252,11 @@ static void measure_one(pmu_counter_t *evt)
+>>>>    static noinline void __measure(pmu_counter_t *evt, uint64_t count)
+>>>>    {
+>>>> +	u64 cntrs = BIT_ULL(event_to_global_idx(evt));
+>>>> +
+>>>>    	__start_event(evt, count);
+>>>> -	loop();
+>>>> -	stop_event(evt);
+>>>> +	loop(cntrs);
+>>>> +	__stop_event(evt);
+>>>>    }
+>>>>    static bool verify_event(uint64_t count, struct pmu_event *e)
+>>>> @@ -451,7 +506,7 @@ static void check_running_counter_wrmsr(void)
+>>>>    	report_prefix_push("running counter wrmsr");
+>>>>    	start_event(&evt);
+>>>> -	loop();
+>>>> +	__loop();
+>>>>    	wrmsr(MSR_GP_COUNTERx(0), 0);
+>>>>    	stop_event(&evt);
+>>>>    	report(evt.count < gp_events[0].min, "cntr");
+>>>> @@ -468,7 +523,7 @@ static void check_running_counter_wrmsr(void)
+>>>>    	wrmsr(MSR_GP_COUNTERx(0), count);
+>>>> -	loop();
+>>>> +	__loop();
+>>>>    	stop_event(&evt);
+>>>>    	if (this_cpu_has_perf_global_status()) {
+>>>> -- 
+>>>> 2.34.1
+>>>>
