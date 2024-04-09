@@ -1,34 +1,35 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957FA7C0A9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931E37BB1A;
 	Tue,  9 Apr 2024 07:30:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712647858; cv=none; b=T74abUZ8z5rTBH1co7NdClmqZPqf+fNgS7p6Z5NG4a4ANa5OD6NQ9AamtNgKoGav7xK+BoiYOhlXGN19mu2aTjphfVKmgrKizjBYEWHd/MujtERnwX1SLx7+q/YaiBiWjj+nSktIYwAe6kt8lkZ9bO1KrhbzkveuvODrQAnLXCM=
+	t=1712647858; cv=none; b=oHBRsCZ5JfNcjDKG1TTAi6CKNGONJ42+8NtgQ+uBLwvOmo16cEOIdYODl8F2dowq6wfIOpYT2iT8Si0pePSTIy+Wa8BV9I60aym19ZBVZTCeSCvfrRr/vlCPVUQ36hdjQxRtU6gTjBE2IF5GOaoIi35dfJKOWWcsxo4lwVtga5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712647858; c=relaxed/simple;
-	bh=r9rSLlfIhJer4fzjFi/L0h0xK2cjOr96/AVBAEJVmUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dNc8sGt1lTWfqr4TRRWZD4cJ0KQEUKK5wwqKkKRsfsUWys3S5udoag5qpgn8ELPwIy5wWJIejW9Lm0DcURvsL4bCY6gvhdKnXKP1NBdyTebH50AoFoESdLsw0MxPWoQTrMhC3KEOQ2x+i4oymd/jMiaOec+4x+zV89RJ3V5vwQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=TzVeC8dr; arc=none smtp.client-ip=80.237.130.52
+	bh=pE/Y96b4Lmsy+ebjj+zVv1h1X+yVjer7tDax3IgAqLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JNRB5h9qjvclyul5KRj+cz7UPb3s+wbA994ZKl2hd2oaxO29Fqtre/4ALALzGn7xItiiVYwRy4jp6KWzNWkSN72LHIeN6sF86y8mwJl6vA+MPANFx0/Mma+LwI9U2MnwDQcKqhSZQRRHfHdBDBpNGGxc3ji17qxNHK2Tj8tQV4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=PtPjQ1rS; arc=none smtp.client-ip=80.237.130.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="TzVeC8dr"
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="PtPjQ1rS"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:Subject:Date:
-	Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=UxJyCdmSRIdnQgIpQFL657Xfx2+jcU5H7X+gTyZfOcQ=; t=1712647855; x=1713079855;
-	 b=TzVeC8drAIkiPokFCNpo/AcWe8XnHT3voYph/Rxaj3C3/lb+cJU5hkQ0eYAAGIzF1+mvVavay2
-	fWvvXYAptBhABua58oFTUlV6JoVwrZ9tGGRf/KwLE9QhfGE+dW7ltIX9tbGoNhHYxde91tEA6Z0p5
-	LEDB7GEMr5k5gFeSnoYF7KY5uozdxH4ODkcfKjpLAzStlEIx2lZ5XtWvUwuy2VSAnVz/uy9eAMtyy
-	f4fP3qDWgAkR3nW64psw5uR0F/JQcNn8BZd79a6rQJv95TF01GJnJR56a+751V5a4dci7WwSuSXI/
-	IQFbHWSfli8FDYrC+abV7s61dR03lVLdx/hyw==;
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Sender:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=mWeps612SQJGKPCMCZ4KyBqfdzQNYoeA60QuHY4EFvU=; t=1712647855;
+	x=1713079855; b=PtPjQ1rSUV2a8BqdueeOhIn535xJFcQ9IPB9ylAfTj+iTWcCG4K2+256HX+NA
+	OIuaJjtmV34gBHp4Xhll5MrJY0VOrdhvWsj22/Rd8AnM7MUHS4rlOm7HdZ23GXJyVPqdHhXtQDaeK
+	X8XuuMltFvAXqAtTw0MYbnthTihyB5Jp8ZfuJGxNo4BbLc/M0AhuzM/WURLIFaE8B8m2jGU+Zucor
+	rMmdPedAGKIJ7Ld2Fh+BGXKWUasixw6DqKGMzD39lKk9WeNamUT80FbgvA1/weUEJw88DAZ5Q5HiF
+	WcVuXsPvnG3qc212h65CqOK39BG3PYZF3G5OWrwlqWe3Inyrjg==;
 Received: from ip4d148da6.dynamic.kabel-deutschland.de ([77.20.141.166] helo=truhe.fritz.box); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1ru5wP-0006Ld-Ve; Tue, 09 Apr 2024 09:30:50 +0200
+	id 1ru5wQ-0006Ld-Hl; Tue, 09 Apr 2024 09:30:50 +0200
 From: Thorsten Leemhuis <linux@leemhuis.info>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: regressions@lists.linux.dev,
@@ -36,10 +37,12 @@ Cc: regressions@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Bagas Sanjaya <bagasdotme@gmail.com>,
 	=?UTF-8?q?Petr=20Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
-Subject: [PATCH v2 0/6] docs: verify/bisect: fine tuning, testing fixes, build host, order
-Date: Tue,  9 Apr 2024 09:30:43 +0200
-Message-ID: <cover.1712647788.git.linux@leemhuis.info>
+Subject: [PATCH v2 2/6] docs: verify/bisect: add and fetch stable branches ahead of time
+Date: Tue,  9 Apr 2024 09:30:45 +0200
+Message-ID: <57dcf312959476abe6151bf3d35eb79e3e9a83d1.1712647788.git.linux@leemhuis.info>
 X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cover.1712647788.git.linux@leemhuis.info>
+References: <cover.1712647788.git.linux@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,58 +51,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1712647855;18e5c630;
-X-HE-SMSGID: 1ru5wP-0006Ld-Ve
+X-HE-SMSGID: 1ru5wQ-0006Ld-Hl
 
-A quick series with various improvements for
-Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst after
-receiving feedback on the text or seeing people struggle with certain
-tasks.
+Add and fetch all required stable branches ahead of time. This fixes a
+bug, as readers that wanted to bisect a regression within a stable or
+longterm series otherwise did not have them available at the right time.
+This way also matches the flow somewhat better and avoids some "if you
+haven't already added it" phrases that otherwise become necessary in
+future changes.
 
-* The first two patches contains various fixes and some fine tuning.
-
-* The third is mainly a layout improvement that results in a somewhat
-  large patch.
-
-* The fourth adds instructions for later testing of reverts, fixes, or
-  newer versions. This was already hinted at; but during some early
-  work on Documentation/admin-guide/reporting-issues.rst to better
-  reconcile the two it seemed wise to cover this properly here.
-
-* The fifth patch briefly outlines how to build kernels on a different
-  host; it came into being after a second user within one week asked for
-  this. That also allowed the text to briefly cover cross-compilation.
-
-* The sixth makes users that face a regression within a stable series
-  test that series first before they are told to test mainline.
+Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
 ---
+ .../verify-bugs-and-bisect-regressions.rst    | 31 +++++++++++--------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
-Hi! While at it let me mention one more thing unrelated to the changes
-that came up where I'm unsure if the current approach by the text was
-a wise choice:
-
-* Should the document tell users to avoid mainline during merge windows?
-
-Some input from the community on this would be splendid.
-
-Ciao, Thorsten
-
-P.S.: Not totally sure, but I think this should go into 6.9 as this is
-a new document; if not I guess it would be wise to pick the first two,
-as they fix bugs.
-
-Thorsten Leemhuis (6):
-  docs: verify/bisect: use git switch, tag kernel, and various fixes
-  docs: verify/bisect: add and fetch stable branches ahead of time
-  docs: verify/bisect: proper headlines and more spacing
-  docs: verify/bisect: explain testing reverts, patches and newer code
-  docs: verify/bisect: describe how to use a build host
-  docs: verify/bisect: stable regressions: first stable, then mainline
-
- .../verify-bugs-and-bisect-regressions.rst    | 597 ++++++++++++------
- 1 file changed, 417 insertions(+), 180 deletions(-)
-
-
-base-commit: b8cfda5c9065cd619a97c17da081cbfab3b1e756
+diff --git a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+index c999e40c79ab7f..06278501a4bdcc 100644
+--- a/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
++++ b/Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
+@@ -136,8 +136,7 @@ will be considered the 'good' release and used to prepare the .config file.
+ 
+ * **Segment 3**: perform and validate the bisection.
+ 
+-  a) In case your 'broken' version is a stable/longterm release, add the Git
+-     branch holding it::
++  a) Retrieve the sources for your 'bad' version::
+ 
+        git remote set-branches --add stable linux-6.1.y
+        git fetch stable
+@@ -371,6 +370,21 @@ Preparations: set up everything to build your own kernels
+ 
+   [:ref:`details<sources_bisref>`]
+ 
++.. _stablesources_bissbs:
++
++* Retrieve the sources for any stable or longterm series you might need.
++
++  Is the version you earlier established as 'bad' a stable or longterm release?
++  Then download the code for the series it belongs to ('linux-6.1.y' in this
++  example)::
++
++    git remote set-branches --add stable linux-6.1.y
++    git fetch stable
++
++  If the version earlier established as 'good' is from a different stable or
++  longterm series (say 6.0.13), repeat the previous step, but this time for the
++  branch holding the series the 'good' version belongs to (e.g. linux-6.0.y).
++
+ .. _oldconfig_bissbs:
+ 
+ * Start preparing a kernel build configuration (the '.config' file).
+@@ -620,12 +634,10 @@ be a waste of time. [:ref:`details<introlatestcheck_bisref>`]
+   reproduce it with the mainline kernel you just built? One that according to
+   the `front page of kernel.org <https://kernel.org/>`_ is still supported? Then
+   check if the latest codebase for the particular series might already fix the
+-  problem. To do so, add the stable series Git branch for your 'good' kernel
+-  (again, this here is assumed to be 6.0) and check out the latest version::
++  problem. To do so, check out that series latest version (again, this here is
++  assumed to be 6.0)::
+ 
+     cd ~/linux/
+-    git remote set-branches --add stable linux-6.0.y
+-    git fetch stable
+     git switch --discard-changes --detach linux-6.0.y
+ 
+   Now use the checked out code to build and install another kernel using the
+@@ -717,13 +729,6 @@ configuration created earlier this works a lot faster than many people assume:
+ overall on average it will often just take about 10 to 15 minutes to compile
+ each kernel on commodity x86 machines.
+ 
+-* In case your 'bad' version is a stable/longterm release (say 6.1.5), add its
+-  stable branch, unless you already did so earlier::
+-
+-    cd ~/linux/
+-    git remote set-branches --add stable linux-6.1.y
+-    git fetch stable
+-
+ .. _bisectstart_bissbs:
+ 
+ * Start the bisection and tell Git about the versions earlier established as
 -- 
 2.44.0
 
