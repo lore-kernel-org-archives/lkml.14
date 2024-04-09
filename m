@@ -1,125 +1,145 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301368529E
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FC47FBC2;
+	Tue,  9 Apr 2024 09:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654488; cv=none; b=MoBL09LRqD/ovYsVKQ0MI+MJpTbSRmDkxq1pEx1qdDyziUbadSeqrMmHsBKRRk4ai8qQr6RUvoJ8GebLGv7LvwOfS9nhKbqRiwApVnIbHk/+hwU3H7y23HeUje62WpcE34XG3csiWWEpfk/WUjtqn2EplvTIkVFUd0M7sZAQ0/o=
+	t=1712654528; cv=none; b=pAjW+Pc9H5+e448keDPDs30VNhrcoRL/PCX6BlIIaYgyuf4L0AfhES32JV3GaF0wiMVC7mVA+s4zp0lnASqaKaE6EqxbSAdqsF0ytdgXu9Dlpu/sygpJTwPF3XHLI25lxX6k3VhjgGUAHwJ1dJNqbi1GhGwfVFKCB6IA2Gu2/w4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654488; c=relaxed/simple;
-	bh=kpgut7r9SoPwQ6L0e+kvqRpyFcrLlcU6aHU3tKj4qGU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MbOZo6OrpMwBT4YYeGer1zhuDrqRl56XKt/NGPvTrW9q3CPeTU4M+GAsNbaKzbXlJXcX5qMr4ZYHhicjgzZq2WDe7ben9b3TSEVwd4rmGDeLhBybMd8P0U/mHngKm7YR/8dCXOsrEEqpGc0/hJUQk4duD4rZzbMrr5ujzJwaafs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S0Vw1Qcy; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712654528; c=relaxed/simple;
+	bh=wgxmF8dF0t1OLiFgF5yhMNxV6zA389z8dZjRNqQbiDc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a2VfMIOw0uGo5dxumnOAxX/Y0JiNLbyPybSBvZ96oH5WhmV+YY35cHgyDoZXMiKfIb/5bMeia88ENRtcUIusi1Qa7kaUcmX6A6yKDrPeUcHyf79Sc7BDcS/Csuq6sBqCSXD+iF0SQ9DM9QX6jFkS6oshKerCMj8yFSwWvJ3yY/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ot9OcfQo; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S0Vw1Qcy"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YeC5R0Uay0C5dvbf+qarJuNA6Yc3zpuLXDofRbawIic=; b=S0Vw1Qcy2xbOmQLr3rSK5ilD4q
-	HNqv5Mbrk9qTSeb2fxO+ZEO9HdHeckXYZq2yk1LmmSDmr5PMuQVl9WJ4CAHJ/mZvPsT4VPF8daYE7
-	yRavlZarzT063qFyiI0kzrXdpaWsojrTot8ukdvVz2dUdNXSuW7YmUfvGX2L5RR9Bj1t//p9MUJkr
-	MwV7UZ6GPHjAeIZ37A/M5NTLto6pihqEhSIS5hlxiyGoE56UywfDdEvVruBA0yEK8zQoZHC4K4Hqo
-	1rrpNmj150gpscZJoxTJQW8NoWfxLU/n/Ox5KoN7C43AiVCnyQfQ2MIAvmdK25DawFfka9UUxC2XL
-	t8kCKdrQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ru7f6-00000007WWC-20I6;
-	Tue, 09 Apr 2024 09:21:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 28434300600; Tue,  9 Apr 2024 11:21:04 +0200 (CEST)
-Date: Tue, 9 Apr 2024 11:21:04 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Chen Yu <yu.c.chen@intel.com>
-Cc: Abel Wu <wuyun.abel@bytedance.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Tim Chen <tim.c.chen@intel.com>,
-	Tiwei Bie <tiwei.btw@antgroup.com>,
-	Honglei Wang <wanghonglei@didichuxing.com>,
-	Aaron Lu <aaron.lu@intel.com>, Chen Yu <yu.chen.surf@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	kernel test robot <oliver.sang@intel.com>
-Subject: Re: [RFC PATCH] sched/eevdf: Return leftmost entity in pick_eevdf()
- if no eligible entity is found
-Message-ID: <20240409092104.GA2665@noisy.programming.kicks-ass.net>
-References: <20240226082349.302363-1-yu.c.chen@intel.com>
- <758ebf4e-ee84-414b-99ec-182537bcc168@bytedance.com>
- <20240408115833.GF21904@noisy.programming.kicks-ass.net>
- <ZhPtCyRmPxa0DpMe@chenyu5-mobl2>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ot9OcfQo"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d700beb60bso87034001fa.1;
+        Tue, 09 Apr 2024 02:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712654525; x=1713259325; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r1YI1LD16aBiZ7GIogy/yUsyhydLDw6SsonapHKI3FE=;
+        b=Ot9OcfQokp9OQcmmKoNNyCBgkRKRPZkzMkBM1hAPJZzgRgPMxvFyjQ3O0G4IEXELCU
+         tRNppEQJWqSlvWmm4BSQLjaZa3VpTnfaGt9cpRmG8AnTG7U95TUcCmXXmD0RwyiqfDNz
+         jM2ckfvPW6o2jkaNMh7RMn2rCdRpi2cMEDUYDYjjRBeanHH3Nv0/SMLecNuLej1ICZB1
+         mFpA6IThmfK2J+Rfgyj889O4t1dr4IqB6/uGG5UiD0L056vEymm3sw5sk4Fsm5SA8R97
+         FeP9GB7ZkE/YW3N7ArDiuFbrvnCuaD9Cy6AXNiTztEcWwVYW2jvoPxJLzjb4AkRnLMpG
+         Wz6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712654525; x=1713259325;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r1YI1LD16aBiZ7GIogy/yUsyhydLDw6SsonapHKI3FE=;
+        b=OaCYE4iNgaCaAGqgpuRujd7KvdL41PE86wRZf0htDmuJiIfArXRJmE6JDpeaOOKwI5
+         E8FQFbiheir4Ei7tCuRKQbGyg+wWG1v93oAKguWNItBBzW25RqPWZoJP+5aMnDruYXZE
+         y4pU03VURWxkzpNYcXMdQBeAL1De11cbPta/6DnuUGEdP6duUEYSErgYWfamFq8nkIdP
+         +hqDI5rOkjCGuFmQ4IY5G7DdsKsucQWBIoy3qsLccLmvzdeuW+xIITmKB7WGl1ysdacH
+         zP/ap4zBiPDHx3Z9xHcGMTkofpX4e/046XR2gQG7j3jQZdLnau49+HGLJiFsZ2gdGNN/
+         7VaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmaDFNuoChLQhzzZh57p/AEx5xRYQWzL3yj7h/HEDy1bC53DZvXMJnbna0e9gznV+ab2tnpWgy4tIc91WuyuPaSzG87h9ngSzbUn7gcSYU+9xXtGqeCMZifPp/UseLEN3XsiJZpI5afg==
+X-Gm-Message-State: AOJu0YzDvIPJkpR0tTAVIkP7IsZ65/7Bnjs+bYMwytA3MP4vGUfKjNzk
+	/md/ubFysnkN4MWjHIgSjALO691/8nJF3dEYgcJzOvhz1ixUFrvr
+X-Google-Smtp-Source: AGHT+IEd5fPYAVXM4XxUF+C21LNjRVh8lxcxzN8JGvpeWnZKVlON9QdWZ6IU7KdQRBRKVpgj6S6efw==
+X-Received: by 2002:a2e:854c:0:b0:2d6:f5c6:e5a1 with SMTP id u12-20020a2e854c000000b002d6f5c6e5a1mr8870002ljj.12.1712654524793;
+        Tue, 09 Apr 2024 02:22:04 -0700 (PDT)
+Received: from [192.168.0.31] (84-115-213-64.cable.dynamic.surfer.at. [84.115.213.64])
+        by smtp.gmail.com with ESMTPSA id qs1-20020a170906458100b00a4e6626ae21sm5454291ejc.0.2024.04.09.02.22.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 02:22:04 -0700 (PDT)
+Message-ID: <89e7db2d-1de0-4e2e-a2d2-f00d45399b11@gmail.com>
+Date: Tue, 9 Apr 2024 11:22:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhPtCyRmPxa0DpMe@chenyu5-mobl2>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 8/9] dt-bindings: rtc: stmp3xxx-rtc: convert to dtschema
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Vladimir Zapolskiy <vz@mleia.com>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240408-rtc_dtschema-v1-0-c447542fc362@gmail.com>
+ <20240408-rtc_dtschema-v1-8-c447542fc362@gmail.com>
+ <f0467c4f-45e2-4cae-b1b5-3867e5b9bf08@linaro.org>
+Content-Language: en-US, de-AT
+From: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+In-Reply-To: <f0467c4f-45e2-4cae-b1b5-3867e5b9bf08@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 08, 2024 at 09:11:39PM +0800, Chen Yu wrote:
-> On 2024-04-08 at 13:58:33 +0200, Peter Zijlstra wrote:
-> > On Thu, Feb 29, 2024 at 05:00:18PM +0800, Abel Wu wrote:
-> > 
-> > > > According to the log, vruntime is 18435852013561943404, the
-> > > > cfs_rq->min_vruntime is 763383370431, the load is 629 + 2048 = 2677,
-> > > > thus:
-> > > > s64 delta = (s64)(18435852013561943404 - 763383370431) = -10892823530978643
-> > > >      delta * 2677 = 7733399554989275921
-> > > > that is to say, the multiply result overflow the s64, which turns the
-> > > > negative value into a positive value, thus eligible check fails.
-> > > 
-> > > Indeed.
-> > 
-> > From the data presented it looks like min_vruntime is wrong and needs
-> > update. If you can readily reproduce this, dump the vruntime of all
-> > tasks on the runqueue and see if min_vruntime is indeed correct.
-> >
+On 4/9/24 09:40, Krzysztof Kozlowski wrote:
+> On 08/04/2024 17:53, Javier Carrasco wrote:
+>> Convert existing binding to dtschema to support validation.
+>>
+>> The 'fsl,imx28-rtc' compatible is currently not supported, and it is
+>> only referenced in this binding and in nxp/mxs/imx28.dtsi. Therefore,
+>> that compatible has been dropped, which triggers a warning when testing
+>> the DT against the new binding.
 > 
-> This was the dump of all the entities on the tree, from left to right,
+> Instead document missing compatibles and mention this in commit msg.
+> 
 
-Oh, my bad, I thought it was the pick path.
 
-> and also from top down in middle order traverse, when this issue happens:
-> 
-> [  514.461242][ T8390] cfs_rq avg_vruntime:386638640128 avg_load:2048 cfs_rq->min_vruntime:763383370431
-> [  514.535935][ T8390] current on_rq se 0xc5851400, deadline:18435852013562231446
-> 			min_vruntime:18437121115753667698 vruntime:18435852013561943404, load:629
-> 
-> 
-> [  514.536772][ T8390] Traverse rb-tree from left to right
-> [  514.537138][ T8390]  se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible  <-- leftmost se
-> [  514.537835][ T8390]  se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
-> 
-> [  514.538539][ T8390] Traverse rb-tree from topdown
-> [  514.538877][ T8390]  middle se 0xec1234e0 deadline:763384870431 min_vruntime:763383370431 vruntime:763383370431 non-eligible   <-- root se
-> [  514.539605][ T8390]  middle se 0xec4fcf20 deadline:763762447228 min_vruntime:763760947228 vruntime:763760947228 non-eligible
-> 
-> The tree looks like:
-> 
->           se (0xec1234e0)
->                   |
->                   |
->                   ----> se (0xec4fcf20)
-> 
-> 
-> The root se 0xec1234e0 is also the leftmost se, its min_vruntime and
-> vruntime are both 763383370431, which is aligned with
-> cfs_rq->min_vruntime. It seems that the cfs_rq's min_vruntime gets
-> updated correctly, because it is monotonic increasing.
+There is no driver that will match 'fsl,imx28-rtc', only
+'fsl,stmp3xxx-rtc', so I am not sure how to document the missing
+compatible in a sensible way. My first suggestion to account for
+undocumented strings would be:
 
-Right.
+  compatible:
+    oneOf:
+      - items:
+          - enum:
+              - fsl,imx23-rtc
+              - fsl,imx28-rtc
+          - const: fsl,stmp3xxx-rtc
+      - const: fsl,stmp3xxx-rtc
 
-> My guess is that, for some reason, one newly forked se in a newly
-> created task group, in the rb-tree has not been picked for a long
-> time(maybe not eligible). Its vruntime stopped at the negative
-> value(near (unsigned long)(-(1LL << 20)) for a long time, its vruntime
-> is long behind the cfs_rq->vruntime, thus the overflow happens.
+Any suggestions or improvements?
 
-I'll have to do the math again, but that's something in the order of not
-picking a task in about a day, that would be 'bad' :-)
+>>
+>> There is another reference to fsl,stmp3xxx-rtc in nxp/mxs/imx23.dtsi,
+>> where another unsupported compatible 'fsl,imx23-rtc' is used, and the
+>> same problem would arise when testing the file against the new binding.
+> 
+> Please write concise messages... you have to paragraphs about the same?
+> What is the difference here?
+> 
+The difference is that 'fsl,imx23-rtc' was not even mentioned in any
+binding, and it can only be found in imx23.dtsi. 'fsl,imx28-rtc' was
+indeed mentioned in the txt binding.
 
-Is there any sane way to reproduce this, and how often does it happen?
+My understanding after your comment is that we should gather
+undocumented compatibles and add them to the bindings they would belong
+to,no matter if they are used anywhere or not. I added this one to the
+suggestion above as well.
+
+>>
+>> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
+>> ---
+>>  .../devicetree/bindings/rtc/fsl,stmp3xxx-rtc.yaml  | 45 ++++++++++++++++++++++
+>>  .../devicetree/bindings/rtc/stmp3xxx-rtc.txt       | 21 ----------
+>>  2 files changed, 45 insertions(+), 21 deletions(-)
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
+Javier Carrasco
