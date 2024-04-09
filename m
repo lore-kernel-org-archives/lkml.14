@@ -1,204 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCF0155A3D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF340156249
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712683639; cv=none; b=gYOSKBWlTyXnHgBzbZCLjCy68UKdpfX78tPhs3fEGfIvL4oE/0NyMSwoPx83WvDw3dEZoIRWdjSk5jIUOWFl4ai/SEireJwntjSiLb77f/+gePcFfCchQWrePphjEiSvRWIai35HNFHoj0xWR6vOhz5oVwqwJ/WA2g2ErAnLmEc=
+	t=1712683690; cv=none; b=JAJ1Y9YRhQZ8ZXkegWpffNCmiYXYUBE8GN00DAOvJtLXnXdOHV+wzwp7Cj1WCoi2mYlJZ+UDfddO1MHhjz34YfJySsezwrmgdfi21L3wAzgOLww7rsyE6cJBV1YvQIRvRpZ6zEqZhN2dtjYJu5knK7fMuOsFMBlM8soP/PTIYqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712683639; c=relaxed/simple;
-	bh=ov5V6UUHjBzKmLOJ3+BcZdJeRQ2EaCxb3pY7asEm1lI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t0b475ec5KiRcnSHdLResF45gTMSTyNN7x2FlMed2l5s9z9Dyd+7xfEAEj9XnMSKWcLsFyT8lES+Lt+JF5X2SHtGGtywOyuoS3MhkXaAUOfzyWvHDMl+/kkmB7snTufBFyHipKJJlMp/gkJdrjiU+2T5kjWsXny7ZIyLDsWHx7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BkOvB/vq; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712683690; c=relaxed/simple;
+	bh=TPhpU6GJEU734JPKrGvqBheDD6F81x0OYRJ4s8MuK+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VkpyPD8req2FYK2ZSpm71nUitm5tg2CPxu9Lq5aM3eUlz7pwqRKSKuIXVT0+Oh0nC1fx64qhbvT+wR82ZorhD0gcWc25kIHg+GDqyeOIXQKd2ZZWEzsUd9mPJD3H4jEsKz9pSI+T2OJiiffDFTstJlbytGDrOImdkZpqbokqZkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=E+vy51t5; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BkOvB/vq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712683638; x=1744219638;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ov5V6UUHjBzKmLOJ3+BcZdJeRQ2EaCxb3pY7asEm1lI=;
-  b=BkOvB/vqEnBxQLlUYl28ge2RS3WytKChJu3UaZziNSv0fk8tCG9ZDPze
-   ibyI4m26/CpFKmKzSpcyFfqHbQMus8NhAvtX8NCWS9jltWfvcpq6+89wF
-   SEJ2ASFA4cN5ocd7FQBsEUx8yVoqL/9djFst6LnT6uBZ1suSXIGoaRH5X
-   JpoBndpYQlQz+zItrY6d84gZdkl7Gi91k5q5RLuTSo1PcrjgF1w2gegGM
-   1Orn4qMSIQ0lR3asYRNIPej1zIqPuiL3E4Y8Me6enbGmcKKjkp4G6Ee+d
-   kI+ZzAI3daK/+uP9D9dKYXB8s93a1YbBE318xAY1WvC5LNw8HU1CQofM2
-   g==;
-X-CSE-ConnectionGUID: DGSGcf1USR2On2FFZoCsNQ==
-X-CSE-MsgGUID: BRl67DZpTU2GlkNItQX8Xw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="33418083"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="33418083"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:27:17 -0700
-X-CSE-ConnectionGUID: 77NcuDNEQ+SbvlNSD97f4g==
-X-CSE-MsgGUID: G4EZT2SVQZC/uu10CKOQJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="24964206"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:27:17 -0700
-Date: Tue, 9 Apr 2024 10:31:46 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Yi Liu
- <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
- <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
- flush
-Message-ID: <20240409103146.0d155e45@jacob-builder>
-In-Reply-To: <aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
-References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
-	<20240407144232.190355-2-baolu.lu@linux.intel.com>
-	<20240408140329.6290377f@jacob-builder>
-	<aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="E+vy51t5"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7cc5e664d52so95236139f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 10:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1712683688; x=1713288488; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bzDpECgxcv/gVK2Eh47txfcjeUm+DcSXrEiDNVslfT0=;
+        b=E+vy51t5hbFKtlPfWz63OAwISfam8JoJQJPF3AsULQlTZX/HvoniDiNyRzbxSMrbZ4
+         mk0VY5pVQ9SrzbabNxxJkimfIKhLT06ENVXFV0HjjURiYtwsvqJdGLxrKYQsqSYYXRWB
+         TAbhQeAzpAwOREQqlwbspbUY82B4xrV390hiU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712683688; x=1713288488;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bzDpECgxcv/gVK2Eh47txfcjeUm+DcSXrEiDNVslfT0=;
+        b=ATm9fftxv9kKNHnDOQKxWHP1NqiIWh1m93PxvuvXHdKdWiT9GPT0qblw51emqowFjl
+         c6Ub1agbmNUc5qGK4qhtFba/ScHjZmfKPDM0fMTshhEGkx/RDaV9n4/iB/j3pAay7VPC
+         ebcnQm8ImhjWk4u/Byc848nCiWa48HjjKRq0dzxTmjuFnJi/DXo0F/CfBfs0DPmusWJ0
+         ckP0QDvEqmRYOshwTGmd5EuaE8jHpGIdH5dpYflClzDzmT1InKh909NP7ZNF98rrbpmd
+         Cir8+7GFe/B0qNugD0A2XyCk02qy3VXuwElubgpdQAF0VBJsM14F0U1plko5GgUCSY8l
+         fW0g==
+X-Forwarded-Encrypted: i=1; AJvYcCVRRNJaHXXyfap3rmUjtV66k9idp+maq2CxjFAojS8yUGHeO2lpZojbOlj4KxeWtsCoz9G6wxGOmwIdHWlssqtGWLlVqly5ytXnCt4e
+X-Gm-Message-State: AOJu0Yxm+tP7psvG1JhCi+f01hVxmWIqWIGu/ZZU3mt68ZhYAqPM//az
+	u9Y3nrA4xOBConyuQXb1kqcHFzSuw37hQdkhiHqLtV92uYgT8ijOwjh0EzzRiaY=
+X-Google-Smtp-Source: AGHT+IFk5z8PoAK3T9resPRUq+Mhgn4hfhcghzxIpzPidDvzpWozapI9Iaz2Vi75WE2H0KeSIVTCNQ==
+X-Received: by 2002:a05:6602:3b98:b0:7d5:de5b:1ac2 with SMTP id dm24-20020a0566023b9800b007d5de5b1ac2mr468468iob.2.1712683688027;
+        Tue, 09 Apr 2024 10:28:08 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id cn23-20020a0566383a1700b00482b4a8f07esm35302jab.61.2024.04.09.10.28.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 10:28:07 -0700 (PDT)
+Message-ID: <5a04e40c-daba-4a1d-b5db-f70d2e51c403@linuxfoundation.org>
+Date: Tue, 9 Apr 2024 11:28:06 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 RESEND 0/7] Handle faults in KUnit tests
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ Brendan Higgins <brendanhiggins@google.com>, David Gow
+ <davidgow@google.com>, Rae Moar <rmoar@google.com>
+Cc: Alan Maguire <alan.maguire@oracle.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+ James Morris <jamorris@linux.microsoft.com>,
+ Kees Cook <keescook@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+ Marco Pagani <marpagan@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Thara Gopinath <tgopinath@microsoft.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Vitaly Kuznetsov
+ <vkuznets@redhat.com>, Zahra Tarkhani <ztarkhani@microsoft.com>,
+ kunit-dev@googlegroups.com, kvm@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-security-module@vger.kernel.org, linux-um@lists.infradead.org,
+ x86@kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20240408074625.65017-1-mic@digikod.net>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240408074625.65017-1-mic@digikod.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Baolu,
-
-On Tue, 9 Apr 2024 11:12:20 +0800, Baolu Lu <baolu.lu@linux.intel.com>
-wrote:
-
-> On 4/9/24 5:03 AM, Jacob Pan wrote:
-> > Hi Lu,  
+On 4/8/24 01:46, Mickaël Salaün wrote:
+> Hi,
 > 
-> Hi Jacob,
+> This patch series teaches KUnit to handle kthread faults as errors, and
+> it brings a few related fixes and improvements.
 > 
-> > 
-> > On Sun,  7 Apr 2024 22:42:32 +0800, Lu Baolu<baolu.lu@linux.intel.com>
-> > wrote:
-> >   
-> >> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
-> >> implementation caches not-present or erroneous translation-structure
-> >> entries except the first-stage translation. The caching mode is
-> >> unrelated to the device TLB , therefore there is no need to check
-> >> it before a device TLB invalidation operation.
-> >>
-> >> Before the scalable mode is introduced, caching mode is treated as
-> >> an indication that the driver is running in a VM guest. This is just
-> >> a software contract as shadow page table is the only way to implement
-> >> a virtual IOMMU. But the VT-d spec doesn't state this anywhere. After
-> >> the scalable mode is introduced, this doesn't stand for anymore, as
-> >> caching mode is not relevant for the first-stage translation. A virtual
-> >> IOMMU implementation is free to support first-stage translation only
-> >> with caching mode cleared.
-> >>
-> >> Remove the caching mode check before device TLB invalidation to ensure
-> >> compatibility with the scalable mode use cases.
-> >>  
-> > I agree with the changes below, what about this CM check:
-> > 
-> > /* Notification for newly created mappings */
-> > static void __mapping_notify_one(struct intel_iommu *iommu, struct
-> > dmar_domain *domain, unsigned long pfn, unsigned int pages)
-> > {
-> > 	/*
-> > 	 * It's a non-present to present mapping. Only flush if caching
-> > mode
-> > 	 * and second level.
-> > 	 */
-> > 	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
-> > 		iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
-> > 
-> > We are still tying devTLB flush to CM=1, no?  
+> Shuah, everything should be OK now, could you please merge this series?
 > 
-> __mapping_notify_one() is called in the path where some PTEs are changed
-> from non-present to present.
+> All these tests pass (on top of v6.8):
+> ./tools/testing/kunit/kunit.py run --alltests
+> ./tools/testing/kunit/kunit.py run --alltests --arch x86_64
+> ./tools/testing/kunit/kunit.py run --alltests --arch arm64 \
+>    --cross_compile=aarch64-linux-gnu-
 > 
-> In this scenario,
+> I also built and ran KUnit tests as a kernel module.
 > 
-> - if CM is set and first-stage translation is not used, the IOTLB caches
->    are required to be explicitly flushed.
-> - else if hardware requires write buffer flushing, do it.
-> - Otherwise, no op.
-> - devtlb invalidation is irrelevant to this path.
+> A new test case check NULL pointer dereference, which wasn't possible
+> before.
 > 
-> The code after the fix appears to do the right thing. devTLB is not
-> invalidated in iommu_flush_iotlb_psi() since it's a map (map == 1).
+> This is useful to test current kernel self-protection mechanisms or
+> future ones such as Heki: https://github.com/heki-linux
 > 
-> Or perhaps I overlooked anything?
-My confusion is that, on one side, this patch is saying devTLB flush has
-nothing to do with CM. But here, if CMD==1, we don't flush devTLB since
-map==1.
-
-If the guest uses SL page tables in vIOMMU, we don;t expose ATS to the
-guest. So ATS is not relevant here, does't matter map or unmap.
-
-Can we remove the map argument in iommu_flush_iotlb_psi(iommu, domain,pfn,
-pages, 0, 1)?
-
-Then devTLB flush will naturally be skipped in the guest (CM=1, SL) since
-ATS is not enabled.
-iommu_flush_dev_iotlb(domain, addr, mask);
-
-i.e.
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 50eb9aed47cc..ee3e5a1af0c5 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1483,7 +1483,7 @@ static void __iommu_flush_iotlb_psi(struct intel_iommu *iommu, u16 did,
- static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
-                                  struct dmar_domain *domain,
-                                  unsigned long pfn, unsigned int pages,
--                                 int ih, int map)
-+                                 int ih)
- {
-        unsigned int aligned_pages = __roundup_pow_of_two(pages);
-        unsigned int mask = ilog2(aligned_pages);
-@@ -1501,12 +1501,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
-        else
-                __iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
- 
--       /*
--        * In caching mode, changes of pages from non-present to present require
--        * flush. However, device IOTLB doesn't need to be flushed in this case.
--        */
--       if (!cap_caching_mode(iommu->cap) || !map)
--               iommu_flush_dev_iotlb(domain, addr, mask);
-+       iommu_flush_dev_iotlb(domain, addr, mask);
- }
- 
- /* Notification for newly created mappings */
-@@ -1518,7 +1513,7 @@ static void __mapping_notify_one(struct intel_iommu *iommu, struct dmar_domain *
-         * and second level.
-         */
-        if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
--               iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
-+               iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0);
-        else
-                iommu_flush_write_buffer(iommu);
- }
-
-
-
-> > 
-> > If we are running in the guest with second level page table (shadowed),
-> > can we decide if devTLB flush is needed based on ATS enable just as the
-> > rest of the cases?  
+> Previous versions:
+> v3: https://lore.kernel.org/r/20240319104857.70783-1-mic@digikod.net
+> v2: https://lore.kernel.org/r/20240301194037.532117-1-mic@digikod.net
+> v1: https://lore.kernel.org/r/20240229170409.365386-1-mic@digikod.net
 > 
-> I think the ATS check should be consistent. It's generic no matter how
-> the IOMMU is implemented (in hardware or emulated in software).
+> Regards,
 > 
-> Best regards,
-> baolu
+> Mickaël Salaün (7):
+>    kunit: Handle thread creation error
+>    kunit: Fix kthread reference
+>    kunit: Fix timeout message
+>    kunit: Handle test faults
+>    kunit: Fix KUNIT_SUCCESS() calls in iov_iter tests
+>    kunit: Print last test location on fault
+>    kunit: Add tests for fault
+> 
 
+Thank you for the resend. Applied to linux-kselftest kunit branch
+for Linux 6.10-rc1.
 
-Thanks,
+thanks,
+-- Shuah
 
-Jacob
