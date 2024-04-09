@@ -1,226 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240B054773
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 03:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712632407; cv=fail; b=HQAnyw1NPOgn2DGpnWWx9y1XsYTB/9m4kY8GsscC08nUMSkGFxpzF0bmpGD9U3130X/BQFqCEt5O0HPKOAYy+guaRRSYL17K7uMG177TxMIHBX+6+Kd66Ef33ga2nzxXoohdsNWWICeCczISPMEdPtb8Is3f5X2z2hSfmwOPOCc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712632407; c=relaxed/simple;
-	bh=yLcgULLiAe8T4spOByCHyQw+whz5RF3nQH4ruIYoAW4=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=uOfpC+CUDlEkPk0HAYHU3jBvKHdu33QY5BisS/l5pcSnzEWXozxmUUsa2TvOPBmoudXGATbO/cCOXLlAhn3vcyt50WcYYW9GExmF2679oeq325sEz3JnDymhqm8VKMNjGZ1eNdbaKzB0VEwOG8yzpHBxLtSvxZcn103lWoXsArM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aHA2iC48; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B242A54BCB
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 03:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712632413; cv=none; b=GKXxdnDjuUx3/ONjp8OX/3Bi0LR1bZTNq3xuD0oQpDF3fFiHm7qGyG8e09hAzVvQdFpXP0O5vBZ45AGYsEgsSfrWchjmnb36ox3yRZUabvm6VuCUjbDPjs9TOQYZ+G5bbDf0aiTyXEHvrUs3mGiswDDS6nlvWB1jLgOIZ6gPx6c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712632413; c=relaxed/simple;
+	bh=1kaSOndBlWdCwwnNgxhFKJd0Bhrm4rCSDmsluZI84SA=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XiBSsMkqlem3BYDV2efSxwGyMVKxbxrP7mA5fWNwD4ybYbR8XeTVyfFcsZU7IKQRovgNU9uy5TyMF3/kUFQsN4z0LJsPc75//nHn70VX/FinALmlbQfFHZPIYN6/xKNSwqix9C3+raXwdgPPM/RokMcQdiZCLmQaV9wQ6OSZ4kY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TdlTELSu; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aHA2iC48"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TdlTELSu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712632406; x=1744168406;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=yLcgULLiAe8T4spOByCHyQw+whz5RF3nQH4ruIYoAW4=;
-  b=aHA2iC48sOQJC70RZpbQ3NBs/Xo4m7PwdIMo09uhaRm9w7YYJLCIWXPN
-   v7NoQWqlFD2PYpivwZsaMIfbA75wLFxoECOb3JfxPPmbHFDgrs9v/nRpI
-   8iZPtx/wm19Q/jv6Cu7vCJoKgGO7numgXuqa+NJUAulWVd8DMOV1whqVm
-   GPLo5hDaSqU9J/wjLpU5MUSI+AAlh065Q8j6Uo8C7dKNuLhsMm8xwBw8l
-   DDX1W1D+mcQeJi8OsY/QDwiQNb1O+x6zLIwf19Jzmo3lePvYXbuTggm6W
-   jVQqDIlmLWHqvhZYmSOXgSXEYBo0Yb4hP/8MJOQXpxB2J3IM4t+WcAPRf
-   Q==;
-X-CSE-ConnectionGUID: ukgsgS2cS0i43XcxrT1rfA==
-X-CSE-MsgGUID: vgkIaOAHSfuyc06dAQSQoQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7798882"
+  t=1712632412; x=1744168412;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=1kaSOndBlWdCwwnNgxhFKJd0Bhrm4rCSDmsluZI84SA=;
+  b=TdlTELSuB3B3Op7j6XMPXFXrzqgrTEFRdVlJmZey3Xb50UneMd7uYWyu
+   sbzo4ab2diRqiefzb3At4NJzvSS1+T5k45SoT2E3obj899DtZ8szjPQGO
+   vCoBncxuJAnpG31Im53MYOEgl6qBSUBC1sE9R+BcPQ81Iiy3Dscyr8xtD
+   qXyXTHsB0NGH1Yg3NZHTzuj9WRrzoAi1mG6G6SgPLvSv6ajwwq8hNGVYo
+   89wKhPXyqmk8YJPDOMqJKIRKnZFYXG1b+mcOBC3g3I6nLQzrPKeS3Mz+G
+   AHMW7WNlH0zQ+xhorxBGXdzDJM1MlFbGYQaF0uWxozLu/c2QASNOV9uQ0
+   w==;
+X-CSE-ConnectionGUID: 6Am8o/1WQQu6gdwBvCvA1Q==
+X-CSE-MsgGUID: eQWUasGhTXSe2m3jA47HjQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="25435315"
 X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
-   d="scan'208";a="7798882"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 20:13:25 -0700
-X-CSE-ConnectionGUID: t+QKRBHHQtuslD6DydE3BA==
-X-CSE-MsgGUID: npEFXyiER/qpGXmIuxo/3A==
+   d="scan'208";a="25435315"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 20:13:31 -0700
+X-CSE-ConnectionGUID: GPF679Y3QhS8iAKBJWA5CA==
+X-CSE-MsgGUID: wMtsLq4JRoy9HRUFM4lBEA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
-   d="scan'208";a="20207401"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 Apr 2024 20:13:25 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 20:13:24 -0700
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 8 Apr 2024 20:13:24 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Mon, 8 Apr 2024 20:13:24 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 8 Apr 2024 20:13:23 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dRYKimZLq+MupHr5N8AkF6FQzBvNa793lo1gVyQZdox1mpQlUBlFuDwQ1+zxCpIdfiTivqkZGHRVvdEakKMAPjVvd4EgN5ZFE7e9RnVhA8MHxGQ2727CcymqEAFqnuTMAqV+FeZLlAkhgzuBoMUvBkSKHPH29h58khYSrIzwjtMbGUCAACoCOrVJMVZYaraZQAqCuHhB5AFDCsbDH5hzb8ynvDnopFcbkWhg0y/+pv8j8R4zEcPg2hszLMpFkWt23bUwNYo2UdxiQG6vpsy6t3EjsUDzbRH11AQY71V6UhMBDakIBaulQLqTpbJqimY6pDTmX2DV9LRfDwx3kxNSiw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+EAsMm6ZdLeOcybfTJg7JRwS7Mssr+8v/TIEncA9FrY=;
- b=mGv6RjzbjJPHrD/kw+te/rVqMN5VXSsxuVGFKJtaASszXwBrZkbpjt6OwMBf0c+QlzLkfPageX/aawRsczdfbA2xFIbLoe6BbvbIoOG4mCRS0sY+y7+cP9/F22L2gHVishzRf1xYNmNAEynxUktkna+l/9wxvLFJ106DGNtqE+mVmbTJGArpHxhIxU+h2maCKFzQ8DEZ47dolDD4umuGkKRZ5Y5NsQqwh5m8S0l/kIh6AnTThpMYBV8kvXXVZsZG8wqEw+NEeJHtOR32Wfo9IgtWRwJJXtW7oBr0fy0cbaFjNIF/g4lsJ3Z2aGINzwy+DsrOYTTVJ7pX5jkIrGNtzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by SJ0PR11MB4783.namprd11.prod.outlook.com (2603:10b6:a03:2af::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.23; Tue, 9 Apr
- 2024 03:13:22 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::d610:9c43:6085:9e68%7]) with mapi id 15.20.7452.019; Tue, 9 Apr 2024
- 03:13:22 +0000
-Message-ID: <ed23454e-16df-48e9-a344-a6d8baf902a5@intel.com>
-Date: Mon, 8 Apr 2024 20:13:19 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/31] x86/resctrl: Move the resctrl filesystem code to
- /fs/resctrl
-To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Fenghua Yu <fenghua.yu@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, H Peter Anvin
-	<hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	<shameerali.kolothum.thodi@huawei.com>, D Scott Phillips OS
-	<scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>, Dave
- Martin <dave.martin@arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
-Content-Language: en-US
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20240321165106.31602-1-james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR16CA0053.namprd16.prod.outlook.com
- (2603:10b6:907:1::30) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+   d="scan'208";a="24575021"
+Received: from unknown (HELO [10.239.159.127]) ([10.239.159.127])
+  by fmviesa003.fm.intel.com with ESMTP; 08 Apr 2024 20:13:28 -0700
+Message-ID: <aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
+Date: Tue, 9 Apr 2024 11:12:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ0PR11MB4783:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kWpalm9X9zP8QdDoT4IZ7zqkn6vddW1IosCfbINKsGnWxWmhO4wMJuy2J5ANulVEfyTkSmVqY6nhxEXyioi5mhH9cuAl8UHFQF4QNtgfGM2Fvaq9XHwq8J8O0Ra7t3ccLBpCKF5MqQhZfnfdeei8w6jORooIVMiK3fe1X3Sgdp6guj+UAAFlVQie9NjJTKlEDbFYve04Km9k+hG9wmM6H4WKu22lrqIfpynUkAsNbq2t0yfnyHnSoZ6HsSXvE0kG0Cwvvb5bcIMT6KEXTMUBACRQmRKhtAxqhYcEihvang2/UApekndMBJ1W81cvkjSPxF+Vp7a9qqfugNmKQZo9qf78CmxgKPAh8AMARQucOgDn9cTbFO/KM3UPOImzfY3RYIvReeDJ1hWf8cY2YCqmoQ5M3IDeHeMcBZOqVBbvUbOcEeMO265PuZyZBMZ6gh9D7Q7OjxAaBH5BixJ8q8NB25HUk6WBSqfN8ivcJcV8sL+vp7tGpcLIgDGPPfPLSMPDs7gmAqLlcz4AyQwety5GCM3bOTZFClR+YCBJ2le+jiYaAlIQEzPOs40SETIhox8wgZm7Zj1VxutmveHgpxfjs0GUbKkKwiLaIep5lqBylztfDV/b975WNYqD2vo2LBp4PZJi8nM+/Tz3wI635StNXgCyQHDajZSL84bzxc9VvBs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(7416005)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RGcyUkR1enVzd0NLWWZIYXdlUVQvZm9YL0xMVUFtU2lJS3ZmK2FUa2draGFW?=
- =?utf-8?B?SHliSENoRkU0NTUxWXVMSVFPTFZPR3ZzeUJHb1J3NlUvNFZPTjVJNWJXZVFi?=
- =?utf-8?B?clUvQnhGMm5UT1ltOWZCVWdkR3B1T2VBRmRWZG1WT3Q0SkZ2c1Q4Q1R6M2p3?=
- =?utf-8?B?NTRvM0pDSi93MFo2aFV2Y1hMUVlsQ00rVHVuK2dUVnpiaS9WVDl2aVdkQkMx?=
- =?utf-8?B?alI3TzV1YjBLcjlSTlFROEYxRjllUmVXMUtTTitTbTZhNnZSVjhSL3RYUzhw?=
- =?utf-8?B?Q1NGNlpuY0RCMmxqTndNTzRvdEJQZFhBWkg0RExPL2Y3Z0l1WERHT294SUVB?=
- =?utf-8?B?Ykg1MzFCVWtMUklxUTJBS1FLTjhiaGVhei9kcHUrMXRIaTBVT1FGTGVDWkVx?=
- =?utf-8?B?Q2pJRTdwcTNkaXVwdlo5M0g3aW8rTUZ1MHBwUm5RcW5hanBWRkpjeWxhNXB1?=
- =?utf-8?B?cGx3ZDcvK0RQL3pVZjNWVmdPdnFoczJSU1F3MFkwMXJnODZqbXVNTGtXdWZi?=
- =?utf-8?B?V2NKTTN0UHFPOUNiQ1k3YURrRC93N0liRXpTNGgvd0tNbit4UUtqajl0Q1ll?=
- =?utf-8?B?V1luaXFESHpVNmJaN3BQTUhENmFCNlh0VGQ1K0R2cEw4TVJ2d25yOVQ3Njc5?=
- =?utf-8?B?RU5vR1VMT1pyblkwQURTZTlmVkdNOVVOQUc3WVlvWEU4UExyS3V5WGM3VjU0?=
- =?utf-8?B?L3c4QUxQQ25XS2dvbUJOdGZxeTFEMTRDQlIwazRUME9rbTQ3ZEZzTy90VWNo?=
- =?utf-8?B?VmxVbm1YL2c3Z2dsRE4vdjNwb05Ua2ZWTzhKK055cFVIRStaa1pTTkFoUlA4?=
- =?utf-8?B?ZjY5QWg1SXlkOWZlSStoNnBuQVA0TVhHVzI5WGlmaTNvOG5rZEdlcklxRXMr?=
- =?utf-8?B?K0xLRVNTQ0FBelZqdWh5QXN5K24rWlgxZlQ0NDB1TFVuN2xrYXRrNVBHa0hK?=
- =?utf-8?B?NmlDbms4MXg1MmhaVStOdkNSbzZCVXNjQVlOVnlnS29WWVZOQmU2UmRVeDNV?=
- =?utf-8?B?Y3N0L1N0UVVjVGp6Y1ljV2gxMXFJeHVpRW41UVgxRzRmZjFnMFkrSThLREVm?=
- =?utf-8?B?OEtmMmQyK2x6UmpnYVkwQVk5bmhHOHRCL0xIQVlTS0NYcUNaSUN0ZE1Ya085?=
- =?utf-8?B?QnlQZURSeUMrYkhyTGk2MCswODRwWUxaZDNYMkJ4blhJdVJqdzB6Y09NZHJq?=
- =?utf-8?B?bnZQTTVYUTFnNUdtT1Y4UytYb210Uk53dEw2VC9GbWdrSEx1WDk4aGQvZHhB?=
- =?utf-8?B?MWZYSzhqcWh3dk1aRGRMWWxsdTN2Zk1aZWN4K09Bd3V1ZkRFbXMzak5zdmND?=
- =?utf-8?B?WEdkQ2gzNnlLSm1ENVpvOEhWN0hCcS9mcCtLZEdHZ2xVU1FyK3owVWt3QVQy?=
- =?utf-8?B?YXczbzVXUFRLTHZpaGNZTDA5eW9zTEhYRDdvTDRmL05RUXJRY2ljRlRESWFW?=
- =?utf-8?B?a1dkQkZuMHBoMm1LS2lzbGUvTzFRK2dRUk1kWExXUFNLN0JxdU5pVHFuZXY0?=
- =?utf-8?B?VDBSbUVBWnk4VitjRWlTKzBPVjJwQVhUL1M3cE4zK29wMmVOSUovVGFFeFJX?=
- =?utf-8?B?d283M21xaENzbkxxTzgwcmVnclZHL2xycmkzWjU5eHF3TEp3c25LcllnUEZD?=
- =?utf-8?B?NmZBVWkrZFdpdUNaSW85V01UeFhmUXZxSXBrOWhyVEJUWEVzdG9BTS9aYU12?=
- =?utf-8?B?cWNJMHo3K1VPSDl5M2FoK0pZeEVWVU95d29udCtKZzBYcFh1UXFjbHF4T1F3?=
- =?utf-8?B?ZXRTRFF2L0s2MHFaQSt2Rm9hdm16V3ZSRVBkeFA3a3dzOERkd0JvMlVqNFRI?=
- =?utf-8?B?eHVsckRYeVpwQjVjNGJ0UjMzczV2Ry9LM2lHZWJpQjkrcVVZVGRKejBjZndt?=
- =?utf-8?B?N2hrOUtkZnp3UUxHUDRkV1VobjMxOFJ2NHI0NTh0b1ZWaVp1bmJ2OFR1eThD?=
- =?utf-8?B?QTlHSlB1dzRrZ1RROTlkT1M3Y0N4bEtsL1FENnB2Y3piSmp2TG9vRGZlNWxB?=
- =?utf-8?B?T0ZJMGRNNFhmbWtHa00yMXZZdVYxUEJGN1BwZmp4bWtyWmxYNnhKU2YvZFFG?=
- =?utf-8?B?eS85WDdjTzY1TlVSTnZSV0phVnJSeHVLZXMrWk8zZFV6Y1RsWmFZaVdMYlR3?=
- =?utf-8?B?ZkhyM2hMSHduUlQ4VG5NWVFRRlRLc1dsY1BNWmtaR1lveFl5dE5obVh1WGFQ?=
- =?utf-8?B?MWc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 620aa439-6d1d-43de-20f2-08dc58430366
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 03:13:22.5505
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c2LDD4YA+llG/Y/7oFKavnBXJ2SR6TrOakgl3ObjblA+JG80rr+Wvt6PTnAERn9OmUEKy9nTU9i1x9jACE0yY3TLnPLYXo0Ja1r7IpTcHnA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4783
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Cc: baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+ Kevin Tian <kevin.tian@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
+ flush
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
+ <20240407144232.190355-2-baolu.lu@linux.intel.com>
+ <20240408140329.6290377f@jacob-builder>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240408140329.6290377f@jacob-builder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi James and x86 Maintainers,
+On 4/9/24 5:03 AM, Jacob Pan wrote:
+> Hi Lu,
 
-Please consider the file movements as captured in the diffstat below:
+Hi Jacob,
 
-On 3/21/2024 9:50 AM, James Morse wrote:
->  MAINTAINERS                               |    2 +
->  arch/Kconfig                              |    8 +
->  arch/x86/Kconfig                          |    5 +-
->  arch/x86/include/asm/resctrl.h            |   45 +-
->  arch/x86/kernel/cpu/resctrl/Makefile      |    5 +-
->  arch/x86/kernel/cpu/resctrl/core.c        |  119 +-
->  arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  506 +--
->  arch/x86/kernel/cpu/resctrl/internal.h    |  433 +--
->  arch/x86/kernel/cpu/resctrl/monitor.c     |  813 +----
->  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 1126 +-----
->  arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 3929 +-------------------
->  arch/x86/kernel/process_32.c              |    2 +-
->  arch/x86/kernel/process_64.c              |    2 +-
->  fs/Kconfig                                |    1 +
->  fs/Makefile                               |    1 +
->  fs/resctrl/Kconfig                        |   23 +
->  fs/resctrl/Makefile                       |    3 +
->  fs/resctrl/ctrlmondata.c                  |  527 +++
->  fs/resctrl/internal.h                     |  340 ++
->  fs/resctrl/monitor.c                      |  843 +++++
->  fs/resctrl/psuedo_lock.c                  | 1122 ++++++
+> 
+> On Sun,  7 Apr 2024 22:42:32 +0800, Lu Baolu<baolu.lu@linux.intel.com>
+> wrote:
+> 
+>> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+>> implementation caches not-present or erroneous translation-structure
+>> entries except the first-stage translation. The caching mode is
+>> unrelated to the device TLB , therefore there is no need to check
+>> it before a device TLB invalidation operation.
+>>
+>> Before the scalable mode is introduced, caching mode is treated as
+>> an indication that the driver is running in a VM guest. This is just
+>> a software contract as shadow page table is the only way to implement
+>> a virtual IOMMU. But the VT-d spec doesn't state this anywhere. After
+>> the scalable mode is introduced, this doesn't stand for anymore, as
+>> caching mode is not relevant for the first-stage translation. A virtual
+>> IOMMU implementation is free to support first-stage translation only
+>> with caching mode cleared.
+>>
+>> Remove the caching mode check before device TLB invalidation to ensure
+>> compatibility with the scalable mode use cases.
+>>
+> I agree with the changes below, what about this CM check:
+> 
+> /* Notification for newly created mappings */
+> static void __mapping_notify_one(struct intel_iommu *iommu, struct dmar_domain *domain,
+> 				 unsigned long pfn, unsigned int pages)
+> {
+> 	/*
+> 	 * It's a non-present to present mapping. Only flush if caching mode
+> 	 * and second level.
+> 	 */
+> 	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+> 		iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
+> 
+> We are still tying devTLB flush to CM=1, no?
 
-(sidenote: James, please note typo in psuedo_lock.c)
+__mapping_notify_one() is called in the path where some PTEs are changed
+from non-present to present.
 
->  fs/resctrl/rdtgroup.c                     | 4013 +++++++++++++++++++++
->  include/linux/resctrl.h                   |  153 +-
->  include/linux/resctrl_types.h             |   98 +
->  24 files changed, 7244 insertions(+), 6875 deletions(-)
->  create mode 100644 fs/resctrl/Kconfig
->  create mode 100644 fs/resctrl/Makefile
->  create mode 100644 fs/resctrl/ctrlmondata.c
->  create mode 100644 fs/resctrl/internal.h
->  create mode 100644 fs/resctrl/monitor.c
->  create mode 100644 fs/resctrl/psuedo_lock.c
->  create mode 100644 fs/resctrl/rdtgroup.c
->  create mode 100644 include/linux/resctrl_types.h
+In this scenario,
 
-I would like to check in on the sentiments regarding maintaining the resctrl
-contributions after this work is merged. Considering that resctrl will 
-be split between fs/resctrl and arch/x86, would it still be acceptable for
-resctrl code to both areas (filesystem as well as arch) to flow via the tip tree with
-help from x86 maintainers?
+- if CM is set and first-stage translation is not used, the IOTLB caches
+   are required to be explicitly flushed.
+- else if hardware requires write buffer flushing, do it.
+- Otherwise, no op.
+- devtlb invalidation is irrelevant to this path.
 
-How will Arm patches flow?
+The code after the fix appears to do the right thing. devTLB is not
+invalidated in iommu_flush_iotlb_psi() since it's a map (map == 1).
 
-James, are you planning a separate MAINTAINERS entry for the Arm specific code?
-I would like to propose that you add yourself as a reviewer to the existing resctrl
-MAINTAINERS entry to learn when any changes are submitted that may impact Arm. 
+Or perhaps I overlooked anything?
 
-Reinette
+> 
+> If we are running in the guest with second level page table (shadowed), can
+> we decide if devTLB flush is needed based on ATS enable just as the rest of
+> the cases?
 
+I think the ATS check should be consistent. It's generic no matter how
+the IOMMU is implemented (in hardware or emulated in software).
+
+Best regards,
+baolu
