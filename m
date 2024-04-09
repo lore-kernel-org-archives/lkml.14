@@ -1,172 +1,115 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E8F134CFE
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B821A136665
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712674911; cv=none; b=F5hXfJfhztOgJvELVAT/GAWYK1I0H2Wey6CPlOUeYf0ogqxGCl8q8BQdGDPdHr8EIPSB4RrfR3EAtJautq0tL5psNg55rCH0HdcDPlFz22shYCzGyX+w+1Tc4Jilot9R2i72wkZB6UjhTA8GFE+W5jwrKcfU6y3vwpeSlX71vq0=
+	t=1712674913; cv=none; b=n4UdHZKqYir9G29uD6wNkNDf6imYZ5u9PaBR6MWEgQI0VLzt4MHvsUWqQ8KdMFGw/MKJ3koikDDmUnxJu3K1cWBYW7285p68wYdegIIWWyHg+ZEtXWOx+NkzQ9SuJj6dqjKvCEDAIje+rrXpGJOBcIxuxPIg6qsJ7BrFgFwPvSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712674911; c=relaxed/simple;
-	bh=2XRLBMqkeM5HXNl5EWou8ZB0E0TV13o8LSI5x8BSvlY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qCos7Q8O8cP6KV5brnmLaSZWPjYwn8QZUK0+21X4GaIE+DIly6kc3XGwwjst8Zp1hqtWKLAhqliFeYd11XRlXV4RBCQwG27UZr+Jr3EDyutAJfzFUa/7++MrUcoFD7F2t2rhdxymiG47KQSozZYmlZ6rtaAzX0su3oOfDTTOpww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xjvwx9k3; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1712674913; c=relaxed/simple;
+	bh=Q8oZYTQPe7yxE75cZ/ybR1+HKZVuPqvv9xAWvwwsZDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r2BK2jfY65vl8d4Ajaby0KDo8hW1zy3zmYCaE/J24wVhrx6Khn0TNa8Cmw6bv7dMGIxRIS4tAqteZ54FgrL4MWepFFTyBoU0uDnLJmJ2k8exiy9z3320MXN2vQLgyPWECFh5x4EcwIHkHSmNkM4pScGpb+2+4KcRypqvNqPsJXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erWrqUYz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xjvwx9k3"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4166b96002dso10630765e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:01:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712674907; x=1713279707; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+c7Nae7lWjUxFMlj/H2Ns6fhkmPqVh4ydm9u7CZiONI=;
-        b=Xjvwx9k3qQCxCqCPdMfNuiDIs0K/ej3onc8KTfYn8pWkSS4Ix8PnySLBwYMt+aAEh1
-         SEM5HwkuUPwEC3ftN0Oy07gEsbmWLfeJiIgRlLOH7x0d4mtVAyzQJDLOU8i18LT7XCHY
-         bkwFtdSFCB/IIwPMfeJ4sk8WJ9HJ5fW+PELHzkz2BCRvaOH05GVK+gLYDJTZYha9kHz1
-         NDCN5F64Q2PVakeKVNLpSLHssJ9xB+pegmXosI5DAgv7USVVBmaYNZAq4Q24DNrozqJi
-         Qt5kkFfMs/CpNDW9/gUToAkQRRnTrbsPkQ2vR2kO+Br5wSUsxVruyIMZ8CVGMoK/0XKi
-         10NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712674907; x=1713279707;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+c7Nae7lWjUxFMlj/H2Ns6fhkmPqVh4ydm9u7CZiONI=;
-        b=GsfPADCgej8qA3IMmeDEgc7KY49xW1fKHNEJWwXBC14BziPrz00shE2gKyBttHT4fC
-         aICffvTyac0s4cZjCZmoZANYCP7yF+5TBx52ugCazQrD+eMmyzcmqNR6fMOmD6Da3mQN
-         HdV8c3JD34/ZXu643lyPDDjFZzhzoa8FZXPLeSzlvPiWF5kiGcmYe/F5MIke7nkMMdfu
-         g+LXAES3a2bpKUEaZ9OmaiLfMx+fsHepZnubg920TvRsU5SM6iY824ASrZNkns1q72xw
-         W+qyfftYhZUa8fYsQ7QSvkMzsAy8muSp3wCK1CyERDNKHQeXAAqqPexgbcayT9K4EBhR
-         ywyQ==
-X-Gm-Message-State: AOJu0Yw9gUa7mAUK2yCBF2SOKqvQdti0r68YDcayX5nmiIf20DGl4PuK
-	BGmuCY/tKz0fRWsYXaChN0SpT5iupBcIDrEjox1zBMaPITfeQR5KwlSKCCqJsCnn/wzNQj7cBDL
-	MITbic3OUgI9uJkyqAbAAYIJvan2U0o6rFSRRUrflwTOAKfKa103tkn5i1Ym77A07YDMB4WSsww
-	tyPUqFx+zC5EGWmQJkMCZqHoIsvENG2Q==
-X-Google-Smtp-Source: AGHT+IFXgzgigm6gF3ssRomZsMb2tDkm1/NBAMp7/v4nwt6/VHQkX6fUKALfUDlw7BZpcWQWvAe2T1rU
-X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
- (user=ardb job=sendgmr) by 2002:a05:600c:3b29:b0:414:a0c:a82c with SMTP id
- m41-20020a05600c3b2900b004140a0ca82cmr31439wms.4.1712674907499; Tue, 09 Apr
- 2024 08:01:47 -0700 (PDT)
-Date: Tue,  9 Apr 2024 17:01:36 +0200
-In-Reply-To: <20240409150132.4097042-5-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erWrqUYz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718E1C433F1;
+	Tue,  9 Apr 2024 15:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712674913;
+	bh=Q8oZYTQPe7yxE75cZ/ybR1+HKZVuPqvv9xAWvwwsZDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=erWrqUYzXjcyXobCYeBKxEdKina/eHfaim+ZDs8jUfJxvJlqmpfhE9nQFd1Hi06PD
+	 4LwfSGj13rk3Nonpjy0yDfG/0ZHHApJWdrRUWMW4nSHpFY2OATH35My72p0Z92ahft
+	 Ri3tMKkglNVrYNT5tHClAE5AEcGufqrW8J/emc3DHShYmx0TiZClXL5jBpxZAXbJDe
+	 AsVW9wp7d5njcqSJdx+k1EFO9BD7kkvGZRfp4gM9Rl1tQ2O3lsXjQJefcc8dfWf2AF
+	 DcP+94uGbC4IUJqI02PG+e9+lyievw6BXNcVR4r0odJXYMxyyH/XHdaNL3OzQUvJZC
+	 I5cnz43Rg1K3g==
+Date: Tue, 9 Apr 2024 22:48:28 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] clocksource/drivers/timer-clint: Add option to
+ use CSR instead of mtime
+Message-ID: <ZhVVPB0qD4pBna51@xhacker>
+References: <20240406112159.1634-1-jszhang@kernel.org>
+ <20240406112159.1634-3-jszhang@kernel.org>
+ <20240409-krypton-employed-b2e0e1b46ddf@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240409150132.4097042-5-ardb+git@google.com>
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3124; i=ardb@kernel.org;
- h=from:subject; bh=AkRYLBTm6VuFUE4hRnB+rntHpPOXzattnmr7pMUxTAQ=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIU00IkD3NPOKFTu0Hs7W2XPVxMPG4eyLtet0z14zVlho3
- KFyPPBNRykLgxgHg6yYIovA7L/vdp6eKFXrPEsWZg4rE8gQBi5OAZgINw/D/5zHBY8Yjzz8ViLP
- eCfHpP8DU+J8q72OZiqLNCeGfRA3es/IMIf9kPTBh1IGWxLPFGtVLXWe99aYPWVPvPNpXZv3S38 6MgIA
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240409150132.4097042-8-ardb+git@google.com>
-Subject: [PATCH v2 3/3] btf: Avoid weak external references
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240409-krypton-employed-b2e0e1b46ddf@spud>
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On Tue, Apr 09, 2024 at 03:26:18PM +0100, Conor Dooley wrote:
+> On Sat, Apr 06, 2024 at 07:21:58PM +0800, Jisheng Zhang wrote:
+> > As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer: add a
+> > quirk for lacking mtime register") of opensbi:
+> > 
+> > "T-Head developers surely have a different understanding of time CSR and
+> > CLINT's mtime register with SiFive ones, that they did not implement
+> > the mtime register at all -- as shown in openC906 source code, their
+> > time CSR value is just exposed at the top of their processor IP block
+> > and expects an external continous counter, which makes it not
+> > overrideable, and thus mtime register is not implemented, even not for
+> > reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
+> > extended CSR, these systems still rely on the mtimecmp registers to
+> > generate timer interrupts. This makes it necessary to implement T-Head
+> > C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
+> > reading mtime register and falls back to default code that reads time
+> > CSR."
+> > 
+> > To use the clint in RISCV-M NOMMU env on Milkv Duo little core, we
+> > need to fall back to read time CSR instead of mtime register. Add the
+> > option for this purpose.
+> > 
+> > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> 
+> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > index 34faa0320ece..7bbdbf2f96a8 100644
+> > --- a/drivers/clocksource/Kconfig
+> > +++ b/drivers/clocksource/Kconfig
+> > @@ -650,6 +650,15 @@ config CLINT_TIMER
+> >  	  This option enables the CLINT timer for RISC-V systems.  The CLINT
+> >  	  driver is usually used for NoMMU RISC-V systems.
+> >  
+> > +config CLINT_USE_CSR_INSTEADOF_MTIME
+> > +	bool "Use TIME CSR instead of the mtime register"
+> > +	depends on CLINT_TIMER
+> > +	help
+> > +	  Use TIME CSR instead of mtime register. Enable this option if
+> > +	  prefer TIME CSR over MTIME register, or if the implementation
+> > +	  doesn't implement the mtime register in CLINT, so fall back on
+> > +	  TIME CSR.
+> 
+> This, as a Kconfig option, seems a bit strange to me. We know at runtime
+> if we are on a T-Head device without the mtime register and should be
+> able decide to use the CSR implementation dynamically in that case,
+> right?
 
-If the BTF code is enabled in the build configuration, the start/stop
-BTF markers are guaranteed to exist in the final link but not during the
-first linker pass.
+Dynamically decision can be done in clocksource/clockevnt:
+I can patch clint_clocksource.read to point to different clint_rdtime()
+implementation.
 
-Avoid GOT based relocations to these markers in the final executable by
-providing preliminary definitions that will be used by the first linker
-pass, and superseded by the actual definitions in the subsequent ones.
+But clint timer is also used in NOMMU RISCV-M's get_cycles(), this
+can't be dynamically chosen w/o an ugly "if (is_c900)"
+check, and I'm not sure whether this check in get_cycles() will
+introduce non-trival overhead or not. Or use code patching technology
+here?
 
-Make the preliminary definitions dependent on CONFIG_DEBUG_INFO_BTF so
-that inadvertent references to this section will trigger a link failure
-if they occur in code that does not honour CONFIG_DEBUG_INFO_BTF.
+Or introduce a function pointer such as unsigned long (*rdtime)(void)
+for RISCV_M_MODE, then point it to different implementation?
 
-Note that Clang will notice that taking the address of__start_BTF cannot
-yield NULL any longer, so testing for that condition is no longer
-needed.
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
- include/asm-generic/vmlinux.lds.h | 9 +++++++++
- kernel/bpf/btf.c                  | 4 ++--
- kernel/bpf/sysfs_btf.c            | 6 +++---
- 3 files changed, 14 insertions(+), 5 deletions(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index e8449be62058..4cb3d88449e5 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -456,6 +456,7 @@
-  * independent code.
-  */
- #define PRELIMINARY_SYMBOL_DEFINITIONS					\
-+	PRELIMINARY_BTF_DEFINITIONS					\
- 	PROVIDE(kallsyms_addresses = .);				\
- 	PROVIDE(kallsyms_offsets = .);					\
- 	PROVIDE(kallsyms_names = .);					\
-@@ -466,6 +467,14 @@
- 	PROVIDE(kallsyms_markers = .);					\
- 	PROVIDE(kallsyms_seqs_of_names = .);
- 
-+#ifdef CONFIG_DEBUG_INFO_BTF
-+#define PRELIMINARY_BTF_DEFINITIONS					\
-+	PROVIDE(__start_BTF = .);					\
-+	PROVIDE(__stop_BTF = .);
-+#else
-+#define PRELIMINARY_BTF_DEFINITIONS
-+#endif
-+
- /*
-  * Read only Data
-  */
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 90c4a32d89ff..46a56bf067a8 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -5642,8 +5642,8 @@ static struct btf *btf_parse(const union bpf_attr *attr, bpfptr_t uattr, u32 uat
- 	return ERR_PTR(err);
- }
- 
--extern char __weak __start_BTF[];
--extern char __weak __stop_BTF[];
-+extern char __start_BTF[];
-+extern char __stop_BTF[];
- extern struct btf *btf_vmlinux;
- 
- #define BPF_MAP_TYPE(_id, _ops)
-diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
-index ef6911aee3bb..fedb54c94cdb 100644
---- a/kernel/bpf/sysfs_btf.c
-+++ b/kernel/bpf/sysfs_btf.c
-@@ -9,8 +9,8 @@
- #include <linux/sysfs.h>
- 
- /* See scripts/link-vmlinux.sh, gen_btf() func for details */
--extern char __weak __start_BTF[];
--extern char __weak __stop_BTF[];
-+extern char __start_BTF[];
-+extern char __stop_BTF[];
- 
- static ssize_t
- btf_vmlinux_read(struct file *file, struct kobject *kobj,
-@@ -32,7 +32,7 @@ static int __init btf_vmlinux_init(void)
- {
- 	bin_attr_btf_vmlinux.size = __stop_BTF - __start_BTF;
- 
--	if (!__start_BTF || bin_attr_btf_vmlinux.size == 0)
-+	if (bin_attr_btf_vmlinux.size == 0)
- 		return 0;
- 
- 	btf_kobj = kobject_create_and_add("btf", kernel_kobj);
--- 
-2.44.0.478.gd926399ef9-goog
-
+Any suggestion is welcome.
+Thanks
