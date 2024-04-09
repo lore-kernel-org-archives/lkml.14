@@ -1,108 +1,155 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7434156870;
-	Tue,  9 Apr 2024 18:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15C015697F;
+	Tue,  9 Apr 2024 18:11:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686266; cv=none; b=Y6CxGQ0GUf2ehi0stcvZpABUFDO68EsyQ4ZZjGei7E0IAiTpzANV0cdpU1Sd60JMih0sBiPznkbh9NyQ7ILA0RtnAj7NO5rCk9MhOD8qNyINsmuYGPlRlZsWeAu4HTfzypV7xc/EAiZAGozoN3qf3CIWcjZ5tQm7Uoh6xcUVmII=
+	t=1712686297; cv=none; b=ap6EUlBi1V6FnprRf3vv8Sc5JEtUeA3LMFUQE1G+N+4qiTwjIX+8duA1H+QP7HP5jvyBTTAlsTDU4FG7b/BlUqgWnyO8m/jLUORjpzS/pqr0Krsv4FI+s6h/qQkFsI4cAISUfABFyFHrK/p1thEILVc9ELAvYH8/LnX+++c68Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686266; c=relaxed/simple;
-	bh=HqaMdhT5LRYjCxR6gMHB6EOhgxJSaOa8vauHB4zv+2E=;
+	s=arc-20240116; t=1712686297; c=relaxed/simple;
+	bh=9KWTLb2GFpqdF3ql6I6u+kNUpw+pjCe7VUcpjHsi9KM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VEcXLkEQW6JyFiEwmibcC3WtjFMfD79IkVnGtESa8JlYs4ay5DUpopaCaLfXmKFzko6SIUQtdxstnBUDafbxRBsJKoGPCrdA7Vk860hmUqt0Am/x1Qg+YQ4VBolz/2UF1AjyYYVKUKz3CWRCQ2HF0kScy+9Ca0RDkS80k4Y0/YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FttKq7Yz; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUiML1MnwCL1ECA+5hXtomq7s0D966LDjYfq8SOL1Rrb3M9N/1p9p9SSwv1Nn+CU5mSXPevrqeK4FplJv7CDw7A8r2Jn10aK7GAUfC/UOmKafopddBY08rn6Dvm5pl1Rs6nQpexTwDbc974W1EzqsMErFHVume5AkwndcXabuYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YNHeecP4; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FttKq7Yz"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e220e40998so37525675ad.1;
-        Tue, 09 Apr 2024 11:11:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNHeecP4"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed0938cd1dso3780568b3a.2;
+        Tue, 09 Apr 2024 11:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712686264; x=1713291064; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
-        b=FttKq7YzQibSu3QkW5wm1cfur0Sb9eg8CtXs6WKUr9zGDaPWl6iuiLJeLdFeC/iNY4
-         8LFySLpve+36Cug69jRdkAr49JZayGOQ+h79XwJLmN+RGRoU5XlOio1N1e8jd9GEJEmv
-         JRMv+qzkoHFdB1b4Bxkp0G2VFJ3rVPH65aFOHo/NDDOX/PNkNDIVWpjBAvpVTOv7ykb3
-         9ug8dXeQdHgfj6UX7ce9WAcNpBnhctkosX4i9G4T6hn4u3kGmYVz8wHyawwXjvaARlGr
-         yFs6XU8whVQDxMNKSkr4yiUhYOMcVBmPngklvhlTodqo1z1xR4SxxVKF1dlxKqaRVvui
-         668g==
+        d=gmail.com; s=20230601; t=1712686295; x=1713291095; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GkJ97XaOIzqTQv4Ch+TrALRjE0+uTTo/4gkFSTSGB0U=;
+        b=YNHeecP4ibHlpniBMLqp6u7Dc3GcN2sTcof/EPBGXpXwbu+qGEYAtwe4R1J2+heUkC
+         ERjGtb6sobwYQZOW3FmH92L3hWjR+X+5SaDEPLOkkyRpZcgin9DgNMiyHl/gaWrw1EDg
+         FqnZ1WTDVZD6Z78nHmrsZPWj/UhDNGScOJq8yqPYSaQvO/D5NDOnwCZk2PrzROMqlp5c
+         tb0J542zvrYm0TFUO/fBSTvgP7EZAMNjKccS4Js5UytEDZFC5YBvNUbS4j6ufl56PYEx
+         xyTW84Ou4VF3M8v7BU0kE38RzML5SvbsSy4WRUSxk8uXgEGDE85Q+XHz6PjT0o0SH3nV
+         rIiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712686264; x=1713291064;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
-        b=HP7vlWjUZAWHHrddjNVv3YgPx0I5azs3kmojBst3vtYYxrA1D71oIL1wOH19ZY4TUs
-         ftaKyJOnrw+v9UBFB6a0bqBKbqbLpNs68NhxBc6I4UQlLhfvlyNm7sZzP5HRpPyyMRxw
-         QVJ6GxsL0bzbuCMLLppGiH+IjkYaaBcj2IV9fcIdUXrq2ShDqTfQuupwK8tiTUbdR8OO
-         OkNIo0AogoEn0JW5q0nLKvHf37jwnzqqiZbnxJXTcIE6YW9tbYBas7IdP4x23WyjvAjD
-         FN0NrJuAkwufQY83aDqkWLEtN1t1r1vTmI+aONn9zP6XzWpktxVLO4uGULpNYulWc91k
-         CGAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOIUq17MX3ojkp1V6Cw9t8Qzn0i7G+B0PGVWhNdNF0DHrikTZ1ScpOCibZaWUiQp6wgT+fg9eMxG/BrIIsRv+ANw33tAjJ8YbWCmPgmBXNdd2CZ9lphiimSkE8vBeIC6loU/9Ymmbt0q30VcajpRlnS34lU1J3DxmLpI8px8Vrd/4WT97R1PLf03PTLkeZ8F32eeVIrP3AiQyVZfVGiTyuaal6tu0B5qARapkRPBBrrJpzrPwvQfwmsTJSMHcsEjkaej8h+uRDEB1Drihu5D3Nyx/memLkjrg5udbv9++s8OCrYu/nGgSZYMTdhiMc7Q==
-X-Gm-Message-State: AOJu0YzL7OMOZU2B65EthKr0eCDvgim79p+ud0OvzG96sNBtdoh9Tnph
-	832vI1K28ki+3abjxbs+JvC89QxEWnzd7y3ealZCI+MUo6NH3lPv
-X-Google-Smtp-Source: AGHT+IGrjPVdFECKS3becNGGDDo38peM0R3uLnfzfKLi+hNrIYGQpqn6EkGBto25qlTyktqlNq6njg==
-X-Received: by 2002:a17:902:82c8:b0:1e2:3e1e:3d9 with SMTP id u8-20020a17090282c800b001e23e1e03d9mr529751plz.63.1712686263974;
-        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j18-20020a170902f25200b001e256cb48f7sm9195770plc.197.2024.04.09.11.11.03
+        d=1e100.net; s=20230601; t=1712686295; x=1713291095;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GkJ97XaOIzqTQv4Ch+TrALRjE0+uTTo/4gkFSTSGB0U=;
+        b=p7DKVwuWqP8dUxkRaupJGo5NgM1F/TLJ+n/5xbenZBIctFKB8ru/9vl4mEjNwLAU5Q
+         Ltu7KLV48pMX7mWgYZik6ii2oaks0lmvxL7WeZoOZZ2qUI3ap3JeiKogc9MEOfcqeZhQ
+         0n+X8Tu22/ArrxgjqlFywCvqNpeY8WgNJE/BmqgnPigjeyehetCh+UW63KxBSwhKkA+X
+         hGQmGelmD2XRhKfHdCyUGAjdrX8Ms8AttNasAwFGYZkj2zrgLJhyoShGzim279kFX+el
+         +d3/4EprVkiblNYYmx8zb+M7+5mE8HtnzeNFML1xstet9ijuXwby2yTBeuEjS/JUvvpY
+         Lomw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzkRed17XKtnLqc4Rwfj66ErIIzkWU8FR6Legh35nArVARR0r1X8otBvcEthGFXFZpKCYZg3TiAG4QwONXtXk5pmXQMr0Q2Yhd6E59Nq8y7GE47jSoCdHIxQPYk79NkSg5e4L9jKoFHCPzUFngWfLrQgBE/OzUT00C9dRZbmVgGJe5mA==
+X-Gm-Message-State: AOJu0YxmEwy33VN1z9JY4iO0wGdJlqUVo/CxOruqkqrp6S/poG5dc8cp
+	LeAaxGfeQb4SKX4Fw0eLYd9S4iow1ewBEyDPgI+4z5z1Ou8Giu/j
+X-Google-Smtp-Source: AGHT+IHtZyM5SIPVSZgn5CW1FvoL+u4dKsDjWNZ0XK+eO/w4fX3IwbRyEhCXI7kRkyf+BeGb5JTfPg==
+X-Received: by 2002:a05:6a21:8804:b0:1a7:4b33:7c6f with SMTP id ta4-20020a056a21880400b001a74b337c6fmr756154pzc.43.1712686294809;
+        Tue, 09 Apr 2024 11:11:34 -0700 (PDT)
+Received: from localhost ([2804:30c:1618:ed00:d152:440c:102b:144e])
+        by smtp.gmail.com with ESMTPSA id l17-20020a170902e2d100b001dddcfca329sm9188461plc.148.2024.04.09.11.11.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 9 Apr 2024 11:11:02 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: David Gow <davidgow@google.com>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Kees Cook <keescook@chromium.org>,
-	Daniel Diaz <daniel.diaz@linaro.org>,
-	Arthur Grillo <arthurgrillo@riseup.net>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
-	netdev@vger.kernel.org, x86@kernel.org,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: [PATCH v3 03/15] kunit: Add test cases for backtrace warning
- suppression
-Message-ID: <aad25d52-83ed-492f-9d56-71d26895173b@roeck-us.net>
-References: <20240403131936.787234-1-linux@roeck-us.net>
- <20240403131936.787234-4-linux@roeck-us.net>
- <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
+        Tue, 09 Apr 2024 11:11:34 -0700 (PDT)
+Date: Tue, 9 Apr 2024 15:12:10 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] iio: adc: Add support for AD4000
+Message-ID: <ZhWE-hQkRZ4JcJA6@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1712585500.git.marcelo.schmitt@analog.com>
+ <1d95d7d023dad69b894a2d0e7b0bad9d569ae382.1712585500.git.marcelo.schmitt@analog.com>
+ <CAMknhBEMDg3YF5pvoKJ-6y0Y5OJpmBthWfogCjy90B=F84SvzA@mail.gmail.com>
+ <ZhVoTi2amNTOJ4eS@debian-BULLSEYE-live-builder-AMD64>
+ <CAMknhBGVkv9sP0pjmmdFngKmGVu+G4Y3MUDG199az1wOUtwasw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMknhBGVkv9sP0pjmmdFngKmGVu+G4Y3MUDG199az1wOUtwasw@mail.gmail.com>
 
-On Tue, Apr 09, 2024 at 04:29:42PM +0800, David Gow wrote:
-> > +ifeq ($(CCONFIG_KUNIT_SUPPRESS_BACKTRACE),y)
+On 04/09, David Lechner wrote:
+> On Tue, Apr 9, 2024 at 11:09 AM Marcelo Schmitt
+> <marcelo.schmitt1@gmail.com> wrote:
+> >
+> > On 04/08, David Lechner wrote:
+> > > On Mon, Apr 8, 2024 at 9:32 AM Marcelo Schmitt
+> > > <marcelo.schmitt@analog.com> wrote:
+> > > >
 > 
-> s/CCONFIG_/CONFIG_/ ?
+...
 > 
 > 
-Odd, I know I tested this (and it still works ;-).
-The additional "C" must have slipped in at some point.
-Thanks for noticing!
+> > > > +static void ad4000_config(struct ad4000_state *st)
+> > > > +{
+> > > > +       unsigned int reg_val;
+> > > > +       int ret;
+> > > > +
+> > > > +       reg_val = FIELD_PREP(AD4000_TURBO, 1);
+> > >
+> > > Since the driver in it's current state can get anywhere near the max
+> > > sample rate of ~1MSPS, I don't think it makes sense to enable turbo at
+> > > this point.
+> > >
+> >
+> > This is just enabling turbo at start up. If not enabling turbo during probe,
+> > we would want(need?) to provide some interface for that, which might not be
+> > much desired.
+> >
+> 
+> TURBO is only needed to achieve the max sample rate of 500k/1M/2MSPS
+> on the various chips by skipping powering down some circuitry between
+> samples. We can't get anywhere close to that in Linux without some
+> sort of SPI offloading. So, for now, we might as well leave it
+> disabled and save some power.
+> 
 
-Guenter
+Humm, ad4000 datasheets don't really mention power usage differences for turbo
+mode like ad7944 datasheet do. Though, they should be similar.
+Yeah, will leave turbo disabled until providing offload support.
+
+> 
+> > > > +
+> > > > +       st->pin_gain = AD4000_1_GAIN;
+> > > > +       if (device_property_present(&spi->dev, "adi,gain-milli")) {
+> > > > +               u32 val;
+> > >
+> > > Should it be an error if adi,gain-milli is set on non-adaq chips?
+> >
+> > Maybe. We should not change the scale if it's a chip that don't have the
+> > amplifier in front of the ADC. I think the best handling would be to just
+> > ignore adi,gain-milli if it's not an ADAQ device. Maybe better add a DT
+> > constraint,
+> >   - if:
+> >       properties:
+> >         compatible:
+> >           contains:
+> >             enum:
+> >               - adi,adaq4001
+> >               - adi,adaq4003
+> >     then:
+> >       properties:
+> >         adi,gain-milli: false
+> > ?
+> 
+> I think this is missing a not:, but otherwise yes this should be in
+> the DT bindings.
+
+Oops, yeap, was missing the not:.
+
+> 
+> Even with that though, I would still be helpful to readers of the
+> driver to at least have a comment here pointing out that this property
+> and related gain scaling only applies to ADAQ chips.
+
+ok, will add a comment.
