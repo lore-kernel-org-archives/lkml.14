@@ -1,55 +1,69 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9172712C53D;
-	Tue,  9 Apr 2024 11:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF5586242;
+	Tue,  9 Apr 2024 11:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712662953; cv=none; b=f8979kyauVXADIrkzCSvwR9BYkq6w7ItSvmDNFT80oXqMj64RYFjGGNHqL4iI1x4vLSs4Urujn+vxNQVdFcbq5RPw6Qsh/DKXYk3drnI7tIwGcEq3xOMIxLOB0jRWpABu2/PFwdbGlra5d/s/IvzWhc6467UcfAVN2BH58Q9XMw=
+	t=1712663048; cv=none; b=iMQP3+2UK4bW0cW3ZVLSxUSjRal/sFKAzPvl2QI1s5cl8ag47akbl0VzzNH5X+CyXLRZYvzw9UfB5I779NRDmlgV6we4WIlpJE7DloctxBj34Sq+27f4bS2BNRZaPN+qVz/uDPCcQgVI4kCkPSCnbUIbBd1MmsyezAai0pwWLYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712662953; c=relaxed/simple;
-	bh=lRpaqbeDxkCxJuVuV7wFw13Xw8Co2VG0r3GNWGlOryA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tivd7ovWBizi5A/i5affPsXhDG7Xs10wcgoVcy979mQZ4kR/ANtx2jwNJ5JJWIvtSIAILs9A3Q+cCB4uxoHfzrdR4gyM35hpKE0Pl1JYmw3tKxmJeZCLZWHuLueqUl7MmXYjHhi70t0fW1UHEozNq6G3j7iL8d0L0KwS8GTSAgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=5WhdTDlk; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712663048; c=relaxed/simple;
+	bh=1dQG2CvAIYQGD4YX1qhjNYbP21CNDqzNX0gQDzEE75w=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=g6p0NbR4ilF4WoOlOUhUJDBTYH2DJcukpDCMuulg7pvlDiUijT5sWGbTZIK07oqJwoO/mTe/HyDgSZIy2ydDcuSajjDShPXst3PAjfcankYH+ZNy4PrT6k20GqR9SOyrTiThYVmLZgCkHRwDltPqTAuLa46Gj5YuGAeUuieVTd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=OxE5DP9J; arc=none smtp.client-ip=203.205.221.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="5WhdTDlk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712662949;
-	bh=lRpaqbeDxkCxJuVuV7wFw13Xw8Co2VG0r3GNWGlOryA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=5WhdTDlkiKrSe2GfXSJrPNQond3nkwTpxc3x0pRZGKHszjxKRKNaLKFbBqv5BFXwj
-	 mxmeb/aHZw+z9+II0rBbBVPf0j8UE0tpWCkAzwm7c7emzG9sxXRVF35QhON3xDcsJX
-	 yig/p4HfQWJAnpgOOGwd0WHvuStK01CRWs9WMJLzPHpuBKeOX6zEazbD57ZOtQrZoc
-	 0bBdD+82QH5P0aKthO5+wEI5aHOa646K8oItvS37R7sF2Tv68PrjOGJwEdIi78I8tr
-	 lsSMWjuKw0THnAX8DH8Kk0NXXPfLmendQOe+Xj+gs4fGQCAcrFY7+NSKm1Dn8cBRg/
-	 kerNjyJAT6qIg==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 8149C378212C;
-	Tue,  9 Apr 2024 11:42:28 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-mediatek@lists.infradead.org
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="OxE5DP9J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712663043; bh=ek038P3LxIw6ciT6YTkaoOBDNFyc6zhMZtJXRjLxO2U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=OxE5DP9J5wJ4vPeRBpEtobdQDNHXMmx6jF/g7f4Mz1snQoYVLMGiL9YmOB808Qfgu
+	 QJrHLRVKhDo2GU2WmqXay2HztKEGf/ydGkXVWQRNyMhACbHzqnhz8ISseyAZSSznx8
+	 y8j4Ydwyqy3ao+fuiwgcb4+cKM4LYYLTp+LSYKTg=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 96A80033; Tue, 09 Apr 2024 19:37:42 +0800
+X-QQ-mid: xmsmtpt1712662662tw6erwfdr
+Message-ID: <tencent_AABA5D95191FCFD28DB325F58D8212525D07@qq.com>
+X-QQ-XMAILINFO: OLnGMPzD2sDVVgYBMuObIt7JY7d+1JJldgIEcNGDmR75Mny7SS/dHiEza6dSIl
+	 G/Mq+ty3e57hyKBAmSoLMVu0nn/iwyNqwiNgwShDz/Wzp1qwnxR8IAKzJkgyUtXEgHTcRLJDoh44
+	 dPQyOcex70aCjGv32PeQ8hpphjivh860XqgXXkE+8RySOSeS/j6Js1Q41fYgITH/frAnGOXRvz0s
+	 ME4ZKTpQnrNTaxllfs5+Ch0GIg+8ivwTQ9XC3ZrBJGHpgd6uP0CZ0L4fjSD6lupgu3zgc//43ysD
+	 6jJMb0i0ZqpgpRNLsGe1CYqJUihji8XNokAqdAkchbUJAOKrdOC8tiP/B0BIGwAbz9VUyLLMGbMS
+	 HNT3GfUESr/93xMNphzEbYS90JvTdsj3ipwDm0ELC6BQqKkQpJghx5JLlSWHHGxSxEkTGNyBsSMT
+	 yipAnTQMkIG2iw4RJRRKi5MX7mZAKq6PE0lz3jHzPvCruqXQbsK27+eOOvSMB4OVukXPXGfavviZ
+	 nWtlCPx9MHwbDTq+eBs0fbVWFosb/45+UB7xGFyLLPOyzy+p9OBvwe9w5qs7NXvxPLjf72ff4K01
+	 coIk7nuvZf3Pds8qmOzbz3CXo5GgOaweKUprYm9/yzMPAq9PFZJZ+58gQeS/6R0rMtLLUqUJorro
+	 h8eOmfHJ0mVER/eE95YejLzVsH5eT2IVUn9QtiRUveS8WNet2AVSaLiqG+WGnfe95x4k4/xE0hHk
+	 dF/Yp4BfrVUg5P28n4+jMy9vJu+hxDHfof9xUbKh9AJy1LwbQ03oNt0Mz5Q4UG2VYSRgNbHIHxTX
+	 f2EVUBZyu1dL8vDZCnbMdW0earas4LzlyywTrbk1CkH+vNv3vYA+8akcZ61iY98Do7UJ2vw7Wadz
+	 mJ8YUQt3h727jYFBUReIMcoAMAYBtQcLm2NleOZE0HCYpcxy7bz1OOX4I4BblYhGVBLoSqxOurvf
+	 GErxvfbvUFFwDaVOSmeXmoFmZ1wZpBRzpjGuJ0fbh0U+/Xx00Iow==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+9b8be5e35747291236c8@syzkaller.appspotmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH 4/5] arm64: dts: mediatek: mt8395-nio-12l: Enable PHYs and USB role switch
-Date: Tue,  9 Apr 2024 13:42:10 +0200
-Message-ID: <20240409114211.310462-5-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409114211.310462-1-angelogioacchino.delregno@collabora.com>
-References: <20240409114211.310462-1-angelogioacchino.delregno@collabora.com>
+	martin.lau@linux.dev,
+	sdf@google.com,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: [PATCH] bpf: fix uninit-value in strnchr
+Date: Tue,  9 Apr 2024 19:37:43 +0800
+X-OQ-MSGID: <20240409113742.4055421-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <0000000000009e2ff406130de279@google.com>
+References: <0000000000009e2ff406130de279@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,97 +72,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable the PCIe0 PHY to be able to set calibrations read from eFuses,
-improving the stability and performance of the PCIe link.
+According to the context in bpf_bprintf_prepare(), this is checking if fmt ends
+with a NUL word. Therefore, strnchrnul() should be used for validation instead
+of strnchr().
 
-While at it, also enable the T-PHYs for both PCIe1 and for USB, allowing
-the USB ports to finally switch to gadget mode if needed, and configure
-the VBUS/ID pins of both USB ports for the same.
-
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reported-by: syzbot+9b8be5e35747291236c8@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 ---
- .../dts/mediatek/mt8395-radxa-nio-12l.dts     | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ kernel/bpf/helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-index f699633659b6..5cbe969da425 100644
---- a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-@@ -685,6 +685,26 @@ pins-bus {
- 		};
- 	};
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index 449b9a5d3fe3..07490eba24fe 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -826,7 +826,7 @@ int bpf_bprintf_prepare(char *fmt, u32 fmt_size, const u64 *raw_args,
+ 	u64 cur_arg;
+ 	char fmt_ptype, cur_ip[16], ip_spec[] = "%pXX";
  
-+	usb3_port0_pins: usb3p0-default-pins {
-+		pins-vbus {
-+			pinmux = <PINMUX_GPIO63__FUNC_VBUSVALID>;
-+			input-enable;
-+		};
-+	};
-+
-+	usb2_port0_pins: usb2p0-default-pins {
-+		pins-iddig {
-+			pinmux = <PINMUX_GPIO130__FUNC_IDDIG_1P>;
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		pins-vbus {
-+			pinmux = <PINMUX_GPIO131__FUNC_USB_DRVVBUS_1P>;
-+			output-low;
-+		};
-+	};
-+
- 	wifi_vreg_pins: wifi-vreg-pins {
- 		pins-wifi-pmu-en {
- 			pinmux = <PINMUX_GPIO65__FUNC_GPIO65>;
-@@ -709,6 +729,10 @@ &pcie1 {
- 	status = "okay";
- };
- 
-+&pciephy {
-+	status = "okay";
-+};
-+
- &pmic {
- 	interrupts-extended = <&pio 222 IRQ_TYPE_LEVEL_HIGH>;
- };
-@@ -776,6 +800,18 @@ mt6315_7_vbuck1: vbuck1 {
- 	};
- };
- 
-+&u3phy0 {
-+	status = "okay";
-+};
-+
-+&u3phy1 {
-+	status = "okay";
-+};
-+
-+&u3phy2 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	/* Exposed at 40 pin connector */
- 	pinctrl-0 = <&uart0_pins>;
-@@ -791,6 +827,8 @@ &uart1 {
- };
- 
- &ssusb0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb3_port0_pins>;
- 	role-switch-default-mode = "host";
- 	usb-role-switch;
- 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
-@@ -804,6 +842,8 @@ mtu3_hs0_role_sw: endpoint {
- };
- 
- &ssusb2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb2_port0_pins>;
- 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
- 	status = "okay";
- };
+-	fmt_end = strnchr(fmt, fmt_size, 0);
++	fmt_end = strnchrnul(fmt, fmt_size, 0);
+ 	if (!fmt_end)
+ 		return -EINVAL;
+ 	fmt_size = fmt_end - fmt;
 -- 
-2.44.0
+2.43.0
 
