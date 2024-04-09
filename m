@@ -1,109 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EAA12EBF7;
-	Tue,  9 Apr 2024 13:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B537012FF81;
+	Tue,  9 Apr 2024 13:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669905; cv=none; b=LjmpiHkKcS5QsVlgtis5Uyt4qkJO5b6jxfF+X6XqZZ59CW4N0aWdw+gza+y/vh8mgx/qtHL0oacQqSDQsPlRWQUYzYF1EdwBo97tVTit5NmPri3bnS7d+WZoJxGg/OTYMBv8Lwikrkl575wpJ3U4+1jXxOCcw4lFk+hxTAU2tOE=
+	t=1712669918; cv=none; b=M6tKMmxPpLowSqtigEKL3we4Dty6F4KzVNIVIHlPCVJ92Kmy/lppWg9O/ctI0248iKe/yIeCx4SERqLaJdLS6HLlACfOa4g1qoqyx7b2gMTOrU7EJTKLF5pacu2vNXfHla+qXrJtbgwonFPqf7uvDgEEjReSLy8jsOtvbNq/4wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669905; c=relaxed/simple;
-	bh=peQqCOotkIJimL+cJu7ThX6HtNMoK2xBm6fdtFNcy9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nak15ysxX8f4l/e+xQiedXg2S83Jji4IRnTLseCqXt2nMPpg3mWXR9k8ExOhEHvyYno1/AeWawMPJHYBMfBSD30ZjZ0xz++yOua2rsrDiLL4BE+4l5gGoHqNfMB76zuxgwH4RbM0nHxMQKOxtbYeD3dvOlcaDdNVkmE+dBOUJok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0jbSYxVG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712669918; c=relaxed/simple;
+	bh=LH2+MZ60zszRAlWofS4xHZNyYvkyDt5kHRdPGDl7eDg=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=VMvyZmCcfZu63sT7g03gJVQa2qLMRAxNzEn8WfIrdl2hFD7NTczkE4Bn3vp05ohSuBgU9ajc8ts6sUXhW0odkzn7fZY293Ty06iPwwFf2fqa/HCohHwQwpGj4RciYa+/3S5e8lMFLPWaICokUuXYjd/Otr+gUQw9TixZrE2b0T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmEoXxg3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0jbSYxVG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B51C433C7;
-	Tue,  9 Apr 2024 13:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712669904;
-	bh=peQqCOotkIJimL+cJu7ThX6HtNMoK2xBm6fdtFNcy9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=0jbSYxVG1SOlgAEiCWRAf5n9aFMnQJIEd7mbkZgdAQWWXVqAmxNfYzMOgPVYvKPqH
-	 OUgFzkcZhooc61avUTVjSJtJPC5P1x0y0S6AMUHw4u1IsseMFNlBL9L+MNFPDNH1xW
-	 19Od2NtULDW2u04N365V7hAwSXlKcX8lVlAir1o0=
-Date: Tue, 9 Apr 2024 15:38:21 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Yi Yang <yiyang13@huawei.com>
-Cc: jirislaby@kernel.org, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH v2] tty: vt: selection: fix soft lockup in
- paste_selection()
-Message-ID: <2024040943-tightwad-handcuff-5eb7@gregkh>
-References: <20240313094529.679957-1-yiyang13@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmEoXxg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 607A2C433F1;
+	Tue,  9 Apr 2024 13:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712669918;
+	bh=LH2+MZ60zszRAlWofS4xHZNyYvkyDt5kHRdPGDl7eDg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=DmEoXxg3vjS6lYG2wOO/DN1hcJODw5Bzq6hdl5Q5Jq1SCYm2nv5cwXaS3A9AnKoD8
+	 MVgZeFAhmLUd9aVnxZOL1Ya3BXj1wZB0fsQwZQFG6jq82HS6W4eIm2AkW8to9cddY/
+	 6dvcmCrFWoAxAssNCjB7WUPy4fAc9Wjnm6tQYjP59TgD5UHXLhmWVs03WPDznLa+SK
+	 YwTEYeRaippOoG0aIEEUViHWUJM99iWa7Ga4l/6pWqcFHSOHJhnyrXIZ6OG/0k45Zj
+	 qH0HencCnuol3TUHj+LoZgeGvz6YZ8qhCZFsCchIvKUBj+/V60gaS97SVkQVuy8cDx
+	 75JwJ1ScmB5Lw==
+Date: Tue, 09 Apr 2024 08:38:37 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313094529.679957-1-yiyang13@huawei.com>
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, Joel Stanley <joel@jms.id.au>, 
+ linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
+ linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+In-Reply-To: <20240405064624.18997-1-krzysztof.kozlowski@linaro.org>
+References: <20240405064624.18997-1-krzysztof.kozlowski@linaro.org>
+Message-Id: <171266958251.1032405.3082451019333889181.robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] ARM: dts: aspeed: greatlakes: correct Mellanox
+ multi-host property
 
-On Wed, Mar 13, 2024 at 09:45:29AM +0000, Yi Yang wrote:
-> Soft lockup occurs when vt device used n_null ldisc, n_null_receivebuf()
-> is not implemented in null_ldisc. So tty_ldisc_receive_buf always return
-> 0 in paste_selection(), this cause deadloop and cause soft lockup.
 
-Why is a vt using n_null?
-
-What is causing that?
-
+On Fri, 05 Apr 2024 08:46:20 +0200, Krzysztof Kozlowski wrote:
+> "mlx,multi-host" is using incorrect vendor prefix and is not documented.
 > 
-> This can be reproduced as follows:
->   int ldisc = 0x1b; // 0x1b is n_null
->   struct{
->   	char subcode;
->   	struct tiocl_selection sel;
->   } data;
->   date.subcode = TIOCL_SETSEL;
->   data.sel.xs = 0;
->   data.sel.xe = 1;
->   data.sel.ys = 0;
->   data.sel.ye = 1;
->   data.sel.sel_mode = TIOCL_SELCHAR;
->   char bytes[2] = {TIOCL_PASTESEL, 0};
->   open("ttyxx", O_RDWR) // open a vt device
->   ioctl(fd, TIOCSETD, &ldisc) // set ldisc to n_null
->   ioctl(fd, TIOCLINUX, &data.subcode);
->   ioctl(fd, TIOCLINUX, bytes); // cause deadloop
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> Fix soft lockup by check receive_buf() and receive_buf2() is NULL.
-
-As you had permissions to do this, why prevent it?
-
-> 
-> Signed-off-by: Yi Yang <yiyang13@huawei.com>
 > ---
 > 
-> v2:Change Check Condition.
+> Changes in v2:
+> 1. None
+> ---
+>  arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-greatlakes.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  drivers/tty/vt/selection.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
-> index 564341f1a74f..715e111376a7 100644
-> --- a/drivers/tty/vt/selection.c
-> +++ b/drivers/tty/vt/selection.c
-> @@ -397,6 +397,12 @@ int paste_selection(struct tty_struct *tty)
->  	ld = tty_ldisc_ref_wait(tty);
->  	if (!ld)
->  		return -EIO;	/* ldisc was hung up */
-> +
-> +	/*tty_ldisc_receive_buf() won't do anything and cause deadloop later*/
 
-Comments need to be properly formated.
 
-And I do not understand this comment sorry.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
-> +	if (!ld->ops->receive_buf && !ld->ops->receive_buf2) {
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
 
-Why check reciev_buf pointers here?  What is that causing?
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
 
-This needs to be documented a lot better please.
+  pip3 install dtschema --upgrade
 
-thanks,
 
-greg k-h
+New warnings running 'make CHECK_DTBS=y aspeed/aspeed-bmc-ampere-mtmitchell.dtb aspeed/aspeed-bmc-facebook-greatlakes.dtb aspeed/aspeed-bmc-facebook-harma.dtb aspeed/aspeed-bmc-facebook-yosemite4.dtb aspeed/aspeed-bmc-facebook-yosemitev2.dtb' for 20240405064624.18997-1-krzysztof.kozlowski@linaro.org:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-harma.dtb: ftgmac@1e690000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'mellanox,multi-host' were unexpected)
+	from schema $id: http://devicetree.org/schemas/net/faraday,ftgmac100.yaml#
+
+
+
+
+
