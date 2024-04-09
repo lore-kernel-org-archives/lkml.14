@@ -1,167 +1,85 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D31A7F478;
-	Tue,  9 Apr 2024 09:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCD27F478;
+	Tue,  9 Apr 2024 09:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656153; cv=none; b=C42HlQwlLa8Eo7xSN1STnMILvp6on1pcUY6xjIrHr3aw6tZ14TyQs6yhvQI6Uv7x2JwP9aDFQ/Evq1VPRUsKNSHnEJIs/Fz2jkV6KpoRuHETlPQw6iodVS6KU4Jv5KpAo+JKbwtPqD0RVlfaFODSiHzw8dsOhSxwXJXoiVPkipY=
+	t=1712656220; cv=none; b=uq1729g1ezaKQXMMaW1QgBqOb5VzfNv/aV/Q/L3gKrFFICdajJOJBGFnvFusuMrARBUOluqxYq9s9PoWCthp/+Vw+f+xjhJDoEOZ+GLUAe1eDqMHH8o678z8Djdss+whlNa4SaAZIIGdk/2jfP6vkMB84/LD/l3/EEofbFyT/ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656153; c=relaxed/simple;
-	bh=bVjFJB/ecwokMGDFoxvj9jHQOPiauqjm5NYvAjOuAU8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GaLCVT9F3nWjYmlk+lINMZk5j0+X3RZRHI1614WxVJxJBiIei0OEy8O0i1BM919dG39kC2q3AbdUdezcuJR1wWrD+HD3wSjQKwDMwn+1MRXMuT8FHPj9Kl8dVdjSvbTj2ThmGIQIxQernXNup84v6C3Vlp018VzhFLbk5lUq3WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxCLoNDxVmys4kAA--.3518S3;
-	Tue, 09 Apr 2024 17:49:01 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHBMMDxVmrmd2AA--.31444S2;
-	Tue, 09 Apr 2024 17:49:00 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>,
-	kvm@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] LoongArch: KVM: Add mmio trace support
-Date: Tue,  9 Apr 2024 17:49:00 +0800
-Message-Id: <20240409094900.1118699-1-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
+	s=arc-20240116; t=1712656220; c=relaxed/simple;
+	bh=B1hRF4wh5KsEIlNYnlONjUnwHiM/6l8Y0AGg+VjQqrI=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:From:To:References:
+	 In-Reply-To; b=KBDO37dvkSqLpzGiADsY5gqgGVhszuv8AonQw41FiVVf39mQwSrCSsMqo16Yzo1KMEnJB6g8G0czNjr2TSDrND0mTnkGnVzF+rUKM65u0zXBrYQnx/xskClaPThMy6tPdtuwd01o+4V2t6YMX6aloY1AtUK2O7b/c1Y+dNSAmW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=UA764w1y; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="UA764w1y"
+Received: from localhost (unknown [213.135.10.150])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id 148E53D5;
+	Tue,  9 Apr 2024 11:41:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+	t=1712655668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:content-type:content-type:in-reply-to:in-reply-to:
+	 references:references; bh=B1hRF4wh5KsEIlNYnlONjUnwHiM/6l8Y0AGg+VjQqrI=;
+	b=UA764w1yQyVsuLGF6Lk+kfDHdZhFDibWXIrnwXcrK/b2vDlQVDhehSpZhGld8VTQlDT5Wg
+	/Qx/N2KRJ477RGmQv9Qs4s+qZgpmV3kF2VXlzJ1yXarTQI6ZHpKhcmWK2pcoVjLkk/uT+N
+	gUNtI6X20YBPuXVlye++Tk8wqiJNKOv1DWOd1OYjYhYdLsPLMictRnyQ4PgWPize3PBlTP
+	7HhYb+Npmmfr3nHQOVCb12am3FVBBNbLiqS26vXz5qdBAV6GOCUyOxpSY/NzofXcM/ijeI
+	JWZpOTz2HdNwueoVBML8t6clo2yQJl34olPUELkWXN3iMANTaurzrMmE3qVrhA==
+Content-Type: multipart/signed;
+ boundary=8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db;
+ micalg=pgp-sha384; protocol="application/pgp-signature"
+Date: Tue, 09 Apr 2024 11:41:06 +0200
+Message-Id: <D0FHRJG05LJN.1GU1N7J0BH6S4@walle.cc>
+Subject: Re: [PATCH v4] mtd: limit OTP NVMEM Cell parse to non Nand devices
+Cc: <stable@vger.kernel.org>
+From: "Michael Walle" <michael@walle.cc>
+To: "Christian Marangi" <ansuelsmth@gmail.com>,
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Miquel Raynal"
+ <miquel.raynal@bootlin.com>, "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.16.0
+References: <20240402212331.27328-1-ansuelsmth@gmail.com>
+In-Reply-To: <20240402212331.27328-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxHBMMDxVmrmd2AA--.31444S2
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
-	nUUI43ZEXa7xR_UUUUUUUUU==
 
-Add mmio trace event support, currently generic mmio events
-KVM_TRACE_MMIO_WRITE/xxx_READ/xx_READ_UNSATISFIED are added here.
+--8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Also vcpu id field is added for all kvm trace events, since perf
-KVM tool parses vcpu id information for kvm entry event.
+Hi,
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/kvm/exit.c  |  7 +++++++
- arch/loongarch/kvm/trace.h | 20 ++++++++++++++------
- 2 files changed, 21 insertions(+), 6 deletions(-)
+just a quick (non-technical) nitpick if you do a new version or
+maybe Miquel will fix it during applying:
 
-diff --git a/arch/loongarch/kvm/exit.c b/arch/loongarch/kvm/exit.c
-index ed1d89d53e2e..3c05aade0122 100644
---- a/arch/loongarch/kvm/exit.c
-+++ b/arch/loongarch/kvm/exit.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/preempt.h>
- #include <linux/vmalloc.h>
-+#include <trace/events/kvm.h>
- #include <asm/fpu.h>
- #include <asm/inst.h>
- #include <asm/loongarch.h>
-@@ -417,6 +418,8 @@ int kvm_emu_mmio_read(struct kvm_vcpu *vcpu, larch_inst inst)
- 		vcpu->arch.io_gpr = rd;
- 		run->mmio.is_write = 0;
- 		vcpu->mmio_is_write = 0;
-+		trace_kvm_mmio(KVM_TRACE_MMIO_READ_UNSATISFIED, run->mmio.len,
-+				run->mmio.phys_addr, NULL);
- 	} else {
- 		kvm_err("Read not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
- 			inst.word, vcpu->arch.pc, vcpu->arch.badv);
-@@ -463,6 +466,8 @@ int kvm_complete_mmio_read(struct kvm_vcpu *vcpu, struct kvm_run *run)
- 		break;
- 	}
- 
-+	trace_kvm_mmio(KVM_TRACE_MMIO_READ, run->mmio.len,
-+			run->mmio.phys_addr, run->mmio.data);
- 	return er;
- }
- 
-@@ -564,6 +569,8 @@ int kvm_emu_mmio_write(struct kvm_vcpu *vcpu, larch_inst inst)
- 		run->mmio.is_write = 1;
- 		vcpu->mmio_needed = 1;
- 		vcpu->mmio_is_write = 1;
-+		trace_kvm_mmio(KVM_TRACE_MMIO_WRITE, run->mmio.len,
-+				run->mmio.phys_addr, data);
- 	} else {
- 		vcpu->arch.pc = curr_pc;
- 		kvm_err("Write not supported Inst=0x%08x @%lx BadVaddr:%#lx\n",
-diff --git a/arch/loongarch/kvm/trace.h b/arch/loongarch/kvm/trace.h
-index c2484ad4cffa..1783397b1bc8 100644
---- a/arch/loongarch/kvm/trace.h
-+++ b/arch/loongarch/kvm/trace.h
-@@ -19,14 +19,16 @@ DECLARE_EVENT_CLASS(kvm_transition,
- 	TP_PROTO(struct kvm_vcpu *vcpu),
- 	TP_ARGS(vcpu),
- 	TP_STRUCT__entry(
-+		__field(unsigned int, vcpu_id)
- 		__field(unsigned long, pc)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->vcpu_id = vcpu->vcpu_id;
- 		__entry->pc = vcpu->arch.pc;
- 	),
- 
--	TP_printk("PC: 0x%08lx", __entry->pc)
-+	TP_printk("vcpu %u PC: 0x%08lx", __entry->vcpu_id, __entry->pc)
- );
- 
- DEFINE_EVENT(kvm_transition, kvm_enter,
-@@ -54,19 +56,22 @@ DECLARE_EVENT_CLASS(kvm_exit,
- 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int reason),
- 	    TP_ARGS(vcpu, reason),
- 	    TP_STRUCT__entry(
-+			__field(unsigned int, vcpu_id)
- 			__field(unsigned long, pc)
- 			__field(unsigned int, reason)
- 	    ),
- 
- 	    TP_fast_assign(
-+			__entry->vcpu_id = vcpu->vcpu_id;
- 			__entry->pc = vcpu->arch.pc;
- 			__entry->reason = reason;
- 	    ),
- 
--	    TP_printk("[%s]PC: 0x%08lx",
--		      __print_symbolic(__entry->reason,
--				       kvm_trace_symbol_exit_types),
--		      __entry->pc)
-+	    TP_printk("vcpu %u [%s] PC: 0x%08lx",
-+			__entry->vcpu_id,
-+			__print_symbolic(__entry->reason,
-+				kvm_trace_symbol_exit_types),
-+			__entry->pc)
- );
- 
- DEFINE_EVENT(kvm_exit, kvm_exit_idle,
-@@ -85,14 +90,17 @@ TRACE_EVENT(kvm_exit_gspr,
- 	    TP_PROTO(struct kvm_vcpu *vcpu, unsigned int inst_word),
- 	    TP_ARGS(vcpu, inst_word),
- 	    TP_STRUCT__entry(
-+			__field(unsigned int, vcpu_id)
- 			__field(unsigned int, inst_word)
- 	    ),
- 
- 	    TP_fast_assign(
-+			__entry->vcpu_id = vcpu->vcpu_id;
- 			__entry->inst_word = inst_word;
- 	    ),
- 
--	    TP_printk("Inst word: 0x%08x", __entry->inst_word)
-+	    TP_printk("vcpu %u Inst word: 0x%08x", __entry->vcpu_id,
-+			__entry->inst_word)
- );
- 
- #define KVM_TRACE_AUX_SAVE		0
+> Subject: [PATCH v4] mtd: limit OTP NVMEM Cell parse to non Nand devices
 
-base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
--- 
-2.39.3
+subject should be "non-NAND", also cell could be lower case :)
 
+-michael
+
+--8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iKcEABMJAC8WIQTIVZIcOo5wfU/AngkSJzzuPgIf+AUCZhUNMhEcbWljaGFlbEB3
+YWxsZS5jYwAKCRASJzzuPgIf+LymAYDD9wmmYfgy26EJDv13ae+bC0ut1EyeUTAm
+lJ9YqLRePNYZ6DdNEEPblZqfBNUTD04BfR6m8Yg0Y/LiFSrhkmPFkcOGZroghen/
+hXr19Rz/FouCSXF2uoJ0y/cdSqW5pYZJKg==
+=wSoG
+-----END PGP SIGNATURE-----
+
+--8a32cdc00bd7bdcde487afcf8d9f9ed3c2c6e755e2a918de1ef16595d7db--
