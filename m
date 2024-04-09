@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968AC1553A4;
-	Tue,  9 Apr 2024 17:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03526156220;
+	Tue,  9 Apr 2024 17:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682695; cv=none; b=STTVqZM/osTfEiT1urLCkxduvYrZZvDBZWmfit/LhVPxKgVHmoHrp4I4+1FtdExtduGuyakeYOsIqL8V+sH5JJIgf8m5d5K2u/SbknhRiqixet91QU8uKB5LbQMK93OhkD11hUhNbUQ55YKaIJKibdOZVi85ipBFSefroM/1Fx8=
+	t=1712682696; cv=none; b=ZJuHP9FiEB2y72waSss5vyIsPlFU5fPIEEXx7xkV0bDsuIatTqn1pbCLQkj+RRh4csOo1pYXmsy6KFrUQdU8kMLfHSoLnA88e8+vYl0tvZkGeADdcJVbqThzrf7KApkP15KryVmsmMlwyESIcA18OP17vCJRRxnvPMJPEnJ/pUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682695; c=relaxed/simple;
-	bh=ljDoht4gIlHXgQ6DZZC+hSQ58lkGXg1Z5Yy/e4jU4yE=;
+	s=arc-20240116; t=1712682696; c=relaxed/simple;
+	bh=SBwp4FIi+xGSX6fUSbg/722dbayUuOp7g15zVEiHioA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=idSliUMxbQ9YfUwCZjPAT17pwzK8Axbq0nu/xUiUZu2M+HjvuzkW7QVpgeZPKLFyrACI3ZpbTr7D4Ggw5rubmb1boRaFVular5FXzPItgF6994iy3rWDZ56WwWUqkR4MVxCjzJLIk/T35AXEbqSUcfTkYtTgTOWiJBiWVqBzGuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GdpmjY0a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBrYyxbC; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=u1oZtqQcnL8lAcBN8BaL26XHvTdQhlOqYzgcZ2a2F7bj18JwjWRoDwcl7Giu4lloia/AW2+eHy05urpJmxOrIo4VcrK6bA6kezm3pbpunyM60iKi7i9FuqWdV23HLQbexHNp7wpLwf/wqmHrybIX4pxrpZjhjBXCB7Hdtk2Lo7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Al8mFl4S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=G0h6Mfc5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GdpmjY0a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBrYyxbC"
-Date: Tue, 09 Apr 2024 17:11:30 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Al8mFl4S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G0h6Mfc5"
+Date: Tue, 09 Apr 2024 17:11:32 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712682692;
+	s=2020; t=1712682693;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tPHgoV226yo0QsYY4d4QVrUTyTxT8ywuyVMZLoQ9rKE=;
-	b=GdpmjY0asF2ZAfhtH1pff4nyam1LrMxAxvw94P+jhceQroVUMPOOoNcDCCHOwySmR+mt5v
-	TnSfUk4AIhm7YeGZnWkiWWve/EomoHEUMMXSqnhf4HVv+UytOYAqywhfmOOtMGwaP5zDPn
-	JvMNNeL+8t9yEuQs9SIZDY7JBaazmBlZRbxOe2+nkvPo/5Mj4MKFZ/+g2YIEQLhTabxRVh
-	sj/T0AcnJc2+/mwfYb1SFO/d4Bp1U8UPUrgyJnVUdLllLK6LfS1FSHt7bzxTPYAT2RsiHY
-	GuRlWC1Sk6gVJXIG2oPwI3M+i3xHshndGkzL2qiZVRf1HO5FcyIOqZuBKe23eg==
+	bh=SYQWJatz/tGYxKhDty9VBTDs+ZeurAA5CNoJu77a3Ks=;
+	b=Al8mFl4Ss/0ECD9JuUjeqUDc+99Sy90LLLoS53yxX/sTdUcZiKFfaOyW3a6v/TGg8qnmVO
+	3p8qleL00BwWv4hH2MT+u1Z8EhHQFYeIf4k7NxqkP0FlmPc2v+BKYt89+EVCjgpywvGHWD
+	Mq/tXG+Kmqvw/kAFvlmCsVK9o9w5ghHJ+0wru2qJTL0UMedBcf4GE4r7iscM+zVdjvzPoC
+	D56ikrQfnhu9Wfb4BUA5VXiVkXFEFwEAeiFO79UfoJpCA5YAPP7LG7MtWqTMqFudSX7RJ+
+	3Uty5hPvND/5LSfUWWZvwJaRbjtIc6vuYtEZLhX6MK72R5qJb8CGF996MmFT9g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712682692;
+	s=2020e; t=1712682693;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tPHgoV226yo0QsYY4d4QVrUTyTxT8ywuyVMZLoQ9rKE=;
-	b=DBrYyxbCls7zP7qkJrkx34kjM0Q06zzA6fG/ImbblyC++6XrNr1B92otGHiLbDqmaejaQW
-	LzuEfNKhI9lf4GCg==
+	bh=SYQWJatz/tGYxKhDty9VBTDs+ZeurAA5CNoJu77a3Ks=;
+	b=G0h6Mfc5N+0kDvHD8qMwa1Qqe0tniB8f652h5uNlJA7V9pUxrccofS79xEoCZJVBIGgj+W
+	AoD+TMEO1SwB5VAw==
 From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
 Subject:
- [tip: x86/alternatives] x86/alternatives: Get rid of __optimize_nops()
-Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ [tip: x86/alternatives] x86/alternatives: Catch late X86_FEATURE modifiers
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+ Srikanth Aithal <sraithal@amd.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20240130105941.19707-3-bp@alien8.de>
-References: <20240130105941.19707-3-bp@alien8.de>
+In-Reply-To: <20240327154317.29909-3-bp@alien8.de>
+References: <20240327154317.29909-3-bp@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171268269023.10875.4449485630574875156.tip-bot2@tip-bot2>
+Message-ID: <171268269269.10875.17747775043118568657.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,127 +68,61 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/alternatives branch of tip:
 
-Commit-ID:     da8f9cf7e721c690ca169fa88641a6c4cee5cae4
-Gitweb:        https://git.kernel.org/tip/da8f9cf7e721c690ca169fa88641a6c4cee5cae4
+Commit-ID:     ee8962082a4413dba1a1b3d3d23490c5221f3b8a
+Gitweb:        https://git.kernel.org/tip/ee8962082a4413dba1a1b3d3d23490c5221f3b8a
 Author:        Borislav Petkov (AMD) <bp@alien8.de>
-AuthorDate:    Tue, 30 Jan 2024 11:59:39 +01:00
+AuthorDate:    Wed, 27 Mar 2024 16:43:14 +01:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 09 Apr 2024 18:12:53 +02:00
+CommitterDate: Tue, 09 Apr 2024 18:03:53 +02:00
 
-x86/alternatives: Get rid of __optimize_nops()
+x86/alternatives: Catch late X86_FEATURE modifiers
 
-There's no need to carve out bits of the NOP optimization functionality
-and look at JMP opcodes - simply do one more NOPs optimization pass
-at the end of patching.
+After alternatives have been patched, changes to the X86_FEATURE flags
+won't take effect and could potentially even be wrong.
 
-A lot simpler code.
+Warn about it.
+
+This is something which has been long overdue.
 
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20240130105941.19707-3-bp@alien8.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Srikanth Aithal <sraithal@amd.com>
+Link: https://lore.kernel.org/r/20240327154317.29909-3-bp@alien8.de
 ---
- arch/x86/kernel/alternative.c | 59 +++++++++-------------------------
- 1 file changed, 16 insertions(+), 43 deletions(-)
+ arch/x86/include/asm/cpufeature.h | 8 ++++++--
+ arch/x86/kernel/cpu/cpuid-deps.c  | 3 +++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index ec94f13..4b3378c 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -217,46 +217,11 @@ static int skip_nops(u8 *buf, int offset, int len)
- }
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 686e92d..f07687d 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -150,8 +150,12 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ extern void setup_clear_cpu_cap(unsigned int bit);
+ extern void clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int bit);
  
- /*
-- * Optimize a sequence of NOPs, possibly preceded by an unconditional jump
-- * to the end of the NOP sequence into a single NOP.
-- */
--static bool
--__optimize_nops(const u8 * const instr, u8 *buf, size_t len, struct insn *insn, int *next, int *prev, int *target)
--{
--	int i = *next - insn->length;
--
--	switch (insn->opcode.bytes[0]) {
--	case JMP8_INSN_OPCODE:
--	case JMP32_INSN_OPCODE:
--		*prev = i;
--		*target = *next + insn->immediate.value;
--		return false;
--	}
--
--	if (insn_is_nop(insn)) {
--		int nop = i;
--
--		*next = skip_nops(buf, *next, len);
--		if (*target && *next == *target)
--			nop = *prev;
--
--		add_nop(buf + nop, *next - nop);
--		DUMP_BYTES(ALT, buf, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, *next);
--		return true;
--	}
--
--	*target = 0;
--	return false;
--}
--
--/*
-  * "noinline" to cause control flow change and thus invalidate I$ and
-  * cause refetch after modification.
-  */
--static void __init_or_module noinline optimize_nops(const u8 * const instr, u8 *buf, size_t len)
-+static void noinline optimize_nops(const u8 * const instr, u8 *buf, size_t len)
- {
--	int prev, target = 0;
--
- 	for (int next, i = 0; i < len; i = next) {
- 		struct insn insn;
+-#define setup_force_cpu_cap(bit) do { \
+-	set_cpu_cap(&boot_cpu_data, bit);	\
++#define setup_force_cpu_cap(bit) do {			\
++							\
++	if (!boot_cpu_has(bit))				\
++		WARN_ON(alternatives_patched);		\
++							\
++	set_cpu_cap(&boot_cpu_data, bit);		\
+ 	set_bit(bit, (unsigned long *)cpu_caps_set);	\
+ } while (0)
  
-@@ -265,7 +230,14 @@ static void __init_or_module noinline optimize_nops(const u8 * const instr, u8 *
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index b717420..5dd427c 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -114,6 +114,9 @@ static void do_clear_cpu_cap(struct cpuinfo_x86 *c, unsigned int feature)
+ 	if (WARN_ON(feature >= MAX_FEATURE_BITS))
+ 		return;
  
- 		next = i + insn.length;
- 
--		__optimize_nops(instr, buf, len, &insn, &next, &prev, &target);
-+		if (insn_is_nop(&insn)) {
-+			int nop = i;
++	if (boot_cpu_has(feature))
++		WARN_ON(alternatives_patched);
 +
-+			next = skip_nops(buf, next, len);
-+
-+			add_nop(buf + nop, next - nop);
-+			DUMP_BYTES(ALT, buf, len, "%px: [%d:%d) optimized NOPs: ", instr, nop, next);
-+		}
- 	}
- }
+ 	clear_feature(c, feature);
  
-@@ -339,10 +311,8 @@ bool need_reloc(unsigned long offset, u8 *src, size_t src_len)
- 	return (target < src || target > src + src_len);
- }
- 
--void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
-+static void __apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
- {
--	int prev, target = 0;
--
- 	for (int next, i = 0; i < instrlen; i = next) {
- 		struct insn insn;
- 
-@@ -351,9 +321,6 @@ void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl
- 
- 		next = i + insn.length;
- 
--		if (__optimize_nops(instr, buf, instrlen, &insn, &next, &prev, &target))
--			continue;
--
- 		switch (insn.opcode.bytes[0]) {
- 		case 0x0f:
- 			if (insn.opcode.bytes[1] < 0x80 ||
-@@ -398,6 +365,12 @@ void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl
- 	}
- }
- 
-+void apply_relocation(u8 *buf, const u8 * const instr, size_t instrlen, u8 *repl, size_t repl_len)
-+{
-+	__apply_relocation(buf, instr, instrlen, repl, repl_len);
-+	optimize_nops(instr, buf, repl_len);
-+}
-+
- /* Low-level backend functions usable from alternative code replacements. */
- DEFINE_ASM_FUNC(nop_func, "", .entry.text);
- EXPORT_SYMBOL_GPL(nop_func);
+ 	/* Collect all features to disable, handling dependencies */
