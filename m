@@ -1,111 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA1E1311A0;
-	Tue,  9 Apr 2024 15:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6212FF84
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675019; cv=none; b=JrTElioHnXljvn7U9tJAxmQgvGjmRTw3IqTn56OiUJF4ECeY1NegPlMf7Pre6njNlGW05wO9eDKqn11noOuM8aP4f657KTWbhGZ5abB5ew61nC3HjAnitudUUYcNeEzY5SUB2OUA6yTtOaxhKFTyT5JMADbPmyLnSCBdUGaKuFA=
+	t=1712675062; cv=none; b=WmfD44Tic4DvPtq441sEyHaXRzVLlGsB8S9BGoR3wSXrvFzdVLgJprnLQaXCtzPFoI04yEZAyHpqx+PeHc+CFVRdvFj32K/4EgGJvT/Ct/px7EiOGgU/cDMNelomlNrBF/zq2c90aDMTlfLOs6ck+vivvqJ5DVBd8xQdgP9Ylqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675019; c=relaxed/simple;
-	bh=m+H+w378Sr6HEqYhv2540iRxgWMuF296nGm682Ps7S4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDhTVLNmwfQESVzj9+CebLJIgLYN5VlxhZbDkDleUA/mX+q97ms0cEGtbUAvIGQAuqWgrPf/PJ0Bka1Vu7eZQKIH5qdHsm+NIGvafMlgOsHAv/hPYaOGkoegrfuxsC7NZH4pe5QnrKF/lxsHg5o+YknUa///aL9Hyus4CWX6Vlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obPXcHZr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712675062; c=relaxed/simple;
+	bh=ssen+WDRW3hqF3y3gAI7KjfM6Zb3SAVS5pRaVtu5ya8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AFDH9AdOnd7gnsDuDT6l622mzJ+V1HpGV8AnuqA1qR/h27vvJ11fcfgka3GVaOEK+1YdaRAOIbOXvDWmCpJvqXRD9KSqw6gsVmB+8l1/0JpGqkWokJDvOIZPQkZPBxDGFkVzJesyhqJ7nE9dFx9EpiyGFwfVLZPa1ZrPVpla1KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ibExW2lO; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obPXcHZr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C08BAC433C7;
-	Tue,  9 Apr 2024 15:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712675019;
-	bh=m+H+w378Sr6HEqYhv2540iRxgWMuF296nGm682Ps7S4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=obPXcHZrskluMa4NU4zR6hyOUW6yg9wkgtvhiK1C1xzCihA+aWVZaHizaG8r5H5h6
-	 83HyPuJ7U2EXKxxbxHWXHTZ3O2hhMvPXMwc7E53xGT1bCvTi2hW24caQgA0/+9Kq37
-	 ThZVynd+PN/jdw+FbYCtGhfvkmeU2USeeja7ZNYwWcjsT2iw8krkYZ/QHCaSvBA9+z
-	 Hrd9MznNbHJg+ih4vrvoM6HneFpmZm8JPzjxWajwCuDoRQrfk0VvK1TFZfu2JLVfOP
-	 jGWdy0xxUFOwAvPgaW7UBh7mqEqoO8vd4Myc6oD5IiKh2GIj1ODxqevGDr3hK54j2e
-	 XiukDYTxb3flQ==
-Date: Tue, 9 Apr 2024 16:03:34 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Eric Lin <eric.lin@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	linux-riscv@lists.infradead.org, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 1/6] dt-bindings: cache: Document the
- sifive,perfmon-counters property
-Message-ID: <20240409-underrate-armless-697047fd61cc@spud>
-References: <20240216000837.1868917-1-samuel.holland@sifive.com>
- <20240216000837.1868917-2-samuel.holland@sifive.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ibExW2lO"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d8b2389e73so6010811fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712675058; x=1713279858; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3YM+s20cdEdse7t7bN3iKiAdYaiSxxuKdZKKsCgmaYw=;
+        b=ibExW2lOTRLTYJMF5CjRfqUXmoTJKkGQ10QXFP6JYNALJP5NdP8ZnajpNpEZXMj7HN
+         fhVrEAe5Jyr02ARfUIKLeqmBM03/wWCAt3b41O4SK5owlMmOdyDoOP+zovzC0VelOFsR
+         GL66zVe+G5NbXn3qVY1F8Hdq6JQD7pOBxtw5/k/U91ULHutRbEiltMBQDvP7Xp5nOnod
+         CH+XWbCR32sJS6xUgBD6o1tSHdhTBcT9sUMZJnTNavp2wCurVRsFCLTU1+q08qeDVVT1
+         a996YyzSCjcFsRKu7d2SJM6DhXFTETCztVDQpVqQfbh+sooUK3/8meEJOF9QN8tdx49z
+         BotA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712675058; x=1713279858;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3YM+s20cdEdse7t7bN3iKiAdYaiSxxuKdZKKsCgmaYw=;
+        b=TDyLc38iO3CWukAB5QzezsXfeUDDcIMpKwYsHDF2EwxHZH6UppKSHkd/OvKpuleDp9
+         z9GQ14mOk6H0o9EAUWsb0du5PeAiJIwPEC5/o2UjxbrZMx9y9OtShGpaJWKoRPUytTtK
+         EoTJ1j9C6AUJJH96bGd85Uujaoyx6Gkavfcn2qTch9r6CPZbvd9W5VZ1ojAO7sIkV9WZ
+         AhvSbY6rGt/LTHZvzg2BrhycyPgn0RFJgZrr1VsOgSmqg/ny84ZagPChcDxA9XwMfPQD
+         XsVwq8mr+m2Ah7ZTnVTJ/mNzku6Ntb97vkpWQcovWTJsF+lcVaIRQ79fqtUe0XrUhLyX
+         ogNw==
+X-Forwarded-Encrypted: i=1; AJvYcCW6WJXfOCscRqGeSjuOrXQ8dff9xY60LVZgpo8wbSr9zuhL+yu+hi55L0qsDhyT0QAs9P4ai1yn3iEtdOqjBfCYQuHSzYr7HJIVL7f8
+X-Gm-Message-State: AOJu0Yz/Gd+96LlNNyqOKDyGzesG17N9HzmsGHRRRkAnyntxS3O57Aki
+	b0gbBosx3Wzr/+ar7ZNqpwR2uR4+olND7ecP1Z9Y6rKceJutvKmKYYbZ/ilSiaM=
+X-Google-Smtp-Source: AGHT+IGoHv754pdfAq6TjWUEj3Tebb540y8BjG8KDvn0k1jGyKTq4jOdTq4eg0QQygBFoeLLrn8fzA==
+X-Received: by 2002:a2e:7d12:0:b0:2d8:7200:38ff with SMTP id y18-20020a2e7d12000000b002d8720038ffmr64570ljc.24.1712675058205;
+        Tue, 09 Apr 2024 08:04:18 -0700 (PDT)
+Received: from [172.30.205.99] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id j14-20020a2e850e000000b002d88d978484sm841131lji.132.2024.04.09.08.04.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 08:04:17 -0700 (PDT)
+Message-ID: <a8ea0f53-40c0-4fc5-94fc-a88f8e0319ac@linaro.org>
+Date: Tue, 9 Apr 2024 17:04:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nDzQsaP24507Oliz"
-Content-Disposition: inline
-In-Reply-To: <20240216000837.1868917-2-samuel.holland@sifive.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/6] soc: qcom: smem: Add pcode/fcode getters
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>
+References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
+ <20240405-topic-smem_speedbin-v1-2-ce2b864251b1@linaro.org>
+ <zc5u7ixaser6ekl3sltzxccstu63tpydxybquxz5hcasj4cmfo@csjwfifugeod>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <zc5u7ixaser6ekl3sltzxccstu63tpydxybquxz5hcasj4cmfo@csjwfifugeod>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---nDzQsaP24507Oliz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 15, 2024 at 04:08:13PM -0800, Samuel Holland wrote:
-> The SiFive Composable Cache controller contains an optional PMU with a
-> configurable number of event counters. Document a property which
-> describes the number of available counters.
->=20
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
-> ---
->=20
->  Documentation/devicetree/bindings/cache/sifive,ccache0.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml =
-b/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-> index 7e8cebe21584..100eda4345de 100644
-> --- a/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-> +++ b/Documentation/devicetree/bindings/cache/sifive,ccache0.yaml
-> @@ -81,6 +81,11 @@ properties:
->        The reference to the reserved-memory for the L2 Loosely Integrated=
- Memory region.
->        The reserved memory node should be defined as per the bindings in =
-reserved-memory.txt.
-> =20
-> +  sifive,perfmon-counters:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0
-> +    description: Number of PMU counter registers
+On 4/6/24 04:21, Dmitry Baryshkov wrote:
+> On Fri, Apr 05, 2024 at 10:41:30AM +0200, Konrad Dybcio wrote:
+>> Introduce getters for SoC product and feature codes and export them.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
 
-I think this should be restricted to devices that actually have it,
-given we've already gone pretty hard in this binding with specific
-requirements.
+[...]
 
-> +
->  allOf:
->    - $ref: /schemas/cache-controller.yaml#
-> =20
-> --=20
-> 2.43.0
->=20
 
---nDzQsaP24507Oliz
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +	/* Ensure the value makes sense */
+>> +	if (raw_code >= SOCINFO_FC_INT_RESERVE)
+>> +		raw_code = SOCINFO_FC_UNKNOWN;
+> 
+> This looks like a c&p from the previous function. Should we be comparing
+> the raw_code with a SOCINFO_PC_ constant?
 
------BEGIN PGP SIGNATURE-----
+Looks like!
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhVYxgAKCRB4tDGHoIJi
-0mzBAQDysCqijpDedJMkSHubXyNjqiZS55GKu1YasR4ei55rswD+MW0xgiNKPVjO
-XNXWQPiUaaqF25hlCEW4n/5lW/MwtwQ=
-=9dlT
------END PGP SIGNATURE-----
-
---nDzQsaP24507Oliz--
+Konrad
