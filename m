@@ -1,123 +1,234 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AB315697F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 18:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DDD156C66;
+	Tue,  9 Apr 2024 18:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686400; cv=none; b=lu+gVTBCCn+X+MI+iUBMEER2bLIrEMzMj5MccgdRiql75y0iOOe0C21qYf9IpS+5JhKw0aZZjVdkytVdQnx+Ie+ASmmDAVXePnSNldazdeqlZWhaQv73CC/6eCyRd5FoIbq6EkWlbclBLWM5+av6l47w4tg8AAPBrkxO25IT9Wo=
+	t=1712686405; cv=none; b=R92gMvuGZi0DOQPU7XeX8GfiO6UO7YvjliaR4ONlX1G5+6xog35z4AnsE5mjmKBezlM+aGsub8fAHC5nrJbt3B9KrTvmB6iZ4e4DlvJyJMakAxfalp5C5aiQ3XT3FYqdYGpRN+hpJ++o24woVC2Btza2y+hT/Walcfz/76r23Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686400; c=relaxed/simple;
-	bh=uLNeg1qHDIQyx4DVMEosgXpludE+lVP3yhaBpeYJCHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A+eJKJx2n+UncFrS4TpZhZZe/qmmNA2+JGciqrbItXz/TuGWDZTbKN+xE7vb82l5H07FpIMrG+Y0DFfRYF2G6NeCj+apsoj1fBCvKDNbc7Hawx24zuDYPVWj30KvbQBc4vdt/n46Xl64JQsOziFB7ZUu//B6AyKtlGjPvTQhhcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pQpVK86p; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712686405; c=relaxed/simple;
+	bh=os22hnONWugy2tpOAKxDCjc6v65N851yUDHEbBVCfUs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XEqlmKbNF2REWMQXwu3sl843xO3rdghTFLZ1VOqgkk1ARfyZM3cZ0EgpjRV3kSpeyqEfVR4uZTSccbKk0TZ+5lqzc62UmmOTe425lZJZojglgOJjfiGgDnz6gDCRtgYk7bUe22pk+Gz8HSwvUfZ5lU00gxsEKahKV7z0N+FG/VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ZKrgookd; arc=none smtp.client-ip=52.119.213.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pQpVK86p"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d29aad15a5so55488731fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 11:13:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZKrgookd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712686396; x=1713291196; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SVvL2F1G6X1zePnKsaGHFi1ccfudklq9eqO3sqLfMAg=;
-        b=pQpVK86pEd72nTJgHeERw/U99JtL+PyvlMEZOly41ki8pL1ntemFwcuP1glvkaIGK0
-         zsDEE3OgMNf7DtPDXAnkg9va+umiKFjOKRDK8qkSCuFLhg31sxBQ+aIQoR4hRTzrIke7
-         6uEf9/dyfrWjamM+DXDAXDp6jm3M3hIh5aUjCJcFbxLK23688Vwza2arS7P22d262GnR
-         SlB81KrQhHXU/uK2HdjzgWDviAXvai3/WdbXcnTW4deQlS957sN6+LbRYJ56WkrQNjqN
-         KzAm03a1vSYtoZ23Va+vtUEADUWUncC2t0e0V/LTGn6ijyIaAy6qTPObMtchxrvY4Nox
-         4iIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712686396; x=1713291196;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SVvL2F1G6X1zePnKsaGHFi1ccfudklq9eqO3sqLfMAg=;
-        b=AOu+JEFuwo1d+UxXocUHy9vj25P3wKd2wBbDq5gD2Bi5sOw5HxeeUfn2uH/Ni+jrNq
-         MM8gD9Jy7bArvxdAuN/gO/DS/Uv7HFi3sbWTBpkiTzeQnORW8HaKbfof5m+Dq6WRWx61
-         RpHvN9OPKwYYlniT7WwHxF0G/ic7c/FzEa486Y31Mc21AVIScjlkVsuOXsnSY6K/cA4j
-         t0Rzsnq7ddFY+XshCxiPQESrDUsT90z7/ealF7lW9yw7/0UP5ZyfkTUpc9uGudz0xX3D
-         KWopKlqNNXwPHQDwWwIRS9cALoq46pKvhenFhvrcWt+RxMz3Uh++vd8zasoeN2o/9HIK
-         Eo5w==
-X-Forwarded-Encrypted: i=1; AJvYcCV2Fphj+sEYnPWdApE8pz4srJk5YPYD798z2bofH6+6FzAcHbIy37wcaQ2zj+rkVIbXQ+xhX1Cg+EE1CaQ92PzilcSpjOWp36bkwKyB
-X-Gm-Message-State: AOJu0YzR2iWldCMzDnFy53QEd8/cmEpwFpnfUk7JGD+RLjo/XW/9jyiv
-	Ry/IbJn3l2oAVfiCqqrwRj82fkZiMEY8LhmCDuLuoZ1I/enx529jgVitfAiEBKo=
-X-Google-Smtp-Source: AGHT+IE9IkoN4MIEa62W5SDOs6R2IZNM/Lb7/qVpQfgom65bemgoHxP7/c5kJNTK3D/ZbevsozDIkg==
-X-Received: by 2002:a2e:6e06:0:b0:2d8:63a2:50dc with SMTP id j6-20020a2e6e06000000b002d863a250dcmr374922ljc.48.1712686396194;
-        Tue, 09 Apr 2024 11:13:16 -0700 (PDT)
-Received: from [172.30.205.99] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id z25-20020a2e9b99000000b002d869fec5ebsm1535892lji.79.2024.04.09.11.13.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 11:13:15 -0700 (PDT)
-Message-ID: <fbfc2d7e-2120-428f-bb1f-60aa606b261b@linaro.org>
-Date: Tue, 9 Apr 2024 20:13:14 +0200
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712686403; x=1744222403;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9WK4Ks0kdU/PfCY29WwFv1CSYBPCLT37R4CWQ0Ev6+c=;
+  b=ZKrgookdjmrGHAol3EHIWCyYqx5ar6hx2ARbkyG37UUAxtcwk89wkQqU
+   fJ0Pj/amPJKpd2rK2dutn3rUtiZBPL/T6WksLkCunIoV664d9ij3AT2fU
+   MZB2PPIQ3MOQ/AiGgeB4lsJ8FJCy7BUOzlc1v2qtwBKVoJC92Pv89tg+v
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
+   d="scan'208";a="625423153"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:13:04 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:4228]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.56:2525] with esmtp (Farcaster)
+ id 942f6115-7a50-47d4-88f3-52c850573cea; Tue, 9 Apr 2024 18:13:03 +0000 (UTC)
+X-Farcaster-Flow-ID: 942f6115-7a50-47d4-88f3-52c850573cea
+Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 18:13:02 +0000
+Received: from bcd074994f7f.amazon.com (10.95.97.144) by
+ EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 18:12:58 +0000
+From: Sudan Landge <sudanl@amazon.com>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
+	<xmarcalx@amazon.co.uk>
+Subject: [PATCH v4 2/5] virt: vmgenid: change implementation to use a platform driver
+Date: Tue, 9 Apr 2024 19:11:51 +0100
+Message-ID: <20240409181154.9962-3-sudanl@amazon.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240409181154.9962-1-sudanl@amazon.com>
+References: <20240409181154.9962-1-sudanl@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] drm/msm/adreno: Add speedbin data for SM8550 / A740
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- Neil Armstrong <neil.armstrong@linaro.org>
-References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
- <20240405-topic-smem_speedbin-v1-5-ce2b864251b1@linaro.org>
- <nek4paofg3hturvjwpa2bnsvmicwmvwixzr6e6iuqstemgrqyo@cagcrnzjsne2>
- <0955cabc-fc4e-4790-a82c-7f6f807fe36b@linaro.org>
- <4ghhtxjtkfjzxeyrajn26get4d6xiq57swwsjmyialcyfivui6@se3ukxxukspt>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <4ghhtxjtkfjzxeyrajn26get4d6xiq57swwsjmyialcyfivui6@se3ukxxukspt>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D037UWC004.ant.amazon.com (10.13.139.254) To
+ EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
+Re-implement vmgenid as a platform driver in preparation
+for adding devicetree bindings support in next commits.
 
+Signed-off-by: Sudan Landge <sudanl@amazon.com>
+---
+ drivers/virt/vmgenid.c | 97 +++++++++++++++++++++++++++++-------------
+ 1 file changed, 67 insertions(+), 30 deletions(-)
 
-On 4/9/24 17:24, Dmitry Baryshkov wrote:
-> On Tue, Apr 09, 2024 at 05:13:15PM +0200, Konrad Dybcio wrote:
->>
->>
->> On 4/6/24 05:25, Dmitry Baryshkov wrote:
->>> On Fri, Apr 05, 2024 at 10:41:33AM +0200, Konrad Dybcio wrote:
->>>> Add speebin data for A740, as found on SM8550 and derivative SoCs.
->>>>
->>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>>> ---
->>>>    drivers/gpu/drm/msm/adreno/adreno_device.c | 14 ++++++++++++++
->>>>    1 file changed, 14 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
->>>> index 901ef767e491..c976a485aef2 100644
->>>> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
->>>> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
->>>> @@ -570,6 +570,20 @@ static const struct adreno_info gpulist[] = {
->>>>    		.zapfw = "a740_zap.mdt",
->>>>    		.hwcg = a740_hwcg,
->>>>    		.address_space_size = SZ_16G,
->>>> +		.speedbins = ADRENO_SPEEDBINS(
->>>
->>> I think this deserves either a comment or some info in the commit
->>> message.
->>
->> "this" = ?
-> 
-> I see two types of speedbins here, it would be nice to understand at
-> least some reason or some defailts for that (if you know them).
+diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+index a167ccfad299..c028e2064fdd 100644
+--- a/drivers/virt/vmgenid.c
++++ b/drivers/virt/vmgenid.c
+@@ -7,9 +7,10 @@
+  * information to random.c.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+-#include <linux/acpi.h>
++#include <linux/platform_device.h>
+ #include <linux/random.h>
+ 
+ ACPI_MODULE_NAME("vmgenid");
+@@ -21,9 +22,9 @@ struct vmgenid_state {
+ 	u8 this_id[VMGENID_SIZE];
+ };
+ 
+-static void vmgenid_notify(struct acpi_device *device, u32 event)
++static void vmgenid_notify(struct device *device)
+ {
+-	struct vmgenid_state *state = acpi_driver_data(device);
++	struct vmgenid_state *state = device->driver_data;
+ 	char *envp[] = { "NEW_VMGENID=1", NULL };
+ 	u8 old_id[VMGENID_SIZE];
+ 
+@@ -32,21 +33,36 @@ static void vmgenid_notify(struct acpi_device *device, u32 event)
+ 	if (!memcmp(old_id, state->this_id, sizeof(old_id)))
+ 		return;
+ 	add_vmfork_randomness(state->this_id, sizeof(state->this_id));
+-	kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
++	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
++}
++
++static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
++				 u32 __always_unused event, void *dev)
++{
++	vmgenid_notify(dev);
++}
++
++static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
++{
++	if (IS_ERR(next_id))
++		return PTR_ERR(next_id);
++
++	state->next_id = next_id;
++	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
++	add_device_randomness(state->this_id, sizeof(state->this_id));
++	return 0;
+ }
+ 
+-static int vmgenid_add(struct acpi_device *device)
++static int vmgenid_add_acpi(struct device *dev,
++			    struct vmgenid_state *state)
+ {
++	struct acpi_device *device = ACPI_COMPANION(dev);
+ 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
+-	struct vmgenid_state *state;
+ 	union acpi_object *obj;
+ 	phys_addr_t phys_addr;
+ 	acpi_status status;
+ 	int ret = 0;
+-
+-	state = devm_kmalloc(&device->dev, sizeof(*state), GFP_KERNEL);
+-	if (!state)
+-		return -ENOMEM;
++	u8 *virt_addr;
+ 
+ 	status = acpi_evaluate_object(device->handle, "ADDR", NULL, &parsed);
+ 	if (ACPI_FAILURE(status)) {
+@@ -63,40 +79,61 @@ static int vmgenid_add(struct acpi_device *device)
+ 
+ 	phys_addr = (obj->package.elements[0].integer.value << 0) |
+ 		    (obj->package.elements[1].integer.value << 32);
+-	state->next_id = devm_memremap(&device->dev, phys_addr, VMGENID_SIZE, MEMREMAP_WB);
+-	if (IS_ERR(state->next_id)) {
+-		ret = PTR_ERR(state->next_id);
++
++	virt_addr = (u8 *)devm_memremap(&device->dev, phys_addr,
++					VMGENID_SIZE, MEMREMAP_WB);
++	ret = setup_vmgenid_state(state, virt_addr);
++	if (ret)
++		goto out;
++
++	dev->driver_data = state;
++	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
++					     vmgenid_acpi_handler, dev);
++	if (ACPI_FAILURE(status)) {
++		dev_err(dev, "Failed to install acpi notify handler");
++		ret = -ENODEV;
++		dev->driver_data = NULL;
+ 		goto out;
+ 	}
++out:
++	ACPI_FREE(parsed.pointer);
++	return ret;
++}
+ 
+-	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
+-	add_device_randomness(state->this_id, sizeof(state->this_id));
++static int vmgenid_add(struct platform_device *pdev)
++{
++	struct vmgenid_state *state;
++	struct device *dev = &pdev->dev;
++	int ret = 0;
+ 
+-	device->driver_data = state;
++	state = devm_kmalloc(dev, sizeof(*state), GFP_KERNEL);
++	if (!state)
++		return -ENOMEM;
++
++	ret = vmgenid_add_acpi(dev, state);
++
++	if (ret)
++		devm_kfree(dev, state);
+ 
+-out:
+-	ACPI_FREE(parsed.pointer);
+ 	return ret;
+ }
+ 
+-static const struct acpi_device_id vmgenid_ids[] = {
++static const struct acpi_device_id vmgenid_acpi_ids[] = {
+ 	{ "VMGENCTR", 0 },
+ 	{ "VM_GEN_COUNTER", 0 },
+ 	{ }
+ };
+-MODULE_DEVICE_TABLE(acpi, vmgenid_ids);
+-
+-static struct acpi_driver vmgenid_driver = {
+-	.name = "vmgenid",
+-	.ids = vmgenid_ids,
+-	.owner = THIS_MODULE,
+-	.ops = {
+-		.add = vmgenid_add,
+-		.notify = vmgenid_notify
+-	}
++MODULE_DEVICE_TABLE(acpi, vmgenid_acpi_ids);
++
++static struct platform_driver vmgenid_plaform_driver = {
++	.probe      = vmgenid_add,
++	.driver     = {
++		.name   = "vmgenid",
++		.acpi_match_table = vmgenid_acpi_ids,
++	},
+ };
+ 
+-module_acpi_driver(vmgenid_driver);
++module_platform_driver(vmgenid_plaform_driver)
+ 
+ MODULE_DESCRIPTION("Virtual Machine Generation ID");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.34.1
 
-"one is slightly faster"
-
-sorry, qcom downstream has been getting increasingly cryptic lately..
-
-Konrad
