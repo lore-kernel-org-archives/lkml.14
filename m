@@ -1,220 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9CC12C7FA
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651598; cv=fail; b=FAEjkfjv7RcUO6LHsNfRaLkZOFCA77evLJ4QMDpOM4CYP3m8670xbGalqVx4C1gEwyHD+wtzXtcpqP6AXWrua7R5LPmT7uydKQ9CpVQ3TC8GN0QIFqemU1FrZE8Ge2H0Pxl8omUN+A5NMW/Inz7NhOARR24nrnQKi2sjPqby1lY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651598; c=relaxed/simple;
-	bh=bgpA8OTW7TLg9Ep+6yQVj+q8/ZK4uSj1Vedsy0KIIbI=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZCs6rpY1CFbm4c5yBf8kt62t2n4rlowh5b5BVTPCayGWNkUCQON0NERB4d79w/PMQkScaKbMyvsBUMmnzN8QVENz9Zu1JpmLH/0O6xYQ7hBbtSac60jlG4Xhf9LkmhSOQcnCJBdwWqbv4K++e2JSB3CJZ1dPrH2o47rYC+KG9iw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSDnp4Gz; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC151C0DD7
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712652107; cv=none; b=ZK8w+jYVmLJmXHpXYtCaLoLEU7timwd5lTuid2uBKn9174pPLxr0oESC7/uu9H5Oe2ljjoGfpBhVDIvX9FjOIwjrKKAqrJGp8mgi3YZM3R85FLJVOFTdiEkcMUFUIEIGl0qZPRbWz7+g1Q1Zzi1Qw9dRLmRaxX9xDRNlfNOULmk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712652107; c=relaxed/simple;
+	bh=IRu1eA17v2XOQGfaF0D90pCkYcs9p9xLgJh5/QtvDcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QHeXUpXMgZnca6y2vZzm+/J+EJTLM389GsQmIj4q4Ew33j9xKVv6iOPna+oOXj1ngRfm7L/TuhVToWIx1LxKYreKAWaUITkvuKNSATULOinG2JviXg0ddKBbkCtfnbpNlQ1ZRGb3r/76oKxLBAWfHfgtMzHD+y5/Y7JH+Js3ENQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=znBwORr6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=2OjyeslS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0NJsTOwc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wr4Cm2MD; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSDnp4Gz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712651596; x=1744187596;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=bgpA8OTW7TLg9Ep+6yQVj+q8/ZK4uSj1Vedsy0KIIbI=;
-  b=kSDnp4GziDc0nO9TkCuebVmWq1QfTE81JSTm3rjSgpmOETOhnjN9ZUTy
-   2aUaHRG9C9EUuMz/eDOh48AY7334A0XiPb0OfGtz7rTcePwaqLnLhv1FU
-   FIAbXg+I90TLXLwDXg8pS2SFopDYb37M8Ps02GFrsNOwfQXhPcHfYLTQk
-   KOySwfQEtR/3HgadZHj/Wzsuh+EvAkFoahNiMinhMamo/w6a2WoO614vK
-   fAf1y55m9xX3OI0JxDfZBKvgNRUiAhx5fWnhQzay7DTMiZ2CyLGZqBQgk
-   lZTLkpJlaa2F1fQpP05tbRHqNF+UisNJj1IUiZnnurop3BSKMdI/0M/5o
-   g==;
-X-CSE-ConnectionGUID: rJf+QwhKTjejmJO2WFgK5Q==
-X-CSE-MsgGUID: pO48yaNuSt65MKg7KzfVGA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="8080238"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="8080238"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 01:33:16 -0700
-X-CSE-ConnectionGUID: oLtcsEGbSeyu0LSi6C1cHA==
-X-CSE-MsgGUID: SIzO6q3lQraGVXy1QAA/ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="20232532"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Apr 2024 01:33:15 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Apr 2024 01:33:14 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Apr 2024 01:33:14 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 01:33:14 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Apr 2024 01:33:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lBcawkXcN3lu5TRlm/LgMneqXU25qgRtYznHc4RrSMZWzL33f8lTZmJAyHwxQ+zQvsIg+3fzLYgzb4NLI0eUfwnjvJOS5Uc7BX4MjcpFhpahJIvvL+Xz5AOZ2T0jntUDwwMpAjTMKSRhJETH4DtgLtqIEQz0B4Dto1bstVol6GiROgHAsCQus5KbWoxVnVxvPUQn+Xq5+Z9jRD6zzxypMbVh9GnSZAAlWrxkcLOWvqeB4Jot2XjY00/dq+jWh348YssTaoC7NI3MNm6WfisRoOcYn3ASUTsxoju/NFKSiUnKM12878zm/VDgKuyfwaeecwTI+H0E5tTRyB4F3NOC1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=it3KSI85er69ZQmcggstiZCKUZBaq08bJhEqb0viwJE=;
- b=lUc/+VNo+ADQxhZ1L0YzeywaroiSTK7MFvE1Kk0qp/ERXljBnq/AXlnZy9zr5JyPRiqxUWWD5g43x4DGXm8B5i0RBdZ1MUjS/4DzmFL9frEyvngrkAVluJrZtDQmG3Ow5n5+OnV0k56h4DinSwayj1ncxevRXJQN8EOmZQpHfv1XAaedh/SEHFAUYNmkuh0uvAIhM/TVx5N5hVPsYfKH2lzy+r1OP94X0GvVS4s7GGv/oDslscsKVYgKhWLChcb82/zfEElINuKM0+8tvgrhUoGYoe2UQKGswFEYlJ7j05kPh/Fgs+LwqEM5K6n7hz65/WhlqKsZLJ8/JSsPAw8drA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
- by MW5PR11MB5881.namprd11.prod.outlook.com (2603:10b6:303:19d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.24; Tue, 9 Apr
- 2024 08:33:12 +0000
-Received: from DS0PR11MB7529.namprd11.prod.outlook.com
- ([fe80::b1f5:9d1f:f510:d54c]) by DS0PR11MB7529.namprd11.prod.outlook.com
- ([fe80::b1f5:9d1f:f510:d54c%3]) with mapi id 15.20.7452.019; Tue, 9 Apr 2024
- 08:33:12 +0000
-Message-ID: <04b9c7cb-e2ac-4dcf-8594-da101a98bc49@intel.com>
-Date: Tue, 9 Apr 2024 16:36:45 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
- flush
-Content-Language: en-US
-To: Lu Baolu <baolu.lu@linux.intel.com>, <iommu@lists.linux.dev>
-CC: Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
- Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	<linux-kernel@vger.kernel.org>
-References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
- <20240407144232.190355-2-baolu.lu@linux.intel.com>
-From: Yi Liu <yi.l.liu@intel.com>
-In-Reply-To: <20240407144232.190355-2-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SI2PR04CA0008.apcprd04.prod.outlook.com
- (2603:1096:4:197::20) To DS0PR11MB7529.namprd11.prod.outlook.com
- (2603:10b6:8:141::20)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="znBwORr6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="2OjyeslS";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0NJsTOwc";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wr4Cm2MD"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 67E94338BE;
+	Tue,  9 Apr 2024 08:41:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712652102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FEl3RjsbC6SJ1EyTwzLlizPrFcOAuMA1IwWEJj5F9jQ=;
+	b=znBwORr6iRCyJSD5Bez3eKjCgvdZT7mk1FsffzdxIGX1gC5ngQpJT1I/KjStuuCIccz7ez
+	gnoIvo+CCE0TTm6CdwnN+1Md8MeI2p6e32ORYE04BmF2vZyoocPnc0q0uP97GDo+PZbAAI
+	siJRPwRgyd/3bVJwFVPRQgPVWT4uYxs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712652102;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FEl3RjsbC6SJ1EyTwzLlizPrFcOAuMA1IwWEJj5F9jQ=;
+	b=2OjyeslS5U0wRzR6LG3RYV3KTuIvcH/MbLEaoWVvUUqkD0Got4AluAlhClj76Q3BqwMML+
+	jX87Stcw7AKBWEAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=0NJsTOwc;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=wr4Cm2MD
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712652100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FEl3RjsbC6SJ1EyTwzLlizPrFcOAuMA1IwWEJj5F9jQ=;
+	b=0NJsTOwcNE3cNaG3BbYQe4/xOwP0b+m9rVLQ4bnhHV9Y+MLSwQS85wGvN5tFjzcpGuOQ+w
+	PkRxUyuqqK4rMQQVtkx0sxbCIr431hLYDoi2J6XJO1aM/HRh8Dz8MPNF8HuEFsNV5NWZzv
+	QhMq2CTk4+CQbTa3iQkjESHh5YEo6IE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712652100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=FEl3RjsbC6SJ1EyTwzLlizPrFcOAuMA1IwWEJj5F9jQ=;
+	b=wr4Cm2MD+eKbS1K3+xcO4jnDiDOtaNiXRAYtODYpAFOZ9qs5QfJOxIKgkDoRJYOeG5lIwE
+	ZGGGxCUxyRs5DKDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5363F13313;
+	Tue,  9 Apr 2024 08:41:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id /I0KFET/FGakTwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 09 Apr 2024 08:41:40 +0000
+Message-ID: <3e90ae2c-3849-49da-a671-d48a0b071fa5@suse.cz>
+Date: Tue, 9 Apr 2024 10:41:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|MW5PR11MB5881:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qS9r4xCb81elxRqf+VTamaj1gpOYYt4vhnx5TJMlDiE2e030VgmxrtmrccohkSXjJiweYU1nJHXJ0Y29aB5EiNJA5xe4WdmQ8tlcNdpGtp5qwZ/DkXYUmDxOc4Hjw78tWc325gmsAYcL2EZcYudu6R25CD9V/djV4w2iUnxvMqPOtQna7C8PpEP1avsL9GcVdZ5ZL182TAg1YMs/CvCVaJL1uDufIGVkOm+c72MBF+5PtQ/4lz30eD3W4vMM3tYqiyXKDciUTehtJhoLpezbIaznhxIzMQYgUG0Io/+KJT5J0ZgjA8DpdiLxPavfmZvBzeR2hJ1PggVWbfAXlLadmfkWw68adt4AneD+9x8JOqBfFc92VapwIdGSmHyRbfteuxCqelsxVvpU3uzRY90YqTkLJPfEVmQPnqQeMlJ4WeKlowLuGHiYlK/Ee13NxoUFnB7EyyeKIoVeiTfKpo/oJPQh+wjFSA7t2I2lap7a5hTQxe9kta47e2gYP6ZjZeksSrzWwXZITxzEwMf84LIQMm8xQ9yWv+To3ic4fFLe9nVJLpo97jOy0f2b6iwiMxj75z/w8sB8Umiph5Psl7UDF5ToARBZmOVZaP4gTnKU+JsyQR4AJkupk1fUHqx+8PkYHZYj5JFh+6udFstbRcPMEijmZGYRMvIK5SXnB8pQ8+o=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WHVLdzVjalY3Ly9UWnExS2JVRUV5RXdleGlwMXd2eXZrUEtOaSs4Q2hLSGVP?=
- =?utf-8?B?eUtGdE9tMmszaU5ldmtUNEQ1QnR6aXpmTXYyRzdsaGp6MERTMEJRa05FcnJT?=
- =?utf-8?B?bUxLNHlHODZsRjl4N0pNWFpadDFmYmJyaTF4MFBPYnh4a25vQWFpNWFNUWta?=
- =?utf-8?B?S2gwNXhoRVF5RGx1bnhrbjgzTFUzS1o0TVQ3cHMydW8xQzJWM2FybUVDSHVY?=
- =?utf-8?B?ejkvb1ROUG1IWGlHZE5XcXJsd0RvWDV2dzJMVkE0ZkpHbitCWmx5cDNMUmZn?=
- =?utf-8?B?Ym5oOEtmL2FzM2s5Tmt3VSt3bTluM1hCbEJBMWk4U1hJWFNvdkp4QWpYckpV?=
- =?utf-8?B?bW9ObHBkNndoTGo1WUJkdXRPRWRYUmFaK2NLNEF5ODYvTGJpd2NqOVNabUdz?=
- =?utf-8?B?ZkJkblJhaUVEbm9yTTdrWGFlWmFyYVdsbnJzQ0Z0elFRdHhPMmZNMWh2Y0N6?=
- =?utf-8?B?cVh4bVhpR1ZWczVZQll5QktsQjg0a0xsV1hGRTlLeHJlR0FhdHBMcm4wN0o2?=
- =?utf-8?B?U0xwcHBGL3JPeVY2UUZzL2RXTDFvdGZlbE4xMUR5V1Q0RW9ESHdDWi9YdEh0?=
- =?utf-8?B?Ykc5QzY1VWQ5Y1JLNlZxZjVkVmttOFJVdlpBRTRyYXl1bXJ0Y1VTOUxneVZI?=
- =?utf-8?B?c0Q4dU9TeG5uT3pKcHgvTHQ4NnhtcXJucEJhcS9NVmdmaGdvbi9seFZHc2pq?=
- =?utf-8?B?djJVVUVBSTBmMVpJOUdkQUZrWG91YnlvVlZDVTlmUC8rbzJ4QzBrTHBQenVs?=
- =?utf-8?B?YXFyOHZoNXFjc0dSYmxsMjJycythWGtWc1BxUkpjeGFyczEyOVZMY3QxRDd1?=
- =?utf-8?B?cy9ZWFhzRnozSVZmL29iQ0ZHYmdKSUFMcno3SU9zUndtSnZ2Uno3S3NWSi80?=
- =?utf-8?B?dzMzUTR4OXZXcEpzaERCRmc1RzBnQS9TSTJMQlU3T0RLVGc0TndNTmVjT0hN?=
- =?utf-8?B?RDRuV3VYN2NDS2R6M1BOVnZ4Y3ppWnljUTB2elRWdVpIK2MzM0JCRjJLMnhK?=
- =?utf-8?B?T09sdm96UDFjOUpKMnpzYUJvRzNUT0taMkU5SXNybEZRK0s0dDlZMDMvNDFO?=
- =?utf-8?B?Rk9pdHZiQ29YTGlteWdJUUlVT24wTVZuVE1QT0swcnBlZlhING5IYXorMVpK?=
- =?utf-8?B?WUV4V3dIWWtaaTVxbDY0Y0hyVDhrd1hlSUp1Y2JzblRNOVJyb0RPOUFwWTh0?=
- =?utf-8?B?NEFpYUttQjB4UHk2SjNwYkV6Y0tPTlBQb2tWbkRBVmFhbDV2WmxyQVdpK0Zp?=
- =?utf-8?B?a0pMcisyVnp3bE9xMlZnODcxTGJIQk9EUHpnSXo3QUQ4c2xiL0dpQzFGd29o?=
- =?utf-8?B?eTFvZDlEZlRFUFRPeHhTRXN3M3BLU3ppNk52UVhUNVovS1pQUHFCQSthTWNX?=
- =?utf-8?B?SGpXemJmbnIvb2JFQ053enRiV2tIc205K21OQ2Y4SXdOZTNCaGhCVWd0WU5B?=
- =?utf-8?B?cEZTdys5UHFxUitSaGtsM2tMQjFtTktraXQrUU9COUJ2TFdTUk05cnBOTGV1?=
- =?utf-8?B?RldMN2RSMXp0K3dtQWYvT1NUUy9sSG5JODdjRG8yWXRCKzZONS9qQ0FmaEZV?=
- =?utf-8?B?YjliZ2NaWlYwaDIzakcrbDUvVlNSaDBXajM1UVEyRVlQem1EU08zeXR5Wkdp?=
- =?utf-8?B?YXVJU0doOHFaVnBydUh3VWRRa1FOOFh6eDRqOU94SHhPTDBNRzRPVktlQ3Nx?=
- =?utf-8?B?TDNDYWE4Ui85c3NWSEx2UklxRzR1OXFQMEN3ak1wVllzVllJYW5kVWJER0dE?=
- =?utf-8?B?czB5Mi9NTWxmNjY2bU1UckkvRHVSbndyL0UvdVJJcVBLc1Q0VloxeGo2Nksz?=
- =?utf-8?B?VHVvOTlvV21mRFBiRGhJMTBZcE15aFZGSjN3VC8vMFFMbjdHbkY4b2ZWZWtr?=
- =?utf-8?B?YWg2Tmtwa1lJTzQzTmVFVkcwbVROYXFhK0ZzekhsRmtaQjFrRy9rMlpzYlNa?=
- =?utf-8?B?VC9hVnNqalRlZ2RIMjRXWVlJM2RFby9UbDhtUUo5aTlFbHhkbkdybG5SNGVs?=
- =?utf-8?B?eTEwUEsxSEg0bFhMdVd0MUhQd2pOT2MzNUg4bjRjQ3RpNmdWUlcvUHZ3WnFh?=
- =?utf-8?B?cXM1Tm9vbHR0Z3BXUWxjQU16NStiNDlqemMwKzh1YXFwUmVQd204dmRWMUlJ?=
- =?utf-8?Q?qG5fcAsHFsY/sJEg+sMFvETl1?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37657521-09ee-4ef2-ed2c-08dc586fb166
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 08:33:12.1994
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: l6NoMsAAHCIuiYSKlsaZEtUWVpuIP3RlPoyRG7XxWehT1Mi7rkZkF2fqsmTVoCmkT3iZExtjcDfAzKsSMImogg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5881
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/10] mm: page_alloc: consolidate free page accounting
+Content-Language: en-US
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
+ "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-11-hannes@cmpxchg.org>
+ <7b3b7f2e-7109-4e72-b1cf-259cb56f3629@linux.alibaba.com>
+ <ecb88320-9990-49e1-a58a-e8fc85b1da3f@suse.cz>
+ <20240408142340.GA1057805@cmpxchg.org>
+ <1cc1e3d1-4646-436c-92cb-f8584406bf88@suse.cz>
+ <dbdcc175-b825-42f1-9bd6-a7a15902d6a0@linux.alibaba.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <dbdcc175-b825-42f1-9bd6-a7a15902d6a0@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 67E94338BE
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -4.50
 
-On 2024/4/7 22:42, Lu Baolu wrote:
-> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
-> implementation caches not-present or erroneous translation-structure
-> entries except the first-stage translation. The caching mode is
-> unrelated to the device TLB , therefore there is no need to check
-> it before a device TLB invalidation operation.
+On 4/9/24 9:56 AM, Baolin Wang wrote:
 > 
-> Before the scalable mode is introduced, caching mode is treated as
-> an indication that the driver is running in a VM guest. This is just
-> a software contract as shadow page table is the only way to implement
-> a virtual IOMMU. But the VT-d spec doesn't state this anywhere. After
-> the scalable mode is introduced, this doesn't stand for anymore, as
-> caching mode is not relevant for the first-stage translation. A virtual
-> IOMMU implementation is free to support first-stage translation only
-> with caching mode cleared.
 > 
-> Remove the caching mode check before device TLB invalidation to ensure
-> compatibility with the scalable mode use cases.
+>>>
+>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>> 
+>> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> Fixes: 792fb43ce2c9 ("iommu/vt-d: Enable Intel IOMMU scalable mode by default")
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> ---
->   drivers/iommu/intel/iommu.c | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
+> Thanks.
 > 
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index 493b6a600394..681789b1258d 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -1501,7 +1501,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
->   	else
->   		__iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
->   
-> -	if (!cap_caching_mode(iommu->cap) && !map)
-> +	if (!map)
->   		iommu_flush_dev_iotlb(domain, addr, mask);
->   }
->   
+>>> With fixed indentation:
+>> 
+>> Maybe Baolin could resend the finalized 2 fixups in a more ready-to-pick form?
+> 
+> Sure, I've send it out.
 
-IMHO. this change can be merged with patch 01. And the reason is to make
-the logic simple and clear.
+Thanks.
 
-> @@ -1575,8 +1575,7 @@ static void intel_flush_iotlb_all(struct iommu_domain *domain)
->   			iommu->flush.flush_iotlb(iommu, did, 0, 0,
->   						 DMA_TLB_DSI_FLUSH);
->   
-> -		if (!cap_caching_mode(iommu->cap))
-> -			iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
-> +		iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
->   	}
->   
->   	if (dmar_domain->nested_parent)
+> And I see Andrew has already folded the first fix 
+> ("mm-page_alloc-fix-freelist-movement-during-block-conversion-fix") into 
+> the patch set. If a formal fix patch is needed, Andrew, please let me know.
 
-you can also move the iommu_flush_dev_iotlb() call out of the iommu_array 
-loop since it does not require checking iommu cap.
-
--- 
-Regards,
-Yi Liu
+Oh didn't notice, in that case nothing more should be needed.
