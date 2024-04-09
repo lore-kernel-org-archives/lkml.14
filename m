@@ -1,199 +1,113 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C67D7604D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 04:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2296683CB0;
+	Tue,  9 Apr 2024 04:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712636599; cv=none; b=uchqHGbaZHkOCnOHkd26lMZsNeyCc4tILGmcMnsj7VxgPNqkPt8bhzv9bVyiGgx9Ju6d83tbwyMQyiGEQqt0ffnZHDggadnyRX0ar6D69dSs/RpJl4nXzYzdmtebcIM4kQ5PBop6InHa7+SgAtorB35tCyNtKuDTR0/T7fpmJTI=
+	t=1712636607; cv=none; b=TSOLWTfiXD9hnooT8YOKObw3vueDkId/1CQCksv3h42fJWEK58WzFY81k0d3i667KpuI3s3I5+d6iYyIZ9oeF98O5ge3O9EYgYPWyLKGGDns/uHQl3kPucwpdm+ooQK+Nxz1gZ/lCYUkF8DMFZcj9McR8m7t+GoI1wIMDHXKyX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712636599; c=relaxed/simple;
-	bh=beTkpYwtJV+t5CxYWh0zckfi7M3IpQimrt25Wfmutgs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FgMIc3xH8BS6gbbgPqq5+30/bNq+LQkfTjtVWQIxK0gMi+AKquDHWWT7z10CxBNIAzHH7Rzaj4b2ykaa6knCP6/ezlw4ZScvYSOS9/bCMIJV/l3988VviI+L4EWM+IxDSk+z0Z5JSmgZc7zD6pgc+oB9TexjNRX3hdsBnHsiZJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y3t8dqR9; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712636607; c=relaxed/simple;
+	bh=SuQSgPe8CBiuq2s/IXE0JGCrExX0FOBruorD6DKwhDI=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=VVfDvZPXTbd3GlqPq1NhBm4H4+c2emf+sQGcgrwzpqBqgfaZR5xiqqwzqZqKHgHDo1W0eHK354foyTHlG3hP0jpsv9GwEkd6C888o0G/3q03JAWYf9NPAovbviz+DWXyr2PMG08QbAxC4+NQsVDly8ruAs4kw9V+zvcbq/3Farg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nTI9L8cB; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y3t8dqR9"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so4300536a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 21:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712636597; x=1713241397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mmMw7a5O50tj9x9X/rTKi3+asqjaHKmEWJL4jpB0MIM=;
-        b=Y3t8dqR96GhluqRs55RQe7vbRDLzm/SES2oM0qo8ggLGkrjQYTxaB7yvNgkuSWjWZ9
-         3olQBNjwaXDobUQzup6m4JYGwkEZxLPEKX0L85QHCsx7MmTimQvURvsyAWP9iZbz2PB8
-         jiFfByN2ZXFGdTUr+9Jz8vD8P25Z0yI6culINlKrSuORgbopoYIjGiMOb4V1DQ60C/xB
-         1hcM0AUkkW+cgCGYV2NsK7AZTDVWpIl4l3ABU/OVS00yrENmDAS5NSxnhfN0T8ZUxsqc
-         o1jcYbTfMk4RlAsRHQj6VJIHjvNt209/CrPGezvbnulyaFMuqzsQ1jybaeF2kjyO1jjC
-         KjSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712636597; x=1713241397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mmMw7a5O50tj9x9X/rTKi3+asqjaHKmEWJL4jpB0MIM=;
-        b=UDorniXKzqc0w4+aDSqe77nksgZ5GFHDJVDURX6lFhhPHFBcwz5GKYUuswGh9Hman1
-         aiDni5DNvIVxGPFEdnBJrHNauSRrsF6wt2BUUuTYZsLBLxwCzwHQiSAd41j323y9RBiV
-         ByuFCCafO+szvTCtHBnC7XWzGSkJs8U/KQpDGhlatjKF1tQoppagJrhFeqHDOejAI1Cq
-         e6GGQl8s7SNaoZ5nHLWLkugRysLgXlx7JmBTJcIQAQaiw/QA8EenKZwWnQ/CtzMAbXHa
-         4uUwvDNocMAKYtw1GaZwadn4rk0+7U/NhxrSbypMn7syN4OC2IjTM5zGsYN+6hSR4NWs
-         jprA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKrxwVU8i3m4BGsLw9eBCtLgKih3sJTykSmxh6QETdtiQsJFc0EPH8VsuGKNMvLhahnA/ChAIVG/Ytp5Yc/8KBONeYpkus9rF8DReV
-X-Gm-Message-State: AOJu0YzjDXaOCopDJzg0fnMu3aiQ748rYdjq7TmyY8aZDTGesayEiqRM
-	g35SUFzHWRVYX7e5vB2rI37YxUbMRLwM5itaqdrBJtkmqzLwdN8gNvHpSmZBs4o5OwhCaokU98b
-	J3K6PTL4co34xfEH4rz8xVdkcG34=
-X-Google-Smtp-Source: AGHT+IErkFwGKO2kTAdhos7XepQZsquGNVc0/92UHzaKSlD+q8rpc3ijcmyr5W4VXK5Zf6zz4zb7gE9OjGY/Z/6i8K0=
-X-Received: by 2002:a05:6a20:5603:b0:1a7:9ce4:bd1d with SMTP id
- ir3-20020a056a20560300b001a79ce4bd1dmr1604314pzc.34.1712636597462; Mon, 08
- Apr 2024 21:23:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nTI9L8cB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712636606; x=1744172606;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=SuQSgPe8CBiuq2s/IXE0JGCrExX0FOBruorD6DKwhDI=;
+  b=nTI9L8cBUe4UZYDCljqedY/9k5z4cQNHJ3Hi1bouyyOjMT8aZto0tXLr
+   vgnVPkpcfMf90M0StmFh/c8xdwZ/54bUs6QSNcJaeRD3kZuzPUIHBnIzu
+   FxNSVfsL12baT7GjsLGS7HhZAF3vwlw98pY0aUNpyZr9l8test982VJ2A
+   cR9GY6a1wpezTAna7wjvWMc/Qx9fAyFujL5AJbmB2sdEREUGVgwkKgOKc
+   9Ui8ZDxOKr5j3vmRbC1SAiJ+RoPq/1+FiUIFsOCs17IEitnha0p9/vpz6
+   bGxa0EOTU7ZOeaVIla0YdDzgL5BdGVS1mTdVpjFj1GnEs27X3ofvwY6IV
+   A==;
+X-CSE-ConnectionGUID: nXg57YKOS6ek8UbTXoy9zg==
+X-CSE-MsgGUID: E+CCpb21TfeHwyDazU9tyQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="33344738"
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="33344738"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 21:23:25 -0700
+X-CSE-ConnectionGUID: OqeZOLAWSVm4WyyvVODuHw==
+X-CSE-MsgGUID: eIudRArYTrG75Ijrlc2gPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="20182985"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/AES256-SHA; 08 Apr 2024 21:23:23 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: "hpa@zytor.com" <hpa@zytor.com>, "tim.c.chen@linux.intel.com"
+ <tim.c.chen@linux.intel.com>, "linux-sgx@vger.kernel.org"
+ <linux-sgx@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "jarkko@kernel.org" <jarkko@kernel.org>, "cgroups@vger.kernel.org"
+ <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "mkoutny@suse.com" <mkoutny@suse.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>, "Mehta, Sohil"
+ <sohil.mehta@intel.com>, "tj@kernel.org" <tj@kernel.org>, "mingo@redhat.com"
+ <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "Huang, Kai"
+ <kai.huang@intel.com>
+Cc: "mikko.ylinen@linux.intel.com" <mikko.ylinen@linux.intel.com>,
+ "seanjc@google.com" <seanjc@google.com>, "anakrish@microsoft.com"
+ <anakrish@microsoft.com>, "Zhang, Bo" <zhanb@microsoft.com>,
+ "kristen@linux.intel.com" <kristen@linux.intel.com>, "yangjie@microsoft.com"
+ <yangjie@microsoft.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
+ "chrisyan@microsoft.com" <chrisyan@microsoft.com>
+Subject: Re: [PATCH v10 12/14] x86/sgx: Turn on per-cgroup EPC reclamation
+References: <20240328002229.30264-1-haitao.huang@linux.intel.com>
+ <20240328002229.30264-13-haitao.huang@linux.intel.com>
+ <d25dbe76d48a0b6c74fa09b06f1ca3fdf234a190.camel@intel.com>
+ <op.2lw8gfg2wjvjmi@hhuan26-mobl.amr.corp.intel.com>
+ <7a21c0de-ba59-4e76-8d67-70957f9db581@intel.com>
+Date: Mon, 08 Apr 2024 23:23:21 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAO9zADy4b1XkD_ZaEF+XkDCXePJLD4Lev3g7HAEGYsCHgeM+KQ@mail.gmail.com>
- <ZRoIGhMesKtmNkAM@debian.me> <CAO9zADyfaLRWB-0rdojnbFD6SUsqX+zb9JZSZUkgTC7VJN=c1A@mail.gmail.com>
- <a619df03-e0cb-48f7-840a-970b7a6f6037@quicinc.com> <CA212FEF-E0BB-483C-86CC-6986D4FBE168@kernel.org>
-In-Reply-To: <CA212FEF-E0BB-483C-86CC-6986D4FBE168@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 9 Apr 2024 00:23:05 -0400
-Message-ID: <CADnq5_PKoX9G8jD=m1WnX3nxd_+GL_xi03_Dgq8HK6Diw3=JsQ@mail.gmail.com>
-Subject: Re: 6.5.5: UBSAN: radeon_atombios.c: index 1 is out of range for type
- 'UCHAR [1]'
-To: Kees Cook <kees@kernel.org>
-Cc: Jeff Johnson <quic_jjohnson@quicinc.com>, Justin Piszcz <jpiszcz@lucidpixels.com>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux AMDGPU <amd-gfx@lists.freedesktop.org>, 
-	Alex Deucher <alexander.deucher@amd.com>, Dave Airlie <airlied@redhat.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2lx047lrwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <7a21c0de-ba59-4e76-8d67-70957f9db581@intel.com>
+User-Agent: Opera Mail/1.0 (Win32)
 
-On Mon, Apr 8, 2024 at 9:45=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
->
->
-> On April 8, 2024 5:45:29 PM PDT, Jeff Johnson <quic_jjohnson@quicinc.com>=
- wrote:
-> >On 10/1/23 17:12, Justin Piszcz wrote:
-> >>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>> [Sun Oct  1 15:59:04 2023] UBSAN: array-index-out-of-bounds in
-> >>>> drivers/gpu/drm/radeon/radeon_atombios.c:2620:43
-> >>>> [Sun Oct  1 15:59:04 2023] index 1 is out of range for type 'UCHAR [=
-1]'
-> >>>> [Sun Oct  1 15:59:04 2023] CPU: 5 PID: 1 Comm: swapper/0 Tainted: G
-> >>>>              T  6.5.5 #13 55df8de52754ef95effc50a55e9206abdea304ac
-> >>>> [Sun Oct  1 15:59:04 2023] Hardware name: Supermicro X9SRL-F/X9SRL-F=
-,
-> >>>> BIOS 3.3 11/13/2018
-> >>>> [Sun Oct  1 15:59:04 2023] Call Trace:
-> >>>> [Sun Oct  1 15:59:04 2023]  <TASK>
-> >>>> [Sun Oct  1 15:59:04 2023]  dump_stack_lvl+0x36/0x50
-> >>>> [Sun Oct  1 15:59:04 2023]  __ubsan_handle_out_of_bounds+0xc7/0x110
-> >>>> [Sun Oct  1 15:59:04 2023]  radeon_atombios_get_power_modes+0x87a/0x=
-8f0
-> >>>> [Sun Oct  1 15:59:04 2023]  radeon_pm_init+0x13a/0x7e0
-> >>>> [Sun Oct  1 15:59:04 2023]  evergreen_init+0x13d/0x3d0
-> >>>> [Sun Oct  1 15:59:04 2023]  radeon_device_init+0x60a/0xbf0
-> >>>> [Sun Oct  1 15:59:04 2023]  radeon_driver_load_kms+0xb1/0x250
-> >>>> [Sun Oct  1 15:59:04 2023]  drm_dev_register+0xfc/0x250
-> >>>> [Sun Oct  1 15:59:04 2023]  radeon_pci_probe+0xd0/0x150
-> >>>> [Sun Oct  1 15:59:04 2023]  pci_device_probe+0x97/0x130
-> >>>> [Sun Oct  1 15:59:04 2023]  really_probe+0xbe/0x2f0
-> >>>> [Sun Oct  1 15:59:04 2023]  ? __pfx___driver_attach+0x10/0x10
-> >>>> [Sun Oct  1 15:59:04 2023]  __driver_probe_device+0x6e/0x120
-> >>>> [Sun Oct  1 15:59:04 2023]  driver_probe_device+0x1a/0x90
-> >>>> [Sun Oct  1 15:59:04 2023]  __driver_attach+0xd4/0x170
-> >>>> [Sun Oct  1 15:59:04 2023]  bus_for_each_dev+0x87/0xe0
-> >>>> [Sun Oct  1 15:59:04 2023]  bus_add_driver+0xf3/0x1f0
-> >>>> [Sun Oct  1 15:59:04 2023]  driver_register+0x58/0x120
-> >>>> [Sun Oct  1 15:59:04 2023]  ? __pfx_radeon_module_init+0x10/0x10
-> >>>> [Sun Oct  1 15:59:04 2023]  do_one_initcall+0x93/0x4a0
-> >>>> [Sun Oct  1 15:59:04 2023]  kernel_init_freeable+0x301/0x580
-> >>>> [Sun Oct  1 15:59:04 2023]  ? __pfx_kernel_init+0x10/0x10
-> >>>> [Sun Oct  1 15:59:04 2023]  kernel_init+0x15/0x1b0
-> >>>> [Sun Oct  1 15:59:04 2023]  ret_from_fork+0x2f/0x50
-> >>>> [Sun Oct  1 15:59:04 2023]  ? __pfx_kernel_init+0x10/0x10
-> >>>> [Sun Oct  1 15:59:04 2023]  ret_from_fork_asm+0x1b/0x30
-> >>>> [Sun Oct  1 15:59:04 2023]  </TASK>
-> >>>> [Sun Oct  1 15:59:04 2023]
-> >>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D
-> >>>> [Sun Oct  1 15:59:04 2023] [drm] radeon: dpm initialized
-> >>>> [Sun Oct  1 15:59:04 2023] [drm] GART: num cpu pages 262144, num gpu
-> >>>> pages 262144
-> >>>> [Sun Oct  1 15:59:04 2023] [drm] enabling PCIE gen 2 link speeds,
-> >>>> disable with radeon.pcie_gen2=3D0
-> >>>> [Sun Oct  1 15:59:04 2023] [drm] PCIE GART of 1024M enabled (table a=
-t
-> >>>> 0x000000000014C000).
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: WB enabled
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: fence driver on ring=
- 0
-> >>>> use gpu addr 0x0000000040000c00
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: fence driver on ring=
- 3
-> >>>> use gpu addr 0x0000000040000c0c
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: fence driver on ring=
- 5
-> >>>> use gpu addr 0x000000000005c418
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: radeon: MSI limited =
-to 32-bit
-> >>>> [Sun Oct  1 15:59:04 2023] radeon 0000:03:00.0: radeon: using MSI.
-> >>>> [Sun Oct  1 15:59:04 2023] [drm] radeon: irq initialized.
-> >>>>
-> >>>
-> >>> Please also open an issue on freedesktop tracker [1].
-> >>>
-> >>> Thanks.
-> >>>
-> >>> [1]: https://gitlab.freedesktop.org/drm/amd/-/issues
-> >>
-> >> Issue opened: https://gitlab.freedesktop.org/drm/amd/-/issues/2894
-> >>
-> >> Regards,
-> >> Justin
-> >
-> >+Kees since I've worked with him on several of these flexible array issu=
-es.
-> >
-> >I just happened to look at kernel logs today for my ath1*k driver mainte=
-nance and see the subject issue is present on my device, running 6.9.0-rc1.=
- The freedesktop issue tracker says the issue is closed, but any fix has no=
-t landed in the upstream kernel. Is there a -next patch somewhere?
-> >
-> >[   12.105270] UBSAN: array-index-out-of-bounds in drivers/gpu/drm/radeo=
-n/radeon_atombios.c:2718:34
-> >[   12.105272] index 48 is out of range for type 'UCHAR [1]'
-> >[
-> >
-> >If there isn't really an upstream fix, I can probably supply one.
->
-> I would expect this to have fixed it:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/drivers/gpu/drm/radeon/pptable.h?id=3Dc63079c61177ba1b17fa05c6875699a36924=
-fe39
->
-> If not, there must be something else happening?
-
-This patch should silence it I think:
-https://patchwork.freedesktop.org/patch/588305/
-
-Alex
+On Mon, 08 Apr 2024 17:37:10 -0500, Huang, Kai <kai.huang@intel.com> wrote:
 
 >
-> -Kees
 >
-> --
-> Kees Cook
+> On 9/04/2024 6:03 am, Haitao Huang wrote:
+>>>>
+>>  The misc root cgroup is a static similar to sgx_cg_root. So  
+>> misc_cg_root()  won't be NULL
+>> However, based on how css_misc() was check NULL, I suppose  
+>> sgx_get_current_cg() may be NULL when cgroup is disabled (again not  
+>> 100% sure but we handle it anyway)
+>
+> Could you help to check?  Sorry I am busy on something else thus won't  
+> be able to do any actual check.
+>
+It's always non-NULL based on testing.
+
+It's hard for me to say definitely by reading the code. But IIUC  
+cgroup_disable command-line only blocks operations in /sys/fs/cgroup so  
+user space can't set up controllers and config limits, etc., for the  
+diasabled ones. Each task->cgroups would still have a non-NULL pointer to  
+the static root object for each cgroup that is enabled by KConfig, so  
+get_current_misc_cg() thus  sgx_get_current_cg() should not return NULL  
+regardless 'cgroup_disable=misc'.
+
+Maybe @Michal or @tj can confirm?
+
+Thanks
+Haitao
+
