@@ -1,451 +1,138 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2139.outbound.protection.outlook.com [40.107.20.139])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF1512C7E8;
-	Tue,  9 Apr 2024 12:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.139
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664389; cv=fail; b=kNqktrNpDYpxWv6qmvYJY8jBpKEm2EUYBo2RyHEjnLykRic+l8z6hi0NJLsdwypT51o387N8ikbA7iKrekVzTqjYz7FsXFJqDn3gx8hcZg4J+sjR5QXj95tYYgzGQxPajHSN6J8ZdloeHV0b9cTe/BR92D01j7Je+3mGJOn2+ZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664389; c=relaxed/simple;
-	bh=q5fLQTRkmLlSWtdsIVtEnUUrdNlnm6sKndE6vvrMQp4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ozrYgFheuRjA+7VZwEBtfsi9EG8+Hc6hzCAzoJnKuQ/NQk1US/rmqpBrKaWyDEkB51gc8HqiZFUIQ+b6MmWCwTqtsQS486PyBpTWMQEeZToL4Y7Cs0RX1qI40awS8CdKcau1fXtY2pNbUHb8ORbZhcxnAN0EtUeJYONwclUGIJ8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bachmann.info; spf=pass smtp.mailfrom=bachmann.info; dkim=pass (1024-bit key) header.d=bachmann.info header.i=@bachmann.info header.b=OG3cRUTt; arc=fail smtp.client-ip=40.107.20.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bachmann.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bachmann.info
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32864129E9E
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 12:07:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712664428; cv=none; b=q5/6z0WDzcCJ3/xDaCA/GzFT0LlHvb2TpGM/YlEMVcs7450IMDiskT8KtQVeTJhBUFTMjaXXhBeGgN70siMByOMbeZ+BP/0Cvni1ILET7on/ZX+LbUWh31IgcAOb4txfThO46W0CyvY1H6+kJtIprAS56uQRl/XfLzOLSufy3ig=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712664428; c=relaxed/simple;
+	bh=dEqzAVisY4aRigVueLVKUe0ncxS5i6fSVpRxQ6Ued50=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BkOEbP8Yblv/mRx48mccxkIB07F1Qy12n6ltIt/jW+URC8JC4KDDFMvHD0fGXcwvIX7von+HqJ3oS78bKf6kfUdAFUgtiqfBU7oZ4iP17fuyHJZjRIFvNSOE6M3du3iUIQvCKn8R9MaAP6L3zD2So76EOP4/N0w1sdEHLtriBR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SeOQL3cE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bachmann.info header.i=@bachmann.info header.b="OG3cRUTt"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gMGqnjFoKvygYAl2l2rsMPX2FivU8MyCm/cveTqj0SycJ0tNFOw9a+F797utkDOz2yLy3Tn6uuZBUIh20CWJ4AUYTAn6WD5wdMeIUXTLqK3DHS/L76wYlAesWajzLi9C3yRNiRt3tJXlffyCUhpsrJFV10oK0m7ZRKAW8ltwFKzVH8g6j+kvpIthi74cmtZtQG1ZFpAvEgP92hwzCrRPLsROXJmx4INGCF1GkI0Krg3JbpQABO0rTo4+bPyEpeMF+3iMUA7RXfZJ8Kt9s7yAeVxKXTrc5ZPUmiSaNA3z0aPEPsLfSyRENjq/196QSQGg/7HmoFCAVhKsU7K1KUHG6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0/tEySYXQu4joJnJd8l8Dy0Y9QiTT4c/JR7NO7UTfV8=;
- b=Upnisrbl9ZF87DD5Qh9HiIujmXf4bq84hOx0gQuq00iK2NceAphHSrCxff3EuKAGlocwu4kNKdylHdRAF74pLR5LtJe53ClWIpAcHwi0gGdHHKEsNGTHSURHMifTlZw7qCD/uROD4Djb/yWjRVEEmcQpgK7O76R4tZdhAYOP7icDW9G883PVvcEg3i8SnIX67VJNdtqOxQZmWtYcoZZ1HXBwFwUh7vXB0rkhK/BByDMT4/3u2ITWG7NWXjYQyatCXtFRGalJ7VdTxrbpyNBJNpIUn7huoIPmUuXksX/koZ9INtAcmZRtgyCL0pzYJbXrVDsRBpwXMQoNaD/gos5UKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 185.67.228.71) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=bachmann.info; dmarc=fail (p=quarantine sp=quarantine pct=100)
- action=quarantine header.from=bachmann.info; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bachmann.info;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0/tEySYXQu4joJnJd8l8Dy0Y9QiTT4c/JR7NO7UTfV8=;
- b=OG3cRUTthpnMgal+hAuzkVO2R9iD5pmCmt0Yd/J5zauzhxsi1u/iNDGfOrx7DQhbNz2H/ZETCqTOWNQBIDxssDro1OC/7afxRVW1kQrMBloxhZiwp3ckZEdthyKTRoWREBAGGbqsPhe+UmSMB51vdmtI+9rQjsZ66nXWfeCaFyw=
-Received: from AS9PR06CA0309.eurprd06.prod.outlook.com (2603:10a6:20b:45b::11)
- by AS4PR05MB9695.eurprd05.prod.outlook.com (2603:10a6:20b:4f1::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 9 Apr
- 2024 12:06:23 +0000
-Received: from AMS0EPF0000019C.eurprd05.prod.outlook.com
- (2603:10a6:20b:45b:cafe::59) by AS9PR06CA0309.outlook.office365.com
- (2603:10a6:20b:45b::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.36 via Frontend
- Transport; Tue, 9 Apr 2024 12:06:23 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
- 185.67.228.71) smtp.mailfrom=bachmann.info; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=bachmann.info;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- bachmann.info discourages use of 185.67.228.71 as permitted sender)
-Received: from webmail.bachmann.info (185.67.228.71) by
- AMS0EPF0000019C.mail.protection.outlook.com (10.167.16.248) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Tue, 9 Apr 2024 12:06:23 +0000
-Received: from ATFKPCLXPAFO.bachmann.at (10.204.124.241) by
- atfkex03.bachmann.at (10.10.10.31) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 9 Apr 2024 14:06:22 +0200
-From: Pascal FONTAIN <Pascal.FONTAIN@bachmann.info>
-To: <linux-kernel@vger.kernel.org>, Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, Sumit Semwal
-	<sumit.semwal@linaro.org>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>
-CC: <afd@ti.com>, Pascal Fontain <pascal.fontain@bachmann.info>,
-	<linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linaro-mm-sig@lists.linaro.org>
-Subject: [PATCH v3 2/2] misc: sram: Add DMA-BUF Heap exporting of SRAM areas
-Date: Tue, 9 Apr 2024 14:06:05 +0200
-Message-ID: <20240409120605.4138472-3-Pascal.FONTAIN@bachmann.info>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240409120605.4138472-1-Pascal.FONTAIN@bachmann.info>
-References: <20240409120605.4138472-1-Pascal.FONTAIN@bachmann.info>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SeOQL3cE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712664425;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HkFcR2uVpCjKDxBhnTR7ZuYMiqqDHFNAcHHxyhfV8EE=;
+	b=SeOQL3cE78t4xiBys2EM2UKlkFAryym4M54utUClwJxeH4sg6xLlcqhK3KBYPw4Q123R15
+	SocP4SI8arME4ySvoA3L5Ks1LNAC7z4+KNlXZb2jF/PuikbqK2d6KwNhY2od+En9eFOJWo
+	SiQHiCNMu4Y787bw8Pzmdtgvf+E5/D0=
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
+ [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-215-BN0629diNv6I3SIevcaRsQ-1; Tue, 09 Apr 2024 08:07:04 -0400
+X-MC-Unique: BN0629diNv6I3SIevcaRsQ-1
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-5aa1b6f6c0fso836924eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 05:07:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712664423; x=1713269223;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HkFcR2uVpCjKDxBhnTR7ZuYMiqqDHFNAcHHxyhfV8EE=;
+        b=H83euj7hL+cqmmkmpOxoNMkEVo0dG+v4pp4DpiMXXd3M7jGrUf3cUmZgFQBJejKCmI
+         LjNFHU+iKqaTVDao77HXbk3fe6vcvLJHy7tUcw8ce6mqb0Vpx5lfODGB62FeSlcM3Fav
+         PFbY+KaeaJqUdfookucaBaHwksTZZjSXKxPZAFa8PrlopDqaO+JJxVFKNiSWCe9IU3Fn
+         6htpi9u9nXW68GBfAlsD2w9UJdaJJ1wziDSvUUgT6qdqs7TRrQMWHBflRv0nT2icxrlw
+         d6Axo8Q9RyX6FzuD+uS7rn7m4r/RsQkosDESfR00fDJZhw0Bs0JC0x+/5GShpycCk0Iv
+         pqQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSz0BPA9YUg6lnNSWOcYqV0WqnfQOupFen1tFg9R04m9YPXKcmCPVj3oN+JXG7LWY3rAmaX/S0NgB5nQwbQ7kIf0AGlM5G5jYBc+UR
+X-Gm-Message-State: AOJu0Yxb/svDCXP84DTj5DgZcEoemQ6gZ6GZLi1Ki2GOahDjCRJDcEyr
+	kBzim+v8OJlbG5M3SNhTvubUuQBFabXC+TqApBaXVOel/ZA0SKC4sbVe0PdrFESLB6oYCXZ+wF9
+	zJHnnQsiiAj5AAxbV8wwkdipy5jH9gSrYJWtXi10iIey82IRmeMxAXKxeSLHDDw==
+X-Received: by 2002:a05:6870:1651:b0:220:bd4d:674d with SMTP id c17-20020a056870165100b00220bd4d674dmr12011962oae.5.1712664423602;
+        Tue, 09 Apr 2024 05:07:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrN5ENLVbSZMW4W4CJ9xO7Y0P9AkyPe6V8i2fZEJ34nveaznGa9nVEA0vvlaoe76fryf7Fmw==
+X-Received: by 2002:a05:6870:1651:b0:220:bd4d:674d with SMTP id c17-20020a056870165100b00220bd4d674dmr12011947oae.5.1712664423318;
+        Tue, 09 Apr 2024 05:07:03 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-244-144.dyn.eolo.it. [146.241.244.144])
+        by smtp.gmail.com with ESMTPSA id po27-20020a05620a385b00b0078d5e60b52esm2787845qkn.114.2024.04.09.05.07.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 05:07:02 -0700 (PDT)
+Message-ID: <d9fde608268413dda70bb6ef328b8d823d568f74.camel@redhat.com>
+Subject: Re: [net-next PATCH] octeontx2-pf: Add support for offload tc with
+ skbedit mark action
+From: Paolo Abeni <pabeni@redhat.com>
+To: Geetha sowjanya <gakula@marvell.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com, 
+	sgoutham@marvell.com, sbhatta@marvell.com, hkelam@marvell.com
+Date: Tue, 09 Apr 2024 14:06:59 +0200
+In-Reply-To: <20240408072638.26674-1-gakula@marvell.com>
+References: <20240408072638.26674-1-gakula@marvell.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: atfkex03.bachmann.at (10.10.10.31) To atfkex03.bachmann.at
- (10.10.10.31)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF0000019C:EE_|AS4PR05MB9695:EE_
-X-MS-Office365-Filtering-Correlation-Id: a2b44e58-01d2-4b5d-087b-08dc588d7993
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	u3gjCNCT+ykSwwkLfH8LW9024Sz9SHzWl5xGx0v3FGp+m75183bLlA5dkVX1Cu5IvLYaZ2UvarZ0WyQK2OTnE8yDBJWVOAhCe5olQvdjIRa5LYTcLKXLoJD3ZjUTg173G1MFWEFo2VXapw6698IOWIa8byKKUoU4anhyZqBrSZ0n9fUL0fAtVM6WTwHOTsOtdcOHohhL2jfins0PCJFMFnqN7ssqLb0vENQ7WZi0y51VVjUX9voqaoeS3BkIH4l4fff0UiyRHxz0cpuds95fUe/75xKxd5h42SGTcRfQG3xYhWO9HnlOj6BMXHg0+8BLzxwXBE9RXiQ58Ml2rDgziidy1FHVz0RSuvNBaBxWM/5bZLSQ+xS0dUU+sRblcmTymb1P51WP6N5UHyRzslq9E/Q3kFWEzHN8U9+HEBxu6LifJcYViCXFEwXaKaCqpQepCid2dt/imsOF9prsbMU4ci85vV1L23EwCbsDObrUDyrtXNPd57MGPpN/S6DVWTJAon3PoNIMt7vKq9S/7/rXLJDop9ebioDLDFxpN7ufWoUMoM3aKzSyXjYnfp0xC9DwJfHahA4BCj8ICauxDQj7fm0sEs1/oj6YZ5VuaO25GqyJdDENAvlDRVAr9RAhMhmPeOw1J7GLtWgftraaWy1zMkpoeiuckeBZoS+5BNoEio+k6HMsxMEPx18Mbl+QgkYgRGnwVpBBbGkoYJ6d3QpbrA==
-X-Forefront-Antispam-Report:
-	CIP:185.67.228.71;CTRY:AT;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:webmail.bachmann.info;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(376005)(82310400014)(1800799015);DIR:OUT;SFP:1102;
-X-OriginatorOrg: bachmann.info
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2024 12:06:23.2298
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2b44e58-01d2-4b5d-087b-08dc588d7993
-X-MS-Exchange-CrossTenant-Id: e3bace4d-d2e7-4d8f-afb8-152509ee3f1a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e3bace4d-d2e7-4d8f-afb8-152509ee3f1a;Ip=[185.67.228.71];Helo=[webmail.bachmann.info]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF0000019C.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR05MB9695
 
-From: Andrew Davis <afd@ti.com>
+On Mon, 2024-04-08 at 12:56 +0530, Geetha sowjanya wrote:
+> Support offloading of skbedit mark action.
+>=20
+> For example, to mark with 0x0008, with dest ip 60.60.60.2 on eth2
+> interface:
+>=20
+>  # tc qdisc add dev eth2 ingress
+>  # tc filter add dev eth2 ingress protocol ip flower \
+>       dst_ip 60.60.60.2 action skbedit mark 0x0008 skip_sw
+>=20
+> Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+> ---
+>  .../net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c  |  2 ++
+>  .../ethernet/marvell/octeontx2/nic/otx2_common.h    |  2 ++
+>  .../net/ethernet/marvell/octeontx2/nic/otx2_tc.c    | 13 +++++++++++++
+>  .../net/ethernet/marvell/octeontx2/nic/otx2_txrx.c  |  3 +++
+>  .../net/ethernet/marvell/octeontx2/nic/otx2_txrx.h  |  3 +++
+>  5 files changed, 23 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c b/dri=
+vers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+> index c75669c8fde7..6188921e9a20 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc_fs.c
+> @@ -1183,6 +1183,8 @@ static int npc_update_rx_entry(struct rvu *rvu, str=
+uct rvu_pfvf *pfvf,
+>  			action.pf_func =3D target;
+>  			action.op =3D NIX_RX_ACTIONOP_UCAST;
+>  		}
+> +		if (req->match_id)
+> +			action.match_id =3D req->match_id;
+>  	}
+> =20
+>  	entry->action =3D *(u64 *)&action;
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h b/d=
+rivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+> index 06910307085e..815ae13c371c 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.h
+> @@ -363,6 +363,7 @@ struct otx2_flow_config {
+>  	struct list_head	flow_list;
+>  	u32			dmacflt_max_flows;
+>  	u16                     max_flows;
+> +	u16			mark_flows;
 
-This new export type exposes to userspace the SRAM area as a DMA-BUF
-Heap,
-this allows for allocations of DMA-BUFs that can be consumed by various
-DMA-BUF supporting devices.
+Since the above fields is used as (reference) counter for the
+OTX2_FLAG_TC_MARK_ENABLED bit, what about using a refcount_t, so you
+gain sanity checks for free?
 
-Signed-off-by: Andrew Davis <afd@ti.com>
-Tested-by: Pascal Fontain <pascal.fontain@bachmann.info>
----
- drivers/misc/Kconfig         |   7 +
- drivers/misc/Makefile        |   1 +
- drivers/misc/sram-dma-heap.c | 246 +++++++++++++++++++++++++++++++++++
- drivers/misc/sram.c          |   6 +
- drivers/misc/sram.h          |  16 +++
- 5 files changed, 276 insertions(+)
- create mode 100644 drivers/misc/sram-dma-heap.c
+Thanks!
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 9e4ad4d61f06..e6674e913168 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -448,6 +448,13 @@ config SRAM
- config SRAM_EXEC
- 	bool
- 
-+config SRAM_DMA_HEAP
-+	bool "Export on-chip SRAM pools using DMA-Heaps"
-+	depends on DMABUF_HEAPS && SRAM
-+	help
-+	  This driver allows the export of on-chip SRAM marked as both pool
-+	  and exportable to userspace using the DMA-Heaps interface.
-+
- config DW_XDATA_PCIE
- 	depends on PCI
- 	tristate "Synopsys DesignWare xData PCIe driver"
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index cdc6405584e3..63effdde5163 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_VMWARE_VMCI)	+= vmw_vmci/
- obj-$(CONFIG_LATTICE_ECP3_CONFIG)	+= lattice-ecp3-config.o
- obj-$(CONFIG_SRAM)		+= sram.o
- obj-$(CONFIG_SRAM_EXEC)		+= sram-exec.o
-+obj-$(CONFIG_SRAM_DMA_HEAP)	+= sram-dma-heap.o
- obj-$(CONFIG_GENWQE)		+= genwqe/
- obj-$(CONFIG_ECHO)		+= echo/
- obj-$(CONFIG_CXL_BASE)		+= cxl/
-diff --git a/drivers/misc/sram-dma-heap.c b/drivers/misc/sram-dma-heap.c
-new file mode 100644
-index 000000000000..e5a0bafe8cb9
---- /dev/null
-+++ b/drivers/misc/sram-dma-heap.c
-@@ -0,0 +1,246 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SRAM DMA-Heap userspace exporter
-+ *
-+ * Copyright (C) 2019-2022 Texas Instruments Incorporated - https://www.ti.com/
-+ *	Andrew Davis <afd@ti.com>
-+ */
-+
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/genalloc.h>
-+#include <linux/io.h>
-+#include <linux/mm.h>
-+#include <linux/scatterlist.h>
-+#include <linux/slab.h>
-+#include <linux/dma-buf.h>
-+#include <linux/dma-heap.h>
-+
-+#include "sram.h"
-+
-+struct sram_dma_heap {
-+	struct dma_heap *heap;
-+	struct gen_pool *pool;
-+};
-+
-+struct sram_dma_heap_buffer {
-+	struct gen_pool *pool;
-+	struct list_head attachments;
-+	struct mutex attachments_lock;
-+	unsigned long len;
-+	void *vaddr;
-+	phys_addr_t paddr;
-+};
-+
-+struct dma_heap_attachment {
-+	struct device *dev;
-+	struct sg_table *table;
-+	struct list_head list;
-+};
-+
-+static int dma_heap_attach(struct dma_buf *dmabuf,
-+			   struct dma_buf_attachment *attachment)
-+{
-+	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-+	struct dma_heap_attachment *a;
-+	struct sg_table *table;
-+
-+	a = kzalloc(sizeof(*a), GFP_KERNEL);
-+	if (!a)
-+		return -ENOMEM;
-+
-+	table = kmalloc(sizeof(*table), GFP_KERNEL);
-+	if (!table) {
-+		kfree(a);
-+		return -ENOMEM;
-+	}
-+	if (sg_alloc_table(table, 1, GFP_KERNEL)) {
-+		kfree(table);
-+		kfree(a);
-+		return -ENOMEM;
-+	}
-+	sg_set_page(table->sgl, pfn_to_page(PFN_DOWN(buffer->paddr)), buffer->len, 0);
-+
-+	a->table = table;
-+	a->dev = attachment->dev;
-+	INIT_LIST_HEAD(&a->list);
-+
-+	attachment->priv = a;
-+
-+	mutex_lock(&buffer->attachments_lock);
-+	list_add(&a->list, &buffer->attachments);
-+	mutex_unlock(&buffer->attachments_lock);
-+
-+	return 0;
-+}
-+
-+static void dma_heap_detatch(struct dma_buf *dmabuf,
-+			     struct dma_buf_attachment *attachment)
-+{
-+	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-+	struct dma_heap_attachment *a = attachment->priv;
-+
-+	mutex_lock(&buffer->attachments_lock);
-+	list_del(&a->list);
-+	mutex_unlock(&buffer->attachments_lock);
-+
-+	sg_free_table(a->table);
-+	kfree(a->table);
-+	kfree(a);
-+}
-+
-+static struct sg_table *dma_heap_map_dma_buf(struct dma_buf_attachment *attachment,
-+					     enum dma_data_direction direction)
-+{
-+	struct dma_heap_attachment *a = attachment->priv;
-+	struct sg_table *table = a->table;
-+
-+	/*
-+	 * As this heap is backed by uncached SRAM memory we do not need to
-+	 * perform any sync operations on the buffer before allowing device
-+	 * domain access. For this reason we use SKIP_CPU_SYNC and also do
-+	 * not use or provide begin/end_cpu_access() dma-buf functions.
-+	 */
-+	if (!dma_map_sg_attrs(attachment->dev, table->sgl, table->nents,
-+			      direction, DMA_ATTR_SKIP_CPU_SYNC))
-+		return ERR_PTR(-ENOMEM);
-+
-+	return table;
-+}
-+
-+static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
-+				   struct sg_table *table,
-+				   enum dma_data_direction direction)
-+{
-+	dma_unmap_sg_attrs(attachment->dev, table->sgl, table->nents,
-+			   direction, DMA_ATTR_SKIP_CPU_SYNC);
-+}
-+
-+static void dma_heap_dma_buf_release(struct dma_buf *dmabuf)
-+{
-+	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-+
-+	gen_pool_free(buffer->pool, (unsigned long)buffer->vaddr, buffer->len);
-+	kfree(buffer);
-+}
-+
-+static int dma_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
-+{
-+	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-+	int ret;
-+
-+	/* SRAM mappings are not cached */
-+	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-+
-+	ret = vm_iomap_memory(vma, buffer->paddr, buffer->len);
-+	if (ret)
-+		pr_err("Could not map buffer to userspace\n");
-+
-+	return ret;
-+}
-+
-+static int dma_heap_vmap(struct dma_buf *dmabuf, struct iosys_map *map)
-+{
-+	struct sram_dma_heap_buffer *buffer = dmabuf->priv;
-+
-+	iosys_map_set_vaddr(map, buffer->vaddr);
-+
-+	return 0;
-+}
-+
-+static const struct dma_buf_ops sram_dma_heap_buf_ops = {
-+	.attach = dma_heap_attach,
-+	.detach = dma_heap_detatch,
-+	.map_dma_buf = dma_heap_map_dma_buf,
-+	.unmap_dma_buf = dma_heap_unmap_dma_buf,
-+	.release = dma_heap_dma_buf_release,
-+	.mmap = dma_heap_mmap,
-+	.vmap = dma_heap_vmap,
-+};
-+
-+static struct dma_buf *sram_dma_heap_allocate(struct dma_heap *heap,
-+					      unsigned long len,
-+					      unsigned long fd_flags,
-+					      unsigned long heap_flags)
-+{
-+	struct sram_dma_heap *sram_dma_heap = dma_heap_get_drvdata(heap);
-+	struct sram_dma_heap_buffer *buffer;
-+
-+	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+	struct dma_buf *dmabuf;
-+	int ret;
-+
-+	buffer = kzalloc(sizeof(*buffer), GFP_KERNEL);
-+	if (!buffer)
-+		return ERR_PTR(-ENOMEM);
-+	buffer->pool = sram_dma_heap->pool;
-+	INIT_LIST_HEAD(&buffer->attachments);
-+	mutex_init(&buffer->attachments_lock);
-+	buffer->len = len;
-+
-+	buffer->vaddr = (void *)gen_pool_alloc(buffer->pool, buffer->len);
-+	if (!buffer->vaddr) {
-+		ret = -ENOMEM;
-+		goto free_buffer;
-+	}
-+
-+	buffer->paddr = gen_pool_virt_to_phys(buffer->pool, (unsigned long)buffer->vaddr);
-+	if (buffer->paddr == -1) {
-+		ret = -ENOMEM;
-+		goto free_pool;
-+	}
-+
-+	/* create the dmabuf */
-+	exp_info.exp_name = dma_heap_get_name(heap);
-+	exp_info.ops = &sram_dma_heap_buf_ops;
-+	exp_info.size = buffer->len;
-+	exp_info.flags = fd_flags;
-+	exp_info.priv = buffer;
-+	dmabuf = dma_buf_export(&exp_info);
-+	if (IS_ERR(dmabuf)) {
-+		ret = PTR_ERR(dmabuf);
-+		goto free_pool;
-+	}
-+
-+	return dmabuf;
-+
-+free_pool:
-+	gen_pool_free(buffer->pool, (unsigned long)buffer->vaddr, buffer->len);
-+free_buffer:
-+	kfree(buffer);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+static struct dma_heap_ops sram_dma_heap_ops = {
-+	.allocate = sram_dma_heap_allocate,
-+};
-+
-+int sram_add_dma_heap(struct sram_dev *sram,
-+		      struct sram_reserve *block,
-+		      phys_addr_t start,
-+		      struct sram_partition *part)
-+{
-+	struct sram_dma_heap *sram_dma_heap;
-+	struct dma_heap_export_info exp_info;
-+
-+	dev_info(sram->dev, "Exporting SRAM Heap '%s'\n", block->label);
-+
-+	sram_dma_heap = kzalloc(sizeof(*sram_dma_heap), GFP_KERNEL);
-+	if (!sram_dma_heap)
-+		return -ENOMEM;
-+	sram_dma_heap->pool = part->pool;
-+
-+	exp_info.name = kasprintf(GFP_KERNEL, "sram_%s", block->label);
-+	exp_info.ops = &sram_dma_heap_ops;
-+	exp_info.priv = sram_dma_heap;
-+	sram_dma_heap->heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(sram_dma_heap->heap)) {
-+		int ret = PTR_ERR(sram_dma_heap->heap);
-+
-+		kfree(sram_dma_heap);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index 632f90d9bcea..643c77598beb 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -120,6 +120,12 @@ static int sram_add_partition(struct sram_dev *sram, struct sram_reserve *block,
- 		ret = sram_add_pool(sram, block, start, part);
- 		if (ret)
- 			return ret;
-+
-+		if (block->export) {
-+			ret = sram_add_dma_heap(sram, block, start, part);
-+			if (ret)
-+				return ret;
-+		}
- 	}
- 	if (block->export) {
- 		ret = sram_add_export(sram, block, start, part);
-diff --git a/drivers/misc/sram.h b/drivers/misc/sram.h
-index 397205b8bf6f..062bdd25fa06 100644
---- a/drivers/misc/sram.h
-+++ b/drivers/misc/sram.h
-@@ -60,4 +60,20 @@ static inline int sram_add_protect_exec(struct sram_partition *part)
- 	return -ENODEV;
- }
- #endif /* CONFIG_SRAM_EXEC */
-+
-+#ifdef CONFIG_SRAM_DMA_HEAP
-+int sram_add_dma_heap(struct sram_dev *sram,
-+		      struct sram_reserve *block,
-+		      phys_addr_t start,
-+		      struct sram_partition *part);
-+#else
-+static inline int sram_add_dma_heap(struct sram_dev *sram,
-+				    struct sram_reserve *block,
-+				    phys_addr_t start,
-+				    struct sram_partition *part)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_SRAM_DMA_HEAP */
-+
- #endif /* __SRAM_H */
--- 
-2.39.2
+Paolo
 
