@@ -1,291 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E63F8F77
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 14:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C850260
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 14:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712673576; cv=none; b=nyygqFLaoMiTbPXnc5+9zajV7rjkA6XH3nqhjqjcqlDPCBgsacJ7R+nR1PvHJ6ccAcueivhmqeBrMoZaAgO949noURn97tnGI71rzGkI5pliWAESTRBuZQRFGJE+qbYkIuQsbwQaaKwen6pegKvXHuafTX/40rGfk7ZZCsZonzA=
+	t=1712673583; cv=none; b=sU9u2shb/i/+1aSU195Njn6OOtbnow5YizKGc3qrek2eK0Vlqp4w1jBfCx3yLlnT/eV4szqaJg8WaAB1wWryD3HzfcD2nBczQznzHcwPGj5XMqRIT88rQrWDzy8PvcCzvODsZ48P38EIROYz+J6dDD8F139otX5Ds3IWdgKkeng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712673576; c=relaxed/simple;
-	bh=UupAhcVDZ+YPXdJA9ZfJYnp9ZzmUBNiEeIsHXJvdxUM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=difJBWO8JqhS0lugWqLXo0HI50hJaajbByffUsjkEp+NbrSuCi+OK4s6UhZftHaAXZjPtumxA7HVMqzhFsZbIQueJbZK8ABZMzrJazO47qfrm/ik8WmCoBzw23KrYbMhRS9swHo7R74X3Pxr1hc3T8Yrl4iQJMO2rGn+39nb97A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9CEF139F;
-	Tue,  9 Apr 2024 07:40:03 -0700 (PDT)
-Received: from [10.1.33.185] (XHFQ2J9959.cambridge.arm.com [10.1.33.185])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78BDA3F766;
-	Tue,  9 Apr 2024 07:39:30 -0700 (PDT)
-Message-ID: <e7af023f-39cd-4aa4-aa13-dd6aabea4cdf@arm.com>
-Date: Tue, 9 Apr 2024 15:39:29 +0100
+	s=arc-20240116; t=1712673583; c=relaxed/simple;
+	bh=rYRdF5eSZvDHg6P/v4LaA4shStXXiArZZpKdGUCyTq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D9n4LeJshxLPs6/pqdJmuHyhFx2ZvBWclBV0N28unSN/9iWWqXKzoe1FiwWJog1Qxc9dW6J6U8XQXPUqZxDSfT5x8ITwJjtGQ1wxEH/CXwOtZKr2gFfp4fW2rOcxUMJY6DI16MEEU4fWS4haE2Fsz5WaN8Sbj1KB8yJ7vkJyESM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CvrAYalZ; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CvrAYalZ"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516dd07d373so2289716e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 07:39:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712673580; x=1713278380; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sr9qt0BbADGa89YCYwT+Bbk+dGM/AHSN1tyvYdeWW7E=;
+        b=CvrAYalZ7tKWU+Xa7Lmfm7mkZmwJpyAkx1B/SBNTWIm/8HqvppMWwhg37j3mZ8DenL
+         KfFnyMpw/gDbHkc9K4aY9snbI+30RqNdM5C9sN/Y9G06DTAW6sWHIJ1oQU2TVbIVc1AU
+         MoPNFStgk3GF/rG6k97JR0bSBxI6C56EYjMft8vO1THw/h+6HAAdfh85Z1zywVmU4mZq
+         icz8VA8P46qYN2xI+jmKRvbWUDrJCHTvexQv3d33Zq3P4m9R/TOsrSajdSGWOLFES5a6
+         t4KMVHBPMg08qsbCf3LdiH68z/vWSUJrYQ+7i9XkH2oZrj1JG6KsAcsKUqLjLHPGsxn7
+         qVOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712673580; x=1713278380;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sr9qt0BbADGa89YCYwT+Bbk+dGM/AHSN1tyvYdeWW7E=;
+        b=BRN1IehtkV1JaIoKYHyoTEKLWDE4m2bu5aBTWuq62Vh3wcK/R8u234/lWNos41Pf4C
+         fFov6azbpZZWusoAN5nYeAAYYXLp29+FFjAgdHXZSeI+KXtaOkBhA34Rv/VX5AS10mLg
+         VCtz1KZY3m9+nfeLv2a/IzmKfcCtn1r0W4tWqaXHDo3u8etpfikB+gsGNIIlimgSHOVg
+         m4Qnjwpo2+F4UyAyC7+hZlLS2vjy93P0jWo9Ogyi2F2nzllgNbSSnS2v3EvL8AH+pcU3
+         22Tey3Ti2fHqFAYpcIoNKBzJGcIeIKojmJXgt+D8pJ8rjugwhajUAb8wZT8K8j4D18LC
+         WcHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUo9XmOXNc6rBGbvh1LN9bzm6az8ZipLUVtdA1Y5K3Z8Z3Ejm89RZTTgyLNMCeCpDMSar8LdvbPMCWlpbgcS1ap/nBX+/eq7fWr3/oc
+X-Gm-Message-State: AOJu0YzMIKRIL/ulOSKbqf2X9UP37EMuVViKY9kLUDdj4x0inWoGGv6i
+	x6GDIaDXKDSeVZErTzCVJbG+n4EfFxGyR+k0ebmPqSMSzyTsqzfHZT3BMAWuoZA=
+X-Google-Smtp-Source: AGHT+IFhmq1jH49fs/wNDP2DWefgXDYDOHbmwLUoOSnTyawe10DQy5StJWx9djPeA8rjMN8setjnjA==
+X-Received: by 2002:ac2:59d0:0:b0:516:cd83:71ce with SMTP id x16-20020ac259d0000000b00516cd8371cemr7651841lfn.31.1712673579685;
+        Tue, 09 Apr 2024 07:39:39 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (dzyjmhyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a00e:a300::227])
+        by smtp.gmail.com with ESMTPSA id i16-20020ac25230000000b00513d13ede82sm1561676lfl.147.2024.04.09.07.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 07:39:39 -0700 (PDT)
+Date: Tue, 9 Apr 2024 17:39:37 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+	dri-devel@lists.freedesktop.org, seanpaul@chromium.org, swboyd@chromium.org, 
+	quic_jesszhan@quicinc.com, quic_bjorande@quicinc.com, johan@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] drm/msm/dp: call dp_hpd_plug_handle()/unplug_handle()
+ directly for external HPD
+Message-ID: <d4gcj4dg5vv5wd72kj7lpzs5cy7b2a4gh4t4lixuigwfkpwt3s@4toc3fpqycwi>
+References: <20240406031548.25829-1-quic_abhinavk@quicinc.com>
+ <ale6wbwzkfagcg2q6glb4vsxu3pthhkk3tquv2ixlatbdryqvh@xscsq2h6emho>
+ <01cb1c0d-a801-37f9-2f55-2bbd8d3a68b9@quicinc.com>
+ <CAA8EJprzH0LiWNx9Udt6og3G063odY6ccvaAgsNS1r3zG8TmdA@mail.gmail.com>
+ <905222ad-612a-3eaf-d966-23c89c99e1f0@quicinc.com>
+ <CAA8EJpp6Lc7sc5fnKp+O8TYdaywiE+dZ=YJin351s=r5rxi+Kw@mail.gmail.com>
+ <covjipaso7bhgiifb62vdh24dpadr7kdypl2dleg7a2vc4jwjd@s4ci5xc6qpa3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Speed up boot with faster linear map creation
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>,
- Itaru Kitayama <itaru.kitayama@linux.dev>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <Mark.Rutland@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
- Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240404143308.2224141-1-ryan.roberts@arm.com>
- <Zg+qwooaWFNL7KIg@vm3> <fd4aed3a-42be-44e0-b3bb-12f77c5911a1@arm.com>
- <ZhEkif45F0aVvKPx@vm3> <533adb77-8c2b-40db-84cb-88de77ab92bb@arm.com>
- <FCDCBCEE-7D97-4769-AB95-7294A9CE18E0@linux.dev>
- <1d5abb48-08a8-4d83-a681-6915bc7b6907@arm.com>
- <268FBD1C-B102-4726-A7F4-1125123BDA7A@linux.dev>
- <5e4dc2fe-2945-4fc5-a533-c8b2d04668a0@redhat.com>
- <d02959bc-84d8-4c74-a0da-9ad1159502e1@redhat.com>
- <c0d66e0d-f492-49ba-b79a-9215317bd65f@redhat.com>
- <b5e68f81-f917-4f82-8e86-a691a0721291@arm.com>
- <d1aca51c-2433-4e06-a3ef-842e27371db6@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <d1aca51c-2433-4e06-a3ef-842e27371db6@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <covjipaso7bhgiifb62vdh24dpadr7kdypl2dleg7a2vc4jwjd@s4ci5xc6qpa3>
 
-On 09/04/2024 15:29, David Hildenbrand wrote:
-> On 09.04.24 16:13, Ryan Roberts wrote:
->> On 09/04/2024 12:51, David Hildenbrand wrote:
->>> On 09.04.24 13:29, David Hildenbrand wrote:
->>>> On 09.04.24 13:22, David Hildenbrand wrote:
->>>>> On 09.04.24 12:13, Itaru Kitayama wrote:
->>>>>>
->>>>>>
->>>>>>> On Apr 9, 2024, at 19:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>>
->>>>>>> On 09/04/2024 01:10, Itaru Kitayama wrote:
->>>>>>>> Hi Ryan,
->>>>>>>>
->>>>>>>>> On Apr 8, 2024, at 16:30, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>>>>
->>>>>>>>> On 06/04/2024 11:31, Itaru Kitayama wrote:
->>>>>>>>>> Hi Ryan,
->>>>>>>>>>
->>>>>>>>>> On Sat, Apr 06, 2024 at 09:32:34AM +0100, Ryan Roberts wrote:
->>>>>>>>>>> Hi Itaru,
->>>>>>>>>>>
->>>>>>>>>>> On 05/04/2024 08:39, Itaru Kitayama wrote:
->>>>>>>>>>>> On Thu, Apr 04, 2024 at 03:33:04PM +0100, Ryan Roberts wrote:
->>>>>>>>>>>>> Hi All,
->>>>>>>>>>>>>
->>>>>>>>>>>>> It turns out that creating the linear map can take a significant
->>>>>>>>>>>>> proportion of
->>>>>>>>>>>>> the total boot time, especially when rodata=full. And most of the
->>>>>>>>>>>>> time is spent
->>>>>>>>>>>>> waiting on superfluous tlb invalidation and memory barriers. This
->>>>>>>>>>>>> series reworks
->>>>>>>>>>>>> the kernel pgtable generation code to significantly reduce the number
->>>>>>>>>>>>> of those
->>>>>>>>>>>>> TLBIs, ISBs and DSBs. See each patch for details.
->>>>>>>>>>>>>
->>>>>>>>>>>>> The below shows the execution time of map_mem() across a couple of
->>>>>>>>>>>>> different
->>>>>>>>>>>>> systems with different RAM configurations. We measure after applying
->>>>>>>>>>>>> each patch
->>>>>>>>>>>>> and show the improvement relative to base (v6.9-rc2):
->>>>>>>>>>>>>
->>>>>>>>>>>>>                    | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere
->>>>>>>>>>>>> Altra
->>>>>>>>>>>>>                    | VM, 16G     | VM, 64G     | VM, 256G    | Metal,
->>>>>>>>>>>>> 512G
->>>>>>>>>>>>> ---------------|-------------|-------------|-------------|-------------
->>>>>>>>>>>>>                    |   ms    (%) |   ms    (%) |   ms    (%) |
->>>>>>>>>>>>> ms    (%)
->>>>>>>>>>>>> ---------------|-------------|-------------|-------------|-------------
->>>>>>>>>>>>> base           |  153   (0%) | 2227   (0%) | 8798   (0%) | 17442  
->>>>>>>>>>>>> (0%)
->>>>>>>>>>>>> no-cont-remap  |   77 (-49%) |  431 (-81%) | 1727 (-80%) |  3796
->>>>>>>>>>>>> (-78%)
->>>>>>>>>>>>> batch-barriers |   13 (-92%) |  162 (-93%) |  655 (-93%) |  1656
->>>>>>>>>>>>> (-91%)
->>>>>>>>>>>>> no-alloc-remap |   11 (-93%) |  109 (-95%) |  449 (-95%) |  1257
->>>>>>>>>>>>> (-93%)
->>>>>>>>>>>>> lazy-unmap     |    6 (-96%) |   61 (-97%) |  257 (-97%) |   838
->>>>>>>>>>>>> (-95%)
->>>>>>>>>>>>>
->>>>>>>>>>>>> This series applies on top of v6.9-rc2. All mm selftests pass. I've
->>>>>>>>>>>>> compile and
->>>>>>>>>>>>> boot tested various PAGE_SIZE and VA size configs.
->>>>>>>>>>>>>
->>>>>>>>>>>>> ---
->>>>>>>>>>>>>
->>>>>>>>>>>>> Changes since v1 [1]
->>>>>>>>>>>>> ====================
->>>>>>>>>>>>>
->>>>>>>>>>>>>       - Added Tested-by tags (thanks to Eric and Itaru)
->>>>>>>>>>>>>       - Renamed ___set_pte() -> __set_pte_nosync() (per Ard)
->>>>>>>>>>>>>       - Reordered patches (biggest impact & least controversial first)
->>>>>>>>>>>>>       - Reordered alloc/map/unmap functions in mmu.c to aid reader
->>>>>>>>>>>>>       - pte_clear() -> __pte_clear() in clear_fixmap_nosync()
->>>>>>>>>>>>>       - Reverted generic p4d_index() which caused x86 build error.
->>>>>>>>>>>>> Replaced with
->>>>>>>>>>>>>         unconditional p4d_index() define under arm64.
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> [1]
->>>>>>>>>>>>> https://lore.kernel.org/linux-arm-kernel/20240326101448.3453626-1-ryan.roberts@arm.com/<https://lore.kernel.org/linux-arm-kernel/20240326101448.3453626-1-ryan.roberts@arm.com/>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Thanks,
->>>>>>>>>>>>> Ryan
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Ryan Roberts (4):
->>>>>>>>>>>>>       arm64: mm: Don't remap pgtables per-cont(pte|pmd) block
->>>>>>>>>>>>>       arm64: mm: Batch dsb and isb when populating pgtables
->>>>>>>>>>>>>       arm64: mm: Don't remap pgtables for allocate vs populate
->>>>>>>>>>>>>       arm64: mm: Lazily clear pte table mappings from fixmap
->>>>>>>>>>>>>
->>>>>>>>>>>>> arch/arm64/include/asm/fixmap.h  |   5 +-
->>>>>>>>>>>>> arch/arm64/include/asm/mmu.h     |   8 +
->>>>>>>>>>>>> arch/arm64/include/asm/pgtable.h |  13 +-
->>>>>>>>>>>>> arch/arm64/kernel/cpufeature.c   |  10 +-
->>>>>>>>>>>>> arch/arm64/mm/fixmap.c           |  11 +
->>>>>>>>>>>>> arch/arm64/mm/mmu.c              | 377 +++++++++++++++++++++++--------
->>>>>>>>>>>>> 6 files changed, 319 insertions(+), 105 deletions(-)
->>>>>>>>>>>>>
->>>>>>>>>>>>> -- 
->>>>>>>>>>>>> 2.25.1
->>>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> I've build and boot tested the v2 on FVP, base is taken from your
->>>>>>>>>>>> linux-rr repo. Running run_vmtests.sh on v2 left some gup longterm not
->>>>>>>>>>>> oks, would you take a look at it? The mm ksefltests used is from your
->>>>>>>>>>>> linux-rr repo too.
->>>>>>>>>>>
->>>>>>>>>>> Thanks for taking a look at this.
->>>>>>>>>>>
->>>>>>>>>>> I can't reproduce your issue unfortunately; steps as follows on Apple
->>>>>>>>>>> M2 VM:
->>>>>>>>>>>
->>>>>>>>>>> Config: arm64 defconfig + the following:
->>>>>>>>>>>
->>>>>>>>>>> # Squashfs for snaps, xfs for large file folios.
->>>>>>>>>>> ./scripts/config --enable CONFIG_SQUASHFS_LZ4
->>>>>>>>>>> ./scripts/config --enable CONFIG_SQUASHFS_LZO
->>>>>>>>>>> ./scripts/config --enable CONFIG_SQUASHFS_XZ
->>>>>>>>>>> ./scripts/config --enable CONFIG_SQUASHFS_ZSTD
->>>>>>>>>>> ./scripts/config --enable CONFIG_XFS_FS
->>>>>>>>>>>
->>>>>>>>>>> # For general mm debug.
->>>>>>>>>>> ./scripts/config --enable CONFIG_DEBUG_VM
->>>>>>>>>>> ./scripts/config --enable CONFIG_DEBUG_VM_MAPLE_TREE
->>>>>>>>>>> ./scripts/config --enable CONFIG_DEBUG_VM_RB
->>>>>>>>>>> ./scripts/config --enable CONFIG_DEBUG_VM_PGFLAGS
->>>>>>>>>>> ./scripts/config --enable CONFIG_DEBUG_VM_PGTABLE
->>>>>>>>>>> ./scripts/config --enable CONFIG_PAGE_TABLE_CHECK
->>>>>>>>>>>
->>>>>>>>>>> # For mm selftests.
->>>>>>>>>>> ./scripts/config --enable CONFIG_USERFAULTFD
->>>>>>>>>>> ./scripts/config --enable CONFIG_TEST_VMALLOC
->>>>>>>>>>> ./scripts/config --enable CONFIG_GUP_TEST
->>>>>>>>>>>
->>>>>>>>>>> Running on VM with 12G memory, split across 2 (emulated) NUMA nodes
->>>>>>>>>>> (needed by
->>>>>>>>>>> some mm selftests), with kernel command line to reserve hugetlbs and
->>>>>>>>>>> other
->>>>>>>>>>> features required by some mm selftests:
->>>>>>>>>>>
->>>>>>>>>>> "
->>>>>>>>>>> transparent_hugepage=madvise earlycon root=/dev/vda2 secretmem.enable
->>>>>>>>>>> hugepagesz=1G hugepages=0:2,1:2 hugepagesz=32M hugepages=0:2,1:2
->>>>>>>>>>> default_hugepagesz=2M hugepages=0:64,1:64 hugepagesz=64K
->>>>>>>>>>> hugepages=0:2,1:2
->>>>>>>>>>> "
->>>>>>>>>>>
->>>>>>>>>>> Ubuntu userspace running off XFS rootfs. Build and run mm selftests
->>>>>>>>>>> from same
->>>>>>>>>>> git tree.
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Although I don't think any of this config should make a difference to
->>>>>>>>>>> gup_longterm.
->>>>>>>>>>>
->>>>>>>>>>> Looks like your errors are all "ftruncate() failed". I've seen this
->>>>>>>>>>> problem on
->>>>>>>>>>> our CI system. There it is due to running the tests from NFS file
->>>>>>>>>>> system. What
->>>>>>>>>>> filesystem are you using? Perhaps you are sharing into the FVP using
->>>>>>>>>>> 9p? That
->>>>>>>>>>> might also be problematic.
->>>>>>>>>>
->>>>>>>>>> That was it. This time I booted up the kernel including your series on
->>>>>>>>>> QEMU on my M1 and executed the gup_longterm program without the ftruncate
->>>>>>>>>> failures. When testing your kernel on FVP, I was executing the script
->>>>>>>>>> from the FVP's host filesystem using 9p.
->>>>>>>>>
->>>>>>>>> I'm not sure exactly what the root cause is. Perhaps there isn't enough
->>>>>>>>> space on
->>>>>>>>> the disk? It might be worth enhancing the error log to provide the
->>>>>>>>> errno in
->>>>>>>>> tools/testing/selftests/mm/gup_longterm.c.
->>>>>>>>>
->>>>>>>>
->>>>>>>> Attached is the strace’d gup_longterm executiong log on your
->>>>>>>> pgtable-boot-speedup-v2 kernel.
->>>>>>>
->>>>>>> Sorry are you saying that it only fails with the pgtable-boot-speedup-v2
->>>>>>> patch
->>>>>>> set applied? I thought we previously concluded that it was independent of
->>>>>>> that?
->>>>>>> I was under the impression that it was filesystem related and not something
->>>>>>> that
->>>>>>> I was planning to investigate.
->>>>>>
->>>>>> No, irrespective of the kernel, if using 9p on FVP the test program fails.
->>>>>> It is indeed 9p filesystem related, as I switched to using NFS all the
->>>>>> issues are gone.
->>>>>
->>>>> Did it never work on 9p? If so, we might have to SKIP that test.
->>>>>
->>>>> openat(AT_FDCWD, "gup_longterm.c_tmpfile_BLboOt", O_RDWR|O_CREAT|O_EXCL,
->>>>> 0600) = 3
->>>>> unlinkat(AT_FDCWD, "gup_longterm.c_tmpfile_BLboOt", 0) = 0
->>>>> fstatfs(3, 0xffffe505a840)              = -1 EOPNOTSUPP (Operation not
->>>>> supported)
->>>>> ftruncate(3, 4096)                      = -1 ENOENT (No such file or
->>>>> directory)
->>>>
->>>> Note: I'm wondering if the unlinkat here is the problem that makes
->>>> ftruncate() with 9p result in weird errors (e.g., the hypervisor
->>>> unlinked the file and cannot reopen it for the fstatfs/ftruncate. ...
->>>> which gives us weird errors here).
->>>>
->>>> Then, we should lookup the fs type in run_with_local_tmpfile() before
->>>> the unlink() and simply skip the test if it is 9p.
->>>
->>> The unlink with 9p most certainly was a known issue in the past:
->>>
->>> https://gitlab.com/qemu-project/qemu/-/issues/103
->>>
->>> Maybe it's still an issue with older hypervisors (QEMU?)? Or it was never
->>> completely resolved?
->>
->> I believe Itaru is running on FVP (Fixed Virtual Platform - "fast model" -
->> Arm's architecture emulator). So QEMU won't be involved here. The FVP emulates
->> a 9p device, so perhaps the bug is in there.
+On Mon, Apr 08, 2024 at 09:33:01PM -0500, Bjorn Andersson wrote:
+> On Tue, Apr 09, 2024 at 01:07:57AM +0300, Dmitry Baryshkov wrote:
+> > On Tue, 9 Apr 2024 at 00:23, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+> > > On 4/8/2024 2:12 PM, Dmitry Baryshkov wrote:
+> > > > On Mon, 8 Apr 2024 at 22:43, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+> > > >> On 4/7/2024 11:48 AM, Bjorn Andersson wrote:
+> > > >>> On Fri, Apr 05, 2024 at 08:15:47PM -0700, Abhinav Kumar wrote:
+> > > >>>> From: Kuogee Hsieh <quic_khsieh@quicinc.com>
+> > > >>> [..]
+> > > >>>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+> [..]
+> > > >>
+> > > >> I will need sometime to address that use-case as I need to see if we can
+> > > >> handle that better and then drop the the DISCONNECT_PENDING state to
+> > > >> address this fully. But it needs more testing.
+> > > >>
+> > > >> But, we will need this patch anyway because without this we will not be
+> > > >> able to fix even the most regular and commonly seen case of basic
+> > > >> connect/disconnect receiving complementary events.
+> > > >
+> > > > Hmm, no. We need to drop the HPD state machine, not to patch it. Once
+> > > > the driver has proper detect() callback, there will be no
+> > > > complementary events. That is a proper way to fix the code, not these
+> > > > kinds of band-aids patches.
+> > > >
+> > >
+> > > I had discussed this part too :)
+> > >
+> > > I totally agree we should fix .detect()'s behavior to just match cable
+> > > connect/disconnect and not link_ready status.
+> > >
+> > > But that alone would not have fixed this issue. If HPD thread does not
+> > > get scheduled and plug_handle() was not executed, .detect() would have
+> > > still returned old status as we will update the cable status only in
+> > > plug_handle() / unplug_handle() to have a common API between internal
+> > > and external hpd execution.
+> > 
+> > I think there should be just hpd_notify, which if the HPD is up,
+> > attempts to read the DPCD. No need for separate plug/unplug_handle.
+> > The detect() can be as simple as !drm_dp_is_branch() || sink_count != 0.
+> > 
 > 
-> Very likely.
+> What is detect() supposed to return in the event that we have external
+> HPD handler? The link state? While the external HPD bridge would return
+> the HPD state?
+
+It should return the same: there is a sensible display attached. Other
+drivers (and drm/msm/dp internally) use !branch || (sink_count > 0).
+
+> If a driver only drives the link inbetween atomic_enable() and
+> atomic_disable() will the "connected state" then ever be reported as
+> "connected"? (I'm sure I'm still missing pieces of this puzzle).
+
+I don't probably get the question. Nothing stops the driver from
+accessing the AUX bus outside of the atomic_enable/disable() brackets.
+
 > 
->>
->> Note that I see lots of "fallocate() failed" failures in gup_longterm when
->> running on our CI system. This is a completely different setup; Real HW with
->> Linux running bare metal using an NFS rootfs. I'm not sure if this is related.
->> Logs show it failing consistently for the "tmpfile" and "local tmpfile" test
->> configs. I also see a couple of these fails in the cow tests.
-> 
-> What is the fallocate() errno you are getting? strace log would help (to see if
-> statfs also fails already)! Likely a similar NFS issue.
+> Regards,
+> Bjorn
 
-Unfortunately this is a system I don't have access to. I've requested some of
-this triage to be done, but its fairly low priority unfortunately.
-
-
+-- 
+With best wishes
+Dmitry
