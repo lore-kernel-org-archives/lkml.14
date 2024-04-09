@@ -1,60 +1,60 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5647D81ACA
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DA380BF0
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712658573; cv=none; b=bkd4qexmzI8KW+4kBJ4KFAT1rHVhmtf2A+LVXU7jFqOLJ+PSP+lhgFbFrvGC3AONMqPEgY6I0Hb2iP3t0eGiMjssmzehcqntibBlWXj4j0IysS9RrAIyg78KuTYSkUri2JPXXkbjqfq/be1uH1hSi7D9pKyi8Ex1BomwlYW5T80=
+	t=1712658600; cv=none; b=e7bHBxBQTRdIJbF/XI7XcvyR6v5k/DcItIdXXWk/ek8r4LFZbcc1Z0lHbBywlr8WqRpOTkdy7h04I2lOOlNf7Xa0sSVGoPiE9xui9TwscNhu1pZWayBgBxU46OZlMRXlZlUcFBDfo+jJSs71Eqjxm/exPJJi8kvOonWXwuwGzn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712658573; c=relaxed/simple;
-	bh=dYhAReZ1vmDiZdobsjqXxIQmDiSdY/KMsiiQ8xms4CI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XssRSBcTIE5tVEr2ZEQWYUggRbCjE9jLLXSnt23c1vD998aAdgrOsEJ9tjFuusP0/Uzet1aq5VzoIq3BwuWGmGTdGWtUB/7Y4GV/RzK5zL5FlrKQaOaaupmZNCsRlx59gKVetfOvse8yAOgtjMXAbrZETcmb4Bg8MhKvAKYamVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HlygIwUu; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1712658600; c=relaxed/simple;
+	bh=1pJc8FYsL2hW347cawkDvUVa3vHO/1Plz4SprVr1CaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XVuchte9hNni+ZwPps5OutSggXYc/G5g8GAoI18RY8fQFopbbjKDQO48AgiosFUFuywdcGxyi5BI58WMDHGsj4JhOzuo40XhzvUyxVWdagFd64I8y92ruiVvflfPTIuwm0VfUWGWTOhV9aJkAA0nYr4XeMYNeMP/1IM37NhO8Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gtNGWNRz; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HlygIwUu"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3455ff1339dso1829591f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:29:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gtNGWNRz"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-343e096965bso2791266f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712658569; x=1713263369; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712658597; x=1713263397; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ykat5P5LfbO5un7nzciIKTkPn6WaTsCCKh0bvskUEKE=;
-        b=HlygIwUuxg8AsqWE8aR998va7qcfw2UU4WcrocBefN+UUj3Y6rlSwoS/6ztu1hKEYF
-         dY0vsuePXZGOUZlVQxFLeRDNUL0b6g2WnpDbO/wONGxMC4d3q27S4QadgwWGrmKH8lsO
-         kGXsF40qvs/4mHD6SMOWHFEyljYbrwXEmvYebLD61wSKe5BoPGkYPnB0LbNCtgjD5TkS
-         N6jLdtC2f13jO13uAzxZm8+a3FrN3cWi0mUfw5HZ3nUCWVdfmxlU0QWf1HrILqr8GIDJ
-         u7KY2Y1R3Utwz9raLtPFPGOhtsSARwqecJ6kfbGL63amfdDqrXNwmcX8lBF/ViENt1bP
-         Hs2w==
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QSaOGp9c1dDH8MD3uHu5DGg+gsqr466YacODisop3PM=;
+        b=gtNGWNRzhQZXxcFd+Pa2u8NxTC2L01Kqz9DwdWHwQqw0AbSLKByYuX6t/5NI4NbPBf
+         qjns82B9hewhKz16mWCkhkNb7Y/aqww7djt+gm0Rv6K6PsPmvKAy9NRzXjHjihi57/w0
+         /fIVM7hWMe6Itd2pc/1xdahi3TZao2h8DbcgPhu9kdknR/XPg06EJ9xCrIgJ9SVvH9+Y
+         WGddwKIbjZaghWHJ1xdWv17OHws6X4WTZBUFejkaLNYil/IuygGSuaWxe3B67M6vG/cd
+         0sqV+bn0oR4v+mXqWNaWD7atdbbcBUZLow/QCaivb1FPBY0SVnu8QS24S2jT6BNN3VJt
+         g5PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712658569; x=1713263369;
+        d=1e100.net; s=20230601; t=1712658597; x=1713263397;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ykat5P5LfbO5un7nzciIKTkPn6WaTsCCKh0bvskUEKE=;
-        b=X+ye/imv1aK3ErJf0Bjts5poDX43nYerpIzEszt0UIFrok+6CLZbFvkchu0HnJRJVT
-         JJsa8b7tp0vYBtoELyA1+ByMzdJ7nr6verFBLkNIj74xOJu34QVRdY+4sGUyyLXWDNDV
-         cfr7pTTxpdMPBwvUYbvSg/0IsIHvQAfFeKz4KLfKwTSg4558GzNDRXxCejOVemRTQaGR
-         fhNe/cyKHb50mWBZGMzcmSHudpySUMpDPjELXFMmMVDLuvn+6ARlriFqgtAvv8pwSw14
-         HTE0G7phfMkIPnZR3P8xXyr7i6/2xr4vpeOofMdL5mXIGAH1B3xqXugJr4c4MpIwxjEt
-         X+4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUZiKd/ctjghPcKyG2EqPkLwzw7DaNwM0nI2wJEVmeKWodBF/A62o5bP54BuJmPbsOLj+eN3MfxWL+gBzBC3K30VzR+np+FEjL/Ye60
-X-Gm-Message-State: AOJu0YwinhVTFGuAxtT2H39PuRfNhi7nT6VMdFcyYw/CIaWY+anmrLMt
-	faTaC19cj2mXLAfbPpvRIGsihHpLaPuT3uFJl+vEZQsG06oPxPom+O1HZw2ozFs=
-X-Google-Smtp-Source: AGHT+IHg/SYP1OwSQx1phS0Gr4gHr1mGzi2LrzlNYbGgaKVxscSxC6soUmqvYC9x1+rD989bWNX8kw==
-X-Received: by 2002:adf:e849:0:b0:343:e031:69b8 with SMTP id d9-20020adfe849000000b00343e03169b8mr9659991wrn.41.1712658568536;
-        Tue, 09 Apr 2024 03:29:28 -0700 (PDT)
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QSaOGp9c1dDH8MD3uHu5DGg+gsqr466YacODisop3PM=;
+        b=Rc5ZgbJP6lZXJFwmqVRQD7OeC4b1+DgvWFE4cregEcfv/3so+b/XvwrnfjrgKxgDWa
+         DtitdmvSCsf1fYkx8aU9wIaTCN0BnTdSE4Td5BEt//QzVTg5lpnhUCo0qqw+lBQOOZzE
+         ZLV0GidIZgN6yArtu+5+6Rs35ZEsnhijFx79eAsYJCU/sWaGXd7f1JlEwaEXJsDrFYsv
+         i7hFI5COD4wucU8+UbwxOlfi+uuFLHyYWuYaNj91uE+8ZiRSKDOGM/bqblN/5xdJp+qg
+         fUMC2BBS+yIsmqAX7rzgiMfxU2kDaVF6sKOlCj6mV5Yt66pVTOE+nwQrxfXGzRCvtvXm
+         IV1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVJjD/9/zgz6cFHKZc54elzYsyneBL7rpUXabUK//uVBw5gHdWkFjJCL86iQL4WNTdYow6XcFGcZzG8TbNlWDBGRvwPwYKHT3nXPmh1
+X-Gm-Message-State: AOJu0YyZsYmp+Vw9nnI9BhxNO2pt7YcA7trZjZs+n4td77b/CpVTzjUl
+	ZxunizclUUuWG4lc2eIxc/13+qMSe4tWVfzlb8/V1L6bOLSCqJatqO0u0N48nmk=
+X-Google-Smtp-Source: AGHT+IF6pICYLqGObByyD6xPdMloA7SGXRa1XZu+UqpcCU9vqr92vyZZRlIqk9ZNqIWcvdafgOaaBg==
+X-Received: by 2002:adf:f4cf:0:b0:343:9230:e079 with SMTP id h15-20020adff4cf000000b003439230e079mr7994478wrp.71.1712658597457;
+        Tue, 09 Apr 2024 03:29:57 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id r18-20020adfce92000000b00343d1d09550sm11145900wrn.60.2024.04.09.03.29.26
+        by smtp.gmail.com with ESMTPSA id x15-20020a5d490f000000b003439b45ca08sm11071794wrq.17.2024.04.09.03.29.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 03:29:27 -0700 (PDT)
-Message-ID: <bad43869-b6d3-43ba-9509-8b1606c12969@linaro.org>
-Date: Tue, 9 Apr 2024 12:29:26 +0200
+        Tue, 09 Apr 2024 03:29:56 -0700 (PDT)
+Message-ID: <3a2da499-be65-4b42-9e25-3b25daeca53d@linaro.org>
+Date: Tue, 9 Apr 2024 12:29:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,16 +62,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: imx-audio-spdif: convert to
- YAML
-To: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
- broonie@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, shengjiu.wang@gmail.com, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
- festevam@gmail.com, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <1712652644-28887-1-git-send-email-shengjiu.wang@nxp.com>
- <1712652644-28887-2-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: rockchip: add USB480M_PHY mux
+To: Sascha Hauer <s.hauer@pengutronix.de>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20240405-clk-rk3568-usb480m-phy-mux-v1-0-6c89de20a6ff@pengutronix.de>
+ <20240405-clk-rk3568-usb480m-phy-mux-v1-1-6c89de20a6ff@pengutronix.de>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -118,77 +119,21 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <1712652644-28887-2-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <20240405-clk-rk3568-usb480m-phy-mux-v1-1-6c89de20a6ff@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 09/04/2024 10:50, Shengjiu Wang wrote:
-> Convert the imx-audio-spdif binding to YAML.
+On 05/04/2024 09:38, Sascha Hauer wrote:
+> The USB480M clock can source from a MUX that selects the clock to come
+> from either of the USB-phy internal 480MHz PLLs. These clocks are
+> provided by the USB phy driver. This adds the define for it.
 > 
-> When testing dtbs_check, found below compatible strings
-> are not listed in document:
-> 
-> fsl,imx-sabreauto-spdif
-> fsl,imx6sx-sdb-spdif
-> 
-> So add them in yaml file to pass the test.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 > ---
->  .../bindings/sound/fsl,imx-audio-spdif.yaml   | 67 +++++++++++++++++++
->  .../bindings/sound/imx-audio-spdif.txt        | 36 ----------
->  2 files changed, 67 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
->  delete mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml b/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
-> new file mode 100644
-> index 000000000000..fec008ffae43
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/fsl,imx-audio-spdif.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale i.MX audio complex with S/PDIF transceiver
-> +
-> +maintainers:
-> +  - Shengjiu Wang <shengjiu.wang@nxp.com>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - fsl,imx-sabreauto-spdif
-> +              - fsl,imx6sx-sdb-spdif
-> +          - enum:
-> +              - fsl,imx-audio-spdif
+>  include/dt-bindings/clock/rk3568-cru.h | 1 +
+>  1 file changed, 1 insertion(+)
 
-If there is going to be any new version/resend:
-This one should be const, not enum.
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
----
-
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions, under or above your Signed-off-by tag. Tag is "received", when
-provided in a message replied to you on the mailing list. Tools like b4
-can help here. However, there's no need to repost patches *only* to add
-the tags. The upstream maintainer will do that for tags received on the
-version they apply.
-
-https://elixir.bootlin.com/linux/v6.5-rc3/source/Documentation/process/submitting-patches.rst#L577
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
