@@ -1,370 +1,249 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C98B15667F
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE50813C66C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712684494; cv=none; b=gT5wW1Us7SdPFT7rJTito5l47I/+psSM6xrI+TtaOxqKFJ5IiaVHNr7zXWInrmBh4Zek49p8y/c78Ece2gFanbwcOcxcKbBa20F8hYJbYgml1ArHBj1e/rG+kvfajsmhk+k9Z67RZYgay5OUAj0zYQw42yKcudWm5gfazJJ9yIc=
+	t=1712684638; cv=none; b=Stc27WBcZ8+4q3+dxZskW0pX9+Zt0r4flOG7Kgtt6pzua71yhEe2isAJ3Kl3BpNcRBphAZqKUga28iZJ2vYwZGEf6ANBX3MP2fwR1GwYM6oq9xkGNh8Du2u3qZ7RVq0tdt0snbMiVOoznu2YxsaqB5gp0Xj29dmTy5hX27xVx8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712684494; c=relaxed/simple;
-	bh=RilpHuz1rOpP5hbcbVR5vakwIvylnnUqUlIz+07gEUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZAo0gHMIwcQ5D94QHGNkF3tcJAUcU0EH+B80+pEg1MRwlBRRPaXTNgobJ7RaRbm/LiFGpsDeRN1g/T0IoVo/z7kfHk3aKqMciR4Y/20kRz7KxHksFkY2ubXr5Lzk+Vd6H8u85oX9jOvL/1c/ykXKtg55nYTyg3iQdiACJi5DAlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Hq2H/Rx3; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712684638; c=relaxed/simple;
+	bh=E8XiIAx5CckpzYUqWuhWyVj9qWA8En0mrP7hMu/15Ps=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LzRIxnaS9TIVDKl/twTfiF4SxqPfBZr4Jb62cF/TX+Cm6Sasy6IahocIZxWpZUsjWF0PinEUfIzRuihj5iPtu2L4RXrCzPpHRyXq/Y6zXQuuPiJiH9r9fbSLrlJLn+WTbUCDGcxUIAMT7gDnEUOxjTWKiO7Nyb56JBdUAq6rknc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TksIkhMu; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Hq2H/Rx3"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7e4017dc13fso1861209241.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 10:41:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712684489; x=1713289289; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VujH6vvpkYtnRus7wB9qrV/4NI4JW4G35KZtTaghVu0=;
-        b=Hq2H/Rx3YwZLs37x3dtFSbZ5LK/BSxhSrmYqfAuI0J+f4tNkT/q9Itn1ztGvf7J0rL
-         G/90d+nfAK0DbxdKijKEPqykz5bRwruj5jSiuQnwcWvHaCaz02iJuLQxyLeW+pCeSyyo
-         oEwksTSFdzX8mCmiVTaJAnm6F5gxb3+RxPPG54haZ6ujVs7jUPqpwyTf5ex49dksCnEM
-         i5N2h8XQzQoTV1d/R8HF8zZnGkofLSWexpIk6CTYzRayZ45IGSj6WmFwUSXW8eoGmQDI
-         ZDt87FuAtVoEhNzfLEoO0NMzmIK4HLsejJ5K4BGjUryUIR3fwBOW+EnZ0U0dpxSdwdu9
-         ELOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712684489; x=1713289289;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VujH6vvpkYtnRus7wB9qrV/4NI4JW4G35KZtTaghVu0=;
-        b=fR6LUrIpUDzfo0pKOLyjx9rCbMY7LXztS+3cvLJn1wImtQwvZZn9VOVg/cGfzdwyLn
-         0H1atFbURYHcNnbAOOTJAg9c083SpRAZx0AH0soykraIKCl8wDehWsYXZ0w5QA2zn62I
-         teHMgK75s39rK2odgw/u+hhp3pF/Ut54LUW6kPAo6pwKfO/O5FdKS3ybGIXWv2shHon3
-         R8a1u+Bm2b2R9ZUSVbHIip7olVY/GmxerZ/LDQGSfMjQyTnL1ZH45wIbbBo4DHAcVAJr
-         DAlXAICfuO0YbBb/hj5302nRQYYLW9CFEXJHXKDHFYYTxiw7tqtgbtOGY6z5+CmQKYdn
-         NPfw==
-X-Gm-Message-State: AOJu0YwzUrns9pQ69ChFHKUh9CQcVWrncxNSb2I+azfN78tgBdvujQhn
-	mPiOq5a8X5rlA95bOgRRUH+91IoS6WRD+WfRrKnQFiZq+v9rfhRY5/ioOHDxWJ8=
-X-Google-Smtp-Source: AGHT+IGXl4DEIRR++UUy1zfJE5z+n5y5S8EbOS9plz8t589kE27fdzx1oxiNqnupEqKrMePyD3MP0A==
-X-Received: by 2002:a05:6122:926:b0:4da:a9d8:f719 with SMTP id j38-20020a056122092600b004daa9d8f719mr660605vka.4.1712684489127;
-        Tue, 09 Apr 2024 10:41:29 -0700 (PDT)
-Received: from megalith.oryx-coho.ts.net (d24-150-219-207.home.cgocable.net. [24.150.219.207])
-        by smtp.gmail.com with ESMTPSA id o11-20020a0ce40b000000b00699437d4dfbsm3828996qvl.72.2024.04.09.10.41.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 10:41:28 -0700 (PDT)
-From: Trevor Gamblin <tgamblin@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	u.kleine-koenig@pengutronix.de,
-	michael.hennerich@analog.com,
-	nuno.sa@analog.com,
-	tgamblin@baylibre.com,
-	dlechner@baylibre.com
-Subject: [PATCH 1/2 v2] pwm: add duty offset support
-Date: Tue,  9 Apr 2024 13:41:25 -0400
-Message-ID: <20240409174126.1296318-2-tgamblin@baylibre.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409174126.1296318-1-tgamblin@baylibre.com>
-References: <20240409174126.1296318-1-tgamblin@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TksIkhMu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712684636; x=1744220636;
+  h=date:from:to:cc:subject:message-id;
+  bh=E8XiIAx5CckpzYUqWuhWyVj9qWA8En0mrP7hMu/15Ps=;
+  b=TksIkhMulXqGBLUJND4JpQjp/WP104ND3sswzDgkmPVidKjmLLKJrPZ3
+   /mF+TT8GfpjDa17bDA7u/bbHGNO/PxMiPh3iNRE3vSpqfkUqHFWKt7UKf
+   emd4kHj2SBlJw5ZpSJ4ANhaK4TtUG35x7EbUUc3NWw/C9C0OYMiSEmKwt
+   7XfyfSzQ45W88/pkMqYbYiKUWiyM7LH1EAIb9VWBkB2lrIhixagTrFhxp
+   VUM0uIpNx5/DtajTj1ykvN3uew9bsN1WSkYzaUWvNHwyvjIOyAdMS6Vm7
+   7IWV4QiNKCqg2osbziCn77YAsnkeC8lIAqFnDgJ2JBatpoDCN9mKJxIUf
+   w==;
+X-CSE-ConnectionGUID: u8RNXI1xQ0KVfKR8vt3Law==
+X-CSE-MsgGUID: z2ZfKqN6R3ikSNhOOPUWQQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18579936"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="18579936"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:43:55 -0700
+X-CSE-ConnectionGUID: RUQMMV3TQLmhxGEdyv2Xyw==
+X-CSE-MsgGUID: OHmUMozUT7G9W4TjbH/1tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="57748006"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 09 Apr 2024 10:43:54 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ruFVg-0006N9-0G;
+	Tue, 09 Apr 2024 17:43:52 +0000
+Date: Wed, 10 Apr 2024 01:43:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:rcu/next] BUILD SUCCESS
+ 295ce878648959c430774ce29618062c9e2255e3
+Message-ID: <202404100122.MnZcLrTf-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Some PWM chips support a "phase" or "duty_offset" feature. This patch
-continues adding support for configuring this property in the PWM
-subsystem.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git rcu/next
+branch HEAD: 295ce878648959c430774ce29618062c9e2255e3  rcutorture: Fix rcu_torture_fwd_cb_cr() data race
 
-Functions duty_offset_show(), duty_offset_store(), and
-pwm_get_duty_offset() are added to match what exists for duty_cycle.
+elapsed time: 1049m
 
-Handle duty_offset in the new pwmchip char device logic.
+configs tested: 172
+configs skipped: 3
 
-Add a check to disallow applying a state with both inversed polarity and
-a nonzero duty_offset.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Also add duty_offset to TP_printk in include/trace/events/pwm.h so that
-it is reported with other properties when using the event tracing pipe
-for debug.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240409   gcc  
+arc                   randconfig-002-20240409   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                         at91_dt_defconfig   clang
+arm                                 defconfig   clang
+arm                          exynos_defconfig   clang
+arm                            hisi_defconfig   gcc  
+arm                   randconfig-001-20240409   gcc  
+arm                   randconfig-002-20240409   clang
+arm                   randconfig-003-20240409   clang
+arm                   randconfig-004-20240409   gcc  
+arm                        spear6xx_defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240409   gcc  
+arm64                 randconfig-002-20240409   gcc  
+arm64                 randconfig-003-20240409   clang
+arm64                 randconfig-004-20240409   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240409   gcc  
+csky                  randconfig-002-20240409   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240409   clang
+hexagon               randconfig-002-20240409   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240409   clang
+i386         buildonly-randconfig-002-20240409   clang
+i386         buildonly-randconfig-003-20240409   gcc  
+i386         buildonly-randconfig-004-20240409   clang
+i386         buildonly-randconfig-005-20240409   gcc  
+i386         buildonly-randconfig-006-20240409   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240409   clang
+i386                  randconfig-002-20240409   gcc  
+i386                  randconfig-003-20240409   clang
+i386                  randconfig-004-20240409   gcc  
+i386                  randconfig-005-20240409   gcc  
+i386                  randconfig-006-20240409   clang
+i386                  randconfig-011-20240409   gcc  
+i386                  randconfig-012-20240409   clang
+i386                  randconfig-013-20240409   clang
+i386                  randconfig-014-20240409   clang
+i386                  randconfig-015-20240409   gcc  
+i386                  randconfig-016-20240409   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240409   gcc  
+loongarch             randconfig-002-20240409   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         apollo_defconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1830-neo_defconfig   gcc  
+mips                     loongson1b_defconfig   clang
+nios2                         3c120_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240409   gcc  
+nios2                 randconfig-002-20240409   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240409   gcc  
+parisc                randconfig-002-20240409   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      chrp32_defconfig   clang
+powerpc                   lite5200b_defconfig   clang
+powerpc                       maple_defconfig   clang
+powerpc                      obs600_defconfig   clang
+powerpc               randconfig-001-20240409   clang
+powerpc               randconfig-002-20240409   gcc  
+powerpc               randconfig-003-20240409   clang
+powerpc64             randconfig-001-20240409   gcc  
+powerpc64             randconfig-002-20240409   clang
+powerpc64             randconfig-003-20240409   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240409   clang
+riscv                 randconfig-002-20240409   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240409   gcc  
+s390                  randconfig-002-20240409   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                    randconfig-001-20240409   gcc  
+sh                    randconfig-002-20240409   gcc  
+sh                           se7780_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240409   gcc  
+sparc64               randconfig-002-20240409   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240409   clang
+um                    randconfig-002-20240409   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240409   clang
+x86_64       buildonly-randconfig-002-20240409   clang
+x86_64       buildonly-randconfig-003-20240409   gcc  
+x86_64       buildonly-randconfig-004-20240409   gcc  
+x86_64       buildonly-randconfig-005-20240409   clang
+x86_64       buildonly-randconfig-006-20240409   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240409   clang
+x86_64                randconfig-002-20240409   clang
+x86_64                randconfig-003-20240409   gcc  
+x86_64                randconfig-004-20240409   gcc  
+x86_64                randconfig-005-20240409   clang
+x86_64                randconfig-006-20240409   clang
+x86_64                randconfig-011-20240409   gcc  
+x86_64                randconfig-012-20240409   clang
+x86_64                randconfig-013-20240409   gcc  
+x86_64                randconfig-014-20240409   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240409   gcc  
+xtensa                randconfig-002-20240409   gcc  
+xtensa                         virt_defconfig   gcc  
 
-Signed-off-by: Trevor Gamblin <tgamblin@baylibre.com>
----
-v2 changes:
-* Address feedback in v1:
-  * Remove supports_offset flag in pwm_chip struct
-  * Don't return EINVAL when state->duty_offset + state->duty_cycle >
-    state->period in __pwm_apply(), since this is valid as long as
-    neither is greater than state->period on its own
-  * Add a check to disallow setting the PWM signal as inverse and a
-    nonzero duty_offset at the same time in __pwm_apply(), with a
-    comment explaining why
-
----
- drivers/pwm/core.c         | 82 +++++++++++++++++++++++++++++++++++---
- include/linux/pwm.h        | 15 +++++++
- include/trace/events/pwm.h |  6 ++-
- 3 files changed, 95 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 2745941a008b..0d12cce67be7 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -80,6 +80,7 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 	 */
- 	if (s1.enabled && s1.polarity != state->polarity) {
- 		s2.polarity = state->polarity;
-+		s2.duty_offset = s1.duty_cycle;
- 		s2.duty_cycle = s1.period - s1.duty_cycle;
- 		s2.period = s1.period;
- 		s2.enabled = s1.enabled;
-@@ -121,6 +122,23 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 			 state->duty_cycle, state->period,
- 			 s2.duty_cycle, s2.period);
- 
-+	if (state->enabled &&
-+	    last->polarity == state->polarity &&
-+	    last->period == s2.period &&
-+	    last->duty_offset > s2.duty_offset &&
-+	    last->duty_offset <= state->duty_offset)
-+		dev_warn(pwmchip_parent(chip),
-+			 ".apply didn't pick the best available duty offset (requested: %llu/%llu, applied: %llu/%llu, possible: %llu/%llu)\n",
-+			 state->duty_offset, state->period,
-+			 s2.duty_offset, s2.period,
-+			 last->duty_offset, last->period);
-+
-+	if (state->enabled && state->duty_offset < s2.duty_offset)
-+		dev_warn(pwmchip_parent(chip),
-+			 ".apply is supposed to round down duty_offset (requested: %llu/%llu, applied: %llu/%llu)\n",
-+			 state->duty_offset, state->period,
-+			 s2.duty_offset, s2.period);
-+
- 	if (!state->enabled && s2.enabled && s2.duty_cycle > 0)
- 		dev_warn(pwmchip_parent(chip),
- 			 "requested disabled, but yielded enabled with duty > 0\n");
-@@ -144,12 +162,13 @@ static void pwm_apply_debug(struct pwm_device *pwm,
- 	if (s1.enabled != last->enabled ||
- 	    s1.polarity != last->polarity ||
- 	    (s1.enabled && s1.period != last->period) ||
-+	    (s1.enabled && s1.duty_offset != last->duty_offset) ||
- 	    (s1.enabled && s1.duty_cycle != last->duty_cycle)) {
- 		dev_err(pwmchip_parent(chip),
--			".apply is not idempotent (ena=%d pol=%d %llu/%llu) -> (ena=%d pol=%d %llu/%llu)\n",
-+			".apply is not idempotent (ena=%d pol=%d %llu/%llu/%llu) -> (ena=%d pol=%d %llu/%llu/%llu)\n",
- 			s1.enabled, s1.polarity, s1.duty_cycle, s1.period,
--			last->enabled, last->polarity, last->duty_cycle,
--			last->period);
-+			s1.duty_offset, last->enabled, last->polarity,
-+			last->duty_cycle, last->period, last->duty_offset);
- 	}
- }
- 
-@@ -164,13 +183,24 @@ static int __pwm_apply(struct pwm_device *pwm, const struct pwm_state *state)
- 	int err;
- 
- 	if (!pwm || !state || !state->period ||
--	    state->duty_cycle > state->period)
-+	    state->duty_cycle > state->period ||
-+	    state->duty_offset > state->period)
- 		return -EINVAL;
- 
- 	chip = pwm->chip;
- 
-+	/* 
-+	 * There is no need to set duty_offset with inverse polarity,
-+	 * since signals with duty_offset values greater than 0.5 *
-+	 * period can equivalently be represented by an inverted signal
-+	 * without offset.
-+	 */
-+	if (state->polarity == PWM_POLARITY_INVERSED && state->duty_offset)
-+		return -EINVAL;
-+
- 	if (state->period == pwm->state.period &&
- 	    state->duty_cycle == pwm->state.duty_cycle &&
-+	    state->duty_offset == pwm->state.duty_offset &&
- 	    state->polarity == pwm->state.polarity &&
- 	    state->enabled == pwm->state.enabled &&
- 	    state->usage_power == pwm->state.usage_power)
-@@ -292,10 +322,11 @@ int pwm_adjust_config(struct pwm_device *pwm)
- 	 * been configured.
- 	 *
- 	 * In either case, we setup the new period and polarity, and assign a
--	 * duty cycle of 0.
-+	 * duty cycle and offset of 0.
- 	 */
- 	if (!state.period) {
- 		state.duty_cycle = 0;
-+		state.duty_offset = 0;
- 		state.period = pargs.period;
- 		state.polarity = pargs.polarity;
- 
-@@ -617,6 +648,41 @@ static ssize_t duty_cycle_store(struct device *pwm_dev,
- 	return ret ? : size;
- }
- 
-+static ssize_t duty_offset_show(struct device *pwm_dev,
-+			       struct device_attribute *attr,
-+			       char *buf)
-+{
-+	const struct pwm_device *pwm = pwm_from_dev(pwm_dev);
-+	struct pwm_state state;
-+
-+	pwm_get_state(pwm, &state);
-+
-+	return sysfs_emit(buf, "%llu\n", state.duty_offset);
-+}
-+
-+static ssize_t duty_offset_store(struct device *pwm_dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t size)
-+{
-+	struct pwm_export *export = pwmexport_from_dev(pwm_dev);
-+	struct pwm_device *pwm = export->pwm;
-+	struct pwm_state state;
-+	u64 val;
-+	int ret;
-+
-+	ret = kstrtou64(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&export->lock);
-+	pwm_get_state(pwm, &state);
-+	state.duty_offset = val;
-+	ret = pwm_apply_might_sleep(pwm, &state);
-+	mutex_unlock(&export->lock);
-+
-+	return ret ? : size;
-+}
-+
- static ssize_t enable_show(struct device *pwm_dev,
- 			   struct device_attribute *attr,
- 			   char *buf)
-@@ -731,6 +797,7 @@ static ssize_t capture_show(struct device *pwm_dev,
- 
- static DEVICE_ATTR_RW(period);
- static DEVICE_ATTR_RW(duty_cycle);
-+static DEVICE_ATTR_RW(duty_offset);
- static DEVICE_ATTR_RW(enable);
- static DEVICE_ATTR_RW(polarity);
- static DEVICE_ATTR_RO(capture);
-@@ -738,6 +805,7 @@ static DEVICE_ATTR_RO(capture);
- static struct attribute *pwm_attrs[] = {
- 	&dev_attr_period.attr,
- 	&dev_attr_duty_cycle.attr,
-+	&dev_attr_duty_offset.attr,
- 	&dev_attr_enable.attr,
- 	&dev_attr_polarity.attr,
- 	&dev_attr_capture.attr,
-@@ -1290,7 +1358,7 @@ static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 			if (state.enabled) {
- 				cstate.period = state.period;
- 				if (state.polarity == PWM_POLARITY_NORMAL) {
--					cstate.duty_offset = 0;
-+					cstate.duty_offset = state.duty_offset;
- 					cstate.duty_cycle = state.duty_cycle;
- 				} else {
- 					cstate.duty_offset = state.duty_cycle;
-@@ -1356,6 +1424,7 @@ static long pwm_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long ar
- 				state.period = cstate.period;
- 				state.polarity = PWM_POLARITY_NORMAL;
- 				state.duty_cycle = cstate.duty_cycle;
-+				state.duty_offset = cstate.duty_offset;
- 			} else {
- 				state.enabled = false;
- 			}
-@@ -1991,6 +2060,7 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 
- 		seq_printf(s, " period: %llu ns", state.period);
- 		seq_printf(s, " duty: %llu ns", state.duty_cycle);
-+		seq_printf(s, " duty_offset: %llu ns", state.duty_offset);
- 		seq_printf(s, " polarity: %s",
- 			   state.polarity ? "inverse" : "normal");
- 
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index a58db7011807..5a93212c58eb 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -51,6 +51,7 @@ enum {
-  * struct pwm_state - state of a PWM channel
-  * @period: PWM period (in nanoseconds)
-  * @duty_cycle: PWM duty cycle (in nanoseconds)
-+ * @duty_offset: PWM duty offset (in nanoseconds)
-  * @polarity: PWM polarity
-  * @enabled: PWM enabled status
-  * @usage_power: If set, the PWM driver is only required to maintain the power
-@@ -61,6 +62,7 @@ enum {
- struct pwm_state {
- 	u64 period;
- 	u64 duty_cycle;
-+	u64 duty_offset;
- 	enum pwm_polarity polarity;
- 	bool enabled;
- 	bool usage_power;
-@@ -130,6 +132,15 @@ static inline u64 pwm_get_duty_cycle(const struct pwm_device *pwm)
- 	return state.duty_cycle;
- }
- 
-+static inline u64 pwm_get_duty_offset(const struct pwm_device *pwm)
-+{
-+	struct pwm_state state;
-+
-+	pwm_get_state(pwm, &state);
-+
-+	return state.duty_offset;
-+}
-+
- static inline enum pwm_polarity pwm_get_polarity(const struct pwm_device *pwm)
- {
- 	struct pwm_state state;
-@@ -161,6 +172,9 @@ static inline void pwm_get_args(const struct pwm_device *pwm,
-  * ->duty_cycle value exceed the pwm_args->period one, which would trigger
-  * an error if the user calls pwm_apply_might_sleep() without adjusting ->duty_cycle
-  * first.
-+ *
-+ * ->duty_offset is likewise set to zero to avoid inconsistent default
-+ *  states.
-  */
- static inline void pwm_init_state(const struct pwm_device *pwm,
- 				  struct pwm_state *state)
-@@ -176,6 +190,7 @@ static inline void pwm_init_state(const struct pwm_device *pwm,
- 	state->period = args.period;
- 	state->polarity = args.polarity;
- 	state->duty_cycle = 0;
-+	state->duty_offset = 0;
- 	state->usage_power = false;
- }
- 
-diff --git a/include/trace/events/pwm.h b/include/trace/events/pwm.h
-index 12b35e4ff917..2d25ac5de816 100644
---- a/include/trace/events/pwm.h
-+++ b/include/trace/events/pwm.h
-@@ -18,6 +18,7 @@ DECLARE_EVENT_CLASS(pwm,
- 		__field(struct pwm_device *, pwm)
- 		__field(u64, period)
- 		__field(u64, duty_cycle)
-+		__field(u64, duty_offset)
- 		__field(enum pwm_polarity, polarity)
- 		__field(bool, enabled)
- 		__field(int, err)
-@@ -27,13 +28,14 @@ DECLARE_EVENT_CLASS(pwm,
- 		__entry->pwm = pwm;
- 		__entry->period = state->period;
- 		__entry->duty_cycle = state->duty_cycle;
-+		__entry->duty_offset = state->duty_offset;
- 		__entry->polarity = state->polarity;
- 		__entry->enabled = state->enabled;
- 		__entry->err = err;
- 	),
- 
--	TP_printk("%p: period=%llu duty_cycle=%llu polarity=%d enabled=%d err=%d",
--		  __entry->pwm, __entry->period, __entry->duty_cycle,
-+	TP_printk("%p: period=%llu duty_cycle=%llu duty_offset=%llu polarity=%d enabled=%d err=%d",
-+		  __entry->pwm, __entry->period, __entry->duty_cycle, __entry->duty_offset,
- 		  __entry->polarity, __entry->enabled, __entry->err)
- 
- );
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
