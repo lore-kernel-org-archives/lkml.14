@@ -1,141 +1,102 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905C913D626
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E405C136E16
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676957; cv=none; b=se8435RqteqvIAeECeeYrIQV19H+az4bxppmrP4Ur380jX1Eq3C7o2D6N8oNsURQD/CDe5BoiSnS5pli3KVBXeJWKG30w+yYZajQaICqPdDFImRqr/t8SmtkD3/uenP/IvORbHwnoynsybEP/cKNtl7M+brNXoPYqmniQowBUzY=
+	t=1712676988; cv=none; b=Y2HXiM/pVA9XRL4KxG1M16IrxgqG5mLH0RBxP7II958jD2lH4gD8WILTyXBOAF7p0zQQ4dqWvKG+AfhJc7fI77jLNz8rvaloUBvmoQjWs1DuKcTPYLe1vr2hnHNl/HkHjynXGma3Up1OJtoKuK9aG/9wW8FBg7tRFflyCQHfTXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676957; c=relaxed/simple;
-	bh=P04LBfkaeW2XuO46xw0RoQrDoyCOfrzCkGumelNfjDk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLDItj8j90DL+JSizeHuewlix49n8oblnCIZ8aVtuP5InVgdil+NQsA6tskNiUAy7UXYbY/MN7sAQXIVE7NXce/9dX5PR2Qj+EtDy6ZqBwIaKPC3rHjAj4S0j1gJem5Ii6W7FBYUd+RnnLOoX53BRSe0hBnmZH22uwIcMW5USL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ifzo3XZ0; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712676988; c=relaxed/simple;
+	bh=0quX4igVUBv0PjMU/FXlfx9DZgCOO6LJrjDtLL6paP0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fvPwtr3Odh0aPaTRcPjOlnO7qaylelN61yKf8XmSbzkLc54dMStmhNLuV+Qqbo4ATa8h2WP64qS/lqPXql1LJ5Vvm93v2WrBDetBM1dHby05ZfXRww/gcJsPhN5c3pVk1Mnc90rxn71o/ToMeJ1fhZ91NCXbqKQbDJ+nOdnW1vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ldJj2zY8; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ifzo3XZ0"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d886f17740so26628941fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:35:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ldJj2zY8"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e6f4ee104so1614420a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712676953; x=1713281753; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BRsd3hpzzr4WHD3K4LXpLnFX04nl95mWHv7i9FXsiIo=;
-        b=Ifzo3XZ0knqheuQUy5YJ25SbTbC+2x+t6hBB9lkdL0R/ZGHelTE41TUNcl/2VBLLJv
-         ZqFqWGbhrUW8g/QchdBkBBeSZJ+/OirjmC+EyL1RR5IwfPq+L2bVDHXgaLIqBvhAJmZ/
-         SL4fKCGd7XVJBo3oNR3W6MjIXdzCjzeJeziR+Y9+hYdtfSHtVw2iT9CRLr5lYUTPd6Rk
-         I8+l0aUfqC6hMxogPlb9itjA7REQBUY+fH121jd/r/GRWYV86JQzhUGij5LX387nytbb
-         NgyI5PyUrXDbwDx5mD0ix9MK+KIpYOsgdZYR7I6uRUyeW7h6DCBLeyF2ykzpZPXjNqUT
-         1cZA==
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712676985; x=1713281785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOph0FaIWn1WLk74ILFxXXN8KiIBmlIobvlKfK86XFk=;
+        b=ldJj2zY8DuAuD989VdUOp+44AYSjj6WZCLsytjTumhz9I3rGGY9rCNDvcmKPqYTSa4
+         zY4qZk2gJ4fB0GjDirSPfpMqwoqli7iFtdlB7jQNDzKzX5WFQ2wz7xKWKBTueSjZ2RM0
+         J3DXOuu3D/tYuazQRj8ZXSlSC76QV0gu0ERKR2+9jtv/4KNKZuKOnZhIelZV9Vp3Xv8A
+         YTUj60yL5zAeFruFJK5zjnIOBwOnNqv8Qf/ZmEMVgP7eTR+PEzBMbLqWXEPhodPBSOxa
+         q71h9vj2fOYP8kfB8PcCmK0y47TkSz4c1ZWtxI1O3ukaSazdefn0w1upgR2hNycZQXvg
+         Voug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712676953; x=1713281753;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BRsd3hpzzr4WHD3K4LXpLnFX04nl95mWHv7i9FXsiIo=;
-        b=eVxg4tmDvTA4ayXARmEhs2Xv2g6SpYcnk1gysZZ8qwvofUeepsVoeRIfQZZ4ZBcYU3
-         Cxknv7v/OlC1fOOhaBU30IjIqShPFynBwNRUtGskXfhU/V7EXM8eIDcp1tOpLorzSNuq
-         pAHiUUo/ZTo4ULGbTEy1smcK6OF+8M/SDAXAE7n/MSkCQE3uowDECV4uI4YFNQI9WmZE
-         wBVMKUuOTPtMMmxBwtDVoC2NCRhLUnljoTLoz8myMCTJQcZQ/aTLetfzKa+0jutLuOA1
-         BOSwd0QkY5FgX9LZl8RDi2lHYY70z16s5ZhSYiws8erqM1zY9wjSN4pP2gjh4JprkWvW
-         n1tg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRThJ2TC9a8T+CmlJMJ1lTpLHyhnPDJL/+4JoWd4NHIAf/yhvljeA/oUJfCnakEUmACRWAu4IwO8lNoP5bZslQpLjZNOmfVRxfMZtM
-X-Gm-Message-State: AOJu0YxaGVCsvB9F92Q1L+EUnv9+f9n4rhXQOznqxSiaYi8W7kXmJ442
-	4Z34vag1uQB6n5wyFFo8FFwT1VFRxEs00PJFCwZXkz1KDQPPC92HrII2hgZrU0XZvuaugtgbBnr
-	b
-X-Google-Smtp-Source: AGHT+IHJYOHXxN+KPaWlA8Ai6GNsv61R44Zkfg2lEX23bMYFoBeClEaCKCd8pkT/YOsSHwvrrH2xYQ==
-X-Received: by 2002:a2e:9259:0:b0:2d8:a1b3:d4ba with SMTP id v25-20020a2e9259000000b002d8a1b3d4bamr4385ljg.11.1712676952665;
-        Tue, 09 Apr 2024 08:35:52 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzyjmhyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a00e:a300::227])
-        by smtp.gmail.com with ESMTPSA id m15-20020a2e910f000000b002d808b86073sm1571238ljg.78.2024.04.09.08.35.52
+        d=1e100.net; s=20230601; t=1712676985; x=1713281785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOph0FaIWn1WLk74ILFxXXN8KiIBmlIobvlKfK86XFk=;
+        b=Qzj6L4SBOFhvkNijchwdraOctfBqh50ZA08yWJdxl19SUYOBFEojmY207ViJGEe8Kn
+         tDqtQc04YPJKeg2EE8NjFhxcmxxBK1ibMxwN6Qq+IhYBhdD2HMJ1n+5lwMu61Za+y+8x
+         TjSCzPddBsv/XLta2LrvpF7bG7+yoVKYfaZsADGAaf4v1+spgjS0zLdwLbARNkH4V48G
+         MMqXXBevqsTZ7KjE53FOnkyOCxyt9Wj5QcaY3dcp+1e08NM/NV/xbeM/0nusI7RfIUdK
+         XD5jnHQgc6oCVKQej0xgVC2aQP/d+RMK7QvhSowM3fgOHVStsqwkdggKsEOe9QBVvQn7
+         R32w==
+X-Forwarded-Encrypted: i=1; AJvYcCUbN+qtY22kdTmVrjnXvjNqOh8YnRxVcmGzGVdjRxd5+V97nU3Nxktzn4Bbx48yzOfobORsK6hcXGhkLVzjJ9aWEOdyZ3KV4yCZnZlU
+X-Gm-Message-State: AOJu0Yz5yipHhW00sG3w1yZ5z3lnCMAOSLgyp/n8U+uVc1S3rnYZ9YbK
+	Ib2kBNqhcRR9IMs6X5/pgFfgqKHZHBbh8fYK1A6vSdKjmseHXbSHINLxzL5RfHF4bfE1tMHFyyg
+	j
+X-Google-Smtp-Source: AGHT+IEjc6dYjz2VkqbE4sv+esMTP2o8UAMrIoQVAD1/6yseAStzbyBLZZBf89n2JUrtgOdfCYDWNA==
+X-Received: by 2002:a50:c348:0:b0:56d:c6e9:ca01 with SMTP id q8-20020a50c348000000b0056dc6e9ca01mr8509919edb.15.1712676985086;
+        Tue, 09 Apr 2024 08:36:25 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id r8-20020aa7c148000000b0056e78e90a1dsm320344edp.49.2024.04.09.08.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 08:35:52 -0700 (PDT)
-Date: Tue, 9 Apr 2024 18:35:50 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	phone-devel@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, 
-	martijn@brixit.nl, samuel@sholland.org, gregkh@linuxfoundation.org, 
-	linux-usb@vger.kernel.org, megi@xff.cz
-Subject: Re: [PATCHv3 2/2] usb: typec: anx7688: Add driver for ANX7688 USB-C
- HDMI bridge
-Message-ID: <4q7o5vb26ibkbvqal5nn4kdnc32rrajhtszrf4fnuisnlfcsg5@6322saeu7qoe>
-References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
- <ZhPM4XU8ttsFftBd@duo.ucw.cz>
- <ZhUQ6kzV5ARlkfPC@kuha.fi.intel.com>
- <ZhUgrNwRYoaV1AIJ@duo.ucw.cz>
+        Tue, 09 Apr 2024 08:36:24 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: John Crispin <john@phrozen.org>,
+	Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] MIPS: ralink: Use min() to fix Coccinelle warning
+Date: Tue,  9 Apr 2024 17:35:20 +0200
+Message-ID: <20240409153519.291205-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhUgrNwRYoaV1AIJ@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 01:04:12PM +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > > This is driver for ANX7688 USB-C HDMI, with flashing and debugging
-> > > features removed. ANX7688 is rather criticial piece on PinePhone,
-> > > there's no display and no battery charging without it.
-> > > 
-> > > There's likely more work to be done here, but having basic support
-> > > in mainline is needed to be able to work on the other stuff
-> > > (networking, cameras, power management).
-> > > 
-> > > Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> > > Co-developed-by: Martijn Braam <martijn@brixit.nl>
-> > > Co-developed-by: Samuel Holland <samuel@sholland.org>
-> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > Just couple of quick comments below - I did not have time to go over
-> > this very thoroughly, but I think you need to make a new version in
-> > any case because of comments in 1/2.
-> 
+Fixes the following Coccinelle/coccicheck warning reported by
+minmax.cocci:
 
-[skipped]
+	WARNING opportunity for min()
 
-> 
-> > > +static int anx7688_connect(struct anx7688 *anx7688)
-> > > +{
-> > > +	struct typec_partner_desc desc = {};
-> > > +	int ret, i;
-> > > +	u8 fw[2];
-> > > +	const u8 dp_snk_identity[16] = {
-> > > +		0x00, 0x00, 0x00, 0xec,	/* id header */
-> > > +		0x00, 0x00, 0x00, 0x00,	/* cert stat */
-> > > +		0x00, 0x00, 0x00, 0x00,	/* product type */
-> > > +		0x39, 0x00, 0x00, 0x51	/* alt mode adapter */
-> > > +	};
-> > > +	const u8 svid[4] = {
-> > > +		0x00, 0x00, 0x01, 0xff,
-> > > +	};
-> > 
-> > Why not get those from DT?
-> 
-> Are you sure it belongs to the DT (and that DT people will agree)?
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ arch/mips/ralink/timer.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-From Documentation/devicetree/bindings/connector/usb-connector.yaml:
-
-            altmodes {
-                displayport {
-                    svid = /bits/ 16 <0xff01>;
-                    vdo = <0x00001c46>;
-                };
-            };
-
-BTW, I don't see the VDO for the DP altmode in your code. Maybe I missed
-it at a quick glance.
-
-> 
-> > > +	u32 caps[8];
-> > > +
-
-
+diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
+index 54094f6e033e..d271ac98312a 100644
+--- a/arch/mips/ralink/timer.c
++++ b/arch/mips/ralink/timer.c
+@@ -75,11 +75,7 @@ static int rt_timer_request(struct rt_timer *rt)
+ 
+ static int rt_timer_config(struct rt_timer *rt, unsigned long divisor)
+ {
+-	if (rt->timer_freq < divisor)
+-		rt->timer_div = rt->timer_freq;
+-	else
+-		rt->timer_div = divisor;
+-
++	rt->timer_div = min(rt->timer_freq, divisor);
+ 	rt_timer_w32(rt, TIMER_REG_TMR0LOAD, rt->timer_freq / rt->timer_div);
+ 
+ 	return 0;
 -- 
-With best wishes
-Dmitry
+2.44.0
+
