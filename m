@@ -1,230 +1,93 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7876A031
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA9069DF4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712649714; cv=none; b=m//Q+35XzDEA+0byVTreqhjL33GJjDPxFGPdl0UC6Cm330iNV1ksjKlgQEdncCuLajBHnoAD/FfYANEpO2FLdEXpO+YdzrWdMTw94RuJ/ysGp+GRPfGaVs//QJsVZEccEDYCQN79k0fXo9Ixd7shnqxDdvFflPIr8utvt2cvHNk=
+	t=1712649751; cv=none; b=jzURZZRISNLXQyaTE2HreKdFqzSwIkYeG1nI4gY/wwDvsV0BNnEhlzj9JFKUmicI3fj+223QF+jMpp8SNyVzfCUqofDlYePkyZOVqLiw3yk+GS5TjcwN/WtANnGTsKA4x0MFmcp7o5EhdYE3f2hyvQYAgvq8ls2+YMjuVXoZujU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712649714; c=relaxed/simple;
-	bh=bMz8MjfIFsUyXV5WBM+KwspP/jmIVlkv1FepIQu2Qp4=;
+	s=arc-20240116; t=1712649751; c=relaxed/simple;
+	bh=Ht+zLsqe77IM1iTP8cb68mcbeS237HYbrtzTXyf4W8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZONJl7yn+FMyG6FZMq4/l/HDLLYxEgY51AKpd+tVcK87mc9mz/gFRx0/pn1PQaR7T71O2hvA0b1i+LTJNFDzgq3zMjVzfCQ5pip5fy1T8fGEha0Q6xkDbTiEPYJcP95bXblN1jA9Zi16hbDBdVHMJd5nPqjOXgv14iG/36YyKOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=bDvmIuLJ; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="bDvmIuLJ"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a51e452a1ceso124851966b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712649710; x=1713254510; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hCIVc0ToTPxKSHwFH39eeFiQ4Iaybjud05qpLdkE0so=;
-        b=bDvmIuLJoYJqpdDTSPlonpFWZ014QS2fVczgt/f+ynUjQb2JujJWKWF12nHXlha+3H
-         +zywUUlMWJ0TajJEgqBtUVF/t+zW5EWW5A2nOf8wmwsPZHnrmHYaq1K8/ACLGAqIDc71
-         blYJwT13++VKoz638Dp1c+9PUBEt/DbD3l/ziA/nFGyX9/UU857ifGmcMTJg52CzW9WL
-         R7PLZOBpEHMcWLXHynqP1d1uqMvNS37Fk8loTmXGwMKJHxUNq3M6yqpL7v4Oe4GodW9U
-         gGIcw+qmWANNzonmrTZPY4zZyk3H52XleZAkKfVOmthbobOBh/vzHuRl2tQQhG20Ohdx
-         7HVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712649710; x=1713254510;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hCIVc0ToTPxKSHwFH39eeFiQ4Iaybjud05qpLdkE0so=;
-        b=wFiPyYM9Xpd9A7Ojz8WMeHog8UQBVcKcUNpgIjiUUarNmCCvkJY1LuJ3xk5T5IcSnh
-         bGdNcvhQ5FWHye9jxPr6JxV1BgEph/eyJUOijLW5Oh88mzArQVQnM+cBtttNfDZHc+3q
-         TeotR6uwGlpQRYPnMYhbymAErb1zQ9yIlwY9ZTtRh59V2SfKrQWCgehYnZOxqPDbG7sX
-         ORLQucL8zfogGlsWNxmxO4eJyfWfKThhVWeUpIHsIDlGuYlwz75W/YV2hv/Yg1ZMyD02
-         AKcKgopu/iWv5Xxa/09IsY2nQ5uwLpz4U7v3Gr7ZybJViJ5uZ2EHi1yIw0KlrOfDmQAh
-         WR9Q==
-X-Gm-Message-State: AOJu0YwpjMhRAUgeRKAJKrd8TcS5EeAg4quGYZeTecHQnL23PwFXQKll
-	xtJWMa0rItlVMliiuvXDHohKc6twALumiS2yMKaT1vxvp0+oEPa1zhsdBK0T6Rk=
-X-Google-Smtp-Source: AGHT+IG/T7uaqwe5y6oCGXamr2sprW/wjX+aVwR61ApsAhhRf7ZUfXSB3xs49ZIPwF/ZvGx/GUAiPw==
-X-Received: by 2002:a17:906:c454:b0:a4d:f5e6:2e34 with SMTP id ck20-20020a170906c45400b00a4df5e62e34mr6793646ejb.19.1712649710207;
-        Tue, 09 Apr 2024 01:01:50 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id xh13-20020a170906da8d00b00a51c0c0cb86sm3775778ejb.22.2024.04.09.01.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 01:01:49 -0700 (PDT)
-Date: Tue, 9 Apr 2024 10:01:48 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
-	Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Alexey Makhalov <amakhalov@vmware.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, 
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Will Deacon <will@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v5 20/22] KVM: riscv: selftests: Add SBI PMU selftest
-Message-ID: <20240409-dd055c3d08e027cf2a5cb4dc@orel>
-References: <20240403080452.1007601-1-atishp@rivosinc.com>
- <20240403080452.1007601-21-atishp@rivosinc.com>
- <20240405-d1a4cb9a441a05a9d2f8b1c8@orel>
- <976411ab-6ddf-4b10-8e13-1575928415ce@rivosinc.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgHVA+zbzVSDKf/UCbjYJRZN1PRO5bKc1iabmBl+pE/nxCdJh2fDjNjn6vHvlD7YfRPqd7sXB+vSrqNPv2EY0fI4qhgv+Jc2+VJH2zMnYl7njIcMy9kB3z8/LyT2Pboy5+LYc6GC1b7ON/DzLOU5Ny44AaBTbOVqL8tUuQSBxzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru6Qv-0002UM-UW; Tue, 09 Apr 2024 10:02:21 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru6Qu-00BGSs-45; Tue, 09 Apr 2024 10:02:20 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru6Qu-004P6s-05;
+	Tue, 09 Apr 2024 10:02:20 +0200
+Date: Tue, 9 Apr 2024 10:02:20 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Arun.Ramadoss@microchip.com
+Cc: andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net,
+	Woojung.Huh@microchip.com, pabeni@redhat.com, edumazet@google.com,
+	f.fainelli@gmail.com, kuba@kernel.org, kernel@pengutronix.de,
+	dsahern@kernel.org, san@skov.dk, willemb@google.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	horms@kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v4 6/9] net: dsa: microchip: dcb: add special
+ handling for KSZ88X3 family
+Message-ID: <ZhT2DEowBo4c46_I@pengutronix.de>
+References: <20240408074758.1825674-1-o.rempel@pengutronix.de>
+ <20240408074758.1825674-7-o.rempel@pengutronix.de>
+ <7f0684fb1729dafc92f8b81ce81f10c91385c0c2.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <976411ab-6ddf-4b10-8e13-1575928415ce@rivosinc.com>
+In-Reply-To: <7f0684fb1729dafc92f8b81ce81f10c91385c0c2.camel@microchip.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2024 at 05:37:19PM -0700, Atish Patra wrote:
-> On 4/5/24 05:50, Andrew Jones wrote:
-> > On Wed, Apr 03, 2024 at 01:04:49AM -0700, Atish Patra wrote:
-> > ...
-> > > +static void test_pmu_basic_sanity(void)
-> > > +{
-> > > +	long out_val = 0;
-> > > +	bool probe;
-> > > +	struct sbiret ret;
-> > > +	int num_counters = 0, i;
-> > > +	union sbi_pmu_ctr_info ctrinfo;
-> > > +
-> > > +	probe = guest_sbi_probe_extension(SBI_EXT_PMU, &out_val);
-> > > +	GUEST_ASSERT(probe && out_val == 1);
-> > > +
-> > > +	num_counters = get_num_counters();
-> > > +
-> > > +	for (i = 0; i < num_counters; i++) {
-> > > +		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_GET_INFO, i,
-> > > +				0, 0, 0, 0, 0);
-> > > +
-> > > +		/* There can be gaps in logical counter indicies*/
-> > > +		if (ret.error)
-> > > +			continue;
-> > > +		GUEST_ASSERT_NE(ret.value, 0);
-> > > +
-> > > +		ctrinfo.value = ret.value;
-> > > +
-> > > +		/**
-> > > +		 * Accesibillity check of hardware and read capability of firmware counters.
-> > 
-> > Accessibility
-> > 
-> 
-> Fixed it.
-> 
-> > > +		 * The spec doesn't mandate any initial value. No need to check any value.
-> > > +		 */
-> > > +		read_counter(i, ctrinfo);
-> > > +	}
-> > > +
-> > > +	GUEST_DONE();
-> > > +}
-> > > +
-> > > +static void run_vcpu(struct kvm_vcpu *vcpu)
-> > > +{
-> > > +	struct ucall uc;
-> > > +
-> > > +	vcpu_run(vcpu);
-> > > +	switch (get_ucall(vcpu, &uc)) {
-> > > +	case UCALL_ABORT:
-> > > +		REPORT_GUEST_ASSERT(uc);
-> > > +		break;
-> > > +	case UCALL_DONE:
-> > > +	case UCALL_SYNC:
-> > > +		break;
-> > > +	default:
-> > > +		TEST_FAIL("Unknown ucall %lu", uc.cmd);
-> > > +		break;
-> > > +	}
-> > > +}
-> > > +
-> > > +void test_vm_destroy(struct kvm_vm *vm)
-> > > +{
-> > > +	memset(ctrinfo_arr, 0, sizeof(union sbi_pmu_ctr_info) * RISCV_MAX_PMU_COUNTERS);
-> > > +	counter_mask_available = 0;
-> > > +	kvm_vm_free(vm);
-> > > +}
-> > > +
-> > > +static void test_vm_basic_test(void *guest_code)
-> > > +{
-> > > +	struct kvm_vm *vm;
-> > > +	struct kvm_vcpu *vcpu;
-> > > +
-> > > +	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
-> > > +	__TEST_REQUIRE(__vcpu_has_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_PMU),
-> > > +				   "SBI PMU not available, skipping test");
-> > > +	vm_init_vector_tables(vm);
-> > > +	/* Illegal instruction handler is required to verify read access without configuration */
-> > > +	vm_install_exception_handler(vm, EXC_INST_ILLEGAL, guest_illegal_exception_handler);
-> > 
-> > I still don't see where the "verify" part is. The handler doesn't record
-> > that it had to handle anything.
-> > 
-> 
-> The objective of the test is to ensure that we get an illegal instruction
-> without configuration.
+Hi Arun,
 
-This part I guessed.
-
-> The presence of the registered exception handler is
-> sufficient for that.
-
-This part I disagree with. The handler may not be necessary and not run if
-we don't get the ILL. Usually when I write tests like these I set a
-boolean in the handler and check it after the instruction which should
-have sent us there to make sure we did indeed go there.
-
+On Mon, Apr 08, 2024 at 04:26:34PM +0000, Arun.Ramadoss@microchip.com wrote:
+> Hi Oleksij,
+> > + * Return: 0 on success, or a negative error code on failure
+> > + */
+> > +static int ksz88x3_port0_apptrust_quirk(struct ksz_device *dev, int
+> > port,
+> > +                                       int reg, u8 data)
+> > +{
+> > +       u8 port1_data;
 > 
-> The verify part is that the test doesn't end up in a illegal instruction
-> exception when you try to access a counter without configuring.
-> 
-> Let me know if you think we should more verbose comment to explain the
-> scenario.
-> 
+> why can't we have some common reference, because it is somewhat
+> confusing. function name is port0, but apptrust config is for port1 and
+> u8 port1_data. atleast instead of port1_data, port0_data, we can have
+> variable name as data, since they are handled in two different
+> functions. 
 
-With a boolean the test code will be mostly self documenting, but a short
-comment saying why we expect the boolean to be set would be good too.
+Ack, I renamed variables and functions to be more in sync with the
+documentation and add defines for ports
 
-Thanks,
-drew
+Is it possible to add this erratum to the chip errata documentation?
 
-> 
-> > > +
-> > > +	vcpu_init_vector_tables(vcpu);
-> > > +	run_vcpu(vcpu);
-> > > +
-> > > +	test_vm_destroy(vm);
-> > > +}
-> > > +
-> > > +static void test_vm_events_test(void *guest_code)
-> > > +{
-> > > +	struct kvm_vm *vm = NULL;
-> > > +	struct kvm_vcpu *vcpu = NULL;
-> > > +
-> > > +	vm = vm_create_with_one_vcpu(&vcpu, guest_code);
-> > > +	__TEST_REQUIRE(__vcpu_has_sbi_ext(vcpu, KVM_RISCV_SBI_EXT_PMU),
-> > > +				   "SBI PMU not available, skipping test");
-> > > +	run_vcpu(vcpu);
-> > > +
-> > > +	test_vm_destroy(vm);
-> > > +}
-> > > +
-> > > +int main(void)
-> > > +{
-> > > +	test_vm_basic_test(test_pmu_basic_sanity);
-> > > +	pr_info("SBI PMU basic test : PASS\n");
-> > > +
-> > > +	test_vm_events_test(test_pmu_events);
-> > > +	pr_info("SBI PMU event verification test : PASS\n");
-> > > +
-> > > +	return 0;
-> > > +}
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
-> > Thanks,
-> > drew
-> 
+Regards,
+Oleksij
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
