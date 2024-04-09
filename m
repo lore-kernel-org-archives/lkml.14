@@ -1,181 +1,262 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D578129A7B
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD4680629
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657120; cv=none; b=o9I+C0NJg37FDxDIrdqJvkoIlfeO/wh7JLI47si4IF2Ewt70WUYi9ezUudc5HUNjmdOTvrTdPkgY+tAB/lzcI4Oel7y/OEUFBoeennmk+fAduH5/7IqC9/twx/71mWDL5YH33Pvl9CPSD0b++2IKLEwVeo2b5XZLeNQaAxo6Y9s=
+	t=1712657173; cv=none; b=i4m7xDcr0WHjrgKxDz91wkvqVoqJX8S4gK497dBjdgjEaoI9sUPeN6JS6y6Nl3OGn2n0Vd4Z/IlVqLbmUJHW6rYG4murKquBLzP9dABaJLy2ARKxgPYzjMxHuygkxu2CTPFQFU599dne3QEJNnLimFyYYrXNcAAZqdQUfgs+V1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657120; c=relaxed/simple;
-	bh=+IJA9+/LkDO3Qh/z4ZzTDQ69ze3J+3wDzxu13Sj1clQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QykGzBAqdV6cYzvbgGolW358DBpdUjVzGLCj7HgpMuVSbfBXYLd4+TqdhAH4kAtcwSFF6OKa1eQoHHAtbbWB04GU8akjycUZe29D5MwcJgtrKGYK1CuSbr9waf+DA9Yqhw0bWysOBQEJRAFgmNdtNkN2Z1zCF0CK6dzoRM67UX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bC6p1iHW; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712657173; c=relaxed/simple;
+	bh=mFNJ9GJFypFrzBVHys9OFUZJBSzxvUUASZWHXI5sgdE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uwX7GQKbnhaNDFp8VuNai3MDb9ND/y3VMe09KkeWlrKLioCqVt2QXY+Z2HVoRR3NQdE9xhGs9xhwkBEfDfaKJvvfn9gYQGzFhJCuk25D4Ad9b3urzHUBwEpTh6+o0j7Bz3rmh9OOGnD+9mYKBq/B675SAEFJqfz4+irx6QQJkkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EhDDzU8s; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bC6p1iHW"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a5200202c1bso26184666b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712657117; x=1713261917; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lyHz56u/iO9/FgsI4q0cP6V/rorpyyesh7+7+zlmKI8=;
-        b=bC6p1iHW8rZgqBzJSrEDMfsBA8aTO0wbFgbYcGVyKUpUB4JNc/tKHr2S8OdXpgabDz
-         2DMYFlMzl25nixcs6I64S795bRhd5dhCO2cuYQVQXKHuGN6ZDSNrdez3VQf+PXqcTzpI
-         r2iF9EzOAMSHbUB61JpiLH48+Fn/ee0pp34JuSEp8NipWxg7YS/N60ZWLSvvFQVu+vVE
-         GUYszspOjp9Ar/f0j4pQV9gQdOtcFhX7zLWuDdUljn/fQA3VdkgghI6lwKsIIn6phpiG
-         8PijcE2aRcLEjmxGl4wA2l5LtSlMrEPBHDY0Wk5WcLKVkoajljBHjb87Qwt4NNLHx0Ep
-         5x0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712657117; x=1713261917;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lyHz56u/iO9/FgsI4q0cP6V/rorpyyesh7+7+zlmKI8=;
-        b=qAxiTrTRMziYMLl4vF6x9+3ftV7pTJ5FP/pqSNPX6Cpj5RQgLMPbwXHr49tf4UMQWD
-         WCpB+NUOrh3FcSXZtR+SYx4dXeBljV9TRoTcLqfYGRkp0etzto/2+GlRSVLbGyqKiqbs
-         xGKJn1biRgHedCUzWW7+0jvtKi28NbAoLQhREyHVwoiXBnUMcFY+3XM+q4OMgVBZ2ayx
-         VrdfJBEA31KMh+jOooArfUUCsn17shSNfw6/T+avI+UsE31ZSDZRviZWG49udNL9OabD
-         3VhHdK8kglUfjwzAAMa9vjqoCfin7J+RuhCjMat5fbD28M8FG3tv9FPXt5mxA/3Tf9Km
-         Z/9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWefhON1LfgyPf+vo98S3HXbwUUo45X0BK99CIL4LcBolKAIeE/YqgLI9wGkWcVVsj06HEB1dlEmEub51WG+ZKWqpdKYcHreK12SoKc
-X-Gm-Message-State: AOJu0YwGJ6efaJq3NQ0f+qaO4uXrdL6WdlOvyKnyl1xtWeZk8jh+4LVI
-	KR7uxmJo6rQshTxz7SGLTVwOGG9yRioD8PLWtLrh/V9yOJNH9iq4
-X-Google-Smtp-Source: AGHT+IH4uESLV606lHisWITKlS8BD5JNspBkRmUwN0p7WVc2Hamq61jeR9aVU0Fl23GolotFpGbE+A==
-X-Received: by 2002:a17:907:7ea4:b0:a4e:5676:417d with SMTP id qb36-20020a1709077ea400b00a4e5676417dmr12020143ejc.58.1712657116669;
-        Tue, 09 Apr 2024 03:05:16 -0700 (PDT)
-Received: from fedora.iskraemeco.si ([193.77.86.250])
-        by smtp.gmail.com with ESMTPSA id qs1-20020a170906458100b00a4e6626ae21sm5496681ejc.0.2024.04.09.03.05.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 03:05:15 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 6/6] locking/atomic/x86: Reorder a couple of arch_atomic64 functions
-Date: Tue,  9 Apr 2024 12:03:57 +0200
-Message-ID: <20240409100503.274629-7-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240409100503.274629-1-ubizjak@gmail.com>
-References: <20240409100503.274629-1-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EhDDzU8s"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7D6AD1BF20A;
+	Tue,  9 Apr 2024 10:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712657169;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sqqIhw8jAz1IoeoUfDX7ZgfwWio/XO2e8ETDGPutQoo=;
+	b=EhDDzU8sbXO2ORX1BNpoLu25UrKjUEPzb9gNNo8miMT0FPupYk7lY0bAQanUccet26IqAA
+	psBd8WSI0zQ52F3Vpp8D0z7YBSorfAiM9JP9EPexHpKShEAdMEQETjIjreZN1sIFTYZt7t
+	7/ltiVNI+C4klRoDpshneoU+hPBcRI+GEKJsCE8k3K2qFsgUgOUaVpHYK445VMHIjFZFXa
+	qZ6FXEavoyigREs61NNE951CB7nxmJDWUI4mZOMUvi6UrTX/OKwdtAVSNS2iEz0tluLtrY
+	OsMOJjfJKtrHobVLsCn3qLAX2a+tkexP7azuvYP8r6dkw+uE3x9SN389tCJI7A==
+Date: Tue, 9 Apr 2024 12:06:06 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH v5 09/16] drm/vkms: Introduce pixel_read_direction enum
+Message-ID: <ZhUTDvdsi2I-7-nE@localhost.localdomain>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, arthurgrillo@riseup.net,
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, jeremie.dautheribes@bootlin.com,
+	miquel.raynal@bootlin.com, thomas.petazzoni@bootlin.com,
+	seanpaul@google.com, marcheu@google.com, nicolejadeyee@google.com
+References: <20240313-yuv-v5-0-e610cbd03f52@bootlin.com>
+ <20240313-yuv-v5-9-e610cbd03f52@bootlin.com>
+ <20240325151103.0a5f7112.pekka.paalanen@collabora.com>
+ <ZgLwTJVb_Z_MHuCp@localhost.localdomain>
+ <20240327141629.48ec16f2.pekka.paalanen@collabora.com>
+ <ZhOhupo3bf6Cxasy@louis-chauvet-laptop>
+ <20240409103537.44e99854.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409103537.44e99854.pekka.paalanen@collabora.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Reorder a couple of arch_atomic64 functions in
-arch/x86/include/asm/atomic64_32.h to better match
-their sequence of declarations between x86_32 and x86_64.
+Le 09/04/24 - 10:35, Pekka Paalanen a écrit :
+> On Mon, 8 Apr 2024 09:50:18 +0200
+> Louis Chauvet <louis.chauvet@bootlin.com> wrote:
+> 
+> > Le 27/03/24 - 14:16, Pekka Paalanen a écrit :
+> > > On Tue, 26 Mar 2024 16:57:00 +0100
+> > > Louis Chauvet <louis.chauvet@bootlin.com> wrote:
+> > >   
+> > > > Le 25/03/24 - 15:11, Pekka Paalanen a écrit :  
+> > > > > On Wed, 13 Mar 2024 18:45:03 +0100
+> > > > > Louis Chauvet <louis.chauvet@bootlin.com> wrote:
+> > > > >     
+> > > > > > The pixel_read_direction enum is useful to describe the reading direction
+> > > > > > in a plane. It avoids using the rotation property of DRM, which not
+> > > > > > practical to know the direction of reading.
+> > > > > > This patch also introduce two helpers, one to compute the
+> > > > > > pixel_read_direction from the DRM rotation property, and one to compute
+> > > > > > the step, in byte, between two successive pixel in a specific direction.
+> > > > > > 
+> > > > > > Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/vkms/vkms_composer.c | 36 ++++++++++++++++++++++++++++++++++++
+> > > > > >  drivers/gpu/drm/vkms/vkms_drv.h      | 11 +++++++++++
+> > > > > >  drivers/gpu/drm/vkms/vkms_formats.c  | 30 ++++++++++++++++++++++++++++++
+> > > > > >  3 files changed, 77 insertions(+)
+> > > > > > 
+> > > > > > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > > > index 9254086f23ff..989bcf59f375 100644
+> > > > > > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > > > > > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> 
+> > > > > I hope IGT uses FB patterns instead of solid color in its tests of
+> > > > > rotation to be able to detect the difference.    
+> > > > 
+> > > > They use solid colors, and even my new rotation test [3] use solid colors.  
+> > > 
+> > > That will completely fail to detect rotation and reflection bugs then.
+> > > E.g. userspace asks for 180-degree rotation, and the driver does not
+> > > rotate at all. Or rotate-180 getting confused with one reflection.  
+> > 
+> > I think I missunderstood what you means with "solid colors".
+> > 
+> > The tests uses a plane with multiple solid colors:
+> > 
+> > +-------+-------+
+> > | White | Red   |
+> > +-------+-------+
+> > | Blue  | Green |
+> > +-------+-------+
+> > 
+> > But it don't use gradients because of YUV.
+> >
+> 
+> Oh, that works. No worries then.
+> 
+> > > > It is mainly for yuv formats with subsampling: if you have formats with 
+> > > > subsampling, a "software rotated buffer" and a "hardware rotated buffer" 
+> > > > will not apply the same subsampling, so the colors will be slightly 
+> > > > different.  
+> > > 
+> > > Why would they not use the same subsampling?  
+> > 
+> > YUV422, for each pair of pixels along a horizontal line, the U and V 
+> > components are shared between those two pixels. However, along a vertical 
+> > line, each pixel has its own U and V components.
+> > 
+> > When you rotate an image by 90 degrees:
+> >  - Hardware Rotation: If you use hardware rotation, the YUV subsampling 
+> >    axis will align with what was previously the "White-Red" axis. The 
+> >    hardware will handle the rotation.
+> >  - Software Rotation: If you use software rotation, the YUV subsampling 
+> >    axis will align with what was previously the "Red-Green" axis.
+> 
+> That would be a bug in the software rotation.
 
-No functional changes intended.
+Yes, but it is very complex to fix I think, so I did not chose 
+this path :)
+ 
+> > Because the subsampling compression axis changes depending on whether 
+> > you're using hardware or software rotation, the compression effect on 
+> > colors will differ. Specifically:
+> >  - Hardware rotation, a gradient along the "White-Red" axis may be 
+> >    compressed (i.e same UV component for multiple pixels along the 
+> >    gradient).
+> >  - Software rotation, the same gradient will not be compressed (i.e, each 
+> >    different color in the gradient have dedicated UV component)
+> > 
+> > The same reasoning also apply for "color borders", and my series [3] avoid 
+> > this issue by choosing the right number of pixels.
+> 
+> What is [3]?
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/include/asm/atomic64_32.h | 46 +++++++++++++++---------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+I don't know why I put [3] here, I probably mixed references between mails
 
-diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
-index 862448db1207..3864d82a9339 100644
---- a/arch/x86/include/asm/atomic64_32.h
-+++ b/arch/x86/include/asm/atomic64_32.h
-@@ -12,7 +12,7 @@ typedef struct {
- 	s64 __aligned(8) counter;
- } atomic64_t;
+[3]: https://lore.kernel.org/all/20240313-new_rotation-v2-0-6230fd5cae59@bootlin.com/
  
--#define ATOMIC64_INIT(val)	{ (val) }
-+#define ATOMIC64_INIT(i)	{ (i) }
- 
- #define __ATOMIC64_DECL(sym) void atomic64_##sym(atomic64_t *, ...)
- #ifndef ATOMIC64_EXPORT
-@@ -61,17 +61,21 @@ ATOMIC64_DECL(add_unless);
- #undef __ATOMIC64_DECL
- #undef ATOMIC64_EXPORT
- 
--static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
-+static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
- {
--	return arch_cmpxchg64(&v->counter, old, new);
-+	s64 r;
-+	alternative_atomic64(read, "=&A" (r), "c" (v) : "memory");
-+	return r;
- }
--#define arch_atomic64_cmpxchg arch_atomic64_cmpxchg
- 
--static __always_inline bool arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s64 new)
-+static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
- {
--	return arch_try_cmpxchg64(&v->counter, old, new);
-+	unsigned high = (unsigned)(i >> 32);
-+	unsigned low = (unsigned)i;
-+	alternative_atomic64(set, /* no output */,
-+			     "S" (v), "b" (low), "c" (high)
-+			     : "eax", "edx", "memory");
- }
--#define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
- 
- static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 n)
- {
-@@ -85,22 +89,6 @@ static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 n)
- }
- #define arch_atomic64_xchg arch_atomic64_xchg
- 
--static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
--{
--	unsigned high = (unsigned)(i >> 32);
--	unsigned low = (unsigned)i;
--	alternative_atomic64(set, /* no output */,
--			     "S" (v), "b" (low), "c" (high)
--			     : "eax", "edx", "memory");
--}
--
--static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
--{
--	s64 r;
--	alternative_atomic64(read, "=&A" (r), "c" (v) : "memory");
--	return r;
--}
--
- static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
- {
- 	alternative_atomic64(add_return,
-@@ -199,6 +187,18 @@ static __always_inline s64 arch_atomic64_dec_if_positive(atomic64_t *v)
- #undef alternative_atomic64
- #undef __alternative_atomic64
- 
-+static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
-+{
-+	return arch_cmpxchg64(&v->counter, old, new);
-+}
-+#define arch_atomic64_cmpxchg arch_atomic64_cmpxchg
-+
-+static __always_inline bool arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s64 new)
-+{
-+	return arch_try_cmpxchg64(&v->counter, old, new);
-+}
-+#define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
-+
- static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
- {
- 	s64 val = __READ_ONCE(v->counter);
--- 
-2.44.0
+> I've used similar tactics in the Weston test suite, when I have no
+> implementation for chroma siting: the input and reference images
+> consist of 2x2 equal color pixel groups, so that chroma siting makes no
+> difference. When chroma siting will be implemented, the tests will be
+> extended.
+> 
+> Is there a TODO item to fix the software rotation bug and make the
+> tests more sensitive?
+> 
+> I think documenting this would be an ok intermediate solution.
+> 
+> > > The framebuffer contents are defined in its natural orientation, and
+> > > the subsampling applies in the natural orientation. If such a FB
+> > > is on a rotated plane, one must account for subsampling first, and
+> > > rotate second. 90-degree rotation does not change the encoded color.
+> > > 
+> > > Getting the subsampling exactly right is going to be necessary sooner
+> > > or later. There is no UAPI for setting chroma siting yet, but ideally
+> > > there should be.
+> > >   
+> > > > > The return values do seem correct to me, assuming I have guessed
+> > > > > correctly what "X" and "Y" refer to when combined with rotation. I did
+> > > > > not find good documentation about that.    
+> > > > 
+> > > > Yes, it is difficult to understand how rotation and reflexion should 
+> > > > works in drm. I spend half a day testing all the combination in drm_rect_* 
+> > > > helpers to understand how this works. According to the code:
+> > > > - If only rotation or only reflexion, easy as expected
+> > > > - If reflexion and rotation are mixed, the source buffer is first 
+> > > >   reflected and then rotated.  
+> > > 
+> > > Now that you know, you could send a documentation patch. :-)  
+> > 
+> > And now I'm not sure about it :)
+> 
+> You'll have people review the patch and confirm your understanding or
+> point out a mistake. A doc patch it easier to notice and jump in than
+> this series.
+
+I just send it [4], you are in copy.
+
+[4]: https://lore.kernel.org/all/20240409-google-drm-doc-v1-0-033d55cc8250@bootlin.com/
+
+> > I was running the tests on my v6, and for the first time ran my new 
+> > rotation [3] on the previous VKMS code. None of the tests for 
+> > ROT_90+reflexion and ROT_270+reflexion are passing...
+> > 
+> > So, either the previous vkms implementation was wrong, or mine is wrong :)
+> > 
+> > So, if a DRM expert can explain this, it could be nice.
+> > 
+> > To have a common example, if I take the same buffer as above 
+> > (white+red+blue+green), if I create a plane with rotation = 
+> > ROTATION_90 | REFLECTION_X, what is the expected result?
+> > 
+> > 1 - rotation then reflection 
+> > 
+> > +-------+-------+
+> > | Green | Red   |
+> > +-------+-------+
+> > | Blue  | White |
+> > +-------+-------+
+> > 
+> > 2 - reflection then rotation (my vkms implementation)
+> > 
+> > +-------+-------+
+> > | White | Blue  |
+> > +-------+-------+
+> > | Red   | Green |
+> > +-------+-------+
+> > 
+> 
+> I wish I knew. :-)
+> 
+> Thanks,
+> pq
+> 
+> 
+> > > For me as a userspace developer, the important place is
+> > > https://dri.freedesktop.org/docs/drm/gpu/drm-kms.html#standard-plane-properties
+> > >   
+
 
