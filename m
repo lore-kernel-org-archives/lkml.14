@@ -1,105 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from out203-205-221-247.mail.qq.com (out203-205-221-247.mail.qq.com [203.205.221.247])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3407EEE0;
-	Tue,  9 Apr 2024 14:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F097275809;
+	Tue,  9 Apr 2024 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.247
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712671610; cv=none; b=p1oiaCLOvjjEf2mTLWvEJKV8he4tw3rv/XPO2UTFbrn5m3tmUbXZG6a2xyRW0R1A9hlUfvSzuiICWLpTz0GGRp5kt9X/pUFopTfIOP+WE9B+iW4waPAdIxvCKKApDGyKR1zmdSgunk0G2xmHJeEmMV88Kuz3wXuA4eWuNPDodd4=
+	t=1712671686; cv=none; b=jKFA6Xb39jHt9TItvG7bVcmGEgxL3W5J+nSNdswb6HIGWmaZE1qvybtS32Kne45Z+5XXEglrb8FpJfRXAcA/YL6XM7Nxjk72zVO+ufRWFgutusK7iUg/wZqaYZrCWPE9bl55UfT5gkMB7EH7Wv2QI/FUpQgLD37DUI+RiAUXIKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712671610; c=relaxed/simple;
-	bh=P1gNeYkG5bwZnGH03ghwXER+cIJuJOAxd+xPMYGlaCI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6F8LsTSHyx0RvBXAJB2yIrI+U2ZQVLc610o7F3SAjp3lN8wTzPAqwzagTFJLTxqyREn6KpjEsuRu7vH4EwJvX8Tg6Ie8OIi89tNwCaJYp2XGhD4wqOtmiBNBq7aERvnazGNRTxv3jGjk6qOBZg6kArgZXHxN4Ig8cHoli+0Q+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CECIG6Ph; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712671686; c=relaxed/simple;
+	bh=aZ3VspYYkKY1SKuWGstld2SVTKAJS1fjt3YHHePeFqk=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=hv953NuHCJfBi/JSskVfRPCK3di5fyvtxgQZLZf23qYB6degIL5t8tiJsEyoN3QhNHtNmeIAno+mnu0GLIQrowoWpj3t595ruzXivjvfJXWchNmJincwKufmfljzYrOe/1nircYknIlIMzrrXz+ZuNRtFF/kmi1eExl45xtVchk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QbA/vVeH; arc=none smtp.client-ip=203.205.221.247
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CECIG6Ph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712671609; x=1744207609;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=P1gNeYkG5bwZnGH03ghwXER+cIJuJOAxd+xPMYGlaCI=;
-  b=CECIG6PhoJPLrdMzNAIV1vmPfiYCQtMiWvTM4ql0OtwlGymCTeAxjiGl
-   6NkPEJukJMAqQ0XPJuNLBMFbRDtBlXdcYoLhQSMN96M8yVVXq+RSeN0Ye
-   N3YcO4dt/o1y4GAN0vBC+BvWYOZA4DTSTSYmdbgAkTMpctR/LDQjF7sif
-   Ex6XipHnLVCQam89eknrWefYdUUgO9+XQMjXJ9HAuF72uHCMmcWN7yFAB
-   75l8MSk3O8dWYDo6LK0fRCn57/oxTADUveLQp2oOHOnE160bHYD6yH7AD
-   M5iuaSQYCm49MCYBRWyTsOH2CRgfZyScy1Afl9jtmnKHVkUWdP/4EgACN
-   g==;
-X-CSE-ConnectionGUID: u1vYq9qwR2ajBKvYNeCxaw==
-X-CSE-MsgGUID: +H+XGrLcRLqlpp9bUYyW9A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11824762"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="11824762"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:06:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915400773"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="915400773"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:06:44 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ruC7V-00000002p7w-0HJf;
-	Tue, 09 Apr 2024 17:06:41 +0300
-Date: Tue, 9 Apr 2024 17:06:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 2/2] gpiolib: Update the kernel documentation - add
- Return sections
-Message-ID: <ZhVLcNI3rRhWs9_D@smile.fi.intel.com>
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
- <20240408231727.396452-3-andriy.shevchenko@linux.intel.com>
- <ZhU57jB_pVvDz0ZR@smile.fi.intel.com>
- <CAMRc=Mdzc2gSEX0h0Uwcxr2qMgwLLXfhJda=3AkNNYsDBQre7A@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QbA/vVeH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712671681; bh=Nq7x37qnBv79sD920Br4gJu3bwEbV/pMCm95FU3naDk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=QbA/vVeHqGIdL6GIN5Aabs8VRYJcnKVkyAEZpqoJnTbrE+UVVtFogERdirJS5TTx8
+	 8G41AnRxLXGdb6W3TwtTKbx+kbcpxmqur6/OwhdRBnGuDTY0qFCrC6zqJUsAypWzLU
+	 /IGMoU2dERkECnOmypwBuOt+zb9j+HKt0j9kAjm8=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 6D16000; Tue, 09 Apr 2024 22:01:45 +0800
+X-QQ-mid: xmsmtpt1712671305t2hlw4hd1
+Message-ID: <tencent_88401767377846C9736D0363C96C23BB4405@qq.com>
+X-QQ-XMAILINFO: MXFwphgysCmN7alFT54dUzQwy3Yf4UCiwHgtXIu9oHZ6X2/XiOTaFGgsyzuF2u
+	 BWJEbWMOcQXfFTLTOQpeeXrdVWRtoapk4/0M7AQRhNgbeFb62N+u9liwhKDDAHWWegr8w8OkiBw1
+	 ioQ42KrhMBTgM52VRYhCcNhjT4eab7Zsq92OHoTtzRqZHHkpu5No+MlG+0E4yudhDgiKQWivQCKg
+	 cLqEuj5DtRR+UPU9xjL3DQNckNqMF2Wi9kWe83m8eezRIloBb2d4mfQdO80iVoFBRwLBj4HMfSM9
+	 dkS5QOzS5BNfLV6I7gqEpiwVwgjbN7DAxqWwh8UB20bZXEaeVPthNVidYI4DZKsuobSzErjlGuVv
+	 l5HOy4xpNztv22onDE10Y6EhZ0rGXIYr9I+oNN9P0eRCyjl/EA1/sknQaqjxgNNA3mFAdbmXeBCB
+	 oNCUYgStbGpWPDYCK2hOTACTrgwcBPOomlREYsuS0LRiKE2CSdDEW+6PLLo80ZbPN0PO27xVP3HU
+	 kqpKiIiSLoIuE+rrA0tuSRF1HwBLvxsn++9qD4eiOL6hZHuR25pC8vxyAUprvIM4lyAvq5lU6T2T
+	 O7A+PresvyPjUyIroSypXsB7xBe0ZXlVG7M4HuU7kZOvc/96/nH/tbCT3BS12yK4WqtoHBIPPkQs
+	 h5dD73wlRTamZCMYrcNlii3Gt35JL8MsVTCoK1jQ0HWWJ0UnQPG+HXBQqt0Jw6qIIyhmaRXf25qQ
+	 acGhHoF63hZfbTa5e8U4yTLVykNw+cm5V7CZ1GJHydpZs4+5/Pu/24cqwCXntRla5HTup+ONOEHt
+	 WNsGEcTuFVELID/U1nLr9wVtfi1HCGt6eO8AbsVSFPJEGquYzhg3RTBVYBEM3HcCEWv7dafBhvjO
+	 0onQLX5QebODGDtWpSmG6KGNNOjlaeWIAOIyCtKkPo7aSTeBSc8Nr+edtaTYlaBjRH6ZENX1Y501
+	 R831j7dHsTX5gaL/RILH+sbcR5GSJlRQBRqGD2x1CiSAGxI5NYWPHhrv4tKSRNps4pxkx2INMbGW
+	 7V3eDBB9LsqkXRQj4a8WTCnxd6wjQ4gjNKdwHTIAdNuzNfSSYGM/A6zhg0F4hUQgHjb9R9kgk28Y
+	 zyKEdW
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: eric.dumazet@gmail.com
+Cc: eadavis@qq.com,
+	edumazet@google.com,
+	johan.hedberg@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	luiz.dentz@gmail.com,
+	marcel@holtmann.org,
+	netdev@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] net/socket: Ensure length of input socket option param >= sizeof(int)
+Date: Tue,  9 Apr 2024 22:01:45 +0800
+X-OQ-MSGID: <20240409140144.28412-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <7cf0848b-f44c-42ad-848a-369a249bff77@gmail.com>
+References: <7cf0848b-f44c-42ad-848a-369a249bff77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mdzc2gSEX0h0Uwcxr2qMgwLLXfhJda=3AkNNYsDBQre7A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 09, 2024 at 04:01:43PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 9, 2024 at 2:52 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Tue, 9 Apr 2024 15:07:41 +0200, Eric Dumazet wrote:
+> > The optlen value passed by syzbot to _sys_setsockopt() is 2, which results in
+> > only 2 bytes being allocated when allocating memory to kernel_optval, and the
+> > optval size passed when calling the function copy_from_sockptr() is 4 bytes.
+> > Here, optlen is determined uniformly in the entry function __sys_setsockopt().
+> > If its value is less than 4, the parameter is considered invalid.
 > >
-> > On Tue, Apr 09, 2024 at 02:12:51AM +0300, Andy Shevchenko wrote:
-> > > $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> > > 67
-> > >
-> > > Fix these by adding Return sections. While at it, make sure all of
-> > > Return sections use the same style.
-> >
-> > Since there shouldn't be hard dependency to the first one, can you consider
-> > applying this one, so it unblocks me?
+> > Reported-by: syzbot+837ba09d9db969068367@syzkaller.appspotmail.com
+> > Reported-by: syzbot+b71011ec0a23f4d15625@syzkaller.appspotmail.com
+> > Reported-by: syzbot+d4ecae01a53fd9b42e7d@syzkaller.appspotmail.com
+> > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 > 
-> I'm not sure what the resolution is for % and HTML <font> tags in the end?
-
-Most of the constants are without %, so less churn now is to drop %.
-If you think otherwise, please, fix it and I will rebase my patches later.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
+> I think I gave my feedback already.
+> 
+> Please do not ignore maintainers feedback.
+> 
+> This patch is absolutely wrong.
+> 
+> Some setsockopt() deal with optlen == 1 just fine, thank you very much.
+It's better to use evidence to support your claim, rather than your "maintainer" title.
 
