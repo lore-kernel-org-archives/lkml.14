@@ -1,98 +1,111 @@
-Received: from njjs-sys-mailin01.njjs.baidu.com (mx312.baidu.com [180.101.52.108])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C29355E49;
-	Tue,  9 Apr 2024 04:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.101.52.108
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B8F26AC5
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 04:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712636816; cv=none; b=ToLPWQZQ0LcdFlIOPvuJdmS4hmFXzRnVK17aEGSMQ6yn6nr5ikwkgsvO0/wbkeSkidID0t3KmgrpQMN9LqmPQh7NF/EhKiT67ufSFRZQ/jWOC0qzigPTGetmO9bmeg1Rx42qHtmhxMTR+t66nExQcbWN0QxqLRR+46j0jzlIASA=
+	t=1712637129; cv=none; b=krHgITtY+8U53cljtHidYy85Hj78PJMaPHCHyMrCiDG7c2d1AuTf6/emoFH6Png7qygWmihrocBUhVvYqfOoGA1+VTBz815bMltKRJO0hZGFQwJblB6ENyZXeSW6SKTq70Rm4Bx8/uzQBPV/6zhut6ObiwBZF0nEkO/Gd0YZrBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712636816; c=relaxed/simple;
-	bh=jGNXxHR/Fh4U/7Tq9uNGVzYyZsoPbyiNVcG5X3Bq9MM=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=Qt1OBnSE4vZgXD+IppGThMrcX/jHGH8HI0MZBjEuY/C8ylwgKVw7t0bOxDimnmuH8x2f204MsVZP4n8wtuxuGnmCTlMG5h3yPKA8KnV9YbbmlywpYH2SEhC/8ltZ0DH83hpqgWWAWsJc+dxEy7DANUw1i73pmvMdh4aaANWeb2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=180.101.52.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-Received: from localhost (bjhw-sys-rpm015653cc5.bjhw.baidu.com [10.227.53.39])
-	by njjs-sys-mailin01.njjs.baidu.com (Postfix) with ESMTP id 4BFD87F00045;
-	Tue,  9 Apr 2024 12:20:59 +0800 (CST)
-From: Li RongQing <lirongqing@baidu.com>
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	peterz@infradead.org,
-	linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com,
-	kvm@vger.kernel.org,
-	seanjc@google.com,
-	szy0127@sjtu.edu.cn,
-	thomas.lendacky@amd.com
-Cc: Li RongQing <lirongqing@baidu.com>
-Subject: [PATCH][RFC] x86,lib: Add wbinvd_on_many_cpus helpers
-Date: Tue,  9 Apr 2024 12:20:56 +0800
-Message-Id: <20240409042056.51757-1-lirongqing@baidu.com>
-X-Mailer: git-send-email 2.9.4
+	s=arc-20240116; t=1712637129; c=relaxed/simple;
+	bh=dPvPqUERy12DlCuYBp4kJOrK+EGsyRWG0aIs7+b7590=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X4zBTPYOD3yCIZVM/N1yiudhl5dQJzTn0/kdZvP5FA1VRedM/MeL70zasoI3ePqGrzm2cMWu97bLxCOktuqB6E7XEqfxIabiZzneRQJMxKkm/qJ88fjs/pSQEote2tuSRxD3wq5DGjpAvpX6rng3FtURaleGGy6szaPwa/Q5NI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru39E-0004ek-Fn; Tue, 09 Apr 2024 06:31:52 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru39C-00BErS-Fh; Tue, 09 Apr 2024 06:31:50 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1ru39C-004MsH-1F;
+	Tue, 09 Apr 2024 06:31:50 +0200
+Date: Tue, 9 Apr 2024 06:31:50 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Arun.Ramadoss@microchip.com
+Cc: andrew@lunn.ch, olteanv@gmail.com, davem@davemloft.net,
+	Woojung.Huh@microchip.com, pabeni@redhat.com, edumazet@google.com,
+	f.fainelli@gmail.com, kuba@kernel.org, kernel@pengutronix.de,
+	dsahern@kernel.org, san@skov.dk, willemb@google.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	horms@kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH net-next v4 5/9] net: dsa: microchip: add support for
+ different DCB app configurations
+Message-ID: <ZhTEtmcvubthMXmB@pengutronix.de>
+References: <20240408074758.1825674-1-o.rempel@pengutronix.de>
+ <20240408074758.1825674-6-o.rempel@pengutronix.de>
+ <40d90a28d95bff48f352a3aaf81df2b1a6133cc7.camel@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <40d90a28d95bff48f352a3aaf81df2b1a6133cc7.camel@microchip.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-wbinvd_on_many_cpus will call smp_call_function_many(), which should
-be more efficient that iterating cpus since it would run wbinvd()
-concurrently locally and remotely
+Hi Arun,
 
-it can be used by the below patch
-https://patchwork.kernel.org/project/kvm/patch/1860502863.219296.1710395908135.JavaMail.zimbra@sjtu.edu.cn/
+On Mon, Apr 08, 2024 at 04:10:15PM +0000, Arun.Ramadoss@microchip.com wrote:
+> > +int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
+> > +{
+> > +       struct ksz_device *dev = ds->priv;
+> > +       int ret, reg, shift;
+> > +       u8 data, mask;
+> > +
+> > +       ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
+> > +
+> > +       ret = ksz_pread8(dev, port, reg, &data);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       return (data & mask) >> shift;
+> 
+> I assume we can use retrun FIELD_GET(mask, data), since mask is GENMASK
+> format. 
+> 
+> > 
+> > +int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8
+> > prio)
+> > prio)
+> > +{
+> > +       struct ksz_device *dev = ds->priv;
+> > +       int reg, shift;
+> > +       u8 mask;
+> > +
+> > +       if (prio >= dev->info->num_tx_queues)
+> > +               return -EINVAL;
+> > +
+> > +       ksz_get_defult_port_prio_reg(dev, &reg, &mask, &shift);
+> > +
+> > +       return ksz_prmw8(dev, port, reg, mask, (prio << shift) &
+> > mask);
+> 
+> FIELD_PREP(mask, prio)
 
-Cc: Zheyun Shen <szy0127@sjtu.edu.cn>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
----
- arch/x86/include/asm/smp.h | 7 +++++++
- arch/x86/lib/cache-smp.c   | 7 +++++++
- 2 files changed, 14 insertions(+)
+Sadly, FIELD_GET() and FIELD_PREP() do not work with dynamic masks.
 
-diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
-index a35936b..70973de 100644
---- a/arch/x86/include/asm/smp.h
-+++ b/arch/x86/include/asm/smp.h
-@@ -111,6 +111,7 @@ void native_play_dead(void);
- void play_dead_common(void);
- void wbinvd_on_cpu(int cpu);
- int wbinvd_on_all_cpus(void);
-+int wbinvd_on_many_cpus(const struct cpumask *mask);
- 
- void smp_kick_mwait_play_dead(void);
- 
-@@ -159,6 +160,12 @@ static inline int wbinvd_on_all_cpus(void)
- 	return 0;
- }
- 
-+static inline int wbinvd_on_many_cpus(const struct cpumask *mask)
-+{
-+	wbinvd();
-+	return 0;
-+}
-+
- static inline struct cpumask *cpu_llc_shared_mask(int cpu)
- {
- 	return (struct cpumask *)cpumask_of(0);
-diff --git a/arch/x86/lib/cache-smp.c b/arch/x86/lib/cache-smp.c
-index 7af743b..5950d1b 100644
---- a/arch/x86/lib/cache-smp.c
-+++ b/arch/x86/lib/cache-smp.c
-@@ -20,3 +20,10 @@ int wbinvd_on_all_cpus(void)
- 	return 0;
- }
- EXPORT_SYMBOL(wbinvd_on_all_cpus);
-+
-+int wbinvd_on_many_cpus(const struct cpumask *mask)
-+{
-+	smp_call_function_many(mask, __wbinvd, NULL, 1);
-+	return 0;
-+}
-+EXPORT_SYMBOL(wbinvd_on_many_cpus);
+Regards,
+Oleksij
 -- 
-2.9.4
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
