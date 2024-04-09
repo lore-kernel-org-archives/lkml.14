@@ -1,111 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF056157A5D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B5D157A51
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712690728; cv=none; b=MowOJ+Az/+uNeCi3XXJpAo3oyHlEG6Z9lxz+Qm3Z5bHHGsocFS/8zIXLZb+k7DoMujVwKj6+K5q62M12CAkUjWMMOFWXSC46k5OetKWcCcPLtMR681lWEKCq7lB47LMjHCDvQsJp05sUDNbXqzZuRDbW5ot7wlAKJSwsBSdUUDU=
+	t=1712690739; cv=none; b=g/NhhdIuFZkbPIK0Q3pNwatjz/47Z5nywwNjP9ZHu9h6fmef2tVtTU7hFvTphTTmnoG9AahyLqfCXvFaZ/L85eoZaqiPPu2kK3f3MF0vlaPtL9eXOcyt3NfbPNFJaCd7W5ydmyR7Yu7CZ3+hSe49JfGzl+TMPJR3J3iwgq5mxRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712690728; c=relaxed/simple;
-	bh=8ggUQvHKaMkbaZKa6fSqKVjkq7jK/5ChUl8Qcha1vQY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ccB9ohY0WCZr4E4X4WTMGhhyg7K0dwpotUKUAJ2Un4DaqgqmfEvR3xNb4vzvK7AO0zdb8NYOZaovaVbClz+TXqx9E26jE8jz0LKyrXoVsrWc5lUPdk+MwMMi+7tp/Zs0y76HSAFluyIHrQzLCJwRK7YCeUZqQDS3TgifhjL2IL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hbSXSg9k; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712690739; c=relaxed/simple;
+	bh=sZns4wWiCwVq2UKw3DllXS1aY/CmVoZGF+v/FMeR3zg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VPAPRKkJ53UWSiKCOKeHNX2sdYs130MFKud+WpFRJ/fH0R9vohwNNHGxZNpVJ1cM+brfltOnBVjzKaqS2EX7jjqSud01iSgnSvvs3kHmRhziB9rdNo2/BZ1tYgJJVPzgUZwsEdRIXspv8tBMyXsc9Ml1lQ3On/WKnFO5DRiLhfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/SGLq92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbSXSg9k"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712690725;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UDO/LuGyFJsgzNpcvXk5nDcpkN8Vm1hlfEW8fwIXGqY=;
-	b=hbSXSg9kWmcgN2xmphjGZN0sPt36CZWSHo2QDhaLuvRrM203vv+9WLZQLYU61cj0n2rijK
-	Rorb08KxAAm2RTzkacmP/HkRmoHUc47Nom7Do3y4dkuqy75kRmmHHFpGOueJ3e1yiMRTpx
-	VtDkHYCFUYs1BCfwuqELpPKaoNUZnBs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-79-q_7BzCqOO76DTj4PZpIcDA-1; Tue, 09 Apr 2024 15:25:22 -0400
-X-MC-Unique: q_7BzCqOO76DTj4PZpIcDA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E95FE890524;
-	Tue,  9 Apr 2024 19:25:20 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.192.106])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E1E2B40AE784;
-	Tue,  9 Apr 2024 19:25:08 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Peter Xu <peterx@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Yin Fengwei <fengwei.yin@intel.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Hugh Dickins <hughd@google.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <naoya.horiguchi@nec.com>,
-	Richard Chang <richardycc@google.com>
-Subject: [PATCH v1 09/18] mm/memory-failure: use folio_mapcount() in hwpoison_user_mappings()
-Date: Tue,  9 Apr 2024 21:22:52 +0200
-Message-ID: <20240409192301.907377-10-david@redhat.com>
-In-Reply-To: <20240409192301.907377-1-david@redhat.com>
-References: <20240409192301.907377-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/SGLq92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7621FC433C7;
+	Tue,  9 Apr 2024 19:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712690738;
+	bh=sZns4wWiCwVq2UKw3DllXS1aY/CmVoZGF+v/FMeR3zg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=L/SGLq92FO/Y3Ifb/DIrf0ewcs/SvPtFMxGhrGdIItA5B7TNlzsLA5NhLFZHE4Sf5
+	 ax+o5r283Ugp/c4OxkE3Oyv7Fbgui/3EePahWdUxJC6/1PEWJUoup3vBFs5qdjjLW0
+	 u3Srk84StwXDJT5/HK6BK49ESE5tlA8aXfyiQZ/Bx6uNQ4+mft0Q05VT7M5StCpoug
+	 lcoqa1k9tqFxqgtwlz+DOdj0HngoveTKYtR/LeZvrJG2g54QN9ndsdhkf96YkfJ5i/
+	 dnhmEV4K+LmdqGVOK/HBmFLPJy8Hb7HhiUxOiQmZKv4+rfpwg5ZIV+6E/9QOi+H9iT
+	 HZ4MU0o7Jr/eQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 11B81CE2D22; Tue,  9 Apr 2024 12:25:38 -0700 (PDT)
+Date: Tue, 9 Apr 2024 12:25:38 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Julia Lawall <julia.lawall@inria.fr>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: Finding open-coded workarounds for 1/2-byte cmpxchg()?
+Message-ID: <d0c0e4c6-0791-448b-90ec-0bb4edcb8518@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <f57bcb57-45a4-4dfb-8758-8f7302223ea9@paulmck-laptop>
+ <alpine.DEB.2.22.394.2404060057110.3446@hadrien>
+ <0e489247-6350-4485-9976-320b457ae748@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e489247-6350-4485-9976-320b457ae748@paulmck-laptop>
 
-We want to limit the use of page_mapcount() to the places where it is
-absolutely necessary. We can only unmap full folios; page_mapped(),
-which we check here, is translated to folio_mapped() -- based on
-folio_mapcount(). So let's print the folio mapcount instead.
+On Fri, Apr 05, 2024 at 04:18:29PM -0700, Paul E. McKenney wrote:
+> On Sat, Apr 06, 2024 at 01:00:35AM +0200, Julia Lawall wrote:
+> > 
+> > 
+> > On Thu, 4 Apr 2024, Paul E. McKenney wrote:
+> > 
+> > > Hello, Julia!
+> > >
+> > > I hope that things are going well for you and yours.
+> > >
+> > > TL;DR: Would you or one of your students be interested in looking for
+> > > some interesting code patterns involving cmpxchg?  If such patterns exist,
+> > > we would either need to provide fixes or to drop support for old systems.
+> > >
+> > > If this would be of interest, please read on!
+> > >
+> > > Arnd (CCed) and I are looking for open-coded emulations for one-byte
+> > > and two-byte cmpxchg().  Such emulations might be attempting to work
+> > > around the fact that not all architectures support those sizes, being
+> > > as they are only required to support four-byte cmpxchg() and, if they
+> > > are 64-bit architectures, eight-byte cmpxchg().
+> > >
+> > > There is a one-byte emulation in RCU (kernel/rcu/tasks.h), which looks
+> > > like this:
+> > >
+> > > ------------------------------------------------------------------------
+> > >
+> > > u8 rcu_trc_cmpxchg_need_qs(struct task_struct *t, u8 old, u8 new)
+> > > {
+> > > 	union rcu_special ret;
+> > > 	union rcu_special trs_old = READ_ONCE(t->trc_reader_special);
+> > > 	union rcu_special trs_new = trs_old;
+> > >
+> > > 	if (trs_old.b.need_qs != old)
+> > > 		return trs_old.b.need_qs;
+> > > 	trs_new.b.need_qs = new;
+> > > 	ret.s = cmpxchg(&t->trc_reader_special.s, trs_old.s, trs_new.s);
+> > > 	return ret.b.need_qs;
+> > > }
+> > >
+> > > ------------------------------------------------------------------------
+> > >
+> > > An additional issue is posed by these, also in kernel/rcu/tasks.h:
+> > >
+> > > ------------------------------------------------------------------------
+> > >
+> > > 	if (trs.b.need_qs == (TRC_NEED_QS_CHECKED | TRC_NEED_QS)) {
+> > >
+> > > 	return smp_load_acquire(&t->trc_reader_special.b.need_qs);
+> > >
+> > > 	smp_store_release(&t->trc_reader_special.b.need_qs, v);
+> > >
+> > > ------------------------------------------------------------------------
+> > >
+> > > The additional issue is that these statements assume that each CPU
+> > > architecture has single-byte load and store instructions, which some of
+> > > the older Alpha systems do not.  Fortunately for me, Arnd was already
+> > > thinking in terms of removing support for these systems.
+> > >
+> > > But there are additional systems that do not support 16-bit loads and
+> > > stores.  So if there is a 16-bit counterpart to rcu_trc_cmpxchg_need_qs()
+> > > on a quantity that is also subject to 16-bit loads or stores, either
+> > > that function needs adjustment or a few more ancient systems need to
+> > > lose their Linux-kernel support.
+> > >
+> > > Again, is looking for this sort of thing something that you or one of
+> > > your students would be interested in?
+> > 
+> > Hello,
+> > 
+> > I tried, but without much success.  The following looks a little bit
+> > promising, eg the use of the variable name "want", but it's not clear that
+> > the rest of the context fits the pattern.
+> 
+> Thank you for digging into this!!!
+> 
+> > diff -u -p /home/julia/linux/net/sunrpc/xprtsock.c
+> > /tmp/nothing/net/sunrpc/xprtsock.c
+> > --- /home/julia/linux/net/sunrpc/xprtsock.c
+> > +++ /tmp/nothing/net/sunrpc/xprtsock.c
+> > @@ -690,12 +690,9 @@ xs_read_stream(struct sock_xprt *transpo
+> >  		if (ret <= 0)
+> >  			goto out_err;
+> >  		transport->recv.offset = ret;
+> > -		if (transport->recv.offset != want)
+> > -			return transport->recv.offset;
+> 
+> Agreed, though you are quite right that ->recv.copied and ->recv.offset
+> are different lengths.  But yes, as you sugggest below, there must be
+> a cmpxchg() of some type (cmpxchg(), cmpxchg_acquire(), ...) in the mix
+> somewhere.  Also, the cmpxchg() must be applied to a pointer to either
+> a 32-bit or a 64-bit quantity, but the change must be 16 bits (or 8 bits).
+> 
+> > The semantic patch in question was:
+> > 
+> > @r@
+> > expression olde;
+> > idexpression old;
+> > @@
+> > 
+> > if (olde != old) { ... return olde; }
+> > 
+> > @@
+> > expression newe != r.olde;
+> > idexpression nw;
+> > expression r.olde;
+> > idexpression r.old;
+> > @@
+> > 
+> > *if (olde != old) { ... return olde; }
+> > ...
+> > *newe = nw;
+> > ...
+> > *return newe;
+> > 
+> > The semantic patch doesn't include the cmpxchg.  I wasn't sure if that
+> > would always be present, or in what form.
+> 
+> It would be, but I am having trouble characterizing exactly what the
+> pattern would look like beyond "emulating a 16-bit cmpxchg() using either
+> a 32-bit cmpxchg() or a 64-bit cmpxchg()".  :-(
+> 
+> Thank you again, and something to think more about.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory-failure.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I took the crude approach of looking at all of the cmpxchg*() invocations,
+discarding those that were clearly not an issue.  Here are the close calls
+that I found:
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 88359a185c5f..ee2f4b8905ef 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -1628,8 +1628,8 @@ static bool hwpoison_user_mappings(struct page *p, unsigned long pfn,
- 
- 	unmap_success = !page_mapped(p);
- 	if (!unmap_success)
--		pr_err("%#lx: failed to unmap page (mapcount=%d)\n",
--		       pfn, page_mapcount(p));
-+		pr_err("%#lx: failed to unmap page (folio mapcount=%d)\n",
-+		       pfn, folio_mapcount(page_folio(p)));
- 
- 	/*
- 	 * try_to_unmap() might put mlocked page in lru cache, so call
--- 
-2.44.0
+o	drivers/misc/genwqe/card_ddcb.c enqueue_ddcb() does work against
+	a union that has 32-bit, 16-bit, and eight-bit members, but as
+	far as I can see the ->icrc_16 member is not used.  But this
+	might be an accident waiting to happen.  Or maybe this driver
+	is used only by architectures with a full set of cmpxchg sizes.
 
+	The 8-bit ->hsi and ->shi fields are used for debug output, which
+	should be harmless.
+
+	Ditto __genwqe_purge_ddcb() that same file.
+
+o	drivers/platform/surface/aggregator/controller.c ssh_seq_next()
+	does an 8-bit cmpxchg().
+
+o	drivers/platform/surface/aggregator/controller.c ssh_rqid_next()
+	does a 16-bit cmpxchg().
+
+o	kernel/locking/qspinlock_paravirt.h pv_wait_node() does
+	an 8-bit cmpxchg().  As does pv_kick_node() in that same
+	file.  And __pv_queued_spin_unlock().  And, as Arnd noted,
+	trylock_clear_pending() and pv_hybrid_queued_unfair_trylock()
+	in that same file do 16-bit cmpxchg_acquire().
+
+o	net/rxrpc/io_thread.c rxrpc_input_packet_on_conn() is strange
+	in that it supplies 16-bit old and new fields to a cmpxchg()
+	of a 32-bit quantity, but it is quite possible that this would
+	be a 16-bit quantity if permitted in core code.  This is in an
+	rxrpc_connection structure.
+
+There are no doubt some false negatives omitted from this list, but
+there are a few places that use or would like to use 8-bit and 16-bit
+cmpxchg*().
+
+							Thanx, Paul
