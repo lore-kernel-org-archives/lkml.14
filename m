@@ -1,90 +1,108 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB88715665B;
-	Tue,  9 Apr 2024 18:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7434156870;
+	Tue,  9 Apr 2024 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686205; cv=none; b=B4NyP6C36ZjBbXgM4WQLh8qTxedMr37ACWg7N5r9k3ky2ki+6gSkcg0R4pYkzyIB8eUfqCyIv8tP/jiaeI5HPsio0rovU7k1HgmqXXdANXpC4tipN4a/TRrIlhNLxM/bOl/vtxXtYay9LGy+Mv1f+gtE6ovn82caCeupeRYATeM=
+	t=1712686266; cv=none; b=Y6CxGQ0GUf2ehi0stcvZpABUFDO68EsyQ4ZZjGei7E0IAiTpzANV0cdpU1Sd60JMih0sBiPznkbh9NyQ7ILA0RtnAj7NO5rCk9MhOD8qNyINsmuYGPlRlZsWeAu4HTfzypV7xc/EAiZAGozoN3qf3CIWcjZ5tQm7Uoh6xcUVmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686205; c=relaxed/simple;
-	bh=GWZMNv/jp14YM5KipnCUWg6RYgfSYcRiFQqZSRxASho=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZVtc7zXejJzD6RApA++JNnf7DOhUvxzkTxxP9HiHHzfMuBxMejEj8lPl+FAk7DUORPB/tbOnf/1VUweldYLHnbt+/H8oggFwif6IZPHKsJeYI3/kyxV/La+zzyozPN3MyhfuGEvKxN3WpLg36cs+m4Ws2RWZzv+EpiQqAqBsJV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=svenjoac@gmx.de header.b=R4MTHzzT; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1712686266; c=relaxed/simple;
+	bh=HqaMdhT5LRYjCxR6gMHB6EOhgxJSaOa8vauHB4zv+2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VEcXLkEQW6JyFiEwmibcC3WtjFMfD79IkVnGtESa8JlYs4ay5DUpopaCaLfXmKFzko6SIUQtdxstnBUDafbxRBsJKoGPCrdA7Vk860hmUqt0Am/x1Qg+YQ4VBolz/2UF1AjyYYVKUKz3CWRCQ2HF0kScy+9Ca0RDkS80k4Y0/YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FttKq7Yz; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=svenjoac@gmx.de header.b="R4MTHzzT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1712686169; x=1713290969; i=svenjoac@gmx.de;
-	bh=B1Gs2gI4M4O38Do9MzvVjCBuAgBbEJZ0/QWS9rcgkQI=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:In-Reply-To:References:
-	 Date;
-	b=R4MTHzzTFqgqWm8n4CjPgP5QaBJYtcKXtYqhYIgq3TAQyaVE1m9IJN7/yAW1+GT/
-	 P8qMGg1aTEGVeJuO/YYKgmK+q6IhmpXVchyS2urqc8bME2H15FKyCTTM1DEw3fbNe
-	 0E9JDl2xqMFqdy/1GqKXJ3vHy9FLd0ABVwWo7DadbbXoXpxXQQnAnL/PfZKIAz76Z
-	 534SQrVMRp+A69rnzZLQVlC9ki4ydc3rX3QTcKMEePgtEgQkK/kOdCZV7e76WCkxq
-	 XXD/Jl3ALt19EB23iYsF61E7l/m/9Qt3uy6JPVozJhaBRFJlPrOriraLUP/USfoAe
-	 O9kvx6LKEX4MCQS6DQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.203.81.120]) by mail.gmx.net
- (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MTRMi-1sLrS10Cwm-00TlCf; Tue, 09 Apr 2024 20:09:29 +0200
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id B07B680119; Tue, 09 Apr 2024 20:09:26 +0200 (CEST)
-From: Sven Joachim <svenjoac@gmx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,  patches@lists.linux.dev,
-  linux-kernel@vger.kernel.org,  torvalds@linux-foundation.org,
-  akpm@linux-foundation.org,  linux@roeck-us.net,  shuah@kernel.org,
-  patches@kernelci.org,  lkft-triage@lists.linaro.org,  pavel@denx.de,
-  jonathanh@nvidia.com,  f.fainelli@gmail.com,  sudipm.mukherjee@gmail.com,
-  srw@sladewatkins.net,  rwarsow@gmx.de,  conor@kernel.org,
-  allen.lkml@gmail.com,  broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/138] 6.1.85-rc1 review
-In-Reply-To: <20240408125256.218368873@linuxfoundation.org> (Greg
-	Kroah-Hartman's message of "Mon, 8 Apr 2024 14:56:54 +0200")
-References: <20240408125256.218368873@linuxfoundation.org>
-Date: Tue, 09 Apr 2024 20:09:26 +0200
-Message-ID: <87h6ga4dd5.fsf@turtle.gmx.de>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FttKq7Yz"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e220e40998so37525675ad.1;
+        Tue, 09 Apr 2024 11:11:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712686264; x=1713291064; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
+        b=FttKq7YzQibSu3QkW5wm1cfur0Sb9eg8CtXs6WKUr9zGDaPWl6iuiLJeLdFeC/iNY4
+         8LFySLpve+36Cug69jRdkAr49JZayGOQ+h79XwJLmN+RGRoU5XlOio1N1e8jd9GEJEmv
+         JRMv+qzkoHFdB1b4Bxkp0G2VFJ3rVPH65aFOHo/NDDOX/PNkNDIVWpjBAvpVTOv7ykb3
+         9ug8dXeQdHgfj6UX7ce9WAcNpBnhctkosX4i9G4T6hn4u3kGmYVz8wHyawwXjvaARlGr
+         yFs6XU8whVQDxMNKSkr4yiUhYOMcVBmPngklvhlTodqo1z1xR4SxxVKF1dlxKqaRVvui
+         668g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712686264; x=1713291064;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J9dSAKFdynyhKujjaxO9n/FtMdq9OcS8F/T8JeifJ1k=;
+        b=HP7vlWjUZAWHHrddjNVv3YgPx0I5azs3kmojBst3vtYYxrA1D71oIL1wOH19ZY4TUs
+         ftaKyJOnrw+v9UBFB6a0bqBKbqbLpNs68NhxBc6I4UQlLhfvlyNm7sZzP5HRpPyyMRxw
+         QVJ6GxsL0bzbuCMLLppGiH+IjkYaaBcj2IV9fcIdUXrq2ShDqTfQuupwK8tiTUbdR8OO
+         OkNIo0AogoEn0JW5q0nLKvHf37jwnzqqiZbnxJXTcIE6YW9tbYBas7IdP4x23WyjvAjD
+         FN0NrJuAkwufQY83aDqkWLEtN1t1r1vTmI+aONn9zP6XzWpktxVLO4uGULpNYulWc91k
+         CGAA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOIUq17MX3ojkp1V6Cw9t8Qzn0i7G+B0PGVWhNdNF0DHrikTZ1ScpOCibZaWUiQp6wgT+fg9eMxG/BrIIsRv+ANw33tAjJ8YbWCmPgmBXNdd2CZ9lphiimSkE8vBeIC6loU/9Ymmbt0q30VcajpRlnS34lU1J3DxmLpI8px8Vrd/4WT97R1PLf03PTLkeZ8F32eeVIrP3AiQyVZfVGiTyuaal6tu0B5qARapkRPBBrrJpzrPwvQfwmsTJSMHcsEjkaej8h+uRDEB1Drihu5D3Nyx/memLkjrg5udbv9++s8OCrYu/nGgSZYMTdhiMc7Q==
+X-Gm-Message-State: AOJu0YzL7OMOZU2B65EthKr0eCDvgim79p+ud0OvzG96sNBtdoh9Tnph
+	832vI1K28ki+3abjxbs+JvC89QxEWnzd7y3ealZCI+MUo6NH3lPv
+X-Google-Smtp-Source: AGHT+IGrjPVdFECKS3becNGGDDo38peM0R3uLnfzfKLi+hNrIYGQpqn6EkGBto25qlTyktqlNq6njg==
+X-Received: by 2002:a17:902:82c8:b0:1e2:3e1e:3d9 with SMTP id u8-20020a17090282c800b001e23e1e03d9mr529751plz.63.1712686263974;
+        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j18-20020a170902f25200b001e256cb48f7sm9195770plc.197.2024.04.09.11.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 11:11:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Tue, 9 Apr 2024 11:11:02 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: David Gow <davidgow@google.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Kees Cook <keescook@chromium.org>,
+	Daniel Diaz <daniel.diaz@linaro.org>,
+	Arthur Grillo <arthurgrillo@riseup.net>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org, loongarch@lists.linux.dev,
+	netdev@vger.kernel.org, x86@kernel.org,
+	Linux Kernel Functional Testing <lkft@linaro.org>
+Subject: Re: [PATCH v3 03/15] kunit: Add test cases for backtrace warning
+ suppression
+Message-ID: <aad25d52-83ed-492f-9d56-71d26895173b@roeck-us.net>
+References: <20240403131936.787234-1-linux@roeck-us.net>
+ <20240403131936.787234-4-linux@roeck-us.net>
+ <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Provags-ID: V03:K1:vL3vQt9Kk7zU9G9u353BTGfpG3FcgCdgMal5QikDGdQ/TIK7B6Y
- qYNnCdQcPbxzdYMWidnlfEKgoz5Ss63nlM4OUlsIj77oLhXeaHhw7EGCL1gicRZHy3VQVrG
- YXesvfvTkE/+fv0dN9iqnlBd11PoUBNWxSOsbotRk9NepHcT5kqk2R1UiZ+WQ4G6d2CMw4+
- DPWDVivTIIkveS5HywT0Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:B7si3eCXGUo=;T1DtpOEuBV7WOHPFyReILsyI+Fg
- 5+YkKuPmyS7Mnp1Fbvo86yRDqrYX2vZMxQIEw5niq21k9KtN+zU2Gdb4n4RZ1XcJdXXG/5nYA
- b4iadaFmTO1R+xr85tgR3qkxZAdpdYvz3vPgI0ZRybZREtXMOuxaOUGcQdphpUhx0KvAHhnkW
- tMig7CiZPw3ND7yJh/wL5fyqkIDAHxiJ/z6IRInZUs07G1QMscuU4pyPGSDh5bcUx0+oBRLz0
- 2ID0oYlpu6NvUghFaFW/FGntjIL7cPo8hVYvSU2SeHo5q+IxPTAVJ+tMEhwAwX60mgNRDrTwI
- uXVMNdFTZvh3CiCX38e2ZZKUr7LTJrYWVSKGYpb7AooL+RjAGQF2oBTRRxSDQYvRa4HI6MnMX
- uP06dRSaCVECFxzzg8De778R63UvUT3/Vg42SSf15EY0Cfmlkn9pGySqUcvOQTAEswmV+c8L2
- 0iQLbbTvCf/O+jklW5VVQ56+aNG9yxcwSryF+zzx2qay8+bIm8V50r/+Dq85bVt8FA7fTpISy
- tZFLZp/nGlDcRoJyerPPX1Y3k1LbkQbMkCMPPio2qLxUjjwmNbgpWuE1xENv6UAwWaKoD93Rs
- 3LWpI8KOh4Wn1KbvPJIYe5Mxcrtnhk5kK6Sa3c4TKCVb104OsSs7tjM3cpHq3TZrx0+7mt3V4
- wX+Idqn8prOlieyaozF1HwzFoGw7s2hha6pMPb2Hty/K7Xr5q6NYIU7674XwVdpNOKye6dj3h
- /+6pTkCwV0Jry9c61xkUpSC9XHFn8AoY+M7S+ncBdjSDbDgV0kBHT7Fy7QI/e3sT7kBTVPqST
- sHZFHdu2f9CxGD3G1YnS/7fFkjeJ9Tpmj+GnUBVBm4FlA=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSknXkT=WU-fwi5wP4bWv04DKByxSYAPmhYhC--FaQH-PQ@mail.gmail.com>
 
-On 2024-04-08 14:56 +0200, Greg Kroah-Hartman wrote:
+On Tue, Apr 09, 2024 at 04:29:42PM +0800, David Gow wrote:
+> > +ifeq ($(CCONFIG_KUNIT_SUPPRESS_BACKTRACE),y)
+> 
+> s/CCONFIG_/CONFIG_/ ?
+> 
+> 
+Odd, I know I tested this (and it still works ;-).
+The additional "C" must have slipped in at some point.
+Thanks for noticing!
 
-> This is the start of the stable review cycle for the 6.1.85 release.
-> There are 138 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Works fine for me on x86_64.
-
-Tested-by: Sven Joachim <svenjoac@gmx.de>
-
-Cheers,
-       Sven
+Guenter
