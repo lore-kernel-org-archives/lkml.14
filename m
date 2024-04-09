@@ -1,107 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373E7155A45;
-	Tue,  9 Apr 2024 17:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCF0155A3D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712683626; cv=none; b=BXdNrSoUbRnOmPJxagfxuKpjvzQnFKep793aUs+9AfoIFFM8dpSeryDONK1aAMZ6MHpcG8WKzX+8drg7IYqhRbRbczflXws8po7Ux3gdNHSWrWySC+qa4Lx/0xaUk6WmD9BggOnwh+pD8xkphHPfLPA8nbLpx5K77THb04CONJ8=
+	t=1712683639; cv=none; b=gYOSKBWlTyXnHgBzbZCLjCy68UKdpfX78tPhs3fEGfIvL4oE/0NyMSwoPx83WvDw3dEZoIRWdjSk5jIUOWFl4ai/SEireJwntjSiLb77f/+gePcFfCchQWrePphjEiSvRWIai35HNFHoj0xWR6vOhz5oVwqwJ/WA2g2ErAnLmEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712683626; c=relaxed/simple;
-	bh=Kbut6EHysiAuN2pqwbI1Q3ysmlqsWX1b/pEAFMnt+eg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HiPP0NX/K2RcK3B2AqNgeyz21DFPFYq0jI8MlFWrtEf/HfsuB+9gW81Gb59iPU20uZKLYJMdDt4A2maugis6zjEU3n6dVarXvyIrG+O5nmY+KJH6q/Z3u6D6+T8rj4LqqioABwqOnb5+HPFRMGS1oKlCP5VYNP73cAuJoNipuII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOXtDKhU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712683639; c=relaxed/simple;
+	bh=ov5V6UUHjBzKmLOJ3+BcZdJeRQ2EaCxb3pY7asEm1lI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t0b475ec5KiRcnSHdLResF45gTMSTyNN7x2FlMed2l5s9z9Dyd+7xfEAEj9XnMSKWcLsFyT8lES+Lt+JF5X2SHtGGtywOyuoS3MhkXaAUOfzyWvHDMl+/kkmB7snTufBFyHipKJJlMp/gkJdrjiU+2T5kjWsXny7ZIyLDsWHx7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BkOvB/vq; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOXtDKhU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6636C433C7;
-	Tue,  9 Apr 2024 17:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712683625;
-	bh=Kbut6EHysiAuN2pqwbI1Q3ysmlqsWX1b/pEAFMnt+eg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MOXtDKhUSuGy06O0wOHEzMRUsMEx1PIpgQJfGYxuWXcCM0Hi03dVimVFkMGIujRJ3
-	 nnf9k4pl9WHvRGO24qbpJYe5cQPMAlNzXQnqaC5yB23mArWmjYIwoTLkAe3pHeAij7
-	 bVG/W9agnm3h+ORu1i468Ml2zhUUaDQ23Yr1D4nJprQjvE1GV6xLqsfRHLIKOfK+3q
-	 5WbVRukqkcBpuL0jIA799KCPPHH3S8qo1NW+hOFq4D1e/TJ7DFYKieiv1xGAljJsFj
-	 KNdM3guD0TBs5LxYi9iL3llXOJVY7wDUyizpGSx2sSGYlAGQpTxPcJT7ZnjWoES55A
-	 YlEg8mZ22GnFQ==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51381021af1so9546528e87.0;
-        Tue, 09 Apr 2024 10:27:05 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV4YrIlbxcpcD0Cqj4P1qr3fD3Zr96Bw1tsxsn9qcj1xdfx30Ri6i44HHNkXM9XETGq9owZIpSd705nmBhpPNc1WVfmIa47msYn4HNvpvmYNfrkxGHJKXNaSDyAflgbEHoYX8nTaY8T5Vr7+b6JZEe7h3tj5HEyHZeWipO55NsGb7Uqq1Cr
-X-Gm-Message-State: AOJu0YwLZFUlp0T+ZO/p4mawkGTHJdfdz/g3UsYFgFBNG0LdENfRz0/b
-	9RNrYaCPx5RvAch1Kq4ELIDFb+062mDsnDg4SShMLvSLoHNTSs1OtJzfC6CUvqaRWelyqKX5mRW
-	PjAIbL3fRFzv7onp4eakz3+VqUw==
-X-Google-Smtp-Source: AGHT+IEHcM0JD7ZqWipo4LWrXKbnA82iD02tShlGX9cvVnQUGGgSKaw7D46ABppnjB6v8ynWM6ZkjO5amGWWIwt6rYg=
-X-Received: by 2002:ac2:4c35:0:b0:516:9fab:75de with SMTP id
- u21-20020ac24c35000000b005169fab75demr55819lfq.5.1712683624187; Tue, 09 Apr
- 2024 10:27:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BkOvB/vq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712683638; x=1744219638;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ov5V6UUHjBzKmLOJ3+BcZdJeRQ2EaCxb3pY7asEm1lI=;
+  b=BkOvB/vqEnBxQLlUYl28ge2RS3WytKChJu3UaZziNSv0fk8tCG9ZDPze
+   ibyI4m26/CpFKmKzSpcyFfqHbQMus8NhAvtX8NCWS9jltWfvcpq6+89wF
+   SEJ2ASFA4cN5ocd7FQBsEUx8yVoqL/9djFst6LnT6uBZ1suSXIGoaRH5X
+   JpoBndpYQlQz+zItrY6d84gZdkl7Gi91k5q5RLuTSo1PcrjgF1w2gegGM
+   1Orn4qMSIQ0lR3asYRNIPej1zIqPuiL3E4Y8Me6enbGmcKKjkp4G6Ee+d
+   kI+ZzAI3daK/+uP9D9dKYXB8s93a1YbBE318xAY1WvC5LNw8HU1CQofM2
+   g==;
+X-CSE-ConnectionGUID: DGSGcf1USR2On2FFZoCsNQ==
+X-CSE-MsgGUID: BRl67DZpTU2GlkNItQX8Xw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="33418083"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="33418083"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:27:17 -0700
+X-CSE-ConnectionGUID: 77NcuDNEQ+SbvlNSD97f4g==
+X-CSE-MsgGUID: G4EZT2SVQZC/uu10CKOQJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="24964206"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 10:27:17 -0700
+Date: Tue, 9 Apr 2024 10:31:46 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Baolu Lu <baolu.lu@linux.intel.com>
+Cc: iommu@lists.linux.dev, Kevin Tian <kevin.tian@intel.com>, Yi Liu
+ <yi.l.liu@intel.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
+ flush
+Message-ID: <20240409103146.0d155e45@jacob-builder>
+In-Reply-To: <aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
+References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
+	<20240407144232.190355-2-baolu.lu@linux.intel.com>
+	<20240408140329.6290377f@jacob-builder>
+	<aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322145406.2613256-1-Frank.Li@nxp.com>
-In-Reply-To: <20240322145406.2613256-1-Frank.Li@nxp.com>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 9 Apr 2024 12:26:52 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLJDhJd_uoL05Z=s3Mc7PRkcJWsQGGjdG0Q0GFp0zA8xw@mail.gmail.com>
-Message-ID: <CAL_JsqLJDhJd_uoL05Z=s3Mc7PRkcJWsQGGjdG0Q0GFp0zA8xw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] ASoC: dt-bindings: fsl-esai: Convert fsl,esai.txt
- to yaml
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shengjiu Wang <shengjiu.wang@nxp.com>, 
-	"open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	imx@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 22, 2024 at 9:54=E2=80=AFAM Frank Li <Frank.Li@nxp.com> wrote:
->
-> Convert fsl,esai.txt to yaml. So DTB_CHECK tools can verify dts file abou=
-t
-> esai part.
->
-> clock-names 'spba' is optional according to description. So minItems of
-> clocks and clock-names is 3.
->
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->
-> Notes:
->     Change from v1 to v2
->     - alphabetical order compatible string according to rob's suggestion
->     - clock description move under 'clock' according to kryszof's suggest=
-ion
->     - fix descritpion indent according to rob's suggestion
->
->     Pass dt_binding check
->      make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -j8  dt_binding=
-_check DT_SCHEMA_FILES=3Dfsl,esai.yaml
->       DTEX    Documentation/devicetree/bindings/sound/fsl,esai.example.dt=
-s
->       LINT    Documentation/devicetree/bindings
->       CHKDT   Documentation/devicetree/bindings/processed-schema.json
->       SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->       DTC_CHK Documentation/devicetree/bindings/sound/fsl,esai.example.dt=
-b
+Hi Baolu,
 
-Did you run dtbs_check too? Probably not arm32 at least (first number
-is number of warnings):
+On Tue, 9 Apr 2024 11:12:20 +0800, Baolu Lu <baolu.lu@linux.intel.com>
+wrote:
 
-    218  esai@2024000: clocks: [[2, 208], [2, 209], [2, 118], [2,
-208], [2, 156]] is too long
-    218  esai@2024000: clock-names:3: 'spba' was expected
-    218  esai@2024000: clock-names:2: 'fsys' was expected
-    218  esai@2024000: clock-names:1: 'extal' was expected
-    218  esai@2024000: clock-names: ['core', 'mem', 'extal', 'fsys',
-'spba'] is too long
+> On 4/9/24 5:03 AM, Jacob Pan wrote:
+> > Hi Lu,  
+> 
+> Hi Jacob,
+> 
+> > 
+> > On Sun,  7 Apr 2024 22:42:32 +0800, Lu Baolu<baolu.lu@linux.intel.com>
+> > wrote:
+> >   
+> >> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+> >> implementation caches not-present or erroneous translation-structure
+> >> entries except the first-stage translation. The caching mode is
+> >> unrelated to the device TLB , therefore there is no need to check
+> >> it before a device TLB invalidation operation.
+> >>
+> >> Before the scalable mode is introduced, caching mode is treated as
+> >> an indication that the driver is running in a VM guest. This is just
+> >> a software contract as shadow page table is the only way to implement
+> >> a virtual IOMMU. But the VT-d spec doesn't state this anywhere. After
+> >> the scalable mode is introduced, this doesn't stand for anymore, as
+> >> caching mode is not relevant for the first-stage translation. A virtual
+> >> IOMMU implementation is free to support first-stage translation only
+> >> with caching mode cleared.
+> >>
+> >> Remove the caching mode check before device TLB invalidation to ensure
+> >> compatibility with the scalable mode use cases.
+> >>  
+> > I agree with the changes below, what about this CM check:
+> > 
+> > /* Notification for newly created mappings */
+> > static void __mapping_notify_one(struct intel_iommu *iommu, struct
+> > dmar_domain *domain, unsigned long pfn, unsigned int pages)
+> > {
+> > 	/*
+> > 	 * It's a non-present to present mapping. Only flush if caching
+> > mode
+> > 	 * and second level.
+> > 	 */
+> > 	if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+> > 		iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
+> > 
+> > We are still tying devTLB flush to CM=1, no?  
+> 
+> __mapping_notify_one() is called in the path where some PTEs are changed
+> from non-present to present.
+> 
+> In this scenario,
+> 
+> - if CM is set and first-stage translation is not used, the IOTLB caches
+>    are required to be explicitly flushed.
+> - else if hardware requires write buffer flushing, do it.
+> - Otherwise, no op.
+> - devtlb invalidation is irrelevant to this path.
+> 
+> The code after the fix appears to do the right thing. devTLB is not
+> invalidated in iommu_flush_iotlb_psi() since it's a map (map == 1).
+> 
+> Or perhaps I overlooked anything?
+My confusion is that, on one side, this patch is saying devTLB flush has
+nothing to do with CM. But here, if CMD==1, we don't flush devTLB since
+map==1.
 
-Conversions can leave warnings, but any you think should be fixed in
-the binding should be fixed in the conversion.
+If the guest uses SL page tables in vIOMMU, we don;t expose ATS to the
+guest. So ATS is not relevant here, does't matter map or unmap.
 
-Rob
+Can we remove the map argument in iommu_flush_iotlb_psi(iommu, domain,pfn,
+pages, 0, 1)?
+
+Then devTLB flush will naturally be skipped in the guest (CM=1, SL) since
+ATS is not enabled.
+iommu_flush_dev_iotlb(domain, addr, mask);
+
+i.e.
+
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 50eb9aed47cc..ee3e5a1af0c5 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -1483,7 +1483,7 @@ static void __iommu_flush_iotlb_psi(struct intel_iommu *iommu, u16 did,
+ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
+                                  struct dmar_domain *domain,
+                                  unsigned long pfn, unsigned int pages,
+-                                 int ih, int map)
++                                 int ih)
+ {
+        unsigned int aligned_pages = __roundup_pow_of_two(pages);
+        unsigned int mask = ilog2(aligned_pages);
+@@ -1501,12 +1501,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
+        else
+                __iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
+ 
+-       /*
+-        * In caching mode, changes of pages from non-present to present require
+-        * flush. However, device IOTLB doesn't need to be flushed in this case.
+-        */
+-       if (!cap_caching_mode(iommu->cap) || !map)
+-               iommu_flush_dev_iotlb(domain, addr, mask);
++       iommu_flush_dev_iotlb(domain, addr, mask);
+ }
+ 
+ /* Notification for newly created mappings */
+@@ -1518,7 +1513,7 @@ static void __mapping_notify_one(struct intel_iommu *iommu, struct dmar_domain *
+         * and second level.
+         */
+        if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+-               iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
++               iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0);
+        else
+                iommu_flush_write_buffer(iommu);
+ }
+
+
+
+> > 
+> > If we are running in the guest with second level page table (shadowed),
+> > can we decide if devTLB flush is needed based on ATS enable just as the
+> > rest of the cases?  
+> 
+> I think the ATS check should be consistent. It's generic no matter how
+> the IOMMU is implemented (in hardware or emulated in software).
+> 
+> Best regards,
+> baolu
+
+
+Thanks,
+
+Jacob
