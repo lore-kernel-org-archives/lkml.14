@@ -1,45 +1,47 @@
-Received: from mail114-240.sinamail.sina.com.cn (mail114-240.sinamail.sina.com.cn [218.30.114.240])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CFF158DA5
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 22:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.114.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7381B757F6;
+	Tue,  9 Apr 2024 22:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712703171; cv=none; b=UerljstVQix5fBSTdsUkGErkxpX0ASJKques8nnKPiYjctWQzMMgNNe2aWAu9h0o21paNQh/d/J8JK7cQwbgQM7Lixb0fg9pjTKr8bXA7ePMFKgtcyiXnmMQtv7nxE2jAFjgGziCGn76ARBCPj7qZHfDpCSA5a96B07ItVegXo0=
+	t=1712703344; cv=none; b=fuiE/9QcqlOrSTR3s13vH3zo9UUVHOI65JN5x5kINj4zDU4WxgijXqJsEd3wyFn6XfHPbMdO+fAkvprjzRL4X7tqN5W1duN44InVsjZyDv5wCZxHH8OrEKMWtAAvO/OO7QTh0L3+yx/+IpCF8Bue2MeKel6SzTY2/h+iKasboyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712703171; c=relaxed/simple;
-	bh=O+mGXfs3RDsQTErSVM8OTaHI3QnXgNIs9P8CYq9GNoM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BIKmRlhm3ILIVfShDF030KuERxA4t1fzJ+toS+tT+9nCXRP+3OswPe6XQb3hmk2oQTymcIjO/jdIep4q6XGfIrMJ6/+qoPTGh90kI4qpacENOS1+4TKPwfuyL1i1c1vDUL0IHm8WTrUd1XCeOrW2QnkIq0ook3+h4YNLEgMCnxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.114.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.11.163])
-	by sina.com (172.16.235.24) with ESMTP
-	id 6615C68000007624; Tue, 10 Apr 2024 06:51:48 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 83548545089525
-X-SMAIL-UIID: AA18EA2385864CD180945C3BC5570DCF-20240410-065148-1
-From: Hillf Danton <hdanton@sina.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: syzbot <syzbot+d1ae9c954f73570e7b58@syzkaller.appspotmail.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	Johannes Berg <johannes.berg@intel.com>,
-	Kalle Valo <kvalo@codeaurora.org>,
-	linux-wireless@vger.kernel.org
-Subject: Re: [syzbot] [kernel?] WARNING in hrtimer_forward (2)
-Date: Wed, 10 Apr 2024 06:51:39 +0800
-Message-Id: <20240409225139.1556-1-hdanton@sina.com>
-In-Reply-To: <87a5m27r08.ffs@tglx>
-References: <000000000000b77a880615a0ed2a@google.com>
+	s=arc-20240116; t=1712703344; c=relaxed/simple;
+	bh=AFB5JJxzNK0ssWsl0dAByIzKSEq22BTDirPDWg2fGr0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WFDG+G6rlOtGkVq7rkS8KG+fNYnO6b1uF8FHf3XFhMntpu6zYqyXRJTYOgncymZPqUQIDzKJ7X5C8lMA72oEMAGKU0r02JnPsR4V3OhFR14KBVGEycVW5XI0GL6iUUrp6b//hus5SqSGSw94gS3maao+fLlbLib5NZh1YNkl3R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QNVhCnQD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QNVhCnQD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F749C433F1;
+	Tue,  9 Apr 2024 22:55:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712703343;
+	bh=AFB5JJxzNK0ssWsl0dAByIzKSEq22BTDirPDWg2fGr0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QNVhCnQDb33aAtFoSRkz5s4jbUOSu7zxI1O24mEXGmmBsCG5SmrWgvwL1v1X1dtYo
+	 m1xjrrleKCM9BINwTdfNiyjfBLIzbUqFLuvELnPjLGoknpEXUlPez+XkxNLN+xsb/A
+	 m/pnRojoDuXa+RYvfQnH9o194L+rBXzwqBUGE7HWKu+STfL4F7xzv9iaK/B5upu6m6
+	 GkRAJ4RrDE9y1Z4eruIUydEFIC7CTyXUlI0vFPFhlzjOiUlsTcLQj86nQa0mI6u6+9
+	 eEhVesQnv13FB9b9MQ/Cuy57LoFkRBABQtCkV8ijQCuoctfV/OtO40Whw7FFCEKxQ0
+	 eAw22zzJc9ahw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [PATCH v2] perf lock contention: Add a missing NULL check
+Date: Tue,  9 Apr 2024 15:55:42 -0700
+Message-ID: <20240409225542.1870999-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,50 +50,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 09 Apr 2024 12:46:31 +0200 Thomas Gleixner <tglx@linutronix.de>
-> On Mon, Apr 08 2024 at 19:46, syzbot wrote:
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 1 PID: 11239 at kernel/time/hrtimer.c:1053 hrtimer_forward+0x210/0x2d0 kernel/time/hrtimer.c:1053
-> > RIP: 0010:hrtimer_forward+0x210/0x2d0 kernel/time/hrtimer.c:1053
-> > Call Trace:
-> >  <IRQ>
-> >  hrtimer_forward_now include/linux/hrtimer.h:355 [inline]
-> >  mac80211_hwsim_beacon+0x192/0x1f0 drivers/net/wireless/virtual/mac80211_hwsim.c:2335
-> >  __run_hrtimer kernel/time/hrtimer.c:1692 [inline]
-> >  __hrtimer_run_queues+0x595/0xd00 kernel/time/hrtimer.c:1756
-> >  hrtimer_run_softirq+0x19a/0x2c0 kernel/time/hrtimer.c:1773
-> >  __do_softirq+0x2bc/0x943 kernel/softirq.c:554
-> >  invoke_softirq kernel/softirq.c:428 [inline]
-> >  __irq_exit_rcu+0xf2/0x1c0 kernel/softirq.c:633
-> >  irq_exit_rcu+0x9/0x30 kernel/softirq.c:645
-> >  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
-> >  sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1043
-> >  </IRQ>
-> 
-> The code which arms the timer is not serialized against the callback so
-> the following can happen:
-> 
->     CPU1                        CPU2
-> 
->     __run_hrtimer(timer)
->                                 if (!hrtimer_queued(timer))
->                                         hrtimer_start(timer);
-> 
->        hrtimer_forward(timer)
->          WARN_ON(hrtimer_queued(timer)
-> 
-> This really wants to use hrtimer_active() which takes the running
-> callback into account.
-> 
-Then the race window is still open with hrtimer_active() and serialization
-outside hrtimer is needed.
+I got a report for a failure in BPF verifier on a recent kernel with
+perf lock contention command.  It checks task->sighand->siglock without
+checking if sighand is NULL or not.  Let's add one.
 
-	CPU1				CPU2
-	---				---
-					if (!hrtimer_is_active(timer))
-	if (!hrtimer_is_active(timer))
-		hrtimer_start(timer);
-	__run_hrtimer(timer)
-						hrtimer_start(timer);
-	hrtimer_forward(timer)
-	  WARN_ON(hrtimer_queued(timer))
+  ; if (&curr->sighand->siglock == (void *)lock)
+  265: (79) r1 = *(u64 *)(r0 +2624)     ; frame1: R0_w=trusted_ptr_task_struct(off=0,imm=0)
+                                        ;         R1_w=rcu_ptr_or_null_sighand_struct(off=0,imm=0)
+  266: (b7) r2 = 0                      ; frame1: R2_w=0
+  267: (0f) r1 += r2
+  R1 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
+  processed 164 insns (limit 1000000) max_states_per_insn 1 total_states 15 peak_states 15 mark_read 5
+  -- END PROG LOAD LOG --
+  libbpf: prog 'contention_end': failed to load: -13
+  libbpf: failed to load object 'lock_contention_bpf'
+  libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
+  Failed to load lock-contention BPF skeleton
+  lock contention BPF setup failed
+  lock contention did not detect any lock contention
+
+Fixes: 1811e82767dcc ("perf lock contention: Track and show siglock with address")
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index fb54bd38e7d0..d931a898c434 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -284,6 +284,7 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
+ 	struct task_struct *curr;
+ 	struct mm_struct___old *mm_old;
+ 	struct mm_struct___new *mm_new;
++	struct sighand_struct *sighand;
+ 
+ 	switch (flags) {
+ 	case LCB_F_READ:  /* rwsem */
+@@ -305,7 +306,9 @@ static inline __u32 check_lock_type(__u64 lock, __u32 flags)
+ 		break;
+ 	case LCB_F_SPIN:  /* spinlock */
+ 		curr = bpf_get_current_task_btf();
+-		if (&curr->sighand->siglock == (void *)lock)
++		sighand = curr->sighand;
++
++		if (sighand && &sighand->siglock == (void *)lock)
+ 			return LCD_F_SIGHAND_LOCK;
+ 		break;
+ 	default:
+-- 
+2.44.0.478.gd926399ef9-goog
+
