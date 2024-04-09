@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3047EF03
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DE17F498
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712650470; cv=none; b=cz6KyxvG4QlOTgyJcjnd5z7XTeQhTssTc37gIrW59J0RZ3HwEq1Dho+7JYR7v//PaifzzdD2xKdjJ4LBwQpowgaL00AXoed2X5zscDUuhZPIzXcFF6K0OFwkGM0osUKVTVF2l/GkdzwvkmQBIA1kVdRmxQUD0ydkjgGXp8H4ArU=
+	t=1712650482; cv=none; b=tgzCmJNYOMYuZfFHh2xFxIHLFYQRzKB/TN0FG0gQueoZcC2rT9b2LA1YpuH0nyq8/wq+B0UcaZfY509cfzq0xuO5EhrFofOqe+uJ/v1es0sVjXzP75lViqH/rsOm+76oCrkQz0F8yMAZe30onmLFKC9qWqRc7vkjTAhcuRkO5hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712650470; c=relaxed/simple;
-	bh=atnM7VrWweDiTimJjVrECjlnN7wKdVLuCzM5GU+yiqM=;
+	s=arc-20240116; t=1712650482; c=relaxed/simple;
+	bh=j3Fq9MRz+jphMARU643d4Ieg05IzjOi2gL8iIE3YmvQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dJjqCAHNszXPEbiwUuTtGuD9wu8FSoL5sSknZCYbBdV01l0v+tMt4TvxHND5y3tN+Q3SPgEWDKWQ0Mbk2N9ZQHoQROABPAwYXBx9Id/2ClKC11olVjCAtHkZcUH3aUVOhXcN2KGNyzwtiHmeAzvgkQBw5rmqS7Ztg0IBCrqoDuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=vQig3oWY; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=dZrTNRg7UQ2J6ULgYvXBCX98g+NZUmaX94+2bEty2xVxU5I7rzuAVFlTjmETHye0O03MRR1y3vELxKRqBI69GJc6vImUQLebUIwoduUHCF4mqQ+eCP85qnAiv6frRJ1HbTA5olQp9CBmrx77HmXY7H+mUO1asQRJYwcpJxk408Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Zs0vQ4G4; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="vQig3oWY"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Zs0vQ4G4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712650466;
-	bh=atnM7VrWweDiTimJjVrECjlnN7wKdVLuCzM5GU+yiqM=;
+	s=mail; t=1712650479;
+	bh=j3Fq9MRz+jphMARU643d4Ieg05IzjOi2gL8iIE3YmvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vQig3oWY4Bj3Pg/QxqCqhDvC1zTiL2AepmByfSA4VKaDiEBWzpVzuxouK9WpXbXZo
-	 Qq7LKw52xN+tCXkDLw34LMZ5ovyyYMBV6oshb5hARPLynV94aJtEtnQZ1Wca2+YWRX
-	 F6n0GTWmvIQe2J1+dc0lU3zUJnk7zoRUuSZmpsT9cgS1Oih1OOdcUT1asqzy4DbVj7
-	 18nutYytA1W56cAqCX5n3f5lGNEXkGxjKm8IkSnmhZG1NQtJp4AIen6voDjoo1YnLQ
-	 Vw2FORAjVKy2VQEq3FSxAx4bj0NTnsaavAYT8u71j7B/KdI9dGMrimuNAo7CWrKw17
-	 pOVjcD7GgsrdQ==
+	b=Zs0vQ4G4UKegKiGfjNZyZDA5qTFXRsOHZ9K9448wO5mzMzwwPVdqoFqyfo4OuXPsp
+	 rZis5/wj5CVS4S6EKu1nEqPMeumvAArLU6qcvLK0J8YlP+SZUr7KXqRn4lLTTuvuwA
+	 B5wiI4CSD+Gx7l67vd/wGynSupG/v1ReGSL5bqkQW+6Jd9SCAhXcVskphzag+4aUjz
+	 ACq0yyVQ6saTSM0nrOiwfP2fQLXV3ZuQo3VmGyTpyrFGJLIZ5LtSjzMOSHiPiOGQiL
+	 Rwdua/1aWRUCE5j4l/yxSBv1xqtH5rK9DxIpOz2IKM+bm6W1cPlcqGEaBQq8tUp1s/
+	 M5rUjVQQbNDZg==
 Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3168137820EE;
-	Tue,  9 Apr 2024 08:14:23 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 680E537820E2;
+	Tue,  9 Apr 2024 08:14:35 +0000 (UTC)
 From: Vignesh Raman <vignesh.raman@collabora.com>
 To: dri-devel@lists.freedesktop.org
 Cc: daniels@collabora.com,
@@ -53,9 +53,9 @@ Cc: daniels@collabora.com,
 	linux-amlogic@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 2/8] drm/ci: uprev mesa version
-Date: Tue,  9 Apr 2024 13:43:23 +0530
-Message-Id: <20240409081329.472463-3-vignesh.raman@collabora.com>
+Subject: [PATCH v6 5/8] drm/ci: mediatek: add tests for powervr gpu driver
+Date: Tue,  9 Apr 2024 13:43:26 +0530
+Message-Id: <20240409081329.472463-6-vignesh.raman@collabora.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240409081329.472463-1-vignesh.raman@collabora.com>
 References: <20240409081329.472463-1-vignesh.raman@collabora.com>
@@ -67,172 +67,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-zlib.net is not allowing tarball download anymore and results
-in below error in kernel+rootfs_arm32 container build,
-urllib.error.HTTPError: HTTP Error 403: Forbidden
-urllib.error.HTTPError: HTTP Error 415: Unsupported Media Type
+For mediatek mt8173, the display driver is mediatek, while the
+gpu driver is powervr. Currently, in drm-ci for mt8173, only the
+display driver is tested. Add support in drm-ci to test powervr
+driver for mt8173. Powervr driver was merged in linux kernel,
+but there's no mediatek support yet. So disable the powervr:mt8173
+job which uses powervr driver.
 
-Uprev mesa which includes a fix for this issue.
-https://gitlab.freedesktop.org/mesa/mesa/-/commit/908f444e
+Also update the MAINTAINERS file to include xfails for powervr driver.
 
-Also copy helper scripts to install, so that the ci jobs can
-use these scripts for logging.
-
-Acked-by: Helen Koike <helen.koike@collabora.com>
 Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 ---
 
-v3:
-  - New patch in series to uprev mesa.
-
-v4:
-  - Fix checkpatch warning.
-
-v5:
-  - Copy helper scripts to install, so that the ci jobs can
-    use these scripts for logging.
-
 v6:
-  - No changes.
+  - New patch in the series. Split powervr changes into a new commit. 
 
 ---
- drivers/gpu/drm/ci/build.sh       |  1 +
- drivers/gpu/drm/ci/container.yml  |  6 +++---
- drivers/gpu/drm/ci/gitlab-ci.yml  | 11 ++++++++---
- drivers/gpu/drm/ci/image-tags.yml |  3 ++-
- drivers/gpu/drm/ci/test.yml       |  2 ++
- 5 files changed, 16 insertions(+), 7 deletions(-)
+ MAINTAINERS                      |  1 +
+ drivers/gpu/drm/ci/gitlab-ci.yml |  1 +
+ drivers/gpu/drm/ci/test.yml      | 14 ++++++++++++++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/ci/build.sh b/drivers/gpu/drm/ci/build.sh
-index 106f2d40d222..8a3baa003904 100644
---- a/drivers/gpu/drm/ci/build.sh
-+++ b/drivers/gpu/drm/ci/build.sh
-@@ -128,6 +128,7 @@ fi
- # Pass needed files to the test stage
- mkdir -p install
- cp -rfv .gitlab-ci/* install/.
-+cp -rfv ci/*  install/.
- cp -rfv install/common install/ci-common
- cp -rfv drivers/gpu/drm/ci/* install/.
- 
-diff --git a/drivers/gpu/drm/ci/container.yml b/drivers/gpu/drm/ci/container.yml
-index 9764e7921a4f..1060eb380b02 100644
---- a/drivers/gpu/drm/ci/container.yml
-+++ b/drivers/gpu/drm/ci/container.yml
-@@ -40,11 +40,11 @@ debian/x86_64_test-android:
-   rules:
-     - when: never
- 
--windows_build_vs2019:
-+windows_build_msvc:
-   rules:
-     - when: never
- 
--windows_test_vs2019:
-+windows_test_msvc:
-   rules:
-     - when: never
- 
-@@ -56,7 +56,7 @@ rustfmt:
-    rules:
-     - when: never
- 
--windows_vs2019:
-+windows_msvc:
-    rules:
-     - when: never
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 333704ceefb6..92afa7b4f3dc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10479,6 +10479,7 @@ S:	Supported
+ T:	git git://anongit.freedesktop.org/drm/drm-misc
+ F:	Documentation/devicetree/bindings/gpu/img,powervr.yaml
+ F:	Documentation/gpu/imagination/
++F:	drivers/gpu/drm/ci/xfails/powervr*
+ F:	drivers/gpu/drm/imagination/
+ F:	include/uapi/drm/pvr_drm.h
  
 diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index 084e3ff8e3f4..2f9a5e217f5c 100644
+index 9df55dc45173..5345a970f0b5 100644
 --- a/drivers/gpu/drm/ci/gitlab-ci.yml
 +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -1,6 +1,6 @@
- variables:
-   DRM_CI_PROJECT_PATH: &drm-ci-project-path mesa/mesa
--  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha 9d162de9a05155e1c4041857a5848842749164cf
-+  DRM_CI_COMMIT_SHA: &drm-ci-commit-sha c4b32f9e90b7204735e6adf1f60c178bf85752e7
- 
-   UPSTREAM_REPO: git://anongit.freedesktop.org/drm/drm
-   TARGET_BRANCH: drm-next
-@@ -26,10 +26,13 @@ variables:
-   JOB_ARTIFACTS_BASE: ${PIPELINE_ARTIFACTS_BASE}/${CI_JOB_ID}
-   # default kernel for rootfs before injecting the current kernel tree
-   KERNEL_REPO: "gfx-ci/linux"
--  KERNEL_TAG: "v6.6.4-for-mesa-ci-e4f4c500f7fb"
-+  KERNEL_TAG: "v6.6.13-mesa-9916"
-   KERNEL_IMAGE_BASE: https://${S3_HOST}/mesa-lava/${KERNEL_REPO}/${KERNEL_TAG}
-   LAVA_TAGS: subset-1-gfx
-   LAVA_JOB_PRIORITY: 30
-+  ARTIFACTS_BASE_URL: https://${CI_PROJECT_ROOT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts
-+  # Python scripts for structured logger
-+  PYTHONPATH: "$PYTHONPATH:$CI_PROJECT_DIR/install"
- 
- default:
-   before_script:
-@@ -46,6 +49,7 @@ default:
-     - cd $CI_PROJECT_DIR
-     - curl --output - $DRM_CI_PROJECT_URL/-/archive/$DRM_CI_COMMIT_SHA/mesa-$DRM_CI_COMMIT_SHA.tar.gz | tar -xz
-     - mv mesa-$DRM_CI_COMMIT_SHA/.gitlab-ci* .
-+    - mv mesa-$DRM_CI_COMMIT_SHA/bin/ci .
-     - rm -rf mesa-$DRM_CI_COMMIT_SHA/
-     - echo -e "\e[0Ksection_end:$(date +%s):drm_ci_download_section\r\e[0K"
- 
-@@ -98,6 +102,7 @@ include:
- stages:
-   - sanity
-   - container
-+  - code-validation
-   - git-archive
-   - build
-   - amdgpu
-@@ -107,7 +112,6 @@ stages:
+@@ -112,6 +112,7 @@ stages:
    - msm
    - rockchip
+   - panfrost
++  - powervr
    - virtio-gpu
--  - lint
  
  # YAML anchors for rule conditions
- # --------------------------------
-@@ -218,6 +222,7 @@ make git archive:
-   script:
-     # Remove drm-ci files we just added
-     - rm -rf .gitlab-ci.*
-+    - rm -rf ci
- 
-     # Compactify the .git directory
-     - git gc --aggressive
-diff --git a/drivers/gpu/drm/ci/image-tags.yml b/drivers/gpu/drm/ci/image-tags.yml
-index 7ab4f2514da8..cf07c3e09b8c 100644
---- a/drivers/gpu/drm/ci/image-tags.yml
-+++ b/drivers/gpu/drm/ci/image-tags.yml
-@@ -1,5 +1,5 @@
- variables:
--   CONTAINER_TAG: "2023-10-11-mesa-uprev"
-+   CONTAINER_TAG: "2022-01-29-mesa-uprev"
-    DEBIAN_X86_64_BUILD_BASE_IMAGE: "debian/x86_64_build-base"
-    DEBIAN_BASE_TAG: "${CONTAINER_TAG}"
- 
-@@ -7,6 +7,7 @@ variables:
-    DEBIAN_BUILD_TAG: "2023-10-08-config"
- 
-    KERNEL_ROOTFS_TAG: "2023-10-06-amd"
-+   PKG_REPO_REV: "67f2c46b"
- 
-    DEBIAN_X86_64_TEST_BASE_IMAGE: "debian/x86_64_test-base"
-    DEBIAN_X86_64_TEST_IMAGE_GL_PATH: "debian/x86_64_test-gl"
 diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
-index 8bc63912fddb..612c9ede3507 100644
+index 959157449e4e..27930e29aabc 100644
 --- a/drivers/gpu/drm/ci/test.yml
 +++ b/drivers/gpu/drm/ci/test.yml
-@@ -150,6 +150,8 @@ msm:sdm845:
-     BM_KERNEL: https://${PIPELINE_ARTIFACTS_BASE}/arm64/cheza-kernel
-     GPU_VERSION: sdm845
-     RUNNER_TAG: google-freedreno-cheza
-+    DEVICE_TYPE: sdm845-cheza-r3
-+    FARM: google
-   script:
-     - ./install/bare-metal/cros-servo.sh
+@@ -292,6 +292,11 @@ amdgpu:stoney:
+   variables:
+     DRIVER_NAME: mediatek
  
++.powervr-gpu:
++  stage: powervr
++  variables:
++    DRIVER_NAME: powervr
++
+ .panfrost-gpu:
+   stage: panfrost
+   variables:
+@@ -320,6 +325,15 @@ mediatek:mt8173:
+     - .mt8173
+     - .mediatek-display
+ 
++powervr:mt8173:
++  extends:
++    - .mt8173
++    - .powervr-gpu
++  rules:
++    # TODO: powervr driver was merged in linux kernel, but there's no mediatek support yet
++    # Remove the rule once mediatek support is added for powervr
++    - when: never
++
+ mediatek:mt8183:
+   extends:
+     - .mt8183
 -- 
 2.40.1
 
