@@ -1,62 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57775158878
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 21:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20FC158878
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 21:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712697970; cv=none; b=k3Od/3dOt1Dmyug2UuOTfjgLESCtc7SYbo2gl+5CgwVkIAgikUAF2Cln0ooJBRrRe+doGsIiY4junzn+74nfQflbDBHd7IPTNrlQfxJCmWPIjiyWgDw73lO/vrYEe4LcViNKvdVmMYHVbJ46cCCWV9H5F3s6eUoH3ZFBavzQlQY=
+	t=1712698142; cv=none; b=SIwagr/B0APoMFSMe9RWkq8qQUGkQYw17kSj6X+qt2GxcV3tK02RsgEemQkgnEBjv5gqdGXKHnU+9hftZAv3WSUtYXDIqSjsBUu4Kc3o3OZVxJvmihxWx/8IpNvFbDW20Jth5Mh4odHNOkVRL7KPUB3Fwu1+yPue7s/27kQ+6os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712697970; c=relaxed/simple;
-	bh=MFUk7Q9DxQTw0mb3PytFtmo806xH8/pvPs/dX/4GHK4=;
+	s=arc-20240116; t=1712698142; c=relaxed/simple;
+	bh=cpqL+Hl6DXpr8zMLQSAXCRUte3LWhQQIiqBnOCk+8q0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+sE9Gvi/7UWuATLIdZE1A8ey4YdqW2X0/hjMmts8CpxWoVNyXlUanzlNm51cFwWnSiwqx1/Df/ZVLmtC7uh/SfnfMQHajpR8aafhC5h5vG+0O9v4TL6kjjznotWimSF2jpF190GYhptLq76HAQhoq/WHWAPoVR5VLkQGe7kQw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e83aJcZs; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LKki1t9Vcjsgi8+Sg/508YuXSrl97fGN487g8LLKKyoSVEXgOayrLRD3mNHNGaXveyUgMyf+0H/KYC5T1VCkcA9RBMXVjGKta/OXGqf58DClel24gw24Pe0vIH6q++tptTAmSFe4ZETbKPPMU59w+hARKhCUlVo+OIQhFvvwOx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GkNdKHWp; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e83aJcZs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712697968; x=1744233968;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MFUk7Q9DxQTw0mb3PytFtmo806xH8/pvPs/dX/4GHK4=;
-  b=e83aJcZsIN+obney+phJav3yQpt5E2vsGLp0/MyQVaivDRGJCIbaiEqj
-   p27RHwRj6FHw46prdq2bGWdLX/tfvCCKjeGQQaTO+UopnVbe+t3g418QC
-   NiuO5pUoMxe09RZxRW9vJG+rBOqeoqIt4trr0eVNLLrXJ3LqCTs7IEfBz
-   +tkTy0HMLGIe4mLBIcKPTR3AcQZlCqfeLOkcJ7wQmmSITV4k4m1mtkUlm
-   +TsqF1zkG/jKfVTzaqk/W8ZOfLYxL7PJ7g80YaA33aCLnL34m8MS7Yz9G
-   cCoy/zmp0kdHEAn8igxYN8d1YlEV318wafYhxgNd6a8aDJnTQi+YaxnM8
-   Q==;
-X-CSE-ConnectionGUID: c/60H8L9SN6tSZp9IhGNyw==
-X-CSE-MsgGUID: jW2kDvZNSwKKWOzbdnqFtw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8263512"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8263512"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 14:26:07 -0700
-X-CSE-ConnectionGUID: 3fcwSMP5SCCrJQ5i+fjp0g==
-X-CSE-MsgGUID: 4dkKLevxRam9bt9qC4DHcw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25146249"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 09 Apr 2024 14:26:04 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruIye-0006WY-2h;
-	Tue, 09 Apr 2024 21:26:00 +0000
-Date: Wed, 10 Apr 2024 05:25:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, vbabka@suse.cz
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	baolin.wang@linux.alibaba.com, david@redhat.com, hannes@cmpxchg.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	mgorman@techsingularity.net, ying.huang@intel.com, ziy@nvidia.com
-Subject: Re: [PATCH] mm: page_alloc: consolidate free page accounting fix 3
-Message-ID: <202404100551.aq0YQFuT-lkp@intel.com>
-References: <a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GkNdKHWp"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1e3f6f03594so18847345ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 14:29:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712698140; x=1713302940; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I1EckUdhv2S0vsLHXrSpPAoBKrsnqtVxE+FzPaDR/vQ=;
+        b=GkNdKHWpHzVRjHUHYaa4Dz17qLR3IeF9Tm3SDpo2v/aWhb7gJnJGowGCG4ac0B+LJ4
+         YYpujhGFRCPEt/Mmc3jdRKWklWg1gtLO+oOS9PNMAfUmAetioAxVQN7FesJtnQQ8Vx4v
+         ochJCC9jTAVkYqqudrXye+NxGkAK0vkfJyqpE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712698140; x=1713302940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I1EckUdhv2S0vsLHXrSpPAoBKrsnqtVxE+FzPaDR/vQ=;
+        b=C1KnVEPwDdXpGLEBHbEA21AbB1rgehnQYuoYX7MaTYc9VkV+FatYWCKO5NDiTUQAe/
+         SomMZHTgD2w5SpDWdomUj8nv9lyIdBfKazx+vjvGgkkk/2kCbPniNCO+PbICahung318
+         8BCqVz/wr/NTjoYRPx7Byb6vxosDZamja04dsO84MYZx2ngCa4sv4YRabsqc2eDJ1Lz3
+         xMKOOhiq4t4bg2PVWeErNn1ubkIy4t3fW1ogikok61slauKzePMuFZBzZLZmtC90/P/x
+         BujtE6p9i+usLzhFQcV9EKPWLs2MDxo1HI66rXk/jri0hhe8TZQe4JBsYraHuZ14ZMtV
+         hsew==
+X-Forwarded-Encrypted: i=1; AJvYcCW3mHi7/o7Yyvr0v8AgY2MPAvzysimp0FToPeF189AIODSuxdPxF3Z6+nv/H1b+6Oxfl5P+Rt3w4PnVTGZFx7H2H32yi3GTjsi8HPum
+X-Gm-Message-State: AOJu0YxmNAUxLs1uBBdz3utXctbVODsVMGbnVtmWauyAT3JrlewGltbo
+	pe8BKzAqEpCCkqmy2Yap16VWbMpBhRLSlpihf60KkbvA5v7rFNJCTAPqaQjU2w==
+X-Google-Smtp-Source: AGHT+IGp1vHyVN9Of3ONnBmhGBURnZ2ozCtASZrjhYok6bINm0BBVqQzRg5525pvfv09CAPY6RG2ng==
+X-Received: by 2002:a17:902:a5cb:b0:1e2:adad:75f4 with SMTP id t11-20020a170902a5cb00b001e2adad75f4mr907671plq.28.1712698139910;
+        Tue, 09 Apr 2024 14:28:59 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p18-20020a170902e35200b001e2461c52c6sm9401985plc.149.2024.04.09.14.28.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 14:28:59 -0700 (PDT)
+Date: Tue, 9 Apr 2024 14:28:58 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] tracing: Add new_exec tracepoint
+Message-ID: <202404091428.B95127B72@keescook>
+References: <20240408090205.3714934-1-elver@google.com>
+ <202404090840.E09789B66@keescook>
+ <ZhWIKeZuWfPOU91D@elver.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,171 +73,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang@linux.alibaba.com>
+In-Reply-To: <ZhWIKeZuWfPOU91D@elver.google.com>
 
-Hi Baolin,
+On Tue, Apr 09, 2024 at 08:25:45PM +0200, Marco Elver wrote:
+> On Tue, Apr 09, 2024 at 08:46AM -0700, Kees Cook wrote:
+> [...]
+> > > +	trace_new_exec(current, bprm);
+> > > +
+> > 
+> > All other steps in this function have explicit comments about
+> > what/why/etc. Please add some kind of comment describing why the
+> > tracepoint is where it is, etc.
+> 
+> I beefed up the tracepoint documentation, and wrote a little paragraph
+> above where it's called to reinforce what we want.
+> 
+> [...]
+> > What about binfmt_misc, and binfmt_script? You may want bprm->interp
+> > too?
+> 
+> Good points. I'll make the below changes for v2:
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index ab778ae1fc06..472b9f7b40e8 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1268,6 +1268,12 @@ int begin_new_exec(struct linux_binprm * bprm)
+>  	if (retval)
+>  		return retval;
+>  
+> +	/*
+> +	 * This tracepoint marks the point before flushing the old exec where
+> +	 * the current task is still unchanged, but errors are fatal (point of
+> +	 * no return). The later "sched_process_exec" tracepoint is called after
+> +	 * the current task has successfully switched to the new exec.
+> +	 */
+>  	trace_new_exec(current, bprm);
+>  
+>  	/*
+> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+> index 8853dc44783d..623d9af777c1 100644
+> --- a/include/trace/events/task.h
+> +++ b/include/trace/events/task.h
+> @@ -61,8 +61,11 @@ TRACE_EVENT(task_rename,
+>   * @task:	pointer to the current task
+>   * @bprm:	pointer to linux_binprm used for new exec
+>   *
+> - * Called before flushing the old exec, but at the point of no return during
+> - * switching to the new exec.
+> + * Called before flushing the old exec, where @task is still unchanged, but at
+> + * the point of no return during switching to the new exec. At the point it is
+> + * called the exec will either succeed, or on failure terminate the task. Also
+> + * see the "sched_process_exec" tracepoint, which is called right after @task
+> + * has successfully switched to the new exec.
+>   */
+>  TRACE_EVENT(new_exec,
+>  
+> @@ -71,19 +74,22 @@ TRACE_EVENT(new_exec,
+>  	TP_ARGS(task, bprm),
+>  
+>  	TP_STRUCT__entry(
+> +		__string(	interp,		bprm->interp	)
+>  		__string(	filename,	bprm->filename	)
+>  		__field(	pid_t,		pid		)
+>  		__string(	comm,		task->comm	)
+>  	),
+>  
+>  	TP_fast_assign(
+> +		__assign_str(interp, bprm->interp);
+>  		__assign_str(filename, bprm->filename);
+>  		__entry->pid = task->pid;
+>  		__assign_str(comm, task->comm);
+>  	),
+>  
+> -	TP_printk("filename=%s pid=%d comm=%s",
+> -		  __get_str(filename), __entry->pid, __get_str(comm))
+> +	TP_printk("interp=%s filename=%s pid=%d comm=%s",
+> +		  __get_str(interp), __get_str(filename),
+> +		  __entry->pid, __get_str(comm))
+>  );
+>  
+>  #endif
 
-kernel test robot noticed the following build errors:
-
-
-
-url:    https://github.com/intel-lab-lkp/linux/commits/UPDATE-20240409-154935/Johannes-Weiner/mm-page_alloc-remove-pcppage-migratetype-caching/20240321-020814
-base:   the 10th patch of https://lore.kernel.org/r/20240320180429.678181-11-hannes%40cmpxchg.org
-patch link:    https://lore.kernel.org/r/a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang%40linux.alibaba.com
-patch subject: [PATCH] mm: page_alloc: consolidate free page accounting fix 3
-config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20240410/202404100551.aq0YQFuT-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404100551.aq0YQFuT-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404100551.aq0YQFuT-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   mm/page_alloc.c: In function '__free_one_page':
->> mm/page_alloc.c:808:43: error: passing argument 1 of 'account_freepages' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     808 |                         account_freepages(zone, -(1 << order), migratetype);
-         |                                           ^~~~
-         |                                           |
-         |                                           struct zone *
-   mm/page_alloc.c:645:51: note: expected 'struct page *' but argument is of type 'struct zone *'
-     645 | static inline void account_freepages(struct page *page, struct zone *zone,
-         |                                      ~~~~~~~~~~~~~^~~~
->> mm/page_alloc.c:808:49: warning: passing argument 2 of 'account_freepages' makes pointer from integer without a cast [-Wint-conversion]
-     808 |                         account_freepages(zone, -(1 << order), migratetype);
-         |                                                 ^~~~~~~~~~~~~
-         |                                                 |
-         |                                                 int
-   mm/page_alloc.c:645:70: note: expected 'struct zone *' but argument is of type 'int'
-     645 | static inline void account_freepages(struct page *page, struct zone *zone,
-         |                                                         ~~~~~~~~~~~~~^~~~
->> mm/page_alloc.c:808:25: error: too few arguments to function 'account_freepages'
-     808 |                         account_freepages(zone, -(1 << order), migratetype);
-         |                         ^~~~~~~~~~~~~~~~~
-   mm/page_alloc.c:645:20: note: declared here
-     645 | static inline void account_freepages(struct page *page, struct zone *zone,
-         |                    ^~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/account_freepages +808 mm/page_alloc.c
-
-   759	
-   760	/*
-   761	 * Freeing function for a buddy system allocator.
-   762	 *
-   763	 * The concept of a buddy system is to maintain direct-mapped table
-   764	 * (containing bit values) for memory blocks of various "orders".
-   765	 * The bottom level table contains the map for the smallest allocatable
-   766	 * units of memory (here, pages), and each level above it describes
-   767	 * pairs of units from the levels below, hence, "buddies".
-   768	 * At a high level, all that happens here is marking the table entry
-   769	 * at the bottom level available, and propagating the changes upward
-   770	 * as necessary, plus some accounting needed to play nicely with other
-   771	 * parts of the VM system.
-   772	 * At each level, we keep a list of pages, which are heads of continuous
-   773	 * free pages of length of (1 << order) and marked with PageBuddy.
-   774	 * Page's order is recorded in page_private(page) field.
-   775	 * So when we are allocating or freeing one, we can derive the state of the
-   776	 * other.  That is, if we allocate a small block, and both were
-   777	 * free, the remainder of the region must be split into blocks.
-   778	 * If a block is freed, and its buddy is also free, then this
-   779	 * triggers coalescing into a block of larger size.
-   780	 *
-   781	 * -- nyc
-   782	 */
-   783	
-   784	static inline void __free_one_page(struct page *page,
-   785			unsigned long pfn,
-   786			struct zone *zone, unsigned int order,
-   787			int migratetype, fpi_t fpi_flags)
-   788	{
-   789		struct capture_control *capc = task_capc(zone);
-   790		unsigned long buddy_pfn = 0;
-   791		unsigned long combined_pfn;
-   792		struct page *buddy;
-   793		bool to_tail;
-   794	
-   795		VM_BUG_ON(!zone_is_initialized(zone));
-   796		VM_BUG_ON_PAGE(page->flags & PAGE_FLAGS_CHECK_AT_PREP, page);
-   797	
-   798		VM_BUG_ON(migratetype == -1);
-   799		VM_BUG_ON_PAGE(pfn & ((1 << order) - 1), page);
-   800		VM_BUG_ON_PAGE(bad_range(zone, page), page);
-   801	
-   802		account_freepages(page, zone, 1 << order, migratetype);
-   803	
-   804		while (order < MAX_PAGE_ORDER) {
-   805			int buddy_mt = migratetype;
-   806	
-   807			if (compaction_capture(capc, page, order, migratetype)) {
- > 808				account_freepages(zone, -(1 << order), migratetype);
-   809				return;
-   810			}
-   811	
-   812			buddy = find_buddy_page_pfn(page, pfn, order, &buddy_pfn);
-   813			if (!buddy)
-   814				goto done_merging;
-   815	
-   816			if (unlikely(order >= pageblock_order)) {
-   817				/*
-   818				 * We want to prevent merge between freepages on pageblock
-   819				 * without fallbacks and normal pageblock. Without this,
-   820				 * pageblock isolation could cause incorrect freepage or CMA
-   821				 * accounting or HIGHATOMIC accounting.
-   822				 */
-   823				buddy_mt = get_pfnblock_migratetype(buddy, buddy_pfn);
-   824	
-   825				if (migratetype != buddy_mt &&
-   826				    (!migratetype_is_mergeable(migratetype) ||
-   827				     !migratetype_is_mergeable(buddy_mt)))
-   828					goto done_merging;
-   829			}
-   830	
-   831			/*
-   832			 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
-   833			 * merge with it and move up one order.
-   834			 */
-   835			if (page_is_guard(buddy))
-   836				clear_page_guard(zone, buddy, order);
-   837			else
-   838				__del_page_from_free_list(buddy, zone, order, buddy_mt);
-   839	
-   840			if (unlikely(buddy_mt != migratetype)) {
-   841				/*
-   842				 * Match buddy type. This ensures that an
-   843				 * expand() down the line puts the sub-blocks
-   844				 * on the right freelists.
-   845				 */
-   846				set_pageblock_migratetype(buddy, migratetype);
-   847			}
-   848	
-   849			combined_pfn = buddy_pfn & pfn;
-   850			page = page + (combined_pfn - pfn);
-   851			pfn = combined_pfn;
-   852			order++;
-   853		}
-   854	
-   855	done_merging:
-   856		set_buddy_order(page, order);
-   857	
-   858		if (fpi_flags & FPI_TO_TAIL)
-   859			to_tail = true;
-   860		else if (is_shuffle_order(order))
-   861			to_tail = shuffle_pick_tail();
-   862		else
-   863			to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
-   864	
-   865		__add_to_free_list(page, zone, order, migratetype, to_tail);
-   866	
-   867		/* Notify page reporting subsystem of freed page */
-   868		if (!(fpi_flags & FPI_SKIP_REPORT_NOTIFY))
-   869			page_reporting_notify_free(order);
-   870	}
-   871	
+Looks good; I await v2, and Steven's Ack. :)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Kees Cook
