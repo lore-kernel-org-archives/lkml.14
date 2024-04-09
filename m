@@ -1,115 +1,115 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7879854908;
-	Tue,  9 Apr 2024 03:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65CC548F2;
+	Tue,  9 Apr 2024 03:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712632541; cv=none; b=qQx0diNj33gSFF5zdaA0XcRX6ipGCohgFEieYQys4JVHMSXND8fzHl9BdNgR1ehGN1WAXOYikVYlUhkkfsqLyyFv6acR89T/sk9L27JA8NN1pih3Hu1o+++siYoTV//kEw6HaaQPMpsPsFX64zlfU2RXJX3x5mMTJPE5WQ2tkU0=
+	t=1712632554; cv=none; b=Kc1k8hLZ22B9QJmT2UMbcpfta5767NvQdPTWGxaB2MmHyQ6SNxxNV3XNjqnGvipLOnO/ivk/wL8JeIXACos0RIJRjlT8WleY2JkvYHiVTIySRZ486cwfKEhuuStkYYnxUNUgywCz3u6kHQm8iZBcb5kGPB9GpQcbwyXs46DaL7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712632541; c=relaxed/simple;
-	bh=KA98YP1iZl6X238fZAQoMgButCDvoi6pP5LWfn1U4HY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lp5JEvixlW64LbT7V+A6abw6rjPY5qeVmo4xlGHFuknO5PW+s/Mm37LwWNypb9p91yi8ED2bdW6DgOliZ1Pfwz6fYE9Tgaqw9InoIzs5Ja0+A1JcU0g7xN0Wt5oP6ZTE53vGAFrjOnHEEiYhGJRl6qESyfrZZXVUvHCjSgntwmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dko8inHi; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712632554; c=relaxed/simple;
+	bh=jrIScl7tEROJREqjIpcHI6bGspQlGAFhvM6VM7rlaV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LgV/9bjYBYlXIinBxD37AXh+c86++9Nf8qVW9/r8Q8qekpFDFvVWYxs5nQDxFOqY9nrtiPK7Q48n9ge0FaIv4bPghkqkSXuadBSUoWlxHkdjZ7Ro/qUNZcM6NPEA54ndC5rp0gw2jXo6q6fG/fEVm/7ulg4nisSu+G+H9limZZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QDL9/zEL; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dko8inHi"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41639ec6fa4so19391305e9.3;
-        Mon, 08 Apr 2024 20:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712632537; x=1713237337; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/efIo3qz30HJtdatu0Dwv9KkVcGf0VssIVHCAQ5bGcA=;
-        b=dko8inHiqq9Bx5nCYxG4DRYy1XC4XCcyFzd7Fvlm9CLx4SJt9KvNJUV+FQCyy0f09U
-         NBUt7d6qcp+FzETwUVMhih8c8o+1DbUADb9/sVKP9FDRKA/QOUeWAf+EJPQETPwXZWKO
-         Ghh2PUx0IUhcdhOkAMB7FFOFtZichFQO0gS89O8KJ1kY4O1hy8CFiT2Plbd8Cyl38e8k
-         iYBBajl7Zei2ecKV2XYxwTFQ5GmXXExXCPk5MkK6MrW6/lbbZwzzLI92c5iX/4qVifgV
-         0F4hEhC6F/mLMPMNIbxQUgau0PMBU4q/XGGgkfFNmBVW59UljYyAn4CETCThPa8SJVP9
-         8MQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712632537; x=1713237337;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/efIo3qz30HJtdatu0Dwv9KkVcGf0VssIVHCAQ5bGcA=;
-        b=YsyfI6/bBey4Cbas36nVM6dxzyt9EMUjq2ekmufuL95rve3wUWVjawxR3FFz0TuoTA
-         zzYa2Sk36O2C+zFa+tuqhfQrlr2vfdBh9LL0N5NkoQsw/Ubc4BvUbemfIAkWtpE7+Sah
-         rC3JDpc8fMTmmdPBR5PGZJ19ITGx4KWVm15qn/VYXjgbeOtqpdfEwVZ4gdc66OoLT3Y8
-         onpOmiXOEJEWJaPViPC8UizQ9NkjyTUykM+5TnEe2CEsDN4ws/VsmWoN2AekzhrJzcE6
-         wyWDmnlgT89GcnthOjB2yhmACjwoptb4yKTEDH5eRgefcxpJLc/hHW2bZRBvC95ig+P/
-         37lA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5p1RmOhgM0/z524RvUZa+r/pPQBo0Rlgbjppoq633xMcU9sJC4P4EjtNoxodrJnoGekTG20FbbZeixGKwgblwrYokWYLzywrkXpa17MR4uri7KZ3rhube/JyeGL0DR4sS9JtGlJTHiqRPI97C/PYtVoa3Szsy6t/pYHoSS52GJFCD
-X-Gm-Message-State: AOJu0YyMpuxIqljAfs7w5MEG8evPUxViamc4DlpOLhl8juMzsUfuQY5G
-	52C0oG+Ntyp6DPny7MM9KAO0KNKOI77zuI1vkKNlStQe7Kf9Iho/UOLMXBHTZId0UKFij47dnhQ
-	jdQkQanssjsyVMCEA824zspZg7fI=
-X-Google-Smtp-Source: AGHT+IHp13Eyur1BPAqItSeYvnwBUkDqDf+115tBS1MX69pjtJCRbrsIY/4+soTp6BTYoTQIYiuxGHVmOxAXsxB8N64=
-X-Received: by 2002:a5d:4b02:0:b0:341:b9dc:eb03 with SMTP id
- v2-20020a5d4b02000000b00341b9dceb03mr8506794wrq.3.1712632537445; Mon, 08 Apr
- 2024 20:15:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QDL9/zEL"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 439386Hr005531;
+	Tue, 9 Apr 2024 03:15:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=3hR7/b+Lcmm0h+bCz7ikScFKg0g90gZUtEoSlyOaUGQ=;
+ b=QDL9/zELLwJNTA0AlRX0XMVL5usITKhIqI7llCZqCy7N8HGs3rxRV/D0UwmrLLuGzbjM
+ yvDYC37VQftNtPjImysV3fWO2/YqdG7hjBeE5aEhfVcM856SZKQSJ0dPtP6pccEaVKIE
+ lq9/hxwzsYTliDoyEkFdEN58SBsV978NCM1absBAfDovsIrF7QDk+A5yGdY4wTpdceLj
+ 9V/9ZgafeMs8F4P7mVfMI641SZ22vli5o/+VNGzL9DhpltKtJMKgkC6XQ//3bYmlk6iV
+ p/gVyxDRbS/1KrgswfW5PQCbioAkZt1yzu7b1BpxwI4JcpfAM5W7/m2zTXafHmMwgnT/ tQ== 
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xcv1gg43b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Apr 2024 03:15:45 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4390vlJA013550;
+	Tue, 9 Apr 2024 03:15:44 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbgqtc1ws-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Apr 2024 03:15:44 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4393Ff1F27656924
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 9 Apr 2024 03:15:43 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2E28E2004B;
+	Tue,  9 Apr 2024 03:15:41 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AC77F20040;
+	Tue,  9 Apr 2024 03:15:40 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  9 Apr 2024 03:15:40 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com.com (unknown [9.36.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 481A76016D;
+	Tue,  9 Apr 2024 13:15:37 +1000 (AEST)
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Cc: manoj@linux.ibm.com, ukrishn@linux.ibm.com, fbarrat@linux.ibm.com
+Subject: [PATCH 1/2] MAINTAINERS: Make cxlflash obsolete
+Date: Tue,  9 Apr 2024 13:10:26 +1000
+Message-ID: <20240409031027.41587-1-ajd@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408-hid-bpf-sleepable-v6-0-0499ddd91b94@kernel.org> <20240408-hid-bpf-sleepable-v6-5-0499ddd91b94@kernel.org>
-In-Reply-To: <20240408-hid-bpf-sleepable-v6-5-0499ddd91b94@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 8 Apr 2024 20:15:26 -0700
-Message-ID: <CAADnVQ+r2hxerOYjQK21ZWpOsccZbrVWm+L0dHh_dRPwm8iK_A@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next v6 5/6] tools: sync include/uapi/linux/bpf.h
-To: Benjamin Tissoires <bentiss@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: MjqIFWIQGX14MH6cBX1Ov2X8XbAeNIZ5
+X-Proofpoint-ORIG-GUID: MjqIFWIQGX14MH6cBX1Ov2X8XbAeNIZ5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-08_19,2024-04-05_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=703 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 bulkscore=0 clxscore=1011
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404090018
 
-On Mon, Apr 8, 2024 at 1:10=E2=80=AFAM Benjamin Tissoires <bentiss@kernel.o=
-rg> wrote:
->
-> cp include/uapi/linux/bpf.h tools/include/uapi/linux/bpf.h
->
-> Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
->
-> ---
->
-> updated in v6
->
-> no changes in v5
->
-> new in v4
-> ---
->  tools/include/uapi/linux/bpf.h | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bp=
-f.h
-> index bf80b614c4db..f1890eed213a 100644
-> --- a/tools/include/uapi/linux/bpf.h
-> +++ b/tools/include/uapi/linux/bpf.h
-> @@ -1662,9 +1662,10 @@ union bpf_attr {
->         } query;
->
->         struct { /* anonymous struct used by BPF_RAW_TRACEPOINT_OPEN comm=
-and */
-> -               __u64 name;
-> -               __u32 prog_fd;
-> -               __aligned_u64 cookie;
-> +               __u64           name;
-> +               __u32           prog_fd;
-> +               __u32           :32;
-> +               __aligned_u64   cookie;
->         } raw_tracepoint;
+The cxlflash driver is no longer actively maintained and we intend to
+remove it in a future kernel release. Change its status to obsolete.
 
-something wrong with your tree.
-there is no such issue in bpf-next.
+While we're here, Matthew Ochs no longer works at IBM and is no longer in
+a position to access cxlflash hardware, so remove him from the maintainers
+list.
+
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+---
+ MAINTAINERS | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aea47e04c3a5..34f605498873 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5780,10 +5780,9 @@ F:	include/uapi/misc/cxl.h
+ 
+ CXLFLASH (IBM Coherent Accelerator Processor Interface CAPI Flash) SCSI DRIVER
+ M:	Manoj N. Kumar <manoj@linux.ibm.com>
+-M:	Matthew R. Ochs <mrochs@linux.ibm.com>
+ M:	Uma Krishnan <ukrishn@linux.ibm.com>
+ L:	linux-scsi@vger.kernel.org
+-S:	Supported
++S:	Obsolete
+ F:	Documentation/arch/powerpc/cxlflash.rst
+ F:	drivers/scsi/cxlflash/
+ F:	include/uapi/scsi/cxlflash_ioctl.h
+-- 
+2.44.0
+
