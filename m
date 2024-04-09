@@ -1,42 +1,32 @@
-Received: from mail-108-mta20.mxroute.com (mail-108-mta20.mxroute.com [136.175.108.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC9557334
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 05:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.175.108.20
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86CFB57334;
+	Tue,  9 Apr 2024 05:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712640511; cv=none; b=lUVxmg39cE4VR+y9GKTgHV79oIKkiXj0yx+qckSwVV1vkxnF+5KgZRIFDshExm9/t5Drzc2Wi3fW8DFJGqBRa8LX+QHsjzA7hdFaXpq5WciNtKMQbslAw7Lfg3XghC40JRkCm9X0I3y1ezSwihoOK+PnvTMRyleavvRvsrCYh4Q=
+	t=1712640517; cv=none; b=SgqcdXlP2Wr9uoPbJsNdIJJzf6QAY4HtPMSPH+yZ5j2Xu1tKUpQJubZUrL0Nu/PQxgiZkHCcqdIMBwjjlbL1oH//AkBwpXt/Y+5uyLEB9y2K169ghCE38TtEN2b38KS33tf3Ovi5FoYDRDioLwuhYZ//CssCEVYxSjtjk9beq48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712640511; c=relaxed/simple;
-	bh=8c0Qz860G3WkAb0AcWN5WjJC35eH3MG32MPUl0qvQRI=;
+	s=arc-20240116; t=1712640517; c=relaxed/simple;
+	bh=B0pJGBgPBVixNPy3sScpcMt39X7U/94nLsgy28kNzVI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tWlaIx/3cTSq7H2wsGRx499Q4J5piMMQChukQp5MsoUu/YltcYx9IY4O/hQ/AiX7qdRZhERCrdKWgVwYh4g+758pDGn+Z1dGRoRIM0CAe8NwhF1Hbn+1vl8isNKDPz/OlIA+s02CNPrAPVO39ObzwNkw86DnchqDfd8fZQajNaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com; spf=pass smtp.mailfrom=luigi311.com; dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b=IAFTK/4q; arc=none smtp.client-ip=136.175.108.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=luigi311.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=luigi311.com
+	 In-Reply-To:Content-Type; b=bqBoXmTsJ+UnTLNk+6l5Wmemc5HL4wQyF4UgV3I3Cq6hvofIp7GCZak/4yTjczZfA3TJtk05BeaPgUXX1Khz5v23uKYeTnCARxT1u6fsRJzT8sZ0LmtmeY6jh2B3mlgry/tHudD115RwTWZ8MjuWIAo7K5ZmCYFvwxnMGT4US+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=RvE29wyt; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=luigi311.com header.i=@luigi311.com header.b="IAFTK/4q"
-Received: from filter006.mxroute.com ([136.175.111.2] filter006.mxroute.com)
- (Authenticated sender: mN4UYu2MZsgR)
- by mail-108-mta20.mxroute.com (ZoneMTA) with ESMTPSA id 18ec14f805f0003bea.010
- for <linux-kernel@vger.kernel.org>
- (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
- Tue, 09 Apr 2024 05:23:16 +0000
-X-Zone-Loop: 01840a76c8d2ba3bdb6f3dfaaee5ba27bf453e7bca60
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=luigi311.com; s=x; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-	From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=E4MKkW6f1nSRZdtxgNHT1iqRYe28mUV0vTu6PYIA7AU=; b=IAFTK/4qWYzi0uoH+gzXRH277M
-	szUC1vHKbVHJD93VaP8lYVj7chkg2INkU9P3Twn8j5bvPr5tLsgB39GExHcDqmi5eL/twM0E7zQAa
-	vOEsfdAFAlJGt2o5IfIXHXi6t9iN4G4MYhCNas1emwK2+Yl7qHV746HCf8kvAUg1/FLR0v7UsAqdv
-	S577OjtwYuYwhlvxIoQkcQfdV1Ti5wFJ8aj3UEsBF8dn6r810HgKxE9nepl3ikqGR528RMTdRVm1P
-	M06VNj0ujBzCTMxqBnKEzgIJoc+oiTKaSkde7FVqhN0G7cKnNmG92NeiBkXxdTYlinJQ52sai+WA1
-	/QtIQjyQ==;
-Message-ID: <11326ea0-51fb-445c-bae3-f16c40af87a3@luigi311.com>
-Date: Mon, 8 Apr 2024 23:23:12 -0600
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RvE29wyt"
+Received: from [100.64.208.45] (unknown [20.29.225.195])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0938A20EA451;
+	Mon,  8 Apr 2024 22:28:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0938A20EA451
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712640516;
+	bh=B0pJGBgPBVixNPy3sScpcMt39X7U/94nLsgy28kNzVI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RvE29wyt8fCX7daJqWxVlv5ePuCEBu+uLrjfs3Hox1yMhRFURT7LSRTdjbo0IvLn8
+	 3Va3pxAYA4pYAZUBo0G4MozP6iigrpMpug/rJNPYs/cmMgq19haKrAZUxVQHyl4pGP
+	 admw9QNLNU4W8HTNtd4PfdCpRQth15C3W5eNUU6w=
+Message-ID: <694fdd96-cc6e-4a4e-aff5-3284cd3ada4e@linux.microsoft.com>
+Date: Mon, 8 Apr 2024 22:28:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,48 +34,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/25] media: i2c: imx258: Add get_selection for pixel
- array information
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-media@vger.kernel.org, dave.stevenson@raspberrypi.com,
- jacopo.mondi@ideasonboard.com, mchehab@kernel.org, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- sakari.ailus@linux.intel.com, devicetree@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, phone-devel@vger.kernel.org
-References: <20240403150355.189229-1-git@luigi311.com>
- <20240403150355.189229-12-git@luigi311.com> <Zg2kHYc6kdiZEAFD@duo.ucw.cz>
-Content-Language: en-US
-From: Luis Garcia <git@luigi311.com>
-In-Reply-To: <Zg2kHYc6kdiZEAFD@duo.ucw.cz>
+Subject: Re: [PATCH v1 1/1] ACPI: CPPC: Fix access width used for PCC
+ registers
+To: Jarred White <jarredwhite@linux.microsoft.com>,
+ Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+Cc: "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240329220054.1205596-1-vanshikonda@os.amperecomputing.com>
+ <eecf5b00-0b61-46a8-82d9-a3c113f2d956@linux.microsoft.com>
+ <m2m7qytrlhdvht7ro6hee2msi2bd5j733yagdakyjfxi2su46i@nj77lj3ulqp7>
+ <365b430b-d91c-4391-bfc4-ea6a3444cb43@linux.microsoft.com>
+Content-Language: en-CA
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+In-Reply-To: <365b430b-d91c-4391-bfc4-ea6a3444cb43@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Authenticated-Id: git@luigi311.com
 
-On 4/3/24 12:46, Pavel Machek wrote:
-> Hi!
-> 
->> Libcamera requires the cropping information for each mode, so
->> add this information to the driver.
-> 
->> @@ -116,6 +124,9 @@ struct imx258_mode {
->>  	u32 link_freq_index;
->>  	/* Default register values */
->>  	struct imx258_reg_list reg_list;
->> +
->> +	/* Analog crop rectangle. */
-> 
-> No need for "." at the end, as it is not above.
-> 
->> +	struct v4l2_rect crop;
->>  };
-> 
-> If the crop is same in all modes, should we have it in common place?
-> 
-> Best regards,
-> 								Pavel
+On 4/8/2024 1:19 PM, Jarred White wrote:
+> On 4/1/2024 10:45 AM, Vanshidhar Konda wrote:
+>> On Mon, Apr 01, 2024 at 09:48:28AM -0700, Easwar Hariharan wrote:
+>>> Hi Vanshi,
+>>>
+>>> Thanks for testing and catching this. One comment below, but Jarred is OOF for a couple days so
+>>> we'll get back again after testing on our platform.
+>>>
+>>> On 3/29/2024 3:00 PM, Vanshidhar Konda wrote:
+>>>> Commit 2f4a4d63a193 ("ACPI: CPPC: Use access_width over bit_width for
+>>>> system memory accesses") modified cpc_read/cpc_write to use access_width to
+>>>> read CPC registers. For PCC registers the access width field in the ACPI
+>>>> register macro specifies the PCC subspace id. For non-zero PCC subspace id
+>>>> the access width is incorrectly treated as access width. This causes errors
+>>>> when reading from PCC registers in the CPPC driver.
+>>>>
+>>>> For PCC registers base the size of read/write on the bit width field.
+>>>> The debug message in cpc_read/cpc_write is updated to print relevant
+>>>> information for the address space type used to read the register.
+>>>>
+>>>> Fixes: 2f4a4d63a193 ("ACPI: CPPC: Use access_width over bit_width for system memory accesses")
+>>>> Signed-off-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
+>>>> ---
 
-I gave this a try similar to what was done on imx219 but its having
-issues and makes a bunch of changes to the following patches so we
-might need to hold off on that change for now.
+Hi Vanshi,
+
+When you send v2 for the SystemMemory space fixes, could you add CC: stable@vger.kernel.org # 5.15+
+to your commit message, since your patch fixes 2f4a4d63a193 that was marked for stable?
+
+Thanks,
+Easwar
+
