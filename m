@@ -1,93 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7423412EBF7;
-	Tue,  9 Apr 2024 13:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4306C130E2D;
+	Tue,  9 Apr 2024 13:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669594; cv=none; b=QC3Yr2v0hp85a0OOkvVDpsRcmtPWG0VZYrwK4exsxNespWyAGLXJfwIVpPjPQ4IGNoSNX8Oee39Oo/SQOHhfpTuvm3hWudceTVkfYc6zJXBxpJ962LCamvKF+n8jdqi9uEJSaj68Q0OAMv+rHd/MBF6sclIw5y+kcvTOUzDc5wQ=
+	t=1712669606; cv=none; b=Wpe2jkL/t+cpz/5iBW9dvljuLuxv8MwG5mDokY4sxykaFuHKCwQE5CK/lAuwEYGofiw63cZAwyLMwY+PHR/0fnUsyJJzwyg9gl2Q9eReAmDJVafSnphrEKin4W1l9fffDE1E/PFzHWHxq9dnLaNh2qXyRMcvIbZMUdTOBXZIdck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669594; c=relaxed/simple;
-	bh=dIMLKmF8QMvsWVI+FEoCYWgHq7jZ/1UVqaTJ39fpZHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A66wcOSPuDyW2jJRXGBY1Heq5YN/ziu94NYPCjOxOiOOlo9xtLf3Ple7M738uafkaM23Vh0WKIQ1CqM2wmVyorETmPPYzqXfMF8KeAeD7nZ0LaUYUBU428RCTT9GuBhYnElYcaBLlEPFSsquTJaQ6+lUv8DSrqGwmsBRdDRCQQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: DHXifDb1StaVzDuwMDjTAg==
-X-CSE-MsgGUID: qT7JqERoS+CCJ8vil5uI4g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25424037"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="25424037"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 06:33:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915399959"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="915399959"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 06:33:08 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1ruBaz-00000002od9-1FNV;
-	Tue, 09 Apr 2024 16:33:05 +0300
-Date: Tue, 9 Apr 2024 16:33:05 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Werner Sembach <wse@tuxedocomputers.com>,
-	Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
-	Jelle van der Waa <jelle@vdwaa.nl>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	linux-input@vger.kernel.org, ojeda@kernel.org,
-	linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-	Gregor Riepl <onitake@gmail.com>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: In kernel virtual HID devices (was Future handling of complex
- RGB devices on Linux v3)
-Message-ID: <ZhVDkf0P6vRLy-Ql@smile.fi.intel.com>
-References: <e21a7d87-3059-4a51-af04-1062dac977d2@tuxedocomputers.com>
- <247b5dcd-fda8-45a7-9896-eabc46568281@tuxedocomputers.com>
- <ZdZ2kMASawJ9wdZj@duo.ucw.cz>
- <b6d79727-ae94-44b1-aa88-069416435c14@redhat.com>
- <a21f6c49-2c05-4496-965c-a7524ed38634@gmail.com>
- <825129ea-d389-4c6c-8a23-39f05572e4b4@redhat.com>
- <adbfdf6c-fb59-4fae-a472-17b04dd8a3f6@tuxedocomputers.com>
- <1fb08a74-62c7-4d0c-ba5d-648e23082dcb@tuxedocomputers.com>
- <aec1d22d-9e59-4dfc-b108-5ba339b0e76a@redhat.com>
- <CANiq72kPXsTjzptK7tSC=RygEpWHJHz1-QXuZv8qPHfGLyzrDw@mail.gmail.com>
+	s=arc-20240116; t=1712669606; c=relaxed/simple;
+	bh=u4FR5Y+UEiIgK8eplC+h87f4MqY4iTWX06FqasbSRuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s/zY7ejd/cE4Fodulanb2z4WtCOUCu+zd9LyrzSTDm1B6L3dBmrKUtPxhZlssiumIh+cvcwssn1+wUl5WDb7qlU6hleS6SRN4nf3WGhqeYt6SLHyH73MYaB9w0wsPg+8w7ZWRkBixtKbUawOFkjOPqgIMlWc1KhF+7dluygHNpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C409139F;
+	Tue,  9 Apr 2024 06:33:53 -0700 (PDT)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A97F3F766;
+	Tue,  9 Apr 2024 06:33:19 -0700 (PDT)
+Message-ID: <3df74a0a-6778-43c4-a8c2-70d71c324f6a@arm.com>
+Date: Tue, 9 Apr 2024 14:33:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kPXsTjzptK7tSC=RygEpWHJHz1-QXuZv8qPHfGLyzrDw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf vendor events arm64: AmpereOne/AmpereOneX: Mark
+ L1D_CACHE_INVAL impacted by errata
+To: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+Cc: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+References: <20240408214022.541839-1-ilkka@os.amperecomputing.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240408214022.541839-1-ilkka@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 25, 2024 at 07:38:46PM +0100, Miguel Ojeda wrote:
-> On Mon, Mar 25, 2024 at 3:25 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > +Cc: Bentiss, Jiri
+
+
+On 08/04/2024 22:40, Ilkka Koskinen wrote:
+> L1D_CACHE_INVAL overcounts in certain situations. See AC03_CPU_41 and
+> AC04_CPU_1 for more details. Mark the event impacted by the errata.
 > 
-> Cc'ing Andy and Geert as well who recently became the
-> maintainers/reviewers of auxdisplay, in case they are interested in
-> these threads (one of the initial solutions discussed in a past thread
-> a while ago was to extend auxdisplay).
+> Signed-off-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+> ---
+>  tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json  | 4 +++-
+>  tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json | 4 +++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
+> index 7a2b7b200f14..ac75f12e27bf 100644
+> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereone/cache.json
+> @@ -9,7 +9,9 @@
+>          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+>      },
+>      {
+> -        "ArchStdEvent": "L1D_CACHE_INVAL"
+> +        "ArchStdEvent": "L1D_CACHE_INVAL",
+> +        "Errata": "Errata AC03_CPU_41",
+> +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
+>      },
+>      {
+>          "ArchStdEvent": "L1D_TLB_REFILL_RD"
+> diff --git a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
+> index c50d8e930b05..f4bfe7083a6b 100644
+> --- a/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
+> +++ b/tools/perf/pmu-events/arch/arm64/ampere/ampereonex/cache.json
+> @@ -9,7 +9,9 @@
+>          "ArchStdEvent": "L1D_CACHE_REFILL_RD"
+>      },
+>      {
+> -        "ArchStdEvent": "L1D_CACHE_INVAL"
+> +        "ArchStdEvent": "L1D_CACHE_INVAL",
+> +        "Errata": "Errata AC04_CPU_1",
+> +        "BriefDescription": "L1D cache invalidate. Impacted by errata -"
+>      },
+>      {
+>          "ArchStdEvent": "L1D_TLB_REFILL_RD"
 
-Without diving into this, just sharing my view on auxdisplay subsystem:
-I consider it _mostly_ (like lim->100% mathematically speaking) as for
-7-segment and alike displays, not any comples RGB or so devices. If
-those devices are capable of representing characters/digits in similar
-way, we may export linedisp library for them to utilise.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Reviewed-by: James Clark <james.clark@arm.com>
