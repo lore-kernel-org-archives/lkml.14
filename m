@@ -1,91 +1,98 @@
-Received: from out162-62-63-194.mail.qq.com (out162-62-63-194.mail.qq.com [162.62.63.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9751812F378;
-	Tue,  9 Apr 2024 13:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.63.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E67212C531;
+	Tue,  9 Apr 2024 13:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712670268; cv=none; b=Y/Jm2Ryd/ojaqsciFzqOAYTNa5X5BR3vXlCK+7jLoCcDntIIADPOGsKeHZXn97/rUp6fsnVd3E6aICH/kjIk/NeWrb8J/oVaPc0VxCfHScIRC3eCUMnp/f3CZMvmRYkAsFWQkU5FhSBscd+4BwhcHy2D5UpYOyWSrgmmO+XMmg0=
+	t=1712670393; cv=none; b=IuDXuTFuFaeD/bz/nk23VLlTGN8TYAMta292vnRH+e63qM19c0ZBFMacjjT0VcZueWQfqlGoVyW0kif/g8XEJ6sqvLxQ0Wg6s29B1XgAgN2vEONBzjn3zS8HmbsI6FUU06RGRL99dPR/XJw/bR0kKcYCfaWgvZ5GZDO0DI4Wnk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712670268; c=relaxed/simple;
-	bh=/kxZXr+rwuZWsLpAl0SSYwp1srPD3nqS4ULZVWAuf8k=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=dIt76et7EEqLBftYxYnbsX7KnKajy5nB1wWjnE45bCGk/AJTdjvCoQ1hSfV5hhfYq/TbJnSMeeC5yK7BvlsLTWPkFbIMgJlSFZTo8G49G8vJNe+4d6WaSTAPAyzXqh6IfGEuKlTAlVO2RA2szjHC/GVlbEoNUQRDOhkj6SZ0SIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Td6C2W+p; arc=none smtp.client-ip=162.62.63.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712670393; c=relaxed/simple;
+	bh=zDbyBb/9hhPVBbG3X7C1YdT4HO4jlTdu1qvdQ+VHvJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBfQezPsBLgp3LiXrM9rfqYTPrqM9zr+GhR5XcisQ56vX9I8CnG/fMBqluiYmJyFjzcZ1thE8xa7o9bzoqwSwhOjQMkXovcCpWVPv/k8Xt45OxAllCXHmy3iQPdalqaAfXqP4Z+Ze5+0nATJydmu2ESjTujElCStSumh5wE1ltk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eflFdtuC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Td6C2W+p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712670258; bh=mV+2uXEU0mxyaFTSC+dqJ7oImfFIcAAupTtNJvfgJYA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Td6C2W+pebgIe4I12hp+cKrXcRfD/tNrb6/WJ0wRlrtl5RwOT+TsnPky8kEafErPQ
-	 fCzNkZ47jO19lUSEqk+vJE9MswA68HnGSzY6w0rLmO0PfSPrCoZYM5J9SOYNZyDuwG
-	 //j0JlKmq406vNRMAgosdznENIhY5hIAOH7X7leU=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
-	id AB23389E; Tue, 09 Apr 2024 21:42:50 +0800
-X-QQ-mid: xmsmtpt1712670170tkjmb0sae
-Message-ID: <tencent_EDCC88A7DB46D3D2F7C64449976EC56EE006@qq.com>
-X-QQ-XMAILINFO: OCYbvBDBNb9rerlANBwTUHLlLdyj8SmQAzuXuPK9Ob3UVeMTOUlb2KXNa0+x5z
-	 CriuoSgInpV8P2aXGt1YyYfx154hu2f1Yvlydw6FtioPyI9zqjDX7GfWc6eCcYz88908p6Sn5al2
-	 bsnAegt/UzKNcGgnYJyiHzszdulrN2bIfan6CEK2brvGFI8AKYGffxhlLLgSvljvPbogo3HdKE2g
-	 bkCeVoeGCF5wnTK9NkLVUhPnLOAy8hAnbzMQC5imHkST880ZuwsqCFT86XnKRYpuLdvbl65piPrA
-	 iH4I/80v3ALIHlCI/zdisN+cTQyyKOLt4axc2v7GevNjzluOjamKO8gxjC/tYO1qKUOHA7jYAm3J
-	 t8heAypBDIdCLKlrBy8yqajqfkZQjIlsv98Rqx1WQGcRfF5j9NqPuxIXsHre22hnTX6zArERnmi4
-	 o4hrfC3j2daxLqTgwNR/3NmpuqI95ICUa8rc3uqj5FyQwfhOYHklKbxxBje3dv+dEzRh5PD7uwiD
-	 pAKRsXDHlTl69FssNHh9xQrPHoR3MaTUtkhxWqDVl151sK1HH7lRqjvzxj+Yza5KhoHCOJS4fmP0
-	 KuemLKhoi6X6Hede9Pag0GlEsZxbSZtVIcL6oXth27WyXTU8Thncq9K4u620biye4mOADV3Rffok
-	 OZOGhmLz14NEY9+hEQVGluKVONp1KhMmQDEfUJCzUij2osiB/WLsqpxO3qawDOexVgFquXeDGYYV
-	 hpXuLwstk2JAOUV+HIzBHHRkhiHdUWyrc0gJYDFLMpQ/GY8e2q56iJJtPZxQ3uxAp676Tfjyr3V/
-	 v/0wDr1qScqyah7gCUeAgHoewwDNc2PDGd/SRQ0imyaFqSltV+7cqIiZtR351mZFMbEXQOqgETk/
-	 v4bYcMGTWKm5GvB7jOkjejHb0zKtG8XX/ZOnlDnJL/pVU+a8C330cIGs0NinTbNqoFuuV8PcYh4A
-	 bQPfsAuc6VSjSSivdBuZlPSuP5BSZm0C+sdLhmCp5SDxs5GYdJZM3RKvodBZLS
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+837ba09d9db969068367@syzkaller.appspotmail.com
-Cc: johan.hedberg@gmail.com,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	marcel@holtmann.org,
-	syzkaller-bugs@googlegroups.com,
-	netdev@vger.kernel.org
-Subject: [PATCH] Bluetooth: fix oob in hci_sock_setsockopt
-Date: Tue,  9 Apr 2024 21:42:51 +0800
-X-OQ-MSGID: <20240409134250.1414-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <0000000000007558ae061553f41b@google.com>
-References: <0000000000007558ae061553f41b@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eflFdtuC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF194C433C7;
+	Tue,  9 Apr 2024 13:46:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712670393;
+	bh=zDbyBb/9hhPVBbG3X7C1YdT4HO4jlTdu1qvdQ+VHvJE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eflFdtuCE7meJNtJ0Hp2+gGmaAnDIiIBQS7CUgKkcvnDVwoxUWPdC7Nku33lL47Rw
+	 OyqoX1knSwghzlxHbL9UGhzngUjdFVkI3M0ZWK8ae8BnOir9NLz88MADXEczliGDrP
+	 sjLZM0S9BvPXV+eXIdtqLbO5a7RPrnTho2LNLK7c=
+Date: Tue, 9 Apr 2024 15:46:30 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v1 0/3] serial: Do not count XON/XOFF in the statistics
+Message-ID: <2024040926-whinny-coil-4c15@gregkh>
+References: <20240403144722.860258-1-andriy.shevchenko@linux.intel.com>
+ <Zg3VHs-LVxHFdi8V@surfacebook.localdomain>
+ <573aac92-9c9b-427b-a76f-3c0b7c3b6ce6@kernel.org>
+ <Zg7NPnpFXkQWJ-Ks@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zg7NPnpFXkQWJ-Ks@smile.fi.intel.com>
 
-If len < sizeof(opt) it will trigger oob, so take the min of them.
+On Thu, Apr 04, 2024 at 06:54:38PM +0300, Andy Shevchenko wrote:
+> On Thu, Apr 04, 2024 at 07:16:55AM +0200, Jiri Slaby wrote:
+> > On 04. 04. 24, 0:15, Andy Shevchenko wrote:
+> > > Wed, Apr 03, 2024 at 05:46:14PM +0300, Andy Shevchenko kirjoitti:
+> > > > Some drivers count XON/XOFF in the Tx statistics, some do not.
+> > > > I actually a bit uncertain, but I _think_ the correct way is not
+> > > > to count them, hence this series.
+> > > 
+> > > Okay, it seems there are much more drivers doing that. Perhaps we need
+> > > to add that to the rest in this case (i.o.w. invert the series from removal
+> > > to addition)?
+> > 
+> > Interesting, perhaps cut & paste?
+> > 
+> > XON and XOFF are overhead IMO. So should not be counted. When they are, they
+> > mangle statistics as in transmitted (real) bytes per second.
+> > 
+> > How are they handled on the RX side?
+> 
+> It took me a while.
+> 
+> All serial drivers accept everything and those that care, update statics for
+> anything they receive. This is because of layering. The Rx XON/XOFF seems
+> (note I am completely unfamiliar with mysterious ways of TTY layers) to be
+> handled on TTY level by n_tty_receive_char_flow_ctrl(), i.o.w. we may not
+> skip counting it easily.
+> 
+> Now the question is, shall we count the control characters on output or not?
+> Whatever decision we made, we should document (if not yet) and align drivers
+> accordingly.
+> 
+> Another Q is what do books / other OS / projects usually do with them
+> WRT statistics?
 
-Reported-by: syzbot+837ba09d9db969068367@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- net/bluetooth/hci_sock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It depends on where you are measuring stuff.
 
-diff --git a/net/bluetooth/hci_sock.c b/net/bluetooth/hci_sock.c
-index 4ee1b976678b..cee7ec1adbd2 100644
---- a/net/bluetooth/hci_sock.c
-+++ b/net/bluetooth/hci_sock.c
-@@ -1946,7 +1946,7 @@ static int hci_sock_setsockopt_old(struct socket *sock, int level, int optname,
- 
- 	switch (optname) {
- 	case HCI_DATA_DIR:
--		if (copy_from_sockptr(&opt, optval, sizeof(opt))) {
-+		if (copy_from_sockptr(&opt, optval, min_t(int, sizeof(opt), len))) {
- 			err = -EFAULT;
- 			break;
- 		}
--- 
-2.43.0
+If you want "raw" bytes on the wire, you count them.  If you want to see
+what the port sends based on what userspace sent/recieved, you don't.
 
+> If we count everything on a wire, then we must count them, otherwise
+> it depends on how we treat them.
+
+Agreed.  We need to pick one and stick with it.
+
+I think, at the driver level, we should count it, as it's a ldisc thing,
+not a driver thing, right?
+
+thanks,
+
+greg k-h
