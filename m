@@ -1,131 +1,210 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C1F55E55;
-	Tue,  9 Apr 2024 10:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9A58119
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712658689; cv=none; b=t1N7UP5kUsJSQNsyVBsXty4XUX/BjZL8Q4y8du/bAigPZay9P8eBLEre7Dblo+PcTKfpcauKzCnKr2VwWsQz+aUCTNq2Lt0pjX2YaoDurIEeIDFjyJbwYeereKQLiqAb+E3quzl2CIr8S8Y5pUgesFLfEyEo2kW08Q1mO7d/IcI=
+	t=1712658751; cv=none; b=G4YWgdbkjk0l7bsikts7G6ymvOEFlUFrnPSZ6yUZ6HWjOvhp+9NjOzJ18ez1BCZnCnnfom4lntFzVABr5jj+XJ3CR8LUxejlGsQ6+WxONmVdIVqnnf6Ie76kY/4RK1iH+//YafxPcQT4fD5E3UoGdk/qcB7qnaiRXgixlYcZCDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712658689; c=relaxed/simple;
-	bh=95/eNQEA2hT6GJXXuLkMPQn2OkasoWu1BXdBrwzlGl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gNy4aGWQvDcfnFpcQ/4egtePglLG3uSJMnkGZKzdxyh+vgZPgGP0QfD6k6OQ3ECphQ97qmi/Z4xkVpSipOGZo9zys2w2tgSiQ7HC8Wjpv5DAgPTfe4eKzag3/plEsKtC/g8ndrqgsKwxe02baiBzsRePQY3OZmcBoss3Uc+4GG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCMlo02B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712658751; c=relaxed/simple;
+	bh=UX9k3/oswSpfOSvNZcldfTNpVEuueE8+0oPvL3d72Ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bgwmF7llq/Bn7WEB518QkionNPcALoLDyjA9IQTqYJgBNOJqPlCT1adaKzCy7A8S4Rgh9nXOD1gg6okMYkSim6r7/IBAWr3um3hKJGj39ptnJtElyyRJgIWorxy9Ia82in4KXUda6rnhU+C6qW23/vHidZYX3QC7T+D3ea8msrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SB08Rwjx; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCMlo02B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DAC0C433C7;
-	Tue,  9 Apr 2024 10:31:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712658688;
-	bh=95/eNQEA2hT6GJXXuLkMPQn2OkasoWu1BXdBrwzlGl4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vCMlo02BzURuyLxdIwDM+tm84sC14IiCKw/etLEfkWoG5XTGPfhAcNwtgmsdxDopb
-	 dOBmNQaH7pVfZgic9BN2s/9AYAY1XJqHi/9OSqSKBZ6+h16bNg0Ja8hPL0nikETbWk
-	 yQvnepDHRjxP3xU0dDip6S9ChKKhIrZq4wigumZObFRIS0QG3n9vfLNLghTpw+3Qt+
-	 2lQLSERMJCEkHKRzffBCjnxHG+0omIYX0HOk01rwRZoFyPT8AuzOBJspi+VvrZg5Wk
-	 MedIFW0D57TX18j8Nu6aHI+/wP4nhckgb3DwJ1ERW+hRNkcHoGEm6x4mauog3M83EE
-	 ahXNuM7XR3/9g==
-Date: Tue, 9 Apr 2024 11:31:20 +0100
-From: Will Deacon <will@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jamie Cunliffe <Jamie.Cunliffe@arm.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	Ard Biesheuvel <ardb@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2] rust: add flags for shadow call stack sanitizer
-Message-ID: <20240409103120.GA22557@willie-the-truck>
-References: <20240305-shadow-call-stack-v2-1-c7b4a3f4d616@google.com>
- <CANiq72mCzRBW7_H5Q4VQF8PGRFwaKJzQwOe8LOP2NbStz4husg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SB08Rwjx"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5aa16c0583eso1791465eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712658748; x=1713263548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6wiRCdd89h1sVMfB48/ixg+/YiJUwbUXTRR0BuEf6E=;
+        b=SB08Rwjxu7Ls+gAb3fV8ixQMYHqvxvETrfahPNf8G5XiVDnP/O0L8Rm2nPyxe4UysD
+         qvQX/m7OYxot2c31tTYnz/aHRQSRqj6Be9GPAKx7hO85pLDdrIDqc+2gOCZp/TWTmpmx
+         lRj7+bfGoUOyBrGQ1h4+Rvcvsn3wnW64R6nnTRjGWu/VpvVFy+wXWOVRJQRFGSvLDi8s
+         YgDjsj6UUwsFeVHe9smE3OrBjYEzOLt/vyM30du/OJtX9vb2qiI3uQvt50E1svHuebCP
+         85V+aYa1LpXSdirkF94z9ZZMz6gtUMY8z3u+3oqpEx0VbkxjnidB1VW2f4WMk0uXzs5u
+         hRfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712658748; x=1713263548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E6wiRCdd89h1sVMfB48/ixg+/YiJUwbUXTRR0BuEf6E=;
+        b=qiMGLxPpMlkONtRSPVQkl87IcMarMd3kXCWDSOb989kD8SFzkPeNZUNvzvHcDjjQh1
+         4/NklkRC23aE0Wcz79HDf0wxozeQz1N4zogd2hwt5gyqzh44Xxu0t2B2+hS01omlY1l+
+         gzQ0j/tDpJkbDRP0cAyWQRYqiuBDaWJlCu8hXvJD04CVXtceOsL8qrf+Mxy5je54krVZ
+         GUXtTmox8or2wAWHUsm+96RUc28xf+msSKSLOMERZxXSjvGQEuuvw2hrlDLJdFeja92u
+         ISAi+3QvqgmSb64c+zjjCnATxf6bkhg76OTq3Cts9yNdTkztIXYazncZ74pSfT6dXe0u
+         vk5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUOUNyPEp8ftr8z4jvtA7NNoahihHA+FvwlFPnzA4AlKvH/ShaFg+9x9Q1UelmZ+vO4m0R2bIxlKUBZ1P9ld20EUOLbAEzMNyTePogW
+X-Gm-Message-State: AOJu0YwySryS3bwlZktmkMrq4u3OCH9wQDJ/RyQHMfFzP9HvKMJREkvZ
+	a0+OqwtV1UCRZQmRLomY3GYpVZGMIrs3dmoBTnpwhpwyVuRP/oLpFQqVrxZbkDDkM2ljXjbVwRB
+	7
+X-Google-Smtp-Source: AGHT+IFEn7fzGVX4ENx7itTb1ycHDldkvgWUd8eaiNCRvLKK78VmQRDlwjkEc3HvZiTxCd71tp4LJA==
+X-Received: by 2002:a05:6358:d3a7:b0:186:5f1:3827 with SMTP id mp39-20020a056358d3a700b0018605f13827mr11380787rwb.18.1712658748170;
+        Tue, 09 Apr 2024 03:32:28 -0700 (PDT)
+Received: from localhost ([122.172.85.136])
+        by smtp.gmail.com with ESMTPSA id e1-20020a630f01000000b005f072084432sm7878536pgl.38.2024.04.09.03.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 03:32:27 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Vladimir Lypak <vladimir.lypak@gmail.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] OPP: Fix required_opp_tables for multiple genpds using same table
+Date: Tue,  9 Apr 2024 16:02:19 +0530
+Message-Id: <c274500b623b83c00c0460383cbe1cdc7490eeac.1712658693.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mCzRBW7_H5Q4VQF8PGRFwaKJzQwOe8LOP2NbStz4husg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Mar 05, 2024 at 01:14:19PM +0100, Miguel Ojeda wrote:
-> On Tue, Mar 5, 2024 at 12:58 PM Alice Ryhl <aliceryhl@google.com> wrote:
-> >
-> > Add flags to support the shadow call stack sanitizer, both in the
-> > dynamic and non-dynamic modes.
-> >
-> > Right now, the compiler will emit the warning "unknown feature specified
-> > for `-Ctarget-feature`: `reserve-x18`". However, the compiler still
-> > passes it to the codegen backend, so the flag will work just fine. Once
-> > rustc starts recognizing the flag (or provides another way to enable the
-> > feature), it will stop emitting this warning. See [1] for the relevant
-> > issue.
-> >
-> > Currently, the compiler thinks that the aarch64-unknown-none target
-> > doesn't support -Zsanitizer=shadow-call-stack, so the build will fail if
-> > you enable shadow call stack in non-dynamic mode. However, I still think
-> > it is reasonable to add the flag now, as it will at least fail the build
-> > when using an invalid configuration, until the Rust compiler is fixed to
-> > list -Zsanitizer=shadow-call-stack as supported for the target. See [2]
-> > for the feature request to add this.
-> >
-> > I have tested this change with Rust Binder on an Android device using
-> > CONFIG_DYNAMIC_SCS. Without the -Ctarget-feature=+reserve-x18 flag, the
-> > phone crashes immediately on boot, and with the flag, the phone appears
-> > to work normally.
-> >
-> > This contains a TODO to add the -Zuse-sync-unwind=n flag. The flag
-> > defaults to n, so it isn't a problem today, but the flag is unstable, so
-> > the default could change in a future compiler release.
-> >
-> > Link: https://github.com/rust-lang/rust/issues/121970 [1]
-> > Link: https://github.com/rust-lang/rust/issues/121972 [2]
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> > This patch raises the question of whether we should change the Rust
-> > aarch64 support to use a custom target.json specification. If we do
-> > that, then we can fix both the warning for dynamic SCS and the
-> > build-failure for non-dynamic SCS without waiting for a new version of
-> > rustc with the mentioned issues fixed.
-> 
-> If the arm64 maintainers are OK with the warning being triggered in that case:
+The required_opp_tables parsing is not perfect, as the OPP core does the
+parsing solely based on the DT node pointers.
 
-Sorry, I meant to reply on this at the time...
+The core sets the required_opp_tables entry to the first OPP table in
+the "opp_tables" list, that matches with the node pointer.
 
-> Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> 
-> Otherwise partially reverting to the `target.json` approach sounds good too.
-> 
-> I added the `-Zuse-sync-unwind=n` to the list at
-> https://github.com/Rust-for-Linux/linux/issues/2. Given the default is
-> what we want, I have put it in the "Good to have" section.
+If the target DT OPP table is used by multiple devices and they all
+create separate instances of 'struct opp_table' from it, then it is
+possible that the required_opp_tables entry may be set to the incorrect
+sibling device.
 
-I think we have time to do this properly, like we did for the clang
-enablement a few years ago. In hindsight, avoiding hacks for the early
-toolchains back then was a really good idea because it meant we could
-rely on a solid baseline set of compiler features from the start.
+Unfortunately, there is no clear way to initialize the right values
+during the initial parsing and we need to do this at a later point of
+time.
 
-So, please can we fix this in rustc and just have SCS dependent on that?
+Cross check the OPP table again while the genpds are attached and fix
+them if required.
 
-Cheers,
+Also add a new API for the genpd core to fetch the device pointer for
+the genpd.
 
-Will
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=218682
+Reported-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+Co-developed-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+Vladimir Lypak,
+
+Can you please give this a try and confirm that it fixes the issue.
+
+ drivers/opp/core.c        | 31 ++++++++++++++++++++++++++++++-
+ drivers/pmdomain/core.c   | 10 ++++++++++
+ include/linux/pm_domain.h |  6 ++++++
+ 3 files changed, 46 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index e233734b7220..1f64b703b744 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -2394,7 +2394,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
+ 			const char * const *names, struct device ***virt_devs)
+ {
+-	struct device *virt_dev;
++	struct device *virt_dev, *gdev;
++	struct opp_table *genpd_table;
+ 	int index = 0, ret = -EINVAL;
+ 	const char * const *name = names;
+ 
+@@ -2427,6 +2428,34 @@ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
+ 			goto err;
+ 		}
+ 
++		/*
++		 * The required_opp_tables parsing is not perfect, as the OPP
++		 * core does the parsing solely based on the DT node pointers.
++		 * The core sets the required_opp_tables entry to the first OPP
++		 * table in the "opp_tables" list, that matches with the node
++		 * pointer.
++		 *
++		 * If the target DT OPP table is used by multiple devices and
++		 * they all create separate instances of 'struct opp_table' from
++		 * it, then it is possible that the required_opp_tables entry
++		 * may be set to the incorrect sibling device.
++		 *
++		 * Cross check it again and fix if required.
++		 */
++		gdev = dev_to_genpd_dev(virt_dev);
++		if (!IS_ERR(gdev))
++			return PTR_ERR(gdev);
++
++		genpd_table = _find_opp_table(gdev);
++		if (!IS_ERR(genpd_table)) {
++			if (genpd_table != opp_table->required_opp_tables[index]) {
++				dev_pm_opp_put_opp_table(opp_table->required_opp_tables[index]);
++				opp_table->required_opp_tables[index] = genpd_table;
++			} else {
++				dev_pm_opp_put_opp_table(genpd_table);
++			}
++		}
++
+ 		/*
+ 		 * Add the virtual genpd device as a user of the OPP table, so
+ 		 * we can call dev_pm_opp_set_opp() on it directly.
+diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+index 4215ffd9b11c..c40eda92a85a 100644
+--- a/drivers/pmdomain/core.c
++++ b/drivers/pmdomain/core.c
+@@ -184,6 +184,16 @@ static struct generic_pm_domain *dev_to_genpd(struct device *dev)
+ 	return pd_to_genpd(dev->pm_domain);
+ }
+ 
++struct device *dev_to_genpd_dev(struct device *dev)
++{
++	struct generic_pm_domain *genpd = dev_to_genpd(dev);
++
++	if (IS_ERR(genpd))
++		return ERR_CAST(genpd);
++
++	return &genpd->dev;
++}
++
+ static int genpd_stop_dev(const struct generic_pm_domain *genpd,
+ 			  struct device *dev)
+ {
+diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+index 772d3280d35f..f24546a3d3db 100644
+--- a/include/linux/pm_domain.h
++++ b/include/linux/pm_domain.h
+@@ -260,6 +260,7 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
+ int pm_genpd_init(struct generic_pm_domain *genpd,
+ 		  struct dev_power_governor *gov, bool is_off);
+ int pm_genpd_remove(struct generic_pm_domain *genpd);
++struct device *dev_to_genpd_dev(struct device *dev);
+ int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+ int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
+ int dev_pm_genpd_remove_notifier(struct device *dev);
+@@ -307,6 +308,11 @@ static inline int pm_genpd_remove(struct generic_pm_domain *genpd)
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline struct device *dev_to_genpd_dev(struct device *dev)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++
+ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+ 						     unsigned int state)
+ {
+-- 
+2.31.1.272.g89b43f80a514
+
