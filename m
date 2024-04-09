@@ -1,122 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF08158D95
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from cae.in-ulm.de (cae.in-ulm.de [217.10.14.231])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EE94157E9C;
+	Tue,  9 Apr 2024 19:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.10.14.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712690795; cv=none; b=o+Vr6xDZLBOgnnJ0LOZBp/fV1vNR6hmsUHMYv60qHac/7/4utROFkfHc6y7VKQNGTVU7HeQx5W/lwr2/DKWgA3RAN9C2n7wNlrvgOvzgmugQnan4CtmT6BY3UnnC95vMLZkWtEwR47D8DwT5/qI2SvgBD9E5Bmx34gT47rceTQA=
+	t=1712690797; cv=none; b=akoxJrUKGb7s3AuPiCgL0lghTWGjA06TZGi3O4hZuQBrDS3/srBr2xYYR0+xTIQg6KjjMvAZjNMKaPOvXrfLpBFYRERQntdLnNqQXx2nAPrpfVfzBLVhWQ3Eits5BiD4TuJA4DsReiWOjjVsB+1QvqOOv6Nfft+G6k9EfbiJiZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712690795; c=relaxed/simple;
-	bh=nXBxw9Nb3AKmpwNJSf0KetfSq5IM5scHwHyH6e628A8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JFwe8dI6XbXIBSCldv6yaRiAMH5W1p1jgGoWBJ7ed4xBdkJRsatQfpXBO+Jv9QqeEffeTv8qiqN4ebwrc6zqXA2KOnhO38loc6gHIZER0xC2aqOWh83L3d/OUyLDOSiWEdJeC5quQHCJlUEfErudj02LP1xYa+r/rZV0PinihC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LEKX/Zbu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LEKX/Zbu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712690792;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NywHbuKGZjP8K2r9cm/m6NcEBx0o+/6jkDGUacCW2cY=;
-	b=LEKX/Zbuw+OASiYjzj9CcZ7bGiUReF1ubDdycU++86SYb7+56Awpfb81UEa2bOrx0YHQSN
-	X51nIZvQUqTPVhxdfxKYePrEopu8g7azeD3Y9v5Qa3Zd53DuDg3Qlad0+B0cqeunJZdle9
-	mqSC7hFv12nnoficICDD1GCigOi6ZIM=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-RFd2M04MNAeCUlOs7BBABg-1; Tue,
- 09 Apr 2024 15:26:29 -0400
-X-MC-Unique: RFd2M04MNAeCUlOs7BBABg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F246E1C0512F;
-	Tue,  9 Apr 2024 19:26:27 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.192.106])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3D11840B497B;
-	Tue,  9 Apr 2024 19:26:17 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	cgroups@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Peter Xu <peterx@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Yin Fengwei <fengwei.yin@intel.com>,
-	Yang Shi <shy828301@gmail.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Hugh Dickins <hughd@google.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <naoya.horiguchi@nec.com>,
-	Richard Chang <richardycc@google.com>
-Subject: [PATCH v1 15/18] trace/events/page_ref: trace the raw page mapcount value
-Date: Tue,  9 Apr 2024 21:22:58 +0200
-Message-ID: <20240409192301.907377-16-david@redhat.com>
-In-Reply-To: <20240409192301.907377-1-david@redhat.com>
-References: <20240409192301.907377-1-david@redhat.com>
+	s=arc-20240116; t=1712690797; c=relaxed/simple;
+	bh=LSz9VcksS3I44HIeB0srZE2FQPGtzmVVAAOs5a4k/3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KPEPI9WID78nqrgl4NXuA+FG1/Y2s+9wtDbir90pXqyWAHsS44X3m/FY4zP4LMwV1aBGjAst5UG00iEl/J75IfmTk+ypAbCfaIS62HpIZign637d2L/EPJAX8xCHXUGa7y+8YqCNW8CeOFwsmUQiqlBzw8Er7QkfBMWuq0ZM6Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de; spf=pass smtp.mailfrom=c--e.de; arc=none smtp.client-ip=217.10.14.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c--e.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c--e.de
+Received: by cae.in-ulm.de (Postfix, from userid 1000)
+	id E3CE4140562; Tue,  9 Apr 2024 21:26:25 +0200 (CEST)
+Date: Tue, 9 Apr 2024 21:26:25 +0200
+From: "Christian A. Ehrhardt" <lk@c--e.de>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] usb: typec: ucsi_glink: drop special handling for
+ CCI_BUSY
+Message-ID: <ZhWWYQMluJCvYFKF@cae.in-ulm.de>
+References: <20240409-qcom-ucsi-fixes-bis-v2-0-6d3a09faec90@linaro.org>
+ <20240409-qcom-ucsi-fixes-bis-v2-3-6d3a09faec90@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240409-qcom-ucsi-fixes-bis-v2-3-6d3a09faec90@linaro.org>
 
-We want to limit the use of page_mapcount() to the places where it is
-absolutely necessary. We already trace raw page->refcount, raw page->flags
-and raw page->mapping, and don't involve any folios. Let's also trace the
-raw mapcount value that does not consider the entire mapcount of large
-folios, and we don't add "1" to it.
 
-When dealing with typed folios, this makes a lot more sense. ... and
-it's for debugging purposes only either way.
+Hi Dmitry,
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/trace/events/page_ref.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, Apr 09, 2024 at 06:29:18PM +0300, Dmitry Baryshkov wrote:
+> Newer Qualcomm platforms (sm8450+) successfully handle busy state and
+> send the Command Completion after sending the Busy state. Older devices
+> have firmware bug and can not continue after sending the CCI_BUSY state,
+> but the command that leads to CCI_BUSY is already forbidden by the
+> NO_PARTNER_PDOS quirk.
+> 
+> Follow other UCSI glue drivers and drop special handling for CCI_BUSY
+> event. Let the UCSI core properly handle this state.
+> 
+> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  drivers/usb/typec/ucsi/ucsi_glink.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_glink.c b/drivers/usb/typec/ucsi/ucsi_glink.c
+> index 9ffea20020e7..fe9b951f5228 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_glink.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_glink.c
+> @@ -176,7 +176,8 @@ static int pmic_glink_ucsi_sync_write(struct ucsi *__ucsi, unsigned int offset,
+>  	left = wait_for_completion_timeout(&ucsi->sync_ack, 5 * HZ);
+>  	if (!left) {
+>  		dev_err(ucsi->dev, "timeout waiting for UCSI sync write response\n");
+> -		ret = -ETIMEDOUT;
+> +		/* return 0 here and let core UCSI code handle the CCI_BUSY */
+> +		ret = 0;
+>  	} else if (ucsi->sync_val) {
+>  		dev_err(ucsi->dev, "sync write returned: %d\n", ucsi->sync_val);
+>  	}
+> @@ -243,11 +244,8 @@ static void pmic_glink_ucsi_notify(struct work_struct *work)
+>  		ucsi_connector_change(ucsi->ucsi, con_num);
+>  	}
+>  
+> -	if (ucsi->sync_pending && cci & UCSI_CCI_BUSY) {
+> -		ucsi->sync_val = -EBUSY;
+> -		complete(&ucsi->sync_ack);
+> -	} else if (ucsi->sync_pending &&
+> -		   (cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))) {
+> +	if (ucsi->sync_pending &&
+> +	    (cci & (UCSI_CCI_ACK_COMPLETE | UCSI_CCI_COMMAND_COMPLETE))) {
+>  		complete(&ucsi->sync_ack);
+>  	}
+>  }
 
-diff --git a/include/trace/events/page_ref.h b/include/trace/events/page_ref.h
-index 8a99c1cd417b..fe33a255b7d0 100644
---- a/include/trace/events/page_ref.h
-+++ b/include/trace/events/page_ref.h
-@@ -30,7 +30,7 @@ DECLARE_EVENT_CLASS(page_ref_mod_template,
- 		__entry->pfn = page_to_pfn(page);
- 		__entry->flags = page->flags;
- 		__entry->count = page_ref_count(page);
--		__entry->mapcount = page_mapcount(page);
-+		__entry->mapcount = atomic_read(&page->_mapcount);
- 		__entry->mapping = page->mapping;
- 		__entry->mt = get_pageblock_migratetype(page);
- 		__entry->val = v;
-@@ -79,7 +79,7 @@ DECLARE_EVENT_CLASS(page_ref_mod_and_test_template,
- 		__entry->pfn = page_to_pfn(page);
- 		__entry->flags = page->flags;
- 		__entry->count = page_ref_count(page);
--		__entry->mapcount = page_mapcount(page);
-+		__entry->mapcount = atomic_read(&page->_mapcount);
- 		__entry->mapping = page->mapping;
- 		__entry->mt = get_pageblock_migratetype(page);
- 		__entry->val = v;
--- 
-2.44.0
+This handling of the command completion turned out to be racy in
+the ACPI case: If a normal command was sent one should wait for
+UCSI_CCI_COMMAND_COMPLETE only. In case of an UCSI_ACK_CC_CI
+command the completion is indicated by UCSI_CCI_ACK_COMPLETE.
+
+While not directly related, a port of this 
+    https://lore.kernel.org/all/20240121204123.275441-3-lk@c--e.de/
+would nicely fit into this series.
+
+I don't have the hardware to do this myself.
+
+
+Best regards,
+Christian
 
