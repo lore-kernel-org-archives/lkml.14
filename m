@@ -1,91 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA5F158A2B;
-	Tue,  9 Apr 2024 22:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C246158A2B;
+	Tue,  9 Apr 2024 22:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712701563; cv=none; b=mFqXMLd1EP8mnpYI3bY8BSOzwkUJCWnDZ/5v5raznCd3rthyp5bz6QPKC4TFgC201cVVIOAh77CW56LOwUAenAfabRz7GoG8jCFsRenBjI37f8u+jkaczKKoYgSJJr7YQWivICWXyMkWb/XVq9W5cz/AXsUNS4Ho4BAE5cdTRyk=
+	t=1712701776; cv=none; b=fELYEZFvmJCMaymMy5bjDGTcKrUgZgseQK3C0s1Jx19tnpda2nuGXR7wAjIknkI8Ag4eZ3DwTfPFMEM9ZEUC18ojGBYC73GFDblQwkjVfH6j0QBsVOzeNZhjbzyPdVZFQJmr0tqKVKtL/0IOtt8M96XQa77pr1J0w+PaT+/kWso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712701563; c=relaxed/simple;
-	bh=8/cFucOeeKlTH3yzMI5vn5hL40q+Izc6GOcx3MvaKKk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=smP0XZkab38XKxPhEnTqRfXdl9yTPvLyg9dXPJhp+E+IqD/ipwzUCdOir2BnU4j03S+AynXIoaT50oGZ2Y+9kwtKgdSHoc0Gj/XpYIAJ7rxe92NipuNkMrHdVq0Gkp+W8uYTmkp+e3ALh4iDY/FXjB2VkxQdzObQmz4B+KQpzvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZ0D5WTm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZ0D5WTm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37138C43390;
-	Tue,  9 Apr 2024 22:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712701562;
-	bh=8/cFucOeeKlTH3yzMI5vn5hL40q+Izc6GOcx3MvaKKk=;
-	h=From:Date:Subject:To:Cc:From;
-	b=oZ0D5WTmAdMKmTvopb0qjX7Kbcvi566oBYT1F4uWLFSL+kv8M6JXD+Prw3wjHkEVS
-	 kRa5kzV0ZjWhj6xt3hzz+Sph366jhBf6+EZEaG9xSvAhvu/r0AMW/A7UQa0Ddp1m0L
-	 65V05/hLl4FIpgjrgm/NSwbewBnpWC9z2E0MEm7hmrTluwSLBzCiC2DhlzZWleE2Qx
-	 /uNbjw4WgFBS1kZBKnzgsxJ8CSmI3C2/HD7APuyLMcvuuID6sNYTdPRWuYDm4Gg5sv
-	 TwuPiVr/QgE85n8oYdC2MgvlvxuXEk1WgQ8K03vEHPY9S+mCZRi/YdVy/x+zKEva/f
-	 J8k/39CJ4wgQw==
-From: Mark Brown <broonie@kernel.org>
-Date: Tue, 09 Apr 2024 23:24:51 +0100
-Subject: [PATCH] selftests/clone3: Fix compiler warning
+	s=arc-20240116; t=1712701776; c=relaxed/simple;
+	bh=b0H/amPHHksimk86o1QnVAoGtJK2xTBcOHzFeNUPX+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KPfDh6+FTpTf8LGczJlIF3JRABY5kEJ8K+dlRgLVDDSCELI41v1Fp4RTN9TkAJSwBuJj5bpKxPbnu1kwwD3o47Vjx/a+08ezvstoJlSEtkFXt1NzRypFt7h/OcACcSfoi7+Ttb32z8Gw37yUx5S/JfixRnZkIg9L3T8L3zZG6ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so8151635ad.1;
+        Tue, 09 Apr 2024 15:29:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712701774; x=1713306574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D6DTozpE9GkFZUHw98n4xWKR6LXmFpO2uEODuiiWHyU=;
+        b=TQAjfWTXW5NH/6VCznnU7E9pxxDyWJ3kCf9qgPRA4x2h1IkPJ1HbcKumLz+dXWsL9h
+         HWJXMVclhSM9EsLgl282oSDBEWRTXvmd/aIFQIaB06Rt+VtdxCuGn/aiXtb9ddo8gQP3
+         IiowM6D0K8aRNjru24eO9m8NsOyG7g6DKK0flxne6bumaT0uu3duXmdixs5XoM+vJAxf
+         apSa5ZvWtwscI2Qiidb3y4vVf0jQttQbDj4jKwJElEfQB7etBI/raXuPwMwDYtag8GK2
+         nFSziDIMy+qK2v41e/Wgo1qCElE3nux6ola/7NHCmzrdN1fACuMactB3d8owHXBsZvTe
+         GEsA==
+X-Forwarded-Encrypted: i=1; AJvYcCURsukU57uOmcxk67IUzsK9MC7pf+IyUWkWNz9Pk52ZejCCKBEs+I5zv/JoSD3L/ur6w4fu3o59QEuSBG3q7Q4/jD/r1vh56mg3GIj8SfpxV/hsVj0+3fweNT4jH48aiTnKA+r+fawOUFSPDkd15lYutGQvEUlyV4BnuyVegO5cdn8FcA==
+X-Gm-Message-State: AOJu0YzWoCzDC95KM+NNJei773hPAQSmERLVZT7lss8Cg6JAL2/RsVmB
+	CnorDCSZ3H+nl0MG7y4lx2BkUcIx5KSpMSNP8Z/KGKhTNJpqzpfqRCpObIB9+Cp1Q8mtVDOy6Qq
+	29Q+kUIn5H4Bjovb1Lyc+YOwLeUk=
+X-Google-Smtp-Source: AGHT+IHUa83TqHnJ0da6WQeqT27lQpuAaXPbGxW4kXiHblvJSkibfHnVvMRtFkOGa9Zo+/j9Q0dK08P3R37a4i1Q9ZU=
+X-Received: by 2002:a17:902:e944:b0:1e3:e093:b5f0 with SMTP id
+ b4-20020a170902e94400b001e3e093b5f0mr1160661pll.8.1712701773667; Tue, 09 Apr
+ 2024 15:29:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240409-clone3-warning-fix-v1-1-03720200f1b4@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADLAFWYC/x2MQQqAIBAAvxJ7bsFSQvtKdBDbaiG2UKhA/HvSc
- QZmMiSKTAnGJkOkmxOfUqFrGwi7l42Ql8rQq94ooxyG4xTS+PgoLBuu/KJ1Xg86DNY5ghpekar
- +p9NcygcFT906ZAAAAA==
-To: Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Shuah Khan <skhan@linuxfoundation.org>, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1322; i=broonie@kernel.org;
- h=from:subject:message-id; bh=8/cFucOeeKlTH3yzMI5vn5hL40q+Izc6GOcx3MvaKKk=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmFcB4ohOSySFEcqyRnkDV/zaqiFySgS3odCDfWUns
- mUWkvluJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZhXAeAAKCRAk1otyXVSH0IcoB/
- 92YSQediGO39+3BGKBUczDGFD6CjDYL+/rJ6NhMSsGoc2U7QeU6Wxh+5uQXHwiAmmzAPLPLw3lrGmA
- bNuMGEwjmW3nksWuza+gTlrrelUUHUS4JWF8YmtyN3iu7zdJfoDiOm9O1L/tfjIYB/C9vhHp1nTx0T
- uD4INyFWeJ9g+VQjNcRDwJ44XCOyy1+84HR3dnaAJJSVMQeoEpKsFJAc3Fa0LMu383q0jeT4zH9+ns
- 72HYJ2LdGyHtFvLOybVwq24caB+Zfm04kW7xaKJTQCuyYmRrA84fsOwXC9Ay5FI0ZwnF25Dz993oO7
- amj5K2hlGxDqWB1fiyEt+DbofsKRzy
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+References: <20240402184543.898923-1-namhyung@kernel.org> <ZgxgRJdFlwfESwKF@x1>
+ <CAM9d7ci7a2dbn1cz-OBkYF7P1fFA3yoBMuTzXRx=KP-yEnyfnQ@mail.gmail.com> <Zgx6mMda_X4pcAj6@x1>
+In-Reply-To: <Zgx6mMda_X4pcAj6@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 15:29:22 -0700
+Message-ID: <CAM9d7cjegWoDE_q3nNydpdyjCvger0_nGWcNCinSWNiXOepe3A@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Add a missing NULL check
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Shuah reported a compiler warning with an Ubuntu GCC 13 build, I've been
-unable to reproduce it but hopefully this fixes the issue:
+On Tue, Apr 2, 2024 at 2:37=E2=80=AFPM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Apr 02, 2024 at 01:42:05PM -0700, Namhyung Kim wrote:
+> > On Tue, Apr 2, 2024 at 12:45=E2=80=AFPM Arnaldo Carvalho de Melo <acme@=
+kernel.org> wrote:
+> > > Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> > > Are you going to have this merged into perf-tools?
+>
+> > > A Fixes: tag isn't perhaps needed as it worked in the past?
+>
+> > Fixes: 1811e82767dcc ("perf lock contention: Track and show siglock
+> > with address")
+>
+> > It was introduced in v6.4 and it should be fine to have this
+> > even without the error.  I'll queue it to perf-tools.
+>
+> ok, better, people trying the tool with a recent kernel will experience
+> this, so its the right thing to get it thru perf-tools.
 
-clone3_set_tid.c:136:43: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘size_t’ {aka ‘long unsigned int’} [-Wformat=]
+Hmm.. it was not sufficient.  I've got another report of failure on loading
+the BPF program.  It seems the verifier treated the NULL check and
+the later loading separately.
 
-Reported-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/clone3/clone3_set_tid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'll send v2 soon.
 
-diff --git a/tools/testing/selftests/clone3/clone3_set_tid.c b/tools/testing/selftests/clone3/clone3_set_tid.c
-index 9ae38733cb6e..fbf813a5a06f 100644
---- a/tools/testing/selftests/clone3/clone3_set_tid.c
-+++ b/tools/testing/selftests/clone3/clone3_set_tid.c
-@@ -133,7 +133,7 @@ static void test_clone3_set_tid(const char *desc,
- 		"[%d] clone3() with CLONE_SET_TID %d says: %d - expected %d\n",
- 		getpid(), set_tid[0], ret, expected);
- 
--	ksft_test_result(ret == expected, "%s with %d TIDs and flags 0x%x\n",
-+	ksft_test_result(ret == expected, "%s with %zu TIDs and flags 0x%x\n",
- 			 desc, set_tid_size, flags);
- }
- 
+Thanks,
+Namhyung
 
----
-base-commit: a053fd3ca5d1b927a8655f239c84b0d790218fda
-change-id: 20240409-clone3-warning-fix-89a363c6899e
 
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+; curr =3D bpf_get_current_task_btf();
+264: (85) call bpf_get_current_task_btf#158
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+265: (79) r1 =3D *(u64 *)(r0 +2624)
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+      R1_w=3Drcu_ptr_or_null_sighand_struct(off=3D0,imm=3D0)
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+266: (15) if r1 =3D=3D 0x0 goto pc+5
+   ; frame1: R1_w=3Drcu_ptr_sighand_struct(off=3D0,imm=3D0)
+267: (b7) r1 =3D 0                      ; frame1: R1_w=3D0
+; if (curr->sighand && &curr->sighand->siglock =3D=3D (void *)lock)
+268: (79) r2 =3D *(u64 *)(r0 +2624)
+   ; frame1: R0_w=3Dtrusted_ptr_task_struct(off=3D0,imm=3D0)
+      R2_w=3Drcu_ptr_or_null_sighand_struct(off=3D0,imm=3D0)
+269: (0f) r2 +=3D r1
+R2 pointer arithmetic on rcu_ptr_or_null_ prohibited, null-check it first
+processed 166 insns (limit 1000000) max_states_per_insn 0
+ total_states 15 peak_states 15 mark_read 5
+-- END PROG LOAD LOG --
+libbpf: prog 'contention_end': failed to load: -13
+libbpf: failed to load object 'lock_contention_bpf'
+libbpf: failed to load BPF skeleton 'lock_contention_bpf': -13
+Failed to load lock-contention BPF skeleton
+lock contention BPF setup failed
