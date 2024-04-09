@@ -1,163 +1,189 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDB513E400
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 16:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EB1145357;
+	Tue,  9 Apr 2024 16:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712680213; cv=none; b=F++6mC8pr2Ocijshb88fNFy/xY/dJsVP/yYu2TAuUfrbFE/RVY1WTeMv9oKGa+aUNWvKwbODWz/qqKmZwZhDy4Kv0tKS7mCE8tY0aLtbgSERWnWZcAS8dmwPWjhmehXrR4+c74Grz6QyueXNRoyQRk20Xcd+Nw4tDbrwzAwOjPM=
+	t=1712680262; cv=none; b=s7qpKEzg6/+kww7+4wL+PwRk/CPS/QS3qc9CTUIgWUuGLhXEegu6n7eoi0j6NpP8hPxlB2OR++gHIk+8E67XPUiiwV1qPBdAfw2qhfrS7ovqb1+4JPCio0taI6aipf+upF6axH2CyR/D6yUuv+y5Pymz9hAp3KPyyJE+m0V3TB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712680213; c=relaxed/simple;
-	bh=DFOzieDuAL+zwmbA47qxk0Y2Ai2LA/jilIkINPKmX/E=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=VKm/xiMZR7fjUtZco4Ty132kULscENrzbFIL6Ah5qmNcL+EF6G3lOLbosn8KYlcYSmZkpW82x46UoyhRx6REs9IMPLYmDHlpIvqsn7q/YXfYqMmbIKjcLO2LKoV6Woro/yqD4Uk2gibbKMMKJFEKp0g/KQmy3VaGfWWfXd07mMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JFHZx1YB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712680262; c=relaxed/simple;
+	bh=9IGqlV3LbL0DRJUQIwWW6vNmvOiqvD650CTLJEMb5JM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=mwsS8UcXcBVN61TMJW36YKbgA0GLMkB/Wi3sWrBh/PQ2FbSdgtxRPIqoEPnPoH5BFHMInHX607zgtqsiYTsO9PqtHoEZnNj7pwLxrlRIAkSjCkdDvOeBKHIGaI3ZvfHKPsodzEheQbpUQejhJfWnbCttTEK4TYZWhSQ1F+izeqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebw30zeo; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JFHZx1YB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712680210;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Z2N15/vQsvR0nDOnw1tYJA2j128oangAGgtCd36y2W8=;
-	b=JFHZx1YBxnYgStV786aHT6Xz6iHmI623tgaZ1BDgqn3rAH9b2172GpyMD1b5iweIr1+IRZ
-	NCyv4CLDRYljNYuQ92X5UAjunHEjrxA/xNrPKTJBW6L2mJPyalrbhrF+ubuznxvWNm1LU2
-	BseUcYmEpd2pkL92giPk+eNIcG2++Tg=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-184-dZQJEE6JOke-v5KhCrPbSw-1; Tue, 09 Apr 2024 12:30:07 -0400
-X-MC-Unique: dZQJEE6JOke-v5KhCrPbSw-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78d3352237cso835518085a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 09:30:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebw30zeo"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6ed054f282aso3380238b3a.0;
+        Tue, 09 Apr 2024 09:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712680260; x=1713285060; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D5jDn3MTaqDeILwbAuiKYkg/Duk3E3U9ahMYMgz3dp4=;
+        b=ebw30zeopz6kuBTum2D5EZURNESQfqgQZqoDFy4bN02KNTA62lpDKm5z9jgiVlj5Um
+         eFqI3xce+eQRND6xbzq/mJBc69gxdnFlzGjucfBuYU41j7AFz1vj4uHUTk19tNjnNhZX
+         j0BD7RaBlcSUNq5ZFvNm1EkvA6rAvyQTE7xEF+AvLEnBBZMQNjmX9JxcAMoyslA7iIXZ
+         VrnCkRf12Mqp1IisONOjBGROIyxm3jfrXgs8b6BIXsz/Fy5NLC4mMM2cFg3+g/HAQ6V7
+         hG39+u/Vx22CjQeDMZNvzVu51ErckhWnPiUxbYibr/uwoXm0u6CGeNknoLbNi6gExcI1
+         /mSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712680204; x=1713285004;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z2N15/vQsvR0nDOnw1tYJA2j128oangAGgtCd36y2W8=;
-        b=NSW1S7uUw1E3XSXIgHOnAB2uwh5GBk6q2nQRyp2hzP/wV6DPy6ZZn7E5wdB39oFZQt
-         afyXMCgwCsKQwxlf+GU0BfF+XWdvlvjqQo7vcYbAjdMK/5ufASTjayEurWm1dJoclkSK
-         8irW2RzRGKmaBbtPI5Ilkvd2yyITZDCN4MOlgjqKewYGXiaNtJOGZqWoVfdnYIyaGOJw
-         JTKPTQzRd6YFJmxbWRZyQtEv/MYk4rFIlBzvYse0XBjOh4yoRhuV89uhWA6kB74nGP3m
-         Z+Z9cu0Gbg0//ZxW/9eMny9pe7Hs7twGgBwC6b4sFoyrJbgUGgBnRBlq/1jIsqN3WRzi
-         kN6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVQWIICnlmoRGckTUGKvBnn7DkjSWZvPwY6o03MHQL6UIDSHKHNjF0tUpk8iQUyMZwdw4QcMZhZ5MPzCBA7y3hS4VATqec5r6Onvsg9
-X-Gm-Message-State: AOJu0YzwnYR7VU2xB//J+1pWTsFIvzmyrsTfBTjn5Y6HxnlP7cFz1JgT
-	CILWlNyHaa33NwzJ9YU+9AALu9ASdRrAq3zHfQTShk5Rjo0Xz+JyWgP5CL0XnSAFjL2Mnk85qKt
-	dWPmn2La6sKRQ0Yzv6EP33Wt/9szoZhKRck5ywyNdXd6Ki5ipL0m1PJMQXobg4A==
-X-Received: by 2002:a05:620a:1a04:b0:78d:5d86:ee3a with SMTP id bk4-20020a05620a1a0400b0078d5d86ee3amr271165qkb.27.1712680203575;
-        Tue, 09 Apr 2024 09:30:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEaunIAnuq3r3o5QKqjTq71PbncpgxojMlNuf8undfiMQByOKkHlYoNcgKVeL0cSUpKYTduWA==
-X-Received: by 2002:a05:620a:1a04:b0:78d:5d86:ee3a with SMTP id bk4-20020a05620a1a0400b0078d5d86ee3amr271092qkb.27.1712680203193;
-        Tue, 09 Apr 2024 09:30:03 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id r30-20020a05620a03de00b0078d679f6efesm1805562qkm.16.2024.04.09.09.29.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 09:30:02 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Connor O'Brien <connoro@google.com>, Joel Fernandes <joelaf@google.com>,
- Qais Yousef <qyousef@google.com>, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben
- Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Youssef
- Esmat <youssefesmat@google.com>, Mel Gorman <mgorman@suse.de>, Daniel
- Bristot de Oliveira <bristot@redhat.com>, Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, "Paul
- E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, Xuewen
- Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>,
- Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com, John Stultz
- <jstultz@google.com>
-Subject: Re: [RESEND][PATCH v9 4/7] sched: Add do_push_task helper
-In-Reply-To: <20240401234439.834544-5-jstultz@google.com>
-References: <20240401234439.834544-1-jstultz@google.com>
- <20240401234439.834544-5-jstultz@google.com>
-Date: Tue, 09 Apr 2024 18:29:57 +0200
-Message-ID: <xhsmh5xwqa48q.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1712680260; x=1713285060;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5jDn3MTaqDeILwbAuiKYkg/Duk3E3U9ahMYMgz3dp4=;
+        b=Et165VF7wgAchmQU3v/TazE/kwRIBDn87HdFLo5xSwxdDZfkHBy/CknPIpp4iluKP+
+         tdttY0WUWHvTzNZ3BTgMKV8wddUeJBXOm+A0OcEnwZZ297xmfQb4iXYDIFrpShhdjlBy
+         TvoY8jAcsxHlAey9fqAOhWpyScF9Nm25vq6IGgECofrYYdH2pcxpuMojGrp/U7SmnuWC
+         OmI9GI2dryspGh5HoRkYEwGyLGEw1YsxBVgD7jT/6yC8U+oPgrUIPI7aWACDyfNWflmt
+         BU2z0NWA41Hni5SYAJRpeN+krvAYb51qIjsYNY49OQPuR58srUGrulMCtVxaQUalGuBh
+         s8VA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgdfeJC8SnL+qBHHtdRm5QDBQBp+M4raoszy90lOEp475rwqqgfZ28l7YfqY8Jm+K2dwgLWFlCFmFj6YKqsVdpoIg3W5DPajuVr+rsSEaXnRKrL9DiNdaHP7wKTf1cXjz0jgGWCJts5GsUGTqCoJGP427g6CypK/13fMF+SNLBGJh4iVp61L5/
+X-Gm-Message-State: AOJu0YzvegeChGQLYMNdRhJaTMcJUObItXzh+X2Cx0SopKMh198Cd/eC
+	NcKmIFDlrY5W4/pAmXvfuYaqdo3W4SV402t76ABvV04G3atgh2Og
+X-Google-Smtp-Source: AGHT+IHLfR8agCuvFel6ntEWfiy+fZrIfE1ihB/JnlmAX263CXs8KVa/MgkQI7sLDI8UzplSZX1hvg==
+X-Received: by 2002:a05:6a00:985:b0:6ec:f5cf:2bb1 with SMTP id u5-20020a056a00098500b006ecf5cf2bb1mr73165pfg.6.1712680260278;
+        Tue, 09 Apr 2024 09:31:00 -0700 (PDT)
+Received: from [10.10.14.80] (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id r14-20020aa79ece000000b006ecf72cf8easm8486979pfq.22.2024.04.09.09.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 09:30:59 -0700 (PDT)
+Message-ID: <47835475-36de-4682-84ae-0163d45d0bac@gmail.com>
+Date: Wed, 10 Apr 2024 00:28:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/4] drivers: watchdog: ast2500 and ast2600 support
+ bootstatus
+From: PeterYin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz, Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+ Andrew Jeffery <andrew@codeconstruct.com.au>,
+ linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20240328022231.3649741-1-peteryin.openbmc@gmail.com>
+ <20240328022231.3649741-5-peteryin.openbmc@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20240328022231.3649741-5-peteryin.openbmc@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 01/04/24 16:44, John Stultz wrote:
-> From: Connor O'Brien <connoro@google.com>
->
-> Switch logic that deactivates, sets the task cpu,
-> and reactivates a task on a different rq to use a
-> helper that will be later extended to push entire
-> blocked task chains.
->
-> This patch was broken out from a larger chain migration
-> patch originally by Connor O'Brien.
->
-> Cc: Joel Fernandes <joelaf@google.com>
-> Cc: Qais Yousef <qyousef@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Zimuzo Ezeozue <zezeozue@google.com>
-> Cc: Youssef Esmat <youssefesmat@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Metin Kaya <Metin.Kaya@arm.com>
-> Cc: Xuewen Yan <xuewen.yan94@gmail.com>
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: kernel-team@android.com
-> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-Naming nit below notwithstanding:
 
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Peter Yin 於 3/28/24 10:22 寫道:
+> Add WDIOF_EXTERN1 and WDIOF_CARDRESET bootstatus in ast2600
+> 
+> Regarding the AST2600 specification, the WDTn Timeout Status Register
+> (WDT10) has bit 1 reserved. Bit 1 of the status register indicates
+> on ast2500 if the boot was from the second boot source.
+> It does not indicate that the most recent reset was triggered by
+> the watchdog. The code should just be changed to set WDIOF_CARDRESET
+> if bit 0 of the status register is set.
+> 
+> Include SCU register to veriy WDIOF_EXTERN1 in ast2600 SCU74 or
+> ast2500 SCU3C when bit1 is set.
+> 
+> Signed-off-by: Peter Yin <peteryin.openbmc@gmail.com>
+> ---
+>   drivers/watchdog/aspeed_wdt.c | 35 +++++++++++++++++++++++++++++++----
+>   1 file changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+> index b4773a6aaf8c..0e7ef860cbdc 100644
+> --- a/drivers/watchdog/aspeed_wdt.c
+> +++ b/drivers/watchdog/aspeed_wdt.c
+> @@ -11,10 +11,12 @@
+>   #include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/kstrtox.h>
+> +#include <linux/mfd/syscon.h>
+>   #include <linux/module.h>
+>   #include <linux/of.h>
+>   #include <linux/of_irq.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+>   #include <linux/watchdog.h>
+>   
+>   static bool nowayout = WATCHDOG_NOWAYOUT;
+> @@ -77,11 +79,19 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
+>   #define WDT_TIMEOUT_STATUS	0x10
+>   #define   WDT_TIMEOUT_STATUS_IRQ		BIT(2)
+>   #define   WDT_TIMEOUT_STATUS_BOOT_SECONDARY	BIT(1)
+> +#define   WDT_TIMEOUT_STATUS_EVENT		BIT(0)
+>   #define WDT_CLEAR_TIMEOUT_STATUS	0x14
+>   #define   WDT_CLEAR_TIMEOUT_AND_BOOT_CODE_SELECTION	BIT(0)
+>   #define WDT_RESET_MASK1		0x1c
+>   #define WDT_RESET_MASK2		0x20
+>   
+> +/*
+> + * Ast2600 SCU74 bit1 is External reset flag
+> + * Ast2500 SCU3C bit1 is External reset flag
+> + */
+> +#define AST2500_SYSTEM_RESET_EVENT	0x3C
+> +#define AST2600_SYSTEM_RESET_EVENT	0x74
+> +#define   EXTERN_RESET_FLAG		BIT(1)
+>   /*
+>    * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
+>    * enabled), specifically:
+> @@ -330,6 +340,11 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>   	if (IS_ERR(wdt->base))
+>   		return PTR_ERR(wdt->base);
+>   
+> +	struct regmap *scu_base = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +							     "aspeed,scu");
+> +	if (IS_ERR(scu_base))
+> +		return PTR_ERR(scu_base);
+> +
+>   	wdt->wdd.info = &aspeed_wdt_info;
+>   
+>   	if (wdt->cfg->irq_mask) {
+> @@ -459,14 +474,26 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>   	}
+>   
+>   	status = readl(wdt->base + WDT_TIMEOUT_STATUS);
+> -	if (status & WDT_TIMEOUT_STATUS_BOOT_SECONDARY) {
+> +	if (status & WDT_TIMEOUT_STATUS_EVENT)
+>   		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>   
+> -		if (of_device_is_compatible(np, "aspeed,ast2400-wdt") ||
+> -		    of_device_is_compatible(np, "aspeed,ast2500-wdt"))
+> -			wdt->wdd.groups = bswitch_groups;
+> +	if (of_device_is_compatible(np, "aspeed,ast2600-wdt")) {
+> +		ret = regmap_read(scu_base,
+> +				  AST2600_SYSTEM_RESET_EVENT,
+> +				  &status);
+> +	} else {
+> +		ret = regmap_read(scu_base,
+> +				  AST2500_SYSTEM_RESET_EVENT,
+> +				  &status);
+> +		wdt->wdd.groups = bswitch_groups;
+>   	}
+>   
+> +	/*
+> +	 * Reset cause by Extern Reset
+> +	 */
+> +	if (status & EXTERN_RESET_FLAG && !ret)
+> +		wdt->wdd.bootstatus |= WDIOF_EXTERN1;
+> +
+>   	dev_set_drvdata(dev, wdt);
+>   
+>   	return devm_watchdog_register_device(dev, &wdt->wdd);
 
-> Signed-off-by: Connor O'Brien <connoro@google.com>
-> [jstultz: split out from larger chain migration patch]
-> Signed-off-by: John Stultz <jstultz@google.com>
+Hi Guenter,
+    Could you help me understand the definition of WDIOF_CARDRESET in 
+the kernel? If it resets the CPU, should all values be reset to default? 
+Should we check the POR (RstPwr Power on reset SRST# flag) flag in SCU 
+0x74 register bit 0 in ast2600?
 
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index d2242679239e..16057de24ecd 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -3472,5 +3472,14 @@ static inline void init_sched_mm_cid(struct task_struct *t) { }
->  
->  extern u64 avg_vruntime(struct cfs_rq *cfs_rq);
->  extern int entity_eligible(struct cfs_rq *cfs_rq, struct sched_entity *se);
-> +#ifdef CONFIG_SMP
-> +static inline
-> +void do_push_task(struct rq *rq, struct rq *dst_rq, struct task_struct *task)
-
-The naming IMO unfortunately clashes with the hotplug push_task /
-balance_push() stuff.
-
-AFAICT this is move_queued_task() but in a double rq lock
-context. How about move_queued_task_locked()?
-
-Interestingly, all the patched call sites end up with a resched_curr(), but
-move_queued_task() has wakeup_preempt() instead.  
-
-> +{
-> +	deactivate_task(rq, task, 0);
-> +	set_task_cpu(task, dst_rq->cpu);
-> +	activate_task(dst_rq, task, 0);
-> +}
-> +#endif
->  
->  #endif /* _KERNEL_SCHED_SCHED_H */
-> -- 
-> 2.44.0.478.gd926399ef9-goog
 
