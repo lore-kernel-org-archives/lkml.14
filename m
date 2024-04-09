@@ -1,175 +1,193 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B8D156673;
-	Tue,  9 Apr 2024 18:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C874156673
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 18:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686345; cv=none; b=PMaxrIJaCq4GNiONACGXjb96gg4fWd6TtyNAYYBzOwkKmlHTAUFhQlp8u98wOXzEOO+6tyQ2tdRIgFMIkzoX3uvpCIHn9N+ZHa5OwcwHazJ6h0+wLI/YfxHhQofWgpdrENBpuCx5xlbkeb14KUZpbIZO65yTpINx8j0MkjYhhJ8=
+	t=1712686387; cv=none; b=FD38VSOxV9yzFZN6V4jY+hH5dNEO7cqde2FjddNQJAPz02Gbct7URxmA84JlcrKxDM6w39q4BA1SPurI06J7KL/m6XDmxJfqyu+w/uSGPB0DtzO+uYX2b3vDWWjTybXHfwC6xqyB9RNAv2dvn8iMEUjX3q28F7wNw2S18y9sO8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686345; c=relaxed/simple;
-	bh=thxxt4zRIMmtKrX1Zq6SbymytnrxT37KGosR84E5MuI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MfGgy5TqHredP8ft9FhgYGWHQUXJe7bn8hGsVxoUc4rQ5VaYxEGt6mRQOALmXmBO6dBcp5pu8E8hmDEOV/WVpa8whybF/fFvUxBd999y0ze/0v6KHXUrfR0eUtA/QrahZLxHoXKNvlXdGgJgHCsFbwFuD7Vhy44NhiSBanM0Z5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DLp0awBf; arc=none smtp.client-ip=207.171.184.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1712686387; c=relaxed/simple;
+	bh=mt4LK8wRky83QmRbMyyw2lMJig0xnioKZPacc3nZi+E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tlTysZzeJcoctadl+HC8nBVdxwBJanAE+in8yVTY+q7z7X9RqmLMF6BbGBifoKR86DZ4Qo3CFvS4PwsaMXCzr0dUQdJZoTJttiX+aMtv0Jdui6sT70pWfwUwiAUeXKeR0iSXwpvfZZCOHS4Ahqd47mxNTBjuhc4HY1aftlijG3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KFNIhLE5; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DLp0awBf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1712686344; x=1744222344;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CiSkwG2jh+RHXxMnTYckZv1UIdBtz87JB37Fxc/Kq2c=;
-  b=DLp0awBfYVAQhnaPzCImwxH9EJac3ZokG2ou/IpRJ+X94J/hhdkAbsqJ
-   TwFcnSd0G6llZVCN5ZgF3Wqft2YhEYH67m7889szcvsgvqVuzvjQhql2e
-   sr3BP5pFgmtGK5pLyR7fec2ZXB2GTqHwOECsEKWs24y6vKIDzWpFEZbVR
-   U=;
-X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
-   d="scan'208";a="410314341"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:12:17 +0000
-Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:49032]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.4.194:2525] with esmtp (Farcaster)
- id 8c7cf490-05a2-4daf-a4b3-eb0cc4051ea5; Tue, 9 Apr 2024 18:12:15 +0000 (UTC)
-X-Farcaster-Flow-ID: 8c7cf490-05a2-4daf-a4b3-eb0cc4051ea5
-Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
- EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 18:12:15 +0000
-Received: from bcd074994f7f.amazon.com (10.95.97.144) by
- EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 18:12:10 +0000
-From: Sudan Landge <sudanl@amazon.com>
-To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
-	<xmarcalx@amazon.co.uk>
-Subject: [PATCH v4 0/5] virt: vmgenid: Add devicetree bindings support
-Date: Tue, 9 Apr 2024 19:11:49 +0100
-Message-ID: <20240409181154.9962-1-sudanl@amazon.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KFNIhLE5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712686386; x=1744222386;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mt4LK8wRky83QmRbMyyw2lMJig0xnioKZPacc3nZi+E=;
+  b=KFNIhLE5BOqWm/Ww/Z7RjNfUvu+TuAD4UlI4nBRUZkthssDSGdii4WRp
+   CMkWRzYQAHx0WexGGvB2WqlzRFffSaq20W0G+7kpfdlRKCO+/+GCdkZ90
+   xqr7Xq9G0FBE4bQoufGwp5/M9MbxdSnTD5k/UJcH849YwKDDJkkTOux2R
+   pOQaZnT8dsc8/gTccpbCLSMhQewewaAlcICdhXB9U0kuv0gORhC9a0udZ
+   uAZ5bLhYG63cGjEaf6S1CRFe2KSW4d7kJohnSICBX/gXEGbdGx9xoGkga
+   aujU4tQL6z7Xr6x5DAKSCseECCKXyaeSNzjIGg/KN4IiKWxoJuB8BURGn
+   A==;
+X-CSE-ConnectionGUID: owGzOJtFQu64JAINeD9BJg==
+X-CSE-MsgGUID: QUVK3IDLR6+N02FD9zW/3Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7931370"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7931370"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:12:54 -0700
+X-CSE-ConnectionGUID: 4JwxIqsJQ8iG/aa8qLdXTw==
+X-CSE-MsgGUID: c4Qe3VIESJuWGUtRrfIBdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20777552"
+Received: from osezer-mobl.amr.corp.intel.com (HELO [10.209.70.70]) ([10.209.70.70])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:12:52 -0700
+Message-ID: <1f6f4477-0f2a-434a-8c89-3b5d51d61581@linux.intel.com>
+Date: Tue, 9 Apr 2024 11:12:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWA002.ant.amazon.com (10.13.139.10) To
- EX19D036EUC002.ant.amazon.com (10.252.61.191)
-
-This small series of patches aims to add devicetree bindings support for
-the Virtual Machine Generation ID (vmgenid).
-
-Virtual Machine Generation ID was introduced in commit af6b54e2b5ba
-("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
-ACPI only device.
-
-VMGenID specification http://go.microsoft.com/fwlink/?LinkId=260709 defines
-a mechanism for the BIOS/hypervisors to communicate to the virtual machine
-that it is executed with a different configuration (e.g. snapshot execution
-or creation from a template).
-The guest operating system can use the notification for various purposes
-such as re-initializing its random number generator etc.
-
-More references to vmgenid specs:
- - https://www.qemu.org/docs/master/specs/vmgenid.html
- - https://learn.microsoft.com/en-us/windows/win32/hyperv_v2/
- virtual-machine-generation-identifier
-
-*Reason for this change*:
-Chosing ACPI or devicetree is an intrinsic part of an hypervisor design.
-Without going into details of why a hypervisor would choose DT over ACPI,
-we would like to highlight that the hypervisors that have chosen devicetree
-and now want to make use of the vmgenid functionality cannot do so today
-because vmgenid is an ACPI only device.
-This forces these hypervisors to change their design which could have
-undesirable impacts on their use-cases, test-scenarios etc.
-
-vmgenid exposes to the guest a 16-byte cryptographically random number,
-the value of which changes every time it starts executing from a new
-configuration (snapshot, backup, etc.). During initialization, the device
-exposes to the guest the address of the generation ID and
-an interrupt number, which the device will use to notify the guest when
-the generation ID changes.
-These attributes can be trivially communicated via device tree bindings.
-
-We believe that adding a devicetree binding for vmgenid is a simpler
-alternative way to expose the device to the guest than forcing the
-hypervisors to implement ACPI.
-
-Addtional notes:
-While adding the devicetree support we considered re-using existing
-structures/code to avoid duplicating code and reduce maintenance; so,
-we used the same driver to be configured either by ACPI or by DT.
-This also meant reimplementing the existing vmgenid ACPI bus driver as a
-platform driver and making it discoverable using `driver.of_match_table`
-and `driver.acpi_match_table`.
-
-There is no user impact or change in vmgenid functionality when used
-with ACPI. We verified ACPI support of these patches on X86 and DT
-support on ARM using Firecracker hypervisor
-https://github.com/firecracker-microvm/firecracker.
-
-To check schema and syntax errors, the bindings file is verified with:
-```
-  make dt_binding_check \
-  DT_SCHEMA_FILES=\
-  Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
-```
-and the patches were verified with:
-`scripts/checkpatch.pl --strict v4-000*`.
-
-Changelog with respect to version 3:
-- Changed the compatible string from "virtual,vmgenctr" to
-  "microsoft,vmgenid" as per review comments.
-- Renamed vmgenid.yaml to follow DT file naming convention.
-- Updated the description of properties and example in vmgenid yaml file.
-- Addressed the review comments to remove all ifdefs in vmgenid.c with one
-  exception which still needs to be under CONFIG_ACPI.
-- reformated the code with clang-format.
-- Tested code with W=1, Sparse, Smatch and Coccinelle tools.
-
-Changelog with respect to version 2:
-- As per review comments, used platform apis instead of "of_*" APIs,
-  removed unnecessary #include and used IF_ENABLED instead of ifdef.
-- Added more info for vmgenid buffer address and corrected the formatting.
-- Replaced the compatible string from "linux,*" to "virtual,*" because,
-  the device does not have a vendor.
-
-Changelog with respect to version 1:
-- Moved vmgenid.yaml bindings to the more related "rng" folder.
-- Removed `vmgenid_remove` to since it is unrelated to the
-  current goal of the patch.
-- Updated the cover letter and bindings commit
-  "[PATCH v2 3/4] dt-bindings: rng: Add vmgenid support" to
-  provide more information on vmgenid.
-- Compiled with and without CONFIG_OF/CONFIG_ACPI and fixed
-  compilers errors/warnings.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 13/14] x86/sev: Hide SVSM attestation entries if not
+ running under an SVSM
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-coco@lists.linux.dev, svsm-devel@coconut-svsm.dev
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Dan Williams <dan.j.williams@intel.com>, Michael Roth
+ <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>,
+ Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>
+References: <cover.1711405593.git.thomas.lendacky@amd.com>
+ <67893f352bc54de61160bfe251cba0bdf0431f37.1711405593.git.thomas.lendacky@amd.com>
+Content-Language: en-US
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <67893f352bc54de61160bfe251cba0bdf0431f37.1711405593.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Sudan Landge (5):
-  virt: vmgenid: rearrange code to make review easier
-  virt: vmgenid: change implementation to use a platform driver
-  virt: vmgenid: enable driver regardless of ACPI config
-  dt-bindings: rng: Add vmgenid support
-  virt: vmgenid: add support for devicetree bindings
+On 3/25/24 3:26 PM, Tom Lendacky wrote:
+> Config-fs provides support to hide individual attribute entries. Using
+> this support, base the display of the SVSM related entries on the presence
+> of an SVSM.
+>
+> Cc: Joel Becker <jlbec@evilplan.org>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/coco/core.c        |  4 ++++
+>  drivers/virt/coco/tsm.c     | 14 ++++++++++----
+>  include/linux/cc_platform.h |  8 ++++++++
+>  3 files changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/coco/core.c b/arch/x86/coco/core.c
+> index d07be9d05cd0..efa0f648f754 100644
+> --- a/arch/x86/coco/core.c
+> +++ b/arch/x86/coco/core.c
+> @@ -12,6 +12,7 @@
+>  
+>  #include <asm/coco.h>
+>  #include <asm/processor.h>
+> +#include <asm/sev.h>
+>  
+>  enum cc_vendor cc_vendor __ro_after_init = CC_VENDOR_NONE;
+>  u64 cc_mask __ro_after_init;
+> @@ -78,6 +79,9 @@ static bool noinstr amd_cc_platform_has(enum cc_attr attr)
+>  	case CC_ATTR_GUEST_STATE_ENCRYPT:
+>  		return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+>  
+> +	case CC_ATTR_GUEST_SVSM_PRESENT:
+> +		return snp_get_vmpl();
+> +
+>  	/*
+>  	 * With SEV, the rep string I/O instructions need to be unrolled
+>  	 * but SEV-ES supports them through the #VC handler.
+> diff --git a/drivers/virt/coco/tsm.c b/drivers/virt/coco/tsm.c
+> index 46f230bf13ac..d30471874e87 100644
+> --- a/drivers/virt/coco/tsm.c
+> +++ b/drivers/virt/coco/tsm.c
+> @@ -64,6 +64,12 @@ static struct tsm_report_state *to_state(struct tsm_report *report)
+>  	return container_of(report, struct tsm_report_state, report);
+>  }
+>  
+> +static bool provider_visibility(const struct config_item *item,
+> +				const struct configfs_attribute *attr)
+> +{
+> +	return cc_platform_has(CC_ATTR_GUEST_SVSM_PRESENT);
+> +}
+> +
 
- .../bindings/rng/microsoft,vmgenid.yaml       |  49 +++++
- MAINTAINERS                                   |   1 +
- drivers/virt/Kconfig                          |   1 -
- drivers/virt/vmgenid.c                        | 168 ++++++++++++++----
- 4 files changed, 180 insertions(+), 39 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+Any comment about the following query? I think introducing a CC flag for this use
+case is over kill.
 
+https://lore.kernel.org/lkml/6b90b223-46e0-4e6d-a17c-5caf72e3c949@linux.intel.com/
 
-base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+>  static int try_advance_write_generation(struct tsm_report *report)
+>  {
+>  	struct tsm_report_state *state = to_state(report);
+> @@ -144,7 +150,7 @@ static ssize_t tsm_report_service_provider_store(struct config_item *cfg,
+>  
+>  	return len;
+>  }
+> -CONFIGFS_ATTR_WO(tsm_report_, service_provider);
+> +CONFIGFS_ATTR_VISIBLE_WO(tsm_report_, service_provider, provider_visibility);
+>  
+>  static ssize_t tsm_report_service_guid_store(struct config_item *cfg,
+>  					     const char *buf, size_t len)
+> @@ -165,7 +171,7 @@ static ssize_t tsm_report_service_guid_store(struct config_item *cfg,
+>  
+>  	return len;
+>  }
+> -CONFIGFS_ATTR_WO(tsm_report_, service_guid);
+> +CONFIGFS_ATTR_VISIBLE_WO(tsm_report_, service_guid, provider_visibility);
+>  
+>  static ssize_t tsm_report_service_manifest_version_store(struct config_item *cfg,
+>  							 const char *buf, size_t len)
+> @@ -186,7 +192,7 @@ static ssize_t tsm_report_service_manifest_version_store(struct config_item *cfg
+>  
+>  	return len;
+>  }
+> -CONFIGFS_ATTR_WO(tsm_report_, service_manifest_version);
+> +CONFIGFS_ATTR_VISIBLE_WO(tsm_report_, service_manifest_version, provider_visibility);
+>  
+>  static ssize_t tsm_report_inblob_write(struct config_item *cfg,
+>  				       const void *buf, size_t count)
+> @@ -333,7 +339,7 @@ static ssize_t tsm_report_manifestblob_read(struct config_item *cfg, void *buf,
+>  
+>  	return tsm_report_read(report, buf, count, TSM_MANIFEST);
+>  }
+> -CONFIGFS_BIN_ATTR_RO(tsm_report_, manifestblob, NULL, TSM_OUTBLOB_MAX);
+> +CONFIGFS_BIN_ATTR_VISIBLE_RO(tsm_report_, manifestblob, NULL, TSM_OUTBLOB_MAX, provider_visibility);
+>  
+>  #define TSM_DEFAULT_ATTRS() \
+>  	&tsm_report_attr_generation, \
+> diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+> index cb0d6cd1c12f..f1b4266c1484 100644
+> --- a/include/linux/cc_platform.h
+> +++ b/include/linux/cc_platform.h
+> @@ -90,6 +90,14 @@ enum cc_attr {
+>  	 * Examples include TDX Guest.
+>  	 */
+>  	CC_ATTR_HOTPLUG_DISABLED,
+> +
+> +	/**
+> +	 * @CC_ATTR_GUEST_SVSM_PRESENT: Guest is running under an SVSM
+> +	 *
+> +	 * The platform/OS is running as a guest/virtual machine and is
+> +	 * running under a Secure VM Service Module (SVSM).
+> +	 */
+> +	CC_ATTR_GUEST_SVSM_PRESENT,
+>  };
+>  
+>  #ifdef CONFIG_ARCH_HAS_CC_PLATFORM
+
 -- 
-2.34.1
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
