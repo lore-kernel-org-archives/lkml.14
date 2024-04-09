@@ -1,199 +1,105 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50F213B294
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30212F367;
+	Tue,  9 Apr 2024 15:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712676290; cv=none; b=VjHywR+3fhwDeqwZLCQh1m/+DE83m37c6cVPJrzcq/2IXeKTh0W9royRDxBXju7ccUnsNx2I/btgTYemOAtcjV+v2RsUKaRO6oLQOZolhk32AnRb1p4AJRGOF8j4LEztOY2e30/cgXx+HhIAtrFHBOgoNkrDHVv7Yx7UwkwmECI=
+	t=1712676333; cv=none; b=d7hL8WmL0GXijOURg83+819LSX3cskog43ZtaYIBCgs/rOCyYEUJ9lGxwCy7+It5biqZjmYD0tWsIsTnddsKh3YhU0lKCBlbTzluHruZ6jiVWHotZ8wh2ivJ3LSWatIjPuI6XJLmFb/djepz8MEX49KFlENhSumXLSDZaFc/vnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712676290; c=relaxed/simple;
-	bh=Efu3b8ru21S0lD5Y5zsjwcGOYAOC7NOARCbE3B0sUCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tWxCGIT/T4Yt4OWN/3uTq1/f9nimh0b1elRb38JbdVab1vMPoiXKJB8LUuiT/Y4sDLRehd5mPZIbKSlfpM3Ay3LCGhHKUuF4g3FPy8Y6Y4QPNaTfVZUcVuU8cLw15QkQLeQ4jiUsWBwoGYbXA0mY9IKbNKOPLopdPIVBxDKVi18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=gwF1hrwX; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712676333; c=relaxed/simple;
+	bh=xkMdXfA590zFnkmRFUF8fT4qO4Xa0lPHjZzwaSSA/5E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uv+BZcrNZgodxEwaT4KmNGZGr7ggmutffvxJKVqzeEF79dYkvN3DNpxFUXTQSv5bTH8XfQF2aq9/er3CFnqdmRXa+69MrfklYWpl12jjJIcsBKxwvnkwXJwC3tfuy5MJ3AdomvRIP8v5dS9FOFysUlwkED3vvF6iMJzVB+9jIz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3zSK5SJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="gwF1hrwX"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e694337fffso1158905b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 08:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712676288; x=1713281088; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E0BoB0+iqRCepoqzaDLrQ1/6U1zOxuhY81V8gRabkwc=;
-        b=gwF1hrwXAiD3TmmIefe+QCwKV9T0Q4UGEbgqoReYIXQhDnZ77cC/Jwv2SenUcMKQ6t
-         VgmF8DNK6gmpLaZwxApHJMECImF9dgNWIsB9ulXFBjB0YhdIrhWwS/R+NXX6ElDwSlHH
-         rKHgFeJLTR4emwluwfSP7VJBLXDcBNKAfQjQcXVBY2xNAMO4la/AFn9logRz+f48My5t
-         xppTDBGUFY8SYfk/cAJ+rOoa+v3XZ6pDRKbQcdiEGQDRuELzcRPzurbYlG64vKCRtM/F
-         3zt1REap02THPzQJRTWRx+LtMUiovxyk+SjFEBGoIupnO4VcS1rabJWQos1EL1SbkZ7R
-         YX8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712676288; x=1713281088;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E0BoB0+iqRCepoqzaDLrQ1/6U1zOxuhY81V8gRabkwc=;
-        b=e7dKqSqj9o9NTwJz2sT/NbYZ1oAZFSB+uGXGkGlrOAboao+/q06EHR7oTC3P/W5KKq
-         2Kl7U1anbDBiU7vmlN5j9flRvdbd6h/MuxZFlvsvpk5fjiykjK+3KmmLyllGoDN9b4/M
-         etH9+5/tiESli1R9nn3tQHf3/M/RTpKar6AiM91HOyIeIcCWFzOncdw5TaFsuilN6Rfg
-         bKY2Z/khtu2O8OsSBmVPMOI61zzcmkhhQFKOKuwgligXRCSuC+mlRbEev7u4x/RKYrkW
-         DR9SuggqRpIhHlQ6U2BWHfALIpo+lNajChPMnLdvY9HrNvIsAAO2WOO6x0XDMEkywLJV
-         Josw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLzJmoyf1+tXjeNexp1OfGcb2JpTfomuiRck6UxqWrUlipA2gbebGniaR7V1+H1cMXGzR/AN3/mjrY3inTz7+YIToe8WBJvhE7Q7UT
-X-Gm-Message-State: AOJu0YyhMIxZtCJsGbWfrBPo5evxlxYfgPy8HwPzloN3OnWACc7pcPgn
-	we85udLt6Y0nxvzRyZHmoX0MG31p2rMvKnvq9+Xsq60E1Y6ejxmZp2D0COA9ZIs=
-X-Google-Smtp-Source: AGHT+IESaWswrduf3sLVbA5ib5/pMDBwW8iN7ZUU3AI4oslIDVZKjcURQLDu0lwwVU4+E5t/zf46CA==
-X-Received: by 2002:a05:6a20:4323:b0:1a7:199:8ac5 with SMTP id h35-20020a056a20432300b001a701998ac5mr151095pzk.4.1712676288122;
-        Tue, 09 Apr 2024 08:24:48 -0700 (PDT)
-Received: from localhost.localdomain ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id ev6-20020a17090aeac600b002a513cc466esm3945558pjb.45.2024.04.09.08.24.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 08:24:46 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-fsdevel@vger.kernel.org
-Cc: brauner@kernel.org,
-	linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4/4] signalfd: convert to ->read_iter()
-Date: Tue,  9 Apr 2024 09:22:18 -0600
-Message-ID: <20240409152438.77960-5-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240409152438.77960-1-axboe@kernel.dk>
-References: <20240409152438.77960-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3zSK5SJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7DEC43390;
+	Tue,  9 Apr 2024 15:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712676331;
+	bh=xkMdXfA590zFnkmRFUF8fT4qO4Xa0lPHjZzwaSSA/5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C3zSK5SJ9QuA33VEbDf0yFbofMeWSknh2WwFY2Od09HNW3Ilc0DhxDom1RJC1qHz/
+	 MSWmigvbX/WDH1VNm4Fa3Kh4ATqzRQfA8vl9fNRpX3+ZSdABHCRekd2xovLeQyI3e7
+	 0UIs6NNVUakdEUrK7AxiOLyIOI6R1mIFIwBbQzLfWZ+eJWy4LFsdmt8lHd0NN/isw+
+	 jWRWxoYDA60mvHjDj/lf0q1rahoVkZI+cUKMKtmi3h60Z82/MdIzsPl7rh6U0GQXJN
+	 SX2SdN71UQE1MXrenzYuw8pv7YvYub0c8bREYjoKWTfZ0Ae4q///EeyFVzo5kPjOZy
+	 rKqtGXrXlsPog==
+Date: Tue, 9 Apr 2024 10:25:28 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Adam Skladowski <a39.skl@gmail.com>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+	Andy Gross <agross@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: msm8976: Add Adreno GPU
+Message-ID: <b3tshs3ya6nqhf3ykaxnx56rnigbvqfzftpkolvqrxa2rhuzes@wtdu6yrat4qi>
+References: <20240401172153.9231-1-a39.skl@gmail.com>
+ <20240401172153.9231-4-a39.skl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401172153.9231-4-a39.skl@gmail.com>
 
-Rather than use the older style ->read() hook, use ->read_iter() so that
-signalfd can support both O_NONBLOCK and IOCB_NOWAIT for non-blocking
-read attempts.
+On Mon, Apr 01, 2024 at 07:21:52PM +0200, Adam Skladowski wrote:
+> Add Adreno GPU node.
+> 
+> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8976.dtsi | 65 +++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> index 6be310079f5b..77670fce9b8f 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> @@ -1074,6 +1074,71 @@ mdss_dsi1_phy: phy@1a96a00 {
+>  			};
+>  		};
+>  
+> +		adreno_gpu: gpu@1c00000 {
+> +			compatible = "qcom,adreno-510.0", "qcom,adreno";
+> +
+> +			reg = <0x01c00000 0x40000>;
+> +			reg-names = "kgsl_3d0_reg_memory";
+> +
+> +			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "kgsl_3d0_irq";
+> +
+> +			clocks = <&gcc GCC_GFX3D_OXILI_CLK>,
+> +				 <&gcc GCC_GFX3D_OXILI_AHB_CLK>,
+> +				 <&gcc GCC_GFX3D_OXILI_GMEM_CLK>,
+> +				 <&gcc GCC_GFX3D_BIMC_CLK>,
+> +				 <&gcc GCC_GFX3D_OXILI_TIMER_CLK>,
+> +				 <&gcc GCC_GFX3D_OXILI_AON_CLK>;
+> +			clock-names = "core",
+> +				      "iface",
+> +				      "mem",
+> +				      "mem_iface",
+> +				      "rbbmtimer",
+> +				      "alwayson";
+> +
+> +			power-domains = <&gcc OXILI_GX_GDSC>;
+> +
+> +			iommus = <&gpu_iommu 0>;
+> +
+> +			status = "disabled";
 
-Split the fd setup into two parts, so that signalfd can mark the file
-mode with FMODE_NOWAIT before installing it into the process table.
+Make status the last property of the node, please.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/signalfd.c | 44 ++++++++++++++++++++++++++++----------------
- 1 file changed, 28 insertions(+), 16 deletions(-)
+Regards,
+Bjorn
 
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index e20d1484c663..4a5614442dbf 100644
---- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -68,8 +68,7 @@ static __poll_t signalfd_poll(struct file *file, poll_table *wait)
- /*
-  * Copied from copy_siginfo_to_user() in kernel/signal.c
-  */
--static int signalfd_copyinfo(struct signalfd_siginfo __user *uinfo,
--			     kernel_siginfo_t const *kinfo)
-+static int signalfd_copyinfo(struct iov_iter *to, kernel_siginfo_t const *kinfo)
- {
- 	struct signalfd_siginfo new;
- 
-@@ -146,10 +145,10 @@ static int signalfd_copyinfo(struct signalfd_siginfo __user *uinfo,
- 		break;
- 	}
- 
--	if (copy_to_user(uinfo, &new, sizeof(struct signalfd_siginfo)))
-+	if (!copy_to_iter_full(&new, sizeof(struct signalfd_siginfo), to))
- 		return -EFAULT;
- 
--	return sizeof(*uinfo);
-+	return sizeof(struct signalfd_siginfo);
- }
- 
- static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info,
-@@ -199,28 +198,27 @@ static ssize_t signalfd_dequeue(struct signalfd_ctx *ctx, kernel_siginfo_t *info
-  * error code. The "count" parameter must be at least the size of a
-  * "struct signalfd_siginfo".
-  */
--static ssize_t signalfd_read(struct file *file, char __user *buf, size_t count,
--			     loff_t *ppos)
-+static ssize_t signalfd_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
-+	struct file *file = iocb->ki_filp;
- 	struct signalfd_ctx *ctx = file->private_data;
--	struct signalfd_siginfo __user *siginfo;
--	int nonblock = file->f_flags & O_NONBLOCK;
-+	size_t count = iov_iter_count(to);
- 	ssize_t ret, total = 0;
- 	kernel_siginfo_t info;
-+	bool nonblock;
- 
- 	count /= sizeof(struct signalfd_siginfo);
- 	if (!count)
- 		return -EINVAL;
- 
--	siginfo = (struct signalfd_siginfo __user *) buf;
-+	nonblock = file->f_flags & O_NONBLOCK || iocb->ki_flags & IOCB_NOWAIT;
- 	do {
- 		ret = signalfd_dequeue(ctx, &info, nonblock);
- 		if (unlikely(ret <= 0))
- 			break;
--		ret = signalfd_copyinfo(siginfo, &info);
-+		ret = signalfd_copyinfo(to, &info);
- 		if (ret < 0)
- 			break;
--		siginfo++;
- 		total += ret;
- 		nonblock = 1;
- 	} while (--count);
-@@ -246,7 +244,7 @@ static const struct file_operations signalfd_fops = {
- #endif
- 	.release	= signalfd_release,
- 	.poll		= signalfd_poll,
--	.read		= signalfd_read,
-+	.read_iter	= signalfd_read_iter,
- 	.llseek		= noop_llseek,
- };
- 
-@@ -265,20 +263,34 @@ static int do_signalfd4(int ufd, sigset_t *mask, int flags)
- 	signotset(mask);
- 
- 	if (ufd == -1) {
-+		struct file *file;
-+
- 		ctx = kmalloc(sizeof(*ctx), GFP_KERNEL);
- 		if (!ctx)
- 			return -ENOMEM;
- 
- 		ctx->sigmask = *mask;
- 
-+		ufd = get_unused_fd_flags(flags & O_CLOEXEC);
-+		if (ufd < 0) {
-+			kfree(ctx);
-+			return ufd;
-+		}
-+
-+		file = anon_inode_getfile("[signalfd]", &signalfd_fops, ctx,
-+				       O_RDWR | (flags & O_NONBLOCK));
-+		if (IS_ERR(file)) {
-+			put_unused_fd(ufd);
-+			kfree(ctx);
-+			return ufd;
-+		}
-+		file->f_mode |= FMODE_NOWAIT;
-+
- 		/*
- 		 * When we call this, the initialization must be complete, since
- 		 * anon_inode_getfd() will install the fd.
- 		 */
--		ufd = anon_inode_getfd("[signalfd]", &signalfd_fops, ctx,
--				       O_RDWR | (flags & (O_CLOEXEC | O_NONBLOCK)));
--		if (ufd < 0)
--			kfree(ctx);
-+		fd_install(ufd, file);
- 	} else {
- 		struct fd f = fdget(ufd);
- 		if (!f.file)
--- 
-2.43.0
-
+> +
+> +			operating-points-v2 = <&gpu_opp_table>;
+> +
+> +			gpu_opp_table: opp-table {
+> +				compatible = "operating-points-v2";
+> +
