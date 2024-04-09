@@ -1,156 +1,241 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523757F46E;
-	Tue,  9 Apr 2024 09:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0AFE2B2DD
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712654401; cv=none; b=X8NuQxuusoPyforH2/rVl/2c4/UUE5JIqPM41uvTBMKxWvX0zZNSJHjqvO41l63yYr0/ZGwQe2RztlZbqcSpEF0ItnYwYpv5b+o2wh3S0DDSWMf3SOW6h+GYrnvt1bGAvJb54GASFR2uWOXGUnZ6YdBaiPlWFI0q3urD9jqKL4k=
+	t=1712654449; cv=none; b=BxkpeeW91/Pd3qolys+qvDbkCuW8FKlHuWdaGHJyDktSEGqlf7bVMBlZhA7zR6nckbOaZ2FGLf0XfLtJ4jVI+DfnmsGWe99idCqxhgdeq4C0OU8TtD6r9mV/CUKe5sVZHGZ+ooGxhU1KggWy0Qjjo8UtPW4AHGnB+vTIjbb3DJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712654401; c=relaxed/simple;
-	bh=UvnpeLfv6qvxi5trkED6daMBTrkc1vacVdc014meKms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nuvbWTAA8QtHaZy9Ec2EYS4nOtDaye+aCt0cGAFbB8PP8fA3zXq4BDmuelG+YITAkptSklMXAHZFBhfYyfG+Dj78b+hDE8TAjV2KNbpkJfVzrv83Q/hnS1TbBaUHpj8iyQTBGJnQMFPb6h/OE8IGA2iLvQiY+2GZxhNI0MZf0JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w5Swh4rm; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1712654449; c=relaxed/simple;
+	bh=dzWgJIr+elQQqzhnrLVPNLwsqNmviyJGgqIUxcUQWqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2ZEvPsJx4DdzzcDmvaViETdj0TiqbEJ+92GYRJkGdl2/6Edu7bQp3GSp8gWDbuqi+ZrNw0e48N8SL6P0aWOEo7zGGQEt61D4GTGXJ8LQ3vWHK5/AY5vWc94R6muBrsoBXcV6KvrDODjTWgxiXZPS8EjZgtqVo1ENAbGHAmF+YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f9kS6DsV; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w5Swh4rm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=6tTAHEHjz/yf4536kj2DKyb7ca5ho3bhK7fTycMl0W0=;
-	t=1712654399; x=1713086399; b=w5Swh4rmWpjUGixaL6ECf0MWo1pj7MuseOnAgmM4/+1ZhXq
-	ugFosSWVqLQ3GAuuhWAoLt/ty3aQOPbQGe+xvCKmcETPjFa+cDWgHlsW4WacmtQT0bCa2biCMleQS
-	cPffCWzHRdS4Tg2D8PDABm3AbdaiApvhHfVybjnwMnBe03atn0hKcl5pVznysIReRrOd7x08kGHQw
-	x5lexHVIWQDrBQDbVkEjpM35vKeRx3nSjlJ4xOBSFJzKJm+7aNLkOGvwlsb0aYTLR6QXnXNuqPCIo
-	L5UB9kqDVYPqk0krSxzNkj+FQuyh+M/kszlZNtPLpX+QFTQdb/qikkrZZ/z60DNA==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ru7e0-0004Z7-2g; Tue, 09 Apr 2024 11:19:56 +0200
-Message-ID: <fa076f6f-5a19-4a6a-aaf4-8d9e36df8fea@leemhuis.info>
-Date: Tue, 9 Apr 2024 11:19:55 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f9kS6DsV"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so3953187f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 02:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1712654445; x=1713259245; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/AT6TTk+LhAPd9pV/ZdmRWE2NJwTKZCbDeN6oR+wQ/4=;
+        b=f9kS6DsVb4DnrdEPxPn7uNsk2hFTpMIzxf8wQWKBMrIU7eahlx1FCq7ncmDtaukraG
+         ARFQipqYhAjc0Ww8yxGs/D0M28f21aiUJ8PfSZoj5TN2ysTfY4k7poH5fqz0YiX1Rz3m
+         Qp4LLwJotQ4ASKewISiCP6MgqlXpNFQtGnmQkWr35Z2K9va4MmZ3elnigJhls7Z3pN+b
+         MM+czGavSroLjIjBClwN1hizPGeXGXXsuvVxFb/HOJyxkZPDWPOIo5GKwwND18ieT0DY
+         EvXfYIFvSQ5uFCTPqM2cIZg+QUHI77zJ7EFOcwmiM9B9odj3BBGRN22s8Aaak/y//WS3
+         LrtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712654445; x=1713259245;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/AT6TTk+LhAPd9pV/ZdmRWE2NJwTKZCbDeN6oR+wQ/4=;
+        b=vwH+iSPgABepCmZK8NUiU2KFArw1z6+9PM9TjS2n9QYPQ17GpO7zGl0Oyfb4lKZt5q
+         xecr+l3HFXzJYCI0Td19jvQetKq3SHbvkqgaDr+pu/M7BGVEICxhKcAl0/rEyVkqm9PO
+         CC3T/3Gv9zv9/6IUOhI3pLttLIkuE3yUoRQrk5dQPbpATZaBMj0CvmBUC3TxUHD6gnsg
+         IaFj/CDh0Z/k3cndjeADM7PSGLnfDb2ZAvUvKGSyqYJLufquHqS0ak19vQymohjwjg5s
+         LpuyjwiDIBsYV5IhL/WtbJNVKIZo5hDV5mnzUAyOezuDR7BbPyEDDo6VH5MDTMAlmRO/
+         GrIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXghamnI4Gr2d3qbZa11FNgoCg3G2nY1r9pVu+Q2PINXuWtahya+9rYHyOWjzqgncbP41ivN6juz/RylwyQVJ1caCIZhTikhyeUHfcN
+X-Gm-Message-State: AOJu0YwqFPdhyPxQT2G7Q16pIViOZZBu5pm9tQu9vmKvT99XldTbTwc9
+	7WdGRIfxpVIiunhgcG/32bpYk6qzwc6opOgbYWzYUpLRq5OtTDioeJ2MfVwiKzWSKFJGNN85OtO
+	j
+X-Google-Smtp-Source: AGHT+IFihTpQSWOgUGCFfZeSy+hQwBLIikiwaB5BmDMXbwBdPJSCfJ9GxBk3l9MRH2zrv22ix/1dDg==
+X-Received: by 2002:a05:6000:152:b0:343:96a0:cccd with SMTP id r18-20020a056000015200b0034396a0cccdmr10005535wrx.33.1712654444898;
+        Tue, 09 Apr 2024 02:20:44 -0700 (PDT)
+Received: from localhost.localdomain ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id z13-20020a056000110d00b0034174875850sm11036893wrw.70.2024.04.09.02.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 02:20:44 -0700 (PDT)
+Date: Tue, 9 Apr 2024 11:20:42 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH printk v4 06/27] printk: nbcon: Add callbacks to
+ synchronize with driver
+Message-ID: <ZhUIatzxietD4F-m@localhost.localdomain>
+References: <20240402221129.2613843-1-john.ogness@linutronix.de>
+ <20240402221129.2613843-7-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Fwd: Steam Deck OLED 6.8.2 nau8821-max fails
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Arun Gopal Kondaveeti <arungopal.kondaveeti@amd.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Daniel <dmanlfc@gmail.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Sound System <linux-sound@vger.kernel.org>
-References: <ZhFJZoful6nEFskW@archie.me>
- <4d231dc4-0183-47e1-8bfa-3dd225bf8ea3@leemhuis.info>
- <904ffa11-592a-4336-aed2-d6370bb01896@collabora.com>
- <b99e51de-3622-4360-b69d-0fd911ea2a7d@leemhuis.info>
- <9012f8d5-302a-4840-815a-22b1e85fda5c@collabora.com>
- <c0193bca-ea80-49eb-ab26-8256d07078df@leemhuis.info>
- <41b7170d-65b8-4d64-a1d3-7a0d09d79c45@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <41b7170d-65b8-4d64-a1d3-7a0d09d79c45@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712654399;dd17c2de;
-X-HE-SMSGID: 1ru7e0-0004Z7-2g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402221129.2613843-7-john.ogness@linutronix.de>
 
-On 09.04.24 10:47, Cristian Ciocaltea wrote:
-> On 4/9/24 11:04 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 09.04.24 09:42, Cristian Ciocaltea wrote:
->>> On 4/9/24 7:44 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>> On 09.04.24 01:44, Cristian Ciocaltea wrote:
->>>>> On 4/7/24 10:47 AM, Linux regression tracking (Thorsten Leemhuis) wrote:
->>>>>> On 06.04.24 15:08, Bagas Sanjaya wrote:
->>>>>>> On Bugzilla, Daniel <dmanlfc@gmail.com> reported topology regression
->>>>>>> on Steam Deck OLED [1]. He wrote:
->>>>>
->>>>>>>> I'm adding this here, I hope it's the correct place.
->>>>>>>> Currently the Steam Deck OLED fails with Kernel 6.8.2 when trying to initialise the topology for the device.
->>>>>>>> I'm using the `sof-vangogh-nau8821-max.tplg` file from the Steam Deck OLED and associated firmware.
->>>>>>> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=218677
->>>>>> A quick search made me find these posts/threads that foreshadow the problem:
->>>>>>
->>>>>> https://lore.kernel.org/lkml/20231219030728.2431640-1-cristian.ciocaltea@collabora.com/
->>>>>> https://lore.kernel.org/all/a3357e1f-f354-4d4b-9751-6b2182dceea6@amd.com/
->>>>>>
->>>>>> From a quick look at the second discussion it seems a bit like we are
->>>>>> screwed, as iiutc topology files are out in the wild for one or the
->>>>>> other approach. So we might have to bite a bullet there and accept the
->>>>>> regression -- but I might easily be totally mistaken here. Would be good
->>>>>> in one of the experts (Venkata Prasad Potturu maybe?) could quickly
->>>>>> explain what's up here.
->>>>>
->>>>> The problem here is that Steam Deck OLED provides a topology file which
->>>>> uses an incorrect DAI link ID for BT codec. 
->>>>>
->>>>> Patch [1] moves BT_BE_ID to position 2 in the enum, as expected by the
->>>>> topology, but this is not a change that can be accepted upstream as it
->>>>> would break other devices which rely on BT_BE_ID set to 3.  
->>>>>
->>>>> The proper solution would be to update the topology file on Steam Deck,
->>>>> but this is probably not straightforward to be accomplished as it would
->>>>> break the compatibility with the currently released (downstream)
->>>>> kernels.
->>>>>
->>>>> Hopefully, this sheds some more light on the matter.
->>>>>
->>>>> [1]: https://lore.kernel.org/all/20231209205351.880797-11-cristian.ciocaltea@collabora.com/
->>>>
->>>> Many thx, yes, this sheds some light on the matter. But there is one
->>>> remaining question: can we make both camps happy somehow? E.g. something
->>>> along the lines of "first detect if the topology file has BT_BE_ID in
->>>> position 2 or 3 and then act accordingly?
->>>
->>> Right, I have this on my TODOs list but haven't managed to dig into it
->>> yet. However, that would be most likely just another hack to be carried
->>> on until the transition to a fixed topology is completed.
->>
->> Well, sure it's a hack, but the thing is, our number one rule is "no
->> regressions" and the reporter apparently faces one (see start of the
->> thread). So to fulfill this rule it would be ideal to have a fix
->> available soonish or revert the culprit and reply it later together with
->> the fix.
+On Wed 2024-04-03 00:17:08, John Ogness wrote:
+> Console drivers typically must deal with access to the hardware
+> via user input/output (such as an interactive login shell) and
+> output of kernel messages via printk() calls.
 > 
-> Hmm, unless I'm missing something, this shouldn't been considered a
-> regression.  As I explained previously, the OLED model was launched with
->  a downstream implementation of the Vangogh SOF drivers on top of v6.1,
-> as there was no upstream support back then.
-> 
-> When AMD eventually completed the upstreaming process of their SOF
-> drivers in v6.6, we ended up with this unfortunate ID assignments
-> incompatibility.  Hence I cannot see how the mainline kernel would have
-> worked without applying patch [1] above, unless the reporter
-> experimented with a different topology (which is not the case if I got
-> this right).
-> 
->> Do we know which change that went into 6.8 caused this? Or is a revert
->> out-of-the question as it will likely break things for other users that
->> already upgraded to 6.8 and have a matching topology file? (/me fears
->> the answer to the latter question is "yes", but I have to ask :-/)
-> 
-> We need to understand how the reporter got this working with mainline
-> kernels without applying any out-of-tree patches.
+> Follow-up commits require that the printk subsystem is able to
+> synchronize with the driver. Require nbcon consoles to implement
+> two new callbacks (device_lock(), device_unlock()) that will
+> use whatever synchronization mechanism the driver is using for
+> itself (for example, the port lock for uart serial consoles).
 
-Ahh, okay, thx, now I understand this better. You are most likely
-correct. It also made me look at the initial report again where I
-noticed "When *I manually patched support* for the 6.6 or 6.7 mainline
-kernel it worked fine.", so yes, this likely is not a regression.
+We should explain here the bigger picture, see my comment
+of the word "whenever" below.
 
-Thx for your help and sorry for the trouble I caused!
+<proposal>
+Console drivers typically have to deal with access to the hardware
+via user input/output (such as an interactive login shell) and
+output of kernel messages via printk() calls.
 
-Ciao, Thorsten
+They use some classic locking mechanism in most situations. But
+console->write_atomic() callbacks, used by nbcon consoles,
+must be synchronized only by acquiring the console context.
+
+The synchronization via the console context ownership is possible
+only when the console driver is registered. It is when a particular
+device driver is connected with a particular console driver.
+
+The two synchronization mechanisms must be synchronized between
+each other. It is tricky because the console context ownership
+is quite special. It might be taken over by a higher priority
+context. Also CPU migration has to be disabled.
+
+The most tricky part is to (dis)connect these two mechanism during
+the console (un)registration. Let's make it easier by adding two new
+callbacks: device_lock(), device_unlock(). They would allow
+to take the device-specific lock while the device is being
+(un)registered by the related console driver.
+
+For example, these callbacks would lock/unlock the port lock
+for serial port drivers.
+</proposal>
+
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> ---
+>  include/linux/console.h | 42 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/include/linux/console.h b/include/linux/console.h
+> index e4028d4079e1..ad85594e070e 100644
+> --- a/include/linux/console.h
+> +++ b/include/linux/console.h
+> @@ -352,6 +352,48 @@ struct console {
+>  	 */
+>  	void (*write_atomic)(struct console *con, struct nbcon_write_context *wctxt);
+>  
+> +	/**
+> +	 * @device_lock:
+> +	 *
+> +	 * NBCON callback to begin synchronization with driver code.
+> +	 *
+> +	 * Console drivers typically must deal with access to the hardware
+> +	 * via user input/output (such as an interactive login shell) and
+> +	 * output of kernel messages via printk() calls. This callback is
+> +	 * called by the printk-subsystem whenever it needs to synchronize
+> +	 * with hardware access by the driver.
+
+The word "whenever" can be translated as "always" (by dictionary
+and by my head ;-) Then the description sounds like this would be
+the primary synchronization mechanism between printk and the driver.
+
+In fact, this API would have only one purpose to synchronize
+the console registration/unregistration.
+
+IMHO, we should explain here the relation between the driver-specific
+locking and nbcon console context locking. It would describe the big
+picture and hopefully reduce confusion and eventual misuse.
+
+
+> + It should be implemented to
+> +	 * use whatever synchronization mechanism the driver is using for
+> +	 * itself (for example, the port lock for uart serial consoles).
+> +	 *
+> +	 * This callback is always called from task context. It may use any
+> +	 * synchronization method required by the driver. BUT this callback
+> +	 * MUST also disable migration. The console driver may be using a
+> +	 * synchronization mechanism that already takes care of this (such as
+> +	 * spinlocks). Otherwise this function must explicitly call
+> +	 * migrate_disable().
+> +	 *
+> +	 * The flags argument is provided as a convenience to the driver. It
+> +	 * will be passed again to device_unlock(). It can be ignored if the
+> +	 * driver does not need it.
+> +	 */
+
+<proposal>
+	/**
+	 * @device_lock:
+	 *
+	 * NBCON callback to serialize registration of a device driver
+	 * for a console driver.
+	 *
+	 * Console drivers typically have to deal with access to the hardware
+	 * via user input/output (such as an interactive login shell) and
+	 * Output of kernel messages via printk() calls.
+	 *
+	 * They use some classic locking mechanism in most situations. But
+	 * console->write_atomic() callbacks, used by nbcon consoles,
+	 * must be synchronized only by acquiring the console context.
+	 *
+	 * The synchronization via the console context ownership is possible
+	 * only when the console driver is registered. It is when a particular
+	 * device driver is connected with a particular console driver.
+	 *
+	 * The device_lock() callback must block operations on the device
+	 * while it is being (un)registered as a console driver. It will
+	 * make sure that the classic device locking is aware of the console
+	 * context locking when it might be acquired by the related nbcon
+	 * console driver.
+	 *
+	 * This callback is always called from task context. It may use any
+	 * synchronization method required by the driver, for example
+	 * port lock for serial ports.
+	 *
+	 * IMPORTANT: This callback MUST also disable migration. The console
+	 *	driver may be using a synchronization mechanism that already
+	 *	takes care of this (such as spinlocks). Otherwise this function
+	 *	must explicitly call migrate_disable().
+	 *
+	 *	The flags argument is provided as a convenience to the driver.
+	 *	It will be passed again to device_unlock(). It can be ignored
+	 *	if the driver does not need it.
+	 */
+</proposal>
+
+
+> +	void (*device_lock)(struct console *con, unsigned long *flags);
+> +
+> +	/**
+> +	 * @device_unlock:
+> +	 *
+> +	 * NBCON callback to finish synchronization with driver code.
+> +	 *
+> +	 * It is the counterpart to device_lock().
+> +	 *
+> +	 * This callback is always called from task context. It must
+> +	 * appropriately re-enable migration (depending on how device_lock()
+> +	 * disabled migration).
+> +	 *
+> +	 * The flags argument is the value of the same variable that was
+> +	 * passed to device_lock().
+> +	 */
+> +	void (*device_unlock)(struct console *con, unsigned long flags);
+> +
+>  	atomic_t		__private nbcon_state;
+>  	atomic_long_t		__private nbcon_seq;
+>  	struct printk_buffers	*pbufs;
+
+With the updated commit message and comment:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
+
