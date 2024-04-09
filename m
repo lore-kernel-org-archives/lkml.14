@@ -1,190 +1,548 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B58F4F881;
-	Tue,  9 Apr 2024 02:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C4C4E1AD;
+	Tue,  9 Apr 2024 02:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712628395; cv=none; b=UZGVs9r9SJEnKYSL08DIiSUh1dRifd9f1cOHdl947cG58IUM0g1sciypdhKW0sdSANy+ozigEAD4snmI5GO+5sb9/mC1RgFRoLJ+jDOc+EIigS+/X4jIV6wR4+CtlserTZWHOJuXqNnYnCKM8CzEvkek0HeknwnmMBY5lHfijEY=
+	t=1712628509; cv=none; b=AKgC6cX0D8w96IkQ6cBU6wgp8Iy3iVBbL7DYcQMjsNx8W1fxdKZhW/kB4jMWW/0OmugWCC+t/sjq4n1uKx9+wiKdr1Hh9YeYVrDDKSfMvYUy+g8n52sLr4ZhHafj+aM/HBqvbVm//4zHg7XzGGpb6QnlsFNl1xTSsCN/s+h8rOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712628395; c=relaxed/simple;
-	bh=N1zfWbtGo+CYFCJzwpSzSJlqNbgg2Q++/6k0vPNgPD0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Lg/jQkaAlLAKqiEAyLZeUo24CPEhhxgbPrw+eN26g5c7+pEjWo6Xv0nNFedAgwG13whZReBT+hFOEPlB6fvT+NXtAzfzZcfGSlCmX4o7L9U1BH9krgUUjAp2z0siTaOjMqmQZxOBbSBGKzFhmneluLx0YG4FNH8MElWnHhtBHRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 43923xpo075028;
-	Tue, 9 Apr 2024 10:03:59 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id D12482004C43;
-	Tue,  9 Apr 2024 10:06:05 +0800 (CST)
-Received: from localhost.localdomain (10.114.186.34) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Tue, 9 Apr 2024 10:03:58 +0800
-From: <liu.yec@h3c.com>
-To: <andy.shevchenko@gmail.com>, <daniel.thompson@linaro.org>
-CC: <dianders@chromium.org>, <gregkh@linuxfoundation.org>,
-        <jason.wessel@windriver.com>, <jirislaby@kernel.org>,
-        <kgdb-bugreport@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <liu.yeC@h3c.com>
-Subject: [PATCH V9] kdb: Fix the deadlock issue in KDB debugging.
-Date: Tue, 9 Apr 2024 10:03:26 +0800
-Message-ID: <20240409020326.2125332-1-liu.yec@h3c.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAHp75Vd3xAxmEEHHTXWvKYtieV+kUmP+L+tQGq30YDH9S2hc-w@mail.gmail.com>
-References: <CAHp75Vd3xAxmEEHHTXWvKYtieV+kUmP+L+tQGq30YDH9S2hc-w@mail.gmail.com>
+	s=arc-20240116; t=1712628509; c=relaxed/simple;
+	bh=4FGYehEHVy1hwtec6Pd3pqRSVIkicrpNVBFuL6dRlh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oEKQIJsIMXtQXYjDcOsjV0/FrFQA+njWO+4t5hllYSFK0rIr58piY5bf9IwwfBjgRuhKYfXvTKcqi8xALfsmg4Fi8azkj8DaNPAryY++SvQSyT7AG1RWlYUDKrlng6ic47+ztjNv/PeUpQr4vpCIdIpWAOypQJTjyStwior6h+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.96.2)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1ru0u9-0007Tf-11;
+	Tue, 09 Apr 2024 02:08:09 +0000
+Date: Tue, 9 Apr 2024 03:08:05 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: arinc.unal@arinc9.com
+Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Bartel Eerdekens <bartel.eerdekens@constell8.be>,
+	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net] net: dsa: mt7530: trap link-local frames regardless
+ of ST Port State
+Message-ID: <ZhSjBYyabaEAq30-@makrotopia.org>
+References: <20240407-b4-for-net-mt7530-fix-link-local-when-stp-discarding-v1-1-b4b20ac93457@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 43923xpo075028
+In-Reply-To: <20240407-b4-for-net-mt7530-fix-link-local-when-stp-discarding-v1-1-b4b20ac93457@arinc9.com>
 
-From: LiuYe <liu.yeC@h3c.com>
+On Sun, Apr 07, 2024 at 09:11:11PM +0300, Arınç ÜNAL via B4 Relay wrote:
+> From: Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> In Clause 5 of IEEE Std 802-2014, two sublayers of the data link layer
+> (DLL) of the Open Systems Interconnection basic reference model (OSI/RM)
+> are described; the medium access control (MAC) and logical link control
+> (LLC) sublayers. The MAC sublayer is the one facing the physical layer.
+> 
+> In 8.2 of IEEE Std 802.1Q-2022, the Bridge architecture is described. A
+> Bridge component comprises a MAC Relay Entity for interconnecting the Ports
+> of the Bridge, at least two Ports, and higher layer entities with at least
+> a Spanning Tree Protocol Entity included.
+> 
+> Each Bridge Port also functions as an end station and shall provide the MAC
+> Service to an LLC Entity. Each instance of the MAC Service is provided to a
+> distinct LLC Entity that supports protocol identification, multiplexing,
+> and demultiplexing, for protocol data unit (PDU) transmission and reception
+> by one or more higher layer entities.
+> 
+> It is described in 8.13.9 of IEEE Std 802.1Q-2022 that in a Bridge, the LLC
+> Entity associated with each Bridge Port is modeled as being directly
+> connected to the attached Local Area Network (LAN).
+> 
+> On the switch with CPU port architecture, CPU port functions as Management
+> Port, and the Management Port functionality is provided by software which
+> functions as an end station. Software is connected to an IEEE 802 LAN that
+> is wholly contained within the system that incorporates the Bridge.
+> Software provides access to the LLC Entity associated with each Bridge Port
+> by the value of the source port field on the special tag on the frame
+> received by software.
+> 
+> We call frames that carry control information to determine the active
+> topology and current extent of each Virtual Local Area Network (VLAN),
+> i.e., spanning tree or Shortest Path Bridging (SPB) and Multiple VLAN
+> Registration Protocol Data Units (MVRPDUs), and frames from other link
+> constrained protocols, such as Extensible Authentication Protocol over LAN
+> (EAPOL) and Link Layer Discovery Protocol (LLDP), link-local frames. They
+> are not forwarded by a Bridge. Permanently configured entries in the
+> filtering database (FDB) ensure that such frames are discarded by the
+> Forwarding Process. In 8.6.3 of IEEE Std 802.1Q-2022, this is described in
+> detail:
+> 
+> Each of the reserved MAC addresses specified in Table 8-1
+> (01-80-C2-00-00-[00,01,02,03,04,05,06,07,08,09,0A,0B,0C,0D,0E,0F]) shall be
+> permanently configured in the FDB in C-VLAN components and ERs.
+> 
+> Each of the reserved MAC addresses specified in Table 8-2
+> (01-80-C2-00-00-[01,02,03,04,05,06,07,08,09,0A,0E]) shall be permanently
+> configured in the FDB in S-VLAN components.
+> 
+> Each of the reserved MAC addresses specified in Table 8-3
+> (01-80-C2-00-00-[01,02,04,0E]) shall be permanently configured in the FDB
+> in TPMR components.
+> 
+> The FDB entries for reserved MAC addresses shall specify filtering for all
+> Bridge Ports and all VIDs. Management shall not provide the capability to
+> modify or remove entries for reserved MAC addresses.
+> 
+> The addresses in Table 8-1, Table 8-2, and Table 8-3 determine the scope of
+> propagation of PDUs within a Bridged Network, as follows:
+> 
+>   The Nearest Bridge group address (01-80-C2-00-00-0E) is an address that
+>   no conformant Two-Port MAC Relay (TPMR) component, Service VLAN (S-VLAN)
+>   component, Customer VLAN (C-VLAN) component, or MAC Bridge can forward.
+>   PDUs transmitted using this destination address, or any other addresses
+>   that appear in Table 8-1, Table 8-2, and Table 8-3
+>   (01-80-C2-00-00-[00,01,02,03,04,05,06,07,08,09,0A,0B,0C,0D,0E,0F]), can
+>   therefore travel no further than those stations that can be reached via a
+>   single individual LAN from the originating station.
+> 
+>   The Nearest non-TPMR Bridge group address (01-80-C2-00-00-03), is an
+>   address that no conformant S-VLAN component, C-VLAN component, or MAC
+>   Bridge can forward; however, this address is relayed by a TPMR component.
+>   PDUs using this destination address, or any of the other addresses that
+>   appear in both Table 8-1 and Table 8-2 but not in Table 8-3
+>   (01-80-C2-00-00-[00,03,05,06,07,08,09,0A,0B,0C,0D,0F]), will be relayed
+>   by any TPMRs but will propagate no further than the nearest S-VLAN
+>   component, C-VLAN component, or MAC Bridge.
+> 
+>   The Nearest Customer Bridge group address (01-80-C2-00-00-00) is an
+>   address that no conformant C-VLAN component, MAC Bridge can forward;
+>   however, it is relayed by TPMR components and S-VLAN components. PDUs
+>   using this destination address, or any of the other addresses that appear
+>   in Table 8-1 but not in either Table 8-2 or Table 8-3
+>   (01-80-C2-00-00-[00,0B,0C,0D,0F]), will be relayed by TPMR components and
+>   S-VLAN components but will propagate no further than the nearest C-VLAN
+>   component or MAC Bridge.
+> 
+> Because the LLC Entity associated with each Bridge Port is provided via CPU
+> port, we must not filter these frames but forward them to CPU port.
+> 
+> In a Bridge, the transmission Port is majorly decided by ingress and egress
+> rules, FDB, and spanning tree Port State functions of the Forwarding
+> Process. For link-local frames, only CPU port should be designated as
+> destination port in the FDB, and the other functions of the Forwarding
+> Process must not interfere with the decision of the transmission Port. We
+> call this process trapping frames to CPU port.
+> 
+> Therefore, on the switch with CPU port architecture, link-local frames must
+> be trapped to CPU port, and certain link-local frames received by a Port of
+> a Bridge comprising a TPMR component or an S-VLAN component must be
+> excluded from it.
+> 
+> A Bridge of the switch with CPU architecture cannot comprise a non-Two-Port
+> MAC Relay (TPMR) component as TPMR component is only supposed to support a
+> subset of the functionality of a MAC Bridge. A Bridge comprising two ports
+> (Management Port doesn't count) of this architecture will either function
+> as a standard MAC Bridge or a standard VLAN Bridge.
+> 
+> Therefore, a Bridge of this architecture can only comprise S-VLAN
+> components, C-VLAN components, or MAC Bridge components. Since there's no
+> TPMR component, we don't need to relay PDUs using the destination addresses
+> specified on the Nearest non-TPMR section, and the proportion of the
+> Nearest Customer Bridge section where they must be relayed by TPMR
+> components.
+> 
+> One option to trap link-local frames to CPU port is to add static FDB
+> entries with CPU port designated as destination port. However, because that
+> Independent VLAN Learning (IVL) is being used on every VID, each entry only
+> applies to a single VLAN Identifier (VID). For a Bridge comprising a MAC
+> Bridge component or a C-VLAN component, there would have to be 16 times
+> 4096 entries. This switch intellectual property can only hold a maximum of
+> 2048 entries. Using this option, there also isn't a mechanism to prevent
+> link-local frames from being discarded when the spanning tree Port State of
+> the reception Port is discarding.
+> 
+> The remaining option is to utilise the BPC, RGAC1, RGAC2, RGAC3, and RGAC4
+> registers. Whilst this applies to every VID, it doesn't contain all of the
+> reserved MAC addresses without affecting the remaining Standard Group MAC
+> Addresses. The REV_UN frame tag utilised using the RGAC4 register covers
+> the remaining 01-80-C2-00-00-[04,05,06,07,08,09,0A,0B,0C,0D,0F] destination
+> addresses. It also includes the 01-80-C2-00-00-22 to 01-80-C2-00-00-FF
+> destination addresses which may be relayed by MAC Bridges or VLAN Bridges.
+> The latter option provides better but not complete conformance.
+> 
+> This switch intellectual property also does not provide a mechanism to trap
+> link-local frames with specific destination addresses to CPU port by
+> Bridge, to conform to the filtering rules for the distinct Bridge
+> components.
+> 
+> Therefore, regardless of the type of the Bridge component, link-local
+> frames with these destination addresses will be trapped to CPU port:
+> 
+> 01-80-C2-00-00-[00,01,02,03,0E]
+> 
+> In a Bridge comprising a MAC Bridge component or a C-VLAN component:
+> 
+>   Link-local frames with these destination addresses won't be trapped to
+>   CPU port which won't conform to IEEE Std 802.1Q-2022:
+> 
+>   01-80-C2-00-00-[04,05,06,07,08,09,0A,0B,0C,0D,0F]
+> 
+> In a Bridge comprising an S-VLAN component:
+> 
+>   Link-local frames with these destination addresses will be trapped to CPU
+>   port which won't conform to IEEE Std 802.1Q-2022:
+> 
+>   01-80-C2-00-00-00
+> 
+>   Link-local frames with these destination addresses won't be trapped to
+>   CPU port which won't conform to IEEE Std 802.1Q-2022:
+> 
+>   01-80-C2-00-00-[04,05,06,07,08,09,0A]
+> 
+> Currently on this switch intellectual property, if the spanning tree Port
+> State of the reception Port is discarding, link-local frames will be
+> discarded.
+> 
+> To trap link-local frames regardless of the spanning tree Port State, make
+> the switch regard them as BPDU. This switch intellectual property only lets
+> the frames regarded as BPDU bypass the spanning tree Port State function of
+> the Forwarding Process.
+> 
+> With this change, the only remaining interference left is the ingress
+> rules. When the reception Port has no PVID assigned on software,
+> VLAN-untagged frames won't be allowed in. There doesn't seem to be a
+> mechanism on the switch intellectual property to have link-local frames
+> bypass this function of the Forwarding Process.
+> 
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Currently, if CONFIG_KDB_KEYBOARD is enabled, then kgdboc will
-attempt to use schedule_work() to provoke a keyboard reset when
-transitioning out of the debugger and back to normal operation.
-This can cause deadlock because schedule_work() is not NMI-safe.
+Reviewed-by: Daniel Golle <daniel@makrotopia.org>
 
-The stack trace below shows an example of the problem. In this
-case the master cpu is not running from NMI but it has parked
-the slave CPUs using an NMI and the parked CPUs is holding
-spinlocks needed by schedule_work().
+Thank you for the excellent write up!
 
-Example:
-BUG: spinlock lockup suspected on CPU#0. owner_cpu: 1
-CPU1: Call Trace:
-__schedule
-schedule
-schedule_hrtimeout_range_clock
-mutex_unlock
-ep_scan_ready_list
-schedule_hrtimeout_range
-ep_poll
-wake_up_q
-SyS_epoll_wait
-entry_SYSCALL_64_fastpath
-
-CPU0: Call Trace:
-dump_stack
-spin_dump
-do_raw_spin_lock
-_raw_spin_lock
-try_to_wake_up
-wake_up_process
-insert_work
-__queue_work
-queue_work_on
-kgdboc_post_exp_handler
-kgdb_cpu_enter
-kgdb_handle_exception
-__kgdb_notify
-kgdb_notify
-notifier_call_chain
-notify_die
-do_int3
-int3
-
-We fix the problem by using irq_work to call schedule_work()
-instead of calling it directly. This is because we cannot
-resynchronize the keyboard state from the hardirq context
-provided by irq_work. This must be done from the task context
-in order to call the input subsystem.
-
-Therefore, we have to defer the work twice. First, safely
-switch from the debug trap context (similar to NMI) to the
-hardirq, and then switch from the hardirq to the system work queue.
-
-Signed-off-by: LiuYe <liu.yeC@h3c.com>
-Co-developed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-
----
-V8 -> V9: Modify call trace format and move irq_work.h before module.h
-V7 -> V8: Update the description information and comments in the code.
-	: Submit this patch based on version linux-6.9-rc2.
-V6 -> V7: Add comments in the code.
-V5 -> V6: Replace with a more professional and accurate answer.
-V4 -> V5: Answer why schedule another work in the irq_work and not do the job directly.
-V3 -> V4: Add changelogs
-V2 -> V3: Add description information
-V1 -> V2: using irq_work to solve this properly.
----
----
- drivers/tty/serial/kgdboc.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7ce7bb164..32410fec7 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -19,6 +19,7 @@
- #include <linux/console.h>
- #include <linux/vt_kern.h>
- #include <linux/input.h>
-+#include <linux/irq_work.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/serial_core.h>
-@@ -82,6 +83,19 @@ static struct input_handler kgdboc_reset_handler = {
- 
- static DEFINE_MUTEX(kgdboc_reset_mutex);
- 
-+/*
-+ * This code ensures that the keyboard state, which is changed during kdb
-+ * execution, is resynchronized when we leave the debug trap. The resync
-+ * logic calls into the input subsystem to force a reset. The calls into
-+ * the input subsystem must be executed from normal task context.
-+ *
-+ * We need to trigger the resync from the debug trap, which executes in an
-+ * NMI (or similar) context. To make it safe to call into the input
-+ * subsystem we end up having use two deferred execution techniques.
-+ * Firstly, we use irq_work, which is NMI-safe, to provoke a callback from
-+ * hardirq context. Then, from the hardirq callback we use the system
-+ * workqueue to provoke the callback that actually performs the resync.
-+ */
- static void kgdboc_restore_input_helper(struct work_struct *dummy)
- {
- 	/*
-@@ -99,10 +113,17 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
- 
- static DECLARE_WORK(kgdboc_restore_input_work, kgdboc_restore_input_helper);
- 
-+static void kgdboc_queue_restore_input_helper(struct irq_work *unused)
-+{
-+	schedule_work(&kgdboc_restore_input_work);
-+}
-+
-+static DEFINE_IRQ_WORK(kgdboc_restore_input_irq_work, kgdboc_queue_restore_input_helper);
-+
- static void kgdboc_restore_input(void)
- {
- 	if (likely(system_state == SYSTEM_RUNNING))
--		schedule_work(&kgdboc_restore_input_work);
-+		irq_work_queue(&kgdboc_restore_input_irq_work);
- }
- 
- static int kgdboc_register_kbd(char **cptr)
-@@ -133,6 +154,7 @@ static void kgdboc_unregister_kbd(void)
- 			i--;
- 		}
- 	}
-+	irq_work_sync(&kgdboc_restore_input_irq_work);
- 	flush_work(&kgdboc_restore_input_work);
- }
- #else /* ! CONFIG_KDB_KEYBOARD */
--- 
-2.25.1
-
+> ---
+>  drivers/net/dsa/mt7530.c | 229 ++++++++++++++++++++++++++++++++++++++++-------
+>  drivers/net/dsa/mt7530.h |   5 ++
+>  2 files changed, 200 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
+> index 1035820c2377..254501f63731 100644
+> --- a/drivers/net/dsa/mt7530.c
+> +++ b/drivers/net/dsa/mt7530.c
+> @@ -950,20 +950,173 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
+>  	mutex_unlock(&priv->reg_mutex);
+>  }
+>  
+> -/* On page 205, section "8.6.3 Frame filtering" of the active standard, IEEE Std
+> - * 802.1Q™-2022, it is stated that frames with 01:80:C2:00:00:00-0F as MAC DA
+> - * must only be propagated to C-VLAN and MAC Bridge components. That means
+> - * VLAN-aware and VLAN-unaware bridges. On the switch designs with CPU ports,
+> - * these frames are supposed to be processed by the CPU (software). So we make
+> - * the switch only forward them to the CPU port. And if received from a CPU
+> - * port, forward to a single port. The software is responsible of making the
+> - * switch conform to the latter by setting a single port as destination port on
+> - * the special tag.
+> +/* In Clause 5 of IEEE Std 802-2014, two sublayers of the data link layer (DLL)
+> + * of the Open Systems Interconnection basic reference model (OSI/RM) are
+> + * described; the medium access control (MAC) and logical link control (LLC)
+> + * sublayers. The MAC sublayer is the one facing the physical layer.
+>   *
+> - * This switch intellectual property cannot conform to this part of the standard
+> - * fully. Whilst the REV_UN frame tag covers the remaining :04-0D and :0F MAC
+> - * DAs, it also includes :22-FF which the scope of propagation is not supposed
+> - * to be restricted for these MAC DAs.
+> + * In 8.2 of IEEE Std 802.1Q-2022, the Bridge architecture is described. A
+> + * Bridge component comprises a MAC Relay Entity for interconnecting the Ports
+> + * of the Bridge, at least two Ports, and higher layer entities with at least a
+> + * Spanning Tree Protocol Entity included.
+> + *
+> + * Each Bridge Port also functions as an end station and shall provide the MAC
+> + * Service to an LLC Entity. Each instance of the MAC Service is provided to a
+> + * distinct LLC Entity that supports protocol identification, multiplexing, and
+> + * demultiplexing, for protocol data unit (PDU) transmission and reception by
+> + * one or more higher layer entities.
+> + *
+> + * It is described in 8.13.9 of IEEE Std 802.1Q-2022 that in a Bridge, the LLC
+> + * Entity associated with each Bridge Port is modeled as being directly
+> + * connected to the attached Local Area Network (LAN).
+> + *
+> + * On the switch with CPU port architecture, CPU port functions as Management
+> + * Port, and the Management Port functionality is provided by software which
+> + * functions as an end station. Software is connected to an IEEE 802 LAN that is
+> + * wholly contained within the system that incorporates the Bridge. Software
+> + * provides access to the LLC Entity associated with each Bridge Port by the
+> + * value of the source port field on the special tag on the frame received by
+> + * software.
+> + *
+> + * We call frames that carry control information to determine the active
+> + * topology and current extent of each Virtual Local Area Network (VLAN), i.e.,
+> + * spanning tree or Shortest Path Bridging (SPB) and Multiple VLAN Registration
+> + * Protocol Data Units (MVRPDUs), and frames from other link constrained
+> + * protocols, such as Extensible Authentication Protocol over LAN (EAPOL) and
+> + * Link Layer Discovery Protocol (LLDP), link-local frames. They are not
+> + * forwarded by a Bridge. Permanently configured entries in the filtering
+> + * database (FDB) ensure that such frames are discarded by the Forwarding
+> + * Process. In 8.6.3 of IEEE Std 802.1Q-2022, this is described in detail:
+> + *
+> + * Each of the reserved MAC addresses specified in Table 8-1
+> + * (01-80-C2-00-00-[00,01,02,03,04,05,06,07,08,09,0A,0B,0C,0D,0E,0F]) shall be
+> + * permanently configured in the FDB in C-VLAN components and ERs.
+> + *
+> + * Each of the reserved MAC addresses specified in Table 8-2
+> + * (01-80-C2-00-00-[01,02,03,04,05,06,07,08,09,0A,0E]) shall be permanently
+> + * configured in the FDB in S-VLAN components.
+> + *
+> + * Each of the reserved MAC addresses specified in Table 8-3
+> + * (01-80-C2-00-00-[01,02,04,0E]) shall be permanently configured in the FDB in
+> + * TPMR components.
+> + *
+> + * The FDB entries for reserved MAC addresses shall specify filtering for all
+> + * Bridge Ports and all VIDs. Management shall not provide the capability to
+> + * modify or remove entries for reserved MAC addresses.
+> + *
+> + * The addresses in Table 8-1, Table 8-2, and Table 8-3 determine the scope of
+> + * propagation of PDUs within a Bridged Network, as follows:
+> + *
+> + *   The Nearest Bridge group address (01-80-C2-00-00-0E) is an address that no
+> + *   conformant Two-Port MAC Relay (TPMR) component, Service VLAN (S-VLAN)
+> + *   component, Customer VLAN (C-VLAN) component, or MAC Bridge can forward.
+> + *   PDUs transmitted using this destination address, or any other addresses
+> + *   that appear in Table 8-1, Table 8-2, and Table 8-3
+> + *   (01-80-C2-00-00-[00,01,02,03,04,05,06,07,08,09,0A,0B,0C,0D,0E,0F]), can
+> + *   therefore travel no further than those stations that can be reached via a
+> + *   single individual LAN from the originating station.
+> + *
+> + *   The Nearest non-TPMR Bridge group address (01-80-C2-00-00-03), is an
+> + *   address that no conformant S-VLAN component, C-VLAN component, or MAC
+> + *   Bridge can forward; however, this address is relayed by a TPMR component.
+> + *   PDUs using this destination address, or any of the other addresses that
+> + *   appear in both Table 8-1 and Table 8-2 but not in Table 8-3
+> + *   (01-80-C2-00-00-[00,03,05,06,07,08,09,0A,0B,0C,0D,0F]), will be relayed by
+> + *   any TPMRs but will propagate no further than the nearest S-VLAN component,
+> + *   C-VLAN component, or MAC Bridge.
+> + *
+> + *   The Nearest Customer Bridge group address (01-80-C2-00-00-00) is an address
+> + *   that no conformant C-VLAN component, MAC Bridge can forward; however, it is
+> + *   relayed by TPMR components and S-VLAN components. PDUs using this
+> + *   destination address, or any of the other addresses that appear in Table 8-1
+> + *   but not in either Table 8-2 or Table 8-3 (01-80-C2-00-00-[00,0B,0C,0D,0F]),
+> + *   will be relayed by TPMR components and S-VLAN components but will propagate
+> + *   no further than the nearest C-VLAN component or MAC Bridge.
+> + *
+> + * Because the LLC Entity associated with each Bridge Port is provided via CPU
+> + * port, we must not filter these frames but forward them to CPU port.
+> + *
+> + * In a Bridge, the transmission Port is majorly decided by ingress and egress
+> + * rules, FDB, and spanning tree Port State functions of the Forwarding Process.
+> + * For link-local frames, only CPU port should be designated as destination port
+> + * in the FDB, and the other functions of the Forwarding Process must not
+> + * interfere with the decision of the transmission Port. We call this process
+> + * trapping frames to CPU port.
+> + *
+> + * Therefore, on the switch with CPU port architecture, link-local frames must
+> + * be trapped to CPU port, and certain link-local frames received by a Port of a
+> + * Bridge comprising a TPMR component or an S-VLAN component must be excluded
+> + * from it.
+> + *
+> + * A Bridge of the switch with CPU architecture cannot comprise a non-Two-Port
+> + * MAC Relay (TPMR) component as TPMR component is only supposed to support a
+> + * subset of the functionality of a MAC Bridge. A Bridge comprising two ports
+> + * (Management Port doesn't count) of this architecture will either function as
+> + * a standard MAC Bridge or a standard VLAN Bridge.
+> + *
+> + * Therefore, a Bridge of this architecture can only comprise S-VLAN components,
+> + * C-VLAN components, or MAC Bridge components. Since there's no TPMR component,
+> + * we don't need to relay PDUs using the destination addresses specified on the
+> + * Nearest non-TPMR section, and the proportion of the Nearest Customer Bridge
+> + * section where they must be relayed by TPMR components.
+> + *
+> + * One option to trap link-local frames to CPU port is to add static FDB entries
+> + * with CPU port designated as destination port. However, because that
+> + * Independent VLAN Learning (IVL) is being used on every VID, each entry only
+> + * applies to a single VLAN Identifier (VID). For a Bridge comprising a MAC
+> + * Bridge component or a C-VLAN component, there would have to be 16 times 4096
+> + * entries. This switch intellectual property can only hold a maximum of 2048
+> + * entries. Using this option, there also isn't a mechanism to prevent
+> + * link-local frames from being discarded when the spanning tree Port State of
+> + * the reception Port is discarding.
+> + *
+> + * The remaining option is to utilise the BPC, RGAC1, RGAC2, RGAC3, and RGAC4
+> + * registers. Whilst this applies to every VID, it doesn't contain all of the
+> + * reserved MAC addresses without affecting the remaining Standard Group MAC
+> + * Addresses. The REV_UN frame tag utilised using the RGAC4 register covers the
+> + * remaining 01-80-C2-00-00-[04,05,06,07,08,09,0A,0B,0C,0D,0F] destination
+> + * addresses. It also includes the 01-80-C2-00-00-22 to 01-80-C2-00-00-FF
+> + * destination addresses which may be relayed by MAC Bridges or VLAN Bridges.
+> + * The latter option provides better but not complete conformance.
+> + *
+> + * This switch intellectual property also does not provide a mechanism to trap
+> + * link-local frames with specific destination addresses to CPU port by Bridge,
+> + * to conform to the filtering rules for the distinct Bridge components.
+> + *
+> + * Therefore, regardless of the type of the Bridge component, link-local frames
+> + * with these destination addresses will be trapped to CPU port:
+> + *
+> + * 01-80-C2-00-00-[00,01,02,03,0E]
+> + *
+> + * In a Bridge comprising a MAC Bridge component or a C-VLAN component:
+> + *
+> + *   Link-local frames with these destination addresses won't be trapped to CPU
+> + *   port which won't conform to IEEE Std 802.1Q-2022:
+> + *
+> + *   01-80-C2-00-00-[04,05,06,07,08,09,0A,0B,0C,0D,0F]
+> + *
+> + * In a Bridge comprising an S-VLAN component:
+> + *
+> + *   Link-local frames with these destination addresses will be trapped to CPU
+> + *   port which won't conform to IEEE Std 802.1Q-2022:
+> + *
+> + *   01-80-C2-00-00-00
+> + *
+> + *   Link-local frames with these destination addresses won't be trapped to CPU
+> + *   port which won't conform to IEEE Std 802.1Q-2022:
+> + *
+> + *   01-80-C2-00-00-[04,05,06,07,08,09,0A]
+> + *
+> + * To trap link-local frames to CPU port as conformant as this switch
+> + * intellectual property can allow, link-local frames are made to be regarded as
+> + * BPDU. This is because this switch intellectual property only lets the frames
+> + * regarded as BPDU bypass the spanning tree Port State function of the
+> + * Forwarding Process.
+> + *
+> + * The only remaining interference left is the ingress rules. When the reception
+> + * Port has no PVID assigned on software, VLAN-untagged frames won't be allowed
+> + * in. There doesn't seem to be a mechanism on the switch intellectual property
+> + * to have link-local frames bypass this function of the Forwarding Process.
+>   */
+>  static void
+>  mt753x_trap_frames(struct mt7530_priv *priv)
+> @@ -971,35 +1124,43 @@ mt753x_trap_frames(struct mt7530_priv *priv)
+>  	/* Trap 802.1X PAE frames and BPDUs to the CPU port(s) and egress them
+>  	 * VLAN-untagged.
+>  	 */
+> -	mt7530_rmw(priv, MT753X_BPC, MT753X_PAE_EG_TAG_MASK |
+> -		   MT753X_PAE_PORT_FW_MASK | MT753X_BPDU_EG_TAG_MASK |
+> -		   MT753X_BPDU_PORT_FW_MASK,
+> -		   MT753X_PAE_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_PAE_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> -		   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_BPDU_CPU_ONLY);
+> +	mt7530_rmw(priv, MT753X_BPC,
+> +		   MT753X_PAE_BPDU_FR | MT753X_PAE_EG_TAG_MASK |
+> +			   MT753X_PAE_PORT_FW_MASK | MT753X_BPDU_EG_TAG_MASK |
+> +			   MT753X_BPDU_PORT_FW_MASK,
+> +		   MT753X_PAE_BPDU_FR |
+> +			   MT753X_PAE_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_PAE_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> +			   MT753X_BPDU_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_BPDU_CPU_ONLY);
+>  
+>  	/* Trap frames with :01 and :02 MAC DAs to the CPU port(s) and egress
+>  	 * them VLAN-untagged.
+>  	 */
+> -	mt7530_rmw(priv, MT753X_RGAC1, MT753X_R02_EG_TAG_MASK |
+> -		   MT753X_R02_PORT_FW_MASK | MT753X_R01_EG_TAG_MASK |
+> -		   MT753X_R01_PORT_FW_MASK,
+> -		   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> -		   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_BPDU_CPU_ONLY);
+> +	mt7530_rmw(priv, MT753X_RGAC1,
+> +		   MT753X_R02_BPDU_FR | MT753X_R02_EG_TAG_MASK |
+> +			   MT753X_R02_PORT_FW_MASK | MT753X_R01_BPDU_FR |
+> +			   MT753X_R01_EG_TAG_MASK | MT753X_R01_PORT_FW_MASK,
+> +		   MT753X_R02_BPDU_FR |
+> +			   MT753X_R02_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_R02_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> +			   MT753X_R01_BPDU_FR |
+> +			   MT753X_R01_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_BPDU_CPU_ONLY);
+>  
+>  	/* Trap frames with :03 and :0E MAC DAs to the CPU port(s) and egress
+>  	 * them VLAN-untagged.
+>  	 */
+> -	mt7530_rmw(priv, MT753X_RGAC2, MT753X_R0E_EG_TAG_MASK |
+> -		   MT753X_R0E_PORT_FW_MASK | MT753X_R03_EG_TAG_MASK |
+> -		   MT753X_R03_PORT_FW_MASK,
+> -		   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> -		   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> -		   MT753X_BPDU_CPU_ONLY);
+> +	mt7530_rmw(priv, MT753X_RGAC2,
+> +		   MT753X_R0E_BPDU_FR | MT753X_R0E_EG_TAG_MASK |
+> +			   MT753X_R0E_PORT_FW_MASK | MT753X_R03_BPDU_FR |
+> +			   MT753X_R03_EG_TAG_MASK | MT753X_R03_PORT_FW_MASK,
+> +		   MT753X_R0E_BPDU_FR |
+> +			   MT753X_R0E_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_R0E_PORT_FW(MT753X_BPDU_CPU_ONLY) |
+> +			   MT753X_R03_BPDU_FR |
+> +			   MT753X_R03_EG_TAG(MT7530_VLAN_EG_UNTAGGED) |
+> +			   MT753X_BPDU_CPU_ONLY);
+>  }
+>  
+>  static void
+> diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+> index d17b318e6ee4..2deffe741484 100644
+> --- a/drivers/net/dsa/mt7530.h
+> +++ b/drivers/net/dsa/mt7530.h
+> @@ -65,6 +65,7 @@ enum mt753x_id {
+>  
+>  /* Registers for BPDU and PAE frame control*/
+>  #define MT753X_BPC			0x24
+> +#define  MT753X_PAE_BPDU_FR		BIT(25)
+>  #define  MT753X_PAE_EG_TAG_MASK		GENMASK(24, 22)
+>  #define  MT753X_PAE_EG_TAG(x)		FIELD_PREP(MT753X_PAE_EG_TAG_MASK, x)
+>  #define  MT753X_PAE_PORT_FW_MASK	GENMASK(18, 16)
+> @@ -75,20 +76,24 @@ enum mt753x_id {
+>  
+>  /* Register for :01 and :02 MAC DA frame control */
+>  #define MT753X_RGAC1			0x28
+> +#define  MT753X_R02_BPDU_FR		BIT(25)
+>  #define  MT753X_R02_EG_TAG_MASK		GENMASK(24, 22)
+>  #define  MT753X_R02_EG_TAG(x)		FIELD_PREP(MT753X_R02_EG_TAG_MASK, x)
+>  #define  MT753X_R02_PORT_FW_MASK	GENMASK(18, 16)
+>  #define  MT753X_R02_PORT_FW(x)		FIELD_PREP(MT753X_R02_PORT_FW_MASK, x)
+> +#define  MT753X_R01_BPDU_FR		BIT(9)
+>  #define  MT753X_R01_EG_TAG_MASK		GENMASK(8, 6)
+>  #define  MT753X_R01_EG_TAG(x)		FIELD_PREP(MT753X_R01_EG_TAG_MASK, x)
+>  #define  MT753X_R01_PORT_FW_MASK	GENMASK(2, 0)
+>  
+>  /* Register for :03 and :0E MAC DA frame control */
+>  #define MT753X_RGAC2			0x2c
+> +#define  MT753X_R0E_BPDU_FR		BIT(25)
+>  #define  MT753X_R0E_EG_TAG_MASK		GENMASK(24, 22)
+>  #define  MT753X_R0E_EG_TAG(x)		FIELD_PREP(MT753X_R0E_EG_TAG_MASK, x)
+>  #define  MT753X_R0E_PORT_FW_MASK	GENMASK(18, 16)
+>  #define  MT753X_R0E_PORT_FW(x)		FIELD_PREP(MT753X_R0E_PORT_FW_MASK, x)
+> +#define  MT753X_R03_BPDU_FR		BIT(9)
+>  #define  MT753X_R03_EG_TAG_MASK		GENMASK(8, 6)
+>  #define  MT753X_R03_EG_TAG(x)		FIELD_PREP(MT753X_R03_EG_TAG_MASK, x)
+>  #define  MT753X_R03_PORT_FW_MASK	GENMASK(2, 0)
+> 
+> ---
+> base-commit: 365af7ace014ef3fc6f5d0a373c96cc7193db4ce
+> change-id: 20240401-b4-for-net-mt7530-fix-link-local-when-stp-discarding-6e2a4e3e867a
+> 
+> Best regards,
+> -- 
+> Arınç ÜNAL <arinc.unal@arinc9.com>
+> 
+> 
+> 
