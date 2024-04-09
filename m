@@ -1,47 +1,47 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DDD156C66;
-	Tue,  9 Apr 2024 18:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FE615698F;
+	Tue,  9 Apr 2024 18:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686405; cv=none; b=R92gMvuGZi0DOQPU7XeX8GfiO6UO7YvjliaR4ONlX1G5+6xog35z4AnsE5mjmKBezlM+aGsub8fAHC5nrJbt3B9KrTvmB6iZ4e4DlvJyJMakAxfalp5C5aiQ3XT3FYqdYGpRN+hpJ++o24woVC2Btza2y+hT/Walcfz/76r23Tc=
+	t=1712686439; cv=none; b=gClMfjX1iQe/be2E1RVQhctvrj+XsbCVBEtssLNYhv7zbAJp5UMmQFHNW8DFV+umT06CcHDAaS7c0qdtM+/afqToP9jEPd7BGOjiGI/uzlS7Ol0eANNiXxv6kfRa+7/CFFx969VXGjYOyQBPbGE6L2VGNZ6S+1r1i3fPMe+N0yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686405; c=relaxed/simple;
-	bh=os22hnONWugy2tpOAKxDCjc6v65N851yUDHEbBVCfUs=;
+	s=arc-20240116; t=1712686439; c=relaxed/simple;
+	bh=dn+lAleatEKuaifZlrvPWySPzKxUqpTQLCOmlh50Oqs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XEqlmKbNF2REWMQXwu3sl843xO3rdghTFLZ1VOqgkk1ARfyZM3cZ0EgpjRV3kSpeyqEfVR4uZTSccbKk0TZ+5lqzc62UmmOTe425lZJZojglgOJjfiGgDnz6gDCRtgYk7bUe22pk+Gz8HSwvUfZ5lU00gxsEKahKV7z0N+FG/VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=ZKrgookd; arc=none smtp.client-ip=52.119.213.150
+	 MIME-Version:Content-Type; b=gliYxARDd1Wjp9NaGASf1KAFzVDh96O9012VyFfELYJnJK+FsIEfJRdkYCN09CEGa8VcvKZeC+NFJ13VMePsnfJ60s/ZJY4U9h8EcoYiEIOHlK0XNOwvuMKamZqBYX65lUX2iOHZHGVScFYUxj6FAy8nZ4xvVKqFVKECNGUayE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Jx2zim+w; arc=none smtp.client-ip=207.171.188.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ZKrgookd"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Jx2zim+w"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1712686403; x=1744222403;
+  t=1712686438; x=1744222438;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=9WK4Ks0kdU/PfCY29WwFv1CSYBPCLT37R4CWQ0Ev6+c=;
-  b=ZKrgookdjmrGHAol3EHIWCyYqx5ar6hx2ARbkyG37UUAxtcwk89wkQqU
-   fJ0Pj/amPJKpd2rK2dutn3rUtiZBPL/T6WksLkCunIoV664d9ij3AT2fU
-   MZB2PPIQ3MOQ/AiGgeB4lsJ8FJCy7BUOzlc1v2qtwBKVoJC92Pv89tg+v
-   Y=;
+  bh=lgg88BB+Hs9vOysnsDN018CMkG589f+hMJJXDN4bMMc=;
+  b=Jx2zim+wakIDVX/jJ1LibA7jt68z7WrSvFqb88+9OGXssT9OfH4Q61wL
+   WB4ygXFesj3675sMWTraPGn+ZE7W7/ItLn4RwH1okNjO5XX7KQ1ClETxi
+   jK6Lh1wS6sjWMxXu6OgKiTqKzIZUFu1Ilze9n592wd9hTCSMwyjKCzI8r
+   U=;
 X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
-   d="scan'208";a="625423153"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:13:04 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:4228]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.56:2525] with esmtp (Farcaster)
- id 942f6115-7a50-47d4-88f3-52c850573cea; Tue, 9 Apr 2024 18:13:03 +0000 (UTC)
-X-Farcaster-Flow-ID: 942f6115-7a50-47d4-88f3-52c850573cea
+   d="scan'208";a="717886588"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:13:51 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:63192]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.37.241:2525] with esmtp (Farcaster)
+ id fb9eff58-1fec-4c4d-b18f-fd659df80343; Tue, 9 Apr 2024 18:13:50 +0000 (UTC)
+X-Farcaster-Flow-ID: fb9eff58-1fec-4c4d-b18f-fd659df80343
 Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 18:13:02 +0000
+ 15.2.1258.28; Tue, 9 Apr 2024 18:13:50 +0000
 Received: from bcd074994f7f.amazon.com (10.95.97.144) by
  EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Tue, 9 Apr 2024 18:12:58 +0000
+ 15.2.1258.28; Tue, 9 Apr 2024 18:13:45 +0000
 From: Sudan Landge <sudanl@amazon.com>
 To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
 	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
@@ -50,9 +50,9 @@ To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
 	<xmarcalx@amazon.co.uk>
-Subject: [PATCH v4 2/5] virt: vmgenid: change implementation to use a platform driver
-Date: Tue, 9 Apr 2024 19:11:51 +0100
-Message-ID: <20240409181154.9962-3-sudanl@amazon.com>
+Subject: [PATCH v4 4/5] dt-bindings: rng: Add vmgenid support
+Date: Tue, 9 Apr 2024 19:11:53 +0100
+Message-ID: <20240409181154.9962-5-sudanl@amazon.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 In-Reply-To: <20240409181154.9962-1-sudanl@amazon.com>
 References: <20240409181154.9962-1-sudanl@amazon.com>
@@ -64,171 +64,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D037UWC004.ant.amazon.com (10.13.139.254) To
+X-ClientProxiedBy: EX19D039UWB004.ant.amazon.com (10.13.138.57) To
  EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
-Re-implement vmgenid as a platform driver in preparation
-for adding devicetree bindings support in next commits.
+Virtual Machine Generation ID driver was introduced in commit af6b54e2b5ba
+("virt: vmgenid: notify RNG of VM fork and supply generation ID"), as an
+ACPI only device.
+
+VMGenID specification http://go.microsoft.com/fwlink/?LinkId=260709 defines
+a mechanism for the BIOS/hypervisors to communicate to the virtual machine
+that it is executed with a different configuration (e.g. snapshot execution
+or creation from a template).
+The guest operating system can use the notification for various purposes
+such as re-initializing its random number generator etc.
+
+As per the specs, hypervisor should provide a globally unique identified,
+or GUID via ACPI.
+
+This patch tries to mimic the mechanism to provide the same functionality
+which is for a hypervisor/BIOS to notify the virtual machine when it is
+executed with a different configuration.
+
+As part of this support the devicetree bindings requires the hypervisors or
+BIOS to provide a memory address which holds the GUID and an IRQ which is
+used to notify when there is a change in the GUID.
+The memory exposed in the DT should follow the rules defined in the
+vmgenid spec mentioned above.
+
+*Reason for this change*:
+Chosing ACPI or devicetree is an intrinsic part of an hypervisor design.
+Without going into details of why a hypervisor would choose DT over ACPI,
+we would like to highlight that the hypervisors that have chose devicetree
+and now want to make use of the vmgenid functionality cannot do so today
+because vmgenid is an ACPI only device.
+This forces these hypervisors to change their design which could have
+undesirable impacts on their use-cases, test-scenarios etc.
+
+vmgenid exposes to the guest a 16-byte cryptographically random number,
+the value of which changes every time it starts executing from a new
+configuration (snapshot, backup, etc.). During initialization, the device
+exposes to the guest the address of the generation ID and
+an interrupt number, which the device will use to notify the guest when
+the generation ID changes.
+These attributes can be trivially communicated via device tree bindings.
+
+We believe that adding a devicetree binding for vmgenid is a simpler
+alternative way to expose the device to the guest than forcing the
+hypervisors to implement ACPI.
+
+More references to vmgenid specs:
+ - https://www.qemu.org/docs/master/specs/vmgenid.html
+ - https://learn.microsoft.com/en-us/windows/win32/hyperv_v2/virtual-
+machine-generation-identifier
 
 Signed-off-by: Sudan Landge <sudanl@amazon.com>
 ---
- drivers/virt/vmgenid.c | 97 +++++++++++++++++++++++++++++-------------
- 1 file changed, 67 insertions(+), 30 deletions(-)
+ .../bindings/rng/microsoft,vmgenid.yaml       | 49 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
 
-diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
-index a167ccfad299..c028e2064fdd 100644
---- a/drivers/virt/vmgenid.c
-+++ b/drivers/virt/vmgenid.c
-@@ -7,9 +7,10 @@
-  * information to random.c.
-  */
- 
-+#include <linux/acpi.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/acpi.h>
-+#include <linux/platform_device.h>
- #include <linux/random.h>
- 
- ACPI_MODULE_NAME("vmgenid");
-@@ -21,9 +22,9 @@ struct vmgenid_state {
- 	u8 this_id[VMGENID_SIZE];
- };
- 
--static void vmgenid_notify(struct acpi_device *device, u32 event)
-+static void vmgenid_notify(struct device *device)
- {
--	struct vmgenid_state *state = acpi_driver_data(device);
-+	struct vmgenid_state *state = device->driver_data;
- 	char *envp[] = { "NEW_VMGENID=1", NULL };
- 	u8 old_id[VMGENID_SIZE];
- 
-@@ -32,21 +33,36 @@ static void vmgenid_notify(struct acpi_device *device, u32 event)
- 	if (!memcmp(old_id, state->this_id, sizeof(old_id)))
- 		return;
- 	add_vmfork_randomness(state->this_id, sizeof(state->this_id));
--	kobject_uevent_env(&device->dev.kobj, KOBJ_CHANGE, envp);
-+	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
-+}
+diff --git a/Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml b/Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+new file mode 100644
+index 000000000000..8f20dee93e7e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/microsoft,vmgenid.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
-+				 u32 __always_unused event, void *dev)
-+{
-+	vmgenid_notify(dev);
-+}
++title: Virtual Machine Generation ID
 +
-+static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
-+{
-+	if (IS_ERR(next_id))
-+		return PTR_ERR(next_id);
++maintainers:
++  - Jason A. Donenfeld <Jason@zx2c4.com>
 +
-+	state->next_id = next_id;
-+	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
-+	add_device_randomness(state->this_id, sizeof(state->this_id));
-+	return 0;
- }
- 
--static int vmgenid_add(struct acpi_device *device)
-+static int vmgenid_add_acpi(struct device *dev,
-+			    struct vmgenid_state *state)
- {
-+	struct acpi_device *device = ACPI_COMPANION(dev);
- 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
--	struct vmgenid_state *state;
- 	union acpi_object *obj;
- 	phys_addr_t phys_addr;
- 	acpi_status status;
- 	int ret = 0;
--
--	state = devm_kmalloc(&device->dev, sizeof(*state), GFP_KERNEL);
--	if (!state)
--		return -ENOMEM;
-+	u8 *virt_addr;
- 
- 	status = acpi_evaluate_object(device->handle, "ADDR", NULL, &parsed);
- 	if (ACPI_FAILURE(status)) {
-@@ -63,40 +79,61 @@ static int vmgenid_add(struct acpi_device *device)
- 
- 	phys_addr = (obj->package.elements[0].integer.value << 0) |
- 		    (obj->package.elements[1].integer.value << 32);
--	state->next_id = devm_memremap(&device->dev, phys_addr, VMGENID_SIZE, MEMREMAP_WB);
--	if (IS_ERR(state->next_id)) {
--		ret = PTR_ERR(state->next_id);
++description:
++  Firmwares or hypervisors can use this devicetree to describe an
++  interrupt and a shared resource to inject a Virtual Machine Generation ID.
++  Virtual Machine Generation ID is a globally unique identifier (GUID) and
++  the devicetree binding follows VMGenID specification defined in
++  http://go.microsoft.com/fwlink/?LinkId=260709.
 +
-+	virt_addr = (u8 *)devm_memremap(&device->dev, phys_addr,
-+					VMGENID_SIZE, MEMREMAP_WB);
-+	ret = setup_vmgenid_state(state, virt_addr);
-+	if (ret)
-+		goto out;
++properties:
++  compatible:
++    const: microsoft,vmgenid
 +
-+	dev->driver_data = state;
-+	status = acpi_install_notify_handler(device->handle, ACPI_DEVICE_NOTIFY,
-+					     vmgenid_acpi_handler, dev);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "Failed to install acpi notify handler");
-+		ret = -ENODEV;
-+		dev->driver_data = NULL;
- 		goto out;
- 	}
-+out:
-+	ACPI_FREE(parsed.pointer);
-+	return ret;
-+}
- 
--	memcpy(state->this_id, state->next_id, sizeof(state->this_id));
--	add_device_randomness(state->this_id, sizeof(state->this_id));
-+static int vmgenid_add(struct platform_device *pdev)
-+{
-+	struct vmgenid_state *state;
-+	struct device *dev = &pdev->dev;
-+	int ret = 0;
- 
--	device->driver_data = state;
-+	state = devm_kmalloc(dev, sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
++  reg:
++    description:
++      Specifies a 16-byte VMGenID in endianness-agnostic hexadecimal format.
++    maxItems: 1
 +
-+	ret = vmgenid_add_acpi(dev, state);
++  interrupts:
++    description:
++      Interrupt used to notify that a new VMGenID is available.
++    maxItems: 1
 +
-+	if (ret)
-+		devm_kfree(dev, state);
- 
--out:
--	ACPI_FREE(parsed.pointer);
- 	return ret;
- }
- 
--static const struct acpi_device_id vmgenid_ids[] = {
-+static const struct acpi_device_id vmgenid_acpi_ids[] = {
- 	{ "VMGENCTR", 0 },
- 	{ "VM_GEN_COUNTER", 0 },
- 	{ }
- };
--MODULE_DEVICE_TABLE(acpi, vmgenid_ids);
--
--static struct acpi_driver vmgenid_driver = {
--	.name = "vmgenid",
--	.ids = vmgenid_ids,
--	.owner = THIS_MODULE,
--	.ops = {
--		.add = vmgenid_add,
--		.notify = vmgenid_notify
--	}
-+MODULE_DEVICE_TABLE(acpi, vmgenid_acpi_ids);
++required:
++  - compatible
++  - reg
++  - interrupts
 +
-+static struct platform_driver vmgenid_plaform_driver = {
-+	.probe      = vmgenid_add,
-+	.driver     = {
-+		.name   = "vmgenid",
-+		.acpi_match_table = vmgenid_acpi_ids,
-+	},
- };
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    rng@80000000 {
++      compatible = "microsoft,vmgenid";
++      reg = <0x80000000 0x1000>;
++      interrupts = <GIC_SPI 35 IRQ_TYPE_EDGE_RISING>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aea47e04c3a5..243607744b7e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -18476,6 +18476,7 @@ M:	"Theodore Ts'o" <tytso@mit.edu>
+ M:	Jason A. Donenfeld <Jason@zx2c4.com>
+ S:	Maintained
+ T:	git https://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git
++F:	Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+ F:	drivers/char/random.c
+ F:	drivers/virt/vmgenid.c
  
--module_acpi_driver(vmgenid_driver);
-+module_platform_driver(vmgenid_plaform_driver)
- 
- MODULE_DESCRIPTION("Virtual Machine Generation ID");
- MODULE_LICENSE("GPL v2");
 -- 
 2.34.1
 
