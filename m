@@ -1,112 +1,128 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C55F23A1B5;
-	Tue,  9 Apr 2024 01:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5B23A8CE
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 01:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712626200; cv=none; b=ETSX3g5wn5E4qEx0QBcJlbpPJzHa9T5b7dP7LFfso5qVDBPnN0nZL77xWcqdaU8GPFs4qXlJwoz+QyAdLhySUZfSdsTZ/7TbzcVF5yEzLMgfZ24Rq+TPqmaB43XwYDfX3nb4rCAYDlAgO+MJkqDdcVopf93YjCfzujkktsjooX8=
+	t=1712626201; cv=none; b=VUKQZIrfRXUV3Cgdv0QL8yCtvr4meUOTGEAbQtGp19IvJ3NFC/6Nqgbo/YOTkwoqW8OD6ludqp7kwkPPTq2jsFd5G6apSylZZ1/RebsBVl9aH/qxmxTUWCNnP0J4od+RH9Qww7f+YIeEpo5BTJyk418uE3iZK3jtOpZAb8dLAK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712626200; c=relaxed/simple;
-	bh=1z6d1tDDSFA4H/I8bjImtg61JQJRyJ40xuTg84O98aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OV0BzmeZEe73a3qo06ONXAQUuXJFiEvdq1RGWGhOJvJ3kj7+bbTF/Fg8xDdXrQ+MVF1Tl5sSxalrPH0SGbd55z6Gb57qFVUSimzMLvKGgvhSA3auPEwXhSh7GhAemakBZK8cqWWhR7wLDezdmvxvVJcvm5vLscg2pSgwxlUUOxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Br3j05FT; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Br3j05FT"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-29f93c4946cso3176413a91.1;
-        Mon, 08 Apr 2024 18:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712626198; x=1713230998; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xcH7mjUSf37c2TRYjSnNBiA7jaHiSTYFNcmHQ9LeGEc=;
-        b=Br3j05FTv4/gxLusypONvWVSm+IgYUzawnnESuU82PP/lOqoyAUCnnVKxv0uZnxH/9
-         5zRRVI9AhEhC2zpI4K/vBQIiv2UpL/Pb0cwAC54t/SbB96szBqMfV8v3vFvqxBPJARK7
-         y/oSMiNFoubvkbko4q4SaTkzRx2EHFmDmHq82MTkGeRj3+L9Gqz066eULeu6US+nYthj
-         jydt/D/StlBJwFDLws/jzdKmMX4rSuqnJT5xUm7xm5gqfS5Pceh8AZZ7P3K/Z+FiKn/Q
-         LDCIACswMf4OadKLdVCgJZED669RxFvjG4qbWr8e6yA5DO3+Qlzsd+8svnioN3n3Tc1a
-         Fofw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712626198; x=1713230998;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xcH7mjUSf37c2TRYjSnNBiA7jaHiSTYFNcmHQ9LeGEc=;
-        b=wLBA8w81Mso8pSIzt3j5JvvGzpZs70RPL+l6wMxxvm6vEXP70uBnt8z1p17Lz5r0TV
-         SjXs4bR2uTBsMMUp8vync6YYPtd3eRblfM9Pk6tciMRTp/BLGt7z78V4lOkpGtOD2JlS
-         6SDwfzZq5KirDS+/cOHKc4VNwH4qHlrCoT5dB1CMos1zKcWdff14swfpRMwI/wW2JQ/i
-         iiKsBu2YH5o6M4DTVXFxAkWJ1/2eEIkZ6B3VS2UWES5oZyUyw53jkWD4vDM6tHYpyxZW
-         1cvGFWJ3BZrq1jhbMLTjqeN8S4LNRHgDZk3RqNXmktUSIpG1ezBGssDQ0+9XT6iyNhGq
-         H6dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU43Tl3STFnjbHhuTtGn5ucKZ3o4LB1ZjXOsseClegSp1caJigw82AGU6y63lw68B2DRHr34cTdv6Tmtfgmj5LFMXTvb/OwWIAvrMj2P/GyEg8arRfWQh6THorJcSVbghQ269yq
-X-Gm-Message-State: AOJu0Yz9em1//l3odCtN5QOgcDil8ZXqZcakLA9sQJWBuivZb+oq1oT6
-	6Gb8glZmbqJ81sl/Puz0Z7O2sX5EiWSdc3d6wg0TCbIpPN2r8BMQvmy8XlLaCwk=
-X-Google-Smtp-Source: AGHT+IGZnwgUOz1BqN1c5yLkdQwmmVssLMzs57TdHPJEJD5dpvuXwzoiIyQ9tZ5nOTVfg6tfbJ6www==
-X-Received: by 2002:a17:90b:805:b0:2a4:7133:7e02 with SMTP id bk5-20020a17090b080500b002a471337e02mr8521041pjb.35.1712626198010;
-        Mon, 08 Apr 2024 18:29:58 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id on15-20020a17090b1d0f00b0029ffcf1df72sm8844622pjb.38.2024.04.08.18.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 18:29:57 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id D49FF18470A1E; Tue, 09 Apr 2024 08:29:53 +0700 (WIB)
-Date: Tue, 9 Apr 2024 08:29:53 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.8 000/273] 6.8.5-rc1 review
-Message-ID: <ZhSaEVEEh78RY8fz@archie.me>
-References: <20240408125309.280181634@linuxfoundation.org>
+	s=arc-20240116; t=1712626201; c=relaxed/simple;
+	bh=xmdnB+OlH189zldRri5hZkoYzs160LsEOPCqB3tJe40=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Wxpl97/t3cV4R27giiLtMM4I6kivbfNvVvCBnxzjsQxXnF+cXjfFZOpgj23KTyFak5f4n0hp0s143gjr/iBhcXZI4uLL6v5C3GQzw0DQMbq4qvv0739K9lJW5URaRAgQqUv6zGx7waQtd3dCTvguD7XraIgtj9jyXZq23ek5AGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VD7cZ4gqFzNnJb;
+	Tue,  9 Apr 2024 09:27:42 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4240618007D;
+	Tue,  9 Apr 2024 09:29:57 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Tue, 9 Apr
+ 2024 09:29:55 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
+	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
+	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
+	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>, <liwei391@huawei.com>,
+	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>,
+	<kristina.martsenko@arm.com>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
+	<robh@kernel.org>, <scott@os.amperecomputing.com>,
+	<songshuaishuai@tinylab.org>, <shijie@os.amperecomputing.com>,
+	<bhe@redhat.com>, <akpm@linux-foundation.org>, <thunder.leizhen@huawei.com>,
+	<horms@kernel.org>, <rmk+kernel@armlinux.org.uk>, <takakura@valinux.co.jp>,
+	<dianders@chromium.org>, <swboyd@chromium.org>, <frederic@kernel.org>,
+	<reijiw@google.com>, <akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+Subject: [PATCH 1/9] arm64/sysreg: Add definitions for immediate versions of MSR ALLINT
+Date: Tue, 9 Apr 2024 01:23:36 +0000
+Message-ID: <20240409012344.3194724-2-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240409012344.3194724-1-liaochang1@huawei.com>
+References: <20240409012344.3194724-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="a7kZAJtOWI2jj9SG"
-Content-Disposition: inline
-In-Reply-To: <20240408125309.280181634@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
+From: Mark Brown <broonie@kernel.org>
 
---a7kZAJtOWI2jj9SG
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Encodings are provided for ALLINT which allow setting of ALLINT.ALLINT
+using an immediate rather than requiring that a register be loaded with
+the value to write. Since these don't currently fit within the scheme we
+have for sysreg generation add manual encodings like we currently do for
+other similar registers such as SVCR.
 
-On Mon, Apr 08, 2024 at 02:54:35PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.8.5 release.
-> There are 273 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
+Since it is required that these immediate versions be encoded with xzr
+as the source register provide asm wrapper which ensure this is the
+case.
 
-Successfully compiled and installed the kernel on my computer (Acer
-Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ arch/arm64/include/asm/nmi.h    | 27 +++++++++++++++++++++++++++
+ arch/arm64/include/asm/sysreg.h |  2 ++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 arch/arm64/include/asm/nmi.h
 
-Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
+new file mode 100644
+index 000000000000..0c566c649485
+--- /dev/null
++++ b/arch/arm64/include/asm/nmi.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2022 ARM Ltd.
++ */
++#ifndef __ASM_NMI_H
++#define __ASM_NMI_H
++
++#ifndef __ASSEMBLER__
++
++#include <linux/cpumask.h>
++
++extern bool arm64_supports_nmi(void);
++
++#endif /* !__ASSEMBLER__ */
++
++static __always_inline void _allint_clear(void)
++{
++	asm volatile(__msr_s(SYS_ALLINT_CLR, "xzr"));
++}
++
++static __always_inline void _allint_set(void)
++{
++	asm volatile(__msr_s(SYS_ALLINT_SET, "xzr"));
++}
++
++#endif
++
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 9e8999592f3a..b105773c57ca 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -167,6 +167,8 @@
+  * System registers, organised loosely by encoding but grouped together
+  * where the architected name contains an index. e.g. ID_MMFR<n>_EL1.
+  */
++#define SYS_ALLINT_CLR			sys_reg(0, 1, 4, 0, 0)
++#define SYS_ALLINT_SET			sys_reg(0, 1, 4, 1, 0)
+ #define SYS_SVCR_SMSTOP_SM_EL0		sys_reg(0, 3, 4, 2, 3)
+ #define SYS_SVCR_SMSTART_SM_EL0		sys_reg(0, 3, 4, 3, 3)
+ #define SYS_SVCR_SMSTOP_SMZA_EL0	sys_reg(0, 3, 4, 6, 3)
+-- 
+2.34.1
 
---=20
-An old man doll... just what I always wanted! - Clara
-
---a7kZAJtOWI2jj9SG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZhSaDQAKCRD2uYlJVVFO
-o+2aAP9y814LJL5WCPu+pvg6Hy2dWEwsu28eEHvnd3UhmENragEA9wg9CmasZ13B
-RCiyK5QJI8v0LCa3Jb/97eksR6Z2AQM=
-=gjIS
------END PGP SIGNATURE-----
-
---a7kZAJtOWI2jj9SG--
