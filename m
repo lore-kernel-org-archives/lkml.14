@@ -1,62 +1,61 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB382156C6C;
-	Tue,  9 Apr 2024 18:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB481156999;
+	Tue,  9 Apr 2024 18:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686883; cv=none; b=uXsCMJT2mhEUMJUDNe9c3Avvg70fZn+/Ch8ar53gsee0Xsg/iEu5Ws608v5o9jOsMUFsnG4HWTJF3uEAFbH7e5OT0utT8R1QhNaFbwklTXZ2jPoMzLiYKjXNF00ocg/0pRcIOU09wKQJM5u4Zb3YdConxUwbO42X7DckTQtv8dQ=
+	t=1712686891; cv=none; b=RyXS6okDmyVmOef8OJvrF3HQuVHM6MjVlX/8oJj9nT8wiEnqByYZs1p74srvGBmiEjsWpaClksx8FOUtQRU4zKhQ50l/Km7dY2vLijkytjJXJcx8WKwmYXW9CiWfBK1kIRioAG3R5veaRcLNw29YSwk2L3qh9CQb8hnc0O4sUk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686883; c=relaxed/simple;
-	bh=JX51h+HIrCFua2r2hPph9d+H0e3+HlYUIJO9te+NlEg=;
+	s=arc-20240116; t=1712686891; c=relaxed/simple;
+	bh=EcZlkq4mhkJTecvlYLJiT9xew1ftS1oIMx4P6vr0rwc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FRk3YPkvDwMtkDP7mLxmZfofvvMS4TL9mx33U1T2AVKDPKCBmQB9ybu4J/ZQXDyU8O/HybZpmfG4PHv2wn+ftWkpyfoKNi2q4ulfsQR0O8OogzoRfkdCl8LI7YbLU6MaiEB2UwMADJi4qlqx1gdXR1WywC5Evcu/6h89LsZLhnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=o5S+a7w2; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	 MIME-Version:Content-Type; b=sDaTO5E695RZKEMLCt2Plawj3DtvgkLRKDVX4vDzyr6sm6uukVQrXEcvHcDZzumWryMMbaKq4AH0W/oTuegEgENsaZXM8X1FWkkjm0aq5M8c/+cq5GGI3Sh7RNTvBWMWwlZPZtaG6kpKD7mlOzyRBb6h1BJrHyOrfHaeCv2cICE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=t9nDgE42; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="o5S+a7w2"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 6EF54120004;
-	Tue,  9 Apr 2024 21:21:13 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 6EF54120004
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1712686873;
-	bh=v9cv6tUi5qOqN4L1MlS+9E7ZRP0SM3g/SePwjM1FnQ0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=o5S+a7w252TUya1XhwFlHDV4zGPXxrmlPCi5PmxU32HE+RdukWJHbANLIN/Pp43LU
-	 lKtQJ+hF7105IGVQRrPBa+cWKCc07MtO9DNPaHn1hejlhj83Fdp4mHgq4a4NWCA0+o
-	 VUIsjSNIpzu+3+MezcqrMPAvZk8kk3r4SEgf42yTl2EJE8wQFWvuKFwrrf2XkSr8GB
-	 bAkzwo1DgYI+4r5HxXVzcQhlgQ5dbHOnmfRl3GE7EHl1yB7m7hxSM/qiWtVbRLNG+W
-	 3vIGb5wzgV2VMWxPIcHP6Y87j5U0oWr2fIhsBQ+kEzPcFstDn6EK6W461A+mC12k2a
-	 FVHPmJ0Yybe+g==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  9 Apr 2024 21:21:13 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="t9nDgE42"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712686891; x=1744222891;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JxlOcBDU6r908oKknpBe0s7bQqLQWVDeva8VVC0aQbE=;
+  b=t9nDgE42rKpWI4WEOFm+GZ8TtFDmb0xJpIoo5/3WooqFXtRAAmq9y3bp
+   moMl4wkYqEXS05QvLc0V3jeFVS3v4CgKSB8y7AJp+6yYB4m1wWOSmh8gU
+   Wa8eImkQkSUw0YAQPauD9XfBiO3pAtxX0HCeMgfyzV61e4g+aBbXg0w5p
+   A=;
+X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
+   d="scan'208";a="388585344"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:13:29 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:4817]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.26.56:2525] with esmtp (Farcaster)
+ id d21595e7-51f4-4c2a-9b93-72cbdcceb447; Tue, 9 Apr 2024 18:13:26 +0000 (UTC)
+X-Farcaster-Flow-ID: d21595e7-51f4-4c2a-9b93-72cbdcceb447
+Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.79) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 9 Apr 2024 21:21:12 +0300
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>
-CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <oxffffaa@gmail.com>,
-	<kernel@sberdevices.ru>, Arseniy Krasnov <avkrasnov@salutedevices.com>
-Subject: [PATCH v3 1/2] dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
-Date: Tue, 9 Apr 2024 21:10:24 +0300
-Message-ID: <20240409181025.55504-2-avkrasnov@salutedevices.com>
-X-Mailer: git-send-email 2.35.0
-In-Reply-To: <20240409181025.55504-1-avkrasnov@salutedevices.com>
-References: <20240409181025.55504-1-avkrasnov@salutedevices.com>
+ 15.2.1258.28; Tue, 9 Apr 2024 18:13:26 +0000
+Received: from bcd074994f7f.amazon.com (10.95.97.144) by
+ EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 18:13:21 +0000
+From: Sudan Landge <sudanl@amazon.com>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
+	<xmarcalx@amazon.co.uk>
+Subject: [PATCH v4 3/5] virt: vmgenid: enable driver regardless of ACPI config
+Date: Tue, 9 Apr 2024 19:11:52 +0100
+Message-ID: <20240409181154.9962-4-sudanl@amazon.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240409181154.9962-1-sudanl@amazon.com>
+References: <20240409181154.9962-1-sudanl@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,67 +64,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184641 [Apr 09 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/09 14:21:00 #24719986
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-ClientProxiedBy: EX19D041UWB004.ant.amazon.com (10.13.139.143) To
+ EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
-Boot ROM code on Meson requires that some pages on NAND must be written
-in special mode: "short" ECC mode where each block is 384 bytes and
-scrambling mode is on. Such pages located with the specified interval
-within specified offset. Both interval and offset are located in the
-device tree and used by driver if 'nand-is-boot-medium' is set for
-NAND chip.
+Since with next commits vmgenid driver will support both ACPI and
+devicetree, and since either one of CONFIG_ACPI or CONFIG_OF will
+always be enabled, there is no need for the driver compilation to
+depend on ACPI/OF. So, remove ACPI dependency for compiling the driver.
 
-Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Signed-off-by: Sudan Landge <sudanl@amazon.com>
 ---
- .../bindings/mtd/amlogic,meson-nand.yaml           | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/virt/Kconfig   |  1 -
+ drivers/virt/vmgenid.c | 16 +++++++++++-----
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-index 57b6957c8415..b86a1953056b 100644
---- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-@@ -64,11 +64,25 @@ patternProperties:
-         items:
-           maximum: 0
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index 40129b6f0eca..d8c848cf09a6 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -16,7 +16,6 @@ if VIRT_DRIVERS
+ config VMGENID
+ 	tristate "Virtual Machine Generation ID driver"
+ 	default y
+-	depends on ACPI
+ 	help
+ 	  Say Y here to use the hypervisor-provided Virtual Machine Generation ID
+ 	  to reseed the RNG when the VM is cloned. This is highly recommended if
+diff --git a/drivers/virt/vmgenid.c b/drivers/virt/vmgenid.c
+index c028e2064fdd..3d93e3fb94c4 100644
+--- a/drivers/virt/vmgenid.c
++++ b/drivers/virt/vmgenid.c
+@@ -36,13 +36,15 @@ static void vmgenid_notify(struct device *device)
+ 	kobject_uevent_env(&device->kobj, KOBJ_CHANGE, envp);
+ }
  
-+      amlogic,boot-page-last:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The NFC driver needs this information to select ECC
-+          algorithms supported by the boot ROM.
-+
-+      amlogic,boot-page-step:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The NFC driver needs this information to select ECC
-+          algorithms supported by the boot ROM (in pages).
-+
-     unevaluatedProperties: false
+-static void vmgenid_acpi_handler(acpi_handle __always_unused handle,
+-				 u32 __always_unused event, void *dev)
++static void __maybe_unused
++vmgenid_acpi_handler(acpi_handle __always_unused handle,
++		     u32 __always_unused event, void *dev)
+ {
+ 	vmgenid_notify(dev);
+ }
  
-     dependencies:
-       nand-ecc-strength: [nand-ecc-step-size]
-       nand-ecc-step-size: [nand-ecc-strength]
-+      amlogic,boot-page-last: [nand-is-boot-medium, "amlogic,boot-page-step"]
-+      amlogic,boot-page-step: [nand-is-boot-medium, "amlogic,boot-page-last"]
+-static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
++static int __maybe_unused
++setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
+ {
+ 	if (IS_ERR(next_id))
+ 		return PTR_ERR(next_id);
+@@ -53,9 +55,10 @@ static int setup_vmgenid_state(struct vmgenid_state *state, u8 *next_id)
+ 	return 0;
+ }
  
+-static int vmgenid_add_acpi(struct device *dev,
+-			    struct vmgenid_state *state)
++static int vmgenid_add_acpi(struct device __maybe_unused *dev,
++			    struct vmgenid_state __maybe_unused *state)
+ {
++#if IS_ENABLED(CONFIG_ACPI)
+ 	struct acpi_device *device = ACPI_COMPANION(dev);
+ 	struct acpi_buffer parsed = { ACPI_ALLOCATE_BUFFER };
+ 	union acpi_object *obj;
+@@ -98,6 +101,9 @@ static int vmgenid_add_acpi(struct device *dev,
+ out:
+ 	ACPI_FREE(parsed.pointer);
+ 	return ret;
++#else
++	return -EINVAL;
++#endif
+ }
  
- required:
+ static int vmgenid_add(struct platform_device *pdev)
 -- 
-2.35.0
+2.34.1
 
