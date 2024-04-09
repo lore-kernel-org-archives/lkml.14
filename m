@@ -1,79 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C261B80043;
-	Tue,  9 Apr 2024 12:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B212A86651;
+	Tue,  9 Apr 2024 12:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664704; cv=none; b=OUGrZxN9mPOWZuKPkAgD5KHmWZslHJl2op+EDJNJQlI13YJkwPid6tPnAd7WRAR4DSGLqtMZwoTOYeGanrudvB8TfI64Y7nCSHeTVs2vEuBCULLoBWEEbyBRDHyUdqOtALQ6lkDz56KdBiE4UEYz2ypv/Sc58ou7S0zC4zqlOMY=
+	t=1712664720; cv=none; b=pIjCFFwxuHt8XFqonv2mnV6TuPXgTFmOo6fmh2y9l4g5adQGdm+2ptERCCzchHGjDBRKXi0vOKFl/aR7xC1nLnkb20PgJs8kin+zWqnuQNBbR0UtYdvf3nUB/qDVRXcys9OQvpJ0quEYNc0O0El5WJzpa4hEowvRBgSwMdBJEco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664704; c=relaxed/simple;
-	bh=BVOgIna6UH5Fe8n7tYM9YU/VXuuxjddECrXcSWyZ7o8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oJc4jtjX2nh4bDY+5UilMcVkRBgD+aqmLgXPpP2Zh9BbWzjUXlN0XdZXtW23HWbYQ8mXEAm1XCn1kErcQO4wxKhza4YOXM/hl5izjxRwx6l5sv8csj457FXqlVCqbNa5RygWFGUzvQyaRSZHXe5jVIbjp2s/TnHVPcwP9G8xvME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKb8gmM1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712664720; c=relaxed/simple;
+	bh=BVrLcFdYPUDEWEn5KDV423hxP0oT8V4yLUiWZ5gAH/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fEV8HXpe5jZ6E+w1gPSZ/WVzsEjHmIwWTRoCGuy82gk7gCMmkDxys90niedzSg43wIx4QqGZbzBXsrAP2hvqvmOtYebXxpK8+0LWh6CiTukfHEZf6UOoIO5nw0hi1TOM7uPokkOKV8K7ypxmyDB+K5AOWeRbKUvGqTNSiP/nM0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ooLazIGZ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKb8gmM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98ECC433C7;
-	Tue,  9 Apr 2024 12:11:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712664704;
-	bh=BVOgIna6UH5Fe8n7tYM9YU/VXuuxjddECrXcSWyZ7o8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lKb8gmM1SkcPviIvDzzDRveN1RMXmKptiNLqx9jwXfonJ3yB6Ka1G6UANgBrEWbXO
-	 1UdU7vx3HTF5/t3c1vEsJMKeGLGTWRpY8PFtBjDBZ5AhVjoyW82ta8HkFay3RrTOKV
-	 VQ2e1SUdWIiJFDYOH61EEpXcZGhb3mjo5zxucB33i2JkBvCqllTCs9yP8Lc8hhwapC
-	 Yg2OYl+NL4eI9QY2XE9aGgO/BGQupNpJqgM/t5wjnCNXo7CRDfV5yvNEiM5meRh8iD
-	 DW+71Fuy2cgloaC/YgW7j99vfMMQaY7qLx2zUhwSDmzEZgfTEEHhzRokvlWOV2azNT
-	 Fdn9WMTLyH8rQ==
-Date: Tue, 9 Apr 2024 08:11:41 -0400
-From: Eric Biggers <ebiggers@kernel.org>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: linux-crypto@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Chang S . Bae" <chang.seok.bae@intel.com>,
-	Stefan Kanthak <stefan.kanthak@nexgo.de>
-Subject: Re: [PATCH] crypto: x86/aes-xts - access round keys using
- single-byte offsets
-Message-ID: <20240409121141.GA717@quark.localdomain>
-References: <20240409000154.29799-1-ebiggers@kernel.org>
- <CAMj1kXEhrPo18dwAuzpn7R7ZGpOxr2pwuoAfGRtWwzgSF+mTsA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ooLazIGZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712664716;
+	bh=BVrLcFdYPUDEWEn5KDV423hxP0oT8V4yLUiWZ5gAH/s=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ooLazIGZqE3OaFF6d+Ilz7NVeVx8eJIxOh2mbgysLKU5kS1Xy1WZHP+Upx+0xJlc+
+	 m6jB+h/LEox8y7O2NEqE2sWa1uZEHjur17z/65/ePxGRvPgjqkqRjTaU9aIFIY/sC/
+	 o1XEc0KavHkF+mfQfskvEcsNoUQe0RwCwA1lWOgWNpC8cjvjbJsT6INFZhfJtYI7u6
+	 kbU558Fo2sTzdjwQIfMLTsvo0eFUMbpNPW15H6mzzj0Q5yus3XsIPzWGLhoiJuTE33
+	 F7SWQd1CxPabfYNAqhuynrP4N6vXO9j/gDePIeJkKcI2oKNv4Je0GTZwjpa93U29xi
+	 sLS1RPRloeXuQ==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C820137820F5;
+	Tue,  9 Apr 2024 12:11:55 +0000 (UTC)
+Message-ID: <66237505-d84f-483e-b088-b8fd7c34ab9f@collabora.com>
+Date: Tue, 9 Apr 2024 14:11:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEhrPo18dwAuzpn7R7ZGpOxr2pwuoAfGRtWwzgSF+mTsA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] ARM: dts: qcom: msm8974: Use proper compatible for
+ APCS syscon
+To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Jassi Brar <jassisinghbrar@gmail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Jacky Huang
+ <ychuang3@nuvoton.com>, Shan-Chun Hung <schung@nuvoton.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240408-msm8974-apcs-v1-0-90cb7368836e@z3ntu.xyz>
+ <20240408-msm8974-apcs-v1-2-90cb7368836e@z3ntu.xyz>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240408-msm8974-apcs-v1-2-90cb7368836e@z3ntu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-On Tue, Apr 09, 2024 at 11:12:11AM +0200, Ard Biesheuvel wrote:
-> On Tue, 9 Apr 2024 at 02:02, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > Access the AES round keys using offsets -7*16 through 7*16, instead of
-> > 0*16 through 14*16.  This allows VEX-encoded instructions to address all
-> > round keys using 1-byte offsets, whereas before some needed 4-byte
-> > offsets.  This decreases the code size of aes-xts-avx-x86_64.o by 4.2%.
-> >
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> 
-> Nice optimization!
-> 
-> Do you think we might be able to macrofy this a bit so we can use zero
-> based indexing for the round keys, and hide the arithmetic?
-> 
-> 
+SWwgMDgvMDQvMjQgMjE6MzIsIEx1Y2EgV2Vpc3MgaGEgc2NyaXR0bzoNCj4gVXNlIHRoZSBh
+cGNzLWtwc3MtZ2xvYmFsIGNvbXBhdGlibGUgZm9yIHRoZSBBUENTIGdsb2JhbCBtYWlsYm94
+IGJsb2NrDQo+IGZvdW5kIG9uIHRoaXMgU29DLg0KPiANCj4gVGhpcyBhbHNvIHJlc29sdmVz
+IGEgZHQtYmluZGluZyBjaGVja2VyIHdhcm5pbmc6DQo+IA0KPiAgICBhcmNoL2FybS9ib290
+L2R0cy9xY29tL3Fjb20tbXNtODk3NHByby1mYWlycGhvbmUtZnAyLmR0Yjogc3lzY29uQGY5
+MDExMDAwOiBjb21wYXRpYmxlOiAnYW55T2YnIGNvbmRpdGlvbmFsIGZhaWxlZCwgb25lIG11
+c3QgYmUgZml4ZWQ6DQo+ICAgICAgICAgICAgWydzeXNjb24nXSBpcyB0b28gc2hvcnQNCj4g
+ICAgICAgICAgICAnc3lzY29uJyBpcyBub3Qgb25lIG9mIFsnYWxsd2lubmVyLHN1bjhpLWE4
+M3Qtc3lzdGVtLWNvbnRyb2xsZXInLCAnYWxsd2lubmVyLHN1bjhpLWgzLXN5c3RlbS1jb250
+cm9sbGVyJywgJ2FsbHdpbm5lcixzdW44aS12M3Mtc3lzdGVtLWNvbnRyb2xsZXInLCAnYWxs
+d2lubmVyLHN1bjUwaS1hNjQtc3lzdGVtLWNvbnRyb2xsZXInLCAnYW1kLHBlbnNhbmRvLWVs
+YmEtc3lzY29uJywgJ2JyY20sY3J1LWNsa3NldCcsICdmcmVlY29tLGZzZy1jczItc3lzdGVt
+LWNvbnRyb2xsZXInLCAnZnNsLGlteDkzLWFvbm1peC1ucy1zeXNjZmcnLCAnZnNsLGlteDkz
+LXdha2V1cG1peC1zeXNjZmcnLCAnaGlzaWxpY29uLGRzYS1zdWJjdHJsJywgJ2hpc2lsaWNv
+bixoaTYyMjAtc3JhbWN0cmwnLCAnaGlzaWxpY29uLHBjaWUtc2FzLXN1YmN0cmwnLCAnaGlz
+aWxpY29uLHBlcmktc3ViY3RybCcsICdocGUsZ3hwLXN5c3JlZycsICdpbnRlbCxsZ20tc3lz
+Y29uJywgJ2xvb25nc29uLGxzMWItc3lzY29uJywgJ2xvb25nc29uLGxzMWMtc3lzY29uJywg
+J21hcnZlbGwsYXJtYWRhLTM3MDAtdXNiMi1ob3N0LW1pc2MnLCAnbWVkaWF0ZWssbXQ4MTM1
+LXBjdGwtYS1zeXNjZmcnLCAnbWVkaWF0ZWssbXQ4MTM1LXBjdGwtYi1zeXNjZmcnLCAnbWVk
+aWF0ZWssbXQ4MzY1LXN5c2NmZycsICdtaWNyb2NoaXAsbGFuOTY2eC1jcHUtc3lzY29uJywg
+J21pY3JvY2hpcCxzcGFyeDUtY3B1LXN5c2NvbicsICdtc3Rhcixtc2MzMTMtcG1zbGVlcCcs
+ICdudXZvdG9uLG1hMzVkMS1zeXMnLCAnbnV2b3Rvbix3cGNtNDUwLXNobScsICdyb2NrY2hp
+cCxweDMwLXFvcycsICdyb2NrY2hpcCxyazMwMzYtcW9zJywgJ3JvY2tjaGlwLHJrMzA2Ni1x
+b3MnLCAncm9ja2NoaXAscmszMTI4LXFvcycsICdyb2NrY2hpcCxyazMyMjgtcW9zJywgJ3Jv
+Y2tjaGlwLHJrMzI4OC1xb3MnLCAncm9ja2NoaXAscmszMzY4LXFvcycsICdyb2NrY2hpcCxy
+azMzOTktcW9zJywgJ3JvY2tjaGlwLHJrMzU2DQo+ICAgOC1xb3MnLCAncm9ja2NoaXAscmsz
+NTg4LXFvcycsICdyb2NrY2hpcCxydjExMjYtcW9zJywgJ3N0YXJmaXZlLGpoNzEwMC1zeXNt
+YWluJywgJ3RpLGFtNjItdXNiLXBoeS1jdHJsJywgJ3RpLGFtNjU0LWRzcy1vbGRpLWlvLWN0
+cmwnLCAndGksYW02NTQtc2VyZGVzLWN0cmwnLCAndGksajc4NHM0LXBjaWUtY3RybCddDQo+
+ICAgICAgICAgICAgZnJvbSBzY2hlbWEgJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2No
+ZW1hcy9tZmQvc3lzY29uLnlhbWwjDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWNhIFdlaXNz
+IDxsdWNhQHozbnR1Lnh5ej4NCg0KUmV2aWV3ZWQtYnk6IEFuZ2Vsb0dpb2FjY2hpbm8gRGVs
+IFJlZ25vIDxhbmdlbG9naW9hY2NoaW5vLmRlbHJlZ25vQGNvbGxhYm9yYS5jb20+DQoNCg0K
 
-There are two alternatives I considered: defining variables KEYOFF0 through
-KEYOFF14 and writing the offsets as KEYOFF\i(KEY), or defining one variable
-KEYOFF and writing the offsets as \i*16-KEYOFF(KEY).  I think I slightly prefer
-the current patch where it's less abstracted out, though.  It makes it clear the
-offsets really are single-byte, and also index 7 is the exact mid-point so going
-from -7 to 7 still feels fairly natural.  If we wanted to do something more
-complex like use different offsets for AVX vs. AVX512, then we'd need the
-abstraction to handle that, but it doesn't seem useful to do that.
-
-- Eric
