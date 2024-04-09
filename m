@@ -1,154 +1,114 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3136A136994;
-	Tue,  9 Apr 2024 15:54:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6995B137C21
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712678077; cv=none; b=TxK12CcYXU9yXT1PNitYNWwBDGDXcXWhCIrMT6FaGDQWB3I7iOlgHBDpgcr9E/c0OqcjWSmUcq0Af4aS1+jTPKAeMX7/YFauSLDTzHAUHe4eiXq7gDwiEQCfI1w6oV2iMIBZ13z+tglXjdMQMc7uStGazjIVMQN29lgaRaeMf1o=
+	t=1712678095; cv=none; b=FTL3rb33cDyB0462LBAk2o65N7ZQljQ+5wf/XF7mr3T7hU7BE5uwf0Qvo/8a0KfGThURoqy+I0bOBN4Ejkv5flwifxBSA5lou72QixhsCsdNWJNipXPaprJKMH+B8CTppdoo52l3kUor4KTCrLAgiYG/IpCUJENzLErP6xvvllc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712678077; c=relaxed/simple;
-	bh=deh9a6oj7S2gS2ULfJVmjBcpLmZfqHAkc6kcjO7qmUo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=lYV5EW6ZjtjS15CL11VZHWdrdZuhbSB6vJIswqcSgye4UObAOFYX8pOlp/PTLjFjErUlUFM/eaXeCktsy3AT6aAEHgM2biyybsAtH+jF7IRobtj0GkBQqfnGxesRpRgz2GlrZl/wttJYgh1u35rYqavjWjo/Ic42nJBzm/6NNlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=koBP5gFl; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712678095; c=relaxed/simple;
+	bh=WubcsGUotx8PYf1zvq25+VVmzP510xR5OJGgVNuPdjg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WE8CFitPcrD5I9VxfXzaEUn4sVuZG2ypKf7u7LVPUxTPqLhdFgYxnFfb1h0+DKVaRjJP0dGaToEYjR8j0Dsd4Ngh8DCMMXNx1WWfsDH1svYND2/2ZzkZCv0UYf9ToJoptQUgIlDN2JS/1g8TTAh+ZaroITxdyR03Z18FupxHqqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=MCiE+5M4; arc=none smtp.client-ip=148.163.143.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="koBP5gFl"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 439FR6dd010322;
-	Tue, 9 Apr 2024 15:54:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=hltvEKuUiuAjdE9Nr1WEt7/LBEqngI0qozmlnXjnpxQ=;
- b=koBP5gFlerfgpNI8OIJu7AleYBawOadeGKFYBwnGA8Pk4vhUcPSTi1kbZQwhy6oGdE4t
- BXOZKClyN1Nni+3DzSdl+etqj0+SaDETd8LGqT8rx9/MK/qB5Hq2gI8nDyhlZx+DhwXq
- LwZWoL/gVB69eC8xcTsMEUwl0mIl28tDM/y/z6Ql7R84suftLYFhHbdoqAJduQOh3arO
- rXFoxTYOZM9tl5/wT4s4xwbXoy0nIXqLnI88eGASrrvNF+aS+/aO99AdLHVyKZi43zqv
- xU2STpY58crxyuJOhob0SqDqUq/t0CBnBTgbjkugVbymPopoVw1AlLIDNwtjI6YeZYsj RA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xd7rq05gc-1
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="MCiE+5M4"
+Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 439EJY3p017114;
+	Tue, 9 Apr 2024 15:54:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pps0720;
+ bh=EQ+H/dBiEKu8IKtLySCwmwKq940Mc7GunA0XrmxuPWg=;
+ b=MCiE+5M4e8k0Wk6I0ScePrlzmAVLDpWPYb2+FE8dXySULyyuXMaA/7z3fBM6fYzDGesC
+ N8pWREWYa86CzdtzwjX49bD1tYzrC2HBoAgZBupn/gmSA1YXG0FDLbdi94Tp/Dgqdp2i
+ EUoVnEBkroJgUEnBFOIANy94PU5/jLzNYFXu2QP7EaxAzLWThMdQsIStLZlmdmnUkPNH
+ aJ/5kdvPCxauLPX0Di4AQEwqcOeQCXOIW3tRSJsvMi9377TUvO5queNWDB8O3KMCu9cK
+ LAh2cSOe5/fRFEkIKWkkq7V834KD1GPB7+E9NuJghGRPHiP3d3jU+p/zQPceGXL2UZYT ZA== 
+Received: from p1lg14881.it.hpe.com ([16.230.97.202])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3xd7bc0tbg-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 15:54:26 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 439FsNm6022291;
-	Tue, 9 Apr 2024 15:54:23 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xd7rq05g8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 15:54:23 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 439Flq8D021485;
-	Tue, 9 Apr 2024 15:54:22 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbjxkpvrd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 15:54:22 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 439FsHGU29491696
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 9 Apr 2024 15:54:19 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 507B82004B;
-	Tue,  9 Apr 2024 15:54:17 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 232FB20040;
-	Tue,  9 Apr 2024 15:54:17 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  9 Apr 2024 15:54:17 +0000 (GMT)
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: akpm@linux-foundation.org, linux-mm@kvack.org
-Cc: hughd@google.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, iii@linux.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-Subject: [PATCH] mm/shmem: Inline shmem_is_huge() for disabled transparent hugepages
-Date: Tue,  9 Apr 2024 17:54:07 +0200
-Message-Id: <20240409155407.2322714-1-sumanthk@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	Tue, 09 Apr 2024 15:54:29 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14881.it.hpe.com (Postfix) with ESMTPS id C3F7E805E9B;
+	Tue,  9 Apr 2024 15:54:27 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 78703809A22;
+	Tue,  9 Apr 2024 15:54:26 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
+	id F0058302F4723; Tue,  9 Apr 2024 10:54:25 -0500 (CDT)
+From: Kyle Meyer <kyle.meyer@hpe.com>
+To: linux-kernel@vger.kernel.org, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com
+Cc: russ.anderson@hpe.com, dimitri.sivanich@hpe.com, steve.wahl@hpe.com,
+        Kyle Meyer <kyle.meyer@hpe.com>
+Subject: [PATCH 1/2 RESEND] cpumask: Add for_each_cpu_from()
+Date: Tue,  9 Apr 2024 10:52:49 -0500
+Message-Id: <20240409155250.3660517-2-kyle.meyer@hpe.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20240409155250.3660517-1-kyle.meyer@hpe.com>
+References: <20240409155250.3660517-1-kyle.meyer@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yh2qOqAwEPz1FAUnTgCuXIpzv-cWRku-
-X-Proofpoint-ORIG-GUID: O04OGiBclUlW1kPL5W7uXFQepVAMoGO2
+X-Proofpoint-GUID: 7_QlsFujO7Z8xsNJtySWOVqWyt6X9OR8
+X-Proofpoint-ORIG-GUID: 7_QlsFujO7Z8xsNJtySWOVqWyt6X9OR8
+X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-09_11,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 mlxlogscore=569
- suspectscore=0 priorityscore=1501 clxscore=1011 phishscore=0 adultscore=0
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2404010000 definitions=main-2404090104
 
-In order to  minimize code size (CONFIG_CC_OPTIMIZE_FOR_SIZE=y),
-compiler might choose to make a regular function call (out-of-line) for
-shmem_is_huge() instead of inlining it. When transparent hugepages are
-disabled (CONFIG_TRANSPARENT_HUGEPAGE=n), it can cause compilation
-error.
+Add for_each_cpu_from() as a generic cpumask macro.
 
-mm/shmem.c: In function ‘shmem_getattr’:
-./include/linux/huge_mm.h:383:27: note: in expansion of macro ‘BUILD_BUG’
-  383 | #define HPAGE_PMD_SIZE ({ BUILD_BUG(); 0; })
-      |                           ^~~~~~~~~
-mm/shmem.c:1148:33: note: in expansion of macro ‘HPAGE_PMD_SIZE’
- 1148 |                 stat->blksize = HPAGE_PMD_SIZE;
+for_each_cpu_from() is the same as for_each_cpu(), except it starts at
+@cpu instead of zero.
 
-To prevent the possible error, always inline shmem_is_huge() when
-transparent hugepages are disabled.
-
-Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Acked-by: Yury Norov <yury.norov@gmail.com>
 ---
- include/linux/shmem_fs.h | 9 +++++++++
- mm/shmem.c               | 6 ------
- 2 files changed, 9 insertions(+), 6 deletions(-)
+ include/linux/cpumask.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-index a4c15db2f5e5..3fb18f7eb73e 100644
---- a/include/linux/shmem_fs.h
-+++ b/include/linux/shmem_fs.h
-@@ -110,8 +110,17 @@ extern struct page *shmem_read_mapping_page_gfp(struct address_space *mapping,
- extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
- int shmem_unuse(unsigned int type);
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 1c29947db848..655211db38ff 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -368,6 +368,16 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
+ #define for_each_cpu_or(cpu, mask1, mask2)				\
+ 	for_each_or_bit(cpu, cpumask_bits(mask1), cpumask_bits(mask2), small_cpumask_bits)
  
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- extern bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
- 			  struct mm_struct *mm, unsigned long vm_flags);
-+#else
-+static __always_inline bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
-+					  struct mm_struct *mm, unsigned long vm_flags)
-+{
-+	return false;
-+}
-+#endif
++/**
++ * for_each_cpu_from - iterate over every cpu present in @mask, starting at @cpu
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask: the cpumask pointer
++ *
++ * After the loop, cpu is >= nr_cpu_ids.
++ */
++#define for_each_cpu_from(cpu, mask)				\
++	for_each_set_bit_from(cpu, cpumask_bits(mask), small_cpumask_bits)
 +
- #ifdef CONFIG_SHMEM
- extern unsigned long shmem_swap_usage(struct vm_area_struct *vma);
- #else
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 0aad0d9a621b..94ab99b6b574 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -748,12 +748,6 @@ static long shmem_unused_huge_count(struct super_block *sb,
- 
- #define shmem_huge SHMEM_HUGE_DENY
- 
--bool shmem_is_huge(struct inode *inode, pgoff_t index, bool shmem_huge_force,
--		   struct mm_struct *mm, unsigned long vm_flags)
--{
--	return false;
--}
--
- static unsigned long shmem_unused_huge_shrink(struct shmem_sb_info *sbinfo,
- 		struct shrink_control *sc, unsigned long nr_to_split)
- {
+ /**
+  * cpumask_any_but - return a "random" in a cpumask, but not this one.
+  * @mask: the cpumask to search
 -- 
-2.40.1
+2.44.0
 
