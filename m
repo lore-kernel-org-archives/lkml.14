@@ -1,116 +1,106 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DFC12E1D5;
-	Tue,  9 Apr 2024 12:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C4E85636;
+	Tue,  9 Apr 2024 12:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712664730; cv=none; b=t6/RzBczYBqZJ8hznpBk7xAQgNGJQ8wotiDehabC+kM+vWmMP/efDmhet/3bkOXU7CQgv5GM2nPMpLsxRfJcYuBjyiXvCLCRJzEnbzkzxMGRVG0dr9rewl1Dh68rSwUQqw/lhkg2zXSd3ka4ddArW9Y2x6gDO3KiQl9oZj4vmM4=
+	t=1712664817; cv=none; b=ehpYBHXF9YxBFuGtyD644TJ3bKiHz7GCNMNKjriiK6DP7vjyoN2BO2mICh14hEnfKtjZup3X7/VIhl6eZi8jTCB96XP6DcWzzpkp0EqiaA+SLlB8PJKfilc7lQFd/lREvuQ4EMBFUKXbOFEIrIdTjBtBD/gf+BoAIl/vTk0nfkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712664730; c=relaxed/simple;
-	bh=bhAcDsX84r6euMWAqs9kSNF7o9zm3Y8Ymy+vrq4eEHQ=;
+	s=arc-20240116; t=1712664817; c=relaxed/simple;
+	bh=Bn2d67M9B+2xeCfZnams3peFE9ObQAOACMbR2Qme3us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qj8BpNnvZC9d2rKWlNvezf5nsaBWbpE6mChTr+623MDzuFWTsdRSwgBUx/ol1bASzIBp01sOUdIailkzoRLfW5jbuKGbdRJjlsejNbGWPAein9269n6XdTP/JOGr5ELce2usGJ21Fd1fHIAq90EfBldeBEhO5Wrx7xnQ+crOAMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=my38CGIS; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTF8QYQzIzYePE9mNn4bzv6fDrFFYU3dM3a+tOVAcYjqBH8bnpGcLhPXGVXOpKL7ZZcAoGcP014n76JWasxhEDoumDpai0uv4zpHbsWBpfHgwQ9QlTwII5rvj8SeTKRCx68LmWfIabDGeBaomRgDItSzImKJckKou0sGzzbla2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KfWIgrm9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="my38CGIS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 91EBBE0004;
-	Tue,  9 Apr 2024 12:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712664719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZfWm8vYO3mDEuNQxKWMBm2paN+K8NdDcQizKVDcIoC4=;
-	b=my38CGISljwiJ5IwyCJK8F66IO6v+ZQoKG8dNf48uMYkp6aWgPzFutmbt0GJP2xSYK/Rh3
-	JoJ2t/QZruB2XuoNFZYqXUDc6qtPUp4rIvI1DzmCi2bZikWmYcXYKkgwd3f2UN3nO7xxIr
-	Ma/RleoaEAPuSsj5A4rI8Y+gWy3Sns0quh7Ybo8dgjGo9Cxt9DRPHs7Exum5rnesjLwAYR
-	kmnZD0ZMLoiE5GM95Atw5sZLGKYDX6xVVWai8iv/ggPqDuohI90RnD7DwDxJTJju27cmHm
-	m88JatRVGUgGG27aqS4R/sNXVBrzXc6j2xkGm1yse3fhIeDkcR9RLbvy/TcF5Q==
-Date: Tue, 9 Apr 2024 14:11:53 +0200
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KfWIgrm9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873BBC433C7;
+	Tue,  9 Apr 2024 12:13:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712664817;
+	bh=Bn2d67M9B+2xeCfZnams3peFE9ObQAOACMbR2Qme3us=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KfWIgrm9GkrO20P2GPcz8gLnutCwdqiOD7KhP/75f6ZXZdPdV3csBdMv5QQ7gEtUV
+	 8zd1sPalZHLyxqZJodRfkqkcm6HTbONvxVoEW8ni0vbwL3tH5WNS5fFY+VJDEbIDzm
+	 gnZMIqo/3gzCVaj4gHQ2NPKdhNGEQuysBcQpkntrrzK/e9VpxZbmI8KjDNrfAFz6Qy
+	 NEw+3L+dZ7qgo/nEu7t3eV9+5jSUV0lScgww1+XT4VCl8T1zaxP8MYaR3hpmg3IwV0
+	 nni2pLn7wFziLrMyC4I/NnJpLiOn2lPWT/XisRV3mjfYqT2wFYQuIpmxaW78lflTM5
+	 g8PvhYG6lZ5Yw==
+Date: Tue, 9 Apr 2024 13:13:32 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: michael.opdenacker@bootlin.com, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Vladimir Zapolskiy <vz@mleia.com>, Joel Stanley <joel@jms.id.au>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 3/9] dt-bindings: rtc: lpc32xx-rtc: move to trivial-rtc
-Message-ID: <20240409121153e2941468@mail.local>
-References: <20240408-rtc_dtschema-v1-0-c447542fc362@gmail.com>
- <20240408-rtc_dtschema-v1-3-c447542fc362@gmail.com>
- <dd5e9837-0dcf-4b0e-8d11-f8bed868cdf2@linaro.org>
- <6dc808bf-682f-4e91-aac7-7ce6f05a0ab4@gmail.com>
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: dts: sophgo: add initial Milk-V Duo S board
+ device tree
+Message-ID: <20240409-prevent-deepness-2d22bf009b16@spud>
+References: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
+ <IA1PR20MB49532A8D4294ADCE0C33A654BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9NJ+1qh0mf0Ujp8a"
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB49532A8D4294ADCE0C33A654BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
+
+
+--9NJ+1qh0mf0Ujp8a
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6dc808bf-682f-4e91-aac7-7ce6f05a0ab4@gmail.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+Content-Transfer-Encoding: quoted-printable
 
-On 09/04/2024 10:52:54+0200, Javier Carrasco wrote:
-> On 4/9/24 09:34, Krzysztof Kozlowski wrote:
-> > On 08/04/2024 17:53, Javier Carrasco wrote:
-> >> This RTC requires a compatible, a reg and a single interrupt,
-> >> which makes it suitable for a direct conversion into trivial-rtc.
-> >>
-> >> Signed-off-by: Javier Carrasco <javier.carrasco.cruz@gmail.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/rtc/lpc32xx-rtc.txt  | 15 ---------------
-> >>  Documentation/devicetree/bindings/rtc/trivial-rtc.yaml |  2 ++
-> >>  2 files changed, 2 insertions(+), 15 deletions(-)
-> > 
-> > This one no... and if you tested DTS you would see errors, although you
-> > need to test specific lpc config, not multi_v7.
-> > 
-> > It does not look like you tested the DTS against bindings. Please run
-> > `make dtbs_check W=1` (see
-> > Documentation/devicetree/bindings/writing-schema.rst or
-> > https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
-> > for instructions).
-> > 
-> > Anyway, you *must* check all DTS before moving anything to trivial.
-> > 
-> > Does it mean all other bindings were not checked against DTS at all?
-> > 
-> > Best regards,
-> > Krzysztof
-> > 
-> Hi,
-> 
-> I did check the conversion against nxp/lpc/lpc3250-phy3250.dts, which
-> throws a message about the 'clocks' property.
-> 
-> That property is not documented in the original binding, and even though
-> it could be missing, I could not find any function to get a clock (i.e.
-> any form of clk_get()) in rtc-lpc32xx.c, which is the only file where
-> the compatible can be found.
-> 
-> Is therefore the property not useless in the dts? My apologies if I am
-> missing something here.
+On Tue, Apr 09, 2024 at 03:17:35PM +0800, Inochi Amaoto wrote:
+> On Tue, Apr 09, 2024 at 08:45:04AM +0200, michael.opdenacker@bootlin.com =
+wrote:
+> > From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> >=20
+> > This adds initial support for the Milk-V Duo S board
+> > (https://milkv.io/duo-s), enabling the serial port and
+> > read-only SD card support, allowing to boot Linux to the
+> > command line.
+> >=20
+>=20
+> Hi Michael,
+>=20
+> I think your patch losts the board binding and have wrong compatiable.=20
+> Also, the SD can have rw support with proper property. See link [1]=20
+> (need 'disable-wp').
 
-The bindings doesn't document the driver but the hardware. In this case,
-the only input clock seems to be a 32kHz crystal.
+[1] doesn't go anywhere useful.
 
-> 
-> Thanks and best regards,
-> Javier Carrasco
+> I suggest you resubmitting this patch after applying clk patchs.=20
+> This could reduce some unnecessary change. For now, you can just=20
+> use the dts for huashan-pi (with changed memory size).
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Why would using patched huashan-pi dts be more suitable than carrying
+a local patch for duo-s devicetree? What am I missing?
+
+Cheers,
+Conor.
+
+>=20
+> [1]: https://lore.kernel.org/linux-riscv/IA1PR20MB4953B158F6F575840F3D426=
+7BB7D2@IA1PR20MB4953.namprd20.prod.outlook.com/
+
+--9NJ+1qh0mf0Ujp8a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhUw7AAKCRB4tDGHoIJi
+0hxeAP9Gq5pqIE8VbwzobCLZkAoeBFVSPzoXf7wBfFedcwFlTgEA3f5KH2ThJh6z
+E/9yUOzC5dwl7/X9hqNhekc6IjRtSgo=
+=DmrY
+-----END PGP SIGNATURE-----
+
+--9NJ+1qh0mf0Ujp8a--
