@@ -1,64 +1,59 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24C191386C0;
-	Tue,  9 Apr 2024 19:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D9815699E;
+	Tue,  9 Apr 2024 19:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712691427; cv=none; b=YQJCi0BEZGDVKA4UNtTpEcJGjtaSCgfq/R6CwIIFou5ykzZbF6aVMVXrN9M7GxqnFygt0VZXyvJKrFaPEBSmMHdtE0fgWhzBsjJhgVBA+r7iMErzAckLUKnSl1JdYg+QNLwNNL8jGU+80u5CyFiUo/2gT58ugupRaGV5Y9253Zo=
+	t=1712691460; cv=none; b=heOztq0xiYRqqUiaHIBMb9A1rwyw+ywN+yLD+yj+FJcX0Ji3ko2Zvzor9zvVfJS5QKWsvzWmqMQCZk9R9Xfb62xcwI4IPXtNjo0qU9bDLaPUR4aLiFXTqtf9fQGKVNz1WNO24pCS1OYii2IlCkdfdcVktQrcWkdICjeUfvMZQYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712691427; c=relaxed/simple;
-	bh=G8TI8HYxBGOKwFa860i9qbi4wv4r4/W/X7hOcjuztos=;
+	s=arc-20240116; t=1712691460; c=relaxed/simple;
+	bh=RpsZ/E5woailLraq+rLciStxEis1JoVdknqghnMqJKk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e1OqlRsT4l8KGcSqyu/+8LNWU7vzK00kgcvMl2L9L+b5HXf1VucZJXrtHdNQ0GfV2NFGP0tJsoTsFXY1MxSU7bG4KfCkiSrl6hxE7I/IIosCH5c/0bRlVFWqLRMG28NWqYrPI6LKXdONx6kZAV3nWAAWIIH5wcgoPbAKpDgAzdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SoI7TEqw; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=SjW2JVtx+HORjZ45yu0WHNySa2RvqMdIAtzkbipifhKucO8vvxiiL/GoD9j74dnA6smzP7cOENSddYJmZ1U/U/hfzMvVLQu2mYflyFYRhN1fykl5AqmS3ufYwLDX1afpx/Xa57EFXYk6imHFAg2LDNjtAXM7g34PzL169LjsdcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PRYAca2e; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SoI7TEqw"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 439JatlE064249;
-	Tue, 9 Apr 2024 14:36:55 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PRYAca2e"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 439JbKUr034799;
+	Tue, 9 Apr 2024 14:37:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712691416;
-	bh=yfKK38yevMbRAQP/cnjxOpppNyIcNwk3BqMX49snWIg=;
+	s=ti-com-17Q1; t=1712691440;
+	bh=jtWSn0QUC1RtGshhNU5i07HfuZDjb28710CEBnY+WlA=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=SoI7TEqw7QUIhqIBCR4mbyLAuiSFaGbQub9aq+pbTUqva8KI/hpQBe3roIA+ZRS0c
-	 GXpUvoH/ezvt2dSBIkhBxAlXo/SqslCN28K4sdtIK1hgZRPz2hDAXm6ZKeEKF+FUNM
-	 P5SLGW4t4diYrXgkAOqREMEgQz5q/hKWcwVEhCrQ=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 439JatVv005561
+	b=PRYAca2efendeUx7t/5SnqNwdjdwOpHYWdUa0qH/jrynSpb7uMcMkgZTC++rm8G4Y
+	 EXSVqwl1r/ZHaBykhoZUfPsaUcw+X1ZrdG3DAvacMgaS99DGknOaYQM6wt+5wZ+rgI
+	 cxcBXVdesNu2PVtCeTe8CT8Z8+lEPj2qhpE3Hv2w=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 439JbKBP012948
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 9 Apr 2024 14:36:55 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 9 Apr 2024 14:37:20 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
- Apr 2024 14:36:55 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2024 14:37:20 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 9 Apr 2024 14:36:55 -0500
+ Frontend Transport; Tue, 9 Apr 2024 14:37:20 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 439JatOI089867;
-	Tue, 9 Apr 2024 14:36:55 -0500
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 439JbKQ2090612;
+	Tue, 9 Apr 2024 14:37:20 -0500
 From: Nishanth Menon <nm@ti.com>
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren
-	<tony@atomide.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        <linux-omap@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: Nishanth Menon <nm@ti.com>
-Subject: Re: (subset) [PATCH 1/2] arm64: dts: ti: k3-am62p5-sk: minor whitespace cleanup
-Date: Tue, 9 Apr 2024 14:36:53 -0500
-Message-ID: <171269138685.642844.11136653326464585397.b4-ty@ti.com>
+To: <max.krummenacher@toradex.com>, <max.oss.09@gmail.com>
+CC: Nishanth Menon <nm@ti.com>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <francesco.dolcini@toradex.com>,
+        <kristo@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <vigneshr@ti.com>, <stable@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: ti: verdin-am62: Set memory size to 2gb
+Date: Tue, 9 Apr 2024 14:37:18 -0500
+Message-ID: <171269142225.642948.2709707830763732879.b4-ty@ti.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240208105146.128645-1-krzysztof.kozlowski@linaro.org>
-References: <20240208105146.128645-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240320142937.2028707-1-max.oss.09@gmail.com>
+References: <20240320142937.2028707-1-max.oss.09@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,20 +64,19 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Krzysztof Kozlowski,
+Hi max.oss.09@gmail.com,
 
-On Thu, 08 Feb 2024 11:51:45 +0100, Krzysztof Kozlowski wrote:
-> The DTS code coding style expects exactly one space before '{'
-> character.
+On Wed, 20 Mar 2024 15:29:37 +0100, max.oss.09@gmail.com wrote:
+> The maximum DDR RAM size stuffed on the Verdin AM62 is 2GB,
+> correct the memory node accordingly.
 > 
 > 
-As discussed offline, I am picking this patch up.
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/2] arm64: dts: ti: k3-am62p5-sk: minor whitespace cleanup
-      commit: 45ab8daed512258c07fd14536a3633440dabfe84
+[1/1] arm64: dts: ti: verdin-am62: Set memory size to 2gb
+      commit: 7e8eddc5291f5c94dd28227a73b7573b671f4a05
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
