@@ -1,128 +1,184 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3437FBB3
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E4D7FBB8
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712655081; cv=none; b=mxMiu3ZD6bAaIu3C8Peqy2VvDACIyMnagNSfUsBAReXghsAvq4NTmM97WA+lArqJ79atwBICIIs8eKGknYQ+Aj5ALTkB6TFeUbk4ka26Mvpz/4lpYFZqIq925bxmx6qSm7R1kvwSHomnTTPkzO23tripQSg5VTsJ2d7F4hcUPtE=
+	t=1712655318; cv=none; b=HSt532ntaRs/z6kwrWYHfNsVuAJol0WzURcQfaJFamk1uip1mV1nJrAfperHlbt1gYNP+wi2ndbZkxfIS52Gwzb/hdp8OCYoejikBizp/fcs9S4SAgXOgmqSTXOwLhnMIgZhjAQBS3sCPsDXVCQXyuCf+Heb2oSrnjklKH65UB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712655081; c=relaxed/simple;
-	bh=FYgiFjXTdskLu0PMvm55ZF1Jor5HgrNNAHqGGsTKTh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dJzykuF9zkpn7lqZTDv9tTwPtxu7WFrPs47kyD5cZqIekFlsFHKb7xkrhieXCOiBdknCthbahjo6CeHJhaeNzzpEdjdpp+PkDCFUA+bTqGVc7rgxVjfJqO6lsWJaNBFFa1B9TLwHPblKO4MNtMbTPIIeayV3lK7oA4R99vHLjeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YHSOJzlb; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YHSOJzlb"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712655070; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=0LnjQmyzNK4ZE6rezMRyW0SnrJ9XYzbVmvYfi+uWYb0=;
-	b=YHSOJzlbeXbgD1O7XZ29pHpBPGy5AgQx4yYV2GCjXoud8t0jbGflSV3tz7BU2Wsgk1Z1Rkiebb2wHuFO5byNIUF/ZlSqX5uciESf/ZA14Vzb27Rh2trAsflGFgPzx5rOprW3ooatG9RlnEA1zG8R42RhZ0rOWAwqaKhUHNI7GgI=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W4E3E6q_1712655068;
-Received: from 30.97.56.63(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W4E3E6q_1712655068)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Apr 2024 17:31:09 +0800
-Message-ID: <26cb722f-6e1c-4aaf-9edd-ed10a60e0018@linux.alibaba.com>
-Date: Tue, 9 Apr 2024 17:31:08 +0800
+	s=arc-20240116; t=1712655318; c=relaxed/simple;
+	bh=QzlnCxseX/o5D9srb9m9ye5Uko/lm9f1kh7giNxmBrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s9cdlDR/oPVUTO3ntwyKdssr2xJyMpy7eXKkgBHaOwwI5et6CrHr74QX8O5xOYB21gQBFpWBMjOvEm1UEUC0wZo1Z3IzV2lmjiBGblRme+m5Mf+338/gIKxmtZaVlasz+Ip5n6Pspzly3yhVWjVyf6BIwTp5R1hT1y0ZjjA9i24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 79CE9338F1;
+	Tue,  9 Apr 2024 09:35:15 +0000 (UTC)
+Authentication-Results: smtp-out1.suse.de;
+	none
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6616A1332F;
+	Tue,  9 Apr 2024 09:35:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id psU+F9MLFWanRwAAn2gu4w
+	(envelope-from <dwagner@suse.de>); Tue, 09 Apr 2024 09:35:15 +0000
+From: Daniel Wagner <dwagner@suse.de>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	James Smart <james.smart@broadcom.com>,
+	Hannes Reinecke <hare@suse.de>,
+	linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v5 1/6] nvme: authentication error are always non-retryable
+Date: Tue,  9 Apr 2024 11:35:05 +0200
+Message-ID: <20240409093510.12321-2-dwagner@suse.de>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240409093510.12321-1-dwagner@suse.de>
+References: <20240409093510.12321-1-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/10] mm: page_alloc: consolidate free page accounting
-To: Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Mel Gorman <mgorman@techsingularity.net>, Zi Yan <ziy@nvidia.com>,
- "Huang, Ying" <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240320180429.678181-1-hannes@cmpxchg.org>
- <20240320180429.678181-11-hannes@cmpxchg.org>
- <7b3b7f2e-7109-4e72-b1cf-259cb56f3629@linux.alibaba.com>
- <ecb88320-9990-49e1-a58a-e8fc85b1da3f@suse.cz>
- <20240408142340.GA1057805@cmpxchg.org>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20240408142340.GA1057805@cmpxchg.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Rspamd-Queue-Id: 79CE9338F1
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
 
+From: Hannes Reinecke <hare@suse.de>
 
+Any authentication errors which are generated internally are always
+non-retryable, so use negative error codes to ensure they are not
+retried.
 
-On 2024/4/8 22:23, Johannes Weiner wrote:
-> On Mon, Apr 08, 2024 at 09:38:20AM +0200, Vlastimil Babka wrote:
->> On 4/7/24 12:19 PM, Baolin Wang wrote:
->>> On 2024/3/21 02:02, Johannes Weiner wrote:
->>>>    
->>>> +	account_freepages(page, zone, 1 << order, migratetype);
->>>> +
->>>>    	while (order < MAX_PAGE_ORDER) {
->>>> -		if (compaction_capture(capc, page, order, migratetype)) {
->>>> -			__mod_zone_freepage_state(zone, -(1 << order),
->>>> -								migratetype);
->>>> +		int buddy_mt = migratetype;
->>>> +
->>>> +		if (compaction_capture(capc, page, order, migratetype))
->>>>    			return;
->>>> -		}
->>>
->>> IIUC, if the released page is captured by compaction, then the
->>> statistics for free pages should be correspondingly decreased,
->>> otherwise, there will be a slight regression for my thpcompact benchmark.
->>>
->>> thpcompact Percentage Faults Huge
->>>                             k6.9-rc2-base        base + patch10 + 2 fixes	
->>> Percentage huge-1        78.18 (   0.00%)       71.92 (  -8.01%)
->>> Percentage huge-3        86.70 (   0.00%)       86.07 (  -0.73%)
->>> Percentage huge-5        90.26 (   0.00%)       78.02 ( -13.57%)
->>> Percentage huge-7        92.34 (   0.00%)       78.67 ( -14.81%)
->>> Percentage huge-12       91.18 (   0.00%)       81.04 ( -11.12%)
->>> Percentage huge-18       89.00 (   0.00%)       79.57 ( -10.60%)
->>> Percentage huge-24       90.52 (   0.00%)       80.07 ( -11.54%)
->>> Percentage huge-30       94.44 (   0.00%)       96.28 (   1.95%)
->>> Percentage huge-32       93.09 (   0.00%)       99.39 (   6.77%)
->>>
->>> I add below fix based on your fix 2, then the thpcompact Percentage
->>> looks good. How do you think for the fix?
->>
->> Yeah another well spotted, thanks. "slight regression" is an understatement,
->> this affects not just a "statistics" but very important counter
->> NR_FREE_PAGES which IIUC would eventually become larger than reality, make
->> the watermark checks false positive and result in depleted reserves etc etc.
->> Actually wondering why we're not seeing -next failures already (or maybe I
->> just haven't noticed).
-> 
-> Good catch indeed.
-> 
-> Trying to understand why I didn't notice this during testing, and I
-> think it's because I had order-10 pageblocks in my config. There is
-> this in compaction_capture():
-> 
-> 	if (order < pageblock_order && migratetype == MIGRATE_MOVABLE)
-> 		return false;
-> 
-> Most compaction is for order-9 THPs on movable blocks, so I didn't get
-> much capturing in practice in order for that leak to be noticable.
+Signed-off-by: Hannes Reinecke <hare@suse.de>
+Signed-off-by: Daniel Wagner <dwagner@suse.de>
+---
+ drivers/nvme/host/core.c    |  6 +++---
+ drivers/nvme/host/fabrics.c | 25 +++++++++++++------------
+ drivers/nvme/host/nvme.h    |  2 +-
+ 3 files changed, 17 insertions(+), 16 deletions(-)
 
-This makes me wonder why not use 'cc->migratetype' for migratetype 
-comparison, so that low-order (like mTHP) compaction can directly get 
-the released pages, which could avoid some compaction scans without 
-mixing the migratetype?
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 504dc352c458..66387bcca8ae 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -383,14 +383,14 @@ static inline enum nvme_disposition nvme_decide_disposition(struct request *req)
+ 	if (likely(nvme_req(req)->status == 0))
+ 		return COMPLETE;
+ 
+-	if ((nvme_req(req)->status & 0x7ff) == NVME_SC_AUTH_REQUIRED)
+-		return AUTHENTICATE;
+-
+ 	if (blk_noretry_request(req) ||
+ 	    (nvme_req(req)->status & NVME_SC_DNR) ||
+ 	    nvme_req(req)->retries >= nvme_max_retries)
+ 		return COMPLETE;
+ 
++	if ((nvme_req(req)->status & 0x7ff) == NVME_SC_AUTH_REQUIRED)
++		return AUTHENTICATE;
++
+ 	if (req->cmd_flags & REQ_NVME_MPATH) {
+ 		if (nvme_is_path_error(nvme_req(req)->status) ||
+ 		    blk_queue_dying(req->q))
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 1f0ea1f32d22..0166f8a3a3eb 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -467,7 +467,7 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+ 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: secure concatenation is not supported\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
++			ret = -EOPNOTSUPP;
+ 			goto out_free_data;
+ 		}
+ 		/* Authentication required */
+@@ -475,14 +475,14 @@ int nvmf_connect_admin_queue(struct nvme_ctrl *ctrl)
+ 		if (ret) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: authentication setup failed\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
+ 			goto out_free_data;
+ 		}
+ 		ret = nvme_auth_wait(ctrl, 0);
+-		if (ret)
++		if (ret) {
+ 			dev_warn(ctrl->device,
+-				 "qid 0: authentication failed\n");
+-		else
++				 "qid 0: authentication failed, error %d\n",
++				 ret);
++		} else
+ 			dev_info(ctrl->device,
+ 				 "qid 0: authenticated\n");
+ 	}
+@@ -542,7 +542,7 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
+ 		if (result & NVME_CONNECT_AUTHREQ_ASCR) {
+ 			dev_warn(ctrl->device,
+ 				 "qid 0: secure concatenation is not supported\n");
+-			ret = NVME_SC_AUTH_REQUIRED;
++			ret = -EOPNOTSUPP;
+ 			goto out_free_data;
+ 		}
+ 		/* Authentication required */
+@@ -550,12 +550,13 @@ int nvmf_connect_io_queue(struct nvme_ctrl *ctrl, u16 qid)
+ 		if (ret) {
+ 			dev_warn(ctrl->device,
+ 				 "qid %d: authentication setup failed\n", qid);
+-			ret = NVME_SC_AUTH_REQUIRED;
+-		} else {
+-			ret = nvme_auth_wait(ctrl, qid);
+-			if (ret)
+-				dev_warn(ctrl->device,
+-					 "qid %u: authentication failed\n", qid);
++			goto out_free_data;
++		}
++		ret = nvme_auth_wait(ctrl, qid);
++		if (ret) {
++			dev_warn(ctrl->device,
++				 "qid %u: authentication failed, error %d\n",
++				 qid, ret);
+ 		}
+ 	}
+ out_free_data:
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index d0ed64dc7380..9b8904a476b8 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -1122,7 +1122,7 @@ static inline int nvme_auth_negotiate(struct nvme_ctrl *ctrl, int qid)
+ }
+ static inline int nvme_auth_wait(struct nvme_ctrl *ctrl, int qid)
+ {
+-	return NVME_SC_AUTH_REQUIRED;
++	return -EPROTONOSUPPORT;
+ }
+ static inline void nvme_auth_free(struct nvme_ctrl *ctrl) {};
+ #endif
+-- 
+2.44.0
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 2facf844ef84..7a64020f8222 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -622,7 +622,7 @@ compaction_capture(struct capture_control *capc, 
-struct page *page,
-          * and vice-versa but no more than normal fallback logic which can
-          * have trouble finding a high-order free page.
-          */
--       if (order < pageblock_order && migratetype == MIGRATE_MOVABLE)
-+       if (order < pageblock_order && capc->cc->migratetype != migratetype)
-                 return false;
-
-         capc->page = page;
