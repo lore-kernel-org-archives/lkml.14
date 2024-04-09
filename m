@@ -1,160 +1,125 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87651153564
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 16:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7611509B4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 16:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712680340; cv=none; b=JH4zp2MJT7L8kGTjUrPaQmCIG4AssUDOGHEpofOF9Ma54186TZHGoM/R4dAZflYAcYiUDOMkiVPnGmzlAJz5OxNnKg3LlxnCIHCQXdqcQswqv2TDaX1TZs67Pb2G0Ybf5QS5zRY+F575TPlKfwKYzxL1OFMKu8/vkk9boeBJZYw=
+	t=1712680372; cv=none; b=LU51yPCWCsduSyj4wJXFJaKJ5iBt3+eUWS4Nxh+T04Kwz9BZHjD/gHlGsHB0nl2xNtNgqHCpyyZCZlFkqUSxCncCZsYnQv0LgZchlJutCrJ/3PcsnF9NS4vb7Gxva83Q54FDNVPrq/fo4a0NCvIzCeIumJ6cwFIBOz2DvKQ6tfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712680340; c=relaxed/simple;
-	bh=Prub1KO2ZejF3xHKzzDA0iJLy90GBZ+yv81ZRqqRVgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pZrnydi8LgyV74BdC+yp8NOWY0xiA9uv8msr3d2wdJH4WgOtSEwJ3qZv+3khc3X0fHUK9DVDkf+QtJmlSmvS9FDEJZdcQZ41MofFo0XJSZN5L3xo8so9bkpDmietF2RNHb6gPdxR7ZeZgjt/MZX47WL/1Hr+DDuPrQjt3br8CZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VpJ4jxGf; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpJ4jxGf"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-56e2b3e114fso5734536a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 09:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712680337; x=1713285137; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1J93ZkFCOknjdhXLfein2j7yobQHUNs2787CJV9a/ok=;
-        b=VpJ4jxGfZIKbtLh6co6K3+HYODciF+PTVvbbe+HUcdkZFBOKBByS++bjI6+TMhOsVR
-         2CZpphsQ1c+BeFY66QFPMvUoZcnlLG97S1YisBJZ+th4Esfs9jxDtxVsm9BoAYFdJQfa
-         65QWu023uqa+p3jRlskiNtGYJNkMLw90oW72SbE6Jal6HsabQnr9sjrEMs7Ic5FJ/SS+
-         VvFF+KPyACivBTxasF+kT09EwvFkt4dMy4gkWq8w8QYfJ4bwHbw9Q5gwHMp0P/5rRYKZ
-         lF1xwRefgJq+sY7Am9OMZ+iCZvQ048MJgie3QXMKpjnUHQXxuzTSD+f79T+Qds/kzLu7
-         +Nuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712680337; x=1713285137;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1J93ZkFCOknjdhXLfein2j7yobQHUNs2787CJV9a/ok=;
-        b=fxi5YkN9GjtJWqJFmBUBrZtiyqiKNt5a+S5PMLtJ/y46AFbMya7w7XDod6nwdEwOGB
-         tS34iOQmkPlRj3ui1rCBbwVqHoGomIGXG+lNXdHJCDYC647WRl/m0SMKimhs4Qu1ZJbS
-         72hkgliQSckErqLAcMzHZXJDZ/cchHbqE5A3dDne36CQjfoLxUJPzPYzS7SS/d0Qr4Q7
-         vnTYr6rKbNFH5QtuBRkAKniRgCI4N6ALxE36v5P3Fgg0PeHB3pHdbolqLY+4GmMuPOlp
-         9K2GgdcGF596VxvAOHHCVUYYm57Qe5Y2wTGiLQ/DO5oN0nR9EruQSvBNuoYH3/sVS0Di
-         izCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMRAD4gD0/5k4XhASbbzozD+2QtMdSMltau5yhE1FRYDGU2byZ4By5ocSrU+5l6KiF2eFWMjLeuS9hLpS6Pv6OihijwjhNKcJU9jKt
-X-Gm-Message-State: AOJu0Yx3fXeCSt2p22j+tXiq2JldUWuLzUKtIkKy9xvYjanhW8RrK+5m
-	oqJGMcHyJraPbb3yKpDKsSXoHIhOhZno8ErTmzHJCETNGNEhs6AD
-X-Google-Smtp-Source: AGHT+IFz2DTuKmc+52yD+qBtAlC6PpA6Y3O/PUrWDusslSCyaeJU1vfoFH6W9CeIHvKRLv8/0Vy40Q==
-X-Received: by 2002:a17:906:af7b:b0:a46:1d4b:d81 with SMTP id os27-20020a170906af7b00b00a461d4b0d81mr7671184ejb.62.1712680336800;
-        Tue, 09 Apr 2024 09:32:16 -0700 (PDT)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id gx26-20020a1709068a5a00b00a46b4c09670sm5904265ejc.131.2024.04.09.09.32.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 09:32:15 -0700 (PDT)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: mark.rutland@arm.com,
-	x86@kernel.org,
+	s=arc-20240116; t=1712680372; c=relaxed/simple;
+	bh=kGNiOYgEjXV6OIDTsWw1Tx2jDfOc/VCR7k2qJc3X5js=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZtW1bIVvQ+ZYS9I3DkpXoGhW9iU/1cmwOgisdsxN8JoqMRGuYbHDFkc+2+vTbG0qCwuG4yAn6VFVKXDm5BM2ZurPTs8HNnIaXZ1qrFuMYHuotje7FJwMXe/+6vFd9ocUCGUxL/Ii7pqM18kjKICjsyarTWPFuZP2fbDChx95yp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1ruEOo-0004dv-Sf; Tue, 09 Apr 2024 18:32:42 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1ruEOn-00BKtc-Sb; Tue, 09 Apr 2024 18:32:41 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1ruEOn-00H464-2a;
+	Tue, 09 Apr 2024 18:32:41 +0200
+Date: Tue, 9 Apr 2024 18:32:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Yangtao Li <frank.li@vivo.com>, linux-pm@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 4/4] locking/atomic/x86: Define arch_atomic_sub() family using arch_atomic_add() functions
-Date: Tue,  9 Apr 2024 18:30:32 +0200
-Message-ID: <20240409163200.188498-4-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240409163200.188498-1-ubizjak@gmail.com>
-References: <20240409163200.188498-1-ubizjak@gmail.com>
+Subject: Re: [PATCH] cpuidle: kirkwood: Convert to platform remove callback
+ returning void
+Message-ID: <fgmvwuzy34cruggah2z7fau4nnfzopuylsgjs6zzdypp26boya@ekrj5myjef5f>
+References: <20230712094014.41787-1-frank.li@vivo.com>
+ <20231204115517.zxjgi6ateobjj52d@pengutronix.de>
+ <h2sjdrgs7hwmbucr3rxlpusnkpj5tgq2fx27gijtrglr5ffhs6@s63cp4isu4mx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yudkqucvkn2t7jnw"
+Content-Disposition: inline
+In-Reply-To: <h2sjdrgs7hwmbucr3rxlpusnkpj5tgq2fx27gijtrglr5ffhs6@s63cp4isu4mx>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-There is no need to implement arch_atomic_sub() family of inline
-functions, corresponding macros can be directly implemented using
-arch_atomic_add() inlines with negated argument.
 
-No functional changes intended.
+--yudkqucvkn2t7jnw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/include/asm/atomic.h      | 12 ++----------
- arch/x86/include/asm/atomic64_64.h | 12 ++----------
- 2 files changed, 4 insertions(+), 20 deletions(-)
+Hello,
 
-diff --git a/arch/x86/include/asm/atomic.h b/arch/x86/include/asm/atomic.h
-index 55a55ec04350..55b4d24356ea 100644
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -86,11 +86,7 @@ static __always_inline int arch_atomic_add_return(int i, atomic_t *v)
- }
- #define arch_atomic_add_return arch_atomic_add_return
- 
--static __always_inline int arch_atomic_sub_return(int i, atomic_t *v)
--{
--	return arch_atomic_add_return(-i, v);
--}
--#define arch_atomic_sub_return arch_atomic_sub_return
-+#define arch_atomic_sub_return(i, v) arch_atomic_add_return(-(i), v)
- 
- static __always_inline int arch_atomic_fetch_add(int i, atomic_t *v)
- {
-@@ -98,11 +94,7 @@ static __always_inline int arch_atomic_fetch_add(int i, atomic_t *v)
- }
- #define arch_atomic_fetch_add arch_atomic_fetch_add
- 
--static __always_inline int arch_atomic_fetch_sub(int i, atomic_t *v)
--{
--	return xadd(&v->counter, -i);
--}
--#define arch_atomic_fetch_sub arch_atomic_fetch_sub
-+#define arch_atomic_fetch_sub(i, v) arch_atomic_fetch_add(-(i), v)
- 
- static __always_inline int arch_atomic_cmpxchg(atomic_t *v, int old, int new)
- {
-diff --git a/arch/x86/include/asm/atomic64_64.h b/arch/x86/include/asm/atomic64_64.h
-index 3165c0feedf7..ae12acae5b06 100644
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -80,11 +80,7 @@ static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
- }
- #define arch_atomic64_add_return arch_atomic64_add_return
- 
--static __always_inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
--{
--	return arch_atomic64_add_return(-i, v);
--}
--#define arch_atomic64_sub_return arch_atomic64_sub_return
-+#define arch_atomic64_sub_return(i, v) arch_atomic64_add_return(-(i), v)
- 
- static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
- {
-@@ -92,11 +88,7 @@ static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
- }
- #define arch_atomic64_fetch_add arch_atomic64_fetch_add
- 
--static __always_inline s64 arch_atomic64_fetch_sub(s64 i, atomic64_t *v)
--{
--	return xadd(&v->counter, -i);
--}
--#define arch_atomic64_fetch_sub arch_atomic64_fetch_sub
-+#define arch_atomic64_fetch_sub(i, v) arch_atomic64_fetch_add(-(i), v)
- 
- static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
- {
--- 
-2.42.0
+On Wed, Mar 06, 2024 at 10:33:06PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Mon, Dec 04, 2023 at 12:55:17PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Wed, Jul 12, 2023 at 05:40:13PM +0800, Yangtao Li wrote:
+> > > The .remove() callback for a platform driver returns an int which mak=
+es
+> > > many driver authors wrongly assume it's possible to do error handling=
+ by
+> > > returning an error code. However the value returned is (mostly) ignor=
+ed
+> > > and this typically results in resource leaks. To improve here there i=
+s a
+> > > quest to make the remove callback return void. In the first step of t=
+his
+> > > quest all drivers are converted to .remove_new() which already returns
+> > > void.
+> > >=20
+> > > Trivially convert this driver from always returning zero in the remove
+> > > callback to the void returning variant.
+> > >=20
+> > > Cc: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> >=20
+> > Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > Can you pick this up?
+>=20
+> This patch isn't in next yet. Is this still on someone's radar for
+> application? Would be great if this patch made it into the mainline
+> during the upcomming merge window.
 
+It didn't made it into the merge window leading to 6.9-rc1. What are
+the chances to get it into v6.10-rc1?
+
+I just checked, the patch was submitted when Linus's tree was just after
+v6.5-rc1. So it already missed four merge windows without any maintainer
+feedback :-\
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--yudkqucvkn2t7jnw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYVbagACgkQj4D7WH0S
+/k6KuAf/bT1XmaN2Cba7EVDNiZ//oKiFV0fhRs5/Rr5ue/m8zzAVYdq4vvPluEoT
+TxlpEv/dCM2SPexO4qV0WbdGYyiw0LE7eAA1M2I5P0y4GqpUxV935kmzr0Qr47eo
+FzpJMCker7SS4DxMH8f9cub97KN79AZycI00s3VmVMkytFy7COBkWbnFOSYfWmdw
+KNeEJg6xVc2iblfpjCY25LEAhQn7u+JrnmNZ9DY28OENH+oz4xQjH1O/T+zoLYip
+Kul19p3gctyaXhdNYc0HZD7aQX26mEvpD0O7E4pM1Xh8Ps6DI81ppcrsRZFMVgFi
+EbiNNMjLiKJWmNsZc3DPZJPma8ydlQ==
+=FFjN
+-----END PGP SIGNATURE-----
+
+--yudkqucvkn2t7jnw--
