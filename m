@@ -1,32 +1,24 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from mx.gpxsee.org (mx.gpxsee.org [37.205.14.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE6882D9C
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A5F81727;
+	Tue,  9 Apr 2024 09:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.14.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656616; cv=none; b=JSWSMV8AnGb0VKc0Ya8sGJQZPmV0iD6ysBAA3PPkU0FMS7ajUoXVdRD68P1PPQm5HncDG044krYCNUUxWZW3w8C66YG8LQuRfxKORBYXAQU8bdXGFbBEYpEkkKzglEbhC56p2Cbw8SxsYXxwQu9Hz/qzWu5VcTfo+yRNn+YVQvI=
+	t=1712656627; cv=none; b=nUiVB8sc7HwWO2Yeq3JzYs1HwOcRGXn3Kbm5KYo6RceJuhpLrDtLlh8/N1ryDlvEplNgEusz+J+gZDxBfvgAX70Jwynj1h23XA7RuCM7WD1qVr6DKq6BRjZYMI/67gOhcTjJjb/zwRJSHkWVgWt3H5FxUOQNvdieb+26YY5ItMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656616; c=relaxed/simple;
-	bh=23riWL0Gd60rPfm/N+Bksf6fpUnyFPCyw8iYZCSbqm4=;
+	s=arc-20240116; t=1712656627; c=relaxed/simple;
+	bh=Nev6clutsLuoZ3tdEcecuIJhvQs7KonqvYFmWzWrYno=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AXrjRVu8FFDLX8kBK//yqsVoRk4MCMyKtKxPubHkvDegkl4rPeEDFYyPNRywvpJv5xM5t+yBZcpKCm+CXEL42cPunRiEm3dk5WBuuxuJ7wni0a2cumVWUflvyOv4aCwPRzuuGvfuDjC9lLOxQHv5iuZoLI8TulcsigME/XUYSkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fVvPcU0Z; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fVvPcU0Z"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712656605; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=OQGIdks+efdOpe57pVeyT82POjXjytrYc+w+BN9nedU=;
-	b=fVvPcU0ZviY6wU5aXzWT4UeS8viYIYGU0mWzvHF1X2n/f+bF8S+ISZm9gb4wyjzelg4JNjFUVE9oL1sqfa4Hfz6OA2ljl8pKzEwjjjX3T0XR34feP9awzBgwYvyS3az+nb+XCI3nXLxvRRRTqrnQSlUrCcCJVOxDa2b5SS9VuHc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W4E4QQU_1712656603;
-Received: from 30.221.146.5(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W4E4QQU_1712656603)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Apr 2024 17:56:44 +0800
-Message-ID: <ffab38f0-2ec6-4ed2-b0f8-398f2829b71d@linux.alibaba.com>
-Date: Tue, 9 Apr 2024 17:56:43 +0800
+	 In-Reply-To:Content-Type; b=VihqYpVVtyOTKtv89JMyGJ9oueK5rtViTVOibys4PaKQtK63OlwU42lmO6JAXju+nFqC/u4larHc9B9IAMwSusmuiNxBAsUdze98IMHSnXLsWT+qybV7Nisk59qJ3o1qTU3CCkJLhbyCNNu8rjAUWRUZ51rnOoeS6cdI0Go7SA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org; spf=pass smtp.mailfrom=gpxsee.org; arc=none smtp.client-ip=37.205.14.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gpxsee.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gpxsee.org
+Received: from [192.168.4.14] (unknown [62.77.71.229])
+	by mx.gpxsee.org (Postfix) with ESMTPSA id 4A437440C7;
+	Tue,  9 Apr 2024 11:57:02 +0200 (CEST)
+Message-ID: <36d9063f-0133-4a88-8120-f41e5fd85d89@gpxsee.org>
+Date: Tue, 9 Apr 2024 11:57:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,133 +26,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] vp_vdpa: don't allocate unused msix vectors
-To: lyx634449800 <yuxue.liu@jaguarmicro.com>
-Cc: angus.chen@jaguarmicro.com, virtualization@lists.linux.dev,
- xuanzhuo@linux.alibaba.com, linux-kernel@vger.kernel.org,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>
-References: <20240409013020-mutt-send-email-mst@kernel.org>
- <20240409085818.1242-1-yuxue.liu@jaguarmicro.com>
-From: Heng Qi <hengqi@linux.alibaba.com>
-In-Reply-To: <20240409085818.1242-1-yuxue.liu@jaguarmicro.com>
+Subject: Re: [PATCH v4 3/3] media: mgb4: Fixed signal frame rate limit
+ handling
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Martin_T=C5=AFma?= <martin.tuma@digiteqautomotive.com>
+References: <20240322151005.3499-1-tumic@gpxsee.org>
+ <20240322151005.3499-4-tumic@gpxsee.org>
+ <8a0cf515-e450-41b8-950c-4356f2fb9879@xs4all.nl>
+Content-Language: en-US
+From: =?UTF-8?Q?Martin_T=C5=AFma?= <tumic@gpxsee.org>
+In-Reply-To: <8a0cf515-e450-41b8-950c-4356f2fb9879@xs4all.nl>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 08. 04. 24 12:47, Hans Verkuil wrote:
 
+>> diff --git a/Documentation/admin-guide/media/mgb4.rst b/Documentation/admin-guide/media/mgb4.rst
+>> index 2977f74d7e26..6fff886003e2 100644
+>> --- a/Documentation/admin-guide/media/mgb4.rst
+>> +++ b/Documentation/admin-guide/media/mgb4.rst
+>> @@ -228,8 +228,12 @@ Common FPDL3/GMSL output parameters
+>>       open.*
+>>   
+>>   **frame_rate** (RW):
+>> -    Output video frame rate in frames per second. The default frame rate is
+>> -    60Hz.
+>> +    Output video signal frame rate limit in frames per second. Due to
+>> +    the limited output pixel clock steps, the card can not always generate
+>> +    a frame rate perfectly matching the value required by the connected display.
+>> +    Using this parameter one can limit the frame rate by "crippling" the signal
+>> +    so that the lines are not equal but the signal appears like having the exact
+>> +    frame rate to the connected display. The default frame rate limit is 60Hz.
+> 
+> It's not clear what is meant with 'crippling'. Normally when dealing with video
+> framerates the driver will pick the closest video timing to the requested framerate.
+> It is understood that you can't always get the exact framerate, so drivers can
+> make adjustments.
+> 
 
-在 2024/4/9 下午4:58, lyx634449800 写道:
-> From: Yuxue Liu <yuxue.liu@jaguarmicro.com>
->
-> When there is a ctlq and it doesn't require interrupt
-> callbacks,the original method of calculating vectors
-> wastes hardware msi or msix resources as well as system
-> IRQ resources.
->
-> When conducting performance testing using testpmd in the
-> guest os, it was found that the performance was lower compared
-> to directly using vfio-pci to passthrough the device
->
-> In scenarios where the virtio device in the guest os does
-> not utilize interrupts, the vdpa driver still configures
-> the hardware's msix vector. Therefore, the hardware still
-> sends interrupts to the host os. Because of this unnecessary
-> action by the hardware, hardware performance decreases, and
-> it also affects the performance of the host os.
->
-> Before modification:(interrupt mode)
->   32:  0   0  0  0 PCI-MSI 32768-edge    vp-vdpa[0000:00:02.0]-0
->   33:  0   0  0  0 PCI-MSI 32769-edge    vp-vdpa[0000:00:02.0]-1
->   34:  0   0  0  0 PCI-MSI 32770-edge    vp-vdpa[0000:00:02.0]-2
->   35:  0   0  0  0 PCI-MSI 32771-edge    vp-vdpa[0000:00:02.0]-config
->
-> After modification:(interrupt mode)
->   32:  0  0  1  7   PCI-MSI 32768-edge  vp-vdpa[0000:00:02.0]-0
->   33: 36  0  3  0   PCI-MSI 32769-edge  vp-vdpa[0000:00:02.0]-1
->   34:  0  0  0  0   PCI-MSI 32770-edge  vp-vdpa[0000:00:02.0]-config
->
-> Before modification:(virtio pmd mode for guest os)
->   32:  0   0  0  0 PCI-MSI 32768-edge    vp-vdpa[0000:00:02.0]-0
->   33:  0   0  0  0 PCI-MSI 32769-edge    vp-vdpa[0000:00:02.0]-1
->   34:  0   0  0  0 PCI-MSI 32770-edge    vp-vdpa[0000:00:02.0]-2
->   35:  0   0  0  0 PCI-MSI 32771-edge    vp-vdpa[0000:00:02.0]-config
->
-> After modification:(virtio pmd mode for guest os)
->   32: 0  0  0   0   PCI-MSI 32768-edge   vp-vdpa[0000:00:02.0]-config
->
-> To verify the use of the virtio PMD mode in the guest operating
-> system, the following patch needs to be applied to QEMU:
-> https://lore.kernel.org/all/20240408073311.2049-1-yuxue.liu@jaguarmicro.com
->
-> Signed-off-by: Yuxue Liu <yuxue.liu@jaguarmicro.com>
-> Acked-by: Jason Wang <jasowang@redhat.com>
-> ---
-> V4: Update the title and assign values to uninitialized variables
-> V3: delete unused variables and add validation records
-> V2: fix when allocating IRQs, scan all queues
->
->   drivers/vdpa/virtio_pci/vp_vdpa.c | 23 +++++++++++++++++------
->   1 file changed, 17 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/vdpa/virtio_pci/vp_vdpa.c b/drivers/vdpa/virtio_pci/vp_vdpa.c
-> index df5f4a3bccb5..74bc8adfc7e8 100644
-> --- a/drivers/vdpa/virtio_pci/vp_vdpa.c
-> +++ b/drivers/vdpa/virtio_pci/vp_vdpa.c
-> @@ -160,7 +160,14 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
->   	struct pci_dev *pdev = mdev->pci_dev;
->   	int i, ret, irq;
->   	int queues = vp_vdpa->queues;
-> -	int vectors = queues + 1;
-> +	int vectors = 0;
-> +	int msix_vec = 0;
-> +
-> +	for (i = 0; i < queues; i++) {
-> +		if (vp_vdpa->vring[i].cb.callback)
-> +			vectors++;
-> +	}
-> +	vectors++;
->   
->   	ret = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSIX);
->   	if (ret != vectors) {
-> @@ -173,9 +180,12 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
->   	vp_vdpa->vectors = vectors;
->   
->   	for (i = 0; i < queues; i++) {
-> +		if (!vp_vdpa->vring[i].cb.callback)
-> +			continue;
-> +
->   		snprintf(vp_vdpa->vring[i].msix_name, VP_VDPA_NAME_SIZE,
->   			"vp-vdpa[%s]-%d\n", pci_name(pdev), i);
-> -		irq = pci_irq_vector(pdev, i);
-> +		irq = pci_irq_vector(pdev, msix_vec);
->   		ret = devm_request_irq(&pdev->dev, irq,
->   				       vp_vdpa_vq_handler,
->   				       0, vp_vdpa->vring[i].msix_name,
-> @@ -185,21 +195,22 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
->   				"vp_vdpa: fail to request irq for vq %d\n", i);
->   			goto err;
->   		}
-> -		vp_modern_queue_vector(mdev, i, i);
-> +		vp_modern_queue_vector(mdev, i, msix_vec);
->   		vp_vdpa->vring[i].irq = irq;
-> +		msix_vec++;
->   	}
->   
->   	snprintf(vp_vdpa->msix_name, VP_VDPA_NAME_SIZE, "vp-vdpa[%s]-config\n",
->   		 pci_name(pdev));
-> -	irq = pci_irq_vector(pdev, queues);
-> +	irq = pci_irq_vector(pdev, msix_vec);
->   	ret = devm_request_irq(&pdev->dev, irq,	vp_vdpa_config_handler, 0,
->   			       vp_vdpa->msix_name, vp_vdpa);
->   	if (ret) {
->   		dev_err(&pdev->dev,
-> -			"vp_vdpa: fail to request irq for vq %d\n", i);
-> +			"vp_vdpa: fail to request irq for config, ret %d\n", ret);
->   			goto err;
->   	}
-> -	vp_modern_config_vector(mdev, queues);
-> +	vp_modern_config_vector(mdev, msix_vec);
->   	vp_vdpa->config_irq = irq;
->   
->   	return 0;
+By "crippling" I mean the signal is modified in a obscure way so that a 
+frame has not all lines equal. The HW somehow (the exact way is not 
+known to me, the documentation is very sparse on this - before my 
+investigation it stated only "frames per second" which was very 
+confusing and the reason this patch exists) modifies the last 
+line(lines?) so that the overall clock ticks per frame is the desired 
+value. Some blanking stuff (the porches?) you have set are not equal for 
+all the frame lines.
 
-Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
+What I'm trying to do is to change the original documentation which is 
+definitely wrong (the users are confused how you can set the timings AND 
+the frame rate with different values at the same time) without saying 
+too much about the exact algorithm as it is not exactly known and may 
+even slightly change in different FW versions.
+
+Does that all make sense to you now?
