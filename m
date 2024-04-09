@@ -1,248 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF6A158871;
-	Tue,  9 Apr 2024 21:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F1E15886D
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 21:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712697076; cv=none; b=SM1URxDqrLFbk6agCZYkMaB1VVBEs1zlN3xzUHuyBD16qqcBfihjsTS0Aagkdc3Wvl1niHw6UxmKzNLC4zG39Vs6UodMId2ofyuMAHU/L2hjpWiw0S16moSyRkInhQHNxnVgKMmq3TogqI7aM6ECQDbAvCe3p1UhwL7GOvm21so=
+	t=1712697376; cv=none; b=sEx+1x8p2iJRtu3CpjTKY0cyViU2gt4NAKwufV/mFGmWB4ltpPTkWOcOffmtki58NyKwwcX8AMtFPWyq2EyUjE7LBw8QW1Pv8nibnPbzt2+3EdjxoQuyJGmIxXQgDVQRbnJoXrhFPKOLvVMcMKv5cVW5Msf0X3IM8fGSCKzom/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712697076; c=relaxed/simple;
-	bh=qjHBmxO19+VYEQPH6eAGJ8GUUULWhDNC6hilZ/5xo2U=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Iy5l/AixfnZ4h3Dig5iRbQv3aaHucH5I1YU4UzEpvGsJGuYnZi6Jxr84iORZf4CaLiITgdeE278YoaPv6g4VdP5lmNH50XLTUGUKrl1y2HN0+MzDboyMT766wZcB+EElT4e4xPWE98GyW08jz8Zs4oByVaoDdF6IfzHWXQPdvTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A950FC433A6;
-	Tue,  9 Apr 2024 21:11:15 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.97)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1ruImt-00000000d28-0tuD;
-	Tue, 09 Apr 2024 17:13:51 -0400
-Message-ID: <20240409211351.075320273@goodmis.org>
-User-Agent: quilt/0.67
-Date: Tue, 09 Apr 2024 17:02:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Lorenzo Stoakes <lstoakes@gmail.com>,
- linux-mm@kvack.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Kees Cook <keescook@chromium.org>,
- Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- linux-hardening@vger.kernel.org,
- Guenter Roeck <linux@roeck-us.net>,
- Ross Zwisler <zwisler@google.com>,
- wklin@google.com,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Joel Fernandes <joel@joelfernandes.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>
-Subject: [POC][RFC][PATCH 1/2] mm/x86: Add wildcard * option as memmap=nn*align:name
-References: <20240409210254.660888920@goodmis.org>
+	s=arc-20240116; t=1712697376; c=relaxed/simple;
+	bh=a6ygL+/fUwPck1ccv8s7ruzmTryeKbeD8k2zVjh+OOM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CPxSyAQByDleQfUx8hdLHdFyVRrTGV9u5wjHoPlp/K08nYuKdEDZMnAXHUjvIBrWB1QJ9M1wu/v7VaZsu8rGbha7SHKOj/q/wZqTnE2hfvEOlI/QLf9/DmPIfNQhuBTGr0nTbkkban77fm4+gH5nIwekkFHkyQ3TAgvBnma8rvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4ur4G/Z; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4ur4G/Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712697375; x=1744233375;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=a6ygL+/fUwPck1ccv8s7ruzmTryeKbeD8k2zVjh+OOM=;
+  b=N4ur4G/Zm+0UQIR3Pp94ta2zMoLsWdad8I8GCKx76fWlVu7WurWjiNrI
+   R3nM52wdMqvZMt0Wwdr5Kmt10LP0I2lQB9fdtCgJbEDNsgHLLBb9E1h3m
+   MAUUbQZjZ6NAResCTY2FCdeJtMLN0YnvdhyBwFjqoU8M7M/Hprk31dSVa
+   qFCeHI/yg/eQ2ZdXQFSRPmfUjDaWmd/lCO/gOe1IuJ6Sw4gEQ2m6J0DJM
+   lf4C6v9xSMsitTi+ntCUpU4gL7VxQoyox81S+CE8DcOcq0HlKFaf16Q+i
+   y0uoYQMhEXwXCc57OTw/vi2Cylj+uifzKf/T+Eh6r3l7IgQGUszP7yW56
+   Q==;
+X-CSE-ConnectionGUID: luVb+MPNTkW7wjUVEzKs1w==
+X-CSE-MsgGUID: vwE4gwq3QuqqoWaM+2cYxA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7907331"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7907331"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 14:16:06 -0700
+X-CSE-ConnectionGUID: 2twYPn6RTra1WZAfOA0uwA==
+X-CSE-MsgGUID: niUwqrdZQQy2XgiiTH0liw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20454084"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 09 Apr 2024 14:16:02 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ruIoy-0006W0-1c;
+	Tue, 09 Apr 2024 21:16:00 +0000
+Date: Wed, 10 Apr 2024 05:15:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>, vbabka@suse.cz
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+	david@redhat.com, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, mgorman@techsingularity.net,
+	ying.huang@intel.com, ziy@nvidia.com
+Subject: Re: [PATCH] mm: page_alloc: consolidate free page accounting fix 3
+Message-ID: <202404100519.mVXXF6kV-lkp@intel.com>
+References: <a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang@linux.alibaba.com>
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi Baolin,
 
-In order to allow for requesting a memory region that can be used for
-things like pstore on multiple machines where the memory is not the same,
-add a new option to the memmap=nn$ kernel command line.
+kernel test robot noticed the following build errors:
 
-The memmap=nn$addr will reserve nn amount of memory at the physical
-address addr. To use this, one must know the physical memory layout and
-know where usable memory exists in the physical layout.
 
-Add a '*' option that will assign memory by looking for a range that can
-fit the given size and alignment. It will start at the high addresses, and
-then work its way down.
 
-The format is:  memmap=nn*align:name
+url:    https://github.com/intel-lab-lkp/linux/commits/UPDATE-20240409-154935/Johannes-Weiner/mm-page_alloc-remove-pcppage-migratetype-caching/20240321-020814
+base:   the 10th patch of https://lore.kernel.org/r/20240320180429.678181-11-hannes%40cmpxchg.org
+patch link:    https://lore.kernel.org/r/a2a48baca69f103aa431fd201f8a06e3b95e203d.1712648441.git.baolin.wang%40linux.alibaba.com
+patch subject: [PATCH] mm: page_alloc: consolidate free page accounting fix 3
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20240410/202404100519.mVXXF6kV-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404100519.mVXXF6kV-lkp@intel.com/reproduce)
 
-Where it will find nn amount of memory at the given alignment of align.
-The name field is to allow another subsystem to retrieve where the memory
-was found. For example:
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404100519.mVXXF6kV-lkp@intel.com/
 
-  memmap=12M*4096:oops ramoops.mem_name=oops
+All errors (new ones prefixed by >>):
 
-Where ramoops.mem_name will tell ramoops that memory was reserved for it
-via the wildcard '*' option and it can find it by calling:
+>> mm/page_alloc.c:808:54: error: too few arguments to function call, expected 4, have 3
+     808 |                         account_freepages(zone, -(1 << order), migratetype);
+         |                         ~~~~~~~~~~~~~~~~~                                 ^
+   mm/page_alloc.c:645:20: note: 'account_freepages' declared here
+     645 | static inline void account_freepages(struct page *page, struct zone *zone,
+         |                    ^                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     646 |                                      int nr_pages, int migratetype)
+         |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
 
-  if (memmap_named("oops", &start, &size)) {
-	// start holds the start address and size holds the size given
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- arch/x86/kernel/e820.c | 91 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/mm.h     |  2 +
- mm/memory.c            |  7 ++++
- 3 files changed, 100 insertions(+)
+vim +808 mm/page_alloc.c
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 6f1b379e3b38..a8831ef30c73 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -64,6 +64,61 @@ struct e820_table *e820_table __refdata			= &e820_table_init;
- struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
- struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
- 
-+/* For wildcard memory requests, have a table to find them later */
-+#define E820_MAX_MAPS		8
-+#define E820_MAP_NAME_SIZE	16
-+struct e820_mmap_map {
-+	char			name[E820_MAP_NAME_SIZE];
-+	u64			start;
-+	u64			size;
-+};
-+static struct e820_mmap_map e820_mmap_list[E820_MAX_MAPS] __initdata;
-+static int e820_mmap_size				__initdata;
-+
-+/* Add wildcard region with a lookup name */
-+static int __init e820_add_mmap(u64 start, u64 size, const char *name)
-+{
-+	struct e820_mmap_map *map;
-+
-+	if (!name || !name[0] || strlen(name) >= E820_MAP_NAME_SIZE)
-+		return -EINVAL;
-+
-+	if (e820_mmap_size >= E820_MAX_MAPS)
-+		return -1;
-+
-+	map = &e820_mmap_list[e820_mmap_size++];
-+	map->start = start;
-+	map->size = size;
-+	strcpy(map->name, name);
-+	return 0;
-+}
-+
-+/**
-+ * memmap_named - Find a wildcard region with a given name
-+ * @name: The name that is attached to a wildcard region
-+ * @start: If found, holds the start address
-+ * @size: If found, holds the size of the address.
-+ *
-+ * Returns: 1 if found or 0 if not found.
-+ */
-+int __init memmap_named(const char *name, u64 *start, u64 *size)
-+{
-+	struct e820_mmap_map *map;
-+	int i;
-+
-+	for (i = 0; i < e820_mmap_size; i++) {
-+		map = &e820_mmap_list[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0) {
-+			*start = map->start;
-+			*size = map->size;
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
- /* For PCI or other memory-mapped resources */
- unsigned long pci_mem_start = 0xaeedbabe;
- #ifdef CONFIG_PCI
-@@ -200,6 +255,29 @@ static void __init e820_print_type(enum e820_type type)
- 	}
- }
- 
-+/*
-+ * Search for usable ram that can be reserved for a wildcard.
-+ * Start at the highest memory and work down to lower memory.
-+ */
-+static s64 e820__region(u64 size, u64 align)
-+{
-+	u64 start;
-+	int i;
-+
-+	for (i = e820_table->nr_entries; i >= 0; i--) {
-+		if (e820_table->entries[i].type != E820_TYPE_RAM &&
-+		    e820_table->entries[i].type != E820_TYPE_RESERVED_KERN)
-+			continue;
-+
-+		start = e820_table->entries[i].addr + e820_table->entries[i].size;
-+		start -= size;
-+		start = ALIGN_DOWN(start, align);
-+		if (start >= e820_table->entries[i].addr)
-+			return start;
-+	}
-+	return -1;
-+}
-+
- void __init e820__print_table(char *who)
- {
- 	int i;
-@@ -944,6 +1022,19 @@ static int __init parse_memmap_one(char *p)
- 	} else if (*p == '$') {
- 		start_at = memparse(p+1, &p);
- 		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
-+	} else if (*p == '*') {
-+		u64 align;
-+		/* Followed by alignment and ':' then the name */
-+		align = memparse(p+1, &p);
-+		start_at = e820__region(mem_size, align);
-+		if ((s64)start_at < 0)
-+			return -EINVAL;
-+		if (*p != ':')
-+			return -EINVAL;
-+		p++;
-+		e820_add_mmap(start_at, mem_size, p);
-+		p += strlen(p);
-+		e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
- 	} else if (*p == '!') {
- 		start_at = memparse(p+1, &p);
- 		e820__range_add(start_at, mem_size, E820_TYPE_PRAM);
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 0436b919f1c7..cf9b34454c6f 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4202,4 +4202,6 @@ static inline bool pfn_is_unaccepted_memory(unsigned long pfn)
- 	return range_contains_unaccepted_memory(paddr, paddr + PAGE_SIZE);
- }
- 
-+int memmap_named(const char *name, u64 *start, u64 *size);
-+
- #endif /* _LINUX_MM_H */
-diff --git a/mm/memory.c b/mm/memory.c
-index d2155ced45f8..7a29f17df7c1 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -120,6 +120,13 @@ static bool vmf_orig_pte_uffd_wp(struct vm_fault *vmf)
- 	return pte_marker_uffd_wp(vmf->orig_pte);
- }
- 
-+int __init __weak memmap_named(const char *name, u64 *start, u64 *size)
-+{
-+	pr_info("Kernel command line: memmap=nn*align:name not supported on this kernel");
-+	/* zero means not found */
-+	return 0;
-+}
-+
- /*
-  * A number of key systems in x86 including ioremap() rely on the assumption
-  * that high_memory defines the upper bound on direct map memory, then end
+   759	
+   760	/*
+   761	 * Freeing function for a buddy system allocator.
+   762	 *
+   763	 * The concept of a buddy system is to maintain direct-mapped table
+   764	 * (containing bit values) for memory blocks of various "orders".
+   765	 * The bottom level table contains the map for the smallest allocatable
+   766	 * units of memory (here, pages), and each level above it describes
+   767	 * pairs of units from the levels below, hence, "buddies".
+   768	 * At a high level, all that happens here is marking the table entry
+   769	 * at the bottom level available, and propagating the changes upward
+   770	 * as necessary, plus some accounting needed to play nicely with other
+   771	 * parts of the VM system.
+   772	 * At each level, we keep a list of pages, which are heads of continuous
+   773	 * free pages of length of (1 << order) and marked with PageBuddy.
+   774	 * Page's order is recorded in page_private(page) field.
+   775	 * So when we are allocating or freeing one, we can derive the state of the
+   776	 * other.  That is, if we allocate a small block, and both were
+   777	 * free, the remainder of the region must be split into blocks.
+   778	 * If a block is freed, and its buddy is also free, then this
+   779	 * triggers coalescing into a block of larger size.
+   780	 *
+   781	 * -- nyc
+   782	 */
+   783	
+   784	static inline void __free_one_page(struct page *page,
+   785			unsigned long pfn,
+   786			struct zone *zone, unsigned int order,
+   787			int migratetype, fpi_t fpi_flags)
+   788	{
+   789		struct capture_control *capc = task_capc(zone);
+   790		unsigned long buddy_pfn = 0;
+   791		unsigned long combined_pfn;
+   792		struct page *buddy;
+   793		bool to_tail;
+   794	
+   795		VM_BUG_ON(!zone_is_initialized(zone));
+   796		VM_BUG_ON_PAGE(page->flags & PAGE_FLAGS_CHECK_AT_PREP, page);
+   797	
+   798		VM_BUG_ON(migratetype == -1);
+   799		VM_BUG_ON_PAGE(pfn & ((1 << order) - 1), page);
+   800		VM_BUG_ON_PAGE(bad_range(zone, page), page);
+   801	
+   802		account_freepages(page, zone, 1 << order, migratetype);
+   803	
+   804		while (order < MAX_PAGE_ORDER) {
+   805			int buddy_mt = migratetype;
+   806	
+   807			if (compaction_capture(capc, page, order, migratetype)) {
+ > 808				account_freepages(zone, -(1 << order), migratetype);
+   809				return;
+   810			}
+   811	
+   812			buddy = find_buddy_page_pfn(page, pfn, order, &buddy_pfn);
+   813			if (!buddy)
+   814				goto done_merging;
+   815	
+   816			if (unlikely(order >= pageblock_order)) {
+   817				/*
+   818				 * We want to prevent merge between freepages on pageblock
+   819				 * without fallbacks and normal pageblock. Without this,
+   820				 * pageblock isolation could cause incorrect freepage or CMA
+   821				 * accounting or HIGHATOMIC accounting.
+   822				 */
+   823				buddy_mt = get_pfnblock_migratetype(buddy, buddy_pfn);
+   824	
+   825				if (migratetype != buddy_mt &&
+   826				    (!migratetype_is_mergeable(migratetype) ||
+   827				     !migratetype_is_mergeable(buddy_mt)))
+   828					goto done_merging;
+   829			}
+   830	
+   831			/*
+   832			 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
+   833			 * merge with it and move up one order.
+   834			 */
+   835			if (page_is_guard(buddy))
+   836				clear_page_guard(zone, buddy, order);
+   837			else
+   838				__del_page_from_free_list(buddy, zone, order, buddy_mt);
+   839	
+   840			if (unlikely(buddy_mt != migratetype)) {
+   841				/*
+   842				 * Match buddy type. This ensures that an
+   843				 * expand() down the line puts the sub-blocks
+   844				 * on the right freelists.
+   845				 */
+   846				set_pageblock_migratetype(buddy, migratetype);
+   847			}
+   848	
+   849			combined_pfn = buddy_pfn & pfn;
+   850			page = page + (combined_pfn - pfn);
+   851			pfn = combined_pfn;
+   852			order++;
+   853		}
+   854	
+   855	done_merging:
+   856		set_buddy_order(page, order);
+   857	
+   858		if (fpi_flags & FPI_TO_TAIL)
+   859			to_tail = true;
+   860		else if (is_shuffle_order(order))
+   861			to_tail = shuffle_pick_tail();
+   862		else
+   863			to_tail = buddy_merge_likely(pfn, buddy_pfn, page, order);
+   864	
+   865		__add_to_free_list(page, zone, order, migratetype, to_tail);
+   866	
+   867		/* Notify page reporting subsystem of freed page */
+   868		if (!(fpi_flags & FPI_SKIP_REPORT_NOTIFY))
+   869			page_reporting_notify_free(order);
+   870	}
+   871	
+
 -- 
-2.43.0
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
