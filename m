@@ -1,115 +1,90 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B184B7CF2B;
-	Tue,  9 Apr 2024 08:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38174EB41
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712649602; cv=none; b=g5gYcPZHaMJitkgJ2L/pX+5W0xToR63mle6UJqWyiuRBNg/EZOy+DperrlQrTGbkVeD7oVIe7AYX6Uovwogf5OP1/yVmeW+UZXdaZl+O5yxrr8+5GMoaZ3xRpDAv5mUEVlKkseaIG0zeVB/dnySIwBe2kbOq1LiPH7wTJCu7QJA=
+	t=1712649639; cv=none; b=Ur/VkmlFp+BDdSVNFItvLB1udR8cdZsJns9OBqS/za5NQJAjG7RlQYRo4zHcY8P8+xjUPdCs/QZyNaCG+bgxr0MA9kMS9iDh6fdhhHtWI13AOeKOrWyELO+c9VkXD1chNNPorm0XTXbZ6n1oDht41+xzAtkAMJwpMXLGUG3Y++k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712649602; c=relaxed/simple;
-	bh=+3z6auRQhul1eNrO/m8FYJ1d51wSu1m5tm67G9k2QnA=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ZVv3hBof+BevAh3qhdVGdFttqO+0qG59N8AFkoUR3sxuieAVCCutBcvqrN4X09LwsILd4esLqMYocQNibS74LPop8TYUdNShfnY4GxOyYhk30VJtJSrGvRkCDdJo7RAkpIluU4UNQzsrDHugWxeSMgTEQh01nHUgiL1uSdG31Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VDJFv6FkRz29kj0;
-	Tue,  9 Apr 2024 15:57:07 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id C68911402C7;
-	Tue,  9 Apr 2024 15:59:58 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 9 Apr
- 2024 15:59:58 +0800
-Subject: Re: [PATCH net-next v1 12/12] mm: page_frag: update documentation and
- maintainer for page_frag
-To: Alexander Duyck <alexander.duyck@gmail.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Jonathan Corbet
-	<corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
-	<linux-mm@kvack.org>, <linux-doc@vger.kernel.org>
-References: <20240407130850.19625-1-linyunsheng@huawei.com>
- <20240407130850.19625-13-linyunsheng@huawei.com>
- <b5c5866e626f6c90657a32b5e9adff724d5896db.camel@gmail.com>
- <c1f5a78a-3040-0cc7-f113-d5ec82c6010f@huawei.com>
- <CAKgT0UfZBGEVJa1O7cdNt6zy_EEPoGo=aW6ugRKy8a44qg0j8w@mail.gmail.com>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <09d7d59b-9da3-52f7-b039-acd0344c88c8@huawei.com>
-Date: Tue, 9 Apr 2024 15:59:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1712649639; c=relaxed/simple;
+	bh=avVXALww2VwZ9gN38ctn3234RAy9lcjvts1P4UvCWU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fS4Zoi2f2gVfu/4/PCV3HBoohh/xTCNONarlsle+RNY24G6kP3xeEpo+ejV47UOBnm4JIg4cHh5Yk1A4w3NCzS7UG0a7FRNd9XuFbIsC5l0AfqnRxno+kfUNgu/fJfTZTCM8Hy3TiHLSd0vvxDO8oDI6En1sKGueqXhe1VaIEQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qh0+Ccw5; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qh0+Ccw5"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-56e448d6f9cso1401697a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712649636; x=1713254436; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ONlMZGZ9RPYiJA+pih4//jtldRttSyww/CoJiXseC8=;
+        b=Qh0+Ccw5fnZ6kW4s1b1CPUhsNvQzvO9KwqlOJIDd3gI2dMVPv97UlaABlG6qsc9jVe
+         rBgBQwpna5xVB4NHuAWOqWRV6fQR7E7Exx2DLexOffPjSPKzdBi56a4oZ9OJzqdNzV8T
+         tBcJEUolvbyPYYjSrdai5sMPQMZRjVn8lLB70w5aLRNekbpIcND6zXp6Fo7AA+SJqHTZ
+         7Iigl2IvvUvx/oPHtL955EQU10LAMmyP6EqbSYglcvuyy+MTYKuwn3nlMHB7gFRz+0gD
+         hxlCFMnbhwzuDIbTur05hE3A2FI2MzqXk2RckOqKN2Gp7JzGGiT+HaTS1gIaXAt1ye8P
+         Y4KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712649636; x=1713254436;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6ONlMZGZ9RPYiJA+pih4//jtldRttSyww/CoJiXseC8=;
+        b=DN5mP29tq7wjfWZySWcdNhb8UV5haeJrATdXQPjtDMz/x0pJmu7Mo3CH78aXe/2Kie
+         mB7OLPsMVSYfLu+0XsjVHhkWe9qb8m3ZEIY8mByiMRBiIjWBYSqMc1jnr+YCcuxDmy5B
+         3Hbjr2zdULz1XAOQ/5seaO4in2kYqgwgpBtlGVzkTcKcnx1j2DZ9T/1Vlq4ub82/LD67
+         471X0MCpQzA13vNuDLTNIUgsJFoXTBEapSvlm2q7OEeWOxGsnrcxSLzE6IfWxwKSqXyX
+         Bn1AbPIRZE89/+93EmfRj3B3Zbc7TJzsbAwAH+1IZUOUJ+PmSnNCy5f82PDIgyTfsw8G
+         DD/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWlsV0ZQROOA27MKaQjnRb34tJv/zluEGD5Sc4if/XsIwMx1n6UQzoT2mK/pGsefYMu0/tWyhuYmGVPX6cCwdtZ2A7qc4SIU/yZPknl
+X-Gm-Message-State: AOJu0YwaS5e63P5QqCH6hIkVLcK3eMCPTirJneQF3JBgZtqYYGdBWpB4
+	hq+XRvCcnjyWESQGYATHZqU0Rm00FKu9NFkBLfP4RCOC1/Ciw3zes0NdbUe1dWw=
+X-Google-Smtp-Source: AGHT+IGxEblWAkIcMvVn/67TittUpAQ5r3yIpuR2HIFYIIXkYrL/8PqoXuJ527K8Niw97U0bA6lP0A==
+X-Received: by 2002:a17:907:8690:b0:a4e:2600:3fb6 with SMTP id qa16-20020a170907869000b00a4e26003fb6mr4485405ejc.62.1712649635877;
+        Tue, 09 Apr 2024 01:00:35 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id dm14-20020a170907948e00b00a4e24d259edsm5289480ejc.167.2024.04.09.01.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 01:00:35 -0700 (PDT)
+Date: Tue, 9 Apr 2024 11:00:30 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jackson Chui <jacksonchui.qwerty@gmail.com>
+Cc: Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2] staging: greybus: Replace gcam macros with direct dev
+ log calls
+Message-ID: <f851a212-4bb0-42ca-91c4-1ee44ea9ef4c@moroto.mountain>
+References: <ZhRzWNiak1qOdJLL@jc-ubuntu-dev-korn-1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfZBGEVJa1O7cdNt6zy_EEPoGo=aW6ugRKy8a44qg0j8w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhRzWNiak1qOdJLL@jc-ubuntu-dev-korn-1>
 
-On 2024/4/9 0:13, Alexander Duyck wrote:
-> On Mon, Apr 8, 2024 at 6:39 AM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2024/4/8 2:13, Alexander H Duyck wrote:
->>> On Sun, 2024-04-07 at 21:08 +0800, Yunsheng Lin wrote:
->>>> Update documentation about design, implementation and API usages
->>>> for page_frag.
->>>>
->>>> Also update MAINTAINERS for page_frag. Alexander seems to be the
->>>> orginal author for page_frag, we can add him to the MAINTAINERS
->>>> later if we have an ack from him.
->>>>
->>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>
->>> Again, this seems more like 2 different pathches at least. One for the
->>> Documentation and MAINTAINERS changes, and one for the function
->>> documentation.
->>
->> Sure.
->>
+On Mon, Apr 08, 2024 at 03:44:40PM -0700, Jackson Chui wrote:
+> Reported by checkpatch:
 > 
-> [...]
+> CHECK: Macro argument 'gcam' may be better as '(gcam)' to avoid
+> precedence issues
 > 
->>>> --- a/MAINTAINERS
->>>> +++ b/MAINTAINERS
->>>> @@ -16683,6 +16683,16 @@ F:  mm/page-writeback.c
->>>>  F:  mm/readahead.c
->>>>  F:  mm/truncate.c
->>>>
->>>> +PAGE FRAG
->>>> +M:  Yunsheng Lin <linyunsheng@huawei.com>
->>>> +L:  linux-mm@kvack.org
->>>> +L:  netdev@vger.kernel.org
->>>> +S:  Supported
->>>> +F:  Documentation/mm/page_frags.rst
->>>> +F:  include/linux/page_frag_cache.h
->>>> +F:  mm/page_frag_cache.c
->>>> +F:  mm/page_frag_test.c
->>>> +
->>>
->>> I would appreciate it if you could add me as I usually am having to
->>> deal with issues people have with this anyway. You can probably just go
->>> with:
->>> Alexander Duyck <alexander.duyck@gmail.com>
->>
->> Sure, good to your ack here.
+> Inline standard calls to 'dev_*' kernel logging functions, in favor
+> of 'gcam_*' macros, to clear up gcam-related logging.
 > 
-> Just to be clear this isn't an Ack, but if you are going to list
-> maintainers for this my name should be on the list so this is the
-> preferred format. There are still some things to be cleaned up in this
-> patch.
+> Signed-off-by: Jackson Chui <jacksonchui.qwerty@gmail.com>
 
-Sure, I was talking about "Alexander seems to be the orginal author for
-page_frag, we can add him to the MAINTAINERS later if we have an ack from
-him." in the commit log.
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-> .
-> 
+regards,
+dan carpenter
+
