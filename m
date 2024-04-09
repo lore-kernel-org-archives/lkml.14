@@ -1,155 +1,175 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15C015697F;
-	Tue,  9 Apr 2024 18:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B8D156673;
+	Tue,  9 Apr 2024 18:12:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.184.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712686297; cv=none; b=ap6EUlBi1V6FnprRf3vv8Sc5JEtUeA3LMFUQE1G+N+4qiTwjIX+8duA1H+QP7HP5jvyBTTAlsTDU4FG7b/BlUqgWnyO8m/jLUORjpzS/pqr0Krsv4FI+s6h/qQkFsI4cAISUfABFyFHrK/p1thEILVc9ELAvYH8/LnX+++c68Io=
+	t=1712686345; cv=none; b=PMaxrIJaCq4GNiONACGXjb96gg4fWd6TtyNAYYBzOwkKmlHTAUFhQlp8u98wOXzEOO+6tyQ2tdRIgFMIkzoX3uvpCIHn9N+ZHa5OwcwHazJ6h0+wLI/YfxHhQofWgpdrENBpuCx5xlbkeb14KUZpbIZO65yTpINx8j0MkjYhhJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712686297; c=relaxed/simple;
-	bh=9KWTLb2GFpqdF3ql6I6u+kNUpw+pjCe7VUcpjHsi9KM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUiML1MnwCL1ECA+5hXtomq7s0D966LDjYfq8SOL1Rrb3M9N/1p9p9SSwv1Nn+CU5mSXPevrqeK4FplJv7CDw7A8r2Jn10aK7GAUfC/UOmKafopddBY08rn6Dvm5pl1Rs6nQpexTwDbc974W1EzqsMErFHVume5AkwndcXabuYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YNHeecP4; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712686345; c=relaxed/simple;
+	bh=thxxt4zRIMmtKrX1Zq6SbymytnrxT37KGosR84E5MuI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MfGgy5TqHredP8ft9FhgYGWHQUXJe7bn8hGsVxoUc4rQ5VaYxEGt6mRQOALmXmBO6dBcp5pu8E8hmDEOV/WVpa8whybF/fFvUxBd999y0ze/0v6KHXUrfR0eUtA/QrahZLxHoXKNvlXdGgJgHCsFbwFuD7Vhy44NhiSBanM0Z5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=DLp0awBf; arc=none smtp.client-ip=207.171.184.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNHeecP4"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed0938cd1dso3780568b3a.2;
-        Tue, 09 Apr 2024 11:11:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="DLp0awBf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712686295; x=1713291095; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GkJ97XaOIzqTQv4Ch+TrALRjE0+uTTo/4gkFSTSGB0U=;
-        b=YNHeecP4ibHlpniBMLqp6u7Dc3GcN2sTcof/EPBGXpXwbu+qGEYAtwe4R1J2+heUkC
-         ERjGtb6sobwYQZOW3FmH92L3hWjR+X+5SaDEPLOkkyRpZcgin9DgNMiyHl/gaWrw1EDg
-         FqnZ1WTDVZD6Z78nHmrsZPWj/UhDNGScOJq8yqPYSaQvO/D5NDOnwCZk2PrzROMqlp5c
-         tb0J542zvrYm0TFUO/fBSTvgP7EZAMNjKccS4Js5UytEDZFC5YBvNUbS4j6ufl56PYEx
-         xyTW84Ou4VF3M8v7BU0kE38RzML5SvbsSy4WRUSxk8uXgEGDE85Q+XHz6PjT0o0SH3nV
-         rIiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712686295; x=1713291095;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GkJ97XaOIzqTQv4Ch+TrALRjE0+uTTo/4gkFSTSGB0U=;
-        b=p7DKVwuWqP8dUxkRaupJGo5NgM1F/TLJ+n/5xbenZBIctFKB8ru/9vl4mEjNwLAU5Q
-         Ltu7KLV48pMX7mWgYZik6ii2oaks0lmvxL7WeZoOZZ2qUI3ap3JeiKogc9MEOfcqeZhQ
-         0n+X8Tu22/ArrxgjqlFywCvqNpeY8WgNJE/BmqgnPigjeyehetCh+UW63KxBSwhKkA+X
-         hGQmGelmD2XRhKfHdCyUGAjdrX8Ms8AttNasAwFGYZkj2zrgLJhyoShGzim279kFX+el
-         +d3/4EprVkiblNYYmx8zb+M7+5mE8HtnzeNFML1xstet9ijuXwby2yTBeuEjS/JUvvpY
-         Lomw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzkRed17XKtnLqc4Rwfj66ErIIzkWU8FR6Legh35nArVARR0r1X8otBvcEthGFXFZpKCYZg3TiAG4QwONXtXk5pmXQMr0Q2Yhd6E59Nq8y7GE47jSoCdHIxQPYk79NkSg5e4L9jKoFHCPzUFngWfLrQgBE/OzUT00C9dRZbmVgGJe5mA==
-X-Gm-Message-State: AOJu0YxmEwy33VN1z9JY4iO0wGdJlqUVo/CxOruqkqrp6S/poG5dc8cp
-	LeAaxGfeQb4SKX4Fw0eLYd9S4iow1ewBEyDPgI+4z5z1Ou8Giu/j
-X-Google-Smtp-Source: AGHT+IHtZyM5SIPVSZgn5CW1FvoL+u4dKsDjWNZ0XK+eO/w4fX3IwbRyEhCXI7kRkyf+BeGb5JTfPg==
-X-Received: by 2002:a05:6a21:8804:b0:1a7:4b33:7c6f with SMTP id ta4-20020a056a21880400b001a74b337c6fmr756154pzc.43.1712686294809;
-        Tue, 09 Apr 2024 11:11:34 -0700 (PDT)
-Received: from localhost ([2804:30c:1618:ed00:d152:440c:102b:144e])
-        by smtp.gmail.com with ESMTPSA id l17-20020a170902e2d100b001dddcfca329sm9188461plc.148.2024.04.09.11.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 11:11:34 -0700 (PDT)
-Date: Tue, 9 Apr 2024 15:12:10 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, lars@metafoo.de,
-	Michael.Hennerich@analog.com, jic23@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: adc: Add support for AD4000
-Message-ID: <ZhWE-hQkRZ4JcJA6@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1712585500.git.marcelo.schmitt@analog.com>
- <1d95d7d023dad69b894a2d0e7b0bad9d569ae382.1712585500.git.marcelo.schmitt@analog.com>
- <CAMknhBEMDg3YF5pvoKJ-6y0Y5OJpmBthWfogCjy90B=F84SvzA@mail.gmail.com>
- <ZhVoTi2amNTOJ4eS@debian-BULLSEYE-live-builder-AMD64>
- <CAMknhBGVkv9sP0pjmmdFngKmGVu+G4Y3MUDG199az1wOUtwasw@mail.gmail.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712686344; x=1744222344;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CiSkwG2jh+RHXxMnTYckZv1UIdBtz87JB37Fxc/Kq2c=;
+  b=DLp0awBfYVAQhnaPzCImwxH9EJac3ZokG2ou/IpRJ+X94J/hhdkAbsqJ
+   TwFcnSd0G6llZVCN5ZgF3Wqft2YhEYH67m7889szcvsgvqVuzvjQhql2e
+   sr3BP5pFgmtGK5pLyR7fec2ZXB2GTqHwOECsEKWs24y6vKIDzWpFEZbVR
+   U=;
+X-IronPort-AV: E=Sophos;i="6.07,190,1708387200"; 
+   d="scan'208";a="410314341"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:12:17 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.43.254:49032]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.4.194:2525] with esmtp (Farcaster)
+ id 8c7cf490-05a2-4daf-a4b3-eb0cc4051ea5; Tue, 9 Apr 2024 18:12:15 +0000 (UTC)
+X-Farcaster-Flow-ID: 8c7cf490-05a2-4daf-a4b3-eb0cc4051ea5
+Received: from EX19D036EUC002.ant.amazon.com (10.252.61.191) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.155) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 18:12:15 +0000
+Received: from bcd074994f7f.amazon.com (10.95.97.144) by
+ EX19D036EUC002.ant.amazon.com (10.252.61.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 9 Apr 2024 18:12:10 +0000
+From: Sudan Landge <sudanl@amazon.com>
+To: <tytso@mit.edu>, <Jason@zx2c4.com>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<sudanl@amazon.com>, <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	<thomas.lendacky@amd.com>, <dan.j.williams@intel.com>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <graf@amazon.de>, <dwmw@amazon.co.uk>, <bchalios@amazon.es>,
+	<xmarcalx@amazon.co.uk>
+Subject: [PATCH v4 0/5] virt: vmgenid: Add devicetree bindings support
+Date: Tue, 9 Apr 2024 19:11:49 +0100
+Message-ID: <20240409181154.9962-1-sudanl@amazon.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMknhBGVkv9sP0pjmmdFngKmGVu+G4Y3MUDG199az1wOUtwasw@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWA002.ant.amazon.com (10.13.139.10) To
+ EX19D036EUC002.ant.amazon.com (10.252.61.191)
 
-On 04/09, David Lechner wrote:
-> On Tue, Apr 9, 2024 at 11:09 AM Marcelo Schmitt
-> <marcelo.schmitt1@gmail.com> wrote:
-> >
-> > On 04/08, David Lechner wrote:
-> > > On Mon, Apr 8, 2024 at 9:32 AM Marcelo Schmitt
-> > > <marcelo.schmitt@analog.com> wrote:
-> > > >
-> 
-...
-> 
-> 
-> > > > +static void ad4000_config(struct ad4000_state *st)
-> > > > +{
-> > > > +       unsigned int reg_val;
-> > > > +       int ret;
-> > > > +
-> > > > +       reg_val = FIELD_PREP(AD4000_TURBO, 1);
-> > >
-> > > Since the driver in it's current state can get anywhere near the max
-> > > sample rate of ~1MSPS, I don't think it makes sense to enable turbo at
-> > > this point.
-> > >
-> >
-> > This is just enabling turbo at start up. If not enabling turbo during probe,
-> > we would want(need?) to provide some interface for that, which might not be
-> > much desired.
-> >
-> 
-> TURBO is only needed to achieve the max sample rate of 500k/1M/2MSPS
-> on the various chips by skipping powering down some circuitry between
-> samples. We can't get anywhere close to that in Linux without some
-> sort of SPI offloading. So, for now, we might as well leave it
-> disabled and save some power.
-> 
+This small series of patches aims to add devicetree bindings support for
+the Virtual Machine Generation ID (vmgenid).
 
-Humm, ad4000 datasheets don't really mention power usage differences for turbo
-mode like ad7944 datasheet do. Though, they should be similar.
-Yeah, will leave turbo disabled until providing offload support.
+Virtual Machine Generation ID was introduced in commit af6b54e2b5ba
+("virt: vmgenid: notify RNG of VM fork and supply generation ID") as an
+ACPI only device.
 
-> 
-> > > > +
-> > > > +       st->pin_gain = AD4000_1_GAIN;
-> > > > +       if (device_property_present(&spi->dev, "adi,gain-milli")) {
-> > > > +               u32 val;
-> > >
-> > > Should it be an error if adi,gain-milli is set on non-adaq chips?
-> >
-> > Maybe. We should not change the scale if it's a chip that don't have the
-> > amplifier in front of the ADC. I think the best handling would be to just
-> > ignore adi,gain-milli if it's not an ADAQ device. Maybe better add a DT
-> > constraint,
-> >   - if:
-> >       properties:
-> >         compatible:
-> >           contains:
-> >             enum:
-> >               - adi,adaq4001
-> >               - adi,adaq4003
-> >     then:
-> >       properties:
-> >         adi,gain-milli: false
-> > ?
-> 
-> I think this is missing a not:, but otherwise yes this should be in
-> the DT bindings.
+VMGenID specification http://go.microsoft.com/fwlink/?LinkId=260709 defines
+a mechanism for the BIOS/hypervisors to communicate to the virtual machine
+that it is executed with a different configuration (e.g. snapshot execution
+or creation from a template).
+The guest operating system can use the notification for various purposes
+such as re-initializing its random number generator etc.
 
-Oops, yeap, was missing the not:.
+More references to vmgenid specs:
+ - https://www.qemu.org/docs/master/specs/vmgenid.html
+ - https://learn.microsoft.com/en-us/windows/win32/hyperv_v2/
+ virtual-machine-generation-identifier
 
-> 
-> Even with that though, I would still be helpful to readers of the
-> driver to at least have a comment here pointing out that this property
-> and related gain scaling only applies to ADAQ chips.
+*Reason for this change*:
+Chosing ACPI or devicetree is an intrinsic part of an hypervisor design.
+Without going into details of why a hypervisor would choose DT over ACPI,
+we would like to highlight that the hypervisors that have chosen devicetree
+and now want to make use of the vmgenid functionality cannot do so today
+because vmgenid is an ACPI only device.
+This forces these hypervisors to change their design which could have
+undesirable impacts on their use-cases, test-scenarios etc.
 
-ok, will add a comment.
+vmgenid exposes to the guest a 16-byte cryptographically random number,
+the value of which changes every time it starts executing from a new
+configuration (snapshot, backup, etc.). During initialization, the device
+exposes to the guest the address of the generation ID and
+an interrupt number, which the device will use to notify the guest when
+the generation ID changes.
+These attributes can be trivially communicated via device tree bindings.
+
+We believe that adding a devicetree binding for vmgenid is a simpler
+alternative way to expose the device to the guest than forcing the
+hypervisors to implement ACPI.
+
+Addtional notes:
+While adding the devicetree support we considered re-using existing
+structures/code to avoid duplicating code and reduce maintenance; so,
+we used the same driver to be configured either by ACPI or by DT.
+This also meant reimplementing the existing vmgenid ACPI bus driver as a
+platform driver and making it discoverable using `driver.of_match_table`
+and `driver.acpi_match_table`.
+
+There is no user impact or change in vmgenid functionality when used
+with ACPI. We verified ACPI support of these patches on X86 and DT
+support on ARM using Firecracker hypervisor
+https://github.com/firecracker-microvm/firecracker.
+
+To check schema and syntax errors, the bindings file is verified with:
+```
+  make dt_binding_check \
+  DT_SCHEMA_FILES=\
+  Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+```
+and the patches were verified with:
+`scripts/checkpatch.pl --strict v4-000*`.
+
+Changelog with respect to version 3:
+- Changed the compatible string from "virtual,vmgenctr" to
+  "microsoft,vmgenid" as per review comments.
+- Renamed vmgenid.yaml to follow DT file naming convention.
+- Updated the description of properties and example in vmgenid yaml file.
+- Addressed the review comments to remove all ifdefs in vmgenid.c with one
+  exception which still needs to be under CONFIG_ACPI.
+- reformated the code with clang-format.
+- Tested code with W=1, Sparse, Smatch and Coccinelle tools.
+
+Changelog with respect to version 2:
+- As per review comments, used platform apis instead of "of_*" APIs,
+  removed unnecessary #include and used IF_ENABLED instead of ifdef.
+- Added more info for vmgenid buffer address and corrected the formatting.
+- Replaced the compatible string from "linux,*" to "virtual,*" because,
+  the device does not have a vendor.
+
+Changelog with respect to version 1:
+- Moved vmgenid.yaml bindings to the more related "rng" folder.
+- Removed `vmgenid_remove` to since it is unrelated to the
+  current goal of the patch.
+- Updated the cover letter and bindings commit
+  "[PATCH v2 3/4] dt-bindings: rng: Add vmgenid support" to
+  provide more information on vmgenid.
+- Compiled with and without CONFIG_OF/CONFIG_ACPI and fixed
+  compilers errors/warnings.
+
+
+Sudan Landge (5):
+  virt: vmgenid: rearrange code to make review easier
+  virt: vmgenid: change implementation to use a platform driver
+  virt: vmgenid: enable driver regardless of ACPI config
+  dt-bindings: rng: Add vmgenid support
+  virt: vmgenid: add support for devicetree bindings
+
+ .../bindings/rng/microsoft,vmgenid.yaml       |  49 +++++
+ MAINTAINERS                                   |   1 +
+ drivers/virt/Kconfig                          |   1 -
+ drivers/virt/vmgenid.c                        | 168 ++++++++++++++----
+ 4 files changed, 180 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rng/microsoft,vmgenid.yaml
+
+
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+-- 
+2.34.1
+
