@@ -1,39 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5AB13A86B;
-	Tue,  9 Apr 2024 15:04:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A25912FF65;
+	Tue,  9 Apr 2024 15:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675086; cv=none; b=TD81X2c3r941Rjn8PCCBPFNAqbJynGKnZ4I0/meBjrhYxQJFQt1HbPVjMwSqojHH9L3VH7mLlNkve/Xw24A3LOW2GiqEu0csVXjYtP8lfpHTWmxRtGG81kGF/TcOQGGF4LN+1zCl5y6DaiBZ/daoo6ZpGcPXSopILa4YAjmWrz8=
+	t=1712675083; cv=none; b=e76/JukH2VeIs41/xNtQ+Pa9Jv9/Ii8l0ShHUct50No5BJCyDhwOop6ldAVgeyJ4gQBAwQHG2yRMWUueyllH9eMiujC5OIpAzo9T/0V5sVgDXCUah2mNDzp0xoTLzmY5EYpLiuJ200I11CngR0TLlckxHR0O4dV4Tbad+BuywMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675086; c=relaxed/simple;
-	bh=p420LPQ6KNjjB5J7zbiDgqLaUPO0eqRJYdW5zaYUUq0=;
+	s=arc-20240116; t=1712675083; c=relaxed/simple;
+	bh=OicPe2apnkmzCM/+kK6IVbj3lxMxl0Xb8XTydKxeN4s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LZApdhQmCoe65vPb8MX+0APmweG5mhifSZjiW5hzAqjw+Lu0Mo7KrqjOSlUGwcDmTL5fU5KhHlF2nQuo0ZAEXBEaMR/9kwePfseFuV8h6YEqBFz9TDDnR3/2j+I1r/26gQthaGSB0/DlCZOzWxE3WecHuTusBAuXgE7qwStIxiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eKhQu53b; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=G4WaemK2Iu2b7foKcXvRABPG90+hCyfUvd67vntQLKH/TGIHrlpltpfvCUvegWoydY3mNEdGMRvwn9n6zmr+y14q1KJATMGzCoSY2e59SNP49Q+SnjiYG2Kdf6vIMbBp4eTfUuquN5q1cUk6kT7f23K4yWHi2I48dzdiB6tlPVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FVC1aHZU; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eKhQu53b"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ACDF7C000A;
-	Tue,  9 Apr 2024 15:04:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FVC1aHZU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 72B9EC000C;
+	Tue,  9 Apr 2024 15:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712675081;
+	t=1712675077;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WVOuql8dKHHZkQjfmEVGEzF8aGPcGCYemOcJitXcJn8=;
-	b=eKhQu53bTEasAJ8N1JGDxw1nskCDHYz4OBtoiw5VbC6BeFAXutj+M3bfIcNVDWhAxej7Kf
-	AnLtEIHg/r2u1SDS9E9sargzLXGQPeKKdJa7uWNPoCVQUzbIDceOscw8HXZtrGd3dO3mJJ
-	VQY2cvOFnHhF7xXEcPEBl6/wdRfvxVT9So9izpj+iaJYIONT5zWvkVgmx22PTUt2TqGyQd
-	MTIdWCUI/Td4k6i9xk7kwscnwXg8RoUSyrw9+wOkAkmk6N3gVwVwec/vN561lQh/kp7ud7
-	NkoxvZPOh6yAinzJfH8tr/ybXvarCPsLLWP1dLZ4w+X3ZejUjXxhYpNX7I9S6Q==
+	bh=/tlcaVBCjzFkXgUlW5LL6I3JDt7G63hJu0bJA/wNnpQ=;
+	b=FVC1aHZUTJmijTITNkjqKzSBGLFFuo8OuO64T5m+j/KYVXB+3Uu5pl2MjQnL0R5f4UZWNa
+	prpB4/6G+R0Vgjna8gRNmCKU8LO5e5uDlxgm7HSVWGaUcmB/exuTEyDzvLKtQyly85gjeb
+	nL9kJaZ7aDDpq5gyfUEHqG17G44m84vwWCQfzjiYW27tuY1CGuWDGwrhBVmFnyvp5U08aC
+	/QAH3/JIS7u4RrHwxpEOzT2pyRxHp/2GjJ9ifyDvhxlNm/nvZQ597NFzMp9s/FcM3W6JrS
+	ozmY6iaotB8Lkh7FwDYzDNnkc/zNEwBuUOcGVczaAriF9zdve4/AfKONCSWkYg==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 09 Apr 2024 17:04:07 +0200
-Subject: [PATCH net-next v7 17/17] net: pse-pd: Add TI TPS23881 PSE
- controller driver
+Date: Tue, 09 Apr 2024 17:04:05 +0200
+Subject: [PATCH net-next v7 15/17] net: pse-pd: Add PD692x0 PSE controller
+ driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240409-feature_poe-v7-17-11e38efd4dee@bootlin.com>
+Message-Id: <20240409-feature_poe-v7-15-11e38efd4dee@bootlin.com>
 References: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 In-Reply-To: <20240409-feature_poe-v7-0-11e38efd4dee@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -67,63 +67,78 @@ X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Add a new driver for the TI TPS23881 I2C Power Sourcing Equipment
-controller.
+Add a new driver for the PD692x0 I2C Power Sourcing Equipment controller.
+This driver only support i2c communication for now.
 
 Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
+Change in v2:
+- Drop of_match_ptr
+- Follow the "c33" PoE prefix naming change.
+- Remove unused delay_recv variable. Then, remove struct pd692x0_msg_content
+  which is similar to struct pd692x0_msg.
+- Fix a weird sleep loop.
+- Improve pd692x0_recv_msg for better readability.
+- Fix a warning reported by Simon on a pd692x0_fw_write_line call.
+
 Change in v3:
-- New patch.
-
-Change in v6:
-- Fix firmware management, release_firmware was missing.
-
-Change in v7:
-- Few nit spotted by Andrew.
-- Rename *flash_fw* functions to *flash_sram_fw*.
+- Fix few nit.
+- Change the return value of pd692x0_try_recv_msg function.
+- Replace a dev_err() function to dev_err_probe().
+- Replace pd692x0_update_matrix by the newly introduced setup_pi_matrix callback.
+- Follow new bindings of managers subnode description.
+- Update the pse ops with the newly introduced pi_enable, pi_is_enabled and
+  pi_disable ones.
+- Replace firmware version check by a softer one (< instead of =!).
+- Rearrange the probe function, which had wrong ordering on error case
+  between pcdcev registering and software version read.
+- Fixed the probe function in the case it is call two times. The status
+  won't be sent automatically on the second times so ask for it.
 ---
- drivers/net/pse-pd/Kconfig    |   9 +
- drivers/net/pse-pd/Makefile   |   1 +
- drivers/net/pse-pd/tps23881.c | 820 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 830 insertions(+)
+ drivers/net/pse-pd/Kconfig   |   11 +
+ drivers/net/pse-pd/Makefile  |    1 +
+ drivers/net/pse-pd/pd692x0.c | 1223 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1235 insertions(+)
 
 diff --git a/drivers/net/pse-pd/Kconfig b/drivers/net/pse-pd/Kconfig
-index e3a6ba669f20..80cf373a5a0e 100644
+index 687dec49c1e1..e3a6ba669f20 100644
 --- a/drivers/net/pse-pd/Kconfig
 +++ b/drivers/net/pse-pd/Kconfig
-@@ -31,4 +31,13 @@ config PSE_PD692X0
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pd692x0.
+@@ -20,4 +20,15 @@ config PSE_REGULATOR
+ 	  Sourcing Equipment without automatic classification support. For
+ 	  example for basic implementation of PoDL (802.3bu) specification.
  
-+config PSE_TPS23881
-+	tristate "TPS23881 PSE controller"
++config PSE_PD692X0
++	tristate "PD692X0 PSE controller"
 +	depends on I2C
++	select FW_UPLOAD
 +	help
-+	  This module provides support for TPS23881 regulator based Ethernet
++	  This module provides support for PD692x0 regulator based Ethernet
 +	  Power Sourcing Equipment.
 +
 +	  To compile this driver as a module, choose M here: the
-+	  module will be called tps23881.
++	  module will be called pd692x0.
++
  endif
 diff --git a/drivers/net/pse-pd/Makefile b/drivers/net/pse-pd/Makefile
-index 9c12c4a65730..9d2898b36737 100644
+index 1b8aa4c70f0b..9c12c4a65730 100644
 --- a/drivers/net/pse-pd/Makefile
 +++ b/drivers/net/pse-pd/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
+@@ -4,3 +4,4 @@
+ obj-$(CONFIG_PSE_CONTROLLER) += pse_core.o
  
  obj-$(CONFIG_PSE_REGULATOR) += pse_regulator.o
- obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
-+obj-$(CONFIG_PSE_TPS23881) += tps23881.o
-diff --git a/drivers/net/pse-pd/tps23881.c b/drivers/net/pse-pd/tps23881.c
++obj-$(CONFIG_PSE_PD692X0) += pd692x0.o
+diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
 new file mode 100644
-index 000000000000..98ffbb1bbf13
+index 000000000000..6488b941703c
 --- /dev/null
-+++ b/drivers/net/pse-pd/tps23881.c
-@@ -0,0 +1,820 @@
++++ b/drivers/net/pse-pd/pd692x0.c
+@@ -0,0 +1,1223 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Driver for the TI TPS23881 PoE PSE Controller driver (I2C bus)
++ * Driver for the Microchip PD692X0 PoE PSE Controller driver (I2C bus)
 + *
 + * Copyright (c) 2023 Bootlin, Kory Maincent <kory.maincent@bootlin.com>
 + */
@@ -136,729 +151,1107 @@ index 000000000000..98ffbb1bbf13
 +#include <linux/platform_device.h>
 +#include <linux/pse-pd/pse.h>
 +
-+#define TPS23881_MAX_CHANS 8
++#define PD692X0_PSE_NAME "pd692x0_pse"
 +
-+#define TPS23881_REG_PW_STATUS	0x10
-+#define TPS23881_REG_OP_MODE	0x12
-+#define TPS23881_OP_MODE_SEMIAUTO	0xaaaa
-+#define TPS23881_REG_DIS_EN	0x13
-+#define TPS23881_REG_DET_CLA_EN	0x14
-+#define TPS23881_REG_GEN_MASK	0x17
-+#define TPS23881_REG_NBITACC	BIT(5)
-+#define TPS23881_REG_PW_EN	0x19
-+#define TPS23881_REG_PORT_MAP	0x26
-+#define TPS23881_REG_PORT_POWER	0x29
-+#define TPS23881_REG_POEPLUS	0x40
-+#define TPS23881_REG_TPON	BIT(0)
-+#define TPS23881_REG_FWREV	0x41
-+#define TPS23881_REG_DEVID	0x43
-+#define TPS23881_REG_SRAM_CTRL	0x60
-+#define TPS23881_REG_SRAM_DATA	0x61
++#define PD692X0_MAX_PIS	48
++#define PD692X0_MAX_MANAGERS		12
++#define PD692X0_MAX_MANAGER_PORTS	8
++#define PD692X0_MAX_HW_PORTS	(PD692X0_MAX_MANAGERS * PD692X0_MAX_MANAGER_PORTS)
 +
-+struct tps23881_port_desc {
-+	u8 chan[2];
-+	bool is_4p;
++#define PD69200_BT_PROD_VER	24
++#define PD69210_BT_PROD_VER	26
++#define PD69220_BT_PROD_VER	29
++
++#define PD692X0_FW_MAJ_VER	3
++#define PD692X0_FW_MIN_VER	5
++#define PD692X0_FW_PATCH_VER	5
++
++enum pd692x0_fw_state {
++	PD692X0_FW_UNKNOWN,
++	PD692X0_FW_OK,
++	PD692X0_FW_BROKEN,
++	PD692X0_FW_NEED_UPDATE,
++	PD692X0_FW_PREPARE,
++	PD692X0_FW_WRITE,
++	PD692X0_FW_COMPLETE,
 +};
 +
-+struct tps23881_priv {
++struct pd692x0_msg {
++	u8 key;
++	u8 echo;
++	u8 sub[3];
++	u8 data[8];
++	__be16 chksum;
++} __packed;
++
++struct pd692x0_msg_ver {
++	u8 prod;
++	u8 maj_sw_ver;
++	u8 min_sw_ver;
++	u8 pa_sw_ver;
++	u8 param;
++	u8 build;
++};
++
++enum {
++	PD692X0_KEY_CMD,
++	PD692X0_KEY_PRG,
++	PD692X0_KEY_REQ,
++	PD692X0_KEY_TLM,
++	PD692X0_KEY_TEST,
++	PD692X0_KEY_REPORT = 0x52
++};
++
++enum {
++	PD692X0_MSG_RESET,
++	PD692X0_MSG_GET_SYS_STATUS,
++	PD692X0_MSG_GET_SW_VER,
++	PD692X0_MSG_SET_TMP_PORT_MATRIX,
++	PD692X0_MSG_PRG_PORT_MATRIX,
++	PD692X0_MSG_SET_PORT_PARAM,
++	PD692X0_MSG_GET_PORT_STATUS,
++	PD692X0_MSG_DOWNLOAD_CMD,
++
++	/* add new message above here */
++	PD692X0_MSG_CNT
++};
++
++struct pd692x0_priv {
 +	struct i2c_client *client;
 +	struct pse_controller_dev pcdev;
 +	struct device_node *np;
-+	struct tps23881_port_desc port[TPS23881_MAX_CHANS];
++
++	enum pd692x0_fw_state fw_state;
++	struct fw_upload *fwl;
++	bool cancel_request;
++
++	u8 msg_id;
++	bool last_cmd_key;
++	unsigned long last_cmd_key_time;
++
++	enum ethtool_c33_pse_admin_state admin_state[PD692X0_MAX_PIS];
 +};
 +
-+static struct tps23881_priv *to_tps23881_priv(struct pse_controller_dev *pcdev)
++/* Template list of communication messages. The non-null bytes defined here
++ * constitute the fixed portion of the messages. The remaining bytes will
++ * be configured later within the functions. Refer to the "PD692x0 BT Serial
++ * Communication Protocol User Guide" for comprehensive details on messages
++ * content.
++ */
++static const struct pd692x0_msg pd692x0_msg_template_list[PD692X0_MSG_CNT] = {
++	[PD692X0_MSG_RESET] = {
++		.key = PD692X0_KEY_CMD,
++		.sub = {0x07, 0x55, 0x00},
++		.data = {0x55, 0x00, 0x55, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_GET_SYS_STATUS] = {
++		.key = PD692X0_KEY_REQ,
++		.sub = {0x07, 0xd0, 0x4e},
++		.data = {0x4e, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_GET_SW_VER] = {
++		.key = PD692X0_KEY_REQ,
++		.sub = {0x07, 0x1e, 0x21},
++		.data = {0x4e, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_SET_TMP_PORT_MATRIX] = {
++		.key = PD692X0_KEY_CMD,
++		.sub	 = {0x05, 0x43},
++		.data = {   0, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_PRG_PORT_MATRIX] = {
++		.key = PD692X0_KEY_CMD,
++		.sub = {0x07, 0x43, 0x4e},
++		.data = {0x4e, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_SET_PORT_PARAM] = {
++		.key = PD692X0_KEY_CMD,
++		.sub = {0x05, 0xc0},
++		.data = {   0, 0xff, 0xff, 0xff,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_GET_PORT_STATUS] = {
++		.key = PD692X0_KEY_REQ,
++		.sub = {0x05, 0xc1},
++		.data = {0x4e, 0x4e, 0x4e, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++	[PD692X0_MSG_DOWNLOAD_CMD] = {
++		.key = PD692X0_KEY_PRG,
++		.sub = {0xff, 0x99, 0x15},
++		.data = {0x16, 0x16, 0x99, 0x4e,
++			 0x4e, 0x4e, 0x4e, 0x4e},
++	},
++};
++
++static u8 pd692x0_build_msg(struct pd692x0_msg *msg, u8 echo)
 +{
-+	return container_of(pcdev, struct tps23881_priv, pcdev);
++	u8 *data = (u8 *)msg;
++	u16 chksum = 0;
++	int i;
++
++	msg->echo = echo++;
++	if (echo == 0xff)
++		echo = 0;
++
++	for (i = 0; i < sizeof(*msg) - sizeof(msg->chksum); i++)
++		chksum += data[i];
++
++	msg->chksum = cpu_to_be16(chksum);
++
++	return echo;
 +}
 +
-+static int tps23881_pi_enable(struct pse_controller_dev *pcdev, int id)
++static int pd692x0_send_msg(struct pd692x0_priv *priv, struct pd692x0_msg *msg)
 +{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	u8 chan;
-+	u16 val;
++	const struct i2c_client *client = priv->client;
 +	int ret;
 +
-+	if (id >= TPS23881_MAX_CHANS)
-+		return -ERANGE;
++	if (msg->key == PD692X0_KEY_CMD && priv->last_cmd_key) {
++		int cmd_msleep;
 +
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		val = (u16)(ret | BIT(chan));
-+	else
-+		val = (u16)(ret | BIT(chan + 4));
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			val |= BIT(chan);
-+		else
-+			val |= BIT(chan + 4);
++		cmd_msleep = 30 - jiffies_to_msecs(jiffies - priv->last_cmd_key_time);
++		if (cmd_msleep > 0)
++			msleep(cmd_msleep);
 +	}
 +
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
-+	if (ret)
-+		return ret;
++	/* Add echo and checksum bytes to the message */
++	priv->msg_id = pd692x0_build_msg(msg, priv->msg_id);
++
++	ret = i2c_master_send(client, (u8 *)msg, sizeof(*msg));
++	if (ret != sizeof(*msg))
++		return -EIO;
 +
 +	return 0;
 +}
 +
-+static int tps23881_pi_disable(struct pse_controller_dev *pcdev, int id)
++static int pd692x0_reset(struct pd692x0_priv *priv)
 +{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	u8 chan;
-+	u16 val;
++	const struct i2c_client *client = priv->client;
++	struct pd692x0_msg msg, buf = {0};
 +	int ret;
 +
-+	if (id >= TPS23881_MAX_CHANS)
-+		return -ERANGE;
-+
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
++	msg = pd692x0_msg_template_list[PD692X0_MSG_RESET];
++	ret = pd692x0_send_msg(priv, &msg);
++	if (ret) {
++		dev_err(&client->dev,
++			"Failed to reset the controller (%pe)\n", ERR_PTR(ret));
 +		return ret;
-+
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		val = (u16)(ret | BIT(chan + 4));
-+	else
-+		val = (u16)(ret | BIT(chan + 8));
-+
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			val |= BIT(chan + 4);
-+		else
-+			val |= BIT(chan + 8);
 +	}
 +
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PW_EN, val);
-+	if (ret)
-+		return ret;
++	msleep(30);
++
++	ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
++	if (ret != sizeof(buf))
++		return ret < 0 ? ret : -EIO;
++
++	/* Is the reply a successful report message */
++	if (buf.key != PD692X0_KEY_REPORT || buf.sub[0] || buf.sub[1])
++		return -EIO;
++
++	msleep(300);
++
++	ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
++	if (ret != sizeof(buf))
++		return ret < 0 ? ret : -EIO;
++
++	/* Is the boot status without error */
++	if (buf.key != 0x03 || buf.echo != 0xff || buf.sub[0] & 0x1) {
++		dev_err(&client->dev, "PSE controller error\n");
++		return -EIO;
++	}
 +
 +	return 0;
 +}
 +
-+static int tps23881_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
++static bool pd692x0_try_recv_msg(const struct i2c_client *client,
++				 struct pd692x0_msg *msg,
++				 struct pd692x0_msg *buf)
 +{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	bool enabled;
-+	u8 chan;
-+	int ret;
++	/* Wait 30ms before readback as mandated by the protocol */
++	msleep(30);
 +
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
-+		return ret;
++	memset(buf, 0, sizeof(*buf));
++	i2c_master_recv(client, (u8 *)buf, sizeof(*buf));
++	if (buf->key)
++		return 0;
 +
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4)
-+		enabled = ret & BIT(chan);
-+	else
-+		enabled = ret & BIT(chan + 4);
++	msleep(100);
 +
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4)
-+			enabled &= !!(ret & BIT(chan));
-+		else
-+			enabled &= !!(ret & BIT(chan + 4));
-+	}
++	memset(buf, 0, sizeof(*buf));
++	i2c_master_recv(client, (u8 *)buf, sizeof(*buf));
++	if (buf->key)
++		return 0;
 +
-+	/* Return enabled status only if both channel are on this state */
-+	return enabled;
++	return 1;
 +}
 +
-+static int tps23881_ethtool_get_status(struct pse_controller_dev *pcdev,
-+				       unsigned long id,
-+				       struct netlink_ext_ack *extack,
-+				       struct pse_control_status *status)
++/* Implementation of I2C communication, specifically addressing scenarios
++ * involving communication loss. Refer to the "Synchronization During
++ * Communication Loss" section in the Communication Protocol document for
++ * further details.
++ */
++static int pd692x0_recv_msg(struct pd692x0_priv *priv,
++			    struct pd692x0_msg *msg,
++			    struct pd692x0_msg *buf)
 +{
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	struct i2c_client *client = priv->client;
-+	bool enabled, delivering;
-+	u8 chan;
++	const struct i2c_client *client = priv->client;
 +	int ret;
 +
-+	ret = i2c_smbus_read_word_data(client, TPS23881_REG_PW_STATUS);
-+	if (ret < 0)
++	ret = pd692x0_try_recv_msg(client, msg, buf);
++	if (!ret)
++		goto out_success;
++
++	dev_warn(&client->dev,
++		 "Communication lost, rtnl is locked until communication is back!");
++
++	ret = pd692x0_send_msg(priv, msg);
++	if (ret)
 +		return ret;
 +
-+	chan = priv->port[id].chan[0];
-+	if (chan < 4) {
-+		enabled = ret & BIT(chan);
-+		delivering = ret & BIT(chan + 4);
++	ret = pd692x0_try_recv_msg(client, msg, buf);
++	if (!ret)
++		goto out_success2;
++
++	msleep(10000);
++
++	ret = pd692x0_send_msg(priv, msg);
++	if (ret)
++		return ret;
++
++	ret = pd692x0_try_recv_msg(client, msg, buf);
++	if (!ret)
++		goto out_success2;
++
++	return pd692x0_reset(priv);
++
++out_success2:
++	dev_warn(&client->dev, "Communication is back, rtnl is unlocked!");
++out_success:
++	if (msg->key == PD692X0_KEY_CMD) {
++		priv->last_cmd_key = true;
++		priv->last_cmd_key_time = jiffies;
 +	} else {
-+		enabled = ret & BIT(chan + 4);
-+		delivering = ret & BIT(chan + 8);
++		priv->last_cmd_key = false;
 +	}
 +
-+	if (priv->port[id].is_4p) {
-+		chan = priv->port[id].chan[1];
-+		if (chan < 4) {
-+			enabled &= !!(ret & BIT(chan));
-+			delivering &= !!(ret & BIT(chan + 4));
-+		} else {
-+			enabled &= !!(ret & BIT(chan + 4));
-+			delivering &= !!(ret & BIT(chan + 8));
-+		}
++	return 0;
++}
++
++static int pd692x0_sendrecv_msg(struct pd692x0_priv *priv,
++				struct pd692x0_msg *msg,
++				struct pd692x0_msg *buf)
++{
++	struct device *dev = &priv->client->dev;
++	int ret;
++
++	ret = pd692x0_send_msg(priv, msg);
++	if (ret)
++		return ret;
++
++	ret = pd692x0_recv_msg(priv, msg, buf);
++	if (ret)
++		return ret;
++
++	if (msg->echo != buf->echo) {
++		dev_err(dev,
++			"Wrong match in message ID, expect %d received %d.\n",
++			msg->echo, buf->echo);
++		return -EIO;
 +	}
 +
-+	/* Return delivering status only if both channel are on this state */
-+	if (delivering)
++	/* If the reply is a report message is it successful */
++	if (buf->key == PD692X0_KEY_REPORT &&
++	    (buf->sub[0] || buf->sub[1])) {
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static struct pd692x0_priv *to_pd692x0_priv(struct pse_controller_dev *pcdev)
++{
++	return container_of(pcdev, struct pd692x0_priv, pcdev);
++}
++
++static int pd692x0_fw_unavailable(struct pd692x0_priv *priv)
++{
++	switch (priv->fw_state) {
++	case PD692X0_FW_OK:
++		return 0;
++	case PD692X0_FW_PREPARE:
++	case PD692X0_FW_WRITE:
++	case PD692X0_FW_COMPLETE:
++		dev_err(&priv->client->dev, "Firmware update in progress!\n");
++		return -EBUSY;
++	case PD692X0_FW_BROKEN:
++	case PD692X0_FW_NEED_UPDATE:
++	default:
++		dev_err(&priv->client->dev,
++			"Firmware issue. Please update it!\n");
++		return -EOPNOTSUPP;
++	}
++}
++
++static int pd692x0_pi_enable(struct pse_controller_dev *pcdev, int id)
++{
++	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
++	struct pd692x0_msg msg, buf = {0};
++	int ret;
++
++	ret = pd692x0_fw_unavailable(priv);
++	if (ret)
++		return ret;
++
++	if (priv->admin_state[id] == ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED)
++		return 0;
++
++	msg = pd692x0_msg_template_list[PD692X0_MSG_SET_PORT_PARAM];
++	msg.data[0] = 0x1;
++	msg.sub[2] = id;
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
++
++	priv->admin_state[id] = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
++
++	return 0;
++}
++
++static int pd692x0_pi_disable(struct pse_controller_dev *pcdev, int id)
++{
++	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
++	struct pd692x0_msg msg, buf = {0};
++	int ret;
++
++	ret = pd692x0_fw_unavailable(priv);
++	if (ret)
++		return ret;
++
++	if (priv->admin_state[id] == ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED)
++		return 0;
++
++	msg = pd692x0_msg_template_list[PD692X0_MSG_SET_PORT_PARAM];
++	msg.data[0] = 0x0;
++	msg.sub[2] = id;
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
++
++	priv->admin_state[id] = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
++
++	return 0;
++}
++
++static int pd692x0_pi_is_enabled(struct pse_controller_dev *pcdev, int id)
++{
++	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
++	struct pd692x0_msg msg, buf = {0};
++	int ret;
++
++	ret = pd692x0_fw_unavailable(priv);
++	if (ret)
++		return ret;
++
++	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_STATUS];
++	msg.sub[2] = id;
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
++
++	if (buf.sub[1]) {
++		priv->admin_state[id] = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
++		return 1;
++	} else {
++		priv->admin_state[id] = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
++		return 0;
++	}
++}
++
++static int pd692x0_ethtool_get_status(struct pse_controller_dev *pcdev,
++				      unsigned long id,
++				      struct netlink_ext_ack *extack,
++				      struct pse_control_status *status)
++{
++	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
++	struct pd692x0_msg msg, buf = {0};
++	int ret;
++
++	ret = pd692x0_fw_unavailable(priv);
++	if (ret)
++		return ret;
++
++	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_PORT_STATUS];
++	msg.sub[2] = id;
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
++
++	/* Compare Port Status (Communication Protocol Document par. 7.1) */
++	if ((buf.sub[0] & 0xf0) == 0x80 || (buf.sub[0] & 0xf0) == 0x90)
 +		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DELIVERING;
++	else if (buf.sub[0] == 0x1b || buf.sub[0] == 0x22)
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_SEARCHING;
++	else if (buf.sub[0] == 0x12)
++		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_FAULT;
 +	else
 +		status->c33_pw_status = ETHTOOL_C33_PSE_PW_D_STATUS_DISABLED;
 +
-+	/* Return enabled status only if both channel are on this state */
-+	if (enabled)
++	if (buf.sub[1])
 +		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_ENABLED;
 +	else
 +		status->c33_admin_state = ETHTOOL_C33_PSE_ADMIN_STATE_DISABLED;
 +
++	priv->admin_state[id] = status->c33_admin_state;
++
 +	return 0;
 +}
 +
-+/* Parse managers subnode into a array of device node */
-+static int
-+tps23881_get_of_channels(struct tps23881_priv *priv,
-+			 struct device_node *chan_node[TPS23881_MAX_CHANS])
++static struct pd692x0_msg_ver pd692x0_get_sw_version(struct pd692x0_priv *priv)
 +{
-+	struct device_node *channels_node, *node;
-+	int i, ret;
++	struct device *dev = &priv->client->dev;
++	struct pd692x0_msg msg, buf = {0};
++	struct pd692x0_msg_ver ver = {0};
++	int ret;
 +
-+	if (!priv->np)
-+		return -EINVAL;
++	msg = pd692x0_msg_template_list[PD692X0_MSG_GET_SW_VER];
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0) {
++		dev_err(dev, "Failed to get PSE version (%pe)\n", ERR_PTR(ret));
++		return ver;
++	}
 +
-+	channels_node = of_find_node_by_name(priv->np, "channels");
-+	if (!channels_node)
-+		return -EINVAL;
++	/* Extract version from the message */
++	ver.prod = buf.sub[2];
++	ver.maj_sw_ver = (buf.data[0] << 8 | buf.data[1]) / 100;
++	ver.min_sw_ver = ((buf.data[0] << 8 | buf.data[1]) / 10) % 10;
++	ver.pa_sw_ver = (buf.data[0] << 8 | buf.data[1]) % 10;
++	ver.param = buf.data[2];
++	ver.build = buf.data[3];
 +
-+	for_each_child_of_node(channels_node, node) {
-+		u32 chan_id;
++	return ver;
++}
 +
-+		if (!of_node_name_eq(node, "channel"))
++struct pd692x0_manager {
++	struct device_node *port_node[PD692X0_MAX_MANAGER_PORTS];
++	int nports;
++};
++
++struct pd692x0_matrix {
++	u8 hw_port_a;
++	u8 hw_port_b;
++};
++
++static int
++pd692x0_of_get_ports_manager(struct pd692x0_priv *priv,
++			     struct pd692x0_manager *manager,
++			     struct device_node *np)
++{
++	struct device_node *node;
++	int ret, nports, i;
++
++	nports = 0;
++	for_each_child_of_node(np, node) {
++		u32 port;
++
++		if (!of_node_name_eq(node, "port"))
 +			continue;
 +
-+		ret = of_property_read_u32(node, "reg", &chan_id);
-+		if (ret) {
-+			ret = -EINVAL;
++		ret = of_property_read_u32(node, "reg", &port);
++		if (ret)
 +			goto out;
-+		}
 +
-+		if (chan_id >= TPS23881_MAX_CHANS || chan_node[chan_id]) {
++		if (port >= PD692X0_MAX_MANAGER_PORTS || port != nports) {
 +			dev_err(&priv->client->dev,
-+				"wrong number of port (%d)\n", chan_id);
++				"wrong number or order of manager ports (%d)\n",
++				port);
 +			ret = -EINVAL;
 +			goto out;
 +		}
 +
 +		of_node_get(node);
-+		chan_node[chan_id] = node;
++		manager->port_node[port] = node;
++		nports++;
 +	}
 +
-+	of_node_put(channels_node);
++	manager->nports = nports;
 +	return 0;
 +
 +out:
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		of_node_put(chan_node[i]);
-+		chan_node[i] = NULL;
++	for (i = 0; i < nports; i++) {
++		of_node_put(manager->port_node[i]);
++		manager->port_node[i] = NULL;
++	}
++	of_node_put(node);
++	return ret;
++}
++
++static int
++pd692x0_of_get_managers(struct pd692x0_priv *priv,
++			struct pd692x0_manager manager[PD692X0_MAX_MANAGERS])
++{
++	struct device_node *managers_node, *node;
++	int ret, nmanagers, i, j;
++
++	if (!priv->np)
++		return -EINVAL;
++
++	nmanagers = 0;
++	managers_node = of_get_child_by_name(priv->np, "managers");
++	if (!managers_node)
++		return -EINVAL;
++
++	for_each_child_of_node(managers_node, node) {
++		u32 manager_id;
++
++		if (!of_node_name_eq(node, "manager"))
++			continue;
++
++		ret = of_property_read_u32(node, "reg", &manager_id);
++		if (ret)
++			goto out;
++
++		if (manager_id >= PD692X0_MAX_MANAGERS ||
++		    manager_id != nmanagers) {
++			dev_err(&priv->client->dev,
++				"wrong number or order of managers (%d)\n",
++				manager_id);
++			ret = -EINVAL;
++			goto out;
++		}
++
++		ret = pd692x0_of_get_ports_manager(priv, &manager[manager_id],
++						   node);
++		if (ret)
++			goto out;
++
++		nmanagers++;
++	}
++
++	of_node_put(managers_node);
++	return nmanagers;
++
++out:
++	for (i = 0; i < nmanagers; i++) {
++		for (j = 0; j < manager[i].nports; j++) {
++			of_node_put(manager[i].port_node[j]);
++			manager[i].port_node[j] = NULL;
++		}
 +	}
 +
 +	of_node_put(node);
-+	of_node_put(channels_node);
++	of_node_put(managers_node);
 +	return ret;
 +}
 +
-+struct tps23881_port_matrix {
-+	u8 pi_id;
-+	u8 lgcl_chan[2];
-+	u8 hw_chan[2];
-+	bool is_4p;
-+	bool exist;
-+};
-+
 +static int
-+tps23881_match_channel(const struct pse_pi_pairset *pairset,
-+		       struct device_node *chan_node[TPS23881_MAX_CHANS])
++pd692x0_set_port_matrix(const struct pse_pi_pairset *pairset,
++			const struct pd692x0_manager *manager,
++			int nmanagers, struct pd692x0_matrix *port_matrix)
 +{
-+	int i;
++	int i, j, port_cnt;
++	bool found = false;
 +
-+	/* Look on every channels */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (pairset->np == chan_node[i])
-+			return i;
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+static bool
-+tps23881_is_chan_free(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+		      int chan)
-+{
-+	int i;
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (port_matrix[i].exist &&
-+		    (port_matrix[i].hw_chan[0] == chan ||
-+		    port_matrix[i].hw_chan[1] == chan))
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
-+/* Fill port matrix with the matching channels */
-+static int
-+tps23881_match_port_matrix(struct pse_pi *pi, int pi_id,
-+			   struct device_node *chan_node[TPS23881_MAX_CHANS],
-+			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
-+{
-+	int ret;
-+
-+	if (!pi->pairset[0].np)
++	if (!pairset->np)
 +		return 0;
 +
-+	ret = tps23881_match_channel(&pi->pairset[0], chan_node);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!tps23881_is_chan_free(port_matrix, ret)) {
-+		pr_err("tps23881: channel %d already used\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	port_matrix[pi_id].hw_chan[0] = ret;
-+	port_matrix[pi_id].exist = true;
-+
-+	if (!pi->pairset[1].np)
-+		return 0;
-+
-+	ret = tps23881_match_channel(&pi->pairset[1], chan_node);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!tps23881_is_chan_free(port_matrix, ret)) {
-+		pr_err("tps23881: channel %d already used\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	if (port_matrix[pi_id].hw_chan[0] / 4 != ret / 4) {
-+		pr_err("tps23881: 4-pair PSE can only be set within the same 4 ports group");
-+		return -ENODEV;
-+	}
-+
-+	port_matrix[pi_id].hw_chan[1] = ret;
-+	port_matrix[pi_id].is_4p = true;
-+
-+	return 0;
-+}
-+
-+static int
-+tps23881_get_unused_chan(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+			 int port_cnt)
-+{
-+	bool used;
-+	int i, j;
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		used = false;
-+
-+		for (j = 0; j < port_cnt; j++) {
-+			if (port_matrix[j].hw_chan[0] == i) {
-+				used = true;
-+				break;
-+			}
-+
-+			if (port_matrix[j].is_4p &&
-+			    port_matrix[j].hw_chan[1] == i) {
-+				used = true;
++	/* Look on every managers */
++	port_cnt = 0;
++	for (i = 0; i < nmanagers; i++) {
++		/* Look on every ports of the manager */
++		for (j = 0; j < manager[i].nports; j++) {
++			if (pairset->np == manager[i].port_node[j]) {
++				found = true;
 +				break;
 +			}
 +		}
++		port_cnt += j;
 +
-+		if (!used)
-+			return i;
++		if (found)
++			break;
 +	}
 +
-+	return -ENODEV;
-+}
++	if (!found)
++		return -ENODEV;
 +
-+/* Sort the port matrix to following particular hardware ports matrix
-+ * specification of the tps23881. The device has two 4-ports groups and
-+ * each 4-pair powered device has to be configured to use two consecutive
-+ * logical channel in each 4 ports group (1 and 2 or 3 and 4). Also the
-+ * hardware matrix has to be fully configured even with unused chan to be
-+ * valid.
-+ */
-+static int
-+tps23881_sort_port_matrix(struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
-+{
-+	struct tps23881_port_matrix tmp_port_matrix[TPS23881_MAX_CHANS] = {0};
-+	int i, ret, port_cnt = 0, cnt_4ch_grp1 = 0, cnt_4ch_grp2 = 4;
-+
-+	/* Configure 4p port matrix */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		int *cnt;
-+
-+		if (!port_matrix[i].exist || !port_matrix[i].is_4p)
-+			continue;
-+
-+		if (port_matrix[i].hw_chan[0] < 4)
-+			cnt = &cnt_4ch_grp1;
-+		else
-+			cnt = &cnt_4ch_grp2;
-+
-+		tmp_port_matrix[port_cnt].exist = true;
-+		tmp_port_matrix[port_cnt].is_4p = true;
-+		tmp_port_matrix[port_cnt].pi_id = i;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
-+		tmp_port_matrix[port_cnt].hw_chan[1] = port_matrix[i].hw_chan[1];
-+
-+		/* 4-pair ports have to be configured with consecutive
-+		 * logical channels 0 and 1, 2 and 3.
-+		 */
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
-+		tmp_port_matrix[port_cnt].lgcl_chan[1] = (*cnt)++;
-+
-+		port_cnt++;
-+	}
-+
-+	/* Configure 2p port matrix */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		int *cnt;
-+
-+		if (!port_matrix[i].exist || port_matrix[i].is_4p)
-+			continue;
-+
-+		if (port_matrix[i].hw_chan[0] < 4)
-+			cnt = &cnt_4ch_grp1;
-+		else
-+			cnt = &cnt_4ch_grp2;
-+
-+		tmp_port_matrix[port_cnt].exist = true;
-+		tmp_port_matrix[port_cnt].pi_id = i;
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = (*cnt)++;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = port_matrix[i].hw_chan[0];
-+
-+		port_cnt++;
-+	}
-+
-+	/* Complete the rest of the first 4 port group matrix even if
-+	 * channels are unused
-+	 */
-+	while (cnt_4ch_grp1 < 4) {
-+		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
-+		if (ret < 0) {
-+			pr_err("tps23881: port matrix issue, no chan available\n");
-+			return ret;
-+		}
-+
-+		if (port_cnt >= TPS23881_MAX_CHANS) {
-+			pr_err("tps23881: wrong number of channels\n");
-+			return -ENODEV;
-+		}
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp1;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
-+		cnt_4ch_grp1++;
-+		port_cnt++;
-+	}
-+
-+	/* Complete the rest of the second 4 port group matrix even if
-+	 * channels are unused
-+	 */
-+	while (cnt_4ch_grp2 < 8) {
-+		ret = tps23881_get_unused_chan(tmp_port_matrix, port_cnt);
-+		if (ret < 0) {
-+			pr_err("tps23881: port matrix issue, no chan available\n");
-+			return -ENODEV;
-+		}
-+
-+		if (port_cnt >= TPS23881_MAX_CHANS) {
-+			pr_err("tps23881: wrong number of channels\n");
-+			return -ENODEV;
-+		}
-+		tmp_port_matrix[port_cnt].lgcl_chan[0] = cnt_4ch_grp2;
-+		tmp_port_matrix[port_cnt].hw_chan[0] = ret;
-+		cnt_4ch_grp2++;
-+		port_cnt++;
-+	}
-+
-+	memcpy(port_matrix, tmp_port_matrix, sizeof(tmp_port_matrix));
-+
-+	return port_cnt;
-+}
-+
-+/* Write port matrix to the hardware port matrix and the software port
-+ * matrix.
-+ */
-+static int
-+tps23881_write_port_matrix(struct tps23881_priv *priv,
-+			   struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS],
-+			   int port_cnt)
-+{
-+	struct i2c_client *client = priv->client;
-+	u8 pi_id, lgcl_chan, hw_chan;
-+	u16 val = 0;
-+	int i, ret;
-+
-+	for (i = 0; i < port_cnt; i++) {
-+		pi_id = port_matrix[i].pi_id;
-+		lgcl_chan = port_matrix[i].lgcl_chan[0];
-+		hw_chan = port_matrix[i].hw_chan[0] % 4;
-+
-+		/* Set software port matrix for existing ports */
-+		if (port_matrix[i].exist)
-+			priv->port[pi_id].chan[0] = lgcl_chan;
-+
-+		/* Set hardware port matrix for all ports */
-+		val |= hw_chan << (lgcl_chan * 2);
-+
-+		if (!port_matrix[i].is_4p)
-+			continue;
-+
-+		lgcl_chan = port_matrix[i].lgcl_chan[1];
-+		hw_chan = port_matrix[i].hw_chan[1] % 4;
-+
-+		/* Set software port matrix for existing ports */
-+		if (port_matrix[i].exist) {
-+			priv->port[pi_id].is_4p = true;
-+			priv->port[pi_id].chan[1] = lgcl_chan;
-+		}
-+
-+		/* Set hardware port matrix for all ports */
-+		val |= hw_chan << (lgcl_chan * 2);
-+	}
-+
-+	/* Write hardware ports matrix */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_MAP, val);
-+	if (ret)
-+		return ret;
++	if (pairset->pinout == ALTERNATIVE_A)
++		port_matrix->hw_port_a = port_cnt;
++	else if (pairset->pinout == ALTERNATIVE_B)
++		port_matrix->hw_port_b = port_cnt;
 +
 +	return 0;
 +}
 +
 +static int
-+tps23881_set_ports_conf(struct tps23881_priv *priv,
-+			struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS])
++pd692x0_set_ports_matrix(struct pd692x0_priv *priv,
++			 const struct pd692x0_manager *manager,
++			 int nmanagers,
++			 struct pd692x0_matrix port_matrix[PD692X0_MAX_PIS])
 +{
-+	struct i2c_client *client = priv->client;
++	struct pse_controller_dev *pcdev = &priv->pcdev;
 +	int i, ret;
-+	u16 val;
 +
-+	/* Set operating mode */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_OP_MODE,
-+					TPS23881_OP_MODE_SEMIAUTO);
-+	if (ret)
-+		return ret;
-+
-+	/* Disable DC disconnect */
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DIS_EN, 0x0);
-+	if (ret)
-+		return ret;
-+
-+	/* Set port power allocation */
-+	val = 0;
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (!port_matrix[i].exist)
-+			continue;
-+
-+		if (port_matrix[i].is_4p)
-+			val |= 0xf << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
-+		else
-+			val |= 0x3 << ((port_matrix[i].lgcl_chan[0] / 2) * 4);
++	/* Init Matrix */
++	for (i = 0; i < PD692X0_MAX_PIS; i++) {
++		port_matrix[i].hw_port_a = 0xff;
++		port_matrix[i].hw_port_b = 0xff;
 +	}
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_PORT_POWER, val);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable detection and classification */
-+	val = 0;
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		if (!port_matrix[i].exist)
-+			continue;
-+
-+		val |= BIT(port_matrix[i].lgcl_chan[0]) |
-+		       BIT(port_matrix[i].lgcl_chan[0] + 4);
-+		if (port_matrix[i].is_4p)
-+			val |= BIT(port_matrix[i].lgcl_chan[1]) |
-+			       BIT(port_matrix[i].lgcl_chan[1] + 4);
-+	}
-+	ret = i2c_smbus_write_word_data(client, TPS23881_REG_DET_CLA_EN, val);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int
-+tps23881_set_ports_matrix(struct tps23881_priv *priv,
-+			  struct device_node *chan_node[TPS23881_MAX_CHANS])
-+{
-+	struct tps23881_port_matrix port_matrix[TPS23881_MAX_CHANS] = {0};
-+	int i, ret;
 +
 +	/* Update with values for every PSE PIs */
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++) {
-+		ret = tps23881_match_port_matrix(&priv->pcdev.pi[i], i,
-+						 chan_node, port_matrix);
++	for (i = 0; i < pcdev->nr_lines; i++) {
++		ret = pd692x0_set_port_matrix(&pcdev->pi[i].pairset[0],
++					      manager, nmanagers,
++					      &port_matrix[i]);
++		if (ret) {
++			dev_err(&priv->client->dev,
++				"unable to configure pi %d pairset 0", i);
++			return ret;
++		}
++
++		ret = pd692x0_set_port_matrix(&pcdev->pi[i].pairset[1],
++					      manager, nmanagers,
++					      &port_matrix[i]);
++		if (ret) {
++			dev_err(&priv->client->dev,
++				"unable to configure pi %d pairset 1", i);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static int
++pd692x0_write_ports_matrix(struct pd692x0_priv *priv,
++			   const struct pd692x0_matrix port_matrix[PD692X0_MAX_PIS])
++{
++	struct pd692x0_msg msg, buf;
++	int ret, i;
++
++	/* Write temporary Matrix */
++	msg = pd692x0_msg_template_list[PD692X0_MSG_SET_TMP_PORT_MATRIX];
++	for (i = 0; i < PD692X0_MAX_PIS; i++) {
++		msg.sub[2] = i;
++		msg.data[0] = port_matrix[i].hw_port_b;
++		msg.data[1] = port_matrix[i].hw_port_a;
++
++		ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++		if (ret < 0)
++			return ret;
++	}
++
++	/* Program Matrix */
++	msg = pd692x0_msg_template_list[PD692X0_MSG_PRG_PORT_MATRIX];
++	ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int pd692x0_setup_pi_matrix(struct pse_controller_dev *pcdev)
++{
++	struct pd692x0_manager manager[PD692X0_MAX_MANAGERS] = {0};
++	struct pd692x0_priv *priv = to_pd692x0_priv(pcdev);
++	struct pd692x0_matrix port_matrix[PD692X0_MAX_PIS];
++	int ret, i, j, nmanagers;
++
++	/* Should we flash the port matrix */
++	if (priv->fw_state != PD692X0_FW_OK &&
++	    priv->fw_state != PD692X0_FW_COMPLETE)
++		return 0;
++
++	ret = pd692x0_of_get_managers(priv, manager);
++	if (ret < 0)
++		return ret;
++
++	nmanagers = ret;
++	ret = pd692x0_set_ports_matrix(priv, manager, nmanagers, port_matrix);
++	if (ret)
++		goto out;
++
++	ret = pd692x0_write_ports_matrix(priv, port_matrix);
++	if (ret)
++		goto out;
++
++out:
++	for (i = 0; i < nmanagers; i++) {
++		for (j = 0; j < manager[i].nports; j++)
++			of_node_put(manager[i].port_node[j]);
++	}
++	return ret;
++}
++
++static const struct pse_controller_ops pd692x0_ops = {
++	.setup_pi_matrix = pd692x0_setup_pi_matrix,
++	.ethtool_get_status = pd692x0_ethtool_get_status,
++	.pi_enable = pd692x0_pi_enable,
++	.pi_disable = pd692x0_pi_disable,
++	.pi_is_enabled = pd692x0_pi_is_enabled,
++};
++
++#define PD692X0_FW_LINE_MAX_SZ 0xff
++static int pd692x0_fw_get_next_line(const u8 *data,
++				    char *line, size_t size)
++{
++	size_t line_size;
++	int i;
++
++	line_size = min_t(size_t, size, PD692X0_FW_LINE_MAX_SZ);
++
++	memset(line, 0, PD692X0_FW_LINE_MAX_SZ);
++	for (i = 0; i < line_size - 1; i++) {
++		if (*data == '\r' && *(data + 1) == '\n') {
++			line[i] = '\r';
++			line[i + 1] = '\n';
++			return i + 2;
++		}
++		line[i] = *data;
++		data++;
++	}
++
++	return -EIO;
++}
++
++static enum fw_upload_err
++pd692x0_fw_recv_resp(const struct i2c_client *client, unsigned long ms_timeout,
++		     const char *msg_ok, unsigned int msg_size)
++{
++	/* Maximum controller response size */
++	char fw_msg_buf[5] = {0};
++	unsigned long timeout;
++	int ret;
++
++	if (msg_size > sizeof(fw_msg_buf))
++		return FW_UPLOAD_ERR_RW_ERROR;
++
++	/* Read until we get something */
++	timeout = msecs_to_jiffies(ms_timeout) + jiffies;
++	while (true) {
++		if (time_is_before_jiffies(timeout))
++			return FW_UPLOAD_ERR_TIMEOUT;
++
++		ret = i2c_master_recv(client, fw_msg_buf, 1);
++		if (ret < 0 || *fw_msg_buf == 0) {
++			usleep_range(1000, 2000);
++			continue;
++		} else {
++			break;
++		}
++	}
++
++	/* Read remaining characters */
++	ret = i2c_master_recv(client, fw_msg_buf + 1, msg_size - 1);
++	if (strncmp(fw_msg_buf, msg_ok, msg_size)) {
++		dev_err(&client->dev,
++			"Wrong FW download process answer (%*pE)\n",
++			msg_size, fw_msg_buf);
++		return FW_UPLOAD_ERR_HW_ERROR;
++	}
++
++	return FW_UPLOAD_ERR_NONE;
++}
++
++static int pd692x0_fw_write_line(const struct i2c_client *client,
++				 const char line[PD692X0_FW_LINE_MAX_SZ],
++				 const bool last_line)
++{
++	int ret;
++
++	while (*line != 0) {
++		ret = i2c_master_send(client, line, 1);
++		if (ret < 0)
++			return FW_UPLOAD_ERR_RW_ERROR;
++		line++;
++	}
++
++	if (last_line) {
++		ret = pd692x0_fw_recv_resp(client, 100, "TP\r\n",
++					   sizeof("TP\r\n") - 1);
++		if (ret)
++			return ret;
++	} else {
++		ret = pd692x0_fw_recv_resp(client, 100, "T*\r\n",
++					   sizeof("T*\r\n") - 1);
 +		if (ret)
 +			return ret;
 +	}
 +
-+	ret = tps23881_sort_port_matrix(port_matrix);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = tps23881_write_port_matrix(priv, port_matrix, ret);
-+	if (ret)
-+		return ret;
-+
-+	ret = tps23881_set_ports_conf(priv, port_matrix);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
++	return FW_UPLOAD_ERR_NONE;
 +}
 +
-+static int tps23881_setup_pi_matrix(struct pse_controller_dev *pcdev)
++static enum fw_upload_err pd692x0_fw_reset(const struct i2c_client *client)
 +{
-+	struct device_node *chan_node[TPS23881_MAX_CHANS] = {NULL};
-+	struct tps23881_priv *priv = to_tps23881_priv(pcdev);
-+	int ret, i;
++	const struct pd692x0_msg zero = {0};
++	struct pd692x0_msg buf = {0};
++	unsigned long timeout;
++	char cmd[] = "RST";
++	int ret;
 +
-+	ret = tps23881_get_of_channels(priv, chan_node);
++	ret = i2c_master_send(client, cmd, strlen(cmd));
 +	if (ret < 0) {
-+		dev_warn(&priv->client->dev,
-+			 "Unable to parse port-matrix, default matrix will be used\n");
-+		return 0;
-+	}
-+
-+	ret = tps23881_set_ports_matrix(priv, chan_node);
-+
-+	for (i = 0; i < TPS23881_MAX_CHANS; i++)
-+		of_node_put(chan_node[i]);
-+
-+	return ret;
-+}
-+
-+static const struct pse_controller_ops tps23881_ops = {
-+	.setup_pi_matrix = tps23881_setup_pi_matrix,
-+	.pi_enable = tps23881_pi_enable,
-+	.pi_disable = tps23881_pi_disable,
-+	.pi_is_enabled = tps23881_pi_is_enabled,
-+	.ethtool_get_status = tps23881_ethtool_get_status,
-+};
-+
-+static const char fw_parity_name[] = "ti/tps23881/tps23881-parity-14.bin";
-+static const char fw_sram_name[] = "ti/tps23881/tps23881-sram-14.bin";
-+
-+struct tps23881_fw_conf {
-+	u8 reg;
-+	u8 val;
-+};
-+
-+static const struct tps23881_fw_conf tps23881_fw_parity_conf[] = {
-+	{.reg = 0x60, .val = 0x01},
-+	{.reg = 0x62, .val = 0x00},
-+	{.reg = 0x63, .val = 0x80},
-+	{.reg = 0x60, .val = 0xC4},
-+	{.reg = 0x1D, .val = 0xBC},
-+	{.reg = 0xD7, .val = 0x02},
-+	{.reg = 0x91, .val = 0x00},
-+	{.reg = 0x90, .val = 0x00},
-+	{.reg = 0xD7, .val = 0x00},
-+	{.reg = 0x1D, .val = 0x00},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct tps23881_fw_conf tps23881_fw_sram_conf[] = {
-+	{.reg = 0x60, .val = 0xC5},
-+	{.reg = 0x62, .val = 0x00},
-+	{.reg = 0x63, .val = 0x80},
-+	{.reg = 0x60, .val = 0xC0},
-+	{.reg = 0x1D, .val = 0xBC},
-+	{.reg = 0xD7, .val = 0x02},
-+	{.reg = 0x91, .val = 0x00},
-+	{.reg = 0x90, .val = 0x00},
-+	{.reg = 0xD7, .val = 0x00},
-+	{.reg = 0x1D, .val = 0x00},
-+	{ /* sentinel */ }
-+};
-+
-+static int tps23881_flash_sram_fw_part(struct i2c_client *client,
-+				       const char *fw_name,
-+				       const struct tps23881_fw_conf *fw_conf)
-+{
-+	const struct firmware *fw = NULL;
-+	int i, ret;
-+
-+	ret = request_firmware(&fw, fw_name, &client->dev);
-+	if (ret)
++		dev_err(&client->dev,
++			"Failed to reset the controller (%pe)\n",
++			ERR_PTR(ret));
 +		return ret;
-+
-+	dev_dbg(&client->dev, "Flashing %s\n", fw_name);
-+
-+	/* Prepare device for RAM download */
-+	while (fw_conf->reg) {
-+		ret = i2c_smbus_write_byte_data(client, fw_conf->reg,
-+						fw_conf->val);
-+		if (ret)
-+			goto out;
-+
-+		fw_conf++;
 +	}
 +
-+	/* Flash the firmware file */
-+	for (i = 0; i < fw->size; i++) {
-+		ret = i2c_smbus_write_byte_data(client,
-+						TPS23881_REG_SRAM_DATA,
-+						fw->data[i]);
-+		if (ret)
-+			goto out;
++	timeout = msecs_to_jiffies(10000) + jiffies;
++	while (true) {
++		if (time_is_before_jiffies(timeout))
++			return FW_UPLOAD_ERR_TIMEOUT;
++
++		ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
++		if (ret < 0 ||
++		    !memcmp(&buf, &zero, sizeof(buf)))
++			usleep_range(1000, 2000);
++		else
++			break;
 +	}
 +
-+out:
-+	release_firmware(fw);
-+	return ret;
++	/* Is the reply a successful report message */
++	if (buf.key != PD692X0_KEY_TLM || buf.echo != 0xff ||
++	    buf.sub[0] & 0x01) {
++		dev_err(&client->dev, "PSE controller error\n");
++		return FW_UPLOAD_ERR_HW_ERROR;
++	}
++
++	/* Is the firmware operational */
++	if (buf.sub[0] & 0x02) {
++		dev_err(&client->dev,
++			"PSE firmware error. Please update it.\n");
++		return FW_UPLOAD_ERR_HW_ERROR;
++	}
++
++	return FW_UPLOAD_ERR_NONE;
 +}
 +
-+static int tps23881_flash_sram_fw(struct i2c_client *client)
++static enum fw_upload_err pd692x0_fw_prepare(struct fw_upload *fwl,
++					     const u8 *data, u32 size)
 +{
++	struct pd692x0_priv *priv = fwl->dd_handle;
++	const struct i2c_client *client = priv->client;
++	enum pd692x0_fw_state last_fw_state;
 +	int ret;
 +
-+	ret = tps23881_flash_sram_fw_part(client, fw_parity_name,
-+					  tps23881_fw_parity_conf);
++	priv->cancel_request = false;
++	last_fw_state = priv->fw_state;
++
++	priv->fw_state = PD692X0_FW_PREPARE;
++
++	/* Enter program mode */
++	if (last_fw_state == PD692X0_FW_BROKEN) {
++		const char *msg = "ENTR";
++		const char *c;
++
++		c = msg;
++		do {
++			ret = i2c_master_send(client, c, 1);
++			if (ret < 0)
++				return FW_UPLOAD_ERR_RW_ERROR;
++			if (*(c + 1))
++				usleep_range(10000, 20000);
++		} while (*(++c));
++	} else {
++		struct pd692x0_msg msg, buf;
++
++		msg = pd692x0_msg_template_list[PD692X0_MSG_DOWNLOAD_CMD];
++		ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++		if (ret < 0) {
++			dev_err(&client->dev,
++				"Failed to enter programming mode (%pe)\n",
++				ERR_PTR(ret));
++			return FW_UPLOAD_ERR_RW_ERROR;
++		}
++	}
++
++	ret = pd692x0_fw_recv_resp(client, 100, "TPE\r\n", sizeof("TPE\r\n") - 1);
 +	if (ret)
-+		return ret;
++		goto err_out;
 +
-+	ret = tps23881_flash_sram_fw_part(client, fw_sram_name,
-+					  tps23881_fw_sram_conf);
-+	if (ret)
-+		return ret;
++	if (priv->cancel_request) {
++		ret = FW_UPLOAD_ERR_CANCELED;
++		goto err_out;
++	}
 +
-+	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_SRAM_CTRL, 0x18);
-+	if (ret)
-+		return ret;
++	return FW_UPLOAD_ERR_NONE;
 +
-+	mdelay(12);
-+
-+	return 0;
++err_out:
++	pd692x0_fw_reset(priv->client);
++	priv->fw_state = last_fw_state;
++	return ret;
 +}
 +
-+static int tps23881_i2c_probe(struct i2c_client *client)
++static enum fw_upload_err pd692x0_fw_write(struct fw_upload *fwl,
++					   const u8 *data, u32 offset,
++					   u32 size, u32 *written)
 +{
++	struct pd692x0_priv *priv = fwl->dd_handle;
++	char line[PD692X0_FW_LINE_MAX_SZ];
++	const struct i2c_client *client;
++	int ret, i;
++	char cmd;
++
++	client = priv->client;
++	priv->fw_state = PD692X0_FW_WRITE;
++
++	/* Erase */
++	cmd = 'E';
++	ret = i2c_master_send(client, &cmd, 1);
++	if (ret < 0) {
++		dev_err(&client->dev,
++			"Failed to boot programming mode (%pe)\n",
++			ERR_PTR(ret));
++		return FW_UPLOAD_ERR_RW_ERROR;
++	}
++
++	ret = pd692x0_fw_recv_resp(client, 100, "TOE\r\n", sizeof("TOE\r\n") - 1);
++	if (ret)
++		return ret;
++
++	ret = pd692x0_fw_recv_resp(client, 5000, "TE\r\n", sizeof("TE\r\n") - 1);
++	if (ret)
++		dev_warn(&client->dev,
++			 "Failed to erase internal memory, however still try to write Firmware\n");
++
++	ret = pd692x0_fw_recv_resp(client, 100, "TPE\r\n", sizeof("TPE\r\n") - 1);
++	if (ret)
++		dev_warn(&client->dev,
++			 "Failed to erase internal memory, however still try to write Firmware\n");
++
++	if (priv->cancel_request)
++		return FW_UPLOAD_ERR_CANCELED;
++
++	/* Program */
++	cmd = 'P';
++	ret = i2c_master_send(client, &cmd, sizeof(char));
++	if (ret < 0) {
++		dev_err(&client->dev,
++			"Failed to boot programming mode (%pe)\n",
++			ERR_PTR(ret));
++		return ret;
++	}
++
++	ret = pd692x0_fw_recv_resp(client, 100, "TOP\r\n", sizeof("TOP\r\n") - 1);
++	if (ret)
++		return ret;
++
++	i = 0;
++	while (i < size) {
++		ret = pd692x0_fw_get_next_line(data, line, size - i);
++		if (ret < 0) {
++			ret = FW_UPLOAD_ERR_FW_INVALID;
++			goto err;
++		}
++
++		i += ret;
++		data += ret;
++		if (line[0] == 'S' && line[1] == '0') {
++			continue;
++		} else if (line[0] == 'S' && line[1] == '7') {
++			ret = pd692x0_fw_write_line(client, line, true);
++			if (ret)
++				goto err;
++		} else {
++			ret = pd692x0_fw_write_line(client, line, false);
++			if (ret)
++				goto err;
++		}
++
++		if (priv->cancel_request) {
++			ret = FW_UPLOAD_ERR_CANCELED;
++			goto err;
++		}
++	}
++	*written = i;
++
++	msleep(400);
++
++	return FW_UPLOAD_ERR_NONE;
++
++err:
++	strscpy_pad(line, "S7\r\n", sizeof(line));
++	pd692x0_fw_write_line(client, line, true);
++	return ret;
++}
++
++static enum fw_upload_err pd692x0_fw_poll_complete(struct fw_upload *fwl)
++{
++	struct pd692x0_priv *priv = fwl->dd_handle;
++	const struct i2c_client *client = priv->client;
++	struct pd692x0_msg_ver ver;
++	int ret;
++
++	priv->fw_state = PD692X0_FW_COMPLETE;
++
++	ret = pd692x0_fw_reset(client);
++	if (ret)
++		return ret;
++
++	ver = pd692x0_get_sw_version(priv);
++	if (ver.maj_sw_ver < PD692X0_FW_MAJ_VER) {
++		dev_err(&client->dev,
++			"Too old firmware version. Please update it\n");
++		priv->fw_state = PD692X0_FW_NEED_UPDATE;
++		return FW_UPLOAD_ERR_FW_INVALID;
++	}
++
++	ret = pd692x0_setup_pi_matrix(&priv->pcdev);
++	if (ret < 0) {
++		dev_err(&client->dev, "Error configuring ports matrix (%pe)\n",
++			ERR_PTR(ret));
++		priv->fw_state = PD692X0_FW_NEED_UPDATE;
++		return FW_UPLOAD_ERR_HW_ERROR;
++	}
++
++	priv->fw_state = PD692X0_FW_OK;
++	return FW_UPLOAD_ERR_NONE;
++}
++
++static void pd692x0_fw_cancel(struct fw_upload *fwl)
++{
++	struct pd692x0_priv *priv = fwl->dd_handle;
++
++	priv->cancel_request = true;
++}
++
++static void pd692x0_fw_cleanup(struct fw_upload *fwl)
++{
++	struct pd692x0_priv *priv = fwl->dd_handle;
++
++	switch (priv->fw_state) {
++	case PD692X0_FW_WRITE:
++		pd692x0_fw_reset(priv->client);
++		fallthrough;
++	case PD692X0_FW_COMPLETE:
++		priv->fw_state = PD692X0_FW_BROKEN;
++		break;
++	default:
++		break;
++	}
++}
++
++static const struct fw_upload_ops pd692x0_fw_ops = {
++	.prepare = pd692x0_fw_prepare,
++	.write = pd692x0_fw_write,
++	.poll_complete = pd692x0_fw_poll_complete,
++	.cancel = pd692x0_fw_cancel,
++	.cleanup = pd692x0_fw_cleanup,
++};
++
++static int pd692x0_i2c_probe(struct i2c_client *client)
++{
++	struct pd692x0_msg msg, buf = {0}, zero = {0};
 +	struct device *dev = &client->dev;
-+	struct tps23881_priv *priv;
++	struct pd692x0_msg_ver ver;
++	struct pd692x0_priv *priv;
++	struct fw_upload *fwl;
 +	int ret;
-+	u8 val;
 +
 +	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 +		dev_err(dev, "i2c check functionality failed\n");
@@ -869,77 +1262,102 @@ index 000000000000..98ffbb1bbf13
 +	if (!priv)
 +		return -ENOMEM;
 +
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_DEVID);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret != 0x22) {
-+		dev_err(dev, "Wrong device ID\n");
-+		return -ENXIO;
-+	}
-+
-+	ret = tps23881_flash_sram_fw(client);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_FWREV);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(&client->dev, "Firmware revision 0x%x\n", ret);
-+
-+	/* Set configuration B, 16 bit access on a single device address */
-+	ret = i2c_smbus_read_byte_data(client, TPS23881_REG_GEN_MASK);
-+	if (ret < 0)
-+		return ret;
-+
-+	val = ret | TPS23881_REG_NBITACC;
-+	ret = i2c_smbus_write_byte_data(client, TPS23881_REG_GEN_MASK, val);
-+	if (ret)
-+		return ret;
-+
 +	priv->client = client;
 +	i2c_set_clientdata(client, priv);
-+	priv->np = dev->of_node;
 +
-+	priv->pcdev.owner = THIS_MODULE;
-+	priv->pcdev.ops = &tps23881_ops;
-+	priv->pcdev.dev = dev;
-+	priv->pcdev.types = ETHTOOL_PSE_C33;
-+	priv->pcdev.nr_lines = TPS23881_MAX_CHANS;
-+	ret = devm_pse_controller_register(dev, &priv->pcdev);
-+	if (ret) {
-+		return dev_err_probe(dev, ret,
-+				     "failed to register PSE controller\n");
++	ret = i2c_master_recv(client, (u8 *)&buf, sizeof(buf));
++	if (ret != sizeof(buf)) {
++		dev_err(dev, "Failed to get device status\n");
++		return -EIO;
 +	}
 +
-+	return ret;
++	/* Probe has been already run and the status dumped */
++	if (!memcmp(&buf, &zero, sizeof(buf))) {
++		/* Ask again the controller status */
++		msg = pd692x0_msg_template_list[PD692X0_MSG_GET_SYS_STATUS];
++		ret = pd692x0_sendrecv_msg(priv, &msg, &buf);
++		if (ret < 0) {
++			dev_err(dev, "Failed to get device status\n");
++			return ret;
++		}
++	}
++
++	if (buf.key != 0x03 || buf.sub[0] & 0x01) {
++		dev_err(dev, "PSE controller error\n");
++		return -EIO;
++	}
++	if (buf.sub[0] & 0x02) {
++		dev_err(dev, "PSE firmware error. Please update it.\n");
++		priv->fw_state = PD692X0_FW_BROKEN;
++	} else {
++		ver = pd692x0_get_sw_version(priv);
++		dev_info(&client->dev, "Software version %d.%02d.%d.%d\n",
++			 ver.prod, ver.maj_sw_ver, ver.min_sw_ver,
++			 ver.pa_sw_ver);
++
++		if (ver.maj_sw_ver < PD692X0_FW_MAJ_VER) {
++			dev_err(dev, "Too old firmware version. Please update it\n");
++			priv->fw_state = PD692X0_FW_NEED_UPDATE;
++		} else {
++			priv->fw_state = PD692X0_FW_OK;
++		}
++	}
++
++	priv->np = dev->of_node;
++	priv->pcdev.nr_lines = PD692X0_MAX_PIS;
++	priv->pcdev.owner = THIS_MODULE;
++	priv->pcdev.ops = &pd692x0_ops;
++	priv->pcdev.dev = dev;
++	priv->pcdev.types = ETHTOOL_PSE_C33;
++	ret = devm_pse_controller_register(dev, &priv->pcdev);
++	if (ret)
++		return dev_err_probe(dev, ret,
++				     "failed to register PSE controller\n");
++
++	fwl = firmware_upload_register(THIS_MODULE, dev, dev_name(dev),
++				       &pd692x0_fw_ops, priv);
++	if (IS_ERR(fwl))
++		return dev_err_probe(dev, PTR_ERR(fwl),
++				     "failed to register to the Firmware Upload API\n");
++	priv->fwl = fwl;
++
++	return 0;
 +}
 +
-+static const struct i2c_device_id tps23881_id[] = {
-+	{ "tps23881", 0 },
++static void pd692x0_i2c_remove(struct i2c_client *client)
++{
++	struct pd692x0_priv *priv = i2c_get_clientdata(client);
++
++	firmware_upload_unregister(priv->fwl);
++}
++
++static const struct i2c_device_id pd692x0_id[] = {
++	{ PD692X0_PSE_NAME, 0 },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(i2c, tps23881_id);
++MODULE_DEVICE_TABLE(i2c, pd692x0_id);
 +
-+static const struct of_device_id tps23881_of_match[] = {
-+	{ .compatible = "ti,tps23881", },
++static const struct of_device_id pd692x0_of_match[] = {
++	{ .compatible = "microchip,pd69200", },
++	{ .compatible = "microchip,pd69210", },
++	{ .compatible = "microchip,pd69220", },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, tps23881_of_match);
++MODULE_DEVICE_TABLE(of, pd692x0_of_match);
 +
-+static struct i2c_driver tps23881_driver = {
-+	.probe		= tps23881_i2c_probe,
-+	.id_table	= tps23881_id,
++static struct i2c_driver pd692x0_driver = {
++	.probe		= pd692x0_i2c_probe,
++	.remove		= pd692x0_i2c_remove,
++	.id_table	= pd692x0_id,
 +	.driver		= {
-+		.name		= "tps23881",
-+		.of_match_table = tps23881_of_match,
++		.name		= PD692X0_PSE_NAME,
++		.of_match_table = pd692x0_of_match,
 +	},
 +};
-+module_i2c_driver(tps23881_driver);
++module_i2c_driver(pd692x0_driver);
 +
 +MODULE_AUTHOR("Kory Maincent <kory.maincent@bootlin.com>");
-+MODULE_DESCRIPTION("TI TPS23881 PoE PSE Controller driver");
++MODULE_DESCRIPTION("Microchip PD692x0 PoE PSE Controller driver");
 +MODULE_LICENSE("GPL");
 
 -- 
