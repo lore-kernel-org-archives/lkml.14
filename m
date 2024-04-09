@@ -1,285 +1,177 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30267E101
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE708130484
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 10:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657644; cv=none; b=o3QEXFcZSeNr6KUHTmq/BBD+nBZ9c4ObcXQSSjGxa57+o8uCei9hVpRJ5/2rC47nVgIFWzsAAtX6UBMkMfSIl5GYWPFP9qNgw4mv4eFocOB/ESQo8MDwnu+pIqDJ1MjAwzhwTP6KOkqNLnPqoY4bmRHyCCncEelEs3+JwsrEWug=
+	t=1712657648; cv=none; b=ZmpU58krf5a1Lh6cP297okZUSFtquvC7+X+nBAB0yVPVYrt1TJM7Nbxj5PUPZyt6dsE/ralr4X9p0XchE+Z5apEFXsV2B+H7QU3Zz0WJKYvb081HZuuqMkM2BKyYRTjyZdD5Ehw7TtiksW5s4w8fv5A/t7QONxyuKorzO9LjWLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657644; c=relaxed/simple;
-	bh=f9vTCZeazc+cC9E9m3sp3ek3199iY8AYYqVbk3yPnmo=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Rcq+hU6yNys1yZuwRCaQ5oon2/lBRrPr9Pe/rwMi4q8yUHPOOxhU9545y9vNbjkc/XoceSL9EOwtBkXiyK0tqfPv6LHLqwe+KC2rvwuAZh8FJnytKQUthAZEpnOKjBhiS2Jb1zmD6cFw27EN2aZn7DgX5XB6WtZyqOAFPx+QwPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iUDqfsYX; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712657648; c=relaxed/simple;
+	bh=A2PASoilqpYSI/+vuK5IOoXc5LlU1gMN/yOVGVWPN5c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kdXHKPK0xexMCczSjFLz3UTnAEpWmLvHSbPYfriuON/ohiHeS3ck5RNv+AVz24mU7/eFWZ4+uUhS3+kyX9sNziVrX0nE3eJvCnUWPr1SM+Y9ZGRMal7Uq+O2Ad/lzzS3BYQWTxO8Jvj6SvS47aT/eWnBwOoc96PDMKkSpAn3+e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oQyvvHSx; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iUDqfsYX"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712657638;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I6NjstxZg5zzcu4zkmXOrIo4bbiuOWeKiARFgfpV5y0=;
-	b=iUDqfsYXaSTkwJFoNMKuNMtWigcM0vWSQp9JgveKOMBBIMhWIPR72fJBxTztFtL5y0e/3u
-	E0bUZkisG3H9EcD2wQvxCfjWKE245hTc5sqVs2gGxde8j1QhLPyTau/KGcg1+zGv0QMAAP
-	YXa5yFwRH55ZHHq71hR99gsxEQcM+6M=
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oQyvvHSx"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4165805e158so17698225e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 03:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712657642; x=1713262442; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+HA5hs8xf/jy+EOJ7+HP5joeg+9+VSnSpeoghvWaVeM=;
+        b=oQyvvHSxDjlHsS3pP6j8itE4QhB2E1c/21BvH4RGoahicPA2r6WbFOOKMY3K13QfAu
+         f9Ur8lYwIr61pzR/GfQkNBIa/mTpcc+fzim5hWzvmi08yzmW7GmRpxFScgrP+7Y6pi06
+         /kEY+j0Dm3CWl+M1WtrmZYZHUKeEobkKlESZyX1nIouqWBiDn03hTKKh6Fm+MSRLVW4e
+         F4vDxnbH5Vyq7YRdw40fH6q80Lkuj1A/SELjs5IN7rYqoFFWujgRKuSaQDaFPUiXsVwB
+         qU8EIjLMG1mAGCAgXup/O0wd+6leCP+K7QrGwslAAED49aIdukoRwNQVy3c9udjksje1
+         Uayw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712657642; x=1713262442;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+HA5hs8xf/jy+EOJ7+HP5joeg+9+VSnSpeoghvWaVeM=;
+        b=nvPQpgFi93vHwDHsad2Svx2iOYpQOUd+t+7sUterAC7NNgCTxuh5uueKuAG69ypjqz
+         Lqic8eM3DheiYQA744LE3g57E3OOQBbHFxKCIzIIhJWRkY2QyFQg4NwHXLMc/H9cJw72
+         VCF99CZ1XFjpsACssCN9ndE6W9Wg2+WFIZjDF99alOJXUVwU04DrKB+O+d0fBfMXlXxa
+         o/4hZrRxMGdpr8XqIk9c1Ph2zUyfnfAGNbhBFek6rvwR7QxafFM5997oy118aT6lGZex
+         2frooWRngeSHZkmzYtXCXTeM5GFSDh4KQbmNuRpctiYs7joNzIKEyELOmHaOwgWi+IKp
+         9+Fw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFeHHR7sUBPZ3TfXsJj3evW9hckBAR05eWua2HS+d7PAWa0MP+0fvcn2BcTrRR/Y406yTWLzf15T3Khyze+jFr6LMNQ3mnj6GX9BDK
+X-Gm-Message-State: AOJu0YxNYgcujVOfgNGtE9sro5vJ4aQRmfGm11Te6+KZkdOSKpWnE2LM
+	y7myWvY/bDROwbuPOjzVQeBufhEoUBdmvocYyq6nQWqaeqY73dwPxbtoWqsj1xWh7aNYuL6um4/
+	lRaQ=
+X-Google-Smtp-Source: AGHT+IGg+qyK2mz9YWd/JqH50CwAtlrGTRYl+InjvJ2xy4FgfQZKzqEtNGNqbRovXDbYKqTzZPbMLw==
+X-Received: by 2002:a05:600c:3108:b0:416:4923:1f2d with SMTP id g8-20020a05600c310800b0041649231f2dmr6513861wmo.30.1712657642630;
+        Tue, 09 Apr 2024 03:14:02 -0700 (PDT)
+Received: from [127.0.1.1] ([93.5.22.158])
+        by smtp.googlemail.com with ESMTPSA id r7-20020a05600c458700b00416b035c2d8sm1124149wmo.3.2024.04.09.03.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 03:14:02 -0700 (PDT)
+From: Alexandre Mergnat <amergnat@baylibre.com>
+Date: Tue, 09 Apr 2024 12:13:35 +0200
+Subject: [PATCH v2 14/18] ASoC: mediatek: Add MT8365 support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.400.31\))
-Subject: Re: [PATCH v2 0/4] Speed up boot with faster linear map creation
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Itaru Kitayama <itaru.kitayama@linux.dev>
-In-Reply-To: <1d5abb48-08a8-4d83-a681-6915bc7b6907@arm.com>
-Date: Tue, 9 Apr 2024 19:13:38 +0900
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Mark Rutland <Mark.Rutland@arm.com>,
- Ard Biesheuvel <ardb@kernel.org>,
- David Hildenbrand <david@redhat.com>,
- Donald Dutile <ddutile@redhat.com>,
- Eric Chanudet <echanude@redhat.com>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <268FBD1C-B102-4726-A7F4-1125123BDA7A@linux.dev>
-References: <20240404143308.2224141-1-ryan.roberts@arm.com>
- <Zg+qwooaWFNL7KIg@vm3> <fd4aed3a-42be-44e0-b3bb-12f77c5911a1@arm.com>
- <ZhEkif45F0aVvKPx@vm3> <533adb77-8c2b-40db-84cb-88de77ab92bb@arm.com>
- <FCDCBCEE-7D97-4769-AB95-7294A9CE18E0@linux.dev>
- <1d5abb48-08a8-4d83-a681-6915bc7b6907@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240226-audio-i350-v2-14-3043d483de0d@baylibre.com>
+References: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+In-Reply-To: <20240226-audio-i350-v2-0-3043d483de0d@baylibre.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Rob Herring <robh@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2430; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=A2PASoilqpYSI/+vuK5IOoXc5LlU1gMN/yOVGVWPN5c=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBmFRTT2q1kS4mzy/NybWoAbX8cukntMOY4p5dixke5
+ /AoCuiWJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZhUU0wAKCRArRkmdfjHURctOD/
+ 4mrGmtiYDjbfFa+U1HcWmqlwWqpw5YBSVzqMwm0HuwtcYbgBYCvy7BsPTIKM9b/Eb0dPNPuvQUEXo+
+ +PwIkV1XZOqs+akViaabJZpjcym9VBidjgxZ8HiRJNOD6WnJ3zwAbqkLlb4LJGovQk85OeAGyJRnJo
+ VxO4UgINR9o+b5qo1a878IOXYPjgsXw2rQUknZtFUW2SVtDM734Aij/VLxPzHobadPjSqhEGStU1vb
+ D0j0KIFFdfdptvwGji4fPqvcA+MzJAmpbQiANyGpdlz7ZK15Lr1Z/QB5bsk5k5jOvNpePCnU8tvUlx
+ 5mRjbtLL/qf0oMSsz+hAG5KtwJglafv/7bbsA7nBmEYejG9JNX34SrIO9yeRbQ9Br4UZknPO2592Ho
+ oilZDSgVzk4yHg9hcqV+YdcY+WyvnHtjasvI9lHyMuuqox6fWkn/zwFrgY/fn+62T4Qe9e4QcPfR6A
+ 8kBnD2UItlMldFJ9+YMFjzhIPv2KByIxNy7n6Ip0oLZzd3hmkjESst8P5AMocRMdcu7HjmaeodaCZE
+ BD12RuC4m5ZXo7RNAo3UoaD5KatuyibL8h/PZT2t6zbc4/2YTLVvfJBz7+XLB23LQqNJoAm3enhBt2
+ YyI1mYbn/6r4TCxea0jX4kKyXJpl4p0/TSaUa4PlzBCJ4j1GZTQmnhgoWsow==
+X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
+ fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
+- Add specific config to enable:
+  - MT8365 sound support
+  - MT6357 audio codec support
+- Add the mt8365 directory and all drivers under it.
 
+Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+---
+ sound/soc/mediatek/Kconfig         | 20 ++++++++++++++++++++
+ sound/soc/mediatek/Makefile        |  1 +
+ sound/soc/mediatek/mt8365/Makefile | 15 +++++++++++++++
+ 3 files changed, 36 insertions(+)
 
-> On Apr 9, 2024, at 19:04, Ryan Roberts <ryan.roberts@arm.com> wrote:
->=20
-> On 09/04/2024 01:10, Itaru Kitayama wrote:
->> Hi Ryan,
->>=20
->>> On Apr 8, 2024, at 16:30, Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>=20
->>> On 06/04/2024 11:31, Itaru Kitayama wrote:
->>>> Hi Ryan,
->>>>=20
->>>> On Sat, Apr 06, 2024 at 09:32:34AM +0100, Ryan Roberts wrote:
->>>>> Hi Itaru,
->>>>>=20
->>>>> On 05/04/2024 08:39, Itaru Kitayama wrote:
->>>>>> On Thu, Apr 04, 2024 at 03:33:04PM +0100, Ryan Roberts wrote:
->>>>>>> Hi All,
->>>>>>>=20
->>>>>>> It turns out that creating the linear map can take a significant =
-proportion of
->>>>>>> the total boot time, especially when rodata=3Dfull. And most of =
-the time is spent
->>>>>>> waiting on superfluous tlb invalidation and memory barriers. =
-This series reworks
->>>>>>> the kernel pgtable generation code to significantly reduce the =
-number of those
->>>>>>> TLBIs, ISBs and DSBs. See each patch for details.
->>>>>>>=20
->>>>>>> The below shows the execution time of map_mem() across a couple =
-of different
->>>>>>> systems with different RAM configurations. We measure after =
-applying each patch
->>>>>>> and show the improvement relative to base (v6.9-rc2):
->>>>>>>=20
->>>>>>>                | Apple M2 VM | Ampere Altra| Ampere Altra| =
-Ampere Altra
->>>>>>>                | VM, 16G     | VM, 64G     | VM, 256G    | =
-Metal, 512G
->>>>>>> =
----------------|-------------|-------------|-------------|-------------
->>>>>>>                |   ms    (%) |   ms    (%) |   ms    (%) |    ms =
-   (%)
->>>>>>> =
----------------|-------------|-------------|-------------|-------------
->>>>>>> base           |  153   (0%) | 2227   (0%) | 8798   (0%) | 17442 =
-  (0%)
->>>>>>> no-cont-remap  |   77 (-49%) |  431 (-81%) | 1727 (-80%) |  3796 =
-(-78%)
->>>>>>> batch-barriers |   13 (-92%) |  162 (-93%) |  655 (-93%) |  1656 =
-(-91%)
->>>>>>> no-alloc-remap |   11 (-93%) |  109 (-95%) |  449 (-95%) |  1257 =
-(-93%)
->>>>>>> lazy-unmap     |    6 (-96%) |   61 (-97%) |  257 (-97%) |   838 =
-(-95%)
->>>>>>>=20
->>>>>>> This series applies on top of v6.9-rc2. All mm selftests pass. =
-I've compile and
->>>>>>> boot tested various PAGE_SIZE and VA size configs.
->>>>>>>=20
->>>>>>> ---
->>>>>>>=20
->>>>>>> Changes since v1 [1]
->>>>>>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>>>>>=20
->>>>>>>   - Added Tested-by tags (thanks to Eric and Itaru)
->>>>>>>   - Renamed ___set_pte() -> __set_pte_nosync() (per Ard)
->>>>>>>   - Reordered patches (biggest impact & least controversial =
-first)
->>>>>>>   - Reordered alloc/map/unmap functions in mmu.c to aid reader
->>>>>>>   - pte_clear() -> __pte_clear() in clear_fixmap_nosync()
->>>>>>>   - Reverted generic p4d_index() which caused x86 build error. =
-Replaced with
->>>>>>>     unconditional p4d_index() define under arm64.
->>>>>>>=20
->>>>>>>=20
->>>>>>> [1] =
-https://lore.kernel.org/linux-arm-kernel/20240326101448.3453626-1-ryan.rob=
-erts@arm.com/<https://lore.kernel.org/linux-arm-kernel/20240326101448.3453=
-626-1-ryan.roberts@arm.com/>
->>>>>>>=20
->>>>>>> Thanks,
->>>>>>> Ryan
->>>>>>>=20
->>>>>>>=20
->>>>>>> Ryan Roberts (4):
->>>>>>>   arm64: mm: Don't remap pgtables per-cont(pte|pmd) block
->>>>>>>   arm64: mm: Batch dsb and isb when populating pgtables
->>>>>>>   arm64: mm: Don't remap pgtables for allocate vs populate
->>>>>>>   arm64: mm: Lazily clear pte table mappings from fixmap
->>>>>>>=20
->>>>>>> arch/arm64/include/asm/fixmap.h  |   5 +-
->>>>>>> arch/arm64/include/asm/mmu.h     |   8 +
->>>>>>> arch/arm64/include/asm/pgtable.h |  13 +-
->>>>>>> arch/arm64/kernel/cpufeature.c   |  10 +-
->>>>>>> arch/arm64/mm/fixmap.c           |  11 +
->>>>>>> arch/arm64/mm/mmu.c              | 377 =
-+++++++++++++++++++++++--------
->>>>>>> 6 files changed, 319 insertions(+), 105 deletions(-)
->>>>>>>=20
->>>>>>> --
->>>>>>> 2.25.1
->>>>>>>=20
->>>>>>=20
->>>>>> I've build and boot tested the v2 on FVP, base is taken from your
->>>>>> linux-rr repo. Running run_vmtests.sh on v2 left some gup =
-longterm not oks, would you take a look at it? The mm ksefltests used is =
-from your linux-rr repo too.
->>>>>=20
->>>>> Thanks for taking a look at this.
->>>>>=20
->>>>> I can't reproduce your issue unfortunately; steps as follows on =
-Apple M2 VM:
->>>>>=20
->>>>> Config: arm64 defconfig + the following:
->>>>>=20
->>>>> # Squashfs for snaps, xfs for large file folios.
->>>>> ./scripts/config --enable CONFIG_SQUASHFS_LZ4
->>>>> ./scripts/config --enable CONFIG_SQUASHFS_LZO
->>>>> ./scripts/config --enable CONFIG_SQUASHFS_XZ
->>>>> ./scripts/config --enable CONFIG_SQUASHFS_ZSTD
->>>>> ./scripts/config --enable CONFIG_XFS_FS
->>>>>=20
->>>>> # For general mm debug.
->>>>> ./scripts/config --enable CONFIG_DEBUG_VM
->>>>> ./scripts/config --enable CONFIG_DEBUG_VM_MAPLE_TREE
->>>>> ./scripts/config --enable CONFIG_DEBUG_VM_RB
->>>>> ./scripts/config --enable CONFIG_DEBUG_VM_PGFLAGS
->>>>> ./scripts/config --enable CONFIG_DEBUG_VM_PGTABLE
->>>>> ./scripts/config --enable CONFIG_PAGE_TABLE_CHECK
->>>>>=20
->>>>> # For mm selftests.
->>>>> ./scripts/config --enable CONFIG_USERFAULTFD
->>>>> ./scripts/config --enable CONFIG_TEST_VMALLOC
->>>>> ./scripts/config --enable CONFIG_GUP_TEST
->>>>>=20
->>>>> Running on VM with 12G memory, split across 2 (emulated) NUMA =
-nodes (needed by
->>>>> some mm selftests), with kernel command line to reserve hugetlbs =
-and other
->>>>> features required by some mm selftests:
->>>>>=20
->>>>> "
->>>>> transparent_hugepage=3Dmadvise earlycon root=3D/dev/vda2 =
-secretmem.enable
->>>>> hugepagesz=3D1G hugepages=3D0:2,1:2 hugepagesz=3D32M =
-hugepages=3D0:2,1:2
->>>>> default_hugepagesz=3D2M hugepages=3D0:64,1:64 hugepagesz=3D64K =
-hugepages=3D0:2,1:2
->>>>> "
->>>>>=20
->>>>> Ubuntu userspace running off XFS rootfs. Build and run mm =
-selftests from same
->>>>> git tree.
->>>>>=20
->>>>>=20
->>>>> Although I don't think any of this config should make a difference =
-to gup_longterm.
->>>>>=20
->>>>> Looks like your errors are all "ftruncate() failed". I've seen =
-this problem on
->>>>> our CI system. There it is due to running the tests from NFS file =
-system. What
->>>>> filesystem are you using? Perhaps you are sharing into the FVP =
-using 9p? That
->>>>> might also be problematic.
->>>>=20
->>>> That was it. This time I booted up the kernel including your series =
-on
->>>> QEMU on my M1 and executed the gup_longterm program without the =
-ftruncate
->>>> failures. When testing your kernel on FVP, I was executing the =
-script from the FVP's host filesystem using 9p.
->>>=20
->>> I'm not sure exactly what the root cause is. Perhaps there isn't =
-enough space on
->>> the disk? It might be worth enhancing the error log to provide the =
-errno in
->>> tools/testing/selftests/mm/gup_longterm.c.
->>>=20
->>=20
->> Attached is the strace=E2=80=99d gup_longterm executiong log on your
->> pgtable-boot-speedup-v2 kernel.
->=20
-> Sorry are you saying that it only fails with the =
-pgtable-boot-speedup-v2 patch
-> set applied? I thought we previously concluded that it was independent =
-of that?
-> I was under the impression that it was filesystem related and not =
-something that
-> I was planning to investigate.
+diff --git a/sound/soc/mediatek/Kconfig b/sound/soc/mediatek/Kconfig
+index 5a8476e1ecca..c1c86ecc0601 100644
+--- a/sound/soc/mediatek/Kconfig
++++ b/sound/soc/mediatek/Kconfig
+@@ -298,3 +298,23 @@ config SND_SOC_MT8195_MT6359
+ 	  boards with the MT6359 and other I2S audio codecs.
+ 	  Select Y if you have such device.
+ 	  If unsure select "N".
++
++config SND_SOC_MT8365
++	tristate "ASoC support for Mediatek MT8365 chip"
++	depends on ARCH_MEDIATEK
++	select SND_SOC_MEDIATEK
++	help
++	  This adds ASoC platform driver support for Mediatek MT8365 chip
++	  that can be used with other codecs.
++	  Select Y if you have such device.
++	  If unsure select "N".
++
++config SND_SOC_MT8365_MT6357
++	tristate "ASoC Audio driver for MT8365 with MT6357 codec"
++	depends on SND_SOC_MT8365 && MTK_PMIC_WRAP
++	select SND_SOC_MT6357
++	help
++	  This adds support for ASoC machine driver for Mediatek MT8365
++	  boards with the MT6357 codec.
++	  Select Y if you have such device.
++	  If unsure select "N".
+diff --git a/sound/soc/mediatek/Makefile b/sound/soc/mediatek/Makefile
+index 3938e7f75c2e..4b55434f2168 100644
+--- a/sound/soc/mediatek/Makefile
++++ b/sound/soc/mediatek/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_SND_SOC_MT8186) += mt8186/
+ obj-$(CONFIG_SND_SOC_MT8188) += mt8188/
+ obj-$(CONFIG_SND_SOC_MT8192) += mt8192/
+ obj-$(CONFIG_SND_SOC_MT8195) += mt8195/
++obj-$(CONFIG_SND_SOC_MT8365) += mt8365/
+diff --git a/sound/soc/mediatek/mt8365/Makefile b/sound/soc/mediatek/mt8365/Makefile
+new file mode 100644
+index 000000000000..52ba45a8498a
+--- /dev/null
++++ b/sound/soc/mediatek/mt8365/Makefile
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0
++
++# MTK Platform driver
++snd-soc-mt8365-pcm-objs := \
++	mt8365-afe-clk.o \
++	mt8365-afe-pcm.o \
++	mt8365-dai-adda.o \
++	mt8365-dai-dmic.o \
++	mt8365-dai-i2s.o \
++	mt8365-dai-pcm.o
++
++obj-$(CONFIG_SND_SOC_MT8365) += snd-soc-mt8365-pcm.o
++
++# Machine driver
++obj-$(CONFIG_SND_SOC_MT8365_MT6357) += mt8365-mt6357.o
 
-No, irrespective of the kernel, if using 9p on FVP the test program =
-fails.
-It is indeed 9p filesystem related, as I switched to using NFS all the =
-issues are gone.
-
-Thanks,
-Itaru.
-
->=20
->>=20
->> Thanks,
->> Itaru.
->>=20
->>> Thanks,
->>> Ryan
->>>=20
->>>>=20
->>>> Thanks,
->>>> Itaru.
->>>>=20
->>>>>=20
->>>>> Does this problem reproduce with v6.9-rc2, without my patches? I =
-except it
->>>>> probably does?
->>>>>=20
->>>>> Thanks,
->>>>> Ryan
->>>>>=20
->>>>>>=20
->>>>>> Thanks,
->>>>>> Itaru.
-
+-- 
+2.25.1
 
