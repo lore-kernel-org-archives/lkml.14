@@ -1,22 +1,22 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248897BAF3
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 13:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A85C12F584
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 13:59:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712671149; cv=none; b=ldZeltvm18X3/K62KdVcy/RwGYR2WSvn6LSJ8kKNb0xW5AEgVKdCfJ8jhTh/ZNLempKVmkLdeo9hoaqz+b+WjAhT0efYUP8lhI4k58bIGK/AAqLztpVzBHLV1JzJwIjeybRq6zyV6CJkxxj98PnGiLxeTmARQgBw5Jcudiiu/g0=
+	t=1712671178; cv=none; b=neSaQtSatqqGXFX6usi3RdloRRXPUIhJenpbf0qk2XIfJ8+Hx+OthMr3wd98A5+BCyaLVegr2GJ1wbBhSHzKssAgTzzkoNUJ4cdJ/iwZSWMHkbeIKv6Vnm9QYGghsXulup4Y9r66JGagEQs1Xts46m6uWevLbzAe5Ez+711CYKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712671149; c=relaxed/simple;
-	bh=HhVZ25bmFK6NaOk9VYredBVKj1M6DjxkjjEd4lA97Mk=;
+	s=arc-20240116; t=1712671178; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O2ESKQIUBaKrVni4tB+vfJHmvSa08m56TmiVnWdk3xO2+HCLtsF68GsDRMFu1nwSJxZHlPtA3cWbnsahQVtD1M/S4UenOXf0d2DCmBxOOZBXBFScOZ+x1wty7HoHqwMgr5ImlsmtTIY80x9pGJkii5NBxF3t6wJ6G/aOBUIvVog=
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+hr++pchXHSdQYQdSdgaU0wZibZAhvzTRVhC1GuvQNivXmSpFiG/FFOy92J3+Hhtnpj4AomWhNqNQm2MmDaugnLwUJ2bKpTL7tLFrXOopzpJYLiYJxcRZjlLk6oI9f6gSLjjSK81bbZnQ1upzxoKBq1FEUZoyo/68LBPqAA88U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id C6AEA68B05; Tue,  9 Apr 2024 15:59:04 +0200 (CEST)
-Date: Tue, 9 Apr 2024 15:59:04 +0200
+	id A483068B05; Tue,  9 Apr 2024 15:59:34 +0200 (CEST)
+Date: Tue, 9 Apr 2024 15:59:33 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Daniel Wagner <dwagner@suse.de>
 Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
@@ -24,10 +24,9 @@ Cc: Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
 	James Smart <james.smart@broadcom.com>,
 	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/6] nvme: authentication error are always
- non-retryable
-Message-ID: <20240409135904.GA20883@lst.de>
-References: <20240409093510.12321-1-dwagner@suse.de> <20240409093510.12321-2-dwagner@suse.de>
+Subject: Re: [PATCH v5 3/6] nvme-tcp: short-circuit reconnect retries
+Message-ID: <20240409135933.GB20883@lst.de>
+References: <20240409093510.12321-1-dwagner@suse.de> <20240409093510.12321-4-dwagner@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,16 +35,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240409093510.12321-2-dwagner@suse.de>
+In-Reply-To: <20240409093510.12321-4-dwagner@suse.de>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Apr 09, 2024 at 11:35:05AM +0200, Daniel Wagner wrote:
-> From: Hannes Reinecke <hare@suse.de>
-> 
-> Any authentication errors which are generated internally are always
-> non-retryable, so use negative error codes to ensure they are not
-> retried.
-
-Thanks, this looks much better now:
+Looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
