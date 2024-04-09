@@ -1,61 +1,106 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F26713E3E3;
-	Tue,  9 Apr 2024 17:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698A715380F
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 17:07:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712682409; cv=none; b=Du19XjtcdNfOD78M+Qw9DVoWZiTUhc3z/C7OumDmP4CeYKcvw2H+Em9A/lCNtwGTA3n2sOUkD8kveOKOdUe1/L7JrXJCNb5cz1k2H/wYJMpJGs9mghK5nVDM0Zr0vH/mt8N5QTucVcm8jVo1cydQChOudsMSNJnIPr1KUj/4dBs=
+	t=1712682466; cv=none; b=YmUgtz9Jh91FtSzl5Sj8FjYchz7+cnt1OZDiv6EbnudKtQzAh3xn5ZTLIxYACd5H0BN0kJu3GyrSPRPqGCkhvY19K7fbkyo37Tat6BWbyCpS6uFbvVReXggK7NKhhHkpTjtohmtluB0Eyuqsh+E9Yq3lgu9Hoixf0JpzdvX7Sac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712682409; c=relaxed/simple;
-	bh=SU/lIZjorLYT/0gn8Ivk/IkYaTA7K0Unxbh+QSYRN84=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rR7X/PyQ/HACnD585NxsNUgB4WEZNWlsXyK5TExNpW7D7lVzMq+XNefwAqGeyTqX2JgwPJH17zolapmKuF+PdfzI4Q/88Dxy+yN6ra+PTqyPsSEfgljufOAl78JLQtnFk1c8gGufFPGxWNgFEAIIiu+Hca9w4gkkR4sJGBA/69A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=OAwGOJjb; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1712682466; c=relaxed/simple;
+	bh=ue+OGUqfOmLNbIUTamEItS+snMKGV7KZJW+7KVOECcQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BqUtA+8Z0YyCCs2eYlbvw/a4iOR804bZa9BNxc6cbXlHD1G4EEf+I/hPub91EQE1dPwQd09iWyUPm4rHGH12O+VpeVO9Bu2krt3zigummyaXcWMqqoGqDOcZHo+hrQicLz+pKcLcds9CMG/iM+ndMrAAKG8JSndXrAL/bss9tho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MaLvLzRw; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="OAwGOJjb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SU/lIZjorLYT/0gn8Ivk/IkYaTA7K0Unxbh+QSYRN84=; b=OAwGOJjbH3VyJN6C/JQx2eHqDl
-	L6MBrNPuxjVIC/3iVlvU40CtZjaRS9iKd/G/fWJ4MwqmO5ppVaLxueAHwoOojyzqZ0moH1XmuxHtL
-	yuSVvOEjppa1fcyBL90f8sFclfNIwgQy4acr/3hlrlJGzLm632vl+fqrdrcy0tF3xmJ7+9ohSvAIs
-	/kTJyOiH9zbC+AbqCw3pIi8mgEIy6FvTTwLGJqEpogltTzljTRvsVTeNtLN7uh33DK+0bmvMUrtlD
-	GqHp0buy79XsBLsZufqboxbgT7vyi5ZN5t/3DA5OzzKMkk2gjLP8jY3MyoqOmgH3BIRYzLC4I5S0R
-	kHfYxYKg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1ruEvk-009F9r-11;
-	Tue, 09 Apr 2024 17:06:44 +0000
-Date: Tue, 9 Apr 2024 18:06:44 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-fsdevel@vger.kernel.org, brauner@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] iov_iter: add copy_to_iter_full()
-Message-ID: <20240409170644.GE2118490@ZenIV>
-References: <20240409152438.77960-1-axboe@kernel.dk>
- <20240409152438.77960-2-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MaLvLzRw"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41699bbfb91so4245e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 10:07:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712682463; x=1713287263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qsBq0cy8GlGyTLsFzDWh0JUEGzZ8zL8Mw/WsALeBfxM=;
+        b=MaLvLzRwsNqMtgMawlV7zeMp+juP7zR9WXy0Jm4OWZTfvbgp4XI2/j8yKW7i8hECJK
+         fbCeB+D+wqStiwLFxOW/qtdPZ2ZPI/zMlq9pRPOhWytAWIfWPSoiz4RIqmVqMVHy8AmD
+         N+kTiPixd+GouoRy5LQF5Dx1LcsWJ+iayHPQgCa1hUgi5bni+d+ARNAaXXefq0MFfDsA
+         s2zhA2S8Zf1QexcsIeXmMNHvGy1J1/dM62U0wKWvGZrTdyxibGz4EzOQ6NthPz+5zhRq
+         T/4KjLWMYcro1FZ82b9Wrm2xV3RU4QBWaYZCrStiZiuA0UIdk5cKFAFjSGv1N2BbQ4X5
+         J/MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712682463; x=1713287263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qsBq0cy8GlGyTLsFzDWh0JUEGzZ8zL8Mw/WsALeBfxM=;
+        b=YCQZuAmd0HvNbB4g+uhbjIHt8EXSXYRcuAf1BPulR7DRDqrjIHonQjwv0imNU1XhHi
+         Nt+WL366EmnWeKV2LrFYvk07enoZ/0OatPM9DYVEeiPhIPsjGnPWykz2MCwRjkjn5Xhi
+         GNY/F9Oyifm+REcn+zY0W46emsU5nM5o8ySSZD1y1rtbFO4Cuak7frJxRkA17duq55AA
+         edzo6zIBpQGS05DWk7yV6LmkgwYUCfyp/aKQ9OMv6kdPaF56CAodTbTSvZ2sWzRnbK7g
+         HM/T9bBUz8xUUjNFQ0q2Jv48Ej2PSjgMAaa2FkV/jiH2oonMvtVXNyRBATtPFilOuq6a
+         tmUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWTzTgKQoIoiUmrNeJHrlXA+mERg2nYHHAyL9CDdicRQkKr6ayi3GAjU+VKhbNzot/svnZXRb7mN2P85V6HA2URAqTBlIB06v7aqSIv
+X-Gm-Message-State: AOJu0YxVjGYrrF3p5Wx1m65ka0l1QqckBcTgK3/6vUj2znwP63Dd5Jz7
+	iy9tY6nBt/s8QG8zwxPukOmj/NAqUTUHI8Y6ohcNOYqp4VLPOVtKJ7tTa3kOG9hupqmGLKyJLXk
+	g4YjwjEvBMxsdIhZL+Eo1HVBUddKe1M5+3e0=
+X-Google-Smtp-Source: AGHT+IEEpJwqd6S7g8HTA9AUAVkouCdLTgaK8Qrafsc/GrNIeR6yWteoZFEb2wHAnEnwAyAcW7FiUqeH8KOEXFfmP5c=
+X-Received: by 2002:a05:600c:1987:b0:416:57f5:b426 with SMTP id
+ t7-20020a05600c198700b0041657f5b426mr184824wmq.1.1712682462632; Tue, 09 Apr
+ 2024 10:07:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409152438.77960-2-axboe@kernel.dk>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20240409062639.3393-1-adrian.hunter@intel.com>
+In-Reply-To: <20240409062639.3393-1-adrian.hunter@intel.com>
+From: John Stultz <jstultz@google.com>
+Date: Tue, 9 Apr 2024 10:07:30 -0700
+Message-ID: <CANDhNCqx14CU9TwwkWqgUY9ucgaQZ8DwNmG+m==XrOziSfOS0Q@mail.gmail.com>
+Subject: Re: [PATCH] vdso: Fix powerpc build U64_MAX undeclared error
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, linuxppc-dev@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 09:22:15AM -0600, Jens Axboe wrote:
-> Add variant of copy_to_iter() that either copies the full amount asked
-> for and return success, or ensures that the iov_iter is back to where
-> it started on failure and returns false.
+On Mon, Apr 8, 2024 at 11:27=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
+>
+> U64_MAX is not in include/vdso/limits.h, although that isn't noticed on x=
+86
+> because x86 includes include/linux/limits.h indirectly. However powerpc
+> is more selective, resulting in the following build error:
+>
+>   In file included from <command-line>:
+>   lib/vdso/gettimeofday.c: In function 'vdso_calc_ns':
+>   lib/vdso/gettimeofday.c:11:33: error: 'U64_MAX' undeclared
+>      11 | # define VDSO_DELTA_MASK(vd)    U64_MAX
+>         |                                 ^~~~~~~
+>
+> Use ULLONG_MAX instead which will work just as well and is in
+> include/vdso/limits.h.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/all/20240409124905.6816db37@canb.auug.org=
+.au/
+> Fixes: c8e3a8b6f2e6 ("vdso: Consolidate vdso_calc_delta()")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-FWIW, see git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #work.iov_iter
-
-There was an open-coded instance (skb_copy_linear()) that I'd converted to
-that helper in the same commit; I can split it, of course, but I don't
-see much point in that.
+Acked-by: John Stultz <jstultz@google.com>
