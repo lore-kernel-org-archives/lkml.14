@@ -1,92 +1,87 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9840A158D8D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 23:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876CE158D9C;
+	Tue,  9 Apr 2024 23:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712703674; cv=none; b=D02O61hXkUcDMxCZTscfB+NP5Yc4Zl/1hwci0XHhsi1Vb+IsiI9Rj1FiwQOfhjTjrj5kTR5ZJjlASCgZrUCCMYhH5M5EDYZDv/JxGnTTYOCwQ40gRlU+W0JI4wEJzCVIvq1QJ3ba2pGUWt0V2XonVkQI+RYEeiUgVvUhL8r313M=
+	t=1712703913; cv=none; b=uAHKNR9+Ta99QhvtFZBgW0pwG6iQB5FcPx0y8HrKxFiO/MPEnfMTvlUgXFN51uyxW3j/hl2zgPXy4+2TGsj6Ez/KPEaqG5eHBRCjTWnwAy1zrS0XtP6BoqTiE3QyhS9htaY5Mu87kCltT6WZ9kIXrH15YG1ppb6hTMd22e92eEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712703674; c=relaxed/simple;
-	bh=JeppPCTETs93zcY8Nce9AbwilLKNhb+fARd6mCkiHYc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nRY9ZonTWTAh1ipbg+WyQRIaXFaHLvPXk1YtL+tCPe++BRERh7TVf0fj3ZCOjBFOkxw1e/nmC9j3y4JA6pXgFn4WTJvWw89fWPRKOAb0vRneY4KvCEgGszOlZ8jy+pRK/s7GLuYwgc4cXbPnhQ4QLpq23SwXxyTzbZqPfCMeDmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rwczPZCv; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712703913; c=relaxed/simple;
+	bh=JpiDdYF+w6gmwqQJ37NKkF9DXGvg/Cm8SjNiCArVRFg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lqz5gai/l4Zd9ZbC+/bEQxxjcX2kL6rImaf/w6VLdJy9StQKg7wxQppDFxR2j5WCHD3wDaIeEWoHFY2Ujo/qK/Z7UVn1ohRtEEOvhgLQVmRjkKVCdicwUA9YrW6r/8wGt9AxuMLFqA+iNMR+b6lzPbPc6dH0yJIdQ92PVKoVHrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRYkmkzu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwczPZCv"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d8743ecebdso42543991fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 16:01:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712703671; x=1713308471; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i7xaqNIsZ+2qWZG1Juv6VR/X6zHaDdpvuvJrk66LyvY=;
-        b=rwczPZCvJ+hc5ESQzu7ON1usV/3aj2hkQR7eNDZsVqit1aJi46WAZ1HmoRgpQ3HctC
-         41KfozStthmuRaAE7UfSc/iH6fWuSobDB4OtQtt6jNqXO13TCPyqJina1QpcpQdxefQ1
-         I5IdV5COItAbzN2ZYTzEH7ZAIF7EYCfwjt3ggA8JZOWvKwyMsOl+nNZiHuoS1mKVJQra
-         ZptYj4YXjeiHGc6p48Ew6J+ORMS11aHlaHNFyGWuBb0dcDcos0Oawk6Et1KlRWLiBbMw
-         oYMxjGGUR5P3tCLCgLHtMr0LL2P+MEUWsqRj4NtLy10I87PIOkpxzNyXellMgTDlKhEe
-         VBIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712703671; x=1713308471;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i7xaqNIsZ+2qWZG1Juv6VR/X6zHaDdpvuvJrk66LyvY=;
-        b=LWDkxIF1VJ6sBC1cjDRy/7dAGSfAXcE/wn4kBTKra6VGIw786LWMD/A6zYEQpdHgAs
-         T5U6e5cD9EaeZyQI53MlGdbf78SSi8Gx3nHeAGPVnufSmqPMSA7StTSVCW+Y8Q31btYe
-         z816Gk3vWuw3W7gkwGrfjssk59B/VAc96G7gk+LqsZJzi8dzXeMcsHgabrAR2LmGTx4E
-         zG+GX4CruUT1nrEa/Og3svsJBskEZ/74i5MRcQ7QvRToaEm5z8R01fk/1SPu067dMfIa
-         RAfQZ9EsoXGpglSVqDv7bxAGfI/XA/pMT9DNLJibBWIDmxlcj5CrNHJ1eEWpB2CqbVuH
-         vLAA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGBJpUW8vPUWZQaO+UNgaqFR+IBph/KSiYEyfPcNeRxqixqNVzD8x1vRHa7CZCDs8V3IQyK8eWMLZkBptW6aouwKoSly6vTg42xpBY
-X-Gm-Message-State: AOJu0Yzl1pFJ611Yb+mQ//H3Kqhto7Rxt1Bgvf08zH5sv5nStTbHQgJN
-	DjlcSPJuP1QpNVsHHOZRjf9a87Ku6Szn9Q3e26+tP1Oy0pkQ47oHVRxJvBtmO7U=
-X-Google-Smtp-Source: AGHT+IGAoCmmmkHVr8d4K2/bjCs9PjNxBVhrWn3RLt45OCDpf+HOu7K+ghHtnL1+EaX1IlLjp1IOjQ==
-X-Received: by 2002:a2e:b94e:0:b0:2d8:1249:a047 with SMTP id 14-20020a2eb94e000000b002d81249a047mr799800ljs.41.1712703670372;
-        Tue, 09 Apr 2024 16:01:10 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (dzyjmhyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a00e:a300::227])
-        by smtp.gmail.com with ESMTPSA id o10-20020a2e9b4a000000b002d71b89f93bsm1689846ljj.27.2024.04.09.16.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 16:01:10 -0700 (PDT)
-Date: Wed, 10 Apr 2024 02:01:08 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Francesco Dolcini <francesco.dolcini@toradex.com>, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alan Stern <stern@rowland.harvard.edu>, Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v1] usb: typec: mux: gpio-sbu: Allow GPIO operations to
- sleep
-Message-ID: <gehd2jmb6aellgcafld5qtitfv42fjzeouq2vvhynkoyu4kjpx@tilmbn6r3bq4>
-References: <20240409190910.4707-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRYkmkzu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBE3C433C7;
+	Tue,  9 Apr 2024 23:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712703913;
+	bh=JpiDdYF+w6gmwqQJ37NKkF9DXGvg/Cm8SjNiCArVRFg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZRYkmkzu0SpZIT3Cmp7T6WKaPrI47XIfmURZ7LbmhFv8BUzR+Tt/au4Kwder3xPBB
+	 wWCins93lPAjUPblcvKZdc41f+Uk2omSqvNFLJKI4HoPFnu/fqiifxfYLPuP48DFKN
+	 sY93h3H4HoMBwYH0ZfjhsnAfCCLDg1gEhCBiJ0VGuOhEYfK3dqlUZ93ygd91eg9xjJ
+	 +9bpNRvmzzn5QefWTZqY/q1PQCnagkWEnUxrbyW9KoLsAYsV/ErCxLUhoN4I5suWnQ
+	 JEOd/jxNakMq5zIkLtAWNMdgViQ8d/9qxLBk6AlF47nYIYruxTe7v/tu/7RSgRro/0
+	 NRh1vru6unBhA==
+From: SeongJae Park <sj@kernel.org>
+To: SeongJae Park <sj@kernel.org>
+Cc: damon@lists.linux.dev,
+	linux-damon@amazon.com,
+	linux-damon-trial@amazon.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: DAMON Beer/Coffee/Tea chat series
+Date: Tue,  9 Apr 2024 16:05:10 -0700
+Message-Id: <20240409230510.74265-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20220810225102.124459-1-sj@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409190910.4707-1-francesco@dolcini.it>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 09:09:10PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+Hello community,
+
+On Wed, 10 Aug 2022 22:51:02 +0000 SeongJae Park <sj@kernel.org> wrote:
+
+> Hello,
 > 
-> Use gpiod_set_value_cansleep() to support gpiochips which can
-> sleep like, e.g. I2C GPIO expanders.
 > 
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
->  drivers/usb/typec/mux/gpio-sbu-mux.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
+> In short, I'd like to start an open, regular, and informal virtual bi-weekly
+> meeting series for DAMON community.
 > 
+> Important links and dates
+> -------------------------
+> 
+> Location: https://meet.google.com/ndx-evoc-gbu
+> Agenda: https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing
 
--- 
-With best wishes
-Dmitry
+If you tried to join today's meeting and if you were unable to join, it's all
+my fault.  Sorry, I again missed my alarm.
+
+I was about to schedule another meeting instance for this on next Tuesday, but
+I realized that it will conflict with OpenSource Summit NA
+(https://events.linuxfoundation.org/open-source-summit-north-america/).
+
+So let's have yet another meeting on a week after that.  That is, 2024-04-23
+Tuesday, 09:30 PT.  My apology again for anyone who were unable to join the
+meeting due to my fault, and looking forward to chat with you on the meeting.
+I also updated the agenda doc
+(https://docs.google.com/document/d/1v43Kcj3ly4CYqmAkMaZzLiM2GEnWfgdGbZAH3mi2vpM/edit?usp=sharing).
+
+FYI, I will also attend the OSSummit next week in person, and DAMON will again
+be presented there (https://sched.co/1aBOg).  Looking forward to meet you in
+person if possible!
+
+
+Thanks,
+SJ
+
+[...]
