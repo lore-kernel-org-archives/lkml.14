@@ -1,212 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B5D157A51
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA798158871
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 19:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712690739; cv=none; b=g/NhhdIuFZkbPIK0Q3pNwatjz/47Z5nywwNjP9ZHu9h6fmef2tVtTU7hFvTphTTmnoG9AahyLqfCXvFaZ/L85eoZaqiPPu2kK3f3MF0vlaPtL9eXOcyt3NfbPNFJaCd7W5ydmyR7Yu7CZ3+hSe49JfGzl+TMPJR3J3iwgq5mxRU=
+	t=1712690743; cv=none; b=uud5DcweuK09gMNyBviWNxZbW7EJkGcOpmgZIbeg/Ow+KJ9WTZfEp+3dtsGzoTDtrt4Y8aglr5g4KmDho7IxAcN+gMlDoRBft3maiUVkREhVCe/GVX5NTanXkw9zKXpT7t4BOmaNMP3MoSs/Y/uOowvnrlSoRQVnlv8d1d8KQY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712690739; c=relaxed/simple;
-	bh=sZns4wWiCwVq2UKw3DllXS1aY/CmVoZGF+v/FMeR3zg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VPAPRKkJ53UWSiKCOKeHNX2sdYs130MFKud+WpFRJ/fH0R9vohwNNHGxZNpVJ1cM+brfltOnBVjzKaqS2EX7jjqSud01iSgnSvvs3kHmRhziB9rdNo2/BZ1tYgJJVPzgUZwsEdRIXspv8tBMyXsc9Ml1lQ3On/WKnFO5DRiLhfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/SGLq92; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712690743; c=relaxed/simple;
+	bh=R1eBZWi0r7hSbgtg+APm7iwY8f/rz4SnnovRTb8gUI0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r/8LXNCxEtGS9/89ApwdIkp5INVTQwg/MRZhFCMhquPnbw91yA3ZdjmwC3o+IX8augNQrSwDAWkQqCuxMI0ajO99HzhIgBmDUm/iIT7nwGsjeRDv3togEJJxNwccSYetZgOyFJZfvuH4nD6JUGNIoN/rP/RKAGfrcwGVn06DgWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aTRUxtZz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/SGLq92"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7621FC433C7;
-	Tue,  9 Apr 2024 19:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712690738;
-	bh=sZns4wWiCwVq2UKw3DllXS1aY/CmVoZGF+v/FMeR3zg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=L/SGLq92FO/Y3Ifb/DIrf0ewcs/SvPtFMxGhrGdIItA5B7TNlzsLA5NhLFZHE4Sf5
-	 ax+o5r283Ugp/c4OxkE3Oyv7Fbgui/3EePahWdUxJC6/1PEWJUoup3vBFs5qdjjLW0
-	 u3Srk84StwXDJT5/HK6BK49ESE5tlA8aXfyiQZ/Bx6uNQ4+mft0Q05VT7M5StCpoug
-	 lcoqa1k9tqFxqgtwlz+DOdj0HngoveTKYtR/LeZvrJG2g54QN9ndsdhkf96YkfJ5i/
-	 dnhmEV4K+LmdqGVOK/HBmFLPJy8Hb7HhiUxOiQmZKv4+rfpwg5ZIV+6E/9QOi+H9iT
-	 HZ4MU0o7Jr/eQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 11B81CE2D22; Tue,  9 Apr 2024 12:25:38 -0700 (PDT)
-Date: Tue, 9 Apr 2024 12:25:38 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Julia Lawall <julia.lawall@inria.fr>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: Re: Finding open-coded workarounds for 1/2-byte cmpxchg()?
-Message-ID: <d0c0e4c6-0791-448b-90ec-0bb4edcb8518@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <f57bcb57-45a4-4dfb-8758-8f7302223ea9@paulmck-laptop>
- <alpine.DEB.2.22.394.2404060057110.3446@hadrien>
- <0e489247-6350-4485-9976-320b457ae748@paulmck-laptop>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aTRUxtZz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712690740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DDf71sS1dWCd5bf/gEaENI1Rp8VJQ5nXZAI6YpNXJLo=;
+	b=aTRUxtZzo+ELqYwDEVMxlAmzooZpFivpbIZC0qChM6p5v6vtH/6im1Kz0f1j5UM9gHMoNg
+	qOjpHc/gOQ5TQzyaAXZAqwxVJgNTyTfLayAbbhmkxPr1UEjXE+ohjX6D6jKHtzommq2Sy+
+	abOL8Jd62qaL+HT0UuAuw4+/h73p9IM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-538-vMa84eYMNlusTgwrdB_i6w-1; Tue, 09 Apr 2024 15:25:35 -0400
+X-MC-Unique: vMa84eYMNlusTgwrdB_i6w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 592A9830ED2;
+	Tue,  9 Apr 2024 19:25:33 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.192.106])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 4A7E840153AE;
+	Tue,  9 Apr 2024 19:25:21 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Peter Xu <peterx@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Yin Fengwei <fengwei.yin@intel.com>,
+	Yang Shi <shy828301@gmail.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Hugh Dickins <hughd@google.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <naoya.horiguchi@nec.com>,
+	Richard Chang <richardycc@google.com>
+Subject: [PATCH v1 10/18] mm/page_alloc: use folio_mapped() in __alloc_contig_migrate_range()
+Date: Tue,  9 Apr 2024 21:22:53 +0200
+Message-ID: <20240409192301.907377-11-david@redhat.com>
+In-Reply-To: <20240409192301.907377-1-david@redhat.com>
+References: <20240409192301.907377-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e489247-6350-4485-9976-320b457ae748@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Fri, Apr 05, 2024 at 04:18:29PM -0700, Paul E. McKenney wrote:
-> On Sat, Apr 06, 2024 at 01:00:35AM +0200, Julia Lawall wrote:
-> > 
-> > 
-> > On Thu, 4 Apr 2024, Paul E. McKenney wrote:
-> > 
-> > > Hello, Julia!
-> > >
-> > > I hope that things are going well for you and yours.
-> > >
-> > > TL;DR: Would you or one of your students be interested in looking for
-> > > some interesting code patterns involving cmpxchg?  If such patterns exist,
-> > > we would either need to provide fixes or to drop support for old systems.
-> > >
-> > > If this would be of interest, please read on!
-> > >
-> > > Arnd (CCed) and I are looking for open-coded emulations for one-byte
-> > > and two-byte cmpxchg().  Such emulations might be attempting to work
-> > > around the fact that not all architectures support those sizes, being
-> > > as they are only required to support four-byte cmpxchg() and, if they
-> > > are 64-bit architectures, eight-byte cmpxchg().
-> > >
-> > > There is a one-byte emulation in RCU (kernel/rcu/tasks.h), which looks
-> > > like this:
-> > >
-> > > ------------------------------------------------------------------------
-> > >
-> > > u8 rcu_trc_cmpxchg_need_qs(struct task_struct *t, u8 old, u8 new)
-> > > {
-> > > 	union rcu_special ret;
-> > > 	union rcu_special trs_old = READ_ONCE(t->trc_reader_special);
-> > > 	union rcu_special trs_new = trs_old;
-> > >
-> > > 	if (trs_old.b.need_qs != old)
-> > > 		return trs_old.b.need_qs;
-> > > 	trs_new.b.need_qs = new;
-> > > 	ret.s = cmpxchg(&t->trc_reader_special.s, trs_old.s, trs_new.s);
-> > > 	return ret.b.need_qs;
-> > > }
-> > >
-> > > ------------------------------------------------------------------------
-> > >
-> > > An additional issue is posed by these, also in kernel/rcu/tasks.h:
-> > >
-> > > ------------------------------------------------------------------------
-> > >
-> > > 	if (trs.b.need_qs == (TRC_NEED_QS_CHECKED | TRC_NEED_QS)) {
-> > >
-> > > 	return smp_load_acquire(&t->trc_reader_special.b.need_qs);
-> > >
-> > > 	smp_store_release(&t->trc_reader_special.b.need_qs, v);
-> > >
-> > > ------------------------------------------------------------------------
-> > >
-> > > The additional issue is that these statements assume that each CPU
-> > > architecture has single-byte load and store instructions, which some of
-> > > the older Alpha systems do not.  Fortunately for me, Arnd was already
-> > > thinking in terms of removing support for these systems.
-> > >
-> > > But there are additional systems that do not support 16-bit loads and
-> > > stores.  So if there is a 16-bit counterpart to rcu_trc_cmpxchg_need_qs()
-> > > on a quantity that is also subject to 16-bit loads or stores, either
-> > > that function needs adjustment or a few more ancient systems need to
-> > > lose their Linux-kernel support.
-> > >
-> > > Again, is looking for this sort of thing something that you or one of
-> > > your students would be interested in?
-> > 
-> > Hello,
-> > 
-> > I tried, but without much success.  The following looks a little bit
-> > promising, eg the use of the variable name "want", but it's not clear that
-> > the rest of the context fits the pattern.
-> 
-> Thank you for digging into this!!!
-> 
-> > diff -u -p /home/julia/linux/net/sunrpc/xprtsock.c
-> > /tmp/nothing/net/sunrpc/xprtsock.c
-> > --- /home/julia/linux/net/sunrpc/xprtsock.c
-> > +++ /tmp/nothing/net/sunrpc/xprtsock.c
-> > @@ -690,12 +690,9 @@ xs_read_stream(struct sock_xprt *transpo
-> >  		if (ret <= 0)
-> >  			goto out_err;
-> >  		transport->recv.offset = ret;
-> > -		if (transport->recv.offset != want)
-> > -			return transport->recv.offset;
-> 
-> Agreed, though you are quite right that ->recv.copied and ->recv.offset
-> are different lengths.  But yes, as you sugggest below, there must be
-> a cmpxchg() of some type (cmpxchg(), cmpxchg_acquire(), ...) in the mix
-> somewhere.  Also, the cmpxchg() must be applied to a pointer to either
-> a 32-bit or a 64-bit quantity, but the change must be 16 bits (or 8 bits).
-> 
-> > The semantic patch in question was:
-> > 
-> > @r@
-> > expression olde;
-> > idexpression old;
-> > @@
-> > 
-> > if (olde != old) { ... return olde; }
-> > 
-> > @@
-> > expression newe != r.olde;
-> > idexpression nw;
-> > expression r.olde;
-> > idexpression r.old;
-> > @@
-> > 
-> > *if (olde != old) { ... return olde; }
-> > ...
-> > *newe = nw;
-> > ...
-> > *return newe;
-> > 
-> > The semantic patch doesn't include the cmpxchg.  I wasn't sure if that
-> > would always be present, or in what form.
-> 
-> It would be, but I am having trouble characterizing exactly what the
-> pattern would look like beyond "emulating a 16-bit cmpxchg() using either
-> a 32-bit cmpxchg() or a 64-bit cmpxchg()".  :-(
-> 
-> Thank you again, and something to think more about.
+We want to limit the use of page_mapcount() to the places where it is
+absolutely necessary.
 
-I took the crude approach of looking at all of the cmpxchg*() invocations,
-discarding those that were clearly not an issue.  Here are the close calls
-that I found:
+For tracing purposes, we use page_mapcount() in
+__alloc_contig_migrate_range(). Adding that mapcount to total_mapped sounds
+strange: total_migrated and total_reclaimed would count each page only
+once, not multiple times.
 
-o	drivers/misc/genwqe/card_ddcb.c enqueue_ddcb() does work against
-	a union that has 32-bit, 16-bit, and eight-bit members, but as
-	far as I can see the ->icrc_16 member is not used.  But this
-	might be an accident waiting to happen.  Or maybe this driver
-	is used only by architectures with a full set of cmpxchg sizes.
+But then, isolate_migratepages_range() adds each folio only once to the
+list. So for large folios, we would query the mapcount of the
+first page of the folio, which doesn't make too much sense for large
+folios.
 
-	The 8-bit ->hsi and ->shi fields are used for debug output, which
-	should be harmless.
+Let's simply use folio_mapped() * folio_nr_pages(), which makes more
+sense as nr_migratepages is also incremented by the number of pages in
+the folio in case of successful migration.
 
-	Ditto __genwqe_purge_ddcb() that same file.
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ mm/page_alloc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-o	drivers/platform/surface/aggregator/controller.c ssh_seq_next()
-	does an 8-bit cmpxchg().
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 393366d4a704..40fc0f60e021 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6389,8 +6389,12 @@ int __alloc_contig_migrate_range(struct compact_control *cc,
+ 
+ 		if (trace_mm_alloc_contig_migrate_range_info_enabled()) {
+ 			total_reclaimed += nr_reclaimed;
+-			list_for_each_entry(page, &cc->migratepages, lru)
+-				total_mapped += page_mapcount(page);
++			list_for_each_entry(page, &cc->migratepages, lru) {
++				struct folio *folio = page_folio(page);
++
++				total_mapped += folio_mapped(folio) *
++						folio_nr_pages(folio);
++			}
+ 		}
+ 
+ 		ret = migrate_pages(&cc->migratepages, alloc_migration_target,
+-- 
+2.44.0
 
-o	drivers/platform/surface/aggregator/controller.c ssh_rqid_next()
-	does a 16-bit cmpxchg().
-
-o	kernel/locking/qspinlock_paravirt.h pv_wait_node() does
-	an 8-bit cmpxchg().  As does pv_kick_node() in that same
-	file.  And __pv_queued_spin_unlock().  And, as Arnd noted,
-	trylock_clear_pending() and pv_hybrid_queued_unfair_trylock()
-	in that same file do 16-bit cmpxchg_acquire().
-
-o	net/rxrpc/io_thread.c rxrpc_input_packet_on_conn() is strange
-	in that it supplies 16-bit old and new fields to a cmpxchg()
-	of a 32-bit quantity, but it is quite possible that this would
-	be a 16-bit quantity if permitted in core code.  This is in an
-	rxrpc_connection structure.
-
-There are no doubt some false negatives omitted from this list, but
-there are a few places that use or would like to use 8-bit and 16-bit
-cmpxchg*().
-
-							Thanx, Paul
