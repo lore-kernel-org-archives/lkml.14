@@ -1,117 +1,97 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A339137C21
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 15:54:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA26513B293;
+	Tue,  9 Apr 2024 15:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712678101; cv=none; b=WAoUf/mltpcSZKXllnDOwdKNtttin9XKO7+4HpgwTdotazCEI37DEqr4nu15Nx8v/T0yt0LnLjom7d/PBrejJpjrouevTslUKWokyVBVhKTrLmKNK2BLwKxZEfpaQRr1Ype3KKyqDx1HAL2TNWi0Rq1rmlyhisHo8ZkiycBCB1Q=
+	t=1712678106; cv=none; b=UCueXl24J299Z4u0ruRpcfW2Tr+xhWY9dE0FxSuNwG286bDhUnDu24JIv6yPaQmMruKRTFSgHLiPgJbz2L5zM5/C1Jm1qL0T42P3zpaFheFWRrNcQONab2bCqEIHaz1+bXkM517hMUsZipZ+pqK8/SFqWnKarUrvcl9LmsSFLRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712678101; c=relaxed/simple;
-	bh=1l2tPS/uw+PB8D9xP3EBZO3PYpd//HCxeQtArQ8R/zI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WMh8iK8mJuF7CXip8udbRFte1DP1pO7f+XT2rmTfObjp3RsbIBERd5MAFVanRyXHYVuSnmZCA8edA3RBdhtsiDyemzQbrKvp7ju3xuFWCy0qOe1CdYHikhFM9IGFNAcgsonng3Toc8MgpM8cUSZVAOm5JXO9MH494b86CCOQAf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=EPZmPHnm; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="EPZmPHnm"
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 439D47Ad019489;
-	Tue, 9 Apr 2024 15:54:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pps0720;
- bh=y37/eCMfvVuk9cmZXA5UvUTrgMOmLUFWq9k52hU/Lh8=;
- b=EPZmPHnmn+EPPxEl7cg2pK4N8REz4+PznD+lgeUWv0P6t+ChS0LUw7K/MhvA6t6zSJ2V
- 4b3+hNOwZ5HHQlg3HZ+nItE9bs8Y/nktshRVU2x8M2hP8VkrCWH+QwsJGuYX7B2tr0ir
- eKYVEiG5STxWZgh0okJvOPq7g5bvAlqvzHvrlnxURf2GFXd8u+mxGRcyzWCZOkiKLCLY
- ck2UZR0o0/W0hooGCL9zD7qOtU1924fWG0UHfdYuUTuLIB0jzYrBVFdX+UdlSDf+2wne
- dkUMzCv108wOJjtSYFjdRekx15f5eUm6gFiPv0X4NwiCWigNfatqNe8DMxr1zI+cLw6q uA== 
-Received: from p1lg14878.it.hpe.com ([16.230.97.204])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3xd0n6c43s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Apr 2024 15:54:43 +0000
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14878.it.hpe.com (Postfix) with ESMTPS id 3118E295EF;
-	Tue,  9 Apr 2024 15:54:43 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id D6A7B809046;
-	Tue,  9 Apr 2024 15:54:42 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
-	id 530A9302F4723; Tue,  9 Apr 2024 10:54:39 -0500 (CDT)
-From: Kyle Meyer <kyle.meyer@hpe.com>
-To: linux-kernel@vger.kernel.org, yury.norov@gmail.com,
-        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com
-Cc: russ.anderson@hpe.com, dimitri.sivanich@hpe.com, steve.wahl@hpe.com,
-        Kyle Meyer <kyle.meyer@hpe.com>
-Subject: [PATCH 2/2 RESEND] sched/topology: Optimize topology_span_sane()
-Date: Tue,  9 Apr 2024 10:52:50 -0500
-Message-Id: <20240409155250.3660517-3-kyle.meyer@hpe.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20240409155250.3660517-1-kyle.meyer@hpe.com>
-References: <20240409155250.3660517-1-kyle.meyer@hpe.com>
+	s=arc-20240116; t=1712678106; c=relaxed/simple;
+	bh=0lPHtPQnZWwOuPYNH0Mij7OvM1YjXB78i9gew5k4nBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G/Nhrh2hJJBCZbXaZrdjBziBgBgfBFjOeu9bsfR4GAwMQSk5MaVnSIm/jD8mNX4bJea5KtM5CNHka84g2myQr5GZ3UdoK8YPTfkBxIE+R9GHnWMo1qIz1TMeRj8gM0vZuCZ5yESLg5GDTnk71y1k4BuFSEwSW6SkX8XtPvAY+uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5e4613f2b56so4435961a12.1;
+        Tue, 09 Apr 2024 08:55:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712678104; x=1713282904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6krUFkZxSu7NHCuJ24hvqtrbwkrF1MhKocaeSXBeP1g=;
+        b=BVTkKK/MdEWX6HBXWry60C1xxrWD9IFMx+se6VU9KlsAeaw9cJWHRS689RPSKhXTHs
+         GZTCqB0I8/TkEaZnR8hFyJDPEdu/FaDhGhtCe43bWp5PvLtUcdpyY7KpfRl9ngevTb30
+         DbwX45tdYgSAuy5w+PeEBkv90LuU75HAPa/p9+UTGYL/291zG8edNiuikYg1t1oWvffg
+         1LGqnL1+K6VwLfncFqfCo9fUj8Xe1UGZBmmFb7bK3DjpSB7n9etNkDfrIHCoojXxrNFO
+         G6bYC7bssTiyHNJxMHpBZyTg5i1/aWEZOhfZo8dwJZx8inNbB3Mpz0Fms1/C1SjmSYTR
+         9PRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXgKioS39D+vOK6OChRLWYE/VCg/usgUYVa11WUK9MtYnjf+jOJRSvdeOWvsrUchocHCK6IEcfD6lWw7ALQWJvy3nGG7CQpM36z/1xm9LZMxB2xheJnnQ+TG3RvajurrjlRd2MoUWVkZ9hSe40eQ==
+X-Gm-Message-State: AOJu0Ywgm6y4bCj1+bujwjDBLkWa1NLXmiFK/oaoKLqI9mv/HSceruaf
+	pYCo00CfoKPh9JthI9NmTfbNgxodBtAkICdUXzxfD+IAIDJWN0DxlbD1+s8w2KsBaMRFMAmADmc
+	Ceq1lsY/AE3MWWKEysAkI/vL/QY4=
+X-Google-Smtp-Source: AGHT+IHE/dEmZWu5fRh3HefzkZZpkUkBWoB/yZw6LtaPY8lxKNr+Qil08N6s7/bplA2zcN7caznfjTQ4tImCgt1wQzo=
+X-Received: by 2002:a17:90a:101:b0:29b:ccb4:a250 with SMTP id
+ b1-20020a17090a010100b0029bccb4a250mr40293pjb.16.1712678103729; Tue, 09 Apr
+ 2024 08:55:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: aEZwzJ6g0c0-bGY4Q_cvmnctZtRuwETF
-X-Proofpoint-ORIG-GUID: aEZwzJ6g0c0-bGY4Q_cvmnctZtRuwETF
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-09_11,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- phishscore=0 mlxscore=0 mlxlogscore=861 priorityscore=1501 impostorscore=0
- clxscore=1015 spamscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404090104
+References: <20240408185520.1550865-1-namhyung@kernel.org> <CAMuHMdXQ_osFeknmg=oR6-fMH_MkVqabCtbynxQ6UvpZRwry3Q@mail.gmail.com>
+ <ZhVG_9KpcWLLhc-s@x1>
+In-Reply-To: <ZhVG_9KpcWLLhc-s@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 9 Apr 2024 08:54:51 -0700
+Message-ID: <CAM9d7ci+r73oNUOS7zjHmRGkQk0OhLAdv4zqt7BV+y4jb1rkwg@mail.gmail.com>
+Subject: Re: [PATCHSET 0/9] Sync tools headers with the kernel source
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Optimize topology_span_sane() by removing duplicate comparisons.
+Hello,
 
-The total number of comparisons is reduced from N * (N - 1) to
-N * (N - 1) / 2 (per non-NUMA scheduling domain level).
+On Tue, Apr 9, 2024 at 6:47=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> On Tue, Apr 09, 2024 at 09:15:02AM +0200, Geert Uytterhoeven wrote:
+> > Hi Namhyung, Arnaldo,
+> >
+> > On Mon, Apr 8, 2024 at 8:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > > I'm gonna carry these changes on the perf tools tree.  I'll update th=
+e
+> > > vhost.h once it lands on the mainline.
+> > >
+> > > This is the full explanation from Arnaldo:
+> > >
+> > > There used to be no copies, with tools/ code using kernel headers
+> > > directly. From time to time tools/perf/ broke due to legitimate kerne=
+l
+> > > hacking. At some point Linus complained about such direct usage. Then=
+ we
+> > > adopted the current model.
+> >
+> > Do you have a reference to that?
+>
+> I would have to do a search on the mailing list to find the exact
+> exchange, this is from memory and from people asking this repeatedly.
+>
+> Ingo replied with reasons similar to the ones I use in this canned
+> explanation when sending the notice of updating the files.
 
-Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
-Reviewed-by: Yury Norov <yury.norov@gmail.com>
----
- kernel/sched/topology.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+This is the Ingo's reply:
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 99ea5986038c..b6bcafc09969 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -2347,7 +2347,7 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
- static bool topology_span_sane(struct sched_domain_topology_level *tl,
- 			      const struct cpumask *cpu_map, int cpu)
- {
--	int i;
-+	int i = cpu + 1;
- 
- 	/* NUMA levels are allowed to overlap */
- 	if (tl->flags & SDTL_OVERLAP)
-@@ -2359,9 +2359,7 @@ static bool topology_span_sane(struct sched_domain_topology_level *tl,
- 	 * breaking the sched_group lists - i.e. a later get_group() pass
- 	 * breaks the linking done for an earlier span.
- 	 */
--	for_each_cpu(i, cpu_map) {
--		if (i == cpu)
--			continue;
-+	for_each_cpu_from(i, cpu_map) {
- 		/*
- 		 * We should 'and' all those masks with 'cpu_map' to exactly
- 		 * match the topology we're about to build, but that can only
--- 
-2.44.0
+https://lore.kernel.org/r/ZhTwPLliHXKPAJUQ@gmail.com/
 
+Thanks,
+Namhyung
