@@ -1,265 +1,166 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25A78173C;
-	Tue,  9 Apr 2024 09:56:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE6882D9C
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 09:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712656610; cv=none; b=osor4+isI24w7ONBjB2KNKqFMuCf8kvXYRGbWu+3a/SF8si/E1UPvRAHCIvGeZbZzDryg84HFhaNg/wn2Qc8uwtWrTsNR3bHAXZuic3Sq4dxV2HEr2dMKNBL1OIfb8oNDnOkblTvoRBfhef/8WRF+QricMZSKNKfYs/666xi6vQ=
+	t=1712656616; cv=none; b=JSWSMV8AnGb0VKc0Ya8sGJQZPmV0iD6ysBAA3PPkU0FMS7ajUoXVdRD68P1PPQm5HncDG044krYCNUUxWZW3w8C66YG8LQuRfxKORBYXAQU8bdXGFbBEYpEkkKzglEbhC56p2Cbw8SxsYXxwQu9Hz/qzWu5VcTfo+yRNn+YVQvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712656610; c=relaxed/simple;
-	bh=wvsDcCz4V8ckm6Y5cmx24jz4vCItdVXP3OrMJQUAD+A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WZ7g1d8YpGTtB6iVNdBVbRoesvrxNsNv65en06qZB4FjcirvrOu9r3UCOLCunLEhVdTZGbIg9qnCYyMSG49Yqht5l44fsDpf1JFt8rID7ishK74rjYakRvjazfUETOR212gNxy7dUaDw9HU61y0zgZY+N5KM1hcYyKwW8P4PFko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igzVb5+z; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712656616; c=relaxed/simple;
+	bh=23riWL0Gd60rPfm/N+Bksf6fpUnyFPCyw8iYZCSbqm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AXrjRVu8FFDLX8kBK//yqsVoRk4MCMyKtKxPubHkvDegkl4rPeEDFYyPNRywvpJv5xM5t+yBZcpKCm+CXEL42cPunRiEm3dk5WBuuxuJ7wni0a2cumVWUflvyOv4aCwPRzuuGvfuDjC9lLOxQHv5iuZoLI8TulcsigME/XUYSkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fVvPcU0Z; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igzVb5+z"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed2dc03df6so1723177b3a.1;
-        Tue, 09 Apr 2024 02:56:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712656608; x=1713261408; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bBNT1NwAXcdBlViFBBFgJVd26xGIToLjTiUG+Kqd4r4=;
-        b=igzVb5+zcXyrMqIYU+stAGFGdiJR1X5vaZFTzs4pOfSt4FBGueN7CGpJa98qPgA20m
-         0yDvcXZkSTHsgCX95kE3gT/Up7JRhDfu6PPLXgCdZUw9VQxG7tGYmvgU01ND7OF2h7KF
-         68ttIm12LZD7aU2eKYr/EtFiPRLT88250WbKUDytkjFlxoS1bBhEyUnfmuajLKoT6DlL
-         TMmIEGhoAwpimbvMSmTtrQrY0EaroSc7tEFGQWFgZhkSzmoz/YBO4uVww+gYBR9sM1AI
-         ZgSG5uYZ5dS9HPRa09Spa+R5c4l5sv16WgM2yyHg/fhNhSWIVmT1LwyGLwccYDnUGp4s
-         zr8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712656608; x=1713261408;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bBNT1NwAXcdBlViFBBFgJVd26xGIToLjTiUG+Kqd4r4=;
-        b=htP72J0P0Wm7NkgDOCZMd56nh3nPE5p4nIR7xLBNl23A5mhm7ejw+2EfWPsc2phx3o
-         ncZWk4Re07RBfzo4o1kaqydEH7Lj+qNlMHGk2eP/6DpnwR1njAEmPzdyl6c8999AohHe
-         pVPtVfXcXSCDRunA6gp0eoLnVClhf5CrP5hnbLzzMPOT973CRDhot7ewiyrhwnuuI6Y6
-         dPa8Lk+IGbNVEfue1T0NQYDQEAGzh/XFQG5J6t9I7duMwO8FIgsn2gTKCvi1vdtLUgo3
-         /gzTGDLCu2vx3PpsHWlxvlZ0LVrM7+7we5bRLXyTUrb4KfrSmi17uYUHLsSAPzHxiD9n
-         8whA==
-X-Forwarded-Encrypted: i=1; AJvYcCUolBdsNbegD7Ho+Pnt2MM14wD9zoAfBrNY3KCnN52J0oseBgAdJbj+tEDq8zAR1SyyOTpqSA6UGlnwNaPLc9Hy16CGvtdpOcOI+gEk+1n72zj7sXWSq+WnDTEagWhX3a+10bER6P53ZIGuq90o6ntsQs4HSv6nDciEddILF0vM001+m18=
-X-Gm-Message-State: AOJu0YydeowyHn57TMTBn6lTJ2GS2KsLAbD8NSAQLflaLihAdrrPwHto
-	bsEg5R1o6pHGFrkSSWBBA9c0nwybV1nGjQIxWsD5NSAuKFB2oaBN
-X-Google-Smtp-Source: AGHT+IH+0xUHB5fNKZSDnFf4TdSpCjNWFwoNEa+N7S7Yf2YQ9ZZ8dXvoiwYwJG1I3dhWKPBX9BpxLA==
-X-Received: by 2002:a05:6a21:2d89:b0:1a7:3d2a:7383 with SMTP id ty9-20020a056a212d8900b001a73d2a7383mr14320944pzb.18.1712656608022;
-        Tue, 09 Apr 2024 02:56:48 -0700 (PDT)
-Received: from a28aa0606c51.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id o17-20020a170902d4d100b001e3f1596baasm5100445plg.298.2024.04.09.02.56.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 02:56:47 -0700 (PDT)
-From: Jacky Huang <ychuang570808@gmail.com>
-To: linus.walleij@linaro.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ychuang3@nuvoton.com,
-	schung@nuvoton.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 2/3] dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
-Date: Tue,  9 Apr 2024 09:56:36 +0000
-Message-Id: <20240409095637.2135-3-ychuang570808@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240409095637.2135-1-ychuang570808@gmail.com>
-References: <20240409095637.2135-1-ychuang570808@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fVvPcU0Z"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712656605; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=OQGIdks+efdOpe57pVeyT82POjXjytrYc+w+BN9nedU=;
+	b=fVvPcU0ZviY6wU5aXzWT4UeS8viYIYGU0mWzvHF1X2n/f+bF8S+ISZm9gb4wyjzelg4JNjFUVE9oL1sqfa4Hfz6OA2ljl8pKzEwjjjX3T0XR34feP9awzBgwYvyS3az+nb+XCI3nXLxvRRRTqrnQSlUrCcCJVOxDa2b5SS9VuHc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W4E4QQU_1712656603;
+Received: from 30.221.146.5(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W4E4QQU_1712656603)
+          by smtp.aliyun-inc.com;
+          Tue, 09 Apr 2024 17:56:44 +0800
+Message-ID: <ffab38f0-2ec6-4ed2-b0f8-398f2829b71d@linux.alibaba.com>
+Date: Tue, 9 Apr 2024 17:56:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] vp_vdpa: don't allocate unused msix vectors
+To: lyx634449800 <yuxue.liu@jaguarmicro.com>
+Cc: angus.chen@jaguarmicro.com, virtualization@lists.linux.dev,
+ xuanzhuo@linux.alibaba.com, linux-kernel@vger.kernel.org,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>
+References: <20240409013020-mutt-send-email-mst@kernel.org>
+ <20240409085818.1242-1-yuxue.liu@jaguarmicro.com>
+From: Heng Qi <hengqi@linux.alibaba.com>
+In-Reply-To: <20240409085818.1242-1-yuxue.liu@jaguarmicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Jacky Huang <ychuang3@nuvoton.com>
 
-Add documentation to describe nuvoton ma35d1 pin control and GPIO.
 
-Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       | 163 ++++++++++++++++++
- 1 file changed, 163 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+在 2024/4/9 下午4:58, lyx634449800 写道:
+> From: Yuxue Liu <yuxue.liu@jaguarmicro.com>
+>
+> When there is a ctlq and it doesn't require interrupt
+> callbacks,the original method of calculating vectors
+> wastes hardware msi or msix resources as well as system
+> IRQ resources.
+>
+> When conducting performance testing using testpmd in the
+> guest os, it was found that the performance was lower compared
+> to directly using vfio-pci to passthrough the device
+>
+> In scenarios where the virtio device in the guest os does
+> not utilize interrupts, the vdpa driver still configures
+> the hardware's msix vector. Therefore, the hardware still
+> sends interrupts to the host os. Because of this unnecessary
+> action by the hardware, hardware performance decreases, and
+> it also affects the performance of the host os.
+>
+> Before modification:(interrupt mode)
+>   32:  0   0  0  0 PCI-MSI 32768-edge    vp-vdpa[0000:00:02.0]-0
+>   33:  0   0  0  0 PCI-MSI 32769-edge    vp-vdpa[0000:00:02.0]-1
+>   34:  0   0  0  0 PCI-MSI 32770-edge    vp-vdpa[0000:00:02.0]-2
+>   35:  0   0  0  0 PCI-MSI 32771-edge    vp-vdpa[0000:00:02.0]-config
+>
+> After modification:(interrupt mode)
+>   32:  0  0  1  7   PCI-MSI 32768-edge  vp-vdpa[0000:00:02.0]-0
+>   33: 36  0  3  0   PCI-MSI 32769-edge  vp-vdpa[0000:00:02.0]-1
+>   34:  0  0  0  0   PCI-MSI 32770-edge  vp-vdpa[0000:00:02.0]-config
+>
+> Before modification:(virtio pmd mode for guest os)
+>   32:  0   0  0  0 PCI-MSI 32768-edge    vp-vdpa[0000:00:02.0]-0
+>   33:  0   0  0  0 PCI-MSI 32769-edge    vp-vdpa[0000:00:02.0]-1
+>   34:  0   0  0  0 PCI-MSI 32770-edge    vp-vdpa[0000:00:02.0]-2
+>   35:  0   0  0  0 PCI-MSI 32771-edge    vp-vdpa[0000:00:02.0]-config
+>
+> After modification:(virtio pmd mode for guest os)
+>   32: 0  0  0   0   PCI-MSI 32768-edge   vp-vdpa[0000:00:02.0]-config
+>
+> To verify the use of the virtio PMD mode in the guest operating
+> system, the following patch needs to be applied to QEMU:
+> https://lore.kernel.org/all/20240408073311.2049-1-yuxue.liu@jaguarmicro.com
+>
+> Signed-off-by: Yuxue Liu <yuxue.liu@jaguarmicro.com>
+> Acked-by: Jason Wang <jasowang@redhat.com>
+> ---
+> V4: Update the title and assign values to uninitialized variables
+> V3: delete unused variables and add validation records
+> V2: fix when allocating IRQs, scan all queues
+>
+>   drivers/vdpa/virtio_pci/vp_vdpa.c | 23 +++++++++++++++++------
+>   1 file changed, 17 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/vdpa/virtio_pci/vp_vdpa.c b/drivers/vdpa/virtio_pci/vp_vdpa.c
+> index df5f4a3bccb5..74bc8adfc7e8 100644
+> --- a/drivers/vdpa/virtio_pci/vp_vdpa.c
+> +++ b/drivers/vdpa/virtio_pci/vp_vdpa.c
+> @@ -160,7 +160,14 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
+>   	struct pci_dev *pdev = mdev->pci_dev;
+>   	int i, ret, irq;
+>   	int queues = vp_vdpa->queues;
+> -	int vectors = queues + 1;
+> +	int vectors = 0;
+> +	int msix_vec = 0;
+> +
+> +	for (i = 0; i < queues; i++) {
+> +		if (vp_vdpa->vring[i].cb.callback)
+> +			vectors++;
+> +	}
+> +	vectors++;
+>   
+>   	ret = pci_alloc_irq_vectors(pdev, vectors, vectors, PCI_IRQ_MSIX);
+>   	if (ret != vectors) {
+> @@ -173,9 +180,12 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
+>   	vp_vdpa->vectors = vectors;
+>   
+>   	for (i = 0; i < queues; i++) {
+> +		if (!vp_vdpa->vring[i].cb.callback)
+> +			continue;
+> +
+>   		snprintf(vp_vdpa->vring[i].msix_name, VP_VDPA_NAME_SIZE,
+>   			"vp-vdpa[%s]-%d\n", pci_name(pdev), i);
+> -		irq = pci_irq_vector(pdev, i);
+> +		irq = pci_irq_vector(pdev, msix_vec);
+>   		ret = devm_request_irq(&pdev->dev, irq,
+>   				       vp_vdpa_vq_handler,
+>   				       0, vp_vdpa->vring[i].msix_name,
+> @@ -185,21 +195,22 @@ static int vp_vdpa_request_irq(struct vp_vdpa *vp_vdpa)
+>   				"vp_vdpa: fail to request irq for vq %d\n", i);
+>   			goto err;
+>   		}
+> -		vp_modern_queue_vector(mdev, i, i);
+> +		vp_modern_queue_vector(mdev, i, msix_vec);
+>   		vp_vdpa->vring[i].irq = irq;
+> +		msix_vec++;
+>   	}
+>   
+>   	snprintf(vp_vdpa->msix_name, VP_VDPA_NAME_SIZE, "vp-vdpa[%s]-config\n",
+>   		 pci_name(pdev));
+> -	irq = pci_irq_vector(pdev, queues);
+> +	irq = pci_irq_vector(pdev, msix_vec);
+>   	ret = devm_request_irq(&pdev->dev, irq,	vp_vdpa_config_handler, 0,
+>   			       vp_vdpa->msix_name, vp_vdpa);
+>   	if (ret) {
+>   		dev_err(&pdev->dev,
+> -			"vp_vdpa: fail to request irq for vq %d\n", i);
+> +			"vp_vdpa: fail to request irq for config, ret %d\n", ret);
+>   			goto err;
+>   	}
+> -	vp_modern_config_vector(mdev, queues);
+> +	vp_modern_config_vector(mdev, msix_vec);
+>   	vp_vdpa->config_irq = irq;
+>   
+>   	return 0;
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-new file mode 100644
-index 000000000000..8b9ec263213f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-@@ -0,0 +1,163 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/nuvoton,ma35d1-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Nuvoton MA35D1 pin control and GPIO
-+
-+maintainers:
-+  - Shan-Chun Hung <schung@nuvoton.com>
-+  - Jacky Huang <ychuang3@nuvoton.com>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nuvoton,ma35d1-pinctrl
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  nuvoton,sys:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      phandle of the system-management node.
-+
-+  ranges: true
-+
-+patternProperties:
-+  "^gpio@[0-9a-f]+$":
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      gpio-controller: true
-+
-+      '#gpio-cells':
-+        const: 2
-+
-+      reg:
-+        maxItems: 1
-+
-+      clocks:
-+        maxItems: 1
-+
-+      interrupt-controller: true
-+
-+      '#interrupt-cells':
-+        const: 2
-+
-+      interrupts:
-+        description:
-+          The interrupt outputs to sysirq.
-+        maxItems: 1
-+
-+    required:
-+      - gpio-controller
-+      - '#gpio-cells'
-+      - reg
-+      - clocks
-+      - interrupt-controller
-+      - '#interrupt-cells'
-+      - interrupts
-+
-+  "^pin-[a-z0-9]+$":
-+    type: object
-+    description:
-+      A pinctrl node should contain at least one subnodes representing the
-+      pinctrl groups available on the machine. Each subnode will list the
-+      pins it needs, and how they should be configured, with regard to muxer
-+      configuration, pullups, drive strength, input enable/disable and input
-+      schmitt.
-+
-+    $ref: pincfg-node.yaml#
-+
-+    properties:
-+      power-source:
-+        description: |
-+          Valid arguments are described as below:
-+          0: power supply of 1.8V
-+          1: power supply of 3.3V
-+        enum: [0, 1]
-+
-+      drive-strength-microamp:
-+        oneOf:
-+          - enum: [ 2900, 4400, 5800, 7300, 8600, 10100, 11500, 13000 ]
-+            description: 1.8V I/O driving strength
-+          - enum: [ 17100, 25600, 34100, 42800, 48000, 56000, 77000, 82000 ]
-+            description: 3.3V I/O driving strength
-+
-+    unevaluatedProperties: false
-+
-+  "-grp$":
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    properties:
-+      nuvoton,pins:
-+        description:
-+          Each entry consists of 4 parameters and represents the mux and config
-+          setting for one pin.
-+        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+        minItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              maximum: 13
-+              description:
-+                Pin bank.
-+            - minimum: 0
-+              maximum: 15
-+              description:
-+                Pin bank index.
-+            - minimum: 0
-+              maximum: 15
-+              description:
-+                Mux 0 means GPIO and mux 1 to 15 means the specific device function.
-+
-+required:
-+  - compatible
-+  - nuvoton,sys
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
-+
-+    pinctrl@40040000 {
-+        compatible = "nuvoton,ma35d1-pinctrl";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        nuvoton,sys = <&sys>;
-+        ranges = <0 0x40040000 0xc00>;
-+
-+        gpio@0 {
-+            reg = <0x0 0x40>;
-+            interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&clk GPA_GATE>;
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+        };
-+
-+        uart-grp {
-+            uart11-pins {
-+                nuvoton,pins = <11 0 2>,
-+                               <11 1 2>,
-+                               <11 2 2>,
-+                               <11 3 2>;
-+                bias-disable;
-+                power-source = <1>;
-+            };
-+        };
-+    };
--- 
-2.34.1
-
+Reviewed-by: Heng Qi <hengqi@linux.alibaba.com>
