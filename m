@@ -1,309 +1,225 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C290656454;
-	Tue,  9 Apr 2024 08:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5F57FBA4
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 08:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712651200; cv=none; b=DGH447r4ejUgfXTq2SV8sk40CjAykFJtBM/nAb8BH5QTfBhnRK8FD/c0H5dS0jnswnR0zePOGyGyjYnaBiedkQd/ARzvn/sZrN3ORUptr9PBXJ1LeuZuqRoQK6sdoaEb4vx9tRNdJHbcvhz1VPpthG2d+kzrwVliNbrhUOtgXpM=
+	t=1712651212; cv=none; b=DVXOLHF6J+6XyYwcaKRteTPw62+LKCZfYJ0DTc7tKVWWmbgBE9IoDZ386Cd7CEMgWBxnLxzLZnQydVjfwNMaNC7NODH7nSpuQn4d5gU1Kwqxt2TyZwrBU/bKfOYNGt0WjbyPvsX+0Vg0l4pYj20czQKTet7TOQ0+iDezh9dtkjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712651200; c=relaxed/simple;
-	bh=JejHKR0gHVu/eqF/L9HtuEJTVGLd0uBI/XfIBGNWRGY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LCEqFcF5kwgjckw5r0mbJa+FnteB2XqlqCY8fco9fqpuN44NGCG2eGp2/IGCM4Zc/rfq5XEGRlylRreE6LIdONB09QYVYUD2nEk4wBuxEUS4tfMEkkO0XPcOtID2loFi/gRBMEKpvyNP5TJ+TPGXljbCLqskJEi9EwcYZ0dNGmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HB71b7lw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gx0dM1x6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712651212; c=relaxed/simple;
+	bh=VsYOF1JMpARh8icPaZLBbg5X8krdsxVBecPo/v9ECYk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mLdU4cePgQALsQREthI9cVpzbXnP/ekyz9k1GS5H4ELzFMyGMjnWuuMvq642Z+XAwKkIxYb2PEbaAu6k2GT57YgUVrbiGDMCsBQeGa7WeQzU4CXJgREp9uapyc/BQT4FfczA1/fTAM/4qNRQkOYwTlgnn6ulUeIudDXF3SpaMXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YrMq5z5y; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HB71b7lw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gx0dM1x6"
-Date: Tue, 09 Apr 2024 08:26:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712651196;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=usxdulLKt5b3hOMpUquF1GHZZ707drbw5wxjSREMHLo=;
-	b=HB71b7lwNeipQN0SQp9qYDyau5WNXfuQl42ksBd8j9/3Y4ui4i5cO21iz9no6klSJDZUEG
-	BScNSbzH04NebY77Z3UIQEQApgkQEPaJmbuXfbJT946mA7k7pE32OS26RYVP35O4D2Gs9U
-	iuhv1N7N+yxjtfpQhfllEC6wiNqARVc995GxFV1x2dhFdY5zCpBt8g8K7xJH+tlBq2UH5p
-	NFpvNzeGLkCKKASzsZGtQayAEaM/HFkoQn5XXG/pGnFApKOCY9OX6hpFlGfDGvbVROZ2nY
-	a/B/NkMfSCEsvMNdLlibZaiyDrFnp5lNXLlFFWrSqAOgEDCCcp+7AJ3NgYYoCA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712651196;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=usxdulLKt5b3hOMpUquF1GHZZ707drbw5wxjSREMHLo=;
-	b=Gx0dM1x648DdKqMCu3Co/v2nq2rVw/ZtDwaTtgj15zBYmTK6CAqPqNVTJvThzT6jMJqrn1
-	DfXbTE7MToPOaYCw==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] locking/atomic/x86: Modernize x86_32
- arch_{,try_}_cmpxchg64{,_local}()
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240408091547.90111-3-ubizjak@gmail.com>
-References: <20240408091547.90111-3-ubizjak@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrMq5z5y"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecf8ebff50so3217670b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 01:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712651210; x=1713256010; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QEV6OQjVxTSY2zvJnEJkUcnGhBmxeH58je50dLMPk7M=;
+        b=YrMq5z5yiwA4f3BzWx0Ds89WithId0C58UWqG2UnCfOZKda+sbztTioRzoHF1/Tmgs
+         Umo8EokbeP0W2uoQdTErs+Umw20kM5M/ihuPAIhe3xMFeLrvPnmUJKTrXKOvvANE0ozm
+         uNRaA2xGQLPV3meOUGWUzB3VH5D7nwZiE9hF2nW4gHyhJJkLPoh+wNOP5GNIblPZV7pE
+         US9dzVJRmnQd7GC3EW73Z3EsNo+5xLXKUDmjddMPx+BNUmUcmYC2HTfaNZadVZhv6OEc
+         8vc3QSXrLWS5kReF6ufefuCad3tKh7L8+mvy5J0ZSyPGGEPIhnOeNbG/t6jYU2W5iIjB
+         w3vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712651210; x=1713256010;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QEV6OQjVxTSY2zvJnEJkUcnGhBmxeH58je50dLMPk7M=;
+        b=cgEC6xUjk8Z+yM/4MnfJTr0vIhwzy7IM7K6n6/ra8ehbj3J68OWe4OqvqaFYdBTYGd
+         ig+tBlu3Co0dhL+M49ZL0OM0tHMl5/eOmBo/Xd4hd+Sdb7OC71h/tv3CPP0PcoO+aPHy
+         mWF2VfKOrUPwsILQ/H4AFsprVWuIZ6/zczgiDXCQ9naQSjlhthFL4/nhG52hJHw3i0+e
+         b4Xy/3/rocQwpbjk/l2drXLlofmGU41IcqrDiYXc3deWO5mkEQ6A4t0EKuoy1u1DAW/Z
+         NDplwX2e7Sn67RcXS7NxmmrEbFNhH65cpJMt4sazVwNUaPhMSdtvz2/Wgn0pmRiIyL2Q
+         4igA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOjBSFJj896Z03g67RY/wypIp0pmag5sLmfV0K4xHkY7ULmDl82B8bWxNE6rfbmVLKe2uPaCnulwEVpqXs/c1v5sBbJz2XpucOqGZU
+X-Gm-Message-State: AOJu0YwJGhO+70mklZF7ASsew6AWSWrU1J9b1et7NKiQjtMBtBOti79N
+	///4wIosYktlYSjZG8WVG1vqMVWVhYvgvPPUAZ1okm7/crR4pmt0
+X-Google-Smtp-Source: AGHT+IHnSXKOHVSAMgfJF8XXWiIQpW7P/2klv+o3448Nul1gsbWu8MZY9Ik8wT9wAGSzIPftDqJIuA==
+X-Received: by 2002:a05:6a20:9784:b0:1a7:48de:b2a4 with SMTP id hx4-20020a056a20978400b001a748deb2a4mr2552682pzc.6.1712651209608;
+        Tue, 09 Apr 2024 01:26:49 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id r16-20020a632050000000b005f05c88c149sm7594238pgm.71.2024.04.09.01.26.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 01:26:49 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	linux-mm@kvack.org
+Cc: baolin.wang@linux.alibaba.com,
+	chrisl@kernel.org,
+	david@redhat.com,
+	hanchuanhua@oppo.com,
+	hannes@cmpxchg.org,
+	hughd@google.com,
+	kasong@tencent.com,
+	ryan.roberts@arm.com,
+	surenb@google.com,
+	v-songbaohua@oppo.com,
+	willy@infradead.org,
+	xiang@kernel.org,
+	ying.huang@intel.com,
+	yosryahmed@google.com,
+	yuzhao@google.com,
+	ziy@nvidia.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/5] large folios swap-in: handle refault cases first
+Date: Tue,  9 Apr 2024 20:26:26 +1200
+Message-Id: <20240409082631.187483-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171265119601.10875.15517936000118837045.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the locking/core branch of tip:
+From: Barry Song <v-songbaohua@oppo.com>
 
-Commit-ID:     7016cc5def44b9dcb28089efae4412fa0d6c78c2
-Gitweb:        https://git.kernel.org/tip/7016cc5def44b9dcb28089efae4412fa0d6c78c2
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Mon, 08 Apr 2024 11:13:57 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 09 Apr 2024 09:51:03 +02:00
+This patch is extracted from the large folio swapin series[1], primarily addressing
+the handling of scenarios involving large folios in the swap cache. Currently, it is
+particularly focused on addressing the refaulting of mTHP, which is still undergoing
+reclamation. This approach aims to streamline code review and expedite the integration
+of this segment into the MM tree.
 
-locking/atomic/x86: Modernize x86_32 arch_{,try_}_cmpxchg64{,_local}()
+It relies on Ryan's swap-out series v7[2], leveraging the helper function
+swap_pte_batch() introduced by that series.
 
-Commit:
+Presently, do_swap_page only encounters a large folio in the swap
+cache before the large folio is released by vmscan. However, the code
+should remain equally useful once we support large folio swap-in via
+swapin_readahead(). This approach can effectively reduce page faults
+and eliminate most redundant checks and early exits for MTE restoration
+in recent MTE patchset[3].
 
-  b23e139d0b66 ("arch: Introduce arch_{,try_}_cmpxchg128{,_local}()")
+The large folio swap-in for SWP_SYNCHRONOUS_IO and swapin_readahead()
+will be split into separate patch sets and sent at a later time.
 
-introduced arch_{,try_}_cmpxchg128{,_local}() for x86_64 targets.
+-v2:
+ - rebase on top of mm-unstable in which Ryan's swap_pte_batch() has changed
+   a lot.
+ - remove folio_add_new_anon_rmap() for !folio_test_anon()
+   as currently large folios are always anon(refault).
+ - add mTHP swpin refault counters
 
-Modernize existing x86_32 arch_{,try_}_cmpxchg64{,_local}() definitions
-to follow the same structure as the definitions introduced by the
-above commit.
+-v1:
+  Link: https://lore.kernel.org/linux-mm/20240402073237.240995-1-21cnbao@gmail.com/
 
-No functional changes intended.
+Differences with the original large folios swap-in series
+ - collect r-o-b, acked;
+ - rename swap_nr_free to swap_free_nr, according to Ryan;
+ - limit the maximum kernel stack usage for swap_free_nr, Ryan;
+ - add output argument in swap_pte_batch to expose if all entries are
+   exclusive
+ - many clean refinements, handle the corner case folio's virtual addr
+   might not be naturally aligned
 
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lore.kernel.org/r/20240408091547.90111-3-ubizjak@gmail.com
----
- arch/x86/include/asm/cmpxchg_32.h | 179 ++++++++++++++++-------------
- 1 file changed, 100 insertions(+), 79 deletions(-)
+[1] https://lore.kernel.org/linux-mm/20240304081348.197341-1-21cnbao@gmail.com/
+[2] https://lore.kernel.org/linux-mm/20240408183946.2991168-1-ryan.roberts@arm.com/
+[3] https://lore.kernel.org/linux-mm/20240322114136.61386-1-21cnbao@gmail.com/
 
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index b5731c5..fe40d06 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -3,103 +3,124 @@
- #define _ASM_X86_CMPXCHG_32_H
- 
- /*
-- * Note: if you use set64_bit(), __cmpxchg64(), or their variants,
-+ * Note: if you use __cmpxchg64(), or their variants,
-  *       you need to test for the feature in boot_cpu_data.
-  */
- 
--#ifdef CONFIG_X86_CMPXCHG64
--#define arch_cmpxchg64(ptr, o, n)					\
--	((__typeof__(*(ptr)))__cmpxchg64((ptr), (unsigned long long)(o), \
--					 (unsigned long long)(n)))
--#define arch_cmpxchg64_local(ptr, o, n)					\
--	((__typeof__(*(ptr)))__cmpxchg64_local((ptr), (unsigned long long)(o), \
--					       (unsigned long long)(n)))
--#define arch_try_cmpxchg64(ptr, po, n)					\
--	__try_cmpxchg64((ptr), (unsigned long long *)(po), \
--			(unsigned long long)(n))
--#endif
-+union __u64_halves {
-+	u64 full;
-+	struct {
-+		u32 low, high;
-+	};
-+};
-+
-+#define __arch_cmpxchg64(_ptr, _old, _new, _lock)			\
-+({									\
-+	union __u64_halves o = { .full = (_old), },			\
-+			   n = { .full = (_new), };			\
-+									\
-+	asm volatile(_lock "cmpxchg8b %[ptr]"				\
-+		     : [ptr] "+m" (*(_ptr)),				\
-+		       "+a" (o.low), "+d" (o.high)			\
-+		     : "b" (n.low), "c" (n.high)			\
-+		     : "memory");					\
-+									\
-+	o.full;								\
-+})
- 
--static inline u64 __cmpxchg64(volatile u64 *ptr, u64 old, u64 new)
-+
-+static __always_inline u64 __cmpxchg64(volatile u64 *ptr, u64 old, u64 new)
- {
--	u64 prev;
--	asm volatile(LOCK_PREFIX "cmpxchg8b %1"
--		     : "=A" (prev),
--		       "+m" (*ptr)
--		     : "b" ((u32)new),
--		       "c" ((u32)(new >> 32)),
--		       "0" (old)
--		     : "memory");
--	return prev;
-+	return __arch_cmpxchg64(ptr, old, new, LOCK_PREFIX);
- }
- 
--static inline u64 __cmpxchg64_local(volatile u64 *ptr, u64 old, u64 new)
-+static __always_inline u64 __cmpxchg64_local(volatile u64 *ptr, u64 old, u64 new)
- {
--	u64 prev;
--	asm volatile("cmpxchg8b %1"
--		     : "=A" (prev),
--		       "+m" (*ptr)
--		     : "b" ((u32)new),
--		       "c" ((u32)(new >> 32)),
--		       "0" (old)
--		     : "memory");
--	return prev;
-+	return __arch_cmpxchg64(ptr, old, new,);
- }
- 
--static inline bool __try_cmpxchg64(volatile u64 *ptr, u64 *pold, u64 new)
-+#define __arch_try_cmpxchg64(_ptr, _oldp, _new, _lock)			\
-+({									\
-+	union __u64_halves o = { .full = *(_oldp), },			\
-+			   n = { .full = (_new), };			\
-+	bool ret;							\
-+									\
-+	asm volatile(_lock "cmpxchg8b %[ptr]"				\
-+		     CC_SET(e)						\
-+		     : CC_OUT(e) (ret),					\
-+		       [ptr] "+m" (*(_ptr)),				\
-+		       "+a" (o.low), "+d" (o.high)			\
-+		     : "b" (n.low), "c" (n.high)			\
-+		     : "memory");					\
-+									\
-+	if (unlikely(!ret))						\
-+		*(_oldp) = o.full;					\
-+									\
-+	likely(ret);							\
-+})
-+
-+static __always_inline bool __try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 new)
- {
--	bool success;
--	u64 old = *pold;
--	asm volatile(LOCK_PREFIX "cmpxchg8b %[ptr]"
--		     CC_SET(z)
--		     : CC_OUT(z) (success),
--		       [ptr] "+m" (*ptr),
--		       "+A" (old)
--		     : "b" ((u32)new),
--		       "c" ((u32)(new >> 32))
--		     : "memory");
--
--	if (unlikely(!success))
--		*pold = old;
--	return success;
-+	return __arch_try_cmpxchg64(ptr, oldp, new, LOCK_PREFIX);
- }
- 
--#ifndef CONFIG_X86_CMPXCHG64
-+#ifdef CONFIG_X86_CMPXCHG64
-+
-+#define arch_cmpxchg64 __cmpxchg64
-+
-+#define arch_cmpxchg64_local __cmpxchg64_local
-+
-+#define arch_try_cmpxchg64 __try_cmpxchg64
-+
-+#else
-+
- /*
-  * Building a kernel capable running on 80386 and 80486. It may be necessary
-  * to simulate the cmpxchg8b on the 80386 and 80486 CPU.
-  */
- 
--#define arch_cmpxchg64(ptr, o, n)				\
--({								\
--	__typeof__(*(ptr)) __ret;				\
--	__typeof__(*(ptr)) __old = (o);				\
--	__typeof__(*(ptr)) __new = (n);				\
--	alternative_io(LOCK_PREFIX_HERE				\
--			"call cmpxchg8b_emu",			\
--			"lock; cmpxchg8b (%%esi)" ,		\
--		       X86_FEATURE_CX8,				\
--		       "=A" (__ret),				\
--		       "S" ((ptr)), "0" (__old),		\
--		       "b" ((unsigned int)__new),		\
--		       "c" ((unsigned int)(__new>>32))		\
--		       : "memory");				\
--	__ret; })
--
--
--#define arch_cmpxchg64_local(ptr, o, n)				\
--({								\
--	__typeof__(*(ptr)) __ret;				\
--	__typeof__(*(ptr)) __old = (o);				\
--	__typeof__(*(ptr)) __new = (n);				\
--	alternative_io("call cmpxchg8b_emu",			\
--		       "cmpxchg8b (%%esi)" ,			\
--		       X86_FEATURE_CX8,				\
--		       "=A" (__ret),				\
--		       "S" ((ptr)), "0" (__old),		\
--		       "b" ((unsigned int)__new),		\
--		       "c" ((unsigned int)(__new>>32))		\
--		       : "memory");				\
--	__ret; })
-+#define __arch_cmpxchg64_emu(_ptr, _old, _new)				\
-+({									\
-+	union __u64_halves o = { .full = (_old), },			\
-+			   n = { .full = (_new), };			\
-+									\
-+	asm volatile(ALTERNATIVE(LOCK_PREFIX_HERE			\
-+				 "call cmpxchg8b_emu",			\
-+				 "lock; cmpxchg8b %[ptr]", X86_FEATURE_CX8) \
-+		     : [ptr] "+m" (*(_ptr)),				\
-+		       "+a" (o.low), "+d" (o.high)			\
-+		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
-+		     : "memory");					\
-+									\
-+	o.full;								\
-+})
-+
-+static __always_inline u64 arch_cmpxchg64(volatile u64 *ptr, u64 old, u64 new)
-+{
-+	return __arch_cmpxchg64_emu(ptr, old, new);
-+}
-+#define arch_cmpxchg64 arch_cmpxchg64
-+
-+#define __arch_cmpxchg64_emu_local(_ptr, _old, _new)			\
-+({									\
-+	union __u64_halves o = { .full = (_old), },			\
-+			   n = { .full = (_new), };			\
-+									\
-+	asm volatile(ALTERNATIVE("call cmpxchg8b_emu",			\
-+				 "cmpxchg8b %[ptr]", X86_FEATURE_CX8)	\
-+		     : [ptr] "+m" (*(_ptr)),				\
-+		       "+a" (o.low), "+d" (o.high)			\
-+		     : "b" (n.low), "c" (n.high), "S" (_ptr)		\
-+		     : "memory");					\
-+									\
-+	o.full;								\
-+})
-+
-+static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64 new)
-+{
-+	return __arch_cmpxchg64_emu_local(ptr, old, new);
-+}
-+#define arch_cmpxchg64_local arch_cmpxchg64_local
- 
- #endif
- 
+Barry Song (1):
+  mm: swap_pte_batch: add an output argument to reture if all swap
+    entries are exclusive
+  mm: add per-order mTHP swpin_refault counter
+
+Chuanhua Han (3):
+  mm: swap: introduce swap_free_nr() for batched swap_free()
+  mm: swap: make should_try_to_free_swap() support large-folio
+  mm: swap: entirely map large folios found in swapcache
+
+ include/linux/huge_mm.h |  1 +
+ include/linux/swap.h    |  5 +++
+ mm/huge_memory.c        |  2 ++
+ mm/internal.h           |  9 +++++-
+ mm/madvise.c            |  2 +-
+ mm/memory.c             | 69 ++++++++++++++++++++++++++++++++---------
+ mm/swapfile.c           | 51 ++++++++++++++++++++++++++++++
+ 7 files changed, 123 insertions(+), 16 deletions(-)
+
+Appendix:
+
+The following program can generate numerous instances where large folios
+are hit in the swap cache if we enable 64KiB mTHP,
+
+#echo always > /sys/kernel/mm/transparent_hugepage/hugepages-64kB/enabled
+
+#define DATA_SIZE (128UL * 1024)
+#define PAGE_SIZE (4UL * 1024)
+#define LARGE_FOLIO_SIZE (64UL * 1024)
+
+static void *write_data(void *addr)
+{
+	unsigned long i;
+
+	for (i = 0; i < DATA_SIZE; i += PAGE_SIZE)
+		memset(addr + i, (char)i, PAGE_SIZE);
+}
+
+static void *read_data(void *addr)
+{
+	unsigned long i;
+
+	for (i = 0; i < DATA_SIZE; i += PAGE_SIZE) {
+		if (*((char *)addr + i) != (char)i) {
+			perror("mismatched data");
+			_exit(-1);
+		}
+	}
+}
+
+static void *pgout_data(void *addr)
+{
+	madvise(addr, DATA_SIZE, MADV_PAGEOUT);
+}
+
+int main(int argc, char **argv)
+{
+	for (int i = 0; i < 10000; i++) {
+		pthread_t tid1, tid2;
+		void *addr = mmap(NULL, DATA_SIZE * 2, PROT_READ | PROT_WRITE,
+				MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+		unsigned long aligned_addr = ((unsigned long)addr + LARGE_FOLIO_SIZE) &
+				~(LARGE_FOLIO_SIZE - 1);
+
+		if (addr == MAP_FAILED) {
+			perror("fail to malloc");
+			return -1;
+		}
+
+		write_data(aligned_addr);
+
+		if (pthread_create(&tid1, NULL, pgout_data, (void *)aligned_addr)) {
+			perror("fail to pthread_create");
+			return -1;
+		}
+
+		if (pthread_create(&tid2, NULL, read_data, (void *)aligned_addr)) {
+			perror("fail to pthread_create");
+			return -1;
+		}
+
+		pthread_join(tid1, NULL);
+		pthread_join(tid2, NULL);
+		munmap(addr, DATA_SIZE * 2);
+	}
+
+	return 0;
+}
+
+# cat /sys/kernel/mm/transparent_hugepage/hugepages-64kB/stats/anon_swpout
+932
+# cat /sys/kernel/mm/transparent_hugepage/hugepages-64kB/stats/anon_swpin_refault 
+1488
+
+-- 
+2.34.1
+
