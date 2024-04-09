@@ -1,280 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28563136E1A
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 13:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9171136E1A;
+	Tue,  9 Apr 2024 13:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712669984; cv=none; b=YSUEOxiRlKaGmbCW07z04KsJLPlldJ5GuGEyJJcEzSqJ1oBtDttZsqRGAvvjTE/l1zjyC8hCvtVeYWnN5QcS3ArFSj/ByPiPbGUsHhgu5PL2HvKb45c9W68m8xQW8t4vAsu3qlyVKYsbMdX7VK35u1T0DpjbvvalC9VyYozspqc=
+	t=1712669991; cv=none; b=JkoCTvv/wIo8ep5Gxx22yTT8uAs6LRFz1hX3p1H4hMigTPU4/G61qaKD12TOqSITbVhyMU+tPhQy5aCnOwyMLRaqqc1iIghsbbvzlpq72s+MeZW8uNC7GivEglVPnC35X3YMkfcqvOgVRuMTcScgaJU/agXRSxQvDrcjxTxcfV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712669984; c=relaxed/simple;
-	bh=KensjnedLegccSGAdNxddcu/yT/aCf00Pqp6AFK3eTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QZ0ItBPC4mw6+5e8SjHe3RbEVQVrRoAU8+tjEPKGMW8X9OZSHd9eZ/4a+2Ksi7nfl9/+xDQvqZDMUb/ZPlZDSEk5/G7u9zJv9ViaBVjxLb3Rm5QZKfaCx5prroIKJU54Z5vMmMN40UBKuWpblTD3Jm8LFPMeGJb9x5O3kvdKVCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HO69Uw+u; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712669991; c=relaxed/simple;
+	bh=NlCnClFQH/uZ929V7ZbiGAE/v+SqP5ye30qi4yMGgT4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pYTc8DJV0g4SoVmbAqHa9zgF4YMVwsy0nwJb1wvXpVORBntX5AOF3C4yA+DUm6ql333DQW3IbVO0bVB47a5m3zfOLPPa66sANVm66H8N/XxiNwGrcll+FLDrGH7oOUD76yLstSUUu/25jrlzOb0UxIHz33j4RR84zF1KIojEIOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz9+bP/N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HO69Uw+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712669981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cHNENpIo5P3xNA2FT6uR/Fpf8icdmb0An+YCTlDYv/k=;
-	b=HO69Uw+uvP7r+OZWtz2fhouFcMTBNkYWzOQm8ECquZBvJbgx4nTO5FelrdwG4N9TKKE/9p
-	NntivXw6KYKoL9DWMfOw0oKprnzegn9l9nBwxb2N2nQrc7EZI5a7Ajzj6U72Je6AAsqy41
-	O0dgFznlRtA4MKy8XYnIhlLiul49+UQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-653-I0pd653lOZ2bOgxz-s13DQ-1; Tue, 09 Apr 2024 09:39:37 -0400
-X-MC-Unique: I0pd653lOZ2bOgxz-s13DQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CDDDF802A6F;
-	Tue,  9 Apr 2024 13:39:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.56])
-	by smtp.corp.redhat.com (Postfix) with SMTP id DFF89444300;
-	Tue,  9 Apr 2024 13:39:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  9 Apr 2024 15:38:11 +0200 (CEST)
-Date: Tue, 9 Apr 2024 15:38:03 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dmitry Vyukov <dvyukov@google.com>, John Stultz <jstultz@google.com>,
-	Marco Elver <elver@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kasan-dev@googlegroups.com, Edward Liaw <edliaw@google.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2] selftests/timers/posix_timers: reimplement
- check_timer_distribution()
-Message-ID: <20240409133802.GD29396@redhat.com>
-References: <20240404145408.GD7153@redhat.com>
- <87le5t9f14.ffs@tglx>
- <20240406150950.GA3060@redhat.com>
- <20240406151057.GB3060@redhat.com>
- <CACT4Y+Ych4+pdpcTk=yWYUOJcceL5RYoE_B9djX_pwrgOcGmFA@mail.gmail.com>
- <20240408102639.GA25058@redhat.com>
- <20240408184957.GD25058@redhat.com>
- <87il0r7b4k.ffs@tglx>
- <20240409111051.GB29396@redhat.com>
- <877ch67nhb.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz9+bP/N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B8DC43390;
+	Tue,  9 Apr 2024 13:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712669990;
+	bh=NlCnClFQH/uZ929V7ZbiGAE/v+SqP5ye30qi4yMGgT4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gz9+bP/NQQKA3q5/7+iA5EmQBknvdLRXCJqhSxDYKUnYOOXHQl7v4xCI76GZyaVPR
+	 t3S2pEJYWHinI58cNsT3RbjM7zqEdeMSSraZ7/BzG3u2l1743I34XsRFBPkVcGc3bC
+	 Y7rRjxR94vd0rmtvzFCEcdtkx8hcc3VS8t2j1eMJFVW/ENdMg4a3qudxJBQmr9KnYF
+	 d+DgY+UO7CK8zByRebkyddA+jIlCQ6zShKiVzMkZEsvb3j1WX2aR8WUkdrQAy2Cex0
+	 HLlA/grRpTLYL5J/AYgQySKUTm6gOcejwYoqjNJJsGnlP810MZsFlzkVtVIVbZiFV+
+	 sAwKfyMo5S0+g==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>,
+	Oded Gabbay <ogabbay@kernel.org>,
+	Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+	Pranjal Ramajor Asha Kanojiya <quic_pkanojiy@quicinc.com>,
+	Carl Vanderlip <quic_carlv@quicinc.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] accel/qaic: mark debugfs stub functions as static inline
+Date: Tue,  9 Apr 2024 15:39:35 +0200
+Message-Id: <20240409133945.2976190-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <877ch67nhb.ffs@tglx>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Transfer-Encoding: 8bit
 
-Thomas says:
+From: Arnd Bergmann <arnd@arndb.de>
 
-	The signal distribution test has a tendency to hang for a long
-	time as the signal delivery is not really evenly distributed. In
-	fact it might never be distributed across all threads ever in
-	the way it is written.
+The alternative stub functions are listed as global, which produces
+a build failure in some configs:
 
-To me even the
+In file included from drivers/accel/qaic/qaic_drv.c:31:
+drivers/accel/qaic/qaic_debugfs.h:16:5: error: no previous prototype for 'qaic_bootlog_register' [-Werror=missing-prototypes]
+   16 | int qaic_bootlog_register(void) { return 0; }
+      |     ^~~~~~~~~~~~~~~~~~~~~
+drivers/accel/qaic/qaic_debugfs.h:17:6: error: no previous prototype for 'qaic_bootlog_unregister' [-Werror=missing-prototypes]
+   17 | void qaic_bootlog_unregister(void) {}
+      |      ^~~~~~~~~~~~~~~~~~~~~~~
+drivers/accel/qaic/qaic_debugfs.h:18:6: error: no previous prototype for 'qaic_debugfs_init' [-Werror=missing-prototypes]
+   18 | void qaic_debugfs_init(struct qaic_drm_device *qddev) {}
+      |      ^~~~~~~~~~~~~~~~~
 
-	This primarily tests that the kernel does not favour any one.
+Make them static inline as intended.
 
-comment doesn't look right. The kernel does favour a thread which hits
-the timer interrupt when CLOCK_PROCESS_CPUTIME_ID expires.
-
-The new version simply checks that the group leader sleeping in join()
-never receives SIGALRM, cpu_timer_fire() should always send the signal
-to the thread which burns cpu.
-
-Without the commit bcb7ee79029d ("posix-timers: Prefer delivery of signals
-to the current thread") the test-case fails immediately, the very 1st tick
-wakes the leader up. Otherwise it quickly succeeds after 100 ticks.
-
-As Thomas suggested, the new version doesn't report the failure on the
-pre v6.3 kernels that do not have the commit bcb7ee79029d; this is a
-feature that obviously fails on the older kernels. So the patch adds the
-new simple ksft_ck_kernel_version() helper and uses ksft_test_result_skip()
-if check_timer_distribution() fails on the older kernel.
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Fixes: 5f8df5c6def6 ("accel/qaic: Add bootlog debugfs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- tools/testing/selftests/kselftest.h           |  14 +++
- tools/testing/selftests/timers/posix_timers.c | 103 ++++++++----------
- 2 files changed, 61 insertions(+), 56 deletions(-)
+ drivers/accel/qaic/qaic_debugfs.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
-index 541bf192e30e..6aab3309c6a3 100644
---- a/tools/testing/selftests/kselftest.h
-+++ b/tools/testing/selftests/kselftest.h
-@@ -51,6 +51,7 @@
- #include <stdarg.h>
- #include <string.h>
- #include <stdio.h>
-+#include <sys/utsname.h>
- #endif
- 
- #ifndef ARRAY_SIZE
-@@ -388,4 +389,17 @@ static inline __printf(1, 2) int ksft_exit_skip(const char *msg, ...)
- 	exit(KSFT_SKIP);
- }
- 
-+static inline int ksft_ck_kernel_version(unsigned int min_major,
-+					 unsigned int min_minor)
-+{
-+	struct utsname info;
-+	unsigned int major, minor;
-+
-+	uname(&info);
-+	if (sscanf(info.release, "%u.%u.", &major, &minor) != 2)
-+		ksft_exit_fail();
-+
-+	return major > min_major || (major == min_major && minor >= min_minor);
-+}
-+
- #endif /* __KSELFTEST_H */
-diff --git a/tools/testing/selftests/timers/posix_timers.c b/tools/testing/selftests/timers/posix_timers.c
-index d49dd3ffd0d9..64c41463b704 100644
---- a/tools/testing/selftests/timers/posix_timers.c
-+++ b/tools/testing/selftests/timers/posix_timers.c
-@@ -184,80 +184,71 @@ static int check_timer_create(int which)
- 	return 0;
- }
- 
--int remain;
--__thread int got_signal;
-+static pthread_t ctd_thread;
-+static volatile int ctd_count, ctd_failed;
- 
--static void *distribution_thread(void *arg)
-+static void ctd_sighandler(int sig)
- {
--	while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
--	return NULL;
-+	if (pthread_self() != ctd_thread)
-+		ctd_failed = 1;
-+	ctd_count--;
- }
- 
--static void distribution_handler(int nr)
-+static void *ctd_thread_func(void *arg)
- {
--	if (!__atomic_exchange_n(&got_signal, 1, __ATOMIC_RELAXED))
--		__atomic_fetch_sub(&remain, 1, __ATOMIC_RELAXED);
--}
--
--/*
-- * Test that all running threads _eventually_ receive CLOCK_PROCESS_CPUTIME_ID
-- * timer signals. This primarily tests that the kernel does not favour any one.
-- */
--static int check_timer_distribution(void)
--{
--	int err, i;
--	timer_t id;
--	const int nthreads = 10;
--	pthread_t threads[nthreads];
- 	struct itimerspec val = {
- 		.it_value.tv_sec = 0,
- 		.it_value.tv_nsec = 1000 * 1000,
- 		.it_interval.tv_sec = 0,
- 		.it_interval.tv_nsec = 1000 * 1000,
- 	};
-+	timer_t id;
- 
--	remain = nthreads + 1;  /* worker threads + this thread */
--	signal(SIGALRM, distribution_handler);
--	err = timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id);
--	if (err < 0) {
--		ksft_perror("Can't create timer");
--		return -1;
--	}
--	err = timer_settime(id, 0, &val, NULL);
--	if (err < 0) {
--		ksft_perror("Can't set timer");
--		return -1;
--	}
-+	/* 1/10 seconds to ensure the leader sleeps */
-+	usleep(10000);
- 
--	for (i = 0; i < nthreads; i++) {
--		err = pthread_create(&threads[i], NULL, distribution_thread,
--				     NULL);
--		if (err) {
--			ksft_print_msg("Can't create thread: %s (%d)\n",
--				       strerror(errno), errno);
--			return -1;
--		}
--	}
-+	ctd_count = 100;
-+	if (timer_create(CLOCK_PROCESS_CPUTIME_ID, NULL, &id))
-+		return "Can't create timer";
-+	if (timer_settime(id, 0, &val, NULL))
-+		return "Can't set timer";
- 
--	/* Wait for all threads to receive the signal. */
--	while (__atomic_load_n(&remain, __ATOMIC_RELAXED));
-+	while (ctd_count > 0 && !ctd_failed)
-+		;
- 
--	for (i = 0; i < nthreads; i++) {
--		err = pthread_join(threads[i], NULL);
--		if (err) {
--			ksft_print_msg("Can't join thread: %s (%d)\n",
--				       strerror(errno), errno);
--			return -1;
--		}
--	}
-+	if (timer_delete(id))
-+		return "Can't delete timer";
- 
--	if (timer_delete(id)) {
--		ksft_perror("Can't delete timer");
--		return -1;
--	}
-+	return NULL;
-+}
-+
-+/*
-+ * Test that only the running thread receives the timer signal.
-+ */
-+static int check_timer_distribution(void)
-+{
-+	const char *errmsg;
- 
--	ksft_test_result_pass("check_timer_distribution\n");
-+	signal(SIGALRM, ctd_sighandler);
-+
-+	errmsg = "Can't create thread";
-+	if (pthread_create(&ctd_thread, NULL, ctd_thread_func, NULL))
-+		goto err;
-+
-+	errmsg = "Can't join thread";
-+	if (pthread_join(ctd_thread, (void **)&errmsg) || errmsg)
-+		goto err;
-+
-+	if (!ctd_failed)
-+		ksft_test_result_pass("check signal distribution\n");
-+	else if (ksft_ck_kernel_version(6, 3))
-+		ksft_test_result_fail("check signal distribution\n");
-+	else
-+		ksft_test_result_skip("check signal distribution (old kernel)\n");
- 	return 0;
-+err:
-+	ksft_print_msg(errmsg);
-+	return -1;
- }
- 
- int main(int argc, char **argv)
+diff --git a/drivers/accel/qaic/qaic_debugfs.h b/drivers/accel/qaic/qaic_debugfs.h
+index ea3fd1a88405..05e74f84cf9f 100644
+--- a/drivers/accel/qaic/qaic_debugfs.h
++++ b/drivers/accel/qaic/qaic_debugfs.h
+@@ -13,8 +13,8 @@ int qaic_bootlog_register(void);
+ void qaic_bootlog_unregister(void);
+ void qaic_debugfs_init(struct qaic_drm_device *qddev);
+ #else
+-int qaic_bootlog_register(void) { return 0; }
+-void qaic_bootlog_unregister(void) {}
+-void qaic_debugfs_init(struct qaic_drm_device *qddev) {}
++static inline int qaic_bootlog_register(void) { return 0; }
++static inline void qaic_bootlog_unregister(void) {}
++static inline void qaic_debugfs_init(struct qaic_drm_device *qddev) {}
+ #endif /* CONFIG_DEBUG_FS */
+ #endif /* __QAIC_DEBUGFS_H__ */
 -- 
-2.25.1.362.g51ebf55
-
+2.39.2
 
