@@ -1,169 +1,111 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BEC5465D
-	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 05:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C00F56455
+	for <linux-kernel@vger.kernel.org>; Tue,  9 Apr 2024 05:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712639624; cv=none; b=XrlL0EqjzKtf32I/QVYm6BVQ0CuySulSaGjnEwwSqOwYyh8K94qzCJAD4wvOVYc3uAxZPQu34JTPtZ2Bslf+ALAswuXmFQ+CbeA6ChKICHBaai/MCTJ8nA+g0heO2n7ynN8iYxBW+hO7OREKNRFLgmxLMsz72xhBvC/qjtaXR5c=
+	t=1712640250; cv=none; b=jZjWcJnm+pUW6PkNj+neQfTbfaMVxQpdR4DaqgFSayBTyA2yw9I6ZajkK5AmxFKDbMKj6OVypWWhDnzcUEzTCeviQ/skB9PQ5b8wFQB70t66bbjCZ9fmpNXGm3LLOCYB338WUvbQJFXOc0PRFypJkNyDK2PGq+pujYYNF0t0+lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712639624; c=relaxed/simple;
-	bh=KKjF/zFeP2l4ureM8YQ44jPQw1jLe60wvSyJYXpz6XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lys61r118eTQu46e3laqOa36z6wEDZZIvdSY8hfcQEvuf5mUqIW3Cs9dWPuYJH0Z8rgQjVHtN4YgnsLwKJn/4+ZSQZ7axfiFhS1QPjR2bzD43wsTkaRlxzD7mLdaS3YT2JYRA9UKfBAsHN9mq1zoIL5R9EioaRMWfN+xrfg/7uE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LMY5owiJ; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712640250; c=relaxed/simple;
+	bh=2yzdMPsQjZBKbu2RsG7bppQbPga9w4g4BiLWfpVbzx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mIvr8KxXFuPac1p41qnjPoOBcAPh5jCHqW0Ko3DdyLgy76nNpDHL4TogW5kCDzTXg0YY1GhG2+HBqGWgMIA393DLvizzxmx0GR4+rahFe53/jGHpJ8rgXZ53/B1lrLfloEKWBYwlZdDE7OWleAsN8yTMWQUf6UqxbTXFMHA+Cdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XCnTq9pi; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LMY5owiJ"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-43477091797so118941cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 22:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712639621; x=1713244421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b6G7fQwZrU8Ut2ONWgYwB5iUHvGBDAPNe+jjAW2C4Mg=;
-        b=LMY5owiJ6d9Q1+QuH1YFu5x2LaD9Xn3ti4Co230Nr4lYHpug/9VfXK5Qf8ZDZ3vC6b
-         8QfihJ4GQ+3F2YhI96evxjnqqlAeyqdbzRnaORale5loyceoqlk/koG0UqPQMaZwRkgm
-         EhjLw26k1QwwBywkgIk7ZyQDOncs/gECAdnck2xs63NQNF+VdE/Z7+2aSkMChp9S54KU
-         pL/yG+j0V7oo5ikfBjNZ5RZErJo7VDbwvOya90y6SpoyaxYWXvo44C12sKnZmNpMlUNh
-         5Kd2U/nTpf/2c9oEPXcWIlJsdSOW7uQR5SWjU3IJLbYt95XLJ7Dyjm4FTT2/zo4w1PWQ
-         SRHQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XCnTq9pi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712640247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qdDr1Hl3PFGnhdknuMQtRh93bfh1USz5GSeKZpt2kZY=;
+	b=XCnTq9pioMPYFoyfPPxsIl1/RRUxvqYLSrX+eam60YrtGIno8vzv1rRkNLMdV8327P/UPE
+	BlHgJxCpcrQL4E4PiYSQqyq4hWlII2z5bZvnyPhvIDwRfPlAPrml7bM2RUfFZN2eUGgTWq
+	80O6QCWgle8AjyKVKTnr3l/fIjErXxE=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-327-diXIfWJSPnWiVnoGRbcTUA-1; Tue, 09 Apr 2024 01:24:04 -0400
+X-MC-Unique: diXIfWJSPnWiVnoGRbcTUA-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2a4f59746f7so1653839a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 08 Apr 2024 22:24:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712639621; x=1713244421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b6G7fQwZrU8Ut2ONWgYwB5iUHvGBDAPNe+jjAW2C4Mg=;
-        b=snMzt6PWPeac77dtUcQyXPGWNIoQP3GgoaSlgm496X+JAw5hPuIPIdCIpnZh/PAE/p
-         6sFPA0RPp13vXlKOb6L//qgB4BMQrkLdTqFBv0WoBYC16yir6QSTHY6gTW0X3WCwrDbj
-         9YdW5TDZb6yqnOfBK3PIryQrQM+8kGBFxlOOq/oK3ccSGxFl0kPqOTsAiJzRcrsXxm1o
-         BwVO7nQ8WewPGDWvcfKZLnDxEzNMGma6heo1p+UfNZltGsDr6L55J36lteVqDCv9zCi6
-         zJ0Lif5561tSWjzxiqGXh5DRitJF2x0GRGr59RULDkLSG9S/06BMjoKZq1n1Ymow5dO7
-         2gPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQVrn4XwGyHNdCbgvi8NR1jcvf6e2aNPKOA2Xl/Tnbp24zboldYyZXyAs/0a1+PxGzqDG/oWJXy6zJ5PAEmG3TGu8MMxRgw9SWn9LL
-X-Gm-Message-State: AOJu0Yz/W7Zt8IXyjPuwBo6zU11nWiTBS98ivRxFan0UYP7Rw5f5WldS
-	GqLXojJwqtNX28vaQBm05jcxOI+rkBzc8XueT7H/IgauIf4Pz2EqZhTujkTMWasER1iHsgkqQt2
-	f1m72x/D1zDCtKtKEZqe59icsjlqa+oNz4qr2
-X-Google-Smtp-Source: AGHT+IGtzSNJgjDc/nC7nFe1GhF37b1NuM2JGv6SOuE597isSLhoxrccb1PNcX9sCRP+cNte/jpd8sOR+EPxlmcj0Y8=
-X-Received: by 2002:a05:622a:1f9b:b0:431:6155:c602 with SMTP id
- cb27-20020a05622a1f9b00b004316155c602mr124400qtb.3.1712639621316; Mon, 08 Apr
- 2024 22:13:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712640240; x=1713245040;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdDr1Hl3PFGnhdknuMQtRh93bfh1USz5GSeKZpt2kZY=;
+        b=H9XRQoN0KDW2TbYuNdUV/PI6natfXI1OD8fz97Vrx947Pfsd6XHOzFUoTaY0eZ99sT
+         LSEbetBQoO1+92LepoZn5uKXrJrxcnqSHpXYDVZZdhGgaF/hi30b4AjejEFBin+LAErg
+         SrTRlvWMJKyaEp4RTEUpWQNWU5aKPVS5vIg0r1ieP/6ckju+jEgYJ7F3G1ZvHd/CaBsc
+         /qI9pCVHDJaot3FddOHBuDwQ2EXF0sVJsQ9yKdqnjqhbp0TCFYaFTUXQeabQlJ1s2xnA
+         zwbBluWLMaGACzPdyfzl6A8S9Gk80cJDG8xuKzrzrNq+2fQqgl3p2RoO+UMlOc8wIDZp
+         U50Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWHIvxzagSjQiSJx7qZBnTqDeddDa/HX/RNwBziViG4FCwbqkgDQUJkn+b0oQ4z2fwUh2zoDurHbsjlZLwim6sRGJOVo55WX0+4su1W
+X-Gm-Message-State: AOJu0YwKfSr6QbIAnhIRuoMYCA4wHSoNYyJn3e816IFoGpMAxTltLWSk
+	ZHIwVX5kfHCmoP2RWK9H8Y93aLXdjJb5BMXV2ARHbB4e8u3+7fJ8JjcpBIQpfFfk2Yu4QFb11bk
+	HWqTL//r/tiZQpy7LgfoCxNQq6AR1jN4+xxQb+ObTqgnMwefTAMysWHC0a++khA==
+X-Received: by 2002:a17:90a:17c6:b0:2a2:bc9d:f44f with SMTP id q64-20020a17090a17c600b002a2bc9df44fmr7783878pja.13.1712640240446;
+        Mon, 08 Apr 2024 22:24:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHaRZwSrquXWFWvjYyvbfJbti9WAgNhMn8ACwIQ4BNfAmRp+5jeTjoHsnaXWUTVhQlgYU/Dw==
+X-Received: by 2002:a17:90a:17c6:b0:2a2:bc9d:f44f with SMTP id q64-20020a17090a17c600b002a2bc9df44fmr7783868pja.13.1712640240075;
+        Mon, 08 Apr 2024 22:24:00 -0700 (PDT)
+Received: from [192.168.1.240] (117-20-68-143.751444.bne.nbn.aussiebb.net. [117.20.68.143])
+        by smtp.gmail.com with ESMTPSA id cu12-20020a17090afa8c00b002a2f6da006csm7344186pjb.52.2024.04.08.22.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Apr 2024 22:23:59 -0700 (PDT)
+Message-ID: <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
+Date: Tue, 9 Apr 2024 15:23:52 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408231310.325451-1-saravanak@google.com> <20240408231310.325451-3-saravanak@google.com>
- <CAGETcx8gGcq01CwTZyn=Q0fSQkzMf6tshSmPr5YWYZuhhJVdXg@mail.gmail.com>
-In-Reply-To: <CAGETcx8gGcq01CwTZyn=Q0fSQkzMf6tshSmPr5YWYZuhhJVdXg@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Mon, 8 Apr 2024 22:13:01 -0700
-Message-ID: <CAGETcx8j50dpovO-Mj0MjpYcw+n6T9ei6mo8tm7BVkcjfy_VVQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 2/2] of: dynamic: Fix probing of overlay devices
-To: Herve Codina <herve.codina@bootlin.com>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh@kernel.org>, kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-spi@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info
+ keycodes
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, hmh@hmh.eng.br,
+ ibm-acpi-devel@lists.sourceforge.net, platform-driver-x86@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+ njoshi1@lenovo.com, vsankar@lenovo.com
+References: <mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
+ <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
+ <ZhR-WPx7dgKxziMb@google.com>
+Content-Language: en-US, en-AU
+From: Peter Hutterer <peter.hutterer@redhat.com>
+In-Reply-To: <ZhR-WPx7dgKxziMb@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 8, 2024 at 6:40=E2=80=AFPM Saravana Kannan <saravanak@google.co=
-m> wrote:
->
-> On Mon, Apr 8, 2024 at 4:13=E2=80=AFPM Saravana Kannan <saravanak@google.=
-com> wrote:
-> >
-> > Get fw_devlink to work well with overlay devices.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/base/core.c    | 10 ++++++++++
-> >  drivers/of/dynamic.c   |  8 ++++++++
-> >  include/linux/fwnode.h |  2 ++
-> >  3 files changed, 20 insertions(+)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 5f4e03336e68..d856f9c5d601 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -237,6 +237,16 @@ static void __fw_devlink_pickup_dangling_consumers=
-(struct fwnode_handle *fwnode,
-> >                 __fw_devlink_pickup_dangling_consumers(child, new_sup);
-> >  }
-> >
-> > +
-> > +void fw_devlink_pickup_dangling_consumers(struct fwnode_handle *child,
-> > +                                                struct fwnode_handle *=
-parent)
-> > +{
-> > +       mutex_lock(&fwnode_link_lock);
-> > +       __fw_devlink_pickup_dangling_consumers(child, parent);
-> > +       __fw_devlink_link_to_consumers(parent->dev);
-> > +       mutex_unlock(&fwnode_link_lock);
-> > +}
-> > +
-> >  static DEFINE_MUTEX(device_links_lock);
-> >  DEFINE_STATIC_SRCU(device_links_srcu);
-> >
-> > diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> > index 19a1a38554f2..0a936f46820e 100644
-> > --- a/drivers/of/dynamic.c
-> > +++ b/drivers/of/dynamic.c
-> > @@ -237,6 +237,7 @@ static void __of_attach_node(struct device_node *np=
-)
-> >  int of_attach_node(struct device_node *np)
-> >  {
-> >         struct of_reconfig_data rd;
-> > +       struct fwnode_handle *fwnode, *parent;
-> >
-> >         memset(&rd, 0, sizeof(rd));
-> >         rd.dn =3D np;
-> > @@ -246,6 +247,13 @@ int of_attach_node(struct device_node *np)
-> >         mutex_unlock(&of_mutex);
-> >
-> >         of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
-> > +       fwnode =3D of_fwnode_handle(np);
-> > +       fwnode_for_each_parent_node(fwnode, parent)
-> > +               if (parent->dev) {
-> > +                       fw_devlink_pickup_dangling_consumers(fwnode, pa=
-rent);
-> > +                       fwnode_handle_put(parent);
-> > +                       break;
-> > +               }
->
-> I'm clearly calling this in the wrong location. Please move this logic
-> to __of_changeset_entry_notify() and for the case
-> OF_RECONFIG_ATTACH_NODE. Haven't fully thought through the DETACH
-> case, but it should work correctly for that case too. If not, I'll
-> take care of that next.
->
+On 09/04/2024 09:31, Dmitry Torokhov wrote:
+> Hi Mark,
+> 
+> On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
+>> Add support for new input events on Lenovo laptops that need exporting to
+>> user space.
+>>
+>> Lenovo trackpoints are adding the ability to generate a doubletap event.
+>> Add a new keycode to allow this to be used by userspace.
+> 
+> What is the intended meaning of this keycode? How does it differ from
+> the driver sending BTN_LEFT press/release twice?
+>>
+>> Lenovo support is using FN+N with Windows to collect needed details for
+>> support cases. Add a keycode so that we'll be able to provide similar
+>> support on Linux.
+> 
+> Is there a userspace consumer for this?
 
-I'll send out a RFC v2 with the code fixed up in a few minutes.
+Funnily enough XKB has had a keysym for this for decades but it's not hooked up anywhere due to the way it's pointer keys accessibility feature was implemented. Theory is that most of userspace just needs to patch the various pieces together for the new evdev code + keysym, it's not really any different to handling a volume key (except this one needs to be assignable).
 
-> -Saravana
->
-> >
-> >         return 0;
-> >  }
-> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > index 0d79070c5a70..4b3f697a90e8 100644
-> > --- a/include/linux/fwnode.h
-> > +++ b/include/linux/fwnode.h
-> > @@ -220,6 +220,8 @@ int fwnode_link_add(struct fwnode_handle *con, stru=
-ct fwnode_handle *sup,
-> >                     u8 flags);
-> >  void fwnode_links_purge(struct fwnode_handle *fwnode);
-> >  void fw_devlink_purge_absent_suppliers(struct fwnode_handle *fwnode);
-> > +void fw_devlink_pickup_dangling_consumers(struct fwnode_handle *child,
-> > +                                         struct fwnode_handle *parent)=
-;
-> >  bool fw_devlink_is_strict(void);
-> >
-> >  #endif
-> > --
-> > 2.44.0.478.gd926399ef9-goog
-> >
+Cheers,
+   Peter
+
