@@ -1,219 +1,160 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CE275809;
-	Tue,  9 Apr 2024 14:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712672064; cv=fail; b=qYeUOmDTB+tNh1ILzamqoKwhVGj1RzFA73LW78Mv2a4vhwgCxV6OIilGno6QFDy+guVk06KB6FLcTUjuNz3AyPf1ihrHSGQprriOwzJecJ92MaE3TOX6yuN7y11Q+LahERCk6KWhnDcjPAjXt/iK2sHXKlN51KbQj0Nn+aC5UyM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712672064; c=relaxed/simple;
-	bh=p9Y6i4U78okTRPf1Jv7B5oEVDviAGwVVQ+2Xu2g+Ix8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=keCldc1ZuM0o18gwOw0mGxDVSFAKgPZguCz1Pelz70HDPZ2ROjCRb4E+gwDjs3vMp7C08usQUwilaRj6CCB2jn07XsTUm2Eax7t4Q58WNWtXnaWYsp1sZd5lj9TceHPYwfwIu5KWBLPvdlGiJDaYuBqHendjAC/wcwTZd8Ciz0s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1b0iCZJn; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mbGlXune; arc=fail smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DA97F7CB;
+	Tue,  9 Apr 2024 14:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712672108; cv=none; b=cvPqInyibIUpbIPA7qLbnS2TnpeLjgSFcgQJNjARsfkXjp3Go1xc4jYJfA2c4+mGibANhC7MbHopUJvwQ6G0a+WjDqgOJosAByyoJgdsZjMAnfIzdb0NOe1ppfe3CGDpD3ColdXdyi60Ty54tEeKNsTu2SIHbG2HHpLr5bHhQVg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712672108; c=relaxed/simple;
+	bh=w3QKbuBJwcCjbBH7DUcEkVnmAfgOavXXlVQiyGShmdM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kATJOSZXtqcqnn7pYUBid2Emo96So2FvF9yvAKL0Ce3KTnih2vK9E+TovGgTUWnSoBp3CvL1xooXAYHEDmR0vHYxwPW5Sk+c+nrLehFXL5Ycp33prDnhjAMnl/I1Qur8R1ed0IIogQ9UKyHsmtWjwqUuIl/zlqEzn2NyX7RwFrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L3b4kJEt; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1b0iCZJn";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mbGlXune"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L3b4kJEt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712672063; x=1744208063;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=p9Y6i4U78okTRPf1Jv7B5oEVDviAGwVVQ+2Xu2g+Ix8=;
-  b=1b0iCZJnEpELGQEiEXcRPV2gO6/toE6AOnSRZyGezTk/4A+EN3uLXBDZ
-   HvQXPl9zNwVGuF2aRtxjpgXYsQFtE/g4WcPVv3+rqpJ/zkUsh0nN9F4zy
-   BCGBjqsB9vNdGLfSELpY5RKazsppe6KizhiPkR+sPCpBgr0/OKvn+gl92
-   Ne+V5HQ2kTnEdSUGoOnGF1W5zyaMeVxyQyymNRtYOcuZ2XUkT7OQo9ZOo
-   jOfTD6v8GB3WRIPJIBYoLKPFqaCLgzbrJGeuSIczSiIcxe7jOq7ph3GsH
-   QxpEHSHmk9jNWqe75wYF+1T2NOiX+FbA+TZHFaAuQA2QaA+/MScyeekZl
-   g==;
-X-CSE-ConnectionGUID: pgUlRW+VQ5+cwT08ApHVVQ==
-X-CSE-MsgGUID: 16l4y6YWQTyYX0aq21Nf0Q==
-X-IronPort-AV: E=Sophos;i="6.07,189,1708412400"; 
-   d="scan'208";a="20732336"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 Apr 2024 07:14:22 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Apr 2024 07:14:06 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 07:14:06 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ESSYnBrKWyI1FYxaKvl0lartqjbkXAdCY/1W0DH/7UHbNCPpbBRYdC9bejxhwSfjWTTjbYf97iptSeDqsw8G+H9SrqIBS2fI1LVW2Qz+fTG2FYLShfWqXjXaVUg61Z3R6c2ISx75UIfaU2ypMje8wQUMYqXrmp8pZT1XF77S7OL52h495PxNZRyZYLlIpESR/2YjlMq8jIeQ9YHGixijQyxu0t1B82kw91MUK4muqHcBvlG2eEU4nWIAdzkti8ReeLqCN5HitQTN+FJq4I06nbuQfacXhCoKvKOkv2FkJjwrBFtn9bOiVV20HAryxEVtfucpsa4n0WKRK4zjBpg/lw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p9Y6i4U78okTRPf1Jv7B5oEVDviAGwVVQ+2Xu2g+Ix8=;
- b=OwwX/n5eEngQZHJAqOieEkuVCsmNVJunNrGyukqvAjn3BZgj4IENmVkzjTEFQcAPDBvLNk52JkDuxIhX9Tg1KZNR3Z8EbUhtoxKk4XhWVetNl5JK2IDkHz+5YX7xa8+4KNitAoG/d0+pdoDsA9PwnQTViBd4vd+6nhJsCFODl/JKgKwfxAb+Fe6fPCom8rSNarkUBdCkT68zxhfP9F5P9V5CN4flquYscGqh8UjHSL8M2GOd8FLCEJ5A7XXMeXCRLMKgVgyiVUGEYd9YNtKGHTbPlMN0A8ajKuvf03ORJiDz/NuTucRCAaScUZAp7mtKfFVDcFcoyqqY7fR5yJIxiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p9Y6i4U78okTRPf1Jv7B5oEVDviAGwVVQ+2Xu2g+Ix8=;
- b=mbGlXune2Z93sMAiBJ9qAzWAb/HfKcJN8x+gqQlT722jNJh52FXUhDjeZiR0mHjQmQUy3YIvK/oBJxsOTnDiZhYLq8PTjTphoelGQnxgjlEtVKOIxIzhvXZAkYMB5ODlVXGL32zCwwkqe08xbQLIl8T9wZxzPy0KIozreAJuB7lf7qpU19X1kpgi5uUO2VvFEeGIiz6uunsM9ctFNPU1sUUMK7RxlR4bodVzexUkAy2MLhyMa72aUIiFFHCCWUWE00UHzIioCYz2Ias5rNm/JWIjShjiNi7S4xjziPUZ6FgBZ8luURYFeKOxjB/Bv85ChBpAJfRJ0GwB5rK0HDUDwg==
-Received: from PH7PR11MB8033.namprd11.prod.outlook.com (2603:10b6:510:246::12)
- by MN6PR11MB8171.namprd11.prod.outlook.com (2603:10b6:208:471::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Tue, 9 Apr
- 2024 14:14:04 +0000
-Received: from PH7PR11MB8033.namprd11.prod.outlook.com
- ([fe80::d529:f716:6630:2a1d]) by PH7PR11MB8033.namprd11.prod.outlook.com
- ([fe80::d529:f716:6630:2a1d%3]) with mapi id 15.20.7430.045; Tue, 9 Apr 2024
- 14:14:04 +0000
-From: <Arun.Ramadoss@microchip.com>
-To: <andrew@lunn.ch>, <olteanv@gmail.com>, <davem@davemloft.net>,
-	<Woojung.Huh@microchip.com>, <pabeni@redhat.com>, <o.rempel@pengutronix.de>,
-	<edumazet@google.com>, <f.fainelli@gmail.com>, <kuba@kernel.org>
-CC: <kernel@pengutronix.de>, <dsahern@kernel.org>, <san@skov.dk>,
-	<willemb@google.com>, <linux-kernel@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <horms@kernel.org>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next v5 4/9] net: dsa: microchip: add multi queue
- support for KSZ88X3 variants
-Thread-Topic: [PATCH net-next v5 4/9] net: dsa: microchip: add multi queue
- support for KSZ88X3 variants
-Thread-Index: AQHailaeULprcvidk0CkpQunbT4rkrFf/BmA
-Date: Tue, 9 Apr 2024 14:14:04 +0000
-Message-ID: <78e905b30c3c19ca74a651c0a541965abafda266.camel@microchip.com>
-References: <20240409081851.3530641-1-o.rempel@pengutronix.de>
-	 <20240409081851.3530641-5-o.rempel@pengutronix.de>
-In-Reply-To: <20240409081851.3530641-5-o.rempel@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.36.5-0ubuntu1 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB8033:EE_|MN6PR11MB8171:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: c8NQK1trBNkW5K7BG+g4bYUDntLFI1SeXiLbw8IiZ5CY0pNDzr6nBE1TQKTVFzn7L3CvcbCrhadY27dRdilZZm51p4qVHKL3B2OdjYYZZgBoozOLczVazLfrAeOabvlau01HFNKai8jKO1CpTAO0lx1bdggVFvRJTSps0PnroxmuJq3y7xd9X3uXKP4UEgldyC0sNfZkQ6oZvvcXbZhtxIseRH7f9kTGo8QWf9y25mVXaG1c6cHKsCJj83kx89nfG3vi8OLse2TbpXcWI29Z4QHAB6svHalHrLcuS84XHmm5romvARq9gzYISOM05lGvwC+ybO3ogYlZxTGdBfjmvsjxlOAd//vtjIjPiK72l74bkV90fL/TMzEUYPltVcQzW7YzhLENURtwlviQiUHPjDXX+LW9B0kjFEjZQeCwtj2HdAUicc7y+RYz5J5/3i1H9/veKPfNUrSmX8V45TY6eafJxGhTk8k7PNja8MKsVSr11Z3NiIcvr7+3LvR2TqUa373Z/g3g2O+pvCY17e3hddTxb31OGudko7q/vbnfeBsXb/OoZtUM7uUNe4nL0+oc1DBTBnG2ILzVvQz2M23H/eXjQ8t/bZnZz1JQIMaS+afC1Ch7UW18TZbVmf57ootTmSGYKtbi6XIdCI1qUDOdb8bZ8j0mzJxvz6vvW7oOuQc=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8033.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V3czVFFYZGJSREdaakNHZnFDOXdFYS93QXZreFVUTHBzNm5SNFNKMFlMUHFW?=
- =?utf-8?B?NW9OMzFYTFd3RHZVQUxWdk9ZeWpNSmNZaG9ySEU3Z0lDYU1zV3NiYlhodkR6?=
- =?utf-8?B?bDdYUVB5ZzlQQmlwWDdqT2hSNmd6NG9DUjl1Zjc2bktCTnl1QUlkb0lid3kx?=
- =?utf-8?B?TjhPaEtCZU5mUmE1UmxiemZLODU4Y21uQjRXZGRZd1hwTjhqVGR5K3YzQlo5?=
- =?utf-8?B?aGl6by9jWThkTGUzeVN2U0VSNDZFaENIRXA4UTJLOThCVTNEc3FBenFOdHVm?=
- =?utf-8?B?ZGk4SjJaVlc2a0tkV21wQjdNbWNnVkNlcEpGUmFxdnFRaVpoSW9sWTZiVDEz?=
- =?utf-8?B?OUI3T3RXM0NxWGZ2WmxCNlRyZHplaFRUNlpUcVRxYnQ2enQ3eDB5OUd2bmt1?=
- =?utf-8?B?NHNhTHl0ZDVEdStvaVdBK3dDUEw4MS91cSsrM0hoZ3U0Yzdxblgzc2dMZEdV?=
- =?utf-8?B?NVhPdGp4eXVvM09HZVJPZ2VDS29RSldJYjlMQlBad21sbDVJUVo3bFFmdDIr?=
- =?utf-8?B?RnZFckhSb3ZGMWpjSzNCM3Y1QTBHR1p5TXdlbHpwYjREK0k4YnoyaXd6ZlRw?=
- =?utf-8?B?aXNGWFZoSjJSY0s2eVM1Njc5UU1VZUpzNjBzMmF6TmVXYW9LL0VleGpqTmZV?=
- =?utf-8?B?UnpZZjFvbDNsMlNpY1N2SUhydExUMFg4TUc3TmUreTd1dVVZZWlya01qVkV3?=
- =?utf-8?B?MWM2ak93Vm1QQlVJSjAxMkw2ZmxpQTRtd09uUzZWWHBZS0ZudW0xQTJEZUpt?=
- =?utf-8?B?S25KOCtHTGZQdWZRN3YycDNLV08wMzQzUVBZTnQ1Y0lmOVE4b1EyOVVsb0M1?=
- =?utf-8?B?NGptaTloZ3U4cHJlMmVDeVdQbVJiVld2MGNGaVFMcGdNQ1l2Yi84Uys3MVg4?=
- =?utf-8?B?by9EMWkyR28wRnJRbkNBOGxQcktPN0dyTGp0bXJkeldodThIS0hHb2dEWUZI?=
- =?utf-8?B?NmYwbHVTT1VjME9oQ1kwVy8vYXNHY0NBd1M3MkNJbDRQNSt0SWEwNnlYbS9i?=
- =?utf-8?B?cGJIUXVoR1lFd1BYRG9WRjdSSGRmWkdWVTlQczF1Q1M4K0IyUm1lNFRqN2lD?=
- =?utf-8?B?cTZHL0FxYm8ya29hb1RBaXVCazJqS3lycEJGblpaaVltN29BeTJOTmxvVU9m?=
- =?utf-8?B?b25TNWdBbnltZmxVT0FZUHBjNTd0c0UwdDVtbGJ1ejhxNWRtVXdFUktJaG1R?=
- =?utf-8?B?eDF5WThRYnV0R0RYeHlzdjlLSmxWU2d5RWdKRlM0UEF3SCtuU1o5Q1ZuL1NF?=
- =?utf-8?B?ZzgxcktWQmVxdXh6ZC9DWEtodVhlUm9rUDczWnlBL2pGeUZIM2ZTSmQvSDFq?=
- =?utf-8?B?Ty9TcktRc0hSbVZWblNWUjBBbEp1emE3VVJPYVA2SGRsOFNuT0FCWUNBUytn?=
- =?utf-8?B?UGVOcjdMOFZPbThTeEFLQ0s5elAxY0dLRkY4ZDgwd0UyTlpJNFJlaW1uS0N1?=
- =?utf-8?B?bkR4czllTkJ4dWpINWZyWHQ5ajMvTGNiZzh3ZTV2N1F5U0NmQlVySCtQZVp2?=
- =?utf-8?B?eG1BUDdiQmNxbG05NjR5R3ZuZHQ5YVZQL2FTeVA0Q3dEeHZONWN1R01iVHNU?=
- =?utf-8?B?eFNkdm5lM2o1N0lENzJ0Q0hYRkpvRTNMcU5SY0dzQUdEM2xCT295ZGl6ZU16?=
- =?utf-8?B?MERrVGNPZTBxM0Q5UCtISXJMUGg5bmlGU2ZDTmZYdyswVWF5ZktQd0txaDNy?=
- =?utf-8?B?MTBSYmxuS3d2TlpFOWREeGdRS1pLdVppSkNlVkdyekhmbUhrN2VkaW5sN2Fk?=
- =?utf-8?B?bVhVTS90U05DdUUvYzZ0MGNxTzVZVVFkNy9wZTRsSjRqZEp5VXF2bGtUYmVk?=
- =?utf-8?B?L2dWMzRqdEFSZkJoNUdOOWtjTDI3ak93SXlvRFVCU3cwd1NBS25CTDJLZEQ3?=
- =?utf-8?B?NG93VmsvVWpqUysrRXB4akF1OFFSNVh2YTY2MDRDVVhUM0FLM2RVT0xuc0Yr?=
- =?utf-8?B?dUZyVTJQcDl6dTVxWnluVytLZUFQNlJsNUtPcGxXdElETDNhMzUwMUVsNml1?=
- =?utf-8?B?U1RjbExKd3VraXNiUVJ6NDg2WW5FeUp6SUoxYTRRd3lkcW5VUWxTcU04VjUr?=
- =?utf-8?B?OWNvSC9MZENrTkx3WlNKUGZtU3FPRys4aC9lajI3QVJOZXRSV3Y3Q0dFNnRO?=
- =?utf-8?B?dVZZQXV4Q0FRVll4RnlFMTd1UkNmRHNHWkdicDlKd0lvZjlxaDhIbU9rSndJ?=
- =?utf-8?B?WlE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A52EB6463DEDD04899C761BC6357CAC8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712672107; x=1744208107;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=w3QKbuBJwcCjbBH7DUcEkVnmAfgOavXXlVQiyGShmdM=;
+  b=L3b4kJEtQ/Y6vrZ3zNfm8gXg4On7drW2B27QlZAjnu4byY+YiYP9i7u0
+   3BliVqmh+lLAgcwfYw+CcjMY+sVeaUMRYVuHsU1wSiUOi1G5hblLdBbo/
+   lfrJCoIk0NlVZjdeMn/a2rYxzyu24/tih+S+tasjmdAArxoPiro7ml1TH
+   hmK5BFBS9g75aqEzsy2BIfZ5ogMde/5mGi0aRDcrYApQhISEQoEV4qJih
+   HAOG+oxr/YSxkAcE3s7REu9oNRJp5tyDFUiofiEvXhOLjQxvii7MA2i0H
+   tMgL/WMoz5VRITp/8Qg17zUqMefgW5/o99PsHbU97lAiPjiFbzvC0+uYL
+   Q==;
+X-CSE-ConnectionGUID: OnjsjfNsSpWEGfGsu/V8DA==
+X-CSE-MsgGUID: rILNYIU1SxSSkShn/lif/w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18551297"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="18551297"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:15:07 -0700
+X-CSE-ConnectionGUID: PeNHtEUHSd2WfpwjoOmOBA==
+X-CSE-MsgGUID: uwwCQ/OjSJegQna6pmerXA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="20699579"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:15:03 -0700
+Message-ID: <f59ca834-2915-43c2-8bc5-5b83121693d6@intel.com>
+Date: Tue, 9 Apr 2024 22:15:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8033.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3d8426f-e964-48d3-3344-08dc589f4fc1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2024 14:14:04.0852
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: v6/jaftusTwORbSYHTFhkn+tPofLn96rwj/jfIyDl009qMgMS0WKoaEUFqJ2Fgn1r798+iYdP1GspMUvoe71OVPPXFN4xKhpv6fijvc2pYI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8171
+User-Agent: Mozilla Thunderbird
+Subject: Re: [ANNOUNCE] PUCK Notes - 2024.04.03 - TDX Upstreaming Strategy
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+ Isaku Yamahata <isaku.yamahata@intel.com>, Wei W Wang
+ <wei.w.wang@intel.com>, David Skidmore <davidskidmore@google.com>,
+ Steve Rutherford <srutherford@google.com>,
+ Pankaj Gupta <pankaj.gupta@amd.com>
+References: <20240405165844.1018872-1-seanjc@google.com>
+ <73b40363-1063-4cb3-b744-9c90bae900b5@intel.com>
+ <ZhQZYzkDPMxXe2RN@google.com>
+ <24c80d16-733b-4036-8057-075a0dab3b4d@intel.com>
+ <ZhVKIfydhfac9SE4@google.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <ZhVKIfydhfac9SE4@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-SGkgT2xla3NpaiwNCg0KDQo+IA0KPiAtc3RhdGljIHZvaWQga3N6ODc5NV9zZXRfcHJpb19xdWV1
-ZShzdHJ1Y3Qga3N6X2RldmljZSAqZGV2LCBpbnQgcG9ydCwNCj4gaW50IHF1ZXVlKQ0KPiArc3Rh
-dGljIGludCBrc3o4X3BvcnRfcXVldWVfc3BsaXQoc3RydWN0IGtzel9kZXZpY2UgKmRldiwgaW50
-IHBvcnQsDQo+IGludCBxdWV1ZXMpDQo+ICB7DQo+IC0gICAgICAgdTggaGksIGxvOw0KPiArICAg
-ICAgIHU4IG1hc2tfNHEsIG1hc2tfMnE7DQo+ICsgICAgICAgdTggcmVnXzRxLCByZWdfMnE7DQo+
-ICsgICAgICAgdTggZGF0YV80cSA9IDA7DQo+ICsgICAgICAgdTggZGF0YV8ycSA9IDA7DQo+ICsg
-ICAgICAgaW50IHJldDsNCj4gDQo+IC0gICAgICAgLyogTnVtYmVyIG9mIHF1ZXVlcyBjYW4gb25s
-eSBiZSAxLCAyLCBvciA0LiAqLw0KPiAtICAgICAgIHN3aXRjaCAocXVldWUpIHsNCj4gLSAgICAg
-ICBjYXNlIDQ6DQo+IC0gICAgICAgY2FzZSAzOg0KPiAtICAgICAgICAgICAgICAgcXVldWUgPSBQ
-T1JUX1FVRVVFX1NQTElUXzQ7DQo+IC0gICAgICAgICAgICAgICBicmVhazsNCj4gLSAgICAgICBj
-YXNlIDI6DQo+IC0gICAgICAgICAgICAgICBxdWV1ZSA9IFBPUlRfUVVFVUVfU1BMSVRfMjsNCj4g
-LSAgICAgICAgICAgICAgIGJyZWFrOw0KPiAtICAgICAgIGRlZmF1bHQ6DQo+IC0gICAgICAgICAg
-ICAgICBxdWV1ZSA9IFBPUlRfUVVFVUVfU1BMSVRfMTsNCj4gKyAgICAgICBpZiAoa3N6X2lzX2tz
-ejg4eDMoZGV2KSkgew0KPiArICAgICAgICAgICAgICAgbWFza180cSA9IEtTWjg4NzNfUE9SVF80
-UVVFVUVfU1BMSVRfRU47DQo+ICsgICAgICAgICAgICAgICBtYXNrXzJxID0gS1NaODg3M19QT1JU
-XzJRVUVVRV9TUExJVF9FTjsNCj4gKyAgICAgICAgICAgICAgIHJlZ180cSA9IFJFR19QT1JUX0NU
-UkxfMDsNCj4gKyAgICAgICAgICAgICAgIHJlZ18ycSA9IFJFR19QT1JUX0NUUkxfMjsNCj4gKw0K
-PiArICAgICAgICAgICAgICAgLyogS1NaODc5NSBmYW1pbHkgc3dpdGNoZXMgaGF2ZSBXZWlnaHRl
-ZCBGYWlyDQo+IFF1ZXVlaW5nIChXRlEpDQo+ICsgICAgICAgICAgICAgICAgKiBlbmFibGVkIGJ5
-IGRlZmF1bHQuIEVuYWJsZSBpdCBmb3IgS1NaODg3MyBmYW1pbHkNCj4gc3dpdGNoZXMNCj4gKyAg
-ICAgICAgICAgICAgICAqIHRvby4gRGVmYXVsdCB2YWx1ZSBmb3IgS1NaODg3MyBmYW1pbHkgaXMg
-c3RyaWN0DQo+IHByaW9yaXR5LA0KPiArICAgICAgICAgICAgICAgICogd2hpY2ggc2hvdWxkIGJl
-IGVuYWJsZWQgYnkgdXNpbmcNCj4gVENfU0VUVVBfUURJU0NfRVRTLCBub3QNCj4gKyAgICAgICAg
-ICAgICAgICAqIGJ5IGRlZmF1bHQuDQo+ICsgICAgICAgICAgICAgICAgKi8NCj4gKyAgICAgICAg
-ICAgICAgIHJldCA9IGtzel9ybXc4KGRldiwgUkVHX1NXX0NUUkxfMywNCj4gV0VJR0hURURfRkFJ
-Ul9RVUVVRV9FTkFCTEUsDQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBXRUlHSFRF
-RF9GQUlSX1FVRVVFX0VOQUJMRSk7DQo+ICsgICAgICAgICAgICAgICBpZiAocmV0KQ0KPiArICAg
-ICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiArICAgICAgIH0gZWxzZSB7DQo+ICsg
-ICAgICAgICAgICAgICBtYXNrXzRxID0gS1NaODc5NV9QT1JUXzRRVUVVRV9TUExJVF9FTjsNCj4g
-KyAgICAgICAgICAgICAgIG1hc2tfMnEgPSBLU1o4Nzk1X1BPUlRfMlFVRVVFX1NQTElUX0VOOw0K
-PiArICAgICAgICAgICAgICAgcmVnXzRxID0gUkVHX1BPUlRfQ1RSTF8xMzsNCj4gKyAgICAgICAg
-ICAgICAgIHJlZ18ycSA9IFJFR19QT1JUX0NUUkxfMDsNCj4gKw0KPiArICAgICAgICAgICAgICAg
-LyogVE9ETzogdGhpcyBpcyBsZWdhY3kgZnJvbSBpbml0aWFsIEtTWjg3OTUgZHJpdmVyLA0KPiBz
-aG91bGQgYmUNCj4gKyAgICAgICAgICAgICAgICAqIG1vdmVkIHRvIGFwcHJvcHJpYXRlIHBsYWNl
-IGluIHRoZSBmdXR1cmUuDQo+ICsgICAgICAgICAgICAgICAgKi8NCj4gKyAgICAgICAgICAgICAg
-IHJldCA9IGtzel9ybXc4KGRldiwgUkVHX1NXX0NUUkxfMTksDQo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBTV19PVVRfUkFURV9MSU1JVF9RVUVVRV9CQVNFRCwNCj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIFNXX09VVF9SQVRFX0xJTUlUX1FVRVVFX0JBU0VEKTsNCj4g
-KyAgICAgICAgICAgICAgIGlmIChyZXQpDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVy
-biByZXQ7DQo+ICAgICAgICAgfQ0KPiAtICAgICAgIGtzel9wcmVhZDgoZGV2LCBwb3J0LCBSRUdf
-UE9SVF9DVFJMXzAsICZsbyk7DQo+IC0gICAgICAga3N6X3ByZWFkOChkZXYsIHBvcnQsIFBfRFJP
-UF9UQUdfQ1RSTCwgJmhpKTsNCj4gLSAgICAgICBsbyAmPSB+UE9SVF9RVUVVRV9TUExJVF9MOw0K
-PiAtICAgICAgIGlmIChxdWV1ZSAmIFBPUlRfUVVFVUVfU1BMSVRfMikNCj4gLSAgICAgICAgICAg
-ICAgIGxvIHw9IFBPUlRfUVVFVUVfU1BMSVRfTDsNCj4gLSAgICAgICBoaSAmPSB+UE9SVF9RVUVV
-RV9TUExJVF9IOw0KPiAtICAgICAgIGlmIChxdWV1ZSAmIFBPUlRfUVVFVUVfU1BMSVRfNCkNCj4g
-LSAgICAgICAgICAgICAgIGhpIHw9IFBPUlRfUVVFVUVfU1BMSVRfSDsNCj4gLSAgICAgICBrc3pf
-cHdyaXRlOChkZXYsIHBvcnQsIFJFR19QT1JUX0NUUkxfMCwgbG8pOw0KPiAtICAgICAgIGtzel9w
-d3JpdGU4KGRldiwgcG9ydCwgUF9EUk9QX1RBR19DVFJMLCBoaSk7DQo+IC0NCj4gLSAgICAgICAv
-KiBEZWZhdWx0IGlzIHBvcnQgYmFzZWQgZm9yIGVncmVzcyByYXRlIGxpbWl0LiAqLw0KPiAtICAg
-ICAgIGlmIChxdWV1ZSAhPSBQT1JUX1FVRVVFX1NQTElUXzEpDQo+IC0gICAgICAgICAgICAgICBr
-c3pfY2ZnKGRldiwgUkVHX1NXX0NUUkxfMTksDQo+IFNXX09VVF9SQVRFX0xJTUlUX1FVRVVFX0JB
-U0VELA0KPiAtICAgICAgICAgICAgICAgICAgICAgICB0cnVlKTsNCj4gKw0KPiArICAgICAgIGlm
-IChxdWV1ZXMgPT0gNCkNCj4gKyAgICAgICAgICAgICAgIGRhdGFfNHEgPSBtYXNrXzRxOw0KPiAr
-ICAgICAgIGlmIChxdWV1ZXMgPT0gMikNCj4gKyAgICAgICAgICAgICAgIGRhdGFfMnEgPSBtYXNr
-XzJxOw0KDQpuaXRwaWNrOiBpdCBzaG91bGQgYmUgZWxzZSBpZi4gDQoNCk90aGVyd2lzZToNCkFj
-a2VkLWJ5OiBBcnVuIFJhbWFkb3NzIDxhcnVuLnJhbWFkb3NzQG1pY3JvY2hpcC5jb20+DQoNCj4g
-Kw0KPiArICAgICAgIHJldCA9IGtzel9wcm13OChkZXYsIHBvcnQsIHJlZ180cSwgbWFza180cSwg
-ZGF0YV80cSk7DQo+ICsgICAgICAgaWYgKHJldCkNCj4gKyAgICAgICAgICAgICAgIHJldHVybiBy
-ZXQ7DQo+ICsNCj4gKyAgICAgICByZXR1cm4ga3N6X3BybXc4KGRldiwgcG9ydCwgcmVnXzJxLCBt
-YXNrXzJxLCBkYXRhXzJxKTsNCj4gIH0NCj4gDQo+IA0K
+On 4/9/2024 10:01 PM, Sean Christopherson wrote:
+> On Tue, Apr 09, 2024, Xiaoyao Li wrote:
+>> On 4/9/2024 12:20 AM, Sean Christopherson wrote:
+>>> On Sun, Apr 07, 2024, Xiaoyao Li wrote:
+>>>> On 4/6/2024 12:58 AM, Sean Christopherson wrote:
+>>>>>     - For guest MAXPHYADDR vs. GPAW, rely on KVM_GET_SUPPORTED_CPUID to enumerate
+>>>>>       the usable MAXPHYADDR[2], and simply refuse to enable TDX if the TDX Module
+>>>>>       isn't compatible.  Specifically, if MAXPHYADDR=52, 5-level paging is enabled,
+>>>>>       but the TDX-Module only allows GPAW=0, i.e. only supports 4-level paging.
+>>>>
+>>>> So userspace can get supported GPAW from usable MAXPHYADDR, i.e.,
+>>>> CPUID(0X8000_0008).eaxx[23:16] of KVM_GET_SUPPORTED_CPUID:
+>>>>    - if usable MAXPHYADDR == 52, supported GPAW is 0 and 1.
+>>>>    - if usable MAXPHYADDR <= 48, supported GPAW is only 0.
+>>>>
+>>>> There is another thing needs to be discussed. How does userspace configure
+>>>> GPAW for TD guest?
+>>>>
+>>>> Currently, KVM uses CPUID(0x8000_0008).EAX[7:0] in struct
+>>>> kvm_tdx_init_vm::cpuid.entries[] of IOCTL(KVM_TDX_INIT_VM) to deduce the
+>>>> GPAW:
+>>>>
+>>>> 	int maxpa = 36;
+>>>> 	entry = kvm_find_cpuid_entry2(cpuid->entries, cpuid->nent, 0x80000008, 0);
+>>>> 	if (entry)
+>>>> 		max_pa = entry->eax & 0xff;
+>>>>
+>>>> 	...
+>>>> 	if (!cpu_has_vmx_ept_5levels() && max_pa > 48)
+>>>> 		return -EINVAL;
+>>>> 	if (cpu_has_vmx_ept_5levels() && max_pa > 48) {
+>>>> 		td_params->eptp_controls |= VMX_EPTP_PWL_5;
+>>>> 		td_params->exec_controls |= TDX_EXEC_CONTROL_MAX_GPAW;
+>>>> 	} else {
+>>>> 		td_params->eptp_controls |= VMX_EPTP_PWL_4;
+>>>> 	}
+>>>>
+>>>> The code implies that KVM allows the provided CPUID(0x8000_0008).EAX[7:0] to
+>>>> be any value (when 5level ept is supported). when it > 48, configure GPAW of
+>>>> TD to 1, otherwise to 0.
+>>>>
+>>>> However, the virtual value of CPUID(0x8000_0008).EAX[7:0] inside TD is
+>>>> always the native value of hardware (for current TDX).
+>>>>
+>>>> So if we want to keep this behavior, we need to document it somewhere that
+>>>> CPUID(0x8000_0008).EAX[7:0] in struct kvm_tdx_init_vm::cpuid.entries[] of
+>>>> IOCTL(KVM_TDX_INIT_VM) is only for configuring GPAW, not for userspace to
+>>>> configure virtual CPUID value for TD VMs.
+>>>>
+>>>> Another option is that, KVM doesn't allow userspace to configure
+>>>> CPUID(0x8000_0008).EAX[7:0]. Instead, it provides a gpaw field in struct
+>>>> kvm_tdx_init_vm for userspace to configure directly.
+>>>>
+>>>> What do you prefer?
+>>>
+>>> Hmm, neither.  I think the best approach is to build on Gerd's series to have KVM
+>>> select 4-level vs. 5-level based on the enumerated guest.MAXPHYADDR, not on
+>>> host.MAXPHYADDR.
+>>
+>> I see no difference between using guest.MAXPHYADDR (EAX[23:16]) and using
+>> host.MAXPHYADDR (EAX[7:0]) to determine the GPAW (and EPT level) for TD
+>> guest. The case for TDX diverges from what for non TDX VMs. The value of
+>> them passed from userspace can only be used to configure GPAW and EPT level
+>> for TD, but won't be reflected in CPUID inside TD.
+> 
+> But the TDX module will emulate EAX[7:0] to match hardware, no?  Whenever possible,
+> the CPUID entries passed to KVM should match the CPUID values that are observed
+> by the guest.  E.g. if host.MAXPHYADDR=52, but the CPU only supports 4-level
+> paging, then KVM should get host.MAXPHYADDR=52, guest.MAXPHYADDR=48.
+
+side topic: Do we expect KVM to check the input of EAX[7:0] to match 
+with hardware value? or a zero value? or both are allowed?
+
+> As I said in my response to Rick:
+> 
+>   : > An alternative would be to have the KVM API peak at the value, and then
+>   : > discard it (not pass the leaf value to the TDX module). Not ideal.
+>   :
+>   : Heh, I typed up this idea before reading ahead.  This has my vote.  Unless I'm
+>   : misreading where things are headed, using guest.MAXPHYADDR to communicate what
+>   : is essentially GPAW to the guest is about to become the de facto standard.
+>   :
+>   : At that point, KVM can basically treat the current TDX module behavior as an
+>   : erratum, i.e. discarding guest.MAXPHYADDR becomes a workaround for a "CPU" bug,
+>   : not some goofy KVM quirk.
+
+yes, bit [23:16] fits better.
