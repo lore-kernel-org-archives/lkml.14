@@ -1,69 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0D7199B0
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 22:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F97F225D7
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 22:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712961763; cv=none; b=QommUNmgMKkMS8MwpYkZ++MUhZavY5UJuNjnsTKt2BQ/YwrYiiB2+R1aWpwbMBA83DB8IJNIpVu3oEAmzUR+Dt/oZS7ilthdBouu+TEvtr+/UuP4QtTjj7HxGtLmrLo2zYeDaM/aGLWd5D+yrI08Vsj63+dIyz67KbQNjxf+gU0=
+	t=1712961881; cv=none; b=ibocq9HvsjZa+vL35eMqfGujya4bHkMnEDTvokzZ1cdarVZmEgZGb7RPz2crM1X5VhvvVl5c151hDLVe1M2tsTqH2Q7VC61HdF3wd71yRBGHolihTMKRqv9uGQ14wsyA2s/58sGq/qGxF9YS1XyKdyJ7xAFZ2PxCuw1uG6KhUhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712961763; c=relaxed/simple;
-	bh=1SbohQdK3WicmGP5UHDUXuCg8kjTQqR+HuWubdPfhAg=;
+	s=arc-20240116; t=1712961881; c=relaxed/simple;
+	bh=2/G8pva0QKXdcG7pAlRPcQQaEkGLUnJpeXwjjOIqChY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GmxH9xSOCyoxjETG1yUnzmQ+Q+1DukztXJwd0F3YztHeWNJ9jKCCYTHnkPufYUS65MwvGBUiCx1nNy58tUSQTzTSpC+/i/8CLwMTtEz+EXKq0zNAQVL/Y4awHl1NMJLbcy7iVU1ZHQfc/aX5ahSeO6JCx8pmTl6JRe4RJVoigUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HV+iXxVu; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i/xGacUho4Eu1q3lFEI1kVQnRN9Ri6knlooKyPgh54ogcF97+D+Rk02239ZgSkP4p/z7CBwjbFAZlVH9/RplrB5ThTVqyD259YxvM0/LIj5tNPPk46Z6x1fT+yOOOkcYHM+1/BBi0Uc68gXXp/nKDd+SZLt88TcTXKetdR9448M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=S9p6DXVR; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HV+iXxVu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712961762; x=1744497762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1SbohQdK3WicmGP5UHDUXuCg8kjTQqR+HuWubdPfhAg=;
-  b=HV+iXxVuCu0c9hnCw9MCtvpkEaMrmvrSMYvgAhuEQbC6uJXcexese7nO
-   LdpXad8KhTfTCsxT8dOZoO1Q1JBnFD+6kaJJ0D4n+lJg5B+CuoawSfwEz
-   eFeVyn2v8js0aUnIPGEFybqWYHhqUetdGHfhnzQOsHP9D7BED3T+ay9UF
-   wz29/dgvxppoeWT4nbR0TV2jIwcThmJnpUzmi1OnqatNfvto1emykEsVp
-   UHhJGFTmlqNUvQaSkmUcudwswglGSFMCPrct4G7iroYIwfEs/ht6gQ6ek
-   vgyw6ZKw49OnsoZ7I7e14UajdynKstuRQBlS29CsKfpe6KxSOW2aOnFqN
-   A==;
-X-CSE-ConnectionGUID: 9VWmvUm0R3a3+03TKgDbAw==
-X-CSE-MsgGUID: pbatoZ5fRxec8YdESRCHFA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12217633"
-X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="12217633"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 15:42:41 -0700
-X-CSE-ConnectionGUID: tk+3c19OQx2wruTrlGbHFA==
-X-CSE-MsgGUID: Wl3rdLLOT1qkbrvyIPUSmw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="21855066"
-Received: from ttmartin-mobl1.amr.corp.intel.com (HELO desk) ([10.209.4.27])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 15:42:40 -0700
-Date: Fri, 12 Apr 2024 15:42:32 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2 1/3] x86/bugs: Only harden syscalls when needed
-Message-ID: <20240412224232.uiaht6yx2ghtx3gg@desk>
-References: <cover.1712944776.git.jpoimboe@kernel.org>
- <079f24edefb5b47e922c2804f199463e04ccf0c8.1712944776.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="S9p6DXVR"
+Date: Wed, 10 Apr 2024 21:53:41 +0900
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712961877;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bK7KfBMPyOIucwDtN0e7NfhXAX7dIzQN2rgbT78Breo=;
+	b=S9p6DXVRqT4Q3RBVm7Uq9aPDAJOOzIiSGngKqvRMvNWI8kHldgoRu+I3oxpRc8RPeCTXYE
+	rNPpTaRupbgiEaYYO+Wb9MdGx5CS1G/ZS+NpHFGPZgs4dI7FECqKaBUKjvrNuPLzlwPpCm
+	KonJVHhiEGrZwSX6WL6pvVmUyuIlROA=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Itaru Kitayama <itaru.kitayama@linux.dev>
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, kernel-team@android.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Speed up boot with faster linear map creation
+Message-ID: <ZhaL1TABj0Qf7UKR@vm3>
+References: <20240412131908.433043-1-ryan.roberts@arm.com>
+ <171293670589.3659902.6442840474459477952.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,21 +49,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <079f24edefb5b47e922c2804f199463e04ccf0c8.1712944776.git.jpoimboe@kernel.org>
+In-Reply-To: <171293670589.3659902.6442840474459477952.b4-ty@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Apr 12, 2024 at 11:10:32AM -0700, Josh Poimboeuf wrote:
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 3c7434329661..7c87fe80c696 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -470,6 +470,7 @@
->  #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
->  #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
->  #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
-> +#define X86_FEATURE_INDIRECT_SAFE	(21*32+ 4) /* "" Indirect branches aren't vulnerable to Spectre v2 */
+On Fri, Apr 12, 2024 at 05:06:41PM +0100, Will Deacon wrote:
+> On Fri, 12 Apr 2024 14:19:05 +0100, Ryan Roberts wrote:
+> > It turns out that creating the linear map can take a significant proportion of
+> > the total boot time, especially when rodata=full. And most of the time is spent
+> > waiting on superfluous tlb invalidation and memory barriers. This series reworks
+> > the kernel pgtable generation code to significantly reduce the number of those
+> > TLBIs, ISBs and DSBs. See each patch for details.
+> > 
+> > The below shows the execution time of map_mem() across a couple of different
+> > systems with different RAM configurations. We measure after applying each patch
+> > and show the improvement relative to base (v6.9-rc2):
+> > 
+> > [...]
+> 
+> Applied to arm64 (for-next/mm), thanks!
+> 
+> [1/3] arm64: mm: Don't remap pgtables per-cont(pte|pmd) block
+>       https://git.kernel.org/arm64/c/5c63db59c5f8
+> [2/3] arm64: mm: Batch dsb and isb when populating pgtables
+>       https://git.kernel.org/arm64/c/1fcb7cea8a5f
+> [3/3] arm64: mm: Don't remap pgtables for allocate vs populate
+>       https://git.kernel.org/arm64/c/0e9df1c905d8
 
-This should be (21*32+ 5).
+I confirm this series boots the system on FVP (with my .config and my
+buildroot rootfs using Shrinkwrap).
 
-Other than that:
+Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
 
-Reviewed-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Thanks,
+Itaru.
+
+> 
+> Cheers,
+> -- 
+> Will
+> 
+> https://fixes.arm64.dev
+> https://next.arm64.dev
+> https://will.arm64.dev
