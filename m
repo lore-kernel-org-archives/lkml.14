@@ -1,40 +1,40 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BC417F375;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45BB17F373;
 	Wed, 10 Apr 2024 17:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771099; cv=none; b=QJN2Vmxwj4JsJMNnO8zT2LrjqqpwIT8STtNtSOLpGQ/BzHv+rJ9DGwp/dZkVFb/2k9MMcCxNEJkdL0zZB++uITCTHP1WrmeKKmuz2a1IfJ3np9RWNtBPNi3vvRvAlhhCIeo66dtrlEMOdhj6O8kSNhJO4gDWuewmhBH55PNpezs=
+	t=1712771101; cv=none; b=p5Vhfxh6XmSspYfm2NXT90Jp2TSmuXU69o04Sq4suAC6aGSCUKTT8NGhQrDl4h4IKUtPhb8aSY/80Ok1rnqGRpN5s62RmK5ciw2mSsfrNHJ7jZpqdfz/z7eSzUHgTJOd21AAag6nizPSyovaC2j8vMp+MxaVqbzSymH+TNX2SnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771099; c=relaxed/simple;
-	bh=jZ42qBAOVfXfjDC/gxg6TKm2g0q8hkME0qL1SccI63w=;
+	s=arc-20240116; t=1712771101; c=relaxed/simple;
+	bh=KDEZGqVK+a+9HcbLaldc+1MzUP3IHmBDbVJNhkob+mI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aYMqPjvUfOpk3eEEKGCZuTjzYerF+ydnt61Xqzvimb3GVT1UrNrLsQIA63ZW/ag3FyePWp7/mWBsQmBHdbmg7c/tJgCFe2K1NQSJrt/5iwX7+TO1lNccuK4wwCoRnUdWymDqmP+xVDDU1CE65ilmAWPUAtg42jQWRnCpWx9Vbz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=UG3RqXFW reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=iBb+c80+tJpkesX8VLzrAO7tv+/bqGP2gC+Bw6jrUFe0s8C5zydmogTPg/7oA0wVsUPd27lSkuP1pjy5ViqlE7aMpuhr0SIEG/IhXq6REVEH7DWTt46aNn3pLeAmt1EVse+TUpEsHW0DnjlWHC0L0ddx0JAk3VZSdsu7W3Vm/NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=nxJcMALb reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="UG3RqXFW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="nxJcMALb"
 Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
  by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id 2915b8068ed30433; Wed, 10 Apr 2024 19:44:55 +0200
+ id 4e1645a71e206586; Wed, 10 Apr 2024 19:44:49 +0200
 Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 37C9C66C66F;
-	Wed, 10 Apr 2024 19:44:55 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 2246966C66F;
+	Wed, 10 Apr 2024 19:44:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1712771095;
-	bh=jZ42qBAOVfXfjDC/gxg6TKm2g0q8hkME0qL1SccI63w=;
+	s=dkim; t=1712771089;
+	bh=KDEZGqVK+a+9HcbLaldc+1MzUP3IHmBDbVJNhkob+mI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UG3RqXFWFOLKMOX4IoF4HNLP+dfdQ3sRfdSrc3uSmyDXCP+4JLt5RUtS8vDFcgWBG
-	 Oz0Y0+qCWK3W+jMJHeChNUL8uiMwvr/lxzbVFmf5jowd2EQhXHFc+bVILc/Szv7PDa
-	 w0c8tjyL4TyRR7kOs3oEAx8XD2HwwyzNuWq+/lTIBi2V2R5zrFpQuykzs1o3Wal2+T
-	 npZ6Iubb828hRYBbalL8unut4mSK3ZDPtUp99mWqNTG4O3IQzsPVA0nawSvpZUD0Zo
-	 Pgiy5vJSs7Tnp0RP3xtdo73VgfRziAuw7qFdYPcAeq/icdyiOaMc/HhaWGjBXnt+RQ
-	 MWGiSU74t7PRQ==
+	b=nxJcMALbf6WROrRz3bAx1vRfMFb75Kc4zMov3Kx+YT7G6kw9X4SKEdnjJb6bNZruf
+	 5p3GKHXSsnPUayC8JF5YmAY3bIY3YEEktndEJMYLOyFa9pNXiPZby7UaKAFfR/l5Cn
+	 eSKFtOV6o4N0jN7oniTkl3+CjBtc2ADAEksyan1NLCI6Fux+F1Ui52DEaB3iOwOqlE
+	 le6mca+QIUBwRxNtg1D/5ZzsDvZ+A5mmCKpWMonLM2LYdWNx8fhfzfxc27N8CnDrNf
+	 B8fO8ZSzecmLWzCHn+ZmynZg3WFUtLlyJtJHr3EoYNPS0nEgOIcHot7QyyxYCCZNYb
+	 o5qEDxs9yhrxg==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -42,9 +42,10 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
  Lukasz Luba <lukasz.luba@arm.com>,
  Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Subject:
- [PATCH v1 07/16] thermal: gov_power_allocator: Eliminate a redundant variable
-Date: Wed, 10 Apr 2024 18:12:45 +0200
-Message-ID: <1913649.CQOukoFCf9@kreacher>
+ [PATCH v1 14/16] thermal: gov_user_space: Use .trip_crossed() instead of
+ .throttle()
+Date: Wed, 10 Apr 2024 19:03:10 +0200
+Message-ID: <15186663.tv2OnDr8pf@kreacher>
 In-Reply-To: <13515747.uLZWGnKmhe@kreacher>
 References: <13515747.uLZWGnKmhe@kreacher>
 Precedence: bulk
@@ -63,50 +64,65 @@ X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Notice that the passive field in struct thermal_zone_device is not
-used by the Power Allocator governor itself and so the ordering of
-its updates with respect to allow_maximum_power() or allocate_power()
-does not matter.
-
-Accordingly, make power_allocator_manage() update that field right
-before returning, which allows the current value of it to be passed
-directly to allow_maximum_power() without using the additional update
-variable that can be dropped.
+Notifying user space about trip points that have not been crossed is
+not particuarly useful, so modity the User Space governor to use the
+.trip_crossed() callback, which is only invoked for trips that have been
+crossed, instead of .throttle() that is invoked for all trips in a
+thermal zone every time the zone is updated.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/thermal/gov_power_allocator.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Index: linux-pm/drivers/thermal/gov_power_allocator.c
+Note: I am not actually sure if there is user space depending on the
+current behavior that can be broken by this change.
+
+I can easily imagine trying to implement a complicated governor in user
+space that will look at all of the trips in the thermal zone regardless
+of whether or not they are crossed, which can be kind of helped by the
+current behavior of the user space governor.
+
+However, the total overhead caused by it is considerable and quite
+arguably it may not be acceptable at least in some cases.
+
+---
+ drivers/thermal/gov_user_space.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+Index: linux-pm/drivers/thermal/gov_user_space.c
 ===================================================================
---- linux-pm.orig/drivers/thermal/gov_power_allocator.c
-+++ linux-pm/drivers/thermal/gov_power_allocator.c
-@@ -747,21 +747,18 @@ static void power_allocator_manage(struc
+--- linux-pm.orig/drivers/thermal/gov_user_space.c
++++ linux-pm/drivers/thermal/gov_user_space.c
+@@ -26,11 +26,13 @@ static int user_space_bind(struct therma
+  * notify_user_space - Notifies user space about thermal events
+  * @tz: thermal_zone_device
+  * @trip: trip point
++ * @crossed_up: whether or not the trip has been crossed on the way up
+  *
+  * This function notifies the user space through UEvents.
+  */
+-static int notify_user_space(struct thermal_zone_device *tz,
+-			     const struct thermal_trip *trip)
++static void notify_user_space(struct thermal_zone_device *tz,
++			      const struct thermal_trip *trip,
++			      bool crossed_up)
  {
- 	struct power_allocator_params *params = tz->governor_data;
- 	const struct thermal_trip *trip = params->trip_switch_on;
--	bool update;
- 
- 	lockdep_assert_held(&tz->lock);
- 
- 	if (trip && tz->temperature < trip->temperature) {
--		update = tz->passive;
--		tz->passive = 0;
- 		reset_pid_controller(params);
--		allow_maximum_power(tz, update);
-+		allow_maximum_power(tz, tz->passive);
-+		tz->passive = 0;
- 		return;
- 	}
- 
--	tz->passive = 1;
+ 	char *thermal_prop[5];
+ 	int i;
+@@ -46,13 +48,11 @@ static int notify_user_space(struct ther
+ 	kobject_uevent_env(&tz->device.kobj, KOBJ_CHANGE, thermal_prop);
+ 	for (i = 0; i < 4; ++i)
+ 		kfree(thermal_prop[i]);
 -
- 	allocate_power(tz, params->trip_max->temperature);
-+	tz->passive = 1;
+-	return 0;
  }
  
- static struct thermal_governor thermal_gov_power_allocator = {
+ static struct thermal_governor thermal_gov_user_space = {
+ 	.name		= "user_space",
+-	.throttle	= notify_user_space,
++	.trip_crossed	= notify_user_space,
+ 	.bind_to_tz	= user_space_bind,
+ };
+ THERMAL_GOVERNOR_DECLARE(thermal_gov_user_space);
 
 
 
