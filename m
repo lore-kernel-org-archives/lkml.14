@@ -1,282 +1,219 @@
-Received: from ma-mailsvcp-mx-lapp01.apple.com (ma-mailsvcp-mx-lapp01.apple.com [17.32.222.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F071836F7
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 22:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.32.222.22
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712787482; cv=none; b=tF5NUdrKkIVMCqNv3JCzth/aq34wEE/MmGEKnSFEZnIVGchGPdpm6zZWRyLx8lcGaEgE7XhYmm8BIRki93ZxAfzHWJVv2rvaKPxCEbnhb2U43g2NEtI0cPExBu9fANZg5ReIp+k/UaAxWWTn+K4OhJZCGDzVrSVHxcQfzHj2TZk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712787482; c=relaxed/simple;
-	bh=RzQDTssJlYAh3BMwvx5gEiw6hlt77+7dESf4c/c7TE8=;
-	h=MIME-version:Content-type:From:To:Cc:Subject:Date:Message-id:
-	 In-reply-to:References; b=JhSu+SAREOyGg6k/9AxVI+wcKf27E1bQxa3ZbScN6thXf1JZW+CLXQyI0kf8RQZCbY+pMzIfBFPJ0NPBK9gk3/Z978G4Qxqjn6GBp7YAcdBVOvR8bfUFGq/3nvgamJTBKw493gO3y9htSziRxHG6A4KnGPSPElPcz4pNIrAMnh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=dteWCXYQ; arc=none smtp.client-ip=17.32.222.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7550168DC;
+	Wed, 10 Apr 2024 22:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712787621; cv=fail; b=FN9ZYfgeRd76jLZlZ/Nc5b8qix/SAZfY5HfSgvgncAm69iWAVVkE2xYenqnCf+Psrxc9aLqhAGerWN160bZ2iLASWQA2mVR8/jzoWm2ysJqBH77S+EgqWTcECdLYoSi1+dsx1y6MC9ovp0K//O4O1Dg3ZArdRqoVhcAlcOMQTe0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712787621; c=relaxed/simple;
+	bh=5PVb9Pb1X0xb2NBuNAs1Bim6OEHqVhei2PV3+uS/njQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=lARwJHTTLlBJK3ajgqyOKsZ8EMY+3l4WffCemvpYRKygYUmahUaBSDNfwMM+60ZWmiCuyzIJeBkYzjJwvXZiteCFsj+LvqXwOwtHY3EvrklwM6IfmW73F1H4NN30IINOn7bfEAJGRgIZFKPECtzAhptW9mTkLn7RGKNcee6w0wU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PV1BdBGC; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="dteWCXYQ"
-Received: from rn-mailsvcp-mta-lapp04.rno.apple.com
- (rn-mailsvcp-mta-lapp04.rno.apple.com [10.225.203.152])
- by ma-mailsvcp-mx-lapp01.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0SBQ004HUWHRGT20@ma-mailsvcp-mx-lapp01.apple.com> for
- linux-kernel@vger.kernel.org; Wed, 10 Apr 2024 14:17:53 -0700 (PDT)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com;
- h=mime-version : content-transfer-encoding : content-type : from : to : cc :
- subject : date : message-id : in-reply-to : references; s=20180706;
- bh=Zb4qSLbdX8jyBOZB1vfZMuFlfmvUIt03Ab95Bnrn+Vw=;
- b=dteWCXYQxAKcXXJyCpKkcxW3Nib5ozjuh8KTt7G2FKrc803XjLRVkJFvIhrkDaIGdQQS
- enZRmFrS7uvrV9qyp/WrW1qYCeRvyvNTh2hlwC0AetNBu8NLQa3sSTSRNSFl1K9kR/Wi
- eOKlGK2A+8TjKfqdEacAimx7jXCG5G6yApSbZnplvri/7xspjh6i/O+v/nW/A93eEzOF
- g8LPFySTH4Oe0Qv2eXIuTL6uEXF0zMQWhBtvRed7j5TY+D5hxQrEuznmw0wLN7kjKSk4
- PIcIuv8d3Hk0TuPI8LWtTHdNC4KN5q5bDAHWMPO8le/DedQsY4gnzxuW8EI15NC72F1q Ng==
-Received: from rn-mailsvcp-mmp-lapp03.rno.apple.com
- (rn-mailsvcp-mmp-lapp03.rno.apple.com [17.179.253.16])
- by rn-mailsvcp-mta-lapp04.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) with ESMTPS id <0SBQ00920WHP3NI0@rn-mailsvcp-mta-lapp04.rno.apple.com>;
- Wed, 10 Apr 2024 14:17:50 -0700 (PDT)
-Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp03.rno.apple.com by
- rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023)) id <0SBQ00E00WFDM000@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
- 10 Apr 2024 14:17:49 -0700 (PDT)
-X-Va-A:
-X-Va-T-CD: 062083411fbdfe5b9668648d0dddd4c2
-X-Va-E-CD: abda6b097ca298131272d100f832e7b1
-X-Va-R-CD: 2510821dd2dd4e6582baa96a6b1cf6d9
-X-Va-ID: a6f2dfa7-7aaa-4ef5-b815-2be5cf783d78
-X-Va-CD: 0
-X-V-A:
-X-V-T-CD: 062083411fbdfe5b9668648d0dddd4c2
-X-V-E-CD: abda6b097ca298131272d100f832e7b1
-X-V-R-CD: 2510821dd2dd4e6582baa96a6b1cf6d9
-X-V-ID: 75e69c48-0d5d-49d4-8082-0485a2f69f66
-X-V-CD: 0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PV1BdBGC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712787620; x=1744323620;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=5PVb9Pb1X0xb2NBuNAs1Bim6OEHqVhei2PV3+uS/njQ=;
+  b=PV1BdBGCeVZjA1UlUXwzlqCgSFJG9EFF9WN4FTdb/1M/iTZW4VlLPj/n
+   ht9ymtNxFvvA+q6Dc4/kHe63n8rujNXqEx6pShW0RyGEj71/7KlvnrZeO
+   LOGRYQB5+o6p8+SV5JUPAwedI7PW357Edyf2uzbDguASxR0GFip5rBCjn
+   Q+0qzNWitTgOgkxg91JpheGzpQbfG0NKlK9MxL2suVvs1o+h8zrXIHBre
+   1yV0gWAi3oARrkiFZLir7DeECtIKC1HHDETCYn12pdls3a2m+IJ2glZb4
+   8DqUSwqrqZWoo+3GOxNwR7xYUZLxvTSvV5dHTh+8eJ9eevX7Fbi2k0s0l
+   A==;
+X-CSE-ConnectionGUID: GBIHga9hSHyeK5WY+ioJhg==
+X-CSE-MsgGUID: e+EBMOePRXKEfuyhPxTrxw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="30662552"
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="30662552"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 15:20:19 -0700
+X-CSE-ConnectionGUID: 2AGw+AvESXyTkNp6fsE5HA==
+X-CSE-MsgGUID: oEVxE4WCQlOUlXoQbyTeGg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="25479649"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Apr 2024 15:20:19 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 10 Apr 2024 15:20:18 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 10 Apr 2024 15:20:18 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 10 Apr 2024 15:20:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lnHvcfugS9Vb0NzIL11sJ7SOn+3aOD8Nax2MEHSMdvcoLQPZ3RWZg99Dg+yWUx2IisL8TY+DTMCJEsu5InU/wQowW++uVFGu1EJjpbre9LXxxxzr39PwNISLNCWv0TKDylzV5UYGnDJ/IvNXeB4IgohniaJ+2SOHVMFoF/zgXf9xERAf8RoltHOEO2zHCbQ6T/2IXKKDFUh1UX85I5I8XbTSzCyCQaadFIrsWeu6AO7wkNqUSHeHbvnIkyFzyUNQoEC8oIk4+xBKQ2qF78NXQy/u0gCRBjdZDYbiNTqeQIdofeNTQRF+flH6QgD8Sn2EUdlRhJanGEXz9Lsl+0Kovg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/jIUqYoy6YUdbf9CDv7zkUq4wAE02MHjVeMHBmWhXq8=;
+ b=CjKqMB0yAJTRznYg0q5y6DujVlmZexA5Q+fHBceKD7e+pWNSDmf9eFJOLvFBwedLCJ+8gRyjw4gd04zgznRY9lLOdCZ99BrpzwUhW8Aw4XVhMljtoUM6LFQZMxjVdgPtCqUcXQLjy9BgCef7fYxWuPYcSnwQ1uelCkhF4fn6WEkqH3gxU84b8QoGnuEWS29Z/mkXluMBPAhkJ6ZP3hQ+MHAEIsTN+xgFuOqsmpyotor3wCZ8NMdEE4CP6QlUElt9ulgp7PSLcnrvWUkdGckapfZGqPVgn3QQyk5ADnKZzzGeJLYPa7toMh9fioe1DVe6kbTM8BzHFgNFbtq51fhB3A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+ by DS0PR11MB6349.namprd11.prod.outlook.com (2603:10b6:8:ce::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 10 Apr
+ 2024 22:20:16 +0000
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::b383:e86d:874:245a]) by CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::b383:e86d:874:245a%5]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
+ 22:20:16 +0000
+Message-ID: <22153526-f764-420e-84f1-851006c67e76@intel.com>
+Date: Wed, 10 Apr 2024 15:20:15 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2] net: sparx5: flower: fix fragment flags handling
+To: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>,
+	<netdev@vger.kernel.org>
+CC: Steen Hegelund <Steen.Hegelund@microchip.com>, Lars Povlsen
+	<lars.povlsen@microchip.com>, Daniel Machon <daniel.machon@microchip.com>,
+	<UNGLinuxDriver@microchip.com>, "David S. Miller" <davem@davemloft.net>,
+	"Eric Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, <linux-kernel@vger.kernel.org>
+References: <20240410095224.6372-1-ast@fiberby.net>
+Content-Language: en-US
+From: Jacob Keller <jacob.e.keller@intel.com>
+In-Reply-To: <20240410095224.6372-1-ast@fiberby.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW4P220CA0017.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::22) To CO1PR11MB5089.namprd11.prod.outlook.com
+ (2603:10b6:303:9b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-version: 1.0
-Content-transfer-encoding: 8BIT
-Content-type: text/plain; charset=UTF-8
-Received: from mr41p01nt-relayp01.apple.com ([17.115.0.54])
- by rn-mailsvcp-mmp-lapp03.rno.apple.com
- (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
- 2023))
- with ESMTPSA id <0SBQ00HCRWGK4E00@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
- 10 Apr 2024 14:17:48 -0700 (PDT)
-From: Zayd Qumsieh <zayd_qumsieh@apple.com>
-To: zayd_qumsieh@apple.com
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Mateusz Guzik <mjguzik@gmail.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
- Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
- Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
- Baoquan He <bhe@redhat.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>,
- Joel Granados <j.granados@samsung.com>, Dawei Li <dawei.li@shingroup.cn>,
- Andrew Morton <akpm@linux-foundation.org>,
- Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
- Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
- Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
- Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
- Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] tso: aarch64: allow userspace to set tso bit using prctl
-Date: Wed, 10 Apr 2024 14:16:41 -0700
-Message-id: <20240410211652.16640-4-zayd_qumsieh@apple.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-reply-to: <20240410211652.16640-1-zayd_qumsieh@apple.com>
-References: <20240410211652.16640-1-zayd_qumsieh@apple.com>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|DS0PR11MB6349:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 43jgfCwanTOHtKWyTGYUa2pIZHOuBdkwzqcRKDfpY4uu6Jxo/VtLeIg6poWpworXG72bNlTG5plxVLNsPBDxVt1JM4D8OVrt4X8dZSEuIZdcRRDDgiU0LWqHMp4Axq8eTs0WMH2jPbpq0i1ogVFkStxiMuOOOsAt/LZNHk1R8IhWreP2GaN7pCb3wspkvokIQnVNMpNhANVkF6yKeTz/QDhPAD0aYySoSZE0EdsWH03fsQiQB7rppdDJAJ6HmreilUst9CwCEzAmr8HenDY1tK7HA3fxZT4xvNYacyzkuIinuUKWBGlUSNNzu/XyEjeLD4hYGDZeZP6EPI9H1DJPFWKVQmwVLLKxx2sUrqZBTpMmBQ2QEUI8R5x99pSNpMEpzvvByAti87xPyT0PRHiJvIVMZGhcajma74dm9KSCjY9NShjpBVqyqvHBRLVFHOy1nXuz4Kxq5bWCl2rIrqLy/i0mdlID7BcxJm7KxtW/FEnSDSj122cnoSCt/qEwOrmmDuR+MaI4TGIaG4MTnAFEtS9mgZzakg+FmDbEgqn4xEYZvtwFHMVuikX2CdiAcW1MVQZ9j8YPsgmcwHtiTHaXSkL+6S7NKoyjMyFz/FZELke6/EDGnZ/9CSPXSxS6YnkGiEpWQyDaqVnYdp9gMaj/WkO9nb2tLDexsegtEkOFcL4=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RklDeXQvK3RzamdNNkwyMll1aVEwaERlRTF5azQ1TitYREZqTVdVUktBL004?=
+ =?utf-8?B?SEp5S3kzUTNwUTlRdGxyVEVyODM4eGMraVJNUTg1MG9OR3ZsSisrUHhBbDMy?=
+ =?utf-8?B?cmUvWlBhZklGWFNhTGR3OE5iYWtrcjJOV3k5aHd2U2NsdW9iMkR6NlU3Umdt?=
+ =?utf-8?B?eCtnb0ZmRGhEZHRxSVBLUlFqNjFZQTVxYVgwSmdEcEVQRFdNV3Bjcnc2NEJC?=
+ =?utf-8?B?N0NGMTJKdmw5a1NPNEdKeXR2QnFIUzBTWExrQkRubkJGUEhtS3h5SDlCc3Vw?=
+ =?utf-8?B?K2xWcFV2YjROUlV5cW95MW4zZnduWHZpVTA3bHZUZDl1cG1mTWdrOEo3VDl1?=
+ =?utf-8?B?c3lmNDJKYnNIdFVCdUhjTWc2cVR1ZWVHa2EwWGRQaXQrMlhNZmh2WXNsOTlk?=
+ =?utf-8?B?L3hoamQycElweGJGaWNDSmFuN0trekNEcUVxaDIyRUdkUUZvNnhyNVpzRDd6?=
+ =?utf-8?B?c3doVWwwTEZSRUdrQ3dSbW1XR1htdFhEbFVycmROSHhFUlo1ZTM3bXJjcEsr?=
+ =?utf-8?B?azlidHQvT0NMN3RmSCtySG1BbCtadXZwa0JoNWlkL091SW45d1RzS0hUSWhw?=
+ =?utf-8?B?em5vZjRaMmN6YkIxRldmdUZBNHZ6S2dFTmpEaFZqVlR4TEdLYlJ1ZlhjRzJW?=
+ =?utf-8?B?QnJJZUM3UDVNd3M0V0xkZS82MW04V0FRNGhTaGVRT2VMSU9ZYjhVWUFGbytJ?=
+ =?utf-8?B?R2xDbzB0SldXQkV5bklaalQyZ1BBbTRLMXRQRDBVNTRBdGRpclRFdkNTbFdr?=
+ =?utf-8?B?TDUwME9EbGRLMExlREkwM0o5UzkwRU9qTXpmSTM2WFpNYkVOaDVuV3Z5YjRy?=
+ =?utf-8?B?aitCaUlNVTlYcFVKMmJod1JCVWJMUXQ1azdYQ3c4MHZDdHJZKzlsanRjSGdu?=
+ =?utf-8?B?UU40dnV0Ym44MUJiNnBUR1p3dE0zVG82Tmt1Y2FJd3hlYzBFeFl1cXFoZ08y?=
+ =?utf-8?B?YkVueC9qMFlLaHpkV3BWaDQzbW1GNHlXWlEzQS8vcmQ0dGlkTis5YjlJOFg0?=
+ =?utf-8?B?UXVJS1M3UVVOZHM2b2hyK3RiWHphY1ZOazBuQ3RIR0FGSUNQNi9rMGs3SUJy?=
+ =?utf-8?B?MHNEVk0xUmN3L0V6dFViQjFDRjBxeENMKzZ0ZGFrKzM4c2NuTjZiTWtCQ0gx?=
+ =?utf-8?B?SWluM1htZC9sdzZZd3pnUDlTR3dGeXc0YTREN3daT012aVhDYXU0RWZnazRm?=
+ =?utf-8?B?elA2MWNucllaVXFsUXVMR2NCYjlDWDZjT3hSVEVJeU0rTXd2MVlaTFV0V2c0?=
+ =?utf-8?B?UFl3RWJMVnYxWWJ3T0ZlMkhEbFJFcGhxclBvUmhLUUVHWmRkSHhUcytLSzVi?=
+ =?utf-8?B?R0NwSUY0UFI1TnYzUHZDZ1IxRmtEbEgvVHBUYU5KVDREYTJOa3UzK2loUGdx?=
+ =?utf-8?B?VisrQTZFbURvSEtmZ01Zc2E4Sk1ocHByRFE1azlqMWQ3Vmd1cUxqU3pIVHJv?=
+ =?utf-8?B?cWRGRkhpUVFIQ1pCT2JqaWhwR3J6UzFQejMwQWZRcXVCNFZTb29QKzRJOUY4?=
+ =?utf-8?B?b0dtZ2M0anhsUi95c1VveCtFVGNrV1Nmb0RtS1ZISHJGSE1DblNMSFVCdVN6?=
+ =?utf-8?B?N1lwU09LdnFibDBUYitCejZMRHl0ZThLbnZPS3VVYzRsVGxtWFdpWnRWNWl1?=
+ =?utf-8?B?ZzFIWkxtcHVCaE9BRlBkY1huSWZFVG8yMGpYWDd0bmVlSUFEcGJnWE0wWGhP?=
+ =?utf-8?B?eDFCaWd2cm9ZVkZCazI2N0wwc2FqSHNoMUpUL2xBZFBOYUNaUmYxZU5WWGt5?=
+ =?utf-8?B?dDQ0c0NCT1BrYXVscHk0b2dLVGxCRU1nWVdySTlrYytmbDJRR2FGODhPRFBw?=
+ =?utf-8?B?SmhWUjM1cHQxS0NaMGNVOVgyQlo0NUVjSk9EQlBiWXVjODIrYUREYXRZQ0VW?=
+ =?utf-8?B?dGJuNnIyOXprblVLU0d2WThKbjdzZ2U2ZFFwekRJQ1JBZEZZODhsMG1GTVF3?=
+ =?utf-8?B?T0Q3NFpyR0ZqOVRibFJ0bHNUelZzbW9EdzNOazJqZzNsSjRCT3hVanVVTEQ4?=
+ =?utf-8?B?ZjNLVkh2NVJQR2l5azgzQ1gwUFFDV01FeU8vdDdUS1pBWVY0Rk9oRjR1dkxq?=
+ =?utf-8?B?Vm96UGxkd2hmSHNvdW4xdjAyY3Rlb3R2eTUxTk9Hd2dnSXlsSllsNzFxWEVG?=
+ =?utf-8?B?WDVmV2tHQ002enBvZ296SWJ5ZlE4bWFTTVRnWU5kaVdQVmFPMFNqR0hrbWxn?=
+ =?utf-8?B?bFE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c7267e43-9fdf-4ba7-8b85-08dc59ac6670
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 22:20:16.8247
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EbYyZ29/jiX3dxjP0j4tLSn0POdYLpCVhFwBuLAK20DYdhCY8e+m0oLsLc/GA18izC/kyWC3tTo2XfYx0p2GS5Qi2mO5MEcgtBCICUn0rj0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6349
+X-OriginatorOrg: intel.com
 
-Add a new prctl to allow userspace to change the TSO bit. This is
-useful for emulators that recompile x86_64 to ARM64. Such programs used
-to need to emulate TSO by hand, which has massive performance
-ramifications. With this change, emulators can now use prctl to set the
-TSO bit at will, and avoid emulating TSO.
 
-Signed-off-by: Zayd Qumsieh <zayd_qumsieh@apple.com>
----
- arch/arm64/Kconfig           |  6 +++++
- arch/arm64/include/asm/tso.h |  1 +
- arch/arm64/kernel/process.c  | 52 ++++++++++++++++++++++++++++++++++++
- arch/arm64/kernel/tso.c      |  1 +
- include/uapi/linux/prctl.h   |  9 +++++++
- kernel/sys.c                 | 11 ++++++++
- 6 files changed, 80 insertions(+)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 35162e5a0705..ecb7e1f080af 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -2088,10 +2088,16 @@ config ARM64_TSO
- 	  dynamically switched between the default ARM64 memory model
- 	  and x86_64's memory model (TSO).
- 
-+	  This option enables the support for toggling TSO mode for
-+	  userspace threads.
-+
- 	  Selecting this option allows the feature to be detected at
- 	  runtime. If the CPU doesn't implement TSO mode, then this
- 	  feature will be disabled.
- 
-+	  Userspace threads that want to use this feature must
-+	  explicitly opt in via a prctl().
-+
- endmenu # "ARMv8.5 architectural features"
- 
- menu "ARMv8.7 architectural features"
-diff --git a/arch/arm64/include/asm/tso.h b/arch/arm64/include/asm/tso.h
-index 405e9a5efdf5..cf31c685b1dd 100644
---- a/arch/arm64/include/asm/tso.h
-+++ b/arch/arm64/include/asm/tso.h
-@@ -13,6 +13,7 @@
- 
- int modify_tso_enable(bool tso_enable);
- void tso_thread_switch(struct task_struct *next);
-+int arch_set_mem_model(struct task_struct *task, int memory_model);
- 
- #endif /* CONFIG_ARM64_TSO */
- #endif /* __ASM_TSO_H */
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 3831c1a97f79..2b0e9a5331e0 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -763,3 +763,55 @@ int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
- 	return prot;
- }
- #endif
-+
-+static int arch_set_mem_model_default(struct task_struct *task)
-+{
-+	int return_error = 0;
-+
-+#ifdef CONFIG_ARM64_TSO
-+	int modify_tso_enable_error = modify_tso_enable(false);
-+
-+	if (modify_tso_enable_error == -EOPNOTSUPP)
-+		// TSO is the only other memory model on arm64.
-+		// If TSO is not supported, then the default memory
-+		// model must already be set.
-+		return_error = 0;
-+	else
-+		return_error = modify_tso_enable_error;
-+
-+	if (!return_error)
-+		task->thread.tso = false;
-+
-+	return return_error;
-+#endif
-+
-+	return return_error;
-+}
-+
-+#ifdef CONFIG_ARM64_TSO
-+
-+static int arch_set_mem_model_tso(struct task_struct *task)
-+{
-+	int error = modify_tso_enable(true);
-+
-+	if (!error)
-+		task->thread.tso = true;
-+
-+	return error;
-+}
-+
-+#endif /* CONFIG_ARM64_TSO */
-+
-+int arch_set_mem_model(struct task_struct *task, int memory_model)
-+{
-+	switch (memory_model) {
-+	case PR_SET_MEM_MODEL_DEFAULT:
-+		return arch_set_mem_model_default(task);
-+#ifdef CONFIG_ARM64_TSO
-+	case PR_SET_MEM_MODEL_TSO:
-+		return arch_set_mem_model_tso(task);
-+#endif /* CONFIG_ARM64_TSO */
-+	default:
-+		return -EINVAL;
-+	}
-+}
-diff --git a/arch/arm64/kernel/tso.c b/arch/arm64/kernel/tso.c
-index 9a15d825943f..44749f1f5e10 100644
---- a/arch/arm64/kernel/tso.c
-+++ b/arch/arm64/kernel/tso.c
-@@ -58,4 +58,5 @@ void tso_thread_switch(struct task_struct *next)
- 	}
- }
- 
-+
- #endif /* CONFIG_ARM64_TSO */
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 370ed14b1ae0..62b767e6efcf 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -1,4 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright © 2024 Apple Inc. All rights reserved.
-+ */
-+
- #ifndef _LINUX_PRCTL_H
- #define _LINUX_PRCTL_H
- 
-@@ -306,4 +310,9 @@ struct prctl_mm_map {
- # define PR_RISCV_V_VSTATE_CTRL_NEXT_MASK	0xc
- # define PR_RISCV_V_VSTATE_CTRL_MASK		0x1f
- 
-+/* Set the CPU memory model */
-+#define PR_SET_MEM_MODEL		71
-+# define PR_SET_MEM_MODEL_DEFAULT	0
-+# define PR_SET_MEM_MODEL_TSO		1
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index 8bb106a56b3a..94c18700b849 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -3,6 +3,7 @@
-  *  linux/kernel/sys.c
-  *
-  *  Copyright (C) 1991, 1992  Linus Torvalds
-+ *  Copyright © 2024 Apple Inc. All rights reserved.
-  */
- 
- #include <linux/export.h>
-@@ -2315,6 +2316,11 @@ int __weak arch_prctl_spec_ctrl_set(struct task_struct *t, unsigned long which,
- 	return -EINVAL;
- }
- 
-+int __weak arch_set_mem_model(struct task_struct *task, int memory_model)
-+{
-+	return -EINVAL;
-+}
-+
- #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
- 
- #ifdef CONFIG_ANON_VMA_NAME
-@@ -2760,6 +2766,11 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 	case PR_RISCV_V_GET_CONTROL:
- 		error = RISCV_V_GET_CONTROL();
- 		break;
-+	case PR_SET_MEM_MODEL:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = arch_set_mem_model(current, arg2);
-+		break;
- 	default:
- 		error = -EINVAL;
- 		break;
--- 
-2.39.3 (Apple Git-146)
+On 4/10/2024 2:52 AM, Asbjørn Sloth Tønnesen wrote:
+> I noticed that only 3 out of the 4 input bits were used,
+> mt.key->flags & FLOW_DIS_IS_FRAGMENT was never checked.
+> 
+> In order to avoid a complicated maze, I converted it to
+> use a 16 byte mapping table.
+> 
+> As shown in the table below the old heuristics doesn't
+> always do the right thing, ie. when FLOW_DIS_IS_FRAGMENT=1/1
+> then it used to only match follow-up fragment packets.
+> 
+> Here are all the combinations, and their resulting new/old
+> VCAP key/mask filter:
+> 
+>   /- FLOW_DIS_IS_FRAGMENT (key/mask)
+>   |    /- FLOW_DIS_FIRST_FRAG (key/mask)
+>   |    |    /-- new VCAP fragment (key/mask)
+>   v    v    v    v- old VCAP fragment (key/mask)
+> 
+>  0/0  0/0  -/-  -/-     impossible (due to entry cond. on mask)
+>  0/0  0/1  -/-  0/3 !!  invalid (can't match non-fragment + follow-up frag)
+>  0/0  1/0  -/-  -/-     impossible (key > mask)
+>  0/0  1/1  1/3  1/3     first fragment
+> 
+>  0/1  0/0  0/3  3/3 !!  not fragmented
+>  0/1  0/1  0/3  3/3 !!  not fragmented (+ not first fragment)
+>  0/1  1/0  -/-  -/-     impossible (key > mask)
+>  0/1  1/1  -/-  1/3 !!  invalid (non-fragment and first frag)
+> 
+>  1/0  0/0  -/-  -/-     impossible (key > mask)
+>  1/0  0/1  -/-  -/-     impossible (key > mask)
+>  1/0  1/0  -/-  -/-     impossible (key > mask)
+>  1/0  1/1  -/-  -/-     impossible (key > mask)
+> 
+>  1/1  0/0  1/1  3/3 !!  some fragment
+>  1/1  0/1  3/3  3/3     follow-up fragment
+>  1/1  1/0  -/-  -/-     impossible (key > mask)
+>  1/1  1/1  1/3  1/3     first fragment
+> 
+> In the datasheet the VCAP fragment values are documented as:
+>  0 = no fragment
+>  1 = initial fragment
+>  2 = suspicious fragment
+>  3 = valid follow-up fragment
+> 
+> Result: 3 combinations match the old behavior,
+>         3 combinations have been corrected,
+>         2 combinations are now invalid, and fail,
+>         8 combinations are impossible.
+> 
 
+Appreciate the detailed analysis with the lookup table. This is a bit
+more opaque but a maze of combinations would be even less readable and
+maintainable.
+
+Makes sense.
+
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
