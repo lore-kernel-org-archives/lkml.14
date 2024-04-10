@@ -1,79 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AC915E801;
-	Wed, 10 Apr 2024 13:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7650916131C;
+	Wed, 10 Apr 2024 13:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712755201; cv=none; b=STynnCeTKrc2r0GHMxqVYHCTVKqawsF5y9Oq0JM84TPJlueM9nH6NPCV9YGSflLMB8/KQk7NbarEHOlSAd2hIB/EKQJda0ES1Caci7EwOy3x7NIimZuTQN/xDgeGDf4DaLK8ipiXz+X/nzCzDxvPaSjtq1axZaFmQtzQTVajTDE=
+	t=1712755213; cv=none; b=bVqE+FeO33Ntxo8FcetkH9vEe/9xXlv4xZxrWvNjIFZaZaKJ3x0SuH6ZREAk4qtoq0fkYlhC6NAgtAfE4E0hby320rdj0M4hjYWjirItwUbHOxwzaVwzneG8+9bKxNbe9LBBpi0JkU6wi6Gi4i1XhVmbPxwQ9Mp4bXVoHtOqTFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712755201; c=relaxed/simple;
-	bh=Y2xFVKVJYXpxExcTVw1OG0qaRy+eheyCTegub5oKido=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BH4HxZFGGpZMPM/DTIdOXFVwl1prWz9xFC2lPkQoBz7hZgL4G3b5QATW1JIBEOocDgIw9fs75JYt72DGvzI+39n1NENNY2uu+AOHGon3bQ+eoFzNnsCtLspfbic54Jfr+buC2oGkAVx6bRmYLVYaDWgI2qTIYuLOFyRMVCwK0oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA4EC433F1;
-	Wed, 10 Apr 2024 13:19:58 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH 2/4] LoongArch: Update dts for Loongson-2K2000 to support ISA/LPC
-Date: Wed, 10 Apr 2024 21:18:02 +0800
-Message-ID: <20240410131804.2165848-3-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240410131804.2165848-1-chenhuacai@loongson.cn>
-References: <20240410131804.2165848-1-chenhuacai@loongson.cn>
+	s=arc-20240116; t=1712755213; c=relaxed/simple;
+	bh=uHVxn6S6zS02geIFwmBs5SHYJUz02pa08bMj+uvJEIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PM269erX+HQnG2+JC6DhYHeewdERzal8Op7wzfvTUZ/Xo4bRKzl5Qny5oVsgCqL+0QhPXxlbrG+imqQ0Je96e45yhlUaBunLlDG8YwRfFoaE/vca0O4SQe5kZr3He+CyT5c/DxV8fmNXt28skkFl3ZY393JomPJ6ZKQFwm6jQ3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=amlRCAAy; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="amlRCAAy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712755211; x=1744291211;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uHVxn6S6zS02geIFwmBs5SHYJUz02pa08bMj+uvJEIw=;
+  b=amlRCAAyA6a+vy7q/6P0ppurWsVmJLsuPuxAkvvM7lTLVmfDfgGPaITe
+   AuQnwqo2KaudXKWuJtktTZ+a8Z7mApoIuQ6RXOySEIMbOqjOmIXMS+3th
+   94N41a3qunFc9aDmGhNX0zLPCWXhiiJ0tk1i5+6nYg9THpLsbWuwSVsYW
+   uKpczIv3/Bm92mER6ESggqPWIOe333moWx/v7sTBF/w2F0tQ3GFmXA63r
+   KofUuymui/WaYlk1OB79jTiRZ6ffgGwM4W8MZuURlteiVcy55849qfDvS
+   YY0ub/nKkUggmCdowGkxmPZ1f/VnywtcesPxyP0OkDNnFCyWxUWqDMJJd
+   Q==;
+X-CSE-ConnectionGUID: WHiwNWEZRoyME+MhgQ4zTw==
+X-CSE-MsgGUID: Wh8fovDJRVG3S4sICspMVw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7988973"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7988973"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:20:10 -0700
+X-CSE-ConnectionGUID: eycmoRiYS8y3Zs+HD8krtA==
+X-CSE-MsgGUID: AHdQNHWLRXqZQdb/dwvMfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="25186819"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:20:10 -0700
+Received: from [10.212.84.148] (kliang2-mobl1.ccr.corp.intel.com [10.212.84.148])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0066920B573A;
+	Wed, 10 Apr 2024 06:20:08 -0700 (PDT)
+Message-ID: <55528313-d858-41d2-b438-77bbc0e514f0@linux.intel.com>
+Date: Wed, 10 Apr 2024 09:20:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf/x86/rapl: Add support for Intel Arrow Lake
+To: Zhang Rui <rui.zhang@intel.com>, peterz@infradead.org
+Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com
+References: <20240410124554.448987-1-rui.zhang@intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240410124554.448987-1-rui.zhang@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Some Loongson-2K2000 platforms have ISA/LPC devices such as Super-IO,
-define an ISA node in the dts file to avoid access error. Also adjust
-the PCI io resource range to avoid confliction.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/boot/dts/loongson-2k2000.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k2000.dtsi b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-index a231949b5f55..dcee9f3783fd 100644
---- a/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-+++ b/arch/loongarch/boot/dts/loongson-2k2000.dtsi
-@@ -51,6 +51,13 @@ bus@10000000 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 
-+		isa@18400000 {
-+			compatible = "isa";
-+			#size-cells = <1>;
-+			#address-cells = <2>;
-+			ranges = <1 0x0 0x0 0x18400000 0x4000>;
-+		};
-+
- 		pmc: power-management@100d0000 {
- 			compatible = "loongson,ls2k2000-pmc", "loongson,ls2k0500-pmc", "syscon";
- 			reg = <0x0 0x100d0000 0x0 0x58>;
-@@ -141,7 +148,7 @@ pcie@1a000000 {
- 			#size-cells = <2>;
- 			device_type = "pci";
- 			bus-range = <0x0 0xff>;
--			ranges = <0x01000000 0x0 0x00008000 0x0 0x18400000 0x0 0x00008000>,
-+			ranges = <0x01000000 0x0 0x00008000 0x0 0x18408000 0x0 0x00008000>,
- 				 <0x02000000 0x0 0x60000000 0x0 0x60000000 0x0 0x20000000>;
- 
- 			gmac0: ethernet@3,0 {
--- 
-2.43.0
+On 2024-04-10 8:45 a.m., Zhang Rui wrote:
+> Arrow Lake RAPL support is the same as previous Sky Lake.
+> Add Arrow Lake model for RAPL.
+> 
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 
+The series looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> ---
+>  arch/x86/events/rapl.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index fb2b1961e5a3..6bfb78d5b37e 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -808,6 +808,8 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
+>  	X86_MATCH_INTEL_FAM6_MODEL(RAPTORLAKE_S,	&model_skl),
+>  	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE,		&model_skl),
+>  	X86_MATCH_INTEL_FAM6_MODEL(METEORLAKE_L,	&model_skl),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE_H,		&model_skl),
+> +	X86_MATCH_INTEL_FAM6_MODEL(ARROWLAKE,		&model_skl),
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
