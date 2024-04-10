@@ -1,111 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F316EBE4;
-	Wed, 10 Apr 2024 15:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BBA16E871
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:34:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763220; cv=none; b=UtQIH4EOPcWFxD7STJgNk3kITCA39X/7Mb/0BBUV5vKtnUzBzMfgWLZJq34PzZgXSAEYKv/eDSXHLKcCAJjbrR4cev93+Muy4BOnjoRttj1OYej6UhR2Tzn7f9AS/yF+t7aw35m6Kt1D0IUM6mkkVkSBTj870l/ImWG0Dsfv0VY=
+	t=1712763265; cv=none; b=e7iagwR7vJK3UVcIDTOmP6jDP6w1c2Hh/eLfefMYPNjdM7vcMaOIoRvLU5fA78hMmtqHZJZ12utVv3YImS08EJRCmkmfyHT7hCZ8/ZpflBjYPBF+U5APaU+Zn+Jqy3b/vqtJbRrogQFEqvUHu5b+4QAoct6Mo/lPNdsmbQwyzHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763220; c=relaxed/simple;
-	bh=92ZRImfzi1uBmz5wPYU8Kbhx0TjrM28aNmBdmI8IclA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XWv2xAQMoBUGG4DOEnd/bI3AF+K+3MlVZM+mjtNX6XSgx8Vtt5peScEBb/+dKvS7RkkGxNNl5plx3PO5yjrFanPf9GQjzMWuUrp3J+gfnGxywrSLuGQrWxZGcPo/fxwXspG7Hw6s9OB9GVFNpRb/FdpNB6dvrc4Eg56tnLbnwZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9A4C433F1;
-	Wed, 10 Apr 2024 15:33:37 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:36:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
-Message-ID: <20240410113614.39b61b0d@gandalf.local.home>
-In-Reply-To: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712763265; c=relaxed/simple;
+	bh=HnzozCvOS1q27gnKJVvpU7CHZz9gMEPBCAW7+Cc7CVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JAwdYxz78MkZxi2hFDM2AsACnc5T6VK8ZLF9FX3C8ued7A3e0pnKiryQKKodgY9DBdnx2HpujHVhWmh9Fd0aIPvYLzEjmWYeP9a5MIibut4ajaypYT084J4uRmuH01/UvfKQGlpo99bhutik/sCxni4dac4zd5zutPv6aTlJs3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVbAmK+8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVbAmK+8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88590C433F1;
+	Wed, 10 Apr 2024 15:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712763265;
+	bh=HnzozCvOS1q27gnKJVvpU7CHZz9gMEPBCAW7+Cc7CVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CVbAmK+8SUeJoukHHawbCIya8ngLTbHf6Eg59RFqOJ5x5ulWk3u8qtRwZwRJAd+nh
+	 GpLmyqE2v9zegDypKQ1HJ83rAh/j+CAsf3CbVAiS2QtmmaFFBK/7CO1cGrgW9F6DrN
+	 oPc9Yk/dWpQglCJT9OU9dfkTjIfrcGHwwjo/x1phTjufzt5dkl/zpZQ/Zzaqtcx7Di
+	 7JHxqPh3rsy6LSxAjjHdJDjCJfmZwXuYvgwlWp8HUf54Y+TNs8/pnzvMkmcCZPiexG
+	 4BE7eDFabQGKPAShg6pUZR23tNxa0Pfd3sNx5uOrmiyGfWjj8gMM/J4ThnUk+etzA5
+	 9QY4KWuUWa0KQ==
+Date: Wed, 10 Apr 2024 16:34:19 +0100
+From: Will Deacon <will@kernel.org>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, jonathan.cameron@huawei.com,
+	prime.zeng@hisilicon.com, linuxarm@huawei.com,
+	yangyicong@hisilicon.com
+Subject: Re: [PATCH 1/2] perf: arm_pmu: Only show online CPUs in device's
+ "cpus" attribute
+Message-ID: <20240410153419.GA25171@willie-the-truck>
+References: <20240410095833.63934-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410095833.63934-1-yangyicong@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Mon, 01 Apr 2024 23:48:52 +0000
-Justin Stitt <justinstitt@google.com> wrote:
-
-> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
-> index ba2d96a1bc2f..274c297f1b15 100644
-> --- a/include/trace/events/rpcgss.h
-> +++ b/include/trace/events/rpcgss.h
-> @@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
->  		__entry->timeout = timeout;
->  		__entry->window_size = window_size;
->  		__entry->len = len;
-> -		strncpy(__get_str(acceptor), data, len);
-> +		memcpy(__get_str(acceptor), data, len);
->  	),
->  
->  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
-
-WTF, that code is just buggy. Looking at the rpcgss_context event we have:
-
-> TRACE_EVENT(rpcgss_context,
->         TP_PROTO(
->                 u32 window_size,
->                 unsigned long expiry,
->                 unsigned long now,
->                 unsigned int timeout,
->                 unsigned int len,
->                 const u8 *data
->         ),
+On Wed, Apr 10, 2024 at 05:58:32PM +0800, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
->         TP_ARGS(window_size, expiry, now, timeout, len, data),
+> When there're CPUs offline after system booting, perf will failed:
+> [root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
+> Error:
+> The sys_perf_event_open() syscall returned with 19 (No such device) for event (cpu-clock).
+> /bin/dmesg | grep -i perf may provide additional information.
 > 
->         TP_STRUCT__entry(
->                 __field(unsigned long, expiry)
->                 __field(unsigned long, now)
->                 __field(unsigned int, timeout)
->                 __field(u32, window_size)
->                 __field(int, len)
->                 __string(acceptor, data)
-
-The __string() macro expects "data" to be a string and does *not* check
-length when copying.
-
-If anything, it needs to be:
-
-		__string_len(acceptor, data, len)
-
-as the macro code has changed recently, and the current code will crash!
-
->         ),
+> This is due to PMU's "cpus" is not updated and still contains offline
+> CPUs and perf will try to open perf event on the offlined CPUs.
 > 
->         TP_fast_assign(
->                 __entry->expiry = expiry;
->                 __entry->now = now;
->                 __entry->timeout = timeout;
->                 __entry->window_size = window_size;
->                 __entry->len = len;
->                 strncpy(__get_str(acceptor), data, len);
+> Make "cpus" attribute only shows online CPUs and introduced a new
+> "supported_cpus" where users can get the range of the CPUs this
+> PMU supported monitoring.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/perf/arm_pmu.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
 
-Then this needs to be:
+Hmm. Is the complexity in the driver really worth it here? CPUs can be
+onlined and offlined after the perf_event_open() syscall has been
+executed, so this feels like something userspace should be aware of and
+handle on a best-effort basis anyway.
 
-		__assign_str(acceptor, data);
+Does x86 get away with this because CPU0 is never offlined?
 
-Note, the length is now saved via __string_len() and not needed here.
-
-I'll go send a patch to fix this.
-
--- Steve
-
-
->         ),
+Will
