@@ -1,191 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95872D268;
-	Wed, 10 Apr 2024 04:41:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712724066; cv=fail; b=TGW9SKTRYlCUS2jfu4dIpiajQwag1XFMIn9H/EQpIddWP/BHjxydRiBnmkyiwRPdjOlU3aXP9dhB0S9LsEv+Gj81rHtRB3W1yWNLCT73xRDaNIiMR1kSoa4ZzBYMtu8EBoonqmhSbGFeVCV9Dmg/n4AnYp6D6Z78ren73B1pxIA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712724066; c=relaxed/simple;
-	bh=Wn3qjtjXHVtWJ9tTUhLwb/WZ1xbmEEvRn4XImQXUJ/A=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=QUaZOvvm2tGYAe9HBe9iNaKZSDQEAiyEbGvqH06kHhYVEYla78QFmbwBD4MXsBBF+Ydclcy8u6kxpCuiFZ0iQ0jMKowDp4NfpWu9pGkPeqePQH3gD1eeQjkbD9KILClwfyMqKYNL4aQ3DkizbcOV4hDwnsxYhBStuXLo1BMrZek=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nPh+90+R; arc=fail smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD5BC8E0;
+	Wed, 10 Apr 2024 04:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712724079; cv=none; b=Wsyk5qWG8Vk4+k3+J8/pM5R5NS6kIc9OWZmL6Ry9TpHoYP/Ud+0akN3h/50N3YJ+ZRMYUD0Fs1MYjX+homH9zr8XTWcYhB/5pL7AdmmTUhlIp62TEtKr9cb92AFexcUZJMOcXV7pMEnAyr6NxS+lFzG5p8SwdgDL1kcGO58cZRY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712724079; c=relaxed/simple;
+	bh=CvANhkT3bjU8SGaWUSOMNC3pInbPa0QZUBUNA+Qsi5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=reK4I6KMmmh66XZM6MaxZoozsi3LBf9QbHwQoJAyho0yv20LdaJGIShaR5BzEY4XaISD1iMESJDTKW0MX1czhwVicPn5Dz2dZGV3N2kyoj3fU67d8fOv14mJ6MmGK6euePxmYi0fXr483L1VEX96SeGl+NxVF+O4KNauX1iEK98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hIHHOS9H; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nPh+90+R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712724063; x=1744260063;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Wn3qjtjXHVtWJ9tTUhLwb/WZ1xbmEEvRn4XImQXUJ/A=;
-  b=nPh+90+RFwxU9laCC7xFQRhsUndAiBMkrNYuqf6HP5h9K8SCAY5m0/Te
-   RWfwpZpZ8e9tXU6RmL+foQLG/QRYzwFijVLTRbtkNKtgmu3aVH/0CPFiz
-   jHf86Z6L7KhXElj5NMIydctQeYgHZLo7NelXvACX7NkmZ6vkttVWTLP4z
-   QbJw77a7ORuJjKvMtqOFz6BwdxRXJGTS3IuKIYmK3TQipu3yqPnF0r86h
-   THCKwCODOAWv23KpXVHqVN8rkQm/7/FfqAIIeUdsKptTW5sMbhTueXRzs
-   BNoDoCZa7w9SjG37dOsUtrzvG85Oxja8+DgfhGR0FMmzffuoGtSjkZ+v0
-   Q==;
-X-CSE-ConnectionGUID: olgz3eVUSA2TWdTcsNTNYQ==
-X-CSE-MsgGUID: ng7ZvsO3Tmayzn8YDAwL9A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18676242"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="18676242"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 21:41:03 -0700
-X-CSE-ConnectionGUID: TFhlnFYcQGmTSsksOLH/Rw==
-X-CSE-MsgGUID: CG8iQFoESZuhoY2iC4QzjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25038083"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Apr 2024 21:41:03 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 9 Apr 2024 21:41:02 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 21:41:02 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.101)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 9 Apr 2024 21:40:38 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oSwXmT0vqsV1ka7SCM8R0Wq9lat6nkAAjBku23yHfvpzErrGTl3RE2+FINzJf1F+syhkVHVI2dH7iV3E7G51gs66AEcsdatFngCKVBPI3uP0yAXTofd+444fnusFSmkXeZAxZCgvVbRGZBI1ylqmCthSXdVcSaibz5D2dOyssRyJr3r3l+PXGMl5Nnst1u5z5fM7WtbUKPA/ll8LXAzxZuHb3+H3MN2pvB8ehwC/yJmGjazpNxB9VegWGIfip10juXa1JMepIjiEVU6SIQPxcCbd/Txw0R2HIEnMX1ucADydZ/Ny8SsNN3oupCuYWj6TmpgZ2N1rFNmWg9TAPtJZ1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qgeVgxyv0OeHr519O0upFvXyZhKgK+Gbhxg6P3dfOZw=;
- b=lvb0Q9+k7dO4qcEohDpA4fUHCAozo39pfYtKoAwHBiIMN5Qg2iJPIoJuYIZ1ntBAk9rI+nfJWiMo16JVKCWoRUoGFa3hs1rsj8G+IgyC48iuSg0CebxR3lNo1fbX6O2O+vxQA9OfBivCbI9S0WUZKOo+VWSLHuu1xw+Vx1lKrg37Fub4l7vFSSucZtX0sEsOEbH/qCYyhQU32aQ/tfFM/I3ueQko1CZ+fbyisu/N8PYuG0ESfUPdZ86GHMhSJRJFGrpYR5m8Ync6B0n/1lnbIKqeVlIS1THmuEiWEWHvEOggtU1qNDYIO+NrB1DS+HRx4rBiqqlUsKrN5y6nBiJ5QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SA1PR11MB8279.namprd11.prod.outlook.com (2603:10b6:806:25c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 10 Apr
- 2024 04:40:36 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
- 04:40:36 +0000
-Date: Tue, 9 Apr 2024 21:40:33 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>, <ira.weiny@intel.com>
-CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Navneet
- Singh" <navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Alison Schofield
-	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>,
-	<linux-btrfs@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/26] cxl/region: Add Dynamic Capacity CXL region support
-Message-ID: <6616184163627_e9f9f294c2@iweiny-mobl.notmuch>
-References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
- <20240324-dcd-type2-upstream-v1-9-b7b00d623625@intel.com>
- <20240404112628.0000633d@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240404112628.0000633d@Huawei.com>
-X-ClientProxiedBy: BY3PR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::19) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hIHHOS9H"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43A3VNlw031961;
+	Wed, 10 Apr 2024 04:41:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=vJX8hXgmI1cP9JeYXDNUwqcy/x7F81wYrlGr7moQXUA=; b=hI
+	HHOS9HM6rxBD1rl75le+W0C4UZfPIzHVPfwv2q9aqatEFsOU60I7ybphe+cjJcGw
+	8PKJMfzLuokD5b+HmFxoLj1GKVUQdFXns2Z+w5rXazHrfJJYJTKZ3CXWQZbCTlfi
+	/pyYC/0Kj4GIGLIjCxRrV/Xs842wCWsAvZ05e6W16tH827CTfnIOsfHjBeIg8oqG
+	1nGwtWvhHJby8dwu65d/CdDFjGch6hkTMEH7ZSxq04Kh5XkE3xUT0DuX9rQzfl/U
+	sguyVWSLpMuUgWXh/15PQT6Yivb/dAg9IsxPxlC1ZllI3zQX1JYGmw+buq0UUR2D
+	DNlN6eCocMueQqE3Clug==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xdjxh8axt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 04:41:04 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43A4f3hH008190
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 04:41:03 GMT
+Received: from [10.216.60.187] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 9 Apr 2024
+ 21:40:57 -0700
+Message-ID: <60e569d7-0d63-4b62-b666-1dd7919c8af2@quicinc.com>
+Date: Wed, 10 Apr 2024 10:10:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA1PR11MB8279:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MLzgHobsU+mvpRh3hgIPspNwyTvZ3oYksB4e35oChVP2IRb6SPTqgrGqGrVBUN2nyReQgUurIdLI5Y/71n5LnQOZ8PSUbEK4c4zL42GE5SEFNQxvFR3eVSELg+abEGlxsIzs5Hw7a6L4cVNlsES5cWxQ+u8W34s+KmwaFlZalGtAn5ixhVBLe0qjRdcLK6wPdTi/NnDNmFTic6Mm1gUbG26Ky4mPDbewGpx4j3BOqj+0J3N2ZyTGoQntMdM7N4TIIMUvNut5zx0J2ktXWucMZ4/TE/8rgbAY9ay44U+dxavklQJok08rkMCkaswrUlfWSXl6WSeKiFt6zOVYq2v6kxH1hFJQb0HO+nVVp/MHbjgtqEGX/O8fOqbcyHIP9IzkDRWKOVnkhrTufWnlzegD/QjFzGJyMQ++o7fOHfiwnp3L9l8r5cdY5GkTHq/zoKlUw3SmSbZRelBEeV3GYufgKB2CAunHqF3A4edvCF+tT7wmvsjn+Covs3I3MzayHdUzFs4KhLS3ATDAqQf9dEHD98dW6Dbk2ofeAKoluW42WBc9BmcRLf1sxGbvqSrVdub2A0YhH/N9hipHG025UWNTPgcVqCpI9F+E/IF9PcZV0pyymBsCn7JjCBnq+1Hu1Hfi26wUgw/xgqM0USWdyMtwu0+5vJ13bigBlb2nffT7ihI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?hTOsV+o0KjgxpfaJgDeJYraFC1QjDreM8zutzk3VY7wLg/sM9wuI92UqLpyK?=
- =?us-ascii?Q?/kmrCFakdFoW6jBYxIInOs7KCd7Mhpd/lsY8ZFpBsfS4TwLWZiEIycJA/5rS?=
- =?us-ascii?Q?DPyORvRQzdsGv5peD4nhsu3/cLrwKoJMlh8ikbjXmSf8UYc67bwmUCM+cxN8?=
- =?us-ascii?Q?wn3daEWmi6g2q4gBih/UdAfODZipDlZvSEl+2PV6YGcsYaZRGyyEvA4cPYPS?=
- =?us-ascii?Q?VMkS1JXDtRJgZ/dPIdBSc0Z6E8eSeJK6q77G/EGWyt9sWymoap1evDFg7bIj?=
- =?us-ascii?Q?N84I3i02X8Ia4a8d9q6RgsGh0/HU8Wcs+9xG5Bi0+HpOgLEEgug44o6zyZGt?=
- =?us-ascii?Q?S6SHgv+nNNeP13ISFG1cTWCnqgbfhCUpPItqiz48nRLFEdhyBqBmLn7fXede?=
- =?us-ascii?Q?9C3fqr0Wm/M2TPbLqOJPb8Uluw/pV7V8PQdi02qMCwsr6eZNnxEf7BZEVw/Z?=
- =?us-ascii?Q?9+8C5HejbeMLCgvAY3OLxr+nqKSBL0GIWw9sGu0NXPmP35aG0WfrSDnAEscw?=
- =?us-ascii?Q?T/vQ0/nyUn10DMpMze0Zmd/46NXHL+79Rmu7D80kwuDajV5NZfDL+4LItlmt?=
- =?us-ascii?Q?V3URQo4A8vyOop2X03LwBkbhiWx/ulju0UGYcncva1PRcG9b1YsTkmj43KUy?=
- =?us-ascii?Q?nEaI9PxiOh3fLyrAAdGkr3Hb7pPHVdD0HgG/2wL2tvRleeiaqKKf4XrhpS2/?=
- =?us-ascii?Q?F7Vv579gBNdyHwt0hYamCiIOLjiiPPxftBgPFVEoxAdWkA3jINXPXtbJV5/Y?=
- =?us-ascii?Q?c265qlNhzaDJ297+8RlOeqv8T2xrGD7Q3FKcm1ziPDbImxU8I6znyiFfC858?=
- =?us-ascii?Q?JjVpjzp/0C5WaP5l5hOquN4vCc5kaWakGpZkXaTVbwddcjOCtBdXn0dfhs+j?=
- =?us-ascii?Q?YEX1jFeAO464WZzxwaKlxmX7rRwBHxkeJMwf7tNtE+or9ITBKRyjieCyf1Gq?=
- =?us-ascii?Q?V8tyNvVR6iSe2rPgrmg5KFg7jM0TmfPt+upU5/vrZof4iWWWX02A2wzsBwkS?=
- =?us-ascii?Q?78Q6TTNqeIAwgi1bCtMgddttYrdwWoMqsPd4S2vvyj5i7WUbZCuRnDjycktz?=
- =?us-ascii?Q?Zfx6JYdCAin2CsAOr8XLpJ+9ZNGSO0dtq/Md0Fdo5GhNBFIs1CI/+wEkBiN0?=
- =?us-ascii?Q?QR08kbxE+KG4npJ3I7cQIgAitVSvwacpYQ+OBgOVQTfoIREEIb57AgBLBN43?=
- =?us-ascii?Q?p2yrvlfkILMQVy2X5HSWlED0r7HX0w594HMieo7T0no7kMD6WvvfS2QNIf+A?=
- =?us-ascii?Q?hxh4I8NajkhINu0aLsjeOUbyKAtsLPZgI2zXbQxDPrqiXUgBgkS0lzsbOPY3?=
- =?us-ascii?Q?QZRRxzSa2UmDVg/omGBtSzHRaFGtiIaMu12Z5clnds2Zubw0WJv/l7JcajOs?=
- =?us-ascii?Q?e96StdhP7LH0xvpVO27Cg+uM8vDFhfwonkYVVFU0AiJznqXSCxLwI1IlKPds?=
- =?us-ascii?Q?sobp85jL2BPLlGWIFFumJguQdE+IgxGxu27e9lyLl+/QMkIiEPo77RQ2S1nz?=
- =?us-ascii?Q?12iEAnaNoR0ld9+lHW8GTIoT0DeMm4ix6mpvZB+WNQwlENEaYxrwq42L7IRa?=
- =?us-ascii?Q?LIQuDQV7wzvnKmz0zJsnFGg8tFukYd3kaBp3NF9F?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86329e63-d52a-41e0-8e0f-08dc59185d80
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 04:40:36.4173
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sT9Gz97oVwgbAAiXwaipNVxyRBGaUC/ZV8vihc9TZhSeIEhZgZANFjYuKgFgH46JScLgLFNq14avfCtBbzJq0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8279
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v20 4/9] usb: dwc3: core: Refactor PHY logic to support
+ Multiport Controller
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+        Wesley Cheng
+	<quic_wcheng@quicinc.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        Johan Hovold
+	<johan@kernel.org>,
+        "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>,
+        "linux-usb@vger.kernel.org"
+	<linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "quic_ppratap@quicinc.com"
+	<quic_ppratap@quicinc.com>,
+        "quic_jackp@quicinc.com"
+	<quic_jackp@quicinc.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+References: <20240408132925.1880571-1-quic_kriskura@quicinc.com>
+ <20240408132925.1880571-5-quic_kriskura@quicinc.com>
+ <20240409011046.zgjqvhewldch3snu@synopsys.com>
+ <3ab9badd-2cf6-4fe0-aaf0-d08614418968@quicinc.com>
+ <20240409181342.wmjvi6rwtxphnv3z@synopsys.com>
+Content-Language: en-US
+From: Krishna Kurapati PSSNV <quic_kriskura@quicinc.com>
+In-Reply-To: <20240409181342.wmjvi6rwtxphnv3z@synopsys.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: d1lbR0JK5Ly33FsAvkn7ErNTNFCqjUpY
+X-Proofpoint-GUID: d1lbR0JK5Ly33FsAvkn7ErNTNFCqjUpY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-09_12,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404100032
 
-Jonathan Cameron wrote:
-> On Sun, 24 Mar 2024 16:18:12 -0700
-> ira.weiny@intel.com wrote:
+
+
+On 4/9/2024 11:43 PM, Thinh Nguyen wrote:
+> On Tue, Apr 09, 2024, Krishna Kurapati PSSNV wrote:
+>>
+>>
+>> On 4/9/2024 6:41 AM, Thinh Nguyen wrote:
+>>> On Mon, Apr 08, 2024, Krishna Kurapati wrote:
+>>>> Currently the DWC3 driver supports only single port controller
+>>>> which requires at least one HS PHY and at most one SS PHY.
+>>>>
+>>>> But the DWC3 USB controller can be connected to multiple ports and
+>>>> each port can have their own PHYs. Each port of the multiport
+>>>> controller can either be HS+SS capable or HS only capable
+>>>> Proper quantification of them is required to modify GUSB2PHYCFG
+>>>> and GUSB3PIPECTL registers appropriately.
+>>>>
+>>>> Add support for detecting, obtaining and configuring PHYs supported
+>>>> by a multiport controller. Limit support to multiport controllers
+>>>> with up to four ports for now (e.g. as needed for SC8280XP).
+>>>>
+>>>> Signed-off-by: Krishna Kurapati <quic_kriskura@quicinc.com>
+>>>> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+>>>> ---
+>>>>    drivers/usb/dwc3/core.c | 251 ++++++++++++++++++++++++++++------------
+>>>>    drivers/usb/dwc3/core.h |  14 ++-
+>>>>    drivers/usb/dwc3/drd.c  |  15 ++-
+>>>>    3 files changed, 193 insertions(+), 87 deletions(-)
+>>>>
+>>>
+>>> <snip>
+>>>
+>>>> @@ -1937,6 +2020,10 @@ static int dwc3_get_num_ports(struct dwc3 *dwc)
+>>>>    	iounmap(base);
+>>>> +	if (dwc->num_usb2_ports > DWC3_MAX_PORTS ||
+>>>> +	    dwc->num_usb3_ports > DWC3_MAX_PORTS)
+>>>> +		return -ENOMEM;
+>>>
+>>> This should be -EINVAL.
+>>>
+>>>> +
+>>>>    	return 0;
+>>>>    }
+>>>
+>>> <snip>
+>>>
+>>>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>>>> index 341e4c73cb2e..df2e111aa848 100644
+>>>> --- a/drivers/usb/dwc3/core.h
+>>>> +++ b/drivers/usb/dwc3/core.h
+>>>> @@ -33,6 +33,12 @@
+>>>>    #include <linux/power_supply.h>
+>>>> +/*
+>>>> + * Maximum number of ports currently supported for multiport
+>>>> + * controllers.
+>>>
+>>> This macro here is being used per USB2 vs USB3 ports rather than USB2 +
+>>> USB3, unlike the xHCI MAXPORTS. You can clarify in the comment and
+>>> rename the macro to avoid any confusion. You can also create 2 separate
+>>> macros for number of USB2 and USB3 ports even if they share the same
+>>> value.
+>>>
+>>> As noted[*], we support have different max number of usb2 ports vs usb3
+>>> ports. I would suggest splitting the macros.
+>>>
+>>
+>> Hi Thinh,
+>>
+>>   This macro was intended only to identify how many USB2 (or USB3) Phy's were
+>> serviced/operated by this driver, not how many logical ports present (like
 > 
-> > From: Navneet Singh <navneet.singh@intel.com>
-> > 
-> > CXL devices optionally support dynamic capacity.  CXL Regions must be
-> > configured correctly to access this capacity.  Similar to ram and pmem
-> > partitions, DC Regions, as they are called in CXL 3.1, represent
-> > different partitions of the DPA space.
-> > 
-> > Introduce the concept of a sparse DAX region.  Add the create_dc_region
-> > sysfs entry to create sparse DC DAX regions.  Special case DC capable
-> > regions to create a 0 sized seed DAX device to maintain backards
-> > compatibility with older software which needs a default DAX device to
-> > hold the region reference.
-> > 
-> > Flag sparse DAX regions to indicate 0 capacity available until such time
-> > as DC capacity is added.
-> > 
-> > Interleaving is deferred in this series.  Add an early check.
-> > 
-> > Signed-off-by: Navneet Singh <navneet.singh@intel.com>
-> > Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> With the -EBUSY others addressed LGTM.
-
-But the other docs do not have that notation.  Also the EBUSY was not changed
-from the previous documentation.  Only the text for DC was added.
-
-I'm inclined to leave this.
-
-> Fan's duplication comment
-> might be something to tidy up later.
+> That's not what you described in the comment right above the macro...
 > 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> in xHCI). I don't think it would be confusing currently given that it is
+>> only used to identify number of generic phy instances to allocate and not
+>> used for any other purpose. Once the num_usb2_ports and num_usb3_ports are
+>> read by get_num_ports(...) call, they directly indicate how many ports are
+> 
+> Those fields are clear. But for DWC3_MAX_PORTS, based on the name and
+> comment of the macro, it's not clear.
+> 
+>> HS and SS respectively. Keeping the same in mind, I returned ENOMEM above
+>> (as you mentioned) because we don't allocate more than DWC3_MAX_PORTS and if
+>> the number of hs or ss ports is more than that, we simply return ENOMEM
+>> saying the driver doesn't support operating those many phy's.
+> 
+> The error code -ENOMEM indicates out of memory failure. The check
+> condition dwc->num_usb2_ports > DWC3_MAX_PORTS indicates invalid config.
+> There's no allocation in that check.
+> 
+>>
+>>> [*] https://urldefense.com/v3/__https://lore.kernel.org/linux-usb/20230801013031.ft3zpoatiyfegmh6@synopsys.com/__;!!A4F2R9G_pg!azHqgm92ENkFQrpv6Fhs6PCe210VGOAIrsuGFhrgmfaor8N_kWLu6rxkPpbeCBTLL4NbUpOWlQ0ufmP9DFwO9iFc0XdSEg$
+>>>
+>>>> + */
+>>>> +#define DWC3_MAX_PORTS 4
+>>>> +
+>>>>
+>>>
+>>> But it's not a big issue whether you decided to push a new version or a
+>>> create a separate patch for the comments above. Here's my Ack:
+>>>
+>>
+>> Since this is not a bug, I would prefer to make a separate patch to rename
+>> the macros. (If that is fine).
+>>
+> 
+> That is fine with me. Thanks for your effort pursuing and continue
+> working on this series.
+> 
 
-Thanks,
-Ira
+Thanks Thinh. If there are no other issues, I will wait till Greg picks 
+the series up. Thanks for the reviews throughout the series.
 
-
+Regards,
+Krishna,
