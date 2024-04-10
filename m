@@ -1,137 +1,302 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8F4181311;
-	Wed, 10 Apr 2024 19:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9ED15DBB7;
+	Wed, 10 Apr 2024 19:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712777876; cv=none; b=sQpuU+wH4BJ8GX9t90Yz41bbFpc4PoA+P6MN3reU7HTv3AqqwFS5w22A7XLbjAAZihdSJ4mk5+SRadAUgyOt7/4jmRy/kHIUEF6frzTQOIa9MUXe4SJoFzhkgrlv2UUNHFPQhOPyQ//bb30B6MrOIBsHsp+85zEpYZSLQrNfz7s=
+	t=1712778010; cv=none; b=sTLMyJv2SM/qzZWUs3TvA92Q9yQ2y5mkkomyQjr+VpjMoIhd27CTuJQSHCGL/9Kz/OXcES1ZfFwUAebQazK3ILwGX1WicdsWpfS8WPxqNHJ7UYcDRMoq6Mq5iSO/rMt1Rhl9s964LNbovk0haZe6c2eZI3f7/GZABk87fYf5xsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712777876; c=relaxed/simple;
-	bh=K6oeNAjQ7C0hW+8CzLz9+z7T4W2t9RvIZXZ2cFItEQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eWvFHUHswGH8qqBTCzUw5Yzmr1ImB3mn48xrwJCuraie/wNKm3J2lz+N3EjpM8Wvi3CAOtIczFhy9JDZqzfpW6igq7WHVo4oPLoewXJ+FUYBrIaDQZFip+5+EWLopQJr/4U0M7gcKpcEsH6yZ52DrQFXtIDNsmAdrF8ftPxCSVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=E2POfess; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="E2POfess"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9hg2PSHk8E57TWYc2JeAWBrRdzJuP4lckAGhxVr40SI=; b=E2POfessUrhzeAkOj6YxIsuTDA
-	5MSm9FGxBlByPThoFcsd928J9T7kuZFVBsC1QxL1CWf7txL2yPGrbT6SNAMeLpTbkNCvFugS6GV35
-	WQRP+RzfwSeLAmzjsMC2B0nf6sWGoV+8yePiaNUvEnKqh03HDf+4WZ2yfU8ZegXqBecMsag894oWm
-	dhBDXIGYsSpgsuJCc3dJGEY1kX9CJCgkHPxIbI8KOhzERGud6KtLMjB12iMt6bhcTrmc9zdr7dn+R
-	XD3NvgLEWzU4Es6lYZROcPROfKJrV6glt+ppwnALjrDpG7sjto+t4Fb/cJ47q97/4Q3ARfVkBy3GF
-	M5IlChNg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38562)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rudlF-0008SU-1J;
-	Wed, 10 Apr 2024 20:37:33 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rudlB-0006Cv-25; Wed, 10 Apr 2024 20:37:29 +0100
-Date: Wed, 10 Apr 2024 20:37:28 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Radu Pirea <radu-nicolae.pirea@oss.nxp.com>,
-	Jay Vosburgh <j.vosburgh@gmail.com>,
-	Andy Gospodarek <andy@greyhouse.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	Rahul Rameshbabu <rrameshbabu@nvidia.com>,
-	Alexandra Winter <wintera@linux.ibm.com>
-Subject: Re: [PATCH net-next v10 07/13] net: Add struct kernel_ethtool_ts_info
-Message-ID: <ZhbqeCeTHIU0LrIn@shell.armlinux.org.uk>
-References: <20240409-feature_ptp_netnext-v10-0-0fa2ea5c89a9@bootlin.com>
- <20240409-feature_ptp_netnext-v10-7-0fa2ea5c89a9@bootlin.com>
- <20240409182725.139856d5@kernel.org>
- <20240410101200.0178e594@kmaincent-XPS-13-7390>
- <ZhZkNEYnY3FV7Q8E@shell.armlinux.org.uk>
- <20240410155412.2f34a117@kmaincent-XPS-13-7390>
+	s=arc-20240116; t=1712778010; c=relaxed/simple;
+	bh=zlC8Rjkw8j7sTtblL3UUVoXVx3v7nrKzUOV52YTEhF4=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UzU+2OZTubUkTXRxHC1Agbh4hYAa0t76GuUytQlf7vULO5xHVJLx8SZ8FRqjLw0Mztxu9bIsPClDe21AzQX1vp8hf1XPnRYp9MLVAPDPyEARVlFvXMFEH3ZOXjh5DbYL87JiCE99coFXXFoR7ttaaet71vk6BNvl4ngrZ1pfOTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFCmd4h01z67Zdq;
+	Thu, 11 Apr 2024 03:38:25 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 488F51408F9;
+	Thu, 11 Apr 2024 03:40:04 +0800 (CST)
+Received: from localhost (10.48.150.216) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
+ 2024 20:40:03 +0100
+Date: Wed, 10 Apr 2024 20:40:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
+Subject: Re: [RFC PATCH 2/4] ACPI: processor: refactor
+ acpi_processor_get_info: isolate cpu hotpug init delay
+Message-ID: <20240410204002.00000ce9@Huawei.com>
+In-Reply-To: <BEF140E0-C419-4A27-B2B2-6EB24F48B3C1@oracle.com>
+References: <20240409150536.9933-1-miguel.luis@oracle.com>
+	<20240409150536.9933-3-miguel.luis@oracle.com>
+	<20240410142031.00007036@Huawei.com>
+	<BEF140E0-C419-4A27-B2B2-6EB24F48B3C1@oracle.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410155412.2f34a117@kmaincent-XPS-13-7390>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Apr 10, 2024 at 03:54:12PM +0200, Kory Maincent wrote:
-> On Wed, 10 Apr 2024 11:04:36 +0100
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-> 
-> > On Wed, Apr 10, 2024 at 10:12:00AM +0200, Kory Maincent wrote:
-> > > On Tue, 9 Apr 2024 18:27:25 -0700
-> > > Jakub Kicinski <kuba@kernel.org> wrote:
-> > >   
-> > > > On Tue, 09 Apr 2024 10:26:29 +0200 Kory Maincent wrote:  
-> > > > > In prevision to add new UAPI for hwtstamp we will be limited to the
-> > > > > struct ethtool_ts_info that is currently passed in fixed binary format
-> > > > > through the ETHTOOL_GET_TS_INFO ethtool ioctl. It would be good if new
-> > > > > kernel code already started operating on an extensible kernel variant
-> > > > > of that structure, similar in concept to struct kernel_hwtstamp_config
-> > > > > vs struct hwtstamp_config.
-> > > > > 
-> > > > > Since struct ethtool_ts_info is in include/uapi/linux/ethtool.h, here
-> > > > > we introduce the kernel-only structure in include/linux/ethtool.h.
-> > > > > The manual copy is then made in the function called by
-> > > > > ETHTOOL_GET_TS_INFO. 
-> > > > 
-> > > > This one now conflicts :(
-> > > > 
-> > > > Applying: net: Add struct kernel_ethtool_ts_info
-> > > > error: sha1 information is lacking or useless
-> > > > (drivers/net/phy/marvell_ptp.c). error: could not build fake ancestor  
-> > > 
-> > > gnn patching my out of tree patch in the series! Sorry for that.  
-> > 
-> > Given that this path corresponds to the driver I wrote, do I assume
-> > that you've picked up my work on PTP support for Marvell PHYs? You
-> > should be aware that I still have the patches out of tree but it's
-> > been pointless me reposting it until the issue of which PTP gets
-> > used has been solved. (Publishing will just increase the pressure
-> > to merge it without the PTP problems being solved, and thus break
-> > Marvell PP2 PTP.)
-> 
-> Yes I did with few fixes and I know you don't want to post the patches until
-> setting which PTP gets used has been solved. As you can see this is one of the
-> subject of this series. About it, could you review this series? This would help
-> a lot and you will be able to post again your Marvell PTP patches if its get
-> merged.
+On Wed, 10 Apr 2024 17:20:01 +0000
+Miguel Luis <miguel.luis@oracle.com> wrote:
 
-I wish I could, but I'm seriously short of available time at the
-moment. I'm fitting in what I can day by day and there are many
-things wanting my attention - but I don't have enough time at the
-moment for everything. So really I can't take on anything new
-right now.
+> > On 10 Apr 2024, at 13:20, Jonathan Cameron <Jonathan.Cameron@Huawei.com=
+> wrote:
+> >=20
+> > On Tue,  9 Apr 2024 15:05:31 +0000
+> > Miguel Luis <miguel.luis@oracle.com> wrote:
+> >  =20
+> >> Delaying a hotplugged CPU initialization depends on
+> >> CONFIG_ACPI_HOTPLUG_CPU. Isolate that.
+> >>=20
+> >> Signed-off-by: Miguel Luis <miguel.luis@oracle.com> =20
+> >=20
+> > Again, needs more explanation. =20
+>=20
+> In agreement.
+>=20
+> > Post the full set with the v4 vCPU
+> > HP patches on top of this so we can see how it is used.
+> >  =20
+>=20
+> I=E2=80=99ll get a link to a repo for the next version besides would like=
+ primarily to
+> establish acpi_processor_{get_info|remove} first since these changes
+> would need to live with and without vCPU HP.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Great.
+
+>=20
+> > I guess the aim here is to share the bulk of this code between
+> > the present and enabled paths? Whilst I think they should look
+> > more similar actual code sharing seems like a bad idea for a
+> > couple of reasons. =20
+>=20
+> That would be my understanding from comments on v4. Both present and
+> enabled paths do have common procedures up to certain point. IIUC, from .1
+> and .2 from comments [1] and [2] while .3 would be architecture specific =
+code.
+>=20
+> [1]: https://lore.kernel.org/linux-arm-kernel/CAJZ5v0iiJpUWq5GMSnKFWQTzn_=
+bdwoQz9m=3DhDaXNg4Lj_ePF4g@mail.gmail.com/
+> [2]: https://lore.kernel.org/linux-arm-kernel/20240322185327.00002416@Hua=
+wei.com/
+
+3 is not just architecture specific code, it's architecture and action spec=
+ific.
+i.e. What is done in there should not happen in the present path.
+
+=46rom what is in [2] I became much less convinced much code should be shared=
+..
+Lightly editing where that thread went today, there is some shared code in
+the make_present / make_enabled path, but not that much.
+As per that discussion, cpu_maps_update* is harmless, but also pointless
+and potentially misleading in the enable case.
+
+static int acpi_processor_make_present(struct acpi_processor *pr)
+{
+        unsigned long long sta;
+        acpi_status status;
+        int ret;
+
+        if (!IS_ENABLED(CONFIG_ACPI_HOTPLUG_CPU)) {
+                pr_err_once("Changing CPU present bit is not supported\n");
+                return -ENODEV;
+        }
+
+// The _STA check here is needed still or we need to push it into
+// arch_register_cpu() on x86 similarly to proposal on arm64.
+
+	status =3D acpi_evaluate_integer(pr->handle, "_STA", NULL, &sta);
+        if (ACPI_FAILURE(status) || !(sta & ACPI_STA_DEVICE_PRESENT))
+                return -ENODEV;
+
+        if (invalid_phys_cpuid(pr->phys_id))
+                return -ENODEV;
+        cpu_maps_update_begin();
+        cpus_write_lock();
+
+        ret =3D acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+        if (ret)
+                goto out;
+
+        ret =3D arch_register_cpu(pr->id);
+        if (ret) {
+                acpi_unmap_cpu(pr->id);
+                goto out;
+        }
+
+        /* =20
+	* CPU got hot-added, but cpu_data is not initialized yet.  Set a flag
+	* to delay cpu_idle/throttling initialization and do it when the CPU
+	* gets online for the first time.
+	*/
+        pr_info("CPU%d has been hot-added\n", pr->id);
+        pr->flags.need_hotplug_init =3D 1;
+
+out:
+        cpus_write_unlock();
+        cpu_maps_update_done();
+        return ret;
+}
+
+static int acpi_processor_make_enabled(struct acpi_processor *pr)
+{
+        unsigned long long sta;
+        acpi_status status;
+        bool present, enabled;
+        int ret;
+
+        if (invalid_phys_cpuid(pr->phys_id))
+                return -ENODEV;
+
+        cpus_write_lock();
+        ret =3D arch_register_cpu(pr->id);
+        cpus_write_unlock();
+
+        return ret;
+}
+
+>=20
+> >=20
+> > Imagine an arch that supports both present and enabled setting (so vCPU=
+ HP and
+> > CPU HP) on that this function will be defined but will not be the right
+> > thing to do for vCPU HP.  Note that in theory this is true of x86 but n=
+o one
+> > has added support for the 'online capable bit' yet. =20
+>=20
+> =E2=80=A6 I agree with the above. It reinforces refactoring acpi_processo=
+r_get_info
+> so it clearly decouples present and enabled paths.
+>=20
+> >=20
+> > The impression for the _present() path will be that acpi_process_hotplu=
+g_delay_init()
+> > should be called, and that's not true.  That should be obvious in the c=
+ode
+> > not hidden behind a stubbed out function. =20
+>=20
+> Ack. Need to check how we=E2=80=99re differentiating both paths.
+
+I haven't looked as much at the remove path recently but for the enable path
+the code that should run in the enable path is much less than in the presen=
+t path.
+
+>=20
+> >=20
+> > Finally, you've pulled acpi_process_enumearte_extra out of the CONFIG_A=
+CPI_HOTPLUG_CPU
+> > block and I'm fairly sure it still has acpi_map_cpu() calls which aren't
+> > defined yet for now ACPI_HOTPLUG_CPU configs. =20
+>=20
+> Yep, it still has. Unless you squash the next patch into this one, which I
+> didn=E2=80=99t so one could see these changes progressively rather than
+> self-contained.
+>=20
+I think that makes it non bisectable, so you can't do this.  Either don't m=
+ove
+that code until after the next patch, or squash the 2 together.
+
+Less important in an RFC though,
+
+Jonathan
+
+
+> Miguel
+>=20
+> >=20
+> > Jonathan
+> >  =20
+> >> ---
+> >> drivers/acpi/acpi_processor.c | 34 ++++++++++++++++++----------------
+> >> 1 file changed, 18 insertions(+), 16 deletions(-)
+> >>=20
+> >> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_process=
+or.c
+> >> index 37e8b69113dd..9ea58b61d741 100644
+> >> --- a/drivers/acpi/acpi_processor.c
+> >> +++ b/drivers/acpi/acpi_processor.c
+> >> @@ -184,7 +184,22 @@ static void __init acpi_pcc_cpufreq_init(void) {}
+> >>=20
+> >> /* Initialization */
+> >> #ifdef CONFIG_ACPI_HOTPLUG_CPU
+> >> -static int acpi_processor_hotadd_init(struct acpi_processor *pr)
+> >> +static void acpi_processor_hotplug_delay_init(struct acpi_processor *=
+pr)
+> >> +{
+> >> + /*
+> >> + * CPU got hot-added, but cpu_data is not initialized yet.  Set a flag
+> >> + * to delay cpu_idle/throttling initialization and do it when the CPU
+> >> + * gets online for the first time.
+> >> + */
+> >> + pr_info("CPU%d has been hot-added\n", pr->id);
+> >> + pr->flags.need_hotplug_init =3D 1;
+> >> +}
+> >> +#else
+> >> +static void acpi_processor_hotplug_delay_init(struct acpi_processor *=
+pr) {}
+> >> +#endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> >> +
+> >> +/* Enumerate extra CPUs */
+> >> +static int acpi_processor_enumerate_extra(struct acpi_processor *pr)
+> >> {
+> >> unsigned long long sta;
+> >> acpi_status status;
+> >> @@ -210,25 +225,12 @@ static int acpi_processor_hotadd_init(struct acp=
+i_processor *pr)
+> >> goto out;
+> >> }
+> >>=20
+> >> - /*
+> >> - * CPU got hot-added, but cpu_data is not initialized yet.  Set a flag
+> >> - * to delay cpu_idle/throttling initialization and do it when the CPU
+> >> - * gets online for the first time.
+> >> - */
+> >> - pr_info("CPU%d has been hot-added\n", pr->id);
+> >> - pr->flags.need_hotplug_init =3D 1;
+> >> -
+> >> + acpi_processor_hotplug_delay_init(pr);
+> >> out:
+> >> cpus_write_unlock();
+> >> cpu_maps_update_done();
+> >> return ret;
+> >> }
+> >> -#else
+> >> -static inline int acpi_processor_hotadd_init(struct acpi_processor *p=
+r)
+> >> -{
+> >> - return -ENODEV;
+> >> -}
+> >> -#endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> >>=20
+> >> static int acpi_evaluate_processor(struct acpi_device *device,
+> >>   struct acpi_processor *pr,
+> >> @@ -347,7 +349,7 @@ static int acpi_processor_get_info(struct acpi_dev=
+ice *device)
+> >> *  because cpuid <-> apicid mapping is persistent now.
+> >> */
+> >> if (invalid_logical_cpuid(pr->id) || !cpu_present(pr->id)) {
+> >> - int ret =3D acpi_processor_hotadd_init(pr);
+> >> + int ret =3D acpi_processor_enumerate_extra(pr);
+> >>=20
+> >> if (ret)
+> >> return ret; =20
+> >  =20
+>=20
+
