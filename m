@@ -1,104 +1,98 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ADF16C86C;
-	Wed, 10 Apr 2024 14:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07816131C;
+	Wed, 10 Apr 2024 14:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712760101; cv=none; b=Lukysa0Iao1eGIYQdaFGpxHeIi/eO2zEHiazx9EpLjx9rDXj0TyAoFaVXMJFIUBT8lQP7roJ2WDGmoOYnrdJtOBujCNB2xJNeTT9evaRkkeU3C/A6rfUm/BxN//8/LXE+VO8WB0ARXTTXNy3UGEtQQbA8R9YMUkiNVP8lQaQkA0=
+	t=1712760179; cv=none; b=jc7M/tlfOyHt7HDp1znR5hKNi3dSTMsEgVPRpjRuQ3bzsposMEoBHBDvNKZma53fqF1u4zfZGUG/+5IMJLGmHMBZvgBGVV1eoKdnhtCz+9qzQ5S/PvHQtsAOkkM5JTWLehEx7CyHqG+WXD5s9p9OMkaws8fVcsSWestvSy+aWpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712760101; c=relaxed/simple;
-	bh=eXwx+wQoL+ODyiiDFEy2/qkqUwkZPi5ZruoSzmPNn1M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cNzfLWpTvKIhGgL5UhwN7VYQHuXGzt/FqJ9WwOYZrN4ObZJeLEDw21/WFe33wEB8Tw0wx3dHydG4fQQfufQ9l6Asl36qquq6zb48d0Ci189uKFxJ6/QAn7Tax1BkhP3jVpAdJVPjoYu71LaRz2ld7lc7gyBnorbOL9IKKtqOYHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CJy7eDP4; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712760179; c=relaxed/simple;
+	bh=luoVgNyj4zzwwoGosR+LKd29Ur7JRFYhyAO39bS3iYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u0ZZJdEgvxxQXGUZMGZa8unUx7JwfP/et4TU/mCow6rKqeJqiUpFI0rmQIrht6nGkbLK/KnFpDgSzeAhsAuLQLrBnIag69QCtwZpLcziOUe0apmgtphNyqO4Ez2M8DsMazyE9FEcyvM8N9f1G/S1Fmpu0JOw+yoJbMnRfLM3GC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b07fLTai; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CJy7eDP4"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516cbf3fe68so8395391e87.0;
-        Wed, 10 Apr 2024 07:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712760098; x=1713364898; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8r4DtfNp8+A8ASHcNQoOpnxAj+pTDEaZ0fpsKFQEyGY=;
-        b=CJy7eDP4F9gNrpptGe8WLFni4+OJUtPBVIqfIRaJzI+6FIbZKm76nP9FJWMiMlYWoI
-         bj8Ec75OOGPiKlDTRCXOTg+IrYnb873oIvYEmKMH/81q87aZIPXKCaKvd2jF6+zbVG17
-         HQaC09WXqu4y5RL9C2A9DUZIqQ0f0TuzSlw9t+THOS0hWT/G1iXDWJSi83dFU8bZ+NK8
-         X+EOSChEcGJ5km3QVyZ7/5c76pQD/h6tqsOVYgaOvbzDl7KnUHlsCzrAedd/+ioBzjNs
-         cdeAzAL32B24qZIzz0SUhBqbbodi1W47KfkaSMt1/ir1LClGybcYWxTyFYRuQOR6lUz3
-         kDjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712760098; x=1713364898;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8r4DtfNp8+A8ASHcNQoOpnxAj+pTDEaZ0fpsKFQEyGY=;
-        b=FuqCFV80pjQL+OnqAeZQwfWnMQD/5MJcK/DhLGHaTTPDcretgYGWh+pGSuxoyG8ngH
-         sM+YHng2FxGZ4pRI7lPxLR/o42f+W6zRDLM87hqxqm3dEN/KsJMZHNPqKU6BPlxz15aD
-         ilt4QVcFfxs2kIQr3EjBwnWzai7lftE/UXVRk+oPBS5+A4AWZ/zI6ZlSI4Qd/hWi6Apv
-         iWgtPqXnTc/Ycfe9SrasYzXdrwrVpZhYDmFksPXrk+fXWk3riFciSzSrvhOcf9bNo/rw
-         4OA7vSLE/zK3WWv47Uw+H9Da5zMeBUbVlcUgBg2fBoLn817rGsc479xGArJ+zzp13Vhx
-         KjKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0FgkZWCofetCaXxXtZ6UHHbFYtVbv1TzX9UuoISx7zVFEtWSMahaYDj4uJFk/sNt/AJi5/n+G+McqBGzUtVjk+0W95r5Duuy09dgQsv9VmPzOZMSRKv22VCdxJxGqqoJcXspp
-X-Gm-Message-State: AOJu0YyDpfYKkSpW8oEFBhJWJJ5jtvny/64+S2PV9oOApzPPN1pQcIqU
-	8O/C68e8Ls64b+E0Gkd63RjdnR40KEliAxV2T25QYly0nwBOz70K
-X-Google-Smtp-Source: AGHT+IHbr/StM0jqKWACoAq/R6iJnAXnIJZzSuEHigaUgH1vDTMz/X5SPGnGZEfn0wpbYvvQcJUiAQ==
-X-Received: by 2002:a19:5f0a:0:b0:516:c4a8:8950 with SMTP id t10-20020a195f0a000000b00516c4a88950mr1709689lfb.8.1712760097737;
-        Wed, 10 Apr 2024 07:41:37 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id k2-20020adff282000000b0033e9d9f891csm13839564wro.58.2024.04.10.07.41.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 07:41:37 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Boris Pismenny <borisp@nvidia.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] tls: remove redundant assignment to variable decrypted
-Date: Wed, 10 Apr 2024 15:41:36 +0100
-Message-Id: <20240410144136.289030-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b07fLTai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8AC9C433C7;
+	Wed, 10 Apr 2024 14:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712760179;
+	bh=luoVgNyj4zzwwoGosR+LKd29Ur7JRFYhyAO39bS3iYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b07fLTaipG3I0kSFOt/zafbbHHiO4S32fLcqmYd6q0R37s3ScVmqRr1uG2MBoOyAS
+	 T81YMrNBgj2dJG1nDvP8oXw3IBGjaIduAuo4sfs7kypXW6perKZOQa8tj9dxeoImIN
+	 MbruKyDrUpoVlILRrZEPaBctf6piqLJtrAi+t+pBHG8VtAthdxbt62CbDhpDkhcE0M
+	 MZcOGJOZxVs9dEa/zznCVHr+2aWv/B5aP4yLYyVld1u4TDwaVRTzEbzHFFEB6P2Ymr
+	 z4cqJc2EvNO+hl43NNh/54nap8qjZcfyye30Y1vntHhuq6oiAbB3Ab2uEKUEhYe3FU
+	 Hj9WQB0qtU6wg==
+Date: Wed, 10 Apr 2024 16:42:56 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
+Message-ID: <ZhalcBcd3w0w2HD_@localhost.localdomain>
+References: <20240322065208.60456-1-bigeasy@linutronix.de>
+ <20240322065208.60456-3-bigeasy@linutronix.de>
+ <ZhRhn1B0rMSNv6mV@pavilion.home>
+ <20240409085732.FBItbOSO@linutronix.de>
+ <ZhU2YwettB6i6AMp@localhost.localdomain>
+ <20240409134729.JpcBYOsK@linutronix.de>
+ <ZhZ54XAcBt50WEnE@localhost.localdomain>
+ <20240410134702.dcWYciZB@linutronix.de>
+ <ZhabcanCbQej1azv@localhost.localdomain>
+ <20240410140633.0MHBLpMI@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240410140633.0MHBLpMI@linutronix.de>
 
-The variable decrypted is being assigned a value that is never read,
-the control of flow after the assignment is via an return path and
-decrypted is not referenced in this path. The assignment is redundant
-and can be removed.
+Le Wed, Apr 10, 2024 at 04:06:33PM +0200, Sebastian Andrzej Siewior a écrit :
+> On 2024-04-10 16:00:17 [+0200], Frederic Weisbecker wrote:
+> > Le Wed, Apr 10, 2024 at 03:47:02PM +0200, Sebastian Andrzej Siewior a écrit :
+> > > On 2024-04-10 13:37:05 [+0200], Frederic Weisbecker wrote:
+> > > > > Couldn't we either flush _or_ remove the task_work in perf_release()?
+> > > > 
+> > > > Right so the problem in perf_release() is that we may be dealing with task works
+> > > > of other tasks than current. In that case, task_work_cancel() is fine if it
+> > > > successes. But if it fails, you don't have the guarantee that the task work
+> > > > isn't concurrently running or about to run. And you have no way to know about
+> > > > that. So then you need some sort of flushing indeed.
+> > > 
+> > > Since perf_release() preemptible, a wait/sleep for completion would be
+> > > best (instead of flushing).
+> > 
+> > Like this then?
+> > 
+> > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
+> 
+> Kind of, yes. Do we have more than one waiter? If not, maybe that
+> rcuwait would work then.
 
-Cleans up clang scan warning:
-net/tls/tls_sw.c:2150:4: warning: Value stored to 'decrypted' is never
-read [deadcode.DeadStores]
+Indeed there is only one waiter so that should work. Would
+that be something you can call while preemption is disabled?
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- net/tls/tls_sw.c | 1 -
- 1 file changed, 1 deletion(-)
+Thanks.
 
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index b783231668c6..305a412785f5 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -2147,7 +2147,6 @@ int tls_sw_recvmsg(struct sock *sk,
- 		if (ret) {
- 			if (err >= 0 || err == -EINPROGRESS)
- 				err = ret;
--			decrypted = 0;
- 			goto end;
- 		}
- 
--- 
-2.39.2
-
+> Otherwise (>1 waiter) we did establish that we may need a per-task
+> counter for recursion handling so preempt-disable shouldn't be a problem
+> then. The pending_work_wq must not be used outside of task context (means
+> no hardirq or something like that).
+> 
+> Sebastian
