@@ -1,203 +1,116 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2074.outbound.protection.outlook.com [40.107.244.74])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB57175A4;
-	Wed, 10 Apr 2024 18:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775449; cv=fail; b=rcISu966Crs8kiM28oRRNpFAoIXjseCLAbEA+aj2Z1ljbDMdbVeFFM0cexitASBEuWm4hwvXj/ObVRtpvYe+VvOUKp+s/ALp7cS1OUOhugP6Ei4SkUpooBSdCIWcv7z4W/I+O2GcpsXKN/ti4lckx1vJWRpo3pnB2RzNy3Uyaz4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775449; c=relaxed/simple;
-	bh=SSndwC5hDqxJpdBvENnzdv6zQgeEKAwvbSI1ut6/nIM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Kt01AcIKWXxE7ZMmGROiYdqonctw96wT3ITkzA9v7VD20x0tLo4CW1Snnl+HVy37OYs1vdB7V513KSheZ7ndwYOzvJKXBK/Qn5BmyOmh7TDOA5kkEZNGPacsSSfZsMxWBUqcLRFY+QL4XUcs5eSvv1qNaVanpNzQZpR9ZT7v284=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gZ7NI8Uy; arc=fail smtp.client-ip=40.107.244.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AC82E405
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 18:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712775463; cv=none; b=S7fUv/y/oZrmpzXDIRN3vaAloxMsdxOv4ejX5a1OXmvZQLovKg0CRI3FzgNx5IdXrFRbLWjbJDfGk6+g688PN9SMmt5rYDD30tR/RTdFymNgNDcYPW2lokfW1acUoCuSXCGR+hrxaQFfRUk8qUresbmK/SjmnXaA+w/IhkKaEn0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712775463; c=relaxed/simple;
+	bh=T63WWSNwemtE5FUWed+rwjc2++XzqVd45sS/kU5+0WQ=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=qgAtop2RYzW898BIVdlUbuqWRbhnUQnRPcfWGf2M9idG/cUhx5fWtkOprcFJBF4lrPdj8+Zc09npujt6MbshBUh0qnd/NKVQZKf+NcOwlaAwABb+k3WfBpykBkk3a+5ekNcZTEZ1QOuzzPORE+Telhw8cqB2rrz8CKPPX1UCz1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vNFlB0+y; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="gZ7NI8Uy"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R5V/MXPXkldn4YZPHZIwiV3fi4pzZElEBcREpwmlMhMLTfXZS4750R0V63zjTSE/WDory52aO48BqQe3YCkzxpxrgBWFCIJOuYb7dtQjMOkEl1dTVV/AhfYS7gZEtOOMiif5Nwn4m3zUMXYtxHHQKutb44mHHztcyAhB2RHEZt6KZuEIFGMOwaDD7Zi3QJWzdH5IQB+9hV6yCpOH3LVLO90h+qgPt000gTrcPSgqKUbJT2OtDi3ckjlhyVuyJEdJgFXqNctj0RO0arZiNkZbZQOBOBZmR0vTYzXU2hWziRLe+lALMcAslCTxD0eRpoD1nDfmRWJm+DMHtNXe9Dxk2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=daS+ZqUE/ZDq0OlbyEe1b0k4YlqNWZg87UCOC660bsQ=;
- b=mZPh6Ra8hLuXIALxPgpB40FHeTclPwGKxdUZsMepiS305mnb/vUrsCfq1j4ogxkivKSLsRDVI0Db6pUc/yrBK0T84DTKa/5TBw1fnY/eUKTtwZWq+JEvwel+yVqZFEnTBRtc1KYMbYJLlNtcP6WV5kU0Cr3/JtJnUT1hFewHIQL554/hZnq467NA9Eplomzt4eJtCr3vJKN5iJg57EnUP5jQwSO5CtcDidRXL/vdaw20/u1Ieb3wE7mYIbjRKPo4YBqDPG1bzAoBYQU844QHCz9dqXi+PL5e80iH2rf2xHiSkba0DVN0+RrExLkQEAgEQGlb8l5TIUFu9dB81HGzdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=daS+ZqUE/ZDq0OlbyEe1b0k4YlqNWZg87UCOC660bsQ=;
- b=gZ7NI8UyZb+xnAczHLemxr5e7AHTeznL05Gjs7OGiqgqbwP1sURVxd4f44eMsTiGTH1/wMkqntVv1ht6D+k/aoiRh4dK5+5IdqS0cz5guSsfn+78cYpoUydetEVo6WNq5uZfWz5NvCJM/LrC5LBBcRSuDpDGVWZdAHK+UwC4UtTLkE3+ju0BpM/hexchHKXwS/1oEk9Tjz0VJ/82broYgu8htm2ol1bxRcrVRQtqW2/R497ksdOAn/CK0L3UhfWmt5ecSGvimpwWaJC0dgrjIDVbtHQXmzDlNgMPtC47wlVo4cCEsf26s1KU4qmHLJp04FZoDEFP1DwhzS3hIsjwFw==
-Received: from DM6PR18CA0026.namprd18.prod.outlook.com (2603:10b6:5:15b::39)
- by SN7PR12MB6929.namprd12.prod.outlook.com (2603:10b6:806:263::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
- 2024 18:57:23 +0000
-Received: from DS1PEPF00017090.namprd03.prod.outlook.com
- (2603:10b6:5:15b:cafe::e0) by DM6PR18CA0026.outlook.office365.com
- (2603:10b6:5:15b::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.21 via Frontend
- Transport; Wed, 10 Apr 2024 18:57:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Wed, 10 Apr 2024 18:57:23 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 10 Apr
- 2024 11:57:06 -0700
-Received: from [10.41.21.79] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.12; Wed, 10 Apr
- 2024 11:57:02 -0700
-Message-ID: <3ab3cbc1-234f-e0b6-4521-298018547aad@nvidia.com>
-Date: Thu, 11 Apr 2024 00:27:00 +0530
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vNFlB0+y"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v4 3/4] arm64: Update AMU-based frequency scale factor on
- entering idle
-Content-Language: en-US
-To: Beata Michalska <beata.michalska@arm.com>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <ionela.voinescu@arm.com>,
-	<vanshikonda@os.amperecomputing.com>
-CC: <sudeep.holla@arm.com>, <will@kernel.org>, <catalin.marinas@arm.com>,
-	<vincent.guittot@linaro.org>, <yang@os.amperecomputing.com>,
-	<lihuisong@huawei.com>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20240405133319.859813-1-beata.michalska@arm.com>
- <20240405133319.859813-4-beata.michalska@arm.com>
-From: Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <20240405133319.859813-4-beata.michalska@arm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|SN7PR12MB6929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d46c5f5-7f24-4f69-5e6b-08dc59900e7b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	yxQ8Tf7ldDtw1hdemE6STb7Xv5NkQGy+LETlB0lzXlPXXl6WX9wbEhzh0gFan41qJKY6xJYlUOgAgFKI1IiskdMkhrB8t0QWqLeQhjUB5t7FNxdLCmNp7eVHhfQTU+x4hvPWqMCTCOyX+LjnUTyLdJEUt6as7XnkyxOF9KCBs5bEwRaN6FwKKAONLkgeD093MnRGXtw8BNyqam26ZemFk3V7JTsVqYx25PCczOsjC4Gyrvqca13EJafOgfnb/xBB1NUAbPxQDfEHL6w49KUht4PHpKAmJvUrPxY4acemMkyIEWgf1Idix1wiqr/1P+FrmY4h0XSiRyynz0UuCuEkzaoopGatkxV3OGTVv22LFuoOWowL0aH7Zho8iT4wCtpvC4G49IzGQYAopOC01Qg3JMdR2cHieuh0S6HoBhhhcdxqdn4asroiheShk57nrK/SPoDmOj3Tjr1WePR+S5/gc/jcAVUIwMAhq7SsxL5NsYFfnDdw/ix3yYJuln8DfTZTbAk7WwCVWKjFHbPlkMMuDlyQOboMGo14uibnfFC5zHAV/w5uJXyKVwuvXA2BGRw2y0Sp9RADVzOu0wZDR2sP0BRUupcL2WviYpFccZLtGbRmRJG/65I/Ynhfjl6WUhmQDxIpzCELiNndazKuliGfZpTxs1emRyMRZzXjSYsCk2szdSj5i4L5Tss0WCRKhCLaDc5F2lkvhmiPzie3TIvEbwbhG4h5nENzqGb9SLnSMGXHWgz8kgmgxP15PPw2Q5/S
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(7416005)(36860700004)(82310400014)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 18:57:23.1334
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d46c5f5-7f24-4f69-5e6b-08dc59900e7b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017090.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6929
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712775459;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ADESv9RkZIcja5wW8o1aMTUgcCG5wDttV7TT2gQQZ3w=;
+	b=vNFlB0+y6Jsa9DH9o85ONcbM0LRX3VMjU81brB9OcJ0GhOjgM2Zrx3tQ60zNGCZ4Y/EsF5
+	0UUJT+zItjlbmz7mG2sFIY4rU1RIXAH9U8Ra+Jf3tOKsAbkzhHD/CKomUafh+a4/y9AeZn
+	8KUZjcPDt4I8b94mMZ2sOL9nHMuog5Y=
+Date: Wed, 10 Apr 2024 18:57:36 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Eric Van Hensbergen" <eric.vanhensbergen@linux.dev>
+Message-ID: <e73a1e0c90ebce33c23f8f7746c23c1199f62a78@linux.dev>
+TLS-Required: No
+Subject: Re: [GIT PULL] fs/9p patches for 6.9 merge window
+To: "Oleg Nesterov" <oleg@redhat.com>
+Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
+ kent.overstreet@linux.dev
+In-Reply-To: <74f117635037a82dc2fb2923993cf329b6939b7e@linux.dev>
+References: <ZfRkyxUf8TIgsYjA@1149290c588b>
+ <20240408141436.GA17022@redhat.com>
+ <74f117635037a82dc2fb2923993cf329b6939b7e@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Beata,
+April 10, 2024 at 12:20 PM, "Eric Van Hensbergen" <eric.vanhensbergen@lin=
+ux.dev> wrote:
+> April 8, 2024 at 9:14 AM, "Oleg Nesterov" <oleg@redhat.com> wrote:
+> > Hello,
+> >  the commit 724a08450f74 ("fs/9p: simplify iget to remove unnecessary=
+ paths")
+> >  from this PR breaks my setup.
+> >=20
+>=20
+> Thanks for the bisect and detailed reproduction instructions. I am look=
+ing at this now and it seems to be related to another problem reported by=
+ Kent Overstreet where he was seeing symlink loop reports that were disru=
+pting his testing environment. Once I'm able to reproduce, I'll try and g=
+et a patch out later today, if not I may revert the commit to keep from d=
+isrupting folks' testing environments.
+>=20
 
-This patch is giving abort due to 'amu_fie_cpus' mask which gets 
-allocated later in 'init_amu_fie()'.
+Okay,=20I think I understand this one, unfortunately it doesn't appear ob=
+viously related to Kent's report if what I believe is correct.  I think I=
+'ve reproduced the problem, fundamentally, since you have two mount point=
+s you are exporting together. I believe we are getting an inode number co=
+llision which was being hidden by the "always create a new inode on looku=
+p" inefficiency in v9fs_vfs_lookup.  You could probably verify that for m=
+e by stating the /home directory and the / directory on the server side o=
+f your setup.  When I created two partitions and mounted one inside the o=
+ther the "home" and the "root" both had inode 2 and I got -ELOOP when try=
+ing to access.
 
-  ] smp: Bringing up secondary CPUs ...
-  ] Unable to handle kernel read from unreadable memory at virtual
-    address 0000000000000000
-    .......
-  ] Call trace:
-  ]  arch_cpu_idle_enter+0x30/0xe0
-  ]  do_idle+0xb8/0x2e0
-  ]  cpu_startup_entry+0x3c/0x50
-  ]  rest_init+0x108/0x128
-  ]  start_kernel+0x7a4/0xa50
-  ]  __primary_switched+0x80/0x90
-  ] Code: d53cd042 b8626800 f943c821 53067c02 (f8627821)
-  ] ---[ end trace 0000000000000000 ]---
-  ] Kernel panic - not syncing: Oops: Fatal exception
+The underlying cause in the patch series is that I was trying to maintain=
+ inodes versus constantly creating and deleting them -- and I simplified =
+the inode lookup to be based purely on inode number (versus checking agai=
+nst times, type, i_generation, etc.) -- so collisions are much more likel=
+y to happen.  If qemu detects that this is a possibility it usually print=
+s something:=20
+qemu-system-aarch64:=20warning: 9p: Multiple devices detected in same Vir=
+tFS export, which might lead to file ID collisions and severe misbehaviou=
+rs on guest! You should either use a separate export for each device shar=
+ed from host or use virtfs option 'multidevs=3Dremap'!
 
-Added cpumask_available() check before access to fix.
+I can confirm that multidevs=3Dremap in qemu does appear to avoid the pro=
+blem, but this doesn't help the fact that we have a broader regression on=
+ our hand that used to work.  It'd be useful to see if mutlidevs=3Dremap =
+also deals with your problem @Kent, but while I think its the same underl=
+ying problem, I don't think it may be the same solution.
 
-  +++ b/arch/arm64/kernel/topology.c
-  @@ -211,9 +211,13 @@ void arch_cpu_idle_enter(void)
-   {
-          unsigned int cpu = smp_processor_id();
+I think I have to give up on relying on qid.path/inode-number as unique a=
+nd maintain our own client view of those -- but this will cause problems =
+with the way several parts of the code currently operate where we need to=
+ lookup inode by a unique identifier from the server (which is currently =
+conveyed by qids).
 
-  -       if (!cpumask_test_cpu(cpu, amu_fie_cpus))
-  +       if (cpumask_available(amu_fie_cpus) &&
-  +           !cpumask_test_cpu(cpu, amu_fie_cpus))
-                  return;
+Now that I understand the problem, I think I can work thorugh a partial r=
+evert which will go back to a more complex match in vfs_lookup (which exa=
+mines several other fields from the server beyond qid.path) -- but maybe =
+I can do it in such a way which will still avoid keeping duplicate inode =
+structs around in memory.
 
-Thank you,
-Sumit Gupta
+This didn't show up in my regressions because I always export a single fi=
+le system where the inodes are always unique.
 
-On 05/04/24 19:03, Beata Michalska wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> Now that the frequency scale factor has been activated for retrieving
-> current frequency on a given CPU, trigger its update upon entering
-> idle. This will, to an extent, allow querying last known frequency
-> in a non-invasive way. It will also improve the frequency scale factor
-> accuracy when a CPU entering idle did not receive a tick for a while.
-> As a consequence, for idle cores, the reported frequency will be the
-> last one observed before entering the idle state.
-> 
-> Suggested-by: Vanshidhar Konda <vanshikonda@os.amperecomputing.com>
-> Signed-off-by: Beata Michalska <beata.michalska@arm.com>
-> ---
->   arch/arm64/kernel/topology.c | 17 +++++++++++++++--
->   1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-> index b03fe8617721..f204f6489f98 100644
-> --- a/arch/arm64/kernel/topology.c
-> +++ b/arch/arm64/kernel/topology.c
-> @@ -207,6 +207,19 @@ static struct scale_freq_data amu_sfd = {
->          .set_freq_scale = amu_scale_freq_tick,
->   };
-> 
-> +void arch_cpu_idle_enter(void)
-> +{
-> +       unsigned int cpu = smp_processor_id();
-> +
-> +       if (!cpumask_test_cpu(cpu, amu_fie_cpus))
-> +               return;
-> +
-> +       /* Kick in AMU update but only if one has not happened already */
-> +       if (housekeeping_cpu(cpu, HK_TYPE_TICK) &&
-> +           time_is_before_jiffies(per_cpu(cpu_amu_samples.last_update, cpu)))
-> +               amu_scale_freq_tick();
-> +}
-> +
->   #define AMU_SAMPLE_EXP_MS      20
-> 
->   unsigned int arch_freq_get_on_cpu(int cpu)
-> @@ -232,8 +245,8 @@ unsigned int arch_freq_get_on_cpu(int cpu)
->           * this boils down to identifying an active cpu within the same freq
->           * domain, if any.
->           */
-> -       if (!housekeeping_cpu(cpu, HK_TYPE_TICK) ||
-> -           time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS))) {
-> +       if (!housekeeping_cpu(cpu, HK_TYPE_TICK) || (!idle_cpu(cpu) &&
-> +           time_is_before_jiffies(last_update + msecs_to_jiffies(AMU_SAMPLE_EXP_MS)))) {
->                  struct cpufreq_policy *policy = cpufreq_cpu_get(cpu);
->                  int ref_cpu = cpu;
-> 
-> --
-> 2.25.1
-> 
+Thanks for your patience while I work through this - now that i can repro=
+duce the problem, I'm fairly certain I can get a patch together this week=
+ to test to see if it solves the regressions.
+
+     -eric
