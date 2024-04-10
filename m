@@ -1,158 +1,232 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2058.outbound.protection.outlook.com [40.107.237.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC5F181329
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 19:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712778540; cv=fail; b=YJNJEqHTuNXOsGpp9w1k9uKnGkQcWZp/QQi/xvhH5/iHIvgPQLiIKk76eFh0PpJvzwBYzILrNcf8e9/C0SXaEbkPe3+wbrSnwUSFcUbsIn+pmdrOSxhQPxtRynaUUPPGhrhXcc4D3aXauJyD7/NChNe/RS8hSyX8JyL9Uo1ocZ4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712778540; c=relaxed/simple;
-	bh=txVJohEs29OdaDXlJGvCJJAfW5WG5atdMNw9P4pyOew=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F/lyRFd7wP8DDGRZmBpxPnu5YydYn+TPwlwvBGPzwf3H/rYnn1CA1ZDyfhHPdOtiMwI3KRNl7fS4vWBQvxbVmdf0F/JABJHj0dr7gtXSxXbPGis1T6ZmascUQgOif9o90VcEjFoNlcBvXZ+bEYdSY53hNy/bVEjM8/H8DGJxNNE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xCEiiU4M; arc=fail smtp.client-ip=40.107.237.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541C1181337
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 19:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712778542; cv=none; b=qGlhJMuuenRvMbjXAavVPqzm+MJ5NgC3seqZ+6scUqf5ZwLLCoiw3XYhEWSjMgdidNuUFb8tEWzJhr4eF0W6BeVC9opa4u6A9UCgqJB9+runNSFBJPsjElHOEamjXTrmOGcI1schREMfb+FWuefvELDrO+lXFKNwD7OfCzJydtc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712778542; c=relaxed/simple;
+	bh=xEoGedRNiXJoGnqajnhf1BwPxOUbcpaoDU2aUMU/6xw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QkBNW3jisTX6vqLSP4Z7yD5vxhtT/8Jl5AqWfAWghqLI2fi0bPyqlGqjdMiMECQ/bl6bmoknKCcH6Xnq0rQ3fbb+9/8tY4bKEQKQ/Pvi3mwJ45uZH9SvpH8ckRc6lzQcPRVGVZ+FCB3nVeV3JKCln4GPtYExJAmFflONNbdOLog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pG6NEfN8; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xCEiiU4M"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HXg0/SvRmB2zsmOymhR4ZotI9taE1NG2IA/Inrr91VQHN49cD0gHLn1SeZ4JSKvu7ql397rkOM3QQvg58uYqhByxl1H9Hve9srBis8VNmybXeka90DUa76F/fgpV1I41q1OS6U60Ac73fhjjE/LNWwmJ7UgDPr5Aaoq7zqofV4wE8YYtNYEBFv+IJKHOpcZrsFv5Mh+c2Pg0fmNbyGGpK9tdqKrwsd+q5jmDve679dpJElj9tYS6TmfBI5hZdsnACwcPrYItlCjylbMlipcVIjn1ivNqDztMISXXPIXC/u4oP+bdegCk8Q1lzBLcYHtncTvdiKyn6xARrb767tghFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k0LRVzS8grWUW2SXthNFTo83cUa9GynSeTFdqAUi4wo=;
- b=Ki3rMboSt47bv/SI6Yn0E9jgUWPets3Mo+LtgghrGljGftVZcKlKlXxnYpji/c3yrWb0bvyUVNaA4ijiMJUH4L0B+g++GBZJvPmb5IK5RfRCz87SHdiebgSABCyp5MzK485VvU23pTDSCUhaVJYuTs/m5VUXo0Fpw6NpEU3IioeEYzVx9Xbh/20iWM+EYstG4UJllJCU47Iwc/22JeQd+Y9RqmIBY1CXpvl0/GqPIgp7J9Q+Adfq99itxbW4VPlOrnOk31n73QvULDwViH4CEAN16I+lrudbPQH/4w8jw7S/64iuiZZzaDA60KtmWW99psxDEpM3D2eeGipi0SpWlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k0LRVzS8grWUW2SXthNFTo83cUa9GynSeTFdqAUi4wo=;
- b=xCEiiU4Mpg4Z2mCQw8yadmTbTodX1nU9r3WPt9mbIW4/SJRM7lVuS+R7yFxmEXin+4xRJS+RCXtIAZgoQsbNy0VSCnYkHRhk4P3bJpadac4PnMedo8KoUvATkm+NlvrI/+Tyt49P0YI+kpqubjXC2x6jqx7AxhXcLQFvDTlrq0Y=
-Received: from SN6PR08CA0007.namprd08.prod.outlook.com (2603:10b6:805:66::20)
- by SA1PR12MB6822.namprd12.prod.outlook.com (2603:10b6:806:25d::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
- 2024 19:48:56 +0000
-Received: from SA2PEPF00001508.namprd04.prod.outlook.com
- (2603:10b6:805:66:cafe::90) by SN6PR08CA0007.outlook.office365.com
- (2603:10b6:805:66::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.19 via Frontend
- Transport; Wed, 10 Apr 2024 19:48:55 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Wed, 10 Apr 2024 19:48:55 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Apr
- 2024 14:48:55 -0500
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 10 Apr
- 2024 14:48:54 -0500
-Received: from fedora.mshome.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 10 Apr 2024 14:48:52 -0500
-From: Jason Andryuk <jason.andryuk@amd.com>
-To: Juergen Gross <jgross@suse.com>, Boris Ostrovsky
-	<boris.ostrovsky@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, "Ingo
- Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
-	<hpa@zytor.com>, Stefano Stabellini <sstabellini@kernel.org>, "Oleksandr
- Tyshchenko" <oleksandr_tyshchenko@epam.com>, Paolo Bonzini
-	<pbonzini@redhat.com>
-CC: <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>, "Jason
- Andryuk" <jason.andryuk@amd.com>
-Subject: [PATCH 0/5] x86/pvh: Make PVH entry relocatable
-Date: Wed, 10 Apr 2024 15:48:45 -0400
-Message-ID: <20240410194850.39994-1-jason.andryuk@amd.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pG6NEfN8"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43477091797so2891cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:49:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712778539; x=1713383339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DWCShh/bRGRzeO22yeBjtZLPhJ0/AGFCyE+KkcrS+ds=;
+        b=pG6NEfN8H1FXyjhB6zgMz+V9P0x2RFFQyiTdsFO1L8VKpRZzyjbysiRD2ExCnRgOyP
+         0jWXnJGQfToi03nmPxhOzvQ8GnFe5PYQ0eFRMbLuEO2dmusAPuDSUWSmQy4lRYpfQqn3
+         D5g/7wYHgv2woKEaU8vyxaJA0v9b4Ck0ZrI83pGenx0LyuKCSGX+Wcd+3hXZ7zxJaBc8
+         H4CMDij5YMRVFiHWUjfY91MVCf6HqD6Oo4llx3di1Ic8N0DMtoXfSng3m4FadtQU3GmD
+         c+WWawmeJOMxjmCBk+zt62kiil76RJEDKkXGg6mfVbbsT8OAXlGYWUnrZ1X76kBP5kkz
+         bE1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712778539; x=1713383339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DWCShh/bRGRzeO22yeBjtZLPhJ0/AGFCyE+KkcrS+ds=;
+        b=o+qSA+0W4A/1ya0zPNM6Cjj042k8eOYXvF1S289Ef4RV+It4Jj1mE6xJwblzfkDrqF
+         ubyX7Jzhp0BjCljNfCCkcwUElkYFhVwGwL+bQInFDICMOxOGl1BPMaeT8rC0JL+tmIEe
+         91vRZFUxTaY9kgPRFX646gNg/lwVA9bd6JQ1BHclvFqDUyw03XI4SBciEfRcNrcBH2Dg
+         PW7bVGPmPenL3xmrbYnqKfY1Qokd0vIrdm1txkuAwfwGF6B2gzOJviqaCO/fythapDWT
+         DbuVfWKoACvgLJPug7/qA+xjUqqX2J/AHWfxswI5cQDA805YLykhnXTwrkQMIqsehI6q
+         yi+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW0ANT6bfRxDEgINNGnwJdqNbnV3aIk4+MVMCyKqFeCj3wQ9cTZPiGTpjkIenYwleXrOBy07iYtr9RwoMZiZlO1Q9yraQz3dJgT8rc+
+X-Gm-Message-State: AOJu0YwffHPzWsiIkbiVGnWO3mIN6QuBSKt5z5v8C3jbB+k/FGRvTVnd
+	WzNNS6AQqweMEwKmOUfE/AagLtLXPBW7VFy8cbuHa3CUYtYGvj8RMadR2OL7Pb1Il4NNxdQwyjc
+	EybH+nahjuBxEbADpHnMJbdHoAO4lpM6qa14u
+X-Google-Smtp-Source: AGHT+IGa6MOnKjfghS1aRAZ4F4MxrT/E1DKiGKtukJn/QsQjBmlT/f6kggLbge9jt3UM+LRGc/z5WVALVplB0eqXhqc=
+X-Received: by 2002:a05:622a:5c13:b0:434:61ad:8c1b with SMTP id
+ gd19-20020a05622a5c1300b0043461ad8c1bmr55230qtb.28.1712778539135; Wed, 10 Apr
+ 2024 12:48:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|SA1PR12MB6822:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28717031-e15d-4c1a-2eb0-08dc599741d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	H+zzQjvRY0w9QKyty8feI3ffpbd+kGRTEAPthS7CtX0N6qqYDcygx4O/wiOJYRNlx3f3dmZ1EsPfN4kka2sSq80/l97orx3EVos8OX50YhkJy+54apPHWQu3qk/DI9FoQEg/n9hLlQGOhoSo79pq9KDeWXg7nrr+l7XEyd+lQXUHpZF1+5LTjIte6SvMjfnR/wS019g6vyLntPh16yks8LB240wfhLQiT/f5Wuapeyfeh7Fw7kLwVhG0MIpctezwq2NnPi4m2fgrVtWhmSJe/qPamQq7eexaBG8ovN3zvcVRXGo4GyveFPu4/V3rBr0ckeAwctkBTFvb+hnfvdsAW9uN5tohTJk4ZxD8XwYTN0eY6GZ9pY06HjspmMioa8oZd74B9XGommmfTny5IpgMf8ljrMc1Oy9RlMyuBrdc21+C3nLz23fZzFeMJG1zs4bufPmTxMcYizhOvO192R3MKGcr8PUudMV3s3KfNFw5eerh8LXzFvkiY+N/+UkJ87SbOkkqT4+6WzW8ey6WVTVp5ierk5LjQSJbVgceFb/zkxh3Ml0dL7oTVyMDRWyqAz3bUx1pr6S4VylEsr9Ljln3gBwSgBVkLM5t8smWetnLpoL+puinDR7t7AZ2kZ0giWheqPnlbt/xfd2/yqdNU8fIzXMWwXrRSmaEmfxcfeCFRvgy/PRZWaAnsFBOVjA3vzEAHo9lU3o3mpSZF45iY/87CBreWyNi+EBtl9tDXp+xQn9FmSajxKNd9Q2w1QZsg2rukk/qn2n6d52zbxConuzhaw==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(82310400014)(36860700004)(921011);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 19:48:55.8697
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28717031-e15d-4c1a-2eb0-08dc599741d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00001508.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6822
+References: <20240410182618.169042-2-noah@noahloomans.com>
+In-Reply-To: <20240410182618.169042-2-noah@noahloomans.com>
+From: Guenter Roeck <groeck@google.com>
+Date: Wed, 10 Apr 2024 12:48:46 -0700
+Message-ID: <CABXOdTe02ALsv6sghnhWMkn7-7kidXhjvWzpDn7dGh4zKEkO8g@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: cros_ec_uart: properly fix race condition
+To: Noah Loomans <noah@noahloomans.com>
+Cc: Bhanu Prakash Maiya <bhanumaiya@chromium.org>, Benson Leung <bleung@chromium.org>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
+	Robert Zieba <robertzieba@google.com>, chrome-platform@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Using the PVH entry point, the uncompressed vmlinux is loaded at
-LOAD_PHYSICAL_ADDR, and execution starts in 32bit mode at the
-address in XEN_ELFNOTE_PHYS32_ENTRY, pvh_start_xen, with paging
-disabled.
+On Wed, Apr 10, 2024 at 11:29=E2=80=AFAM Noah Loomans <noah@noahloomans.com=
+> wrote:
+>
+> The cros_ec_uart_probe() function calls devm_serdev_device_open() before
+> it calls serdev_device_set_client_ops(). This can trigger a NULL pointer
+> dereference:
+>
+>     BUG: kernel NULL pointer dereference, address: 0000000000000000
+>     ...
+>     CPU: 5 PID: 103 Comm: kworker/u16:3 Not tainted 6.8.4-zen1-1-zen #1 4=
+a88f2661038c2a3bb69aa70fb41a5735338823c
+>     Hardware name: Google Morphius/Morphius, BIOS MrChromebox-4.22.2-1-g2=
+a93624aebf 01/22/2024
+>     Workqueue: events_unbound flush_to_ldisc
+>     RIP: 0010:ttyport_receive_buf+0x3f/0xf0
+>     ...
+>     Call Trace:
+>      <TASK>
+>      ? __die+0x10f/0x120
+>      ? page_fault_oops+0x171/0x4e0
+>      ? srso_return_thunk+0x5/0x5f
+>      ? exc_page_fault+0x7f/0x180
+>      ? asm_exc_page_fault+0x26/0x30
+>      ? ttyport_receive_buf+0x3f/0xf0
+>      flush_to_ldisc+0x9b/0x1c0
+>      process_one_work+0x17b/0x340
+>      worker_thread+0x301/0x490
+>      ? __pfx_worker_thread+0x10/0x10
+>      kthread+0xe8/0x120
+>      ? __pfx_kthread+0x10/0x10
+>      ret_from_fork+0x34/0x50
+>      ? __pfx_kthread+0x10/0x10
+>      ret_from_fork_asm+0x1b/0x30
+>      </TASK>
+>
+> A simplified version of crashing code is as follows:
+>
+>     static inline size_t serdev_controller_receive_buf(struct serdev_cont=
+roller *ctrl,
+>                                                       const u8 *data,
+>                                                       size_t count)
+>     {
+>             struct serdev_device *serdev =3D ctrl->serdev;
+>
+>             if (!serdev || !serdev->ops->receive_buf) // CRASH!
+>                 return 0;
+>
+>             return serdev->ops->receive_buf(serdev, data, count);
+>     }
+>
+>     static size_t ttyport_receive_buf(struct tty_port *port, const u8 *cp=
+,
+>                                       const u8 *fp, size_t count)
+>     {
+>             struct serdev_controller *ctrl =3D port->client_data;
+>             [...]
+>
+>             if (!test_bit(SERPORT_ACTIVE, &serport->flags))
+>                     return 0;
+>
+>             ret =3D serdev_controller_receive_buf(ctrl, cp, count);
+>
+>             [...]
+>             return ret;
+>     }
+>
+> It assumes that if SERPORT_ACTIVE is set and serdev exists, serdev->ops
+> will also exist. This conflicts with the existing cros_ec_uart_probe()
+> logic, as it first calls devm_serdev_device_open() (which sets
+> SERPORT_ACTIVE), and only later sets serdev->ops via
+> serdev_device_set_client_ops().
+>
+> Commit 01f95d42b8f4 ("platform/chrome: cros_ec_uart: fix race
+> condition") attempted to fix a similar race condition, but while doing
+> so, made the window of error for this race condition to happen much
+> wider.
+>
+> Attempt to fix the race condition again, making sure we fully setup
+> before calling devm_serdev_device_open().
+>
+> Fixes: 01f95d42b8f4 ("platform/chrome: cros_ec_uart: fix race condition")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Noah Loomans <noah@noahloomans.com>
+> ---
+>
+> This is my first time contributing to Linux, I hope this is a good
+> patch. Feedback on how to improve is welcome!
+>
 
-Loading at LOAD_PHYSICAL_ADDR has not been a problem in the past as
-virtual machines don't have conflicting memory maps.  But Xen now
-supports a PVH dom0, which uses the host memory map, and there are
-Coreboot/EDK2 firmwares that have reserved regions conflicting with
-LOAD_PHYSICAL_ADDR.  Xen recently added XEN_ELFNOTE_PHYS32_RELOC to
-specify an alignment, minimum and maximum load address when
-LOAD_PHYSICAL_ADDR cannot be used.  This patch series makes the PVH
-entry path PIC to support relocation.
+The commit message is a bit long, but the patch itself looks good to me.
 
-Only x86-64 is converted.  The 32bit entry path calling into vmlinux,
-which is not PIC, will not support relocation.
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
 
-The entry path needs pages tables to switch to 64bit mode.  A new
-pvh_init_top_pgt is added to make the transition into the startup_64
-when the regular init_top_pgt pagetables are setup.  This duplication is
-unfortunate, but it keeps the changes simpler.  __startup_64() can't be
-used to setup init_top_pgt for PVH entry because it is 64bit code - the
-32bit entry code doesn't have page tables to use.
+Guenter
 
-This is the straight forward implementation to make it work.  Other
-approaches could be pursued.
-
-checkpatch.pl gives an error: "ERROR: Macros with multiple statements
-should be enclosed in a do - while loop" about the moved PMDS macro.
-But PMDS is an assembler macro, so its not applicable.  There are some
-false positive warnings "WARNING: space prohibited between function name
-and open parenthesis '('" about the macro, too.
-
-Jason Andryuk (5):
-  xen: sync elfnote.h from xen tree
-  x86/pvh: Make PVH entrypoint PIC for x86-64
-  x86/pvh: Set phys_base when calling xen_prepare_pvh()
-  x86/kernel: Move page table macros to new header
-  x86/pvh: Add 64bit relocation page tables
-
- arch/x86/kernel/head_64.S            |  22 +---
- arch/x86/kernel/pgtable_64_helpers.h |  28 +++++
- arch/x86/platform/pvh/head.S         | 157 +++++++++++++++++++++++++--
- include/xen/interface/elfnote.h      |  93 +++++++++++++++-
- 4 files changed, 265 insertions(+), 35 deletions(-)
- create mode 100644 arch/x86/kernel/pgtable_64_helpers.h
-
--- 
-2.44.0
-
+>  drivers/platform/chrome/cros_ec_uart.c | 28 +++++++++++++-------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_uart.c b/drivers/platform/ch=
+rome/cros_ec_uart.c
+> index 8ea867c2a01a..62bc24f6dcc7 100644
+> --- a/drivers/platform/chrome/cros_ec_uart.c
+> +++ b/drivers/platform/chrome/cros_ec_uart.c
+> @@ -263,12 +263,6 @@ static int cros_ec_uart_probe(struct serdev_device *=
+serdev)
+>         if (!ec_dev)
+>                 return -ENOMEM;
+>
+> -       ret =3D devm_serdev_device_open(dev, serdev);
+> -       if (ret) {
+> -               dev_err(dev, "Unable to open UART device");
+> -               return ret;
+> -       }
+> -
+>         serdev_device_set_drvdata(serdev, ec_dev);
+>         init_waitqueue_head(&ec_uart->response.wait_queue);
+>
+> @@ -280,14 +274,6 @@ static int cros_ec_uart_probe(struct serdev_device *=
+serdev)
+>                 return ret;
+>         }
+>
+> -       ret =3D serdev_device_set_baudrate(serdev, ec_uart->baudrate);
+> -       if (ret < 0) {
+> -               dev_err(dev, "Failed to set up host baud rate (%d)", ret)=
+;
+> -               return ret;
+> -       }
+> -
+> -       serdev_device_set_flow_control(serdev, ec_uart->flowcontrol);
+> -
+>         /* Initialize ec_dev for cros_ec  */
+>         ec_dev->phys_name =3D dev_name(dev);
+>         ec_dev->dev =3D dev;
+> @@ -301,6 +287,20 @@ static int cros_ec_uart_probe(struct serdev_device *=
+serdev)
+>
+>         serdev_device_set_client_ops(serdev, &cros_ec_uart_client_ops);
+>
+> +       ret =3D devm_serdev_device_open(dev, serdev);
+> +       if (ret) {
+> +               dev_err(dev, "Unable to open UART device");
+> +               return ret;
+> +       }
+> +
+> +       ret =3D serdev_device_set_baudrate(serdev, ec_uart->baudrate);
+> +       if (ret < 0) {
+> +               dev_err(dev, "Failed to set up host baud rate (%d)", ret)=
+;
+> +               return ret;
+> +       }
+> +
+> +       serdev_device_set_flow_control(serdev, ec_uart->flowcontrol);
+> +
+>         return cros_ec_register(ec_dev);
+>  }
+>
+> --
+> 2.44.0
+>
