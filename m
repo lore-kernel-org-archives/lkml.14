@@ -1,172 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B98154C0F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:45:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA9513C9D4;
+	Wed, 10 Apr 2024 08:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712738740; cv=none; b=LpmmQuQ8jT7ezBTBpTlXNtpNkwiwjyB7zDLrmBZ6gIrgqdjCMv5uDr1bCDZju088Tbt26jgTetrVRB5jTkHPk3vCVrIzEQl+zLoYUFP/q9IRxhEt+tDxxo1AWNp81XtACJNgjrwXxm5CR5g7uHTtpbm14/moTiClV1ns3uTunCg=
+	t=1712738785; cv=none; b=pg7QotJl4repxMRqb54uVAeEmti4QckEoYTK4cvF2cVZeU21H8uCSuCPHUXFXpyyBttYDy9z8kz/ATRyI5zoMsDVZ1a2VPBHO9Fi6+vnVQOxReSH+AhfWZls3y5wOWaSAdslFivcUBcSafBEKQzI6aI8uPw/bjDZtv21Oq/vHbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712738740; c=relaxed/simple;
-	bh=rjpJ/B0jBLfP6NqGowlaRPiXpWGZqILHxap2uCmUq7E=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gv6lq//iiArTBPjbROeNbqQQslg/u81sbj0WoR4I4tXxotAzpGXTUnBDAcq3m01B2Em25GA/2kFv+RQWHz6z0vyNH/mUS83ltjakKlvfeIqRdMqOcfNZvdYQ4Vz+jw+u2VVR3bpj5a7u50uEYXPCPwippxfzfeMSZ4BYLESeQA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZnkn8Hr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZnkn8Hr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D033EC433C7;
-	Wed, 10 Apr 2024 08:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712738739;
-	bh=rjpJ/B0jBLfP6NqGowlaRPiXpWGZqILHxap2uCmUq7E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nZnkn8HrApjPn+iBhw/Z53N0bB5DkavtqggzdJ1FKc6z1KIgt0UcANOWxTPYTfGOd
-	 b9mtO7drDcTBlWti/u/3DvjOkvxj5wYBbafkNTnrgekkExcrFU7dx7o2mATD9GZnNS
-	 iLWh1Th97DjMhQdxJ6h1Ve+tuxUIRjwM+UiRFcSbriQN4RK2cutC6Gfa772FQQdzCi
-	 Rp8IRo65oXNhaMrn0C12M4J//fX5ggxoWjij075NKo1+RkQ8si6QmEBR753jNfEPR6
-	 PCJxjwLBozu7H4wLtaxJ1xEY2Edtl00qQ+bsW8x0oEwpRWeYDW2cpbQUA9kB1LWABC
-	 y/B88RqarDZzQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1ruTaL-0034tA-JX;
-	Wed, 10 Apr 2024 09:45:37 +0100
-Date: Wed, 10 Apr 2024 09:45:37 +0100
-Message-ID: <86wmp5sj0u.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Gavin Shan <gshan@redhat.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	akpm@linux-foundation.org,
-	oliver.upton@linux.dev,
-	apopple@nvidia.com,
-	rananta@google.com,
-	mark.rutland@arm.com,
-	v-songbaohua@oppo.com,
-	yangyicong@hisilicon.com,
-	shahuang@redhat.com,
-	yihyu@redhat.com,
-	shan.gavin@gmail.com
-Subject: Re: [PATCH v3 1/3] arm64: tlb: Fix TLBI RANGE operand
-In-Reply-To: <7a929104-5f09-4ff6-8792-4a9e93bc0894@arm.com>
-References: <20240405035852.1532010-1-gshan@redhat.com>
-	<20240405035852.1532010-2-gshan@redhat.com>
-	<7a929104-5f09-4ff6-8792-4a9e93bc0894@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1712738785; c=relaxed/simple;
+	bh=90hWQ+ubNEuCYKT0GJY7VybLwzVVSh8JhjHzzsQRa88=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=pZB9yLI7e/zXwWcR+UxlO5RAbHTqUhVzVY8XAT3sqPEjN4XV+HPoEtn7QwfnvGi4qt/Ns2uQh2Ef2Oy0PsBBV9Qk5BeLBA9IgYbUE27urWHf9ZhkqaWUzZTRvOchbSUxO/a+2RKFI01yQsT6q+sFVWX3EvjIbdfIKT4TAvr9zDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id C91BB3781453;
+	Wed, 10 Apr 2024 08:46:18 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240409172821.820897593@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240409172821.820897593@linuxfoundation.org>
+Date: Wed, 10 Apr 2024 09:46:18 +0100
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: ryan.roberts@arm.com, gshan@redhat.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org, oliver.upton@linux.dev, apopple@nvidia.com, rananta@google.com, mark.rutland@arm.com, v-songbaohua@oppo.com, yangyicong@hisilicon.com, shahuang@redhat.com, yihyu@redhat.com, shan.gavin@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Message-ID: <3c0c9c-66165200-11-194ac52@218875518>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?6=2E6?= 000/254] 
+ =?utf-8?q?6=2E6=2E26-rc2?= review
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 08 Apr 2024 09:29:31 +0100,
-Ryan Roberts <ryan.roberts@arm.com> wrote:
-> 
-> On 05/04/2024 04:58, Gavin Shan wrote:
-> > KVM/arm64 relies on TLBI RANGE feature to flush TLBs when the dirty
-> > pages are collected by VMM and the page table entries become write
-> > protected during live migration. Unfortunately, the operand passed
-> > to the TLBI RANGE instruction isn't correctly sorted out due to the
-> > commit 117940aa6e5f ("KVM: arm64: Define kvm_tlb_flush_vmid_range()").
-> > It leads to crash on the destination VM after live migration because
-> > TLBs aren't flushed completely and some of the dirty pages are missed.
-> > 
-> > For example, I have a VM where 8GB memory is assigned, starting from
-> > 0x40000000 (1GB). Note that the host has 4KB as the base page size.
-> > In the middile of migration, kvm_tlb_flush_vmid_range() is executed
-> > to flush TLBs. It passes MAX_TLBI_RANGE_PAGES as the argument to
-> > __kvm_tlb_flush_vmid_range() and __flush_s2_tlb_range_op(). SCALE#3
-> > and NUM#31, corresponding to MAX_TLBI_RANGE_PAGES, isn't supported
-> > by __TLBI_RANGE_NUM(). In this specific case, -1 has been returned
-> > from __TLBI_RANGE_NUM() for SCALE#3/2/1/0 and rejected by the loop
-> > in the __flush_tlb_range_op() until the variable @scale underflows
-> > and becomes -9, 0xffff708000040000 is set as the operand. The operand
-> > is wrong since it's sorted out by __TLBI_VADDR_RANGE() according to
-> > invalid @scale and @num.
-> > 
-> > Fix it by extending __TLBI_RANGE_NUM() to support the combination of
-> > SCALE#3 and NUM#31. With the changes, [-1 31] instead of [-1 30] can
-> > be returned from the macro, meaning the TLBs for 0x200000 pages in the
-> > above example can be flushed in one shoot with SCALE#3 and NUM#31. The
-> > macro TLBI_RANGE_MASK is dropped since no one uses it any more. The
-> > comments are also adjusted accordingly.
-> 
-> Perhaps I'm being overly pedantic, but I don't think the bug is
-> __TLBI_RANGE_NUM() not being able to return 31; It is clearly documented that it
-> can only return in the range [-1, 30] and a maximum of (MAX_TLBI_RANGE_PAGES -
-> 1) pages are supported.
+On Tuesday, April 09, 2024 23:00 IST, Greg Kroah-Hartman <gregkh@linuxf=
+oundation.org> wrote:
 
-I guess "clearly" is pretty relative. I find it misleading that we
-don't support the full range of what the architecture offers and have
-these odd limitations.
+> This is the start of the stable review cycle for the 6.6.26 release.
+> There are 254 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Thu, 11 Apr 2024 17:27:40 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6=
+.26-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-6.6.y
+> and the diffstat can be found below.
+>=20
 
-> The bug is in the kvm caller, which tries to call __flush_tlb_range_op() with
-> MAX_TLBI_RANGE_PAGES; clearly out-of-bounds.
+KernelCI report for stable-rc/linux-6.6.y for this week :-
 
-Nobody disputes that point, hence the Fixes: tag pointing to the KVM
-patch. But there are two ways to fix it: either reduce the amount KVM
-can use for range invalidation, or fix the helper to allow the full
-range offered by the architecture.
+## stable-rc HEAD for linux-6.6.y:
+Date: 2024-04-08
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3Dec59b99017e96d3bc8a6d5b87c01f47ec5a9bcb9
 
-> So personally, I would prefer to fix the bug first. Then separately
-> enhance the infrastructure to support NUM=31.
+## Build failures:
+No build failures seen for the stable-rc/linux-6.6.y commit head \o/
 
-I don't think this buys us much, apart from making it harder for
-people to know what they need/want/randomly-elect to backport.
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-6.6.y commit head=
+ \o/
 
-> > Fixes: 117940aa6e5f ("KVM: arm64: Define kvm_tlb_flush_vmid_range()")
-> 
-> I would argue that the bug was actually introduced by commit 360839027a6e
-> ("arm64: tlb: Refactor the core flush algorithm of __flush_tlb_range"), which
-> separated the tlbi loop from the range size validation in __flush_tlb_range().
-> Before this, all calls would have to go through __flush_tlb_range() and
-> therefore anything bigger than (MAX_TLBI_RANGE_PAGES - 1) pages would cause the
-> whole mm to be flushed. Although I get that bisect will lead to this one, so
-> that's probably the right one to highlight.
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
-I haven't tried to bisect it, only picked this as the obviously
-culprit.
+Thanks,
+Shreeya Patel
 
-To your point, using __flush_tlb_range() made little sense for KVM --
-what would be the vma here? Splitting the helper out was, I think the
-correct decision. But we of course lost sight of the __TLBI_RANGE_NUM
-limitation in the process.
-
-> I get why it was split, but perhaps it should have been split at a higher level;
-> If tlbi range is not supported, then KVM will flush the whole vmid. Would it be
-> better for KVM to follow the same pattern as __flush_tlb_range_nosync() and
-> issue per-block tlbis upto a max of MAX_DVM_OPS before falling back to the whole
-> vmid? And if tlbi range is supported, KVM uses it regardless of the size of the
-> range, whereas __flush_tlb_range_nosync() falls back to flush_tlb_mm() at a
-> certain size. It's not clear why this divergence is useful?
-
-That'd be a definitive improvement indeed, and would bring back some
-much needed consistency.
-
-> > Cc: stable@kernel.org # v6.6+
-> > Reported-by: Yihuang Yu <yihyu@redhat.com>
-> > Suggested-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Gavin Shan <gshan@redhat.com>
-> 
-> Anyway, the implementation looks correct, so:
-> 
-> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-
-Thanks for that!
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
