@@ -1,54 +1,84 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C2013D521
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AF913D27E;
+	Wed, 10 Apr 2024 07:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735354; cv=none; b=bhVqzo42utSlS3JOWWYdMszr9+Ixe/V7u83puk07vdwbWscRNFWCl27Xf4TbUAPhAv5iKb+ucSI0JvftHV17OR1NVl3+Thdc2mdqnt+laFe0AXXQh+BkSFfXzKtC2M8yIdAagE4eWkA+burSzpWKKBrfdFMHIQFAr3m+5CHVUYI=
+	t=1712735363; cv=none; b=c/ImIWdyZ9ELCYIfArk66J1trSfIuC8t9ELvoHFeUhE1ivjDUGu5IcCQrO/4z4PkA9IygaORAeytYCdZtEBFDswAa5jB02eOAFQjSqJViM0hnfIxeigorvlnGN8SE4hWJW7k56euyvyMg671CylPK+03GdHXdwu/iqQQk2K1DAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712735354; c=relaxed/simple;
-	bh=tCAYH8SttXspLQuOho8vf/6RSFBLhheQNq/XMrpHCIw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Of7657/mUHrzAgZTezAOqRxJIRcRnHdB+H87wKSYqURKxkNWc9hih3TV5ZHmcinGimszKpIMaJSXZG1zKXwpZmYO9oHtMHy1UXWYFOC/uslNxF+yuMI3vh97+9DymGeUA/qu1oz70O9o6xhU9LB6qVISJgLGz/6eGqc2OGo5CSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VDvz164k0z1R5TK;
-	Wed, 10 Apr 2024 15:46:21 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF3741403D5;
-	Wed, 10 Apr 2024 15:49:04 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
- (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
- 2024 15:49:04 +0800
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: <richard@nod.at>, <daniel@makrotopia.org>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] ubi: Fix resource leaking in error handling path of ubi_init
-Date: Wed, 10 Apr 2024 15:40:31 +0800
-Message-ID: <20240410074033.2523399-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712735363; c=relaxed/simple;
+	bh=+9te3cNBoGduBlHPkYI0dfFohs/gQ6e7/rlGyu2fe+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GoHxLlKU3tnwZEz6/BHiu0KcOlXJGnS3prJl/RaJvUtQ/Qi9vL4InKcqOSX1IHyE0URWdNiLqxMTTi5EnJZQ9kbao+60Mqt1BhxK4Cldd/jYYTaIt+waKOOGDD6wOf93Qx28S+7beqi6r1OjpF5UQlTYPvr8PMlac9tKEHWz4Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WG4TViuh; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WG4TViuh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712735361; x=1744271361;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+9te3cNBoGduBlHPkYI0dfFohs/gQ6e7/rlGyu2fe+U=;
+  b=WG4TViuhwhAsF2AnkDSgR0q84KUIGLRE6hWcEicOmKpyct+/XIkvVjbr
+   I8hUdGBCogL/tWx0lmMht3/uviSqIyu3CgIU5Dtjhlaxh+FHTsWog3vxS
+   IpDZ3RVtqESXOSHae5TjS1BC2JZPDDjdMDoDzgLdlU34HcsbIf4m6D5ns
+   YoWtKR4r04M7WKxdEildlyCq8vT50zbP7yde/dbp4mKyqT0vEhhr/Rp6C
+   WopM+ME7yAZzm0IE1mvDzPDeOdvzX/3CMG4ABoSXAEoSJLTo07L+E+1Aj
+   uLoGYTYo60THnFbo7f8rWZ8QytWoys6kGQQScnmY6zDAuKeQ3sMeOQxxA
+   g==;
+X-CSE-ConnectionGUID: yqindwHxRYSLsDAD7MYQdA==
+X-CSE-MsgGUID: IH6ImbmuRfSiAiBgalmEjw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18647782"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="18647782"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 00:49:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="937094645"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="937094645"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 10 Apr 2024 00:49:18 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 826AC169; Wed, 10 Apr 2024 10:49:17 +0300 (EEST)
+Date: Wed, 10 Apr 2024 10:49:17 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
+	andriy.shevchenko@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com, linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ACPI: bus: allow _UID matching for integer zero
+Message-ID: <20240410074917.GX112498@black.fi.intel.com>
+References: <20240328035540.13194-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240328035540.13194-1-raag.jadav@intel.com>
 
+On Thu, Mar 28, 2024 at 09:25:40AM +0530, Raag Jadav wrote:
+> Commit b2b32a173881 ("ACPI: bus: update acpi_dev_hid_uid_match() to
+> support multiple types") added _UID matching support for both integer
+> and string types, which satisfies NULL @uid2 argument for string types
+> using inversion, but this logic prevents _UID comparision in case the
+                                                ^^^^^^^^^^^
 
-Zhihao Cheng (2):
-  ubi: ubi_init: Fix missed debugfs cleanup in error handling path
-  ubi: ubi_init: Fix missed ubiblock cleanup in error handling path
+Typo: comparison
 
- drivers/mtd/ubi/build.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+> argument is integer 0, which may result in false positives.
+> 
+> Fix this using _Generic(), which will allow NULL @uid2 argument for
+> string types as well as _UID matching for all possible integer values.
+> 
+> Fixes: b2b32a173881 ("ACPI: bus: update acpi_dev_hid_uid_match() to support multiple types")
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
--- 
-2.39.2
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
