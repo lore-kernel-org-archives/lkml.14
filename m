@@ -1,89 +1,203 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E248917966E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF62817994F;
+	Wed, 10 Apr 2024 17:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770770; cv=none; b=PGADFOO2k5AJtqje4M7d/Gvg1YW1nKfH7XEYEwx2epcwEbULiLe6/eAWOiS8sL0qLT2+dmghvN6Z3we8D5qxX7PF4sgVHblEdUvsx9CeYOejFpQ49EqAoySy3lAMwTlRgcoUWOIU+cBOrcBHANYaZQFwDML6zHU9UxyC3NDkU5U=
+	t=1712770877; cv=none; b=LOQvebVVnbeD8ZpHiTs0qzDnGfuI6QmuJm1Y2nK7Bz1eGQqYNb0Zcv2l34Jokrpn2p8u5ctqXfXMVHySaKEsk7VGylFd8w6tFaP+oBqgleFDslna3fGWeRXbHi6Jet9caM0KKDdNISeVMFpM7S3gx8EVnEsZ29kl2FLQh79y7mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770770; c=relaxed/simple;
-	bh=Ae78iTX5Gi1u5H/iJKMp5ReYCFnEnOmbK4zUk7vZlRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XZ5YuCMfotjkP0Lt0nPEcJurEPQOc+xGAFI2318ZlZNQGhitL6+D7M5lcNhFVlGbHM5EcZ6YZXdgZaOzun3lqgAQ75n+dXO537/btpk5YMAXhhfcOnPSYsSHBTUBJM361PXXg2BifdnthX4NMdRvtg/T0Eoyf7mIFfdsa+WZPXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FMKZbyfU; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMKZbyfU"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d895138ce6so43835261fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712770767; x=1713375567; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=FOAAOfk0ZAGGudRLQ06zTrFZTJcS2I7LIhPpzIE377o=;
-        b=FMKZbyfUimS4Qn6LXKkGbxPJLlV4ma27fDnrC3oxGwYCaDd/S+yXf92+FqUKW6CAa7
-         aOc6bSvxhhKISAWndU/f5MUsM7HruJrsXiB9UoMSgIaGpyAlcCsbvclf5atAYa0H7teq
-         ysJJ290L5lOI5amAEneftF2DZ62yGZIfXLYslg3H7woWb3hDy9XFvUjjW3jFkZa2nYIA
-         JXDGmmnxwjVbBIGRiIsBwgYIPPKi5E5ZWufT0m7gNdHkd9UFKklXO3IblC9/lvXTlFcx
-         +ZOkyFlMJ5jol9gwcYTmHo29b6WE8Yn/4MMr4j7wSk8ZP3dgDZIFu5Vpp2I1Z4X+BvpP
-         XtKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712770767; x=1713375567;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FOAAOfk0ZAGGudRLQ06zTrFZTJcS2I7LIhPpzIE377o=;
-        b=udbfKxstx3OVF/tSeFdsYRz1cVy4xKDbQGaAInup+D3VBOWHzfiucEHjnmbJqtbGuf
-         ij+nSRwa/+s/aymTZ7/U4BVYx/zKwU+xVH19aQfi7tbX65A1A+yq2cJThowVkRFEOa42
-         YRpREbHINPVXFo3zKp9tqk56d3acxCqlaOOXGzFxNTde8/re37DYQ5U9IZtvj9qvmq7O
-         xSGzqg2x5srqnPylYCx8phgXL2gbCCmnJlIkgxXN7AiFMLLSWYjT9wcNNfEkHBQKZbzL
-         iAXPa1gtW4c0Dzw2QJKZeZ8MhD2B64dSLv5poGy6wMxyvO3ld1kOmPGx28COnfN/wfrr
-         uE6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXbTz13nsjB46JM/aA2vCNNFQ0Vib02Y799afj5pwdgqvQ83xs51T1iOSiPTyaoN3k10uh62yK+UNdQNeF5o1o6riuNh1qiNzIWE9iA
-X-Gm-Message-State: AOJu0YxDpNPkznG2hszGr5nljdpfS1JQ3thTqTSyCMRA/1uHL3qYPM74
-	UQeC83qEr7g2/KEvePy+CDlwKE4mXzO4fqaZydD+86+WG+EyL3WID90g3McpxCo=
-X-Google-Smtp-Source: AGHT+IEnBHkuJvI8my1nrxHO1p3O+X/dhW375UqupB/NAf+4Eoc6qRo9EwzliQKAnTU1wYxD4MgzVQ==
-X-Received: by 2002:a2e:8859:0:b0:2d8:71d4:4bb3 with SMTP id z25-20020a2e8859000000b002d871d44bb3mr2393711ljj.26.1712770767037;
-        Wed, 10 Apr 2024 10:39:27 -0700 (PDT)
-Received: from [172.30.205.26] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id o10-20020a2e9b4a000000b002d71b89f93bsm1905763ljj.27.2024.04.10.10.39.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 10:39:26 -0700 (PDT)
-Message-ID: <301f5ec7-e616-4352-9f80-e5cb51a46782@linaro.org>
-Date: Wed, 10 Apr 2024 19:39:24 +0200
+	s=arc-20240116; t=1712770877; c=relaxed/simple;
+	bh=0aKNApkH5cxJA6D2c8OOUEoVR19/Bs8/LdW506TRGlM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s3MBThtk9OJdI9XDAPtA1+vmPDeEjjFT/QLJ88VCQKGdnvtaLCz5mdMhbYPhH5PNzWAUW2RchUZt1Q3R1ZVLr74nb1AemWdyi9XYgwUls/ow+wluUwCbgx/zLdaky45dv52vxy/MRmn73I8U28e7/UXWDh6Gzrp7LDscFLXr6mM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCB65C433F1;
+	Wed, 10 Apr 2024 17:41:15 +0000 (UTC)
+Date: Wed, 10 Apr 2024 13:43:52 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com, rdunlap@infradead.org, linux-mm@kvack.org
+Subject: Re: [PATCH v20 2/5] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <20240410134352.66d35fbc@gandalf.local.home>
+In-Reply-To: <20240406173649.3210836-3-vdonnefort@google.com>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+	<20240406173649.3210836-3-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] regulator: vqmmc-ipq4019: fix module autoloading
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Robert Marko <robert.marko@sartura.hr>,
- Luka Perkov <luka.perkov@sartura.hr>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240410172615.255424-1-krzk@kernel.org>
- <20240410172615.255424-2-krzk@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240410172615.255424-2-krzk@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Sat,  6 Apr 2024 18:36:46 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> +int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+> +		    struct vm_area_struct *vma)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long flags, *subbuf_ids;
+> +	int err = 0;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +
+> +	mutex_lock(&cpu_buffer->mapping_lock);
+> +
+> +	if (cpu_buffer->mapped) {
+> +		err = __rb_map_vma(cpu_buffer, vma);
+> +		if (!err)
+> +			err = __rb_inc_dec_mapped(cpu_buffer, true);
+> +		mutex_unlock(&cpu_buffer->mapping_lock);
+> +		return err;
+> +	}
+> +
+> +	/* prevent another thread from changing buffer/sub-buffer sizes */
+> +	mutex_lock(&buffer->mutex);
+> +
+> +	err = rb_alloc_meta_page(cpu_buffer);
+> +	if (err)
+> +		goto unlock;
+> +
+> +	/* subbuf_ids include the reader while nr_pages does not */
+> +	subbuf_ids = kcalloc(cpu_buffer->nr_pages + 1, sizeof(*subbuf_ids), GFP_KERNEL);
+> +	if (!subbuf_ids) {
+> +		rb_free_meta_page(cpu_buffer);
+> +		err = -ENOMEM;
+> +		goto unlock;
+> +	}
+> +
+> +	atomic_inc(&cpu_buffer->resize_disabled);
+> +
+> +	/*
+> +	 * Lock all readers to block any subbuf swap until the subbuf IDs are
+> +	 * assigned.
+> +	 */
+> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +	rb_setup_ids_meta_page(cpu_buffer, subbuf_ids);
+> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +
+> +	err = __rb_map_vma(cpu_buffer, vma);
+> +	if (!err) {
+> +		raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +		cpu_buffer->mapped = 1;
+> +		raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +	} else {
+> +		kfree(cpu_buffer->subbuf_ids);
+> +		cpu_buffer->subbuf_ids = NULL;
+> +		rb_free_meta_page(cpu_buffer);
+> +	}
+> +unlock:
+
+Nit: For all labels, please add a space before them. Otherwise, diffs will
+show "unlock" as the function and not "ring_buffer_map", making it harder
+to find where the change is.
+
+Same for the labels below.
+
+-- Steve
 
 
-On 4/10/24 19:26, Krzysztof Kozlowski wrote:
-> Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-> based on the alias from of_device_id table.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+> +	mutex_unlock(&buffer->mutex);
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> +
+> +	return err;
+> +}
+> +
+> +int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long flags;
+> +	int err = 0;
+> +
+> +	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+> +		return -EINVAL;
+> +
+> +	cpu_buffer = buffer->buffers[cpu];
+> +
+> +	mutex_lock(&cpu_buffer->mapping_lock);
+> +
+> +	if (!cpu_buffer->mapped) {
+> +		err = -ENODEV;
+> +		goto out;
+> +	} else if (cpu_buffer->mapped > 1) {
+> +		__rb_inc_dec_mapped(cpu_buffer, false);
+> +		goto out;
+> +	}
+> +
+> +	mutex_lock(&buffer->mutex);
+> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +
+> +	cpu_buffer->mapped = 0;
+> +
+> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +
+> +	kfree(cpu_buffer->subbuf_ids);
+> +	cpu_buffer->subbuf_ids = NULL;
+> +	rb_free_meta_page(cpu_buffer);
+> +	atomic_dec(&cpu_buffer->resize_disabled);
+> +
+> +	mutex_unlock(&buffer->mutex);
+> +out:
+> +	mutex_unlock(&cpu_buffer->mapping_lock);
+> +
+> +	return err;
+> +}
+> +
+> +int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+> +{
+> +	struct ring_buffer_per_cpu *cpu_buffer;
+> +	unsigned long reader_size;
+> +	unsigned long flags;
+> +
+> +	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
+> +	if (IS_ERR(cpu_buffer))
+> +		return (int)PTR_ERR(cpu_buffer);
+> +
+> +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+> +consume:
+> +	if (rb_per_cpu_empty(cpu_buffer))
+> +		goto out;
+> +
+> +	reader_size = rb_page_size(cpu_buffer->reader_page);
+> +
+> +	/*
+> +	 * There are data to be read on the current reader page, we can
+> +	 * return to the caller. But before that, we assume the latter will read
+> +	 * everything. Let's update the kernel reader accordingly.
+> +	 */
+> +	if (cpu_buffer->reader_page->read < reader_size) {
+> +		while (cpu_buffer->reader_page->read < reader_size)
+> +			rb_advance_reader(cpu_buffer);
+> +		goto out;
+> +	}
+> +
+> +	if (WARN_ON(!rb_get_reader_page(cpu_buffer)))
+> +		goto out;
+> +
+> +	goto consume;
+> +out:
+> +	/* Some archs do not have data cache coherency between kernel and user-space */
+> +	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
+> +
+> +	rb_update_meta_page(cpu_buffer);
+> +
+> +	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+> +	rb_put_mapped_buffer(cpu_buffer);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * We only allocate new buffers, never free them if the CPU goes down.
+>   * If we were to free the buffer, then the user would lose any trace that was in
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
