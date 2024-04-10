@@ -1,127 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFA216F0DE;
-	Wed, 10 Apr 2024 15:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779816E87C;
+	Wed, 10 Apr 2024 15:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763155; cv=none; b=MikozRnuxq0TRnHxnl6L9PBwj9bj/7GLW/PWnk7dSuNPaKEiDAuyR2ilgDmhVntjmxmRP+RppONo1D53zgxbj4/PObNJNdgh+w9qGaJuZ/jFu55O6bDZIMBH9W+Jaj5Wk78jaQyFY5UbatRV10MhZ3yGotJxGxYaYkz6je4NClk=
+	t=1712763164; cv=none; b=JrjeLH5Yi3xaiq3bsurrugT84PDAe/5erbcjaxXUIhoYCeJeOUthnvCSzV5fTmWKidUrExCEmBQnncGyS4SymflUP77XG0K9M/HGOEHh3aT/wWIsqcGQQdiGwgymEHpNqZqoB1lU1dVspnBrR6E0Zxu91mDugsY21IC1926sI5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763155; c=relaxed/simple;
-	bh=dEgjPQZVrrL7vqI7IKViUp1qmoIOfEl5s9dyPS1YBmo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cLYmwuBBgUHZp4kmjMRVHHswntlSVxzHqeV4/JYWt0qD2kaxfj/K+5jyuJamf3KlxCpGtS5rzF/EoXCOYsPcqv8uWkvKwsgZq7dvUgyrsYUtkvsj5rHxrmhAPNivBMhXsWlPX8GJ9nVLYHpJj/DgD3oqnlI8NNeHIIGVrYzXPWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iWCZQnVb; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712763164; c=relaxed/simple;
+	bh=aSCpDH/F4R0DSA6FAKET7AmPuGmk0OGo1JZYB3F1/M4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ngjY89NXoW1Y/mS9jYUvZfxo7qgdrIF8KdA85qscHZEgYXOrdWdwQ92oMybVEeyCQqX0zwN/K1Y/JLgTWHTaCbpeZS/CUD2udFZ784Xp5OkkQyXeJwPMVk7PnHo4zdcya9jubpxCgkezufWL1RGua6b/EMYFtL9GiAldBtuL+M4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LytFKXN0; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iWCZQnVb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712763153; x=1744299153;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=dEgjPQZVrrL7vqI7IKViUp1qmoIOfEl5s9dyPS1YBmo=;
-  b=iWCZQnVbXhhwoJgU9P8mSUi0d7N3zO4INJQTJsrwa6qu12P95EaAG7cG
-   38hhQbvgU4EA848mMPQ2aaDIq8Hi2+6/05nwCxkpnrg2++OjsWeKzA6rF
-   mddIB+QQq1Txy68tVYKKore5ysVS5A8ADBVkKOKPbIUIkqmgNaP82h4gk
-   stQQiU+n/8+ts2sL9AJgy7gQftRQwYZ7lz/wPKmu/5oxICHoZ1daCTF9q
-   13RsPQkqhkR1XUa1F4Orf9DrlQt0QS3WiSJpaah7EAIU+nkcsOv4Jt2k5
-   nGgi+4d7cgxIKGYIOcXJ26LYRbRXTTNDOwUBAkkQ/A2T0tO5a1Md7+4D+
-   g==;
-X-CSE-ConnectionGUID: q2C80GErSLWIl5FV1BB36Q==
-X-CSE-MsgGUID: RalOf9Y1Sv6SpUSjJoatFQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8260339"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8260339"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:32:32 -0700
-X-CSE-ConnectionGUID: m+bpUFx2Q5yIztOqKC/y2g==
-X-CSE-MsgGUID: eZS9QWdnQA+wEYN3JBJnXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="51568789"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.214.234])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:32:25 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH] bug: Fix no-return-statement warning with !CONFIG_BUG
-Date: Wed, 10 Apr 2024 18:32:12 +0300
-Message-Id: <20240410153212.127477-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LytFKXN0"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a51d05c50b2so456946466b.0;
+        Wed, 10 Apr 2024 08:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712763161; x=1713367961; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NIoZdroObHcn0ilUnP99WXP7c8tNf1PTNXOqonjBdzs=;
+        b=LytFKXN0RLSc3GaL7m7WMMMsS/OnROeV/7t1EjlE5NNdfnxev7Sydk2DjxrdEJnkid
+         nADG0cILZjGe+LGXfSgedBPsTkR6Ircv5FcgouTQjuL3XtO2mPoKxdChOSX41dyMpfhW
+         mWpalYBHHeku+QL2/mgCI2d2GqhQPtMxkYyGuvT2Ri4r6u1qwao1/8rdBTD9FV8pjbrT
+         m3MH80mlbqw9dTGpuua9sF4bwym3qwSaeM2PzggqjCr4Z4CXz4aQf6y0HI1sV8FEPzzD
+         L/uO06b0KJCbX6qFcR+w41Ba/2mTslxj8LM68S6niOeLGh9yT5XprS36WahIQ+lAtwZc
+         D6Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712763161; x=1713367961;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NIoZdroObHcn0ilUnP99WXP7c8tNf1PTNXOqonjBdzs=;
+        b=j3gdAr4BxrAbrpelcH59977iL5rVXhSsVPO5he/M+CZLFHilhG9BimkTa1W1YHSA8G
+         SywAjG+hPqEnKUyqIB5cIY8MoMqHjVaF1Vb0Dmmv83fv5KF8I+fL7qUIYjMVxbJadjlf
+         aQLrJRsd0u7mCAnlSBqKVmpkegj5qE+o/d6hhSeqNqHoJXgbYVgunguuLRq8vLq18Klx
+         1HW+OhqTFVSp4NGVgHkqU+YTYWUG9RmfJ1M2B7XeLJn0BwFPIE0iFws/SKHlhheTJTSz
+         IIBzydjVzayiwONItTykK+ZLDKI/UvpzQghjbJWRVM44FtAIg3GJZpUCmxzvVRTDNDUR
+         fbYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbMU4pe8wg5L2C/NLYmQF65HSpG035IyBgKqmNtjVmrybcaHJFFYQbL0vxPzLgr9EoBY1HyulBeVNycy8yRiPSWtqxDKu2hsETcar2rSbGkn1AQIeOYrs79f2CNl3ruKm68FNs
+X-Gm-Message-State: AOJu0YwEe3ur/KaCi9irEvTecv6Wgc0oCWLm3H5gEe2ni32s5I8gGx8V
+	Q9vynxGRG9JE9o7so0WHFNVQz3fvwwqYAPggQiJrAzURV0Tf0wCs
+X-Google-Smtp-Source: AGHT+IFCvCk24d1vqHgUtpGPRpXznj4t6uQg0+kcFcV3Q2ZHEsnQlRvc/21H7pZ+1pW4Fa8GmM/QZA==
+X-Received: by 2002:a17:906:8308:b0:a4e:390f:c6ce with SMTP id j8-20020a170906830800b00a4e390fc6cemr1669666ejx.65.1712763160458;
+        Wed, 10 Apr 2024 08:32:40 -0700 (PDT)
+Received: from skbuf ([2a02:2f04:d201:1f00::b2c])
+        by smtp.gmail.com with ESMTPSA id bv4-20020a170906b1c400b00a51e452fe0esm2750028ejb.170.2024.04.10.08.32.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 08:32:39 -0700 (PDT)
+Date: Wed, 10 Apr 2024 18:32:36 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com, David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
+Subject: Re: [PATCH net-next v6 5/9] net: dsa: microchip: add support for
+ different DCB app configurations
+Message-ID: <20240410153236.d3ncotfhzwv4dlb7@skbuf>
+References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
+ <20240410080556.1241048-6-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410080556.1241048-6-o.rempel@pengutronix.de>
 
-BUG() does not return, and arch implementations of BUG() use unreachable()
-or other non-returning code. However with !CONFIG_BUG, the default
-implementation is often used instead, and that does not do that. x86 always
-uses its own implementation, but powerpc with !CONFIG_BUG gives a build
-error:
+On Wed, Apr 10, 2024 at 10:05:52AM +0200, Oleksij Rempel wrote:
+> diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+> new file mode 100644
+> index 0000000000000..d2122f844c80b
+> --- /dev/null
+> +++ b/drivers/net/dsa/microchip/ksz_dcb.c
+> +/**
+> + * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
+> + *			      of Internal Priority Value (IPV) sources.
+> + *
+> + * This array defines the apptrust selectors supported by the hardware, where
+> + * the index within the array indicates the priority of the selector - lower
+> + * indices correspond to higher priority. This fixed priority scheme is due to
+> + * the hardware's design, which does not support configurable priority among
+> + * different priority sources.
+> + *
+> + * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
+> + * by the hardware's fixed logic, as detailed below. The order reflects a
+> + * non-configurable precedence where certain types of priority information
+> + * override others:
+> + *
+> + * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
+> + * 2. ACL - Overrides VLAN PCP and DSCP priorities.
+> + * 3. VLAN PCP - Overrides DSCP priority.
+> + * 4. DSCP - Lowest priority, does not override any other priority source.
+> + *
+> + * In this context, the array's lower index (higher priority) for
+> + * 'DCB_APP_SEL_PCP' suggests its relative priority over
+> + * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
+> + *
+> + * DCB_APP_SEL_PCP - Priority Code Point selector
+> + * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
+> + */
+> +static const u8 ksz_supported_apptrust[] = {
+> +	DCB_APP_SEL_PCP,
+> +	IEEE_8021QAZ_APP_SEL_DSCP,
+> +};
 
-  kernel/time/timekeeping.c: In function ‘timekeeping_debug_get_ns’:
-  kernel/time/timekeeping.c:286:1: error: no return statement in function
-  returning non-void [-Werror=return-type]
+I've no idea how kernel-doc is supposed to document arrays. But this
+generates a scripts/kernel-doc warning:
 
-Add unreachable() to default !CONFIG_BUG BUG() implementation.
+  CHECK   ../drivers/net/dsa/microchip/ksz_dcb.c
+../drivers/net/dsa/microchip/ksz_dcb.c:81: warning: cannot understand function prototype: 'const u8 ksz_supported_apptrust[] = '
 
-Fixes: e8e9d21a5df6 ("timekeeping: Refactor timekeeping helpers")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com/
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- include/asm-generic/bug.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-index 6e794420bd39..b7de3a4eade1 100644
---- a/include/asm-generic/bug.h
-+++ b/include/asm-generic/bug.h
-@@ -156,7 +156,10 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
- 
- #else /* !CONFIG_BUG */
- #ifndef HAVE_ARCH_BUG
--#define BUG() do {} while (1)
-+#define BUG() do {		\
-+	do {} while (1);	\
-+	unreachable();		\
-+} while (0)
- #endif
- 
- #ifndef HAVE_ARCH_BUG_ON
--- 
-2.34.1
-
+Worst case, it doesn't need to be a kernel-doc?
