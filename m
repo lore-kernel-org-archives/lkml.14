@@ -1,124 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13D4154C00
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0087D155385;
+	Wed, 10 Apr 2024 10:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712745818; cv=none; b=oSkgqcQ0gbNJyF876trCuq8Zm83suU6FVaYa7KYn7oJvsRlt7fdjxRq5nlBNeCCaLVwMbP+OVofdSOgQpJIm/46X6ffR7gwr3+MoVd/2OEAUIQmUTrqpZAGFim/n2er+x2SRrX8f/5zBVsru8vo4WdyJwRfkW0iv8HNdPSI1EtM=
+	t=1712745835; cv=none; b=sCwg2RNkR+0cwO39tLWXHMcj153lLmvpsjk8VZOtBDMX315BClZP7wg6vlb+o2pc/6C9+ul7HCoD2HY4ObHHUuaw2rDqYMYyuQ+Z7lWy11zp9yPcw1PkXaIp+YQ0fKm+OFNVp0I+PdFuI9s2jpS6U9YFDuA2wAwcvm27HR2P3WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712745818; c=relaxed/simple;
-	bh=F2uId5jnhTOHuSWdCNV89q9EehcaDMvEPq2uWVgwVAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BpJQmsyuzeJw+DVuBFtfq7MBpQXinOSVPKSpk3m2eMOzgkvXa6wXMZqvXIKO53BqfRLAoyaBxrgT9fQBBypHioY4btLPAN7oVW9kjeTjvvzdzjBKMzZML7piYhsiIxRmImTPrfNwToTqiAbD/SMC+N6EY+YG7AexMsFd/1dn3f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVOhSl2x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712745835; c=relaxed/simple;
+	bh=CMXlteTKOwFAuVMW0aMjJuXqhJP5cUNUL11/P+b21/8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G1Mhy+FomU48vR8aq8pXg+Jw2j+HvDovNfdv7nkG/rryE2LG+mxWLkvhGQC+q6PuuaiXdiOOruwcHw7p58ppQQfCQ6L364qOzfwN6FQ2VCUVq/pK4w3lM8tHkDsMgRSELQEUKabXrAR3XBWDBDP9V67UkFO9/Y2CdyP4fGlNdK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4qWInpE; arc=none smtp.client-ip=209.85.160.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVOhSl2x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD9CC433C7;
-	Wed, 10 Apr 2024 10:43:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712745818;
-	bh=F2uId5jnhTOHuSWdCNV89q9EehcaDMvEPq2uWVgwVAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HVOhSl2xqE/Euo0SyKzBTJJicqtADWb3WcxStLD8a3Q2j9UD8vw16QQepslDJQgzB
-	 eY3sAlAL19W+yWptx+ThleiwIq79mVtO7allc9YetRZ4uuco7juVIFEGp63HtIqb22
-	 fO87/EE5kjyW4WxI905mRDk06uTb8U4e9sYkFt0nAuBEVUdqAArB/VLpAkOXp105ZB
-	 2v4nTxrUMGgf/7O9YthaTIYyrVc2CMlTXy5dpRQ59wMqbZ+h9WusNUzxw+WF5FhhRL
-	 A0dDJiLbCLXgEeEtWcMTENsMRPHBSWQdB1hrgG3KBKx9ZsPjTiKmNsRDAAS7vbe8yW
-	 7/kIvEND+BhMQ==
-Date: Wed, 10 Apr 2024 18:30:13 +0800
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] clocksource/drivers/timer-clint: Add option to
- use CSR instead of mtime
-Message-ID: <ZhZqNbbUyPhVzekO@xhacker>
-References: <20240406112159.1634-1-jszhang@kernel.org>
- <20240406112159.1634-3-jszhang@kernel.org>
- <20240409-krypton-employed-b2e0e1b46ddf@spud>
- <ZhVVPB0qD4pBna51@xhacker>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4qWInpE"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-23333dddd8aso54356fac.1;
+        Wed, 10 Apr 2024 03:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712745833; x=1713350633; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D1Sp7n1FvxcNzxiV/M3Whh5xnznJqzGBI91xq3AgOsc=;
+        b=m4qWInpEPQTK9n7pQpzT31t1omK0K8TSleOPXKDBI9LQh4tZv1MdhH/O0xKDlfEAxX
+         sOVehc+QaG8mTxlJ5SAwJwKc7xLTN94ACvbBPeebkNPTbo0utQrxomxDYMCKA6aaMme4
+         eAs7IuKkfwHjtk6tZg9WRN2lsURdmSdx9uXIxRmeHKxcN2Fq7fWZW5GqJFhqz3vCjSg7
+         hS0h0Gsa70YtMnaSGPWugFNEyC1RnINpfgiVk5s3UkGFVRiOERwWD9Gxdtqy/tJauToV
+         /zuzlqzzsRj1h1SbP7LB9PSa7EMDJiVlaw5btP76zwWH2XfCkwQOtH2ShzyCfmm3Y/oI
+         2psA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712745833; x=1713350633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D1Sp7n1FvxcNzxiV/M3Whh5xnznJqzGBI91xq3AgOsc=;
+        b=RQIzXWGNQJ93L/h222WePSASPA2GBawxW28OEYsG9+GWs9PcmkxxbVHt8Rc2+zrCv4
+         /X2U9viCXqb7wqQ/+F1I9aGmnlmOiYnK6M/+PWPqVaMD8Bvobym6WdyKrsLICy21MjN6
+         SGPulGSdSycgzEptLAcARUhJudBIBHLLXiX9sT/kB2qlofFIMGr3VTWg5VB+R6xwmUok
+         jnUV2gE5xbeHWfAFlk/Kv0JYh5d6Ys/jqJNL9wOtFm9aq7ye8YABu8WfmJU8t5x6DFpU
+         Z3tpZdTaMWL6zGhS6mBcnDEsfVNHZYiVDCBnbB93UbbMnYkjtKjFZoiZ/AmpSavgGMPu
+         UJ1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWDVFe6HWN8xn0QKceaE4KS161a5x/O9YtVvwdeODJWCYqOU7gMoJDRXrlToY84LEFGDuG4jUB+6ChnsdfpNeSK38NsZKzYKKi7i36Zqk0e4c56HlR8lMHdg8TM/sDfC1SDgxS5wuFRjw==
+X-Gm-Message-State: AOJu0YyA40LI0MMM1vjQb3FIITmLXObFuI11eGsyFDslpMpOUEK5ouoq
+	LvQ8ypj7lQ0EUYXlB664FmIxSeO3VONImfouV7iVV7/YWOyi8Yvclahrm3Yu2YGcTfEJbU20080
+	lAd9VLiZdvUfOygBiefBQlmjpCY8=
+X-Google-Smtp-Source: AGHT+IEGPf5fgJ+Ji13oItqw8ThUKQ2lo5EoXR03Lt9sU+JG4aSaJBKXhCfpCYKEoA5qiJCcmGLynCsasGEkZeYqbCg=
+X-Received: by 2002:a05:6870:1682:b0:22e:bd35:d3fb with SMTP id
+ j2-20020a056870168200b0022ebd35d3fbmr2593686oae.22.1712745833092; Wed, 10 Apr
+ 2024 03:43:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZhVVPB0qD4pBna51@xhacker>
+References: <20240409153519.291205-2-thorsten.blum@toblux.com>
+In-Reply-To: <20240409153519.291205-2-thorsten.blum@toblux.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Wed, 10 Apr 2024 12:43:41 +0200
+Message-ID: <CAMhs-H8EByNhBAkhDvtHL_ZUgLnMFQcR1zeYhaKQSg-13uFnVQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: ralink: Use min() to fix Coccinelle warning
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: John Crispin <john@phrozen.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 10:48:33PM +0800, Jisheng Zhang wrote:
-> On Tue, Apr 09, 2024 at 03:26:18PM +0100, Conor Dooley wrote:
-> > On Sat, Apr 06, 2024 at 07:21:58PM +0800, Jisheng Zhang wrote:
-> > > As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer: add a
-> > > quirk for lacking mtime register") of opensbi:
-> > > 
-> > > "T-Head developers surely have a different understanding of time CSR and
-> > > CLINT's mtime register with SiFive ones, that they did not implement
-> > > the mtime register at all -- as shown in openC906 source code, their
-> > > time CSR value is just exposed at the top of their processor IP block
-> > > and expects an external continous counter, which makes it not
-> > > overrideable, and thus mtime register is not implemented, even not for
-> > > reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
-> > > extended CSR, these systems still rely on the mtimecmp registers to
-> > > generate timer interrupts. This makes it necessary to implement T-Head
-> > > C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
-> > > reading mtime register and falls back to default code that reads time
-> > > CSR."
-> > > 
-> > > To use the clint in RISCV-M NOMMU env on Milkv Duo little core, we
-> > > need to fall back to read time CSR instead of mtime register. Add the
-> > > option for this purpose.
-> > > 
-> > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> > 
-> > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > > index 34faa0320ece..7bbdbf2f96a8 100644
-> > > --- a/drivers/clocksource/Kconfig
-> > > +++ b/drivers/clocksource/Kconfig
-> > > @@ -650,6 +650,15 @@ config CLINT_TIMER
-> > >  	  This option enables the CLINT timer for RISC-V systems.  The CLINT
-> > >  	  driver is usually used for NoMMU RISC-V systems.
-> > >  
-> > > +config CLINT_USE_CSR_INSTEADOF_MTIME
-> > > +	bool "Use TIME CSR instead of the mtime register"
-> > > +	depends on CLINT_TIMER
-> > > +	help
-> > > +	  Use TIME CSR instead of mtime register. Enable this option if
-> > > +	  prefer TIME CSR over MTIME register, or if the implementation
-> > > +	  doesn't implement the mtime register in CLINT, so fall back on
-> > > +	  TIME CSR.
-> > 
-> > This, as a Kconfig option, seems a bit strange to me. We know at runtime
-> > if we are on a T-Head device without the mtime register and should be
-> > able decide to use the CSR implementation dynamically in that case,
-> > right?
-> 
-> Dynamically decision can be done in clocksource/clockevnt:
-> I can patch clint_clocksource.read to point to different clint_rdtime()
-> implementation.
-> 
-> But clint timer is also used in NOMMU RISCV-M's get_cycles(), this
-> can't be dynamically chosen w/o an ugly "if (is_c900)"
-> check, and I'm not sure whether this check in get_cycles() will
-> introduce non-trival overhead or not. Or use code patching technology
-> here?
+Hi Thorsten,
 
-Hi,
+On Tue, Apr 9, 2024 at 5:36=E2=80=AFPM Thorsten Blum <thorsten.blum@toblux.=
+com> wrote:
+>
+> Fixes the following Coccinelle/coccicheck warning reported by
+> minmax.cocci:
+>
+>         WARNING opportunity for min()
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+>  arch/mips/ralink/timer.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+>
+> diff --git a/arch/mips/ralink/timer.c b/arch/mips/ralink/timer.c
+> index 54094f6e033e..d271ac98312a 100644
+> --- a/arch/mips/ralink/timer.c
+> +++ b/arch/mips/ralink/timer.c
+> @@ -75,11 +75,7 @@ static int rt_timer_request(struct rt_timer *rt)
+>
+>  static int rt_timer_config(struct rt_timer *rt, unsigned long divisor)
+>  {
+> -       if (rt->timer_freq < divisor)
+> -               rt->timer_div =3D rt->timer_freq;
+> -       else
+> -               rt->timer_div =3D divisor;
+> -
+> +       rt->timer_div =3D min(rt->timer_freq, divisor);
 
-After some tests, I think will go with code patching path, I.E use
-static_branch in get_cycles(). New version is under cooking.
+I do find the original code more readable.
 
-Thanks
-> 
-> Or introduce a function pointer such as unsigned long (*rdtime)(void)
-> for RISCV_M_MODE, then point it to different implementation?
-> 
-> Any suggestion is welcome.
-> Thanks
+Best regards,
+    Sergio Paracuellos
+
+>         rt_timer_w32(rt, TIMER_REG_TMR0LOAD, rt->timer_freq / rt->timer_d=
+iv);
+>
+>         return 0;
+> --
+> 2.44.0
+>
