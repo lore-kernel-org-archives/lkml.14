@@ -1,116 +1,121 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9956415AAAE;
-	Wed, 10 Apr 2024 13:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 216B8154BE7
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712754138; cv=none; b=i6nIgoVuVo6Igcmixi781sg4eBL8r78qrMr5ZMl+HOHt9TifmxmRU7dWgaZy7lhfHujxNwJSr/z1RYUWoFoIDO1GNcFgLCYpklLUXwq5npDoLOqn+8RJPPTxqdxpce93TQmbFDaNryDxtFa5Yu359i6WOM28y1/aB5S61dfixHE=
+	t=1712754183; cv=none; b=Xfcq7dAfZaKnF24sMTlCAeIbZ3u1fw3xNEYy+rkc7+IN7TfHXQcE0cb2+Ewis+Ja0vHh8h0rsc2EIIcnYj7U8DmTTn8kURHzCkcNDVzvTZ+3Yixiwv1s6xdCe9KiMnn8opG7iddqPdGlbPHIEeNxcpaHDAO1OBDbj2hdd7lpgpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712754138; c=relaxed/simple;
-	bh=cCynkWA1egzt6idfM5NgSo+yPlJqqy2bQBgW20A3KJE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pneMNC6caUhpEoKaX8rOYdw6LHoR/Bp3zQTO87eWicoUQFGmJuj5fUo1E90si5C9/mRwX1TwhJI5XDXP3I0MWIKLZ9fHqqO100cwjRe6BZOXiyO9naGHy8Qv1mbqV5iuI9AVy1xG0bcroYjKpF1J1pI90b1sqknFhWWFsHtsxSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OR0qcMun; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712754183; c=relaxed/simple;
+	bh=Mzy1RLChKpTXckeRfOn3L90L6pWcJRlTrF3gU8yBosw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ah8gAqj2VfrN3TMyw9tfFmZNciEGVLGPqPtURdX1L9d6AeK+lfzCUFhPpCMwLwy4E02p8VhwFhztGzHHnujzNaGQyY9pRgfuBxg7R/ydiQGetwbFa7jTHDL5LDlgnWeW5/TfH6FCFiKBRXsaU2PGJMR5eV1xtj7k189a5XYN/J0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HV2v4aCO; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OR0qcMun"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e3ff14f249so24483855ad.1;
-        Wed, 10 Apr 2024 06:02:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HV2v4aCO"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e411e339b8so25299115ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712754135; x=1713358935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wfEkXHqcrSslp75yT8Es7LWtgthY82aZjWT+8xGzxlw=;
-        b=OR0qcMunOhpxHttX5FqWnjaI2a29LdlvUEDXhRhZbOI3lL8UX9CeIawKcF2qmRL2XM
-         xKNIaVpXwxLredZCE5H1PedzVAvVlhaxeJEOxp7gv9nSGSRdTrui3ZDDvwXO4FyIFs9K
-         K/vIBiuiGGNbETuM6lFWHQoDlZTEaJ8TeG0jcHjyXtJaFH+Fuz2TssHhFW41EiHwYOBF
-         Ce/peJYimi+YXvmHtRUN/J4mI6YUM7UMyku4uyE3nbfgOaEwzQH/fxK/5Nz3+dguUK2y
-         iToz7tdnw8NFc7gebD95DkdEvdDD6I8NNkxrXbDOs9kCOBwpk5hmS+Hik1y57ebvzfsK
-         ax4w==
+        d=chromium.org; s=google; t=1712754181; x=1713358981; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x3Y56dDS984KsDzs2nzTKgy6adBy9joM/agCd66RARo=;
+        b=HV2v4aCOwl3k/clrmZQFBqxbjXAfywP+A1nfAEERh1oEHpPCE7lp29TZeR2QRva8Zk
+         FuSULnBwlZSZOJTBnZblK6yDWkepeoEH9aVcnMgI3+d4tW/aEutjpsuxgZOxMv3meflG
+         bF4foDQoigW1EGhuGL5wJOYjtaIXmq6njJ5GA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712754135; x=1713358935;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1712754181; x=1713358981;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wfEkXHqcrSslp75yT8Es7LWtgthY82aZjWT+8xGzxlw=;
-        b=tTWZC1FykeLcx4BCGVHC7Rn53S0aGT/zRi80x26/TetkiDzzLK063efYYqlXOx7xK3
-         5gx9WAkcCfdanmOV9c/82lt2vkwYqHCs8y4e8dErbndje9mwggLRHVuV9ZK623Dja1r1
-         k/7C7+yprG4NdqJq+/xw+2sVu3MOPRJBIY6YPZUWaOj9xLDvnrPO9eOn+X3Ji4X/M+MP
-         csnKinlYcwFwZ7yEJgL4K5Orc+cFr9zJHF/teMoWWTD8ANcoFwNqSFdw8QBnO7IBPICm
-         nn5GXTjtd61vo/9pZpA54Wv0y/66hsdObmGk5cAdgkbSvIm7oAA44m+s/mwKvw9EpE+w
-         zwGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKgRyU1GQKLOnKoF0ZGJ7yNs4hF71aqYRJWjh7mQrPR4N3x6Ha6A5HF/Da0BlByLjw8fc0wWWqKaqb8OOGlQ/oBWvrDs5u4y9bac8/
-X-Gm-Message-State: AOJu0YyyZJ09YP5E2dXGeYUy8ftuQMbTdXbRSDqtWnRoJiIQE8CybHZU
-	amGx/2PjmgpHzgyD7TP66shinpEubRCVkb4BekO8+B6qPQf0gHHM8AdUQrz2
-X-Google-Smtp-Source: AGHT+IF/cJ6s5X7FwDxg61oaVso/YmK8UKpzLf5sIgkOvGvwW5GS5KcpnfKOsMZEpyBDBV1OVM9e3g==
-X-Received: by 2002:a17:902:ee8d:b0:1e2:a5db:30d1 with SMTP id a13-20020a170902ee8d00b001e2a5db30d1mr3042367pld.13.1712754135238;
-        Wed, 10 Apr 2024 06:02:15 -0700 (PDT)
-Received: from kousik.local ([2405:201:c006:31f8:d197:ecac:84d7:f484])
-        by smtp.gmail.com with ESMTPSA id e6-20020a17090301c600b001e43a00ee07sm5445375plh.211.2024.04.10.06.02.11
+        bh=x3Y56dDS984KsDzs2nzTKgy6adBy9joM/agCd66RARo=;
+        b=DeSwf2SA/0XyT5lsKnx2fer1Y1mGQgv80p6mERmaxfkiX1HJaXTmysb5gjf9LgQ4Gl
+         v59Np8CZ/7M7OxJ2Z5YiUd4fsQ5ffApisBAt3Q3LaysR4ES8h1Ujz1e2LnILd4hn/0yX
+         YabzQzNgX1SlMjzmJVoIweVU8JE5l/zY+Uh9AgUE7UcHnYlJjFlZyHkXIRt5YTw3DoEa
+         qQafpS0MB5ZigRrnOjqzJiLtpZCW0DXErMHF0uE9rARjzbPgl+pdYbQQmeE8fZhgHVzR
+         HKpV78PAI9nNOCzZAK6M383yPxFWc+LVsVFciQhpgcI0xIp3TYvB8R5PabyF/4dZA3CI
+         j1og==
+X-Forwarded-Encrypted: i=1; AJvYcCVE+OQ0/bEuJpRve8YH2nCW8cYsrOUEqZhpPn/IWXkcD+/BesU0JhJgggSUJ1DtJpTZBk9MCwZGHH5EEf72VpcaD0vhm4wj0AjtU9Bo
+X-Gm-Message-State: AOJu0YxViJOeyH5nVQHUzmxSbE5xSZP3uVr2L7N7u9+tkTQkMRtbaitj
+	wzW/yZ52Lyg2DSKHwMHMB+X9yOdrIoaohNCNCbbmybP3Qk5uOmewez44hEj3akDbrx/AIwqT+7y
+	Z/c4B
+X-Google-Smtp-Source: AGHT+IHqZzwYa8MxtXFxj041lgd7J88+1a1m5BQKJBRqUvFpLKeI9bdlPRTEzn2uQM5glqcDtWs7AQ==
+X-Received: by 2002:a17:902:fc48:b0:1e4:10d9:5dfb with SMTP id me8-20020a170902fc4800b001e410d95dfbmr3179942plb.38.1712754181302;
+        Wed, 10 Apr 2024 06:03:01 -0700 (PDT)
+Received: from yuanhsinte1.c.googlers.com (88.216.124.34.bc.googleusercontent.com. [34.124.216.88])
+        by smtp.gmail.com with ESMTPSA id kq12-20020a170903284c00b001e29acb2d18sm10726341plb.4.2024.04.10.06.02.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 06:02:14 -0700 (PDT)
-From: Kousik Sanagavarapu <five231003@gmail.com>
-To: linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Julia Lawall <julia.lawall@inria.fr>,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: [PATCH] spi: cadence-xspi: use for_each_available_child_of_node_scoped()
-Date: Wed, 10 Apr 2024 18:31:16 +0530
-Message-ID: <20240410130205.179069-1-five231003@gmail.com>
-X-Mailer: git-send-email 2.44.0.548.g91ec36f2cc
+        Wed, 10 Apr 2024 06:03:00 -0700 (PDT)
+From: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Date: Wed, 10 Apr 2024 13:02:48 +0000
+Subject: [PATCH v2] thermal/drivers/mediatek/lvts_thermal: Add coeff for
+ mt8192
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240410-lvts_thermal-v2-1-621cb7c07a32@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAPeNFmYC/3XMQQ6CMBCF4auQWVvTFgrqynsYYrBM6SRAzRQbD
+ eHuVvYu/5e8b4WITBjhUqzAmChSmHPoQwHWd/OAgvrcoKWuZKWkGNMS74tHnrpRlH1Zm1PVdNY
+ 5yJcno6P3zt3a3J7iEviz60n91j9QUkIJRCMf+mxVY+qr9Rwmek3HwAO027Z9AUg9I3KrAAAA
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
+ =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
+ Balsam CHIHI <bchihi@baylibre.com>
+Cc: Alexandre Mergnat <amergnat@baylibre.com>, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, Hsin-Te Yuan <yuanhsinte@chromium.org>
+X-Mailer: b4 0.12.4
 
-Refactor code for "is the node's child available?" check by using the
-corresponding macro instead, which reads more clearly.
+In order for lvts_raw_to_temp to function properly on mt8192,
+temperature coefficients for mt8192 need to be added.
 
-While at it, use scope-based cleanup instead of manual of_node_put()
-calls when getting platform data through cdns_xspi_of_get_plat_data().
-
-This removes the unnecessary "node_child" declaration out of the loop's
-scope and auto cleans up "node_child" when it goes out of scope, even
-when we return early due to error.
-
-Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
+Fixes: 288732242db4 ("thermal/drivers/mediatek/lvts_thermal: Add mt8192 support")
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
 ---
- drivers/spi/spi-cadence-xspi.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+Changes in v2:
+- Reusing mt8195 coeff instead of creating duplicate definitions
+- Link to v1: https://lore.kernel.org/r/20240410-lvts_thermal-v1-1-ee50b29c1756@chromium.org
+---
+ drivers/thermal/mediatek/lvts_thermal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/spi/spi-cadence-xspi.c b/drivers/spi/spi-cadence-xspi.c
-index 8648b8eb080d..2209e9fc378f 100644
---- a/drivers/spi/spi-cadence-xspi.c
-+++ b/drivers/spi/spi-cadence-xspi.c
-@@ -486,20 +486,14 @@ static irqreturn_t cdns_xspi_irq_handler(int this_irq, void *dev)
- static int cdns_xspi_of_get_plat_data(struct platform_device *pdev)
- {
- 	struct device_node *node_prop = pdev->dev.of_node;
--	struct device_node *node_child;
- 	unsigned int cs;
+diff --git a/drivers/thermal/mediatek/lvts_thermal.c b/drivers/thermal/mediatek/lvts_thermal.c
+index fd4bd650c77a6..4e5c213a89225 100644
+--- a/drivers/thermal/mediatek/lvts_thermal.c
++++ b/drivers/thermal/mediatek/lvts_thermal.c
+@@ -1530,11 +1530,15 @@ static const struct lvts_data mt7988_lvts_ap_data = {
+ static const struct lvts_data mt8192_lvts_mcu_data = {
+ 	.lvts_ctrl	= mt8192_lvts_mcu_data_ctrl,
+ 	.num_lvts_ctrl	= ARRAY_SIZE(mt8192_lvts_mcu_data_ctrl),
++	.temp_factor	= LVTS_COEFF_A_MT8195,
++	.temp_offset	= LVTS_COEFF_B_MT8195,
+ };
  
--	for_each_child_of_node(node_prop, node_child) {
--		if (!of_device_is_available(node_child))
--			continue;
--
-+	for_each_available_child_of_node_scoped(node_prop, node_child) {
- 		if (of_property_read_u32(node_child, "reg", &cs)) {
- 			dev_err(&pdev->dev, "Couldn't get memory chip select\n");
--			of_node_put(node_child);
- 			return -ENXIO;
- 		} else if (cs >= CDNS_XSPI_MAX_BANKS) {
- 			dev_err(&pdev->dev, "reg (cs) parameter value too large\n");
--			of_node_put(node_child);
- 			return -ENXIO;
- 		}
- 	}
+ static const struct lvts_data mt8192_lvts_ap_data = {
+ 	.lvts_ctrl	= mt8192_lvts_ap_data_ctrl,
+ 	.num_lvts_ctrl	= ARRAY_SIZE(mt8192_lvts_ap_data_ctrl),
++	.temp_factor	= LVTS_COEFF_A_MT8195,
++	.temp_offset	= LVTS_COEFF_B_MT8195,
+ };
+ 
+ static const struct lvts_data mt8195_lvts_mcu_data = {
+
+---
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+change-id: 20240410-lvts_thermal-3d365847acff
+
+Best regards,
 -- 
-2.44.0.548.g91ec36f2cc
+Hsin-Te Yuan <yuanhsinte@chromium.org>
 
