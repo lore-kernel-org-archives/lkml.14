@@ -1,125 +1,124 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4714B16EBEF;
-	Wed, 10 Apr 2024 15:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF81416F0D7;
+	Wed, 10 Apr 2024 15:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763320; cv=none; b=YvoJVuyR/cToTaSIGfNzlZ8ixa8xZeufDdvoHvwlb+63v0+bsa1tFjbw3gl4Ey8VNWcOl9noBcoUxYx92qa91v2Lyhvf9hnneGqanyYJwuwYNZSNpe4BqfdkMAYt09+7OVSstUW2SiNYrNjFH5WktubeUjLapQloHBcsyDfTqVU=
+	t=1712763329; cv=none; b=Oxz68gcOEkDEEmuJZJFt0Vj0DtbkSOtnxfYVI4W3IdqYQ9iozV4x0PwyAiH0oU67fgCjG5GdpttKizmEdY1fuI93ow+8sIkFGDfqiAeV9/E6nkjXhFuOE8q+B0Lmvb+EAAl4I2ERfkge0bnAZH2w8B5urTRkn6B8xmvZEuBTjnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763320; c=relaxed/simple;
-	bh=vWx8hjmgbGaYijZPOHAFQF3Diarftvn5nTcDZWxUfWQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NC6D1ojATcEyfcdbg3hJeozwzB7auAZ9nnyGPXWTdX9lwTjp2QuCeTZmE7yxXTE4BPpyZYPr/7gearDz3iEttWLEipp2/67rBsAlz4Vm5iHPsVh6cjaxmXV2V+nkml2BRCIl3HEiw1sayr30ieQmF0OpEuomF+dW7XONHXtQxgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUmhn/29; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712763329; c=relaxed/simple;
+	bh=8walZAK6NKjpVLbHHEWlhePnShxtE50CiegFbxlpbWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsJ8vG4xjaeUBNVHyrudGYq48UU3wyB8diVjh9JiXjaVabiNiccdIgf5Jm3CvvZNfvxDqWIwwclntiyToJhlB/FolncK4TSCKOFNmupGBgt/sClJnRYVfUya6zHA3u3gLCOA3MK+DNnd6Pl19hhfQnRMaXIAHAV6dLZvWxjtW9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6Y5zMar; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUmhn/29"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-343e46ec237so4116290f8f.2;
-        Wed, 10 Apr 2024 08:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712763317; x=1713368117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
-        b=lUmhn/29r1jhMngW5rBuyxAxpzyouSBQc7BhiLnU7QSuAUUY1IoLnwGvoXFNAPS9+o
-         MCJdoX/M25J6nnBSL1OPsbV8uFAfleloNrDW0fS1LvX9MnIN5dAP9xWOrYuPsJbrJKsF
-         x6fyq87Yh0K74Iq9kXx3c79Ecm3RZpybAFRqMkmzMladSRu3CWx7CeSIqM8rqpZ3CIVU
-         PcuSpRkUMwr8fTf34+Ukjpti6l02M/r3vyzMkmzCMDgnNCpPrjllt2EKQEOCuTNj72Q+
-         yUL5gVKH1OApCTyfEIDo+IXJUJ9c5bYGZ1pqwToVySlZPS1GX3EJjGW0f/1QIE9Zqmmb
-         p9nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712763317; x=1713368117;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
-        b=Ht7Xk4I6LLPsj4VP8DKMyaYcjxiGa2Xx4VYjyJOrvnx6ev53eT1qJXrORHyLsx74cD
-         J1mhbJc9WN1ubd0bA0MbUJHVtbSfSNDRPx2CvHdHECD6PKqeggwwoxoqPjkN7i5f42Z/
-         Z87nXFq3dvNYyhP7zqXEo7ozdSyMAhMjaNBxaEU8TnzMz9+XoO9HHn9fDpDODo3RP3PS
-         fczEHlgW73flRNDEI/9S6t3ZHWqh1Inn3Jgxn+ZYIFcSnHUn1PzSq50MDtMwh8vJnXV+
-         SXklDiMbmoGraXxV5oKVD9i3vsvtb0q3/Sw11MBQ7a9lEfqLF3/2kT5ZZ7R+F629C8Bb
-         CNKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXV4j+hWfgALjTUmAzGFSPkaxg2SCNCV/8QfwDpk+ogErJn4DPn+hBCngSGJeBzJwqpu1RDoWnhJJZP8tc6tNDejPPX6MMwrAL1lvBbYWD5Iq7pY73UjXYTKESy4Ba42nTBQy1od9sSGC0WcTclXQqaqOkQyOafl7Tp2/JodVGIkm/YiRFO
-X-Gm-Message-State: AOJu0YyjkoayZurNJwFXP+7850ONUUEaQmV51scBoHn4ToTsYhXNNpxF
-	YuvEdsDR3rket2pVbAVN8k4ysc6IgW2tlHAYaEJq460zRCPcmBfg
-X-Google-Smtp-Source: AGHT+IFpCTXftuYdAbu9wXWKxlU/Jww9KocYRa4/MBt6ILtJAroKsGboJFb5WMAzrx/I3nDy7QQrCg==
-X-Received: by 2002:adf:b312:0:b0:346:b6e:395 with SMTP id j18-20020adfb312000000b003460b6e0395mr2143793wrd.9.1712763317311;
-        Wed, 10 Apr 2024 08:35:17 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id y14-20020a5d4ace000000b00341dbb4a3a7sm14043505wrs.86.2024.04.10.08.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 08:35:16 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com,
-	shuah@kernel.org,
-	dsahern@kernel.org,
-	aduyck@mirantis.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next v6 1/6] net: gro: add flush check in udp_gro_receive_segment
-Date: Wed, 10 Apr 2024 17:34:18 +0200
-Message-Id: <20240410153423.107381-2-richardbgobert@gmail.com>
-In-Reply-To: <20240410153423.107381-1-richardbgobert@gmail.com>
-References: <20240410153423.107381-1-richardbgobert@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6Y5zMar"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F6FC433C7;
+	Wed, 10 Apr 2024 15:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712763328;
+	bh=8walZAK6NKjpVLbHHEWlhePnShxtE50CiegFbxlpbWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c6Y5zMarCKVz3VPX6NsdWppeDYYLGFkgF0PbgtXXc+k2laIh0nDzyC4Y/efTBFxiU
+	 2JCUjjKClnzkNX/Qr9FWnzmw0yrKxqVJVoAMIqNdUnS0IyV6haPm1To1d/ddU+Q2fZ
+	 wDMzjlUhPXh+xN0UF+2iAuQWAdRKyZhFMZp8jivs/LioNfa2RK/igv2dPedDvsqDho
+	 xRphNNEY4zs19RJLQN26ElP2IQvOxjZvHK7hCvjZCYSpOpMPlOGFNTEHRWBsKzWeza
+	 Vn9ZfyO/qXGe6djlH+GvaXmf4UKYY4MiBhRNX4MFYaYnFjIwwNJkVCx9nm2ImIuVDn
+	 J3aJEbjGGbK5w==
+Date: Wed, 10 Apr 2024 08:35:26 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: zhuqiuer <zhuqiuer1@huawei.com>, justinstitt@google.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux@armlinux.org.uk, llvm@lists.linux.dev, morbo@google.com,
+	ndesaulniers@google.com
+Subject: Re: [PATCH v2] ARM: Add a memory clobber to the fmrx instruction
+Message-ID: <20240410153526.GA3904754@dev-arch.thelio-3990X>
+References: <20240409164641.GC3219862@dev-arch.thelio-3990X>
+ <20240410024126.21589-1-zhuqiuer1@huawei.com>
+ <20240410024126.21589-2-zhuqiuer1@huawei.com>
+ <CAMj1kXFdR49n2Je5jYSdbWRZbMGoZenfaqDX3iCQFVZUecrCmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFdR49n2Je5jYSdbWRZbMGoZenfaqDX3iCQFVZUecrCmw@mail.gmail.com>
 
-GRO-GSO path is supposed to be transparent and as such L3 flush checks are
-relevant to all flows which call skb_gro_receive. This patch uses the same
-logic and code from tcp_gro_receive but in the relevant flow path in
-udp_gro_receive_segment.
+On Wed, Apr 10, 2024 at 02:31:11PM +0200, Ard Biesheuvel wrote:
+> On Wed, 10 Apr 2024 at 04:41, zhuqiuer <zhuqiuer1@huawei.com> wrote:
+> >
+> > The instruction fmrx is used throughout the kernel,
+> > where it is sometimes expected to be skipped
+> > by incrementing the program counter, such as in vfpmodule.c:vfp_init().
+> > Therefore, the instruction should not be reordered when it is not intended.
+> > Adding a barrier() instruction before and after this call cannot prevent
+> > reordering by the compiler, as the fmrx instruction is constrained
+> > by '=r', meaning it works on the general register but not on memory.
+> > To ensure the order of the instruction after compiling,
+> > adding a memory clobber is necessary.
+> >
+> > Below is the code snippet disassembled from the method:
+> > vfpmodule.c:vfp_init(), compiled by LLVM.
+> >
+> > Before the patching:
+> > xxxxx:   xxxxx    bl  c010c688 <register_undef_hook>
+> > xxxxx:   xxxxx    mov r0, r4
+> > xxxxx:   xxxxx    bl  c010c6e4 <unregister_undef_hook>
+> > ...
+> > xxxxx:   xxxxx    bl  c0791c8c <printk>
+> > xxxxx:   xxxxx    movw    r5, #23132  ; 0x5a5c
+> > xxxxx:   xxxxx    vmrs    r4, fpsid  <- this is the fmrx instruction
+> >
+> > After the patching:
+> > xxxxx:   xxxxx    bl  c010c688 <register_undef_hook>
+> > xxxxx:   xxxxx    mov r0, r4
+> > xxxxx:   xxxxx    vmrs    r5, fpsid  <- this is the fmrx instruction
+> > xxxxx:   xxxxx    bl  c010c6e4 <unregister_undef_hook>
+> >
+> > Signed-off-by: zhuqiuer <zhuqiuer1@huawei.com>
+> 
+> This also fixes the issue I observed so
+> 
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-Fixes: 36707061d6ba ("udp: allow forwarding of plain (non-fraglisted) UDP GRO packets")
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
----
- net/ipv4/udp_offload.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
-index 3498dd1d0694..1f4e08f43c4b 100644
---- a/net/ipv4/udp_offload.c
-+++ b/net/ipv4/udp_offload.c
-@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
- 	struct sk_buff *p;
- 	unsigned int ulen;
- 	int ret = 0;
-+	int flush;
- 
- 	/* requires non zero csum, for symmetry with GSO */
- 	if (!uh->check) {
-@@ -528,7 +529,17 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
- 				skb_gro_postpull_rcsum(skb, uh,
- 						       sizeof(struct udphdr));
- 
--				ret = skb_gro_receive(p, skb);
-+				flush = NAPI_GRO_CB(p)->flush;
-+
-+				if (NAPI_GRO_CB(p)->flush_id != 1 ||
-+				    NAPI_GRO_CB(p)->count != 1 ||
-+				    !NAPI_GRO_CB(p)->is_atomic)
-+					flush |= NAPI_GRO_CB(p)->flush_id;
-+				else
-+					NAPI_GRO_CB(p)->is_atomic = false;
-+
-+				if (flush || skb_gro_receive(p, skb))
-+					ret = 1;
- 			}
- 		}
- 
--- 
-2.36.1
+This can probably go in Russell's patch tracker? Your patch had
 
+Cc: stable@vger.kernel.org
+
+in it, should this one as well?
+
+> > ---
+> >  arch/arm/vfp/vfpinstr.h | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/vfp/vfpinstr.h b/arch/arm/vfp/vfpinstr.h
+> > index 3c7938fd40aa..ae2c9b9b7701 100644
+> > --- a/arch/arm/vfp/vfpinstr.h
+> > +++ b/arch/arm/vfp/vfpinstr.h
+> > @@ -68,14 +68,14 @@
+> >         u32 __v;                        \
+> >         asm(".fpu       vfpv2\n"        \
+> >             "vmrs       %0, " #_vfp_    \
+> > -           : "=r" (__v) : : "cc");     \
+> > +           : "=r" (__v) : : "memory", "cc");   \
+> >         __v;                            \
+> >   })
+> >
+> >  #define fmxr(_vfp_,_var_)              \
+> >         asm(".fpu       vfpv2\n"        \
+> >             "vmsr       " #_vfp_ ", %0" \
+> > -          : : "r" (_var_) : "cc")
+> > +          : : "r" (_var_) : "memory", "cc")
+> >
+> >  #else
+> >
+> > --
+> > 2.12.3
+> >
