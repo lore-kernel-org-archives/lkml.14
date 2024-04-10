@@ -1,193 +1,200 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B430155393
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 09:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F75156C69
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 09:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712740399; cv=none; b=e9bY5yQWJKexj3jocWDknMIXIR+fUTSp5RYF09N/5d2iNwUzGjrQMlnNw/EQwG1soMhL3VYsTsEq89WZ4VFfB7t73rptz9B5CB+hCVSrbvaGXYLP777RF7QHdYGrS8nymqLONe7vJ+t1deuFEl3mTKWLQwKnhueLbQ9GnU4DY4I=
+	t=1712740536; cv=none; b=h7QL8cuIyCQ1j2ANlpj0RLcS7sZGAx84XeM9jgqMGfPlHysaBgO0AlzPcoZYWgWJW8rMgluo+YXaoOW8Kqb6g4vGJLdav+KQ+AoREQy1XR2iNbTresly3X9zuWxhIGKYmZAs7po+D8UJRII127nzratGYczXrfN2SYO/ZreDV7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712740399; c=relaxed/simple;
-	bh=747hwwI/9YEbtqGw/BZYY5aPIyGCxcAHjcyu86npB9A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DfvWy6hxq+foZvw1hv/NIVGzdcrsKv2h3VhkAE8eB30OYx8Sxd9Begn2xeCwLKGqf6NtWjOxV0YLKYznw+C55OkG//Fnee/HNanWy1XJgX+Mbg+D0giuEAl4x/JPcsRzU6h08+6uFZhFRFvFbpyhNFHm5IZcfj4cbHiq83Uur/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iguVEViO; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712740536; c=relaxed/simple;
+	bh=8IGEkHVnTFNiTPePBcBdEHImxzk/mvEc8vQlWHZ3o24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jvw2DQ69XGx3ZzmV1p+YikbC9ZcfBZWxYoZjD6XvOQ7VUTirc9flJLRsHFRBjA9dFhFTWQU/C8ZRD7qxKMeVL4YDLR/Pb4MUNAXy8DeFMvL/jPzwvcsfx3C9HnOGzZ6Li1tOMyTqshaM/VZAlImcGmepFkQ6aEG4MD+r6xO1WK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YNLUDLxp; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iguVEViO"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5dca1efad59so4616856a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:13:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YNLUDLxp"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41699bbfb91so52125e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:15:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712740397; x=1713345197; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=747hwwI/9YEbtqGw/BZYY5aPIyGCxcAHjcyu86npB9A=;
-        b=iguVEViOMpo9tpWmLm72ISEvyDI+QJIMZw8Wl8E5zrheC0OeOUap1I3jfBQypo/6FD
-         0+7JhFYw1pGwfP4q2VfU+na+NZ3s5/8OHEIaqYl2Yp+p0vi+Jf1OeuetFLBU/+4jbzSn
-         nRMJvnrBiFcaAsL3eqjHU+QZYRGdjD9LAvrFUm5SMjLt5PX8jN1GVUp7oeEIcphL1KD4
-         LwyJXFZ+Knr6gkP2YrcrfbY9PgtVWXFtGAlubqr6+/4uwm7pZFJoZvpJLAYp6bxcnKhC
-         45dgMesaOso5jFINH714r3b1TH4WW+1wf0WLNJxrsdRpWqcXMWzOq9ua3EmJnh+08Ydf
-         ln/g==
+        d=google.com; s=20230601; t=1712740533; x=1713345333; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mo5yUXNBd3ZqPlawfQyQwNue5di0stprqcnUautikic=;
+        b=YNLUDLxpPtvrnB3+HKa6wtXy83+XZ/DM3/xCpwKmQnU9Css7mgjnoc3f9tGx0UJ7EM
+         SZYPgOX3lBjA1kVakkWf29eas2tHRcuwe1sPnTzEHEnHaTFP3FfqIUDfhT9gXK2xnI+w
+         lt7jxX0QuJP1AiyqK7Er8lBLlUliPtMKhKgUs4Y1evVcTm+z3gxfnrmv3/KybGZ69HLh
+         l2F/8zBH5KA2LZiGv23yGmm3DSOEiQsFus757zcSyUyG72bXTLkVdq2oHf0DokLhLSDp
+         Q49tbR2gkRQRjQcREAaS3UxZaYAV5t59X6wczsbCZ6ghKOeVi8fctt3Pu4cI/vZK+Ff5
+         YEPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712740397; x=1713345197;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=747hwwI/9YEbtqGw/BZYY5aPIyGCxcAHjcyu86npB9A=;
-        b=rASchSxOsoKtTahjBt2p+CIIXbY0xWKHbCoDqhYKwqJTNRKr0cy1cR3r7IM3EDiiQo
-         YzFhML+09OQW6DIeGE/Gmwju0dKtXCbf492P3s3RDt1cJvrF/zCCoREGDqPNGPr5I1W9
-         J/lRKP6OFttjQyAumiU84v6Ycv5CQfMz7VRJ4lYk8Ezlg+neIwQqhKBJRHgklItHhIOz
-         NOnVof9nKd1tZrUEQIHmD6DTYngP7yq+RvDOXSbE/whszwgJdT58T5iB57MNoIIE6CeB
-         pU0VeVXvG0mcIFicWTgyPtnS8b/JRsUxOcwsn1LDWQgrWp+BzFyN7SO6VAdgXo8/udTp
-         n93w==
-X-Forwarded-Encrypted: i=1; AJvYcCUKpitamHA8qu9rW5zScWfMPr5mZ2pskHrmqkJ1z/m5qBNuB2ufRy64UXT5H4MTo40ZYKNW8P6NfRzCjbY54anhLAd7immNhtU0clNV
-X-Gm-Message-State: AOJu0YwTCpamCHX+/BACnGOhKMRe8VzFa5w/hiNT42EYRVJOto/+6K7M
-	nu3vI9hKz2UYYXJkHW184HynuV0hpN+9vMCiP3r2Hvy+C3562Gu+ua8rbMptQXpumUjJSo+41Rs
-	P5ZEDWsO3cHvq5sNK2HIQ0FEEy2wlk7C8hOinlQ==
-X-Google-Smtp-Source: AGHT+IFtiHhjryYsOV4095JXEzRNDfVTs/PKiPustZNKOQaI3lZeyTvS3gYiwpaUh0qrUoKzXy/ySr9mjAULOpoe53A=
-X-Received: by 2002:a05:6a21:186:b0:1a9:500c:d3e1 with SMTP id
- le6-20020a056a21018600b001a9500cd3e1mr1857329pzb.50.1712740397608; Wed, 10
- Apr 2024 02:13:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712740533; x=1713345333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mo5yUXNBd3ZqPlawfQyQwNue5di0stprqcnUautikic=;
+        b=NwKJ78sLfDdUc2IGUv667buvd+n4/PgKWWakpCIFWyTill3N9b1NWf3GYCp9hK0ljW
+         q/0cqPl5GysuiTlf2vy+3u9b00Gr6SKdmQAHGAMjIPh0BGh3xQjksLXXDkgeImeaFQqE
+         yHuVTMVAyQk7kHbBszWdkOyA1/F1haxOtSDEf/1yZgi2kvmatjiCZ5S+EBBIxLoDg+V8
+         JFau5yL2J6QkcRkIRL5FbBNUcCr1DYwXEOEtTcskbjJ4tpV1SP4Q0RQkg3G6cIJS7Y3X
+         lcJSvrPTTc7WuyMH2wSIlSuK+QzR4oMVYx/YGnKuKD57tAdvJnnQMqdSKolIUcq7E5Vt
+         sbSg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9BA89+o2Gj9f77VQP74z2CVgpZD4VP7ugQ87HXTj517Cg2cttLqbXbRqc9EYXfTjHa6H9aFncQLYf00T9spBr+++astAJzCPFlvrz
+X-Gm-Message-State: AOJu0YzETrzMtggfeOfhIg4zhBJZeSbVWKogqIFebkRsn09epiLl43UF
+	YovpLCPljv+XKyhsa7Zxf0eoFTmAryCLVPj9bSWXfx/YMkbx0LRQ7hslJUuLyQ==
+X-Google-Smtp-Source: AGHT+IEBtQIBTBIKC8UbwL32JAPKT7O7PWWE97mAxwT/AQp+UyPWzOdg2/EhifcyhKX5pP1qVudzgw==
+X-Received: by 2002:a05:600c:5113:b0:414:daa3:c192 with SMTP id o19-20020a05600c511300b00414daa3c192mr161451wms.0.1712740532752;
+        Wed, 10 Apr 2024 02:15:32 -0700 (PDT)
+Received: from google.com (248.199.140.34.bc.googleusercontent.com. [34.140.199.248])
+        by smtp.gmail.com with ESMTPSA id di3-20020a0560000ac300b00341c7129e28sm13315653wrb.91.2024.04.10.02.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 02:15:32 -0700 (PDT)
+Date: Wed, 10 Apr 2024 09:15:30 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
+	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+	tabba@google.com, will@kernel.org, yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH] KVM: arm64: Add support for FFA_PARTITION_INFO_GET
+Message-ID: <ZhZYsuqggl_Hzv8X@google.com>
+References: <20240409151908.541589-1-sebastianene@google.com>
+ <ZhVpmF2js1NJp1qF@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403005930.1587032-1-qyousef@layalina.io> <CAKfTPtDB8D6bouxJN9q8gXqG+BQYcsrJYEodDWtOB2kQwPH53A@mail.gmail.com>
- <20240404220500.dmfl2krll37znbi5@airbuntu> <CAKfTPtDP7if0gozSrnj+E_hH5xR-vpGAM2TwN4qWXcg5BtrEtw@mail.gmail.com>
- <20240405171653.boxbylrdak5fopjv@airbuntu> <20240407122700.ns7gknqwqkpjjyd4@airbuntu>
- <CAKfTPtBZao-Ry=sdAV=rtTwbxbEJmwb-_gNceSjV6u-6EXTY-w@mail.gmail.com>
- <CANDhNCq5HZvecSe9_9f7j5koY2VNdyjM_b3csL6=U1A_8J2ksw@mail.gmail.com>
- <20240409061909.tb3vxc27h2eawiwg@airbuntu> <CAKfTPtC4hdbBhn+-hkK9i4vkjO5fBGfsxjESkBrvyOwN6oHCdA@mail.gmail.com>
- <20240410065901.ruzhjsmtmpsnl4qe@airbuntu>
-In-Reply-To: <20240410065901.ruzhjsmtmpsnl4qe@airbuntu>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 10 Apr 2024 11:13:06 +0200
-Message-ID: <CAKfTPtD-J37Q1SL2HqZLvfNtW9LY34C-d-t6-0KU4DxkUmvHzQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/pi: Reweight fair_policy() tasks when inheriting prio
-To: Qais Yousef <qyousef@layalina.io>
-Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhVpmF2js1NJp1qF@google.com>
 
-On Wed, 10 Apr 2024 at 08:59, Qais Yousef <qyousef@layalina.io> wrote:
->
-> On 04/09/24 14:35, Vincent Guittot wrote:
-> > On Tue, 9 Apr 2024 at 08:19, Qais Yousef <qyousef@layalina.io> wrote:
-> > >
-> > > On 04/08/24 12:51, John Stultz wrote:
-> > > > On Mon, Apr 8, 2024 at 12:17=E2=80=AFAM Vincent Guittot
-> > > > <vincent.guittot@linaro.org> wrote:
-> > > > >
-> > > > > On Sun, 7 Apr 2024 at 14:27, Qais Yousef <qyousef@layalina.io> wr=
-ote:
-> > > > > >
-> > > > > > On 04/05/24 18:16, Qais Yousef wrote:
-> > > > > >
-> > > > > > > >
-> > > > > > > > All that to say that I think the weight is not applied on p=
-urpose.
-> > > > > > > > This might work for your particular case but there are more=
- changes to
-> > > > > > > > be done if you want to apply prio inheritance between cfs t=
-asks.
-> > > > > > > >
-> > > > > > > > As an example, what about the impact of cgroup on the actua=
-l weight
-> > > > > > > > and the inherited priority of a task ? If the owner and the=
- waiter
-> > > > > > > > don't belong to the same cgroup their own prio is meaningle=
-ss... task
-> > > > > > > > nice -20 in a group with a weight equal to nice 19 vs a tas=
-k nice 19
-> > > > > > > > in a group with a weight equals to nice -20
-> > > > > > >
-> > > > > > > That is on my mind actually. But I thought it's a separate pr=
-oblem. That has to
-> > > > > > > do with how we calculate the effective priority of the pi_tas=
-k. And probably
-> > > > > > > the sorting order to if we agree we need to revert the above.=
- If that is done
-> > > > > >
-> > > > > > Thinking more about it the revert is not the right thing to do.=
- We want fair
-> > > > > > tasks to stay ordered in FIFO for better fairness and avoid pot=
-ential
-> > > > > > starvation issues. It's just the logic for searching the top_wa=
-iter need to be
-> > > > > > different. If the top_waiter is fair, then we need to traverse =
-the tree to find
-> > > > > > the highest nice value. We probably can keep track of this whil=
-e adding items
-> > > > > > to the tree to avoid the search.
-> > > > > >
-> > > > > > For cgroup; is it reasonable (loosely speaking) to keep track o=
-f pi_cfs_rq and
-> > > > > > detach_attach_task_cfs_rq() before the reweight? This seems the=
- most
-> > > > > > straightforward solution and will contain the complexity to kee=
-ping track of
-> > > > > > cfs_rq. But it'll have similar issue to proxy execution where a=
- task that
-> > > > > > doesn't belong to the cgroup will consume its share..
-> > > > >
-> > > > > That's a good point, Would proxy execution be the simplest way to=
- fix all this ?
-> > >
-> > > Is it? Over 4.5 years ago Unity reported to me about performance inve=
-rsion
-> > > problem and that's when proxy execution work was revived as simplest =
-way to fix
-> > > all of this. But still no end in sight from what I see. I was and sti=
-ll think
-> > > an interim solution in rt_mutex could help a lot of use cases already=
- without
-> > > being too complex. Not as elegant and comprehensive like proxy execut=
-ion, but
-> > > given the impact on both userspace and out of tree kernel hacks are g=
-rowing
-> > > waiting for this to be ready, the cost of waiting is high IMHO.
-> > >
-> > > FWIW, I already heard several feedbacks that PTHREAD_PRIO_INHERIT doe=
-s nothing.
-> > > I think this reweight issue is more serious problem and likely why I =
-heard this
-> > > feedback. I could be underestimating the complexity of the fix though=
-. So I'll
-> >
-> > Without cgroup, the solution could be straightforward but android uses
-> > extensively cgroup AFAICT and update_cfs_group() makes impossible to
-> > track the top cfs waiter and its "prio"
->
-> :(
->
-> IIUC the issue is that we can't easily come up with a single number of
-> 'effective prio' for N level hierarchy and compare it with another M leve=
-l
-> hierarchy..
+On Tue, Apr 09, 2024 at 05:15:20PM +0100, Vincent Donnefort wrote:
+> Hi Seb,
+> 
+> On Tue, Apr 09, 2024 at 03:19:08PM +0000, Sebastian Ene wrote:
+> > Handle the FFA_PARTITION_INFO_GET host call inside the pKVM hypervisor
+> > and copy the response message back to the host buffers. Save the
+> > returned FF-A version as we will need it later to interpret the response
+> > from the TEE.
+> > 
+> > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > ---
+> >  arch/arm64/kvm/hyp/nvhe/ffa.c | 49 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > index 320f2eaa14a9..72fc365bc7a8 100644
+> > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > @@ -67,6 +67,7 @@ struct kvm_ffa_buffers {
+> >   */
+> >  static struct kvm_ffa_buffers hyp_buffers;
+> >  static struct kvm_ffa_buffers host_buffers;
+> > +static u32 ffa_version;
+> >  
+> >  static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
+> >  {
+> > @@ -640,6 +641,49 @@ static bool do_ffa_features(struct arm_smccc_res *res,
+> >  	return true;
+> >  }
+> >  
+> > +static void do_ffa_part_get(struct arm_smccc_res *res,
+> > +			    struct kvm_cpu_context *ctxt)
+> > +{
+> > +	DECLARE_REG(u32, uuid0, ctxt, 1);
+> > +	DECLARE_REG(u32, uuid1, ctxt, 2);
+> > +	DECLARE_REG(u32, uuid2, ctxt, 3);
+> > +	DECLARE_REG(u32, uuid3, ctxt, 4);
+> > +	DECLARE_REG(u32, flags, ctxt, 5);
+> > +	u32 off, count, sz, buf_sz;
+> > +
+> > +	hyp_spin_lock(&host_buffers.lock);
+> > +	if (!host_buffers.rx) {
+> > +		ffa_to_smccc_res(res, FFA_RET_INVALID_PARAMETERS);
+> > +		goto out_unlock;
+> > +	}
+> > +
+> > +	arm_smccc_1_1_smc(FFA_PARTITION_INFO_GET, uuid0, uuid1,
+> > +			  uuid2, uuid3, flags, 0, 0,
+> > +			  res);
+> > +
+> > +	if (res->a0 != FFA_SUCCESS)
+> > +		goto out_unlock;
+> > +
+> > +	count = res->a2;
+> > +	if (!count)
+> > +		goto out_unlock;
+> 
+> Looking at the table 13.34, it seems what's in "count" depends on the flag.
+> Shouldn't we check its value, and only memcpy into the host buffers if the flag
+> is 0?
+> 
 
-And then how do you apply it on the hierarchy ?
+When the flag is `1` the count referes to the number of partitions
+deployed. In both cases we have to copy something unless count == 0.
 
+> > +
+> > +	if (ffa_version > FFA_VERSION_1_0) {
+> > +		buf_sz = sz = res->a3;
+> > +		if (sz > sizeof(struct ffa_partition_info))
+> > +			buf_sz = sizeof(struct ffa_partition_info);
+> 
+> What are you trying to protect against here? We have to trust EL3 anyway, (as
+> other functions do).
+> 
+> The WARN() could be kept though to make sure we won't overflow our buffer. But
+> it could be transformed into an error? FFA_RET_ABORTED?
+> 
 >
-> Does proxy execution fix this problem then? If we can't find the top wait=
-er,
 
-I haven't dug enough in the patchset. John ?
+I think we can keep it as a WARN_ON because it is not expected to have
+a return code of FFA_SUCCESS but the buffer to be overflown. The TEE is
+expected to return NO_MEMORY in w2 if the results cannot fit in the RX
+buffer.
 
-> I can't see how proxy execution would work here too. To my understanding =
-it's
-> more about how we apply inheritance (by donating execution context of the=
- top
-> waiter) instead of manually applying inheritance like we're doing now.
->
-> But the logic of finding the top waiter should remain the same, no?
->
-> Need to extend my test case to cover this scenario.
+Thanks,
+Seb
+
+> > +	} else {
+> > +		/* FFA_VERSION_1_0 lacks the size in the response */
+> > +		buf_sz = sz = 8;
+> > +	}
+> > +
+> > +	WARN_ON((count - 1) * sz + buf_sz > PAGE_SIZE);
+> > +	for (off = 0; off < count * sz; off += sz)
+> > +		memcpy(host_buffers.rx + off, hyp_buffers.rx + off, buf_sz);
+> > +out_unlock:
+> > +	hyp_spin_unlock(&host_buffers.lock);
+> > +}
+> > +
+> >  bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+> >  {
+> >  	struct arm_smccc_res res;
+> > @@ -686,6 +730,9 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+> >  	case FFA_MEM_FRAG_TX:
+> >  		do_ffa_mem_frag_tx(&res, host_ctxt);
+> >  		goto out_handled;
+> > +	case FFA_PARTITION_INFO_GET:
+> > +		do_ffa_part_get(&res, host_ctxt);
+> > +		break;
+> >  	}
+> >  
+> >  	if (ffa_call_supported(func_id))
+> > @@ -726,6 +773,8 @@ int hyp_ffa_init(void *pages)
+> >  	if (FFA_MAJOR_VERSION(res.a0) != 1)
+> >  		return -EOPNOTSUPP;
+> >  
+> > +	ffa_version = res.a0;
+> > +
+> >  	arm_smccc_1_1_smc(FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0, &res);
+> >  	if (res.a0 != FFA_SUCCESS)
+> >  		return -EOPNOTSUPP;
+> > -- 
+> > 2.44.0.478.gd926399ef9-goog
+> > 
