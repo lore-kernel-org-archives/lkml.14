@@ -1,127 +1,111 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8779816E87C;
-	Wed, 10 Apr 2024 15:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3F316EBE4;
+	Wed, 10 Apr 2024 15:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763164; cv=none; b=JrjeLH5Yi3xaiq3bsurrugT84PDAe/5erbcjaxXUIhoYCeJeOUthnvCSzV5fTmWKidUrExCEmBQnncGyS4SymflUP77XG0K9M/HGOEHh3aT/wWIsqcGQQdiGwgymEHpNqZqoB1lU1dVspnBrR6E0Zxu91mDugsY21IC1926sI5s=
+	t=1712763220; cv=none; b=UtQIH4EOPcWFxD7STJgNk3kITCA39X/7Mb/0BBUV5vKtnUzBzMfgWLZJq34PzZgXSAEYKv/eDSXHLKcCAJjbrR4cev93+Muy4BOnjoRttj1OYej6UhR2Tzn7f9AS/yF+t7aw35m6Kt1D0IUM6mkkVkSBTj870l/ImWG0Dsfv0VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763164; c=relaxed/simple;
-	bh=aSCpDH/F4R0DSA6FAKET7AmPuGmk0OGo1JZYB3F1/M4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngjY89NXoW1Y/mS9jYUvZfxo7qgdrIF8KdA85qscHZEgYXOrdWdwQ92oMybVEeyCQqX0zwN/K1Y/JLgTWHTaCbpeZS/CUD2udFZ784Xp5OkkQyXeJwPMVk7PnHo4zdcya9jubpxCgkezufWL1RGua6b/EMYFtL9GiAldBtuL+M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LytFKXN0; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LytFKXN0"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a51d05c50b2so456946466b.0;
-        Wed, 10 Apr 2024 08:32:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712763161; x=1713367961; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NIoZdroObHcn0ilUnP99WXP7c8tNf1PTNXOqonjBdzs=;
-        b=LytFKXN0RLSc3GaL7m7WMMMsS/OnROeV/7t1EjlE5NNdfnxev7Sydk2DjxrdEJnkid
-         nADG0cILZjGe+LGXfSgedBPsTkR6Ircv5FcgouTQjuL3XtO2mPoKxdChOSX41dyMpfhW
-         mWpalYBHHeku+QL2/mgCI2d2GqhQPtMxkYyGuvT2Ri4r6u1qwao1/8rdBTD9FV8pjbrT
-         m3MH80mlbqw9dTGpuua9sF4bwym3qwSaeM2PzggqjCr4Z4CXz4aQf6y0HI1sV8FEPzzD
-         L/uO06b0KJCbX6qFcR+w41Ba/2mTslxj8LM68S6niOeLGh9yT5XprS36WahIQ+lAtwZc
-         D6Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712763161; x=1713367961;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NIoZdroObHcn0ilUnP99WXP7c8tNf1PTNXOqonjBdzs=;
-        b=j3gdAr4BxrAbrpelcH59977iL5rVXhSsVPO5he/M+CZLFHilhG9BimkTa1W1YHSA8G
-         SywAjG+hPqEnKUyqIB5cIY8MoMqHjVaF1Vb0Dmmv83fv5KF8I+fL7qUIYjMVxbJadjlf
-         aQLrJRsd0u7mCAnlSBqKVmpkegj5qE+o/d6hhSeqNqHoJXgbYVgunguuLRq8vLq18Klx
-         1HW+OhqTFVSp4NGVgHkqU+YTYWUG9RmfJ1M2B7XeLJn0BwFPIE0iFws/SKHlhheTJTSz
-         IIBzydjVzayiwONItTykK+ZLDKI/UvpzQghjbJWRVM44FtAIg3GJZpUCmxzvVRTDNDUR
-         fbYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbMU4pe8wg5L2C/NLYmQF65HSpG035IyBgKqmNtjVmrybcaHJFFYQbL0vxPzLgr9EoBY1HyulBeVNycy8yRiPSWtqxDKu2hsETcar2rSbGkn1AQIeOYrs79f2CNl3ruKm68FNs
-X-Gm-Message-State: AOJu0YwEe3ur/KaCi9irEvTecv6Wgc0oCWLm3H5gEe2ni32s5I8gGx8V
-	Q9vynxGRG9JE9o7so0WHFNVQz3fvwwqYAPggQiJrAzURV0Tf0wCs
-X-Google-Smtp-Source: AGHT+IFCvCk24d1vqHgUtpGPRpXznj4t6uQg0+kcFcV3Q2ZHEsnQlRvc/21H7pZ+1pW4Fa8GmM/QZA==
-X-Received: by 2002:a17:906:8308:b0:a4e:390f:c6ce with SMTP id j8-20020a170906830800b00a4e390fc6cemr1669666ejx.65.1712763160458;
-        Wed, 10 Apr 2024 08:32:40 -0700 (PDT)
-Received: from skbuf ([2a02:2f04:d201:1f00::b2c])
-        by smtp.gmail.com with ESMTPSA id bv4-20020a170906b1c400b00a51e452fe0esm2750028ejb.170.2024.04.10.08.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 08:32:39 -0700 (PDT)
-Date: Wed, 10 Apr 2024 18:32:36 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
-Subject: Re: [PATCH net-next v6 5/9] net: dsa: microchip: add support for
- different DCB app configurations
-Message-ID: <20240410153236.d3ncotfhzwv4dlb7@skbuf>
-References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
- <20240410080556.1241048-6-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1712763220; c=relaxed/simple;
+	bh=92ZRImfzi1uBmz5wPYU8Kbhx0TjrM28aNmBdmI8IclA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XWv2xAQMoBUGG4DOEnd/bI3AF+K+3MlVZM+mjtNX6XSgx8Vtt5peScEBb/+dKvS7RkkGxNNl5plx3PO5yjrFanPf9GQjzMWuUrp3J+gfnGxywrSLuGQrWxZGcPo/fxwXspG7Hw6s9OB9GVFNpRb/FdpNB6dvrc4Eg56tnLbnwZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB9A4C433F1;
+	Wed, 10 Apr 2024 15:33:37 +0000 (UTC)
+Date: Wed, 10 Apr 2024 11:36:14 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Russell King <linux@armlinux.org.uk>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
+Message-ID: <20240410113614.39b61b0d@gandalf.local.home>
+In-Reply-To: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410080556.1241048-6-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 10, 2024 at 10:05:52AM +0200, Oleksij Rempel wrote:
-> diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-> new file mode 100644
-> index 0000000000000..d2122f844c80b
-> --- /dev/null
-> +++ b/drivers/net/dsa/microchip/ksz_dcb.c
-> +/**
-> + * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
-> + *			      of Internal Priority Value (IPV) sources.
-> + *
-> + * This array defines the apptrust selectors supported by the hardware, where
-> + * the index within the array indicates the priority of the selector - lower
-> + * indices correspond to higher priority. This fixed priority scheme is due to
-> + * the hardware's design, which does not support configurable priority among
-> + * different priority sources.
-> + *
-> + * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
-> + * by the hardware's fixed logic, as detailed below. The order reflects a
-> + * non-configurable precedence where certain types of priority information
-> + * override others:
-> + *
-> + * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
-> + * 2. ACL - Overrides VLAN PCP and DSCP priorities.
-> + * 3. VLAN PCP - Overrides DSCP priority.
-> + * 4. DSCP - Lowest priority, does not override any other priority source.
-> + *
-> + * In this context, the array's lower index (higher priority) for
-> + * 'DCB_APP_SEL_PCP' suggests its relative priority over
-> + * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
-> + *
-> + * DCB_APP_SEL_PCP - Priority Code Point selector
-> + * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-> + */
-> +static const u8 ksz_supported_apptrust[] = {
-> +	DCB_APP_SEL_PCP,
-> +	IEEE_8021QAZ_APP_SEL_DSCP,
-> +};
+On Mon, 01 Apr 2024 23:48:52 +0000
+Justin Stitt <justinstitt@google.com> wrote:
 
-I've no idea how kernel-doc is supposed to document arrays. But this
-generates a scripts/kernel-doc warning:
+> diff --git a/include/trace/events/rpcgss.h b/include/trace/events/rpcgss.h
+> index ba2d96a1bc2f..274c297f1b15 100644
+> --- a/include/trace/events/rpcgss.h
+> +++ b/include/trace/events/rpcgss.h
+> @@ -618,7 +618,7 @@ TRACE_EVENT(rpcgss_context,
+>  		__entry->timeout = timeout;
+>  		__entry->window_size = window_size;
+>  		__entry->len = len;
+> -		strncpy(__get_str(acceptor), data, len);
+> +		memcpy(__get_str(acceptor), data, len);
+>  	),
+>  
+>  	TP_printk("win_size=%u expiry=%lu now=%lu timeout=%u acceptor=%.*s",
 
-  CHECK   ../drivers/net/dsa/microchip/ksz_dcb.c
-../drivers/net/dsa/microchip/ksz_dcb.c:81: warning: cannot understand function prototype: 'const u8 ksz_supported_apptrust[] = '
+WTF, that code is just buggy. Looking at the rpcgss_context event we have:
 
-Worst case, it doesn't need to be a kernel-doc?
+> TRACE_EVENT(rpcgss_context,
+>         TP_PROTO(
+>                 u32 window_size,
+>                 unsigned long expiry,
+>                 unsigned long now,
+>                 unsigned int timeout,
+>                 unsigned int len,
+>                 const u8 *data
+>         ),
+> 
+>         TP_ARGS(window_size, expiry, now, timeout, len, data),
+> 
+>         TP_STRUCT__entry(
+>                 __field(unsigned long, expiry)
+>                 __field(unsigned long, now)
+>                 __field(unsigned int, timeout)
+>                 __field(u32, window_size)
+>                 __field(int, len)
+>                 __string(acceptor, data)
+
+The __string() macro expects "data" to be a string and does *not* check
+length when copying.
+
+If anything, it needs to be:
+
+		__string_len(acceptor, data, len)
+
+as the macro code has changed recently, and the current code will crash!
+
+>         ),
+> 
+>         TP_fast_assign(
+>                 __entry->expiry = expiry;
+>                 __entry->now = now;
+>                 __entry->timeout = timeout;
+>                 __entry->window_size = window_size;
+>                 __entry->len = len;
+>                 strncpy(__get_str(acceptor), data, len);
+
+Then this needs to be:
+
+		__assign_str(acceptor, data);
+
+Note, the length is now saved via __string_len() and not needed here.
+
+I'll go send a patch to fix this.
+
+-- Steve
+
+
+>         ),
