@@ -1,166 +1,135 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2107.outbound.protection.outlook.com [40.107.94.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358BC8C1E;
-	Wed, 10 Apr 2024 04:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.107
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712724703; cv=fail; b=bIzauLDRBxFqmxgmboQlPZyfMgSwshhdOtpKM7h+cQBsp1fE8AeeM9aGwkDXfwKzfHQLOOcpbNhOBcJgExJwWMYciWNzjb5vcFJDpFUOJcjR9Kni2ztK3D2KFVq4/lXNixXBRFdXG8MnmDRuHaBiGSIh2/BNlahUsdmOq60jV6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712724703; c=relaxed/simple;
-	bh=KOfdkg7pmTTZnbAQHjhfkGFTBjevo2U+6UPNLtziTM4=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 Content-Type:MIME-Version; b=iOVIh3/F45/jsIpbJO43IJvhvGmh67cD6pNCtGPC1lrsv7gZ4jxAo79L8l7i9cpPEPzcn+xZjOHto/GXaNaGygFFWh+WQVXFxSYy34pDg5CLWA7S6I3gW9sfou9e+KcnB6Tebsi3p6xGtv0n9BkJF/er3owd5uBojt2lOJ4zl7E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NXT98Bi6; arc=fail smtp.client-ip=40.107.94.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E7B8F44
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712724790; cv=none; b=RJy14Bv4snc/tcfQoMfzG6tSKP5jw8gtSE2KNSUL4hvmhB0Q2NXmUcxEX9JgPPLhD4nWHdfiGS7TttiMsYAElYXWC6nXo19G/jO6gVm6DSuxra3MybPO1YljkOXH01uqWjMa9mR3pc+lxAJXdvGcddpXMUcgm5XfBLFDiF9G0R4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712724790; c=relaxed/simple;
+	bh=3a6xBxfBTuhDr2mbQLGPWuHFkhHEu34jB6fMbSSBIMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l2WNzHiQyJk4jNuIUvz8hSsuobI9kU+pRhr2/4DJtYbm+oq89wDDQV084BIptQc9i05w4uyY9FqTKrDnSJBxtDoLhXH9nFGrttZJNVDdpBqXyvZSQagp+c3hTDmNKEA1hZvQ/FpmJGqKOoa2lM/leYaRLkvAmUROo1zkX72Ms7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=jOk3fCct; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NXT98Bi6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RQp6L0KzHuqOW9wf17TTU8xy7b0KOpaOCQ6L8cRiZNarI2c+K++ODJfokZe2qQhRsRfCYWbemLHZDdUDO54R/zMt+M4b78MsQ70Fv5o9BhvyvAmKkhyf0Hz9A1A9cPDL0tJX39NBn1pdlKTw0wjhCK4LXglbCoq/MDxOp0OSMhHMQS9o9DFTHU3z8QAhAVJiNyKpzLeoE67so46/ANTgWnCSl5jW807qGxli6PXdxqLosSsVIjPGrZQDOvuWnwzSxsKim+xTnCI0BftjVULIzidEoXTaQT6Oms89Oxb5EviKO9i4gHIw2CxGs197V7N11gqT/HuAdXL3Ctthz5+Esw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fqYWPZlAKbhbzazxuFefZuuw6dzZIc1zWybZx7ccs4s=;
- b=l7U4dEx7u3q3QSfEu52sE+bryTyiN7ik9vAw80QcquZw6GUr8Yioh2NQQ7KswN56RZLMKv58Av6Qv0Znj61SUMEu4AkYMJWsoaIyfhm2ccnkszr1CjSV8goVLYbPrjk4nFTNzp37QpNQWQnH1coIggEerlY3nJzlTpGrTBdwfslHJrTemtJPi0W+FgClVgd7D+WwOTKgMeS28SBT8QScwKLl3QnyLD8nAKAWpzWnubW43mne8NeBdBU3UgqfYezs+6cLQ1d4neRiSH3KLKnM4tK/tNZm2bw5JC0sJMxe13TjW2iex9SOd0UtK9DYnBBT8vpQU9m7we5vIzCD/p35gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fqYWPZlAKbhbzazxuFefZuuw6dzZIc1zWybZx7ccs4s=;
- b=NXT98Bi6CO7ao37n0flSsUgW7xIhn/kcH68hu/aCEqOlJNzkoTd5bA5WydeQnr9mH0w+AcZO3+Pfx8yvLMub2XCn4ksaILeHPAu41hom9aLG3/pc7W2wvHM6zFmAsMzGmVB0XdCiGZzs69549QvkvCcIxH8dv8+jAMGHLQxpUHkUAcAu6Msiyw7hUByDFJuShru99JV0TPiUi5tg9Besc/I+KTGDiJueO+SafJWK7M7JAFa+XEe5S1FC1F+RyiSbTbj/d4EMYkFnKzitTXALzDD/BYgJCfRulUdJIqsKo3jEqfZjPJ8Wo4ovpur527oe+iXO7vt/66L8iGvwMyEPGw==
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com (2603:10b6:a03:61::28)
- by LV8PR12MB9181.namprd12.prod.outlook.com (2603:10b6:408:18d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Wed, 10 Apr
- 2024 04:51:38 +0000
-Received: from BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf]) by BYAPR12MB2743.namprd12.prod.outlook.com
- ([fe80::459b:b6fe:a74c:5fbf%6]) with mapi id 15.20.7409.042; Wed, 10 Apr 2024
- 04:51:36 +0000
-References: <20240408180918.2773238-1-jfraker@google.com>
- <661550e348224_23a2b2294f7@willemb.c.googlers.com.notmuch>
- <20240409172838.247738f3@kernel.org>
-User-agent: mu4e 1.10.8; emacs 28.2
-From: Rahul Rameshbabu <rrameshbabu@nvidia.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, John Fraker
- <jfraker@google.com>, netdev@vger.kernel.org, Praveen  Kaligineedi
- <pkaligineedi@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>,
- Shailend Chand <shailend@google.com>, Willem de  Bruijn
- <willemb@google.com>, "David S. Miller" <davem@davemloft.net>, Junfeng Guo
- <junfeng.guo@intel.com>, Ziwei Xiao <ziweixiao@google.com>, Jeroen de
- Borst <jeroendb@google.com>, linux-kernel@vger.kernel.org,
- kory.maincent@bootlin.com, andrew@lunn.ch, richardcochran@gmail.com
-Subject: Re: [PATCH net-next] gve: Correctly report software timestamping
- capabilities
-Date: Tue, 09 Apr 2024 21:40:46 -0700
-In-reply-to: <20240409172838.247738f3@kernel.org>
-Message-ID: <87jzl5akh5.fsf@nvidia.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0087.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::28) To BYAPR12MB2743.namprd12.prod.outlook.com
- (2603:10b6:a03:61::28)
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="jOk3fCct"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6164d7a02d2so69226677b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 21:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1712724787; x=1713329587; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MAE654Au+Cu+yFu/o4oiBY/gYWIOkPFch6LZEH21s18=;
+        b=jOk3fCctb4fHEoPQEO5uJl8V/0I2FBpxAe3Hfk97dF/I1ixePj9Q+2I3RvNoh1EM7/
+         9BH9iVuisz9A1BEay62wnyF1mPAHm5u5j7HYpXyjNjzSViFiR1k56HF6dTPLStMEk03R
+         B84pSV9h7dtS7+Hz/btQ2FxSuFMnmj4+toBldZKE8DD4l1w874IkZCTfyywesLjfLzSd
+         000M3VwP4ixfEagLu3MkyGfk/9Qr3QE7KaWZ6Q92t+JaXsQkGLwfZZePgUFP+Dz/NJT8
+         Lc2pnZmdfCjHc+CWvdXWAqeUalhyJyPqdkH23CWESEoCUTShdl/3Pd3kEBPnXyeiagg8
+         KiqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712724787; x=1713329587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MAE654Au+Cu+yFu/o4oiBY/gYWIOkPFch6LZEH21s18=;
+        b=IZaArQH88ef24ISU9cki4ZVcJzPblXKgN1X5lHSFO3EqOr7vSLHXY4NTxkDdZ2PJwB
+         REIL3v8PpOhGMSYPcZj0wcowdFmLJ9taiixFXO8oe6IfW5Nnd6260XDIV5HLHL5/gzzH
+         qSmTGFh4iG1/wCOaMAdH+vfBiefdZkiGRbcr3+nYBxVjn7lgoejjzRSe/z3jDqz/8xhc
+         29S0lvpJOv+K0YC8ZuqkPMjT39AKOO2214+gQ927BEjs3VcBA/ymj1BMyYGQ8kgmEPIz
+         FH5K0izTOzWzPUcah60meTaP3QLQ03ldzUqDwh5txsOEtc/Gh7MJUsirRysvzYYZDQ9t
+         2Xag==
+X-Forwarded-Encrypted: i=1; AJvYcCXtlvfZ4Jkie/7CKi7flirl2PSylxDkluD2A+8MqD0dwL/NK575zdUAw8pD+sDg5/3317giSbtXfNQQj5b4ZyGAhSoosunZzVYINLR5
+X-Gm-Message-State: AOJu0YyF+TbMS0R6FUMMgP1u+L65jkOxTzwRgEbRrJWC4swWolTPgOSx
+	1UjSJdV5aCR3QgnL7V6f8jX70c9mL939OGQ0BWcNCl40Lo2Lmz71cOICPeA/fhPvdmd5Dq3SZM/
+	OLU1zF16v3e9nLaifNmVzi+SoE96SFb1a7X8GHg==
+X-Google-Smtp-Source: AGHT+IEDQQpBK6XZSXPAqfxDh052kSypvbxtnqC3reJifSRqNmfuSjm5X9w5rcmwQrEa+f9DgnRsbZq8Dcp6o9bI66s=
+X-Received: by 2002:a81:8346:0:b0:614:42b1:edd8 with SMTP id
+ t67-20020a818346000000b0061442b1edd8mr1883003ywf.2.1712724786123; Tue, 09 Apr
+ 2024 21:53:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2743:EE_|LV8PR12MB9181:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	JGEVK9Ok1A5CWUj3RYNQF5aa1YkpBm2N92sir7FUpLXiu+rBAqzsOfQeruOWdAICm9ukWHi1/pBm+bPMG+ghmxmsTJPiJtwhHl8GV6pc7W9EHBHbjznd4Xn/L1868tbwHAUBs4jazfACKGJLjoP7pKOD4cG8Q5UXfAvYkNWnly2Opy9JHwtjoBpGFD486PQCUeli2aCw1MwKN+OinAhJgZABflVSofVMfRlOUV+uWn6ZW8+etm2lVENlomLZLunB04aMRT9Ui6WJlGSukDY+qxNfnVa5CaaIfQNLxU4cvFo7sxhPiTo4N+jTbZIq/GK4Q9b2p4eX2COUm9HDrI4BciBjLxWbyYDq7bWPUifw4ih/Z+3x2iZB6vWgOiRYCsl4saydDRm7MytV4RFXwTkIjvJoNaxTtIDixK5HnNDrod3J0/30atQWz7Vu05ggGNOO6le8m+Ev4/YjWcC8mYaHZzDlYjnye8aCZnMnXqvR4Yd6H24Raxr8a55GMQFZiA4rrjsDObvumz9AnTfjC5iqX3HtxYRRk/4CvcryAwp0Nf3PQLJ5ZZQ9esSZS0svK+AbbCKWuVuFFPL/zZUyJaM6VDRVkqZ/qQ2ZsMYLbbYTxeoFmCZ5mshkrkJMIOyUnq2tsE8fyCRC1mEs5T9Sy3lz4k5xED/oEv1Ies3k+ess504=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2743.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?RXqNgJ7JlZwCsjkpgSWFjpF6FwqPPFd7WFSG/M+D4CBHNfL18wAJVkZ5q7TK?=
- =?us-ascii?Q?eH4LHiLupM/XyeevwJX+G4wUqPbUsVRVS2Jib/Tn3BiafYTAJhfWI0Dya2oU?=
- =?us-ascii?Q?RrTU/yMh0q2wba4JuiBI86haT+qbDgoUeSV7MbnmUOum6O+MiZM1ZO9CHnfP?=
- =?us-ascii?Q?KoH1Rc1i4avuhvhueIEa7sPkFe8fPBpRzhF9/RL8OOt2N9e9+3g5ZA/AW9Q4?=
- =?us-ascii?Q?JKxNm+W291sN8SY30r4CZUouwgwwQVf5DMYn8xDKKoiPgw2GOgziuyDLubwo?=
- =?us-ascii?Q?0uLbH5P4jk2xnHkq7aIxGdN+eH8yFbB5Gef+BsIPGm/1loHiItBvpd0cjP6A?=
- =?us-ascii?Q?vdAJdInLY5cf8kQcXUMRZLI8r/F/EapZUR9x1woDllobZSUaonsS6KsXmVLW?=
- =?us-ascii?Q?tu22aLLE9qrgNmCRlSuBpOllNm/huVh7X4dfSUaHz3TKQqFN/8C7JtSzcL2h?=
- =?us-ascii?Q?wdEEEvKZ1mHP7JyhSvpGImcUSji+mto5XtbTXjOwhnGLmxSfJPgTqYs/uDML?=
- =?us-ascii?Q?D35lyijjnuJsNhmLr1Ec9LA6UFj8ojPqCt/YqJBdnNZgSyXVaYmo1SRwDHz5?=
- =?us-ascii?Q?YTGoK2gnC8UKe2oVX7WAe8ZPqM5Nf/b7f2MgI5oNI7a91kc9qIRuoVhSKFD+?=
- =?us-ascii?Q?zAsdTI0gIax80Gc9yZX69tpsS3h5piBjg2XfRCgHlTrOTqCef25/tGlQZL4z?=
- =?us-ascii?Q?I/4f2YuN/lm9kh8Y3rxkTscFyoKdtRNiO7jCdKybP/2r2ZARzFZnPOazZwIY?=
- =?us-ascii?Q?t8bXkE49c7vOzG0gQ1HvpOV5pVubE5YAWi9lELwvC0mA1//cng2PFehGqZJo?=
- =?us-ascii?Q?XhichhSjgY55r7UzmFdDFV3NCREBuG1y7TVfoSuzcHadN6kd91C2j9HijM6G?=
- =?us-ascii?Q?32++YTJVDqO11FVbnKMU8u/JAF4EPsE3Z1NzxbJqOe4SyoGIpDlS8L8UJVxQ?=
- =?us-ascii?Q?x+2nQTN9KvnoqG9s5giQr08rOvlS5c89G+LMag4BChS8Ru+QwvKOPAO38p2r?=
- =?us-ascii?Q?uNunWnc6VIZel+Yt68rSs56yXmz8pNz6o+3MIIONuHf1cE/K4i4RJwSgh8O8?=
- =?us-ascii?Q?zFjR58DxzhUvq/9d2//9ykyM6G1Dyb0f7mIBG2IxCH5opTZjMYMF13kCDavL?=
- =?us-ascii?Q?XG1mS5/3qsA9L2PZ0tb+c9JL+t8bNVJqhX3weWIE7KsBNolcP705xPdZB2lR?=
- =?us-ascii?Q?rObuoZn7gGbUErffben51A8L64trRSVMsrxkLRvBQmNYgTEmXyuaUYiBNd+/?=
- =?us-ascii?Q?c7LJIRuGGH5tf4k8JZN74W3P5TdmuEmrmUf1UMFKFd+gIMVskEFiehuEOx3+?=
- =?us-ascii?Q?/0oTrUxY5bVKrfajBbHC6oCE5r2BfEdxLKOL+KWUoPxOLO+kuk3is1YnwQhe?=
- =?us-ascii?Q?mz1PfAwPMwdIrxq8pcTYOiqFIibUJZomzX7BAJzu9aFR1agS0VBeRN80ezfe?=
- =?us-ascii?Q?BrNQEMHQFby9Ow9AD2lrIgRDhkfFm9LmwJLLzdZCNe8KxVjh3AenwY1AoZbj?=
- =?us-ascii?Q?Tw9X2CmMuHXSJ/9TGntLj2getUAY/gRyT5cf2dVVdorL8AxKD+V/AZv7ugQK?=
- =?us-ascii?Q?Pt1Y8zPg/WFgjAmtxvPbVLY8kOGV6PW0tHuwkioxKjaDZCGFyVtcj/ZMCH5F?=
- =?us-ascii?Q?IQ=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 917bbe88-d6d8-4b57-ce7d-08dc5919e6d9
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2743.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 04:51:36.3913
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 81PxZcunekDPbpZlHGUuV4lvqw0cG95cZ7apAT7KiqMDLy3kfLKBpJjY76dttGoR46EPMYRB5KDEJVqzeZ0GeQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9181
+References: <20240408100607.1732600-1-lei.chen@smartx.com> <ZhT22tl/Iho5M+1x@gmail.com>
+In-Reply-To: <ZhT22tl/Iho5M+1x@gmail.com>
+From: Lei Chen <lei.chen@smartx.com>
+Date: Wed, 10 Apr 2024 12:52:55 +0800
+Message-ID: <CAKcXpBz0wsabXFLK3uSgXn2sti11VcZeZz1c6G=7P6RoiExqjw@mail.gmail.com>
+Subject: Re: [PATCH RESEND] x86/tsc: print some log if calibrated tsc freq
+ deviates from original too much
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On Tue, 09 Apr, 2024 17:28:38 -0700 Jakub Kicinski <kuba@kernel.org> wrote:
-> On Tue, 09 Apr 2024 10:29:55 -0400 Willem de Bruijn wrote:
->> This device calls skb_tx_timestamp in its ndo_start_xmit: the
->> prerequisite for SOF_TIMESTAMPING_TX_SOFTWARE.
->> 
->> All devices support SOF_TIMESTAMPING_RX_SOFTWARE by virtue of
->> net_timestamp_check being called in the device independent code.
->> 
->> To ethtool timestamping maintainers: It's quite unnecessary to have
->> each device advertise SOF_TIMESTAMPING_RX_SOFTWARE |
->> SOF_TIMESTAMPING_SOFTWARE. In __ethtool_get_ts_info we could just
->> always add those flags to the result from the callees.
->> 
->>         if (phy_has_tsinfo(phydev))
->>                 return phy_ts_info(phydev, info);
->>         if (ops->get_ts_info)
->>                 return ops->get_ts_info(dev, info);
->> 
->>         info->so_timestamping = SOF_TIMESTAMPING_RX_SOFTWARE |
->>                                 SOF_TIMESTAMPING_SOFTWARE;
+On Tue, Apr 9, 2024 at 4:05=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrote=
+:
 >
-> My gut tells me we force drivers to set the ethtool op because
-> while at it they will probably also implement tx stamping.
+>
+> * Lei Chen <lei.chen@smartx.com> wrote:
+>
+> > In most cases, tsc_khz is refined by hpet on boot. But in a few
+> > production-level nodes, the refinement fails because calibrated
+> > freq diviates from origin tsc freq more than 1%. Printing some
+> > logs will help get this info.
+> >
+> > Signed-off-by: Lei Chen <lei.chen@smartx.com>
+> > ---
+> >  arch/x86/kernel/tsc.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+> > index 15f97c0abc9d..a68b16e72df1 100644
+> > --- a/arch/x86/kernel/tsc.c
+> > +++ b/arch/x86/kernel/tsc.c
+> > @@ -1435,8 +1435,15 @@ static void tsc_refine_calibration_work(struct w=
+ork_struct *work)
+> >       }
+> >
+> >       /* Make sure we're within 1% */
+> > -     if (abs(tsc_khz - freq) > tsc_khz/100)
+> > +     if (abs(tsc_khz - freq) > tsc_khz/100) {
+> > +             pr_warn("Warning: TSC freq calibrated by [%s]: %lu.%03lu =
+MHz deviates too much from original freq: %lu.%03lu MHz\n",
+>
+> Yeah, so it wouldn't cost us anything to more precisely define 'too much'=
+:
+>
+>  s/deviates too much from
+>   /deviates by more than 1% from
+>
+> Right?
 
-I think the logic should be the other way (in terms of the
-relationship). A call to skb_tx_timestamp should throw a warning if the
-driver does not advertise its timestamping capabilities. This way, a
-naive netdev driver for some lightweight device does not need to worry
-about this. I agree that anyone implementing tx timestamping should have
-this operation defined. An skb does not contain any mechanism to
-reference the driver's ethtool callback. Maybe the right choice is to
-have a ts capability function registered for each netdev that can be
-used by the core stack and that powers the ethtool operation as well
-instead of the existing callback for ethtool?
+Thanks for your suggestion, I'll change it.
+
 
 >
-> Even more unhelpful point I'll risk making is that we could 
-> add a test and make people who submit new drivers run it :)
-
---
-Thanks,
-
-Rahul Rameshbabu
+> > +                     hpet ? "HPET" : "PM_TIMER",
+> > +                     (unsigned long)freq / 1000,
+> > +                     (unsigned long)freq % 1000,
+> > +                     (unsigned long)tsc_khz / 1000,
+> > +                     (unsigned long)tsc_khz % 1000);
+> >               goto out;
+> > +     }
+>
+> The warning makes sense I suppose, if it's one per system and once per
+> bootup [right?], but I think pr_info() would be plenty enough priority fo=
+r
+> this condition - especially as we didn't have the warning before and don'=
+t
+> know how frequent it is?
+>
+I'm afraid tsc frequency deviates from HPET more than 1% is a system risk.
+It means either HPET or tsc might be not stable. Users should be cautious o=
+f
+the risk and turn to ntp for help. In our production nodes, it indeed
+causes more
+time skew.  So maybe warning is a better way to expose the risk ?
