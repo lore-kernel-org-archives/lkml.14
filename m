@@ -1,83 +1,153 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60D1138C
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97510E3;
+	Wed, 10 Apr 2024 02:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712715881; cv=none; b=sy8q8o7o+6/TTurnfcc3VR4PHb/kz22vPazY0Ne/IgjQAjAt1mxXtCIvCVnmUhgbnQFGG9AKY6HfG8Up5dJZang0ih7/qrjiPV3F9bvUlM1ALTnRLZffMfYOh7ke0q2kpW6fvMxvu9JkWI9/xFdF/0MBVrd+IMqYbVTRo8swOAo=
+	t=1712715974; cv=none; b=B6P31dAMTghbiC9UFrJ/uGQ5J/KAO6K5MZ4CQUfvpVTg9wEZVJqCyl7MC8hVighUigs+CnHXfawVJ+Ph9RmRc3bQ9FQQXuMFVt0P8DyhNx9GVlWxzY4WNIOrxAUDZAqaZt4GfLezev18da5cuQKzeD1f0hiWPDrl7s+OQ7z/4lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712715881; c=relaxed/simple;
-	bh=Vk65zLEOHyz65cxDoyt3Cn3gBlwcWIXgVqjFJrJWXwk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQG2dwzpmQuSfappne0JXSCuV4qbmndTL9DVfRyFoOa8tEfMU+eMu/q7hUMvPiuPURFi5h6W1L9CYT0FOR5raxIMIFLv9tbQpz8QU/7uBUlNIjKA025q7PknyE510xJfnmrgw46XaEdFRpu+gpHnUkqfny45mBLiDbZ5U4TRrSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=hpiJQFHg; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
+	s=arc-20240116; t=1712715974; c=relaxed/simple;
+	bh=J7vXo8gnzotGaAOZGaEFsf6LKD7BLcr3tjED66ZNRx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nM5n12/wfQa9oo/flFW/uk2ViVC6GLpf9PHovQiZn+Y7mEzWiyPbS1RqYSQFQp36Ok52qOlrL1IVUkrIToX5aNlRjqwVNxxkfLWuuxGJFqg3FVb010BVhIOxRsxjlY4i9jh49bAsvWvozXSryz3Wh0q3eBieFc7ezgKmIq+SVRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=pAq+m9yk; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="hpiJQFHg"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-617d4797d9bso38647247b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 19:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1712715879; x=1713320679; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWFwQDfL/X9Ah8K+tT4l6UKgiTB6JFFzOxSKcxIzX5U=;
-        b=hpiJQFHgm4OB8xAcJNAdoYA9S8p7Ly+NnQXxymoSO58hlYapeePCNManQnKoXUrRLe
-         l0Tgojus/032/Fhb0umJbRkSABkZiBzlHkw4XWlz2WwbYk2Bb+J8MpgXsaduJ4KDx5WZ
-         wAL5EcaDXcIVFyXko1gICLvDZdWu7sSNoEIIboVNI5vFeJlx3eyTCT5y++UjtyTQLrnw
-         b6aQ11j73g72wZElxCd/6p+IBd3rc19f9SFUkB8pIOqnKm8KnNeTZQcNslhUaXZkXTv2
-         HHjFdC4yiVygigpLd07G7uQ8LHJDJqBl5h1SnApP10HYiLUo5pYruebuIHYpWIdck4Bv
-         SpaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712715879; x=1713320679;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eWFwQDfL/X9Ah8K+tT4l6UKgiTB6JFFzOxSKcxIzX5U=;
-        b=ShGpJEkjapAw/FAcQUBJz55eGrab6h5zWTZnFiedZ7QkSsEmxM9Kk2Xcg94T9FrL6f
-         WEflmLQ4XseJu/FNgYBTv0ntcRitNj8Nz0FKJQFQWRJMIpGOYDSbZVn2TE4I1NWkT1bo
-         KZA08YG5hfHwzCj3fVjCXTa8guygHQu6pD6Ap1kaggG99lqITv8Q17qy4Yx+mYcrGF3K
-         ekw73uyYorNdtoI/utgfQ0se9b2sepdQ0QEjBwFmxP/Ve6BAFnl/OlBSxbEUuljQx8Ta
-         3x6PgCkMMy2Rn2H6WhrCtFqQPAKFIr+m/XqnS8i8pq5BBVVavbhXWajX/AMllJv9g6wP
-         nyjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVL3OdFetpxVw5NZ5nYvcUEjE5NVsOKzvsfAcAUX6qigZ+1tpAT2A84GMwyKoYOQ9KPOjKxO7CrJFQZ915ry7Re+ehzPFAb/e35f26Z
-X-Gm-Message-State: AOJu0YxxCI6OeSrroB7gcXCCH9af/ALTEVIdOkndHjEiEm8uLgiqb7vA
-	RtTv7YRMdvVB8Wq8dRpckXpSTwiI8CusXPasj44nj8ePK1p7I8o8e8a93yVkxt/3/qpkcGVjqVn
-	uMKNHdog/6Kk61UdM9ZFo08J3WLKsP1f5cgYw4+qdGtFHLUsCwQ2BlcxBsY8=
-X-Google-Smtp-Source: AGHT+IF0fFXPIj5xQwzDknu6VhWQ6LucNMUUiMp5+MYiPRoNAeNvB36ROJa2HQ15muqnIQn6oBi5o/T3s1Y8xNIz1bo=
-X-Received: by 2002:a05:690c:92:b0:618:4a3f:2752 with SMTP id
- be18-20020a05690c009200b006184a3f2752mr533296ywb.11.1712715878272; Tue, 09
- Apr 2024 19:24:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="pAq+m9yk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1712715645; bh=J7vXo8gnzotGaAOZGaEFsf6LKD7BLcr3tjED66ZNRx4=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=pAq+m9ykq3MBG8HAZqb5dhlh+bkT/EAkF76/uquZ0HDh4Lsh/kM8MVI+u0ZZbX9vl
+	 mVNwgt3Bza4HRAYznNQ2l3Rf/mybYp1gjdllrS0BWbrL8NUP/ALM76OKZaIyWY1aPl
+	 NVc0Woczth0IrK95PL/s8qaMFne2NEXykKreSVm4=
+Date: Wed, 10 Apr 2024 04:20:44 +0200
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
+	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
+	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
+Subject: Re: [PATCHv3 1/2] dt-bindings: usb: typec: anx7688: start a binding
+ document
+Message-ID: <ounfv3vgg2esvxk2cxckeqyy52mghiyps2rszh7sf5poryyjzs@ftumsalmthza>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
+	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
+	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
+ <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
+ <ZhPTTxI4oTF3pgrk@duo.ucw.cz>
+ <e7841ad2-fa3d-442d-804d-51f12e05c234@linaro.org>
+ <e6vvuttix5k5fioy7q44ick5wj6u5gleh7mht36s4zjjcym7vy@bziejyohtc4b>
+ <7976e254-ed1e-406d-870b-1ecdc4b1e23c@linaro.org>
+ <uoo7xltbfx7u6iai7urj3wez7cwotokxt6lwjhff57xbljusqn@fr2xejnrlak7>
+ <1502383c-9caf-4362-8bd6-ed719a304f08@linaro.org>
+ <vbo7bacecuagu4qzrr6tsdh4qlejrv7ia67yylf6ay4u7qnwge@kqj27bun2m7d>
+ <97f2d38d-c863-4c76-91f1-52cd250759d7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409062407.1952728-1-lei.chen@smartx.com> <20240409182535.166cda7c@kernel.org>
-In-Reply-To: <20240409182535.166cda7c@kernel.org>
-From: Lei Chen <lei.chen@smartx.com>
-Date: Wed, 10 Apr 2024 10:24:26 +0800
-Message-ID: <CAKcXpBwVuRS1Orrvi3J4Ru5N1J8hzeRuf6GhOfX8BMWi-82q3w@mail.gmail.com>
-Subject: Re: [PATCH] net:tun: limit printing rate when illegal packet received
- by tun dev
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <97f2d38d-c863-4c76-91f1-52cd250759d7@linaro.org>
 
-On Wed, Apr 10, 2024 at 9:25=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
->
-> On Tue,  9 Apr 2024 02:24:05 -0400 Lei Chen wrote:
-> > --- <NMI exception stack> ---
->
-> You need to indent this line with a space, otherwise
-> git am will cut off the commit message here.
+On Mon, Apr 08, 2024 at 10:12:30PM GMT, Krzysztof Kozlowski wrote:
+> On 08/04/2024 17:17, Ondřej Jirman wrote:
+> > 
+> > Now for things to not fail during suspend/resume based on PM callbacks
+> > invocation order, anx7688 driver needs to enable this regulator too, as long
+> > as it needs it.
+> 
+> No, the I2C bus driver needs to manage it. Not one individual I2C
+> device. Again, why anx7688 is specific? If you next phone has anx8867,
+> using different driver, you also add there i2c-supply? And if it is
+> nxp,ptn5100 as well?
 
-Thanks for your reply, and I'll remake the patch.
-:)
+Yes, that could work, if I2C core would manage this.
+
+> > 
+> > I can put bus-supply to I2C controller node, and read it from the ANX7688 driver
+> > I guess, by going up a DT node. Whether that's going to be acceptable, I don't
+> > know. 
+> > 
+> > 
+> > VCONN regulator I don't know where else to put either. It doesn't seem to belong
+> > anywhere. It's not something directly connected to Type-C connector, so
+> > not part of connector bindings, and there's nothing else I can see, other
+> > than anx7688 device which needs it for core functionality.
+> 
+> That sounds like a GPIO, not regulator. anx7688 has GPIOs, right? On
+> Pinephone they go to regulator, but on FooPhone also using anx7688 they
+> go somewhere else, so why this anx7688 assumes this is a regulator?
+
+CC1/CC2_VCONN control pins are "GPIO" of anx7688, sort of. They have fixed
+purpose of switching external 5V regulator output to one of the CC pins
+on type-c port. I don't care what other purpose with some other firmware
+someone puts to those pins. It's irrelevant to the use case of anx7688
+as a type-c controller/HDMI bridge, which we're describing here.
+
+VCONN regulator is an actual GPIO controlled regulator on the board, and
+needs to be controlled by the anx7688 driver. So that CC1/CC2_VCONN control
+pins driven by the firmware actually do what they're supposed to do.
+
+Not sure why it would be a business of anything else but anx7688 driver
+enabling this regulator, because only this driver knows and cares about this.
+If some other board doesn't have the need to manually enable the regulator, or
+doesn't have the regulator, it can simply be optional.
+
+There are also some other funky supplies in the bindings, that are not connected
+to the chip in any way, but need to be controlled by the driver:
+
++  vbus-supply: true
++  vbus-in-supply: true
+
+First one can be on the connector node instead, where the driver can fetch
+it from.
+
+The purpose of the second one is to link the Phone's PMIC's USB power input with
+the type-c controller (anx7688), to make sure the PMIC has information about how
+much power it can draw from external PSU.
+
+The second one can be replaced by rewriting the anx7688 driver so that it
+creates a power supply representing the USB PSU connected to the phone, and by
+linking to anx7688 DT node from x-powers,axp813-usb-power-supply via
+a power-supplies property, which would mean that USB input of the phone is
+supplied by the external USB PSU. PMIC driver can be modified to watch
+the power supply provided by anx7688 driver for information it detected
+via USB-PD and update its input current limit via a standard helper function.
+
+This is how eg. fusb302 works. Not sure if that's any better from the PoV of
+DT bindings, though. Because power-supplies = <&anx7688>; will not look any
+greater in DT bindings, IMO. It will just link the same nodes in the other
+direction.
+
+Anyway, the HW is that there's an external PSU (detected by type c controller)
+and internal USB power input, and they are connected and one has to respect the
+limits of the other. I guess I shouldn't be adding a device node for external PSU,
+since it's not part of the phone. But that's what's trully being linked on
+HW level.
+
+Kind regards,
+	o.
+
+> 
+> > 
+> > ANX7688 chip desing doesn't have integrated VCONN mosfet switches so it always
+> > needs external supply + switches that are controlled by the chip itself. There's
+> > no sensible design where someone would not want this and the driver needs
+> > to get this regulator reference from somewhere. The switches are sort of an
+> > extension of the chip.
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
