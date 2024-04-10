@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0577E2BB04;
-	Wed, 10 Apr 2024 05:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94ACBB676;
+	Wed, 10 Apr 2024 05:15:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712726122; cv=none; b=lcegDLjuPRnVS0KGp2E7SamyxtMRB6+3hSeJ1OBEcvKNYMOPAfhzpt8R230INy1Jz+qPOFembvtSN4uLhbTnwyqKRtB6q9OYm1JGZnhZDle9brpJHsAF13CAQMlNU2fv4bT7+CpWyBHY2Y9LdC49uRkAQof4ebZT2/kZFe8w8DA=
+	t=1712726128; cv=none; b=Z3qry13t6KzgBlOF12GpEC6Uu1IY5w323nkQoytVi9szo2jq05IyW0HfB/RfjRkHiZnEnVwn4Iku0EDL5qnE//+Ls/k88Iyfi1UDIHMJzEA7Mc4VOmdcF31U71E0/yy/qyTV7EiNhpw7sOKPBqV6ZUZJG/nr3HwqwAGlO2Ih8HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712726122; c=relaxed/simple;
-	bh=uqHdCvKwLUkUq6lL1NYuIJsLFUDJ/F9OwTDrDtKlWLU=;
+	s=arc-20240116; t=1712726128; c=relaxed/simple;
+	bh=wupLBeH52WYuu08SB8OdZb8dy8SXdlV2nrfdO4R1nIM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aB9imxt08aNByIqqgiPJAXFMSpGTCV0hGLrVaQvxszc5PG0F7gxajDcJ7xyq6UJVesW51JkIFKbjQljXW0CMFDqy/qW4oxBoqcuhTsONFwofYL9ZRlq/MESr9MM1rHTPSW/G8E4eY4JCvzmieEEC5rP95N3SksLhThF0DkVX6mY=
+	 MIME-Version:Content-Type; b=Zl+mJkxCCdnacI0SZuQP5lVeA8dNQHU7CBdROvXfpTeUsVHo/LJ3AMNZlyX9G1UGNV50cUnC66OvJgQq8f8w+fziEJrq3Ikqncyd1WQC1Fl0KUNz9Mti5GmZv7pcWzQFq7HYZSenSnpW65KlhQ+LaXRg6aNXhbqAA12u+WmMHHE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,27 +18,39 @@ Received: from ip-185-104-138-50.ptr.icomera.net ([185.104.138.50] helo=phil..)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1ruQIl-0008Ut-Sa; Wed, 10 Apr 2024 07:15:16 +0200
+	id 1ruQIo-0008Ut-9s; Wed, 10 Apr 2024 07:15:18 +0200
 From: Heiko Stuebner <heiko@sntech.de>
-To: Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>
+To: hverkuil-cisco@xs4all.nl,
+	mchehab@kernel.org,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	sebastian.reichel@collabora.com,
+	jose.abreu@synopsys.com,
+	nelson.costa@synopsys.com,
+	p.zabel@pengutronix.de,
+	dmitry.osipenko@collabora.com,
+	nicolas.dufresne@collabora.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	hverkuil@xs4all.nl,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	shawn.wen@rock-chips.com
 Cc: Heiko Stuebner <heiko@sntech.de>,
 	devicetree@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
+	linux-media@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	David Jander <david@protonic.nl>
-Subject: Re: [PATCH 0/2] clk: rockchip: clk-rk3568.c: Add missing USB480M_PHY mux
-Date: Wed, 10 Apr 2024 07:15:05 +0200
-Message-Id: <171272604794.1867483.1180962337998524101.b4-ty@sntech.de>
+	linux-arm@lists.infradead.org,
+	kernel@collabora.com
+Subject: Re: (subset) [PATCH v3 0/6] Add Synopsys DesignWare HDMI RX Controller
+Date: Wed, 10 Apr 2024 07:15:07 +0200
+Message-Id: <171272604798.1867483.3380752860192123035.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240405-clk-rk3568-usb480m-phy-mux-v1-0-6c89de20a6ff@pengutronix.de>
-References: <20240405-clk-rk3568-usb480m-phy-mux-v1-0-6c89de20a6ff@pengutronix.de>
+In-Reply-To: <20240327225057.672304-1-shreeya.patel@collabora.com>
+References: <20240327225057.672304-1-shreeya.patel@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,17 +60,24 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 05 Apr 2024 09:38:35 +0200, Sascha Hauer wrote:
-> This series adds a missing clock for the Rockchip RK3568.
+On Thu, 28 Mar 2024 04:20:51 +0530, Shreeya Patel wrote:
+> This series implements support for the Synopsys DesignWare
+> HDMI RX Controller, being compliant with standard HDMI 1.4b
+> and HDMI 2.0.
 > 
+> Features that are currently supported by the HDMI RX driver
+> have been tested on rock5b board using a HDMI to micro-HDMI cable.
+> It is recommended to use a good quality cable as there were
+> multiple issues seen during testing the driver.
 > 
+> [...]
 
 Applied, thanks!
 
-[1/2] dt-bindings: clock: rockchip: add USB480M_PHY mux
-      commit: 575bc7b477e3f6c505f49c3d99d7be965594d640
-[2/2] clk: rockchip: clk-rk3568.c: Add missing USB480M_PHY mux
-      commit: 007bd99669eae90f23817023dc78dbb38e76437d
+[1/6] dt-bindings: reset: Define reset id used for HDMI Receiver
+      commit: ca151fd56b5736a7adbdba5675b9d87d70f20b23
+[2/6] clk: rockchip: rst-rk3588: Add reset line for HDMI Receiver
+      commit: 7af67019cd78d028ef377df689ac103d51905518
 
 Best regards,
 -- 
