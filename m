@@ -1,116 +1,85 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AC82E405
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 18:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4360617F371;
+	Wed, 10 Apr 2024 18:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775463; cv=none; b=S7fUv/y/oZrmpzXDIRN3vaAloxMsdxOv4ejX5a1OXmvZQLovKg0CRI3FzgNx5IdXrFRbLWjbJDfGk6+g688PN9SMmt5rYDD30tR/RTdFymNgNDcYPW2lokfW1acUoCuSXCGR+hrxaQFfRUk8qUresbmK/SjmnXaA+w/IhkKaEn0=
+	t=1712775507; cv=none; b=AZhoX4wwqh1CyzbahRyqyDHM2xgYKbZVuJesqeYGQKVjPY3A+Jrz3a150EGAjiDKWZZOyGTuTqa1PsQ9sQPk5PwjXU6Bg71si+HVijshGifPZkue8c9h78jahOGlKLYv2IcETpxWGJE5KLAPIkMym6V2xunQBN7V+KVArjeafEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775463; c=relaxed/simple;
-	bh=T63WWSNwemtE5FUWed+rwjc2++XzqVd45sS/kU5+0WQ=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=qgAtop2RYzW898BIVdlUbuqWRbhnUQnRPcfWGf2M9idG/cUhx5fWtkOprcFJBF4lrPdj8+Zc09npujt6MbshBUh0qnd/NKVQZKf+NcOwlaAwABb+k3WfBpykBkk3a+5ekNcZTEZ1QOuzzPORE+Telhw8cqB2rrz8CKPPX1UCz1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vNFlB0+y; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712775507; c=relaxed/simple;
+	bh=9YYPyx0qIUyI2HnU5/vkhTGz6+QCGmfdShkQKgzhQ6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HTErlucS5XhFHraCFYMvCa30A8OlR8+XFCjux2+7F3XlxPFLSorAHnPLK/Rf+AsKLoefCEOkDP3xQvxcWotK8D3FZAsyUXPQ0rxBR5wGiMIeuxEpUiS8h8RYAPt2v/LyFcmRm2bU1DbC/OyqULQd6RN1djgtfIDs9M8IsdxEv/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NctKVa6n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vNFlB0+y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NctKVa6n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C449AC433C7;
+	Wed, 10 Apr 2024 18:58:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712775506;
+	bh=9YYPyx0qIUyI2HnU5/vkhTGz6+QCGmfdShkQKgzhQ6A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NctKVa6nDuwhkik7DjWM/8gh6F+hOS55GKTNqBVCX1nBdzkyfiYssDUSeRGXdCF2S
+	 wxkoec0/uuRSCRW7Pq9Hi/Ha4DvgRKER3vzJ3UHVdATxV7WQlxWo3GNSvHIVE35aqx
+	 bsSYCoy+DFdkQW2vjW4ebXc9IH9SRhMxnDOl3XjC4NvcVIPC8xPC/B/9gT8BaqDCCY
+	 KvQWXcWzW+TSyFFnROqICrLEUwMaeMFms0kmBgJBAayEctO6ln8J34GTEZ7ScOb8zy
+	 lHcNfa0Wt6RGjRIAL6b7ilVf22abWc7Wj2xhgf9XyTvvADKixDs7OD44sWp35AQkdP
+	 EFEigzh7HECrw==
+Date: Wed, 10 Apr 2024 13:58:23 -0500
+From: Rob Herring <robh@kernel.org>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Jose Abreu <joabreu@synopsys.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Paolo Abeni <pabeni@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-renesas-soc@vger.kernel.org,
+	Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH net-next v2 1/5] dt-bindings: net: renesas,rzn1-gmac:
+ Document RZ/N1 GMAC support
+Message-ID: <171277550043.890351.16696873966908975164.robh@kernel.org>
+References: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com>
+ <20240409-rzn1-gmac1-v2-1-79ca45f2fc79@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712775459;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ADESv9RkZIcja5wW8o1aMTUgcCG5wDttV7TT2gQQZ3w=;
-	b=vNFlB0+y6Jsa9DH9o85ONcbM0LRX3VMjU81brB9OcJ0GhOjgM2Zrx3tQ60zNGCZ4Y/EsF5
-	0UUJT+zItjlbmz7mG2sFIY4rU1RIXAH9U8Ra+Jf3tOKsAbkzhHD/CKomUafh+a4/y9AeZn
-	8KUZjcPDt4I8b94mMZ2sOL9nHMuog5Y=
-Date: Wed, 10 Apr 2024 18:57:36 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Eric Van Hensbergen" <eric.vanhensbergen@linux.dev>
-Message-ID: <e73a1e0c90ebce33c23f8f7746c23c1199f62a78@linux.dev>
-TLS-Required: No
-Subject: Re: [GIT PULL] fs/9p patches for 6.9 merge window
-To: "Oleg Nesterov" <oleg@redhat.com>
-Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org,
- kent.overstreet@linux.dev
-In-Reply-To: <74f117635037a82dc2fb2923993cf329b6939b7e@linux.dev>
-References: <ZfRkyxUf8TIgsYjA@1149290c588b>
- <20240408141436.GA17022@redhat.com>
- <74f117635037a82dc2fb2923993cf329b6939b7e@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409-rzn1-gmac1-v2-1-79ca45f2fc79@bootlin.com>
 
-April 10, 2024 at 12:20 PM, "Eric Van Hensbergen" <eric.vanhensbergen@lin=
-ux.dev> wrote:
-> April 8, 2024 at 9:14 AM, "Oleg Nesterov" <oleg@redhat.com> wrote:
-> > Hello,
-> >  the commit 724a08450f74 ("fs/9p: simplify iget to remove unnecessary=
- paths")
-> >  from this PR breaks my setup.
-> >=20
->=20
-> Thanks for the bisect and detailed reproduction instructions. I am look=
-ing at this now and it seems to be related to another problem reported by=
- Kent Overstreet where he was seeing symlink loop reports that were disru=
-pting his testing environment. Once I'm able to reproduce, I'll try and g=
-et a patch out later today, if not I may revert the commit to keep from d=
-isrupting folks' testing environments.
->=20
 
-Okay,=20I think I understand this one, unfortunately it doesn't appear ob=
-viously related to Kent's report if what I believe is correct.  I think I=
-'ve reproduced the problem, fundamentally, since you have two mount point=
-s you are exporting together. I believe we are getting an inode number co=
-llision which was being hidden by the "always create a new inode on looku=
-p" inefficiency in v9fs_vfs_lookup.  You could probably verify that for m=
-e by stating the /home directory and the / directory on the server side o=
-f your setup.  When I created two partitions and mounted one inside the o=
-ther the "home" and the "root" both had inode 2 and I got -ELOOP when try=
-ing to access.
+On Tue, 09 Apr 2024 11:21:44 +0200, Romain Gantois wrote:
+> From: Clément Léger <clement.leger@bootlin.com>
+> 
+> The RZ/N1 series of MPUs feature up to two Gigabit Ethernet controllers.
+> These controllers are based on Synopsys IPs. They can be connected to
+> RZ/N1 RGMII/RMII converters.
+> 
+> Add a binding that describes these GMAC devices.
+> 
+> Signed-off-by: "Clément Léger" <clement.leger@bootlin.com>
+> [rgantois: commit log]
+> Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
+> ---
+>  .../devicetree/bindings/net/renesas,rzn1-gmac.yaml | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+> 
 
-The underlying cause in the patch series is that I was trying to maintain=
- inodes versus constantly creating and deleting them -- and I simplified =
-the inode lookup to be based purely on inode number (versus checking agai=
-nst times, type, i_generation, etc.) -- so collisions are much more likel=
-y to happen.  If qemu detects that this is a possibility it usually print=
-s something:=20
-qemu-system-aarch64:=20warning: 9p: Multiple devices detected in same Vir=
-tFS export, which might lead to file ID collisions and severe misbehaviou=
-rs on guest! You should either use a separate export for each device shar=
-ed from host or use virtfs option 'multidevs=3Dremap'!
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-I can confirm that multidevs=3Dremap in qemu does appear to avoid the pro=
-blem, but this doesn't help the fact that we have a broader regression on=
- our hand that used to work.  It'd be useful to see if mutlidevs=3Dremap =
-also deals with your problem @Kent, but while I think its the same underl=
-ying problem, I don't think it may be the same solution.
-
-I think I have to give up on relying on qid.path/inode-number as unique a=
-nd maintain our own client view of those -- but this will cause problems =
-with the way several parts of the code currently operate where we need to=
- lookup inode by a unique identifier from the server (which is currently =
-conveyed by qids).
-
-Now that I understand the problem, I think I can work thorugh a partial r=
-evert which will go back to a more complex match in vfs_lookup (which exa=
-mines several other fields from the server beyond qid.path) -- but maybe =
-I can do it in such a way which will still avoid keeping duplicate inode =
-structs around in memory.
-
-This didn't show up in my regressions because I always export a single fi=
-le system where the inodes are always unique.
-
-Thanks for your patience while I work through this - now that i can repro=
-duce the problem, I'm fairly certain I can get a patch together this week=
- to test to see if it solves the regressions.
-
-     -eric
