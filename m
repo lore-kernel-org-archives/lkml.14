@@ -1,152 +1,83 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB8E1802C3;
-	Wed, 10 Apr 2024 18:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D66C134CC2;
+	Wed, 10 Apr 2024 19:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775518; cv=none; b=mFcy3bL4tBIPbcW48Z68qtb+V+3vkpxAv8XHnrlX2Jo0kpsm8zKLBJEQMCn1NXqvwrzNMO8/8uCE5UxKZyE6G1BGx1+ucrxlbdD4op7EVu6FP3LvE5BZYIQI0tot/+bXvt7syYNJ+PCL+suV6YL06XJqE3jBG2v99ercDHcS9NQ=
+	t=1712775699; cv=none; b=FfkcsW7zplH0pAwGjwL4gMyt5CJ1ZhryJJAOhBxEvCp572N4duvdt4/cPRtR82LG0Xjq83ZSWfQ3JlFwk4tyuNktNsgd5dN9FADLeg7tdMPdIJwgoi7Kg4JvOfppaDXAjbo4lfTvCEceJCNRSP5C81aLuXJ7W6QB1MFxZAvLk1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775518; c=relaxed/simple;
-	bh=lh2gm0kHeYgCJ8cQXm65KiV9dBGvDMtnxA7aJBAbQW4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bzGokY+t2mMozp2p3IjsQElMbYi6RJUNtpjuv+tOZjpT38037w1L7LO6PaV8BDEk2ISjRWPXOg0ILi9BX2yN5A1A57eaGaSV5ZUZIyh1lq0HtRc0IH5oZB6Uc1LtKR97x2e+nu9yKioV9vGNeEQVDKewDTgT3lsYo62WIjCCJLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Keu3+nEQ; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712775699; c=relaxed/simple;
+	bh=3Yq8cuuw7WI6+8aRN0KBuQMrYv4dTTJGQ1IaeMbXNFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xg/CXkq1jRfHRJYo5uvQ0tCBGJWw9eBkvX2YjTg6qhaGVbg+5eNtwbeN6WoA4dt5FqGDrDBp2CGj7+6VdaUyibGLskPhQtJ2grTRGyhaPU1Bq7qD5Y5+S4gbMaV6RwElJbYmiOnRJIo/Hoer25Bu9NWc/TnRdpf+JQBvgU7foKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=ZaQRep0W; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Keu3+nEQ"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-346a7841713so102025f8f.0;
-        Wed, 10 Apr 2024 11:58:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ZaQRep0W"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1e220e40998so45945905ad.1;
+        Wed, 10 Apr 2024 12:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712775515; x=1713380315; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VfjXX6/HzDFyrzenYHCjHv4rR+msuREnAg9dECeqgyE=;
-        b=Keu3+nEQl5+VXwzo82wLSZuIekfwzQTvoy+gwNEXTvTAhnw8aoHr5jmA6wcZkVd19V
-         b72AOsdRAy+Nc6ajwfL3EDg/mLnzutOphOqVfHob8RUcC8KOlgqdppbvtdxjFzwIuXQE
-         aNRu2lHMEVvede+NyeMtLQgK4IfG6Bn+c7dpTRGBxNjJKHvhshsqDtpSZVxL9jHuiW6T
-         uUt8/ltmYdpI7nVivaVo4HYA4BNPWjwh83Lv3BaSW/fvk1PGoMqA4efMXlo2/aOTKNHk
-         E6UCVgHZSRow35eiLT84y2xEv9UYCCZY5oxmsbrLKn/I/1ymr9SJnueX9KkcJlOrZ4UU
-         qTfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712775515; x=1713380315;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=googlemail.com; s=20230601; t=1712775697; x=1713380497; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VfjXX6/HzDFyrzenYHCjHv4rR+msuREnAg9dECeqgyE=;
-        b=sgnDML9pL3v4EOzBsHhJbX5bwRlXgExFdMxPlPWoymRfFhVAmG9pdwSKA2O+ELRfjH
-         7gQPKMbRd8beB59vlwszV5087ET6EKfSC7WQfiLNJzBh13IX7rOHyq2CChuxgoKe3JQA
-         gTTuzMDjK/jLAl4hNihdZ2GIAgs/YLyUeTojufQU1qPSyG/Td3yav49gLzYnHPLUgQKJ
-         gsslngY6da1q+RZAGzCNRJ5RawneiVNdpWT0CtBZq5WivQbpBuPStvCMoUfbMvbkGL49
-         sHxwJZO7zex9ae6R6wjj/ISVPyGc3KleOZpJxEFcrVz5pUsADb/tZSUepuWXjDQXx49r
-         zoug==
-X-Forwarded-Encrypted: i=1; AJvYcCWbn6SX5sATjNZvw2Y7xVy4QTwIISJgEdtQun6KHYM7iRWq5MIc0/nsId1Cuzy6ElWXFihPUiAozKNY2OTDClXkiMZiMfyXdkmRvSd+2wws4rA0DfttTrld7P4ex9l0UCsiTCO0dTo=
-X-Gm-Message-State: AOJu0YzxAScboljzVKa6NqmH3VnKWW8zrj46UCdE/R/n9BTNeukmSCdG
-	QHSpm1x4giRq1XWEP7NsQczEDGVl4Ffi8SgAY678cFsM7e7kCmRE0I8I/Mz4i5A=
-X-Google-Smtp-Source: AGHT+IGfDRR+m0n1Eik2IVGMrnMInH5L/2Z4F7sVzdvFZtgZO/0CvL7ZhRnAy4FCVy9kMHx2PmUaxw==
-X-Received: by 2002:a05:6000:2ad:b0:33e:c2ed:d94e with SMTP id l13-20020a05600002ad00b0033ec2edd94emr2776972wry.56.1712775514988;
-        Wed, 10 Apr 2024 11:58:34 -0700 (PDT)
-Received: from trashcan (public-nat-13.vpngate.v4.open.ad.jp. [219.100.37.245])
-        by smtp.gmail.com with ESMTPSA id o13-20020a5d58cd000000b00341b7d5054bsm14431144wrf.72.2024.04.10.11.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 11:58:34 -0700 (PDT)
-Date: Wed, 10 Apr 2024 21:58:02 +0300
-From: Vladimir Lypak <vladimir.lypak@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] OPP: Fix required_opp_tables for multiple genpds using
- same table
-Message-ID: <ZhbhOsNQeFnLHzsp@trashcan>
-References: <c274500b623b83c00c0460383cbe1cdc7490eeac.1712658693.git.viresh.kumar@linaro.org>
+        bh=FQGIuC9fhgYKv0jGpAIt5La8/Y4BHfZvvmnOc5ODMp8=;
+        b=ZaQRep0WcKL3iWkLZNPxYRhx3Z0Bgj3j0GcsaK/e9KFVePRuNsMoHtKHKTOu5wyIQ5
+         vO3GiVsXV+EksVtj+ItjGy5owApinbW12N/9Kj98taHtZxtNdPRDodCBCXPkpD02JpwM
+         j+c7cTMRUXsbnuQSKorSz/Lifu5nEDyy9+QQ3lzo/wSOIFPdtquMQHDTI9XFsdknRaCJ
+         6rMIvk/qhcQLSlZdU4Yg4sOS976gsBo8cDjtCrqiL8QjEyuR/q5Cyj8/KA2XblIv+pJN
+         vFj0MF2mX9gOJSuhiuIpsThxTylMfsIlt3Pc47DT2yagUEbAlFufHCP6XD/gHkrXbb+1
+         MYdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712775697; x=1713380497;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FQGIuC9fhgYKv0jGpAIt5La8/Y4BHfZvvmnOc5ODMp8=;
+        b=LjB9RahNsDEbqwoDqLRFZBV8T6cuc5M57bFapA7lG17xhpABWHSqCs2CJ5C6rHisMg
+         +Xvs3b3dJ+iIezU4B8a2ESqOzyoG081H0bFVCSQO0NGIkg8YKDNSI8qT8jhA+dEAN7Hu
+         ijkr1N/5tOgujYsC5uTMUCIaWxqVNjXYLBy2BmPw2/PNjMClGXTjaj2pR5SdANMvesJh
+         Et3DKfooI6G5DW+K6/6lPaBDm8Hs3dN0YsF1Xo8SC9O+28TfDL9HuBSwqzD5vXY0epUM
+         ewJZRHCOZgh/1RPNbSw2regD0HrFn6BAt4KeeIaT9altpjAqjTA/RyaCtbVy8zfEtamm
+         qBXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXbHDcFi9iG40kFCWbRxCQxF6bnWFOIQVdLEoK4i7AAdHWwEkeGR97ujgZUY1ozd169umy3ztYgOm7yWuWkJn89gBQY27zpPOXMjseDTuftHeGigI24cctOXZQbbtT7/kKHAlxl+3nC
+X-Gm-Message-State: AOJu0YxsNPwQpI0B/+ZmGIFihISmg1GzbSmD7plEViBU6fviCpRp9vU9
+	2ZkWj0YKTZ0+0nCuiLNKsIv56uon9tLDuSkZiKwjVxZgMMcRtfdHGXTQw3m746RM+r7Si389RrL
+	sW27UpAC1moI8jNe1xWHwTV1Y4OUDgYDLhD8=
+X-Google-Smtp-Source: AGHT+IEROyQwnsZ2mJRiQBK9B8AlbdE6ckE2JKAZuRGsMr3HiSh0XYkFX2esld+9JLkEVgvtnIu/uwZKqkAMsWTRoa8=
+X-Received: by 2002:a17:903:1cd:b0:1e0:b6d5:bed with SMTP id
+ e13-20020a17090301cd00b001e0b6d50bedmr3490508plh.5.1712775696824; Wed, 10 Apr
+ 2024 12:01:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c274500b623b83c00c0460383cbe1cdc7490eeac.1712658693.git.viresh.kumar@linaro.org>
+References: <20240410155406.224128-1-krzk@kernel.org>
+In-Reply-To: <20240410155406.224128-1-krzk@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 10 Apr 2024 21:01:25 +0200
+Message-ID: <CAFBinCDHp0r7jje9pS4u+2OgiC2LfhHBA1T6OveZhiuKX=jomg@mail.gmail.com>
+Subject: Re: [PATCH] clk: meson: s4: fix module autoloading
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, 
+	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 04:02:19PM +0530, Viresh Kumar wrote:
-> The required_opp_tables parsing is not perfect, as the OPP core does the
-> parsing solely based on the DT node pointers.
-> 
-> The core sets the required_opp_tables entry to the first OPP table in
-> the "opp_tables" list, that matches with the node pointer.
-> 
-> If the target DT OPP table is used by multiple devices and they all
-> create separate instances of 'struct opp_table' from it, then it is
-> possible that the required_opp_tables entry may be set to the incorrect
-> sibling device.
-> 
-> Unfortunately, there is no clear way to initialize the right values
-> during the initial parsing and we need to do this at a later point of
-> time.
-> 
-> Cross check the OPP table again while the genpds are attached and fix
-> them if required.
-> 
-> Also add a new API for the genpd core to fetch the device pointer for
-> the genpd.
-> 
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=218682
-> Reported-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> Co-developed-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> Vladimir Lypak,
-> 
-> Can you please give this a try and confirm that it fixes the issue.
-> 
->  drivers/opp/core.c        | 31 ++++++++++++++++++++++++++++++-
->  drivers/pmdomain/core.c   | 10 ++++++++++
->  include/linux/pm_domain.h |  6 ++++++
->  3 files changed, 46 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> index e233734b7220..1f64b703b744 100644
-> --- a/drivers/opp/core.c
-> +++ b/drivers/opp/core.c
-> @@ -2394,7 +2394,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
->  static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
->  			const char * const *names, struct device ***virt_devs)
->  {
-> -	struct device *virt_dev;
-> +	struct device *virt_dev, *gdev;
-> +	struct opp_table *genpd_table;
->  	int index = 0, ret = -EINVAL;
->  	const char * const *name = names;
->  
-> @@ -2427,6 +2428,34 @@ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
->  			goto err;
->  		}
->  
-> +		/*
-> +		 * The required_opp_tables parsing is not perfect, as the OPP
-> +		 * core does the parsing solely based on the DT node pointers.
-> +		 * The core sets the required_opp_tables entry to the first OPP
-> +		 * table in the "opp_tables" list, that matches with the node
-> +		 * pointer.
-> +		 *
-> +		 * If the target DT OPP table is used by multiple devices and
-> +		 * they all create separate instances of 'struct opp_table' from
-> +		 * it, then it is possible that the required_opp_tables entry
-> +		 * may be set to the incorrect sibling device.
-> +		 *
-> +		 * Cross check it again and fix if required.
-> +		 */
-> +		gdev = dev_to_genpd_dev(virt_dev);
-> +		if (!IS_ERR(gdev))
-> +			return PTR_ERR(gdev);
-
-This condition shouldn't be inverted. It returns if gdev is valid.
-With this bit corrected patch fixes the issue.
+On Wed, Apr 10, 2024 at 5:54=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+> based on the alias from of_device_id table.  Clocks are considered core
+> components, so usually they are built-in, however these can be built and
+> used as modules on some generic kernel.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
