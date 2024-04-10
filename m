@@ -1,134 +1,122 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A5D28370
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 23:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8442E40E
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 23:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.63.210.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712791715; cv=none; b=L9QC0v+Mjyn/DOonjMAMzFJ7+SQEdnbUEuTKP0VBzS16eiG81bC1Gt+A3FwRVprzmvLHrizsllNEGep34KU43XQF3mE61E3P/caPYskwuP+UMpNvDhWVWha3ne4qbpTn3qL/CZ1bPfP0UDny6va5HRdl0uTJzmwMJPjtuR6XJW0=
+	t=1712791976; cv=none; b=aziFNerYV/0V4+Bm4ymn7xRwfGwse9CbZVHF2qBAAOUPZZIEZy6ND3Y5redTp9bzcqng9E539wQTgoZkAq6Yp/a/i6P/vhhe0z91ozwsNzbvBEBLz9nyxwxH7FQ8J2tpnRhuRUSQboGcM1zOJ+Ws0zj0CzUCH5jUA8mqcBcrLFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712791715; c=relaxed/simple;
-	bh=IskzSE1OOdWxLV4wEIgj5iiPGJft461h1onztXKb1j4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=poe/GKkhepcYcRbGLCDVOxZgjPovgykp/KbsGcmvFlaD8Fw+0DQqPH5hkwLKc6TNEoDPMeY7Wa74yFTa653B8yWVHHSuW9TiOGlTodPPRYBnf3Ya4/6RhZilabDO+HrLDcvyzpyHXavsxIn+HT6ckPCt1Jutq6kLEkCV1wbLtyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fXrj4RLu; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712791976; c=relaxed/simple;
+	bh=j0uyhERivx0zpo5d7Uab//m+L+A7uhY7E/Nr6dO6BaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gy/a2tkKO+bEA4aZ2Cw/B95Qru1gFZbUacXxYWuKebtZ/h1oqmKENSh+Vuae0rR74ElrkZiWHH3v3qDrZW81h7Q7vrI14odSqLLYKGvMGMFifyDtAI4fCEJ4tuWLQO7DShPjn/utO0iArzfimLd9nitxBn4pU67zz/YFbJ1B9gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st; spf=pass smtp.mailfrom=marcan.st; dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b=L/u/bRB/; arc=none smtp.client-ip=212.63.210.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=marcan.st
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marcan.st
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fXrj4RLu"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e48d0a632so7772676a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 16:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712791712; x=1713396512; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8xY8IaUaFZA+Gv7USloz4HDmI2WsvnF1MlA0Fl2dmZs=;
-        b=fXrj4RLu9sAbZ7sPAQd32d1M4R4GFFtoFGqGHumpuco1APIGovQQ3ZCrddAMz0qADz
-         G3mM9QrLb5lBhszOKSHy7fy18jZEzwi5lXlsqc0pCo1cluQTqPGzKQ3zI86LCAGJ6a1r
-         gwaNU72pQeBZFqq7cy8I2qu3w2Whu02yKxnexdPQSKqGKqj4FusJ05jHAvRaA/scixFe
-         +NthHyjYmN66k7EUDDQgOxDqXew/jeIMaKbHFFAJXoMPtQBMu8QNUNrGmBGX4kxFSbvs
-         1feVp9/fpGC8pCrdFmzdF3hL6oVWB2HCKOk+5kcaZyuZdbCzP6zZeLutKv9ug5EvXiYi
-         W2jA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712791712; x=1713396512;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8xY8IaUaFZA+Gv7USloz4HDmI2WsvnF1MlA0Fl2dmZs=;
-        b=XNvly7iqTZREmztzDZCsyyeI8Zt3TztUCBlFxpravs2tQHotxrxm2rm7yX42S/NIe8
-         4oMUU53Sx4K8lPQxZ8HQqGqVvAAj+T7+eNb5GyPNlPT5b9qxLPwFuBj/baOn3DkHmeaI
-         FAElC1R5vNpOULEatwJWBonKFBekHbQtUof3u+96wE/wIL7I0HtRmpqLifGl4KDskC2/
-         vtXdCkCL0GA9w84DxTzrTnyft4YA2M6dhlL29W9f0hM1KCmPGhBVxWtebtpeeukZaupE
-         RNd7+fyjaEEU33poCF7jFT3t+qHGUjF1q8ffwUlbfZcibDmUKSSlp7d6x6b4SL2808Sw
-         JD/Q==
-X-Gm-Message-State: AOJu0YzaoI8+QsMb85xQIhSB9ousz907CourcX4t321qB4u4ugqA2a4t
-	ctirx3ZJ5S7wxTfHxpoyldFe7FDlN0TPwpGhvauj7g7GHs98kmcNNf9aFTv20Dhx6riPkOraAGC
-	DtwTjgViuRpSrsJuuox7lQQwNn/9tiF65n2QO
-X-Google-Smtp-Source: AGHT+IFmOsrz5Hq/L8KjpOuaXMrNhjFmuTtpfw3wP32V8jN+t6rexPb4kfOSRskN6xAUqM5KYt/4+RS5HeJCyNqNRcY=
-X-Received: by 2002:a50:9512:0:b0:56e:3172:20dd with SMTP id
- u18-20020a509512000000b0056e317220ddmr3084056eda.27.1712791711605; Wed, 10
- Apr 2024 16:28:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=marcan.st header.i=@marcan.st header.b="L/u/bRB/"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: marcan@marcan.st)
+	by mail.marcansoft.com (Postfix) with ESMTPSA id C5EE5425B7;
+	Wed, 10 Apr 2024 23:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+	t=1712791409; bh=j0uyhERivx0zpo5d7Uab//m+L+A7uhY7E/Nr6dO6BaY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=L/u/bRB/7IZ0MsT0QSxUrZPrLzui36sFJM8ktHUciTh1lDiFPMbf2gUhQGg9CvIaM
+	 MCiYGOG9VRexB1zg5wDgb3XQozR71K0Elc//dCm8H5gBFtcbDcHXJIqLwjuvmqQRqx
+	 v3OddNK5sgpwShPNplUJE2XRmE7veOXg6T9yyPaKokJvr7TEpPCasUoiGiNneUiANE
+	 tqiuqLK+n4mj0nXsA9JaXPuYt7wI0AdDYyvCatJp53oN2HWDB1ybwCtLXRRBej8x6Q
+	 340/SSgLiv6NCspLpp7JLrAXsGt2C7O49h6Ky/xqEZewhT36oVFJQuQhGqYlYoHgH1
+	 SNLbQUkGb6cbw==
+Message-ID: <f4f53335-eba9-4c71-b64d-ca2c65c29a74@marcan.st>
+Date: Thu, 11 Apr 2024 08:23:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410232637.4135564-1-jstultz@google.com>
-In-Reply-To: <20240410232637.4135564-1-jstultz@google.com>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 10 Apr 2024 16:28:19 -0700
-Message-ID: <CAFhGd8oRJG6Amrr8VxriXP11NgVPbPBdaKKWbuCSowSxrGEcMg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] selftests: timers: Fix posix_timers ksft_print_msg warning
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Edward Liaw <edliaw@google.com>, 
-	Carlos Llamas <cmllamas@google.com>, kernel-team@android.com, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] tso: aarch64: Expose TSO for virtualized linux on
+ Apple Silicon
+To: Zayd Qumsieh <zayd_qumsieh@apple.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mateusz Guzik <mjguzik@gmail.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Marc Zyngier
+ <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Miguel Luis <miguel.luis@oracle.com>, Joey Gouly <joey.gouly@arm.com>,
+ Christoph Paasch <cpaasch@apple.com>, Kees Cook <keescook@chromium.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Baoquan He <bhe@redhat.com>,
+ Lecopzer Chen <lecopzer.chen@mediatek.com>,
+ Joel Granados <j.granados@samsung.com>, Dawei Li <dawei.li@shingroup.cn>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
+ Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
+ Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
+ Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Justin Lu <ih_justin@apple.com>, Asahi Linux <asahi@lists.linux.dev>
+References: <20240410211652.16640-1-zayd_qumsieh@apple.com>
+From: Hector Martin <marcan@marcan.st>
+Content-Language: en-US
+In-Reply-To: <20240410211652.16640-1-zayd_qumsieh@apple.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 10, 2024 at 4:26=E2=80=AFPM John Stultz <jstultz@google.com> wr=
-ote:
->
-> After commit 6d029c25b71f ("selftests/timers/posix_timers:
-> Reimplement check_timer_distribution()") I started seeing the
-> following warning building with an older gcc:
->
-> posix_timers.c:250:2: warning: format not a string literal and no format =
-arguments [-Wformat-security]
->   250 |  ksft_print_msg(errmsg);
->       |  ^~~~~~~~~~~~~~
->
-> Fix this up by changing it to ksft_print_msg("%s", errmsg)
->
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Justin Stitt <justinstitt@google.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Edward Liaw <edliaw@google.com>
-> Cc: Carlos Llamas <cmllamas@google.com>
-> Cc: kernel-team@android.com
-> Cc: linux-kselftest@vger.kernel.org
-> Fixes: 6d029c25b71f ("selftests/timers/posix_timers: Reimplement check_ti=
-mer_distribution()")
-> Signed-off-by: John Stultz <jstultz@google.com>
+On 2024/04/11 6:16, Zayd Qumsieh wrote:
+> x86 CPUs use a TSO memory model. Apple Silicon CPUs have the ability to
+> selectively use a TSO memory model. This can be done by setting the
+> ACTLR.TSOEN bit to 1. This feature is useful for x86 emulators, since it
+> removes the need for emulators to insert memory barriers in order to abide
+> by the TSO memory model. This patch series will add ACTLR.TSOEN support to
+> virtualized linux on Apple Silicon machines. Userspace will be able to use
+> a prctl to change the memory model of the CPU from the default ARM64 memory
+> model to a TSO memory model.
+> 
+> A simple test can be used to determine if the TSO memory model is in use.
+> This must be done on Apple Silicon MacOS Sonoma version 14.4 or later,
+> since earlier versions do not support modification of the TSOEN bit.
+> https://github.com/saagarjha/TSOEnabler/blob/master/testtso/main.c
+> 
+> This program will hang indefinitely if TSO is in use, and will crash almost
+> immediately if it is not in use.
 
-Yep, makes sense.
+Well this is unexpected, given I talked to Justin Lu at Apple back in
+December and I thought our plan was to work together on the series I've
+had cooking in the Asahi tree [1] for a while now, which is actually
+shipping in thousands of Asahi Linux systems in production and actually
+already supported by the FEX-Emu project with our ABI. You CCed 30+
+people, but not me nor the asahi@lists.linux.dev mailing list...
 
-Acked-by: Justin Stitt <justinstitt@google.com>
+[1] https://github.com/AsahiLinux/linux/tree/bits/220-tso
 
-> ---
->  tools/testing/selftests/timers/posix_timers.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/timers/posix_timers.c b/tools/testin=
-g/selftests/timers/posix_timers.c
-> index d86a0e00711e..348f47176e0a 100644
-> --- a/tools/testing/selftests/timers/posix_timers.c
-> +++ b/tools/testing/selftests/timers/posix_timers.c
-> @@ -247,7 +247,7 @@ static int check_timer_distribution(void)
->                 ksft_test_result_skip("check signal distribution (old ker=
-nel)\n");
->         return 0;
->  err:
-> -       ksft_print_msg(errmsg);
-> +       ksft_print_msg("%s", errmsg);
->         return -1;
->  }
->
-> --
-> 2.44.0.478.gd926399ef9-goog
->
+Given that we're here now, I'll send out my series for review and see
+what people think about that one.
+
+> 
+> Zayd Qumsieh (3):
+>   tso: aarch64: allow linux kernel to read/write ACTLR.TSOEN
+>   tso: aarch64: context-switch tso bit on thread switch
+>   tso: aarch64: allow userspace to set tso bit using prctl
+> 
+>  arch/arm64/Kconfig                 | 19 +++++++++
+>  arch/arm64/include/asm/processor.h |  4 ++
+>  arch/arm64/include/asm/sysreg.h    |  7 ++++
+>  arch/arm64/include/asm/tso.h       | 19 +++++++++
+>  arch/arm64/kernel/Makefile         |  2 +-
+>  arch/arm64/kernel/process.c        | 61 +++++++++++++++++++++++++++++
+>  arch/arm64/kernel/tso.c            | 62 ++++++++++++++++++++++++++++++
+>  include/uapi/linux/prctl.h         |  9 +++++
+>  kernel/sys.c                       | 11 ++++++
+>  9 files changed, 193 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/include/asm/tso.h
+>  create mode 100644 arch/arm64/kernel/tso.c
+> 
+
+- Hector
