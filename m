@@ -1,110 +1,145 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E9317F369;
-	Wed, 10 Apr 2024 17:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7AF17F372;
+	Wed, 10 Apr 2024 17:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771098; cv=none; b=LMGNZRPL1HkWjyS3bzqLgompBt/WIJH6vIysgtIf2PvE5xZZVDdM8ULLev6jXWTdMbG+RMW1RKl/OLfzdg2nMIppkna8+k2f+3T/+xF7yfku1jPknkI7Nlmm/xWxyQDB12RFQcKx4cn0baMigKg49cvUyZqgvGpSB3S0y0H8vEg=
+	t=1712771099; cv=none; b=c1LLnNXL0LpNwv0xzfLjz6jTzr/s9B5dUvi1pVx/O6LyeXfypKOpztXgpR0S1B+8i5hkTOqGigbhEm84nJiT9gD7omniOtq7cfMXqryl5gI8XpriimcEAy7tRiqqLeQgUWYVDk62ZVPHxKa9i5AVQz/LGBuyI4dRT3wg/qo2Rlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771098; c=relaxed/simple;
-	bh=J3FVnwDh/KGiA6tpfeXzIKlz2LWvlujkzxc+I0KPgFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XxhlSZ+zWzhZbeqR99972jFZTxzK7w520UfGZXCpZ4Yly6JPtNt8PnpXSVYaeuyKPkJ9NijexG5TWOR8j+j2DDcloHZTtrDFbCZV8+nWXMfFUb0etrdi0cpT32t3KSFeZfY1qykKB+M7V1p7VCUs9FuqW6yYdPCyjYTyfQxQHes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=oxbOfCp3 reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1712771099; c=relaxed/simple;
+	bh=zd72EbgmhFsdvxrkydv/54uHUjTmye/iH4W+WqdNsUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R6ZHA683a57UdRuopwier3g978ep3bG4ARz8F8u1LnXAq7+C7/4SmpBwtitMo0FuCEADLWR3ci4wqDGdv9rnmVFK8hkeD78XTZs7hLYKUcL3XcHrw1nzsdgXPwddb13ULODIGdnVM5UsH5yJLgryo8HrSykKJjHXp4y8ncgxq+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AvdRggsv; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="oxbOfCp3"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id 65631d58b4123eed; Wed, 10 Apr 2024 19:44:47 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 59FAD66C66F;
-	Wed, 10 Apr 2024 19:44:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1712771087;
-	bh=J3FVnwDh/KGiA6tpfeXzIKlz2LWvlujkzxc+I0KPgFU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=oxbOfCp34dSikTSvRh20E+pQNQ5B0RJPEGlIv4//yecq30J08PCq7hJIfAZeWIzwm
-	 MbHIkinVq86zESqyD049uRYJ5CXO+Z953AhLmbEPVJWzaeRU6+yMoKwdvpMT6GZ0Tp
-	 bnDfOlfer4EWovhKfzbQOvjwaY8E8mHSnF1n4Vj+70jlQgSq6DDVEYnIOnjKgyeK5S
-	 uB/6xVcuPbxZdWoMWSkogMvL5gDsaGxFOW9IrwOG2qSKRCP50L5Wv/FLiR7gjx62v1
-	 WB1qGUZXOVOj1HlD9vgxQK8LLL7QhVOF5IpI+UwJrle1CRCugEWcPc5dBkyWZIpDV9
-	 PUip6MCY/oHTw==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject:
- [PATCH v1 16/16] thermal: core: Relocate critical and hot trip handling
-Date: Wed, 10 Apr 2024 19:44:34 +0200
-Message-ID: <9337957.rMLUfLXkoz@kreacher>
-In-Reply-To: <13515747.uLZWGnKmhe@kreacher>
-References: <13515747.uLZWGnKmhe@kreacher>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AvdRggsv"
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AHWfCE027558;
+	Wed, 10 Apr 2024 17:44:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=lnjnE8ATros47CvItPMr0cyRhNnNvF8qFBKBUXO4nZg=;
+ b=AvdRggsvVtfgVMcGf1LWwC2cpuVNYpVhS/VYxYE9Sa3p4sFXBVjl7jzeNO6F073J9Nvo
+ U/omTieaaEzZ9iD3ZCm0neCWSCfXvA0GzxtoIiqcdGK3gHAZLspWVEuHytY3J84MjoQx
+ ayRhg5ymc0FZxffaz06ZSdk85D+tGzbMpnhl3pXD5WzkMUuS61HR3k5zobEiiTXr4mfE
+ aPExz9a/LEYnpzV0AquFSh0M+E6qN0Qzcuh8zIdM9fBKiFEglM8nF8UGdhj9tkRd9+95
+ UdHJ6D3BsaA9Mo+udUJFIPIVi7kU1CZa9KrIfl8ncgejC8UTn5EWJywBiOQoXslw55Zk ng== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy8j00rf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:42 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AHige7011949;
+	Wed, 10 Apr 2024 17:44:42 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy8j00ra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:41 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43AH29f6029904;
+	Wed, 10 Apr 2024 17:44:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbj7me5h5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 17:44:40 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AHiZpp50856364
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 17:44:37 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC8DD20043;
+	Wed, 10 Apr 2024 17:44:34 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B400C20040;
+	Wed, 10 Apr 2024 17:44:34 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.152.224.66])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 17:44:34 +0000 (GMT)
+Date: Wed, 10 Apr 2024 19:19:44 +0200
+From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Matthew Wilcox
+ <willy@infradead.org>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle
+ <svens@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [PATCH v1 4/5] s390/uv: update PG_arch_1 comment
+Message-ID: <20240410191944.72c84b2e@p-imbrenda>
+In-Reply-To: <20240404163642.1125529-5-david@redhat.com>
+References: <20240404163642.1125529-1-david@redhat.com>
+	<20240404163642.1125529-5-david@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudehiedguddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 8zhlPPNcuaeSlcywV_RLHDG0nrUNh0XR
+X-Proofpoint-GUID: 53w3kbTBb5T7QS82YxhvL0E5DyEKQP8o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 malwarescore=0 spamscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=907 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404100130
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH v1] 
+On Thu,  4 Apr 2024 18:36:41 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-Modify handle_thermal_trip() to call handle_critical_trips() only after
-finding that the trip temperature has been crossed on the way up and
-remove the redundant temperature check from the latter.
+> We removed the usage of PG_arch_1 for page tables in commit
+> a51324c430db ("s390/cmma: rework no-dat handling").
+> 
+> Let's update the comment in UV to reflect that.
+> 
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-No intentional functional impact.
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/thermal/thermal_core.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-Index: linux-pm/drivers/thermal/thermal_core.c
-===================================================================
---- linux-pm.orig/drivers/thermal/thermal_core.c
-+++ linux-pm/drivers/thermal/thermal_core.c
-@@ -350,10 +350,6 @@ void thermal_zone_device_critical_reboot
- static void handle_critical_trips(struct thermal_zone_device *tz,
- 				  const struct thermal_trip *trip)
- {
--	/* If we have not crossed the trip_temp, we do not care. */
--	if (trip->temperature <= 0 || tz->temperature < trip->temperature)
--		return;
--
- 	trace_thermal_zone_trip(tz, thermal_zone_trip_id(tz, trip), trip->type);
- 
- 	if (trip->type == THERMAL_TRIP_CRITICAL)
-@@ -405,10 +401,11 @@ static void handle_thermal_trip(struct t
- 		list_add_tail(&td->notify_list_node, way_up_list);
- 		td->notify_temp = trip->temperature;
- 		td->threshold -= trip->hysteresis;
--	}
- 
--	if (trip->type == THERMAL_TRIP_CRITICAL || trip->type == THERMAL_TRIP_HOT)
--		handle_critical_trips(tz, trip);
-+		if (trip->type == THERMAL_TRIP_CRITICAL ||
-+		    trip->type == THERMAL_TRIP_HOT)
-+			handle_critical_trips(tz, trip);
-+	}
- }
- 
- static void update_temperature(struct thermal_zone_device *tz)
-
-
+> ---
+>  arch/s390/kernel/uv.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
+> index 9c0113b26735..76fc61333fae 100644
+> --- a/arch/s390/kernel/uv.c
+> +++ b/arch/s390/kernel/uv.c
+> @@ -471,13 +471,12 @@ int arch_make_page_accessible(struct page *page)
+>  		return 0;
+>  
+>  	/*
+> -	 * PG_arch_1 is used in 3 places:
+> -	 * 1. for kernel page tables during early boot
+> -	 * 2. for storage keys of huge pages and KVM
+> -	 * 3. As an indication that this small folio might be secure. This can
+> +	 * PG_arch_1 is used in 2 places:
+> +	 * 1. for storage keys of hugetlb folios and KVM
+> +	 * 2. As an indication that this small folio might be secure. This can
+>  	 *    overindicate, e.g. we set the bit before calling
+>  	 *    convert_to_secure.
+> -	 * As secure pages are never huge, all 3 variants can co-exists.
+> +	 * As secure pages are never large folios, both variants can co-exists.
+>  	 */
+>  	if (!test_bit(PG_arch_1, &folio->flags))
+>  		return 0;
 
