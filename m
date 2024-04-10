@@ -1,41 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFC017BB04;
-	Wed, 10 Apr 2024 17:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1803017B51F;
+	Wed, 10 Apr 2024 17:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768591; cv=none; b=sC4flb2XgYodTt0k0I3dGt8Z13qbTnvzYp+oPn8oWK1AwMXIDUAv+jT9cJeitx1iFhrd/w1HFwx3QpylzU4NSr/yPgIE1Kz8k2CZYP5Jk4CzOr9t2C6gYHRbP6M0AB51fCzRc04rkESgO+neeRg6xNMEIZQPL+XTh7p2eOfA8X4=
+	t=1712768605; cv=none; b=X3F6ro1GR7tJQaXgs6he9ANJcd9rb+/S5xz9MGwunyNcaCJLHfQ7iUUH0c/WjJgCJQkQCDQ8KPsXsuHMAlKw0dGvYZn2oK2zN+pmONUapo2SyjvUlXwo3o/nnFX2f8rC3bbFs9bW10/BrHz5to1dvyiSajlAwTAaxgbY5UlpRbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768591; c=relaxed/simple;
-	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cKjZG3twLoOueGdfAAghobZVx/mmwRqdLYMIAX+MS7/TK0O6AX/VIBsuqClyVYg01NRnnKx+PlcHExFXVAqcAOrIcOhC8e9ZfOAQriY+3TshalrYtXyfvY37zetTZzIWzEHAmKhZesHYLbzukUOSZam4z7HbLIo8U9n7m4VAIhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMWIUT+U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712768605; c=relaxed/simple;
+	bh=zHNGk5M5w9BnN3lIY62vdcsFlgOeYRgg3MnWGX+WdB4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UZrabfpSIytr68NUQyKfsqrYX1K6RB8awR1rWyjqlMEYj6ipsDlRY9SUShKDZnkuU+HRSjaTUboNN1MIm36AoVkZV86r0x4PmGTHC2JI6rIpsKu3OQ+nsRThk/7wNoYiFhTkVzpzk33txQI+nlXo97MdYB4N5Or9u5wtypTm718=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jE7Y9hg2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMWIUT+U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97517C433C7;
-	Wed, 10 Apr 2024 17:03:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jE7Y9hg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E86C433C7;
+	Wed, 10 Apr 2024 17:03:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712768590;
-	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
+	s=k20201202; t=1712768605;
+	bh=zHNGk5M5w9BnN3lIY62vdcsFlgOeYRgg3MnWGX+WdB4=;
 	h=From:To:Cc:Subject:Date:From;
-	b=eMWIUT+UXcRUDE7PHz4Gz2Snr9yDR/7AFj/ApMgha1qTlaqcRIDqr3sl+W6z+bP8O
-	 5mqv9QHqE0mHr6f06CVsfF6QsTd7pWFTOZVyy5k2qvMeEk0a0zc8aqK3ND81tIHX1r
-	 yCFHeAYTvEZelpf71cn6wmfdz5UFIcyh9OitrLYodqYCItkvjZick2Ehvb2vYPnDuu
-	 ugH6ocIAXwAXwHJgTIF6CqSX8BQfbqBLZgkKmNIG70gPHr5rkFeoI2o8LRTp5OphhL
-	 QszNn5802IGpnEhyRWSeAFuPEF/LQTqbc+eYBq+rnwJnIbye4lQ7aOO6ph1UXYqTJY
-	 3lSaMZ2xHXetA==
+	b=jE7Y9hg27DjE+C2YQ1zX/HWJv2YS18bvwHHUIwyu0VFtrmH6HCZnvpL3jqLrSAlbh
+	 /LZOw0spv1Owkbvpl193OZVeckZtnlYLjSQe+O3vuX8Ew4PW0EEpp9Y88aAMuhOpbx
+	 zepb6onsaDi3VjzKF7Wf7iai8qk++6i0zuFCydFB8+FlpZouxoovapgkMt7nA75qTv
+	 EyxBnrByBoD72EgVpXSxxrNbfW/ZqCfsw3XHQtV8pQ9A0xBlTiUVnUITxOjcy/pSxu
+	 yNnJO7VwrS29qhpSJ7C36K3zMkF95vo+InKxOiicqKvBmRvsI+2Y6EqRwSA/CZgEs8
+	 DPqBDVY7nG64w==
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Lizhi Hou <lizhi.hou@amd.com>,
+	Brian Xu <brian.xu@amd.com>,
+	Raj Kumar Rampelli <raj.kumar.rampelli@amd.com>,
+	Michal Simek <michal.simek@amd.com>,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] gpio: lpc32xx: fix module autoloading
-Date: Wed, 10 Apr 2024 19:03:05 +0200
-Message-Id: <20240410170305.248683-1-krzk@kernel.org>
+Subject: [PATCH 1/2] dmaengine: ti: k3-udma: fix module autoloading
+Date: Wed, 10 Apr 2024 19:03:16 +0200
+Message-Id: <20240410170317.248715-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,21 +53,21 @@ based on the alias from of_device_id table.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpio/gpio-lpc32xx.c | 1 +
+ drivers/dma/ti/k3-udma.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-index 5ef8af824980..c097e310c9e8 100644
---- a/drivers/gpio/gpio-lpc32xx.c
-+++ b/drivers/gpio/gpio-lpc32xx.c
-@@ -529,6 +529,7 @@ static const struct of_device_id lpc32xx_gpio_of_match[] = {
- 	{ .compatible = "nxp,lpc3220-gpio", },
- 	{ },
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 6400d06588a2..d7259caa0200 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -4405,6 +4405,7 @@ static const struct of_device_id udma_of_match[] = {
+ 	},
+ 	{ /* Sentinel */ },
  };
-+MODULE_DEVICE_TABLE(of, lpc32xx_gpio_of_match);
++MODULE_DEVICE_TABLE(of, udma_of_match);
  
- static struct platform_driver lpc32xx_gpio_driver = {
- 	.driver		= {
+ static struct udma_soc_data am654_soc_data = {
+ 	.oes = {
 -- 
 2.34.1
 
