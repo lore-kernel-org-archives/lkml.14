@@ -1,76 +1,124 @@
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3773613DB9F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13D4154C00
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712745751; cv=none; b=uorJHe0kJDMI5VvL1TL595UY7aoNlyHGjzVZdNWqhLmy8NpYqEsEJrzDGjpss2UVec/LonzY3fIJa8778sWHjH+pmuzPRe1XZHkuH4oAShCC1G6iZrGFiei0HYKJPZ6l4s7sqG+THRfz3RceUHIqvkioCtGqUKj61namrld0GYA=
+	t=1712745818; cv=none; b=oSkgqcQ0gbNJyF876trCuq8Zm83suU6FVaYa7KYn7oJvsRlt7fdjxRq5nlBNeCCaLVwMbP+OVofdSOgQpJIm/46X6ffR7gwr3+MoVd/2OEAUIQmUTrqpZAGFim/n2er+x2SRrX8f/5zBVsru8vo4WdyJwRfkW0iv8HNdPSI1EtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712745751; c=relaxed/simple;
-	bh=AbyfJgbEqm3y8eA/5R8TMVFQDOgrDw8mMvC2Hb5f9hg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aUW62xiwg3g7UohPQH6XXe9/0mdh8wHpTqZxTDjfEvUVkDVVxRS0aJTBGlZc+0bf+FNh3T+OfO0YoG4aQWCItsKWtytz7oNc7cCk5BzeA6ykleqV6QGzXpZm5PAqHQemdVEAhSaxkyfBdXP433ARBapjvJanLoAT6Ml9vMscNqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g9JGd3eU; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712745818; c=relaxed/simple;
+	bh=F2uId5jnhTOHuSWdCNV89q9EehcaDMvEPq2uWVgwVAE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BpJQmsyuzeJw+DVuBFtfq7MBpQXinOSVPKSpk3m2eMOzgkvXa6wXMZqvXIKO53BqfRLAoyaBxrgT9fQBBypHioY4btLPAN7oVW9kjeTjvvzdzjBKMzZML7piYhsiIxRmImTPrfNwToTqiAbD/SMC+N6EY+YG7AexMsFd/1dn3f8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVOhSl2x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9JGd3eU"
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-a5213f0f85dso34446266b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 03:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712745748; x=1713350548; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AbyfJgbEqm3y8eA/5R8TMVFQDOgrDw8mMvC2Hb5f9hg=;
-        b=g9JGd3eUtS2J1wd2Ui2MOiriZ2BQ3bbLcWc3AnHxFu82wnrUz9StfUFoQOdWF8pd1/
-         JQVpTNfGXGzE50dYwcsDYNDx/xghEe6UtJ1XcNCEJdJjJ3QJK+7t9Dk0hDSdivAXMbQ4
-         xsVYs46clTVG/LNYlxHvO4dN06e0f9WorO0q+uXwcZEoGRS6Ovh7rei9+qhhAh94E6Xv
-         5vo3/xRZlHqwiMA0EZkgIFIGwHBpjovav53fUUXIHAk291nbIhDbaMfheoO+BDVVMkGC
-         tnFxJV34jNKByAtKVtMbwbg/ry7HC01k6QyLHDRaD70HYnRWdscRuEHsaVH/lkMt/tlP
-         1MRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712745748; x=1713350548;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AbyfJgbEqm3y8eA/5R8TMVFQDOgrDw8mMvC2Hb5f9hg=;
-        b=KjOzMViRO6wp+qycA4hUzzI2Lqy5Ehe/PtGIkeJhHJC8w7QjX9kibsUIyA9lSxg0aP
-         mQuH5e9XfP725neVuaT6wIfyT4I59P7cuXoyTCpmu4aly0d95KNrtxQcpEfcRutLWovi
-         WiBUkz6bPqvVSdTg6KUOR3FKAgrGoAeO+7SHaUZWyjWX8HSo1Aub2P9hSmu+fpww7Nn0
-         OtYWbF7J9q/lr+D84F1gBBYM8GGIuNo1IV/+uuJV/gLrHuzAvyUWJRPcUQamM9AzL8n8
-         Bprh4Mjw1uk5pvqaE6DdXm5jK/NoRkbOkUuOAaZ6UPKcVro/vLWjVo6D4e7csQDVEHsi
-         pjnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgksABf8bNa8hSyiv25obFrv3i8RhxnETOxzUlbQb9vEGp3kP2a7COJyjQyqJlDwenORUPUs9uTPVzVsXnRRlJwEku8tbY2ew/fWJ2
-X-Gm-Message-State: AOJu0YwSN8BvLmXLbDPKhHbven3YV8oaE3xbTVRHSWgyUV/NfAhGkchA
-	iseqxyRzg/iq4a3ItQS8VpJySCUiktV70xnYWl40kYjbLLkxH9grZNDtf1MJzS9/1ECj/xqAX7k
-	SHZbeVC//8H2Y3m8O/sFE39MUm3U=
-X-Google-Smtp-Source: AGHT+IEGFJO0BaJk999ZrILsT2hCzk6kVrd4mglOI/cbkdQghXzCGcxkWrmTrLybQSXUmJLhAVXSq7OJMRq5CyIMS2k=
-X-Received: by 2002:a17:906:f9d1:b0:a51:9cee:4718 with SMTP id
- lj17-20020a170906f9d100b00a519cee4718mr1256690ejb.38.1712745748304; Wed, 10
- Apr 2024 03:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVOhSl2x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD9CC433C7;
+	Wed, 10 Apr 2024 10:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712745818;
+	bh=F2uId5jnhTOHuSWdCNV89q9EehcaDMvEPq2uWVgwVAE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HVOhSl2xqE/Euo0SyKzBTJJicqtADWb3WcxStLD8a3Q2j9UD8vw16QQepslDJQgzB
+	 eY3sAlAL19W+yWptx+ThleiwIq79mVtO7allc9YetRZ4uuco7juVIFEGp63HtIqb22
+	 fO87/EE5kjyW4WxI905mRDk06uTb8U4e9sYkFt0nAuBEVUdqAArB/VLpAkOXp105ZB
+	 2v4nTxrUMGgf/7O9YthaTIYyrVc2CMlTXy5dpRQ59wMqbZ+h9WusNUzxw+WF5FhhRL
+	 A0dDJiLbCLXgEeEtWcMTENsMRPHBSWQdB1hrgG3KBKx9ZsPjTiKmNsRDAAS7vbe8yW
+	 7/kIvEND+BhMQ==
+Date: Wed, 10 Apr 2024 18:30:13 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Conor Dooley <conor@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] clocksource/drivers/timer-clint: Add option to
+ use CSR instead of mtime
+Message-ID: <ZhZqNbbUyPhVzekO@xhacker>
+References: <20240406112159.1634-1-jszhang@kernel.org>
+ <20240406112159.1634-3-jszhang@kernel.org>
+ <20240409-krypton-employed-b2e0e1b46ddf@spud>
+ <ZhVVPB0qD4pBna51@xhacker>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407080358.8635-1-qq810974084@gmail.com> <559293f8-0291-4059-95ac-99c5c106320a@wanadoo.fr>
-In-Reply-To: <559293f8-0291-4059-95ac-99c5c106320a@wanadoo.fr>
-From: Huai-Yuan Liu <qq810974084@gmail.com>
-Date: Wed, 10 Apr 2024 18:41:50 +0800
-Message-ID: <CAH9++vFxvYkQocw+=rtF=5B=Cfg_uwfL+Ac-vncLrSqMTuUDFw@mail.gmail.com>
-Subject: Re: [PATCH V2] ppdev: Add an error check in register_device
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: sudipm.mukherjee@gmail.com, arnd@arndb.de, gregkh@linuxfoundation.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZhVVPB0qD4pBna51@xhacker>
+
+On Tue, Apr 09, 2024 at 10:48:33PM +0800, Jisheng Zhang wrote:
+> On Tue, Apr 09, 2024 at 03:26:18PM +0100, Conor Dooley wrote:
+> > On Sat, Apr 06, 2024 at 07:21:58PM +0800, Jisheng Zhang wrote:
+> > > As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer: add a
+> > > quirk for lacking mtime register") of opensbi:
+> > > 
+> > > "T-Head developers surely have a different understanding of time CSR and
+> > > CLINT's mtime register with SiFive ones, that they did not implement
+> > > the mtime register at all -- as shown in openC906 source code, their
+> > > time CSR value is just exposed at the top of their processor IP block
+> > > and expects an external continous counter, which makes it not
+> > > overrideable, and thus mtime register is not implemented, even not for
+> > > reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
+> > > extended CSR, these systems still rely on the mtimecmp registers to
+> > > generate timer interrupts. This makes it necessary to implement T-Head
+> > > C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
+> > > reading mtime register and falls back to default code that reads time
+> > > CSR."
+> > > 
+> > > To use the clint in RISCV-M NOMMU env on Milkv Duo little core, we
+> > > need to fall back to read time CSR instead of mtime register. Add the
+> > > option for this purpose.
+> > > 
+> > > Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+> > 
+> > > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> > > index 34faa0320ece..7bbdbf2f96a8 100644
+> > > --- a/drivers/clocksource/Kconfig
+> > > +++ b/drivers/clocksource/Kconfig
+> > > @@ -650,6 +650,15 @@ config CLINT_TIMER
+> > >  	  This option enables the CLINT timer for RISC-V systems.  The CLINT
+> > >  	  driver is usually used for NoMMU RISC-V systems.
+> > >  
+> > > +config CLINT_USE_CSR_INSTEADOF_MTIME
+> > > +	bool "Use TIME CSR instead of the mtime register"
+> > > +	depends on CLINT_TIMER
+> > > +	help
+> > > +	  Use TIME CSR instead of mtime register. Enable this option if
+> > > +	  prefer TIME CSR over MTIME register, or if the implementation
+> > > +	  doesn't implement the mtime register in CLINT, so fall back on
+> > > +	  TIME CSR.
+> > 
+> > This, as a Kconfig option, seems a bit strange to me. We know at runtime
+> > if we are on a T-Head device without the mtime register and should be
+> > able decide to use the CSR implementation dynamically in that case,
+> > right?
+> 
+> Dynamically decision can be done in clocksource/clockevnt:
+> I can patch clint_clocksource.read to point to different clint_rdtime()
+> implementation.
+> 
+> But clint timer is also used in NOMMU RISCV-M's get_cycles(), this
+> can't be dynamically chosen w/o an ugly "if (is_c900)"
+> check, and I'm not sure whether this check in get_cycles() will
+> introduce non-trival overhead or not. Or use code patching technology
+> here?
 
 Hi,
 
-Thanks for CJ's suggestion. I have modified and sent the
-[PATCH V3] email.
+After some tests, I think will go with code patching path, I.E use
+static_branch in get_cycles(). New version is under cooking.
 
-Best regards,
-
-Liu.
+Thanks
+> 
+> Or introduce a function pointer such as unsigned long (*rdtime)(void)
+> for RISCV_M_MODE, then point it to different implementation?
+> 
+> Any suggestion is welcome.
+> Thanks
