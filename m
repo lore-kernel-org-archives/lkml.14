@@ -1,136 +1,126 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9047460;
-	Wed, 10 Apr 2024 19:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3926180A72;
+	Wed, 10 Apr 2024 19:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775875; cv=none; b=gvivG6DsYK4f52eU1YQxHSEVGTpPKQIlDms5ICgBpNAQAZJc0lrg1gjo9szDVVEmmtFYuHPvIUeOGBKgLlsKc+Ghej4gh7bRLKk+RqI9C1+W7V0qLthvq9n3pXDGQkcipkG94c0O6LiFQtzQw+l8c8kfKvZfdfbAZIokP8MuTVw=
+	t=1712775909; cv=none; b=P4kE5/0q86Mks6zc5s4HarhWT453j7s+UkeBXitKFoGSkSiyrdrh+hjHCnGmeEr6EalJ7OJaF5T3Jw449hSnKiONPGcUI4iXCt8m3ce7ZrPXozrOCRkQTPc92hkC0V3/JoiUluZ1e3S49/S1ytKX3KYexUP8dFS2yUNlZTjYWWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775875; c=relaxed/simple;
-	bh=WNUHRnuL/nPa/KdZjEbb1Yec0muX2H7NaxT84SbLG+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RlXcUth3pHaBcf9SS3Vrm1ACfIS2RClT7dFX3iEkDINn2yWBE4SDrmweFJZDIxXl0xWWDUWfQmhj8CSjmHrqZQY0gT0fV61QZ9LiwEnnhkhttS+A2A0u6q8nYfCYL1xwTUwI5eFGrppxq+QiTv19pgrZONtK72u1j5oGcKlLMNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UPyw8BLE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712775909; c=relaxed/simple;
+	bh=xJ76YTn3wQfwsWlJss8HC1CSxlng5rzLEq9ZSe9Oh5M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Iq1mGRLcrbYZXsAtMSebXq7wRKYV0U2dEgna9R6h5NdoFugNo6VNn7BoCtw3bymyyZ5EJ9451I9+DN9UXOSg85ueue3ZOV/cVcdh5mkTiKMr0hj9p7icuCriDKV3IcMS1ue89RBshNCMmC6j66hcPFZaipdtkFw+IAyt2a33dHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Gom9vxDs; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UPyw8BLE"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43AEFVpt031790;
-	Wed, 10 Apr 2024 19:04:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=McZIZ4RkNyMqFdfx+BLnURSG0gx07exkf3P/nz9bFEk=; b=UP
-	yw8BLENpdWV1k3PlqVVCFwwJIkjna/c/YldXBHce6NcvOkvYqn3tBoOpsmLIebVs
-	FlBOa8p34dDNVi1dFVYLZkUHj1Reo53ydytnO7YMV0SxWII2eALJ7pzMJ+8Rf+Jo
-	jaIhDVf7Cl68YSeI6jnt2wY6wPlqVw8y2cRQqHUCUs54/WD7fVolF0c323iJiYMC
-	x/V634ulbM9T/ytbfmwAZ7hqUQD3wHuT+vi4W55LajlRWntAkIvmISMjEMacrUs7
-	Q2EZxG7SLMVrdJJJ57roPtJUmejoygTpQySA6+t7na5ftPKLrmN73PmedA6aLCa6
-	X961rZAPS+L/WK/eIPHA==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xdphau2cf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 19:04:12 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43AJ4BSS016238
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 19:04:11 GMT
-Received: from [10.46.19.239] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 10 Apr
- 2024 12:04:07 -0700
-Message-ID: <f6066cc2-410a-4043-9657-7168dbd2a2ce@quicinc.com>
-Date: Wed, 10 Apr 2024 12:04:06 -0700
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Gom9vxDs"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 513B5100078;
+	Wed, 10 Apr 2024 22:04:58 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 513B5100078
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1712775898;
+	bh=KPqzQ6GA9yQYv2FMku0FIiAMvpL81PJdS/5X+nH2yHU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=Gom9vxDsOW2Yf1l9CBFAIIFxV+oNvW22YqNwSejJROBa5xSCAXF9ojfZRqBPuC7I5
+	 mkhGonjHphVP5Ru+jzeoQ+wr2niVJw7ikYcjf90uhMg5udu0nqUKjJjV1TAkYxyg07
+	 Hhs7CplwJTQR7sOowYz2lGqCpXaq5jP5jNPrY2UfrpHa9ZXY9c+ePS36+qNzcT//Os
+	 CjEglogI3p52xUDplCV+uZLDqmq7HHHQFOy2INZ2oJAC4tqPA4eDvilIpsJjOFsyip
+	 LjEAUC3me7KDY/z2nU9M3ZeZdDBQelQ8ZbMuY5JyI8YcBA93+ospgqH4wk3jWCmfII
+	 mfx+OZhksQFEA==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Wed, 10 Apr 2024 22:04:58 +0300 (MSK)
+Received: from localhost.localdomain (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 10 Apr 2024 22:04:57 +0300
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
+	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
+	<robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>
+CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <oxffffaa@gmail.com>,
+	<kernel@sberdevices.ru>, Arseniy Krasnov <avkrasnov@salutedevices.com>
+Subject: [PATCH v4 0/2] Meson: R/W support for pages used by boot ROM
+Date: Wed, 10 Apr 2024 21:54:07 +0300
+Message-ID: <20240410185409.2635622-1-avkrasnov@salutedevices.com>
+X-Mailer: git-send-email 2.35.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH bpf-next v1 1/3] net: Rename mono_delivery_time to
- tstamp_type for scalabilty
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Halaney <ahalaney@redhat.com>,
-        "Martin
- KaFai Lau" <martin.lau@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>
-CC: <kernel@quicinc.com>
-References: <20240409210547.3815806-1-quic_abchauha@quicinc.com>
- <20240409210547.3815806-2-quic_abchauha@quicinc.com>
- <6616b0af63eed_2a98a52947e@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>
-In-Reply-To: <6616b0af63eed_2a98a52947e@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8QFGfTKv0lAOUgSU9Ht80HCesRaoTJFS
-X-Proofpoint-ORIG-GUID: 8QFGfTKv0lAOUgSU9Ht80HCesRaoTJFS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- clxscore=1015 adultscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=942 mlxscore=0 priorityscore=1501 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404100138
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184659 [Apr 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/10 15:26:00 #24739493
+X-KSMG-AntiVirus-Status: Clean, skipped
 
+Amlogic's boot ROM code needs that some pages on NAND must be written
+in special "short" ECC mode with scrambling enabled. Such pages:
+1) Contain some metadata about hardware.
+2) Located with some interval starting from 0 offset, until some
+   specified offset. Interval and second offset are set in the
+   device tree.
 
+This patchset adds R/W support for such pages. To enable it we can setup
+it in dts:
 
-On 4/10/2024 8:30 AM, Willem de Bruijn wrote:
-> Abhishek Chauhan wrote:
->> mono_delivery_time was added to check if skb->tstamp has delivery
->> time in mono clock base (i.e. EDT) otherwise skb->tstamp has
->> timestamp in ingress and delivery_time at egress.
->>
->> Renaming the bitfield from mono_delivery_time to tstamp_type is for
->> extensibilty for other timestamps such as userspace timestamp
->> (i.e. SO_TXTIME) set via sock opts.
->>
->> Bridge driver today has no support to forward the userspace timestamp
->> packets and ends up resetting the timestamp. ETF qdisc checks the
->> packet coming from userspace and encounters to be 0 thereby dropping
->> time sensitive packets. These changes will allow userspace timestamps
->> packets to be forwarded from the bridge to NIC drivers.
->>
->> In future tstamp_type:1 can be extended to support userspace timestamp
->> by increasing the bitfield.
->>
->> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
->> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
->> ---
->>  include/linux/skbuff.h                     | 18 +++++++++---------
->>  include/net/inet_frag.h                    |  4 ++--
->>  net/bridge/netfilter/nf_conntrack_bridge.c |  6 +++---
->>  net/core/dev.c                             |  2 +-
->>  net/core/filter.c                          |  8 ++++----
->>  net/ipv4/inet_fragment.c                   |  2 +-
->>  net/ipv4/ip_fragment.c                     |  2 +-
->>  net/ipv4/ip_output.c                       |  8 ++++----
->>  net/ipv6/ip6_output.c                      |  6 +++---
->>  net/ipv6/netfilter.c                       |  6 +++---
->>  net/ipv6/netfilter/nf_conntrack_reasm.c    |  2 +-
->>  net/ipv6/reassembly.c                      |  2 +-
->>  net/sched/act_bpf.c                        |  4 ++--
->>  net/sched/cls_bpf.c                        |  4 ++--
->>  14 files changed, 37 insertions(+), 37 deletions(-)
-> 
-> Since the next patch against touches many of the same lines, probably
-> can just squash the two.
+    nand-is-boot-medium;
+    amlogic,boot-page-last = <1024>;
+    amlogic,boot-page-step = <128>;
 
-Sounds good i can do that. 
-Make only 2 patches 
-1. rename + assign tstamp_type
-2. introduce another bit for clock_id base time 
+It means that each 128th page in range 0 to 1024 pages will be accessed
+in special mode ("short" ECC + scrambling). In practice this feature is
+needed when we want to update first block of NAND - driver will enable
+required mode by itself using value from device tree.
+
+Changelog:
+ v1 -> v2:
+  * Rename 'meson,boot-page-XXX' -> 'amlogic,boot-page-XXX'.
+  * Add words that 'amlogic,boot-page-step' is measured in pages.
+  * Remove words that 'amlogic,boot-page-XXX' depends on 'nand-is-boot-medium'.
+  * Make both 'amlogic,boot-page-XXX' depend on each other also, in
+    addition to 'nand-is-boot-medium' dependency.
+ v2 -> v3:
+  * Add quotes to 0001 in dependencies. This fixes 'make dt_binding_check'
+    warning.
+ v3 -> v4:
+  * Rename 'amlogic,boot-page-last' to 'amlogic,boot-pages'.
+
+Arseniy Krasnov (2):
+  dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
+  mtd: rawnand: meson: support R/W mode for boot ROM
+
+ .../bindings/mtd/amlogic,meson-nand.yaml      | 14 +++
+ drivers/mtd/nand/raw/meson_nand.c             | 88 +++++++++++++------
+ 2 files changed, 73 insertions(+), 29 deletions(-)
+
+-- 
+2.35.0
+
