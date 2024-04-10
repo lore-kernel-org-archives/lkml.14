@@ -1,146 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75C513D274;
-	Wed, 10 Apr 2024 08:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E94413C90D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712738912; cv=none; b=XsLE082xazRZvzaYJzg3Bi76xQ2f0pRb2P6xmTDP5gTLwbyDOFtGTmXYnAY6sAf8I8j/JmsIB2RyUVEzWILywGCseYIaDCYJdNjX/t6wjpJX4xuUtMG+CUdVD1M310+2OhICTjRZ/MtUuys8NxqQMhyadqpVVaIJDkyiT7gVSWU=
+	t=1712738990; cv=none; b=hWeejR8xlqKVv0+5bKdlvcy3rKQ7WIvUc0DRtJOU7SRi92R1sz+yxj2Cft9nJf6osfg/IMVOfTP84fIrSwDX/ZJ6gqV+pCrEy3mPC6eL9FInOtoUQ/RVXxparL78R2n3pXB53GXdGgA0hLP/OUtXuV00r1XvDVDxSkWxK6bB+8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712738912; c=relaxed/simple;
-	bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
-	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=eL8Gx+V2mmWnRozzvefSzncbQZkX9OSmY6GSDUoG6tQ4iNS8FKkHz5TAgz2CXbmeUoQQXEpBo9d+AV6OEzU3nhDOmtz3B2tUsMuQn5Np1Y5jwH4YCpJt8s8JskmjBKAVRLJi7t8EV3FEFlIFh3MoLwWvouP6S2PIDA6gepbx5WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mZ3Kc7cz; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712738990; c=relaxed/simple;
+	bh=EuhUqKyi42jKQ13Gy6Zb/ZHyS6A85KCmaQdG5z7UwXo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rwX5RwXccJQ2u/ojTLeqdDuJMbCubK2C1YHNIqDdRxg0hOu6kHWxoeMNjVpHW0GF/HpVqpCSzmOiypYmzA3RqAMzwMkKcAuEiipSxDHmU9EKU9LRcIJjPci2R7d8p5C+oYw10UQqC656obYeMjdX3GyAahynFA+wEYG41sr3yIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=gHQ8sX38; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mZ3Kc7cz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712738911; x=1744274911;
-  h=from:to:cc:date:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=61jPHnCZ/8pf2B+mY3nN/ZOKCq8JfMnl5uS92Vb8dAA=;
-  b=mZ3Kc7cz1W3LCLHg4AQGkF48tmZDTL6J1cOFOV6YYgl/rGdi27YVZud4
-   5Eoz1Wl5JCRRY47N9v9wduM+J8o6LBuPbf3C8j7hrSe9tkixe6q7vQ1ad
-   sca34h3JPH+mlENUCKujPV3tMCSW8TkmqytwKDfvNFjM1mbLbv73kadA1
-   jvlJfkOzMEhEkLmpM4wOb5xoQd4FLSykacuRIVwWhIhpL1EM/V8yowzPj
-   7FmD75kYE82ypApKaUPdNS+XHskCgn9PGh9UnH69wHHaGWJo2vN9j0zcc
-   evOp3NAyQjDwGjldR36jdhVDUPrHo+uFjtRwTtbqqDapc14c+CRz8SCs3
-   A==;
-X-CSE-ConnectionGUID: eslKSWjRR+qU247JBTo/CA==
-X-CSE-MsgGUID: OV3N/o0gSVCnsqh2yOND8Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7946191"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7946191"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:30 -0700
-X-CSE-ConnectionGUID: EcNDN0JxSceH1mlDremgeQ==
-X-CSE-MsgGUID: czqeVPCiQTiKstaCEPtrfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="51457052"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.29])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:48:28 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>
-Date: Wed, 10 Apr 2024 11:43:57 +0300
-Subject: [GIT PULL] platform-drivers-x86 for v6.9-2
-Message-ID: <pdx86-pr-20240410114357-295477719@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="gHQ8sX38"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712738984; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zi64y6gftwEUpOYycPmnGWa28oBRzWmtl7QJD3qYI3A=;
+	b=gHQ8sX38ka0Y/NtcChoLO3BQM3JDdurGMFPbPGtwMoIzv6HV2+IpccsNeu3hWiriMM0MIx4pG6sP3GvBNvXhGRfEzcF5u6xii/wwOImney5Y0eZE3bFjvJi8aGIvemBbGiz6pvGgWnOSt9eJ+sHZJ0xfGhb+C+zwz7Qb5L1F104=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W4HDLKP_1712738983;
+Received: from 30.97.56.65(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W4HDLKP_1712738983)
+          by smtp.aliyun-inc.com;
+          Wed, 10 Apr 2024 16:49:44 +0800
+Message-ID: <093e883e-4ac5-4772-9a85-0117c2d990f6@linux.alibaba.com>
+Date: Wed, 10 Apr 2024 16:49:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/10] mm: page_alloc: consolidate free page accounting
+To: Zi Yan <ziy@nvidia.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Mel Gorman <mgorman@techsingularity.net>, "Huang, Ying"
+ <ying.huang@intel.com>, David Hildenbrand <david@redhat.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240320180429.678181-1-hannes@cmpxchg.org>
+ <20240320180429.678181-11-hannes@cmpxchg.org>
+ <7b3b7f2e-7109-4e72-b1cf-259cb56f3629@linux.alibaba.com>
+ <ecb88320-9990-49e1-a58a-e8fc85b1da3f@suse.cz>
+ <20240408142340.GA1057805@cmpxchg.org>
+ <26cb722f-6e1c-4aaf-9edd-ed10a60e0018@linux.alibaba.com>
+ <FA55690D-0532-48DE-A929-5FECCB667C86@nvidia.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <FA55690D-0532-48DE-A929-5FECCB667C86@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
-
-Here is a platform-drivers-x86 fixes PR for v6.9.
-
-Fixes:
- - intel/hid: Solve spurious hibernation aborts (power button release)
- - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
- - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
- - lg-laptop: Fix W=1 %s null argument warning
-
-New HW Support:
- - acer-wmi: PH18-71 mode button and fan speed sensor
- - intel/hid: Lunar Lake and Arrow Lake HID IDs
-
-Regards, i.
 
 
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
+On 2024/4/9 22:46, Zi Yan wrote:
+> On 9 Apr 2024, at 5:31, Baolin Wang wrote:
+> 
+>> On 2024/4/8 22:23, Johannes Weiner wrote:
+>>> On Mon, Apr 08, 2024 at 09:38:20AM +0200, Vlastimil Babka wrote:
+>>>> On 4/7/24 12:19 PM, Baolin Wang wrote:
+>>>>> On 2024/3/21 02:02, Johannes Weiner wrote:
+>>>>>>    +	account_freepages(page, zone, 1 << order, migratetype);
+>>>>>> +
+>>>>>>     	while (order < MAX_PAGE_ORDER) {
+>>>>>> -		if (compaction_capture(capc, page, order, migratetype)) {
+>>>>>> -			__mod_zone_freepage_state(zone, -(1 << order),
+>>>>>> -								migratetype);
+>>>>>> +		int buddy_mt = migratetype;
+>>>>>> +
+>>>>>> +		if (compaction_capture(capc, page, order, migratetype))
+>>>>>>     			return;
+>>>>>> -		}
+>>>>>
+>>>>> IIUC, if the released page is captured by compaction, then the
+>>>>> statistics for free pages should be correspondingly decreased,
+>>>>> otherwise, there will be a slight regression for my thpcompact benchmark.
+>>>>>
+>>>>> thpcompact Percentage Faults Huge
+>>>>>                              k6.9-rc2-base        base + patch10 + 2 fixes	
+>>>>> Percentage huge-1        78.18 (   0.00%)       71.92 (  -8.01%)
+>>>>> Percentage huge-3        86.70 (   0.00%)       86.07 (  -0.73%)
+>>>>> Percentage huge-5        90.26 (   0.00%)       78.02 ( -13.57%)
+>>>>> Percentage huge-7        92.34 (   0.00%)       78.67 ( -14.81%)
+>>>>> Percentage huge-12       91.18 (   0.00%)       81.04 ( -11.12%)
+>>>>> Percentage huge-18       89.00 (   0.00%)       79.57 ( -10.60%)
+>>>>> Percentage huge-24       90.52 (   0.00%)       80.07 ( -11.54%)
+>>>>> Percentage huge-30       94.44 (   0.00%)       96.28 (   1.95%)
+>>>>> Percentage huge-32       93.09 (   0.00%)       99.39 (   6.77%)
+>>>>>
+>>>>> I add below fix based on your fix 2, then the thpcompact Percentage
+>>>>> looks good. How do you think for the fix?
+>>>>
+>>>> Yeah another well spotted, thanks. "slight regression" is an understatement,
+>>>> this affects not just a "statistics" but very important counter
+>>>> NR_FREE_PAGES which IIUC would eventually become larger than reality, make
+>>>> the watermark checks false positive and result in depleted reserves etc etc.
+>>>> Actually wondering why we're not seeing -next failures already (or maybe I
+>>>> just haven't noticed).
+>>>
+>>> Good catch indeed.
+>>>
+>>> Trying to understand why I didn't notice this during testing, and I
+>>> think it's because I had order-10 pageblocks in my config. There is
+>>> this in compaction_capture():
+>>>
+>>> 	if (order < pageblock_order && migratetype == MIGRATE_MOVABLE)
+>>> 		return false;
+>>>
+>>> Most compaction is for order-9 THPs on movable blocks, so I didn't get
+>>> much capturing in practice in order for that leak to be noticable.
+>>
+>> This makes me wonder why not use 'cc->migratetype' for migratetype comparison, so that low-order (like mTHP) compaction can directly get the released pages, which could avoid some compaction scans without mixing the migratetype?
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 2facf844ef84..7a64020f8222 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -622,7 +622,7 @@ compaction_capture(struct capture_control *capc, struct page *page,
+>>           * and vice-versa but no more than normal fallback logic which can
+>>           * have trouble finding a high-order free page.
+>>           */
+>> -       if (order < pageblock_order && migratetype == MIGRATE_MOVABLE)
+>> +       if (order < pageblock_order && capc->cc->migratetype != migratetype)
+>>                  return false;
+>>
+>>          capc->page = page;
+> 
+> It is worth trying, since at the original patch time mTHP was not present and
+> not capturing any MIGRATE_MOVABLE makes sense. But with your change, the capture
+> will lose the opportunity of letting an unmovable request use a reclaimable
+> pageblock and vice-versa, like the comment says. Please change the comment
+> as well and we should monitor potential unmovable and reclaimable regression.
 
-  Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.9-2
-
-for you to fetch changes up to e71c8481692582c70cdfd0996c20cdcc71e425d3:
-
-  platform/x86: lg-laptop: fix %s null argument warning (2024-04-08 18:32:14 +0300)
-
-----------------------------------------------------------------
-platform-drivers-x86 for v6.9-2
-
-Fixes:
- - intel/hid: Solve spurious hibernation aborts (power button release)
- - toshiba_acpi: Ignore 2 keys to avoid log noise during suspend/resume
- - intel-vbtn: Fix probe by restoring VBDL and VGBS evalutation order
- - lg-laptop: Fix W=1 %s null argument warning
-
-New HW Support:
- - acer-wmi: PH18-71 mode button and fan speed sensor
- - intel/hid: Lunar Lake and Arrow Lake HID IDs
-
-The following is an automated shortlog grouped by driver:
-
-acer-wmi:
- -  Add support for Acer PH18-71
-
-intel/hid:
- -  Add Lunar Lake and Arrow Lake support
- -  Don't wake on 5-button releases
-
-intel-vbtn:
- -  Update tablet mode switch at end of probe
- -  Use acpi_has_method to check for switch
-
-lg-laptop:
- -  fix %s null argument warning
-
-toshiba_acpi:
- -  Silence logging for some events
-
-----------------------------------------------------------------
-Bernhard Rosenkränzer (1):
-      platform/x86: acer-wmi: Add support for Acer PH18-71
-
-David McFarland (1):
-      platform/x86/intel/hid: Don't wake on 5-button releases
-
-Gergo Koteles (1):
-      platform/x86: lg-laptop: fix %s null argument warning
-
-Gwendal Grignou (2):
-      platform/x86: intel-vbtn: Use acpi_has_method to check for switch
-      platform/x86: intel-vbtn: Update tablet mode switch at end of probe
-
-Hans de Goede (1):
-      platform/x86: toshiba_acpi: Silence logging for some events
-
-Sumeet Pawnikar (1):
-      platform/x86/intel/hid: Add Lunar Lake and Arrow Lake support
-
- drivers/platform/x86/acer-wmi.c     |  9 +++++++++
- drivers/platform/x86/intel/hid.c    |  9 ++++++++-
- drivers/platform/x86/intel/vbtn.c   | 11 ++++-------
- drivers/platform/x86/lg-laptop.c    |  2 +-
- drivers/platform/x86/toshiba_acpi.c |  4 +++-
- 5 files changed, 25 insertions(+), 10 deletions(-)
+Yes, but I think this case is easy to solve. Anyway let me try to do 
+some measurement for mTHP.
