@@ -1,57 +1,58 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829E618410F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 21:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130D7184127
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 21:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712786089; cv=none; b=DfkaG37lT/uTGjjenVBwoMo7D2aGhOJT88cZJX4R1eTK+2Qse0M2TWQjBI5cNuRIbn2ifAQW66tcvS3+jU0qq0z2wIl7Lqf/sHybL65AWhl4pSWGQqVcN+Fag9t367T9pyilEtX4NK8jdS6Bft53tpDa6Fy4TKV43GdcxGOtoPM=
+	t=1712786090; cv=none; b=R/iXCWe387AI4qGWJSahBvyccbKrIo9bZLRrnaqNEOOHoI6t+hz47qnRvq52QfdDuNxaCG0qxM0LcxalqzFpweBgt7hJoWcdewC41tcA5762D6dftYZILX3hFwYzN7SINfMtBhF3Y0sEExY5ZlZLc3/lPGvasmYBwNRunAt0l7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712786089; c=relaxed/simple;
-	bh=rzGNe4hZhMnB8M/40dl2p6r/nVedCnlrPhrsN56MHoE=;
+	s=arc-20240116; t=1712786090; c=relaxed/simple;
+	bh=CNOEK2aWkC3W8YJDXsiqotp6WsB7BgDuWRBpQs7crVU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fwTr+TYzuiBHHKrcOntCHOeo4i1cd0Egh1NhuQt9Ab1dt3h19hBBv/GJIj2F5oXuq6avaqvQaJhu04o5kiljo9twszzGo73oSSGDihZ+qpF24rVu5fbydzS/ZZUx7e4jQ45xBgK6i5Yr8g1ib8kLKoKn+cDrnywr7Pb6P4fDpv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=F/eeD8sE; arc=none smtp.client-ip=209.85.160.175
+	 In-Reply-To:To:Cc; b=X3XGUEnD3cUdOc/mFJlfHJ6ogQBYM3Y99wQFvVacWeKDrUlVJi56i4WMc97mW1f/KKPyjx9E7cy220H7jgBdRToTOfArOCPFxBjgKfHH02ytQ1nCvPDD4unnBok0GD9JJftt9uVpzE2R9nJCP1Ck3sNZMaZiLmuHauFxmaqcxKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SCZqqIHh; arc=none smtp.client-ip=209.85.219.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F/eeD8sE"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-434d85cdb05so9521751cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:54:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SCZqqIHh"
+Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbef31a9dbso4775388276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:54:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712786086; x=1713390886; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1712786088; x=1713390888; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=nPW2ppTL8S189BnwjTGvFf2yuc7RYQzJKkrIYHPYwNk=;
-        b=F/eeD8sEjrY+EhekZafyZQoJa27/IyQrTtkPnnDb5U32vvUEhclqgJvnkF3yk2IA9s
-         b/I2HvnnaY4uosfvxdHNI9Y47+AKPYlkUJ9vjHEzNxwYapYUYRJ+hONV3g5voEXutj1R
-         S91spzMhdSx1FopiRRS3HNBIvbRWtNgmhSq2U=
+        bh=s6vhOcczX0Rso19zsRzhH1nUym0L4HSC9FS2OUDhpCI=;
+        b=SCZqqIHhAbzTPWD+OERGE/77Jwb5jSH/ZN9+jIiYC4RhRU4pYeLTtQ8S0cjQm08oX4
+         ZLaTYJoh1V+WQRE0WQaAyxucj/8t3Mn9Rdcw1EWUchjIpP1+5OXFHgqgLbyfLtMTxvKN
+         ThiQCA1T3+VLDlGfGNUQsQwyJ9TPb63f9x608=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712786086; x=1713390886;
+        d=1e100.net; s=20230601; t=1712786088; x=1713390888;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nPW2ppTL8S189BnwjTGvFf2yuc7RYQzJKkrIYHPYwNk=;
-        b=wnmsuQNEO0h+ZwsMM5kX2TibWw86ixP1feXYSglEJoALUkVb4HdUYV31IHC5kZoeoq
-         t7AlKLzge2o049Ni5RN0rVwLtSiqZBnvBkzGuQ2cjFLV768HDSE9ydaF4kF+vFp9Ctv6
-         V5wQQ5innnhN0rhN6M5/f/V5N+B4Gq/s71ejSeMdHAnSoGK5ZKSQ2PeiG2cT0WOv1Y6u
-         Yjyebk0/UnZrHTVWV1rE+lv9T/4Di1cx8yYaqGI9QMn18PUuPMZbNe8Sy2mlqU8FNtS8
-         Upj7IdDZVsbHefXv4TkdtLNadcyXYj5IX+rYhSASiCKzvKolXA7tnYcXR+WgolQ0yEy4
-         t0Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0Pt7NWXiG4umyf1kXhO/g5MK5q0s8LyM9S8VpNILZzj28Vif67jTtQijLPqk5GcLFycR4IvZ9E5Tn3wE/j1LbGfHEMX0UHAdfOefJ
-X-Gm-Message-State: AOJu0Yxh96lYo/+OyGz1Unzr1VOEWlQzgKLptPQSSKUEId3VN5y/+kQv
-	ykMVzI7wPX15XiG78tTHR1O2BmBEdnblnB0bl03+FpYIkJiiBeKNHNvbNS08sQ==
-X-Google-Smtp-Source: AGHT+IGqJ1+HwPYyX9JNsLSdWW24aYLgwinvggdSsd1dVYnvyZyEESK2vRNNPs8/wL4dw6XEd0RjjQ==
-X-Received: by 2002:a05:622a:10b:b0:436:5628:d6a6 with SMTP id u11-20020a05622a010b00b004365628d6a6mr818871qtw.48.1712786086346;
-        Wed, 10 Apr 2024 14:54:46 -0700 (PDT)
+        bh=s6vhOcczX0Rso19zsRzhH1nUym0L4HSC9FS2OUDhpCI=;
+        b=WGtapXnpSJmVgMTF0kFPw6fVFIXC3JvBGdpk+/fkSRZjP5Guvk1tXumNAbJ2HOnGwO
+         vk7aOFoFS5aL4+DRjZYKw86qggAt/tCkfsvtbPWkLYaWF5zI83FHlfrY9nYcGFvF0FrO
+         PZEUaR3Hn6nbvgwNVThwu4kvcCL4i6tRQ+BlOpTecaVFptJ/HUJzt1LTxARfV4i5s0T7
+         FBin9171CQZYOwmgOgkPEt/9pPJF/rdu2Q5+vCbsREuHg/tUDPGGoP0E7A4+A00XklYj
+         A3G/2XWFDBhr1o+fC5rHeY0WCQVH4VBi9uJ+ZtmDENGJUbjAZ3ZVJkgphSzHNdqDf3Cn
+         QZlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQksN04apBYPdyIRSTv6FY+rAojaVKZIH5PG5kQPAaxPS+eK9DRAsQOgiG4thlkQeuTmDdSo5PGosNLn2mgJRLikfoW80cy6Fg1J3t
+X-Gm-Message-State: AOJu0Yw7YUfCm6FOmC1J1/ebiSGTLbuzi4nWBiG7e3f66nOyYGxvLVya
+	bLpkFnVZJSWhotwHzBlFP5J7BF4W5IWPqD+9um6g1gLh0pgUcJaelYTnOPV1yQ==
+X-Google-Smtp-Source: AGHT+IGIfO/2mFuyvVoujR3E89kj5KMNHwJfRYxvWyAQjc1xNMc4jdF0XAAcb1kFRJTlscFJbgdi9Q==
+X-Received: by 2002:a25:acc1:0:b0:dcd:5bfa:8184 with SMTP id x1-20020a25acc1000000b00dcd5bfa8184mr4697141ybd.39.1712786087887;
+        Wed, 10 Apr 2024 14:54:47 -0700 (PDT)
 Received: from denia.c.googlers.com (188.173.86.34.bc.googleusercontent.com. [34.86.173.188])
-        by smtp.gmail.com with ESMTPSA id kg26-20020a05622a761a00b00434c1eedb0esm67330qtb.36.2024.04.10.14.54.45
+        by smtp.gmail.com with ESMTPSA id kg26-20020a05622a761a00b00434c1eedb0esm67330qtb.36.2024.04.10.14.54.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 14:54:45 -0700 (PDT)
+        Wed, 10 Apr 2024 14:54:47 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Wed, 10 Apr 2024 21:54:38 +0000
-Subject: [PATCH 1/6] media: usb: siano: Fix allocation of urbs
+Date: Wed, 10 Apr 2024 21:54:40 +0000
+Subject: [PATCH 3/6] media: platform: sti: hva: clk_unprepare
+ unconditionally
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +61,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240410-smatch-v1-1-785d009a852b@chromium.org>
+Message-Id: <20240410-smatch-v1-3-785d009a852b@chromium.org>
 References: <20240410-smatch-v1-0-785d009a852b@chromium.org>
 In-Reply-To: <20240410-smatch-v1-0-785d009a852b@chromium.org>
 To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -73,116 +74,30 @@ Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-USB urbs must be allocated with usb_alloc_urb. Quoting the manual
+hva->clk cannot be NULL at this point. Simplify the code and make smatch
+happy:
 
-Only use this function (usb_init_urb) if you _really_ understand what you
-are doing.
-
-Fix the following smatch error:
-
-drivers/media/usb/siano/smsusb.c:53:38: warning: array of flexible structures
+drivers/media/platform/st/sti/hva/hva-hw.c:412 hva_hw_probe() warn: 'hva->clk' from clk_prepare() not released on lines: 412
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/usb/siano/smsusb.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ drivers/media/platform/st/sti/hva/hva-hw.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/siano/smsusb.c b/drivers/media/usb/siano/smsusb.c
-index 723510520d092..d85308e0785db 100644
---- a/drivers/media/usb/siano/smsusb.c
-+++ b/drivers/media/usb/siano/smsusb.c
-@@ -40,7 +40,7 @@ struct smsusb_urb_t {
- 	struct smscore_buffer_t *cb;
- 	struct smsusb_device_t *dev;
+diff --git a/drivers/media/platform/st/sti/hva/hva-hw.c b/drivers/media/platform/st/sti/hva/hva-hw.c
+index fe4ea2e7f37e3..fcb18fb52fdd7 100644
+--- a/drivers/media/platform/st/sti/hva/hva-hw.c
++++ b/drivers/media/platform/st/sti/hva/hva-hw.c
+@@ -406,8 +406,7 @@ int hva_hw_probe(struct platform_device *pdev, struct hva_dev *hva)
+ err_disable:
+ 	pm_runtime_disable(dev);
+ err_clk:
+-	if (hva->clk)
+-		clk_unprepare(hva->clk);
++	clk_unprepare(hva->clk);
  
--	struct urb urb;
-+	struct urb *urb;
- 
- 	/* For the bottom half */
- 	struct work_struct wq;
-@@ -160,7 +160,7 @@ static int smsusb_submit_urb(struct smsusb_device_t *dev,
- 	}
- 
- 	usb_fill_bulk_urb(
--		&surb->urb,
-+		surb->urb,
- 		dev->udev,
- 		usb_rcvbulkpipe(dev->udev, dev->in_ep),
- 		surb->cb->p,
-@@ -168,9 +168,9 @@ static int smsusb_submit_urb(struct smsusb_device_t *dev,
- 		smsusb_onresponse,
- 		surb
- 	);
--	surb->urb.transfer_flags |= URB_FREE_BUFFER;
-+	surb->urb->transfer_flags |= URB_FREE_BUFFER;
- 
--	return usb_submit_urb(&surb->urb, GFP_ATOMIC);
-+	return usb_submit_urb(surb->urb, GFP_ATOMIC);
+ 	return ret;
  }
- 
- static void smsusb_stop_streaming(struct smsusb_device_t *dev)
-@@ -178,7 +178,7 @@ static void smsusb_stop_streaming(struct smsusb_device_t *dev)
- 	int i;
- 
- 	for (i = 0; i < MAX_URBS; i++) {
--		usb_kill_urb(&dev->surbs[i].urb);
-+		usb_kill_urb(dev->surbs[i].urb);
- 		if (dev->surbs[i].wq.func)
- 			cancel_work_sync(&dev->surbs[i].wq);
- 
-@@ -338,6 +338,8 @@ static void smsusb_term_device(struct usb_interface *intf)
- 	struct smsusb_device_t *dev = usb_get_intfdata(intf);
- 
- 	if (dev) {
-+		int i;
-+
- 		dev->state = SMSUSB_DISCONNECTED;
- 
- 		smsusb_stop_streaming(dev);
-@@ -346,6 +348,9 @@ static void smsusb_term_device(struct usb_interface *intf)
- 		if (dev->coredev)
- 			smscore_unregister_device(dev->coredev);
- 
-+		for (i = 0; i < MAX_URBS; i++)
-+			usb_free_urb(dev->surbs[i].urb);
-+
- 		pr_debug("device 0x%p destroyed\n", dev);
- 		kfree(dev);
- 	}
-@@ -390,6 +395,7 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 	void *mdev;
- 	int i, rc;
- 	int align = 0;
-+	int n_urb = 0;
- 
- 	/* create device object */
- 	dev = kzalloc(sizeof(struct smsusb_device_t), GFP_KERNEL);
-@@ -461,9 +467,11 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 	dev->coredev->is_usb_device = true;
- 
- 	/* initialize urbs */
--	for (i = 0; i < MAX_URBS; i++) {
--		dev->surbs[i].dev = dev;
--		usb_init_urb(&dev->surbs[i].urb);
-+	for (n_urb = 0; n_urb < MAX_URBS; n_urb++) {
-+		dev->surbs[n_urb].dev = dev;
-+		dev->surbs[n_urb].urb = usb_alloc_urb(0, GFP_KERNEL);
-+		if (!dev->surbs[n_urb].urb)
-+			goto free_urbs;
- 	}
- 
- 	pr_debug("smsusb_start_streaming(...).\n");
-@@ -485,6 +493,10 @@ static int smsusb_init_device(struct usb_interface *intf, int board_id)
- 
- 	return rc;
- 
-+free_urbs:
-+	for (i = 0; i < n_urb; i++)
-+		usb_free_urb(dev->surbs[n_urb].urb);
-+
- err_unregister_device:
- 	smsusb_term_device(intf);
- #ifdef CONFIG_MEDIA_CONTROLLER_DVB
 
 -- 
 2.44.0.478.gd926399ef9-goog
