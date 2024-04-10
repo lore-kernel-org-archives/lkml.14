@@ -1,111 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D01494D6;
-	Wed, 10 Apr 2024 11:58:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEB115ADA6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:58:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712750289; cv=none; b=cs600o/+zWgpkPKooha44d3/MDQgeO4dniFxJsxThV4Uxk2uxuPwLH/hQaW6iQBt4J6TPiAlIpCEtSzLhaBNNgQcNGLTM9JJXDzjE+t1XXmtYU1AC4iPO+sbI4arvO3wdUYH59vBJ0OtaAPoNVEihsuAfIUuNZteRJMHkKNJ/wo=
+	t=1712750321; cv=none; b=J23e8e9GrfDq+6RihWi4jYGTC9nqJf1WBmQ6fzfYTvJzRvt/eAWvtANRtjuUNutf65lYoJit6b6bCaLdpzogKw0HRO6MFhE/eN2Pjl/QUt9+a0nB6Ne16H4G1EwjSIjvKOALe6ITEy6/X5P7HOZdozHMoHXBB0IpZO9cMfDFDp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712750289; c=relaxed/simple;
-	bh=NNn9PFSTYD7cqCl6hz0HImhdmwtK0pBHKxKy9hV4DKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P7gmFfTG3LUU4byB8dPK7jeaQCE6tB90HFYz3xAh4x4odKHgr/dTl6A7nn1mDXeo0WSPzga+R+FfxK2IGWU2AbQPuf8XOLSKXpr2hFnu0wDDzXrf7Ge9+AvqklFYCY4eCOyqBE7LRHfxEVzz0fXwzhWYKantmSYUpPvaeylkVdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzWGbFT0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712750321; c=relaxed/simple;
+	bh=D6g7kz9v1lvnZv12s+hhXRD9WFjxJ0VoV/zFfH1fEXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GxWcE/Br4iNgm/BnQw2caXNnSGCBpn38QF3R/jIfg/2uHwHcWshasFTNqITCe6gjoKrSFNbt0yHSpMWelxzeftE3KniUOqx7+r28u24YNuSxw6sfrFqgJvRJsIZU8SBjkqfd5KFgMzIeGglbqNN0KfFcWOHFb0XCmHXnnqE0buI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gN7ADNtA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzWGbFT0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EFAC433F1;
-	Wed, 10 Apr 2024 11:58:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gN7ADNtA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37D8C433C7;
+	Wed, 10 Apr 2024 11:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712750288;
-	bh=NNn9PFSTYD7cqCl6hz0HImhdmwtK0pBHKxKy9hV4DKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CzWGbFT0pQPr5PGe5Mcpjxw+oeW+QocsoylRdvqaI5HLgB/f62hSvN+KLluR14H3A
-	 smtVRLg7hWq30aJc0OtF9AkgPjXk4vdGiUZTqVnIiCWiuq9ym6kXsvJrz/sR+f8LIX
-	 3vG8UsYAU08EoVHW7xqRYL0OeFU0whxwBhRaKMuYc1emqwVMTYOQOxCy69w1IsYpjy
-	 qvvpk7I1MXLnliKVw6Eh0e9XcgtmXLAOtcLSyXjCnUFC1C1G5UjslgeuhsKAJC80VB
-	 JVZz7+uAoUUFLtMnpOcf4GaFRMGB86qujVcjf2mXX39UZ0Elock/AgrsExJQtkfL2a
-	 7xzQfVgNVQLxg==
-Date: Wed, 10 Apr 2024 06:58:06 -0500
-From: Rob Herring <robh@kernel.org>
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
-	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
-	keescook@chromium.org, ajones@ventanamicro.com,
-	conor.dooley@microchip.com, cleger@rivosinc.com,
-	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
-	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, krzysztof.kozlowski+dt@linaro.org,
-	oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
-	ebiederm@xmission.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
-	lstoakes@gmail.com, shuah@kernel.org, brauner@kernel.org,
-	andy.chiu@sifive.com, jerry.shih@sifive.com,
-	hankuan.chen@sifive.com, greentime.hu@sifive.com, evan@rivosinc.com,
-	xiao.w.wang@intel.com, charlie@rivosinc.com,
-	apatel@ventanamicro.com, mchitale@ventanamicro.com,
-	dbarboza@ventanamicro.com, sameo@rivosinc.com,
-	shikemeng@huaweicloud.com, willy@infradead.org,
-	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
-	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
-	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
-	maskray@google.com, ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
-	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
-	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
-	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
-	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH v3 04/29] riscv: zicfilp / zicfiss in dt-bindings
- (extensions.yaml)
-Message-ID: <20240410115806.GA4044117-robh@kernel.org>
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-5-debug@rivosinc.com>
+	s=k20201202; t=1712750321;
+	bh=D6g7kz9v1lvnZv12s+hhXRD9WFjxJ0VoV/zFfH1fEXs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gN7ADNtA9kOKv2MBmNcwFJ/WzdRIS0TQAnQmZRekIvRoK4RXM8MDzMQDES/aZSlKC
+	 jGTaD9/j0HULprQI97rZlsidLO/7Ge/jsyXD6gysWa6J6jtKnRmx0ZD1d/a4qJjxaS
+	 lLXYscXxFXkAR8solCU0KiWRUlscBlsNQA8kO6iXXC9XIAEQrJTi0KH4nkLciva9HT
+	 TlO99wjcHBxfA+ZkR6r/id4hs80xJok9mNGTXO1p2KucPo7uDoOR3PUeWJ/yCqLHI1
+	 AmTkDfEybvtIwKh1BoiskVeKg5VIbWjyNwugTy1mAku5n2ckemEP1eEZm7ZvnqQfka
+	 AZGENFyRd+owg==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Cyril Jean <cyril.jean@microchip.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/5] PolarFire SoC Auto Update design info support
+Date: Wed, 10 Apr 2024 12:58:03 +0100
+Message-ID: <20240410-opulently-epic-8654bdac3422@spud>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240403234054.2020347-5-debug@rivosinc.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1327; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=DKDUkLAPHTrXR9D8TwtwSjtryroUcX4bNpjv3LfEM94=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGlidVd4t133aY1wWKDPGzFHuFFLRKArpXzVun1mrUvKE 3xfKVl0lLIwiHEwyIopsiTe7muRWv/HZYdzz1uYOaxMIEMYuDgFYCLOXgx/RRPyY+KPpZREXF3f uHdT7oGvXGw7DQwObDqf2HNUfdnfGwz/0xkv3f7wdYH8lT1SE4IO/JQTPKzI3HT9tVfpPPEZ2fI sfAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 04:34:52PM -0700, Deepak Gupta wrote:
-> Make an entry for cfi extensions in extensions.yaml.
-> 
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->  .../devicetree/bindings/riscv/extensions.yaml          | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> index 63d81dc895e5..45b87ad6cc1c 100644
-> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-> @@ -317,6 +317,16 @@ properties:
->              The standard Zicboz extension for cache-block zeroing as ratified
->              in commit 3dd606f ("Create cmobase-v1.0.pdf") of riscv-CMOs.
->  
-> +        - const: zicfilp
-> +          description:
-> +            The standard Zicfilp extension for enforcing forward edge control-flow
-> +            integrity in commit 3a20dc9 of riscv-cfi and is in public review.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Does in public review mean the commit sha is going to change?
+There's a document that is internally available that the author of the
+design info/overlay format stuff wrote about how it is composed and I
+need to go read it and make a version of it publicly available before
+this can be merged.
 
-> +
-> +        - const: zicfiss
-> +          description:
-> +            The standard Zicfiss extension for enforcing backward edge control-flow
-> +            integrity in commit 3a20dc9 of riscv-cfi and is in publc review.
-> +
->          - const: zicntr
->            description:
->              The standard Zicntr extension for base counters and timers, as
-> -- 
-> 2.43.2
-> 
+While implementing the design info support, I found a few opportunities
+for cleaning up the code and fixed a bug that had been mentioned
+internally about failure cases printing success. The scope based cleanup
+stuff in particular is rather helpful for the drivers using the system
+services mailbox, so I'll roll that out to the other users soonTM.
+
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Cyril Jean <cyril.jean@microchip.com>
+CC: linux-riscv@lists.infradead.org
+CC: linux-kernel@vger.kernel.org
+
+Conor Dooley (5):
+  firmware: microchip: support writing bitstream info to flash
+  firmware: microchip: don't unconditionally print validation success
+  firmware: microchip: clarify that sizes and addresses are in hex
+  firmware: microchip: move buffer allocation into
+    mpfs_auto_update_set_image_address()
+  firmware: microchip: use scope-based cleanup where possible
+
+ drivers/firmware/microchip/mpfs-auto-update.c | 140 +++++++++---------
+ 1 file changed, 70 insertions(+), 70 deletions(-)
+
+-- 
+2.43.0
+
