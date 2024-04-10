@@ -1,102 +1,106 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F44815B568
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C5515F400;
+	Wed, 10 Apr 2024 13:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757588; cv=none; b=Qq4kxVi7ufck6uulYZRCFRi0F18euDTguIiaYiujoMLB1nRCGh949yZVs9WkKU+r8u9dDFLkBZPUMHCcEy3lmWY+ywfHDmMu0QpcV2B1ItqX+FUv/PVnthQo3OCAiu4kQNCBunHs7i5mR0UZCnNh8ls9JtyucKSo4QaP/ed+bHs=
+	t=1712757590; cv=none; b=SBZbLA44sy7i07j1YAHNUP8Q4zGa6zJIere8MvpeS1SY6I4eS0QC2TpcwKWhdFmSGQEpc9Ku4hKc+JG96BIOnEQ+rr/XkGxX+zuVzvjnhahCB7TWKRcyGWZtYmpdc/61pXrSSHQTXcPzt9aRHkkLEnklzNbi0Izwdw6cjtXPXeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757588; c=relaxed/simple;
-	bh=6Uqwnw302suIzBJiIBQsZeD3y2gKWEdgNhICFPWo1MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fXYTFb3D/3IuO4K/rwO7mQ1tQ0YPDlP9IG/1DQFMl3eoeOyYmk9aFJARafwMfWDtERTbF6LjYE3kayT0+TNzq7W7rICxDfoE0Ie3ZPeJtOLdr4Bmi951JFYpfZcbWwbFpedT6NoLrTHXDI26hrzeCpYvFSOkhm6CV+/iO6c31L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=33iofNrw; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712757590; c=relaxed/simple;
+	bh=VyssH3HwGA8ttPNbt05cbLQnHU3BKOP+QGZgSD7GjKs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tEFwWrKipnWFTY95n/rcboxemIbojvtISiXBIWrLWwPjU+T3+x5MHhsXjzm6ZdgY8GyMAa+iGJkXfLCEEmLzY9YtmfqPmXnkIY82UErn/nheRXQh753cjQjMccMJwjfaCU+RWUfSnjkASSftXiFdAJA//7sYSMuxPRDwZPPgZbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FIe9lP7p; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="33iofNrw"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-479e57ff63bso1757224137.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712757586; x=1713362386; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5aa3hIWZtOiM9o7F/Dz6DxBBPY3BgmfWmAFxkVrBHd8=;
-        b=33iofNrwnfNauxs8afLTgJHKp+9p4CPgdTobmG0+vYEc6KZmX6vufTcD0bPXCZjdox
-         wXfy76V/viBwIUp7/KscRduZtTKbddgDkdfBjMR+u+DR+jmnHOdYY8wv0+i8TrofTZPg
-         bYBjfuC4Emao2Q1oguAgL/tYrqse0VYyDntA4GbnLyZvoIHhiV/U2etAxX53MTcP0RAw
-         hHI23PTSvu/DcUIK+KOrjgP3XOrNmaNO0Ri+djkKxpspJ4yyRbtA5ti+oMlTzNT8O2hW
-         DO0VcYQpQUJ6JbgtemPCEAdyGV4A+9/RarTwbTGyNl0o8WAqaU7OwYPiO9b2fvXyGss+
-         03eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712757586; x=1713362386;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5aa3hIWZtOiM9o7F/Dz6DxBBPY3BgmfWmAFxkVrBHd8=;
-        b=S1kIYVAfslNLXahhFengxykm8oBFCtzwkHejZzcw0lMNxkZsgfSPjBasuS6YskGaf5
-         UKbi9CSQEZAOzWjjUo1IPghhdPINIPbhp1uY0B8L9yYSp96Oyp3jEmcJ89t0iO0L+Wrr
-         IvX5mZvW2zNnNEFupINxn0jVSnWzsjxS1M6EoRvtrefllkr9OGf0OMLtIoE0cEok3950
-         T7Qz60rBqnby2RGfCIWtkVvO0TcdayPY0Rbi3EY4kBmHkZfUfDCxaFfK8vkIlAKr0dhG
-         zr6Tahdxebx0IYpwnsYT7oFK/vddswg8XULgIivSYVPHkmMNGam5PzPXk4XmY4f+SyY1
-         kuRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlKWP9sCarvH7kmWTFkk3REMTgkY60f6jQ0lk/985/yuYtOvCrvnF93JlrXWrdBsEp+CtZwWZSVYkaZ2lwz+2DzuKmPywB4uunzTBk
-X-Gm-Message-State: AOJu0YzWbbTi4iD/QhR6SOfMSuKp0Wj7sVbXLEmi7fxbpcf1krO1+KW5
-	u/9SVUcP1R9PYkaDnRO3JYHPie/n2dMus1aTRSyFuzoQ00zJMh9UUt7P/g87hxxlFHbdumlZBT5
-	t4ponic8BLugcRAW24VxvutvE/agSlUYs6cik
-X-Google-Smtp-Source: AGHT+IEpsiKA9Ha0aSj78Js7MGsZu+xSPo2OOybBgeVcNcg20IWc+marqLN4JEtWyhh8Xzl0ENJq8kVbtbfz5TbqHoU=
-X-Received: by 2002:a05:6102:1593:b0:47a:248b:6846 with SMTP id
- g19-20020a056102159300b0047a248b6846mr2424398vsv.16.1712757585948; Wed, 10
- Apr 2024 06:59:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FIe9lP7p"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADximh056735;
+	Wed, 10 Apr 2024 08:59:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1712757584;
+	bh=wohS1UWkRM7giv/XyIaRHM0QVxnTPGRnJbLhd8440+w=;
+	h=From:To:CC:Subject:Date;
+	b=FIe9lP7pGVrH5IL58fh9ZElM9Hmi0tbJdEBi2sBHgQHRXnzU9nBU0NQJZAOugYrwY
+	 wxt7pXt+x0GEG2aWgfrRJ36NIWGt9YXiA3ynDMz/KrmT6lzr0tPW9GKRjbylL0CoXZ
+	 gWS2TcnZVca1VSjrM6TRbA0S/OMD8JFk9cf8uW+M=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxhP1011473
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 10 Apr 2024 08:59:44 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
+ Apr 2024 08:59:43 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 10 Apr 2024 08:59:43 -0500
+Received: from fllvsmtp8.itg.ti.com ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhak067183;
+	Wed, 10 Apr 2024 08:59:43 -0500
+From: Andrew Davis <afd@ti.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
+        Nick Saulnier <nsaulnier@ti.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew
+ Davis <afd@ti.com>
+Subject: [PATCH v2 00/13] OMAP mailbox FIFO removal
+Date: Wed, 10 Apr 2024 08:59:29 -0500
+Message-ID: <20240410135942.61667-1-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408090205.3714934-1-elver@google.com> <20240410225648.7a815ba873c8d55c44385c24@kernel.org>
-In-Reply-To: <20240410225648.7a815ba873c8d55c44385c24@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 10 Apr 2024 15:59:07 +0200
-Message-ID: <CANpmjNNFcHp0n5J5XWMb=3cpa+FT5V1xeev5dFZCC7SknPBkOA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Add new_exec tracepoint
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Kees Cook <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Wed, 10 Apr 2024 at 15:56, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Mon,  8 Apr 2024 11:01:54 +0200
-> Marco Elver <elver@google.com> wrote:
->
-> > Add "new_exec" tracepoint, which is run right after the point of no
-> > return but before the current task assumes its new exec identity.
-> >
-> > Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
-> > runs before flushing the old exec, i.e. while the task still has the
-> > original state (such as original MM), but when the new exec either
-> > succeeds or crashes (but never returns to the original exec).
-> >
-> > Being able to trace this event can be helpful in a number of use cases:
-> >
-> >   * allowing tracing eBPF programs access to the original MM on exec,
-> >     before current->mm is replaced;
-> >   * counting exec in the original task (via perf event);
-> >   * profiling flush time ("new_exec" to "sched_process_exec").
-> >
-> > Example of tracing output ("new_exec" and "sched_process_exec"):
->
-> nit: "new_exec" name a bit stands out compared to other events, and hard to
-> expect it comes before or after "sched_process_exec". Since "begin_new_exec"
-> is internal implementation name, IMHO, it should not exposed to user.
-> What do you think about calling this "sched_prepare_exec" ?
+Hello all,
 
-I like it, I'll rename it to sched_prepare_exec.
+Core of this series is the last patch removing the message FIFO
+from OMAP mailbox. This hurts our real-time performance. It was a
+legacy leftover from before the common mailbox framework anyway.
 
-Thanks!
+The rest of the patches are cleanups found along the way.
+
+Thanks,
+Andrew
+
+Changes for v2:
+ - Use threaded irq as suggested by Hari and to
+     fix possible "scheduling while atomic" issue
+ - Use oneshot irq as we do not want to enable the
+     irq again until we clear our the messages
+ - Rebase on v6.9-rc3
+
+Andrew Davis (13):
+  mailbox: omap: Remove unused omap_mbox_{enable,disable}_irq()
+    functions
+  mailbox: omap: Remove unused omap_mbox_request_channel() function
+  mailbox: omap: Move omap_mbox_irq_t into driver
+  mailbox: omap: Move fifo size check to point of use
+  mailbox: omap: Remove unneeded header omap-mailbox.h
+  mailbox: omap: Remove device class
+  mailbox: omap: Use devm_pm_runtime_enable() helper
+  mailbox: omap: Merge mailbox child node setup loops
+  mailbox: omap: Use function local struct mbox_controller
+  mailbox: omap: Use mbox_controller channel list directly
+  mailbox: omap: Remove mbox_chan_to_omap_mbox()
+  mailbox: omap: Reverse FIFO busy check logic
+  mailbox: omap: Remove kernel FIFO message queuing
+
+ drivers/mailbox/Kconfig        |   9 -
+ drivers/mailbox/omap-mailbox.c | 519 +++++++--------------------------
+ include/linux/omap-mailbox.h   |  13 -
+ 3 files changed, 108 insertions(+), 433 deletions(-)
+
+-- 
+2.39.2
+
