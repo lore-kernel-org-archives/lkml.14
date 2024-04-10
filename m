@@ -1,144 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0CC168CC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38781CD22;
+	Wed, 10 Apr 2024 05:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712727399; cv=none; b=Y5PgUQFOmRLBgw7jXuXHKHNOHrB+EUmkTxzc6AJ/lEu7A/yip3m+KNjZO0wKRDUi+yadhnZJHJtf77EnDih6F/i554iBFcqHa0TC8MIRmAis0cfC1KYjiIZyqwVhyE0uvv7IfG/SieRzd0WIu9cEEA9w1EgOE56yx6VN+4obSQI=
+	t=1712727402; cv=none; b=Xoyax6JOkH+AtUm+NI6te7r9oCl7Z1n1QZ5BPbQ2yQuKX0Eezc/WDH1JdsodiJoGNJNEmD/YPsxA1S3TInwaNgLvw+lxSXFcFXgkWX/5KRiMB0hpTA/rR7t95IeTrK5w1L2LqvbGd1L0+YkPKk+lOjxWL9uFA8ue49AWCeX7Mi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712727399; c=relaxed/simple;
-	bh=tneDLGnMthukd9PZWHKkFOw81KrbNr+svS6oICoufZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=YNohlfXamjk7j4kBlp/H0FayJxBaRYxdQ1TqgXsucEtaNaiuJ+aPlCcBCg+OWKmQqeo4rDklWu8JZmBVZqvfzFMeDstZmJc0DSjq3mY+6j7wb7t1HvdzrcxnPFDWmZvh8ZPWLcbRg9ktn33o/q7gfzd8QuKpqqPzQ4VgTC+vT9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FLBGP2Bk; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712727402; c=relaxed/simple;
+	bh=LtSDeAsJ+4SWm9wByi2DhLCqTBwpDzN5PPJS7j+gizo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kxUoLAM+Dp4TO7mxMp20kbJiwJRJQWZScpe3iPmJG3FI6er6QoLh0D5NnsarIIOSlEDwOj2d/jKbWKO9foZcNYCTeXFWNAE9atYFuiu7i2JbsMQgNvTwhvceR3QHGXfnLnh6lH1zb2eYnclgVChz4Y8wRw5e/Wjropr95I9MjRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CcrBEod+; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FLBGP2Bk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712727398; x=1744263398;
-  h=date:from:to:cc:subject:message-id;
-  bh=tneDLGnMthukd9PZWHKkFOw81KrbNr+svS6oICoufZ4=;
-  b=FLBGP2BkKURHSjAMsbAHAdetYzJUesr/z4MIBpjfJKbRAvbsXY3jy8ZO
-   iSppAOPe6lSkSxRXNeQaisECmZADaFeuFhmfNIjBVOhk6OqbXRjqKFmNo
-   iRw1neiyJr60qzUiMMobv/310sJSBtFKbk4+QfILFAbX966kGRWE6iY5z
-   lJ9jUXwP95yrqaXaP69gYBgjtIMKlfNGtEd+9Qt4OnIhqUWuqeBrBESKv
-   KmjNEuuhKWvxu0X2WL130Tp3WEVc1WVcACf2NULDL65To98C1FSyMkFGl
-   +sM4RDj4C62khYZYGW0NY3GfdfvBlYVVWWL9cs2o6RQOK/UsB8y8Dpq4c
-   Q==;
-X-CSE-ConnectionGUID: FLF4qbTJRyC8+YA2TXCcxg==
-X-CSE-MsgGUID: wtENuz4vRWCA5gjjfaDElw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11911762"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11911762"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 22:36:36 -0700
-X-CSE-ConnectionGUID: CYbxMDKTQjqZMYqObbWeNg==
-X-CSE-MsgGUID: Z6GmpaE7QgCr+Rjaq1rgvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="43698937"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 09 Apr 2024 22:36:35 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruQdM-0006xO-2Q;
-	Wed, 10 Apr 2024 05:36:32 +0000
-Date: Wed, 10 Apr 2024 13:35:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/asm] BUILD SUCCESS
- a0c8cf9780359376496bbd6d2be1343badf68af7
-Message-ID: <202404101344.IF3RsBl0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CcrBEod+"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43A5aS2A052354;
+	Wed, 10 Apr 2024 00:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1712727388;
+	bh=Oxa0nWrISrf6ZE0JvFIznpZ3rLdWaI2az+Zz5A5Q81Q=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=CcrBEod+Cznes0dZwJ2ssshvTaaQ+/eP6eElyvGpylQk4M3Xu746cqCWamgUKvEHf
+	 oRHoUY+IoyI9ueDaTRjO0/zfZc9riSb9505k4XN5YNvyS3hg8JxLfz2wHsf0SoEuSI
+	 zozOtvxLI6rSQEe3nAHbsGpr/ebK7k0EMQg8OrpU=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43A5aSa4124434
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 10 Apr 2024 00:36:28 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
+ Apr 2024 00:36:28 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 10 Apr 2024 00:36:28 -0500
+Received: from [172.24.20.156] (lt5cd2489kgj.dhcp.ti.com [172.24.20.156])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43A5aOJe016251;
+	Wed, 10 Apr 2024 00:36:25 -0500
+Message-ID: <a329fc6b-561c-4300-8778-c90ca97b70f3@ti.com>
+Date: Wed, 10 Apr 2024 11:06:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] arm64: dts: ti: k3-j721e-main: Add the MAIN domain
+ watchdog instances
+To: Neha Malcom Francis <n-francis@ti.com>, <robh@kernel.org>,
+        <conor+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <vigneshr@ti.com>, <nm@ti.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>
+References: <20240326122723.2329402-1-n-francis@ti.com>
+ <20240326122723.2329402-4-n-francis@ti.com>
+Content-Language: en-US
+From: "Kumar, Udit" <u-kumar1@ti.com>
+In-Reply-To: <20240326122723.2329402-4-n-francis@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/asm
-branch HEAD: a0c8cf9780359376496bbd6d2be1343badf68af7  x86/alternatives: Remove a superfluous newline in _static_cpu_has()
+Hi Neha
 
-elapsed time: 740m
+On 3/26/2024 5:57 PM, Neha Malcom Francis wrote:
+> There are 10 watchdog instances in the MAIN domain:
+> 	* one each for the 2 A72 cores
+> 	* one for the GPU core
+> 	* one for the C7x core
+> 	* one each for the 2 C66x cores
+> 	* one each for the 4 R5F cores
+>
+> Currently, the devicetree only describes watchdog instances for the A72
+> cores and enables them. Describe the remaining but reserve them as they
+> will be used by their respective firmware.
+>
+> Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 93 +++++++++++++++++++++++
+>   1 file changed, 93 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> index c7eafbc862f9..d8930b8ea8ec 100644
+> --- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+> @@ -2157,6 +2157,99 @@ watchdog1: watchdog@2210000 {
+>   		assigned-clock-parents = <&k3_clks 253 5>;
+>   	};
+>   
 
-configs tested: 67
-configs skipped: 135
+Looking at TRM, SPRUIJ7*3–December 2018–Revised March 2019,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Table 12-22646. RTI Instances, says There is gap in numbering
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240410   gcc  
-i386         buildonly-randconfig-005-20240410   gcc  
-i386         buildonly-randconfig-006-20240410   gcc  
-i386                                defconfig   clang
-i386                  randconfig-003-20240410   gcc  
-i386                  randconfig-004-20240410   gcc  
-i386                  randconfig-005-20240410   gcc  
-i386                  randconfig-013-20240410   gcc  
-i386                  randconfig-015-20240410   gcc  
-i386                  randconfig-016-20240410   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-powerpc                        cell_defconfig   gcc  
-riscv                               defconfig   clang
-riscv             nommu_k210_sdcard_defconfig   gcc  
-s390                             alldefconfig   gcc  
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                            migor_defconfig   gcc  
-sh                           se7712_defconfig   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
+RTI0, RTI1, RTI15 and so on
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+IMO, labels for watchdog should be as per TRM.
+
+eg watchdog2 to watchdog15, But I don't have strong opinion on either .
+
+Let maintainer suggest on this
+
+
+
+> +	/*
+> +	 * The following RTI instances are coupled with MCU R5Fs, c7x and
+> +	 * GPU so keeping them reserved as these will be used by their
+> +	 * respective firmware
+> +	 */
+> +	watchdog2: watchdog@22f0000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x22f0000 0x00 0x100>;
+> +		clocks = <&k3_clks 257 1>;
+> +		power-domains = <&k3_pds 257 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 257 1>;
+> +		assigned-clock-parents = <&k3_clks 257 5>;
+> +		/* reserved for GPU */
+> +		status = "reserved";
+> +	};
+
+Please help me to understand, where from you got it for GPU,
+
+May be I am looking at wrong data, Again above TRM
+
+Table 12-22645. RTI Hardware Requests. RTI-15 says esm0
+
+> +
+> +	watchdog3: watchdog@2300000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x2300000 0x00 0x100>;
+> +		clocks = <&k3_clks 256 1>;
+> +		power-domains = <&k3_pds 256 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 256 1>;
+> +		assigned-clock-parents = <&k3_clks 256 5>;
+> +		/* reserved for C7X */
+> +		status = "reserved";
+
+This I see in above table for Compute Cluster
+
+
+> +	};
+> +
+> +	watchdog4: watchdog@2380000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x2380000 0x00 0x100>;
+> +		clocks = <&k3_clks 254 1>;
+> +		power-domains = <&k3_pds 254 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 254 1>;
+> +		assigned-clock-parents = <&k3_clks 254 5>;
+> +		/* reserved for C66X_0 */
+> +		status = "reserved";
+> +	};
+> +
+> +	watchdog5: watchdog@2390000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x2390000 0x00 0x100>;
+> +		clocks = <&k3_clks 255 1>;
+> +		power-domains = <&k3_pds 255 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 255 1>;
+> +		assigned-clock-parents = <&k3_clks 255 5>;
+> +		/* reserved for C66X_1 */
+> +		status = "reserved";
+> +	};
+> +
+> +	watchdog6: watchdog@23c0000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x23c0000 0x00 0x100>;
+> +		clocks = <&k3_clks 258 1>;
+> +		power-domains = <&k3_pds 258 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 258 1>;
+> +		assigned-clock-parents = <&k3_clks 258 5>;
+> +		/* reserved for MAIN_R5F0_0 */
+
+TRM says, this covers both MAIN_R5F0_0 and MAIN_R5F0_1.
+
+Suggest , if split is done at fw level
+
+> +		status = "reserved";
+> +	};
+> +
+> +	watchdog7: watchdog@23d0000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x23d0000 0x00 0x100>;
+> +		clocks = <&k3_clks 259 1>;
+> +		power-domains = <&k3_pds 259 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 259 1>;
+> +		assigned-clock-parents = <&k3_clks 259 5>;
+> +		/* reserved for MAIN_R5F0_1 */
+> +		status = "reserved";
+
+TRM says, this covers both MAIN_R5F0_0 and MAIN_R5F0_1.
+
+Suggest , if split is done at fw level
+
+> +	};
+> +
+> +	watchdog8: watchdog@23e0000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x23e0000 0x00 0x100>;
+> +		clocks = <&k3_clks 260 1>;
+> +		power-domains = <&k3_pds 260 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 260 1>;
+> +		assigned-clock-parents = <&k3_clks 260 5>;
+> +		/* reserved for MAIN_R5F1_0 */
+> +		status = "reserved";
+> +	};
+
+
+TRM says, this covers both MAIN_R5F1_0 and MAIN_R5F1_1.
+
+Suggest , if split is done at fw level
+
+> +
+> +	watchdog9: watchdog@23f0000 {
+> +		compatible = "ti,j7-rti-wdt";
+> +		reg = <0x00 0x23f0000 0x00 0x100>;
+> +		clocks = <&k3_clks 261 1>;
+> +		power-domains = <&k3_pds 261 TI_SCI_PD_EXCLUSIVE>;
+> +		assigned-clocks = <&k3_clks 261 1>;
+> +		assigned-clock-parents = <&k3_clks 261 5>;
+> +		/* reserved for MAIN_R5F1_1 */
+
+TRM says, this covers both MAIN_R5F1_0 and MAIN_R5F1_1.
+
+Suggest , if split is done at fw level
+
+> +		status = "reserved";
+> +	};
+> +
+>   	main_r5fss0: r5fss@5c00000 {
+>   		compatible = "ti,j721e-r5fss";
+>   		ti,cluster-mode = <1>;
