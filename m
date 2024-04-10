@@ -1,42 +1,60 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323C915B990;
-	Wed, 10 Apr 2024 11:49:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03815B0F2
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749800; cv=none; b=aWFZcnQt+/vi2Ze0PLm20sBUNeu477rvdCwU1xABG9c/roH5ozgFDEiPx1meX5jzdQtZXkezejGxlli2E0hyLA1x+vR6Aq3ID2RZgTfJp4I7xg95rOUfp8TqIjL9dJIbOTwf4JklXm33fUavJcSvWMR5aLxh8dKlN3xk9sSBDLU=
+	t=1712749833; cv=none; b=dj9YNot9tQbPoGj60vlycw/qjyK3rvR2OppXShuGUDHT54hfUNw6Ixsfpohe3DF9OeIwKgs6aeUNRQ1h1xtX8/B01LBtJ6miVjWzuChQFGwi2MEzp0BHI1IebuPfFOCNa70queDWRx3xCFJDovG7uUDFz7amzC7KmqFQJ50kkHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749800; c=relaxed/simple;
-	bh=lzh1zOL2GZaC9KvS1/2NH2b4sklK+RWokY0RHqFrW4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=o2vQRlq7T2QEDlNVyhpufVblhu3v8D6MEDl5JR+bFtBfqM7Mbou2dXQ1sor1JOlmqPv1jyutjcKhsrrOwA1FkzqMK+MEfx3CJvN3aPic/aGIXwdaIo5aH/fHxYjUSbcRhXPYIzReNF/yMu8KvdY8flV6NNJcuQNWvJfAijts9xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=bLGU83b9; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1712749833; c=relaxed/simple;
+	bh=Bk/2GDxBgBKZaokHcOMTz49eyI+1QVoNozIXUpW4/VI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tY715hOK7WodU6WdUZzq8uIF5h7awL5ihqmCP5Yzxby9CuQlaoxKEeLNZ8H4OKMFSZKTamzIHKQbUkN44StHGZLRXoSaNicrFC+J1zWinB7scaai+k1AUJCDwOL5kjd2N88VoaNoq7tjfgVMNfcPac2NQBWsbQmXAcJ4P1miJj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lGi2OweF; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="bLGU83b9"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id 1A576100002;
-	Wed, 10 Apr 2024 14:49:32 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1712749772; bh=orBTxthOmkOLw2GzZM5dy/q8ncQT8wiwTCAtBDly8Wc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=bLGU83b9vUGLxKi2GmvKDE6DRQDyOKuTFPnxvRnvhwInt8CuRWsslY10v4N2Z40k7
-	 Yg9CWMFWZN8IiXf+VteYUYx9kVh4dCfPHTY6A7ofG9rxYMH21WQUshbiB+pvM1RTj8
-	 wmEUX+CZti1oggowfyE8QNJIYevf0Z61p51qgAygq5eGKoI/o+lBEM1iOrOdKGThgl
-	 p3FrTWg9K/wj5xUHEI93Hj131J9hnbz7VYuDCekvkeXT5RokY8mwqJTwr3TM1+D5YE
-	 11QJqWblkPW9OTBXXeaVs/H8b2SyMciyGZSnDnQYw+XZkrCnq9S1WqswSz+INpcUUu
-	 rfgNcC555wGdw==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Wed, 10 Apr 2024 14:48:10 +0300 (MSK)
-Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Apr
- 2024 14:47:50 +0300
-Message-ID: <6151dd67-702b-41e7-8e54-43d4d1178442@t-argos.ru>
-Date: Wed, 10 Apr 2024 14:45:13 +0300
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lGi2OweF"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d895e2c6efso36172251fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:50:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712749829; x=1713354629; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/AHVovJjaRrYuJwPpCH1ehDBd4Vwot0WGnmrkIqnd/o=;
+        b=lGi2OweF2dH7yt9e+SHcm31mGPkw22hWHWqjb0ZP4vd39Xj1A+ESeos95h81KSt+MD
+         MoxiSE7U0Jg7cuabG86qScKHA8Ust52gDji2mM3xeGh8sMYwLXKjQhKzmvF67vm9yAbz
+         Zlv98QRCI2scWtJmU85qxvbRinFs3JuahNy9Q72BOtuwoy5VpRF4XjifD+pfAY2gf2Bz
+         ebWD8bAbli1P0IQtgHKON6q/ZUVDDSOVPkQZ1MncXVGZCkQhLLOJEBab3/vimT+OTwgc
+         jGF3O7uuLsrgBA15HBOWAGik8yCedfIsinmFyFTtSz7qvCmRo5frHRY40xZfNwIQmceC
+         RROw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712749829; x=1713354629;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/AHVovJjaRrYuJwPpCH1ehDBd4Vwot0WGnmrkIqnd/o=;
+        b=U82XJfwHkVb5lEtlMOnYP954uvEAkJGmXNZg5TAzXUYhRJDtYzFE4hkzfMrpkJteAP
+         T/cseqzFrgpAEViri9YNikN54LEBuuT0k0mSvItYC3AzbgtEBNK9VwskkgTO/Ag4aUzd
+         0bVLcswyz7Bj5Yunu3wvlkAGS8ULyEEO3EyUcppUhctukFPsZ4ZhZELONQVMhBfGhl+Z
+         pYP01JR0WxwiAZxa0bdSOorAa/mS2K2PHq6gCALLfsW1Vlxc1QPHuNT0OXW/zWkLDj4x
+         C1wNS7q9MJEVZ2NRJ334QfjwIyhx7SbF9WVYnkii8173V5wHLIkp7MFN9m8D+KLx4hmo
+         w+UQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIX976ZXr5ZbSIyqYN3NobAOu6iVIeMzrufuwinN2mH1f9UzxpVzgt3l+cvneQyEt50JpIkqK58FM6z3GZHd30g2oT15TLCbLojmnh
+X-Gm-Message-State: AOJu0YxOh0EKmhrq91Os178lRD2zgu4UDPK3vgulbY+NItyrGR50BmXR
+	1tPIJt6CFIt3QrNH68cZSB8j6kKx61hKwLuto/kt0x6R4gbHmO/2dD6bHTAaw46A2O98pbXZ5Wo
+	syW0=
+X-Google-Smtp-Source: AGHT+IEvZt4fpCQvn84d60RRfmCkGOF/8hWNSU6M08yMMsd4ImingIW/9UKEH3GBojO8JqkAxMB5tA==
+X-Received: by 2002:a2e:904e:0:b0:2d8:4af7:1235 with SMTP id n14-20020a2e904e000000b002d84af71235mr1342410ljg.44.1712749829600;
+        Wed, 10 Apr 2024 04:50:29 -0700 (PDT)
+Received: from [172.30.204.89] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id u34-20020a05651c142200b002d86678e0b0sm1741662lje.109.2024.04.10.04.50.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 04:50:29 -0700 (PDT)
+Message-ID: <dca1e891-cfde-4e95-864e-419934d385e5@linaro.org>
+Date: Wed, 10 Apr 2024 13:50:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,86 +62,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/dpu: Add callback function pointer check before
- its call
-Content-Language: ru
-To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Marijn
- Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, Neil Armstrong <neil.armstrong@linaro.org>,
-	Stephen Boyd <swboyd@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-References: <20240408085523.12231-1-amishin@t-argos.ru>
- <c2c3b573-0e62-4452-e657-fbef9abb9430@quicinc.com>
-From: Aleksandr Mishin <amishin@t-argos.ru>
-In-Reply-To: <c2c3b573-0e62-4452-e657-fbef9abb9430@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184651 [Apr 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;git.kernel.org:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/10 07:25:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/10 08:25:00 #24735279
-X-KSMG-AntiVirus-Status: Clean, skipped
+Subject: Re: [PATCH v2 4/7] PCI: qcom: Add support for IPQ9574
+To: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <20240409190833.3485824-1-mr.nuke.me@gmail.com>
+ <20240409190833.3485824-5-mr.nuke.me@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240409190833.3485824-5-mr.nuke.me@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 08.04.2024 19:51, Abhinav Kumar wrote:
+On 4/9/24 21:08, Alexandru Gagniuc wrote:
+> Add support for the PCIe on IPQ9574. The main difference from ipq6018
+> is that the "iface" clock is not necessarry. Add a special case in
+> qcom_pcie_get_resources_2_9_0() to handle this.
 > 
+> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   drivers/pci/controller/dwc/pcie-qcom.c | 13 +++++++++----
+>   1 file changed, 9 insertions(+), 4 deletions(-)
 > 
-> On 4/8/2024 1:55 AM, Aleksandr Mishin wrote:
->> In dpu_core_irq_callback_handler() callback function pointer is 
->> compared to NULL,
->> but then callback function is unconditionally called by this pointer.
->> Fix this bug by adding conditional return.
->>
->> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>
-> 
-> Yes , as dmitry wrote, this should be Reported-by.
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 14772edcf0d3..10560d6d6336 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1101,15 +1101,19 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
+>   	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
+>   	struct dw_pcie *pci = pcie->pci;
+>   	struct device *dev = pci->dev;
+> -	int ret;
+> +	int ret, num_clks = ARRAY_SIZE(res->clks) - 1;
+>   
+> -	res->clks[0].id = "iface";
+> +	res->clks[0].id = "rchng";
+>   	res->clks[1].id = "axi_m";
+>   	res->clks[2].id = "axi_s";
+>   	res->clks[3].id = "axi_bridge";
+> -	res->clks[4].id = "rchng";
+>   
+> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
+> +	if (!of_device_is_compatible(dev->of_node, "qcom,pcie-ipq9574")) {
+> +		res->clks[4].id = "iface";
+> +		num_clks++;
 
-It is an established practice for our project, you can find 700+ applied
-patches with similar line:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
+Or use devm_clk_bulk_get_optional and rely on the bindings to sanity-check.
 
-> But rest LGTM.
-> 
->> Fixes: c929ac60b3ed ("drm/msm/dpu: allow just single IRQ callback")
->> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
->> ---
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c 
->> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
->> index 946dd0135dff..03a16fbd4c99 100644
->> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
->> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
->> @@ -223,9 +223,11 @@ static void dpu_core_irq_callback_handler(struct 
->> dpu_kms *dpu_kms, unsigned int
->>       VERB("IRQ=[%d, %d]\n", DPU_IRQ_REG(irq_idx), DPU_IRQ_BIT(irq_idx));
->> -    if (!irq_entry->cb)
->> +    if (!irq_entry->cb) {
->>           DRM_ERROR("no registered cb, IRQ=[%d, %d]\n",
->>                 DPU_IRQ_REG(irq_idx), DPU_IRQ_BIT(irq_idx));
->> +        return;
->> +    }
->>       atomic_inc(&irq_entry->count);
+Mani, thoughts?
 
--- 
-Kind regards
-Aleksandr
+Konrad
