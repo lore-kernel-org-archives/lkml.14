@@ -1,69 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AD716E866;
-	Wed, 10 Apr 2024 14:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97E715ADB0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712759760; cv=none; b=laMTsSDdgIsh6jAU8ORn9uh3RagirLGxOdfv+zDQ0uyolOeYnnu5MwYWxepRTEvstNRtoKlEViJFkxys7IbysuyuWN72UoAjF0nfS7lEr4AKRkB6aYyJrnqDuUJPoob1VgtspJNcXJt8ieCgeLb/IVISvF9GKF02hM/GdExG8xw=
+	t=1712759831; cv=none; b=ZITuAaBQd7GktaPU1yAEaFKxSOKB4Tu5igtLDozFJMDzH7/Gvl7gib6kEwbpZPsILb/eaccX+IOo/R/Wfg6HuSXQzctRldfbNPnsmFbdDlgbv6Dw3hjjZXbT3ZFhbHQTiJa14HTk1KFSzLpV7RkDzP3jYOzMcqPjF2DV63XaU94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712759760; c=relaxed/simple;
-	bh=jdPSsyHlYjQqP3LARjfkhXrm0nOtLrLPubyWHx7h94Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RNnhfhnqamQL+aqhnly/8BOLEqZ/dlQT7w/PhfdYSEPcR13gfSOlfTK7ivhDAWqfMIoeaII65MW3ROsZw3/EpaieUpW7JpMcWyE4hk2vZq3z6QEAp+ZN5Vo8yirbvCDQ261X8RE2dFmc72ILvs+Z9a04XlzNffQlsYrc9EfLa0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmFiC3Tc; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712759831; c=relaxed/simple;
+	bh=zr37AZ5P+Jsxgb/Gyxa03cQqGoKMeaJhEq3JPY4Fv7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e8d6blclmO4sbzocXZfdCO+76NIyL1SO4ClTt+scH4S1iFfmRVxzMrEwUYLSkZcjtwpyc+BDTULFEgHTnU0qGF/IRw9gWIb1Jy7dLkLMGFkX9/Fkjx9xnRnB5c333PuDCisBQph3scDtXHl2IxnVyNwqcbrwxzI9N9nisxUGoeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O7n5Jgf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmFiC3Tc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712759759; x=1744295759;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jdPSsyHlYjQqP3LARjfkhXrm0nOtLrLPubyWHx7h94Y=;
-  b=XmFiC3TcBibFRjA9UD6g45iNiggWM8qBMJ2i8A8jwe7L7daZ0af2c2Aa
-   hwltAeeOif4/LAQ1rmCgM2SggJUN9E1P8oFfbkh3fALypTOPwx3NK5Zsa
-   eBr2IQL1Z23+QG/ItT++9lkBgrkzAULcQ4FZOFQQXXtWEaywrD885jV7f
-   3wGhEYQSZvdct/EAtn3Fto8dujMMwnFwfvj250OYJMO/7LAC11c3/fOib
-   tlYjmewzcrqEXCGNUuP4PldRxroDxpvCcAIXKM7Fnh/irtEh94apE23X8
-   gHzn9wBb/4OdUAj27mR/KATebbM5ZBm76YV2aVd/6sTfpTR7JOFOs3uRZ
-   w==;
-X-CSE-ConnectionGUID: T3km9xF1QYezFYtReetSkw==
-X-CSE-MsgGUID: QcDcbAA+RdS6tik/kdnAeg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18837881"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="18837881"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 07:35:58 -0700
-X-CSE-ConnectionGUID: aRgrC8THQLWC3UotmZwHqQ==
-X-CSE-MsgGUID: ip7l6a3QS3mvJd0R5CfSmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25095588"
-Received: from unknown (HELO spr.sh.intel.com) ([10.239.53.118])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 07:35:55 -0700
-From: Chao Gao <chao.gao@intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: daniel.sneddon@linux.intel.com,
-	pawan.kumar.gupta@linux.intel.com,
-	Chao Gao <chao.gao@intel.com>,
-	Zhang Chen <chen.zhang@intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O7n5Jgf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 164F7C43399;
+	Wed, 10 Apr 2024 14:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712759831;
+	bh=zr37AZ5P+Jsxgb/Gyxa03cQqGoKMeaJhEq3JPY4Fv7U=;
+	h=From:To:Cc:Subject:Date:From;
+	b=O7n5Jgf2lmc+U1ygdgCX+qRuGy1Y3+qW8hGz8Ub4A5eOdTbw00TpmssfAOwTSXy1y
+	 dVa/2yAMhIWsq2bEfs9HtNnnN0uxiK/Hn3f+lIUigthhLJARcpWNoWBNV0g7Nhr815
+	 I/xsOw2WJo5N/c0Bmw/O6qfCNwnKNhPRbV3XiC7iDW6j887tZ7Nl+dKaHMSyFuzZ+6
+	 DkwTXzFZaHe+LL6H8LVeerY75mNvAkW9KTbELBIzTaknOHWt2pHhBqmRTlIT79LgRe
+	 iIew2SZrURVtgmlyB0jqctrDZ2mzpXvVcHm7GcNVrcTLtebJsVbTSnFgtq8FvOdLMX
+	 AVuM5Yl43yZvQ==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC PATCH v3 10/10] KVM: VMX: Advertise MITI_ENUM_RETPOLINE_S_SUPPORT
-Date: Wed, 10 Apr 2024 22:34:38 +0800
-Message-Id: <20240410143446.797262-11-chao.gao@intel.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20240410143446.797262-1-chao.gao@intel.com>
-References: <20240410143446.797262-1-chao.gao@intel.com>
+	Samuel Holland <samuel.holland@sifive.com>,
+	Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] riscv: improve nommu and timer-clint
+Date: Wed, 10 Apr 2024 22:23:45 +0800
+Message-ID: <20240410142347.964-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,46 +47,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow guest to report if retpoline is used in supervisor mode.
+As is known, the sophgo CV1800B contains so called little core, which
+is C906 w/o MMU, so I want to run nommu linux on it. This series is
+the result of the bring up. After this series, w/ proper dts, we can
+run nommu linux on milkv duo's little core.
 
-KVM will deploy RRSBA_DIS_S for guest if guest is using retpoline and
-the processor enumerates RRSBA.
+First of all, patch1 removes the PAGE_OFFSET hardcoding by introducing
+DRAM_BASE Kconfig option.
 
-Signed-off-by: Zhang Chen <chen.zhang@intel.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Secondly, to use the T-HEAD C9xx clint in RISCV-M NOMMU env, we need
+to take care two points:
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index c5ceaebd954b..235cb6ad69c0 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1956,8 +1956,10 @@ static inline bool is_vmx_feature_control_msr_valid(struct vcpu_vmx *vmx,
- }
- 
- #define VIRTUAL_ENUMERATION_VALID_BITS	VIRT_ENUM_MITIGATION_CTRL_SUPPORT
--#define MITI_ENUM_VALID_BITS		MITI_ENUM_BHB_CLEAR_SEQ_S_SUPPORT
--#define MITI_CTRL_VALID_BITS		MITI_CTRL_BHB_CLEAR_SEQ_S_USED
-+#define MITI_ENUM_VALID_BITS		(MITI_ENUM_BHB_CLEAR_SEQ_S_SUPPORT | \
-+					 MITI_ENUM_RETPOLINE_S_SUPPORT)
-+#define MITI_CTRL_VALID_BITS		(MITI_CTRL_BHB_CLEAR_SEQ_S_USED | \
-+					 MITI_CTRL_RETPOLINE_S_USED)
- 
- static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
- {
-@@ -2508,6 +2510,11 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (data & ~MITI_CTRL_VALID_BITS)
- 			return 1;
- 
-+		if (data & MITI_CTRL_RETPOLINE_S_USED &&
-+		    kvm_cpu_cap_has(X86_FEATURE_RRSBA_CTRL) &&
-+		    host_arch_capabilities & ARCH_CAP_RRSBA)
-+			spec_ctrl_mask |= SPEC_CTRL_RRSBA_DIS_S;
-+
- 		if (data & MITI_CTRL_BHB_CLEAR_SEQ_S_USED &&
- 		    kvm_cpu_cap_has(X86_FEATURE_BHI_CTRL) &&
- 		    !(host_arch_capabilities & ARCH_CAP_BHI_NO))
+1.The mtimecmp in T-Head C9xx clint only supports 32bit read/write,
+implement such support.
+
+2. As pointed out by commit ca7810aecdba ("lib: utils/timer: mtimer:
+add a quirk for lacking mtime register") of opensbi:
+
+"T-Head developers surely have a different understanding of time CSR and
+CLINT's mtime register with SiFive ones, that they did not implement
+the mtime register at all -- as shown in openC906 source code, their
+time CSR value is just exposed at the top of their processor IP block
+and expects an external continous counter, which makes it not
+overrideable, and thus mtime register is not implemented, even not for
+reading. However, if CLINTEE is not enabled in T-Head's MXSTATUS
+extended CSR, these systems still rely on the mtimecmp registers to
+generate timer interrupts. This makes it necessary to implement T-Head
+C9xx CLINT support in OpenSBI MTIMER driver, which skips implementing
+reading mtime register and falls back to default code that reads time
+CSR."
+
+So, we need to fall back to read time CSR instead of mtime register.
+Add riscv_csr_time_available static key for this purpose.
+
+The second patch adds T-Head C9xxx clint support to timer-clint driver
+by taking care of above two points.
+
+Since v2:
+  - drop CONFIG_CLINT_USE_CSR_INSTEADOF_MTIME, instead we use runtime
+    code patch to dynamically enable CSR TIME code path or MTIME code
+    path.
+
+Since v1:
+  - fix c900_clint_timer_init_dt() defined but not used build warning
+  - add option CONFIG_CLINT_USE_CSR_INSTEADOF_MTIME instead of removing
+    mtime usage for all platforms, since not all platforms implement the
+    time CSR in HW in M mode.
+  - rebase on the timer-clint improvement series
+https://lore.kernel.org/linux-riscv/20240406111757.1597-1-jszhang@kernel.org/T/#t
+
+
+Jisheng Zhang (2):
+  riscv: nommu: remove PAGE_OFFSET hardcoding
+  clocksource/drivers/timer-clint: Add T-Head C9xx clint
+
+ arch/riscv/Kconfig                |  8 +++++-
+ arch/riscv/include/asm/clint.h    |  2 ++
+ arch/riscv/include/asm/timex.h    | 18 +++++++++---
+ drivers/clocksource/timer-clint.c | 48 +++++++++++++++++++++++++++----
+ 4 files changed, 66 insertions(+), 10 deletions(-)
+
 -- 
-2.39.3
+2.43.0
 
