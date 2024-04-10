@@ -1,79 +1,53 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB50816EBF3;
-	Wed, 10 Apr 2024 15:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7B916DEB3;
+	Wed, 10 Apr 2024 15:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712761849; cv=none; b=YHRsLiURS34CaQDbMvNNKRRhie53JdPiBwulGC97N0wrKdzg58ujAKyyLuD3YogM1RZWfWB1yiP7loSdqIpN7dDGnsJNxWkhWm1M9HgxmAUCWjeSVOp9RhdtXdsb5/z5ufC5gFUUOZ04N9DmNc5yTXiWRvjC8tomU/Vm9CezDUs=
+	t=1712761915; cv=none; b=F/ixcgKAfcp5OUoT2bdbcm3UOubK+YTksr4QeRrpz8j8FnoqdI6PXL80A+e6aiinnCFophoJjq6da8WZAu6N/W2N9vnhDa30D7FuCL6EeI3eaORy8U1wfXPlcfNbgu3o+/4hQnME+Uj8CfbcdoRcUFeJhEmIidvnOlB3z32mPzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712761849; c=relaxed/simple;
-	bh=m8eE0AcwzEs5wRNkzi5ro5vJAfqsbE5UexQ/HfZKWAY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jns02tMeOqB73+l9lpNUjwm2ky9HJ2PG76VLJxDFTwahKN1pNM/rhGdoFz7OekiUYo+lyR4LviWzQvafv1SMFnyvNz5i9kcVWMB5jgPZU91GsOF4kG2VhTFvhMVcuZWCrIdqHO45dLCQZN3PD0V6w1Yss5cLPX8askGy5PptN74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=RBNh+tqa; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RBNh+tqa"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AF76LJ019812;
-	Wed, 10 Apr 2024 15:09:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=S7Sh61Dwbw08Hj8QqXjKFpfPZZqM0K8Q6t/Sk/b6f4Y=;
- b=RBNh+tqaPKTIhKRa+KG5KVN8s36DSZb74fobi7BHt6HaQooIAqn/PnkXtM8BFDHjTW+T
- 9Oe7e3W0pDJfG2AND0nSgmRwdo8D2aLCqQefluGkBM4m60b/Xvjk9mbd9+jKsgyYV2+w
- 5FkVXCrQYAWjxIPBhKwF0Q+sSUwCop+qt7zi3kJBvvqlHJQa3qBjPZXmiolZNWRbKcdN
- T4+N/BMWsK/adOJnp3scBxfQIr7K/XywKizk6fCJK6s6IB0XFLJFRl51fxKxttjZ+OaV
- WT5jo+MQ6BycbKjoYZrj6u2Q5HzOZNrsemRJBGbHnfW8VAeGmLgM/M1pFcVm00xc6GuC GA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdw4n806d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 15:09:56 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AF9uAj023241;
-	Wed, 10 Apr 2024 15:09:56 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdw4n806a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 15:09:56 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43ACSJid016982;
-	Wed, 10 Apr 2024 15:09:55 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbke2n0jm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 15:09:54 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AF9nam48562646
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Apr 2024 15:09:51 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 265842004F;
-	Wed, 10 Apr 2024 15:09:49 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 125DF2004B;
-	Wed, 10 Apr 2024 15:09:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 10 Apr 2024 15:09:49 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 55669)
-	id CA30CE0301; Wed, 10 Apr 2024 17:09:48 +0200 (CEST)
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH v2 RESEND 0/5] sched/vtime: vtime.h headers cleanup
-Date: Wed, 10 Apr 2024 17:09:43 +0200
-Message-Id: <cover.1712760275.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1712761915; c=relaxed/simple;
+	bh=2L9ruEgKU7GYbMGJOT2FsQxcS+TeocaV5OhumlCSjAk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kCqamYHrAB0mpIKw3hFH/mHRRNw+5gaFOegCxju5VhCwt/YvzskFZ9GSN2DP+LHTvwZIZ6WelQm5tHsoDqciccUWGEL/MK3ojCZNPIE2Gr4+7VaqRRen1ZbZ4pqBAw4pqKatUcdcsz17euUnNQL2wCRb2ROa0Nz9/+aFK+EGhbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VF5rs57vfz4f3khg;
+	Wed, 10 Apr 2024 23:11:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 8B4C61A0175;
+	Wed, 10 Apr 2024 23:11:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g4orBZmFSt+Jg--.51485S4;
+	Wed, 10 Apr 2024 23:11:48 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ritesh.list@gmail.com,
+	hch@infradead.org,
+	djwong@kernel.org,
+	david@fromorbit.com,
+	willy@infradead.org,
+	zokeefe@google.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com,
+	wangkefeng.wang@huawei.com
+Subject: [RFC PATCH v4 29/34] ext4: fall back to buffer_head path for defrag
+Date: Wed, 10 Apr 2024 23:03:08 +0800
+Message-Id: <20240410150313.2820364-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
+References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,59 +55,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 43tJPVhQ1qfmHz2XICzEeDqIzqiN8NXK
-X-Proofpoint-ORIG-GUID: iPRydWYHzjU6SLaIr79RnupfQ4DzWgiA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- adultscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
- mlxlogscore=787 bulkscore=0 impostorscore=0 spamscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404100109
+X-CM-TRANSID:cCh0CgAn9g4orBZmFSt+Jg--.51485S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7uw45KryfZr4UWr15ZF1xuFg_yoW8Kry5pr
+	9Ikr15Kr4DXas29Fn3ta4UZr1rKa10g3y7urWfW3WxJFWDA34IgFyjkF1UAFW5trZ7JrWa
+	qF40kr17W347G3DanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQ0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r
+	4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG6xCI17CEII8v
+	rVW3JVW8Jr1lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7Mx
+	kF7I0En4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
+	vaj40_Zr0_Wr1UMIIF0xvEx4A2jsIE14v26r4UJVWxJr1lIxAIcVC2z280aVCY1x0267AK
+	xVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjxU0dgAUUUUU
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi All,
+From: Zhang Yi <yi.zhang@huawei.com>
 
-There are no changes since the last post, just a re-send.
+Online defrag doesn't support iomap path yet, we have to fall back to
+buffer_head path for the inode which has been using iomap. Changing
+active inode is dangerous, before we start, we must hold the inode lock
+and the mapping->invalidate_lock, and writeback all dirty folios and
+drop the inode's pagecache.
 
-v2:
-- patch 4: commit message reworded (Heiko)
-- patch 5: vtime.h is removed from Kbuild scripts (PowerPC only) (Heiko)
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/ext4/move_extent.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-v1:
-Please find a small cleanup to vtime_task_switch() wiring.
-I split it into smaller patches to allow separate PowerPC
-vs s390 reviews. Otherwise patches 2+3 and 4+5 could have
-been merged.
-
-I tested it on s390 and compile-tested it on 32- and 64-bit
-PowerPC and few other major architectures only, but it is
-only of concern for CONFIG_VIRT_CPU_ACCOUNTING_NATIVE-capable
-ones (AFAICT).
-
-Thanks!
-
-
-Alexander Gordeev (5):
-  sched/vtime: remove confusing arch_vtime_task_switch() declaration
-  sched/vtime: get rid of generic vtime_task_switch() implementation
-  s390/vtime: remove unused __ARCH_HAS_VTIME_TASK_SWITCH leftover
-  s390/irq,nmi: include <asm/vtime.h> header directly
-  sched/vtime: do not include <asm/vtime.h> header
-
- arch/powerpc/include/asm/Kbuild    |  1 -
- arch/powerpc/include/asm/cputime.h | 13 -------------
- arch/powerpc/kernel/time.c         | 22 ++++++++++++++++++++++
- arch/s390/include/asm/vtime.h      |  2 --
- arch/s390/kernel/irq.c             |  1 +
- arch/s390/kernel/nmi.c             |  1 +
- include/asm-generic/vtime.h        |  1 -
- include/linux/vtime.h              |  5 -----
- kernel/sched/cputime.c             | 13 -------------
- 9 files changed, 24 insertions(+), 35 deletions(-)
- delete mode 100644 include/asm-generic/vtime.h
-
+diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+index 7cd4afa4de1d..3db255385367 100644
+--- a/fs/ext4/move_extent.c
++++ b/fs/ext4/move_extent.c
+@@ -538,6 +538,34 @@ mext_check_arguments(struct inode *orig_inode,
+ 	return 0;
+ }
+ 
++/*
++ * Disable buffered iomap path for the inode that requiring move extents,
++ * fallback to buffer_head path.
++ */
++static int ext4_disable_buffered_iomap_aops(struct inode *inode)
++{
++	int err;
++
++	/*
++	 * The buffered_head aops don't know how to handle folios
++	 * dirtied by iomap, so before falling back, flush all dirty
++	 * folios the inode has.
++	 */
++	filemap_invalidate_lock(inode->i_mapping);
++	err = filemap_write_and_wait(inode->i_mapping);
++	if (err < 0) {
++		filemap_invalidate_unlock(inode->i_mapping);
++		return err;
++	}
++	truncate_inode_pages(inode->i_mapping, 0);
++
++	ext4_clear_inode_state(inode, EXT4_STATE_BUFFERED_IOMAP);
++	ext4_set_aops(inode);
++	filemap_invalidate_unlock(inode->i_mapping);
++
++	return 0;
++}
++
+ /**
+  * ext4_move_extents - Exchange the specified range of a file
+  *
+@@ -609,6 +637,12 @@ ext4_move_extents(struct file *o_filp, struct file *d_filp, __u64 orig_blk,
+ 	inode_dio_wait(orig_inode);
+ 	inode_dio_wait(donor_inode);
+ 
++	/* Fallback to buffer_head aops for inodes with buffered iomap aops */
++	if (ext4_test_inode_state(orig_inode, EXT4_STATE_BUFFERED_IOMAP))
++		ext4_disable_buffered_iomap_aops(orig_inode);
++	if (ext4_test_inode_state(donor_inode, EXT4_STATE_BUFFERED_IOMAP))
++		ext4_disable_buffered_iomap_aops(donor_inode);
++
+ 	/* Protect extent tree against block allocations via delalloc */
+ 	ext4_double_down_write_data_sem(orig_inode, donor_inode);
+ 	/* Check the filesystem environment whether move_extent can be done */
 -- 
-2.40.1
+2.39.2
 
