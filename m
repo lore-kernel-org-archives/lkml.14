@@ -1,82 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97781156C67;
-	Wed, 10 Apr 2024 15:53:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46662171654;
+	Wed, 10 Apr 2024 15:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712764422; cv=none; b=X7MjGwJ3nW87M/fh0Iu7JnpcCedf1kOUKN6z0W2qEOpGJqHiKIwvNS0yi5suUC3d0qAzaCoIju7RpYjhwPf3XfRNaHMj8cwPlj3YWku6zbgzhAWMU3SRs8s6wSYIn3MZDbpTB16b47yfM0ubgWHMzec5QB9eOajroCxCmJZxqws=
+	t=1712764430; cv=none; b=fDKD77pq42Q0bH3UDaEYEG3A1mGdTA1k2GsAKl1p7JQvLGJ2XgIV69LqoVgarOOoNIHcp8QezPtfNmLmX61HKhartHcVImbYj26Tbh9lg2BOcb6PwOPGlPs7k9EWcX3QplOxUCZFFEgDMWLpRQqxfYGk4s9NQYWLhini85HKn7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712764422; c=relaxed/simple;
-	bh=Yj2mjB7xGY/t85UZ8jq4NsVg3CMycDTWl975T4rbgkU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZwmWoZmQFVDAGO02ysKpSCNcLuR3WNGqdqZ3QCAKXEIK+iFbbAtW4fUYGwJ1ejXV+jPXX6qxgWqJComEEoe0hp2a324sv9lsqxsaiAFZgk6NWBTWIRMskoAw6aI+DpRK7Ng2l/jebs/LFKffHHXV+L044vfxFo8cSlcwvx6ONis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E3CC433F1;
-	Wed, 10 Apr 2024 15:53:40 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:56:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Justin Stitt <justinstitt@google.com>, Andrew Lunn <andrew@lunn.ch>,
- Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Jeff Layton
- <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
- <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
- <tom@talpey.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] trace: events: cleanup deprecated strncpy uses
-Message-ID: <20240410115617.14804133@gandalf.local.home>
-In-Reply-To: <ZhazHrz4SxBs+BFD@tissot.1015granger.net>
-References: <20240401-strncpy-include-trace-events-mdio-h-v1-1-9cb5a4cda116@google.com>
-	<20240410113614.39b61b0d@gandalf.local.home>
-	<ZhazHrz4SxBs+BFD@tissot.1015granger.net>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712764430; c=relaxed/simple;
+	bh=SqPe3DfzT/ltHcfMna2d1NH1tRD4LDibXZWmRZyVL5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZWxqRwH/aauH6TL20Tdz631RYFiNQtV120bNi02j9+vwkACT7yc0J8jHBHc9d+qX9SzT2oYm+0e2dSFZif6IbSHIJBBOvw9lzXevpVhD8o43dvjiC9aZn/rkCP7MORd1IqCmHpJGdbCkGjGJq9bffxEqLqv4b1F4wiIz3LjSi6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYIsoepc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYIsoepc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C0E0C433C7;
+	Wed, 10 Apr 2024 15:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712764429;
+	bh=SqPe3DfzT/ltHcfMna2d1NH1tRD4LDibXZWmRZyVL5M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AYIsoepcYFkCZZq3EohWBeJd6LXBDaGTUpupVmhLuy1ajqgKPH7whwY/7a01lO2lq
+	 HnmQwa2/vD5YObh9yDPklhFHaVk3b/1C7+CQUkHueHcA79O2M95sB6oKzc63CjLpby
+	 uUmyvpe1VdyKfiD9MjMDiwN5qxRKb7leyUysWMtvDxlmvBUILreKwYxMtwuL7oeIli
+	 Hu4vTmGHZqfg3IR5NL2ZHQ0OaSVO9JxpnCoGoRrIzvuOaxQTncI2eOZaUVLWueqmU5
+	 KGEjyaaSZ9CdIuYvM0Rz3Gu+AB0Jr0bonCHbmEXkLawTc0rLJS95/aUTI39/GjV8ry
+	 pBRCsUdlIaazw==
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	linux-clk@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] clk: sifive: prci: fix module autoloading
+Date: Wed, 10 Apr 2024 17:53:42 +0200
+Message-Id: <20240410155342.224061-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 10 Apr 2024 11:41:18 -0400
-Chuck Lever <chuck.lever@oracle.com> wrote:
+Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+based on the alias from of_device_id table.  Clocks are considered core
+components, so usually they are built-in, however these can be built and
+used as modules on some generic kernel.
 
-> > If anything, it needs to be:
-> > 
-> > 		__string_len(acceptor, data, len)
-> > 
-> > as the macro code has changed recently, and the current code will crash!  
-> 
-> A general question:
-> 
-> Is there a test suite we should run regularly to build some
-> confidence in the kernel's observability apparatus? We're building
-> a menagerie of tests around kdevops, and one area where we know
-> there is a testing gap is the tracepoints in NFSD and SunRPC.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/clk/sifive/sifive-prci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I try to add self tests within the macros. As __assign_str() is going to
-turn into just __assign_str(field) (instead of __assign_str(field, src)), I
-added a test to make sure what was passed to __string() is also what
-__assign_str() gets. But using strcpy() in place of __assign_str() really
-is doing something that one should not be doing.
+diff --git a/drivers/clk/sifive/sifive-prci.c b/drivers/clk/sifive/sifive-prci.c
+index 25b8e1a80ddc..700a1be9ec47 100644
+--- a/drivers/clk/sifive/sifive-prci.c
++++ b/drivers/clk/sifive/sifive-prci.c
+@@ -611,6 +611,7 @@ static const struct of_device_id sifive_prci_of_match[] = {
+ 	{.compatible = "sifive,fu740-c000-prci", .data = &prci_clk_fu740},
+ 	{}
+ };
++MODULE_DEVICE_TABLE(of, sifive_prci_of_match);
+ 
+ static struct platform_driver sifive_prci_driver = {
+ 	.driver = {
+-- 
+2.34.1
 
-There's checks in the tracepoint code as well for things like referencing a
-pointer that was not saved in the event, and other things. But a generic
-test on a custom trace event, I don't really have.
-
-Note, you could enable CONFIG_TRACE_EVENT_INJECT where an "inject" file is
-created, and you can write into it:
-
- # cd /sys/kernel/tracing
- # echo 1 > events/rpcgss/rpcgss_context/enable
- # echo 'expiry=123456 now=222' > events/rpcgss/rpcgss_context/inject
- # cat trace
-bash-843     [001] .....   720.083189: rpcgss_context: win_size=0 expiry=123456 now=222 timeout=0 acceptor=
-
-And you could use that for testing.
-
--- Steve
