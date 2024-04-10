@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA0615FD03;
-	Wed, 10 Apr 2024 14:38:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7882171E42;
+	Wed, 10 Apr 2024 14:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712759915; cv=none; b=VWYjala3+CKVcuJS1FwMA6WHZefws8I5PcUMWyBTcNstoj7l2KdTq7TzlpVgMx4QcJZWSVvjQF0sHs55/vf4RCKEsoTdaEPBblaz3ZQ8VKeZC8B2pU1oosXIZ276jqkoF/+/BCe/2l0/bOAeyFbx7pRk0y6iPWblsQEWl+Xprw0=
+	t=1712759916; cv=none; b=h5KmKejbVzsw8mcrazVuX/I9DB1k0EjMIdbSDkadY2gmbLoyLsY7h4i2PReYw4ZHc5AorTtizdCi/yivgU6M6SQ+RNKfEGbrQBKKR5ZGmHegrWbUwn1kSbVysPLcQGNSsxAt+QIZqqkpG4baylcZAGW2OtbjTIC6JtTbZWzQaIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712759915; c=relaxed/simple;
-	bh=bufxHOVc0PpM9V2w/cjt4ES+5o3E5VFV22cph4TnOxM=;
+	s=arc-20240116; t=1712759916; c=relaxed/simple;
+	bh=NOyElOQaf27dJq/f3VnEzoSkQgo67chGcw7cpfTgSv8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I0f4G6OrJMpP4F0eAAzC/YrlNBPcWHtN2Ht5OQULLDAyDxthJVesUh/04AqcXmEko7lGmkkLBqJh+4XOO7/gj4Sf37cqYYMNdko5LOQueoJP3AlmTt16zczZ1GA/y//CJ+0Vkb7uApmoDVH+3v+X2OyENFcb4WJ+VzRBekTNn/A=
+	 MIME-Version; b=Ar364Lf+0XV1athUKL31kyS4LwLaiKA1ILndse5xvOvhsGUkN7+QohkVl5lzXrtt/iHjKlyuIiWsjmwIbZZl9HRNbN+BJguBm/VCA9b1FfWTkR5QPHnlyrXy5jD8GWiqpwwmMX5WUsAIPwsrxm6DoEo6f239yLBfzzF5ngvKFcE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VF56R6wVrz4f3k6H;
-	Wed, 10 Apr 2024 22:38:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VF56P0L9wz4f3m74;
+	Wed, 10 Apr 2024 22:38:21 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 616E01A0C6A;
-	Wed, 10 Apr 2024 22:38:28 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id AB9EF1A0572;
+	Wed, 10 Apr 2024 22:38:29 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RFSpBZmcwR8Jg--.63000S8;
-	Wed, 10 Apr 2024 22:38:28 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAX6RFSpBZmcwR8Jg--.63000S10;
+	Wed, 10 Apr 2024 22:38:29 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -42,9 +42,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com,
 	wangkefeng.wang@huawei.com
-Subject: [PATCH v4 04/34] ext4: drop iblock parameter
-Date: Wed, 10 Apr 2024 22:29:18 +0800
-Message-Id: <20240410142948.2817554-5-yi.zhang@huaweicloud.com>
+Subject: [PATCH v4 06/34] ext4: make ext4_da_reserve_space() reserve multi-clusters
+Date: Wed, 10 Apr 2024 22:29:20 +0800
+Message-Id: <20240410142948.2817554-7-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
 References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
@@ -55,10 +55,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RFSpBZmcwR8Jg--.63000S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFy7ZFy7XrW5Jr1rCFW3Wrg_yoW5Gr47p3
-	93AF1rGr1fuw109a1xtF17ZF1Sga1UtrW7Jryftr1Fkas5GF1ftF4DAF12yFy8trWfXFn0
-	qF4jqr1UCw4SyrDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgAX6RFSpBZmcwR8Jg--.63000S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1fZr4DXF48uFWrAr4kCrg_yoWrXF1xpF
+	s8AF43WryIv34kWFWxZr4DZF1S9a4SqFWUta93WFyxXry5J3WSgF1UKF1YvF1rKrWkCw4q
+	qa45u348u3WjgFDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHS14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -78,68 +78,116 @@ X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-The start block of the delalloc extent to be inserted is equal to
-map->m_lblk, just drop the duplicate iblock input parameter.
+Add 'nr_resv' parameter to ext4_da_reserve_space(), which indicates the
+number of clusters wants to reserve, make it reserve multi-clusters once
+a time.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/inode.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ fs/ext4/inode.c             | 18 +++++++++---------
+ include/trace/events/ext4.h | 10 ++++++----
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
 diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index e4043ddb07a5..cccc16506f5f 100644
+index d37233e2ed0b..1180a9eb4362 100644
 --- a/fs/ext4/inode.c
 +++ b/fs/ext4/inode.c
-@@ -1712,8 +1712,7 @@ static int ext4_insert_delayed_block(struct inode *inode, ext4_lblk_t lblk)
-  * time. This function looks up the requested blocks and sets the
-  * buffer delay bit under the protection of i_data_sem.
+@@ -1479,9 +1479,9 @@ static int ext4_journalled_write_end(struct file *file,
+ }
+ 
+ /*
+- * Reserve space for a single cluster
++ * Reserve space for 'nr_resv' clusters
   */
--static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
--			      struct ext4_map_blocks *map,
-+static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 			      struct buffer_head *bh)
+-static int ext4_da_reserve_space(struct inode *inode)
++static int ext4_da_reserve_space(struct inode *inode, int nr_resv)
  {
- 	struct extent_status es;
-@@ -1733,8 +1732,8 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
- 		  (unsigned long) map->m_lblk);
- 
- 	/* Lookup extent status tree firstly */
--	if (ext4_es_lookup_extent(inode, iblock, NULL, &es)) {
--		retval = es.es_len - (iblock - es.es_lblk);
-+	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
-+		retval = es.es_len - (map->m_lblk - es.es_lblk);
- 		if (retval > map->m_len)
- 			retval = map->m_len;
- 		map->m_len = retval;
-@@ -1754,7 +1753,7 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
- 			return 0;
- 		}
- 
--		map->m_pblk = ext4_es_pblock(&es) + iblock - es.es_lblk;
-+		map->m_pblk = ext4_es_pblock(&es) + map->m_lblk - es.es_lblk;
- 		if (ext4_es_is_written(&es))
- 			map->m_flags |= EXT4_MAP_MAPPED;
- 		else if (ext4_es_is_unwritten(&es))
-@@ -1788,8 +1787,8 @@ static int ext4_da_map_blocks(struct inode *inode, sector_t iblock,
- 	 * inserting delalloc range haven't been delayed or allocated
- 	 * whitout holding i_rwsem and folio lock.
+ 	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+ 	struct ext4_inode_info *ei = EXT4_I(inode);
+@@ -1492,18 +1492,18 @@ static int ext4_da_reserve_space(struct inode *inode)
+ 	 * us from metadata over-estimation, though we may go over by
+ 	 * a small amount in the end.  Here we just reserve for data.
  	 */
--	if (ext4_es_lookup_extent(inode, iblock, NULL, &es)) {
--		retval = es.es_len - (iblock - es.es_lblk);
-+	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
-+		retval = es.es_len - (map->m_lblk - es.es_lblk);
- 		if (retval > map->m_len)
- 			retval = map->m_len;
- 		map->m_len = retval;
-@@ -1846,7 +1845,7 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
- 	 * preallocated blocks are unmapped but should treated
- 	 * the same as allocated blocks.
- 	 */
--	ret = ext4_da_map_blocks(inode, iblock, &map, bh);
-+	ret = ext4_da_map_blocks(inode, &map, bh);
- 	if (ret <= 0)
+-	ret = dquot_reserve_block(inode, EXT4_C2B(sbi, 1));
++	ret = dquot_reserve_block(inode, EXT4_C2B(sbi, nr_resv));
+ 	if (ret)
  		return ret;
  
+ 	spin_lock(&ei->i_block_reservation_lock);
+-	if (ext4_claim_free_clusters(sbi, 1, 0)) {
++	if (ext4_claim_free_clusters(sbi, nr_resv, 0)) {
+ 		spin_unlock(&ei->i_block_reservation_lock);
+-		dquot_release_reservation_block(inode, EXT4_C2B(sbi, 1));
++		dquot_release_reservation_block(inode, EXT4_C2B(sbi, nr_resv));
+ 		return -ENOSPC;
+ 	}
+-	ei->i_reserved_data_blocks++;
+-	trace_ext4_da_reserve_space(inode);
++	ei->i_reserved_data_blocks += nr_resv;
++	trace_ext4_da_reserve_space(inode, nr_resv);
+ 	spin_unlock(&ei->i_block_reservation_lock);
+ 
+ 	return 0;       /* success */
+@@ -1678,7 +1678,7 @@ static int ext4_insert_delayed_block(struct inode *inode, ext4_lblk_t lblk)
+ 	 * extents status tree doesn't get a match.
+ 	 */
+ 	if (sbi->s_cluster_ratio == 1) {
+-		ret = ext4_da_reserve_space(inode);
++		ret = ext4_da_reserve_space(inode, 1);
+ 		if (ret != 0)   /* ENOSPC */
+ 			return ret;
+ 	} else {   /* bigalloc */
+@@ -1690,7 +1690,7 @@ static int ext4_insert_delayed_block(struct inode *inode, ext4_lblk_t lblk)
+ 				if (ret < 0)
+ 					return ret;
+ 				if (ret == 0) {
+-					ret = ext4_da_reserve_space(inode);
++					ret = ext4_da_reserve_space(inode, 1);
+ 					if (ret != 0)   /* ENOSPC */
+ 						return ret;
+ 				} else {
+diff --git a/include/trace/events/ext4.h b/include/trace/events/ext4.h
+index 6b41ac61310f..cc5e9b7b2b44 100644
+--- a/include/trace/events/ext4.h
++++ b/include/trace/events/ext4.h
+@@ -1246,14 +1246,15 @@ TRACE_EVENT(ext4_da_update_reserve_space,
+ );
+ 
+ TRACE_EVENT(ext4_da_reserve_space,
+-	TP_PROTO(struct inode *inode),
++	TP_PROTO(struct inode *inode, int nr_resv),
+ 
+-	TP_ARGS(inode),
++	TP_ARGS(inode, nr_resv),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	dev_t,	dev			)
+ 		__field(	ino_t,	ino			)
+ 		__field(	__u64,	i_blocks		)
++		__field(	int,	reserve_blocks		)
+ 		__field(	int,	reserved_data_blocks	)
+ 		__field(	__u16,  mode			)
+ 	),
+@@ -1262,16 +1263,17 @@ TRACE_EVENT(ext4_da_reserve_space,
+ 		__entry->dev	= inode->i_sb->s_dev;
+ 		__entry->ino	= inode->i_ino;
+ 		__entry->i_blocks = inode->i_blocks;
++		__entry->reserve_blocks = nr_resv;
+ 		__entry->reserved_data_blocks = EXT4_I(inode)->i_reserved_data_blocks;
+ 		__entry->mode	= inode->i_mode;
+ 	),
+ 
+-	TP_printk("dev %d,%d ino %lu mode 0%o i_blocks %llu "
++	TP_printk("dev %d,%d ino %lu mode 0%o i_blocks %llu reserve_blocks %d"
+ 		  "reserved_data_blocks %d",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  (unsigned long) __entry->ino,
+ 		  __entry->mode, __entry->i_blocks,
+-		  __entry->reserved_data_blocks)
++		  __entry->reserve_blocks, __entry->reserved_data_blocks)
+ );
+ 
+ TRACE_EVENT(ext4_da_release_space,
 -- 
 2.39.2
 
