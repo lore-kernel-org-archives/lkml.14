@@ -1,57 +1,57 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49F7016F0CE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D890174EE0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712753233; cv=none; b=gYNyYXyWzAr5n+MRfJD2Z01MZy3BGNnbQbzMvFqLVzJfuRyyo0CCytmWLCZGspH3KJ1OPIyrOfXzIcHmnljJOtD2UMA2DBOixJ+9woV7N2tXjg1MrhW9Hr8t729w/sL9yZUx62m5RB1VKpRUENjcLiGFtVqPG3LHXjdkEHD/Qfw=
+	t=1712753239; cv=none; b=lmPSs6qh/T9jtYeRa3caIANLEjIMCJwuyErM8jdpbbJ2lbUz1g+3CQePYYuZqJYEIT0yymwC7lFVS+oByUvr/Zu2z+oXRN3EpvXrcdXdAoWcoOqB4cg/ton2vzMqzEqQWPR2bpvKnQm/RYtfKobPlPVlFbeSM2MndoIMnhdFm+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712753233; c=relaxed/simple;
-	bh=77BfOO2IOWAEW/jqbOROK0sZUqtTV3003QPtXv3TMzk=;
+	s=arc-20240116; t=1712753239; c=relaxed/simple;
+	bh=Zu9qHogsjwwvS76RuRykV3Cyl3hZFd1eYZO5KYwA5Tk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rEqCHQby3SSbdflCKbnVVMWSA6Om/Su18tVEoQFm+M8Mr0Ed62Jb35n0pENyMYiWn6F2PVasxaU7SV0L7ZrqT0+SH7JzgOP6uPchu3jlJ2z4+S3FYp4m3GwcdQ7lYpKqtLPmMQNIuR82ZpBpT8dkMvG3HwZxAK+JQnroDpCnEww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uzekW3BZ; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=U7M7LhyPMrFR/B8Z1pZdRlUp4OipRS+T/XNfol7JGXExGqmmVUb3huOHlNX4ml1CWSzRjJHohKlCvLn+vlLydB48orGjuL6dI6qhMwOeafsO+UMgoCowUU7zmfkQ1PCqQgHm+JPgVzl3jKnTqKqVLI0K9DkIoDKB3fuHO3v1X/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Tv20W+/b; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uzekW3BZ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4155819f710so52843455e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Tv20W+/b"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5171a529224so3996514e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:47:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712753228; x=1713358028; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712753233; x=1713358033; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w2b87iCiNZLRKNoV6V7FcY8VZZsyNMpNPTQRRmzlzLU=;
-        b=uzekW3BZ2kAbyYxXrTP/P3xpU/2Peis1RtfOfl/k/O33Ltf7M+DUI8jl3RLA7w8cRc
-         wEyv3ZaTEV/d7qGwPf+DJt9eq/4yQD186BcAuiObszFWTKz8hgAEExOA4ZUeP6Ru/GJ3
-         sZwWg2bxNuA2AKArbVyCCP3U87lp1WggdLKADrMHb/mqQMVG+yP053GPAezMM8WqaKu0
-         vBgtEFRwa+RpLMU3QHwp7xCAS3wA47Wav4YH4TXt/RLFpwbKs5YpsGri0sn/jJC75ctb
-         B3wJIYWVLgMDASi7Lx+LFSRgtEuRQxdbwccJmrIJpr6whmtfc2dmsK3jZn60WpvM4Ab7
-         08mg==
+        bh=z6NUiX8vyJKElOCOKE+vXKfTmxYyyFPuN3p6ttUZMX0=;
+        b=Tv20W+/bdTWpaQ8+SOwWRs2I7/NQhQSTMKI4Nb5iHwzf7XDNs3lV+V/SCR0YTo+Kv1
+         q4l/uSCicYBZAv1tl2NJ3xSo6LaLDAFf+VsETVnDeCTsV6t808s+pHsB0qqvI+VeNPbL
+         /pGhvx5BoOokkFX5aXdSDM9f+EM8NXLmGWdev9yWI83VczS1Qe1wrzHH7mqDqBMNw3mC
+         G0R3E0TL87gTKJME91tOVFt7KpF5bRtG9ipxxmCkTFtCQ7mq3qE87AkKCjA7WTF4De/b
+         sZGiZwop6HFgwtVU/Kr8+X/0OQ+kxPP8FhJGhvE6gMo+wPyS4GbGJuuOvWUYBYEPWNvE
+         Csaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712753228; x=1713358028;
+        d=1e100.net; s=20230601; t=1712753233; x=1713358033;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w2b87iCiNZLRKNoV6V7FcY8VZZsyNMpNPTQRRmzlzLU=;
-        b=kSJhXtnGQW+Oe5gSZYhXbspDbMPcYAkoJxyCxoqZMgQ1ktER4rBYkRyVJgLBy1Dezc
-         LgjgswI8WxQUBxghSIGck1GImYr5w2GFpRLvf8jerilx0U0BzCJK7HBaF+hhCyvJU4Re
-         AqkwXG5vb+CW54fqRMDPbi6XqcOnTZNEWfzeGLrdswYd4CzJV1l4+9jT/wqTh2UjQrSs
-         ON+1/YJmAqcFy2+SHoN0UExe5ajzowngU58af8sH1oNjn8JtkOzGPKCNEwoe8lLcYCXU
-         nTS9rNL2MBhnMAbYPw0pWqK6JQU8I1aNoudiN2n2r5nZxBfGG8NWM+NysydLnLfWhiKS
-         mIpw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAYqzB+zVSiVmuSeWDp2Uh5Dqfz2ZsX6CYJHzOrk0YajrZw8x7FBWOxJB2MuPs50wfR7z07SmaBt1b7/aaGEBYOpg+nlzKd4HyU5cl
-X-Gm-Message-State: AOJu0YyLaR+KRYdj/WscXRHy54VxHYSsZyIfV51f5YHuFtCaTZ+TFKCQ
-	JsG20Ue+Q4eKqgtyLF1RwfX3CYJG0sG2GB8i3AWsonzwOl13WnHQUXtv5w/wxVY=
-X-Google-Smtp-Source: AGHT+IGQnpFaOp9lKdRu3NcDaQUeKUgA7ORK3DgV037+G1ZS3XhSIR59qhgIanzRtA1UCOJXJ/vjxg==
-X-Received: by 2002:a05:600c:1d19:b0:416:abcf:af5a with SMTP id l25-20020a05600c1d1900b00416abcfaf5amr1799598wms.36.1712753228264;
-        Wed, 10 Apr 2024 05:47:08 -0700 (PDT)
+        bh=z6NUiX8vyJKElOCOKE+vXKfTmxYyyFPuN3p6ttUZMX0=;
+        b=akSqlJWxoaOKuQfzc2Obur5/Mj7yykBDUGm0SGd7oaSXTaU0Q4mCIP3ePPfgwfmjkx
+         7NcH+HGK1XI+vF/y4OyN8Spgt8dmUfVGY3vYMkJVVMl08ho90Nv5aQArUkZtKXNwKUv4
+         NC33WepLD6TfAfDcYluPmS1+QBRuVVvyPcDOVDyqTH8pq30JXKtZjfOopBt6BbBxz1a0
+         Cvjhtp8ShbF+N4a67kKdQquj//Xz1vSIJqJ5NreUrHcVq6hbHAGyYtXa457fRc0jD8oT
+         naNcYDjE4ik3Rvm8RG8fUrfJvt5et1sl41hsyh2VZx8DPPT6BunxIvZs8tVCEjT4PRtO
+         M5kQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJQdc4yHCz/2TSnyMoyrFy+UHPDhrzeYuFJipwNPK1rwAZw6I8SxFKGxMSV/VPyyfyzFNDADxSPNwoPphiNz1ZdfMR2nduaH1/9cP2
+X-Gm-Message-State: AOJu0YxBJsChEHWaLhvnr/xsYfJbDLvl5jdNJs89NXA7VCJboLf8BhoL
+	U0rDGBqmUnvf6jo8o6gkr1AnvS1S4iJw1UTmoG6UZmK5n+Liyvkz8TuroC4u9F0=
+X-Google-Smtp-Source: AGHT+IGfrJ7OaZz+PXCCgv0qoGYu9zPEdDb58BFa1E8ouRgU2iFIk8ebIdAkp2W60bcgcXxT6W6Flw==
+X-Received: by 2002:a19:6912:0:b0:513:d884:7aac with SMTP id e18-20020a196912000000b00513d8847aacmr1460918lfc.21.1712753232925;
+        Wed, 10 Apr 2024 05:47:12 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:6908:7e99:35c9:d585])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041663450a4asm2150929wmn.45.2024.04.10.05.47.06
+        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041663450a4asm2150929wmn.45.2024.04.10.05.47.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 05:47:07 -0700 (PDT)
+        Wed, 10 Apr 2024 05:47:12 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
@@ -95,9 +95,9 @@ Cc: linux-bluetooth@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	linux-pm@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v7 12/16] PCI/pwrctl: add PCI power control core code
-Date: Wed, 10 Apr 2024 14:46:24 +0200
-Message-Id: <20240410124628.171783-13-brgl@bgdev.pl>
+Subject: [PATCH v7 15/16] Bluetooth: qca: use the power sequencer for QCA6390
+Date: Wed, 10 Apr 2024 14:46:27 +0200
+Message-Id: <20240410124628.171783-16-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240410124628.171783-1-brgl@bgdev.pl>
 References: <20240410124628.171783-1-brgl@bgdev.pl>
@@ -111,281 +111,154 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Some PCI devices must be powered-on before they can be detected on the
-bus. Introduce a simple framework reusing the existing PCI OF
-infrastructure.
-
-The way this works is: a DT node representing a PCI device connected to
-the port can be matched against its power control platform driver. If
-the match succeeds, the driver is responsible for powering-up the device
-and calling pcie_pwrctl_device_set_ready() which will trigger a PCI bus
-rescan as well as subscribe to PCI bus notifications.
-
-When the device is detected and created, we'll make it consume the same
-DT node that the platform device did. When the device is bound, we'll
-create a device link between it and the parent power control device.
+Use the pwrseq subsystem's consumer API to run the power-up sequence for
+the Bluetooth module of the QCA6390 package.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pci/Kconfig         |   1 +
- drivers/pci/Makefile        |   1 +
- drivers/pci/pwrctl/Kconfig  |   8 +++
- drivers/pci/pwrctl/Makefile |   4 ++
- drivers/pci/pwrctl/core.c   | 137 ++++++++++++++++++++++++++++++++++++
- include/linux/pci-pwrctl.h  |  51 ++++++++++++++
- 6 files changed, 202 insertions(+)
- create mode 100644 drivers/pci/pwrctl/Kconfig
- create mode 100644 drivers/pci/pwrctl/Makefile
- create mode 100644 drivers/pci/pwrctl/core.c
- create mode 100644 include/linux/pci-pwrctl.h
+ drivers/bluetooth/hci_qca.c | 74 +++++++++++++++++++++++++++++--------
+ 1 file changed, 59 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index d35001589d88..aa4d1833f442 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -296,5 +296,6 @@ source "drivers/pci/hotplug/Kconfig"
- source "drivers/pci/controller/Kconfig"
- source "drivers/pci/endpoint/Kconfig"
- source "drivers/pci/switch/Kconfig"
-+source "drivers/pci/pwrctl/Kconfig"
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 8a60ad7acd70..d31dcea650c1 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -29,6 +29,7 @@
+ #include <linux/of.h>
+ #include <linux/acpi.h>
+ #include <linux/platform_device.h>
++#include <linux/pwrseq/consumer.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/serdev.h>
+ #include <linux/mutex.h>
+@@ -215,6 +216,7 @@ struct qca_power {
+ 	struct regulator_bulk_data *vreg_bulk;
+ 	int num_vregs;
+ 	bool vregs_on;
++	struct pwrseq_desc *pwrseq;
+ };
  
- endif
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 175302036890..8ddad57934a6 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
+ struct qca_serdev {
+@@ -1682,6 +1684,27 @@ static bool qca_wakeup(struct hci_dev *hdev)
+ 	return wakeup;
+ }
  
- obj-$(CONFIG_PCI)		+= msi/
- obj-$(CONFIG_PCI)		+= pcie/
-+obj-$(CONFIG_PCI)		+= pwrctl/
- 
- ifdef CONFIG_PCI
- obj-$(CONFIG_PROC_FS)		+= proc.o
-diff --git a/drivers/pci/pwrctl/Kconfig b/drivers/pci/pwrctl/Kconfig
-new file mode 100644
-index 000000000000..96195395af69
---- /dev/null
-+++ b/drivers/pci/pwrctl/Kconfig
-@@ -0,0 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+menu "PCI Power control drivers"
-+
-+config PCI_PWRCTL
-+	tristate
-+
-+endmenu
-diff --git a/drivers/pci/pwrctl/Makefile b/drivers/pci/pwrctl/Makefile
-new file mode 100644
-index 000000000000..52ae0640ef7b
---- /dev/null
-+++ b/drivers/pci/pwrctl/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+
-+obj-$(CONFIG_PCI_PWRCTL)		+= pci-pwrctl-core.o
-+pci-pwrctl-core-y			:= core.o
-diff --git a/drivers/pci/pwrctl/core.c b/drivers/pci/pwrctl/core.c
-new file mode 100644
-index 000000000000..332e16003505
---- /dev/null
-+++ b/drivers/pci/pwrctl/core.c
-@@ -0,0 +1,137 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/pci-pwrctl.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
-+
-+static int pci_pwrctl_notify(struct notifier_block *nb, unsigned long action,
-+			     void *data)
-+{
-+	struct pci_pwrctl *pwrctl = container_of(nb, struct pci_pwrctl, nb);
-+	struct device *dev = data;
-+
-+	if (dev_fwnode(dev) != dev_fwnode(pwrctl->dev))
-+		return NOTIFY_DONE;
-+
-+	switch (action) {
-+	case BUS_NOTIFY_ADD_DEVICE:
-+		/*
-+		 * We will have two struct device objects bound to two different
-+		 * drivers on different buses but consuming the same DT node. We
-+		 * must not bind the pins twice in this case but only once for
-+		 * the first device to be added.
-+		 *
-+		 * If we got here then the PCI device is the second after the
-+		 * power control platform device. Mark its OF node as reused.
-+		 */
-+		dev->of_node_reused = true;
-+		break;
-+	case BUS_NOTIFY_BOUND_DRIVER:
-+		pwrctl->link = device_link_add(dev, pwrctl->dev,
-+					       DL_FLAG_AUTOREMOVE_CONSUMER);
-+		if (!pwrctl->link)
-+			dev_err(pwrctl->dev, "Failed to add device link\n");
-+		break;
-+	case BUS_NOTIFY_UNBOUND_DRIVER:
-+		if (pwrctl->link)
-+			device_link_del(pwrctl->link);
-+		break;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+/**
-+ * pci_pwrctl_device_set_ready() - Notify the pwrctl subsystem that the PCI
-+ * device is powered-up and ready to be detected.
-+ *
-+ * @pwrctl: PCI power control data.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on error.
-+ *
-+ * Note:
-+ * This function returning 0 doesn't mean the device was detected. It means,
-+ * that the bus rescan was successfully started. The device will get bound to
-+ * its PCI driver asynchronously.
-+ */
-+int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl)
++static int qca_port_reopen(struct hci_uart *hu)
 +{
 +	int ret;
 +
-+	if (!pwrctl->dev)
-+		return -ENODEV;
-+
-+	pwrctl->nb.notifier_call = pci_pwrctl_notify;
-+	ret = bus_register_notifier(&pci_bus_type, &pwrctl->nb);
-+	if (ret)
++	/* Now the device is in ready state to communicate with host.
++	 * To sync host with device we need to reopen port.
++	 * Without this, we will have RTS and CTS synchronization
++	 * issues.
++	 */
++	serdev_device_close(hu->serdev);
++	ret = serdev_device_open(hu->serdev);
++	if (ret) {
++		bt_dev_err(hu->hdev, "failed to open port");
 +		return ret;
++	}
 +
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(to_pci_dev(pwrctl->dev->parent)->bus);
-+	pci_unlock_rescan_remove();
++	hci_uart_set_flow_control(hu, false);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(pci_pwrctl_device_set_ready);
 +
-+/**
-+ * pci_pwrctl_device_unset_ready() - Notify the pwrctl subsystem that the PCI
-+ * device is about to be powered-down.
-+ *
-+ * @pwrctl: PCI power control data.
-+ */
-+void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl)
-+{
-+	/*
-+	 * We don't have to delete the link here. Typically, this function
-+	 * is only called when the power control device is being detached. If
-+	 * it is being detached then the child PCI device must have already
-+	 * been unbound too or the device core wouldn't let us unbind.
-+	 */
-+	bus_unregister_notifier(&pci_bus_type, &pwrctl->nb);
-+}
-+EXPORT_SYMBOL_GPL(pci_pwrctl_device_unset_ready);
+ static int qca_regulator_init(struct hci_uart *hu)
+ {
+ 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+@@ -1750,21 +1773,7 @@ static int qca_regulator_init(struct hci_uart *hu)
+ 		break;
+ 	}
+ 
+-	/* Now the device is in ready state to communicate with host.
+-	 * To sync host with device we need to reopen port.
+-	 * Without this, we will have RTS and CTS synchronization
+-	 * issues.
+-	 */
+-	serdev_device_close(hu->serdev);
+-	ret = serdev_device_open(hu->serdev);
+-	if (ret) {
+-		bt_dev_err(hu->hdev, "failed to open port");
+-		return ret;
+-	}
+-
+-	hci_uart_set_flow_control(hu, false);
+-
+-	return 0;
++	return qca_port_reopen(hu);
+ }
+ 
+ static int qca_power_on(struct hci_dev *hdev)
+@@ -1792,6 +1801,17 @@ static int qca_power_on(struct hci_dev *hdev)
+ 		ret = qca_regulator_init(hu);
+ 		break;
+ 
++	case QCA_QCA6390:
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++		ret = pwrseq_power_on(qcadev->bt_power->pwrseq);
++		if (ret)
++			return ret;
 +
-+static void devm_pci_pwrctl_device_unset_ready(void *data)
-+{
-+	struct pci_pwrctl *pwrctl = data;
++		ret = qca_port_reopen(hu);
++		if (ret)
++			return ret;
++		break;
 +
-+	pci_pwrctl_device_set_ready(pwrctl);
-+}
+ 	default:
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+ 		if (qcadev->bt_en) {
+@@ -2170,6 +2190,10 @@ static void qca_power_shutdown(struct hci_uart *hu)
+ 		}
+ 		break;
+ 
++	case QCA_QCA6390:
++		pwrseq_power_off(qcadev->bt_power->pwrseq);
++		break;
 +
-+/**
-+ * devm_pci_pwrctl_device_set_ready - Managed variant of
-+ * pci_pwrctl_device_set_ready().
-+ *
-+ * @dev: Device managing this pwrctl provider.
-+ * @pwrctl: PCI power control data.
-+ *
-+ * Returns:
-+ * 0 on success, negative error number on error.
-+ */
-+int devm_pci_pwrctl_device_set_ready(struct device *dev,
-+				     struct pci_pwrctl *pwrctl)
-+{
-+	int ret;
+ 	default:
+ 		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+ 	}
+@@ -2308,12 +2332,25 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	case QCA_WCN6750:
+ 	case QCA_WCN6855:
+ 	case QCA_WCN7850:
++	case QCA_QCA6390:
+ 		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+ 						sizeof(struct qca_power),
+ 						GFP_KERNEL);
+ 		if (!qcadev->bt_power)
+ 			return -ENOMEM;
++		break;
++	default:
++		break;
++	}
+ 
++	switch (qcadev->btsoc_type) {
++	case QCA_WCN3988:
++	case QCA_WCN3990:
++	case QCA_WCN3991:
++	case QCA_WCN3998:
++	case QCA_WCN6750:
++	case QCA_WCN6855:
++	case QCA_WCN7850:
+ 		qcadev->bt_power->dev = &serdev->dev;
+ 		err = qca_init_regulators(qcadev->bt_power, data->vregs,
+ 					  data->num_vregs);
+@@ -2354,6 +2391,13 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		}
+ 		break;
+ 
++	case QCA_QCA6390:
++		qcadev->bt_power->pwrseq = devm_pwrseq_get(&serdev->dev,
++							   "bluetooth");
++		if (IS_ERR(qcadev->bt_power->pwrseq))
++			return PTR_ERR(qcadev->bt_power->pwrseq);
++		fallthrough;
 +
-+	ret = pci_pwrctl_device_set_ready(pwrctl);
-+	if (ret)
-+		return ret;
-+
-+	return devm_add_action_or_reset(dev,
-+					devm_pci_pwrctl_device_unset_ready,
-+					pwrctl);
-+}
-+EXPORT_SYMBOL_GPL(devm_pci_pwrctl_device_set_ready);
-+
-+MODULE_AUTHOR("Bartosz Golaszewski <bartosz.golaszewski@linaro.org>");
-+MODULE_DESCRIPTION("PCI Device Power Control core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/pci-pwrctl.h b/include/linux/pci-pwrctl.h
-new file mode 100644
-index 000000000000..45e9cfe740e4
---- /dev/null
-+++ b/include/linux/pci-pwrctl.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (C) 2024 Linaro Ltd.
-+ */
-+
-+#ifndef __PCI_PWRCTL_H__
-+#define __PCI_PWRCTL_H__
-+
-+#include <linux/notifier.h>
-+
-+struct device;
-+struct device_link;
-+
-+/*
-+ * This is a simple framework for solving the issue of PCI devices that require
-+ * certain resources (regulators, GPIOs, clocks) to be enabled before the
-+ * device can actually be detected on the PCI bus.
-+ *
-+ * The idea is to reuse the platform bus to populate OF nodes describing the
-+ * PCI device and its resources, let these platform devices probe and enable
-+ * relevant resources and then trigger a rescan of the PCI bus allowing for the
-+ * same device (with a second associated struct device) to be registered with
-+ * the PCI subsystem.
-+ *
-+ * To preserve a correct hierarchy for PCI power management and device reset,
-+ * we create a device link between the power control platform device (parent)
-+ * and the supplied PCI device (child).
-+ */
-+
-+/**
-+ * struct pci_pwrctl - PCI device power control context.
-+ * @dev: Address of the power controlling device.
-+ *
-+ * An object of this type must be allocated by the PCI power control device and
-+ * passed to the pwrctl subsystem to trigger a bus rescan and setup a device
-+ * link with the device once it's up.
-+ */
-+struct pci_pwrctl {
-+	struct device *dev;
-+
-+	/* Private: don't use. */
-+	struct notifier_block nb;
-+	struct device_link *link;
-+};
-+
-+int pci_pwrctl_device_set_ready(struct pci_pwrctl *pwrctl);
-+void pci_pwrctl_device_unset_ready(struct pci_pwrctl *pwrctl);
-+int devm_pci_pwrctl_device_set_ready(struct device *dev,
-+				     struct pci_pwrctl *pwrctl);
-+
-+#endif /* __PCI_PWRCTL_H__ */
+ 	default:
+ 		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
 -- 
 2.40.1
 
