@@ -1,764 +1,134 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FA113D500
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:06:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C128C13D52A;
+	Wed, 10 Apr 2024 08:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736370; cv=none; b=Yowd0d/CnriUQEKM+SOnHVknlaNaMm3nRSmApf+WfqtMWcNJJ6PWSJ33li6EoG4wt4RHxvpNVZTXJlnQIjBBXLvK5lohKq99oCDd5JT7oBK2HgBMRW/NNwRdolpaDMooBaBGDJEtxljbwYrAffoGft03tbVD9+jhDH1l/vjQ87g=
+	t=1712736533; cv=none; b=DSK01TnmvI0U4Gk6MSuhRI30IUqCGnPsc1++U5zedsNzkAgbldt+O4FyQxnVwhOy4S8ZVqcHz8YSZnaoa8KcnzBiizh23NqGy9Z3SadXqJnPd3GFip8pe9SafUL2rc+uDG9VvTyNRLxHGqup2ReoZCzFFhOgtttlnM0M7EwU+3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736370; c=relaxed/simple;
-	bh=eD606V1GbkcLESPgo9fZO1KdMlJ6HLkV+jPp+EJ7Pmk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f9fbLj/EhFtz3cggHwkpEA1O/ZwirEZ4J3mMFB4On1v8S1rb9nKXfGFCK+rGLK2BM3rNdEIVkdZ2kqk8xV5LLRYMIQOPAZ/BGtYxVj9JqwEF8SspwS3KrZyW0DyUmqZeQls59xy+bS2IqcYBSbpP1fP/VXrhmXqd0R8/PNNdLs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruSy0-0004NR-Bh; Wed, 10 Apr 2024 10:06:00 +0200
-Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruSxx-00BSb1-UX; Wed, 10 Apr 2024 10:05:57 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruSxx-005CuP-2o;
-	Wed, 10 Apr 2024 10:05:57 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com,
-	David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v6 5/9] net: dsa: microchip: add support for different DCB app configurations
-Date: Wed, 10 Apr 2024 10:05:52 +0200
-Message-Id: <20240410080556.1241048-6-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240410080556.1241048-1-o.rempel@pengutronix.de>
-References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1712736533; c=relaxed/simple;
+	bh=KS6I4HH8eby4GzV/ULCJd4lnaTez7aBJmrwmmizEjbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ov8OOETvstgdIdZqwLxF0DnRa8CIRGx9DapEhEhaldZxegTa8vgys4OO3paoBNq6srZyVL/yuLbUwxlb0DvAKluA5g/kQLD6ABtGq77+/5W1tstGlu5tnT0REASv5v4354FUIIu3YvD3N/PfLlntQ1pjE+Lh3Du38MynVXKegls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JMLOm1kE; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JMLOm1kE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712736529;
+	bh=KS6I4HH8eby4GzV/ULCJd4lnaTez7aBJmrwmmizEjbI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMLOm1kEL4UGwTTkvbkniqxboz1c3WU+iT0aKYh+vBwFiYhw4i+ViTQ8FpgZtPQfS
+	 JO6tzsWuk+2EI8DRTCXrpFnPJzdULGwU527HdI5rh14m/f8tUUzOvz+oU7RIadRDrH
+	 pImZp8DX3fcFzzExTJi8WfsWjwsJJ3AV+zmHfS5ut3cnOuU8S4xg0buXvu3iaSteQN
+	 fqu2jrjsS6QmvXaF4rS84FT2ymOPlCjaIzKV2qfH9wcT76k04Up7OpbXUJ0UfMogqw
+	 edP842v5sBEIZDamCfDkV3z0gqiCLynPBKLv3FgDkq/+rxfiupUfQz8VESyy0ASRtq
+	 jXC/S9B+y3vig==
+Received: from mercury (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: sre)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B687A3780C13;
+	Wed, 10 Apr 2024 08:08:49 +0000 (UTC)
+Received: by mercury (Postfix, from userid 1000)
+	id B61D31063262; Wed, 10 Apr 2024 10:08:48 +0200 (CEST)
+Date: Wed, 10 Apr 2024 10:08:48 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Hermes Zhang <chenhuiz@axis.com>
+Cc: Andrew Davis <afd@ti.com>, Hermes Zhang <Hermes.Zhang@axis.com>, 
+	kernel@axis.com, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] power: supply: bq27xxx: Divide the reg cache to each
+ register
+Message-ID: <i4tusers6p4ofzusgalshmiekfeczfvfvkjrmz42n5saaq2nmy@th6eweffbu6k>
+References: <20240306100904.1914263-1-Hermes.Zhang@axis.com>
+ <c4u27576oazfrlcp5avy3ect3i4jlsmdvi7nlun5qvez3ipti2@ue5jxbydmevs>
+ <c3c219ca-e126-42fb-8f20-5df0dec58d7c@ti.com>
+ <ff34e22e-702f-acc9-469d-33f092bf20bd@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n3zerunypjlzwp5a"
+Content-Disposition: inline
+In-Reply-To: <ff34e22e-702f-acc9-469d-33f092bf20bd@axis.com>
 
-Add DCB support to configure app trust sources and default port priority.
 
-Following commands can be used for testing:
-dcb apptrust set dev lan1 order pcp dscp
-dcb app replace dev lan1 default-prio 3
+--n3zerunypjlzwp5a
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since it is not possible to configure DSCP-Prio mapping per port, this
-patch provide only ability to read switch global dscp-prio mapping and
-way to enable/disable app trust for DSCP.
+Hi,
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
----
-changes v5:
-- reorder port_set_apptrust and port_get_apptrust
-- s/defult/default
-- group all the get register function in top of file
-- s/invalid/err_sel_not_vaild
-- s/apptrus_/apptrust_
-changes v3:
-- move ksz8_port2_supported_apptrust[] to a followup patch
----
- drivers/net/dsa/microchip/Kconfig      |   2 +
- drivers/net/dsa/microchip/Makefile     |   2 +-
- drivers/net/dsa/microchip/ksz_common.c |  12 +-
- drivers/net/dsa/microchip/ksz_common.h |   5 +
- drivers/net/dsa/microchip/ksz_dcb.c    | 544 +++++++++++++++++++++++++
- drivers/net/dsa/microchip/ksz_dcb.h    |  21 +
- 6 files changed, 584 insertions(+), 2 deletions(-)
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.c
- create mode 100644 drivers/net/dsa/microchip/ksz_dcb.h
+On Tue, Apr 02, 2024 at 10:04:22AM +0800, Hermes Zhang wrote:
+> On 2024/4/1 21:57, Andrew Davis wrote:
+> > On 4/1/24 8:15 AM, Sebastian Reichel wrote:
+> > > [+cc Andrew Davis]
+> > >=20
+> > > Hello Hermes,
+> > >=20
+> > > Sorry for the delay. This arrived too close to the 6.9 merge window.
+> > > I had a look now and while the patch looks fine to me on a conceptual
+> > > level, it did not apply. It looks like you used a pre-2024 kernel tree
+> > > to generate the patch against. Please always use something recent base
+> > > tree (and ideally use git's --base option to document the used
+> > > parent commit).
+> > >=20
+> > > Other than that I just applied a series from Andrew, which cleans up
+> > > the register caching in bq27xxx and removed most registers from the
+> > > cache. That's something I did not consider earlier, since I thought
+> > > the cache was introduced to fix a different issue. But that was
+> > > apparently sbs-battery and not bq27xxx.
+> >=20
+> > The original BQ27000 device did not have an interrupt pin to signal
+> > when important updates to the battery occurred, so early devices
+> > using it would have userspace poll those values. As the kernel driver
+> > added its own polling for updates, it seems the early driver authors
+> > simply decided to cache the values between kernel reads and return
+> > those to userspace when it reads.
+> >=20
+> > This is a problem though for two reasons.
+> > 1. If no one is interested in these values the kernel will still poll
+> > =A0=A0 them anyway, wasting I2C bus time and power.
+> > 2. If userspace is actually interested in some value and so checks it
+> > =A0=A0 often, it will only get real updated values when the kernel next
+> >    polls, which might not be often enough for some use-cases.
+> >=20
+> Agree! Also good to know the history.
 
-diff --git a/drivers/net/dsa/microchip/Kconfig b/drivers/net/dsa/microchip/Kconfig
-index 394ca8678d2ba..c1b906c05a025 100644
---- a/drivers/net/dsa/microchip/Kconfig
-+++ b/drivers/net/dsa/microchip/Kconfig
-@@ -4,6 +4,8 @@ menuconfig NET_DSA_MICROCHIP_KSZ_COMMON
- 	depends on NET_DSA
- 	select NET_DSA_TAG_KSZ
- 	select NET_DSA_TAG_NONE
-+	select NET_IEEE8021Q_HELPERS
-+	select DCB
- 	help
- 	  This driver adds support for Microchip KSZ9477 series switch and
- 	  KSZ8795/KSZ88x3 switch chips.
-diff --git a/drivers/net/dsa/microchip/Makefile b/drivers/net/dsa/microchip/Makefile
-index 49459a50dbc81..1cfba1ec9355a 100644
---- a/drivers/net/dsa/microchip/Makefile
-+++ b/drivers/net/dsa/microchip/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_NET_DSA_MICROCHIP_KSZ_COMMON)	+= ksz_switch.o
--ksz_switch-objs := ksz_common.o
-+ksz_switch-objs := ksz_common.o ksz_dcb.o
- ksz_switch-objs += ksz9477.o ksz9477_acl.o ksz9477_tc_flower.o
- ksz_switch-objs += ksz8795.o
- ksz_switch-objs += lan937x_main.o
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index b2d1c61400c51..78a9622adecde 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -28,6 +28,7 @@
- #include <net/switchdev.h>
- 
- #include "ksz_common.h"
-+#include "ksz_dcb.h"
- #include "ksz_ptp.h"
- #include "ksz8.h"
- #include "ksz9477.h"
-@@ -2364,6 +2365,10 @@ static int ksz_setup(struct dsa_switch *ds)
- 		goto out_ptp_clock_unregister;
- 	}
- 
-+	ret = ksz_dcb_init(dev);
-+	if (ret)
-+		goto out_ptp_clock_unregister;
-+
- 	/* start switch */
- 	regmap_update_bits(ksz_regmap_8(dev), regs[S_START_CTRL],
- 			   SW_START, SW_START);
-@@ -2691,7 +2696,7 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
- 	 * there is no need to do anything.
- 	 */
- 
--	return 0;
-+	return ksz_dcb_init_port(dev, port);
- }
- 
- void ksz_port_stp_state_set(struct dsa_switch *ds, int port, u8 state)
-@@ -3943,6 +3948,11 @@ static const struct dsa_switch_ops ksz_switch_ops = {
- 	.port_setup_tc		= ksz_setup_tc,
- 	.get_mac_eee		= ksz_get_mac_eee,
- 	.set_mac_eee		= ksz_set_mac_eee,
-+	.port_get_default_prio	= ksz_port_get_default_prio,
-+	.port_set_default_prio	= ksz_port_set_default_prio,
-+	.port_get_dscp_prio	= ksz_port_get_dscp_prio,
-+	.port_get_apptrust	= ksz_port_get_apptrust,
-+	.port_set_apptrust	= ksz_port_set_apptrust,
- };
- 
- struct ksz_device *ksz_switch_alloc(struct device *base, void *priv)
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index 900e9ac06d013..cbbaafca79379 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -621,6 +621,11 @@ static inline bool ksz_is_ksz88x3(struct ksz_device *dev)
- 	return dev->chip_id == KSZ8830_CHIP_ID;
- }
- 
-+static inline bool is_ksz8(struct ksz_device *dev)
-+{
-+	return ksz_is_ksz87xx(dev) || ksz_is_ksz88x3(dev);
-+}
-+
- static inline int is_lan937x(struct ksz_device *dev)
- {
- 	return dev->chip_id == LAN9370_CHIP_ID ||
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-new file mode 100644
-index 0000000000000..d2122f844c80b
---- /dev/null
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -0,0 +1,544 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+
-+#include <linux/dsa/ksz_common.h>
-+#include <net/dsa.h>
-+#include <net/dscp.h>
-+#include <net/ieee8021q.h>
-+
-+#include "ksz_common.h"
-+#include "ksz_dcb.h"
-+#include "ksz8.h"
-+
-+#define KSZ8_REG_PORT_1_CTRL_0			0x10
-+#define KSZ8_PORT_DIFFSERV_ENABLE		BIT(6)
-+#define KSZ8_PORT_802_1P_ENABLE			BIT(5)
-+#define KSZ8_PORT_BASED_PRIO_M			GENMASK(4, 3)
-+
-+#define KSZ88X3_REG_TOS_DSCP_CTRL		0x60
-+#define KSZ8765_REG_TOS_DSCP_CTRL		0x90
-+
-+#define KSZ9477_REG_SW_MAC_TOS_CTRL		0x033e
-+#define KSZ9477_SW_TOS_DSCP_REMAP		BIT(0)
-+#define KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M	GENMASK(5, 3)
-+
-+#define KSZ9477_REG_DIFFSERV_PRIO_MAP		0x0340
-+
-+#define KSZ9477_REG_PORT_MRI_PRIO_CTRL		0x0801
-+#define KSZ9477_PORT_HIGHEST_PRIO		BIT(7)
-+#define KSZ9477_PORT_OR_PRIO			BIT(6)
-+#define KSZ9477_PORT_MAC_PRIO_ENABLE		BIT(4)
-+#define KSZ9477_PORT_VLAN_PRIO_ENABLE		BIT(3)
-+#define KSZ9477_PORT_802_1P_PRIO_ENABLE		BIT(2)
-+#define KSZ9477_PORT_DIFFSERV_PRIO_ENABLE	BIT(1)
-+#define KSZ9477_PORT_ACL_PRIO_ENABLE		BIT(0)
-+
-+#define KSZ9477_REG_PORT_MRI_MAC_CTRL		0x0802
-+#define KSZ9477_PORT_BASED_PRIO_M		GENMASK(2, 0)
-+
-+struct ksz_apptrust_map {
-+	u8 apptrust;
-+	u8 bit;
-+};
-+
-+static const struct ksz_apptrust_map ksz8_apptrust_map_to_bit[] = {
-+	{ DCB_APP_SEL_PCP, KSZ8_PORT_802_1P_ENABLE },
-+	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ8_PORT_DIFFSERV_ENABLE },
-+};
-+
-+static const struct ksz_apptrust_map ksz9477_apptrust_map_to_bit[] = {
-+	{ DCB_APP_SEL_PCP, KSZ9477_PORT_802_1P_PRIO_ENABLE },
-+	{ IEEE_8021QAZ_APP_SEL_DSCP, KSZ9477_PORT_DIFFSERV_PRIO_ENABLE },
-+};
-+
-+/**
-+ * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
-+ *			      of Internal Priority Value (IPV) sources.
-+ *
-+ * This array defines the apptrust selectors supported by the hardware, where
-+ * the index within the array indicates the priority of the selector - lower
-+ * indices correspond to higher priority. This fixed priority scheme is due to
-+ * the hardware's design, which does not support configurable priority among
-+ * different priority sources.
-+ *
-+ * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
-+ * by the hardware's fixed logic, as detailed below. The order reflects a
-+ * non-configurable precedence where certain types of priority information
-+ * override others:
-+ *
-+ * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
-+ * 2. ACL - Overrides VLAN PCP and DSCP priorities.
-+ * 3. VLAN PCP - Overrides DSCP priority.
-+ * 4. DSCP - Lowest priority, does not override any other priority source.
-+ *
-+ * In this context, the array's lower index (higher priority) for
-+ * 'DCB_APP_SEL_PCP' suggests its relative priority over
-+ * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
-+ *
-+ * DCB_APP_SEL_PCP - Priority Code Point selector
-+ * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-+ */
-+static const u8 ksz_supported_apptrust[] = {
-+	DCB_APP_SEL_PCP,
-+	IEEE_8021QAZ_APP_SEL_DSCP,
-+};
-+
-+static const char * const ksz_supported_apptrust_variants[] = {
-+	"empty", "dscp", "pcp", "dscp pcp"
-+};
-+
-+static void ksz_get_default_port_prio_reg(struct ksz_device *dev, int *reg,
-+					  u8 *mask, int *shift)
-+{
-+	if (is_ksz8(dev)) {
-+		*reg = KSZ8_REG_PORT_1_CTRL_0;
-+		*mask = KSZ8_PORT_BASED_PRIO_M;
-+		*shift = __bf_shf(KSZ8_PORT_BASED_PRIO_M);
-+	} else {
-+		*reg = KSZ9477_REG_PORT_MRI_MAC_CTRL;
-+		*mask = KSZ9477_PORT_BASED_PRIO_M;
-+		*shift = __bf_shf(KSZ9477_PORT_BASED_PRIO_M);
-+	}
-+}
-+
-+/**
-+ * ksz_get_dscp_prio_reg - Retrieves the DSCP-to-priority-mapping register
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @reg: Pointer to the register address to be set
-+ * @per_reg: Pointer to the number of DSCP values per register
-+ * @mask: Pointer to the mask to be set
-+ *
-+ * This function retrieves the DSCP to priority mapping register, the number of
-+ * DSCP values per register, and the mask to be set.
-+ */
-+static void ksz_get_dscp_prio_reg(struct ksz_device *dev, int *reg,
-+				  int *per_reg, u8 *mask)
-+{
-+	if (ksz_is_ksz87xx(dev)) {
-+		*reg = KSZ8765_REG_TOS_DSCP_CTRL;
-+		*per_reg = 4;
-+		*mask = GENMASK(1, 0);
-+	} else if (ksz_is_ksz88x3(dev)) {
-+		*reg = KSZ88X3_REG_TOS_DSCP_CTRL;
-+		*per_reg = 4;
-+		*mask = GENMASK(1, 0);
-+	} else {
-+		*reg = KSZ9477_REG_DIFFSERV_PRIO_MAP;
-+		*per_reg = 2;
-+		*mask = GENMASK(2, 0);
-+	}
-+}
-+
-+/**
-+ * ksz_get_apptrust_map_and_reg - Retrieves the apptrust map and register
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @map: Pointer to the apptrust map to be set
-+ * @reg: Pointer to the register address to be set
-+ * @mask: Pointer to the mask to be set
-+ *
-+ * This function retrieves the apptrust map and register address for the
-+ * apptrust configuration.
-+ */
-+static void ksz_get_apptrust_map_and_reg(struct ksz_device *dev,
-+					 const struct ksz_apptrust_map **map,
-+					 int *reg, u8 *mask)
-+{
-+	if (is_ksz8(dev)) {
-+		*map = ksz8_apptrust_map_to_bit;
-+		*reg = KSZ8_REG_PORT_1_CTRL_0;
-+		*mask = KSZ8_PORT_DIFFSERV_ENABLE | KSZ8_PORT_802_1P_ENABLE;
-+	} else {
-+		*map = ksz9477_apptrust_map_to_bit;
-+		*reg = KSZ9477_REG_PORT_MRI_PRIO_CTRL;
-+		*mask = KSZ9477_PORT_802_1P_PRIO_ENABLE |
-+			KSZ9477_PORT_DIFFSERV_PRIO_ENABLE;
-+	}
-+}
-+
-+/**
-+ * ksz_port_get_default_prio - Retrieves the default priority for a port on a
-+ *			       KSZ switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number from which to get the default priority
-+ *
-+ * This function fetches the default priority for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: The default priority of the port on success, or a negative error
-+ * code on failure.
-+ */
-+int ksz_port_get_default_prio(struct dsa_switch *ds, int port)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int ret, reg, shift;
-+	u8 data, mask;
-+
-+	ksz_get_default_port_prio_reg(dev, &reg, &mask, &shift);
-+
-+	ret = ksz_pread8(dev, port, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	return (data & mask) >> shift;
-+}
-+
-+/**
-+ * ksz_port_set_default_prio - Sets the default priority for a port on a KSZ
-+ *			       switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to set the default priority
-+ * @prio: Priority value to set
-+ *
-+ * This function sets the default priority for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure.
-+ */
-+int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int reg, shift;
-+	u8 mask;
-+
-+	if (prio >= dev->info->num_tx_queues)
-+		return -EINVAL;
-+
-+	ksz_get_default_port_prio_reg(dev, &reg, &mask, &shift);
-+
-+	return ksz_prmw8(dev, port, reg, mask, (prio << shift) & mask);
-+}
-+
-+/**
-+ * ksz_port_get_dscp_prio - Retrieves the priority for a DSCP value on a KSZ
-+ *			    switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to get the priority
-+ * @dscp: DSCP value for which to get the priority
-+ *
-+ * This function fetches the priority value from switch global DSCP-to-priorty
-+ * mapping table for the specified DSCP value.
-+ *
-+ * Return: The priority value for the DSCP on success, or a negative error
-+ * code on failure.
-+ */
-+int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
-+{
-+	struct ksz_device *dev = ds->priv;
-+	int reg, per_reg, ret, shift;
-+	u8 data, mask;
-+
-+	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
-+
-+	/* If DSCP remapping is disabled, DSCP bits 3-5 are used as Internal
-+	 * Priority Value (IPV)
-+	 */
-+	if (!is_ksz8(dev)) {
-+		ret = ksz_read8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL, &data);
-+		if (ret)
-+			return ret;
-+
-+		/* If DSCP remapping is disabled, DSCP bits 3-5 are used as
-+		 * Internal Priority Value (IPV)
-+		 */
-+		if (!(data & KSZ9477_SW_TOS_DSCP_REMAP))
-+			return FIELD_GET(KSZ9477_SW_TOS_DSCP_DEFAULT_PRIO_M,
-+					 dscp);
-+	}
-+
-+	/* In case DSCP remapping is enabled, we need to write the DSCP to
-+	 * priority mapping table.
-+	 */
-+	reg += dscp / per_reg;
-+	ret = ksz_read8(dev, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	shift = (dscp % per_reg) * (8 / per_reg);
-+
-+	return (data >> shift) & mask;
-+}
-+
-+/**
-+ * ksz_init_global_dscp_map - Initializes the global DSCP-to-priority mapping
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function initializes the global DSCP-to-priority mapping table for the
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz_init_global_dscp_map(struct ksz_device *dev)
-+{
-+	int reg, per_reg, ret, dscp;
-+	u8 data = 0;
-+	u8 mask;
-+
-+	/* On KSZ9xxx variants, DSCP remapping is disabled by default.
-+	 * Enable to have, predictable and reproducible behavior across
-+	 * different devices.
-+	 */
-+	if (!is_ksz8(dev)) {
-+		ret = ksz_rmw8(dev, KSZ9477_REG_SW_MAC_TOS_CTRL,
-+			       KSZ9477_SW_TOS_DSCP_REMAP,
-+			       KSZ9477_SW_TOS_DSCP_REMAP);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ksz_get_dscp_prio_reg(dev, &reg, &per_reg, &mask);
-+
-+	for (dscp = 0; dscp < DSCP_MAX; dscp++) {
-+		int ipv, shift, tt;
-+
-+		/* Map DSCP to Traffic Type, which is corresponding to the
-+		 * Internal Priority Value (IPV) in the switch.
-+		 */
-+		if (!is_ksz8(dev)) {
-+			ipv = ietf_dscp_to_ieee8021q_tt(dscp);
-+		} else {
-+			/* On KSZ8xxx variants we do not have IPV to queue
-+			 * remapping table. We need to convert DSCP to Traffic
-+			 * Type and then to queue.
-+			 */
-+			tt = ietf_dscp_to_ieee8021q_tt(dscp);
-+			if (tt < 0)
-+				return tt;
-+
-+			ipv = ieee8021q_tt_to_tc(tt, dev->info->num_tx_queues);
-+		}
-+
-+		if (ipv < 0)
-+			return ipv;
-+
-+		shift = (dscp % per_reg) * (8 / per_reg);
-+		data |= (ipv & mask) << shift;
-+
-+		if (dscp % per_reg == per_reg - 1) {
-+			ret = ksz_write8(dev, reg + (dscp / per_reg), data);
-+			if (ret)
-+				return ret;
-+
-+			data = 0;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ksz_apptrust_error - Prints an error message for an invalid apptrust selector
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function prints an error message when an invalid apptrust selector is
-+ * provided.
-+ */
-+static void ksz_apptrust_error(struct ksz_device *dev)
-+{
-+	char supported_apptrust_variants[64];
-+	int i;
-+
-+	supported_apptrust_variants[0] = '\0';
-+	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust_variants); i++) {
-+		if (i > 0)
-+			strlcat(supported_apptrust_variants, ", ",
-+				sizeof(supported_apptrust_variants));
-+		strlcat(supported_apptrust_variants,
-+			ksz_supported_apptrust_variants[i],
-+			sizeof(supported_apptrust_variants));
-+	}
-+
-+	dev_err(dev->dev, "Invalid apptrust selector or priority order. Supported: %s\n",
-+		supported_apptrust_variants);
-+}
-+
-+/**
-+ * ksz_port_set_apptrust_validate - Validates the apptrust selectors
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @sel: Array of apptrust selectors to validate
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function validates the apptrust selectors provided and ensures that
-+ * they are in the correct order.
-+ *
-+ * This family of switches supports two apptrust selectors: DCB_APP_SEL_PCP and
-+ * IEEE_8021QAZ_APP_SEL_DSCP. The priority order of the selectors is fixed and
-+ * cannot be changed. The order is as follows:
-+ * 1. DCB_APP_SEL_PCP - Priority Code Point selector (highest priority)
-+ * 2. IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-+ *   (lowest priority)
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+static int ksz_port_set_apptrust_validate(struct ksz_device *dev, int port,
-+					  const u8 *sel, int nsel)
-+{
-+	int i, j, found;
-+	int j_prev = 0;
-+
-+	/* Iterate through the requested selectors */
-+	for (i = 0; i < nsel; i++) {
-+		found = 0;
-+
-+		/* Check if the current selector is supported by the hardware */
-+		for (j = 0; j < sizeof(ksz_supported_apptrust); j++) {
-+			if (sel[i] != ksz_supported_apptrust[j])
-+				continue;
-+
-+			found = 1;
-+
-+			/* Ensure that no higher priority selector (lower index)
-+			 * precedes a lower priority one
-+			 */
-+			if (i > 0 && j <= j_prev)
-+				goto err_sel_not_vaild;
-+
-+			j_prev = j;
-+			break;
-+		}
-+
-+		if (!found)
-+			goto err_sel_not_vaild;
-+	}
-+
-+	return 0;
-+
-+err_sel_not_vaild:
-+	ksz_apptrust_error(dev);
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * ksz_port_set_apptrust - Sets the apptrust selectors for a port on a KSZ
-+ *			   switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to set the apptrust selectors
-+ * @sel: Array of apptrust selectors to set
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function sets the apptrust selectors for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
-+			  const u8 *sel, int nsel)
-+{
-+	const struct ksz_apptrust_map *map;
-+	struct ksz_device *dev = ds->priv;
-+	int reg, i, ret;
-+	u8 data = 0;
-+	u8 mask;
-+
-+	ret = ksz_port_set_apptrust_validate(dev, port, sel, nsel);
-+	if (ret)
-+		return ret;
-+
-+	ksz_get_apptrust_map_and_reg(dev, &map, &reg, &mask);
-+
-+	for (i = 0; i < nsel; i++) {
-+		int j;
-+
-+		for (j = 0; j < ARRAY_SIZE(ksz_supported_apptrust); j++) {
-+			if (sel[i] != ksz_supported_apptrust[j])
-+				continue;
-+
-+			data |= map[j].bit;
-+			break;
-+		}
-+	}
-+
-+	return ksz_prmw8(dev, port, reg, mask, data);
-+}
-+
-+/**
-+ * ksz_port_get_apptrust - Retrieves the apptrust selectors for a port on a KSZ
-+ *			   switch
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to get the apptrust selectors
-+ * @sel: Array to store the apptrust selectors
-+ * @nsel: Number of apptrust selectors in the array
-+ *
-+ * This function fetches the apptrust selectors for the specified port on a KSZ
-+ * switch.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
-+{
-+	const struct ksz_apptrust_map *map;
-+	struct ksz_device *dev = ds->priv;
-+	int reg, i, ret;
-+	u8 data;
-+	u8 mask;
-+
-+	ksz_get_apptrust_map_and_reg(dev, &map, &reg, &mask);
-+
-+	ret = ksz_pread8(dev, port, reg, &data);
-+	if (ret)
-+		return ret;
-+
-+	*nsel = 0;
-+	for (i = 0; i < ARRAY_SIZE(ksz_supported_apptrust); i++) {
-+		if (data & map[i].bit)
-+			sel[(*nsel)++] = ksz_supported_apptrust[i];
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * ksz_dcb_init_port - Initializes the DCB configuration for a port on a KSZ
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @port: Port number for which to initialize the DCB configuration
-+ *
-+ * This function initializes the DCB configuration for the specified port on a
-+ * KSZ switch. Particular DCB configuration is set for the port, including the
-+ * default priority and apptrust selectors.
-+ * The default priority is set to Best Effort, and the apptrust selectors are
-+ * set to all supported selectors.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_dcb_init_port(struct ksz_device *dev, int port)
-+{
-+	int ret, ipv;
-+
-+	if (is_ksz8(dev)) {
-+		ipv = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
-+					 dev->info->num_tx_queues);
-+		if (ipv < 0)
-+			return ipv;
-+	} else {
-+		ipv = IEEE8021Q_TT_BE;
-+	}
-+
-+	/* Set the default priority for the port to Best Effort */
-+	ret = ksz_port_set_default_prio(dev->ds, port, ipv);
-+	if (ret)
-+		return ret;
-+
-+	return ksz_port_set_apptrust(dev->ds, port, ksz_supported_apptrust,
-+				     ARRAY_SIZE(ksz_supported_apptrust));
-+}
-+
-+/**
-+ * ksz_dcb_init - Initializes the DCB configuration for a KSZ switch
-+ * @dev: Pointer to the KSZ switch device structure
-+ *
-+ * This function initializes the DCB configuration for a KSZ switch. The global
-+ * DSCP-to-priority mapping table is initialized.
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
-+int ksz_dcb_init(struct ksz_device *dev)
-+{
-+	int ret;
-+
-+	ret = ksz_init_global_dscp_map(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.h b/drivers/net/dsa/microchip/ksz_dcb.h
-new file mode 100644
-index 0000000000000..254c0e7bdafca
---- /dev/null
-+++ b/drivers/net/dsa/microchip/ksz_dcb.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-+
-+#ifndef __KSZ_DCB_H
-+#define __KSZ_DCB_H
-+
-+#include <net/dsa.h>
-+
-+#include "ksz_common.h"
-+
-+int ksz_port_get_default_prio(struct dsa_switch *ds, int port);
-+int ksz_port_set_default_prio(struct dsa_switch *ds, int port, u8 prio);
-+int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp);
-+int ksz_port_set_apptrust(struct dsa_switch *ds, int port,
-+			  const unsigned char *sel,
-+			  int nsel);
-+int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel);
-+int ksz_dcb_init_port(struct ksz_device *dev, int port);
-+int ksz_dcb_init(struct ksz_device *dev);
-+
-+#endif /* __KSZ_DCB_H */
--- 
-2.39.2
+well, there was another driver, which had to introduce caching to
+reduce I2C bus load when userspace polls data too quickly. Since
+bq27xxx already had caching, its removal might have regressed some
+platform. If nobody complains I'm of course happy with the much
+simpler code :)
 
+-- Sebastian
+
+--n3zerunypjlzwp5a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYWSQwACgkQ2O7X88g7
++poY8A/9G1KVulGheVYOGNJYFbUgTPbeVzesFW2K4/x1y9k/kk1Y43Afl4uujE/g
+94h+7hWylbvYGuJ0MfwbmaokV0J9ST2qsWjRpPBSgm4dw9NVXZ3ks5qHZtRFJJWX
+3XHOIaJinQ8JTcU3QUlp0soMgOKl78c+5yAPzSeg8cGsorE1LwNdVgE73VMku+fc
+4yPeOsbKxZphsfvPrJkJfA4FanWHqwdIygYxiiqXKIsjz2V/xQmdX+OGR4HwKuqC
+B4CIhQx0SgaHr6txIBI0sgpCrhcLNQhwy/5LWH3RRWmKKwkkXmSqLKnHl7DxtHD+
+W/45spUkCeRN1izobpXMsh26xwcSLDatJvoCxE3m49SdglI0SjLXpz7jv2er1JWz
+xrgVJJ7f+SkXVQMo3sLwJ8ITe18MmyEUn0dT1kvVnDmIulhyXoWXmXXnD1bevwgr
+Du2+gxn1ih35eJ0mP3ZnWxeix2OJG+Q5//d73OkY+hQyijOv8rOIKbqD2FwNC+Sc
+qXvJxASoKBAz1N/RwkfUe9bxGSuqJtgVjuWD2VAiRGFL92KUBsdlC4phvvThWhb5
+Xz774Y67R8RKhBCRZXWIfH/PnHbnZEcOp7jnQngfsBkBhYMGb+7nYhQkcpkZ2KcY
+TTYDAqfstI8UMWeRf3tSIeurRciDl6u9PPpTLXyYieytch1LbtY=
+=EEZn
+-----END PGP SIGNATURE-----
+
+--n3zerunypjlzwp5a--
