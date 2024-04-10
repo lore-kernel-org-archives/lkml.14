@@ -1,36 +1,36 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5975B13D299
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6E513D2A2
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735188; cv=none; b=m0dJaSoCZmq+IBqhlRzAkCLQe5f/xyR0uzd38R2igCVqBz3VceSIk8sTu9hr4mrVSmCikFLsFs+fBvvWwee42XOq39omkfuwVNOZXTSZpq0muzDuQCj5XAnQ026YrbdKw4i6cmdHkOTf76aNHpfvkh1myF0G4eI49NOt9YjL59Q=
+	t=1712735188; cv=none; b=YKeQq4ejzKSrc9s2r6IPg+7d2lTDlu4uX5Eo4JUBmnkOVtP2jEbfOGCDgHVUMCJC5HPNgDaGjfzzM9Je6ww2AwYFfMg8grL8rBnOrMKKNbXWWgURdO77mTv3daz8XDI7H8KUlN3AOe1T+ZnKNtmvk43UszrnkolqO70d/A9APKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712735188; c=relaxed/simple;
-	bh=6enRpkCtRRhSMRNuro77x5hwv78gHH59C5x6cX07ujA=;
+	bh=eVjgfv6c6w9mMdyjEREivPKWmBPpimfOyfdSSj4rIqU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pWYYScdF0/ll7luBjMkwko1Gsf0nM0l8Ybje3yH08c4s/EdoaYcINgLTcsmRuz41xedM4gplP++2GV8qUk/yPHc1GNouBAiZIe7RZV9BUsoqxKUZ0/bFN5ATt8qSCTWNtoaHiHFaTFQ7ML5kWprbg7PP9fHQcpJFQSEAcO947nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	 MIME-Version:Content-Type; b=YIn+LA8zJbz14tMmWVjEyYcV5fJ3jrGkKBLFD+MEWs//n7S5QFUvHzw8BBA8z1OL6fEdDMLDLQcJ1JiQAfFYOkzp8IF4DKzQzDDVRnNVHNP8xdZOiP59JV/9rGBaLYC7Ov7AWfmM5whZv+GskANfmcZrMKSuzrjMEBCX6tu4TUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VDvvm6Jn4z29lMv;
-	Wed, 10 Apr 2024 15:43:32 +0800 (CST)
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VDvy11JTjz21kfM;
+	Wed, 10 Apr 2024 15:45:29 +0800 (CST)
 Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id A876218001A;
+	by mail.maildlp.com (Postfix) with ESMTPS id 89DDF18001A;
 	Wed, 10 Apr 2024 15:46:24 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
  (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
- 2024 15:46:21 +0800
+ 2024 15:46:20 +0800
 From: Zhihao Cheng <chengzhihao1@huawei.com>
 To: <richard@nod.at>
 CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<yi.zhang@huawei.com>
-Subject: [PATCH 6/9] ubifs: Move ui->data initialization after initializing security
-Date: Wed, 10 Apr 2024 15:37:48 +0800
-Message-ID: <20240410073751.2522830-7-chengzhihao1@huawei.com>
+Subject: [PATCH 4/9] ubifs: Remove insert_dead_orphan from replaying orphan process
+Date: Wed, 10 Apr 2024 15:37:46 +0800
+Message-ID: <20240410073751.2522830-5-chengzhihao1@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410073751.2522830-1-chengzhihao1@huawei.com>
 References: <20240410073751.2522830-1-chengzhihao1@huawei.com>
@@ -45,67 +45,94 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
  kwepemm600013.china.huawei.com (7.193.23.68)
 
-Host inode and its' xattr will be written on disk after initializing
-security when creating symlink or dev, then the host inode and its
-dentry will be written again in ubifs_jnl_update.
-There is no need to write inode data in the security initialization
-pass, just move the ui->data initialization after initializing
-security.
+UBIFS will do commit at the end of mounting process(rw mode), dead
+orphans(added by insert_dead_orphan in replaying orphan) are deleted
+by ubifs_orphan_end_commit(). The only reason why dead orphans are
+added into orphan list is that old orpans may be lost when powercut
+happens in ubifs_orphan_end_commit():
+ubifs_orphan_end_commit  // TNC(updated by orphans) is not written yet
+ if (c->cmt_orphans != 0)
+  commit_orphans
+   consolidate // traverse orphan list
+  write_orph_nodes // rewrite all orphans by ubifs_leb_change
+  // If dead orphans are not in list, they will be lost when powercut
+  // happens, then TNC won't be updated by old orphans in next mounting.
+Luckily, the condition 'c->cmt_orphans != 0' will never be true in
+mounting process, there can't be new orphans added into orphan list
+before mounting returned, but commit will be done at the end of mounting.
 
 Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- fs/ubifs/dir.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ fs/ubifs/orphan.c | 49 -----------------------------------------------
+ 1 file changed, 49 deletions(-)
 
-diff --git a/fs/ubifs/dir.c b/fs/ubifs/dir.c
-index 551148de66cd..848988f2b7dc 100644
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -1102,16 +1102,18 @@ static int ubifs_mknod(struct mnt_idmap *idmap, struct inode *dir,
- 		goto out_fname;
- 	}
+diff --git a/fs/ubifs/orphan.c b/fs/ubifs/orphan.c
+index 88fbf331ad8c..6e843e8fc3db 100644
+--- a/fs/ubifs/orphan.c
++++ b/fs/ubifs/orphan.c
+@@ -513,51 +513,6 @@ int ubifs_clear_orphans(struct ubifs_info *c)
+ 	return 0;
+ }
  
-+	err = ubifs_init_security(dir, inode, &dentry->d_name);
-+	if (err) {
-+		kfree(dev);
-+		goto out_inode;
-+	}
-+
- 	init_special_inode(inode, inode->i_mode, rdev);
- 	inode->i_size = ubifs_inode(inode)->ui_size = devlen;
- 	ui = ubifs_inode(inode);
- 	ui->data = dev;
- 	ui->data_len = devlen;
- 
--	err = ubifs_init_security(dir, inode, &dentry->d_name);
--	if (err)
--		goto out_inode;
+-/**
+- * insert_dead_orphan - insert an orphan.
+- * @c: UBIFS file-system description object
+- * @inum: orphan inode number
+- *
+- * This function is a helper to the 'do_kill_orphans()' function. The orphan
+- * must be kept until the next commit, so it is added to the rb-tree and the
+- * deletion list.
+- */
+-static int insert_dead_orphan(struct ubifs_info *c, ino_t inum)
+-{
+-	struct ubifs_orphan *orphan, *o;
+-	struct rb_node **p, *parent = NULL;
 -
- 	mutex_lock(&dir_ui->ui_mutex);
- 	dir->i_size += sz_change;
- 	dir_ui->ui_size = dir->i_size;
-@@ -1184,6 +1186,10 @@ static int ubifs_symlink(struct mnt_idmap *idmap, struct inode *dir,
- 		goto out_fname;
- 	}
- 
-+	err = ubifs_init_security(dir, inode, &dentry->d_name);
-+	if (err)
-+		goto out_inode;
-+
- 	ui = ubifs_inode(inode);
- 	ui->data = kmalloc(disk_link.len, GFP_NOFS);
- 	if (!ui->data) {
-@@ -1209,10 +1215,6 @@ static int ubifs_symlink(struct mnt_idmap *idmap, struct inode *dir,
- 	ui->data_len = disk_link.len - 1;
- 	inode->i_size = ubifs_inode(inode)->ui_size = disk_link.len - 1;
- 
--	err = ubifs_init_security(dir, inode, &dentry->d_name);
--	if (err)
--		goto out_inode;
+-	orphan = kzalloc(sizeof(struct ubifs_orphan), GFP_KERNEL);
+-	if (!orphan)
+-		return -ENOMEM;
+-	orphan->inum = inum;
 -
- 	mutex_lock(&dir_ui->ui_mutex);
- 	dir->i_size += sz_change;
- 	dir_ui->ui_size = dir->i_size;
+-	p = &c->orph_tree.rb_node;
+-	while (*p) {
+-		parent = *p;
+-		o = rb_entry(parent, struct ubifs_orphan, rb);
+-		if (inum < o->inum)
+-			p = &(*p)->rb_left;
+-		else if (inum > o->inum)
+-			p = &(*p)->rb_right;
+-		else {
+-			/* Already added - no problem */
+-			kfree(orphan);
+-			return 0;
+-		}
+-	}
+-	c->tot_orphans += 1;
+-	rb_link_node(&orphan->rb, parent, p);
+-	rb_insert_color(&orphan->rb, &c->orph_tree);
+-	list_add_tail(&orphan->list, &c->orph_list);
+-	orphan->del = 1;
+-	orphan->dnext = c->orph_dnext;
+-	c->orph_dnext = orphan;
+-	dbg_mnt("ino %lu, new %d, tot %d", (unsigned long)inum,
+-		c->new_orphans, c->tot_orphans);
+-	return 0;
+-}
+-
+ /**
+  * do_kill_orphans - remove orphan inodes from the index.
+  * @c: UBIFS file-system description object
+@@ -655,10 +610,6 @@ static int do_kill_orphans(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
+ 				if (err)
+ 					goto out_ro;
+ 			}
+-
+-			err = insert_dead_orphan(c, inum);
+-			if (err)
+-				goto out_free;
+ 		}
+ 
+ 		*last_cmt_no = cmt_no;
 -- 
 2.39.2
 
