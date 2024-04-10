@@ -1,239 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA05159571;
-	Wed, 10 Apr 2024 11:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C277159589
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749320; cv=none; b=XvSwARhR0U/wCT4qxTcmlmPD98qlSEfqPUzYmWrjt6N7oSAeL+93ra7XmVqLo1TRPMBjpkAZ7gyuEN7mE5HKsevUcSi/zjX4Bu1vtPEZlgSHGRJll7VM+SwRTEhCrF2xEwbUKP6Wu5amtD+NWvagZyF+GzHQACUJ+aaAYUe24Bs=
+	t=1712749356; cv=none; b=opbfWWYfA1bhZ/Xbd6hRhMqE18ITWXqmnGkN6vpz1qYAiHIboyaLs2D11PX50RoclvIuVI2Ts1ovW4ynnakpHxs+xgq4jvC6gg3z/rv1wRsdNqjlOeR8qHCRmje0+JS5WJzoS6CfVr6kx2xu28sZX2HuGG7k6/EDQt7tw25H8sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749320; c=relaxed/simple;
-	bh=yG0zg+oeG65EEgQu+xIv2yDk0f6ytD4/gZuu43Ic4NM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G4pMlFHhzUkeZPQnYI3QM9xbao2WcEyNuOVXRVs43JW07+Y5T1/w3/QTe5Xidyj+t8t1Z8I1UOZ73EabLnIaWvfEf8QJNLJGIUzNxqb5rlhATMc4AhLdX0UuVPydyZHHuZrdew1w2b5LEL/9fA5jOdXNLeH/VeLd8iJolWfXF7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gwV8VI9P; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712749356; c=relaxed/simple;
+	bh=yaFQxvePqSzegCFFO4PoSuEJoGwSuxRd214Dl7AG+sQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iQCkRMLtMELZan5ueRza0G4+KRJ13fOXnJnTUio1pgF7hzgy+9fmPqkFXpn0V+n4rScYcivS7IVjcu5kte49+01SrMExPbc+BjgbtnnxPJzLatPG+NxWjAZoCziVIuBCAAVdDNT5p02RWJi56C+EMfGGndn1MuzaSnnNaWq7/RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JnXIpMMv; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gwV8VI9P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712749319; x=1744285319;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yG0zg+oeG65EEgQu+xIv2yDk0f6ytD4/gZuu43Ic4NM=;
-  b=gwV8VI9PnVRpSydYKE0oX/eIE+Sl9/Qw3OBhX1iHQm54BU2STpf+Ogl5
-   FQuIVe12Yr28IWlWNdx171xq0vxbZsv3cV3kjBh9eZ5yGtnum8o/au6O7
-   TwyDQ53LexCQ9j+cyNkyy5HnhASD7R413uBAYlHAj4ad+QScFYdLFYXrY
-   6J1gtKeEXCtrQB7Ds4cqGIT/97d5DwnpyHoVA26xalrgxEfNmDwLFTUBG
-   qxZVj91bsQT1lDk5kJCyHyeZV5/dDfQyeLYX3jH/bn+cpv2qUyUq73pn2
-   zHgdEDiqJwUkbY4BZkKmAQP6QumZimyrabILL2NxmVwkySfJvzWyuOgdN
-   g==;
-X-CSE-ConnectionGUID: 8NC5PeXxQJGULsCwIm1Aww==
-X-CSE-MsgGUID: AzMUE8oARhOXVfAxW/EJ4w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11896320"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11896320"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 04:41:59 -0700
-X-CSE-ConnectionGUID: ttzm7WJaR6W2mHtBRovH1Q==
-X-CSE-MsgGUID: qfAhKikZTKGbSVdCdieoTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20417691"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 04:41:52 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 93BBD1203E6;
-	Wed, 10 Apr 2024 14:41:49 +0300 (EEST)
-Date: Wed, 10 Apr 2024 11:41:49 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Zhi Mao <zhi.mao@mediatek.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Mehdi Djait <mehdi.djait@bootlin.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, shengnan.wang@mediatek.com,
-	yaya.chang@mediatek.com, yunkec@chromium.org, 10572168@qq.com
-Subject: Re: [PATCH 1/2] media: dt-bindings: i2c: add Giantec GT97xx VCM
- driver
-Message-ID: <ZhZ6_WXfCdwGBdC-@kekkonen.localdomain>
-References: <20240410104002.1197-1-zhi.mao@mediatek.com>
- <20240410104002.1197-2-zhi.mao@mediatek.com>
- <20240410-rice-fringe-4ae992217a2f@spud>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JnXIpMMv"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-516d756eb74so5929161e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712749352; x=1713354152; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KUA83gpzkWVU1iShuYOjIgJTVa9hCldc/8ck/dDALYc=;
+        b=JnXIpMMvgKrv2RwXViwWyX+T38+uGBohIZzQasRMdlbRZndTyW1KcaY3U0YN1yS1Pc
+         avSX3xjl71rRuYRQmgSH5+O/9hVw6pPG3c/a8Katqx8FHbFuf3h364TTv9Go4wf/AC4q
+         MHU9LFgFCnQHpFUrXH/wRPzQ0bQbzoQ5g/io+RRbmDUUSjrttmbbzVBYdwwmIg4GDzn8
+         gKeBcGKBOkDpBndUQSOBPkkZw44RycRy7d4jKLBvTQyRAVO6D4GiX7mZtKbHoPNpQuHx
+         LB4zYQbbZ0r1SshQGWYyDv81xPO9USjB/nr/OP2H/eZw+6rvb842rgj31WEfkjfIfg/N
+         8nSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712749352; x=1713354152;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUA83gpzkWVU1iShuYOjIgJTVa9hCldc/8ck/dDALYc=;
+        b=lfZ/glRvuv5l5QC9HjF0K78/1jhu/8P9vq9b1BCvytbPkPoy7ctwC8/13o81+Aq8sA
+         FLhSgVTWDQjkvgfJnbotwHIyCai0QRmakWdRz5fLsbLssfTPm+tImIfmHSKoXp16n+pl
+         ybbBNBCHFx8/oxgWv3HtOtmo144rJvJ1ZTtLwAVqDCS3WMJ3nqOnc/e6Erp8wSoa9dW1
+         W1Yrqlg5e/PL2SrAnsCN/ckpXVDdzuuE68uMGAW0T8zS6EBiGEbFKg/R1w8TR8sTnWeT
+         vJV0EJYGEinofcw2qrYRzoskDHXhXDVIdPje6jRNTv/J+dY/QqO/dgNsAXAdxhTsTNGO
+         xnNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTrEzEGu8lyx9TYXyoRiDKmGdoH9/LPfzcM5g4s074rYMWRageROMZVwn3w3vL5aOMVsP26taOtJSBTag3Wtm7qQt9/QijdJLQ/2YF
+X-Gm-Message-State: AOJu0Ywk3CxP4+CKSwHyHCT/OZcFPBVIdhlzMba3EujQXq4x9vsA2CKM
+	Fl/53jrSR3A7dQQlIG4I/TCCiSTf9EQTl2RuHXYruQnVcoCpJHqhWiX3Asc5AbYvPh92v+hacFQ
+	Z25c=
+X-Google-Smtp-Source: AGHT+IH0+JJIgaOrT6Rtm4Iaj3kAzRyP1f2o2KvzIHaHdG7P6BeuIaEO3YdnIAP8OVrErSr8qWw4XQ==
+X-Received: by 2002:a05:6512:e85:b0:516:ea55:324d with SMTP id bi5-20020a0565120e8500b00516ea55324dmr1833879lfb.31.1712749352436;
+        Wed, 10 Apr 2024 04:42:32 -0700 (PDT)
+Received: from [172.30.204.89] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id s24-20020a197718000000b00516c600cfcasm1853162lfc.106.2024.04.10.04.42.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 04:42:32 -0700 (PDT)
+Message-ID: <730d6b9e-d6b4-41fd-bef3-b1fa6e914a35@linaro.org>
+Date: Wed, 10 Apr 2024 13:42:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410-rice-fringe-4ae992217a2f@spud>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] drm/msm/adreno: Implement SMEM-based speed bin
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>
+References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
+ <20240405-topic-smem_speedbin-v1-4-ce2b864251b1@linaro.org>
+ <scvwfj44z3wpp7phvesfwjuv5awtlkwby2vvrpaq4i5fircrt3@i3ebya4iymf3>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <scvwfj44z3wpp7phvesfwjuv5awtlkwby2vvrpaq4i5fircrt3@i3ebya4iymf3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Conor, Zhi,
 
-On Wed, Apr 10, 2024 at 12:27:07PM +0100, Conor Dooley wrote:
-> Hey,
-> 
-> On Wed, Apr 10, 2024 at 06:40:01PM +0800, Zhi Mao wrote:
-> > Add YAML device tree binding for GT97xx VCM driver,
-> 
-> Please don't mention drivers here, bindings are for hardware.
-> 
-> > and the relevant MAINTAINERS entries.
-> > 
-> > Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> > ---
-> >  .../bindings/media/i2c/giantec,gt97xx.yaml    | 91 +++++++++++++++++++
-> >  1 file changed, 91 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml b/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
-> > new file mode 100644
-> > index 000000000000..8c9f1eb4dac8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
-> > @@ -0,0 +1,91 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright (c) 2020 MediaTek Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/giantec,gt97xx.yaml#
-> 
-> Filename patching compatible please.
-> 
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Giantec Semiconductor, Crop. GT97xx Voice Coil Motor (VCM)
-> > +
-> > +maintainers:
-> > +  - Zhi Mao <zhi.mao@mediatek.com>
-> > +
-> > +description: |-
-> > +  The Giantec GT97xx is a 10-bit DAC with current sink capability.
-> > +  The DAC is controlled via I2C bus that operates at clock rates up to 1MHz.
-> > +  This chip integrates Advanced Actuator Control (AAC) technology
-> > +  and is intended for driving voice coil lens in camera modules.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - giantec,gt9768 # for GT9768 VCM
-> > +      - giantec,gt9769 # for GT9769 VCM
-> 
-> I don't think these comments are needed, they should be clear from the
-> compatibles, no?
-> 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  vin-supply: true
-> > +
-> > +  vdd-supply: true
-> > +
-> > +  giantec,aac-mode:
-> > +    description:
-> > +      Indication of AAC mode select.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum:
-> > +      - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
-> > +      - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
-> > +      - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
-> > +      - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
-> 
-> I dislike these enum based properties and I would rather this either be
-> the values themselves (0.48, 0.70 etc).
-> 
-> > +    default: 2
-> > +
-> > +  giantec,aac-timing:
-> > +    description:
-> > +      Number of AAC Timing count that controlled by one 6-bit period of
-> > +      vibration register AACT[5:0], the unit of which is 100 us.
-> 
-> Then the property should be in a standard unit of time, not "random" hex
-> numbers that correspond to register values.
-> 
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    default: 0x20
-> > +    minimum: 0x00
-> > +    maximum: 0x3f
-> > +
-> > +  giantec,clock-presc:
-> > +    description:
-> > +      Indication of VCM internal clock dividing rate select, as one multiple
-> > +      factor to calculate VCM ring periodic time Tvib.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum:
-> > +      - 0    #  Dividing Rate -  2
-> > +      - 1    #  Dividing Rate -  1
-> > +      - 2    #  Dividing Rate -  1/2
-> > +      - 3    #  Dividing Rate -  1/4
-> > +      - 4    #  Dividing Rate -  8
-> > +      - 5    #  Dividing Rate -  4
-> 
-> Same here, you should not need these comments explaining the values, use
-> an enum with meaningful values please. 
-> 
-> > +    default: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - vin-supply
-> > +  - vdd-supply
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        vcm@c {
-> 
-> "vcm" is not a generic node-name, can you use one please?
-> Look around similar bindings or at the dt spec for generic node-names.
 
-"camera-lens" would seem to be widely used. I can post patches to change
-some of the rest out there that aren't aligned.
+On 4/6/24 05:23, Dmitry Baryshkov wrote:
+> On Fri, Apr 05, 2024 at 10:41:32AM +0200, Konrad Dybcio wrote:
+>> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
+>> abstracted through SMEM, instead of being directly available in a fuse.
+>>
+>> Add support for SMEM-based speed binning, which includes getting
+>> "feature code" and "product code" from said source and parsing them
+>> to form something that lets us match OPPs against.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+
+[...]
+
+>> -	return nvmem_cell_read_variable_le_u32(dev, "speed_bin", speedbin);
+>> +	u32 fcode, pcode;
+>> +	int ret;
+>> +
+>> +	/* Try reading the speedbin via a nvmem cell first */
+>> +	ret = nvmem_cell_read_variable_le_u32(dev, "speed_bin", speedbin);
+>> +	if (!ret && ret != -EINVAL)
+> 
+> This is always false.
+
+Right, a better condition would be (!ret || ret != EINVAL)..
+
 
 > 
-> Thanks,
-> Conor.
+>> +		return ret;
+>> +
+>> +	ret = qcom_smem_get_feature_code(&fcode);
+>> +	if (ret) {
+>> +		dev_err(dev, "Couldn't get feature code from SMEM!\n");
+>> +		return ret;
 > 
-> > +            compatible = "giantec,gt9768";
-> > +            reg = <0x0c>;
-> > +
-> > +            vin-supply = <&gt97xx_vin>;
-> > +            vdd-supply = <&gt97xx_vdd>;
-> > +            giantec,aac-timing = <0x20>;
-> > +        };
-> > +    };
-> > +
-> > +...
+> This brings in QCOM_SMEM dependency (which is not mentioned in the
+> Kconfig). Please keep iMX5 hardware in mind, so the dependency should be
+> optional. Respective functions should be stubbed in the header.
 
--- 
-Kind regards,
+OK, I had this in mind early on, but forgot to actually impl it.
 
-Sakari Ailus
+> 
+>> +	}
+>> +
+>> +	ret = qcom_smem_get_product_code(&pcode);
+>> +	if (ret) {
+>> +		dev_err(dev, "Couldn't get product code from SMEM!\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* Don't consider fcode for external feature codes */
+>> +	if (fcode <= SOCINFO_FC_EXT_RESERVE)
+>> +		fcode = SOCINFO_FC_UNKNOWN;
+>> +
+>> +	*speedbin = FIELD_PREP(ADRENO_SKU_ID_PCODE, pcode) |
+>> +		    FIELD_PREP(ADRENO_SKU_ID_FCODE, fcode);
+> 
+> What about just asking the qcom_smem for the 'gpu_bin' and hiding gory
+> details there? It almost feels that handling raw PCODE / FCODE here is
+> too low-level and a subject to change depending on the socinfo format.
+
+No, the FCODE & PCODE can be interpreted differently across consumers.
+
+> 
+>> +
+>> +	return ret;
+>>   }
+>>   
+>>   int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>> @@ -1098,9 +1129,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>>   			devm_pm_opp_set_clkname(dev, "core");
+>>   	}
+>>   
+>> -	if (adreno_read_speedbin(dev, &speedbin) || !speedbin)
+>> +	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
+>>   		speedbin = 0xffff;
+>> -	adreno_gpu->speedbin = (uint16_t) (0xffff & speedbin);
+> 
+> the &= 0xffff should probably go to the adreno_read_speedbin / nvmem
+> case. WDYT?
+
+Ok, I can keep it, though realistically if this ever does anything
+useful, it likely means the dt is wrong
+
+Konrad
