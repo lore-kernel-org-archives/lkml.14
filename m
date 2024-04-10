@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A7213D2BE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E10713D292
 	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736367; cv=none; b=V9GurM5JjN9TaINwLLGWpVSpdw5XCura9bexTZ0Q0u6e2/pZqhZj8v0KkoAUmqoWjVgzu+dCiVEgSkrF3NQAEIR0g9U/i2MHzHq3W9gjELl34WDuIvWkfrLNIckOjbpAK9AfkmAyTN20Qm+NthZ2Fr4Oz+SJFxwRwQSuUDUx/Dw=
+	t=1712736368; cv=none; b=jQ1HFW2Y2SNuZrcv0VAhzV1NeJqWimETmkFHzs6tUlzcR8bU2vL8Df9babMIzOKobvjzCE+TX+CCIcBs+HaAea46q6EgHNX51498E0jHLJax1O3g7Aw5C2iAFhUNZpMwiivfldnag00n4kZEppXQzNvlOkrB6OTcMR63zY8WtFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736367; c=relaxed/simple;
-	bh=QPq++0oGGAhF9jWbCS3UVNaYuVdly7/+G7Nn1QU2JyM=;
+	s=arc-20240116; t=1712736368; c=relaxed/simple;
+	bh=Qjb8udiUnw5ls5ypyZbytvpkn5nU+tT5QfOsZXoNbhI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=izmlHSXtBPkE4Y5yV6HAZBwl2m5ZBjReJoojgCGmDCVFDgKf9BamRf9QGDn0DstXzn5oXLwjjuWfzDlCm3TE100SI1yO0N+l7zpCakJcGTiXkhjzSSRtH2qKRMgANVpNXb0WwANbYkM+ZN/usgu2AjPnN/9U4COi8KjJ0CyXUp0=
+	 MIME-Version; b=tCBIgy9IFiDWUiMeK6ShTX0LOa+r1z5Ot+2ihwoG6FgJFMs5WSl+ARGOLEU4da0Q3dPgY8+s1b3BCwwJ1L2S4HZxfAe23lX6wKq06fKGGYZLTvq3L47vUC+d3/RfJoyd8AcNmqrESQM4vbStcPoesWwEMrJ9qrphkeIRAK65EHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1ruSy0-0004NN-Bg; Wed, 10 Apr 2024 10:06:00 +0200
+	id 1ruSy0-0004NS-Bh; Wed, 10 Apr 2024 10:06:00 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1ruSxx-00BSav-Rm; Wed, 10 Apr 2024 10:05:57 +0200
+	id 1ruSxy-00BSb7-0o; Wed, 10 Apr 2024 10:05:58 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1ruSxx-005Ctk-2V;
+	id 1ruSxx-005Cuu-2z;
 	Wed, 10 Apr 2024 10:05:57 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -39,7 +39,6 @@ To: "David S. Miller" <davem@davemloft.net>,
 	Woojung Huh <woojung.huh@microchip.com>,
 	Arun Ramadoss <arun.ramadoss@microchip.com>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
@@ -48,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v6 1/9] net: dsa: add support for DCB get/set apptrust configuration
-Date: Wed, 10 Apr 2024 10:05:48 +0200
-Message-Id: <20240410080556.1241048-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v6 8/9] net: dsa: microchip: init predictable IPV to queue mapping for all non KSZ8xxx variants
+Date: Wed, 10 Apr 2024 10:05:55 +0200
+Message-Id: <20240410080556.1241048-9-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410080556.1241048-1-o.rempel@pengutronix.de>
 References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
@@ -66,84 +65,120 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add DCB support to get/set trust configuration for different packet
-priority information sources. Some switch allow to chose different
-source of packet priority classification. For example on KSZ switches it
-is possible to configure VLAN PCP and/or DSCP sources.
+Init priority to queue mapping in the way as it shown in IEEE 802.1Q
+mapping example.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
-changes v6:
-- port_set_apptrust pointer should be tested in dsa_user_dcbnl_set_apptrust()
-changes v3:
-- s/to choice/to chose/
+changes v2:
+- s/ksz_set_default_prio_queue_mapping/ksz9477_set_default_prio_queue_mapping
+- remove error on queue < 0.
 ---
- include/net/dsa.h |  4 ++++
- net/dsa/user.c    | 28 ++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ drivers/net/dsa/microchip/ksz_common.c | 57 +++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 24 deletions(-)
 
-diff --git a/include/net/dsa.h b/include/net/dsa.h
-index 7c0da9effe4e9..96bde2aa86efd 100644
---- a/include/net/dsa.h
-+++ b/include/net/dsa.h
-@@ -955,6 +955,10 @@ struct dsa_switch_ops {
- 				      u8 prio);
- 	int	(*port_del_dscp_prio)(struct dsa_switch *ds, int port, u8 dscp,
- 				      u8 prio);
-+	int	(*port_set_apptrust)(struct dsa_switch *ds, int port,
-+				     const u8 *sel, int nsel);
-+	int	(*port_get_apptrust)(struct dsa_switch *ds, int port, u8 *sel,
-+				     int *nsel);
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 87a807ac7900e..8a5d41025604a 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -24,6 +24,7 @@
+ #include <linux/of_net.h>
+ #include <linux/micrel_phy.h>
+ #include <net/dsa.h>
++#include <net/ieee8021q.h>
+ #include <net/pkt_cls.h>
+ #include <net/switchdev.h>
  
- 	/*
- 	 * Suspend and resume
-diff --git a/net/dsa/user.c b/net/dsa/user.c
-index 16d395bb1a1fe..aa6c26cd63f56 100644
---- a/net/dsa/user.c
-+++ b/net/dsa/user.c
-@@ -2136,6 +2136,32 @@ int dsa_user_change_mtu(struct net_device *dev, int new_mtu)
- 	return err;
+@@ -2672,9 +2673,33 @@ static int ksz_port_mdb_del(struct dsa_switch *ds, int port,
+ 	return dev->dev_ops->mdb_del(dev, port, mdb, db);
  }
  
-+static int __maybe_unused
-+dsa_user_dcbnl_set_apptrust(struct net_device *dev, u8 *sel, int nsel)
++static int ksz9477_set_default_prio_queue_mapping(struct ksz_device *dev,
++						  int port)
 +{
-+	struct dsa_port *dp = dsa_user_to_port(dev);
-+	struct dsa_switch *ds = dp->ds;
-+	int port = dp->index;
++	u32 queue_map = 0;
++	int ipv;
 +
-+	if (!ds->ops->port_set_apptrust)
-+		return -EOPNOTSUPP;
++	for (ipv = 0; ipv < dev->info->num_ipvs; ipv++) {
++		int queue;
 +
-+	return ds->ops->port_set_apptrust(ds, port, sel, nsel);
++		/* Traffic Type (TT) is corresponding to the Internal Priority
++		 * Value (IPV) in the switch. Traffic Class (TC) is
++		 * corresponding to the queue in the switch.
++		 */
++		queue = ieee8021q_tt_to_tc(ipv, dev->info->num_tx_queues);
++		if (queue < 0)
++			return queue;
++
++		queue_map |= queue << (ipv * KSZ9477_PORT_TC_MAP_S);
++	}
++
++	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
 +}
 +
-+static int __maybe_unused
-+dsa_user_dcbnl_get_apptrust(struct net_device *dev, u8 *sel, int *nsel)
-+{
-+	struct dsa_port *dp = dsa_user_to_port(dev);
-+	struct dsa_switch *ds = dp->ds;
-+	int port = dp->index;
-+
-+	if (!ds->ops->port_get_apptrust)
-+		return -EOPNOTSUPP;
-+
-+	return ds->ops->port_get_apptrust(ds, port, sel, nsel);
-+}
-+
- static int __maybe_unused
- dsa_user_dcbnl_set_default_prio(struct net_device *dev, struct dcb_app *app)
+ static int ksz_port_setup(struct dsa_switch *ds, int port)
  {
-@@ -2376,6 +2402,8 @@ static const struct ethtool_ops dsa_user_ethtool_ops = {
- static const struct dcbnl_rtnl_ops __maybe_unused dsa_user_dcbnl_ops = {
- 	.ieee_setapp		= dsa_user_dcbnl_ieee_setapp,
- 	.ieee_delapp		= dsa_user_dcbnl_ieee_delapp,
-+	.dcbnl_setapptrust	= dsa_user_dcbnl_set_apptrust,
-+	.dcbnl_getapptrust	= dsa_user_dcbnl_get_apptrust,
- };
+ 	struct ksz_device *dev = ds->priv;
++	int ret;
  
- static void dsa_user_get_stats64(struct net_device *dev,
+ 	if (!dsa_is_user_port(ds, port))
+ 		return 0;
+@@ -2682,6 +2707,12 @@ static int ksz_port_setup(struct dsa_switch *ds, int port)
+ 	/* setup user port */
+ 	dev->dev_ops->port_setup(dev, port, false);
+ 
++	if (!is_ksz8(dev)) {
++		ret = ksz9477_set_default_prio_queue_mapping(dev, port);
++		if (ret)
++			return ret;
++	}
++
+ 	/* port_stp_state_set() will be called after to enable the port so
+ 	 * there is no need to do anything.
+ 	 */
+@@ -3546,8 +3577,7 @@ static int ksz_tc_ets_add(struct ksz_device *dev, int port,
+ 
+ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ {
+-	int ret, queue, tc_prio, s;
+-	u32 queue_map = 0;
++	int ret, queue;
+ 
+ 	/* To restore the default chip configuration, set all queues to use the
+ 	 * WRR scheduler with a weight of 1.
+@@ -3559,31 +3589,10 @@ static int ksz_tc_ets_del(struct ksz_device *dev, int port)
+ 			return ret;
+ 	}
+ 
+-	switch (dev->info->num_tx_queues) {
+-	case 2:
+-		s = 2;
+-		break;
+-	case 4:
+-		s = 1;
+-		break;
+-	case 8:
+-		s = 0;
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+ 	/* Revert the queue mapping for TC-priority to its default setting on
+ 	 * the chip.
+ 	 */
+-	for (tc_prio = 0; tc_prio < dev->info->num_ipvs; tc_prio++) {
+-		int queue;
+-
+-		queue = tc_prio >> s;
+-		queue_map |= queue << (tc_prio * KSZ9477_PORT_TC_MAP_S);
+-	}
+-
+-	return ksz_pwrite32(dev, port, KSZ9477_PORT_MRI_TC_MAP__4, queue_map);
++	return ksz9477_set_default_prio_queue_mapping(dev, port);
+ }
+ 
+ static int ksz_tc_ets_validate(struct ksz_device *dev, int port,
 -- 
 2.39.2
 
