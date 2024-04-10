@@ -1,108 +1,111 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2255F156865;
-	Wed, 10 Apr 2024 11:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330D01494D6;
+	Wed, 10 Apr 2024 11:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712750176; cv=none; b=c7nHSpUpijhGK9zG1a8qUTFHtzfyUMCShh42oiguAL3HuinkOHUxEwSE1h6IGB4CbN4d0t5L4ki7GGlhTryzaF+r/bZ5PSnG0tICTGc9iBdPqs3sIN3GKo72tcZDEjRrykGxXYCiJl22qpboCG+8+4tUEXKFIL8g1r51u97d820=
+	t=1712750289; cv=none; b=cs600o/+zWgpkPKooha44d3/MDQgeO4dniFxJsxThV4Uxk2uxuPwLH/hQaW6iQBt4J6TPiAlIpCEtSzLhaBNNgQcNGLTM9JJXDzjE+t1XXmtYU1AC4iPO+sbI4arvO3wdUYH59vBJ0OtaAPoNVEihsuAfIUuNZteRJMHkKNJ/wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712750176; c=relaxed/simple;
-	bh=QOyaJy+CNi6R9607nxZfxgMXDaD6rr1ppov0JOl34z0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=HkXeZ7a7B+OOphAFY1p6NrnUErFu1a3MzLFw9QRibRq1XeXSICIMzCp2xeRdmeC/JerMLdJqcu62RJJ5wCm4mJx74LnJ4PD0jFuQRNOcITMIeZnYUkBksWqsp3gkGSI8O4izkOYPZb8QLxvH4BK9HWGx1lMwO0+ElxMaaCIWxeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VF1Rz0bmjz1RC7s;
-	Wed, 10 Apr 2024 19:53:19 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5C4CA14037E;
-	Wed, 10 Apr 2024 19:56:11 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
- 2024 19:56:11 +0800
-Subject: Re: [PATCH net-next v1 12/12] mm: page_frag: update documentation and
- maintainer for page_frag
-To: Alexander Duyck <alexander.duyck@gmail.com>, Jakub Kicinski
-	<kuba@kernel.org>
-CC: <davem@davemloft.net>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew
- Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<linux-doc@vger.kernel.org>
-References: <20240407130850.19625-1-linyunsheng@huawei.com>
- <20240407130850.19625-13-linyunsheng@huawei.com>
- <b5c5866e626f6c90657a32b5e9adff724d5896db.camel@gmail.com>
- <c1f5a78a-3040-0cc7-f113-d5ec82c6010f@huawei.com>
- <CAKgT0UfZBGEVJa1O7cdNt6zy_EEPoGo=aW6ugRKy8a44qg0j8w@mail.gmail.com>
- <09d7d59b-9da3-52f7-b039-acd0344c88c8@huawei.com>
- <20240409062504.26cfcdde@kernel.org>
- <CAKgT0UfqDRxhUyfQhwsDrRhQmCw4qNw_7Jwq+xN1Z4f6_1Bthg@mail.gmail.com>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <dea82ac3-65fc-c941-685f-9d4655aa4a52@huawei.com>
-Date: Wed, 10 Apr 2024 19:56:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1712750289; c=relaxed/simple;
+	bh=NNn9PFSTYD7cqCl6hz0HImhdmwtK0pBHKxKy9hV4DKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P7gmFfTG3LUU4byB8dPK7jeaQCE6tB90HFYz3xAh4x4odKHgr/dTl6A7nn1mDXeo0WSPzga+R+FfxK2IGWU2AbQPuf8XOLSKXpr2hFnu0wDDzXrf7Ge9+AvqklFYCY4eCOyqBE7LRHfxEVzz0fXwzhWYKantmSYUpPvaeylkVdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzWGbFT0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzWGbFT0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79EFAC433F1;
+	Wed, 10 Apr 2024 11:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712750288;
+	bh=NNn9PFSTYD7cqCl6hz0HImhdmwtK0pBHKxKy9hV4DKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CzWGbFT0pQPr5PGe5Mcpjxw+oeW+QocsoylRdvqaI5HLgB/f62hSvN+KLluR14H3A
+	 smtVRLg7hWq30aJc0OtF9AkgPjXk4vdGiUZTqVnIiCWiuq9ym6kXsvJrz/sR+f8LIX
+	 3vG8UsYAU08EoVHW7xqRYL0OeFU0whxwBhRaKMuYc1emqwVMTYOQOxCy69w1IsYpjy
+	 qvvpk7I1MXLnliKVw6Eh0e9XcgtmXLAOtcLSyXjCnUFC1C1G5UjslgeuhsKAJC80VB
+	 JVZz7+uAoUUFLtMnpOcf4GaFRMGB86qujVcjf2mXX39UZ0Elock/AgrsExJQtkfL2a
+	 7xzQfVgNVQLxg==
+Date: Wed, 10 Apr 2024 06:58:06 -0500
+From: Rob Herring <robh@kernel.org>
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
+	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
+	keescook@chromium.org, ajones@ventanamicro.com,
+	conor.dooley@microchip.com, cleger@rivosinc.com,
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-mm@kvack.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, krzysztof.kozlowski+dt@linaro.org,
+	oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
+	ebiederm@xmission.com, Liam.Howlett@oracle.com, vbabka@suse.cz,
+	lstoakes@gmail.com, shuah@kernel.org, brauner@kernel.org,
+	andy.chiu@sifive.com, jerry.shih@sifive.com,
+	hankuan.chen@sifive.com, greentime.hu@sifive.com, evan@rivosinc.com,
+	xiao.w.wang@intel.com, charlie@rivosinc.com,
+	apatel@ventanamicro.com, mchitale@ventanamicro.com,
+	dbarboza@ventanamicro.com, sameo@rivosinc.com,
+	shikemeng@huaweicloud.com, willy@infradead.org,
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
+	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
+	maskray@google.com, ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
+	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
+	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
+	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: Re: [PATCH v3 04/29] riscv: zicfilp / zicfiss in dt-bindings
+ (extensions.yaml)
+Message-ID: <20240410115806.GA4044117-robh@kernel.org>
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-5-debug@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UfqDRxhUyfQhwsDrRhQmCw4qNw_7Jwq+xN1Z4f6_1Bthg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403234054.2020347-5-debug@rivosinc.com>
 
-On 2024/4/9 23:11, Alexander Duyck wrote:
-> On Tue, Apr 9, 2024 at 6:25 AM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Tue, 9 Apr 2024 15:59:58 +0800 Yunsheng Lin wrote:
->>>> Just to be clear this isn't an Ack, but if you are going to list
->>>> maintainers for this my name should be on the list so this is the
->>>> preferred format. There are still some things to be cleaned up in this
->>>> patch.
->>>
->>> Sure, I was talking about "Alexander seems to be the orginal author for
->>> page_frag, we can add him to the MAINTAINERS later if we have an ack from
->>> him." in the commit log.
->>
->> Do we have to have a MAINTAINERS entry for every 1000 lines of code?
-
-Do we have something like rule or guidance against that?
-Looking at the entry in MAINTAINERS, it seems quite normal to me,
-I thouht it is generally encourage someone with willing and ability
-to be a maintainer/reviewer.
-
-Considering you have refused adding me as the reviewer of page_pool
-despite the support from two maintainers of page_pool, for the season
-of something like below:
-'page pool is increasingly central to the whole networking stack.
-The bar for "ownership" is getting higher and higher..'
-
-I think I might need a second opinion here.
-
->> It really feels forced :/
-
-I am not a native english speaker here, I would rather not comment
-on the 'forced' part here and focus more on the technical disscusion.
-
+On Wed, Apr 03, 2024 at 04:34:52PM -0700, Deepak Gupta wrote:
+> Make an entry for cfi extensions in extensions.yaml.
 > 
-> I don't disagree. However, if nothing else I think it gets used as a
-> part of get_maintainers.pl that tells you who to email about changes
-> doesn't it? It might make sense in my case since I am still
-> maintaining it using my gmail account, but I think the commits for
-> that were mostly from my Intel account weren't they? So if nothing
-> else it might be a way to provide a trail of breadcrumbs on how to
-> find a maintainer who changed employers..
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>  .../devicetree/bindings/riscv/extensions.yaml          | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> index 63d81dc895e5..45b87ad6cc1c 100644
+> --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> @@ -317,6 +317,16 @@ properties:
+>              The standard Zicboz extension for cache-block zeroing as ratified
+>              in commit 3dd606f ("Create cmobase-v1.0.pdf") of riscv-CMOs.
+>  
+> +        - const: zicfilp
+> +          description:
+> +            The standard Zicfilp extension for enforcing forward edge control-flow
+> +            integrity in commit 3a20dc9 of riscv-cfi and is in public review.
 
-+1.
-I generally pay more attention to the patch that is to'ed or cc'ed
-to my email when I am overloaded with other work.
+Does in public review mean the commit sha is going to change?
 
-> .
+> +
+> +        - const: zicfiss
+> +          description:
+> +            The standard Zicfiss extension for enforcing backward edge control-flow
+> +            integrity in commit 3a20dc9 of riscv-cfi and is in publc review.
+> +
+>          - const: zicntr
+>            description:
+>              The standard Zicntr extension for base counters and timers, as
+> -- 
+> 2.43.2
 > 
