@@ -1,138 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488D3176FDB;
-	Wed, 10 Apr 2024 17:19:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4934917BB0F;
+	Wed, 10 Apr 2024 17:19:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712769568; cv=none; b=tyIe5js0Y8bMEotV3Bj00d6TsBkx0wD/CT0uHzc0pPu05+N00LmN4emviz0Au0WlCZHg4tXlwD2wo5oi+CrtpU0zUPOq+fU4F/ocSBouRxLu+PJGgnR5XIiwohlu9Uq0BO9rQAfeAMZlqdbqi9Vc5dWiG/lK2X7v+7Ij3kJw+q4=
+	t=1712769592; cv=none; b=YBq0gznoXVn8+86nuPAMkmvBKS7YMrnY4BwOVZkiNU01rIypuo42GcTMF210Eg7eNzHq1A2s22j0mxU/UO3j7xUzMSlBFkWzWIUrFQjFbSYPuRey9D9tyzXvLPqtNn2hXq7GiKFSiNVQb9tcmIYzlRMEt9oHqRRm1KztTI8Eab4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712769568; c=relaxed/simple;
-	bh=W5eX1rU/9P9HprqQ9cPTQC7SCZNm4aigfiIYicPhLKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKblNNuSWyJPUv2X9SC1bbUypqDpptpkN3/q+DzK/IvCty31pRdpqYA4rFkEIcsJHQyef4H5xykNLwwW8i2iindizIC8TKaQIM/1fNFVQjYIi4sEhmHSWKijIdRfWM8z0nWa8GhqVv3R62MxaW1q0KfyTEi65dgQzARgdDlIByw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8R+u2Lc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712769592; c=relaxed/simple;
+	bh=6Hn8w2/tHxyjB+9DMsHB0GAVTOXeeu71uZLUXMLz+MY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=psRrZHwwR2EBbb1mO2/6+T4AistI3S+bmKUiOP7HrNbIt1A0vrpkS6bYxQ73+WKPBCxBqoVSb5j0qpRRHNSAIvBpedYt2FuyyKMjZ1ehDeTMPlpN83iIz/dZbX/xpwrvFQ+3ccBToBb3xl+HCfPLUiwZ6MFUM0JrkjPhpxg3yZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iw3NnDtI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8R+u2Lc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919E3C433F1;
-	Wed, 10 Apr 2024 17:19:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iw3NnDtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCBAC433C7;
+	Wed, 10 Apr 2024 17:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712769567;
-	bh=W5eX1rU/9P9HprqQ9cPTQC7SCZNm4aigfiIYicPhLKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g8R+u2LcMjuhESgE2vdJd7RAdvDYicV1iPM5LiK+Cex1rJ4Kn+rqiOOKA4YgGBKvU
-	 6wirhtTbJho6uV8fUZjciCHslvPTUwhW4UtoLt0zHxFxemaIr2QGwk1TON+DL5DPwh
-	 h4NyvSfMciSRUzEYpe0gpKjAsugwpEW/EoOvZdRYg0QWazSXf8I5sdanN5s321ELEa
-	 WJiUI7rmI6eD2Nw2Re3rpobNscN0B/NJ0kDU++7gyEtBdjRNw250mUOIQAgU3B7lA7
-	 XlYVjideFzkiT88e516rW9xYi1ojtQpflKSFz+BxOzTxZ829xErrWrYMEn+5+DHuMX
-	 ZuGXuEGz8Zh6A==
-Date: Wed, 10 Apr 2024 12:19:25 -0500
-From: Rob Herring <robh@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] dt-bindings: firmware: add i.MX SCMI Extension
- protocol
-Message-ID: <20240410171925.GA564262-robh@kernel.org>
-References: <20240405-imx95-bbm-misc-v2-v2-0-9fc9186856c2@nxp.com>
- <20240405-imx95-bbm-misc-v2-v2-2-9fc9186856c2@nxp.com>
+	s=k20201202; t=1712769592;
+	bh=6Hn8w2/tHxyjB+9DMsHB0GAVTOXeeu71uZLUXMLz+MY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Iw3NnDtIMq//xAo9OFKaD7T0kj/vRBXn46OJrE2/476IYB5LXdw1GgrE5R/jwUk8b
+	 AFwoxuJ1n0D/+s0eaInUMLzW1ZRy+CJ7DiaN0Xuz0FbAAzLwQXX6yOVdSDu/37PtGJ
+	 gxq9mAq498bsN9wlIvV4fqx5O4DI7os0SgVK01Z1UUX9U8H8ZiZaAtzp2YRqqeGk/0
+	 YjKVDQOYm3sPznflP+a9c3achXJ3ZxQppeUtiWYoF4tcI5ozxhPki1874EfZUo+XT+
+	 SFagDUVXJaMWqq919jYg5J4Ui7ly6AWR8cKU0sjDF8p9IvJWsNtfY9exW7b315SBbH
+	 ThQyM9LW6jUVw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Subject: [PATCH 00/18] HID: Include current HID-BPF fixes in tree
+Date: Wed, 10 Apr 2024 19:19:20 +0200
+Message-Id: <20240410-bpf_sources-v1-0-a8bf16033ef8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405-imx95-bbm-misc-v2-v2-2-9fc9186856c2@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABjKFmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDYyML3aSCtPji/NKi5NRi3aRUwzTjZDND82TTVCWgjoKi1LTMCrBp0bG
+ 1tQDcwZGFXQAAAA==
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, Peter Hutterer <peter.hutterer@who-t.net>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Martin Sivak <mars@montik.net>, 
+ Ping Cheng <pinglinux@gmail.com>, Jason Gerecke <killertofu@gmail.com>, 
+ Aaron Armstrong Skomra <skomra@gmail.com>, 
+ Joshua Dickens <Joshua@joshua-dickens.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712769589; l=4998;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=6Hn8w2/tHxyjB+9DMsHB0GAVTOXeeu71uZLUXMLz+MY=;
+ b=4u3UJmMlfDaLYKJ4I0Ma//8KMyyoUN8KeH2/6JvseMZ2t+tHYRFsk4AWtNKrHvabriBx/1hlA
+ H6sKRtFR2hzCXXOgazQhJqLwQ+Y+58hzd8P+YpnxD6KMjePxVfckorN
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-On Fri, Apr 05, 2024 at 08:39:24PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Add i.MX SCMI Extension protocols bindings for:
->  - Battery Backed Secure Module(BBSM)
->  - MISC settings such as General Purpose Registers settings.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/firmware/imx,scmi.yaml     | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/imx,scmi.yaml b/Documentation/devicetree/bindings/firmware/imx,scmi.yaml
-> new file mode 100644
-> index 000000000000..7ee19a661d83
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/imx,scmi.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2024 NXP
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/firmware/imx,scmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: i.MX System Control and Management Interface(SCMI) Vendor Protocols Extension
-> +
-> +maintainers:
-> +  - Peng Fan <peng.fan@nxp.com>
-> +
-> +allOf:
-> +  - $ref: arm,scmi.yaml#
+When I introduced HID-BPF, I mentioned that we should ship the HID-BPF
+programs in the kernel when they are fixes so that everybody can benefit
+from them.
 
-This needs to be the other way around. Add a ref to this file in 
-arm,scmi.yaml under an 'anyOf' entry.
+I tried multiple times to do so but I was confronted to a tough problem:
+how can I make the kernel load them automatically?
 
-> +
-> +properties:
-> +  protocol@81:
-> +    $ref: 'arm,scmi.yaml#/$defs/protocol-node'
-> +    unevaluatedProperties: false
-> +    description:
-> +      The BBM Protocol is for managing Battery Backed Secure Module (BBSM) RTC
-> +      and the ON/OFF Key
-> +
-> +    properties:
-> +      reg:
-> +        const: 0x81
-> +
-> +    required:
-> +      - reg
-> +
-> +  protocol@84:
-> +    $ref: 'arm,scmi.yaml#/$defs/protocol-node'
-> +    unevaluatedProperties: false
-> +    description:
-> +      The MISC Protocol is for managing SoC Misc settings, such as GPR settings
-> +
-> +    properties:
-> +      reg:
-> +        const: 0x84
-> +
-> +      wakeup-sources:
-> +        description:
-> +          Each entry consists of 2 integers, represents the source and electric signal edge
-> +        items:
-> +          items:
-> +            - description: the wakeup source
-> +            - description: the wakeup electric signal edge
+I went over a few solutions, but it always came down to something either
+ugly, or either not satisfying (like forcing `bpftool` to be compiled
+first, or not being able to insert them as a module).
 
-No constraints on the entry values?
+OTOH, I was working with Peter on `udev-hid-bpf`[0] as a proof of
+concept on how a minimal loader should look like. This allowed me to
+experiment on the BPF files and how they should look like.
 
-> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +
-> +    required:
-> +      - reg
-> +
-> +additionalProperties: false
+And after further thoughts, I realized that `udev-hid-bpf` could very
+well be the `kmod load` that we currently have:
+- the kernel handles the device normally
+- a udev event is emitted
+- a udev rule fires `udev-hid-bpf` and load the appropriate HID-BPF
+  file(s) based on the modalias
 
-And then this can be true.
+Given that most HID devices are supposed to work to a minimal level when
+connected without any driver, this makes the whole HID-BPF programs nice
+to have but not critical. We can then postpone the HID-BPF loading when
+userspace is ready.
 
-Rob
+Working with HID-BPF is also a much better user experience for end users
+(as I predicted). All they have to do is to go to the `udev-hid-bpf`
+project, fetch an artifact from the MR that concerns them, run
+`install.sh` (no compilation required), and their devices are fixed
+(minus some back and forth when the HID-BPF program needs some changes).
+
+So I already have that loader available, and it works well enough for
+our users. But the missing point was still how to "upstream" those BPF
+fixes?
+
+That's where this patch series comes in: we simply store the fixes in
+the kernel under `drivers/hid/bpf/progs`, provide a way to compile them,
+but also add tests for them in the selftests dir.
+
+Once a program is accepted here, for convenience, the same program will
+move from a "testing" directory to a "stable" directory on
+`udev-hid-bpf`. This way, distributions don't need to follow when there
+is a new program added here, they can just ship the "stable" ones from
+`udev-hid-bpf`.
+
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+
+[0] https://gitlab.freedesktop.org/libevdev/udev-hid-bpf/
+
+---
+Benjamin Tissoires (18):
+      HID: do not assume HAT Switch logical max < 8
+      HID: bpf: add first in-tree HID-BPF fix for the XPPen Artist 24
+      HID: bpf: add in-tree HID-BPF fix for the XPPen Artist 16
+      HID: bpf: add in-tree HID-BPF fix for the HP Elite Presenter Mouse
+      HID: bpf: add in-tree HID-BPF fix for the IOGear Kaliber Gaming MMOmentum mouse
+      HID: bpf: add in-tree HID-BPF fix for the Wacom ArtPen
+      HID: bpf: add in-tree HID-BPF fix for the XBox Elite 2 over Bluetooth
+      HID: bpf: add in-tree HID-BPF fix for the Huion Kamvas Pro 19
+      HID: bpf: add in-tree HID-BPF fix for the Raptor Mach 2
+      selftests/hid: import base_device.py from hid-tools
+      selftests/hid: add support for HID-BPF pre-loading before starting a test
+      selftests/hid: tablets: reduce the number of pen state
+      selftests/hid: tablets: add a couple of XP-PEN tablets
+      selftests/hid: tablets: also check for XP-Pen offset correction
+      selftests/hid: add Huion Kamvas Pro 19 tests
+      selftests/hid: import base_gamepad.py from hid-tools
+      selftests/hid: move the gamepads definitions in the test file
+      selftests/hid: add tests for the Raptor Mach 2 joystick
+
+ drivers/hid/bpf/progs/FR-TEC__Raptor-Mach-2.bpf.c  | 185 ++++++
+ drivers/hid/bpf/progs/HP__Elite-Presenter.bpf.c    |  58 ++
+ drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c   | 290 +++++++++
+ .../hid/bpf/progs/IOGEAR__Kaliber-MMOmentum.bpf.c  |  59 ++
+ drivers/hid/bpf/progs/Makefile                     |  91 +++
+ .../hid/bpf/progs/Microsoft__XBox-Elite-2.bpf.c    | 133 ++++
+ drivers/hid/bpf/progs/README                       | 102 +++
+ drivers/hid/bpf/progs/Wacom__ArtPen.bpf.c          | 173 +++++
+ drivers/hid/bpf/progs/XPPen__Artist24.bpf.c        | 229 +++++++
+ drivers/hid/bpf/progs/XPPen__ArtistPro16Gen2.bpf.c | 274 ++++++++
+ drivers/hid/bpf/progs/hid_bpf.h                    |  15 +
+ drivers/hid/bpf/progs/hid_bpf_helpers.h            | 170 +++++
+ include/linux/hid.h                                |   6 +-
+ tools/testing/selftests/hid/tests/base.py          |  87 ++-
+ tools/testing/selftests/hid/tests/base_device.py   | 421 ++++++++++++
+ tools/testing/selftests/hid/tests/base_gamepad.py  | 238 +++++++
+ tools/testing/selftests/hid/tests/test_gamepad.py  | 457 ++++++++++++-
+ tools/testing/selftests/hid/tests/test_tablet.py   | 723 +++++++++++++++------
+ 18 files changed, 3507 insertions(+), 204 deletions(-)
+---
+base-commit: 3e78a6c0d3e02e4cf881dc84c5127e9990f939d6
+change-id: 20240328-bpf_sources-be1f3c617c5e
+
+Best regards,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
+
