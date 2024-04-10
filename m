@@ -1,109 +1,79 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2ACC15DBAF;
-	Wed, 10 Apr 2024 14:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBCB15FA80
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757998; cv=none; b=giaQE2EuOL9KjeGNWDNNwH2IbGTEW7TCUMsSMdK+OlNhQbj317QaqrmAZ5iDNajwlWOJbsakoD4ti4Z7urErhjgqq7jm7jPRDOLsS8t2xQDPKZ/TXYI/Mjeb//ZVSvvPKvsI6wBVa7zZXlrfD7Hd8nGb2+/aynHeE33CnEoc/es=
+	t=1712758229; cv=none; b=WZymbkK94BXUMP03DW4psmUDUxJNsH2P3r76WWtaMG6Icf0qHwp5L0lT0sauvnA8wbW3LpyGYWoZoZ1TKSuTmzZCNeqYQCmGpDwnVFWq33M/PG8PWiYm6zNYvxc/V81nqDXyktFeZb8ycTJm+CVWtcR40EsEMrb+1lXkp8Q878A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757998; c=relaxed/simple;
-	bh=YG3UNFG71SI7VV/cXkcthvTWFGFfieVr3YwF+lYyvKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvRjNKSawpL3qBUiVefRWzVxcKVErtDS5x7oFmQlqm8iJUx0rnmKKUrOeFv90kF41PqV5k/IbfRVK+Z6yJnWHx8tsqEyIQM4nuJksKRcMIE4itDIYqQnHj8X4T+ngiuvygOEv9nc2C5bXvR7bmQTuCNn6fs1O7w6eVC2fBKP+aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FcyKDb6E; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bEObH6fW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712758229; c=relaxed/simple;
+	bh=pRgnzoGAqN+8AmHMkslGDM2NWRVdlaRT9PhcUTzgJJY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=CDYOjkY7hBIZG8GuJM+ogT1w16izC5BgfWtzM93/tN5rpMVr7+aL6OWF749LKuvnLpEuN6XJHeWwW4w5s2Kbx0T331I7OFAFe0YhCuMpXyqT6yCDy9H6vIaciR5ZCTC/L4Xx1lVw31NMZR+8LgJkTYME5w1Hutf/C7wvL5K1+Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msU30hyI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FcyKDb6E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bEObH6fW"
-Date: Wed, 10 Apr 2024 16:06:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712757995;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YG3UNFG71SI7VV/cXkcthvTWFGFfieVr3YwF+lYyvKM=;
-	b=FcyKDb6E4bYWPJy/ktmc6KpStYEOiziYCzyXgEL+DP3YXwsy1/f8fUc913/lmEdT38kEdV
-	pcR/7uCTbmtNq85FfqyJT//utRRtHpZA7togdpMnGrfrNy1gAo5TPOopYqY8MwfaGqZb0r
-	+7QK2WFWvj+D1FOHpbJGklLZR0zp+BKED5snqiR92qXGnGVN7bOvZXtBRzQgvG2JPjPIR7
-	GWR0EyTxLvpuQyeGAxRnTUx6yYs2JDn/Y6LY0BDm8EpXHkppqgubk9bGx5DHpbbZ7uoYRX
-	gcED50gnyZXfzYt6YFX1CS3PVY4d1oK5OSzbnW9IF1JvwUjkZ5uDZ//mqwrF4g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712757995;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YG3UNFG71SI7VV/cXkcthvTWFGFfieVr3YwF+lYyvKM=;
-	b=bEObH6fWkZ/awcDQZVhwsXdq3B0DTTDpy6ipTP9YT+nRySAFw3dBJKKM6/KDj50+yKeXsm
-	Bu0LYFUNB8Mg4OAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <20240410140633.0MHBLpMI@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-3-bigeasy@linutronix.de>
- <ZhRhn1B0rMSNv6mV@pavilion.home>
- <20240409085732.FBItbOSO@linutronix.de>
- <ZhU2YwettB6i6AMp@localhost.localdomain>
- <20240409134729.JpcBYOsK@linutronix.de>
- <ZhZ54XAcBt50WEnE@localhost.localdomain>
- <20240410134702.dcWYciZB@linutronix.de>
- <ZhabcanCbQej1azv@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msU30hyI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5F286C43394;
+	Wed, 10 Apr 2024 14:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712758229;
+	bh=pRgnzoGAqN+8AmHMkslGDM2NWRVdlaRT9PhcUTzgJJY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=msU30hyIMeAZQZysjcS6nFd+A1m/bQG/yLGXEvqM3/QhZNHaK92i6sS7+k5ZvJ/J8
+	 rMZb+AEl50BIQWKhEKfN7GJ9KmluajYdrA4EWxqwd+DEE/N7hbT8AU6oWrTwDpL6O9
+	 aMS6lId5NtmTZ2EXnATJ+5KuWlNznBM8r+D1Qi6+RlRFN8AT+9WtkxjEqu/jMWbUGn
+	 XdXB42FII76a9l0D/z36dXCZjIjh3W+sbIxPO53ReoZ8vQTsYONHA4X/N+xUr+0yOb
+	 ymGobJUfVfKV+TZtTmrcFAaFKVbA6Xi/LbH5JZ1mVSD7nSzu5igqAAWsEUbf61wtTV
+	 BdyWDP5KuFDkQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4DD23D60310;
+	Wed, 10 Apr 2024 14:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZhabcanCbQej1azv@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] RISC-V: only flush icache when it has VM_EXEC set
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <171275822931.12683.7449228181407944312.git-patchwork-notify@kernel.org>
+Date: Wed, 10 Apr 2024 14:10:29 +0000
+References: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+In-Reply-To: <tencent_6D851035F6F2FD0B5A69FB391AE39AC6300A@qq.com>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ alexghiti@rivosinc.com, conor.dooley@microchip.com, jszhang@kernel.org,
+ andrew@sifive.com
 
-On 2024-04-10 16:00:17 [+0200], Frederic Weisbecker wrote:
-> Le Wed, Apr 10, 2024 at 03:47:02PM +0200, Sebastian Andrzej Siewior a =C3=
-=A9crit :
-> > On 2024-04-10 13:37:05 [+0200], Frederic Weisbecker wrote:
-> > > > Couldn't we either flush _or_ remove the task_work in perf_release(=
-)?
-> > >=20
-> > > Right so the problem in perf_release() is that we may be dealing with=
- task works
-> > > of other tasks than current. In that case, task_work_cancel() is fine=
- if it
-> > > successes. But if it fails, you don't have the guarantee that the tas=
-k work
-> > > isn't concurrently running or about to run. And you have no way to kn=
-ow about
-> > > that. So then you need some sort of flushing indeed.
-> >=20
-> > Since perf_release() preemptible, a wait/sleep for completion would be
-> > best (instead of flushing).
->=20
-> Like this then?
->=20
-> https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28=
-147d8ac06b21c64d7784d49f892e06c0e50
+Hello:
 
-Kind of, yes. Do we have more than one waiter? If not, maybe that
-rcuwait would work then.
-Otherwise (>1 waiter) we did establish that we may need a per-task
-counter for recursion handling so preempt-disable shouldn't be a problem
-then. The pending_work_wq must not be used outside of task context (means
-no hardirq or something like that).
+This patch was applied to riscv/linux.git (for-next)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
-Sebastian
+On Wed, 10 Jan 2024 02:48:59 +0800 you wrote:
+> As I-Cache flush on current RISC-V needs to send IPIs to every CPU cores
+> in the system is very costly, limiting flush_icache_mm to be called only
+> when vma->vm_flags has VM_EXEC can help minimize the frequency of these
+> operations. It improves performance and reduces disturbances when
+> copy_from_user_page is needed such as profiling with perf.
+> 
+> For I-D coherence concerns, it will not fail if such a page adds VM_EXEC
+> flags in the future since we have checked it in the __set_pte_at function.
+> 
+> [...]
+
+Here is the summary with links:
+  - RISC-V: only flush icache when it has VM_EXEC set
+    https://git.kernel.org/riscv/c/542124fc0d5c
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
