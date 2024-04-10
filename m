@@ -1,73 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85D015A4;
-	Wed, 10 Apr 2024 01:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9151F10F9
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 01:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712713587; cv=none; b=HtDsmNuBJIvdW0Y+Lhencar1OsY8m3YP3kaZ5lp0CL2h3iwXaFwpfCaZQvEOlVAuPohPlOp6UTohO4YMdp9/z/32EKhpKoo/nQYtEHzW5LHQ6toedp/R7qXvMW8LLvPXGx2LQwWC4z8U3Ws3aS7WbZkhtQIfJ6hbQj2To5MhGW8=
+	t=1712713659; cv=none; b=THBnBikq8BtolqOo0npf/Qn+mT3o+4RITdl8Gs3rcsbODLL/9ESkgc2zNL95mxSDm3+XRrQa5k/9o5m+afQ6ZJDYaHaPD+IMc2Ll4rDX1FfTo3uv82IS9pnsDxocWU6ABqRuP/lc9xh99Q1S2kCMAQvAyuxORFITvjYhe0yXoRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712713587; c=relaxed/simple;
-	bh=1YgFdUcBOKesTaua31ZEyD1c9Gpgvfr0heHVZed0Enk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FAbalXxZN1JpQBl13Anor0GjbmosIr42lIDoS9VaMG0iSzT1sbkVaG200g0tsj46N23w30h4d5CL3x1JkQnQuL5sEgobJUpGgTwwLQiuAeOHENnm9CMhT1khM2awZR8rmrtuiMlThjZsxqd7bucw32IVMah3cQ+irbzd8p46Apc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/78VjWd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712713659; c=relaxed/simple;
+	bh=31Y67G+Aev410Mx8rxxPpS/JtoU8Ta4nueJJC6BOPXA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aA9eWs1Ks7YjxdyYH2Goz2O9oPg3yNlJfVap2BLDMFW5ypeHNCLj0RyVdYkdgjlp9zy8mFkbtysdx/8cS0jp3SlzJrCnlj8jW5fef7POiUWBgMDgbwRAiFJDIjoiqngS02BQDvEb5kf5DIJJI/4SuGvmctpGledBKNYiALQ8tPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ldmlgJj+; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/78VjWd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D42C433F1;
-	Wed, 10 Apr 2024 01:46:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712713587;
-	bh=1YgFdUcBOKesTaua31ZEyD1c9Gpgvfr0heHVZed0Enk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I/78VjWdo/c0F0Ap07gI5asrS7PrsOu2M02J+DbxVjLWDvzFOCQj0or2QN13AWozE
-	 I69cMnaM1ljMIhs/0Lp84+zGGrKjGK+/CXANY3BLrmNxLBhq4kaduZjuEReLaCWWCM
-	 rte8M4SlHEUagzJtAXFK0rggGoLFQZvYFbNsor1v1NzuoQK/a4YRotlvV3NLP6fos1
-	 5WsKk0K30sTsNVRZti9VcJ00BcNP1yTZV7kxZYXi4/yHOzNi43F1A9xC8vq4CFQg0l
-	 rwcAwaw4bJhCi9poeYvELIrMuEt8FcP5FKz1pc4TBZxdLGNQelNbfUOj7E91vbTg6q
-	 dEzc8Cp+Z0Vvg==
-Date: Tue, 9 Apr 2024 18:46:25 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: aleksander.lobakin@intel.com, davem@davemloft.net, pabeni@redhat.com,
- edumazet@google.com, elder@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, taras.chornyi@plvision.eu, ath11k@lists.infradead.org,
- ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
- geomatsi@gmail.com, kvalo@kernel.org, quic_jjohnson@quicinc.com,
- leon@kernel.org, dennis.dalessandro@cornelisnetworks.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
- Jiri Pirko <jiri@resnulli.us>, Simon Horman <horms@kernel.org>, Daniel
- Borkmann <daniel@iogearbox.net>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>
-Subject: Re: [PATCH net-next v4 1/9] net: free_netdev: exit earlier if dummy
-Message-ID: <20240409184625.301e4bc0@kernel.org>
-In-Reply-To: <20240409125738.1824983-2-leitao@debian.org>
-References: <20240409125738.1824983-1-leitao@debian.org>
-	<20240409125738.1824983-2-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ldmlgJj+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712713657; x=1744249657;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=31Y67G+Aev410Mx8rxxPpS/JtoU8Ta4nueJJC6BOPXA=;
+  b=ldmlgJj+dW9O6cCI3LxG6oqLtxX8wnrOPMdTi+4EdCUEbmVXxRR1tsXv
+   pxbXQyNj0NvU8WojRB2I0jMlBKP9B1mPhh2rFDjC/nodE/ndsQKmzWwyh
+   0XzimyLwm+Gc9ndQ9pgmOmyPDKOliH7twt6XgyOZH5nhptBAuHFR21vfC
+   zIJxeHZ6FhS81+ze48EG4tS0+f0zc1tg9BBU3+tRwhtzbbp1iCpOcZxNe
+   SsEQiJztxYjgM5vCYIbWqCuFa5BICVspjkLI+5zLs6JyJQtqdfYgEHU+K
+   J7j7zYsweAM5SpeRr5k8dSVGg4xIlpnxrVCBzpsUag+R1bM5V3ShpV5nT
+   w==;
+X-CSE-ConnectionGUID: YCHkgP9ETTO53BBF4m56nw==
+X-CSE-MsgGUID: PCRwMFVARSu/R6UGx3ZGtA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="25501081"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="25501081"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:47:37 -0700
+X-CSE-ConnectionGUID: HfRY5yEVQFuIRxe1gVqu9Q==
+X-CSE-MsgGUID: ZuSZB7FQSQyQKsmP6gNtRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="25197540"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:47:34 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,  ryncsn@gmail.com,
+  nphamcs@gmail.com,  songmuchun@bytedance.com,  david@redhat.com,
+  chrisl@kernel.org,  guo.ziliang@zte.com.cn,  yosryahmed@google.com,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
+Subject: Re: [PATCH v2] mm: swap: prejudgement swap_has_cache to avoid page
+ allocation
+In-Reply-To: <20240409145740.GA543696@bytedance> (Zhaoyu Liu's message of
+	"Tue, 9 Apr 2024 22:57:40 +0800")
+References: <20240408121439.GA252652@bytedance>
+	<20240408132704.f966adc8d3928df4d3b8c0a9@linux-foundation.org>
+	<87edbf8hta.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<20240409145740.GA543696@bytedance>
+Date: Wed, 10 Apr 2024 09:45:41 +0800
+Message-ID: <877ch66ldm.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On Tue,  9 Apr 2024 05:57:15 -0700 Breno Leitao wrote:
-> For dummy devices, exit earlier at free_netdev() instead of executing
-> the whole function. This is necessary, because dummy devices are
-> special, and shouldn't have the second part of the function executed.
-> 
-> Otherwise reg_state, which is NETREG_DUMMY for dummy devices, will be
-> overwritten and there will be no way to identify that this is a dummy
-> device. Also, this device do not need the final put_device(), since
-> dummy devices are not registered (through register_netdevice()), where
-> the device reference is increased (at netdev_register_kobject() ->
-> device_add()).
+Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com> writes:
 
-There's a small fuzz when applying due to the phy topo changes
-landing, please rebase, the CI didn't ingest it right.
--- 
-pw-bot: cr
+> On Tue, Apr 09, 2024 at 09:07:29AM +0800, Huang, Ying wrote:
+>> Andrew Morton <akpm@linux-foundation.org> writes:
+>> 
+>> > On Mon, 8 Apr 2024 20:14:39 +0800 Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com> wrote:
+>> >
+>> >> Based on qemu arm64 - latest kernel + 100M memory + 1024M swapfile.
+>> >> Create 1G anon mmap and set it to shared, and has two processes
+>> >> randomly access the shared memory. When they are racing on swap cache,
+>> >> on average, each "alloc_pages_mpol + swapcache_prepare + folio_put"
+>> >> took about 1475 us.
+>> >
+>> > And what effect does this patch have upon the measured time?  ANd upon
+>> > overall runtime?
+>> 
+>> And the patch will cause increased lock contention, please test with
+>> more processes and perhaps HDD swap device too.
+>
+> Hi Ying,
+>
+> Thank you for your suggestion.
+> It may indeed cause some lock contention, as mentioned by Kairui before.
+>
+> If so, is it recommended?
+> ---
+>   unsigned char swap_map, mapcount, hascache;
+>   ...
+>   /* Return raw data of the si->swap_map[offset] */
+>   swap_map = __swap_map(si, entry);
+>   mapcount = swap_map & ~SWAP_HAS_CACHE;
+>   if (!mapcount && swap_slot_cache_enabled)
+>   ...
+>   hascache = swap_map & SWAP_HAS_CACHE;
+>   /* Could judge that it's being added to swap cache with high probability */
+>   if (mapcount && hascache)
+>     goto skip_alloc;
+>   ...
+> ---
+> In doing so, there is no additional use of locks.
+
+Yes.  This can remove the lock-contention.  But, you need to prove that
+it's necessary in the first place.
+
+--
+Best Regards,
+Huang, Ying
+
+>> >> So skip page allocation if SWAP_HAS_CACHE was set, just
+>> >> schedule_timeout_uninterruptible and continue to acquire page
+>> >> via filemap_get_folio() from swap cache, to speedup
+>> >> __read_swap_cache_async.
