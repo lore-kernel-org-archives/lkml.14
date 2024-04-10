@@ -1,157 +1,115 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2068.outbound.protection.outlook.com [40.107.241.68])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB4A15958D;
-	Wed, 10 Apr 2024 10:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712745455; cv=fail; b=OINCtPEH1WBh7Jm38Vn87bbP4N0ZRYR9k9pHuefft1R3oI+s/B4UZn4q3UjiUbtTyj0WM+NwOZ7PKPDiZ6sxrBrxIy0qSH5f04bLOKhM3jUQYIO4HSZD2ldF5S150h7zdzULzvxrj5R+Hu6BgRtIX6DJCDCUasHcp4nJ7je3klM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712745455; c=relaxed/simple;
-	bh=e9W+JCBYvZfGTTaIiOjhKotoOPYP2T3yU81rmt3WkSQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c0s/6XEx2nrMPiD8rL+thCeMPkzciGpJ/zRA1rc9w4mWhHj04nb4/TkxXEzg8u6fCMeIPdDXLsl4GI2GfEJDqW8RDRRRRf2oX4N/wZgA5X2uD93vrwwhqPgznpTvhHPou/aunmuhj2IoxxCjPmrlpPRhngYqkc+jUE92lIbCv6o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=qQxDq+gJ; arc=fail smtp.client-ip=40.107.241.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B927C15B0F0;
+	Wed, 10 Apr 2024 10:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712745465; cv=none; b=r0oBnxOc3KPkfRX/G6kIUN2OyIXD4e+fN/x5Z/882OiPg1QBkCAkbaafPcmtE1HeFxubqsiVeCE4t0RIAq5HRQ0YqcBU0gCKgEG2dc92TinlVBpNpd/jch/f7RFRHedKNaBb2E4tAXS5x5exA1kXqKhztf390vgh6Tym62Yt9PE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712745465; c=relaxed/simple;
+	bh=V6nc2YAKdgKWZHfMO2mdSMDfQwBidaZh7CVlmeQ/RdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPqEU1no1u6HmqPmcSMW30kNMeuokGmV3p6X0YtamkCIpGVO2E8/ytPmpCuOjz5gsnx3HvANvVX9Y7GJAnHLYLMN5JvxxisBlzdgjjSIYGTPQKB49dSHfbtrjfZWZdVom6f4WsDEofqz3xwiERduiHR2dI4acd4X0AENYo5sA0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJSundnX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="qQxDq+gJ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YAcZLIAd756+qxtDfQciNEWYwVSrPbSF4O7abRlxixCJFvtVUu7XlWpyyvoaxDrCUXjNZdT9V7igW4dd9yAL0q1/n7ry6UlUa22V+fCy7MqPrT/G6UZUmvc2NB/c1vo8nk3+5exbnO6ro75Pn9zlcodYyhu97dAYHajibUS6qLoHFpJOWY35qkJ+/aGINjEU6zBRF9Is+tSSLh8gUOR998Hg1UTE9B98c815HGUiiT2NU1EjUnTsI6q7hakhBtnWJgefDWtFFTMz9zK2Jta1IOHuc09k3y/k2RtuZzgHMYVprEtOoj4aHJXk6BxinaHDuWBuXUSM5LaguudQxeroVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LyCk/1KcVYWz2acTlAF9lplxehQ03IBEGAaswPnl3y0=;
- b=WQexNGIwL7sMsGh/SuEpct7S49WLFVKj/Ya8uUPpeMBY2lG9v87YUeQ8RXKXVJMJhjICT7qcoIyd3Rbara4naZb8Co3hepvZBc7ZJ1UDqHUSVaee5mKy13j4T4NlLo8IgGSO2CMxChV1oADbQMn7dO2FHP90ro9H60AlLPumSWvpl4bNn94tbMNdmWy1OeMCOYQor/vXJsiaKYTUgVQtnvK3Z9WyfcFYPL65re4JtyAucMfQFaRtKl7oJ50xT0umdtJ7ZmvED4Rg2WUzf5z48Dx1nivkAwy7Nscr2Gn+sCapCOiHPBSGT0b0EgXVbJ6blCLyDi3ha/r7oAyk4a0ukw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=leica-geosystems.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LyCk/1KcVYWz2acTlAF9lplxehQ03IBEGAaswPnl3y0=;
- b=qQxDq+gJ1QPgPPbq9d8loaLp3uBCyMVndVAhkpSPHDu6jQ4jvlwJN4R7S+VCKgA+X39rQO92A3FhEf0SqBeC0nJ9SoA7n8gVW2xzI6VcgvQQo2NmFDQodwLIzGdSf6U58ccoWYFS9V8kvLBZWoi9aLaAiAoqPhR/OtfFrks5fVs=
-Received: from AS8PR07CA0042.eurprd07.prod.outlook.com (2603:10a6:20b:459::29)
- by VI1PR06MB6557.eurprd06.prod.outlook.com (2603:10a6:800:11c::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7430.46; Wed, 10 Apr
- 2024 10:37:29 +0000
-Received: from AMS0EPF00000196.eurprd05.prod.outlook.com
- (2603:10a6:20b:459:cafe::b7) by AS8PR07CA0042.outlook.office365.com
- (2603:10a6:20b:459::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.19 via Frontend
- Transport; Wed, 10 Apr 2024 10:37:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
- smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
-Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
- designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.8.40.94; helo=hexagon.com; pr=C
-Received: from hexagon.com (193.8.40.94) by
- AMS0EPF00000196.mail.protection.outlook.com (10.167.16.217) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7452.22 via Frontend Transport; Wed, 10 Apr 2024 10:37:28 +0000
-Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
-	 Wed, 10 Apr 2024 12:37:28 +0200
-From: Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>
-To: joel@jms.id.au
-Cc: bsp-development.geo@leica-geosystems.com,
-	Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>,
-	Eddie James <eajames@linux.ibm.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] iio: pressure: dps310: simplify scale factor reading
-Date: Wed, 10 Apr 2024 12:36:04 +0200
-Message-Id: <20240410103604.992989-5-thomas.haemmerle@leica-geosystems.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240410103604.992989-1-thomas.haemmerle@leica-geosystems.com>
-References: <20240327084937.3801125-1-thomas.haemmerle@leica-geosystems.com>
- <20240410103604.992989-1-thomas.haemmerle@leica-geosystems.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJSundnX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71876C433F1;
+	Wed, 10 Apr 2024 10:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712745465;
+	bh=V6nc2YAKdgKWZHfMO2mdSMDfQwBidaZh7CVlmeQ/RdU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GJSundnX+JygdMMTXQhsQvXdAUdTSBEnAWses4V2MkmKT6RU2v7u1bBHWViP4nhOV
+	 hmRE6TrSpSr/OukV8DB98dCuiH3oV+7b1g94qsVe23pmwp83G8CqpK4BX0ZgaVCdZU
+	 qwDUlnRnarHC/3Q0uMj/feOBJIprsLyHzP52RzrpwaMMMCsjUO/zd/+Qp8grH3GmWU
+	 xCs+Z9JvsGIOFEKB/juDLMTu/pDe64Dg+CMCh48WceL1y1dO1Jf8DGySeDpyMYw8f8
+	 jnzJYgMQABhIosVmdnijjnE8hzMWTWXlgy45WBSX+h2rcULdQ4yhEYl40BhK89tzws
+	 v30JLUDt92KHw==
+Date: Wed, 10 Apr 2024 18:24:18 +0800
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Michael Opdenacker <michael.opdenacker@bootlin.com>,
+	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: dts: sophgo: add initial Milk-V Duo S board
+ device tree
+Message-ID: <ZhZo0iJFSn1te-6d@xhacker>
+References: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
+ <IA1PR20MB49532A8D4294ADCE0C33A654BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240409-prevent-deepness-2d22bf009b16@spud>
+ <IA1PR20MB49534E00CAE29D24F7D7E718BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <1514d28a-5e96-4531-a972-894e41902efa@bootlin.com>
+ <IA1PR20MB4953CA04D33EA0C7902DFA3ABB062@IA1PR20MB4953.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 10 Apr 2024 10:37:28.0557 (UTC) FILETIME=[15C361D0:01DA8B33]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF00000196:EE_|VI1PR06MB6557:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 7bef3570-9c13-44a7-0bb3-08dc594a386a
-X-SET-LOWER-SCL-SCANNER: YES
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8GDMMj2FPAGuGd+ZD7IEHnJWxwyH2BmZD+3siewU8UNCZsy95W+k2btI7qes5vGFs39DuOE4igLLq5+oXj9Azbpgzvn+M7fytaN9uZxIW+OJ9lkSguCMr4TqmlvgOJic+Xh7g9NB98IG36Q6D6qMc1S9gifzyWpjNyRoznHSa+zaZxwnjZtUQBjSyjqpzIqG4vQL0jKL8Txb5kCXOZTdwPdDHB60rJlR4tOLXULneFDD1b2pCVuVvjKmsZ+nzHZPbRk+RbPoYm/ZV0/eNVz5+CrJbJVJifu02pNWbe2vq7g+7k94UxawZMUTeUuYNBsIj+zcXYxBTtUnx9j/5D8ubJM7/c/KYObSOPiz4u47gYaeKoI0Hk+xMLbJWRrK+BpirwObJ3PXdRGMG1lQgQJS+4o3PyJFPpDLqYw3apA5a7G/aQhKiHhkVw5aXYXESIQP+dYEx4XgW4XuJRKPLNPht/XstSO82i3bu+zFqxUmbKiWHeJnDY+XQYsv/Sl179/vzukNrI2DL1I56SXdcDAPGqKTe3dQJOW3W3Yj54oPflMOifMgkcey4RDL049KpRid4Obl3iOK8k1U+erW+gPlD2ghas9rxnEsLAGvTVvEHGObmDXPqVgw6L/w8K2gO+UXXGlApeBJiDj6YuP4loa2j9tYJp5Ia1AiSoOJs6I4XD7n99ps7rj76HXtjPVSckBthfvktZI/Tni60raOdoZWpQjawxhgM83TW396O9RkNwQa++jjaZrw6wBGkvs+TJ97
-X-Forefront-Antispam-Report:
-	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(82310400014)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 10:37:28.7756
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bef3570-9c13-44a7-0bb3-08dc594a386a
-X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF00000196.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR06MB6557
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <IA1PR20MB4953CA04D33EA0C7902DFA3ABB062@IA1PR20MB4953.namprd20.prod.outlook.com>
 
-Both functions `dps310_get_pres_precision` and
-`dps310_get_temp_precision` provide the oversampling rate by calling the
-`BIT()` macro. However, to look up the corresponding scale factor, we
-need the register value itself. Currently, this is achieved by undoing
-the calculation of the oversampling rate with `ilog2()`.
+On Wed, Apr 10, 2024 at 09:24:40AM +0800, Inochi Amaoto wrote:
+> On Tue, Apr 09, 2024 at 03:08:17PM +0200, Michael Opdenacker wrote:
+> > Hi Inochi
+> > 
+> > On 4/9/24 at 14:27, Inochi Amaoto wrote:
+> > > On Tue, Apr 09, 2024 at 01:13:32PM +0100, Conor Dooley wrote:
+> > > > On Tue, Apr 09, 2024 at 03:17:35PM +0800, Inochi Amaoto wrote:
+> > > > > On Tue, Apr 09, 2024 at 08:45:04AM +0200, michael.opdenacker@bootlin.com wrote:
+> > > > > > From: Michael Opdenacker <michael.opdenacker@bootlin.com>
+> > > > > > 
+> > > > > > This adds initial support for the Milk-V Duo S board
+> > > > > > (https://milkv.io/duo-s), enabling the serial port and
+> > > > > > read-only SD card support, allowing to boot Linux to the
+> > > > > > command line.
+> > > > > > 
+> > > > > Hi Michael,
+> > > > > 
+> > > > > I think your patch losts the board binding and have wrong compatiable.
+> > > > > Also, the SD can have rw support with proper property. See link [1]
+> > > > > (need 'disable-wp').
+> > > > [1] doesn't go anywhere useful.
+> > > > 
+> > > This is my fault, I copied the wrong url. The right patch is
+> > > https://lore.kernel.org/r/20240217144826.3944-1-jszhang@kernel.org.
+> > 
+> > 
+> > No problem, I found out.
+> > I confirm that using the "disable-wp;" property does the trick to make the
+> > MMC writable.
+> > 
+> > However, it wasn't mentioned in the above URL...
+> > 
+> > By the way, do I really need those under &sdhci0?
+> > 
+> > + bus-width = <4>; + no-1-8-v; + no-mmc; + no-sdio;
+> > 
+> > My board looks happy so far without them ;-)
 
-Simplify the two functions for getting the scale factor and directly
-use the register content for the lookup.
+setting the correct bus-width is necessary for better performance
+no-1-8-v can be removed, but it doesn't harm anything because
+the board doesn't supply 1.8v
 
-Signed-off-by: Thomas Haemmerle <thomas.haemmerle@leica-geosystems.com>
----
- drivers/iio/pressure/dps310.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+no-mmc and no-sdio to make the probe a bit quicker
 
-diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
-index 4abce7e40715..320e34ff9381 100644
---- a/drivers/iio/pressure/dps310.c
-+++ b/drivers/iio/pressure/dps310.c
-@@ -382,11 +382,11 @@ static int dps310_get_pres_k(struct dps310_data *data, int *val)
- {
- 	int reg_val, rc;
- 
--	rc = dps310_get_pres_precision(data, &reg_val);
--	if (rc)
-+	rc = regmap_read(data->regmap, DPS310_PRS_CFG, &reg_val);
-+	if (rc < 0)
- 		return rc;
- 
--	*val = scale_factors[ilog2(reg_val)];
-+	*val = scale_factors[reg_val & GENMASK(2, 0)];
- 
- 	return 0;
- }
-@@ -395,11 +395,11 @@ static int dps310_get_temp_k(struct dps310_data *data, int *val)
- {
- 	int reg_val, rc;
- 
--	rc = dps310_get_temp_precision(data, &reg_val);
--	if (rc)
-+	rc = regmap_read(data->regmap, DPS310_TMP_CFG, &reg_val);
-+	if (rc < 0)
- 		return rc;
- 
--	*val = scale_factors[ilog2(reg_val)];
-+	*val = scale_factors[reg_val & GENMASK(2, 0)];
- 
- 	return 0;
- }
--- 
-2.34.1
-
+> 
+> FYI, Jisheng. Could you share some suggestions?
+> 
+> > Thanks again for your help
+> > Cheers
+> > Michael.
+> > 
+> > -- 
+> > Michael Opdenacker, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> > 
