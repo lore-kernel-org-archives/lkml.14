@@ -1,153 +1,189 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97510E3;
-	Wed, 10 Apr 2024 02:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E751C2E;
+	Wed, 10 Apr 2024 02:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712715974; cv=none; b=B6P31dAMTghbiC9UFrJ/uGQ5J/KAO6K5MZ4CQUfvpVTg9wEZVJqCyl7MC8hVighUigs+CnHXfawVJ+Ph9RmRc3bQ9FQQXuMFVt0P8DyhNx9GVlWxzY4WNIOrxAUDZAqaZt4GfLezev18da5cuQKzeD1f0hiWPDrl7s+OQ7z/4lA=
+	t=1712716059; cv=none; b=YHk3Do2u8KRMexlFqt6qjlKOBi6ozyext75IAtOy4x2suOVTK/QAI1MmkBZMn+CusiQmksu62iNYBOWHgJjnqothySTmYfE2U2hdyRGoCZehgGJOIt/NCJpjSvS9LlfLcllRirOL4nuA9knUP7Hzin80n57ttmAu3W6gGHwXkj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712715974; c=relaxed/simple;
-	bh=J7vXo8gnzotGaAOZGaEFsf6LKD7BLcr3tjED66ZNRx4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nM5n12/wfQa9oo/flFW/uk2ViVC6GLpf9PHovQiZn+Y7mEzWiyPbS1RqYSQFQp36Ok52qOlrL1IVUkrIToX5aNlRjqwVNxxkfLWuuxGJFqg3FVb010BVhIOxRsxjlY4i9jh49bAsvWvozXSryz3Wh0q3eBieFc7ezgKmIq+SVRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=pAq+m9yk; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1712716059; c=relaxed/simple;
+	bh=KCZk5Jghp9ioOCljK8ePjGa/GSS059iFLxQINPpp1zg=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=Atw2RrmbHK5LxYkpT7snLzJrf4O6umXI12sEJapq0UPkBAzz5RlHPXepiuBvDWUDOisjG25aQhntasI9ddA3OfnOx6ttpo94iqAq/U1VMFzTUdKaICqHeV3XtlqH/N5l5rUAlQKiMz9k9JC0xKyPUUUjNx6EpbwSpUlGKb3Km8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIVXz2yV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="pAq+m9yk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1712715645; bh=J7vXo8gnzotGaAOZGaEFsf6LKD7BLcr3tjED66ZNRx4=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=pAq+m9ykq3MBG8HAZqb5dhlh+bkT/EAkF76/uquZ0HDh4Lsh/kM8MVI+u0ZZbX9vl
-	 mVNwgt3Bza4HRAYznNQ2l3Rf/mybYp1gjdllrS0BWbrL8NUP/ALM76OKZaIyWY1aPl
-	 NVc0Woczth0IrK95PL/s8qaMFne2NEXykKreSVm4=
-Date: Wed, 10 Apr 2024 04:20:44 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
-	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
-	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-Subject: Re: [PATCHv3 1/2] dt-bindings: usb: typec: anx7688: start a binding
- document
-Message-ID: <ounfv3vgg2esvxk2cxckeqyy52mghiyps2rszh7sf5poryyjzs@ftumsalmthza>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Pavel Machek <pavel@ucw.cz>, phone-devel@vger.kernel.org, 
-	kernel list <linux-kernel@vger.kernel.org>, fiona.klute@gmx.de, martijn@brixit.nl, samuel@sholland.org, 
-	heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <ZhPMHdt6r/4D99Zg@duo.ucw.cz>
- <ab9affc8-de68-4ec9-bdfc-02131191bc3a@linaro.org>
- <ZhPTTxI4oTF3pgrk@duo.ucw.cz>
- <e7841ad2-fa3d-442d-804d-51f12e05c234@linaro.org>
- <e6vvuttix5k5fioy7q44ick5wj6u5gleh7mht36s4zjjcym7vy@bziejyohtc4b>
- <7976e254-ed1e-406d-870b-1ecdc4b1e23c@linaro.org>
- <uoo7xltbfx7u6iai7urj3wez7cwotokxt6lwjhff57xbljusqn@fr2xejnrlak7>
- <1502383c-9caf-4362-8bd6-ed719a304f08@linaro.org>
- <vbo7bacecuagu4qzrr6tsdh4qlejrv7ia67yylf6ay4u7qnwge@kqj27bun2m7d>
- <97f2d38d-c863-4c76-91f1-52cd250759d7@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIVXz2yV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7921FC433C7;
+	Wed, 10 Apr 2024 02:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712716058;
+	bh=KCZk5Jghp9ioOCljK8ePjGa/GSS059iFLxQINPpp1zg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=cIVXz2yVe7ImcNYM7wBUtIVH3Cy2FfbisfRQ6w1VZOtS98YSFvZBVemDOxX2wRjlh
+	 qp9KtrdBV4GqnI4PQE3m42UGIqt2xiOrQI7AadLeMSEKX8h+SDl6ae7vSnSWaE+7il
+	 1xPhVhzCMwkZbrffA4beBS9yVbxTWNX8sjxYNRd7NzlmRB4Sk96MkOpblZSZmFMRmY
+	 fdY5cy3BCh0lC516EQNQxKmmq8FHiV6gBJ7pyQop6ShhDd+VaZ0qxlDxxEKvpBzJU/
+	 YJQZu0B0Yfg8lKTvD5B55HrdrBE7sLIQkKM5KqpKdGA5M9ucZ0x+yWOXu9pO6qbkzX
+	 5uUSILmGfGBtQ==
+Message-ID: <dde59dd2ef4da81528e31f65844e0b3f.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <97f2d38d-c863-4c76-91f1-52cd250759d7@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240409-shallow-voice-c84ed791bc7d@spud>
+References: <20240328010831.884487-1-jan.dakinevich@salutedevices.com> <20240328010831.884487-2-jan.dakinevich@salutedevices.com> <1j7chfiz8e.fsf@starbuckisacylon.baylibre.com> <e3a85852b911fdf16dd9ae158f42b3ef.sboyd@kernel.org> <f01cdd910ab35316b8012795f73fd2b34c8e6f8e.camel@pengutronix.de> <13617b7a892424d2b024c725505a6f4f.sboyd@kernel.org> <20240408-numerator-escargot-a642507a598e@spud> <20240409-shallow-voice-c84ed791bc7d@spud>
+Subject: Re: [RFC PATCH v2 1/5] clk: meson: axg: move reset controller's code to separate module
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Jerome Brunet <jbrunet@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Conor Dooley <conor@kernel.org>
+Date: Tue, 09 Apr 2024 19:27:36 -0700
+User-Agent: alot/0.10
 
-On Mon, Apr 08, 2024 at 10:12:30PM GMT, Krzysztof Kozlowski wrote:
-> On 08/04/2024 17:17, Ondřej Jirman wrote:
-> > 
-> > Now for things to not fail during suspend/resume based on PM callbacks
-> > invocation order, anx7688 driver needs to enable this regulator too, as long
-> > as it needs it.
-> 
-> No, the I2C bus driver needs to manage it. Not one individual I2C
-> device. Again, why anx7688 is specific? If you next phone has anx8867,
-> using different driver, you also add there i2c-supply? And if it is
-> nxp,ptn5100 as well?
+Quoting Conor Dooley (2024-04-09 05:05:37)
+> On Mon, Apr 08, 2024 at 06:05:51PM +0100, Conor Dooley wrote:
+>=20
+> > > > Seconded, the clk-mpfs/reset-mpfs and clk-starfive-jh7110-sys/reset-
+> > > > starfive-jh7110 drivers are examples of this.
+> > > >=20
+> > > > > The auxiliary device creation function can also be in the
+> > > > > drivers/reset/ directory so that the clk driver calls some functi=
+on
+> > > > > to create and register the device.
+> > > >=20
+> > > > I'm undecided about this, do you think mpfs_reset_controller_regist=
+er()
+> > > > and jh7110_reset_controller_register() should rather live with the
+> > > > reset aux drivers in drivers/reset/ ?
+> > >=20
+> > > Yes, and also mpfs_reset_read() and friends. We should pass the base
+> > > iomem pointer and parent device to mpfs_reset_adev_alloc() instead and
+> > > then move all that code into drivers/reset with some header file
+> > > exported function to call. That way the clk driver hands over the data
+> > > without having to implement half the implementation.
+> >=20
+> > I'll todo list that :)
+>=20
+> Something like the below?
+>=20
+> -- >8 --
+> From a12f281d2cb869bcd9a6ffc45d0c6a0d3aa2e9e2 Mon Sep 17 00:00:00 2001
+> From: Conor Dooley <conor.dooley@microchip.com>
+> Date: Tue, 9 Apr 2024 11:54:34 +0100
+> Subject: [PATCH] clock, reset: microchip: move all mpfs reset code to the
+>  reset subsystem
+>=20
+> <insert something here>
+>=20
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-Yes, that could work, if I2C core would manage this.
+Looks pretty good.
 
-> > 
-> > I can put bus-supply to I2C controller node, and read it from the ANX7688 driver
-> > I guess, by going up a DT node. Whether that's going to be acceptable, I don't
-> > know. 
-> > 
-> > 
-> > VCONN regulator I don't know where else to put either. It doesn't seem to belong
-> > anywhere. It's not something directly connected to Type-C connector, so
-> > not part of connector bindings, and there's nothing else I can see, other
-> > than anx7688 device which needs it for core functionality.
-> 
-> That sounds like a GPIO, not regulator. anx7688 has GPIOs, right? On
-> Pinephone they go to regulator, but on FooPhone also using anx7688 they
-> go somewhere else, so why this anx7688 assumes this is a regulator?
+>  static const struct of_device_id mpfs_clk_of_match_table[] =3D {
+> diff --git a/drivers/reset/reset-mpfs.c b/drivers/reset/reset-mpfs.c
+> index 7f3fb2d472f4..27cd68b4ee81 100644
+> --- a/drivers/reset/reset-mpfs.c
+> +++ b/drivers/reset/reset-mpfs.c
+> @@ -137,9 +139,67 @@ static int mpfs_reset_probe(struct auxiliary_device =
+*adev,
+>         return devm_reset_controller_register(dev, rcdev);
+>  }
+> =20
+> +static void mpfs_reset_unregister_adev(void *_adev)
+> +{
+> +       struct auxiliary_device *adev =3D _adev;
+> +
+> +       auxiliary_device_delete(adev);
+> +       auxiliary_device_uninit(adev);
+> +}
+> +
+> +static void mpfs_reset_adev_release(struct device *dev)
+> +{
+> +       struct auxiliary_device *adev =3D to_auxiliary_dev(dev);
+> +
+> +       kfree(adev);
+> +}
+> +
+> +static struct auxiliary_device *mpfs_reset_adev_alloc(struct device *clk=
+_dev)
+> +{
+> +       struct auxiliary_device *adev;
+> +       int ret;
+> +
+> +       adev =3D kzalloc(sizeof(*adev), GFP_KERNEL);
+> +       if (!adev)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       adev->name =3D "reset-mpfs";
+> +       adev->dev.parent =3D clk_dev;
+> +       adev->dev.release =3D mpfs_reset_adev_release;
+> +       adev->id =3D 666u;
+> +
+> +       ret =3D auxiliary_device_init(adev);
+> +       if (ret) {
+> +               kfree(adev);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       return adev;
+> +}
+> +
+> +int mpfs_reset_controller_register(struct device *clk_dev, void __iomem =
+*base)
+> +{
+> +       struct auxiliary_device *adev;
+> +       int ret;
+> +
+> +       mpfs_reset_addr =3D base;
 
-CC1/CC2_VCONN control pins are "GPIO" of anx7688, sort of. They have fixed
-purpose of switching external 5V regulator output to one of the CC pins
-on type-c port. I don't care what other purpose with some other firmware
-someone puts to those pins. It's irrelevant to the use case of anx7688
-as a type-c controller/HDMI bridge, which we're describing here.
+Instead of a global this can be stashed in adev->dev.platform_data and
+grabbed in the driver probe?
 
-VCONN regulator is an actual GPIO controlled regulator on the board, and
-needs to be controlled by the anx7688 driver. So that CC1/CC2_VCONN control
-pins driven by the firmware actually do what they're supposed to do.
+> +
+> +       adev =3D mpfs_reset_adev_alloc(clk_dev);
+> +       if (IS_ERR(adev))
+> +               return PTR_ERR(adev);
+> +
+> +       ret =3D auxiliary_device_add(adev);
+> +       if (ret) {
+> +               auxiliary_device_uninit(adev);
+> +               return ret;
+> +       }
+> +
+> +       return devm_add_action_or_reset(clk_dev, mpfs_reset_unregister_ad=
+ev, adev);
+> +}
+> +
+>  static const struct auxiliary_device_id mpfs_reset_ids[] =3D {
+>         {
+> -               .name =3D "clk_mpfs.reset-mpfs",
+> +               .name =3D "reset_mpfs.reset-mpfs",
+>         },
+>         { }
+>  };
+> diff --git a/include/soc/microchip/mpfs.h b/include/soc/microchip/mpfs.h
+> index 09722f83b0ca..0b756bf5e9bd 100644
+> --- a/include/soc/microchip/mpfs.h
+> +++ b/include/soc/microchip/mpfs.h
+> @@ -43,11 +43,11 @@ struct mtd_info *mpfs_sys_controller_get_flash(struct=
+ mpfs_sys_controller *mpfs_
+>  #endif /* if IS_ENABLED(CONFIG_POLARFIRE_SOC_SYS_CTRL) */
+> =20
+>  #if IS_ENABLED(CONFIG_MCHP_CLK_MPFS)
+> -
+> -u32 mpfs_reset_read(struct device *dev);
+> -
+> -void mpfs_reset_write(struct device *dev, u32 val);
+> -
+> +#if IS_ENABLED(CONFIG_RESET_CONTROLLER)
+> +int mpfs_reset_controller_register(struct device *clk_dev, void __iomem =
+*base);
+> +#else
+> +int mpfs_reset_controller_register(struct device *clk_dev, void* __iomem=
+ base) { return 0;}
 
-Not sure why it would be a business of anything else but anx7688 driver
-enabling this regulator, because only this driver knows and cares about this.
-If some other board doesn't have the need to manually enable the regulator, or
-doesn't have the regulator, it can simply be optional.
-
-There are also some other funky supplies in the bindings, that are not connected
-to the chip in any way, but need to be controlled by the driver:
-
-+  vbus-supply: true
-+  vbus-in-supply: true
-
-First one can be on the connector node instead, where the driver can fetch
-it from.
-
-The purpose of the second one is to link the Phone's PMIC's USB power input with
-the type-c controller (anx7688), to make sure the PMIC has information about how
-much power it can draw from external PSU.
-
-The second one can be replaced by rewriting the anx7688 driver so that it
-creates a power supply representing the USB PSU connected to the phone, and by
-linking to anx7688 DT node from x-powers,axp813-usb-power-supply via
-a power-supplies property, which would mean that USB input of the phone is
-supplied by the external USB PSU. PMIC driver can be modified to watch
-the power supply provided by anx7688 driver for information it detected
-via USB-PD and update its input current limit via a standard helper function.
-
-This is how eg. fusb302 works. Not sure if that's any better from the PoV of
-DT bindings, though. Because power-supplies = <&anx7688>; will not look any
-greater in DT bindings, IMO. It will just link the same nodes in the other
-direction.
-
-Anyway, the HW is that there's an external PSU (detected by type c controller)
-and internal USB power input, and they are connected and one has to respect the
-limits of the other. I guess I shouldn't be adding a device node for external PSU,
-since it's not part of the phone. But that's what's trully being linked on
-HW level.
-
-Kind regards,
-	o.
-
-> 
-> > 
-> > ANX7688 chip desing doesn't have integrated VCONN mosfet switches so it always
-> > needs external supply + switches that are controlled by the chip itself. There's
-> > no sensible design where someone would not want this and the driver needs
-> > to get this regulator reference from somewhere. The switches are sort of an
-> > extension of the chip.
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+static inline
