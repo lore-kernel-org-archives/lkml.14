@@ -1,168 +1,54 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15A020E3
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:11:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B66519E;
+	Wed, 10 Apr 2024 00:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712707897; cv=none; b=bAt+e5nQKTDeaH9fCoQz+EFW6viRmMmu4K4h+LIipFZGMtdqnZ5dg1zgwsEGOP3Li3wUIfNbk//6BHhKLSv/8BHY4PK8OlZvrqGIVQq/9hJHvOVXLfuP/pmynf4IzpmA5npDybFPZPZ+qcaN0Jd6Gnj9lOMqw98+Yu7stk33RfQ=
+	t=1712707912; cv=none; b=TjzN8xyAKVbVGs3bcpqJDNghyHWFHL9mMmT9lMY2zmJq3+mlxwUzdFS7o4oSXW24TwPQbR4jLY+Tg/j3iM0o+zWYhq9pj8iyb4+zBupEm0bbwuKqHg0jJ5S/Qfu9c853Frnn8TnarDtRbfPv3C1VeBIBWZecuZukAb4r0lNkJWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712707897; c=relaxed/simple;
-	bh=jb461/Hw0ZqEf1wO7HDax8yrOboCkSwQKL6zWAmMrUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hLnBH/V1wvfBEa5DRluKV7Hip6/FyZRks3TgzCGlywQr5S05OOG96Nbb+H1NxhcqKLwA84ri3zMJRos/55A/pjbaOsPibGaJ6MBdtFKKlm9yJPEVJ5OAmC+zLhWqPZ5bz+dyN28tShaCPtygwviJUsgglIXLBajly9IxUnx3kOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=x1DLPITV; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="x1DLPITV"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-229a90b7aa9so2779568fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712707895; x=1713312695; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gtH2sd79QyaRF1BMJBe3s1Wc0LYZsHGHiseKLFNrnNM=;
-        b=x1DLPITV9nMIlhpYlEx84azkC26S3DzZ8vyifZPWEneQjZabIytDgy5r0udEUtCUZz
-         z9kFhajxYGcGyGEcVoIMhrI2CY7Aek0yfL5Up0Wp7+Kqj6IHjLJmE4CVki30GfmNlK36
-         B2oHHR1HbvBLfLZtqd4/6Kd7XG5dbbpd6l0IxFRR/WggRSm2l5DmRo/J69AhvMJBhElN
-         7Uwng3MPdbilaYRcftqw4zfS7JTjGHo/qsUpqmLR8ZKk5qqbfN8N9pqhgt0rBRrRMdlU
-         uRYJdDNEvw2zngFO4e8Xbq3qPUWtlrjIpJGdtIqRVBKOZnovoOv9IstXigTDCxSNW0es
-         YK+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712707895; x=1713312695;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gtH2sd79QyaRF1BMJBe3s1Wc0LYZsHGHiseKLFNrnNM=;
-        b=QnCOlmpCGY3OpvO0DA4CMuuQsjHDmvPg1jP5L+k5cdhvd5CsLZjCJc42XbHSp0fqe0
-         wVDRaGUa+4jZqSHfxEkanDg4ZAi5IAVmcmzGYxb7KGUuS1z+OPuRqbLT87I5T7WmuObL
-         VFBO4kuivM1LE3jjHtsL0NkYnOeNomOiGdxXIyGwij75QeRlnfPtXd4fk1H8TgVJN4PV
-         cfe4O8tWpNlHYYn0/Gak+9zWoBvYiJxHCzV5rXom2FAh3i73onvX/JlOt/lF5wHy/bw8
-         XwvY0MUTJv89+vSwNwxxgzEmGqXb5rahf3JE5UVPEw/ibQhA6nDNvdW4jIO8VJ8tIZxZ
-         jJyw==
-X-Gm-Message-State: AOJu0YyE2CJr7NqppsLtZffimb2Sk++OY8aubZf79+qJZeZj3i2zGJ+p
-	bgcAuP1KEqsYWQOUa4rFuxc+x8B27N8ATpGGeQJ4VztDCF/LqeiS1/R4PaHw5Oc=
-X-Google-Smtp-Source: AGHT+IEeDpvGXBqH/je10IHPu14YT86VdOv9pM7mB36It6cqAwKg+lgXt6Z2O4u7jJXtXFs/Sn2j4g==
-X-Received: by 2002:a05:6870:332b:b0:22a:7ce0:dd37 with SMTP id x43-20020a056870332b00b0022a7ce0dd37mr1322899oae.9.1712707894814;
-        Tue, 09 Apr 2024 17:11:34 -0700 (PDT)
-Received: from [10.0.16.226] ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id o5-20020a056a001b4500b006e72c8ece23sm8926609pfv.191.2024.04.09.17.11.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 17:11:34 -0700 (PDT)
-Message-ID: <388ef032-7030-47b5-bba5-852b00de7382@rivosinc.com>
-Date: Tue, 9 Apr 2024 17:11:31 -0700
+	s=arc-20240116; t=1712707912; c=relaxed/simple;
+	bh=cNZeGZ/65OwERzSfuxbYVGkUaCy7OOfWW6eKXwFvmww=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=klF2ws6vjpK4VB2fOmgVLIprGYJHYh5nE066VPiZSpXUJHdod5JhkZLkT5hPgi3iHCvmVekBDXSrHbe1VPXfoZzh/7t9JwN/KfS5iOpIBp2Rgxd0rF7BM3yXERcvCxn2xvpG8l7Htwo1JmZ0msUUU3pxIPoqHbad6ckdNyC3L+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092DFC43390;
+	Wed, 10 Apr 2024 00:11:50 +0000 (UTC)
+Date: Tue, 9 Apr 2024 20:14:26 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, rsavitski@google.com
+Subject: Re: [PATCH] ring-buffer: Only update pages_touched when a new page
+ is touched
+Message-ID: <20240409201426.73251bc4@gandalf.local.home>
+In-Reply-To: <20240410084400.d08b17cc846c233619e3c9fd@kernel.org>
+References: <20240409151309.0d0e5056@gandalf.local.home>
+	<20240410084400.d08b17cc846c233619e3c9fd@kernel.org>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/15] RISC-V: KVM: Add perf sampling support for
- guests
-Content-Language: en-US
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>,
- Atish Patra <atishp@atishpatra.org>,
- Conor Dooley <conor.dooley@microchip.com>, Guo Ren <guoren@kernel.org>,
- Icenowy Zheng <uwu@icenowy.me>, kvm-riscv@lists.infradead.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Shuah Khan <shuah@kernel.org>,
- Will Deacon <will@kernel.org>
-References: <20240229010130.1380926-1-atishp@rivosinc.com>
- <20240229010130.1380926-10-atishp@rivosinc.com>
- <20240302-f9732d962e5f7c7760059f2e@orel>
- <c46c57c2-95bc-4289-ac99-efd5bad093b5@rivosinc.com>
- <20240405-de92b25fdc1ecf53770c49d9@orel>
-From: Atish Patra <atishp@rivosinc.com>
-In-Reply-To: <20240405-de92b25fdc1ecf53770c49d9@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/5/24 05:05, Andrew Jones wrote:
-> On Tue, Apr 02, 2024 at 01:33:10AM -0700, Atish Patra wrote:
-> ...
->>> but it should be possible for the VMM to disable this extension in the
->>> guest. We just need to change all the checks in KVM of the host's ISA
->>> for RISCV_ISA_EXT_SSCOFPMF to checking the guest's ISA instead. Maybe
->>> it's not worth it, though, if the guest PMU isn't useful without overflow.
->>> But, sometimes it's nice to be able to disable stuff for debug and
->>> workarounds.
->>>
->>
->> As per my understanding, kvm_riscv_vcpu_isa_disable_allowed only returns
->> true for those extensions which can be disabled architecturally.
+On Wed, 10 Apr 2024 08:44:00 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+
+> Looks good to me.
 > 
-> I think kvm_riscv_vcpu_isa_disable_allowed can return true for any
-> extensions that KVM can guarantee won't be exposed in any way to the
-> guest. Extensions that cannot be disabled architecturally must return
-> false, since their instructions will still be present in the guest, even
-> if KVM doesn't want to expose them, but extensions which KVM emulates
-> can return true because KVM can choose not to emulate them. IIUC, sscofpmf
-> falls in this latter category.
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks.
+
 > 
+> BTW, isn't this a real bugfix, because the page_touched can be
+> bigger than nr_pages without this fix?
 
-hmm. The Sscofpmf is dependent on interrupt filtering via hvien and SBI 
-PMU. So you are suggesting to toggle off the CSR_HVIEN bit for overflow 
-interrupt or do more granular disabling for privilege mode filtering in 
-SBI PMU as well.
+Yes, I simply forgot to add the Cc stable.
 
-Beyond that we can't disable SBI PMU. Is that okay ? A guest can still 
-cause counter overflow and interrupt the host. However, the guest won't 
-get any interrupt as hvien is not set.
-
-It can also still filter the events as that is tied with SBI PMU.
-
-We can put more granular checks in SBI pmu but I am just wondering if it 
-provides anything additional beyond just disabling the sscofpmf in 
-device tree.
-
-
->>
->> VMM can still disable any extension by not adding to the device tree.
->> In fact, that's how kvmtool can disable sstc or sscofpmf with
->> --disable-<isa-ext command>.
->>
->> The warning is bit confused though.
->>
->> For example: if you run kvmtool with --disable-sstc
->>
->> "Warning: Failed to disable sstc ISA exension"
-> 
-> I think Sstc should allow disabling since it has a corresponding henvcfg
-> bit which KVM could not set in order to force accesses to the Sstc CSRs
-> to raise ILL exceptions. So, let's put Sstc aside, since it's not a good
-
-Agreed. I will send a separate patch for that.
-
-> example. An extension like Zihintpause, OTOH, cannot be disabled since
-> the 'pause' instruction will be present even if KVM does not put
-> Zihintpause in the guest's ISA string. If a kvmtool user uses
-> --disable-zihintpause, then I think this warning about failing to disable
-> the extension is appropriate.
-> 
->>
->> But sstc is disabled: Here is the cpuinfo output.
->> # cat /proc/cpuinfo
->> processor       : 0
->> hart            : 0
->> isa             : rv64imafdc_zicbom_zicboz_zicntr_zicsr_zifencei_zihintntl_zihintpause_zihpm_zfa_zba_zbb_zbc_zbs_smstateen_sscofpmf
->> mmu             : sv57
->> mvendorid       : 0x0
->> marchid         : 0x0
->> mimpid          : 0x0
->> hart isa        : rv64imafdc_zicbom_zicboz_zicntr_zicsr_zifencei_zihintntl_zihintpause_zihpm_zfa_zba_zbb_zbc_zbs_smstateen_sscofpmf
-> 
-> Removing from the ISA string is the best we can do in cases like
-> Zihintpause, and is likely good enough for well-behaved guests, but the
-> VMM's warning to the user is good for these cases too, since not all
-> guests are well-behaved.
-> 
-> Thanks,
-> drew
-
+-- Steve
