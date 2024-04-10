@@ -1,159 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEFB13D607;
-	Wed, 10 Apr 2024 08:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFA413C9C2;
+	Wed, 10 Apr 2024 08:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712738276; cv=none; b=jz2I4emDBYohjlhehEcsNiAjjmdcqvaiTxQJPRq5DeSarjwoNs3wtDUU7RDMMjsKtxgNMmRgI7LjkjEMhtJiBZw3ioF+TS3IaDHoGo7cq1OiagauSSv8TRi6YQLRlf1dTbtzaDefZPu4qD2DPLAH2ni7q6mrFUbD4hQjyeCpwhU=
+	t=1712738362; cv=none; b=mjFdPikKkJo5O8ROVZb6NNvTyN/GD5TqNY5mEw/y0yDlYpm8A6k3JiH5EorqNY3xgBM3RfvINxa/GWBXoB3fZyEce9uShls8BelboEFFMJ7fES08DbjtJQ/xA5j6BDOCQCF/9V68GMDt01XA1HRIlHR8vuUImUwft5j661Pw3Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712738276; c=relaxed/simple;
-	bh=yIdIemOnTziXqNpLh8yEnKKFNrbqsF06OfPzOTHOcbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TJBItvxM+FwovXWJB0ul/mwYdvs7WCbIrDrfJZWZ0oZ74s0RbH5DhhNZD9TRg6yVpFioo1rUVnX/GK5CnuHiwGDiNWTnIvAWSoKs3ZviQ65F5VU/N6UgBM5WYgJRU+kI+gYhf1QjJRaw0Uy2ckll/W29Wq+icSNweBnAs/A4kAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGO9oWBZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712738362; c=relaxed/simple;
+	bh=2y49D1eI4q7zkQo5x7DSWdfmQTrrsMHZSWx5rXc3Prc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=duvL7RNTCaNInbpvtrXa27tx9EwgFbBgv6NbmBNk//l09+EUY8X+T0p252GGqvbmjmj9Xlx847iSbn6oKBbJIyxJ11Doqpy5z+1Gjr9D4YLunz3aRVB25atmBJLR9bhTx279eSPJ3jwzDPHd+jp+4Y6VGzdlZtjRZq/0D7xt8eA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vg5gNxMO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGO9oWBZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45198C433C7;
-	Wed, 10 Apr 2024 08:37:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712738276;
-	bh=yIdIemOnTziXqNpLh8yEnKKFNrbqsF06OfPzOTHOcbY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=TGO9oWBZCnrkYFJOnvj3/5hP17eIupKKEZ7xBFRoxiLlPLTvn+gRNNzzRUi2KKZEN
-	 JDSJOtOkQQg0c6febzk8GxIYwf/bESKqGHh3gkuUfGL+v6JpdH16QE5FdIKENbrVCB
-	 MoojmL+l1IUBPUj+2W+EccTK/yPb75RcBdxCvKen/9FACh7XU/Ry6MPQUg3h6YRxMJ
-	 uGq39KL1RYomMCTLpqziztv377/AjsBrqOPJIuZduu3ZSrq/x5QpjW0KIW5iYnB9A6
-	 HCkYQ47agBokjq1I5snV56G3pj7m21ataYtEhKEnPPjgiKM2chSFf71hdYCkrV3gPy
-	 h/vxegaUrI3CQ==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2d858501412so82635331fa.0;
-        Wed, 10 Apr 2024 01:37:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWVsc6dFgsAV6NvHL1biywmssl/Wl1cEsatiCczFqm7Me+40Ff711Bn2PtUoVOaL3TDP0s0mlcsMldMeOU9q8iVVDuemuoIPGJjMpiMuAXvLTM1na1omLtw+MVFZTk6sDEmJckeFh87KPjrC+41HpjpAJFraOHvE/HcXezbexX5WQoTr9/d6YBrUJTDrXsWUO+eMeOzEAydxg/t3w==
-X-Gm-Message-State: AOJu0Yw3NCoMiDlC2o4pzTGFSiOUt5sgSYLETq0ec1mE2yz5w2+dVvsg
-	TKqdc6t+Ap/hlMFsbqlz1peX5hgdsdHhe5GVW49fuTCqdQF9rg3oKdMu8btv4w/CMwNMWI/U/NV
-	hEkDBfK4KLRoeS0jJXN5JX0kENRM=
-X-Google-Smtp-Source: AGHT+IErSky0zBx8VsJq18v2HDQ+IG2X2DLhHy2ORhAG5DQJYR3dQ/hVwRYoQ6FiWK4PuY4e2gnC4YDKAM8JXi22gts=
-X-Received: by 2002:a05:651c:169c:b0:2d6:ff04:200f with SMTP id
- bd28-20020a05651c169c00b002d6ff04200fmr1261201ljb.33.1712738274441; Wed, 10
- Apr 2024 01:37:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vg5gNxMO"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43A8W9Qv031312;
+	Wed, 10 Apr 2024 08:39:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=NIxTvEuhd5P4XCtFvjS4//f/6PwhINm43QqOnnXyD/4=;
+ b=Vg5gNxMOuW/nt2GrQU+TDN+Ed/sJzNCi4Kv8u4Rl6Et4vjrxJbXj3r6oYu0zNfejT6SW
+ bgWFRVgQEZYSgJLu2mN4o12M1U1PVEyCqpnXp1b0T6rDyWThbHq9ngBHyZTddebAzrVF
+ /uvEG2mu1V90m6DS19OEkVXIBmSOg5VezQ66u1QDO/pd3qbqNKFuQilRMIgOcmA3gVU5
+ gAe1ShX5UPUEJxxRb/TCn3rM0MulUx8rYAw0Ssdjd0h05i7zL+IZ+3TcyDqZ1o5xav6k
+ QtryKWEmkIMFSgNJXtER0HFHs2aTvlH8gvRPEgJq3bdoTk0V4NxNYM55m5QUC/0OqCzk WQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdqbdg0jj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 08:39:17 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43A8dGOV010193;
+	Wed, 10 Apr 2024 08:39:16 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdqbdg0jh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 08:39:16 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43A5rOeI016982;
+	Wed, 10 Apr 2024 08:39:16 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbke2k75e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 08:39:16 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43A8dCuw34144544
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 08:39:14 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3726120043;
+	Wed, 10 Apr 2024 08:39:12 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0DF7020040;
+	Wed, 10 Apr 2024 08:39:12 +0000 (GMT)
+Received: from [9.152.212.236] (unknown [9.152.212.236])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 08:39:12 +0000 (GMT)
+Message-ID: <ecf8b61aebdda160e49763dcb9efc24bb432c8ce.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] fbdev: add HAS_IOPORT dependencies
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Arnd
+ Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Date: Wed, 10 Apr 2024 10:39:11 +0200
+In-Reply-To: <20240410082743.1425538-2-schnelle@linux.ibm.com>
+References: <20240410082743.1425538-1-schnelle@linux.ibm.com>
+	 <20240410082743.1425538-2-schnelle@linux.ibm.com>
+Autocrypt: addr=schnelle@linux.ibm.com; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409150132.4097042-5-ardb+git@google.com> <20240409150132.4097042-8-ardb+git@google.com>
- <ZhZMITbXAR63hkoD@krava>
-In-Reply-To: <ZhZMITbXAR63hkoD@krava>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 10 Apr 2024 10:37:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHuHVJn9H62GeA8kHNXm8L39BdCowebFkeCcNfYN29DjA@mail.gmail.com>
-Message-ID: <CAMj1kXHuHVJn9H62GeA8kHNXm8L39BdCowebFkeCcNfYN29DjA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] btf: Avoid weak external references
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, 
-	Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, linux-arch@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, bpf@vger.kernel.org, 
-	Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QJlWpFbp0j_TnGDn1wS_LMkoK54XnbXb
+X-Proofpoint-ORIG-GUID: 9oSXZnxLnY6KfZ4QgWFKtg5mMSWPzzRF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_03,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404100062
 
-On Wed, 10 Apr 2024 at 10:22, Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Tue, Apr 09, 2024 at 05:01:36PM +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > If the BTF code is enabled in the build configuration, the start/stop
-> > BTF markers are guaranteed to exist in the final link but not during the
-> > first linker pass.
-> >
-> > Avoid GOT based relocations to these markers in the final executable by
-> > providing preliminary definitions that will be used by the first linker
-> > pass, and superseded by the actual definitions in the subsequent ones.
-> >
-> > Make the preliminary definitions dependent on CONFIG_DEBUG_INFO_BTF so
-> > that inadvertent references to this section will trigger a link failure
-> > if they occur in code that does not honour CONFIG_DEBUG_INFO_BTF.
-> >
-> > Note that Clang will notice that taking the address of__start_BTF cannot
-> > yield NULL any longer, so testing for that condition is no longer
-> > needed.
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> >  include/asm-generic/vmlinux.lds.h | 9 +++++++++
-> >  kernel/bpf/btf.c                  | 4 ++--
-> >  kernel/bpf/sysfs_btf.c            | 6 +++---
-> >  3 files changed, 14 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> > index e8449be62058..4cb3d88449e5 100644
-> > --- a/include/asm-generic/vmlinux.lds.h
-> > +++ b/include/asm-generic/vmlinux.lds.h
-> > @@ -456,6 +456,7 @@
-> >   * independent code.
-> >   */
-> >  #define PRELIMINARY_SYMBOL_DEFINITIONS                                       \
-> > +     PRELIMINARY_BTF_DEFINITIONS                                     \
-> >       PROVIDE(kallsyms_addresses = .);                                \
-> >       PROVIDE(kallsyms_offsets = .);                                  \
-> >       PROVIDE(kallsyms_names = .);                                    \
-> > @@ -466,6 +467,14 @@
-> >       PROVIDE(kallsyms_markers = .);                                  \
-> >       PROVIDE(kallsyms_seqs_of_names = .);
-> >
-> > +#ifdef CONFIG_DEBUG_INFO_BTF
-> > +#define PRELIMINARY_BTF_DEFINITIONS                                  \
-> > +     PROVIDE(__start_BTF = .);                                       \
-> > +     PROVIDE(__stop_BTF = .);
-> > +#else
-> > +#define PRELIMINARY_BTF_DEFINITIONS
-> > +#endif
->
-> hi,
-> I'm getting following compilation fail when CONFIG_DEBUG_INFO_BTF is disabled
->
->         [jolsa@krava linux-qemu]$ make
->           CALL    scripts/checksyscalls.sh
->           DESCEND objtool
->           INSTALL libsubcmd_headers
->           UPD     include/generated/utsversion.h
->           CC      init/version-timestamp.o
->           LD      .tmp_vmlinux.kallsyms1
->         ld: kernel/bpf/btf.o: in function `btf_parse_vmlinux':
->         /home/jolsa/kernel/linux-qemu/kernel/bpf/btf.c:5988: undefined reference to `__start_BTF'
->         ld: /home/jolsa/kernel/linux-qemu/kernel/bpf/btf.c:5989: undefined reference to `__stop_BTF'
->         ld: /home/jolsa/kernel/linux-qemu/kernel/bpf/btf.c:5989: undefined reference to `__start_BTF'
->         make[2]: *** [scripts/Makefile.vmlinux:37: vmlinux] Error 1
->         make[1]: *** [/home/jolsa/kernel/linux-qemu/Makefile:1160: vmlinux] Error 2
->         make: *** [Makefile:240: __sub-make] Error 2
->
-> maybe the assumption was that kernel/bpf/btf.o is compiled only
-> for CONFIG_DEBUG_INFO_BTF, but it's actually:
->
->   obj-$(CONFIG_BPF_SYSCALL) += btf.o memalloc.o
->
+On Wed, 2024-04-10 at 10:27 +0200, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=3Dn will disable inb()/outb() and friends at
+> compile time. We thus need to add HAS_IOPORT as dependency for those
+> drivers using them.
+>=20
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+> Note: This patch does not depend any not-yet-mainline HAS_IOPORT changes
+> and may be merged via subsystem specific trees at your earliest
+> convenience.
+>=20
+>  drivers/video/fbdev/Kconfig | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 
-Interesting. I did build test this with and without
-CONFIG_DEBUG_INFO_BTF, but not with CONFIG_BPF_SYSCALL=y and
-CONFIG_DEBUG_INFO_BTF=n.
+Sorry, I just noticed that one of the fbdev Kconfig changes slipped
+into my patch for video. This one is missing the below hunk and I'll
+send a v2.
 
-> I guess we just need !CONFIG_DEBUG_INFO_BTF version of btf_parse_vmlinux
-> function
->
+diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+index f90b191dc68b..76bbfd3767da 100644
+--- a/drivers/video/fbdev/Kconfig
++++ b/drivers/video/fbdev/Kconfig
+@@ -245,7 +245,7 @@ config FB_FM2
+=20
+ config FB_ARC
+ 	tristate "Arc Monochrome LCD board support"
+-	depends on FB && (X86 || COMPILE_TEST)
++	depends on FB && HAS_IOPORT && (X86 || COMPILE_TEST)
+ 	select FB_SYSMEM_HELPERS_DEFERRED
+ 	help
+ 	  This enables support for the Arc Monochrome LCD board. The board
 
-The below gives me a working build.
 
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -5971,6 +5971,9 @@ struct btf *btf_parse_vmlinux(void)
-        struct btf *btf = NULL;
-        int err;
 
-+       if (!IS_ENABLED(CONFIG_DEBUG_INFO_BTF))
-+               return ERR_PTR(-ENOENT);
-+
-        env = kzalloc(sizeof(*env), GFP_KERNEL | __GFP_NOWARN);
-        if (!env)
-                return ERR_PTR(-ENOMEM);
