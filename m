@@ -1,58 +1,52 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 949F8178CF4;
-	Wed, 10 Apr 2024 16:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC45217966F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 16:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712765332; cv=none; b=KfJaoOz7x1Z//5XG0kv6hYrfwkotuOD8htafZhzM+fm2mcEnlIc9ZGT9IVi5VuNqFAnhZfBf7fQtfDPwshJn7vfeXPBvIINcpRTZu7t5m7z/BejJ0dxBafSpYJC409PMiphz6MxgAoDpubt6nojWDwhsbKCdVvODPjmnb62QI8M=
+	t=1712765477; cv=none; b=TeX0keUy0LyyB4P3KBDzU6FNKNzbK2dz1xdpNFFcAYBb5krd9MqSook2lLYSVcVCLj/ufRia8X6H4czEClQs2D8mbwnt553kUp0Czz7MFX4qE8yeDap1NzpVcsx44FqXT+5UDclzJD7PYrXdTIvr4T8NfiRReE4JyP3A/x/XCW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712765332; c=relaxed/simple;
-	bh=uIp+Ly6NhCx68e61qpQZ5cWRk4j7iTO0QltCVLYEnfY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fQ0OSBOTAWzYZyg4hr9taUnT6JEw9VgOYDFoP/RDj0RKRpMWyn5T8JA7oTAZEhmdwwf4KkZ/a+RHs40ifQyRx/eRe/GqOdLBfiK/SQl0Onpm5qhj8FBM3oVJ04GG+yksVaozvOSjZ4/D8EtnXK+6mnwM9rT8+Dvwl+a0lqLXxsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=WH8YFB8k; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1712765477; c=relaxed/simple;
+	bh=uSG2l5o+Q79nj3UeD5xKuQOR/gwI5ezOeDJXvmNQMr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FiNd/M52yDO0nSfoOsIcHblOIYIbZFRpsgRI2E/K/6HKqhSLJzwLDWG7rdm+hpfD5EkuKsWFfUQKQ8l02foswEg6tldKRyJ44Cy7jtqz48p0J+PuABKzciT7bE2l0+xW3lTkYmE90kFFFGJ12pbgdTn48QdhGHY9Ls8UNVq5/D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qfr1P/cv; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="WH8YFB8k"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43AAVPBH003230;
-	Wed, 10 Apr 2024 11:08:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=O
-	CzWokGvgPVgqbKJreriPnsCx85RwRyagqB/QJQ8/vI=; b=WH8YFB8kpbw2FOPVK
-	wqKtZfOfJwamIjjmbrH78vmjCngoOQmuH9js5Z3KcCr5tjkWdbrTYM7wbYG8TfwJ
-	FngR/S+2R7ag6YQuKiJlHccKktGxSGNtZbofUgJoW+s2pLjPZW0l4D7F8Cv1j81b
-	1IjP7PQzMNl7dy3mEMk+/NpIE8+/cFvOB4HgXSRuwxLBwOaBeF5QrVsJ/3gVtjf7
-	2r8Ta6n/L+HDjsXJIiIgAJPGwJVpFBkNtFcj5MeFk4qvD9MuOeO/pMcXJoeF8sq2
-	Nh1/Bp+8r+J4DNM0P8Pbhsp19/u9uw/qNqYimfgBDtm/SH9RgTVEttfe5Hkl+3sE
-	JI95w==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxn7k0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 11:08:39 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Apr
- 2024 17:08:37 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Wed, 10 Apr 2024 17:08:37 +0100
-Received: from EDIN4L06LR3.ad.cirrus.com (EDIN4L06LR3.ad.cirrus.com [198.61.64.213])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C104682024A;
-	Wed, 10 Apr 2024 16:08:36 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>
-Subject: [PATCH] ASoC: cs35l56: Include array_size.h
-Date: Wed, 10 Apr 2024 17:08:33 +0100
-Message-ID: <20240410160833.20837-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qfr1P/cv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712765474;
+	bh=uSG2l5o+Q79nj3UeD5xKuQOR/gwI5ezOeDJXvmNQMr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qfr1P/cv6RgE5xtO2uYwAMhAovIA7FqZz0NBanGp3220Ms2NWEpxrVSyADBxJzvk6
+	 lBidnOiHOdb2tCWF6AVsP1XR/HZkz/rLrMUHasj6Uxz19TnRSpWyuMs5aQUu/nkwGs
+	 HdGXayO9RBsMGezgMxhfLDGug8+ssyYTs3EF29s/O4Fz3RKDGtUvA2CqqxK+nAtrD2
+	 kLm31bDZk7zlSAqFSQfUQKvtUlNex19vnR7Fjc72ITf+bTzygOL0x3b47wDPlMagSn
+	 lyihPeoWIGQbJeROVt2Ma2CF6yf6+0yQPvDAT5XncTSwbMQBvuJOy5vE04jsP0Fktg
+	 0+ljtnNj5Ql9Q==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7B95F37820FA;
+	Wed, 10 Apr 2024 16:11:13 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: tglx@linutronix.de
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	x86@kernel.org
+Subject: Re: [REGRESSION] mainline boot regression on AMD Stoney Ridge Chromebooks
+Date: Wed, 10 Apr 2024 18:11:41 +0200
+Message-Id: <20240410161141.261818-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <878r1l48xn.ffs@tglx>
+References: <878r1l48xn.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,44 +54,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Itkn7BXLBpQp6x6Z1s9Jn7mBqLTJXMsw
-X-Proofpoint-GUID: Itkn7BXLBpQp6x6Z1s9Jn7mBqLTJXMsw
-X-Proofpoint-Spam-Reason: safe
 
-Explicitly #include array_size.h for the source files that use
-ARRAY_SIZE().
+Hi Thomas,
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
----
- sound/soc/codecs/cs35l56-shared.c | 1 +
- sound/soc/codecs/cs35l56.c        | 1 +
- 2 files changed, 2 insertions(+)
+On 4/10/24 15:57, Thomas Gleixner wrote:
+> Laura!
+> 
+> On Wed, Apr 10 2024 at 10:15, Laura Nao wrote:
+>> On 4/9/24 14:25, Thomas Gleixner wrote:
+>>> Can you please replace that patch with the one below?
+>>
+>> So, with this patch applied on top of ace278e7eca6 the kernel doesn't
+>> boot anymore - reference test job:
+>> https://lava.collabora.dev/scheduler/job/13324010
+>>
+>> I see the only change between the second and third patch you provided,
+>> besides the debug prints, is:
+>>
+>> -	if (!topo_is_converted(c))
+>> -		return;
+>> -
+> 
+> Right. So this limits the area to search significantly.
+> 
+>> Printing the debug information without this probably doesn't really help,
+>> but just in case it's useful: I tried excluding the change above from the
+>> patch while leaving everything else unchanged - reference test job:
+>> https://lava.collabora.dev/scheduler/job/13324298 (also pasted the
+>> kernel log here for easier consultation:
+>> https://pastebin.com/raw/TQBDvCah)
+>>
+>> Hope this helps,
+> 
+> It does. Good idea!
+> 
+> I just moved the exit check a bit so we should see the scan info. That
+> should tell me what goes south.
+>
 
-diff --git a/sound/soc/codecs/cs35l56-shared.c b/sound/soc/codecs/cs35l56-shared.c
-index ec1d95e57061..3aa39f5923eb 100644
---- a/sound/soc/codecs/cs35l56-shared.c
-+++ b/sound/soc/codecs/cs35l56-shared.c
-@@ -5,6 +5,7 @@
- // Copyright (C) 2023 Cirrus Logic, Inc. and
- //                    Cirrus Logic International Semiconductor Ltd.
- 
-+#include <linux/array_size.h>
- #include <linux/firmware/cirrus/wmfw.h>
- #include <linux/gpio/consumer.h>
- #include <linux/regmap.h>
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 6331b8c6136e..dfd703d9e12f 100644
---- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -6,6 +6,7 @@
- //                    Cirrus Logic International Semiconductor Ltd.
- 
- #include <linux/acpi.h>
-+#include <linux/array_size.h>
- #include <linux/completion.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
--- 
-2.39.2
+Here's the full kernel log with the latest patch applied: 
+https://pastebin.com/raw/r2CkP396
 
+Reference test job: https://lava.collabora.dev/scheduler/job/13328709
+
+Thanks!
+
+Laura
