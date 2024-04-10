@@ -1,129 +1,133 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A3A15EFAE
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9FB15B137;
+	Wed, 10 Apr 2024 15:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763059; cv=none; b=YjIL9wQr1fhmq1uC8xpHWe6Fe6PhIQWMHt75cemPoWCbDVns3JqsNCmW9W1Wj5FHQAjPGpAnizJff3olAUWvLe/ZBzCOaiWqJZhMBPZhLdEHmOpqpianE4Mp1heiO1OANCVEbAIKBWAEoaDZcNw50uOsEOlXElELGU503u1upro=
+	t=1712763076; cv=none; b=dZy5fWsORkYP1p9y2V0qsLysqlHv0HDbMi7oaV5D5fh2/Iq4jAgE0Tu/w4dRMalUVtXicd0VvkIkM5YjQKJgrFw7yQjVXYoRGFCKwkNZwFlSXLBQN17qJDzya+McYjEMPWkxHGyqU8+eWmlEDU5VGwa4BNEwSfPvlaCIfoP4ecg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763059; c=relaxed/simple;
-	bh=u1eWAA/ThURkbCchsyub5PAfU1Ae5xWgAQKecjdCMoc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FUQZQxqG/EI9IZ5si7EVOWZFrP9yzSPQuhz98AQmz6ODHUBcqLH2WSbakBeRrhK6Oqv7MUd2OvhMc7cIdXvS7vSBr5dVZqDTXOIFa7hs6WbGCW6MCMIjuAE3J3uoN1SoekbqaozQWRwxSQt/IyexwGJIJj9/7QTwQbaiLqeSgDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=3DGe+Pxl; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712763076; c=relaxed/simple;
+	bh=pH+z7kT+B4G554baL6gQ+2qPvr9hlaRu9zM0ygTBqww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bkHfowmXKOPXoI0lOHPSqwzbmJrMpLbLFjJ1gKQ/G46L+ju7kGdazzF3k6FtQOpoZP8hbjDCNwFaJMGCwhbYwbLc2nHUJaDDLE9rHSEM7+NbHfZkiaq1geVYosumYNUSUs8ciqK96FR+8njsB1iwcik0duza+QmtDOh2rRb6nnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qViPEqHI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="3DGe+Pxl"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-346407b8c9aso678515f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712763056; x=1713367856; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OWBh7JXEUeIzo5KgJAd3zKBhqX2eLt0rOguALy1M0Kk=;
-        b=3DGe+PxlpcfHZknuci25H9JJ8XxKvRKUkr4G8+KGuK+bB4qPFRq2dbCRe2h6O2idIP
-         syOjYu0V0SI3s3T34XiQcPedAwPi2qj5sBrrFgX4/PzDoIJCu7TXtO4qgMmyv66LVZvX
-         16jPI9ZOLPWaKiW+paMrPmumMz3IKjqowyNVm7RqZ8e7/rOeSqCtDxBFeu734pi9Vko3
-         3Cf0J1B1eA4/eTCGza0f2dbKLEEaUCG9rM159fJr2GuyzpFlebzqr5H3ssHACw4s06DO
-         QVO0mQY4iSqtoNJfJM/rd//eZ1mSP9gXdlB5+o2EIkRAnn7KfxT73qfsTRjqgQUjey6j
-         b1PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712763056; x=1713367856;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OWBh7JXEUeIzo5KgJAd3zKBhqX2eLt0rOguALy1M0Kk=;
-        b=pImCaPeur2bMDfSpAZILINuudRql50rDoFyZmamiip3Vz+0oyhAYUDvIzNpxjI9koI
-         65bBIvrmXpe1cixVyBtJxFPy8rjo/GHcG3AqmZhw7Mr7sPqd9oXUQWcr+SJouxGDDo/m
-         ZsZqLG/ZwIeIvebXypXH6xpZlXfhqYtDs7yWMHXL23Pb+fE79dVMcomy9TUo+BCtpFSC
-         vpO0oIGZolYA66D8rrFdv69M0qDwUOat0etZgnP0FJ0Zxln3Fs0rXwG0jwhfaXsKuy6d
-         1ToHK39gtHmcw3wzzDc3O5TjAusSGoBB+pe2NG6zx2oz5s+sOBtWvl38+Z4q7NWi0Bgw
-         e5tw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1QYYl0mucH1LstDBR0c3gokUjdAB8dWucippK4TsfnVpktGRdjunZz6TwVVTd1KyRj2M/u203Cit/q3d99t/BnFhSzuykoa+nyvcb
-X-Gm-Message-State: AOJu0YzoYdmK6ZsryHZF5cU4ALmmYVAGu4N+7B3SaGJBisBpkrDzyUQf
-	08epPYkfH6qAC55iZJaGS+wC8dYM/NDptrckqe4x7jTvihaX+gDDkfelKGNjk0U=
-X-Google-Smtp-Source: AGHT+IGM+tKVXZHv9j2QFP6knh6WFNV2lFvfGgCYRQglQNtraXDOdyw8VxBYrHku61VtDa7HjL9l/w==
-X-Received: by 2002:a5d:64e3:0:b0:343:ba58:1297 with SMTP id g3-20020a5d64e3000000b00343ba581297mr2445689wri.3.1712763055716;
-        Wed, 10 Apr 2024 08:30:55 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:999:a3a0:d4a6:5856:3e6c:3dff? ([2a01:e0a:999:a3a0:d4a6:5856:3e6c:3dff])
-        by smtp.gmail.com with ESMTPSA id p19-20020a05600c1d9300b00416bf7b68f6sm2604986wms.31.2024.04.10.08.30.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 08:30:55 -0700 (PDT)
-Message-ID: <ce7b7413-31ac-4c93-8970-e7cf0d6902cc@rivosinc.com>
-Date: Wed, 10 Apr 2024 17:30:54 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qViPEqHI"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43ADvQvd002584;
+	Wed, 10 Apr 2024 15:31:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=pp1;
+ bh=Cbi/eAWd7VhxaqxfaHTml+ueD1AIDaz+ba8OE4CCdvA=;
+ b=qViPEqHIuBk9CBux21zCp8UMLj//yBpq37q5ojeITXSi8J/V8GrSYW3oKyFtC8PKQ+S+
+ jr0OhNNdhKo+mOCUbqWdK/lNmqCc2cNxhf6ejca2zxlBcdRMMlsNZhh8pbBlSQTJ+cGT
+ GJSo67C6hCJT5OzwqYENJ/tcY43p+woUjruAfstycZ5vCHtTWkZO+L/3B8pPB3Qre+1A
+ kbCdGBSDon3MT4zO6YL1Ejx0HvY7IVWO2AVHuf7g7Z5i39EUrFtZIIwvsMa8nha9f8kJ
+ 1aAEDABtFv13w7dxCcY14UBIuYa+KqH3EXEgAv0JDBI2zgg1TKSAxI54/uxGqSwdt0K6 uQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xds6k8s0y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 15:31:03 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AFV3XD021875;
+	Wed, 10 Apr 2024 15:31:03 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xds6k8s0n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 15:31:03 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43AEXDuU029966;
+	Wed, 10 Apr 2024 15:26:47 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbj7mdf1c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 15:26:47 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AFQf4j30867974
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 15:26:44 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D3E2E20043;
+	Wed, 10 Apr 2024 15:26:41 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 32FE12004F;
+	Wed, 10 Apr 2024 15:26:41 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.171.29.198])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 10 Apr 2024 15:26:41 +0000 (GMT)
+Date: Wed, 10 Apr 2024 17:26:39 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, hughd@google.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+        iii@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/shmem: Inline shmem_is_huge() for disabled
+ transparent hugepages
+Message-ID: <Zhavr9NxvayDhU9X@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <20240409155407.2322714-1-sumanthk@linux.ibm.com>
+ <594dbec7-b560-44e5-a684-93dcb8ba85df@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] riscv: nommu: remove PAGE_OFFSET hardcoding
-To: Jisheng Zhang <jszhang@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Samuel Holland <samuel.holland@sifive.com>, Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240410142347.964-1-jszhang@kernel.org>
- <20240410142347.964-2-jszhang@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20240410142347.964-2-jszhang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <594dbec7-b560-44e5-a684-93dcb8ba85df@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: L612PNMowBeXj8vY2YP3t3EszkoVv0Uk
+X-Proofpoint-ORIG-GUID: GxlMHGTjvPmiE1LhuQok0TrbcWFwqCxD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ spamscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
+ phishscore=0 clxscore=1015 mlxlogscore=368 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404100112
 
-
-
-On 10/04/2024 16:23, Jisheng Zhang wrote:
-> Currently, PAGE_OFFSET is hardcoded as 0x8000_0000, it works fine since
-> there's only one nommu platform in the mainline. However, there are
-> many cases where the (S)DRAM base address isn't 0x8000_0000, so remove
-> the hardcoding value, and introduce DRAM_BASE which will be set by
-
-Hi Jisheng,
-
-Typo: s/harcoding/hardcoded
-
-> users during configuring. DRAM_BASE is 0x8000_0000 by default.
+On Wed, Apr 10, 2024 at 02:34:35PM +0200, David Hildenbrand wrote:
+> On 09.04.24 17:54, Sumanth Korikkar wrote:
+> > In order to  minimize code size (CONFIG_CC_OPTIMIZE_FOR_SIZE=y),
+> > compiler might choose to make a regular function call (out-of-line) for
+> > shmem_is_huge() instead of inlining it. When transparent hugepages are
+> > disabled (CONFIG_TRANSPARENT_HUGEPAGE=n), it can cause compilation
+> > error.
+> > 
+> > mm/shmem.c: In function ‘shmem_getattr’:
+> > ./include/linux/huge_mm.h:383:27: note: in expansion of macro ‘BUILD_BUG’
+> >    383 | #define HPAGE_PMD_SIZE ({ BUILD_BUG(); 0; })
+> >        |                           ^~~~~~~~~
+> > mm/shmem.c:1148:33: note: in expansion of macro ‘HPAGE_PMD_SIZE’
+> >   1148 |                 stat->blksize = HPAGE_PMD_SIZE;
+> > 
+> > To prevent the possible error, always inline shmem_is_huge() when
+> > transparent hugepages are disabled.
+> > 
 > 
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  arch/riscv/Kconfig | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 7895c77545f1..b4af1df86352 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -247,10 +247,16 @@ config MMU
->  	  Select if you want MMU-based virtualised addressing space
->  	  support by paged memory management. If unsure, say 'Y'.
->  
-> +if !MMU
-> +config DRAM_BASE
-> +	hex '(S)DRAM Base Address'
-> +	default 0x80000000
-> +endif
+> Do you know which commit introduced that?
+Hi David,
 
-I'm not sure but it feels odd to have this at top level config menu.
-Maybe it would make more sense for this to be located under the
-"Platform Type" section ?
+Currently with CONFIG_CC_OPTIMIZE_FOR_SIZE=y and expirementing with
+-fPIC kernel compiler option, I could see this error on s390.
+
+However, default kernel compiler options doesnt end up with the above
+pattern right now.
+
+I think, shmem_is_huge() for disabled transparent hugepages comes from:
+Commit 5e6e5a12a44c ("huge tmpfs: shmem_is_huge(vma, inode, index)")
+
+However, HPAGE_PMD_SIZE macros for !CONFIG_TRANSPARENT_HUGEPAGE
+originates from:
+Commit d8c37c480678 ("thp: add HPAGE_PMD_* definitions for
+!CONFIG_TRANSPARENT_HUGEPAGE")
 
 Thanks,
-
-Clément
-
-> +
->  config PAGE_OFFSET
->  	hex
->  	default 0xC0000000 if 32BIT && MMU
-> -	default 0x80000000 if !MMU
-> +	default DRAM_BASE if !MMU
->  	default 0xff60000000000000 if 64BIT
->  
->  config KASAN_SHADOW_OFFSET
+Sumanth
