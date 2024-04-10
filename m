@@ -1,136 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13D45522E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 01:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1032964A;
+	Wed, 10 Apr 2024 01:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712713696; cv=none; b=aPY+T/k1Frh+ewk1PeZR3dH4FIPl+UrFTJiD3W9ikeBifEWgxlufSxl0ryTtiJWdbFJN8wq0JtnggKaGpd0Y4MpA6nF7MrU6SCFTL+3c3RBn6lmpDu+FK4fzS21JI7w58lxDQ6UMZXsAq8Hz4bFVhhjZynzbvialFVsSHsK0bqI=
+	t=1712713829; cv=none; b=sVUYbyCciamlherocGTfNzYEISq0SL2x0m/12XACj75A/0bp8kJEgR/Rdiv1y9otNHAoYqDSVk5dd/aikOLgyJ6dwbdLRh3S83RUj1NxDbh137U74at9Fxy/Yd2T0qLTZn3A4zp28a8T3Yvqq51HR801tYv9FZaRtb1lrP62aIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712713696; c=relaxed/simple;
-	bh=NcKvOkrCzR342U93keVujN6cdA/17UZMHK43RsPTVsY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ffzw51MTcDqNW665wvpUXwJmw/gRyopZ5t4dvccoQSHrFwLg/oWmlI9JT4EzOctIZO7HptHVOO7DAIhz7P3qMLP0GIp231zW5UhVvfKZJmbF0Mgg32S82lXZQUOboWhOKe/2LOA3g5hZt6iELMn6kVy/s89+8riKzAO15zyF+RM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HlIgxZYv; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712713829; c=relaxed/simple;
+	bh=C7uzs+pRecO5vt0/mJMXKHRDYPy1ocmPRZF7qiuwzcU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I6I9wMoRqfxjRbPUDtN8POQlAEXScT9rBn8gE2oTwxbFVC1Un3MdPpZM05582edF6W2gFEh9bcNga5mMfdPdnzL/fachqlPS/BHa+NOEdjI4oUoq/ALBmtPo2vj7nzVrEeLcmHemlPv/sOULkoiK8Cvu10CKIIKweev7b8WRbqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=peqvizFg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HlIgxZYv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712713695; x=1744249695;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=NcKvOkrCzR342U93keVujN6cdA/17UZMHK43RsPTVsY=;
-  b=HlIgxZYvXi2i4Vb5GYZrnB0ky+LozNowwJBBsue58PxcvCtUmqv57nR2
-   0XlFL/wQyxOIpXxZ559UwWdbcboJ6ulptaNyLE05wLfV8P6+w+dLUqPXd
-   NUDwgHcArwgpaf+Jw3UeZ9qGsAGJWlkPdF7DmpfwXuVYuD/C4ZHF8cjB7
-   p+el9lDsQzNEbDChM4NG6ON2eJbps9D2lgUwRsjlokjRAm8lOKzHnVYv0
-   wxi3jNOng6lhM4JuKkf2djdufqkLyn4f9k/u5gL3sEXYwOLn1DKxTuABa
-   Lq9PI0cxTaGj9w4on1nbX2mkaFfbUHhvwabnqtSISQI37ocO304P44SUT
-   g==;
-X-CSE-ConnectionGUID: j/8AGrDYRLS5ZQHs+THlFA==
-X-CSE-MsgGUID: cq5v/Ww0S6WwtmtV3VDtHQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8235325"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8235325"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:48:15 -0700
-X-CSE-ConnectionGUID: M1tPkJiaQKOyDTqRm15LIA==
-X-CSE-MsgGUID: 2XzmfPgPR7C2Qhk1Wl87ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="24903108"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 18:48:11 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Nhat Pham <nphamcs@gmail.com>
-Cc: Zhaoyu Liu <liuzhaoyu.zackary@bytedance.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  ryncsn@gmail.com,  songmuchun@bytedance.com,
-  david@redhat.com,  chrisl@kernel.org,  guo.ziliang@zte.com.cn,
-  yosryahmed@google.com,  linux-kernel@vger.kernel.org,  linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: swap: prejudgement swap_has_cache to avoid page
- allocation
-In-Reply-To: <CAKEwX=MBts2mGgTE__VP-ZVMrMFTzQnbTAkMPTJs3KNRQ2QDjg@mail.gmail.com>
-	(Nhat Pham's message of "Tue, 9 Apr 2024 10:52:40 -0700")
-References: <20240408121439.GA252652@bytedance>
-	<20240408132704.f966adc8d3928df4d3b8c0a9@linux-foundation.org>
-	<87edbf8hta.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<20240409145740.GA543696@bytedance>
-	<CAKEwX=MBts2mGgTE__VP-ZVMrMFTzQnbTAkMPTJs3KNRQ2QDjg@mail.gmail.com>
-Date: Wed, 10 Apr 2024 09:46:18 +0800
-Message-ID: <8734ru6lcl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="peqvizFg"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CCE9EC43390;
+	Wed, 10 Apr 2024 01:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712713828;
+	bh=C7uzs+pRecO5vt0/mJMXKHRDYPy1ocmPRZF7qiuwzcU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=peqvizFg2+AZZ1hTZ+ii7ZBDykemh1OdN+i0jnc8+UX/RYNgE84XGWAdhntfxmJGZ
+	 iToKsl2zFVXcgPYQ0x/WD8lCAlcAax+7bMePFOHubiGlomfppRX02XtONeyrl/pnNW
+	 nvsqBvtd+XkEV+HegrWRVzG1eIYYE3+2+WwVPTNqMc79IgF6kuylBV4+4eiMf1Ubex
+	 CTxAYiqHDGWXyPeilvolTQs4c2/JyaMFZQAdRori7S87lG5W9zM83oJkWVC9mrA8/6
+	 M3SU5b38X8t2joqmoXxfh/Obm4NmJtYNTP8VINTcwqvxvomcx7uvSjL2VpHQFaRdbO
+	 fWGb8n2paHimg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B830FC395F6;
+	Wed, 10 Apr 2024 01:50:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v5 0/3] Minor cleanups to skb frag ref/unref
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171271382875.18237.12454972110569663249.git-patchwork-notify@kernel.org>
+Date: Wed, 10 Apr 2024 01:50:28 +0000
+References: <20240408153000.2152844-1-almasrymina@google.com>
+In-Reply-To: <20240408153000.2152844-1-almasrymina@google.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ayush.sawal@chelsio.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, hawk@kernel.org,
+ ilias.apalodimas@linaro.org, steffen.klassert@secunet.com,
+ herbert@gondor.apana.org.au, dsahern@kernel.org, borisp@nvidia.com,
+ john.fastabend@gmail.com, dtatulea@nvidia.com
 
-Nhat Pham <nphamcs@gmail.com> writes:
+Hello:
 
-> On Tue, Apr 9, 2024 at 7:57=E2=80=AFAM Zhaoyu Liu
-> <liuzhaoyu.zackary@bytedance.com> wrote:
->>
->> On Tue, Apr 09, 2024 at 09:07:29AM +0800, Huang, Ying wrote:
->> > Andrew Morton <akpm@linux-foundation.org> writes:
->> >
->> > > On Mon, 8 Apr 2024 20:14:39 +0800 Zhaoyu Liu <liuzhaoyu.zackary@byte=
-dance.com> wrote:
->> > >
->> > >> Based on qemu arm64 - latest kernel + 100M memory + 1024M swapfile.
->> > >> Create 1G anon mmap and set it to shared, and has two processes
->> > >> randomly access the shared memory. When they are racing on swap cac=
-he,
->> > >> on average, each "alloc_pages_mpol + swapcache_prepare + folio_put"
->> > >> took about 1475 us.
->> > >
->> > > And what effect does this patch have upon the measured time?  ANd up=
-on
->> > > overall runtime?
->> >
->> > And the patch will cause increased lock contention, please test with
->> > more processes and perhaps HDD swap device too.
->>
->> Hi Ying,
->>
->> Thank you for your suggestion.
->> It may indeed cause some lock contention, as mentioned by Kairui before.
->>
->> If so, is it recommended?
->> ---
->>   unsigned char swap_map, mapcount, hascache;
->>   ...
->>   /* Return raw data of the si->swap_map[offset] */
->>   swap_map =3D __swap_map(si, entry);
->>   mapcount =3D swap_map & ~SWAP_HAS_CACHE;
->>   if (!mapcount && swap_slot_cache_enabled)
->>   ...
->>   hascache =3D swap_map & SWAP_HAS_CACHE;
->>   /* Could judge that it's being added to swap cache with high probabili=
-ty */
->>   if (mapcount && hascache)
->>     goto skip_alloc;
->>   ...
->> ---
->> In doing so, there is no additional use of locks.
->>
->
-> Hmm so is this a lockless check now? Ummmm... Could someone with more
-> expertise in the Linux kernel memory model double check that this is
-> even a valid state we're observing here? Looks like we're performing
-> an unguarded, unsynchronized, non-atomic read with the possibility of
-> concurrent write - is there a chance we might see partial/invalid
-> results?
->
-> Could you also test with zswap enabled (and perhaps with zswap
-> shrinker enabled)?
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-READ_ONCE() will save us from partial/invalid results.
+On Mon,  8 Apr 2024 08:29:55 -0700 you wrote:
+> v5:
+> - Applied feedback from Eric to inline napi_pp_get_page().
+> - Applied Reviewed-By's.
+> 
+> v4:
+> - Rebased to net-next.
+> - Clarified skb_shift() code change in commit message.
+> - Use skb->pp_recycle in a couple of places where I previously hardcoded
+>   'false'.
+> 
+> [...]
 
---
-Best Regards,
-Huang, Ying
+Here is the summary with links:
+  - [net-next,v5,1/3] net: make napi_frag_unref reuse skb_page_unref
+    https://git.kernel.org/netdev/net-next/c/959fa5c188bf
+  - [net-next,v5,2/3] net: mirror skb frag ref/unref helpers
+    (no matching commit)
+  - [net-next,v5,3/3] net: remove napi_frag_unref
+    https://git.kernel.org/netdev/net-next/c/f58f3c956340
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
