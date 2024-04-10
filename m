@@ -1,151 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18860158D94;
-	Wed, 10 Apr 2024 10:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C87813D274
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712744669; cv=none; b=miUk5hoKR6v2NC0NxIoIld7Lx4Fv4UZ1qCWrsnVhKyTONhcFn/qTXpw4jnAwVtfxKrEBu2LXRt/efQDRZuscv42gczVeZICn3jTAWYvfZFYM/T6a/VutyajL4EVGkx230ewL22Vn7uiXUgVMGGXPybojUwKNWCUHM324fk+DnIE=
+	t=1712744716; cv=none; b=mmn4UOXS/aToiBTUSi40xoJQswUj7Hmq/73Z2iKgYtb9uaz3qHwDMk8pYRKi1xHteK32/3c8CAksOWqRxhdjzzvun6BuNlznjib8KCP67Sw0IsnvyjE9k5cptDDIPjT0p8sL3B4tADouIdcNqyOi8o6fgSbKt0F+qCVQTupVdl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712744669; c=relaxed/simple;
-	bh=ebbxEm39CjWYFC6IF/Qa9Ng63Zx8Wwaf4wL+lGqTjNw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L3SPyLVI1aWmU771d/jJdN9vtk6A6wtFoMLEqoBPHtKCE9pRo20JOQmtq3BkTB6XCR8GokoaFRthBEDqPnZW8IpspnJnOs8yHrA1PqfldMzzjODqGpD2dk6qs+ymPYfDDtfcRqjYSOF2YY0vvRw+lsPqZHaH+dYNtcgKXg89jpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sc66azfd; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sc66azfd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712744668; x=1744280668;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ebbxEm39CjWYFC6IF/Qa9Ng63Zx8Wwaf4wL+lGqTjNw=;
-  b=Sc66azfdkVe3zz7jy0TBbV+UCVoHJ3Bt0RUQGHYX4Jx+yWrMo8fstSUN
-   JJNK8mgPsQDfSfPrZWXMEiQ/RSL23JFVZVMUEUjEGu4YGZ9091eBPDGsC
-   tuGoO7L5c7ykkCNy1n235OYcG5e+UUxDCSAbJsX9sDjDBzAG0jp7AD0nT
-   i8Vrbq9HJ4rcW9riTiMjLOO6iOBcju9egzNK1h6vqiDSmTVof2Q9GxmEK
-   lNClYTWpiT7jdAuZBr6oDmQdWZjw1NafgWPO2iwJlfdi8X2GHqTaYB1un
-   hBXjhdyj7eJj2keRP7qojdmFF26KB4obkNR3ecdgw8A74+pIx7/8FhXJ2
-   A==;
-X-CSE-ConnectionGUID: nXPEC85WSmmG0RSCrPZ+0A==
-X-CSE-MsgGUID: f/H3utzNQlK8JOIgAXaqHw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8224430"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8224430"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:24:28 -0700
-X-CSE-ConnectionGUID: Nrqx7/0BSJWJvICVK9O+Qg==
-X-CSE-MsgGUID: s3AwXsfhQfq6IXM8QWLN+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25283031"
-Received: from unknown (HELO chenyu-dev.sh.intel.com) ([10.239.62.107])
-  by orviesa004.jf.intel.com with ESMTP; 10 Apr 2024 03:24:26 -0700
-From: Chen Yu <yu.c.chen@intel.com>
-To: linux-efi@vger.kernel.org
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Chao Gao <chao.gao@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>,
-	"Hossain, Md Iqbal" <md.iqbal.hossain@intel.com>
-Subject: [PATCH] efi/unaccepted: touch soft lockup during memory accept
-Date: Wed, 10 Apr 2024 18:23:01 +0800
-Message-Id: <20240410102301.634677-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712744716; c=relaxed/simple;
+	bh=Gov7EcvHo7EBQmRb3lqqi73NGa5AlOyAKgNU773j8hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ef/hfsdB6DN9ZvVC49VX6bez+F0TkMncA/fkgpA+wAforVLIf8INGxCXZZcGtCgnin0AhssF7+ofbRmKtU4gmreZ/GSZcst6fjQvzeaH/mJUI6OyTYpZZ9H7GsD1jTGLbRG7KpRgRp+XI0k3bO+484NcecZAKPFwGf1JEWN7QvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC5EB139F;
+	Wed, 10 Apr 2024 03:25:42 -0700 (PDT)
+Received: from [10.57.73.247] (unknown [10.57.73.247])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9859D3F6C4;
+	Wed, 10 Apr 2024 03:25:11 -0700 (PDT)
+Message-ID: <a3197d4c-0966-4b38-af48-6cfe417894a3@arm.com>
+Date: Wed, 10 Apr 2024 11:25:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arm64: mm: Batch dsb and isb when populating
+ pgtables
+Content-Language: en-GB
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Itaru Kitayama <itaru.kitayama@fujitsu.com>
+References: <20240404143308.2224141-1-ryan.roberts@arm.com>
+ <20240404143308.2224141-3-ryan.roberts@arm.com>
+ <ZhZkr7PHB6ppksWv@FVFF77S0Q05N>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ZhZkr7PHB6ppksWv@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Commit 50e782a86c98 ("efi/unaccepted: Fix soft lockups caused
-by parallel memory acceptance") has released the spinlock so
-other CPUs can do memory acceptance in parallel and not
-triggers softlockup on other CPUs.
+On 10/04/2024 11:06, Mark Rutland wrote:
+> On Thu, Apr 04, 2024 at 03:33:06PM +0100, Ryan Roberts wrote:
+>> After removing uneccessary TLBIs, the next bottleneck when creating the
+>> page tables for the linear map is DSB and ISB, which were previously
+>> issued per-pte in __set_pte(). Since we are writing multiple ptes in a
+>> given pte table, we can elide these barriers and insert them once we
+>> have finished writing to the table.
+>>
+>> Execution time of map_mem(), which creates the kernel linear map page
+>> tables, was measured on different machines with different RAM configs:
+>>
+>>                | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere Altra
+>>                | VM, 16G     | VM, 64G     | VM, 256G    | Metal, 512G
+>> ---------------|-------------|-------------|-------------|-------------
+>>                |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
+>> ---------------|-------------|-------------|-------------|-------------
+>> before         |   77   (0%) |  431   (0%) | 1727   (0%) |  3796   (0%)
+>> after          |   13 (-84%) |  162 (-62%) |  655 (-62%) |  1656 (-56%)
+>>
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Tested-by: Itaru Kitayama <itaru.kitayama@fujitsu.com>
+>> Tested-by: Eric Chanudet <echanude@redhat.com>
+>> ---
+>>  arch/arm64/include/asm/pgtable.h |  7 ++++++-
+>>  arch/arm64/mm/mmu.c              | 13 ++++++++++++-
+>>  2 files changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index afdd56d26ad7..105a95a8845c 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -271,9 +271,14 @@ static inline pte_t pte_mkdevmap(pte_t pte)
+>>  	return set_pte_bit(pte, __pgprot(PTE_DEVMAP | PTE_SPECIAL));
+>>  }
+>>  
+>> -static inline void __set_pte(pte_t *ptep, pte_t pte)
+>> +static inline void __set_pte_nosync(pte_t *ptep, pte_t pte)
+>>  {
+>>  	WRITE_ONCE(*ptep, pte);
+>> +}
+>> +
+>> +static inline void __set_pte(pte_t *ptep, pte_t pte)
+>> +{
+>> +	__set_pte_nosync(ptep, pte);
+>>  
+>>  	/*
+>>  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index fd91b5bdb514..dc86dceb0efe 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -178,7 +178,11 @@ static pte_t *init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+>>  	do {
+>>  		pte_t old_pte = __ptep_get(ptep);
+>>  
+>> -		__set_pte(ptep, pfn_pte(__phys_to_pfn(phys), prot));
+>> +		/*
+>> +		 * Required barriers to make this visible to the table walker
+>> +		 * are deferred to the end of alloc_init_cont_pte().
+>> +		 */
+>> +		__set_pte_nosync(ptep, pfn_pte(__phys_to_pfn(phys), prot));
+>>  
+>>  		/*
+>>  		 * After the PTE entry has been populated once, we
+>> @@ -234,6 +238,13 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>>  	} while (addr = next, addr != end);
+>>  
+>>  	pte_clear_fixmap();
+>> +
+>> +	/*
+>> +	 * Ensure all previous pgtable writes are visible to the table walker.
+>> +	 * See init_pte().
+>> +	 */
+>> +	dsb(ishst);
+>> +	isb();
+> 
+> Hmm... currently the call to pte_clear_fixmap() alone should be sufficient,
+> since that needs to update the PTE for the fixmap slot, then do maintenance for
+> that.
 
-However the softlock up was intermittent shown up if the memory
-of the TD guest is large, and the timeout of softlockup is set
-to 1 second:
+Yes, true...
 
- RIP: 0010:_raw_spin_unlock_irqrestore
- Call Trace:
- ? __hrtimer_run_queues
- <IRQ>
- ? hrtimer_interrupt
- ? watchdog_timer_fn
- ? __sysvec_apic_timer_interrupt
- ? __pfx_watchdog_timer_fn
- ? sysvec_apic_timer_interrupt
- </IRQ>
- ? __hrtimer_run_queues
- <TASK>
- ? hrtimer_interrupt
- ? asm_sysvec_apic_timer_interrupt
- ? _raw_spin_unlock_irqrestore
- ? __sysvec_apic_timer_interrupt
- ? sysvec_apic_timer_interrupt
- accept_memory
- try_to_accept_memory
- do_huge_pmd_anonymous_page
- get_page_from_freelist
- __handle_mm_fault
- __alloc_pages
- __folio_alloc
- ? __tdx_hypercall
- handle_mm_fault
- vma_alloc_folio
- do_user_addr_fault
- do_huge_pmd_anonymous_page
- exc_page_fault
- ? __do_huge_pmd_anonymous_page
- asm_exc_page_fault
- __handle_mm_fault
+> 
+> So we could avoid the addition of the dsb+isb here, and have a comment:
+> 
+> 	/*
+> 	 * Note: barriers and maintenance necessary to clear the fixmap slot
+> 	 * ensure that all previous pgtable writes are visible to the table
+> 	 * walker.
+> 	 */
+> 	pte_clear_fixmap();
+> 
+> ... which'd be fine as long as we keep this fixmap clearing rather than trying
+> to do that lazily as in patch 4.
 
-When the local irq is enabled at the end of accept_memory(),
-the softlockup detects that the watchdog on single CPU has
-not been fed for a while. That is to say, even other CPUs
-will not be blocked by spinlock, the current CPU might be
-stunk with local irq disabled for a while, which hurts not
-only nmi watchdog but also softlockup.
+But it isn't patch 4 that breaks it, it's patch 3. Once we have abstracted
+pte_clear_fixmap() into the ops->unmap() call, for the "late" ops, unmap is a
+noop. I guess the best solution there would be to require that unmap() always
+issues these barriers.
 
-Chao Gao pointed out that the memory accept could be time
-costly and there was similar report before. Thus to avoid
-any softlocup detection during this stage, give the
-softlockup a flag to skip the timeout check at the end of
-accept_memory(), by invoking touch_softlockup_watchdog().
+I'll do as you suggest for this patch. If we want to keep patch 3, then I'll add
+the barriers for all unmap() impls.
 
-Reported-by: "Hossain, Md Iqbal" <md.iqbal.hossain@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/firmware/efi/unaccepted_memory.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/firmware/efi/unaccepted_memory.c b/drivers/firmware/efi/unaccepted_memory.c
-index 5b439d04079c..50f6503fe49f 100644
---- a/drivers/firmware/efi/unaccepted_memory.c
-+++ b/drivers/firmware/efi/unaccepted_memory.c
-@@ -4,6 +4,7 @@
- #include <linux/memblock.h>
- #include <linux/spinlock.h>
- #include <linux/crash_dump.h>
-+#include <linux/nmi.h>
- #include <asm/unaccepted_memory.h>
- 
- /* Protects unaccepted memory bitmap and accepting_list */
-@@ -149,6 +150,9 @@ void accept_memory(phys_addr_t start, phys_addr_t end)
- 	}
- 
- 	list_del(&range.list);
-+
-+	touch_softlockup_watchdog();
-+
- 	spin_unlock_irqrestore(&unaccepted_memory_lock, flags);
- }
- 
--- 
-2.25.1
+> 
+> Mark.
+> 
+>>  }
+>>  
+>>  static pmd_t *init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+>> -- 
+>> 2.25.1
+>>
 
