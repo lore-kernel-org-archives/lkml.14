@@ -1,193 +1,134 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC0913C911;
-	Wed, 10 Apr 2024 07:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C3813C9AE
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712733594; cv=none; b=itkjD1io6Vq529PX5LYaE1AzvZTm8YZd6lcyneu9HWG8VQ5yXKlJe4RS4GPSKrTKbWGGv250t+alRAEYRoxv0DbMlsMfMUn10YyE3+thwajd3UA72GrKmUhj65qzvoAJKDoEJeI/U68y5olooAIa0JjL8seCnt6krjcprak14rE=
+	t=1712733648; cv=none; b=Pn3WA+ox6kAy9v838v1oTv16Yj0KD8qbKFVpa81y2hGD6+uL4Rfx1OTiDGL5qYqeSVbmcDcofLZwZz41GqWTEGAFBjGk3+EfpZCCzhZVQcXrVOmwrogUMMia0SQITR6GODxvuurQZpecGDXff26351Vl9CQJLBuiWjpH+WcmFCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712733594; c=relaxed/simple;
-	bh=dqDekrwa4k1Je2dX2DShFv9ok+er/wifDum8wWIsAv8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EmijUGr+GrsFnQYLhzwAH6DJuuoHfNbnUrH5W4ZxaVVJhqnpSYCKjuIz1iFlL4lQIXaG+e0sLSHPHxtbmLfwblMRD89kisDhZNHs+O1iuEfUD0pnojNryJ/fbvtMmMNNiOukRC6nJZXLCtQAx/f1NjAbnyApqytyGU1JunkyXu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 43A7Iduf024986;
-	Wed, 10 Apr 2024 15:18:39 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id 9266A2004BB5;
-	Wed, 10 Apr 2024 15:20:49 +0800 (CST)
-Received: from localhost.localdomain (10.114.186.34) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Wed, 10 Apr 2024 15:18:29 +0800
-From: <liu.yec@h3c.com>
-To: <andy.shevchenko@gmail.com>, <daniel.thompson@linaro.org>,
-        <gregkh@linuxfoundation.org>
-CC: <dianders@chromium.org>, <jason.wessel@windriver.com>,
-        <jirislaby@kernel.org>, <kgdb-bugreport@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <liu.yeC@h3c.com>
-Subject: [PATCH V11] kdb: Fix the deadlock issue in KDB debugging.
-Date: Wed, 10 Apr 2024 15:18:10 +0800
-Message-ID: <20240410071810.3432842-1-liu.yec@h3c.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <567857bab013409ca53fa7c36292f4b0@h3c.com>
-References: <567857bab013409ca53fa7c36292f4b0@h3c.com>
+	s=arc-20240116; t=1712733648; c=relaxed/simple;
+	bh=rx19adIEtRfFuy8+v22L05S/+p5rIRJ/JcnvLnEFh7s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lAsTKnmBsTJ+2lqgSQCnp1bOd0E/Dx6pxpc3I2TbkyZKDqWbL45SHY8IZe74sA6u30vrWD/vbonJLV6O3DNSjfA4F8MvEHsmPR4Eb9zZdOnHwFoASnRfV4JkPuPWJO2SThmuBMKvXQdxVTzHWAhwVFnbC5NicjQgT3d9kvave6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=E+7HpyAs; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="E+7HpyAs"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a4644bde1d4so869735666b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1712733645; x=1713338445; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uLhNuIrSaoYe/9NO2TgswlnfBaBCyzfaiiheEplZdqE=;
+        b=E+7HpyAscsvxzlxlbX2LdRHPXl2tyDpBbOoYQdqJqRB1lt/ibuAQaxU69TFWBkz+Ek
+         oUFYbBWYjSFLkh6agnL1JbQD5tdToy83+q5LwEMYxCpA3J2axwWWiC2GD5oEobqa/Oo5
+         9EK8GHhn/U15sXVJcqnHlDG+22FQFYCRm4ETn6nkyQOrXNA5VpRit4mTKw7+YoXUvyk2
+         ZSgcj4RXPUbkV5Ug6B9t2KAUirmQNUJDePxb7MZw+vIxEJChx2UJZlAiww9iEenSxobX
+         ronns2mXYGlYWCBo/8s13bmENjrC0aMtZslS0SCX9wJP/mgy6Ak4k70Svorjv2QkI3Zu
+         WkkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712733645; x=1713338445;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uLhNuIrSaoYe/9NO2TgswlnfBaBCyzfaiiheEplZdqE=;
+        b=ZtoAOzHyjpnBk5A2PY+qq7P41/Auf6h8Rzu/5jrYlOibFOkPhSZ54E5WfWoj4krEAM
+         YBOhBTAwze703oO2WoYUs3zXR+g5QksbL0yaJJtvNu5qx2AEtWYDa+qgTAKxlW9fmOlT
+         4raYRMbVKZrqQv0O65NrdN3hys6XZsv+CiHVk+G4RIJjLO34UkEhX9fZp+XgCoX9HVZN
+         n8pIBJT8nobqlDo03O6BOzdq00tYwEKmir8ftlAgbzGrEGk9t8njjN907SH8OWANgnEH
+         rmxY1fJfeU4Jj0bT1IZhXCW2BDljx5ZWwAQPD4Sav0AiG/eclTYC/GP7SR6UyUB5rc13
+         Bpng==
+X-Gm-Message-State: AOJu0Yz/napBH85l233GtXW65CaLjTCw6+uVedaRpaobi6LEXVZN/kQe
+	GY+RV/E1+S9Rzf2+QKq83RRQCXKvppuWjI1ZbIbOSiiXdl2kf7RKi5QjfQslUoE=
+X-Google-Smtp-Source: AGHT+IFblqSFRNSt8LD4P6llFistdn4FvvuYpArYI85OkCLQGw80eVNjwPfQ65XS4eljatieTXAaFA==
+X-Received: by 2002:a17:906:c215:b0:a51:d7f3:324b with SMTP id d21-20020a170906c21500b00a51d7f3324bmr969037ejz.66.1712733644958;
+        Wed, 10 Apr 2024 00:20:44 -0700 (PDT)
+Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
+        by smtp.gmail.com with ESMTPSA id jz8-20020a17090775e800b00a4672fb2a03sm6720040ejc.10.2024.04.10.00.20.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 00:20:44 -0700 (PDT)
+Date: Wed, 10 Apr 2024 09:20:43 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Atish Patra <atishp@rivosinc.com>
+Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Atish Patra <atishp@atishpatra.org>, Conor Dooley <conor.dooley@microchip.com>, 
+	Guo Ren <guoren@kernel.org>, Icenowy Zheng <uwu@icenowy.me>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Shuah Khan <shuah@kernel.org>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 09/15] RISC-V: KVM: Add perf sampling support for
+ guests
+Message-ID: <20240410-f1a4303dc73789aa6adbe730@orel>
+References: <20240229010130.1380926-1-atishp@rivosinc.com>
+ <20240229010130.1380926-10-atishp@rivosinc.com>
+ <20240302-f9732d962e5f7c7760059f2e@orel>
+ <c46c57c2-95bc-4289-ac99-efd5bad093b5@rivosinc.com>
+ <20240405-de92b25fdc1ecf53770c49d9@orel>
+ <388ef032-7030-47b5-bba5-852b00de7382@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 43A7Iduf024986
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <388ef032-7030-47b5-bba5-852b00de7382@rivosinc.com>
 
-From: LiuYe <liu.yeC@h3c.com>
+On Tue, Apr 09, 2024 at 05:11:31PM -0700, Atish Patra wrote:
+> On 4/5/24 05:05, Andrew Jones wrote:
+> > On Tue, Apr 02, 2024 at 01:33:10AM -0700, Atish Patra wrote:
+> > ...
+> > > > but it should be possible for the VMM to disable this extension in the
+> > > > guest. We just need to change all the checks in KVM of the host's ISA
+> > > > for RISCV_ISA_EXT_SSCOFPMF to checking the guest's ISA instead. Maybe
+> > > > it's not worth it, though, if the guest PMU isn't useful without overflow.
+> > > > But, sometimes it's nice to be able to disable stuff for debug and
+> > > > workarounds.
+> > > > 
+> > > 
+> > > As per my understanding, kvm_riscv_vcpu_isa_disable_allowed only returns
+> > > true for those extensions which can be disabled architecturally.
+> > 
+> > I think kvm_riscv_vcpu_isa_disable_allowed can return true for any
+> > extensions that KVM can guarantee won't be exposed in any way to the
+> > guest. Extensions that cannot be disabled architecturally must return
+> > false, since their instructions will still be present in the guest, even
+> > if KVM doesn't want to expose them, but extensions which KVM emulates
+> > can return true because KVM can choose not to emulate them. IIUC, sscofpmf
+> > falls in this latter category.
+> > 
+> 
+> hmm. The Sscofpmf is dependent on interrupt filtering via hvien and SBI PMU.
+> So you are suggesting to toggle off the CSR_HVIEN bit for overflow interrupt
 
-Currently, if CONFIG_KDB_KEYBOARD is enabled, then kgdboc will
-attempt to use schedule_work() to provoke a keyboard reset when
-transitioning out of the debugger and back to normal operation.
-This can cause deadlock because schedule_work() is not NMI-safe.
+Yeah, this is what I was thinking.
 
-The stack trace below shows an example of the problem. In this
-case the master cpu is not running from NMI but it has parked
-the slave CPUs using an NMI and the parked CPUs is holding
-spinlocks needed by schedule_work().
+> or do more granular disabling for privilege mode filtering in SBI PMU as
+> well.
+> 
+> Beyond that we can't disable SBI PMU. Is that okay ? A guest can still cause
+> counter overflow and interrupt the host. However, the guest won't get any
+> interrupt as hvien is not set.
+> 
+> It can also still filter the events as that is tied with SBI PMU.
+> 
+> We can put more granular checks in SBI pmu but I am just wondering if it
+> provides anything additional beyond just disabling the sscofpmf in device
+> tree.
 
-Example:
-BUG: spinlock lockup suspected on CPU#0. owner_cpu: 1
-CPU1: Call Trace:
-__schedule
-schedule
-schedule_hrtimeout_range_clock
-mutex_unlock
-ep_scan_ready_list
-schedule_hrtimeout_range
-ep_poll
-wake_up_q
-SyS_epoll_wait
-entry_SYSCALL_64_fastpath
+If it's too much of a code burden for something we're unlikely going to
+want to do for anything other than debug (where removing the extension
+from the device tree is likely sufficient), then that's another reason to
+not allow disabling. Maybe we should write a comment above
+kvm_riscv_vcpu_isa_disable_allowed which points how extensions end up
+there, i.e. either KVM is powerless to completely hide it or we don't
+want to maintain KVM code to completely hide it.
 
-CPU0: Call Trace:
-dump_stack
-spin_dump
-do_raw_spin_lock
-_raw_spin_lock
-try_to_wake_up
-wake_up_process
-insert_work
-__queue_work
-queue_work_on
-kgdboc_post_exp_handler
-kgdb_cpu_enter
-kgdb_handle_exception
-__kgdb_notify
-kgdb_notify
-notifier_call_chain
-notify_die
-do_int3
-int3
-
-We fix the problem by using irq_work to call schedule_work()
-instead of calling it directly. This is because we cannot
-resynchronize the keyboard state from the hardirq context
-provided by irq_work. This must be done from the task context
-in order to call the input subsystem.
-
-Therefore, we have to defer the work twice. First, safely
-switch from the debug trap context (similar to NMI) to the
-hardirq, and then switch from the hardirq to the system work queue.
-
-Signed-off-by: LiuYe <liu.yeC@h3c.com>
-Co-developed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-
----
-V10 -> V11: Revert to V9
-V9 -> V10 : Add Signed-off-by of Greg KH and Andy Shevchenko, Acked-by of Daniel Thompson
-V8 -> V9: Modify call trace format and move irq_work.h before module.h
-V7 -> V8: Update the description information and comments in the code.
-	: Submit this patch based on version linux-6.9-rc2.
-V6 -> V7: Add comments in the code.
-V5 -> V6: Replace with a more professional and accurate answer.
-V4 -> V5: Answer why schedule another work in the irq_work and not do the job directly.
-V3 -> V4: Add changelogs
-V2 -> V3: Add description information
-V1 -> V2: using irq_work to solve this properly.
----
----
- drivers/tty/serial/kgdboc.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7ce7bb164..32410fec7 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -19,6 +19,7 @@
- #include <linux/console.h>
- #include <linux/vt_kern.h>
- #include <linux/input.h>
-+#include <linux/irq_work.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/serial_core.h>
-@@ -82,6 +83,19 @@ static struct input_handler kgdboc_reset_handler = {
- 
- static DEFINE_MUTEX(kgdboc_reset_mutex);
- 
-+/*
-+ * This code ensures that the keyboard state, which is changed during kdb
-+ * execution, is resynchronized when we leave the debug trap. The resync
-+ * logic calls into the input subsystem to force a reset. The calls into
-+ * the input subsystem must be executed from normal task context.
-+ *
-+ * We need to trigger the resync from the debug trap, which executes in an
-+ * NMI (or similar) context. To make it safe to call into the input
-+ * subsystem we end up having use two deferred execution techniques.
-+ * Firstly, we use irq_work, which is NMI-safe, to provoke a callback from
-+ * hardirq context. Then, from the hardirq callback we use the system
-+ * workqueue to provoke the callback that actually performs the resync.
-+ */
- static void kgdboc_restore_input_helper(struct work_struct *dummy)
- {
- 	/*
-@@ -99,10 +113,17 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
- 
- static DECLARE_WORK(kgdboc_restore_input_work, kgdboc_restore_input_helper);
- 
-+static void kgdboc_queue_restore_input_helper(struct irq_work *unused)
-+{
-+	schedule_work(&kgdboc_restore_input_work);
-+}
-+
-+static DEFINE_IRQ_WORK(kgdboc_restore_input_irq_work, kgdboc_queue_restore_input_helper);
-+
- static void kgdboc_restore_input(void)
- {
- 	if (likely(system_state == SYSTEM_RUNNING))
--		schedule_work(&kgdboc_restore_input_work);
-+		irq_work_queue(&kgdboc_restore_input_irq_work);
- }
- 
- static int kgdboc_register_kbd(char **cptr)
-@@ -133,6 +154,7 @@ static void kgdboc_unregister_kbd(void)
- 			i--;
- 		}
- 	}
-+	irq_work_sync(&kgdboc_restore_input_irq_work);
- 	flush_work(&kgdboc_restore_input_work);
- }
- #else /* ! CONFIG_KDB_KEYBOARD */
--- 
-2.25.1
-
+Thanks,
+drew
