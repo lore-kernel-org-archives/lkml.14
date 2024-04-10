@@ -1,65 +1,60 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A2B313C831
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7D613C903
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712732432; cv=none; b=Lof2KgIg2LKBJpOJpHikdSgtlB+smKRMsjlA4T/5bAjrBHqV4UBbSu6+SD/W8n9k1xim20McBn/C+k9dxVxZit8qPa20aJ5TWXd7/DWxjFgob3vdbzOufa6qKOA5rROyz42xfKzxbHW6BrMMgFGUod6wX4taO2l5/oXfhXsJH8s=
+	t=1712732562; cv=none; b=qr4MUBb+TEAWDNWU515Pf1LviyzV29NWcIonXEmKgeo6DPNsqoIH0QzqMKTC2FaAGpYhEF4CVIfMa+Npo5toZQN38WaFWeZZPYXQ+I/zjnApByqkwZagScd7DuT7WhSvuc4ccuKCxDyP8jxIKLB7RZ3rEToL2Hl4VbYivhCT218=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712732432; c=relaxed/simple;
-	bh=FhQsd1boIMChf7oRNrqjPNegG/mXoNr0ok8CFmIDsIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZDDkYVQi+3dqYlBVsLasKl3uCm+ov9IUfs7sxH9djRJ1OPdl85jrFx3UJ5vSmO8HELbGwkfN0UOBMdYvQn0+z8jB5kcnUmeGsk7BCW2olJh2NOC3ZDUlMS/7lRXOVFbaDxU2+OUvFeAngAEz4AjLoWq/1AAyLu58KI8jmqXL3XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C9X4ZTgI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712732562; c=relaxed/simple;
+	bh=KuuhwXIxd+CrdutUrBgH6Qegdwvnp6jKf1EPKmYKOAA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=I6Gi9OLaDvQ2xdFPIPiAlgKV1w9ZxUxT00CBp2+RIdujaQ51/nMloMN8sdDldaL6AI0zA1Plr3tRdP875DwxUx29YbJTriiQfSrncERZDw8YmxJ+Xss0OahslGKzZn5rvCIM9PX7fiLaaS8F5CsOGkv+nwkWoAHbQv3rdg4ijoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eWyDSK14; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C9X4ZTgI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712732429;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qpbw284sxKVH6lHTnqkMx+addOtGg8WZK0QMSoncDMU=;
-	b=C9X4ZTgIaaiUTTmY1oVV+sxIZyLEYOt5bH+TqKutz2SQ7MGHAaiGEMizamBHYhrsD4I2Yj
-	pjDjju3JUtNqQ4JECAEg5oxf1mjMnhnTBaaK3VNEXvFd1+84+6QHj9DIT9qDeaV83F2Inx
-	yCBoy9Wlb/Ti8a1lG3NYHw7gIx9c+6E=
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com
- [209.85.208.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-82-U8of9-GMPvGYTELGBwpKqQ-1; Wed, 10 Apr 2024 03:00:27 -0400
-X-MC-Unique: U8of9-GMPvGYTELGBwpKqQ-1
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2d87f5937fcso29403211fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:00:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eWyDSK14"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d8743ecebdso44996311fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712732558; x=1713337358; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=BR/M44OaqP8dIosbqNJgmiCcv852M5Z3sN+PJdg3q10=;
+        b=eWyDSK143J1SOUKZWDHMT//TsaUP2LeLwWnCI9RTFaXjB4eiSB5n9cWYkTj7aWDlka
+         bqkg0Bro1YBgPlYok6i/2a58ZnL/TOjhyDHizH7AlKXdTHEY277Obdfqi1fJ1pNjwrUU
+         y/aShvD6MQ0cEgO+T7nqfJHcCIbT3rhDHTW3dVFZQVxpAK5YhsnwOiHwCXrPPktwC0iM
+         UnhwUyrSLgedrKcB0f4wPxkF32k4JIzOCC/RczfkesgX20rCMRJ/OkVEFipLgwvfBYH8
+         ZjH7zaJNp7EJVgDD4TTTttUs8arwGviOXA7aDLzDCrWn8wwlCiUnEYdLZ9pW61Bd2vnB
+         fM/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712732426; x=1713337226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qpbw284sxKVH6lHTnqkMx+addOtGg8WZK0QMSoncDMU=;
-        b=vYwfGuCGHRCSViLkPxNntBigKdshd79P6kpMdttmja4f0wvJQTIs6W4dOAUnBh6wwM
-         hZTiaFo5R3An6lNTMXzzhwtCBhQN/2UhPJ1qRpUQkuixXnPcfiLL0EYM4LmgqtzbkM+O
-         5EnXfiJRkPbWxp2+ejLJ2VKoEnxLTj0RjWxwdqvTZknSXNIHA50X+oQoMPwKDsiVSR15
-         3R3pQSXzyN2TPMJXAhm+WdHZG+d+60xjRkJwHleP+vVTMLn+pRQ5qlPukyqN+GwbDHVv
-         DsAtCGf1lWXuJTeijl2nDIo89SnsvH+uabhIKkleQr/5yO5jT61B+gZcNwLS7Fy/ixTI
-         05BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGVX1SWvKgtEZNd5CUjhr6D+J5GkpWUITV0T7AZabrKkBl3bbGz8FGkTi3JhrGeZh1WH9iPFj7SYjzzblSMWwG8eOKFsI5VAyYItbp
-X-Gm-Message-State: AOJu0YyzqfFSDlpAo5PzowQb2sXeXndKAzOAsIiNnwxHyEmfviyXNsWl
-	de4Knvp852ItsGMzlY31gOrDxJQSjJLA51L40/l/zXaYIL4RjAjzPmbvrR+x5WJSeM4jj4Lm5QR
-	Q7OYuyJegUVD1Ept7J6+QJuTIk464SMzyfxJEPAOpMWdPu8USrQXBhSwevmKhbw==
-X-Received: by 2002:a19:9117:0:b0:516:d729:5c3a with SMTP id t23-20020a199117000000b00516d7295c3amr1168407lfd.50.1712732426391;
-        Wed, 10 Apr 2024 00:00:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFZwpgzhlS04wJSv2+6nilTveCTk3jDGldjMnH79vAQfGE3vGSdklHYnK7RIL1Ki2VjBojH5w==
-X-Received: by 2002:a19:9117:0:b0:516:d729:5c3a with SMTP id t23-20020a199117000000b00516d7295c3amr1168367lfd.50.1712732425800;
-        Wed, 10 Apr 2024 00:00:25 -0700 (PDT)
-Received: from [192.168.0.182] (host-79-51-196-100.retail.telecomitalia.it. [79.51.196.100])
-        by smtp.gmail.com with ESMTPSA id h21-20020a1709066d9500b00a4dacd6b8b3sm6618742ejt.68.2024.04.10.00.00.24
+        d=1e100.net; s=20230601; t=1712732558; x=1713337358;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BR/M44OaqP8dIosbqNJgmiCcv852M5Z3sN+PJdg3q10=;
+        b=Zy9hzGukUm29z00JG6/aELkZuVYUuk6RbNBoVxgGwKaxFTZu5rpyYIfqEFIL8sDqia
+         u4mISGqJebbPzBTmcSRFt9oXrS7y0rSZykluVVJAm+SXHqa4uYnzb57N4AMr8kP345TH
+         jRjgoZJMHQ/VcGTd3FKBI9ctW3F6QXIHKcJMkjYVF71NLNfs7s6reITGLl/U3PbytAfc
+         r0mPP5hi5I35D+T1D2EvNbmHpXIwEkAFQ5wi9LWAtqqRp5Ivyf33/dR4bYq8G4mKb4Bg
+         GA2XbDU6YFRrMulFEtUBg6CPBbB0vWUFDxnLaw0DPNB6uZVAMjW7yfbtM9aAu1NhNwtI
+         JTOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWnW/74og71nMF714xtYHD7Hd3tk2AQiTp+O2HJVT817DiQhWC1rvoS6jlUMTXsThxBuBOxMUEjsaMqwKhkhxUetISONcDEtPyuOu8Y
+X-Gm-Message-State: AOJu0YxHiyZ9XssuKbQ/VBGDbUrYlO8vHKAsXap7SC5J1aQ9bB5mjqXA
+	GLQa9wFkJrrZOafja/p2sk91nK/ry2i47KoraB3h/Pjt6kXdn7M3Vn2arDPQY0A=
+X-Google-Smtp-Source: AGHT+IHYzyvuSa+1YMuKaIM4oJaaBJR8tTyhayqVhnZB9LPV9T6D9JtPKR4Hxnjq7t1trwOJ5Y/mjg==
+X-Received: by 2002:a2e:b002:0:b0:2d6:dba1:6d37 with SMTP id y2-20020a2eb002000000b002d6dba16d37mr1487868ljk.11.1712732558348;
+        Wed, 10 Apr 2024 00:02:38 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id i7-20020a05600c354700b00416928e239csm1330850wmq.35.2024.04.10.00.02.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 00:00:25 -0700 (PDT)
-Message-ID: <7578e8f4-03ac-4234-90c3-0585af4eca4d@redhat.com>
-Date: Wed, 10 Apr 2024 09:00:23 +0200
+        Wed, 10 Apr 2024 00:02:37 -0700 (PDT)
+Message-ID: <a23adb9c-6377-467b-ac3c-0ec51fc97253@linaro.org>
+Date: Wed, 10 Apr 2024 09:02:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,55 +62,102 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/2] sched/rt: Disable runtime accounting for idle
- threads with SCHED_FIFO policy
-To: Atul Pant <quic_atulpant@quicinc.com>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, rafael@kernel.org,
- daniel.lezcano@linaro.org
-Cc: kernel@quicinc.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20240410045417.3048209-1-quic_atulpant@quicinc.com>
- <20240410045417.3048209-2-quic_atulpant@quicinc.com>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@redhat.com>
-In-Reply-To: <20240410045417.3048209-2-quic_atulpant@quicinc.com>
+Subject: Re: [PATCH v2 5/7] dt-bindings: phy: qcom,ipq8074-qmp-pcie: add
+ ipq9574 gen3x2 PHY
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: mr.nuke.me@gmail.com, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240409190833.3485824-1-mr.nuke.me@gmail.com>
+ <20240409190833.3485824-6-mr.nuke.me@gmail.com>
+ <019180df-67b9-438b-a10d-f92fd4ddec03@linaro.org>
+ <33461c22-21a3-023b-4750-c69304471ea8@gmail.com>
+ <2379377e-ca1c-453f-bb74-186ab738ce39@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <2379377e-ca1c-453f-bb74-186ab738ce39@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/10/24 06:54, Atul Pant wrote:
-> To prevent the throttling of RT idle threads, like the idle-inject
-> threads, skip accounting of runtime for these threads.
+On 10/04/2024 08:59, Krzysztof Kozlowski wrote:
+> On 09/04/2024 22:19, mr.nuke.me@gmail.com wrote:
+>>>
+>>>
+>>>>   
+>>>>     clock-names:
+>>>>       items:
+>>>>         - const: aux
+>>>>         - const: cfg_ahb
+>>>>         - const: pipe
+>>>> +      - const: anoc
+>>>> +      - const: snoc
+>>>
+>>> OK, you did not test it. Neither this, nor DTS. I stop review, please
+>>> test first.
+>>
+>> I ran both `checkpatch.pl` and `make dt_binding_check`. What in this 
+>> patch makes you say I "did not test it", and what test or tests did I miss?
+>>
 > 
-> Signed-off-by: Atul Pant <quic_atulpant@quicinc.com>
-> ---
->  kernel/sched/rt.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> ... and no, you did not. If you tested, you would easily see error:
+> 	clock-names: ['aux', 'cfg_ahb', 'pipe'] is too short
 > 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 4ac36eb4cdee..d20999270e75 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1075,7 +1075,9 @@ static void update_curr_rt(struct rq *rq)
->  		struct rt_rq *rt_rq = rt_rq_of_se(rt_se);
->  		int exceeded;
->  
-> -		if (sched_rt_runtime(rt_rq) != RUNTIME_INF) {
-> +		if (sched_rt_runtime(rt_rq) != RUNTIME_INF &&
-> +				!(curr->policy == SCHED_FIFO &&
-> +					curr->flags & PF_IDLE)) {
+> When you receive comment from reviewer, please investigate thoroughly
+> what could get wrong. Don't answer just to get rid of reviewer. It's
+> fine to make mistakes, but if reviewer points to issue and you
+> immediately respond "no issue", that's waste of my time.
 
+To clarify: "no issue" response is waste of my time. If you responded
+"oh, I see the error, but I don't know how to fix it", it would be ok, I
+can clarify and help in this.
 
-FYI, this will not be a problem with dl server because play_idle_precise()
-disables preemption, so the dl server will not be scheduled until preempt_enable().
-
-with the DL server, the time consumed as an rt task will not change the DL server
-behavior because the logic inverts: it provides bandwidth for the fair
-scheduler (instead of throttling the RT sched).
-
--- Daniel
-
->  			raw_spin_lock(&rt_rq->rt_runtime_lock);
->  			rt_rq->rt_time += delta_exec;
->  			exceeded = sched_rt_runtime_exceeded(rt_rq);
+Best regards,
+Krzysztof
 
