@@ -1,155 +1,138 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2121.outbound.protection.partner.outlook.cn [139.219.146.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9230B1A286;
-	Wed, 10 Apr 2024 06:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712729045; cv=fail; b=NLXVJvJoOhV0HWxhPKS+JiBA/rRPqXk5PR23NBcXCxrcmHJlVU62brzJghAch88FAq4SiZoGBAibWQ6N6PDVyqlAbAv73ykzWffK5j1r6UMD2cd5n3Byfwu/NBQVumML2y899TCWgQIzA2lzxPXlruBuI+GglkeOZJw215LqauA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712729045; c=relaxed/simple;
-	bh=tSE1Qhij4wK4SMcOKlnFut1pJFKY9BvqmpHhPa9FOlQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DeSmWhcTal9/C9QTFtN6/h2aOah4c+KqiJRUhEjuznfMWEIajlbW/Y1SIrU1dau4nywcXrBgyFdgIxskG+FqEyZU/Of0/XrGbFfYCr17EiqE3V3G88stTyeLs5B0NTiwMFqLuHoDDIGTDvEiY6eOhD+tTgeKZE6qHj7ApgetnCY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XzRMwmF2BNonP90W1AGjNUsKG6Xyan2SSwLfuGC1lm9h039HLLFZ6sLwaRCJXAw/mpClvw/g79nohakU5jUT7BQDMHfOmrhQmkSUaIQoKjug47I78TYIeCyCOshIAq+xej46Pu5KCs5nN5/vt0Icfng6gBC0qMUatd4UsfgQILezvQcoLe3xz3qp4zuH/WUh1EbiSKjPxvZI6A9vm1fuaeNgvcUe57IDTQzlaIbN14+kMrgvxW5YxISRZw6j+mgK7EcBtAmq89ww6/a0YOsad3kCtHRwNbznkmUqXbb/q7gWvVdwVYzkft3qbiZzORTU4JP/V6we2OPz+8RRJf6WxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bu6cW3D24AA4mHs3NGtLf1pUBG0FFD8Tm+W0JTNEtAI=;
- b=aQKrYjjd+fBjZPZESZTmlCP/ddnCh+W4DbpAMYbrRVx16j4Xqlq3fh8JkVTEYECrjA6JK0bWJ3JuwO5XNZD+JddMJ74hU+nPIvbS322svTFPuD6+A1tV8JaWextehIrHxsmkWBXud8Qvtvk2eeXmexHTYTW0v1N+XL3mNfjgs0WOtnxjUNsOuXmUVe8r+0t9tIfab34kcjjK0SNFU6q1y0A9lDGJEXBZC4jtREYQ97UPGFw5a/nDaRZ8II4jLTXtf+WR1Hy7GrPsvppzr8yZJwZFk2MB7hQbp1D6E4H5CcZhw4ulFRVLsdZIB8v0BHgOchRBRCHL/gfKc6gl6fR87w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1084.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:9::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
- 2024 03:31:56 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::6174:711d:d93:87c9]) by NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::6174:711d:d93:87c9%4]) with mapi id 15.20.7409.053; Wed, 10 Apr 2024
- 03:31:56 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v4 2/2] riscv: dts: starfive: visionfive-2: Fix lower rate of CPUfreq by setting PLL0 rate to 1.5GHz
-Date: Wed, 10 Apr 2024 11:31:48 +0800
-Message-Id: <20240410033148.213991-3-xingyu.wu@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240410033148.213991-1-xingyu.wu@starfivetech.com>
-References: <20240410033148.213991-1-xingyu.wu@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: NT0PR01CA0002.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510::23) To NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C15DC8E0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712729088; cv=none; b=moSJ4QJcmlzv3u+0RQHw3Sz7WFFk0GiR1TCcAPiUxJZVJouXzzHu9aAqcY0RmvdV3EkVOuVXTJ/5bVdCOZ5tYOiju/fKPiXhICtSgryNj6725qvdO+gWPnpNj13s8i/VGEZHWchL7pDloOaCqbP/uNr1jxD4nWB00wqPnM11s+g=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712729088; c=relaxed/simple;
+	bh=oWyZ+2HHESXcg5q+2ctOv+NAfabIR6RjsI4Lq4pXWZM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nc7Z1/dYCORFttE6BUqQ1D/n2o11AM1Yjf9WvqGC44o4aj0S8aM/DOyxYTm1ZHRG7ddUq/i0g1FToKd6TLhFpbLIjOylFzDZJxJF5LlMlVEEPDy8nVynSmPr/FwKfYgVhNkLa2blTKWMh3QOAK74HaMiNn+ZNJfzmAt3+0HTu2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l5O1DJ+q; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l5O1DJ+q"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-563cb3ba9daso6291004a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 23:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712729085; x=1713333885; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7gDV4JbaTTm9NlqiqU6nfySjdKEm+sfqMjtLrfor7hs=;
+        b=l5O1DJ+q7BFKeRfqXMRhU53Z5t9bua2pE24ZO3flApNORw7JlinNbspoKPKTUMJqZU
+         56bITswAPTydaRxutPCNNY5D29CCYIR1kcovH9d4bT3UFG0CvnMZ8UnlE4duvOuydWsv
+         4QE6Dvw+gJUtBj3F0i6Wj4VqogwXeUAYqwhb+H+vH1VDUa738prB+qiOcYgLa+wE2sLa
+         GvwP/nncKNDIK8CE8OvHaTKAST/HNeu7DRSByKNjXKG6aOf86RT/aNN0TuYMgUObtsWP
+         hgEJz3b15Sre5JBJXLU2k1mSbFAqsTVeycpY+jtIuCd//lMtOWANdzGwl6YLVdiqyCr0
+         bXhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712729085; x=1713333885;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gDV4JbaTTm9NlqiqU6nfySjdKEm+sfqMjtLrfor7hs=;
+        b=MPR5rtYbAVE2kghinOIwZOkmneubFkpxHMLWRLv4ZEDxGQureXLyNhANQwvzESUd6m
+         k2Wkl4Jj3HbwfK7qJz/RmhzFBMQp4TU+eBDn5UKirPFd7ZJS78emlwQIWugohwaRykU8
+         eR6bqqcDSdEbId5B2DMFDnoZ1zRmrgmRUtkLCUi4yfuDsO2gbgAVX+PnJpUd85/UwgtD
+         uDdehA7MHbyX1Y7YPMk/cLylJElLZBZN3r8Dtjc1uvFdG0bLjM07BSHb0ouPMTUPJKPM
+         TSa6VWDv55oPzY2IlS8kSuQq/nvRb1BrWjoUZ7uipV3L3PnoY4aTDsHu0dqzxXKjqd4h
+         c6Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEKcRO29aQNvsoNOtbvIszV8pRoBsQFo/7qYAyqmFAXxYCr0IlsXS9SArwu0jhSH4w5nRZeIJZvtV0a0f9FpMXx1q6qEV4Qm+7oNLE
+X-Gm-Message-State: AOJu0YzHq4rvKadV1Kvcsr+Jnk/n0tNpzqERQmkTbCVSuq9rvoLE6LJx
+	G5sKxjDGRSurQ9oqrCF4W0TFe0IttkAm28DUEWCPgLldnETXFC5AYDGJaPBWg+Q=
+X-Google-Smtp-Source: AGHT+IF8Dz8WYXaIyUg3dE0PCnkEDs7+Tf7JNr1TzLGURfyAff7u/BmchEiv/wLVow9TPJUp/UFgqA==
+X-Received: by 2002:a17:906:5786:b0:a51:e1a1:d127 with SMTP id k6-20020a170906578600b00a51e1a1d127mr1281915ejq.26.1712729085368;
+        Tue, 09 Apr 2024 23:04:45 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id t1-20020a1709067c0100b00a46aac377e8sm6546078ejo.54.2024.04.09.23.04.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Apr 2024 23:04:44 -0700 (PDT)
+Message-ID: <3f524fd9-60bb-422c-95b6-f46594115ac2@linaro.org>
+Date: Wed, 10 Apr 2024 08:04:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB0956:EE_|NTZPR01MB1084:EE_
-X-MS-Office365-Filtering-Correlation-Id: e951561a-600d-44d9-4ceb-08dc590ec5ed
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	UwoNeYlbnaEzAr3pKIyhiiDkFpZLAyVVgUlnhm1U7PWkf8uwl/NK1zNLMsROsFT9lSv1w+BS0P350zc9YJ/XMhrkfBGOU7jNAzOI5x9XIGEkKy5KzmXVPUaXj6xuosQKepLX57z+Er9MNLdfAM6Ck9lEZCJ9wyWTP6IJ++meVdr1aJAOmsjx1bc2ybaRaE9AOlS54PQtLmiC9sVoSshegumrQepWsYlM4aXvtuAx2qZpreiksA6oPEiCL2d6715yIhmC3anM6QWjp0gm+0sZhthlS6ah6bn3+Ky1n6t1vhLm6wcH3IBcGS3NFlpHJUA65+bpse5WRRD+xjimsTyUjfHHdJg2dSis26eMkG5YHKpqzkDob90e743G8R5nH4A7Ck98w3jLw0mnjGF7Hg39bOEEybfskRNGpi8Gkqs8iNXGKa5wNIdE+nXt25gPj76/penr/5SOhJgLwskV+pTBZbYmO10Vhl7hN+9exaP9GfSkkh+o6rlm2oPkauTX+kWD0PadeyfNfflcHfuOoCe8H1oQQwCKYIaLeBi9u210H5Uy1ffyP17/2hQvmOQltpJ8tyKFrIHE5rgTpmSSUoijgJwO2nYyF0e2zgIbZOSay3T51YcmRpUBdhPDj8bTIFM1
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(41320700004)(52116005)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZBJZWPeztH2It8SDtqx1cmgwdDJYJZ1hMrOGdY5is5a7yHu6URBgv4klGsaF?=
- =?us-ascii?Q?FbSIwTTVQAsGRdQoLGACJN7RJTiuBikV5VzOhay4tcQnYsgzfCfQ4/jL1ggz?=
- =?us-ascii?Q?lasX07Z0Zp3yVy4L2qSquEa2kncpt8600b0FLzUd2FHsBLRhCwI/pV2CwdDp?=
- =?us-ascii?Q?Nqdl8h2oXUoykCcOOUOVPBkOUflfnBh40YdtV2tNo4iTLqN8tiuywEFixmdf?=
- =?us-ascii?Q?HQvrbhuRNNiVWOZDbkAH+qKqFkf4k3dKlO2x6/vNn00+yKwJmFk3/FI1I3PF?=
- =?us-ascii?Q?uucLZ+ZJwlgVs97vuBpH4GjGagbD+IogMJoVp2EBXFJLP91PO9WmOFLJEB6D?=
- =?us-ascii?Q?/Jq9vhDC4sr6Itb421fAduD+2Q9oxmSYUdJf07WtyFu+r0Pf3MAT7GLR84fd?=
- =?us-ascii?Q?DlQjlBum7gjtLarjGreZlDyc1mVi5ZeAJwFwnnhLpOrhAKH9VgXUPfaeJkvV?=
- =?us-ascii?Q?6Y9Klhd648DRIQmLb/yDxbM2W8f9ZJ5+2es8LoO+6rMS2OpI+7noquy5ydAv?=
- =?us-ascii?Q?clNDHsydarMtgDbF8hvuE2mj8rV0IZ4NcEdanTLzzdq/EAs+UHnCL/S7Irf+?=
- =?us-ascii?Q?ejr/cE65NNdPwtH5wD9GNlX6VpQ5u0V+Zx4I+KrMOl3SSNMQuGW/+D8Vl4AS?=
- =?us-ascii?Q?ziFNlWxUM7yancIWCMY3UwmaZVaGFibaUHxdqkNascsg9HJx2Khilw85XAS4?=
- =?us-ascii?Q?ZFMnVkdN8EjfdHSKd5XFYRsSkUT4V006V2CKBE+wsP9eyXihi3FXW5DwSnFw?=
- =?us-ascii?Q?qLk+Q70d8jaZW599l3Jth+UrjxybsLOGvFWn6a/hE2uGy2BtWUz32ebR9AQI?=
- =?us-ascii?Q?WlX1LlruoX+wVRKhqs320+rgSertuL3+OjO6qFo7K5QtoAVR8xZLuRutUU0G?=
- =?us-ascii?Q?RLg7qhCItg0zLu87kIIprYqispOmfK3bV2QoAiLSe3BZsRhUh1ir6eRWSycy?=
- =?us-ascii?Q?1DNtDelMUiLVL7aoKkTS0TW9M6oPzFzU9iHc9460O3bORf68VDOGJJYJaiJV?=
- =?us-ascii?Q?waK+i22PpLlb0aWuqmiiY6+eYN7MKzSHslq1vul24VS7dNBXC4RSJD4rmWnd?=
- =?us-ascii?Q?n/44nrGIr3qh28QCA8cyc6iE2jJWxTUYC51BZ46IhNv9sfS4VGmQmuBTkt5L?=
- =?us-ascii?Q?JbdUqLjHBAVTR4Tx/VBiV6dfu6tF0eac7dHQtVcMW8NF4vhfO9/19bBxelc8?=
- =?us-ascii?Q?8EibQbQNagLuVnh5jINl6SwaYLkdVFGinnSPB/Ml5hI6Sc+HhJUH70V9y6ps?=
- =?us-ascii?Q?BUND+DD764jf/qI9+gPyLo5vph7PVJyrz4edbM3bMwtzDhHuMypLMb0sStre?=
- =?us-ascii?Q?UfsQdvGOpR5F8XDSCv8tK3m/4h1FheM+qOhZc7GQwj2nQzNFMb5Gx31iNy5M?=
- =?us-ascii?Q?phTnyzhjKWWTulXeKJTQsu1cBSdlbLDHVH2gfei7mZUIxR1QexYX+uqe1BCo?=
- =?us-ascii?Q?Sc53kalj3P08wJxjYFAvTNfyaKqwuxjmzs+OqFYevRDblLBJsW47dzMES0Mn?=
- =?us-ascii?Q?a9NRrYUi25FFE4EUAIs8N//+i5lGbdFxXQApiUgNcLy08k1TG2M6Y83dICed?=
- =?us-ascii?Q?94dkCd9sEVI1i2/MczqIZLw6tYfYvcUnu2nSuJmbhawJ1aEOnJIlCMYW5LIl?=
- =?us-ascii?Q?Yw=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e951561a-600d-44d9-4ceb-08dc590ec5ed
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 03:31:56.6373
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DFhEgKRBor53UbrkaxV7vaoyqSXbv+IBEjgJtevsVBitrHwUwfjTcTxZqDwpMjy2aUiLfiHFFk3qaE0acq4WKyKGyenKIHrv3M7hPHyVcJA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1084
+User-Agent: Mozilla Thunderbird
+Subject: Re: linux-next: duplicate patch in the samsung-krzk-fixes tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Olof Johansson <olof@lixom.net>,
+ Arnd Bergmann <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20240410090858.549161db@canb.auug.org.au>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240410090858.549161db@canb.auug.org.au>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-CPUfreq supports 4 cpu frequency loads on 375/500/750/1500MHz.
-But now PLL0 rate is 1GHz and the cpu frequency loads become
-333/500/500/1000MHz in fact.
+On 10/04/2024 01:08, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The following commit is also in the arm-soc-fixes tree as a different
+> commit (but the same patch):
+> 
+>   c51102b6a279 ("MAINTAINERS: Change Krzysztof Kozlowski's email address")
+> 
+> This is commit
+> 
+>   011d79ef1cfa ("MAINTAINERS: Change Krzysztof Kozlowski's email address")
 
-So PLL0 rate should be default set to 1.5GHz and set the
-cpu_core rate to 500MHz in safe.
+Thanks, expected. I am dropping mine.
 
-Fixes: e2c510d6d630 ("riscv: dts: starfive: Add cpu scaling for JH7110 SoC")
-Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
----
- .../boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi     | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-index 45b58b6f3df8..28981b267de4 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi
-@@ -390,6 +390,12 @@ spi_dev0: spi@0 {
- 	};
- };
- 
-+&syscrg {
-+	assigned-clocks = <&syscrg JH7110_SYSCLK_CPU_CORE>,
-+			  <&pllclk JH7110_PLLCLK_PLL0_OUT>;
-+	assigned-clock-rates = <500000000>, <1500000000>;
-+};
-+
- &sysgpio {
- 	i2c0_pins: i2c0-0 {
- 		i2c-pins {
--- 
-2.25.1
+Best regards,
+Krzysztof
 
