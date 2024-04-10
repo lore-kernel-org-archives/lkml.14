@@ -1,45 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA8217F37A;
-	Wed, 10 Apr 2024 20:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712781967; cv=none; b=B1Pxtmtp6FCRYp4pRupjdmK9R4tbjOSygwQO25VblvM8VPe0vSjloknfh7YZKokpgnygzNw1G/+Xz1gIbksV+zdN7wdQX78BPsb38SmvGLoitt2/G9GRX5WYZb1H5Ib9LvJKkIzKfVI3J8gBPiCAeqY6ZZLOSinEQegdpWtvAM8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712781967; c=relaxed/simple;
-	bh=0QSCL/hvtLmpjs+qXUf272DGb1S3kZzbWCaWKPOZaIU=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD546110;
+	Wed, 10 Apr 2024 20:49:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712782162; cv=pass; b=uKJEdva/in5iTz2b5rMkoupJDIegAgPeDWlEeNCB/5KCIaxcke6zxhi4sut2+hW1580R3VmyxIJfdAlIEGIgZViXelOERJrZAwtrL0wTABg53kv+HFpIMNn8GCDwg107YUZhA3tzxEZ57MWqBoPrrSkd8B1pS5H73DFhlv4jNpY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712782162; c=relaxed/simple;
+	bh=JXzrQDFJA0Gu3q5+SC+IUPYAr8WcoxjCQZzQ+7wZQBE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pVZa+RGlV5hipmrkAl2CPeFssGIphcl76546dD0zepD0iTIiRohfjpLg64T1rfww9rhLjhMNnYbwQfs3kY96/YBboDfPOjl8X91ljcDYmxuTT7WoGc2s6wWrOU2HNGWrou/jtAIPG8SpfWO/VXQM4MtdjrYvTIWxkG+/t5TfRCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLggDbpN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mcIeDtxzUz0SOAmX3TFK32xNQ6tec4RbYnHI9F8Mgksxlv/6c/xp4E2i5RR347s+X6in9yB+YL2CuAzpqSLJQaEd4nkq667Pd9ngJtGJImmW21GZ1QAGM8lC6NpvpMB9zpg39j7VESBbX+vE81JsHAMl/VF6E4gPRp3d5MEPmwE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=YO9MziK5; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=wwvRbXhR; arc=pass smtp.client-ip=81.169.146.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLggDbpN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92181C433F1;
-	Wed, 10 Apr 2024 20:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712781967;
-	bh=0QSCL/hvtLmpjs+qXUf272DGb1S3kZzbWCaWKPOZaIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lLggDbpN2wo5Za26GyXDFPLOx+lCzdCEKofCRFCr5iXTlB0rCLS6EY1hnnlmpcL55
-	 vbubcMbdKpB/D/HPWMnyNAqfPhnZ3CT6zTrTWWF1ZMCWKx5qoS1IEFy7sF/we7LNSp
-	 jBLQW3R7cymmVILjfG54rZ5qHRdzHvPTt+LbPOnWXexpAKFJArlC+aCDAf+ajhXiSQ
-	 L3QrEPhLQQhG67lJnhADcfJLePucmAn9P4tUwGRYwGpPp0ZBWry2PWFZyZpNLDLBXr
-	 uPcWypVYPOjjDqq++cOL+w4nCv6ux5FrmAly1gCry3FPeARaOg9H3pTxFjr3xJzF3C
-	 yADTLxqgSLrUA==
-Date: Wed, 10 Apr 2024 17:46:04 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 5/6] perf report: Add a menu item to annotate data type
- in TUI
-Message-ID: <Zhb6jJneP36Z-or0@x1>
-References: <20240409235000.1893969-1-namhyung@kernel.org>
- <20240409235000.1893969-6-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="YO9MziK5";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="wwvRbXhR"
+ARC-Seal: i=1; a=rsa-sha256; t=1712781796; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=VRrGJxDdjSj0eYQRxuN/VAe1NsDhyTIqNYIPVb/8hkcWZnYnwGxexZ0epk2mcy780f
+    3SSJIC1UZjL3PqC3Nxr3kWSbHVtUk63Fr6r8g/6nk+5hKVoSm4pPkFl9AAPLPFc3K/r7
+    HycRXYASZz12w0EZyed51RmjataQ/jdEUkOsDFG7DxmEZzLUjx3AA5jVjNpdLvZCokCm
+    BX+yGmNRzqt2f68O8HhTCvYxXtDq1sATFkrLf8rERH5f+860VZRfrAhv7pqqs6wbtgLH
+    6nTf65fCAJJRkwPq8t55nppe9d7umkx+OD4i+ftXUvDOcyKvUozwakZMzBa+ru7SZE5o
+    3o1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712781796;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Vpm3WBEjx8xKzxZVlVGQ1gTHDj3B3Wv4u8I0wkcfzI0=;
+    b=gkZyG4G9JWypkieMj5V/t4+eo+llXYW4tvAiN7h7IPfgATixUO1RCxZVE+sYVt77Rn
+    P6emEef6SGNpQ+EpdU6pFpvMN46B4el9N7kyqhPsNwBlWqfPhJXEAczpaf9+30tNdElB
+    H1I4AiSrFSDVw0m8eHRBk9TTeCYRZqnROqi1SlqmndIF475ORk57b6oKD5bQVHWcbJts
+    P3/8vD9xZFxg1Z7hnWFtFs/BwUnGin2DzAELJEoLFZuCQHgZ0h3Wylr4J7KlcV10dTVr
+    OyOd0x9Y7RdgQ8qJEhQ1XFCrmrIbaYAX27BMPvn4riZmJn6SPhi4Ed7BjgcYYliYGKi+
+    qVpw==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712781796;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Vpm3WBEjx8xKzxZVlVGQ1gTHDj3B3Wv4u8I0wkcfzI0=;
+    b=YO9MziK5sx06hRa5+VPky8b3qszJAGOvCRTCL5ckPLXoNzGda8jhI6mKbu6z37AkLi
+    ZflMD+vD53oKx/eWWu0fo+1Wi0wgWoqwico9mT+CLw9+pNbZdd3QFLHtYSMqYgt8V85f
+    1ISsBPxzrlcvvbFdWTxGhrQJHTgFidVcAwxd4Gu/y5+l5jQqOak1R0t9/b4u8Fg2uohh
+    92TWRiUJNApWb5QD/diCoKjxPcsBCBgsBWzrjkAqW6gkQZKzGmGSj6RGlFKrCZoYGlVq
+    kuji2HyeOuA3RxmWyGm49H5LsZyNaO0KXeUn6dFCrJLoXqepooHRHJ3k+jQsgNkw3xWz
+    xnFg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712781796;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=Vpm3WBEjx8xKzxZVlVGQ1gTHDj3B3Wv4u8I0wkcfzI0=;
+    b=wwvRbXhRIDqEqW6toXziGAqzIQ4rCOEOHiAbzLbwttV82qUpiQZxaYJYlrCck2s9dx
+    sDgfOmoTcDnjSPSTF+AQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA8pqN1A=="
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
+    with ESMTPSA id Raf12503AKhFYPX
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Wed, 10 Apr 2024 22:43:15 +0200 (CEST)
+Date: Wed, 10 Apr 2024 22:43:10 +0200
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sa8155p-adp: use correct gpio for
+ SDHC2 CD
+Message-ID: <Zhb53i8-pJhDMVZM@gerhold.net>
+References: <20240410134022.732767-1-volodymyr_babchuk@epam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,130 +88,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240409235000.1893969-6-namhyung@kernel.org>
+In-Reply-To: <20240410134022.732767-1-volodymyr_babchuk@epam.com>
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 09, 2024 at 04:49:59PM -0700, Namhyung Kim wrote:
-> When the hist entry has the type info, it should be able to display the
-> annotation browser for the type like in `perf annotate --data-type`.
-
-Trying to test this with:
-
-root@number:~# perf report --header-only |& grep "perf record"
-# cmdline : /home/acme/bin/perf record -a -e {cpu_core/mem-loads,ldlat=30/P,cpu_core/mem-stores/P} 
-root@number:~# perf evlist -v
-cpu_core/mem-loads,ldlat=30/P: type: 4 (cpu_core), size: 136, config: 0x1cd (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|IDENTIFIER, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, precise_ip: 2, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-cpu_core/mem-stores/P: type: 4 (cpu_core), size: 136, config: 0x2cd (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|IDENTIFIER, read_format: ID|LOST, inherit: 1, freq: 1, precise_ip: 3, sample_id_all: 1
-dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|CPU|IDENTIFIER, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-root@number:~# perf report -s type
-
-And when I press ESC to exit:
-
-root@number:~# perf report -s type
-perf: Segmentation fault
--------- backtrace --------
-perf[0x61326b]
-/lib64/libc.so.6(+0x3e9a0)[0x7f7173a5c9a0]
-/lib64/libc.so.6(free+0x25)[0x7f7173abd385]
-perf[0x5d5002]
-perf[0x4fd007]
-perf[0x523ce0]
-perf[0x525ad4]
-perf[0x503f43]
-perf[0x557ad4]
-perf[0x557eeb]
-perf[0x4e5355]
-perf[0x4dea42]
-perf[0x528aad]
-perf[0x42b559]
-perf[0x4c39e9]
-perf[0x4c3cf9]
-perf[0x410e47]
-/lib64/libc.so.6(+0x2814a)[0x7f7173a4614a]
-/lib64/libc.so.6(__libc_start_main+0x8b)[0x7f7173a4620b]
-perf[0x4113e5]
-root@number:~#
-
-Trying to build with debug info...
-
-- Arnaldo
- 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-report.c    |  5 +++++
->  tools/perf/ui/browsers/hists.c | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
+On Wed, Apr 10, 2024 at 01:41:30PM +0000, Volodymyr Babchuk wrote:
+> Card Detect pin for SHDC2 on SA8155P-ADP is connected to GPIO4 of
+> PMM8155AU_1, not to internal TLMM. This change fixes two issues at
+> once: not working ethernet (because GPIO4 is used for MAC TX) and SD
+> detection.
 > 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index dcd93ee5fc24..aaa6427a1224 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1694,6 +1694,11 @@ int cmd_report(int argc, const char **argv)
->  	else
->  		use_browser = 0;
+> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> index 5e4287f8c8cd1..6b08ce246b78c 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> @@ -384,7 +384,7 @@ &remoteproc_cdsp {
+>  &sdhc_2 {
+>  	status = "okay";
 >  
-> +	if (report.data_type && use_browser == 1) {
-> +		symbol_conf.annotate_data_member = true;
-> +		symbol_conf.annotate_data_sample = true;
-> +	}
-> +
->  	if (sort_order && strstr(sort_order, "ipc")) {
->  		parse_options_usage(report_usage, options, "s", 1);
->  		goto error;
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index 0c02b3a8e121..71b32591d61a 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -38,6 +38,7 @@
->  #include "../ui.h"
->  #include "map.h"
->  #include "annotate.h"
-> +#include "annotate-data.h"
->  #include "srcline.h"
->  #include "string2.h"
->  #include "units.h"
-> @@ -2505,6 +2506,32 @@ add_annotate_opt(struct hist_browser *browser __maybe_unused,
->  	return 1;
->  }
->  
-> +static int
-> +do_annotate_type(struct hist_browser *browser, struct popup_action *act)
-> +{
-> +	struct hist_entry *he = browser->he_selection;
-> +
-> +	hist_entry__annotate_data_tui(he, act->evsel, browser->hbt);
-> +	ui_browser__handle_resize(&browser->b);
-> +	return 0;
-> +}
-> +
-> +static int
-> +add_annotate_type_opt(struct hist_browser *browser,
-> +		      struct popup_action *act, char **optstr,
-> +		      struct hist_entry *he)
-> +{
-> +	if (he == NULL || he->mem_type == NULL || he->mem_type->histograms == NULL)
-> +		return 0;
-> +
-> +	if (asprintf(optstr, "Annotate type %s", he->mem_type->self.type_name) < 0)
-> +		return 0;
-> +
-> +	act->evsel = hists_to_evsel(browser->hists);
-> +	act->fn = do_annotate_type;
-> +	return 1;
-> +}
-> +
->  static int
->  do_zoom_thread(struct hist_browser *browser, struct popup_action *act)
->  {
-> @@ -3307,6 +3334,10 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
->  						       browser->he_selection->ip);
->  		}
->  skip_annotation:
-> +		nr_options += add_annotate_type_opt(browser,
-> +						    &actions[nr_options],
-> +						    &options[nr_options],
-> +						    browser->he_selection);
->  		nr_options += add_thread_opt(browser, &actions[nr_options],
->  					     &options[nr_options], thread);
->  		nr_options += add_dso_opt(browser, &actions[nr_options],
-> -- 
-> 2.44.0.478.gd926399ef9-goog
+> -	cd-gpios = <&tlmm 4 GPIO_ACTIVE_LOW>;
+> +	cd-gpios = <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
+
+Good catch!
+
+>  	pinctrl-names = "default", "sleep";
+>  	pinctrl-0 = <&sdc2_on>;
+>  	pinctrl-1 = <&sdc2_off>;
+
+These two pinctrl configure "gpio96" for "sd-cd-pins". Yet another wrong
+GPIO? Should probably drop that and add proper pinctrl for the actual
+GPIO in the PMIC. Seems like Qualcomm configured the PMIC GPIO with
+pull-up downstream [1] (not sure if this is the right file). It might be
+redundant if there is an external pull-up on the board, but only the
+schematic could tell that for sure.
+
+FWIW: Looking closer at the broken commit, the regulator voltage setup
+of &sdhc_2 looks suspicious too. Typically one would want a 1.8V capable
+regulator for the vqmmc-supply to properly use ultra high-speed modes,
+but &vreg_l13c_2p96 seems to be configured with 2.504V-2.960V at the
+moment. On downstream it seems to be 1.8V-2.96V [2] (again, not sure if
+this is the right file). I would recommend re-checking this too and
+testing if UHS cards are detected correctly (if you have the board).
+
+&vreg_l17a_2p96 has the same 2.504V-2.960V, but has 2.704V-2.960V
+downstream [3]. This is close at least, might be fine as-is (but I'm not
+convinced there is a good reason to differ there).
+
+Thanks,
+Stephan
+
+[1]: https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/484af352989c912db8f3b6393fc090006029066f/arch/arm64/boot/dts/qcom/sa8155-pmic-overlay.dtsi#L206-214
+[2]: https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/484af352989c912db8f3b6393fc090006029066f/arch/arm64/boot/dts/qcom/sa8155-regulator.dtsi#L635-642
+[3]: https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/484af352989c912db8f3b6393fc090006029066f/arch/arm64/boot/dts/qcom/sa8155-regulator.dtsi#L363-370
