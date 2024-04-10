@@ -1,102 +1,84 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A3A19E
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BB17F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712708413; cv=none; b=VRDk7+2cT5+A7qenxRdZilcm2XdiMiZBq5j6t2VYPtvhjMWBa6TIa/S8G4KTnPuJ3fJ5J66TRE/eGaoKpOGupRKOuPZYLuxYMWLmZYIzJ6tOcu9Ta2S6XEBbUOzpfdClWI5ho26gPgXYJEqb9r6jqxKc8Xq/rXSbbsM0FbcC1eE=
+	t=1712708430; cv=none; b=XntTwFhYjtm+r+dGFvelQapWvoURfibRTEpCg8PJw1G1j92xara4w58OaX+/6hbACkWMBLAcxmXf5yIFAR1rJ/LYvGS+xTAplEIKr2nzy2KnGdJ0vVyYjDWEpotSD4PrvISOIipjCcvl/mcu/VhTQrOzHRK/ShTdbOhEWRRsuFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712708413; c=relaxed/simple;
-	bh=5uXvHxjZzirfDvkIRhOsYYDI7XACucJRqQE4OGn03HA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kwt5sY4tN5ZujKZ58z7cuXnw0F0RZxLgz20Z+iuTacZEAPW8HN4ktH33um28nRTiWbwUqIGneeieRhRWXfdfsSjuZvd6uDao3u9azAYSIAqrHQN1Y/nUgazEQAjZ5VYg9CavlTj/6XxBashMqn9nfdUv+iC4E2l6OKCtY0oDvP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=H+52ARJd; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712708430; c=relaxed/simple;
+	bh=kuJQWjJaE2OOAcB7+Mj7bSmqNkugL/GwYSdQp3xFQmE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VEutTzCVSvK66yeN4Kj6rjd7NBmOB8Red9HIPlkOKzK0KtdVESQdNfwt8eGLbTvY6GbQfQc1+DOMO9OxUL4tY5NzCxoK5Z/PsjtJonC5L0jegnF1kkF+iznYCxlSbqA1bIGuukzEbV59H83V/gdymrSUOyyu2v9jAKN2YkiOxtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GZzzWR4H; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="H+52ARJd"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso25445739f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:20:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZzzWR4H"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6182f7f7fc9so20676947b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712708411; x=1713313211; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8dH1sOx8AuuAIwyitTYp4fQEkYb8QaLWM8FC1wyKIYw=;
-        b=H+52ARJdBNzEhm5cq6vTVyJN94TwjZFpDklDqt5HIZA32eu7vH0qSsm+St7QLT0EmF
-         jVIR0dwk1UUct5RIVLkbbqmAMau/pwptoSsuWIqR1iGzphzeUmRwMvZDh4XIYMBVUaWQ
-         1R9fpsdJz/Ne4eCZY1fOFONUBSEJKuGi520x0=
+        d=google.com; s=20230601; t=1712708428; x=1713313228; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rAKPNUoQGPaQKahi3jTZ7ES/C/RE/TCbwkXna9U00WU=;
+        b=GZzzWR4H394iWePssEmOOKfNlhDnrcbzs/nkAbNI0kqWFOr5RMc/RpWnJ8JlDVkUN1
+         z90YAX/rcE2GUJLs3OFuA5Tu7BqW+7uHHuOZ7HmHHfbtCnG6rOIqh5fEyJgQ7auqGOe8
+         ywjKjq8ztYQo1g3p4u9pp2VofvjlcLRSzy9rJWCZl4GotYxkpbCv7h2nqoIIvqvNACte
+         NhmSDfr5i9+5u9Jr6gSiCmu12+1yZIJRHFmbMKcj5i0G0lnUKDiZ6DF650QUC3wBQxMF
+         3lp+S1ssBxXUc77jjejwxGZ+E7iol4W+thLFRv17AghjOYa3qWVk2prJUe5FTILbx2iV
+         P7hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712708411; x=1713313211;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8dH1sOx8AuuAIwyitTYp4fQEkYb8QaLWM8FC1wyKIYw=;
-        b=jHRrFzpfv9y766OA2oel+toRTDNzCi+ZXU/yjlg4W+Dv6urCYksG/y1VAly2ZRlrUP
-         ZxpVShMrZqkohneqguO0sGmYiKPbRU0p8OWZTezdvHBnnJTw/7ARcuYimbxIHJvqe6yA
-         YJVVp6guBahqs5r2GvdPlIbrBQ4dpfYUfuVbnN2dkbcbDRU4nX1V9t0aeMDHt+/qktW9
-         Wm7wy48UrmEQLySawpWIeO3/emsmYW7enB4rf0bw+9OoU3eBrxOjV22I2RdoqcEX/Irs
-         4kWnSnLlg+F89Mh9ZQzRDG45EBUbDUeQM4oCIE6MQkBbMWI9Z0z6clVhw15vdkdeSzU2
-         hjXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqAwI6vfQZ9SJwSvrfTw1ShlQR+DzecwIsIwQWNrY//d+NxtrvG89gHa/oel0TLjAykji6AcVvBWGZBsbKOvFTS9MMjwp9Ica+XgyC
-X-Gm-Message-State: AOJu0Yzs5gKIF/1VJgBxF2AaON1K2qQw7lRnCh/YkfuVmBz5WCFmdgRA
-	AGctyMWPubabbv29ByHB2uw/awAxK9/Sj+0jf+EDMx5FCyfyNj2b+FlJ9oOCl/E=
-X-Google-Smtp-Source: AGHT+IHbvOdT7cqb6UgFwLcn1UkETQPFfzLOFngW91YpGcYtJrG5Zk7Dp6VMjSouo+2g5OCmxYqkyw==
-X-Received: by 2002:a05:6e02:1fcb:b0:368:efa4:be12 with SMTP id dj11-20020a056e021fcb00b00368efa4be12mr1803875ilb.3.1712708411222;
-        Tue, 09 Apr 2024 17:20:11 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id p11-20020a92d68b000000b00368c37480ffsm2854540iln.82.2024.04.09.17.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 17:20:10 -0700 (PDT)
-Message-ID: <a07a6abd-47d4-4646-805b-ae170b0540a8@linuxfoundation.org>
-Date: Tue, 9 Apr 2024 18:20:10 -0600
+        d=1e100.net; s=20230601; t=1712708428; x=1713313228;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rAKPNUoQGPaQKahi3jTZ7ES/C/RE/TCbwkXna9U00WU=;
+        b=k+2Vga3/dLA+3bKpcMxo0DtEpp1L6uxn+oY8k6Jmc6ap6L/0r2bl70dKS1Ep1UdRO/
+         VnlkP25A28AsitYAjiKJ3t71J/ITiERJtEB6rst92Z857AaDQIjJN9D7hSFww81xEUAX
+         Gl3e5iilg+mUiGEdUAG1OHBOg+1FJ1MqXN7fR12S8VckFAGjg1pTVL0v5ulPzp6O+sae
+         c0wiZGHfCd282574gbLescfFZcMJaspx1ml7Ma6JuThQf+BdYZShD/FY4ms8sC1+gjeF
+         lqwYHq2OC6TEISUgsBWToA1o0I0WigjjtLwgr02l3oAj4QSadiv3OViPELN8/mjH4j+d
+         8vhg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8yLVstuBPaHuuSqIMXft4LUcSdpWxLGWVEPY5T56I4cO4NjJjsTI30O4uTZHb6VpVw/IQj9/iHjTSPHZh8TgoD/eeBwRrS1CH0HSr
+X-Gm-Message-State: AOJu0YzBtmSS1olUt3aQMQo9Q6/YRj95jHbIyQkMlbKZsK8xSTfMKjXM
+	9EoQSo05LDEiZ1HxNYiw2j+GcD/wRKPLG+5Mbak3BhrrnpJMQ1GiZHxLcxOTBr7mHOmJSOjU9KG
+	HvA==
+X-Google-Smtp-Source: AGHT+IFiLrCcF2gPZk1+gsLvsRjqTLlCh84H6en3uOOmmqdRwlLNqKPZGV+CxW5PP5zgT0hIJbuV6emeuMc=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a0d:cc4d:0:b0:615:1d0d:eaa8 with SMTP id
+ o74-20020a0dcc4d000000b006151d0deaa8mr341965ywd.5.1712708428045; Tue, 09 Apr
+ 2024 17:20:28 -0700 (PDT)
+Date: Tue,  9 Apr 2024 17:19:44 -0700
+In-Reply-To: <20240305003742.245767-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.8 000/273] 6.8.5-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240408125309.280181634@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240408125309.280181634@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240305003742.245767-1-seanjc@google.com>
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <171270407761.1586889.5401391360531652033.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: Drop unused @may_block param from gfn_to_pfn_cache_invalidate_start()
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Like Xu <like.xu.linux@gmail.com>, Paul Durrant <paul@xen.org>, 
+	David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="utf-8"
 
-On 4/8/24 06:54, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.8.5 release.
-> There are 273 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, 04 Mar 2024 16:37:42 -0800, Sean Christopherson wrote:
+> Remove gfn_to_pfn_cache_invalidate_start()'s unused @may_block parameter,
+> which was leftover from KVM's abandoned (for now) attempt to support guest
+> usage of gfn_to_pfn caches.
 > 
-> Responses should be made by Wed, 10 Apr 2024 12:52:23 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
 > 
 
-Compiled and booted on my test system. No dmesg regressions.
+Applied to kvm-x86 fixes, thanks!
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+[1/1] KVM: Drop unused @may_block param from gfn_to_pfn_cache_invalidate_start()
+      https://github.com/kvm-x86/linux/commit/b326ec064c9a
 
-thanks,
--- Shuah
+--
+https://github.com/kvm-x86/linux/tree/next
