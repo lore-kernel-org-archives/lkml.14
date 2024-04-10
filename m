@@ -1,82 +1,119 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8142F154BFE;
-	Wed, 10 Apr 2024 08:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A8F1494D6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712739297; cv=none; b=Niyr2PIvCBW7oRQj/DmGIDfwMB2Vt7r4rEJ85SG37f16aRQ75WM4Afhct9pzhAujlFpRSJzjU26DBjMmU7bNkmkeYKcnJved7xgMRl+d4KGTuIQ6gQkBcgqiNHCV6o4ic1cruo6bjlZS8mgj9bEoTLIjVniMmiC8qYZhnIaKfho=
+	t=1712739435; cv=none; b=IcHbBcHEvxQltlQoTMy0akWsI9cZptPvEuInVsg1i2AbVANfNRoWIRpXP93FvceCp2bs/kgKZMcsAtHgNbIp4Gp0AOGbh86asAcZKQbTAkE9fJGsVHUGNLtLiJ8tX8cpNoc6RmARvTnEv7f8cGp1mpHYC2Q016jq+g2mx2wHIlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712739297; c=relaxed/simple;
-	bh=Z4OFHRpr3nmIyEO1k7F/aAyiG8qyK/DH8BQ8AL7YSc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g1z2gctwk7R5Kgde9JeDJx1EVYlPhaZVjN06aF7czZ+/cOklEzJPRwNzI7+p4ucoL9QWrY7f4nKHpSKEfmQ6EFfEi2AhJzchH+mKRRTIVV3I6pIi5MWbfXYEy7YPjuuPos3LsheT4nFJGSauIsHtTUBgDIfDTWJmc1m4b0XtA48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BC1sVjt9; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BC1sVjt9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=U7D8PI3wu075m0OUTFPGJL2EXXEYUI1OP6LrQdtjtEU=; b=BC1sVjt9yA5JEifjOYOfUfCkr7
-	Q/HTFvQuc1LjQLEuKCQ5fc69H/+KR3wjyjVr60K1YRmz1jLkbtWfPazYVPIDzeaC4aKeQHwomz6Ht
-	BW4tXcB0Qxhe9vzA++6LtrYuBv/HFGPWtxBD6QH9QvA+9B3ykudPiCMENAi9Rjvf445T5xCZlKX/+
-	Luwyl+2k3fHCOy9hPr2dpUq1VO/1yQg8HzcVwK5JjU3BH7C4No0/8bPVhFr1LXvv8c/ov7fvEM3x/
-	vvlTLNNKr32zGV24MWqnC6rtCn4x6evvI7zABZOwJYrYcvj1RFtYdBlw1mVJiqLfcJ2lT4rWxzdZi
-	mTwJ/ewQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ruTj7-000000080U0-3lnr;
-	Wed, 10 Apr 2024 08:54:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 88ED53004D5; Wed, 10 Apr 2024 10:54:41 +0200 (CEST)
-Date: Wed, 10 Apr 2024 10:54:41 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Atul Pant <quic_atulpant@quicinc.com>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	rafael@kernel.org, daniel.lezcano@linaro.org, kernel@quicinc.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] Disable RT-throttling for idle-inject threads
-Message-ID: <20240410085441.GA21455@noisy.programming.kicks-ass.net>
-References: <20240410045417.3048209-1-quic_atulpant@quicinc.com>
+	s=arc-20240116; t=1712739435; c=relaxed/simple;
+	bh=Q1AqR+G96BIjuAm54HH3yhLhu9vaKzbndYjKoX1vp4U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sQPn6atJCMSm9rijY9raMdo+bEqxQTy5PGKKhomLT/m20L0Bd1P3pgpp/JYW7t3bdX9q7F0YVkMlUdMfmRuOsRz5T736Zf/kcbyz46M9nTGI8hx2Lg6XX40HtvGhfzmfAlXdIArFyeTGHT+8ZWW4FgQLTbSCheBp5N/jTjsOxBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ruTlJ-0005R5-Qm; Wed, 10 Apr 2024 10:56:57 +0200
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ruTlI-00BSie-TL; Wed, 10 Apr 2024 10:56:56 +0200
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1ruTlI-00050O-2l;
+	Wed, 10 Apr 2024 10:56:56 +0200
+Message-ID: <b9ee67f1a6d782e6b6ee9e273bc8c6fa5bc1813b.camel@pengutronix.de>
+Subject: Re: [RFC PATCH v2 1/5] clk: meson: axg: move reset controller's
+ code to separate module
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor@kernel.org>
+Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Jerome Brunet
+ <jbrunet@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Michael
+ Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Kevin Hilman <khilman@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org
+Date: Wed, 10 Apr 2024 10:56:56 +0200
+In-Reply-To: <dde59dd2ef4da81528e31f65844e0b3f.sboyd@kernel.org>
+References: <20240328010831.884487-1-jan.dakinevich@salutedevices.com>
+	 <20240328010831.884487-2-jan.dakinevich@salutedevices.com>
+	 <1j7chfiz8e.fsf@starbuckisacylon.baylibre.com>
+	 <e3a85852b911fdf16dd9ae158f42b3ef.sboyd@kernel.org>
+	 <f01cdd910ab35316b8012795f73fd2b34c8e6f8e.camel@pengutronix.de>
+	 <13617b7a892424d2b024c725505a6f4f.sboyd@kernel.org>
+	 <20240408-numerator-escargot-a642507a598e@spud>
+	 <20240409-shallow-voice-c84ed791bc7d@spud>
+	 <dde59dd2ef4da81528e31f65844e0b3f.sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410045417.3048209-1-quic_atulpant@quicinc.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2024 at 10:24:15AM +0530, Atul Pant wrote:
-> We are trying to implement a solution for thermal mitigation by using
-> idle injection on CPUs.  However we face some limitations with the
-> current idle-inject framework. As per our need, we want to start
-> injecting idle cycles on a cpu for indefinite time (until the
-> temperature/power of the CPU falls below a threshold). This will allow
-> to keep the hot CPUs in the sleep state until we see improvement in
-> temperature/power. If we set idle duration to a large value or have an
-> idle-injection ratio of 100%,  then the idle-inject RT thread suffers
-> from RT throttling. This results in the CPU exiting from the sleep state
-> and consume some power.
-> 
-> To solve this limitation, we propose a solution to disable RT-throttling
-> whenever idle-inject threads run. We achieve this by not accounting the
-> runtime for the idle-inject threads.
+On Di, 2024-04-09 at 19:27 -0700, Stephen Boyd wrote:
+> Quoting Conor Dooley (2024-04-09 05:05:37)
+> > On Mon, Apr 08, 2024 at 06:05:51PM +0100, Conor Dooley wrote:
+> >=20
+> > > > > Seconded, the clk-mpfs/reset-mpfs and clk-starfive-jh7110-sys/res=
+et-
+> > > > > starfive-jh7110 drivers are examples of this.
+> > > > >=20
+> > > > > > The auxiliary device creation function can also be in the
+> > > > > > drivers/reset/ directory so that the clk driver calls some func=
+tion
+> > > > > > to create and register the device.
+> > > > >=20
+> > > > > I'm undecided about this, do you think mpfs_reset_controller_regi=
+ster()
+> > > > > and jh7110_reset_controller_register() should rather live with th=
+e
+> > > > > reset aux drivers in drivers/reset/ ?
+> > > >=20
+> > > > Yes, and also mpfs_reset_read() and friends. We should pass the bas=
+e
+> > > > iomem pointer and parent device to mpfs_reset_adev_alloc() instead =
+and
+> > > > then move all that code into drivers/reset with some header file
+> > > > exported function to call. That way the clk driver hands over the d=
+ata
+> > > > without having to implement half the implementation.
+> > >=20
+> > > I'll todo list that :)
+> >=20
+> > Something like the below?
+> >=20
+> > -- >8 --
+> > From a12f281d2cb869bcd9a6ffc45d0c6a0d3aa2e9e2 Mon Sep 17 00:00:00 2001
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> > Date: Tue, 9 Apr 2024 11:54:34 +0100
+> > Subject: [PATCH] clock, reset: microchip: move all mpfs reset code to t=
+he
+> >  reset subsystem
+> >=20
+> > <insert something here>
+> >=20
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Looks pretty good.
 
-Running RT tasks for indefinite amounts of time will wreck the system.
-Things like workqueues and other per-cpu threads expect service or
-things will pile up and run to ground.
+Yes, that does look convincing.
 
-Idle injection, just like every other RT user must not be able to starve
-the system of service.
-
-If your system design requires this (I would argue it is broken), look
-at other means, like CPU-hotplug (which I also really detest) -- which
-takes down the CPU in a controlled manner and avoids the resource
-issues.
+regards
+Philipp
