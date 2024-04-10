@@ -1,107 +1,118 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8F18F5B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B74120EB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:17:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712715182; cv=none; b=di+4gij0d2F3JGOPy8wCeyefPxOOt5VQYM6LwcJZ+GnDHldcO7MA4uiqUDnvQask2AidRGOBUEAaVLrAVAM3sli/HSclrl63XmR6Tg1KdvzcAHUeGpsWaKil8N6tsvuCWhnzUsldvKXgSTPN9NgTtxm7UMqa4JOILfcUQhzMoaU=
+	t=1712715430; cv=none; b=pL7/GnvVnWHC0j422ADSrVM88zGXSMpHy64Fndtk1/U+jQAVoib8CTSBrHAZ/z0Eb5lZ24mfghg8v1O3rp7uX8phf64eMyRfio1//aJohAGBMk7LHJppNwXLPFvT/BQYLzXLZlLpG428vn5+lnLTiGSMwzOxhiyxZxu8PcOUhzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712715182; c=relaxed/simple;
-	bh=lK4P4UCMjiw2ZyFxCplRxGsdI2xx+6Y6j1/D98mAre8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SI1EKCjyWo1wgdw3hVl7veWwqq41Gpw7oe47pK+1K1hvQtSYjlJjyEnNMtgiwwFv4Hwa/66AKWa0N3wNz8OW/C0RwY8joC3uiMOr0S5SXqKhy5TdGHzc0ZJjJV9BxLPdUvfvPYEbdhIZysX0iRgRkPfcrDa+XtUZscXjDSqpdhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ljTJW/Y0; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712715430; c=relaxed/simple;
+	bh=O6C6n9pybJTJLPJy1c8WzpgKVw+uUnnwKizzYQ7blj4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XBoGfB7QH6+x+G0evRgFs4kUhL1hVyuN8vsNfTmi46RK5GT1UVIqJYXUYEUFVnRrkMzRx0UrJO32hXm6Eh3pBzsSkAz97Ft72J5LPUjozcB9RGDQIpzcW6QQo8eJzQygt6CO+Hz7sfqYvHiHutORmOkv2XSSBDSQxGk0HPv0JNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JSBUiON5; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljTJW/Y0"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ecec796323so5885733b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 19:13:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712715180; x=1713319980; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tfrQs+4JrCPHQuxPOBXPCCTtuoY+nVtkPvrmH/Y0bqU=;
-        b=ljTJW/Y0nL4mbXmGJxpce9S0uVts67YPZhjgPfE9wS6HLM8E9VGvLQCuADx1CR0jx/
-         CTioeXIMqITGy+qn5Ugyve6Z7PV4NeX0OHimDqgQfAtXn/sKGrYGfagE+SuxmUN4QhhJ
-         CISXAAmO2wKteghlwhg5RczV4zGcO/EB7+HtsPyfKEppg3bM7hkw6jAZJ/gIXnEYcgCs
-         AxqQf5ib0v/HmZ83eQ3+HlYayNtw4QM9yQOXCi0oS3FefnunoLCBr1W375b+TLi2VkI+
-         ggw6USdMFo0tl1T4DWukxZhpoc+JeJxKbFnARpx0047G2VQRPDhuFBZ7Ov/05sBXvxJo
-         2gHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712715180; x=1713319980;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tfrQs+4JrCPHQuxPOBXPCCTtuoY+nVtkPvrmH/Y0bqU=;
-        b=rKEdwPfLhbz/m8Di2CVpKheaietU0WTS2dT4l7YOcSHMxHBboKQefmpT9MliOx20so
-         Doy/Lo850UVS2pT5OYt9khQ5zaur+RC5c6KpkmwqLw/ZPP1J420gkEmmXSKMv7J1PdvQ
-         yFNh+qEf1rlnIOwcBUi9VQnhTh7+P5HPbMhOUfas+GD/soKirnb2yk2LyigsN/qQ0vcp
-         BASgADrsZ3Uxds7x5F9gmfMI80DmTAqLwUBvOT5T7wREcSZYeuj3bYQCf7eSywyMFXLm
-         5VS6ySgCLCdRevc0xbGZBCTr5ZFVbLPZ48QZ73zc82+bDhkxrEgC3KDN4Px8J+ZVGhvP
-         az7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVu/03sLrSHZN/QnQD0fO/nd95yQxDveYZS2MrYVigi/LKb4b0lXWV04MAR86PoK2ZKHP/3Cj8XmLhCT1rZ0A8zzTOZuhGjQGXmTkG4
-X-Gm-Message-State: AOJu0Yw+XM1cD2so0AZF0GUhxEXXLmYuEciKVONDKvnCCW3jHTi9c/8y
-	cRtLf34JHEM7LV+l3HvkcBHk4VHxoGY9lqjKAIpkKNzNDNJYDqaL
-X-Google-Smtp-Source: AGHT+IFouD389XE/szQrJCFNEso8tE9jSmplHrRziy+SDkM2J+XStefDaKGhx/vrhu5RS4Nw4yM38w==
-X-Received: by 2002:a05:6a00:1ad2:b0:6ea:dfbf:13d4 with SMTP id f18-20020a056a001ad200b006eadfbf13d4mr1545511pfv.18.1712715180364;
-        Tue, 09 Apr 2024 19:13:00 -0700 (PDT)
-Received: from [192.168.255.10] ([43.132.141.20])
-        by smtp.gmail.com with ESMTPSA id le8-20020a056a004fc800b006ed2709ada6sm5199846pfb.65.2024.04.09.19.12.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 19:12:59 -0700 (PDT)
-Message-ID: <8836b1e2-f231-486e-9caf-757250e7a005@gmail.com>
-Date: Wed, 10 Apr 2024 10:12:56 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JSBUiON5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712715430; x=1744251430;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=O6C6n9pybJTJLPJy1c8WzpgKVw+uUnnwKizzYQ7blj4=;
+  b=JSBUiON5P+HMBeBGx6j8oZByqAqn7X09CG+tkBbUQjNv2iJ32IQaJ3Lf
+   bXBfSsbvGbwhZYZtyfgmpxZY3k+QtRJZAXksI3zzPyKbtJERN/yPw2woN
+   FlrxZDhKZ2U0ks5488x50LpNfWTQMzmzKFknkeoJnic/Jvz6Rolm9fYQx
+   bW/WA4PV+xMDyIPlFIdV1vgDb09N2IVC5gWeD0sa7/m1+hSHx5s6tGVUB
+   hshL4jOMQtCPvPqPREuvEkocEPcMZWtd9HrMV/yeK3LazzdfIZcdD+KP0
+   oRrDnpKHRrQ8OJ6qdZMBkbxN6hAZ45Uaz/XV1Ar5U7dY9NpoD+ENox5Xy
+   w==;
+X-CSE-ConnectionGUID: JNWCY562TVupDYaxbxsa4A==
+X-CSE-MsgGUID: TTkrDxjfQCqYYBjVDUN1KA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8161293"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="8161293"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:17:10 -0700
+X-CSE-ConnectionGUID: TXOFrYDjTyiFtmhcOf1iKQ==
+X-CSE-MsgGUID: PGZlSwBjSt+v7vtpIZ8YWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="24908586"
+Received: from amatsuba-mobl2.amr.corp.intel.com (HELO [10.209.3.203]) ([10.209.3.203])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:17:10 -0700
+Message-ID: <19a3c2890b18ce230a9e147c0eeee27caf0c4137.camel@linux.intel.com>
+Subject: Re: [RFC] mm: get_mm_counter() get the total memory usage of the
+ process
+From: Tim Chen <tim.c.chen@linux.intel.com>
+To: Chen Taotao <chentt10@chinatelecom.cn>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date: Tue, 09 Apr 2024 19:17:08 -0700
+In-Reply-To: <20240322151139.7417-1-chentt10@chinatelecom.cn>
+References: <20240322151139.7417-1-chentt10@chinatelecom.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/9] mm/ksm: add ksm_get_folio
-To: David Hildenbrand <david@redhat.com>, alexs@kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: Izik Eidus <izik.eidus@ravellosystems.com>,
- Matthew Wilcox <willy@infradead.org>, Andrea Arcangeli
- <aarcange@redhat.com>, Hugh Dickins <hughd@google.com>,
- Chris Wright <chrisw@sous-sol.org>
-References: <20240409092826.1733637-1-alexs@kernel.org>
- <20240409092826.1733637-2-alexs@kernel.org>
- <5b90db38-75fe-44fc-b4ca-55dd1b15724d@redhat.com>
-Content-Language: en-US
-From: Alex Shi <seakeel@gmail.com>
-In-Reply-To: <5b90db38-75fe-44fc-b4ca-55dd1b15724d@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+
+On Fri, 2024-03-22 at 23:11 +0800, Chen Taotao wrote:
+> Currently, the get_mm_counter() function returns only the value of
+> the process memory counter percpu_counter ->count record, ignoring
+> the memory usage count maintained by each CPU in the
+> percpu_counter->counters array, which leads to an error in obtaining
+> the memory usage count of a process, especially when there are many
+> CPU cores. counts, especially when there are many CPU cores.
+>=20
+> It is now possible to have get_mm_counter() get the memory count of a
+> process by adding the memory counts maintained by each cpu, thus getting
+> an accurate memory count of the process.
+>=20
+> This patch is an unofficial version that simply fixes the above problem,
+> as I'm not sure if it makes sense to do so.
+
+Summing up the mm counts maintained in every cpu is expensive,
+especially if we are doing the read often.  More so
+when there are a large number of cores on large servers or
+newer CPU with high core counts.
+
+For mm counters,the count in fbc->count is good enough we
+don't need to correct fbc->count with the the small counts
+update (< percpu_counter_batch) cached in per cpu counts.
+
+So do you have a mm count use case where you really need the precise
+count with get_mm_counter?
+
+I do not think we should make the change you suggested.
+
+Tim
 
 
+>=20
+> Signed-off-by: Chen Taotao <chentt10@chinatelecom.cn>
+> ---
+>  include/linux/mm.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index f5a97dec5..5cf6443aa 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2569,7 +2569,7 @@ static inline bool get_user_page_fast_only(unsigned=
+ long addr,
+>   */
+>  static inline unsigned long get_mm_counter(struct mm_struct *mm, int mem=
+ber)
+>  {
+> -	return percpu_counter_read_positive(&mm->rss_stat[member]);
+> +	return percpu_counter_sum_positive(&mm->rss_stat[member]);
+>  }
+> =20
+>  void mm_trace_rss_stat(struct mm_struct *mm, int member);
 
-On 4/9/24 6:50 PM, David Hildenbrand wrote:
-> On 09.04.24 11:28, alexs@kernel.org wrote:
->> From: "Alex Shi (tencent)" <alexs@kernel.org>
->>
->> The ksm only contains single pages, so we could add a new func
->> ksm_get_folio for get_ksm_page to use folio instead of pages to save a
->> couple of compound_head calls.
->>
->> After all caller replaced, get_ksm_page will be removed.
->>
->> Signed-off-by: Alex Shi (tencent) <alexs@kernel.org>
->> To: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Izik Eidus <izik.eidus@ravellosystems.com>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Andrea Arcangeli <aarcange@redhat.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Cc: Chris Wright <chrisw@sous-sol.org>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
-> 
-> Note that the more common way is to have RBs ets fist. Further, I haven't really seen "To:" that often :)
-
-Hi David, 
-
-Thanks a lot for notice, will change it in next version. 
-> 
