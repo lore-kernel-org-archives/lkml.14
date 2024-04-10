@@ -1,150 +1,113 @@
-Received: from fout2-smtp.messagingengine.com (fout2-smtp.messagingengine.com [103.168.172.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFD91FB4;
-	Wed, 10 Apr 2024 02:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4B9539A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712715430; cv=none; b=IxWyTa25BCH1YBwSKwwPibTgv9Vaq0stpjU9ZP35rA5DFef4dBl98I14ilcL8Xi8RxS06mcddZE//jWPo5HOtycWdZFFfxyyoN5LwBBQ5VVVlUZ2fkr4T75lh3FQltZQbGdaz0342DwsUXekD+1CabgOCfTYfWFdGICvmPmhgfM=
+	t=1712715804; cv=none; b=O07u6fawPSdriTczVH370SGBnfIQd0Gcn11nwvfvfzNJL4Ple4YscDm16rTtBa7n46sUzknyCq5dqhFPuPRu/6cDN0FVVYu2kHU05XYSbtvDY3Y+b4FgP7c81Ylropr26CcVFtKglMewH/bmpwj2uxU0xFOZdouijXiIng+xpyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712715430; c=relaxed/simple;
-	bh=onrkEQO2aQUtdBzkZs6XetQ4U270C3bQZEOS7N31PO4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=Jz5oAaA21mGhe9ofWGSscTlT4yE+ul9MDWOav9qMncee0/TNKZHaKnXDBW7Qtc7sZwHfAxvUPi/RNZmhQDMm08dKF1voIU1XW5YDwhUQq+ynIZqE7g6dl7Oebr4v0DHjXkXZoHnzkb0B35CdyuAH+fObVt7HWvYSdnJFs3OMEe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=mQ4PTrIi; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DfkG8UUI; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1712715804; c=relaxed/simple;
+	bh=9sHL5LbebkwrBdLiCkbTw2BdnFhiSCphYDK66lRVEPo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iBgGV9JXgaHJptpXX3Fc/J4tb9Q14zyybUJQjQOW6LqUh1WXGrUIi1TlpN1rie5uX1vbPEyJ1rF2Z3QZYP1lk5rRbRqZoce5DTfMNm1kSh9zF6scKMI5MEIYol8OXC7wx1CpaB5ZoGkxbbmle/mx4v2P2cw7JiiHiv1CLYqCVPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com; spf=none smtp.mailfrom=smartx.com; dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b=GOM5bUwg; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smartx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=smartx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="mQ4PTrIi";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DfkG8UUI"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 872BD13802C3;
-	Tue,  9 Apr 2024 22:17:06 -0400 (EDT)
-Received: from imap52 ([10.202.2.102])
-  by compute3.internal (MEProxy); Tue, 09 Apr 2024 22:17:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1712715426; x=1712801826; bh=QmIb7eehjl
-	j51OheY2NUMsMEGmdD2KNY8qYRik3xPX0=; b=mQ4PTrIiRS7rytFH1Qd2cJH/K0
-	Rst1K9kB4t+DrgXmo5pz61HLbiClt2aavSSWAIN562599LdW1wNnBS8YvigrSZ+F
-	BAZapcLCWWES7H2LoA3D/+WnZfcdt3k4V7gOOWwnFUoEbyvoo7I1XczN3J0hbkU4
-	T5LDIe2r1LAxaRINH6t3hfBxqbuTj3H9FiKu2uIs4rnwOnT2S7vjmGZftN8uD+RQ
-	2T3sOXth2yL1lgKmZPbXNIMluKokUcHLwJuCmvMUhlJSDpisI/SMjGfjgbvoKfwh
-	DY9AC33kHBNuh8xYfg7qTgtIeZabm4t1GMhrp3s6fBdf5O6H9Zs+FVvtiHkw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712715426; x=1712801826; bh=QmIb7eehjlj51OheY2NUMsMEGmdD
-	2KNY8qYRik3xPX0=; b=DfkG8UUI+XVQPXJzMLRwXseYHSDiNTUAMRVFc97kHhdT
-	YDIHXf6y2pItsHSlGWWTJ/JhHYtbxCFAGhbABYyhZmzOLqhZhcMyPOgNdfFl1w74
-	xc3H6Ut6YaWOrJXaFl93L31FIEaPKca4F8Wtk3xLENzZ3lOfG8/MmYafRndAG+Sl
-	Z4MGy3r6XhP+I0LRrar+ddPfeMU6vUBZhZe4JzPfo/8ZQTzAkWIfZUkj0csIRhVB
-	Zfo0S/I/pIExZ99Bi+QRLCdgLDifbAWilBKDGoYFcvO/zFk6QmzsauGOhS3Gt1Al
-	/5Jw5/9YSRSTmsWAhDO7S0EVeDQoVFttJDVWSDStTw==
-X-ME-Sender: <xms:ofYVZiqp5iyPfNaVOONHbobDeeEa56rHNH4EbAPo-CgGtCiPmGDGNw>
-    <xme:ofYVZgrf3wDOD36oL_Csox0JerKjEjuEGI0MpFb8m10t-H-vUT6y4fUe5K4Ce0FJ2
-    PNZvoFFs8z1NSZYuBM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehhedgheegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfofgr
-    rhhkucfrvggrrhhsohhnfdcuoehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssg
-    drtggrqeenucggtffrrghtthgvrhhnpeeiueefjeeiveetuddvkeetfeeltdevffevudeh
-    ffefjedufedvieejgedugeekhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggr
-X-ME-Proxy: <xmx:ofYVZnNLTcKsV6MW_9sh3P7gJqC4x7MyGE7aCWndLFe5eVKDHuLJig>
-    <xmx:ofYVZh7embmJTUwTDEyEVMirG_2jv7FHuTSPUkANqJGsA7wgulvO-g>
-    <xmx:ofYVZh5L_kfBTJayoA6ML-LrdLBORZFrRLlBDg6BaoBwz7CIaWhJkQ>
-    <xmx:ofYVZhiMUeMEI1GJtVvmvDdhjym3pXtSR6etB6WXSEQCxc2O_zZqkA>
-    <xmx:ovYVZuzgJR4Tu6KGzU0GAyhXDfnuJiGu_yKdF7z0WFeGCu5n_RWSXpgr>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id C52AFC60098; Tue,  9 Apr 2024 22:17:05 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=smartx-com.20230601.gappssmtp.com header.i=@smartx-com.20230601.gappssmtp.com header.b="GOM5bUwg"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-61804067da0so29065947b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 19:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=smartx-com.20230601.gappssmtp.com; s=20230601; t=1712715801; x=1713320601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=khwZnWm14dL8uE/PMsqyX7hSnOPMt8GrfT/vNnwgL7k=;
+        b=GOM5bUwgxTHMLE7T0inRujbxzHL8rViue4maA0FB4EwuBFQbLzxXgQBKcuQlOiRKP/
+         nOBDI8yHyFvQ1ngnchomXh/wdzrwKgLbDPmYGnqMdkKIZvdo85ueZTvnznnCNrF7qGlh
+         7JT4cxEXzoMc3EN1fq7X7U3UfXJHFEyHGjPsq2reYKuaabrXQpjeXT52JUyr0JXlITh1
+         U6lZaQlV9Hv5xUsRx58aDPFqzjGpceWUOWvlGbeWxVF1l1RiHdtnTi7YiA2nlTisTLed
+         DSHHfzyoouDEabnRoqTwToPW3WUaobocJGdSTOnhpQf1K1CdIjZ7hX9MyEzArZPcZ71c
+         ciIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712715801; x=1713320601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=khwZnWm14dL8uE/PMsqyX7hSnOPMt8GrfT/vNnwgL7k=;
+        b=eo57m0db6VcUBT11SZKoL9tVEqfvEFLGzD1TeBl0mYigLFLMHErCJzbNYEqgDdKxdS
+         NLRgLp2VDHwR2v7h9aRmVbKjengECQ3YydEQIQgMY8yLXxTDWEmqJyWqAzj+1yG+Hmir
+         p1cuxfFseOD2cyH16CaSWYrwBYMK3cqQ0cz1UXSSo7Y90gSWalAHijBj6sq+zAXRT20J
+         /q8ENmpyORB93Pt4cvbd05ckc473qa2Nz0R3/dsmbf70h6EsKzO9N4uZohNBBMc0X249
+         EBMs/u++8ATgwbvocONuWY3lCzfc4PEBJCe16kJlkdNUQ3kVVN4NfSDUVPcjcmUFMxip
+         BqwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvtqoDM7q/zajEg/dsDRpBd1NNF1hsmGoz1SZdxJywzlLhoM4gth0wmpfqmLN4EnNumfhVXhOCb4g7gvTrw1w2FuH6thlw+MabyDJX
+X-Gm-Message-State: AOJu0YzN9QL0pjaC8RzI6yE7na5OWATjTUW83+BfLFg1EJaAp3J5/IbU
+	hyFKPmckzP5i83EplHK78Y9B3a7M0nmZd1w2YoVxvpkm6CCo3hwnSStaR5UcpItOC5EDD/9Dvi1
+	OV/AfPW4q19Tw7QTc1APL6ol5HygWZvacN8ocyw==
+X-Google-Smtp-Source: AGHT+IFtrp/7l/2i9POMHsw6eREWDmyeLqci9yjdmkaQt9VIn2HnOxOlbHcG2dl4PfW2xl1WKSUQr8erN9u+LieXHos=
+X-Received: by 2002:a25:30c6:0:b0:de0:d2fe:d499 with SMTP id
+ w189-20020a2530c6000000b00de0d2fed499mr1325133ybw.21.1712715800493; Tue, 09
+ Apr 2024 19:23:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <92ee5cb2-565e-413c-b968-81393a9211c4@app.fastmail.com>
-In-Reply-To: <ZhXpZe1Gm5e4xP6r@google.com>
-References: <mpearson-lenovo@squebb.ca>
- <20240324210817.192033-1-mpearson-lenovo@squebb.ca>
- <20240324210817.192033-2-mpearson-lenovo@squebb.ca>
- <ZhR-WPx7dgKxziMb@google.com>
- <f3342c0b-fb31-4323-aede-7fb02192cf44@redhat.com>
- <ZhW3Wbn4YSGFBgfS@google.com> <ZhXpZe1Gm5e4xP6r@google.com>
-Date: Tue, 09 Apr 2024 22:17:05 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Peter Hutterer" <peter.hutterer@redhat.com>
-Cc: "Hans de Goede" <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Henrique de Moraes Holschuh" <hmh@hmh.eng.br>,
- ibm-acpi-devel@lists.sourceforge.net,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Nitin Joshi1" <njoshi1@lenovo.com>, "Vishnu Sankar" <vsankar@lenovo.com>
-Subject: Re: [PATCH 1/4] Input: Add trackpoint doubletap and system debug info keycodes
-Content-Type: text/plain
+References: <20240409062407.1952728-1-lei.chen@smartx.com> <0e5a96b6-0862-4c00-b07f-7485af232475@lunn.ch>
+In-Reply-To: <0e5a96b6-0862-4c00-b07f-7485af232475@lunn.ch>
+From: Lei Chen <lei.chen@smartx.com>
+Date: Wed, 10 Apr 2024 10:23:08 +0800
+Message-ID: <CAKcXpBwE-8p+naDgJnCU41ODxRhWq7CkhEeeOAw+Ode4-J6CLw@mail.gmail.com>
+Subject: Re: [PATCH] net:tun: limit printing rate when illegal packet received
+ by tun dev
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dmitry
-
-On Tue, Apr 9, 2024, at 9:20 PM, Dmitry Torokhov wrote:
-> On Tue, Apr 09, 2024 at 02:47:05PM -0700, Dmitry Torokhov wrote:
->> On Tue, Apr 09, 2024 at 03:23:52PM +1000, Peter Hutterer wrote:
->> > On 09/04/2024 09:31, Dmitry Torokhov wrote:
->> > > Hi Mark,
->> > > 
->> > > On Sun, Mar 24, 2024 at 05:07:58PM -0400, Mark Pearson wrote:
->> > > > Add support for new input events on Lenovo laptops that need exporting to
->> > > > user space.
->> > > > 
->> > > > Lenovo trackpoints are adding the ability to generate a doubletap event.
->> > > > Add a new keycode to allow this to be used by userspace.
->> > > 
->> > > What is the intended meaning of this keycode? How does it differ from
->> > > the driver sending BTN_LEFT press/release twice?
->> > > > 
->> > > > Lenovo support is using FN+N with Windows to collect needed details for
->> > > > support cases. Add a keycode so that we'll be able to provide similar
->> > > > support on Linux.
->> > > 
->> > > Is there a userspace consumer for this?
->> > 
->> > Funnily enough XKB has had a keysym for this for decades but it's not
->> > hooked up anywhere due to the way it's pointer keys accessibility
->> > feature was implemented. Theory is that most of userspace just needs
->> > to patch the various pieces together for the new evdev code + keysym,
->> > it's not really any different to handling a volume key (except this
->> > one needs to be assignable).
->> 
->> What is the keysym? If we can make them relatable to each other that
->> would be good. Or maybe we could find a matching usage from HID usage
->> tables...
+On Tue, Apr 9, 2024 at 8:52=E2=80=AFPM Andrew Lunn <andrew@lunn.ch> wrote:
 >
-> I was looking through the existing codes and I see:
+> On Tue, Apr 09, 2024 at 02:24:05AM -0400, Lei Chen wrote:
+> > vhost_worker will call tun call backs to receive packets. If too many
+> > illegal packets arrives, tun_do_read will keep dumping packet contents.
+> > When console is enabled, it will costs much more cpu time to dump
+> > packet and soft lockup will be detected.
+> >
+> > Rate limit mechanism can be used to limit the dumping rate.
+> > @@ -2125,14 +2126,16 @@ static ssize_t tun_put_user(struct tun_struct *=
+tun,
+> >                                           tun_is_little_endian(tun), tr=
+ue,
+> >                                           vlan_hlen)) {
+> >                       struct skb_shared_info *sinfo =3D skb_shinfo(skb)=
+;
+> > -                     pr_err("unexpected GSO type: "
+> > -                            "0x%x, gso_size %d, hdr_len %d\n",
+> > -                            sinfo->gso_type, tun16_to_cpu(tun, gso.gso=
+_size),
+> > -                            tun16_to_cpu(tun, gso.hdr_len));
+> > -                     print_hex_dump(KERN_ERR, "tun: ",
+> > -                                    DUMP_PREFIX_NONE,
+> > -                                    16, 1, skb->head,
+> > -                                    min((int)tun16_to_cpu(tun, gso.hdr=
+_len), 64), true);
+> > +
+> > +                     if (__ratelimit(&ratelimit)) {
 >
-> #define KEY_INFO		0x166	/* AL OEM Features/Tips/Tutorial */
+> Maybe just use net_ratelimit() rather than add a new ratelimit
+> variable?
+
+Thanks for your suggestion, net_ratelimit is a better way to make it.
+
 >
-> We also have KEY_VENDOR used in a few drivers/plafrom/x86, including
-> thinkkpad_acpi.c and I wonder if it would be suitable for this vendor
-> specific debug info collection application (which I honestly doubt will
-> materialize).
->
+> A separate issue, i wounder if rather than pr_err(),
+> netdev_err(tun->dev, ...) should be used to indicate which TUN device
+> has been given bad GSO packets?
 
-That's a somewhat disappointing note on your doubts, is that based on anything? Just wondering what we've done to deserve that criticism.
-
-That aside, I guess KEY_INFO or KEY_VENDOR could be a good fit (I personally don't think KEY_CONFIG matches well), but I would be worried about clashing with existing functionality.
-
-Peter - do you have any opinion from the user space side of things, or are these likely unused? KEY_VENDOR seems the safer bet to me (but I don't love it).
-
-Dmitry - What are the downsides or concerns of introducing a new code? I'd like to evaluate that against the potential to cause conflicts by re-using existing codes. If you feel strongly about it then I'll defer to your judgement, but I'd like to understand better the context.
-
-Thanks
-Mark
+I got it, I'll remake the patch, thanks.
