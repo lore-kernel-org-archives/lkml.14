@@ -1,57 +1,57 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4849915ECD9
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1AB15EFCB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712752041; cv=none; b=vD2rwVsjtoBhGGNrqeQRXeZrS5psKSDVV1+CWiXIVzQX0Rc3oqekv1oMTItv+UHZIvXEHJaBt4a6Xzj1BTVdXyjKFNXZu2RAczOYdUjcPdQ75QorpRnG/1WqgWUjefgssE5Q+4bJiXjau4eW/n6O4g1H7WivJ9L84Vc3vEAhbJc=
+	t=1712752044; cv=none; b=A1KTMP5jH7GqkMQNnoD4LG+4mCv9QzCmtIpS1lQ1+MMv9ZgG8csO1tstVpYyip5EgPw36quaK4SdKGNevYxY1eAsJGnL/z4QVieHo3WQp+hqBQCVOhd9JUKwgf7n6o8gHJ7ECM0bLZLFOaaBKpVjinAjjhpxngx+DKSIfMsnHtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712752041; c=relaxed/simple;
-	bh=2Dn9zwoluUm9lOlv4owEz3lfChsm2AnVOIaAhDO5O5A=;
+	s=arc-20240116; t=1712752044; c=relaxed/simple;
+	bh=6KPSD3CV6Jniy65UJWan4EwWxElAtg5Emo94UsSLQdo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cj0WMo62yPO8riiWkRI7XI+EYvKDY+7QwpP3qDcuoAkKPlnYt7tRB7Vl43fnYQg5RCP8WK90zuTRHTfYWX4E8LPkOsS/sV3NvDyWI3Uq+0FraE13iKQ6Fi5cW+R1yK2ycEjmKo/AJMlbi8DWOkLpuYLvUgNJv/scb1jRFmv7m/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=hjI6RZ4V; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=LABVb4b3sgvqOtYfRsPiYWf4fNsGJCLDsacrspPoGxjmUSTdAyLOQWje10+f1g4do1XeHoRPBvQLxXFTerfyhRqoOaAyrO+BLyzQBko+Ir/Unj3sxgij5zVB4t/nV/dQHjjthbMBc6wtVmDpDnnruIGPDiLh8XecdWOqZXQ+BuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ldXdVDTk; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="hjI6RZ4V"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-417c5aa35f6so604095e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:27:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ldXdVDTk"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41634598125so30544535e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1712752038; x=1713356838; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1712752041; x=1713356841; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lzM8sQ3uQ3tHjk4LJ4TPWYY/Gu5/y3nmRsoLKfwtupQ=;
-        b=hjI6RZ4VwVtAd3D7YuqJ9oBycxE88ajzGlNkXpwdJ68FnWuQAOYXrwfPpfVxHZnjNE
-         lXeFVR+TdjOFF03j+9ov47z3rzg2Kz1A/RUYcc7F7buBfPf5QAF8zxjMUhck09uDWcGl
-         2SSFOkh/ad7LOHcPbpq1TgGWyr6HApGYKcm3gTd9oUIqSzFfend5F3zrstkWlzxMC+UL
-         f4rHzw5ugyydnERUYeto2/85dHts2U8DWMlbhT9c434Pfw+q+L8vpDqD/0TefH8IDv9q
-         efxDxFuA786ySICbjPtkjlIxqA0BEqiJA4XsSyFI+VXQhYGExI8pk5HLy7Y97kesQNRB
-         zmfA==
+        bh=BpA2RlMoyu0BqLSW07AvttVgRisVX81MzCveYc+do0o=;
+        b=ldXdVDTkqJZCSdBcESAimnuog7zgmJSXVUvW0rKyCfuMwqUC/0ZfR8xerEr0hAdcfm
+         PKncaIWAWsdJq29vgzfz3DYXjyhNyC0jlRe6QP7WwDJzMxcGifEIiqhRpVDpwACnv5mI
+         wszlS07OO39iHnbfatzxqxD8IggbHjB/2naYsO77+xWKSPVGCEUbrYhXeakYHaYPfbSA
+         4Bm5tOrtm+D1J/Ve6tnSsqkSvNw1iH4mJmo9RLVqSHiBP2P9cOonGd8K/lcysv6da8BB
+         X5zqqKzfyuGaNgB2sHHl0YWVDX2jjMSV/qHrWsjWI3wREXIlJm01qG8OQSMUbFjMPEXr
+         +SfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712752038; x=1713356838;
+        d=1e100.net; s=20230601; t=1712752041; x=1713356841;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lzM8sQ3uQ3tHjk4LJ4TPWYY/Gu5/y3nmRsoLKfwtupQ=;
-        b=BH/bBho2HXXXLm+SGJqQJ7D3paHc1WQv+VS7zzzDa2W9z85khBJoG8dIggQ2szK0jp
-         V+BmmKy6VCIjW545aWeYX0q5JRrm1hyUDRvNtHRIT9y32meoaGSd/0F98Aoy8g07WKLF
-         JNyPSX5vmm9VVizlHt588wD3ToKg9uJKdmA66PRfRRJlXvUYNmkRZV93XYLQ+AgMDAUb
-         9HYHzMvvyoZ/07oAh3/XHSTtOyFzAAvWXdyAm0LaI5xHm9jtxxGs3X/BE88Kh+je7354
-         U3iiIVXJY86PGVXrohyNu8ojoFKhQQrIvR0FWGYkWILkPmtCzFTJBtpxBc4vOGYvtKA8
-         YFfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVx3YHKxXkuIBIx+FaeG+BgOD/ZQgN9g8ikOXuAKlAt3UXN9eu44tbN85OYtghzI/cpjcXTA8ew2bKvbaze0c8/+nxYZwnZiKcwfpzv
-X-Gm-Message-State: AOJu0YwdAf7gvnHZurQ6FYUJN5bqZk+iyQAA7AUzOQRIcdASEHbxTR1V
-	ljP9cJRuZRlK/9FImqsqG7VMvMthcVzglbtMzlIoh89SdX3bqq31fc4rP3VmP4U=
-X-Google-Smtp-Source: AGHT+IFRk5kC3MaMRtaKkbQqvr24Q262P3CbvQNlYZMqaD37NiQ9554hIb+fg3ZHw3VG+HvK3hTdJQ==
-X-Received: by 2002:a05:600c:1c8d:b0:414:8e7:cd60 with SMTP id k13-20020a05600c1c8d00b0041408e7cd60mr1592969wms.8.1712752037726;
-        Wed, 10 Apr 2024 05:27:17 -0700 (PDT)
+        bh=BpA2RlMoyu0BqLSW07AvttVgRisVX81MzCveYc+do0o=;
+        b=jdvjp7Ju/xhxO+iKglhWU/51nNonqqA+UTo/flFNe6PtUwYgCcH4OdIB9uojuWd4L8
+         UWWvYEn0FCA1ptLUe2BWzmnJQctMkja+drPhLUlhl7ZRi3OPfZnx2VYZNvf54Vk1AWEK
+         vypCnv9MUslmVBwppUcSbyhGHwYaGbXoZgs+vYZMHO25Z/3ufwDPzjzcE49u2QO4LaPx
+         viyefeG7Jm5s7XFfTmULCXdncwEPAbh4gB7kkofKt6J2C5rBouihBVynEb30W8C52srX
+         r/KGu8/QY2yVm76XJBe/2WigubgimMUyNosX53sB8I3lbUEHJrFfXc7D7y7AzXKi3Xqg
+         D0MA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFeZ0zV8P/k+7KWPH55vshUonJYFUBWbShQGv/6+xa40q4I6jwIcJqGxxsUIZ7hIK0nP2liSZ7KV1yV0dfjVC+wDpqaykbRQGEX3GG
+X-Gm-Message-State: AOJu0YzTkPXfCLJWYZuN6UuSkLxWkB2IK4zJKL4zR6QoSBfUNgb+fx2H
+	w7DZyiQ+hVHsY7IvG4FgJr+we890BDvGu0iRG3IxHYmYjr2aY/B2qNMeOHgnMH0=
+X-Google-Smtp-Source: AGHT+IEslhXRTyTTc/rViVOTHJZ2hE6b2gDX+SYshnhaAeHiTdfgXPeMyGD5fUCcBpyALSarmD9OIg==
+X-Received: by 2002:a05:600c:54e5:b0:416:b8c9:e77a with SMTP id jb5-20020a05600c54e500b00416b8c9e77amr1740109wmb.16.1712752041353;
+        Wed, 10 Apr 2024 05:27:21 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.8])
-        by smtp.gmail.com with ESMTPSA id m2-20020a05600c3b0200b004171f151a5csm1679446wms.16.2024.04.10.05.27.16
+        by smtp.gmail.com with ESMTPSA id m2-20020a05600c3b0200b004171f151a5csm1679446wms.16.2024.04.10.05.27.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 05:27:17 -0700 (PDT)
+        Wed, 10 Apr 2024 05:27:20 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: geert+renesas@glider.be,
@@ -67,9 +67,9 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 5/9] dt-bindings: clock: renesas,rzg2l-cpg: Update #power-domain-cells = <1> for RZ/G3S
-Date: Wed, 10 Apr 2024 15:26:53 +0300
-Message-Id: <20240410122657.2051132-6-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 7/9] clk: renesas: r9a08g045: Add support for power domains
+Date: Wed, 10 Apr 2024 15:26:55 +0300
+Message-Id: <20240410122657.2051132-8-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410122657.2051132-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20240410122657.2051132-1-claudiu.beznea.uj@bp.renesas.com>
@@ -83,73 +83,111 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The driver will be modified (in the next commits) to be able to specify
-individual power domain ID for each IP. The driver will still
-support #power-domain-cells = <0>, thus, previous users are not
-affected.
-
-The #power-domain-cells = <1> has been instantiated only for RZ/G3S at
-the moment as individual platform clock drivers need to be adapted for
-this to be supported on the rest of the SoCs.
-
-Also, the description for #power-domain-cells was updated with the links
-to per-SoC power domain IDs.
+Instantiate power domains for the currently enabled IPs of R9A08G045 SoC.
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
 Changes in v3:
 - collected tags
 
-Changes in v2:
-- updated patch title and description
-- kept both 0 and 1 for #power-domain-cells as not all the drivers,
-  device trees are adpated with this series
-- added a reference to dt-bindings/clock/r9a0*-cpg.h for power domain
-  specifiers
-- dropped the changes from examples section
+Change in v2:
+- used DEF_REG_CONF() to describe register offests and bits
+- updated MSTOP bitmask for ddr domain
+- updated MSTOP config for oftde_ddr
+- kept the same description for gic as the CPG_BUS_ACPU_MSTOP register
+  documentation in the latest HW manual version is wrong and it will be
+  fixed; proper description for GIC is located in "Registers for Module
+  Standby Mode" table
+- haven't added watchdog domain (was missing in v1, too, by mistake) as
+  the watchdog restart handler will fail w/o patch [1]; with this pm domain
+  support the watchdog will fail to probe; not sure what is the best
+  option until [1] will be integrated
 
- .../bindings/clock/renesas,rzg2l-cpg.yaml      | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20240228083253.2640997-10-claudiu.beznea.uj@bp.renesas.com
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml b/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-index 80a8c7114c31..4e3b0c45124a 100644
---- a/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-+++ b/Documentation/devicetree/bindings/clock/renesas,rzg2l-cpg.yaml
-@@ -57,7 +57,8 @@ properties:
-       can be power-managed through Module Standby should refer to the CPG device
-       node in their "power-domains" property, as documented by the generic PM
-       Domain bindings in Documentation/devicetree/bindings/power/power-domain.yaml.
--    const: 0
-+      The power domain specifiers defined in <dt-bindings/clock/r9a0*-cpg.h> could
-+      be used to reference individual CPG power domains.
+ drivers/clk/renesas/r9a08g045-cpg.c | 61 +++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+diff --git a/drivers/clk/renesas/r9a08g045-cpg.c b/drivers/clk/renesas/r9a08g045-cpg.c
+index c3e6da2de197..c64769082f5b 100644
+--- a/drivers/clk/renesas/r9a08g045-cpg.c
++++ b/drivers/clk/renesas/r9a08g045-cpg.c
+@@ -240,6 +240,62 @@ static const unsigned int r9a08g045_crit_mod_clks[] __initconst = {
+ 	MOD_CLK_BASE + R9A08G045_DMAC_ACLK,
+ };
  
-   '#reset-cells':
-     description:
-@@ -76,6 +77,21 @@ required:
- 
- additionalProperties: false
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,r9a08g045-cpg
-+    then:
-+      properties:
-+        '#power-domain-cells':
-+          const: 1
-+    else:
-+      properties:
-+        '#power-domain-cells':
-+          const: 0
++static const struct rzg2l_cpg_pm_domain_init_data r9a08g045_pm_domains[] = {
++	/* Keep always-on domain on the first position for proper domains registration. */
++	DEF_PD("always-on",	R9A08G045_PD_ALWAYS_ON,
++				DEF_REG_CONF(0, 0),
++				DEF_REG_CONF(0, 0),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("gic",		R9A08G045_PD_GIC,
++				DEF_REG_CONF(CPG_BUS_ACPU_MSTOP, BIT(3)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(2)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("ia55",		R9A08G045_PD_IA55,
++				DEF_REG_CONF(CPG_BUS_PERI_CPU_MSTOP, BIT(13)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(3)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("dmac",		R9A08G045_PD_DMAC,
++				DEF_REG_CONF(CPG_BUS_REG1_MSTOP, GENMASK(3, 0)),
++				DEF_REG_CONF(0, 0),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("ddr",		R9A08G045_PD_DDR,
++				DEF_REG_CONF(CPG_BUS_PERI_DDR_MSTOP, GENMASK(1, 0)),
++				DEF_REG_CONF(CPG_PWRDN_IP2, BIT(0)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("tzcddr",	R9A08G045_PD_TZCDDR,
++				DEF_REG_CONF(CPG_BUS_TZCDDR_MSTOP, GENMASK(2, 0)),
++				DEF_REG_CONF(CPG_PWRDN_IP2, BIT(1)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("otfde_ddr",	R9A08G045_PD_OTFDE_DDR,
++				DEF_REG_CONF(CPG_BUS_PERI_CPU2_MSTOP, BIT(2)),
++				DEF_REG_CONF(CPG_PWRDN_IP2, BIT(2)),
++				RZG2L_PD_F_ALWAYS_ON),
++	DEF_PD("sdhi0",		R9A08G045_PD_SDHI0,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(0)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(13)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("sdhi1",		R9A08G045_PD_SDHI1,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(1)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(14)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("sdhi2",		R9A08G045_PD_SDHI2,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(11)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(15)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("eth0",		R9A08G045_PD_ETHER0,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(2)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(11)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("eth1",		R9A08G045_PD_ETHER1,
++				DEF_REG_CONF(CPG_BUS_PERI_COM_MSTOP, BIT(3)),
++				DEF_REG_CONF(CPG_PWRDN_IP1, BIT(12)),
++				RZG2L_PD_F_NONE),
++	DEF_PD("scif0",		R9A08G045_PD_SCIF0,
++				DEF_REG_CONF(CPG_BUS_MCPU2_MSTOP, BIT(1)),
++				DEF_REG_CONF(0, 0),
++				RZG2L_PD_F_NONE),
++};
 +
- examples:
-   - |
-     cpg: clock-controller@11010000 {
+ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	/* Core Clocks */
+ 	.core_clks = r9a08g045_core_clks,
+@@ -260,5 +316,10 @@ const struct rzg2l_cpg_info r9a08g045_cpg_info = {
+ 	.resets = r9a08g045_resets,
+ 	.num_resets = R9A08G045_VBAT_BRESETN + 1, /* Last reset ID + 1 */
+ 
++	/* Power domains */
++	.pm_domains = r9a08g045_pm_domains,
++	.num_pm_domains = ARRAY_SIZE(r9a08g045_pm_domains),
++	.pm_domain_pwrdn_mstop = true,
++
+ 	.has_clk_mon_regs = true,
+ };
 -- 
 2.39.2
 
