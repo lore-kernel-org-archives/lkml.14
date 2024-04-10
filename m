@@ -1,75 +1,169 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731EC22085
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6748820300
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712730774; cv=none; b=L5lRzvkfjUGpohCydOjad4Y6hm7Fc/1GiVi3AA+yMbNSGe4QjJ1REEEXHndrNo8NeWDT5Es0adtnPkpOUH1j6d3cSTt8AqcYeqAlFC+7bxwXExZLrExUB3WQmgHBaCDWOWbh4g1B3LNZvR4vJ8bAtud9wQ3vta4n2VfoRQugNDY=
+	t=1712730856; cv=none; b=qPlLOB2JsBCOB5+nfLdfHDG6+07diYlh42Qq8pDs6tJLZpDyXBq/4cPFgtzqOXVq3lSo9RUZFVXqFMOY3w5GJX4UxJoQrAB5Qv10t6rGKQ1U5lcDMWMwGvRZvPipJ6+d2epBcQmgtCqeQOjX/MCrGvs6CrZwBzvgtoPNuTuMWGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712730774; c=relaxed/simple;
-	bh=DksJD71LSA/lTxh+KoWTN20bzXaJEvyG97ps3N4apDU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fDC4wZDeVXx0yEvboP0t6+9/2pgw0mTnCafWifTeKq+Cp26wBw6zfQh3/T0H1Je1zF2vAG10YZSTvU/DIfuGrG2wAUpASzsj/Lv3PEE+SIU1V8ukkCbjOCm7kCqieNg0rLvwVfASGTLW5wdj/v2mm24ICpN+I52tPdbyAc7knaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp88t1712730689t01lhhz8
-X-QQ-Originating-IP: DR2jmQRNoIooP2y4DSvc27GYUaEoyry4t3NtVCqNbKA=
-Received: from HX01040082.powercore.com.cn ( [14.19.178.199])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 10 Apr 2024 14:31:28 +0800 (CST)
-X-QQ-SSF: 01400000000000B09000000A0000000
-X-QQ-FEAT: BycE0arnt6RHytf6+hWz5URWjN+mlFrqYJZ7Wctl56D5JSUSbjoAAwPUFySvH
-	/F2WWk8xOL9VAWvwPgGwIxwb1KNwNvw+ck9oRAQyWw7xTmv8nwZrKHCVpSsviHAdaT5ItK1
-	x9HPuGbRcUcpfi2FAEYLBhJ8HUzduNIV1OxAz/h3ZdUxlXyKJQyjqRZnsmijX7Uc3HsB+iF
-	YXiitiCFZozuR3kbMjZjxThs8Klpr3OuN++7rRgwl1FHh15pftH7Xh5kDK6yRM5RSYjXgdT
-	FmWL7XYqSDqBAcuKXrdCXTPjIIka9ie/f7euWzxPRwejGaIRqp3WWor2K6q8AKispDZhFNI
-	hdeSk9bPJlzgG4iYf8ZCLRyc3WMvg2Gi3bgiVYOGipEMq3o2+p817586rCGpwQ3ZaOkFcFY
-	zZ+sULD3I7o=
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 8989228139429590105
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: palmer@dabbelt.com
-Cc: paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	gregkh@linuxfoundation.org,
-	atishp@rivosinc.com,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Jinglin Wen <jinglin.wen@shingroup.cn>
-Subject: [PATCH 0/3] Add early console functionality
-Date: Wed, 10 Apr 2024 14:31:06 +0800
-Message-Id: <20240410063109.20483-1-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1712730856; c=relaxed/simple;
+	bh=L8qUFpUH7Renm5tiH9WqQL0bEhl/mJAzS7iP1fS8R1U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SuaIKXOp7yPo7dU3xGdQY1x8MX6czzk/q9xgJM7GvnY2piqd0+Yokrug5Najg2pH+xKSbN7TDV1uStpm+2Nv6fj5oinYj9od/765HcfGOsKUNjXYjJEOGo4CKgIbzYWgDA7pLZZ1++o89nhdzYsuv4oke5jGr3gv8CfPTWL/6iU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1ruRX0-0001d0-MD; Wed, 10 Apr 2024 08:34:02 +0200
+Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1ruRWy-00BRRq-U5; Wed, 10 Apr 2024 08:34:00 +0200
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1ruRWy-0057ls-2k;
+	Wed, 10 Apr 2024 08:34:00 +0200
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Wed, 10 Apr 2024 08:33:07 +0200
+Subject: [PATCH] tls: defer close to kernel task
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240410-ktls-defer-close-v1-1-b59e6626b8e4@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAKIyFmYC/x3MwQpAQBCA4VfRnE2NtRSvIgfWLBOhHUlp393m+
+ B3+/wXlIKzQZi8EvkXl2BOKPAO3DPvMKFMyGDKWbEG4XpvixJ4Duu1QRiLTlLaq7UgNpOwM7OX
+ 5l10f4wdE1IL9YgAAAA==
+To: Boris Pismenny <borisp@nvidia.com>, 
+ John Fastabend <john.fastabend@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Pavel Begunkov <asml.silence@gmail.com>, Jens Axboe <axboe@kernel.dk>, 
+ kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712730840; l=3347;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=L8qUFpUH7Renm5tiH9WqQL0bEhl/mJAzS7iP1fS8R1U=;
+ b=ZWLnNgSyiZsCAzmR7gR76h5X3Eps1/swO+Yn89chwI9IWznsIqLFQWRoWpJdGL+f3VBXgiTT7
+ Jiq7fXS28WAALdd6n/HyKZbwulGDbeoLWiE3Hpq0R45tvv2Rk3niDcl
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The following patch series implements support for the early console
-on the RISC-V platform.
+proto->close is normally called from a userspace task which can be
+interrupted by signals. When asynchronous encryption is used then KTLS
+sends out the final data at close time. When a signal comes in during
+close then it can happen tcp_sendmsg_locked() is interrupted by that
+signal while waiting for memory in sk_stream_wait_memory() which then
+returns with -ERSTARTSYS. It is not possible to recover from this situation
+and the final transmit data is lost.
 
-Jinglin Wen (3):
-  riscv: Support for early console.
-  riscv: Support SBI as the interface for the RISC-V early console
-  riscv: Add information for MAINTAINERS
+With this patch we defer the close operation to a kernel task which
+doesn't get signals.
 
- MAINTAINERS                            |   6 ++
- arch/riscv/include/asm/early_console.h |  23 ++++++
- arch/riscv/kernel/Makefile             |   1 +
- arch/riscv/kernel/early_console.c      | 108 +++++++++++++++++++++++++
- arch/riscv/kernel/setup.c              |   2 +
- drivers/tty/hvc/Kconfig                |  12 +++
- drivers/tty/hvc/hvc_riscv_sbi.c        |  29 +++++++
- 7 files changed, 181 insertions(+)
- create mode 100644 arch/riscv/include/asm/early_console.h
- create mode 100644 arch/riscv/kernel/early_console.c
+The described situation happens when KTLS is used in conjunction with
+io_uring, as io_uring uses task_work_add() to add work to the current
+userspace task.
 
+The problem is discussed in [1] and [2] and the solution implemented in
+this patch is suggested by Pavel Begunkov here [3]
+
+[1] https://lore.kernel.org/all/20231010141932.GD3114228@pengutronix.de/
+[2] https://lore.kernel.org/all/20240315100159.3898944-1-s.hauer@pengutronix.de/
+[3] https://lore.kernel.org/all/bfc6afa9-501f-40b6-929a-3aa8c0298265@gmail.com
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+
+Note I only need this asynchronous close for the
+ctx->tx_conf == TLS_SW case. I can refactor the patch to only go
+asynchronous when necessary if that's desired.
+---
+ net/tls/tls_main.c | 37 +++++++++++++++++++++++++++++++------
+ 1 file changed, 31 insertions(+), 6 deletions(-)
+
+diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+index b4674f03d71a9..b0b7e0d2f1145 100644
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -365,16 +365,21 @@ static void tls_sk_proto_cleanup(struct sock *sk,
+ 	}
+ }
+ 
+-static void tls_sk_proto_close(struct sock *sk, long timeout)
++struct tls_close_work {
++	struct work_struct work;
++	struct tls_context *ctx;
++	long timeout;
++};
++
++static void deferred_close(struct work_struct *work)
+ {
++	struct tls_close_work *cw = container_of(work, struct tls_close_work, work);
++	struct tls_context *ctx = cw->ctx;
++	struct sock *sk = ctx->sk;
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+-	struct tls_context *ctx = tls_get_ctx(sk);
+ 	long timeo = sock_sndtimeo(sk, 0);
+ 	bool free_ctx;
+ 
+-	if (ctx->tx_conf == TLS_SW)
+-		tls_sw_cancel_work_tx(ctx);
+-
+ 	lock_sock(sk);
+ 	free_ctx = ctx->tx_conf != TLS_HW && ctx->rx_conf != TLS_HW;
+ 
+@@ -395,10 +400,30 @@ static void tls_sk_proto_close(struct sock *sk, long timeout)
+ 		tls_sw_strparser_done(ctx);
+ 	if (ctx->rx_conf == TLS_SW)
+ 		tls_sw_free_ctx_rx(ctx);
+-	ctx->sk_proto->close(sk, timeout);
++	ctx->sk_proto->close(sk, cw->timeout);
+ 
+ 	if (free_ctx)
+ 		tls_ctx_free(sk, ctx);
++
++	kfree(cw);
++}
++
++static void tls_sk_proto_close(struct sock *sk, long timeout)
++{
++	struct tls_context *ctx = tls_get_ctx(sk);
++	struct tls_close_work *cw;
++
++	if (ctx->tx_conf == TLS_SW)
++		tls_sw_cancel_work_tx(ctx);
++
++	cw = kmalloc(sizeof(*cw), GFP_KERNEL);
++	if (!cw)
++		return;
++
++	INIT_WORK(&cw->work, deferred_close);
++	cw->timeout = timeout;
++	cw->ctx = ctx;
++	queue_work(system_unbound_wq, &cw->work);
+ }
+ 
+ static __poll_t tls_sk_poll(struct file *file, struct socket *sock,
+
+---
+base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
+change-id: 20240410-ktls-defer-close-002934564b09
+
+Best regards,
 -- 
-2.25.1
+Sascha Hauer <s.hauer@pengutronix.de>
 
