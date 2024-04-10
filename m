@@ -1,43 +1,62 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEB0522E;
-	Wed, 10 Apr 2024 02:08:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E3C10F9
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712714898; cv=none; b=hmy+2TTqHqw0NdUd0tVQ5weMtQbickgCbjx2oiePOfn/2ttMaP7AJz4Fu+JI/5YvmwceD56Y8btz0Lgkz4iQEQhpMg+WlDIIONpkZsXZ3UCEyij82RV3yDCSoAP3WoyTsVMe9+B+aVw78W0nz8OxNVyNTMRTIVRhFAJ7Mi6z9tM=
+	t=1712715003; cv=none; b=d23hkeU05D+eQufBPjDq2A6R+FnK0jYtM6A3dUB86tHQfiH+m9V0v/S/HoE5OeZtL4sXFfSWQNSNlqmyYdLQHK82tFV+EAfj7XOwwpfrLpSa05KphFwi+WO9rboUgJmhiFIpj9vTAEd/AL4XASLSTsUc95kFzuW9FNSu3dY8xq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712714898; c=relaxed/simple;
-	bh=0W3UsbIojVwFSlMNwZGkkrTxQotLO1cK8fUvwsiqQF0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jNMAVPHgVYRHMOM/Z84Oo3Gw6g2WrGZELD2CDRtiAKVR+ahmFFLuB2rBgJPyraF0w+lvTUs1HmkwFUIVT8/UT8EVITKEY+VUIwuPvgq4Yot/JJw+SDDrHVoS1sDoHkAuosNEDhv/BUoRCqIcXTDewbPY1XtJQixUrEZVN2jThs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 43A26IAO060864;
-	Wed, 10 Apr 2024 10:06:22 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id 0B8C922DED61;
-	Wed, 10 Apr 2024 10:08:31 +0800 (CST)
-Received: from localhost.localdomain (10.114.186.34) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Wed, 10 Apr 2024 10:06:22 +0800
-From: <liu.yec@h3c.com>
-To: <andy.shevchenko@gmail.com>, <daniel.thompson@linaro.org>,
-        <gregkh@linuxfoundation.org>
-CC: <dianders@chromium.org>, <jason.wessel@windriver.com>,
-        <jirislaby@kernel.org>, <kgdb-bugreport@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        <liu.yeC@h3c.com>
-Subject: [PATCH V10] kdb: Fix the deadlock issue in KDB debugging.
-Date: Wed, 10 Apr 2024 10:06:15 +0800
-Message-ID: <20240410020615.2885000-1-liu.yec@h3c.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240409020326.2125332-1-liu.yec@h3c.com>
-References: <20240409020326.2125332-1-liu.yec@h3c.com>
+	s=arc-20240116; t=1712715003; c=relaxed/simple;
+	bh=REOhqJJd8sYpwA0ffeiV27cAvZ9AtNWJXYSp8PBZaAM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G0/9b9eJhBqByEsWdZIy1S4EX7hRc2bsvG/QNw4AocAG3lpn31p81DOfczmRJ1pHvn8YjUQCWDxjCGwu1h3kvJCGUo/tuvwYgYp748p1L9SIEGIS8QJa7thThp8pNs4KuoESNjNMNkBCS66cHIXrZwvrCRCSnAVmWqW0fwEladU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bnx9R4xT; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bnx9R4xT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712715002; x=1744251002;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=REOhqJJd8sYpwA0ffeiV27cAvZ9AtNWJXYSp8PBZaAM=;
+  b=bnx9R4xThuwE3ZUlYwLFdL0ZGQOxUa829N9K5FVEM6ybW8tTY1PfpOHT
+   XG77mlwheo9X24AF56UxhhN14UK7c1BRAFQ8bO4UUtMh6HbebKLOuqJWS
+   POWRzjrLbkPZjwdb3h3yBEOA3qE5NfSX5625qQqI3GUjGmzFNbIVHWAXf
+   cIN50U36DuRNaIdm3FNDKCZUlZRTzGCZdE80pOzwciyN04XXkR7MkePZH
+   4xhPk4X4FPLhlGV/mhkvIIOZr4LAO923U9mH3CoOiMKNgf+CtUND6xBod
+   wVKZpsmnRZdq8SJymAr77SwO4Vjz38T7OAWwg8JSnR83qVwYXqZOUf7ec
+   w==;
+X-CSE-ConnectionGUID: zVIiCnpnSdeC4nMM7wlavg==
+X-CSE-MsgGUID: 67TYDuprQHeu4+RATurkhg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7918525"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7918525"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:10:02 -0700
+X-CSE-ConnectionGUID: DWJyA+sySQ6Z98Er4nZBwg==
+X-CSE-MsgGUID: iG+0dSp7QISLdcFGTSt/fA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20478872"
+Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
+  by fmviesa007.fm.intel.com with ESMTP; 09 Apr 2024 19:09:58 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Tina Zhang <tina.zhang@intel.com>,
+	Yi Liu <yi.l.liu@intel.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 00/12] Consolidate domain cache invalidation
+Date: Wed, 10 Apr 2024 10:08:32 +0800
+Message-Id: <20240410020844.253535-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,151 +64,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 43A26IAO060864
 
-From: LiuYe <liu.yeC@h3c.com>
+The IOMMU hardware cache needs to be invalidated whenever the mappings
+in the domain are changed. Currently, domain cache invalidation is
+scattered across different places, causing several issues:
 
-Currently, if CONFIG_KDB_KEYBOARD is enabled, then kgdboc will
-attempt to use schedule_work() to provoke a keyboard reset when
-transitioning out of the debugger and back to normal operation.
-This can cause deadlock because schedule_work() is not NMI-safe.
+- IOMMU IOTLB Invalidation: This is done by iterating through the domain
+  IDs of each domain using the following code:
 
-The stack trace below shows an example of the problem. In this
-case the master cpu is not running from NMI but it has parked
-the slave CPUs using an NMI and the parked CPUs is holding
-spinlocks needed by schedule_work().
+        xa_for_each(&dmar_domain->iommu_array, i, info)
+                iommu_flush_iotlb_psi(info->iommu, dmar_domain,
+                                      start_pfn, nrpages,
+                                      list_empty(&gather->freelist), 0);
 
-Example:
-BUG: spinlock lockup suspected on CPU#0. owner_cpu: 1
-CPU1: Call Trace:
-__schedule
-schedule
-schedule_hrtimeout_range_clock
-mutex_unlock
-ep_scan_ready_list
-schedule_hrtimeout_range
-ep_poll
-wake_up_q
-SyS_epoll_wait
-entry_SYSCALL_64_fastpath
+  This code could theoretically cause a use-after-free problem because
+  there's no lock to protect the "info" pointer within the loop.
 
-CPU0: Call Trace:
-dump_stack
-spin_dump
-do_raw_spin_lock
-_raw_spin_lock
-try_to_wake_up
-wake_up_process
-insert_work
-__queue_work
-queue_work_on
-kgdboc_post_exp_handler
-kgdb_cpu_enter
-kgdb_handle_exception
-__kgdb_notify
-kgdb_notify
-notifier_call_chain
-notify_die
-do_int3
-int3
+- Inconsistent Invalidation Methods: Different domain types implement
+  their own cache invalidation methods, making the code difficult to
+  maintain. For example, the DMA domain, SVA domain, and nested domain
+  have similar cache invalidation code scattered across different files.
 
-We fix the problem by using irq_work to call schedule_work()
-instead of calling it directly. This is because we cannot
-resynchronize the keyboard state from the hardirq context
-provided by irq_work. This must be done from the task context
-in order to call the input subsystem.
+- SVA Domain Inconsistency: The SVA domain implementation uses a
+  completely different data structure to track attached devices compared
+  to other domains. This creates unnecessary differences and, even
+  worse, leads to duplicate IOTLB invalidation when an SVA domain is
+  attached to devices belonging to a same IOMMU.
 
-Therefore, we have to defer the work twice. First, safely
-switch from the debug trap context (similar to NMI) to the
-hardirq, and then switch from the hardirq to the system work queue.
+- Nested Domain Dependency: The special overlap between a nested domain
+  and its parent domain requires a dedicated parent_domain_flush()
+  helper function to be called everywhere the parent domain's mapping
+  changes.
 
-Signed-off-by: LiuYe <liu.yeC@h3c.com>
-Co-developed-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Greg KH <gregkh@linuxfoundation.org>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+- Limited Debugging Support: There are currently no debugging aids
+  available for domain cache invalidation.
 
----
-V9 -> V10 : Add Signed-off-by of Greg KH and Andy Shevchenko, Acked-by of Daniel Thompson
-V8 -> V9: Modify call trace format and move irq_work.h before module.h
-V7 -> V8: Update the description information and comments in the code.
-	: Submit this patch based on version linux-6.9-rc2.
-V6 -> V7: Add comments in the code.
-V5 -> V6: Replace with a more professional and accurate answer.
-V4 -> V5: Answer why schedule another work in the irq_work and not do the job directly.
-V3 -> V4: Add changelogs
-V2 -> V3: Add description information
-V1 -> V2: using irq_work to solve this properly.
----
----
- drivers/tty/serial/kgdboc.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+By consolidating domain cache invalidation into a common location, we
+can address the issues mentioned above and improve the code's
+maintainability and debuggability.
 
-diff --git a/drivers/tty/serial/kgdboc.c b/drivers/tty/serial/kgdboc.c
-index 7ce7bb164..32410fec7 100644
---- a/drivers/tty/serial/kgdboc.c
-+++ b/drivers/tty/serial/kgdboc.c
-@@ -19,6 +19,7 @@
- #include <linux/console.h>
- #include <linux/vt_kern.h>
- #include <linux/input.h>
-+#include <linux/irq_work.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/serial_core.h>
-@@ -82,6 +83,19 @@ static struct input_handler kgdboc_reset_handler = {
- 
- static DEFINE_MUTEX(kgdboc_reset_mutex);
- 
-+/*
-+ * This code ensures that the keyboard state, which is changed during kdb
-+ * execution, is resynchronized when we leave the debug trap. The resync
-+ * logic calls into the input subsystem to force a reset. The calls into
-+ * the input subsystem must be executed from normal task context.
-+ *
-+ * We need to trigger the resync from the debug trap, which executes in an
-+ * NMI (or similar) context. To make it safe to call into the input
-+ * subsystem we end up having use two deferred execution techniques.
-+ * Firstly, we use irq_work, which is NMI-safe, to provoke a callback from
-+ * hardirq context. Then, from the hardirq callback we use the system
-+ * workqueue to provoke the callback that actually performs the resync.
-+ */
- static void kgdboc_restore_input_helper(struct work_struct *dummy)
- {
- 	/*
-@@ -99,10 +113,17 @@ static void kgdboc_restore_input_helper(struct work_struct *dummy)
- 
- static DECLARE_WORK(kgdboc_restore_input_work, kgdboc_restore_input_helper);
- 
-+static void kgdboc_queue_restore_input_helper(struct irq_work *unused)
-+{
-+	schedule_work(&kgdboc_restore_input_work);
-+}
-+
-+static DEFINE_IRQ_WORK(kgdboc_restore_input_irq_work, kgdboc_queue_restore_input_helper);
-+
- static void kgdboc_restore_input(void)
- {
- 	if (likely(system_state == SYSTEM_RUNNING))
--		schedule_work(&kgdboc_restore_input_work);
-+		irq_work_queue(&kgdboc_restore_input_irq_work);
- }
- 
- static int kgdboc_register_kbd(char **cptr)
-@@ -133,6 +154,7 @@ static void kgdboc_unregister_kbd(void)
- 			i--;
- 		}
- 	}
-+	irq_work_sync(&kgdboc_restore_input_irq_work);
- 	flush_work(&kgdboc_restore_input_work);
- }
- #else /* ! CONFIG_KDB_KEYBOARD */
+The series and related patches are available on GitHub:
+https://github.com/LuBaolu/intel-iommu/commits/iommu-vtd-cache-tag-v2
+
+Change log:
+
+v2:
+ - Allow cache tags of parent_type to be reusable.
+ - Save the the iommu device pointer to @dev of IOTLB tag type to make
+   it present the location of the TLB explicitly.
+ - Rename cache_tag_flush_cm_range() to cache_tag_flush_range_pt() to
+   make it clear that cache_tag_flush_range_pt() is called for PTEs
+   changes from non-present to present.
+ - Split out a patch series to clean up all inconsistent devtlb
+   invalidation policies for caching mode.
+   https://lore.kernel.org/linux-iommu/20240407144232.190355-1-baolu.lu@linux.intel.com/
+ - Fix a bug in intel_nested_cache_invalidate_user() where the @nrpages
+   is misused as @end.
+ - Various mics refinements and adjustments.
+
+v1: https://lore.kernel.org/linux-iommu/20240325021705.249769-1-baolu.lu@linux.intel.com/
+
+Jason Gunthorpe (1):
+  iommu: Add ops->domain_alloc_sva()
+
+Lu Baolu (11):
+  iommu/vt-d: Add cache tag assignment interface
+  iommu/vt-d: Add cache tag invalidation helpers
+  iommu/vt-d: Add trace events for cache tag interface
+  iommu/vt-d: Use cache_tag_flush_all() in flush_iotlb_all
+  iommu/vt-d: Use cache_tag_flush_range() in tlb_sync
+  iommu/vt-d: Use cache_tag_flush_range_np() in iotlb_sync_map
+  iommu/vt-d: Cleanup use of iommu_flush_iotlb_psi()
+  iommu/vt-d: Use cache_tag_flush_range() in cache_invalidate_user
+  iommu/vt-d: Use cache helpers in arch_invalidate_secondary_tlbs
+  iommu/vt-d: Retire intel_svm_dev
+  iommu/vt-d: Retire struct intel_svm
+
+ include/linux/iommu.h        |   3 +
+ drivers/iommu/intel/iommu.h  |  79 ++++---
+ drivers/iommu/intel/trace.h  |  97 +++++++++
+ drivers/iommu/intel/cache.c  | 401 +++++++++++++++++++++++++++++++++++
+ drivers/iommu/intel/iommu.c  | 296 ++++----------------------
+ drivers/iommu/intel/nested.c |  71 ++-----
+ drivers/iommu/intel/svm.c    | 279 +++++-------------------
+ drivers/iommu/iommu-sva.c    |  16 +-
+ drivers/iommu/intel/Makefile |   2 +-
+ 9 files changed, 685 insertions(+), 559 deletions(-)
+ create mode 100644 drivers/iommu/intel/cache.c
+
 -- 
-2.25.1
+2.34.1
 
