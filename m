@@ -1,230 +1,94 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628B4BA2E;
-	Wed, 10 Apr 2024 02:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC6D38C;
+	Wed, 10 Apr 2024 02:34:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712716377; cv=none; b=gV02vnribvfa6JJrzvm4ZwEYh0yHrmHMvsFA5LZIvdz7S/LoK9dw87vQ4lG3XlQIQoACTV9SidHeinU2Nk4mFew5wxmfiU7A4HzD6SAQ0bzxO/SznqeTYpeLuSqPzzqOY4zCNL2WwNi5BnY9uNevsHVXn3IpifW/ngpMw25NeQY=
+	t=1712716486; cv=none; b=FMHkuNbfW67Jkg6Fcn+dL2LYR/Y94jDuN9lUzSMFVTrGdyB/hOuUKQmEVdky/hGQJFF/x6FdK4K/oMrvZxUab+gfJufYS2l2hmUYPstPwK7JyIRa4lDwKRf/yqQ4DYQUVmqPtAd+zBbUDg2UIWe/hsniELtjoazq4CX5/nryTGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712716377; c=relaxed/simple;
-	bh=ScsLn2QVzQBveqF59yy04O8I8ch6/UBRUmnuXTuXCkY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CAX7hhy1WLBch5qhceKBehjpDbznJKsTAzsSIntnmXtfa+8F939LBwlZNjLufnz60ej7VBKKdiL6ZhrZLj1HuZ8j5xilpeVRpuW101pfPHaqvncN+yilDlWLonTPJ2Sp5rU1hgccnvv7KDCLretP7/HaOMUPCRSzJQNV7nMIwi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bUaGherb; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712716486; c=relaxed/simple;
+	bh=R6VBlim+71tEDZXZtiIuonlIPFwYuazstmsGh4YD41w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C80wCVeYncZlEiZS+UXpuGeV/eAcgmkCJu8gzg7ryBZPrpUAeFy1U3qd7ANxbpm1+GgwNe0t63qXr62Z6yP8QdFsgsLOsllBOMbfVLKvReL4ha3SpjRQ8G1mzQTs84Z5z6ilOtQ+DOR7m+7DUU4VcG1YNVYDWfjSAk6kNVsPbh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W0JRq96X; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bUaGherb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W0JRq96X"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712716375; x=1744252375;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=ScsLn2QVzQBveqF59yy04O8I8ch6/UBRUmnuXTuXCkY=;
-  b=bUaGherb9LYUqVAhsBhk7X0ZgR8zH61kAkZseSINgUUY4QzwduUctQNz
-   2NUes+vRSLtHUKAPsb8regUXgaOjZjYrJcAaLmGDqXLzMUTuTCz3H3NjV
-   UeiZuC6gAI/Yzev/lLASmSGOw6+oGuuLlorQmuJ+Uluw3NGolNsT7M5ZD
-   dE6cbdhlSTXj+4P8FhlohozZ5Ow4TRl/uefy5UgCtn9cej5qUJVKpTrHZ
-   sDiCyF3G7YsE/BkNoVuYBQPgKb1Z2JvOB1ZGUEWERVgH/Frb8uga44rRJ
-   tEDxHO/5zQOMoGyqc61/X3LUOeUZIfakIFxqF7WV3zKKu+19WDHXd5d+Y
-   g==;
-X-CSE-ConnectionGUID: 1KIjWQzXTCep5l9gJL14Kw==
-X-CSE-MsgGUID: D+XzXz3mR6a7wbTBw+pceA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11834436"
+  t=1712716485; x=1744252485;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=R6VBlim+71tEDZXZtiIuonlIPFwYuazstmsGh4YD41w=;
+  b=W0JRq96XkAGWdt50j/56l20BGkMg7/74S81Cn0XZuuOEyn9CAEOnRq7s
+   q5BsqwsKE14J03bp9nZ0AP752jmQSS8J//kri747vYS3R4xlHS4XEMr0H
+   vYO5t7yZbH6CUfwa+V1btSOTv8TcrjJRVTh+ukPYHIunY4LPxuiso+Q8Z
+   X1uyH3d9S8FkcSv14vBkbsLboqqV4pR+DQZ2/4lnoG82f5IOkJgWxA0dW
+   B4GEulE/j3juLv5hh0MU0+Aaeakyx1Glukk+s7tkCVnyXWwwHVdVJdC+Z
+   iOhvATXVXspHADx3kDpHwFHlq89pkRGJEXm3FsCOd83dlpjTjVdk1FFba
+   A==;
+X-CSE-ConnectionGUID: Ng21Uu6NTBOhnIxCJ9c0gQ==
+X-CSE-MsgGUID: IcSk7HhrQoGdxDGXujZRvg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11900164"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11834436"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:32:55 -0700
-X-CSE-ConnectionGUID: vqaprlaOT1+aD0p8Oc9Q3w==
-X-CSE-MsgGUID: C0kf41mLSwerSyvWdpaN6Q==
+   d="scan'208";a="11900164"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:34:44 -0700
+X-CSE-ConnectionGUID: fwEU+C8lRgCtj1ll65RtFQ==
+X-CSE-MsgGUID: ROv5VnFdRka2SXDHB7Do5A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20482433"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:32:49 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,  Gregory Price
- <gourry.memverge@gmail.com>,  aneesh.kumar@linux.ibm.com,
-  mhocko@suse.com,  tj@kernel.org,  john@jagalactic.com,  Eishan Mirakhur
- <emirakhur@micron.com>,  Vinicius Tavares Petrucci
- <vtavarespetr@micron.com>,  Ravis OpenSrc <Ravis.OpenSrc@micron.com>,
-  Alistair Popple <apopple@nvidia.com>,  Srinivasulu Thanneeru
- <sthanneeru@micron.com>,  SeongJae Park <sj@kernel.org>,  Dan Williams
- <dan.j.williams@intel.com>,  Vishal Verma <vishal.l.verma@intel.com>,
-  Dave Jiang <dave.jiang@intel.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  nvdimm@lists.linux.dev,
-  linux-cxl@vger.kernel.org,  linux-kernel@vger.kernel.org,  Linux Memory
- Management List <linux-mm@kvack.org>,  "Ho-Ren (Jack) Chuang"
- <horenc@vt.edu>,  "Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>,
-  qemu-devel@nongnu.org,  Hao Xiang <hao.xiang@bytedance.com>
-Subject: Re: [PATCH v11 2/2] memory tier: create CPUless memory tiers after
- obtaining HMAT info
-In-Reply-To: <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
-	(Ho-Ren Chuang's message of "Fri, 5 Apr 2024 15:43:47 -0700")
-References: <20240405000707.2670063-1-horenchuang@bytedance.com>
-	<20240405000707.2670063-3-horenchuang@bytedance.com>
-	<20240405150244.00004b49@Huawei.com>
-	<CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com>
-Date: Wed, 10 Apr 2024 10:30:56 +0800
-Message-ID: <87ttka54pr.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="43658571"
+Received: from yungchua-ws.ostc.intel.com (HELO yungchua-ws.intel.com) ([10.54.69.90])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 19:34:43 -0700
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org,
+	broonie@kernel.org,
+	tiwai@suse.de
+Cc: vinod.koul@linaro.org,
+	linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.intel.com,
+	bard.liao@intel.com
+Subject: [PATCH 0/4] ASoC/soundwire: fix race conditions on remove
+Date: Wed, 10 Apr 2024 02:34:34 +0000
+Message-Id: <20240410023438.487017-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-"Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+There is a possible rate condition when removing the soundwire driver.
+When the manager becomes pm_runtime active in the remove procedure,
+peripherals will become attached, and do the initialization process.
+We have to wait until all the devices are fully resumed before the
+cleanup, otherwise there is a possible race condition where asynchronous
+workqueues initiate transfers on the bus that cannot complete. This
+patchset fixes the issue by ensuring all devices are fully resumed and
+SoundWire interrupt is disabled after all jobs are done.
+The change is mainly on SoundWire. It would be better to go through
+SoundWire tree.
 
-> On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
-> <Jonathan.Cameron@huawei.com> wrote:
->>
->> On Fri,  5 Apr 2024 00:07:06 +0000
->> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
->>
->> > The current implementation treats emulated memory devices, such as
->> > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal m=
-emory
->> > (E820_TYPE_RAM). However, these emulated devices have different
->> > characteristics than traditional DRAM, making it important to
->> > distinguish them. Thus, we modify the tiered memory initialization pro=
-cess
->> > to introduce a delay specifically for CPUless NUMA nodes. This delay
->> > ensures that the memory tier initialization for these nodes is deferred
->> > until HMAT information is obtained during the boot process. Finally,
->> > demotion tables are recalculated at the end.
->> >
->> > * late_initcall(memory_tier_late_init);
->> > Some device drivers may have initialized memory tiers between
->> > `memory_tier_init()` and `memory_tier_late_init()`, potentially bringi=
-ng
->> > online memory nodes and configuring memory tiers. They should be exclu=
-ded
->> > in the late init.
->> >
->> > * Handle cases where there is no HMAT when creating memory tiers
->> > There is a scenario where a CPUless node does not provide HMAT informa=
-tion.
->> > If no HMAT is specified, it falls back to using the default DRAM tier.
->> >
->> > * Introduce another new lock `default_dram_perf_lock` for adist calcul=
-ation
->> > In the current implementation, iterating through CPUlist nodes requires
->> > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will en=
-d up
->> > trying to acquire the same lock, leading to a potential deadlock.
->> > Therefore, we propose introducing a standalone `default_dram_perf_lock=
-` to
->> > protect `default_dram_perf_*`. This approach not only avoids deadlock
->> > but also prevents holding a large lock simultaneously.
->> >
->> > * Upgrade `set_node_memory_tier` to support additional cases, including
->> >   default DRAM, late CPUless, and hot-plugged initializations.
->> > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
->> > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()` =
-to
->> > handle cases where memtype is not initialized and where HMAT informati=
-on is
->> > available.
->> >
->> > * Introduce `default_memory_types` for those memory types that are not
->> >   initialized by device drivers.
->> > Because late initialized memory and default DRAM memory need to be man=
-aged,
->> > a default memory type is created for storing all memory types that are
->> > not initialized by device drivers and as a fallback.
->> >
->> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
->> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
->> > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
->>
->> Hi - one remaining question. Why can't we delay init for all nodes
->> to either drivers or your fallback late_initcall code.
->> It would be nice to reduce possible code paths.
->
-> I try not to change too much of the existing code structure in
-> this patchset.
->
-> To me, postponing/moving all memory tier registrations to
-> late_initcall() is another possible action item for the next patchset.
->
-> After tier_mem(), hmat_init() is called, which requires registering
-> `default_dram_type` info. This is when `default_dram_type` is needed.
-> However, it is indeed possible to postpone the latter part,
-> set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
-> indeed be split into two parts, and the latter part can be moved to
-> late_initcall() to be processed together.
+Bard Liao (3):
+  soundwire: intel_auxdevice: use pm_runtime_resume() instead of
+    pm_request_resume()
+  soundwire: intel: export intel_resume_child_device
+  soundwire: intel_init: resume all devices on exit.
 
-I don't think that it's good to move all memory_tier initialization in
-drivers to late_initcall().  It's natural to keep them in
-device_initcall() level.
+Pierre-Louis Bossart (1):
+  ASoC: SOF: Intel: hda: disable SoundWire interrupt later
 
-If so, we can allocate default_dram_type in memory_tier_init(), and call
-set_node_memory_tier() only in memory_tier_lateinit().  We can call
-memory_tier_lateinit() in device_initcall() level too.
+ drivers/soundwire/intel_auxdevice.c | 10 +++++-----
+ drivers/soundwire/intel_auxdevice.h |  1 +
+ drivers/soundwire/intel_init.c      | 14 ++++++++++++++
+ sound/soc/sof/intel/hda.c           |  4 ++--
+ 4 files changed, 22 insertions(+), 7 deletions(-)
 
---
-Best Regards,
-Huang, Ying
+-- 
+2.34.1
 
-> Doing this all memory-type drivers have to call late_initcall() to
-> register a memory tier. I=E2=80=99m not sure how many they are?
->
-> What do you guys think?
->
->>
->> Jonathan
->>
->>
->> > ---
->> >  mm/memory-tiers.c | 94 +++++++++++++++++++++++++++++++++++------------
->> >  1 file changed, 70 insertions(+), 24 deletions(-)
->> >
->> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
->> > index 516b144fd45a..6632102bd5c9 100644
->> > --- a/mm/memory-tiers.c
->> > +++ b/mm/memory-tiers.c
->>
->>
->>
->> > @@ -855,7 +892,8 @@ static int __init memory_tier_init(void)
->> >        * For now we can have 4 faster memory tiers with smaller adista=
-nce
->> >        * than default DRAM tier.
->> >        */
->> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM);
->> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTANC=
-E_DRAM,
->> > +                                                   &default_memory_ty=
-pes);
->> >       if (IS_ERR(default_dram_type))
->> >               panic("%s() failed to allocate default DRAM tier\n", __f=
-unc__);
->> >
->> > @@ -865,6 +903,14 @@ static int __init memory_tier_init(void)
->> >        * types assigned.
->> >        */
->> >       for_each_node_state(node, N_MEMORY) {
->> > +             if (!node_state(node, N_CPU))
->> > +                     /*
->> > +                      * Defer memory tier initialization on
->> > +                      * CPUless numa nodes. These will be initialized
->> > +                      * after firmware and devices are initialized.
->>
->> Could the comment also say why we can't defer them all?
->>
->> (In an odd coincidence we have a similar issue for some CPU hotplug
->>  related bring up where review feedback was move all cases later).
->>
->> > +                      */
->> > +                     continue;
->> > +
->> >               memtier =3D set_node_memory_tier(node);
->> >               if (IS_ERR(memtier))
->> >                       /*
->>
