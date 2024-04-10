@@ -1,142 +1,153 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103E41553B3
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 09:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACBE15531D;
+	Wed, 10 Apr 2024 09:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712741357; cv=none; b=h8Wce+QjXn1obsDWqZ6Xe3ymIyedYZja8qzizGDJgc9wBR1TXBf1fmPCvVZ4Ss8C+r8n/4Cbj5PIb3aXkBhJZd+PQqXkVv9BmLjum3+iFJyIn81R8VgdjDZ/iNRBdkQwA4IJYWUuIObBRM7bkG/GNnr67erdJJfNDSb8lJf7lws=
+	t=1712741357; cv=none; b=g5p4o1Xd3DO4jnVilDGBDxj25UrivxLc6aLnBMeZmvIjnZ4FIwAGxGdIiM5PSvcaqUhEjXzLMZSjHzBCrKgPztysIBlUA1oDXgpgcKtCnvD6NaKcZH5vuGGa7nG3L4fC7NywXf/cLr5E0dJgKsKB7r2I18pSDkuTmVE1FsrNI3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712741357; c=relaxed/simple;
-	bh=6BEZbI7KV8B3eszDr0HfCNB0Z0sn1CHOU8k8kIi+hgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDA86qZVlt/IjRuL3zwPAztjf54dl5FVv9IlHqdj7K1g7Ty4Njdlzt5KPLCD7AvL+0AuzhLxq9DPFNImdZpBA4ta1HHLX38R7z6UQQTFYIsZ06FhU3yqd2yBL5XdLyE0QFQ4loanqnHZ421Ft05v93IFdBzCw6Td086EVdnrzvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=T9qHz4n4; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=yknB+7qTEVSApo7twiMZf9uswY1p1QPEpYLKQmR+whs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=j6QoNPt8g+RMbaAEDIvRQfg/1BsnLlUTVXxIkPhnaKKPUbzNYTWIEOqMbDNINa+cxLz+OslEYponvRbw0KRtD3cvhpcT0z39r89R9DjEZokvpScs1zGxaEvK+pNiY2yGGJaO7PY8/AiJD3mIjjaGEdayQlLl/+U3n644rzjqS18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KOU4JR8F; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="T9qHz4n4"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41739e4f8caso1624985e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712741353; x=1713346153; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4kwkorErv8tb8SzoHtazPQP+BQoahujJfqdWOv/amk=;
-        b=T9qHz4n4Foc7hRwTv8yZWgRFWk8UMS0PDxgLT9anc4rF9s/kddxFrngEaQhDamPwRA
-         97hEFJnVUD1GXCXBSb6oHYIcJ6gWwwEuVNzi1Qbtu5ExUEJOWn70tcc6mgeONlj52Jv0
-         +mmwolViO+G6iB/W1UfuAMYsaNmugR1WGg2YB/mUhJisDcFsAHD0I1OJvHRZRxCVX1G/
-         5aoU4oM6iXnxteFTnD0U3KSWukMYd+0Upr4tnLYacRqGqwUdikSfPT4qrob7RpoZqj3d
-         WS1KOIGsq1B1P5xiqfcd/2CrdYPfZxe+TWX9bBRMayTMp4PO6aGCyIF5PDKaBoNEEC/7
-         /bXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712741353; x=1713346153;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z4kwkorErv8tb8SzoHtazPQP+BQoahujJfqdWOv/amk=;
-        b=uU7m4HBongkp5aFOP4Lv3rE+Ak9XU58pwcr9YH2ngwgXenJQQ9p3P7ARz96QYEetR6
-         slY48ltd6R/cNnIfRQCAL2HZNJVzp0ldSfoi7ffpNjOxcSH8YuBO0ajFXRmDBQvQhpXu
-         TKjpsMYC95U4XuWgd5CUKDtb6ltCAS/FmRhzE89jO4nWIBs4YUyIB8U0+PeEMXaGXMbD
-         StfJN76fP0zgTLx71Zm8Q63nfEnzNdoeG4is1g4pajHA03a+SkkWNpLxP5fbZIn+/SRC
-         uhi+f6qUMZUC9kXqPIGmWuXp4/oZqfVHyqgAACrl0bZYF1FQ8UjwfWDtp4EYQ+vEb1ix
-         C5uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWaqyelUc4fo0djUOh5YdKyjm5kQFFI0A/S+krEKmclM4xjpnfTSyE1J18Pi4WyIey/xCCZM2EddMdsYf9rq3DC9gNT9dm6gqVOpb6q
-X-Gm-Message-State: AOJu0YyJGSoEvGSKNEDDnupVIkB9lf+zR2klfsDhN354u2YFG9UoGT2m
-	n85qI1gUTHS92PtsSUWsRIeojgl62OBJcy+kW6KrqyuOlc61DicESh62gW9b8yM=
-X-Google-Smtp-Source: AGHT+IFvXyauqU6yE1hhXxe+82hSR7xjimh79oxs60By+238847k+6MrB7Ys5sLNSFw6IjHtaU72FA==
-X-Received: by 2002:a05:600c:5252:b0:416:643c:8946 with SMTP id fc18-20020a05600c525200b00416643c8946mr1274626wmb.17.1712741353432;
-        Wed, 10 Apr 2024 02:29:13 -0700 (PDT)
-Received: from [192.168.1.172] ([93.5.22.158])
-        by smtp.gmail.com with ESMTPSA id u15-20020a05600c19cf00b004168efc77d1sm1698186wmq.39.2024.04.10.02.29.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 02:29:13 -0700 (PDT)
-Message-ID: <9ecf2158-10d1-47b3-a02f-54a4cddbf426@baylibre.com>
-Date: Wed, 10 Apr 2024 11:29:11 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KOU4JR8F"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D3354C0010;
+	Wed, 10 Apr 2024 09:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712741353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Oqn8emte3xu2XqiT6+4r45XXMdjD8s3EgYSdiWO/wSE=;
+	b=KOU4JR8Fv1K2+w6GWVB0nXsk81F1XTXMY5fPJUgAAb2xvaeqnv16riK98g/vCcReurUCgk
+	d0z7LvSlRqBuHAB7i4lmcJNnsqedCSJ52ug57vVhBxyMSvLwodMbgCCdG42D7VLQjdlTRI
+	QxlsDnfjtaraXnyg7UaL4JSNgUhsFpI1KACnTg5Bru+C4OXdkk1OubbIHxg+W8mB8mcSKr
+	9YM+efhdrVHSKS1tX+YT/OXxfED8F9op8P4cepmRtspa80hB+q70PlWNBkRmlTFjgGOrjo
+	eyAz7ZRWqVAivIedZ3epFWI+1kA2m9h6B2gfHM8l8vKayh/KpqK+fBrS18oLQA==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Wed, 10 Apr 2024 11:29:09 +0200
+Subject: [PATCH v3 6/9] spi: cadence-qspi: add early busywait to
+ cqspi_wait_for_bit()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/18] ASoC: dt-bindings: mediatek,mt8365-afe: Add
- audio afe document
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
- <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Lee Jones <lee@kernel.org>, Flora Fu <flora.fu@mediatek.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240410-cdns-qspi-mbly-v3-6-7b7053449cf7@bootlin.com>
+References: <20240410-cdns-qspi-mbly-v3-0-7b7053449cf7@bootlin.com>
+In-Reply-To: <20240410-cdns-qspi-mbly-v3-0-7b7053449cf7@bootlin.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Vaishnav Achath <vaishnav.a@ti.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
  Rob Herring <robh@kernel.org>
-Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-References: <20240226-audio-i350-v3-0-16bb2c974c55@baylibre.com>
- <20240226-audio-i350-v3-1-16bb2c974c55@baylibre.com>
- <e0b48da7-b33c-45e4-b3f3-a6d71bb0afe2@linaro.org>
-Content-Language: en-US
-From: Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <e0b48da7-b33c-45e4-b3f3-a6d71bb0afe2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Call readl_relaxed_poll_timeout() with no sleep at the start of
+cqspi_wait_for_bit(). If its short timeout expires, a sleeping
+readl_relaxed_poll_timeout() call takes the relay.
 
+The reason is to avoid hrtimer interrupts on the system. All read
+operations are expected to take less than 100µs.
 
-On 09/04/2024 17:46, Krzysztof Kozlowski wrote:
->> +    soc {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        afe@11220000 {
-> Did you implement the comment or decided to keep afe?
-> 
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/spi/spi-cadence-quadspi.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
-Though it was clear according to [1]:
-"
-Audio Front End, this is the same name used for other MTK SoC, to be
-consistent.
-
-Cook a new patch serie to change "afe" by "audio-controller" for all MTK
-SoC would be great.
-"
-
-I want to keep it and fix it later with ALL other MTK SoC.
-You didn't answer after that, I though it was ok for you...
-So if you don't agree with that, just tell me to change it instead of 
-let me think I've the choice.
-
-
-> BTW, whatever "consistency" you have in mind, it does not really matter
-> that much for that example. And for sure do not add incorrect code
-> intentionally just to fix it in next patch.
-
-I don't get your point.
-What do you mean by "do not add incorrect code intentionally" please ???
-
-
-My PoV: I implement my bindings aligned to ALL other MTK SoC, which have 
-been validated by you in the past. I can understand the copied code is 
-wrong, but I've suggested a solution and you didn't NACK it.
-
-I fell like you bully me. Are you ok to stop insinuating bad things 
-please and tell me directly if a fix is mandatory and if you are waiting 
-for a specific one, tell me directly to avoid this kind of unpleasant 
-talk and waste of time, I know maintainers are busy persons.
-
-Beside that, thanks for your reviews.
-
-[1]: 
-https://lore.kernel.org/all/eeb3329b-0558-4237-8343-4e11f65a6a35@baylibre.com/
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index cde84d10678e..fecb76cfb932 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -120,6 +120,7 @@ struct cqspi_driver_platdata {
+ /* Operation timeout value */
+ #define CQSPI_TIMEOUT_MS			500
+ #define CQSPI_READ_TIMEOUT_MS			10
++#define CQSPI_BUSYWAIT_TIMEOUT_US		500
+ 
+ /* Runtime_pm autosuspend delay */
+ #define CQSPI_AUTOSUSPEND_TIMEOUT		2000
+@@ -298,13 +299,27 @@ struct cqspi_driver_platdata {
+ 
+ #define CQSPI_REG_VERSAL_DMA_VAL		0x602
+ 
+-static int cqspi_wait_for_bit(void __iomem *reg, const u32 mask, bool clr)
++static int cqspi_wait_for_bit(const struct cqspi_driver_platdata *ddata,
++			      void __iomem *reg, const u32 mask, bool clr,
++			      bool busywait)
+ {
++	u64 timeout_us = CQSPI_TIMEOUT_MS * USEC_PER_MSEC;
+ 	u32 val;
+ 
++	if (busywait) {
++		int ret = readl_relaxed_poll_timeout(reg, val,
++						     (((clr ? ~val : val) & mask) == mask),
++						     0, CQSPI_BUSYWAIT_TIMEOUT_US);
++
++		if (ret != -ETIMEDOUT)
++			return ret;
++
++		timeout_us -= CQSPI_BUSYWAIT_TIMEOUT_US;
++	}
++
+ 	return readl_relaxed_poll_timeout(reg, val,
+ 					  (((clr ? ~val : val) & mask) == mask),
+-					  10, CQSPI_TIMEOUT_MS * 1000);
++					  10, timeout_us);
+ }
+ 
+ static bool cqspi_is_idle(struct cqspi_st *cqspi)
+@@ -434,8 +449,8 @@ static int cqspi_exec_flash_cmd(struct cqspi_st *cqspi, unsigned int reg)
+ 	writel(reg, reg_base + CQSPI_REG_CMDCTRL);
+ 
+ 	/* Polling for completion. */
+-	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_CMDCTRL,
+-				 CQSPI_REG_CMDCTRL_INPROGRESS_MASK, 1);
++	ret = cqspi_wait_for_bit(cqspi->ddata, reg_base + CQSPI_REG_CMDCTRL,
++				 CQSPI_REG_CMDCTRL_INPROGRESS_MASK, 1, true);
+ 	if (ret) {
+ 		dev_err(&cqspi->pdev->dev,
+ 			"Flash command execution timed out.\n");
+@@ -790,8 +805,8 @@ static int cqspi_indirect_read_execute(struct cqspi_flash_pdata *f_pdata,
+ 	}
+ 
+ 	/* Check indirect done status */
+-	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTRD,
+-				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0);
++	ret = cqspi_wait_for_bit(cqspi->ddata, reg_base + CQSPI_REG_INDIRECTRD,
++				 CQSPI_REG_INDIRECTRD_DONE_MASK, 0, true);
+ 	if (ret) {
+ 		dev_err(dev, "Indirect read completion error (%i)\n", ret);
+ 		goto failrd;
+@@ -1091,8 +1106,8 @@ static int cqspi_indirect_write_execute(struct cqspi_flash_pdata *f_pdata,
+ 	}
+ 
+ 	/* Check indirect done status */
+-	ret = cqspi_wait_for_bit(reg_base + CQSPI_REG_INDIRECTWR,
+-				 CQSPI_REG_INDIRECTWR_DONE_MASK, 0);
++	ret = cqspi_wait_for_bit(cqspi->ddata, reg_base + CQSPI_REG_INDIRECTWR,
++				 CQSPI_REG_INDIRECTWR_DONE_MASK, 0, false);
+ 	if (ret) {
+ 		dev_err(dev, "Indirect write completion error (%i)\n", ret);
+ 		goto failwr;
 
 -- 
-Regards,
-Alexandre
+2.44.0
+
