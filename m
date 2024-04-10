@@ -1,39 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC88617BB2E;
-	Wed, 10 Apr 2024 17:12:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F9C1802AD;
+	Wed, 10 Apr 2024 17:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712769160; cv=none; b=fsn5m19lOj7nlFyFXKZNix5eu3nx7q++nCAHjez9ir38BT2SdYN5afvTBceFuzYW9EuACq/nrsB8FnpLjeel9+FQ3VbO19TDrCqHewSFrOFOA8pABxRxCNd491pnyw0nvN3GKcdleEpf/9ubaZK0GlCIzz8+1vifU/2gB0uFrGk=
+	t=1712769163; cv=none; b=uGVmUCyLtIBTcL5h3uI3IAlf4erdEIWd9NDfG9KFIZEc1yZePE8UWYsy2Vr/VNPd3XTd4RgAF7EuKKwxI3LXGgEEVSfASDSGFFEAZgbL0tclMO/FhhfPYLWuVc2BD6o/dTaY5LGrSuAPIO6WviNZUtnYFh6NAxOtuqOjXdQ7E8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712769160; c=relaxed/simple;
-	bh=qy/BC7EhDliYH0sA8fccO7bozWLbpErUVkxPvBBH8yY=;
+	s=arc-20240116; t=1712769163; c=relaxed/simple;
+	bh=o9k4BScWsxqBPVgu+3mmJq0aPMvXBAfbm0qYGfu1fLg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ryIdk4q/H6PexIkoant3BUF6sVOG5BgUWhHR/W8AuZvnY6Tg95g/mq9dhH3A6ZkwfCKufqgQIfGLin/du81de9ZrjdO7bO02J/1vUUj1nphV1HbCu5wkG0ZwW0jSEnn2iPLIiwnPBgyaSvnbeaKf+o5HyIKFbPnBZHUeUcruiZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gZlV6OYK; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=IgtJZHy/t10MoMPkYYdEzY8/EKOcLU+yAHJQstI68Kz+NF2NyzxbdeDVqKtysbsEyfSfUS1hRdthiHqkTQxXFjLnbKnP6dB8C2mf4oGFv/QhWRbmR86KFZZ8zneRuDEvK+fZL7AKntA32VNuonnVBOQLIA+ih0Spm2wc4SAmcW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R4ND5J3M; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gZlV6OYK"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 57BAF1C000A;
-	Wed, 10 Apr 2024 17:12:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R4ND5J3M"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6888C1C0007;
+	Wed, 10 Apr 2024 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712769156;
+	t=1712769159;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TFeZNmNWSruVbVOlxmosbNjPRa+XfQDOejg7IP8V8PM=;
-	b=gZlV6OYKFLf4iq9pUPekA5Xe4V3qJ3L4j/YVFuMk4IH/39ZSd/XbRBBlCvqGTlmjiCs+F4
-	9ZyDmvYaX/Q4GWpK3jj+FqAGwOwA+9UUwTOUHxELyV07HPHpVskWl2O+Kzqgc451+CVXci
-	MStsT73PoEnKdoCN0Saf3b6AscWB29aIrTyexJOJA832EbkF5usq2ZKbWAQDG+4ZTzJ+55
-	aASCvTkGAzLjiPeZjMz7qxGPr675v/hzlFEDoZkUJZaoJSyhVLAc49t6i1LcZxyKY9lNmm
-	BP3bgvhoGHkRL3pMlCo9e0wEDgFbTETShJ9RhgX58ayy7nf1ojnoUuJzXtU+2w==
+	bh=66C0T2c7fJuRVzdHb/PD9nAE/qTXLvKb4vCjmWufhEA=;
+	b=R4ND5J3MOocn1Y5Swu1Yjv1jUaZ+5T+3g3r4+q1Q1UyJ33aFztG4l/tgk/kejAS+iVf8Gn
+	c1wY9JLJvbVozMksp5gqBvCe5C4yG8Maum6TTR35tM0xsUS2Nk33K+xLOGjU33L6R8MOHG
+	LoAuvSIJ+ayGZCQ9WMaKVCs+fyMISLjUz+lG4LMv4OYA2IPjW/D7ScJYnc55lCHh/WHuin
+	l3TPUTpaA26JJLqfZjAXLBeUJwUlaPurUbj5wKZrYuYCuDmbdSAOPGPSTU77HJBdtaEuI1
+	0xZR5y2a9H1kA8xk6bF7d4UZgQYEyAFJu2YVwqhmOXI4NaCfhnZ4iD///A6BRA==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 10 Apr 2024 19:12:33 +0200
-Subject: [PATCH 04/11] clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS
- flag
+Date: Wed, 10 Apr 2024 19:12:37 +0200
+Subject: [PATCH 08/11] MIPS: mobileye: eyeq5: add OLB syscon node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240410-mbly-olb-v1-4-335e496d7be3@bootlin.com>
+Message-Id: <20240410-mbly-olb-v1-8-335e496d7be3@bootlin.com>
 References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
 In-Reply-To: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -62,128 +61,34 @@ Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add CLK_DIVIDER_EVEN_INTEGERS flag to support divisor of 2, 4, 6, etc.
-The same divisor can be done using a table, which would be big and
-wasteful for a clock dividor of width 8 (256 entries).
-
-Require increasing flags size from u8 to u16 because
-CLK_DIVIDER_EVEN_INTEGERS is the eighth flag.
+The OLB ("Other Logic Block") is a syscon region hosting clock, reset
+and pin controllers. It contains registers such as I2C speed mode that
+need to be accessible by other nodes.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/clk/clk-divider.c    | 12 +++++++++---
- include/linux/clk-provider.h | 11 +++++++----
- 2 files changed, 16 insertions(+), 7 deletions(-)
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/clk-divider.c b/drivers/clk/clk-divider.c
-index a2c2b5203b0a..b6654c5c36d2 100644
---- a/drivers/clk/clk-divider.c
-+++ b/drivers/clk/clk-divider.c
-@@ -72,6 +72,8 @@ static unsigned int _get_maxdiv(const struct clk_div_table *table, u8 width,
- 		return clk_div_mask(width);
- 	if (flags & CLK_DIVIDER_POWER_OF_TWO)
- 		return 1 << clk_div_mask(width);
-+	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
-+		return 2 * (clk_div_mask(width) + 1);
- 	if (table)
- 		return _get_table_maxdiv(table, width);
- 	return clk_div_mask(width) + 1;
-@@ -97,6 +99,8 @@ static unsigned int _get_div(const struct clk_div_table *table,
- 		return 1 << val;
- 	if (flags & CLK_DIVIDER_MAX_AT_ZERO)
- 		return val ? val : clk_div_mask(width) + 1;
-+	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
-+		return 2 * (val + 1);
- 	if (table)
- 		return _get_table_div(table, val);
- 	return val + 1;
-@@ -122,6 +126,8 @@ static unsigned int _get_val(const struct clk_div_table *table,
- 		return __ffs(div);
- 	if (flags & CLK_DIVIDER_MAX_AT_ZERO)
- 		return (div == clk_div_mask(width) + 1) ? 0 : div;
-+	if (flags & CLK_DIVIDER_EVEN_INTEGERS)
-+		return (div >> 1) - 1;
- 	if (table)
- 		return  _get_table_val(table, div);
- 	return div - 1;
-@@ -538,7 +544,7 @@ struct clk_hw *__clk_hw_register_divider(struct device *dev,
- 		struct device_node *np, const char *name,
- 		const char *parent_name, const struct clk_hw *parent_hw,
- 		const struct clk_parent_data *parent_data, unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width, u8 clk_divider_flags,
-+		void __iomem *reg, u8 shift, u8 width, u16 clk_divider_flags,
- 		const struct clk_div_table *table, spinlock_t *lock)
- {
- 	struct clk_divider *div;
-@@ -610,7 +616,7 @@ EXPORT_SYMBOL_GPL(__clk_hw_register_divider);
- struct clk *clk_register_divider_table(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_divider_flags, const struct clk_div_table *table,
-+		u16 clk_divider_flags, const struct clk_div_table *table,
- 		spinlock_t *lock)
- {
- 	struct clk_hw *hw;
-@@ -664,7 +670,7 @@ struct clk_hw *__devm_clk_hw_register_divider(struct device *dev,
- 		struct device_node *np, const char *name,
- 		const char *parent_name, const struct clk_hw *parent_hw,
- 		const struct clk_parent_data *parent_data, unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width, u8 clk_divider_flags,
-+		void __iomem *reg, u8 shift, u8 width, u16 clk_divider_flags,
- 		const struct clk_div_table *table, spinlock_t *lock)
- {
- 	struct clk_hw **ptr, *hw;
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 4a537260f655..cb348e502e41 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -675,13 +675,15 @@ struct clk_div_table {
-  * CLK_DIVIDER_BIG_ENDIAN - By default little endian register accesses are used
-  *	for the divider register.  Setting this flag makes the register accesses
-  *	big endian.
-+ * CLK_DIVIDER_EVEN_INTEGERS - clock divisor is 2, 4, 6, 8, 10, etc.
-+ *	Formula is 2 * (value read from hardware + 1).
-  */
- struct clk_divider {
- 	struct clk_hw	hw;
- 	void __iomem	*reg;
- 	u8		shift;
- 	u8		width;
--	u8		flags;
-+	u16		flags;
- 	const struct clk_div_table	*table;
- 	spinlock_t	*lock;
- };
-@@ -697,6 +699,7 @@ struct clk_divider {
- #define CLK_DIVIDER_READ_ONLY		BIT(5)
- #define CLK_DIVIDER_MAX_AT_ZERO		BIT(6)
- #define CLK_DIVIDER_BIG_ENDIAN		BIT(7)
-+#define CLK_DIVIDER_EVEN_INTEGERS	BIT(8)
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+index 6cc5980e2fa1..e82d2a57f6da 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
++++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+@@ -100,6 +100,14 @@ uart2: serial@a00000 {
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- extern const struct clk_ops clk_divider_ops;
- extern const struct clk_ops clk_divider_ro_ops;
-@@ -726,18 +729,18 @@ struct clk_hw *__clk_hw_register_divider(struct device *dev,
- 		struct device_node *np, const char *name,
- 		const char *parent_name, const struct clk_hw *parent_hw,
- 		const struct clk_parent_data *parent_data, unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width, u8 clk_divider_flags,
-+		void __iomem *reg, u8 shift, u8 width, u16 clk_divider_flags,
- 		const struct clk_div_table *table, spinlock_t *lock);
- struct clk_hw *__devm_clk_hw_register_divider(struct device *dev,
- 		struct device_node *np, const char *name,
- 		const char *parent_name, const struct clk_hw *parent_hw,
- 		const struct clk_parent_data *parent_data, unsigned long flags,
--		void __iomem *reg, u8 shift, u8 width, u8 clk_divider_flags,
-+		void __iomem *reg, u8 shift, u8 width, u16 clk_divider_flags,
- 		const struct clk_div_table *table, spinlock_t *lock);
- struct clk *clk_register_divider_table(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		void __iomem *reg, u8 shift, u8 width,
--		u8 clk_divider_flags, const struct clk_div_table *table,
-+		u16 clk_divider_flags, const struct clk_div_table *table,
- 		spinlock_t *lock);
- /**
-  * clk_register_divider - register a divider clock with the clock framework
++		olb: system-controller@e00000 {
++			compatible = "mobileye,eyeq5-olb", "syscon", "simple-mfd";
++			reg = <0 0xe00000 0x0 0x400>;
++			ranges = <0x0 0x0 0xe00000 0x400>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
++
+ 		gic: interrupt-controller@140000 {
+ 			compatible = "mti,gic";
+ 			reg = <0x0 0x140000 0x0 0x20000>;
 
 -- 
 2.44.0
