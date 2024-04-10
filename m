@@ -1,97 +1,81 @@
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E33517B507;
-	Wed, 10 Apr 2024 16:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E998617B51B;
+	Wed, 10 Apr 2024 16:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768135; cv=none; b=JhhPFtDeiZqi/0hnQbFYqz+T55orxV1Am5TE8gPF3YCNzGh34TUcndq5p1btC0ZVl7Y9r1MfbwBd8fOG+TVCV2hX7/feisoJWWuog5B7WpAgvc8nCQyhSiGHsUc79beF7/Lw9cH57w/QbOU/w9OT4wBTYa2Dcw3l8iW2WlFHIaU=
+	t=1712768279; cv=none; b=kSPF8ycWlwQEBXbZEmHXRF00+dKfCJjewYBqaY0AH/OHtVuCTCwXh+6if0ZBVKwFmC+kknM3oelJhTXZHttetMns0kSJh1N25VVxHY0lqb2DaEybyovUvJXltJq1wmi5ayjsPeDbn6maRya47EUrnxjU7kRRtl1y1AoYt7TwPqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768135; c=relaxed/simple;
-	bh=9FGLAozPYT08B8QqzbTuZsQRhIqrVv2OVR0opnaqJZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YO4itairy+9RSEWMrBPITQQkXZHrNsiLrZGBtwl7yUvqEVXp6pspKLuYcXzFfYI03h/BUsUv5amAbm4Ria9VTQ2dVA217ag58/phMhX93UFxBwasb3/thneQrojRGRTAT5ozOElt5gyy+V/JWAkNUEZlHxdUAUNXuEhXj5JS/VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FzFZmXX7; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712768279; c=relaxed/simple;
+	bh=Z/ZgqaypGaV5swi15SPT/jtzv4HSULo1UI0nOqmEKes=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bFX8FCdYmCUWPmmtVL7J2Gs8krU1n+NU+8+Q3mGykH7+j8hHo0S0dxs49z1v8OExHKwyX7xQc0yYS5AdzQmhrEIC14hD0mOm6XjBOrGECbA1L4c984MKHKwIHk4BHxiX6EV3Cz3Oe/xJCmU5UdPpQVYm+meM8AAz/O42+SwPQAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EiizNN1U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L2QjUseu; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FzFZmXX7"
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4daa2b076beso2098662e0c.1;
-        Wed, 10 Apr 2024 09:55:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712768133; x=1713372933; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mlhnPVBkd849gBpPLB7C+8g6xLIg9ro6ZK3Rrk9CvkI=;
-        b=FzFZmXX7hO8t4EAXxtSk/uzJZYwI86BRg744IOujqlFRd0PG3h41DQV4At/P+YJ9bA
-         4Ce1ef8mRZKdJS2S39UlMMQqDVneIZ5HoGttN6mBKAlIpPxABVA84JR37STm8mNWhrs7
-         uZ7YBCnZC3b1oFsLQVGq/0/681Aa/QCFyNK4TvSdP7yeBRpMugBJ0jhk4SbMSkEfkZUN
-         d4zW+0KhdTMxw4AmWQvitLxUmBzlK9BhLr/dH5M5oC4r48RxMkj4ke4dwovx5zas0NFp
-         oDLj0fZnVILF5/by7bO3kVGW/2SrRc3Nwoo2HktpZHkvlY24OoMhw1IOeez+kmXOQOLo
-         kTAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712768133; x=1713372933;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mlhnPVBkd849gBpPLB7C+8g6xLIg9ro6ZK3Rrk9CvkI=;
-        b=BiY0dEn500Q6HaA8TtYq+9vkNKcGEPTc5AFcKCRl7eKHy2uqAUQulluWaLoOpsYq3s
-         aqCnOuKbUa66iMwtL6rDnieqMoUbGQjDs932M3RsAIYebSH17fdW52aRT0bja49hZ0OV
-         Rn8wj0lUVpad1V7ZOeX+VQeFql5GMskxAWULXcd4qHQDsAgnHy1M/nH8QIWHt05xyDsk
-         SLS4hpM2NkdCVMXvMERwahhKVHy3slOx0gM9F7s+l2k/KjyxccXwxmwC0gnAkXejTLia
-         R0t3dXzK6d6u9Ht0AL23JQEYVmUfU9RuOZIUROwjDuWnAfJOYg+PjcH34FSq4fhZ183X
-         f2jw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Btb6PFMxD2aqEtFT+Bsp4mKuMi1oRieleCIEVYhnJ5o8m/P6kP96GMXzrqj2UGPWSMRhgC2ZbXz2pFsXlFpR4SgbuyK3KWM3jQWg
-X-Gm-Message-State: AOJu0Yxg6U8IYdabe0/sd36aB+wPdSvHYFMTp/quD3CmShSMD1VBiFE4
-	tpxYKRO4g4TmlG5BmlbeD5Orf2wfcFzKkJN02RUC6INai8G2r5G9zoKZ07YdcU2pzFuhwkcJsrc
-	SEMvu4ME4ODZlMbh9hdA/XsNvTrY=
-X-Google-Smtp-Source: AGHT+IF9pAel7nMAX3I9Rg1aEgBOzdta8G8E3m1sAmDZh3iIQ1Ev1SSmSrFgHdlnLugMYPfW11kKhWz88gCHEs7dau0=
-X-Received: by 2002:a05:6122:8cc:b0:4da:a94e:269c with SMTP id
- 12-20020a05612208cc00b004daa94e269cmr3401326vkg.16.1712768133288; Wed, 10 Apr
- 2024 09:55:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EiizNN1U";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L2QjUseu"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712768276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z/ZgqaypGaV5swi15SPT/jtzv4HSULo1UI0nOqmEKes=;
+	b=EiizNN1UGYKYXzf7NRbZWq2tkmt5yiBlDPHkpDAh9Ri1hi8XJ5nzE99AE4MhnhNBLewiSM
+	wHUwV0D6NYfWxaQjQKHRhhhSOA6SE5J/Agy/1Wy4uomoxh4WOH89ZrMHojmSi1gW3wPY3U
+	jYeA1eHDmfEyrTgBmvPpPjWi+IEwG84JkPhO0S6YDG66RuvF0geKWLM9t+YgftTfCkjM56
+	2587eF+AcK9qi0/E3Jrc4QvKVKpn6Vcd3VIbyI/5UAcGXBs3n0v0YBaKUTvyFODSIS3fFb
+	6J1qxOAg2BSKMgku5QHBZ7K71Uopcd8RFnLGC2J5LkeMG/BhRfNLEmGbWyUvAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712768276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z/ZgqaypGaV5swi15SPT/jtzv4HSULo1UI0nOqmEKes=;
+	b=L2QjUseufo3EpamzfqlCtxYv+wy8YLexNGrqOW2E5n24SXMLLo33ABn9a/7QKMYA17/ilC
+	N0G5TERtlqRbXYDw==
+To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, John
+ Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho
+ <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+ <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>, Benno
+ Lossin <benno.lossin@proton.me>, Andreas Hindborg
+ <a.hindborg@samsung.com>, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Subject: Re: [PATCH v2] rust: time: add Ktime
+In-Reply-To: <20240322-rust-ktime_ms_delta-v2-1-d98de1f7c282@google.com>
+References: <20240322-rust-ktime_ms_delta-v2-1-d98de1f7c282@google.com>
+Date: Wed, 10 Apr 2024 18:57:55 +0200
+Message-ID: <87v84p2m0c.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409173543.596615037@linuxfoundation.org>
-In-Reply-To: <20240409173543.596615037@linuxfoundation.org>
-From: Allen <allen.lkml@gmail.com>
-Date: Wed, 10 Apr 2024 09:55:21 -0700
-Message-ID: <CAOMdWSLF=Xo=raUUfD27MZgTzpMZ==zp0D1fGfjGsfcP66=kcw@mail.gmail.com>
-Subject: Re: [PATCH 6.8 000/280] 6.8.5-rc3 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-> This is the start of the stable review cycle for the 6.8.5 release.
-> There are 280 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Fri, Mar 22 2024 at 08:59, Alice Ryhl wrote:
+> Introduce a wrapper around `ktime_t` with a few different useful
+> methods.
 >
-> Responses should be made by Thu, 11 Apr 2024 17:35:00 +0000.
-> Anything received after that time might be too late.
+> Rust Binder will use these bindings to compute how many milliseconds a
+> transaction has been active for when dumping the current state of the
+> Binder driver. This replicates the logic in C Binder [1].
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.5-rc3.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
-> and the diffstat can be found below.
+> For a usage example in Rust Binder, see [2].
 >
-> thanks,
+> The `ktime_get` method cannot be safely called in NMI context. This
+> requirement is not checked by these abstractions, but it is intended
+> that klint [3] or a similar tool will be used to check it in the future.
 >
-> greg k-h
->
+> Link: https://lore.kernel.org/lkml/5ac8c0d09392290be789423f0dd78a520b830fab.1682333709.git.zhangchuang3@xiaomi.com/ [1]
+> Link: https://r.android.com/3004103 [2]
+> Link: https://rust-for-linux.com/klint [3]
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-Compiled and booted on my x86_64 and ARM64 test systems. No errors or
-regressions.
-
-Tested-by: Allen Pais <apais@linux.microsoft.com>
-
-Thanks.
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
