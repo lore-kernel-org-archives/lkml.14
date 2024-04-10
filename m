@@ -1,102 +1,120 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A901215EFCC
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:22:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428AC15EFA0;
+	Wed, 10 Apr 2024 14:23:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712758962; cv=none; b=ebZo9Eja+Sc3cDbOA5RDtUYGKEHhGYspSXg06U98kysJtK95ox2bstzPYBtpTXNicnXta6UE6Rd6v0x+Vli5KTL3DyCcNlS8Cezra9PjmdWRNH96WBWGa9DHUDUAyaCYO8Ac1Ziv5/iFNmWgXgY73SwUxx895YOet6galZBLpqE=
+	t=1712759023; cv=none; b=F0XYrRFj1l+kzW3xA1Yh9K6y54smcg7K6olBSq863Q1KGe2KF+3qYdVtrbhqRe02P5+D2oQpYAB08JuojiG5gr3eZnWBD4NIUYFwKEU8XkpldFiwzZWt6LdVUAYVFHY1ZcYCyu2zg81xICZS+iT31clfL+mnhHz+DXK4Qj0DqIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712758962; c=relaxed/simple;
-	bh=yaSKqEJum2ck2PZxdBaoUcQHyswu/eekvDph0rJnJ3k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=lafrbnhAJuC/A8953atYO1j6jivi0GOu3WXxVwatnbiiDqbZ4sdZxsu9Te31BauLITmpLY4Pr0NnFv/LQCxPDb+/qubevq5ne6O3FGCFKz0iQgtP0qacF7buPA4Xs+axknb9zfb/So90eZtX+dnEyCJ1I7NaxaIyHKNKC0RhCJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mdlAwCf0; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712759023; c=relaxed/simple;
+	bh=HnqCMIOfXdvvaRzyYrBMGnzCyFc1Yaa5gsY5UY7IZiM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RZlwP9WKzs+T37fMAqgzWKxxmuV9A72ZBR/1b09wbCeI5uJLI4YZI3aBzcdrxQ7RQRwm6TuVcmnjC8/Tlan0qvzDCGJIPkmEk1mxheR7egFvpOF8Xeq5XfaIFEifQPew8SYf3uvkSwIZXwRGXdlcxlj8JUT843fIwRZ6cr9JHrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bqAmOYB4; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mdlAwCf0"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e6acb39d4so3850668a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712758959; x=1713363759; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J9TniiRgXZpUH84DKODlQtqenNtFYZDXqebQBO7ZDCw=;
-        b=mdlAwCf0+1A/tEOJM6L2xyodHkh8NxF9qUtSHN70/QFE5M9NEHDgqC+n3US1kmtX81
-         cM1I38sY9dWemYpwyqf2477rBfjRfppDLmRCPmVKu7baFTvSqO54m74UragWpqEMDrYO
-         Om2AJgdm1bTCHlDLP/0qrYmYwuGpUU+WwRaCm6DjdxGg3yOLw6mvDC13LGtCc13vbpqr
-         h6StmdufMFMtyzRDThxXkl0F44XK3OnqAggg26gOTPBEhWMWL4yqB2ScSMEuX/nELwnr
-         770UQGoqqq/ugQttE4jMfXBgU/wN+NVHqD6MULuGFYU1jObXgXKJWl7FnJpGrfliF1Nj
-         gYhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712758959; x=1713363759;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J9TniiRgXZpUH84DKODlQtqenNtFYZDXqebQBO7ZDCw=;
-        b=aCTlJNSHXncDOJ8CYb2gwrc770migysVv4G59WpVQVC0aRrAZKs3NCVG7bao85tsTi
-         NGTV4ikYQQxXqE9lfGXl6ZygmwGroz4Ftsxpz1+ti2oOr/sEJhCHWPTD6LleWv2qOR5/
-         dKHe/vFAksWDA0ZxqvsV8lGSFtEmWhSbBgsIXxDYmL3/+6+6Ww+u3MWguZh8+dV15HS5
-         aD8FxbV7PKYf/rx8R9jK+68NYUMgnYn0Rl+PrxfhMAluJG4r7Rx6BpAVzGoDRbpyJ46j
-         9zuDqjO2zmDq7FUUafMJZAlZ43og7190QM4aYXgpaVjXOa8NkaSeABabJc5eBd+d24Kp
-         5Z5g==
-X-Forwarded-Encrypted: i=1; AJvYcCXXmT0GXA9t7eBxSxa+qWeqwlk+w9azyTv8E19HHKHgkvUz/mD+wMJnIC9aGVwzgGEsdpASuvN/hx6fQt50rc3xPTT187sUvin6FKpq
-X-Gm-Message-State: AOJu0Yxe5KPwl+VI/kUsd5UZLX34cbUQr0n+2qaUOWkshH77OBIXkJWp
-	NAGaMR1hV/OtI0VeeYGSsOx+j45czekXlfq2uuj0cKfcoZ15zYp14k2+4HwgzOw=
-X-Google-Smtp-Source: AGHT+IEyFlSMTciTLKgZ0LwqpaVCq5r0Cqpl/6AriXAmz2R/iaZjTELdZrW5xapwul9CBN0LkBtUvA==
-X-Received: by 2002:a17:906:a410:b0:a46:f69b:49b1 with SMTP id l16-20020a170906a41000b00a46f69b49b1mr1637529ejz.46.1712758958594;
-        Wed, 10 Apr 2024 07:22:38 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id e9-20020a17090618e900b00a4655513f0bsm7000506ejf.88.2024.04.10.07.22.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 07:22:36 -0700 (PDT)
-Date: Wed, 10 Apr 2024 17:22:32 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH v2] ASoC: soc-card: soc-card-test: Fix some error handling in
- probe()
-Message-ID: <2db68591-64e2-4f43-a5e1-cb8849f0a296@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bqAmOYB4"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AEGwLT010910;
+	Wed, 10 Apr 2024 14:23:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=x8VM+V1w3JAbArcaOhRzXIT7eX6+wJ3KM9tG1h/57jY=;
+ b=bqAmOYB4FA4e1u2bo/CdkEy2lc4V4yDNs5doytqkxfk9273gu3+p3gyU8ZdB10kEnbuf
+ pYqYPE+OR8ECF6uFeOPU+z96LeEN/rxvJcvxoagckPXPjLW4mXDkTCd9vC7F+3f7evek
+ DGREVZbkhaRr5rcHtcp7VD7gogmeNVSStayx4C9dNeDxxOm101QCMH1akg85LHYBFE6k
+ Jb3v2bpH44N420NfkuRlb6/eNExsQyWQyYxONYF8EzXkKzAJYS8E5mpAy2RmsKnIiGut
+ TTjAW8mS0Xse6tn3NdJ17m4gyGJ7/iBKXiFmlIACvh6x/9lRRteIqkXv8DmU1532FFyV nw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdvd3g0j1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 14:23:36 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AENajw020763;
+	Wed, 10 Apr 2024 14:23:36 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdvd3g0hx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 14:23:36 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43ADXLcr019109;
+	Wed, 10 Apr 2024 14:23:35 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbh40dcp1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 14:23:35 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AENTjd51577226
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 10 Apr 2024 14:23:31 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9743B20043;
+	Wed, 10 Apr 2024 14:23:29 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7338D20040;
+	Wed, 10 Apr 2024 14:23:29 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 14:23:29 +0000 (GMT)
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Niklas Schnelle <schnelle@linux.ibm.com>
+Subject: [PATCH 0/1] video: Handle HAS_IOPORT dependencies
+Date: Wed, 10 Apr 2024 16:23:28 +0200
+Message-Id: <20240410142329.3567824-1-schnelle@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Ra6IE6pqmL5Hws10lxl50yDsGPY_Khnh
+X-Proofpoint-GUID: YfSjbfW578ouNsYRTVHjOFvbmD3NPvTP
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 impostorscore=0 spamscore=0 adultscore=0
+ mlxscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404100104
 
-Fix this reversed if statement and call put_device() before returning
-the error code.
+Hi Helge (again ;-)),
 
-Fixes: ef7784e41db7 ("ASoC: soc-card: Add KUnit test case for snd_soc_card_get_kcontrol")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-v2: call put_device()
+This is a follow up in my ongoing effort of making inb()/outb() and
+similar I/O port accessors compile-time optional. Previously I sent this
+as a treewide series titled "treewide: Remove I/O port accessors for
+HAS_IOPORT=n" with the latest being its 5th version[0]. With a significant
+subset of patches merged I've changed over to per-subsystem series. These
+series are stand alone and should be merged via the relevant tree such
+that with all subsystems complete we can follow this up with the final
+patch that will make the I/O port accessors compile-time optional.
 
- sound/soc/soc-card-test.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+The current state of the full series with changes to the remaining subsystems
+and the aforementioned final patch can be found for your convenience on my
+git.kernel.org tree in the has_ioport branch[1]. As for compile-time vs runtime
+see Linus' reply to my first attempt[2].
 
-diff --git a/sound/soc/soc-card-test.c b/sound/soc/soc-card-test.c
-index 075c52fe82e5..faf9a3d46884 100644
---- a/sound/soc/soc-card-test.c
-+++ b/sound/soc/soc-card-test.c
-@@ -148,8 +148,10 @@ static int soc_card_test_case_init(struct kunit *test)
- 	priv->card->owner = THIS_MODULE;
- 
- 	ret = snd_soc_register_card(priv->card);
--	if (!ret)
-+	if (ret) {
-+		put_device(priv->card_dev);
- 		return ret;
-+	}
- 
- 	return 0;
- }
+Thanks,
+Niklas
+
+[0] https://lore.kernel.org/all/20230522105049.1467313-1-schnelle@linux.ibm.com/
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/log/?h=has_ioport
+[2] https://lore.kernel.org/lkml/CAHk-=wg80je=K7madF4e7WrRNp37e3qh6y10Svhdc7O8SZ_-8g@mail.gmail.com/
+
+Niklas Schnelle (1):
+  video: Handle HAS_IOPORT dependencies
+
+ include/video/vga.h | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
+
 -- 
-2.43.0
+2.40.1
 
