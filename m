@@ -1,91 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97A02744D;
-	Wed, 10 Apr 2024 10:30:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ABC155300;
+	Wed, 10 Apr 2024 10:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712745048; cv=none; b=UIv5FtFmK8ij+aRLuJIb9hiLShll3jF01cybL6JXVJWH501f7KOG3emfiGMU/P+gNE39QVF64Xe78q7e3z+gD0LRlki8sjhu3DTbHK/JQu69HWembFhV26PBYLcymZp5zkGAUEi1zwIyAWq/CM7mIUqJC0AWhxt1EAkqk7F1K50=
+	t=1712745058; cv=none; b=LKgj5k/i8FHx4+ZFTIL8KqQDsKnOQM7fy/jyDPz0WLDtMxNBo+6LcrqbUj+OBL3fpMdHW8hUGCMDLHfUL8U7gsgAfV4Hyn1Da+JMmXNuIeGxRiPxHGKabAXmJs8HYrGRCTE/aUPSKj5ZM0tBjhr0OJagCjPVPh50FQfzHrPbAok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712745048; c=relaxed/simple;
-	bh=PFOYzkTQaz4RIV29s8crIVArTeI+klJddc4BaSfF6jM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AkS26NpTukInXnC/KEqCsgjtgmSIbUqAf5oVPTVZAyhDsGwbgRcEJNoKLP1e+VlFWj78nfhiEhyldxrxYTKHSgZEM+4lXLHJhroaxXvux7bHyryVOK5LM45wCqP+hKsLnroboUSup8LnU5ED7loGmKLhdbMvhC9WUwVmcNYqbCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c10OJVwq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712745058; c=relaxed/simple;
+	bh=4zuUE+4lnuT1tggaLbfb0fGKSWl4GwtjbvM5H87GdGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m1P07yBi6h6iGorxPFxzEaNXZVTf34wUyPWJdDnntU8gSbd+58XOGjlJDLv+/hiO511W7F9rgNdoEdyJg98P6TluNKgmY0FI8KHTWD7qRMW2b9vN3ZdS7tpziLH7BZvqg5Y+YAV2hr8y+omfzeGqZpSY9s1uuGYyLU3juukCtRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F1JIqt1D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c10OJVwq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725A9C433F1;
-	Wed, 10 Apr 2024 10:30:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F1JIqt1D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4D2C433F1;
+	Wed, 10 Apr 2024 10:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712745048;
-	bh=PFOYzkTQaz4RIV29s8crIVArTeI+klJddc4BaSfF6jM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=c10OJVwqruArl5g5dCIgIlZ3UQywtIqmha4t4djM5xAnA40tOoewe49ZDfgnbs38h
-	 kDjnmrcSFdYLitqgQsypKWVoUmWkDcXatkwBPlRgrTu6NvrT67UoxwtkRkKX1Y0pfJ
-	 Dv8WAyqZxbAAD5rnFwpGkX6xcLah7Ylzn0RqYthYchZ51lDX7xdbDjs/GxU3izIIpE
-	 +VSq7LX7heBJlX3KtXnAyQksjEqG6w68dA+JOgWYYz/O1cGRCAy4n3zcELfyYMEp4p
-	 kT/GiIQg5C1LiGKQ6M8jPFLf7nFfqoCHRO/c+Zr895CnKGEiv18IaCub+OvG4MR87f
-	 PpysPvsBYjKPQ==
-From: Conor Dooley <conor@kernel.org>
-To: linux-riscv@lists.infradead.org,
-	Yangyu Chen <cyy@cyyself.name>
-Cc: conor@kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Guo Ren <guoren@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH RESEND v8 0/6] riscv: add initial support for Canaan Kendryte K230
-Date: Wed, 10 Apr 2024 11:30:25 +0100
-Message-ID: <20240410-unwoven-march-299a9499f5f4@spud>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
-References: <tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com>
+	s=k20201202; t=1712745058;
+	bh=4zuUE+4lnuT1tggaLbfb0fGKSWl4GwtjbvM5H87GdGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F1JIqt1DYu/EdX9xeaqocx0Ee4XY2rYzbMa07kVMga9FMWIqgSn0V3gAVx5RypX6Y
+	 KDwK6xQmNHyTvCbQ3c7vPKe9WOSPZJlKvDJiXUFDiRPEysAmX6XTZq1QTbwPQU8j1o
+	 Wad+4UCUk323tDaC20zdvVPwq6ECB6GCwS02zVoo9Tfc04W0vZK4285mTsBTidFzuf
+	 HFdHRXc1lkdZA5Jo8r063Lv8buZ4+zOn76deLqCbYHFjxqq6FDHd7tLTgT4/dDBZvj
+	 7uGxqGrbM8a4IIeG2Z2sNPe3JWEqeyKcnSpfNA9F6Cbn4CFa/dnFC+5/hpEIOp09fY
+	 DNjOwSzBq7DJg==
+Date: Wed, 10 Apr 2024 12:30:55 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Valentin Schneider <vschneid@redhat.com>, rcu@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>
+Subject: Re: [PATCH 2/2] context_tracking, rcu: Rename RCU_DYNTICKS_IDX to
+ CT_DYNTICKS_IDX
+Message-ID: <ZhZqX0YqlzPoOK2b@localhost.localdomain>
+References: <20240327112902.1184822-1-vschneid@redhat.com>
+ <20240327112902.1184822-3-vschneid@redhat.com>
+ <Zg6tYD-9AFPkOOsW@localhost.localdomain>
+ <1ef9d1f9-16a2-4ddc-abd5-6c3b7cde290f@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1058; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=g1jnmXwY+mRbkP1JjfYfibR7YG/ZdsVyF8SLWs6lEX0=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGliWY7L232dpH74pq6L8PmpOyv0rfqW0Nz7DkK6ErZKi soGl7d2lLIwiHEwyIopsiTe7muRWv/HZYdzz1uYOaxMIEMYuDgFYCJmKowMm6clMFUtl8+J0Rbv 1PZMy9sh+WNTGH9Jk9VBTqklmxheMfwVrewWtTDnvnTFcO2UWyI7hav2M4pdnCRn5xH9WjBVjoM LAA==
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ef9d1f9-16a2-4ddc-abd5-6c3b7cde290f@paulmck-laptop>
 
-From: Conor Dooley <conor.dooley@microchip.com>
-
-On Mon, 08 Apr 2024 00:26:58 +0800, Yangyu Chen wrote:
-> K230 is an ideal chip for RISC-V Vector 1.0 evaluation now. Add initial
-> support for it to allow more people to participate in building drivers
-> to mainline for it.
+Le Tue, Apr 09, 2024 at 12:53:03PM -0700, Paul E. McKenney a écrit :
+> On Thu, Apr 04, 2024 at 03:38:40PM +0200, Frederic Weisbecker wrote:
+> > Le Wed, Mar 27, 2024 at 12:29:02PM +0100, Valentin Schneider a écrit :
+> > > The symbols relating to the CT_STATE part of context_tracking.state are now
+> > > all prefixed with CT_STATE.
+> > > 
+> > > The RCU dynticks counter part of that atomic variable still involves
+> > > symbols with different prefixes, align them all to be prefixed with
+> > > CT_DYNTICKS, as CT_DYNTICKS_MASK already is.
+> > > 
+> > > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> > 
+> > It used to be that RCU extended quiescent state and dynticks enter/exit
+> > were coupled. But this isn't the case anymore. Nowadays RCU stops watching
+> > some time later after dynticks is entered.
 > 
-> This kernel has been tested upon factory SDK [1] with
-> k230_evb_only_linux_defconfig and patched mainline opensbi [2] to skip
-> locked pmp and successfully booted to busybox on initrd with this log [3].
+> I knew that consolidation of atomic operations was too good to last...
 > 
-> [...]
+> > I wonder if we shouldn't take advantage of that cleanup for a meaning that
+> > really reflect that RCU stops watching from there.
+> > 
+> > Paul what do you think? CT_EQS_IDX ? CT_RCUEQS_IDX? CT_RCUOFF_IDX? ...?
+> 
+> "After what you just did?  You can just RCU off!!!"
+> 
+> Sorry, couldn't resist...
+> 
+> I am having a hard time getting too excited about the name.  I could
+> suggest CT_RCU_WATCHING_IDX, but that isn't exactly the shortest
+> possible name.
 
-Applied to riscv-dt-for-next, thanks!
+I really like CT_RCU_WATCHING. It says everything. The _IDX isn't even
+needed after all. What do you think?
 
-[1/6] dt-bindings: riscv: Add T-HEAD C908 compatible
-      https://git.kernel.org/conor/c/64cbc46bb854
-[2/6] dt-bindings: add Canaan K230 boards compatible strings
-      https://git.kernel.org/conor/c/b065da13ea9c
-[3/6] dt-bindings: timer: Add Canaan K230 CLINT
-      https://git.kernel.org/conor/c/b3ae796d0a4f
-[4/6] dt-bindings: interrupt-controller: Add Canaan K230 PLIC
-      https://git.kernel.org/conor/c/db54fda11b13
-[5/6] riscv: dts: add initial canmv-k230 and k230-evb dts
-      https://git.kernel.org/conor/c/5db2c4dc413e
+Thanks.
 
-
-6/6 intentionally missing, it goes on another branch.
-
-Thanks,
-Conor.
+> 							Thanx, Paul
