@@ -1,70 +1,74 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BD915ECF7
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9438315ECF7;
+	Wed, 10 Apr 2024 14:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712758700; cv=none; b=UPIjstsX1x5HDpXvMmrRtP7xMN6Hb3FsViwS3OwLluYue2BqoPgPZhdvLces5cQYPqCeEFtTP89Jx1zl6i2cZyhlc8yozMbzpEr6qHmd/GMFdtHbr2xeWCCjMfHvKRMayAslviMoI9IA0o7YQkpa/H41zbtw5dSK1jmjJDMsTDg=
+	t=1712758707; cv=none; b=rsfjgUOV3zRZN9WebrkKJuGXKK9eMI9emY6vE+p/6o1+7v0QEolQEJV+6+dLKz+NJJK9XpOnCndPb8k8eYmJjRHTmyEDovw3kgBI5Zl0+VCRiOXoX4aYXf6jLT6C7QgNOwD1X9Fav07ZGmmlJikPyP5J+CL/q8g50iGwxbcTvac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712758700; c=relaxed/simple;
-	bh=FznTubYp6w0r5q/3QmPodUzEX1aM7IcFEf7XrPzXaes=;
+	s=arc-20240116; t=1712758707; c=relaxed/simple;
+	bh=43iHxXQ+Xn7lzGP2Qk3mNs64oX+sA9CuAlA0854WGcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uC856mnB0iFw9Eh/ozGp7nhRa+V9BgJxNPVcDcyJB3XYhaJchnkpMdPN688lN+2yt0+UXevi6gRrHtOvOGm3Lynyc4RyC0C15Gfpj65KzqxxEkPsYF2BCopqgUoO9sFpRSEWEoq3xYqWJW4v6xy2KmV5rHNpazbBln+bjw5xj2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XBPXOjef; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9/HXBpBtkhLiO52nHJBcQTyo0dXcV4/gZDnJNHVH6e8kp1W+srTedycm45SG6sP2O74SOVrohjHCaTyUlbWXPm2CNger3DqdGDpifOa7rYh8jx3Q4SXkruT7JM0hHO4Po35NsMBEwl8eY+UqgBpy0mHCrh96mAWQYK0J+taifg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G3PZRUvp; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XBPXOjef"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712758698; x=1744294698;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FznTubYp6w0r5q/3QmPodUzEX1aM7IcFEf7XrPzXaes=;
-  b=XBPXOjef6hJ8EX957x8TSuGmgYg3RqwiwuKrkqtChgGU71B+OA5pfNho
-   ocbxq1toldr5vX+ZWTrCfP2NCkOHoAeWVWTvxno+c0O1E/eZ+rxzLFsM+
-   bFLeAi9UXt1tURVYLTDywMSfbAkTgu5vDwwEXVal3EU9zxyX8Sm8eAceG
-   SpbmQi3wur9MC4cFuH0mulMViGjApl/wxuuFBNYYjCvE5t3qFn5hF0ZU+
-   fmeSRgEIZEX2oG0rk4ONglP5asXc311Zlbwu2G3xHjeVnb2sLRHR1AWYc
-   BOP5y1JmXecUeAMMQ/C/ME5BPOMBiByLUY3JC2cjbtNO+cYFZEEyTsY6+
-   g==;
-X-CSE-ConnectionGUID: ztkv7P6lS3Sv1bQBzG6YKA==
-X-CSE-MsgGUID: aN5F32HbTdGo3pY0vE9Tng==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8286832"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="8286832"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 07:18:17 -0700
-X-CSE-ConnectionGUID: BUWEHUgZRwyulQxO+uFnOg==
-X-CSE-MsgGUID: ahXft4hoT/KZOy0wF0d8Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="51550060"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 10 Apr 2024 07:18:10 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruYm8-0007U8-0L;
-	Wed, 10 Apr 2024 14:18:08 +0000
-Date: Wed, 10 Apr 2024 22:17:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, rafael@kernel.org,
-	peterz@infradead.org, adrian.hunter@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, jun.nakajima@intel.com,
-	rick.p.edgecombe@intel.com, thomas.lendacky@amd.com,
-	michael.roth@amd.com, seanjc@google.com, kai.huang@intel.com,
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, bdas@redhat.com,
-	vkuznets@redhat.com, dionnaglaze@google.com, anisinha@redhat.com,
-	jroedel@suse.de, ardb@kernel.org, kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] x86/snp: Convert shared memory back to private on
- kexec
-Message-ID: <202404102232.UKwWHSTE-lkp@intel.com>
-References: <b24885f5495f6b8ba2f9e825fda9188fcbf28231.1712694667.git.ashish.kalra@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G3PZRUvp"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56c5d05128dso7649129a12.0;
+        Wed, 10 Apr 2024 07:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712758704; x=1713363504; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5GE1IW0Lti2OUmskUuiVrJg2UU8Baut/hi2lIaMb+BI=;
+        b=G3PZRUvpn50cX5dG2as6j+Dkc15fuuM1kslvuFHncG+UXGiDS8UJYbkfrl5wq/QmUx
+         jXTz7aTpdZdIG86SXXj3c45afr748+cqukcCeahz5aWvVYTCLTjri9rhcz8KqBS8K320
+         +Z/XCohsRCBjV0D5po6Z+pdo1JaQq5WYuwOY90rWdWSqKGvS38253c76gZKQDBGUkSbd
+         4MM5fPt195vFXj5DssY72kMPVzagHy+ggUIMCRJJfN7LfURhM+YzNd2AL65feyKMkRLU
+         sUn7cQ1gd6wQp9/T5QYJf3WuIRiVLYFnWdBMs7A5vmWWKXDHRv3DmUXrJ5eoKy0Kudau
+         +SUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712758704; x=1713363504;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5GE1IW0Lti2OUmskUuiVrJg2UU8Baut/hi2lIaMb+BI=;
+        b=ZrWUFJTs7bgvqJkA4gG8g0zdyAb2r9lcsHfdPOaK3KasvSBnIHEPwSylQ+5e65L61U
+         8am1KIZZgPiyUMSlC1+PSfpBFgada0XHrZcGB1tXHe7L+TVT3LzNMhZpC/ns0rtsxrwj
+         AQw2F9bmANLfFJlmAyP739W4yKYs56Z7DER89yrb104zDkrsOwdh++IDrDGL2So2RevB
+         WzjI9RwiJocou0jJnLDa72NhTDQKtAkGpkXAnJdEh6xb69TzddYWw0e9vi/dvuIYlsGM
+         SskMfARXmQ5mNzouqKBiLg1xI3daEOSlD0Chp25q+63A3PGf/I1ruesFd6J4FVdzdWFR
+         8HqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCD831vJFjJ7Bza94al8Vlkups4Nr4tH+y2dWeVk5nwpN02qw7CU/gG0GpjOl0H1pUZ6t8HLGkJW1w2EJ6pGHiUzAgZH8Y5L3MJr79+Z64gjpG7X3tsvznfElaIns7R4Nk88tqM+67
+X-Gm-Message-State: AOJu0Yx+WxZWMXTFJuZH86k/ihFVPiYwb4LWjCJgkgL04J6RiIsUqKJu
+	+I43R8+tNVex8lzy3PY8stgiwpNJ7x9jXPynfwFe98+OR5Jh4UQg
+X-Google-Smtp-Source: AGHT+IFgbRzN8EqG0LgVdM+i6UEVhaiP9sxgR4y2h+gWh3T543XQTaKg30zVjpcIQn4wX4m9qtdv+w==
+X-Received: by 2002:a17:907:7e97:b0:a4e:6223:2507 with SMTP id qb23-20020a1709077e9700b00a4e62232507mr2176259ejc.5.1712758703391;
+        Wed, 10 Apr 2024 07:18:23 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id qf31-20020a1709077f1f00b00a5208537b63sm1106506ejc.141.2024.04.10.07.18.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 07:18:22 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 10 Apr 2024 16:18:20 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Subject: Re: [PATCH 3/3] x86/cpu: Ignore "mitigations" kernel parameter if
+ SPECULATION_MITIGATIONS=n
+Message-ID: <ZhafrPn/2mOcP/FE@gmail.com>
+References: <20240409175108.1512861-1-seanjc@google.com>
+ <20240409175108.1512861-4-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,132 +77,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b24885f5495f6b8ba2f9e825fda9188fcbf28231.1712694667.git.ashish.kalra@amd.com>
-
-Hi Ashish,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on tip/master]
-[also build test ERROR on linus/master next-20240410]
-[cannot apply to tip/x86/core tip/x86/mm tip/auto-latest]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Ashish-Kalra/efi-x86-skip-efi_arch_mem_reserve-in-case-of-kexec/20240410-044512
-base:   tip/master
-patch link:    https://lore.kernel.org/r/b24885f5495f6b8ba2f9e825fda9188fcbf28231.1712694667.git.ashish.kalra%40amd.com
-patch subject: [PATCH v4 4/4] x86/snp: Convert shared memory back to private on kexec
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20240410/202404102232.UKwWHSTE-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404102232.UKwWHSTE-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404102232.UKwWHSTE-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> arch/x86/kernel/sev.c:993:14: error: call to undeclared function 'pte_decrypted'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     993 |                 if (pte && pte_decrypted(*pte) && !pte_none(*pte)) {
-         |                            ^
-   arch/x86/kernel/sev.c:1021:16: error: call to undeclared function 'pte_decrypted'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1021 |                 if (!pte || !pte_decrypted(*pte) || pte_none(*pte))
-         |                              ^
->> arch/x86/kernel/sev.c:1041:7: error: call to undeclared function 'stop_memory_enc_conversion'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-    1041 |         if (!stop_memory_enc_conversion(wait_for_lock))
-         |              ^
-   3 errors generated.
---
->> arch/x86/mm/mem_encrypt_amd.c:471:21: error: no member named 'enc_kexec_stop_conversion' in 'struct x86_guest'
-     471 |         x86_platform.guest.enc_kexec_stop_conversion = snp_kexec_stop_conversion;
-         |         ~~~~~~~~~~~~~~~~~~ ^
->> arch/x86/mm/mem_encrypt_amd.c:472:21: error: no member named 'enc_kexec_unshare_mem' in 'struct x86_guest'
-     472 |         x86_platform.guest.enc_kexec_unshare_mem     = snp_kexec_unshare_mem;
-         |         ~~~~~~~~~~~~~~~~~~ ^
-   2 errors generated.
+In-Reply-To: <20240409175108.1512861-4-seanjc@google.com>
 
 
-vim +/pte_decrypted +993 arch/x86/kernel/sev.c
+* Sean Christopherson <seanjc@google.com> wrote:
 
-   970	
-   971	static void unshare_all_memory(void)
-   972	{
-   973		unsigned long addr, end;
-   974	
-   975		/*
-   976		 * Walk direct mapping and convert all shared memory back to private,
-   977		 */
-   978	
-   979		addr = PAGE_OFFSET;
-   980		end  = PAGE_OFFSET + get_max_mapped();
-   981	
-   982		while (addr < end) {
-   983			unsigned long size;
-   984			unsigned int level;
-   985			pte_t *pte;
-   986	
-   987			pte = lookup_address(addr, &level);
-   988			size = page_level_size(level);
-   989	
-   990			/*
-   991			 * pte_none() check is required to skip physical memory holes in direct mapped.
-   992			 */
- > 993			if (pte && pte_decrypted(*pte) && !pte_none(*pte)) {
-   994				int pages = size / PAGE_SIZE;
-   995	
-   996				if (!make_pte_private(pte, addr, pages, level)) {
-   997					pr_err("Failed to unshare range %#lx-%#lx\n",
-   998					       addr, addr + size);
-   999				}
-  1000	
-  1001			}
-  1002	
-  1003			addr += size;
-  1004		}
-  1005		__flush_tlb_all();
-  1006	
-  1007	}
-  1008	
-  1009	static void unshare_all_bss_decrypted_memory(void)
-  1010	{
-  1011		unsigned long vaddr, vaddr_end;
-  1012		unsigned int level;
-  1013		unsigned int npages;
-  1014		pte_t *pte;
-  1015	
-  1016		vaddr = (unsigned long)__start_bss_decrypted;
-  1017		vaddr_end = (unsigned long)__start_bss_decrypted_unused;
-  1018		npages = (vaddr_end - vaddr) >> PAGE_SHIFT;
-  1019		for (; vaddr < vaddr_end; vaddr += PAGE_SIZE) {
-  1020			pte = lookup_address(vaddr, &level);
-  1021			if (!pte || !pte_decrypted(*pte) || pte_none(*pte))
-  1022				continue;
-  1023	
-  1024			set_pte_enc(pte, level, (void *)vaddr);
-  1025		}
-  1026		vaddr = (unsigned long)__start_bss_decrypted;
-  1027		snp_set_memory_private(vaddr, npages);
-  1028	}
-  1029	
-  1030	/* Stop new private<->shared conversions */
-  1031	void snp_kexec_stop_conversion(bool crash)
-  1032	{
-  1033		/*
-  1034		 * Crash kernel reaches here with interrupts disabled: can't wait for
-  1035		 * conversions to finish.
-  1036		 *
-  1037		 * If race happened, just report and proceed.
-  1038		 */
-  1039		bool wait_for_lock = !crash;
-  1040	
-> 1041		if (!stop_memory_enc_conversion(wait_for_lock))
-  1042			pr_warn("Failed to finish shared<->private conversions\n");
-  1043	}
-  1044	
+> Explicitly disallow enabling mitigations at runtime for kernels that were
+> built with CONFIG_SPECULATION_MITIGATIONS=n.  Because more Kconfigs are
+> buried behind SPECULATION_MITIGATIONS, trying to provide sane behavior for
+> retroactively enabling mitigations is extremely difficult, bordering on
+> impossible.  E.g. page table isolation and call depth tracking requrie
+> build-time support, BHI mitigations will still be off without additional
+> kernel parameters, etc.
+> 
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |  3 +++
+>  arch/x86/Kconfig                                | 10 +++++++---
+>  kernel/cpu.c                                    |  2 ++
+>  3 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 70046a019d42..7d623df11a1a 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3423,6 +3423,9 @@
+>  			arch-independent options, each of which is an
+>  			aggregation of existing arch-specific options.
+>  
+> +			Note, "mitigations" is supported on x86 if and only if
+> +			the kernel was built with SPECULATION_MITIGATIONS=y.
+> +
+>  			off
+>  				Disable all optional CPU mitigations.  This
+>  				improves system performance, but it may also
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 10a6251f58f3..f4e4dd360636 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2493,10 +2493,14 @@ menuconfig SPECULATION_MITIGATIONS
+>  	default y
+>  	help
+>  	  Say Y here to enable options which enable mitigations for
+> -	  speculative execution hardware vulnerabilities.
+> +	  speculative execution hardware vulnerabilities.  Mitigations can
+> +	  be disabled or restricted to SMT systems at runtime via the
+> +	  "mitigations" kernel parameter.
+>  
+> -	  If you say N, all mitigations will be disabled. You really
+> -	  should know what you are doing to say so.
+> +	  If you say N, all mitigations will be disabled.  This CANNOT be
+> +	  overridden at runtime.
+> +
+> +	  Say 'Y', unless you really know what you are doing.
+>  
+>  if SPECULATION_MITIGATIONS
+>  
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 07ad53b7f119..d445763d8047 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -3214,6 +3214,8 @@ static int __init mitigations_parse_cmdline(char *arg)
+>  {
+>  	if (!strcmp(arg, "off"))
+>  		cpu_mitigations = CPU_MITIGATIONS_OFF;
+> +	else if (!IS_ENABLED(CONFIG_SPECULATION_MITIGATIONS))
+> +		pr_crit("Kernel compiled without mitigations, system may still be vulnerable\n");
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This doesn't really make it clear that the kernel is actively ignoring the 
+mitigations= command line. I think something like this would be more clear:
+
+> +		pr_crit("Kernel compiled without mitigations, ignoring mitigations= boot option. System may still be vulnerable\n");
+
+Thanks,
+
+	Ingo
