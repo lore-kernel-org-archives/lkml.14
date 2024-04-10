@@ -1,108 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753EA158210;
-	Wed, 10 Apr 2024 10:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79B3156861;
+	Wed, 10 Apr 2024 10:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712743443; cv=none; b=J+OceEJ+RKxrm23JNuW8V4gaR4dX+lwYs2SkKVrnsRc7mYyLviHmSArNgjNgWS/SeaegrunvPEEOHS9lzXiCnkFpbEA97FKD7NPOkWmLv0BeJrWpzUmt3iEvl2b0LkwhxH6Ozspr4ktRGYMrAjGLh8ucub5AGgqbM89RaDzuGYc=
+	t=1712743512; cv=none; b=mO+ta8eVEvpz8W6ssNmDiv2qmacRAbYFa6TQLT0Q9zYyLE9nW7AfhPeD88lsq5cLQB9PNxJ3jhJm7ybm+rgtBGpZaqJejyXc1PB0IRi4p/FBh6p5bQQ1Q1w+6cbmzVkdQarX9mFl6OXCCfqJv6WWjalgDmcDC55mthhI8Q5RaVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712743443; c=relaxed/simple;
-	bh=O0VlrLYkNg9eeGffg8c3eww3VthKzB16sPQVJP9pPzg=;
+	s=arc-20240116; t=1712743512; c=relaxed/simple;
+	bh=aCOEQD5HoFwyvxMVyRIMD1XvJRwuaLgi7aqiKKGZ72M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LpRDjjLLdICLwnIFvxgCFy4NQ5CiJ/Voj4/xb/QO7jMi4JjJMmW1MHGEzJ9X5X7d8hcae7e7UO1KE/SYzgkNtPWh8BU23ZCx95tHKcmmhkT5mvf2uCMfVt7CK+oSvXGIhcF4JATIJQq24VDl3405vixY3F/uqRZQJN08Bl5ixCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArqSI63k; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrULmYbbl8VLqQB9o96gErlMEf9ytN+ehcnzA5DuIb8eR0TIc4TNxZo7B/NsEliKCsVNsFU/NLVQErMyov7R/czdFtxMvs/IkWQXe7KLml5TXiqutcsaLPdo74sl0Y6dZsqFkIat964s5xYL/1yn+65RoWXpNN+0uNnhwsSsk6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N7eCHR7B; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArqSI63k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCA9C433F1;
-	Wed, 10 Apr 2024 10:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712743443;
-	bh=O0VlrLYkNg9eeGffg8c3eww3VthKzB16sPQVJP9pPzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ArqSI63kngbacDK0bh817px/g8VItoLwBabfoLZMUPNq+Biw+scFGx3I1sgPDbLnM
-	 wS9iWRN9bVfqYyzAc8SucNF2wPD5L5cQT5+kftT74n/k9MFk2VmgYwhIPXN7/e4EsE
-	 T/hRY8UIKwSXj4M96LLuEcU1k7FSc0LB6jz4CWUZFJ4DLY2KUG1kvrKH7ZGEw2/ym0
-	 4KJT1vBrCbfH9DVvo5VT0QAsAJ3hJ8sa2/Q0XBg8DsLuO9wNmkXewbMaesTNdytdYZ
-	 DRKSFxt9JgHxHH/0/i+0UEyAaPbRuoVviIfxMaPvW/a0s/HtuW9+NM9t6+dE0QQcp9
-	 AP6G4+rINUvVw==
-Date: Wed, 10 Apr 2024 11:03:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>, lee@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add ROHM BD71879
-Message-ID: <20240410-possum-lecturer-716185901aa5@spud>
-References: <20240404195423.666446-1-andreas@kemnade.info>
- <20240404195423.666446-2-andreas@kemnade.info>
- <3d5df067-ec94-42c6-bbd0-43ce8cd53e40@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N7eCHR7B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712743511; x=1744279511;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=aCOEQD5HoFwyvxMVyRIMD1XvJRwuaLgi7aqiKKGZ72M=;
+  b=N7eCHR7BeRRU4bRG04OKA3U8VXaCmtCSTnidiNKvDte7RBbEjgtuC1qi
+   A26Z5gGRFrUSA3FBQFUZ8/bxmwManxQhvs8D6xlj2NRYam0QUoH8kG3zm
+   78XfcmPSoGLb7BynTK/BhePbYyMnf1KodT3i59bWXvpdmBzRKRg7m4TOr
+   gJjrbbwZJrlQ/qbNsSYCBS4pOPvHOFOV9jOhwUIOsMV5x34CtF3XfS4lE
+   EiirlBvzh/2z4s6AzzO6SBkqQLazcyznxvHevOOjCfLOv54p/KA8ULoXk
+   0feWvvSu+KUGjWwnZFmA35Cq7XNGtFDAADE6x9Bq/wVtLgZ86+qEbdAHL
+   A==;
+X-CSE-ConnectionGUID: hKRuXGspTIawgDzag2ldyA==
+X-CSE-MsgGUID: 1kiPoE3kRxmN9jQSI2hk/A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7954235"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7954235"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:05:10 -0700
+X-CSE-ConnectionGUID: NXe6mQrYS1GaUMYPi6ORfA==
+X-CSE-MsgGUID: oxWyHfUmQgyKyEf8g7IBeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="57951394"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:05:09 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id CBC5211FC46;
+	Wed, 10 Apr 2024 13:05:05 +0300 (EEST)
+Date: Wed, 10 Apr 2024 10:05:05 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/9] media: subdev: Fix use of sd->enabled_streams in
+ call_s_stream()
+Message-ID: <ZhZkURwXETI9URKy@kekkonen.localdomain>
+References: <20240405-enable-streams-impro-v2-0-22bca967665d@ideasonboard.com>
+ <20240405-enable-streams-impro-v2-4-22bca967665d@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="d0bdlkh8SwUX6pNK"
-Content-Disposition: inline
-In-Reply-To: <3d5df067-ec94-42c6-bbd0-43ce8cd53e40@gmail.com>
-
-
---d0bdlkh8SwUX6pNK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240405-enable-streams-impro-v2-4-22bca967665d@ideasonboard.com>
 
-On Wed, Apr 10, 2024 at 10:57:08AM +0300, Matti Vaittinen wrote:
-> On 4/4/24 22:54, Andreas Kemnade wrote:
-> > As this chip was seen in several devices in the wild, add it.
-> >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > Suggested-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> > ---
-> >   .../devicetree/bindings/mfd/rohm,bd71828-pmic.yaml         | 7 ++++++-
-> >   1 file changed, 6 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.ya=
-ml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-> > index 0b62f854bf6b..07f99738fcf6 100644
-> > --- a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
-> > @@ -17,7 +17,12 @@ description: |
-> >   properties:
-> >     compatible:
-> > -    const: rohm,bd71828
-> > +    oneOf:
-> > +      - const: rohm,bd71828
-> > +
-> > +      - items:
-> > +          - const: rohm,bd71879
-> > +          - const: rohm,bd71828
-> >     reg:
-> >       description:
->=20
-> Am I correct, this reads as:
->=20
-> Either
-> 	compatible =3D rohm,bd71828
-> or
-> 	compatible =3D rohm,bd71879, rohm,bd71828
->=20
-> but not compatible =3D rohm,bd71879?
+Moi,
 
-Correct.
+On Fri, Apr 05, 2024 at 12:14:22PM +0300, Tomi Valkeinen wrote:
+> call_s_stream() uses sd->enabled_streams to track whether streaming has
+> already been enabled. However,
+> v4l2_subdev_enable/disable_streams_fallback(), which was the original
+> user of this field, already uses it, and
+> v4l2_subdev_enable/disable_streams_fallback() will call call_s_stream().
+> 
+> This leads to a conflict as both functions set the field. Afaics, both
+> functions set the field to the same value, so it won't cause a runtime
+> bug, but it's still wrong and if we, e.g., change how
+> v4l2_subdev_enable/disable_streams_fallback() operates we might easily
+> cause bugs.
+> 
+> Fix this by adding a new field, 'streaming_enabled', for
+> call_s_stream().
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 8 ++------
+>  include/media/v4l2-subdev.h           | 3 +++
+>  2 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index a15a41576918..94483b238f2a 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -421,12 +421,8 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>  	 * The .s_stream() operation must never be called to start or stop an
+>  	 * already started or stopped subdev. Catch offenders but don't return
+>  	 * an error yet to avoid regressions.
+> -	 *
+> -	 * As .s_stream() is mutually exclusive with the .enable_streams() and
+> -	 * .disable_streams() operation, we can use the enabled_streams field
+> -	 * to store the subdev streaming state.
+>  	 */
+> -	if (WARN_ON(!!sd->enabled_streams == !!enable))
+> +	if (WARN_ON(!!sd->streaming_enabled == !!enable))
 
---d0bdlkh8SwUX6pNK
-Content-Type: application/pgp-signature; name="signature.asc"
+A single ! is enough on both sides.
 
------BEGIN PGP SIGNATURE-----
+>  		return 0;
+>  
+>  	if (enable)
+> @@ -442,7 +438,7 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>  	}
+>  
+>  	if (!ret)
+> -		sd->enabled_streams = enable ? BIT(0) : 0;
+> +		sd->streaming_enabled = !!enable;
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhZkDwAKCRB4tDGHoIJi
-0k8LAQCCIueExTdOVFOVm0LA9g+yGDV3QCm9Xr4ma7lWVWh1YAEAnMhqdijGAVjr
-aAO9Zk1iF7Qz1qrfzcqUXIHGxnwdPwg=
-=gAgy
------END PGP SIGNATURE-----
+No need for !! unless you think it needs to be very loud. Casting a
+non-boolean value to boolean results in true if it's non-zero.
 
---d0bdlkh8SwUX6pNK--
+>  
+>  	return ret;
+>  }
+> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> index a9e6b8146279..f55d03e0acc1 100644
+> --- a/include/media/v4l2-subdev.h
+> +++ b/include/media/v4l2-subdev.h
+> @@ -1043,6 +1043,8 @@ struct v4l2_subdev_platform_data {
+>   *		     v4l2_subdev_enable_streams() and
+>   *		     v4l2_subdev_disable_streams() helper functions for fallback
+>   *		     cases.
+> + * @streaming_enabled: Tracks whether streaming has been enabled with s_stream.
+> + *                     This is only for call_s_stream() internal use.
+>   *
+>   * Each instance of a subdev driver should create this struct, either
+>   * stand-alone or embedded in a larger struct.
+> @@ -1091,6 +1093,7 @@ struct v4l2_subdev {
+>  	 */
+>  	struct v4l2_subdev_state *active_state;
+>  	u64 enabled_streams;
+> +	bool streaming_enabled;
+>  };
+>  
+>  
+> 
+
+-- 
+Terveisin,
+
+Sakari Ailus
