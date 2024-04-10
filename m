@@ -1,90 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E05D174EE9;
-	Wed, 10 Apr 2024 14:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA0316D9B7
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712760616; cv=none; b=fjx2Z5kewUPfLRvQmsE6CygB3HHNemJL2YxSWXseT7YOCE3HRWMURBdyG9PuSganALikThQIwl/MtSotQ8LUZ01ZFWVBaGrTXp193o7IuqBUe28xzDnx7EFcnpa18u/zyys5PBjLtrqeDTLxx9q47P7s5FV3iXrolwcUpzjv58w=
+	t=1712760740; cv=none; b=nvHkUui28LaLSsu2BlC05AwZdgTDjeblEVqP9UlL6zwKrnxVllHN3DhHU2kGVtQ4Cn/UtLbTHauKpTEdbRQiG7BJRkovHJHuJu2tEtw+EuVNzjZ6t4Ux9Tnd1scunbWZej7GL7VkxOTdMU3mNcDo3DNN01jwnr3zzJroe3Ry5YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712760616; c=relaxed/simple;
-	bh=QWBeKVujIF8v0rlPHbEKaf0gAf7oOpu5rJ9JUTdF9BM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rmtCLOb0HyIJsyStPxmKT31KJzj7nG4VQSkCQkbO14Pzc47nhqg/uvIWJxyCXlCkjx3+znpmoCBEFNGQqKStOdtPJFXj5PLAflmKgH31IIi51xdGvNNbPz7R94ZLpog9opzcYH8aRpg2bSlw0SWPgSuxJmaQ8+3pnS513ySVzTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pDBIBuC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712760740; c=relaxed/simple;
+	bh=V/whf2NgJi4jjsL/BuQVyIZUl0yZ8lKE0/G90die/Go=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Fquszngni9naZtMjINNC5oz6N3IUbMgX+w+dwd6btVxOLGDmgOWebVTrflc7dlhsIpq7IPtv8fWzy/Vr8N8lcmQBcOh7K7dxM+exXjAaQQFGC2yzLLfpZiIWylm4wMHSs7l71sjNPD9Jm9ujTXhzmzBsaPwDfBm6heFcaPYRMQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GQFzNF0B; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rz7yx78a; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pDBIBuC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77080C433F1;
-	Wed, 10 Apr 2024 14:50:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712760615;
-	bh=QWBeKVujIF8v0rlPHbEKaf0gAf7oOpu5rJ9JUTdF9BM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pDBIBuC7E57OZzo5tK2mLc7aLpm1/IPAKzPyAwDN/IfgqssUg21BEwtfBBOjC7p90
-	 TVPvcpV3tzbuNRyJxe7G/R48sVeKWjLY/ltZ38KWn5gDXmHhQKBTbJvKNl3lpPElFV
-	 AIAwEbpwjp5SZ3E4juX+DIFSpabOVmM5GAhHrr9QikvKJJX2qyF/JtfMnm+7XnIaVJ
-	 nLfuCf+z8xiC/UY1RHA4Nqe8CcqqJ8R7p9/pxuvZ6dW4W0bjwMtQ8bU3YLi+BswnfG
-	 Dab6SvrXdWjJ/n9njoJD338nTybXYgxZ8JmnJIAcbJs9qXFRFD8G3KcDNj0FDNAKew
-	 sFFHa8Ppm0Rsw==
-Date: Wed, 10 Apr 2024 16:50:13 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 2/4] perf: Enqueue SIGTRAP always via task_work.
-Message-ID: <ZhanJYjJQqrqYlg-@localhost.localdomain>
-References: <ZhRhn1B0rMSNv6mV@pavilion.home>
- <20240409085732.FBItbOSO@linutronix.de>
- <ZhU2YwettB6i6AMp@localhost.localdomain>
- <20240409134729.JpcBYOsK@linutronix.de>
- <ZhZ54XAcBt50WEnE@localhost.localdomain>
- <20240410134702.dcWYciZB@linutronix.de>
- <ZhabcanCbQej1azv@localhost.localdomain>
- <20240410140633.0MHBLpMI@linutronix.de>
- <ZhalcBcd3w0w2HD_@localhost.localdomain>
- <20240410144821.bVdBdVOR@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GQFzNF0B";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rz7yx78a"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712760737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ohxUODTZAldM0Ht/9Tv92UeRT+mq+q4icxH6L3Lk8tQ=;
+	b=GQFzNF0Bg+4k7nNSSdY5l/ZgMCwL5A7Ej6m72NDN5ma9AlLvCtkvlcB+NdU+AVtWoxlihj
+	8GW/qHneqjCt78BgB8PqAwURYjkT/lEOksxe3NN/5XIqnOutAmnJCi4qN+gBKDTFmu4+Tp
+	vKIMWx5c9SR3oLX9OZlKNHN9vbu3WIK3e/NjS56mrD7/o/GG2+1SrUHAOfXVOk8ogmhut2
+	opqTxWyA3ZbLCq78fbWbCrGueDg/xQXh0R7CgV1qBaLcQIB3XHGKh4L+BDGnafVjLVrtdu
+	c41PKab4toQQTWXNRICaVxjG7mT7EYYS/h4JKRfjwhVbeCmcH2VPrXM2Sg/ETg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712760737;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ohxUODTZAldM0Ht/9Tv92UeRT+mq+q4icxH6L3Lk8tQ=;
+	b=rz7yx78aiQwqLc36Qkc3Ic5L1U38cgWJsjDy+sM0mxaPPWOmgxetSEvO9ZVMX9p9RSGvFo
+	bp+Ar6onyszePSCA==
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Linux kernel regressions
+ list <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>, xiangfeix.ma@intel.com
+Subject: Re: Call Trace when adding vCPU to guest
+In-Reply-To: <b9e54d33-7f5e-45a5-b215-d3f9daef5a8e@leemhuis.info>
+References: <b4929457-23b8-4ad4-8324-cc1cde5ecece@leemhuis.info>
+ <87bk6h49tq.ffs@tglx> <b9e54d33-7f5e-45a5-b215-d3f9daef5a8e@leemhuis.info>
+Date: Wed, 10 Apr 2024 16:52:16 +0200
+Message-ID: <871q7d46e7.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240410144821.bVdBdVOR@linutronix.de>
+Content-Type: text/plain
 
-Le Wed, Apr 10, 2024 at 04:48:21PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2024-04-10 16:42:56 [+0200], Frederic Weisbecker wrote:
-> > > > Like this then?
-> > > > 
-> > > > https://lore.kernel.org/all/202403310406.TPrIela8-lkp@intel.com/T/#m63c28147d8ac06b21c64d7784d49f892e06c0e50
-> > > 
-> > > Kind of, yes. Do we have more than one waiter? If not, maybe that
-> > > rcuwait would work then.
-> > 
-> > Indeed there is only one waiter so that should work. Would
-> > that be something you can call while preemption is disabled?
-> 
-> rcuwait_wake_up() does only wake_up_process() which is fine.
-> wake_up() does spin_lock_irqsave() which is a no.
+On Wed, Apr 10 2024 at 15:48, Thorsten Leemhuis wrote:
 
-Duh!
+> On 10.04.24 15:38, Thomas Gleixner wrote:
+>> On Wed, Apr 10 2024 at 09:34, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=218698
+>> [...]
+>>>>
+>>>> When hot adding a vCPU to the guest, the guest happens Call Trace and reboot.
+>> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=a9025cd1c673a8d6eefc79d911075b8b452eba8f
+>> 
+>> It'll be in rc4
+>
+> Ahh, splendid, thx for replying! Ciao, Thorsten
+>
+> #regzbot fix: a9025cd1c673a8d6eefc79d911075b8b452eb
 
-> On the other hand that preempt-disable needs to go anyway due to
-> perf_sigtrap(). But a slim wake is a slim wake ;)
+Ooops. No!
 
-Sure thing :)
+I just read back and noticed that this is a report against some whatever
+kernel:
 
-> > Thanks.
-> 
-> Sebastian
+> [   49.782913] Call Trace:
+> [   49.783039]  <TASK>
+> [   49.783147]  ? __die+0x24/0x70
+> [   49.783309]  ? page_fault_oops+0x82/0x150
+> [   49.783518]  ? kernelmode_fixup_or_oops+0x84/0x110
+> [   49.783753]  ? exc_page_fault+0xb9/0x160
+> [   49.783948]  ? asm_exc_page_fault+0x26/0x30
+> [   49.784144]  ? cpu_update_apic+0x1c/0x70
+> [   49.784327]  generic_processor_info+0x7e/0x160
+> [   49.784541]  acpi_register_lapic+0x19/0x80
+
+# cd linus/linux
+# gcur
+master 2c71fdf02a95: Merge tag 'drm-fixes-2024-04-09' of https://gitlab.freedesktop.org/drm/kernel
+# git grep generic_processor_info
+#
+
+generic_processor_info() was removed during the 6.9 merge window with
+the topology rework before v6.9-rc1.
+
+So the guest kernel _cannot_ be v6.9-rc2 at all.
+
+Thanks,
+
+        tglx
+
+
+
