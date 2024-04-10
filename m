@@ -1,127 +1,143 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8297179668
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 16:11:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A6A176FB8
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 16:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712765495; cv=none; b=Ufkv/1+L1NX+KHeGuaMyYu18G89gdxau74zM3GkDTC0n1N5IqTjJKvJxKz7ra7XA3GQpshZXLYAht8db5BnvlEhYagAIfRxf3rf8lQRc+HECvGEzYBJ2RcstR4LPGgkKKyalz93voBspffOuqVmmNf9ZPLoBkYJooUs3kVDQIQI=
+	t=1712765543; cv=none; b=e01sv0+qQuxyZPOE+cG0F/B3dTEkiAeVG10ZDo2A8drVpoUits7YuV8OntqEbNXWOUXjNblW/N/90aqoXwYfpWJsJECqoiRm6ChZlKIe+HYCXEPzUzTT3KN0ouoIE/5ScbWjKWbQCLZVsY2eV9q63kIYXrVF1NMbRiU+V8XjSCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712765495; c=relaxed/simple;
-	bh=Brha+pzHRoTDzGvY8i5/hWAwyVOrjvBDcmO3xAizNl4=;
+	s=arc-20240116; t=1712765543; c=relaxed/simple;
+	bh=c9PGCuY6rG9FxgXioiP1w/MDaTwBhRCGq7HHEAVFV74=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8NZ2ShPxIm6GQ9LV65IsTDrGyD1QCWf9Uj1hHdx/NBi8kVTmnGLk503N1L3E3h0Bf+r/IvexjurAoftZpXDc5Sz3DqFkdmlAGEKVhFpbYE3o7N2p2eOjf5a3gVUQPisaQW2zjqlmFDnDa6gArMvP8hC0476rFLhdNVCWDmfjuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruaXn-0006DP-HG; Wed, 10 Apr 2024 18:11:27 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruaXl-00BWip-Vm; Wed, 10 Apr 2024 18:11:25 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1ruaXl-0068ZL-2q;
-	Wed, 10 Apr 2024 18:11:25 +0200
-Date: Wed, 10 Apr 2024 18:11:25 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
-Subject: Re: [PATCH net-next v6 5/9] net: dsa: microchip: add support for
- different DCB app configurations
-Message-ID: <Zha6Lf72N8fc0Ju1@pengutronix.de>
-References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
- <20240410080556.1241048-6-o.rempel@pengutronix.de>
- <20240410153236.d3ncotfhzwv4dlb7@skbuf>
+	 Content-Type:Content-Disposition:In-Reply-To; b=sKQFf7L7oimh6LpBrp0CBGyjo2hzT0aEJ0fZSOgJH6VH1IDtK8SJNH1I4I/lp84quNGgXuHQcrNpt4nuNeGY83sToLCFiyxSlPcE5/642nPeH7FfhcrXzwEqlIsWB0z2o+wPGPGRCQUNPSc5KQSmImiQep6P6I5VzohoklqeZRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aqedj5om; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Aqedj5om"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF765C433F1;
+	Wed, 10 Apr 2024 16:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712765542;
+	bh=c9PGCuY6rG9FxgXioiP1w/MDaTwBhRCGq7HHEAVFV74=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Aqedj5omVgbmpMFYJ6Z9B7DU1WW6aZgVjXVZFlj5VzwDBu9GaLotEXRVCxogUjbsT
+	 mN65c5N9KQTvC1K+HAVdEUhAHk37q3g8jq5sKtdjaz5XJT73la1fGa9Kda3jSD3rW2
+	 tLsDrSnDrLS4FZ6owabRYjfzcTCVXAdCY8iB4rTrjm/tpbx4vbhxWL64y/y5UtEWIb
+	 ZZ7bcninalRWKzg1a3FAk59lTE6D0XRTF1lxIaCyaK0o077M/0vAGWs1BygYqqA9/8
+	 XIqYZp9idUEUujtfzFqeHXUsXCQ/ZVeYnTJ3WB9iwkXGDMJrjiKfyxDB+lOjU5N1nv
+	 Q1LCdSEVKOS/g==
+Date: Wed, 10 Apr 2024 17:12:17 +0100
+From: Will Deacon <will@kernel.org>
+To: Seongsu Park <sgsu.park@samsung.com>
+Cc: catalin.marinas@arm.com, mark.rutland@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Leem ChaeHoon <infinite.run@gmail.com>,
+	Gyeonggeon Choi <gychoi@student.42seoul.kr>,
+	Soomin Cho <to.soomin@gmail.com>, DaeRo Lee <skseofh@gmail.com>,
+	kmasta <kmasta.study@gmail.com>
+Subject: Re: [PATCH v3] arm64: Cleanup __cpu_set_tcr_t0sz()
+Message-ID: <20240410161217.GB25225@willie-the-truck>
+References: <CGME20240408024022epcas1p176f9509f6f85fd8dbfa2dd17067a8aee@epcas1p1.samsung.com>
+ <20240408024016.490516-1-sgsu.park@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240410153236.d3ncotfhzwv4dlb7@skbuf>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240408024016.490516-1-sgsu.park@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Wed, Apr 10, 2024 at 06:32:36PM +0300, Vladimir Oltean wrote:
-> On Wed, Apr 10, 2024 at 10:05:52AM +0200, Oleksij Rempel wrote:
-> > diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-> > new file mode 100644
-> > index 0000000000000..d2122f844c80b
-> > --- /dev/null
-> > +++ b/drivers/net/dsa/microchip/ksz_dcb.c
-> > +/**
-> > + * ksz_supported_apptrust[] - Supported apptrust selectors and Priority Order
-> > + *			      of Internal Priority Value (IPV) sources.
-> > + *
-> > + * This array defines the apptrust selectors supported by the hardware, where
-> > + * the index within the array indicates the priority of the selector - lower
-> > + * indices correspond to higher priority. This fixed priority scheme is due to
-> > + * the hardware's design, which does not support configurable priority among
-> > + * different priority sources.
-> > + *
-> > + * The priority sources, including Tail Tag, ACL, VLAN PCP and DSCP are ordered
-> > + * by the hardware's fixed logic, as detailed below. The order reflects a
-> > + * non-configurable precedence where certain types of priority information
-> > + * override others:
-> > + *
-> > + * 1. Tail Tag - Highest priority, overrides ACL, VLAN PCP, and DSCP priorities.
-> > + * 2. ACL - Overrides VLAN PCP and DSCP priorities.
-> > + * 3. VLAN PCP - Overrides DSCP priority.
-> > + * 4. DSCP - Lowest priority, does not override any other priority source.
-> > + *
-> > + * In this context, the array's lower index (higher priority) for
-> > + * 'DCB_APP_SEL_PCP' suggests its relative priority over
-> > + * 'IEEE_8021QAZ_APP_SEL_DSCP' within the system's fixed priority scheme.
-> > + *
-> > + * DCB_APP_SEL_PCP - Priority Code Point selector
-> > + * IEEE_8021QAZ_APP_SEL_DSCP - Differentiated Services Code Point selector
-> > + */
-> > +static const u8 ksz_supported_apptrust[] = {
-> > +	DCB_APP_SEL_PCP,
-> > +	IEEE_8021QAZ_APP_SEL_DSCP,
-> > +};
+On Mon, Apr 08, 2024 at 11:40:16AM +0900, Seongsu Park wrote:
+> In cpu_set_default_tcr_t0sz(), it is an error to shift TCR_T0SZ_OFFSET
+> twice form TCR_T0SZ() and __cpu_set_tcr_t0sz().
+> Since TCR_T0SZ_OFFSET is 0, no error occurred.
+> We need to clarify whether the parameter of __cpu_set_tcr_t0sz is a
+> shifted value or an unshifted value.
 > 
-> I've no idea how kernel-doc is supposed to document arrays. But this
-> generates a scripts/kernel-doc warning:
+> We have already shifted the value of t0sz in TCR_T0SZ by TCR_T0SZ_OFFSET.
+> This is necessary for consistency with TCR_T1SZ.
+> Therefore, the parameter of __cpu_set_tcr_t0sz is clarified as a shifted
+> value.
+
+This commit message needs reworking. I would suggest something like:
+
+  The T0SZ field of TCR_EL1 occupies bits 0-5 of the register and
+  encodes the virtual address space translated by TTBR0_EL1. When
+  updating the field (for example, because we are switching to/from
+  the idmap page-table), __cpu_set_tcr_t0sz() erroneously treats its
+  't0sz' argument as unshifted, resulting in harmless but confusing
+  double shifts by 0 in the code.
+
+  Remove the unnecessary shifts.
+
+> Co-developed-by: Leem ChaeHoon <infinite.run@gmail.com>
+> Signed-off-by: Leem ChaeHoon <infinite.run@gmail.com>
+> Co-developed-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
+> Signed-off-by: Gyeonggeon Choi <gychoi@student.42seoul.kr>
+> Co-developed-by: Soomin Cho <to.soomin@gmail.com>
+> Signed-off-by: Soomin Cho <to.soomin@gmail.com>
+> Co-developed-by: DaeRo Lee <skseofh@gmail.com>
+> Signed-off-by: DaeRo Lee <skseofh@gmail.com>
+> Co-developed-by: kmasta <kmasta.study@gmail.com>
+> Signed-off-by: kmasta <kmasta.study@gmail.com>
+> Signed-off-by: Seongsu Park <sgsu.park@samsung.com>
+
+Honestly, although it's great that you all meet up to look at the kernel,
+this long list of credits is a little absurd for a trivial patch like
+this. Please can you decide who did the most work and give them the
+credit? Hopefully there will be future opportunities for you all to
+contribute!
+
+> ---
 > 
->   CHECK   ../drivers/net/dsa/microchip/ksz_dcb.c
-> ./drivers/net/dsa/microchip/ksz_dcb.c:81: warning: cannot understand function prototype: 'const u8 ksz_supported_apptrust[] = '
+> v2:
+>  - Condition is updated
+> v3:
+>  - Commit message is updated
+>  - cpu_set_tcr_t0sz macro is added
 > 
-> Worst case, it doesn't need to be a kernel-doc?
+> ---
+>  arch/arm64/include/asm/mmu_context.h | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+> index c768d16b81a4..fb603ec7f61f 100644
+> --- a/arch/arm64/include/asm/mmu_context.h
+> +++ b/arch/arm64/include/asm/mmu_context.h
+> @@ -72,15 +72,16 @@ static inline void __cpu_set_tcr_t0sz(unsigned long t0sz)
+>  {
+>  	unsigned long tcr = read_sysreg(tcr_el1);
+>  
+> -	if ((tcr & TCR_T0SZ_MASK) >> TCR_T0SZ_OFFSET == t0sz)
+> +	if ((tcr & TCR_T0SZ_MASK) == t0sz)
+>  		return;
+>  
+>  	tcr &= ~TCR_T0SZ_MASK;
+> -	tcr |= t0sz << TCR_T0SZ_OFFSET;
+> +	tcr |= t0sz;
+>  	write_sysreg(tcr, tcr_el1);
+>  	isb();
+>  }
+>  
+> +#define cpu_set_tcr_t0sz(t0sz)		__cpu_set_tcr_t0sz(TCR_T0SZ(t0sz))
+>  #define cpu_set_default_tcr_t0sz()	__cpu_set_tcr_t0sz(TCR_T0SZ(vabits_actual))
+>  #define cpu_set_idmap_tcr_t0sz()	__cpu_set_tcr_t0sz(idmap_t0sz)
+>  
+> @@ -134,7 +135,7 @@ static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
+>  {
+>  	cpu_set_reserved_ttbr0();
+>  	local_flush_tlb_all();
+> -	__cpu_set_tcr_t0sz(t0sz);
+> +	cpu_set_tcr_t0sz(t0sz);
 
-I can remove the part which makes this comment a kenrel doc.
+Sorry, but this is wrong. Please have a look at how cpu_install_ttbr0()
+is called; specifically how trans_pgd_idmap_page() sets up 't0sz'.
 
-Are there other issues for this patch? Can it get your Reviewed-by if
-fixed?
+So I don't think you should change cpu_install_ttbr0() at all and adding
+a cpu_set_tcr_t0sz() macro which calls TCR_T0SZ on the 't0sz' argument
+is a mistake.
 
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Will
