@@ -1,143 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4B5178CDF
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FB91791FE
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712764571; cv=none; b=DEWNW8+5KCLH3uomAYZZvpSnMs48ngm6X29Coc43lzTFoWQLhas1e40YBGa/JVzIW2qlGnfrHIOiPcGKdVXBp4FYbyjcdSLkZa8JThYPZHhPE7cnfvAwdIXnE/p7lsq7pT3MdhvrASD6rVLixadaxiw9vHfD9OMGSS2BjUCn6xo=
+	t=1712764576; cv=none; b=PDpeNZ7kIIsjNo6fvxjmnXgtB1fD/2U08nniKfLjpMpd0GpwxEol1BMMtRY8cI9Q79HGzY6GxnPDRzBeli2uZ41wVuo0qcbR6OikPtMLcAJ7heJpRskGkN5KsCaw54GB2P+ku5VuUeXQ+h4OZBmVsgmSA2MwrwmQtV/g6A1UkLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712764571; c=relaxed/simple;
-	bh=ib/Czh9TMd/11JWLM99RkSfUuaLTcKgI+kz9vZpIItQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N0i43GF9SYIsk6ZXbKTr2rrXii+0XDzRzC4UnvRjZfcwxozg1R1+XaWGDMrZCkie1oQtqcRPGGVtibbftwdFfKmXHKPkxNB8vygQgIFMIvlSO/c8sRvlddCCCGyCCu9ZRCpNNwVider7DFmBLrQ3PagQN6g33lpKrLdYqpylL10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dkZh4oMv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712764576; c=relaxed/simple;
+	bh=POh8IzPVqd5g9ddH6pfdaCVtLO682z9BexNHdz5ZleU=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=msfYGIhQgrTkjlPnxypxWcD6HVheZbEOMY8wzpt3woPTxrsr2auw9c6tVUeyGcuMAU1J54wfu9VsU8qLBBLlDNr8XuDTc+8KCNgKKhDDDKkH3Rmwe8o3SDrHqs78GAri73M9fi3jLRgYScJjOx94jXZf4O9NlIejVkCIBxE8MMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tLLPGzNs; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dkZh4oMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712764568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P8ZsNI89NzeHBwo5bvI1yofxYUq5jUxcvm+li/FE14A=;
-	b=dkZh4oMv/vf3Q67wIKopWjS53RoA1TvxsQ2Km3Ap7CUM1LOl2sYjFVljHCKGfaCyAdcY4I
-	iVK7VSDSa16G9eckvhz8aIBcWUqBrgbomQeP83gZzQ/OkSKx/Wf8xoRPYxQlvu+dEN4bS5
-	a1w0sz3zLtG+xo5/N21k3bBhXkKGYk0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-591-sePtCS1xOjyfrSAEA2ASBA-1; Wed, 10 Apr 2024 11:56:04 -0400
-X-MC-Unique: sePtCS1xOjyfrSAEA2ASBA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8930C8007BA;
-	Wed, 10 Apr 2024 15:56:03 +0000 (UTC)
-Received: from t14s.fritz.box (unknown [10.39.193.162])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 82C97920;
-	Wed, 10 Apr 2024 15:56:00 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	x86@kernel.org,
-	linux-s390@vger.kernel.org,
-	kvm@vger.kernel.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yonghua Huang <yonghua.huang@intel.com>,
-	Fei Li <fei1.li@intel.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH v1 3/3] mm: follow_pte() improvements
-Date: Wed, 10 Apr 2024 17:55:27 +0200
-Message-ID: <20240410155527.474777-4-david@redhat.com>
-In-Reply-To: <20240410155527.474777-1-david@redhat.com>
-References: <20240410155527.474777-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tLLPGzNs"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3442f4e098bso2455481f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712764573; x=1713369373; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HMdmKuUIz4lixjCtcUgme1poJSOdnyEZp5xiFsRRNeM=;
+        b=tLLPGzNsVhSvdOXwRhU7ge6mXA5h6UGJi+xU3TPkC9x+6H/OvSBc9HYcXaccuR0NWx
+         LSz2tYNZmZNmIZAE52UKwzm+SCOB7w6MsMeedlmwNW/0q6wl0ooKIUHZ7ZovTP3XbUq7
+         V1R8VibjB9nWYJcViV5CgJUzmedqrIW9RMCMurIImH/r/u6E9/rKxEtTEw4F7sL3Qbpv
+         +FkPEvGBqs3b245L7Ul4rKP+QFyTsKFpVODrB3g/LqR7/6j4W94hBe+pAzWwxYSO2uZF
+         LNqRjamzEBlKAjJJDZGATYz8NsvkuJA81++Ryh6ajVf6Bp/D7y/lx+dMofkcJkDoGbu3
+         3Rsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712764573; x=1713369373;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HMdmKuUIz4lixjCtcUgme1poJSOdnyEZp5xiFsRRNeM=;
+        b=HQi0OReI/9UL5knw0Ck3bnlgmKPqgguY+EEnKJDRkObWKULGkRQcU4BsgFjY+sV8oN
+         Lk5+AW0c6pbrldMufJGFN/glQsp+ZLKYy6sixlRJTAw7zpmIKLiu17FqRNdAn8TgngBG
+         JGOQmFVH+J17K0goPtH9t0kSqximCzGJabwRL/L1k7hK077mUrFpg7SWqEfXY3r3pBnH
+         N6MsdAFbdt1hBX12QsdEnWx4J6NQFbITS1muaz5BfUMkPJo5vDLttEE1uiqifvCmNyZd
+         zL1z88IUAJhz3BlcEUwzeO/h+hnlgssiRHkZpFuWaiv/RP+L1Y26LGpZHFshr8Uchtk0
+         rp+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUAHRFzE1H24otMA7iP668hcDUt0MXyR0XkmJrIuSwaFVMGxhribSZKTwxe7HAmtd+GkY6HQPHKxF9gHkF14nWZOiwpCYSEgf1FhZOD
+X-Gm-Message-State: AOJu0Yw8uWyRszjdJtpveVlxsI8tFq3dLOAzmiU/C5k3P/tRcF8lRhnk
+	TCOoDPHM+W/nPVuTmljBTnbD/8kq8G6a9dbxAoPuSY+XkdAtp9c9b4TpyaYnvx4=
+X-Google-Smtp-Source: AGHT+IH0DicSj7EZdYVwanK8DChE5Kq6JyrG4DLOmsDfa/paE/heJ15/axU+4Ae8PBBUkNTAuGB01w==
+X-Received: by 2002:a05:6000:402c:b0:345:811b:466e with SMTP id cp44-20020a056000402c00b00345811b466emr46608wrb.26.1712764573431;
+        Wed, 10 Apr 2024 08:56:13 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:760d:c2fa:a66b:fed3? ([2a01:e0a:982:cbb0:760d:c2fa:a66b:fed3])
+        by smtp.gmail.com with ESMTPSA id i6-20020adffc06000000b003455e5d2569sm10468562wrr.0.2024.04.10.08.56.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 08:56:13 -0700 (PDT)
+Message-ID: <7c1aa6a9-b964-45e7-bd8c-d9ef5096a04a@linaro.org>
+Date: Wed, 10 Apr 2024 17:56:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] clk: meson: s4: fix module autoloading
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240410155406.224128-1-krzk@kernel.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20240410155406.224128-1-krzk@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-follow_pte() is now our main function to lookup PTEs in VM_PFNMAP/VM_IO
-VMAs. Let's perform some more sanity checks to make this exported function
-harder to abuse.
+On 10/04/2024 17:54, Krzysztof Kozlowski wrote:
+> Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+> based on the alias from of_device_id table.  Clocks are considered core
+> components, so usually they are built-in, however these can be built and
+> used as modules on some generic kernel.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   drivers/clk/meson/s4-peripherals.c | 1 +
+>   drivers/clk/meson/s4-pll.c         | 1 +
+>   2 files changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clk/meson/s4-peripherals.c b/drivers/clk/meson/s4-peripherals.c
+> index 6c35de3d536f..22ff030bd6a8 100644
+> --- a/drivers/clk/meson/s4-peripherals.c
+> +++ b/drivers/clk/meson/s4-peripherals.c
+> @@ -3799,6 +3799,7 @@ static const struct of_device_id clkc_match_table[] = {
+>   	},
+>   	{}
+>   };
+> +MODULE_DEVICE_TABLE(of, clkc_match_table);
+>   
+>   static struct platform_driver s4_driver = {
+>   	.probe		= meson_s4_periphs_probe,
+> diff --git a/drivers/clk/meson/s4-pll.c b/drivers/clk/meson/s4-pll.c
+> index 8dfaeccaadc2..8a917b9703bf 100644
+> --- a/drivers/clk/meson/s4-pll.c
+> +++ b/drivers/clk/meson/s4-pll.c
+> @@ -853,6 +853,7 @@ static const struct of_device_id clkc_match_table[] = {
+>   	},
+>   	{}
+>   };
+> +MODULE_DEVICE_TABLE(of, clkc_match_table);
+>   
+>   static struct platform_driver s4_driver = {
+>   	.probe		= meson_s4_pll_probe,
 
-Further, extend the doc a bit, it still focuses on the KVM use case with
-MMU notifiers. Drop the KVM+follow_pfn() comment, follow_pfn() is no more,
-and we have other users nowadays.
-
-Also extend the doc regarding refcounted pages and the interaction with MMU
-notifiers.
-
-KVM is one example that uses MMU notifiers and can deal with refcounted
-pages properly. VFIO is one example that doesn't use MMU notifiers, and
-to prevent use-after-free, rejects refcounted pages:
-pfn_valid(pfn) && !PageReserved(pfn_to_page(pfn)). Protection changes are
-less of a concern for users like VFIO: the behavior is similar to
-longterm-pinning a page, and getting the PTE protection changed afterwards.
-
-The primary concern with refcounted pages is use-after-free, which
-callers should be aware of.
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index ab01fb69dc72..535ef2686f95 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5935,15 +5935,21 @@ int __pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
-  *
-  * On a successful return, the pointer to the PTE is stored in @ptepp;
-  * the corresponding lock is taken and its location is stored in @ptlp.
-- * The contents of the PTE are only stable until @ptlp is released;
-- * any further use, if any, must be protected against invalidation
-- * with MMU notifiers.
-+ *
-+ * The contents of the PTE are only stable until @ptlp is released using
-+ * pte_unmap_unlock(). This function will fail if the PTE is non-present.
-+ * Present PTEs may include PTEs that map refcounted pages, such as
-+ * anonymous folios in COW mappings.
-+ *
-+ * Callers must be careful when relying on PTE content after
-+ * pte_unmap_unlock(). Especially if the PTE maps a refcounted page,
-+ * callers must protect against invalidation with MMU notifiers; otherwise
-+ * access to the PFN at a later point in time can trigger use-after-free.
-  *
-  * Only IO mappings and raw PFN mappings are allowed.  The mmap semaphore
-  * should be taken for read.
-  *
-- * KVM uses this function.  While it is arguably less bad than the historic
-- * ``follow_pfn``, it is not a good general-purpose API.
-+ * This function must not be used to modify PTE content.
-  *
-  * Return: zero on success, -ve otherwise.
-  */
-@@ -5957,6 +5963,10 @@ int follow_pte(struct vm_area_struct *vma, unsigned long address,
- 	pmd_t *pmd;
- 	pte_t *ptep;
- 
-+	mmap_assert_locked(mm);
-+	if (unlikely(address < vma->vm_start || address >= vma->vm_end))
-+		goto out;
-+
- 	if (!(vma->vm_flags & (VM_IO | VM_PFNMAP)))
- 		goto out;
- 
--- 
-2.44.0
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
