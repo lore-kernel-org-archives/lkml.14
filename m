@@ -1,197 +1,213 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6080F20DDB
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668ED20304;
+	Wed, 10 Apr 2024 06:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712730028; cv=none; b=W9UdYZz8sRkRuKcx7sEDgJOSskF5pdgrzB+d0/lgczEcFeAPwhjPnUWWUE0hr/RtKQAWNQDDH5jdUJAZZXq9soeECI9MOy5CSxOriB4wXFWfp5gj6181WvwUFJJsphGz2NntKwjkL2rkK1roawoFYTvyNE2t9AnYnnNKHcLVIF8=
+	t=1712730044; cv=none; b=O9Mp0poj9kWHym7tiVHOLGZlTwmcqgS/NyAqeVfHRiOUP+NcK4+pLXbKi2i48A73Fv6AUhj2Aty/8beISjwEwfpbbdmLdrBV2jmd2gbvpsxIg9l1YQzxkVWTLD1lU7ohqwuuW5rsdUYi1E74VvozmIHXKeakYwGJrVl10DnvfGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712730028; c=relaxed/simple;
-	bh=uwt784Shk9K3LkOdlCkuId4R+pmLZMhJOJTkzgnUs+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QN4giq2036oEZTM5ZhaTMeyw3YZwSOIq4APiJjp4JD3aedpDYTTT5ArzN0XUJHcFvBfnvkABOfYJqx9IJduu7Whxaa0wrfP2WxsIoOPkvumNEkezg6eQtv+MRz7jUr4m2/Tveu1wnVwcSwUSZz6VLWGHc9J5XBkoPrkPfI2btV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RpyfwBom; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712730044; c=relaxed/simple;
+	bh=SVgnyvJn4+dftj5N9qiNFUfNLaC+N6iSxocInF85y/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JpTyfPXzWkiF/JUek0khNCnccF2tIkjLKMedKyK21Csq42rDMlIuzkHLrm3KmMT01PRftCn1sIFFcOABCnED/r3bhHHAkgXQ5thCR0cnqJjqgwb8NknwuBQYuk48kFIqqAI7XzICE7Pm3jDXN6/w1I4UGF2Qeuiep8Rez8OQopk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DRH5op6+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0jV/eoo4; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=DRH5op6+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0jV/eoo4; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RpyfwBom"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed054f282aso3851432b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 23:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712730026; x=1713334826; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e5v4LfNlblo2WKgRAn2D3NW7xqD55htd+EO/6vEx8Ak=;
-        b=RpyfwBomodqtD+enc0lrnylD7sKxrpv6BBk608AdaH4aN2/3JKS+THUZK3megyV6EW
-         jZdswysfCSTf+wo0a+ZeIuJoQcZtxf5dC/5X/EQM3zQQogEK/4KD66yNwlGZ80dvqiP9
-         UqfhR/FokvPBKv8XoYCZaYwiyp0aiPDJ2tlD8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712730026; x=1713334826;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e5v4LfNlblo2WKgRAn2D3NW7xqD55htd+EO/6vEx8Ak=;
-        b=N9+HFMlhKbm1AyxYCTKDKN2E/g5uAue50jdhEzWC93B6Yy/+TYFGoyO5DOr1wKElDB
-         HTl9sONd+8zxlKIekc0c199/Iim7bVtEimHIWCwsx8W3FSKf2V9yLHhBH/4eE65Mc6pW
-         7mj2HI2biMjg60ZeLHOXM/rif9ZSs9jNxqgGHIE3Q5udeowEeqcjhC/hilcv16KAzWa7
-         8kWUeMf7Aqd4FyF/2D5j//HdiiUXHDtYhU/G/9D/1uBiQ4oIWO7I5z+Tio6QwszCW5Yo
-         3LOFAXexMT+jnqacDGzZRNeB/PQGQnJU0Yz/0lN5uILvczjYUtF3TcY/LsRd0LgbfjWJ
-         f9yg==
-X-Forwarded-Encrypted: i=1; AJvYcCVn1wqfRyau9QZ+sw0Q2xZqr8pN4mlGNQCQS0CoLyuFFK7JMWm6MRCnTnaqkL+Cq3/n55Juac+XH0kWhwaZ/372U9phMAwvS9pLX38j
-X-Gm-Message-State: AOJu0Yz23szSIXdkhVvRR+5jaA1X2tpdNkyGe9dnLpVBfMdLaXbCL+2O
-	KM407tEBLy08ClaD2WQmCqUOXY8DYzitGxcpMAg+h0LZ/xPw58z3/hDkyHzsC82hYMv/HK9t3qE
-	8EQ==
-X-Google-Smtp-Source: AGHT+IHAta98FxLNG/x0sc1YsRsry9ENklaCOvy0ZnfjzpSfwTLrCO0ZpnFeZ9TC6+QWoa+lKUCVCQ==
-X-Received: by 2002:a05:6a00:21c9:b0:6ec:ee7c:141c with SMTP id t9-20020a056a0021c900b006ecee7c141cmr2087534pfj.16.1712730025858;
-        Tue, 09 Apr 2024 23:20:25 -0700 (PDT)
-Received: from yuanhsinte1.c.googlers.com (88.216.124.34.bc.googleusercontent.com. [34.124.216.88])
-        by smtp.gmail.com with ESMTPSA id lb14-20020a056a004f0e00b006ead47a65d1sm9411384pfb.109.2024.04.09.23.20.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 23:20:25 -0700 (PDT)
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Wed, 10 Apr 2024 06:20:20 +0000
-Subject: [PATCH] arm64: dts: mediatek: mt8192: Add missing trip point in
- thermal zone
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DRH5op6+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0jV/eoo4";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="DRH5op6+";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0jV/eoo4"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8A4D3349E5;
+	Wed, 10 Apr 2024 06:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712730040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yJIujaH3RXIktcRv88URJI4c3MW1XPtMbHZWqI5VmXc=;
+	b=DRH5op6+qgu/ZbeaZUaYpnIYWqjeWpHK8OW0+kwvqDCMEwaguq5aqaXafgAjwJ6zywhusF
+	tsgFsWgaCMMY4NaTEaGk3lDtHCR73mjQ4SRA1LnqLj9EF0l+PnSJ2BlijBLHcS98VKUP8t
+	Vf4bNVGD5TMPNXoHOH52Hod45ruzXX8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712730040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yJIujaH3RXIktcRv88URJI4c3MW1XPtMbHZWqI5VmXc=;
+	b=0jV/eoo4drBjtHKjxE/GtnE1W1+NVg3WllILQl+VLv9gNYfTXrOGjwpUFYpLOwg0GRsGjF
+	4Wxv4HCZCDpVodDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1712730040; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yJIujaH3RXIktcRv88URJI4c3MW1XPtMbHZWqI5VmXc=;
+	b=DRH5op6+qgu/ZbeaZUaYpnIYWqjeWpHK8OW0+kwvqDCMEwaguq5aqaXafgAjwJ6zywhusF
+	tsgFsWgaCMMY4NaTEaGk3lDtHCR73mjQ4SRA1LnqLj9EF0l+PnSJ2BlijBLHcS98VKUP8t
+	Vf4bNVGD5TMPNXoHOH52Hod45ruzXX8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1712730040;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yJIujaH3RXIktcRv88URJI4c3MW1XPtMbHZWqI5VmXc=;
+	b=0jV/eoo4drBjtHKjxE/GtnE1W1+NVg3WllILQl+VLv9gNYfTXrOGjwpUFYpLOwg0GRsGjF
+	4Wxv4HCZCDpVodDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CECBE13691;
+	Wed, 10 Apr 2024 06:20:38 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id InaALLYvFmaJGQAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 10 Apr 2024 06:20:38 +0000
+Message-ID: <94d6d88b-b0e7-491d-94e8-dc9e5fba5620@suse.de>
+Date: Wed, 10 Apr 2024 08:20:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240410-upstream-torvalds-master-v1-1-852e903f0cec@chromium.org>
-X-B4-Tracking: v=1; b=H4sIAKMvFmYC/x3MTQqEMAxA4atI1gZa6Sh4FXERajoT8I+kiiDe3
- TLLb/HeDcYqbNBXNyifYrKtBb6uIP5o/TLKVAyNa4IL3uGxW1amBfOmJ82T4UKWWTE44pQ+wbe
- xg5Lvykmu/3oYn+cFMVnATGoAAAA=
-To: Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
- =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
- Balsam CHIHI <bchihi@baylibre.com>, 
- Alexandre Mergnat <amergnat@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Hsin-Te Yuan <yuanhsinte@chromium.org>
-X-Mailer: b4 0.12.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/10] block atomic writes
+Content-Language: en-US
+To: Matthew Wilcox <willy@infradead.org>, Luis Chamberlain <mcgrof@kernel.org>
+Cc: John Garry <john.g.garry@oracle.com>, Pankaj Raghav
+ <p.raghav@samsung.com>, Daniel Gomez <da.gomez@samsung.com>,
+ =?UTF-8?Q?Javier_Gonz=C3=A1lez?= <javier.gonz@samsung.com>, axboe@kernel.dk,
+ kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
+ martin.petersen@oracle.com, djwong@kernel.org, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, dchinner@redhat.com, jack@suse.cz,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+ tytso@mit.edu, jbongio@google.com, linux-scsi@vger.kernel.org,
+ ojaswin@linux.ibm.com, linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
+ io-uring@vger.kernel.org, nilay@linux.ibm.com, ritesh.list@gmail.com
+References: <20240326133813.3224593-1-john.g.garry@oracle.com>
+ <ZgOXb_oZjsUU12YL@casper.infradead.org>
+ <c4c0dad5-41a4-44b4-8f40-2a250571180b@oracle.com>
+ <Zg7Z4aJtn3SxY5w1@casper.infradead.org>
+ <f3c1d321-0dfc-466f-9f6a-fe2f0513d944@oracle.com>
+ <ZhQud1NbO4aMt0MH@bombadil.infradead.org>
+ <ZhYQANQATz82ytl1@casper.infradead.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <ZhYQANQATz82ytl1@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.79 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	R_RATELIMIT(0.00)[to_ip_from(RLusjj3u5c53i6g8q6enupwtij)];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,samsung.com,kernel.dk,kernel.org,lst.de,grimberg.me,linux.ibm.com,zeniv.linux.org.uk,redhat.com,suse.cz,vger.kernel.org,lists.infradead.org,mit.edu,google.com,kvack.org,gmail.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Score: -2.79
+X-Spam-Flag: NO
 
-Add the missing passive trip point which is expected by kernel.
+On 4/10/24 06:05, Matthew Wilcox wrote:
+> On Mon, Apr 08, 2024 at 10:50:47AM -0700, Luis Chamberlain wrote:
+>> On Fri, Apr 05, 2024 at 11:06:00AM +0100, John Garry wrote:
+>>> On 04/04/2024 17:48, Matthew Wilcox wrote:
+>>>>>> The thing is that there's no requirement for an interface as complex as
+>>>>>> the one you're proposing here.  I've talked to a few database people
+>>>>>> and all they want is to increase the untorn write boundary from "one
+>>>>>> disc block" to one database block, typically 8kB or 16kB.
+>>>>>>
+>>>>>> So they would be quite happy with a much simpler interface where they
+>>>>>> set the inode block size at inode creation time,
+>>>>> We want to support untorn writes for bdev file operations - how can we set
+>>>>> the inode block size there? Currently it is based on logical block size.
+>>>> ioctl(BLKBSZSET), I guess?  That currently limits to PAGE_SIZE, but I
+>>>> think we can remove that limitation with the bs>PS patches.
+>>
+>> I can say a bit more on this, as I explored that. Essentially Matthew,
+>> yes, I got that to work but it requires a set of different patches. We have
+>> what we tried and then based on feedback from Chinner we have a
+>> direction on what to try next. The last effort on that front was having the
+>> iomap aops for bdev be used and lifting the PAGE_SIZE limit up to the
+>> page cache limits. The crux on that front was that we end requiring
+>> disabling BUFFER_HEAD and that is pretty limitting, so my old
+>> implementation had dynamic aops so to let us use the buffer-head aops
+>> only when using filesystems which require it and use iomap aops
+>> otherwise. But as Chinner noted we learned through the DAX experience
+>> that's not a route we want to again try, so the real solution is to
+>> extend iomap bdev aops code with buffer-head compatibility.
+> 
+> Have you tried just using the buffer_head code?  I think you heard bad
+> advice at last LSFMM.  Since then I've landed a bunch of patches which
+> remove PAGE_SIZE assumptions throughout the buffer_head code, and while
+> I haven't tried it, it might work.  And it might be easier to make work
+> than adding more BH hacks to the iomap code.
+> 
+> A quick audit for problems ...
+> 
+> __getblk_slow:
+>         if (unlikely(size & (bdev_logical_block_size(bdev)-1) ||
+>                          (size < 512 || size > PAGE_SIZE))) {
+> 
+> cont_expand_zero (not used by bdev code)
+> cont_write_begin (ditto)
+> 
+> That's all I spot from a quick grep for PAGE, offset_in_page() and kmap.
+> 
+> You can't do a lot of buffer_heads per folio, because you'll overrun
+>          struct buffer_head *bh, *head, *arr[MAX_BUF_PER_PAGE];
+> in block_read_full_folio(), but you can certainly do _one_ buffer_head
+> per folio, and that's all you need for bs>PS.
+> 
+Indeed; I got a patch here to just restart the submission loop if one
+reaches the end of the array. But maybe submitting one bh at a time and
+using plugging should achieve that same thing. Let's see.
 
-Fixes: c7a728051f4e ("arm64: dts: mediatek: mt8192: Add thermal nodes and thermal zones")
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8192.dtsi | 40 ++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+>> I suspect this is a use case where perhaps the max folio order could be
+>> set for the bdev in the future, the logical block size the min order,
+>> and max order the large atomic.
+> 
+> No, that's not what we want to do at all!  Minimum writeback size needs
+> to be the atomic size, otherwise we have to keep track of which writes
+> are atomic and which ones aren't.  So, just set the logical block size
+> to the atomic size, and we're done.
+> 
++1. My thoughts all along.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-index 05e401670bced..08d8bccc84669 100644
---- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
-@@ -1959,6 +1959,11 @@ cpu0-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU0>;
- 
- 			trips {
-+				cpu0_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu0_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -1989,6 +1994,11 @@ cpu1-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU1>;
- 
- 			trips {
-+				cpu1_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu1_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2019,6 +2029,11 @@ cpu2-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU2>;
- 
- 			trips {
-+				cpu2_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu2_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2049,6 +2064,11 @@ cpu3-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU3>;
- 
- 			trips {
-+				cpu3_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu3_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2079,6 +2099,11 @@ cpu4-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU0>;
- 
- 			trips {
-+				cpu4_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu4_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2109,6 +2134,11 @@ cpu5-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU1>;
- 
- 			trips {
-+				cpu5_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu5_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2139,6 +2169,11 @@ cpu6-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU2>;
- 
- 			trips {
-+				cpu6_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu6_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
-@@ -2169,6 +2204,11 @@ cpu7-thermal {
- 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU3>;
- 
- 			trips {
-+				cpu7_thres: trip-point {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
- 				cpu7_alert: trip-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
+Cheers,
 
----
-base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
-change-id: 20240410-upstream-torvalds-master-40aeff5416c7
-
-Best regards,
+Hannes
 -- 
-Hsin-Te Yuan <yuanhsinte@chromium.org>
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
 
