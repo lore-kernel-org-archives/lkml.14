@@ -1,310 +1,146 @@
-Received: from mx0a-0039f301.pphosted.com (mx0a-0039f301.pphosted.com [148.163.133.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97BD3F9D8;
-	Wed, 10 Apr 2024 23:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.242
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712793479; cv=fail; b=fn/bC8/igqlfx3GdIHTWDh/VBxsBBfxu1ALIG5qTAz/bjXHwkDTEiZ6kZCunXzPdVIVXshMPEy95lTZ03lehiWmccXqKQwjZZMt/fdiSloahW+grfWrZWOFxTAlVF63FlhiaCC6nJSkTH0+8QqrdM4aEVrkza5VotArihydGdPs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712793479; c=relaxed/simple;
-	bh=5dFFCYXui8l7J9ylG70OnL/JNGrGSY30KSwi/TuMUHw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UtdM6CXiOpQN+bPyjc72Yq3z/qePe48eldBQRXTfx11vovgyGeN7YHYbUiQZmuXq4zDITU0dTMUa1qhhVIQQw/wvuQdaSslfxhW+Xa1QArPkPkfs2Z0P63qEe6zlRzNqf6948s3jcBXT5ppQQXh+51Jflek9bewzrg3/eIY35mI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com; spf=pass smtp.mailfrom=epam.com; dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b=J+mah+lG; arc=fail smtp.client-ip=148.163.133.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epam.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7553FB31
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 23:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712793510; cv=none; b=OWUhKg1s+mM2/E3mf/wwinIYOy9lT9K2Q2J0I1vBEMnbH0TOJmvl6NuVwS/5ZK2XFsZI3ZvSHXtDa+oR9W9bZoFVke6nEMlBFFGyH6pVkjUQPKy0WbzBYRxiWTdefT7f/e/IOJdUgQzimsN9eOhJKgtKnI3y1I+pti4NvPBX4fE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712793510; c=relaxed/simple;
+	bh=bXItv4HYzVSIBt+RUD5HDA9HqlJYzm+XsjCsyrirxEM=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FubVfCGPB/Xcuu3EXrvWs0OdRYcNuWzx1pj5UBK+lERms1feolcqO7pYKDAuh+GLbfI6sw7AYqbUTAWGC11OKp6/PUkpmHQNVXjZmwYLxB+min0u4Mmt2d7Rbo/Dok5eEzagVgJr1DcsHKhsdfhoDk1LWrACyKPQQxUHAuiMo6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ul8dGcy7; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="J+mah+lG"
-Received: from pps.filterd (m0174677.ppops.net [127.0.0.1])
-	by mx0a-0039f301.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43AESZeh009881;
-	Wed, 10 Apr 2024 21:57:06 GMT
-Received: from eur03-am7-obe.outbound.protection.outlook.com (mail-am7eur03lp2233.outbound.protection.outlook.com [104.47.51.233])
-	by mx0a-0039f301.pphosted.com (PPS) with ESMTPS id 3xdtpu9jbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 21:57:06 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Hw6AhVKM6/6E4q60Ng2eHSmLmdgXOkh+pfpXaDTgr5Z/D+WjdyQtXp5fA7zQ8AA+lOZLlRCex8HWYIxzserBGsd2rb9q05sYWstmUdU7qy4XuzvHsPvezWpoQUk35dGXXHEu4H/9gohj1pAYWttOIzuZmIWjrKPjHC1cG0OzLcCm79eqZripQzp5jUiAuS2TF5HwXtv+A4Elmc7qcMNdBGjBA0wIkwjp+0+NX1jar4ZqdfYY3r2L0Pxv5MCr2JR+UDo9HHiphUy9D57Zzg+Rxi6og4l0YWxcfTLbPR4frr4oVDRI8omWklhSwWDUGY2BPEm5koXwxx2e8XkMjMIL1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pURTru28IxydbfOo1jyVMKuczgUp4OIKkmr/zc0KUhc=;
- b=kNjVnezeuGAsVNMWJ+6g0nd7nnrNUAjvMoohtEUK+62F8jrzsP01foNrY9TMDVozTk0lBZhw7E+T33NCnTyUC+6nkkWtudjPcx9Kl4RYgBuUuqcWnYCJbkOQBuFI9kLU9rk+GheY//uKDYFXDiI3Y0/Opwp+x5ePnUO766R2RW75yovbvI8fPpTXRo2MMh1WUzQ1Bot5ByotUX/ujE0zf1t6VgBl6FeHw5LuNwicrltjnGbdMnz5th6F46L0Sz9qn3ibyMYCzq4e8zYdRMGbaPpQQ7zUQALX0VmcMS8qrNup1eD0kLvIWUy9wf3kCcVVi1cvhWJsHQz9WeZB0P1QSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pURTru28IxydbfOo1jyVMKuczgUp4OIKkmr/zc0KUhc=;
- b=J+mah+lGJ9xvWdTp5KIr0n26WG3AX7uszbnq17yn3keZWT2CXeDo+ibTDnTNC5RIYcaG412NIVlLjNpjhLqA7NrSWq7NX64Z+Zvfv3/VRVh+7bP5do4QWBcMje+DgGqENcgtnj7cM+Y/uWGugx+5dDjpW3O8dAEuCd/ezMy7XQy8T/9/zW/KVLx/GapjvdvnE5LOJnB7M3W1kJWvrnrgpahkKL1MjLSNHsUe9eyjL5MhuB631rFfO5pwLW+AgpzJrYWoNu+RRFHLZc+TqjdQBY1njGDxyBQrcSz+x0OQ9erTlf99HgKtGI0sUDSGLzvlZpOhEzljbGOG/JUZup//tg==
-Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
- (2603:10a6:150:16a::21) by AM7PR03MB6133.eurprd03.prod.outlook.com
- (2603:10a6:20b:142::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.38; Wed, 10 Apr
- 2024 21:57:02 +0000
-Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
- ([fe80::74c9:2488:1dd7:b976]) by GV1PR03MB10456.eurprd03.prod.outlook.com
- ([fe80::74c9:2488:1dd7:b976%3]) with mapi id 15.20.7409.053; Wed, 10 Apr 2024
- 21:57:02 +0000
-From: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-To: Stephan Gerhold <stephan@gerhold.net>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        "linux-arm-msm@vger.kernel.org"
-	<linux-arm-msm@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sa8155p-adp: use correct gpio for SDHC2
- CD
-Thread-Topic: [PATCH] arm64: dts: qcom: sa8155p-adp: use correct gpio for
- SDHC2 CD
-Thread-Index: AQHai0zLM9/mnLFG7UOC+X9g3MAg9rFh+MwAgAAK5IA=
-Date: Wed, 10 Apr 2024 21:57:02 +0000
-Message-ID: <87cyqw6fvh.fsf@epam.com>
-References: <20240410134022.732767-1-volodymyr_babchuk@epam.com>
- <Zhb53i8-pJhDMVZM@gerhold.net>
-In-Reply-To: <Zhb53i8-pJhDMVZM@gerhold.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: mu4e 1.10.7; emacs 29.3
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: GV1PR03MB10456:EE_|AM7PR03MB6133:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- wrWaOKbyKZ5zGGQFanDdCS3UqALe4EtEod5GhyafoSOZfwu5tiNibGthNaxjf+ObXJZtk/0ke9xpINKeevVhQWqIrT9l1QOU9N196Fne4rNM8jiw2ZY7kmr63Sei9nBAHnfE+DzFQruaDMGEGkRgVjLEl22AXNtdq2YpKxbSrS1bNHVsc9YXUBl4gU+k0GyAOux80mTNYYp2uzZpXDSvQLGYObX+ewi69O5ygcjmFXeN/yhlRt9bUZeOFkW4Z0nAthQolpFslnR9eTz6RDWzIlpFi//hu5TlCZvzMu8PgoWqTJlC4qaqQQV0pcP4nBDzUNkJPvui3wOnUkrkhUBj2ZOCbl0gQCu51yxrLSxdR1qgGpiUF2czAuwcIBrA1sTaCspTo+J6Pv/+B7CughpQF8gaeFMMYZxW5srX4tZhVF3aEBUgDaem5jm2SKmG+92tXQiEbCbGoU9Opgm78ONXW5Y7B4+89fWDzCtCogyFl69mymfCs0hgvuYGQ2Hb7srPTcbZxvboZEQhRbY6uT2u45dgcZ89XqQ+eRHThX/3hb2nx6Bm2l3lnc5WcHyvr8vX/k1fCucKjDfsY4egmyv0kwcJZtcHHWOqEJR6iaLav7HyqmTuywCA7uImWO/4J1VzJSTRfxLqcpxvPL+txH4zNG/LWsvII3hypHjHl+5Gq8Y=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR03MB10456.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?I1ukcloWMCWLQBXJVGNS/DhMwGSkgvfo0D8r/kSKhV+IGXF4JZ2Xzm9iTy?=
- =?iso-8859-1?Q?1Luu2w9pcc0zCi1buV/SGWeTlcn79BKxXLynfxxqKotZGUecUyjTqQqLXe?=
- =?iso-8859-1?Q?P+eiDkmGiTrkngLBxtsOodws1L/vBQAcOncE23wMXSgcJMy8pM4PRjJVqk?=
- =?iso-8859-1?Q?d3CsQscrRUDy/+6zrk+0w64C652EBMw/vlHw6XBp90XfmTuP9MTdPEovvO?=
- =?iso-8859-1?Q?+zT8BOlf2J52rrIN8fmTfJ+Zez7bOqgMaR43aFSSW1ZD1x5eOUNW2HCBCR?=
- =?iso-8859-1?Q?4HbFNtTzstPNwMN1aRzVtMR3kgDh+Zv0mD3o0tLZw2bkz50P1SuLrEUFVJ?=
- =?iso-8859-1?Q?rqP8VaInYBc3/BpzhE+fU+Ovy7KCN7yVyAm5y44QaCFvSDVQQ7xeaomCtd?=
- =?iso-8859-1?Q?nf5VnsX/RSBlXinz7ZRyeZVKm1fP/Jv5tIrz0YxZZsDEhgYDU9vdorRxKp?=
- =?iso-8859-1?Q?zs7U2fTOmVGYfNriA4EE3/pDvn4gJgjVmz3lqArtIdH3hJOmnWY6lO4Pge?=
- =?iso-8859-1?Q?jAa1UAKl2RcK8hXuxcdNd8cdyRZAjLvnvUOEU9NUTD6OB5Muzqe2/d0Qdl?=
- =?iso-8859-1?Q?LfMxM9lGs3lm+l08d+UtWjog7xgV23MgGWKXaenRHFXDVaKkEzxJLIprwS?=
- =?iso-8859-1?Q?WbrwXTm6s4BM6BqI/mPFBVWvt2XqPAkJQWUyDIr5OC1Woi0Rw9KuyaD/xT?=
- =?iso-8859-1?Q?AkWc1kzctrQkMO9ox4rPdIp6xqZmtpWqTPpisSHR7CjTuNNqurY2nxaPN5?=
- =?iso-8859-1?Q?OigF7GmztdW/BGnhL/9UmPyZqGN52vGzRgZoinMOX3sJF+3WSi/WQFwiP6?=
- =?iso-8859-1?Q?WuVp9acwDKcC7gCiHtq5Pkgm4UoLXQWdlPnK0k01a0BVdQh61Xylh8vHh/?=
- =?iso-8859-1?Q?L9CgfJxwJqqscnzmEqTsRguPGz0Z21Anlu1yCW0Uv9/malV3Pm0osZ2UP8?=
- =?iso-8859-1?Q?LD5OhfiWzeiEpDXnB9bNtDTrBzrW8TvFpxKrEeEq2/DwtPesFGJ630djaB?=
- =?iso-8859-1?Q?V5uK5o1RI76+gGTLzUPHI9HZmWc4nfCLbnnQ5bRPN2Cizvl7imbcJ824TZ?=
- =?iso-8859-1?Q?s2RuDRnUKjzX1XOFb+Z1+VAEPoBjc5xkHOJr80Oigmj6I0TpoToDpTCqCs?=
- =?iso-8859-1?Q?l5NLeOa7aNWqUF5ApZqE/C205KMb96noB4gZAdGY2vEZfZL8LuMhVdhroH?=
- =?iso-8859-1?Q?Dv8NqFYKZ1F2dwryDU9MpXllw/VIlgd7gG9feAe2Qlr3DHNm+GzcZIxIAx?=
- =?iso-8859-1?Q?hPASuQJgQwOPJLtLSTgy1E6vH4oDtG5yrNydWaDC4F5lzivor21Blc/blG?=
- =?iso-8859-1?Q?vAmGS+5JkVmJt/3ozF2KLsgOgmvZHHrOKV368COHyd0DbJTfj+tRKjsC+2?=
- =?iso-8859-1?Q?Mhtr3/MkQMcWmfhTpX4AgTlpqxCSp+sLgKmmkHuKme+nQvzQbZZYvl3OaU?=
- =?iso-8859-1?Q?CJNJpc4wu9a2AjlF/Tc0qDfgMiDBIvqycqXgaikS+QM0bjbNTZVbGuzM9p?=
- =?iso-8859-1?Q?pzC7K/sz89bingjFl2a4e24lwbKf3eG9he9VXytS9CdKMCBOI1I+2BZOtY?=
- =?iso-8859-1?Q?KVliHw7B8bSFpXH8aJ8DKNxeUTj8PbqaZcp5WEap/p05rgrFVpslsVcInz?=
- =?iso-8859-1?Q?WW/HWtpIQCoZ5vQrlbEMAlJiJxDJMmIt28ed6oj6ma6ehkWkhmsn3UcA?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ul8dGcy7"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e42a6158d5so36955ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 16:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712793508; x=1713398308; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ZXB+0PtaF+vG2Eqe2ku2kHYSPF78NFZHwzDIf6uFVo=;
+        b=ul8dGcy7CrJ4QlBF847S23xeeYmdr1uFniE4EssnJuF9uVlt7XlFWP/5saKY3aGGW6
+         R/q84JQjdLY84gy2Yu+ZQ6zCcbXvw21T5S/DGqsB8NpeuJXPW59MsqZjy/XzAygRg3FO
+         DBBcBNWAd4ELo87Pj02kig4gcrMCTCo+FYBKF7n6m8I1/hq8MFyInnBIGKI437o+MHRF
+         Gnd16K0fGkceV/fcAMhxNA84MifHHBUF3AQe6/KoL1V4r0IS8vl8ts7kJVWiL8sCrkSy
+         LRhk5QIGmrXzoSMDm5WRzQs+21LKt/dozqUiJjUDTaEeKPpjutitrYmpRn0UFk88ARtF
+         jVKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712793508; x=1713398308;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ZXB+0PtaF+vG2Eqe2ku2kHYSPF78NFZHwzDIf6uFVo=;
+        b=kkdJdsEMDojP1suzmNizqP0PdEyD/HqBaVeuguB56sidGCBAZKMLFAqYhwmYAr2Ek6
+         7ePgkHiq6bghTOA2BIzpaBJZFOhrJOjQUBfP2j2mHtmJUs5n6cVRPw9vSpmHWWpGB0e9
+         +6ZLDE+xj/pxlOVmiUXQ5ApbO/tY7cYCnjPtbSaPIAgnaB96VYMtWLlcIXMsoox5u735
+         tB64CHNNE81V71F4TfrMkV1z1+hGtNEC52Ps+8Xh9uPV8GJelgaLT/F9pIBqD3B099y6
+         7SeK2qnPfSsuY41dWp7+jblw1/uz6iuFMBNxxKBXNdyagOc7YnbGaaSCHG9gIOveEf0a
+         IAXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAkjMH+fq3qskVlz6fm9V++b0/edXgvDoEwfu1wqywUM45KeVafkQPe+vgLLNBxBDl7BR3Us+jaZiy9gKrqa+21xjifk5skAOMutJ8
+X-Gm-Message-State: AOJu0YyIYP1Ugtd1GFQv0PdMF6kjU6qmMg4yPjUBHxwdCECixiuNgF+D
+	X5+kpAmbP6stP+36ddIKCAjllBJ4PMUOHmdBvsZmn1DmFSJR3wDoSOua1WM7vw==
+X-Google-Smtp-Source: AGHT+IGd+QI2KOJ5c/8/pTyKY+Y+N0EZgS87fvMttED3Ds2Pyg5DEehZ91bfZhC4ZUFBKIIxCloFUA==
+X-Received: by 2002:a17:902:e743:b0:1e3:c01d:fb17 with SMTP id p3-20020a170902e74300b001e3c01dfb17mr55118plf.11.1712793508162;
+        Wed, 10 Apr 2024 16:58:28 -0700 (PDT)
+Received: from [2620:0:1008:15:2d0b:3c67:e0d1:ea8] ([2620:0:1008:15:2d0b:3c67:e0d1:ea8])
+        by smtp.gmail.com with ESMTPSA id ga18-20020a056a00621200b006edcf5533cesm214863pfb.79.2024.04.10.16.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 16:58:27 -0700 (PDT)
+Date: Wed, 10 Apr 2024 16:58:26 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: Sourav Panda <souravpanda@google.com>, corbet@lwn.net, 
+    gregkh@linuxfoundation.org, rafael@kernel.org, mike.kravetz@oracle.com, 
+    muchun.song@linux.dev, rppt@kernel.org, david@redhat.com, 
+    rdunlap@infradead.org, chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, 
+    tomas.mudrunka@gmail.com, bhelgaas@google.com, ivan@cloudflare.com, 
+    pasha.tatashin@soleen.com, yosryahmed@google.com, hannes@cmpxchg.org, 
+    shakeelb@google.com, kirill.shutemov@linux.intel.com, 
+    wangkefeng.wang@huawei.com, adobriyan@gmail.com, 
+    Vlastimil Babka <vbabka@suse.cz>, 
+    "Liam R. Howlett" <Liam.Howlett@oracle.com>, surenb@google.com, 
+    linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+    linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+    Matthew Wilcox <willy@infradead.org>, weixugc@google.com
+Subject: Re: [PATCH v9 1/1] mm: report per-page metadata information
+In-Reply-To: <20240319143320.d1b1ef7f6fa77b748579ba59@linux-foundation.org>
+Message-ID: <65b77d3e-d683-1e90-ebb0-5c7758143048@google.com>
+References: <20240220214558.3377482-1-souravpanda@google.com> <20240220214558.3377482-2-souravpanda@google.com> <20240319143320.d1b1ef7f6fa77b748579ba59@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR03MB10456.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54b39c72-77d2-4cc4-0364-08dc59a92742
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2024 21:57:02.2688
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Dw+g23g8Cpb7T5gorBbRzLbhWfomT4JX6KIJoMLB8LhtBjBJ1kBeZmXUQOEJ7Ra+FT3E+eEfYh8Zkej2FMwkvKsM8XoALGy19HqI615eF/I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6133
-X-Proofpoint-GUID: 7FJrc-4gpmXggYIcIKk-X3iN1UugC4p_
-X-Proofpoint-ORIG-GUID: 7FJrc-4gpmXggYIcIKk-X3iN1UugC4p_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 adultscore=0 impostorscore=0
- mlxscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404100160
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 19 Mar 2024, Andrew Morton wrote:
 
-Hi Stephan,
+> On Tue, 20 Feb 2024 13:45:58 -0800 Sourav Panda <souravpanda@google.com> wrote:
+> 
+> > Adds two new per-node fields, namely nr_memmap and nr_memmap_boot,
+> > to /sys/devices/system/node/nodeN/vmstat and a global Memmap field
+> > to /proc/meminfo. This information can be used by users to see how
+> > much memory is being used by per-page metadata, which can vary
+> > depending on build configuration, machine architecture, and system
+> > use.
+> 
+> I yield to no man in my admiration of changelogging but boy, that's a
+> lot of changelogging.  Would it be possible to consolidate the [0/N]
+> coverletter and the [1/N] changelog into a single thing please?
+> 
+> >  Documentation/filesystems/proc.rst |  3 +++
+> >  fs/proc/meminfo.c                  |  4 ++++
+> >  include/linux/mmzone.h             |  4 ++++
+> >  include/linux/vmstat.h             |  4 ++++
+> >  mm/hugetlb_vmemmap.c               | 17 ++++++++++++----
+> >  mm/mm_init.c                       |  3 +++
+> >  mm/page_alloc.c                    |  1 +
+> >  mm/page_ext.c                      | 32 +++++++++++++++++++++---------
+> >  mm/sparse-vmemmap.c                |  8 ++++++++
+> >  mm/sparse.c                        |  7 ++++++-
+> >  mm/vmstat.c                        | 26 +++++++++++++++++++++++-
+> >  11 files changed, 94 insertions(+), 15 deletions(-)
+> 
+> And yet we offer the users basically no documentation.  The new sysfs
+> file should be documented under Documentation/ABI somewhere and
+> perhaps we could prepare some more expansive user-facing documentation
+> elsewhere?
+> 
 
-Stephan Gerhold <stephan@gerhold.net> writes:
+Sourav, is it possible to refresh this series into a v10 on top of the 
+latest upstream kernel with a single condensed changelog that details the 
+current behavior, what extension this is adding, and how it is generally 
+useful?
 
-> On Wed, Apr 10, 2024 at 01:41:30PM +0000, Volodymyr Babchuk wrote:
->> Card Detect pin for SHDC2 on SA8155P-ADP is connected to GPIO4 of
->> PMM8155AU_1, not to internal TLMM. This change fixes two issues at
->> once: not working ethernet (because GPIO4 is used for MAC TX) and SD
->> detection.
->>=20
->> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/=
-dts/qcom/sa8155p-adp.dts
->> index 5e4287f8c8cd1..6b08ce246b78c 100644
->> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
->> @@ -384,7 +384,7 @@ &remoteproc_cdsp {
->>  &sdhc_2 {
->>  	status =3D "okay";
->> =20
->> -	cd-gpios =3D <&tlmm 4 GPIO_ACTIVE_LOW>;
->> +	cd-gpios =3D <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
->
-> Good catch!
+As noted here, the cover letter has great material that discusses the 
+rationale for this change but would be lost if only this patch is merged.  
+So typically the cover letter material gets concatenated into the 
+changelog, but in this case there's a lot of overlap.
 
-Yeah... It took time to understand why ethernet is not working
-sometimes. It appeared that there were race between SDHC and MAC
-initialization.
+A single patch that includes a succinct changelog would be awesome.
 
->
->>  	pinctrl-names =3D "default", "sleep";
->>  	pinctrl-0 =3D <&sdc2_on>;
->>  	pinctrl-1 =3D <&sdc2_off>;
->
-> These two pinctrl configure "gpio96" for "sd-cd-pins". Yet another wrong
-> GPIO? Should probably drop that and add proper pinctrl for the actual
-> GPIO in the PMIC. Seems like Qualcomm configured the PMIC GPIO with
-> pull-up downstream [1] (not sure if this is the right file). It might be
-> redundant if there is an external pull-up on the board, but only the
-> schematic could tell that for sure.
+And then the requested documentation in Documentation/ABI either included 
+in the same patch or as a second patch in the series?
 
-If I only had schematic for this board... gpio96 puzzles me as well. I
-can understand where wrong GPIO4 come from. But gpio96 origin is
-completely unclear. I have user manual for the board, it mention
-functions of some GPIOs, but there is nothing about gpio96. Anyways, I
-removed it from the DTS (see diff below) and I see no issues with SD card.
+I don't think the resulting patch series will actually need a cover letter 
+after that, it will be able to stand on its own.
 
-> FWIW: Looking closer at the broken commit, the regulator voltage setup
-> of &sdhc_2 looks suspicious too. Typically one would want a 1.8V capable
-> regulator for the vqmmc-supply to properly use ultra high-speed modes,
-> but &vreg_l13c_2p96 seems to be configured with 2.504V-2.960V at the
-> moment. On downstream it seems to be 1.8V-2.96V [2] (again, not sure if
-> this is the right file). I would recommend re-checking this too and
-> testing if UHS cards are detected correctly (if you have the board).
+> I'd like to hear others' views on the overall usefulness/utility of this
+> change, please?
+> 
 
-This is actually a good catch. I changed the voltage range to 1.8V-2.96V an=
-d
-now my card detects in UHS/SDR104 mode. Prior to this change it worked only
-in HS mode.
+Likely true for all hyperscalers, the immediate use case that this could 
+be applied to is to track boot memory overhead and any regression over 
+time (across kernel upgrades, firmware upgrades, etc) that may change the 
+amount of total memory available.  We'd want to subtract out the boot 
+overhead that we know about (like struct page here) and then alert on any 
+regression where we're losing memory from reboot to reboot for any reason.
 
-> &vreg_l17a_2p96 has the same 2.504V-2.960V, but has 2.704V-2.960V
-> downstream [3]. This is close at least, might be fine as-is (but I'm not
-> convinced there is a good reason to differ there).
->
-
-Well, I believe that downstream configuration is more correct, but I
-can't prove it, so I'll leave it as is.
-
-Diff for additional changes looks like this:
-
-diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts=
-/qcom/sa8155p-adp.dts
-index 6b08ce246b78c..b2a3496ff68ad 100644
---- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-+++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-@@ -283,7 +283,7 @@ vreg_l12c_1p808: ldo12 {
-=20
-                vreg_l13c_2p96: ldo13 {
-                        regulator-name =3D "vreg_l13c_2p96";
--                       regulator-min-microvolt =3D <2504000>;
-+                       regulator-min-microvolt =3D <1800000>;
-                        regulator-max-microvolt =3D <2960000>;
-                        regulator-initial-mode =3D <RPMH_REGULATOR_MODE_HPM=
->;
-                };
-@@ -386,8 +386,8 @@ &sdhc_2 {
-=20
-        cd-gpios =3D <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
-        pinctrl-names =3D "default", "sleep";
--       pinctrl-0 =3D <&sdc2_on>;
--       pinctrl-1 =3D <&sdc2_off>;
-+       pinctrl-0 =3D <&sdc2_on &pmm8155au_1_sdc2_on>;
-+       pinctrl-1 =3D <&sdc2_off &pmm8155au_1_sdc2_off>;
-        vqmmc-supply =3D <&vreg_l13c_2p96>; /* IO line power */
-        vmmc-supply =3D <&vreg_l17a_2p96>;  /* Card power line */
-        bus-width =3D <4>;
-@@ -505,13 +505,6 @@ data-pins {
-                        bias-pull-up;           /* pull up */
-                        drive-strength =3D <16>;  /* 16 MA */
-                };
--
--               sd-cd-pins {
--                       pins =3D "gpio96";
--                       function =3D "gpio";
--                       bias-pull-up;           /* pull up */
--                       drive-strength =3D <2>;   /* 2 MA */
--               };
-        };
-=20
-        sdc2_off: sdc2-off-state {
-        @@ -532,13 +525,6 @@ data-pins {
-                        bias-pull-up;           /* pull up */
-                        drive-strength =3D <2>;   /* 2 MA */
-                };
--
--               sd-cd-pins {
--                       pins =3D "gpio96";
--                       function =3D "gpio";
--                       bias-pull-up;           /* pull up */
--                       drive-strength =3D <2>;   /* 2 MA */
--               };
-        };
-=20
-        usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
-@@ -604,3 +590,25 @@ phy-reset-pins {
-                };
-        };
- };
-+
-+&pmm8155au_1_gpios {
-+       pmm8155au_1_sdc2_on: pmm8155au_1-sdc2-on-state {
-+               sd-cd-pin {
-+                       pins =3D "gpio4";
-+                       function =3D "normal";
-+                       input-enable;
-+                       bias-pull-up;
-+                       power-source =3D <0>;
-+               };
-+       };
-+
-+       pmm8155au_1_sdc2_off: pmm8155au_1-sdc2-off-state {
-+               sd-cd-pin {
-+                       pins =3D "gpio4";
-+                       function =3D "normal";
-+                       input-enable;
-+                       bias-pull-up;
-+                       power-source =3D <0>;
-+               };
-+       };
-+};
-
-
-I am planning to send v2 tomorrow.
-
---=20
-WBR, Volodymyr=
+This increased visibility into boot memory overhead allows us to create a 
+mechanism to track changes over time when otherwise that attribution of 
+that memory is not available.
