@@ -1,95 +1,94 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC05363E;
-	Wed, 10 Apr 2024 18:56:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E6732E405;
+	Wed, 10 Apr 2024 18:57:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775384; cv=none; b=IiBzD55Heu7H98dBYWYWUST0kQzuuMlYsRxxUc0LalVslUqg70HcKCbhgMz22U+o7RMCuGB3KcwpDo/d3CAHFCOjJsCAiHYvB7dyNqZZlGCUW+k+w/eYrHiMSOfP0xKF9jDC+WLiHzS5K/Ul0aEZFDYuJuRodkrMpFf/EIM9DrI=
+	t=1712775431; cv=none; b=c3tCRoHTI4PIbymKQAy65wWl/3Y8bhJyoMFrHPUCur1iy0gvPQWVis/2lwOHVKBwE7yNnWv1QksvLb/gnyOvX8HSK2cFzw9A4yfEteEuALxy3YmM413k0u2R4MvxlZ5vGDOZW2aZzihV+m9UaKRu9THmKNRJU5W+hzruVzsbFZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775384; c=relaxed/simple;
-	bh=z8uL29ol4D/VzeVxNrLkekTvpm9qYZqbPbEmZ0BnNKc=;
+	s=arc-20240116; t=1712775431; c=relaxed/simple;
+	bh=1pr4aMZSU4Lugs+zJr+eQADtuseadL78E1eXv5pdPnk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DMqUGRhpYI+3ScR7JZ6Xvhy/jp+0JxEQMskHzRXSrAgjbBgMYYwc2w2wGtp2JDd8iYxfO3KBqS/2mG06IlEvdWHFQeMEnMgWkWrbhCEcAwqvhLBmWJTLVxSR6nrdMFyuRPYsHCspfCsZbhV2xH5viXAlAeMlB+gMCy0apeEDIcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Eih04ugn; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=AFkfU0SjgVoB1gVY3C7VMrDU5GHbA4GFQRhGbTu4YMUp0A3MZUi8nuv9hacd+6yciVMhkWj8JEGbNaqVgaSKdX/Mn35WbDHEZCx5k8qWzzltdh50qNm11XBRdW3+YTtdpZW5wbWGpPxIaPAkAAKMSVOnynrlPRmgqECKSr5wRRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hovp2kNJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Eih04ugn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=U8bqg6vv1xN246qvsvrQZYNVGTMrjTXzu9x/4q0URWY=; b=Eih04ugnqStfjTGj8LCSTHRa8I
-	JVKC9gkRyoCXJUkvOs3gxMIVb6pp3NE4PiFgKq38B/dWSfl77kt3RXU5fC9mMMM6OCB3O8hcgUx2S
-	Iv1Pl/+4KblR/zsHS7r1cSKoeP4zO0tKaJGaX6F+EpE3lDTPTujdhDVlzVNGQN9/rLbNsvowxTg2K
-	CWuVQR8+MaNkHOw8BqdKVjxzsNgCldrupd7faINLxt+omBYy9HAtuQW8d1cgHLKwfslwkV2lecqX8
-	goWQIWe7kLglAMnYY1F9r7DLY0WiKdfvrjCoo58dPUxqUlo+NqnwAQtfmvkjDxde80Y5aYlKd0JtS
-	qpMjAr0Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38784)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rud77-0008Nd-2R;
-	Wed, 10 Apr 2024 19:56:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rud73-0006BQ-2Q; Wed, 10 Apr 2024 19:56:01 +0100
-Date: Wed, 10 Apr 2024 19:56:00 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v4 02/15] ACPI: processor: Register all CPUs from
- acpi_processor_get_info()
-Message-ID: <ZhbgwBBvh6ccdO7x@shell.armlinux.org.uk>
-References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
- <E1rVDmU-0027YP-Jz@rmk-PC.armlinux.org.uk>
- <CAJZ5v0iiJpUWq5GMSnKFWQTzn_bdwoQz9m=hDaXNg4Lj_ePF4g@mail.gmail.com>
- <20240322185327.00002416@Huawei.com>
- <20240410134318.0000193c@huawei.com>
- <CAJZ5v0ggD042sfz3jDXQVDUxQZu_AWaF2ox-Me8CvFeRB8nczw@mail.gmail.com>
- <20240410145005.00003050@Huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hovp2kNJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E824CC433C7;
+	Wed, 10 Apr 2024 18:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712775431;
+	bh=1pr4aMZSU4Lugs+zJr+eQADtuseadL78E1eXv5pdPnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hovp2kNJfByBs6PovxEnzv77Oi7dLKzGioqq8cnRVAbWvYammQeTdAZUz7LbSYHJS
+	 TQibzE8+e4nkwjZgpqqk45lyZyKh994lb/tBcoe8PDjeGbqM3OR7052ceNgTp4Z49O
+	 L/jjrJd615oT7fC9j8wodlmvgT+djN+tcbj0MAWR804lSIV0TPXRHCvenPQPXFzY80
+	 jkLAUOZt+hU15V6lHF3+vqOBZcJMuuapmNtBNDse6bZ9/Q4B19ZphBv0NvIRRLPx6m
+	 Xme5V4x94QDqXiqtR0Hyw8Zb1Ydqq2ynC9SFEc1ma0x/HSPUobTSYzERBnWQ6WI35u
+	 gC5UEGuKQTPZA==
+Date: Wed, 10 Apr 2024 13:57:08 -0500
+From: Rob Herring <robh@kernel.org>
+To: Christian Hewitt <christianshewitt@gmail.com>
+Cc: Jacobe Zang <jacobe.zang@wesion.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Neil Armstrong <narmstrong@baylibre.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, quic_jesszhan@quicinc.com,
+	sam@ravnborg.org, nick@khadas.com, thierry.reding@gmail.com,
+	dri-devel@lists.freedesktop.org,
+	devicetree <devicetree@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	AML <linux-amlogic@lists.infradead.org>
+Subject: Re: [PATCH 1/2] dt-bindings: panel-simple-dsi: add New Khadas TS050
+ panel bindings
+Message-ID: <20240410185708.GA884726-robh@kernel.org>
+References: <20240409082641.359627-1-jacobe.zang@wesion.com>
+ <3CCAF214-09FE-4580-99CD-AB95E78FFB8F@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240410145005.00003050@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3CCAF214-09FE-4580-99CD-AB95E78FFB8F@gmail.com>
 
-On Wed, Apr 10, 2024 at 02:50:05PM +0100, Jonathan Cameron wrote:
-> If we get rid of this catch all, solution would be to move the
-> !acpi_disabled check into the arm64 version of arch_cpu_register()
-> because we would only want the delayed registration path to be
-> used on ACPI cases where the question of CPU availability can't
-> yet be resolved.
+On Wed, Apr 10, 2024 at 08:22:25AM +0400, Christian Hewitt wrote:
+> > On 9 Apr 2024, at 12:26 PM, Jacobe Zang <jacobe.zang@wesion.com> wrote:
+> > 
+> > This add the bindings for the New Khadas TS050 1080x1920 5" LCD DSI panel
+> > designed to work with the Khadas VIM3 and VIM3L Single Board Computers.
+> > 
+> > Signed-off-by: Jacobe Zang <jacobe.zang@wesion.com>
+> > ---
+> > .../devicetree/bindings/display/panel/panel-simple-dsi.yaml     | 2 ++
+> > 1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+> > index f9160d7bac3ca..e194309f31b72 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-simple-dsi.yaml
+> > @@ -36,6 +36,8 @@ properties:
+> >       - jdi,fhd-r63452
+> >         # Khadas TS050 5" 1080x1920 LCD panel
+> >       - khadas,ts050
+> > +        # Khadas NEW TS050 5" 1080x1920 LCD panel
+> > +      - khadas,newts050
+> 
+> Products are only new until they are old. At some future point there will
+> inevitably be a third iteration requiring a ‘new new’ name. IMHO it would
+> be better to use something like khadas,ts050v2.
 
-Aren't we then needing two arch_register_cpu() implementations?
-I'm assuming that you're suggesting that the !acpi_disabled, then
-do nothing check is moved into arch_register_cpu() - or to put it
-another way, arch_register_cpu() does nothing if ACPI is enabled.
+I only see patch 1, so the threading is messed up...
 
-If arch_register_cpu() does nothing if ACPI is enabled, how do
-CPUs get registered (and sysfs files get created to control them)
-on ACPI systems? ACPI wouldn't be able to call arch_register_cpu(),
-so I suspect you'll need an ACPI-specific version of this function.
+In any case, The commit message should say something about how they are 
+different? Is the new one not compatible with the old? That's what this 
+change tells me. Otherwise, it should have a fallback. 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Rob
