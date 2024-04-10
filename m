@@ -1,49 +1,66 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055663F8FB
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E618249F7;
+	Wed, 10 Apr 2024 06:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712730987; cv=none; b=pNd8/VENSJ1XeLE5KEKXkGyQLY/jYh8as09FatrSfcuYGumOQunqaDIcBAAbOqMBIabIzdxB5B/ZfXcKqUUx80RmM5/uQ8Y9ECdT64GFPEo63bMl1W7uEZj63cpydmqrd5DQigBvUWfj7YZqFyL782+dqkiPqgBQRdjq/OfBfes=
+	t=1712731048; cv=none; b=HNIfphdVa136jJ1crgXHXVGsMxyTNr4hTFJ6AbNx73WXMyX/GKcxfpysJHa5WFXXICGWMaiOa/zmYdkxqltADMv9X+oMIoUvyFv7VPQKB8dCWWuUpJ2TntF0XNFsi0dmY80L44TNDaYd7xc1iwvVMjhXStNeFrOA9ge4gdcY3YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712730987; c=relaxed/simple;
-	bh=xs83s6oIEPW4cMhg8wwW1AMRm0+CYAxYP4GtGXNydqk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kXQFquEK4TSrqBwXi2eNwSsV0FjgMW5xT77F0AQW1hgLKoIJCSIx9yApOP/86rumelO8cO02UXcZ399LEDcXWn85CBeqG2qLxlkyHrgcqqc8bzbJfiuVbNw8VAJ6j/MKoFX58WeHclG0qBx7EKOf+pPnHVmk313Tmi7sx3HroG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp86t1712730902t5w2xg72
-X-QQ-Originating-IP: 11WQUV0r5zeVO1AoN22iVtolLSL58diAT6MAVG6NtKQ=
-Received: from HX01040082.powercore.com.cn ( [14.19.197.107])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 10 Apr 2024 14:34:58 +0800 (CST)
-X-QQ-SSF: 01400000000000B09000000A0000000
-X-QQ-FEAT: 5x8Sgf4S6/ibmGyV3WobG9KCGSh3CfJOt5MS70mBYmRNDkCu/CLpXhQakp5Oe
-	foHkHFQ1Xb62EDUYBvSRqWRKlrXc7moIGe8iNUnjxQKslMyV8YQCBcaGCOiKN72aLhnkb9s
-	qNBcKElaSgGw8eK1Nbg9TW54oX0kJKLmJ8SyGcJiZc7LN/WMbDkysH3TowkGKuVqHU6AJf1
-	TYjI62P5c24MuSiQtir9YxixB4NvUopOkYEibXf8t3Lt0uc0GN87tZogJaE3W1IdwghmFxk
-	hhxcKuRf8YDztHPEySvI6UzYdBhu4PwrfPMQ4CCuDkJtK0XQKTnFDDQtDD8ypNIj5YhN0mH
-	9WhpuUyxrla5J1CssyEBPGPLczjMHHJFTsvpxDbDMOwE687rH6VyqHNv4N19U5fyff5++lE
-	P0eZmeeSJvRVNpBLaMYAgGZSpm8ogdtr
-X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 4090882819559728776
-From: Jinglin Wen <jinglin.wen@shingroup.cn>
-To: palmer@dabbelt.com
-Cc: paul.walmsley@sifive.com,
-	aou@eecs.berkeley.edu,
-	gregkh@linuxfoundation.org,
-	atishp@rivosinc.com,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Jinglin Wen <jinglin.wen@shingroup.cn>
-Subject: [PATCH 3/3] riscv: Add information for MAINTAINERS
-Date: Wed, 10 Apr 2024 14:34:32 +0800
-Message-Id: <20240410063432.23058-4-jinglin.wen@shingroup.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240410063432.23058-1-jinglin.wen@shingroup.cn>
-References: <20240410063432.23058-1-jinglin.wen@shingroup.cn>
+	s=arc-20240116; t=1712731048; c=relaxed/simple;
+	bh=HAYPiiAi4an1HSNVXQLFxn+aHj5YagTpUMtwKQLUG9k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qJcmF/5IaJ6A77308ZSramMRwxDuaBXOkTrGBhHfhsGBElKLRZTtwlxEjgfBRsXdurbyFNSBIvw9bMdJB1sgNmUejQuqi9v8wmKhk+Ysvga+n4RE/VdupmV7yqUrGHohugNTI7H2V75PBNzdv+j1L/+j0OFluKkBr6niZWt7c3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=d1oBC7pF; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=uBLLOwZw reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="d1oBC7pF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="uBLLOwZw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1712731045; x=1744267045;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LzaLHY+9fUJOo9N2tsj7/15WhP3w9UXkZ+rUZbt8k3c=;
+  b=d1oBC7pFGaI50rmVWeVAXFD+bzKLqwgt7f7RRZRwmQxBtkRsfRO4pL/t
+   IorbQIVMq97cIMfHnK1+aCK8nlDd9zjzw9OhXUg2hfap9hfXxpkju+d2G
+   qQ+BYwSaxHWI56naDqj3LyvcjETRYGCkDjAJIQl/tCLOvv9HIEwTCAggK
+   +u8z/crs8RzjOnMQC1Q6vCl3zrP5fFRNyIy9yOPrk6ASmklQN4n3av3Av
+   Dfyjioqn1FmzP5WFrOWUyP0a/NVF+TMwI5cRIQNUSdh7hSPnH5gvq6dfM
+   YJyV39cTZdWbD6DPWlvbsZs9EXD+r6m7lwD2G+MB67PyD0CiDEPtjXVAM
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.07,190,1708383600"; 
+   d="scan'208";a="36333793"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 10 Apr 2024 08:37:16 +0200
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B4D6B16142F;
+	Wed, 10 Apr 2024 08:37:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1712731032; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=LzaLHY+9fUJOo9N2tsj7/15WhP3w9UXkZ+rUZbt8k3c=;
+	b=uBLLOwZwQNqgjDuHA144zmu31c02mmGxLgWB1OcMWNxdBv5jDuKjMDKkiaxAOUWf15CrgP
+	2LQIs8mNMeDZmI63o/h4e05U5SzDJ8LDh6eafdxG0ZYuSYqZR+QtKbutrDcB5hzX1V278N
+	xoC0XOjgBoAsXAFu9JxAq09WSRgPHz84G7lH5V84uTOqlp0c3m05TZHyLbhw9V8uuV3Iov
+	GSAFKrzQFcM7wbLbBJ/do2cW9cIIXJQKlE7qZBLzx57EHDQCsyQvtUv8LyPLmutotixNYD
+	MJjsUsq6V4K0mS2QbQYu7hyAQsbR+jFwASr6SZihre4r0mXn1c/fM+mgecaBTA==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux@ew.tq-group.com,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] arm64: dts: imx8mp: Enable HDMI on TQMa8MPxL/MBa8MPxL
+Date: Wed, 10 Apr 2024 08:37:05 +0200
+Message-Id: <20240410063706.3813894-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,34 +68,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-2
+X-Last-TLS-Session-Version: TLSv1.3
 
-Add the description of the RISC-V early console to
-MAINTAINERS.
+Enable HDMI nodes and add the output connector.
 
-Signed-off-by: Jinglin Wen <jinglin.wen@shingroup.cn>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../freescale/imx8mp-tqma8mpql-mba8mpxl.dts   | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aa3b947fb080..bdc013ac4e75 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18936,6 +18936,12 @@ F:	arch/riscv/
- N:	riscv
- K:	riscv
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl.dts b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl.dts
+index 86d3da36e4f3e..c51ed7d991d18 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mpxl.dts
+@@ -135,6 +135,18 @@ led-2 {
+ 		};
+ 	};
  
-+RISC-V EARLY CONSOLE SUPPORT
-+M:	Jinglin Wen <jinglin.wen@shingroup.cn>
-+S:	Supported
-+F:	arch/riscv/include/asm/early_console.h
-+F:	arch/riscv/kernel/early_console.c
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		label = "X44";
++		type = "a";
 +
- RISC-V MICROCHIP FPGA SUPPORT
- M:	Conor Dooley <conor.dooley@microchip.com>
- M:	Daire McNamara <daire.mcnamara@microchip.com>
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_out>;
++			};
++		};
++	};
++
+ 	display: display {
+ 		/*
+ 		 * Display is not fixed, so compatible has to be added from
+@@ -470,6 +482,28 @@ &gpio5 {
+ 			  "", "", "", "";
+ };
+ 
++&hdmi_pvi {
++	status = "okay";
++};
++
++&hdmi_tx {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hdmi>;
++	status = "okay";
++
++	ports {
++		port@1 {
++			hdmi_tx_out: endpoint {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmi_tx_phy {
++	status = "okay";
++};
++
+ &i2c2 {
+ 	clock-frequency = <384000>;
+ 	pinctrl-names = "default", "gpio";
+@@ -531,6 +565,10 @@ &i2c6 {
+ 	status = "okay";
+ };
+ 
++&lcdif3 {
++	status = "okay";
++};
++
+ &pcf85063 {
+ 	/* RTC_EVENT# is connected on MBa8MPxL */
+ 	pinctrl-names = "default";
 -- 
-2.25.1
+2.34.1
 
