@@ -1,88 +1,132 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79C817BB01
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDFCE17B4F5;
+	Wed, 10 Apr 2024 17:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768656; cv=none; b=n76ZLih+Ael1JqAHseRt9+uDxTZtjxicMI9h1LYmx28EvcrlMpTpxtHuUC+u4Irq+kRzjP93LfmXUlPeprLYJuaLNLPXNa0lmrKxEfO2zEjcA7Klx5Pt8QsA1o74E4aRVI5HjBDmsXeNapfVZv/l/1XaTBwGM0jqbRfOiecnGbc=
+	t=1712768693; cv=none; b=deJ0L8F2+uxhRHGsHeNnV0L6SQk2zeujsCuvrDe/sHLfaVptMh+DDH9v3aGUTvDI4/t5KD8BoFOF4pfIoKXcT4I7xaOwvtKAel6ibWX+hR06ihShqkpADKln3hYC4OmLvAEkGk7eh6acVLOGuXkjcsEHBzqSqSL67wyd7xgaMOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768656; c=relaxed/simple;
-	bh=SQ4K/v5QQTv+vk6IVu/x6ynSF4jikLHPm3kjTu9TLvw=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CuG90RgBlEIpxJg2gXf8T5Z48sEmKrPft2yR5fuianVbT9otLFtnXk2a/LJHV6GrkA8eOKHwuH5lc+NW4y+o9WAmrDAP5wPv3cglZpA6TM9L7Y5yAktKRx38uwOAOXOJUC62OvcoFq21QhQ/bC0dDRRiXsQ6o2Yg4L1D95WAJqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VF8Jc2Hbqz6JBTr;
-	Thu, 11 Apr 2024 01:02:24 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id AA6751404FC;
-	Thu, 11 Apr 2024 01:04:04 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
- 2024 18:04:04 +0100
-Date: Wed, 10 Apr 2024 18:04:03 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Robin Murphy <robin.murphy@arm.com>
-CC: <will@kernel.org>, <mark.rutland@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf/arm-cmn: Set PMU device parent
-Message-ID: <20240410180403.00004cff@Huawei.com>
-In-Reply-To: <25d4428df1ddad966c74a3ed60171cd3ca6c8b66.1712682917.git.robin.murphy@arm.com>
-References: <25d4428df1ddad966c74a3ed60171cd3ca6c8b66.1712682917.git.robin.murphy@arm.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712768693; c=relaxed/simple;
+	bh=lGUayZ0NERip+JtN2fxcFADYK4Fi8n9sC6/iV/waWTA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nY47TYPETcHdmjfgrE0X0zXfftsdpAbX4J6oUUv/J992LDvVnh6S6NI6a+0kPk6vYXn7EpC/IHLnX6m7502WSYANq787XJDtgvIvkQaC98h316ImAF9bGUvJbHgmdNFxEKA2FUblVDoMNTEkyGKQQzAiqMQM1LGbEp1K991cXEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IL23dQAu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IL23dQAu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1EFC433F1;
+	Wed, 10 Apr 2024 17:04:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712768693;
+	bh=lGUayZ0NERip+JtN2fxcFADYK4Fi8n9sC6/iV/waWTA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IL23dQAuS21Z7Jri7a6tuqD9tixV+AyBTokcwo1EI/YAsR4S6ofOcLw7pBWUV6TRk
+	 XcoCJapTePCjvMsMxK8dY7Q0uHUz+ZXL9nZgBZ2D7DURT+9UG8ZKJ4fcRM8QzdN69W
+	 LtPrDLJ3HsC6Ej3jSQdp5hZHWPKD7NQII//DoX5Atb/RveQobO+xP9VbiBF9SmjZ26
+	 sCnqHBUNHvfcAPi091DcmS/Y3RloyUM9DtRU/qDmNn9T7PYIJyOb2sk+seRlRRhFJE
+	 8IoK+5TVhq45Xq8t6JK7e+FZggEzv/pRbLL8SleuxRtwSFDfdPi4PkUDMl1pPIMGrp
+	 DjOMpj3/J95EA==
+Date: Wed, 10 Apr 2024 10:04:50 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Calvin Owens <calvin@wbinvd.org>
+Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] kbuild: buildtar: Add arm support
+Message-ID: <20240410170450.GA1828262@dev-arch.thelio-3990X>
+References: <e7c14a0d329e28bdcda21376b54a43c85a4aaf3f.1712682861.git.calvin@wbinvd.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7c14a0d329e28bdcda21376b54a43c85a4aaf3f.1712682861.git.calvin@wbinvd.org>
 
-On Tue,  9 Apr 2024 18:15:17 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
+Hi Calvin,
 
-> Now that perf supports giving the PMU device a parent, we can use our
-> platform device to make the relationship between CMN instances and PMU
-> IDs trivially discoverable, from either nominal direction:
+Thanks for the patch!
+
+On Tue, Apr 09, 2024 at 10:17:07AM -0700, Calvin Owens wrote:
+> Make 'make tar-pkg' and friends work on 32-bit arm.
 > 
-> root@crazy-taxi:~# ls /sys/devices/platform/ARMHC600:00 | grep cmn
-> arm_cmn_0
-> root@crazy-taxi:~# realpath /sys/bus/event_source/devices/arm_cmn_0/..
-> /sys/devices/platform/ARMHC600:00
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Nice.  I'd forgotten all about this :( 
+> Signed-off-by: Calvin Owens <calvin@wbinvd.org>
 
-https://lore.kernel.org/all/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
-still has a bunch of these + there were many I never looked into.
+Technically speaking, buildtar works for 32-bit ARM right now (I use it
+almost daily), this is just explicitly adding it to the supported list
+to avoid the warning and putting zImage at vmlinuz-${KERNELRELEASE}
+instead of vmlinux-kbuild-${KERNELRELEASE}, right?
 
-Guess I should respin that series though probably 50% at least still apply.
+That said, looks mostly fine to me, one comment below.
 
-J
+Before:
 
+  './System.map' -> 'tar-install/boot/System.map-6.9.0-rc3-00023-g2c71fdf02a95'
+  '.config' -> 'tar-install/boot/config-6.9.0-rc3-00023-g2c71fdf02a95'
+  './vmlinux' -> 'tar-install/boot/vmlinux-6.9.0-rc3-00023-g2c71fdf02a95'
+  'arch/arm/boot/zImage' -> 'tar-install/boot/vmlinux-kbuild-6.9.0-rc3-00023-g2c71fdf02a95'
+
+  ** ** **  WARNING  ** ** **
+
+  Your architecture did not define any architecture-dependent files
+  to be placed into the tarball. Please add those to scripts/package/buildtar ...
+
+After:
+
+  './System.map' -> 'tar-install/boot/System.map-6.9.0-rc3-00023-g2c71fdf02a95-dirty'
+  '.config' -> 'tar-install/boot/config-6.9.0-rc3-00023-g2c71fdf02a95-dirty'
+  './vmlinux' -> 'tar-install/boot/vmlinux-6.9.0-rc3-00023-g2c71fdf02a95-dirty'
+  './arch/arm/boot/zImage' -> 'tar-install/boot/vmlinuz-6.9.0-rc3-00023-g2c71fdf02a95-dirty'
+
+and the location of zImage is the only thing that changes as expected.
 
 > ---
->  drivers/perf/arm-cmn.c | 1 +
->  1 file changed, 1 insertion(+)
+>  scripts/package/buildtar | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 7ef9c7e4836b..b2c607cf3ad7 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -2482,6 +2482,7 @@ static int arm_cmn_probe(struct platform_device *pdev)
->  	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
->  	cmn->pmu = (struct pmu) {
->  		.module = THIS_MODULE,
-> +		.parent = cmn->dev,
->  		.attr_groups = arm_cmn_attr_groups,
->  		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
->  		.task_ctx_nr = perf_invalid_context,
+> diff --git a/scripts/package/buildtar b/scripts/package/buildtar
+> index 72c91a1b832f..0939f9eabbf2 100755
+> --- a/scripts/package/buildtar
+> +++ b/scripts/package/buildtar
+> @@ -101,6 +101,9 @@ case "${ARCH}" in
+>  			fi
+>  		done
+>  		;;
+> +	arm)
+> +		[ -f "${objtree}/arch/arm/boot/zImage" ] && cp -v -- "${objtree}/arch/arm/boot/zImage" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
 
+While it probably does not matter too much, it would be more proper to
+make this
+
+  [ -f "${KBUILD_IMAGE}" ] && cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinuz-${KERNELRELEASE}"
+
+as the current line does not work with CONFIG_XIP_KERNEL=y, since zImage
+does not exist (KBUILD_IMAGE is arch/arm/boot/xipImage with this
+configuration)
+
+  $ ls arch/arm/boot
+  compressed  dts  xipImage
+
+resulting in buildtar failing because
+
+  [ -f "${objtree}/arch/arm/boot/zImage" ]
+
+fails and is the last statement that runs in the script (and the tar
+package is not really complete in this configuration anyways).
+
+Prior to this change, the correct image would get placed into the
+tarball.
+
+  'arch/arm/boot/xipImage' -> 'tar-install/boot/vmlinux-kbuild-6.9.0-rc3-00023-g2c71fdf02a95'
+
+> +		;;
+>  	*)
+>  		[ -f "${KBUILD_IMAGE}" ] && cp -v -- "${KBUILD_IMAGE}" "${tmpdir}/boot/vmlinux-kbuild-${KERNELRELEASE}"
+>  		echo "" >&2
+> -- 
+> 2.39.2
+> 
+
+Cheers,
+Nathan
