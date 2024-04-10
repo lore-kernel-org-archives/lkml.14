@@ -1,141 +1,135 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977481802A1;
-	Wed, 10 Apr 2024 17:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04458172BBA;
+	Wed, 10 Apr 2024 17:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771115; cv=none; b=L7DHqllPBAtMxv8n/4AYFuIFELPzNX+vkZqPNdaN5e0AgUiDz2EsZkMRlb8R4HHQ/yLFWBbh0RHc7pPkPSYc/Nk0BbdXmFxL8oPa6TMPBeX9zJLoowzR4bkrlKGEL+CAk7Zu+vHvEbgXLKLBvght3cjcnRtSn1Qr7mrLeoti5Vc=
+	t=1712771144; cv=none; b=EkDBqPFbs2vk/G7O5vdONeMapbfNJKeeNNAqPk9akzd1ZhRRpctjmYRqMbCOq1AKTa1vpCuw6k23SuOTf4DA/lAIPS/5Qph2josBCo2UHuyhMlgffYO4QJrIPOzSkwW815RAlgzkDnYTHhLYnfrzxClG1FA+Jvk640s7QdbtyL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771115; c=relaxed/simple;
-	bh=Wj6ZRvlrOSDMBt6W7n9IjAZ7AZ//hA1fkrsJS10CLKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fi0xT0i61XOVV/0xLK41tH/g6Pk1jb/WZaMtPB0PSaA+Qi4FnkIuQ8hmSkUwhSOQYlTmlJUYbIMRCxPDxzLvsos6R17WgnRVqzCfDT/nktN9I/0Tz7CEPdZzBasV7sks8wwnbKNuXPkYHr6GoJak574SLcLw5JjQxpBfkfy/PbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5dcc4076c13so63023a12.0;
-        Wed, 10 Apr 2024 10:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712771113; x=1713375913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l6yLmtZ0A7ipNhWm4F0IrALVPTgUBnQRDTiWvpPH58w=;
-        b=dqyQZVpHdH23KwIqFXX4O4Uvu9Q2boFA6jOYHfDl0o+ib0YsuILdwZrAzU4vib5PB0
-         bAWSuO54bJojiUPHyKgjjdpPUrh1IJkJqaAfckI4N6lM9+7RBp9ytxyE7YlY1+f/TOqW
-         cfstgQxzfuB2oyHEmAOaZFY6aVu4x/cZY/SgWTsVaTQvBzcdjEJICPRyqmzN7HbeTzm1
-         pwOFEBCZOJfJD7Akq6n6nfTUevOVP0EtxZd63y1/Or23ByG3JHe3b9Pk+aqPiGeUzPsu
-         hqPnib0qKjkCZlZZEDmppmJsFIVYSwHtanKO00hhlKEHjlxgsdVpml5a8ZpH678b9qVL
-         +o5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUrSlTfa+kf8JhIGKRrTnnb+rHNtdPBKL8ZbSTBrxqTQqBKZNAq+f7ObcxGhZZ/in9Y4+67/QjmCaYBJ1OpdFodhs8Eke5wzMVuloOHgNczJxDjx+lLbxa/IzQLUn6Kfdg9tuMvbhLPO0r7WRd3rw==
-X-Gm-Message-State: AOJu0YySWQCu09y2nvKNuK0VcGj0+CXQDclC1mD2aX/ywFxdFQVPUa5d
-	EOlv2NWj2gaHbQIQMC4OCvUuEDlFrHpdMKltnD6mOzKmP2gwdRqVIuVN744S460t28E9ut0yMWC
-	rkpYf87T/ximnfGlQ+Wn0OreKoSk=
-X-Google-Smtp-Source: AGHT+IGR5Q/4Md6XRPDFOZYZCA29OSHEwciU9ZcwjlSpvOPYr1vpBgVJGEcgGhvz5WXiumG4zrUPoZKHzxQHmQg+fC8=
-X-Received: by 2002:a17:90a:7281:b0:2a0:78f4:2dc5 with SMTP id
- e1-20020a17090a728100b002a078f42dc5mr415791pjg.22.1712771112758; Wed, 10 Apr
- 2024 10:45:12 -0700 (PDT)
+	s=arc-20240116; t=1712771144; c=relaxed/simple;
+	bh=4HxhIxz1qnINsE/eh0Ei4JK0lPO3IXgG3NuSYv/yN/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ht8IEE5m+TZQjXyNzjr4k0jyXlh4okyHJxjgciPuKZ5YTw3jYRcqS1Gz609W6lh2D8BBpjti1ZNGIwV4trOdLbim6uIay0vhftxckeZ638fJI1yqtuD5AEradC5xdtxoPh2mJWQySO6/zDx/Z60lcBMzCRsNNmslj9SpW0uqBKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4wyUNXm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4wyUNXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B40BC43390;
+	Wed, 10 Apr 2024 17:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712771143;
+	bh=4HxhIxz1qnINsE/eh0Ei4JK0lPO3IXgG3NuSYv/yN/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C4wyUNXmswTj1u4BA484bIuNcklHmB5TA7wajGIIF5plKdO5YRWUkPJ4Rup+ZHnqy
+	 XybJK/pACKZnuE1+5WgMB0IRo2mV1yZP7zlpX+stj/1qLkyQQeUTrBL3xEzqb7cIt9
+	 0yjBj0J0q+OcVE3sms6PBJWbHoQurnU52TFHjkJC5jGNOvCwRZQTre1+S4IPDd6P48
+	 jludvrK3Es+chz4K4FHHx02VQWGCcKE9exDExTEm427EGo+26QbJMOOIH8mh8pAbKZ
+	 a00r61yZb+4rK37PpYXWb9MkAWIBmPVzZxXSNu0fY5HBAhLK/ipy1D0tnVaZU6Vh/A
+	 rXMF/ilP6JHiw==
+Date: Wed, 10 Apr 2024 10:45:40 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Leon Romanovsky <leon@kernel.org>, Lin Ma <linma@zju.edu.cn>,
+	Simon Horman <horms@kernel.org>, Breno Leitao <leitao@debian.org>,
+	Tobias Brunner <tobias@strongswan.org>,
+	Raed Salem <raeds@nvidia.com>, Netdev <netdev@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] [RFC] xfrm: work around a clang-19 fortifiy-string
+ false-positive
+Message-ID: <20240410174540.GB3649628@dev-arch.thelio-3990X>
+References: <20240216202657.2493685-1-arnd@kernel.org>
+ <202402161301.BBFA14EE@keescook>
+ <763214eb-20eb-4627-8d4b-2e7f29db829a@app.fastmail.com>
+ <20240409161517.GA3219862@dev-arch.thelio-3990X>
+ <f94c6943-eb93-4533-8e4d-3645ef38b990@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410104450.15602-1-adrian.hunter@intel.com> <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 10 Apr 2024 10:45:00 -0700
-Message-ID: <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
-To: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f94c6943-eb93-4533-8e4d-3645ef38b990@app.fastmail.com>
 
-On Wed, Apr 10, 2024 at 9:08=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, Apr 10, 2024 at 3:45=E2=80=AFAM Adrian Hunter <adrian.hunter@inte=
-l.com> wrote:
+On Tue, Apr 09, 2024 at 09:41:09PM +0200, Arnd Bergmann wrote:
+> On Tue, Apr 9, 2024, at 18:15, Nathan Chancellor wrote:
+> > On Mon, Apr 08, 2024 at 09:06:21AM +0200, Arnd Bergmann wrote:
+> >> >
+> >> > The shorter fix (in the issue) is to explicitly range-check before
+> >> > the loop:
+> >> >
+> >> >        if (xp->xfrm_nr > XFRM_MAX_DEPTH)
+> >> >                return -ENOBUFS;
+> >> 
+> >> I ran into this issue again and I see that Nathan's fix has
+> >> made it into mainline and backports, but it's apparently
+> >> not sufficient.
+> >> 
+> >> I don't see the warning with my patch from this thread, but
+> >> there may still be a better fix.
 > >
-> > Simplify is_event_supported by using sys_perf_event_open() directly lik=
-e
-> > other perf API probe functions and move it into perf_api_probe.c where
-> > other perf API probe functions reside.
-> >
-> > A side effect is that the probed events do not appear when debug prints
-> > are enabled, which is beneficial because otherwise they can be confused
-> > with selected events.
-> >
-> > This also affects "Test per-thread recording" in
-> > "Miscellaneous Intel PT testing" which expects the debug prints of
-> > only selected events to appear between the debug prints:
-> > "perf record opening and mmapping events" and
-> > "perf record done opening and mmapping events"
-> >
-> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->
-> nit:
-> Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
->
-> > ---
-> >  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
-> >  tools/perf/util/perf_api_probe.h |  2 ++
-> >  tools/perf/util/pmus.c           |  1 +
-> >  tools/perf/util/print-events.c   | 50 +-------------------------------
-> >  tools/perf/util/print-events.h   |  1 -
-> >  5 files changed, 44 insertions(+), 50 deletions(-)
-> >
-> > diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_ap=
-i_probe.c
-> > index 1de3b69cdf4a..13acb34a4e1c 100644
-> > --- a/tools/perf/util/perf_api_probe.c
-> > +++ b/tools/perf/util/perf_api_probe.c
-> > @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
-> >  {
-> >         return perf_probe_api(perf_probe_cgroup);
-> >  }
-> > +
-> > +bool is_event_supported(u8 type, u64 config)
-> > +{
-> > +       struct perf_event_attr attr =3D {
-> > +               .type =3D type,
-> > +               .config =3D config,
-> > +               .disabled =3D 1,
-> > +       };
-> > +       int fd =3D sys_perf_event_open(&attr, 0, -1, -1, 0);
->
-> It looks like this is a change to the actual perf_event_open
-> arguments, I don't think it is an issue but wanted to flag it.
->
-> > +
-> > +       if (fd < 0) {
-> > +               /*
-> > +                * The event may fail to open if the paranoid value
-> > +                * /proc/sys/kernel/perf_event_paranoid is set to 2
-> > +                * Re-run with exclude_kernel set; we don't do that by
-> > +                * default as some ARM machines do not support it.
-> > +                */
-> > +               attr.exclude_kernel =3D 1;
->
-> I worry about the duplicated fallback logic getting out of sync,
-> perhaps we could have a quiet option for evsel__open option, or better
-> delineate the particular log entries. I don't really have a good
-> alternative idea and kind of like that detecting an event is available
-> loses the evsel baggage. I would kind of like event parsing just to
-> give 1 or more perf_event_attr for similar reasons.
+> > Is it the exact same warning? clang-19 or older?
+> > What > architecture/configuration? If my change is not sufficient then maybe
+> > there are two separate issues here? I have not seen this warning appear
+> > in our CI since my change was applied.
+> 
+> I only see it with clang-19. I've never seen it with arm32 and
+> currently only see it with arm64, though I had seen it with x86-64
+> as well in February before your patch.
 
-We have the missing feature check in the evsel open code,
-and I think we should check the exclude-bits first than others.
-Currently struct pmu has missing_features.exclude_guest only
-and it can have exclude_kernel or others too.
+That seems to line up with my prior experience.
 
-Anyway, I'm ok with this change.
+> The warning is the same as before aside from the line number,
+> which which is now include/linux/fortify-string.h:462:4
+> where it was line 420, but I think that is just a context
+> change.
+> 
+> I have a number of configs that reproduce this bug, see
+> https://pastebin.com/tMgfD7cu for an example with current
+> linux-next.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Thanks for that. I was able to reproduce this on next-20240410 as well
+and I reduced the necessary configurations needed to reproduce this on
+top of just defconfig:
 
-Thanks,
-Namhyung
+  $ echo 'CONFIG_FORTIFY_SOURCE=y
+  CONFIG_KASAN=y
+  CONFIG_XFRM_USER=y' >arch/arm64/configs/repro.config
+
+  $ make -skj"$(nproc)" ARCH=arm64 LLVM=1 {def,repro.}config net/xfrm/xfrm_user.o
+  In file included from net/xfrm/xfrm_user.c:14:
+  In file included from include/linux/compat.h:10:
+  In file included from include/linux/time.h:60:
+  In file included from include/linux/time32.h:13:
+  In file included from include/linux/timex.h:67:
+  In file included from arch/arm64/include/asm/timex.h:8:
+  In file included from arch/arm64/include/asm/arch_timer.h:12:
+  In file included from arch/arm64/include/asm/hwcap.h:9:
+  In file included from arch/arm64/include/asm/cpufeature.h:27:
+  In file included from include/linux/cpumask.h:13:
+  In file included from include/linux/bitmap.h:13:
+  In file included from include/linux/string.h:371:
+  include/linux/fortify-string.h:462:4: warning: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+    462 |                         __write_overflow_field(p_size_field, size);
+        |                         ^
+  1 warning generated.
+
+Unfortunately, I have no idea why it is complaining nor why your patch
+resolves it but the combination of FORTIFY_SOURCE and KASAN certainly
+seems like a reasonable place to start looking. I will see if I can come
+up with a smaller reproducer to see if it becomes more obvious why this
+code triggers this warning.
+
+Cheers,
+Nathan
