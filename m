@@ -1,86 +1,78 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5304713D277;
-	Wed, 10 Apr 2024 07:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D47C13D277
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:58:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735898; cv=none; b=LIRQEEbCscRNsPsFMKz6s5fkvoPrA2jt9A4A67vvgH4WrofGARe246aE+ObwIzZ8rLiT7sJRZXY6aa6+YEIq1zLb5WBC+4lutsjLNnwSM5P1eiLPzTLgSLVd8IMVXPl9jxvEfpEsitIFD6H7VBleDB5AEccJtYWmeb+MLQCP4fY=
+	t=1712735908; cv=none; b=EdCdAZoSUSJLuki3UkQ0Zrst8wIvw61CGmg3lredFexBTUpqOd9hdAk7DaA0btIyDBBXfL5CwHuc5DAuuwlVDeuUodFqBT20e2CPkN9qFZZTaFjTaA8hmN1OliA0t1U1tbHiNWdEZ9FWtS5eHPoEgiinMUf8czlGOLnSHm8fppg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712735898; c=relaxed/simple;
-	bh=ggAwJ9gKp8m5cmIfIhvJyCQX6iVQCf8TPFb9NPvj2wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LzVT/26XZOb3w6cVvRHnNfarjH3JymO6shR92awSBAYjyBSXRqRhsX3wEyAyEbcSInKdxEhm1VQkyCb83cC3hSXR4TohCHI2f+h/bO/9Gto1GAaElHKcIFe6hMDm5GKa63kweyirxlBjVFb/Oq4y9QbtUWQ1b4ElghzJGsTQEu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=PTEG8cXO; arc=none smtp.client-ip=212.42.244.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="PTEG8cXO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1712735569; bh=ggAwJ9gKp8m5cmIfIhvJyCQX6iVQCf8TPFb9NPvj2wE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PTEG8cXOcVrICTtF3JjPJgD01Crf7lT+mVj+85uh8xn5khfP3LDUufykW8v8wKSf0
-	 VmKfwz1ROWdbGwbU+3d48MeYkXBG1204CNCgDZ/FmyFcwAVDuR3GnQ83QU+1M/Z/Zl
-	 ez1FbDkXxwwKaT+hzQ1lYfyRuUnKhLPEJasrrM4E=
-Received: from mail-auth.avm.de (unknown [IPv6:2001:bf0:244:244::71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Wed, 10 Apr 2024 09:52:49 +0200 (CEST)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 01426804EB;
-	Wed, 10 Apr 2024 09:52:49 +0200 (CEST)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id E82B018AFD6; Wed, 10 Apr 2024 09:52:48 +0200 (CEST)
-Date: Wed, 10 Apr 2024 09:52:48 +0200
-From: Nicolas Schier <n.schier@avm.de>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>, Tony Finch <dot@dotat.at>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] scripts/unifdef: avoid constexpr keyword
-Message-ID: <ZhZFUEFJQ-THmulp@buildd.core.avm.de>
-References: <20240408071758.2526806-1-arnd@kernel.org>
+	s=arc-20240116; t=1712735908; c=relaxed/simple;
+	bh=SVFpJC7hpWdsEN6oXEfmHE/kIbC1/z81n1486492/eI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nprBeHRl4r5uMpyPJC7sZ8yL37VcZU3EtJ/tismQoXymI+yRjmoRPm4u7HMCyRFYw1aHiYUv6skDFMnfZ+YP2aT2817Pw8WSqpe6/FxImza14nRd/wcl+9HmWiI4X0QgcSxwObRwA/SmFGWuhYyZ4tEkJCOTuRpNRtsUGeOwas8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3D251480;
+	Wed, 10 Apr 2024 00:58:55 -0700 (PDT)
+Received: from [10.162.43.6] (a077893.blr.arm.com [10.162.43.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 802AF3F766;
+	Wed, 10 Apr 2024 00:58:20 -0700 (PDT)
+Message-ID: <bcc75076-3baa-4a23-8709-0012456f30a2@arm.com>
+Date: Wed, 10 Apr 2024 13:28:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240408071758.2526806-1-arnd@kernel.org>
-X-purgate-ID: 149429::1712735569-FDC5C025-C3543675/0/0
-X-purgate-type: clean
-X-purgate-size: 1031
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+User-Agent: Mozilla Thunderbird
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH v3 3/3] arm64: tlb: Allow range operation for
+ MAX_TLBI_RANGE_PAGES
+To: Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org,
+ maz@kernel.org, oliver.upton@linux.dev, ryan.roberts@arm.com,
+ apopple@nvidia.com, rananta@google.com, mark.rutland@arm.com,
+ v-songbaohua@oppo.com, yangyicong@hisilicon.com, shahuang@redhat.com,
+ yihyu@redhat.com, shan.gavin@gmail.com
+References: <20240405035852.1532010-1-gshan@redhat.com>
+ <20240405035852.1532010-4-gshan@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20240405035852.1532010-4-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 08, 2024 at 09:17:52AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 4/5/24 09:28, Gavin Shan wrote:
+> MAX_TLBI_RANGE_PAGES pages is covered by SCALE#3 and NUM#31 and it's
+> supported now. Allow TLBI RANGE operation when the number of pages is
+> equal to MAX_TLBI_RANGE_PAGES in __flush_tlb_range_nosync().
 > 
-> Starting with c23, 'constexpr' is a keyword in C like in C++ and cannot
-> be used as an identifier:
-> 
-> scripts/unifdef.c:206:25: error: 'constexpr' can only be used in variable declarations
->   206 | static bool             constexpr;              /* constant #if expression */
->       |                         ^
-> scripts/unifdef.c:880:13: error: expected identifier or '('
->   880 |                 constexpr = false;
->       |                           ^
-> 
-> Rename this instance to allow changing to C23 at some point in the future.
-> 
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: linux-kbuild@vger.kernel.org
-> Reviewed-By: Tony Finch <dot@dotat.at>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Suggested-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
 > ---
->  v2: include fixup from Tony
-
-thanks, LGTM.
-
-Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
+>  arch/arm64/include/asm/tlbflush.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index 243d71f7bc1f..95fbc8c05607 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -446,11 +446,11 @@ static inline void __flush_tlb_range_nosync(struct vm_area_struct *vma,
+>  	 * When not uses TLB range ops, we can handle up to
+>  	 * (MAX_DVM_OPS - 1) pages;
+>  	 * When uses TLB range ops, we can handle up to
+> -	 * (MAX_TLBI_RANGE_PAGES - 1) pages.
+> +	 * MAX_TLBI_RANGE_PAGES pages.
+>  	 */
+>  	if ((!system_supports_tlb_range() &&
+>  	     (end - start) >= (MAX_DVM_OPS * stride)) ||
+> -	    pages >= MAX_TLBI_RANGE_PAGES) {
+> +	    pages > MAX_TLBI_RANGE_PAGES) {
+>  		flush_tlb_mm(vma->vm_mm);
+>  		return;
+>  	}
