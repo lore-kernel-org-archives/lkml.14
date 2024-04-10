@@ -1,156 +1,215 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0DF20E3;
-	Wed, 10 Apr 2024 06:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712729840; cv=none; b=bZ6halXmz88io/PzxyKTPnChS05egMrtlJVeDoFkZAZ6DtpBgd96VoCE+WqbE7/maJwFsekAQeTXr8tZWS33Lx0DX7XpWdcK939js0bE2C0ZjR/nTqqdyPKmJ61AgrCHSJy0o+nDstH0aqqwbdfGk+7pB6r/ZYq6d3sl9wwfSGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712729840; c=relaxed/simple;
-	bh=qs6l5jxvkDTBRQoimBG8GeWEgWg+7YUN6vqxESKx63g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=o2oNrlHoTGq9Fpaanx3yNXVz1sFrnMPXCSVY87M1PWK6m00TonjUo9ZbtA4dVMeO3XvX7NnnMfZmJJrHyb24w63tED7s+1tYbnULTerLRoaaCvJ8HkW2zNSLDG1nP+CpPrvJ1nUlW8cPZrk/CGIk5W2g6ybO7wbccPcHWAccMKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N3uzvzJA; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C7F20304;
+	Wed, 10 Apr 2024 06:19:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712729979; cv=fail; b=VEGBiwWuvh8YVd57DoXW1LnH4JJnOvmMeKJb9eAf9pKQudc/eLJ7xhJbvha1tCw79ET74IVIzJI7RAfT8C/Gx/Hm252/LXKoe7QRHyoJjifiSKvmKz55E8QwQhsG43DUXFJP10RG/3IXUp1e/qQTa6SuXRXro+fTLLv2mrnxQRo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712729979; c=relaxed/simple;
+	bh=AcH3wofH9l0Vl13WTjCwq82yjOD7Bzobr+AOm8s7WQw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BvqMYwEznQwAta1yhDw//JDBUv/WxJ+CIZTKwO8GoANYhpFLMV6iJ9bNQ6iEwzb0j9P4ntSzuInlqKJdKautvJv2Mziw8AFXxXe+W7y7D952nGPsCCgACSPirzcsFJBeZIR9TciBlwV6si0ZOZt8xE69ELTXV4XMkJpk/ZPc67Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hBHlP9uJ; arc=fail smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N3uzvzJA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hBHlP9uJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712729839; x=1744265839;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=qs6l5jxvkDTBRQoimBG8GeWEgWg+7YUN6vqxESKx63g=;
-  b=N3uzvzJAsxoMkZb+Cg1Bc6Gj83UuhC/pRLqV4y7nFyVYKjtHhvnvA8nJ
-   O0egrWfdbGKgscHuNJhghhQKeGj1SqV1pyF/NhnaTp73h/wtFu1fmmFgl
-   kF7NqM7JeB1HO19v/symA97mt1ijIUP6WIj89Px+2TQvSAU14ZO1RJnHV
-   2TGjXdfM3v+jyzrT41Vqm+dBcFcG4A5tyBdWYU8wXuTL3296VRdbECJ+B
-   xqLPZMSk5h4CWE+rPfPS/piM3AW4Wr4kxzMJ1CiHrloe/0iYgckIgJ86T
-   BLyw3Dj+ksiYmr3LFU5s+5QK9icvNIiAkMncaoqxLnE9vSKDfe9qIGj3w
+  t=1712729978; x=1744265978;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=AcH3wofH9l0Vl13WTjCwq82yjOD7Bzobr+AOm8s7WQw=;
+  b=hBHlP9uJslrKVbm3Abj+u5sm8AQURR9muycthzuG63u8rGQ1793+lHMs
+   CQvBAddFckJ1eQInbuPwYY8fFompsm8xbQ692SevvFyYvfEVWjPCuYWPD
+   QR7GRUhwmtGieMckifnfpshkLkWc1ZvdMXK44fNwOPt9USqGw3fZRRHp+
+   C+xsRfGcUU7SfXHMe1pG8Ga1dJgPf52Y7qYRo4GlOMHaY0T1F+TsuLjl+
+   XF67o7c9CJq9ZoVv/o0qhvcYseepx24aekn+FYtfa3ipNGEECsotUnsRK
+   mby2WpwCkHqGOHxbhmUmV3nG2P24uUntR1YcjN9NVUkz5bCwucTF0JDoB
    Q==;
-X-CSE-ConnectionGUID: ydyTWxHgQRadfEkjXhi33A==
-X-CSE-MsgGUID: OW7cXftDRQW3cmWjVWPAPw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11863830"
+X-CSE-ConnectionGUID: m2cBowrfR06NTzNsZy2h9g==
+X-CSE-MsgGUID: s3AqEJR3SwuZGznH9l20mQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18640190"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11863830"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 23:17:18 -0700
-X-CSE-ConnectionGUID: cp1nF6qKSI6i7+BTGKxGuw==
-X-CSE-MsgGUID: H3oek+f/TLqHQrJCTDjbhg==
+   d="scan'208";a="18640190"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 23:19:37 -0700
+X-CSE-ConnectionGUID: sH2fg7Q4Ree/+8Bddh4u5w==
+X-CSE-MsgGUID: y8TQMPrQT4yOnUNXAFM9BA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="24930831"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 23:17:12 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Yuanchu Xie <yuanchu@google.com>
-Cc: David Hildenbrand <david@redhat.com>,  "Aneesh Kumar K.V"
- <aneesh.kumar@linux.ibm.com>,  Khalid Aziz <khalid.aziz@oracle.com>,
-  Henry Huang <henry.hj@antgroup.com>,  Yu Zhao <yuzhao@google.com>,  Dan
- Williams <dan.j.williams@intel.com>,  Gregory Price
- <gregory.price@memverge.com>,  Wei Xu <weixugc@google.com>,  David
- Rientjes <rientjes@google.com>,  Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
-  Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Michal Hocko <mhocko@kernel.org>,  Roman Gushchin
- <roman.gushchin@linux.dev>,  Muchun Song <muchun.song@linux.dev>,  Shuah
- Khan <shuah@kernel.org>,  Yosry Ahmed <yosryahmed@google.com>,  Matthew
- Wilcox <willy@infradead.org>,  Sudarshan Rajagopalan
- <quic_sudaraja@quicinc.com>,  Kairui Song <kasong@tencent.com>,  "Michael
- S. Tsirkin" <mst@redhat.com>,  Vasily Averin <vasily.averin@linux.dev>,
-  Nhat Pham <nphamcs@gmail.com>,  Miaohe Lin <linmiaohe@huawei.com>,  Qi
- Zheng <zhengqi.arch@bytedance.com>,  Abel Wu <wuyun.abel@bytedance.com>,
-  "Vishal Moola (Oracle)" <vishal.moola@gmail.com>,  Kefeng Wang
- <wangkefeng.wang@huawei.com>,  linux-kernel@vger.kernel.org,
-  linux-mm@kvack.org,  cgroups@vger.kernel.org,
-  linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v3 1/8] mm: multi-gen LRU: ignore non-leaf pmd_young
- for force_scan=true
-In-Reply-To: <CAJj2-QEczZzon8AhO32_B=D2MAZG+1YWp0yrgSKQOChjQnN1OA@mail.gmail.com>
-	(Yuanchu Xie's message of "Tue, 9 Apr 2024 15:36:04 -0700")
-References: <20240327213108.2384666-1-yuanchu@google.com>
-	<20240327213108.2384666-2-yuanchu@google.com>
-	<875xwr81x9.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAJj2-QEczZzon8AhO32_B=D2MAZG+1YWp0yrgSKQOChjQnN1OA@mail.gmail.com>
-Date: Wed, 10 Apr 2024 14:15:18 +0800
-Message-ID: <87plux68w9.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+   d="scan'208";a="25132908"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Apr 2024 23:19:37 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 23:19:36 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 23:19:36 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 23:19:36 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 9 Apr 2024 23:19:35 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gnsnnXF9RWD5MBKanYCB13BIqKUBrh1bxXPsTNasTYDf2IhsUYmVLumjGL3j0KXlzR0KEDjkuU5spZnz5RY52txkwcz3TJMXH+7vU/4ZfcSgZJKT9j9MMprhYkry6ql0h9DbTg7qoD4yMbd2T2QCCzjA0cIRdJU4XzqhQkuOeRva/rwcOZKTwufy0uaKfmrgCXUdIHtCBWvAbEnN1p8QpOLXFuq9FZZaw4whG0wt/Z8Kf1BgezqZGOnp6w3RZLku5yyRgDwpD/blVt2pIquhm2UdC5lArZC2VqOzPOsQSD4+THtgmdK0Ouaktn8PD4B76WTNf3J0Q+P+gzMz7yEXdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=g68ezOYiCsVGWRMxkz1Zp64+bkyodtLbqlJXnASvXKw=;
+ b=ghClnMquTLXPX2dBbKHW3CVv5NwqYuFcQCJ/5NL+qrF7pDdUbjhxiOrcpKibJk0YAysvrBiFSL6orDvITirZ1ybyFA/fk+GyGTI+nu3/ahEGpd8xcS43k2lr0Hrk8zPw9IonySVoHfhvFMNmlnzTF0DFK/pQPGGggFnDG7LHT9UMKzKa5MA9BsQIqBRrTp5fKJApXa5XqfLwaA5jxoNCtXUzD1rZXMwiHUoL18h34LsehsCHhgUpL5TSLbzTFQktmjxd+nlyq3luguPz0ng3m116v0i8acQTEu0ZKBkKM/6V1thRHzmiOId5oTVPTJ/0Vc9vnuPMEUzRjVhjhJTtBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by PH0PR11MB7524.namprd11.prod.outlook.com (2603:10b6:510:281::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Wed, 10 Apr
+ 2024 06:19:33 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::5c74:8206:b635:e10e%7]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
+ 06:19:33 +0000
+Date: Tue, 9 Apr 2024 23:19:30 -0700
+From: Ira Weiny <ira.weiny@intel.com>
+To: fan <nifan.cxl@gmail.com>, <ira.weiny@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, Fan Ni <fan.ni@samsung.com>, "Jonathan
+ Cameron" <Jonathan.Cameron@huawei.com>, Navneet Singh
+	<navneet.singh@intel.com>, Dan Williams <dan.j.williams@intel.com>, Davidlohr
+ Bueso <dave@stgolabs.net>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, <linux-btrfs@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 14/26] cxl/region: Read existing extents on region
+ creation
+Message-ID: <66162f721d5a_e9f9f2943e@iweiny-mobl.notmuch>
+References: <20240324-dcd-type2-upstream-v1-0-b7b00d623625@intel.com>
+ <20240324-dcd-type2-upstream-v1-14-b7b00d623625@intel.com>
+ <ZgRbTfmoU3HZPfrf@debian>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ZgRbTfmoU3HZPfrf@debian>
+X-ClientProxiedBy: BY3PR05CA0048.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::23) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH0PR11MB7524:EE_
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: l4hlfSOcXLAVWNe8xHkuuVncl1Efym1COX9vSMqRmBj2R7NTvtB71YbE9xTWLWnPUJPi/bErhIyun8fRVBU9eSPvS/ayuaQu3h7Btat8Chskfql49TQRo2PTD1kDlOr6/DJY35x/etCeK6YbUDm75PtbQjmnyuD1MXw1VgIWJMTykSGXA/zSZTpWGrfQaeh8oZ0kGh8jGMd5YnfqmEUC4huDBZwfpPqKwIo5sLnk7ZoaqnxRloumta5CjLwQMtl3xabkUDXnmlBYldTJ37fMqFwb44yRb/+GWHizTioq/Yrz4TlqMltxlVxZO4BIZdMaeHcBhKqPQtLAjFKH5TA0sdIM1DIClrgZrfSqpZxbvexKzZ9NKchjsun5Zy63cWpKbw0sBU8JerfUWPeOSYjZYFsgf54zAKh44n914yo88te+y7WJY+zvJ0Aef5EPkjXCydu/781FbaF1HBPnM8GIUNYpqmwJJxiWe1vAx/WUYV5CSbzHH241BmwmYEaD2K5rAqb6t0gUxLYrzRuZZ1BeqcOhoKK0TnP4nGWdTZGyay4j08PUoEQqJ36v54G9DEBOS+nR81FaRPydNtYAtkNmH2fppNO0wf6wSocqwhoVgSDwPeBOcIPb2QEbOK2JZ2vukN4Q/yul1hiSA6oj4S6RKTN1LXe1OM+/Mb0NjAMR4pA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?IfBaQZ5zMC3REt4VRDJ0070ejd+VSaxZIGo1XCijs0ggZoxIrIkrxK6WOD+N?=
+ =?us-ascii?Q?R3pXFEVN6abumndEYALy/535X8ocInzpUME/Nq+2sRy+UxCQoZS8jnE+BJZL?=
+ =?us-ascii?Q?JYQe/FB16vxaKBhZqDdw+vr09kcUnvmkQGwoNRpBW1wT2bTwuRmbRSdZ8UM0?=
+ =?us-ascii?Q?ASQjhIdOZ1paiuAbSPMvT0XNDJK7OBHLPppLgArsQDOfTqp1X1+VqJMPXuTq?=
+ =?us-ascii?Q?z8pguyptd6RqM1gpr/MReUJJjztltThzYglMgLnewakvPAoz/6i71g5ZCOHD?=
+ =?us-ascii?Q?Lr19bf4vRFwLdejNHLcVvDdMtgqOXUV8E4/e2fqmvpOURyoYz8oufJNb5Ekv?=
+ =?us-ascii?Q?nnNErF/QH/onFK5m4dCFMV1PTEGQItkD3pQHGhABNt+GEONk+wLG5G+dOsUq?=
+ =?us-ascii?Q?c6eGAQOHH7yOOkKPzYmrJUWp2XvQbJ/78BxJpCeRTXdONG6+IjrFjExNMwMW?=
+ =?us-ascii?Q?IrDppuF6sCg1/0+K77ZdkWcyoqNgD/GWNyL1KYbbJOhcI1TjVYP/wJG498wV?=
+ =?us-ascii?Q?nfJ4Y43jz7gqerbYaPoYr0FcPz7og0trGDRrkWLy9x5PuF4CJU4lWuMNplIt?=
+ =?us-ascii?Q?DBsi8SGqQONmR+DkbDpMmpi8SW2Ji5n4chYLomCf9NGxd2ztIoqrov7naYEA?=
+ =?us-ascii?Q?NyHSDv8yW7qJmxURdBTDgC5IerzvQzQ3IUbwPe5qz5QaorDQuEakP+8spfd6?=
+ =?us-ascii?Q?Xg2IqmihgsexgKuvvZhqx8qYbSCgD95yfzz2IkbYr9ZtP3z1FLfS7FFpHQLu?=
+ =?us-ascii?Q?8aE2qxYbI0v7AwDpXG9wykC2+kQO79UzpXkMC/HEeeTAc+fJyS0sv/gdgvgM?=
+ =?us-ascii?Q?XTm1mOdj+bhG0d+nKN4xOoKTUNkjvih+y0XLSwG63mdcXnIv8es8xpW2nUkX?=
+ =?us-ascii?Q?y7zZ9i2IcIic0sl4/KDpChrg1lzFFdrW/4JlHbrtN59Jhb0c0L8QPSPmRFuO?=
+ =?us-ascii?Q?INLUv2+LjnaFdvnJ8oDxY43KZ3gS2k5gV2VCJbh0vElOG3WcrKjUueCd8MsR?=
+ =?us-ascii?Q?rFJiFrc5OEPC/ATvAuFQ8JKahCBELJodGQ4am672tbgLg2NEDcyRkRzlB/VA?=
+ =?us-ascii?Q?IfEW6aYFSs7Q6zLnCEgf/JUzVFuHzFr1STe3Cx3KPdZdu3Et1fEK26RVCbjB?=
+ =?us-ascii?Q?NRQ2wyKol3Qap0mFcdJ/DK6RH0j0v7UFrrI/K6K7FQmmNFryrIlLn4PCWwfB?=
+ =?us-ascii?Q?0uASnLRxSuXxKDzqXT+GbNKhPS7isa7l5C+86Ei+/5ZCJlGsGmgSMepkcPCv?=
+ =?us-ascii?Q?S7z6JnaJogvlJWZIcwBZuFnffm7sU2k0HquKNP4lKhgpG6ftEgy3dDXGm49R?=
+ =?us-ascii?Q?z76wMndqIiazfMLqO0C1QDdADu7fbjELqTpFVHj+/NHHX2QPf/1q7crTHfoe?=
+ =?us-ascii?Q?ID129VIGFdYjlfoSJMCzwBCQ6nlq3fralDILmFF2bkNX+yXTl5yzlR5JvaeP?=
+ =?us-ascii?Q?597SeKV4Y1E74/WRt9LtsV8pveHEWtZ+ilUvJBXSutseJfXNAF9Vh7yU4fip?=
+ =?us-ascii?Q?2RmEVxG2trwtcs1WBzINkervcUY/lvrg1R/Q/H7kVgNqK6AnQvkC2F3RasyJ?=
+ =?us-ascii?Q?olnOuQ9G+Zdy4tE6oWP4BhjfrWcGyQzjGK18ayWS?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaacc405-2006-494b-f94a-08dc5926302e
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 06:19:33.2883
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lo4eFYh2dFCRjKVP3edcez/nP4XDOBtwF43tWwCLVy57wIcRvYJskEwvfVafeHSafP4YXH86G07GTVa6K2amqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7524
+X-OriginatorOrg: intel.com
 
-Yuanchu Xie <yuanchu@google.com> writes:
+fan wrote:
+> On Sun, Mar 24, 2024 at 04:18:17PM -0700, ira.weiny@intel.com wrote:
+> > From: Navneet Singh <navneet.singh@intel.com>
+> > 
 
-> On Mon, Apr 8, 2024 at 11:52=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
-> wrote:
->>
->> Yuanchu Xie <yuanchu@google.com> writes:
->>
->> > When non-leaf pmd accessed bits are available, MGLRU page table walks
->> > can clear the accessed bit and promptly ignore the accessed bit on the
->> > pte because it's on a different node, so the walk does not update the
->> > generation of said page. When the next scan comes around on the right
->> > node, the non-leaf pmd accessed bit might remain cleared and the pte
->> > accessed bits won't be checked. While this is sufficient for
->> > reclaim-driven aging, where the goal is to select a reasonably cold
->> > page, the access can be missed when aging proactively for measuring the
->> > working set size of a node/memcg.
->> >
->> > Since force_scan disables various other optimizations, we check
->> > force_scan to ignore the non-leaf pmd accessed bit.
->> >
->> > Signed-off-by: Yuanchu Xie <yuanchu@google.com>
->> > ---
->> >  mm/vmscan.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/mm/vmscan.c b/mm/vmscan.c
->> > index 4f9c854ce6cc..1a7c7d537db6 100644
->> > --- a/mm/vmscan.c
->> > +++ b/mm/vmscan.c
->> > @@ -3522,7 +3522,7 @@ static void walk_pmd_range(pud_t *pud, unsigned =
-long start, unsigned long end,
->> >
->> >               walk->mm_stats[MM_NONLEAF_TOTAL]++;
->> >
->> > -             if (should_clear_pmd_young()) {
->> > +             if (!walk->force_scan && should_clear_pmd_young()) {
->> >                       if (!pmd_young(val))
->> >                               continue;
->>
->> Sorry, I don't understand why we need this.  If !pmd_young(val), we
->> don't need to update the generation.  If pmd_young(val), the bloom
->> filter will be ignored if force_scan =3D=3D true.  Or do I miss somethin=
-g?
-> If !pmd_young(val), we still might need to update the generation.
->
-> The get_pfn_folio function returns NULL if the folio's nid !=3D node
-> under scanning,
-> so the pte accessed bit does not get cleared and the generation is not up=
-dated.
-> Now the pmd_young flag of this pmd is cleared, and if none of the
-> pte's are accessed
-> before another round of scanning occurs on the folio's node, the pmd_youn=
-g check
-> fails and the pte accessed bit is skipped.
->
-> This is fine for kswapd but can introduce inaccuracies when scanning
-> proactively for
-> workingset estimation.
+[snip]
 
-Got it!  Thanks for detailed explanation.  Can you give more details in
-patch description too?
+> > +
+> > +/**
+> > + * cxl_read_dc_extents() - Read any existing extents
+> > + * @cxled: Endpoint decoder which is part of a region
+> > + *
+> > + * Issue the Get Dynamic Capacity Extent List command to the device
+> > + * and add any existing extents found which belong to this decoder.
+> > + *
+> > + * Return: 0 if command was executed successfully, -ERRNO on error.
+> > + */
+> > +int cxl_read_dc_extents(struct cxl_endpoint_decoder *cxled)
+> > +{
+> > +	struct cxl_memdev_state *mds = cxled_to_mds(cxled);
+> > +	struct device *dev = mds->cxlds.dev;
+> > +	unsigned int extent_gen_num;
+> > +	int rc;
+> > +
+> > +	if (!cxl_dcd_supported(mds)) {
+> > +		dev_dbg(dev, "DCD unsupported\n");
+> > +		return 0;
+> > +	}
+> > +
+> > +	rc = cxl_dev_get_dc_extent_cnt(mds, &extent_gen_num);
+> > +	dev_dbg(mds->cxlds.dev, "Extent count: %d Generation Num: %d\n",
+> > +		rc, extent_gen_num);
+> > +	if (rc <= 0) /* 0 == no records found */
+> > +		return rc;
+> > +
+> > +	return cxl_dev_get_dc_extents(cxled, extent_gen_num, rc);
+> 
+> Not sure about the behaviour here. From the cxl_dev_get_dc_extents
+> implementation below, if gen_num changed or the expected extent count
+> changed, it will return error. 
 
-It's unfortunate because PMD young checking helps scanning performance
-much.  It's unnecessary to be done in this patchset, but I hope we can
-find some way to get it back at some time.
+yep.
 
---
-Best Regards,
-Huang, Ying
+> If I understand it correctly, if the above two values change, it means
+> the extent list has been updated due to extent add/release since last
+> time we read the extent list info (cxl_dev_get_dc_extent_cnt), do we
+> need to fail the operation or try again?
+
+The original series was safe to fail the operation because the list was read on
+memory device driver load and not when the regions were created.  This is an
+oversight with the new architecture.  Now that regions query for the list
+independent of other regions being active the list could indeed change during
+this operation.  :-/  So a retry is necessary.
+
+Let me work on the retry because some of the extents may have been surfaced
+during the list processing which means a re-read of the list will need to
+properly ignore those already found.  Or some other tracking needs to be put in
+place.
+
+Ira
