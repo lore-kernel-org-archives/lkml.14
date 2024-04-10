@@ -1,45 +1,45 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C984116DED8;
-	Wed, 10 Apr 2024 13:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A889B16E87A;
+	Wed, 10 Apr 2024 13:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757594; cv=none; b=ZudBS8CQ69tCisiDIYu0vesHnngFLVROGFJMoedczKbxT6rXt3HRm/43lXTkJrLXPUpVdO2w7HIGyHC91Th0XMjcEK4HYjG+uLkGUsHPsheospz6/+UyMffVVambJf5aLYAuh8cIBe68735PR5NemyESzS1pm9ZuztI2riSVNrQ=
+	t=1712757595; cv=none; b=oTMbkjDCc+0xKWP5OWSS+lfiCmhNdiGzqxfWPZsormk49nDMrqNM3ltMROSX00BFgyvF8Zdh2MHFyBIAedznhau/Xc37kO2vK9H5VYGddRIuEnv6CyUlHbbPpgLgPWMeXlQ8njnGzau3gABuys35Fk0u0pmmMe0v3jJpEZq7iHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757594; c=relaxed/simple;
-	bh=P/VnF/qnJ/q/CFLwO6pmKiUWpJe7q8mHYQKoiG5ldhM=;
+	s=arc-20240116; t=1712757595; c=relaxed/simple;
+	bh=PTegs9ykbvHC1ICQVyVsRDew1j48hO85AyiibH06nsU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C+ykrx6r7zC3AuUsq4+mdXJ34eNufqPj9CQn7YlodF79qadYUpXin3IhFyAGNM4OgkWdJ/42wZpFBevw1TCfRq07kpZjJa/kshmyKMx83YGvW1AxRi4fP1WgWXY/3rTDeKMNjEZQI+77Art4EQNr7Barp8kbLKGQLZPKNum8c5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nlYVBXeA; arc=none smtp.client-ip=198.47.19.141
+	 MIME-Version:Content-Type; b=gBZs2m2JNXofpjYTw7FEFbWw4LVV5teG61zio9xz0B7qlRrV0SCVnh7Md1J2kNqRrhEAySE2mg9iKjl4J9bHNErxekqbLTtYjJRozTZvHrnBpGVQV3NU7QkTgGVE+wWaNgAGn0D/OQdkpkEg7Z77zVFIivzWv51Jh32nu58QLig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DuWKHJ5G; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nlYVBXeA"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxksB024582;
-	Wed, 10 Apr 2024 08:59:46 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DuWKHJ5G"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxlqw067939;
+	Wed, 10 Apr 2024 08:59:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712757586;
-	bh=KDf4x/lczdR2LuWICqLSkiUo9SNZ0/+dHt1tFmC5qbw=;
+	s=ti-com-17Q1; t=1712757587;
+	bh=D2x4h79JlmRi6L/Tkiiqwzm9M9u1cUSEJdufr2dangU=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=nlYVBXeAmz0SnQVSCd5SLZ7Q/7Y7N9+OjXdktqf7opWsFINj54NaiMHP5p7Eunyyz
-	 ScRLjXskJN1o42AWC8WIV/w1xNkOFVZV89t/n/ibFK1m3lsifpVu2yw3WiRFrlrx9f
-	 DTPXQcZ0LTyQ2XZ4zCojEsYkS97rE0H9RgvtADe4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxk5o029209
+	b=DuWKHJ5GR7aHnEXUZdZEM7SIAwkXv/28N9pkxh3IdSFaNLBAFc4ytgZCwSullETOQ
+	 L58jRY4B8EifmO06VvKx8EgxEw2R5HJvx6W1ZQFfnADH4LCVe7uus1tXDYCBUpTzQW
+	 /1A+RNcrdk9Lf0WmHpxTiz7Y9j7u4+tVE5U2mUEQ=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxlkl020080
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Apr 2024 08:59:46 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 10 Apr 2024 08:59:47 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Apr 2024 08:59:46 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2024 08:59:47 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Apr 2024 08:59:46 -0500
+ Frontend Transport; Wed, 10 Apr 2024 08:59:47 -0500
 Received: from fllvsmtp8.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhas067183;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhau067183;
 	Wed, 10 Apr 2024 08:59:46 -0500
 From: Andrew Davis <afd@ti.com>
 To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
@@ -49,9 +49,9 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
 CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew
  Davis <afd@ti.com>
-Subject: [PATCH v2 08/13] mailbox: omap: Merge mailbox child node setup loops
-Date: Wed, 10 Apr 2024 08:59:37 -0500
-Message-ID: <20240410135942.61667-9-afd@ti.com>
+Subject: [PATCH v2 10/13] mailbox: omap: Use mbox_controller channel list directly
+Date: Wed, 10 Apr 2024 08:59:39 -0500
+Message-ID: <20240410135942.61667-11-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410135942.61667-1-afd@ti.com>
 References: <20240410135942.61667-1-afd@ti.com>
@@ -65,182 +65,118 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Currently the driver loops through all mailbox child nodes twice, once
-to read in data from each node, and again to make use of this data.
-Instead read the data and make use of it in one pass. This removes
-the need for several temporary data structures and reduces the
-complexity of this main loop in probe.
+The driver stores a list of omap_mbox structs so it can later use it to
+lookup the mailbox names in of_xlate. This same information is already
+available in the mbox_controller passed into of_xlate. Simply use that
+data and remove the extra allocation and storage of the omap_mbox list.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/mailbox/omap-mailbox.c | 119 +++++++++++++--------------------
- 1 file changed, 46 insertions(+), 73 deletions(-)
+ drivers/mailbox/omap-mailbox.c | 42 +++++++++-------------------------
+ 1 file changed, 11 insertions(+), 31 deletions(-)
 
 diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index 4f956c7b4072c..17c9b9df78b1d 100644
+index 97f59d9f9f319..8e42266cb31a5 100644
 --- a/drivers/mailbox/omap-mailbox.c
 +++ b/drivers/mailbox/omap-mailbox.c
-@@ -89,19 +89,6 @@ struct omap_mbox_device {
- 	struct mbox_controller controller;
+@@ -85,7 +85,6 @@ struct omap_mbox_device {
+ 	u32 num_users;
+ 	u32 num_fifos;
+ 	u32 intr_type;
+-	struct omap_mbox **mboxes;
  };
  
--struct omap_mbox_fifo_info {
--	int tx_id;
--	int tx_usr;
--	int tx_irq;
--
--	int rx_id;
--	int rx_usr;
--	int rx_irq;
--
--	const char *name;
--	bool send_no_irq;
--};
--
  struct omap_mbox {
- 	const char		*name;
- 	int			irq;
-@@ -574,8 +561,7 @@ static int omap_mbox_probe(struct platform_device *pdev)
+@@ -356,25 +355,6 @@ static void omap_mbox_fini(struct omap_mbox *mbox)
+ 	mbox_queue_free(mbox->rxq);
+ }
+ 
+-static struct omap_mbox *omap_mbox_device_find(struct omap_mbox_device *mdev,
+-					       const char *mbox_name)
+-{
+-	struct omap_mbox *_mbox, *mbox = NULL;
+-	struct omap_mbox **mboxes = mdev->mboxes;
+-	int i;
+-
+-	if (!mboxes)
+-		return NULL;
+-
+-	for (i = 0; (_mbox = mboxes[i]); i++) {
+-		if (!strcmp(_mbox->name, mbox_name)) {
+-			mbox = _mbox;
+-			break;
+-		}
+-	}
+-	return mbox;
+-}
+-
+ static int omap_mbox_chan_startup(struct mbox_chan *chan)
+ {
+ 	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
+@@ -539,6 +519,7 @@ static struct mbox_chan *omap_mbox_of_xlate(struct mbox_controller *controller,
+ 	struct device_node *node;
+ 	struct omap_mbox_device *mdev;
+ 	struct omap_mbox *mbox;
++	int i;
+ 
+ 	mdev = dev_get_drvdata(controller->dev);
+ 	if (WARN_ON(!mdev))
+@@ -551,16 +532,23 @@ static struct mbox_chan *omap_mbox_of_xlate(struct mbox_controller *controller,
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 
+-	mbox = omap_mbox_device_find(mdev, node->name);
++	for (i = 0; i < controller->num_chans; i++) {
++		mbox = controller->chans[i].con_priv;
++		if (!strcmp(mbox->name, node->name)) {
++			of_node_put(node);
++			return &controller->chans[i];
++		}
++	}
++
+ 	of_node_put(node);
+-	return mbox ? mbox->chan : ERR_PTR(-ENOENT);
++	return ERR_PTR(-ENOENT);
+ }
+ 
+ static int omap_mbox_probe(struct platform_device *pdev)
  {
  	int ret;
  	struct mbox_chan *chnls;
--	struct omap_mbox **list, *mbox, *mboxblk;
--	struct omap_mbox_fifo_info *finfo, *finfoblk;
-+	struct omap_mbox **list, *mbox;
+-	struct omap_mbox **list, *mbox;
++	struct omap_mbox *mbox;
  	struct omap_mbox_device *mdev;
  	struct omap_mbox_fifo *fifo;
  	struct device_node *node = pdev->dev.of_node;
-@@ -609,40 +595,6 @@ static int omap_mbox_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
+@@ -608,12 +596,6 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 	if (!mdev->irq_ctx)
+ 		return -ENOMEM;
  
--	finfoblk = devm_kcalloc(&pdev->dev, info_count, sizeof(*finfoblk),
--				GFP_KERNEL);
--	if (!finfoblk)
+-	/* allocate one extra for marking end of list */
+-	list = devm_kcalloc(&pdev->dev, info_count + 1, sizeof(*list),
+-			    GFP_KERNEL);
+-	if (!list)
 -		return -ENOMEM;
 -
--	finfo = finfoblk;
--	child = NULL;
--	for (i = 0; i < info_count; i++, finfo++) {
--		child = of_get_next_available_child(node, child);
--		ret = of_property_read_u32_array(child, "ti,mbox-tx", tmp,
--						 ARRAY_SIZE(tmp));
--		if (ret)
--			return ret;
--		finfo->tx_id = tmp[0];
--		finfo->tx_irq = tmp[1];
--		finfo->tx_usr = tmp[2];
--
--		ret = of_property_read_u32_array(child, "ti,mbox-rx", tmp,
--						 ARRAY_SIZE(tmp));
--		if (ret)
--			return ret;
--		finfo->rx_id = tmp[0];
--		finfo->rx_irq = tmp[1];
--		finfo->rx_usr = tmp[2];
--
--		finfo->name = child->name;
--
--		finfo->send_no_irq = of_property_read_bool(child, "ti,mbox-send-noirq");
--
--		if (finfo->tx_id >= num_fifos || finfo->rx_id >= num_fifos ||
--		    finfo->tx_usr >= num_users || finfo->rx_usr >= num_users)
--			return -EINVAL;
--	}
--
- 	mdev = devm_kzalloc(&pdev->dev, sizeof(*mdev), GFP_KERNEL);
- 	if (!mdev)
- 		return -ENOMEM;
-@@ -667,36 +619,58 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 	chnls = devm_kcalloc(&pdev->dev, info_count + 1, sizeof(*chnls),
+ 			     GFP_KERNEL);
  	if (!chnls)
- 		return -ENOMEM;
- 
--	mboxblk = devm_kcalloc(&pdev->dev, info_count, sizeof(*mbox),
--			       GFP_KERNEL);
--	if (!mboxblk)
--		return -ENOMEM;
-+	child = NULL;
-+	for (i = 0; i < info_count; i++) {
-+		int tx_id, tx_irq, tx_usr;
-+		int rx_id,         rx_usr;
-+
-+		mbox = devm_kzalloc(&pdev->dev, sizeof(*mbox), GFP_KERNEL);
-+		if (!mbox)
-+			return -ENOMEM;
-+
-+		child = of_get_next_available_child(node, child);
-+		ret = of_property_read_u32_array(child, "ti,mbox-tx", tmp,
-+						 ARRAY_SIZE(tmp));
-+		if (ret)
-+			return ret;
-+		tx_id = tmp[0];
-+		tx_irq = tmp[1];
-+		tx_usr = tmp[2];
-+
-+		ret = of_property_read_u32_array(child, "ti,mbox-rx", tmp,
-+						 ARRAY_SIZE(tmp));
-+		if (ret)
-+			return ret;
-+		rx_id = tmp[0];
-+		/* rx_irq = tmp[1]; */
-+		rx_usr = tmp[2];
-+
-+		if (tx_id >= num_fifos || rx_id >= num_fifos ||
-+		    tx_usr >= num_users || rx_usr >= num_users)
-+			return -EINVAL;
- 
--	mbox = mboxblk;
--	finfo = finfoblk;
--	for (i = 0; i < info_count; i++, finfo++) {
- 		fifo = &mbox->tx_fifo;
--		fifo->msg = MAILBOX_MESSAGE(finfo->tx_id);
--		fifo->fifo_stat = MAILBOX_FIFOSTATUS(finfo->tx_id);
--		fifo->intr_bit = MAILBOX_IRQ_NOTFULL(finfo->tx_id);
--		fifo->irqenable = MAILBOX_IRQENABLE(intr_type, finfo->tx_usr);
--		fifo->irqstatus = MAILBOX_IRQSTATUS(intr_type, finfo->tx_usr);
--		fifo->irqdisable = MAILBOX_IRQDISABLE(intr_type, finfo->tx_usr);
-+		fifo->msg = MAILBOX_MESSAGE(tx_id);
-+		fifo->fifo_stat = MAILBOX_FIFOSTATUS(tx_id);
-+		fifo->intr_bit = MAILBOX_IRQ_NOTFULL(tx_id);
-+		fifo->irqenable = MAILBOX_IRQENABLE(intr_type, tx_usr);
-+		fifo->irqstatus = MAILBOX_IRQSTATUS(intr_type, tx_usr);
-+		fifo->irqdisable = MAILBOX_IRQDISABLE(intr_type, tx_usr);
- 
- 		fifo = &mbox->rx_fifo;
--		fifo->msg = MAILBOX_MESSAGE(finfo->rx_id);
--		fifo->msg_stat =  MAILBOX_MSGSTATUS(finfo->rx_id);
--		fifo->intr_bit = MAILBOX_IRQ_NEWMSG(finfo->rx_id);
--		fifo->irqenable = MAILBOX_IRQENABLE(intr_type, finfo->rx_usr);
--		fifo->irqstatus = MAILBOX_IRQSTATUS(intr_type, finfo->rx_usr);
--		fifo->irqdisable = MAILBOX_IRQDISABLE(intr_type, finfo->rx_usr);
--
--		mbox->send_no_irq = finfo->send_no_irq;
-+		fifo->msg = MAILBOX_MESSAGE(rx_id);
-+		fifo->msg_stat =  MAILBOX_MSGSTATUS(rx_id);
-+		fifo->intr_bit = MAILBOX_IRQ_NEWMSG(rx_id);
-+		fifo->irqenable = MAILBOX_IRQENABLE(intr_type, rx_usr);
-+		fifo->irqstatus = MAILBOX_IRQSTATUS(intr_type, rx_usr);
-+		fifo->irqdisable = MAILBOX_IRQDISABLE(intr_type, rx_usr);
-+
-+		mbox->send_no_irq = of_property_read_bool(child, "ti,mbox-send-noirq");
- 		mbox->intr_type = intr_type;
- 
- 		mbox->parent = mdev;
--		mbox->name = finfo->name;
--		mbox->irq = platform_get_irq(pdev, finfo->tx_irq);
-+		mbox->name = child->name;
-+		mbox->irq = platform_get_irq(pdev, tx_irq);
- 		if (mbox->irq < 0)
+@@ -675,7 +657,6 @@ static int omap_mbox_probe(struct platform_device *pdev)
  			return mbox->irq;
  		mbox->chan = &chnls[i];
-@@ -743,7 +717,6 @@ static int omap_mbox_probe(struct platform_device *pdev)
- 	if (ret < 0 && ret != -ENOSYS)
- 		return ret;
+ 		chnls[i].con_priv = mbox;
+-		list[i] = mbox++;
+ 	}
  
--	devm_kfree(&pdev->dev, finfoblk);
- 	return 0;
- }
+ 	mutex_init(&mdev->cfg_lock);
+@@ -683,7 +664,6 @@ static int omap_mbox_probe(struct platform_device *pdev)
+ 	mdev->num_users = num_users;
+ 	mdev->num_fifos = num_fifos;
+ 	mdev->intr_type = intr_type;
+-	mdev->mboxes = list;
  
+ 	controller = devm_kzalloc(&pdev->dev, sizeof(*controller), GFP_KERNEL);
+ 	if (!controller)
 -- 
 2.39.2
 
