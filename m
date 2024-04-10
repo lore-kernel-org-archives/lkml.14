@@ -1,108 +1,167 @@
-Received: from fout6-smtp.messagingengine.com (fout6-smtp.messagingengine.com [103.168.172.149])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915D818410C;
-	Wed, 10 Apr 2024 22:06:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49100184102;
+	Wed, 10 Apr 2024 22:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712786803; cv=none; b=IHiQW/QLcC3sjoEdMk+DE19zjw0UiR7Ah2K9jNlKAPWA/AYd557FskP3t1ZquIRbuSNdaUCpmM6yxkj/80gxBs69YZET3sVDoZbdJJAgftO20jxCaPVD2NyUsqlQ0ViQLHqgfzZX4/O1EeESxlNj0vumz8EJ48fI8PkFIYt1loY=
+	t=1712786877; cv=none; b=suoUHNlysQhBNqBXuMteQYB0m3zHXudfVSSRWDJUsVf5Th05t5iXlzd4VAiAFQDWEfRSFwRnRmsZAyTDn4HECbNmN8G938/yIbHtlTfDgY7wpKM8gKHkkmis/cqIgAl1ynjySpmleHD+UA/GGhD8f6z9dinhKixtsZVx+NKsCxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712786803; c=relaxed/simple;
-	bh=hDr6Y9+XNRCuD5B6N5g7dzpvSY/j6WUCAujonwGLJBQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=Q4EJiGcfVsJLaXQbFaajTbTGWxD1Ti9AFV2GG8zGxEUwNs7/vJEX0UTkac6zurg0BHLtzV6NQ5ILVdhlGtI5Ev21PwwlrqCiL2z789cvnX4iPY0Q1gBjaNh+qViWQK+SsEyDvMkwpS2lfWxqawPk+vYpfco1giZ45RnZFVKhOhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=noahloomans.com; spf=pass smtp.mailfrom=noahloomans.com; dkim=pass (2048-bit key) header.d=noahloomans.com header.i=@noahloomans.com header.b=k/FASzBH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=pSuCmUaH; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=noahloomans.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=noahloomans.com
+	s=arc-20240116; t=1712786877; c=relaxed/simple;
+	bh=6zo9q44VDWHNQpisy/DUoH9d+K7FwbxtL1YxaN+nx9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MWY47GoJ19gs22kHGdtDvhwdaHIJg/MI1rrtydRzIi9960j3hcbNG0GCrGnj0elVa5+LkaoHM/jtQ2c2kHhwb64i8PKhed7yeN7T0a5T3aseOFroKs1X2Q/UKUQ3alR/g5+Se2P466BXaXg5tXTNGE/jJaK9p7bpX4+BId4cMrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iP4j2Wcn; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=noahloomans.com header.i=@noahloomans.com header.b="k/FASzBH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="pSuCmUaH"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 6B4AA1380059;
-	Wed, 10 Apr 2024 18:06:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute7.internal (MEProxy); Wed, 10 Apr 2024 18:06:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=noahloomans.com;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
-	 t=1712786799; x=1712873199; bh=hDr6Y9+XNRCuD5B6N5g7dzpvSY/j6WUC
-	AujonwGLJBQ=; b=k/FASzBHZ+y5S2Xb4n+1dhgDrinbaAnfbBOkMOTkdHXuFhBR
-	XY9y3kQCKR985aIw8u8PLMNHmcgdppdo0poKf8zvb1x9AGjqqR9C1sBxP6eFqkGi
-	cD/lbG64yw1a5CcxkNv7R0+/UusYaQXy/JdnPCG+EkkQXD1xT84y+4mkJvycfxTz
-	a8h+LzTTJko3i8sJScUlJqz4bGTg5Q91jAQLQoKR+wb0R7X7/Wm92V4BHaDP6hzy
-	zfuDtyLFdsT5qC3nRfsxiAAMagjZUIbl8djfn6FCyv2tvogWQq7nDV5/249M4e0q
-	satODWrMc2PDYqHHS5snrEapRzJxOZxfCm/vFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1712786799; x=
-	1712873199; bh=hDr6Y9+XNRCuD5B6N5g7dzpvSY/j6WUCAujonwGLJBQ=; b=p
-	SuCmUaHe17M4eLknY80Qv61Qm+xxC3FaKf3661SLoVko4ue37UJvyPWYxqx9vBGg
-	bb+7gErJRJw7XTLZXmoIB+pNReDnPXWxU9ytakhcIV8KZYH5LLa8X5/FbrDhN9OE
-	lXWizuq8TG88xUDKgunBY7bZ+MM9N4zjBX612NrVrdY1/LA703ioKUv8pS6Dnh4P
-	5nbYbfLuIi7harRfx3iUqBODvIL5sj/UVbrXT8CF0+J770vXmt3ygBBpTUTwJDAY
-	ta8hvQl4BB5D7GjHFqpJajCwlDWQauzGv5AtiTqCNXhDOp1+JWVpTXBw5QABt0z0
-	i2EB+FwULA/EPL9YwH02Q==
-X-ME-Sender: <xms:bg0XZlrJnCOcls6IjcMw70ozNf8tEoF3Postpr-Yu22Fa6tk2sWY-g>
-    <xme:bg0XZnqzlvlmnW3bwp4tsUO9r652PaseMPer6zmAIzplEivCZcvCaAjyq8qKO47dB
-    37MJWxtzsNFS0VwD9A>
-X-ME-Received: <xmr:bg0XZiNfQuKKLGLAYZZ3apnzIHZdgBvCMR00gpnX4jFkjO9kQMfxeeX21DDtLTOkBZHTuj-wyeVAdYLz6aIhww>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepggfgtgffkffuhffvvefofhgjsehtqhertdertdejnecuhfhrohhmpedfpfho
-    rghhucfnohhomhgrnhhsfdcuoehnohgrhhesnhhorghhlhhoohhmrghnshdrtghomheqne
-    cuggftrfgrthhtvghrnhepvdeijeehteeggfefkeehleehkeevgfdvtdehgefgledtieff
-    ueeuleeffeeuhefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepnhhorghhsehnohgrhhhlohhomhgrnhhsrdgtohhm
-X-ME-Proxy: <xmx:bw0XZg5g40prx91R4lNAhgMe1gsbCC9THmEVprxNF2Yngq24lhcS_A>
-    <xmx:bw0XZk4-SBi_0pcalrQhF8F-NZzHHiFi1uoe_LzN-M98o1iIf4zszQ>
-    <xmx:bw0XZog3i9MOc0NizI0X0NQ6C3H5RNjOd9xAfNem76vJiR6BkOx1Lg>
-    <xmx:bw0XZm5mKLr8aMDUJ5NchY-8cWs7cs9juvuJqkYY-5cShdW4W2oQyQ>
-    <xmx:bw0XZlGg6K0TA8HL5HdhzDeGa9m6bSERYDe3NAy6Vw6uJbld6qM9d9Jl>
-Feedback-ID: i93394469:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 10 Apr 2024 18:06:36 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iP4j2Wcn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712786876; x=1744322876;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6zo9q44VDWHNQpisy/DUoH9d+K7FwbxtL1YxaN+nx9Y=;
+  b=iP4j2Wcn67AtWEJvGDb3oOfn+e+JgJ4QhecUL7uSkWQHISD2jT+g+LD2
+   QBa+kIY6iu4Fx0cgoEHp7HFq3n9CybIYWMtJzCqPxXK4das98aXUreO0g
+   wdQYEpfn+BGm5mpPmvq8reuT53owovBEl9cV7PigzShCqL4HyK1yUS55l
+   Q5KFC4InPhN0sIZAqRVb0qAR6ckQWusU8pr4Jm9rihKifzLqD+f2IdWox
+   pc6nahqxyNaUPXaam9L0z8QLb52JIZhATkdaWMMOGpJTTYWQk0Vp53pdk
+   13IVMDwQxXaXcTt3VMqp69FrNXUPNEezMLFX8NpjoqLrUr2KMHyuX9kQO
+   w==;
+X-CSE-ConnectionGUID: Mpj7y31QRie0GYv8TWQpsA==
+X-CSE-MsgGUID: e4lawNIbTI2hY7lLkLcPPw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8041105"
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="8041105"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 15:07:53 -0700
+X-CSE-ConnectionGUID: uYlNVSKcQSyPKHp3AC56Zg==
+X-CSE-MsgGUID: av2ztQZTQJC3DhZn+piJiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="25476294"
+Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 15:07:52 -0700
+From: isaku.yamahata@intel.com
+To: kvm@vger.kernel.org
+Cc: isaku.yamahata@intel.com,
+	isaku.yamahata@gmail.com,
+	linux-kernel@vger.kernel.org,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Michael Roth <michael.roth@amd.com>,
+	David Matlack <dmatlack@google.com>,
+	Federico Parola <federico.parola@polito.it>,
+	Kai Huang <kai.huang@intel.com>
+Subject: [PATCH v2 01/10] KVM: Document KVM_MAP_MEMORY ioctl
+Date: Wed, 10 Apr 2024 15:07:27 -0700
+Message-ID: <9a060293c9ad9a78f1d8994cfe1311e818e99257.1712785629.git.isaku.yamahata@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1712785629.git.isaku.yamahata@intel.com>
+References: <cover.1712785629.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 11 Apr 2024 00:06:33 +0200
-Message-Id: <D0GS8UL1WKI5.1PLEUUWOD7B8@noahloomans.com>
-Subject: Re: [PATCH] platform/chrome: cros_ec_uart: properly fix race
- condition
-From: "Noah Loomans" <noah@noahloomans.com>
-To: "Guenter Roeck" <groeck@google.com>
-Cc: "Bhanu Prakash Maiya" <bhanumaiya@chromium.org>, "Benson Leung"
- <bleung@chromium.org>, "Tzung-Bi Shih" <tzungbi@kernel.org>, "Guenter
- Roeck" <groeck@chromium.org>, "Robert Zieba" <robertzieba@google.com>,
- <chrome-platform@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <stable@vger.kernel.org>
-X-Mailer: aerc 0.17.0
-References: <20240410182618.169042-2-noah@noahloomans.com>
- <CABXOdTe02ALsv6sghnhWMkn7-7kidXhjvWzpDn7dGh4zKEkO8g@mail.gmail.com>
-In-Reply-To: <CABXOdTe02ALsv6sghnhWMkn7-7kidXhjvWzpDn7dGh4zKEkO8g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 2024-04-10 at 21:48 UTC+02, Guenter Roeck wrote:
-> On Wed, Apr 10, 2024 at 11:29=E2=80=AFAM Noah Loomans <noah@noahloomans.c=
-om> wrote:
-> > This is my first time contributing to Linux, I hope this is a good
-> > patch. Feedback on how to improve is welcome!
->
-> The commit message is a bit long, but the patch itself looks good to me.
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Hmm yeah it's a bit on a long side. I'm not sure what could be removed
-though, it all seems relevant for understanding the bug and the fix.
+Adds documentation of KVM_MAP_MEMORY ioctl. [1]
 
-> Reviewed-by: Guenter Roeck <groeck@chromium.org>
+It populates guest memory.  It doesn't do extra operations on the
+underlying technology-specific initialization [2].  For example,
+CoCo-related operations won't be performed.  Concretely for TDX, this API
+won't invoke TDH.MEM.PAGE.ADD() or TDH.MR.EXTEND().  Vendor-specific APIs
+are required for such operations.
 
-Thanks!
+The key point is to adapt of vcpu ioctl instead of VM ioctl.  First,
+populating guest memory requires vcpu.  If it is VM ioctl, we need to pick
+one vcpu somehow.  Secondly, vcpu ioctl allows each vcpu to invoke this
+ioctl in parallel.  It helps to scale regarding guest memory size, e.g.,
+hundreds of GB.
 
--Noah
+[1] https://lore.kernel.org/kvm/Zbrj5WKVgMsUFDtb@google.com/
+[2] https://lore.kernel.org/kvm/Ze-TJh0BBOWm9spT@google.com/
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+---
+v2:
+- Make flags reserved for future use. (Sean, Michael)
+- Clarified the supposed use case. (Kai)
+- Dropped source member of struct kvm_memory_mapping. (Michael)
+- Change the unit from pages to bytes. (Michael)
+---
+ Documentation/virt/kvm/api.rst | 52 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index f0b76ff5030d..6ee3d2b51a2b 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -6352,6 +6352,58 @@ a single guest_memfd file, but the bound ranges must not overlap).
+ 
+ See KVM_SET_USER_MEMORY_REGION2 for additional details.
+ 
++4.143 KVM_MAP_MEMORY
++------------------------
++
++:Capability: KVM_CAP_MAP_MEMORY
++:Architectures: none
++:Type: vcpu ioctl
++:Parameters: struct kvm_memory_mapping (in/out)
++:Returns: 0 on success, < 0 on error
++
++Errors:
++
++  ========== =============================================================
++  EINVAL     invalid parameters
++  EAGAIN     The region is only processed partially.  The caller should
++             issue the ioctl with the updated parameters when `size` > 0.
++  EINTR      An unmasked signal is pending.  The region may be processed
++             partially.
++  EFAULT     The parameter address was invalid.  The specified region
++             `base_address` and `size` was invalid.  The region isn't
++             covered by KVM memory slot.
++  EOPNOTSUPP The architecture doesn't support this operation. The x86 two
++             dimensional paging supports this API.  the x86 kvm shadow mmu
++             doesn't support it.  The other arch KVM doesn't support it.
++  ========== =============================================================
++
++::
++
++  struct kvm_memory_mapping {
++	__u64 base_address;
++	__u64 size;
++	__u64 flags;
++  };
++
++KVM_MAP_MEMORY populates guest memory with the range, `base_address` in (L1)
++guest physical address(GPA) and `size` in bytes.  `flags` must be zero.  It's
++reserved for future use.  When the ioctl returns, the input values are updated
++to point to the remaining range.  If `size` > 0 on return, the caller should
++issue the ioctl with the updated parameters.
++
++Multiple vcpus are allowed to call this ioctl simultaneously.  It's not
++mandatory for all vcpus to issue this ioctl.  A single vcpu can suffice.
++Multiple vcpus invocations are utilized for scalability to process the
++population in parallel.  If multiple vcpus call this ioctl in parallel, it may
++result in the error of EAGAIN due to race conditions.
++
++This population is restricted to the "pure" population without triggering
++underlying technology-specific initialization.  For example, CoCo-related
++operations won't perform.  In the case of TDX, this API won't invoke
++TDH.MEM.PAGE.ADD() or TDH.MR.EXTEND().  Vendor-specific uAPIs are required for
++such operations.
++
++
+ 5. The kvm_run structure
+ ========================
+ 
+-- 
+2.43.2
+
