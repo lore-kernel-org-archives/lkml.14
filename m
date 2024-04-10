@@ -1,116 +1,142 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0B4158D76
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9744315ADA2;
+	Wed, 10 Apr 2024 13:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712755629; cv=none; b=mpykKPF6TMLXXkwirvIHrzx59qbXkQ+n6uXsRf6z8Ap98Sb8ZuhU2L0S4SfWNyVZJJHBwSu05o94YvwOtJldB9cprtuon5ztAb5V22FawUEV+jeVgocoJmc6CaybDIonve6UVOSl4QX7Hj/l4uBQR3NLX315oO4OSgTSBoH82Po=
+	t=1712755711; cv=none; b=O/M9uf7vji4Ave9amjru6NyNlQA3EDkla8qZGZQMb5iUwoYIS3kUat4RrLUZEijh9HdvxrA/LdSZgn2tH7vqus6dGqpPXt4P02Eyehr3pADBkNVuDeUszF9ijQAWDIco1g6FE4DMuhXZbTvqTB7wBzfykeUFwjGGbrIJoOn0f5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712755629; c=relaxed/simple;
-	bh=xMIrTLGjJqr6DWw79isjfTXMWURAOcD1QXwXUnanW7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UeXpItQYJwNca3Zpq/2X96lwuYSJCYWkoAe28N4x6VQgSuLUft1yvKClCfS8YtspY1DI7SZqIMgFuM0Wm9KD2+OI+ybTPqvRRyS6zB5lQhTfUf4UYlW7oxkS9mtvhWmBFp7qB51dwm2QRAm2ouw7brurvvrpkPfDBKaNUqENlqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hB/QEnJ3; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712755711; c=relaxed/simple;
+	bh=vG/etX9uFWDRMQyM96dxgcCHcoWyYgwQIb4SGb4iHUc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Milf5EHTOqdLYwAyKHZTQlTSuq938u+2iRPrWIp907ZhHSVBK8dudVj1Ln19aZDvvyYa7+i72OuVNnl2wLWHHZL+tiYq1XRNemPygq2JXgu1G8ozB9f3Rx3KDIjB5uUiQEr8zuA7y8qvqkrPk63fp5tWLo3F6n6w7d5ORUSu9g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iubVYXfK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hB/QEnJ3"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-617f8a59a24so34659037b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:27:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712755626; x=1713360426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qi+4DCwnHTAmfAqEJzjHXORo4khqCoQQ4VwVv0Dtzlc=;
-        b=hB/QEnJ3K6PiqkkBJ4FNU5A3NLMvjIRsqjfnDDlQxjDDvza7CzQ93W2qg45pGCgtFe
-         2ITi7pxDHMqg5ar6EAm98SvBT6T5MY9GJ2a6Un4AZyoavRw2WgrKZM5jQo92Imnaur9E
-         W6SCdx8GxgzIjkSyaDz7rrsHxqaPKktrtfLKJIExiRrRNmrgOxo2pyOaPNDD5HUAq4Ta
-         JyJOGA+Wd+XlupPl3v3jgwxeiV3PsQK1UNuRJS17ZTwk/D4zFSTiKoez0FBYZxDSlhus
-         4CNzcG0hbqQmsxV4NTPmBvErnXA+zOYj9PH5anHQ1mffIRasiYXoXxu2ZnGpaXZDvMRI
-         g2sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712755626; x=1713360426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qi+4DCwnHTAmfAqEJzjHXORo4khqCoQQ4VwVv0Dtzlc=;
-        b=OWkLjBb2RefptOR1vTeU0wK0sBzNW3Pg7PjRAJqpb8EU16Y+L2n0FEvJCJkiHS4Ipr
-         15fK2JOpf3AZE1GVfXSCrNQERMWnYMy0oJImtWdIJIF7AbxYER5/wDZVpuKE0M/UREBs
-         nlSPvfqbvh4QLw8oUgG6j1koUkoy4xCWp0YuL3O+PTXQRiNE1pBINUtVvrE33sEwvRTG
-         TvDfrXKQIchfcM/oiZI9WnFsWxaY60iE0RBTOEQ5LFDERHrMoiTrrz50I1poWJ7JCdfW
-         W/Fmp54OS+A2gRB+3O23EGy2jx5xCmayz8QhJERAiu9HZCRaiPwqH3quq7pjifrMDO+a
-         miuQ==
-X-Gm-Message-State: AOJu0YypQSGmgch3+xwY1NhTRrAZe0ORZCk8mVA1BEISsQvq+SbxaQ6o
-	5YihLwxvtp38DOcmCGYwo+x71lB8fSmswzkQGpGFRBxNpXnztlpW
-X-Google-Smtp-Source: AGHT+IHPf1bO1Hpk1rj0MLDjs0wxJ7zC/0kveJaMg/4qdZZbrJpDeDQkt01UJZa3yl+WPBy3GofYqw==
-X-Received: by 2002:a81:6c11:0:b0:614:281d:acdf with SMTP id h17-20020a816c11000000b00614281dacdfmr2690103ywc.31.1712755626484;
-        Wed, 10 Apr 2024 06:27:06 -0700 (PDT)
-Received: from localhost ([69.73.66.55])
-        by smtp.gmail.com with ESMTPSA id l64-20020a0de243000000b006145f80d24dsm2684124ywe.29.2024.04.10.06.27.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 06:27:05 -0700 (PDT)
-Date: Wed, 10 Apr 2024 06:27:04 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Kyle Meyer <kyle.meyer@hpe.com>
-Cc: linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-	linux@rasmusvillemoes.dk, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	russ.anderson@hpe.com, dimitri.sivanich@hpe.com, steve.wahl@hpe.com
-Subject: Re: [PATCH 0/2 RESEND] sched/topology: Optimize topology_span_sane()
-Message-ID: <ZhaTqNP3mIq62M96@yury-ThinkPad>
-References: <20240409155250.3660517-1-kyle.meyer@hpe.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iubVYXfK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 420B6C43390;
+	Wed, 10 Apr 2024 13:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712755711;
+	bh=vG/etX9uFWDRMQyM96dxgcCHcoWyYgwQIb4SGb4iHUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iubVYXfK6JPDhhN9TmRS0x6QzxNaToPZCeVJnHP93bzsfQkb7YaWzUGU5fvosdVlK
+	 1iYtCJ+3WmeWgXErCaKKoO8GwwKCAVsPQSeaDEZwvjhLCuOC89oo5gQpo6M/afAEAy
+	 4yeMyJV1phaU5H/syWUh2fS6hJ6AmMPbK9BuOo+0TU6FA/S11ekIIS3LR1gsLiMZaG
+	 mJvEUbFS4EnjHWHw0mmkVeePQ3ozflixNW+Mf7PgkbFPaNxs5zDRXrhRsUvsJ6qIwh
+	 nvaEhh/w7672EUsnJyENttVNo1/Exy/MsDqmdMXp6iyLxGelAPVwHWr0EhfXbeuCBH
+	 DtboMbnFmvheg==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-22f0429c1ebso185206fac.0;
+        Wed, 10 Apr 2024 06:28:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUUcst/lEX0TrGqaZcggeqiPU+99cGmB4KLjRYNj6ZHx6CvmX/0iux/PHrv9BkgPQhexl4/cAYo0E0X+DFH2SO8qCqp2crdxsi365sCWaHER2kck0+6g38wJ68p4wvsVU4wZT2We0W5OpCOLe1es/4Y0h+vrO6jFdicgDUpj+xm3oC4hjBUAvc8D3wJav6dc5iwuiE/ycdF7RYhFpQjNAnJYiIh0S3CkHKextzPzsYbdHoQT1k7ZVZ9F50NXJiTN65baYuCYKMgUrhNTHSCxxLDlmL7vtAhwlgXEi7p0zvSAxOgh7W85X18LeMstJ2xREHVhvyR5CjdsUHC9hNm/xV5hPn9JnO0Bu5osE2rLGHH
+X-Gm-Message-State: AOJu0YzEIW7zi+uQ3p6nnF2pVZwTJrnvJ+NcJT5qcWoP830PtPnIukE+
+	MFAibq2RZZXmrqB0AcDGutcTJsd2vyDnkNo9oEkBzx7IKMfLSyj18pTebcrb5MZhaaedunYN+o3
+	kUeOk+d8GCg4/+1GbCQBzvGyTeUs=
+X-Google-Smtp-Source: AGHT+IFL5SftybRh1r8JWNftMLn5Ll2W8+pkIYo7YlzdluWnaIUYaO6UpMp9mGVfMWaTjUBfbyWqBLpc+8TxlkLduX4=
+X-Received: by 2002:a05:6871:a00a:b0:22d:fb4b:9d11 with SMTP id
+ vp10-20020a056871a00a00b0022dfb4b9d11mr2534660oab.4.1712755710509; Wed, 10
+ Apr 2024 06:28:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409155250.3660517-1-kyle.meyer@hpe.com>
+References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk> <E1rVDmU-0027YP-Jz@rmk-PC.armlinux.org.uk>
+ <CAJZ5v0iiJpUWq5GMSnKFWQTzn_bdwoQz9m=hDaXNg4Lj_ePF4g@mail.gmail.com>
+ <20240322185327.00002416@Huawei.com> <20240410134318.0000193c@huawei.com>
+In-Reply-To: <20240410134318.0000193c@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 10 Apr 2024 15:28:18 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ggD042sfz3jDXQVDUxQZu_AWaF2ox-Me8CvFeRB8nczw@mail.gmail.com>
+Message-ID: <CAJZ5v0ggD042sfz3jDXQVDUxQZu_AWaF2ox-Me8CvFeRB8nczw@mail.gmail.com>
+Subject: Re: [PATCH RFC v4 02/15] ACPI: processor: Register all CPUs from acpi_processor_get_info()
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, 
+	linux-pm@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev, x86@kernel.org, 
+	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
+	James Morse <james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 10:52:48AM -0500, Kyle Meyer wrote:
-> A soft lockup is being detected in build_sched_domains() on 32 socket
-> Sapphire Rapids systems with 3840 processors.
-> 
-> topology_span_sane(), called by build_sched_domains(), checks that each
-> processor's non-NUMA scheduling domains are completely equal or
-> completely disjoint. If a non-NUMA scheduling domain partially overlaps
-> another, scheduling groups can break.
-> 
-> This series adds for_each_cpu_from() as a generic cpumask macro to
-> optimize topology_span_sane() by removing duplicate comparisons. The
-> total number of comparisons is reduced from N * (N - 1) to
-> N * (N - 1) / 2 (per non-NUMA scheduling domain level), decreasing the
-> boot time by approximately 20 seconds and preventing the soft lockup on
-> the mentioned systems.
-> 
-> RESEND because Valentin Schneider reported that PATCH 2/2 wasn't
-> delivered to all recipients.
+On Wed, Apr 10, 2024 at 2:43=E2=80=AFPM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> > >
+> > > > diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
+> > > > index 47de0f140ba6..13d052bf13f4 100644
+> > > > --- a/drivers/base/cpu.c
+> > > > +++ b/drivers/base/cpu.c
+> > > > @@ -553,7 +553,11 @@ static void __init cpu_dev_register_generic(vo=
+id)
+> > > >  {
+> > > >         int i, ret;
+> > > >
+> > > > -       if (!IS_ENABLED(CONFIG_GENERIC_CPU_DEVICES))
+> > > > +       /*
+> > > > +        * When ACPI is enabled, CPUs are registered via
+> > > > +        * acpi_processor_get_info().
+> > > > +        */
+> > > > +       if (!IS_ENABLED(CONFIG_GENERIC_CPU_DEVICES) || !acpi_disabl=
+ed)
+> > > >                 return;
+> > >
+> > > Honestly, this looks like a quick hack to me and it absolutely
+> > > requires an ACK from the x86 maintainers to go anywhere.
+> > Will address this separately.
+> >
+>
+> So do people prefer this hack, or something along lines of the following?
+>
+> static int __init cpu_dev_register_generic(void)
+> {
+>         int i, ret =3D 0;
+>
+>         for_each_online_cpu(i) {
+>                 if (!get_cpu_device(i)) {
+>                         ret =3D arch_register_cpu(i);
+>                         if (ret)
+>                                 pr_warn("register_cpu %d failed (%d)\n", =
+i, ret);
+>                 }
+>         }
+>         //Probably just eat the error.
+>         return 0;
+> }
+> subsys_initcall_sync(cpu_dev_register_generic);
 
-Hmm... And this one doesn't have #1, at least for me. Can you please
-resend again, so we all will have the series as a whole?
+I would prefer something like the above.
 
-Also, can you rephrase this from patch #1 because it confuses people:
+I actually thought that arch_register_cpu() might return something
+like -EPROBE_DEFER when it cannot determine whether or not the CPU is
+really available.
 
-> + * for_each_cpu_from - iterate over every cpu present in @mask, starting at @cpu
+Then, the ACPI processor enumeration path may take care of registering
+CPU that have not been registered so far and in the more-or-less the
+same way regardless of the architecture (modulo some arch-specific
+stuff).
 
-Maybe: iterate over CPUs present in a @mask greater than a @cpu?
-Or similar.
+In the end, it should be possible to avoid changing the behavior of
+x86 and loongarch in this series.
 
-Thanks,
-Yury
+> Which may look familiar at it's effectively patch 3 from v3 which was dea=
+ling
+> with CPUs missing from DSDT (something we think doesn't happen).
+>
+> It might be possible to elide the arch_register_cpu() in
+> make_present() but that will mean we use different flows in this patch se=
+t
+> for the hotplug and initially present cases which is a bit messy.
+>
+> I've tested this lightly on arm64 and x86 ACPI + DT booting and it "seems=
+" fine.
 
-> Kyle Meyer (2):
->   cpumask: Add for_each_cpu_from()
->   sched/topology: Optimize topology_span_sane()
-> 
->  include/linux/cpumask.h | 10 ++++++++++
->  kernel/sched/topology.c |  6 ++----
->  2 files changed, 12 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.44.0
+Sounds promising.
+
+Thanks!
