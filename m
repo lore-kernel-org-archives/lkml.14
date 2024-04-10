@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09AA15EFD0;
-	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BCC15EFCC
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712758833; cv=none; b=jbt8AmO0FDR2sJ2onnEzd2HhtTueuq0HKCtbvzOBoEteDC5Qx+ZMh33zLLuWNr9qu14cDIR4viayYhLd2xoltRaT+qlWyrl31kK8ZV7ihqyg8pY+a49XwMIb36WdrXXXKUSbIVp8FnaJNS8//ZyyTEPq9wglo7G0LOFD4dplzZI=
+	t=1712758833; cv=none; b=QOFhS79OIM/EmNhHkAw7ZIFfGSaOxPXrgeI4csUCJGNNtfcmcJjXk0zgNTIR8421FXhGTJGfssU8H/LDqHxk+QvJvpYejPsFuIYRzH83fF0dIOdqpsy4YpW9+octgxmsKhJEXi3mnfrJkzKpkfM74M0UpD2nBAu9lmsa1uJF21M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712758833; c=relaxed/simple;
-	bh=0DhS4EK0I4APNslc3wne19z1VN4gidak3VARFGUl/0o=;
+	bh=eC+Z9N5ahPdK92RFfh/c+mNGqNL0+z2FsfyJ+SMTgvo=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=H/l8SWJgaIvxAmO5/ZLsMNp1Xp256TLoe5INL7HwrbYLj/0iFkotcmaSGyySevrwpukrAKnfWYvSZtGsFN7tuoOgshh24ONb+z2kP+1ZcyonNCx/AB3qutzhnQCQyaSsiNGNi+rTMrwS3l2+lOa9eyxmUCsL80Zqehkhg/56KOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c02H669+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=PoWKocgcMH8KrRSK3u3EGcpAOfm7b4JR3epn1PoTHK0dy1EIu8vRaUjtrPNBu1fqBr9g4/fVBrcUhpTt4df9ORY/6EG5JyjL5+Sj3adgWVMTNMyCFvcpD10pU3mirWZ0GFlBLiCPbAs79mmPoOfP1AXCRgTVkUDqGDRNEkBmrL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gSgTtKc4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c02H669+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7ECA2C433B1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gSgTtKc4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6366CC433C7;
 	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712758833;
-	bh=0DhS4EK0I4APNslc3wne19z1VN4gidak3VARFGUl/0o=;
+	bh=eC+Z9N5ahPdK92RFfh/c+mNGqNL0+z2FsfyJ+SMTgvo=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=c02H669+4EVdfAUg8t85q4fzFena0/vNFU7go8zrbdoO3G26BjMljhZdsw9YaHSCe
-	 KAOMh4B4U9/di7pW7tqFJL363BOtAN8Ez1p2QYhmhIHIKzMhvQKEQ/+oQay1iHuPqF
-	 eX08E+TjZA9OrqzoArP+KbizTzuIHMCtSVONtl9EJwj5AXbWAJ2J2qRI+YOvmCsrDZ
-	 VTVAD6XHwOeqUhWyxiirdp5e3ioIedXhIILMVSzIfIIBEnGrbK4OL4LZnJ6N/X9eit
-	 Avuur1aX5W+zXL5Knz4BuPRpjMALXPlNZHpPsg16H1upV48mqd6yqHvkiWYU9BRpCC
-	 gUlyy6w0T88Pg==
+	b=gSgTtKc4jIBQvla84kxwNpeU6lyHv4ZNr0YSikGOIY4aRJaMKZqBxI3F6FPEwqDHB
+	 4O0WLOqbqwiZ2c+LI48F9A/FSv5YFTqyLz500eeqx8vqy8P7/9lq/Isfc2eqG/cytQ
+	 XBk/B9vueVJPwT5EtfVxir3rssao85wYThEeUMpItManb71hnlHe/eRXXzHRPQcofA
+	 sP4vYck9sSS/pu1n7iSUxiYEAl1OEyCxCuuEtjemSHh+7s9DBcS+pKI6H5pe3G5YxE
+	 LOg/TORLO2U2bxc9MwF90J85TOxW1TpIPI4ItBvqbp2TJpMKI3XNd1JDMwTi1uCv5u
+	 6ht5FKZYXUkXw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 705C7D6030E;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53B30CF21C4;
 	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,38 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: Do not save the scratch CSR during suspend
+Subject: Re: [PATCH 0/4] riscv: 64-bit NOMMU fixes and enhancements
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171275883345.18495.7862735068515050043.git-patchwork-notify@kernel.org>
+ <171275883333.18495.7159115515897564807.git-patchwork-notify@kernel.org>
 Date: Wed, 10 Apr 2024 14:20:33 +0000
-References: <20240312195641.1830521-1-samuel.holland@sifive.com>
-In-Reply-To: <20240312195641.1830521-1-samuel.holland@sifive.com>
+References: <20240227003630.3634533-1-samuel.holland@sifive.com>
+In-Reply-To: <20240227003630.3634533-1-samuel.holland@sifive.com>
 To: Samuel Holland <samuel.holland@sifive.com>
 Cc: linux-riscv@lists.infradead.org, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, ajones@ventanamicro.com, conor.dooley@microchip.com,
- leyfoon.tan@starfivetech.com, paul.walmsley@sifive.com, pavel@ucw.cz,
- rafael@kernel.org, jeeheng.sia@starfivetech.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+ linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (for-next)
+This series was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Tue, 12 Mar 2024 12:56:38 -0700 you wrote:
-> While the processor is executing kernel code, the value of the scratch
-> CSR is always zero, so there is no need to save the value. Continue to
-> write the CSR during the resume flow, so we do not rely on firmware to
-> initialize it.
+On Mon, 26 Feb 2024 16:34:45 -0800 you wrote:
+> This series aims to improve support for NOMMU, specifically by making it
+> easier to test NOMMU kernels in QEMU and on various widely-available
+> hardware (errata permitting). After all, everything supports Svbare...
 > 
-> Signed-off-by: Samuel Holland <samuel.holland@sifive.com>
+> After applying this series, a NOMMU kernel based on defconfig (changing
+> only the three options below*) boots to userspace on QEMU when passed as
+> -kernel.
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: Do not save the scratch CSR during suspend
-    https://git.kernel.org/riscv/c/ba5ea59f768f
+  - [1/4] riscv: Fix TASK_SIZE on 64-bit NOMMU
+    (no matching commit)
+  - [2/4] riscv: Fix loading 64-bit NOMMU kernels past the start of RAM
+    (no matching commit)
+  - [3/4] riscv: Remove MMU dependency from Zbb and Zicboz
+    https://git.kernel.org/riscv/c/9c4319d69744
+  - [4/4] riscv: Allow NOMMU kernels to run in S-mode
+    https://git.kernel.org/riscv/c/f862bbf4cdca
 
 You are awesome, thank you!
 -- 
