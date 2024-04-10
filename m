@@ -1,79 +1,149 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B86D15A4A0;
-	Wed, 10 Apr 2024 11:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D882837B
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749663; cv=none; b=dnLVZWNa5gWCL8FHUxJWmYp/epCapdaxfwiLLWyzI/m392JyS85JIQ0as19dciNGWTd1P3TpHus7mlrd3Pr1AGr4j8VYtkZKspycuc0QQFuASoaDhhsjwlErc0JkYbGrZqu3BmdHnityJCAMTRoqqGdrc3EFcpHTqyyk7p84mJE=
+	t=1712749717; cv=none; b=lYdZsmkN2oI6LmzuMI2GAqqZwa35BVL2cW/02POPEvUj3RPayu08vAVSpCzIcC9USUK79ZQfJiRTkReeMm8aRdtJzCVKV+b+PB/VRDCAmZrfxu3bTExYs8P6MQgN5cbQYusMF9Dt4Cv0k/5t/05zWbGfkPywxFmdZISbircreJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749663; c=relaxed/simple;
-	bh=TIUzW46FH8L5pXXfEfJMVqXA2/iDwWUpGRPrS/YtqKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gs0SuXzBLkIrdckbl6tLbIQ4nmjboBeIt8OXfE36wpqk7H4XVn83ILiZZ7XXCvjsNIWB9At9ju7bqFZkE7UXt3TLVxdqP4EldDsCfWXARyPItCpB6Z+k+Sc1uTgTWP2CJCeJJnOm+mrdZKwYbYIwpXQFACcoITyLYTg3o2rLSPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Ff2lkR55; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1712749717; c=relaxed/simple;
+	bh=KSk84KldP3i/N39dUMXd2SrMF4EJlh8o6xnwO4yPJHA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TM+P3s8iGT0SuibVZfho+hmm/I7wbzhITN6+vjYlK+t5w01ikPcqLH48xS/397HdHAleWpi81ryPJBpLvUl6lGxOgafEarlJBDLOow60QCTWOxGM1vcoL1paG/YomG3V46YmPwq6OPqHHBDz0Bf6+i2fD14mCIqLw7OTJ8/9r5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V77AW2D6; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Ff2lkR55"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 0C201600A2;
-	Wed, 10 Apr 2024 11:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1712749658;
-	bh=TIUzW46FH8L5pXXfEfJMVqXA2/iDwWUpGRPrS/YtqKk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ff2lkR552DLeYpk+ho+vXk9phPhnrn+mZrI5MmM+GAzjB9CpSli9jlwjL/i0+QrtH
-	 I74p7CIgGGHu9DfDfBltt9MAjyKJdm/Brgd6RJXMQfBMkoak0ETYByCHyd8VYuPvB2
-	 b5GtTHU07aMjXVLeB3xXFZtlP67x06Upm931jtDzkrF4pRJyy+b6spqg4s6Ar0AVPZ
-	 18f2oKuG0BYukUf26wCmmeG+FVLRSPQbw05KaIvpQLfFzfdbgbQ5r5/6DH5R78m0cZ
-	 DtApwU0Sr14n7NnYjgMoeeNumbf3M9o480gMIBFu/Oaj1N6IkbgbPqbnzJeStZts1I
-	 mtsjxuurhOTDg==
-Received: by x201s (Postfix, from userid 1000)
-	id 7C24C2010E6; Wed, 10 Apr 2024 11:47:31 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Pieter Jansen van Vuuren <pieter.jansenvanvuuren@netronome.com>
-Subject: [PATCH net-next] flow_offload: fix flow_offload_has_one_action() kdoc
-Date: Wed, 10 Apr 2024 11:47:17 +0000
-Message-ID: <20240410114718.15145-1-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V77AW2D6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712749714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Hgz+WKKNpX8kuTtB/qmB4UwO1pKBtPOgiyiwsLQlcQ=;
+	b=V77AW2D6feltAtJSGG4LXacn4rpPiFJ7Rx3WrMuWcMYpdBInwqcPBlMGiSDgIZNWr5qp+J
+	vZCbaXuJOndaMl/m1rzBcApsVBr7kCe4I5IXuvg0BOJBccw9WO8x5KD1nXhO3rsGIsYxcw
+	PkRK3kCZNlmZWGFsZRLpA4i0clrH8RU=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-178-zCzRxK9UPZq2FsMWa5qBhQ-1; Wed, 10 Apr 2024 07:48:33 -0400
+X-MC-Unique: zCzRxK9UPZq2FsMWa5qBhQ-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a51b00fc137so303296366b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:48:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712749712; x=1713354512;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Hgz+WKKNpX8kuTtB/qmB4UwO1pKBtPOgiyiwsLQlcQ=;
+        b=UxtwOiZi8Ycdx2AszCnvMtDYCRACF8xVLdF7INu9uESyUXq/I8ezijxh0ShuunmgDx
+         iJq5hanUjciooCYz+SZ4mKjrsl44ZdfzApl94b7eh6Nd3xkfkk+hYNyqQSMRMVVWV/zD
+         OhWrh2ctQgFHXRJdQtQldLEuhjiXc0BalQcBLjhHjPVMrM8zc50BkFShcSa8mI8aJzoP
+         d7TcP+2C058udhTXzv2kTaQ0Ga55EBB+Id4CvWG2JgJz7teU0Gqmk33ALvg2jn03iF+1
+         ejnIETt3sGlPlLhJkOm2AI4wLeXskMlP84ZUqnTxCF7gy8LKQmpkfnfAD70tGbn5804H
+         JfCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUFpsCm2+AZpmLXXtm6vw4HlA27rZ2/I3t1sM3sg4rSNq69CG9z+LceabtegsnqzduLQaTGNW5EuoIYGP+RAMkg6BiYxNedGSL/WGmy
+X-Gm-Message-State: AOJu0YwtQrEAgDteg62Zri+dSBGJm/BmtNAbWd2JTMAh034PgvADLi+E
+	yRpJ7qdm2sEMJjfKBqiMeT5m0omDDRFx0f5vpHcSK25NlktANPBYga6aYaeU7ojgQFZAvEieGm0
+	TUoZVgoeaKHrCznrd7uU8Zbtj9gOKsMz/7K/25LTuxnrFO2/pERCzqmJUxDGDmw==
+X-Received: by 2002:a17:906:66c8:b0:a4e:4e76:5fc7 with SMTP id k8-20020a17090666c800b00a4e4e765fc7mr1634794ejp.65.1712749712021;
+        Wed, 10 Apr 2024 04:48:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEkcmmuuLNmbHAa9veWZrKrdL2BsI5D3agKppJCjJD/xmaktuasqemf2nxiHYY8y1tBaQo+9g==
+X-Received: by 2002:a17:906:66c8:b0:a4e:4e76:5fc7 with SMTP id k8-20020a17090666c800b00a4e4e765fc7mr1634772ejp.65.1712749711612;
+        Wed, 10 Apr 2024 04:48:31 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id qq18-20020a17090720d200b00a51cdf560b9sm4433981ejb.37.2024.04.10.04.48.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 04:48:31 -0700 (PDT)
+Message-ID: <d330e0fa-fc50-4920-9000-c6343f5f101b@redhat.com>
+Date: Wed, 10 Apr 2024 13:48:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] media: v4l: Don't turn on privacy LED if streamon
+ fails
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org
+Cc: tomi.valkeinen@ideasonboard.com,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Umang Jain <umang.jain@ideasonboard.com>, linux-kernel@vger.kernel.org
+References: <20240410114712.661186-1-sakari.ailus@linux.intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20240410114712.661186-1-sakari.ailus@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-include/net/flow_offload.h:351: warning:
-  No description found for return value of 'flow_offload_has_one_action'
+Hi,
 
-Fixes: ab79af32b0a5 ("mlxsw: use intermediate representation for matchall offload")
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- include/net/flow_offload.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 4/10/24 1:47 PM, Sakari Ailus wrote:
+> Turn on the privacy LED only if streamon succeeds. This can be done after
+> enabling streaming on the sensor.
+> 
+> Fixes: b6e10ff6c23d ("media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
-index 314087a5e1818..7726b4a97050e 100644
---- a/include/net/flow_offload.h
-+++ b/include/net/flow_offload.h
-@@ -345,7 +345,7 @@ static inline bool flow_action_has_entries(const struct flow_action *action)
-  * flow_offload_has_one_action() - check if exactly one action is present
-  * @action: tc filter flow offload action
-  *
-- * Returns true if exactly one action is present.
-+ * Return: true if exactly one action is present.
-  */
- static inline bool flow_offload_has_one_action(const struct flow_action *action)
- {
--- 
-2.43.0
+Thanks, patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 22 ++++++++++++----------
+>  1 file changed, 12 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index 4c6198c48dd6..012b757eac9f 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -412,15 +412,6 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>  	if (WARN_ON(!!sd->enabled_streams == !!enable))
+>  		return 0;
+>  
+> -#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+> -	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+> -		if (enable)
+> -			led_set_brightness(sd->privacy_led,
+> -					   sd->privacy_led->max_brightness);
+> -		else
+> -			led_set_brightness(sd->privacy_led, 0);
+> -	}
+> -#endif
+>  	ret = sd->ops->video->s_stream(sd, enable);
+>  
+>  	if (!enable && ret < 0) {
+> @@ -428,9 +419,20 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
+>  		ret = 0;
+>  	}
+>  
+> -	if (!ret)
+> +	if (!ret) {
+>  		sd->enabled_streams = enable ? BIT(0) : 0;
+>  
+> +#if IS_REACHABLE(CONFIG_LEDS_CLASS)
+> +		if (!IS_ERR_OR_NULL(sd->privacy_led)) {
+> +			if (enable)
+> +				led_set_brightness(sd->privacy_led,
+> +						   sd->privacy_led->max_brightness);
+> +			else
+> +				led_set_brightness(sd->privacy_led, 0);
+> +		}
+> +#endif
+> +	}
+> +
+>  	return ret;
+>  }
+>  
 
