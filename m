@@ -1,119 +1,127 @@
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E73A13D60B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A009713D620
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735731; cv=none; b=jhdIMFs5WU9ybyWjnx35UBjuXOw8L5VyRbV+zLhYPNqIiAUBdGekrBXztgVQou2sLpAngqKSs0Qp5qcLQCwecJh6qlfK0UbNzvst7VE9Jyt1jBp52vCNHUpSRrCBM6QO7pzSiTMO9mqqZnKcUxsUW1KNe1HYAqqxEdsEIb4xnng=
+	t=1712735734; cv=none; b=ai8cjO4zpMjiDVxKLNaYrVi2yJ2aMpmY71TWpkhqBQgpOwaAm1qhu19zguf5f1h44Pxfct/zXKrya9VoIc5tsW/ABmMilwFVJcAkxLmcEbhp/tLS/LvtFjXipxszTNafvrXuh+lY+QT7yngXC6c7iHUnGD7kKwkmCviwATPzGGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712735731; c=relaxed/simple;
-	bh=pqNpgX0qoIwqOLBxtS6tCaDOhmohIYoLpcCRM8mEwhw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lhc7KCKs0m4bGRhXUUWDumJRNQsj2PU++aFhTISJq7JgRKBhAmoeF8//EWzEeOWyzcWJ37YokSKhyQCPFqYJ4IJwMVUl+yOPuhagYJ2xUdO0zPjPXA9mB4CjK3KkrMLr7qd9RwK9KuFTOJHNqVJTkLN5hqtGqXRL9vDZrI19+9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pp2on71+; arc=none smtp.client-ip=209.85.221.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pp2on71+"
-Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-4dac4791267so1201091e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:55:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712735728; x=1713340528; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uS3BUxF5qCtTkHZxGjFabw9iVy7E/k2BpkwDClQgffY=;
-        b=Pp2on71+qqigOyfK8fY6ZwAiE6cGgA8rqmzLyxLgazsODDcBLbsho68U3SYPE097d1
-         IBLIhoq0XDwhRnhd+PPMKHv7E8UDd6wuHrZ0GI5hpW6dmznVd8hutfrhCu+zDBvkfKbR
-         1PUXp8NNNqysNKrX1T2I8mAx+O8gcvUx/AHwheNDY4Cju+yyrwVTri+A5K4MOhxLgvH4
-         WkvWWxaAb/Sd6gKGaAWbwUIpkdDudneQAOkjmRAS1yZpfnDgAcaGBVXWpbW6CqLyHnuD
-         B/l9jA4YrHKgyb/g+CLKY89x9b8HBQv4SNIHuec2eAxN4D38V0G2NgmFLDtMAQI46ljv
-         yiCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712735728; x=1713340528;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uS3BUxF5qCtTkHZxGjFabw9iVy7E/k2BpkwDClQgffY=;
-        b=RlU0scG+j9Km2NH9lULwsFUEhxbnux0jyKFcLUmw8dXt29BJYT3TM7CrVqt0qiWBqU
-         dHbMfqpyepCy5APwtP7OMzNDvFVfGivVem4PPWji1UYmkr9Gr9hSW1DcwsgSgvysN9Z7
-         SiFkQz+RQHUta3us2SNIW7fMhyQxRD/Bz7Rh/+3A3cp/uJvZIqPiSskvQ8/41lD4xzpd
-         U/p1juB27DRiDFrPpRuOoMYpeBUckWh0i3MHhnvUXkocBzGhk+Q87EuF0hYRTredFXks
-         NdY3KDstJ9FQernV7daA5uQ5uvzOHpY2V3dXaLJx5zrZRr57p28EEc4cabF9r7RA9luH
-         HkTg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2Oc4WWQ6aLLO+4oqalW+6a1/U4ClMACRqwBxA0EGxQTRs9lu5HtWKRVGyFSSMJ9FvwihczNpaFOLU6WHHoL7X0OjTV1MQsO+JVeau
-X-Gm-Message-State: AOJu0Yzgo5Nth8Q0dtBYDJ+z7eNFJuf7Sji/nYtVEfXQlf6XPwJsXKHd
-	nWnBVfLXj3jkabWHsTztzRl3FFNbRlFJQw5TofGL0YB9Yq7PBv6Ucf7kMGaSeryfBa2nb1Cc8JA
-	hbHyZq65pjv+/g99CWXx5MM0NhWdouhXC3sQt
-X-Google-Smtp-Source: AGHT+IFzeD+gUEtV1nuDqVBhWDhR3c8rh+fHfgbCTEvNgaxLAeR6T5heeQ/A7dsx9xLWrUTVzlCnXl+91EEnZ3Eql3Q=
-X-Received: by 2002:a05:6122:251f:b0:4d8:7443:bca7 with SMTP id
- cl31-20020a056122251f00b004d87443bca7mr2070748vkb.6.1712735728391; Wed, 10
- Apr 2024 00:55:28 -0700 (PDT)
+	s=arc-20240116; t=1712735734; c=relaxed/simple;
+	bh=WU50FrX5DOOKxac3YXsUftaGdVTpKXhDtWyRM2Q0i3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TCKJBfwQdPaYLgU2/J60pERUPShFgUEN/PR8ktlTeVDoSj9UGkA+hnh2IsxokOPzvXijSuNZew3nZglPzwRqg3PqY60ab9K0WqLgxwxV7W/TqAYx3mbj50WiMzmy9rCRTBBVfUlegOeYjBDj4dTPRQbweJBahOBxVM5QfLBrZRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6BB0139F;
+	Wed, 10 Apr 2024 00:55:55 -0700 (PDT)
+Received: from [10.162.43.6] (a077893.blr.arm.com [10.162.43.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 619903F64C;
+	Wed, 10 Apr 2024 00:55:20 -0700 (PDT)
+Message-ID: <410c7fe2-5790-49d6-9732-d2f3c5e351e6@arm.com>
+Date: Wed, 10 Apr 2024 13:25:17 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408090205.3714934-1-elver@google.com> <20240409103327.7a9012fa@gandalf.local.home>
- <CANpmjNOv=8VBvbKBQbsBdg9y2pNsfdaA-46QB53NY-Ddmq3tmA@mail.gmail.com> <20240410085428.53093333cf4d768d6b420a11@kernel.org>
-In-Reply-To: <20240410085428.53093333cf4d768d6b420a11@kernel.org>
-From: Marco Elver <elver@google.com>
-Date: Wed, 10 Apr 2024 09:54:50 +0200
-Message-ID: <CANpmjNOXbWM6seCS9728D+ZXUrF2u+YTCaC7q4ZkHFVM2P+t7Q@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Add new_exec tracepoint
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Kees Cook <keescook@chromium.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/3] arm64: tlb: Fix TLBI RANGE operand
+Content-Language: en-US
+To: Gavin Shan <gshan@redhat.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Cc: catalin.marinas@arm.com, will@kernel.org, akpm@linux-foundation.org,
+ maz@kernel.org, oliver.upton@linux.dev, ryan.roberts@arm.com,
+ apopple@nvidia.com, rananta@google.com, mark.rutland@arm.com,
+ v-songbaohua@oppo.com, yangyicong@hisilicon.com, shahuang@redhat.com,
+ yihyu@redhat.com, shan.gavin@gmail.com
+References: <20240405035852.1532010-1-gshan@redhat.com>
+ <20240405035852.1532010-2-gshan@redhat.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240405035852.1532010-2-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 10 Apr 2024 at 01:54, Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> On Tue, 9 Apr 2024 16:45:47 +0200
-> Marco Elver <elver@google.com> wrote:
->
-> > On Tue, 9 Apr 2024 at 16:31, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Mon,  8 Apr 2024 11:01:54 +0200
-> > > Marco Elver <elver@google.com> wrote:
-> > >
-> > > > Add "new_exec" tracepoint, which is run right after the point of no
-> > > > return but before the current task assumes its new exec identity.
-> > > >
-> > > > Unlike the tracepoint "sched_process_exec", the "new_exec" tracepoint
-> > > > runs before flushing the old exec, i.e. while the task still has the
-> > > > original state (such as original MM), but when the new exec either
-> > > > succeeds or crashes (but never returns to the original exec).
-> > > >
-> > > > Being able to trace this event can be helpful in a number of use cases:
-> > > >
-> > > >   * allowing tracing eBPF programs access to the original MM on exec,
-> > > >     before current->mm is replaced;
-> > > >   * counting exec in the original task (via perf event);
-> > > >   * profiling flush time ("new_exec" to "sched_process_exec").
-> > > >
-> > > > Example of tracing output ("new_exec" and "sched_process_exec"):
-> > >
-> > > How common is this? And can't you just do the same with adding a kprobe?
-> >
-> > Our main use case would be to use this in BPF programs to become
-> > exec-aware, where using the sched_process_exec hook is too late. This
-> > is particularly important where the BPF program must stop inspecting
-> > the user space's VM when the task does exec to become a new process.
->
-> Just out of curiousity, would you like to audit that the user-program
-> is not malformed? (security tracepoint?) I think that is an interesting
-> idea. What kind of information you need?
 
-I didn't have that in mind. If the BPF program reads (or even writes)
-to user space memory, it must stop doing so before current->mm is
-switched, otherwise it will lead to random results or memory
-corruption. The new process may reallocate the memory that we want to
-inspect, but the user space process must explicitly opt in to being
-inspected or being manipulated. Just like the kernel "flushes" various
-old state on exec since it's becoming a new process, a BPF program
-that has per-process state needs to do the same.
+
+On 4/5/24 09:28, Gavin Shan wrote:
+> KVM/arm64 relies on TLBI RANGE feature to flush TLBs when the dirty
+> pages are collected by VMM and the page table entries become write
+> protected during live migration. Unfortunately, the operand passed
+> to the TLBI RANGE instruction isn't correctly sorted out due to the
+> commit 117940aa6e5f ("KVM: arm64: Define kvm_tlb_flush_vmid_range()").
+> It leads to crash on the destination VM after live migration because
+> TLBs aren't flushed completely and some of the dirty pages are missed.
+> 
+> For example, I have a VM where 8GB memory is assigned, starting from
+> 0x40000000 (1GB). Note that the host has 4KB as the base page size.
+> In the middile of migration, kvm_tlb_flush_vmid_range() is executed
+> to flush TLBs. It passes MAX_TLBI_RANGE_PAGES as the argument to
+> __kvm_tlb_flush_vmid_range() and __flush_s2_tlb_range_op(). SCALE#3
+> and NUM#31, corresponding to MAX_TLBI_RANGE_PAGES, isn't supported
+> by __TLBI_RANGE_NUM(). In this specific case, -1 has been returned
+> from __TLBI_RANGE_NUM() for SCALE#3/2/1/0 and rejected by the loop
+> in the __flush_tlb_range_op() until the variable @scale underflows
+> and becomes -9, 0xffff708000040000 is set as the operand. The operand
+> is wrong since it's sorted out by __TLBI_VADDR_RANGE() according to
+> invalid @scale and @num.
+> 
+> Fix it by extending __TLBI_RANGE_NUM() to support the combination of
+> SCALE#3 and NUM#31. With the changes, [-1 31] instead of [-1 30] can
+> be returned from the macro, meaning the TLBs for 0x200000 pages in the
+> above example can be flushed in one shoot with SCALE#3 and NUM#31. The
+> macro TLBI_RANGE_MASK is dropped since no one uses it any more. The
+> comments are also adjusted accordingly.
+> 
+> Fixes: 117940aa6e5f ("KVM: arm64: Define kvm_tlb_flush_vmid_range()")
+> Cc: stable@kernel.org # v6.6+
+> Reported-by: Yihuang Yu <yihyu@redhat.com>
+> Suggested-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+> ---
+>  arch/arm64/include/asm/tlbflush.h | 20 +++++++++++---------
+>  1 file changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index 3b0e8248e1a4..a75de2665d84 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -161,12 +161,18 @@ static inline unsigned long get_trans_granule(void)
+>  #define MAX_TLBI_RANGE_PAGES		__TLBI_RANGE_PAGES(31, 3)
+>  
+>  /*
+> - * Generate 'num' values from -1 to 30 with -1 rejected by the
+> - * __flush_tlb_range() loop below.
+> + * Generate 'num' values from -1 to 31 with -1 rejected by the
+> + * __flush_tlb_range() loop below. Its return value is only
+> + * significant for a maximum of MAX_TLBI_RANGE_PAGES pages. If
+> + * 'pages' is more than that, you must iterate over the overall
+> + * range.
+>   */
+> -#define TLBI_RANGE_MASK			GENMASK_ULL(4, 0)
+> -#define __TLBI_RANGE_NUM(pages, scale)	\
+> -	((((pages) >> (5 * (scale) + 1)) & TLBI_RANGE_MASK) - 1)
+> +#define __TLBI_RANGE_NUM(pages, scale)					\
+> +	({								\
+> +		int __pages = min((pages),				\
+> +				  __TLBI_RANGE_PAGES(31, (scale)));	\
+> +		(__pages >> (5 * (scale) + 1)) - 1;			\
+> +	})
+>  
+>  /*
+>   *	TLB Invalidation
+> @@ -379,10 +385,6 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+>   * 3. If there is 1 page remaining, flush it through non-range operations. Range
+>   *    operations can only span an even number of pages. We save this for last to
+>   *    ensure 64KB start alignment is maintained for the LPA2 case.
+> - *
+> - * Note that certain ranges can be represented by either num = 31 and
+> - * scale or num = 0 and scale + 1. The loop below favours the latter
+> - * since num is limited to 30 by the __TLBI_RANGE_NUM() macro.
+>   */
+>  #define __flush_tlb_range_op(op, start, pages, stride,			\
+>  				asid, tlb_level, tlbi_user, lpa2)	\
