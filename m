@@ -1,89 +1,261 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344A764A;
-	Wed, 10 Apr 2024 05:55:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7583427453
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:56:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712728551; cv=none; b=Xj5jOSZflDL5NhbWJWnBz9JfeF3iP+xgPY9S5m354dlGtRkSVe82bEkyYcxoleAY8bAAPMNFldg0IyC9qMCdZxbXCAbeLNLxYk9+uAEWFRs6GSE3c1TyQ689UUX0yDHSFTAZqz5cGNPLnM8xC8V/Jpd2HYQ8Z1T7mr+y8hjsNro=
+	t=1712728569; cv=none; b=D3oZuRZksd2/exsQSXxuqJenKUDpgy24W3QEzrxjeri0JdzliWedHNNyBjMCWatlGLpIk8Xwg1idbeYrpdLt+feOt8bQVnjlp1+fGHfkuQmbHeYl39iWrHaHQev4CQ3NsqnaK1VbjMgB654UY0hG2+MUJbOBkKrEJJbk8JuvuqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712728551; c=relaxed/simple;
-	bh=igMcFDMxvu2p9U20IbqyeRQJRA/g0Q0NAOMiAPdkpwM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AEZ79mjuNwfPL8Tu0hORVpnCT7JES/1HkaC2XTtcSexzcnqccjhXTyXbv3nBTf1TS5V/YQTS1INxjNpUN1W2Nb43fmyplZ/5AzEPq10Yy6j5G2I4HPoJM5vnbEU1S4JfmZJHSQaL7qLO18EWWCesVy/Qs73bBsNz1ZE0umOadnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 43A5s7Wa084336;
-	Wed, 10 Apr 2024 13:54:07 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX08-BJD.srv.huawei-3com.com (unknown [10.153.34.10])
-	by mail.maildlp.com (Postfix) with ESMTP id CEF182004BC2;
-	Wed, 10 Apr 2024 13:56:16 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX08-BJD.srv.huawei-3com.com (10.153.34.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Wed, 10 Apr 2024 13:54:08 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Wed, 10 Apr 2024 13:54:08 +0800
-From: Liuye <liu.yeC@h3c.com>
-To: Greg KH <gregkh@linuxfoundation.org>,
-        "andy.shevchenko@gmail.com"
-	<andy.shevchenko@gmail.com>
-CC: "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>,
-        "dianders@chromium.org" <dianders@chromium.org>,
-        "jason.wessel@windriver.com"
-	<jason.wessel@windriver.com>,
-        "jirislaby@kernel.org" <jirislaby@kernel.org>,
-        "kgdb-bugreport@lists.sourceforge.net"
-	<kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org"
-	<linux-serial@vger.kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFYxMF0ga2RiOiBGaXggdGhlIGRlYWRsb2NrIGlzc3Vl?=
- =?gb2312?Q?_in_KDB_debugging.?=
-Thread-Topic: [PATCH V10] kdb: Fix the deadlock issue in KDB debugging.
-Thread-Index: AQHaiuuw81gSSyk26Eq+v/7KfdTz2LFgdGkAgACJimA=
-Date: Wed, 10 Apr 2024 05:54:08 +0000
-Message-ID: <0c004dd44ad5478eba9451186f4ec962@h3c.com>
-References: <20240409020326.2125332-1-liu.yec@h3c.com>
- <20240410020615.2885000-1-liu.yec@h3c.com>
- <2024041014-padlock-aggregate-4705@gregkh>
-In-Reply-To: <2024041014-padlock-aggregate-4705@gregkh>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1712728569; c=relaxed/simple;
+	bh=iRWSGvESmj50SK/3+gdejLYH0/TGzOFnE+pS8ZkDCcU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dA8yvTkIqPtVhREM7YduEEhdwWofK3UF68Yz8KBpqa/jEo6NLPTj9gTgvLuyvPY8VJLPNtl0FhpfHbKkK7W2YLnpPgfU6UeDpCGJIpPwaDD/giqRCEJdJzUyCNlm430EE422mmnbrsCahLywolKufT+weOC8MSLmNchomnDgYd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eI9yDIir; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eI9yDIir"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso6445176276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 22:56:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1712728565; x=1713333365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IqGY/vGIyR9LCZTBxU/bq4zwRiV3ymHiMH0aV8SV/K8=;
+        b=eI9yDIir0ScwLq6U7sh4XaUhPRPKZq4v0oZtdcKLmrskAEA7PTm4WXHIDVE047iFXh
+         nUzC8npiXMtss/N27lA2tDlgsW50ikTy45ni58yiFuvRomwItRiJgRZaXg9V+d6KzuUA
+         e8WbP54N0Hv8TdKlK9I9Kdb/ypHWcEFNysZwZbuhuXo0hvl3l3KVbjBBM3Ul8Gmi6TKX
+         2BEt19zoddP+zsYumm9yUTJ9xVZKL4RZngG2+SDFpq3TT59T1Z8ER8eLxRB943VR8JXq
+         tLX8OKyYhkVEhwdd3MgoE9cfy7b3mle+zqqrZ7Z0hRoiL595IuHiYogj0BS92TwUEHKf
+         Qj0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712728565; x=1713333365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IqGY/vGIyR9LCZTBxU/bq4zwRiV3ymHiMH0aV8SV/K8=;
+        b=jWnSsJxc2CbPNofi60BVH+31UryPLNmlse1L5vUcAO+uq2e73xZ8j8jF3lxT2jscr9
+         6LZwTKnVBtXeRsRrO5x0uE8smOjQKlb6ikSsGjrxVC9WlNPrdCFfEIIjybNgtWI2AdKZ
+         3K3BUW8VMG9Ml8rzDTTGsNe72r+ZVyasvA4pr08PyKfAII10+lOzHfaZyV9D1ueRaBCs
+         pMK7ZxRxrv2WohY2y8wZ5a5lOAqKBYVSP8oLPl2J1qiZb0V3jsxOxUhD8q4A014QnD6Q
+         qNuMeCsoTVWXuZi40q1gbcXwaCbp938HhwGVWUYNpr7DhYIaPY2VuoEw6OQZW2hmnTWZ
+         50xA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNW74S7rP+ery3GBO7yx6dz7hTw8wlEjQoFs7OJtnLtRdqpP3QT6COIMEJKVLK7iejhlWYfErZ2EV9cuGIoeUwgkRDQhmfvTaHVmaD
+X-Gm-Message-State: AOJu0YznTgtVon5djeDLyPzL+icCk5vlImpoGibj08cs/T7b3ozoI83b
+	pRKMLCLv5wMpm0vTsR+vkOfa9xoX32nM2Gz2mE6Gu/j01MrE0j7AZLdFKLMZr/UvHTi867Vprdv
+	4UhOuqQT3UDVcPjprpHSwbuA0l7KMcSyJVEaurQ==
+X-Google-Smtp-Source: AGHT+IHeeE9q1+cJcZFRlCtvV1BbpZVxnUEWrSDgdRRs3q/CuKFEvKs0kmjhM3Z408INF7Cm0W+a8a8XNmlyII/QV0E=
+X-Received: by 2002:a25:be92:0:b0:dcd:5635:5c11 with SMTP id
+ i18-20020a25be92000000b00dcd56355c11mr1731856ybk.45.1712728565448; Tue, 09
+ Apr 2024 22:56:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 43A5s7Wa084336
+References: <20240405000707.2670063-1-horenchuang@bytedance.com>
+ <20240405000707.2670063-3-horenchuang@bytedance.com> <20240405150244.00004b49@Huawei.com>
+ <CAKPbEqpGM_nR+LKbsoFTviBZaKUKYqJ3zbJp9EOCJAGvuPy6aQ@mail.gmail.com> <87ttka54pr.fsf@yhuang6-desk2.ccr.corp.intel.com>
+In-Reply-To: <87ttka54pr.fsf@yhuang6-desk2.ccr.corp.intel.com>
+From: "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com>
+Date: Tue, 9 Apr 2024 22:55:54 -0700
+Message-ID: <CAKPbEqqH0nhVUAcJUxDc_bPewY85+TqhtO94MyypV35GBo33+A@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v11 2/2] memory tier: create CPUless memory
+ tiers after obtaining HMAT info
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Gregory Price <gourry.memverge@gmail.com>, 
+	aneesh.kumar@linux.ibm.com, mhocko@suse.com, tj@kernel.org, 
+	john@jagalactic.com, Eishan Mirakhur <emirakhur@micron.com>, 
+	Vinicius Tavares Petrucci <vtavarespetr@micron.com>, Ravis OpenSrc <Ravis.OpenSrc@micron.com>, 
+	Alistair Popple <apopple@nvidia.com>, Srinivasulu Thanneeru <sthanneeru@micron.com>, 
+	SeongJae Park <sj@kernel.org>, Dan Williams <dan.j.williams@intel.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Linux Memory Management List <linux-mm@kvack.org>, "Ho-Ren (Jack) Chuang" <horenc@vt.edu>, 
+	"Ho-Ren (Jack) Chuang" <horenchuang@gmail.com>, qemu-devel@nongnu.org, 
+	Hao Xiang <hao.xiang@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pj4gU2lnbmVkLW9mZi1ieTogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+DQo+
-DQo+SSBoYXZlIE5PVCBzaWduZWQgb2ZmIG9uIHRoaXMgY29tbWl0LiAgWW91IGp1c3Qgc2FpZCB0
-aGF0IEkgbWFkZSBhIGxlZ2FsIHN0YXRlbWVudCBhYm91dCB0aGlzIGNvbW1pdCB3aXRob3V0IHRo
-YXQgYWN0dWFsbHkgYmVpbmcgdHJ1ZT8/Pw0KPg0KPlNvcnJ5LCBidXQgdGhhdCBpcyBmbGF0IG91
-dCBub3QgYWNjZXB0YWJsZSBhdCBhbGwuICBQbGVhc2UgZ28gd29yayB3aXRoIHlvdXIgY29tcGFu
-eSBsYXd5ZXJzIHRvIGZpZ3VyZSBvdXQgd2hhdCB5b3UgZGlkIGFuZCBjb21lIGJhY2sgd2l0aCBh
-biBleHBsYWluYXRpb24gb2YgZXhhY3RseSB3aGF0IHRoaXMgaXMgYW5kIGhvdyBpdCB3aWxsIG5v
-dCBoYXBwZW4gYWdhaW4uDQo+DQoNCj4+IFNpZ25lZC1vZmYtYnk6IEFuZHkgU2hldmNoZW5rbyA8
-YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4NCj4+IFY5IC0+IFYxMCA6IEFkZCBTaWduZWQt
-b2ZmLWJ5IG9mIEdyZWcgS0ggYW5kIEFuZHkgU2hldmNoZW5rbywgQWNrZWQtYnkgDQo+PiBvZiBE
-YW5pZWwgVGhvbXBzb24NCj4NCj5IdWg/IQ0KDQpAZ3JlZyBrLWggo7oNCkBBbmR5IFNoZXZjaGVu
-a28go7oNCg0KU29ycnksIGl0IHdhcyBteSBtaXN0YWtlLiBJIG1pc3VuZGVyc3Rvb2QgdGhlIG1l
-YW5pbmcgb2YgInNpZ25lZC1vZmYtYnkiLCB3aGljaCBsZWQgdG8gdXNhZ2UgaXNzdWVzLg0KDQpJ
-IHdhbnQgdG8gZXhwcmVzcyBteSBncmF0aXR1ZGUgZm9yIHRoZSBzdWdnZXN0aW9ucyBvbiB0aGUg
-cGF0Y2ggZnJvbSB0aGUgdHdvIG9mIHlvdS4gDQoNCldoYXQgZG8gSSBuZWVkIHRvIGRvIG5vdz8g
-UmVsZWFzZSBQQVRDSCBWMTEgYW5kIGRlbGV0ZSB0aGVzZSB0d28gc2lnbmF0dXJlcyBpbiBpdCA/
-DQo=
+On Tue, Apr 9, 2024 at 7:33=E2=80=AFPM Huang, Ying <ying.huang@intel.com> w=
+rote:
+>
+> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> writes:
+>
+> > On Fri, Apr 5, 2024 at 7:03=E2=80=AFAM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:
+> >>
+> >> On Fri,  5 Apr 2024 00:07:06 +0000
+> >> "Ho-Ren (Jack) Chuang" <horenchuang@bytedance.com> wrote:
+> >>
+> >> > The current implementation treats emulated memory devices, such as
+> >> > CXL1.1 type3 memory, as normal DRAM when they are emulated as normal=
+ memory
+> >> > (E820_TYPE_RAM). However, these emulated devices have different
+> >> > characteristics than traditional DRAM, making it important to
+> >> > distinguish them. Thus, we modify the tiered memory initialization p=
+rocess
+> >> > to introduce a delay specifically for CPUless NUMA nodes. This delay
+> >> > ensures that the memory tier initialization for these nodes is defer=
+red
+> >> > until HMAT information is obtained during the boot process. Finally,
+> >> > demotion tables are recalculated at the end.
+> >> >
+> >> > * late_initcall(memory_tier_late_init);
+> >> > Some device drivers may have initialized memory tiers between
+> >> > `memory_tier_init()` and `memory_tier_late_init()`, potentially brin=
+ging
+> >> > online memory nodes and configuring memory tiers. They should be exc=
+luded
+> >> > in the late init.
+> >> >
+> >> > * Handle cases where there is no HMAT when creating memory tiers
+> >> > There is a scenario where a CPUless node does not provide HMAT infor=
+mation.
+> >> > If no HMAT is specified, it falls back to using the default DRAM tie=
+r.
+> >> >
+> >> > * Introduce another new lock `default_dram_perf_lock` for adist calc=
+ulation
+> >> > In the current implementation, iterating through CPUlist nodes requi=
+res
+> >> > holding the `memory_tier_lock`. However, `mt_calc_adistance()` will =
+end up
+> >> > trying to acquire the same lock, leading to a potential deadlock.
+> >> > Therefore, we propose introducing a standalone `default_dram_perf_lo=
+ck` to
+> >> > protect `default_dram_perf_*`. This approach not only avoids deadloc=
+k
+> >> > but also prevents holding a large lock simultaneously.
+> >> >
+> >> > * Upgrade `set_node_memory_tier` to support additional cases, includ=
+ing
+> >> >   default DRAM, late CPUless, and hot-plugged initializations.
+> >> > To cover hot-plugged memory nodes, `mt_calc_adistance()` and
+> >> > `mt_find_alloc_memory_type()` are moved into `set_node_memory_tier()=
+` to
+> >> > handle cases where memtype is not initialized and where HMAT informa=
+tion is
+> >> > available.
+> >> >
+> >> > * Introduce `default_memory_types` for those memory types that are n=
+ot
+> >> >   initialized by device drivers.
+> >> > Because late initialized memory and default DRAM memory need to be m=
+anaged,
+> >> > a default memory type is created for storing all memory types that a=
+re
+> >> > not initialized by device drivers and as a fallback.
+> >> >
+> >> > Signed-off-by: Ho-Ren (Jack) Chuang <horenchuang@bytedance.com>
+> >> > Signed-off-by: Hao Xiang <hao.xiang@bytedance.com>
+> >> > Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+> >>
+> >> Hi - one remaining question. Why can't we delay init for all nodes
+> >> to either drivers or your fallback late_initcall code.
+> >> It would be nice to reduce possible code paths.
+> >
+> > I try not to change too much of the existing code structure in
+> > this patchset.
+> >
+> > To me, postponing/moving all memory tier registrations to
+> > late_initcall() is another possible action item for the next patchset.
+> >
+> > After tier_mem(), hmat_init() is called, which requires registering
+> > `default_dram_type` info. This is when `default_dram_type` is needed.
+> > However, it is indeed possible to postpone the latter part,
+> > set_node_memory_tier(), to `late_init(). So, memory_tier_init() can
+> > indeed be split into two parts, and the latter part can be moved to
+> > late_initcall() to be processed together.
+>
+> I don't think that it's good to move all memory_tier initialization in
+> drivers to late_initcall().  It's natural to keep them in
+> device_initcall() level.
+>
+> If so, we can allocate default_dram_type in memory_tier_init(), and call
+> set_node_memory_tier() only in memory_tier_lateinit().  We can call
+> memory_tier_lateinit() in device_initcall() level too.
+>
+
+It makes sense to me to leave only `default_dram_type ` and
+hotplug_init() in memory_tier_init(), postponing all
+set_node_memory_tier()s to memory_tier_late_init()
+
+Would it be possible there is no device_initcall() calling
+memory_tier_late_init()? If yes, I think putting memory_tier_late_init()
+in late_init() is still necessary.
+
+> --
+> Best Regards,
+> Huang, Ying
+>
+> > Doing this all memory-type drivers have to call late_initcall() to
+> > register a memory tier. I=E2=80=99m not sure how many they are?
+> >
+> > What do you guys think?
+> >
+> >>
+> >> Jonathan
+> >>
+> >>
+> >> > ---
+> >> >  mm/memory-tiers.c | 94 +++++++++++++++++++++++++++++++++++---------=
+---
+> >> >  1 file changed, 70 insertions(+), 24 deletions(-)
+> >> >
+> >> > diff --git a/mm/memory-tiers.c b/mm/memory-tiers.c
+> >> > index 516b144fd45a..6632102bd5c9 100644
+> >> > --- a/mm/memory-tiers.c
+> >> > +++ b/mm/memory-tiers.c
+> >>
+> >>
+> >>
+> >> > @@ -855,7 +892,8 @@ static int __init memory_tier_init(void)
+> >> >        * For now we can have 4 faster memory tiers with smaller adis=
+tance
+> >> >        * than default DRAM tier.
+> >> >        */
+> >> > -     default_dram_type =3D alloc_memory_type(MEMTIER_ADISTANCE_DRAM=
+);
+> >> > +     default_dram_type =3D mt_find_alloc_memory_type(MEMTIER_ADISTA=
+NCE_DRAM,
+> >> > +                                                   &default_memory_=
+types);
+> >> >       if (IS_ERR(default_dram_type))
+> >> >               panic("%s() failed to allocate default DRAM tier\n", _=
+_func__);
+> >> >
+> >> > @@ -865,6 +903,14 @@ static int __init memory_tier_init(void)
+> >> >        * types assigned.
+> >> >        */
+> >> >       for_each_node_state(node, N_MEMORY) {
+> >> > +             if (!node_state(node, N_CPU))
+> >> > +                     /*
+> >> > +                      * Defer memory tier initialization on
+> >> > +                      * CPUless numa nodes. These will be initializ=
+ed
+> >> > +                      * after firmware and devices are initialized.
+> >>
+> >> Could the comment also say why we can't defer them all?
+> >>
+> >> (In an odd coincidence we have a similar issue for some CPU hotplug
+> >>  related bring up where review feedback was move all cases later).
+> >>
+> >> > +                      */
+> >> > +                     continue;
+> >> > +
+> >> >               memtier =3D set_node_memory_tier(node);
+> >> >               if (IS_ERR(memtier))
+> >> >                       /*
+> >>
+
+
+
+--=20
+Best regards,
+Ho-Ren (Jack) Chuang
+=E8=8E=8A=E8=B3=80=E4=BB=BB
