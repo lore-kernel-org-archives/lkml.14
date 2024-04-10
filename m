@@ -1,233 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72AFC159598;
-	Wed, 10 Apr 2024 11:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2DA15B15A;
+	Wed, 10 Apr 2024 11:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712748435; cv=none; b=VVOcMckFa2HZLViTFwSCI8hcGvXUlh5xZHzZmoyagi1gaZS0Lz6GmOJBVeEz26jyfs0yr2/VD9mAf+hJEX0GNHuQJtMD8OfEtefPhqEbLwSm/n78i9PcBoCEL77q0eTBk0WSMpPkLG7HS+UiYt+QxAzV3Zeuut+GPXN/Qcc5XD8=
+	t=1712748489; cv=none; b=ZfUrPj64xURxvC4p29DNCq0/7bf9gT2KWhEiRAd/6mUAR/hq2EcDyqtkmBPuNEV6xXPl+Bb/6m/u0AC+3IMIevhzpAXsUf2J+QJbGpdGHhZZPYKeCKdcs2mijowcBlqo2x9Bn5f6t5/437t++q5D0Rlvg4k/7YAqZmbjtlDv1zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712748435; c=relaxed/simple;
-	bh=FsOWXLW0PHDHZni/M6GeHDub8yyvYPEYUuELjlh26os=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NTUmOd2qSg231S6/GiuGf2kzD40z6OzBC9vO0sn82RkA9c192+1k90YJZxgnF5JqhzoBtXb6QM9OtryCMgDkG2tLy7piGmZIR6kCS9ZlYA4ehHCsXdLB8K16qDQOeAXyRq9xH/Dw19uBBYXsY2lqvJ58oF/XPqMRT7X9E111sas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPLuWMgV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712748489; c=relaxed/simple;
+	bh=zQD9reb1Og/2cv0dqHDZdUJcbucn8FwX4wKjO/1ShN0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=e4iGGhzm7HDG3RzfK03yutaU0C/DWIvUTSDOH+3HNlOEiMXmz9rvnH8oC6WFMZS9hhii99+Shei+1ptyx6oXgs/NYKedk26kwR+QN7UqrOuNR8TlAx9r+CFxwkFcgrstVOOEmn6uxT8Jj39fr/d18fKZXCD6JHQUJzo6VoydfBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6LAVQo+; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPLuWMgV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9A2AC433C7;
-	Wed, 10 Apr 2024 11:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712748435;
-	bh=FsOWXLW0PHDHZni/M6GeHDub8yyvYPEYUuELjlh26os=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oPLuWMgV4Ro+rz/gs08+aKeQeKpkKgHvt8o88/C0ptaAhIw4eeuP+qdoIWkzpxx60
-	 QXZObbEInpnD6RbWaEzPVV6poph9LaVwAhfor2xzYdN1YVpwVaP2YBtMMh19vcmHH9
-	 fr4rIsixpea2bMEUDORoIsITm0z81+/mikhb1v02Sj1Lr8jjxRcMCqO61AdGOLfYUV
-	 c1aKnJ1eG117TwzfkT4+GLkkf3NPNJ3Y1dG3ftY4eIbDv4ZlTUe8s8LtN5gxMieWHA
-	 NI9lyiE2T37SEoPwjmk+sUv8pE06b2EC9Km07eKUO/Wfmts7QHzEBW0qNGUUGiAkHW
-	 KdHtpTM+JJAbg==
-Date: Wed, 10 Apr 2024 12:27:07 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Zhi Mao <zhi.mao@mediatek.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Paul Elder <paul.elder@ideasonboard.com>,
-	Mehdi Djait <mehdi.djait@bootlin.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Bingbu Cao <bingbu.cao@intel.com>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, shengnan.wang@mediatek.com,
-	yaya.chang@mediatek.com, yunkec@chromium.org, 10572168@qq.com
-Subject: Re: [PATCH 1/2] media: dt-bindings: i2c: add Giantec GT97xx VCM
- driver
-Message-ID: <20240410-rice-fringe-4ae992217a2f@spud>
-References: <20240410104002.1197-1-zhi.mao@mediatek.com>
- <20240410104002.1197-2-zhi.mao@mediatek.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6LAVQo+"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d756eb74so5912746e87.3;
+        Wed, 10 Apr 2024 04:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712748485; x=1713353285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Di3el+9O+K85+qwRdX3FObg5JWhX17wOpW5ZhQZowA=;
+        b=U6LAVQo+e+3MHW/feKZDb2eLmL1Dg3ya1HICPgyXsrapgVhWFG2T1lofCvmh/uyfL3
+         I2qruVX+eyRtCHAPW5BA14+NE2INDgi0IIh7y2feQfzJIKhe0qZTipueIKj3SNtfNAIs
+         xHqmGD7llF+qwyo3OTe/RQm/bZMtbYlkqt9yYl33NS/SpD+nKsPLT0xozFOOufVctmMK
+         lNyv+FFSvwLWHpmg/jOEDTAbS+hROsj3rb4iOr5sjMqZK2n0fZ6U776MWSbyGQo643ft
+         g8Zve4kzSFqwRolHBcMPqvEy6pXapboZ+C6z8NFuupJ0dKiSDUCE6MBuSFyl0MmJ+ujU
+         Pcjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712748485; x=1713353285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Di3el+9O+K85+qwRdX3FObg5JWhX17wOpW5ZhQZowA=;
+        b=uwCHENxQOJeOmwQdpJuy2YHFM6a47A7gJdmjJEZpVMplDUk1f9IBK2Vd+JRDujZjMh
+         Xb58Z5M9ClRThUE494uTel2XI1RDbft0UX//m5+C5Xt6FbB+3wT8i9BcR2bXVeOp3a7q
+         pH1fBwOYCcQJCxuJWUfbPSuTpxIrZNQIqw58QLJLcEo7t6Cs/DSpHIhN6q5S7hwAJx0k
+         6xjz762P0O+Zyzn9jZKYXv0ha0fAMX+mV87ngKaXG9JGYy6ITPf2F3BQYUq2bz2KWLcU
+         NCx5CwaW5tgNIin2GN833WuPpr8vw1Nymw835Jze1QlyTfkq21hohUhd0YvV3szHl9eq
+         18Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCWCgcLUimUpdgY5s/C0GjUPvmA7AKa/PITXhtMEi5WZ4dxDd4XBIPwdzKV18PpBYXRAv9bWXthHme1042DrAVkAz75B98/lxEiVqdt9g4FVwnmkZ99AKUmzEuYZv9X0ZA0YgJI4rEGhOg==
+X-Gm-Message-State: AOJu0Yyhgy8y3H76R74XvK3nX+/CHv2erYzJ2iCXBSxx+tlxkKgy61lE
+	SudJC/JbCbKr4+ceALBPKXCdeVPkEW6/D3boDo1ZJQk0OgsBq2bw
+X-Google-Smtp-Source: AGHT+IGf1h0UiA0XnNpSWQPwb+7C7LUshO+9D6IWkNrocMZzRR2s4bom2PG43tzhgkyK+fAY/XOupw==
+X-Received: by 2002:a19:a403:0:b0:515:8564:28c8 with SMTP id q3-20020a19a403000000b00515856428c8mr1236389lfc.67.1712748485357;
+        Wed, 10 Apr 2024 04:28:05 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id r6-20020a05600c458600b004162a9f03a6sm2001182wmo.7.2024.04.10.04.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 04:28:04 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Jan Kara <jack@suse.com>,
+	linux-ext4@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] jbd2: remove redundant assignement to variable err
+Date: Wed, 10 Apr 2024 12:28:03 +0100
+Message-Id: <20240410112803.232993-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ISZ8o4WhYZ7L06Pc"
-Content-Disposition: inline
-In-Reply-To: <20240410104002.1197-2-zhi.mao@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
+The variable err is being assigned a value that is never read, it
+is being re-assigned inside the following while loop and also
+after the while loop. The assignment is redundant and can be
+removed.
 
---ISZ8o4WhYZ7L06Pc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cleans up clang scan build warning:
+fs/jbd2/commit.c:574:2: warning: Value stored to 'err' is never
+read [deadcode.DeadStores]
 
-Hey,
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ fs/jbd2/commit.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Wed, Apr 10, 2024 at 06:40:01PM +0800, Zhi Mao wrote:
-> Add YAML device tree binding for GT97xx VCM driver,
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 5e122586e06e..78a9d08ae9f8 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -571,7 +571,6 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+ 	J_ASSERT(commit_transaction->t_nr_buffers <=
+ 		 atomic_read(&commit_transaction->t_outstanding_credits));
+ 
+-	err = 0;
+ 	bufs = 0;
+ 	descriptor = NULL;
+ 	while (commit_transaction->t_buffers) {
+-- 
+2.39.2
 
-Please don't mention drivers here, bindings are for hardware.
-
-> and the relevant MAINTAINERS entries.
->=20
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> ---
->  .../bindings/media/i2c/giantec,gt97xx.yaml    | 91 +++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/giantec,g=
-t97xx.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.y=
-aml b/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
-> new file mode 100644
-> index 000000000000..8c9f1eb4dac8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright (c) 2020 MediaTek Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/giantec,gt97xx.yaml#
-
-Filename patching compatible please.
-
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Giantec Semiconductor, Crop. GT97xx Voice Coil Motor (VCM)
-> +
-> +maintainers:
-> +  - Zhi Mao <zhi.mao@mediatek.com>
-> +
-> +description: |-
-> +  The Giantec GT97xx is a 10-bit DAC with current sink capability.
-> +  The DAC is controlled via I2C bus that operates at clock rates up to 1=
-MHz.
-> +  This chip integrates Advanced Actuator Control (AAC) technology
-> +  and is intended for driving voice coil lens in camera modules.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - giantec,gt9768 # for GT9768 VCM
-> +      - giantec,gt9769 # for GT9769 VCM
-
-I don't think these comments are needed, they should be clear from the
-compatibles, no?
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vin-supply: true
-> +
-> +  vdd-supply: true
-> +
-> +  giantec,aac-mode:
-> +    description:
-> +      Indication of AAC mode select.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
-> +      - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
-> +      - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
-> +      - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
-
-I dislike these enum based properties and I would rather this either be
-the values themselves (0.48, 0.70 etc).
-
-> +    default: 2
-> +
-> +  giantec,aac-timing:
-> +    description:
-> +      Number of AAC Timing count that controlled by one 6-bit period of
-> +      vibration register AACT[5:0], the unit of which is 100 us.
-
-Then the property should be in a standard unit of time, not "random" hex
-numbers that correspond to register values.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    default: 0x20
-> +    minimum: 0x00
-> +    maximum: 0x3f
-> +
-> +  giantec,clock-presc:
-> +    description:
-> +      Indication of VCM internal clock dividing rate select, as one mult=
-iple
-> +      factor to calculate VCM ring periodic time Tvib.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 0    #  Dividing Rate -  2
-> +      - 1    #  Dividing Rate -  1
-> +      - 2    #  Dividing Rate -  1/2
-> +      - 3    #  Dividing Rate -  1/4
-> +      - 4    #  Dividing Rate -  8
-> +      - 5    #  Dividing Rate -  4
-
-Same here, you should not need these comments explaining the values, use
-an enum with meaningful values please.=20
-
-> +    default: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - vin-supply
-> +  - vdd-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        vcm@c {
-
-"vcm" is not a generic node-name, can you use one please?
-Look around similar bindings or at the dt spec for generic node-names.
-
-Thanks,
-Conor.
-
-> +            compatible =3D "giantec,gt9768";
-> +            reg =3D <0x0c>;
-> +
-> +            vin-supply =3D <&gt97xx_vin>;
-> +            vdd-supply =3D <&gt97xx_vdd>;
-> +            giantec,aac-timing =3D <0x20>;
-> +        };
-> +    };
-> +
-> +...
-> --=20
-> 2.25.1
->=20
-
---ISZ8o4WhYZ7L06Pc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhZ3iwAKCRB4tDGHoIJi
-0qQVAP9+OK/cYtTAIsZGXslgYKki3/Se5piJRnHXuSw9pqWl+wD/a7O+OCtP7921
-6LtI+5nuhgIdoOKzNL+cFkLRYvI5nQM=
-=cJO3
------END PGP SIGNATURE-----
-
---ISZ8o4WhYZ7L06Pc--
