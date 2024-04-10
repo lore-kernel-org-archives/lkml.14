@@ -1,59 +1,59 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46D015B0E4
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E06B17F36E
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:57:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771852; cv=none; b=cb0vcHZIslowMKBA5cTpEbY7p/SE74QAUUSxi00jFPypy+Ah0U6HVmtog2NgxWXJHrL2XazpEa2cMic9PpisppkzFEg5qCXqzPTczWfierWH/loMauR6mYsxYjPznbY9oPMe44w1hnW3BtDuPlNaqYu9fvmJNwxd4s7jqANr8ho=
+	t=1712771869; cv=none; b=rSR21PYaQurBck9BCtNa5gqmTeXRbA+JalJnSY3u9EovZfoFONF1XdBoM7kUpze5UI8QrqIdeM09pDvLFgN7mILdjIWiaPWHlC2Fx5VMblNYiN7nDKDF/+ZgUMl9VMX1WHmnr4van0GaJRc/S3u0HW9MXkZGGJpHMyEEwatadus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771852; c=relaxed/simple;
-	bh=d4BtwqKAX8nsbOtJH/r0S6Y+oLvQxv6c8zbD+FFfF9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c0UdXdK07iV65YBwoTL/zcCSDdU1XfNwz0ePTxRNsA8x3/BL270UUusNtTcjD52bZmv9HKfIp6UFSp2tcGfVOKYgvlFv78u7CxS3gkWJ0Jb9mXlNPBxN6MPQpTrbNTkNjJg2KVytLO0Q9re4eoNjGzTbvACw3X2YCyUyynOypHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ts4QcG5E; arc=none smtp.client-ip=209.85.208.173
+	s=arc-20240116; t=1712771869; c=relaxed/simple;
+	bh=KSSlk8bsMALzU4aLOuDQa//L0banKdQVAiOoA5qSe4g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=k/8S6vrzBlhL/6JARzOOa7XoypmkQZ/GCRdENcOgm47eRNdH1BKGYYO+JgGPWcDhT7Yh9Usi0PPNDwJzV/D3VM2Ge6br1FMkPRmFAliBGMgVq+CGmYpwWpllxv6owewb5LoVH0x3hJR9kLg6VTzqeIQRnxKbH4ISHeHhycZ3rws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZnfKzdLO; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts4QcG5E"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d6c9678cbdso91008111fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:57:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZnfKzdLO"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516cbf3fe68so8653447e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712771849; x=1713376649; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712771866; x=1713376666; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Keh+sIQeRPab3t60QMgWltAOm3qWZpzbMlaDmGjP9v4=;
-        b=Ts4QcG5Ek3ER0MTyAo1wJy40MuGMsvGwuZq6WE3HN99XfVRX1GjSJtsY/TIGUCLwJz
-         OYtMcLfOH+34rgcDeGYrwvjv12508+iiUDYp3Xg4lvhIJaMs5+a/czg3zUC1Ku9XKCHX
-         zyds5LemfvDTgzdcFTv/9McXk2M8eFWi1Im5Np4SLqKwpBvcXXagQNPpKXs/WHB24iHQ
-         ljK1GdzjhCJkFx2Gc+ghjbFJr09hQu7elVFztGrujOPzYTaGab8uGhTn/vGM0KmFgLR1
-         jHQPTPTj5jG2UGRTT7oOPXiKpBI76uZHNIClBxXNYD3Xr/OOWNH2JbsONjEEE/yy7mtM
-         UYpA==
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=4VriGxSmeAMrd0HbAi17rP97R4YzqX84RVPW8DEU7SU=;
+        b=ZnfKzdLO/4IMEV7kbHAfKh+shAIF8ik3U6tXW67i05NSKi7M3bUYX8rRFTiXyp6Cu7
+         0qzdsvqZ9Ctrq/qyOlrVIW+rYJH7+5e1rodVxsJtjJo4/GfDpJKlBtPp3bEwRkoGN4/z
+         RyZIVhsMuyefSQ0WmUCDtNVUF3VnwNF2FfJJlH+BnBA22f67HW8k5MUadV8u3S4m/2I1
+         2v63R6eQsqWp5TvKC+9PHpohjb3ntEyV4Q9XRhBMpQ3WIJTm6uKDBleGXBVrtN2QnPCp
+         ko2i33Ywibxalei5L/NuQvJzaWGJdIjQDjL9wE/YFzvG9gtGOOQgT/VXJFY/35eqKBPX
+         KomA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712771849; x=1713376649;
+        d=1e100.net; s=20230601; t=1712771866; x=1713376666;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Keh+sIQeRPab3t60QMgWltAOm3qWZpzbMlaDmGjP9v4=;
-        b=l+RsHWAHdpne5fKyVQLkI9YiLkKcJmCj7Kql9RPk1ItcmUFL3/Jn/G/4ZKzsf+j8qD
-         9RJnTvMlHsSIbMSpJAPm635y2URNoOJ1GB4fm4qe5fxl8a+lhK2q9pUEqiHrVNLTlFWM
-         sld/6LIEuOtUwD41Zon21jNqtuoJ+JKLM384XvZB8KAJx1pf+tk+mnh0NOWEdvvq0n50
-         qVON8rgFU8fjN6iNAy3T/P5oxlfjRc8baTJ2Pl+AZIw+HaWxgbJrRC0eCrArwppGZpeH
-         Dfu0C6llfdbI+0EXuTd1kmHTh8skJlrbf4OOJdGMXwq9/C7ZYrxZNGN5PqzoFb2G64JG
-         mW5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnWzMhScYb1PbJC8WM0NACLtTQow6f7gUysaO/K0qYJJK2N4b7xNfbXXwkhWy9wTA/gm0YQJN5XY3xb/mMUaEI4bLZf5NAYImVj1EV
-X-Gm-Message-State: AOJu0Yx/fxvxG3Q2iNi0kEXaUuFvgwxN5nVCI2JJcwCTGo2HBeK6/+XV
-	zbeqDbVP6/UCNmbMHiGNfBXngGu0sM1VDopJh69KwHr2I/eO8MB6r+UncVacGMw=
-X-Google-Smtp-Source: AGHT+IE5JGH4lSYVlSEHhQH6EV1huMoARnine21xFIyBlZYyXopqr5UbT3v5//1+D8M8VOOpQl4S9Q==
-X-Received: by 2002:ac2:48a2:0:b0:516:d250:86bd with SMTP id u2-20020ac248a2000000b00516d25086bdmr1962949lfg.44.1712771848929;
-        Wed, 10 Apr 2024 10:57:28 -0700 (PDT)
+        bh=4VriGxSmeAMrd0HbAi17rP97R4YzqX84RVPW8DEU7SU=;
+        b=uwL0+M2n/NdAJl/2YoZ6Le3J1m36cp0JolTxiCTN/wFeJdFUH3VRZhLC62fl30YyW/
+         GMjY+RGteu5Xw1rJLu3wl5xzfp+hcpHgRs7grgcQuUO/S5rXcXSYVHRNXPfQ+Jdsf90M
+         6GI44F+wEZQnp3J7hRGWVfdKAfpiLQcPFtutg6xkbQf9JRx2fuwIIwtghC0KKW8hgnlc
+         xoXZHlj/cf80/HT6bfpd28+zgRdZ0KCE/6SsfGMk9/gJzCe5RmY6tcNs9d0l9G0O02kc
+         gjX328CUqti07ewMlNhKi+Oq58HeURphnutOoTWm9SxxXYbdKsCiHUObI1Vk/3M4jac2
+         aw6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXWsHL4i13HAKXVwGAVP55rbIc2CIliHgQ34vcFg1b3j1bHqbJlt8y/4GUKwCYMIJ/+BaDPqPmywBKUPUHYFV94OlHRlfXM+QVc2oBd
+X-Gm-Message-State: AOJu0Yz9IycrT9pbUz99UOTDbP5i9pCRAl9mfFzJpHIVUk7tKsZJ7enc
+	Sy1zmoiwCXL3rfoUMeceG1qBt8QsYtIeNjzF58Q9O+0Hzguyrq4INYW2S0K6yKk=
+X-Google-Smtp-Source: AGHT+IEMn+7QOBZoSPpCqOFaNsmBHfuxXi2Pq5xTIAsOtgQ9XvtVpkTgTWFxslo2PrKeDv5iStEd/g==
+X-Received: by 2002:ac2:4198:0:b0:515:d1b9:3066 with SMTP id z24-20020ac24198000000b00515d1b93066mr2133456lfh.46.1712771866030;
+        Wed, 10 Apr 2024 10:57:46 -0700 (PDT)
 Received: from [172.30.205.26] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id t20-20020a056512209400b00516be9fa424sm1883743lfr.254.2024.04.10.10.57.28
+        by smtp.gmail.com with ESMTPSA id y18-20020a196412000000b00516ce0257a8sm1915241lfb.105.2024.04.10.10.57.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 10:57:28 -0700 (PDT)
-Message-ID: <fa826aed-579a-4432-a1eb-053a3b7f40c9@linaro.org>
-Date: Wed, 10 Apr 2024 19:57:27 +0200
+        Wed, 10 Apr 2024 10:57:45 -0700 (PDT)
+Message-ID: <16bba953-d6f9-4701-8b95-56b3231c5f6d@linaro.org>
+Date: Wed, 10 Apr 2024 19:57:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,34 +61,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom: qmp-ufs: update SM8650 tables for Gear 4 & 5
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240410-topic-sm8650-upstream-ufs-g5-v1-1-5527c44b37e6@linaro.org>
+Subject: Re: [PATCH] clk: qcom: fix module autoloading
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240410155356.224098-1-krzk@kernel.org>
 Content-Language: en-US
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240410-topic-sm8650-upstream-ufs-g5-v1-1-5527c44b37e6@linaro.org>
+In-Reply-To: <20240410155356.224098-1-krzk@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 4/10/24 17:39, Neil Armstrong wrote:
-> Update the SM8650 UFS PHY init tables to support Gear 4 and Gear 5
-> using the overlays setup (only supported Gear 5 before), and sync
-> back with the latest Qualcomm recommended values.
+On 4/10/24 17:53, Krzysztof Kozlowski wrote:
+> Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
+> based on the alias from of_device_id table.  Clocks are considered core
+> components, so usually they are built-in, however these can be built and
+> used as modules on some generic kernel.
 > 
-> The new recommended values allow a solid 50% bump in sequential
-> read/write benchmarks on the SM8650 QRD & HDK reference boards.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
-
-I'm gonna trust you on copypasting these numbers properly as I
-have no sources.. but that 50% speedup does look very nice!
 
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
