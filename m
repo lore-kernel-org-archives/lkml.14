@@ -1,89 +1,89 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8641717BB38;
-	Wed, 10 Apr 2024 17:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DD01802A8;
+	Wed, 10 Apr 2024 17:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770414; cv=none; b=dac+r4lnhu7i+pzBDOE5mV6Sf8zrB7QoLAtH83C7n4iCp00uQhg0B1Ia9Wcj7Eq6uepjboKhH4/ptWG0+7cLHM+iKL1dmPmVQNQ4poSe4iaHbYzeEP+LfTiMXhh1QxjFx8XWr/Wzw9JicccHLTdwpamiqcAUjd9uKWClYg4+wKg=
+	t=1712770417; cv=none; b=nzzDr8nSq5E7gIWzgUVJO3gd99aBpTmWm457FH9iam2Plknr356XLmk3BxxvpGj9dibC7S/OPYDPy/oBdqAm2MMFwrsa+wsLQbATyVZXfhmxzCr+rUWXDpQAOtWU1lfa5GKpC4zICjUh0LmyrCzh3CiKcSeRFUYM8tCtf+PwYcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770414; c=relaxed/simple;
-	bh=xODv+YwTcyoEbclY4dNpd4xlX4hgVswy/9vscvUzER4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MMC2uDIoZpECghYlmPpSnJmM6f36zxtJZm2Oi/BwGqdly6OW3OZOb7A5sM0lgSD4m0q8gruKBMRHV+t0Gwsfs8x3gHRhwe2ImV5wOaX9OfEvg3r9IaREroSK2iIdfiERCPOeU/t2HwAtkN2wJmwnMzASVzlELmRxuE1eP27le2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jMYCZLem; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jMYCZLem"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ed9fc77bbfso1316481b3a.1;
-        Wed, 10 Apr 2024 10:33:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712770412; x=1713375212; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xODv+YwTcyoEbclY4dNpd4xlX4hgVswy/9vscvUzER4=;
-        b=jMYCZLemxw4iXNlVzxS+N/GHl1gIPU8LsY1ebbJAsnqoPMg7ldMK3RDiK/X6B+Sz8X
-         +o0npeNg78bU56EgOTPA/qubLciDirIK5z2lYJySspE3uceRY8MR5ks4w10pgUbIcI5N
-         s/j1d+oGx84vJ2t9zMipQt+9jGmzVY/lcvi+i+DHoUOyFlFOVojDmpBh+aTyUpjDLieR
-         tQcWvAvplFfKsrRiRsRbq3GHoRHJBPaaOLLy5nRGxvXjHQ6LvG3hqPhQQdkydFHUPrVj
-         QqrkCuDlUu9+N9sXtmtQNlzZkDFH59pAQMokjg8ypwhSMoiQVcrbDaR7eF6abuSPcWaj
-         cnLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712770412; x=1713375212;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xODv+YwTcyoEbclY4dNpd4xlX4hgVswy/9vscvUzER4=;
-        b=ja9vwtomusHityqXKSoPRMtQZ4LKx5L8gUCD4QqjtOV+OGQL+06t0Hi0giPlSXEFme
-         rNtvGrMgPELUFXqaxDDWVS3L6CzoaYG6u9LSoRMeq6+d0YbdrUJFvDgk5c5/XKDpewQo
-         trxbiAcwoN+6pj07G7gttqgTVdV0rzc+Hvu/Nqn/5f7jcO2er96JAchXbEbHNnnlmOYG
-         /G9xDyrqBo1Ca+Q3Smbg/5k7Y2ddhYmoJlwf4Bm1qgieasb0dU5Uc2IL3/5K2gAZVgP8
-         iXnO33VPHgcvCm3pABrSeOQw7D99TxXcqtQ2PA+/CQW6q2FY5Sq3mxnho2LCWaDrsbIy
-         XYPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5fmpROaPx+PWaJ+KAQw1rvIu6F8XrKDRRTtwOD5YZHhEaAht4hnun+Bc2OTPJWr8yJizvpQNlO+jsEHE4IOMTr3PDYiy/Bm0W+3CjV7cgo8vNVbIdrqzS472wnNLFrhcAlw1riDdKWQ==
-X-Gm-Message-State: AOJu0YxeJf+9amTynn0vlaO2EcXjwtviAw1evBPuRNCQuS02YpeSDbXj
-	V0/mzw2kpcz0h126BPAr0RTK7njjSdhr3nn2BJDNj/PxhkInkObxM0NW5EnEgmLMuzRJ
-X-Google-Smtp-Source: AGHT+IF2oPoMCMFjgJy0pGIOQEvZP1Lg66viYwlG9lUpHiDsZ3hIOK2G/eMecblgfcS5fb9E29wX9g==
-X-Received: by 2002:a05:6a21:2d8c:b0:1a7:590e:1fc8 with SMTP id ty12-20020a056a212d8c00b001a7590e1fc8mr3376025pzb.17.1712770411655;
-        Wed, 10 Apr 2024 10:33:31 -0700 (PDT)
-Received: from localhost.localdomain ([221.220.133.103])
-        by smtp.gmail.com with ESMTPSA id v13-20020a170903238d00b001e49428f327sm3640303plh.176.2024.04.10.10.33.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 10:33:30 -0700 (PDT)
-From: Jianfeng Liu <liujianfeng1994@gmail.com>
-To: shawn.lin@rock-chips.com
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	heiko@sntech.de,
-	krzysztof.kozlowski+dt@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	liujianfeng1994@gmail.com,
-	robh@kernel.org,
-	sfr@canb.auug.org.au
-Subject: Re: Re: [PATCH] arm64: dts: rockchip: remove startup-delay-us from vcc3v3_pcie2x1l0 on rock-5b
-Date: Thu, 11 Apr 2024 01:33:20 +0800
-Message-Id: <20240410173320.191923-1-liujianfeng1994@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <432000a6-1de9-4452-beb7-6954677e34c8@rock-chips.com>
-References: <432000a6-1de9-4452-beb7-6954677e34c8@rock-chips.com>
+	s=arc-20240116; t=1712770417; c=relaxed/simple;
+	bh=DmWvcimBV0EwaDRiRQGTmsaNYqsgcCxqJIMpAyeTNcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i35c1JgwYgp/g2OLJJT+wR+A7ePi7IuFmug2LfdJB9b/fZ3Xts6JSKiOh5e5x2K/8qt0XfC2oQ//L2I939mXiyFKsB6Gaue2oynWz4ku+y9Y7gRGCpe6cUcwhky2yGRhXIwWNAnCL7OXmkBnlBLnuwyLCGxum6kaKuXFn4TIi5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 735B2C433C7;
+	Wed, 10 Apr 2024 17:33:36 +0000 (UTC)
+Date: Wed, 10 Apr 2024 13:36:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ kernel-team@android.com, rdunlap@infradead.org
+Subject: Re: [PATCH v20 1/5] ring-buffer: allocate sub-buffers with
+ __GFP_COMP
+Message-ID: <20240410133613.0a6bd6fb@gandalf.local.home>
+In-Reply-To: <20240406173649.3210836-2-vdonnefort@google.com>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+	<20240406173649.3210836-2-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Shawn,
 
-Wed, 10 Apr 2024 14:30:16 +0800, Shawn Lin wrote:
->Could you help try this patch to checkout if it works for you?
+Hi Vincent,
 
-This patch works for me. Thank you for pointing me to the right path!
-Looking forward to your fix.
+Thanks for sending this. Nit: Subject should start with a capital:
 
-Jianfeng
+  ring-buffer: Allocate sub-buffers with __GFP_COMP
+
+-- Steve
+
+
+On Sat,  6 Apr 2024 18:36:45 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> In preparation for the ring-buffer memory mapping, allocate compound
+> pages for the ring-buffer sub-buffers to enable us to map them to
+> user-space with vm_insert_pages().
+> 
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 25476ead681b..cc9ebe593571 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -1524,7 +1524,7 @@ static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+>  		list_add(&bpage->list, pages);
+>  
+>  		page = alloc_pages_node(cpu_to_node(cpu_buffer->cpu),
+> -					mflags | __GFP_ZERO,
+> +					mflags | __GFP_COMP | __GFP_ZERO,
+>  					cpu_buffer->buffer->subbuf_order);
+>  		if (!page)
+>  			goto free_pages;
+> @@ -1609,7 +1609,7 @@ rb_allocate_cpu_buffer(struct trace_buffer *buffer, long nr_pages, int cpu)
+>  
+>  	cpu_buffer->reader_page = bpage;
+>  
+> -	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_ZERO,
+> +	page = alloc_pages_node(cpu_to_node(cpu), GFP_KERNEL | __GFP_COMP | __GFP_ZERO,
+>  				cpu_buffer->buffer->subbuf_order);
+>  	if (!page)
+>  		goto fail_free_reader;
+> @@ -5579,7 +5579,7 @@ ring_buffer_alloc_read_page(struct trace_buffer *buffer, int cpu)
+>  		goto out;
+>  
+>  	page = alloc_pages_node(cpu_to_node(cpu),
+> -				GFP_KERNEL | __GFP_NORETRY | __GFP_ZERO,
+> +				GFP_KERNEL | __GFP_NORETRY | __GFP_COMP | __GFP_ZERO,
+>  				cpu_buffer->buffer->subbuf_order);
+>  	if (!page) {
+>  		kfree(bpage);
+
