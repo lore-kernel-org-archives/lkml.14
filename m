@@ -1,124 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3F815B990;
-	Wed, 10 Apr 2024 11:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323C915B990;
+	Wed, 10 Apr 2024 11:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712749791; cv=none; b=roAY/f74bVfmQYF7/jxVA5ImkeXrA9XgRZ/UZY8LRuYXu9kvEFXhyLl6rfFr1Dclz3/YBeZQms45w+Mue1mFKSCg/Aoin1NBdil4JP4WagoJCBw6zx3mWCTx8TOxUETsz1UE4ANNMoFNROaWBOB5mTHg0vz81M5bLtIsv0r+b+s=
+	t=1712749800; cv=none; b=aWFZcnQt+/vi2Ze0PLm20sBUNeu477rvdCwU1xABG9c/roH5ozgFDEiPx1meX5jzdQtZXkezejGxlli2E0hyLA1x+vR6Aq3ID2RZgTfJp4I7xg95rOUfp8TqIjL9dJIbOTwf4JklXm33fUavJcSvWMR5aLxh8dKlN3xk9sSBDLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712749791; c=relaxed/simple;
-	bh=hZSWgcp7GnBBKQ/ANmuBJ1lGoqRIvIkLrQj6268hnRY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eyhMzbfSTN2rgS6jeN1y5lVBxJXhei8YnI9cfTUPVvplNfM/DzylLw+9HETlXbJL2Aydd6+C93HDmHFio2EJv2U/DLfUc7DZ8jvhfAkUxwNRL6kZkhWiPHpLh4plPppfFM36gRNIPbKpw1ob0axzlOSeqJ3VkhlAELurOiSQqIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PBmWg1Ej; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712749800; c=relaxed/simple;
+	bh=lzh1zOL2GZaC9KvS1/2NH2b4sklK+RWokY0RHqFrW4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=o2vQRlq7T2QEDlNVyhpufVblhu3v8D6MEDl5JR+bFtBfqM7Mbou2dXQ1sor1JOlmqPv1jyutjcKhsrrOwA1FkzqMK+MEfx3CJvN3aPic/aGIXwdaIo5aH/fHxYjUSbcRhXPYIzReNF/yMu8KvdY8flV6NNJcuQNWvJfAijts9xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=bLGU83b9; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PBmWg1Ej"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712749791; x=1744285791;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hZSWgcp7GnBBKQ/ANmuBJ1lGoqRIvIkLrQj6268hnRY=;
-  b=PBmWg1EjZrOXZKwQpe3+9Mz58iby46bu4mwDcdV8V369+0fUfuN2OgVJ
-   XrVylhGe54jkNyCHG0bkJhu0SqqFqEgufWZjSo/90hXdOAqigDQfOeMly
-   26kFezkNn1SizyPXGBZYPHpOTnFmTl5OGpiZUVH3GFh+ecSH+zUCKnLxC
-   ViI04zdtIT6oxxdG3RbVWvl9jaDK5NkpUvNYZAKwePp7NZnWkgHQTUuna
-   cRZn5sd+7UPFt2apkPiQVQpiCKkw3y00g1jyqiwztED/m//eg4swhdlUE
-   ipjIyRsUBhwgAHyBP3c9BVRumjmS5CV5RL/UXkYzEgZy+lzeO+/gnBhL+
-   g==;
-X-CSE-ConnectionGUID: b/dqFYzlTp2kw2Cs+oV3ZQ==
-X-CSE-MsgGUID: xzslro3WSQmtcgbPx8tUfg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11944240"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11944240"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 04:49:50 -0700
-X-CSE-ConnectionGUID: OT+wDgJGSJqHR+RwN/KXfA==
-X-CSE-MsgGUID: QtnGadiqSc2BPgOAsMkeig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="43769373"
-Received: from inlubt0316.iind.intel.com ([10.191.20.213])
-  by fmviesa002.fm.intel.com with ESMTP; 10 Apr 2024 04:49:43 -0700
-From: lakshmi.sowjanya.d@intel.com
-To: tglx@linutronix.de,
-	jstultz@google.com,
-	giometti@enneenne.com,
-	corbet@lwn.net,
-	linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	andriy.shevchenko@linux.intel.com,
-	eddie.dong@intel.com,
-	christopher.s.hall@intel.com,
-	jesse.brandeburg@intel.com,
-	davem@davemloft.net,
-	alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com,
-	mcoquelin.stm32@gmail.com,
-	perex@perex.cz,
-	linux-sound@vger.kernel.org,
-	anthony.l.nguyen@intel.com,
-	peter.hilber@opensynergy.com,
-	pandith.n@intel.com,
-	subramanian.mohan@intel.com,
-	thejesh.reddy.t.r@intel.com,
-	lakshmi.sowjanya.d@intel.com
-Subject: [PATCH v6 11/11] ABI: pps: Add ABI documentation for Intel TIO
-Date: Wed, 10 Apr 2024 17:18:28 +0530
-Message-Id: <20240410114828.25581-12-lakshmi.sowjanya.d@intel.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240410114828.25581-1-lakshmi.sowjanya.d@intel.com>
-References: <20240410114828.25581-1-lakshmi.sowjanya.d@intel.com>
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="bLGU83b9"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id 1A576100002;
+	Wed, 10 Apr 2024 14:49:32 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1712749772; bh=orBTxthOmkOLw2GzZM5dy/q8ncQT8wiwTCAtBDly8Wc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=bLGU83b9vUGLxKi2GmvKDE6DRQDyOKuTFPnxvRnvhwInt8CuRWsslY10v4N2Z40k7
+	 Yg9CWMFWZN8IiXf+VteYUYx9kVh4dCfPHTY6A7ofG9rxYMH21WQUshbiB+pvM1RTj8
+	 wmEUX+CZti1oggowfyE8QNJIYevf0Z61p51qgAygq5eGKoI/o+lBEM1iOrOdKGThgl
+	 p3FrTWg9K/wj5xUHEI93Hj131J9hnbz7VYuDCekvkeXT5RokY8mwqJTwr3TM1+D5YE
+	 11QJqWblkPW9OTBXXeaVs/H8b2SyMciyGZSnDnQYw+XZkrCnq9S1WqswSz+INpcUUu
+	 rfgNcC555wGdw==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Wed, 10 Apr 2024 14:48:10 +0300 (MSK)
+Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 10 Apr
+ 2024 14:47:50 +0300
+Message-ID: <6151dd67-702b-41e7-8e54-43d4d1178442@t-argos.ru>
+Date: Wed, 10 Apr 2024 14:45:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dpu: Add callback function pointer check before
+ its call
+Content-Language: ru
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, Marijn
+ Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Stephen Boyd <swboyd@chromium.org>, <linux-arm-msm@vger.kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+References: <20240408085523.12231-1-amishin@t-argos.ru>
+ <c2c3b573-0e62-4452-e657-fbef9abb9430@quicinc.com>
+From: Aleksandr Mishin <amishin@t-argos.ru>
+In-Reply-To: <c2c3b573-0e62-4452-e657-fbef9abb9430@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184651 [Apr 10 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;git.kernel.org:7.1.1;127.0.0.199:7.1.2;mx1.t-argos.ru.ru:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/10 07:25:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/10 08:25:00 #24735279
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 
-Document sysfs interface for Intel Timed I/O PPS driver.
 
-Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
----
- Documentation/ABI/testing/sysfs-platform-pps-tio | 7 +++++++
- MAINTAINERS                                      | 1 +
- 2 files changed, 8 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-pps-tio
+On 08.04.2024 19:51, Abhinav Kumar wrote:
+> 
+> 
+> On 4/8/2024 1:55 AM, Aleksandr Mishin wrote:
+>> In dpu_core_irq_callback_handler() callback function pointer is 
+>> compared to NULL,
+>> but then callback function is unconditionally called by this pointer.
+>> Fix this bug by adding conditional return.
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>
+> 
+> Yes , as dmitry wrote, this should be Reported-by.
+> 
 
-diff --git a/Documentation/ABI/testing/sysfs-platform-pps-tio b/Documentation/ABI/testing/sysfs-platform-pps-tio
-new file mode 100644
-index 000000000000..b9b8c97a7840
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-pps-tio
-@@ -0,0 +1,7 @@
-+What:		/sys/devices/platform/INTCxxxx/enable
-+Date:		March 2024
-+KernelVersion	6.9
-+Contact:	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-+Description:
-+		(RW) Enable or disable PPS TIO generator output, read to
-+		see the status of hardware (Enabled/Disabled).
-diff --git a/MAINTAINERS b/MAINTAINERS
-index aea47e04c3a5..e63365a2d029 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17684,6 +17684,7 @@ M:	Rodolfo Giometti <giometti@enneenne.com>
- L:	linuxpps@ml.enneenne.com (subscribers-only)
- S:	Maintained
- W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
-+F:	Documentation/ABI/testing/sysfs-platform-pps-tio
- F:	Documentation/ABI/testing/sysfs-pps
- F:	Documentation/devicetree/bindings/pps/pps-gpio.yaml
- F:	Documentation/driver-api/pps.rst
+It is an established practice for our project, you can find 700+ applied
+patches with similar line:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?qt=grep&q=linuxtesting.org
+
+> But rest LGTM.
+> 
+>> Fixes: c929ac60b3ed ("drm/msm/dpu: allow just single IRQ callback")
+>> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+>> ---
+>>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
+>> index 946dd0135dff..03a16fbd4c99 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
+>> @@ -223,9 +223,11 @@ static void dpu_core_irq_callback_handler(struct 
+>> dpu_kms *dpu_kms, unsigned int
+>>       VERB("IRQ=[%d, %d]\n", DPU_IRQ_REG(irq_idx), DPU_IRQ_BIT(irq_idx));
+>> -    if (!irq_entry->cb)
+>> +    if (!irq_entry->cb) {
+>>           DRM_ERROR("no registered cb, IRQ=[%d, %d]\n",
+>>                 DPU_IRQ_REG(irq_idx), DPU_IRQ_BIT(irq_idx));
+>> +        return;
+>> +    }
+>>       atomic_inc(&irq_entry->count);
+
 -- 
-2.35.3
-
+Kind regards
+Aleksandr
