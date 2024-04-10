@@ -1,94 +1,159 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DD98C1D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C06E391
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:23:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712708594; cv=none; b=XYHyeMgYlYrbol0pzMywFSfDexz8jw58DAfKRX4CD8p6Cnug5RWHIxuWa0sYGoSJjXHBRR0mbk0eTNhXlsTdtyJ6R+k6aznay6x+1EHXTB1nBYy94YUuybMisNZvIcMBoZn2/uneLJ4i8pu0APIil+Qg0VXBqmprPEEVsn8pcUI=
+	t=1712708632; cv=none; b=Z71tFzPIKqccestO/tOh7F4RiRe0GojOkCv1O3XZz+7wX01Dz6l9/P8VCGVqZpHA5TAtizJvFDUOXM1OfCD520ncwvpx+Fn9y1Wsp0guSTEYNwKBb+vDy+wwLa3YHkmVDoz71kBsq8Q7bPQG+9uq8LWfRbq9y3q/TiR97JMWwnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712708594; c=relaxed/simple;
-	bh=3eu1Qe4PMa3bnntPXg4L7chuLuE2AEuX2iOgmahG7eE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Jl7sI9xLPRdHoZ8DJrW23KPDgx5di2Why6y4aq8N7yS/V5x4iGoLktyXiGbzIsuGI5u0Hvm1XCXL+6PJSaHyei2ZB1npJLTbB04Y+9uszUQJlyY7OM3Ju8EFYw9qAqgCDwah3N+9Bv9xFqOzZ+7PPBBha8EyG2wGh5vTdyII00I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpCFOrZx; arc=none smtp.client-ip=209.85.214.202
+	s=arc-20240116; t=1712708632; c=relaxed/simple;
+	bh=M8wkmy0FFgNfHoZTlccX2cdK1u7Ho1Ghmzrr/SjCsVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cJQx4oqPs4q6VIBz0kDD500FPOhFPnN/QQYvx8JRsNGk2TGZoG8BtJoOoY1PhMsOzQxms/pSQ6SfruMjIJTQcekW3GIslzTAmsHXtLT4LeOTLZ8Rsl5QWZHQFNsw2OTVT4cvZmRtRrN+VfnX5VnAx6iZqhUK5HNezeFIWiPQ4N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MvNpFUe0; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpCFOrZx"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1e2a553aad6so41768865ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:23:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MvNpFUe0"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a51ddc783e3so330108566b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712708593; x=1713313393; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=28lDu6txVDJUSpWthdWC1Dj1Rlfmeg6/3/6iNxGTIqk=;
-        b=KpCFOrZxGptwdOWQZnjCbrQrM5WkGXQwlmrb0f+EAth0XOlVU8dCfpv9+70DqfuNM1
-         o185I7sVk+BAItf3NoT+mxD/kR3hm0qF97ZvVgBvHeWqj/PzrVN8IZR/2aPxHdHA0kPA
-         BMSxQVKIjgUgrqs4guh8U7ecch/8dg5Q9TumSk6GMGu9TXRCWqHwmbOro9+qVSUUVI58
-         /TLYcs3N7M7qF7JoS8MGDDSt9E+iJm4O5M9cPi6CYvNLxyamj3JKvQEZJI2sd/PgVlS1
-         LTaPPuqzSTAZ8lc8vS6rymTR7R5RTKTF1iLpvVtzi2GNKNLh9bJOzdTY5Qlc/CgAznrn
-         Fyjg==
+        d=google.com; s=20230601; t=1712708629; x=1713313429; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f5KEFu9ntLir/zrgNKi0L8qnCsTF4mTHACifp8EqEFM=;
+        b=MvNpFUe0FCz6ls7M7cj/Uzg54G8xdBa8xZY+m5Kzw1WGuA3ivIW+Qky4tuJWW8dSHN
+         LFVoYO+TcdCElkMeOM1DEdFOGVCybNffVVae6Q8wCrqzS//dk/k0rKwd6XAXcy6IFYxk
+         xEn4ohLovbF0LWKLQMnlHq7GvdJ1IrFLEkH7dKsRZncEooNixBZl/cTCgpLIulChTjkk
+         9J/61Ss3t4BzIo/FM9Q4Z8w+83qIQHzXTT97w8XzBbkx4uxyTDHmCAVvQlRbKa59raJj
+         AGxyp9474vVvaciCripYZmOObZwbmlsIpypTxi3vBmhDfMc+UuDUVnFGDIBMhDo7Sj87
+         uFrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712708593; x=1713313393;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=28lDu6txVDJUSpWthdWC1Dj1Rlfmeg6/3/6iNxGTIqk=;
-        b=IikJa5E8OhM4h6D86GfcXTJK9cDbnSr//JZt0UWwyVc6l36RuW105gixlMTuUtLwu0
-         0FbiVuDVn0zsRVkgwTt7QSlPSNR/6fMY2KuOMOZNbpRmg2POP6l2Ro8y8G0g0OV5vmzq
-         fbhVs6LQvLPJwkMq8BifdZBSvH8YuQsuVcfT4jG0BgyLweiCqJB2MrFEsiVx3u2bI5mD
-         y61K9hkIi8J15frmYAKrxfxTEzwVE1E/dzOHa0eBKKIwGHK68v8ey0c/yrZQBR4QOAIE
-         7Komhb+DRukIoEeBCxYqLPXmu/loqsA1okIPGvI2L5A7NYksl22r/LbtQ7GD/PXf8lFt
-         XOjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVkYBFmGgJ4Vi5g1hUwFulu0bPdHx42ifODF42OY652rBzKfKAQ4gAEkMKkusHHRmoKEhaK6Iikb9R8vbAT4s94hUDzFVXWxKWX9Tlo
-X-Gm-Message-State: AOJu0YyyVeWJpdKeGWtCfIbgx9JqPoRbXnqy4fPL1930WpkoGsJZXs3H
-	vOjwppK+pg/hgsSY5RWUOO5GKdu96+KbfpPE5zoNcRXQS3t7dzDbNm1l7fOC3CXOccTl374Kak5
-	fOg==
-X-Google-Smtp-Source: AGHT+IHmo4wQwlYcsQz+pURXNU+Tpt11cQYRWEckqOHYPPXzGzfW2iV427+NtDA4LvFGvkhNRAm02GTEU8s=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:903:32d0:b0:1e3:e0bc:70cf with SMTP id
- i16-20020a17090332d000b001e3e0bc70cfmr70909plr.9.1712708592809; Tue, 09 Apr
- 2024 17:23:12 -0700 (PDT)
-Date: Tue,  9 Apr 2024 17:20:01 -0700
-In-Reply-To: <20240209221700.393189-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1712708629; x=1713313429;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f5KEFu9ntLir/zrgNKi0L8qnCsTF4mTHACifp8EqEFM=;
+        b=q7UpCtfHD2+zp7vC0pvOG/3Ma1A8JDCr9/J8CQLjFDANNTOrA1pIgswvv/rzGzCc2a
+         foiPcJXZ9e53IYT9xd2yRiJ0ekNwnkOivYpTPS7q7VsUt3pMvkOxeDajbDTU3I4eooJN
+         CMInczntn+nxOPTQh1gHmevZP7tmneC2aZnVls79SK7Dj27zPqgPwe6aMJ1aP1ZsHDhZ
+         QcfDhvt1VBlrcwE9ddTgrO51rXRL5Jh8/12oTwgc7wTEsosfAZWWofvPvn4tdHDiXgy1
+         g0P5A0Ou3vcGXMEQ5DCEAbU7CEdLHNkR2/0Qrz/xlUJh8GVlf4vmDBOoT8c7yVT6VtA4
+         UrFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLWHMSXHrlpNwp0UplMq+WGP1xadI+UoacADF+u/azrZvWD0tgDMEsYz+YUDmASsruwgMI95XpPxPE0sdvouykuNvE+GjxzwcFonWQ
+X-Gm-Message-State: AOJu0YxS4hkHEJA8+k7bnByavBj4KbyD19Ml3pT64xsBNiDlW9Pipkpk
+	p3d3Sg7KMV8I/PdoUB2yNBrDLv86+5TNe7cBtLPICP47Ad8G0G9aUAZny4HHOSHu+3PnS6gJMe3
+	XV1XxqKT0ujpTMWbpDG1ovToIYQEbPT/g1plu
+X-Google-Smtp-Source: AGHT+IFBzm/AwEpDdiqpg/CwCa4Zosq++tdfYX+7w+FZxqMgXJS+wj0rsmwie4JV2eEKEwKYWPqGyghjmhNvA5np5Qo=
+X-Received: by 2002:a17:907:7da5:b0:a52:40c:7cd2 with SMTP id
+ oz37-20020a1709077da500b00a52040c7cd2mr758664ejc.66.1712708628590; Tue, 09
+ Apr 2024 17:23:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240209221700.393189-1-seanjc@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <171270506415.1590135.3971044080210389220.b4-ty@google.com>
-Subject: Re: [PATCH 0/3] KVM: nVMX: nEPT injection fixes and cleanups
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240405-strncpy-xattr-split2-v1-1-90ab18232407@google.com> <ZhVDgbRoF9X7JSdt@infradead.org>
+In-Reply-To: <ZhVDgbRoF9X7JSdt@infradead.org>
+From: Justin Stitt <justinstitt@google.com>
+Date: Tue, 9 Apr 2024 17:23:35 -0700
+Message-ID: <CAFhGd8pwoBSvLDRLX8ekRk+u9uX6s6mcAfTz8E15E6EBsvuSag@mail.gmail.com>
+Subject: Re: [PATCH] xfs: xattr: replace strncpy and check for truncation
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>, 
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 09 Feb 2024 14:16:57 -0800, Sean Christopherson wrote:
-> Fix a minor bug where KVM doesn't clear EXIT_QUALIFICATION when injecting
-> an EPT Misconfig into L1, and then move exit_qualification out of
-> kvm_vcpu_arch to avoid recurrences of the bug fixed by commit d7f0a00e438d
-> ("KVM: VMX: Report up-to-date exit qualification to userspace").
-> 
-> Sean Christopherson (3):
->   KVM: nVMX: Clear EXIT_QUALIFICATION when injecting an EPT Misconfig
->   KVM: x86: Move nEPT exit_qualification field from kvm_vcpu_arch to
->     x86_exception
->   KVM: nVMX: Add a sanity check that nested PML Full stems from EPT
->     Violations
-> 
-> [...]
+Hi,
 
-Applied to kvm-x86 vmx, thanks!
+On Tue, Apr 9, 2024 at 6:32=E2=80=AFAM Christoph Hellwig <hch@infradead.org=
+> wrote:
+>
+> On Fri, Apr 05, 2024 at 07:45:08PM +0000, Justin Stitt wrote:
+> > -     memcpy(offset, prefix, prefix_len);
+> > -     offset +=3D prefix_len;
+> > -     strncpy(offset, (char *)name, namelen);                 /* real n=
+ame */
+> > -     offset +=3D namelen;
+> > -     *offset =3D '\0';
+> > +
+> > +     combined_len =3D prefix_len + namelen;
+> > +
+> > +     /* plus one byte for \0 */
+> > +     actual_len =3D scnprintf(offset, combined_len + 1, "%s%s", prefix=
+, name);
+> > +
+> > +     if (actual_len < combined_len)
+>
+> Shouldn't this be a !=3D ?
 
-[1/3] KVM: nVMX: Clear EXIT_QUALIFICATION when injecting an EPT Misconfig
-      https://github.com/kvm-x86/linux/commit/0c4765140351
-[2/3] KVM: x86: Move nEPT exit_qualification field from kvm_vcpu_arch to x86_exception
-      https://github.com/kvm-x86/linux/commit/a9466078687f
-[3/3] KVM: nVMX: Add a sanity check that nested PML Full stems from EPT Violations
-      https://github.com/kvm-x86/linux/commit/23ffe4bbf807
+I guess it could be. It's a truncation check so I figured just
+checking if the amount of bytes actually copied was less than the
+total would suffice.
 
---
-https://github.com/kvm-x86/linux/tree/next
+>
+> That being said I think this is actually wrong - the attr names are
+> not NULL-terminated on disk, which is why we have the explicit
+> zero terminataion above.
+
+Gotcha, in which case we could use the "%.*s" format specifier which
+allows for a length argument. Does something like this look better?
+
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 364104e1b38a..1b7e886e0f29 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -206,6 +206,7 @@ __xfs_xattr_put_listent(
+ {
+  char *offset;
+  int arraytop;
++ size_t combined_len, actual_len;
+
+  if (context->count < 0 || context->seen_enough)
+  return;
+@@ -220,11 +221,16 @@ __xfs_xattr_put_listent(
+  return;
+  }
+  offset =3D context->buffer + context->count;
+- memcpy(offset, prefix, prefix_len);
+- offset +=3D prefix_len;
+- strncpy(offset, (char *)name, namelen); /* real name */
+- offset +=3D namelen;
+- *offset =3D '\0';
++
++ combined_len =3D prefix_len + namelen;
++
++ /* plus one byte for \0 */
++ actual_len =3D scnprintf(offset, combined_len + 1, "%.*s%.*s",
++        prefix_len, prefix, namelen, name);
++
++ if (actual_len < combined_len)
++ xfs_warn(context->dp->i_mount,
++ "cannot completely copy context buffer resulting in truncation");
+
+ compute_size:
+  context->count +=3D prefix_len + namelen + 1;
+---
+
+
+
+>
+> How was this tested?
+
+With https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/about/
+
+but using scripts + image from: https://github.com/tytso/xfstests-bld
+
+here's the output log: https://pastebin.com/V2gFhbNZ wherein I ran the
+5 default ones (I think?):
+
+|        Ran: generic/475 generic/476 generic/521 generic/522 generic/642
+|        Passed all 5 tests
+
+Thanks
+Justin
