@@ -1,161 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E891836F3;
-	Wed, 10 Apr 2024 21:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066DE181BA1
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 21:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712784771; cv=none; b=hEO78MJBwrh3jPn7aoKtiO0i8jxRdva++BftTt6UmFT5KkKrx6eAKlJWZliSMRqIeGNnELuYrgIM3nCulHAA+MW4pr2GeEXv0yILSxR8hM+Q7HUUSyXG1ClvRM6OEK9/6xRb8i9t8kyinMYp/mkK2tdxNhS6DJWdDLMGFoiAdnw=
+	t=1712784854; cv=none; b=ibp+S86o2dgeZ4OyJxOsbQgSa760cJy5Ze3id/iYkMBfmW/vnzcsRYPIw/yVmxGODU97VuiTilcz6skuzHG/EF5KGGgqy98TMIOcUoAdEPCeRlMxFxA4A8OpBqGE9F+hWWKWtCXYM71Wt/t19V66CXmirGnzst39srW7iNCjIuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712784771; c=relaxed/simple;
-	bh=uPaan8WWeNrf7KcvhIYFP+9mQ3Jap9iTRzy0ugpH7BU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dSWxhtMY4YIchHAPzwAfvkDt4R8w4qI8CLTgfxY46v3HCCCwlX6HVgcpV4yMDoXwkLHUCOlRRtl8QcZavVk4G7/Uinea7QPPn/swZ1dRaR/YFwXUzql0oAEo1UiwXm3ZYbMOBqgCyXbkIGs7xy96v68y/XUpDm34Djr8X/D/LrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cjZIlLaL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nV7PBw92; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1712784854; c=relaxed/simple;
+	bh=a0SG3VyvekQ3EUaROTNeCfLGl5QhimItEjNTpotic1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bhKcjO5eT1/v/CO0jHbTeXq9EZXyqatQE+2T6yMO7IQ+jM/9gycv1A4+XX3ptYbjUYSqY8RDjTQRofnM62w/ovGvlPGJ+rX/b70E+RYb04lJFSdwoH+Fp2XioNWmDyv6fOaIVOMX5CSqgzQVu3O6wwTXMxTBz8w7jEWmsPTwyzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=jRZ5Slpp; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cjZIlLaL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nV7PBw92"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712784767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nh8OJkypTZN2dIacuWiBicR/c4idFBZIzTy0pVZ35ws=;
-	b=cjZIlLaL/PET73d27bxQlie5EjJ9KCuctB85P00To/7BKeKXkrRLZKwPkflv6XDInOeerx
-	SYrs+aLDhP34tezZuQ77WhJ/aBHrY9wjSRib7PnKXWawOBOLOaifubvCZOMmkA/WsWNrkH
-	tQPDQyPuOa+hNZjY8Bbl7N/vHusGJTFQYvRu6+DYQn1cNkZCNgSGbrJ+q6rNhhmb5lp3N+
-	3poKBGia6ReXtFAEA4uM2gTKqOROS+34+hyarZ5Njq9FjIiOQS3Gn6sCpsKF54Cv9Bxyp7
-	AyjUU/mnMozhgiNZV2MyTLzsjgOSXYlGwp+V4Y+1Zr/QadVb0yY+cso9P/ouwA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712784767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nh8OJkypTZN2dIacuWiBicR/c4idFBZIzTy0pVZ35ws=;
-	b=nV7PBw924lPvBzqrI/DpQb1r5WYRKGXbBipF/QylDBVVWVk2N5W4vkOtRlhcxuBm8quLJH
-	XhR5wRV5qwpOLsDg==
-To: lakshmi.sowjanya.d@intel.com, jstultz@google.com, giometti@enneenne.com,
- corbet@lwn.net, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, andriy.shevchenko@linux.intel.com,
- eddie.dong@intel.com, christopher.s.hall@intel.com,
- jesse.brandeburg@intel.com, davem@davemloft.net,
- alexandre.torgue@foss.st.com, joabreu@synopsys.com,
- mcoquelin.stm32@gmail.com, perex@perex.cz, linux-sound@vger.kernel.org,
- anthony.l.nguyen@intel.com, peter.hilber@opensynergy.com,
- pandith.n@intel.com, subramanian.mohan@intel.com,
- thejesh.reddy.t.r@intel.com, lakshmi.sowjanya.d@intel.com
-Subject: Re: [PATCH v6 01/11] x86/tsc: Add base clock properties in
- clocksource structure
-In-Reply-To: <20240410114828.25581-2-lakshmi.sowjanya.d@intel.com>
-References: <20240410114828.25581-1-lakshmi.sowjanya.d@intel.com>
- <20240410114828.25581-2-lakshmi.sowjanya.d@intel.com>
-Date: Wed, 10 Apr 2024 23:32:46 +0200
-Message-ID: <87cyqw3nup.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="jRZ5Slpp"
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+	by mx0a-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AK6FO5028605;
+	Wed, 10 Apr 2024 21:33:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pps0720;
+ bh=n8iXOtRne7tZ+9DWIHeKPTmoEpb24PMwftP+jRCqW68=;
+ b=jRZ5Slppd3p7dO+qYjoNotTAJxnnjzdbIyLMpa8+KoW3Dp40NfZDAqg7k7UmPxnJ6tIw
+ sPpAzYML1C8Lyo3eNebv+u2533j1/0G15FOBmfv6XU+jLzgXgHFMZBaXpzEBxKyHRhCs
+ TpfbsAzH7C/s6oShxcgMmr2FxB4jBkeyAGfhGYDG+h9AOtsl2vXVQ/t6zmVgiV0UVbJn
+ Xx+2pfm6wVPyGgMvqk2wk347worTH5kPp0P9Pb3AcnTf8lgqC/zp3FNMQh+qIb7qqL1d
+ 2vpEdp/jQBoNfvZYjHwrC32jZapX0d5JIovov7F8FEQcnT4fo7/eGvS++HdVkfZNlM7+ tw== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+	by mx0a-002e3701.pphosted.com (PPS) with ESMTPS id 3xdssrd4m4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 10 Apr 2024 21:33:43 +0000
+Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 1AF048005D6;
+	Wed, 10 Apr 2024 21:33:42 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.39])
+	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 8B482805AE8;
+	Wed, 10 Apr 2024 21:33:29 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 48777)
+	id DD16430000734; Wed, 10 Apr 2024 16:33:28 -0500 (CDT)
+From: Kyle Meyer <kyle.meyer@hpe.com>
+To: linux-kernel@vger.kernel.org, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com
+Cc: russ.anderson@hpe.com, dimitri.sivanich@hpe.com, steve.wahl@hpe.com,
+        Kyle Meyer <kyle.meyer@hpe.com>
+Subject: [PATCH v2 1/2] cpumask: Add for_each_cpu_from()
+Date: Wed, 10 Apr 2024 16:33:10 -0500
+Message-Id: <20240410213311.511470-2-kyle.meyer@hpe.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20240410213311.511470-1-kyle.meyer@hpe.com>
+References: <20240410213311.511470-1-kyle.meyer@hpe.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: I3aY0pbpw_jtiLoNISHwocuO5VKiBCkV
+X-Proofpoint-GUID: I3aY0pbpw_jtiLoNISHwocuO5VKiBCkV
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ bulkscore=0 clxscore=1015 adultscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2404010000 definitions=main-2404100158
 
-On Wed, Apr 10 2024 at 17:18, lakshmi.sowjanya.d@intel.com wrote:
-> @@ -48,6 +49,7 @@ struct module;
->   * @archdata:		Optional arch-specific data
->   * @max_cycles:		Maximum safe cycle value which won't overflow on
->   *			multiplication
-> + * @freq_khz:		Clocksource frequency in khz.
->   * @name:		Pointer to clocksource name
->   * @list:		List head for registration (internal)
->   * @rating:		Rating value for selection (higher is better)
-> @@ -70,6 +72,8 @@ struct module;
->   *			validate the clocksource from which the snapshot was
->   *			taken.
->   * @flags:		Flags describing special properties
-> + * @base:		Hardware abstraction for clock on which a clocksource
-> + *			is based
->   * @enable:		Optional function to enable the clocksource
->   * @disable:		Optional function to disable the clocksource
->   * @suspend:		Optional suspend function for the clocksource
-> @@ -105,12 +109,14 @@ struct clocksource {
->  	struct arch_clocksource_data archdata;
->  #endif
->  	u64			max_cycles;
-> +	u32			freq_khz;
+Add for_each_cpu_from() as a generic cpumask macro.
 
-Q: Why is this a bad place to add this member?
+for_each_cpu_from() is the same as for_each_cpu(), except it starts at
+@cpu instead of zero.
 
-A: Because it creates a 4 byte hole in the data structure.
+Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
+Acked-by: Yury Norov <yury.norov@gmail.com>
+---
+ include/linux/cpumask.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
->  	const char		*name;
->  	struct list_head	list;
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 1c29947db848..d75060fbd058 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -368,6 +368,16 @@ unsigned int __pure cpumask_next_wrap(int n, const struct cpumask *mask, int sta
+ #define for_each_cpu_or(cpu, mask1, mask2)				\
+ 	for_each_or_bit(cpu, cpumask_bits(mask1), cpumask_bits(mask2), small_cpumask_bits)
+ 
++/**
++ * for_each_cpu_from - iterate over CPUs present in @mask, from @cpu to the end of @mask.
++ * @cpu: the (optionally unsigned) integer iterator
++ * @mask: the cpumask pointer
++ *
++ * After the loop, cpu is >= nr_cpu_ids.
++ */
++#define for_each_cpu_from(cpu, mask)				\
++	for_each_set_bit_from(cpu, cpumask_bits(mask), small_cpumask_bits)
++
+ /**
+  * cpumask_any_but - return a "random" in a cpumask, but not this one.
+  * @mask: the cpumask to search
+-- 
+2.44.0
 
-While adding it here fills a 4 byte hole.
-
-Hint:
-
-  pahole -c clocksource kernel/time/clocksource.o
-
-would have told you that.
-
->  	int			rating;
->  	enum clocksource_ids	id;
->  	enum vdso_clock_mode	vdso_clock_mode;
->  	unsigned long		flags;
-> +	struct clocksource_base *base;
-
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index b58dffc58a8f..2542cfefbdee 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1193,6 +1193,40 @@ static bool timestamp_in_interval(u64 start, u64 end, u64 ts)
->  	return false;
->  }
->  
-> +static bool convert_clock(u64 *val, u32 numerator, u32 denominator)
-> +{
-> +	u64 rem, res;
-> +
-> +	if (!numerator || !denominator)
-> +		return false;
-> +
-> +	res = div64_u64_rem(*val, denominator, &rem) * numerator;
-> +	*val = res + div_u64(rem * numerator, denominator);
-> +	return true;
-> +}
-> +
-> +static bool convert_base_to_cs(struct system_counterval_t *scv)
-> +{
-> +	struct clocksource *cs = tk_core.timekeeper.tkr_mono.clock;
-> +	struct clocksource_base *base = cs->base;
-> +	u32 num, den;
-> +
-> +	/* The timestamp was taken from the time keeper clock source */
-> +	if (cs->id == scv->cs_id)
-> +		return true;
-> +
-> +	/* Check whether cs_id matches the base clock */
-> +	if (!base || base->id != scv->cs_id)
-> +		return false;
-> +
-> +	num = scv->use_nsecs ? cs->freq_khz : base->numerator;
-> +	den = scv->use_nsecs ? USEC_PER_SEC : base->denominator;
-> +
-> +	convert_clock(&scv->cycles, num, den);
-
-Q: Why does this ignore the return value of convert_clock() ?
-
-A: Because all drivers will correctly fill in everything.
-
-Q: Then why does convert_clock() bother to check and have a return
-   value?
-
-A: Because drivers will fail to correctly fill in everything
-
-Thanks,
-
-        tglx
