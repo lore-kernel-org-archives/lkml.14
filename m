@@ -1,101 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856B515CD4B;
-	Wed, 10 Apr 2024 13:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF82415E7E6;
+	Wed, 10 Apr 2024 13:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757523; cv=none; b=iHzf78Ktbcna9XapkbAOkKhn/Hvn2XwhaTVnNveIik6+v0J1USCCVSMT0F7/iMIfwxTaODAI7ULFdxprr+UTTWAtFiVqpKqMOwLm5WbspTlYvYRHVCbV4cWPig0p9tt+g5dBfXG8P3nmfb6UKpCRNn1qM+hhWXq27AsMEI/KC9A=
+	t=1712757575; cv=none; b=XFOTsb3/77r0o2GCEDGZjazB4FEIBy6K4r8qnv5eUdKMWuOmFmHz+k9OFLEdtvAC8Nc2pXQC3YogpaBFKxIKM8HWIx7S1t+33c7zF8JU43+O88qQPkW2O0MM/jUkxEjXmCb9MtZi0JY5iwYNLGhMN2d7+cYGGU7o47vGqtiPIPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757523; c=relaxed/simple;
-	bh=CteGrLp21p90H//plZVTRArhoHufEhyzcxklfO2rDtk=;
+	s=arc-20240116; t=1712757575; c=relaxed/simple;
+	bh=KzIwAs0WuSRVdxrxETt53ZODVPWPZANummHTPBLM92g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXHIB+QwN+ccjjin5PE3+WJ2s9piNYsXYMyUJyzAc0wOHUIYjdQ7BZG0lUcRV233gZ1sz336NkV7HMOqgZCajZCH9qRKfkOnJ0znznr8hOO/0Gv3nBI9IWIo9FQqdNgK9pmUqDLM9n0TM0M66zWRd6ld95e19+XEfJvJWdTeGig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ5HWuEv; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=btU3Gz6gq1I14cLFzpmqA2rJYObyucTUsgGpYC+U4hSti4beQqFibzKRTSYNPnOZTLPgTlKb88TQGQJtVbQwRT8r6sMDouhap1zFynHIYX6AULIV7UV4qolJYz9TNyS+Hasq3pbC5eShmPvzMkb2YvVD8WoILSwmMszGdQqMbsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L42VrYWg; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ5HWuEv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABF5C433F1;
-	Wed, 10 Apr 2024 13:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712757523;
-	bh=CteGrLp21p90H//plZVTRArhoHufEhyzcxklfO2rDtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQ5HWuEviNHm1qAE+YQNb3OQsWEmGjHsMyckLuumeCpTAF5uQiCn/i7I85js2B5S4
-	 KCSnBcl0DscAqrV2hvDLsXgE4+x9UfNnYH0QCU1G2dBDTdlwMDXbPRWphK1rk31m6W
-	 DPDNMOOjVuKynkZh4cimbDorssZ86nAhRUkolMbHmgeni28RBLS4pKCmuklVqwlIOv
-	 N7217bKyaDQfrhLSL6HweYfz7M6c4U0coXLvc68iuTuGq15hIdr86v3UaCYgZgarS9
-	 usd7jU2TuBt4Tqr6O+gF/F5Q5FT819Fs61KxgShir0g2PC3zFnt5HQopQVQMucXSKV
-	 AeZdEqe6YyWpA==
-Date: Wed, 10 Apr 2024 15:58:40 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <ZhabEORWtSsdSq9x@localhost.localdomain>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
- <20240409062501.h4rA_ck4@linutronix.de>
- <ZhUaAjhQXN6ahtpS@localhost.localdomain>
- <20240409105405.TXUU--_W@linutronix.de>
- <ZhUt8XMndGSwNuwx@localhost.localdomain>
- <20240409133336.Y4Io-16-@linutronix.de>
- <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
- <20240410125126.X26tR8tM@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L42VrYWg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712757574; x=1744293574;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KzIwAs0WuSRVdxrxETt53ZODVPWPZANummHTPBLM92g=;
+  b=L42VrYWgU6IzUNSnkINbQMgH4duX2iZ591pjCnZ80afEty4yJJtjZMie
+   s6P0fWcePfbnMleZSFDGdaDnCGB7plOPWl9oB/kN2XOWV6lAHt50KxP2D
+   Kt5epZYmAyLYrgtw0DbWfgUp6XYnARBBJqccJjj7LKNmOu1tXPGlsN2YK
+   k2Sb2LnnnaY/5g7MACGZu+kcbvPz7ZblOOwzHFWSE49q0ULLpLVhbBbyf
+   cdAmSNQbz4vgCSzXTXTVphakAbjEAmp5MzQ9cEOND3c59YgdK5PBNXnU8
+   UyWbUs9W/Tz5zDY5jQm43wMn+odkdKPwFcIRwIyFUh7G0An/vG4XKYuFn
+   w==;
+X-CSE-ConnectionGUID: UoQNj6plTdqvTSajANgE4Q==
+X-CSE-MsgGUID: h9eqBgaCSiqIlkbNKePQYA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7993181"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7993181"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:59:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915433717"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="915433717"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 06:59:28 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ruYU0-000000035Gi-3T2g;
+	Wed, 10 Apr 2024 16:59:24 +0300
+Date: Wed, 10 Apr 2024 16:59:24 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: lakshmi.sowjanya.d@intel.com
+Cc: tglx@linutronix.de, jstultz@google.com, giometti@enneenne.com,
+	corbet@lwn.net, linux-kernel@vger.kernel.org, x86@kernel.org,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, eddie.dong@intel.com,
+	christopher.s.hall@intel.com, jesse.brandeburg@intel.com,
+	davem@davemloft.net, alexandre.torgue@foss.st.com,
+	joabreu@synopsys.com, mcoquelin.stm32@gmail.com, perex@perex.cz,
+	linux-sound@vger.kernel.org, anthony.l.nguyen@intel.com,
+	peter.hilber@opensynergy.com, pandith.n@intel.com,
+	subramanian.mohan@intel.com, thejesh.reddy.t.r@intel.com
+Subject: Re: [PATCH v6 11/11] ABI: pps: Add ABI documentation for Intel TIO
+Message-ID: <ZhabPIK_zDJgVf4c@smile.fi.intel.com>
+References: <20240410114828.25581-1-lakshmi.sowjanya.d@intel.com>
+ <20240410114828.25581-12-lakshmi.sowjanya.d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240410125126.X26tR8tM@linutronix.de>
+In-Reply-To: <20240410114828.25581-12-lakshmi.sowjanya.d@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Le Wed, Apr 10, 2024 at 02:51:26PM +0200, Sebastian Andrzej Siewior a écrit :
-> On 2024-04-10 12:38:50 [+0200], Frederic Weisbecker wrote:
-> > Some alternatives:
-> > 
-> > _ Clear event->pending_work = 0 after perf_sigtrap(), preventing an
-> > event in there from adding a new task work. We may miss a signal though...
-> > 
-> > _ Make the recursion context per task on -RT...
+On Wed, Apr 10, 2024 at 05:18:28PM +0530, lakshmi.sowjanya.d@intel.com wrote:
+> From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 > 
-> The per-task counter would be indeed the easiest thing to do. But then
-> only for task context, right?
+> Document sysfs interface for Intel Timed I/O PPS driver.
 
-It should work for CPU context as well. A context switch shouldn't be
-considered as recursion. Hopefully...
+...
 
-> 
-> But why would we miss a signal if we clean event->pending_work late?
-> Isn't cleaning late same as clearing in
-> perf_swevent_put_recursion_context()?
+> +Date:		March 2024
+> +KernelVersion	6.9
 
-Not exactly. perf_swevent_get_recursion_context() avoids a new software event
-altogether from being recorded. It is completely ignored. Whereas clearing late
-event->pending_work records new software events but ignores the signal.
+This boat is already sailed...
 
-> If clearing pending_work late works, I would prefer to avoid yet another
-> per-task counter if possible.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yeah I know :-/
 
-Thanks.
-
-> 
-> > > > Thanks.
-> 
-> Sebastian
