@@ -1,84 +1,63 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BB17F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0877F;
+	Wed, 10 Apr 2024 00:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712708430; cv=none; b=XntTwFhYjtm+r+dGFvelQapWvoURfibRTEpCg8PJw1G1j92xara4w58OaX+/6hbACkWMBLAcxmXf5yIFAR1rJ/LYvGS+xTAplEIKr2nzy2KnGdJ0vVyYjDWEpotSD4PrvISOIipjCcvl/mcu/VhTQrOzHRK/ShTdbOhEWRRsuFM=
+	t=1712708511; cv=none; b=D+6BhaXxDVY+wFVPq2EO5iU8ueLdfwa7WqJW9q6241zruT60OeICSUT+J6VJrFP8iGEEI0zAsUnN/DNJSCRXlcVn/C+THlDbDSj3fh41851WpqHxyeTxOZx18cY9VCcgz/rPPSShndAIyY/5C44D+9pmm25++UlsCTZUcqP8pyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712708430; c=relaxed/simple;
-	bh=kuJQWjJaE2OOAcB7+Mj7bSmqNkugL/GwYSdQp3xFQmE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VEutTzCVSvK66yeN4Kj6rjd7NBmOB8Red9HIPlkOKzK0KtdVESQdNfwt8eGLbTvY6GbQfQc1+DOMO9OxUL4tY5NzCxoK5Z/PsjtJonC5L0jegnF1kkF+iznYCxlSbqA1bIGuukzEbV59H83V/gdymrSUOyyu2v9jAKN2YkiOxtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GZzzWR4H; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712708511; c=relaxed/simple;
+	bh=gzUOWwz3tviqyMlmwEHpoHDPsNyvzfup7Ce/HPd7+eI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=muU9COo2gL9xsherK4wl6L6JT+z6rAfrepQ+IUpAtA1dQJGCnMd3jrLSPdxeGaTGuclbl/zkQaiWkjNtwytWHU2zaFLOkRRD9L79PCNuKyqtcN6EYlDNaunwIDungrTKDtyfJhf2wSknVp6QeTdAZoh4Wn1TbM6og+ZByBLbvUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rf/VLZPN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZzzWR4H"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6182f7f7fc9so20676947b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712708428; x=1713313228; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rAKPNUoQGPaQKahi3jTZ7ES/C/RE/TCbwkXna9U00WU=;
-        b=GZzzWR4H394iWePssEmOOKfNlhDnrcbzs/nkAbNI0kqWFOr5RMc/RpWnJ8JlDVkUN1
-         z90YAX/rcE2GUJLs3OFuA5Tu7BqW+7uHHuOZ7HmHHfbtCnG6rOIqh5fEyJgQ7auqGOe8
-         ywjKjq8ztYQo1g3p4u9pp2VofvjlcLRSzy9rJWCZl4GotYxkpbCv7h2nqoIIvqvNACte
-         NhmSDfr5i9+5u9Jr6gSiCmu12+1yZIJRHFmbMKcj5i0G0lnUKDiZ6DF650QUC3wBQxMF
-         3lp+S1ssBxXUc77jjejwxGZ+E7iol4W+thLFRv17AghjOYa3qWVk2prJUe5FTILbx2iV
-         P7hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712708428; x=1713313228;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rAKPNUoQGPaQKahi3jTZ7ES/C/RE/TCbwkXna9U00WU=;
-        b=k+2Vga3/dLA+3bKpcMxo0DtEpp1L6uxn+oY8k6Jmc6ap6L/0r2bl70dKS1Ep1UdRO/
-         VnlkP25A28AsitYAjiKJ3t71J/ITiERJtEB6rst92Z857AaDQIjJN9D7hSFww81xEUAX
-         Gl3e5iilg+mUiGEdUAG1OHBOg+1FJ1MqXN7fR12S8VckFAGjg1pTVL0v5ulPzp6O+sae
-         c0wiZGHfCd282574gbLescfFZcMJaspx1ml7Ma6JuThQf+BdYZShD/FY4ms8sC1+gjeF
-         lqwYHq2OC6TEISUgsBWToA1o0I0WigjjtLwgr02l3oAj4QSadiv3OViPELN8/mjH4j+d
-         8vhg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8yLVstuBPaHuuSqIMXft4LUcSdpWxLGWVEPY5T56I4cO4NjJjsTI30O4uTZHb6VpVw/IQj9/iHjTSPHZh8TgoD/eeBwRrS1CH0HSr
-X-Gm-Message-State: AOJu0YzBtmSS1olUt3aQMQo9Q6/YRj95jHbIyQkMlbKZsK8xSTfMKjXM
-	9EoQSo05LDEiZ1HxNYiw2j+GcD/wRKPLG+5Mbak3BhrrnpJMQ1GiZHxLcxOTBr7mHOmJSOjU9KG
-	HvA==
-X-Google-Smtp-Source: AGHT+IFiLrCcF2gPZk1+gsLvsRjqTLlCh84H6en3uOOmmqdRwlLNqKPZGV+CxW5PP5zgT0hIJbuV6emeuMc=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a0d:cc4d:0:b0:615:1d0d:eaa8 with SMTP id
- o74-20020a0dcc4d000000b006151d0deaa8mr341965ywd.5.1712708428045; Tue, 09 Apr
- 2024 17:20:28 -0700 (PDT)
-Date: Tue,  9 Apr 2024 17:19:44 -0700
-In-Reply-To: <20240305003742.245767-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rf/VLZPN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5157EC433F1;
+	Wed, 10 Apr 2024 00:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712708510;
+	bh=gzUOWwz3tviqyMlmwEHpoHDPsNyvzfup7Ce/HPd7+eI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rf/VLZPNe3KM7PuQkA/waKmvEJyyKyi/21q+CMesC55RySW/yz2jR6t7SExBKRvFs
+	 lgInRbwk6OZrp2DTPBYBekxJJ2rMfYoFKfTZ++r6vSAjVh+32+9xnzjdxF6RXODSEE
+	 GWhCdzugCYEFm1/n8GI52L3gy7ILDjWGjkjZHYN1bFj2Y6NMXgYZn7bvpWkvTRbMTB
+	 QRQMHMGJ69KP70XwgAVhu+iBLCp33YUHS/DkdMg37gJtfMoXOR7AaVahU8ZBbUCLVv
+	 hOokROauum4PUqwj4V9y/GYmAZ7+k+WOTOkeGoJ2jKqli8rvJQ3unrYU1DpDiVEmHv
+	 S+Q4LpUMT8TXA==
+Date: Tue, 9 Apr 2024 17:21:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: davem@davemloft.net, pabeni@redhat.com, edumazet@google.com,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next v2 4/4] net: dqs: make struct dql more cache
+ efficient
+Message-ID: <20240409172149.6f285b68@kernel.org>
+In-Reply-To: <20240408172605.635508-5-leitao@debian.org>
+References: <20240408172605.635508-1-leitao@debian.org>
+	<20240408172605.635508-5-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240305003742.245767-1-seanjc@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <171270407761.1586889.5401391360531652033.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: Drop unused @may_block param from gfn_to_pfn_cache_invalidate_start()
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Like Xu <like.xu.linux@gmail.com>, Paul Durrant <paul@xen.org>, 
-	David Woodhouse <dwmw2@infradead.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 04 Mar 2024 16:37:42 -0800, Sean Christopherson wrote:
-> Remove gfn_to_pfn_cache_invalidate_start()'s unused @may_block parameter,
-> which was leftover from KVM's abandoned (for now) attempt to support guest
-> usage of gfn_to_pfn caches.
+On Mon,  8 Apr 2024 10:25:56 -0700 Breno Leitao wrote:
+> With the previous change, struct dqs->stall_thrs will be in the hot path
+> (at queue side), even if DQS is disabled.
 > 
+> The other fields accessed in this function (last_obj_cnt and num_queued)
+> are in the first cache line, let's move this field  (stall_thrs) to the
+> very first cache line, since there is a hole there.
 > 
+> This does not change the structure size, since it moves an short (2
+> bytes) to 4-bytes whole in the first cache line.
 
-Applied to kvm-x86 fixes, thanks!
-
-[1/1] KVM: Drop unused @may_block param from gfn_to_pfn_cache_invalidate_start()
-      https://github.com/kvm-x86/linux/commit/b326ec064c9a
-
---
-https://github.com/kvm-x86/linux/tree/next
+Doesn't this move the cache line bouncing problem to the other side?
+Eric said "copy" I read that as "have two fields with the same value".
+I think it's single digit number of alu instructions we'd be saving
+here, not super convinced patch 3 is the right trade off...
