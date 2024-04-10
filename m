@@ -1,253 +1,236 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62351E878
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F70215EFAE;
+	Wed, 10 Apr 2024 15:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762928; cv=none; b=SitxkNcsMUAlQFvUp8ylwyhtMF6wRlTgfx1lJxpoa+HgYOCNksaHX0ri1ZjCN6F51MHQIeT2a4R9KORDs/j+/k1eixe26zYE3FmmbKNKlSGY6bo+k0EfBo5nXaxJGa2kzp8kdA8+t0mVi5g3n5R3pu0zMl62rjEPXQNNsE9YAYQ=
+	t=1712762975; cv=none; b=WBIBhGkhLfKB2Rspe/zt9LqInuPQJNxI9SuUqTd36cnRJkHnIO+LEDrPVcGXa9aVTq44xvXrSCEceTEsY+uID3azaWrgbr89zynKX+cyc6uQknTXm8HHoOqXS7+bnouTc9SnEqGHcPCsnXE9NcAjaMSeSMDEZ+7/6DoAQIgSK3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762928; c=relaxed/simple;
-	bh=lSxDCqVmS49joX+KK2vOQBOuXPAF5oXxcuK+9LJdVFg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=grDD1CxGAM7qCUxDf1o4Bkzi6pZ+imRnS8sd3MpeYqDsxqoFHOwCueN3VDqzIeGNkRmddEuZOVsC+k8TaDJY0NbTSbDAtQ1lzHuLGmHq3aeBJa0oQCcmcAzwEBLwp6hgtLselaNT/6AgJbRcF+M++b/VxRmQjW89x6k4Jh2hqa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fKfXx6da; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712762975; c=relaxed/simple;
+	bh=D6tHl94Mqj+YhPbkPg+wHj8JPc4IGyn8BYCHVddbrgY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xgv30t7TIVxvxjWawrnk+Buf0lNhUviCm0KmbXrJk+qFt8QiYS+WXUB6FoQTh9SX8aOgfSq9GVxH+rReAE8T2bWev/fNsIThYpMmSGV+KUE6G/vDuwtqAjzov+gFbiVLnvIlp5YblCQtaJ9zogLm9E0tazqGUirltM3L/95/OOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=AijiieaE; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fKfXx6da"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712762925;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ci1baLlwDbOm6Wup8/nHleUUTbOV/R7CG6mxApYjz0M=;
-	b=fKfXx6daHhl5PrK4E9aFrZnlTgfulS/1gTixVI5lppIUn4QLmTYyjG7U4WgxMei2HJbxBT
-	7SVDXcWl22mWqiKidMiB7KG1dnUUDPhhg9qCiyxMp65QfNZ8hvoqNH50JXwt6dWgt5YVGi
-	M08HmR8HVH0LI9O+xUtY7i/e5LucBTw=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-390-AfH0EcHqMXSmp7c7iAiAdQ-1; Wed, 10 Apr 2024 11:28:44 -0400
-X-MC-Unique: AfH0EcHqMXSmp7c7iAiAdQ-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-69627b26a51so2057506d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:28:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712762923; x=1713367723;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ci1baLlwDbOm6Wup8/nHleUUTbOV/R7CG6mxApYjz0M=;
-        b=FVZ6uatgI+RSHU74x81lbNnQOh5a6EPBshQednr3olXMRH7RphuWAyIHRdimiSistw
-         Lw+wxQOiHxq1y05W42/6MZ9759NF+X4oWDzx7F/jM70X87E3kT/Z/PmNTRlMSph5IhNf
-         eHLAwe9DBD/sDAXGaHsT8v0bgwmF5qYW7pk66PZp1HkPMHmfvwdvZVUFKEtyK/QLWe7M
-         l5HHD0CITqE3VFW5npEiBmAUSa8gPipLT9ylrBwUdKLewUVPmQjWnf+TxlirccY0v+AG
-         4UmrMBVJ1Q86yXGgXkA4lOw+Ia9hvqt/OYpHDRJ+NIn1Un390UorGEXPXxqlIbF3OksS
-         Kxpw==
-X-Forwarded-Encrypted: i=1; AJvYcCVcVad48PgObdzYQx+jkIuiqP+Onor1J4LZrvAIUgAie3XAyERXVdeJ/VndoIYZRd2/0p7YWlPVunPSC+AxaNate0brYdPSMi3/OfB+
-X-Gm-Message-State: AOJu0YytSlGfBtIq77tNDDYaek4oPno3FlaPmPEnZuohxOU8Pc8yPD5i
-	VlllKKvVn07I7fXWPOERSQRVqjD/IYGd8oOZHGatiZ9gzk1p4owC+ecxYnGUyeE1jg1gV3BQzUf
-	kRHFWDgcYK/Qb6QEDS6rvPzNtJKLQW7UXLHKvOjvOTgRtfi4o+JIT1Z5dDiOrWA==
-X-Received: by 2002:a05:6214:5090:b0:69b:ce6:271b with SMTP id kk16-20020a056214509000b0069b0ce6271bmr3168089qvb.2.1712762923251;
-        Wed, 10 Apr 2024 08:28:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGZs5MCkL0IJwntJvXwMvElTS5kl/yk1ExPO6tDqr2NK62DfB6pdbW0p2/DjTaMvJz9lDcKPw==
-X-Received: by 2002:a05:6214:5090:b0:69b:ce6:271b with SMTP id kk16-20020a056214509000b0069b0ce6271bmr3168047qvb.2.1712762922544;
-        Wed, 10 Apr 2024 08:28:42 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id ek1-20020ad45981000000b00699032e555bsm5208543qvb.127.2024.04.10.08.28.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 08:28:42 -0700 (PDT)
-Date: Wed, 10 Apr 2024 11:28:39 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Matthew Wilcox <willy@infradead.org>,
-	Rik van Riel <riel@surriel.com>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yang Shi <shy828301@gmail.com>, John Hubbard <jhubbard@nvidia.com>,
-	linux-arm-kernel@lists.infradead.org,
-	"Kirill A . Shutemov" <kirill@shutemov.name>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Christoph Hellwig <hch@infradead.org>,
-	linux-riscv@lists.infradead.org,
-	James Houghton <jthoughton@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	"Aneesh Kumar K . V" <aneesh.kumar@kernel.org>,
-	Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3 00/12] mm/gup: Unify hugetlb, part 2
-Message-ID: <ZhawJ-VD6DtLZ2Zm@x1n>
-References: <20240321220802.679544-1-peterx@redhat.com>
- <20240322161000.GJ159172@nvidia.com>
- <ZgHJaJSpoeJVEccN@x1n>
- <20240326140252.GH6245@nvidia.com>
- <Zg8gEyE4o_VJsTmx@x1n>
- <20240405181633.GH5383@nvidia.com>
- <ZhBwVLyHr8WEKSx2@x1n>
- <20240409234355.GJ5383@nvidia.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="AijiieaE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1712762536;
+	bh=D6tHl94Mqj+YhPbkPg+wHj8JPc4IGyn8BYCHVddbrgY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AijiieaEGfw7A7pM0mjmSo8sVX6CMr/cpz12PzZzOquRvaJij36ufyzMY0u0hdCyC
+	 ZAGHedAKIakAvMptB0kqkD9KFC+0ja0ugryHuMNJ1scMqCyny2e+teq9W48o7tFfuL
+	 EH8VzABUdA+CMndHWNjO77acaUjAqbuIEv0w+h2WJ40vyoRmgzH5DFTHq7b6rc+fJS
+	 Ccv89+sQANkzISzE+Noaao87phvo9TkQnsZMePrZ8hWkW11Fx/zBqertHiJ8qi1Z4u
+	 qn9mwK2/+L0kvf3tlLe4MRgHkKd02sUcaXKzQp7c98MKPYQw2bTTUVGwrfdGXE6Vbw
+	 76Jc1Ii82FDtQ==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4VF6540SSfzrWT;
+	Wed, 10 Apr 2024 11:22:16 -0400 (EDT)
+Message-ID: <41bbe236-5c61-4a0e-91b1-b292179cde78@efficios.com>
+Date: Wed, 10 Apr 2024 11:22:51 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240409234355.GJ5383@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched: Add missing memory barrier in switch_mm_cid
+To: Yeo Reum Yun <YeoReum.Yun@arm.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <Dietmar.Eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Daniel Bristot de Oliveira <bristot@redhat.com>,
+ Valentin Schneider <vschneid@redhat.com>,
+ Catalin Marinas <Catalin.Marinas@arm.com>,
+ Mark Rutland <Mark.Rutland@arm.com>, Will Deacon <will@kernel.org>,
+ Aaron Lu <aaron.lu@intel.com>
+References: <20240308150719.676738-1-mathieu.desnoyers@efficios.com>
+ <AM0PR08MB42895432478A020E2C5B6C5FFB2C2@AM0PR08MB4289.eurprd08.prod.outlook.com>
+ <AM0PR08MB428921B21B38D517A8A61FC4FB002@AM0PR08MB4289.eurprd08.prod.outlook.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <AM0PR08MB428921B21B38D517A8A61FC4FB002@AM0PR08MB4289.eurprd08.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 09, 2024 at 08:43:55PM -0300, Jason Gunthorpe wrote:
-> On Fri, Apr 05, 2024 at 05:42:44PM -0400, Peter Xu wrote:
-> > In short, hugetlb mappings shouldn't be special comparing to other huge pXd
-> > and large folio (cont-pXd) mappings for most of the walkers in my mind, if
-> > not all.  I need to look at all the walkers and there can be some tricky
-> > ones, but I believe that applies in general.  It's actually similar to what
-> > I did with slow gup here.
-> 
-> I think that is the big question, I also haven't done the research to
-> know the answer.
-> 
-> At this point focusing on moving what is reasonable to the pXX_* API
-> makes sense to me. Then reviewing what remains and making some
-> decision.
-> 
-> > Like this series, for cont-pXd we'll need multiple walks comparing to
-> > before (when with hugetlb_entry()), but for that part I'll provide some
-> > performance tests too, and we also have a fallback plan, which is to detect
-> > cont-pXd existance, which will also work for large folios.
-> 
-> I think we can optimize this pretty easy.
->  
-> > > I think if you do the easy places for pXX conversion you will have a
-> > > good idea about what is needed for the hard places.
-> > 
-> > Here IMHO we don't need to understand "what is the size of this hugetlb
-> > vma"
-> 
-> Yeh, I never really understood why hugetlb was linked to the VMA.. The
-> page table is self describing, obviously.
+Peter, Ingo, can you please consider merging this fix ?
 
-Attaching to vma still makes sense to me, where we should definitely avoid
-a mixture of hugetlb and !hugetlb pages in a single vma - hugetlb pages are
-allocated, managed, ...  totally differently.
-
-And since hugetlb is designed as file-based (which also makes sense to me,
-at least for now), it's also natural that it's vma-attached.
-
-> 
-> > or "which level of pgtable does this hugetlb vma pages locate",
-> 
-> Ditto
-> 
-> > because we may not need that, e.g., when we only want to collect some smaps
-> > statistics.  "whether it's hugetlb" may matter, though. E.g. in the mm
-> > walker we see a huge pmd, it can be a thp, it can be a hugetlb (when
-> > hugetlb_entry removed), we may need extra check later to put things into
-> > the right bucket, but for the walker itself it doesn't necessarily need
-> > hugetlb_entry().
-> 
-> Right, places may still need to know it is part of a huge VMA because we
-> have special stuff linked to that.
-> 
-> > > But then again we come back to power and its big list of page sizes
-> > > and variety :( Looks like some there have huge sizes at the pgd level
-> > > at least.
-> > 
-> > Yeah this is something I want to be super clear, because I may miss
-> > something: we don't have real pgd pages, right?  Powerpc doesn't even
-> > define p4d_leaf(), AFAICT.
-> 
-> AFAICT it is because it hides it all in hugepd.
-
-IMHO one thing we can benefit from such hugepd rework is, if we can squash
-all the hugepds like what Christophe does, then we push it one more layer
-down, and we have a good chance all things should just work.
-
-So again my Power brain is close to zero, but now I'm referring to what
-Christophe shared in the other thread:
-
-https://github.com/linuxppc/wiki/wiki/Huge-pages
-
-Together with:
-
-https://lore.kernel.org/r/288f26f487648d21fd9590e40b390934eaa5d24a.1711377230.git.christophe.leroy@csgroup.eu
-
-Where it has:
-
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -98,6 +98,7 @@ config PPC_BOOK3S_64
-        select ARCH_ENABLE_HUGEPAGE_MIGRATION if HUGETLB_PAGE && MIGRATION
-        select ARCH_ENABLE_SPLIT_PMD_PTLOCK
-        select ARCH_ENABLE_THP_MIGRATION if TRANSPARENT_HUGEPAGE
-+       select ARCH_HAS_HUGEPD if HUGETLB_PAGE
-        select ARCH_SUPPORTS_HUGETLBFS
-        select ARCH_SUPPORTS_NUMA_BALANCING
-        select HAVE_MOVE_PMD
-@@ -290,6 +291,7 @@ config PPC_BOOK3S
- config PPC_E500
-        select FSL_EMB_PERFMON
-        bool
-+       select ARCH_HAS_HUGEPD if HUGETLB_PAGE
-        select ARCH_SUPPORTS_HUGETLBFS if PHYS_64BIT || PPC64
-        select PPC_SMP_MUXED_IPI
-        select PPC_DOORBELL
-
-So I think it means we have three PowerPC systems that supports hugepd
-right now (besides the 8xx which Christophe is trying to drop support
-there), besides 8xx we still have book3s_64 and E500.
-
-Let's check one by one:
-
-  - book3s_64
-
-    - hash
-
-      - 64K: p4d is not used, largest pgsize pgd 16G @pud level.  It
-        means after squashing it'll be a bunch of cont-pmd, all good.
-
-      - 4K: p4d also not used, largest pgsize pgd 128G, after squashed
-        it'll be cont-pud. all good.
-
-    - radix
-
-      - 64K: largest 1G @pud, then cont-pmd after squashed. all good.
-
-      - 4K: largest 1G @pud, then cont-pmd, all good.
-
-  - e500 & 8xx
-
-    - both of them use 2-level pgtables (pgd + pte), after squashed hugepd
-      @pgd level they become cont-pte. all good.
-
-I think the trick here is there'll be no pgd leaves after hugepd squashing
-to lower levels, then since PowerPC seems to never have p4d, then all
-things fall into pud or lower.  We seem to be all good there?
-
-> 
-> If the goal is to purge hugepd then some of the options might turn out
-> to convert hugepd into huge p4d/pgd, as I understand it. It would be
-> nice to have certainty on this at least.
-
-Right.  I hope the pmd/pud plan I proposed above can already work too with
-such ambicious goal too.  But review very welcomed from either you or
-Christophe.
-
-PS: I think I'll also have a closer look at Christophe's series this week
-or next.
-
-> 
-> We have effectively three APIs to parse a single page table and
-> currently none of the APIs can return 100% of the data for power.
+It adds a missing memory barrier in switch_mm_cid(), which is a
+no-op on x86 because switch_mm already provides it. This issue was
+reported more than a month ago.
 
 Thanks,
 
+Mathieu
+
+On 2024-04-08 05:38, Yeo Reum Yun wrote:
+> Gentle ping...
+> 
+> ________________________________________
+> From: Yeo Reum Yun <YeoReum.Yun@arm.com>
+> Sent: 19 March 2024 09:20
+> To: Mathieu Desnoyers; Ingo Molnar; Peter Zijlstra
+> Cc: linux-kernel@vger.kernel.org; stable@vger.kernel.org; Steven Rostedt; Vincent Guittot; Juri Lelli; Dietmar Eggemann; Ben Segall; Mel Gorman; Daniel Bristot de Oliveira; Valentin Schneider; Catalin Marinas; Mark Rutland; Will Deacon; Aaron Lu
+> Subject: Re: [PATCH] sched: Add missing memory barrier in switch_mm_cid
+> 
+> Gentle ping.
+> 
+> ________________________________________
+> From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Sent: 08 March 2024 15:07
+> To: Ingo Molnar; Peter Zijlstra
+> Cc: linux-kernel@vger.kernel.org; Mathieu Desnoyers; Yeo Reum Yun; stable@vger.kernel.org; Steven Rostedt; Vincent Guittot; Juri Lelli; Dietmar Eggemann; Ben Segall; Mel Gorman; Daniel Bristot de Oliveira; Valentin Schneider; Catalin Marinas; Mark Rutland; Will Deacon; Aaron Lu
+> Subject: [PATCH] sched: Add missing memory barrier in switch_mm_cid
+> 
+> Many architectures' switch_mm() (e.g. arm64) do not have an smp_mb()
+> which the core scheduler code has depended upon since commit:
+> 
+>      commit 223baf9d17f25 ("sched: Fix performance regression introduced by mm_cid")
+> 
+> If switch_mm() doesn't call smp_mb(), sched_mm_cid_remote_clear() can
+> unset the actively used cid when it fails to observe active task after it
+> sets lazy_put.
+> 
+> There *is* a memory barrier between storing to rq->curr and _return to
+> userspace_ (as required by membarrier), but the rseq mm_cid has stricter
+> requirements: the barrier needs to be issued between store to rq->curr
+> and switch_mm_cid(), which happens earlier than:
+> 
+> - spin_unlock(),
+> - switch_to().
+> 
+> So it's fine when the architecture switch_mm happens to have that barrier
+> already, but less so when the architecture only provides the full barrier
+> in switch_to() or spin_unlock().
+> 
+> It is a bug in the rseq switch_mm_cid() implementation. All architectures
+> that don't have memory barriers in switch_mm(), but rather have the full
+> barrier either in finish_lock_switch() or switch_to() have them too late
+> for the needs of switch_mm_cid().
+> 
+> Introduce a new smp_mb__after_switch_mm(), defined as smp_mb() in the
+> generic barrier.h header, and use it in switch_mm_cid() for scheduler
+> transitions where switch_mm() is expected to provide a memory barrier.
+> 
+> Architectures can override smp_mb__after_switch_mm() if their
+> switch_mm() implementation provides an implicit memory barrier.
+> Override it with a no-op on x86 which implicitly provide this memory
+> barrier by writing to CR3.
+> 
+> Link: https://lore.kernel.org/lkml/20240305145335.2696125-1-yeoreum.yun@arm.com/
+> Reported-by: levi.yun <yeoreum.yun@arm.com>
+> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
+> Cc: <stable@vger.kernel.org> # 6.4.x
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Cc: levi.yun <yeoreum.yun@arm.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Aaron Lu <aaron.lu@intel.com>
+> ---
+>   arch/x86/include/asm/barrier.h |  3 +++
+>   include/asm-generic/barrier.h  |  8 ++++++++
+>   kernel/sched/sched.h           | 20 ++++++++++++++------
+>   3 files changed, 25 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
+> index 35389b2af88e..0d5e54201eb2 100644
+> --- a/arch/x86/include/asm/barrier.h
+> +++ b/arch/x86/include/asm/barrier.h
+> @@ -79,6 +79,9 @@ do {                                                                  \
+>   #define __smp_mb__before_atomic()      do { } while (0)
+>   #define __smp_mb__after_atomic()       do { } while (0)
+> 
+> +/* Writing to CR3 provides a full memory barrier in switch_mm(). */
+> +#define smp_mb__after_switch_mm()      do { } while (0)
+> +
+>   #include <asm-generic/barrier.h>
+> 
+>   /*
+> diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
+> index 961f4d88f9ef..5a6c94d7a598 100644
+> --- a/include/asm-generic/barrier.h
+> +++ b/include/asm-generic/barrier.h
+> @@ -296,5 +296,13 @@ do {                                                                       \
+>   #define io_stop_wc() do { } while (0)
+>   #endif
+> 
+> +/*
+> + * Architectures that guarantee an implicit smp_mb() in switch_mm()
+> + * can override smp_mb__after_switch_mm.
+> + */
+> +#ifndef smp_mb__after_switch_mm
+> +#define smp_mb__after_switch_mm()      smp_mb()
+> +#endif
+> +
+>   #endif /* !__ASSEMBLY__ */
+>   #endif /* __ASM_GENERIC_BARRIER_H */
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 2e5a95486a42..044d842c696c 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -79,6 +79,8 @@
+>   # include <asm/paravirt_api_clock.h>
+>   #endif
+> 
+> +#include <asm/barrier.h>
+> +
+>   #include "cpupri.h"
+>   #include "cpudeadline.h"
+> 
+> @@ -3481,13 +3483,19 @@ static inline void switch_mm_cid(struct rq *rq,
+>                   * between rq->curr store and load of {prev,next}->mm->pcpu_cid[cpu].
+>                   * Provide it here.
+>                   */
+> -               if (!prev->mm)                          // from kernel
+> +               if (!prev->mm) {                        // from kernel
+>                          smp_mb();
+> -               /*
+> -                * user -> user transition guarantees a memory barrier through
+> -                * switch_mm() when current->mm changes. If current->mm is
+> -                * unchanged, no barrier is needed.
+> -                */
+> +               } else {                                // from user
+> +                       /*
+> +                        * user -> user transition relies on an implicit
+> +                        * memory barrier in switch_mm() when
+> +                        * current->mm changes. If the architecture
+> +                        * switch_mm() does not have an implicit memory
+> +                        * barrier, it is emitted here.  If current->mm
+> +                        * is unchanged, no barrier is needed.
+> +                        */
+> +                       smp_mb__after_switch_mm();
+> +               }
+>          }
+>          if (prev->mm_cid_active) {
+>                  mm_cid_snapshot_time(rq, prev->mm);
+> --
+> 2.39.2
+> 
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+
 -- 
-Peter Xu
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
