@@ -1,101 +1,94 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877301C2D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239CA19F;
+	Wed, 10 Apr 2024 00:33:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712709137; cv=none; b=uTeZeRYoReXURB7KdbwRy2vtZRSeLevw4FlkucQS/sEc+Ek1jKev9AieZ2uT5NnH6h0NsydyFX70w1eS6INWsxsD0NvrNVn2RQXsyp3y79PHGJWqfJ5TqO6LpcewUtDS07P35bo7xRQfP29J43QqNHnGa+vZyTURHBkxyUGgikw=
+	t=1712709196; cv=none; b=IzL5oNua90ZBnsDd/WpqyqKO5euyN9D57Tgf8wlFvVagNehpyDJINW/zBBrehnSPhTCKUJwewRHKlTg1LOX+6efxYQ6TVzgvvvt65iu9qBlpSIFEQXLh6FmGtj+joFBb81rRATwDkuTMDjfH9z7JSZQ3j2sEOqAdkHI14BEGs5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712709137; c=relaxed/simple;
-	bh=1Exgi+JLL+QO+d2hti+19dm0FiYFViJaiPvbpGc8XJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cl3oxDjTIqp/1fmy76YXM5k6htOlalIsTDQ8WIQYAGTKEPA4BQ9Zt3GWMTEztxICY0s4bjqXwhMntRS6LPi6TxKH9UOOoc5Ni/19swV4fM7FSdf7JkrdjgldOPe/zy7EarMn0M/dYxqCX0NEAJomURVfx/t6FemV8oATKnWRtmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JaL6oEGI; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712709196; c=relaxed/simple;
+	bh=7B3abChn6QeywU4/KUOFAabRB16trDidpC3z9pyRZA0=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=gqko8LFB3XxizZM06sQAGLnisKdL4jfJ5zmLHiV931lTru09njNQ/MjubJERemGDTkZg6QYm5gqZhl+RovX3jvF/VUZriF5hAG7KyjinvqdlZbGltvti6ySpwv0fH97O2/EAJ/K5D7PMSeisQtaqPfvsqDCMU1vosMQbvpiBixs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=JJ9fs9DU; arc=none smtp.client-ip=203.205.221.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JaL6oEGI"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7cb9dd46babso64065939f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 17:32:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712709134; x=1713313934; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fH2gqC5dLvzkZJc67eDj37ebZ1ZnAJYQHjhTciwIjkU=;
-        b=JaL6oEGIfkgOCcxqe1xkRRenn6oCPvhberFzYRXylZdIotELj8VBlHEECfbumTB9e0
-         4qPCvrP2mv/0OH2UY3CQLV7g/KWti/4ER9gXiAMFNjzmu/Otisr09nXdvC6nTSQAOlYQ
-         2Z5fV+OiERK2A0dL73Qi25ItCQqy61ko5wKG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712709134; x=1713313934;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fH2gqC5dLvzkZJc67eDj37ebZ1ZnAJYQHjhTciwIjkU=;
-        b=ZmyqBlFNI+2IiDtB4EZwYTwPN4rqqRgBARuJKGF2k9ASwPhxO1R1jz4nNDn1fKLxpC
-         2+PJUCKFlL3CxZU69yOiCY2Mc8/lNfqobXLUHQcloBdnysStMBAeoFm0d0jHt1V1ZpiI
-         7mFYLE/rUNT3nQ8MREb9WMfu132Wjoxp3/rCjm5ymouQnly5nHtuTqIRRgp+6yGZAYcH
-         SOjBoj/n6ZOdOazhCTxWtXbJa6ZYM7v6AzRcI1Zx6X0orcOL/ECSEEATkJbLEQQK9dDI
-         ufqBoNUpNadWROrjxtncez0enNHghRT3bM6w7Kx9QUULp6sw88Vpn1XQk6Vh8Dh9vi5Y
-         njXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLmf9r1rFLGmXY0awikU1ZvTfb9Ksh0igYuTD2AjnETdRBbCUVSokl6gpotDz2p76XlEk27DXwfKzVfm0jJGIB1trPe1mIH8FktXY1
-X-Gm-Message-State: AOJu0YwdLvWLEm8mHz1ZfbTrjnKQq0xxbRMZm2943zaLEgFFnzIsBiRj
-	9s7RZMDuPRIrc+blRNmDGXRU3c8yvF/GD96abtLXp18k/bVd2r4JGA4lcdPfcDI=
-X-Google-Smtp-Source: AGHT+IH7BSYmyscHz7vHJtvD9eJkudLF4tWaNfGG1dnEvB6mShpdylQuwZUbV8Oy3sTctHyrzW6kVg==
-X-Received: by 2002:a05:6e02:1d99:b0:36a:38bf:5fb2 with SMTP id h25-20020a056e021d9900b0036a38bf5fb2mr1612736ila.2.1712709134686;
-        Tue, 09 Apr 2024 17:32:14 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id p5-20020a92da45000000b003686160b165sm2843156ilq.75.2024.04.09.17.32.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Apr 2024 17:32:14 -0700 (PDT)
-Message-ID: <99cc80f1-9ea6-4acc-a320-2cac6f7035df@linuxfoundation.org>
-Date: Tue, 9 Apr 2024 18:32:13 -0600
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="JJ9fs9DU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712709191; bh=u0Mv4a49i+HjEHT0FFM4iQe2j30d3IX7Cki+XJXwmi4=;
+	h=From:To:Cc:Subject:Date;
+	b=JJ9fs9DUjalxgP6hoYOQJJ9Yls5P56D1c+QeQd7/oX5wL1g9HDK2tHLz4G6TOuqD+
+	 /ui0OMkr2iFrCllzInGDWXZMgFFesmaW43d0YLvJ4Xg3auahw2anUwy9rF7ui5/6ih
+	 Zrv3K2JXmFGiBHij2tfJmPrgilma/+qwksthERK0=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 8473001E; Wed, 10 Apr 2024 08:33:07 +0800
+X-QQ-mid: xmsmtpt1712709187tvku4af5a
+Message-ID: <tencent_EC72CD3879FA6F102FC56E4495F0E822EC0A@qq.com>
+X-QQ-XMAILINFO: OdIVOfqOaVcrMCJcWeDKI4Sr1b2eFxV1E7SSje18Q6CWk3Gxh2SfhZ9PSxAA7S
+	 UkgZ27DzHwI/c9SWJX4xTYSlvQ9E2qIXUwE+/AlR2a02H9Gjl77/l/258nwyq5TMUpeadvHU9ywc
+	 JBmKWDKzVDrCdLj9/MKGN7m8NJvkca9mFFSCuutDjDdrMvgtLEwSWSklPg5eZRmRC5u+Btt6GiPq
+	 8T9xFnp86QRPjfmm5L+kVy7LNLLr8UpcvTjogzZXXHcGhk1GPlTb4LWp7s5NODWYZX2oysh2UiDO
+	 P92iFOP6dHBxjtKGYiregsMZssZJZK4e03LOALSgptxd38xWCXGnciRzMRHYzPF0XIROz5Dt9okZ
+	 gAS+wN33i6FydwdQErurCXjNnw8SvGnHyZhY6TUyWjQnnhyDdyPhuqoA00W61YS7O3Iy2jbWOVlE
+	 aMIoqKRJM1Mq0yczEifyso0Q8K52YXRnG8dDrPXi1suyGH6LEH3garxNrSuLrDSes8+uqpMRgb3E
+	 RC5zhGknEmV/yvLYnvDFpcl0TVx/xYbpJPq46GqyKgp5BlaEkcTePYBS3htQ/KocbSV6icVNPGUF
+	 zxaL3MHcH9WcO60VnnCDwygsesh3515McMSBH+HwzfcJT/DJMt+l5NpEyC/EEOf/9F3XP2X6Dn6k
+	 pI8PJTUE15+19o9dNxbkm+wvH0c22e4KrYWFXGrJ/sIPnLN18GuXxsMy5QkXJYms80lFVxjnuT0I
+	 //7YldQYlPhYkbEziT7orMyGgnp2wSPbVYRh7D7KQ9zia67bWCYqhpwDpCME3ZS2Jc7D4BLf6hp5
+	 eTGztIGLFukdlI2VlQqqoM+KIKbQuF1NW/5VrZk4P01jm6qbFEJ1PyvRPqtYE/qZ354G3UmLvqJV
+	 MciLrqZ0X3fAvN5O+eQhRsr54MVQrC93f1+EPlTSeuBywbv6Alwwga4KHgsS/r7RaJURcInCZG70
+	 I5JQRaET0=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: bpf@vger.kernel.org
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	sdf@google.com,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	yonghong.song@linux.dev
+Subject: [PATCH] bpf: strnchr not suitable for getting NUL-terminator
+Date: Wed, 10 Apr 2024 08:33:08 +0800
+X-OQ-MSGID: <20240410003307.181290-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 000/690] 5.15.154-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240408125359.506372836@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240408125359.506372836@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/8/24 06:47, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.154 release.
-> There are 690 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 10 Apr 2024 12:52:23 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.154-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-Compiled and booted on my test system. No dmesg regressions.
+The strnchr() is not suitable for obtaining the end of a string with a length
+exceeding 1 and ending with a NUL character.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ kernel/bpf/helpers.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
--- Shuah
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index 449b9a5d3fe3..07490eba24fe 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -826,7 +826,7 @@ int bpf_bprintf_prepare(char *fmt, u32 fmt_size, const u64 *raw_args,
+ 	u64 cur_arg;
+ 	char fmt_ptype, cur_ip[16], ip_spec[] = "%pXX";
+ 
+-	fmt_end = strnchr(fmt, fmt_size, 0);
++	fmt_end = strnchrnul(fmt, fmt_size, 0);
+ 	if (!fmt_end)
+ 		return -EINVAL;
+ 	fmt_size = fmt_end - fmt;
+-- 
+2.43.0
+
