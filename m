@@ -1,238 +1,157 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4873A17F379;
-	Wed, 10 Apr 2024 17:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0071802A6;
+	Wed, 10 Apr 2024 17:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771100; cv=none; b=gNtlKRSa1DqrVxxYYxgSm6YWkHnap30JuBQYtQ2h6bWYtNOEuqqPtMzF33WlNMYgVY9Y4mVsPVILpD+zM9KQEUxm0pnbJeq+OrpNR/JbsfB7gs6ROdqFgRz8YU/gcNKdGa28+VwziS+PmqQSaQ9S91FSwciVUlXjrBKPGtvkTdo=
+	t=1712771102; cv=none; b=n8mir+mOFZbHrrbkRmtvESucd0Zk7Ke8NB56sb4lYSeuIlpfJwwIVDEcqSkcQUStX8nsAqcFj1DkAPbLhdmVvd8KHxtnvEklWrrskOMb8Npp6Vg9hb30FUmHaJPaEu9d/OOC2Z5VssjJzBVV7P9OeMqJWjotyZVUuDF17v7XKQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771100; c=relaxed/simple;
-	bh=tU0llIrllZGBRBSavOUUBkfUfb8QI63nj9aOBMcJOj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JOvkR3AJ14DlHeGHnmZULlMY+3ohoFvydYKrUbkX1/oQA6+j4Tu4vdTxK6/VxZSBjcm9Hj/QbM6MgQfdh4SsVU46I1tx8zaSFl3n+47zZFYpiuFHWrbHbUG6dpiJMqjKDhzw7zXKMVaxt7xdyDfngqQs0NPj88CXOmtxwDJcmps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cQyhRkTI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712771102; c=relaxed/simple;
+	bh=tWSbL77Uu0S5xnOIRWaaVpbSPmpL1rxRn22rKE+1/l0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=daWPaZ6KBQGWunPGlkQLPc0iSrIsD39AWe8mcHqUukWIYaqwrve7sFGgS0mKaZOhvLv8DqiL4660b572T4qSnetZ+89sN243/WbIDfSEXxJfwEYppySBJfBvvEVc2OuINe33zuppEgJXkhHmf9eGX8quJhTfDpt1kTnfms6U8zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=RTi7gH0F reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cQyhRkTI"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43AHVgZG007470;
-	Wed, 10 Apr 2024 17:44:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=isCwm2VVj9IIusgK5+U+9pg2r2c/kDAQFXY6w8ShkCo=;
- b=cQyhRkTIl4/qjhddQzjTxEMo4+0zNfE/pYfoBe4duwiQM3YX0MM3wh4+fX3V2x4G2sGk
- rI5sq25FyKI/19HBz9K4CxvOHy8HTyW4DMcl0QroHMJfRi/+dxRfusOKHwGEiyCS5Dqh
- cWgRC/xIyRmRY1G6dDXwx8HbmsBiPYl094ARqFspKKeKPKXHat6tlY/3lz51tQYlThGk
- p6ZAFpiO0EC4dVcVRkvYivrcWjEKSjz6noBSleZi084mMoTS/pOvz2gB6kZPUzN/Nhts
- XA4RBIagt349h3W3X1jfaeq1fyoo2Cmtgb+MFo2nCwM6JHr6L1WFpBfCHniycPphxx8l og== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy1tr1xs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 17:44:44 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43AHii2d029421;
-	Wed, 10 Apr 2024 17:44:44 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xdy1tr1xn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 17:44:44 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43AFK6e1017031;
-	Wed, 10 Apr 2024 17:44:43 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbke2nuf3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 17:44:43 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43AHibNo53150022
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 10 Apr 2024 17:44:40 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D948620043;
-	Wed, 10 Apr 2024 17:44:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AAFD920040;
-	Wed, 10 Apr 2024 17:44:37 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 10 Apr 2024 17:44:37 +0000 (GMT)
-Date: Wed, 10 Apr 2024 19:42:36 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        Matthew Wilcox
- <willy@infradead.org>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian
- Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle
- <svens@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Gerald
- Schaefer <gerald.schaefer@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v1 3/5] s390/uv: convert PG_arch_1 users to only work on
- small folios
-Message-ID: <20240410194236.1c89eb7d@p-imbrenda>
-In-Reply-To: <20240404163642.1125529-4-david@redhat.com>
-References: <20240404163642.1125529-1-david@redhat.com>
-	<20240404163642.1125529-4-david@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="RTi7gH0F"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
+ id c0eaaeb4e1f813d6; Wed, 10 Apr 2024 19:44:57 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id E7AE066C66F;
+	Wed, 10 Apr 2024 19:44:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1712771097;
+	bh=tWSbL77Uu0S5xnOIRWaaVpbSPmpL1rxRn22rKE+1/l0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=RTi7gH0F4xSRi/fFkU5LLFrH6B3DNjpvQIyraxTGxqWY8tqvgab4n3V8YESzzApZK
+	 eZYeeEYixNeeOpyg66FszDzmpWvrg9cYoHeO/A5M0V3PsFmAp5ybkLJQRM0UxRsd+o
+	 sR41GWYXTdZzPuJEUhjGU2ropgltJdPkf8INSPWIyT+e7R/iQeTfnpvJfyyRxe2H2y
+	 aoHMsWwvmpvWOSQrlydvizRz8ofZ0Cx4GwBgqwg+YWqYlf7dp0OcCxRxwhajH+4mA8
+	 N8yhsOMaNHCGCZECuNFCAxdgvMyI/ytwLwtLjIEPYg+3m9/+BFT8ZQnkfoKr0v8Th+
+	 VNr3eEi0VCkdA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Lukasz Luba <lukasz.luba@arm.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject:
+ [PATCH v1 06/16] thermal: gov_power_allocator: Use .manage() callback instead
+ of .throttle()
+Date: Wed, 10 Apr 2024 18:10:14 +0200
+Message-ID: <1815410.VLH7GnMWUR@kreacher>
+In-Reply-To: <13515747.uLZWGnKmhe@kreacher>
+References: <13515747.uLZWGnKmhe@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hz7Bxbv-xN-ZtiKpIDAhRT2UsI1w_po4
-X-Proofpoint-ORIG-GUID: -P0lAWXIohdv_lozvSe4QhK7TZVjsEOR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- malwarescore=0 bulkscore=0 phishscore=0 priorityscore=1501 suspectscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
- definitions=main-2404100130
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudehiedguddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
 
-On Thu,  4 Apr 2024 18:36:40 +0200
-David Hildenbrand <david@redhat.com> wrote:
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> Now that make_folio_secure() may only set PG_arch_1 for small folios,
-> let's convert relevant remaining UV code to only work on (small) folios
-> and simply reject large folios early. This way, we'll never end up
-> touching PG_arch_1 on tail pages of a large folio in UV code.
-> 
-> The folio_get()/folio_put() for functions that are documented to already
-> hold a folio reference look weird and it should probably be removed.
-> Similarly, uv_destroy_owned_page() and uv_convert_owned_from_secure()
-> should really consume a folio reference instead. But these are cleanups for
-> another day.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/include/asm/page.h |  1 +
->  arch/s390/kernel/uv.c        | 39 +++++++++++++++++++++---------------
->  2 files changed, 24 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-> index 54d015bcd8e3..b64384872c0f 100644
-> --- a/arch/s390/include/asm/page.h
-> +++ b/arch/s390/include/asm/page.h
-> @@ -214,6 +214,7 @@ static inline unsigned long __phys_addr(unsigned long x, bool is_31bit)
->  #define pfn_to_phys(pfn)	((pfn) << PAGE_SHIFT)
->  
->  #define phys_to_page(phys)	pfn_to_page(phys_to_pfn(phys))
-> +#define phys_to_folio(phys)	page_folio(phys_to_page(phys))
->  #define page_to_phys(page)	pfn_to_phys(page_to_pfn(page))
->  #define folio_to_phys(page)	pfn_to_phys(folio_pfn(folio))
->  
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index adcbd4b13035..9c0113b26735 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -134,14 +134,17 @@ static int uv_destroy_page(unsigned long paddr)
->   */
->  int uv_destroy_owned_page(unsigned long paddr)
->  {
-> -	struct page *page = phys_to_page(paddr);
-> +	struct folio *folio = phys_to_folio(paddr);
->  	int rc;
->  
-> -	get_page(page);
-> +	if (unlikely(folio_test_large(folio)))
-> +		return 0;
+The Power Allocator governor really only wants to be called once per
+thermal zone update and it does a special check to skip the extra,
+from its perspective, invocations of the .throttle() callback.
 
-please add a comment here to explain why it's ok to just return 0
-here...
+Make it use .manage() instead of .throttle().
 
-> +
-> +	folio_get(folio);
->  	rc = uv_destroy_page(paddr);
->  	if (!rc)
-> -		clear_bit(PG_arch_1, &page->flags);
-> -	put_page(page);
-> +		clear_bit(PG_arch_1, &folio->flags);
-> +	folio_put(folio);
->  	return rc;
->  }
->  
-> @@ -169,14 +172,17 @@ int uv_convert_from_secure(unsigned long paddr)
->   */
->  int uv_convert_owned_from_secure(unsigned long paddr)
->  {
-> -	struct page *page = phys_to_page(paddr);
-> +	struct folio *folio = phys_to_folio(paddr);
->  	int rc;
->  
-> -	get_page(page);
-> +	if (unlikely(folio_test_large(folio)))
-> +		return 0;
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/thermal/gov_power_allocator.c |   24 +++++++-----------------
+ 1 file changed, 7 insertions(+), 17 deletions(-)
 
-... and here
+Index: linux-pm/drivers/thermal/gov_power_allocator.c
+===================================================================
+--- linux-pm.orig/drivers/thermal/gov_power_allocator.c
++++ linux-pm/drivers/thermal/gov_power_allocator.c
+@@ -395,7 +395,7 @@ static void divvy_up_power(struct power_
+ 	}
+ }
+ 
+-static int allocate_power(struct thermal_zone_device *tz, int control_temp)
++static void allocate_power(struct thermal_zone_device *tz, int control_temp)
+ {
+ 	struct power_allocator_params *params = tz->governor_data;
+ 	unsigned int num_actors = params->num_actors;
+@@ -410,7 +410,7 @@ static int allocate_power(struct thermal
+ 	int i = 0, ret;
+ 
+ 	if (!num_actors)
+-		return -ENODEV;
++		return;
+ 
+ 	/* Clean all buffers for new power estimations */
+ 	memset(power, 0, params->buffer_size);
+@@ -471,8 +471,6 @@ static int allocate_power(struct thermal
+ 				      num_actors, power_range,
+ 				      max_allocatable_power, tz->temperature,
+ 				      control_temp - tz->temperature);
+-
+-	return 0;
+ }
+ 
+ /**
+@@ -745,40 +743,32 @@ static void power_allocator_unbind(struc
+ 	tz->governor_data = NULL;
+ }
+ 
+-static int power_allocator_throttle(struct thermal_zone_device *tz,
+-				    const struct thermal_trip *trip)
++static void power_allocator_manage(struct thermal_zone_device *tz)
+ {
+ 	struct power_allocator_params *params = tz->governor_data;
++	const struct thermal_trip *trip = params->trip_switch_on;
+ 	bool update;
+ 
+ 	lockdep_assert_held(&tz->lock);
+ 
+-	/*
+-	 * We get called for every trip point but we only need to do
+-	 * our calculations once
+-	 */
+-	if (trip != params->trip_max)
+-		return 0;
+-
+-	trip = params->trip_switch_on;
+ 	if (trip && tz->temperature < trip->temperature) {
+ 		update = tz->passive;
+ 		tz->passive = 0;
+ 		reset_pid_controller(params);
+ 		allow_maximum_power(tz, update);
+-		return 0;
++		return;
+ 	}
+ 
+ 	tz->passive = 1;
+ 
+-	return allocate_power(tz, params->trip_max->temperature);
++	allocate_power(tz, params->trip_max->temperature);
+ }
+ 
+ static struct thermal_governor thermal_gov_power_allocator = {
+ 	.name		= "power_allocator",
+ 	.bind_to_tz	= power_allocator_bind,
+ 	.unbind_from_tz	= power_allocator_unbind,
+-	.throttle	= power_allocator_throttle,
++	.manage		= power_allocator_manage,
+ 	.update_tz	= power_allocator_update_tz,
+ };
+ THERMAL_GOVERNOR_DECLARE(thermal_gov_power_allocator);
 
-> +
-> +	folio_get(folio);
->  	rc = uv_convert_from_secure(paddr);
->  	if (!rc)
-> -		clear_bit(PG_arch_1, &page->flags);
-> -	put_page(page);
-> +		clear_bit(PG_arch_1, &folio->flags);
-> +	folio_put(folio);
->  	return rc;
->  }
->  
-> @@ -457,33 +463,34 @@ EXPORT_SYMBOL_GPL(gmap_destroy_page);
->   */
->  int arch_make_page_accessible(struct page *page)
->  {
-> +	struct folio *folio = page_folio(page);
->  	int rc = 0;
->  
-> -	/* Hugepage cannot be protected, so nothing to do */
-> -	if (PageHuge(page))
-> +	/* Large folios cannot be protected, so nothing to do */
-> +	if (unlikely(folio_test_large(folio)))
->  		return 0;
->  
->  	/*
->  	 * PG_arch_1 is used in 3 places:
->  	 * 1. for kernel page tables during early boot
->  	 * 2. for storage keys of huge pages and KVM
-> -	 * 3. As an indication that this page might be secure. This can
-> +	 * 3. As an indication that this small folio might be secure. This can
->  	 *    overindicate, e.g. we set the bit before calling
->  	 *    convert_to_secure.
->  	 * As secure pages are never huge, all 3 variants can co-exists.
->  	 */
-> -	if (!test_bit(PG_arch_1, &page->flags))
-> +	if (!test_bit(PG_arch_1, &folio->flags))
->  		return 0;
->  
-> -	rc = uv_pin_shared(page_to_phys(page));
-> +	rc = uv_pin_shared(folio_to_phys(folio));
->  	if (!rc) {
-> -		clear_bit(PG_arch_1, &page->flags);
-> +		clear_bit(PG_arch_1, &folio->flags);
->  		return 0;
->  	}
->  
-> -	rc = uv_convert_from_secure(page_to_phys(page));
-> +	rc = uv_convert_from_secure(folio_to_phys(folio));
->  	if (!rc) {
-> -		clear_bit(PG_arch_1, &page->flags);
-> +		clear_bit(PG_arch_1, &folio->flags);
->  		return 0;
->  	}
->  
+
 
