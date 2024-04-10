@@ -1,91 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8993815ECD2;
-	Wed, 10 Apr 2024 13:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EB115E7FD;
+	Wed, 10 Apr 2024 13:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712755364; cv=none; b=COI0WN0pijHgZYQY3fG5wPMz3lKa9/hmW4ateSjdvxxVO9by3gpL1ctsS7i3vODtxU+zQST8Wmc3wS1aov0C/7JbHfK277SZbw9tf1isgrGZNVWo+02kfgiP4WoBZNY+mOxCy0CUJxARdArwAfP7Gjx30rtbRol4qANb19y1IMk=
+	t=1712755446; cv=none; b=Pj/pvOy8GxzMrR5yb5Z3ECKagAFsbH6hYP4K4nMAgZjpeUU5dgErz+epnhXoH4pfRFmjxS1hPICj0Pf24Ni5THZYC07lGiDzdUut4sVM2WqefP2X1bKNb3V8JRvxfoo1CEb3mIM037g9dmKI4KJkKKthOqldipQGL0Co3UDvrY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712755364; c=relaxed/simple;
-	bh=03D0DQleB9vxk8wekat4Pmx/RVLXpwIuxViW/1q3BPE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=CnQr18+SNjO7Rdyq5Zpg4f52quwewq+38ykfmpJhVCNDeUMd5lzKaXB7fWdrQp6JqHuK4w25QJWe88eAhqeR9TjBBc5xzGJzwXPq9ftCLC2wJh6bEhqLHauCsE+y/ZZpu8YH+ATeu4aIFibf41h9Ps50cJSNedbgpbFF7pa8jVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cPub9SDT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cPub9SDT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FF6C433C7;
-	Wed, 10 Apr 2024 13:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712755364;
-	bh=03D0DQleB9vxk8wekat4Pmx/RVLXpwIuxViW/1q3BPE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=cPub9SDTJInpTD3h3i5Bm0XMXXDO2+Pu3RoVexjDEgpyIom8aOKTpUnOi2fKfG0v/
-	 Z21+mTqNAwQ3B0ZxoDkdf+ioemD5P4CiEswiaqPYR2YMFl0r6A7CF6u2sRUasBR0fI
-	 q3A3FvUeBdN0WnAVvvxKzvY9zqoV+OKEv93rhNpW8YB4lul59+n6aXt7SE73+lxvAm
-	 UUp6giFw1XTo2UdIUxitRqf07eVX36sLFl2qCFX3CNINltqlz6x/1WSFC209Y5iFfx
-	 f9yEfchlx+Wdet8CZIpQ7odYqnkYwAV2OIENdLL2IhQRy+7gqbGhgMQRycR3Pyrrb5
-	 3f7InogKyfqbQ==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org
-Cc: conor@kernel.org, Conor Dooley <conor.dooley@microchip.com>, Miguel
- Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson
- Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Nathan
- Chancellor <nathan@kernel.org>, Nick Desaulniers
- <ndesaulniers@google.com>, rust-for-linux@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-Subject: Re: [PATCH v3 0/1] RISC-V: enable rust
-In-Reply-To: <20240409-unsaddle-skittle-c93eb77732bb@spud>
-References: <20240409-unsaddle-skittle-c93eb77732bb@spud>
-Date: Wed, 10 Apr 2024 15:22:40 +0200
-Message-ID: <871q7d73of.fsf@all.your.base.are.belong.to.us>
+	s=arc-20240116; t=1712755446; c=relaxed/simple;
+	bh=smc0dd2Hljy1BFflS7XGq1OlXzh6nMSx794vVITK+uM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gyLYDWS3oVYaFdvYuDqTElkwvUvWx1vwQtQjz4+xxQhdiXGfIKGU+kg61NpPQjmLP7aO7UnSURRpUFXUNTYqwpeTrE7IevAD0vaouHTtldPnFi9nZHophCcDvI1+Hr8Yi+TTbF7ym0MGKDK8qW8sVMR1QROQm21zFxPe1O72LIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VF3Qk73l2z67G9n;
+	Wed, 10 Apr 2024 21:22:22 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB063140CF4;
+	Wed, 10 Apr 2024 21:24:00 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 10 Apr
+ 2024 14:24:00 +0100
+Date: Wed, 10 Apr 2024 14:23:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<rmk+kernel@armlinux.org.uk>
+Subject: Re: [RFC PATCH 3/4] ACPI: processor: refactor
+ acpi_processor_get_info: isolate acpi_{map|unmap}_cpu under
+ CONFIG_ACPI_HOTPLUG_CPU
+Message-ID: <20240410142359.00003dea@Huawei.com>
+In-Reply-To: <20240409150536.9933-4-miguel.luis@oracle.com>
+References: <20240409150536.9933-1-miguel.luis@oracle.com>
+	<20240409150536.9933-4-miguel.luis@oracle.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Conor Dooley <conor@kernel.org> writes:
+On Tue,  9 Apr 2024 15:05:32 +0000
+Miguel Luis <miguel.luis@oracle.com> wrote:
 
-> From: Conor Dooley <conor.dooley@microchip.com>
->
-> I've intentionally not turned on the gcc support, as discussed on
-> v1. I've also switched over to using the target, but it is a bit heavier
-> than the one arm64 seems to be using. RISC-V has fewer targets available
-> and this was the closest. I preserved the redzone disabling, just moved
-> into the Makefile. Any comment from Gary or the LLVM lads on the target
-> would be great I think:
-> https://github.com/rust-lang/rust/blob/master/compiler/rustc_target/src/s=
-pec/targets/riscv64imac_unknown_none_elf.rs
-> arm64 is using:
-> https://github.com/rust-lang/rust/blob/master/compiler/rustc_target/src/s=
-pec/targets/aarch64_unknown_none.rs
->
-> I was gonna send this yesterday, but found out last minute I had invalid
-> code in the target generation script. The kernel test robot had given my
-> branch the global all-clear - the rust coverage with all the
-> "depends on !FOO" must really limit the build coverage. I built for x86
-> with rust enabled locally this time to make sure..
->
-> As this as lifted from the state of the Rust-for-Linux tree, the commit
-> messages from there cannot be preserved, so these patches have commit
-> messages that I wrote.
->
-> I've tested this on Icicle, and the modules seem to work as expected.
-> Unfortunately there appear to be implicit 32-bit divisions (or similar)
-> in core Rust code, so, as in the downstream Rust-for-Linux tree, Rust is
-> only enabled for 64-bit.
+> mapping and unmaping a cpu at the stage of extra cpu enumeration is
+> architecture specific which depends on CONFIG_ACPI_HOTPLUG_CPU so let's
+> isolate that functionality from architecture independent one.
 
-Nice, works with my simple test on VisionFive 2 as well! Cool to have
-Rust support in! Now, BTF just needs to be supported, and I can have
-Rust *and* BPF in my kernels! :-P \o/
+Should we consider renaming acpi_map_cpu() to arch_acpi_map_cpu()
+to make the arch specific nature of that call more obvious?
+I think that has caused more confusion in the discussion than
+whether it is hotplug specific or not.
 
-Tested-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+As mentioned in patch 2, fairly sure this needs to go before that
+patch.
+
+Jonathan
+
+> 
+> Signed-off-by: Miguel Luis <miguel.luis@oracle.com>
+> ---
+>  drivers/acpi/acpi_processor.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> index 9ea58b61d741..c6e2f64a056b 100644
+> --- a/drivers/acpi/acpi_processor.c
+> +++ b/drivers/acpi/acpi_processor.c
+> @@ -194,8 +194,21 @@ static void acpi_processor_hotplug_delay_init(struct acpi_processor *pr)
+>  	pr_info("CPU%d has been hot-added\n", pr->id);
+>  	pr->flags.need_hotplug_init = 1;
+>  }
+> +static int acpi_processor_hotplug_map_cpu(struct acpi_processor *pr)
+> +{
+> +	return acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+> +}
+> +static void acpi_processor_hotplug_unmap_cpu(struct acpi_processor *pr)
+> +{
+> +	acpi_unmap_cpu(pr->id);
+> +}
+>  #else
+>  static void acpi_processor_hotplug_delay_init(struct acpi_processor *pr) {}
+> +static int acpi_processor_hotplug_map_cpu(struct acpi_processor *pr)
+> +{
+> +	return 0;
+> +}
+> +static void acpi_processor_hotplug_unmap_cpu(struct acpi_processor *pr) {}
+>  #endif /* CONFIG_ACPI_HOTPLUG_CPU */
+>  
+>  /* Enumerate extra CPUs */
+> @@ -215,13 +228,13 @@ static int acpi_processor_enumerate_extra(struct acpi_processor *pr)
+>  	cpu_maps_update_begin();
+>  	cpus_write_lock();
+>  
+> -	ret = acpi_map_cpu(pr->handle, pr->phys_id, pr->acpi_id, &pr->id);
+> +	ret = acpi_processor_hotplug_map_cpu(pr);
+>  	if (ret)
+>  		goto out;
+>  
+>  	ret = arch_register_cpu(pr->id);
+>  	if (ret) {
+> -		acpi_unmap_cpu(pr->id);
+> +		acpi_processor_hotplug_unmap_cpu(pr);
+>  		goto out;
+>  	}
+>  
+
