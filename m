@@ -1,122 +1,203 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D4F154BF7;
-	Wed, 10 Apr 2024 08:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F32D339AB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712738367; cv=none; b=qeKOQY0WNbejj4T3h3o0uFhOQmWhLXmFFxqdcuaN/uy8mvSNNOW6WE29omsi4Oan4b0tz65MPGDVw6DI8RIkKDlDwt5EMaD2y5zcQ+SFGA24sC8WsrewugdUaSly+1XB22yDnl8CcF4KC8vnlXLveKVyBhx5TYqqNTg9CQignY4=
+	t=1712738453; cv=none; b=hLNmsm1YPeTvJ/rey5JnL5OTuTRxFrz1Oeywi/aDsFtoDYLIccvVr2cDC0GR4DTnLFtA8ebzm4YJDGq6/MZSLQyclrAvgl7CUA3zBKX+IddDThcRGLfkyQGoCcM2dhgOwlwdc33VLTP/fw1wEMboJE/O8vFT25f5m79xK5ajVyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712738367; c=relaxed/simple;
-	bh=ZO2PG/fMQB+8VlbmBQVf9zcfZmh9qOkdCf4vHQD3Px4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BYqA0l70I+izV+kSHXzpA1EKgBW2pBZEixp09gB1t4Kx1HZdxDmq5zwk4ZqUxs2xuIJxpVYIRzkwF5KJJiBHaWc4mOkmt3CrfLyEdI3n+WxGspMut5uV4F9HKjfH/ptjujUdeJfRaQ5aPqi93NdCcfLvgNh/qqs99YZEzlqI79U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 43A8c4T8014703;
-	Wed, 10 Apr 2024 16:38:04 +0800 (GMT-8)
-	(envelope-from liu.yeC@h3c.com)
-Received: from DAG6EX11-BJD.srv.huawei-3com.com (unknown [10.153.34.13])
-	by mail.maildlp.com (Postfix) with ESMTP id CB763235AF7B;
-	Wed, 10 Apr 2024 16:40:14 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX11-BJD.srv.huawei-3com.com (10.153.34.13) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Wed, 10 Apr 2024 16:38:06 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Wed, 10 Apr 2024 16:38:06 +0800
-From: Liuye <liu.yeC@h3c.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>,
-        "dianders@chromium.org" <dianders@chromium.org>,
-        "jason.wessel@windriver.com"
-	<jason.wessel@windriver.com>,
-        "jirislaby@kernel.org" <jirislaby@kernel.org>,
-        "kgdb-bugreport@lists.sourceforge.net"
-	<kgdb-bugreport@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org"
-	<linux-serial@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTog562U5aSNOiBbUEFUQ0ggVjEwXSBr?=
- =?utf-8?Q?db:_Fix_the_deadlock_issue_in_KDB_debugging.?=
-Thread-Topic: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENIIFYxMF0ga2RiOiBGaXgg?=
- =?utf-8?Q?the_deadlock_issue_in_KDB_debugging.?=
-Thread-Index: AQHaiuuw81gSSyk26Eq+v/7KfdTz2LFgdGkAgACJimD//36cAIAAh7Hw//98qQCAAIohAP//mg0AABEeCaA=
-Date: Wed, 10 Apr 2024 08:38:06 +0000
-Message-ID: <8f0487eaf15442f5b0bf7a6cafa5b973@h3c.com>
-References: <20240409020326.2125332-1-liu.yec@h3c.com>
- <20240410020615.2885000-1-liu.yec@h3c.com>
- <2024041014-padlock-aggregate-4705@gregkh>
- <0c004dd44ad5478eba9451186f4ec962@h3c.com>
- <2024041001-retaliate-cork-1fe5@gregkh>
- <5c659d5f41ff4cf69ea9467b62d74e9b@h3c.com>
- <2024041022-electable-unblock-5077@gregkh>
- <567857bab013409ca53fa7c36292f4b0@h3c.com>
- <2024041007-busload-equipment-b673@gregkh>
-In-Reply-To: <2024041007-busload-equipment-b673@gregkh>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1712738453; c=relaxed/simple;
+	bh=tPkV/dgJUzieymppUjyKRIwaMmxFkge2PvtDcrZP96c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=E0nWLm88QmjB4liV8ocfMIq5BVhKRS/vShSlVFYKip755Un0HdXEhD77YRzx+NINbSXVEZxyxMyeEsR4Xvt/Uku0H4MRLJtVwgMZRdFNEDT6NYeuB5iDI5ClW5Ro8DqLznR8IdS4MT4qMrs/s6yndm/w//trky+y8LgaXpCvgqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WHSfrO/W; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WHSfrO/W"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5aa12c21ff4so2577615eaf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 01:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712738450; x=1713343250; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NAyow8X3gkrKIXrdZZsBjPykepVjWpYDrdgw89x4pGE=;
+        b=WHSfrO/WmVJJpSxVIeFYxhZhDTkoW9ZEIDwXDD1EMR5DCkIsE51SmS+nKOzzqOZrM2
+         m0/hVeE3mNrx+wV2CShm/ZA3/3pbkXKIHTD2jpgu2HqYm9bgrBcHnaVAfMEM0FBpU9IE
+         SSEBFRMzfA9K5A6Ok6mZY3Ju7NDCEG9WX1npo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712738450; x=1713343250;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NAyow8X3gkrKIXrdZZsBjPykepVjWpYDrdgw89x4pGE=;
+        b=q9uCgcV7Nc1o09p8bkrXuu8WNQmzNt9HahTVOHp1HM9n4KfugPFi2vRJf4HKfiC1MR
+         9C3p3D1xlT4K4txpwWNMlj6At5yRsupkc4pzDibpunc4R8kn/OIWTh8wKLAuwm16s1Vx
+         Bsnhlw8i31KS51U5TurL5kcxvwXsc4pxUusNoch51lRkwNcu3SfBS7FZoQdX8WdMAW1W
+         VhTuJWIQjat2L+LK9mma7U/FrjgP7m/KCfiUoi/xNusS0ftOg7TFCNhBU+E5ykv2ZZXe
+         YdgTIC0dfNSAJMPFuCooAchJuI6XHtcHWq9uGgNpxURZXrfPM3Oeen2R15CkSofaZ2gy
+         zAjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOeHP2iRhjyoV2GQ+XxqPc9QVdAR/+NhTViF0UYeFpWGtBTEfr5VC7LhFhwNT/V3m41FqbNpyS3CX8Cv9bMJ62IbqoF3tmpFH1Dk3u
+X-Gm-Message-State: AOJu0Yxvi5lCEh0mzgqybWmLLenP+PejcQd7bRln0Fv+UtoNKk5jTWcc
+	+lkOONmD7pvr5ixEcOcocR/pAbNamIpvQ7ZbdFbCVsBX/z6Bs6p+INCBlceXaQ==
+X-Google-Smtp-Source: AGHT+IGQIGRSVbir8tD+7BU7dQc6yvCondb+sBONRHguGITH+9jJFPC17Z5wLbgHntSupY3dHcRiGg==
+X-Received: by 2002:a05:6870:700c:b0:22e:d2b2:25fe with SMTP id u12-20020a056870700c00b0022ed2b225femr2049905oae.1.1712738450103;
+        Wed, 10 Apr 2024 01:40:50 -0700 (PDT)
+Received: from yuanhsinte1.c.googlers.com (88.216.124.34.bc.googleusercontent.com. [34.124.216.88])
+        by smtp.gmail.com with ESMTPSA id i6-20020a056a00004600b006e04ca18c2bsm9606330pfk.196.2024.04.10.01.40.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 01:40:49 -0700 (PDT)
+From: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Date: Wed, 10 Apr 2024 08:40:45 +0000
+Subject: [PATCH v2] arm64: dts: mediatek: mt8192: Add missing trip point in
+ thermal zone
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 43A8c4T8014703
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240410-upstream-torvalds-master-v2-1-679777847b63@chromium.org>
+X-B4-Tracking: v=1; b=H4sIAI1QFmYC/42NTQ6DIBBGr2JYdxqg2L9V79G4IDgoSREzg6SN8
+ e6lnqDL9yXvfatgpIAs7s0qCEvgkKYK+tAIN9ppQAh9ZaGlNtIoCcvMmdBGyImKffUM0XJGAiM
+ tet8adXYXUfWZ0If3nn52lcfAVfnsT0X91j+iRYGCa6vxJk9eOnQPN1KKYYnHRIPotm37Aoofg
+ AjDAAAA
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
+ =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
+ Balsam CHIHI <bchihi@baylibre.com>, 
+ Alexandre Mergnat <amergnat@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ Hsin-Te Yuan <yuanhsinte@chromium.org>
+X-Mailer: b4 0.12.4
 
-Pk9uIFdlZCwgQXByIDEwLCAyMDI0IGF0IDA2OjMwOjU5QU0gKzAwMDAsIExpdXllIHdyb3RlOg0K
-Pj4gPk9uIFdlZCwgQXByIDEwLCAyMDI0IGF0IDA2OjEwOjEwQU0gKzAwMDAsIExpdXllIHdyb3Rl
-Og0KPj4gPj4gPk9uIFdlZCwgQXByIDEwLCAyMDI0IGF0IDA1OjU0OjA4QU0gKzAwMDAsIExpdXll
-IHdyb3RlOg0KPj4gPj4gPj4gPj4gU2lnbmVkLW9mZi1ieTogR3JlZyBLSCA8Z3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc+DQo+PiA+PiA+PiA+DQo+PiA+PiA+PiA+SSBoYXZlIE5PVCBzaWduZWQg
-b2ZmIG9uIHRoaXMgY29tbWl0LiAgWW91IGp1c3Qgc2FpZCB0aGF0IEkgbWFkZSBhIGxlZ2FsIHN0
-YXRlbWVudCBhYm91dCB0aGlzIGNvbW1pdCB3aXRob3V0IHRoYXQgYWN0dWFsbHkgYmVpbmcgdHJ1
-ZT8/Pw0KPj4gPj4gPj4gPg0KPj4gPj4gPj4gPlNvcnJ5LCBidXQgdGhhdCBpcyBmbGF0IG91dCBu
-b3QgYWNjZXB0YWJsZSBhdCBhbGwuICBQbGVhc2UgZ28gd29yayB3aXRoIHlvdXIgY29tcGFueSBs
-YXd5ZXJzIHRvIGZpZ3VyZSBvdXQgd2hhdCB5b3UgZGlkIGFuZCBjb21lIGJhY2sgd2l0aCBhbiBl
-eHBsYWluYXRpb24gb2YgZXhhY3RseSB3aGF0IHRoaXMgaXMgYW5kIGhvdyBpdCB3aWxsIG5vdCBo
-YXBwZW4gYWdhaW4uDQo+PiA+PiA+PiA+DQo+PiA+PiA+PiANCj4+ID4+ID4+ID4+IFNpZ25lZC1v
-ZmYtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4+ID4+
-ID4+ID4NCj4+ID4+ID4+ID4+IFY5IC0+IFYxMCA6IEFkZCBTaWduZWQtb2ZmLWJ5IG9mIEdyZWcg
-S0ggYW5kIEFuZHkgU2hldmNoZW5rbywgDQo+PiA+PiA+PiA+PiBBY2tlZC1ieSBvZiBEYW5pZWwg
-VGhvbXBzb24NCj4+ID4+ID4+ID4NCj4+ID4+ID4+ID5IdWg/IQ0KPj4gPj4gPj4gDQo+PiA+PiA+
-PiBAZ3JlZyBrLWgg77yaDQo+PiA+PiA+PiBAQW5keSBTaGV2Y2hlbmtvIO+8mg0KPj4gPj4gPj4g
-DQo+PiA+PiA+PiBTb3JyeSwgaXQgd2FzIG15IG1pc3Rha2UuIEkgbWlzdW5kZXJzdG9vZCB0aGUg
-bWVhbmluZyBvZiAic2lnbmVkLW9mZi1ieSIsIHdoaWNoIGxlZCB0byB1c2FnZSBpc3N1ZXMuDQo+
-PiA+PiA+PiANCj4+ID4+ID4+IEkgd2FudCB0byBleHByZXNzIG15IGdyYXRpdHVkZSBmb3IgdGhl
-IHN1Z2dlc3Rpb25zIG9uIHRoZSBwYXRjaCBmcm9tIHRoZSB0d28gb2YgeW91LiANCj4+ID4+ID4+
-IA0KPj4gPj4gPj4gV2hhdCBkbyBJIG5lZWQgdG8gZG8gbm93PyBSZWxlYXNlIFBBVENIIFYxMSBh
-bmQgZGVsZXRlIHRoZXNlIHR3byBzaWduYXR1cmVzIGluIGl0ID8NCj4+ID4+ID4NCj4+ID4+ID5B
-cyBJIHNhaWQsIGdvIHdvcmsgd2l0aCB5b3VyIGNvcnBvcmF0ZSBsYXd5ZXJzIG9uIHRoaXMgdG8g
-dW5kZXJzdGFuZCB3aGF0IGp1c3QgaGFwcGVuZWQgYW5kIGhhdmUgdGhlbSBsZXQgdXMga25vdyBo
-b3cgaXQgd2lsbCBub3QgaGFwcGVuIGFnYWluLg0KPj4gPj4gDQo+PiA+PiBJJ20gdmVyeSBzb3Jy
-eSwgdGhpcyBpcyBteSBmaXJzdCB0aW1lIHN1Ym1pdHRpbmcgYSBwYXRjaCBhbmQgSSBtYWRlIGEg
-c2lnbmlmaWNhbnQgbWlzdGFrZSBpbiB1c2luZyAiU2lnbmVkLW9mZi1ieSIuIEkgbm93IHVuZGVy
-c3RhbmQgdGhlIG1lYW5pbmcgb2YgdGhpcyBmaWVsZCBhbmQgd2lsbCBub3QgbWFrZSB0aGUgc2Ft
-ZSBtaXN0YWtlIGFnYWluIGluIHRoZSBmdXR1cmUuDQo+PiA+DQo+PiA+VW5kZXJzdG9vZCwgYnV0
-IHlvdSBzdGlsbCBuZWVkIHRvIGdvIHdvcmsgd2l0aCB5b3VyIGNvcnBvcmF0ZSBsZWdhbCBncm91
-cCBzbyB0aGF0IHlvdSBhbGwgZW5zdXJlIHRoaXMgZG9lcyBub3QgaGFwcGVuIGFnYWluIGZvciBh
-bnkgb3RoZXIgZGV2ZWxvcGVyIGluIHlvdXIgY29tcGFueSwgYXMgSSBhbSBzdXJlIHRoZXkgd2ls
-bCB3YW50IHRvIGtub3cgYWJvdXQgdGhpcy4NCj4+IA0KPj4gT2ssIEkgd2lsbCByZXBvcnQgdGhp
-cyB0byB0aGUgY29tcGFueS4gQXQgdGhlIHNhbWUgdGltZSwgSSB3aWxsIGFkZCBhbiBhdWRpdCBt
-ZWNoYW5pc20gdG8gdGhlIHBhdGNoIHN1Ym1pc3Npb24gcHJvY2Vzcy4gVGhhbmtzIGFnYWluIGZv
-ciB5b3VyIHJlbWluZGVyLg0KPj4gDQo+PiBJIHdpbGwgcmVtb3ZlIHRoaXMgcGFydCBpbiBQQVRD
-SCBWMTEuDQo+DQo+Tm8sIHlvdSB3aWxsIG5lZWQgdG8gZG8gdGhpcyBiZWZvcmUgd2UgY2FuIGFj
-Y2VwdCB5b3VyIGNoYW5nZS4gIEFuZCBzb21lIHNvcnQgb2YgdmVyaWZpY2F0aW9uIHRoYXQgdGhp
-cyBpcyBub3cgaW4gcGxhY2UgcHJvcGVybHkgZm9yIG9idmlvdXMgcmVhc29ucy4NCg0KV2hhdCBk
-b2VzICJObyIgbWVhbj8gQXJlIHlvdSB0YWxraW5nIGFib3V0IGdpdmluZyBmZWVkYmFjayB0byB0
-aGUgY29tcGFueSB0byBwcmV2ZW50IHRoaXMgaW5jaWRlbnQgZnJvbSBoYXBwZW5pbmc/IE9yIHN1
-Ym1pdHRpbmcgUEFUQ0ggVjExPyBJZiBpdCdzIHRoZSBmb3JtZXIsIGhvdyBzaG91bGQgSSBnaXZl
-IHlvdSBmZWVkYmFjaz8iDQo=
+According to Documentation/driver-api/thermal/power_allocator.rst, there
+should be two passive trip points. Adding the missing trip point to
+ensure that the governor works optimally.
+
+Fixes: c7a728051f4e ("arm64: dts: mediatek: mt8192: Add thermal nodes and thermal zones")
+Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+---
+Changes in v2:
+- Clearify the reason of adding another passive trip point
+- Link to v1: https://lore.kernel.org/r/20240410-upstream-torvalds-master-v1-1-852e903f0cec@chromium.org
+---
+ arch/arm64/boot/dts/mediatek/mt8192.dtsi | 40 ++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192.dtsi b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+index 05e401670bced..08d8bccc84669 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192.dtsi
+@@ -1959,6 +1959,11 @@ cpu0-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU0>;
+ 
+ 			trips {
++				cpu0_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu0_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -1989,6 +1994,11 @@ cpu1-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU1>;
+ 
+ 			trips {
++				cpu1_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu1_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2019,6 +2029,11 @@ cpu2-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU2>;
+ 
+ 			trips {
++				cpu2_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu2_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2049,6 +2064,11 @@ cpu3-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_LITTLE_CPU3>;
+ 
+ 			trips {
++				cpu3_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu3_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2079,6 +2099,11 @@ cpu4-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU0>;
+ 
+ 			trips {
++				cpu4_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu4_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2109,6 +2134,11 @@ cpu5-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU1>;
+ 
+ 			trips {
++				cpu5_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu5_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2139,6 +2169,11 @@ cpu6-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU2>;
+ 
+ 			trips {
++				cpu6_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu6_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+@@ -2169,6 +2204,11 @@ cpu7-thermal {
+ 			thermal-sensors = <&lvts_mcu MT8192_MCU_BIG_CPU3>;
+ 
+ 			trips {
++				cpu7_thres: trip-point {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
+ 				cpu7_alert: trip-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+
+---
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+change-id: 20240410-upstream-torvalds-master-40aeff5416c7
+
+Best regards,
+-- 
+Hsin-Te Yuan <yuanhsinte@chromium.org>
+
