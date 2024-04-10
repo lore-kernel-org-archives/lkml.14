@@ -1,269 +1,373 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22D51802CF
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D7F18132D;
+	Wed, 10 Apr 2024 17:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712769607; cv=none; b=Rfw/cJJdntnKjdaRHFeNKho2YuFcZZBU9AH4707Qd/hrzX0Vwc2dXH5pL8CRpQ1EH/Rryj7VDllKm1K9ZGPHD4khPuQSat4ZQ41WiGJ4d7dEuGocsr+Tk2hl25MOtwDyk4DkoCH34u9gZROx0KG5Vk3sYqDgnEGYk2jb1UXOqyA=
+	t=1712769608; cv=none; b=ThZnGRcw0PYscDC/vt4kzwrVWUyX8II7PvsEkEE16rbRqKTqe/+/3w/fvblSrYL8ae5Avz/yWDasKcqv35Vde6sKrBTCt2VMZ1gt+3usDkP58tPfLPLqEmwzgrI+Hj+O1ITJdIb7YC6HLS4wx2QYdQnRHX6McCE6vEmlU4dVkcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712769607; c=relaxed/simple;
-	bh=xSLeHxyYi8Zxdg+XSdX3dMDtUYqkIt1D68inGtdRHxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sp3YCwLrHejZ2uHHpX5mLQV/hUDWs9JnEJN11pLc+7N6Dp1xTVThisnR/SUZ6AlPdBHPXokIlXBH8oE6TY1Wj9Su276HiSMkP8dAsFKialEFXD1NpGrdQ+pnq113bxylHDJRQHhH8gJErzNV2aMDd01AoFzCRKqfCdKgLVl0HCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=XdFmXy6K; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1712769608; c=relaxed/simple;
+	bh=AnKY2JWgMzB46NzQdPOHpHpxSV95ugEa2qCrvKqtvRE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p5dhT1yTNq514oz9Q9fv6FXdBxiPdzhBAxfhAU/OcUBZXMZn3CxHPfS1IfXzLRti3AiP5lbjDVOFcEBLx/4oQ1LPyyeTfLI35AZTmeHsOE74SUNQWyZLvZjl4R5j41u5N76oxCWd/HIdH7mCxL5hzTHjQwkramPOOb3BpaQhF6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBjFYA/z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="XdFmXy6K"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4dabbf19e1eso1697626e0c.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1712769605; x=1713374405; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uXp9+dQgY3sRjebCLVAq5mxFK7MYfaxXUQNws49jGV4=;
-        b=XdFmXy6KzpTmKNsRrqx8zYLDpGJJ76Vn7rExvv6jnKs5X+Kry3rtKH7KYrtXewsjf7
-         tdJ1mQMeXPhDzeI5iiE7H2vIF+QBwMip/FWvuPSDYvW2/JezU8keMdJLsVb0G3BVobSz
-         zd2LD8gFTcHCztSRHt/1/QUjS1WTBzJ9dfLXc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712769605; x=1713374405;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uXp9+dQgY3sRjebCLVAq5mxFK7MYfaxXUQNws49jGV4=;
-        b=K2daTJIBoltdTZWBZg3LzUirA5ygfUmJ7wDrqcb1xdDrv44aGEXf6ZC+uLjXalI0tn
-         NoXaPRD2fr/CHgjF9oCVKbhl+ARGJIl3YpzVrot0Tm0UoA35cTogBBJ57FhduNz+0SSl
-         B9I8XX234MIg83E5NpaKvcNTJjevfItLkTAf7hfRhm6W8QOD+b+ZAzI1NsxPDYIPsF2z
-         L08wjkp/7ThSGM/Y0Q3OO6dlqtVDJAzJDXsG7ZMaixvsbaYFgE27wif6JaVbTzTCCE1x
-         BpkNHcW31/fDcaRRFrzAqau57s8W9W1jpXbyGFF8D6OQSWDGfhozVs2LiqSZR0ohKlvR
-         cvJw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS0eUPdYDkvNp8LIEORxx2cvubQ/hS4b9QDmA0FZdFrvhylysxAQsTKNkwEMbUsQhKIJmnHceU+cOWpL2enEWfGuGPmZiw2sz8uGef
-X-Gm-Message-State: AOJu0Yx+HORGKqArla4rJz39E19Vw+C23BbseYFGpX32X3AiK/aQBpA+
-	gQAB3sSfaZkhFla6eO2XnoAHhm0HBTQjfJRx8Ta+NLQa8FALOVsON62xya0tGQ==
-X-Google-Smtp-Source: AGHT+IEY3UOxmYPFIY3KwG/1cb3j/BDBZlcfFiLayUC49HpEVFgQJsp8CdG87BjXCvX2nZe0J+qBqQ==
-X-Received: by 2002:a05:6122:41e:b0:4c8:8d45:5325 with SMTP id e30-20020a056122041e00b004c88d455325mr2979563vkd.7.1712769604575;
-        Wed, 10 Apr 2024 10:20:04 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
-        by smtp.gmail.com with ESMTPSA id ez17-20020ad45911000000b0069940ecfd39sm4999243qvb.141.2024.04.10.10.19.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 10:20:03 -0700 (PDT)
-Message-ID: <3296d311-5517-423d-b911-2f6d7f2ee626@broadcom.com>
-Date: Wed, 10 Apr 2024 10:19:52 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBjFYA/z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A21C43143;
+	Wed, 10 Apr 2024 17:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712769608;
+	bh=AnKY2JWgMzB46NzQdPOHpHpxSV95ugEa2qCrvKqtvRE=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=aBjFYA/zDEl3/B95BhU7koGOnj3MAKCpgfKzcgIhhVlqctvITgMdMHdCN3IodFd8/
+	 nnBAVMTtOlN2Tj0J1XSi89x+X71wG3B6BD/8Geyc0XoPmOskR+6wUTV9hIcxSmU8hc
+	 65A8pl+hKwx6sENhG+oyNqH+C1nek7jiN70YdGyUCZ0gctlSxVCe56THzPxac4ptJc
+	 g8UT92WIhRye4QWVYeMk/iToQF0Uyv/CLutR70M5Bu9O/eFtVQ6M2WwJWX909f4Z64
+	 Vd79y6uu0hcfmoVeEaGZeYMUvfjeCUKPDo/5G5Sz7Fs9TunV7UsZzR7DQOuagnOB3n
+	 I7a8U/ffpCSUw==
+From: Benjamin Tissoires <bentiss@kernel.org>
+Date: Wed, 10 Apr 2024 19:19:28 +0200
+Subject: [PATCH 08/18] HID: bpf: add in-tree HID-BPF fix for the Huion
+ Kamvas Pro 19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: Covert to exit callback returning void
-To: lizhe <sensor1010@163.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: "rafael@kernel.org" <rafael@kernel.org>,
- "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
- "ray.huang@amd.com" <ray.huang@amd.com>, "marcan@marcan.st"
- <marcan@marcan.st>, "sven@svenpeter.dev" <sven@svenpeter.dev>,
- "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
- "mmayer@broadcom.com" <mmayer@broadcom.com>,
- "bcm-kernel-feedback-list@broadcom.com"
- <bcm-kernel-feedback-list@broadcom.com>,
- "srinivas.pandruvada@linux.intel.com" <srinivas.pandruvada@linux.intel.com>,
- "lenb@kernel.org" <lenb@kernel.org>, "khilman@kernel.org"
- <khilman@kernel.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
- "npiggin@gmail.com" <npiggin@gmail.com>,
- "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
- "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
- "andersson@kernel.org" <andersson@kernel.org>,
- "konrad.dybcio@linaro.org" <konrad.dybcio@linaro.org>,
- "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
- "cristian.marussi@arm.com" <cristian.marussi@arm.com>,
- "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
- "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "angelogioacchino.delregno@collabora.com"
- <angelogioacchino.delregno@collabora.com>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "asahi@lists.linux.dev" <asahi@lists.linux.dev>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
-References: <20240410132247.3587-1-sensor1010@163.com>
- <279401246.446176.1712756559290.JavaMail.root@mail-tracker-145-3ep34-c9h23-5f64cf7787-82gdh>
- <398726f4-3ec3-406d-b154-1f0caad63f02@csgroup.eu>
- <1388632395.447003.1712759604593.JavaMail.root@mail-tracker-145-3ep34-c9h23-5f64cf7787-82gdh>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <1388632395.447003.1712759604593.JavaMail.root@mail-tracker-145-3ep34-c9h23-5f64cf7787-82gdh>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000e5411e0615c13f10"
-
---000000000000e5411e0615c13f10
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240410-bpf_sources-v1-8-a8bf16033ef8@kernel.org>
+References: <20240410-bpf_sources-v1-0-a8bf16033ef8@kernel.org>
+In-Reply-To: <20240410-bpf_sources-v1-0-a8bf16033ef8@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, Peter Hutterer <peter.hutterer@who-t.net>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712769589; l=17046;
+ i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
+ bh=AnKY2JWgMzB46NzQdPOHpHpxSV95ugEa2qCrvKqtvRE=;
+ b=OtaIhr/gVdX9Y8iqPHqNFoWxTbNsUaybKhU4icGFft1e9M256qtFh90zNQ9LdtOW2AWM1twLo
+ eJJ5cVvxUo0AF2HBJ6yKAZK5cjHJqDVkrmOD/OAP+oZSAptGdeRKkpC
+X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
+ pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
+This tablets gets a lot of things wrong:
+- the secondary button is reported through Secondary Tip Switch
+- the third button is reported through Invert
 
+Fortunately, before entering eraser mode, (so Invert = 1),
+the tablet always sends an out-of-proximity event.
+So we can detect that single event and:
+- if there was none but the invert bit was toggled: this is the
+  third button
+- if there was this out-of-proximity event, we are entering
+  eraser mode, and we will until the next out-of-proximity.
 
-On 4/10/2024 7:33 AM, lizhe wrote:
-> Hi，
->       i have already change the definition of exit
->       in struct cpu_freq_driver in include/linux/cpufreq.h
-
-Again, no top-posting and please use HTML. The patch you sent does not 
-indicate that include/linux/cpufreq.h has been updated, so maybe you 
-forgot to "git add include/linux/cpufreq.h" before preparing the patch.
-
-You can verify the list of files changed in your patch by looking at the 
-lines after the "---":
-
+Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
 ---
-  drivers/cpufreq/acpi-cpufreq.c         | 4 +---
-  drivers/cpufreq/amd-pstate.c           | 7 ++-----
-  drivers/cpufreq/apple-soc-cpufreq.c    | 4 +---
-  drivers/cpufreq/bmips-cpufreq.c        | 4 +---
-  drivers/cpufreq/cppc_cpufreq.c         | 3 +--
-  drivers/cpufreq/cpufreq-dt.c           | 3 +--
-  drivers/cpufreq/e_powersaver.c         | 3 +--
-  drivers/cpufreq/intel_pstate.c         | 4 +---
-  drivers/cpufreq/mediatek-cpufreq-hw.c  | 4 +---
-  drivers/cpufreq/mediatek-cpufreq.c     | 4 +---
-  drivers/cpufreq/omap-cpufreq.c         | 3 +--
-  drivers/cpufreq/pasemi-cpufreq.c       | 6 ++----
-  drivers/cpufreq/powernow-k6.c          | 3 +--
-  drivers/cpufreq/powernow-k7.c          | 3 +--
-  drivers/cpufreq/powernow-k8.c          | 4 +---
-  drivers/cpufreq/powernv-cpufreq.c      | 4 +---
-  drivers/cpufreq/ppc_cbe_cpufreq.c      | 3 +--
-  drivers/cpufreq/qcom-cpufreq-hw.c      | 4 +---
-  drivers/cpufreq/qoriq-cpufreq.c        | 4 +---
-  drivers/cpufreq/scmi-cpufreq.c         | 4 +---
-  drivers/cpufreq/scpi-cpufreq.c         | 4 +---
-  drivers/cpufreq/sh-cpufreq.c           | 4 +---
-  drivers/cpufreq/sparc-us2e-cpufreq.c   | 3 +--
-  drivers/cpufreq/sparc-us3-cpufreq.c    | 3 +--
-  drivers/cpufreq/speedstep-centrino.c   | 4 +---
-  drivers/cpufreq/tegra194-cpufreq.c     | 4 +---
-  drivers/cpufreq/vexpress-spc-cpufreq.c | 3 +--
-  27 files changed, 29 insertions(+), 74 deletions(-)
+ drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c | 290 +++++++++++++++++++++++
+ 1 file changed, 290 insertions(+)
+
+diff --git a/drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c b/drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c
+new file mode 100644
+index 000000000000..ff759f2276f9
+--- /dev/null
++++ b/drivers/hid/bpf/progs/Huion__Kamvas-Pro-19.bpf.c
+@@ -0,0 +1,290 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright (c) 2024 Benjamin Tissoires
++ */
++
++#include "vmlinux.h"
++#include "hid_bpf.h"
++#include "hid_bpf_helpers.h"
++#include <bpf/bpf_tracing.h>
++
++#define VID_HUION 0x256C
++#define PID_KAMVAS_PRO_19 0x006B
++#define NAME_KAMVAS_PRO_19 "HUION Huion Tablet_GT1902"
++
++#define TEST_PREFIX "uhid test "
++
++HID_BPF_CONFIG(
++	HID_DEVICE(BUS_USB, HID_GROUP_MULTITOUCH_WIN_8, VID_HUION, PID_KAMVAS_PRO_19),
++);
++
++bool prev_was_out_of_range;
++bool in_eraser_mode;
++
++/*
++ * We need to amend the report descriptor for the following:
++ * - the second button is reported through Secondary Tip Switch instead of Secondary Barrel Switch
++ * - the third button is reported through Invert, and we need some room to report it.
++ *
++ */
++static const __u8 fixed_rdesc[] = {
++	0x05, 0x0d,                    // Usage Page (Digitizers)             0
++	0x09, 0x02,                    // Usage (Pen)                         2
++	0xa1, 0x01,                    // Collection (Application)            4
++	0x85, 0x0a,                    //  Report ID (10)                     6
++	0x09, 0x20,                    //  Usage (Stylus)                     8
++	0xa1, 0x01,                    //  Collection (Application)           10
++	0x09, 0x42,                    //   Usage (Tip Switch)                12
++	0x09, 0x44,                    //   Usage (Barrel Switch)             14
++	0x09, 0x5a,                    //   Usage (Secondary Barrel Switch)   16 /* changed from Secondary Tip Switch */
++	0x09, 0x3c,                    //   Usage (Invert)                    18
++	0x09, 0x45,                    //   Usage (Eraser)                    20
++	0x15, 0x00,                    //   Logical Minimum (0)               22
++	0x25, 0x01,                    //   Logical Maximum (1)               24
++	0x75, 0x01,                    //   Report Size (1)                   26
++	0x95, 0x05,                    //   Report Count (5)                  28 /* changed (was 5) */
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              30
++	0x05, 0x09,                    //   Usage Page (Button)                  /* inserted */
++	0x09, 0x4a,                    //   Usage (0x4a)                         /* inserted to be translated as input usage 0x149: BTN_STYLUS3 */
++	0x95, 0x01,                    //   Report Count (1)                     /* inserted */
++	0x81, 0x02,                    //   Input (Data,Var,Abs)                 /* inserted */
++	0x05, 0x0d,                    //   Usage Page (Digitizers)              /* inserted */
++	0x09, 0x32,                    //   Usage (In Range)                  32
++	0x75, 0x01,                    //   Report Size (1)                   34
++	0x95, 0x01,                    //   Report Count (1)                  36
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              38
++	0x81, 0x03,                    //   Input (Cnst,Var,Abs)              40
++	0x05, 0x01,                    //   Usage Page (Generic Desktop)      42
++	0x09, 0x30,                    //   Usage (X)                         44
++	0x09, 0x31,                    //   Usage (Y)                         46
++	0x55, 0x0d,                    //   Unit Exponent (-3)                48
++	0x65, 0x33,                    //   Unit (EnglishLinear: in³)         50
++	0x26, 0xff, 0x7f,              //   Logical Maximum (32767)           52
++	0x35, 0x00,                    //   Physical Minimum (0)              55
++	0x46, 0x00, 0x08,              //   Physical Maximum (2048)           57
++	0x75, 0x10,                    //   Report Size (16)                  60
++	0x95, 0x02,                    //   Report Count (2)                  62
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              64
++	0x05, 0x0d,                    //   Usage Page (Digitizers)           66
++	0x09, 0x30,                    //   Usage (Tip Pressure)              68
++	0x26, 0xff, 0x3f,              //   Logical Maximum (16383)           70
++	0x75, 0x10,                    //   Report Size (16)                  73
++	0x95, 0x01,                    //   Report Count (1)                  75
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              77
++	0x09, 0x3d,                    //   Usage (X Tilt)                    79
++	0x09, 0x3e,                    //   Usage (Y Tilt)                    81
++	0x15, 0xa6,                    //   Logical Minimum (-90)             83
++	0x25, 0x5a,                    //   Logical Maximum (90)              85
++	0x75, 0x08,                    //   Report Size (8)                   87
++	0x95, 0x02,                    //   Report Count (2)                  89
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              91
++	0xc0,                          //  End Collection                     93
++	0xc0,                          // End Collection                      94
++	0x05, 0x0d,                    // Usage Page (Digitizers)             95
++	0x09, 0x04,                    // Usage (Touch Screen)                97
++	0xa1, 0x01,                    // Collection (Application)            99
++	0x85, 0x04,                    //  Report ID (4)                      101
++	0x09, 0x22,                    //  Usage (Finger)                     103
++	0xa1, 0x02,                    //  Collection (Logical)               105
++	0x05, 0x0d,                    //   Usage Page (Digitizers)           107
++	0x95, 0x01,                    //   Report Count (1)                  109
++	0x75, 0x06,                    //   Report Size (6)                   111
++	0x09, 0x51,                    //   Usage (Contact Id)                113
++	0x15, 0x00,                    //   Logical Minimum (0)               115
++	0x25, 0x3f,                    //   Logical Maximum (63)              117
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              119
++	0x09, 0x42,                    //   Usage (Tip Switch)                121
++	0x25, 0x01,                    //   Logical Maximum (1)               123
++	0x75, 0x01,                    //   Report Size (1)                   125
++	0x95, 0x01,                    //   Report Count (1)                  127
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              129
++	0x75, 0x01,                    //   Report Size (1)                   131
++	0x95, 0x01,                    //   Report Count (1)                  133
++	0x81, 0x03,                    //   Input (Cnst,Var,Abs)              135
++	0x05, 0x01,                    //   Usage Page (Generic Desktop)      137
++	0x75, 0x10,                    //   Report Size (16)                  139
++	0x55, 0x0e,                    //   Unit Exponent (-2)                141
++	0x65, 0x11,                    //   Unit (SILinear: cm)               143
++	0x09, 0x30,                    //   Usage (X)                         145
++	0x26, 0xff, 0x7f,              //   Logical Maximum (32767)           147
++	0x35, 0x00,                    //   Physical Minimum (0)              150
++	0x46, 0x15, 0x0c,              //   Physical Maximum (3093)           152
++	0x81, 0x42,                    //   Input (Data,Var,Abs,Null)         155
++	0x09, 0x31,                    //   Usage (Y)                         157
++	0x26, 0xff, 0x7f,              //   Logical Maximum (32767)           159
++	0x46, 0xcb, 0x06,              //   Physical Maximum (1739)           162
++	0x81, 0x42,                    //   Input (Data,Var,Abs,Null)         165
++	0x05, 0x0d,                    //   Usage Page (Digitizers)           167
++	0x09, 0x30,                    //   Usage (Tip Pressure)              169
++	0x26, 0xff, 0x1f,              //   Logical Maximum (8191)            171
++	0x75, 0x10,                    //   Report Size (16)                  174
++	0x95, 0x01,                    //   Report Count (1)                  176
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              178
++	0xc0,                          //  End Collection                     180
++	0x05, 0x0d,                    //  Usage Page (Digitizers)            181
++	0x09, 0x22,                    //  Usage (Finger)                     183
++	0xa1, 0x02,                    //  Collection (Logical)               185
++	0x05, 0x0d,                    //   Usage Page (Digitizers)           187
++	0x95, 0x01,                    //   Report Count (1)                  189
++	0x75, 0x06,                    //   Report Size (6)                   191
++	0x09, 0x51,                    //   Usage (Contact Id)                193
++	0x15, 0x00,                    //   Logical Minimum (0)               195
++	0x25, 0x3f,                    //   Logical Maximum (63)              197
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              199
++	0x09, 0x42,                    //   Usage (Tip Switch)                201
++	0x25, 0x01,                    //   Logical Maximum (1)               203
++	0x75, 0x01,                    //   Report Size (1)                   205
++	0x95, 0x01,                    //   Report Count (1)                  207
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              209
++	0x75, 0x01,                    //   Report Size (1)                   211
++	0x95, 0x01,                    //   Report Count (1)                  213
++	0x81, 0x03,                    //   Input (Cnst,Var,Abs)              215
++	0x05, 0x01,                    //   Usage Page (Generic Desktop)      217
++	0x75, 0x10,                    //   Report Size (16)                  219
++	0x55, 0x0e,                    //   Unit Exponent (-2)                221
++	0x65, 0x11,                    //   Unit (SILinear: cm)               223
++	0x09, 0x30,                    //   Usage (X)                         225
++	0x26, 0xff, 0x7f,              //   Logical Maximum (32767)           227
++	0x35, 0x00,                    //   Physical Minimum (0)              230
++	0x46, 0x15, 0x0c,              //   Physical Maximum (3093)           232
++	0x81, 0x42,                    //   Input (Data,Var,Abs,Null)         235
++	0x09, 0x31,                    //   Usage (Y)                         237
++	0x26, 0xff, 0x7f,              //   Logical Maximum (32767)           239
++	0x46, 0xcb, 0x06,              //   Physical Maximum (1739)           242
++	0x81, 0x42,                    //   Input (Data,Var,Abs,Null)         245
++	0x05, 0x0d,                    //   Usage Page (Digitizers)           247
++	0x09, 0x30,                    //   Usage (Tip Pressure)              249
++	0x26, 0xff, 0x1f,              //   Logical Maximum (8191)            251
++	0x75, 0x10,                    //   Report Size (16)                  254
++	0x95, 0x01,                    //   Report Count (1)                  256
++	0x81, 0x02,                    //   Input (Data,Var,Abs)              258
++	0xc0,                          //  End Collection                     260
++	0x05, 0x0d,                    //  Usage Page (Digitizers)            261
++	0x09, 0x56,                    //  Usage (Scan Time)                  263
++	0x55, 0x00,                    //  Unit Exponent (0)                  265
++	0x65, 0x00,                    //  Unit (None)                        267
++	0x27, 0xff, 0xff, 0xff, 0x7f,  //  Logical Maximum (2147483647)       269
++	0x95, 0x01,                    //  Report Count (1)                   274
++	0x75, 0x20,                    //  Report Size (32)                   276
++	0x81, 0x02,                    //  Input (Data,Var,Abs)               278
++	0x09, 0x54,                    //  Usage (Contact Count)              280
++	0x25, 0x7f,                    //  Logical Maximum (127)              282
++	0x95, 0x01,                    //  Report Count (1)                   284
++	0x75, 0x08,                    //  Report Size (8)                    286
++	0x81, 0x02,                    //  Input (Data,Var,Abs)               288
++	0x75, 0x08,                    //  Report Size (8)                    290
++	0x95, 0x08,                    //  Report Count (8)                   292
++	0x81, 0x03,                    //  Input (Cnst,Var,Abs)               294
++	0x85, 0x05,                    //  Report ID (5)                      296
++	0x09, 0x55,                    //  Usage (Contact Max)                298
++	0x25, 0x0a,                    //  Logical Maximum (10)               300
++	0x75, 0x08,                    //  Report Size (8)                    302
++	0x95, 0x01,                    //  Report Count (1)                   304
++	0xb1, 0x02,                    //  Feature (Data,Var,Abs)             306
++	0x06, 0x00, 0xff,              //  Usage Page (Vendor Defined Page 1) 308
++	0x09, 0xc5,                    //  Usage (Vendor Usage 0xc5)          311
++	0x85, 0x06,                    //  Report ID (6)                      313
++	0x15, 0x00,                    //  Logical Minimum (0)                315
++	0x26, 0xff, 0x00,              //  Logical Maximum (255)              317
++	0x75, 0x08,                    //  Report Size (8)                    320
++	0x96, 0x00, 0x01,              //  Report Count (256)                 322
++	0xb1, 0x02,                    //  Feature (Data,Var,Abs)             325
++	0xc0,                          // End Collection                      327
++};
++
++SEC("fmod_ret/hid_bpf_rdesc_fixup")
++int BPF_PROG(hid_fix_rdesc_huion_kamvas_pro_19, struct hid_bpf_ctx *hctx)
++{
++	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, HID_MAX_DESCRIPTOR_SIZE /* size */);
++
++	if (!data)
++		return 0; /* EPERM check */
++
++	__builtin_memcpy(data, fixed_rdesc, sizeof(fixed_rdesc));
++
++	return sizeof(fixed_rdesc);
++}
++
++/*
++ * This tablet reports the 3rd button through invert, but this conflict
++ * with the normal eraser mode.
++ * Fortunately, before entering eraser mode, (so Invert = 1),
++ * the tablet always sends an out-of-proximity event.
++ * So we can detect that single event and:
++ * - if there was none but the invert bit was toggled: this is the
++ *   third button
++ * - if there was this out-of-proximity event, we are entering
++ *   eraser mode, and we will until the next out-of-proximity.
++ */
++SEC("fmod_ret/hid_bpf_device_event")
++int BPF_PROG(kamvas_pro_19_fix_3rd_button, struct hid_bpf_ctx *hctx)
++{
++	__u8 *data = hid_bpf_get_data(hctx, 0 /* offset */, 10 /* size */);
++
++	if (!data)
++		return 0; /* EPERM check */
++
++	if (data[0] != 0x0a) /* not the pen report ID */
++		return 0;
++
++	/* stylus is out of range */
++	if (!(data[1] & 0x40)) {
++		prev_was_out_of_range = true;
++		in_eraser_mode = false;
++		return 0;
++	}
++
++	/* going into eraser mode (Invert = 1) only happens after an
++	 * out of range event
++	 */
++	if (prev_was_out_of_range && (data[1] & 0x18))
++		in_eraser_mode = true;
++
++	/* eraser mode works fine */
++	if (in_eraser_mode)
++		return 0;
++
++	/* copy the Invert bit reported for the 3rd button in bit 7 */
++	if (data[1] & 0x08)
++		data[1] |= 0x20;
++
++	/* clear Invert bit now that it was copied */
++	data[1] &= 0xf7;
++
++	prev_was_out_of_range = false;
++
++	return 0;
++}
++
++SEC("syscall")
++int probe(struct hid_bpf_probe_args *ctx)
++{
++	ctx->retval = ctx->rdesc_size != 328;
++	if (ctx->retval)
++		ctx->retval = -EINVAL;
++
++	/* ensure the kernel isn't fixed already */
++	if (ctx->rdesc[17] != 0x43) /* Secondary Tip Switch */
++		ctx->retval = -EINVAL;
++
++	struct hid_bpf_ctx *hctx = hid_bpf_allocate_context(ctx->hid);
++
++	if (!hctx) {
++		return ctx->retval = -EINVAL;
++		return 0;
++	}
++
++	const char *name = hctx->hid->name;
++
++	/* strip out TEST_PREFIX */
++	if (!__builtin_memcmp(name, TEST_PREFIX, sizeof(TEST_PREFIX) - 1))
++		name += sizeof(TEST_PREFIX) - 1;
++
++	if (__builtin_memcmp(name, NAME_KAMVAS_PRO_19, sizeof(NAME_KAMVAS_PRO_19)))
++		ctx->retval = -EINVAL;
++
++	hid_bpf_release_context(hctx);
++
++	return 0;
++}
++
++char _license[] SEC("license") = "GPL";
+
 -- 
-Florian
+2.44.0
 
---000000000000e5411e0615c13f10
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIDzZqX0yW+IbOk7e
-lQ3LvvHFszWYbuVhz4zB0CwyHRmuMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDQxMDE3MjAwNVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQDcEyjAUzFfwN71bV8aap9pgpj0gufcGm/K
-GSvDQQRy6TJ9bvnl/6utrAB/c2LgH5imYdVmvcwrVsqKy/655lXzTameOM9XdOR6WHhP5ZuGThxe
-lXpMEnSNuXWKZZ+YUApMnQktC86g2LyGlOeF7z7y3LoypJEFgZh4cJ4vuymuiM5HBQXHIwGrWLEY
-obWjLGI7CQfEEmjEIDWXJUFzhK4Oe5Ixje+1fiq+sGkV83NLPIrjIbNiEZkM0066MsujYNaA4y/5
-j+pcS5pCF1BEl2cC2gkYCrGahsY7Gh2NOW/0r+qU0vQuzgTng6GBnUypg6mQd/zGbiOfxEgZyMUr
-HB2V
---000000000000e5411e0615c13f10--
