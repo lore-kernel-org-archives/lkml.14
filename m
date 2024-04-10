@@ -1,78 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC4215B553;
-	Wed, 10 Apr 2024 18:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E41A16F0DF;
+	Wed, 10 Apr 2024 18:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775078; cv=none; b=E+aWiiBw4JGgrJ64lx3knFixreBYnPkHO7qizl+MD8DL3Qk98mTt3JVEzS0DCMO9X8KvBpeJype7NUIm5LrMlrmjkLRXoFhvsqe2xGF08WbJpPQBvplIU9kdu1shxrHe2J5eTxvvYUUTtCH8yOsraXy7qh6JygeqLHwSp1LZQbA=
+	t=1712775142; cv=none; b=sLhWb8bu+Xr78gnHNTKCsJJnX3WxaL4QfEt0UVeySYPu+9qGdAQDLNKYMNYliAjFgcFxp8N9G6q7/eIc1NCeq+TCj3atLfBS6MGpGU3uJWzN3R3p+nKeE7uj0Aylmcn2YqKF1ExqTD/CVg0hi1tThbqN15InqYCss3geYaG4f3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775078; c=relaxed/simple;
-	bh=uk6YkMUxJv7HaSVCQDn74ZjZOlGw6gZ/lMU0WUZv8wc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=njVkklJqx01swx+Yz03+ftQMhY7tPohj2P/48UjBw/ly/F2ovHg2ymcxH1JSK4LVSQKr99B2VuZw6wE+vH4B1mKJo6JRheGJ9Vqbq9qcm4Zpn4uABX4XmRfFT6KLThWLKguzEes6+JdPhaDrsuevJXcoM/B2tGR3v2wIIzsm19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AlIJSi6E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712775142; c=relaxed/simple;
+	bh=z5JVLaH+fp0+7NF0boo5IQT2gY7gn3yvbn52zrvcvJ0=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=o90WXOtYo2qlap/p+3CUY6xbgD8+uB+483Sgrdn8VEy+UOV/Yco3t4pnczQK3acsz0wtOxPiPe9U2333UhQIGIJEaP6THoFpD3+LrWAc/SMpt1zNQWVIe9GUy/mAXBoKF1VtPMez0NVgtQo+77w1ZIR7om0cqsAh4jPNGnpV3+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6OuxsVT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AlIJSi6E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1486C433C7;
-	Wed, 10 Apr 2024 18:51:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6OuxsVT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F86AC433F1;
+	Wed, 10 Apr 2024 18:52:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712775078;
-	bh=uk6YkMUxJv7HaSVCQDn74ZjZOlGw6gZ/lMU0WUZv8wc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AlIJSi6EVyRPBDTwk89QTm3T25I2dRXoRynSPHKZacJN9n4FGA79xwE143AjcMFIW
-	 q2/6N1vg11ojb+fbfxo5fYQs9AqFPzwM54vPk6BVkwIPz/FMSft5AMZoW4e1snzUch
-	 415Qt5kiQeJZoy9HmFTQBQIExQxVXIQQ39DaLeRVjTqUwlexc3xylI+HhB9MM6GRxt
-	 IeYwsA/LMviGhW/OiQ7omPMH65B4eZQ7RZnYlrbabwrI0d/S3B74lrxC9GBpLerprO
-	 twZulNVcD0KOZVl3ZtzVvpbXwMer7mnEatC7d9hX+7FJCG8qFBq1YirzYLTb9hN96N
-	 nmzCAAxS91jFQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf annotate: Skip DSOs not found
-Date: Wed, 10 Apr 2024 11:51:17 -0700
-Message-ID: <20240410185117.1987239-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+	s=k20201202; t=1712775141;
+	bh=z5JVLaH+fp0+7NF0boo5IQT2gY7gn3yvbn52zrvcvJ0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=I6OuxsVT4AkYCNqtMs94w+YdgDTmc7sZi1OxRFxEEY7TdKkHVJLcff0Ns9HQaWzZJ
+	 CJzELzUg6LhW/Zb2WUONLbjORl/K/NFFYoiLPrAM9BlAsKDbk2d0opNG3Oe/mBsz/f
+	 LSIY661NBeHfccgnhAeH1yRgTFxTnGCfX5FWEGYNzFHgzKfk7qsgH8sc5xD/S3x/DU
+	 svDLtE/k8eLctNrc8VUwJn+aoiuNdhTEFhChq/a7rgOmJGEr6sHa+OUHyvvjVUkKaR
+	 mxiam+sNWKUBU7VM5dtuK6YPrlAybjIy+Uubf/kxua+j/QwydgWgS+mGV46n6F7ekT
+	 1tGYgjy5Mebig==
+Date: Wed, 10 Apr 2024 13:52:20 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Cc: Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-gpio@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
+ linux-clk@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
+ <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
+Message-Id: <171277513936.883835.18187305941709008733.robh@kernel.org>
+Subject: Re: [PATCH 01/11] dt-bindings: soc: mobileye: add EyeQ5 OLB system
+ controller
 
-In some data file, I see the following messages repeated.  It seems it
-doesn't have DSOs in the system and the dso->binary_type is set to
-DSO_BINARY_TYPE__NOT_FOUND.  Let's skip them to avoid the followings.
 
-  No output from objdump  --start-address=0x0000000000000000 --stop-address=0x00000000000000d4  -d --no-show-raw-insn       -C "$1"
-  Error running objdump  --start-address=0x0000000000000000 --stop-address=0x0000000000000631  -d --no-show-raw-insn       -C "$1"
-  ...
+On Wed, 10 Apr 2024 19:12:30 +0200, Théo Lebrun wrote:
+> Add documentation to describe the "Other Logic Block" syscon.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 125 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 126 insertions(+)
+> 
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/disasm.c | 2 ++
- 1 file changed, 2 insertions(+)
+My bot found errors running 'make dt_binding_check' on your patch:
 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index a1219eb930aa..92937809be85 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -1669,6 +1669,8 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		return symbol__disassemble_bpf(sym, args);
- 	} else if (dso->binary_type == DSO_BINARY_TYPE__BPF_IMAGE) {
- 		return symbol__disassemble_bpf_image(sym, args);
-+	} else if (dso->binary_type == DSO_BINARY_TYPE__NOT_FOUND) {
-+		return -1;
- 	} else if (dso__is_kcore(dso)) {
- 		kce.kcore_filename = symfs_filename;
- 		kce.addr = map__rip_2objdump(map, sym->start);
--- 
-2.44.0.478.gd926399ef9-goog
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040:compatible:0: 'mobileye,eyeq5-clk' was expected
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040:reg: [[64, 56]] is too short
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040: 'reg-names' is a required property
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:compatible:0: 'mobileye,eyeq5-reset' was expected
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:reg: [[0, 60]] is too short
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:#reset-cells:0:0: 2 was expected
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000: 'reg-names' is a required property
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-1/soc/system-controller@d2003000/reset-controller@d2003000: failed to match any schema with compatible: ['mobileye,eyeq6h-acc-reset']
+Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-1/soc/system-controller@d2003000/clock-controller@d2003040: failed to match any schema with compatible: ['mobileye,eyeq6h-acc-clk']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
