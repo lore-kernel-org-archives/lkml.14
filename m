@@ -1,175 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95416E878;
-	Wed, 10 Apr 2024 15:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A4D15EFBF
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762748; cv=none; b=uPwaDEWyFi1isjHGv10w0NB1c3pkI78rDXLmG74/9d3XRmof1E5LQlvpCCwcUlRU7Z7Vj6cMo66l6pm1jNeYDs1QGagOCS0GxDxeBKKs3c7ycJRYeKrt1LAWXAIPARWxweu5eTQejArS3/eDIMKc3Q2gum4VqAUHhrOVFsuaBrM=
+	t=1712762773; cv=none; b=IoBZub3+gqEaom5fiXS4DMksQic4ko2L94GnYAIk67gOhPnP4MAoGAbDbGox1ktHbo1xDe95l0Al4mHDQNBj+jgcFjU/SBdQ2gKzjGl8CW0YCY67k3uQZ7M2r/hbHb142G1aEaH8v4sAdZlWyVHWuQroNijoXkiDZeqCMSpLxAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762748; c=relaxed/simple;
-	bh=Pk0thEfc+DKwTeAkAv2HFqvGA8+fNmNFZy9Fw5oWnfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u1SCwxMHNd6eWvwF+sklaMbhiPGIQbhF0oNp2of8oR1SEKuBxJ++fHSe1xkFiISXmaKezFKXphuonpUKFdCg4kUxIOKw1dStzBr0tt1FD6oy3YJ44FIFYOoLGxQYoerTkE7ikwnuFGhx7Bz1BwaQvPKpXr4tAXJrH0QmG6V56Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F05C433F1;
-	Wed, 10 Apr 2024 15:25:47 +0000 (UTC)
-Date: Wed, 10 Apr 2024 11:28:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Zheng Yejian <zhengyejian1@huawei.com>
-Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
-Message-ID: <20240410112823.1d084c8f@gandalf.local.home>
-In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712762773; c=relaxed/simple;
+	bh=NjI5rFggc3aqQe0o+gfJSoRvtLTRJmexa+8r0p9Ntco=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T8EVVqwYsDdBJUtHAPPatnd0EsiH3BQ9ln+7AFgWnLX2I+qNwXTLl0b6hfjvzp4YqMWsRvsP/fQPhoDMIXrV4PivUg0br3jjyK6rd4hMinF5COIscsa/tMNU/a8vOuL6fyn3bf1FLxrUv8Mtis39AZ03+6r1RHjOQ1np/VvAcBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=NM73iIay; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NM73iIay"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-78d70890182so146873785a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:26:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1712762769; x=1713367569; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AYtRG8OSIBC59TZF+GDLNPNPrXRQAi2vj0OFPl1DVg8=;
+        b=NM73iIayPApgw/qpHuDLwcEIMHOI3Nuv+t7T0P1lNUp/sml3y1JYp8ItEAy1TVKzCx
+         pd6Vv0a+TkpqgO3suAdflKV0/ZQh0UulTSFkq4tKWhmIbyez1plbvy8DbKR68m2DhomG
+         EMcjGimL6gZVAJwO5uJzvMezCQDK3Y2E6WgvZ3QubPCQF/fu3vGEdxlrxQCVL/o35YJA
+         u+EHKaWyDklZ5nwMa3cSIvuHQyGoe8TA4shxUHSKVACNeC+oeBHmACfijRUDjYXsc976
+         ihyGk0up0xreDjayYQ97Nh1AvmpJOddr3bsfI737chMJ3RjvJG3z6o/pYjEq3Q8hOVWw
+         glTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712762769; x=1713367569;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AYtRG8OSIBC59TZF+GDLNPNPrXRQAi2vj0OFPl1DVg8=;
+        b=q0lj+ZeMW3FK37iAhGgc3XmWWq3z/6Yf65XtzHz8ukQOnv5vdjIuIhDFO+IFEHfIHS
+         s9+NOYppMpb/n3yb62MlvHLsASlpKc1zA4tTQL/FTb5xH7riD1lSiXCatF+ITExGwOBA
+         yporPem1V9dB8psikfOJlRgHCMTMAO/9nxxx/XrU26eKlfPcZpzRB9DA23le9Uk64bhL
+         A2QdwiCuoosiViMlNS0gvmxP3KZUpKxZHuvmvrUAELsvXX95QZKAga8nYzIcdRcsNWgJ
+         l8Pzos0kD71UUyk2bXcI8memkXiYLHSmmgiBw3Pi2y2bZwvTWV2F5jfAQbsgvcsj5TwH
+         XlRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNSyEF25Ie5yIvRueanZeSkH7Oa8btur32RTkLE6aKIeTi7qTOQWhps22ON1XCHIoNfnpxD5lk0VSlHY7KlL7CE/a3JvIZxJx2hyQP
+X-Gm-Message-State: AOJu0Yxi0l3FP+jft663Pq0HcH0nBn6vi91rsd0fuLvHgMyYomXG5ZDI
+	VhcSOoWbuu3DJXv30phWbsxzaX+UxKYEdtbaBbrJEPUgq7/UScrTSSLs57tpf0UA89vY+DgEeVh
+	8
+X-Google-Smtp-Source: AGHT+IGLypAGDe3QxT1cY2n+wr00FUlMz9BvHKaU5Fchaycn6bNlZiKi4cPrlNk7kg+txx8meLFuYA==
+X-Received: by 2002:a05:620a:469f:b0:78e:9715:7dc5 with SMTP id bq31-20020a05620a469f00b0078e97157dc5mr2575426qkb.23.1712762768726;
+        Wed, 10 Apr 2024 08:26:08 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id a16-20020a05620a16d000b0078d6349aa03sm3525474qkn.103.2024.04.10.08.26.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 08:26:07 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1ruZpu-008Dhh-VX;
+	Wed, 10 Apr 2024 12:26:06 -0300
+Date: Wed, 10 Apr 2024 12:26:06 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Eric Badger <ebadger@purestorage.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] iommu: Add static iommu_ops->release_domain
+Message-ID: <20240410152606.GF223006@ziepe.ca>
+References: <20240305013305.204605-1-baolu.lu@linux.intel.com>
+ <20240305013305.204605-2-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240305013305.204605-2-baolu.lu@linux.intel.com>
 
-On Mon, 1 Apr 2024 20:55:43 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
-
-> KASAN reports a bug:
+On Tue, Mar 05, 2024 at 09:33:01AM +0800, Lu Baolu wrote:
+> The current device_release callback for individual iommu drivers does the
+> following:
 > 
->   BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
->   Read of size 8 at addr ffff888141d40010 by task insmod/424
->   CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
->   [...]
->   Call Trace:
->    <TASK>
->    dump_stack_lvl+0x68/0xa0
->    print_report+0xcf/0x610
->    kasan_report+0xb5/0xe0
->    ftrace_location+0x90/0x120
->    register_kprobe+0x14b/0xa40
->    kprobe_init+0x2d/0xff0 [kprobe_example]
->    do_one_initcall+0x8f/0x2d0
->    do_init_module+0x13a/0x3c0
->    load_module+0x3082/0x33d0
->    init_module_from_file+0xd2/0x130
->    __x64_sys_finit_module+0x306/0x440
->    do_syscall_64+0x68/0x140
->    entry_SYSCALL_64_after_hwframe+0x71/0x79
+> 1) Silent IOMMU DMA translation: It detaches any existing domain from the
+>    device and puts it into a blocking state (some drivers might use the
+>    identity state).
+> 2) Resource release: It releases resources allocated during the
+>    device_probe callback and restores the device to its pre-probe state.
 > 
-> The root cause is that when lookup_rec() is lookuping ftrace record of
-> an address in some module, and at the same time in ftrace_release_mod(),
-> the memory that saving ftrace records has been freed as that module is
-> being deleted.
+> Step 1 is challenging for individual iommu drivers because each must check
+> if a domain is already attached to the device. Additionally, if a deferred
+> attach never occurred, the device_release should avoid modifying hardware
+> configuration regardless of the reason for its call.
 > 
->   register_kprobes() {
->     check_kprobe_address_safe() {
->       arch_check_ftrace_location() {
->         ftrace_location() {
->           lookup_rec()  // access memory that has been freed by
->                         // ftrace_release_mod() !!!
+> To simplify this process, introduce a static release_domain within the
+> iommu_ops structure. It can be either a blocking or identity domain
+> depending on the iommu hardware. The iommu core will decide whether to
+> attach this domain before the device_release callback, eliminating the
+> need for repetitive code in various drivers.
 > 
-> It seems that the ftrace_lock is required when lookuping records in
-> ftrace_location(), so is ftrace_location_range().
+> Consequently, the device_release callback can focus solely on the opposite
+> operations of device_probe, including releasing all resources allocated
+> during that callback.
 > 
-> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> Co-developed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 > ---
->  kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index da1710499698..838d175709c1 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
->  }
->  
->  /**
-> - * ftrace_location_range - return the first address of a traced location
-> + * ftrace_location_range_locked - return the first address of a traced location
->   *	if it touches the given ip range
->   * @start: start of range to search.
->   * @end: end of range to search (inclusive). @end points to the last byte
-> @@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
->   * that is either a NOP or call to the function tracer. It checks the ftrace
->   * internal tables to determine if the address belongs or not.
->   */
-> -unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> +static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
->  {
->  	struct dyn_ftrace *rec;
->  
-> @@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->  	return 0;
->  }
->  
-> +unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> +{
-> +	unsigned long loc;
-> +
-> +	mutex_lock(&ftrace_lock);
-> +	loc = ftrace_location_range_locked(start, end);
-> +	mutex_unlock(&ftrace_lock);
+>  include/linux/iommu.h |  1 +
+>  drivers/iommu/iommu.c | 19 +++++++++++++++----
+>  2 files changed, 16 insertions(+), 4 deletions(-)
 
-I'm not so sure we can take a mutex in all places that call this function.
+I looked at all the drivers:
+ 1) Didn't spend time to guess what ipmmu-vmss is doing
+ 2) Several drivers are obviously missing the release_domain behavior
+    and now be trivially fixed
+ 3) amd, s390, virtio-iommu and arm-smmu should probably support
+    blocked_domain (I assume that is what their detach does)
+ 4) arm-smmuv3 can use it too once disable_bypass is removed
+ 5) Several drivers don't even have release_device functions.
+    Probably all of them can do their identiy domains too.
 
-What about using RCU?
+This seems like a pretty reasonable thing to add to this series too:
 
-	rcu_read_lock();
-	loc = ftrace_location_range_rcu(start, end);
-	rcu_read_unlock();
+diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
+index eb1e62cd499a58..3ddc4b4418a049 100644
+--- a/drivers/iommu/apple-dart.c
++++ b/drivers/iommu/apple-dart.c
+@@ -979,6 +979,7 @@ static void apple_dart_get_resv_regions(struct device *dev,
+ static const struct iommu_ops apple_dart_iommu_ops = {
+ 	.identity_domain = &apple_dart_identity_domain,
+ 	.blocked_domain = &apple_dart_blocked_domain,
++	.release_domain = &apple_dart_blocked_domain,
+ 	.domain_alloc_paging = apple_dart_domain_alloc_paging,
+ 	.probe_device = apple_dart_probe_device,
+ 	.release_device = apple_dart_release_device,
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index d98c9161948a25..902dc4da44f987 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -1424,8 +1424,6 @@ static void exynos_iommu_release_device(struct device *dev)
+ 	struct exynos_iommu_owner *owner = dev_iommu_priv_get(dev);
+ 	struct sysmmu_drvdata *data;
+ 
+-	WARN_ON(exynos_iommu_identity_attach(&exynos_identity_domain, dev));
+-
+ 	list_for_each_entry(data, &owner->controllers, owner_node)
+ 		device_link_del(data->link);
+ }
+@@ -1471,6 +1469,7 @@ static int exynos_iommu_of_xlate(struct device *dev,
+ 
+ static const struct iommu_ops exynos_iommu_ops = {
+ 	.identity_domain = &exynos_identity_domain,
++	.release_domain = &exynos_identity_domain,
+ 	.domain_alloc_paging = exynos_iommu_domain_alloc_paging,
+ 	.device_group = generic_device_group,
+ 	.probe_device = exynos_iommu_probe_device,
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index b8c47f18bc2612..b5693041b18dd4 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -1012,6 +1012,7 @@ static void mtk_iommu_get_resv_regions(struct device *dev,
+ 
+ static const struct iommu_ops mtk_iommu_ops = {
+ 	.identity_domain = &mtk_iommu_identity_domain,
++	.release_domain = &mtk_iommu_identity_domain,
+ 	.domain_alloc_paging = mtk_iommu_domain_alloc_paging,
+ 	.probe_device	= mtk_iommu_probe_device,
+ 	.release_device	= mtk_iommu_release_device,
+diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+index a9fa2a54dc9b39..9e7205af7d7316 100644
+--- a/drivers/iommu/mtk_iommu_v1.c
++++ b/drivers/iommu/mtk_iommu_v1.c
+@@ -580,6 +580,7 @@ static int mtk_iommu_v1_hw_init(const struct mtk_iommu_v1_data *data)
+ 
+ static const struct iommu_ops mtk_iommu_v1_ops = {
+ 	.identity_domain = &mtk_iommu_v1_identity_domain,
++	.release_domain = &mtk_iommu_v1_identity_domain,
+ 	.domain_alloc_paging = mtk_iommu_v1_domain_alloc_paging,
+ 	.probe_device	= mtk_iommu_v1_probe_device,
+ 	.probe_finalize = mtk_iommu_v1_probe_finalize,
+diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+index c9528065a59afa..c4c76aaec19e50 100644
+--- a/drivers/iommu/omap-iommu.c
++++ b/drivers/iommu/omap-iommu.c
+@@ -1725,6 +1725,7 @@ static void omap_iommu_release_device(struct device *dev)
+ 
+ static const struct iommu_ops omap_iommu_ops = {
+ 	.identity_domain = &omap_iommu_identity_domain,
++	.release_domain = &omap_iommu_identity_domain,
+ 	.domain_alloc_paging = omap_iommu_domain_alloc_paging,
+ 	.probe_device	= omap_iommu_probe_device,
+ 	.release_device	= omap_iommu_release_device,
+diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+index da79d9f4cf6371..e551c5b143bbd3 100644
+--- a/drivers/iommu/rockchip-iommu.c
++++ b/drivers/iommu/rockchip-iommu.c
+@@ -1162,6 +1162,7 @@ static int rk_iommu_of_xlate(struct device *dev,
+ 
+ static const struct iommu_ops rk_iommu_ops = {
+ 	.identity_domain = &rk_identity_domain,
++	.release_domain = &rk_identity_domain,
+ 	.domain_alloc_paging = rk_iommu_domain_alloc_paging,
+ 	.probe_device = rk_iommu_probe_device,
+ 	.release_device = rk_iommu_release_device,
 
-Then in ftrace_release_mod() we can have:
+> +	if (!dev->iommu->attach_deferred && ops->release_domain)
+> +		ops->release_domain->ops->attach_dev(ops->release_domain, dev);
 
- out_unlock:
-	mutex_unlock();
+We should probably be sensitive to the 
+dev->iommu->require_direct flag - generally drivers should prefer the
+blocked for the release domain, but in case the FW ias asking for
+require_direct we need to switch to identity.
 
-	/* Need to synchronize with ftrace_location() */
-	if (tmp_pages)
-		synchronize_rcu();
+Also, may as well avoid switching a domain if the group is already
+correct and use the common attach function to get the tracing.. So
+like this?
 
--- Steve
+	if (!dev->iommu->attach_deferred) {
+		struct iommu_domain *release_domain = ops->release_domain;
 
+		if (dev->iommu->require_direct && ops->identity_domain)
+			release_domain = ops->identity_domain;
 
-> +
-> +	return loc;
-> +}
-> +
->  /**
->   * ftrace_location - return the ftrace location
->   * @ip: the instruction pointer to check
-> @@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->   */
->  unsigned long ftrace_location(unsigned long ip)
->  {
-> -	struct dyn_ftrace *rec;
-> +	unsigned long loc;
->  	unsigned long offset;
->  	unsigned long size;
->  
-> -	rec = lookup_rec(ip, ip);
-> -	if (!rec) {
-> +	loc = ftrace_location_range(ip, ip);
-> +	if (!loc) {
->  		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
->  			goto out;
->  
->  		/* map sym+0 to __fentry__ */
->  		if (!offset)
-> -			rec = lookup_rec(ip, ip + size - 1);
-> +			loc = ftrace_location_range(ip, ip + size - 1);
->  	}
->  
-> -	if (rec)
-> -		return rec->ip;
-> -
->  out:
-> -	return 0;
-> +	return loc;
->  }
->  
->  /**
+		if (release_domain && group->domain != release_domain)
+			WARN_ON(__iommu_attach_device(release_domain, dev));
+	}
 
+Jason
