@@ -1,111 +1,147 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52B2180A8B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06117180A7D
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712756486; cv=none; b=EVskou9tO/L4pXuPz1cvpZBcDaXtIOvipDw+0Kava9LnPKFOgbLjVkDNJ1w3L4o9Xf2nJX1hTDWI3naI1SZTbTxF4TlOfVjT3bLCpRoM2wSJx7FNdD6J0K6scfcL4HPgpFu3vzt8v77uwYjAM6HL1BJ+/biCWrh1o56MX4X0DiQ=
+	t=1712756485; cv=none; b=envp6JwtRpkOfw0AFKHl9c7JOZm66mYw1IOXC2SZOnyYxSpOR7kZ/e12m+LOCSqLC8kXCJjWdzlMct2PufjYDnSLL2py6hUtz/jXFbUhmdXckLiEA8FnaYIgI4gBxeIu95Ims7Z/i8PBp/o76ywIKGKhaG+PLkU0uuwm4nzQtZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712756486; c=relaxed/simple;
-	bh=E/R4WnmYuAxReinXHRFy49Y8WI9annFGpZ0d41P4xF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lVWbWTRm+9hMm/Gwwef2hZEU93g7WctvnW5Z+mheHuuc7B7lTw/wGr9Yjyl4EvnOg13VWUtHfqznyOx7kRT5+ifegduZ/71ySid7DO/PfCnljRXpcWjXrHg5v7ZGnIiuOeezOOHq6jYkdVZFZ803vaQsqbWk7dyG8U8ufzDnGg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ruYCT-0003sC-Au; Wed, 10 Apr 2024 15:41:17 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ruYCS-00BVN6-Tq; Wed, 10 Apr 2024 15:41:16 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1ruYCS-00HaVk-2i;
-	Wed, 10 Apr 2024 15:41:16 +0200
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Rob Herring <robh@kernel.org>,
+	s=arc-20240116; t=1712756485; c=relaxed/simple;
+	bh=CJ5Yg4Su25upi9PiRBilKHZBgxfV1yi9eo8lCkVdx7g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=a+ay+SeBWHRMg2zYjfYGFTQ5v8YgHYNcvAyIg33+7hAsvGjGk7l5PvHLLVtkIMCYnWM7+ujclFTSBH9LIPRlQ8HyKGnfoguhNV81Hsf+PU9kCOEsXBLyhJpfEv8UmmqhnOX4y3GNYfHDSF7Cjx1+NNTVzPnfV/7zf20YPDD9ZDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Lf0sUxq4; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Lf0sUxq4"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4155819f710so53278055e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1712756482; x=1713361282; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bfpDELhZMXS3a+UUIPdr1Q+y0EuPmA52WesKgXwm+Ms=;
+        b=Lf0sUxq4UOs3C7KQX9/jUbg4WWL0HxKQYtHJ0eVFePeuWxpcTGK3pjOSU9ihvt0xds
+         IDvkGrSrzp4kcU0hbrEOlf2b3FkX+F4MBaEFz/Jo1EQU5pxHJpoA5TKi54fq79ooxF5t
+         F6EUNFUCUZY5V0j+Q6546Fv9smaI9MAbA8tMFNZUsHUrvq2Y4dmdOH1P8nRiHDXBtzXp
+         iEOb6a4+Vz3kZ3mzEYge9GcWqJljpC1ZJBZnzWXvnYnlAKcDDHUs38vrx+39zcSPRbaF
+         mPg2p3RfZm9XtIxYT4lbx2XOiohQ8ViDok2YHvedZWWo6M7aC25cTz3AjGKQoiTfZegC
+         a1gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712756482; x=1713361282;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bfpDELhZMXS3a+UUIPdr1Q+y0EuPmA52WesKgXwm+Ms=;
+        b=vHYDYImtj9qS3nwEnrLQa5269GCp6iRGCYfAC99dYupLmJcnjuDpdfeYVRUBC/jsCB
+         l+6A+JwdNJQ0/FNu6uW87g3r7h0zAQcwXln/2a7Ty4TA4gotJ3btX7GZs9GEWRi9Wuqd
+         QrsEaJcHavliOsly6qF+2JNHqst4EEd2fxL7fkYApx+ZxI9mAE3eZWW1Rxr2zEjMJ0Te
+         kAggOWeN475RQe0yDiDBzO57Np8Di2+iNR6270MmXZNcVAFAGKWExMejeY5mOQQ1qqxG
+         bmZ7nP+L0ggk71mz779IvjElLJpbCf5/ti7e6Gpd2pMLq5fGk+6GR1tSVVXeyqMaclnU
+         MzGg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6pLVIAO0/kQMT/1GdGh30cSY7pb1tOtZ8iRDdu0PUVBskUDTx9goWK+SFpFqQCFUI3TvZfv3k3ZstC3vLKVZelcdOh4fuq/eubyTH
+X-Gm-Message-State: AOJu0YwDYP5h4OvwWmQf83jqBOMc3JVWyNzC7b37onc16yS7bBU0eaC0
+	wMjuHSp3Jbh7vvUAyIiPHXe5LCHrp5piaCcGkQQSiF7Tb1Kb/S1hxbHRHkZTlvM=
+X-Google-Smtp-Source: AGHT+IE/n16DpYEO2qqbI73ni/tWCneu2SaQzav7O3neyS/HYU4MN+sPx87irigmMT5RkxaFWg9p4Q==
+X-Received: by 2002:a05:600c:1914:b0:415:6d51:8e2d with SMTP id j20-20020a05600c191400b004156d518e2dmr2247721wmq.13.1712756482533;
+        Wed, 10 Apr 2024 06:41:22 -0700 (PDT)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.8])
+        by smtp.gmail.com with ESMTPSA id n15-20020a05600c500f00b00417c0fa4b82sm872528wmr.25.2024.04.10.06.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 06:41:22 -0700 (PDT)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	biju.das.jz@bp.renesas.com
+Cc: linux-watchdog@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH 1/2] HSI: omap_ssi_core: Convert to platform remove callback returning void
-Date: Wed, 10 Apr 2024 15:41:10 +0200
-Message-ID:  <bc6b1caafa977346b33c1040d0f8e616bc0457bf.1712756364.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1712756364.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1712756364.git.u.kleine-koenig@pengutronix.de>
+	linux-renesas-soc@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH RESEND v8 09/10] watchdog: rzg2l_wdt: Power on the PM domain in rzg2l_wdt_restart()
+Date: Wed, 10 Apr 2024 16:40:43 +0300
+Message-Id: <20240410134044.2138310-10-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240410134044.2138310-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240410134044.2138310-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1804; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=E/R4WnmYuAxReinXHRFy49Y8WI9annFGpZ0d41P4xF8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmFpb3ZL8wh8Q1x1FS2lw7F+HU7WWSyhYVj9RBu eMx6GQ88waJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZhaW9wAKCRCPgPtYfRL+ Tl0+CACbv5YxvkaezS/2dseRf2Y8pCoXnji9se8DRcOVmNXyABe/euTFjLW0xuhmxQuT4sdO6ZH I2ukNmDnFm9oqvBQ+qQTN4AXNaOarRySHRRNFjPjDPSQJR6mvuH7uod0okX7YktOIb8yUR6l5U/ Vvd0IZKHAM7AQKQzxbDQByMgnn917WnsJGnSRwfaAvdWxK8lljcmvFc27vJgqzg4RNVVQ7in8gS I4yS4wcVJvfiX2T1nVUgn0BuZaABZVMTgDWCXLxIYWSJck8ogHLyOX7b1knj5iru6RdYKyznMX6 AGmZX4tcmn4TfTAL+yQvPAKQFoVnyVkm/bPkPN5EautSevg+
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is ignored (apart
-from emitting a warning) and this typically results in resource leaks.
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-To improve here there is a quest to make the remove callback return
-void. In the first step of this quest all drivers are converted to
-.remove_new(), which already returns void. Eventually after all drivers
-are converted, .remove_new() will be renamed to .remove().
+The rzg2l_wdt_restart() is called from atomic context. Calling
+pm_runtime_{get_sync, resume_and_get}() or any other runtime PM resume
+APIs is not an option as it may lead to issues as described in commit
+e4cf89596c1f ("watchdog: rzg2l_wdt: Fix 'BUG: Invalid wait context'")
+that removed the pm_runtime_get_sync() and used directly the
+clk_prepare_enable() APIs.
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+Starting with RZ/G3S the watchdog could be part of its own software
+controlled power domain (see the initial implementation in Link section).
+In case the watchdog is not used the power domain is off and accessing
+watchdog registers leads to aborts.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+To solve this the patch powers on the power domain using
+dev_pm_genpd_resume() API before enabling its clock. This is not
+sleeping or taking any other locks as the power domain will not be
+registered with GENPD_FLAG_IRQ_SAFE flags.
+
+Link: https://lore.kernel.org/all/20240208124300.2740313-1-claudiu.beznea.uj@bp.renesas.com
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- drivers/hsi/controllers/omap_ssi_core.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hsi/controllers/omap_ssi_core.c b/drivers/hsi/controllers/omap_ssi_core.c
-index 6802efb4d6cd..3140990a6164 100644
---- a/drivers/hsi/controllers/omap_ssi_core.c
-+++ b/drivers/hsi/controllers/omap_ssi_core.c
-@@ -547,7 +547,7 @@ static int ssi_probe(struct platform_device *pd)
- 	return err;
- }
+Changes in v8:
+- none, this patch is new
+
+ drivers/watchdog/rzg2l_wdt.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/drivers/watchdog/rzg2l_wdt.c b/drivers/watchdog/rzg2l_wdt.c
+index c8c20cfb97a3..98e5e9914a5d 100644
+--- a/drivers/watchdog/rzg2l_wdt.c
++++ b/drivers/watchdog/rzg2l_wdt.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/units.h>
+@@ -164,6 +165,17 @@ static int rzg2l_wdt_restart(struct watchdog_device *wdev,
+ 	struct rzg2l_wdt_priv *priv = watchdog_get_drvdata(wdev);
+ 	int ret;
  
--static int ssi_remove(struct platform_device *pd)
-+static void ssi_remove(struct platform_device *pd)
- {
- 	struct hsi_controller *ssi = platform_get_drvdata(pd);
++	/*
++	 * The device may be part of a power domain that is currently
++	 * powered off. We need to power it up before accessing registers.
++	 * We don't undo the dev_pm_genpd_resume() as the device need to
++	 * be up for the reboot to happen. Also, as we are in atomic context
++	 * here there is no need to increment PM runtime usage counter
++	 * (to make sure pm_runtime_active() doesn't return wrong code).
++	 */
++	if (!pm_runtime_active(wdev->parent))
++		dev_pm_genpd_resume(wdev->parent);
++
+ 	clk_prepare_enable(priv->pclk);
+ 	clk_prepare_enable(priv->osc_clk);
  
-@@ -561,8 +561,6 @@ static int ssi_remove(struct platform_device *pd)
- 	platform_set_drvdata(pd, NULL);
- 
- 	pm_runtime_disable(&pd->dev);
--
--	return 0;
- }
- 
- #ifdef CONFIG_PM
-@@ -618,7 +616,7 @@ MODULE_DEVICE_TABLE(of, omap_ssi_of_match);
- 
- static struct platform_driver ssi_pdriver = {
- 	.probe = ssi_probe,
--	.remove	= ssi_remove,
-+	.remove_new = ssi_remove,
- 	.driver	= {
- 		.name	= "omap_ssi",
- 		.pm     = DEV_PM_OPS,
 -- 
-2.43.0
+2.39.2
 
