@@ -1,70 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DDA16DECB
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:25:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95416E878;
+	Wed, 10 Apr 2024 15:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762741; cv=none; b=NuckSwRgdlpRakeF1L7HfCPwNLNrSa+UUttwHKX37Kjx+GFL4dqho8Jk/Hi/IvzCQk4e26MESPFuDreZtl5uQlvyTZWxQl5hSZb0L6fwLyyLYhPaUPq9bbTpu1x8uNKToAO9WwSD7iB13lS3DJRDSzlSY9j+lFUwiCKIqbPOI88=
+	t=1712762748; cv=none; b=uPwaDEWyFi1isjHGv10w0NB1c3pkI78rDXLmG74/9d3XRmof1E5LQlvpCCwcUlRU7Z7Vj6cMo66l6pm1jNeYDs1QGagOCS0GxDxeBKKs3c7ycJRYeKrt1LAWXAIPARWxweu5eTQejArS3/eDIMKc3Q2gum4VqAUHhrOVFsuaBrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762741; c=relaxed/simple;
-	bh=Nqu+9dKEhjC9kwrawShWr3dtYD9VLYMStsi3if+IvzE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SAp/aKoUmdCEINAKF9J5NmLQs05AO0jiH4ehtkbwPv/RTkZRvlaiWAvCZHTibg9ZVvBlElgkmJF0jfEz05FBs1b9LB9PhV/t55jRSdeVy1a2i8eK/v9dKA9xr0MS441lEkaUN3jb8h4ZVz5jzvAYIxf2UnHocwqETN3hvc0xXIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjZ2Bc+E; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjZ2Bc+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22978C43394;
-	Wed, 10 Apr 2024 15:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712762740;
-	bh=Nqu+9dKEhjC9kwrawShWr3dtYD9VLYMStsi3if+IvzE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gjZ2Bc+E4cT3wA8GAem+w6X9VRG7fkY20Q4/K0PkLiL02OIaisKhKe+Wi8eMTIJWc
-	 Wr6sb3tUJxHK3ZlHalfgYtweIe4gLL8sJG7jNpvAG3/qxz8VdF12UmrLFIwrfeZyYQ
-	 1K/GSM1ZAhbuHTNmM84M/+f3mx0vJXtda+mGQWuhlExj8AlmHC27xBYDrrEMI367yl
-	 v3JiSCNeNP/+wAYreBOsx7442EXytLqS7mnbW4Y/QqWnu9C1lXRsGhfvQp01j7fmDw
-	 UhgSCaOBwbZuc1rfWIoB9ZD99Wq8OGMIrNeNJv1sNzxgoYv1Q32/9G4sQAWnCHnsG+
-	 yliVcTh1Q0JzQ==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Jassi Brar <jassisinghbrar@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] mailbox: mtk-cmdq-mailbox: fix module autoloading
-Date: Wed, 10 Apr 2024 17:25:34 +0200
-Message-Id: <20240410152534.190326-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712762748; c=relaxed/simple;
+	bh=Pk0thEfc+DKwTeAkAv2HFqvGA8+fNmNFZy9Fw5oWnfU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u1SCwxMHNd6eWvwF+sklaMbhiPGIQbhF0oNp2of8oR1SEKuBxJ++fHSe1xkFiISXmaKezFKXphuonpUKFdCg4kUxIOKw1dStzBr0tt1FD6oy3YJ44FIFYOoLGxQYoerTkE7ikwnuFGhx7Bz1BwaQvPKpXr4tAXJrH0QmG6V56Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31F05C433F1;
+	Wed, 10 Apr 2024 15:25:47 +0000 (UTC)
+Date: Wed, 10 Apr 2024 11:28:23 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Zheng Yejian <zhengyejian1@huawei.com>
+Cc: <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+ <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: Fix use-after-free issue in ftrace_location()
+Message-ID: <20240410112823.1d084c8f@gandalf.local.home>
+In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add MODULE_DEVICE_TABLE(), so this module could be properly autoloaded
-based on the alias from of_device_id table.
+On Mon, 1 Apr 2024 20:55:43 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+> KASAN reports a bug:
+> 
+>   BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
+>   Read of size 8 at addr ffff888141d40010 by task insmod/424
+>   CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+ #213
+>   [...]
+>   Call Trace:
+>    <TASK>
+>    dump_stack_lvl+0x68/0xa0
+>    print_report+0xcf/0x610
+>    kasan_report+0xb5/0xe0
+>    ftrace_location+0x90/0x120
+>    register_kprobe+0x14b/0xa40
+>    kprobe_init+0x2d/0xff0 [kprobe_example]
+>    do_one_initcall+0x8f/0x2d0
+>    do_init_module+0x13a/0x3c0
+>    load_module+0x3082/0x33d0
+>    init_module_from_file+0xd2/0x130
+>    __x64_sys_finit_module+0x306/0x440
+>    do_syscall_64+0x68/0x140
+>    entry_SYSCALL_64_after_hwframe+0x71/0x79
+> 
+> The root cause is that when lookup_rec() is lookuping ftrace record of
+> an address in some module, and at the same time in ftrace_release_mod(),
+> the memory that saving ftrace records has been freed as that module is
+> being deleted.
+> 
+>   register_kprobes() {
+>     check_kprobe_address_safe() {
+>       arch_check_ftrace_location() {
+>         ftrace_location() {
+>           lookup_rec()  // access memory that has been freed by
+>                         // ftrace_release_mod() !!!
+> 
+> It seems that the ftrace_lock is required when lookuping records in
+> ftrace_location(), so is ftrace_location_range().
+> 
+> Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> ---
+>  kernel/trace/ftrace.c | 28 ++++++++++++++++++----------
+>  1 file changed, 18 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index da1710499698..838d175709c1 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1581,7 +1581,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>  }
+>  
+>  /**
+> - * ftrace_location_range - return the first address of a traced location
+> + * ftrace_location_range_locked - return the first address of a traced location
+>   *	if it touches the given ip range
+>   * @start: start of range to search.
+>   * @end: end of range to search (inclusive). @end points to the last byte
+> @@ -1592,7 +1592,7 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
+>   * that is either a NOP or call to the function tracer. It checks the ftrace
+>   * internal tables to determine if the address belongs or not.
+>   */
+> -unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+> +static unsigned long ftrace_location_range_locked(unsigned long start, unsigned long end)
+>  {
+>  	struct dyn_ftrace *rec;
+>  
+> @@ -1603,6 +1603,17 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>  	return 0;
+>  }
+>  
+> +unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+> +{
+> +	unsigned long loc;
+> +
+> +	mutex_lock(&ftrace_lock);
+> +	loc = ftrace_location_range_locked(start, end);
+> +	mutex_unlock(&ftrace_lock);
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index ead2200f39ba..080d091e28ac 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -765,6 +765,7 @@ static const struct of_device_id cmdq_of_ids[] = {
- 	{.compatible = "mediatek,mt8195-gce", .data = (void *)&gce_plat_mt8195},
- 	{}
- };
-+MODULE_DEVICE_TABLE(of, cmdq_of_ids);
- 
- static struct platform_driver cmdq_drv = {
- 	.probe = cmdq_probe,
--- 
-2.34.1
+I'm not so sure we can take a mutex in all places that call this function.
+
+What about using RCU?
+
+	rcu_read_lock();
+	loc = ftrace_location_range_rcu(start, end);
+	rcu_read_unlock();
+
+Then in ftrace_release_mod() we can have:
+
+ out_unlock:
+	mutex_unlock();
+
+	/* Need to synchronize with ftrace_location() */
+	if (tmp_pages)
+		synchronize_rcu();
+
+-- Steve
+
+
+> +
+> +	return loc;
+> +}
+> +
+>  /**
+>   * ftrace_location - return the ftrace location
+>   * @ip: the instruction pointer to check
+> @@ -1614,25 +1625,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>   */
+>  unsigned long ftrace_location(unsigned long ip)
+>  {
+> -	struct dyn_ftrace *rec;
+> +	unsigned long loc;
+>  	unsigned long offset;
+>  	unsigned long size;
+>  
+> -	rec = lookup_rec(ip, ip);
+> -	if (!rec) {
+> +	loc = ftrace_location_range(ip, ip);
+> +	if (!loc) {
+>  		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
+>  			goto out;
+>  
+>  		/* map sym+0 to __fentry__ */
+>  		if (!offset)
+> -			rec = lookup_rec(ip, ip + size - 1);
+> +			loc = ftrace_location_range(ip, ip + size - 1);
+>  	}
+>  
+> -	if (rec)
+> -		return rec->ip;
+> -
+>  out:
+> -	return 0;
+> +	return loc;
+>  }
+>  
+>  /**
 
