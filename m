@@ -1,60 +1,72 @@
-Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4BB13C900;
-	Wed, 10 Apr 2024 07:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A0F13C905
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712733256; cv=none; b=asN+YMOkWdDFTc4x+evE7Zo4PJcA5V3XPNu8Mzs/CEu+Icr5WSocib6qxFJwMuHpsAoSAvwQt17+gkjAaL0S42Zcd8xJt+qtn30PcLDr3WoVR5eNKBZn6mRV4RJ5Po9FZl50wKf1EA8AQJRstyrqI0lUSj0+zh62FAc2C3mGq1Y=
+	t=1712733297; cv=none; b=IR3O4any/25+svUu2VxU6gdUIyikaQvOfPNHERmHVEZZk9UC4DR3OZVHf95nCLkKY/Ie+EBlqbZdyWiJCpiyfLIZy6y++xqKHWo0qotltSi/SG3wocVb21hC3S88s/An2UN8Umb906ZFQn7FFLOprIiJV5c/xPivE1Xh/RbHxpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712733256; c=relaxed/simple;
-	bh=YmJ4s2H8wjmREoV2xAlGhvbwF7Bfw51LOFU0l1TB+EI=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=fMriTQTjsRsGqq8CAtF01o8P2pgNIBdzIlb+zN9tsEe4Ot3y3+8yqGHwhOZF8aJC7GHpw6ZShPGQvHyNmXXxwebLBJS7g0IEOes46gq69tXfKRi6NN+ewLnKkkgtKbThxduBq+RjnotD1Rhcj5wopCQQvRrGOcQF1ps/Mdvhr88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=xDK9pbC9; arc=none smtp.client-ip=203.205.221.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712733297; c=relaxed/simple;
+	bh=6g9/jsociBqmZYAv6y4f1ADBORU8rHPX+WE2IfbFsv0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dGXw+6AqnZuj82b0BwHip/CBTNogf/BQsJgaZKCX7iS2Fmd0B/NZb8CqR7Oa0hCsGDTC9FEw7LHF1UDQl45RkUxtYAqcb2ybuLiEThKUaX8p5tAvhaK+WH/1luCb7lsxKHs+xM1hnE0UH1FJDm/2bZzaJXH9Q9YOZ5RT88x7enc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=qC9XblTZ; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="xDK9pbC9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712733251; bh=pLNFfWJZyrrjt5ug/1IiEA0s6nA/zcDIGuvnAc6EYyU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=xDK9pbC9vhrDJHlw/ChVdWteJDO1a2Co2kYL43vQB0XHJy+WZwxe1zDyrP5v1N02/
-	 uCqLt4bgGfx3FGBKc9oE8GTFjHhHkbwAaCM+af4wL3lDGporPtaNOp/dSuWqWyBknY
-	 R91wrOSCMOEVotXmFeyseZz/2JzeyBhsY64YpjXI=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 16E9E07C; Wed, 10 Apr 2024 15:05:46 +0800
-X-QQ-mid: xmsmtpt1712732746taw9g6jm2
-Message-ID: <tencent_59925DB41938CFAC0DDEA5A40DB592425D07@qq.com>
-X-QQ-XMAILINFO: MIAHdi1iQo+z6Me8BtzExIGoq9q6kn1ilN1+Ec9Q63Jhv6qjQlpeJnwHPB3qZP
-	 fM0X6whyJCXIGus//1EjkvBvcpw1HrIZgiT1xP+6jirBUlHhvwCAW1gPMAnlku9xKbgsumlHPs/w
-	 6P0T6w8bK8ZbNPa4RzxBhzZIrCfmnvuqeX5Y7ICdI+Pb2l9+3veyUebYmFVhlzFT4Tfv+W6m2Iro
-	 SGzByP40FpR2FY0bilje3dXlxksQLrrHoYH4srDecZ2qmQWqbV+AufclGN2Kdgjbc1p1+7SdLPKI
-	 mxEgGx0Yjboonu5s5hzcZxz4sUuWjG1Tf2+qKPUiE9fY/twK2QwKwGVzLipLSyZOIllBvM8penmU
-	 cozVmNEL0t+m1bjl+lAAHq7JuIA9BSnmwsdxiWYnW1niy8/f35KXPaDuvmeiAxGvSZWoybD/MQq0
-	 5LE8Vp0In2V8X2IYI39eCvV6R4Rux1DADk7k3ly28SnSIS9qDOFHKRRwZDKQQhjY0IGAbcgYAm3g
-	 7N269nIOwsO8nrwToukukOIsw5Rrlc4jGX8yVtpJU+0CGT6lQhg1Yxn2zi0cQWEicOKT9FN0Im41
-	 MlELpxFEvHf+sXzI6wYQy5YJmOlHlBuU3rTd2Ewb7JaHkLtC5woOdXm4JFd0MF1FMgFXWFg/aZHk
-	 A9OziP1aaXB+co9psyv2MAeapUrUhufYZFS2pvKXr6BAtVRr3/TpHYmz4V/S+/mMbXT6I4Dgi2Ne
-	 ycOi2c3ad3l2qaUmtq++YkY16ny9LrW559DOFwhd9yu3ygssWBZ4Q5yYn5FsBWdHhDcn4y1QTYSu
-	 iyiaOovWrNxJLlgOLC8uqI1vfUU8WihwK/lU0LfvVNjqFuhuxVL8oWBdnYj0+kxG/cVZAHepLAyv
-	 ZzKJKNzZQ0EOs/CxPkxXvJZAO3rmVKaj29yfbiTDsdNjRYi0uQoLwwN7C5fJQ7ZnfAmtLZ3EH8SG
-	 RTuRTZdHM=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com
-Cc: jfs-discussion@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="qC9XblTZ"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5f415fd71f8so1472686a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:14:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1712733296; x=1713338096; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oIMOd1zj3gkMdcIscBRTSVUzcEAoxAPXNWZxjmNC33Y=;
+        b=qC9XblTZeENri3UNK8MqeSnuf2/Q8et/KEGlZhRHUpfLSj5eElk7FTliNOc7DFZNDc
+         pIiiyF7ebLoNkMZ8dNEHDQ0pcnogvSjgpMd0JevXuzhv43NflvFw4o+5rAxH1lCv9/RH
+         vuLZnOKMk+ut4AmG8880n8ksGkOGjylJH6Oiy+mDft9+prY6IcIVp6fG39LMOJo2HMsl
+         FgBkroDJ5FTLe2wTirUAIUUfkTdqt4nDKBPzKKPRvak2TRoC+sUlOVfNCMoQfiwD2wlC
+         5y/PCnPv+0rnH3L4iBYDqf7VLL3pPLVA67yuUJ4ZxFs58c/cuGRzOxpxdE5as630pATi
+         pDqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712733296; x=1713338096;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oIMOd1zj3gkMdcIscBRTSVUzcEAoxAPXNWZxjmNC33Y=;
+        b=vq6b7n69qZEYfcRcuDyZpgXiJPhDa6aj/qCuZjfFWhkdtHaBsbztMEOxUpRyjkVEGG
+         n911J8pnSdzKq10XD0b1HpEjnrRSl2xQp3KVMX+2iyPxYV/RuZziGnuJ9RH5raqJvIk2
+         dNKw5aiAmP7uw0oxLqng+thJ/4xa9IIje0j8PpOdrDd81mUsggHdkIAeyKGfviqoGxwT
+         H6cj+JDkt8Kgwi82PNjDcjSG5C52MghwfnqCpQ8BdCfpod+budqFO+0UsPG25gx2Xx/S
+         aBDjSj4d9InuFb8Rw/y8lqSbEzKiGJFCMcgQmmRV0aaiJy0Ub5NWMwDztk/VTAmGLTKF
+         DxDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoCDiVIBSAzvzLyWiEkno7CzWUQHrsuPOTYe5Xn6vwoHbcvnnEE2HEKvy9z/gFRO2UovXri7eb2mZ0OD+vCKVWMOpXrXv+9i/mpc30
+X-Gm-Message-State: AOJu0Yz2jSN9yHrbRo7uEKDhRYzme5uc3uTZCVa4sKgkGDfvVoCbqydf
+	SR/Lhu1ILkLa+bpgxxcyChD6wqwCm17ixq9NdYPC/BlPp8Ucr93VEZYwDnbCzi8=
+X-Google-Smtp-Source: AGHT+IEVm6HJ8DLUI4GT5B2aoRikQtW20BaDdKOMt4/+udHIsI3m/VTV3o3lGXByhjg8ncO4JyMRtA==
+X-Received: by 2002:a05:6a20:9698:b0:1a8:4254:5cdf with SMTP id hp24-20020a056a20969800b001a842545cdfmr1796798pzc.22.1712733295666;
+        Wed, 10 Apr 2024 00:14:55 -0700 (PDT)
+Received: from localhost.localdomain ([116.66.212.162])
+        by smtp.gmail.com with ESMTPSA id z17-20020a170903409100b001e264b50964sm10107975plc.205.2024.04.10.00.14.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 00:14:55 -0700 (PDT)
+From: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+To: sam@ravnborg.org,
+	neil.armstrong@linaro.org,
+	daniel@ffwll.ch,
+	dianders@chromium.org,
+	airlied@gmail.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	shaggy@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] jfs: reserve the header and use freelist from second
-Date: Wed, 10 Apr 2024 15:05:47 +0800
-X-OQ-MSGID: <20240410070546.719365-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000ea6cba0615a3f177@google.com>
-References: <000000000000ea6cba0615a3f177@google.com>
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+Subject: [PATCH v1 0/2] Support BOE nv110wum-l60 and IVO t109nw41 MIPI-DSI panel
+Date: Wed, 10 Apr 2024 15:14:35 +0800
+Message-Id: <20240410071439.2152588-1-yangcong5@huaqin.corp-partner.google.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +75,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-[syzbot reported]
-general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 PID: 5061 Comm: syz-executor404 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:dtInsertEntry+0xd0c/0x1780 fs/jfs/jfs_dtree.c:3713
-...
-[Analyze]
-When the pointer h has the same value as p, after writing name in UniStrncpy_to_le(),
-p->header.flag will be cleared.
-This will cause the previously true judgment "p->header.flag & BT-LEAF" to change
-to no after writing the name operation, this leads to entering an incorrect branch
-and accessing the uninitialized object ih when judging this condition for the
-second time.
-[Fix]
-When allocating slots from the freelist, we start from the second one to preserve
-the header of p from being incorrectly modified.
+BOE nv110wum-l60 and IVO t109nw41 both 11.0" WUXGA TFT LCD panel,
+which fits in nicely with the existing panel-boe-tv101wum-nl6 driver.
+Add compatible for BOE nv110wum-l60 and IVO t109nw41
+in dt-bindings.
 
-Reported-by: syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/jfs/jfs_dtree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cong Yang (4):
+  dt-bindings: display: panel: Add compatible for BOE nv110wum-l60
+  drm/panel: boe-tv101wum-nl6: Support for BOE nv110wum-l60 MIPI-DSI
+    panel
+  dt-bindings: display: panel: Add compatible for IVO t109nw41
+  drm/panel: boe-tv101wum-nl6: Support for IVO t109nw41 MIPI-DSI panel
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 031d8f570f58..deb2a5cc78d8 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -3618,7 +3618,8 @@ static void dtInsertEntry(dtpage_t * p, int index, struct component_name * key,
- 	kname = key->name;
- 
- 	/* allocate a free slot */
--	hsi = fsi = p->header.freelist;
-+	hsi = fsi = p->header.freelist = p->header.freelist == 0 ? 
-+		1 : p->header.freelist;
- 	h = &p->slot[fsi];
- 	p->header.freelist = h->next;
- 	--p->header.freecnt;
+ .../display/panel/boe,tv101wum-nl6.yaml       |   4 +
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 213 ++++++++++++++++++
+ 2 files changed, 217 insertions(+)
+
 -- 
-2.43.0
+2.25.1
 
