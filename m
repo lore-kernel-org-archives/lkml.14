@@ -1,87 +1,228 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3087515B0E4
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFBC17F36D;
+	Wed, 10 Apr 2024 17:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771567; cv=none; b=k27or5ryuOoPasLyZx8XLq7FNtFp4wiFvyVBnFcNWuRlSkx2w1fUIFuYWTGerzFb/Tu7PZSOcIl3sA6jud0DFF4T8L5uX/oLbxNpP0kSUp60FqhZd2fi5F3o/9kOg3zIRxyVDKr9+sURAbhte7NNr8KoKEsE88y7rnZuBbUUep4=
+	t=1712771617; cv=none; b=FWDwrgU8uLD2k+s5bVMjn6VNL94S5p6N3fprp9NmKLoNQ7uP9XHKc0KSb/9dflIGFPH5KWgaIiji+CvupcLRFDAZMGIA/6oPpZVf61xGU5uEve4bM14t3wyMfbBlua0Hk5CLZQyQ+A35NSo1UE7/T09C0zCIgY/ufZtlgYW2wAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771567; c=relaxed/simple;
-	bh=767o7xvkZkE5AQMsnF/zYn8G1hq61jQzSHPrrqakIms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tBBu9qWLCw5FTM8yrq2r66jv9W2OjZbxP8MvP9UlgfDE5S8YvxAN79/JMNhB1enekWSFpRohaK8w+l4+hyjqW0yJXjpo5Rrg35deetXETWqohklKOtjj/izDs5EpvBhd/s/7ox+SFTDr40I4SmTgqLTAl96qvWxBzDccDdRKzkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NChVpYqB; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NChVpYqB"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d4886a1cb4so83736161fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712771564; x=1713376364; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uOVHA2xlzK7je7ttjy1nhrPlXlPuAp2xezIP2Gu8nIM=;
-        b=NChVpYqBHbSAiaCkhnBtbML0SQ3clrOE0QexSV+3o7bhupaWXmVtZcmUxuQuI2ibsV
-         jWlcCOpQGZb5xBOuTu/4dwjReDfdML1jxYoY+sP0X1OtLiNetersEMznvDTubuyzFU3M
-         zHA4An29eKS46OJdg4uV0bX/1Cub5ghDNTJMHBUd4ewA8+RNl9QyYnI7FjxyVZuciyGX
-         B2tKKOeeNbXVPzgsp5yuJBMpDipGZ7C5IMMC3E3Nq9D3B6ndz9PoWM89Q3jCWbfkokqB
-         wjGuTpmdIQGk06bWSRNeIWjgWSblJzCy9U4sFmBFH6RatuBqYrUELC7F7UBlU0HokwTt
-         YDjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712771564; x=1713376364;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uOVHA2xlzK7je7ttjy1nhrPlXlPuAp2xezIP2Gu8nIM=;
-        b=aA7ygtSNZykzrnh0O8LyaznehWewJfua3yqBUHXBc6fvwmSeRqsl1EL0pa4c45hWBg
-         t8nOB2Gl5fwzzYrIq9KGlLoblGiCHKOkGjx3dQAZJx5E2H/hKGpXygzi/ntsdq0ZNn+8
-         4nJ092m5jEi9+QGLA5yfGXkcQB+MQRkbYRKycUUxAk5EdWbPYTTB7fiF8/3ukNPbptV9
-         EpzzDahDA5awGPMVY5PhurvK+IXOesUFjJCrse6s0zWtTkifXSeDrmDNfZHTAl9txfPQ
-         Q8Dyb1r+QwteFFzAvWJMRiGrTScZY7zwAsiWDMY3tOleRoqu5Gsl0gBi/sJ0MQ63um+c
-         jkiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7PqpxTwmFbzwVisJJW0p86QJHMCh1tJfJ1t+xkYfogd3dH7YaKWybXLiCCtJqxyYe+XDDeFRU3wnLQZavwBXWK1FaOQsxhyQ3NTME
-X-Gm-Message-State: AOJu0Yz21ksZz7vviXT1ACphr6t/9pIgqsXxv0vB2KkZw0MKJWHADGVw
-	NL8kAlQPqcJd2dEV+bXYGtq9avWgaFT3RG+KDFGy9fGOWGYnd19YVy/rJa4hmKg=
-X-Google-Smtp-Source: AGHT+IEOlj4YMG9ismhRXJyrEXTIOfXs991+9TpCiZiqMR8fC8jAZzGSCXGqag0xPmiMZ4gXU+5/0g==
-X-Received: by 2002:a2e:300b:0:b0:2d8:71a3:aafd with SMTP id w11-20020a2e300b000000b002d871a3aafdmr2448469ljw.27.1712771563497;
-        Wed, 10 Apr 2024 10:52:43 -0700 (PDT)
-Received: from [172.30.205.26] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id c20-20020a2e6814000000b002d82f0f14c3sm1844665lja.130.2024.04.10.10.52.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 Apr 2024 10:52:43 -0700 (PDT)
-Message-ID: <148157a4-7f78-4d03-8a12-44658ca6ab51@linaro.org>
-Date: Wed, 10 Apr 2024 19:52:41 +0200
+	s=arc-20240116; t=1712771617; c=relaxed/simple;
+	bh=3/m6CnlZT8WDYrp1oFmaSDvXJdpwkiKKCHdd+w0rOqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DJcJqPvTSak3Z84Mk9BIBxmw3EgBoZc9AhlomTN1ThZkQ6oAiO3R1ju3GORmXkZvgLm2vV+20YqgHc/DQoOxQNPAMKXFc+oW8UDUZDDKgwmAsZ8rN89KLTo2VaOz2o2Urbvu8bUn17tUCVonuwrRMQ9ZNvidEvmSV2NEzcbVgro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D9CC433C7;
+	Wed, 10 Apr 2024 17:53:35 +0000 (UTC)
+Date: Wed, 10 Apr 2024 13:56:12 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Lorenzo
+ Stoakes <lstoakes@gmail.com>
+Cc: Vincent Donnefort <vdonnefort@google.com>, mhiramat@kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, kernel-team@android.com,
+ rdunlap@infradead.org
+Subject: Re: [PATCH v20 0/5] Introducing trace buffer mapping by user-space
+Message-ID: <20240410135612.5dc362e3@gandalf.local.home>
+In-Reply-To: <20240406173649.3210836-1-vdonnefort@google.com>
+References: <20240406173649.3210836-1-vdonnefort@google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rpmsg: qcom_glink_ssr: fix module autoloading
-To: Krzysztof Kozlowski <krzk@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240410164058.233280-1-krzk@kernel.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240410164058.233280-1-krzk@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
 
+Hi Andrew, et.al.
 
-On 4/10/24 18:40, Krzysztof Kozlowski wrote:
-> Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-> based on the alias from of_device_id table.
+Linus said it's a hard requirement that this code gets an Acked-by (or
+Reviewed-by) from the memory sub-maintainers before he will accept it.
+He was upset that we faulted in pages one at a time instead of mapping it
+in one go:
+
+  https://lore.kernel.org/all/CAHk-=wh5wWeib7+kVHpBVtUn7kx7GGadWqb5mW5FYTdewEfL=w@mail.gmail.com/
+
+Could you take a look at patches 1-3 to make sure they look sane from a
+memory management point of view?
+
+I really want this applied in the next merge window.
+
+Thanks!
+
+-- Steve
+
+
+On Sat,  6 Apr 2024 18:36:44 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> The tracing ring-buffers can be stored on disk or sent to network
+> without any copy via splice. However the later doesn't allow real time
+> processing of the traces. A solution is to give userspace direct access
+> to the ring-buffer pages via a mapping. An application can now become a
+> consumer of the ring-buffer, in a similar fashion to what trace_pipe
+> offers.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+> Support for this new feature can already be found in libtracefs from
+> version 1.8, when built with EXTRA_CFLAGS=-DFORCE_MMAP_ENABLE.
+> 
+> Vincent
+> 
+> v19 -> v20:
+>   * Fix typos in documentation.
+>   * Remove useless mmap open and fault callbacks.
+>   * add mm.h include for vm_insert_pages
+> 
+> v18 -> v19:
+>   * Use VM_PFNMAP and vm_insert_pages
+>   * Allocate ring-buffer subbufs with __GFP_COMP
+>   * Pad the meta-page with the zero-page to align on the subbuf_order
+>   * Extend the ring-buffer test with mmap() dedicated suite
+> 
+> v17 -> v18:
+>   * Fix lockdep_assert_held
+>   * Fix spin_lock_init typo
+>   * Fix CONFIG_TRACER_MAX_TRACE typo
+> 
+> v16 -> v17:
+>   * Documentation and comments improvements.
+>   * Create get/put_snapshot_map() for clearer code.
+>   * Replace kzalloc with kcalloc.
+>   * Fix -ENOMEM handling in rb_alloc_meta_page().
+>   * Move flush(cpu_buffer->reader_page) behind the reader lock.
+>   * Move all inc/dec of cpu_buffer->mapped behind reader lock and buffer
+>     mutex. (removes READ_ONCE/WRITE_ONCE accesses).
+> 
+> v15 -> v16:
+>   * Add comment for the dcache flush.
+>   * Remove now unnecessary WRITE_ONCE for the meta-page.
+> 
+> v14 -> v15:
+>   * Add meta-page and reader-page flush. Intends to fix the mapping
+>     for VIVT and aliasing-VIPT data caches.
+>   * -EPERM on VM_EXEC.
+>   * Fix build warning !CONFIG_TRACER_MAX_TRACE.
+> 
+> v13 -> v14:
+>   * All cpu_buffer->mapped readers use READ_ONCE (except for swap_cpu)
+>   * on unmap, sync meta-page teardown with the reader_lock instead of
+>     the synchronize_rcu.
+>   * Add a dedicated spinlock for trace_array ->snapshot and ->mapped.
+>     (intends to fix a lockdep issue)
+>   * Add kerneldoc for flags and Reserved fields.
+>   * Add kselftest for snapshot/map mutual exclusion.
+> 
+> v12 -> v13:
+>   * Swap subbufs_{touched,lost} for Reserved fields.
+>   * Add a flag field in the meta-page.
+>   * Fix CONFIG_TRACER_MAX_TRACE.
+>   * Rebase on top of trace/urgent.
+>   * Add a comment for try_unregister_trigger()
+> 
+> v11 -> v12:
+>   * Fix code sample mmap bug.
+>   * Add logging in sample code.
+>   * Reset tracer in selftest.
+>   * Add a refcount for the snapshot users.
+>   * Prevent mapping when there are snapshot users and vice versa.
+>   * Refine the meta-page.
+>   * Fix types in the meta-page.
+>   * Collect Reviewed-by.
+> 
+> v10 -> v11:
+>   * Add Documentation and code sample.
+>   * Add a selftest.
+>   * Move all the update to the meta-page into a single
+>     rb_update_meta_page().
+>   * rb_update_meta_page() is now called from
+>     ring_buffer_map_get_reader() to fix NOBLOCK callers.
+>   * kerneldoc for struct trace_meta_page.
+>   * Add a patch to zero all the ring-buffer allocations.
+> 
+> v9 -> v10:
+>   * Refactor rb_update_meta_page()
+>   * In-loop declaration for foreach_subbuf_page()
+>   * Check for cpu_buffer->mapped overflow
+> 
+> v8 -> v9:
+>   * Fix the unlock path in ring_buffer_map()
+>   * Fix cpu_buffer cast with rb_work_rq->is_cpu_buffer
+>   * Rebase on linux-trace/for-next (3cb3091138ca0921c4569bcf7ffa062519639b6a)
+> 
+> v7 -> v8:
+>   * Drop the subbufs renaming into bpages
+>   * Use subbuf as a name when relevant
+> 
+> v6 -> v7:
+>   * Rebase onto lore.kernel.org/lkml/20231215175502.106587604@goodmis.org/
+>   * Support for subbufs
+>   * Rename subbufs into bpages
+> 
+> v5 -> v6:
+>   * Rebase on next-20230802.
+>   * (unsigned long) -> (void *) cast for virt_to_page().
+>   * Add a wait for the GET_READER_PAGE ioctl.
+>   * Move writer fields update (overrun/pages_lost/entries/pages_touched)
+>     in the irq_work.
+>   * Rearrange id in struct buffer_page.
+>   * Rearrange the meta-page.
+>   * ring_buffer_meta_page -> trace_buffer_meta_page.
+>   * Add meta_struct_len into the meta-page.
+> 
+> v4 -> v5:
+>   * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+> 
+> v3 -> v4:
+>   * Add to the meta-page:
+>        - pages_lost / pages_read (allow to compute how full is the
+> 	 ring-buffer)
+>        - read (allow to compute how many entries can be read)
+>        - A reader_page struct.
+>   * Rename ring_buffer_meta_header -> ring_buffer_meta
+>   * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+>   * Properly consume events on ring_buffer_map_get_reader_page() with
+>     rb_advance_reader().
+> 
+> v2 -> v3:
+>   * Remove data page list (for non-consuming read)
+>     ** Implies removing order > 0 meta-page
+>   * Add a new meta page field ->read
+>   * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+> 
+> v1 -> v2:
+>   * Hide data_pages from the userspace struct
+>   * Fix META_PAGE_MAX_PAGES
+>   * Support for order > 0 meta-page
+>   * Add missing page->mapping.
+> 
+> Vincent Donnefort (5):
+>   ring-buffer: allocate sub-buffers with __GFP_COMP
+>   ring-buffer: Introducing ring-buffer mapping functions
+>   tracing: Allow user-space mapping of the ring-buffer
+>   Documentation: tracing: Add ring-buffer mapping
+>   ring-buffer/selftest: Add ring-buffer mapping test
+> 
+>  Documentation/trace/index.rst                 |   1 +
+>  Documentation/trace/ring-buffer-map.rst       | 106 +++++
+>  include/linux/ring_buffer.h                   |   6 +
+>  include/uapi/linux/trace_mmap.h               |  48 +++
+>  kernel/trace/ring_buffer.c                    | 403 +++++++++++++++++-
+>  kernel/trace/trace.c                          | 113 ++++-
+>  kernel/trace/trace.h                          |   1 +
+>  tools/testing/selftests/ring-buffer/Makefile  |   8 +
+>  tools/testing/selftests/ring-buffer/config    |   2 +
+>  .../testing/selftests/ring-buffer/map_test.c  | 302 +++++++++++++
+>  10 files changed, 979 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/trace/ring-buffer-map.rst
+>  create mode 100644 include/uapi/linux/trace_mmap.h
+>  create mode 100644 tools/testing/selftests/ring-buffer/Makefile
+>  create mode 100644 tools/testing/selftests/ring-buffer/config
+>  create mode 100644 tools/testing/selftests/ring-buffer/map_test.c
+> 
+> 
+> base-commit: 7604256cecef34a82333d9f78262d3180f4eb525
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
