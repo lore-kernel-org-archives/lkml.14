@@ -1,84 +1,97 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from relay161.nicmail.ru (relay161.nicmail.ru [91.189.117.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FC217F365;
-	Wed, 10 Apr 2024 18:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5261802A5
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.189.117.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712773337; cv=none; b=aG9L6ml2X96y6XZp8hEmB7X/IPqo1RO1h2VvuRf2vL5cDWY0G1O+CW5StLGQmaq5RiLRzfRNOBq0+q1TRHGUjQM+yQu4Gx/1dOGwJ/vi9dl1pPVFWdoUHP17TyD1YZbzH1zEf8aaJ1lfkuekynLoCtKJOpUL/byaSNooh0MquXk=
+	t=1712773342; cv=none; b=YokdzCl567T/of5As152EhfMkNnFdiT/FRKmZ7PEJUglDdET3uNBGQZkL1y8n06ybeJudo/XXZhLAseKia7lFMwGJfeA0N9Cw4I5NcKCssbaPxTpqta6e3BybM4uV4V0fH2rQgBiHieB0wgwkHP431A43vneL6NezOqWPoVO3Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712773337; c=relaxed/simple;
-	bh=emCfEmonWuKI46r0+LaWfIDnHM68bwnBZgGxRz3ISV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unMoSVqwjDBN73C/LuhsFhfi1P1wWLOJMSjmo5SSTPzIkOJduQ4x1JT58dXZPiYLw7qYFZPDqXUeuB4XOM8URYdEcPJnXugaZULeh6AgzaFUQgclPjdNqRDS56WHEMkb3MjlPFtsOD4xO5LQss2RCH/wI2QbVAsUZGU8/GOF32o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id C4C171C007B; Wed, 10 Apr 2024 20:22:07 +0200 (CEST)
-Date: Wed, 10 Apr 2024 20:22:07 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.8 000/280] 6.8.5-rc3 review
-Message-ID: <ZhbYz3XqW3zy/sES@duo.ucw.cz>
-References: <20240409173543.596615037@linuxfoundation.org>
+	s=arc-20240116; t=1712773342; c=relaxed/simple;
+	bh=MiGYtVTPTlPJXtEc1JctOxEO0iGjODSuctCxjwC4WDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VF6GN/h5N5twoVYbbXKEwuGDp4NoerXKBhlCTdpmjVjAXf0giPyphXtJqEY6jFUXtTDbU3MDd9aKWloCBoWfojP7bedA01041H68R17iASBSRGz1kmEUYUtrdwpoxiEmiWRuEigik+Hhgxz8Qek8E5vvpkpMy7jjmC60NKFefJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru; spf=pass smtp.mailfrom=ancud.ru; arc=none smtp.client-ip=91.189.117.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ancud.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ancud.ru
+Received: from [10.28.138.152] (port=4466 helo=[192.168.95.111])
+	by relay.hosting.mail.nic.ru with esmtp (Exim 5.55)
+	(envelope-from <kiryushin@ancud.ru>)
+	id 1rucF2-0007Tr-4O;
+	Wed, 10 Apr 2024 21:00:13 +0300
+Received: from [87.245.155.195] (account kiryushin@ancud.ru HELO [192.168.95.111])
+	by incarp1104.mail.hosting.nic.ru (Exim 5.55)
+	with id 1rucF2-009gh0-0h;
+	Wed, 10 Apr 2024 21:00:12 +0300
+Message-ID: <75c2b85a-da67-4037-b2b5-6a1dec838fa9@ancud.ru>
+Date: Wed, 10 Apr 2024 21:00:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="71Z35RUIFCdqClct"
-Content-Disposition: inline
-In-Reply-To: <20240409173543.596615037@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/smpboot: Add map vars allocation check in
+ smp_prepare_cpus_common
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ashok Raj <ashok.raj@intel.com>,
+ David Woodhouse <dwmw@amazon.co.uk>, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org
+References: <20240409182940.664482-1-kiryushin@ancud.ru>
+ <ZhaUZFY5MUyy6hWK@gmail.com>
+Content-Language: en-US
+From: Nikita Kiryushin <kiryushin@ancud.ru>
+In-Reply-To: <ZhaUZFY5MUyy6hWK@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-MS-Exchange-Organization-SCL: -1
 
+Thank you for the feedback!
+I still have a couple of questions, if you could elaborate further?
 
---71Z35RUIFCdqClct
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>   - That doesn't really solve anything, nor does it propagate the error
+>     further up.
+This patch indeed is not fixing the problem, but tries to, at least
+notify about it. Not sure, if it makes any sense in the context, as
+noted that
 
-Hi!
+> Plus memory allocation failures within __init functions for
+>     key CPU data structures are invariably fatal.
+If allocation errors in this case are indeed fatal, no one will be able to
+get the printed warning (so it is indeed pointless).
 
-> This is the start of the stable review cycle for the 6.8.5 release.
-> There are 280 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+But I do not understand, if all the possible allocation failures here are fatal?
+For cpu 0 it is obvious (as set_cpu_sibling_map(0) right here dereferences
+the allocated), but is it as fatal for the other cores?
 
-CIP testing did not find any problems here:
+> While there might be
+>     more cores in the future - but there will be even more RAM. This error
+>     condition will never be realistic.
+In general case it is true. But there are some cases, for which we can not presume, that there will be enough resources: for example, building a new system with large number of cores and test-running it with one small stick of ram, or (more realistically) some quirky hardware/firmware fault. I myself had experience in the past with a buggy BIOS, that made memory resource available for the system usage so small, it led to allocation failures in places it was presumed impossible before.
+>   - The canonical arch behavior for __init functions is to return -ENOMEM
+>     and not printk anything.
+Thank you for this observation! Is there any documentation I should read
+to educate myself about conventional rules like that?
+I was making my assumptions that printk is an OK solution in this case,
+based on surrounding code (like arch_cpuhp_init_parallel_bringup,
+disable_smp and native_smp_prepare_cpus, all of which do printk).
+I guess it may be specific to this specific part of code that, as you
+mentioned, are not meant to fail.
+>   But that's not really an option for
+>     smp_prepare_cpus_common(), which feeds back into the
+>     ::smp_prepare_cpus() callback that doesn't really expect failure either.
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/tree/linux-=
-6.1.y
-
-We also tested Linux 6.6.26-rc3 (63547075e080), Linux 6.8.5-rc3
-(6d08df6c401e), Linux 5.15.154-rc3 (8bdd6a2f1b3b) without detecting
-problems.
-
-Tested-by: Pavel Machek (CIP) <pavel@denx.de>
-
-Best regards,
-                                                                Pavel
-
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---71Z35RUIFCdqClct
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iFwEABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZhbYzwAKCRAw5/Bqldv6
-8jT3AJYzlOrCNYuYQENESlIawrq+OvslAJ9ybfbA5xvqzzQNrndvY+eEg6tBVA==
-=1boZ
------END PGP SIGNATURE-----
-
---71Z35RUIFCdqClct--
+> My suggestion would be to simply pass in __GFP_NOFAIL to document that
+> there's no reasonable allocation failure policy here.
+Thank you, seems like a more elegant solution, than adding new state
+flags to the code!
+But I have some questions considering __GFP_NOFAIL. It clearly shows, that allocation will not fail/is not expected to fail, does it not try making allocation until it succeeds? Would not it make the system hang in a problematic case? If all the allocations for all the cpus in this block are critical, we would be trading a possible crash for a possible hang (all in early startup), not sure which is better to debug. If some of the allocations are not that critical, with __GFP_NOFAIL the would still hang, is it OK?
+> Also note that this code has changed in the latest x86 tree (tip:master).
+Thank you for bringing that to my attention! Are there any guides to read
+about the preferred workflow for patches for x86 subsystem? I was developing
+the code on top of mainline kernel, not the x86 tree, and would like to know
+if I should have done it differently for the future.
