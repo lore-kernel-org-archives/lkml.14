@@ -1,68 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CC017BB10
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 17:27:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A44178CEE;
+	Wed, 10 Apr 2024 17:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770020; cv=none; b=b++Urhd1dT6QZapp7C9Ke29mVd+HcRuVrnrI4V0uI2e+FsQk118WLEd9KklNARA+RL+4U+DkKBvqDsMmeZxOWkRhrlgz5HAFy23vuQHmCJl+uo0Hd0fIhare8jAzfc9Cw0kbyTpLxB03GXAUwclbexofyEtPbVVgFt2o3VWK60w=
+	t=1712770167; cv=none; b=LeQThXHn/NfWSrKj77ZRhFQWbYqtlF067naUA3cBfsKXla5v1jjddUm4lVFIV3ODiWfFFLOgZhXfKZJdIihIXJJvsR3zm8vhfaY2vp1TWVi62MIIRPfz2K796+NfZv4m3AdPLkq0ERVbIiw1c6MpJNcPCs7rGFtD6Ll1kXVS2hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770020; c=relaxed/simple;
-	bh=PyToWV/okY5b6RHThwqWggcm0DKW3OA4KIKTaosbhUc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E8/JDl/rnBapOHC8CeEKbamQpPR8kC9ahqfxowDKpASQlDIeq7J2OP3ZfI1hdeVhSOtTdlkQPjy0TPhCZxwaDYMvNnuPHp9pWI4EDEEYkancKim6FZ2DSCoGbo2jNvyZSjaDOJI/GWQrFdHtrOrT3ofTaROuwOzZAnU0Hj3Uu6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVkRjWbV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712770167; c=relaxed/simple;
+	bh=kKy/KkBjkWZbvlopf+v401WCCnoGXIliP5F7ZNV9yIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMIFrk2cj07xgSPsJCllgb+oATNC5RbQL4dqQDJxGLMQqiNe5GreNUPRCpv9q86xKcS62iNd9jSG60ss5QfYdPA4Kg6CWrquc6XUh0t4tNCLex4YgO8HROSIT2+nGcsoqCXIMTQNBDwyXVOpny+1689K5Gv+6xhJXKTs7ipXTzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlJJ3J4H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVkRjWbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75A19C433F1;
-	Wed, 10 Apr 2024 17:26:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlJJ3J4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A734CC433C7;
+	Wed, 10 Apr 2024 17:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712770020;
-	bh=PyToWV/okY5b6RHThwqWggcm0DKW3OA4KIKTaosbhUc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CVkRjWbVMx1VhxmiwdzkgS/29EysYmq/NAhzg6MuCDJmZmtvuB5ZM2BHbGmgANqVW
-	 8naqltGLSkvunA54vsXUV9qoX8VNmW1wnquntHJRZ4y98UCvg86RMB8i+JUSkc6xZk
-	 x+Jh4Drp20aF4riEjJDfFe1hSeVHU9bPqDJ+r5RwtfeybplZoxWt6X05vJXSKmKrCh
-	 LVwaKDwq6s941Leml35idQCbiIgPQ1W4vIQwOP6ehfCAFpkyvIbx6bc+UG17naw5Ve
-	 v7XplMu2HBeQH3yVx6YYXjGdAWiW6oOIcjUjVboFEYmZdunXJ0hxtATu5PamqzJ5Zn
-	 xbCiX7uDtGQLQ==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-arm-kernel@lists.infradead.org,
+	s=k20201202; t=1712770166;
+	bh=kKy/KkBjkWZbvlopf+v401WCCnoGXIliP5F7ZNV9yIs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nlJJ3J4HT50hadj+1d/lz0xRzTzb5GeCtya2+Cc8lcfxz9pWNZXQ3zT5vdi6NAbeU
+	 Gz+t0h+fPb6sIhdXIBQMKgAix6DnLgS3R2KPwaBLYs3wzebhyXjsuw0MtxcVyo0Hq0
+	 9LwEb7x024/I86PfKizx7SLRp3WmyFHI2ix5zJgIGSb+6dPkEHKlScKPbapMO8S2jM
+	 8BBfe0OIYPunXnX3MkNInb7lFsVMuMMow6wMLlzdQTgmRYR9G9RQkSK3Z8jgRhICVM
+	 G0nwpufPRxE0mPi5WDSh2EpyUHVTIynzAkavDyfTMu/9IzcsXCrKFjxQ2E53roj0SM
+	 TJgMR9Z18HhOg==
+Date: Wed, 10 Apr 2024 12:29:24 -0500
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: matthew.gerlach@linux.intel.com, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] bus: brcmstb_gisb: fix module autoloading
-Date: Wed, 10 Apr 2024 19:26:54 +0200
-Message-Id: <20240410172654.255525-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v2] dt-bindings: PCI: altera: Convert to YAML
+Message-ID: <20240410172924.GA622917-robh@kernel.org>
+References: <20240405145322.3805828-1-matthew.gerlach@linux.intel.com>
+ <2ece9ac2-899c-4185-b0f3-8ab939afc1e5@linaro.org>
+ <alpine.DEB.2.22.394.2404081309050.381257@sj-4150-psse-sw-opae-dev2>
+ <d079bf4d-ebfe-4d98-b718-0c545aabbd30@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d079bf4d-ebfe-4d98-b718-0c545aabbd30@linaro.org>
 
-Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-based on the alias from of_device_id table.
+On Tue, Apr 09, 2024 at 08:29:07AM +0200, Krzysztof Kozlowski wrote:
+> On 08/04/2024 22:34, matthew.gerlach@linux.intel.com wrote:
+> >>> diff --git a/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..999dcda05f55
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/pci/altr,pcie-root-port.yaml
+> >>> @@ -0,0 +1,106 @@
+> >>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>> +# Copyright (C) 2024, Intel Corporation
+> >>
+> >> This is derivative of previous work, which is easily visible by doing
+> >> the same mistakes in DTS as they were before.
+> > 
+> > This is definitely derivative of previous work, and I want to fix the 
+> > DTS mistakes too.
+> > 
+> >>
+> >> You now added fresh copyrights ignoring all previous work, even though
+> >> you copied it. I don't agree.
+> >>
+> >> If you want to ignore previous copyrights, then at least don't copy
+> >> existing code... although even that would not be sufficient.
+> > 
+> > Ignoring previous copyrights was not my intent. There is no copyright 
+> > statement in the original text version of the device tree bindings. Should 
+> > that lack of copyright statement carry forward?
+> 
+> All the authors are copyright holders automatically, at least in some or
+> maybe most jurisdictions. You do not need to add copyright label for
+> material to be copyrighted. That's why you are not allowed to relicense
+> the work for example, without other authors' agreement.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/bus/brcmstb_gisb.c | 1 +
- 1 file changed, 1 insertion(+)
+The only thing I see as missing is some years. All the authors were 
+Altera which is now Intel, so Intel is the sole copyright holder. 
+Whether is says 2015 contributions were Altera or Intel is probably 
+immaterial.  There were also contributions by Google (Bjorn), but those 
+were purely editorial.
 
-diff --git a/drivers/bus/brcmstb_gisb.c b/drivers/bus/brcmstb_gisb.c
-index 65ae758f3194..ee29162da4ee 100644
---- a/drivers/bus/brcmstb_gisb.c
-+++ b/drivers/bus/brcmstb_gisb.c
-@@ -410,6 +410,7 @@ static const struct of_device_id brcmstb_gisb_arb_of_match[] = {
- 	{ .compatible = "brcm,bcm74165-gisb-arb", .data = gisb_offsets_bcm74165 },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, brcmstb_gisb_arb_of_match);
- 
- static int __init brcmstb_gisb_arb_probe(struct platform_device *pdev)
- {
--- 
-2.34.1
-
+Rob
