@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131D416F28E;
-	Wed, 10 Apr 2024 13:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDB2171659;
+	Wed, 10 Apr 2024 13:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712756226; cv=none; b=Ap164iVWTddwtjk3HWYyJQCa/R4B3aVjWAYZgZq11yYYF2H8lmbdcPv38AoZ84COdrT74OyaS2a3DLjAVGafGKSCVKAww2LVgz/zw0+EOx6jTRou5Nm128tJEg8WZOaA1yLMKCpYsq0liY22o7WLpyTWoXryPFrs/D6DVk9LIl8=
+	t=1712756227; cv=none; b=c+qLb8VJg+mZpO6vb/6c4lnQs5aAXQ4qwZ0IzkqEladB7VF9e90oA59Jg4s7vHXZEy9GFpqGGkRvRYe8teeSnMzfLAlfvzUYR2KPPEQjKQEeBMDYrrdrmSs4Psed9WpSz+fWIGYobH/zsJFHS/rvuCBm7aK9oZ19cPXpn6fa4B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712756226; c=relaxed/simple;
-	bh=aX2gfX0qKYkUHf7H0T+1mAzhQZIXwn9a3KNHcyddJUU=;
+	s=arc-20240116; t=1712756227; c=relaxed/simple;
+	bh=KM32SNb41b4Lg9S0iKRUmn1qiuXmKsCzoFcVq1tt5Q4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EV+55cwxeaIxrG/6DcLqxORZTp0a2S8RKRrGOsd/Yh7ITk5UWXd9ozmfdEVPbbtUP9uOSiqYcoCdvb4XfkRVq8VggaBGxbiacrezIFs7ZSonkA3z7kzpdHF052QlUAqCriH7z9GP/kWYqU2MOL0A/vuVyuQnSPl4oTW0jGpmuR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=YRQRXWQ3xXclzmb7SGwW55/y37xfcB4Ie/5giYzlqPHoAmOn6hwWVr1G1bzfWd0NJIofukn98M+i/kKQ9srh6u4/EFz9snkGmF1pok9wHJx+S0kGp8gzMFr1n4UEV/DHFy8V6l5qHUOHeGrbcqktvwmJnoA911cvezgCDiiRl5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VF3lT41m7z4f3khM;
-	Wed, 10 Apr 2024 21:36:53 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VF3lT0002z4f3m7N;
+	Wed, 10 Apr 2024 21:36:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 61EDE1A0179;
-	Wed, 10 Apr 2024 21:37:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id A20D21A0E24;
+	Wed, 10 Apr 2024 21:37:01 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAn+RHolRZmeCl4Jg--.8806S24;
-	Wed, 10 Apr 2024 21:37:00 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RHolRZmeCl4Jg--.8806S26;
+	Wed, 10 Apr 2024 21:37:01 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	chengzhihao1@huawei.com,
 	yukuai3@huawei.com,
 	wangkefeng.wang@huawei.com
-Subject: [RFC PATCH v4 20/34] ext4: use reserved metadata blocks when splitting extent on endio
-Date: Wed, 10 Apr 2024 21:28:04 +0800
-Message-Id: <20240410132818.2812377-21-yi.zhang@huaweicloud.com>
+Subject: [RFC PATCH v4 22/34] ext4: add a new iomap aops for regular file's buffered IO path
+Date: Wed, 10 Apr 2024 21:28:06 +0800
+Message-Id: <20240410132818.2812377-23-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410132818.2812377-1-yi.zhang@huaweicloud.com>
 References: <20240410132818.2812377-1-yi.zhang@huaweicloud.com>
@@ -54,10 +54,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn+RHolRZmeCl4Jg--.8806S24
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1UXw4xWrW5ZFy8Ary5Jwb_yoW8Wryfpr
-	9rAF1xWr40v3Wj9FW8u3WUJryrC3WUWF47GrZ8t3y29ay7Jr1ruF47K3WrZFyFqrZ7Xw4j
-	vr40qa48Zwn5Aa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:cCh0CgAn+RHolRZmeCl4Jg--.8806S26
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryDCFWrXrWrZr17Kr17KFg_yoW5CF17pF
+	Z8Kas3Gr18Zr9F9a1fXayDZF4Yya4fGw4UKFW3G3WavFyrGrW7KFWvk3WjkFy5t3y8Ar17
+	XF4jkry7WF17CrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -76,41 +76,89 @@ X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-ext4 only reserved space for delalloc for data blocks, doesn't reserve
-space for metadata blocks in ext4_da_reserve_space(). Besides, if we
-enable dioread_nolock mount option, it also doesn't reserve metadata
-blocks for the extent status conversion.
-
-In order to prevent data loss caused by fail to allocate metadata blocks
-on writeback, we reserve 2% space or 4096 blocks for meta data, and use
-EXT4_GET_BLOCKS_PRE_IO to do the potential split in advance. But all
-these two methods were just best efforts, if it's really running out of
-sapce, there is no difference between splitting extent on writeback and
-on IO completed, both will lead to data loss.
-
-The best way is to reserve enough space for metadata. Before that, we
-can at least make sure that things won't get worse if we postpone
-splitting extent to endio. So let's use reserved sapce in endio too.
+Introduce a new iomap address space operations ext4_iomap_aops to
+support regular file's buffered IO path, also add an inode state flag
+EXT4_STATE_BUFFERED_IOMAP, if it was set on an inode, it means that
+inode use the iomap path instead of buffer_head path for buffered IO.
+Most of their callbacks can use generic implementations, the left over
+read_folio, readahead and writepages will be implemented later.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/extents.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ext4/ext4.h  |  1 +
+ fs/ext4/inode.c | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 8bc8a519f745..fcb1916a7c29 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -3722,7 +3722,8 @@ static int ext4_convert_unwritten_extents_endio(handle_t *handle,
- 			     (unsigned long long)map->m_lblk, map->m_len);
- #endif
- 		err = ext4_split_convert_extents(handle, inode, map, ppath,
--						 EXT4_GET_BLOCKS_CONVERT);
-+					EXT4_GET_BLOCKS_CONVERT |
-+					EXT4_GET_BLOCKS_METADATA_NOFAIL);
- 		if (err < 0)
- 			return err;
- 		path = ext4_find_extent(inode, map->m_lblk, ppath, 0);
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 7e27e1e7c579..05949a8136ae 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1913,6 +1913,7 @@ enum {
+ 	EXT4_STATE_VERITY_IN_PROGRESS,	/* building fs-verity Merkle tree */
+ 	EXT4_STATE_FC_COMMITTING,	/* Fast commit ongoing */
+ 	EXT4_STATE_ORPHAN_FILE,		/* Inode orphaned in orphan file */
++	EXT4_STATE_BUFFERED_IOMAP,	/* Inode use iomap for buffered IO */
+ };
+ 
+ #define EXT4_INODE_BIT_FNS(name, field, offset)				\
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 2704dca96ee7..4c1fed516d9e 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3523,6 +3523,22 @@ const struct iomap_ops ext4_iomap_report_ops = {
+ 	.iomap_begin = ext4_iomap_begin_report,
+ };
+ 
++static int ext4_iomap_read_folio(struct file *file, struct folio *folio)
++{
++	return 0;
++}
++
++static void ext4_iomap_readahead(struct readahead_control *rac)
++{
++
++}
++
++static int ext4_iomap_writepages(struct address_space *mapping,
++				 struct writeback_control *wbc)
++{
++	return 0;
++}
++
+ /*
+  * For data=journal mode, folio should be marked dirty only when it was
+  * writeably mapped. When that happens, it was already attached to the
+@@ -3612,6 +3628,21 @@ static const struct address_space_operations ext4_da_aops = {
+ 	.swap_activate		= ext4_iomap_swap_activate,
+ };
+ 
++static const struct address_space_operations ext4_iomap_aops = {
++	.read_folio		= ext4_iomap_read_folio,
++	.readahead		= ext4_iomap_readahead,
++	.writepages		= ext4_iomap_writepages,
++	.dirty_folio		= iomap_dirty_folio,
++	.bmap			= ext4_bmap,
++	.invalidate_folio	= iomap_invalidate_folio,
++	.release_folio		= iomap_release_folio,
++	.direct_IO		= noop_direct_IO,
++	.migrate_folio		= filemap_migrate_folio,
++	.is_partially_uptodate  = iomap_is_partially_uptodate,
++	.error_remove_folio	= generic_error_remove_folio,
++	.swap_activate		= ext4_iomap_swap_activate,
++};
++
+ static const struct address_space_operations ext4_dax_aops = {
+ 	.writepages		= ext4_dax_writepages,
+ 	.direct_IO		= noop_direct_IO,
+@@ -3634,6 +3665,8 @@ void ext4_set_aops(struct inode *inode)
+ 	}
+ 	if (IS_DAX(inode))
+ 		inode->i_mapping->a_ops = &ext4_dax_aops;
++	else if (ext4_test_inode_state(inode, EXT4_STATE_BUFFERED_IOMAP))
++		inode->i_mapping->a_ops = &ext4_iomap_aops;
+ 	else if (test_opt(inode->i_sb, DELALLOC))
+ 		inode->i_mapping->a_ops = &ext4_da_aops;
+ 	else
 -- 
 2.39.2
 
