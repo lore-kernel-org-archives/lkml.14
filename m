@@ -1,121 +1,180 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD14015EFB3;
-	Wed, 10 Apr 2024 13:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450CD15ECF4;
+	Wed, 10 Apr 2024 13:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712755077; cv=none; b=q86/dEKbp5u3iG7jq6TVRYYJT1qCJZaHbhmaTt2KHTfRHsqlFQQIGLD39OJmr+N6T6DVLm0oACbA0QyO6ob/qoemeKiClhnLI51MWMj+wAKTfx6gWo4xfNppNtfspxVw9G1L6wOjKjbjaKudHLX042DlXQpDTioWl5I43397EJ0=
+	t=1712755076; cv=none; b=mgLSIM5VH/xJKNs0IZ87WmawO6lNIrWCsfbn1yWR30tpiP3w1smBTIp54uDR/bDrIYA1KnTF5pURezwn7d2pnJ+XiF2EWa8dtPoRGZTrlpzcOYIYhJKn3nGmqoAHMHoz95PelF0gvkZ65orKUJj/1KpZJgtjzoKSPCjTE8hfXNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712755077; c=relaxed/simple;
-	bh=Z9XshNGeaDkZA4YdqrH2pphdBGw4s2CGo/Ima80EU2Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cG/jy08gKFH3/jWndZTTDlIDAv51Eg6T8ako5QGQVXXLHK18CfQQQsyeajKN0RQ9KOTSQP3bmNu5JKyTstJGdBtmM0a+p9/bKJWdRkTiWBqq3ZbFbzfIGGQNpjhH0m2cR9bdLM/xylw5qJw7rBx3tKJZx8O81h2joQlifom78UM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so8242941a12.1;
-        Wed, 10 Apr 2024 06:17:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712755074; x=1713359874;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WCSWo+cbTjbJqU2UMVUeUJFNUS6Yf5iPYegXsbIUp/M=;
-        b=E8vKbu6Keyv/TpBvb/tB0MO1y+Wb41cVv5magZIhIBDTmumdpQn5FWTb8UOOYJAIyw
-         J5tYAgji1OEM90t7rf2lJf4NGJMIplpDHqDLovTsbQxdwONywZR+AbJ4woOFyh1rIQJC
-         jLnSOqiOW52rrAtsJanywZAauMW/qKliIXRssU6JE689umFGd+GnZIkYm6k4izCfmkDi
-         SS/3bYinq+qwrDqKlp5u0RBFZV2DSx6CqEoPYvZRRdziK4EFSgoEfKYzLVOClnkhaLaJ
-         ORevlV/UR2qTmO1tVMezhTr4uEDpX89sLHaxJULUEOgGuddMjLryBEPeENKkb161Z9eq
-         U1uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSRs5V5OCAxiD+Of6bcuUFilR/5BdidkmMVTyIjzNKnY0v6P3tCiEKDiyxQngavJvkHdMJ79391LAnU3buN0EjqxhzWFCq3ZCtdjghK9JCOCxqZ0utcX3zqnTB2K+Qe9BGxtwJE5azM0V15TX6HFqX2cJC+JQcP7CAd8O04z6W1bGXWfKe1FwRuDJO48eP1VITOtyX1CnWcDM=
-X-Gm-Message-State: AOJu0YzqeR5DgPvePQ+9A0dnvxoIhQp8VWe+HkEPFKR/l4Zi1NHFSecg
-	8mEygi9tCOU6keYT2cxWdlDW7S949MO6ktszX8OMK/xcR69Lsjdg
-X-Google-Smtp-Source: AGHT+IFzohQ8nifeoYK9ng+dXMVkUWT33vP4drtn7UGXanZmNkg0eJxYz4rgtTa24o9nG26otr90ng==
-X-Received: by 2002:a50:baa4:0:b0:568:9d31:2a75 with SMTP id x33-20020a50baa4000000b005689d312a75mr2097283ede.4.1712755073613;
-        Wed, 10 Apr 2024 06:17:53 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
-        by smtp.gmail.com with ESMTPSA id y9-20020a056402440900b0056e3707323bsm5689027eda.97.2024.04.10.06.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 06:17:52 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu,
-	ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	geomatsi@gmail.com,
-	kvalo@kernel.org
-Cc: quic_jjohnson@quicinc.com,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	idosch@idosch.org,
-	leitao@debian.org,
-	Ido Schimmel <idosch@nvidia.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Simon Horman <horms@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH net-next v5 01/10] net: core: Fix documentation
-Date: Wed, 10 Apr 2024 06:13:42 -0700
-Message-ID: <20240410131407.3897251-2-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240410131407.3897251-1-leitao@debian.org>
-References: <20240410131407.3897251-1-leitao@debian.org>
+	s=arc-20240116; t=1712755076; c=relaxed/simple;
+	bh=ZzUGjucKmBove6HaqklxHcR4xSxnKJw1prpl5yxzevg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TIbklhHvEN5m/qzISMXkolFaC6XF424uFOfqGE9cz7B6tyyI4A+J9NCg+4iOckXO6Ihpl8TH7FVGf/NLq59r6TQ2r/D4me9ofKvCNHXZdjukuvppUVl3KeZsDH462vjSbCvlMHPhLhW4XFwIa56AcmaWBgXq5xp4nJDNMN6OI7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=YojNkfL2; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="YojNkfL2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712755023; x=1713359823; i=deller@gmx.de;
+	bh=msoMYGawkUxm0PT5cSRpGt0x1hnq2850w+pXJFSkP2k=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=YojNkfL2CtdLHzYdmdAQlyR0m9oA290POvaz1gTFTOwd6yEQclfj/xBQJ4jjCuKi
+	 7xbvjCP3s479puz/gAiBXEhA2Mxcf+rx2rmykKilLaZmyy29Mp5Zy6oqsTKkpc1bu
+	 mND6icvExm91RR7Z17DllPwF2QYXgoR1HOYi+DwVbq9nI/6f7gatNdXyXd77g4NXU
+	 DcE1g0ctCoxiUhhosKVyX3jgd88QDsbuS/L3ngIH3ZUYSClfBRyTYQNE+Mjx6Ohbp
+	 MWJAIMFgpflwnR7rBkWkl/e7p84AdNQLrRB0S97z+sOJaT7PalGj19TZ9suX8tdxL
+	 UI494hzKZxNp5pWf2A==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.8.0.6] ([78.94.87.245]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mn2WF-1sb4Nk0Q9H-00k4xv; Wed, 10
+ Apr 2024 15:17:03 +0200
+Message-ID: <5191337e-9ffc-44b7-9700-eb5f1f2fc4cc@gmx.de>
+Date: Wed, 10 Apr 2024 15:17:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fbdev/sh7760fb: allow modular build
+To: Randy Dunlap <rdunlap@infradead.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Sam Ravnborg <sam@ravnborg.org>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20240210053938.30558-1-rdunlap@infradead.org>
+ <4d01127a9130ce46b7c1d447811c89c1d1503199.camel@physik.fu-berlin.de>
+ <c5436115-0b26-4369-8d71-154cc3c95659@infradead.org>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <c5436115-0b26-4369-8d71-154cc3c95659@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DCTb5Bwx2DoMf62bRu10O/n+mH0FmVf2ekAZyo35laz1flwRAsW
+ NlfgNgEZHHlFpXiPF6MmBc6BdyQ1RepF1fS7uEcOTMUOe9izm59EpMldawG184HKsFRj+lR
+ 1R2Q3aM+60j8gXoBoRfy1kGfpIGU67n568JpoHqJKmY9hgM6SmnSwIrHYBtZNYnK0qZm4XX
+ VWRtSkI40Qpcx+sygmznA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:DEocJMt9eLI=;4j+JNJUcyI6qicZNmTxw5+OuWWu
+ IIZpR6juaRNyc+bb8dTGTlGpPAet4Li6Oa0MW8ae6u52ABXD6OAbtcpd2hc75ZH/1rfHOhfEV
+ QZuBLbht+4Z7CcqOUdCYjam4Ut4QkP7l34G7GlOONy2yzTbelan8bDlzWB/018IJTOOXTpHtT
+ 34Hx2cmkDFTSVMR80KEjJMy3pCKjj+4361vFpfE0RRxpP7VukWxvM+Lgh9r52n0c+NCeeD9AU
+ fBmH2HVsirsC9R0DYG7w9uujU0pDoFohiZmKrq+VzwiCdLrkMCeS7Ltc5FM2fjQ7/jBX9HNv3
+ S10C1Fw1I09izKpiUx1+73nMTHzNAHlAU0iSDR+cLtqq43hHDm6ChQB/LPEl8WAljZ6Gc8Gjt
+ OVZ9dRnIa5dURGqyDDGTeU2FaymQBxJQ2gDe/JVCLKIgmcBDBmd7DldCg5RIU9TeMi3AaGVaW
+ S1ob14SAyHKFmfq6vrk+WPIQ9SSptd5iJc3VkhwmcdIypiMSneUuRf9D/ypKWE8Fi+zCC7gqF
+ lO5VsTDEJLIB26Rh6KzAPk2JJ+NV1pXQQG+AVySD7gX3bs+12kki5so27itmsPSkh+Jmedyyk
+ TMYgZ3yuy5rU3f4JS5o1oINiIBKdwNIY2g0PkRTMlNWxOH0ESN7pLPzhnN8pw4Zip+E6k9oP1
+ nqP5Ua8wW3+CZdMt4W9cjcnen3JSgwW2zOVc7eN7HhOFbDh4Mc3rrHrkxaD1Zwwyl27O6MM6U
+ 5CnRVeNDuHgBa8MLyD2PxQK8DUDObbVRgzyBj7ER5eLG1P/Bt0gk8uhYI0qgv4HWlY3ZFXV86
+ DdTn8rPVthR//GAMMidVMZueEl8DxLwh/rG8jb4NN0m2k=
 
-Fix bad grammer in description of init_dummy_netdev() functio.  This
-topic showed up in the review of the "allocate dummy device dynamically"
-patchset.
+On 4/10/24 06:54, Randy Dunlap wrote:
+> Hi,
+>
+> Will someone be merging this patch?
 
-Suggested-by: Ido Schimmel <idosch@nvidia.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/core/dev.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I've just added it to the fbdev git tree.
 
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 854a3a28a8d8..987039ffa63c 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10418,7 +10418,7 @@ EXPORT_SYMBOL(register_netdevice);
-  *	init_dummy_netdev	- init a dummy network device for NAPI
-  *	@dev: device to init
-  *
-- *	This takes a network device structure and initialize the minimum
-+ *	This takes a network device structure and initializes the minimum
-  *	amount of fields so it can be used to schedule NAPI polls without
-  *	registering a full blown interface. This is to be used by drivers
-  *	that need to tie several hardware interfaces to a single NAPI
-@@ -10427,7 +10427,7 @@ EXPORT_SYMBOL(register_netdevice);
- void init_dummy_netdev(struct net_device *dev)
- {
- 	/* Clear everything. Note we don't initialize spinlocks
--	 * are they aren't supposed to be taken by any of the
-+	 * as they aren't supposed to be taken by any of the
- 	 * NAPI code and this dummy netdev is supposed to be
- 	 * only ever used for NAPI polls
- 	 */
--- 
-2.43.0
+Thanks!
+Helge
+
+
+>
+> thanks.
+>
+> On 2/10/24 1:31 AM, John Paul Adrian Glaubitz wrote:
+>> On Fri, 2024-02-09 at 21:39 -0800, Randy Dunlap wrote:
+>>> There is no reason to prohibit sh7760fb from being built as a
+>>> loadable module as suggested by Geert, so change the config symbol
+>>> from bool to tristate to allow that and change the FB dependency as
+>>> needed.
+>>>
+>>> Fixes: f75f71b2c418 ("fbdev/sh7760fb: Depend on FB=3Dy")
+>>> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+>>> Cc: Javier Martinez Canillas <javierm@redhat.com>
+>>> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+>>> Cc: Sam Ravnborg <sam@ravnborg.org>
+>>> Cc: Helge Deller <deller@gmx.de>
+>>> Cc: linux-fbdev@vger.kernel.org
+>>> Cc: dri-devel@lists.freedesktop.org
+>>> ---
+>>>   drivers/video/fbdev/Kconfig |    4 ++--
+>>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff -- a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
+>>> --- a/drivers/video/fbdev/Kconfig
+>>> +++ b/drivers/video/fbdev/Kconfig
+>>> @@ -1645,8 +1645,8 @@ config FB_COBALT
+>>>   	select FB_IOMEM_HELPERS
+>>>
+>>>   config FB_SH7760
+>>> -	bool "SH7760/SH7763/SH7720/SH7721 LCDC support"
+>>> -	depends on FB=3Dy && (CPU_SUBTYPE_SH7760 || CPU_SUBTYPE_SH7763 \
+>>> +	tristate "SH7760/SH7763/SH7720/SH7721 LCDC support"
+>>> +	depends on FB && (CPU_SUBTYPE_SH7760 || CPU_SUBTYPE_SH7763 \
+>>>   		|| CPU_SUBTYPE_SH7720 || CPU_SUBTYPE_SH7721)
+>>>   	select FB_IOMEM_HELPERS
+>>>   	help
+>>
+>> Acked-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+>>
+>> Adrian
+>>
+>
 
