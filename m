@@ -1,120 +1,206 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03FCB16F0D1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F92516E871;
+	Wed, 10 Apr 2024 15:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763121; cv=none; b=gTW3KRUoJQq284Xh/yYmdgS/MFY+bMH6TJBucMZ1JiMm7al4uqu5S/Gjoa5dxNpj1M/k2ZzNGratAmKTmAVMbJ6Q2vVWFUeKN98p3yBUOlVb2TJ105yT+x1myKUWU96MVcT1EAoXpdUjqjB96YAhnvKyogQbvORJvK6FCRoYPWE=
+	t=1712763149; cv=none; b=fs+D1gBvHpqSXlrLgGYyC4iijrxBqzvl3/n0xo8aLMsNIMKLTb2X1YBQYWTcRTzndlsq2GO9w3PrjTfGBNX6EdXFNqgzmhbnz/6FiZC8p1hp5PUTtusUhGsNrxd0oNo2wf3LtLKiM5+QZ55gdfLgJGPjhUUIWKy+I3PrijPHN4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763121; c=relaxed/simple;
-	bh=6Vog+dAt2cAMqsPI+yh28GngocmuMJI+7wvR2qyxv7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQyrtuH3S8YHLV4lX7vyR7AaESAB4piY59TzGpR2ynM15NWKpgMXiODOLoBWbVC+5J+U5ug8jKFGXdIq5NvQDL1W4Gehwg97Z0RFh+oCHICnmSdJAP7x9rn6jhlvLSNJQyNXmUhoV3t4AfjHn1Vs7DxSJuB5rMJzEHHgOVtxKWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HCEe7uhe; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712763149; c=relaxed/simple;
+	bh=B0nAhchM37YZ2xM/SSFrLXk96D+WGDIbRzquDnO1f2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EfUOpnqRhK4hd8GZIM7E/jESsqSHQfS6GoaGPMpKJsOMu/ZPZObsgCtmOUoryH+hle91CAeAYl8R+chl6KkiW3ZKSkis+3tCTYqwcaMFsY6pvB7FwAxgZpY5zkxCqjkmMJP1APUO/CoGGb1eHYtdrgWtPOcE3eJ1dFnAMBP+4SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=srz27ijB; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=srz27ijB; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HCEe7uhe"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56e56ee8d5cso5336787a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712763118; x=1713367918; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cTPhvP3A5r7MS8UL1VvzFtK1xJvz3SKxBGHHR0/FSwI=;
-        b=HCEe7uhet4O578NU7bREoB9lnXlswazrADXaijHRHIiiM43eEhpFQ2SmslgWH1lYXz
-         36jEE735iRRtHxBb2PPWYQ80tE1r45Bu/lnxOYuC4d3aKTtK+/5twZhPSkmADwafhsSo
-         zPWlRupNwHoy5osC92zpb+u363TsErKxqbWAH3BkwLLIR+Gl2wLc1jEccldxV0yaMLNj
-         mCBQ89Nz2oHyyrQMI6ljL1GY9zsdZa/WSU0quaEGMoMAqQrgaN4yB9rp62h4R/re7g7k
-         KTlXKjF7t0KXaNt/eV+Y9L3tcwvyZYBCPTdfF1IAwGuoFBYuU8cMenla6uOG74aDVAqU
-         4yPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712763118; x=1713367918;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cTPhvP3A5r7MS8UL1VvzFtK1xJvz3SKxBGHHR0/FSwI=;
-        b=wo0Fyky7DOftZ8sWbUBJNOMjOo4WxbPV8r1ilMOLWp+psXxuwefElMlNIEC1zMNAeD
-         W/OujhdAdhYvk+UP0TLllNfIloqUHrI4ttbFQAsnDD8KFRJfI4i4LNpes/fHTJm0ZKQ+
-         alPP1hsrTbQWMohOQJoTmmhsmfqPNNEc6loblhSMsiQtT5qhQaK9Xs8+IpWnjl8TbAbQ
-         oMsKLyCq1WxYlKwZA719UVlXg/ljYUsbInNRPU4TqkbqYVTbY9qdPRfkXfK0Trkyh2vH
-         hFlukIWxRTDEo9wBVqsLKyZiXgThsDf6owI1VNN2ZkHPTkdEyKH6B8Q74h7FNWJSGsKQ
-         pkpg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNi9uoCgNzH4xcuQ0fGk+198bL2i5TXdt8kou1m6PLmxdJneNWhAQ3jeH78kcNNw6y0Q7P6g6VwWs/OzU6gtRmaRQseunNtMuG0R4D
-X-Gm-Message-State: AOJu0Yxuu2GqDDoXcoF6ZmPdl4u+5kZgn9Pz2ELdphaZ12FbcehweFeG
-	gpFEEAEATVXcO6i5X+BggtxYfNMXjWOfdSLxZPzEXafGZ+RzNEJZF82yfXSdfxk=
-X-Google-Smtp-Source: AGHT+IHI2Ekpl25h0Yy4yKCuyZYB9KuHYXbJc3VeE6shatg6Hicrdayi5+NJC9iLQkC8NWx5z+JrZw==
-X-Received: by 2002:a50:a6d2:0:b0:56d:fdb3:bcc5 with SMTP id f18-20020a50a6d2000000b0056dfdb3bcc5mr2136474edc.12.1712763118023;
-        Wed, 10 Apr 2024 08:31:58 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id et6-20020a056402378600b0056b8dcdaca5sm6501104edb.73.2024.04.10.08.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 08:31:56 -0700 (PDT)
-Date: Wed, 10 Apr 2024 18:31:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: soc-card: soc-card-test: Fix some error
- handling in probe()
-Message-ID: <6aaca4c3-46c4-475a-aecd-cf471370e97c@moroto.mountain>
-References: <2db68591-64e2-4f43-a5e1-cb8849f0a296@moroto.mountain>
- <c8e9a7a0-6fcf-4bbe-a659-b2360f5980d8@opensource.cirrus.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="srz27ijB";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="srz27ijB"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1FCB85D062;
+	Wed, 10 Apr 2024 15:32:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712763145; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1OPC8ZgLiEqBr/w4gD9mybwHjbz8PCFyyQkn0bnLdg0=;
+	b=srz27ijBb1CaOxMILf0y0BODVBSj6vzbTDLHNv20pFvSo/lwXczWQnkgRDUo7H8Oe3MNuB
+	FNy1t8gf21EM3mV/x+hIv3spGsySh56XqbcCboC0KFCRuJJ6/KfReGp9j531CoQu9s25rw
+	hxpbvUnOLXADLFMETxPHeHt76gPjgp4=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=srz27ijB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712763145; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1OPC8ZgLiEqBr/w4gD9mybwHjbz8PCFyyQkn0bnLdg0=;
+	b=srz27ijBb1CaOxMILf0y0BODVBSj6vzbTDLHNv20pFvSo/lwXczWQnkgRDUo7H8Oe3MNuB
+	FNy1t8gf21EM3mV/x+hIv3spGsySh56XqbcCboC0KFCRuJJ6/KfReGp9j531CoQu9s25rw
+	hxpbvUnOLXADLFMETxPHeHt76gPjgp4=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C4A413691;
+	Wed, 10 Apr 2024 15:32:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id l2WqNQexFmZTNAAAD6G6ig
+	(envelope-from <mpdesouza@suse.com>); Wed, 10 Apr 2024 15:32:23 +0000
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Lukas Hruska <lhruska@suse.cz>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Miroslav Benes <mbenes@suse.cz>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Joe Lawrence <joe.lawrence@redhat.com>,
+	live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	Marcos Paulo de Souza <mpdesouza@suse.com>
+Subject: Re: [PATCH v1 0/5] livepatch: klp-convert tool - Minimal version
+Date: Wed, 10 Apr 2024 12:32:18 -0300
+Message-ID: <20240410153220.15927-1-mpdesouza@suse.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20231106162513.17556-1-lhruska@suse.cz>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8e9a7a0-6fcf-4bbe-a659-b2360f5980d8@opensource.cirrus.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Level: *****
+X-Spamd-Result: default: False [5.39 / 50.00];
+	BAYES_SPAM(5.10)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	BAD_REP_POLICIES(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim,suse.cz:email];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	R_DKIM_ALLOW(0.00)[suse.com:s=susede1];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Spam-Score: 5.39
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: 1FCB85D062
+X-Spamd-Bar: +++++
 
-On Wed, Apr 10, 2024 at 03:43:45PM +0100, Richard Fitzgerald wrote:
-> On 10/4/24 15:22, Dan Carpenter wrote:
-> > Fix this reversed if statement and call put_device() before returning
-> > the error code.
-> > 
-> > Fixes: ef7784e41db7 ("ASoC: soc-card: Add KUnit test case for snd_soc_card_get_kcontrol")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > v2: call put_device()
-> > 
-> >   sound/soc/soc-card-test.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/sound/soc/soc-card-test.c b/sound/soc/soc-card-test.c
-> > index 075c52fe82e5..faf9a3d46884 100644
-> > --- a/sound/soc/soc-card-test.c
-> > +++ b/sound/soc/soc-card-test.c
-> > @@ -148,8 +148,10 @@ static int soc_card_test_case_init(struct kunit *test)
-> >   	priv->card->owner = THIS_MODULE;
-> >   	ret = snd_soc_register_card(priv->card);
-> > -	if (!ret)
-> > +	if (ret) {
-> > +		put_device(priv->card_dev);
-> >   		return ret;
-> > +	}
-> >   	return 0;
-> >   }
-> 
-> Thanks.
-> Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-> 
-> I can see that put_device() is also missing earlier in the
-> function:
-> 
-> 	if (!priv->card)
-> 		return -ENOMEM;
-> 
-> I can send a fix for that.
+On Mon,  6 Nov 2023 17:25:08 +0100 Lukas Hruska <lhruska@suse.cz> wrote:
 
-No.  Let me resend.  I'm sorry, this patch has not been up to proper
-standards.  Also I should fix Smatch to warn about missing put_device()
-calls to prevent this sort of thing going forward.
+> Summary
+> -------
+> 
+> This is a significantly simplified version of the original klp-convert tool.
+> The klp-convert code has never got a proper review and also clean ups 
+> were not easy. The last version was v7, see 
+> https://lore.kernel.org/r/20230306140824.3858543-1-joe.lawrence@redhat.com
+> 
+> The main change is that the tool does not longer search for the 
+> symbols which would need the livepatch specific relocation entry.
+> Also klp.symbols file is not longer needed.
+> 
+> Instead, the needed information is appended to the symbol declaration
+> via a new macro KLP_RELOC_SYMBOL(). It creates symbol with all needed
+> metadata. For example:
+> 
+>   extern char *saved_command_line \
+>                  KLP_RELOC_SYMBOL(vmlinux, vmlinux, saved_command_line, 0); 
+> 
+> would create symbol
+> 
+> $>readelf -r -W <compiled livepatch module>:
+> Relocation section '.rela.text' at offset 0x32e60 contains 10 entries:
+>     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+> [...]
+> 0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.rela.vmlinux.vmlinux.saved_command_line,0 - 4 
+> [...]
+> 
+> 
+> The simplified klp-convert tool just transforms symbols
+> created by KLP_RELOC_SYMBOL() to object specific rela sections
+> and rela entries which would later be proceed when the livepatch
+> or the livepatched object is loaded.
+> 
+> For example, klp-convert would replace the above symbols with:
+> 
+> $> readelf -r -W <livepatch_module_proceed_by_klp_convert>
+> Relocation section '.klp.rela.vmlinux.text' at offset 0x5cb60 contains 1 entry:
+>     Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+> 0000000000000068  0000003c00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.saved_command_line,0 - 4 
+> 
+> 
+> Note that similar macro was needed also in the original version
+> to handle more symbols of the same name (sympos).
+> 
+> Given the above, add klp-convert tool; integrate klp-convert tool into
+> kbuild; add data-structure and macros to enable users to annotate
+> livepatch source code; make modpost stage compatible with livepatches;
+> update livepatch-sample and update documentation.
+> 
+> 
+> Testing
+> -------
+> 
+> The patchset selftests build and execute on x86_64, s390x, and ppc64le
+> for both default config (with added livepatch dependencies) and a larger
+> SLE-15-ish config.
+> 
+> 
+> Summary of changes in this minimal version
+> ------------------------
+> 
+> - rebase for v6.5
+> - cleaned-up SoB chains (suggested by pmladek)
+> - klp-convert: remove the symbol map auto-resolving solution
+> - klp-convert: add macro for flagging variables inside a LP src to be resolved by this tool
+> - klp-convert: code simplification
 
-regards,
-dan carpenter
+Do we have anything that blocks klp-convert-mini to be merged, or something that
+needs to be fixed?
+
+Thanks,
+  Marcos
+
+> 
+> Previous versions
+> -----------------
+> 
+> RFC:
+>   https://lore.kernel.org/lkml/cover.1477578530.git.jpoimboe@redhat.com/
+> v2:
+>   https://lore.kernel.org/lkml/f52d29f7-7d1b-ad3d-050b-a9fa8878faf2@redhat.com/
+> v3:
+>   https://lore.kernel.org/lkml/20190410155058.9437-1-joe.lawrence@redhat.com/
+> v4:
+>   https://lore.kernel.org/lkml/20190509143859.9050-1-joe.lawrence@redhat.com/
+> v5:
+>   (not posted)
+>   https://github.com/joe-lawrence/klp-convert-tree/tree/klp-convert-v5-devel
+> v6:
+>   https://lore.kernel.org/live-patching/20220216163940.228309-1-joe.lawrence@redhat.com/
+> v7:
+>   https://lore.kernel.org/all/20230306140824.3858543-1-joe.lawrence@redhat.com/
