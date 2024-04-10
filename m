@@ -1,45 +1,45 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DF216EBEF;
-	Wed, 10 Apr 2024 13:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B559D16E87F;
+	Wed, 10 Apr 2024 13:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757596; cv=none; b=B1tDZ9N3uP2KLnNasRfIZQ7TW5yDo2HhQBKrnG9v0LfKdfJNuZQCc+eeUeb+IEK4suURzcgY4+kWAtQIrS3gv9vSyVi1LDCWRis49X3Sss43TGJ60dHuPVv6VJvFB2kdtVN1EP8iztgEgkdrMb2ztvILXQr1qnQ2SOt3vinOq2I=
+	t=1712757595; cv=none; b=aLf52zImYIZWPmtrB2hiAsDtKLQKWGJWKpp6jqmrcKPl6BjmYKOLjIFfdryC3Qx9OhT3bbPXNWzNKWS9u2fiJCfv0MkeZrQl3SK+KART+9VMNBp40L+VttKB70Kkl/XhMMjLQ3GMm68B1ZB6Z0nassFu+kvjHMVjAda35SxS2r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757596; c=relaxed/simple;
-	bh=qy9PyGlUP2RPUSM/eP2gDf7EcF/g1j8GI4jRMc+CzrY=;
+	s=arc-20240116; t=1712757595; c=relaxed/simple;
+	bh=Zhl8BvhKtpPrlgnKaQ1BZAidyWWa+TJx1j06viQkwMA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ki9/2GY5jiTWGjme0AbawbGTPhlx5iaasrrlg9LPFlKkHOLqoOnddYjTqf/6A+zH9Unkz/ytcRs4eeYcpg/M3en6wDU8KKwI9rTQ9cnMJffZ3pGbD0Ho09Xgn/eoI5eg7Rrc3fhRAJfl90Ha2/ve5Nwe1fMsFaAjKx9rARR4qxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qj2zSA2W; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=FmPgWGjXFz+gyXlu5o/ba/fcuElsfl7p6yOshdQKwJX1k/SNvRu7Z7pT3nsxqn3zyHj3WcZXshMOctT5WjVAVKjRuboCCmtTsXoPsN+nAJ5IArbY84jV09MQ7GipzHbSAivB8XMPpQOinbLSof5yxRGsbSR0yYokJC4Ksm/TQVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VVSoJy0t; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qj2zSA2W"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxlgT056758;
-	Wed, 10 Apr 2024 08:59:47 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VVSoJy0t"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxmKW024600;
+	Wed, 10 Apr 2024 08:59:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712757587;
-	bh=u3tJ80kY0yv2TU/mG7vJq/vhEjzXqcyTjxZViHgfa30=;
+	s=ti-com-17Q1; t=1712757588;
+	bh=Xva49Wa0r4m4+Jvqo/mGM4IoMNqfwpsfUf1TS+2klds=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=qj2zSA2WbHVWo8KsUUo4MaJtG3WokWGOcgXlUg7mspoaC8prO83V6RMO0B67G2NFO
-	 /d+JmHjWAKERnCMoP87dNl8f15JfuOmWGvWtaXvj1t4VbKftzXZDHsGajytnwvZWum
-	 4VK6mlR67iV8LQNMomNo0Q89Gd++epPv+lgtHA6Q=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxlIi011519
+	b=VVSoJy0t1OVs8jufe6Xh98t0pqk459g0othQE4aATnLBWcvtsEsQuwPkz48wlBmNO
+	 Q2xqJs4gQ75IMcpavZr5NpjZLzWrlZASqRVnl0CRmxLG0S4NMS6hv4XZmrw1K67u3m
+	 596YIoMqDg8GN+wkaFw76XLnceqEGfv7+68BdD2Q=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxmYH020094
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Apr 2024 08:59:47 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 10 Apr 2024 08:59:48 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Apr 2024 08:59:47 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2024 08:59:48 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Wed, 10 Apr 2024 08:59:47 -0500
 Received: from fllvsmtp8.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhav067183;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhax067183;
 	Wed, 10 Apr 2024 08:59:47 -0500
 From: Andrew Davis <afd@ti.com>
 To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
@@ -49,9 +49,9 @@ To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
 CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew
  Davis <afd@ti.com>
-Subject: [PATCH v2 11/13] mailbox: omap: Remove mbox_chan_to_omap_mbox()
-Date: Wed, 10 Apr 2024 08:59:40 -0500
-Message-ID: <20240410135942.61667-12-afd@ti.com>
+Subject: [PATCH v2 13/13] mailbox: omap: Remove kernel FIFO message queuing
+Date: Wed, 10 Apr 2024 08:59:42 -0500
+Message-ID: <20240410135942.61667-14-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240410135942.61667-1-afd@ti.com>
 References: <20240410135942.61667-1-afd@ti.com>
@@ -65,63 +65,221 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This function only checks if mbox_chan *chan is not NULL, but that cannot
-be the case and if it was returning NULL which is not later checked
-doesn't save us from this. The second check for chan->con_priv is
-completely redundant as if it was NULL we would return NULL just the
-same. Simply dereference con_priv directly and remove this function.
+The kernel FIFO queue has a couple issues. The biggest issue is that
+it causes extra latency in a path that can be used in real-time tasks,
+such as communication with real-time remote processors.
+
+The whole FIFO idea itself looks to be a leftover from before the
+unified mailbox framework. The current mailbox framework expects
+mbox_chan_received_data() to be called with data immediately as it
+arrives. Remove the FIFO and pass the messages to the mailbox
+framework directly as part of a threaded IRQ handler.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/mailbox/omap-mailbox.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/mailbox/Kconfig        |   9 ---
+ drivers/mailbox/omap-mailbox.c | 107 ++-------------------------------
+ 2 files changed, 5 insertions(+), 111 deletions(-)
 
+diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+index 42940108a1874..78e4c74fbe5c2 100644
+--- a/drivers/mailbox/Kconfig
++++ b/drivers/mailbox/Kconfig
+@@ -68,15 +68,6 @@ config OMAP2PLUS_MBOX
+ 	  OMAP2/3; or IPU, IVA HD and DSP in OMAP4/5. Say Y here if you
+ 	  want to use OMAP2+ Mailbox framework support.
+ 
+-config OMAP_MBOX_KFIFO_SIZE
+-	int "Mailbox kfifo default buffer size (bytes)"
+-	depends on OMAP2PLUS_MBOX
+-	default 256
+-	help
+-	  Specify the default size of mailbox's kfifo buffers (bytes).
+-	  This can also be changed at runtime (via the mbox_kfifo_size
+-	  module parameter).
+-
+ config ROCKCHIP_MBOX
+ 	bool "Rockchip Soc Integrated Mailbox Support"
+ 	depends on ARCH_ROCKCHIP || COMPILE_TEST
 diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index 8e42266cb31a5..8e2760d2c5b0c 100644
+index c5d4083125856..46747559b438f 100644
 --- a/drivers/mailbox/omap-mailbox.c
 +++ b/drivers/mailbox/omap-mailbox.c
-@@ -103,14 +103,6 @@ static unsigned int mbox_kfifo_size = CONFIG_OMAP_MBOX_KFIFO_SIZE;
- module_param(mbox_kfifo_size, uint, S_IRUGO);
- MODULE_PARM_DESC(mbox_kfifo_size, "Size of omap's mailbox kfifo (bytes)");
+@@ -65,14 +65,6 @@ struct omap_mbox_fifo {
+ 	u32 intr_bit;
+ };
  
--static struct omap_mbox *mbox_chan_to_omap_mbox(struct mbox_chan *chan)
--{
--	if (!chan || !chan->con_priv)
--		return NULL;
+-struct omap_mbox_queue {
+-	spinlock_t		lock;
+-	struct kfifo		fifo;
+-	struct work_struct	work;
+-	struct omap_mbox	*mbox;
+-	bool full;
+-};
 -
--	return (struct omap_mbox *)chan->con_priv;
--}
+ struct omap_mbox_match_data {
+ 	u32 intr_type;
+ };
+@@ -90,7 +82,6 @@ struct omap_mbox_device {
+ struct omap_mbox {
+ 	const char		*name;
+ 	int			irq;
+-	struct omap_mbox_queue	*rxq;
+ 	struct omap_mbox_device *parent;
+ 	struct omap_mbox_fifo	tx_fifo;
+ 	struct omap_mbox_fifo	rx_fifo;
+@@ -99,10 +90,6 @@ struct omap_mbox {
+ 	bool			send_no_irq;
+ };
+ 
+-static unsigned int mbox_kfifo_size = CONFIG_OMAP_MBOX_KFIFO_SIZE;
+-module_param(mbox_kfifo_size, uint, S_IRUGO);
+-MODULE_PARM_DESC(mbox_kfifo_size, "Size of omap's mailbox kfifo (bytes)");
 -
  static inline
  unsigned int mbox_read_reg(struct omap_mbox_device *mdev, size_t ofs)
  {
-@@ -357,7 +349,7 @@ static void omap_mbox_fini(struct omap_mbox *mbox)
+@@ -202,30 +189,6 @@ static void omap_mbox_disable_irq(struct omap_mbox *mbox, omap_mbox_irq_t irq)
+ 	mbox_write_reg(mbox->parent, bit, irqdisable);
+ }
+ 
+-/*
+- * Message receiver(workqueue)
+- */
+-static void mbox_rx_work(struct work_struct *work)
+-{
+-	struct omap_mbox_queue *mq =
+-			container_of(work, struct omap_mbox_queue, work);
+-	u32 msg;
+-	int len;
+-
+-	while (kfifo_len(&mq->fifo) >= sizeof(msg)) {
+-		len = kfifo_out(&mq->fifo, (unsigned char *)&msg, sizeof(msg));
+-		WARN_ON(len != sizeof(msg));
+-
+-		mbox_chan_received_data(mq->mbox->chan, (void *)(uintptr_t)msg);
+-		spin_lock_irq(&mq->lock);
+-		if (mq->full) {
+-			mq->full = false;
+-			omap_mbox_enable_irq(mq->mbox, IRQ_RX);
+-		}
+-		spin_unlock_irq(&mq->lock);
+-	}
+-}
+-
+ /*
+  * Mailbox interrupt handler
+  */
+@@ -238,27 +201,15 @@ static void __mbox_tx_interrupt(struct omap_mbox *mbox)
+ 
+ static void __mbox_rx_interrupt(struct omap_mbox *mbox)
+ {
+-	struct omap_mbox_queue *mq = mbox->rxq;
+ 	u32 msg;
+-	int len;
+ 
+ 	while (!mbox_fifo_empty(mbox)) {
+-		if (unlikely(kfifo_avail(&mq->fifo) < sizeof(msg))) {
+-			omap_mbox_disable_irq(mbox, IRQ_RX);
+-			mq->full = true;
+-			goto nomem;
+-		}
+-
+ 		msg = mbox_fifo_read(mbox);
+-
+-		len = kfifo_in(&mq->fifo, (unsigned char *)&msg, sizeof(msg));
+-		WARN_ON(len != sizeof(msg));
++		mbox_chan_received_data(mbox->chan, (void *)(uintptr_t)msg);
+ 	}
+ 
+-	/* no more messages in the fifo. clear IRQ source. */
++	/* clear IRQ source. */
+ 	ack_mbox_irq(mbox, IRQ_RX);
+-nomem:
+-	schedule_work(&mbox->rxq->work);
+ }
+ 
+ static irqreturn_t mbox_interrupt(int irq, void *p)
+@@ -274,57 +225,15 @@ static irqreturn_t mbox_interrupt(int irq, void *p)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct omap_mbox_queue *mbox_queue_alloc(struct omap_mbox *mbox,
+-					void (*work)(struct work_struct *))
+-{
+-	struct omap_mbox_queue *mq;
+-	unsigned int size;
+-
+-	if (!work)
+-		return NULL;
+-
+-	mq = kzalloc(sizeof(*mq), GFP_KERNEL);
+-	if (!mq)
+-		return NULL;
+-
+-	spin_lock_init(&mq->lock);
+-
+-	/* kfifo size sanity check: alignment and minimal size */
+-	size = ALIGN(mbox_kfifo_size, sizeof(u32));
+-	size = max_t(unsigned int, size, sizeof(u32));
+-	if (kfifo_alloc(&mq->fifo, size, GFP_KERNEL))
+-		goto error;
+-
+-	INIT_WORK(&mq->work, work);
+-	return mq;
+-
+-error:
+-	kfree(mq);
+-	return NULL;
+-}
+-
+-static void mbox_queue_free(struct omap_mbox_queue *q)
+-{
+-	kfifo_free(&q->fifo);
+-	kfree(q);
+-}
+-
+ static int omap_mbox_startup(struct omap_mbox *mbox)
+ {
+ 	int ret = 0;
+-	struct omap_mbox_queue *mq;
+-
+-	mq = mbox_queue_alloc(mbox, mbox_rx_work);
+-	if (!mq)
+-		return -ENOMEM;
+-	mbox->rxq = mq;
+-	mq->mbox = mbox;
+ 
+-	ret = request_irq(mbox->irq, mbox_interrupt, IRQF_SHARED,
+-			  mbox->name, mbox);
++	ret = request_threaded_irq(mbox->irq, NULL, mbox_interrupt,
++				   IRQF_ONESHOT, mbox->name, mbox);
+ 	if (unlikely(ret)) {
+ 		pr_err("failed to register mailbox interrupt:%d\n", ret);
+-		goto fail_request_irq;
++		return ret;
+ 	}
+ 
+ 	if (mbox->send_no_irq)
+@@ -333,18 +242,12 @@ static int omap_mbox_startup(struct omap_mbox *mbox)
+ 	omap_mbox_enable_irq(mbox, IRQ_RX);
+ 
+ 	return 0;
+-
+-fail_request_irq:
+-	mbox_queue_free(mbox->rxq);
+-	return ret;
+ }
+ 
+ static void omap_mbox_fini(struct omap_mbox *mbox)
+ {
+ 	omap_mbox_disable_irq(mbox, IRQ_RX);
+ 	free_irq(mbox->irq, mbox);
+-	flush_work(&mbox->rxq->work);
+-	mbox_queue_free(mbox->rxq);
+ }
  
  static int omap_mbox_chan_startup(struct mbox_chan *chan)
- {
--	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
-+	struct omap_mbox *mbox = chan->con_priv;
- 	struct omap_mbox_device *mdev = mbox->parent;
- 	int ret = 0;
- 
-@@ -372,7 +364,7 @@ static int omap_mbox_chan_startup(struct mbox_chan *chan)
- 
- static void omap_mbox_chan_shutdown(struct mbox_chan *chan)
- {
--	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
-+	struct omap_mbox *mbox = chan->con_priv;
- 	struct omap_mbox_device *mdev = mbox->parent;
- 
- 	mutex_lock(&mdev->cfg_lock);
-@@ -415,7 +407,7 @@ static int omap_mbox_chan_send(struct omap_mbox *mbox, u32 msg)
- 
- static int omap_mbox_chan_send_data(struct mbox_chan *chan, void *data)
- {
--	struct omap_mbox *mbox = mbox_chan_to_omap_mbox(chan);
-+	struct omap_mbox *mbox = chan->con_priv;
- 	int ret;
- 	u32 msg = (u32)(uintptr_t)(data);
- 
 -- 
 2.39.2
 
