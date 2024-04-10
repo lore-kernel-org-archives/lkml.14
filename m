@@ -1,57 +1,57 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60F015F32D
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E14715EFB6
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712753223; cv=none; b=o6FdgEQgXYydCXzQMg+lc46DXap+PHhiWXsNiFk5l4JYDHic66+hXowpeogrGCW1iBOPqfQwLMZHYnMcuN3gl4nLXN2pJNGLN4Oj5UZu44kyVPrO4Z3A+vhOd0on5gcYjS4B0Ts4Z0zMCQR/dsqE2gYr5OrskkrY+P3W47rPXsw=
+	t=1712753228; cv=none; b=FVCDX/1yfXw3ly5zXHdTbaxsvqvhjuCGN3XaNHzK9ek9XstPiDu5RAMP6/nfdyKCwJpn9vOTOrR8LAzlBmggtD2izk9g+jAKJlBxKDTDmLnDZX+/L8VKPL7G0VXRIXA4Tbg4YxYqCiv1tBeZ7IpC7WXTrGk4Wc21qmoJRg2y0Oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712753223; c=relaxed/simple;
-	bh=yuUbhrVP+Y0H7UT/O3thYPD6emXiObImUnYqdZK+3KI=;
+	s=arc-20240116; t=1712753228; c=relaxed/simple;
+	bh=c5P5lscsnbWC5EHjzQG5JSjk93ahAtvYSeOqjGvj/7s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZnP3vfT05GZppEPwNOQ+Ga767h/6KJZczF7ZuaCOOjVrd+/7m2fPK09lR5cCZvGiqHQ4cnDTKmktM0XNt7KQTywsbgIhaAqMmiM8AgGIN9Ew/F1hwluRAjSWb0FOG0mYyVCtYWB+CK+MMZd9zwRlBhIfuM/zAoEMYN5BUbL+TKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2WiuBvYM; arc=none smtp.client-ip=209.85.208.170
+	 MIME-Version; b=HzyyTlnhfmuqm2NpOxTl8bhcsY4QtZLY6JrzFOffAdCcSXsvRSoi8ZkpFrG+ShUCZ8xltzeumlT4LcmL6GC2kVjYrzOCU4ib9XY0ofxT+mYTSQOmbFNNo1NKwrRFTQoxekObvkjlSuNn94OC+g00Z4DJ7S+Pwnt7Zm9Hx+VmkaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Xq/CEiR6; arc=none smtp.client-ip=209.85.208.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2WiuBvYM"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d895138d0eso28126061fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:47:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Xq/CEiR6"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d700beb6beso72624121fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712753218; x=1713358018; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712753224; x=1713358024; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gL+qn26ifXXRkGbTTkra4Pi9LQ/hbimmKLqK5bNd5H0=;
-        b=2WiuBvYMKRPzSbRZdcgTIBZeF2KeFTak5ZjKOSGP1zT4nwP01WLMihS7+CcteoZbfr
-         EkXuQOYqLM+ccRyz6rlJqGPB/uVzfZbgNRveMI6II2mxaAsNoc9yX83SNTMnCo8Ndzcw
-         02o/kSAM6Q9keUYgd+QQwManE+80+xMLNAoUIye1RCm1oTdB0/obMs5ctsbHMgda9kFh
-         6Ymxy3h0+PBfa1WUiZekQ8sgjUlfIAKYN4CHi3BceFI6R23p3vBHf7uP5sw3dq+AUFRL
-         ndQHC3SLvlJaeT8+GTcKtQpnw6X4WJYEtcdX1unUloFZj3bcKvl5JcVXpOg2UercdYhW
-         3MDQ==
+        bh=Y3Qk/DJ4ryR6XkF1VG+aVefQinCL6xUnkD758p4/AkE=;
+        b=Xq/CEiR68bpZ9rkUUSkFsdEk3+B3xBEIzbiZacgnZnqD/1VttUWDPLWvrSdtxEGTov
+         jQA1fGFx1yRoNKcc3oJjEaa4/VpOgPzLAO1ueWmjB9+fzm7Nw+RN8DHbrOZ9hesWhu91
+         +xg2g5cnPvEkUsE9pSGPzBCwNTRacAUcvuBCBPbR4Rk3Pn3u43jbp1prJg8IshPwfnuf
+         UpsLJZQRoa7sWPFHLBiLN/VXSVe+xK9Wf+KCUyzYr+yLU3L/b80XtJSScG/fUCVKogir
+         VZWEDRtWc9O/ZC81doHtvFqERt0Vx14zmjx578DkXXmhcD76Al0WhiHl9SAxa1RIc4LP
+         mppw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712753218; x=1713358018;
+        d=1e100.net; s=20230601; t=1712753224; x=1713358024;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gL+qn26ifXXRkGbTTkra4Pi9LQ/hbimmKLqK5bNd5H0=;
-        b=t5GETyf34wJhfid3SPPVMhtjSblRx55u+zzcxTt6KcqKhPw9hhJ9OI2w9WECdllySL
-         qjTKlt4FItGprebimnYMfftMsKQrlqhZ09alMaPKCU61ygpvXrkE1b50tXFc8zVgPX/8
-         wdA0YCC+qmw75S+seVBY0unXglEtq6HjAxl2hPtNmO1n+gWzKuFiBVfBDV+LTUzSSlVo
-         njIdYVN5S4i6KWn6yHFVf/jR+cWwlEoHTCXXK7n3CExooEN8TojaTpJ/tuN/5HinooWX
-         uEJ+Bko25gVXc5y+QNR6MfiaIPrPKcTpcdzOkfoizcjkthOyAzIaiCsTIHrgN4SF018/
-         MTjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8dXFKwhX1AwfejbL+x9BizjVWCLbipzTXJ5mqnwqBXVWxz29L+LU2x24aMcXgmnzmtUvxHHSjZ2eHofRflxzi/V55dslt2x4yY2aX
-X-Gm-Message-State: AOJu0YzuZKaa48/4Lo8H/kyP7G4HA4DLnHM9Zr29EUZzFIqRxEQziR5i
-	15dP1wtZxO+Fcy4DIuuADdGt4kd5ndHM/UOAyBvtFBPGtGQ0mTT3QWQsqLZ+j9U=
-X-Google-Smtp-Source: AGHT+IFAtqUdx5RNZKwhTA+R/6J6N9lpFC+miW0F6cNugAKikLhl4qd9sCjbuh2MDg1XRgAmue0OEw==
-X-Received: by 2002:a2e:a789:0:b0:2d8:c12b:f291 with SMTP id c9-20020a2ea789000000b002d8c12bf291mr1936525ljf.26.1712753217739;
-        Wed, 10 Apr 2024 05:46:57 -0700 (PDT)
+        bh=Y3Qk/DJ4ryR6XkF1VG+aVefQinCL6xUnkD758p4/AkE=;
+        b=gUvD6dk3mOMWG2rTiCYF2Bqkz/xOQt/Yhxr7EoDkyFmgagZzTyZqFEbu0FSXEDRJv2
+         7vLhFaB+ErBIrtdg7g/DxbBI2SZpb+RUpr4BBPp/g5GUbJOgo+Gr/HZ8gh0kZLsFMXgX
+         hWsYkeC5sSWqa7v/xPPNdPS74ScVka1VFB71lrp4deA7AeppOHHbvcyK3ep+K5fHeGjj
+         dVhVPGx2nGEHzpQJkA83PSmAf9RKRUL1Y6Glks5vEZ6rfIVvQ7YfKFJklDtJc7Z33ODl
+         ewr7d8GCXhe+gX4uJNI/j15npPJp3l1XDsLY2eoTT39rzC+r+SbN/kPbhyJQaqhWyvtr
+         BSyw==
+X-Forwarded-Encrypted: i=1; AJvYcCWUMHgHZ87n8fnzsKYGabT/mz5up76AAoanAjzEQNmLE3FfwGo3RVBFMogqLs8HB7Ygan0/RO1ot6OCeV7vw320neI+1GhSAeubEbTb
+X-Gm-Message-State: AOJu0Yz5OoiK8HZ90SutkjQlI42OP09H4Z7q4b9uJsBIu1OLI6eUwC7s
+	xSYrGsv6Z5+V9sfzTMZLgTzgVrT8C0tyNGOds+fnjxTvZqDXUL0U9VUW5QZdf3I=
+X-Google-Smtp-Source: AGHT+IHz4nxeX4Kf6VHEirR5NLp0YeiXxNxBQwG9L0Vdn0xDzZmeanJ4D1dLir6knQRmR1TckfDACg==
+X-Received: by 2002:a2e:9dd7:0:b0:2d4:a22e:d3b3 with SMTP id x23-20020a2e9dd7000000b002d4a22ed3b3mr1712240ljj.11.1712753223862;
+        Wed, 10 Apr 2024 05:47:03 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:6908:7e99:35c9:d585])
-        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041663450a4asm2150929wmn.45.2024.04.10.05.46.56
+        by smtp.gmail.com with ESMTPSA id v13-20020a05600c444d00b0041663450a4asm2150929wmn.45.2024.04.10.05.47.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 05:46:57 -0700 (PDT)
+        Wed, 10 Apr 2024 05:47:03 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Marcel Holtmann <marcel@holtmann.org>,
 	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
@@ -94,11 +94,10 @@ Cc: linux-bluetooth@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-pci@vger.kernel.org,
 	linux-pm@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 05/16] dt-bindings: net: wireless: describe the ath12k PCI module
-Date: Wed, 10 Apr 2024 14:46:17 +0200
-Message-Id: <20240410124628.171783-6-brgl@bgdev.pl>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH v7 09/16] PCI: hold the rescan mutex when scanning for the first time
+Date: Wed, 10 Apr 2024 14:46:21 +0200
+Message-Id: <20240410124628.171783-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240410124628.171783-1-brgl@bgdev.pl>
 References: <20240410124628.171783-1-brgl@bgdev.pl>
@@ -112,121 +111,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add device-tree bindings for the ATH12K module found in the WCN7850
-package.
+With the introduction of PCI device power control drivers that will be
+able to trigger the port rescan when probing, we need to hold the rescan
+mutex during the initial pci_host_probe() too or the two could get in
+each other's way.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/net/wireless/qcom,ath12k.yaml    | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ath12k.yaml
+ drivers/pci/probe.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath12k.yaml b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k.yaml
-new file mode 100644
-index 000000000000..f04d72d2c88e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath12k.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (c) 2024 Linaro Limited
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/wireless/qcom,ath12k.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies ath12k wireless devices (PCIe)
-+
-+maintainers:
-+  - Jeff Johnson <quic_jjohnson@quicinc.com>
-+  - Kalle Valo <kvalo@kernel.org>
-+
-+description:
-+  Qualcomm Technologies IEEE 802.11ax PCIe devices.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - pci17cb,1107  # WCN7850
-+
-+  reg:
-+    maxItems: 1
-+
-+  vddaon-supply:
-+    description: VDD_AON supply regulator handle
-+
-+  vddwlcx-supply:
-+    description: VDD_WLCX supply regulator handle
-+
-+  vddwlmx-supply:
-+    description: VDD_WLMX supply regulator handle
-+
-+  vddrfacmn-supply:
-+    description: VDD_RFA_CMN supply regulator handle
-+
-+  vddrfa0p8-supply:
-+    description: VDD_RFA_0P8 supply regulator handle
-+
-+  vddrfa1p2-supply:
-+    description: VDD_RFA_1P2 supply regulator handle
-+
-+  vddrfa1p8-supply:
-+    description: VDD_RFA_1P8 supply regulator handle
-+
-+  vddpcie0p9-supply:
-+    description: VDD_PCIE_0P9 supply regulator handle
-+
-+  vddpcie1p8-supply:
-+    description: VDD_PCIE_1P8 supply regulator handle
-+
-+required:
-+  - compatible
-+  - reg
-+  - vddaon-supply
-+  - vddwlcx-supply
-+  - vddwlmx-supply
-+  - vddrfacmn-supply
-+  - vddrfa0p8-supply
-+  - vddrfa1p2-supply
-+  - vddrfa1p8-supply
-+  - vddpcie0p9-supply
-+  - vddpcie1p8-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    pcie {
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+
-+        pcie@0 {
-+            device_type = "pci";
-+            reg = <0x0 0x0 0x0 0x0 0x0>;
-+            #address-cells = <3>;
-+            #size-cells = <2>;
-+            ranges;
-+
-+            bus-range = <0x01 0xff>;
-+
-+            wifi@0 {
-+                compatible = "pci17cb,1107";
-+                reg = <0x10000 0x0 0x0 0x0 0x0>;
-+
-+                vddaon-supply = <&vreg_pmu_aon_0p59>;
-+                vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
-+                vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
-+                vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
-+                vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
-+                vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
-+                vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
-+                vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
-+                vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
-+            };
-+        };
-+    };
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 1325fbae2f28..1802900328a0 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -3066,7 +3066,9 @@ int pci_host_probe(struct pci_host_bridge *bridge)
+ 	struct pci_bus *bus, *child;
+ 	int ret;
+ 
++	pci_lock_rescan_remove();
+ 	ret = pci_scan_root_bus_bridge(bridge);
++	pci_unlock_rescan_remove();
+ 	if (ret < 0) {
+ 		dev_err(bridge->dev.parent, "Scanning root bridge failed");
+ 		return ret;
 -- 
 2.40.1
 
