@@ -1,35 +1,59 @@
-Received: from smtpcmd12132.aruba.it (smtpcmd12132.aruba.it [62.149.156.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D83F15DBC4
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:26:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417DD15DBC4
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712759220; cv=none; b=d7RQcF/cH+F9SMk9bIeEHg65q+iWmiMv3nMfCmU9ss8ubW6eeWC9b8pgScER0LD21xZ2Zv+UjGyOlIp89PqkjYOBbwL9xK0kYdshcGcm8VKYgC2waQgPqictshQSwGav/U9ijqge44OEqqZeXSoZOTpX82DUHDf8mzo/ONHSeNo=
+	t=1712759233; cv=none; b=V3BBf1hVVu07Jzwtezv9q7VdqE8KWLjGSJY55vQhzlqaZCBAjf04ThzA7majhWbui3NZTKA2+qyHMP03hR0dWDEaMwgFqZz9W0/ncXymwekZ/4okykB8SHD0t87pGsL0EDhIay1u1x4EdWMNYNbjg/1UA/PaoUlETHXlvEEh9dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712759220; c=relaxed/simple;
-	bh=Difdx3BxJzhOX2o/HP/f9EELdU+sT92qxGG5u7354ag=;
+	s=arc-20240116; t=1712759233; c=relaxed/simple;
+	bh=ZQv+Cv6FtAbS0T/V0OLwICdE4U3tkVtKCw2XykvAM6E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DN9WJfm9u5BPTEGhlAlmj6RktiJ+QtGEEJr81Iuczg31VDbk0saAK+iWtxhZg/GQCfYDRHnUbdbZxCc1oZNEIV2TtfHlWRWXmmfXbyBcgYmriIORbQlNteT39KQAi1bZaUn9L8Op4Of++i2kMO48leuWpSsXlBj8kxgkrrmcBms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=Y+7V8yXU; arc=none smtp.client-ip=62.149.156.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	 In-Reply-To:Content-Type; b=BiNSPQrv5Zs9gF1FV4+2gLol5YMiQCp4UQVZryaa1wu4GCTBQORmdfkktv6bW+NPrNf93TG5nb3QNNgvoWzt9BROHWYY5BjH8oXIRxdGQmqN9wtiVqN3XBYNg65OfwZa8Z/bw+Ozv0yO8Htp2pbMEnBggByV+mgsYQoYp/AXrKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=R6qshOfs; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="Y+7V8yXU"
-Received: from [192.168.1.57] ([79.0.204.227])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id uYrYrEorFJV7NuYrZrfvGW; Wed, 10 Apr 2024 16:23:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1712759026; bh=Difdx3BxJzhOX2o/HP/f9EELdU+sT92qxGG5u7354ag=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=Y+7V8yXUtqdQtu2Z/l8rYtvo3mPL/BNMXv0I8klhh9G18iCNp4L0E3m+dy0i/DDi3
-	 xyLOsm0jbjXmWYFNugKPIhC9UsZ3PTaUfB8VkINryrVuWSUG3VUfKIZux/mcL54l/z
-	 KIZ2ZLkbTHAWcIBX60RD3FuhniTkWIHLHbBNrtVxZSMpPpkBEwApL23Vbe1UpX1LeV
-	 Y0rgCKVgMZMV5XYlBY8rLqbJSuzBCIdw8UuTNmp/NoBhFvQu7XOo+1Ad4lse82qUtN
-	 lq3DSVl0zQcCLUzsWzPTPg3zmJATF2fQxz1y5hpt7x7T9HjhVjSdSi9aHtRU8CXm41
-	 iPm9JvfnR14sw==
-Message-ID: <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
-Date: Wed, 10 Apr 2024 16:23:43 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="R6qshOfs"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-343cfa6faf0so5034238f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712759228; x=1713364028; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zFeYAr3tgWzelp4Qc502/jt9QrT83vOai+OT7e3SF3I=;
+        b=R6qshOfsJU7pmFY80xi8VFZwgh/Ivl7dRFAXLdXeoH97GbYFfhEgCAIOBN2XC+njzD
+         H4/BFFZ/Lx/Xk4eaN50r+4MMGwYoLdzG3QuLjHRuRN4d6gRU/PeCgjc/d/U6LmWpMXq5
+         UrZFHINvFfGnjNdCRi2JcyTyQiqjkZ8OSjgTG/DHdOttEGhhxR1AZY49IC1Mz6w4etow
+         1mCdzlfHhT6p7lBDO2+DPZuAFfbItc6mNGnitd252x39LR5HMCqmRwFscdfhlNe9LfFl
+         8D+jxh8S3L+Z4ZGX78QPU5Ijl5/Wgk0UjGmBcms4NkuN9kKTjYDsFyE8yAcaEzhaBt4X
+         r1eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712759228; x=1713364028;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zFeYAr3tgWzelp4Qc502/jt9QrT83vOai+OT7e3SF3I=;
+        b=parCrWjjeMBayxJ/qbfxqXLI5xI8LsoFgtB0OsTdt3boUDYZoW/o2xl+tAVBdGsMOm
+         1hzzQnW1EDQA2PVvMXrKpVKEzHjt70qxkC/nGrQNMqhBNEhNUzlZrKX6HB5Jk9FY6MZs
+         IBcJlshRkrsv0AdjXiyloqHP9cbs7Fw0Pfnr5AyXgzBWX13nnJae+GqDhAr+5/wQvnJC
+         Q3MO9oirlPprvYqK9izOQwPpcVyV++i6wFOON/ZDg/xBa8u9ZdF1scKu0hgZ5qg+wJlU
+         ZYmll9/luH0opNr+uBcq1Z9pMrt5KGcHGWxvRIgFOmzr4mcgCK4zcjUtgqwF+Af7Vs1/
+         dQdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWpwc94fewRGtyWibtlTkb9Y9gmJCq5Ny1uJxxQHbwTVPYrGmmCSJapH4urWAaKr49gDmRRqbeMBpUAGGvZEfhvlrP7dc2KKNSDS1nV
+X-Gm-Message-State: AOJu0YwSgqnFsQwXbCzyWshiW+c5/Xkvl/lZksY5rJ83MKCBRHceY2A+
+	Cl94mBQzmZlLmVht2aQndproc6Z2w3hfNVzED2XHqs6GJCui+txhyqt79c61V/s=
+X-Google-Smtp-Source: AGHT+IGSvVBdvyjiYeq1pMtO732y4Er6q/giXpAXAVvEFvGgI0ZjYjMZMlOGyJUSQFXanGM+QGMBOw==
+X-Received: by 2002:a05:6000:188a:b0:344:4bcc:ed28 with SMTP id a10-20020a056000188a00b003444bcced28mr3345746wri.32.1712759228609;
+        Wed, 10 Apr 2024 07:27:08 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id b17-20020a5d40d1000000b00343cad2a4d3sm13846851wrq.18.2024.04.10.07.27.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 07:27:08 -0700 (PDT)
+Message-ID: <d334ddc4-3c8e-49d7-8940-30f78bff823f@baylibre.com>
+Date: Wed, 10 Apr 2024 16:27:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,70 +61,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
- when not needed
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
+Subject: Re: [PATCH v4 07/18] ASoC: mediatek: Add common snd_soc_ops
+ .startup() callback
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ broonie@kernel.org
+Cc: wenst@chromium.org, lgirdwood@gmail.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+ trevor.wu@mediatek.com, maso.huang@mediatek.com,
+ xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+ kuninori.morimoto.gx@renesas.com, shraash@google.com,
+ nicolas.ferre@microchip.com, u.kleine-koenig@pengutronix.de,
+ dianders@chromium.org, frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+ eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+ jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com, alpernebiyasak@gmail.com,
+ ckeepax@opensource.cirrus.com, zhourui@huaqin.corp-partner.google.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ shane.chien@mediatek.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20240409113310.303261-1-angelogioacchino.delregno@collabora.com>
+ <20240409113310.303261-8-angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20240409113310.303261-8-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfOxo2hSIHH3+mH6g5ecaL9iBtmekxHFOjZJTmXbuXn5INXrXLdqGfv9jutC7tQVGJuMuPq3HLONPulaE+u1hA2Na4g7zRQjP9+6rq2NEwQFZ4HidDc9P
- bWqJw8WkGCecm/U5//v/uW9r5lTTs7SwgOophfyXigDAcUWtOcOJx6GPma9vWD5FWiuDRxKrrDsbOzGQQMmBBacDFIfNKNgTwpsmfMyNa2wbg5oxctxXkWYl
- iJq/EBp3zQWC8nFMt355Lk6mUoJ9S2/maBahsw4VZsr8MCZMJODQAAHpMQfUioJ0EJ/MwOvZaQz0U3/o3z/JvHkl/Tq7+tJimKmq4UG/9Vfna1EXp6k1zru1
- A/WoHWS624jThbbZOv+qFkMSmXQgQA==
 
-On 10/04/24 13:35, Bastien Curutchet wrote:
-> In the IRQ handler, the GPIO's state is read to verify the direction of
-> the edge that triggered the interruption before generating the PPS event.
-> If a pulse is too short, the GPIO line can reach back its original state
-> before this verification and the PPS event is lost.
-> 
-> This check is needed when info->capture_clear is set because it needs
-> interruptions on both rising and falling edges. When info->capture_clear
-> is not set, interruption is triggered by one edge only so this check can
-> be omitted.
-> 
-> Bypass the edge's direction verification when info->capture_clear is not
-> set.
-> 
-> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
-> ---
->   drivers/pps/clients/pps-gpio.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
-> index 2f4b11b4dfcd..c2a96e3e3836 100644
-> --- a/drivers/pps/clients/pps-gpio.c
-> +++ b/drivers/pps/clients/pps-gpio.c
-> @@ -52,6 +52,15 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
->   
->   	info = data;
->   
-> +	if (!info->capture_clear) {
-> +		/*
-> +		 * If capture_clear is unset, IRQ is triggered by one edge only.
-> +		 * So the check on edge direction is not needed here
-> +		 */
-> +		pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
-> +		return IRQ_HANDLED;
-> +	}
-> +
->   	rising_edge = gpiod_get_value(info->gpio_pin);
->   	if ((rising_edge && !info->assert_falling_edge) ||
->   			(!rising_edge && info->assert_falling_edge))
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Apart the code duplication, which are the real benefits of doing so?
-
-Rodolfo
+On 09/04/2024 13:32, AngeloGioacchino Del Regno wrote:
+> MediaTek platforms are typically setting PCM rate and channels
+> constraints for playback, capture and HDMI/DisplayPort playback:
+> commonize the startup callback by adding the PCM constraints data
+> to the mtk_platform_card_data structure and by reusing the common
+> mtk_soundcard_startup() function for all of them by getting back
+> the parameters from the aforementioned struct.
 
 -- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
-
+Regards,
+Alexandre
