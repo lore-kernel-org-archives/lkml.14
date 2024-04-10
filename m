@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13C772AE6A
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0218F13D293
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 08:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736084; cv=none; b=tDLyT+C/7h31hMK+/+vl41J9EO2tjXJTYg6L6/0RhG+mUg/iyS4fUBc9/zyrILMaU0EZd4o8jBqJBQSCrKPt86OdfpaYvgl8FugvcDv6d3svmBaP652zmNtw4hBOKFkx8mVWuJdGAV4qkebRTlSABW8x+ZgTx/CEqvadKGfvphY=
+	t=1712736155; cv=none; b=UICVldD7olZZdJvY3agmOwU5XQAifYOrl5QcajTR/VCjYuR3IM2GCWvLgAEILVpxk/TH9LUgjhlx6Ipgns07AXN6G0s1BXkzFTYmaeQp7aUms003h7BLzPkl3y80brsEadxaKO4V27BLQhy55B6OAdUUTH8uy8Zrjj4+uvEUY8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736084; c=relaxed/simple;
-	bh=VTwZMXnYIbWR0MWJwZOA1x+kDKtOjvRESHbBhhqjrGk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bx4ofAJ/mjTbyCh/ksXhNOKytWo+t54ZZMFRvayxlWpXhhHEFUZDT4zQV331W50srX+L+SdsuSllyv2Nllgh8FndqcbPywu6vyT/Kh8WpBck8rJ9ztEbVrxUe52M7/gn1IJmMXxnY8J0cap0v/e7iEXVp8mxITY/j+Hk9Yo+iwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C1271480;
-	Wed, 10 Apr 2024 01:01:52 -0700 (PDT)
-Received: from [10.57.17.166] (unknown [10.57.17.166])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 87FBA3F766;
-	Wed, 10 Apr 2024 01:01:18 -0700 (PDT)
-Message-ID: <1d317158-f9a4-48b8-bc29-5a1d75c6493d@arm.com>
-Date: Wed, 10 Apr 2024 09:01:08 +0100
+	s=arc-20240116; t=1712736155; c=relaxed/simple;
+	bh=ns5iFXaPS2mOe7i63bnwPeaQB9a+vK/75Dv/SXu4kPo=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=B9ZeF2FDOBmV5d+OV0Xjh99QYoaN0hNluLPg4t0ISXVFKxt0NnPDJ/L4X3OnPfduEt6bQu2eHqv4oU92ZlR3Zb2D2rZMvUyqOXOaMcjAJCwFO0okx6tcukp3RV157Z8Lml4shES9mTn6UNclKDgWc9tHP7pv86oZIlFkCRIKk4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I7Y7/4ub; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I7Y7/4ub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712736154; x=1744272154;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ns5iFXaPS2mOe7i63bnwPeaQB9a+vK/75Dv/SXu4kPo=;
+  b=I7Y7/4ubG+sDu72IG62CBW5aQnTbAS+3xxKDUnRCHvptSlt0TTvnO4RG
+   2fdttizQvh3An7L2hQ+a8cAzIPMR3kbpRXyQ6R7QgrT91Pyg1adv8Ir5r
+   FvOidMiJaLObw4Yd7wN+bnCXdhNK7QYhIV06pviaYfIrXaBcKZQdoIASH
+   zYtB6VR0hKd0qnObKSD0bI8lQH20Pp8yJ8QzNJpYXf06W7awNCAvsagDb
+   vKxkj477XeDOfznvy/S/LLn+PBpM+TmQP5YYJX0NO8gAGiDgvWv0YHKQH
+   Cn93rJHxGnh9X47CFIW3t3goqSMw7sLg70QCBqOyA/BlA8mUU4aAM8hvf
+   Q==;
+X-CSE-ConnectionGUID: 2UgSiUJCQW+6vCDGcCSmQQ==
+X-CSE-MsgGUID: Z4snNm6/T7uXvEssBAR8og==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="33488836"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="33488836"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:02:29 -0700
+X-CSE-ConnectionGUID: YatJKCZ1SROZ0ZlY2uIrig==
+X-CSE-MsgGUID: b4Gf+aVbTmeChF1ZQ+xihg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20365966"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.86]) ([10.124.237.86])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 01:02:27 -0700
+Message-ID: <0231631b-44ca-45ee-adf9-0a5c8852cc27@linux.intel.com>
+Date: Wed, 10 Apr 2024 16:02:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,43 +52,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched/fair: Fix wrong flag passed to
- set_rd_overutilized()
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
- <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>
-References: <0afb160788a297f8cda63b70385de5f6bddec11e.1712693356.git.hongyan.xia2@arm.com>
- <4370fce5-323e-4f03-87e1-89632e724e2c@linux.ibm.com>
+Cc: baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] iommu/vt-d: Remove caching mode check before
+ device TLB flush
+To: Yi Liu <yi.l.liu@intel.com>, iommu@lists.linux.dev
+References: <20240410055823.264501-1-baolu.lu@linux.intel.com>
+ <7e78917f-f84c-4e98-a612-73b8013ae367@intel.com>
 Content-Language: en-US
-From: Hongyan Xia <hongyan.xia2@arm.com>
-In-Reply-To: <4370fce5-323e-4f03-87e1-89632e724e2c@linux.ibm.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <7e78917f-f84c-4e98-a612-73b8013ae367@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/04/2024 07:11, Shrikanth Hegde wrote:
-> 
-> 
-> On 4/10/24 1:43 AM, Hongyan Xia wrote:
->> In update_sd_lb_stats(), sg_overloaded is passed to
->> set_rd_overutilized(). This seems to be a typo during refactoring, which
->> breaks many of my local EAS tests because overutilization is mistakenly
->> triggered.
+On 2024/4/10 14:30, Yi Liu wrote:
+> On 2024/4/10 13:58, Lu Baolu wrote:
+>> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+>> implementation caches not-present or erroneous translation-structure
+>> entries except the first-stage translation. The caching mode is
+>> irrelevant to the device TLB , therefore there is no need to check
+>> it before a device TLB invalidation operation.
 >>
->> This fix makes those EAS tests work again.
->>
+>> iommu_flush_iotlb_psi() is called in map and unmap paths. The caching
+>> mode check before device TLB invalidation will cause device TLB
+>> invalidation always issued if IOMMU is not running in caching mode.
+>> This is wrong and causes unnecessary performance overhead.
 > 
-> Yes. This is a needed fix.
-> 
->> Signed-off-by: Hongyan Xia <hongyan.xia2@arm.com>
->   
-> 
-> FYI, Same patch has been posted by Vincent a week ago.
-> https://lore.kernel.org/all/20240404155738.2866102-1-vincent.guittot@linaro.org/
+> I don't think the original code is wrong. As I replied before, if CM==0,
+> the iommu_flush_iotlb_psi() is only called in unmap path, in which the
+> @map is false. [1] The reason to make the change is to make the logic
+> simpler. 🙂
 
-Thank you. Somehow I missed it in my inbox.
+Oh, I see. There is a magic
+
+         if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+                 iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
+
+in __mapping_notify_one().
+
+So if it's caching mode, then
+
+  - iommu_flush_iotlb_psi() will be called with @map=1 from
+    __mapping_notify_one(), "!cap_caching_mode(iommu->cap) || !map" is
+    not true, and device TLB is not invalidated.
+  - iommu_flush_iotlb_psi() will also be called with @map=0 from
+    intel_iommu_tlb_sync(), device TLB is issued there.
+
+That's the expected behavior for caching mode.
+
+If it's not the caching mode, then
+
+  - iommu_flush_iotlb_psi() will be called with @map=0 from
+    intel_iommu_tlb_sync(), device TLB is issued there.
+
+That's also the expected behavior.
+
+So the existing code is correct but obscure and difficult to understand,
+right? If so, we should make this patch as a cleanup rather than a fix.
+
+Best regards,
+baolu
