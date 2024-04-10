@@ -1,163 +1,89 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5DEC2D6
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 07:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0C913D28B;
+	Wed, 10 Apr 2024 07:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735685; cv=none; b=fSncI+20BnSpPRcn9D96Q+Y+rmLfNUvVpgYtJMSOFyxP1g9GCFxf9Zt58YH+w2RFK+GHbfwx6mq557oSF0TcvOxq713nGgTT8zvamQPVsvrOWsJNnaDbuod/1qlHdiZu3JU1YrtJEr1bns3Evfx+MALlMNU0+lVQwDQRg169uGw=
+	t=1712735724; cv=none; b=PcxVNNb+NEWxvx7jiY0tllIMlrpm+rHdrbKlaS2q9+PmzWAOo3M0/Z0I/RSmQox0qi/0KW6t92sKMkuAzB7kvEuchp7U8DVeRQP86tsMTxbVGDV00rwWLlsFqR4Uf1hiBWYp2yA7uPw0aXsLQDBGFZ9ApqZ7lpHqp32GuSRb3Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712735685; c=relaxed/simple;
-	bh=Jd2c0Gd5Zw/HS1VgNj6UNoKrZsDEbPpFbAV2PSqqRvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KA1gm+o7bVv0vF2L20izi6AGDb/82VLUCsC5sv+c+qfS+A6zEWTVm3U/QO1vnsZ0FpVHFB0io2bXpBQTRbpLdDdDCVK2AaIVDU2UO7CnNiQw29UKKWd7YnB5hBFyimDzMnuc0M0IcdNETt0b2zbH2YE8PndQWZVTxNBP88++yRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=h1g6Sn7v; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1712735724; c=relaxed/simple;
+	bh=HcMcawYwrMbKNcpE8lk7DBbxiVe9ZzPEjbE5Enqe2Bs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tl4uSA1XDt61laQ5F4HbGZjAHKGYDjzozuWaxAdeDZ4wNZ9DQ5mWIosDjxsEvft56Ekj3E2vRGSQRVygBsfnCwGxxPfdisMSUiRaA5n1WhM+KB2xkM4Cd5ZRmzQSrkdgyEbOeGMiBNmEGhofeAgE1LWplj/MaY+9BtCepnmC9Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=UZ7GNjt1; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="h1g6Sn7v"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-56bdf81706aso8521207a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712735682; x=1713340482; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xT4TfO1sl44M/nt04uaJynnbnIHdAjwI3dACDF2EjZU=;
-        b=h1g6Sn7vovUYnFftOWYNTLp1UEaxGsxEGF70w9VdgXaQ31EktSCxeEsgiHXMQMeSfW
-         c5MBTI3xKWvIMDH48XoSSpIcNJzvXSGEOEQuNy5LLAxUyCGWR7xRSw/dN57Y3vg3kMYy
-         4Y/eI8s1fVqmDnlJ3sGg75ZRDBxGX/0COguZAu3ateC6VxKFCO1CDk720UExuSVrdZ/C
-         TqFNk7pSgp5Z7a31LPjSW5UFtFEAAjIxD4zKCrWFllw8FNTY2f6blVnGlaEAkpEgbznE
-         nhgaLAoiNFwn6z4iqF5Ew517ahVdmdra1iM2IsuHHyfqAUMEQ29m4d6c9k6OEeU4OxX4
-         IUWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712735682; x=1713340482;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xT4TfO1sl44M/nt04uaJynnbnIHdAjwI3dACDF2EjZU=;
-        b=hC8NFAR4w2tjVYndKfaiaSX/BHyj+tcNIixeXXvJLK4TV8d1T4hRl4wi7FiH3Wdhf+
-         SEcakcg2SnnNKrTeo8Z7/EYBsNFCbDqwOeTpYfgB0DRSqIn6VwlH7BRH1QfmB8Sa0pFY
-         5tF83cC3SzvuvXrCTmc7aI11KLv9+3YyQ2JBNOQSmO4U3BOFxFWw/HmIJB0mTOgbiDle
-         slE9S3rwOYVoSLBoYr+FDjxwZRdfkGurOKuhjSqWGx7+gTIdEofq4ONlMPNtctOiYlBJ
-         a0RnMvcffXER9eWFz13UIHGPA0w84YfmDftZnnNgeWvKPoTtHAc/9qmovqAs52X8cNrw
-         GUeQ==
-X-Gm-Message-State: AOJu0Yyh/WZU6hTQftBZZAuf7eUoDCgP0kYFssZgn6KoFcTS7bIIBcbM
-	KmQTNC49R+vSr0WabAUhmvIfiX0LITKfE2GxY1ORB+NT18XybXxaORERsPbOCZ0=
-X-Google-Smtp-Source: AGHT+IHRLBNWYp5osm4g2tE72KL50pB81DvbKh3OKFJcV5WdtGMoowG4LIJqFVgVawpLvyMudGgyRg==
-X-Received: by 2002:a50:8e54:0:b0:56e:3293:3772 with SMTP id 20-20020a508e54000000b0056e32933772mr1082442edx.29.1712735682410;
-        Wed, 10 Apr 2024 00:54:42 -0700 (PDT)
-Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id x1-20020a056402414100b0056e307db93dsm6132199eda.86.2024.04.10.00.54.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 00:54:41 -0700 (PDT)
-Date: Wed, 10 Apr 2024 09:54:41 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: linux-kernel@vger.kernel.org, Anup Patel <anup@brainfault.org>, 
-	Ajay Kaher <akaher@vmware.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Alexey Makhalov <amakhalov@vmware.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Juergen Gross <jgross@suse.com>, kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, virtualization@lists.linux.dev, 
-	VMware PV-Drivers Reviewers <pv-drivers@vmware.com>, Will Deacon <will@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v5 21/22] KVM: riscv: selftests: Add a test for PMU
- snapshot functionality
-Message-ID: <20240410-f46f91518afc0e151f375a62@orel>
-References: <20240403080452.1007601-1-atishp@rivosinc.com>
- <20240403080452.1007601-22-atishp@rivosinc.com>
- <20240405-4e840120e8117c286cb593f9@orel>
- <8748dbed-d105-4f26-a808-667c3b56c8ec@rivosinc.com>
- <20240410-2a41e43624596a442d6a95cd@orel>
- <4a428500-4e37-4e7d-968d-3da20dd822af@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="UZ7GNjt1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=ieFT59N5jWL4d5qY/lsIo26kUNWbiudGLqzvxyRefYQ=;
+	t=1712735722; x=1713945322; b=UZ7GNjt1n+hgmWpIAFiYMVYTo4RD93nB/nR46flo+52Lvyp
+	Wsc10ouQyWrX0ZF+T01njwizykidMARBcnVf1oUM51GJ7kZ/KlK59U+gtVHzB0ezQhg1mQ8iGYG7M
+	CZcTuAB65OjCklmKikmUx4jrs93tN/f+hxlgr8nBf2z4cqJnitTHQES5844SBOO6BZC3Fp2JV44ai
+	xE+K7HgcLk292mIzaVQiNU9JZUqOjEJNTsUn85vjoJmrQ5TgQYNseI+cES2GnntOPG90IP/PMGASN
+	D3DSuxU4dwNgmb0BatE+BmAvTSpZToEiq3HAraPP7KfGRcg62JIsCeFQCDC66iEg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1ruSnf-00000001Ees-42vq;
+	Wed, 10 Apr 2024 09:55:20 +0200
+Message-ID: <5cf6b243c3967cd5a630f8f8e5bf17f7c9010f01.camel@sipsolutions.net>
+Subject: Re: [EXT] Re: [PATCH v9 0/2] wifi: mwifiex: add code to support
+ host mlme
+From: Johannes Berg <johannes@sipsolutions.net>
+To: David Lin <yu-hao.lin@nxp.com>, Brian Norris <briannorris@chromium.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>, "kvalo@kernel.org"
+ <kvalo@kernel.org>, "linux-wireless@vger.kernel.org"
+ <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Pete Hsieh <tsung-hsien.hsieh@nxp.com>, 
+ "rafael.beims" <rafael.beims@toradex.com>, Francesco Dolcini
+ <francesco.dolcini@toradex.com>
+Date: Wed, 10 Apr 2024 09:55:18 +0200
+In-Reply-To: <DU0PR04MB96365F2B6AFD856655D6A66CD1062@DU0PR04MB9636.eurprd04.prod.outlook.com>
+References: <ZfTspRKFgrO9xCTH@google.com>
+	 <969e95ccc4a1d35b45212b7fcb536ee90995e3b5.camel@sipsolutions.net>
+	 <PA4PR04MB9638D253189D6DD330B198B2D1332@PA4PR04MB9638.eurprd04.prod.outlook.com>
+	 <PA4PR04MB9638BE73DDBCE1CE8AA32BA8D1332@PA4PR04MB9638.eurprd04.prod.outlook.com>
+	 <b2d9a7ef53c5ab4212617e8edf202bbafe52e2f8.camel@sipsolutions.net>
+	 <ZftaJEIeNfV7YrVo@google.com>
+	 <PA4PR04MB9638F5037D1AB9BCF51CC9D9D1322@PA4PR04MB9638.eurprd04.prod.outlook.com>
+	 <Zf4rDifM6bLuqpX2@google.com>
+	 <4e5f3741819e457c5c79d825c6520cb9ee531b95.camel@sipsolutions.net>
+	 <PA4PR04MB96386917877832602F221282D13A2@PA4PR04MB9638.eurprd04.prod.outlook.com>
+	 <ZgxCngq_Rguc4qs8@google.com>
+	 <DU0PR04MB96365F2B6AFD856655D6A66CD1062@DU0PR04MB9636.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a428500-4e37-4e7d-968d-3da20dd822af@rivosinc.com>
+X-malware-bazaar: not-scanned
 
-On Wed, Apr 10, 2024 at 12:28:08AM -0700, Atish Patra wrote:
-> 
-> On 4/10/24 00:10, Andrew Jones wrote:
-> > On Tue, Apr 09, 2024 at 03:52:40PM -0700, Atish Patra wrote:
-> > > On 4/5/24 06:11, Andrew Jones wrote:
-> > > > On Wed, Apr 03, 2024 at 01:04:50AM -0700, Atish Patra wrote:
-> > ...
-> > > > > +	probe = guest_sbi_probe_extension(SBI_EXT_PMU, &out_val);
-> > > > > +	GUEST_ASSERT(probe && out_val == 1);
-> > > > > +
-> > > > > +	if (get_host_sbi_spec_version() < sbi_mk_version(2, 0))
-> > > > > +		__GUEST_ASSERT(0, "SBI implementation version doesn't support PMU Snapshot");
-> > > > > +}
-> > > > It's a pity we can't check the SBI spec version that KVM is advertising
-> > > > from KVM userspace. Normally we'd want to check something like this at
-> > > > the start of the test with TEST_REQUIRE() before running a VCPU in order
-> > > > to generate a skip exit.
-> > > > 
-> > > Agreed. I will send a separate series for that as it is an ABI change.
-> > > 
-> > > > (We probably should allow reading and even writing the SBI spec version
-> > > > from the VMM in order to better support migration.)
-> > > > 
-> > > How that would work for SBI spec version write use case ? For migraiton, you
-> > > can't go back to older SBI versions in the host. Isn't it ?
-> > > 
-> > > Considering this case your VM is running with PMU snapshot as the host has
-> > > SBI v2.0. It can't be migrated to v1.0 and expecting it work. Correct ?
-> > > 
-> > We can start a VM on a host with SBI v2.0, but tell KVM to tell the VM
-> > that it has v1.0. Then, the guest shouldn't use any features from SBI
-> > that appear after v1.0 and it should be safe to migrate to a host with
-> > v1.0.
-> 
-> That depends on when the VMM request to KVM to change the version.
-> Most of SBI implementation checks the SBI version at the boot and
-> enable/disable
-> feature based on the SBI version available. If the SBI version supported by
-> KVM changes
-> to an older one, the calls from VM will fail unexpectedly.
+On Wed, 2024-04-10 at 07:30 +0000, David Lin wrote:
+> Hi Johannes and Brian,
+> =20
+>     I think this patch is used to leverage MLME of wpa_supplicant and hos=
+tapd. It won't affect the usage of cfg80211 for mwifiex. I wonder if I can =
+prepare patch v10.
 
-We have to configure KVM's SBI version before the first run of VCPUs,
-just like we should make sure ISA/SBI extensions are configured first.
+No. That sentence tells me you've _still_ not understood any of the
+technical arguments in the thread, you're _still_ arguing with
+completely uninteresting arguments. Where before you had "it's well
+tested" and "it uses 'standard' APIs" now you're saying "it doesn't
+affect anyone else". All of that is obvious, and also completely besides
+the point.
 
-> 
-> > A more likely scenario might be this though:
-> > 
-> >   1. KVM userspace checks and captures the SBI version of the host where
-> >      the VM is first being launched, e.g. v2.0
-> >   2. The VM gets migrated to another host which supports something later,
-> >      e.g. v3.0, but to
-> >      - avoid possibly confusing the guest we tell the destination host
-> >        that it should expose v2.0 as the SBI version
-> >      - allow rollback to the source host without concern that the guest
-> >        has already seen v3.0 and started to use something that the
-> >        source can't provide
-> 
-> This makes sense though. As per my understanding, we should not allow
-> modifying
-> the SBI version that is less that the version VM already boot with.
-> However, we can allow modifying the SBI version that is higher or same as
-> the VM booted with.
+Please go back and actually _understand_ the discussion. Also actually
+_participate_ in the discussion too, so far you've pretty much only made
+empty arguments. Once you've understood the concerns and can explain why
+they don't apply, _then_ you can resend the patch.
 
-Mostly only 'the same as'. Higher might work, but it's also risky since
-there could be guests out there which capture the version on boot and
-then for whatever reason do sanity checks against that later on and
-freak out when there's a change, even if the change went higher.
-
-> 
-> I can't think of a use case for the higher version though.
-
-Maybe only for a coordinated update which uses kexec rather than
-a full shutdown+boot cycle, but I'm reaching...
-
-Regarding a full shutdown+boot cycle, in those cases, we're usually
-free to make changes as that's the same as a host kernel being shutdown
-and then being boot again after a firmware update.
-
-Thanks,
-drew
+johannes
