@@ -1,212 +1,138 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFAF15B0E4;
-	Wed, 10 Apr 2024 17:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488D3176FDB;
+	Wed, 10 Apr 2024 17:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712769498; cv=none; b=oWCLReUF8GCARojV+bP6g8lhF9wAxezZ+LSbjv/lTlepUVS+jNpxmz7LkLvD9tyTXqSauQsQ4vEVzwN/JJ44NW+amDE4n5G1Vn5xLKXRaxjzLQ9JAruY/OSDrQqMo4zyKMMtRtxaGgW5MYRPzEoGhIOQNz9CxvFRy5mOs+NQ50Q=
+	t=1712769568; cv=none; b=tyIe5js0Y8bMEotV3Bj00d6TsBkx0wD/CT0uHzc0pPu05+N00LmN4emviz0Au0WlCZHg4tXlwD2wo5oi+CrtpU0zUPOq+fU4F/ocSBouRxLu+PJGgnR5XIiwohlu9Uq0BO9rQAfeAMZlqdbqi9Vc5dWiG/lK2X7v+7Ij3kJw+q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712769498; c=relaxed/simple;
-	bh=pze+/ST5lcAZTgLL3MfKRc3IpTaWq5E06McQnCfjJ/Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yb7fjTG2VUQNwQJYK/NJvxV7xbZKLrG7/k/IxLKb8p0W+nqbbAYM2tCWHpEyS/ubUGL5jrrUrYFJXg+6AaZzEXvvjJ8q7qPqtU3igI9gVaxMVO2sgEAsiICmN99SQ7v7F7fZtg9AcEuj6SBYtpG2wgf70WjwVaTw5nHkw2DFfQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=nRgG8DJh; arc=none smtp.client-ip=167.114.26.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1712769568; c=relaxed/simple;
+	bh=W5eX1rU/9P9HprqQ9cPTQC7SCZNm4aigfiIYicPhLKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKblNNuSWyJPUv2X9SC1bbUypqDpptpkN3/q+DzK/IvCty31pRdpqYA4rFkEIcsJHQyef4H5xykNLwwW8i2iindizIC8TKaQIM/1fNFVQjYIi4sEhmHSWKijIdRfWM8z0nWa8GhqVv3R62MxaW1q0KfyTEi65dgQzARgdDlIByw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8R+u2Lc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="nRgG8DJh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1712769494;
-	bh=pze+/ST5lcAZTgLL3MfKRc3IpTaWq5E06McQnCfjJ/Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nRgG8DJhJ13BdD61Q3w8naE9a2X1LePlOfIzh/QEHhsIgxml+OllqXJnI2aGkkCUU
-	 IW7pyhy7e8muOfPAlLZu3CvUOil600Ss2GqkwF11seZ+g6see0sF0jmRlul+zp14gL
-	 QhGquyTurkELLfrh/zYxo3ZjedAgEEmCYLpoT6Yg4IEZrj3hThU6MMMlqwVrBBK0sM
-	 OfLal2lbNT3Wn8a8JHi8lzAuG0KlcOpKuVT09QrTTKHD4TghBp1cDNKeSYLfIZMLqG
-	 NpVSCoHphmq9wtRTOhxpexDt50+5h3r9rpvEUVT0s7XqRVLg7sWib6mzNMj3Bb15JN
-	 Hc9Fgt6sBa10Q==
-Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4VF8fs2KdQzrmj;
-	Wed, 10 Apr 2024 13:18:13 -0400 (EDT)
-Message-ID: <18f5d6e7-9e33-419a-bd15-fd4fa34a69c8@efficios.com>
-Date: Wed, 10 Apr 2024 13:18:45 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8R+u2Lc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 919E3C433F1;
+	Wed, 10 Apr 2024 17:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712769567;
+	bh=W5eX1rU/9P9HprqQ9cPTQC7SCZNm4aigfiIYicPhLKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g8R+u2LcMjuhESgE2vdJd7RAdvDYicV1iPM5LiK+Cex1rJ4Kn+rqiOOKA4YgGBKvU
+	 6wirhtTbJho6uV8fUZjciCHslvPTUwhW4UtoLt0zHxFxemaIr2QGwk1TON+DL5DPwh
+	 h4NyvSfMciSRUzEYpe0gpKjAsugwpEW/EoOvZdRYg0QWazSXf8I5sdanN5s321ELEa
+	 WJiUI7rmI6eD2Nw2Re3rpobNscN0B/NJ0kDU++7gyEtBdjRNw250mUOIQAgU3B7lA7
+	 XlYVjideFzkiT88e516rW9xYi1ojtQpflKSFz+BxOzTxZ829xErrWrYMEn+5+DHuMX
+	 ZuGXuEGz8Zh6A==
+Date: Wed, 10 Apr 2024 12:19:25 -0500
+From: Rob Herring <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Peng Fan <peng.fan@nxp.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: firmware: add i.MX SCMI Extension
+ protocol
+Message-ID: <20240410171925.GA564262-robh@kernel.org>
+References: <20240405-imx95-bbm-misc-v2-v2-0-9fc9186856c2@nxp.com>
+ <20240405-imx95-bbm-misc-v2-v2-2-9fc9186856c2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] sched: Add missing memory barrier in switch_mm_cid
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, "levi . yun" <yeoreum.yun@arm.com>,
- stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
- <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- Daniel Bristot de Oliveira <bristot@redhat.com>,
- Valentin Schneider <vschneid@redhat.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>,
- Aaron Lu <aaron.lu@intel.com>
-References: <20240308150719.676738-1-mathieu.desnoyers@efficios.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20240308150719.676738-1-mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405-imx95-bbm-misc-v2-v2-2-9fc9186856c2@nxp.com>
 
-This fix has received an Acked-by from ARM64 maintainer Catalin Marinas. [1]
-
-I'm CCing x86 maintainers whom are not also scheduler maintainers
-as well so they can give their input.
-
-This is still waiting for feedback from scheduler maintainers.
-
-[1] https://lore.kernel.org/lkml/ZhUVpwwqKxWKgU0Q@arm.com/
-
-On 2024-03-08 10:07, Mathieu Desnoyers wrote:
-> Many architectures' switch_mm() (e.g. arm64) do not have an smp_mb()
-> which the core scheduler code has depended upon since commit:
+On Fri, Apr 05, 2024 at 08:39:24PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
->      commit 223baf9d17f25 ("sched: Fix performance regression introduced by mm_cid")
+> Add i.MX SCMI Extension protocols bindings for:
+>  - Battery Backed Secure Module(BBSM)
+>  - MISC settings such as General Purpose Registers settings.
 > 
-> If switch_mm() doesn't call smp_mb(), sched_mm_cid_remote_clear() can
-> unset the actively used cid when it fails to observe active task after it
-> sets lazy_put.
-> 
-> There *is* a memory barrier between storing to rq->curr and _return to
-> userspace_ (as required by membarrier), but the rseq mm_cid has stricter
-> requirements: the barrier needs to be issued between store to rq->curr
-> and switch_mm_cid(), which happens earlier than:
-> 
-> - spin_unlock(),
-> - switch_to().
-> 
-> So it's fine when the architecture switch_mm happens to have that barrier
-> already, but less so when the architecture only provides the full barrier
-> in switch_to() or spin_unlock().
-> 
-> It is a bug in the rseq switch_mm_cid() implementation. All architectures
-> that don't have memory barriers in switch_mm(), but rather have the full
-> barrier either in finish_lock_switch() or switch_to() have them too late
-> for the needs of switch_mm_cid().
-> 
-> Introduce a new smp_mb__after_switch_mm(), defined as smp_mb() in the
-> generic barrier.h header, and use it in switch_mm_cid() for scheduler
-> transitions where switch_mm() is expected to provide a memory barrier.
-> 
-> Architectures can override smp_mb__after_switch_mm() if their
-> switch_mm() implementation provides an implicit memory barrier.
-> Override it with a no-op on x86 which implicitly provide this memory
-> barrier by writing to CR3.
-> 
-> Link: https://lore.kernel.org/lkml/20240305145335.2696125-1-yeoreum.yun@arm.com/
-> Reported-by: levi.yun <yeoreum.yun@arm.com>
-> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Fixes: 223baf9d17f2 ("sched: Fix performance regression introduced by mm_cid")
-> Cc: <stable@vger.kernel.org> # 6.4.x
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Cc: levi.yun <yeoreum.yun@arm.com>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Aaron Lu <aaron.lu@intel.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->   arch/x86/include/asm/barrier.h |  3 +++
->   include/asm-generic/barrier.h  |  8 ++++++++
->   kernel/sched/sched.h           | 20 ++++++++++++++------
->   3 files changed, 25 insertions(+), 6 deletions(-)
+>  .../devicetree/bindings/firmware/imx,scmi.yaml     | 80 ++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
 > 
-> diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-> index 35389b2af88e..0d5e54201eb2 100644
-> --- a/arch/x86/include/asm/barrier.h
-> +++ b/arch/x86/include/asm/barrier.h
-> @@ -79,6 +79,9 @@ do {									\
->   #define __smp_mb__before_atomic()	do { } while (0)
->   #define __smp_mb__after_atomic()	do { } while (0)
->   
-> +/* Writing to CR3 provides a full memory barrier in switch_mm(). */
-> +#define smp_mb__after_switch_mm()	do { } while (0)
+> diff --git a/Documentation/devicetree/bindings/firmware/imx,scmi.yaml b/Documentation/devicetree/bindings/firmware/imx,scmi.yaml
+> new file mode 100644
+> index 000000000000..7ee19a661d83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/firmware/imx,scmi.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2024 NXP
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/firmware/imx,scmi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->   #include <asm-generic/barrier.h>
->   
->   /*
-> diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
-> index 961f4d88f9ef..5a6c94d7a598 100644
-> --- a/include/asm-generic/barrier.h
-> +++ b/include/asm-generic/barrier.h
-> @@ -296,5 +296,13 @@ do {									\
->   #define io_stop_wc() do { } while (0)
->   #endif
->   
-> +/*
-> + * Architectures that guarantee an implicit smp_mb() in switch_mm()
-> + * can override smp_mb__after_switch_mm.
-> + */
-> +#ifndef smp_mb__after_switch_mm
-> +#define smp_mb__after_switch_mm()	smp_mb()
-> +#endif
+> +title: i.MX System Control and Management Interface(SCMI) Vendor Protocols Extension
 > +
->   #endif /* !__ASSEMBLY__ */
->   #endif /* __ASM_GENERIC_BARRIER_H */
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 2e5a95486a42..044d842c696c 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -79,6 +79,8 @@
->   # include <asm/paravirt_api_clock.h>
->   #endif
->   
-> +#include <asm/barrier.h>
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
 > +
->   #include "cpupri.h"
->   #include "cpudeadline.h"
->   
-> @@ -3481,13 +3483,19 @@ static inline void switch_mm_cid(struct rq *rq,
->   		 * between rq->curr store and load of {prev,next}->mm->pcpu_cid[cpu].
->   		 * Provide it here.
->   		 */
-> -		if (!prev->mm)                          // from kernel
-> +		if (!prev->mm) {                        // from kernel
->   			smp_mb();
-> -		/*
-> -		 * user -> user transition guarantees a memory barrier through
-> -		 * switch_mm() when current->mm changes. If current->mm is
-> -		 * unchanged, no barrier is needed.
-> -		 */
-> +		} else {				// from user
-> +			/*
-> +			 * user -> user transition relies on an implicit
-> +			 * memory barrier in switch_mm() when
-> +			 * current->mm changes. If the architecture
-> +			 * switch_mm() does not have an implicit memory
-> +			 * barrier, it is emitted here.  If current->mm
-> +			 * is unchanged, no barrier is needed.
-> +			 */
-> +			smp_mb__after_switch_mm();
-> +		}
->   	}
->   	if (prev->mm_cid_active) {
->   		mm_cid_snapshot_time(rq, prev->mm);
+> +allOf:
+> +  - $ref: arm,scmi.yaml#
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+This needs to be the other way around. Add a ref to this file in 
+arm,scmi.yaml under an 'anyOf' entry.
 
+> +
+> +properties:
+> +  protocol@81:
+> +    $ref: 'arm,scmi.yaml#/$defs/protocol-node'
+> +    unevaluatedProperties: false
+> +    description:
+> +      The BBM Protocol is for managing Battery Backed Secure Module (BBSM) RTC
+> +      and the ON/OFF Key
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x81
+> +
+> +    required:
+> +      - reg
+> +
+> +  protocol@84:
+> +    $ref: 'arm,scmi.yaml#/$defs/protocol-node'
+> +    unevaluatedProperties: false
+> +    description:
+> +      The MISC Protocol is for managing SoC Misc settings, such as GPR settings
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x84
+> +
+> +      wakeup-sources:
+> +        description:
+> +          Each entry consists of 2 integers, represents the source and electric signal edge
+> +        items:
+> +          items:
+> +            - description: the wakeup source
+> +            - description: the wakeup electric signal edge
+
+No constraints on the entry values?
+
+> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +
+> +    required:
+> +      - reg
+> +
+> +additionalProperties: false
+
+And then this can be true.
+
+Rob
