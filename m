@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28A815EFC8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C228215EFD3;
+	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712758833; cv=none; b=mdpLq43nIY2LMwKLdckSOL+MrNA3MlvjyFU+j0GFaChGygi+9mqyYxzlE+FqwLZ3KO3D5sv5L54bJEhGs70euhM7/m5xhc56Ooyl55bXNVaXz8e7TjZ7uVjZpFZe0eYVogJzKPnVp2+1EOxN7GvRRlhEmceXEtxaEYwAfzj4jaY=
+	t=1712758833; cv=none; b=rbgmjldMgkkwtiQcNL5XFRbJzk1H2bqdn5daz7wzenJDKyaJk5Erkp8JvssF2o1NYmy3VUMPXHvNx36KWF4xKdQql+OKx4HGjywOqSoWd+Zrs7grBsLbkoPfCOXIZ1kRe9M0hAsh10aN+/PFgYKmNT/6hILpXommYHR1hWd+88A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712758833; c=relaxed/simple;
-	bh=xDkGlfHuxeUMLKmnnKvrUXj70ln4rm8rNPiszU3Vn/I=;
+	bh=96EroGBucN/XgCKG058lK4TrE/wjf9osJZ/hchKA2Qc=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AsRoPxljsQwHN1gj0kjVqzSoNfxMhh56N6+tlTYu8EowM3QEfFWd1FNTbN2HXSKKFbSY271SEmaf/1CfVP/rTTBb83qymkDRh/bNY2k5/IoIQVHHsDUTxMzV005Sz4G3+Sdj2Noqh+z2KaIvmAzIiwwG4WQAsVgqZCqbx5ukxkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6OL6W7v; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=S6Hhv6S3XBGFzQMG2ENRphWWAhohSixc9sChKIS05PJdBobyzj+pP2gxyTzhu+OG4hcr+ft9vXfb9orboajlPzK838fTXQQAAEf/kpjtTLcGWuUlXFexCPotHqRuKuq+fqhk6l0U9B7ckgAWoS4xCkifKhRbITRv16DVpOio2dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8vc0L8S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6OL6W7v"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55CC0C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8vc0L8S"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 69078C43394;
 	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1712758833;
-	bh=xDkGlfHuxeUMLKmnnKvrUXj70ln4rm8rNPiszU3Vn/I=;
+	bh=96EroGBucN/XgCKG058lK4TrE/wjf9osJZ/hchKA2Qc=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Y6OL6W7vapmqulllVpsNnjRDcPT9oEzn/Rg4xVgasMrP1z0CpfNDJsR5X2iVWRm4Z
-	 ry7M9L4OkEHQpe3Q65uHSiAxVYEygosyL89IiF8RBAZJpo5FR9roEQmdQN+GYIOa7T
-	 yAMzC10eFvGglUDLckZCGDUDLxOwR+T9N8f2S4kHs3hijhgSRqhA/LUnkMvgc1xq0x
-	 BS+tN89A6x41e7iFDAdCYvdtveafvQSX8UcBt23YPwFG2VRQbQiSiGfL+OboCtkrrp
-	 68si6Tzhvw1Lt2zJr4i7PtmTbyf+95t1EUT/KvFvpFQn6H5NEx+ERWB4EXieonyq2e
-	 2nNai4sEogyQw==
+	b=q8vc0L8SS+ED/SjnwXPSCTK/WjTR5+3x7tIMpmnNdvBupgN/Lc/A7g2ygw7978BME
+	 miUzhSbeVbmDcWBMp1ZA9Dnf1PWEU4hklH0n1CJJ7ytWmLcoWow0ptvKXloPkIOiT1
+	 Nl3QJ/MXEcttk4CsgHCiVJoN95uTi2g1s/VYhyIt8ExwomIk5xQPa72ls1vF8SV5Ab
+	 MV0FoVmc0YTIfDcL8x8Ms/hfsLGG0CJ8mlCY2+aSU1470yOkK/C04J3U/n4TkQlwfM
+	 K9usfAt75uDvCBr7H0FyG1R+P2hiXESDbTenHwZiiT5oQLYCZdEsTOF/Pztoe+Otpn
+	 hNDYfBKwNLAUA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4AD22D60310;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5ACFDC395F8;
 	Wed, 10 Apr 2024 14:20:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,47 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1 0/5] Rework & improve riscv cmpxchg.h and atomic.h
+Subject: Re: [PATCH v3 0/1] RISC-V: enable rust
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <171275883330.18495.10110341843571163280.git-patchwork-notify@kernel.org>
+ <171275883336.18495.14519035632596668351.git-patchwork-notify@kernel.org>
 Date: Wed, 10 Apr 2024 14:20:33 +0000
-References: <20240103163203.72768-2-leobras@redhat.com>
-In-Reply-To: <20240103163203.72768-2-leobras@redhat.com>
-To: Leonardo Bras <leobras@redhat.com>
-Cc: linux-riscv@lists.infradead.org, will@kernel.org, peterz@infradead.org,
- boqun.feng@gmail.com, mark.rutland@arm.com, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, guoren@kernel.org,
- parri.andrea@gmail.com, geert@linux-m68k.org, mingo@kernel.org,
- andrzej.hajda@intel.com, linux-kernel@vger.kernel.org
+References: <20240409-unsaddle-skittle-c93eb77732bb@spud>
+In-Reply-To: <20240409-unsaddle-skittle-c93eb77732bb@spud>
+To: Conor Dooley <conor@kernel.org>
+Cc: linux-riscv@lists.infradead.org, conor.dooley@microchip.com,
+ ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ corbet@lwn.net, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ nathan@kernel.org, ndesaulniers@google.com, rust-for-linux@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 
 Hello:
 
-This series was applied to riscv/linux.git (for-next)
+This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed,  3 Jan 2024 13:31:58 -0300 you wrote:
-> While studying riscv's cmpxchg.h file, I got really interested in
-> understanding how RISCV asm implemented the different versions of
-> {cmp,}xchg.
+On Tue,  9 Apr 2024 18:25:15 +0100 you wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 > 
-> When I understood the pattern, it made sense for me to remove the
-> duplications and create macros to make it easier to understand what exactly
-> changes between the versions: Instruction sufixes & barriers.
+> I've intentionally not turned on the gcc support, as discussed on
+> v1. I've also switched over to using the target, but it is a bit heavier
+> than the one arm64 seems to be using. RISC-V has fewer targets available
+> and this was the closest. I preserved the redzone disabling, just moved
+> into the Makefile. Any comment from Gary or the LLVM lads on the target
+> would be great I think:
+> https://github.com/rust-lang/rust/blob/master/compiler/rustc_target/src/spec/targets/riscv64imac_unknown_none_elf.rs
+> arm64 is using:
+> https://github.com/rust-lang/rust/blob/master/compiler/rustc_target/src/spec/targets/aarch64_unknown_none.rs
 > 
 > [...]
 
 Here is the summary with links:
-  - [v1,1/5] riscv/cmpxchg: Deduplicate xchg() asm functions
-    https://git.kernel.org/riscv/c/4bfa185fe3f0
-  - [v1,2/5] riscv/cmpxchg: Deduplicate cmpxchg() asm and macros
-    https://git.kernel.org/riscv/c/07a0a41cb77d
-  - [v1,3/5] riscv/atomic.h : Deduplicate arch_atomic.*
-    https://git.kernel.org/riscv/c/906123739272
-  - [v1,4/5] riscv/cmpxchg: Implement cmpxchg for variables of size 1 and 2
-    https://git.kernel.org/riscv/c/54280ca64626
-  - [v1,5/5] riscv/cmpxchg: Implement xchg for variables of size 1 and 2
-    https://git.kernel.org/riscv/c/a8ed2b7a2c13
+  - [v3,1/1] RISC-V: enable building 64-bit kernels with rust support
+    https://git.kernel.org/riscv/c/81889e8523e6
 
 You are awesome, thank you!
 -- 
