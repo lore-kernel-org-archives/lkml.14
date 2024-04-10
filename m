@@ -1,218 +1,156 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A517138C
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D466910A09;
+	Wed, 10 Apr 2024 04:32:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712723481; cv=none; b=AwUE3mOCwpurgg5IREdPgl7o+MqOl1vJ5fBeZuy+0ga2O3oAikiE87TThFvERTcQYyWME9X2UWhvIGiOaK6qCQumy9ey2HY6OP7XTi4oyZaje3fWOmeIucHS6J1+v+yvs/StnOqtw4cYB/S4nFaGopTFzUFgZP7U3dJSxqchH8s=
+	t=1712723523; cv=none; b=G3HSDW16qzi4q0POyCNYB6UXB39Y8euXlgK6w297SkBCdwHrHZ4lvfro5MlNC/r+AZ45UEwqZlU5g2D1vtrxKgcDIkS8XJSEwxc1meLkNz452iZdnmwyW1cpDP3AoPx2T3EJ2j0X/wsCKaqjo/UYR0s4FdK2KD0d4j3F+O9FTeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712723481; c=relaxed/simple;
-	bh=XiTWu7OM6cQSjaR7mqjqF6mQNFpmdn30ObaklWFSHls=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Y3E9WXbG94DB+lDzA+m9M7K6Tj+93rwRy+SyfcsLby89kzBJgWNPZICVYWWRsYnlg5tJ//arpVGupQYPm0eXrcrXX1bElOPFnhk5mhctv13MpsyIPaf+N45e8fXET/z+pGqv5kB20vz4T4ecjQZDPTEIFH9Ore59UPsjvo2za5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7d5db4f1ab8so391181739f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 21:31:19 -0700 (PDT)
+	s=arc-20240116; t=1712723523; c=relaxed/simple;
+	bh=rMVm9URc9I8cVqvGGbdYnQEP4nxrZ957jULQWF63OlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eCBZI6KzPc4wiqy+soxvw8sWyETW/+J2ousyWBIws/a/S9BjS5fxIMPVfCL2PJsQ35o1eJOxm/4FksB22pWDDnyL/K34RpZiIPg2S8sksfYtirQs4iQRNqV9mU8sLecs4zk29gTUKRvfk3vjdvyOL5OQSS7jsb4q1/poqgwlxsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OVLg6fXH; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OVLg6fXH"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a51c8274403so420889266b.1;
+        Tue, 09 Apr 2024 21:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712723520; x=1713328320; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xNrSwE+dolE2QA8qHvdLe8vM7FO2G4niuceuaP/S8AE=;
+        b=OVLg6fXHFIWZErKmVfCiM1MKvWZsrWNKL/7OqSft/IhpQzSlR/Q+I0pHGK1Xbu3RAu
+         K8lNKMYTRXVf+TfUZC9QbGYoPw2bwguJeck8OQtLygXB9JjSgGvSoIacQd9hEXEXw27u
+         WLEOPZF6NJTLL1f94UCGRnL4YOMVh3T7tU0Mgm5VhK3mPwCKARC6SWwHbkCTdeylWLmD
+         GMZE4lqm28/qsLQckxEHKSw/gAr9IU6MtTdMnrDWKfrlblX9v/m8YMkftcn2x5kKyERR
+         yhrC6yl3FYXiCubKISZTTKwjVKkO2juVJ7ZknYVpT5e63o1w/UorIZDBOenGE0EH/4dX
+         YiyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712723479; x=1713328279;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Br1CErGe7qhIZ1oIK3iyp4poNkKAzNpGP+NpHq47RPw=;
-        b=YMzb/K5FY5Mqdv1Lnwesc23KskkIC61myQA5d9thnb640BXC/lqEiA02OjtW5wysvH
-         5nIVE3IGuS6ZdpLLZRMMyaZ62uf0ZRdWHDChd16O7HmzOIDDRQlBBRjD7I1UkIvLb6YG
-         t+Jm2bCtbsgVwDTiUBWJlNRsXkPVeoxnfnXX8YgctxUYK7yFk3q4OvDO2C31SfyHDClq
-         aNas4JeuRPrOVmsZgE6u+RXfFG6PPfv71XUeIAKC/mMuvtkWJDlrtFf80TFI+6MM6bo3
-         ASpE7pD1iVeYLvGvId7GNePIIYdLJpNlCq3bH9nF5LU6/tfj9IBKOe6O9uxX7zbm4Iev
-         2BdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV3EviUcbP+iOMHGWR/NHlJmQbC5JDJCOjedGUgecBBtOlYZCs3jbPNX6F4CIZr7yEqAPd7WNBUJZLyqCKGi3M+5FjTcnafp3BbmpV/
-X-Gm-Message-State: AOJu0Yz9NiFNrU7yMDMruiXZfNy65dWZiJR5UT+k0HcmeOlEUcCyesmP
-	3gUE7n6t1dTcZ8MT0uOiBDuXqYc0LgDPVLDCJkAvf+KTM3SXlUnkKaqsgj49wHIOYHDAjRHeuIf
-	W5YRK+EDqWxyPUDXpClTLNo217EOLSqfOlOw0LzCyGGoQERpCHZikBrU=
-X-Google-Smtp-Source: AGHT+IEtnHGgUZanktUjrkLE2KopYplvVF+a02iqPtZxQ6VlR7e0QWn5IDzae7bqnMpT2230PwT4KLGKILEsECkwrkIip2kDELWu
+        d=1e100.net; s=20230601; t=1712723520; x=1713328320;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xNrSwE+dolE2QA8qHvdLe8vM7FO2G4niuceuaP/S8AE=;
+        b=TL7pTOFnhQxJUXi/rGaKGfQOBdLbwRRdHCZuxkQxTAsL6Aes764AphE/l37ToXdT6m
+         DeKA8jHfN3sBZnvwnln5gjz5WIyH2SB79rFH6Rjm5fNQKdV8+u1XI0VGZg+djWQWvxfw
+         tyGsLFJBK0Eb5DEPmsqSZw94i+rt3xZhtGUJJmJGcc3WfK85RabAefpUvpgE4bZ+5CfU
+         2LHGSylhL3XjpjpPW/43vSTFQLgeLZ4SKjuDAHPWfc70g+zh7dW9Qooqz703DUfhZMxJ
+         yyBINs9P96QBLbWaNb2pKvtr15eFtb1SBf9AlQhc2GJFvvL638fCl/GY1jJ6wjTRtjxQ
+         Ry/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUA9vIO8aNisIoxtN7m2qA46R1XwlAA/PWIqgZ5FbYxOB02IYiP0waNUh+cRZwF5ksXAJ9ZxbIDHFWr6VrvFTGX4IksXFxUS/IHW7+xkyJDDt0+vnBu8Rio43ZlNsxg99hUWE2uuNt+r0OAoep8e+D3ZBhG4KhRhqyM8HI+SnBZKQrtuQ==
+X-Gm-Message-State: AOJu0YxXp1xEAnTUmZTXFK1QBdMk+Kf26NfCsJveNA9j3nnJ/EdaFgLZ
+	0xSNaNilQnQAIOfqRqO5cYvD76FaWAwTaGWyRME/iVvGxsMnTvfs
+X-Google-Smtp-Source: AGHT+IEFsrpybLrAxP55MzTpaSrenlWTPHzaVeLem3lu9vpNOhH0S2cMYNX2Xn5nmDfbQ8RsQjL+Bw==
+X-Received: by 2002:a17:906:7192:b0:a51:c191:c0a0 with SMTP id h18-20020a170906719200b00a51c191c0a0mr693725ejk.43.1712723519698;
+        Tue, 09 Apr 2024 21:31:59 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id h19-20020a1709070b1300b00a51971dd79csm6586263ejl.143.2024.04.09.21.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 21:31:58 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 10 Apr 2024 06:31:56 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Kyle Huey <me@kylehuey.com>
+Cc: Kyle Huey <khuey@kylehuey.com>, linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Robert O'Callahan <robert@ocallahan.org>,
+	Song Liu <song@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RESEND PATCH v5 1/4] perf/bpf: Call bpf handler directly, not
+ through overflow machinery
+Message-ID: <ZhYWPGX0RzamxOHx@gmail.com>
+References: <20240214173950.18570-1-khuey@kylehuey.com>
+ <20240214173950.18570-2-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1543:b0:7d6:1c79:fe4c with SMTP id
- h3-20020a056602154300b007d61c79fe4cmr54006iow.0.1712723479205; Tue, 09 Apr
- 2024 21:31:19 -0700 (PDT)
-Date: Tue, 09 Apr 2024 21:31:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000093a8ec0615b682a9@google.com>
-Subject: [syzbot] [jffs2?] KASAN: slab-out-of-bounds Read in jffs2_sum_add_kvec
-From: syzbot <syzbot+d7c218ea1def103f6bcd@syzkaller.appspotmail.com>
-To: dwmw2@infradead.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, richard@nod.at, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    707081b61156 Merge branch 'for-next/core', remote-tracking..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1100ac99180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=caeac3f3565b057a
-dashboard link: https://syzkaller.appspot.com/bug?extid=d7c218ea1def103f6bcd
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149f31f6180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15f2c5a1180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6cad68bf7532/disk-707081b6.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1a27e5400778/vmlinux-707081b6.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/67dfc53755d0/Image-707081b6.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d7c218ea1def103f6bcd@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in jffs2_sum_add_kvec+0x99c/0x11e4 fs/jffs2/summary.c:261
-Read of size 4 at addr ffff0000d8ccacbc by task jffs2_gcd_mtd0/6173
-
-CPU: 1 PID: 6173 Comm: jffs2_gcd_mtd0 Not tainted 6.8.0-rc7-syzkaller-g707081b61156 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call trace:
- dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:291
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:298
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd0/0x124 lib/dump_stack.c:106
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x178/0x518 mm/kasan/report.c:488
- kasan_report+0xd8/0x138 mm/kasan/report.c:601
- __asan_report_load4_noabort+0x20/0x2c mm/kasan/report_generic.c:380
- jffs2_sum_add_kvec+0x99c/0x11e4 fs/jffs2/summary.c:261
- jffs2_flash_direct_writev+0xa8/0xe8 fs/jffs2/writev.c:22
- jffs2_flash_writev+0x13c/0x11ac fs/jffs2/wbuf.c:805
- jffs2_write_dnode+0x3cc/0xb80 fs/jffs2/write.c:109
- jffs2_garbage_collect_metadata fs/jffs2/gc.c:834 [inline]
- jffs2_garbage_collect_live+0x1098/0x3640 fs/jffs2/gc.c:529
- jffs2_garbage_collect_pass+0x1470/0x1a50 fs/jffs2/gc.c:464
- jffs2_garbage_collect_thread+0x414/0x48c fs/jffs2/background.c:155
- kthread+0x288/0x310 kernel/kthread.c:388
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-
-Allocated by task 6162:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x40/0x78 mm/kasan/common.c:68
- kasan_save_alloc_info+0x40/0x50 mm/kasan/generic.c:575
- poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
- __kasan_kmalloc+0xac/0xc4 mm/kasan/common.c:387
- kasan_kmalloc include/linux/kasan.h:211 [inline]
- __do_kmalloc_node mm/slub.c:3981 [inline]
- __kmalloc+0x2bc/0x5d4 mm/slub.c:3994
- kmalloc include/linux/slab.h:594 [inline]
- kzalloc include/linux/slab.h:711 [inline]
- jffs2_do_mount_fs+0x120/0x1d00 fs/jffs2/build.c:387
- jffs2_do_fill_super+0x480/0x9f8 fs/jffs2/fs.c:573
- jffs2_fill_super+0x248/0x280 fs/jffs2/super.c:289
- mtd_get_sb+0x174/0x398 drivers/mtd/mtdsuper.c:57
- mtd_get_sb_by_nr+0x94/0xb0 drivers/mtd/mtdsuper.c:88
- get_tree_mtd+0x4e4/0x680 drivers/mtd/mtdsuper.c:141
- jffs2_get_tree+0x28/0x38 fs/jffs2/super.c:294
- vfs_get_tree+0x90/0x288 fs/super.c:1779
- do_new_mount+0x278/0x900 fs/namespace.c:3352
- path_mount+0x590/0xe04 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount fs/namespace.c:3875 [inline]
- __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-
-The buggy address belongs to the object at ffff0000d8cca000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 956 bytes to the right of
- allocated 2304-byte region [ffff0000d8cca000, ffff0000d8cca900)
-
-The buggy address belongs to the physical page:
-page:00000000c4bc55ea refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x118cc8
-head:00000000c4bc55ea order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0x5ffc00000000840(slab|head|node=0|zone=2|lastcpupid=0x7ff)
-page_type: 0xffffffff()
-raw: 05ffc00000000840 ffff0000c0002140 0000000000000000 dead000000000001
-raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff0000d8ccab80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff0000d8ccac00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff0000d8ccac80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                                        ^
- ffff0000d8ccad00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff0000d8ccad80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-jffs2: Write of 68 bytes at 0x0002d034 failed. returned -22, retlen 0
-jffs2: Not marking the space at 0x0002d034 as dirty because the flash driver returned retlen zero
-jffs2: error: (6173) __jffs2_dbg_acct_sanity_check_nolock: eeep, space accounting for block at 0x00000000 is screwed.
-jffs2: error: (6173) __jffs2_dbg_acct_sanity_check_nolock: free 0x000000 + dirty 0x000000 + used 0x000000 + wasted 0x000000 + unchecked 0x000000 != total 0x001000.
-------------[ cut here ]------------
-kernel BUG at fs/jffs2/debug.c:38!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 6173 Comm: jffs2_gcd_mtd0 Tainted: G    B              6.8.0-rc7-syzkaller-g707081b61156 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __jffs2_dbg_acct_sanity_check_nolock+0x57c/0x76c fs/jffs2/debug.c:35
-lr : __jffs2_dbg_acct_sanity_check_nolock+0x57c/0x76c fs/jffs2/debug.c:35
-sp : ffff800097947440
-x29: ffff8000979474b0 x28: ffff0000d8ccaccc x27: 0000000000000000
-x26: 0000000000000000 x25: 0000000000000000 x24: ffff0000d8f68180
-x23: 0000000000000000 x22: 0000000000000000 x21: ffff0000d8ccacc4
-x20: dfff800000000000 x19: 000000000000181d x18: 1fffe00036804396
-x17: 0000000000000000 x16: ffff80008aca6b80 x15: 0000000000000001
-x14: 1ffff00012f28da8 x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000002 x10: 0000000000ff0100 x9 : a157a05fb2900e00
-x8 : a157a05fb2900e00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff800097946d58 x4 : ffff80008ed822c0 x3 : ffff80008036f0d8
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 00000000000000a3
-Call trace:
- __jffs2_dbg_acct_sanity_check_nolock+0x57c/0x76c fs/jffs2/debug.c:35
- __jffs2_dbg_acct_sanity_check+0x38/0x54 fs/jffs2/debug.c:56
- jffs2_write_dnode+0x4ec/0xb80 fs/jffs2/write.c:137
- jffs2_garbage_collect_metadata fs/jffs2/gc.c:834 [inline]
- jffs2_garbage_collect_live+0x1098/0x3640 fs/jffs2/gc.c:529
- jffs2_garbage_collect_pass+0x1470/0x1a50 fs/jffs2/gc.c:464
- jffs2_garbage_collect_thread+0x414/0x48c fs/jffs2/background.c:155
- kthread+0x288/0x310 kernel/kthread.c:388
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-Code: 2a1703e6 2a1603e7 b90003e8 959b3174 (d4210000) 
----[ end trace 0000000000000000 ]---
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240214173950.18570-2-khuey@kylehuey.com>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+* Kyle Huey <me@kylehuey.com> wrote:
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> To ultimately allow bpf programs attached to perf events to completely
+> suppress all of the effects of a perf event overflow (rather than just the
+> sample output, as they do today), call bpf_overflow_handler() from
+> __perf_event_overflow() directly rather than modifying struct perf_event's
+> overflow_handler. Return the bpf program's return value from
+> bpf_overflow_handler() so that __perf_event_overflow() knows how to
+> proceed. Remove the now unnecessary orig_overflow_handler from struct
+> perf_event.
+> 
+> This patch is solely a refactoring and results in no behavior change.
+> 
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Acked-by: Song Liu <song@kernel.org>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/perf_event.h |  6 +-----
+>  kernel/events/core.c       | 28 +++++++++++++++-------------
+>  2 files changed, 16 insertions(+), 18 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index d2a15c0c6f8a..c7f54fd74d89 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -810,7 +810,6 @@ struct perf_event {
+>  	perf_overflow_handler_t		overflow_handler;
+>  	void				*overflow_handler_context;
+>  #ifdef CONFIG_BPF_SYSCALL
+> -	perf_overflow_handler_t		orig_overflow_handler;
+>  	struct bpf_prog			*prog;
+>  	u64				bpf_cookie;
+>  #endif
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Could we reduce the #ifdeffery please?
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+On distros CONFIG_BPF_SYSCALL is almost always enabled, so it's not like 
+this truly saves anything on real systems.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+I'd suggest making the perf_event::prog and perf_event::bpf_cookie fields 
+unconditional.
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+> +#ifdef CONFIG_BPF_SYSCALL
+> +static int bpf_overflow_handler(struct perf_event *event,
+> +				struct perf_sample_data *data,
+> +				struct pt_regs *regs);
+> +#endif
 
-If you want to undo deduplication, reply with:
-#syz undup
+If the function definitions are misordered then first do a patch that moves 
+the function earlier in the file, instead of slapping a random prototype 
+into a random place.
+
+> -	READ_ONCE(event->overflow_handler)(event, data, regs);
+> +#ifdef CONFIG_BPF_SYSCALL
+> +	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+> +#endif
+> +		READ_ONCE(event->overflow_handler)(event, data, regs);
+
+This #ifdef would go away too - on !CONFIG_BPF_SYSCALL event->prog should 
+always be NULL.
+
+Please keep the #ifdeffery reduction and function-moving patches separate 
+from these other changes.
+
+Thanks,
+
+	Ingo
