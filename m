@@ -1,133 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E6716EC18
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 15:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4714B16EBEF;
+	Wed, 10 Apr 2024 15:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712763312; cv=none; b=eIUEKr9bjtbY8mv6A3WDiaHvFEmFZPDDg+951MpxbJqZuuWOiItox0qKQFJu6SvsWO60Al3EIRlCt7340DZHjkSVzvugiOc031Zi1Kld82loOjJ+7kTPHlC7M6z00bJzds+v578E0JbuMGp4TAr6/sbN2EeTBLmEK+0y5Lmd1p4=
+	t=1712763320; cv=none; b=YvoJVuyR/cToTaSIGfNzlZ8ixa8xZeufDdvoHvwlb+63v0+bsa1tFjbw3gl4Ey8VNWcOl9noBcoUxYx92qa91v2Lyhvf9hnneGqanyYJwuwYNZSNpe4BqfdkMAYt09+7OVSstUW2SiNYrNjFH5WktubeUjLapQloHBcsyDfTqVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712763312; c=relaxed/simple;
-	bh=knF+LOBW9J8frgy2CbQjVxBB6xMQ9R7nAYy8AbUmRK0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=W3Jz2ptUk14pU06QbVx2YEc86URgvXZj4gBAa7rhFDbmMMN5vVyhsWz/D/VFCSG23AToV314D4wIN0O6EZG7+QyENVaHMbgYZgketPy8cgxFfpkAOC+1qXtTI78L3LeOJNrqDNNJq7gHfCs1U8+eYMXlI5XoSfM7KEroK2lgjRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U8d6LHLL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712763320; c=relaxed/simple;
+	bh=vWx8hjmgbGaYijZPOHAFQF3Diarftvn5nTcDZWxUfWQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NC6D1ojATcEyfcdbg3hJeozwzB7auAZ9nnyGPXWTdX9lwTjp2QuCeTZmE7yxXTE4BPpyZYPr/7gearDz3iEttWLEipp2/67rBsAlz4Vm5iHPsVh6cjaxmXV2V+nkml2BRCIl3HEiw1sayr30ieQmF0OpEuomF+dW7XONHXtQxgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUmhn/29; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U8d6LHLL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712763310; x=1744299310;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=knF+LOBW9J8frgy2CbQjVxBB6xMQ9R7nAYy8AbUmRK0=;
-  b=U8d6LHLLodNOln3Ok7huYaVbqK1m4yb0CTM/UNgqtp3abmYepcyco1oY
-   wpCBABZBJUGu9acbxsudoMelTHUPVx+INLf1KOSQr79/HmrrlTCsmcwSD
-   2Wc0/vKhEZ+Yo51ugMXctxddPckSlwD0rz/t1FlzYrOH+1+oJh+8OXhdQ
-   2oZEwBe7NxoUc/HEzCSk6m9HTEGXqNRdISF9qQ72mp4V7RM7gxcOnthKA
-   FwkdD9SsHbKBVaQeGEWQ+4zu194u8OcGg/Ce1CLkCkHi6B2XVV2d6mDRc
-   usxZcPrT9U8C4IEWZzwWcnaaqBCpfpxFEq7nUcacN9QnP51eVvHHDz1qL
-   g==;
-X-CSE-ConnectionGUID: OKTEkqYCQ9a1Unz8Ojhm7w==
-X-CSE-MsgGUID: WKhwt5e6QDqd+V7tmfh0mQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7987503"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7987503"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:35:10 -0700
-X-CSE-ConnectionGUID: pX1/nI07QWGvh/Uqi6DMLw==
-X-CSE-MsgGUID: 448c7hfOTSCX7W6p/l95+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="43856038"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.214.234])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 08:35:06 -0700
-Message-ID: <b9d3138b-000a-49ca-bc82-6517231eca91@intel.com>
-Date: Wed, 10 Apr 2024 18:35:01 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUmhn/29"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-343e46ec237so4116290f8f.2;
+        Wed, 10 Apr 2024 08:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712763317; x=1713368117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
+        b=lUmhn/29r1jhMngW5rBuyxAxpzyouSBQc7BhiLnU7QSuAUUY1IoLnwGvoXFNAPS9+o
+         MCJdoX/M25J6nnBSL1OPsbV8uFAfleloNrDW0fS1LvX9MnIN5dAP9xWOrYuPsJbrJKsF
+         x6fyq87Yh0K74Iq9kXx3c79Ecm3RZpybAFRqMkmzMladSRu3CWx7CeSIqM8rqpZ3CIVU
+         PcuSpRkUMwr8fTf34+Ukjpti6l02M/r3vyzMkmzCMDgnNCpPrjllt2EKQEOCuTNj72Q+
+         yUL5gVKH1OApCTyfEIDo+IXJUJ9c5bYGZ1pqwToVySlZPS1GX3EJjGW0f/1QIE9Zqmmb
+         p9nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712763317; x=1713368117;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=68baX53kYRdqiSV3OuL3sThzmNqdOFLBEOv/P9LxiMo=;
+        b=Ht7Xk4I6LLPsj4VP8DKMyaYcjxiGa2Xx4VYjyJOrvnx6ev53eT1qJXrORHyLsx74cD
+         J1mhbJc9WN1ubd0bA0MbUJHVtbSfSNDRPx2CvHdHECD6PKqeggwwoxoqPjkN7i5f42Z/
+         Z87nXFq3dvNYyhP7zqXEo7ozdSyMAhMjaNBxaEU8TnzMz9+XoO9HHn9fDpDODo3RP3PS
+         fczEHlgW73flRNDEI/9S6t3ZHWqh1Inn3Jgxn+ZYIFcSnHUn1PzSq50MDtMwh8vJnXV+
+         SXklDiMbmoGraXxV5oKVD9i3vsvtb0q3/Sw11MBQ7a9lEfqLF3/2kT5ZZ7R+F629C8Bb
+         CNKw==
+X-Forwarded-Encrypted: i=1; AJvYcCXV4j+hWfgALjTUmAzGFSPkaxg2SCNCV/8QfwDpk+ogErJn4DPn+hBCngSGJeBzJwqpu1RDoWnhJJZP8tc6tNDejPPX6MMwrAL1lvBbYWD5Iq7pY73UjXYTKESy4Ba42nTBQy1od9sSGC0WcTclXQqaqOkQyOafl7Tp2/JodVGIkm/YiRFO
+X-Gm-Message-State: AOJu0YyjkoayZurNJwFXP+7850ONUUEaQmV51scBoHn4ToTsYhXNNpxF
+	YuvEdsDR3rket2pVbAVN8k4ysc6IgW2tlHAYaEJq460zRCPcmBfg
+X-Google-Smtp-Source: AGHT+IFpCTXftuYdAbu9wXWKxlU/Jww9KocYRa4/MBt6ILtJAroKsGboJFb5WMAzrx/I3nDy7QQrCg==
+X-Received: by 2002:adf:b312:0:b0:346:b6e:395 with SMTP id j18-20020adfb312000000b003460b6e0395mr2143793wrd.9.1712763317311;
+        Wed, 10 Apr 2024 08:35:17 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id y14-20020a5d4ace000000b00341dbb4a3a7sm14043505wrs.86.2024.04.10.08.35.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 08:35:16 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	shuah@kernel.org,
+	dsahern@kernel.org,
+	aduyck@mirantis.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net-next v6 1/6] net: gro: add flush check in udp_gro_receive_segment
+Date: Wed, 10 Apr 2024 17:34:18 +0200
+Message-Id: <20240410153423.107381-2-richardbgobert@gmail.com>
+In-Reply-To: <20240410153423.107381-1-richardbgobert@gmail.com>
+References: <20240410153423.107381-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: tinyconfig: kernel/time/timekeeping.c:286:1: error: no return
- statement in function returning non-void [-Werror=return-type]
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Linux Regressions <regressions@lists.linux.dev>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
- John Stultz <jstultz@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYvjdZCW=7ZGxS6A_3bysjQ56YF7S-+PNLQ_8a4DKh1Bhg@mail.gmail.com>
- <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <52cf2d1a-76ec-48cb-96c3-211fa1eb721a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/04/24 16:03, Adrian Hunter wrote:
-> On 10/04/24 13:56, Naresh Kamboju wrote:
->> The powerpc,s390, superSh and sparc tinyconfig builds failed due to
->> following build
->> warnings / errors on the Linux next-20240410 with gcc-13 and gcc-11.
->>
->> List build failures:
->> ---
->> * s390, build
->>   - gcc-13-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> * sh, build
->>   - gcc-11-tinyconfig - failed
->>
->> * sparc, build
->>   - gcc-11-tinyconfig - failed
->>
->> * mips, build
->>   - gcc-12-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> * powerpc, build
->>   - gcc-13-tinyconfig - failed
->>   - gcc-8-tinyconfig - failed
->>
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>
->> Build log:
->> --------
->> kernel/time/timekeeping.c: In function 'timekeeping_debug_get_ns':
->> kernel/time/timekeeping.c:286:1: error: no return statement in
->> function returning non-void [-Werror=return-type]
->>   286 | }
->>       | ^
->> cc1: some warnings being treated as errors
-> 
-> Using unreachable() in the default BUG() seems to make this go
-> away.
-> 
-> diff --git a/include/asm-generic/bug.h b/include/asm-generic/bug.h
-> index 6e794420bd39..891bd9b0be70 100644
-> --- a/include/asm-generic/bug.h
-> +++ b/include/asm-generic/bug.h
-> @@ -156,7 +156,7 @@ extern __printf(1, 2) void __warn_printk(const char *fmt, ...);
->  
->  #else /* !CONFIG_BUG */
->  #ifndef HAVE_ARCH_BUG
-> -#define BUG() do {} while (1)
-> +#define BUG() do { do {} while (1) ; unreachable(); } while (0)
->  #endif
->  
->  #ifndef HAVE_ARCH_BUG_ON
-> 
+GRO-GSO path is supposed to be transparent and as such L3 flush checks are
+relevant to all flows which call skb_gro_receive. This patch uses the same
+logic and code from tcp_gro_receive but in the relevant flow path in
+udp_gro_receive_segment.
 
-Patch here:
+Fixes: 36707061d6ba ("udp: allow forwarding of plain (non-fraglisted) UDP GRO packets")
+Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+---
+ net/ipv4/udp_offload.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-	https://lore.kernel.org/all/20240410153212.127477-1-adrian.hunter@intel.com/
-
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 3498dd1d0694..1f4e08f43c4b 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -471,6 +471,7 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 	struct sk_buff *p;
+ 	unsigned int ulen;
+ 	int ret = 0;
++	int flush;
+ 
+ 	/* requires non zero csum, for symmetry with GSO */
+ 	if (!uh->check) {
+@@ -528,7 +529,17 @@ static struct sk_buff *udp_gro_receive_segment(struct list_head *head,
+ 				skb_gro_postpull_rcsum(skb, uh,
+ 						       sizeof(struct udphdr));
+ 
+-				ret = skb_gro_receive(p, skb);
++				flush = NAPI_GRO_CB(p)->flush;
++
++				if (NAPI_GRO_CB(p)->flush_id != 1 ||
++				    NAPI_GRO_CB(p)->count != 1 ||
++				    !NAPI_GRO_CB(p)->is_atomic)
++					flush |= NAPI_GRO_CB(p)->flush_id;
++				else
++					NAPI_GRO_CB(p)->is_atomic = false;
++
++				if (flush || skb_gro_receive(p, skb))
++					ret = 1;
+ 			}
+ 		}
+ 
+-- 
+2.36.1
 
