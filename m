@@ -1,110 +1,108 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6796156C6B
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753EA158210;
+	Wed, 10 Apr 2024 10:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712743414; cv=none; b=mPtHtJPCt7ef81gd9JGlzTJnhz3iDuWt0Yntyh3biK1PBpKgKN/5eMVIAc5/UkmXxww80mylnaL2tSvp3hu/DK4J+GvtB47PBtrz6vxrPzAwydo5eLHtDibvjHC4yYSk8JJ8X0Xl2vfoKGok6K6I1bmOhBXy6HFh8HoLZANsV+8=
+	t=1712743443; cv=none; b=J+OceEJ+RKxrm23JNuW8V4gaR4dX+lwYs2SkKVrnsRc7mYyLviHmSArNgjNgWS/SeaegrunvPEEOHS9lzXiCnkFpbEA97FKD7NPOkWmLv0BeJrWpzUmt3iEvl2b0LkwhxH6Ozspr4ktRGYMrAjGLh8ucub5AGgqbM89RaDzuGYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712743414; c=relaxed/simple;
-	bh=aKH0GORu0FeDvjtPV4fOTHpIA4ay6AYThgTuOB/WIHA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V3NIB0MvJHjffaWtWH1I0UpV1oJG6sHWBgLP63ReA0KIiCcg4XVaTWguZzTWT49B/Tr+IGbJujzhAECuzaAbS5lIFqQ44DqYpEwPtR5aQI8RKAo4/6EB6owwXF0EWQsQLH/hWKk6luDiTo9hJ96VUzeMmlOavS0g8a9/ZClqxu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VDz052JHlz21kdn;
-	Wed, 10 Apr 2024 18:02:29 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id B648D14037E;
-	Wed, 10 Apr 2024 18:03:24 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Wed, 10 Apr 2024 18:03:24 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <mark.rutland@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
-	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH 2/2] perf: arm_spe: Only show online CPUs in device's "cpumask" attribute
-Date: Wed, 10 Apr 2024 17:58:33 +0800
-Message-ID: <20240410095833.63934-2-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20240410095833.63934-1-yangyicong@huawei.com>
-References: <20240410095833.63934-1-yangyicong@huawei.com>
+	s=arc-20240116; t=1712743443; c=relaxed/simple;
+	bh=O0VlrLYkNg9eeGffg8c3eww3VthKzB16sPQVJP9pPzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LpRDjjLLdICLwnIFvxgCFy4NQ5CiJ/Voj4/xb/QO7jMi4JjJMmW1MHGEzJ9X5X7d8hcae7e7UO1KE/SYzgkNtPWh8BU23ZCx95tHKcmmhkT5mvf2uCMfVt7CK+oSvXGIhcF4JATIJQq24VDl3405vixY3F/uqRZQJN08Bl5ixCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ArqSI63k; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ArqSI63k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCA9C433F1;
+	Wed, 10 Apr 2024 10:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712743443;
+	bh=O0VlrLYkNg9eeGffg8c3eww3VthKzB16sPQVJP9pPzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ArqSI63kngbacDK0bh817px/g8VItoLwBabfoLZMUPNq+Biw+scFGx3I1sgPDbLnM
+	 wS9iWRN9bVfqYyzAc8SucNF2wPD5L5cQT5+kftT74n/k9MFk2VmgYwhIPXN7/e4EsE
+	 T/hRY8UIKwSXj4M96LLuEcU1k7FSc0LB6jz4CWUZFJ4DLY2KUG1kvrKH7ZGEw2/ym0
+	 4KJT1vBrCbfH9DVvo5VT0QAsAJ3hJ8sa2/Q0XBg8DsLuO9wNmkXewbMaesTNdytdYZ
+	 DRKSFxt9JgHxHH/0/i+0UEyAaPbRuoVviIfxMaPvW/a0s/HtuW9+NM9t6+dE0QQcp9
+	 AP6G4+rINUvVw==
+Date: Wed, 10 Apr 2024 11:03:59 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Andreas Kemnade <andreas@kemnade.info>, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Add ROHM BD71879
+Message-ID: <20240410-possum-lecturer-716185901aa5@spud>
+References: <20240404195423.666446-1-andreas@kemnade.info>
+ <20240404195423.666446-2-andreas@kemnade.info>
+ <3d5df067-ec94-42c6-bbd0-43ce8cd53e40@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="d0bdlkh8SwUX6pNK"
+Content-Disposition: inline
+In-Reply-To: <3d5df067-ec94-42c6-bbd0-43ce8cd53e40@gmail.com>
 
-From: Yicong Yang <yangyicong@hisilicon.com>
 
-When there're CPUs offline after system booting, perf will failed:
-[root@localhost ~]# /home/yang/perf record -e arm_spe_0//
-Error:
-The sys_perf_event_open() syscall returned with 19 (No such device) for event (arm_spe_0//).
-/bin/dmesg | grep -i perf may provide additional information.
+--d0bdlkh8SwUX6pNK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is due to PMU's "cpumask" is not updated and still contains offline
-CPUs and perf will try to open perf event on the offlined CPUs.
+On Wed, Apr 10, 2024 at 10:57:08AM +0300, Matti Vaittinen wrote:
+> On 4/4/24 22:54, Andreas Kemnade wrote:
+> > As this chip was seen in several devices in the wild, add it.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > Suggested-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > ---
+> >   .../devicetree/bindings/mfd/rohm,bd71828-pmic.yaml         | 7 ++++++-
+> >   1 file changed, 6 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.ya=
+ml b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+> > index 0b62f854bf6b..07f99738fcf6 100644
+> > --- a/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+> > @@ -17,7 +17,12 @@ description: |
+> >   properties:
+> >     compatible:
+> > -    const: rohm,bd71828
+> > +    oneOf:
+> > +      - const: rohm,bd71828
+> > +
+> > +      - items:
+> > +          - const: rohm,bd71879
+> > +          - const: rohm,bd71828
+> >     reg:
+> >       description:
+>=20
+> Am I correct, this reads as:
+>=20
+> Either
+> 	compatible =3D rohm,bd71828
+> or
+> 	compatible =3D rohm,bd71879, rohm,bd71828
+>=20
+> but not compatible =3D rohm,bd71879?
 
-Make "cpumask" attribute only shows online CPUs and introduced a new
-"supported_cpus" where users can get the range of the CPUs this
-PMU supported monitoring.
+Correct.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
- drivers/perf/arm_spe_pmu.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+--d0bdlkh8SwUX6pNK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 35f0de03416f..c3123570f955 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -254,13 +254,33 @@ static ssize_t cpumask_show(struct device *dev,
- 			    struct device_attribute *attr, char *buf)
- {
- 	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
-+	cpumask_var_t mask;
-+	ssize_t n;
- 
--	return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
-+	/* If allocation failed then show the supported_cpus */
-+	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
-+		return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
-+
-+	cpumask_and(mask, &spe_pmu->supported_cpus, cpu_online_mask);
-+	n = cpumap_print_to_pagebuf(true, buf, mask);
-+	free_cpumask_var(mask);
-+
-+	return n;
- }
- static DEVICE_ATTR_RO(cpumask);
- 
-+static ssize_t supported_cpus_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
-+
-+	return cpumap_print_to_pagebuf(true, buf, &spe_pmu->supported_cpus);
-+}
-+static DEVICE_ATTR_RO(supported_cpus);
-+
- static struct attribute *arm_spe_pmu_attrs[] = {
- 	&dev_attr_cpumask.attr,
-+	&dev_attr_supported_cpus.attr,
- 	NULL,
- };
- 
--- 
-2.24.0
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhZkDwAKCRB4tDGHoIJi
+0k8LAQCCIueExTdOVFOVm0LA9g+yGDV3QCm9Xr4ma7lWVWh1YAEAnMhqdijGAVjr
+aAO9Zk1iF7Qz1qrfzcqUXIHGxnwdPwg=
+=gAgy
+-----END PGP SIGNATURE-----
+
+--d0bdlkh8SwUX6pNK--
