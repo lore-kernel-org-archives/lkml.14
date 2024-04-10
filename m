@@ -1,179 +1,162 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2115.outbound.protection.outlook.com [40.107.6.115])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF114D59F;
-	Wed, 10 Apr 2024 06:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712732027; cv=fail; b=Z6/Ym1XuBWpqWzz93qQ2G2RqNwYoMJKtqLmgtRcjnmwXd5DT18cMfn2kR5zD/C9eY+xJtv3m94TIA0MnoHlEYUZ9si4FS4jtS7p3Ox4SKbuQAkZeZIhR16rXcBCNSTOahLqvlgAgkMhUnAtyqNoGCMd9yILN8HEeqnfWmC/8TkY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712732027; c=relaxed/simple;
-	bh=+TqHMhgDfv2rebdUrBo6CccG47NOugClAQaQySAwipc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eX1DxG49PK25193KocsYuaW0OwMLI2mfaxxQy4LhAH2WAOqT+XnminVFxH/jltzMFRi8WT6X4Y/JmTVfK/A6kbj6w22GwuBHtwlikQ1jFzTYuBnTTEaf9vCcuOep4z8m7+U/57Ntw6xPEN9ojxBioNe8bF7Ll4/blYxJTlX1hUw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=EQgM8Ntn; arc=fail smtp.client-ip=40.107.6.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2DE374D9
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:59:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712732347; cv=none; b=mbXFBJALkGygyC7YrW+puoJA+7UWq5aI/CH0xgIwefxRgv2Mb9bIz3sqK+Ivu6GWvVW30glfbG8Ng9u5wVxhIUGGGlNQcirvRVTR/zCb9fTKbCfVEKV9LKEpnTBzp15Fd5dI6lnFi0u5FjD5mUZktS8iW16iuqmrr//g3U2UuCs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712732347; c=relaxed/simple;
+	bh=ux60IGVfQn8BAw045CqhbS18oTj2DipzkQNpfcpuKlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qljQZysknsG+eM4OeBTajmv0AiQYfrmWfNjRKODoN4FsJujB8Uuw+yQ4eGrhxGPYTZs7Q8mJlajwZnKFPtehQPFcrzeZ5gGAsE/ir6eVFNFZDlEFscDF48EHs71UqcOBt/3agtwTWEde5M522MHfuVNT0LVgZVVYU0dDiV7mjjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=CQCoImaz; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EQgM8Ntn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bUE0z8wDC3Ayr0ZgDREy8rzvgkstQ2iAf6N/zIm5L2Uq3A4X9vwEX+KLi3FUvZ6AFRf7JoqgihsxCcAFBsKCwIFpCcniXG6v4DvsJ1oNBVb1J4r+nZMLTJkouqeyZBzfDc42xdiMhsrpaOshnYplzP1opRA6g9BbbHxA5tkeMSxlM6F/JpJfZU4xd+EOBaLqVgxCkQA/aKp1Yh7DywbuQ+JjJ0HJ3rcjxBKblosuKYR/faX/3BuDpgGBlJTv7DHFcP+Qg3Z0Pzv4s8xBxQaxW6aceEliuHp5Zp5u3qd9KTSaz/+ldBU/YX0ZJ9BsRJmaah0kptXszbJY8g1G4gpqTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dxl7/m0qUNhnY6R72lpDaaF3WX6gYKYl9vpO6j519K0=;
- b=ZtvqN0ouNSSFINZ8BZub8bHYDCX4lS6bW2z2LPCWmhgweRyevv+eYW2EIOaZEOeH+b6IKATfICZe7EtRGV2oTcucvga6nYKB2hZn+Lgc9ZtLHXs7j+UOJ+TaBwSYUoocaxwYTLaaZ8UL+oNqKcSyFSGURK9qlN3TH9J3TQmEW/lEiuJJJlmHUp+XnFAxMeRjKjbX44bBIxJl/c5bja6zNcuubSMUcFtt+RnOtp0jy7kdo5t6BAqQMN54KTsTlrC/URKI4sCCpM08iSzlQ5Q8GeAyM0aGxQVhcW0iOBmtx3gJPTWfls0A0i/yxYcoN6hF8iwiiGlcwvG7AwkopsAhQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dxl7/m0qUNhnY6R72lpDaaF3WX6gYKYl9vpO6j519K0=;
- b=EQgM8NtnyoR4sdW4hT41dAfrjTY+aE80JC+9H6Z2STSsm+eVAFPUOBlwxMXNJnhmpPwnlvVoHHGsg0ic+SleiD0wz1IGKZ5BYkWLTkHQjtPEFWbp0+s6vwedFSjvfh77lCmBRcE00IYNVTlg25TSm2c9WiXfscQ/c3IfgOng8AA=
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
- by DBBPR04MB8010.eurprd04.prod.outlook.com (2603:10a6:10:1f1::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Wed, 10 Apr
- 2024 06:53:39 +0000
-Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::4f24:3f44:d5b1:70ba]) by AS4PR04MB9386.eurprd04.prod.outlook.com
- ([fe80::4f24:3f44:d5b1:70ba%7]) with mapi id 15.20.7409.042; Wed, 10 Apr 2024
- 06:53:39 +0000
-From: Joy Zou <joy.zou@nxp.com>
-To: ping.bai@nxp.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de
-Cc: kernel@pengutronix.de,
-	festevam@gmail.com,
-	linux-imx@nxp.com,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] arm64: dts: imx93-11x11-evk: add rtc PCF2131 support
-Date: Wed, 10 Apr 2024 15:01:28 +0800
-Message-Id: <20240410070128.1506555-2-joy.zou@nxp.com>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20240410070128.1506555-1-joy.zou@nxp.com>
-References: <20240410070128.1506555-1-joy.zou@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SG3P274CA0008.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::20)
- To AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="CQCoImaz"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa17c29ba0so2230791eaf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 09 Apr 2024 23:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1712732344; x=1713337144; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ckJd731MMp6vz4I5H58StUaBu0IRuHxK3k8ylOh5qYY=;
+        b=CQCoImazgesxZlTjmQURu/2aziCTx0yCBKYfxklyRnvPKOnaOstT48Xdy+fssbt3Zb
+         oa/Q8QE91cdHybz4Ama+nBisfT+oriMzcG0j+KlBgx7TCPas5QOazCmnak5mmMeW3Qz1
+         G7zoEb/S8jeE2MQViJh16gPXAT394OXsztAzVTIhoALlKTznw4n8yMZjGuLovAkvO9n0
+         GQbN1GPXdwvMRot1Z3RDUi06zA6GXkhBwVFyrWZUiNX70apFCIOKZIZ5sc8U5abPYBW5
+         qL2gHR2bUz67yNKb82zCxlnPoRncowmZFELjq5t6wRhDzChv6Dz0dUfAHwpgPflK2ifl
+         UlXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712732344; x=1713337144;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ckJd731MMp6vz4I5H58StUaBu0IRuHxK3k8ylOh5qYY=;
+        b=OkI/7KUK7xvDym7bKwqMsbay2dTr6LwEzuRFw8OVwr7vCNEOVxdVbLAitZ1IXdxtSh
+         zfEvXVylU6v0wpdKF6HS1UQ+aWaFEb409F+ZGHR51AebcSGQdW06DW2S+Vv/89NqTeR0
+         j2jlmI9FQ2pw7JtigZ1N/trMbksMYF+vGTiP2AB+DsKeGKEm0YKUuHqgLz0Vk8f/lk5I
+         x5C9Q6NLvbBJz4NqKgdbucNZu61ulONlnpZysG+HLmBNTLq/wH7lhtJN2YVQ2nN/Xd3s
+         47QRNVnuktz7dbvUa70s1/JKmimUVvuG/zkcb0h7YoTtjfmcnkpgZzeefY+/22YEY6uP
+         6luA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIo1S98aTUOHJPbUgFzNOniMEJUhSCq3nggP0uOP5mn9hDFBltQOr/lpLGXBho93CdNhIKInJ0QJrZQBu8cxqa12ec2/I8WpirftOa
+X-Gm-Message-State: AOJu0Yyfn+enxDkjGix1UCbyPPMO68r3AODmIAub2dtjb/XmJHqxxDqi
+	4k1F12yrwEKq2dyU2SAayNYlauArAA0EFoOMDnnRgDInwVxrzFAeOr8QmiVJfVE=
+X-Google-Smtp-Source: AGHT+IGABmi6URzg4J686LkeFnvno9mEIXoB1NJ3vIDihcfi713WBDvEaw0+yafO/fl2ufVFDnQjqw==
+X-Received: by 2002:a05:6358:980e:b0:183:645b:cfa5 with SMTP id y14-20020a056358980e00b00183645bcfa5mr2292203rwa.15.1712732344075;
+        Tue, 09 Apr 2024 23:59:04 -0700 (PDT)
+Received: from airbuntu ([64.125.41.58])
+        by smtp.gmail.com with ESMTPSA id u12-20020a63d34c000000b005dc87f5dfcfsm9295442pgi.78.2024.04.09.23.59.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 23:59:03 -0700 (PDT)
+Date: Wed, 10 Apr 2024 07:59:01 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: John Stultz <jstultz@google.com>, Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Subject: Re: [PATCH] sched/pi: Reweight fair_policy() tasks when inheriting
+ prio
+Message-ID: <20240410065901.ruzhjsmtmpsnl4qe@airbuntu>
+References: <20240403005930.1587032-1-qyousef@layalina.io>
+ <CAKfTPtDB8D6bouxJN9q8gXqG+BQYcsrJYEodDWtOB2kQwPH53A@mail.gmail.com>
+ <20240404220500.dmfl2krll37znbi5@airbuntu>
+ <CAKfTPtDP7if0gozSrnj+E_hH5xR-vpGAM2TwN4qWXcg5BtrEtw@mail.gmail.com>
+ <20240405171653.boxbylrdak5fopjv@airbuntu>
+ <20240407122700.ns7gknqwqkpjjyd4@airbuntu>
+ <CAKfTPtBZao-Ry=sdAV=rtTwbxbEJmwb-_gNceSjV6u-6EXTY-w@mail.gmail.com>
+ <CANDhNCq5HZvecSe9_9f7j5koY2VNdyjM_b3csL6=U1A_8J2ksw@mail.gmail.com>
+ <20240409061909.tb3vxc27h2eawiwg@airbuntu>
+ <CAKfTPtC4hdbBhn+-hkK9i4vkjO5fBGfsxjESkBrvyOwN6oHCdA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9386:EE_|DBBPR04MB8010:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	olKe6vhXYenghbEMCkfM9oo80tHPDOCObhBF9wVQsl2SiK1eAy9IEDTQrxYSKSuQF171kdSB/KpxCYfgJopjAnUGSq0QFg950PmTOB7KHyMuwyMgPY+xuN639HIYlpNHIVDSBGScQwNPA+h9Wm9kHk3sFomRKeTEDqsRXl3wZ9ahLAslfbwkskDQVr3Ur1lIs0/cebCtqc3LbNDtrZM6UzLCj41gDNc0sdeDpr9rmIuG1kriomzuWgRcYUtGQ+myRGhzT+1QswvtRUNwHMEkT7uWMFLiBaxbwy0LWsHhslgWZmeYE9EBMmB2vCW9ycLJfBgLyVDasWMHdw/7Pkvr8Gx3eAhrlzZUzUlf8hKxjNElJiSDeGp7LOVlrtEB1BPLd6ZLGPCL3TuvnGnsLgnD6gtI2HK/xrD53Y8K5Y9zmfD3/JcPNTTrHE+f8FOQ26ZL11Z2QGvjUT7Spw7nTvJy5rKHgL49DyWr+NWtQZ3SaPmTuIx8J0zgRRaS6hMrYmG0YOw+kyoREn3WOXtRMMArc1+eO0DzPk/pQmhv4BV0rhZ24a4AJHUG5yS/phTx0kI00C395r29Jr64FzlZOS2J8ReozK3QBwKXXxz2IoBk9Lp5wEn31A6lL2Opi2lHy2QJCKflo8+/OYehzv+ADZpoOd2L9fC14/y5vSFDQgP8iDu1v7RJXqBo/GPqF/FQrsZPGDFgj0AeRgukg1czJRTWoQ==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(366007)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?w1ZiKl5VK83LA4r4XC/hOAfV2YHg2TdJNq/K0r9tdiSmabG/EjVN6Vay/xw/?=
- =?us-ascii?Q?/2Pk9UJk5rycPLDktTcGCNpiA1FlMZoTj6KupAL26DICWI25Lt5vjoaH8cSD?=
- =?us-ascii?Q?VuaP3fYfALe7iTdF9MJAHXhh/B873twQBXjAnjE7Iyf49r35WCofKOuE8wAY?=
- =?us-ascii?Q?JN38e8Qzh7iJ4cMj/t0qdPRdgtawNHZmjnli8XHjv7YUJzJAG0zWJz+mV+rh?=
- =?us-ascii?Q?zfck/Da46rM9kUOXT27/EqLXQiNMV5tNAvVRidaw/JB+bRQ1PUCtEWe/XvYH?=
- =?us-ascii?Q?5Uwat0AodTfOivqWUASgV0TgHD2Q/0hY7i5ew4RR9UGYlu1YkNNfmeZ6hEkQ?=
- =?us-ascii?Q?xTLnbcEEtxphNrf75esnMrh5dB9U0Lt6E9Ys5v+NQ8N3ctovCGl23oNXdJfo?=
- =?us-ascii?Q?zLlfFKuwXFlL8Cyeqf3vDF1wgXd90GYCRuug2vtlXK4ItD48XQkTUzLeZkbf?=
- =?us-ascii?Q?G5HNei8fgAMZaaM7Xomd480rflvb2qajbE/qTyH7Y4POU93/FbZ5OS5wy3+4?=
- =?us-ascii?Q?UzcCBYPMTZtNH4rH6DlDmrX/QA512Z0lqf7+4Av/lDfONSlCMHHdBBYjyTUG?=
- =?us-ascii?Q?gkqlEWLaaW50rJzfiRaZkGIAysI31RAtVf2Htqq8y4HV3H3rEkbAQBFcNMyt?=
- =?us-ascii?Q?aQ76zSRcNVselYDK8Tzz0DLy+1d68rnbIcYrzgUAuCn4ZoxDAJAy+eqPkZwx?=
- =?us-ascii?Q?MXBG/YPNvEWZ/YpwVNgNnbhjyy9uz0DxmPKy81iOnY8RtSfnvHE5uesyJeqJ?=
- =?us-ascii?Q?bekf7iascglUjVs34Vjw9n8dTq9MpG9Q42pxngJPlrvlo5mtIRKBDHk+nbqs?=
- =?us-ascii?Q?UWDFBEzenkKDolsrnWeqaWUqpaedH2Vsgda4CtPrpJn2YVgqGm8HIdf1WUUk?=
- =?us-ascii?Q?77t54B+OT/6txmaGQSYRgbWsy7V2VSjO+4TVG8ftltc4MPKL2g+YZZyY7sht?=
- =?us-ascii?Q?Jyy1heL3z09BV9AYinb0kWQAExJlWB1k7T1pZ6njUAVy1lS9U/TPfNayI55s?=
- =?us-ascii?Q?qvJFqeu8+Ug9rhzN9V2oX5551GwwILhYxqW5phqJb20kCqq+BOcFLxkw0Ihv?=
- =?us-ascii?Q?kroj4y/5RCzGdLrr7bbHanNPBuN0Af5jU7xmxRrdYSSgG4mlwxGBje6rx69Q?=
- =?us-ascii?Q?uU5kPlMI65V8fuLrhGcDDW/q57rYfqftfKLKhra+pyCmAHun0XlKg0w0z5zt?=
- =?us-ascii?Q?zT37oZJWDXcexTcmjQa5m1f9Yasl+KW9CzzzpZtPykn1OzbYfLpyOa1HusOC?=
- =?us-ascii?Q?2De0ZrGEgMKrAdLzm+jb83Z7c18aNCN0tZBemQ0te6GTjjKzymf5099onAaK?=
- =?us-ascii?Q?/i7yPH3kZSRSQA0wFbYvFA5NZ5optuTMdsoMMQ3IrxIx0pkn+ZXlAb0Tqecw?=
- =?us-ascii?Q?f/SWsuyliSPrySn6uU/8NamU1Rk7Vb0IC7nuCD/IGfQNPjYYgApP8l/xZgYF?=
- =?us-ascii?Q?tFb28SkBz5EIk7NXjvt1ni9E3Oa7wHmFOQhFPnp4NOQZGJ+NE2shQArn+lW9?=
- =?us-ascii?Q?iaKCnm3zC4AxblSXQdEJ2WK7WPnjD1OsPWEU7yQO7h3/1kt3wYcvaDAkg3cn?=
- =?us-ascii?Q?eJGvvPrTSx+R8EPvC5moxugQygfwNPLZmQiq5qEG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40124464-8a20-427c-9567-08dc592af3de
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 06:53:39.6619
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mG7cgLITdjBgF0TPClahZ6ThvzLw9cdDX/IcucK1+CEQOIiQISWbcYBf7WKecx93
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB8010
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKfTPtC4hdbBhn+-hkK9i4vkjO5fBGfsxjESkBrvyOwN6oHCdA@mail.gmail.com>
 
-Support rtc PCF2131 on imx93-11x11-evk.
+On 04/09/24 14:35, Vincent Guittot wrote:
+> On Tue, 9 Apr 2024 at 08:19, Qais Yousef <qyousef@layalina.io> wrote:
+> >
+> > On 04/08/24 12:51, John Stultz wrote:
+> > > On Mon, Apr 8, 2024 at 12:17 AM Vincent Guittot
+> > > <vincent.guittot@linaro.org> wrote:
+> > > >
+> > > > On Sun, 7 Apr 2024 at 14:27, Qais Yousef <qyousef@layalina.io> wrote:
+> > > > >
+> > > > > On 04/05/24 18:16, Qais Yousef wrote:
+> > > > >
+> > > > > > >
+> > > > > > > All that to say that I think the weight is not applied on purpose.
+> > > > > > > This might work for your particular case but there are more changes to
+> > > > > > > be done if you want to apply prio inheritance between cfs tasks.
+> > > > > > >
+> > > > > > > As an example, what about the impact of cgroup on the actual weight
+> > > > > > > and the inherited priority of a task ? If the owner and the waiter
+> > > > > > > don't belong to the same cgroup their own prio is meaningless... task
+> > > > > > > nice -20 in a group with a weight equal to nice 19 vs a task nice 19
+> > > > > > > in a group with a weight equals to nice -20
+> > > > > >
+> > > > > > That is on my mind actually. But I thought it's a separate problem. That has to
+> > > > > > do with how we calculate the effective priority of the pi_task. And probably
+> > > > > > the sorting order to if we agree we need to revert the above. If that is done
+> > > > >
+> > > > > Thinking more about it the revert is not the right thing to do. We want fair
+> > > > > tasks to stay ordered in FIFO for better fairness and avoid potential
+> > > > > starvation issues. It's just the logic for searching the top_waiter need to be
+> > > > > different. If the top_waiter is fair, then we need to traverse the tree to find
+> > > > > the highest nice value. We probably can keep track of this while adding items
+> > > > > to the tree to avoid the search.
+> > > > >
+> > > > > For cgroup; is it reasonable (loosely speaking) to keep track of pi_cfs_rq and
+> > > > > detach_attach_task_cfs_rq() before the reweight? This seems the most
+> > > > > straightforward solution and will contain the complexity to keeping track of
+> > > > > cfs_rq. But it'll have similar issue to proxy execution where a task that
+> > > > > doesn't belong to the cgroup will consume its share..
+> > > >
+> > > > That's a good point, Would proxy execution be the simplest way to fix all this ?
+> >
+> > Is it? Over 4.5 years ago Unity reported to me about performance inversion
+> > problem and that's when proxy execution work was revived as simplest way to fix
+> > all of this. But still no end in sight from what I see. I was and still think
+> > an interim solution in rt_mutex could help a lot of use cases already without
+> > being too complex. Not as elegant and comprehensive like proxy execution, but
+> > given the impact on both userspace and out of tree kernel hacks are growing
+> > waiting for this to be ready, the cost of waiting is high IMHO.
+> >
+> > FWIW, I already heard several feedbacks that PTHREAD_PRIO_INHERIT does nothing.
+> > I think this reweight issue is more serious problem and likely why I heard this
+> > feedback. I could be underestimating the complexity of the fix though. So I'll
+> 
+> Without cgroup, the solution could be straightforward but android uses
+> extensively cgroup AFAICT and update_cfs_group() makes impossible to
+> track the top cfs waiter and its "prio"
 
-Signed-off-by: Joy Zou <joy.zou@nxp.com>
----
-Changes in v3:
-1.adjust the indentation.
+:(
 
-Changes in v2:
-1. remove unnecessary status property.
----
- .../boot/dts/freescale/imx93-11x11-evk.dts    | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+IIUC the issue is that we can't easily come up with a single number of
+'effective prio' for N level hierarchy and compare it with another M level
+hierarchy..
 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-index 07e85a30a25f..73e0bca36b81 100644
---- a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
-@@ -281,6 +281,23 @@ ldo5: LDO5 {
- 	};
- };
- 
-+&lpi2c3 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&pinctrl_lpi2c3>;
-+	pinctrl-1 = <&pinctrl_lpi2c3>;
-+	status = "okay";
-+
-+	pcf2131: rtc@53 {
-+		compatible = "nxp,pcf2131";
-+		reg = <0x53>;
-+		interrupt-parent = <&pcal6524>;
-+		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+};
-+
- &iomuxc {
- 	pinctrl_eqos: eqosgrp {
- 		fsl,pins = <
-@@ -343,6 +360,13 @@ MX93_PAD_I2C2_SDA__LPI2C2_SDA			0x40000b9e
- 		>;
- 	};
- 
-+	pinctrl_lpi2c3: lpi2c3grp {
-+		fsl,pins = <
-+			MX93_PAD_GPIO_IO28__LPI2C3_SDA			0x40000b9e
-+			MX93_PAD_GPIO_IO29__LPI2C3_SCL			0x40000b9e
-+		>;
-+	};
-+
- 	pinctrl_pcal6524: pcal6524grp {
- 		fsl,pins = <
- 			MX93_PAD_CCM_CLKO2__GPIO3_IO27			0x31e
--- 
-2.37.1
+Does proxy execution fix this problem then? If we can't find the top waiter,
+I can't see how proxy execution would work here too. To my understanding it's
+more about how we apply inheritance (by donating execution context of the top
+waiter) instead of manually applying inheritance like we're doing now.
 
+But the logic of finding the top waiter should remain the same, no?
+
+Need to extend my test case to cover this scenario.
