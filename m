@@ -1,48 +1,40 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5979D1591E1;
-	Wed, 10 Apr 2024 15:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F5615D5C0;
+	Wed, 10 Apr 2024 15:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762861; cv=none; b=NWidxYlPHSnMdJEFE7OeK2PNFYl7/bjiBIbg8zUdwkqsNe78KwQ0e/D97cOgl+McVAu06xN1wJ5f0pnYXIg38SmQUX2ALY9TCoqiM+IFCHIgH2tQ49756w7tkZFGxkW8etscol5zjjA9Z4jKu5PDm2HTCULw4nlkK9y+VS0z+5Q=
+	t=1712762929; cv=none; b=UBD+HwTDxdsl0+qtuylTyyz//6sCxzfvA90hlXAi7nQgpukh8m03OHauBOEDyne1xLqMlT/v1Q0HalyD0P9962fpWM6gfjjUq+ZvqHm8EdrVXDttiMgtyDelhW5xCnMqX9Ut+S8r7XuvlRegW8cUIqHDRWriP23KikJj68WKoe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762861; c=relaxed/simple;
-	bh=yaqHM0962MfpM+OFdQda8fXPe0R1wO7c3AlNIHOVwdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cIDr9b+TXaDzq5eq0ksIiA5LVmLWXAL58VAPt8bPBT3w2Lp5ptcZt8K1cJEot2DdXJ3ZHUQemGHmuSecBTA7AXhXPlN0qm0PEMop62C+J9yTcBqnLuD/AvZI5AbjTIKRvXHuWID3lh/GmRj4O/5b3B4A1rcFzaHvSVRZEpjeZtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QMVx+iIj; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712762929; c=relaxed/simple;
+	bh=CKYJu7WyQjbgodgDBQk/bD0aZ+5Ih4b2bRRph8ajJNE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hUfXNTzDM+j2e+MTs1GZod6OhS0zB6zyLgeCRRXmv0db7/rc80xML9Z2ltTeQbogX5EQ6xp4idmSgqMhhyG+K+tvZHsB4/V6l2Sk+Ee9ZKis5aWc8Z8xlfDmzLoD0iu7MKmOSAqfYDv1pQucBSJU+sk7LKzH4KOwBPlEpUjm204=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=K1g8NZ9X; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QMVx+iIj"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43A8bUQZ020430;
-	Wed, 10 Apr 2024 15:27:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=SeKInDMchgVr+fW9WAo6YizzoIlylrKBtPkpDrYflGc=; b=QM
-	Vx+iIjNoBxgbQhbk47P1pSkvCBi6kiaSSZFteiH8PqXWUF0Y7UYSWrwJ3USY+xai
-	GpMzaeDLZwM3AoGqxqUV9+ueya3RJGxE95WUHnvgCDFs5MzZP+Djd3mUZ8JzAwe0
-	6S2YEqGQJdphdetr8iOfJZaaPyjM5230lKtCzNV8IrViCObX5p7tH3axnILjKVCn
-	HrHWFKU22mBrjW0gJUsF1fI2uYWOU0hgzhaQSDLoYsE+Jpvut0geIRe/ud4DPPSJ
-	8fggfL5TrmQ7pfWvB/7hPSNjCQTZ3E7PVA4IghTfCh3TrgZ3LycX2IH7oruboSQa
-	QCfwL5e2a4lspc6371dA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xdnqtjn3f-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 15:27:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43AFR8Ts012315
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 10 Apr 2024 15:27:08 GMT
-Received: from [10.110.37.144] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 10 Apr
- 2024 08:27:06 -0700
-Message-ID: <d440d38f-f805-4c85-96b3-ae0b5ad2bbdc@quicinc.com>
-Date: Wed, 10 Apr 2024 08:27:05 -0700
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="K1g8NZ9X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712762924;
+	bh=CKYJu7WyQjbgodgDBQk/bD0aZ+5Ih4b2bRRph8ajJNE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K1g8NZ9XR3lakU90fT945gzq+DiAo/FRpF8YT7T6u+aQZmErduUjLkdbPHkFjx8pu
+	 mzrRW1tBX48RU8nBach238E42fYVQLFIvISoTqSysZhQeyZRkdXYnEHB78EC60oPHs
+	 HcAah3gmFWgu5zRhllO7O8W1tC98QU5Xc6BgbldS76U0M9dPM1Vw68ZgGPP9D1G5R4
+	 dCTniLg2gjCeqAcr5rFQDwfICu23kOxzIWORkG44Xmu1YRVXkgd2ISRqssYHuleWcZ
+	 2riMyfqkOmZ9NXXLB+wUCSUs577ZiwKxtmL1FoSDrtAxskh8Uj1CoNZCDrihogfJW5
+	 HhS7bd8w+H66w==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 89F423780C13;
+	Wed, 10 Apr 2024 15:28:42 +0000 (UTC)
+Message-ID: <636411e6-05fd-4e32-8e3c-6bcc0c9ec063@collabora.com>
+Date: Wed, 10 Apr 2024 17:28:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,84 +42,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 05/16] dt-bindings: net: wireless: describe the ath12k
- PCI module
+Subject: Re: [PATCH v4 05/18] ASoC: mediatek: mt8192: Migrate to
+ mtk_soundcard_common_probe
+To: Alexandre Mergnat <amergnat@baylibre.com>, broonie@kernel.org
+Cc: wenst@chromium.org, lgirdwood@gmail.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+ trevor.wu@mediatek.com, maso.huang@mediatek.com,
+ xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+ kuninori.morimoto.gx@renesas.com, shraash@google.com,
+ nicolas.ferre@microchip.com, u.kleine-koenig@pengutronix.de,
+ dianders@chromium.org, frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+ eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+ jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com, alpernebiyasak@gmail.com,
+ ckeepax@opensource.cirrus.com, zhourui@huaqin.corp-partner.google.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ shane.chien@mediatek.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20240409113310.303261-1-angelogioacchino.delregno@collabora.com>
+ <20240409113310.303261-6-angelogioacchino.delregno@collabora.com>
+ <cf0184c4-2b3e-4074-9e30-bf65ec7f0aaa@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marcel Holtmann
-	<marcel@holtmann.org>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        "David
- S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Bjorn
- Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Catalin
- Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Bjorn
- Helgaas <bhelgaas@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Geert
- Uytterhoeven <geert+renesas@glider.be>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Neil
- Armstrong <neil.armstrong@linaro.org>,
-        Marek Szyprowski
-	<m.szyprowski@samsung.com>,
-        Alex Elder <elder@linaro.org>,
-        Srini Kandagatla
-	<srinivas.kandagatla@linaro.org>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Abel Vesa <abel.vesa@linaro.org>,
-        Manivannan
- Sadhasivam <mani@kernel.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>,
-        Amit Pundir
-	<amit.pundir@linaro.org>, Xilin Wu <wuxilin123@gmail.com>
-CC: <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-References: <20240410124628.171783-1-brgl@bgdev.pl>
- <20240410124628.171783-6-brgl@bgdev.pl>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20240410124628.171783-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Wx5pfsg1IEL3FNsbq-QxsVprddWodQtT
-X-Proofpoint-GUID: Wx5pfsg1IEL3FNsbq-QxsVprddWodQtT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-10_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- lowpriorityscore=0 mlxscore=0 adultscore=0 impostorscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=826
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404100112
+In-Reply-To: <cf0184c4-2b3e-4074-9e30-bf65ec7f0aaa@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/10/2024 5:46 AM, Bartosz Golaszewski wrote:
-[...]
-> +description:
-> +  Qualcomm Technologies IEEE 802.11ax PCIe devices.
+Il 10/04/24 15:59, Alexandre Mergnat ha scritto:
+> 
+> 
+> On 09/04/2024 13:32, AngeloGioacchino Del Regno wrote:
+>> @@ -1211,52 +1196,85 @@ static int mt8192_mt6359_dev_probe(struct platform_device 
+>> *pdev)
+>>           if (dai_link->num_codecs && dai_link->codecs[0].dai_name &&
+>>               strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
+>>               dai_link->ops = &mt8192_rt1015_i2s_ops;
+>> -
+>> -        if (!dai_link->platforms->name)
+>> -            dai_link->platforms->of_node = platform_node;
+>> -    }
+>> -
+>> -    priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> -    if (!priv) {
+>> -        ret = -ENOMEM;
+>> -        goto err_probe;
+>> -    }
+>> -    snd_soc_card_set_drvdata(card, priv);
+>> -
+>> -    ret = mt8192_afe_gpio_init(&pdev->dev);
+>> -    if (ret) {
+>> -        dev_err_probe(&pdev->dev, ret, "%s init gpio error\n", __func__);
+> 
+> I don't think __func__ is necessary.
+> 
+>> -        goto err_probe;
+>>       }
+>> -    ret = devm_snd_soc_register_card(&pdev->dev, card);
+>> -    if (ret)
+>> -        dev_err_probe(&pdev->dev, ret, "%s snd_soc_register_card fail\n", 
+>> __func__);
+> 
+> I don't think __func__ is necessary.
 
-if you respin, nit: s/11ax/11be/
+I am removing the line, here :-P
+
+> 
+>> -
+>> -err_probe:
+>>       of_node_put(headset_codec);
+>>   err_headset_codec:
+>>       of_node_put(speaker_codec);
+>>   err_speaker_codec:
+>> -    of_node_put(platform_node);
+>> -err_platform_node:
+>> -    of_node_put(hdmi_codec);
+>> +    if (hdmi_codec)
+>> +        of_node_put(hdmi_codec);
+>> +
+>>       return ret;
+>>   }
+>> +static int mt8192_mt6359_soc_card_probe(struct mtk_soc_card_data *soc_card_data, 
+>> bool legacy)
+>> +{
+>> +    struct mtk_platform_card_data *card_data = soc_card_data->card_data;
+>> +    struct snd_soc_card *card = card_data->card;
+>> +    int ret;
+>> +
+>> +    if (legacy) {
+>> +        ret = mt8192_mt6359_legacy_probe(soc_card_data);
+>> +        if (ret)
+>> +            return ret;
+>> +    } else {
+>> +        struct snd_soc_dai_link *dai_link;
+>> +        int i;
+>> +
+>> +        for_each_card_prelinks(card, i, dai_link)
+>> +            if (dai_link->num_codecs && dai_link->codecs[0].dai_name &&
+>> +                strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
+>> +                dai_link->ops = &mt8192_rt1015_i2s_ops;
+>> +    }
+>> +
+>> +    ret = mt8192_afe_gpio_init(card->dev);
+>> +    if (ret)
+>> +        return dev_err_probe(card->dev, ret, "%s init gpio error\n", __func__);
+> 
+> I don't think __func__ is necessary.
+> 
+
+That was on purpose.
+I'm migrating things, but I am leaving the prints as they were.
+
+Cheers,
+Angelo
+
+>> +
+>> +    return 0;
+>> +}
+> 
+> Beside that,
+> Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+> 
+
+
 
