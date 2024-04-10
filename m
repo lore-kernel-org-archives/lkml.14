@@ -1,55 +1,55 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9515F1598E8
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85EE15920A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 11:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712748099; cv=none; b=leqPr8XybAUGpG4430ZU5x1cj888zStS8Hm3Q469uUGGpCNt4yFQEQfgv3d6o8qSHuvrOGIq39KL2OL14rThZazmIQM24h4U6kvNThjBDwGAWwSQR3Nzz+c7sKMjsV13Y9f8lA5kKdLVjyYSfQsEIEBlTnj89GoyXkDfueEQa6U=
+	t=1712748293; cv=none; b=owJfUbtUmfWTm7eziAZk+IMOF93z4sQWBuc91WZZqLMwWJ5e5J0w0rMaMLOPznwDbkPfSvcLyvvSK3FAialt/j8AN5It6UccGrDXwxkV7S6pV2qxScbMtgmVWPBP24ABsLqnidWy00yzVkTCzdxuQYfj5+jMGNycDiUn+zbuV74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712748099; c=relaxed/simple;
-	bh=oTffGc+EO1lAJbCgG3QBoGQfVS7A6Ola4sFH696sM8A=;
+	s=arc-20240116; t=1712748293; c=relaxed/simple;
+	bh=RulsX+ZQ0xI3FOCjWtjixDk2aZyRKbqsfynJZlC85YY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uvEyo03ekUNPZfJ5YFdC+JkW1OO561TJdf8cd72LGcsSh6OI5B0E49mir8PKMNXKDb7dpk9fZcOrLAUJ2kHHmWKRYfKiEpdz86q/c7Jeo+9NNnnW3hC6yHU61g2mj+UHr/EtI3B2XGbStwmwO9jckkZGRCnXsmvEqMPTi/0QHfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFRW50U2; arc=none smtp.client-ip=209.85.208.181
+	 To:Cc:Content-Type; b=UlRTY1FxN5sA3w/375Qup45bDmLALrPya8B0m+UUbWWyOrdbCaKHyyqOxZikzV+7ItJxWiWORGlWtjOdCi74oDETpFZbkY1B84oI46IVCy3rStiYGpjQq45O82WOhPANPRnNEe22FMhAIS2ioFUoqiOe5h8hj0I65JCDz1/nr04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ox8VhrXm; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFRW50U2"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d700beb60bso107293551fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:21:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ox8VhrXm"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-343b92e54f5so4901368f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 04:24:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712748096; x=1713352896; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712748290; x=1713353090; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ud+517cbK3MIdJCHymhuRgamDd5LkAQgdCc6QwW3VM0=;
-        b=aFRW50U2+0nhJ+cBO0+6Oxs3N7cRXo+ygxCqmjSUiUmXgvPBzp/1ZDHzWaMJRgFzhm
-         e6vtlVFP3W7inyMmko5XWKMOcgzKFKfF0wcCiyzH2Njp5zb1SwPqsTq5hk1sK/IR7vEj
-         EBPPB/uO0JyTmiCEupsBfqQDLqinzoIGnHonM22FvOf/R9so0kIPhXLckicAHmsv5eWJ
-         FaObPgz3gzwTBZklTdF9cALffvGoU+aftmk9Fr9U2n/ET+MoRz8mPTUDBlUlIDajBDjH
-         l6Sr8d01u/n9qaI2kA7do5Ruh73Bd5suTKI/OONj7xwCHWsSL2kleKg+IJIeEZdmfuTd
-         gnLA==
+        bh=RulsX+ZQ0xI3FOCjWtjixDk2aZyRKbqsfynJZlC85YY=;
+        b=Ox8VhrXmKiHq+SvF3G29BpvLWpw6MPYqumFLi7bTOs9tyaTvSAuc5bJEuxCXLhZQlY
+         ZekobgtnuYeIAmZjt8gksIH/X1/B4UIE7avsfb0pdu6oJRs4NX2vbNqs9a+vUKLkne9v
+         ym5xmFFbnLbjBWrSlPdYOCPQOI0DKvUyhwx9Ck714GeIQm9a+XLMA/KDKeVnucGbsWQd
+         P15E5Zg9ht58UM117dPDuEaOCRCp9qEbA6Dc3xjUXpejzfBhym6QEN6HfTmgUwF+hD9i
+         kPe+0z6ZZ7OYva+LItUxf/XcXIqEHjF2KTDu301OyjN6XX1r6xt4bnZcbVP0liNniYaM
+         2hag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712748096; x=1713352896;
+        d=1e100.net; s=20230601; t=1712748290; x=1713353090;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ud+517cbK3MIdJCHymhuRgamDd5LkAQgdCc6QwW3VM0=;
-        b=gkCcCevvEm/S3IcvL8PmjdNlN1Suqc41Ho4sfnmmZjkWZaGZnj7cdY3wxlc/PSqgH0
-         2rTx+RA8ffEwFv+9j9/eNAtMNXF9Z8HvYqxjpiVq6o6t53XaERVBfFuChs/uyTiT/wxB
-         mDI2o7vthqXXpxoT39ByV0BqotETU83lpz8tJ38XoQXgjjTfOICJleOiMZDsCaQrKUOX
-         QlTgXrgt0jlFNgh6NWAQpqfVKrv8WaxBPtUPaSTZoNjd1W3SqGXdAyNxJR6HgSH1188w
-         mdZpMjYGR+r2eNCqfy9o5szFRo3XlvVgH7W3HU4G4FjHExbxik3dSTT+Yn06GoLAD0V0
-         Vu1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVAoOW1PbhnZxsIHXWa8C7u5N/xNRQC+LQzcPAMBkYIc+VKPfikSAJCLafiVk4926KlBUFNzUX6BJqwoT+DLauHqA3sUYi6bY6kSG0F
-X-Gm-Message-State: AOJu0YwVueIgh870kU1NPRoTaniHnmsGiu69YsoM5obpQWEdPuAV3Qqg
-	sVAI+5SbNz3A8cKsj9ynZFYKiJFaoHwOx/1EEtGjtBNBhieT0qwVrE3+sbvIjl2VHoAmCo0gxcU
-	UdPbU44niq6fp32zWvFIkNJIwklw=
-X-Google-Smtp-Source: AGHT+IHyTnRS2cj+jC6mWGrGRlbdmCffxUxUYisErEJfoatyZBVPbyUmm9ghK+3G+vcqEpM8cBT9qeA0JbnpSXXzOwE=
-X-Received: by 2002:a05:651c:b8c:b0:2d8:5a4b:17b1 with SMTP id
- bg12-20020a05651c0b8c00b002d85a4b17b1mr2109029ljb.15.1712748095459; Wed, 10
- Apr 2024 04:21:35 -0700 (PDT)
+        bh=RulsX+ZQ0xI3FOCjWtjixDk2aZyRKbqsfynJZlC85YY=;
+        b=hoPOeM52uf9CxxRH16idlYNe8OhJ68neoDd/4FzfBRTsThQiQ3HBullBN/QB4/LPGT
+         HQF0p6zz6G0asp+BSKjZTQ5M7egBCFV02TbPcnwPqYUvZ7Ag9msHVqxmwY1Nlxlk7cdq
+         EtQQKkH8YnajZhI8AKyhcFCrLbI99Uy6J/TvI6NqM0zrLN34ZFgovI3spDE66WsAVWHe
+         uPOPmXDrXEK1dyEJWxpy7LOi9LNnja1mEgTV4rWz+G4F1KA7vOdtHQUA1k2HfQ1xny6P
+         lD1kryIO5a+QTL5Icoy49aKz39sLPzYhrWQY8F/Bhn3C8mndtfiYwCQNVLH1x0SK0lyX
+         fNnw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzAO6Er0Crwr6CFzZMVUPOea+QXTAduDY+7K7W385GQYXzrfm3xAzyOYArFPZqmKTV2avN5oLU6wFga2wjr4HOqWaEmnFoluZciz5S
+X-Gm-Message-State: AOJu0YyuwjROu4YmI0iDXhhnrWudH1t+gcsrS2BIar2wTu+71//r3QOa
+	x1mxJMfSDVmzFAt79MWUqsrs0MGX1J2khtBVTv6JCeM1CoS3LsPo3oNZpvMCRcR2S/WgtcfO08G
+	CX87gV+CBuTYSUZL3tnKp0hDlULUE04z3RP0=
+X-Google-Smtp-Source: AGHT+IF9feX54onok2ZCe/GqwajBd7Pd0t6MmOGkEe+atSYvdfX9IQvLDWobQ07Vq9QKWNS9hc3uGOwicuBtYVR1M+k=
+X-Received: by 2002:a05:6000:1ac8:b0:343:c58f:7af4 with SMTP id
+ i8-20020a0560001ac800b00343c58f7af4mr1603177wry.59.1712748289941; Wed, 10 Apr
+ 2024 04:24:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,13 +63,13 @@ References: <20231004145137.86537-1-ubizjak@gmail.com> <20231004145137.86537-5-u
  <CAHk-=wi6U-O1wdPOESuCE6QO2OaPu0hEzaig0uDOU4L5CREhug@mail.gmail.com>
  <CAFULd4Z3C771u8Y==8h6hi=mhGmy=7RJRAEBGfNZ0SmynxF41g@mail.gmail.com>
  <ZSPm6Z/lTK1ZlO8m@gmail.com> <CAFULd4Z=S+GyvtWCpQi=_mkkYvj8xb_m0b0t1exDe5NPyAHyAA@mail.gmail.com>
- <CA+fCnZen+5XC4LFYuzhdAjSjY_Jh0Yk=KYXxcYxkMDNj3kY9kA@mail.gmail.com>
-In-Reply-To: <CA+fCnZen+5XC4LFYuzhdAjSjY_Jh0Yk=KYXxcYxkMDNj3kY9kA@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 10 Apr 2024 13:21:23 +0200
-Message-ID: <CAFULd4aJd6YKXZr=AZ7yzNkiR4_DfL5soQSvhMhNiQEPUOS87g@mail.gmail.com>
+ <CA+fCnZen+5XC4LFYuzhdAjSjY_Jh0Yk=KYXxcYxkMDNj3kY9kA@mail.gmail.com> <CAFULd4aJd6YKXZr=AZ7yzNkiR4_DfL5soQSvhMhNiQEPUOS87g@mail.gmail.com>
+In-Reply-To: <CAFULd4aJd6YKXZr=AZ7yzNkiR4_DfL5soQSvhMhNiQEPUOS87g@mail.gmail.com>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Wed, 10 Apr 2024 13:24:38 +0200
+Message-ID: <CA+fCnZcB5GuwUx7SPKyCMVb2V-dc4GkJbY2PvmzhqHB5vszS6g@mail.gmail.com>
 Subject: Re: [PATCH 4/4] x86/percpu: Use C for percpu read/write accessors
-To: Andrey Konovalov <andreyknvl@gmail.com>
+To: Uros Bizjak <ubizjak@gmail.com>
 Cc: Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org, 
 	linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>, 
 	Nadav Amit <namit@vmware.com>, Brian Gerst <brgerst@gmail.com>, 
@@ -81,57 +81,20 @@ Cc: Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.or
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 10, 2024 at 1:11=E2=80=AFPM Andrey Konovalov <andreyknvl@gmail.=
-com> wrote:
+On Wed, Apr 10, 2024 at 1:21=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wro=
+te:
 >
-> On Mon, Oct 9, 2023 at 4:35=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wr=
-ote:
-> >
-> > On Mon, Oct 9, 2023 at 1:41=E2=80=AFPM Ingo Molnar <mingo@kernel.org> w=
-rote:
-> > >
-> > >
-> > > * Uros Bizjak <ubizjak@gmail.com> wrote:
-> > >
-> > > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > > index ecb256954351..1edf4a5b93ca 100644
-> > > > --- a/arch/x86/Kconfig
-> > > > +++ b/arch/x86/Kconfig
-> > > > @@ -2393,7 +2393,7 @@ config CC_HAS_NAMED_AS
-> > > >
-> > > >  config USE_X86_SEG_SUPPORT
-> > > >       def_bool y
-> > > > -     depends on CC_HAS_NAMED_AS && SMP
-> > > > +     depends on CC_HAS_NAMED_AS && SMP && !KASAN
-> > > > +     depends on CC_HAS_NAMED_AS && SMP && !KASAN
-> > >
-> > > So I'd rather express this as a Kconfig quirk line, and explain each =
-quirk.
-> > >
-> > > Something like:
-> > >
-> > >         depends on CC_HAS_NAMED_AS
-> > >         depends on SMP
-> > >         #
-> > >         # -fsanitize=3Dkernel-address (KASAN) is at the moment incomp=
-atible
-> > >         # with named address spaces - see GCC bug #12345.
-> > >         #
-> > >         depends on !KASAN
-> >
-> > This is now PR sanitizer/111736 [1], but perhaps KASAN people [CC'd]
-> > also want to be notified about this problem.
-> >
-> > [1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D111736
+> > Filed a KASAN bug to track this:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D218703
 >
-> Filed a KASAN bug to track this:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D218703
+> Please note the fix in -tip tree that reenables sanitizers for fixed comp=
+ilers:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=3Dx=
+86/percpu&id=3D9ebe5500d4b25ee4cde04eec59a6764361a60709
+>
+> Thanks,
+> Uros.
 
-Please note the fix in -tip tree that reenables sanitizers for fixed compil=
-ers:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=3Dx86=
-/percpu&id=3D9ebe5500d4b25ee4cde04eec59a6764361a60709
-
-Thanks,
-Uros.
+Ah, awesome! I guess this will be in the mainline soon, so I'll close
+the bug then. Thank you!
