@@ -1,103 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEC115B995;
-	Wed, 10 Apr 2024 12:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27EB156F23
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 12:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712753491; cv=none; b=WGgzaL13acGzADfvkoAWn0xauCPEURexuld0Ozm9+WuBNrzibWcp8McQuvR2ZOobf62P24r3o7SRdw2gYjKNy/gf5NTFFnUzMLX6cRI0ZJu81NA6PgmGAWqOO+DGDSgj7mnZ8IrIhzZgjiRpBEcHyL0NZrSCJc07j9lprsRzvDI=
+	t=1712753886; cv=none; b=e8POVtQAJ3aYEv0UgeGGCp5aC6yo1FqrQhac41kFTTbyXq5A3VtmrLRBUanP2iUXH+GoQoI/LV/vhcQIWP2UqmvRRqQEKy4B2pwIYtY+Ns1MlO/z5N+XjQ5Tn0lkAb9kAjR5Xxpy5tQQu9HATwvCwaHJFHAdF2/kaOPbQks8ylg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712753491; c=relaxed/simple;
-	bh=LLMGp714NUJtAYoSJJfvg+tAURcKNyM+caOeo+Zjxmg=;
+	s=arc-20240116; t=1712753886; c=relaxed/simple;
+	bh=nJUi9rPZej+h44WRD6Xh/z4m8frw/jvIQlcyirl031g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNjOoaefTaayF9W1iF/fQLjzadMFe4c9fjf28mlF9GqBopjQmj5t5RDpCnX/MMfBm9HzYbTZmcBcMKe23qcL7rsQHB2qHLdVhByZtY6zVxUuM+hZNCrTrmmWnOCjl3F9k2rg1xKz4jGR8P3k2XLqIZn6F+OHtxdb9kef3eQTOKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iw2pEUtO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V7JASDXn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=fIEbf+ca0UIV7N4vK5QMYlMCVU5xD+C4D/84m08Y3K9npnyFwXvCHSiO20KfT8I2onK7pFr62tlwuLF0l69UioChkVcd1uNXyrz68Db7Em+AmibYJx66fJdTl4EtlQItDh3CFnPtyp6Z3gZgZQ382/od0bh8V4V5vsxOBInMlZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiKRZFQA; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iw2pEUtO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V7JASDXn"
-Date: Wed, 10 Apr 2024 14:51:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712753488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4QXXsu71JXQrIDib+0DcdWbOZC0pgoPfrFmZFNP9YI=;
-	b=iw2pEUtOI2eZiBNUtW4AgZjjSQmLZy0yBPIv5T+wXGvsHP/vuXHFfAEk+2JDNji2JuZLsQ
-	Ab9vPegknyD5vGwSW1VGmsRYvrkc6QhlWj4C7ORnw/Hc35OFqr2Nsni17Zdvxtmmt12WSN
-	Cnk7cFq/zsyrE985StGzJ6ugfTxqdCGYaCsj0bO3s+4fmd9+ObbRJAUezu8vuWqrbs4mTF
-	f9+qNqR5q2gKGWAuoUl4QYUsayf4PCjKySbF32oNI0NktBVhyyH/rofwjqVDcPHiipmtF5
-	2nI8U2Si4vQxzDOcWhypE9RX2EYJFsyFh9Jftyq0U5sS76/6Ezesxl38Jjp+3A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712753488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e4QXXsu71JXQrIDib+0DcdWbOZC0pgoPfrFmZFNP9YI=;
-	b=V7JASDXnjHUwWxLVi//k+JlpDl2zSCScJLqjUnDnxSA1Nx3xsauxDrCktOo/z8fugJI5aN
-	t2jNcUrovOpx6uDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Marco Elver <elver@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH v3 3/4] perf: Remove perf_swevent_get_recursion_context()
- from perf_pending_task().
-Message-ID: <20240410125126.X26tR8tM@linutronix.de>
-References: <20240322065208.60456-1-bigeasy@linutronix.de>
- <20240322065208.60456-4-bigeasy@linutronix.de>
- <ZhRqSEbyd1rqVwfN@pavilion.home>
- <20240409062501.h4rA_ck4@linutronix.de>
- <ZhUaAjhQXN6ahtpS@localhost.localdomain>
- <20240409105405.TXUU--_W@linutronix.de>
- <ZhUt8XMndGSwNuwx@localhost.localdomain>
- <20240409133336.Y4Io-16-@linutronix.de>
- <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiKRZFQA"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a51c6e91793so613803566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712753883; x=1713358683; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ERc0Mc3295DMpduY6C379p9vkt2xRGs6pLrBozDiTnc=;
+        b=MiKRZFQAfLCl2D9mmdJoMaWxpfVG1dfILPb3AaIfhZxHwVdbONiJN1wiuNnxtJJKH9
+         0y38ozzdxCkQpNR/Cp3/nBKUzLCMicTxJfZIptit+L3placcTAee/hTFCFd82fh0JCbp
+         Yz73HFlO5M9DouUmmNre89bk638qSkX92dUH/aGcw9qyZcqSa+XiAvKoxoYtcrOeKVYd
+         9exJLDyqOJfhAW3VzA5S9xdU8P5vPlDy9czClTzrhUtSlBzkgNLqmmmcep5e+5CuBAd/
+         SKNd2/dwYj0QUELXqYV7XUy8kkKB1NqTCQwlNe7t+W8Yzn/ANkFdKZdIQrX/jASltMrJ
+         lFNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712753883; x=1713358683;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ERc0Mc3295DMpduY6C379p9vkt2xRGs6pLrBozDiTnc=;
+        b=IRGbuJ/+GlHDoOc8bEeNItw4jRzvUra+9fEcFlirYGsC84xT5mdG9DnCzV/CM53FeE
+         M5ESYnAkha5PcI+Js17A/f/CCXrFsZVhXaIOA0li59UlaKHihHpLzCOZxizRSZVNNEWJ
+         OTbVAye0AAe65VyW0dZ/VNQap5I2MKyENKWgEyPi8O5m0+LXbBIcr9U7neXyPTnnGoXy
+         oLA6GZj06mXUzPjHZZ/gb3TCKcEINClmmL5swKMIGQ1rtvIGwn2w4Owz8i4hUcC2+Kwo
+         J8Lq/V6+rDC55vnfXZf9x4kzX+/dbTCppl73L//iowyI4Oy1KPN0ZrS5wddGw62Di18G
+         JXlA==
+X-Gm-Message-State: AOJu0YzkdUsTKf60gZ+dl1NbZUcniPkd4uDyFFskHWEqJsOTPGkxNoa/
+	DwntrBmleRbPsUCOFMpuIX11+25beEuSszrKJZIEaqpFLDFGOd1ncKZwteqaUxtWGw==
+X-Google-Smtp-Source: AGHT+IG0BPNBEFTKAfB0H0Zu/fSg3ECNuPRVpK4VhqxdwzkPz4eA4nBzPl2mnc36IMRVR/eE3FxPQA==
+X-Received: by 2002:a17:907:86a7:b0:a52:176c:15f with SMTP id qa39-20020a17090786a700b00a52176c015fmr223791ejc.15.1712753882634;
+        Wed, 10 Apr 2024 05:58:02 -0700 (PDT)
+Received: from gmail.com (1F2EF1A5.nat.pool.telekom.hu. [31.46.241.165])
+        by smtp.gmail.com with ESMTPSA id q18-20020aa7d452000000b0056e247de8e3sm6418852edr.1.2024.04.10.05.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Apr 2024 05:58:02 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date: Wed, 10 Apr 2024 14:58:00 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Conrad Grobler <grobler@google.com>,
+	Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH] x86/boot/64: Clear CR4.PGE to disable global 1:1 mappings
+Message-ID: <ZhaM2N3EONa7tNgl@gmail.com>
+References: <20240410102520.348017-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhZsOvM3uTP6nTnZ@localhost.localdomain>
+In-Reply-To: <20240410102520.348017-2-ardb+git@google.com>
 
-On 2024-04-10 12:38:50 [+0200], Frederic Weisbecker wrote:
-> > Anyway, I misunderstood the concept
-> > before. That means we need to keep that counter here and a
-> > migrate_disable() is needed to avoid CPU migration which is sad.
+
+* Ard Biesheuvel <ardb+git@google.com> wrote:
+
+> From: Ard Biesheuvel <ardb@kernel.org>
 > 
-> I fear that won't work either. The task is then pinned but another
-> task can come up on that CPU and its software events will be ignored...
-
-oh, right.
-
-> Some alternatives:
+> The early 64-bit boot code must be entered with a 1:1 mapping of the
+> bootable image, but it cannot operate without a 1:1 mapping of all the
+> assets in memory that it accesses, and therefore, it creates such
+> mappings for all known assets upfront, and additional ones on demand
+> when a page fault happens on a memory address.
 > 
-> _ Clear event->pending_work = 0 after perf_sigtrap(), preventing an
-> event in there from adding a new task work. We may miss a signal though...
+> These mappings are created with the global bit G set, as the flags used
+> to create page table descriptors are based on __PAGE_KERNEL_LARGE_EXEC
+> defined by the core kernel, even though the context where these mappings
+> are used is very different.
 > 
-> _ Make the recursion context per task on -RT...
+> This means that the TLB maintenance carried out by the decompressor is
+> not sufficient if it is entered with CR4.PGE enabled, which has been
+> observed to happen with the stage0 bootloader of project Oak. While this
+> is a dubious practice if no global mappings are being used to begin
+> with, the decompressor is clearly at fault here for creating global
+> mappings and not performing the appropriate TLB maintenance.
+> 
+> Since commit
+> 
+>   f97b67a773cd84b ("x86/decompressor: Only call the trampoline when changing paging levels")
+> 
+> CR4 is no longer modified by the decompressor if no change in the number
+> of paging levels is needed. Before that, CR4 would always be set to a
+> known value with PGE cleared.
 
-The per-task counter would be indeed the easiest thing to do. But then
-only for task context, right?
+So if we do this for robustness & historical pre-f97b67a773cd84b 
+quirk-reliance's sake, I'd prefer if we loaded a known CR4 value again, 
+instead of just turning off the PGE bit.
 
-But why would we miss a signal if we clean event->pending_work late?
-Isn't cleaning late same as clearing in
-perf_swevent_put_recursion_context()?
-If clearing pending_work late works, I would prefer to avoid yet another
-per-task counter if possible.
+It's probably also a tiny bit faster, as no CR4 read has to be performed.
 
-> > > Thanks.
+Thanks,
 
-Sebastian
+	Ingo
