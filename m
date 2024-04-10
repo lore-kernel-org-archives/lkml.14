@@ -1,128 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ma-mailsvcp-mx-lapp03.apple.com (ma-mailsvcp-mx-lapp03.apple.com [17.32.222.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB2A184122;
-	Wed, 10 Apr 2024 22:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBE1181CE4
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 22:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.32.222.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712787377; cv=none; b=n+RJxXtbYwyFwWuu7D8rW4LBswIBRNTtTIfj/7n1Sw+Ponta/m9n2HUHp2XdK2e1bqtC3Qh3rxKPwngwNNsqxoE4iPliSlAfegtl32GArquc4bkE+EgsNDFTXYKCMH5U4c0IKgIuM5yY31tPD381+jIwJ4ZgI9JcT3W+XJgyLUQ=
+	t=1712787444; cv=none; b=mu2KAERL1EllvfWRZxN3W3U/ngV5paXehKkkjDXOABhZbjWy2RTuUTtdxldcQ3YGPQMNZPsZ0+AhiizlIE1+UjPK5EUlDQYHDncq1xfNbKzh0Rtx12WGHAtpnIqoE5goxfvH5SrZ+ZAlHpP0bk+/rtNOfrIgmTt91lqdUXCMeEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712787377; c=relaxed/simple;
-	bh=eSgO5pW5YMKLhnbQoXlFyr4GSxxlml3nI3ZwqFFRmh4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oX+UWRk6TuOpjEoQqaJzFY2EZSWVsxoDfK7GCOgNm31KI6I1wZJgRBbw5Bt+Kofe4IEE7no/8R0bd8hy/tbU42xnrO7U22Xi13CIOf3AEK0z/xIcHfT7WjGMTjpthhsZ0S2S3ax6kEA3ICK4jdTxjQ8gdWc9ADfn2WB/pnmROYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9n8ET68; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712787444; c=relaxed/simple;
+	bh=nHTm4IkHTzWerMJ8v9avrsZE5U0RCkuIrXkQ+1yUBVM=;
+	h=From:To:Cc:Subject:Date:Message-id:MIME-version; b=o5NRnnqofwVnuMdEKnh/x9Gwu/5N7oZ/rOcB4tGbXCaq9u1cDgZKkFH4bq0iTYdVq3ThU0qHoo7LY7uGfeS32ItMfKeKLoG65C2cc2Rbt2hBb65suIneVN+HJr+cpsBq9ArIYv6Wlel2KKXMb14KDA1HztKgUWAci8K6vym0kX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=IiMjK5RZ; arc=none smtp.client-ip=17.32.222.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9n8ET68"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFE8C433F1;
-	Wed, 10 Apr 2024 22:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712787377;
-	bh=eSgO5pW5YMKLhnbQoXlFyr4GSxxlml3nI3ZwqFFRmh4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o9n8ET68D2ZFe/iSKlFkvb35l/MWCS9iIEfC5Ejo2JybPqCdX/Gl4U0OaQc+lSTEV
-	 t3HyqvUBJBi7fybvhAaZrGJtgikm2g7kfT58aK5gt0ZvQMCoanJyiMNOxc79aZnNum
-	 2BdjY3JuJB4rAtqJU6/AulLAX5jjmXTitatKhaV/gkYSeTn642ka4buGDYDnuGqXhb
-	 v9MmIiHozPux3yibIUcOe/P12YDJY0G4GTDHZS0WniA/nN/tLQ03nK8KiuhArxrgVt
-	 oAy5lBLEG4KQ4qpEI8qYpD4XnO4NFBybPaY86KamYElWChe/MAZwQN8SYkzj/z+VwA
-	 9rvJIfDWdcoeA==
-Date: Wed, 10 Apr 2024 23:16:11 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Deepak Gupta <debug@rivosinc.com>
-Cc: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
-	Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
-Message-ID: <20240410-jawless-cavalry-a3eaf9c562a4@spud>
-References: <20240410091106.749233-1-cleger@rivosinc.com>
- <20240410091106.749233-8-cleger@rivosinc.com>
- <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
+	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="IiMjK5RZ"
+Received: from rn-mailsvcp-mta-lapp03.rno.apple.com
+ (rn-mailsvcp-mta-lapp03.rno.apple.com [10.225.203.151])
+ by ma-mailsvcp-mx-lapp03.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SBQ0095AWGDQO30@ma-mailsvcp-mx-lapp03.apple.com> for
+ linux-kernel@vger.kernel.org; Wed, 10 Apr 2024 14:17:16 -0700 (PDT)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=from : to
+ : cc : subject : date : message-id : mime-version : content-transfer-encoding;
+ s=20180706; bh=HetBtjAbeNKKObaWpI5jJ2A3RgaXf6CNF2KW8DL5DY8=;
+ b=IiMjK5RZiajWwizQ4THMkjgco3I5MZzvCZ9sIZnV2Cehh3V/G+pxjwyeYNdb53FF41Fi
+ eoPkTZLvbsBXco2+GL1aLfqgbXlu2VLdageFASHZw6G79tmIsd3kh8PyAA8iqq1cw/Yr
+ cpcfXAoW3+88fVKsyvEUEihJSUadoi9kSCYHTanfpaSNo4VIyovAO9tavLM+JFlalCIt
+ 89jE1JLPW0P5sC8t+bA8QYYvjRD6MyZMDzZT3nC55+k5vNrbMI2cbwVR22e9rQ/N4Gsh
+ Rm2ZUabbgADszZr402cFkxjsMXGnGC2vIoUDcJaYNaLwOS8ZskP+Le8S1ddDAQ1sRaXI 2w==
+Received: from rn-mailsvcp-mmp-lapp03.rno.apple.com
+ (rn-mailsvcp-mmp-lapp03.rno.apple.com [17.179.253.16])
+ by rn-mailsvcp-mta-lapp03.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SBQ00B4SWGO9G91@rn-mailsvcp-mta-lapp03.rno.apple.com>;
+ Wed, 10 Apr 2024 14:17:12 -0700 (PDT)
+Received: from process_milters-daemon.rn-mailsvcp-mmp-lapp03.rno.apple.com by
+ rn-mailsvcp-mmp-lapp03.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0SBQ00L00VZ22L00@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
+ 10 Apr 2024 14:17:12 -0700 (PDT)
+X-Va-A:
+X-Va-T-CD: 062083411fbdfe5b9668648d0dddd4c2
+X-Va-E-CD: cc7eb2f3f4d5c23d41ee639b8390ba78
+X-Va-R-CD: 47ce8353f889a0ce7bfb0502aee22921
+X-Va-ID: 1429ac5e-2a83-4311-a6c5-c195ad9577fa
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: 062083411fbdfe5b9668648d0dddd4c2
+X-V-E-CD: cc7eb2f3f4d5c23d41ee639b8390ba78
+X-V-R-CD: 47ce8353f889a0ce7bfb0502aee22921
+X-V-ID: 64eccdd0-ba58-4f9e-a35c-065e04ed13d3
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-10_06,2024-04-09_01,2023-05-22_02
+Received: from mr41p01nt-relayp01.apple.com ([17.115.0.54])
+ by rn-mailsvcp-mmp-lapp03.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023))
+ with ESMTPSA id <0SBQ00HCRWGK4E00@rn-mailsvcp-mmp-lapp03.rno.apple.com>; Wed,
+ 10 Apr 2024 14:17:09 -0700 (PDT)
+From: Zayd Qumsieh <zayd_qumsieh@apple.com>
+To: zayd_qumsieh@apple.com
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mateusz Guzik <mjguzik@gmail.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
+ Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
+ Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Baoquan He <bhe@redhat.com>, Lecopzer Chen <lecopzer.chen@mediatek.com>,
+ Joel Granados <j.granados@samsung.com>, Dawei Li <dawei.li@shingroup.cn>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
+ Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
+ Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
+ Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] tso: aarch64: Expose TSO for virtualized linux on Apple
+ Silicon
+Date: Wed, 10 Apr 2024 14:16:38 -0700
+Message-id: <20240410211652.16640-1-zayd_qumsieh@apple.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DLrdOXAHzOvEYfLu"
-Content-Disposition: inline
-In-Reply-To: <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
+MIME-version: 1.0
+Content-transfer-encoding: 8bit
 
+x86 CPUs use a TSO memory model. Apple Silicon CPUs have the ability to
+selectively use a TSO memory model. This can be done by setting the
+ACTLR.TSOEN bit to 1. This feature is useful for x86 emulators, since it
+removes the need for emulators to insert memory barriers in order to abide
+by the TSO memory model. This patch series will add ACTLR.TSOEN support to
+virtualized linux on Apple Silicon machines. Userspace will be able to use
+a prctl to change the memory model of the CPU from the default ARM64 memory
+model to a TSO memory model.
 
---DLrdOXAHzOvEYfLu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A simple test can be used to determine if the TSO memory model is in use.
+This must be done on Apple Silicon MacOS Sonoma version 14.4 or later,
+since earlier versions do not support modification of the TSOEN bit.
+https://github.com/saagarjha/TSOEnabler/blob/master/testtso/main.c
 
-On Wed, Apr 10, 2024 at 02:32:41PM -0700, Deepak Gupta wrote:
-> On Wed, Apr 10, 2024 at 11:11:00AM +0200, Cl=E9ment L=E9ger wrote:
-> > Add parsing for Zcmop ISA extension which was ratified in commit
-> > b854a709c00 ("Zcmop is ratified/1.0") of the riscv-isa-manual.
-> >=20
-> > Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
-> > ---
-> > arch/riscv/include/asm/hwcap.h | 1 +
-> > arch/riscv/kernel/cpufeature.c | 1 +
-> > 2 files changed, 2 insertions(+)
-> >=20
-> > diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hw=
-cap.h
-> > index b7551bad341b..cff7660de268 100644
-> > --- a/arch/riscv/include/asm/hwcap.h
-> > +++ b/arch/riscv/include/asm/hwcap.h
-> > @@ -86,6 +86,7 @@
-> > #define RISCV_ISA_EXT_ZCB		77
-> > #define RISCV_ISA_EXT_ZCD		78
-> > #define RISCV_ISA_EXT_ZCF		79
-> > +#define RISCV_ISA_EXT_ZCMOP		80
-> >=20
-> > #define RISCV_ISA_EXT_XLINUXENVCFG	127
-> >=20
-> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeat=
-ure.c
-> > index 09dee071274d..f1450cd7231e 100644
-> > --- a/arch/riscv/kernel/cpufeature.c
-> > +++ b/arch/riscv/kernel/cpufeature.c
-> > @@ -265,6 +265,7 @@ const struct riscv_isa_ext_data riscv_isa_ext[] =3D=
- {
-> > 	__RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
-> > 	__RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
-> > 	__RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
-> > +	__RISCV_ISA_EXT_DATA(zcmop, RISCV_ISA_EXT_ZCMOP),
->=20
-> As per spec zcmop is dependent on zca. So perhaps below ?
->=20
-> __RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZCMOP, RISCV_ISA_EXT_ZCA)
+This program will hang indefinitely if TSO is in use, and will crash almost
+immediately if it is not in use.
 
-What's zicboz got to do with it, copy-pasto I guess?
-If we're gonna imply stuff like this though I think we need some
-comments explaining why it's okay.
+Zayd Qumsieh (3):
+  tso: aarch64: allow linux kernel to read/write ACTLR.TSOEN
+  tso: aarch64: context-switch tso bit on thread switch
+  tso: aarch64: allow userspace to set tso bit using prctl
 
-> > 	__RISCV_ISA_EXT_DATA(zba, RISCV_ISA_EXT_ZBA),
-> > 	__RISCV_ISA_EXT_DATA(zbb, RISCV_ISA_EXT_ZBB),
-> > 	__RISCV_ISA_EXT_DATA(zbc, RISCV_ISA_EXT_ZBC),
-> > --=20
-> > 2.43.0
-> >=20
-> >=20
+ arch/arm64/Kconfig                 | 19 +++++++++
+ arch/arm64/include/asm/processor.h |  4 ++
+ arch/arm64/include/asm/sysreg.h    |  7 ++++
+ arch/arm64/include/asm/tso.h       | 19 +++++++++
+ arch/arm64/kernel/Makefile         |  2 +-
+ arch/arm64/kernel/process.c        | 61 +++++++++++++++++++++++++++++
+ arch/arm64/kernel/tso.c            | 62 ++++++++++++++++++++++++++++++
+ include/uapi/linux/prctl.h         |  9 +++++
+ kernel/sys.c                       | 11 ++++++
+ 9 files changed, 193 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/include/asm/tso.h
+ create mode 100644 arch/arm64/kernel/tso.c
 
---DLrdOXAHzOvEYfLu
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.39.3 (Apple Git-146)
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhcPqwAKCRB4tDGHoIJi
-0re3AP9QmK68/uYxyQ3GXl/aO2Y4Z5DssohLEjC19dZXe0kZCAD9GGfqdzucBPRK
-8Oq4p/rBx7aglYaFYqQkMvbeIZStjwU=
-=a6wq
------END PGP SIGNATURE-----
-
---DLrdOXAHzOvEYfLu--
