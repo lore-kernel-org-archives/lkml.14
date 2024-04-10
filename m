@@ -1,48 +1,23 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2317C129;
-	Wed, 10 Apr 2024 06:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE08C20DDB
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712729158; cv=none; b=h+4MeiSxLFE9NZ+UYMmLsk8DAvk0/lmvaheOnnmN3j1mzcLt9lfQkbVOFVcIvYoi87gDsfNeKfrIlFcFsj0zddejrYYRf7XB919KkedH1fNHtcxQf6IlujixI29uotvM0etKuOF6gAqtiThrUfjJMNRkwaoSTx7VQcMQZJ7Z3Yc=
+	t=1712729260; cv=none; b=axxiqtl3osTGDBJqM00ebRNNgI9g2uPDurJBd7TqyzY3NGW7s95VbzUj9FUb+ACJ6Np6clDGtbpSpmqvzgAFvriOHuVHYIOx5UNQ1SrqWcKVWQymhgsCL/Er61hVpdBo6a5YenWIlCYJk/N9RXOxIQBpM9gxUTmVBtMR6mk7P4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712729158; c=relaxed/simple;
-	bh=DVHB2q2GJovhxPFwVciTSpWQoweRjR50YuTmJuOXzoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cE2D3ncF69EcO66DZQn0d8jNCUh+ch8bs0eY4qVmTTau2wDVtuo1epDVoAa4gMWh4Bdvw/UeoIyiTafmxB6Z1PXoef+gosnL6LaLqwFHi3wYDNT18Y14Flye0vcTVCnYaGZV8aMGU0W8n+cWgQW32FIlzw/03W1L8kYVMpjuAw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=K8Sgwi6f; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="K8Sgwi6f"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43A65i81084426;
-	Wed, 10 Apr 2024 01:05:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712729144;
-	bh=LOHKtXEiE3d6AuJ2L8rr+IMyqwcKlUeg9Up/wDw6oeg=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=K8Sgwi6fBQ0zTyropujuPdrOfaQV2UUmZE2PBKyf+cZHsxXJ5CFmHItPBVpxyqu2e
-	 fDqG5Ab0d3bMNSDwQIcwiEwBrLOxeswWYUy0FLBdIAV2Rstqd5r+AcL9R3eHhZm7Sg
-	 a5/fC2cmDVNobSorivWJsFZ4653gSEtKe5XpWg3A=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43A65iSi007048
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Apr 2024 01:05:44 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Apr 2024 01:05:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Apr 2024 01:05:43 -0500
-Received: from [172.24.20.156] (lt5cd2489kgj.dhcp.ti.com [172.24.20.156])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43A65eI9070155;
-	Wed, 10 Apr 2024 01:05:40 -0500
-Message-ID: <f999020f-0f07-4eb3-bc59-f1a0f7237af7@ti.com>
-Date: Wed, 10 Apr 2024 11:35:39 +0530
+	s=arc-20240116; t=1712729260; c=relaxed/simple;
+	bh=WX1tDgIme+L3XE+HZdKDtwNhwJATQz0mcJAPfpArHVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EYz0Qblyc08u3h+7icbClS/PnJ72F+qgxfqQHroygtxv6w9aPXK7fkDgnMPvb3Cs5bcPw6TNeq1QiuK/r538WnB21LMzFYUbHr+K63hV0WIVuGQOS99I8azhSboPVKlPgwlMPfbXjv82B7zeL+EN8vztZfph5Hn2tv+r8linuyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BDECDC0007;
+	Wed, 10 Apr 2024 06:07:33 +0000 (UTC)
+Message-ID: <d534e73a-a7c0-4116-98bf-09617b7f89b3@ghiti.fr>
+Date: Wed, 10 Apr 2024 08:07:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,80 +25,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] arm64: dts: ti: k3-j7200-main: Add the MAIN domain
- watchdog instances
-To: Neha Malcom Francis <n-francis@ti.com>, <robh@kernel.org>,
-        <conor+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <vigneshr@ti.com>, <nm@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>, <u-kumar1@ti.com>
-References: <20240326122723.2329402-1-n-francis@ti.com>
- <20240326122723.2329402-5-n-francis@ti.com>
+Subject: Re: [PATCH riscv/fixes] riscv: hwprobe: fix invalid sign extension
+ for RISCV_HWPROBE_EXT_ZVFHMIN
 Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20240326122723.2329402-5-n-francis@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+To: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <20240409143839.558784-1-cleger@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240409143839.558784-1-cleger@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
-Hi Neha
+Hi Clément,
 
-On 3/26/2024 5:57 PM, Neha Malcom Francis wrote:
-> There are 4 watchdog instances in the MAIN domain:
-> 	* one each for the 2 A72 cores
-> 	* one each for the 2 R5F cores
+On 09/04/2024 16:38, Clément Léger wrote:
+> The current definition yields a negative 32bits signed value which
+> result in a mask with is obviously incorrect. Replace it by using a
+> 1ULL bit shift value to obtain a single set bit mask.
 >
-> Currently, the devicetree only describes watchdog instances for the A72
-> cores and enables them. Describe the remaining but reserve them as they
-> will be used by their respective firmware.
->
-> Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
+> Fixes: 5dadda5e6a59 ("riscv: hwprobe: export Zvfh[min] ISA extensions")
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
 > ---
->   arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 27 +++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
+>   arch/riscv/include/uapi/asm/hwprobe.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> index 657f9cc9f4ea..c448c2218e23 100644
-> --- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> @@ -1254,6 +1254,33 @@ watchdog1: watchdog@2210000 {
->   		assigned-clock-parents = <&k3_clks 253 5>;
->   	};
->   
-> +	/*
-> +	 * The following RTI instances are coupled with MCU R5Fs so
-> +	 * keeping them reserved as these will be used by their respective
-> +	 * firmware
-> +	 */
-> +	watchdog2: watchdog@23c0000 {
-> +		compatible = "ti,j7-rti-wdt";
-> +		reg = <0x00 0x23c0000 0x00 0x100>;
-> +		clocks = <&k3_clks 258 1>;
-> +		power-domains = <&k3_pds 258 TI_SCI_PD_EXCLUSIVE>;
-> +		assigned-clocks = <&k3_clks 258 1>;
-> +		assigned-clock-parents = <&k3_clks 258 5>;
-> +		/* reserved for MAIN_R5F0_0 */
-> +		status = "reserved";
-> +	};
-> +
-> +	watchdog3: watchdog@23d0000 {
-> +		compatible = "ti,j7-rti-wdt";
-> +		reg = <0x00 0x23d0000 0x00 0x100>;
-> +		clocks = <&k3_clks 259 1>;
-> +		power-domains = <&k3_pds 259 TI_SCI_PD_EXCLUSIVE>;
-> +		assigned-clocks = <&k3_clks 259 1>;
-> +		assigned-clock-parents = <&k3_clks 259 5>;
-> +		/* reserved for MAIN_R5F0_1 */
-> +		status = "reserved";
-> +	};
-> +
-
-Please see, if this make more sense to have label as watchdog28 and 
-watchdog29, to align with TRM.
-
-Also request to add mcu domain 2 watchdog as well.
+> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+> index 9f2a8e3ff204..2902f68dc913 100644
+> --- a/arch/riscv/include/uapi/asm/hwprobe.h
+> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
+> @@ -54,7 +54,7 @@ struct riscv_hwprobe {
+>   #define		RISCV_HWPROBE_EXT_ZFHMIN	(1 << 28)
+>   #define		RISCV_HWPROBE_EXT_ZIHINTNTL	(1 << 29)
+>   #define		RISCV_HWPROBE_EXT_ZVFH		(1 << 30)
+> -#define		RISCV_HWPROBE_EXT_ZVFHMIN	(1 << 31)
+> +#define		RISCV_HWPROBE_EXT_ZVFHMIN	(1ULL << 31)
+>   #define		RISCV_HWPROBE_EXT_ZFA		(1ULL << 32)
+>   #define		RISCV_HWPROBE_EXT_ZTSO		(1ULL << 33)
+>   #define		RISCV_HWPROBE_EXT_ZACAS		(1ULL << 34)
 
 
->   	main_timer0: timer@2400000 {
->   		compatible = "ti,am654-timer";
->   		reg = <0x00 0x2400000 0x00 0x400>;
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
