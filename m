@@ -1,528 +1,91 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A1713C905;
-	Wed, 10 Apr 2024 07:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C013AD30;
+	Wed, 10 Apr 2024 07:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712733062; cv=none; b=lESTFVwj+89yExskVQv+qFKzn4Bz5CDtBOPhq0QoiVCowVgJhv21idJv8xGe3+SMfrM/5UDWkXLSNCW+nGT3azKDbLKtzyOmKaGYqcRsn/+KaHkCi7dhozEYbW7/33XY+bC2mXz0ecGr06lNSpqBLPMJI4EPoPGV9GCezpq7Hvk=
+	t=1712733182; cv=none; b=RBvhLExSv97S1uEKG5bXAm1uEcL/ZXkJ//5wcVCm2trC2Iwy5mT1WiNh7sSL9fxVw+vTkeVhha/Dbf9saxtsaqtF6JRGn8HJsMI0IEDU+z/9OYWNTFGmzF+ZRFi82llc07tx3N2fJpGZIwWXALb2WVCxRfuldjbajlzKLypbAsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712733062; c=relaxed/simple;
-	bh=iIhTqQKGFYGbMX+0WhDDRmnoQ6sHNC2UxWsKCD/mCsI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kiVANZmEmYaRnI3DObWc/KKrDi8Crd95BjIZ3LvHLoetB//YEfxuoZnVAEKt2NRzJ4lgHMeV6wBC521Bjnqcx31BQFjWa9xx7xt5TsvubdXpH9eXqplHSrkh8y5BTtNl3oMKxtwbvVk4z+djB2MRHQs+lXYIqDdEPVPVyC/r88c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KUhBgg2x; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712733182; c=relaxed/simple;
+	bh=2xuaVJiYV98yQZyJqCo8wDjLB4OZ8dHeBSX32T6poTs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=b3Io/0pJZiu5FGeCI2rXF9sya/Zuz1/yIGn0/LEwFUv0yQUUkiJf9A9pa7ZvGiEnw8w8iLby85z8VqnFk/YP0UDGCm0ewM0kG/KWIVvvTANgbZ4WbNAIgaYZ3ce+p/xC5yath1ZCIe7oScwagtfBRRp2THqFHX6MJwDEerddQnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRJxY7p5; arc=none smtp.client-ip=209.85.214.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KUhBgg2x"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 309DCE0003;
-	Wed, 10 Apr 2024 07:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712733058;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uM2ai5Wl9STzyxfvvo0m0/G2zlemCl8YkRDBrWtIT1c=;
-	b=KUhBgg2xeu8HecQD265ZFSEj8IsuJDB4A3PRy6hzw3htLxdT5CP4DbBC8p1JRB7K5dRUC/
-	hlGWF/L2sMJIRrgM4cks6tYqz9pQnWcJIcW658fcpp419b+ARUwn+4O0KTsYCe/fMacVBc
-	+k5Ju6zHy/zzHZOTRLo+V314A8W8iSbrl1+xTECrylw17QoPe9OTTWBtID9lo52Vt9axol
-	1gfLSzMo+HiFH2qk1EN3g79N18BHBArqfNzLaMwWUGbsotvn4t2ssBDHrHtOvOkN4mvNB1
-	yjKyvR0m9CYnotu6532JqAIbzFCEsVlUIMNPy0bijbxbRzJzOckKJp86c83EqQ==
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Date: Wed, 10 Apr 2024 09:10:34 +0200
-Subject: [PATCH 2/2] wifi: wilc1000: convert list management to RCU
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRJxY7p5"
+Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so6601905ad.0;
+        Wed, 10 Apr 2024 00:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712733180; x=1713337980; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=v8Z0HpTMm7JW0HfSi1migXbtT3L5ZfuOmq81pu08fxY=;
+        b=VRJxY7p5egdlDZm/rODV84LBK9rf1qTTfDxSAScpwgvnvqQorofUcgFZD+EjwqXxxb
+         CEi+4kLzryoo3mWJz14UfoWUXko7bF7FSebmu36wk0dFXJkTTNQTYCCyup5kdf8hhqj2
+         J2plN8SuPPMHaFt0jWIyGYHnfFmUNB5k/X6PdPhvYzWXKPl5VKuG6r6+1wB+3PfCQJ78
+         snoKKCt+clqBxy223cRzcwFIgPXtHDDfD1M9txjD9QBjlEhYUM9WHSO+h+E1nMv9pA7h
+         aBPd4qQomXW3cFHduf74VQyVmPTv6JveKRrn83TAYO0GOKQ5ZvieESUidI1vO86uQ4SL
+         O9Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712733180; x=1713337980;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8Z0HpTMm7JW0HfSi1migXbtT3L5ZfuOmq81pu08fxY=;
+        b=McLksPKrtnmMw3Yh7+v+gVGOsLS+Hg6tVyrv9/aFbAhTohoiZ6gT4vXuXkiJA3AIMK
+         HGK/e+kTKZlLna62Wuro9GivswzpVbgB665davjFvl0VmiDMvayV3x/oEK0WawEVE9k5
+         D8pwStAwDZw2M5PrX4o5jtEpgbdGBS2RTEgkZQPRk5MoCFEobYiKnQwXZYGTrgim8mQ9
+         JyDZFu+yKsVoULLzZ5/57YtR9GGY2M557P0h13i7USCKx5xymqx+ojlBdmpgbZfSw4bW
+         r9EId3ETqExrN1T+WFNs2Hcn3BS9EXmc5vmIK2k4FfG65fxc9KzfNrYA4hkh3rz/o76x
+         VebA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJZ8f8CMKZj3bfe/F7rWp9lcgLVZX6rVjYevKg9zyOjGFPzpyMeDqvRfLKpW7xJK8s4n4b/pVVHe4sfWbghIZEsvk7FvLyLyFXmj9OFdAnrbUGomiR2ezi9W4ZIfeGpykSsWlPnkl3NJOVAOHzNl29qJqVGMAP9gmwve5oqbaJ4iYu4A==
+X-Gm-Message-State: AOJu0YyOEMBRB1S+Lf5G+1RwistUNYinSS9nR6LzcrNkysaBhjzyBptq
+	KzDDQ+1K5Co3O8GUzSiMZstiXkEyST5gepir8s8Ubuqoml/ZugoT
+X-Google-Smtp-Source: AGHT+IFMrqnJaJlYiQxwL0LAGuOQ3kVshpqFKiYiLZtdnpGtgTDNithiisZ0+SBC0c+D4ORu1fIAqA==
+X-Received: by 2002:a17:903:a8c:b0:1e4:3c7f:c179 with SMTP id mo12-20020a1709030a8c00b001e43c7fc179mr5797235plb.12.1712733179945;
+        Wed, 10 Apr 2024 00:12:59 -0700 (PDT)
+Received: from [172.27.224.145] (ec2-16-163-40-128.ap-east-1.compute.amazonaws.com. [16.163.40.128])
+        by smtp.gmail.com with ESMTPSA id v12-20020a170902f0cc00b001e002673fddsm10100548pla.194.2024.04.10.00.12.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 00:12:59 -0700 (PDT)
+Message-ID: <40a8d9d3-20a8-44e8-96d2-0dcd8627cfc8@gmail.com>
+Date: Wed, 10 Apr 2024 15:12:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240410-wilc_srcu_to_rcu-v1-2-a9ff5b10feaa@bootlin.com>
-References: <20240410-wilc_srcu_to_rcu-v1-0-a9ff5b10feaa@bootlin.com>
-In-Reply-To: <20240410-wilc_srcu_to_rcu-v1-0-a9ff5b10feaa@bootlin.com>
-To: Ajay Singh <ajay.kathat@microchip.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, Kalle Valo <kvalo@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: alexis.lothore@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] RISCV: KVM: add tracepoints for entry and exit events
+To: Shenlin Liang <liangshenlin@eswincomputing.com>, anup@brainfault.org,
+ atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, linux-perf-users@vger.kernel.org
+References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+ <20240328031220.1287-2-liangshenlin@eswincomputing.com>
+Content-Language: en-US
+From: Eric Cheng <eric.cheng.linux@gmail.com>
+In-Reply-To: <20240328031220.1287-2-liangshenlin@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-wilc1000 driver currently uses SRCU API to manage vif list. There is no
-real reason to use SRCU API here, and it makes things slightly more
-complicated (we need to handle a SRCU index as well as a srcu_struct) than
-classical RCU.
+On 3/28/2024 11:12 AM, Shenlin Liang wrote:
+> Like other architectures, RISCV KVM also needs to add these event
+> tracepoints to count the number of times kvm guest entry/exit.
+> 
+> Signed-off-by: Shenlin Liang <liangshenlin@eswincomputing.com>
+> ---
+>   arch/riscv/kvm/trace_riscv.h | 60 ++++++++++++++++++++++++++++++++++++
 
-Switch SRCU APIs to RCU APIs.
-
-Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
----
- drivers/net/wireless/microchip/wilc1000/cfg80211.c | 41 +++++++++------------
- drivers/net/wireless/microchip/wilc1000/hif.c      | 15 +++-----
- drivers/net/wireless/microchip/wilc1000/netdev.c   | 43 +++++++++-------------
- drivers/net/wireless/microchip/wilc1000/netdev.h   |  5 +--
- drivers/net/wireless/microchip/wilc1000/wlan.c     |  5 +--
- 5 files changed, 45 insertions(+), 64 deletions(-)
-
-diff --git a/drivers/net/wireless/microchip/wilc1000/cfg80211.c b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-index 089102ed9ae5..7d9fb9f2d527 100644
---- a/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-+++ b/drivers/net/wireless/microchip/wilc1000/cfg80211.c
-@@ -237,12 +237,11 @@ static int set_channel(struct wiphy *wiphy,
- 	struct wilc_vif *vif;
- 	u32 channelnum;
- 	int result;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_wl_to_vif(wl);
- 	if (IS_ERR(vif)) {
--		srcu_read_unlock(&wl->srcu, srcu_idx);
-+		rcu_read_unlock();
- 		return PTR_ERR(vif);
- 	}
- 
-@@ -253,7 +252,7 @@ static int set_channel(struct wiphy *wiphy,
- 	if (result)
- 		netdev_err(vif->ndev, "Error in setting channel\n");
- 
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- 	return result;
- }
- 
-@@ -806,9 +805,8 @@ static int set_wiphy_params(struct wiphy *wiphy, u32 changed)
- 	struct wilc *wl = wiphy_priv(wiphy);
- 	struct wilc_vif *vif;
- 	struct wilc_priv *priv;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_wl_to_vif(wl);
- 	if (IS_ERR(vif))
- 		goto out;
-@@ -863,7 +861,7 @@ static int set_wiphy_params(struct wiphy *wiphy, u32 changed)
- 		netdev_err(priv->dev, "Error in setting WIPHY PARAMS\n");
- 
- out:
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- 	return ret;
- }
- 
-@@ -1539,20 +1537,19 @@ static struct wireless_dev *add_virtual_intf(struct wiphy *wiphy,
- 
- 	if (type == NL80211_IFTYPE_MONITOR) {
- 		struct net_device *ndev;
--		int srcu_idx;
- 
--		srcu_idx = srcu_read_lock(&wl->srcu);
-+		rcu_read_lock();
- 		vif = wilc_get_vif_from_type(wl, WILC_AP_MODE);
- 		if (!vif) {
- 			vif = wilc_get_vif_from_type(wl, WILC_GO_MODE);
- 			if (!vif) {
--				srcu_read_unlock(&wl->srcu, srcu_idx);
-+				rcu_read_unlock();
- 				goto validate_interface;
- 			}
- 		}
- 
- 		if (vif->monitor_flag) {
--			srcu_read_unlock(&wl->srcu, srcu_idx);
-+			rcu_read_unlock();
- 			goto validate_interface;
- 		}
- 
-@@ -1560,12 +1557,12 @@ static struct wireless_dev *add_virtual_intf(struct wiphy *wiphy,
- 		if (ndev) {
- 			vif->monitor_flag = 1;
- 		} else {
--			srcu_read_unlock(&wl->srcu, srcu_idx);
-+			rcu_read_unlock();
- 			return ERR_PTR(-EINVAL);
- 		}
- 
- 		wdev = &vif->priv.wdev;
--		srcu_read_unlock(&wl->srcu, srcu_idx);
-+		rcu_read_unlock();
- 		return wdev;
- 	}
- 
-@@ -1613,7 +1610,7 @@ static int del_virtual_intf(struct wiphy *wiphy, struct wireless_dev *wdev)
- 	list_del_rcu(&vif->list);
- 	wl->vif_num--;
- 	mutex_unlock(&wl->vif_mutex);
--	synchronize_srcu(&wl->srcu);
-+	synchronize_rcu();
- 	return 0;
- }
- 
-@@ -1638,25 +1635,23 @@ static void wilc_set_wakeup(struct wiphy *wiphy, bool enabled)
- {
- 	struct wilc *wl = wiphy_priv(wiphy);
- 	struct wilc_vif *vif;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_wl_to_vif(wl);
- 	if (IS_ERR(vif)) {
--		srcu_read_unlock(&wl->srcu, srcu_idx);
-+		rcu_read_unlock();
- 		return;
- 	}
- 
- 	netdev_info(vif->ndev, "cfg set wake up = %d\n", enabled);
- 	wilc_set_wowlan_trigger(vif, enabled);
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- static int set_tx_power(struct wiphy *wiphy, struct wireless_dev *wdev,
- 			enum nl80211_tx_power_setting type, int mbm)
- {
- 	int ret;
--	int srcu_idx;
- 	s32 tx_power = MBM_TO_DBM(mbm);
- 	struct wilc *wl = wiphy_priv(wiphy);
- 	struct wilc_vif *vif;
-@@ -1664,10 +1659,10 @@ static int set_tx_power(struct wiphy *wiphy, struct wireless_dev *wdev,
- 	if (!wl->initialized)
- 		return -EIO;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_wl_to_vif(wl);
- 	if (IS_ERR(vif)) {
--		srcu_read_unlock(&wl->srcu, srcu_idx);
-+		rcu_read_unlock();
- 		return -EINVAL;
- 	}
- 
-@@ -1679,7 +1674,7 @@ static int set_tx_power(struct wiphy *wiphy, struct wireless_dev *wdev,
- 	ret = wilc_set_tx_power(vif, tx_power);
- 	if (ret)
- 		netdev_err(vif->ndev, "Failed to set tx power\n");
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- 
- 	return ret;
- }
-@@ -1762,7 +1757,6 @@ static void wlan_init_locks(struct wilc *wl)
- 	init_completion(&wl->cfg_event);
- 	init_completion(&wl->sync_event);
- 	init_completion(&wl->txq_thread_started);
--	init_srcu_struct(&wl->srcu);
- }
- 
- void wlan_deinit_locks(struct wilc *wilc)
-@@ -1773,7 +1767,6 @@ void wlan_deinit_locks(struct wilc *wilc)
- 	mutex_destroy(&wilc->txq_add_to_head_cs);
- 	mutex_destroy(&wilc->vif_mutex);
- 	mutex_destroy(&wilc->deinit_lock);
--	cleanup_srcu_struct(&wilc->srcu);
- }
- 
- int wilc_cfg80211_init(struct wilc **wilc, struct device *dev, int io_type,
-diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
-index 3925ca653e80..919de6ffb821 100644
---- a/drivers/net/wireless/microchip/wilc1000/hif.c
-+++ b/drivers/net/wireless/microchip/wilc1000/hif.c
-@@ -1570,12 +1570,11 @@ void wilc_network_info_received(struct wilc *wilc, u8 *buffer, u32 length)
- 	struct host_if_drv *hif_drv;
- 	struct host_if_msg *msg;
- 	struct wilc_vif *vif;
--	int srcu_idx;
- 	int result;
- 	int id;
- 
- 	id = get_unaligned_le32(&buffer[length - 4]);
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_vif_from_idx(wilc, id);
- 	if (!vif)
- 		goto out;
-@@ -1607,7 +1606,7 @@ void wilc_network_info_received(struct wilc *wilc, u8 *buffer, u32 length)
- 		kfree(msg);
- 	}
- out:
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- void wilc_gnrl_async_info_received(struct wilc *wilc, u8 *buffer, u32 length)
-@@ -1615,14 +1614,13 @@ void wilc_gnrl_async_info_received(struct wilc *wilc, u8 *buffer, u32 length)
- 	struct host_if_drv *hif_drv;
- 	struct host_if_msg *msg;
- 	struct wilc_vif *vif;
--	int srcu_idx;
- 	int result;
- 	int id;
- 
- 	mutex_lock(&wilc->deinit_lock);
- 
- 	id = get_unaligned_le32(&buffer[length - 4]);
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_vif_from_idx(wilc, id);
- 	if (!vif)
- 		goto out;
-@@ -1649,7 +1647,7 @@ void wilc_gnrl_async_info_received(struct wilc *wilc, u8 *buffer, u32 length)
- 		kfree(msg);
- 	}
- out:
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- 	mutex_unlock(&wilc->deinit_lock);
- }
- 
-@@ -1657,12 +1655,11 @@ void wilc_scan_complete_received(struct wilc *wilc, u8 *buffer, u32 length)
- {
- 	struct host_if_drv *hif_drv;
- 	struct wilc_vif *vif;
--	int srcu_idx;
- 	int result;
- 	int id;
- 
- 	id = get_unaligned_le32(&buffer[length - 4]);
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	vif = wilc_get_vif_from_idx(wilc, id);
- 	if (!vif)
- 		goto out;
-@@ -1687,7 +1684,7 @@ void wilc_scan_complete_received(struct wilc *wilc, u8 *buffer, u32 length)
- 		}
- 	}
- out:
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- int wilc_remain_on_channel(struct wilc_vif *vif, u64 cookie, u16 chan,
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.c b/drivers/net/wireless/microchip/wilc1000/netdev.c
-index 710e29bea560..73f56f7b002b 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.c
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.c
-@@ -127,30 +127,28 @@ void wilc_wlan_set_bssid(struct net_device *wilc_netdev, const u8 *bssid,
- 
- int wilc_wlan_get_num_conn_ifcs(struct wilc *wilc)
- {
--	int srcu_idx;
- 	u8 ret_val = 0;
- 	struct wilc_vif *vif;
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wilc, vif) {
- 		if (!is_zero_ether_addr(vif->bssid))
- 			ret_val++;
- 	}
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- 	return ret_val;
- }
- 
- static void wilc_wake_tx_queues(struct wilc *wl)
- {
--	int srcu_idx;
- 	struct wilc_vif *ifc;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wl, ifc) {
- 		if (ifc->mac_opened && netif_queue_stopped(ifc->ndev))
- 			netif_wake_queue(ifc->ndev);
- 	}
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- static int wilc_txq_task(void *vp)
-@@ -655,7 +653,6 @@ static int wilc_set_mac_addr(struct net_device *dev, void *p)
- 	struct sockaddr *addr = (struct sockaddr *)p;
- 	unsigned char mac_addr[ETH_ALEN];
- 	struct wilc_vif *tmp_vif;
--	int srcu_idx;
- 
- 	if (!is_valid_ether_addr(addr->sa_data))
- 		return -EADDRNOTAVAIL;
-@@ -667,19 +664,19 @@ static int wilc_set_mac_addr(struct net_device *dev, void *p)
- 
- 	/* Verify MAC Address is not already in use: */
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wilc, tmp_vif) {
- 		wilc_get_mac_address(tmp_vif, mac_addr);
- 		if (ether_addr_equal(addr->sa_data, mac_addr)) {
- 			if (vif != tmp_vif) {
--				srcu_read_unlock(&wilc->srcu, srcu_idx);
-+				rcu_read_unlock();
- 				return -EADDRNOTAVAIL;
- 			}
--			srcu_read_unlock(&wilc->srcu, srcu_idx);
-+			rcu_read_unlock();
- 			return 0;
- 		}
- 	}
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- 
- 	result = wilc_set_mac_address(vif, (u8 *)addr->sa_data);
- 	if (result)
-@@ -767,15 +764,14 @@ netdev_tx_t wilc_mac_xmit(struct sk_buff *skb, struct net_device *ndev)
- 						wilc_tx_complete);
- 
- 	if (queue_count > FLOW_CONTROL_UPPER_THRESHOLD) {
--		int srcu_idx;
- 		struct wilc_vif *vif;
- 
--		srcu_idx = srcu_read_lock(&wilc->srcu);
-+		rcu_read_lock();
- 		wilc_for_each_vif(wilc, vif) {
- 			if (vif->mac_opened)
- 				netif_stop_queue(vif->ndev);
- 		}
--		srcu_read_unlock(&wilc->srcu, srcu_idx);
-+		rcu_read_unlock();
- 	}
- 
- 	return NETDEV_TX_OK;
-@@ -819,13 +815,12 @@ void wilc_frmw_to_host(struct wilc *wilc, u8 *buff, u32 size,
- 	unsigned int frame_len = 0;
- 	struct wilc_vif *vif;
- 	struct sk_buff *skb;
--	int srcu_idx;
- 	int stats;
- 
- 	if (!wilc)
- 		return;
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	wilc_netdev = get_if_handler(wilc, buff);
- 	if (!wilc_netdev)
- 		goto out;
-@@ -853,15 +848,14 @@ void wilc_frmw_to_host(struct wilc *wilc, u8 *buff, u32 size,
- 		netdev_dbg(wilc_netdev, "netif_rx ret value is: %d\n", stats);
- 	}
- out:
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- void wilc_wfi_mgmt_rx(struct wilc *wilc, u8 *buff, u32 size, bool is_auth)
- {
--	int srcu_idx;
- 	struct wilc_vif *vif;
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wilc, vif) {
- 		struct ieee80211_mgmt *mgmt = (struct ieee80211_mgmt *)buff;
- 		u16 type = le16_to_cpup((__le16 *)buff);
-@@ -882,7 +876,7 @@ void wilc_wfi_mgmt_rx(struct wilc *wilc, u8 *buff, u32 size, bool is_auth)
- 		if (vif->monitor_flag)
- 			wilc_wfi_monitor_rx(wilc->monitor_dev, buff, size);
- 	}
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- }
- 
- static const struct net_device_ops wilc_netdev_ops = {
-@@ -912,7 +906,7 @@ void wilc_netdev_cleanup(struct wilc *wilc)
- 		list_del_rcu(&vif->list);
- 		wilc->vif_num--;
- 		mutex_unlock(&wilc->vif_mutex);
--		synchronize_srcu(&wilc->srcu);
-+		synchronize_rcu();
- 		if (vif->ndev)
- 			unregister_netdev(vif->ndev);
- 	}
-@@ -931,16 +925,15 @@ static u8 wilc_get_available_idx(struct wilc *wl)
- {
- 	int idx = 0;
- 	struct wilc_vif *vif;
--	int srcu_idx;
- 
--	srcu_idx = srcu_read_lock(&wl->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wl, vif) {
- 		if (vif->idx == 0)
- 			idx = 1;
- 		else
- 			idx = 0;
- 	}
--	srcu_read_unlock(&wl->srcu, srcu_idx);
-+	rcu_read_unlock();
- 	return idx;
- }
- 
-@@ -990,7 +983,7 @@ struct wilc_vif *wilc_netdev_ifc_init(struct wilc *wl, const char *name,
- 	list_add_tail_rcu(&vif->list, &wl->vif_list);
- 	wl->vif_num += 1;
- 	mutex_unlock(&wl->vif_mutex);
--	synchronize_srcu(&wl->srcu);
-+	synchronize_rcu();
- 
- 	return vif;
- 
-diff --git a/drivers/net/wireless/microchip/wilc1000/netdev.h b/drivers/net/wireless/microchip/wilc1000/netdev.h
-index 5937d6d45695..eecee3973d6a 100644
---- a/drivers/net/wireless/microchip/wilc1000/netdev.h
-+++ b/drivers/net/wireless/microchip/wilc1000/netdev.h
-@@ -32,8 +32,8 @@
- 
- #define wilc_for_each_vif(w, v) \
- 	struct wilc *_w = w; \
--	list_for_each_entry_srcu(v, &_w->vif_list, list, \
--				 srcu_read_lock_held(&_w->srcu))
-+	list_for_each_entry_rcu(v, &_w->vif_list, list, \
-+				 rcu_read_lock_held())
- 
- struct wilc_wfi_stats {
- 	unsigned long rx_packets;
-@@ -220,7 +220,6 @@ struct wilc {
- 
- 	/* protect vif list */
- 	struct mutex vif_mutex;
--	struct srcu_struct srcu;
- 	u8 open_ifcs;
- 
- 	/* protect head of transmit queue */
-diff --git a/drivers/net/wireless/microchip/wilc1000/wlan.c b/drivers/net/wireless/microchip/wilc1000/wlan.c
-index a9e872a7b2c3..37c32d17856e 100644
---- a/drivers/net/wireless/microchip/wilc1000/wlan.c
-+++ b/drivers/net/wireless/microchip/wilc1000/wlan.c
-@@ -712,7 +712,6 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 	u32 *vmm_table = wilc->vmm_table;
- 	u8 ac_pkt_num_to_chip[NQUEUES] = {0, 0, 0, 0};
- 	const struct wilc_hif_func *func;
--	int srcu_idx;
- 	u8 *txb = wilc->tx_buffer;
- 	struct wilc_vif *vif;
- 
-@@ -724,10 +723,10 @@ int wilc_wlan_handle_txq(struct wilc *wilc, u32 *txq_count)
- 
- 	mutex_lock(&wilc->txq_add_to_head_cs);
- 
--	srcu_idx = srcu_read_lock(&wilc->srcu);
-+	rcu_read_lock();
- 	wilc_for_each_vif(wilc, vif)
- 		wilc_wlan_txq_filter_dup_tcp_ack(vif->ndev);
--	srcu_read_unlock(&wilc->srcu, srcu_idx);
-+	rcu_read_unlock();
- 
- 	for (ac = 0; ac < NQUEUES; ac++)
- 		tqe_q[ac] = wilc_wlan_txq_get_first(wilc, ac);
-
--- 
-2.44.0
+Conventionally, it should be named to trace.h, especially if only one. Refer to 
+other arch's.
 
