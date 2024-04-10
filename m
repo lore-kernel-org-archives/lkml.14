@@ -1,544 +1,177 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A19F1802CA;
-	Wed, 10 Apr 2024 14:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712759928; cv=none; b=E5NRZVHQYD+Zl7D2nmT7YL2pvvb7eKAP9bixlfhnkKebYpWU2ipBdf80WFA19YWZuTZztiPywl1pPUrLCMqz4wqvC0HsPUuBG/TMAz/mq7qqHp3iPTWt+5QRwCf1Emys33NRN5IckSDd+fVkFfQMsGHvUM/YqV5Q080aGyq+1gs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712759928; c=relaxed/simple;
-	bh=scmimbVvVzRlxTsGVHaK02B0pyJ1H7Zghhbg7lPho/Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Puli2zu7srSo9K+cuChQI4QpAklx2Kaj21bUJAENrAXd3FcweVftCOLTEHPBhuYT0iRuvuX0y264UBLQGpacoWWW6PUIjgYzRRIwrUgVD2VD01jR/vDlfv6IRdoYUWYhPr42nLuyH14knB3J/xikuid6HyKufPdf345drCSmsL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VF56j4JkYz4f3kJq;
-	Wed, 10 Apr 2024 22:38:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 047831A0572;
-	Wed, 10 Apr 2024 22:38:42 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6RFSpBZmcwR8Jg--.63000S29;
-	Wed, 10 Apr 2024 22:38:41 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	hch@infradead.org,
-	djwong@kernel.org,
-	david@fromorbit.com,
-	willy@infradead.org,
-	zokeefe@google.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	wangkefeng.wang@huawei.com
-Subject: [RFC PATCH v4 25/34] ext4: implement writeback iomap path
-Date: Wed, 10 Apr 2024 22:29:39 +0800
-Message-Id: <20240410142948.2817554-26-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
-References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B9B16D9D0
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 14:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712760078; cv=fail; b=RwkVEjPwyEkr8Sor4Z8x+dYen0sAGWKnIP2shUu4AHGivn02zTXAn9Pjai75f4Xp8p3CE6pCHcoIZSsvxGgmBpAcZ//yEYDpCS3JnPL7IA+sIOsw+n3c6Sej8MgTvvOUdc0ijKWxIsYnVVorlktQkmdYtfyZc/3aZ//+JzMSgX8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712760078; c=relaxed/simple;
+	bh=+wmv539NzYaISibItOaGd0nhPCaie+Jo3vPR4RNzQuw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=G9HkNm+alLozXwI2PqcZ7bDpwoIMy6CMqrDH0UFUvJBfgdQDKApcuMFPJ6ThRFlxuHYLC0CgkdX+1R8E+AcRKdU6QF7NXJoYiwpk34YHL+7HcDcIIWh6c8ErjgwKXA60imjKeVR3UQObuh1arf4Nm9hqm5uwKUWr3SOFoCHtE5o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nAy6ytnX; arc=fail smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nAy6ytnX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712760077; x=1744296077;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=+wmv539NzYaISibItOaGd0nhPCaie+Jo3vPR4RNzQuw=;
+  b=nAy6ytnXMLBm1w6k9ouBlprbmcroPqhc8jEt9SA/S1wqoK+UFTvFYuoy
+   zHQtPprTJqk6A03cBvockC3mSpF+13gnp9L8MmjZW+KU3N14zDlIeqNpp
+   K5atgny3dfATd0ufT2fyVLTfalhbrqyI2CJ2LuJzBsmTUIxCBK5sJ3YyZ
+   6xtOTIYwOr9W9HMOkML8bGZZbL9ZYBZXDQ4xuhn5rJ4p8rg0N74PZL8AB
+   u8aMw4yUSfCkBm4KQIrYTb6LC9nsWhuDKcw5h2yLVnOspxJLKpoPaNPZl
+   oihnSkhF/13raghxG1BTdgf+PFZeEskZFUIR6IUUNFsXpfguD7I/frvGt
+   g==;
+X-CSE-ConnectionGUID: t8Q6/SDtSEmD5QuLBO7zSw==
+X-CSE-MsgGUID: NGzNsKMpQMG0pttBoUd6lA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7984054"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="7984054"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 07:41:16 -0700
+X-CSE-ConnectionGUID: 380xAYzzTZi7Vc0IhPlOQg==
+X-CSE-MsgGUID: RptTX7BSQr+8DwtNsZWVzg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20597991"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Apr 2024 07:41:17 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 10 Apr 2024 07:41:16 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 10 Apr 2024 07:41:16 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 10 Apr 2024 07:41:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j+YJCKgasjRx+5ShYV0g+3KI/f7pjDQbHpaKKarRAOaEUYqb4I8aU6RE9RalpQ8ell5a7eZ4PN1Du1/R2V2GmL3LsmNRzkpgzBvzBAxWg1hoP59m32qZVgBe/i5Y6xmZ2bXC4QqCSUxSpcIVtrN2nskK7k35YuFl55F2BtsqrVpouBylOHOBuq9lhpWWz9jGIJqYAtqHRcCRmBbRewnrs3ifVnVhqH38Sw7fHAxpWXpvbak+pA20J4uYzDD9QNB7SXfs7bBszFIF5KgEQEvGTlTNJwkwgm1D/If+kqd6TCG6vt39pEUQrMbtTf+FdyaJDLzGqkyMFt8DtmXT3WjvGA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+wmv539NzYaISibItOaGd0nhPCaie+Jo3vPR4RNzQuw=;
+ b=LzmTNUYy/QQjkICfsAe4iVmBg0M0+3hhZUBjQiBdUfbfjShB16QDICUiMmEtLfXvp/tlpAl18AMd8Yuc0lC06U9dOnpQnzTgiun716XAiMy85bq5vQQRfG+mrphv28ChNQLjLfZkucSrhM3l2CCUuEsHOSREvk3IOpxOujsw8y8vgDz6WiaxQUOp27uioe17I8iX5YHMTFjB8HpggJtDQdfGbfNxdpEh9pRAhpgPJ2d1PhmG+L988qR4+Fb/GUqFIKYFMCTmviXUYNofW6Fq4DaDJ0a82U/CZ84wh7f7VKhRb+50egQXIqHYNk/uaSxyTX8VRPyzs9kK8wg7SlLoFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
+ by SN7PR11MB7042.namprd11.prod.outlook.com (2603:10b6:806:299::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 10 Apr
+ 2024 14:41:13 +0000
+Received: from MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::1761:33ae:729c:a795]) by MN0PR11MB5963.namprd11.prod.outlook.com
+ ([fe80::1761:33ae:729c:a795%5]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
+ 14:41:13 +0000
+From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+To: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
+	<mingo@redhat.com>, "Hansen, Dave" <dave.hansen@intel.com>, "bp@alien8.de"
+	<bp@alien8.de>
+CC: "sathyanarayanan.kuppuswamy@linux.intel.com"
+	<sathyanarayanan.kuppuswamy@linux.intel.com>, "hpa@zytor.com"
+	<hpa@zytor.com>, "Reshetova, Elena" <elena.reshetova@intel.com>,
+	"seanjc@google.com" <seanjc@google.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCHv2 0/4] x86/tdx: Adjust TD settings on boot
+Thread-Topic: [PATCHv2 0/4] x86/tdx: Adjust TD settings on boot
+Thread-Index: AQHafqGvjWJLBDxl7UOL6WDDV1721bFhq+qAgAABFgA=
+Date: Wed, 10 Apr 2024 14:41:13 +0000
+Message-ID: <46cb81e0dda6196a1339cdfc93ea93f2d13c3e4b.camel@intel.com>
+References: <20240325104607.2653307-1-kirill.shutemov@linux.intel.com>
+	 <sbunoj5dm6xifhqog5aaeujrbiilfqufum5msoiqtp2di3nsbs@wdoa37qkziwe>
+In-Reply-To: <sbunoj5dm6xifhqog5aaeujrbiilfqufum5msoiqtp2di3nsbs@wdoa37qkziwe>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.44.4-0ubuntu2 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|SN7PR11MB7042:EE_
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YJf6GipyMuYmvYLrPH0YA+MfH6GKnA7DqeJkT4kQWc0h8viR+qMljJEVDL9Mb9OAa4VxswlCIouHHnFjF45UGTl2c2WMBWUl3lWmUswgJSiMB4hi5UP5Bejjqnud93pAFfW6E8AEUToUxz+22hKYJoUnPrwjh04GxpnDD9GBEcth/F6qWyAX9csNtRze9+YP5gV8K8D8WTNBv6DfLVTuTUm0xgk6vh/CiJLSLlF6+46aUTuMCkLPIvWPlO/tEuSY++Mlki9HcahT8yL0TTgS4OE5C/ysiZlocEKRn7DhPg5MKDv44DOPU+Qn11DEf+Ng8RYJIhXLQBZF8oJ9x51khSkYwC8dYElaOX0Rte/BOMeOTJzAJOk/QEfY5ckNfWv+14wCsZcRVY0gIQoa/1lM0gguNRn3bVUhrf9xobeN4l4E8modoSwSemNbOoHaq1+hrTznxiQLBEeP5PJkBDm2cxcrCakU8vmD/WqHR2I5+9y5wB7PRF1kuvnTt3J93B5upVu30wWhdQ22C51nU/g3lTbPOZewFcCR2RiBloxFemUQ1qhkLJA9NZz2LhOnRKi6Afv4VqYDjOGdJvPMXfUL+SljMJNnnfDC0WkTnY+pGjS85AKpYQDP225C/rMOYi0FIrOHdIJJu5fA7SuC4elG2Wk9EMVbCgd3r6cCzl9h5Ug=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?USs2ZDhJZUp2Vm5wbnA2SmdBdUdvaTBHWFBrVXFyRmdNV0NiajgyUXM2Snd1?=
+ =?utf-8?B?VTJVNTBnUDBVUGNsUmZ6c3ErNE5hSGJZUjNHbEVteGNIWFRMWi9XSlZDSWk3?=
+ =?utf-8?B?amJ4SjN2aXdhS1lOOStPakpYZUZreHJSV2cyUnRhQnh1eTFBWVN6YTQzR2hD?=
+ =?utf-8?B?cjdkTEYzZFVxM2RQN0h3ajN5bGtyUmNZc0JzYjhhWWpIYXp6Mll5OVZTSGg0?=
+ =?utf-8?B?dzZTNTNmRlh0MDVsT3NsQjJFUUtmRk1kelRHQW5uZ0hPMjY3Y0JiVUxiOFl2?=
+ =?utf-8?B?NnQvT29wNDR5Tngzekk5M1NiWTdQUHNWS3R3eUxiWFhwdk00eW91bnpwVXFj?=
+ =?utf-8?B?aWp5bkQ3YlJTY1ZXRkJJL0hnYndZaFZFSWxjM1drdjBhWXkwY2kzdGVDRWxN?=
+ =?utf-8?B?MmE0bVFUTUd3cHJYRnJpQU9DTTBzYXNRcVgwNXdFRzd6NkFRVDZsMUpiNUR5?=
+ =?utf-8?B?OGJIYVJhemdtZmw4Q2gyblROVXkzaUM0Z3Q0VDRSTFlHY0VJdU5xdk5PRnU0?=
+ =?utf-8?B?UHZDclpMTFFrekY2VU5xZ2JvZ2tFRXJqS2RXTlRrR0JheUJ0OGx2RnZvRVNC?=
+ =?utf-8?B?YVVVYXRpMDU5aEpIOGJOWnhZMERnWTNkTndkZS9ESCtYOW1ZSE5qa09ZR1BK?=
+ =?utf-8?B?Y2tSWUp2ZWhSWm8yS0NwcUVnV1l4M1B2ZVJuR0JYRnBjZkVNdXZ4aDBDWFdB?=
+ =?utf-8?B?cVNOT21oM09yTzdSakVmMWpEUGx1TmpNbFIwRU9kc29KU2p1ZG5jT3RSNzc5?=
+ =?utf-8?B?TWpSK0dMTkpmVWVwbFRzR1ZCTXNJbnIrd2JyS0ZEby8zYUFITUlDb1NYQXpl?=
+ =?utf-8?B?OGdzWlJEUFVqeUNoNGpOOGlkbVl3M2NQamZ0aSt6UzFTTkp4UkpGVmxuVHhw?=
+ =?utf-8?B?M0xHZHAyWkZ1emRrUkFsNm9qalNaM0dmdEFBVFNmWDZzSFl4RVRXY3BWSm9t?=
+ =?utf-8?B?QlVuekIvZm9peEh5ckhGZEcrbHpBbEkvc1VIZ1dPSDFOYk45T1F4WGFvelox?=
+ =?utf-8?B?N1FqVEMxZzVRdWJJTUg5R1VIUXNoaWpseUNhbG56YzlCMG5ub2syMVl4R1cv?=
+ =?utf-8?B?TU5BQjhEa29lN2FHaG9uQU5hbTFmZ0xxYzJDZEE5S0ltTXhpM25RQmU5clh0?=
+ =?utf-8?B?V1o0VFA5Vy9XRmgwVXo3aFVJejE4VGhIMnhpb3lZVTY2cTVPKzgvOEZWMzBO?=
+ =?utf-8?B?OCtwc3kzeTBMaE5pcE02eEIwOFMzN0UxRXJvYk1sZksvRGhrY3lqNVBBK1c5?=
+ =?utf-8?B?NmlDNk8rRVRWdGc5SmtBZ0tGeWs3SjhsUUpmMWdQNCtYcnRuUVltcnJyNGNV?=
+ =?utf-8?B?UVVFZmF6NytYREU5L01YajNWa1hXby8zcUR0c09PcGtWYit1R1Z2UjlzcUdk?=
+ =?utf-8?B?VSsxYzdRWWhWdk9UQWphdkZ0ODhyaGNBVUZlZ0lKSElGT1Z5MVVveWlJMzZy?=
+ =?utf-8?B?TEh2d1Y1YjFOSG4rNDdja1BNVG5jWUhtbTVjVGRQUS8xMFdQMHFpU28rdkF1?=
+ =?utf-8?B?Y1l0ZElFbUZ3NnlkRUlNMDcyazZYQWgyUEIvZ3dHQmd5aGVBMG9ZNG1OMFVH?=
+ =?utf-8?B?TUM3R04vTTZ3WU8zRjV0MXJFNG83Wm1iL0NrMElrczQwbVNuejA3QUJvdzlI?=
+ =?utf-8?B?VlA3eDBUUy9IaHZCM0RqazRZZ3RCNGlwMWRCZVFhelkvK3dRd0Y5MWJLeTlU?=
+ =?utf-8?B?bEkzMWFNUVpVcGdUWU1mK01Gb2tsYmR1SGZJNW1IejJ5TW1tM0o3ZVdXdVZQ?=
+ =?utf-8?B?TzN0YWRWd0tBdkZremYzQ1VvTG1pbi8xaWxKTTc2Q0xUY1JtTWtMZ01uWVg5?=
+ =?utf-8?B?emZYY1pKMjRHZytvcWJIUGh6N3hUazdnL0dHMnJEeVd3ZU9DOGgxMXZGQU9q?=
+ =?utf-8?B?NGNEdWphc1EyVGIxb2tvSWFvUVlUOUNmNEk4VGNnc2hXZFJjVE9mS0g0L1Bh?=
+ =?utf-8?B?VzBwRE1vbHg2RmZYdVpJcDZ0U25QN3JKbGVqaWhqWnlvblRMVEdjSVUzYXFo?=
+ =?utf-8?B?cFBZM1RDWUtrditGbnozeDNTVTJzYTZxMnFkT1NPenFNNkxuOTFPNzdvc1NU?=
+ =?utf-8?B?aGlkUlZqbVBNcW80LzErUGZvMit1SklKb3B6ZVVrVGpjNis1OXlFb281Unpv?=
+ =?utf-8?B?QXBjS0JLUVJqRnNwLys1aXJJdFUva1hBSDFsMkpXYnYrdXlzcS9tbFRZTE5W?=
+ =?utf-8?B?TlE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8D649244181CA049BEAE0230CAF3769B@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6RFSpBZmcwR8Jg--.63000S29
-X-Coremail-Antispam: 1UD129KBjvAXoW3ur17CryDKFWUXFykuFWUXFb_yoW8Wr4DJo
-	WavF43Xr48Jr98ta95Cr1fJFyUuan7Ga1rJr15ur4FqFy3AF1a9w4xK3y3W3W3Ww4Fkr4x
-	ZryxJF45Gr4kJF4rn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUOA7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r126s0DM28Irc
-	Ia0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l
-	84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJV
-	W0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
-	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCF
-	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFI
-	xGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxV
-	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI
-	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F
-	4UJVW0owCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j6F4U
-	JwCI42IY6I8E87Iv6xkF7I0E14v26rxl6s0DYxBIdaVFxhVjvjDU0xZFpf9x0pRDPE-UUU
-	UU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b1f8945-7ef3-45ca-4fe0-08dc596c455f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Apr 2024 14:41:13.4417
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qhp6A7fOUzR70Jn6Y/8z3At1MmjOmIeR+sFEAOEru2Ls8m2opIpdcyzV4Xv0O68ZWBkJ7OWNnlCy5jGeJbfPxCuE80DBYG6fDJw6gM+0s7g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7042
+X-OriginatorOrg: intel.com
 
-From: Zhang Yi <yi.zhang@huawei.com>
-
-Implement the buffered writeback iomap path, including the map_blocks()
-and the prepare_ioend() callback in iomap_writeback_ops and the
-corresponding end io path. Add ext4_iomap_map_blocks() to dirty map
-status before writeback, start journal handle and allocate new blocks if
-it's not been allocated. Add ext4_iomap_prepare_ioend() to register the
-end io handler of converting unwritten extents to mapped extents.
-
-Note that current iomap call iomap_do_writepage() to write back dirty
-folios one by one, but we can't map or allocate block(s) for dirty folio
-one by one because it's expensive if folio size is small. In order to
-reduce the number of blocks mapping times, we can calculate the length
-through wbc->range_end carefully and map an entire delayed extent on the
-first call.
-
-Besides, since we always allocate unwritten extents for the new
-allocated blocks, there are other 4 processes are different from the
-buffered_head writeback path, which could be more simple.
-
-1. We have to allow splitting extents in endio during the unwritten to
-   written conversion.
-2. We don't need to write back the data before the metadata, there is no
-   risk of exposing stale data, the data=ordered journal mode becomes
-   useless. So we don't need to attach data to the jinode, and the
-   journal thread doesn't need to write data.
-3. Since data=ordered is not used, we don't need to reserve journal
-   credits and use reserved handle for the extent status conversion.
-4. We can postpone the i_disksize updating to endio path.
-
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- fs/ext4/ext4.h      |   4 +
- fs/ext4/ext4_jbd2.c |   6 ++
- fs/ext4/extents.c   |  23 +++---
- fs/ext4/inode.c     | 186 +++++++++++++++++++++++++++++++++++++++++++-
- fs/ext4/page-io.c   | 107 +++++++++++++++++++++++++
- fs/ext4/super.c     |   2 +
- 6 files changed, 318 insertions(+), 10 deletions(-)
-
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 2bd543c43341..2ec6c7884e9a 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -1147,6 +1147,8 @@ struct ext4_inode_info {
- 	 */
- 	struct list_head i_rsv_conversion_list;
- 	struct work_struct i_rsv_conversion_work;
-+	struct list_head i_iomap_ioend_list;
-+	struct work_struct i_iomap_ioend_work;
- 	atomic_t i_unwritten; /* Nr. of inflight conversions pending */
- 
- 	spinlock_t i_block_reservation_lock;
-@@ -3755,6 +3757,8 @@ int ext4_bio_write_folio(struct ext4_io_submit *io, struct folio *page,
- 		size_t len);
- extern struct ext4_io_end_vec *ext4_alloc_io_end_vec(ext4_io_end_t *io_end);
- extern struct ext4_io_end_vec *ext4_last_io_end_vec(ext4_io_end_t *io_end);
-+extern void ext4_iomap_end_io(struct work_struct *work);
-+extern void ext4_iomap_end_bio(struct bio *bio);
- 
- /* mmp.c */
- extern int ext4_multi_mount_protect(struct super_block *, ext4_fsblk_t);
-diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
-index 5d8055161acd..2f83cd90e132 100644
---- a/fs/ext4/ext4_jbd2.c
-+++ b/fs/ext4/ext4_jbd2.c
-@@ -11,6 +11,12 @@ int ext4_inode_journal_mode(struct inode *inode)
- {
- 	if (EXT4_JOURNAL(inode) == NULL)
- 		return EXT4_INODE_WRITEBACK_DATA_MODE;	/* writeback */
-+	/*
-+	 * Ordered mode is no longer needed for the inode that use the
-+	 * iomap path, always use writeback mode.
-+	 */
-+	if (ext4_test_inode_state(inode, EXT4_STATE_BUFFERED_IOMAP))
-+		return EXT4_INODE_WRITEBACK_DATA_MODE;	/* writeback */
- 	/* We do not support data journalling with delayed allocation */
- 	if (!S_ISREG(inode->i_mode) ||
- 	    ext4_test_inode_flag(inode, EXT4_INODE_EA_INODE) ||
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index fcb1916a7c29..9849947cec56 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -3708,18 +3708,23 @@ static int ext4_convert_unwritten_extents_endio(handle_t *handle,
- 	ext_debug(inode, "logical block %llu, max_blocks %u\n",
- 		  (unsigned long long)ee_block, ee_len);
- 
--	/* If extent is larger than requested it is a clear sign that we still
--	 * have some extent state machine issues left. So extent_split is still
--	 * required.
--	 * TODO: Once all related issues will be fixed this situation should be
--	 * illegal.
-+	/*
-+	 * For the inodes that use the buffered iomap path need to split
-+	 * extents in endio, other inodes not.
-+	 *
-+	 * TODO: Reserve enough sapce for splitting extents, always split
-+	 * extents here, and totally remove this warning.
- 	 */
- 	if (ee_block != map->m_lblk || ee_len > map->m_len) {
- #ifdef CONFIG_EXT4_DEBUG
--		ext4_warning(inode->i_sb, "Inode (%ld) finished: extent logical block %llu,"
--			     " len %u; IO logical block %llu, len %u",
--			     inode->i_ino, (unsigned long long)ee_block, ee_len,
--			     (unsigned long long)map->m_lblk, map->m_len);
-+		if (!ext4_test_inode_state(inode, EXT4_STATE_BUFFERED_IOMAP)) {
-+			ext4_warning(inode->i_sb,
-+				     "Inode (%ld) finished: extent logical block %llu, "
-+				     "len %u; IO logical block %llu, len %u",
-+				     inode->i_ino, (unsigned long long)ee_block,
-+				     ee_len, (unsigned long long)map->m_lblk,
-+				     map->m_len);
-+		}
- #endif
- 		err = ext4_split_convert_extents(handle, inode, map, ppath,
- 					EXT4_GET_BLOCKS_CONVERT |
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index e825ed16fd60..55a4d293177d 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -43,6 +43,7 @@
- #include <linux/iversion.h>
- 
- #include "ext4_jbd2.h"
-+#include "ext4_extents.h"
- #include "xattr.h"
- #include "acl.h"
- #include "truncate.h"
-@@ -3721,10 +3722,193 @@ static void ext4_iomap_readahead(struct readahead_control *rac)
- 	iomap_readahead(rac, &ext4_iomap_buffered_read_ops);
- }
- 
-+struct ext4_writeback_ctx {
-+	struct iomap_writepage_ctx ctx;
-+	struct writeback_control *wbc;
-+	unsigned int data_seq;
-+};
-+
-+static int ext4_iomap_map_one_extent(struct inode *inode,
-+				     struct ext4_map_blocks *map)
-+{
-+	struct extent_status es;
-+	handle_t *handle = NULL;
-+	int credits, map_flags;
-+	int retval;
-+
-+	credits = ext4_da_writepages_trans_blocks(inode);
-+	handle = ext4_journal_start(inode, EXT4_HT_WRITE_PAGE, credits);
-+	if (IS_ERR(handle))
-+		return PTR_ERR(handle);
-+
-+	map->m_flags = 0;
-+	/*
-+	 * In order to protect from the race of truncate, we have to lookup
-+	 * extent stats and map blocks under i_data_sem, otherwise the
-+	 * delalloc extent could be stale.
-+	 */
-+	down_write(&EXT4_I(inode)->i_data_sem);
-+	if (likely(ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es))) {
-+		retval = es.es_len - (map->m_lblk - es.es_lblk);
-+		map->m_len = min_t(unsigned int, retval, map->m_len);
-+
-+		if (likely(ext4_es_is_delayed(&es))) {
-+			map->m_flags |= EXT4_MAP_DELAYED;
-+			trace_ext4_da_write_pages_extent(inode, map);
-+			/*
-+			 * Call ext4_map_create_blocks() to allocate any delayed
-+			 * allocation blocks. It is possible that we're going to
-+			 * need more metadata blocks, however we must not fail
-+			 * because we're in writeback and there is nothing we
-+			 * can do so it might result in data loss. So use
-+			 * reserved blocks to allocate metadata if possible.
-+			 */
-+			map_flags = EXT4_GET_BLOCKS_CREATE_UNWRIT_EXT |
-+				    EXT4_GET_BLOCKS_METADATA_NOFAIL;
-+
-+			retval = ext4_map_create_blocks(handle, inode, map,
-+							map_flags);
-+		}
-+		if (ext4_es_is_written(&es) || ext4_es_is_unwritten(&es)) {
-+			map->m_pblk = ext4_es_pblock(&es) + map->m_lblk -
-+				      es.es_lblk;
-+			map->m_flags = ext4_es_is_written(&es) ?
-+				       EXT4_MAP_MAPPED : EXT4_MAP_UNWRITTEN;
-+		}
-+	} else {
-+		retval = ext4_map_query_blocks(handle, inode, map);
-+	}
-+
-+	up_write(&EXT4_I(inode)->i_data_sem);
-+	ext4_journal_stop(handle);
-+	return retval < 0 ? retval : 0;
-+}
-+
-+static int ext4_iomap_map_blocks(struct iomap_writepage_ctx *wpc,
-+				 struct inode *inode, loff_t offset,
-+				 unsigned int dirty_len)
-+{
-+	struct ext4_writeback_ctx *ewpc =
-+			container_of(wpc, struct ext4_writeback_ctx, ctx);
-+	struct super_block *sb = inode->i_sb;
-+	struct journal_s *journal = EXT4_SB(sb)->s_journal;
-+	struct ext4_inode_info *ei = EXT4_I(inode);
-+	struct ext4_map_blocks map;
-+	unsigned int blkbits = inode->i_blkbits;
-+	unsigned int index = offset >> blkbits;
-+	unsigned int end, len;
-+	int ret;
-+
-+	if (unlikely(ext4_forced_shutdown(inode->i_sb)))
-+		return -EIO;
-+
-+	/* Check validity of the cached writeback mapping. */
-+	if (offset >= wpc->iomap.offset &&
-+	    offset < wpc->iomap.offset + wpc->iomap.length &&
-+	    ewpc->data_seq == READ_ONCE(ei->i_es_seq))
-+		return 0;
-+
-+	end = min_t(unsigned int,
-+		    (ewpc->wbc->range_end >> blkbits), (UINT_MAX - 1));
-+	len = (end > index + dirty_len) ? end - index + 1 : dirty_len;
-+
-+retry:
-+	map.m_lblk = index;
-+	map.m_len = min_t(unsigned int, EXT_UNWRITTEN_MAX_LEN, len);
-+	ret = ext4_map_blocks(NULL, inode, &map, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * The map isn't a delalloc extent, it must be a hole or have
-+	 * already been allocated.
-+	 */
-+	if (!(map.m_flags & EXT4_MAP_DELAYED))
-+		goto out;
-+
-+	/* Map one delalloc extent. */
-+	ret = ext4_iomap_map_one_extent(inode, &map);
-+	if (ret < 0) {
-+		if (ext4_forced_shutdown(sb))
-+			return ret;
-+
-+		/*
-+		 * Retry transient ENOSPC errors, if
-+		 * ext4_count_free_blocks() is non-zero, a commit
-+		 * should free up blocks.
-+		 */
-+		if (ret == -ENOSPC && ext4_count_free_clusters(sb)) {
-+			jbd2_journal_force_commit_nested(journal);
-+			goto retry;
-+		}
-+
-+		ext4_msg(sb, KERN_CRIT,
-+			 "Delayed block allocation failed for "
-+			 "inode %lu at logical offset %llu with "
-+			 "max blocks %u with error %d",
-+			 inode->i_ino, (unsigned long long)map.m_lblk,
-+			 (unsigned int)map.m_len, -ret);
-+		ext4_msg(sb, KERN_CRIT,
-+			 "This should not happen!! Data will "
-+			 "be lost\n");
-+		if (ret == -ENOSPC)
-+			ext4_print_free_blocks(inode);
-+		return ret;
-+	}
-+out:
-+	ewpc->data_seq = READ_ONCE(ei->i_es_seq);
-+	ext4_set_iomap(inode, &wpc->iomap, &map, offset,
-+		       map.m_len << blkbits, 0);
-+	return 0;
-+}
-+
-+static int ext4_iomap_prepare_ioend(struct iomap_ioend *ioend, int status)
-+{
-+	struct ext4_inode_info *ei = EXT4_I(ioend->io_inode);
-+
-+	/* Need to convert unwritten extents when I/Os are completed. */
-+	if (ioend->io_type == IOMAP_UNWRITTEN ||
-+	    ioend->io_offset + ioend->io_size > READ_ONCE(ei->i_disksize))
-+		ioend->io_bio.bi_end_io = ext4_iomap_end_bio;
-+
-+	return status;
-+}
-+
-+static void ext4_iomap_discard_folio(struct folio *folio, loff_t pos)
-+{
-+	struct inode *inode = folio->mapping->host;
-+
-+	ext4_iomap_punch_delalloc(inode, pos,
-+				  folio_pos(folio) + folio_size(folio) - pos);
-+}
-+
-+static const struct iomap_writeback_ops ext4_writeback_ops = {
-+	.map_blocks = ext4_iomap_map_blocks,
-+	.prepare_ioend = ext4_iomap_prepare_ioend,
-+	.discard_folio = ext4_iomap_discard_folio,
-+};
-+
- static int ext4_iomap_writepages(struct address_space *mapping,
- 				 struct writeback_control *wbc)
- {
--	return 0;
-+	struct inode *inode = mapping->host;
-+	struct super_block *sb = inode->i_sb;
-+	long nr = wbc->nr_to_write;
-+	int alloc_ctx, ret;
-+	struct ext4_writeback_ctx ewpc = {
-+		.wbc = wbc,
-+	};
-+
-+	if (unlikely(ext4_forced_shutdown(sb)))
-+		return -EIO;
-+
-+	alloc_ctx = ext4_writepages_down_read(sb);
-+	trace_ext4_writepages(inode, wbc);
-+	ret = iomap_writepages(mapping, wbc, &ewpc.ctx, &ext4_writeback_ops);
-+	trace_ext4_writepages_result(inode, wbc, ret, nr - wbc->nr_to_write);
-+	ext4_writepages_up_read(sb, alloc_ctx);
-+
-+	return ret;
- }
- 
- /*
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index 312bc6813357..5ad72f725e0c 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -22,6 +22,7 @@
- #include <linux/bio.h>
- #include <linux/workqueue.h>
- #include <linux/kernel.h>
-+#include <linux/iomap.h>
- #include <linux/slab.h>
- #include <linux/mm.h>
- #include <linux/sched/mm.h>
-@@ -565,3 +566,109 @@ int ext4_bio_write_folio(struct ext4_io_submit *io, struct folio *folio,
- 
- 	return 0;
- }
-+
-+static void ext4_iomap_finish_ioend(struct iomap_ioend *ioend)
-+{
-+	struct inode *inode = ioend->io_inode;
-+	struct ext4_inode_info *ei = EXT4_I(inode);
-+	loff_t pos = ioend->io_offset;
-+	size_t size = ioend->io_size;
-+	loff_t new_disksize;
-+	handle_t *handle;
-+	int credits;
-+	int ret, err;
-+
-+	ret = blk_status_to_errno(ioend->io_bio.bi_status);
-+	if (unlikely(ret))
-+		goto out;
-+
-+	/*
-+	 * We may need to convert up to one extent per block in
-+	 * the page and we may dirty the inode.
-+	 */
-+	credits = ext4_chunk_trans_blocks(inode,
-+			EXT4_MAX_BLOCKS(size, pos, inode->i_blkbits));
-+	handle = ext4_journal_start(inode, EXT4_HT_EXT_CONVERT, credits);
-+	if (IS_ERR(handle)) {
-+		ret = PTR_ERR(handle);
-+		goto out_err;
-+	}
-+
-+	if (ioend->io_type == IOMAP_UNWRITTEN) {
-+		ret = ext4_convert_unwritten_extents(handle, inode, pos, size);
-+		if (ret)
-+			goto out_journal;
-+	}
-+
-+	/*
-+	 * Update on-disk size after IO is completed. Races with
-+	 * truncate are avoided by checking i_size under i_data_sem.
-+	 */
-+	new_disksize = pos + size;
-+	if (new_disksize > READ_ONCE(ei->i_disksize)) {
-+		down_write(&ei->i_data_sem);
-+		new_disksize = min(new_disksize, i_size_read(inode));
-+		if (new_disksize > ei->i_disksize)
-+			ei->i_disksize = new_disksize;
-+		up_write(&ei->i_data_sem);
-+		ret = ext4_mark_inode_dirty(handle, inode);
-+		if (ret)
-+			EXT4_ERROR_INODE_ERR(inode, -ret,
-+					     "Failed to mark inode dirty");
-+	}
-+
-+out_journal:
-+	err = ext4_journal_stop(handle);
-+	if (!ret)
-+		ret = err;
-+out_err:
-+	if (ret < 0 && !ext4_forced_shutdown(inode->i_sb)) {
-+		ext4_msg(inode->i_sb, KERN_EMERG,
-+			 "failed to convert unwritten extents to "
-+			 "written extents or update inode size -- "
-+			 "potential data loss! (inode %lu, error %d)",
-+			 inode->i_ino, ret);
-+	}
-+out:
-+	iomap_finish_ioends(ioend, ret);
-+}
-+
-+/*
-+ * Work on buffered iomap completed IO, to convert unwritten extents to
-+ * mapped extents
-+ */
-+void ext4_iomap_end_io(struct work_struct *work)
-+{
-+	struct ext4_inode_info *ei = container_of(work, struct ext4_inode_info,
-+						  i_iomap_ioend_work);
-+	struct iomap_ioend *ioend;
-+	struct list_head ioend_list;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ei->i_completed_io_lock, flags);
-+	list_replace_init(&ei->i_iomap_ioend_list, &ioend_list);
-+	spin_unlock_irqrestore(&ei->i_completed_io_lock, flags);
-+
-+	iomap_sort_ioends(&ioend_list);
-+	while (!list_empty(&ioend_list)) {
-+		ioend = list_entry(ioend_list.next, struct iomap_ioend, io_list);
-+		list_del_init(&ioend->io_list);
-+		iomap_ioend_try_merge(ioend, &ioend_list);
-+		ext4_iomap_finish_ioend(ioend);
-+	}
-+}
-+
-+void ext4_iomap_end_bio(struct bio *bio)
-+{
-+	struct iomap_ioend *ioend = iomap_ioend_from_bio(bio);
-+	struct ext4_inode_info *ei = EXT4_I(ioend->io_inode);
-+	struct ext4_sb_info *sbi = EXT4_SB(ioend->io_inode->i_sb);
-+	unsigned long flags;
-+
-+	/* Only reserved conversions from writeback should enter here */
-+	spin_lock_irqsave(&ei->i_completed_io_lock, flags);
-+	if (list_empty(&ei->i_iomap_ioend_list))
-+		queue_work(sbi->rsv_conversion_wq, &ei->i_iomap_ioend_work);
-+	list_add_tail(&ioend->io_list, &ei->i_iomap_ioend_list);
-+	spin_unlock_irqrestore(&ei->i_completed_io_lock, flags);
-+}
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 5fce4d2b3b87..6410918161a0 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -1431,11 +1431,13 @@ static struct inode *ext4_alloc_inode(struct super_block *sb)
- #endif
- 	ei->jinode = NULL;
- 	INIT_LIST_HEAD(&ei->i_rsv_conversion_list);
-+	INIT_LIST_HEAD(&ei->i_iomap_ioend_list);
- 	spin_lock_init(&ei->i_completed_io_lock);
- 	ei->i_sync_tid = 0;
- 	ei->i_datasync_tid = 0;
- 	atomic_set(&ei->i_unwritten, 0);
- 	INIT_WORK(&ei->i_rsv_conversion_work, ext4_end_io_rsv_work);
-+	INIT_WORK(&ei->i_iomap_ioend_work, ext4_iomap_end_io);
- 	ext4_fc_init_inode(&ei->vfs_inode);
- 	mutex_init(&ei->i_fc_lock);
- 	return &ei->vfs_inode;
--- 
-2.39.2
-
+T24gV2VkLCAyMDI0LTA0LTEwIGF0IDE3OjM3ICswMzAwLCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3Jv
+dGU6DQo+IE9uIE1vbiwgTWFyIDI1LCAyMDI0IGF0IDEyOjQ2OjAzUE0gKzAyMDAsIEtpcmlsbCBB
+LiBTaHV0ZW1vdiB3cm90ZToNCj4gPiBBZGp1c3QgVEQgc2V0dGluZyBvbiBib290Og0KPiA+IA0K
+PiA+IMKgwqAgLSBEaXNhYmxlIEVQVCB2aW9sYXRpb24gI1ZFIG9uIHByaXZhdGUgbWVtb3J5IGlm
+IFREIGNhbg0KPiA+IMKgwqDCoMKgIGNvbnRyb2wgaXQ7DQo+ID4gDQo+ID4gwqDCoCAtIEVuYWJs
+ZSB2aXJ0dWFsaXphdGlvbiBvZiB0b3BvbG9neS1yZWxhdGVkIENQVUlEIGxlYWZzDQo+ID4gwqDC
+oMKgwqAgWDJBUElDX0FQSUNJRCBNU1I7DQo+IA0KPiBBbnkgZmVlZGJhY2s/DQoNCkl0IGlzIG1p
+c3NpbmcgYSBsb3Qgb2YgdGhlIG5vcm1hbCB0aGluZ3MgdGhhdCBjb21lIGluIGNvdmVybGV0dGVy
+cyBsaWtlIHdoYXQgaXMNCnRoZSBwcm9ibGVtIGFuZCBpbXBvcnRhbmNlLiBJdCBtaWdodCBoZWxw
+IGF0dHJhY3QgbW9yZSByZXZpZXcuDQo=
