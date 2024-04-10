@@ -1,63 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0A08F4E;
-	Wed, 10 Apr 2024 10:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA2E8F4E
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 10:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712743389; cv=none; b=JL2aSLMgocY+CetdabfeOHXZ7vYgr5JEvU3gwZpsRJ7SSiNbiV5Zr9qejeFwmg2jk0ApsSAZpadeUmZX/O0SX0Us0apQgS6m2QydohfJhjUG4PUgSUH9MS5y0rOij++si1Y8ie/9StinDctmAvo1bqnscAnv9C9LTR4lLt4ENjo=
+	t=1712743413; cv=none; b=BRNqBrVYNg5u3ldcrhSk08PGU2a+BjRcX744wzHFZKoLEHpd0vEolWmj0hWv601BzPUlyPxvO+b5VWqqO+m6ctHc96lgstvcn6gDY+BBlyCl8vfcF64kxr21toz04f1aoVrKm7huyOS+qLmU0vhQj6rkcR8kWgG4PRDWueGimog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712743389; c=relaxed/simple;
-	bh=PESaPOPG9KlJZbxWL1LM1wMqfUvpvl3bfm2/tdacBQw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BsXceJ/z+9u8W9Kaync1kKRY+dy3riY3jZf7uYqVRuwVdinFdpS529SH9PCQ+25YVhNmwOjDlpMEo2/Hl4t/MqE4PLW+xNKrhh6ynXjTXe6Z/JkHqxTdBGw5MeiaHA1REL3MDaQN53dgjYY5A8ps3f9I5iQwytbdiNRZSwWyksE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QX/VNOmg; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QX/VNOmg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712743387; x=1744279387;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PESaPOPG9KlJZbxWL1LM1wMqfUvpvl3bfm2/tdacBQw=;
-  b=QX/VNOmgo86Vv1uQGXrXBFHPT/oxH3yO33KSL4Zzp7y+nSu5b8mDljVC
-   RbGh4fEO08OD4EJEi0fT/xql50WwLj7htMkQqtX1vWaLwQxu4AhBDraoj
-   8nWL3Xj8kHDvI7z5FqpsJBW0rt/5Qp+UI6kkwAsGrbDYp81uMPlgAYJVG
-   P+A/+reSzuS0DFBCOkUKTZec08cp5OcoKCoughko71ck3yyJ2XTByUUzh
-   05tzaLQtJmpj2Ra7hxoInp7Is2miF0PdMmoR8zdqlzvG7RByYuNgpkkD8
-   DY64Inj6KZQdD6MY340yR0tWvo21Z0qXd41FSkaA1lNj1ito5LCEUKAtk
-   A==;
-X-CSE-ConnectionGUID: 1XH/mDwDSGKbQmW/wBRIpA==
-X-CSE-MsgGUID: cQD/xHHLSyW/+zrVHUjZXA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11887954"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11887954"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:03:07 -0700
-X-CSE-ConnectionGUID: Hsqu5gW0S5KbhhQG3TuwzA==
-X-CSE-MsgGUID: ruyqUbEYSFmhiGCE9Xl7tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25193688"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 03:03:05 -0700
-Received: from svinhufvud.ger.corp.intel.com (localhost [IPv6:::1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 9F0E311FC46;
-	Wed, 10 Apr 2024 13:03:01 +0300 (EEST)
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: linux-media@vger.kernel.org
-Cc: tomi.valkeinen@ideasonboard.com,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] media: v4l: Don't turn on privacy LED if streamon fails
-Date: Wed, 10 Apr 2024 13:03:01 +0300
-Message-Id: <20240410100301.658824-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712743413; c=relaxed/simple;
+	bh=ElFxRXFnLreP2B/j6C2YdLwoMXQn2kE494QqHuqzJBY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s+b4bG/NQjef5MItJJBT8Az1FVYiCMElbO+jRsyeRs6Wr9nBisc+KKGtP3OFuP+97yIwKUePXZrEGil+DnujF+2debvcweToJLFNRXRoulcqGhRfXbRTNOyb6r8mcYZZ2Gs+51Hv6e38cmZaoB/8L9yJyAkweVg0XKbse0fMXaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VDyyX29TxzNnM7;
+	Wed, 10 Apr 2024 18:01:08 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5EF4B1402CE;
+	Wed, 10 Apr 2024 18:03:24 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Wed, 10 Apr 2024 18:03:23 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <will@kernel.org>, <mark.rutland@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+CC: <jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
+Subject: [PATCH 1/2] perf: arm_pmu: Only show online CPUs in device's "cpus" attribute
+Date: Wed, 10 Apr 2024 17:58:32 +0800
+Message-ID: <20240410095833.63934-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,53 +39,71 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-Turn on the privacy LED only if streamon succeeds. This can be done after
-enabling streaming on the sensor.
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-Fixes: b6e10ff6c23d ("media: v4l2-core: Make the v4l2-core code enable/disable the privacy LED if present")
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+When there're CPUs offline after system booting, perf will failed:
+[root@localhost ~]# /home/yang/perf stat -a -e armv8_pmuv3_0/cycles/
+Error:
+The sys_perf_event_open() syscall returned with 19 (No such device) for event (cpu-clock).
+/bin/dmesg | grep -i perf may provide additional information.
+
+This is due to PMU's "cpus" is not updated and still contains offline
+CPUs and perf will try to open perf event on the offlined CPUs.
+
+Make "cpus" attribute only shows online CPUs and introduced a new
+"supported_cpus" where users can get the range of the CPUs this
+PMU supported monitoring.
+
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/perf/arm_pmu.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 4c6198c48dd6..acb7c3003ab6 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -412,15 +412,6 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (WARN_ON(!!sd->enabled_streams == !!enable))
- 		return 0;
- 
--#if IS_REACHABLE(CONFIG_LEDS_CLASS)
--	if (!IS_ERR_OR_NULL(sd->privacy_led)) {
--		if (enable)
--			led_set_brightness(sd->privacy_led,
--					   sd->privacy_led->max_brightness);
--		else
--			led_set_brightness(sd->privacy_led, 0);
--	}
--#endif
- 	ret = sd->ops->video->s_stream(sd, enable);
- 
- 	if (!enable && ret < 0) {
-@@ -431,6 +422,16 @@ static int call_s_stream(struct v4l2_subdev *sd, int enable)
- 	if (!ret)
- 		sd->enabled_streams = enable ? BIT(0) : 0;
- 
-+#if IS_REACHABLE(CONFIG_LEDS_CLASS)
-+	if (!IS_ERR_OR_NULL(sd->privacy_led) && !(enable && ret < 0)) {
-+		if (enable)
-+			led_set_brightness(sd->privacy_led,
-+					   sd->privacy_led->max_brightness);
-+		else
-+			led_set_brightness(sd->privacy_led, 0);
-+	}
-+#endif
+diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+index 8458fe2cebb4..acbb0e1d0414 100644
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -558,13 +558,35 @@ static ssize_t cpus_show(struct device *dev,
+ 			 struct device_attribute *attr, char *buf)
+ {
+ 	struct arm_pmu *armpmu = to_arm_pmu(dev_get_drvdata(dev));
+-	return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++	cpumask_var_t mask;
++	ssize_t n;
 +
- 	return ret;
++	/* If allocation failed then show the supported_cpus */
++	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
++		return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++
++	cpumask_and(mask, &armpmu->supported_cpus, cpu_online_mask);
++	n = cpumap_print_to_pagebuf(true, buf, mask);
++	free_cpumask_var(mask);
++
++	return n;
  }
  
+ static DEVICE_ATTR_RO(cpus);
+ 
++static ssize_t supported_cpus_show(struct device *dev,
++				   struct device_attribute *attr, char *buf)
++{
++	struct arm_pmu *armpmu = to_arm_pmu(dev_get_drvdata(dev));
++
++	return cpumap_print_to_pagebuf(true, buf, &armpmu->supported_cpus);
++}
++
++static DEVICE_ATTR_RO(supported_cpus);
++
+ static struct attribute *armpmu_common_attrs[] = {
+ 	&dev_attr_cpus.attr,
++	&dev_attr_supported_cpus.attr,
+ 	NULL,
+ };
+ 
 -- 
-2.39.2
+2.24.0
 
