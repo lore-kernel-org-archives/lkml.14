@@ -1,277 +1,384 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0C27F
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 00:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712707754; cv=none; b=fbRRQGtst/+l3cMz/iqnfDyMcumB1s9PKOfRcJioO+ba581uYEhc/ccubLADupmvrZewDwv89dfA3ZH2bZo9nk9Z5LsGXEmt0l88OUBMVSmnIg3M9yRj1aur05MBCD6bB2DGJbihEjsILA3PL0M40cHH2ImrB4Xccady+kzPuS8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712707754; c=relaxed/simple;
-	bh=MqRwpCcUTE8ROvGrn0LrVmIiCOJF15TV1p6DAROjZOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=W2MVSvcDZYI0yek7YXh0f6zGfhPUaqGKbOKegm4ULHFAhVDWcWTY1AqbSbmm8h6W5oHSw/MX8HAFw8FdhtzWSwFQ3CPSnoFRDbIfyfi3fuvbEvGuRnCbVfY7xGehOSOyZ1N0BLdqocb2Bdpv0Jh7W37S89kap+68uD3izSYKjGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mebwIU1Y; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03887F;
+	Wed, 10 Apr 2024 00:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712707880; cv=fail; b=DkAIcSLdLcGINjx7xLMSCbpcwhTAliVrKnuHMXvdw9dB23d5gm2OZ7alRiDcHa7UhHyrs+WW4jgHi00szBzEskyiGiGgzGhB8Cj91Xid0n3G3uO4QlG1Qrr0VRfwilhu0kvANSImgczHT2DXlN25pEJOnWAISl0VIQy7Y8sOQuo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712707880; c=relaxed/simple;
+	bh=iQO+jajaBsAxpjnwCtvMsiqV4zXxyHQ7ahM4ymXNThs=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MPbXNcbTz45EjlGeGn/Ym5mbXH5/5E+XnoKYIEa03HZ2nUi6XizTyDVhh8sbSFZV9xy3+j3nZqXLUQm0nNitSHVauyACE0ep1aEUeXpIyalkowokx4oo4ZXUtCTSmJ6k7LbplbZM++VFKMenHTFtSrHt7Sq09SkwYE9LEMTYTb8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=huaHTGkI; arc=fail smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mebwIU1Y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="huaHTGkI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712707753; x=1744243753;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=MqRwpCcUTE8ROvGrn0LrVmIiCOJF15TV1p6DAROjZOc=;
-  b=mebwIU1Y0N/e6Sb9BxRWATUnHjTamyyFBjZd3nPJsAHhm5W6LCxl1AfK
-   51AlIP3LmxtGpwMzNng5L222a8GsYMZPuHqHScM7BY52XM0jqcoie7TLW
-   fg0keJU+57HcDl0rvGazmW2XZh4r2e7qV67LTReRpv6nZqVKgGgVtF+q6
-   MI1++EcN49nhMWVLVmo3mdxJMwQzmgMO4UZ2JuZAHB4f0gwNxSGtxTGhd
-   tR60B9m5YvyBt5s3gJQ8V2AP9JCXHGh0SgF43sVUmjPqLL4vgN4c8qhT4
-   bzSXL+FOLD8kIz/4F9o98OSZb81Ttd9iRJIUqTS2U7uxU4Dj4tyKBxuNt
-   A==;
-X-CSE-ConnectionGUID: esuZZU15R5KPCgfQEJnIuA==
-X-CSE-MsgGUID: ib7ITePASG6U05eTr9DZug==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="18765928"
+  t=1712707878; x=1744243878;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=iQO+jajaBsAxpjnwCtvMsiqV4zXxyHQ7ahM4ymXNThs=;
+  b=huaHTGkIArYw6Ns77tVoC7/k1V609g55UlJp1aCVZyrHhgXx4hGNfoCZ
+   lto55lh4ot1hxtS6up2p1Jn6hDhPKH/GD6tyuFMxQVLHij2yDgIxP0T1f
+   jKt4L4BvZpoNfEFoSk4FnG2E4pKaajbAPySli52RxE0mPFWEBLm8kS+o6
+   aPGBhP/F2OD2YJlTKu3WjrxscCmWYFf5/MT6rJHveRqgjMxw39wsTugpt
+   bxQi0NHqm4hWcvDb1yV7ZFnQKV1rPBU164MaDEjfL6gQw8eoeEMEYB0PI
+   z9bhZnMmLpIpr0gFBfD7mbRfIh8vSBUBPgiA4jKI5L0SLFDrsRDKmT9CZ
+   Q==;
+X-CSE-ConnectionGUID: 0Htwwy7LQrqTbkPWVZ9IYQ==
+X-CSE-MsgGUID: Gro3LJmWQ92Dg1sOiNLm1g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7905118"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="18765928"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 17:09:12 -0700
-X-CSE-ConnectionGUID: 8s78tHBAR3Oqddjl82D9Bw==
-X-CSE-MsgGUID: yD05rYJMRO6QDCqhJnRrAQ==
+   d="scan'208";a="7905118"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 17:11:14 -0700
+X-CSE-ConnectionGUID: 9zL6lpV1SnCAGKSkPHHVkg==
+X-CSE-MsgGUID: SS1swIflTTCWs9ZZCCboLg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="25143227"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 09 Apr 2024 17:09:11 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruLWW-0006dk-0w;
-	Wed, 10 Apr 2024 00:09:08 +0000
-Date: Wed, 10 Apr 2024 08:08:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev.2024.04.04a 17/74] mm/memcontrol.c:1200:31: sparse:
- sparse: incorrect type in argument 2 (different base types)
-Message-ID: <202404100829.OchVjDmF-lkp@intel.com>
+   d="scan'208";a="20818308"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 Apr 2024 17:11:14 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 17:11:13 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 9 Apr 2024 17:11:13 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 9 Apr 2024 17:11:13 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 9 Apr 2024 17:11:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LZA4fxfGss6ZEvNSqz3BYM3FARYkkGaKuibvkoltfNAnwK4hAsmjS/tj8w5rmR9vcDIUEUH0iUkSCtwzmLPYOscxDpu826kHUeqEpl46iFZ97uOOsfCx0ug8iCVPrpBhiHDoByz4ca+PmcrFlfy51d75yNTIrl6KZCizNQ+1tNsnMOn3ixtsPGdV5Pa+6Zwhu8CFbEpxycO5M9u/UFqAasmbp/H50zyWjT66luUBoLBibmbHJVMeq/U7FsLzenK/ETj3gtGkkS6nAyuo0lzEfYNF6XoLrSUZsl07VjwKE2baLXYC733tsCRqvPBTEbkRONT7Am/9a7oc072JTqXYCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ytgjN1ZMHheDviFD5zDD2GFhonurxLaJB52OjBau7ZU=;
+ b=Ph4e4MDpQ8oAYKnaZbGTTBfWhcbsHMh8luxk+1/7vuGa+N3vGTiB4caNdyXbRzzEzkS5fN4HkoGxJqBurxeANgvYM7r7/VkCaRudl8DMJCB/4jz+8d7ASfXjchGAUyuvfK3REJxgOC050VJESRyEMrVPU3dIx37Mrr92PnspRpHG6ZkHpvIhB+bs2ySfhhbYE+0lHB/+mchq9inO1LR1QnmdHMhHWaqzNLmPPeYJI3qWjeOY5hjrMms2uorj78YNQc1EtqvPEZnd3sePdACpUEeQhjg1uefdQz+g4dHzliJVxnG7j9OaTO4BjDpMMpX/fmWCzQEBOhF/gKkC7VOFbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+ by IA0PR11MB7353.namprd11.prod.outlook.com (2603:10b6:208:435::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Wed, 10 Apr
+ 2024 00:11:11 +0000
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::b383:e86d:874:245a]) by CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::b383:e86d:874:245a%5]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
+ 00:11:11 +0000
+Message-ID: <bf86b3f9-6f99-45e7-8246-839747205622@intel.com>
+Date: Tue, 9 Apr 2024 17:11:09 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] cxgb4: flower: use NL_SET_ERR_MSG_MOD for
+ validation errors
+To: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>, "Raju
+ Rangoju" <rajur@chelsio.com>, "David S. Miller" <davem@davemloft.net>, "Eric
+ Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240408165506.94483-1-ast@fiberby.net>
+Content-Language: en-US
+From: Jacob Keller <jacob.e.keller@intel.com>
+In-Reply-To: <20240408165506.94483-1-ast@fiberby.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: MW3PR05CA0003.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::8) To CO1PR11MB5089.namprd11.prod.outlook.com
+ (2603:10b6:303:9b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|IA0PR11MB7353:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /ThRDxMOC6Eqa0vHJ6uY7GKPCB+CF6UvZGYWPuHetO0Z9AJ7qyIgNtjaiLNvKUyUEGndIbP4LyyYOBViVjnZzZ+tiumVXsGvislkNO4eL4pDQ9HWVTCoRS5l9mkJWwN2SSdVlcUBEq/94hPIwCcX/zrpIzvPeQcImIdn7QFvVbYZHMYqsc2xjxNlls+is6TyeOG4DAXRCLh4ZElHEz3gNFR5HxN+cj0rw2T+sQKOvEjvrAWlmlS2iO0benwQgHb0h7S5eCIRMRngO3g91oWBA0fv6k5QoFS90st38FpMgpfEgsumiYXvYMmsGjoYp3P+p3qUMcwZG4oDN3r/MwGVZiV9NUT8Uo5LwoFVZXlHEdivZJs2cCA1GUEbbu2yPT3tKWIjdANiOVUps8rXIJ19gceVFn8Dt0/6TTEN+yVRkuew7/d2C9jnnTWJ/jj2YBTp+VxoigjT5ONAv4IHlXUtgHUuYX4Kq58YWrSgMYSN1i/dVd5nalHo+dFR7J7I5w11/4nnALNhyOyayc/YVkskSeZV9mXn/ZJfTcd8rHBn9wZWkpuo+ejA25wYIPY+CZKKZdLow4iLoUh2I2YkLxf553Zp5JFoKcxluLd1RZMyfR75bZgF90dhIsJfhSsS5xedju4tgBzJnskxD+IcHfZ9/6SP1wc0FDBgaqNatPYObKg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZGNwQjJpRkhoLzVRMisvMEJpZ2dwbmg5ZHpRT1VOcHlwSnlCU0E4Z0Y0dUxM?=
+ =?utf-8?B?WDNRRjIwRlp6S0FYNWlJUFplZ0g0ZTkyd1MxWnJPT3B3U3BlREpIemZGS3lv?=
+ =?utf-8?B?dHc0RUVkUHZ3Wmx5M0xrQWxpOVZhcWtDTHMxNEt4T2NGUEs5S0RWcHJRSW50?=
+ =?utf-8?B?QWw2MTVpZ2UzN1RTeGxBWGxOUk5NODVuTEU1aEE5R1h2UWVkeCt2ckJUdUZX?=
+ =?utf-8?B?UXNkcFZHWkNxS3JjUEF1VDV6Zkx5ajMzOFNCdUR6WXlPMUxNbHBHUWVyQitl?=
+ =?utf-8?B?NnlNM01XRzF3ZFpoSkpJYlN4bmZZRVliTVR2MU51bHlDY2lIZFVEZk1RNFdw?=
+ =?utf-8?B?WWhDUk5ZbjQ2dE9uU1ZFdnRvaUFLS2xFZ0d1SndlZndwN2h1dkJVUFpYYW5M?=
+ =?utf-8?B?WSt6c2hEeVFRc2hiU0lvdDBIdXNrZGFscDdEUWpzTXFnUGROWjhYemF1Rmsx?=
+ =?utf-8?B?QTJ6V29Nbi9rNlRIODgxNnNpd0lDVjM4YzJQRzM2SjlGU0Z2Zk5LaHY4YkNv?=
+ =?utf-8?B?YzlVd1M5b0tjb2JvdkpHY0VmODVXYzZRZnFrazFqdzVCYnlDaTNOU2FBandI?=
+ =?utf-8?B?QzhJQ1VlZHY1WURubjRMbmVieGxnZEtBUnZpNUtKUEo0T1F0UG5vOUR1b2N3?=
+ =?utf-8?B?ZjBUSXhZTDh0Um5FeUt4R3JPYkFTa3FFMTFsUEdIQzBvWDNudGJ0WjN1QllW?=
+ =?utf-8?B?ZExYR2dhTTJSMTVVVnowNE5tWkYvenhCRnpRSFJsZUlpOFRJZlRpRnhFODBP?=
+ =?utf-8?B?ZkhOL0V2eXJoVHd3WGJ2bUFYUzc4MlpkRnNQNXBIK2hOUFJmOGExQzBoWlFE?=
+ =?utf-8?B?dzhyUmgrRVkzaXNjb1BOWkpkWEEvcFA0bXVHbFhlN2xqZTB5MlhEMm1rRXJQ?=
+ =?utf-8?B?V1pGVDRTSU5RUXloSkNGMDRSZTZUUFQ3ajBuc2lFaDEvdVBsc3QwSnhDS1hW?=
+ =?utf-8?B?eXoyV2M4MnNNOUIzNCtVM0llVzJmL0JpWUhrVnZma1VIVDBHVGlhQzdQNVdX?=
+ =?utf-8?B?RVAzWk14Wm4weHpKQS9FVWw1Z1pnc05Lclk1TS83bTJKazFvVkZLV1ozRndv?=
+ =?utf-8?B?S25UOENlZ3lmclBVQmd0OCswMWpJWHVhVm03OVl0QzZGYUo3b2JobUVCUTR1?=
+ =?utf-8?B?eTFhOW5LQzdHR2x4a0QxTEZCN05WcjN5TkNMeWFJRGh3QVp2K3lkRnk4eTZB?=
+ =?utf-8?B?UitWN2UwTlNIOE90eEhucjRuVUZIR0RBQTFOZ3JlZjJVUHVqd2tadjRESWxU?=
+ =?utf-8?B?czhjOG5UV1g3WXRZZjdjK2EwcDVRdUU5dFYrZUNCcEUzNnVWV1QzbkJneXc4?=
+ =?utf-8?B?TFdQa3dhdUU3bUMyNDIxV05GQjNyRFFHL3Z1a29jZmNiaDRqYjZEWmdkcTNV?=
+ =?utf-8?B?eUxvSENOaElpMGFVclJlREJ6eVlPTXJabnB4TjdOWE5nSVVtbThRdFBxN3RB?=
+ =?utf-8?B?SEdlS1lYRG9vYVRSckVjZVBoeFh4cm5Hc2V0Sk9tZ2p4aU16ME9aeXdUQ3RX?=
+ =?utf-8?B?Nm5weGFsaFdUd1FxOW4rK3p0enZlVXhtaTVtMVJHWUROTHRMRzdTaTRMMTR1?=
+ =?utf-8?B?b0dIcXh5OGlSOWFHOTlLT3ZNZmo1K1dJRmpHRDNYNzRkdlJZUnRRWVh5WVZH?=
+ =?utf-8?B?MGtoR0VSNWx2Q3kvT1Y5SHRuYzVheTQzeHl2M2x4WG9wL2pTNkxncXBzWkU0?=
+ =?utf-8?B?OGkyV1JDaWloMSsyYUQxYkJZUDJxN3VxSXphTGJoT0NwbU5QZ2JxY1BFZkxO?=
+ =?utf-8?B?VDdGTEg3Y3BHYWFyL0dBR0lJYStndE9rUUQ3VG1xcjVSTWxHVHphdll5L0lt?=
+ =?utf-8?B?Y3RMckdpV0tBWmV6dE5VbGhmVUo1a3licDVlSlVRSHk2ekt6ZU9TODVMVWhR?=
+ =?utf-8?B?ZFR4MktCcTRRa3FzRUd1WVZHUDdoTWQwRktVK0ZpTGtoeW5nbWpVc0syU2Jz?=
+ =?utf-8?B?bHVma0ZTT2kzem1lcWtiK0hGL0kzNVRnNHFUQ2NyLzRnczNOaDRPdWxuVkFQ?=
+ =?utf-8?B?NmFndFppOENXek5SVllXQStwQjVvaVNta1prWkRkY2t4S1RhK3lYc2RncWt4?=
+ =?utf-8?B?d0l1TzNSR09Dc3Q3MHBwbEsvdnc0WEY5eUxhNFVlTWlZNHNwbTByZXFmVWVu?=
+ =?utf-8?B?RjJPQW1RRWZWTW1zdmZNajBRZjM3SmlTaDc1bkJwR016ZEZ6cEVkUE9MQmtW?=
+ =?utf-8?B?M0E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 020dc6ba-80cd-4230-e231-08dc58f2ba66
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 00:11:11.3033
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eyJ5zrVEaq9pDo16PDfryIykdNH/YBSiAXuEqWjkLEh2g9N+s4pD0btYXMnyAoDHafyruTX9hNw1go8Xu2Gn8tny5cdi4ATjRSuQ9eCNCZU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7353
+X-OriginatorOrg: intel.com
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2024.04.04a
-head:   e2a520f3f3921cb5d3c9631917fccf8c215991ce
-commit: 27011e7159ef6e100e9ae1debb01a8e180ee94bf [17/74] riscv: Emulate one-byte cmpxchg
-config: riscv-randconfig-r122-20240409 (https://download.01.org/0day-ci/archive/20240410/202404100829.OchVjDmF-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240410/202404100829.OchVjDmF-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404100829.OchVjDmF-lkp@intel.com/
 
-sparse warnings: (new ones prefixed by >>)
->> mm/memcontrol.c:1200:31: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct mem_cgroup *__old @@
-   mm/memcontrol.c:1200:31: sparse:     expected unsigned long [usertype] old
-   mm/memcontrol.c:1200:31: sparse:     got struct mem_cgroup *__old
->> mm/memcontrol.c:1200:31: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct mem_cgroup *__new @@
-   mm/memcontrol.c:1200:31: sparse:     expected unsigned long [usertype] new
-   mm/memcontrol.c:1200:31: sparse:     got struct mem_cgroup *__new
-   mm/memcontrol.c:1240:23: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct mem_cgroup *__old @@
-   mm/memcontrol.c:1240:23: sparse:     expected unsigned long [usertype] old
-   mm/memcontrol.c:1240:23: sparse:     got struct mem_cgroup *__old
-   mm/memcontrol.c:1240:23: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct mem_cgroup *__new @@
-   mm/memcontrol.c:1240:23: sparse:     expected unsigned long [usertype] new
-   mm/memcontrol.c:1240:23: sparse:     got struct mem_cgroup *__new
-   mm/memcontrol.c:1281:17: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct mem_cgroup *__old @@
-   mm/memcontrol.c:1281:17: sparse:     expected unsigned long [usertype] old
-   mm/memcontrol.c:1281:17: sparse:     got struct mem_cgroup *__old
-   mm/memcontrol.c:1281:17: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct mem_cgroup *__new @@
-   mm/memcontrol.c:1281:17: sparse:     expected unsigned long [usertype] new
-   mm/memcontrol.c:1281:17: sparse:     got struct mem_cgroup *__new
->> mm/memcontrol.c:3184:19: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct obj_cgroup *__old @@
-   mm/memcontrol.c:3184:19: sparse:     expected unsigned long [usertype] old
-   mm/memcontrol.c:3184:19: sparse:     got struct obj_cgroup *__old
->> mm/memcontrol.c:3184:19: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct obj_cgroup *__new @@
-   mm/memcontrol.c:3184:19: sparse:     expected unsigned long [usertype] new
-   mm/memcontrol.c:3184:19: sparse:     got struct obj_cgroup *__new
-   mm/memcontrol.c:4408:21: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   mm/memcontrol.c:4408:21: sparse:    struct mem_cgroup_threshold_ary [noderef] __rcu *
-   mm/memcontrol.c:4408:21: sparse:    struct mem_cgroup_threshold_ary *
-   mm/memcontrol.c:4410:21: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   mm/memcontrol.c:4410:21: sparse:    struct mem_cgroup_threshold_ary [noderef] __rcu *
-   mm/memcontrol.c:4410:21: sparse:    struct mem_cgroup_threshold_ary *
-   mm/memcontrol.c:4566:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   mm/memcontrol.c:4566:9: sparse:    struct mem_cgroup_threshold_ary [noderef] __rcu *
-   mm/memcontrol.c:4566:9: sparse:    struct mem_cgroup_threshold_ary *
-   mm/memcontrol.c:4660:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   mm/memcontrol.c:4660:9: sparse:    struct mem_cgroup_threshold_ary [noderef] __rcu *
-   mm/memcontrol.c:4660:9: sparse:    struct mem_cgroup_threshold_ary *
-   mm/memcontrol.c: note: in included file:
-   include/linux/memcontrol.h:761:9: sparse: sparse: context imbalance in 'folio_lruvec_lock' - wrong count at exit
-   include/linux/memcontrol.h:761:9: sparse: sparse: context imbalance in 'folio_lruvec_lock_irq' - wrong count at exit
-   include/linux/memcontrol.h:761:9: sparse: sparse: context imbalance in 'folio_lruvec_lock_irqsave' - wrong count at exit
-   mm/memcontrol.c:2185:6: sparse: sparse: context imbalance in 'folio_memcg_lock' - wrong count at exit
-   mm/memcontrol.c:2232:17: sparse: sparse: context imbalance in '__folio_memcg_unlock' - unexpected unlock
---
->> fs/fs-writeback.c:291:13: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct bdi_writeback *__old @@
-   fs/fs-writeback.c:291:13: sparse:     expected unsigned long [usertype] old
-   fs/fs-writeback.c:291:13: sparse:     got struct bdi_writeback *__old
->> fs/fs-writeback.c:291:13: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct bdi_writeback *__new @@
-   fs/fs-writeback.c:291:13: sparse:     expected unsigned long [usertype] new
-   fs/fs-writeback.c:291:13: sparse:     got struct bdi_writeback *__new
-   fs/fs-writeback.c:753:15: sparse: sparse: context imbalance in 'wbc_attach_and_unlock_inode' - unexpected unlock
-   fs/fs-writeback.c:1804:20: sparse: sparse: context imbalance in 'writeback_single_inode' - different lock contexts for basic block
-   fs/fs-writeback.c:1990:9: sparse: sparse: context imbalance in 'writeback_sb_inodes' - different lock contexts for basic block
-   fs/fs-writeback.c:2580:20: sparse: sparse: context imbalance in '__mark_inode_dirty' - unexpected unlock
---
-   fs/bcachefs/btree_cache.c: note: in included file:
-   fs/bcachefs/bcachefs.h:1023:9: sparse: sparse: array of flexible structures
->> fs/bcachefs/btree_cache.c:534:15: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct task_struct *__old @@
-   fs/bcachefs/btree_cache.c:534:15: sparse:     expected unsigned long [usertype] old
-   fs/bcachefs/btree_cache.c:534:15: sparse:     got struct task_struct *__old
->> fs/bcachefs/btree_cache.c:534:15: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct task_struct *__new @@
-   fs/bcachefs/btree_cache.c:534:15: sparse:     expected unsigned long [usertype] new
-   fs/bcachefs/btree_cache.c:534:15: sparse:     got struct task_struct *__new
-   fs/bcachefs/btree_cache.c:546:15: sparse: sparse: incorrect type in argument 2 (different base types) @@     expected unsigned long [usertype] old @@     got struct task_struct *__old @@
-   fs/bcachefs/btree_cache.c:546:15: sparse:     expected unsigned long [usertype] old
-   fs/bcachefs/btree_cache.c:546:15: sparse:     got struct task_struct *__old
-   fs/bcachefs/btree_cache.c:546:15: sparse: sparse: incorrect type in argument 3 (different base types) @@     expected unsigned long [usertype] new @@     got struct task_struct *__new @@
-   fs/bcachefs/btree_cache.c:546:15: sparse:     expected unsigned long [usertype] new
-   fs/bcachefs/btree_cache.c:546:15: sparse:     got struct task_struct *__new
+On 4/8/2024 9:55 AM, Asbjørn Sloth Tønnesen wrote:
+> Replace netdev_{warn,err} with NL_SET_ERR_MSG_{FMT_,}MOD
+> to better inform the user about the problem.
+> 
+> Only compile-tested, no access to HW.
+> 
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+> ---
 
-vim +1200 mm/memcontrol.c
+Good improvement. Its a straightforward replacement.
 
-4b569387c0d566 Nhat Pham         2023-10-06  1138  
-5660048ccac873 Johannes Weiner   2012-01-12  1139  /**
-5660048ccac873 Johannes Weiner   2012-01-12  1140   * mem_cgroup_iter - iterate over memory cgroup hierarchy
-5660048ccac873 Johannes Weiner   2012-01-12  1141   * @root: hierarchy root
-5660048ccac873 Johannes Weiner   2012-01-12  1142   * @prev: previously returned memcg, NULL on first invocation
-5660048ccac873 Johannes Weiner   2012-01-12  1143   * @reclaim: cookie for shared reclaim walks, NULL for full walks
-5660048ccac873 Johannes Weiner   2012-01-12  1144   *
-5660048ccac873 Johannes Weiner   2012-01-12  1145   * Returns references to children of the hierarchy below @root, or
-5660048ccac873 Johannes Weiner   2012-01-12  1146   * @root itself, or %NULL after a full round-trip.
-5660048ccac873 Johannes Weiner   2012-01-12  1147   *
-5660048ccac873 Johannes Weiner   2012-01-12  1148   * Caller must pass the return value in @prev on subsequent
-5660048ccac873 Johannes Weiner   2012-01-12  1149   * invocations for reference counting, or use mem_cgroup_iter_break()
-5660048ccac873 Johannes Weiner   2012-01-12  1150   * to cancel a hierarchy walk before the round-trip is complete.
-5660048ccac873 Johannes Weiner   2012-01-12  1151   *
-05bdc520b3ad39 Miaohe Lin        2020-10-13  1152   * Reclaimers can specify a node in @reclaim to divide up the memcgs
-05bdc520b3ad39 Miaohe Lin        2020-10-13  1153   * in the hierarchy among all concurrent reclaimers operating on the
-05bdc520b3ad39 Miaohe Lin        2020-10-13  1154   * same node.
-5660048ccac873 Johannes Weiner   2012-01-12  1155   */
-694fbc0fe78518 Andrew Morton     2013-09-24  1156  struct mem_cgroup *mem_cgroup_iter(struct mem_cgroup *root,
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1157  				   struct mem_cgroup *prev,
-694fbc0fe78518 Andrew Morton     2013-09-24  1158  				   struct mem_cgroup_reclaim_cookie *reclaim)
-7d74b06f240f1b KAMEZAWA Hiroyuki 2010-10-27  1159  {
-3f649ab728cda8 Kees Cook         2020-06-03  1160  	struct mem_cgroup_reclaim_iter *iter;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1161  	struct cgroup_subsys_state *css = NULL;
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1162  	struct mem_cgroup *memcg = NULL;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1163  	struct mem_cgroup *pos = NULL;
-711d3d2c9bc3fb KAMEZAWA Hiroyuki 2010-10-27  1164  
-694fbc0fe78518 Andrew Morton     2013-09-24  1165  	if (mem_cgroup_disabled())
-694fbc0fe78518 Andrew Morton     2013-09-24  1166  		return NULL;
-5660048ccac873 Johannes Weiner   2012-01-12  1167  
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1168  	if (!root)
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1169  		root = root_mem_cgroup;
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1170  
-542f85f9ae4acd Michal Hocko      2013-04-29  1171  	rcu_read_lock();
-14067bb3e24b96 KAMEZAWA Hiroyuki 2009-04-02  1172  
-527a5ec9a53471 Johannes Weiner   2012-01-12  1173  	if (reclaim) {
-ef8f2327996b5c Mel Gorman        2016-07-28  1174  		struct mem_cgroup_per_node *mz;
-527a5ec9a53471 Johannes Weiner   2012-01-12  1175  
-a3747b53b1771a Johannes Weiner   2021-04-29  1176  		mz = root->nodeinfo[reclaim->pgdat->node_id];
-9da83f3fc74b80 Yafang Shao       2019-11-30  1177  		iter = &mz->iter;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1178  
-a9320aae68a1cd Wei Yang          2022-04-28  1179  		/*
-a9320aae68a1cd Wei Yang          2022-04-28  1180  		 * On start, join the current reclaim iteration cycle.
-a9320aae68a1cd Wei Yang          2022-04-28  1181  		 * Exit when a concurrent walker completes it.
-a9320aae68a1cd Wei Yang          2022-04-28  1182  		 */
-a9320aae68a1cd Wei Yang          2022-04-28  1183  		if (!prev)
-a9320aae68a1cd Wei Yang          2022-04-28  1184  			reclaim->generation = iter->generation;
-a9320aae68a1cd Wei Yang          2022-04-28  1185  		else if (reclaim->generation != iter->generation)
-542f85f9ae4acd Michal Hocko      2013-04-29  1186  			goto out_unlock;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1187  
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1188  		while (1) {
-4db0c3c2983cc6 Jason Low         2015-04-15  1189  			pos = READ_ONCE(iter->position);
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1190  			if (!pos || css_tryget(&pos->css))
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1191  				break;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1192  			/*
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1193  			 * css reference reached zero, so iter->position will
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1194  			 * be cleared by ->css_released. However, we should not
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1195  			 * rely on this happening soon, because ->css_released
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1196  			 * is called from a work queue, and by busy-waiting we
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1197  			 * might block it. So we clear iter->position right
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1198  			 * away.
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1199  			 */
-6df38689e0e9a0 Vladimir Davydov  2015-12-29 @1200  			(void)cmpxchg(&iter->position, pos, NULL);
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1201  		}
-89d8330ccf2ad4 Wei Yang          2022-04-28  1202  	} else if (prev) {
-89d8330ccf2ad4 Wei Yang          2022-04-28  1203  		pos = prev;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1204  	}
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1205  
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1206  	if (pos)
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1207  		css = &pos->css;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1208  
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1209  	for (;;) {
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1210  		css = css_next_descendant_pre(css, &root->css);
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1211  		if (!css) {
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1212  			/*
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1213  			 * Reclaimers share the hierarchy walk, and a
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1214  			 * new one might jump in right at the end of
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1215  			 * the hierarchy - make sure they see at least
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1216  			 * one group and restart from the beginning.
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1217  			 */
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1218  			if (!prev)
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1219  				continue;
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1220  			break;
-542f85f9ae4acd Michal Hocko      2013-04-29  1221  		}
-5f578161971863 Michal Hocko      2013-04-29  1222  
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1223  		/*
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1224  		 * Verify the css and acquire a reference.  The root
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1225  		 * is provided by the caller, so we know it's alive
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1226  		 * and kicking, and don't take an extra reference.
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1227  		 */
-41555dadbff8d2 Wei Yang          2022-04-28  1228  		if (css == &root->css || css_tryget(css)) {
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1229  			memcg = mem_cgroup_from_css(css);
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1230  			break;
-41555dadbff8d2 Wei Yang          2022-04-28  1231  		}
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1232  	}
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1233  
-527a5ec9a53471 Johannes Weiner   2012-01-12  1234  	if (reclaim) {
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1235  		/*
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1236  		 * The position could have already been updated by a competing
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1237  		 * thread, so check that the value hasn't changed since we read
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1238  		 * it to avoid reclaiming from the same cgroup twice.
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1239  		 */
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1240  		(void)cmpxchg(&iter->position, pos, memcg);
-6df38689e0e9a0 Vladimir Davydov  2015-12-29  1241  
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1242  		if (pos)
-5ac8fb31ad2ebd Johannes Weiner   2014-12-10  1243  			css_put(&pos->css);
-542f85f9ae4acd Michal Hocko      2013-04-29  1244  
-19f39402864ea3 Michal Hocko      2013-04-29  1245  		if (!memcg)
-527a5ec9a53471 Johannes Weiner   2012-01-12  1246  			iter->generation++;
-527a5ec9a53471 Johannes Weiner   2012-01-12  1247  	}
-14067bb3e24b96 KAMEZAWA Hiroyuki 2009-04-02  1248  
-542f85f9ae4acd Michal Hocko      2013-04-29  1249  out_unlock:
-542f85f9ae4acd Michal Hocko      2013-04-29  1250  	rcu_read_unlock();
-c40046f3ad5e87 Michal Hocko      2013-04-29  1251  	if (prev && prev != root)
-c40046f3ad5e87 Michal Hocko      2013-04-29  1252  		css_put(&prev->css);
-c40046f3ad5e87 Michal Hocko      2013-04-29  1253  
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1254  	return memcg;
-9f3a0d0933de07 Johannes Weiner   2012-01-12  1255  }
-14067bb3e24b96 KAMEZAWA Hiroyuki 2009-04-02  1256  
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 
-:::::: The code at line 1200 was first introduced by commit
-:::::: 6df38689e0e9a07ff4f42c06b302e203b33667e9 mm: memcontrol: fix possible memcg leak due to interrupted reclaim
-
-:::::: TO: Vladimir Davydov <vdavydov@virtuozzo.com>
-:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>  .../ethernet/chelsio/cxgb4/cxgb4_tc_flower.c  | 64 +++++++++----------
+>  1 file changed, 30 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+> index 72ac4a34424b9..3a6987cafe590 100644
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.c
+> @@ -305,7 +305,7 @@ static void cxgb4_process_flow_match(struct net_device *dev,
+>  	fs->mask.iport = ~0;
+>  }
+>  
+> -static int cxgb4_validate_flow_match(struct net_device *dev,
+> +static int cxgb4_validate_flow_match(struct netlink_ext_ack *extack,
+>  				     struct flow_rule *rule)
+>  {
+>  	struct flow_dissector *dissector = rule->match.dissector;
+> @@ -321,8 +321,9 @@ static int cxgb4_validate_flow_match(struct net_device *dev,
+>  	      BIT_ULL(FLOW_DISSECTOR_KEY_ENC_KEYID) |
+>  	      BIT_ULL(FLOW_DISSECTOR_KEY_VLAN) |
+>  	      BIT_ULL(FLOW_DISSECTOR_KEY_IP))) {
+> -		netdev_warn(dev, "Unsupported key used: 0x%llx\n",
+> -			    dissector->used_keys);
+> +		NL_SET_ERR_MSG_FMT_MOD(extack,
+> +				       "Unsupported key used: 0x%llx",
+> +				       dissector->used_keys);
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> @@ -339,13 +340,15 @@ static int cxgb4_validate_flow_match(struct net_device *dev,
+>  		struct flow_match_ip match;
+>  
+>  		if (eth_ip_type != ETH_P_IP && eth_ip_type != ETH_P_IPV6) {
+> -			netdev_err(dev, "IP Key supported only with IPv4/v6");
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "IP Key supported only with IPv4/v6");
+>  			return -EINVAL;
+>  		}
+>  
+>  		flow_rule_match_ip(rule, &match);
+>  		if (match.mask->ttl) {
+> -			netdev_warn(dev, "ttl match unsupported for offload");
+> +			NL_SET_ERR_MSG_MOD(extack,
+> +					   "ttl match unsupported for offload");
+>  			return -EOPNOTSUPP;
+>  		}
+>  	}
+> @@ -576,7 +579,7 @@ static bool valid_l4_mask(u32 mask)
+>  	return hi && lo ? false : true;
+>  }
+>  
+> -static bool valid_pedit_action(struct net_device *dev,
+> +static bool valid_pedit_action(struct netlink_ext_ack *extack,
+>  			       const struct flow_action_entry *act,
+>  			       u8 *natmode_flags)
+>  {
+> @@ -595,8 +598,7 @@ static bool valid_pedit_action(struct net_device *dev,
+>  		case PEDIT_ETH_SMAC_47_16:
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported pedit field\n",
+> -				   __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit field");
+>  			return false;
+>  		}
+>  		break;
+> @@ -609,8 +611,7 @@ static bool valid_pedit_action(struct net_device *dev,
+>  			*natmode_flags |= CXGB4_ACTION_NATMODE_DIP;
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported pedit field\n",
+> -				   __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit field");
+>  			return false;
+>  		}
+>  		break;
+> @@ -629,8 +630,7 @@ static bool valid_pedit_action(struct net_device *dev,
+>  			*natmode_flags |= CXGB4_ACTION_NATMODE_DIP;
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported pedit field\n",
+> -				   __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit field");
+>  			return false;
+>  		}
+>  		break;
+> @@ -638,8 +638,8 @@ static bool valid_pedit_action(struct net_device *dev,
+>  		switch (offset) {
+>  		case PEDIT_TCP_SPORT_DPORT:
+>  			if (!valid_l4_mask(~mask)) {
+> -				netdev_err(dev, "%s: Unsupported mask for TCP L4 ports\n",
+> -					   __func__);
+> +				NL_SET_ERR_MSG_MOD(extack,
+> +						   "Unsupported mask for TCP L4 ports");
+>  				return false;
+>  			}
+>  			if (~mask & PEDIT_TCP_UDP_SPORT_MASK)
+> @@ -648,8 +648,7 @@ static bool valid_pedit_action(struct net_device *dev,
+>  				*natmode_flags |= CXGB4_ACTION_NATMODE_DPORT;
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported pedit field\n",
+> -				   __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit field");
+>  			return false;
+>  		}
+>  		break;
+> @@ -657,8 +656,8 @@ static bool valid_pedit_action(struct net_device *dev,
+>  		switch (offset) {
+>  		case PEDIT_UDP_SPORT_DPORT:
+>  			if (!valid_l4_mask(~mask)) {
+> -				netdev_err(dev, "%s: Unsupported mask for UDP L4 ports\n",
+> -					   __func__);
+> +				NL_SET_ERR_MSG_MOD(extack,
+> +						   "Unsupported mask for UDP L4 ports");
+>  				return false;
+>  			}
+>  			if (~mask & PEDIT_TCP_UDP_SPORT_MASK)
+> @@ -667,13 +666,12 @@ static bool valid_pedit_action(struct net_device *dev,
+>  				*natmode_flags |= CXGB4_ACTION_NATMODE_DPORT;
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported pedit field\n",
+> -				   __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit field");
+>  			return false;
+>  		}
+>  		break;
+>  	default:
+> -		netdev_err(dev, "%s: Unsupported pedit type\n", __func__);
+> +		NL_SET_ERR_MSG_MOD(extack, "Unsupported pedit type");
+>  		return false;
+>  	}
+>  	return true;
+> @@ -727,8 +725,7 @@ int cxgb4_validate_flow_actions(struct net_device *dev,
+>  			 * the provided output port is not valid
+>  			 */
+>  			if (!found) {
+> -				netdev_err(dev, "%s: Out port invalid\n",
+> -					   __func__);
+> +				NL_SET_ERR_MSG_MOD(extack, "Out port invalid");
+>  				return -EINVAL;
+>  			}
+>  			act_redir = true;
+> @@ -745,21 +742,21 @@ int cxgb4_validate_flow_actions(struct net_device *dev,
+>  			case FLOW_ACTION_VLAN_PUSH:
+>  			case FLOW_ACTION_VLAN_MANGLE:
+>  				if (proto != ETH_P_8021Q) {
+> -					netdev_err(dev, "%s: Unsupported vlan proto\n",
+> -						   __func__);
+> +					NL_SET_ERR_MSG_MOD(extack,
+> +							   "Unsupported vlan proto");
+>  					return -EOPNOTSUPP;
+>  				}
+>  				break;
+>  			default:
+> -				netdev_err(dev, "%s: Unsupported vlan action\n",
+> -					   __func__);
+> +				NL_SET_ERR_MSG_MOD(extack,
+> +						   "Unsupported vlan action");
+>  				return -EOPNOTSUPP;
+>  			}
+>  			act_vlan = true;
+>  			}
+>  			break;
+>  		case FLOW_ACTION_MANGLE: {
+> -			bool pedit_valid = valid_pedit_action(dev, act,
+> +			bool pedit_valid = valid_pedit_action(extack, act,
+>  							      &natmode_flags);
+>  
+>  			if (!pedit_valid)
+> @@ -771,14 +768,14 @@ int cxgb4_validate_flow_actions(struct net_device *dev,
+>  			/* Do nothing. cxgb4_set_filter will validate */
+>  			break;
+>  		default:
+> -			netdev_err(dev, "%s: Unsupported action\n", __func__);
+> +			NL_SET_ERR_MSG_MOD(extack, "Unsupported action");
+>  			return -EOPNOTSUPP;
+>  		}
+>  	}
+>  
+>  	if ((act_pedit || act_vlan) && !act_redir) {
+> -		netdev_err(dev, "%s: pedit/vlan rewrite invalid without egress redirect\n",
+> -			   __func__);
+> +		NL_SET_ERR_MSG_MOD(extack,
+> +				   "pedit/vlan rewrite invalid without egress redirect");
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -864,7 +861,7 @@ int cxgb4_flow_rule_replace(struct net_device *dev, struct flow_rule *rule,
+>  	if (cxgb4_validate_flow_actions(dev, &rule->action, extack, 0))
+>  		return -EOPNOTSUPP;
+>  
+> -	if (cxgb4_validate_flow_match(dev, rule))
+> +	if (cxgb4_validate_flow_match(extack, rule))
+>  		return -EOPNOTSUPP;
+>  
+>  	cxgb4_process_flow_match(dev, rule, fs);
+> @@ -901,8 +898,7 @@ int cxgb4_flow_rule_replace(struct net_device *dev, struct flow_rule *rule,
+>  	init_completion(&ctx.completion);
+>  	ret = __cxgb4_set_filter(dev, fidx, fs, &ctx);
+>  	if (ret) {
+> -		netdev_err(dev, "%s: filter creation err %d\n",
+> -			   __func__, ret);
+> +		NL_SET_ERR_MSG_FMT_MOD(extack, "filter creation err %d", ret);
+>  		return ret;
+>  	}
+>  
