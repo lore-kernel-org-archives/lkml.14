@@ -1,105 +1,67 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12ED11779B4;
-	Wed, 10 Apr 2024 17:36:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10683178CEE;
+	Wed, 10 Apr 2024 17:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712770571; cv=none; b=ufmzr/kxYKt4NTP9Vv/eyTUSMaAz2nDiGNT+ZRYVTmMm1G/mQsE14HMOrFdWgvhHIM5FJDKArOnrFEXbSj0bgtL4EKpga4XvUrbH1K7UQLRwes1vtQswpNIqRC9ztZKUYjB7XbjU8znidFZTGR/kkgr3JHiRrWt6kt9tmREXylg=
+	t=1712770603; cv=none; b=XEP7VaDL6IgMZu0rK/L9qX/75YBu944rIwzvbrpdjV+vQ5F93TSRbLwwkfKHov7vydBWwVXbST1quPdtuPMgp6WvmvJwGj7+H5BbtkJeEm0Ftu/z3qmU0achBjBVhyiU/DYnh9GZwr6KKnhuZax5TElu8dsto2fL2ODEWcXdImQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712770571; c=relaxed/simple;
-	bh=s7AlPHnjW1gFs3weqR//JnIAW3hG+/Mp+aTuvYmxgTU=;
+	s=arc-20240116; t=1712770603; c=relaxed/simple;
+	bh=C2Ckdhh6MShRypHTQfGnWVcfvy2wO5tJ+RrOIcXU+GE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p2+x3X32CoKrZ801XtkYFNGmkdaDWfFjB3IA9loQOFj+haLX+43yX/Qrqx0UVHKz2mKYkJhVdUEuz67bSAPtr4mMpb+FH5h03XTzcdKa4Z0aPLJ98l6kBSsGYiWHwwnMnpqbGgQrgr1WO8tVj0ye7KrJMr1S9CA6R6ITlRItAw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wo/su6ux; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pwQ8usD0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wo/su6ux; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=pwQ8usD0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=ku2fbVdP9tN/myGy5+f1Nvmq2zNPGwrrTxF/Wq0CiWnfVO/1pT4yJNcQrpk6voQSUZiVbdzzPTA+GUhFYvllrnMuJWEsc7h50qHSsibzDv3Se+UysKrXFV3kjKQkXLGKCXFlG5+nMO+tDwgwL7yn+M27psyjg+sMRerMrcH3UnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fakINiiU; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wo/su6ux";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pwQ8usD0";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wo/su6ux";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="pwQ8usD0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3395033A89;
-	Wed, 10 Apr 2024 17:36:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=Wo/su6uxAz3KDCet7sG1IMbLmZNu/s492NxBN+stUG6oo2qYtuABn+4iFfLZA7KwEty81H
-	IdrOqxowTjwdMcGmvVJuVhd3KhUwlHGwlvUKUWet7620GxVeKx3CiehY9/HodlAMarXBGu
-	QKA3ILsUtN07gfz8aoS5W8ffx3zw7mU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=pwQ8usD0NAyGD6U1k6UXV+bVfsviAAMcwHC0rXMTXFxYTDSQht5I5OMD0LYFtofyWnG5ZB
-	JIolcEC5hlnuCvCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=Wo/su6uxAz3KDCet7sG1IMbLmZNu/s492NxBN+stUG6oo2qYtuABn+4iFfLZA7KwEty81H
-	IdrOqxowTjwdMcGmvVJuVhd3KhUwlHGwlvUKUWet7620GxVeKx3CiehY9/HodlAMarXBGu
-	QKA3ILsUtN07gfz8aoS5W8ffx3zw7mU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712770567;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0ZHHE5aOwQ1Ezn/ab1buAuDtcCLPcpIIchKLIUxoBbM=;
-	b=pwQ8usD0NAyGD6U1k6UXV+bVfsviAAMcwHC0rXMTXFxYTDSQht5I5OMD0LYFtofyWnG5ZB
-	JIolcEC5hlnuCvCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EFAAD13691;
-	Wed, 10 Apr 2024 17:36:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 20hgOgbOFmZrWQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 10 Apr 2024 17:36:06 +0000
-Date: Wed, 10 Apr 2024 19:28:37 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Jan Kara <jack@suse.cz>
-Cc: Matthew Wilcox <willy@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>,
-	axboe@kernel.dk, roger.pau@citrix.com, colyli@suse.de,
-	kent.overstreet@gmail.com, joern@lazybastard.org,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
-	gor@linux.ibm.com, agordeev@linux.ibm.com, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	nico@fluxnic.net, xiang@kernel.org, chao@kernel.org, tytso@mit.edu,
-	adilger.kernel@dilger.ca, jack@suse.com, konishi.ryusuke@gmail.com,
-	akpm@linux-foundation.org, hare@suse.de, p.raghav@samsung.com,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-s390@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-bcachefs@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-nilfs@vger.kernel.org, yukuai3@huawei.com,
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH RFC v3 for-6.8/block 09/17] btrfs: use bdev apis
-Message-ID: <20240410172837.GO3492@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
- <20231221085712.1766333-10-yukuai1@huaweicloud.com>
- <ZYcZi5YYvt5QHrG9@casper.infradead.org>
- <20240104114958.f3cit5q7syp3tn3a@quack3>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fakINiiU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712770602; x=1744306602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C2Ckdhh6MShRypHTQfGnWVcfvy2wO5tJ+RrOIcXU+GE=;
+  b=fakINiiUCRSw2Y/efrv454Y2guCzBhEsWkxytKQXg8bFw3gm1WRGftkH
+   87jkL0gqVzxXCcM25OxzKyBCKA8Wx9HwO0eGSmcUjsGbE2uBDipzgSOo3
+   gt01cUYDw1+l5enazbsUZlkPlLSsquie/hGMmiwG1XuWw7zcqU9uL4Urr
+   kKs5b9FuPhXGfZEbipOiH8GXjStDUDdAD9MwYaXP4jjtNRwe4rrurxTaP
+   aiKv9/7eP5h2pOJxdPiyqJxjlij3uLTXE7RQyFg9icl2AgPEMs5iznek4
+   1/wSu/z2WHtccpbIQsXiV3v6W8NuPM0Y1yLegI6X8OoD67o6yqtm5Ixnp
+   A==;
+X-CSE-ConnectionGUID: IWfmZtZIT+Owxx28JyCBrw==
+X-CSE-MsgGUID: IITQZQWQSMegjxzMIlpJOA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8328253"
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="8328253"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:36:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915438867"
+X-IronPort-AV: E=Sophos;i="6.07,191,1708416000"; 
+   d="scan'208";a="915438867"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 10:36:21 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rubru-000000038N0-3OjI;
+	Wed, 10 Apr 2024 20:36:18 +0300
+Date: Wed, 10 Apr 2024 20:36:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Felix Fietkau <nbd@nbd.name>, Alexander Couzens <lynxis@fe80.eu>,
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: Lorenzo Bianconi <lorenzo@kernel.org>,
+	Ryder Lee <ryder.lee@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>,
+	Sean Wang <sean.wang@mediatek.com>, Kalle Valo <kvalo@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH wireless-next v1 1/1] wifi: mt76: mt7915: Remove unused
+ of_gpio.h
+Message-ID: <ZhbOEqO4BIE4q7Vv@smile.fi.intel.com>
+References: <20240228200321.3607764-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -108,76 +70,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240104114958.f3cit5q7syp3tn3a@quack3>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -2.50
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[49];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLtpaten8pmzgjg419jubxqoa7)];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,huaweicloud.com,kernel.dk,citrix.com,suse.de,gmail.com,lazybastard.org,bootlin.com,nod.at,ti.com,linux.ibm.com,oracle.com,fb.com,toxicpanda.com,suse.com,zeniv.linux.org.uk,kernel.org,fluxnic.net,mit.edu,dilger.ca,linux-foundation.org,samsung.com,vger.kernel.org,lists.xenproject.org,lists.infradead.org,lists.ozlabs.org,huawei.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	TAGGED_RCPT(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+In-Reply-To: <20240228200321.3607764-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Jan 04, 2024 at 12:49:58PM +0100, Jan Kara wrote:
-> On Sat 23-12-23 17:31:55, Matthew Wilcox wrote:
-> > On Thu, Dec 21, 2023 at 04:57:04PM +0800, Yu Kuai wrote:
-> > > @@ -3674,16 +3670,17 @@ struct btrfs_super_block *btrfs_read_dev_one_super(struct block_device *bdev,
-> > >  		 * Drop the page of the primary superblock, so later read will
-> > >  		 * always read from the device.
-> > >  		 */
-> > > -		invalidate_inode_pages2_range(mapping,
-> > > -				bytenr >> PAGE_SHIFT,
-> > > +		invalidate_bdev_range(bdev, bytenr >> PAGE_SHIFT,
-> > >  				(bytenr + BTRFS_SUPER_INFO_SIZE) >> PAGE_SHIFT);
-> > >  	}
-> > >  
-> > > -	page = read_cache_page_gfp(mapping, bytenr >> PAGE_SHIFT, GFP_NOFS);
-> > > -	if (IS_ERR(page))
-> > > -		return ERR_CAST(page);
-> > > +	nofs_flag = memalloc_nofs_save();
-> > > +	folio = bdev_read_folio(bdev, bytenr);
-> > > +	memalloc_nofs_restore(nofs_flag);
-> > 
-> > This is the wrong way to use memalloc_nofs_save/restore.  They should be
-> > used at the point that the filesystem takes/releases whatever lock is
-> > also used during reclaim.  I don't know btrfs well enough to suggest
-> > what lock is missing these annotations.
-> 
-> In principle I agree with you but in this particular case I agree the ask
-> is just too big. I suspect it is one of btrfs btree locks or maybe
-> chunk_mutex but I doubt even btrfs developers know and maybe it is just a
-> cargo cult. And it is not like this would be the first occurence of this
-> anti-pattern in btrfs - see e.g. device_list_add(), add_missing_dev(),
-> btrfs_destroy_delalloc_inodes() (here the wrapping around
-> invalidate_inode_pages2() looks really weird), and many others...
+On Wed, Feb 28, 2024 at 10:03:21PM +0200, Andy Shevchenko wrote:
+> of_gpio.h is deprecated and subject to remove.
+> The driver doesn't use it, simply remove the unused header.
 
-The pattern is intentional and a temporary solution before we could
-implement the scoped NOFS. Functions calling allocations get converted
-from GFP_NOFS to GFP_KERNEL but in case they're called from a context
-that either holds big locks or can recursively enter the filesystem then
-it's protected by the memalloc calls. This should not be surprising.
-What may not be obvious is which locks or kmalloc calling functions it
-could be, this depends on the analysis of the function call chain and
-usually there's enough evidence why it's needed.
+What should be done to move this forward?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
