@@ -1,166 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA81181B9F;
-	Wed, 10 Apr 2024 20:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B2817F37A
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 20:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712781517; cv=none; b=Ov9c8N6634UDRNcD0PfVGrsaYEHldu+BAM0hlexjtlxud0nKuAkndXQ0dyiUJeysVyfLHBSiWsmF+a3xpdn/nOIbRH/o1E7OZ7QYGCl8k3hK8tBDOfvFK47ogJ96ycz1FD3T+hzVYSAhaMQOsO4jg2N5ij/vfDJYVTwSszdpIkM=
+	t=1712781818; cv=none; b=pxQN8t/LELwQ0teGCAnU0jL3mvY+FJaREFu7EUTmXssn+aDB9dc2WOUQGEN4/gr0o6VXgWHuLdE1SHC3S43sc+wK57gV+sKpzPlk19zpHB9NRSQBaUY7G5d+PixXTg/qJ5TTEhYSjo6pSygF6hR+w1gchUj6LhiT1cCV/FbTqd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712781517; c=relaxed/simple;
-	bh=/HoZeNzG6zaY4GRuRf8eyKh33b0YMjx8EBiXsVQb2Ao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAkCWqCPBGC9zRZS6ukt082LgtgXBn3oJ9bYP2rgevvcvBOWpuF9qD7fSBMcGrXLgzrypbzaxenfFxTpxz2dW4EDamauyOwyHyYyo5s3Lb8fVkiTZQIVxOvw9/DUAWWsIMV+ZKLxsMsc4Zko2EFeiFqGHtOahiAfbD0Je2t+5iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jFEHYAiR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712781818; c=relaxed/simple;
+	bh=haeE2c1uQMVwuBCh6nmKoLx0syvsO5cganYlWpRKAFo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=LytSTIXlCZrjJbU94fhJS/UUn5dHQ9ef82jZiecIQ1NnOrFG5Jq1CMvp0aDCBifI8E4zGTzSjGmRjQweInRQFJRoHN0HmXxE+U1eDd/xuQY04zJkt2Csqx/ujs6piTNZtgUdLNRoyeMqCbNGOmOPJijw02h8hiCBz4lHpbdyRDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DoLxMmlR; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jFEHYAiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B04E2C433F1;
-	Wed, 10 Apr 2024 20:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712781517;
-	bh=/HoZeNzG6zaY4GRuRf8eyKh33b0YMjx8EBiXsVQb2Ao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jFEHYAiR7BEFnaBCKdWLiS42v69jjRafCf6tx3a8bBjZf9s4IWk10Cmj/wJS4IFR3
-	 h9zbEg7hs5fQoUhLeD6M15JGjaPeNHpCUoIcs7pjnBf1vdFoDoTqPq5VA99MzoSfwh
-	 air4ngKXWkx9bBjQDI2mgmCl6waaBGFeDqZI0ilk/aY4E+zOsD/TgcTl69WOeLjQIi
-	 hy4BS4UxshMznv/u+uwGW0KS9KCR/UKE0JH6OvcJ5lVeUTkYJTQZiEcBiXC7fd9sgA
-	 71zyD8I724rCL7bQGTz2081Hqwjxqw1nispkX+/GmqWYHYWQkE/kl1GNWg/ytc7wUA
-	 AKR87nXFKHxQg==
-Date: Wed, 10 Apr 2024 17:38:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/6] perf annotate-data: Support event group display in
- TUI
-Message-ID: <Zhb4yUkLbpnZZil-@x1>
-References: <20240409235000.1893969-1-namhyung@kernel.org>
- <20240409235000.1893969-5-namhyung@kernel.org>
- <Zhb1lZYuk1cfiFOD@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DoLxMmlR"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de0b4063e59so4796665276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:43:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712781816; x=1713386616; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K4SubXYu8kjsVJfXEh2At6iMxBrwK+80VVQTqnF6NMs=;
+        b=DoLxMmlRxqj9arQZ7eoYfdnWzW8J0AVmixqNjiiG3oQSzMGOioMmkIKAszPVstbEAa
+         /d1pqu+Q+Zcc9iUvLEf7EoST606wod6KCurrvT4gkY1qP9HaqkaukVfz/NbfgccpOrey
+         37XxLpYfGaMNqVvy4kubX8ofDT6F5f7QkmQwkmrHB02DzFINctIA8dFnGvnC1AfBbXeS
+         RIlmpAkcPVqXKBfPyp29lBncfRqxFrrTtWJM2665utW5mkE9mNbN+plZLcfprZzjGyVj
+         P8qN5xisr9vXjuDUjB/SUVXhDfHjefxSx1ddQqKfFwv5Xgfx+8C8PbweB02cMPnRzLUN
+         fiLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712781816; x=1713386616;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K4SubXYu8kjsVJfXEh2At6iMxBrwK+80VVQTqnF6NMs=;
+        b=kbrdPBbhe+iE7Lzt7rN9y6PF/QEfKOiU+Y3eVOQpXl+aWhtTEnxbZC8h3j1XdYQDfX
+         83GELKEn9NP2VpAFtLYWW81UHfCoCz1+R66/vgGwA2N49rZxVRLufmPiS9RnrAjDofUl
+         Uu71pdA1tF9lW+rk8oujlPR85kbzojBRg8jISYqR4T7ee4YNGiv7XWEjXDfmL8B7mBSe
+         nk2TprCU7Bo68fVMSWUMdCt++FFHq9iW4G0kYcdjq+E0WkMlpku8Qb17TdfyYSS1OeNK
+         CIZoGLrwDPCIaCkumLoAJAZX0e8sNVJIINer1KWg/y+3XEcVBibCCyqvkvk+Q/uSZWA8
+         19tQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVflTlfGJgAKMhKmrIEadrXFz/Xm7uqvSu5M6pEKji5HhCE3UNsHd0qfvPwM/Nm1MVQVLyPbe4v018aoD1Lmwmxgk/FEVUm7EshcZ0y
+X-Gm-Message-State: AOJu0Yy7y5ESPfFX4AwCntucIAvvM7D3/N5tU1xDcHjpFOOaHldMDfa1
+	CpLfwTlFkYTRFWnO8jwqnFnCirqPOc+OjOQ7s1LyiCdTTeQXDUXnbqjMSx2LEGwotPIeQTq5uzC
+	9OeyA5eJZnjZ5rarSbyk3Ww==
+X-Google-Smtp-Source: AGHT+IG8XPLzn461t7HYg7HcnLuaG3TVHzRMb9P4mUgIRvjW7s/eDccTG/ZbSuOJUAz9pc1Ch9tK3cW5uAl1bxnTTA==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:2b83:b0:dd9:1db5:8348 with
+ SMTP id fj3-20020a0569022b8300b00dd91db58348mr1031841ybb.8.1712781815890;
+ Wed, 10 Apr 2024 13:43:35 -0700 (PDT)
+Date: Wed, 10 Apr 2024 20:43:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zhb1lZYuk1cfiFOD@x1>
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAPX5FmYC/32NQQqDMBBFryKz7pQkRqld9R7FhcZRB6wJGRFFv
+ HtTD9Dle/DfP0AoMgk8swMirSzs5wTmloEbm3kg5C4xGGWssqpAWeLswo5bLyhh4kVjY5xVj7b
+ KrSshDUOknrcr+q4TjyyLj/v1seqf/ZtbNWrMKe96WxZN11avwfthorvzH6jP8/wCoGz2orUAA AA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712781815; l=2128;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=haeE2c1uQMVwuBCh6nmKoLx0syvsO5cganYlWpRKAFo=; b=MhjGam0PtObrc68tbZTGvY4oh5Wwyx6w16vBGbchHocaRdOCwzZBBtx0op7ozZ3jmt6i7GPf0
+ AHDzHrYUreVB0COSb1VjQEFFd78V5pwZ7RkSJJY/rJb9V3oI6KkT8tN
+X-Mailer: b4 0.12.3
+Message-ID: <20240410-strncpy-xfs-split1-v2-1-7c651502bcb0@google.com>
+Subject: [PATCH v2] xfs: replace deprecated strncpy with memtostr_pad
+From: Justin Stitt <justinstitt@google.com>
+To: Chandan Babu R <chandan.babu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Apr 10, 2024 at 05:24:56PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, Apr 09, 2024 at 04:49:58PM -0700, Namhyung Kim wrote:
-> > Like in stdio, it should print all events in a group together.
-> 
-> How to test this?
-> 
-> You mean something like:
-> 
-> root@number:~# perf record -a -e '{cpu_core/mem-loads,ldlat=30/P,cpu_core/mem-stores/P}'
-> ^C[ perf record: Woken up 8 times to write data ]
-> [ perf record: Captured and wrote 4.980 MB perf.data (55825 samples) ]
-> 
-> root@number:~#
-> 
-> root@number:~# perf annotate --stdio --data-type
-> 
-> And then having the same output in the TUI?
-> 
-> Trying this...
+strncpy() is deprecated for use on NUL-terminated destination strings
+[1] and as such we should prefer more robust and less ambiguous string
+interfaces.
 
-Added, the following, ok?
+sbp->sb_fname may not be NUL-terminated while label is expected to be.
+memtostr best describes this behavior, specifically, use the pad variant
+since we're copying out to userspace.
 
-And the --stdio has all the missing info in TUI:
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings [1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
 
-  Annotate type: 'union ' in /usr/lib64/libc.so.6 (1131 samples):
-   event[0] = cpu_core/mem-loads,ldlat=30/P
-   event[1] = cpu_core/mem-stores/P
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Changes in v2:
+- use memtostr_pad (thanks Kees)
+- Link to v1: https://lore.kernel.org/r/20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com
+---
+Note: This patch relies on the memtostr{_pad} implementation from Kees' patch:
+https://lore.kernel.org/all/20240410023155.2100422-1-keescook@chromium.org/
 
-Committer notes:
+Split from https://lore.kernel.org/all/20240401-strncpy-fs-xfs-xfs_ioctl-c-v1-1-02b9feb1989b@google.com/
+with feedback from Christoph H.
+---
+ fs/xfs/xfs_ioctl.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Collect it:
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index d0e2cec6210d..7ed7a5d57094 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1750,15 +1750,14 @@ xfs_ioc_getlabel(
+ 	char			__user *user_label)
+ {
+ 	struct xfs_sb		*sbp = &mp->m_sb;
++	/* 1 larger than sb_fname, for a NULL byte */
+ 	char			label[XFSLABEL_MAX + 1];
+ 
+ 	/* Paranoia */
+ 	BUILD_BUG_ON(sizeof(sbp->sb_fname) > FSLABEL_MAX);
+ 
+-	/* 1 larger than sb_fname, so this ensures a trailing NUL char */
+-	memset(label, 0, sizeof(label));
+ 	spin_lock(&mp->m_sb_lock);
+-	strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
++	memtostr_pad(label, sbp->sb_fname);
+ 	spin_unlock(&mp->m_sb_lock);
+ 
+ 	if (copy_to_user(user_label, label, sizeof(label)))
 
-  root@number:~# perf record -a -e '{cpu_core/mem-loads,ldlat=30/P,cpu_core/mem-stores/P}'
-  ^C[ perf record: Woken up 8 times to write data ]
-  [ perf record: Captured and wrote 4.980 MB perf.data (55825 samples) ]
-  root@number:~#
+---
+base-commit: c85af715cac0a951eea97393378e84bb49384734
+change-id: 20240405-strncpy-xfs-split1-a2c408b934c6
 
-Then do it in stdio:
-
-  root@number:~# perf annotate --stdio --data-type
-
-  Annotate type: 'union ' in /usr/lib64/libc.so.6 (1131 samples):
-   event[0] = cpu_core/mem-loads,ldlat=30/P
-   event[1] = cpu_core/mem-stores/P
-  ============================================================================
-           Percent     offset       size  field
-    100.00  100.00          0         40  union    {
-    100.00  100.00          0         40      struct __pthread_mutex_s    __data {
-     48.61   23.46          0          4          int     __lock;
-      0.00    0.48          4          4          unsigned int    __count;
-      6.38   41.32          8          4          int     __owner;
-      8.74   34.02         12          4          unsigned int    __nusers;
-     35.66    0.26         16          4          int     __kind;
-      0.61    0.45         20          2          short int       __spins;
-      0.00    0.00         22          2          short int       __elision;
-      0.00    0.00         24         16          __pthread_list_t        __list {
-      0.00    0.00         24          8              struct __pthread_internal_list*     __prev;
-      0.00    0.00         32          8              struct __pthread_internal_list*     __next;
-                                                  };
-                                              };
-      0.00    0.00          0          0      char*       __size;
-     48.61   23.94          0          8      long int    __align;
-                                          };
-
-Now with TUI before this patch:
-
-  root@number:~# perf annotate --tui --data-type
-  Annotate type: 'union ' (790 samples)
-      Percent     Offset       Size  Field
-       100.00          0         40  union  {
-       100.00          0         40      struct __pthread_mutex_s __data {
-        48.61          0          4          int  __lock;
-         0.00          4          4          unsigned int __count;
-         6.38          8          4          int  __owner;
-         8.74         12          4          unsigned int __nusers;
-        35.66         16          4          int  __kind;
-         0.61         20          2          short int    __spins;
-         0.00         22          2          short int    __elision;
-         0.00         24         16          __pthread_list_t     __list {
-         0.00         24          8              struct __pthread_internal_list*  __prev;
-         0.00         32          8              struct __pthread_internal_list*  __next;
-
-
-         0.00          0          0      char*    __size;
-        48.61          0          8      long int __align;
-                                     };
-
-And now after this patch:
-
-Annotate type: 'union ' (790 samples)
-               Percent     Offset       Size  Field
-     100.00     100.00          0         40  union  {
-     100.00     100.00          0         40      struct __pthread_mutex_s      __data {
-      48.61      23.46          0          4          int       __lock;
-       0.00       0.48          4          4          unsigned int      __count;
-       6.38      41.32          8          4          int       __owner;
-       8.74      34.02         12          4          unsigned int      __nusers;
-      35.66       0.26         16          4          int       __kind;
-       0.61       0.45         20          2          short int __spins;
-       0.00       0.00         22          2          short int __elision;
-       0.00       0.00         24         16          __pthread_list_t  __list {
-       0.00       0.00         24          8              struct __pthread_internal_list*       __prev;
-       0.00       0.00         32          8              struct __pthread_internal_list*       __next;
-                                                      };
-                                                  };
-       0.00       0.00          0          0      char* __size;
-      48.61      23.94          0          8      long int      __align;
-                                              };
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
