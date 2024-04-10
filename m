@@ -1,136 +1,176 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584C816F847;
-	Wed, 10 Apr 2024 13:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F11917555F
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 13:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757598; cv=none; b=q5GbNzpuNuTduuQU2Uc6iyDcSGZe0gLKpaOaOKG6JYqbLUO90qytRzoK/ufrSflAMnap+cYlCssv1O0n3yGXoWgKwg9sgyjyUIWnU1H5JmOjETmgDHhwtPD10Z1yK4/DxOAkr4MVFlVmOVUzXu6PZFChOznWR8o8SHoALMn2fu4=
+	t=1712757602; cv=none; b=P/o/AeYUFBnZ0QHbhgVn5TDjjoBvKJjel94caLhr+VA76wjSiLqE91c2EYskzwLyC4MMx1bg6i6cs6R1V7GSGjwArDH0RYyLBa1qTMd7V1awyHAlHgMmwdJj2DAlFXf0Xx1R4SOsryZiG/x8ey/1dRwiOpv2JG3DDy+W7uWd4sM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757598; c=relaxed/simple;
-	bh=cHzIUSsWOwL4bdxoqheqXLuQ8KqcDtisXv/t7osIT50=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OXhELYmfb9wfkZJXHlIFLEJWK+0hHYkyENWMh0IZZaQVLb3+UY69GBD9p+v2ALZ8YpculnYrQqhDgeEg+pubrv69s/wmjKsvlHrtCYnVxuFzyMJwlwMqGHsj8KszcfhQCO3dsELacMk5Xh9Xupc/EgXwqG58RgpJWmTc5ljfmjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=f/9eBYCT; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1712757602; c=relaxed/simple;
+	bh=9VfcLjEoMTpi7xm+VUn6B0UvA2/X0m8cCVXK0p51Jw4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hmtmZsi5LYVnM0Tni5sAiAiRb/YW8hv1GYRvUMgxF1jiWOHs7rvFrxJoyDHq0trHHo6xnaiv0Hj9L9QyuQCW4kt6yrmXwfLSlm8Ni5I+qJta1JCzDcrcKculzH2heFzGbV6JmBmRQHx1a8/v1igWTg2V9U1YLTNL7QxRMyIwTH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DPm3wpYw; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f/9eBYCT"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxlTc116055;
-	Wed, 10 Apr 2024 08:59:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712757587;
-	bh=MRm7Wfdskw+FskyCTQqKVQqWK3HtEFp0jjB5j6n0QcE=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=f/9eBYCT5m1M14e4Sp+9ZrpiLYYun76mG5GmbF5dR1Zdr1ps9xxArkKKr24FxxorY
-	 RIGtyeal9425mTyrt2gaAggPmPbWj0sYm3kUVvF3uCzD5nKKf5L1wpNqoSFUoAXPdR
-	 iOrMHW0ZN+W5ql8JJ8RvHIncBsffEx6iXfdvyuOg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43ADxlXN072373
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 10 Apr 2024 08:59:47 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
- Apr 2024 08:59:46 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 10 Apr 2024 08:59:46 -0500
-Received: from fllvsmtp8.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43ADxhat067183;
-	Wed, 10 Apr 2024 08:59:46 -0500
-From: Andrew Davis <afd@ti.com>
-To: Jassi Brar <jassisinghbrar@gmail.com>, Hari Nagalla <hnagalla@ti.com>,
-        Nick Saulnier <nsaulnier@ti.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrew
- Davis <afd@ti.com>
-Subject: [PATCH v2 09/13] mailbox: omap: Use function local struct mbox_controller
-Date: Wed, 10 Apr 2024 08:59:38 -0500
-Message-ID: <20240410135942.61667-10-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240410135942.61667-1-afd@ti.com>
-References: <20240410135942.61667-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DPm3wpYw"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-345600106d3so2840237f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 06:59:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712757597; x=1713362397; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=g67OSHlwNTDKaFrM3/uwoPsdE8uUwCxkLF5hYguHcs4=;
+        b=DPm3wpYwzLFBH4up7aj4PkCtaEjUUp4IPlYcSQMWgeQO+1WBJHx1tiBaFCgfFS1pSe
+         hkC5zZT/FI0S791G9HsFd1tq1oh6SRmJQgkluP0grplmHp8wjiB4kpkD+ZbkHjCQ7fX+
+         C9cvPD1UCdn3g8XGN7kjTnZ3O3QQ3PlZw2I8qaO0eB1uobmTTtW+JfqC8dAYWd1HR/f2
+         ZGd2YPOzvQLsl+2JOLrKv34lwB+dXuTc63Kvabjr9a3zeHu0YS8dcuaU/9I5LQZTm6QL
+         xh6f87WG4v4guGr/2AgmIt5ZuNv2bEfgDkFMneXdLfaT5JVnS4wigDcvCzZ43tMpQyEg
+         Z7pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712757597; x=1713362397;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g67OSHlwNTDKaFrM3/uwoPsdE8uUwCxkLF5hYguHcs4=;
+        b=gGUHfs+3ZRvJ9PARMaeF0/KMwLVIhh2lfkKaVVuYf2LzQefO8ka+Xpjln3C/jsyfni
+         fv3ammXJhZFO88p1fjIfGuB9CmOp/Mw/2yJPB1lhrMLdXu5jWJ6GL9pAyv/E/mIAvUf8
+         BpvJo7+xxaveCcSo6m3s636xlL/duqMwM7XBv9H4gwM/APKWsPJdEWDTH+asvFm6wMN0
+         d4dAeDl3bviqfbS+aHdS6dOiSG/Fcb9JT/LX+Ayj6BQJK9Hc1gBWJwtXzto6NyjzjlpO
+         mDdhSO0bV4Z1FSstytCuGByiEUleJY3ED2ZWkKUSyTFcZp51Rni+1YI6rLNJgvbBY8pG
+         MOKw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/WHFKGAvE2x+b2lZwlcq7IemDDViqwLEb65PQ3EOgDh8NLs06PeV0cGKFaoCestVVXer32ASNfqxWxpkAZI45Tm6QEdaFLYJkz8yE
+X-Gm-Message-State: AOJu0YxUS6iNRQIyNOkOIoUjGC5VodXp5N3PpsCCOJsafAoYusmzhWIo
+	cBwsOWaiACL9zpXD4qNiWVKP/wKkwEQJ2SV/4NVitSw1tCoZdJSsv1KvvqNSYLk=
+X-Google-Smtp-Source: AGHT+IGRtn6DL2DEemnsBxsmvHHTd4nWEQsASvLDi6kfhHaIx+DPnIFaevFeAdtATqfu2OGeHdeMQw==
+X-Received: by 2002:a5d:620c:0:b0:343:98ee:524 with SMTP id y12-20020a5d620c000000b0034398ee0524mr1624742wru.36.1712757597439;
+        Wed, 10 Apr 2024 06:59:57 -0700 (PDT)
+Received: from [192.168.1.172] ([93.5.22.158])
+        by smtp.gmail.com with ESMTPSA id j15-20020a5d452f000000b00343e825d679sm13385379wra.87.2024.04.10.06.59.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 06:59:56 -0700 (PDT)
+Message-ID: <cf0184c4-2b3e-4074-9e30-bf65ec7f0aaa@baylibre.com>
+Date: Wed, 10 Apr 2024 15:59:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 05/18] ASoC: mediatek: mt8192: Migrate to
+ mtk_soundcard_common_probe
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ broonie@kernel.org
+Cc: wenst@chromium.org, lgirdwood@gmail.com, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, perex@perex.cz, tiwai@suse.com,
+ trevor.wu@mediatek.com, maso.huang@mediatek.com,
+ xiazhengqiao@huaqin.corp-partner.google.com, arnd@arndb.de,
+ kuninori.morimoto.gx@renesas.com, shraash@google.com,
+ nicolas.ferre@microchip.com, u.kleine-koenig@pengutronix.de,
+ dianders@chromium.org, frank.li@vivo.com, allen-kh.cheng@mediatek.com,
+ eugen.hristev@collabora.com, claudiu.beznea@tuxon.dev,
+ jarkko.nikula@bitmer.com, jiaxin.yu@mediatek.com, alpernebiyasak@gmail.com,
+ ckeepax@opensource.cirrus.com, zhourui@huaqin.corp-partner.google.com,
+ nfraprado@collabora.com, alsa-devel@alsa-project.org,
+ shane.chien@mediatek.com, linux-sound@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20240409113310.303261-1-angelogioacchino.delregno@collabora.com>
+ <20240409113310.303261-6-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+From: Alexandre Mergnat <amergnat@baylibre.com>
+In-Reply-To: <20240409113310.303261-6-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The mbox_controller struct is only needed in the probe function. Make
-it a local variable instead of storing a copy in omap_mbox_device
-to simplify that struct.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
----
- drivers/mailbox/omap-mailbox.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/mailbox/omap-mailbox.c b/drivers/mailbox/omap-mailbox.c
-index 17c9b9df78b1d..97f59d9f9f319 100644
---- a/drivers/mailbox/omap-mailbox.c
-+++ b/drivers/mailbox/omap-mailbox.c
-@@ -86,7 +86,6 @@ struct omap_mbox_device {
- 	u32 num_fifos;
- 	u32 intr_type;
- 	struct omap_mbox **mboxes;
--	struct mbox_controller controller;
- };
- 
- struct omap_mbox {
-@@ -541,7 +540,7 @@ static struct mbox_chan *omap_mbox_of_xlate(struct mbox_controller *controller,
- 	struct omap_mbox_device *mdev;
- 	struct omap_mbox *mbox;
- 
--	mdev = container_of(controller, struct omap_mbox_device, controller);
-+	mdev = dev_get_drvdata(controller->dev);
- 	if (WARN_ON(!mdev))
- 		return ERR_PTR(-EINVAL);
- 
-@@ -567,6 +566,7 @@ static int omap_mbox_probe(struct platform_device *pdev)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct device_node *child;
- 	const struct omap_mbox_match_data *match_data;
-+	struct mbox_controller *controller;
- 	u32 intr_type, info_count;
- 	u32 num_users, num_fifos;
- 	u32 tmp[3];
-@@ -685,17 +685,20 @@ static int omap_mbox_probe(struct platform_device *pdev)
- 	mdev->intr_type = intr_type;
- 	mdev->mboxes = list;
- 
-+	controller = devm_kzalloc(&pdev->dev, sizeof(*controller), GFP_KERNEL);
-+	if (!controller)
-+		return -ENOMEM;
- 	/*
- 	 * OMAP/K3 Mailbox IP does not have a Tx-Done IRQ, but rather a Tx-Ready
- 	 * IRQ and is needed to run the Tx state machine
- 	 */
--	mdev->controller.txdone_irq = true;
--	mdev->controller.dev = mdev->dev;
--	mdev->controller.ops = &omap_mbox_chan_ops;
--	mdev->controller.chans = chnls;
--	mdev->controller.num_chans = info_count;
--	mdev->controller.of_xlate = omap_mbox_of_xlate;
--	ret = devm_mbox_controller_register(mdev->dev, &mdev->controller);
-+	controller->txdone_irq = true;
-+	controller->dev = mdev->dev;
-+	controller->ops = &omap_mbox_chan_ops;
-+	controller->chans = chnls;
-+	controller->num_chans = info_count;
-+	controller->of_xlate = omap_mbox_of_xlate;
-+	ret = devm_mbox_controller_register(mdev->dev, controller);
- 	if (ret)
- 		return ret;
- 
+On 09/04/2024 13:32, AngeloGioacchino Del Regno wrote:
+> @@ -1211,52 +1196,85 @@ static int mt8192_mt6359_dev_probe(struct platform_device *pdev)
+>   		if (dai_link->num_codecs && dai_link->codecs[0].dai_name &&
+>   		    strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
+>   			dai_link->ops = &mt8192_rt1015_i2s_ops;
+> -
+> -		if (!dai_link->platforms->name)
+> -			dai_link->platforms->of_node = platform_node;
+> -	}
+> -
+> -	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> -	if (!priv) {
+> -		ret = -ENOMEM;
+> -		goto err_probe;
+> -	}
+> -	snd_soc_card_set_drvdata(card, priv);
+> -
+> -	ret = mt8192_afe_gpio_init(&pdev->dev);
+> -	if (ret) {
+> -		dev_err_probe(&pdev->dev, ret, "%s init gpio error\n", __func__);
+
+I don't think __func__ is necessary.
+
+> -		goto err_probe;
+>   	}
+>   
+> -	ret = devm_snd_soc_register_card(&pdev->dev, card);
+> -	if (ret)
+> -		dev_err_probe(&pdev->dev, ret, "%s snd_soc_register_card fail\n", __func__);
+
+I don't think __func__ is necessary.
+
+> -
+> -err_probe:
+>   	of_node_put(headset_codec);
+>   err_headset_codec:
+>   	of_node_put(speaker_codec);
+>   err_speaker_codec:
+> -	of_node_put(platform_node);
+> -err_platform_node:
+> -	of_node_put(hdmi_codec);
+> +	if (hdmi_codec)
+> +		of_node_put(hdmi_codec);
+> +
+>   	return ret;
+>   }
+>   
+> +static int mt8192_mt6359_soc_card_probe(struct mtk_soc_card_data *soc_card_data, bool legacy)
+> +{
+> +	struct mtk_platform_card_data *card_data = soc_card_data->card_data;
+> +	struct snd_soc_card *card = card_data->card;
+> +	int ret;
+> +
+> +	if (legacy) {
+> +		ret = mt8192_mt6359_legacy_probe(soc_card_data);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		struct snd_soc_dai_link *dai_link;
+> +		int i;
+> +
+> +		for_each_card_prelinks(card, i, dai_link)
+> +			if (dai_link->num_codecs && dai_link->codecs[0].dai_name &&
+> +			    strcmp(dai_link->codecs[0].dai_name, RT1015_CODEC_DAI) == 0)
+> +				dai_link->ops = &mt8192_rt1015_i2s_ops;
+> +	}
+> +
+> +	ret = mt8192_afe_gpio_init(card->dev);
+> +	if (ret)
+> +		return dev_err_probe(card->dev, ret, "%s init gpio error\n", __func__);
+
+I don't think __func__ is necessary.
+
+> +
+> +	return 0;
+> +}
+
+Beside that,
+Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+
 -- 
-2.39.2
-
+Regards,
+Alexandre
