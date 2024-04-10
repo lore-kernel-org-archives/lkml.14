@@ -1,86 +1,81 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B904C181BBC;
-	Wed, 10 Apr 2024 21:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A02181CFF;
+	Wed, 10 Apr 2024 21:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712782808; cv=none; b=AifLbD02DtnLKpFbbkbdXUuqm91uQYFvp0B40zy55XDplXbs7vQapNmCPSMrD2gT72gpw2Uaimo1yxO9LRzb/dI75pNrPrYLZu5F5+lNibhf0kzAhhwASLVoiiNmxSmxokigYMa21lEPiaQWuHwE6eJ77a3uUlxWMDOUFOdWFys=
+	t=1712782827; cv=none; b=eXC8ONhbUq1eLQjNrcX9t9Mi5N0/tZC5HVUKgV1UZbjH3glI0wEZTpfmxp1ZamT6Zrg3Q/6jDvAVgg8/pNSayBF/0el8zDl1Bu3hg2IggoI6gGJ1gfi39SOpmpIMfR2FJzptD27vhwrlZYVAU//BZJ8h4jPJ6ZuI8Rx0Q7PdW8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712782808; c=relaxed/simple;
-	bh=NZxSmvOIrL+98WYQwIqbcfn2nyl5N/8M638PLwCqKpk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BVPk8x6HiH4lYRPCQiVs2hYgw7fOJ+kDBCd9+g4hkOZD1W+S5ECSn2tu4bOoTHRS1com671jgSoxY7yFzjtRyJrMKJQ2xcN6rv431dEAM5cJ2/UWUoXTfhWnpPDdZas7TOf0JtWqqVpRW0qieR1Go0wdACL1+Q0Wqf7ND82JH7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=kAw7RbSv; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1712782827; c=relaxed/simple;
+	bh=xJZ6Dd9iWj7YtydFi/8FqoYMITmH16JTKtZaGi8eKhE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DIjpJctqP3SnHl8RfQUcdyvunMQ+J1dotBPJbx/IGTlMLy6al75+RNjoQTKgYWWNJz0TcuX+2C66cNogG8Av0/Ci0W6vfX4uYNvLpnB07ucvDd0NmZzCyUd9/ZRb1wgEaTaQ/aZ4wd/rjX8tQr0/JBlJdMsZtiMOE33VMSAJUHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MtFu6LwY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="kAw7RbSv"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 08CCF47C3E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1712782804; bh=bBiHyQknYVefwGowYX8X98+sWwdYwknbIEfcbgt8MVY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kAw7RbSv9BcBu6s7oRnasuRvyvN9sgglhE1xceLaBCStyIXPzVUEfEV1mN3h3GNnP
-	 pnS8SsZgOyt+cSOYYrcYdAKSkRHX1HD87wvo9F91Rsf2fQ/NSTATSyTNhXlk/SGq0B
-	 w321qbDUaYD6BdSycet+3dSY6ICKDwILgCTyOdZ8Wjinrk5/f9gaI/TLMFRAluTySB
-	 GKUlHGc+tW77Tnd+G5eOG+Egrt1cfv4buCTF7D/aA7EAYc9RgylsZSvls4p7sCObX9
-	 XVtROmBWJ9sAlqheyJEsfJzkmxddRDvymDxOV/TdYTUwrszJ+3JjVj86yGoHs2P8sr
-	 B0Xej9WywdOWg==
-Received: from localhost (unknown [IPv6:2601:280:5e00:625:67c:16ff:fe81:5f9b])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 08CCF47C3E;
-	Wed, 10 Apr 2024 21:00:03 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: regressions@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, workflows@vger.kernel.org
-Subject: Re: [RFC PATCH v1 2/2] docs: reporting-issue: rework the TLDR
-In-Reply-To: <2f5a78745cbe0a99a4592612d6ffd57a17619fb4.1711455295.git.linux@leemhuis.info>
-References: <cover.1711455295.git.linux@leemhuis.info>
- <2f5a78745cbe0a99a4592612d6ffd57a17619fb4.1711455295.git.linux@leemhuis.info>
-Date: Wed, 10 Apr 2024 15:00:03 -0600
-Message-ID: <878r1lszl8.fsf@meer.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MtFu6LwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2092BC43394;
+	Wed, 10 Apr 2024 21:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712782826;
+	bh=xJZ6Dd9iWj7YtydFi/8FqoYMITmH16JTKtZaGi8eKhE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MtFu6LwYciP/an1N3sZcbtVGMLzJ2mhFv5y3exZizAs2kt3imUVcm4p0FLMDeJ9bu
+	 srBmJHKcwjYwXS073ngcVP1HKaXzlJb8X88xxWudfztH2c60slua3PEIiYdPiLtbpF
+	 uzxxU2x92YFQP7WY+SctjWurFsHPnFffshlAZcp8Je4SJEmu9Lxi+Ek/bx6VDjWZVg
+	 Porh6MAZzeLJ1OqHzDc6NfWkNWwgzpNIZY+e3X2m845JhFgAh3B7jKsKLx6XM9EX3B
+	 iiaCh6YT/82GhDV/k5azsJ3DvrBlX9inWuds8QKAxd8UucarMvg7xLgfltGYFYLINs
+	 nz99W2cXd27jw==
+Date: Wed, 10 Apr 2024 18:00:23 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Spoorthy S <spoorts2@in.ibm.com>, Leo Yan <leo.yan@linux.dev>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] perf test: "object code reading" test fixes
+Message-ID: <Zhb95zKXvVDtUljY@x1>
+References: <20240410103458.813656-1-james.clark@arm.com>
+ <CAP-5=fVgf3cOgbV1KGGLd5gykxT+BzuX1=XUsp+2BNUahGn6QQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVgf3cOgbV1KGGLd5gykxT+BzuX1=XUsp+2BNUahGn6QQ@mail.gmail.com>
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On Wed, Apr 10, 2024 at 09:17:04AM -0700, Ian Rogers wrote:
+> On Wed, Apr 10, 2024 at 3:35 AM James Clark <james.clark@arm.com> wrote:
+> >
+> > A few fixes around the object code reading test. The first patch
+> > appears to be unrelated, but in this case the data symbol test is
+> > broken on Arm N1 by the second commit.
+> >
+> > Changes since V1:
+> >   * Put data symbol test fix first so that bisecting still works on N1
+> >   * Instead of skipping "test data symbol" on N1, add some noise into
+> >     the loop.
+> >   * Add a commit to replace the only usage of lscpu in the tests with
+> >     uname
+> >
+> > James Clark (4):
+> >   perf tests: Make "test data symbol" more robust on Neoverse N1
+> >   perf tests: Apply attributes to all events in object code reading test
+> >   perf map: Remove kernel map before updating start and end addresses
+> >   perf tests: Remove dependency on lscpu
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-> Rework the TLDR (aka the short guide) for various reasons:
->
-> * People had to read it entirely and then act upon what they learned,
->   which from feedback I got was apparently somewhat hard and confusing
->   given everything we expect from bug reporters; this partly was because
->   the first paragraph covered a special case (regression in
->   stable/longterm kernel) and not the main aspect most people cared
->   about when they came to the document.
->
->   Use a step-by-step approach to avoid this.
->
-> * Make use of
->   Documentation/admin-guide/verify-bugs-and-bisect-regressions.rst
->
-> * The 'quickly report a stable regression to the stable team' approach
->   hardly worked out: most of the time the regression was not known yet.
->   Try a different approach using the regressions list.
->
-> * Reports about stable/longterm regressions most of the time were
->   greeted with a brief reply along the lines of 'Is mainline affected as
->   well?'; this is needed to determine who is responsible, so it might as
->   well make the reporter check that before sending the report (which
->   verify-bugs-and-bisect-regressions.rst already tells them to do, too).
->
-> Not-signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  .../admin-guide/reporting-issues.rst          | 104 +++++++++++-------
->  1 file changed, 62 insertions(+), 42 deletions(-)
+Thanks, applied to perf-tools-next,
 
-From a quick read, no objections here.
-
-jon
+- Arnaldo
