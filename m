@@ -1,163 +1,160 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D741836C0;
-	Wed, 10 Apr 2024 17:45:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F42F194C9B;
+	Wed, 10 Apr 2024 17:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771106; cv=none; b=okwRsNrwFaVSXFF2eo20i0jl3RltcSlqUiktE7ba7cAFxFKstIWqom+Xw+ylU36IYTHBrdfn2u/Hi4FpLIoRZj5msK0rS/anN3SptkKcmiqnnTvIbrSXGMkr0RWuw7RgLqRLO8PnqU6qAtlLYRRFvKBjT+IuCyA58ebphf0rNtw=
+	t=1712771109; cv=none; b=CKn3fOrCNwA6YWy7+Q9pMhEzHj6uEK8qH7pVEi3VdGuJo7yqt/GtsTz7KxzumxiS5rD7QYyO44jNpJPbCFLKBiA7JW9+uETRG1c23McDsU38hJA4wDIc5b9COKWYEKL0aM8rHYfYFsLzufvTRz5KRnYGWeI5nR/i9h5nHHPvoss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771106; c=relaxed/simple;
-	bh=O4fc6NcbFmDtcu5Mpz4hlacgxv2TpLc3B9RGa8Nme0s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fuWcxxuUnjRagF9zPq/ukzDTeNcJhqQfmt1ybzkLLTGvhT31XsQAYz8JX6MnqS3PnnlqJ2VXm7/gcxINBmWJic3XXtzHUH/z/5iDTsinoTfkQn+WuiXohA0PH3kQSToxtBFP7gMk17AlPK7urNEVo24sP35jePESjgkn8E6aCn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=SRhvLYbz reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1712771109; c=relaxed/simple;
+	bh=FfbM6dBK2mr783lz2Tf1oTCDjUnulOUEAmCPb7EW5VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EVhfzyIvjTg3zPUrTr2bhwuR+ZjNqdJ2+0Gk2xyvaXckh7VbS7Nzv8guE70sN231L64WPu1ypVkzatK/MmqsBlA3tvicCUyZ0g9bEp3KyfKf2Qlwbg2sJlm4ECsLVBviyf0klnDLOOcuM8B/caDmtBWtiYeMglUhdqg/hcE65E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=yBxxYVQ5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wcXOFf+8; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hTuKFvG7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=elXsFP10; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="SRhvLYbz"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id bb772444a988b3f5; Wed, 10 Apr 2024 19:45:00 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="yBxxYVQ5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wcXOFf+8";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hTuKFvG7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="elXsFP10"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 31B2666C66F;
-	Wed, 10 Apr 2024 19:45:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1712771100;
-	bh=O4fc6NcbFmDtcu5Mpz4hlacgxv2TpLc3B9RGa8Nme0s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=SRhvLYbzwUbjbbB+rh71vwG0EtJ9YzgpOngRxzfdN/W2k4R1cTGiSM6Ojd96fiHnk
-	 gAs8MqLt+9dXZ7Q1+YdfFHURbUvmfB6S7PwpOo9TV85i2cZmBqnvwgnevA8sY3CyKP
-	 LWzA018gPOwTB3N6LD4q1VzfPmAoEXqT4fsNQWLTRr6uxkhjYSQQAZh1DDj+3giJkU
-	 jV0+/H4XY5FnYGsOPdKMsfYnIGqUCSOdFwBOwpImUCyd+n8QYXmhr+D8BUKZGNPgiq
-	 rhjF1gOiIfvAwK7PrOs0GFTQh1MXl8qgVSjsYX8lXGNNyO04420Sff0Nh1E0AQX94I
-	 Bzng0OWja8fPA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Lukasz Luba <lukasz.luba@arm.com>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject:
- [PATCH v1 02/16] thermal: gov_bang_bang: Use .trip_crossed() instead of
- .throttle()
-Date: Wed, 10 Apr 2024 18:04:39 +0200
-Message-ID: <2289003.iZASKD2KPV@kreacher>
-In-Reply-To: <13515747.uLZWGnKmhe@kreacher>
-References: <13515747.uLZWGnKmhe@kreacher>
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E2696205D3;
+	Wed, 10 Apr 2024 17:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712771105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gaFrwClPngI9/zE0tUKh4ZF3uG/AFy0qWp2ynKlaVw4=;
+	b=yBxxYVQ5qlkPxthan7rOZuqjvdWMlGiSEckUBrhGCntgkxyBe3cH6Ca8fevLcFoHomITZe
+	GDShA6eK07x/fuR/cCKQCz9o1H2C4pSgFxoHQfFbh6Ty4vOurIPSuL+JlC00mbz+3ABl9L
+	/Rto2067OhB/bbb+TJMGwpWTA9UqGSM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712771105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gaFrwClPngI9/zE0tUKh4ZF3uG/AFy0qWp2ynKlaVw4=;
+	b=wcXOFf+8TTqZkLO7ZAhXTaXf3LTZxdBgkYcJdIsbyfKZFrJ17TDcW2kx+A7ppzhqACHlAU
+	PPHEyqM26cUBTBDQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712771103; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gaFrwClPngI9/zE0tUKh4ZF3uG/AFy0qWp2ynKlaVw4=;
+	b=hTuKFvG7HdUAjobTA8wbNFYw60I0pmphQSN0CmvsMdtMGMFYFXdR0htXCBrBVrI4cFBFkw
+	S8vHT8ZXd/VMO5YXqB8Q+5TknHMO3o+n3q080BriaRpBvbFfQAQeuYpN89CAkxmovsePsW
+	TbuHCdx83Zr++KxAycUsj31w5E8JkAY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712771103;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gaFrwClPngI9/zE0tUKh4ZF3uG/AFy0qWp2ynKlaVw4=;
+	b=elXsFP10Kw0MWNWMmYdgHRNgO7EAK34dkQ60DZwM9dLMUhg3O251X/W6J7IptLR/IlRGjv
+	goedGCkJGw7ylaBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D458E13691;
+	Wed, 10 Apr 2024 17:45:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s0yPMx/QFmYTXAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 10 Apr 2024 17:45:03 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 73BD9A0681; Wed, 10 Apr 2024 19:45:03 +0200 (CEST)
+Date: Wed, 10 Apr 2024 19:45:03 +0200
+From: Jan Kara <jack@suse.cz>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] fs/direct-io: remove redundant assignment to
+ variable retval
+Message-ID: <20240410174503.wycdhqsglx4pms4q@quack3>
+References: <20240410162221.292485-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudehiedguddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepshhrihhnihhvrghsrdhprghnughruhhvrggurgeslhhinhhugidrihhnthgvlhdrtghomh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410162221.292485-1-colin.i.king@gmail.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.65 / 50.00];
+	BAYES_HAM(-2.35)[96.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:email]
+X-Spam-Score: -1.65
+X-Spam-Flag: NO
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Wed 10-04-24 17:22:21, Colin Ian King wrote:
+> The variable retval is being assigned a value that is not being read,
+> it is being re-assigned later on in the function. The assignment
+> is redundant and can be removed.
+> 
+> Cleans up clang scan build warning:
+> fs/direct-io.c:1220:2: warning: Value stored to 'retval' is never
+> read [deadcode.DeadStores]
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 
-The Bang-Bang governor really is only concerned about trip point
-crossing, so it can use the new .trip_crossed() callback instead of
-.throttle() that is not particularly suitable for it.
+Indeed it's assigned a few lines below. Feel free to add:
 
-Modify it to do so which also takes trip hysteresis into account, so the
-governor does not need to use it directly any more.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/thermal/gov_bang_bang.c |   31 +++++++++++++------------------
- 1 file changed, 13 insertions(+), 18 deletions(-)
+								Honza
 
-Index: linux-pm/drivers/thermal/gov_bang_bang.c
-===================================================================
---- linux-pm.orig/drivers/thermal/gov_bang_bang.c
-+++ linux-pm/drivers/thermal/gov_bang_bang.c
-@@ -13,8 +13,9 @@
- 
- #include "thermal_core.h"
- 
--static int thermal_zone_trip_update(struct thermal_zone_device *tz,
--				    const struct thermal_trip *trip)
-+static void thermal_zone_trip_update(struct thermal_zone_device *tz,
-+				     const struct thermal_trip *trip,
-+				     bool crossed_up)
- {
- 	int trip_index = thermal_zone_trip_id(tz, trip);
- 	struct thermal_instance *instance;
-@@ -43,13 +44,12 @@ static int thermal_zone_trip_update(stru
- 		}
- 
- 		/*
--		 * enable fan when temperature exceeds trip_temp and disable
--		 * the fan in case it falls below trip_temp minus hysteresis
-+		 * Enable the fan when the trip is crossed on the way up and
-+		 * disable it when the trip is crossed on the way down.
- 		 */
--		if (instance->target == 0 && tz->temperature >= trip->temperature)
-+		if (instance->target == 0 && crossed_up)
- 			instance->target = 1;
--		else if (instance->target == 1 &&
--			 tz->temperature < trip->temperature - trip->hysteresis)
-+		else if (instance->target == 1 && !crossed_up)
- 			instance->target = 0;
- 
- 		dev_dbg(&instance->cdev->device, "target=%d\n",
-@@ -59,14 +59,13 @@ static int thermal_zone_trip_update(stru
- 		instance->cdev->updated = false; /* cdev needs update */
- 		mutex_unlock(&instance->cdev->lock);
- 	}
--
--	return 0;
- }
- 
- /**
-  * bang_bang_control - controls devices associated with the given zone
-  * @tz: thermal_zone_device
-  * @trip: the trip point
-+ * @crossed_up: whether or not the trip has been crossed on the way up
-  *
-  * Regulation Logic: a two point regulation, deliver cooling state depending
-  * on the previous state shown in this diagram:
-@@ -90,26 +89,22 @@ static int thermal_zone_trip_update(stru
-  *     (trip_temp - hyst) so that the fan gets turned off again.
-  *
-  */
--static int bang_bang_control(struct thermal_zone_device *tz,
--			     const struct thermal_trip *trip)
-+static void bang_bang_control(struct thermal_zone_device *tz,
-+			      const struct thermal_trip *trip,
-+			      bool crossed_up)
- {
- 	struct thermal_instance *instance;
--	int ret;
- 
- 	lockdep_assert_held(&tz->lock);
- 
--	ret = thermal_zone_trip_update(tz, trip);
--	if (ret)
--		return ret;
-+	thermal_zone_trip_update(tz, trip, crossed_up);
- 
- 	list_for_each_entry(instance, &tz->thermal_instances, tz_node)
- 		thermal_cdev_update(instance->cdev);
--
--	return 0;
- }
- 
- static struct thermal_governor thermal_gov_bang_bang = {
- 	.name		= "bang_bang",
--	.throttle	= bang_bang_control,
-+	.trip_crossed	= bang_bang_control,
- };
- THERMAL_GOVERNOR_DECLARE(thermal_gov_bang_bang);
-
-
-
+> ---
+>  fs/direct-io.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/direct-io.c b/fs/direct-io.c
+> index 62c97ff9e852..b0aafe640fa4 100644
+> --- a/fs/direct-io.c
+> +++ b/fs/direct-io.c
+> @@ -1217,7 +1217,6 @@ ssize_t __blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
+>  	 */
+>  	inode_dio_begin(inode);
+>  
+> -	retval = 0;
+>  	sdio.blkbits = blkbits;
+>  	sdio.blkfactor = i_blkbits - blkbits;
+>  	sdio.block_in_file = offset >> blkbits;
+> -- 
+> 2.39.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
