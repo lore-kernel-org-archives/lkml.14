@@ -1,168 +1,255 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC11B15B0E1
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 09:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712740278; cv=none; b=f0hJZ4uuUvcyx7EUprKes+x/iUN8mYdvLCU3iiOJrTVjeMNe6KSekuw01pGMK7ZL5PvgMgVjs2NCKpZnuVvvp2bt9Tlx1fh9hZjUY4G6PW10eqLHqzeAKQw88nTEcbDn+bHl6+XLVQ/KdhIg8HILrgFyH6o47pSctoizgCY83ps=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712740278; c=relaxed/simple;
-	bh=l6HwQhAS5cBw6tUNZ3QEVVTb2yliEfsikw1VTQcl4U4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJrivF2rmnEJd3OhWomAwaLifmM2TtF39zxDbQTXfu0c+n1sR+zR2G8RWy+Jj9dm9BOi0y9iSD+R0QSTDMkKOprUEKCJl1UDoW/6b5SWWgQIETDBCIZYLJ7lHsXmiVPrbujSGhEQCbsGPxx+xmELpjExDm8J7bvUlHH9r3oGwYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rukvFi7k; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA1A156C61
+	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 09:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712740277; cv=fail; b=pxOsIahDlJN1fnyVQsg7uR9Rv2G11T8d3FVuxC2mAWGB3PoiDFqiNXGvEVbpF309VGbJ3dVoo1tbqTCT1sll4l1wqdAza3Sy2RW1nDXnUOXOBFWJRH/ap32J4E5p96dWqEVpdbZbpE2b8X5vyVYy+JTlkW40E1jxrSMHRzd90Iw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712740277; c=relaxed/simple;
+	bh=D4Ff4atjaDLKyWK/D4uQ4OmK2TD/EcmsKozWbYH28tQ=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z9ziKIBNevJqdlV50JGAEI5VNXHAMrfw0zOrt3ZShTf5OaUG2W1wywhFNhshIlqZqJn3YwYkGgTWmQ4BJBirM+3IN5HkvCBzUsNkcrOuhwV1WiRM/+iNVGpHtBgQ2UFRKc97igjnU2uxeAvAGbYz/78k0BzOP9g142MRwH/Jm2g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=acs1jdIA; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rukvFi7k"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-343cb97e7f5so1162489f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 02:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712740274; x=1713345074; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t82SHWSKnQwBrCB557sYOimgSCzDvuCob+i4t0Pqx/Q=;
-        b=rukvFi7kKxcXSs1EmrLpymW11pzj+BJii6PCOqqd/SWWILtcCtkq9nlIdlTDZJi+Ew
-         7LVOu+ndTQf0t/RhXvlGncC+0gpAlsQlT3uu8U7PKqmSV5me2dTzkorhkcox6rS/CW5T
-         SUY4Hi/t3HtfpKlOgzg53OnUuKimRPONk+IMiE5kB9mbHbL2VPgpDrtJKEJtiHF6xsEW
-         s49CyBVcquTRHGrS/+tkIJUvSb8U41kyDILXoaUdNQmastu0hTeY766zr9fFzTw1T9Qn
-         2jnZYFckjD0iMExnYkRHq25LeSINzShxGDFJGEz3nn5AjdN6XaTLuTdELRnJrqk/egBo
-         hx0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712740274; x=1713345074;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t82SHWSKnQwBrCB557sYOimgSCzDvuCob+i4t0Pqx/Q=;
-        b=Sp7/B+0Jdi0lsLmst9avkqJah684CwJ7PegfrtP5GY0DsR2/+X2/J4eJ2sNnRzcK6m
-         ntTvBrG2e/iZg8FVxiwI1k12QoAjXf0Wtx7vEpNlGW2ZH6mbi/roxa6XgOjWb/jYgNIW
-         2unyIYysYL1aLFRx96VXx2xxEQtUzWWUMa986+GuKWo3+Sa13hwYtKXxj558C+bCM6N0
-         ykgprkFNDcLnNPdYCiqBcLzK4Hkmwy44BSt1CyU9y4KqdIDgdYmppPiKlHhEJRwbz8YF
-         qUAfGodf7NTOXJeGKAvJ1291f9VZlVPbeu0DNpmXT9imUAVSVjoqQhzDPiVd2CQZfRU1
-         bxmA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGnZHiCg9xZQVDVbXMdqzlwunarOHyYzu9Hzfaw/tq0FpVdPMY4T2GBXeM8gYtueGxuGRX6qCDO7q7FtpsI1FtnsfeciaepSmBZ0Eo
-X-Gm-Message-State: AOJu0YzLwLj06pA1daLmvISzqNkQM24EaAP0CHUvLV7XJdRZppXfsrqK
-	kbVUOLRh5rKSVRflTf8KHXyIGciyOEbCo0hgIhZVq+thKwvy6X6BNg/kJa5atuo=
-X-Google-Smtp-Source: AGHT+IFuCtcCydDrKWfn3jYR1RbT1CZEg8ojMks9EcbPdwaTPvasgPI0ZN7jPxJ/lA0ljO5M7tLzaA==
-X-Received: by 2002:a05:6000:1a50:b0:343:d35c:d12c with SMTP id t16-20020a0560001a5000b00343d35cd12cmr1424773wry.3.1712740273999;
-        Wed, 10 Apr 2024 02:11:13 -0700 (PDT)
-Received: from carbon-x1.. ([2a01:e0a:999:a3a0:d4a6:5856:3e6c:3dff])
-        by smtp.gmail.com with ESMTPSA id d6-20020a056000114600b003456c693fa4sm9079086wrx.93.2024.04.10.02.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 02:11:13 -0700 (PDT)
-From: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Anup Patel <anup@brainfault.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH 03/10] riscv: hwprobe: export Zca, Zcf, Zcd and Zcb ISA extensions
-Date: Wed, 10 Apr 2024 11:10:56 +0200
-Message-ID: <20240410091106.749233-4-cleger@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240410091106.749233-1-cleger@rivosinc.com>
-References: <20240410091106.749233-1-cleger@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="acs1jdIA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712740275; x=1744276275;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=D4Ff4atjaDLKyWK/D4uQ4OmK2TD/EcmsKozWbYH28tQ=;
+  b=acs1jdIAmYTlJh5bWC9LBkmBC0GTxCHoDhQsAlIrjR0QIY8FRg7O6aXM
+   7X+Q1+ll4811p4mfREMwjrI3jUMjRzRyYyKtqTh3RmcdP5mKthTzQlLbv
+   81OwR5CxoIGkdp5HOCNx3JJTD4+1vSrbuYv60sXk9tATaP1A9cmJVKCHf
+   c3ZYzZgh62qol/5sHUof7/iYMbwamznbk1ftGO8eupaKRujA97/vaUVDw
+   /613UTnT+axuTYVasRmJiEUiQvV4RDFxYAknoTPa/brthoMAYV4B0QkKx
+   7bGrNxTxSv3QVAAZUf4n0SvvMBdWY05jO21bZv6T7cmWQnkwKmd03XI03
+   A==;
+X-CSE-ConnectionGUID: Mcb8ZFSGQCeqXxhCDUlBQQ==
+X-CSE-MsgGUID: 7Xb3VUyDSwaceWtzCVNJ5g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8216544"
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="8216544"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2024 02:11:14 -0700
+X-CSE-ConnectionGUID: z/WB9vKITau+I+5fWry1AA==
+X-CSE-MsgGUID: 5ionESW5TUOS+ramTyoHEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
+   d="scan'208";a="20928224"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Apr 2024 02:11:14 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 10 Apr 2024 02:11:14 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 10 Apr 2024 02:11:14 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 10 Apr 2024 02:11:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C8SDA8RREmGVmwV9YMhdgg/H8mx8dwQkAbTm6kn3z6nmXikTvE91W9hU2LH80qg/X0hNaLbfQLC2UnFI5liW/r0gBrhHoZL+uRtPEjykwcBIVBcL1SG9Om1JYL4ixZGrdKZ47Jd5sSHpFBoKR1srNMHZAPcy/yg19wzvob8kiXoREczR+2Ww4cq7V+3xRiSuGSJ1hc3+f00OXGpW4F12vvd2+4Cb0hCLYuR7h3VMPp3QbxReXQKetNhwXDF9jrDhZ8M1YUKbHYhANioS6aFb2hs04RIEFaF69VNOA3yqKqSCQvfIEHi/NS+dp6/4IXcEQyyJri8ZVGoNzpDrILLGnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AsFFlQcrPzRiWPOuvw7VeAZvtVxC0OOCboN5MpTSxcE=;
+ b=J6PBvdOuBeiqjZsqxxbPegz/585NGZ1ObsRuQWMhprJ7vFjPGNwAANsli0zyCBBLFBmMjFAZSiBiAjGdQU+KxxGDy9nml1bPrN7I/lFJLmtp33eElWOz8/0hub9HTvbcY3WdWj65o7Cv03/qQsII/67dNgoH0z3H6lYaSGFACsCB1hVrM8BQKbaozqxcYdu//0VLibx+tuoa4E0Duq51beAVtUQNhFnjDWW++jhIOyRU2UGr5rhZuQifq0Ief38jNDphW+d0JYhnnpoA08r2us45YXclKymE+1eyMntahSgSdW/f/KpvAxuRrOdVqACyIUBL3hHoJSpWlF2bHYSQ/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com (2603:10b6:8:141::20)
+ by MW4PR11MB6936.namprd11.prod.outlook.com (2603:10b6:303:226::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Wed, 10 Apr
+ 2024 09:11:05 +0000
+Received: from DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b1f5:9d1f:f510:d54c]) by DS0PR11MB7529.namprd11.prod.outlook.com
+ ([fe80::b1f5:9d1f:f510:d54c%3]) with mapi id 15.20.7452.019; Wed, 10 Apr 2024
+ 09:11:05 +0000
+Message-ID: <be0b254d-d6c0-4a94-8234-936f40538bbc@intel.com>
+Date: Wed, 10 Apr 2024 17:14:38 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] iommu/vt-d: Remove caching mode check before
+ device TLB flush
+Content-Language: en-US
+To: Baolu Lu <baolu.lu@linux.intel.com>, <iommu@lists.linux.dev>
+CC: Kevin Tian <kevin.tian@intel.com>, Jacob Pan
+	<jacob.jun.pan@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+	<will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	<linux-kernel@vger.kernel.org>
+References: <20240410055823.264501-1-baolu.lu@linux.intel.com>
+ <7e78917f-f84c-4e98-a612-73b8013ae367@intel.com>
+ <0231631b-44ca-45ee-adf9-0a5c8852cc27@linux.intel.com>
+From: Yi Liu <yi.l.liu@intel.com>
+In-Reply-To: <0231631b-44ca-45ee-adf9-0a5c8852cc27@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR06CA0218.apcprd06.prod.outlook.com
+ (2603:1096:4:68::26) To DS0PR11MB7529.namprd11.prod.outlook.com
+ (2603:10b6:8:141::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7529:EE_|MW4PR11MB6936:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jm1hxM8b6HpvoENxa775GsLel8DeT2HCz3Y2L5MaCkEs6vT3p4mT5n4DuyMfk7M6GiMUQCR/L6+uvNCG2NrHaF3Og5VFB0wtZgnhvUcrokVHxXo3jJZts5dquSB/urk8K8R4hLm7n6kn4NypwD+owc19qIk2SOOXrW2j+/gH7heul7GTOCgNnfSSkWl18wRdbBQhFHjnkr+G0o+6epWPb1e13kdNM45njtPEURP8RIHm9UZ6GX14bQ4WzYkWUSB9ESfUsxXtNh+QlKUaG4I5KzdOBAer6ogVvZrgztk0YuGK1+bVTUbjHag2IlfYHaOG9LtwpzYARk+W/q64Hi6Lv9sVVbNXAh2F2HVgz/5jE0xElcK5lGsVCF3xM9YD+aHxBr5IoavMn6tXSG6s4r8XBuO6dwtne9AuHSeauMuP2qUcv/rEyQkcosXM7xRbfXtSdhdL6stPnB7aw1g1b/Jho+jfybbCclNSg0Ki2oCg9CiPZnSi1tvPlaZ9zUkWEIdXx7ZvOfrsErvdi2Dg3UBN4SaIEoK0830SYOd2nrA0PSG20/J78hZnhGUI2sH0tld8AQcjC22854KyzpXslTXx4++8F9Oanrodq+Pk2BP52siJAC9jruiCr7t4WYBIq6+I3baKkU53/PG5vTZHRq3Zqc9uMRLp8rcWcV04XRz/nh8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7529.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eGcxSTVjbk9nOUIxR3poZ3NQMlltdmtQL3BtRHR3enJvUXhFbzBSYVB6am11?=
+ =?utf-8?B?VE1kRG42NFk1OUVLdzZyV3NDcENEWXNvbzVFV0RYQm81QmRpbjhETTVaR0JZ?=
+ =?utf-8?B?bGo5WlFWY0FZMzhBaVpuUzlSY2RDeC9CanBZdU1WR2hRY3hvR3hsU3E3aXlB?=
+ =?utf-8?B?N2JlaHd5VnU2a2Z3eTIxQlI5bDcxMlhqbjJ4bHE3SjUzckpWZDA0RUFUak5H?=
+ =?utf-8?B?ZUNLcE5XS29zZ2JkZThXUW5CTVVodDdzSG90Y0pkbGN3Vm9qR2JaQVlQSTR2?=
+ =?utf-8?B?REg3cnR0OUYvRFlvajdjYTAwaUwvYitqWXpkd3ZkdlFiL1FoSHBwaEF0OW1X?=
+ =?utf-8?B?U05LZnVrTU5IcjN6T2ZwTHpBSTNSakVud1BkOHMxSEF0NzFxNFR4aEZIRE9t?=
+ =?utf-8?B?VEwxQW5LbWR2UFNicThqZHRUdGxrdUV0Y1I4Z0VYWmtUSTh5OFJMbEpVcWVE?=
+ =?utf-8?B?TTVXS20rRmVzOFRCN3dwNkN4R2h5a1dWdTRFbXo5blo1QjhHL2JLU09vRVZF?=
+ =?utf-8?B?Vm1USytVd0xndjZKeUxmdnZTeENtZWdrYmtpc2tZR1ArSTJnZ2x0OVFqa2JM?=
+ =?utf-8?B?cVZoQmVGMFdIdVdKYUhVK0RRRVBydElVWWhQTnNSZnFlRHZuV3FQRjJ3Vmxr?=
+ =?utf-8?B?NUxWaDRKbmczaW1hMlE5dmc3blFaUFpkb0Y5RTUwM1dBOWYrUG5Sck4wTmsw?=
+ =?utf-8?B?MEttaXBiU3B4U29ub09RdnA1djgvc0lvelAwU2NXZDdzTUhoaWlibW9ydzRR?=
+ =?utf-8?B?ZXh3aW1mUXNvM2hEQ3QyZFdVOHRBUVVUYzFnZkVnRFpqMENURWgzQktpbWVM?=
+ =?utf-8?B?VC9KZVBDMXZCZFF6REhkMDk5ZHkxQmhrQWhJYkwwdmUwNlQ4di9HNjlKOUJ4?=
+ =?utf-8?B?U01QNFRBOXpyUmVqQ2d1TjlDVmIzb3NGT3c4cjdtVys4QXJ3clpXeFVZREl2?=
+ =?utf-8?B?dklidjcvcjRXek50REdqcFZiZzNXbWphYVZwK1AxVC9vUFYwRjRUUFdNbzJl?=
+ =?utf-8?B?YkVDYTlybkIxcU5GMkVFL3htUHpOdmxYQy9UekYzNEdRaEduMnJBY2xYWnUw?=
+ =?utf-8?B?c2lVdDRPNUJJUkFVNVBSSWxZTXRnazk4TnRFSG40dk9XbHZUVnp0WmFPbHM2?=
+ =?utf-8?B?aFQyR2hZaWpPVFdHK0ZnTnl5djVHYi9FcHU2akp0RkltazBCMjdPaWNXVEJr?=
+ =?utf-8?B?YlEzMVFrNm8waHVXMVhWWEREc2VBN284T3ljWDRxL1l6WEFXR3lRRFRpN1hX?=
+ =?utf-8?B?OTQvM2xHbUpvbjdGb0JZSjBzU0RyVEFST3dOd2dIOGhoTnRqbHJlS2FCR2hY?=
+ =?utf-8?B?RkdBMmltYzhDZEgyN3ZUZ1oxNU9rdjRvTzBRWjBlaWlwSUhIbWF1T2NOWjlQ?=
+ =?utf-8?B?WGFjemZ0UmpEL2FrWmMvd05FdWF3Vzljd3hTOGZycU0wT3Q0WGQ0bUFzd1hu?=
+ =?utf-8?B?Mkp1Yi9Jc3MwazhvRlRjczhGZ0gySnU4RkdXN3VjdHUxd2F6Vi9YVjIwVXE5?=
+ =?utf-8?B?UnIrTTlPekVneERPNUx2MSs4S1VGZDJucU9wOGR2TndFWUxJbnBYRkdTa3Jw?=
+ =?utf-8?B?RDEwSFpNUmFOVnNiVjBCbWZwd0JHRXFRT2tDUDEySWJ0RzhOaS82QVhVbFhV?=
+ =?utf-8?B?VjVrSGZ6eklXNkV4RnVLVGJVcjN1WitZNllOQ3BTcnFUVTlOSW1ZNjV6alQ5?=
+ =?utf-8?B?eVFxb29rYkNxL3A1ODlVSFlpNmVodXU1dklpcGxSeW9tdWQ2cWtIWlJFcmpa?=
+ =?utf-8?B?bnRiTFo4V1cxTnJGa3NkWWpBZ1ZLQWJJNW05M2ZudGVQekdnU2lTME1nVFdQ?=
+ =?utf-8?B?Nmx1MVQ1cW1SREl0MVppbEFDclNxMldsb0dSNEExTWJ4d0Uxd2RhOWxuYnJx?=
+ =?utf-8?B?UXpLSFFyb0dNb01TcVRDS0lsbGZIWGcxWEt2OEVWOHM4cHNDVnltNGlTcE1i?=
+ =?utf-8?B?cmgyRUNSdE1hdlY2TTZIZFhPWk1qODNCZDk0K2htbHJ6TU93OUVQM2ZpYUtY?=
+ =?utf-8?B?VWQ3WHpzbFpMTUlZMTQ2UCtJOXgxbXF5TnhQeUZ5UTdDM1FmTFc0aFl6amVM?=
+ =?utf-8?B?OUxObWlhS09yeHRvUWtoOVpxYitLS1JkVFY5TkkwUU1hdXhnYjV0OXYycUlL?=
+ =?utf-8?Q?ic65lkp0TzY1LOOfOUuiRewXF?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 218ce489-244c-41bf-dfd5-08dc593e26d4
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7529.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 09:11:05.7530
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6bpRvwQ3ERq9VQd+8tQK9MehUuF0mc9lvro4obXfIwdSw5itk0zshgByAUlG+OtUqyjASywoc4dktvXsm6dMCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6936
+X-OriginatorOrg: intel.com
 
-Export Zca, Zcf, Zcd and Zcb ISA extension through hwprobe.
 
-Signed-off-by: Clément Léger <cleger@rivosinc.com>
----
- Documentation/arch/riscv/hwprobe.rst  | 20 ++++++++++++++++++++
- arch/riscv/include/uapi/asm/hwprobe.h |  4 ++++
- arch/riscv/kernel/sys_hwprobe.c       |  4 ++++
- 3 files changed, 28 insertions(+)
 
-diff --git a/Documentation/arch/riscv/hwprobe.rst b/Documentation/arch/riscv/hwprobe.rst
-index 9ca5b093b6d5..bf96b4e8ba3b 100644
---- a/Documentation/arch/riscv/hwprobe.rst
-+++ b/Documentation/arch/riscv/hwprobe.rst
-@@ -192,6 +192,26 @@ The following keys are defined:
-        supported as defined in the RISC-V ISA manual starting from commit
-        58220614a5f ("Zimop is ratified/1.0").
- 
-+  * :c:macro:`RISCV_HWPROBE_EXT_ZCA`: The Zca extension part of Zc* standard
-+       extensions for code size reduction, as ratified in commit 8be3419c1c0
-+       ("Zcf doesn't exist on RV64 as it contains no instructions") of
-+       riscv-code-size-reduction.
-+
-+  * :c:macro:`RISCV_HWPROBE_EXT_ZCB`: The Zcb extension part of Zc* standard
-+       extensions for code size reduction, as ratified in commit 8be3419c1c0
-+       ("Zcf doesn't exist on RV64 as it contains no instructions") of
-+       riscv-code-size-reduction.
-+
-+  * :c:macro:`RISCV_HWPROBE_EXT_ZCD`: The Zcd extension part of Zc* standard
-+       extensions for code size reduction, as ratified in commit 8be3419c1c0
-+       ("Zcf doesn't exist on RV64 as it contains no instructions") of
-+       riscv-code-size-reduction.
-+
-+  * :c:macro:`RISCV_HWPROBE_EXT_ZCF`: The Zcf extension part of Zc* standard
-+       extensions for code size reduction, as ratified in commit 8be3419c1c0
-+       ("Zcf doesn't exist on RV64 as it contains no instructions") of
-+       riscv-code-size-reduction.
-+
- * :c:macro:`RISCV_HWPROBE_KEY_CPUPERF_0`: A bitmask that contains performance
-   information about the selected set of processors.
- 
-diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
-index ac6874ab743a..dd4ad77faf49 100644
---- a/arch/riscv/include/uapi/asm/hwprobe.h
-+++ b/arch/riscv/include/uapi/asm/hwprobe.h
-@@ -60,6 +60,10 @@ struct riscv_hwprobe {
- #define		RISCV_HWPROBE_EXT_ZACAS		(1ULL << 34)
- #define		RISCV_HWPROBE_EXT_ZICOND	(1ULL << 35)
- #define		RISCV_HWPROBE_EXT_ZIMOP		(1ULL << 36)
-+#define		RISCV_HWPROBE_EXT_ZCA		(1ULL << 37)
-+#define		RISCV_HWPROBE_EXT_ZCB		(1ULL << 38)
-+#define		RISCV_HWPROBE_EXT_ZCD		(1ULL << 39)
-+#define		RISCV_HWPROBE_EXT_ZCF		(1ULL << 40)
- #define RISCV_HWPROBE_KEY_CPUPERF_0	5
- #define		RISCV_HWPROBE_MISALIGNED_UNKNOWN	(0 << 0)
- #define		RISCV_HWPROBE_MISALIGNED_EMULATED	(1 << 0)
-diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
-index c99a4cf231c5..2ffa0fe5101e 100644
---- a/arch/riscv/kernel/sys_hwprobe.c
-+++ b/arch/riscv/kernel/sys_hwprobe.c
-@@ -112,6 +112,8 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
- 		EXT_KEY(ZACAS);
- 		EXT_KEY(ZICOND);
- 		EXT_KEY(ZIMOP);
-+		EXT_KEY(ZCA);
-+		EXT_KEY(ZCB);
- 
- 		if (has_vector()) {
- 			EXT_KEY(ZVBB);
-@@ -132,6 +134,8 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
- 			EXT_KEY(ZFH);
- 			EXT_KEY(ZFHMIN);
- 			EXT_KEY(ZFA);
-+			EXT_KEY(ZCD);
-+			EXT_KEY(ZCF);
- 		}
- #undef EXT_KEY
- 	}
+On 2024/4/10 16:02, Baolu Lu wrote:
+> On 2024/4/10 14:30, Yi Liu wrote:
+>> On 2024/4/10 13:58, Lu Baolu wrote:
+>>> The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
+>>> implementation caches not-present or erroneous translation-structure
+>>> entries except the first-stage translation. The caching mode is
+>>> irrelevant to the device TLB , therefore there is no need to check
+>>> it before a device TLB invalidation operation.
+>>>
+>>> iommu_flush_iotlb_psi() is called in map and unmap paths. The caching
+>>> mode check before device TLB invalidation will cause device TLB
+>>> invalidation always issued if IOMMU is not running in caching mode.
+>>> This is wrong and causes unnecessary performance overhead.
+>>
+>> I don't think the original code is wrong. As I replied before, if CM==0,
+>> the iommu_flush_iotlb_psi() is only called in unmap path, in which the
+>> @map is false. [1] The reason to make the change is to make the logic
+>> simpler. 🙂
+> 
+> Oh, I see. There is a magic
+> 
+>          if (cap_caching_mode(iommu->cap) && !domain->use_first_level)
+>                  iommu_flush_iotlb_psi(iommu, domain, pfn, pages, 0, 1);
+> 
+> in __mapping_notify_one().
+> 
+> So if it's caching mode, then
+> 
+>   - iommu_flush_iotlb_psi() will be called with @map=1 from
+>     __mapping_notify_one(), "!cap_caching_mode(iommu->cap) || !map" is
+>     not true, and device TLB is not invalidated.
+>   - iommu_flush_iotlb_psi() will also be called with @map=0 from
+>     intel_iommu_tlb_sync(), device TLB is issued there.
+> 
+> That's the expected behavior for caching mode.
+> 
+> If it's not the caching mode, then
+> 
+>   - iommu_flush_iotlb_psi() will be called with @map=0 from
+>     intel_iommu_tlb_sync(), device TLB is issued there.
+> 
+> That's also the expected behavior.
+>
+> So the existing code is correct but obscure and difficult to understand,
+> right? If so, we should make this patch as a cleanup rather than a fix.
+
+aha, yes. As the below table, iommu_flush_iotlb_psi() does flush device TLB
+as expected. But there is a NA case. When CM==0, it should not be possible
+to call iommu_flush_iotlb_psi() with @map==1 as cache invalidation is not
+required when CM==0. So the existing code logic is really confusing,
+checking @map is enough and clearer. Since the old code works, so perhaps
+no fix tag is needed. :)
+
++----+------+-----------+------------+
+|  \       |            |            |
+|   \ @map |            |            |
+| CM \     |      0     |     1      |
+|     \    |            |            |
++------+---+------------+------------+
+|          |            |            |
+|     0    |      Y     |     NA     |
++----------+------------+------------+
+|          |            |            |
+|     1    |      Y     |     N      |
++----------+------------+------------+
+
+Y means flush dev-TLB please
+N means no need to flush dev-TLB
+NA means not applied
+
+BTW. I think it is better to have the below change in a separate patch.
+The below change does fix a improper dev-TLB flushing behavior. Also
+how about Kevin's concern in the end of [1]. I didn't see your respond
+about it.
+
+@@ -1579,8 +1575,7 @@ static void intel_flush_iotlb_all(struct iommu_domain 
+*domain)
+  			iommu->flush.flush_iotlb(iommu, did, 0, 0,
+  						 DMA_TLB_DSI_FLUSH);
+
+-		if (!cap_caching_mode(iommu->cap))
+-			iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
++		iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
+  	}
+
+  	if (dmar_domain->nested_parent)
+
+
+[1] 
+https://lore.kernel.org/linux-iommu/BN9PR11MB52764F42C20B6B18DDE7E66B8C072@BN9PR11MB5276.namprd11.prod.outlook.com/
+
 -- 
-2.43.0
-
+Regards,
+Yi Liu
