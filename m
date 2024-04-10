@@ -1,68 +1,44 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B7915F408;
-	Wed, 10 Apr 2024 14:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEE116EC1A;
+	Wed, 10 Apr 2024 14:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712761031; cv=none; b=qmlKBwFUPpAhW3PG7YokFdv4sL0o+lTL1MnyYN0cWxytb7xriR+CBjCbvA4lNw1N3Vzx8EDQGH+h4Dxob1okxR+v/kVavS4TKB0oJnhEOXaP1hrf8x8A3BYFPV95NID7n4Y2oT/I20i+GYrDL8mLD3tuQ6C1N5jvUW2uUmBm3a4=
+	t=1712761046; cv=none; b=WPMm7YDFlVrfhF+9m84DOlpWVItduaYqpTj1Q9FHDK+r/NHVj55yatd8ojYomCEElrR/xgDafMUQJgw4tEbw5GnQB88CF9oxB+hPBlKKaJt3KekBkgKjEYcpcihK6L/fTPD2VqtGQtQ0aQpAwZWezWS/IjYhIKjXwsrGAt9wLYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712761031; c=relaxed/simple;
-	bh=t7IzyfQ0z66QoEoGzJDJlFIDnvILKbDF0xKc8/CwM2s=;
+	s=arc-20240116; t=1712761046; c=relaxed/simple;
+	bh=rgAigV0Mg7k37J0oxZCOZaSDtr64xfw5j/3UZIQubQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i35JN0syc0ku5mHsh2LynZAl7VcQt1bsC5IkX5RAJ9mIJ3FGPUKM/JYSdTy7edk0ECNPni3XEz/mcDbeQrKRX5JhzqgN6saG58aC0Ksg9VYUYgmvGM5D+Qd2GDz2JED+iW4KKN3aXtOHfEWFiABfp19ZTjMVanPebeFaZuThWQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMnnVlob; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fibwHyOfu3E4lm1vY/itXkrCwozUA+3vDuBrZVvEy18DwppC5DjGxflrHyqyptk6YRtyMD2mBz9ZpUYI+xWEnu9nb6d50x0iF4s/26F53qoNog8JWDNAY4Z5nXFQ27/bq0uHGVsJGSLKYpZYm0ivIsAWcR2l5QbKoxT04QdIQxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQfFcOP+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMnnVlob"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ecf1bb7f38so4657488b3a.0;
-        Wed, 10 Apr 2024 07:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712761028; x=1713365828; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lKZlsiGSmj1oAmOorazlme/SpRibHSzFq4Lypt1FiW4=;
-        b=lMnnVlob8IJ0SRLnjuWaT6MqrreuQNCXbQCJOQvJIQoplMP+jBN7ObcXmV2O/HeDnN
-         mWyTtEPukNd368MEAJQoLsDGu4kBLHTvCTGtKvsWvdaiVQp6N1n+ZdDMa9ZqdOThueb5
-         tWPfGCl14Zpm7Bj1umKR96M1KVf9Mby1tn8OWKI+zP1zWS3Wi7NGlNrbrbhTD1bQ0i6x
-         hWloqgzTAdOa2VH0fyHCA7I2QZAUe+fkH/Oio9vTX8vVY3cYZJ/BMaODtMT3DjGtEQ3v
-         P2B03s4X/N5ILf03K/dkaavqnDHudHxkgAZpQozQ9TmLxcC0T2K5KYEvkVqlQEGjWKh9
-         XX6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712761028; x=1713365828;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lKZlsiGSmj1oAmOorazlme/SpRibHSzFq4Lypt1FiW4=;
-        b=jEiv99HGf5x/ompfROkLEMZp8b25fE/geFZ4cfU6AZVm+ZeuEGUKaD1J/vzIxeARcU
-         Yq2Rssk7QxquhQmGQz0iwrJrhCYV9ao5dhBOxBZYp0UewS8my2336l9KiRIblHybvAO3
-         HyxwyRwCOavN0j7xtOhiLEMexr4Az4TooHY2ZZ9tx7FFkxh+zeysLSkr8zybX/9qAJE6
-         ZACehbexm2vyUA8VEhchEpH/OFDKeGrdAwGwfTAyEHZz2MYBrfttdtKANqRNNZ2Ub9FN
-         JBVUXoZiOSHHVrCoam84yFdNHN6q9Y+eYMRC60GJM+RNTONcu3Ld68P9QYT3q/CLSUlj
-         SuMw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlNRjJw9tYpNtsvgbPAASTFHvPdBmsmE1aRLeae8C4GEYVxqDbd37Z6+EbPfFk6bYEi2sbcb1WZhixtQvVKgLgFiXVUpwwtg/NIbAY/mo3Th/+EPfZlz6BU6zQfmKiQsxwR6B7FalNjhY=
-X-Gm-Message-State: AOJu0YzYSOL7NpnTHogax5wCWob3l41CD/55PU8+usubCds8IcL1Vl7/
-	baFVIipAkWHbHsBbDZ221AljqCG9WL6d2Very8q/uHgxTArLxlWs
-X-Google-Smtp-Source: AGHT+IHjkI+mrqX8qdjgWtvycBe8GnW3NGYClqb8Gq07Es6IUFHrdNgyWrkVqdHTqVfDlpVz92eGGg==
-X-Received: by 2002:a05:6a00:8907:b0:6ed:cd4c:cc11 with SMTP id hw7-20020a056a00890700b006edcd4ccc11mr1351552pfb.25.1712761028554;
-        Wed, 10 Apr 2024 07:57:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id g4-20020aa79dc4000000b006e8f75d3b07sm10200788pfq.181.2024.04.10.07.57.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 07:57:08 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 10 Apr 2024 07:57:07 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	Arnd Bergmann <arnd@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] hwmon: add HAS_IOPORT dependencies
-Message-ID: <832781c8-cebf-4d4e-936a-67cbeac8bf4d@roeck-us.net>
-References: <20240404124700.3807842-1-schnelle@linux.ibm.com>
- <20240404124700.3807842-2-schnelle@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQfFcOP+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A78DAC433B1;
+	Wed, 10 Apr 2024 14:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712761045;
+	bh=rgAigV0Mg7k37J0oxZCOZaSDtr64xfw5j/3UZIQubQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RQfFcOP+qX85PmQnBPLvccqEywoUWIxkynIP914BonF6qpPr0WgGNqLRbviZLfGPD
+	 Bomu75zNlFrOE2Ke1UznjFkoNd9/pRLwGGHZlVwENl21OmBPEInkv8LqYfisZLOSpi
+	 XpAVCdsAW8pZSBx5AqH9adPA41I3sfdmbW8uDodY5wPxmdoc/6MCsRnfqTMLsTEUGE
+	 BKojfOFIlt2MvygHWzEUSXsdc6Ra7ZJRdThgiGOs+HFxFuaJ0/QalfSZXkTdF0ZDKJ
+	 gCrg8Ipm35MwoNSCvH0ollDCHBWxYJEEzKHXZHZaFeQY52ZlWeDs1+G2PLnfmmrNSm
+	 MUcRXbGTuWgKg==
+Date: Wed, 10 Apr 2024 16:57:19 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Sebastian Ene <sebastianene@google.com>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
+	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+	tabba@google.com, will@kernel.org, yuzenghui@huawei.com,
+	vdonnefort@google.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH] KVM: arm64: Add support for FFA_PARTITION_INFO_GET
+Message-ID: <Zhaoz9E/sw6jVnci@lpieralisi>
+References: <20240409151908.541589-1-sebastianene@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,18 +47,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240404124700.3807842-2-schnelle@linux.ibm.com>
+In-Reply-To: <20240409151908.541589-1-sebastianene@google.com>
 
-On Thu, Apr 04, 2024 at 02:47:00PM +0200, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=n will disable inb()/outb() and friends at
-> compile time. We thus need to add HAS_IOPORT as dependency for those
-> drivers using them.
+On Tue, Apr 09, 2024 at 03:19:08PM +0000, Sebastian Ene wrote:
+> Handle the FFA_PARTITION_INFO_GET host call inside the pKVM hypervisor
+> and copy the response message back to the host buffers. Save the
+> returned FF-A version as we will need it later to interpret the response
+> from the TEE.
 > 
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> ---
+>  arch/arm64/kvm/hyp/nvhe/ffa.c | 49 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> index 320f2eaa14a9..72fc365bc7a8 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> @@ -67,6 +67,7 @@ struct kvm_ffa_buffers {
+>   */
+>  static struct kvm_ffa_buffers hyp_buffers;
+>  static struct kvm_ffa_buffers host_buffers;
+> +static u32 ffa_version;
+>  
+>  static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
+>  {
+> @@ -640,6 +641,49 @@ static bool do_ffa_features(struct arm_smccc_res *res,
+>  	return true;
+>  }
+>  
+> +static void do_ffa_part_get(struct arm_smccc_res *res,
+> +			    struct kvm_cpu_context *ctxt)
+> +{
+> +	DECLARE_REG(u32, uuid0, ctxt, 1);
+> +	DECLARE_REG(u32, uuid1, ctxt, 2);
+> +	DECLARE_REG(u32, uuid2, ctxt, 3);
+> +	DECLARE_REG(u32, uuid3, ctxt, 4);
+> +	DECLARE_REG(u32, flags, ctxt, 5);
+> +	u32 off, count, sz, buf_sz;
+> +
+> +	hyp_spin_lock(&host_buffers.lock);
+> +	if (!host_buffers.rx) {
+> +		ffa_to_smccc_res(res, FFA_RET_INVALID_PARAMETERS);
+> +		goto out_unlock;
+> +	}
+> +
+> +	arm_smccc_1_1_smc(FFA_PARTITION_INFO_GET, uuid0, uuid1,
+> +			  uuid2, uuid3, flags, 0, 0,
+> +			  res);
+> +
+> +	if (res->a0 != FFA_SUCCESS)
+> +		goto out_unlock;
+> +
+> +	count = res->a2;
+> +	if (!count)
+> +		goto out_unlock;
+> +
+> +	if (ffa_version > FFA_VERSION_1_0) {
+> +		buf_sz = sz = res->a3;
+> +		if (sz > sizeof(struct ffa_partition_info))
+> +			buf_sz = sizeof(struct ffa_partition_info);
 
-Applied.
+We are copying buf_sz but (correctly ?) returning res->a3 to the caller,
+which is allowed to expect res->a3 bytes to be filled since that's what
+firmware reported.
 
-Guenter
+Technically this is not a problem at present, because the caller
+(ie the FF-A driver) and the hypervisor rely on the same descriptor
+structures (and buf_sz can't be != sizeof(struct ffa_partition_info),
+anything else is a bug as we stand); they must be kept in sync though as
+the firmware version changes (*if* there are changes in the partition
+descriptor - eg fields are added).
+
+An option would consist in just copying res->a3 bytes as firmware reports
+(obviously keeping the RX buffer boundary checks for the memcpy).
+
+It is just a heads-up because I noticed it, no more, I will let Sudeep
+comment on this since he knows better.
+
+Lorenzo
+
+> +	} else {
+> +		/* FFA_VERSION_1_0 lacks the size in the response */
+> +		buf_sz = sz = 8;
+> +	}
+> +
+> +	WARN_ON((count - 1) * sz + buf_sz > PAGE_SIZE);
+> +	for (off = 0; off < count * sz; off += sz)
+> +		memcpy(host_buffers.rx + off, hyp_buffers.rx + off, buf_sz);
+> +out_unlock:
+> +	hyp_spin_unlock(&host_buffers.lock);
+> +}
+> +
+>  bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+>  {
+>  	struct arm_smccc_res res;
+> @@ -686,6 +730,9 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+>  	case FFA_MEM_FRAG_TX:
+>  		do_ffa_mem_frag_tx(&res, host_ctxt);
+>  		goto out_handled;
+> +	case FFA_PARTITION_INFO_GET:
+> +		do_ffa_part_get(&res, host_ctxt);
+> +		break;
+>  	}
+>  
+>  	if (ffa_call_supported(func_id))
+> @@ -726,6 +773,8 @@ int hyp_ffa_init(void *pages)
+>  	if (FFA_MAJOR_VERSION(res.a0) != 1)
+>  		return -EOPNOTSUPP;
+>  
+> +	ffa_version = res.a0;
+> +
+>  	arm_smccc_1_1_smc(FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0, &res);
+>  	if (res.a0 != FFA_SUCCESS)
+>  		return -EOPNOTSUPP;
+> -- 
+> 2.44.0.478.gd926399ef9-goog
+> 
