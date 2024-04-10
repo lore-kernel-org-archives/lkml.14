@@ -1,86 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED4215920B;
-	Wed, 10 Apr 2024 21:14:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FD415AAD6;
+	Wed, 10 Apr 2024 21:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712783644; cv=none; b=EkKJlJoUojQ4TC86MRz3+MPnL0NZR/yGTnrWhTR/5rHr1Iqk/jVOZJ9dGMXXKu56pozanLWa0lRqDcV1N7kD/inTAKo+txaXKHl3hkzYqPI2RIik31t6BE4DlV5VJJyxHJXcbbDciVCYhmkVbmxJ4fRMbHV8C1pYe9Ao3BBBsqE=
+	t=1712783837; cv=none; b=hfJNnbH0WPWUTGIE6RRxqszisAvmAJPPWSedbozn2srHpS1uN/KUxe3taQHk+ACHal/aUh3wQNXKfqpmTSNOhi9pU9t+CcxDyOZJ617uvTLwnxJgRkqgtevxF23oepx9sGy0UD0Yy6AsLMIyipj3OWMGBMKX1VYdY88xUvGrRs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712783644; c=relaxed/simple;
-	bh=bLJPnax4qL6EbvyLVR0K3hnjSf/4Yjk4/FnnmMrKwEs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pf7a/A5hMLAXVJ1DxZdwHU9XBPs8LaelJriTSSZkGOC3PiagVoh0N3GR9MNHXKG2J45HWo0bwRx/ng4miZ+C9SIfVyt+iV+zq8B9AltvE5QKOXE/WJ0caxWUqE3ct0UWjGMYzsWfoc9nlEg5rQoClxL4XAYaMfqeuJupexQPopk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pig9wYm+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712783837; c=relaxed/simple;
+	bh=FQ5Wqoh4cq0nJmBRJCK5eYR0utN+IWYq6E2MoFSmXIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CaNihN0rArvyMsFS+Iu6QUzDOKuM0ahjXs3S/DXps7txxpJbkz2SppbP/xL4aJ5jItCoSEUKKlE7QWuZrSc7xS6UTNO10HSPXBXSR7ewq8l+Cpeg1rgPYP5lpeZhCZoYxk1ktBxoX4fusVGxXnfnHSmEAhajzvVcP7Th0t81oHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHDKT34r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pig9wYm+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A801C433C7;
-	Wed, 10 Apr 2024 21:14:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHDKT34r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E997AC433C7;
+	Wed, 10 Apr 2024 21:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712783644;
-	bh=bLJPnax4qL6EbvyLVR0K3hnjSf/4Yjk4/FnnmMrKwEs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=pig9wYm+6/nFCM0N14POyu3w+eVGvR/kNKOEK1mBQ+qYbbaJSqHXlfGrZFYJDD8+/
-	 qSV0tJtC2OOo36nEzvt9cY8KDyKJZhYMMtAbwUiu0MDXeqg8Avom7CEscH5M4MapKY
-	 fCDR2zsGTFdE7uXwtEuTak6oev6nuaIikGK2JUJxcQZWrfRNXOzkcOH/tg0ggULhLZ
-	 mulV2MzaA1Kjcns2XElneHvjQYST6Z5+dFVTZhx7RHgFL6CWXXD2g/88L/7cHl5DTe
-	 a0VGL5OQYVVjN1Q3+Vg/fRiYoRFvaVQC0NoGtpsGgQJjXUz0KckjhzHElkzrYj3jnz
-	 JGz5yHxLUbyjQ==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5176f217b7bso1842607e87.0;
-        Wed, 10 Apr 2024 14:14:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoD96sgvL1rMxM/DLJ4WSnrYp0NLag7qpVP178GoTVaBHaMp7ylsJMejC2pcXq0ADKjDBJ6yJ69urX2g0GHRUzLCQ4fzXAv9P0SVh4l8kdKpmT/vARWq3seNO4/eN46bDROj+wJK/oVQ==
-X-Gm-Message-State: AOJu0Yyoa+HMfu3q8AvVMJDbEhDUEO2qsQtS+Fr2DriyDrlBpFCmOiqU
-	+DJS7e2GEIe2KtqNCHJCRu40LlP5t+0Nk4CxRtukk78Vx+px28mvD4f+Qyktc1Wdw1DvyJqQum3
-	gRpIRdzPQoW3lhsmmUYG/b9sz1O4=
-X-Google-Smtp-Source: AGHT+IGQ8UnZ1N24T93Fb8D3wqhBLRCD4YCcA2YU2mbK8WQ31xFkn3XImZg92X+IhDhLlPbP58MNmt5aQzB0QQ4s2yk=
-X-Received: by 2002:ac2:554c:0:b0:516:c44a:657d with SMTP id
- l12-20020ac2554c000000b00516c44a657dmr2939280lfk.64.1712783642352; Wed, 10
- Apr 2024 14:14:02 -0700 (PDT)
+	s=k20201202; t=1712783836;
+	bh=FQ5Wqoh4cq0nJmBRJCK5eYR0utN+IWYq6E2MoFSmXIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PHDKT34r85zeEyeIj5dbbqlATvmjM0HLkWr+kqkwrBOGW9+1s1LsynG8asMAlL7tb
+	 RR+m02zE8zPY7LQO2K05eUC+I7+E1Kq8j1MlIiZwY99RCI99gupZBvOCBwr1yA9/Yw
+	 dge2J54HO4pjLbGs7hhvntCKkh1ExGEJhN8z6z9XPW6jx0FWm907yZJBUmNYaYFTVG
+	 QoARcbGS1onlkcPN2Xxpqbv8rN6jx5OWMAoq25DzXEP59VIpuZoUO6D3/6MVAq+XFn
+	 Y/f9kMuVEvqYWahd0aY1SdROjdolWY720x+KA0CWNG3oeq8SRZrVfPxc00beR5uG4X
+	 FNwWxgV08pYng==
+Date: Wed, 10 Apr 2024 18:17:13 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/6] perf annotate-data: Add
+ hist_entry__annotate_data_tui()
+Message-ID: <ZhcB2Vh6lAcqPasI@x1>
+References: <20240409235000.1893969-1-namhyung@kernel.org>
+ <20240409235000.1893969-4-namhyung@kernel.org>
+ <Zhb0raj1yW8JhuFW@x1>
+ <Zhb-17CrgZt_PdUH@x1>
+ <Zhb_F6hvWrjMcoM1@x1>
+ <ZhcAvddbSEcMXzvH@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <a022f547c43e40e2b9f0aebb2bd0bfa8@kioxia.com>
-In-Reply-To: <a022f547c43e40e2b9f0aebb2bd0bfa8@kioxia.com>
-From: Song Liu <song@kernel.org>
-Date: Wed, 10 Apr 2024 14:13:50 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6iDjPp2B-NEqMEjb9v40US9eN88CuOc+882h6+BRCAQw@mail.gmail.com>
-Message-ID: <CAPhsuW6iDjPp2B-NEqMEjb9v40US9eN88CuOc+882h6+BRCAQw@mail.gmail.com>
-Subject: Re: [PATCH 00/11] md: avoid counter operation conflicts
-To: tada keisuke <keisuke1.tada@kioxia.com>
-Cc: "yukuai3@huawei.com" <yukuai3@huawei.com>, 
-	"linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhcAvddbSEcMXzvH@x1>
 
-Thanks for the patchset!
+On Wed, Apr 10, 2024 at 06:12:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 10, 2024 at 06:05:27PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Apr 10, 2024 at 06:04:26PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Wed, Apr 10, 2024 at 05:21:01PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Tue, Apr 09, 2024 at 04:49:57PM -0700, Namhyung Kim wrote:
+> > > > > Support data type profiling output on TUI.
+> > > > 
+> > > > Added the follow to the commit log message, to make reviewing easier.
+> > > > 
+> > > > As followup patches I think having the DSO name together with the type
+> > > > is important, also I think we could have a first menu with all the pairs
+> > > > of DSO/type, sorted top down by the types with most samples, wdyt?
+> > > > 
+> > > > Applied.
+> > > > 
+> > > 
+> > > There is something else here with the static build, checking...
+> > 
+> > Probably because of:
+> > 
+> > Makefile.config:810: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
+> > 
+> > Fixing...
+> 
+> Trying with:
 
-On Tue, Mar 26, 2024 at 3:29=E2=80=AFAM tada keisuke <keisuke1.tada@kioxia.=
-com> wrote:
->
-> Currently, active_aligned_reads and nr_pending used as counters are atomi=
-c types.
-> Therefore, when inc/dec in a multi-core results in conflicts.
->
-> To solve this problem, use "percpu_ref" counters that can avoid conflicts=
- and maintain consistency.
->
-> Switch modes of percpu_ref to achieve both consistency and conflict avoid=
-ance.
-> During normal operations such as inc/dec, it operates as percpu mode.
-> When consistency is required, it operates as atomic mode.
-> The operations that require consistency are as follows:
-> =E3=83=BBZero check for the counter
-> =E3=83=BBAll operations in RAID 1/10
+Not really, I need to check for HAVE_DWARF_SUPPORT as well? Doing that
 
-IIUC, the patchset is to resolve race conditions and thus improve performan=
-ce.
-If this is the case, could you please include some performance numbers in t=
-he
-next version?
-
-Thanks,
-Song
+- Arnaldo
+ 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 6f7104f06c42d98a..458eafe65e4aa16f 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -469,9 +469,11 @@ static void hists__find_annotations(struct hists *hists,
+>  					goto find_next;
+>  			}
+>  
+> +#ifdef HAVE_SLANG_SUPPORT
+>  			if (use_browser == 1)
+>  				key = hist_entry__annotate_data_tui(he, evsel, NULL);
+>  			else
+> +#endif
+>  				key = hist_entry__annotate_data_tty(he, evsel);
+>  
+>  			switch (key) {
