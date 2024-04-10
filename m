@@ -1,127 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14953224EA
-	for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 05:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A341BF3D;
+	Wed, 10 Apr 2024 06:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712728781; cv=none; b=fu4MLmUm4Q1O7VNpl3lWK6Xq/5tuWb/Vp/B9tJslqQ6gfWEJTMgyj31Sc/KRSaj1WaUeYVh50NDnSJHQghdBiMnJLSLOchco+pnLQjJU/VmMBxAVWHGoNPwpmHJJ8dFfBguhkuoK1xf20vMBcj+T3rtHvpN1twP79qfPGqI7w+8=
+	t=1712728837; cv=none; b=QMWRS+nPKrXK8ijJLnAnJrcZOWnJcYgbrFN9HQZVFCNRZtcbRyEeWRjNaUSvnmhal7VrE9GNlJ51BbVnchBTjNuoePRVpaeQT4Pu3i9iH3j9ZfwF4JOgOBIqzu4CfRtuGEwdR4zyOx0W/02SBYvaYuSprvJKzBdeiJU7l/UXCiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712728781; c=relaxed/simple;
-	bh=kVXQ4bZM5bQZSi1MhboTtlK1NNrbVfyTWUnzwaNNWio=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=U3jVQ1406QQDoAuBcqyscWwN+DOa5WjwAvNnkpgRyM3rDIHOBzlCbbzwKvmsDuID6lTWbtsiMyGpGGUy/E6ZjH8jUF/edKGD1MfFZCdH4LHlRFAtdAQurzYE0099PZ6TiGhs7wtgGSENC4I6JJDA1VOFZt7Iz9+F5FIpW8ITXjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MUOuL9HG; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712728837; c=relaxed/simple;
+	bh=lS08xQB5+dfJ13UYeFRd5tnUYpoDHhzEWxLWJIVAq3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZpUcXwvDtHOBXm0XeM12TUIyD5Nll068d+02PHY+JVibxRvq325C8v/F12wMR1E7eNtj7asLllTwGGuQaI0u0ajMnkMF6+hLMMi5+nSSI7/MlpNfqe/8Lq5hX96PRDrmmN++Pqm7w2N710LCyHpvRJMxy2tMchZrtCRGCFWurJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ldx8Rly/; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MUOuL9HG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ldx8Rly/"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712728780; x=1744264780;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kVXQ4bZM5bQZSi1MhboTtlK1NNrbVfyTWUnzwaNNWio=;
-  b=MUOuL9HGST2OetHbxLA59ISL13hfFq8q87lqg9XBhpveya3uMwZgp5YX
-   UmgpxRMuBC7VPkmT0ecTdjUXCqcSoopSUQIjGqwVHDMj4CT7bcVKbMBsT
-   8geMinZwoAzOLsrqT5BTgeuGBuCeZCMFQzQN3WsAdGHq7MnxhXDvt8SEf
-   KDyAXWTifjZ+eA7oBLRImYaB8+gTBGYtpoh166HTvPIKh91BcNdNS7yvd
-   vtzbSZUUHi7tcwSLTAuVDL/TqTYhD+auwVmtDOWHygWRd2os0Xa6MvWfZ
-   uP2xHmei+zfU/pTyBzFySlmWb8y6CLGPWorsT6fkjWqTMJmGLT7lJcaVy
-   Q==;
-X-CSE-ConnectionGUID: ythGzPmCQN2MGfGzi5amUw==
-X-CSE-MsgGUID: w7D9zFdbQMKiGimVgbzizg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11913099"
+  t=1712728834; x=1744264834;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lS08xQB5+dfJ13UYeFRd5tnUYpoDHhzEWxLWJIVAq3w=;
+  b=Ldx8Rly/4Scf6JyWnoW/7fPPr939waRqk/9pjcCyqWqzJ4U/C3HJN4WB
+   C5smzXGiiUXmyFfWB1Uqe1X4emRXQpl3ce9P/xt4F4vBfKCOv2xBzQf2S
+   8QMjJxhoRdgEcYVIXPMvkPVAbF9H9RzC/Xfmf5ACnxghAydmB21jMLvSp
+   9ebzjMOTlt5rJeEIkVYlse3EnHmLOIgS/J/jLUbWp1fiuMTkeqzqL2GM1
+   2MjFtn4sZgKwti/TdDKNIiG6qqrK+9De3AagoPC/AQ6aXuRZ3otP/DUPf
+   bvxMXMrguG4NjZO1E2flnvildXibHzbHYNnLFPuoroPLVWVMmeUYeedmB
+   A==;
+X-CSE-ConnectionGUID: H6G2pFEuSXS2aGKgU0UjxQ==
+X-CSE-MsgGUID: LlSxPT6YT3iXczubOO53Vg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11039203"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11913099"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 22:59:39 -0700
-X-CSE-ConnectionGUID: 1QT0hvkWQS6nzDJrsST11g==
-X-CSE-MsgGUID: jxcDG/cfSMCtYiMQw+t4cA==
+   d="scan'208";a="11039203"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 23:00:33 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="937094562"
 X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20516501"
-Received: from unknown (HELO allen-box.sh.intel.com) ([10.239.159.127])
-  by fmviesa007.fm.intel.com with ESMTP; 09 Apr 2024 22:59:38 -0700
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: iommu@lists.linux.dev
-Cc: Kevin Tian <kevin.tian@intel.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v2 1/1] iommu/vt-d: Remove caching mode check before device TLB flush
-Date: Wed, 10 Apr 2024 13:58:23 +0800
-Message-Id: <20240410055823.264501-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+   d="scan'208";a="937094562"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 23:00:30 -0700
+Date: Wed, 10 Apr 2024 09:00:28 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: rafael@kernel.org, lenb@kernel.org, robert.moore@intel.com,
+	mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+	stanislaw.gruszka@linux.intel.com
+Cc: linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] ACPI: bus: allow _UID matching for integer zero
+Message-ID: <ZhYq_HDwAi4B49Zz@black.fi.intel.com>
+References: <20240328035540.13194-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328035540.13194-1-raag.jadav@intel.com>
 
-The Caching Mode (CM) of the Intel IOMMU indicates if the hardware
-implementation caches not-present or erroneous translation-structure
-entries except the first-stage translation. The caching mode is
-irrelevant to the device TLB , therefore there is no need to check
-it before a device TLB invalidation operation.
+On Thu, Mar 28, 2024 at 09:25:40AM +0530, Raag Jadav wrote:
+> Commit b2b32a173881 ("ACPI: bus: update acpi_dev_hid_uid_match() to
+> support multiple types") added _UID matching support for both integer
+> and string types, which satisfies NULL @uid2 argument for string types
+> using inversion, but this logic prevents _UID comparision in case the
+> argument is integer 0, which may result in false positives.
+> 
+> Fix this using _Generic(), which will allow NULL @uid2 argument for
+> string types as well as _UID matching for all possible integer values.
+> 
+> Fixes: b2b32a173881 ("ACPI: bus: update acpi_dev_hid_uid_match() to support multiple types")
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-iommu_flush_iotlb_psi() is called in map and unmap paths. The caching
-mode check before device TLB invalidation will cause device TLB
-invalidation always issued if IOMMU is not running in caching mode.
-This is wrong and causes unnecessary performance overhead.
+Bump.
 
-The removal of caching mode check in intel_flush_iotlb_all() doesn't
-impact anything no matter the IOMMU is working in caching mode or not.
-Commit <29b32839725f> ("iommu/vt-d: Do not use flush-queue when
-caching-mode is on") has already disabled flush-queue for caching mode,
-hence caching mode will never call intel_flush_iotlb_all().
+Anything I can do to move this forward?
 
-Fixes: bf92df30df90 ("intel-iommu: Only avoid flushing device IOTLB for domain ID 0 in caching mode")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel/iommu.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
-
-Change log:
-
-v2:
- - Squash two patches into a single one.
- - No functionality changes.
-
-v1: https://lore.kernel.org/linux-iommu/20240407144232.190355-1-baolu.lu@linux.intel.com/
-
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 50eb9aed47cc..681789b1258d 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -1501,11 +1501,7 @@ static void iommu_flush_iotlb_psi(struct intel_iommu *iommu,
- 	else
- 		__iommu_flush_iotlb_psi(iommu, did, pfn, pages, ih);
- 
--	/*
--	 * In caching mode, changes of pages from non-present to present require
--	 * flush. However, device IOTLB doesn't need to be flushed in this case.
--	 */
--	if (!cap_caching_mode(iommu->cap) || !map)
-+	if (!map)
- 		iommu_flush_dev_iotlb(domain, addr, mask);
- }
- 
-@@ -1579,8 +1575,7 @@ static void intel_flush_iotlb_all(struct iommu_domain *domain)
- 			iommu->flush.flush_iotlb(iommu, did, 0, 0,
- 						 DMA_TLB_DSI_FLUSH);
- 
--		if (!cap_caching_mode(iommu->cap))
--			iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
-+		iommu_flush_dev_iotlb(dmar_domain, 0, MAX_AGAW_PFN_WIDTH);
- 	}
- 
- 	if (dmar_domain->nested_parent)
--- 
-2.34.1
-
+Raag
