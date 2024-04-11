@@ -1,173 +1,125 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D213244391
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCCE3F9CB;
+	Thu, 11 Apr 2024 18:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858435; cv=none; b=KnfJ9U7OKZ4HuGQw1EkhN7CudSFVsd6wAfkdrb2n3sGJUGdEFgZOrb++yehsg+9nwBp8Z0OJ0LeTtpL7b/vNVVYB906LVbuPELZitHfDmqLt/a5WBainXmVcs57CShnGFRWeauvsZANLA2XaLqFl/iuozcbLz5WVKKNnCX+vT9U=
+	t=1712858446; cv=none; b=rUC9d0TW2Kw7M6JrVNynXZdQ/U40aDh2I6B+3bjTV9RHK/AUa8ob60ke7gTThkyAgILdCivmthKFuO1I3OR5uvGCOePJb3qjqo31sLNckhzbf8V87awcHUG4GNFbB9/uw3doa+Bt0PbqFK6C50MBt7qMiYSDWOPeOwCJ8BieU48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858435; c=relaxed/simple;
-	bh=yh/ixDQ5eg6OWrim9+bm1G6d/37CpJ1/QL+beESG4jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e1qv4dEQQciknKQEmsEKmtgfI/VtHoyUgj+Pc2ICdIW7uBMgNQCKHGfOCD6xgaKxJLheYRrltqwbbTHc7Q6UxBx//SOMxbrWavs9Nyonjov0uaJOgHtI+E+axiemAIsI8gY1octo21OcRtctBq4E+LVe2DoyTfXXd35olQkwZkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F6A8Ql6Y; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1712858446; c=relaxed/simple;
+	bh=hzu/tgfoKXjQQl4hxSegoZdRQDXbBvEYoIa+xvPtr6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qiMbhqvIU6M+6BuoLsbtPuRUCO4YIEW4G/58Jwqs8w1xyOIOHUIMyK6Z2Zy1QYkDuP8Je7W1UZCy/gEJ44d4z6txfTl0Zgp8dVKwodbvx2K8c8AHyE0qpZoX+vUmK34hRpyi1q4OyG888pP0gAjhwZxlBDZ4uh0U5GavZxRDDnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SD+uR9et; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F6A8Ql6Y"
-Date: Thu, 11 Apr 2024 14:00:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712858430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hugd8ugKeGXlWiLmTwUcSwxtoNqEbzFWRyiumV4I0QI=;
-	b=F6A8Ql6YjuHeVhFhvCjRCHtt6+j5Zmavb6rBRVS2UPMjaUzBr8Uy9YMXKrMLS6Bdu93QAe
-	+1JDwGCXhSmYXVX/GYkUtjra2ilUH2ndkI9p7bCt0GDxnXoAiXvPRveKB1Tl7czCP5mSyl
-	LwnxqSrFPBMBfyHHV7aQPCs6G/4zVIs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	"David S. Miller" <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, 
-	Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, 
-	Huacai Chen <chenhuacai@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nadav Amit <nadav.amit@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Puranjay Mohan <puranjay12@gmail.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Will Deacon <will@kernel.org>, bpf@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev, netdev@vger.kernel.org, 
-	sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4 00/15] mm: jit/text allocator
-Message-ID: <v52bizaflxzrxqk2wtuek2m2juwbzr6jxnpzlvtswkarcaejow@kd7tygzbmijs>
-References: <20240411160051.2093261-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SD+uR9et"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-5a522ae3747so42057eaf.1;
+        Thu, 11 Apr 2024 11:00:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712858444; x=1713463244; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tKygXtwLt+wS+6rSBXso592J8xpcFDOvcPaDL6jZh3Q=;
+        b=SD+uR9et6Kb/+yml+Yf9wTYW/FG6WhOaW17WaB4eZ7dHDxSJRHfPsSGav+M8beEQRj
+         KRBw/fIKt+16leHTc+6iQKfnti1bb5+3DtcOlJk9JdRKvzV7N99fscgr08TGtU47AMDN
+         YGNBbzOrY41JGpkbqzwYWDtgYygU+kWe6eCqNXG3m3TT3svGhaGhAbo6Ext8pBB+R51n
+         Jm0Z/XcSwKus3iZQnw4zCXsnVoTBqxNAEDUU2BSIWjWduOx/v4xo3Q77oyQVq9/Eg8xS
+         7A8zd1BtmqYlxoxldOsmPUw6Tuco6A9bt5omaM53IcCpcNrvG+FSwn3F1qnsWRGc16ut
+         xFNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712858444; x=1713463244;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tKygXtwLt+wS+6rSBXso592J8xpcFDOvcPaDL6jZh3Q=;
+        b=TEgs8OMUd1xJJkH7s/FIpk4KZOPto1MIQh79fFUoe9aAjDPoLKvGKn5EXgowbkkwNK
+         d9gMfRJnU7AB92p1JfacfrisCcSuPeMCPOQgb+G2mDcIgKcw9InnXEmbFQsNlevqHSSd
+         B5NVmOhjlPPzkFRaR2mhBYwRLPcVchBlGU/YoV/qQZdMDF4x4heFcCr8jFotNo1KVuik
+         6XrnaWzACkemA1Zrn+NRu2pRMOejf/1lwmJywOT8Mnpv0AjxFqE+IsK0hlmpNxbKbODA
+         +uu2YdgQ0+KolbpBLR3uNYb7O7iMw39HMB9YgUa6RW9s5SCyUqFm0f5JxAMquJaU4YbQ
+         nlAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOr8aOHAEQ/hVyHts5KaDOPl/ILk9yDemiRjM4zPzjws9yVHdtJtmxOijvIotElJToAj0fTXOGq19jrhmzEoATGFAotNP/zQ5lD4cLrbFLviO3rsMkKCzyNYTrCj91RNRtq7Srgs1pa5QyGUCRM6ixxHv2EA4sSdZzLa1eZuNCaEKj3A==
+X-Gm-Message-State: AOJu0YxkhCjwwU0Oa6bsX03KyVh7L5Cg2aLyQ0+y6TlsfpWocEfUnYKM
+	WDICsYudERdqBdDXuojwSsuhE+aZCmPYwaAEQAoSvR9Sv8pvYZHxCoefFd0yvPQ=
+X-Google-Smtp-Source: AGHT+IHIfdBtJkYCx5rE45KA+2haYhADyvJn3GY3HPvd1BH3bdEIc+Uy9kKIPRg1ZCeBSxTh+j2QEQ==
+X-Received: by 2002:a05:6820:270d:b0:5aa:344e:f419 with SMTP id db13-20020a056820270d00b005aa344ef419mr176666oob.2.1712858443708;
+        Thu, 11 Apr 2024 11:00:43 -0700 (PDT)
+Received: from [192.168.7.169] (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id di12-20020a0568201e8c00b005a4bcb155basm407718oob.23.2024.04.11.11.00.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 11:00:43 -0700 (PDT)
+Message-ID: <bcb03c7d-f566-11cc-21e2-47e5c5a0776a@gmail.com>
+Date: Thu, 11 Apr 2024 13:00:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411160051.2093261-1-rppt@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 3/7] dt-bindings: PCI: qcom: Add IPQ9574 PCIe
+ controller
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240409190833.3485824-1-mr.nuke.me@gmail.com>
+ <20240409190833.3485824-4-mr.nuke.me@gmail.com>
+ <dbee301e-2e31-4db0-877a-96c972ea4bca@linaro.org>
+From: mr.nuke.me@gmail.com
+In-Reply-To: <dbee301e-2e31-4db0-877a-96c972ea4bca@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 11, 2024 at 07:00:36PM +0300, Mike Rapoport wrote:
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> 
-> Hi,
-> 
-> Since v3 I looked into making execmem more of an utility toolbox, as we
-> discussed at LPC with Mark Rutland, but it was getting more hairier than
-> having a struct describing architecture constraints and a type identifying
-> the consumer of execmem.
-> 
-> And I do think that having the description of architecture constraints for
-> allocations of executable memory in a single place is better that having it
-> spread all over the place.
-> 
-> The patches available via git:
-> https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=execmem/v4
-> 
-> v4 changes:
-> * rebase on v6.9-rc2
-> * rename execmem_params to execmem_info and execmem_arch_params() to
->   execmem_arch_setup()
-> * use single execmem_alloc() API instead of execmem_{text,data}_alloc() (Song)
-> * avoid extra copy of execmem parameters (Rick)
-> * run execmem_init() as core_initcall() except for the architectures that
->   may allocated text really early (currently only x86) (Will)
-> * add acks for some of arm64 and riscv changes, thanks Will and Alexandre
-> * new commits:
->   - drop call to kasan_alloc_module_shadow() on arm64 because it's not
->     needed anymore
->   - rename MODULE_START to MODULES_VADDR on MIPS
->   - use CONFIG_EXECMEM instead of CONFIG_MODULES on powerpc as per Christophe:
->     https://lore.kernel.org/all/79062fa3-3402-47b3-8920-9231ad05e964@csgroup.eu/
-> 
-> v3: https://lore.kernel.org/all/20230918072955.2507221-1-rppt@kernel.org
-> * add type parameter to execmem allocation APIs
-> * remove BPF dependency on modules
-> 
-> v2: https://lore.kernel.org/all/20230616085038.4121892-1-rppt@kernel.org
-> * Separate "module" and "others" allocations with execmem_text_alloc()
-> and jit_text_alloc()
-> * Drop ROX entailment on x86
-> * Add ack for nios2 changes, thanks Dinh Nguyen
-> 
-> v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
-> 
-> = Cover letter from v1 (sligtly updated) =
-> 
-> module_alloc() is used everywhere as a mean to allocate memory for code.
-> 
-> Beside being semantically wrong, this unnecessarily ties all subsystmes
-> that need to allocate code, such as ftrace, kprobes and BPF to modules and
-> puts the burden of code allocation to the modules code.
-> 
-> Several architectures override module_alloc() because of various
-> constraints where the executable memory can be located and this causes
-> additional obstacles for improvements of code allocation.
-> 
-> A centralized infrastructure for code allocation allows allocations of
-> executable memory as ROX, and future optimizations such as caching large
-> pages for better iTLB performance and providing sub-page allocations for
-> users that only need small jit code snippets.
-> 
-> Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
-> proposed execmem_alloc [2], but both these approaches were targeting BPF
-> allocations and lacked the ground work to abstract executable allocations
-> and split them from the modules core.
-> 
-> Thomas Gleixner suggested to express module allocation restrictions and
-> requirements as struct mod_alloc_type_params [3] that would define ranges,
-> protections and other parameters for different types of allocations used by
-> modules and following that suggestion Song separated allocations of
-> different types in modules (commit ac3b43283923 ("module: replace
-> module_layout with module_memory")) and posted "Type aware module
-> allocator" set [4].
-> 
-> I liked the idea of parametrising code allocation requirements as a
-> structure, but I believe the original proposal and Song's module allocator
-> was too module centric, so I came up with these patches.
-> 
-> This set splits code allocation from modules by introducing execmem_alloc()
-> and and execmem_free(), APIs, replaces call sites of module_alloc() and
-> module_memfree() with the new APIs and implements core text and related
-> allocations in a central place.
-> 
-> Instead of architecture specific overrides for module_alloc(), the
-> architectures that require non-default behaviour for text allocation must
-> fill execmem_info structure and implement execmem_arch_setup() that returns
-> a pointer to that structure. If an architecture does not implement
-> execmem_arch_setup(), the defaults compatible with the current
-> modules::module_alloc() are used.
-> 
-> Since architectures define different restrictions on placement,
-> permissions, alignment and other parameters for memory that can be used by
-> different subsystems that allocate executable memory, execmem APIs
-> take a type argument, that will be used to identify the calling subsystem
-> and to allow architectures to define parameters for ranges suitable for that
-> subsystem.
-> 
-> The new infrastructure allows decoupling of BPF, kprobes and ftrace from
-> modules, and most importantly it paves the way for ROX allocations for
-> executable memory.
 
-It looks like you're just doing API cleanup first, then improving the
-implementation later?
 
-Patch set looks nice and clean; previous versions did seem to leak too
-much arch/module details (or perhaps we were just bikeshedding too much
-;) - but the API first approach is nice.
+On 4/9/24 15:08, Krzysztof Kozlowski wrote:
+> On 09/04/2024 21:08, Alexandru Gagniuc wrote:
+>> IPQ9574 has PCIe controllers which are almost identical to IPQ6018.
+>> The only difference is that the "iface" clock is not required.
+>> Document this difference along with the compatible string.
+>>
+>> Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+>> ---
+>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 34 +++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> index cf9a6910b542..1915bea580d3 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> @@ -26,6 +26,7 @@ properties:
+>>             - qcom,pcie-ipq8064-v2
+>>             - qcom,pcie-ipq8074
+>>             - qcom,pcie-ipq8074-gen3
+>> +          - qcom,pcie-ipq9574
+>>             - qcom,pcie-msm8996
+>>             - qcom,pcie-qcs404
+>>             - qcom,pcie-sdm845
+>> @@ -397,6 +398,37 @@ allOf:
+>>               - const: axi_m_sticky # AXI Master Sticky reset
+>>               - const: axi_s_sticky # AXI Slave Sticky reset
+>>   
+> 
+> Where do you constrain the reg?
 
-Looking forward to seeing this merged.
+I didn't realize that was also required -- the make checks should have 
+picked this up too? I might be invoking the tests incorrectly.
+
+I should add the ipq9574 in the same list as ipq8074-gen3 and ipq6018, 
+correct?
+
+Alex
