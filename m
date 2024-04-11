@@ -1,430 +1,170 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5ACB149C75;
-	Thu, 11 Apr 2024 11:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C13E145358;
+	Thu, 11 Apr 2024 11:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712836325; cv=none; b=mTv5FUdD18CvwDOCJLVUFgEsP5aEhwGCU9WpnF62eUzzdS88Bl7mkik288bCRot4O0h/ffjLQ/Qf57e4yuDnGUmHiyH4rTQMlugU2SYUrGoUOrnEjZw0r8j0BP33Q0AIHZhv7ciBO7FusffWKyPd4wppIgumGoafJUKpCCtlWl4=
+	t=1712836441; cv=none; b=iUAgYMPKnUFdn9DnOiKXfLEEAdBhA5+16pG10Rq29UuIXhYvGCq+ocX3Dkz0ynwq8gKOge6cf+joP2/zQkMju8ExnMYQcvdCqWfQU2lUsBJI1SJrjsJqjlSFt54Md57gsA+E7TEyuBS3hWzJjhq58nPvLSOEWxj/o7xcYY3NfSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712836325; c=relaxed/simple;
-	bh=xW+C0nLGdF1fVGE2nxaH6HMCF/ySvZeEiDwNGzVSC88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m7lUdYWeL03xnxovykAw85v2d9N58rvV8mqdEuH5w1s5yiE5QKcNLNKH+kPEzq6ma0g673YyQgMVXXujySAEeOPUQ378jYTGy1PHZRW32QGGjswecZeS4j1voJ1HAmbVlclrsHhEnZypymOQXGAsqFGeK1R+xgmlUdnYhMHJdmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c9jzayBD; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712836441; c=relaxed/simple;
+	bh=GA6HGw4J8/cU3TuHTgNeLPLqVHoeB4Kgjas5t6oCUBY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Am8QbVYCuxQC0IxcZOYPODVwGZIkN93KGJHlKead0v4m1tXXFJUwLLiXGUY94lYhJUwpKwVlD3LZPe3fZ+9WCPD4qN8oeIFma7JVYKKRK11s9qhxyZm6wdTHn/MlGYgNZz1ypqbz9PjZiZKkvs17hEj01m2S7sqjYw2FiHtv3YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NzJpf0hU; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9jzayBD"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-343bccc0b2cso5511783f8f.1;
-        Thu, 11 Apr 2024 04:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712836322; x=1713441122; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eVVZ1nJPbPp+vosTyb5RL8BqBGaUyiZ4311MXvuW50s=;
-        b=c9jzayBD77PrcuqJVdsNZnS3OynhcmSvkIbLlr7AAIegcHlNpx90AkvX7BecNrliUt
-         W7ZxUzshKUCUhPLNBIQeNhSeuViBrHVDeShXY5UUTHH0ZBVNQhogkFFClrIKE8JOvzYZ
-         m6e9ApnNqTLTyDRt3CofHa4xMkLKVwVCKkcQUcAfnOSRLSRjk0d1m9mrJcwl6j12n42j
-         AQJKUOlU+K1uuVemb8jveK4b9wXBDdkM3kqiXQbChV4vzgoUy2Fl1o4EHPk3uqDRYAZR
-         y+tkjTR3LF3+OFrGeonuI32HT9r75oNYfGtT3+mEVYdP1JuBBXbigUxqCcIZt4AmqHi0
-         1Kiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712836322; x=1713441122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eVVZ1nJPbPp+vosTyb5RL8BqBGaUyiZ4311MXvuW50s=;
-        b=nn88q5GqZm3hSalFQS8DB0d7G98m1QWDKHR9zDw27GdLsDATRrQBqN+AOQp+7W1c38
-         JGdOgqG0yQ0u/HDWyW3EsVvzJlSPgLnaBXBnmfmqH1/PqUWovMgdm83eVZ9t6CZxi3ap
-         rgrN9ILd8mk/PuqJS61kCZJRS5lLn49lvu6xvoKrl6VwFqRujN6ep6MkfN7tp+uktsVF
-         VA97JNxw4yYWrOYLoF2Ux8PdzmUdQFllwcJe0G9FUPq3yuyUW3YDWAq9j+oaPO+QbeWA
-         IGj8uuZ9iYGGLdVN9ti/mU/QrfOF1IOn8kb1eMVxsqBUOvRExhh+i0B3AAOhbpVxHjDk
-         HFSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgaJg05KOR8MtHrba9tywiYyQv1/Z+xvosUmAj0nTwxS/UtPH7yMn93rU+kSIJYcO/Yj5ufK6HsERebZm4NqdEMXwDDll1DRBwHYU6MOmxPBkFWDruAR5UoB+YL8jr34MZOgkd
-X-Gm-Message-State: AOJu0Yw2nTxhQLAfO9/rUU+FztrbesdKba6//D4gseWYs45LtonfJ8tY
-	5uyzDZGMs6USX2We+LkRgjf4S/55gIt9BpNhHMjyD1RDgsM/LTpk
-X-Google-Smtp-Source: AGHT+IHCtjjN+UKNA7X+7raKMOxDPzARjrUaq5ESZh+KWpurNxlVHTyNOmKd1RKW2iW6fSLPGzDR6g==
-X-Received: by 2002:adf:e488:0:b0:33e:bc7e:cadb with SMTP id i8-20020adfe488000000b0033ebc7ecadbmr3685433wrm.41.1712836321836;
-        Thu, 11 Apr 2024 04:52:01 -0700 (PDT)
-Received: from skbuf ([2a02:2f04:d201:1f00::b2c])
-        by smtp.gmail.com with ESMTPSA id ea15-20020a0560000ecf00b003438cc1d2b4sm1604472wrb.59.2024.04.11.04.52.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 04:52:01 -0700 (PDT)
-Date: Thu, 11 Apr 2024 14:51:58 +0300
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Arun Ramadoss <arun.ramadoss@microchip.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, David Ahern <dsahern@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Willem de Bruijn <willemb@google.com>,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>
-Subject: Re: [PATCH net-next v6 3/9] net: add IEEE 802.1q specific helpers
-Message-ID: <20240411115158.5yxug7u3gtyvyuxh@skbuf>
-References: <20240410080556.1241048-1-o.rempel@pengutronix.de>
- <20240410080556.1241048-1-o.rempel@pengutronix.de>
- <20240410080556.1241048-4-o.rempel@pengutronix.de>
- <20240410080556.1241048-4-o.rempel@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NzJpf0hU"
+Received: from [192.168.88.20] (91-154-34-181.elisa-laajakaista.fi [91.154.34.181])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1EA2A23F;
+	Thu, 11 Apr 2024 13:53:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1712836395;
+	bh=GA6HGw4J8/cU3TuHTgNeLPLqVHoeB4Kgjas5t6oCUBY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NzJpf0hULZgn01vA3eHX4sSoBVKUWOJ8f6hInH19PbXJZp0zgfQSffIBekzxrxHpD
+	 /QrQIMlnyxeUDoPHxyxyfhMlVw4VfcMQ+tEdLpI5HSl02yp993ROm+ntPIX5XkfBSt
+	 Dg57sCTwAPiBLPxudrURA+m/iugTgyk0GtejF8qc=
+Message-ID: <da30ee6a-d8b1-44ad-8a29-fc9ac84aba9d@ideasonboard.com>
+Date: Thu, 11 Apr 2024 14:53:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410080556.1241048-4-o.rempel@pengutronix.de>
- <20240410080556.1241048-4-o.rempel@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 9/9] media: subdev: Support single-stream case in
+ v4l2_subdev_enable/disable_streams()
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>
+References: <20240410-enable-streams-impro-v3-0-e5e7a5da7420@ideasonboard.com>
+ <20240410-enable-streams-impro-v3-9-e5e7a5da7420@ideasonboard.com>
+ <f8e293b7-6a06-4477-9c7e-d1b83163f8e1@ideasonboard.com>
+ <72940e89-0384-4fd3-8a10-42d6db44fdf0@ideasonboard.com>
+ <155bb2c2-21b9-48d5-9615-7a44d4b6a590@ideasonboard.com>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ xsFNBE6ms0cBEACyizowecZqXfMZtnBniOieTuFdErHAUyxVgtmr0f5ZfIi9Z4l+uUN4Zdw2
+ wCEZjx3o0Z34diXBaMRJ3rAk9yB90UJAnLtb8A97Oq64DskLF81GCYB2P1i0qrG7UjpASgCA
+ Ru0lVvxsWyIwSfoYoLrazbT1wkWRs8YBkkXQFfL7Mn3ZMoGPcpfwYH9O7bV1NslbmyJzRCMO
+ eYV258gjCcwYlrkyIratlHCek4GrwV8Z9NQcjD5iLzrONjfafrWPwj6yn2RlL0mQEwt1lOvn
+ LnI7QRtB3zxA3yB+FLsT1hx0va6xCHpX3QO2gBsyHCyVafFMrg3c/7IIWkDLngJxFgz6DLiA
+ G4ld1QK/jsYqfP2GIMH1mFdjY+iagG4DqOsjip479HCWAptpNxSOCL6z3qxCU8MCz8iNOtZk
+ DYXQWVscM5qgYSn+fmMM2qN+eoWlnCGVURZZLDjg387S2E1jT/dNTOsM/IqQj+ZROUZuRcF7
+ 0RTtuU5q1HnbRNwy+23xeoSGuwmLQ2UsUk7Q5CnrjYfiPo3wHze8avK95JBoSd+WIRmV3uoO
+ rXCoYOIRlDhg9XJTrbnQ3Ot5zOa0Y9c4IpyAlut6mDtxtKXr4+8OzjSVFww7tIwadTK3wDQv
+ Bus4jxHjS6dz1g2ypT65qnHen6mUUH63lhzewqO9peAHJ0SLrQARAQABzTBUb21pIFZhbGtl
+ aW5lbiA8dG9taS52YWxrZWluZW5AaWRlYXNvbmJvYXJkLmNvbT7CwY4EEwEIADgWIQTEOAw+
+ ll79gQef86f6PaqMvJYe9QUCX/HruAIbAwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD6
+ PaqMvJYe9WmFD/99NGoD5lBJhlFDHMZvO+Op8vCwnIRZdTsyrtGl72rVh9xRfcSgYPZUvBuT
+ VDxE53mY9HaZyu1eGMccYRBaTLJSfCXl/g317CrMNdY0k40b9YeIX10feiRYEWoDIPQ3tMmA
+ 0nHDygzcnuPiPT68JYZ6tUOvAt7r6OX/litM+m2/E9mtp8xCoWOo/kYO4mOAIoMNvLB8vufi
+ uBB4e/AvAjtny4ScuNV5c5q8MkfNIiOyag9QCiQ/JfoAqzXRjVb4VZG72AKaElwipiKCWEcU
+ R4+Bu5Qbaxj7Cd36M/bI54OrbWWETJkVVSV1i0tghCd6HHyquTdFl7wYcz6cL1hn/6byVnD+
+ sR3BLvSBHYp8WSwv0TCuf6tLiNgHAO1hWiQ1pOoXyMEsxZlgPXT+wb4dbNVunckwqFjGxRbl
+ Rz7apFT/ZRwbazEzEzNyrBOfB55xdipG/2+SmFn0oMFqFOBEszXLQVslh64lI0CMJm2OYYe3
+ PxHqYaztyeXsx13Bfnq9+bUynAQ4uW1P5DJ3OIRZWKmbQd/Me3Fq6TU57LsvwRgE0Le9PFQs
+ dcP2071rMTpqTUteEgODJS4VDf4lXJfY91u32BJkiqM7/62Cqatcz5UWWHq5xeF03MIUTqdE
+ qHWk3RJEoWHWQRzQfcx6Fn2fDAUKhAddvoopfcjAHfpAWJ+ENc7BTQROprNHARAAx0aat8GU
+ hsusCLc4MIxOQwidecCTRc9Dz/7U2goUwhw2O5j9TPqLtp57VITmHILnvZf6q3QAho2QMQyE
+ DDvHubrdtEoqaaSKxKkFie1uhWNNvXPhwkKLYieyL9m2JdU+b88HaDnpzdyTTR4uH7wk0bBa
+ KbTSgIFDDe5lXInypewPO30TmYNkFSexnnM3n1PBCqiJXsJahE4ZQ+WnV5FbPUj8T2zXS2xk
+ 0LZ0+DwKmZ0ZDovvdEWRWrz3UzJ8DLHb7blPpGhmqj3ANXQXC7mb9qJ6J/VSl61GbxIO2Dwb
+ xPNkHk8fwnxlUBCOyBti/uD2uSTgKHNdabhVm2dgFNVuS1y3bBHbI/qjC3J7rWE0WiaHWEqy
+ UVPk8rsph4rqITsj2RiY70vEW0SKePrChvET7D8P1UPqmveBNNtSS7In+DdZ5kUqLV7rJnM9
+ /4cwy+uZUt8cuCZlcA5u8IsBCNJudxEqBG10GHg1B6h1RZIz9Q9XfiBdaqa5+CjyFs8ua01c
+ 9HmyfkuhXG2OLjfQuK+Ygd56mV3lq0aFdwbaX16DG22c6flkkBSjyWXYepFtHz9KsBS0DaZb
+ 4IkLmZwEXpZcIOQjQ71fqlpiXkXSIaQ6YMEs8WjBbpP81h7QxWIfWtp+VnwNGc6nq5IQDESH
+ mvQcsFS7d3eGVI6eyjCFdcAO8eMAEQEAAcLBXwQYAQIACQUCTqazRwIbDAAKCRD6PaqMvJYe
+ 9fA7EACS6exUedsBKmt4pT7nqXBcRsqm6YzT6DeCM8PWMTeaVGHiR4TnNFiT3otD5UpYQI7S
+ suYxoTdHrrrBzdlKe5rUWpzoZkVK6p0s9OIvGzLT0lrb0HC9iNDWT3JgpYDnk4Z2mFi6tTbq
+ xKMtpVFRA6FjviGDRsfkfoURZI51nf2RSAk/A8BEDDZ7lgJHskYoklSpwyrXhkp9FHGMaYII
+ m9EKuUTX9JPDG2FTthCBrdsgWYPdJQvM+zscq09vFMQ9Fykbx5N8z/oFEUy3ACyPqW2oyfvU
+ CH5WDpWBG0s5BALp1gBJPytIAd/pY/5ZdNoi0Cx3+Z7jaBFEyYJdWy1hGddpkgnMjyOfLI7B
+ CFrdecTZbR5upjNSDvQ7RG85SnpYJTIin+SAUazAeA2nS6gTZzumgtdw8XmVXZwdBfF+ICof
+ 92UkbYcYNbzWO/GHgsNT1WnM4sa9lwCSWH8Fw1o/3bX1VVPEsnESOfxkNdu+gAF5S6+I6n3a
+ ueeIlwJl5CpT5l8RpoZXEOVtXYn8zzOJ7oGZYINRV9Pf8qKGLf3Dft7zKBP832I3PQjeok7F
+ yjt+9S+KgSFSHP3Pa4E7lsSdWhSlHYNdG/czhoUkSCN09C0rEK93wxACx3vtxPLjXu6RptBw
+ 3dRq7n+mQChEB1am0BueV1JZaBboIL0AGlSJkm23kw==
+In-Reply-To: <155bb2c2-21b9-48d5-9615-7a44d4b6a590@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I have the following comments already written; sending the email mainly
-to close the window. All of these comments are guarded by a big:
-"I'm not sure if this really belongs in the kernel." Anyway, here goes.
-
-On Wed, Apr 10, 2024 at 10:05:50AM +0200, Oleksij Rempel wrote:
-> IEEE 802.1q specification provides recommendation and examples which can
-> be used as good default values for different drivers.
+On 11/04/2024 14:48, Umang Jain wrote:
+> Hi Tomi,
 > 
-> This patch implements mapping examples documented in IEEE 802.1Q-2022 in
-> Annex I "I.3 Traffic type to traffic class mapping" and IETF DSCP naming
-> and mapping DSCP to Traffic Type inspired by RFC8325.
+> On 11/04/24 4:37 pm, Tomi Valkeinen wrote:
+>> On 11/04/2024 14:02, Umang Jain wrote:
+>>> Hi Tomi,
+>>>
+>>> On 10/04/24 6:05 pm, Tomi Valkeinen wrote:
+>>>> At the moment the v4l2_subdev_enable/disable_streams() functions call
+>>>> fallback helpers to handle the case where the subdev only implements
+>>>> .s_stream(), and the main function handles the case where the subdev
+>>>> implements streams (V4L2_SUBDEV_FL_STREAMS, which implies
+>>>> .enable/disable_streams()).
+>>>>
+>>>> What is missing is support for subdevs which do not implement streams
+>>>> support, but do implement .enable/disable_streams(). Example cases of
+>>>> these subdevices are single-stream cameras, where using
+>>>> .enable/disable_streams() is not required but helps us remove the users
+>>>> of the legacy .s_stream(), and subdevices with multiple source pads 
+>>>> (but
+>>>> single stream per pad), where .enable/disable_streams() allows the
+>>>> subdevice to control the enable/disable state per pad.
+>>>>
+>>>> The two single-streams cases (.s_stream() and 
+>>>> .enable/disable_streams())
+>>>> are very similar, and with small changes we can change the
+>>>> v4l2_subdev_enable/disable_streams() functions to support all three
+>>>> cases, without needing separate fallback functions.
+>>>>
+>>>> A few potentially problematic details, though:
+>>>
+>>> Does this mean the patch needs to be worked upon more ?
+>>
+>> I don't see the two issues below as blockers.
+>>
+>>> I quickly tested the series by applying it locally with my use case 
+>>> of IMX283 .enable/disable streams and s_stream as the helper function 
+>>> and it seems I am still seeing the same behaviour as before (i.e. not 
+>>> being streamed) and have to carry the workaround as mentioned in [1] 
+>>> **NOTE**
+>>
+>> Ok... Then something bugs here, as it is supposed to fix the problem. 
+>> Can you trace the code a bit to see where it goes wrong?
+>>
+>> The execution should go to the "if (!(sd->flags & 
+>> V4L2_SUBDEV_FL_STREAMS))" blocks in v4l2_subdev_collect_streams() and 
+>> v4l2_subdev_set_streams_enabled(),
 > 
-> This helpers will be used in followup patches for dsa/microchip DCB
-> implementation.
+> The execution is not reaching in v4l2_subdev_collect streams() even, it 
+> returns at
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> diff --git a/include/net/ieee8021q.h b/include/net/ieee8021q.h
-> new file mode 100644
-> index 0000000000000..3bec7ec951362
-> --- /dev/null
-> +++ b/include/net/ieee8021q.h
-> @@ -0,0 +1,55 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de> */
-> +
-> +#ifndef _NET_IEEE8021Q_H
-> +#define _NET_IEEE8021Q_H
-> +
-> +#include <linux/errno.h>
-> +
-> +/**
-> + * enum ieee8021q_traffic_type - 802.1Q traffic type priority values (802.1Q-2022)
-> + *
-> + * @IEEE8021Q_TT_BK: Background
-> + * @IEEE8021Q_TT_BE: Best Effort (default). According to 802.1Q-2022, BE is 0
-> + * but has higher priority than BK which is 1.
-> + * @IEEE8021Q_TT_EE: Excellent Effort
-> + * @IEEE8021Q_TT_CA: Critical Applications
-> + * @IEEE8021Q_TT_VI: Video, < 100 ms latency and jitter
-> + * @IEEE8021Q_TT_VO: Voice, < 10 ms latency and jitter
-> + * @IEEE8021Q_TT_IC: Internetwork Control
-> + * @IEEE8021Q_TT_NC: Network Control
-
-We get kernel-doc warnings about IEEE8021Q_TT_MAX not being documented.
-Simon also suggested to make it private, which I guess will work.
-
-> + */
-> +enum ieee8021q_traffic_type {
-> +	IEEE8021Q_TT_BK = 0,
-> +	IEEE8021Q_TT_BE = 1,
-> +	IEEE8021Q_TT_EE = 2,
-> +	IEEE8021Q_TT_CA = 3,
-> +	IEEE8021Q_TT_VI = 4,
-> +	IEEE8021Q_TT_VO = 5,
-> +	IEEE8021Q_TT_IC = 6,
-> +	IEEE8021Q_TT_NC = 7,
-> +
-> +	IEEE8021Q_TT_MAX,
-> +};
-> +
-> +#define SIMPLE_IETF_DSCP_TO_IEEE8021Q_TT(dscp)		((dscp >> 3) & 0x7)
-> +
-> +#if IS_ENABLED(CONFIG_NET_IEEE8021Q_HELPERS)
-> +
-> +int ietf_dscp_to_ieee8021q_tt(u8 dscp);
-> +int ieee8021q_tt_to_tc(unsigned int tt, unsigned int num_queues);
-> +
-> +#else
-> +
-> +static inline int ietf_dscp_to_ieee8021q_tt(int dscp)
-
-Function prototype differs when CONFIG_NET_IEEE8021Q_HELPERS is disabled
-and when it is enabled (u8 dscp vs int dscp).
-
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static inline int ieee8021q_tt_to_tc(int tt, int num_queues)
-
-Same here (unsigned int tt vs int tt).
-
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +#endif
-> +#endif /* _NET_IEEE8021Q_H */
-> diff --git a/net/Kconfig b/net/Kconfig
-> index d5ab791f7afa2..f0a8692496ffa 100644
-> --- a/net/Kconfig
-> +++ b/net/Kconfig
-> @@ -452,6 +452,9 @@ config GRO_CELLS
->  config SOCK_VALIDATE_XMIT
->  	bool
->  
-> +config NET_IEEE8021Q_HELPERS
-> +	bool
-> +
->  config NET_SELFTESTS
->  	def_tristate PHYLIB
->  	depends on PHYLIB && INET
-> diff --git a/net/core/Makefile b/net/core/Makefile
-> index 21d6fbc7e884c..62be9aef25285 100644
-> --- a/net/core/Makefile
-> +++ b/net/core/Makefile
-> @@ -26,6 +26,7 @@ obj-$(CONFIG_NETPOLL) += netpoll.o
->  obj-$(CONFIG_FIB_RULES) += fib_rules.o
->  obj-$(CONFIG_TRACEPOINTS) += net-traces.o
->  obj-$(CONFIG_NET_DROP_MONITOR) += drop_monitor.o
-> +obj-$(CONFIG_NET_IEEE8021Q_HELPERS) += ieee8021q_helpers.o
->  obj-$(CONFIG_NET_SELFTESTS) += selftests.o
->  obj-$(CONFIG_NETWORK_PHY_TIMESTAMPING) += timestamping.o
->  obj-$(CONFIG_NET_PTP_CLASSIFY) += ptp_classifier.o
-> diff --git a/net/core/ieee8021q_helpers.c b/net/core/ieee8021q_helpers.c
-> new file mode 100644
-> index 0000000000000..74b42334746da
-> --- /dev/null
-> +++ b/net/core/ieee8021q_helpers.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (c) 2024 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/printk.h>
-> +#include <linux/types.h>
-> +#include <net/dscp.h>
-> +#include <net/ieee8021q.h>
-> +
-> +/* The following arrays map Traffic Types (TT) to traffic classes (TC) for
-> + * different number of queues as shown in the example provided by
-> + * IEEE 802.1Q-2022 in Annex I "I.3 Traffic type to traffic class mapping" and
-> + * Table I-1 "Traffic type to traffic class mapping".
-> + */
-> +static const u8 ieee8021q_8queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0,
-> +	[IEEE8021Q_TT_BE] = 1,
-> +	[IEEE8021Q_TT_EE] = 2,
-> +	[IEEE8021Q_TT_CA] = 3,
-> +	[IEEE8021Q_TT_VI] = 4,
-> +	[IEEE8021Q_TT_VO] = 5,
-> +	[IEEE8021Q_TT_IC] = 6,
-> +	[IEEE8021Q_TT_NC] = 7,
-> +};
-> +
-> +static const u8 ieee8021q_7queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0,
-> +	[IEEE8021Q_TT_BE] = 1,
-> +	[IEEE8021Q_TT_EE] = 2,
-> +	[IEEE8021Q_TT_CA] = 3,
-> +	[IEEE8021Q_TT_VI] = 4,	[IEEE8021Q_TT_VO] = 4,
-> +	[IEEE8021Q_TT_IC] = 5,
-> +	[IEEE8021Q_TT_NC] = 6,
-> +};
-> +
-> +static const u8 ieee8021q_6queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0,
-> +	[IEEE8021Q_TT_BE] = 1,
-> +	[IEEE8021Q_TT_EE] = 2,	[IEEE8021Q_TT_CA] = 2,
-> +	[IEEE8021Q_TT_VI] = 3,	[IEEE8021Q_TT_VO] = 3,
-> +	[IEEE8021Q_TT_IC] = 4,
-> +	[IEEE8021Q_TT_NC] = 5,
-> +};
-> +
-> +static const u8 ieee8021q_5queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-> +	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-> +	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-> +	[IEEE8021Q_TT_IC] = 3,
-> +	[IEEE8021Q_TT_NC] = 4,
-> +};
-> +
-> +static const u8 ieee8021q_4queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-> +	[IEEE8021Q_TT_EE] = 1, [IEEE8021Q_TT_CA] = 1,
-> +	[IEEE8021Q_TT_VI] = 2, [IEEE8021Q_TT_VO] = 2,
-> +	[IEEE8021Q_TT_IC] = 3, [IEEE8021Q_TT_NC] = 3,
-> +};
-> +
-> +static const u8 ieee8021q_3queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-> +	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-> +	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-> +	[IEEE8021Q_TT_IC] = 2, [IEEE8021Q_TT_NC] = 2,
-> +};
-> +
-> +static const u8 ieee8021q_2queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-> +	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-> +	[IEEE8021Q_TT_VI] = 1, [IEEE8021Q_TT_VO] = 1,
-> +	[IEEE8021Q_TT_IC] = 1, [IEEE8021Q_TT_NC] = 1,
-> +};
-> +
-> +static const u8 ieee8021q_1queue_tt_tc_map[] = {
-> +	[IEEE8021Q_TT_BK] = 0, [IEEE8021Q_TT_BE] = 0,
-> +	[IEEE8021Q_TT_EE] = 0, [IEEE8021Q_TT_CA] = 0,
-> +	[IEEE8021Q_TT_VI] = 0, [IEEE8021Q_TT_VO] = 0,
-> +	[IEEE8021Q_TT_IC] = 0, [IEEE8021Q_TT_NC] = 0,
-> +};
-> +
-> +/**
-> + * ieee8021q_tt_to_tc - Map IEEE 802.1Q Traffic Type to Traffic Class
-> + * @tt: IEEE 802.1Q Traffic Type
-> + * @num_queues: Number of queues
-> + *
-> + * This function maps an IEEE 802.1Q Traffic Type to a Traffic Class (TC) based
-> + * on the number of queues configured on the switch. The mapping is based on the
-
-s/switch/NIC/, ideally it should be useful beyond switches :)
-
-> + * example provided by IEEE 802.1Q-2022 in Annex I "I.3 Traffic type to traffic
-> + * class mapping" and Table I-1 "Traffic type to traffic class mapping".
-> + *
-> + * Return: Traffic Class corresponding to the given Traffic Type or -EINVAL if
-> + * the number of queues is not supported. -EINVAL is used to differentiate from
-
-Needs to also describe the other error case, or be less specific.
-
-> + * -EOPNOTSUPP which is used to indicate that this library function is not
-> + * compiled in.
-> + */
-> +int ieee8021q_tt_to_tc(unsigned int tt, unsigned int num_queues)
-
-Can the enum ieee8021q_traffic_type be used instead of unsigned int?
-
-> +{
-> +	if (tt >= IEEE8021Q_TT_MAX) {
-> +		pr_err("Requested Traffic Type (%d) is out of range (%d)\n", tt,
-> +		       IEEE8021Q_TT_MAX);
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (num_queues) {
-> +	case 8:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_8queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_8queue_tt_tc_map != max - 1");
-> +		return ieee8021q_8queue_tt_tc_map[tt];
-> +	case 7:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_7queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_7queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_7queue_tt_tc_map[tt];
-> +	case 6:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_6queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_6queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_6queue_tt_tc_map[tt];
-> +	case 5:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_5queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_5queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_5queue_tt_tc_map[tt];
-> +	case 4:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_4queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_4queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_4queue_tt_tc_map[tt];
-> +	case 3:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_3queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_3queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_3queue_tt_tc_map[tt];
-> +	case 2:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_2queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_2queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_2queue_tt_tc_map[tt];
-> +	case 1:
-> +		compiletime_assert(ARRAY_SIZE(ieee8021q_1queue_tt_tc_map) !=
-> +				   IEEE8021Q_TT_MAX - 1,
-> +				   "ieee8021q_1queue_tt_tc_map != max - 1");
-> +
-> +		return ieee8021q_1queue_tt_tc_map[tt];
-> +	}
-> +
-> +	pr_err("Invalid number of queues %d\n", num_queues);
-> +
-> +	return -EINVAL;
-> +}
-> +EXPORT_SYMBOL_GPL(ieee8021q_tt_to_tc);
-> +
-> +/**
-> + * ietf_dscp_to_ieee8021q_tt - Map IETF DSCP to IEEE 802.1Q Traffic Type
-> + * @dscp: IETF DSCP value
-> + *
-> + * This function maps an IETF DSCP value to an IEEE 802.1Q Traffic Type (TT).
-> + * Since there is no corresponding mapping between DSCP and IEEE 802.1Q Traffic
-> + * Type, this function is inspired by the RFC8325 documentation which describe
-> + * the mapping between DSCP and 802.11 User Priority (UP) values.
-> + *
-> + * Return: IEEE 802.1Q Traffic Type corresponding to the given DSCP value
-> + */
-> +int ietf_dscp_to_ieee8021q_tt(u8 dscp)
-> +{
-> +	switch (dscp) {
-> +	case DSCP_CS0:
-> +	case DSCP_AF11:
-> +	case DSCP_AF12:
-> +	case DSCP_AF13:
-
-Is it correct for AF11, AF12, AF13 to be classified together with CS0
-rather than with CS1? It looks strange when their upper 3 bits are the
-same as CS1.
-
-> +		return IEEE8021Q_TT_BE;
-> +	case DSCP_CS1:
-> +		return IEEE8021Q_TT_BK;
-> +	case DSCP_CS2:
-> +	case DSCP_AF21:
-> +	case DSCP_AF22:
-> +	case DSCP_AF23:
-> +		return IEEE8021Q_TT_EE;
-> +	case DSCP_CS3:
-> +	case DSCP_AF31:
-> +	case DSCP_AF32:
-> +	case DSCP_AF33:
-> +		return IEEE8021Q_TT_CA;
-> +	case DSCP_CS4:
-> +	case DSCP_AF41:
-> +	case DSCP_AF42:
-> +	case DSCP_AF43:
-> +		return IEEE8021Q_TT_VI;
-> +	case DSCP_CS5:
-> +	case DSCP_EF:
-> +	case DSCP_VOICE_ADMIT:
-> +		return IEEE8021Q_TT_VO;
-> +	case DSCP_CS6:
-> +		return IEEE8021Q_TT_IC;
-> +	case DSCP_CS7:
-> +		return IEEE8021Q_TT_NC;
-> +	}
-> +
-> +	return SIMPLE_IETF_DSCP_TO_IEEE8021Q_TT(dscp);
-> +}
-> +EXPORT_SYMBOL_GPL(ietf_dscp_to_ieee8021q_tt);
-> -- 
-> 2.39.2
+>      if (!streams_mask)
+>                  return 0;
 > 
+> in v4l2_subdev_enable_streams()
+> 
+> Refer to : https://paste.debian.net/1313760/
+> 
+> My tree is based on v6.8 currently, but the series applies cleanly, so I 
+> have not introduced any  rebase artifacts. If you think, v6.8 might be 
+> causing issues, I'll then try to test on RPi 5 with the latest media 
+> tree perhaps.
+
+So who is calling the v4l2_subdev_enable_streams? I presume it comes 
+from v4l2_subdev_s_stream_helper(), in other words the sink side in your 
+pipeline is using legacy s_stream?
+
+Indeed, that helper still needs work. It needs to detect if there's no 
+routing, and use the implicit stream 0. I missed that one.
+
+  Tomi
+
