@@ -1,167 +1,201 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF92A6A031
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A51C1E892;
+	Thu, 11 Apr 2024 18:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858469; cv=none; b=nPTqQZ3RcCoA40IBKXpPLhNsAsDjFiL4ZaPAHAuFA0ktpKpyKj6Ed4m4u8CzV/zmnIWdBx6+PJanWG3UEDawkmfV7ZJViDriDHeCJdzrWPIKFkoYgSaXSG7fAw7NrWANuF+MwNkWsyLEdoQgCvQkDxHJJdLsgZ5VftxsvAYNQ68=
+	t=1712858575; cv=none; b=X25fekGtZilgD2zflJ86HnlxRCP/QdGWa6yKPRIjskFZ7nzW7BsUEGazbmO9LaBFLl4XsATlg0OpSjACmRxuid/mEHrYyS3q/52sfn9XayIxu9aXKtL1WO4ot1cAtfBdLl8YmSjs0sKQroTi7WZVezbQmSDOiNTYW7PE9lGolLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858469; c=relaxed/simple;
-	bh=ELksu+sLzaHjlNPUR9IEFLD8rhRIAjWKwOmmScUPvR4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRK8cQaonX0H536r6Y7xt5A2sRcp3BJfGZz1WoPeY/BhczrE2l+mP18yYcu7aTtIUgCUWD2xSb6DnujZX0Qhpxrc5YjYhKFHzs50MD8xcJ86ZYgLr3YbP7pOtCTSBkjrJZh08G8YYNpoEEE3GOibTOJ0jrWYfYECWorMpnvO1ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ldxlZC9Q; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712858575; c=relaxed/simple;
+	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bV+/qVfCy9C7as5//Qxu8IMdO45CCX1EROCi1OIH5Vmo0DQ1giUztxYwAo8cZ4H3ILfTSI9hlYNkdE4I9DfiESpELh6VeFchuy+L5JtAx75LZgGAiCnIzfe0qHizLfCIJrYXPnd4Var+RtBUloikG+0Hv+ZSqVTFsDqI3yCOAhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IlHKgg+D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ldxlZC9Q"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3462178fbf9so14660f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712858466; x=1713463266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TFQZlmoBEIaWgT85a+mHB96sryXc4pNLPf5zok3FIIo=;
-        b=ldxlZC9QDQBVGNl5h9QLMeHkpkm6mAjtNEmsXiaiRkoawakaBTEmIh9XPsNwZHeIUr
-         QuHNRf/VCTrFaMNvbGPTBhWKFg4He/nRuG2HEsh2eHDhN2MMX1W2AvxgtELjtSOmw19L
-         4JQOfqROSAJj1zvdbPN/vRnA52kjYTcm8warHW0v13url7Srpr/Tb7FNuMzGB6VKQWSU
-         dNPngNArB1djPXVTkVGZHB4yfx8N6OKQN+vVB2T5D/v8OIHNQ4zxDx5+e8MdvaXkBEgF
-         jCDQViUA9VuqMo7H4p21qOi7jrTetxWhR9RiRIA4gXMeZdb7uuPn5owmGfNm9yB9dS13
-         XC1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712858466; x=1713463266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TFQZlmoBEIaWgT85a+mHB96sryXc4pNLPf5zok3FIIo=;
-        b=Z/gsuH9LEw95FEaDg3AJVfX77eEFh1z78RcIbim4uHP3H+yvttjhDg4gRKPfFGnbp+
-         5swc7nwogfc5Jd91zIlm5RCFXJ9QLe/49QRBwXfL3e03ITnve4AO1ZFkAcqh5Djlj/vH
-         z3dzjRdoOYvjxHUeWyV6DP1uuM5zW+HdGCsvpr+nqjsnkbmokP8IPHiXbX26JkU8oerc
-         /Ae+rtyS6ppCoyewv3lsBOr6FQicsVMi/kC/94un/fewD7FdNOlbnLQ3f/T6axCg036i
-         LgKmhL2JrWvrys8SW6XteMkLERkhGCkghMA1Hg+XZftax+Ak/shN1qLFXFRbM5OdUDEL
-         tIdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUecZk3JVUOQSyLItc9ulM2SD1fFQZpkCNcyGF+PDDFawi4yHT16xIcn0UnbyRv5TTHUfk3Siz7BZHnNJtdlI3mkvJ5JwTc5/c0Hsh
-X-Gm-Message-State: AOJu0Yxs3JwjDHYefRfAA/zsm2HO9wF4H0eb2Oq88r2Zp1hRbGkiph0O
-	wI2MG8FTCyCnOibkR5+UhhTy+p+rfcm7IdaL55tHO4ReNsDQTd2Ag+Z35vsi3oiXXuDp8wIvYY5
-	SDK7rtZ13MdzYn7rs3ayZWUKMHwvw7taQKowD
-X-Google-Smtp-Source: AGHT+IEl4Iu+H70L5iEuaxVGs2wVMTfN36uwSB9T1kbBSUqJDIrWPvmyrfPoncl+j8yWfnTJVbG6KZ40Dk/wHobSp7A=
-X-Received: by 2002:a5d:564e:0:b0:343:6551:935 with SMTP id
- j14-20020a5d564e000000b0034365510935mr235209wrw.66.1712858466173; Thu, 11 Apr
- 2024 11:01:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IlHKgg+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 824FEC072AA;
+	Thu, 11 Apr 2024 18:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712858574;
+	bh=Y053hDNWDdlbJKBy+lcyQdE5G+tWn3OYigsAOCjGI2o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IlHKgg+DA76Z0el5BLc3rN5PNpOY4yjbfGZWw9CSxcLHd9Lqqr3eoHns/FznGEI9m
+	 lrNBtvtjqn0DF3T6tu/loQbTxP01dY2r1Gt5ivenxQSyfpbRGsxC8dkl228WZLVNm7
+	 k0DCElk+AANvACFK86ZxCCpG7c9+xYDbXw3DTQSedXRlB0L003tl+JM1mlUxppotHa
+	 1FbDtGiu1/q3kzFBBXrKiXXPKXE4xIRoOnAZ3AbiImQ2kNVyCMWzmTUb9uMCgl+0/5
+	 Wej3FgCChUWaVL4cD+Z2EaYO7FTR5sGrxbee1BfiA96J75oSg4PWtMXkjrAR/cihYs
+	 k5keqvmfsxaZA==
+Date: Thu, 11 Apr 2024 15:02:51 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: BISECTED: perf test -v "Test data symbol" failing on Intel
+ Hybrid systems
+Message-ID: <Zhgly2eQ5vk4FdEE@x1>
+References: <ZhWTIuyB9p1ORbQH@x1>
+ <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401232946.1837665-1-jthoughton@google.com>
- <20240401232946.1837665-6-jthoughton@google.com> <ZhgZHJH3c5Lb5SBs@google.com>
- <Zhgdw8mVNYZvzgWH@google.com>
-In-Reply-To: <Zhgdw8mVNYZvzgWH@google.com>
-From: David Matlack <dmatlack@google.com>
-Date: Thu, 11 Apr 2024 11:00:37 -0700
-Message-ID: <CALzav=f=_+UQBJv_eZ=t5wE0AytVo1mwfDoum+ZyNfNHvyOccQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] KVM: x86: Participate in bitmap-based PTE aging
-To: James Houghton <jthoughton@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Yu Zhao <yuzhao@google.com>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Sean Christopherson <seanjc@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Shaoqin Huang <shahuang@redhat.com>, 
-	Gavin Shan <gshan@redhat.com>, Ricardo Koller <ricarkol@google.com>, 
-	Raghavendra Rao Ananta <rananta@google.com>, Ryan Roberts <ryan.roberts@arm.com>, 
-	David Rientjes <rientjes@google.com>, Axel Rasmussen <axelrasmussen@google.com>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXR0HmxUBvTbPN4GPdqFftYAGsgYHm81+TgmGY7Yh4gww@mail.gmail.com>
 
-On Thu, Apr 11, 2024 at 10:28=E2=80=AFAM David Matlack <dmatlack@google.com=
-> wrote:
->
-> On 2024-04-11 10:08 AM, David Matlack wrote:
-> > On 2024-04-01 11:29 PM, James Houghton wrote:
-> > > Only handle the TDP MMU case for now. In other cases, if a bitmap was
-> > > not provided, fallback to the slowpath that takes mmu_lock, or, if a
-> > > bitmap was provided, inform the caller that the bitmap is unreliable.
-> > >
-> > > Suggested-by: Yu Zhao <yuzhao@google.com>
-> > > Signed-off-by: James Houghton <jthoughton@google.com>
-> > > ---
-> > >  arch/x86/include/asm/kvm_host.h | 14 ++++++++++++++
-> > >  arch/x86/kvm/mmu/mmu.c          | 16 ++++++++++++++--
-> > >  arch/x86/kvm/mmu/tdp_mmu.c      | 10 +++++++++-
-> > >  3 files changed, 37 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/k=
-vm_host.h
-> > > index 3b58e2306621..c30918d0887e 100644
-> > > --- a/arch/x86/include/asm/kvm_host.h
-> > > +++ b/arch/x86/include/asm/kvm_host.h
-> > > @@ -2324,4 +2324,18 @@ int memslot_rmap_alloc(struct kvm_memory_slot =
-*slot, unsigned long npages);
-> > >   */
-> > >  #define KVM_EXIT_HYPERCALL_MBZ             GENMASK_ULL(31, 1)
-> > >
-> > > +#define kvm_arch_prepare_bitmap_age kvm_arch_prepare_bitmap_age
-> > > +static inline bool kvm_arch_prepare_bitmap_age(struct mmu_notifier *=
-mn)
-> > > +{
-> > > +   /*
-> > > +    * Indicate that we support bitmap-based aging when using the TDP=
- MMU
-> > > +    * and the accessed bit is available in the TDP page tables.
-> > > +    *
-> > > +    * We have no other preparatory work to do here, so we do not nee=
-d to
-> > > +    * redefine kvm_arch_finish_bitmap_age().
-> > > +    */
-> > > +   return IS_ENABLED(CONFIG_X86_64) && tdp_mmu_enabled
-> > > +                                    && shadow_accessed_mask;
-> > > +}
-> > > +
-> > >  #endif /* _ASM_X86_KVM_HOST_H */
-> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> > > index 992e651540e8..fae1a75750bb 100644
-> > > --- a/arch/x86/kvm/mmu/mmu.c
-> > > +++ b/arch/x86/kvm/mmu/mmu.c
-> > > @@ -1674,8 +1674,14 @@ bool kvm_age_gfn(struct kvm *kvm, struct kvm_g=
-fn_range *range)
-> > >  {
-> > >     bool young =3D false;
-> > >
-> > > -   if (kvm_memslots_have_rmaps(kvm))
-> > > +   if (kvm_memslots_have_rmaps(kvm)) {
-> > > +           if (range->lockless) {
-> > > +                   kvm_age_set_unreliable(range);
-> > > +                   return false;
-> > > +           }
+On Tue, Apr 09, 2024 at 02:28:43PM -0700, Ian Rogers wrote:
+> On Tue, Apr 9, 2024 at 12:12 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > If a VM has TDP MMU enabled, supports A/D bits, and is using nested
-> > virtualization, MGLRU will effectively be blind to all accesses made by
-> > the VM.
+> > root@x1:~# grep -m1 "model name" /proc/cpuinfo
+> > model name      : 13th Gen Intel(R) Core(TM) i7-1365U
+> > root@x1:~# uname -a
+> > Linux x1 6.7.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Mar 27 16:50:39 UTC 2024 x86_64 GNU/Linux
+> > root@x1:~#
 > >
-> > kvm_arch_prepare_bitmap_age() will return true indicating that the
-> > bitmap is supported. But then kvm_age_gfn() and kvm_test_age_gfn() will
-> > return false immediately and indicate the bitmap is unreliable because =
-a
-> > shadow root is allocate. The notfier will then return
-> > MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE.
+> > Bisected down to:
+> >
+> > commit 5752c20f3787c9bc9ff9411a70b3d41add85518c
+> > Author: Ravi Bangoria <ravi.bangoria@amd.com>
+> > Date:   Thu Jun 15 10:47:00 2023 +0530
+> >
+> >     perf mem: Scan all PMUs instead of just core ones
+> >
+> >     Scanning only core PMUs is not sufficient on platforms like AMD since
+> >     perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
+> >     Scan all PMUs instead of just core PMUs. There should be negligible
+> >     performance overhead because of scanning all PMUs, so we should be okay.
+> >
+> >     Reviewed-by: Ian Rogers <irogers@google.com>
+> >     Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> >
+> > root@x1:~# perf -v ; perf test -v "Test data symbol"
+> > perf version 6.4.rc3.g5752c20f3787
+> > 111: Test data symbol                                                :
+> > --- start ---
+> > test child forked, pid 522202
+> > Recording workload...
+> > malloc_consolidate(): invalid chunk size
+> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 60: 522208 Aborted                 (core dumped) perf mem record --all-user -o ${PERF_DATA} -- $TEST_PROGRAM
+> > /home/acme/libexec/perf-core/tests/shell/test_data_symbol.sh: line 62: kill: (522208) - No such process
+> > Cleaning up files...
+> > test child finished with -1
+> > ---- end ----
+> > Test data symbol: FAILED!
+> > root@x1:~# perf -v ; perf test -v "Test data symbol"
+> > perf version 6.8.g63c22868714b
+> > 116: Test data symbol:
+> > --- start ---
+> > test child forked, pid 526540
+> >  954300-954339 l buf1
+> > perf does have symbol 'buf1'
+> > Recording workload...
+> > Waiting for "perf record has started" message
+> > OK
+> > Cleaning up files...
+> > ---- end(-1) ----
+> > 116: Test data symbol                                                : FAILED!
+> > root@x1:~#
+> >
+> > Further details:
+> >
+> > (gdb) run mem record --all-user sleep 1
+> > Starting program: /root/bin/perf mem record --all-user sleep 1
+> >
+> >
+> > This GDB supports auto-downloading debuginfo from the following URLs:
+> >   <https://debuginfod.fedoraproject.org/>
+> > Enable debuginfod for this session? (y or [n]) y
+> > Debuginfod has been enabled.
+> > To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+> > [Thread debugging using libthread_db enabled]
+> > Using host libthread_db library "/lib64/libthread_db.so.1".
+> >
+> > Program received signal SIGSEGV, Segmentation fault.
+> > 0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
+> > 213                                     s = perf_mem_events__name(j, pmu->name);
+> > (gdb) bt
+> > #0  0x0000000000611860 in perf_mem_events__record_args (rec_argv=0xea8280, argv_nr=0x7fffffffd6bc, rec_tmp=0xebbda0, tmp_nr=0x7fffffffd6c0) at util/mem-events.c:213
+> > #1  0x000000000045c47f in __cmd_record (argc=2, argv=0x7fffffffe420, mem=0x7fffffffda20) at builtin-mem.c:152
+> > #2  0x000000000045d69b in cmd_mem (argc=4, argv=0x7fffffffe420) at builtin-mem.c:514
+> > #3  0x00000000004ffe38 in run_builtin (p=0xe08aa0 <commands+672>, argc=5, argv=0x7fffffffe420) at perf.c:323
+> > #4  0x00000000005000ac in handle_internal_command (argc=5, argv=0x7fffffffe420) at perf.c:377
+> > #5  0x00000000005001fb in run_argv (argcp=0x7fffffffe23c, argv=0x7fffffffe230) at perf.c:421
+> > #6  0x00000000005004e8 in main (argc=5, argv=0x7fffffffe420) at perf.c:537
+> > (gdb) list -5
+> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
+> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
+> > (gdb)
 
-Ah no, I'm wrong here. Setting args.unreliable causes the notifier to
-return 0 instead of MMU_NOTIFIER_YOUNG_FAST.
-MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE is used for something else.
+> >
+> >
+> > (gdb) list -5
+> > file: "arch/x86/util/mem-events.c", line number: 208, symbol: "???"
+> > Line number 203 out of range; arch/x86/util/mem-events.c has 93 lines.
+> > (gdb) p j
+> > $1 = 0
+> > (gdb) p pmu->name
+> > Cannot access memory at address 0x64ffffff9c
+> > (gdb)
+> >
+> > 183 int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
+> > 184                                  char **rec_tmp, int *tmp_nr)
+> > 185 {
+> > 186         int i = *argv_nr, k = 0;
+> > 187         struct perf_mem_event *e;
+> > 188         struct perf_pmu *pmu;
+> > 189         char *s;
+> > 190
+> > 191         for (int j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
+> > 192                 e = perf_mem_events__ptr(j);
+> > 193                 if (!e->record)
+> > 194                         continue;
+> > 195
+> > 196                 if (perf_pmus__num_mem_pmus() == 1) {
+> > 197                         if (!e->supported) {
+> > 198                                 pr_err("failed: event '%s' not supported\n",
+> > 199                                        perf_mem_events__name(j, NULL));
+> > 200                                 return -1;
+> > 201                         }
+> > 202
+> > 203                         rec_argv[i++] = "-e";
+> > 204                         rec_argv[i++] = perf_mem_events__name(j, NULL);
+> > 205                 } else {
+> > 206                         if (!e->supported) {
+> > 207                                 perf_mem_events__print_unsupport_hybrid(e, j);
+> > 208                                 return -1;
+> > 209                         }
+> > 210
+> > 211                         while ((pmu = perf_pmus__scan(pmu)) != NULL) {
+> > 212                                 rec_argv[i++] = "-e";
+> > 213                                 s = perf_mem_events__name(j, pmu->name);
+> > 214                                 if (s) {
+> > 215                                         s = strdup(s);
+> 
+> This looks like something that address/memory sanitizers could help with.
 
-The control flow of all this and naming of functions and macros is
-overall confusing. args.unreliable and
-MMU_NOTIFIER_YOUNG_BITMAP_UNRELIABLE for one. Also I now realize
-kvm_arch_prepare/finish_bitmap_age() are used even when the bitmap is
-_not_ provided, so those names are also misleading.
+I'm I forgetting something?
+
+⬢[acme@toolbox perf-tools-next]$ rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 EXTRA_CFLAGS="-fsanitize=address" O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+
+root@x1:~# perf test -v 116
+116: Test data symbol:
+--- start ---
+test child forked, pid 614595
+ f87540-f87579 l buf1
+perf does have symbol 'buf1'
+Recording workload...
+Waiting for "perf record has started" message
+OK
+Cleaning up files...
+---- end(-1) ----
+116: Test data symbol                                                : FAILED!
+root@x1:~# ldd ~/bin/perf | grep asan
+	libasan.so.8 => /lib64/libasan.so.8 (0x00007f8eb7a00000)
+root@x1:~#
