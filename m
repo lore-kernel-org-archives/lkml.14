@@ -1,208 +1,148 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE5A14C5BE;
-	Thu, 11 Apr 2024 14:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BB14D43D;
+	Thu, 11 Apr 2024 14:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844045; cv=none; b=qwxTmx+2eND4uOmv0IkcOyjaLWEOXXydVeiRx4C6ZI6fPu3mQKE9HLnhpARH8sa01IVt6gyoRMGq+6JIg2xMOOknJ4X/a5J8mf+aLLBin+F1gWuwnP12sIGwC9V8UGEKaFMITxCD71t1WRlmHnaIL8zQyUL0vgKE9ZRlfix3slw=
+	t=1712844163; cv=none; b=jeqExNkw8t+A/01Rc9HsoztcHcmdStgz4Oh2JLo0bwyOd5VB1nqKR+o3YDXGw7E81PU041jwpbcKDwTxmtnqgUx84bi/XH2bkFSbLNHWtXkPm2PbUcer70D2znj5J9FfPZ7ZVsYDRtLeQZQMLj5j0/p/+318eQzpbwTsMaafDhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844045; c=relaxed/simple;
-	bh=C2/enydAC2YCsBNnm5NUTUC6WvB4CkjpCpQsFsdVyag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cr8hveX1litAB+SkTDOh/te2+jP4rKqkovl/XOzWIz0c8EQkAr3oXwfF/7vOZFToMM8v59CeR6jVjJjaF9fiYhoRlFfJcKa3YpEp1S8+D6n9U2lc1FPzedIMhls4PkpWHg1Hif88GO4ss707Lok1szEGzI97SHhbf9UpiL1jnEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a51a7d4466bso788729166b.2;
-        Thu, 11 Apr 2024 07:00:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712844042; x=1713448842;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xrYnp1tDsZ0sxZFnn5u9gBZrt+Gb2bRXco5M67sATos=;
-        b=Dq281TTlzkBsGh9adJHenMuBxsyBDePlba/lltBL87hI1tdka61vUMm/N3xwhXRwpi
-         NpHIXStoVNObBWCuxCtxrG6F7KnyIdgPJfvIs+M+e9KWL6SWPN03OH7RhgRZN7befnwK
-         omKMINTJjbPpsyCjJmYPoowDZ+A3mMELrKosp81diMky5+adRp0hoXb5gR/OIH1r/uid
-         HAuktFIer6kMgTMpMTZM4/Y2D6XuMUD2Uf4Pz2ZUnZNUbfl+6q4kpi0EcY6GdyIHfOsN
-         xz3nV7U8XMTsaNTQ42+VZGcYWly/JvVUyHmD57s7wyL5hDy1SsMWAToQah3zOOSKUX8J
-         Yuzg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/1dl7x1Ll8KYx2PNA6hbWUWxsknAZey+3I0Wg4RBL0osM329QhRfoJJub3Oiv3Q+AIe5js8PuixC/ynUvLUv+wm+Gah/XbAdXoco0EEzazyKxMV74ODkzhryOYX8X8TlLkpZdAqaMA9qeksFFWWi/Fn2ANclA80l2OLww/r9oPciod/MB9OlbGdmPZth5YdiVME2VF34MuQc=
-X-Gm-Message-State: AOJu0YwjHxSk2lLVf/oqtW3WFe6+8+PFoZT7BdRci8N0b2An6MnyPAIQ
-	B796WyPFJaix9S3qHjhs4e48LNvjwuuI7sa065J5Vl1/RQH/AoSi
-X-Google-Smtp-Source: AGHT+IFZGP/scO0ubNJmt0aoTujRGQZJOvjmWlRs+FjC+tWdWZmrmvYWjoweGZeS25kI0JSSKLCy0w==
-X-Received: by 2002:a17:906:e95:b0:a51:b00b:45a5 with SMTP id p21-20020a1709060e9500b00a51b00b45a5mr2923428ejf.74.1712844041681;
-        Thu, 11 Apr 2024 07:00:41 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-001.fbsv.net. [2a03:2880:30ff:1::face:b00c])
-        by smtp.gmail.com with ESMTPSA id ox2-20020a170907100200b00a522bef9f06sm212031ejb.181.2024.04.11.07.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 07:00:41 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: aleksander.lobakin@intel.com,
-	kuba@kernel.org,
-	davem@davemloft.net,
-	pabeni@redhat.com,
-	edumazet@google.com,
-	elder@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	nbd@nbd.name,
-	sean.wang@mediatek.com,
-	Mark-MC.Lee@mediatek.com,
-	lorenzo@kernel.org,
-	taras.chornyi@plvision.eu,
-	ath11k@lists.infradead.org,
-	ath10k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	geomatsi@gmail.com,
-	kvalo@kernel.org,
-	Jeff Johnson <jjohnson@kernel.org>
-Cc: quic_jjohnson@quicinc.com,
-	leon@kernel.org,
-	dennis.dalessandro@cornelisnetworks.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	bpf@vger.kernel.org,
-	idosch@idosch.org,
-	leitao@debian.org
-Subject: [PATCH net-next v6 10/10] wifi: ath11k: allocate dummy net_device dynamically
-Date: Thu, 11 Apr 2024 06:59:34 -0700
-Message-ID: <20240411135952.1096696-11-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411135952.1096696-1-leitao@debian.org>
-References: <20240411135952.1096696-1-leitao@debian.org>
+	s=arc-20240116; t=1712844163; c=relaxed/simple;
+	bh=2pFqs1VB9hO/Q7vOmAgQiyRnAX8T6W5RcsCtTiaNsUI=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=phFdz7ThymUREeQHECR7RoIGGd6v1NYDatNRMzyFLbEQa2Hnaojn/e+h6kvaLJnUMf4r/sUfarYQ/uVsH8ulR5V4LxdkjyCrKdqoN90PYAam/lelmLndZVPUgOscY/kf0KqR7gH+/qB/hlFpwmQYmb4CIXGADp6mebnL8YvDoJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFhDm1vTDz6K6Hw;
+	Thu, 11 Apr 2024 22:00:56 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 45134140519;
+	Thu, 11 Apr 2024 22:02:37 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
+ 2024 15:02:36 +0100
+Date: Thu, 11 Apr 2024 15:02:35 +0100
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Miguel Luis <miguel.luis@oracle.com>
+CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
+Subject: Re: [RFC PATCH 4/4] ACPI: processor: refactor
+ acpi_processor_remove: isolate acpi_unmap_cpu under CONFIG_ACPI_HOTPLUG_CPU
+Message-ID: <20240411150235.0000355c@Huawei.com>
+In-Reply-To: <25259BC7-8CDB-4714-AEDE-CFFD14986148@oracle.com>
+References: <20240409150536.9933-1-miguel.luis@oracle.com>
+	<20240409150536.9933-5-miguel.luis@oracle.com>
+	<20240410143101.00001f5a@Huawei.com>
+	<25259BC7-8CDB-4714-AEDE-CFFD14986148@oracle.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Embedding net_device into structures prohibits the usage of flexible
-arrays in the net_device structure. For more details, see the discussion
-at [1].
+On Thu, 11 Apr 2024 11:02:37 +0000
+Miguel Luis <miguel.luis@oracle.com> wrote:
 
-Un-embed the net_device from struct ath11k_ext_irq_grp by converting it
-into a pointer. Then use the leverage alloc_netdev() to allocate the
-net_device object at ath11k_ahb_config_ext_irq() for ahb, and
-ath11k_pcic_ext_irq_config() for pcic.
+> > On 10 Apr 2024, at 13:31, Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
+> > 
+> > On Tue,  9 Apr 2024 15:05:33 +0000
+> > Miguel Luis <miguel.luis@oracle.com> wrote:
+> >   
+> >> acpi_unmap_cpu is architecture dependent. Isolate it.
+> >> The pre-processor guard for detach may now be restricted to
+> >> cpu unmap.
+> >> 
+> >> Signed-off-by: Miguel Luis <miguel.luis@oracle.com>  
+> > Again the why question isn't answered by the patch description.
+> > 
+> > I assume this is to try and resolve the remove question of releasing
+> > resources that was outstanding on vCPU HP v4 series Russell posted.
+> > 
+> > I've not looked as closely at the remove path as the add one yet, but
+> > my gut feeling is same issue applies.
+> > This code that runs in here should not be dependent on whether
+> > CONFIG_ACPI_HOTPLUG_CPU is enabled or not.  
+> 
+> I agree.
+> 
+> >  What we do for the
+> > make disabled flow should not run a few of the steps in 
+> > acpi_processor_remove() we should make that clear by calling
+> > a different function that doesn't have those steps.
+> >   
+> 
+> Perhaps this got answered already elsewhere but is it OK for the detach handler
+> to be out of CONFIG_ACPI_HOTPLUG_CPU ?
 
-The free of the device occurs at ath11k_ahb_free_ext_irq() for the ahb
-case, and ath11k_pcic_free_ext_irq() for the pcic case.
-
-[1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Tested-by: Kalle Valo <kvalo@kernel.org>
----
- drivers/net/wireless/ath/ath11k/ahb.c  |  9 +++++++--
- drivers/net/wireless/ath/ath11k/core.h |  2 +-
- drivers/net/wireless/ath/ath11k/pcic.c | 21 +++++++++++++++++----
- 3 files changed, 25 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath11k/ahb.c b/drivers/net/wireless/ath/ath11k/ahb.c
-index 7c0a23517949..7f3f6479d553 100644
---- a/drivers/net/wireless/ath/ath11k/ahb.c
-+++ b/drivers/net/wireless/ath/ath11k/ahb.c
-@@ -442,6 +442,7 @@ static void ath11k_ahb_free_ext_irq(struct ath11k_base *ab)
- 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
- 
- 		netif_napi_del(&irq_grp->napi);
-+		free_netdev(irq_grp->napi_ndev);
- 	}
- }
- 
-@@ -533,8 +534,12 @@ static int ath11k_ahb_config_ext_irq(struct ath11k_base *ab)
- 
- 		irq_grp->ab = ab;
- 		irq_grp->grp_id = i;
--		init_dummy_netdev(&irq_grp->napi_ndev);
--		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-+
-+		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-+		if (!irq_grp->napi_ndev)
-+			return -ENOMEM;
-+
-+		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
- 			       ath11k_ahb_ext_grp_napi_poll);
- 
- 		for (j = 0; j < ATH11K_EXT_IRQ_NUM_MAX; j++) {
-diff --git a/drivers/net/wireless/ath/ath11k/core.h b/drivers/net/wireless/ath/ath11k/core.h
-index b3fb74a226fb..590307ca7a11 100644
---- a/drivers/net/wireless/ath/ath11k/core.h
-+++ b/drivers/net/wireless/ath/ath11k/core.h
-@@ -174,7 +174,7 @@ struct ath11k_ext_irq_grp {
- 	u64 timestamp;
- 	bool napi_enabled;
- 	struct napi_struct napi;
--	struct net_device napi_ndev;
-+	struct net_device *napi_ndev;
- };
- 
- enum ath11k_smbios_cc_type {
-diff --git a/drivers/net/wireless/ath/ath11k/pcic.c b/drivers/net/wireless/ath/ath11k/pcic.c
-index add4db4c50bc..79eb3f9c902f 100644
---- a/drivers/net/wireless/ath/ath11k/pcic.c
-+++ b/drivers/net/wireless/ath/ath11k/pcic.c
-@@ -316,6 +316,7 @@ static void ath11k_pcic_free_ext_irq(struct ath11k_base *ab)
- 			free_irq(ab->irq_num[irq_grp->irqs[j]], irq_grp);
- 
- 		netif_napi_del(&irq_grp->napi);
-+		free_netdev(irq_grp->napi_ndev);
- 	}
- }
- 
-@@ -558,7 +559,7 @@ ath11k_pcic_get_msi_irq(struct ath11k_base *ab, unsigned int vector)
- 
- static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- {
--	int i, j, ret, num_vectors = 0;
-+	int i, j, n, ret, num_vectors = 0;
- 	u32 user_base_data = 0, base_vector = 0;
- 	unsigned long irq_flags;
- 
-@@ -578,8 +579,11 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 
- 		irq_grp->ab = ab;
- 		irq_grp->grp_id = i;
--		init_dummy_netdev(&irq_grp->napi_ndev);
--		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-+		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-+		if (!irq_grp->napi_ndev)
-+			return -ENOMEM;
-+
-+		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
- 			       ath11k_pcic_ext_grp_napi_poll);
- 
- 		if (ab->hw_params.ring_mask->tx[i] ||
-@@ -601,8 +605,13 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 			int vector = (i % num_vectors) + base_vector;
- 			int irq = ath11k_pcic_get_msi_irq(ab, vector);
- 
--			if (irq < 0)
-+			if (irq < 0) {
-+				for (n = 0; n <= i; n++) {
-+					irq_grp = &ab->ext_irq_grp[n];
-+					free_netdev(irq_grp->napi_ndev);
-+				}
- 				return irq;
-+			}
- 
- 			ab->irq_num[irq_idx] = irq;
- 
-@@ -615,6 +624,10 @@ static int ath11k_pcic_ext_irq_config(struct ath11k_base *ab)
- 			if (ret) {
- 				ath11k_err(ab, "failed request irq %d: %d\n",
- 					   vector, ret);
-+				for (n = 0; n <= i; n++) {
-+					irq_grp = &ab->ext_irq_grp[n];
-+					free_netdev(irq_grp->napi_ndev);
-+				}
- 				return ret;
- 			}
- 		}
--- 
-2.43.0
+There is code that is again specific to CONFIG_ACPI_HOTPLUG_CPU and
+code that is specific to the disabling only case.  So I think the conditions
+will end up looking pretty similar to the attach path.
+> 
+> Miguel
+> 
+> >> ---
+> >> drivers/acpi/acpi_processor.c | 13 +++++++++----
+> >> 1 file changed, 9 insertions(+), 4 deletions(-)
+> >> 
+> >> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
+> >> index c6e2f64a056b..edcd6a8d4735 100644
+> >> --- a/drivers/acpi/acpi_processor.c
+> >> +++ b/drivers/acpi/acpi_processor.c
+> >> @@ -492,6 +492,14 @@ static int acpi_processor_add(struct acpi_device *device,
+> >> }
+> >> 
+> >> #ifdef CONFIG_ACPI_HOTPLUG_CPU
+> >> +static void acpi_processor_hotunplug_unmap_cpu(struct acpi_processor *pr)
+> >> +{
+> >> + acpi_unmap_cpu(pr->id);
+> >> +}
+> >> +#else
+> >> +static void acpi_processor_hotunplug_unmap_cpu(struct acpi_processor *pr) {}
+> >> +#endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> >> +
+> >> /* Removal */
+> >> static void acpi_processor_remove(struct acpi_device *device)
+> >> {
+> >> @@ -524,7 +532,7 @@ static void acpi_processor_remove(struct acpi_device *device)
+> >> 
+> >> /* Remove the CPU. */
+> >> arch_unregister_cpu(pr->id);
+> >> - acpi_unmap_cpu(pr->id);
+> >> + acpi_processor_hotunplug_unmap_cpu(pr);
+> >> 
+> >> cpus_write_unlock();
+> >> cpu_maps_update_done();
+> >> @@ -535,7 +543,6 @@ static void acpi_processor_remove(struct acpi_device *device)
+> >> free_cpumask_var(pr->throttling.shared_cpu_map);
+> >> kfree(pr);
+> >> }
+> >> -#endif /* CONFIG_ACPI_HOTPLUG_CPU */
+> >> 
+> >> #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
+> >> bool __init processor_physically_present(acpi_handle handle)
+> >> @@ -660,9 +667,7 @@ static const struct acpi_device_id processor_device_ids[] = {
+> >> static struct acpi_scan_handler processor_handler = {
+> >> .ids = processor_device_ids,
+> >> .attach = acpi_processor_add,
+> >> -#ifdef CONFIG_ACPI_HOTPLUG_CPU
+> >> .detach = acpi_processor_remove,
+> >> -#endif
+> >> .hotplug = {
+> >> .enabled = true,
+> >> },  
+> > 
+> >   
+> 
 
