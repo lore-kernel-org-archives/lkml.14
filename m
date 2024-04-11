@@ -1,154 +1,228 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C03F145B07
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5A8145B26;
+	Thu, 11 Apr 2024 10:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712830235; cv=none; b=rU+u+wd/+37/TmzrQxNeSuQnGyWrxkYhRqoDyEnCMa0DFsAdAg7Q2xOKBz5urRsD9CuVjPeG5jF7i7VDhgUIWda4+iRq1p3NUL5QltCjwb2IPHUp2u2WaZl/U9p1O1BQTggNPEk6SHHZ1s/Ytj7R9WZ1OSiaU4CER409FBmqlXw=
+	t=1712830243; cv=none; b=CwuwJT5mM+RI0UfZ0lplnBwHb7vUvJnRJSKHFhAb36H0igR75x4HGbzGFclcOUUTE8vVZrGOBDD2I08KC3+Ikmg4BOfz/O+MzgA2lJOWZoPyxVly6ebeGoqyi/cdR+AvwG7EP0/wzjdh5mbF8ZIoGFtPp+igOlNDqSQc/aodc9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712830235; c=relaxed/simple;
-	bh=c88CtbpASLW+lMC3ncUfeLi/X9N2GHnGhifVL+4uUu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PHq0k/wYtADT8SxX/tWlAnOeD8397A9xuGVxWTcW2KZkfMvXz8sLhCUKnPmRNESbAW9J0sKOpr4kqYGp0cCtlJGM1XBZ1Etj5GLvsqHnE84saFSWqI1E4B9lsPcmAr/FdncRakQ/+rzWj2O55Pb/0vcsQy10oQm/oP9qiq58zeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dVzMczjU; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dVzMczjU"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-417d14b39ebso4206825e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712830231; x=1713435031; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbcuPYzDJIFh9oPzYtxj0nVD0h7WR7t8sWLiBPKjH3g=;
-        b=dVzMczjULcTCkxLz70VJ1TlBe/wKkTozHJOvwScpfYeeA+8k+/ANXvuZAhNuYqId2v
-         HijVDfQrC47SUz/ocItNBouyJILbVI4oCTNpnOIAHpPf8c0AEPCZXGKRkSRFhAPInlHY
-         AhLCR3e/U6ZpHkiqhnVkQC3LlOYoO5fk/aLaZqWxcuyIVO7fOGFesBYTcwerDlKHveCY
-         gdGU5rg25lHyqkC2WKjnhknwm0W5mW0d8hTY2NwdfbGGWGZlOy0vaxARjnat44jTt7LO
-         bfOn0JME0YiVereUweOVxRzJYkFcKbz5KL42wZ+kb62r7AbRXIeUA1o7G7mUO53OCJ69
-         J7Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712830231; x=1713435031;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IbcuPYzDJIFh9oPzYtxj0nVD0h7WR7t8sWLiBPKjH3g=;
-        b=KF5EzDjNZFLOa/Ke+nJ91rM+9Im+6nmdI6u5uzrM43pSOjZJB9VxLg9ytbQ5wpnHWB
-         0ry4OkUIPGFZbmvFcwl7g5H13p6MS1QsNdSHYi4qe2Sp27zIcPsLN7TPAbO0h8VQ0gir
-         R7gAc9wBB6rGGzGDQ9P49bjjGBg3SZZkKk30UNMIJxb6FiMClb8ZRZ544G+iZqtop0di
-         UrAf6C6Pib3PkbB4SXRCfpGzc8P+HI3CS9ME+5DmMqskyguNERcsv14X3REHD+DV+l2+
-         vwyorBWiD0s3dtgUBSu6T0GrcNzcKc4bOmUcXD5Jk6SWxBN/KAxXu+xXiulGQR7CNIcL
-         WrSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUUyrh1Ly6zxjohy/E3o0pRfk3mT0dUPEjGqsUGXhcYHnL11n1O0UhGL21l4lsyhZ6mEOL2TNQdy3x6byjRZJTTaySCqUnkYZFd6a2l
-X-Gm-Message-State: AOJu0YyOoOp2ODT+BnGeWVlG+RAqsrdjq9b8MsJHOE703NiPl4pQgdLw
-	Cg2mFAosTYZqYZenw2onF10xO3ExzYCD6NPT8Sv83KdV/HVQPa6UY06dgK/dYFY=
-X-Google-Smtp-Source: AGHT+IHRKrRLubhr+Lnf9ntcc3NGKnH39WbmBok4qFy8BKIHtyPtVJY8JT7mh5VwhPSvyUJk4CEkEQ==
-X-Received: by 2002:a05:600c:19cf:b0:416:fdb2:fa75 with SMTP id u15-20020a05600c19cf00b00416fdb2fa75mr2614634wmq.9.1712830230728;
-        Thu, 11 Apr 2024 03:10:30 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id l23-20020a05600c1d1700b004163ee3922csm5052531wms.38.2024.04.11.03.10.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 03:10:30 -0700 (PDT)
-Message-ID: <5cad6693-8a76-4a74-92a0-00a0818b5210@linaro.org>
-Date: Thu, 11 Apr 2024 12:10:28 +0200
+	s=arc-20240116; t=1712830243; c=relaxed/simple;
+	bh=lFToQwuD0CN2lHHGhV5ThRLUedjbbjOz8kojfzH5ZY8=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RMr9OqfNpu/uLgS+wZJrbRPe6qV0lkEqwZiE7YJWFR5wgDx6UAaNw1CopavCGUNxOpUDhygsjmIKf1QecrPjzyP0ZcgSg1grLslJOI+gI1ejqqKhnNXH15RnSxbh732c0IOVABxNdFAHlkjwVGbLxaZKKKhcIUHngesWYvqwQYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mxde.zte.com.cn (unknown [10.35.20.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VFZxL1t7mzBmrW;
+	Thu, 11 Apr 2024 18:02:14 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VFZxF0sXYz63t5D;
+	Thu, 11 Apr 2024 18:02:09 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VFZx42y5Nz6G42d;
+	Thu, 11 Apr 2024 18:02:00 +0800 (CST)
+Received: from xaxapp03.zte.com.cn ([10.88.97.17])
+	by mse-fl2.zte.com.cn with SMTP id 43BA1qk5093269;
+	Thu, 11 Apr 2024 18:01:52 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Thu, 11 Apr 2024 18:01:54 +0800 (CST)
+Date: Thu, 11 Apr 2024 18:01:54 +0800 (CST)
+X-Zmail-TransId: 2afa6617b512ffffffffdde-7c4e3
+X-Mailer: Zmail v1.0
+Message-ID: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] soundwire: qcom: allow multi-link on newer devices
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>,
- Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org,
- alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
- Mark Brown <broonie@kernel.org>
-References: <20240405144141.47217-1-krzysztof.kozlowski@linaro.org>
- <ZheyJ5PORudx9gsK@matsya>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZheyJ5PORudx9gsK@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <edumazet@google.com>, <davem@davemloft.net>, <kuba@kernel.org>
+Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
+        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY1XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 43BA1qk5093269
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6617B525.000/4VFZxL1t7mzBmrW
 
-On 11/04/2024 11:49, Vinod Koul wrote:
-> On 05-04-24, 16:41, Krzysztof Kozlowski wrote:
->> Newer Qualcomm SoCs like X1E80100 might come with four speakers spread
->> over two Soundwire controllers, thus they need a multi-link Soundwire
->> stream runtime.
->>
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: alsa-devel@alsa-project.org
->> Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> ---
->>
->> Changes in v2:
->> 1. Only rebase (slightly different context)
-> 
-> Applying /tmp/v2_20240405_krzysztof_kozlowski_soundwire_qcom_allow_multi_link_on_newer_devices.mbx
-> Applying: soundwire: qcom: allow multi-link on newer devices
-> error: drivers/soundwire/qcom.c: does not match index
-> Patch failed at 0001 soundwire: qcom: allow multi-link on newer devices
-> 
-> This fails as well :-(
+From: hepeilin <he.peilin@zte.com.cn>
+Introduce a tracepoint for icmp_send, which can help users to get more
+detail information conveniently when icmp abnormal events happen.
 
-I just applied it on v6.9-rc3 and next-20240410 with b4. No problems.
+1. Giving an usecase example:
+=============================
+When an application experiences packet loss due to an unreachable UDP
+destination port, the kernel will send an exception message through the
+icmp_send function. By adding a trace point for icmp_send, developers or
+system administrators can obtain detailed information about the UDP
+packet loss, including the type, code, source address, destination address,
+source port, and destination port. This facilitates the trouble-shooting
+of UDP packet loss issues especially for those network-service
+applications.
 
-Did anything change since yesterday next? Can you point me to the tree
-and branch you are using?
+2. Operation Instructions:
+==========================
+Switch to the tracing directory.
+        cd /sys/kernel/tracing
+Filter for destination port unreachable.
+        echo "type==3 && code==3" > events/icmp/icmp_send/filter
+Enable trace event.
+        echo 1 > events/icmp/icmp_send/enable
 
-Best regards,
-Krzysztof
+3. Result View:
+================
+ udp_client_erro-11370   [002] ...s.12   124.728002:
+ icmp_send: icmp_send: type=3, code=3.
+ From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
+ skbaddr=00000000589b167a
 
+v4->v5:
+Some fixes according to
+https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
+1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
+
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
+1.Add legality check for UDP header in SKB.
+2.Target this patch for net-next.
+
+Changelog
+========
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
+1. Change the tracking directory to/sys/kernel/tracking.
+2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
+1. adjust the trace_icmp_send() to more protocols than UDP.
+2. move the calling of trace_icmp_send after sanity checks
+in __icmp_send().
+
+Signed-off-by: Peilin He<he.peilin@zte.com.cn>
+Reviewed-by: xu xin <xu.xin16@zte.com.cn>
+Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
+Cc: Yang Yang <yang.yang29@zte.com.cn>
+Cc: Liu Chun <liu.chun2@zte.com.cn>
+Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
+---
+ include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
+ net/ipv4/icmp.c             |  4 +++
+ 2 files changed, 69 insertions(+)
+ create mode 100644 include/trace/events/icmp.h
+
+diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
+new file mode 100644
+index 000000000..7d5190f48
+--- /dev/null
++++ b/include/trace/events/icmp.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM icmp
++
++#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ICMP_H
++
++#include <linux/icmp.h>
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(icmp_send,
++
++		TP_PROTO(const struct sk_buff *skb, int type, int code),
++
++		TP_ARGS(skb, type, code),
++
++		TP_STRUCT__entry(
++			__field(const void *, skbaddr)
++			__field(int, type)
++			__field(int, code)
++			__array(__u8, saddr, 4)
++			__array(__u8, daddr, 4)
++			__field(__u16, sport)
++			__field(__u16, dport)
++			__field(unsigned short, ulen)
++		),
++
++		TP_fast_assign(
++			struct iphdr *iph = ip_hdr(skb);
++			int proto_4 = iph->protocol;
++			__be32 *p32;
++
++			__entry->skbaddr = skb;
++			__entry->type = type;
++			__entry->code = code;
++
++			struct udphdr *uh = udp_hdr(skb);
++			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
++				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
++				__entry->sport = 0;
++				__entry->dport = 0;
++				__entry->ulen = 0;
++			} else {
++				__entry->sport = ntohs(uh->source);
++				__entry->dport = ntohs(uh->dest);
++				__entry->ulen = ntohs(uh->len);
++			}
++
++			p32 = (__be32 *) __entry->saddr;
++			*p32 = iph->saddr;
++
++			p32 = (__be32 *) __entry->daddr;
++			*p32 = iph->daddr;
++		),
++
++		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
++			__entry->type, __entry->code,
++			__entry->saddr, __entry->sport, __entry->daddr,
++			__entry->dport, __entry->ulen, __entry->skbaddr)
++);
++
++#endif /* _TRACE_ICMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+\ No newline at end of file
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index b71b836cc..2081fee18 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -92,6 +92,8 @@
+ #include <net/inet_common.h>
+ #include <net/ip_fib.h>
+ #include <net/l3mdev.h>
++#define CREATE_TRACE_POINTS
++#include <trace/events/icmp.h>
+
+ /*
+  *	Build xmit assembly blocks
+@@ -766,6 +768,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
+ 	if (!fl4.saddr)
+ 		fl4.saddr = htonl(INADDR_DUMMY);
+
++	trace_icmp_send(skb_in, type, code);
++
+ 	icmp_push_reply(&icmp_param, &fl4, &ipc, &rt);
+ ende:
+ 	ip_rt_put(rt);
+-- 
+2.17.1
