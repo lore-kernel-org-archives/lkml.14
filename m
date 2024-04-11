@@ -1,66 +1,141 @@
-Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAC7613DDAA;
-	Thu, 11 Apr 2024 07:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDF013D258
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820382; cv=none; b=VSOkOtL+eqx0YErh9jJEtdP+gFE9vff4erj/crPu5jmKaYJa28XeJbShTSHFTwJpYAOAjOd4meEsHO4ERGPpAcB/Ef47sXZRkjdqQVcLMijcYHf0nkJUl3Q+/9ujv+qDLim+1+9UqN48Fga6IEOtx9dyt/Do9/VYSHvpV4zhXPg=
+	t=1712820490; cv=none; b=mDJ1cHl6HFDtiJyRQIOILIifrLlIax+BPGbIl5+0JyRRaX1S8DoUO8iy5gR0xOtmSNj55Uw1IardJD04ulsBUed+Ktr50zpEBlRhIDlpDBEvcDBijUtJtxzsQVUYY6mCcPvTKXJDxyUCtk3+Mo39VgdtZ9hI0xwfDIrJ6Cx3PPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820382; c=relaxed/simple;
-	bh=PHXTsy2vNvIJCDbU4Ix9HLcR0CmUeuPk0oGEowtL/vU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=ttF+bC2/lYOJa7l4fsFFhcT0lVcWGHx8hUWm7+MYGfRyC3787xmSkbnSdBDC+AQz7CLgxsqrkmXpZo+NAlMhrfTcwB8IaxKLDXltxF+CEm7JHaoXOUrzHywDJvZAUIZ2c5N2C8F6hJIuxSOluSQDf5UwUhlExE66PlNU5yFPyv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from liangshenlin$eswincomputing.com ( [10.12.96.90] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 11 Apr 2024 15:24:09 +0800 (GMT+08:00)
-Date: Thu, 11 Apr 2024 15:24:09 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Shenlin Liang" <liangshenlin@eswincomputing.com>
-To: "Eric Cheng" <eric.cheng.linux@gmail.com>
-Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] RISCV: KVM: add tracepoints for entry and exit
- events
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT6.0.3 build 20220420(169d3f8c)
- Copyright (c) 2002-2024 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <40a8d9d3-20a8-44e8-96d2-0dcd8627cfc8@gmail.com>
-References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
- <20240328031220.1287-2-liangshenlin@eswincomputing.com>
- <40a8d9d3-20a8-44e8-96d2-0dcd8627cfc8@gmail.com>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1712820490; c=relaxed/simple;
+	bh=nJ9e82oM4BnyJLrP/ege9wPr9McFFMBjRzqcj53itJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I6OeYXmCoqwFBhSnL8b0vkkMRHPI5P+tIH6lHnci6hvHAE12smiek1aPPRd2yeExB7qECM3XXR8f4zXclDUtP+berXybuzIhDuU7oW/qqerLTqc7H02Fnag5G5n5mD5I6a5ecjDWJ90igAQHg+O8ugp1mf3dtGwjP1FpJ89KhdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E7MuGdwY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E7MuGdwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18ADAC433C7;
+	Thu, 11 Apr 2024 07:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712820490;
+	bh=nJ9e82oM4BnyJLrP/ege9wPr9McFFMBjRzqcj53itJ4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E7MuGdwYhBo/xPrK3+whmdA+xFQAagWPAbLVnC10x3bPGGEWbGjpwzFixR5aFVCA/
+	 IYUe1teVKkBaXxvYO9oicOC7QCslJq/FYQiuOCsnNOe8jDzhqt+YXOxK8Iu4B+4P9O
+	 nF0VDd6WTEUk2B7MvsNI1RmUXeJZjd2W76dr3ms+qZS8Hmd+ZZ145GzS9ec2NXWVdz
+	 rjnB/paQ3uTMIWN1F0QgMM5EXICITSicZY1IzpIpyAVeAfoQYFJWt5pG6Gz2AgTiKb
+	 O8bd2sXBUsqgplwGIzdAxnxmi5l+h770PKRZBl56a2yECvMp/aZuDfnqLiK6OyrEZ0
+	 LLnugoB+0g6pw==
+Message-ID: <6db95fce-842e-4b99-bc6c-059fe655905f@kernel.org>
+Date: Thu, 11 Apr 2024 09:28:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <607ba9f5.2876.18ecc0ae30d.Coremail.liangshenlin@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgAHGrwZkBdmlBMGAA--.3617W
-X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/1tbiAQEEDGYWXM
-	cg8QAAsy
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 1/6] sched/fair: Add trivial fair server
+Content-Language: en-US, pt-BR, it-IT
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira
+ <bristot@redhat.com>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org, Luca Abeni <luca.abeni@santannapisa.it>,
+ Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+ Thomas Gleixner <tglx@linutronix.de>, Joel Fernandes
+ <joel@joelfernandes.org>, Vineeth Pillai <vineeth@bitbyteword.org>,
+ Shuah Khan <skhan@linuxfoundation.org>, Phil Auld <pauld@redhat.com>,
+ Suleiman Souhlal <suleiman@google.com>,
+ Youssef Esmat <youssefesmat@google.com>
+References: <cover.1712337227.git.bristot@kernel.org>
+ <d1e02419599172f4045a4711b9ff78081f568bb8.1712337227.git.bristot@kernel.org>
+ <20240410172423.GB30852@noisy.programming.kicks-ass.net>
+From: Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20240410172423.GB30852@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-T24gMjAyNC0wNC0xMCAxNToxMiwgRXJpYyBDaGVuZyA8ZXJpYy5jaGVuZy5saW51eEBnbWFpbC5j
-b20+IHdyb3RlOgoKPiAKPiBPbiAzLzI4LzIwMjQgMTE6MTIgQU0sIFNoZW5saW4gTGlhbmcgd3Jv
-dGU6Cj4gPiBMaWtlIG90aGVyIGFyY2hpdGVjdHVyZXMsIFJJU0NWIEtWTSBhbHNvIG5lZWRzIHRv
-IGFkZCB0aGVzZSBldmVudAo+ID4gdHJhY2Vwb2ludHMgdG8gY291bnQgdGhlIG51bWJlciBvZiB0
-aW1lcyBrdm0gZ3Vlc3QgZW50cnkvZXhpdC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU2hlbmxp
-biBMaWFuZyA8bGlhbmdzaGVubGluQGVzd2luY29tcHV0aW5nLmNvbT4KPiA+IC0tLQo+ID4gICBh
-cmNoL3Jpc2N2L2t2bS90cmFjZV9yaXNjdi5oIHwgNjAgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrCj4gCj4gQ29udmVudGlvbmFsbHksIGl0IHNob3VsZCBiZSBuYW1lZCB0byB0
-cmFjZS5oLCBlc3BlY2lhbGx5IGlmIG9ubHkgb25lLiBSZWZlciB0byAKPiBvdGhlciBhcmNoJ3Mu
-CgpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuIEkgd2lsbCBzZW5kIHRoZSB2MiB2ZXJzaW9uLg==
+On 4/10/24 19:24, Peter Zijlstra wrote:
+> On Fri, Apr 05, 2024 at 07:28:00PM +0200, Daniel Bristot de Oliveira wrote:
+>> From: Peter Zijlstra <peterz@infradead.org>
+>>
+>> Use deadline servers to service fair tasks.
+>>
+>> This patch adds a fair_server deadline entity which acts as a container
+>> for fair entities and can be used to fix starvation when higher priority
+>> (wrt fair) tasks are monopolizing CPU(s).
+>>
+>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+>> ---
+>>  kernel/sched/core.c     | 24 ++++++++++++++++--------
+>>  kernel/sched/deadline.c | 23 +++++++++++++++++++++++
+>>  kernel/sched/fair.c     | 25 +++++++++++++++++++++++++
+>>  kernel/sched/sched.h    |  4 ++++
+>>  4 files changed, 68 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>> index 7019a40457a6..04e2270487b7 100644
+>> --- a/kernel/sched/core.c
+>> +++ b/kernel/sched/core.c
+>> @@ -6007,6 +6007,14 @@ static void put_prev_task_balance(struct rq *rq, struct task_struct *prev,
+>>  #endif
+>>  
+>>  	put_prev_task(rq, prev);
+>> +
+>> +	/*
+>> +	 * We've updated @prev and no longer need the server link, clear it.
+>> +	 * Must be done before ->pick_next_task() because that can (re)set
+>> +	 * ->dl_server.
+>> +	 */
+>> +	if (prev->dl_server)
+>> +		prev->dl_server = NULL;
+>>  }
+>>  
+>>  /*
+>> @@ -6037,6 +6045,13 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>>  			p = pick_next_task_idle(rq);
+>>  		}
+>>  
+>> +		/*
+>> +		 * This is a normal CFS pick, but the previous could be a DL pick.
+>> +		 * Clear it as previous is no longer picked.
+>> +		 */
+>> +		if (prev->dl_server)
+>> +			prev->dl_server = NULL;
+>> +
+>>  		/*
+>>  		 * This is the fast path; it cannot be a DL server pick;
+>>  		 * therefore even if @p == @prev, ->dl_server must be NULL.
+>> @@ -6050,14 +6065,6 @@ __pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>>  restart:
+>>  	put_prev_task_balance(rq, prev, rf);
+>>  
+>> -	/*
+>> -	 * We've updated @prev and no longer need the server link, clear it.
+>> -	 * Must be done before ->pick_next_task() because that can (re)set
+>> -	 * ->dl_server.
+>> -	 */
+>> -	if (prev->dl_server)
+>> -		prev->dl_server = NULL;
+>> -
+>>  	for_each_class(class) {
+>>  		p = class->pick_next_task(rq);
+>>  		if (p)
+> 
+> This bit seems like a fix for 63ba8422f876 ("sched/deadline: Introduce
+> deadline servers"), should it be a separate patch?
 
+It was actually reported in a separated patch as a pre-review of this series. So I
+think you can pick them as fixes already from there, and add the fixes tag?
+
+https://lore.kernel.org/lkml/20240313012451.1693807-2-joel@joelfernandes.org/
+https://lore.kernel.org/lkml/20240313012451.1693807-3-joel@joelfernandes.org/
+
+Also add the Reviewed-by me...
+
+-- Daniel
