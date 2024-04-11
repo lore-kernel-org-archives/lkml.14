@@ -1,133 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360EA19DF5E
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5BB19DF59
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849765; cv=none; b=uJKdmNT9fjBQkNiQD8agyFUkvfaQJ7gqMb/DogUyE8CbqagximeZR83Kx536umxN5fw7kdCaGVATfK2vHrZGK7Dv+RZe9cG6fim9dQlzkEFwwPqCLlL4Nzsg/P87pBht9eiw0kjX/MxmvQHmJ9T7oPsCzkNAliA7RvG5ICGMrn8=
+	t=1712849765; cv=none; b=nstzbgCif0oUTYiTZPYNXEHyrLHNKy9u3hl2LhmkRByVJ70zW5MG8+u42NJEQNnZIG3TNyRp6ZSvE7i6flTw1OekIa8PGhi6TQOQHGQ8BwW6+FXV8rdX0xNzMdaXr+mes21RNuOOzeTw04V0zdJBm1b4IVsDgo90AqiQgfmtC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849765; c=relaxed/simple;
-	bh=0VVDSxDozDuY9366NJCNFekjulkSHGITutb5i0OFTy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K9CYrEn/8Pax0BYKYP4vBtTq2Bu00IVqsUu5w8SoV+5G3mpL2a2RNephDLzGzuaP3YUVZGzGh0DIiJKE2ikH9vdwfLrVWO6htIqRdBsMl00XeD9BOUXFwM8CBg/L5fno0onX7VWDDrHx0c84h0k/CwHxKvo4VTCaVIqSgKGVABo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0626D113E;
-	Thu, 11 Apr 2024 08:36:33 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 960F23F6C4;
-	Thu, 11 Apr 2024 08:36:00 -0700 (PDT)
-Date: Thu, 11 Apr 2024 16:35:58 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Shawn Wang <shawnwang@linux.alibaba.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 10/31] x86/resctrl: Move monitor init work to a
- resctrl init call
-Message-ID: <ZhgDXhcUgS/uV3p5@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-11-james.morse@arm.com>
- <beee157c-6e7b-466e-93cd-81a9eb033fe7@linux.alibaba.com>
+	bh=zvqzV0PY1jqn8kHPAOt92hGay/kXiDLTVikdvgd4zXg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E0qKNkS49D/St2tIYWyvrPPC2IxUvs2g/bD/e/nLSMgJ6FLCTcZqBGE/9Yb/pN9j0fMfJFjUoVcdC8BZwKhVWlrju42XVKSShzYHbrMEZQPokrDHcRHv9fS7Ww+CRDsxGzKpnjoPwLY/J9w9HhSYWLi3M3oSSmsuQe+CIvHrLLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=iIYb3LtL; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iIYb3LtL"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58070739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849763; x=1713454563; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0S/KbBS/htLgbe+dCG/wp90qXPsCpm6GnNXMIBTtTxs=;
+        b=iIYb3LtL11BMy73aq1Dol1OZjpD6bS5v0QkYMt4pOc3UGvk8KQT5PU+sCcBwfV1doo
+         UjkmPKWdeCrrkBn69E48Y/raBxVVjjnFF4bqLLyNQLumpBmW1yRTB1gQaxAcJmm8TSid
+         MNWVDfuhtdofmmFSMf7gp66sgKWr0u8S8Lakn+P5mvkoiE/pxccfGzMwZha+2by7gUug
+         sP0MIDO0IkMd6lB3Ztkw3PtpsFpDA1JT3fTajElZWLGJEz2bpeWmQzbalQ1zx0jv9E07
+         ifs8H5VJBLAgKxV3ApmQo1cvdl5AZ7uuLphLd/jnnK4CS2TyiqT3cdRSjCT3ZrDtdqtl
+         v3PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712849763; x=1713454563;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0S/KbBS/htLgbe+dCG/wp90qXPsCpm6GnNXMIBTtTxs=;
+        b=PTHQE6Rqqd01L9ccx77hJnOlZoW+9ZGsLAnUxsXF8zBHi5crjd9xG0FZ9J8SULlcgA
+         jAe3kdnW6yfsUNDGUxz//csAjGTeX/aarU0CUIVG5iEqYIehGwO/xVOXz9tLLhPrt1d1
+         XAicWkyOqnYu4Nd/WqpScWVaxbpHnyoeHK0o3LUMcUBAMujWBajV7oSz3srs8sFzqehu
+         7BqUgDp+xZyoebrIuh2OckN/sAz5+4HhoD4ltgS4BhcZGzePiqJUaIMxKDlNh/SxA/Xh
+         QuVf7aMdqA/t7uFAY78PlyCQPvIbbzjxybnltPJxY4+x47xmf9mliBt32Rl9+7A9DGH0
+         +Png==
+X-Gm-Message-State: AOJu0YxyaZsbl1qNnrqiAPFhQB9GNcNSTNVxvN1iW3O5H37LFbJYQL5t
+	SKT0a0VrdOgMCxyjqEREFYIY4nCWe+UQT4PEekzHvrl7JshsOicB9zvKrslaQmacxMhbV2/tWQO
+	w
+X-Google-Smtp-Source: AGHT+IFhgvpq5dTFXW9hWNErVKSMYtXinSYRZpe9YEaMHIrJTs76iU8YGt4ieMfnAjYVf2rUKQErPA==
+X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr184156iov.2.1712849762662;
+        Thu, 11 Apr 2024 08:36:02 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:36:01 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 155/437] HID: usbhid: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:14:55 -0600
+Message-ID: <20240411153126.16201-156-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <beee157c-6e7b-466e-93cd-81a9eb033fe7@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 10, 2024 at 10:57:30AM +0800, Shawn Wang wrote:
-> Hi James,
-> 
-> On 3/22/24 12:50 AM, James Morse wrote:
-> > rdt_get_mon_l3_config() is called from the architecture's
-> > resctrl_arch_late_init(), and initialises both architecture specific
-> > fields, such as hw_res->mon_scale and resctrl filesystem fields
-> > by calling dom_data_init().
-> > 
-> > To separate the filesystem and architecture parts of resctrl, this
-> > function needs splitting up.
-> > 
-> > Add resctrl_mon_resource_init() to do the filesystem specific work,
-> > and call it from resctrl_init(). This runs later, but is still before
-> > the filesystem is mounted and the rmid_ptrs[] array can be used.
-> > 
-> > Signed-off-by: James Morse <james.morse@arm.com>
-> > ---
-> >   arch/x86/kernel/cpu/resctrl/internal.h |  1 +
-> >   arch/x86/kernel/cpu/resctrl/monitor.c  | 24 +++++++++++++++++-------
-> >   arch/x86/kernel/cpu/resctrl/rdtgroup.c |  4 ++++
-> >   3 files changed, 22 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-> > index 031948322eab..7a0c74779c53 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/internal.h
-> > +++ b/arch/x86/kernel/cpu/resctrl/internal.h
-> > @@ -540,6 +540,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
-> >   void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
-> >   		    struct rdt_domain *d, struct rdtgroup *rdtgrp,
-> >   		    int evtid, int first);
-> > +int resctrl_mon_resource_init(void);
-> >   void mbm_setup_overflow_handler(struct rdt_domain *dom,
-> >   				unsigned long delay_ms,
-> >   				int exclude_cpu);
-> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-> > index 06565153ceb2..929ec1430b45 100644
-> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
-> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-> > @@ -1003,12 +1003,28 @@ static void l3_mon_evt_init(struct rdt_resource *r)
-> >   		list_add_tail(&mbm_local_event.list, &r->evt_list);
-> >   }
-> > +int resctrl_mon_resource_init(void)
-> > +{
-> > +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
-> > +	int ret;
-> > +
-> > +	if (!r->mon_capable)
-> > +		return 0;
-> > +
-> > +	ret = dom_data_init(r);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	l3_mon_evt_init(r);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> 
-> Now x86 platform defaults to all monitoring features on the L3 cache, but some monitoring features may also be on the L2 cache or memory controller according to the MPAM spec. For example, the memory bandwidth monitors could be on the memory controller.
-> 
-> Will resctrl_mon_resource_init() consider this scenario?
-> 
-> Best Regards,
-> Shawn
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/hid/usbhid/hiddev.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-My understanding is limited here, so this will probably have to wait
-until James gets back for a full answer.
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index 59cf3ddfdf78..19b3e663cf3d 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -308,7 +308,7 @@ static int hiddev_open(struct inode *inode, struct file *file)
+ /*
+  * "write" file op
+  */
+-static ssize_t hiddev_write(struct file * file, const char __user * buffer, size_t count, loff_t *ppos)
++static ssize_t hiddev_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	return -EINVAL;
+ }
+@@ -316,10 +316,11 @@ static ssize_t hiddev_write(struct file * file, const char __user * buffer, size
+ /*
+  * "read" file op
+  */
+-static ssize_t hiddev_read(struct file * file, char __user * buffer, size_t count, loff_t *ppos)
++static ssize_t hiddev_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+ 	DEFINE_WAIT(wait);
+-	struct hiddev_list *list = file->private_data;
++	struct hiddev_list *list = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(to);
+ 	int event_size;
+ 	int retval;
+ 
+@@ -347,7 +348,7 @@ static ssize_t hiddev_read(struct file * file, char __user * buffer, size_t coun
+ 					retval = -EIO;
+ 					break;
+ 				}
+-				if (file->f_flags & O_NONBLOCK) {
++				if (iocb->ki_filp->f_flags & O_NONBLOCK) {
+ 					retval = -EAGAIN;
+ 					break;
+ 				}
+@@ -379,7 +380,7 @@ static ssize_t hiddev_read(struct file * file, char __user * buffer, size_t coun
+ 
+ 					event.hid = list->buffer[list->tail].usage_code;
+ 					event.value = list->buffer[list->tail].value;
+-					if (copy_to_user(buffer + retval, &event, sizeof(struct hiddev_event))) {
++					if (!copy_to_iter_full(&event, sizeof(struct hiddev_event), to)) {
+ 						mutex_unlock(&list->thread_lock);
+ 						return -EFAULT;
+ 					}
+@@ -389,7 +390,7 @@ static ssize_t hiddev_read(struct file * file, char __user * buffer, size_t coun
+ 				if (list->buffer[list->tail].field_index != HID_FIELD_INDEX_NONE ||
+ 				    (list->flags & HIDDEV_FLAG_REPORT) != 0) {
+ 
+-					if (copy_to_user(buffer + retval, list->buffer + list->tail, sizeof(struct hiddev_usage_ref))) {
++					if (!copy_to_iter_full(list->buffer + list->tail, sizeof(struct hiddev_usage_ref), to)) {
+ 						mutex_unlock(&list->thread_lock);
+ 						return -EFAULT;
+ 					}
+@@ -846,8 +847,8 @@ static long hiddev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 
+ static const struct file_operations hiddev_fops = {
+ 	.owner =	THIS_MODULE,
+-	.read =		hiddev_read,
+-	.write =	hiddev_write,
++	.read_iter =	hiddev_read,
++	.write_iter =	hiddev_write,
+ 	.poll =		hiddev_poll,
+ 	.open =		hiddev_open,
+ 	.release =	hiddev_release,
+-- 
+2.43.0
 
-The resctrl userspace filesystem interface looks like it can describe
-monitors at multiple levels of the memory system, so my assumption would
-be that it should be possible to wire it up.
-
-This series focuses on refactoring and does not try to add new
-functionality, though.
-
-Cheers
----Dave
