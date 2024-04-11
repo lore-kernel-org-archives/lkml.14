@@ -1,46 +1,46 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18DF14E2C4;
-	Thu, 11 Apr 2024 12:46:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ADD40C1F;
+	Thu, 11 Apr 2024 12:46:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712839607; cv=none; b=Dzo9qAfZmLwLOOsod2fikC7SmiMCzOJAxFy6kJemPqVdnTtJKsr0KJbbJsQCwqnjNY8fMt2utNAO4EK3PA9Ms+wFBYHCTjvVlz0qWzgQr+No7iudG1BLVFkvbqh4lvJ/wzaTNw1y0/vsXGieYmORJyHFMFehawRM75Q6vc4FoCs=
+	t=1712839599; cv=none; b=YK8ZHx5n0oXxyrPiTyA8PtpDdmtymeXRDYqZNrZkyFXBAA/UIUJCjqBHqSIaT/6/LfFaIqIxgXhOBL+BW6NF/Vu8fsHLNJS4tGRJW8Qr/AZenBF4bZvlbtTnwJUuXtqEkN9li/Eja2uc6tFqpN58jVMJeI1GFC+HokRlfKxM9OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712839607; c=relaxed/simple;
-	bh=I55biUp2jrLpFfj0rkNYjImrAY3jvgGQEtzI3FoPxVI=;
+	s=arc-20240116; t=1712839599; c=relaxed/simple;
+	bh=mJa29cp4uyCjGnFLXt0J6notF1Zk76O2mj6aa1sXF+E=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNJkq4ZWOyyvH6U13SdXt9AZn36/fuODDmyjibIExct7juC2++LBL1Qw1j3K6LKHHEh7QDP/hY/gCn9yiVPUH6uto4vIMSjeJReUpNm7Gnz+cxtt/5pkBVtZUpTon9RqOmGKsCOxB77F+grQnRBNcQ6n31ccBtOIkGqUPzVDr4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kKctaW/I; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=Q0W4GwnfD9+/2U4ZoM5/VnFSoS/esi1nFXoAKj+CruVs3WS8IzMPInQZ3uO+hcX3owjlDX3JZuWOKyRckvTTBp4lhIUiXSZ4wOS/e8qAwjN69ZiFodGvvLrctxYYZf5B/lwxWLSGZrUe4Ms9h7UfAxvdtEMlg1EmFk2RvVOo4l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oSVvs/hU; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kKctaW/I"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43B9KnXP032140;
-	Thu, 11 Apr 2024 12:46:39 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oSVvs/hU"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BCiVXi011159;
+	Thu, 11 Apr 2024 12:46:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=5G7axZYkFj5I063ZBqn6X9z9LFERumwdx7c+iM2Mybs=; b=kK
-	ctaW/IsyL5Eo+Eqg8YRtHipo/jaOO0hC/uc4976c/pD2uF98cdV1eJwqFP1ShPGP
-	d+8oCI3OCBfuzfVOvCGY+oxkg6Pu1ckl1AaWCjaz2ZHj9EhXHtb1E317oDY2xS+D
-	DaSZHhIeehphVcKuLCbEHbrXk6jrakl0b9ufJNtfqlYvdGsn0KOTBXt9RFALaUjK
-	VA1BZgm8pjba2cdBRxe/aupvTJJDVkhKJ6SPdD5H2lsj1T1Yyqop6GLUr3zE3eLL
-	hP4jPNCIOsKRU4F3ONjkzVfkSmVv72s0lfU/Z16icFJLFwokqYuLBXOrOw6uCnQe
-	131A+RBMV31IkIRTJVYA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xec6dh2x7-1
+	qcppdkim1; bh=6rK6KDFdkY6UxwLgssBGHOhdyv3RZXQqG0S1Bjff910=; b=oS
+	Vvs/hUwQN2NriR54rKx4s2IW+lJF2yj1yHvavR54QhdRa3ioQQc6a5LVCiJXM4s7
+	JZ+PKysl3PJQtegY2PYixUBqB8ST56n1YFRgXpSSu2Yxu5HxpyR+RwJjWuHf0N6m
+	cF38SaG6fcW2MGjWsmUz5LirX1zg/j9MKwSbH84pcu6x3tP9AvhN+oruUgUwnsS0
+	UXXz4m3SmEzn0fIGxefr8DLWvwMhF3JlMWcaTmFVjMxqnn6IAJnmZ5gmt+90REJj
+	kOxeBjpZqvCL+TSZ81rN4YVPMM218wwnqNblA0q/SCH2d285Z3XjWEm+j1Iiyh/r
+	PxpjWUGR8aWzNwahHhjQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xebqx95x7-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 12:46:38 +0000 (GMT)
+	Thu, 11 Apr 2024 12:46:26 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BCkcAT019331
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BCkQ4r010398
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 12:46:38 GMT
+	Thu, 11 Apr 2024 12:46:26 GMT
 Received: from grosikop.eu.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 11 Apr 2024 05:46:35 -0700
+ 15.2.1544.4; Thu, 11 Apr 2024 05:46:23 -0700
 From: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
 To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
         <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
@@ -48,9 +48,9 @@ To: <rfoss@kernel.org>, <todor.too@gmail.com>, <bryan.odonoghue@linaro.org>,
 CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <laurent.pinchart@ideasonboard.com>,
         <hverkuil-cisco@xs4all.nl>, <quic_hariramp@quicinc.com>
-Subject: [PATCH v3 6/8] media: qcom: camss: Split testgen, RDI and RX for CSID 170
-Date: Thu, 11 Apr 2024 15:45:41 +0300
-Message-ID: <20240411124543.199-7-quic_grosikop@quicinc.com>
+Subject: [PATCH v3 2/8] media: qcom: camss: Attach formats to VFE resources
+Date: Thu, 11 Apr 2024 15:45:37 +0300
+Message-ID: <20240411124543.199-3-quic_grosikop@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240411124543.199-1-quic_grosikop@quicinc.com>
 References: <20240411124543.199-1-quic_grosikop@quicinc.com>
@@ -66,323 +66,1113 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kyCtTb2y0qV9UoWBAcsApig8d9cMVey5
-X-Proofpoint-ORIG-GUID: kyCtTb2y0qV9UoWBAcsApig8d9cMVey5
+X-Proofpoint-GUID: L_2sQmTWfZrq40fqNYSCBCvy0oAZvDjV
+X-Proofpoint-ORIG-GUID: L_2sQmTWfZrq40fqNYSCBCvy0oAZvDjV
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-11_06,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404110093
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 mlxlogscore=999 malwarescore=0 phishscore=0 suspectscore=0
+ adultscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404110093
 
-From: Milen Mitkov <quic_mmitkov@quicinc.com>
+From: Radoslav Tsvetkov <quic_rtsvetko@quicinc.com>
 
-Split the RAW interface (RDI), the CSID receiver (RX)
-and test pattern generator (testgen), configurations
-for CSID on Titan 170
+Video node formats have direct dependency by the sub-device pad formats.
+Remove dependency for SoC version and move format definitions in device
+which creates video node.
 
-Signed-off-by: Milen Mitkov <quic_mmitkov@quicinc.com>
+This commit attaches a struct to the VFE resources that holds format
+description, so it is much easier to assign them to the video node.
+No need to use a switch-case.
+
+NOTE: The mbus_bpp is used to calculate the clock rates and is different
+from bpp which is the bits per pixel written to memory. We need to keep
+both values to not break the calcualtions.
+
+Signed-off-by: Radoslav Tsvetkov <quic_rtsvetko@quicinc.com>
 Signed-off-by: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
 ---
- .../platform/qcom/camss/camss-csid-gen2.c     | 252 ++++++++++--------
- 1 file changed, 139 insertions(+), 113 deletions(-)
+ .../media/platform/qcom/camss/camss-format.h  |  62 +++
+ drivers/media/platform/qcom/camss/camss-vfe.c | 359 ++++++++++++------
+ drivers/media/platform/qcom/camss/camss-vfe.h |  11 +-
+ .../media/platform/qcom/camss/camss-video.c   | 269 +------------
+ .../media/platform/qcom/camss/camss-video.h   |   5 +-
+ drivers/media/platform/qcom/camss/camss.c     |  80 +++-
+ drivers/media/platform/qcom/camss/camss.h     |   1 +
+ 7 files changed, 383 insertions(+), 404 deletions(-)
+ create mode 100644 drivers/media/platform/qcom/camss/camss-format.h
 
-diff --git a/drivers/media/platform/qcom/camss/camss-csid-gen2.c b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-index eb5dabe2639a..2d8398a91fc2 100644
---- a/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-+++ b/drivers/media/platform/qcom/camss/camss-csid-gen2.c
-@@ -176,150 +176,176 @@
- #define		TPG_COLOR_BOX_CFG_MODE		0
- #define		TPG_COLOR_BOX_PATTERN_SEL	2
+diff --git a/drivers/media/platform/qcom/camss/camss-format.h b/drivers/media/platform/qcom/camss/camss-format.h
+new file mode 100644
+index 000000000000..bfbc761bd46c
+--- /dev/null
++++ b/drivers/media/platform/qcom/camss/camss-format.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/* Copyright (c) 2023, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2023 Qualcomm Technologies, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#define PER_PLANE_DATA(plane, h_fract_num, h_fract_den, v_fract_num, v_fract_den, _bpp)		\
++	.hsub[(plane)].numerator	= (h_fract_num),					\
++	.hsub[(plane)].denominator	= (h_fract_den),					\
++	.vsub[(plane)].numerator	= (v_fract_num),					\
++	.vsub[(plane)].denominator	= (v_fract_den),					\
++	.bpp[(plane)]			= (_bpp)
++
++#ifndef __CAMSS_FORMAT_H__
++#define __CAMSS_FORMAT_H__
++
++#include <linux/types.h>
++
++/*
++ * struct fract - Represents a fraction
++ * @numerator: Store the numerator part of the fraction
++ * @denominator: Store the denominator part of the fraction
++ */
++struct fract {
++	u8 numerator;
++	u8 denominator;
++};
++
++/*
++ * struct camss_format_info - ISP media bus format information
++ * @code: V4L2 media bus format code
++ * @mbus_bpp: Media bus bits per pixel
++ * @pixelformat: V4L2 pixel format FCC identifier
++ * @planes: Number of planes
++ * @hsub: Horizontal subsampling (for each plane)
++ * @vsub: Vertical subsampling (for each plane)
++ * @bpp: Bits per pixel when stored in memory (for each plane)
++ */
++struct camss_format_info {
++	u32 code;
++	u32 mbus_bpp;
++	u32 pixelformat;
++	u8 planes;
++	struct fract hsub[3];
++	struct fract vsub[3];
++	unsigned int bpp[3];
++};
++
++struct camss_formats {
++	unsigned int nformats;
++	const struct camss_format_info *formats;
++};
++
++#endif /* __CAMSS_FORMAT_H__ */
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe.c b/drivers/media/platform/qcom/camss/camss-vfe.c
+index 459c70a4b319..2d5a64c055f1 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe.c
++++ b/drivers/media/platform/qcom/camss/camss-vfe.c
+@@ -32,96 +32,250 @@
  
--static void __csid_configure_stream(struct csid_device *csid, u8 enable, u8 vc)
-+static void __csid_configure_rx(struct csid_device *csid,
-+				struct csid_phy_config *phy, int vc)
+ #define SCALER_RATIO_MAX 16
+ 
+-struct vfe_format {
+-	u32 code;
+-	u8 bpp;
++static const struct camss_format_info formats_rdi_8x16[] = {
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_UYVY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_VYUY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_YUYV, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_YVYU, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8, V4L2_PIX_FMT_SBGGR8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8, V4L2_PIX_FMT_SGBRG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8, V4L2_PIX_FMT_SGRBG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8, V4L2_PIX_FMT_SRGGB8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10, V4L2_PIX_FMT_SBGGR10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10, V4L2_PIX_FMT_SGBRG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10, V4L2_PIX_FMT_SGRBG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10, V4L2_PIX_FMT_SRGGB10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12, V4L2_PIX_FMT_SBGGR12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12, V4L2_PIX_FMT_SGBRG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12, V4L2_PIX_FMT_SGRBG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, V4L2_PIX_FMT_SRGGB12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_Y10_1X10, 10, V4L2_PIX_FMT_Y10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++};
++
++static const struct camss_format_info formats_rdi_8x96[] = {
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_UYVY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_VYUY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_YUYV, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_YVYU, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8, V4L2_PIX_FMT_SBGGR8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8, V4L2_PIX_FMT_SGBRG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8, V4L2_PIX_FMT_SGRBG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8, V4L2_PIX_FMT_SRGGB8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10, V4L2_PIX_FMT_SBGGR10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10, V4L2_PIX_FMT_SGBRG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10, V4L2_PIX_FMT_SGRBG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10, V4L2_PIX_FMT_SRGGB10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, 16, V4L2_PIX_FMT_SBGGR10, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12, V4L2_PIX_FMT_SBGGR12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12, V4L2_PIX_FMT_SGBRG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12, V4L2_PIX_FMT_SGRBG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, V4L2_PIX_FMT_SRGGB12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SBGGR14_1X14, 14, V4L2_PIX_FMT_SBGGR14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SGBRG14_1X14, 14, V4L2_PIX_FMT_SGBRG14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SGRBG14_1X14, 14, V4L2_PIX_FMT_SGRBG14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SRGGB14_1X14, 14, V4L2_PIX_FMT_SRGGB14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_Y10_1X10, 10, V4L2_PIX_FMT_Y10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, 16, V4L2_PIX_FMT_Y10, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++};
++
++static const struct camss_format_info formats_rdi_845[] = {
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_UYVY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_VYUY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_YUYV, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_YVYU, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8, V4L2_PIX_FMT_SBGGR8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8, V4L2_PIX_FMT_SGBRG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8, V4L2_PIX_FMT_SGRBG8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8, V4L2_PIX_FMT_SRGGB8, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10, V4L2_PIX_FMT_SBGGR10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10, V4L2_PIX_FMT_SGBRG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10, V4L2_PIX_FMT_SGRBG10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10, V4L2_PIX_FMT_SRGGB10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, 16, V4L2_PIX_FMT_SBGGR10, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12, V4L2_PIX_FMT_SBGGR12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12, V4L2_PIX_FMT_SGBRG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12, V4L2_PIX_FMT_SGRBG12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12, V4L2_PIX_FMT_SRGGB12P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 12) },
++	{ MEDIA_BUS_FMT_SBGGR14_1X14, 14, V4L2_PIX_FMT_SBGGR14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SGBRG14_1X14, 14, V4L2_PIX_FMT_SGBRG14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SGRBG14_1X14, 14, V4L2_PIX_FMT_SGRBG14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_SRGGB14_1X14, 14, V4L2_PIX_FMT_SRGGB14P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 14) },
++	{ MEDIA_BUS_FMT_Y8_1X8, 8, V4L2_PIX_FMT_GREY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 8) },
++	{ MEDIA_BUS_FMT_Y10_1X10, 10, V4L2_PIX_FMT_Y10P, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 10) },
++	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, 16, V4L2_PIX_FMT_Y10, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++};
++
++static const struct camss_format_info formats_pix_8x16[] = {
++	{ MEDIA_BUS_FMT_YUYV8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++};
++
++static const struct camss_format_info formats_pix_8x96[] = {
++	{ MEDIA_BUS_FMT_YUYV8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1_5X8, 8, V4L2_PIX_FMT_NV12, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1_5X8, 8, V4L2_PIX_FMT_NV21, 1,
++	  PER_PLANE_DATA(0, 1, 1, 2, 3, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_NV16, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_NV61, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 2, 8) },
++	{ MEDIA_BUS_FMT_UYVY8_1X16, 8, V4L2_PIX_FMT_UYVY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_VYUY8_1X16, 8, V4L2_PIX_FMT_VYUY, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YUYV8_1X16, 8, V4L2_PIX_FMT_YUYV, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++	{ MEDIA_BUS_FMT_YVYU8_1X16, 8, V4L2_PIX_FMT_YVYU, 1,
++	  PER_PLANE_DATA(0, 1, 1, 1, 1, 16) },
++};
++
++const struct camss_formats vfe_formats_rdi_8x16 = {
++	.nformats = ARRAY_SIZE(formats_rdi_8x16),
++	.formats = formats_rdi_8x16
+ };
+ 
+-static const struct vfe_format formats_rdi_8x16[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_Y10_1X10, 10 },
++const struct camss_formats vfe_formats_pix_8x16 = {
++	.nformats = ARRAY_SIZE(formats_pix_8x16),
++	.formats = formats_pix_8x16
+ };
+ 
+-static const struct vfe_format formats_pix_8x16[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, 8 },
++const struct camss_formats vfe_formats_rdi_8x96 = {
++	.nformats = ARRAY_SIZE(formats_rdi_8x96),
++	.formats = formats_rdi_8x96
+ };
+ 
+-static const struct vfe_format formats_rdi_8x96[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, 16 },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SBGGR14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SGBRG14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SGRBG14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SRGGB14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_Y10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, 16 },
++const struct camss_formats vfe_formats_pix_8x96 = {
++	.nformats = ARRAY_SIZE(formats_pix_8x96),
++	.formats = formats_pix_8x96
+ };
+ 
+-static const struct vfe_format formats_pix_8x96[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, 8 },
++const struct camss_formats vfe_formats_rdi_845 = {
++	.nformats = ARRAY_SIZE(formats_rdi_845),
++	.formats = formats_rdi_845
+ };
+ 
+-static const struct vfe_format formats_rdi_845[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, 16 },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, 12 },
+-	{ MEDIA_BUS_FMT_SBGGR14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SGBRG14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SGRBG14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_SRGGB14_1X14, 14 },
+-	{ MEDIA_BUS_FMT_Y8_1X8, 8 },
+-	{ MEDIA_BUS_FMT_Y10_1X10, 10 },
+-	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, 16 },
++/* TODO: Replace with pix formats */
++const struct camss_formats vfe_formats_pix_845 = {
++	.nformats = ARRAY_SIZE(formats_rdi_845),
++	.formats = formats_rdi_845
+ };
+ 
+ /*
+@@ -132,18 +286,18 @@ static const struct vfe_format formats_rdi_845[] = {
+  *
+  * Return number of bits per pixel
+  */
+-static u8 vfe_get_bpp(const struct vfe_format *formats,
++static u8 vfe_get_bpp(const struct camss_format_info *formats,
+ 		      unsigned int nformats, u32 code)
  {
--	struct csid_testgen_config *tg = &csid->testgen;
--	u32 val;
--	u32 phy_sel = 0;
- 	u8 lane_cnt = csid->phy.lane_cnt;
--	/* Source pads matching RDI channels on hardware. Pad 1 -> RDI0, Pad 2 -> RDI1, etc. */
--	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
--	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
--								   csid->res->formats->nformats,
--								   input_format->code);
-+	int val;
+ 	unsigned int i;
  
- 	if (!lane_cnt)
- 		lane_cnt = 4;
+ 	for (i = 0; i < nformats; i++)
+ 		if (code == formats[i].code)
+-			return formats[i].bpp;
++			return formats[i].mbus_bpp;
  
--	if (!tg->enabled)
--		phy_sel = csid->phy.csiphy_id;
-+	val = (lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
-+	val |= phy->lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
-+	val |= phy->csiphy_id << CSI2_RX_CFG0_PHY_NUM_SEL;
-+	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
+ 	WARN(1, "Unknown format\n");
  
--	if (enable) {
--		/*
--		 * DT_ID is a two bit bitfield that is concatenated with
--		 * the four least significant bits of the five bit VC
--		 * bitfield to generate an internal CID value.
--		 *
--		 * CSID_RDI_CFG0(vc)
--		 * DT_ID : 28:27
--		 * VC    : 26:22
--		 * DT    : 21:16
--		 *
--		 * CID   : VC 3:0 << 2 | DT_ID 1:0
--		 */
--		u8 dt_id = vc & 0x03;
+-	return formats[0].bpp;
++	return formats[0].mbus_bpp;
+ }
+ 
+ static u32 vfe_find_code(u32 *code, unsigned int n_code,
+@@ -1495,32 +1649,12 @@ int msm_vfe_subdev_init(struct camss *camss, struct vfe_device *vfe,
+ 		init_completion(&l->output.sof);
+ 		init_completion(&l->output.reg_update);
+ 
+-		switch (camss->res->version) {
+-		case CAMSS_8x16:
+-			if (i == VFE_LINE_PIX) {
+-				l->formats = formats_pix_8x16;
+-				l->nformats = ARRAY_SIZE(formats_pix_8x16);
+-			} else {
+-				l->formats = formats_rdi_8x16;
+-				l->nformats = ARRAY_SIZE(formats_rdi_8x16);
+-			}
+-			break;
+-		case CAMSS_8x96:
+-		case CAMSS_660:
+-			if (i == VFE_LINE_PIX) {
+-				l->formats = formats_pix_8x96;
+-				l->nformats = ARRAY_SIZE(formats_pix_8x96);
+-			} else {
+-				l->formats = formats_rdi_8x96;
+-				l->nformats = ARRAY_SIZE(formats_rdi_8x96);
+-			}
+-			break;
+-		case CAMSS_845:
+-		case CAMSS_8250:
+-		case CAMSS_8280XP:
+-			l->formats = formats_rdi_845;
+-			l->nformats = ARRAY_SIZE(formats_rdi_845);
+-			break;
++		if (i == VFE_LINE_PIX) {
++			l->nformats = res->vfe.formats_pix->nformats;
++			l->formats = res->vfe.formats_pix->formats;
++		} else {
++			l->nformats = res->vfe.formats_rdi->nformats;
++			l->formats = res->vfe.formats_rdi->formats;
+ 		}
+ 	}
+ 
+@@ -1684,10 +1818,13 @@ int msm_vfe_register_entities(struct vfe_device *vfe,
+ 			video_out->bpl_alignment = 16;
+ 			video_out->line_based = 1;
+ 		}
++
++		video_out->nformats = vfe->line[i].nformats;
++		video_out->formats = vfe->line[i].formats;
++
+ 		snprintf(name, ARRAY_SIZE(name), "%s%d_%s%d",
+ 			 MSM_VFE_NAME, vfe->id, "video", i);
+-		ret = msm_video_register(video_out, v4l2_dev, name,
+-					 i == VFE_LINE_PIX ? 1 : 0);
++		ret = msm_video_register(video_out, v4l2_dev, name);
+ 		if (ret < 0) {
+ 			dev_err(dev, "Failed to register video node: %d\n",
+ 				ret);
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe.h b/drivers/media/platform/qcom/camss/camss-vfe.h
+index 87fc159c48cc..10e2cc3c0b83 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe.h
++++ b/drivers/media/platform/qcom/camss/camss-vfe.h
+@@ -92,7 +92,7 @@ struct vfe_line {
+ 	struct v4l2_rect crop;
+ 	struct camss_video video_out;
+ 	struct vfe_output output;
+-	const struct vfe_format *formats;
++	const struct camss_format_info *formats;
+ 	unsigned int nformats;
+ };
+ 
+@@ -132,6 +132,8 @@ struct vfe_subdev_resources {
+ 	bool has_pd;
+ 	char *pd_name;
+ 	const struct vfe_hw_ops *hw_ops;
++	const struct camss_formats *formats_rdi;
++	const struct camss_formats *formats_pix;
+ };
+ 
+ struct vfe_device {
+@@ -224,6 +226,13 @@ void vfe_pm_domain_off(struct vfe_device *vfe);
+  */
+ int vfe_pm_domain_on(struct vfe_device *vfe);
+ 
++extern const struct camss_formats vfe_formats_rdi_8x16;
++extern const struct camss_formats vfe_formats_pix_8x16;
++extern const struct camss_formats vfe_formats_rdi_8x96;
++extern const struct camss_formats vfe_formats_pix_8x96;
++extern const struct camss_formats vfe_formats_rdi_845;
++extern const struct camss_formats vfe_formats_pix_845;
++
+ extern const struct vfe_hw_ops vfe_ops_4_1;
+ extern const struct vfe_hw_ops vfe_ops_4_7;
+ extern const struct vfe_hw_ops vfe_ops_4_8;
+diff --git a/drivers/media/platform/qcom/camss/camss-video.c b/drivers/media/platform/qcom/camss/camss-video.c
+index 54cd82f74115..cd13a432e291 100644
+--- a/drivers/media/platform/qcom/camss/camss-video.c
++++ b/drivers/media/platform/qcom/camss/camss-video.c
+@@ -24,244 +24,6 @@
+ #define CAMSS_FRAME_MAX_HEIGHT_RDI	8191
+ #define CAMSS_FRAME_MAX_HEIGHT_PIX	4096
+ 
+-struct fract {
+-	u8 numerator;
+-	u8 denominator;
+-};
 -
--		if (tg->enabled) {
--			/* configure one DT, infinite frames */
--			val = vc << TPG_VC_CFG0_VC_NUM;
--			val |= INTELEAVING_MODE_ONE_SHOT << TPG_VC_CFG0_LINE_INTERLEAVING_MODE;
--			val |= 0 << TPG_VC_CFG0_NUM_FRAMES;
--			writel_relaxed(val, csid->base + CSID_TPG_VC_CFG0);
+-/*
+- * struct camss_format_info - ISP media bus format information
+- * @code: V4L2 media bus format code
+- * @pixelformat: V4L2 pixel format FCC identifier
+- * @planes: Number of planes
+- * @hsub: Horizontal subsampling (for each plane)
+- * @vsub: Vertical subsampling (for each plane)
+- * @bpp: Bits per pixel when stored in memory (for each plane)
+- */
+-struct camss_format_info {
+-	u32 code;
+-	u32 pixelformat;
+-	u8 planes;
+-	struct fract hsub[3];
+-	struct fract vsub[3];
+-	unsigned int bpp[3];
+-};
 -
--			val = 0x740 << TPG_VC_CFG1_H_BLANKING_COUNT;
--			val |= 0x3ff << TPG_VC_CFG1_V_BLANKING_COUNT;
--			writel_relaxed(val, csid->base + CSID_TPG_VC_CFG1);
+-static const struct camss_format_info formats_rdi_8x16[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_UYVY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_VYUY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_YUYV, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_YVYU, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, V4L2_PIX_FMT_SBGGR8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, V4L2_PIX_FMT_SGBRG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, V4L2_PIX_FMT_SGRBG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, V4L2_PIX_FMT_SRGGB8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, V4L2_PIX_FMT_SBGGR10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, V4L2_PIX_FMT_SGBRG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, V4L2_PIX_FMT_SGRBG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_PIX_FMT_SRGGB10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, V4L2_PIX_FMT_SBGGR12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, V4L2_PIX_FMT_SGBRG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, V4L2_PIX_FMT_SGRBG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, V4L2_PIX_FMT_SRGGB12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_Y10_1X10, V4L2_PIX_FMT_Y10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-};
 -
--			writel_relaxed(0x12345678, csid->base + CSID_TPG_LFSR_SEED);
+-static const struct camss_format_info formats_rdi_8x96[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_UYVY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_VYUY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_YUYV, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_YVYU, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, V4L2_PIX_FMT_SBGGR8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, V4L2_PIX_FMT_SGBRG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, V4L2_PIX_FMT_SGRBG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, V4L2_PIX_FMT_SRGGB8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, V4L2_PIX_FMT_SBGGR10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, V4L2_PIX_FMT_SGBRG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, V4L2_PIX_FMT_SGRBG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_PIX_FMT_SRGGB10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, V4L2_PIX_FMT_SBGGR10, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, V4L2_PIX_FMT_SBGGR12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, V4L2_PIX_FMT_SGBRG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, V4L2_PIX_FMT_SGRBG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, V4L2_PIX_FMT_SRGGB12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SBGGR14_1X14, V4L2_PIX_FMT_SBGGR14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SGBRG14_1X14, V4L2_PIX_FMT_SGBRG14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SGRBG14_1X14, V4L2_PIX_FMT_SGRBG14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SRGGB14_1X14, V4L2_PIX_FMT_SRGGB14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_Y10_1X10, V4L2_PIX_FMT_Y10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, V4L2_PIX_FMT_Y10, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-};
 -
--			val = (input_format->height & 0x1fff) << TPG_DT_n_CFG_0_FRAME_HEIGHT;
--			val |= (input_format->width & 0x1fff) << TPG_DT_n_CFG_0_FRAME_WIDTH;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_0(0));
+-static const struct camss_format_info formats_rdi_845[] = {
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_UYVY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_VYUY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_YUYV, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_YVYU, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_SBGGR8_1X8, V4L2_PIX_FMT_SBGGR8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGBRG8_1X8, V4L2_PIX_FMT_SGBRG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SGRBG8_1X8, V4L2_PIX_FMT_SGRBG8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SRGGB8_1X8, V4L2_PIX_FMT_SRGGB8, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_SBGGR10_1X10, V4L2_PIX_FMT_SBGGR10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGBRG10_1X10, V4L2_PIX_FMT_SGBRG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SGRBG10_1X10, V4L2_PIX_FMT_SGRBG10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_PIX_FMT_SRGGB10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_SBGGR10_2X8_PADHI_LE, V4L2_PIX_FMT_SBGGR10, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_SBGGR12_1X12, V4L2_PIX_FMT_SBGGR12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGBRG12_1X12, V4L2_PIX_FMT_SGBRG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SGRBG12_1X12, V4L2_PIX_FMT_SGRBG12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SRGGB12_1X12, V4L2_PIX_FMT_SRGGB12P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 12 } },
+-	{ MEDIA_BUS_FMT_SBGGR14_1X14, V4L2_PIX_FMT_SBGGR14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SGBRG14_1X14, V4L2_PIX_FMT_SGBRG14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SGRBG14_1X14, V4L2_PIX_FMT_SGRBG14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_SRGGB14_1X14, V4L2_PIX_FMT_SRGGB14P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 14 } },
+-	{ MEDIA_BUS_FMT_Y8_1X8, V4L2_PIX_FMT_GREY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_Y10_1X10, V4L2_PIX_FMT_Y10P, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 10 } },
+-	{ MEDIA_BUS_FMT_Y10_2X8_PADHI_LE, V4L2_PIX_FMT_Y10, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-};
 -
--			val = format->data_type << TPG_DT_n_CFG_1_DATA_TYPE;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_1(0));
+-static const struct camss_format_info formats_pix_8x16[] = {
+-	{ MEDIA_BUS_FMT_YUYV8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-};
 -
--			val = (tg->mode - 1) << TPG_DT_n_CFG_2_PAYLOAD_MODE;
--			val |= 0xBE << TPG_DT_n_CFG_2_USER_SPECIFIED_PAYLOAD;
--			val |= format->decode_format << TPG_DT_n_CFG_2_ENCODE_FORMAT;
--			writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_2(0));
+-static const struct camss_format_info formats_pix_8x96[] = {
+-	{ MEDIA_BUS_FMT_YUYV8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1_5X8, V4L2_PIX_FMT_NV12, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1_5X8, V4L2_PIX_FMT_NV21, 1,
+-	  { { 1, 1 } }, { { 2, 3 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_NV16, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_NV61, 1,
+-	  { { 1, 1 } }, { { 1, 2 } }, { 8 } },
+-	{ MEDIA_BUS_FMT_UYVY8_1X16, V4L2_PIX_FMT_UYVY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_VYUY8_1X16, V4L2_PIX_FMT_VYUY, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YUYV8_1X16, V4L2_PIX_FMT_YUYV, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-	{ MEDIA_BUS_FMT_YVYU8_1X16, V4L2_PIX_FMT_YVYU, 1,
+-	  { { 1, 1 } }, { { 1, 1 } }, { 16 } },
+-};
 -
--			writel_relaxed(0, csid->base + CSID_TPG_COLOR_BARS_CFG);
--
--			writel_relaxed(0, csid->base + CSID_TPG_COLOR_BOX_CFG);
+ /* -----------------------------------------------------------------------------
+  * Helper functions
+  */
+@@ -968,8 +730,7 @@ static int msm_video_init_format(struct camss_video *video)
+  * Return 0 on success or a negative error code otherwise
+  */
+ 
+-int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+-		       const char *name, int is_pix)
++int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev, const char *name)
+ {
+ 	struct media_pad *pad = &video->pad;
+ 	struct video_device *vdev;
+@@ -1006,34 +767,6 @@ int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+ 
+ 	mutex_init(&video->lock);
+ 
+-	switch (video->camss->res->version) {
+-	case CAMSS_8x16:
+-		if (is_pix) {
+-			video->formats = formats_pix_8x16;
+-			video->nformats = ARRAY_SIZE(formats_pix_8x16);
+-		} else {
+-			video->formats = formats_rdi_8x16;
+-			video->nformats = ARRAY_SIZE(formats_rdi_8x16);
 -		}
-+	val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
-+	if (vc > 3)
-+		val |= 1 << CSI2_RX_CFG1_VC_MODE;
-+	val |= 1 << CSI2_RX_CFG1_MISR_EN;
-+	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
-+}
- 
--		val = 1 << RDI_CFG0_BYTE_CNTR_EN;
--		val |= 1 << RDI_CFG0_FORMAT_MEASURE_EN;
--		val |= 1 << RDI_CFG0_TIMESTAMP_EN;
--		/* note: for non-RDI path, this should be format->decode_format */
--		val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
--		val |= format->data_type << RDI_CFG0_DATA_TYPE;
--		val |= vc << RDI_CFG0_VIRTUAL_CHANNEL;
--		val |= dt_id << RDI_CFG0_DT_ID;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
-+static void __csid_ctrl_rdi(struct csid_device *csid, int enable, u8 rdi)
-+{
-+	int val;
- 
--		/* CSID_TIMESTAMP_STB_POST_IRQ */
--		val = 2 << RDI_CFG1_TIMESTAMP_STB_SEL;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG1(vc));
-+	if (enable)
-+		val = HALT_CMD_RESUME_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	else
-+		val = HALT_CMD_HALT_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	writel_relaxed(val, csid->base + CSID_RDI_CTRL(rdi));
-+}
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PERIOD(vc));
-+static void __csid_configure_testgen(struct csid_device *csid, u8 enable, u8 vc)
-+{
-+	struct csid_testgen_config *tg = &csid->testgen;
-+	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
-+	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
-+								   csid->res->formats->nformats,
-+								   input_format->code);
-+	u8 lane_cnt = csid->phy.lane_cnt;
-+	u32 val;
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PATTERN(vc));
-+	if (!lane_cnt)
-+		lane_cnt = 4;
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PERIOD(vc));
-+	/* configure one DT, infinite frames */
-+	val = vc << TPG_VC_CFG0_VC_NUM;
-+	val |= INTELEAVING_MODE_ONE_SHOT << TPG_VC_CFG0_LINE_INTERLEAVING_MODE;
-+	val |= 0 << TPG_VC_CFG0_NUM_FRAMES;
-+	writel_relaxed(val, csid->base + CSID_TPG_VC_CFG0);
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PATTERN(vc));
-+	val = 0x740 << TPG_VC_CFG1_H_BLANKING_COUNT;
-+	val |= 0x3ff << TPG_VC_CFG1_V_BLANKING_COUNT;
-+	writel_relaxed(val, csid->base + CSID_TPG_VC_CFG1);
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PERIOD(vc));
-+	writel_relaxed(0x12345678, csid->base + CSID_TPG_LFSR_SEED);
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PATTERN(vc));
-+	val = (input_format->height & 0x1fff) << TPG_DT_n_CFG_0_FRAME_HEIGHT;
-+	val |= (input_format->width & 0x1fff) << TPG_DT_n_CFG_0_FRAME_WIDTH;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_0(0));
- 
--		val = 1;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PERIOD(vc));
-+	val = format->data_type << TPG_DT_n_CFG_1_DATA_TYPE;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_1(0));
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PATTERN(vc));
-+	val = (tg->mode - 1) << TPG_DT_n_CFG_2_PAYLOAD_MODE;
-+	val |= 0xBE << TPG_DT_n_CFG_2_USER_SPECIFIED_PAYLOAD;
-+	val |= format->decode_format << TPG_DT_n_CFG_2_ENCODE_FORMAT;
-+	writel_relaxed(val, csid->base + CSID_TPG_DT_n_CFG_2(0));
- 
--		val = 0;
--		writel_relaxed(val, csid->base + CSID_RDI_CTRL(vc));
-+	writel_relaxed(0, csid->base + CSID_TPG_COLOR_BARS_CFG);
- 
--		val = readl_relaxed(csid->base + CSID_RDI_CFG0(vc));
--		val |=  1 << RDI_CFG0_ENABLE;
--		writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
+-		break;
+-	case CAMSS_8x96:
+-	case CAMSS_660:
+-		if (is_pix) {
+-			video->formats = formats_pix_8x96;
+-			video->nformats = ARRAY_SIZE(formats_pix_8x96);
+-		} else {
+-			video->formats = formats_rdi_8x96;
+-			video->nformats = ARRAY_SIZE(formats_rdi_8x96);
+-		}
+-		break;
+-	case CAMSS_845:
+-	case CAMSS_8250:
+-	case CAMSS_8280XP:
+-		video->formats = formats_rdi_845;
+-		video->nformats = ARRAY_SIZE(formats_rdi_845);
+-		break;
 -	}
-+	writel_relaxed(0, csid->base + CSID_TPG_COLOR_BOX_CFG);
+-
+ 	ret = msm_video_init_format(video);
+ 	if (ret < 0) {
+ 		dev_err(v4l2_dev->dev, "Failed to init format: %d\n", ret);
+diff --git a/drivers/media/platform/qcom/camss/camss-video.h b/drivers/media/platform/qcom/camss/camss-video.h
+index bdbae8424140..4f6c0821ead2 100644
+--- a/drivers/media/platform/qcom/camss/camss-video.h
++++ b/drivers/media/platform/qcom/camss/camss-video.h
+@@ -33,8 +33,6 @@ struct camss_video_ops {
+ 			     enum vb2_buffer_state state);
+ };
  
--	if (tg->enabled) {
--		val = enable << TPG_CTRL_TEST_EN;
--		val |= 1 << TPG_CTRL_FS_PKT_EN;
--		val |= 1 << TPG_CTRL_FE_PKT_EN;
--		val |= (lane_cnt - 1) << TPG_CTRL_NUM_ACTIVE_LANES;
--		val |= 0x64 << TPG_CTRL_CYCLES_BETWEEN_PKTS;
--		val |= 0xA << TPG_CTRL_NUM_TRAIL_BYTES;
--		writel_relaxed(val, csid->base + CSID_TPG_CTRL);
--	}
-+	val = enable << TPG_CTRL_TEST_EN;
-+	val |= 1 << TPG_CTRL_FS_PKT_EN;
-+	val |= 1 << TPG_CTRL_FE_PKT_EN;
-+	val |= (lane_cnt - 1) << TPG_CTRL_NUM_ACTIVE_LANES;
-+	val |= 0x64 << TPG_CTRL_CYCLES_BETWEEN_PKTS;
-+	val |= 0xA << TPG_CTRL_NUM_TRAIL_BYTES;
-+	writel_relaxed(val, csid->base + CSID_TPG_CTRL);
-+}
+-struct camss_format_info;
+-
+ struct camss_video {
+ 	struct camss *camss;
+ 	struct vb2_queue vb2_q;
+@@ -52,8 +50,7 @@ struct camss_video {
+ 	unsigned int nformats;
+ };
  
--	val = (lane_cnt - 1) << CSI2_RX_CFG0_NUM_ACTIVE_LANES;
--	val |= csid->phy.lane_assign << CSI2_RX_CFG0_DL0_INPUT_SEL;
--	val |= phy_sel << CSI2_RX_CFG0_PHY_NUM_SEL;
--	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG0);
-+static void __csid_configure_rdi_stream(struct csid_device *csid, u8 enable, u8 vc)
-+{
-+	struct csid_testgen_config *tg = &csid->testgen;
-+	u32 val;
-+	u32 phy_sel = 0;
-+	/* Source pads matching RDI channels on hardware. Pad 1 -> RDI0, Pad 2 -> RDI1, etc. */
-+	struct v4l2_mbus_framefmt *input_format = &csid->fmt[MSM_CSID_PAD_FIRST_SRC + vc];
-+	const struct csid_format_info *format = csid_get_fmt_entry(csid->res->formats->formats,
-+								   csid->res->formats->nformats,
-+								   input_format->code);
+-int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev,
+-		       const char *name, int is_pix);
++int msm_video_register(struct camss_video *video, struct v4l2_device *v4l2_dev, const char *name);
  
--	val = 1 << CSI2_RX_CFG1_PACKET_ECC_CORRECTION_EN;
--	if (vc > 3)
--		val |= 1 << CSI2_RX_CFG1_VC_MODE;
--	val |= 1 << CSI2_RX_CFG1_MISR_EN;
--	writel_relaxed(val, csid->base + CSID_CSI2_RX_CFG1);
-+	if (!tg->enabled)
-+		phy_sel = csid->phy.csiphy_id;
+ void msm_video_unregister(struct camss_video *video);
  
--	if (enable)
--		val = HALT_CMD_RESUME_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
--	else
--		val = HALT_CMD_HALT_AT_FRAME_BOUNDARY << RDI_CTRL_HALT_CMD;
-+	/*
-+	 * DT_ID is a two bit bitfield that is concatenated with
-+	 * the four least significant bits of the five bit VC
-+	 * bitfield to generate an internal CID value.
-+	 *
-+	 * CSID_RDI_CFG0(vc)
-+	 * DT_ID : 28:27
-+	 * VC    : 26:22
-+	 * DT    : 21:16
-+	 *
-+	 * CID   : VC 3:0 << 2 | DT_ID 1:0
-+	 */
-+	u8 dt_id = vc & 0x03;
-+
-+	val = 1 << RDI_CFG0_BYTE_CNTR_EN;
-+	val |= 1 << RDI_CFG0_FORMAT_MEASURE_EN;
-+	val |= 1 << RDI_CFG0_TIMESTAMP_EN;
-+	/* note: for non-RDI path, this should be format->decode_format */
-+	val |= DECODE_FORMAT_PAYLOAD_ONLY << RDI_CFG0_DECODE_FORMAT;
-+	val |= format->data_type << RDI_CFG0_DATA_TYPE;
-+	val |= vc << RDI_CFG0_VIRTUAL_CHANNEL;
-+	val |= dt_id << RDI_CFG0_DT_ID;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
-+
-+	/* CSID_TIMESTAMP_STB_POST_IRQ */
-+	val = 2 << RDI_CFG1_TIMESTAMP_STB_SEL;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG1(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_FRM_DROP_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_IRQ_SUBSAMPLE_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_PIX_DROP_PATTERN(vc));
-+
-+	val = 1;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PERIOD(vc));
-+
-+	val = 0;
-+	writel_relaxed(val, csid->base + CSID_RDI_RPP_LINE_DROP_PATTERN(vc));
-+
-+	val = 0;
- 	writel_relaxed(val, csid->base + CSID_RDI_CTRL(vc));
-+
-+	val = readl_relaxed(csid->base + CSID_RDI_CFG0(vc));
-+	val |=  enable << RDI_CFG0_ENABLE;
-+	writel_relaxed(val, csid->base + CSID_RDI_CFG0(vc));
- }
+diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
+index e4ae81dc9a15..f3242d2d9807 100644
+--- a/drivers/media/platform/qcom/camss/camss.c
++++ b/drivers/media/platform/qcom/camss/camss.c
+@@ -143,7 +143,9 @@ static const struct camss_subdev_resources vfe_res_8x16[] = {
+ 		.type = CAMSS_SUBDEV_TYPE_VFE,
+ 		.vfe = {
+ 			.line_num = 3,
+-			.hw_ops = &vfe_ops_4_1
++			.hw_ops = &vfe_ops_4_1,
++			.formats_rdi = &vfe_formats_rdi_8x16,
++			.formats_pix = &vfe_formats_pix_8x16
+ 		}
+ 	}
+ };
+@@ -318,7 +320,9 @@ static const struct camss_subdev_resources vfe_res_8x96[] = {
+ 		.vfe = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_4_7
++			.hw_ops = &vfe_ops_4_7,
++			.formats_rdi = &vfe_formats_rdi_8x96,
++			.formats_pix = &vfe_formats_pix_8x96
+ 		}
+ 	},
  
- static void csid_configure_stream(struct csid_device *csid, u8 enable)
- {
-+	struct csid_testgen_config *tg = &csid->testgen;
- 	u8 i;
- 	/* Loop through all enabled VCs and configure stream for each */
- 	for (i = 0; i < MSM_CSID_MAX_SRC_STREAMS; i++)
--		if (csid->phy.en_vc & BIT(i))
--			__csid_configure_stream(csid, enable, i);
-+		if (csid->phy.en_vc & BIT(i)) {
-+			if (tg->enabled)
-+				__csid_configure_testgen(csid, enable, i);
-+
-+			__csid_configure_rdi_stream(csid, enable, i);
-+			__csid_configure_rx(csid, &csid->phy, i);
-+			__csid_ctrl_rdi(csid, enable, i);
-+		}
- }
+@@ -342,7 +346,9 @@ static const struct camss_subdev_resources vfe_res_8x96[] = {
+ 		.vfe = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_4_7
++			.hw_ops = &vfe_ops_4_7,
++			.formats_rdi = &vfe_formats_rdi_8x96,
++			.formats_pix = &vfe_formats_pix_8x96
+ 		}
+ 	}
+ };
+@@ -538,7 +544,9 @@ static const struct camss_subdev_resources vfe_res_660[] = {
+ 		.vfe = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_4_8
++			.hw_ops = &vfe_ops_4_8,
++			.formats_rdi = &vfe_formats_rdi_8x96,
++			.formats_pix = &vfe_formats_pix_8x96
+ 		}
+ 	},
  
- static int csid_configure_testgen_pattern(struct csid_device *csid, s32 val)
+@@ -565,7 +573,9 @@ static const struct camss_subdev_resources vfe_res_660[] = {
+ 		.vfe = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_4_8
++			.hw_ops = &vfe_ops_4_8,
++			.formats_rdi = &vfe_formats_rdi_8x96,
++			.formats_pix = &vfe_formats_pix_8x96
+ 		}
+ 	}
+ };
+@@ -758,7 +768,9 @@ static const struct camss_subdev_resources vfe_res_845[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 
+@@ -784,7 +796,9 @@ static const struct camss_subdev_resources vfe_res_845[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.has_pd = true,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 
+@@ -809,7 +823,9 @@ static const struct camss_subdev_resources vfe_res_845[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	}
+ };
+@@ -985,7 +1001,9 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+ 			.pd_name = "ife0",
+-			.hw_ops = &vfe_ops_480
++			.hw_ops = &vfe_ops_480,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE1 */
+@@ -1010,7 +1028,9 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
+ 			.line_num = 3,
+ 			.has_pd = true,
+ 			.pd_name = "ife1",
+-			.hw_ops = &vfe_ops_480
++			.hw_ops = &vfe_ops_480,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE2 (lite) */
+@@ -1033,7 +1053,9 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_480
++			.hw_ops = &vfe_ops_480,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE3 (lite) */
+@@ -1056,7 +1078,9 @@ static const struct camss_subdev_resources vfe_res_8250[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_480
++			.hw_ops = &vfe_ops_480,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ };
+@@ -1267,7 +1291,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.pd_name = "ife0",
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE1 */
+@@ -1285,7 +1311,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.pd_name = "ife1",
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE2 */
+@@ -1303,7 +1331,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.pd_name = "ife2",
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE3 */
+@@ -1321,7 +1351,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.line_num = 4,
+ 			.pd_name = "ife3",
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE_LITE_0 */
+@@ -1338,7 +1370,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE_LITE_1 */
+@@ -1355,7 +1389,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE_LITE_2 */
+@@ -1372,7 +1408,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ 	/* VFE_LITE_3 */
+@@ -1389,7 +1427,9 @@ static const struct camss_subdev_resources vfe_res_sc8280xp[] = {
+ 		.vfe = {
+ 			.is_lite = true,
+ 			.line_num = 4,
+-			.hw_ops = &vfe_ops_170
++			.hw_ops = &vfe_ops_170,
++			.formats_rdi = &vfe_formats_rdi_845,
++			.formats_pix = &vfe_formats_pix_845
+ 		}
+ 	},
+ };
+diff --git a/drivers/media/platform/qcom/camss/camss.h b/drivers/media/platform/qcom/camss/camss.h
+index 2477821dfd85..4b13012940bf 100644
+--- a/drivers/media/platform/qcom/camss/camss.h
++++ b/drivers/media/platform/qcom/camss/camss.h
+@@ -22,6 +22,7 @@
+ #include "camss-csiphy.h"
+ #include "camss-ispif.h"
+ #include "camss-vfe.h"
++#include "camss-format.h"
+ 
+ #define to_camss(ptr_module)	\
+ 	container_of(ptr_module, struct camss, ptr_module)
 -- 
 2.17.1
 
