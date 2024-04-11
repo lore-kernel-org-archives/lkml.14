@@ -1,272 +1,229 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5544C202206
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20FC320221E;
+	Thu, 11 Apr 2024 15:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850217; cv=none; b=gE3VIR1scRaE2WEY91CAySUxbefltG9pZm8MT4zzG2NoYb9yzPaBcD/XbJxZTG39dAYHfPuC6UYJ9WeVIQo0dZzM8q45OFeiHmvzo9oJymTQa1yhx6dcP932NyFRzEkmsALSPuAoyDu41eiqEXZGfvECqMUVs1j7pwvoiRcSVpk=
+	t=1712850218; cv=none; b=ZaiQw3ik3n4sdWUYUI65+quuPN3J6mAGUgPIzCgAwzO3IuC7BZBGEGv+7J+xRdbi0D6s5K/BqwRNzCkK+EGmDqadLuNE0VtvP/r8QCFZM7qTI2zOlqOU0YuVgnogds7V0DlMLxfQStC5DaM34W2/eP9LV+NFs1ErWyfFTVRDLzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850217; c=relaxed/simple;
-	bh=FWSFCkY8Lf1/0GBdZlqopQYrUyh891nmBgOIC5aP+dc=;
+	s=arc-20240116; t=1712850218; c=relaxed/simple;
+	bh=Mo8q+6TVzNpOkq7R1IuTVIjTaKbcaUOLO5q+UD3bQkg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X8Cc/PNWIAJ6qOGIIW61g2oOZzdWDYVhDsm1RqWQ05rQCrtKazZPaRKGIIrV67UOk2+pYmZ8vjd6fUDfq8vQSE2JtzVDlr3iE7+4wN8MH7PU5u1YN5iSCs/TeCdQSSJXrtBNz6fhC8rEh+X3JmLdQChxw2W0hX1bUIGIgsx8QsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=eTY+R95V; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 MIME-Version; b=LD0CmhkSmlduaaR8iLHg2zUWOKbBb/D+5A5N5sSC55f3w1fUFI/8ElxGlCPbVqNAhyz5GpGBbZbyvGzaWtI6wWNLxafU9B3VOmGURV0bE3u0xqviDoXSYdg7XEKLqajgDQfjCMJTwGOdt6/mp8vzZzbPdNgOIK7iPF9RySAQLBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=epIK0n5y; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="eTY+R95V"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58292939f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850215; x=1713455015; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MLwLL88UefWixTIzrVWZHbHXvoOS4UC6DoIfisUbT74=;
-        b=eTY+R95VgUI9hluxhFnuL+Ape4SLiUbpdDv64Blrre5TCc9xmrN2gmzuygrqpOf+FD
-         GbHbwRBBLvoLIlDts/V0obP6ondUR4eyW0zZuJT2flcq++QILPUIZfCdscComDE+qdeB
-         8ee8FZpidA0gqAEEtKvZJnEDgEVM4iPXvGRJitjiDDFX4V40xBvRrab4cxjzCYOgsTzN
-         suuIwMLsKtdlsa5oLhNDhf4nG3xH+tqjK4daNg7w7kRYmIKJjj+m7as9+xJCSvWllYEv
-         WzkeVgD86ym6x8C2W/sV128m8kQigz5BDWtOwdsV9dNpd6QEU2pGZ+GE+A0oiFRgNt6/
-         lhXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850215; x=1713455015;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MLwLL88UefWixTIzrVWZHbHXvoOS4UC6DoIfisUbT74=;
-        b=eMct2nXZFPd6OxY+JLM5GssxQEopY2vR1DTYceEoQo+KUfTYkKDd/dz/LE6ql4bIHc
-         husF18ikCYIK19X+6P4hGeD2zj+RRa2mMeZhJKosYXgASqhqOD5jEFxDVwI6FWtLE9Eg
-         vVIc2ralDR9y6DBkllzaVq47XZncMiSq1czYF9g4HO3bg7P2HG5ZrL8BFTSYGekGzo2o
-         0r0ht757jA7mm6579vREz6pkXArt9NgPUZ1RLHMTIGaFlALEb9Zuug/hyiB2ouOH17x2
-         FHDKwKudJxsC3bQ7LUmhPNUImS7uEPB4heB6nJiIrhorN4bzKceh8raRVpNVFoKAgESu
-         ZWgg==
-X-Gm-Message-State: AOJu0Yy5sZuLCDwzrqJdR22vw+4Y8Hu07rI8sfW3oIPdkkg9dYZN8DpT
-	qp0E65ev6uznIhN33RBkC7kI+jqI+7iFSbdpsqX4m8tUJzCz/hOKaqmCsLBcGLsL1eS5Ppuh7gR
-	Z
-X-Google-Smtp-Source: AGHT+IGAmBwhKjUn674xvySCfPS+s1FqB4el+9hJ7aOclyXvDi56BJ5HXEl35V+akvOD0aAsHxUXvg==
-X-Received: by 2002:a6b:cd08:0:b0:7d5:fe3e:90ff with SMTP id d8-20020a6bcd08000000b007d5fe3e90ffmr215184iog.0.1712850215073;
-        Thu, 11 Apr 2024 08:43:35 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:43:33 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 427/437] hwtracing: coresight: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:19:27 -0600
-Message-ID: <20240411153126.16201-428-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="epIK0n5y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1712850213; x=1713455013; i=parker@finest.io;
+	bh=FVDjHOAyY1jlw5Y+A9WL4QWb/bltRVutt7yXYkqT2Kc=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=epIK0n5yHQdzJruVmMFCXHw8FVV6uQbZ30AuyZP6ADuMYStMRn9wz1KJrrr5l+3b
+	 EVp0OCe7JPYrrzrsSfeWeM1P2ZBrTfrdDdyoC+Lh5YkBvCyrXxGIemJvJvyxzjR1w
+	 7rkgKHQwbbHCS+ET2hOC6T10WAhwIER2t+/IoPsmpFVS98bI2s4ifpUS4gJ/vBGc9
+	 X47DuEDHDvf1kSYOE9TVUTGamr+3PTsF888mSHmlMOec4oWHRjgpvVDeh48oQ2p6o
+	 dWHYOAVORt2bnWlCovgxGHxDd48AcRrKd/nrf7M0tRQplEX7jW4veepz8GwoDUmaS
+	 QDbMtWD4dWcjCuqGtg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0MTjFe-1sLRRE2l2u-00J6kz; Thu, 11 Apr
+ 2024 17:30:04 +0200
+From: parker@finest.io
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>
+Subject: [PATCH 1/2] serial: exar: add missing CTI/Exar PCI IDs to include/linux/pci_ids.h
+Date: Thu, 11 Apr 2024 11:29:26 -0400
+Message-ID: <936439b200c810f83076a710eab81acd1e79ec83.1712846025.git.pnewman@connecttech.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1712846025.git.pnewman@connecttech.com>
+References: <cover.1712846025.git.pnewman@connecttech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pl9kdTije93xR5aiQyhexgoauf6lISgmx4hUN/HHF9OX6y+t839
+ l2RueScXeRBrn5inDDt5SRpEBWY/vFWoLM4oFuxPNpw58AZ9hSq8dqNg/vr09t44FnDD5dR
+ aXSOXiYnkM14I8c8iyLeJEybHMdPWHtXr0WqJtOPs8aAv3ppoKzNyLkATtMpcgH43yDqlN3
+ 8SLCdgjsniC8W0dvfvPPw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:LMeSVELGH1s=;o6i50hBp8znzirjmnsNUIS22hla
+ C1DVmIGSrEdbd0wom/hIYjnCOM7GBN2YLgTUPbTYn2UiUZjBa0/f1M/HZOmuml34qvd9Mz+7S
+ iZ4YA/NMuQiPvSXTlUX+TK/YE+kWAXDjFga5cVsVFjfbQIxT9mPtoFNCKur5FR1xWDSIzByh8
+ SMjd2STgZsTE+OXGX8qhpMFFyC8hP9577uKCfZ3b3RuJ1InQmmeb70FXlTheRK25WBmNKcJa6
+ nOdARFUv2M3YQ3f3pQ0NzuLL1MFl16uJDT2DokACkqTLtFIAjvben95iqwGvzj6Rq4ofgkkN2
+ mY3zBh6NM8/MIThnv9A/5I2lyz1j3yCOE1dcVRelbzZPfd9bsUHgR7ARN+pq6dWXThL54hw0p
+ 7fu0jyekcXpfbps25MLNeSw7PP7nmR7d+qR80RphHxDTQhMnr72uAgt7x3/O9lwfac2nAaWvZ
+ uP3FeriemiINH5xWhawWoatjWffta0juJ5VN770Kzh8uaLNjPNY2zc2zqi4t7YbK/i1Ppy/XT
+ bcYhvYQ6FsWdOtymTDTR1sz4gM+hx/Bq3i++rK57c7W2FIm9hZqtWH4k84ht97/S4jQ6vz8y+
+ Vk08mNT/5hGZYu2mTYrpQ1sa41A1KfeLR9K166swzCEbTTedXc6ZpSjX2taANWanqh8BTM7Qe
+ xrIMUZDdI2c1IowrWeRL8lWAFhrV++GurU8IpJD/HxRVwkro22v79UruDhAy0zQKireF0EJiO
+ rnALxjMZusac6+sK1CVdjjZJPCXSCYwS8KAt74fI3Qi0SWOq1yflAU=
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- .../hwtracing/coresight/coresight-cpu-debug.c  | 15 +++++++--------
- drivers/hwtracing/coresight/coresight-etb10.c  | 18 +++++++++---------
- .../hwtracing/coresight/coresight-tmc-core.c   | 14 +++++++-------
- drivers/hwtracing/coresight/ultrasoc-smb.c     | 12 ++++++------
- 4 files changed, 29 insertions(+), 30 deletions(-)
+From: Parker Newman <pnewman@connecttech.com>
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 1874df7c6a73..5ee3dc600066 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -471,13 +471,13 @@ static int debug_disable_func(void)
- 	return err;
- }
- 
--static ssize_t debug_func_knob_write(struct file *f,
--		const char __user *buf, size_t count, loff_t *ppos)
-+static ssize_t debug_func_knob_write(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t count = iov_iter_count(from);
- 	u8 val;
- 	int ret;
- 
--	ret = kstrtou8_from_user(buf, count, 2, &val);
-+	ret = kstrtou8_from_iter(from, count, 2, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -505,8 +505,7 @@ static ssize_t debug_func_knob_write(struct file *f,
- 	return ret;
- }
- 
--static ssize_t debug_func_knob_read(struct file *f,
--		char __user *ubuf, size_t count, loff_t *ppos)
-+static ssize_t debug_func_knob_read(struct kiocb *iocb, struct iov_iter *to)
- {
- 	ssize_t ret;
- 	char buf[3];
-@@ -515,14 +514,14 @@ static ssize_t debug_func_knob_read(struct file *f,
- 	snprintf(buf, sizeof(buf), "%d\n", debug_enable);
- 	mutex_unlock(&debug_lock);
- 
--	ret = simple_read_from_buffer(ubuf, count, ppos, buf, sizeof(buf));
-+	ret = simple_copy_to_iter(buf, &iocb->ki_pos, sizeof(buf), to);
- 	return ret;
- }
- 
- static const struct file_operations debug_func_knob_fops = {
- 	.open	= simple_open,
--	.read	= debug_func_knob_read,
--	.write	= debug_func_knob_write,
-+	.read_iter	= debug_func_knob_read,
-+	.write_iter	= debug_func_knob_write,
- };
- 
- static int debug_func_init(void)
-diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-index 3aab182b562f..14735de16316 100644
---- a/drivers/hwtracing/coresight/coresight-etb10.c
-+++ b/drivers/hwtracing/coresight/coresight-etb10.c
-@@ -610,30 +610,30 @@ static int etb_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t etb_read(struct file *file, char __user *data,
--				size_t len, loff_t *ppos)
-+static ssize_t etb_read(struct kiocb *iocb, struct iov_iter *to)
- {
-+	size_t len = iov_iter_count(to);
- 	u32 depth;
--	struct etb_drvdata *drvdata = container_of(file->private_data,
-+	struct etb_drvdata *drvdata = container_of(iocb->ki_filp->private_data,
- 						   struct etb_drvdata, miscdev);
- 	struct device *dev = &drvdata->csdev->dev;
- 
- 	etb_dump(drvdata);
- 
- 	depth = drvdata->buffer_depth;
--	if (*ppos + len > depth * 4)
--		len = depth * 4 - *ppos;
-+	if (iocb->ki_pos + len > depth * 4)
-+		len = depth * 4 - iocb->ki_pos;
- 
--	if (copy_to_user(data, drvdata->buf + *ppos, len)) {
-+	if (!copy_to_iter_full(drvdata->buf + iocb->ki_pos, len, to)) {
- 		dev_dbg(dev,
- 			"%s: copy_to_user failed\n", __func__);
- 		return -EFAULT;
- 	}
- 
--	*ppos += len;
-+	iocb->ki_pos += len;
- 
- 	dev_dbg(dev, "%s: %zu bytes copied, %d bytes left\n",
--		__func__, len, (int)(depth * 4 - *ppos));
-+		__func__, len, (int)(depth * 4 - iocb->ki_pos));
- 	return len;
- }
- 
-@@ -650,7 +650,7 @@ static int etb_release(struct inode *inode, struct file *file)
- static const struct file_operations etb_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= etb_open,
--	.read		= etb_read,
-+	.read_iter	= etb_read,
- 	.release	= etb_release,
- 	.llseek		= no_llseek,
- };
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
-index 72005b0c633e..337599655242 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-core.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
-@@ -176,24 +176,24 @@ static inline ssize_t tmc_get_sysfs_trace(struct tmc_drvdata *drvdata,
- 	return -EINVAL;
- }
- 
--static ssize_t tmc_read(struct file *file, char __user *data, size_t len,
--			loff_t *ppos)
-+static ssize_t tmc_read(struct kiocb *iocb, struct iov_iter *to)
- {
-+	size_t len = iov_iter_count(to);
- 	char *bufp;
- 	ssize_t actual;
--	struct tmc_drvdata *drvdata = container_of(file->private_data,
-+	struct tmc_drvdata *drvdata = container_of(iocb->ki_filp->private_data,
- 						   struct tmc_drvdata, miscdev);
--	actual = tmc_get_sysfs_trace(drvdata, *ppos, len, &bufp);
-+	actual = tmc_get_sysfs_trace(drvdata, iocb->ki_pos, len, &bufp);
- 	if (actual <= 0)
- 		return 0;
- 
--	if (copy_to_user(data, bufp, actual)) {
-+	if (!copy_to_iter_full(bufp, actual, to)) {
- 		dev_dbg(&drvdata->csdev->dev,
- 			"%s: copy_to_user failed\n", __func__);
- 		return -EFAULT;
- 	}
- 
--	*ppos += actual;
-+	iocb->ki_pos += actual;
- 	dev_dbg(&drvdata->csdev->dev, "%zu bytes copied\n", actual);
- 
- 	return actual;
-@@ -216,7 +216,7 @@ static int tmc_release(struct inode *inode, struct file *file)
- static const struct file_operations tmc_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= tmc_open,
--	.read		= tmc_read,
-+	.read_iter	= tmc_read,
- 	.release	= tmc_release,
- 	.llseek		= no_llseek,
- };
-diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.c b/drivers/hwtracing/coresight/ultrasoc-smb.c
-index f9ebf20c91e6..27e883e69ce6 100644
---- a/drivers/hwtracing/coresight/ultrasoc-smb.c
-+++ b/drivers/hwtracing/coresight/ultrasoc-smb.c
-@@ -112,13 +112,13 @@ static int smb_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t smb_read(struct file *file, char __user *data, size_t len,
--			loff_t *ppos)
-+static ssize_t smb_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct smb_drv_data *drvdata = container_of(file->private_data,
-+	struct smb_drv_data *drvdata = container_of(iocb->ki_filp->private_data,
- 					struct smb_drv_data, miscdev);
- 	struct smb_data_buffer *sdb = &drvdata->sdb;
- 	struct device *dev = &drvdata->csdev->dev;
-+	size_t len = iov_iter_count(to);
- 	ssize_t to_copy = 0;
- 
- 	if (!len)
-@@ -133,12 +133,12 @@ static ssize_t smb_read(struct file *file, char __user *data, size_t len,
- 	if (sdb->buf_rdptr + to_copy > sdb->buf_size)
- 		to_copy = sdb->buf_size - sdb->buf_rdptr;
- 
--	if (copy_to_user(data, sdb->buf_base + sdb->buf_rdptr, to_copy)) {
-+	if (!copy_to_iter_full(sdb->buf_base + sdb->buf_rdptr, to_copy, to)) {
- 		dev_dbg(dev, "Failed to copy data to user\n");
- 		return -EFAULT;
- 	}
- 
--	*ppos += to_copy;
-+	iocb->ki_pos += to_copy;
- 	smb_update_read_ptr(drvdata, to_copy);
- 	if (!sdb->data_size)
- 		smb_reset_buffer(drvdata);
-@@ -161,7 +161,7 @@ static int smb_release(struct inode *inode, struct file *file)
- static const struct file_operations smb_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= smb_open,
--	.read		= smb_read,
-+	.read_iter	= smb_read,
- 	.release	= smb_release,
- 	.llseek		= no_llseek,
- };
--- 
-2.43.0
+- Added missing CTI serial car PCI IDs
+- Added missing Exar XR17V25X PCI IDs
+- Moved XR17V4358 and XR17V8358 PCI ID defines to pci_ids.h
+
+Signed-off-by: Parker Newman <pnewman@connecttech.com>
+=2D--
+ drivers/tty/serial/8250/8250_exar.c |   3 -
+ include/linux/pci_ids.h             | 104 ++++++++++++++++++++--------
+ 2 files changed, 75 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
+/8250_exar.c
+index 0440df7de1ed..eb00fcd79a8e 100644
+=2D-- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -46,9 +46,6 @@
+ #define PCI_DEVICE_ID_COMMTECH_4228PCIE		0x0021
+ #define PCI_DEVICE_ID_COMMTECH_4222PCIE		0x0022
+
+-#define PCI_DEVICE_ID_EXAR_XR17V4358		0x4358
+-#define PCI_DEVICE_ID_EXAR_XR17V8358		0x8358
+-
+ #define PCI_SUBDEVICE_ID_USR_2980		0x0128
+ #define PCI_SUBDEVICE_ID_USR_2981		0x0129
+
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index a0c75e467df3..971c1a1c98e7 100644
+=2D-- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -1809,35 +1809,76 @@
+
+ #define PCI_VENDOR_ID_ALTEON		0x12ae
+
+-#define PCI_SUBVENDOR_ID_CONNECT_TECH			0x12c4
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_232		0x0001
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_232		0x0002
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_232		0x0003
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485		0x0004
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485_4_4	0x0005
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_485		0x0006
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_485_2_2	0x0007
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_485		0x0008
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485_2_6	0x0009
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH081101V1	0x000A
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH041101V1	0x000B
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_20MHZ		0x000C
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_PTM		0x000D
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_NT960PCI		0x0100
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_TITAN_2		0x0201
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_TITAN_4		0x0202
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_232	0x0300
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_232	0x0301
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_232	0x0302
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1	0x0310
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2	0x0311
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4	0x0312
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2	0x0320
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4	0x0321
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8	0x0322
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_485	0x0330
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_485	0x0331
+-#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_485	0x0332
++#define PCI_VENDOR_ID_CONNECT_TECH				0x12c4
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X          0x110c
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X          0x110d
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16                 0x1110
++
++#define PCI_SUBVENDOR_ID_CONNECT_TECH				0x12c4
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_232			0x0001
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_232			0x0002
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_232			0x0003
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485			0x0004
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485_4_4		0x0005
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_485			0x0006
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH4_485_2_2		0x0007
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_485			0x0008
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH8_485_2_6		0x0009
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH081101V1		0x000A
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH041101V1		0x000B
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_20MHZ			0x000C
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_BH2_PTM			0x000D
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_NT960PCI			0x0100
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_TITAN_2			0x0201
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_TITAN_4			0x0202
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_TITAN_8			0x0203
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_232		0x0300
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_232		0x0301
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_232		0x0302
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1		0x0310
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2		0x0311
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4		0x0312
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2		0x0320
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4		0x0321
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8		0x0322
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_485		0x0330
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_485		0x0331
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_485		0x0332
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_SP_OPTO        0x0340
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_A      0x0341
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_B      0x0342
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS           0x0350
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_A         0x0351
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_B         0x0352
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS           0x0353
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_A        0x0354
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_B        0x0355
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS_OPTO      0x0360
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_A    0x0361
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_B    0x0362
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP             0x0370
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232         0x0371
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_485         0x0372
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP           0x0373
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP           0x0374
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP           0x0375
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232_NS      0x0376
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_LEFT   0x0380
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_RIGHT  0x0381
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XP_OPTO        0x0382
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_XPRS_OPTO    0x0392
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP        0x03A0
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232    0x03A1
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_485    0x03A2
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232_NS 0x03A3
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XEG001               0x0602
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_BASE           0x1000
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_2              0x1002
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_4              0x1004
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_8              0x1008
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_12             0x100C
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_16             0x1010
++
+
+ #define PCI_VENDOR_ID_NVIDIA_SGS	0x12d2
+ #define PCI_DEVICE_ID_NVIDIA_SGS_RIVA128 0x0018
+@@ -2048,9 +2089,14 @@
+ #define PCI_DEVICE_ID_EXAR_XR17C152	0x0152
+ #define PCI_DEVICE_ID_EXAR_XR17C154	0x0154
+ #define PCI_DEVICE_ID_EXAR_XR17C158	0x0158
++#define PCI_DEVICE_ID_EXAR_XR17V252	0x0252
++#define PCI_DEVICE_ID_EXAR_XR17V254	0x0254
++#define PCI_DEVICE_ID_EXAR_XR17V258	0x0258
+ #define PCI_DEVICE_ID_EXAR_XR17V352	0x0352
+ #define PCI_DEVICE_ID_EXAR_XR17V354	0x0354
+ #define PCI_DEVICE_ID_EXAR_XR17V358	0x0358
++#define PCI_DEVICE_ID_EXAR_XR17V4358    0x4358
++#define PCI_DEVICE_ID_EXAR_XR17V8358    0x8358
+
+ #define PCI_VENDOR_ID_MICROGATE		0x13c0
+
+=2D-
+2.43.2
 
