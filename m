@@ -1,228 +1,111 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5A8145B26;
-	Thu, 11 Apr 2024 10:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD84B145B3E;
+	Thu, 11 Apr 2024 10:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712830243; cv=none; b=CwuwJT5mM+RI0UfZ0lplnBwHb7vUvJnRJSKHFhAb36H0igR75x4HGbzGFclcOUUTE8vVZrGOBDD2I08KC3+Ikmg4BOfz/O+MzgA2lJOWZoPyxVly6ebeGoqyi/cdR+AvwG7EP0/wzjdh5mbF8ZIoGFtPp+igOlNDqSQc/aodc9M=
+	t=1712830455; cv=none; b=JzywzzFk/xRDjXQa92JdZY7bJOXgLJHGc4APjY4O/TZTOQr31+aTA3gznOKBaEm/rJSMP1UX/nbdlTfS6KEuwy0eg6q+/VOBsyCKj7GCufjNDprwjN1XAhbbrJwQ3/dm1LAwUu/F90C6ELFvIuxlQBRAFivLSGAzDPcVq8jJH3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712830243; c=relaxed/simple;
-	bh=lFToQwuD0CN2lHHGhV5ThRLUedjbbjOz8kojfzH5ZY8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=RMr9OqfNpu/uLgS+wZJrbRPe6qV0lkEqwZiE7YJWFR5wgDx6UAaNw1CopavCGUNxOpUDhygsjmIKf1QecrPjzyP0ZcgSg1grLslJOI+gI1ejqqKhnNXH15RnSxbh732c0IOVABxNdFAHlkjwVGbLxaZKKKhcIUHngesWYvqwQYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VFZxL1t7mzBmrW;
-	Thu, 11 Apr 2024 18:02:14 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VFZxF0sXYz63t5D;
-	Thu, 11 Apr 2024 18:02:09 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VFZx42y5Nz6G42d;
-	Thu, 11 Apr 2024 18:02:00 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl2.zte.com.cn with SMTP id 43BA1qk5093269;
-	Thu, 11 Apr 2024 18:01:52 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Thu, 11 Apr 2024 18:01:54 +0800 (CST)
-Date: Thu, 11 Apr 2024 18:01:54 +0800 (CST)
-X-Zmail-TransId: 2afa6617b512ffffffffdde-7c4e3
-X-Mailer: Zmail v1.0
-Message-ID: <20240411180154691lpBFKqpsU4tf1vugPPIqq@zte.com.cn>
+	s=arc-20240116; t=1712830455; c=relaxed/simple;
+	bh=mIiR5+e+l2jTYUs6ji27JbnMDzbTv+h4m4icjPb7REY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=swtyWE8qJORBcKNz3wipb4C0reU0/MxxzbdvOLv79rf+PZhs4NSrEjjuOlwwYc2EWdEwVO5dWFV+mZt+uh6zl1tY2ltS52SeZpuTITVgxwM06IdCVlHmbjBVwa7hiwBePG4rK3Xdkp6L8pzuyovXRb9LgcuHkLWLtCRgT7XjMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=NLOM82Oz; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="NLOM82Oz"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9D6D140006;
+	Thu, 11 Apr 2024 10:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712830450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r29/kIGqcmoe5Q56OOEiHGJ3bdPBa/zexDs6zdvg0A8=;
+	b=NLOM82OzTNpduyfXeECKXTy2l1KeB4TlDQ3Cyx24Vyacump5ak8yIbKinNuIb137lHQs4C
+	s8qgGg3sScr3pz2epgdEt93tfcxUPdLOxg3GVW5ZgwvHqJ9CUCHiU33iLHqLACS8O+8GX3
+	97l7j4wjuwG/H+KoawgSxAiaWFMGHQJibLoU49OYXC6jqzzTl49mdniTDW9wS7pwraP6xU
+	tP3wB4PKD0O3FFCVEMAQhBeTm3AjvF/VPkjO0pIijAesZhzTdvWwW/pJ+2ch2aB4HEzuw9
+	bABWQ1g+oHku3AnMKjjnLVB6bEFHzEk6I3thJ5a+G7YHc1IMY5OzLxQsi5WTrQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <edumazet@google.com>, <davem@davemloft.net>, <kuba@kernel.org>
-Cc: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY1XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 43BA1qk5093269
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6617B525.000/4VFZxL1t7mzBmrW
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 11 Apr 2024 12:14:09 +0200
+Message-Id: <D0H7PXOXYNXI.2QM4E0O02FK34@bootlin.com>
+Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Stephen Boyd" <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Michael Turquette" <mturquette@baylibre.com>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>, "Rob Herring" <robh@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH 04/11] clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS
+ flag
+X-Mailer: aerc 0.15.2
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
+ <20240410-mbly-olb-v1-4-335e496d7be3@bootlin.com>
+ <4ce9f3cea1ecd3777cf3e291cc865210.sboyd@kernel.org>
+In-Reply-To: <4ce9f3cea1ecd3777cf3e291cc865210.sboyd@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: hepeilin <he.peilin@zte.com.cn>
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
+Hello,
 
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
+On Thu Apr 11, 2024 at 5:06 AM CEST, Stephen Boyd wrote:
+> Quoting Th=C3=A9o Lebrun (2024-04-10 10:12:33)
+> > index 4a537260f655..cb348e502e41 100644
+> > --- a/include/linux/clk-provider.h
+> > +++ b/include/linux/clk-provider.h
+> > @@ -675,13 +675,15 @@ struct clk_div_table {
+> >   * CLK_DIVIDER_BIG_ENDIAN - By default little endian register accesses=
+ are used
+> >   *     for the divider register.  Setting this flag makes the register=
+ accesses
+> >   *     big endian.
+> > + * CLK_DIVIDER_EVEN_INTEGERS - clock divisor is 2, 4, 6, 8, 10, etc.
+> > + *     Formula is 2 * (value read from hardware + 1).
+> >   */
+> >  struct clk_divider {
+> >         struct clk_hw   hw;
+> >         void __iomem    *reg;
+> >         u8              shift;
+> >         u8              width;
+> > -       u8              flags;
+> > +       u16             flags;
+>
+> This can stay u8
 
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
+It is unclear to me why it can stay u8? __clk_hw_register_divider() puts
+clk_divider_flags into flags field of struct clk_divider.
+BIT(8) overflows u8.
 
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
+>
+> >         const struct clk_div_table      *table;
+> >         spinlock_t      *lock;
+> >  };
+>
+> We should add a kunit test.
 
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pcCqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
+Will look into how this works and try something for next revision. I
+guess you are talking about adding clk_divider tests, not only tests
+for this flag? I cannot find any existing kunit tests for clk_divider.
 
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJzBzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
+Thanks,
 
-Changelog
-========
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHuFQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
-
-Signed-off-by: Peilin He<he.peilin@zte.com.cn>
-Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
----
- include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 69 insertions(+)
- create mode 100644 include/trace/events/icmp.h
-
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000..7d5190f48
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,65 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
-+
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
-+
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(icmp_send,
-+
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
-+
-+		TP_ARGS(skb, type, code),
-+
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			struct udphdr *uh = udp_hdr(skb);
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr) > skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
-+);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-\ No newline at end of file
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index b71b836cc..2081fee18 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -92,6 +92,8 @@
- #include <net/inet_common.h>
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -766,6 +768,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(&icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
--- 
-2.17.1
