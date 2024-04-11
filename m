@@ -1,152 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295741D4280;
-	Thu, 11 Apr 2024 15:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545651D371B
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849988; cv=none; b=qijKxSS+Q2m2rq+XJqY+Q3SXGGpFiWTN0Vehmef0E+QOozm/tqS1bumYABTK2SYuT9V+9w64PW+nu59JlCxD7NNtE5QYaTy1yUvIxgCaLXq4X8PxTqMJMfx+7tivvsLY+J3NHoI6lm04Fy1p1oRdSFcCykiJT50ccEyRzKq0f2s=
+	t=1712849988; cv=none; b=msz9czNvJ/JEUwA2PTntlUTiX0bCMT34i9iZaFoYoU8KE4wvWxA4FskmKSMFhSMWmkZRF/OCelj4pgcg3DiLv71/3/E33JyIc2VqknEXLVK0dA+oxv5YiQ8baRr8WKqDkYKfSUCXgGi48y03ToXp6XAOehVbB2ImK8A1I02Gxlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849988; c=relaxed/simple;
-	bh=BAaUVpCnVLVHiTGwbzDBqzGX029scJjx0KK1ilZVLbM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idq/7VxW/6IBBCVk+dzOWW9OIjFxqDC+AdOCT1phN/7AcJiSwXYj8wHKNmgLT98sY3nCXe8DqteVoN7PpgBE/qfgQ9yGLZhsmDWeOd6rQD+JBcmnNzY4u/GLDQNxWMS1awKWF4c0pHwKXVy+cI8jKaJKa/Hs9dd4tX48nYquxB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WB9pt5su; arc=none smtp.client-ip=10.30.226.201
+	bh=/Q6KnapLBPJz/Wdlpldx5vt5/82eFPTxGeq6XHjxjjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XjkDXPdvSFcHz4atdFyb6s8jI1JBGMvrB7YQzcW3AjcKR+xKDKI7yAMj1DHp7PJ/ftAeFQOGntz9cA5IeHLXQS/8v89S/2WekC3E5fNIUY1zx4vZRVDz1XwkTDHq4CijMBQ+yRK9BtEMYNMahn0MJTrQUSwLrJf7Fvnq8l/qPD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Azk91P5H; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WB9pt5su"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD1CC072AA;
-	Thu, 11 Apr 2024 15:39:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712849987;
-	bh=BAaUVpCnVLVHiTGwbzDBqzGX029scJjx0KK1ilZVLbM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WB9pt5suMDCAZ+xxIXJxK9uDd7v0cMO1K2Y4ucIbBGO8Zaf8PQTbLSvsHZ3YQoisE
-	 PHwvD+U/QBFUeEhGXeQlOxlHO0AyeLynSlilsv6NtidFwvk1m6m+xnkX5LRXuX7ENf
-	 THdjOeZ0iOIV/Vv0eiuvTz3MNz4dyNRqtZ+GLUi30sFczshA3hKVfoyjSGFC80Ad+F
-	 Ni21755PZqbAYz12ggyuS+YnYlXdDOkAf9XcxdjL7HCmboTIQXlvBLTFlFQ4k8bvi8
-	 KPVwqYC4jQno1yKDQMxNs0X/grVOYt1ffexNVoexNSLCGQEGAz56gVyVVFp8dAS8zF
-	 BhmGTvR7EObrQ==
-Date: Thu, 11 Apr 2024 08:39:45 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: John Stultz <jstultz@google.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Edward Liaw <edliaw@google.com>,
-	Carlos Llamas <cmllamas@google.com>, kernel-team@android.com,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/3] selftests: timers: Fix uninitialized variable
- warning in ksft_min_kernel_version
-Message-ID: <20240411153945.GA2507795@dev-arch.thelio-3990X>
-References: <20240410232637.4135564-1-jstultz@google.com>
- <20240410232637.4135564-2-jstultz@google.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Azk91P5H"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58172639f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849985; x=1713454785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jKK8dgn5uHLUesU0IBjCDwlOEErVfVZOLDyYwXoDWEY=;
+        b=Azk91P5Hwdb/xJrc+7xAw/lBkPyqsgCBnanN9q8xUvQTP6UYSqgnM3D6x971drzrw2
+         AYAiCzOVIVcYGbqGOGTpTutq29HyhINzpNP4ERzg84jXgG8xb+HGob8wiu0S2iuYQybW
+         klF+pp9LcK29gJ7AeJDRsm1wc8aZgEzSrnFClVS6OsWlNbVRgz20LxuZd/YjezbfRDO2
+         Gnmvs+BRFiEBvFLF0sIPYtDxJivFCXBLxsAqfwUByZQ6hP9MwY3XSWsrY9ZtIGFzwNiP
+         JQ1Y2HuqLGXGlzWRjyxejds7OwyDhsz/7ah6+vcxh8OCWiAGd1uCmhMKKHfUFEYlxYG5
+         NPKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712849985; x=1713454785;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jKK8dgn5uHLUesU0IBjCDwlOEErVfVZOLDyYwXoDWEY=;
+        b=Fh25VXqX1GCsnq19AQSbai7R00gG9nEkWTZOaTIr44TOXzcde65BtJC9Q4YnIddeOu
+         aQuPWweMp2zRkRNTs1PcOyhiIomjQL1dqrN1VBsCzLs6BKI5NjMm86oKfALq7qwNAhDj
+         RNg31ihuB18b1BAvUd6YPG9N2tTdv3lKCTWnqqfnwKKri7grUUwUMGXzZmM5pzmvLpdg
+         Z6nTy3eKEzIIbOjnO5eAmyI/3Rdy2IcojC7TnApA5pwxNBxbt0Zx9+8DbuCIBflW4pHa
+         iqKgOKlvuuGLtvP0TCVDdf0A+SAc2w9CPnNlBPjLU8OSfHMXoJhTpFeR30tPesUxlFhd
+         p7Bw==
+X-Gm-Message-State: AOJu0YzYWPwc7g1XiJ6BV9Cd8hQdI25Q2jVB4bp2Sw2IzX959fk+/zJ0
+	FfgYPRpAS1/mLhluFIkLj7mT0wkjnzAneJ8cKNPG2mu2hUInx+XySAZasNhUeZqAAA3yKxq5yg+
+	Q
+X-Google-Smtp-Source: AGHT+IHVh6JfR09vkvCedDaYlIm0CPu/ZIhxQhCOwTnDrDtWv8MFcPMxK2RLduyxZknP+Z/1G011fQ==
+X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr196423iov.2.1712849984910;
+        Thu, 11 Apr 2024 08:39:44 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:39:44 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 293/437] fs: convert fs_open to read/write iterators
+Date: Thu, 11 Apr 2024 09:17:13 -0600
+Message-ID: <20240411153126.16201-294-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410232637.4135564-2-jstultz@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 10, 2024 at 04:26:29PM -0700, John Stultz wrote:
-> Building with clang, I see the following warning:
-> 
-> In file included from posix_timers.c:17:
-> ./../kselftest.h:398:6: warning: variable 'major' is used uninitialized whenever '||' condition is true [-Wsometimes-uninitialized]
->         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor) != 2)
->             ^~~~~~~~~~~~
-> ./../kselftest.h:401:9: note: uninitialized use occurs here
->         return major > min_major || (major == min_major && minor >= min_minor);
->                ^~~~~
-> 
-> This is a bit of a red-herring as if the uname() call did fail,
-> we would hit ksft_exit_fail_msg() which should exit.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ fs/fsopen.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Correct, although we have not really conveyed that to the compiler,
-right? exit() is noreturn, which means all functions that call exit()
-unconditionally are also noreturn, such as ksft_exit_fail_msg(). LLVM
-will figure this out once it performs inlining and such but that happens
-after clang's static analysis phase that this warning occurs in. I think
-a better solution would be to add __noreturn to the functions in
-tools/testing/selftests/kselftest.h that call exit(), so that the
-compiler is aware of this through all pipeline phases, maybe something
-like this? It resolves the wawrning for me.
+diff --git a/fs/fsopen.c b/fs/fsopen.c
+index 6593ae518115..a68b7d4071b1 100644
+--- a/fs/fsopen.c
++++ b/fs/fsopen.c
+@@ -14,6 +14,7 @@
+ #include <linux/anon_inodes.h>
+ #include <linux/namei.h>
+ #include <linux/file.h>
++#include <linux/uio.h>
+ #include <uapi/linux/mount.h>
+ #include "internal.h"
+ #include "mount.h"
+@@ -21,12 +22,12 @@
+ /*
+  * Allow the user to read back any error, warning or informational messages.
+  */
+-static ssize_t fscontext_read(struct file *file,
+-			      char __user *_buf, size_t len, loff_t *pos)
++static ssize_t fscontext_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct fs_context *fc = file->private_data;
++	struct fs_context *fc = iocb->ki_filp->private_data;
+ 	struct fc_log *log = fc->log.log;
+ 	unsigned int logsize = ARRAY_SIZE(log->buffer);
++	size_t len = iov_iter_count(to);
+ 	ssize_t ret;
+ 	char *p;
+ 	bool need_free;
+@@ -54,7 +55,7 @@ static ssize_t fscontext_read(struct file *file,
+ 	if (n > len)
+ 		goto err_free;
+ 	ret = -EFAULT;
+-	if (copy_to_user(_buf, p, n) != 0)
++	if (!copy_to_iter_full(p, n, to) != 0)
+ 		goto err_free;
+ 	ret = n;
+ 
+@@ -76,7 +77,7 @@ static int fscontext_release(struct inode *inode, struct file *file)
+ }
+ 
+ const struct file_operations fscontext_fops = {
+-	.read		= fscontext_read,
++	.read_iter	= fscontext_read,
+ 	.release	= fscontext_release,
+ 	.llseek		= no_llseek,
+ };
+-- 
+2.43.0
 
-diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
-index 050c5fd01840..29364c9f3332 100644
---- a/tools/testing/selftests/kselftest.h
-+++ b/tools/testing/selftests/kselftest.h
-@@ -83,6 +83,7 @@
- #define KSFT_XPASS 3
- #define KSFT_SKIP  4
- 
-+#define __noreturn       __attribute__((__noreturn__))
- #define __printf(a, b)   __attribute__((format(printf, a, b)))
- 
- /* counters */
-@@ -324,13 +325,13 @@ void ksft_test_result_code(int exit_code, const char *test_name,
- 		break;						\
- 	} } while (0)
- 
--static inline int ksft_exit_pass(void)
-+static inline __noreturn int ksft_exit_pass(void)
- {
- 	ksft_print_cnts();
- 	exit(KSFT_PASS);
- }
- 
--static inline int ksft_exit_fail(void)
-+static inline __noreturn int ksft_exit_fail(void)
- {
- 	ksft_print_cnts();
- 	exit(KSFT_FAIL);
-@@ -357,7 +358,7 @@ static inline int ksft_exit_fail(void)
- 		  ksft_cnt.ksft_xfail +	\
- 		  ksft_cnt.ksft_xskip)
- 
--static inline __printf(1, 2) int ksft_exit_fail_msg(const char *msg, ...)
-+static inline __noreturn __printf(1, 2) int ksft_exit_fail_msg(const char *msg, ...)
- {
- 	int saved_errno = errno;
- 	va_list args;
-@@ -372,7 +373,7 @@ static inline __printf(1, 2) int ksft_exit_fail_msg(const char *msg, ...)
- 	exit(KSFT_FAIL);
- }
- 
--static inline void ksft_exit_fail_perror(const char *msg)
-+static inline __noreturn void ksft_exit_fail_perror(const char *msg)
- {
- #ifndef NOLIBC
- 	ksft_exit_fail_msg("%s: %s (%d)\n", msg, strerror(errno), errno);
-@@ -385,19 +386,19 @@ static inline void ksft_exit_fail_perror(const char *msg)
- #endif
- }
- 
--static inline int ksft_exit_xfail(void)
-+static inline __noreturn int ksft_exit_xfail(void)
- {
- 	ksft_print_cnts();
- 	exit(KSFT_XFAIL);
- }
- 
--static inline int ksft_exit_xpass(void)
-+static inline __noreturn int ksft_exit_xpass(void)
- {
- 	ksft_print_cnts();
- 	exit(KSFT_XPASS);
- }
- 
--static inline __printf(1, 2) int ksft_exit_skip(const char *msg, ...)
-+static inline __noreturn __printf(1, 2) int ksft_exit_skip(const char *msg, ...)
- {
- 	int saved_errno = errno;
- 	va_list args;
