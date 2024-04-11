@@ -1,98 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C9D14AD0E;
-	Thu, 11 Apr 2024 12:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035CA1442FF
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837085; cv=none; b=PXEzSerTNfPUowWZjoxPAZ66p5BKrji0FLoIiK+i17bsgwhQV4sxKMO8WAyKac4SbL4zIhnn3AxiVr8seHJ9k2oyqrWyncb4+/y8XBHuP7SApz+o1H5KBKyRfkGyLy7H/nSncd1pT7NWm83sRv6ppW0yARMJv/Nb89B38QBCHEA=
+	t=1712837153; cv=none; b=RETMjlkg9nk9dHKWf6BEtUmKziALjILPlC4eU6HqhAN6Cginw5m7H8RFP+v5+U+LaFNh3xaR9iPmMxfqwI4cAMOHHj0bT8VftKyhck27cl8CbEqYKMyyHamyRHmuz+2mIj3BdtpTZhhnbYCMcfBSDK7oUUHAQhTqU/BTGWlg7XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837085; c=relaxed/simple;
-	bh=xTkF8wx7JBTmFK3mgmRAiHBZbcPnN27OP3J1vTmrxhI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XRMWAciv979Fxpvts8SDCIThfOGpR/WoMQFBWvcc3EdhbmZhbipAF+CTlNxCk3W8sRHACaq8zdIst5rvbpx9ehB++9Xy7x3woMWDgTKXin0BpwFlxEBelP701xJhb3yjnuzUz71Ekvhq87ArBXBgMVxruDSsr6gDEiquaFA+Crc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItXuUV94; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItXuUV94"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712837084; x=1744373084;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=xTkF8wx7JBTmFK3mgmRAiHBZbcPnN27OP3J1vTmrxhI=;
-  b=ItXuUV94o1tq0Bc2sModz7zMmbSR1Wz/SG2O7wwAzelWDHSHRG8GShwg
-   OIvEnWKvhnanaExAmrtGGKN0G0o1zwrcF/DZjOEI8uxcMHTZxEktr6oHx
-   4JmGfIRWvGC2VUV05+DI2ncCYVm1ImA31L/TwdKMyBf18G6wgXP7dmGRJ
-   BvnZNKsyjFhfxjpfYmZrN4BZ7QVE8Q63rho7l75de6YRm/SLRU9vGPqbR
-   BAEc79QhIa+ejuSyDs+mOOu2+tcxZEdMNqYfPFtVuVXJXIUt1YE7+sRfC
-   Gz3OLi7YhUy0YYd/tR/uqIwBZLdOWXRWev5cJY3FeXULlwtaiOA35dYWS
-   g==;
-X-CSE-ConnectionGUID: VEDatFd/Sq+VkObhLgbnRQ==
-X-CSE-MsgGUID: bop0ol1+TeOisslIG0GDtA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8093915"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8093915"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:04:43 -0700
-X-CSE-ConnectionGUID: Ks/IUgP/QAKd3BhXy+A8GA==
-X-CSE-MsgGUID: ARmyUGWSQl6RoziNKLSn0A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="20954852"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.66])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:04:40 -0700
-Message-ID: <97124d27-066d-4df3-99c6-e040c90c314e@intel.com>
-Date: Thu, 11 Apr 2024 15:04:37 +0300
+	s=arc-20240116; t=1712837153; c=relaxed/simple;
+	bh=HdYNqVCEe0x2X0F2EaUSXwNmY01gm1OpopI72QHOmK0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Yh8Q4PmFK1WC0f3WNU01QeNJ89YRBhCruDc/dKeHI74f062GZBPTfk8kTE00YwCf419LW/AQbG8sZPCSBG3Xu47KS3qJPrAbzjqTQBXnraNhxbEBz6XKyD8SJ7AOz/21YGgSOmUqeoahYco+KtBDtUlaKJKeF2OtJWaTKQwECNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VFdcm0dhXz1R5XH;
+	Thu, 11 Apr 2024 20:03:04 +0800 (CST)
+Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
+	by mail.maildlp.com (Postfix) with ESMTPS id B2D16140EA2;
+	Thu, 11 Apr 2024 20:05:48 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 11 Apr 2024 20:05:48 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.028;
+ Thu, 11 Apr 2024 20:05:48 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: duchangbin <changbin.du@huawei.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
+ Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched/cputime: remove unused vtime_account_kernel
+Thread-Topic: [PATCH] sched/cputime: remove unused vtime_account_kernel
+Thread-Index: AQHajAKDIkVvBXkJoUKksEBvgpwDs7Fi+RMA
+Date: Thu, 11 Apr 2024 12:05:48 +0000
+Message-ID: <b1befac0501944919cd99f20c4bcecaa@huawei.com>
+References: <20240411112212.2061899-1-changbin.du@huawei.com>
+In-Reply-To: <20240411112212.2061899-1-changbin.du@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.028)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <02E6C0AB2AB5CE48B135099171E224ED@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] perf scripts python: Add a script to run instances of
- perf script in parallel
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240313123634.4353-1-adrian.hunter@intel.com>
-Content-Language: en-US
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240313123634.4353-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 13/03/24 14:36, Adrian Hunter wrote:
-> Add a Python script to run a perf script command multiple times in
-> parallel, using perf script options --cpu and --time so that each job
-> processes a different chunk of the data.
-> 
-> The script supports the use of normal perf script options like
->  --dlfilter and --script, so that the benefit of running parallel jobs
-> naturally extends to them also. In addition, a command can be provided
-> (refer --pipe-to option) to pipe standard output to a custom command.
-> 
-> Refer to the script's own help text at the end of the patch for more
-> details.
-> 
-> The script is useful for Intel PT traces, that can be efficiently
-> decoded by perf script when split by CPU and/or time ranges. Running
-> jobs in parallel can decrease the overall decoding time.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+The vtime_account_idle() can also be removed. Will update this change.
+
+On Thu, Apr 11, 2024 at 07:22:12PM +0800, Changbin Du wrote:
+> This removes the vtime_account_kernel() function in generic vtime
+> accounting. It's never used anymore.
+>=20
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
 > ---
-> 
-> 
-> Changes in V2:
-> 
-> 	Added option to pipe to a custom command
-> 	Added option to set a minimum time interval
-> 	Minor tidying
+>  kernel/sched/cputime.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+>=20
+> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> index af7952f12e6c..29320e66abdc 100644
+> --- a/kernel/sched/cputime.c
+> +++ b/kernel/sched/cputime.c
+> @@ -709,18 +709,6 @@ static void __vtime_account_kernel(struct task_struc=
+t *tsk,
+>  		vtime_account_system(tsk, vtime);
+>  }
+> =20
+> -void vtime_account_kernel(struct task_struct *tsk)
+> -{
+> -	struct vtime *vtime =3D &tsk->vtime;
+> -
+> -	if (!vtime_delta(vtime))
+> -		return;
+> -
+> -	write_seqcount_begin(&vtime->seqcount);
+> -	__vtime_account_kernel(tsk, vtime);
+> -	write_seqcount_end(&vtime->seqcount);
+> -}
+> -
+>  void vtime_user_enter(struct task_struct *tsk)
+>  {
+>  	struct vtime *vtime =3D &tsk->vtime;
+> --=20
+> 2.34.1
+>=20
 
-Any comments?
-
+--=20
+Cheers,
+Changbin Du
