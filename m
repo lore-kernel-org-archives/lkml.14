@@ -1,28 +1,29 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 376EE22096
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6701622096
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:13:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844808; cv=none; b=Bj4ymErOpgDqGyvXh9cFmg87wwlgj1Z+2oAUGvRX9Rnb5HmT2qFKtaf6DYKCBsQJDPRytN9igfce5Sk0HPkbRGRgjvmx7/7SQEWPs1ck1anxLGtb+4NzUe7CpDrWGLR510GKvbzLSPEyEfJvV11dK50kvGbHEsJzfNkOIXW+xcs=
+	t=1712844824; cv=none; b=EGbYYEj/N2CT3YjqE7J34FNzvgCZAFqag8wWLvkYKcFZeXR9X9r+B2MVC1l7O/+NurNZw3+MvDJUtCAeZB3So6lL8M/lyaN4ZyPepXzxoh5qGglr3ji9TmO+zAsZiOkITcBwsXich9lEX903JPcljgdp+1IZIsjRhKoIaTiUHv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844808; c=relaxed/simple;
-	bh=9gYqdh3z0f1o0+aWVzfUE3fhoHPG24zQFuoqUDpyTXw=;
+	s=arc-20240116; t=1712844824; c=relaxed/simple;
+	bh=qbLoWnPAg+jsjrOorXMatRQj/0BRkniRfTdxAUDR7s0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMMq+VQtT+YN2IzH7FLapIzbAJIoeXpcvHqi5f/GwEZHFp+RZSFkArCzIRoZDefzqs6noHP4b3GFSDXY78i0JvhEXiqrxsw8Evoed2Z0qAW0NwpYwrmTngBicVQqxKewBoV3KlCKDAa1hDhTliKv0GK3Mi71MpZai/csT/SIy34=
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5nAP5Lso2QqBqBiafNUXa1zHqRXdbyQdtE85xQnyEzGzQRAvMUj4tuCUoNEuMGls9co1wryM8Rq9lYZmyNtys7qhXrhVWZvG+yCJZOsQg2G+8sjwNR8ZE/ZNYqn/8cemEH0X7Pd+OFxT5Pnh/DNgeOR2hN4eFexG1f5kBRQA9A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12468339;
-	Thu, 11 Apr 2024 07:13:55 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 040F211FB;
+	Thu, 11 Apr 2024 07:14:11 -0700 (PDT)
 Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B710A3F64C;
-	Thu, 11 Apr 2024 07:13:22 -0700 (PDT)
-Date: Thu, 11 Apr 2024 15:13:20 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB1EF3F64C;
+	Thu, 11 Apr 2024 07:13:38 -0700 (PDT)
+Date: Thu, 11 Apr 2024 15:13:36 +0100
 From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
+To: David Hildenbrand <david@redhat.com>
 Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
 	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
 	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
@@ -33,14 +34,13 @@ Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
 	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
 	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
 	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
 	Rex Nie <rex.nie@jaguarmicro.com>
 Subject: Re: [PATCH v1 01/31] x86/resctrl: Fix allocation of cleanest CLOSID
  on platforms with no monitors
-Message-ID: <ZhfwAASIZsjTu5b1@e133380.arm.com>
+Message-ID: <ZhfwEF5EJiTM5Hjm@e133380.arm.com>
 References: <20240321165106.31602-1-james.morse@arm.com>
  <20240321165106.31602-2-james.morse@arm.com>
- <0cbc22c1-a35c-4ad8-8f3b-f7a7b034d944@intel.com>
+ <1e19965c-51f2-4f7a-8d29-e40f4e54a72c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,63 +49,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0cbc22c1-a35c-4ad8-8f3b-f7a7b034d944@intel.com>
+In-Reply-To: <1e19965c-51f2-4f7a-8d29-e40f4e54a72c@redhat.com>
 
-On Mon, Apr 08, 2024 at 08:13:40PM -0700, Reinette Chatre wrote:
-> Hi James,
-> 
-> On 3/21/2024 9:50 AM, James Morse wrote:
+On Tue, Apr 09, 2024 at 10:05:33AM +0200, David Hildenbrand wrote:
+> On 21.03.24 17:50, James Morse wrote:
 > > commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
 > > searching closid_num_dirty_rmid") added a Kconfig option that causes
-> 
-> Please see section about "Fixes" tags in section "Ordering of commit tags"
-> in Documentation/process/maintainer-tip.rst
-
-Noted for James' attention.
-
 > > resctrl to search for the CLOSID with the fewest dirty cache lines when
 > > creating a new control group. This depends on the values read from the
 > > llc_occupancy counters.
-> > 
-> > This support missed that some platforms may not have these counters.
-> > This causes a NULL pointer dereference when creating a new control
-> > group as the array was not allocated by dom_data_init().
-> > 
-> > As this feature isn't necessary on platforms that don't have cache
-> > occupancy monitors, add this to the check that occurs when a new
-> > control group is allocated.
-> > 
-> > The existing code is not selected by any upstream platform, it makes
-> > no sense to backport this patch to stable.
-> > 
+
+[...]
+
+> It's weird to not see RESCTRL_RMID_DEPENDS_ON_CLOSID appear in any Kconfig file.
+> I guess it will all make sense once the refactoring is done :)
+
+Agreed; a stub Kconfig item could be added, but since the file layout
+and naming conventions change after this patch, doing this would
+probably just create noise in the series though.
+
+Looking at <linux/kconfig.h> (yikes!), IS_ENABLED() is designed to do
+the right thing for non-existing Kconfigs...
+
+If nobody is too concerned about the temporarily dangling IS_ENABLED()s
+in this series, I won't propose any change here.
+
+
+> As Reinette comments, likely we want here:
+> 
+> Fixes: 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by searching closid_num_dirty_rmid")
+
+Noted for James' attention.
+
+> 
 > > Signed-off-by: James Morse <james.morse@arm.com>
 > > ---
-> >  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >   arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
 > > 
 > > diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 > > index 011e17efb1a6..1767c1affa60 100644
 > > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 > > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 > > @@ -149,7 +149,8 @@ static int closid_alloc(void)
-> >  
-> >  	lockdep_assert_held(&rdtgroup_mutex);
-> >  
+> >   	lockdep_assert_held(&rdtgroup_mutex);
 > > -	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
 > > +	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID) &&
 > > +	    is_llc_occupancy_enabled()) {
-> >  		cleanest_closid = resctrl_find_cleanest_closid();
-> >  		if (cleanest_closid < 0)
-> >  			return cleanest_closid;
+> >   		cleanest_closid = resctrl_find_cleanest_closid();
+> >   		if (cleanest_closid < 0)
+> >   			return cleanest_closid;
 > 
-> Patch looks good.
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 > 
-> Thank you
+> -- 
+> Cheers,
 > 
-> Reinette
-> 
+> David / dhildenb
 
-Noted, thanks.
+Thanks; noted for James' attention.
 
 Cheers
 ---Dave
