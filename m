@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D6813C3F4;
-	Thu, 11 Apr 2024 06:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B995313CA88;
+	Thu, 11 Apr 2024 06:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712815570; cv=none; b=DqtPDHpYZV1SFzhNdllGS/UlFA7YO/7YTGvKAv98K2PtpKYQNv1GF6dWlVS4UmpZGnveSV2qoChuwDbkPFeEJziw+hNJoXVbjEReb4fFmzsLXvFbcQNA8hhJ//KRhIG9Dc0gwo01khZEBhgqGu3vKJxC2t+koDWeWBOnuIRKBy4=
+	t=1712815628; cv=none; b=D7c4yoQxALe/Pxhw9okeAGxqUzxmRG7+XMqfVjIourRxNbY39a7snVbeEDnL1ZiMvqPa6gZk63Hbu6g/in0ugebr/ZGyYfe1YCOyf3P1rUF8jcRMJo00mLEHTpPTCv24LunW5VPeywmxmJd//5j8yZwsOLZYGssdqKEzINeANsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712815570; c=relaxed/simple;
-	bh=vCSO/IPczaOAqHvsW6X71iBblmOF6snz5KBE39VGiBc=;
+	s=arc-20240116; t=1712815628; c=relaxed/simple;
+	bh=moQ7vBvBvMlEyceyYgedBVvbftU2N42FEzYpfITRaTM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qefWui5Yv+uj53+VnAih4dVDq8YfII9NtEZQE/cIkIXBfaFGkIq129P9Fi837uVMWCRWPOa0A8xlu6HjIzVsm4LPJjO92itKtCIOfoIg+htQx/0EDc/Qy3bP0vLY5SGcDcCPiwlxHs536SixiZGI/vvlScRD/wKyXAKQ7afoKQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/HLMtCY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qzOWkZ4m/dzxlPkjZgZfzG8fjpS/tp3w0ZpjMUl6pDpZwon4fz1e3TNtCm3RFcQaEGGUF3gqzDZrn6TZOavc/WTJ3dH2IX4NQ5uYongo/SIQu3H+2QbYOyBw0SwVM0bcaljbeQWrVU8UL0ZDFUqCxDmbtZt5gXQKfnIQUna4V40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIV1iJgY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/HLMtCY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29BF9C433C7;
-	Thu, 11 Apr 2024 06:06:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIV1iJgY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 409F3C433C7;
+	Thu, 11 Apr 2024 06:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712815570;
-	bh=vCSO/IPczaOAqHvsW6X71iBblmOF6snz5KBE39VGiBc=;
+	s=k20201202; t=1712815628;
+	bh=moQ7vBvBvMlEyceyYgedBVvbftU2N42FEzYpfITRaTM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I/HLMtCYzFdGiq1NHLwevQ7ENuRu3WXxXJs9RfKw61NxVairBT3bNCXSKVPXS4QmQ
-	 hoVtV8u+02YyrtR0Lw2epyApFdMEU0zKvnKn1y3pCmkzEF5/b8hRFdl8CSh102wDs0
-	 T3wUgtRr33eZUTLc56sHKNkHI+7FFOaSlcZD0ap4jO4oj4DXS8bV2WmhtV/Pw86JY5
-	 YTSDq5X32YzZkB3KsPMiI55ufm3pev3b9rEud09/0JohwwJwdtS9x5qeWQPKcmHDrf
-	 RmANGaYarpAXXZoUA415V4jkU7feikaW1f9jCpoEjWbWICDWgJa/yffgXr7nuwJaS1
-	 XvmfwAmS6vAag==
-Message-ID: <9e41a61d-3607-4698-b942-78fca235afd2@kernel.org>
-Date: Thu, 11 Apr 2024 08:05:59 +0200
+	b=uIV1iJgYc7RGw1GTjL3n6XDtSSm6WASongTB6x3M328vjRZRsddzjzTIxsP2MsMNP
+	 Ow8XRWGTXgaPBpNI+RaamkeaH8Q+tGHaspnsraXVBb6jOtS4QFzQBIo6MApGETDdxY
+	 PNJRu7ErXXxQXSSMsvLpuj3uAaNja+qR8uFLTCZUjJR5QFDw6rI1VZn+I5h35Urre0
+	 M1AIanhIoQk6oKuzwfPvfMe0088qs2SHTo+6ghrUK1MIHrX6690zn2HQgesQ6CMyrl
+	 gd8g2lhcHEZGocXBf3Um3xQ8yW4QvPv/StaLas0a1hryRpvGSutqu9ACgvS/UxYpR3
+	 eIB32VqnaEIMg==
+Message-ID: <7598d482-456b-458e-a0b6-b5767f9c4863@kernel.org>
+Date: Thu, 11 Apr 2024 08:06:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,44 +35,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] media: dt-bindings: i2c: add Giantec GT97xx VCM
- driver
-To: =?UTF-8?B?WmhpIE1hbyAo5q+b5pm6KQ==?= <zhi.mao@mediatek.com>,
- "conor@kernel.org" <conor@kernel.org>
-Cc: "heiko@sntech.de" <heiko@sntech.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "laurent.pinchart+renesas@ideasonboard.com"
- <laurent.pinchart+renesas@ideasonboard.com>,
- "yunkec@chromium.org" <yunkec@chromium.org>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
- "hdegoede@redhat.com" <hdegoede@redhat.com>,
- "bingbu.cao@intel.com" <bingbu.cao@intel.com>,
- "paul.elder@ideasonboard.com" <paul.elder@ideasonboard.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
- "mchehab@kernel.org" <mchehab@kernel.org>,
- =?UTF-8?B?U2hlbmduYW4gV2FuZyAo546L5Zyj55S3KQ==?=
- <shengnan.wang@mediatek.com>, =?UTF-8?B?WWF5YSBDaGFuZyAo5by16ZuF5riFKQ==?=
- <Yaya.Chang@mediatek.com>, "p.zabel@pengutronix.de"
- <p.zabel@pengutronix.de>, "alain.volmat@foss.st.com"
- <alain.volmat@foss.st.com>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
- "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
- "robh@kernel.org" <robh@kernel.org>,
- "hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
- "tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "mehdi.djait@bootlin.com" <mehdi.djait@bootlin.com>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "angelogioacchino.delregno@collabora.com"
- <angelogioacchino.delregno@collabora.com>, "10572168@qq.com"
- <10572168@qq.com>
-References: <20240410104002.1197-1-zhi.mao@mediatek.com>
- <20240410104002.1197-2-zhi.mao@mediatek.com>
- <20240410-rice-fringe-4ae992217a2f@spud>
- <5317cb9b01cf5668837ad7ccdcb9eb72b95d98d6.camel@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: mediatek: Support MT8188
+ dual-core SCP
+To: "olivia.wen" <olivia.wen@mediatek.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Tinghan Shen <tinghan.shen@mediatek.com>, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ jason-ch.chen@mediatek.com, yaya.chang@mediatek.com, teddy.chen@mediatek.com
+References: <20240411033750.6476-1-olivia.wen@mediatek.com>
+ <20240411033750.6476-2-olivia.wen@mediatek.com>
 Content-Language: en-US
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -118,92 +96,48 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <5317cb9b01cf5668837ad7ccdcb9eb72b95d98d6.camel@mediatek.com>
+In-Reply-To: <20240411033750.6476-2-olivia.wen@mediatek.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 11/04/2024 04:04, Zhi Mao (毛智) wrote:
-> Hi Conor,
+On 11/04/2024 05:37, olivia.wen wrote:
+> Under different applications, the MT8188 SCP can be used as single-core
+> or dual-core.
 > 
-> Thanks for your review.
+> Signed-off-by: olivia.wen <olivia.wen@mediatek.com>
+
+Are you sure you use full name, not email login as name?
+
+> ---
+>  Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> On Wed, 2024-04-10 at 12:27 +0100, Conor Dooley wrote:
->>>
->>>
->> Hey,
->>
->> On Wed, Apr 10, 2024 at 06:40:01PM +0800, Zhi Mao wrote:
->>> b/Documentation/devicetree/bindings/media/i2c/giantec,gt97xx.yaml
->>> @@ -0,0 +1,91 @@
->>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>> +# Copyright (c) 2020 MediaTek Inc.
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/media/i2c/giantec,gt97xx.yaml#
->>
->> Filename patching compatible please.
->>
->>
-> Sorry, I don't catch this point. 
-> Can you explain more details? 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> index 507f98f..7e7b567 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> @@ -22,7 +22,7 @@ properties:
+>        - mediatek,mt8192-scp
+>        - mediatek,mt8195-scp
+>        - mediatek,mt8195-scp-dual
+> -
+> +      - mediatek,mt8188-scp-dual
 
-s/patching/matching/
-Use compatible as filename.
+Missing blank line, misordered.
 
 
->>>
->>>
->>> +
->>> +  giantec,aac-mode:
->>> +    description:
->>> +      Indication of AAC mode select.
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    enum:
->>> +      - 1    #  AAC2 mode(operation time# 0.48 x Tvib)
->>> +      - 2    #  AAC3 mode(operation time# 0.70 x Tvib)
->>> +      - 3    #  AAC4 mode(operation time# 0.75 x Tvib)
->>> +      - 5    #  AAC8 mode(operation time# 1.13 x Tvib)
->>
->> I dislike these enum based properties and I would rather this either
->> be
->> the values themselves (0.48, 0.70 etc).
->>
->>> +
->>> +  giantec,aac-timing:
->>> +    description:
->>> +      Number of AAC Timing count that controlled by one 6-bit
->>> period of
->>> +      vibration register AACT[5:0], the unit of which is 100 us.
->>
->> Then the property should be in a standard unit of time, not "random"
->> hex
->> numbers that correspond to register values.
->>
->>>
->>> +  giantec,clock-presc:
->>> +    description:
->>> +      Indication of VCM internal clock dividing rate select, as
->>> one multiple
->>> +      factor to calculate VCM ring periodic time Tvib.
->>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>> +    enum:
->>> +      - 0    #  Dividing Rate -  2
->>> +      - 1    #  Dividing Rate -  1
->>> +      - 2    #  Dividing Rate -  1/2
->>> +      - 3    #  Dividing Rate -  1/4
->>> +      - 4    #  Dividing Rate -  8
->>> +      - 5    #  Dividing Rate -  4
->>
->> Same here, you should not need these comments explaining the values,
->> use
->> an enum with meaningful values please. 
->>
-> About "aac-mode/aac-timing/clock-presc", we test this driver with
-> default settings accroding to SPEC and VCM works well, so I will not
-> export these property in YMAL and let driver use default settings.
-> How do you think about it?
+>    reg:
+>      description:
+>        Should contain the address ranges for memory regions SRAM, CFG, and,
+> @@ -195,6 +195,7 @@ allOf:
+>          compatible:
+>            enum:
+>              - mediatek,mt8195-scp-dual
+> +            - mediatek,mt8188-scp-dual
 
-You must remove them from the driver code in such case.
+Again, keep the order.
+
+
 
 Best regards,
 Krzysztof
