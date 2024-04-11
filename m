@@ -1,145 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CBA62144;
-	Thu, 11 Apr 2024 09:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BEC143C62;
+	Thu, 11 Apr 2024 09:04:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712826245; cv=none; b=TAWo9e5f1CFyHjFKDyERPYkHA8dTO1EWbEQIwCR/2Jc5l0Zt4PqBDh9XWBYu/q9UVjm0fJABGCeti1GkeC5F7FHgDf8pPE+Quy1evAz5L+bMa2/9iLOTBzqeYNtt02CFMqpBUWIOcd0b9y6jFBsiCeZteNFB0Vtprn7Yc4ExDpo=
+	t=1712826250; cv=none; b=L3VKh8HszYV7A3xk+cdAd5FkhyRJBtD8VFyrKb2Vx7UESlwlU9naE7g6myLzMvi1MtONtZjpjcp4aVVQbLE6zF9Cbpg2z4r7JiCIsK4BfDskYdS0KBkiDPy/xJsoFg9UUYzycYmpozYfU69hoqW5hCB5X1Z3fJ9/5UebxUXb+Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712826245; c=relaxed/simple;
-	bh=psBauhL+pjKeENmsetnmfnJUWvmR2xRdeP4w3fPxpxw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCxW09vmgxPyX8YPYMPPpo1tv9XD9Z05IfPSWaXkT/2YvXf1COfM5aqeXuv+/Vvae9158lgjAwv8RoP06lzXcc+vnDcMExd1K73Fha/cr4X8zY/cdmq7yPoxTY5iY3vZmE3VoGyFqgFOQoA+WY+4TDeW8aL1Jt1LU/4f0oiVsv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=disR6yM2; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712826250; c=relaxed/simple;
+	bh=6TmusjUX3vnMkNQepVsH4u+5hT3VrOI3o3ZMH1yhilU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aF5Xhdb9KVgTHAzlMuxo3J3irhZvR79PAPIzvuP/En6CqNFTL3IO744Hrm8M1v+S4IltWiOnQyiiof30+p1QJkiDVG0rIp37cdcI95HsA2mRVYGY+k9qQey4WVH3RUiEh5nTpHfbuzEuLjCp05TK6uy0Zly3StSkYr/e32+M1rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tlvu/boS; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="disR6yM2"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tlvu/boS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712826244; x=1744362244;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=psBauhL+pjKeENmsetnmfnJUWvmR2xRdeP4w3fPxpxw=;
-  b=disR6yM2opfBgNKyUJbqJ8EpNYe32CPDu0cJn9ohBSfScrWFYCQTNgMT
-   KeXQg6JkErTerG1PGlMIAm9pn2xdJfhgITmGj4esvHBTo4+4+kgMbRljs
-   w2dsDi+dC0fdujkg0ombirx9F/jgUCGaN8ZUzruPFG+jQtl3gzxNavJuh
-   HcwFSxSOGewS1xTodXaIvsuHMIqTRgotsWztlnkW2oVGUKZdgVpgr7rEg
-   Q9v9W1bJNe1/W3wxEekzbn4SZBtHy77xutcUncXIlu1DQ1K2lhuacqeFl
-   udhDgLKeK86f0uXV9UpJEkk1gvZsKjSKQYAYNv8z2FcOzz3P+pmSsQVV3
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1712826248; x=1744362248;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6TmusjUX3vnMkNQepVsH4u+5hT3VrOI3o3ZMH1yhilU=;
+  b=tlvu/boSLS6EuRsVNYCNe07oBP3KIstqVJKSGcysn2LCoaYO0Icn5Elk
+   e9QROPNo2INRavrnWtB4HLOfPgJPgkRj9PKjHMUdAjak9/GQD3H0wBWT6
+   g3mt4tg+CjQMm3er3iM5j+oG9hTMDQcWATJA/y6bKLZWrwW0g77q+lyq9
+   zmkqEEzbRFYRtTt8i3UvDmIjdas2VqpRx/GEEFX/fDshv6VZSI340j122
+   dQhtuSunlMynZPBtyQLzqaDoG53ELrigBDKtRsvFfwtYaeRd7kF7frGuN
+   yyam8huptlC9hp+wUph1cFR6zoh/PiQR8I03xczdZnUn6ox8PL8u8wCBD
    g==;
-X-CSE-ConnectionGUID: yxqXurRcSt24+Eew1QQSjg==
-X-CSE-MsgGUID: ZYGkJ0kISaKuOjQtRnBxoQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11186361"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="11186361"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:04:02 -0700
-X-CSE-ConnectionGUID: jxyzJahlR7mafm9v/t3HUQ==
-X-CSE-MsgGUID: 7WEppJyAQbCpQrc3PO3miw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="20799716"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.66])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:03:56 -0700
-Message-ID: <0fd5e869-720f-41bb-9f0f-c0f3925ffc1b@intel.com>
-Date: Thu, 11 Apr 2024 12:03:52 +0300
+X-CSE-ConnectionGUID: sBUxEcpYQIqblsPw1hMyfQ==
+X-CSE-MsgGUID: 6LquUSg4QDGyfAHGclQ3bA==
+X-IronPort-AV: E=Sophos;i="6.07,193,1708412400"; 
+   d="asc'?scan'208";a="21080514"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 02:04:03 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Apr 2024 02:03:57 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 11 Apr 2024 02:03:53 -0700
+Date: Thu, 11 Apr 2024 10:03:03 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
+CC: Deepak Gupta <debug@rivosinc.com>, Conor Dooley <conor@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Anup Patel <anup@brainfault.org>, Shuah
+ Khan <shuah@kernel.org>, Atish Patra <atishp@atishpatra.org>,
+	<linux-doc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
+	<linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
+Message-ID: <20240411-superglue-errant-b32e5118695f@wendy>
+References: <20240410091106.749233-1-cleger@rivosinc.com>
+ <20240410091106.749233-8-cleger@rivosinc.com>
+ <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
+ <20240410-jawless-cavalry-a3eaf9c562a4@spud>
+ <20240410-judgingly-appease-5df493852b70@spud>
+ <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
+ <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bug: Fix no-return-statement warning with !CONFIG_BUG
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, John Stultz <jstultz@google.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>,
- linux-s390@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
- x86@kernel.org, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, "Naveen N. Rao"
- <naveen.n.rao@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
- Nicholas Piggin <npiggin@gmail.com>, Borislav Petkov <bp@alien8.de>,
- Andy Lutomirski <luto@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Anna-Maria Gleixner <anna-maria@linutronix.de>,
- Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- linux-kernel@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
- linuxppc-dev@lists.ozlabs.org
-References: <20240410153212.127477-1-adrian.hunter@intel.com>
- <87be83da-6102-483d-b1dc-a77eecc9f780@app.fastmail.com>
- <c9f382b2-cd96-4ee3-ad68-95381d9e09c0@intel.com>
- <cac3f357-0dc2-46ba-9ea0-7b1f4278e8ff@app.fastmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <cac3f357-0dc2-46ba-9ea0-7b1f4278e8ff@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4EMZ8FslzLz1hx5z"
+Content-Disposition: inline
+In-Reply-To: <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
 
-On 11/04/24 10:56, Arnd Bergmann wrote:
-> On Thu, Apr 11, 2024, at 09:16, Adrian Hunter wrote:
->> On 11/04/24 10:04, Arnd Bergmann wrote:
->>> On Wed, Apr 10, 2024, at 17:32, Adrian Hunter wrote:
->>>> BUG() does not return, and arch implementations of BUG() use unreachable()
->>>> or other non-returning code. However with !CONFIG_BUG, the default
->>>> implementation is often used instead, and that does not do that. x86 always
->>>> uses its own implementation, but powerpc with !CONFIG_BUG gives a build
->>>> error:
->>>>
->>>>   kernel/time/timekeeping.c: In function ‘timekeeping_debug_get_ns’:
->>>>   kernel/time/timekeeping.c:286:1: error: no return statement in function
->>>>   returning non-void [-Werror=return-type]
->>>>
->>>> Add unreachable() to default !CONFIG_BUG BUG() implementation.
->>>
->>> I'm a bit worried about this patch, since we have had problems
->>> with unreachable() inside of BUG() in the past, and as far as I
->>> can remember, the current version was the only one that
->>> actually did the right thing on all compilers.
->>>
->>> One problem with an unreachable() annotation here is that if
->>> a compiler misanalyses the endless loop, it can decide to
->>> throw out the entire code path leading up to it and just
->>> run into undefined behavior instead of printing a BUG()
->>> message.
->>>
->>> Do you know which compiler version show the warning above?
->>
->> Original report has a list
->>
-> 
-> It looks like it's all versions of gcc, though no versions
-> of clang show the warnings. I did a few more tests and could
-> not find any differences on actual code generation, but
-> I'd still feel more comfortable changing the caller than
-> the BUG() macro. It's trivial to add a 'return 0' there.
+--4EMZ8FslzLz1hx5z
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-AFAICT every implementation of BUG() except this one has
-unreachable() or equivalent, so that inconsistency seems
-wrong.
+On Thu, Apr 11, 2024 at 09:25:06AM +0200, Cl=E9ment L=E9ger wrote:
+>=20
+>=20
+> On 11/04/2024 00:32, Deepak Gupta wrote:
+> > On Wed, Apr 10, 2024 at 11:27:16PM +0100, Conor Dooley wrote:
+> >> On Wed, Apr 10, 2024 at 11:16:11PM +0100, Conor Dooley wrote:
+> >>> On Wed, Apr 10, 2024 at 02:32:41PM -0700, Deepak Gupta wrote:
+> >>> > On Wed, Apr 10, 2024 at 11:11:00AM +0200, Cl=E9ment L=E9ger wrote:
+> >>> > > Add parsing for Zcmop ISA extension which was ratified in commit
+> >>> > > b854a709c00 ("Zcmop is ratified/1.0") of the riscv-isa-manual.
+> >>> > >
+> >>> > > Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
+> >>> > > ---
+> >>> > > arch/riscv/include/asm/hwcap.h | 1 +
+> >>> > > arch/riscv/kernel/cpufeature.c | 1 +
+> >>> > > 2 files changed, 2 insertions(+)
+> >>> > >
+> >>> > > diff --git a/arch/riscv/include/asm/hwcap.h
+> >>> b/arch/riscv/include/asm/hwcap.h
+> >>> > > index b7551bad341b..cff7660de268 100644
+> >>> > > --- a/arch/riscv/include/asm/hwcap.h
+> >>> > > +++ b/arch/riscv/include/asm/hwcap.h
+> >>> > > @@ -86,6 +86,7 @@
+> >>> > > #define RISCV_ISA_EXT_ZCB=A0=A0=A0=A0=A0=A0=A0 77
+> >>> > > #define RISCV_ISA_EXT_ZCD=A0=A0=A0=A0=A0=A0=A0 78
+> >>> > > #define RISCV_ISA_EXT_ZCF=A0=A0=A0=A0=A0=A0=A0 79
+> >>> > > +#define RISCV_ISA_EXT_ZCMOP=A0=A0=A0=A0=A0=A0=A0 80
+> >>> > >
+> >>> > > #define RISCV_ISA_EXT_XLINUXENVCFG=A0=A0=A0 127
+> >>> > >
+> >>> > > diff --git a/arch/riscv/kernel/cpufeature.c
+> >>> b/arch/riscv/kernel/cpufeature.c
+> >>> > > index 09dee071274d..f1450cd7231e 100644
+> >>> > > --- a/arch/riscv/kernel/cpufeature.c
+> >>> > > +++ b/arch/riscv/kernel/cpufeature.c
+> >>> > > @@ -265,6 +265,7 @@ const struct riscv_isa_ext_data
+> >>> riscv_isa_ext[] =3D {
+> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
+> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
+> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
+> >>> > > +=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcmop, RISCV_ISA_EXT_ZCMOP),
+> >>> >
+> >>> > As per spec zcmop is dependent on zca. So perhaps below ?
+> >>> >
+> >>> > __RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZCMOP,
+> >>> RISCV_ISA_EXT_ZCA)
+> >>>
+> >>> What's zicboz got to do with it, copy-pasto I guess?
+> >=20
+> > Yes, copy-pasta :-)
+> >=20
+> >>> If we're gonna imply stuff like this though I think we need some
+> >>> comments explaining why it's okay.
+> >>
+> >> Also, I'm inclined to call that out specifically in the binding, I've
+> >> not yet checked if dependencies actually work for elements of a string
+> >> array like the do for individual properties. I'll todo list that..
+> >=20
+> > Earlier examples of specifying dependency on envcfg actually had functi=
+onal
+> > use case.
+> > So you are right, I am not sure if its actually needed in this
+> > particular case.
+>=20
+> I actually saw that and think about addressing it but AFAICT, this
+> should be handled by the machine firmware passing the isa string to the
+> kernel (ie, it should be valid). In the case of QEMU, it takes care of
+> setting the extension that are required by this extension itself.
+>=20
+> If we consider to have potentially broken isa string (ie extensions
+> dependencies not correctly handled), then we'll need some way to
+> validate this within the kernel.
 
-Could add 'return 0', but I do notice other cases
-where a function does not have a return value, such as
-cpus_have_final_boot_cap(), so there is already an expectation
-that that is OK.
+No, the DT passed to the kernel should be correct and we by and large we
+should not have to do validation of it. What I meant above was writing
+the binding so that something invalid will not pass dtbs_check.
 
-> Another interesting observation is that clang-11 and earlier
-> versions end up skipping the endless loop, both with and
-> without the __builtin_unreachable, see
-> https://godbolt.org/z/aqa9zqz8x
+--4EMZ8FslzLz1hx5z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Adding volatile asm("") to the loop would probably fix that,
-but it seems like a separate issue.
+-----BEGIN PGP SIGNATURE-----
 
-> 
-> clang-12 and above do work like gcc, so I guess that is good.
-> 
->      Arnd
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhenRgAKCRB4tDGHoIJi
+0ntrAP0Tj4WJ1c21e2spkfDS6PwV7wHiJYoWI9/4CiHZwAQORAEApMmTK1BWuikT
+fiLbYMmFEHJbe4+ND/jrK1UaiylnyQ8=
+=p9pA
+-----END PGP SIGNATURE-----
 
+--4EMZ8FslzLz1hx5z--
