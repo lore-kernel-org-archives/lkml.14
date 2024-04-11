@@ -1,116 +1,58 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A028633
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:35:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB84683;
+	Thu, 11 Apr 2024 12:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712838930; cv=none; b=gs5VciINSdkgsCwyun/R/kZeabwLZD278JdtABkuDZ2QCGm1ZWehpm8urSOL15AIRhxujZNLK/X/NurCa7a718/r1vW8wIqMXO/fbZ7EhNT5pRHnlSayhbSrLqtMSMXQ8cPWyYLl6R4yJzhBMDLhelSX9k1GoyZmzHdx5PGslVM=
+	t=1712838996; cv=none; b=ZXBbDHkqhLyp4vHOn3D/J6I/CPj9uxDBCtQndZ2L+/PG1uXYT9R+hnCeL1KK4lD5iI6LHsX4pP5Zo4wWPvjjxsAj8Sj7j8ayHSPwoamMR6Sxd3+dknOiVwNWcFtEfLyVrbaCyCV58odPeGAGjhAnQ+X5iiMHrNjXYmqHUzsa2lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712838930; c=relaxed/simple;
-	bh=VlTsClRPNfbw4IUtVTteG6qNe/mvq7LDVS2fF6IA07c=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C/QfYnaZmrzh8bDj8AMnLoCr+Lc0j5EirIpipastRW21C/5SwyLF5tsquQvqakP5qlmkMbFVuKKeYea7qwrFN5VJxcdaeWrZT4Phr9zRustIghpspEgOEL+UAQgiBcId5kSYHI77CtmkAeaYedHA0Hsd3x+dGb+GXPMTXKCzciA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VFfGj5YYcz2CcCM;
-	Thu, 11 Apr 2024 20:32:29 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9BABB1400C9;
-	Thu, 11 Apr 2024 20:35:22 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 11 Apr 2024 20:35:22 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <will@kernel.org>, <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-	<broonie@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
-	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>
-Subject: [PATCH v2] arm64: arm_pmuv3: Correctly extract and check the PMUVer
-Date: Thu, 11 Apr 2024 20:30:30 +0800
-Message-ID: <20240411123030.7201-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+	s=arc-20240116; t=1712838996; c=relaxed/simple;
+	bh=9WbGxfE5PYlgXvD8VxYHuYDy1niiS/0v9CNOAh/N7n4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qh6ogXuHrNydLUckrT6SGGSvUyNAI9mMKMqxTudx61NyYP5k01cPRKTda3CEdsvKJEWh2/KbNzZJThrQ7tmrA3hfyoDU87WHNKIOeAaYdZL8MJ5d0/cqwBUYWAdmz6mDbDmzDaGhDitM+MP6LiCOSLYIByE4AXp9hMuNwMZYBH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bhd4psLl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bhd4psLl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51931C433F1;
+	Thu, 11 Apr 2024 12:36:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712838995;
+	bh=9WbGxfE5PYlgXvD8VxYHuYDy1niiS/0v9CNOAh/N7n4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bhd4psLlx7juY3ukr1UqAMsDW98j1XaRyooFcVisAsLK6l2txAX9KtxumX4INPDyM
+	 0MLRj5p3n6sNDHN18Id+SPKuAiJp0GRtEKSBzYim7if5NpfebXBFg5K+vDeghHbHXc
+	 FEWgrHI5wqZmtCiw5QxbyOxi1TAaWivQMAWmgh0IDtDPY1AiNaPllbudW19d8gA+ys
+	 gtkUofepnz09qfnCgny1dhRIRmyrL9kAYNLKGpTWuY8sDqLRtkwgTMsgNw2IR08XxN
+	 cgYeSKS4x+pfOonAjfvro5O5K5BY/roy7uEGtNyULVakpVr86dgrBdrSJUjdyZPbph
+	 6fXOJQk/40dEg==
+Date: Thu, 11 Apr 2024 14:36:32 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Lukas Bulwahn <lbulwahn@redhat.com>
+Cc: Animesh Agarwal <animeshagarwal28@gmail.com>, 
+	linux-i2c@vger.kernel.org, kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust file entry in ARM/LPC32XX SOC SUPPORT
+Message-ID: <whpjtk2nmbft4dqndhealztzxh5du4uemqmmizguwvhmfa2htm@qcklwqf7j4d4>
+References: <20240411050257.42943-1-lukas.bulwahn@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411050257.42943-1-lukas.bulwahn@redhat.com>
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Hi Lukas,
 
-Currently we're using "sbfx" to extract the PMUVer from ID_AA64DFR0_EL1
-and skip the init/reset if no PMU present when the extracted PMUVer is
-negative or is zero. However for PMUv3p8 the PMUVer will be 0b1000 and
-PMUVer extracted by "sbfx" will always be negative and we'll skip the
-init/reset in __init_el2_debug/reset_pmuserenr_el0 unexpectedly.
+> -F:	Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+> +F:	Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
 
-So this patch use "ubfx" instead of "sbfx" to extract the PMUVer. If
-the PMUVer is implementation defined (0b1111) or not implemented(0b0000)
-then skip the reset/init. Previously we'll also skip the init/reset
-if the PMUVer is higher than the version we known (currently PMUv3p9),
-with this patch we'll only skip if the PMU is not implemented or
-implementation defined. This keeps consistence with how we probe
-the PMU in the driver with pmuv3_implemented().
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
----
-Change since v1:
-- Use "ccmp" rather than "csel" to make it tidier, per Will
-Link: https://lore.kernel.org/all/20240408081158.15291-1-yangyicong@huawei.com/
+I guess this should go through the arm folks?
 
- arch/arm64/include/asm/assembler.h | 7 ++++---
- arch/arm64/include/asm/el2_setup.h | 9 +++++----
- 2 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index ab8b396428da..9ecd076ba08f 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -480,9 +480,10 @@ alternative_endif
-  */
- 	.macro	reset_pmuserenr_el0, tmpreg
- 	mrs	\tmpreg, id_aa64dfr0_el1
--	sbfx	\tmpreg, \tmpreg, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
--	cmp	\tmpreg, #1			// Skip if no PMU present
--	b.lt	9000f
-+	ubfx	\tmpreg, \tmpreg, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	cmp	\tmpreg, #ID_AA64DFR0_EL1_PMUVer_NI
-+	ccmp	\tmpreg, #ID_AA64DFR0_EL1_PMUVer_IMP_DEF, #4, ne
-+	b.eq	9000f				// Skip if no PMU present or IMP_DEF
- 	msr	pmuserenr_el0, xzr		// Disable PMU access from EL0
- 9000:
- 	.endm
-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-index b7afaa026842..e4546b29dd0c 100644
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -59,13 +59,14 @@
- 
- .macro __init_el2_debug
- 	mrs	x1, id_aa64dfr0_el1
--	sbfx	x0, x1, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
--	cmp	x0, #1
--	b.lt	.Lskip_pmu_\@			// Skip if no PMU present
-+	ubfx	x0, x1, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	cmp	x0, #ID_AA64DFR0_EL1_PMUVer_NI
-+	ccmp	x0, #ID_AA64DFR0_EL1_PMUVer_IMP_DEF, #4, ne
-+	b.eq	.Lskip_pmu_\@			// Skip if no PMU present or IMP_DEF
- 	mrs	x0, pmcr_el0			// Disable debug access traps
- 	ubfx	x0, x0, #11, #5			// to EL2 and allow access to
- .Lskip_pmu_\@:
--	csel	x2, xzr, x0, lt			// all PMU counters from EL1
-+	csel	x2, xzr, x0, eq			// all PMU counters from EL1
- 
- 	/* Statistical profiling */
- 	ubfx	x0, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
--- 
-2.24.0
-
+Thanks,
+Andi
