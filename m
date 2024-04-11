@@ -1,95 +1,123 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B474B1A38FC
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B7F1A38FC
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712853107; cv=none; b=iWUPrC7u3g6tfFPim6pbQAN9Bdgk1nTMUltgyzv8L1/+9CoCAqD85zJD+gGCRQ5jTSyz9HR2IZi2Zgen1pWm3n1F6A4/0NWc0MMWJjFHjMBETkg8kWkmW02XOT2Wjyu3iNW45ooY9PgzBtDOjcrTnSVyKoWgHAQagMBjFyalehQ=
+	t=1712853138; cv=none; b=A+lwzAC0CkT/G+CNEYrOU90pwFf1Eaz0fT3JQ+yXPuDX9TW/rPa7JTuzrMRL/9ms31LsfM0qWB4M2JRPtXGsbZCzZygKjYxYmjM5oKynVD+TskJSMlmUFDKOqpqbMAq+BeRpIm9ZWITiG474vnsT5u6dTFuXCfySkFsF/TlF7So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712853107; c=relaxed/simple;
-	bh=evOUe1w35ZtZ8Av7MI/0lyqOeulmgJE9vxHA7CRHUeA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a9kopXTai4vWmJRFnqx4xjfX1MSIcvzD8DFZfePaDzsRVFq7QmUbSHidssgn10vm/foLJtzPAObw1gopm0R1D9MrTJ1CXOgmGw13d9jhnLpa+1XUF9wKNbq2/EYHXwqlLX6pLx88QpixweN9OCj5bMazdiv7bKVWveDqo2QsTWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZfdJ1k4S; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1712853138; c=relaxed/simple;
+	bh=TXxB6kiWTqAInfPhaNCRZTdrQCMlHjJn5YTjVSLODLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XfhxgllWS7tbGkPFFLQhInbiNPSXDLHWOxda/0JpAu17aOpmewePJpzUomFT/ZIZpkPs+Hd+JC8e5wJN7XAMwWtFJDgIbQ4i7nQs9v9iF05k/RmvDKcpvskbfoPbkn5D/KAK7QLcnoGujF7RABOotMhwCvIHa1swjgCg1hQBoRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=OZozFB0y; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZfdJ1k4S"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so11714195a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:31:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="OZozFB0y"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so171416139f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1712853104; x=1713457904; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=p0E4Mcvm1Ca/K7JG5a2Gt1iCkk38ClaKkzaJEpcElfU=;
-        b=ZfdJ1k4Sqg4AVSPcimXMcjoQVbHBaqv/2ftg737ZM7VU3RngdiLMEXsmZNRwJMOmDU
-         7fPletejNBJ9VL99DZy+xDJezPQt6jzHQK+qNhNwyv4AjWb1No2uh9mzkPOTsp5tG9b0
-         M2dcPNumPqIZIIvuOFUVfIxctv8f0sAzT6gsE=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712853134; x=1713457934; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Oy7UYOl/fNFnTeFLniF5v2aTFzXlpEmr1JZ5cOgbrD4=;
+        b=OZozFB0yDWiOPPpACsf8u5QGS2eL9Nf0b/2cq4aPJCuAu29cv9cFBC4x5II7tnmTy2
+         viHaHL91jJSkUBJ8WJpjTtmSz4lGxXddD5cIPt/f9YVjUxbG1jIbAmLawMHQMsO5tq4g
+         BqCdCwqC9TRa8yR1Oou1AfvHf1F1t14kROsXF5Aitz+xm+9lPHO+bPhf3P+vVy4omJG/
+         6FxOnjlV144sSeZ3CNxP5PFae1R2Z66xHvVVTzUz1IAxShyl8H95JHWqXw9WYx5Sq/U+
+         zal5qno5JI9RJQkTDeM+q1yakqp+wNvEUVHQMU2XRfcSXG76LE+EsuLru3eIX9b5j+kF
+         MhfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712853104; x=1713457904;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=p0E4Mcvm1Ca/K7JG5a2Gt1iCkk38ClaKkzaJEpcElfU=;
-        b=IQIeSvx1L2fzPyhxijfYVduaQMvoqemwz3Fl5A5Ijh4s2jgTSwbkuz6/q+1XH2eDyD
-         GucnQt+0UQIFA35iLrDis3mRCZgInoy6hevTaOi4Tk/IxZaQilZFupLQy1/ILNcq0v46
-         PfuL5fNZmuU/urScTQ5OHPwo0bvpDVPiqObES6S85sSG24HcoGEIVBgDIZJsG/corxH5
-         6bQ9FY8hItG05TmV7l7XRhZrR2I8Ugt15MQFxYSDdGDmudUKh3K3qC3ewBv+6MwNQVYR
-         MjHCaDH1DZtEnITYPofN9mOlGp5rAz6U9d5FTnJBojht8879TzsNb144P/81Q87xd0wl
-         hbsQ==
-X-Gm-Message-State: AOJu0Yzf5QE1EL7A+a/dSzdtBpBsOsFbJzEC5e4ySOh/fmqD3hE9Lc0W
-	X71ywsIfSCKEimJ1IggXwMo32otPaoLguC5Q3h+ZNSR5bPBJWrt3q0BBSCA2l/9YLYCwjiPg3HJ
-	Eqwi8jA==
-X-Google-Smtp-Source: AGHT+IHSFzAhB4jk8M8l0ZOYhUhqaTqOucN51JwRGS6WNl1I4k2duG2czhAsNc8aiJOENQ3jKdsdag==
-X-Received: by 2002:a50:9f83:0:b0:56e:241c:3f3d with SMTP id c3-20020a509f83000000b0056e241c3f3dmr203617edf.25.1712853103979;
-        Thu, 11 Apr 2024 09:31:43 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id b11-20020aa7c6cb000000b0056e7ba0497dsm826114eds.28.2024.04.11.09.31.43
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1712853134; x=1713457934;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oy7UYOl/fNFnTeFLniF5v2aTFzXlpEmr1JZ5cOgbrD4=;
+        b=Lajvj5xlQYAbjJtaBBM0X3ueD8/jMx4SR3g4NxY9Q9oZeQvYL43qArlDwjd4TBdiKz
+         ev1YbXJ2hlT4h3kj+DlVkWtJNz/+f9E9HUJTT736MKIm5a/CvrYHqbvxa+9qnKiIPL3P
+         dN4/knqZiTyiqyiNhInNyPRyZ3GpS/CiCffMC8f2kKaKm9GlPNgjpVyWtgf8Q4Ch0jo2
+         W7x21R0f3GXvf1j8uN4n4OeL8RiH/WJqk27QfcQTAfT43jnPK+WmWg3LMx8yKMienziF
+         GNLBBYA3UI7PTPZ/2KWiZpnerJ0FpHXN5lpiv0xMwnfh1CBlaDN5sUtEFd+3ml1N6X6b
+         qyPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtABHdMWCe4ne9G/i7hQ5zDzISy9eucsqkre99yiVNMTNOyLgXkzGjGctLQaG0dNzoQyf9H8EVR5A+tiZEApbPWljcuIIT4MYaT00a
+X-Gm-Message-State: AOJu0Yw+kZvJjHOBtAsKQ8VhXzdl8Za7ey4P3rTrqd/bq4VrpeCDafqS
+	DK3w9Rm+5A+j4qPaBE0XMtvhiOhRgExSp3F7abUT7HUqt03XHG2k1AkoxhsMNfnjbQw/W1koOuJ
+	c
+X-Google-Smtp-Source: AGHT+IF7FnIFBdVgpJmIKF42aEt7swonFqyMyJf6euNzLNtg7mFozJPp8HnPzmLyt+gtTM9buj7GBQ==
+X-Received: by 2002:a05:6e02:c8f:b0:36a:f9aa:5757 with SMTP id b15-20020a056e020c8f00b0036af9aa5757mr24038ile.2.1712853134561;
+        Thu, 11 Apr 2024 09:32:14 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id dt3-20020a056e021fe300b00369fd0b4595sm458963ilb.59.2024.04.11.09.32.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 09:31:43 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a44665605f3so893850266b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:31:43 -0700 (PDT)
-X-Received: by 2002:a17:906:f809:b0:a4d:f5e6:2e34 with SMTP id
- kh9-20020a170906f80900b00a4df5e62e34mr160576ejb.19.1712853102671; Thu, 11 Apr
- 2024 09:31:42 -0700 (PDT)
+        Thu, 11 Apr 2024 09:32:13 -0700 (PDT)
+Message-ID: <813d33ec-a462-48a9-b2f3-d890969dca1b@kernel.dk>
+Date: Thu, 11 Apr 2024 10:32:12 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325140943.815051-1-ubizjak@gmail.com> <171284242025.10875.1534973785149780371.tip-bot2@tip-bot2>
-In-Reply-To: <171284242025.10875.1534973785149780371.tip-bot2@tip-bot2>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 11 Apr 2024 09:31:26 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgaxi4Sau27C5yo3vty67DHz-f4L6SSOvmx1K2fQU2B_g@mail.gmail.com>
-Message-ID: <CAHk-=wgaxi4Sau27C5yo3vty67DHz-f4L6SSOvmx1K2fQU2B_g@mail.gmail.com>
-Subject: Re: [tip: locking/core] locking/pvqspinlock: Use try_cmpxchg_acquire()
- in trylock_clear_pending()
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Uros Bizjak <ubizjak@gmail.com>, 
-	Ingo Molnar <mingo@kernel.org>, Waiman Long <longman@redhat.com>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] timerfd: convert to ->read_iter()
+Content-Language: en-US
+To: Marek Szyprowski <m.szyprowski@samsung.com>, linux-fsdevel@vger.kernel.org
+Cc: brauner@kernel.org, linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk
+References: <20240409152438.77960-1-axboe@kernel.dk>
+ <20240409152438.77960-3-axboe@kernel.dk>
+ <1a1c00fb-c83f-44e7-bc6a-cfe52d780c35@kernel.dk>
+ <CGME20240411114048eucas1p21707a2d0bfb9c5a21f3e8aa76c0d82c1@eucas1p2.samsung.com>
+ <528e184b-9cb1-40a7-b757-db11a852dd59@samsung.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <528e184b-9cb1-40a7-b757-db11a852dd59@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Apr 2024 at 06:33, tip-bot2 for Uros Bizjak
-<tip-bot2@linutronix.de> wrote:
->
-> Use try_cmpxchg_acquire(*ptr, &old, new) instead of
-> cmpxchg_relaxed(*ptr, old, new) == old in trylock_clear_pending().
+On 4/11/24 5:40 AM, Marek Szyprowski wrote:
+> Hi,
+> 
+> On 11.04.2024 00:27, Jens Axboe wrote:
+>> On 4/9/24 9:22 AM, Jens Axboe wrote:
+>>> @@ -312,8 +313,8 @@ static ssize_t timerfd_read(struct file *file, char __user *buf, size_t count,
+>>>   		ctx->ticks = 0;
+>>>   	}
+>>>   	spin_unlock_irq(&ctx->wqh.lock);
+>>> -	if (ticks)
+>>> -		res = put_user(ticks, (u64 __user *) buf) ? -EFAULT: sizeof(ticks);
+>>> +	if (ticks && !copy_to_iter_full(&ticks, sizeof(ticks), to))
+>>> +		res = -EFAULT;
+>>>   	return res;
+>>>   }
+>> Dumb thinko here, as that should be:
+>>
+>> if (ticks) {
+>> 	res = copy_to_iter(&ticks, sizeof(ticks), to);
+>> 	if (!res)
+>> 		res = -EFAULT;
+>> }
+>>
+>> I've updated my branch, just a heads-up. Odd how it passing testing,
+>> guess I got stack lucky...
+> 
+> The old version got its way into today's linux-next and bisecting the 
+> boot issues directed me here. There is nothing more to report, but I can 
+> confirm that the above change indeed fixes the problems observed on 
+> next-20240411.
 
-The above commit message is horribly confusing and wrong.
+Yeah sorry about that :(
 
-I was going "that's not right", because it says "use acquire instead
-of relaxed" memory ordering, and then goes on to say "No functional
-change intended".
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-But it turns out the *code* was always acquire, and it's only the
-commit message that is wrong, presumably due to a bit too much
-cut-and-paste.
+Thanks!
 
-But please fix the commit message, and use the right memory ordering
-in the explanations too.
+> I hope that tomorrow's linux-next will have the correct version of this 
+> patch.
 
-            Linus
+It should, the branches have been updated.
+
+-- 
+Jens Axboe
+
