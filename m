@@ -1,139 +1,166 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpdh20-2.aruba.it (smtpdh20-2.aruba.it [62.149.155.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6E313D258
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417B713E04E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820231; cv=none; b=P5sjDXOj7pUARwKTcTHrZEu/XOdxpFUhZmk+0nLiGsfQpTLlpgu22cvN9AshuochOtLWIIZNG6ISwmM36ZQ7laxA64Pwvu5Kr6tpgGtqHmTRBpzNvZxR6kwGVlhhCFBKzPgIhjpDNAkYpsRxfFQXsJ3+qVBYbsLYieyyVGxeIyE=
+	t=1712820239; cv=none; b=Z0rlk7zCImtJpDMqCV1jJlDAaTDCra9T2oMf1AVyJbRcWYwyLDuXwU1cctlubU5QpQrkEVA3iP63j2ERr348GKDkSXk9qeHza2iy3mzIFrbHHyACMFF1NwDoZCeFEOxONU7i9OQSV3jO78+dnV+mWRtqjQZWBiYVUpXjtUAhlug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820231; c=relaxed/simple;
-	bh=gGeW9R0z/8e8cHc5xDnZttqxGEuV/KvsYGHiztgMhTI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nZBeDpZS0nPVua6pXXwCllc3WiRvDJfhZ7rC7U5KB6y1fQHBCjqmRfbJmv2N1p+cfAkxGeXEpBCVJqb2K3Ur6nErVhMtfxaqJYYR+k3uVR685JcYz2zllKehfSQMKzHVmv0MKi1JAwhM1eanHemgwxRF9yhU0saVuz5s86GbD0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shruggie.ro; spf=pass smtp.mailfrom=shruggie.ro; dkim=pass (2048-bit key) header.d=shruggie-ro.20230601.gappssmtp.com header.i=@shruggie-ro.20230601.gappssmtp.com header.b=ZIuRE8mM; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shruggie.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shruggie.ro
+	s=arc-20240116; t=1712820239; c=relaxed/simple;
+	bh=VrywK8vMaYwbpYQvPGENaJzZBcgxgNbgsuu98ieZ/uY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HSoYTPkH8PTUAu5PPQtdQPJRxMbu2REUcv2HAMzB4DlEdhVSjaMROckZFYC+UqSTO8QtT/7wKh/N7tm0yXN8L/7DGQh4vve+5HJosgfsyw0pUJqjpwn/8hfzhh44s5QkZhrDNhHuSthcuOUnQrG57d2J08GALxf96i6t1PEAAfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=YdjJJIXh; arc=none smtp.client-ip=62.149.155.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shruggie-ro.20230601.gappssmtp.com header.i=@shruggie-ro.20230601.gappssmtp.com header.b="ZIuRE8mM"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d756eb74so7062238e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:23:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shruggie-ro.20230601.gappssmtp.com; s=20230601; t=1712820227; x=1713425027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dkOVgTaaGrXLtVM87ktxrc8mZTfhRT2o4/E/F6KN6Bk=;
-        b=ZIuRE8mMVj95qNAJ+4JMQjCiskC8DYJcoS7RvE/RZhRzzXicB7E8OJjIupVoq9b6Ob
-         DDGQENAO7Ec9Ma/gqm5Tv4i9yRl8MUrQeTu3kNJATJpQ2Tt0a34rkyCPeLdyb07R2Mam
-         0W2ohISkv1uFb8oSRvZzcKsDXb41kYCoHzP2JsoG7Uz+T4CSJOi4ZFab5NORH8uxod8j
-         3ViwcjafBqOwg8S56tpULmiX+BClJp1SepH9XNQoHwD1KKO0kawVmM5sVu6abdbO/oDi
-         d9LNDQbJELk228BYO7GzxoOx1ggZ00CEwYBhkM90d3PRGgu7jItcwvC5yzENgC/CSPxE
-         4JvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712820227; x=1713425027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dkOVgTaaGrXLtVM87ktxrc8mZTfhRT2o4/E/F6KN6Bk=;
-        b=uNIrR1tRuPUzy0bmrg9aQ+ymALKrzqeHB+PDbDoRQ8y5HwzVnC0FyitT6LqzApPYFZ
-         Fs0FzSF/SQFdaKPQi5oqpERh0tlJt+JI3q0NIVi6KvpBBPbmyu4khAhi5TA4gygUltYG
-         xZOmSs6feSKC3j+V6MyLwMMt8rZS4cKiNRHw+FY/Ia+rJGChCbDqAWDZvg4JaeJmSMkL
-         pW72gfeGIab5KO6Olze6zPc9RSstZ6jfopwkGqGnn2EcPV245CiWyJAHVwDjv7GBo2Pm
-         ZmrzxSz7fcLw/0z00qTgHCc3ads3QXOiizgZASBxdWiSm1apqZnbchtnIKS4L/54tVQw
-         BO0w==
-X-Gm-Message-State: AOJu0YxnafOxHKX+yII40IiT1Q7OW/HKRzv7CoY8ZxA/CtKtMCpK375u
-	kJ8F910URKJuou+n/NLR0oT5yQkAb54yXyihFiBDb3XDARIxgfbur+OQsNlNinNfVGudONU2m4E
-	K2C+EVeoOCuYIF0kClzruFnRY7Cf+YkqRHRmxxg==
-X-Google-Smtp-Source: AGHT+IFZZUKJ4M2JhpqzsUa3DBvNjlIu3bgNrsSmIxv09/CKGpbc9Zg/QoI/y4VRWj7pcSaPz1WFPMmYuLejmaOVLVY=
-X-Received: by 2002:a19:f70b:0:b0:513:b90f:f4dd with SMTP id
- z11-20020a19f70b000000b00513b90ff4ddmr2683370lfe.49.1712820226865; Thu, 11
- Apr 2024 00:23:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="YdjJJIXh"
+Received: from [192.168.1.57] ([79.0.204.227])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id uojkr2Vp5wWj2uojkrpbFz; Thu, 11 Apr 2024 09:20:44 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712820044; bh=VrywK8vMaYwbpYQvPGENaJzZBcgxgNbgsuu98ieZ/uY=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=YdjJJIXh1cK5BvSTukjoSQKDooRx+BYrFek0vN76Jt3TMYpfj1itK/TpSJeoFSJqv
+	 LNC4BpDNQSnbL1hsF7VeA7oGA19fZA8ywxSnjsNBXFovquZHuRG3jqOjlmHTkEQyse
+	 9I3KkEBp7B5L3YbgKR5qmNwbV6+bKqJeBKIkiO3gEMHyawoI0eHy3ORCSmV7SRW71H
+	 mJno+gpx6Q6Y9pvOfRXT0nyYv36vl/9M+dawWdEzrsxLWrj3CEdlvNNvyas5aBFhhi
+	 P+Zul0G5HgsJoBuQKn6dRmb8ANQubk0pwdwNqzSDFqPVyo3pq2gGk+wv+14zItsprA
+	 p+Au9rAjEHEew==
+Message-ID: <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
+Date: Thu, 11 Apr 2024 09:20:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240402105925.905144-1-alex@shruggie.ro> <20240402105925.905144-2-alex@shruggie.ro>
- <dxm3js6qpcw3n4duid4vmhnkxacmzgq4rnvpbdx62pcn34ybzc@q57pst7lyumf>
-In-Reply-To: <dxm3js6qpcw3n4duid4vmhnkxacmzgq4rnvpbdx62pcn34ybzc@q57pst7lyumf>
-From: Alexandru Ardelean <alex@shruggie.ro>
-Date: Thu, 11 Apr 2024 10:23:35 +0300
-Message-ID: <CAH3L5QosgOBTYgyHUcstNqh+JMBW93j+dk2JuDhdz1=Sfj8i_Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: display: bridge: lt8912b: document
- 'lontium, pn-swap' property
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, adrien.grassein@gmail.com, 
-	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
-	airlied@gmail.com, daniel@ffwll.ch, maarten.lankhorst@linux.intel.com, 
-	mripard@kernel.org, tzimmermann@suse.de, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	stefan.eichenberger@toradex.com, francesco.dolcini@toradex.com, 
-	marius.muresan@mxt.ro, irina.muresan@mxt.ro
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
+ when not needed
+To: Bastien Curutchet <bastien.curutchet@bootlin.com>
+Cc: linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
+ <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
+ <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
+ <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
+ <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+Content-Language: en-US, it, it-IT
+In-Reply-To: <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBf9SqngBaJytq1bLc3vrKUnXV0CQmAOXvhbl7fWYAFO/AjP4ml1SU80jtwuVs0tJRK373tBTDsfiFAwyN5nmxp3T0/Gp7MD0gavFm5Q5SFNG5A4YYhu
+ 5qsu3ysZHBRyaNYHZ6B7M+GL4KRYhqohZvccjruHY8YVI4vjiE9Aq5Si5QAitheYH30YnCkreEIrvYy6bcXVCyqQ1em0UpkvfvmoubPjUEjQ6pks1EH8DH0C
+ E8tF8lI3/dNh+v27OTWrOtRLoF2iv+9gOGM+vINdF5XceCnx+/XgM2PeZf59ojyhjb/IG2Vn2F8C6F1Jx84nHLlOzqWT4K/0+eyutd3k/RkiMe81OyL1TGzw
+ tgyzuOdnZrx444WCKwLgaf67SoaQGw==
 
-On Sun, Apr 7, 2024 at 11:31=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> On Tue, Apr 02, 2024 at 01:59:25PM +0300, Alexandru Ardelean wrote:
-> > On some HW designs, it's easier for the layout if the P/N pins are swap=
-ped.
-> > The driver currently has a DT property to do that.
-> >
-> > This change documents the 'lontium,pn-swap' property.
-> >
-> > Signed-off-by: Alexandru Ardelean <alex@shruggie.ro>
-> > ---
-> >  .../devicetree/bindings/display/bridge/lontium,lt8912b.yaml | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,l=
-t8912b.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt89=
-12b.yaml
-> > index 2cef252157985..3a804926b288a 100644
-> > --- a/Documentation/devicetree/bindings/display/bridge/lontium,lt8912b.=
-yaml
-> > +++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt8912b.=
-yaml
-> > @@ -24,6 +24,12 @@ properties:
-> >      maxItems: 1
-> >      description: GPIO connected to active high RESET pin.
-> >
-> > +  lontium,pn-swap:
-> > +    description: Swap the polarities of the P/N pins in software.
-> > +      On some HW designs, the layout is simplified if the P/N pins
-> > +      are inverted.
-> > +    type: boolean
-> > +
->
-> I'd like to point out the standard `lane-polarities` property defined at
-> Documentation/devicetree/bindings/media/video-interfaces.yaml. You can
-> define and use it for the corresponding endpoint in the lt8912b schema.
->
+On 10/04/24 18:05, Bastien Curutchet wrote:
+> 
+> 
+> On 4/10/24 17:24, Rodolfo Giometti wrote:
+>> On 10/04/24 16:46, Bastien Curutchet wrote:
+>>> Hi Rodolfo,
+>>>
+>>> On 4/10/24 16:23, Rodolfo Giometti wrote:
+>>>> On 10/04/24 13:35, Bastien Curutchet wrote:
+>>>>> In the IRQ handler, the GPIO's state is read to verify the direction of
+>>>>> the edge that triggered the interruption before generating the PPS event.
+>>>>> If a pulse is too short, the GPIO line can reach back its original state
+>>>>> before this verification and the PPS event is lost.
+>>>>>
+>>>>> This check is needed when info->capture_clear is set because it needs
+>>>>> interruptions on both rising and falling edges. When info->capture_clear
+>>>>> is not set, interruption is triggered by one edge only so this check can
+>>>>> be omitted.
+>>>>>
+>>>>> Bypass the edge's direction verification when info->capture_clear is not
+>>>>> set.
+>>>>>
+>>>>> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
+>>>>> ---
+>>>>>   drivers/pps/clients/pps-gpio.c | 9 +++++++++
+>>>>>   1 file changed, 9 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+>>>>> index 2f4b11b4dfcd..c2a96e3e3836 100644
+>>>>> --- a/drivers/pps/clients/pps-gpio.c
+>>>>> +++ b/drivers/pps/clients/pps-gpio.c
+>>>>> @@ -52,6 +52,15 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void 
+>>>>> *data)
+>>>>>       info = data;
+>>>>> +    if (!info->capture_clear) {
+>>>>> +        /*
+>>>>> +         * If capture_clear is unset, IRQ is triggered by one edge only.
+>>>>> +         * So the check on edge direction is not needed here
+>>>>> +         */
+>>>>> +        pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
+>>>>> +        return IRQ_HANDLED;
+>>>>> +    }
+>>>>> +
+>>>>>       rising_edge = gpiod_get_value(info->gpio_pin);
+>>>>>       if ((rising_edge && !info->assert_falling_edge) ||
+>>>>>               (!rising_edge && info->assert_falling_edge))
+>>>>
+>>>> Apart the code duplication, which are the real benefits of doing so?
+>>>>
+>>>
+>>> It prevents from losing a PPS event when the pulse is so short (or the
+>>> kernel so busy) that the trailing edge of the pulse occurs before the
+>>> interrupt handler can read the state of the GPIO pin.
+>>
+>> Have you a real case when this happens?
+>>
+> 
+> Yes, on my use case, a GPS provides a tiny pulse (~10 us) that is
+> sometimes missed when CPU is very busy.
 
-Ohhh.
-Interesting :)
-Many thanks for pointing this out.
-This will make things much easier.
-Will do a V2 with this in a week or two.
-I'm traveling now.
+I see...
 
-Thanks
-Alex
+>> In any cases we should avoid code duplication... so I think we should do 
+>> something as below:
+>>
+>> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+>> index 2f4b11b4dfcd..f05fb15ed7f4 100644
+>> --- a/drivers/pps/clients/pps-gpio.c
+>> +++ b/drivers/pps/clients/pps-gpio.c
+>> @@ -52,7 +52,9 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
+>>
+>>          info = data;
+>>
+>> -       rising_edge = gpiod_get_value(info->gpio_pin);
+>> +       rising_edge = info->capture_clear ? \
+>> +                       gpiod_get_value(info->gpio_pin) : \
+>> +                       !info->assert_falling_edge;
+>>          if ((rising_edge && !info->assert_falling_edge) ||
+>>                          (!rising_edge && info->assert_falling_edge))
+>>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
+>>
+>> Please, review and test it before resubmitting. :)
+>>
+> 
+> I'll try this and send a V2 after my tests, thank you.
 
+OK, thanks.
 
+However we should think very well about this modification since it could be the 
+case where we have a device sending both assert and clear events but we wish to 
+catch just the asserts... in this case we will get doubled asserts!
 
-> >    ports:
-> >      $ref: /schemas/graph.yaml#/properties/ports
-> >
-> > --
-> > 2.44.0
-> >
->
-> --
-> With best wishes
-> Dmitry
+Maybe, can we add a special flag within the DTS (something as 
+"support-tiny-pulses" or something like that) to specify that we are in this 
+special condition and then checking this setting against capture_clear flag?
+
+Ciao,
+
+Rodolfo
+
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
+
