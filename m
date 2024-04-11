@@ -1,146 +1,64 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156CA1A0AE7;
-	Thu, 11 Apr 2024 16:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC36938388;
+	Thu, 11 Apr 2024 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852604; cv=none; b=oQn7tJgrdFHQ3nqLFBhStEqjZ+u9YqToXIhcoCRtlmAxbBioEDFfAtXBbh9qpc1L0MAPgO2i9jJcbTk7a2AsNrT41MPabIZesFB+7qZV8FKqFnx2vJGq9J/swZM1uJt+7YJRWUqvBbK66Nia+B1YGPy56RwHGjGhJ8dE6kyG8uc=
+	t=1712852744; cv=none; b=kgDmxQ11OPVURDpbz2D2lWYXlqNADcYEMo5bkzPqj/c1wN6Ou8HipZuwOrZ56g8icrQGov1G/GEOg3u+xf4Df6HhMsz0cpqJTvLDvvqqkjo4LgMy7+K0h+88QuzJzq7OCKHItmL7rsWF9LEaK3MLno7mu0aa7/vyM1Ws/Sv6d0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852604; c=relaxed/simple;
-	bh=nN/Hr+UlT6emx/RUIJVSa74QG/O0VgJ/byKbQpUfmyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VWVaNTMrArzwXpUAPHTmX9pqckVf8Y9iEtFipuXz7cMNaIXCIqHf/GgUa7hmk+GHQ4qVqOJ2dS/2zrRgt0iPNlEDUG7Xtxh9OW7yoVsaz55FTL2ANhPZ2NsqZAxdRf+HPKGhb+VaVxmAouLKeTQP8C3h/UcUXuKOQxqloIgOpy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XIsGPPx3; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1712852744; c=relaxed/simple;
+	bh=vawJVSPNs8IPTuOUeCDr5RYxL3kOMDGd2wsLFCGKNRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EPxHtXrXRHb012uj1zEIPvWwFsZpLXFNwRokNpaAHEfmkYLodO8P62Q48EE9uPnC8BtBU3+cVS7YwQzPNNcMumv6rfnObQJDo1BY3iN7voFTt6Fk9wqPTJ5zO/u1Fa0iNLNq9z616Waeaa7vB9uVWVDi8K3FzOaKcYoUKQMg7FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuHVqbRQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XIsGPPx3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-	bh=w8fDcPBM4Ze2RPgrAoXs/w5z2M5QE6GW5bGItfgRyJ8=; b=XIsGPPx3mZgUgXDqmsW3zFEUMM
-	hrAF6AwyKjg5u/7JpKuZqbRzY4v8HjoVwEuBNAQVw14POMEREkb9sOqKwAN3ZchA3+E1NH+q43G9i
-	h89UzTlMT34ILaOSNIjqzh/1hopUZTMHNrak55UHbof7sc3viEOIyBCwxIJ6BThh3W7K7EUlGy4np
-	TJb5EIRDb4TXgd7PW5tv8xQPgKoVmMRy+YgpCoXVAMMOQ9WQZGo/nl38Gs8Cc4AV4c2NEYmM7UFcA
-	N6nfqhSWnnj5rSE7+/wwPBIg+h68sSddrjQYwRJvDbTOvqfFAn0OFruiNIfUzQl1/VooT2EV9uDuG
-	6YpTaT4w==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1ruxCN-0000000D38A-1CHz;
-	Thu, 11 Apr 2024 16:22:51 +0000
-Date: Thu, 11 Apr 2024 09:22:51 -0700
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Dan Helmick <dan.helmick@samsung.com>, axboe@kernel.dk,
-	kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, djwong@kernel.org,
-	viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
-	jack@suse.cz, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-	linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-	linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com,
-	linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
-	io-uring@vger.kernel.org, nilay@linux.ibm.com,
-	ritesh.list@gmail.com, willy@infradead.org,
-	Alan Adamson <alan.adamson@oracle.com>
-Subject: Re: [PATCH v6 10/10] nvme: Atomic write support
-Message-ID: <ZhgOW8yBPuuae4ni@bombadil.infradead.org>
-References: <20240326133813.3224593-1-john.g.garry@oracle.com>
- <20240326133813.3224593-11-john.g.garry@oracle.com>
- <Zhcu5m8fmwD1W5bG@bombadil.infradead.org>
- <143e3d55-773f-4fcb-889c-bb24c0acabba@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuHVqbRQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74688C072AA;
+	Thu, 11 Apr 2024 16:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712852744;
+	bh=vawJVSPNs8IPTuOUeCDr5RYxL3kOMDGd2wsLFCGKNRg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=PuHVqbRQSjYGl2oWM9bKSUwT9RwRAZvWdxqZ1gdaa2Hc7FSsNyV/u+4Ua4E/Djv6L
+	 lt8zYJUpCL5qImAcZHUYWzZqGgtNaTyH48XqxUPQKF8FC9+B+95zg5vy5p3RKrPIT6
+	 UC1ZSbcQCx3HFj/E4/lavB1N3UmELNCuN5uq0xgKQtklmjcV+pRdFwBBe4uAo3OHu/
+	 vkTF5wEQVLute2v3/LbWfnVNjptv9X/epxRCImZo13pb+Y57e46OSeQNbeer34uHOO
+	 pvAgWliPzkkX0O1P2NjtiWzvRgN2lXfaXFvW0GoFYAMZlrhyuZG2trUg6ZDahomFB/
+	 JKjrhKx75h6QA==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Stefan Kanthak <stefan.kanthak@nexgo.de>
+Subject: [PATCH v2 0/4] crypto: x86/sha256-ni - cleanup and optimization
+Date: Thu, 11 Apr 2024 09:23:55 -0700
+Message-ID: <20240411162359.39073-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <143e3d55-773f-4fcb-889c-bb24c0acabba@oracle.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-On Thu, Apr 11, 2024 at 09:59:57AM +0100, John Garry wrote:
-> On 11/04/2024 01:29, Luis Chamberlain wrote:
-> > On Tue, Mar 26, 2024 at 01:38:13PM +0000, John Garry wrote:
-> > > From: Alan Adamson <alan.adamson@oracle.com>
-> > > 
-> > > Add support to set block layer request_queue atomic write limits. The
-> > > limits will be derived from either the namespace or controller atomic
-> > > parameters.
-> > > 
-> > > NVMe atomic-related parameters are grouped into "normal" and "power-fail"
-> > > (or PF) class of parameter. For atomic write support, only PF parameters
-> > > are of interest. The "normal" parameters are concerned with racing reads
-> > > and writes (which also applies to PF). See NVM Command Set Specification
-> > > Revision 1.0d section 2.1.4 for reference.
-> > > 
-> > > Whether to use per namespace or controller atomic parameters is decided by
-> > > NSFEAT bit 1 - see Figure 97: Identify – Identify Namespace Data
-> > > Structure, NVM Command Set.
-> > > 
-> > > NVMe namespaces may define an atomic boundary, whereby no atomic guarantees
-> > > are provided for a write which straddles this per-lba space boundary. The
-> > > block layer merging policy is such that no merges may occur in which the
-> > > resultant request would straddle such a boundary.
-> > > 
-> > > Unlike SCSI, NVMe specifies no granularity or alignment rules, apart from
-> > > atomic boundary rule.
-> > 
-> > Larger IU drives a larger alignment *preference*, and it can be multiples
-> > of the LBA format, it's called Namespace Preferred Write Granularity (NPWG)
-> > and the NVMe driver already parses it. So say you have a 4k LBA format
-> > but a 16k NPWG. I suspect this means we'd want atomics writes to align to 16k
-> > but I can let Dan confirm.
-> 
-> If we need to be aligned to NPWG, then the min atomic write unit would also
-> need to be NPWG. Any NPWG relation to atomic writes is not defined in the
-> spec, AFAICS.
+This patchset reduces the amount of source code duplication in
+sha256_ni_asm.S and also reduces the binary code size slightly.
 
-NPWG is just a preference, not a requirement, so it is different than
-logical block size. As far as I can tell we have no block topology
-information to represent it. LBS will help users opt-in to align to
-the NPWG, and a respective NAWUPF will ensure you can also atomically
-write the respective sector size.
+Changed in v2:
+   - Take advantage of .irp in patch 1
+   - Added two additional cleanup patches
 
-For atomics, NABSPF is what we want to use.
+Eric Biggers (4):
+  crypto: x86/sha256-ni - convert to use rounds macros
+  crypto: x86/sha256-ni - rename some register aliases
+  crypto: x86/sha256-ni - optimize code size
+  crypto: x86/sha256-ni - simplify do_4rounds
 
-The above statement on the commit log just seems a bit misleading then.
+ arch/x86/crypto/sha256_ni_asm.S | 253 +++++++-------------------------
+ 1 file changed, 49 insertions(+), 204 deletions(-)
 
-> We simply use the LBA data size as the min atomic unit in this patch.
 
-I thought NABSPF is used.
+base-commit: 20cb38a7af88dc40095da7c2c9094da3873fea23
+-- 
+2.44.0
 
-> > > Note on NABSPF:
-> > > There seems to be some vagueness in the spec as to whether NABSPF applies
-> > > for NSFEAT bit 1 being unset. Figure 97 does not explicitly mention NABSPF
-> > > and how it is affected by bit 1. However Figure 4 does tell to check Figure
-> > > 97 for info about per-namespace parameters, which NABSPF is, so it is
-> > > implied. However currently nvme_update_disk_info() does check namespace
-> > > parameter NABO regardless of this bit.
-> > 
-> > Yeah that its quirky.
-> > 
-> > Also today we set the physical block size to min(npwg, atomic) and that
-> > means for a today's average 4k IU drive if they get 16k atomic the
-> > physical block size would still be 4k. As the physical block size in
-> > practice can also lift the sector size filesystems used it would seem
-> > odd only a larger npwg could lift it.
-> It seems to me that if you want to provide atomic guarantees for this large
-> "physical block size", then it needs to be based on (N)AWUPF and NPWG.
-
-For atomicity, I read it as needing to use NABSPF. Aligning to NPWG will just
-help performance.
-
-The NPWG comes from an internal mapping table constructed and kept on
-DRAM on a drive in units of an IU size [0], and so not aligning to the
-IU just causes having to work with entries in the able rather than just
-one, and also incurs a read-modify-write. Contrary to the logical block
-size, a write below NPWG but respecting the logical block size is allowed,
-its just not optimal.
-
-[0] https://kernelnewbies.org/KernelProjects/large-block-size#Indirection_Unit_size_increases
-
-  Luis
