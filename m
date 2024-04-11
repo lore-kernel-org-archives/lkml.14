@@ -1,870 +1,141 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54A23D994
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F89C1D6385;
+	Thu, 11 Apr 2024 15:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849999; cv=none; b=C6z8yqN/sAZYBhWBgC66/qHKcz9PVyHmUMt+lIURSvqQxcJnitmTl5En4kGWGF2s9oD9rFB6CCrqlLMUm33w0iGLGRF5ORVUFK6iXIc4CGJ6dFR+w8LxDEGeUp1hiHB4FjOSdDwE2ETxHOvxJ7Xq7GZfsouAG1jv+7oT0g9y7D4=
+	t=1712850008; cv=none; b=A2g0PTKmSFjS1jryXsLO8gyjTc04o2arCgood6WBpqIxp/ntSy9oTSgglReNFtzZANyKmgrcuS47fNFoNRp72MSK5ZuIOKBRW1xL7ZE9zUDqSem06fXD4VZYEGPNajTyNb91GJ1BCsrln8JJChVTIAI9NUNW8kPWgO75cHP7h5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849999; c=relaxed/simple;
-	bh=PbdVf0K/1JPdqb+hLBCBRO0RlaNJgFCGXdvGnloyWdU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RJaH6yfXtRt7B0f8bpJjSZbhDsCLzUVAPUYXMZqzyO6qHmXy3k2xkUw2tI+IwHuSb0eF/URwGEQxsAN/IBu6rpEFjjtpxclaoY72R78B/XXBtU1g+DOOpDxPNZAz+Z+2nw62UIptNwdRD6tfRcynhSKAb8RzVU8tLQB3GU3Pud8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=pgtUb0kD; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712850008; c=relaxed/simple;
+	bh=oluwa4uBbq2SQ9awi8ofoYyeGu4WJDGRc+3ri+ChAIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ue0nyFvq5JLDCnQTVxDc9NwTkubiRvXXGJY6aGqPD0aWSJA/J7nosv6yvrGvXcioBYzmYLuJGKZ3UnGat6OiPsH6ljkLyB4V5e2U/8gImRL6YJIxKYcvOq47KdHSE0oom5QkZSKAZ14CM+RLKvg47UIOx/DIPPsLkn3em3FKM5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mvILCXvr; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=mvILCXvr; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="pgtUb0kD"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7d5ed700c2dso16220039f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:39:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849996; x=1713454796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4pDARPBcElBGsSHm8QEfTMGjLKvFl8SxKd0i1UsOV8I=;
-        b=pgtUb0kDTxLxOIsaMvslieI3WRVNY+mF4vXKlVQr4jLETLJvdpzpohzCpW7ZLNZ8j3
-         TWdtCvXC+HERpUgBgtNLxiy0wEZfeNUm2VBfqBQsCdTl3xgldjRw/Cg+y85faCg62brM
-         CbilYcXyw68H61XgLr3kjXjpp2LtWWr1WMYIFDQR4ffI3OOmot7RnLQrifEm32y+TlZW
-         gbNhfDxd04HukURnXM6NQnwsDKL5teOQK+mxAA3uuBji/wObfa+eKF90HVCDV0FUnkzr
-         DGzK4RA/BNyWNOnrhfiOaLYHwtAC3o4Vd0saGJ4nrRaofs8A25jR1k3afxEYjDag62sE
-         Wz/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849996; x=1713454796;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4pDARPBcElBGsSHm8QEfTMGjLKvFl8SxKd0i1UsOV8I=;
-        b=Ls/xe8w5EVUeiMgEf+OA5cttFShMx1kJldkhjICVlmPqYbr9rk5gdrvVuoByRXlgJV
-         39A80s/AhVNhT5YNF3VFqUc+E5m7B8KRuixglYAO9BgzKQDc12wYTeA6gg7DB1+z8T6T
-         lC32LfPplop/+TmZloAtqf+UmwuaNACr7IKe9F8hqtA8b114ICb/LaFEmHmp9RvsZcZj
-         /UQ1pdlhTUvBu2SV/YAqyHz/6T20ueR/Dctdyf4+jujFSJqv9GXQ4WBBsBlk3K4kpVtH
-         8UPTfvU7he6aPGMhPU5HjuthTP9CWWq6sqqVkQOZIsAzT7Zp+3W//pKlWDTyOwxTsrPe
-         kB6Q==
-X-Gm-Message-State: AOJu0YxtZfZxkflO6eRaUlTcz3o6V0YRBzxs5LcBaz+sZUeTo74zaDGP
-	MKPfrzn/QWU3iTDQMYIMog/Hf/vjHcPnixsGASzb49DdYM6Y/xasScT+vNcbX8kEw011egSiDgc
-	8
-X-Google-Smtp-Source: AGHT+IEAXgN5MwVFD82Eadbq74dT8IJrprZ0LXFpImQ3FnGZHeEAaaV0xxoY30FGXk3VabEtRzcmSA==
-X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr171405ioh.1.1712849995641;
-        Thu, 11 Apr 2024 08:39:55 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:39:54 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 299/437] drivers/net/wireless/ath/ath6kl: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:17:19 -0600
-Message-ID: <20240411153126.16201-300-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mvILCXvr";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="mvILCXvr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3088A3765C;
+	Thu, 11 Apr 2024 15:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712850004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G2XByNyMRfD+PxUu51kh1WRBKG3twlIy8uQsFNS0GR0=;
+	b=mvILCXvrw4TQ6/5rw3DDP2K9H8aytX5IdghSHeyb+oTDAAa5Bl/2XnGevAfzT20pzQIdS5
+	AnlOXGlE7elw4PLnYymf1WzAQcpVQP3avnsOROultPJoq05D4E3Xj1SA6Y23/Vbshi71Zl
+	thh+kgHvOlaLf0ydHuDPk0QiYpnBjHg=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=mvILCXvr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1712850004; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G2XByNyMRfD+PxUu51kh1WRBKG3twlIy8uQsFNS0GR0=;
+	b=mvILCXvrw4TQ6/5rw3DDP2K9H8aytX5IdghSHeyb+oTDAAa5Bl/2XnGevAfzT20pzQIdS5
+	AnlOXGlE7elw4PLnYymf1WzAQcpVQP3avnsOROultPJoq05D4E3Xj1SA6Y23/Vbshi71Zl
+	thh+kgHvOlaLf0ydHuDPk0QiYpnBjHg=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1E2691368B;
+	Thu, 11 Apr 2024 15:40:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id l6UjB1QEGGajXwAAD6G6ig
+	(envelope-from <mkoutny@suse.com>); Thu, 11 Apr 2024 15:40:04 +0000
+Date: Thu, 11 Apr 2024 17:40:02 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	Kees Cook <keescook@chromium.org>, Tycho Andersen <tandersen@netflix.com>, 
+	Jens Axboe <axboe@kernel.dk>, Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: Re: [PATCH 2/3] kernel/pid: Remove default pid_max value
+Message-ID: <uu7pzw6cib324p6orccxonr5dqhgy5zdrjgpdqtt7yuf6b76o5@5nbw3mm64p7w>
+References: <20240408145819.8787-1-mkoutny@suse.com>
+ <20240408145819.8787-3-mkoutny@suse.com>
+ <20240408132955.70d10145d2ea1b0b12b7a5d0@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408132955.70d10145d2ea1b0b12b7a5d0@linux-foundation.org>
+X-Spam-Flag: NO
+X-Spam-Score: -4.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 3088A3765C
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.com:dkim];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:dkim]
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/net/wireless/ath/ath6kl/debug.c | 312 +++++++++++-------------
- 1 file changed, 144 insertions(+), 168 deletions(-)
+Hello.
 
-diff --git a/drivers/net/wireless/ath/ath6kl/debug.c b/drivers/net/wireless/ath/ath6kl/debug.c
-index b837d31416df..f3a7385cf7e5 100644
---- a/drivers/net/wireless/ath/ath6kl/debug.c
-+++ b/drivers/net/wireless/ath/ath6kl/debug.c
-@@ -297,10 +297,9 @@ void ath6kl_debug_war(struct ath6kl *ar, enum ath6kl_war war)
- 	}
- }
- 
--static ssize_t read_file_war_stats(struct file *file, char __user *user_buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t read_file_war_stats(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	char *buf;
- 	unsigned int len = 0, buf_len = 1500;
- 	ssize_t ret_cnt;
-@@ -320,14 +319,14 @@ static ssize_t read_file_war_stats(struct file *file, char __user *user_buf,
- 	if (WARN_ON(len > buf_len))
- 		len = buf_len;
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 
- 	kfree(buf);
- 	return ret_cnt;
- }
- 
- static const struct file_operations fops_war_stats = {
--	.read = read_file_war_stats,
-+	.read_iter = read_file_war_stats,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -395,10 +394,10 @@ static int ath6kl_fwlog_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t ath6kl_fwlog_read(struct file *file, char __user *user_buf,
--				 size_t count, loff_t *ppos)
-+static ssize_t ath6kl_fwlog_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(to);
- 	struct sk_buff *skb;
- 	ssize_t ret_cnt;
- 	size_t len = 0;
-@@ -431,7 +430,7 @@ static ssize_t ath6kl_fwlog_read(struct file *file, char __user *user_buf,
- 
- 	/* FIXME: what to do if len == 0? */
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 
- 	vfree(buf);
- 
-@@ -441,17 +440,15 @@ static ssize_t ath6kl_fwlog_read(struct file *file, char __user *user_buf,
- static const struct file_operations fops_fwlog = {
- 	.open = ath6kl_fwlog_open,
- 	.release = ath6kl_fwlog_release,
--	.read = ath6kl_fwlog_read,
-+	.read_iter = ath6kl_fwlog_read,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_fwlog_block_read(struct file *file,
--				       char __user *user_buf,
--				       size_t count,
--				       loff_t *ppos)
-+static ssize_t ath6kl_fwlog_block_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(to);
- 	struct sk_buff *skb;
- 	ssize_t ret_cnt;
- 	size_t len = 0, not_copied;
-@@ -498,13 +495,13 @@ static ssize_t ath6kl_fwlog_block_read(struct file *file,
- 
- 	/* FIXME: what to do if len == 0? */
- 
--	not_copied = copy_to_user(user_buf, buf, len);
-+	not_copied = !copy_to_iter_full(buf, len, to);
- 	if (not_copied != 0) {
- 		ret_cnt = -EFAULT;
- 		goto out;
- 	}
- 
--	*ppos = *ppos + len;
-+	iocb->ki_pos += len;
- 
- 	ret_cnt = len;
- 
-@@ -517,31 +514,29 @@ static ssize_t ath6kl_fwlog_block_read(struct file *file,
- static const struct file_operations fops_fwlog_block = {
- 	.open = ath6kl_fwlog_open,
- 	.release = ath6kl_fwlog_release,
--	.read = ath6kl_fwlog_block_read,
-+	.read_iter = ath6kl_fwlog_block_read,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_fwlog_mask_read(struct file *file, char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_fwlog_mask_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	char buf[16];
- 	int len;
- 
- 	len = snprintf(buf, sizeof(buf), "0x%x\n", ar->debug.fwlog_mask);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t ath6kl_fwlog_mask_write(struct file *file,
--				       const char __user *user_buf,
--				       size_t count, loff_t *ppos)
-+static ssize_t ath6kl_fwlog_mask_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	int ret;
- 
--	ret = kstrtou32_from_user(user_buf, count, 0, &ar->debug.fwlog_mask);
-+	ret = kstrtou32_from_iter(from, count, 0, &ar->debug.fwlog_mask);
- 	if (ret)
- 		return ret;
- 
-@@ -556,16 +551,15 @@ static ssize_t ath6kl_fwlog_mask_write(struct file *file,
- 
- static const struct file_operations fops_fwlog_mask = {
- 	.open = simple_open,
--	.read = ath6kl_fwlog_mask_read,
--	.write = ath6kl_fwlog_mask_write,
-+	.read_iter = ath6kl_fwlog_mask_read,
-+	.write_iter = ath6kl_fwlog_mask_write,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t read_file_tgt_stats(struct file *file, char __user *user_buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t read_file_tgt_stats(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	struct ath6kl_vif *vif;
- 	struct target_stats *tgt_stats;
- 	char *buf;
-@@ -681,14 +675,14 @@ static ssize_t read_file_tgt_stats(struct file *file, char __user *user_buf,
- 	if (len > buf_len)
- 		len = buf_len;
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 
- 	kfree(buf);
- 	return ret_cnt;
- }
- 
- static const struct file_operations fops_tgt_stats = {
--	.read = read_file_tgt_stats,
-+	.read_iter = read_file_tgt_stats,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -700,11 +694,10 @@ static const struct file_operations fops_tgt_stats = {
- #define CREDIT_INFO_DISPLAY_STRING_LEN	200
- #define CREDIT_INFO_LEN	128
- 
--static ssize_t read_file_credit_dist_stats(struct file *file,
--					   char __user *user_buf,
--					   size_t count, loff_t *ppos)
-+static ssize_t read_file_credit_dist_stats(struct kiocb *iocb,
-+					   struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	struct htc_target *target = ar->htc_target;
- 	struct htc_endpoint_credit_dist *ep_list;
- 	char *buf;
-@@ -747,13 +740,13 @@ static ssize_t read_file_credit_dist_stats(struct file *file,
- 	if (len > buf_len)
- 		len = buf_len;
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 	kfree(buf);
- 	return ret_cnt;
- }
- 
- static const struct file_operations fops_credit_dist_stats = {
--	.read = read_file_credit_dist_stats,
-+	.read_iter = read_file_credit_dist_stats,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -778,11 +771,10 @@ static unsigned int print_endpoint_stat(struct htc_target *target, char *buf,
- 	return len;
- }
- 
--static ssize_t ath6kl_endpoint_stats_read(struct file *file,
--					  char __user *user_buf,
--					  size_t count, loff_t *ppos)
-+static ssize_t ath6kl_endpoint_stats_read(struct kiocb *iocb,
-+					  struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	struct htc_target *target = ar->htc_target;
- 	char *buf;
- 	unsigned int buf_len, len = 0;
-@@ -828,22 +820,22 @@ static ssize_t ath6kl_endpoint_stats_read(struct file *file,
- 	if (len > buf_len)
- 		len = buf_len;
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 	kfree(buf);
- 	return ret_cnt;
- }
- 
--static ssize_t ath6kl_endpoint_stats_write(struct file *file,
--					   const char __user *user_buf,
--					   size_t count, loff_t *ppos)
-+static ssize_t ath6kl_endpoint_stats_write(struct kiocb *iocb,
-+					   struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	struct htc_target *target = ar->htc_target;
-+	size_t count = iov_iter_count(from);
- 	int ret, i;
- 	u32 val;
- 	struct htc_endpoint_stats *ep_st;
- 
--	ret = kstrtou32_from_user(user_buf, count, 0, &val);
-+	ret = kstrtou32_from_iter(from, count, 0, &val);
- 	if (ret)
- 		return ret;
- 	if (val == 0) {
-@@ -858,8 +850,8 @@ static ssize_t ath6kl_endpoint_stats_write(struct file *file,
- 
- static const struct file_operations fops_endpoint_stats = {
- 	.open = simple_open,
--	.read = ath6kl_endpoint_stats_read,
--	.write = ath6kl_endpoint_stats_write,
-+	.read_iter = ath6kl_endpoint_stats_read,
-+	.write_iter = ath6kl_endpoint_stats_write,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
-@@ -889,10 +881,9 @@ static bool ath6kl_dbg_is_diag_reg_valid(u32 reg_addr)
- 	return false;
- }
- 
--static ssize_t ath6kl_regread_read(struct file *file, char __user *user_buf,
--				    size_t count, loff_t *ppos)
-+static ssize_t ath6kl_regread_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	u8 buf[50];
- 	unsigned int len = 0;
- 
-@@ -903,17 +894,16 @@ static ssize_t ath6kl_regread_read(struct file *file, char __user *user_buf,
- 		len += scnprintf(buf + len, sizeof(buf) - len,
- 				 "All diag registers\n");
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t ath6kl_regread_write(struct file *file,
--				    const char __user *user_buf,
--				    size_t count, loff_t *ppos)
-+static ssize_t ath6kl_regread_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	unsigned long reg_addr;
- 
--	if (kstrtoul_from_user(user_buf, count, 0, &reg_addr))
-+	if (kstrtoul_from_iter(from, count, 0, &reg_addr))
- 		return -EINVAL;
- 
- 	if ((reg_addr % 4) != 0)
-@@ -928,8 +918,8 @@ static ssize_t ath6kl_regread_write(struct file *file,
- }
- 
- static const struct file_operations fops_diag_reg_read = {
--	.read = ath6kl_regread_read,
--	.write = ath6kl_regread_write,
-+	.read_iter = ath6kl_regread_read,
-+	.write_iter = ath6kl_regread_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -1000,11 +990,10 @@ static int ath6kl_regdump_open(struct inode *inode, struct file *file)
- 	return -EIO;
- }
- 
--static ssize_t ath6kl_regdump_read(struct file *file, char __user *user_buf,
--				  size_t count, loff_t *ppos)
-+static ssize_t ath6kl_regdump_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	u8 *buf = file->private_data;
--	return simple_read_from_buffer(user_buf, count, ppos, buf, strlen(buf));
-+	u8 *buf = iocb->ki_filp->private_data;
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, strlen(buf), to);
- }
- 
- static int ath6kl_regdump_release(struct inode *inode, struct file *file)
-@@ -1015,21 +1004,21 @@ static int ath6kl_regdump_release(struct inode *inode, struct file *file)
- 
- static const struct file_operations fops_reg_dump = {
- 	.open = ath6kl_regdump_open,
--	.read = ath6kl_regdump_read,
-+	.read_iter = ath6kl_regdump_read,
- 	.release = ath6kl_regdump_release,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_lrssi_roam_write(struct file *file,
--				       const char __user *user_buf,
--				       size_t count, loff_t *ppos)
-+static ssize_t ath6kl_lrssi_roam_write(struct kiocb *iocb,
-+				       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	unsigned long lrssi_roam_threshold;
- 	int ret;
- 
--	if (kstrtoul_from_user(user_buf, count, 0, &lrssi_roam_threshold))
-+	if (kstrtoul_from_iter(from, count, 0, &lrssi_roam_threshold))
- 		return -EINVAL;
- 
- 	ar->lrssi_roam_threshold = lrssi_roam_threshold;
-@@ -1041,53 +1030,48 @@ static ssize_t ath6kl_lrssi_roam_write(struct file *file,
- 	return count;
- }
- 
--static ssize_t ath6kl_lrssi_roam_read(struct file *file,
--				      char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_lrssi_roam_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	char buf[32];
- 	unsigned int len;
- 
- 	len = snprintf(buf, sizeof(buf), "%u\n", ar->lrssi_roam_threshold);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
- static const struct file_operations fops_lrssi_roam_threshold = {
--	.read = ath6kl_lrssi_roam_read,
--	.write = ath6kl_lrssi_roam_write,
-+	.read_iter = ath6kl_lrssi_roam_read,
-+	.write_iter = ath6kl_lrssi_roam_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_regwrite_read(struct file *file,
--				    char __user *user_buf,
--				    size_t count, loff_t *ppos)
-+static ssize_t ath6kl_regwrite_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	u8 buf[32];
- 	unsigned int len = 0;
- 
- 	len = scnprintf(buf, sizeof(buf), "Addr: 0x%x Val: 0x%x\n",
- 			ar->debug.diag_reg_addr_wr, ar->debug.diag_reg_val_wr);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t ath6kl_regwrite_write(struct file *file,
--				     const char __user *user_buf,
--				     size_t count, loff_t *ppos)
-+static ssize_t ath6kl_regwrite_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	char buf[32];
- 	char *sptr, *token;
- 	unsigned int len = 0;
- 	u32 reg_addr, reg_val;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 
- 	buf[len] = '\0';
-@@ -1117,8 +1101,8 @@ static ssize_t ath6kl_regwrite_write(struct file *file,
- }
- 
- static const struct file_operations fops_diag_reg_write = {
--	.read = ath6kl_regwrite_read,
--	.write = ath6kl_regwrite_write,
-+	.read_iter = ath6kl_regwrite_read,
-+	.write_iter = ath6kl_regwrite_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -1157,10 +1141,9 @@ int ath6kl_debug_roam_tbl_event(struct ath6kl *ar, const void *buf,
- 	return 0;
- }
- 
--static ssize_t ath6kl_roam_table_read(struct file *file, char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_roam_table_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	int ret;
- 	long left;
- 	struct wmi_target_roam_tbl *tbl;
-@@ -1215,31 +1198,31 @@ static ssize_t ath6kl_roam_table_read(struct file *file, char __user *user_buf,
- 	if (len > buf_len)
- 		len = buf_len;
- 
--	ret_cnt = simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	ret_cnt = simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- 
- 	kfree(buf);
- 	return ret_cnt;
- }
- 
- static const struct file_operations fops_roam_table = {
--	.read = ath6kl_roam_table_read,
-+	.read_iter = ath6kl_roam_table_read,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_force_roam_write(struct file *file,
--				       const char __user *user_buf,
--				       size_t count, loff_t *ppos)
-+static ssize_t ath6kl_force_roam_write(struct kiocb *iocb,
-+				       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	int ret;
- 	char buf[20];
- 	size_t len;
- 	u8 bssid[ETH_ALEN];
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 	buf[len] = '\0';
- 
-@@ -1254,24 +1237,23 @@ static ssize_t ath6kl_force_roam_write(struct file *file,
- }
- 
- static const struct file_operations fops_force_roam = {
--	.write = ath6kl_force_roam_write,
-+	.write_iter = ath6kl_force_roam_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_roam_mode_write(struct file *file,
--				      const char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_roam_mode_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	int ret;
- 	char buf[20];
- 	size_t len;
- 	enum wmi_roam_mode mode;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 	buf[len] = '\0';
- 	if (len > 0 && buf[len - 1] == '\n')
-@@ -1294,7 +1276,7 @@ static ssize_t ath6kl_roam_mode_write(struct file *file,
- }
- 
- static const struct file_operations fops_roam_mode = {
--	.write = ath6kl_roam_mode_write,
-+	.write_iter = ath6kl_roam_mode_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
-@@ -1305,27 +1287,25 @@ void ath6kl_debug_set_keepalive(struct ath6kl *ar, u8 keepalive)
- 	ar->debug.keepalive = keepalive;
- }
- 
--static ssize_t ath6kl_keepalive_read(struct file *file, char __user *user_buf,
--				     size_t count, loff_t *ppos)
-+static ssize_t ath6kl_keepalive_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	char buf[16];
- 	int len;
- 
- 	len = snprintf(buf, sizeof(buf), "%u\n", ar->debug.keepalive);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t ath6kl_keepalive_write(struct file *file,
--				      const char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_keepalive_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	int ret;
- 	u8 val;
- 
--	ret = kstrtou8_from_user(user_buf, count, 0, &val);
-+	ret = kstrtou8_from_iter(from, count, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -1338,8 +1318,8 @@ static ssize_t ath6kl_keepalive_write(struct file *file,
- 
- static const struct file_operations fops_keepalive = {
- 	.open = simple_open,
--	.read = ath6kl_keepalive_read,
--	.write = ath6kl_keepalive_write,
-+	.read_iter = ath6kl_keepalive_read,
-+	.write_iter = ath6kl_keepalive_write,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
-@@ -1349,28 +1329,27 @@ void ath6kl_debug_set_disconnect_timeout(struct ath6kl *ar, u8 timeout)
- 	ar->debug.disc_timeout = timeout;
- }
- 
--static ssize_t ath6kl_disconnect_timeout_read(struct file *file,
--					      char __user *user_buf,
--					      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_disconnect_timeout_read(struct kiocb *iocb,
-+					      struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	char buf[16];
- 	int len;
- 
- 	len = snprintf(buf, sizeof(buf), "%u\n", ar->debug.disc_timeout);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t ath6kl_disconnect_timeout_write(struct file *file,
--					       const char __user *user_buf,
--					       size_t count, loff_t *ppos)
-+static ssize_t ath6kl_disconnect_timeout_write(struct kiocb *iocb,
-+					       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	int ret;
- 	u8 val;
- 
--	ret = kstrtou8_from_user(user_buf, count, 0, &val);
-+	ret = kstrtou8_from_iter(from, count, 0, &val);
- 	if (ret)
- 		return ret;
- 
-@@ -1383,17 +1362,17 @@ static ssize_t ath6kl_disconnect_timeout_write(struct file *file,
- 
- static const struct file_operations fops_disconnect_timeout = {
- 	.open = simple_open,
--	.read = ath6kl_disconnect_timeout_read,
--	.write = ath6kl_disconnect_timeout_write,
-+	.read_iter = ath6kl_disconnect_timeout_read,
-+	.write_iter = ath6kl_disconnect_timeout_write,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_create_qos_write(struct file *file,
--						const char __user *user_buf,
--						size_t count, loff_t *ppos)
-+static ssize_t ath6kl_create_qos_write(struct kiocb *iocb,
-+				       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct ath6kl_vif *vif;
- 	char buf[200];
- 	ssize_t len;
-@@ -1407,7 +1386,7 @@ static ssize_t ath6kl_create_qos_write(struct file *file,
- 		return -EIO;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 	buf[len] = '\0';
- 	sptr = buf;
-@@ -1561,17 +1540,17 @@ static ssize_t ath6kl_create_qos_write(struct file *file,
- }
- 
- static const struct file_operations fops_create_qos = {
--	.write = ath6kl_create_qos_write,
-+	.write_iter = ath6kl_create_qos_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_delete_qos_write(struct file *file,
--				const char __user *user_buf,
--				size_t count, loff_t *ppos)
-+static ssize_t ath6kl_delete_qos_write(struct kiocb *iocb,
-+				       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct ath6kl_vif *vif;
- 	char buf[100];
- 	ssize_t len;
-@@ -1584,7 +1563,7 @@ static ssize_t ath6kl_delete_qos_write(struct file *file,
- 		return -EIO;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 	buf[len] = '\0';
- 	sptr = buf;
-@@ -1608,17 +1587,17 @@ static ssize_t ath6kl_delete_qos_write(struct file *file,
- }
- 
- static const struct file_operations fops_delete_qos = {
--	.write = ath6kl_delete_qos_write,
-+	.write_iter = ath6kl_delete_qos_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_bgscan_int_write(struct file *file,
--				const char __user *user_buf,
--				size_t count, loff_t *ppos)
-+static ssize_t ath6kl_bgscan_int_write(struct kiocb *iocb,
-+				       struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct ath6kl_vif *vif;
- 	u16 bgscan_int;
- 	char buf[32];
-@@ -1629,7 +1608,7 @@ static ssize_t ath6kl_bgscan_int_write(struct file *file,
- 		return -EIO;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 
- 	buf[len] = '\0';
-@@ -1648,17 +1627,16 @@ static ssize_t ath6kl_bgscan_int_write(struct file *file,
- }
- 
- static const struct file_operations fops_bgscan_int = {
--	.write = ath6kl_bgscan_int_write,
-+	.write_iter = ath6kl_bgscan_int_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_listen_int_write(struct file *file,
--				       const char __user *user_buf,
--				       size_t count, loff_t *ppos)
-+static ssize_t ath6kl_listen_int_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct ath6kl_vif *vif;
- 	u16 listen_interval;
- 	char buf[32];
-@@ -1669,7 +1647,7 @@ static ssize_t ath6kl_listen_int_write(struct file *file,
- 		return -EIO;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 
- 	buf[len] = '\0';
-@@ -1686,11 +1664,9 @@ static ssize_t ath6kl_listen_int_write(struct file *file,
- 	return count;
- }
- 
--static ssize_t ath6kl_listen_int_read(struct file *file,
--				      char __user *user_buf,
--				      size_t count, loff_t *ppos)
-+static ssize_t ath6kl_listen_int_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
- 	struct ath6kl_vif *vif;
- 	char buf[32];
- 	int len;
-@@ -1701,22 +1677,22 @@ static ssize_t ath6kl_listen_int_read(struct file *file,
- 
- 	len = scnprintf(buf, sizeof(buf), "%u\n", vif->listen_intvl_t);
- 
--	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
- }
- 
- static const struct file_operations fops_listen_int = {
--	.read = ath6kl_listen_int_read,
--	.write = ath6kl_listen_int_write,
-+	.read_iter = ath6kl_listen_int_read,
-+	.write_iter = ath6kl_listen_int_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
- };
- 
--static ssize_t ath6kl_power_params_write(struct file *file,
--						const char __user *user_buf,
--						size_t count, loff_t *ppos)
-+static ssize_t ath6kl_power_params_write(struct kiocb *iocb,
-+					 struct iov_iter *from)
- {
--	struct ath6kl *ar = file->private_data;
-+	struct ath6kl *ar = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	u8 buf[100];
- 	unsigned int len = 0;
- 	char *sptr, *token;
-@@ -1724,7 +1700,7 @@ static ssize_t ath6kl_power_params_write(struct file *file,
- 		tx_wakeup, num_tx;
- 
- 	len = min(count, sizeof(buf) - 1);
--	if (copy_from_user(buf, user_buf, len))
-+	if (!copy_from_iter_full(buf, len, from))
- 		return -EFAULT;
- 	buf[len] = '\0';
- 	sptr = buf;
-@@ -1766,7 +1742,7 @@ static ssize_t ath6kl_power_params_write(struct file *file,
- }
- 
- static const struct file_operations fops_power_params = {
--	.write = ath6kl_power_params_write,
-+	.write_iter = ath6kl_power_params_write,
- 	.open = simple_open,
- 	.owner = THIS_MODULE,
- 	.llseek = default_llseek,
--- 
-2.43.0
+On Mon, Apr 08, 2024 at 01:29:55PM -0700, Andrew Morton <akpm@linux-foundation.org> wrote:
+> That seems like a large change.
 
+In what sense is it large?
+
+I tried to lookup the code parts that depend on this default and either
+add the other patches or mention the impact (that part could be more
+thorough) in the commit message.
+
+> It isn't clear why we'd want to merge this patchset.  Does it improve
+> anyone's life and if so, how?
+
+- kernel devs who don't care about policy
+  - policy should be decided by distros/users, not in kernel
+
+- users who need many threads
+  - current default is too low
+  - this is one more place to look at when configuring
+
+- users who want to prevent fork-bombs
+  - current default is ineffective (too high), false feeling of safety
+  - i.e. they should configure appropriate mechanism appropriately
+
+
+I thought that the first point alone would be convincing and that only
+scaling impact might need clarification.
+
+Regards,
+Michal
