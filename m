@@ -1,180 +1,154 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2132.outbound.protection.outlook.com [40.107.244.132])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2081.outbound.protection.outlook.com [40.92.20.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40F1F146D5B
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F8A13E051;
+	Thu, 11 Apr 2024 07:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820960; cv=fail; b=o5W9BxBfZBR75E0bFuk6vZzEf0yf7Fz8izkomg47gJqWZPsW3b4/FHqfghiyLFPQDMQH6EfvBunKo35W5eCOrKi3ai/3BSPCeDDoclBWta7Fi4iGiCQzoaAFHjwRoRyONwprjtP5OzQyYkdWp8mdjgEddNWfbFBjwG6LoGlSLdo=
+	t=1712821123; cv=fail; b=WDoqXRUsUwGKDOG3OH4A9WJudEWI48j3bT/D2WOmoYpB8GHFj/kcDQfsZSiVEBRNiiXTvTv/tWqMZKaLiE+JG7zoBPxrVtnuqqu4ArZSCbAIvYoSyqdbxd4sYZ/LKGrvlW3SjlCwzJb377SMxUdExN4fXBsySeOtF40pcA48ons=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820960; c=relaxed/simple;
-	bh=/U+qsd4g2xgEe2oV2ha4xyqKyfjWvqGe7DRHW4fCitM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 Content-Type:MIME-Version; b=uybqETtd3tblB3DjW7H+9tasZUdZlEu4ANRM8UO5FK+mNS5dP5LElUT2qDTGD//TNKizQg9vuEzoTNYucW1CReKvhNxNftX3xdGWRLd1TfM79UYhFxmwS4Xpj1lhq3anZ2A71ldlHQu7S2c6tHD+AogbDvZ88FR/00YffptHkxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=qEHvKVVG; arc=fail smtp.client-ip=40.107.244.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	s=arc-20240116; t=1712821123; c=relaxed/simple;
+	bh=VZjcUvfqSrsUxAejDXbi43M9YbfSdAkT3wTyesH36T4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Em7NaOH+QuA2eUcx1KEGD03aoY0DbixWSiNBEErOOKL6y64JEoyXI5bzENDUornyVUwBULpHqpiKzM0G5MF3OGhuPzJPkInj1NSw0J1AuFfuS+jNPg1EOB0TMeNaJltat7JBDxUBu/FE82BvBBE7JmDBZveUXIKF4yLvDgHqfQM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=qWSEX+77; arc=fail smtp.client-ip=40.92.20.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="qEHvKVVG"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="qWSEX+77"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IGX7aDi0ewMv7rGtu/gPdg9qQqrFo6Fk/0aMv+dwVPzwaRJfbQ7FnzldvXnDoQrmnmhbHlTCn4L58yGK/AM4S1VPg7N60JaWPe2xc/W6OAFbfv1EHx+GbwV09Rh9Lou+1s02Oe47wOq0ikOixU+ZRUnVMWqP7yWDnPx6F5Cb5HLKzEIMl+/ypsXa2eGMGdQHqpAEcmQ3v7Bxf1UDixzhf9ggxhcDq5+HLDsJB58dfe0M0sL30reB/5cGXhFL/g43yrpULY8T06ntYKZjkQhhAHU5MFO54BC2NlYwu3z1yl1o/Ghg064TFZBYpgTJ4L5AhzdB66YOMs7cHdGb9jchmw==
+ b=n33ped5ohpkz4oo5OhWyrwRlVEiAeUzVPVWNFBVKBAGUTj9lifMRNNFZW/fzlMdbYoXXIEp5qk8U9WiDZkYH7Hk1iHnoo6CfKwcyOfUErsw952xuOCQ+aG06/cuwaB+0KJka8LLyYwWJcHuGupiNwRSPuUXuqGG5s0Asr3SankcTnG9LflwQBCyiwJY+7WkQ7SFEB61fHTjJlEK0KctdHYOTbioF7pfuGNhjb8xI2wjHm3u2pwPyqsUqbZggLM78HBpjRWBCChCrnce3f1dWxdZUVmS6eWy4LMS2HT66F2Aduck3dlTJyyzH2Zns3RJXB27IET8XBv7Mo7szHbXS/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IsjRxTukVO31/H0pxAgtJqiJgotGfkdrQFMshdFsx7Y=;
- b=WOo2+lUf6cQbxXPvThPja2grxXTfVaoHtkulJ9IshC9czBaWk0zyaLr2hPxkvM7UeMLpDmXA4kvnzk0MIhG8lT99rjQ71zdkYfY+ldheb26CKLO+kPtVFZceuT+6VL5JWNDyd/Zz2REZbmILP56oC/cnXguuHH3VQMNIOaeQlR6+l0eXSDsLb+kvR08EfFU0MSW57ZzdoiSgwBCDD5Rx40hXYPQEW3Cc0OOjEY6/w5HuPfwgzbkEMoczfGCaiyzKITdzDTU3Lrwilw+0uh2uFDecWH4srLQFeoZhgE1owktgZJJTllDMEwU1ktpG54ZlqWPu3B5wZt4+mIqftc5P8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
+ bh=fEQqN+W+wKuKybelqNiTnJZCWU0PpTbjgDYNvqxYRCs=;
+ b=ZgY4l5kefGqTPftFKykN+Yw+g6tnJ3ObaPou0rHl3rSsi8hf71CMViQkVdWr9XB5YDw+LHwlRin3FsaG4/68ngNV4vnduQIfqt3skqRjTPs8HQYY2NFGUqwaDE8SyaGV/NJz2CuCBoTtfjo48smLRzUqbuK0Oc+iOZhnOlhgGINVGjIoEf5iP6NbBQlOIgsubBIucgwoxrN7tr0ptBfiRSYoly39ZH0gtbZy6GAVhe1ZKHSZMW0Uwl5BkTwo8VrWdBII+YMKH7ZEY+iSB325q6K7lqNjx96azk7DBXQOjPALwlUrGPjcfxhwTNoPtJ67b+aYzUyi8ro/6EcPSZJKCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IsjRxTukVO31/H0pxAgtJqiJgotGfkdrQFMshdFsx7Y=;
- b=qEHvKVVGKWL9VCMKTDdnzWCarnTnVa2r7cqyIyglHOCHvHYvn+cJCjSSoflHVDKeOUdYR5JSBXdnLorl+0aQGExaY/3icomezDBLZc4gKlKzMapMisbiFRknvUAjofF06gDW4Snlvm8H97htHmXesqxDUKChMlYUchMs9hBZ7Ww=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from BL0PR01MB4226.prod.exchangelabs.com (2603:10b6:208:49::30) by
- CYYPR01MB8411.prod.exchangelabs.com (2603:10b6:930:bc::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7409.46; Thu, 11 Apr 2024 07:35:55 +0000
-Received: from BL0PR01MB4226.prod.exchangelabs.com
- ([fe80::12be:916:b914:8b26]) by BL0PR01MB4226.prod.exchangelabs.com
- ([fe80::12be:916:b914:8b26%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
- 07:35:55 +0000
-Date: Thu, 11 Apr 2024 00:35:44 -0700 (PDT)
-From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
-To: Robin Murphy <robin.murphy@arm.com>
-cc: Ilkka Koskinen <ilkka@os.amperecomputing.com>, 
-    Besar Wicaksono <bwicaksono@nvidia.com>, 
-    Suzuki K Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>, 
-    Mark Rutland <mark.rutland@arm.com>, Raag Jadav <raag.jadav@intel.com>, 
-    linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: arm_cspmu: Don't touch interrupt registers if no
- interrupt was assigned
-In-Reply-To: <726d6946-6fc8-4c53-86ad-385ab24fa4c7@arm.com>
-Message-ID: <ebeef2f-8326-3752-7374-7b2514fe9563@os.amperecomputing.com>
-References: <20240307193104.58302-1-ilkka@os.amperecomputing.com> <042bbb32-481e-40d8-a46a-472b724ec33f@arm.com> <89d7ff41-ce2a-fd95-ebfc-4df914efd4c8@os.amperecomputing.com> <c2e3e77c-ba50-4228-9eb8-c8fbcc84edfb@arm.com> <8fdfceb2-90b3-a1a9-fa88-a45ece30c0bb@os.amperecomputing.com>
- <726d6946-6fc8-4c53-86ad-385ab24fa4c7@arm.com>
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-ClientProxiedBy: CH0PR03CA0078.namprd03.prod.outlook.com
- (2603:10b6:610:cc::23) To BL0PR01MB4226.prod.exchangelabs.com
- (2603:10b6:208:49::30)
+ bh=fEQqN+W+wKuKybelqNiTnJZCWU0PpTbjgDYNvqxYRCs=;
+ b=qWSEX+77gjB6mRcU9HNIRauybXS8+iBsH/tZ5wh9/e8ZdwGBqQfrV5+QuAg/RbAWMJa0iipDJJOEsce+2p7Yxc8RKTc2H5BrFAwVjtUp2au7Oh/N62yVU+hv67LFMyUBSzASRYwOlcj8wsmLWFn9F2hZAJxiJD/EeRfyxS1FgCUV9ZkKOzuUAsmljiwX7rHZ+exjqKCERtnLCP2iuHMnxIgi+9uVO3XuunUG6RU9uOOt7Q0kv7AlJwvANLhgol3C6uK/2zjbyoI3sswHnTdzSZuPp/ZnKPl2+aXUQgkiICUDVKNSIEHDTFe4Qx1AIZs13FOUiM6ek5SezSvOAEaUXA==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by PH7PR20MB5308.namprd20.prod.outlook.com (2603:10b6:510:1ba::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Thu, 11 Apr
+ 2024 07:38:37 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
+ 07:38:36 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chao Wei <chao.wei@sophgo.com>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Inochi Amaoto <inochiama@outlook.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>,
+	Liu Gui <kenneth.liu@sophgo.com>,
+	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
+	dlan@gentoo.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: (subset) [PATCH v9 0/6] riscv: sophgo: add clock support for Sophgo CV1800/SG2000 SoCs
+Date: Thu, 11 Apr 2024 15:38:53 +0800
+Message-ID:
+ <IA1PR20MB4953E5E78F930EE25A86EE1CBB052@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <IA1PR20MB4953512A4DCAF293D7B1CBC2BB262@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <IA1PR20MB4953512A4DCAF293D7B1CBC2BB262@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-TMN: [iDtaGmXGwD/g9EANelqzXZc6pF8UbrUjRKGkiBcA1ns=]
+X-ClientProxiedBy: TYWPR01CA0009.jpnprd01.prod.outlook.com
+ (2603:1096:400:a9::14) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <171282109234.564827.16346291400943800204.b4-ty@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR01MB4226:EE_|CYYPR01MB8411:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0445d817-3157-48d6-67ed-08dc59fa059b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|PH7PR20MB5308:EE_
+X-MS-Office365-Filtering-Correlation-Id: 467fae24-5bed-4ab3-e657-08dc59fa64da
+X-MS-Exchange-SLBlob-MailProps:
+	ymJijV9pwJm+jY4Q11pAguX0vq6mPxhXIgrpc7SQiJT9YZkbhQJ5aHyogEsH3iMpBbkF3jw+LwZa/NUQMOQYlYj0M6UCteUSubOjP992e5LfphLHKlxhhSlN4tzmSk9HE37jIqVzDgjYZNCA+3pipxukj+8Fk/DUAqnchD/Blh5enseCcgSsspEAjSZU9jyoEdPf/RpMB+N22q+hloze1bwhVbo8rEmCKZ3oBR9t2Y/x7MfJDSlcWaWHLD4f6GwMfEPZUs8Xp3U3T0yV9mCr4mlgI7FfKEnrrVibHURDhXlI4f3LvXRHDt0LetBoP25qBdNERzI9yG0vyIFo+rTBgC1y9TTmrif5uIoql/qZEIQSQU1EkBEOQdi/a5hZVBua7VpKB8x2NsSvg3vTWEVtLsrkZZ65aPsaCCit6s1IVyh2MnrbHh4gkT/s0KfEUq8rMmzcvdnsn23mmV8PMoid/tmT1uY+CNRtazRpN8AIDrG7zFLOmuuPoYalrF9o/SELZA7kioRr+10E8Tui7jSlrArcAVl4aLMs2YYg3P7zI3XoMCAVlbSo944/RDh6fa9AngWcz4q1yfhY0DUpgZpywlhCBWuNVUg5CO3eybpk0rzZt13aHigIVU++MehKqlp4Es+cBN5rk6LXZ5jjyPNtG3G7b0yxdwKxAhb2EgC/LSE8bCQB2C/HkBnF4kCOiBPf1j++rsIdHjYNrc0i7BEJ1jjVjHKjxAC/8VTMjFBi5t2gOes8bmLkGC6CxY/13ZUhrlDWPpfDcrOn9hSxVudUTYSMlLi2Ql4nNfxmdP2Yiga/HK9Q++OLF7eB4On5K90r
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	f5AFC97lLGglH/6Fheaubu7z41NpKxpCu6KJQRxgAzE3mASpTnW/uQ7VHzMoQpCuIBXNSrg8a/b3tVNfB2Ou9+eE1aOfANTN9AKdIOiwZO6p/l7UhZVFIar/gjOa+uS/P4fYlpy23mgR/GzwA8ZG/9JXGbJFmQN+lx2pwuZzWaUQ2U6ZWzg9pW8VIPS3gmJrdU+x9TslluHJq+HHDUhQFvGoFjtRH8s432N1DtPbe0NvMDVoNmcCspagWudZJZ1igEZypQxpSb6PyzaYhtLBxhFElkx9nmfGWL6Q6xYErT51/rKzdpI+5dKTB4pyT+eqnmoEUXhsV2VQshw7D3tIWUogqvwQR12FJr6SyMujXabfMf4aDm4ZJkw3HpE3rZFW7x1doVgILod0rbmplkIdnjeGhbOuAZbUHFHm/XLJkro/x5L67fmLXFjVHzr0D++fN+M/Ov0+Y+fW83IgVA9qb5ARs5wF00sYqHDST1Uh6O86PND7AOTFDM9LmCuK9OWtq/zy6I4sM5/wue1RH+Wcw03ineEmji4CFQy6ahbYtwXazs9vvXpMgUGacOoAdajzLP5IuE3OerzuLxu/F4nrOxaMsDjOHxBQHbiExVgGHQ+5tRueDusZSn/6oH+dhQh8zIIDSGxjou3ChfF8xoLvaGgMLLW+dou+PfmqthuOoRqtYHvziJnqF47a8ENfOiLrlwCzA57hg8pOlr4aZa0lRoskf7z5gj5pfH9jklorXmU=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR01MB4226.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1102;
+	qs5wmL5YaVfmncpW98DQam8SuxW/sphW15/lw+6HNtM3NVb4YoDy+nTfVx/Xr9duS3zFSwzBWSowxTpuQqTTiCdFZGmwVsfyhIBnXJWFH8EsuAIJGaPy1fSmoUO5Ou+lTog24MwZi8bIVcRqvXpG3ac/t64iSC1PbgwN3L72+ibE4E7MHIhtcOgaB9nh30nLJJA+FQRhmkUQGNuLp89SJD5gq04JFN4jnKXO88SdNLVJTzl38g2rL6QD7n/nmzvlZ3aN4CC//wzgO7ztOpTB6wM1m2J4GlSZcUZjw2S9dLQVVjhcx390B3T7TXQ4XyjyunT0IpMGVNgleZApi6yfZ2nrKWnebNqEd0JI20VCnpRxlt2pExzDkZd6AcofTxLkDZwTnePlr7xJCPYoyHZy6mtREn8Q68n/hXUjOS6xPA1bE+JyC9aNbNUyeU3Z2iEn/1WE4ZQDutcOyK6oKKhAFsAjCy6iDm2DzibVdO9eOB0SgeGzCXOQJZMhAxFytj4Dfd2Wj62VX+aYJM1lxJLuaxFgyRf73eQVilk9eNuzrr4HlR7ouuWmRGSsmDpvPMZbfndp6yfC60DuW/DeaCbQuB3PEmvpn9kI2ffSL56xch3xhoRQzHzEjX2JWUF+TmWkipnVO1KXvMgq+OMXRO1vFT9PyB9EBgeRKrmYYjSVjg+j3rzF+J6s38YjJue9yn4uJ8ep4JS7fKAHdZ2aeNmFQA==
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?yizhfWjMMxSF3NjmhikizE0ibVKCDSTcrnD0YHWWtW92TNpQN6/oP6QMDs+Y?=
- =?us-ascii?Q?VbV0q5WkyU2cd4OKS5UVkVk9Iil1nBg1LfmBy2SdSXDgM2g9rtNyPRov0IB1?=
- =?us-ascii?Q?aIMSDwEUt38EAGj6gGy17s0CqlP4/nejYw66wyck/g4VjIjYBFwfG98DqmiO?=
- =?us-ascii?Q?lZgp7TlZwrgGALLtko3ak5P1wt9P3ryk9ACkxTplelLHfhVa/ckjrMzWPG7I?=
- =?us-ascii?Q?g2V8MokcsF7aL0+d8ou2Fk8Gf0fvvlqE1t8NZCmQqfytCVZUtzj1xPRo0nOq?=
- =?us-ascii?Q?4tRUkqPhemXRsQ1D8y5P9+830F0eMiFDBm7R0HiioTL1XDwlA2JOQiahgDyy?=
- =?us-ascii?Q?Mgf8d4Heu8OB5XiVpFLGc+Hwj4qXBs2L7j1AOwi08JAQ4K6MTQcShB5nGF7u?=
- =?us-ascii?Q?CRSTTIqMWFHeFcBFTGZK/dc/YJntv9qVPrOMUy4mBuerH7XvHIvnWm4fwWeY?=
- =?us-ascii?Q?MbKvf1xZUj8k6WtQ9h/escbbwknJDjKlRMl03ACY3SkBI49RJioF0fq8dcyW?=
- =?us-ascii?Q?wLoWI1ukr46uB5pg4fjXyF4Ty4oB87ppOgwueY70Yp9625Twge0Nvj8Zpa08?=
- =?us-ascii?Q?MkoK+g4Vl5m34UWT11Pb2Ev5gu7uyyD7YKY5/qnJk1JlOeaITRacltYLR37g?=
- =?us-ascii?Q?nLzSDvg/iPpWYWF/MN55GDnnl/YydTg70AkzKKo1A0EbciHVSLyeZqWRaXSG?=
- =?us-ascii?Q?WSKi0fJbvEPNlS36skmY51069hpVoQ7/rYgM9NICp/v0wonB7ccy2psCqPkd?=
- =?us-ascii?Q?wboynkXyvXBOklglDabmdGN+6rdwb8AE8qmeEEfXq4fL2KuZpkiZy5Cf9Pgd?=
- =?us-ascii?Q?fKKgzExZ0jCd0GwGYcdvN3wVsCJ+6+NXD22NLoyG9fouHa9sVsRF+WDYXwQn?=
- =?us-ascii?Q?cElODQcX9bxfbJz+YnOfGiIObEavZTtKl1p+pqXmSA5+AGk6nx2354tjkbek?=
- =?us-ascii?Q?3KMlOOHypCpT/0BVPF95gaVNrYdza7agFu2C/afQbBqW+53y44KO8KTcKMuu?=
- =?us-ascii?Q?CS19h7doZL6dOPaIJQiH73VsrGMoul3sSVjM83FjTO8ZT2anceNBqujRBMv0?=
- =?us-ascii?Q?6o5P5GhiOPu2AvVpjyMdjxsVVrQrx0p8FjKccdOCFy+07cqweEA8VnfD3Rnr?=
- =?us-ascii?Q?1tu+axvMCao0SIQqhTXstQSliQVijzIQ9N3ypPJHff0hOFa9GGd61fvIUw2k?=
- =?us-ascii?Q?iJd+EkjwUOshWuniGwhv5o+W8TjQX1vcfgHLmiMk8M4DNuVTAW+Hx2hddzCT?=
- =?us-ascii?Q?AgXAm5+MOtHlsbZXyyMmGHiIxE+EM8r0ypcvagpaNXeaVa7Yg0FgUKUP7OVz?=
- =?us-ascii?Q?uFgCYj7mxnTElrl5/z5qoxmW057bKOljlzUtyWBAATabL/Xlne6+dpUAZ6nX?=
- =?us-ascii?Q?7VgD45dZTsdORu6ddrePkTIkVrGBmBxDiqd7FoinQ1y1qD2IJI/euDhB7zxf?=
- =?us-ascii?Q?l4bkRz85CvC5NVe0BqiaVEFYz2PONojZvX4tU+33DQu1tG64C7QV0NrQLizU?=
- =?us-ascii?Q?AJoTE2225c0dKxkfMjsLcZb/d/zTHgpzy2t+WfGsU7ZCWTsOIki23C6oqcBW?=
- =?us-ascii?Q?3Itz6ks3U7X3kxZMsVaITTEbvuppX7Ip+gMuCBf79q6tBHEfD47io4CJhTOG?=
- =?us-ascii?Q?pugYBqN0eLyyag7MsPbJ480=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0445d817-3157-48d6-67ed-08dc59fa059b
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR01MB4226.prod.exchangelabs.com
+	=?utf-8?B?YUM4VEF5YlEvc1dDSGRYdXE0RHAvdUs0Mk9uY3p2MTdzWGRwUTNJVGFsM3ll?=
+ =?utf-8?B?bDJacGlpNGd1YjA0dmw0VVVLaEFkUGswQWdSVm10TDBSWXd6ZWtOS2txM1pL?=
+ =?utf-8?B?eGZ1bWMyMGFoQ0JHRVhtZ2hRRklscGM2UTVaTmx3eXlmU0ZrQ0xoUVBMWmhl?=
+ =?utf-8?B?a2E1ZElFanQyMCsrcXA4bGcySzRQNS9rbUlBVU9mT25lZHRjTE1CTFlKQjRz?=
+ =?utf-8?B?WWVhVlNXMVc0dTRaZ0svK0pyNWY3Q1lnUWJ3RkhiL1BITzhxeTVNVExMQlMr?=
+ =?utf-8?B?NURRdUM3RnpRNlc2QTdBWTd3Zlh5VWFyTzhHNWx4VnIrUWVNczhIYkI4Z05u?=
+ =?utf-8?B?OW8ydFNuR0tXMzBzQzZseGN5VTBqYkN4d1VyVXR2bXBINldqTGRFYjQzL21M?=
+ =?utf-8?B?anp2WkxuL1JLcFY5bjNBRzJseGRxK1FCeDBteldyTG1oUlVhTFZFdFZUYU5s?=
+ =?utf-8?B?MllCUUczTzhSRUxvWmk4OEpDVGF4N3pRUlcwQUJIVkRaU29BL3d1RnVtRmlq?=
+ =?utf-8?B?cHJ6SnE1R3l0MGVWQVFsYnBJdk1Vb2pmV2xqWnhvVUVPaU1qNktZdDFQK3cv?=
+ =?utf-8?B?dXZSckxXbW5YSytIeUw1eHd1SG1WWWpTTFRySTliUHd4MDRwTU9Qeld4amFm?=
+ =?utf-8?B?SDRhWXNKWGVWbG50Q1lUWjBmdHNFLzI2N090VWZ1VzlvUjZnV3BseGlCV1cr?=
+ =?utf-8?B?QldRcXdMQmkrRk11M1MwalZXeEx1NFkwY05KV2xXUGJLSlFzRHVsRm5Ra3FK?=
+ =?utf-8?B?TFlhMTdzMDBaUWZ4WE5qeXJBVEZOK3ZObDJ1R0JBTGRxRWp6LzF6ekpHYWkz?=
+ =?utf-8?B?NlgxUXgrUXVNb1poOU9RYmVlRzkyWHRmU3BRaDlVcjR6enBqKzRpOGVVay9B?=
+ =?utf-8?B?SmhXWEhrQzRmbVkzY0Y0WUVhU1NnNTZGWUdyUUs0ai9iUkNFMnUzT1Vyd2V2?=
+ =?utf-8?B?TDJRRXpQZUJicXZldk5KQTdFRmVBZ1dyWk1yQ21nU2xjYjk4cmNKKzZLVGRh?=
+ =?utf-8?B?NjQ2aGZ6U3IycnBkblNkUTNwY0NxT3czQzJNejFqYXE4dWc3eGNSNGxSb2N6?=
+ =?utf-8?B?TzhqeDhlY3N0cDNyMnZwOTU3MUdieFpBUmV3WDBwYkFOVGhIUExPMTQwUDNj?=
+ =?utf-8?B?NFV1KzBhaUZOaTNjRDQ0UndsSGZXZ0ZPTWR0cXN5U3hWTGxxZzk0VGN0RHZF?=
+ =?utf-8?B?MGpGTnVqd2FISzdVUWtVdEdiV3JTakdRTWcxOGZ1VWtsUDE5aHhHdlhFTS9R?=
+ =?utf-8?B?REV2MGYvRG1nMkRJM1FRbHJFMHpWM0ptV1NpTmNMT0taMkRFTldsaDcyb1FV?=
+ =?utf-8?B?M0tVdkRYTWp6Q0tHY1QvM3dEYnhKY0x5WXN2VVFBczh5RUtRcTlPUlRIRXlo?=
+ =?utf-8?B?aUdwVkxmTCtLL2JEZFdFQTROUWhBY2crV2E5NkozYzFiYndhZ202ODkraThI?=
+ =?utf-8?B?ZjZxYUJRK1EzSjgxcFhQVXlmQ3phVHAyOWlMU2UzR0ovT2RXby9QLzZuSjhv?=
+ =?utf-8?B?dTFLaW9Ya1orWmtaTDdqdmQwbVhKeFhLTVBoSmJsRllkSTJoUk0zeDUxSGlj?=
+ =?utf-8?B?VlVZa3ZZTUIyRXRFYXR1UTlhUWI1K0FTQjZlSkZHaW1PYWxHczcybEJrOEth?=
+ =?utf-8?B?Mm94Nk9USDBLQUNCNnFreWpTNTVXUkllN1hZZTBsNG1RaUpYNGlKNWg0Nnp3?=
+ =?utf-8?Q?/Srgtl4aNOLY1jSK59v4?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 467fae24-5bed-4ab3-e657-08dc59fa64da
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 07:35:55.1945
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 07:38:35.2381
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7xBj3ur0cod0l/Vym9Ku+x1qmm1H+ddG2tT1cBeL6OHnYiUBZZjUSciJnFPRsIy2bjuiRbdw5gA4jD3STONemgkweZyJQa72Kd0wz9WuCg7Zgpeic32dNbMFFIIUy74N
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR01MB8411
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR20MB5308
 
+On Sat, 9 Mar 2024 17:01:21 +0800, Inochi Amaoto wrote:
+> Add clock controller support for the Sophgo CV1800B, CV1812H and SG2000.
+> 
+> Changed from v8:
+> 1. improve code.
+> 2. remove default config in Kconfig.
+> 3. merge patch 2-4 of v8 into one.
+> 
+> [...]
 
+Applied to sophgo/for-next, thanks!
 
-On Tue, 9 Apr 2024, Robin Murphy wrote:
-> On 09/04/2024 2:05 am, Ilkka Koskinen wrote:
->> 
->> On Mon, 8 Apr 2024, Robin Murphy wrote:
->>> On 2024-04-05 11:33 pm, Ilkka Koskinen wrote:
->>>> 
->>>> On Fri, 5 Apr 2024, Robin Murphy wrote:
->>>>> On 2024-03-07 7:31 pm, Ilkka Koskinen wrote:
->>>>>> The driver enabled and disabled interrupts even if no interrupt was
->>>>>> assigned to the device.
->>>>> 
->>>>> Why's that a concern - if the interrupt isn't routed anywhere, surely it 
->>>>> makes no difference what happens at the source end?
->>>> 
->>>> The issue is that we have two PMUs attached to the same interrupt line.
->>>> Unfortunately, I just don't seem to find time to add support for shared 
->>>> interrupts to the cspmu driver. Meanwhile, I assigned the interrupt to 
->>>> one of the PMUs while the other one has zero in the APMT table.
->>> 
->>> I suspected something like that ;)
->>> 
->>>> Without the patch, I can trigger "ghost interrupt" in the latter PMU.
->>> 
->>> An occasional spurious interrupt should be no big deal. If it ends up as a 
->>> screaming spurious interrupt because we never handle the overflow 
->>> condition on the "other" PMU, then what matters most is that we never 
->>> handle the overflow, thus the "other" PMU is still useless since you can't 
->>> assume the user is going to read it frequently enough to avoid losing 
->>> information and getting nonsense counts back. So this hack really isn't a 
->>> viable solution for anything.
->> 
->> IIRC, what happens is that kernel will disable the interrupt eventually due 
->> to unhandled spurious interrupts making the "working" PMU also useless.
->
-> Indeed, but if having one inaccurate PMU is fine, having more than one is no 
-> big deal either, right? The moral of the story is that hacking the firmware 
-> to lie about the hardware is just not a great idea.
+[5/6] riscv: dts: sophgo: add clock generator for Sophgo CV1800 series SoC
+      https://github.com/sophgo/linux/commit/bb7b3419627eb34f3466022d1f4b3c942c09712d
+[6/6] riscv: dts: sophgo: add uart clock for Sophgo CV1800 series SoC
+      https://github.com/sophgo/linux/commit/18e8c6d2cced6c57d62813f49b57eeb8ee02f984
 
-Depends on the use case, of course :D
+Thanks,
+Inochi
 
->
-> TBH it's always seemed a bit broken that we allow probing without an IRQ but 
-> then have no accommodation for overflow if so. Fixing that would be a good 
-> thing in itself, and would at least have the side-effect of allowing your 
-> hack to work, however much I may disapprove of that :)
->
-> FWIW it is still lingering some way down my to-do list to factor out the 
-> fiddly IRQ-sharing/migration code into at least a helper library (if not 
-> further into perf core itself) before it gets copy-pasted much more, and it 
-> occurs to me that I could then easily factor the IRQ-substitute timer 
-> approach from e.g. arm-ccn into that as well... The more I think about it the 
-> more I might just convince myself that I want it for the driver I'm currently 
-> working on and justify bumping it up the list, let's see...
-
-That sounds like a great idea. Even plain helper library would keep the 
-drivers a lot cleaner.
-
-Cheers, Ilkka
