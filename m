@@ -1,70 +1,116 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EC114A0AE;
-	Thu, 11 Apr 2024 11:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D50B147C9D;
+	Thu, 11 Apr 2024 11:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712835909; cv=none; b=O5QBp94iR7qGC/sJ7a7rs0RT2jmdRB+8BUkIjoiHpVSrFqngAUdY/27V7r+onFcHefd0XZrc8q7JrKvYKVMhEd/QLjV0Eo5v5aZ0svqGJWO8b5IHXKYn3a37BMkLCZz1XbY/QL7hWjEaO/MJY+5sPrrEPfviXh4KodEIX5Zf2u4=
+	t=1712835909; cv=none; b=lY4OCIuidVC5t1NpUxci22PgececBhEv6XZTnC06SP+3NEpFa/Ni20DZnzozASefhgwnXG7cjArMgBn+81U9/j82tRarHVwfkROVg2B6uMNYb2Y6aXD17ElaVipHrQZzQ1MU7T8ha/QDuHmjqtJiQd+SNxY6RFrIIMqOLaT2p84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712835909; c=relaxed/simple;
-	bh=XRFBR7q3J3br3yr1FBOa62Y1C7spuDVeCqnhCIGgb4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c10YGWOgdGyQhk373Ed98zW+J4AuAiApTOMfJlGzVNTuxZ1n8VdHSsi87G6WPY8nGACzHDVWhLCt5hXx5K/UA9X7Ffg7Bmk3lVGYKD8ufqPG3y9295996k+A5w5scVGN1snwFyLl+QbzJ/eC65Tp+QhjtJ90pob1TOqJ7hdOdNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VFd8h3qZhz1R5XY;
-	Thu, 11 Apr 2024 19:42:12 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2BE0C140E9F;
-	Thu, 11 Apr 2024 19:44:57 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 11 Apr 2024 19:44:56 +0800
-Message-ID: <cedafaa6-5507-41d3-bd1e-a8964b8630ba@huawei.com>
-Date: Thu, 11 Apr 2024 19:44:56 +0800
+	bh=vnqWqqap9+fQ4BzCnsXTPQ93EcTt8RJgBFAXaAY6kT0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fhmv1usktw67TyYezozZcxud25gJ18T7kNoa+5df+zMg2IA5dKgvxqbUyPst0Vr2nlt8a0zaGFhwd4GcERyMXSPzOvCKNtDoJYFpjgTiAsoclGcJRtIPDAcwuAPFV6vZk1ptwlfvo8oOJngmLJN9JE/6i7tFraaux00hac7L8kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,193,1708354800"; 
+   d="scan'208";a="201123388"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 11 Apr 2024 20:45:07 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.85])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B5E0D4202AC3;
+	Thu, 11 Apr 2024 20:45:03 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 3/4] net: ravb: Fix GbEth jumbo packet RX checksum handling
+Date: Thu, 11 Apr 2024 12:44:32 +0100
+Message-Id: <20240411114434.26186-4-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
+References: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bcachefs: fix typo in reference to BCACHEFS_DEBUG
-Content-Language: en-US
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Lukas Bulwahn <lbulwahn@redhat.com>, Kent Overstreet
-	<kent.overstreet@linux.dev>, Brian Foster <bfoster@redhat.com>,
-	<linux-bcachefs@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Lukas Bulwahn <lukas.bulwahn@redhat.com>
-References: <20240411082931.56362-1-lukas.bulwahn@redhat.com>
- <a2683fad-07db-4857-9ebf-7adf31a09e50@huawei.com>
- <b6d90387-7892-4c28-9855-ae35faacfe9c@moroto.mountain>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <b6d90387-7892-4c28-9855-ae35faacfe9c@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Transfer-Encoding: 8bit
 
-Thanks, I got it!
+Sending a 7kB ping packet to the RZ/G2L in Linux v6.9-rc2 causes the
+following backtrace:
 
-On 2024/4/11 18:21, Dan Carpenter wrote:
-> On Thu, Apr 11, 2024 at 05:21:05PM +0800, Hongbo Li wrote:
->> Also, I am curious why such spelling errors cannot be detected at the
->> compilation stage.
->>
-> 
-> The IS_ENABLED() macro is testing whether the define exists or not.
-> In this case both "CONFIG_BCACHEFS_DEBUG" and "CONFIG_BCACHEFS_DEBU" do
-> not exist for this config.
-> 
-> Lukas's scripts make a list of macros we expect to exist and then checks
-> against the list.
-> 
-> regards,
-> dan carpenter
-> 
+	WARNING: CPU: 0 PID: 0 at include/linux/skbuff.h:3127 skb_trim+0x30/0x38
+	Modules linked in:
+	CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W          6.9.0-rc1-00222-gde11614025b1 #3
+	Hardware name: Renesas SMARC EVK based on r9a07g044l2 (DT)
+	pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+	pc : skb_trim+0x30/0x38
+	lr : ravb_rx_csum_gbeth+0x40/0x90
+	sp : ffff800080003d40
+	x29: ffff800080003d40 x28: 0000000000000400 x27: ffff00000d0f0000
+	x26: 0000000000000001 x25: ffff800080003e84 x24: 0000000000000e52
+	x23: 0000000000000000 x22: ffff00000d0f0960 x21: 000000000000ffff
+	x20: 000000000000f6ff x19: ffff00000cf4cb00 x18: 0000000000000000
+	x17: ffff7ffffdd4f000 x16: ffff800080000000 x15: e7e6e5e4e3e2e1e0
+	x14: dfdedddcdbdad9d8 x13: 0000131211100f0e x12: 0d0c0b0a09080706
+	x11: 0000000013121110 x10: 0000000000000000 x9 : 0000000000000001
+	x8 : ffff800080003cf0 x7 : 0000000000000000 x6 : ffff00007faf4590
+	x5 : 000000000010000b x4 : a1a8362deecb53ea x3 : 0000000000000080
+	x2 : 00000000ffff0000 x1 : 000000000cf4ccfc x0 : ffff00000cf4cb00
+	Call trace:
+	 skb_trim+0x30/0x38
+	 ravb_rx_gbeth+0x56c/0x5cc
+	 ravb_poll+0xa0/0x204
+	 __napi_poll+0x38/0x17c
+	 net_rx_action+0x124/0x268
+	 __do_softirq+0x100/0x26c
+	 ____do_softirq+0x10/0x1c
+	 call_on_irq_stack+0x24/0x4c
+	 do_softirq_own_stack+0x1c/0x2c
+	 irq_exit_rcu+0xbc/0xd8
+	 el1_interrupt+0x38/0x68
+	 el1h_64_irq_handler+0x18/0x24
+	 el1h_64_irq+0x64/0x68
+	 default_idle_call+0x28/0x3c
+	 do_idle+0x204/0x25c
+	 cpu_startup_entry+0x38/0x3c
+	 kernel_init+0x0/0x1d8
+	 start_kernel+0x504/0x5f0
+	 __primary_switched+0x80/0x88
+	---[ end trace 0000000000000000 ]---
+
+This is caused by ravb_rx_gbeth() calling ravb_rx_csum_gbeth() with the
+wrong skb for a packet which spans multiple descriptors. To fix this,
+use the correct skb.
+
+Fixes: c2da9408579d ("ravb: Add Rx checksum offload support for GbEth")
+Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+---
+ drivers/net/ethernet/renesas/ravb_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 028ab5c6aaf7..e1e39f65224c 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -843,7 +843,7 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
+ 				priv->rx_1st_skb->protocol =
+ 					eth_type_trans(priv->rx_1st_skb, ndev);
+ 				if (ndev->features & NETIF_F_RXCSUM)
+-					ravb_rx_csum_gbeth(skb);
++					ravb_rx_csum_gbeth(priv->rx_1st_skb);
+ 				napi_gro_receive(&priv->napi[q],
+ 						 priv->rx_1st_skb);
+ 				rx_packets++;
+-- 
+2.39.2
+
