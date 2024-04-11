@@ -1,144 +1,96 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFBF17C61
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FD717C60
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846620; cv=none; b=ufGraQMkjWBspWDSJwCZ0pPKpuiT++N1y077mH+T84fiU1onNcVjmt9jtztI+D5aPWxwCSBvEoZIx5a9U1SJicN1IV7GbKWz1SuaSbav3uhdSfNexdowGLgwXuTRY0KnrZqe3fj6DPmnA4UIvzUznEJnn5hQZ2B+tp0bdzrP13c=
+	t=1712846621; cv=none; b=lAtWGf++MFFOVxbsqH7/5hAFSXBFBjU77OQfvaLPEYMKBvNBNDRV+ucGmv0ghAVjBN5iBR+Ru6hwzOMO4e0YwkQvcEytdm7OvA/xNLk+El6GvEgbmg5dbls0NLNPSPh9kpXfALxQGbkpPs32twsYa0JyL+u940zr6vR4L6xyzZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846620; c=relaxed/simple;
-	bh=5dwBI9khdYJeiWpel/yUUnsS8SPNZ9Fqg7qfToEvfZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fAzqq4W8tIhCccDHB1m9WDtn7CVDo2Koq+9+pzjxN0wMYhc7ZMbRMONiJJg2hLHVTGbBvzs++mYa7l2tY63BzJw2XrgOHtPSAi+P2+6BzMvY+0Ne4a+n/NV4T85NR4Qggi1HuI9BWNtaUSneV3Pq7r5bmirWgoay8XQTH3UxURk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=QRXz7/pD; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1712846621; c=relaxed/simple;
+	bh=gYeTtQfvKPxsXRKWox96oLZ05Hu2i+oxkyWXQLKUook=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cghG6IVnC0bZLBM9cwYWLZuIOFPTTpsyPNBkQOjgMS+kQ09cxK/STwf6LxL4mQ5+7xcdwltqQvIrbP4qNFtRulk18lyx8pNo+po3qe1RWVDKwi+a9npPSaBZJcJQnwzLTZBlmSZe2/Jlm8NSbYyzCyKGULNV94KDi6OY/liGKkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aVniZs3+; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="QRXz7/pD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1712846615;
-	bh=5dwBI9khdYJeiWpel/yUUnsS8SPNZ9Fqg7qfToEvfZY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QRXz7/pDt/jVzuDcjihSy6iw0ML9j0uiHYjKbmGJq9JXtHn2NYOSBi2MnKsCASoya
-	 uxcIWQvnh6Bet0wMOs8zc0vVoKlnrjcUuT4BEJzeE4Y7z0nBOQTXoB98ugqcpU+Kmp
-	 QE/5myHeUWrEQS0pV7PTDYmgLnq/5rRLIDd7w/Dk=
-Received: from stargazer.. (unknown [113.200.174.104])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 1E7D266EA9;
-	Thu, 11 Apr 2024 10:43:31 -0400 (EDT)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Dave Hansen <dave.hansen@linux.intel.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aVniZs3+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qv1t8eFWmdekM+4JNneNzP5Db+pE1gAcLNcy+QQxoYY=; b=aVniZs3+gUkbfsGMO/2meZfM4z
+	gkZIFVsDMsZXYwi4DYa+L9v4BpWrCXuAbvpagVtUtwo4ybzfiqQgrRyVPSoU4kH59D4kdFXYeKUMm
+	xCZMYZ2gqEzasuW7/OsivRMUzokmMs5jhnTFzSdAyda+KFhyG9Kf4oXHG6HFon58yX3EqJ2ovO4ao
+	YKyqrU7J+YewxWtYPBKBYmuYhgK9kvK6Pf/peE69engXbgQS2B2qgsrBRB7nBD+Jc3AzBfudxPlvZ
+	Oq0ovrr2Pe++X4nPxKLUz3BhOFWme0ulrtrM+nHaaRS8uJhZSj29iXdZqBLCcqPRHoOwJ/vqpwu/C
+	piraIPYw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ruveC-00000008fSy-1Am7;
+	Thu, 11 Apr 2024 14:43:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E87E4300487; Thu, 11 Apr 2024 16:43:27 +0200 (CEST)
+Date: Thu, 11 Apr 2024 16:43:27 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: [PATCH v7 1/2] x86/mm: Don't disable INVLPG if "incomplete Global INVLPG flushes" is fixed by microcode
-Date: Thu, 11 Apr 2024 22:43:21 +0800
-Message-ID: <20240411144322.14585-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.44.0
+	Luca Abeni <luca.abeni@santannapisa.it>,
+	Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Phil Auld <pauld@redhat.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Youssef Esmat <youssefesmat@google.com>
+Subject: Re: [PATCH V6 3/6] sched/fair: Fair server interface
+Message-ID: <20240411144327.GB40213@noisy.programming.kicks-ass.net>
+References: <cover.1712337227.git.bristot@kernel.org>
+ <1abba9e7f47ad4a5dfd8b2dfb59aa607983cdce4.1712337227.git.bristot@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1abba9e7f47ad4a5dfd8b2dfb59aa607983cdce4.1712337227.git.bristot@kernel.org>
 
-Per the "Processor Specification Update" documentations referred by the
-intel-microcode-20240312 release note, this microcode release has fixed
-the issue for all affected models.
+On Fri, Apr 05, 2024 at 07:28:02PM +0200, Daniel Bristot de Oliveira wrote:
+> Add an interface for fair server setup on debugfs.
+> 
+> Each CPU has three files under /debug/sched/fair_server/cpu{ID}:
+> 
+>  - runtime: set runtime in ns
+>  - period:  set period in ns
+>  - defer:   on/off for the defer mechanism
+> 
+> This then leaves /proc/sys/kernel/sched_rt_{period,runtime}_us to set
+> bounds on admission control.
+> 
+> The interface also add the server to the dl bandwidth accounting.
 
-So don't disable INVLPG if the microcode is new enough.  The precise
-minimum microcode revision fixing the issue is provided by engineer from
-Intel.
+I suppose most people will want to use it like:
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Michael Kelley <mhklinux@outlook.com>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.tip-bot2@tip-bot2/
-Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/releases/tag/microcode-20240312
-Link: https://cdrdv2.intel.com/v1/dl/getContent/740518 # RPL042, rev. 13
-Link: https://cdrdv2.intel.com/v1/dl/getContent/682436 # ADL063, rev. 24
-Link: https://lore.kernel.org/all/20240325231300.qrltbzf6twm43ftb@desk/
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/x86/mm/init.c | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
+  for i in /debug/sched/fair_server/cpu*
+  do
+	  echo $PERIOD > ${i}/period
+	  ecoh $RUNTIME > ${i}/runtime
+  done
 
-diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 679893ea5e68..c318cdc35467 100644
---- a/arch/x86/mm/init.c
-+++ b/arch/x86/mm/init.c
-@@ -261,33 +261,43 @@ static void __init probe_page_size_mask(void)
- 	}
- }
- 
--#define INTEL_MATCH(_model) { .vendor  = X86_VENDOR_INTEL,	\
--			      .family  = 6,			\
--			      .model = _model,			\
--			    }
-+#define INTEL_MATCH(_model, _fixed_microcode)	\
-+	{					\
-+	  .vendor	= X86_VENDOR_INTEL,	\
-+	  .family	= 6,			\
-+	  .model	= _model,		\
-+	  .driver_data	= _fixed_microcode,	\
-+	}
-+
- /*
-  * INVLPG may not properly flush Global entries
-- * on these CPUs when PCIDs are enabled.
-+ * on these CPUs when PCIDs are enabled and the
-+ * microcode is not updated to fix the issue.
-  */
- static const struct x86_cpu_id invlpg_miss_ids[] = {
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
--	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
--	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
--	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x2e),
-+	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x42c),
-+	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x11),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x118),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4117),
-+	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x2e),
- 	{}
- };
- 
- static void setup_pcid(void)
- {
-+	const struct x86_cpu_id *invlpg_miss_match;
-+
- 	if (!IS_ENABLED(CONFIG_X86_64))
- 		return;
- 
- 	if (!boot_cpu_has(X86_FEATURE_PCID))
- 		return;
- 
--	if (x86_match_cpu(invlpg_miss_ids)) {
-+	invlpg_miss_match = x86_match_cpu(invlpg_miss_ids);
-+
-+	if (invlpg_miss_match &&
-+	    boot_cpu_data.microcode < invlpg_miss_match->driver_data) {
- 		pr_info("Incomplete global flushes, disabling PCID");
- 		setup_clear_cpu_cap(X86_FEATURE_PCID);
- 		return;
--- 
-2.44.0
+And I think we agreed to keep this loop in userspace, but memory is
+vague.
 
+The 'defer' thing is dubious though, I don't suppose anybody would ever
+want to actually change that, other than you while poking around at this
+code, right?
