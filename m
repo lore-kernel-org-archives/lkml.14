@@ -1,182 +1,142 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467822C6B2;
-	Thu, 11 Apr 2024 14:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3646517C69
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846422; cv=none; b=aRJo4PmaDF3spC/xB5c+QDfY50cIunIV3kiELBW/fmQXM8go5DPrXVst0igaoJD77IERisPCyW6XZlC9WRDwZbrQwMITb5yusjWoVCVUANJ317eyMq/T/7416PTNXIX8C0zP4w3cLq7ikRNFW0aYmak4eWc1O+TZvRpE8oCBA1g=
+	t=1712846445; cv=none; b=VgFdlkECD+uwfDxaP/KfjXjnD5n8EOm1hOz7XiRYiANOVhE9ViH/xiKgKYwkUJu05XTcajGAo+iI4QJm0OsMHVf06/2ZUR9dq9Cd8gg3M2n7BXiOltsvY4TmHmboYX2Qw21kqfRvGG4AF049v58dmve9DryQK0jgdHgutkKsYI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846422; c=relaxed/simple;
-	bh=GbQ2nQ7+TdDQc2XJ/ebPuv9itFE/gprywyjzyllp7A0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PgdsyOP8kCun3z2McGdguzqRgzNfwcsCczPmKUMr5Z9SukmE0Le6zkdUQ3nIAx9BPKqKNvk6mcaYGpNolxaAJKArm+lrDgAAV2KIDnt+lOHmi1gTzwZvDj3ggoHXuYvhAHkXqlJeyeSSvYqJ2ytzOzy8/5eRn/I54Y2HULwYpzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Sr8cqwDB; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1712846445; c=relaxed/simple;
+	bh=Izk90m2B8HeuxRzUl7qvqDC44hhknhTr3zpNAjQWEmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXveoBohsYGna3+09ZKaJwK1d3TOUwIvuvDXpo+4s/BItsEVZtx0a4HC07ivE7eQya6Gh1idolYy8hqjrSfsL1hXRU0LCeXq2ZCw2bIuqn4wFf5sRGEej7nyBAwX9FLCz6Ux6U7zdHP9m6tDKOxluTe35bTxgUz5u4gDOcLyLvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DD7Q2Wj0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Sr8cqwDB"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BCBImr019272;
-	Thu, 11 Apr 2024 16:39:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=em1iavzcmoXt7sbQ99esOEY41Vxo8iurL0awxGXDL90=; b=Sr
-	8cqwDBbL8GTrJSESyIqhYjzxk5YgaAJhTd7qaLT2J2w7+9CvlmNPGRFZyOAsFYGE
-	ixsLLia8kD+UNA9a6qqkkrccHOxE2lqEpqA3sUgudVtZlrw3XvoTUj1dm9zUkJZG
-	s7wR+JOx2NRCLnI8axEX2jfgz11EfLxEHNMpXarREVHn8NcZC+4kbzk58xSTYlXf
-	PSbUC1SwTvFX1xaWOhJK1IS24rKMo8SG4FVDttyEvMKPoRHwm4/U356XnZqoTFJc
-	Et8hjT2hkmANIFeuvl8g//UUf8eN+pbmlAeXVgnQK4GyNftclwtSgUpXH1hjp1Zr
-	zRB8VhrtRWIkeu8V1k9g==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbhbjb8kx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 16:39:53 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9D07B40047;
-	Thu, 11 Apr 2024 16:39:50 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E6E1021BF56;
-	Thu, 11 Apr 2024 16:38:40 +0200 (CEST)
-Received: from localhost (10.48.86.106) by SHFDAG1NODE2.st.com (10.75.129.70)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Apr
- 2024 16:38:38 +0200
-From: Christophe Roullier <christophe.roullier@foss.st.com>
-To: "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Jose Abreu <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark
- Brown <broonie@kernel.org>,
-        Christophe Roullier
-	<christophe.roullier@foss.st.com>
-CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 09/11] ARM: dts: stm32: add ethernet1/2 RMII pins for STM32MP13F-DK board
-Date: Thu, 11 Apr 2024 16:36:56 +0200
-Message-ID: <20240411143658.1049706-10-christophe.roullier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240411143658.1049706-1-christophe.roullier@foss.st.com>
-References: <20240411143658.1049706-1-christophe.roullier@foss.st.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DD7Q2Wj0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712846443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wb3AUKmEkBN85hxUnLYS/uHtgcM5R8+K16R/fCHszlA=;
+	b=DD7Q2Wj0QsNe9MzoWdi9cthKVhJGhtYJRpl/N+AqBWR0FIAm2gviYDkagfXlwaxexOEw1b
+	ycZOmnkXFNa5WvJECEDKzxqq1h5OxzpqVpxhpOeFvz0wvaMfaQVe784t8QzupuEqQGIagG
+	+tr2uUmJv8nNYiAUX+UDdeR2evLKY2g=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-689-c5jD_3zrNVKVr8QeZY1FVw-1; Thu,
+ 11 Apr 2024 10:40:39 -0400
+X-MC-Unique: c5jD_3zrNVKVr8QeZY1FVw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72D5D1C05154;
+	Thu, 11 Apr 2024 14:40:39 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.235])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 8F97D2166B31;
+	Thu, 11 Apr 2024 14:40:36 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 11 Apr 2024 16:39:13 +0200 (CEST)
+Date: Thu, 11 Apr 2024 16:39:05 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Leonardo Bras <leobras@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>
+Subject: [PATCH] sched/isolation: fix boot crash when the boot CPU is
+ nohz_full
+Message-ID: <20240411143905.GA19288@redhat.com>
+References: <20240130010046.2730139-2-leobras@redhat.com>
+ <20240402105847.GA24832@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_08,2024-04-09_01,2023-05-22_02
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402105847.GA24832@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Those pins are used for Ethernet 1 and 2 on STM32MP13F-DK board.
-ethernet1: RMII with crystal.
-ethernet2: RMII without crystal.
-Add analog gpio pin configuration ("sleep") to manage power mode on
-stm32mp13.
+Documentation/timers/no_hz.rst states that the "nohz_full=" mask must not
+include the boot CPU, this is no longer true after the commit 08ae95f4fd3b
+("nohz_full: Allow the boot CPU to be nohz_full").
 
-Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+However after another commit aae17ebb53cd ("workqueue: Avoid using isolated
+cpus' timers on queue_delayed_work") the kernel will crash at boot time in
+this case; housekeeping_any_cpu() returns an invalid cpu nr until smp_init()
+paths bring the 1st housekeeping CPU up.
+
+Change housekeeping_any_cpu() to check the result of cpumask_any_and() and
+return smp_processor_id() in this case. Yes, this is just the simple and
+backportable workaround which fixes the symptom, but smp_processor_id() at
+boot time should be safe at least for type == HK_TYPE_TIMER, this more or
+less matches the tick_do_timer_boot_cpu logic.
+
+We should not worry about cpu_down(); tick_nohz_cpu_down() will not allow
+to offline tick_do_timer_cpu (the 1st online housekeeping CPU).
+
+Fixes: aae17ebb53cd ("workqueue: Avoid using isolated cpus' timers on queue_delayed_work")
+Reported-by: Chris von Recklinghausen <crecklin@redhat.com>
+Closes: https://lore.kernel.org/all/20240402105847.GA24832@redhat.com/
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 ---
- arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi | 71 +++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ Documentation/timers/no_hz.rst |  7 ++-----
+ kernel/sched/isolation.c       | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
-index 27e0c3826789d..b2583df813af8 100644
---- a/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/st/stm32mp13-pinctrl.dtsi
-@@ -13,6 +13,77 @@ pins {
- 		};
- 	};
+diff --git a/Documentation/timers/no_hz.rst b/Documentation/timers/no_hz.rst
+index f8786be15183..7fe8ef9718d8 100644
+--- a/Documentation/timers/no_hz.rst
++++ b/Documentation/timers/no_hz.rst
+@@ -129,11 +129,8 @@ adaptive-tick CPUs:  At least one non-adaptive-tick CPU must remain
+ online to handle timekeeping tasks in order to ensure that system
+ calls like gettimeofday() returns accurate values on adaptive-tick CPUs.
+ (This is not an issue for CONFIG_NO_HZ_IDLE=y because there are no running
+-user processes to observe slight drifts in clock rate.)  Therefore, the
+-boot CPU is prohibited from entering adaptive-ticks mode.  Specifying a
+-"nohz_full=" mask that includes the boot CPU will result in a boot-time
+-error message, and the boot CPU will be removed from the mask.  Note that
+-this means that your system must have at least two CPUs in order for
++user processes to observe slight drifts in clock rate.) Note that this
++means that your system must have at least two CPUs in order for
+ CONFIG_NO_HZ_FULL=y to do anything for you.
  
-+	eth1_rmii_pins_a: eth1-rmii-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G', 13, AF11)>, /* ETH_RMII_TXD0 */
-+				 <STM32_PINMUX('G', 14, AF11)>, /* ETH_RMII_TXD1 */
-+				 <STM32_PINMUX('B', 11, AF11)>, /* ETH_RMII_TX_EN */
-+				 <STM32_PINMUX('A', 1, AF11)>, /* ETH_RMII_REF_CLK */
-+				 <STM32_PINMUX('A', 2, AF11)>, /* ETH_MDIO */
-+				 <STM32_PINMUX('G', 2, AF11)>; /* ETH_MDC */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+
-+		pins2 {
-+			pinmux = <STM32_PINMUX('C', 4, AF11)>, /* ETH_RMII_RXD0 */
-+				 <STM32_PINMUX('C', 5, AF11)>, /* ETH_RMII_RXD1 */
-+				 <STM32_PINMUX('C', 1, AF10)>; /* ETH_RMII_CRS_DV */
-+			bias-disable;
-+		};
-+
-+	};
-+
-+	eth1_rmii_sleep_pins_a: eth1-rmii-sleep-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G', 13, ANALOG)>, /* ETH_RMII_TXD0 */
-+				 <STM32_PINMUX('G', 14, ANALOG)>, /* ETH_RMII_TXD1 */
-+				 <STM32_PINMUX('B', 11, ANALOG)>, /* ETH_RMII_TX_EN */
-+				 <STM32_PINMUX('A', 1, ANALOG)>, /* ETH_RMII_REF_CLK */
-+				 <STM32_PINMUX('A', 2, ANALOG)>, /* ETH_MDIO */
-+				 <STM32_PINMUX('G', 2, ANALOG)>, /* ETH_MDC */
-+				 <STM32_PINMUX('C', 4, ANALOG)>, /* ETH_RMII_RXD0 */
-+				 <STM32_PINMUX('C', 5, ANALOG)>, /* ETH_RMII_RXD1 */
-+				 <STM32_PINMUX('C', 1, ANALOG)>; /* ETH_RMII_CRS_DV */
-+		};
-+	};
-+
-+	eth2_rmii_pins_a: eth2-rmii-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('F', 7, AF11)>, /* ETH_RMII_TXD0 */
-+				 <STM32_PINMUX('G', 11, AF10)>, /* ETH_RMII_TXD1 */
-+				 <STM32_PINMUX('G', 8, AF13)>, /* ETH_RMII_ETHCK */
-+				 <STM32_PINMUX('F', 6, AF11)>, /* ETH_RMII_TX_EN */
-+				 <STM32_PINMUX('B', 2, AF11)>, /* ETH_MDIO */
-+				 <STM32_PINMUX('G', 5, AF10)>; /* ETH_MDC */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+
-+		pins2 {
-+			pinmux = <STM32_PINMUX('F', 4, AF11)>, /* ETH_RMII_RXD0 */
-+				 <STM32_PINMUX('E', 2, AF10)>, /* ETH_RMII_RXD1 */
-+				 <STM32_PINMUX('A', 12, AF11)>; /* ETH_RMII_CRS_DV */
-+			bias-disable;
-+		};
-+	};
-+
-+	eth2_rmii_sleep_pins_a: eth2-rmii-sleep-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('F', 7, ANALOG)>, /* ETH_RMII_TXD0 */
-+				 <STM32_PINMUX('G', 11, ANALOG)>, /* ETH_RMII_TXD1 */
-+				 <STM32_PINMUX('G', 8, ANALOG)>, /* ETH_RMII_ETHCK */
-+				 <STM32_PINMUX('F', 6, ANALOG)>, /* ETH_RMII_TX_EN */
-+				 <STM32_PINMUX('B', 2, ANALOG)>, /* ETH_MDIO */
-+				 <STM32_PINMUX('G', 5, ANALOG)>, /* ETH_MDC */
-+				 <STM32_PINMUX('F', 4, ANALOG)>, /* ETH_RMII_RXD0 */
-+				 <STM32_PINMUX('E', 2, ANALOG)>, /* ETH_RMII_RXD1 */
-+				 <STM32_PINMUX('A', 12, ANALOG)>; /* ETH_RMII_CRS_DV */
-+		};
-+	};
-+
- 	i2c1_pins_a: i2c1-0 {
- 		pins {
- 			pinmux = <STM32_PINMUX('D', 12, AF5)>, /* I2C1_SCL */
+ Finally, adaptive-ticks CPUs must have their RCU callbacks offloaded.
+diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+index 373d42c707bc..2a262d3ecb3d 100644
+--- a/kernel/sched/isolation.c
++++ b/kernel/sched/isolation.c
+@@ -46,7 +46,16 @@ int housekeeping_any_cpu(enum hk_type type)
+ 			if (cpu < nr_cpu_ids)
+ 				return cpu;
+ 
+-			return cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
++			if (likely(cpu < nr_cpu_ids))
++				return cpu;
++			/*
++			 * Unless we have another problem this can only happen
++			 * at boot time before start_secondary() brings the 1st
++			 * housekeeping CPU up.
++			 */
++			WARN_ON_ONCE(system_state == SYSTEM_RUNNING ||
++				     type != HK_TYPE_TIMER);
+ 		}
+ 	}
+ 	return smp_processor_id();
 -- 
-2.25.1
+2.25.1.362.g51ebf55
+
 
