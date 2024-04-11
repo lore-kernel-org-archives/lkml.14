@@ -1,101 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9EF01ECE9D;
-	Thu, 11 Apr 2024 15:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEC11F0B6C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850127; cv=none; b=KMNHImXGuOAnqRgNCqA6We0zeqM8JXqxh84xPMkizf5dFtzPkInzbCDOnO93ZpWm8mG8sObjrdsXykGCCUjuKBy/CgjtdGkkCKy/oTuSQU8bBjqS7egSqIj2ddJQshkcE+MjeT2kDEy2aUodDcY6K2qmbbyqNPgNSUDYmoGSQ4w=
+	t=1712850127; cv=none; b=cxIdKoqZd1D3uAyGKG9sKjx0O027Bz5DLo3CQH720mxcojesM7sbJr3Qr6USjuNBLJDze4iLHHvwtAWHgqxwHABBQx3I/jOif5hJn9ucAEpxbhSb4PyYwd27TCWhG3N3HjugvqHoZLO0Gns3O5yVl55dGtPmKS5T8IhZdD71aBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712850127; c=relaxed/simple;
-	bh=s++XfARygyr9QzWg7t9rh68e9ZZCT9EVQZhozNyWOWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a2e6FaLTmtsn9HchJeEQxu+0WTFtEZzsqbBrWHvQPFnR1rGRzFu18H46hKYBpLGhRjL08V5K+SRDEGFAcQLuqewoPXQe00KFf7LSaC2IwZ0VS4exWhv1Xt3121kxyVChzzJrLParkKJxt8G4vE5gs7lcumXs1rLMi0jIHh5SfVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VjdpAGl7; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=HWpRYWyoaUZ2U4fzX8sK97MS4hPQMcyB68wdiAXWcd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OBkHQV3N7WVHmv7K6PQkgPDcFFH7unWXfm5WdlhoaHdVacgPzLRktO0ifvCE/FOMtDi3vsHwMnYMxWpZS4m7kqajXREnJPCZ4Ss4rggbnZp8RV6AFUue56rTS90sNZWjDNLK579tR67F4djw5SQMe7L3Jr4ZiNV0szz2JxzhPbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=CY3gMhv9; arc=none smtp.client-ip=209.85.166.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VjdpAGl7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712850126; x=1744386126;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=s++XfARygyr9QzWg7t9rh68e9ZZCT9EVQZhozNyWOWc=;
-  b=VjdpAGl70T3jUzXGmSycH8jv9c877LaXBc04h96due9ukVyR/QcofCPJ
-   ialXweeHEDFWhXDgmI22aYMEP/Ql8TmwDFqf3+iv+SIOHaR3+Wn9wRCuZ
-   2PxPcrrHNW1poR553CJcZjsajOb0rn8WZhrKHpr/GrJglSuvmFZNJqf/O
-   2lpp7CYoDs4rLbMf33tbqGJUL9iHkuU1LaKP9NjcLgYTYeoWGFfTl/tej
-   64yLEpURXgdczjLWMM7ENvMgvC5QhpCqjUTJ35daCUUhIKPCjFKymmf8x
-   ioi3g5skdFmI7656d58nwepB7Q0V0S9XmThpCd9kOu1covpR6YjiNs6X8
-   g==;
-X-CSE-ConnectionGUID: alg6nNwBR3CGad53UkPW2Q==
-X-CSE-MsgGUID: t/TVSiUUTzCerlITNo08UA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="12119268"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="12119268"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:42:06 -0700
-X-CSE-ConnectionGUID: Tj1tx9SVT5Cf9s1DZaN/pw==
-X-CSE-MsgGUID: MzsmU3NKTOSrrK0nECiQ9Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="25587756"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:42:02 -0700
-Message-ID: <02a23b4f-1b2d-4e85-8826-23842790d237@intel.com>
-Date: Thu, 11 Apr 2024 23:41:59 +0800
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="CY3gMhv9"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170643339f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:42:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850125; x=1713454925; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yJxPi8WmLQix200ePCP+T6VK310QZd3pEm6EroESoUU=;
+        b=CY3gMhv9n4LVzVRrzRmw0HV2+MMsr8d/PdH1or0tTt45eabRc+QTxDqjjiHm505rpo
+         qPQqrPhdMW3mcgyouWBBi/KL9DLkzrICL2ZWIzAdgSEDx6t8WLlUIgByA1ezVayABElh
+         rLVU+U4anI8NKh3JBnAHoV6J7w/4BSB+qUmijoShvZAhy9D85sFvMTX2sSo1ZQl542RX
+         9200N1VCfAxEADPRgITn/cShU2zJ2LkaFR5kLIhR4V//RhBhx+QGbVzuD/gdwqSGHjDl
+         yLML5RzyejzdI4fPDzIs5gWRDBSuQGmZlMPLe52xInDyavUzSZkOTItZIQkih29ztD+p
+         E7/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712850125; x=1713454925;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yJxPi8WmLQix200ePCP+T6VK310QZd3pEm6EroESoUU=;
+        b=JAyZ3X7zJy8TQABywGUsH7+rQ4vNR9tOIxt9IhJXObI6nxKPkQOPfnK5pKgdjLSkQa
+         kbG8TdW7CZUsxElpe1m1ax9HTGiCyrd5NQSUMjrVsFiFezusWicllmwLcKOw1YSoOYE5
+         NUvKOkn5v8QDiGp1Z136B+uiDsGuRGlB2kHQzvWYmEZKgdbS/RFBZun9rqMmuC9hHOPS
+         1eZ1KXwO+dPfT8G8pbU3aAe+nhcidfoeLy7QOFLVQi7HdAS3VUCM690uckrBdLcO/+tG
+         PI+n1CjMzNsj1xMSQF1DEa60FR/WKm1o6lXFBtt6z1Aab8rm5BfeXak6i5D0RIASfIVv
+         NB7w==
+X-Gm-Message-State: AOJu0Yw0Ph+rgQBcAHOLWaGmI/34ZZUdFIg6SCTu0V/4DbkGZFYz89w6
+	x9S9QRFzBQbRR/DoA1ZwjP4Xus3krnF+OzWvjdsxlEP9KgdVQOo8cAIGuQ/Mtm9KTns25CaaTiR
+	q
+X-Google-Smtp-Source: AGHT+IEW5qBY02Bryo2UNQ9fsWBGf1zoZLY2mkVh37eOaDpBhLgcDCe0JLvLYagskD6FbSa/Q9IIwQ==
+X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr196739ioj.2.1712850125304;
+        Thu, 11 Apr 2024 08:42:05 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:42:04 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 372/437] drivers/md: convert bcache to read/write iterators
+Date: Thu, 11 Apr 2024 09:18:32 -0600
+Message-ID: <20240411153126.16201-373-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ANNOUNCE] PUCK Notes - 2024.04.03 - TDX Upstreaming Strategy
-To: Sean Christopherson <seanjc@google.com>
-Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>,
- "davidskidmore@google.com" <davidskidmore@google.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "srutherford@google.com" <srutherford@google.com>,
- "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- Isaku Yamahata <isaku.yamahata@intel.com>, Wei W Wang <wei.w.wang@intel.com>
-References: <ZhRxWxRLbnrqwQYw@google.com>
- <957b26d18ba7db611ed6582366066667267d10b8.camel@intel.com>
- <ZhSb28hHoyJ55-ga@google.com>
- <8b40f8b1d1fa915116ef1c95a13db0e55d3d91f2.camel@intel.com>
- <ZhVdh4afvTPq5ssx@google.com>
- <4ae4769a6f343a2f4d3648e4348810df069f24b7.camel@intel.com>
- <ZhVsHVqaff7AKagu@google.com>
- <b1d112bf0ff55073c4e33a76377f17d48dc038ac.camel@intel.com>
- <ZhfyNLKsTBUOI7Vp@google.com>
- <2c11bb62-874e-4e9e-89b1-859df5b560bc@intel.com>
- <ZhgBGkPTwpIsE6P6@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <ZhgBGkPTwpIsE6P6@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/11/2024 11:26 PM, Sean Christopherson wrote:
-> On Thu, Apr 11, 2024, Xiaoyao Li wrote:
->> flexible (configurable) bits is known to VMM (KVM and userspace) because TDX
->> module has interface to report them. So we can treat a bit as fixed if it is
->> not reported in the flexible group. (of course the dynamic bits are special
->> and excluded.)
-> 
-> Does that interface reported the fixed _values_?
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/md/bcache/debug.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-No.
+diff --git a/drivers/md/bcache/debug.c b/drivers/md/bcache/debug.c
+index 7510d1c983a5..6c28c8ca5629 100644
+--- a/drivers/md/bcache/debug.c
++++ b/drivers/md/bcache/debug.c
+@@ -169,10 +169,10 @@ static bool dump_pred(struct keybuf *buf, struct bkey *k)
+ 	return true;
+ }
+ 
+-static ssize_t bch_dump_read(struct file *file, char __user *buf,
+-			     size_t size, loff_t *ppos)
++static ssize_t bch_dump_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct dump_iterator *i = file->private_data;
++	struct dump_iterator *i = iocb->ki_filp->private_data;
++	size_t size = iov_iter_count(to);
+ 	ssize_t ret = 0;
+ 	char kbuf[80];
+ 
+@@ -180,11 +180,10 @@ static ssize_t bch_dump_read(struct file *file, char __user *buf,
+ 		struct keybuf_key *w;
+ 		unsigned int bytes = min(i->bytes, size);
+ 
+-		if (copy_to_user(buf, i->buf, bytes))
++		if (!copy_to_iter_full(i->buf, bytes, to))
+ 			return -EFAULT;
+ 
+ 		ret	 += bytes;
+-		buf	 += bytes;
+ 		size	 -= bytes;
+ 		i->bytes -= bytes;
+ 		memmove(i->buf, i->buf + bytes, i->bytes);
+@@ -230,7 +229,7 @@ static int bch_dump_release(struct inode *inode, struct file *file)
+ static const struct file_operations cache_set_debug_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= bch_dump_open,
+-	.read		= bch_dump_read,
++	.read_iter	= bch_dump_read,
+ 	.release	= bch_dump_release
+ };
+ 
+-- 
+2.43.0
 
-But as I said, we can get what the fixed _values_ are after TD is 
-initialized by TDH.MNG.INIT via another interface.
-
-Yes. It is a bit late. But at least we have interface to get the fixed 
-value runtime instead of hardcoding them.
-
-Meanwhile, we are working internally with TDX architecture team to 
-request new interface to report fixed bits and values as the 
-configurable bits that doesn't require the TD is initialized. But not 
-guarantee on it and not sure when it will be public.
