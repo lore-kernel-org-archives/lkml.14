@@ -1,194 +1,144 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4A210A12;
-	Thu, 11 Apr 2024 14:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFBF17C61
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846603; cv=none; b=n/MgCPvqi+OIQz566ULeaYQmnoTxTv0qygiiHV12nVZtjTZ9pRZewSiMS5CdqEvgv7nn9v0cKLm87GtF6IRCWgym3kCPI6BJGJ5VCr5F9fFNbzWCXUdYq+RxpNvq7yeRwSTxWhxCTReNP1RiKnoqDDlBnlCkRyGJQcrSqqtq8Rk=
+	t=1712846620; cv=none; b=ufGraQMkjWBspWDSJwCZ0pPKpuiT++N1y077mH+T84fiU1onNcVjmt9jtztI+D5aPWxwCSBvEoZIx5a9U1SJicN1IV7GbKWz1SuaSbav3uhdSfNexdowGLgwXuTRY0KnrZqe3fj6DPmnA4UIvzUznEJnn5hQZ2B+tp0bdzrP13c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846603; c=relaxed/simple;
-	bh=x/18Z9algBXQxM9quW+7AyCJRcmj23RiT3ilEq9hIAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VZUxTx0J5seKsO1kbrwIf7SRYxeT3L1vWNuRFFfUNO7fDknKGuKaO0N0hnOIsuUHwYECzC/RnSowkVy/YjgLfyS7IImrhcoQb/keMMzhlTo3Z8oWmKCQ9aOZlPtw3vgMNKMAu4/0/GDT8JLsC+Iv7V83qYMu5oIAvEpU5hVrJuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=InRaF0wP; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712846620; c=relaxed/simple;
+	bh=5dwBI9khdYJeiWpel/yUUnsS8SPNZ9Fqg7qfToEvfZY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fAzqq4W8tIhCccDHB1m9WDtn7CVDo2Koq+9+pzjxN0wMYhc7ZMbRMONiJJg2hLHVTGbBvzs++mYa7l2tY63BzJw2XrgOHtPSAi+P2+6BzMvY+0Ne4a+n/NV4T85NR4Qggi1HuI9BWNtaUSneV3Pq7r5bmirWgoay8XQTH3UxURk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=QRXz7/pD; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="InRaF0wP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712846602; x=1744382602;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x/18Z9algBXQxM9quW+7AyCJRcmj23RiT3ilEq9hIAk=;
-  b=InRaF0wPVfqTY0u+IqB+pPm50dc8keL2IDUc8yCyxg8+hJUxldS4+84q
-   uGjlUf0nQl24A7R7cQkTFrcVUW5hNOt2RPZuNjaOYZR1cnaUSNmTW+SSW
-   kvtcoyfjcUvYhnuswW4uFhcpjHgJMzb3+IIdQZr90jIGGuF0uCid4ZJuz
-   vi1TfxLZ5YRKHpgYRKIFa6Eg+fgUIILlW+MAaqyVKU8y7+3B12bL+OZGs
-   YpeZgP+AxNEQ8vOLO7suEirGVY6rx6Jgmrecbvgsafk027zTT2dhnKRZc
-   LQe9Ef8tB6sVnViED0eCcPuualxFLlZYkQ02ASpUegf7A9hnoB6FAtVs+
-   g==;
-X-CSE-ConnectionGUID: 9D6xSLu1Rh2kpEBl+4SD/w==
-X-CSE-MsgGUID: 4EW9GTblQX2X/ggDoeTlJg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8422089"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8422089"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 07:43:21 -0700
-X-CSE-ConnectionGUID: il7oItqBTpS6AB0o+c+M2Q==
-X-CSE-MsgGUID: FCVgRjC5T7mnEpCgcjHhyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="20927053"
-Received: from npirooza-mobl1.amr.corp.intel.com (HELO [10.212.34.202]) ([10.212.34.202])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 07:43:21 -0700
-Message-ID: <3995e049-30db-4e31-a5fb-ca998b1822b6@linux.intel.com>
-Date: Thu, 11 Apr 2024 09:24:52 -0500
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="QRXz7/pD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1712846615;
+	bh=5dwBI9khdYJeiWpel/yUUnsS8SPNZ9Fqg7qfToEvfZY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QRXz7/pDt/jVzuDcjihSy6iw0ML9j0uiHYjKbmGJq9JXtHn2NYOSBi2MnKsCASoya
+	 uxcIWQvnh6Bet0wMOs8zc0vVoKlnrjcUuT4BEJzeE4Y7z0nBOQTXoB98ugqcpU+Kmp
+	 QE/5myHeUWrEQS0pV7PTDYmgLnq/5rRLIDd7w/Dk=
+Received: from stargazer.. (unknown [113.200.174.104])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 1E7D266EA9;
+	Thu, 11 Apr 2024 10:43:31 -0400 (EDT)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Dave Hansen <dave.hansen@linux.intel.com>,
+	Michael Kelley <mhklinux@outlook.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: [PATCH v7 1/2] x86/mm: Don't disable INVLPG if "incomplete Global INVLPG flushes" is fixed by microcode
+Date: Thu, 11 Apr 2024 22:43:21 +0800
+Message-ID: <20240411144322.14585-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] soundwire: debugfs: add interface to read/write
- commands
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, bard.liao@intel.com
-References: <20240326090122.1051806-1-yung-chuan.liao@linux.intel.com>
- <20240326090122.1051806-7-yung-chuan.liao@linux.intel.com>
- <Zg_ka02zLnXrADGj@matsya>
- <19f21879-885c-4120-9411-7022f526426f@linux.intel.com>
- <ZhetVE6RQXmGQrVg@matsya>
-Content-Language: en-US
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-In-Reply-To: <ZhetVE6RQXmGQrVg@matsya>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Per the "Processor Specification Update" documentations referred by the
+intel-microcode-20240312 release note, this microcode release has fixed
+the issue for all affected models.
 
+So don't disable INVLPG if the microcode is new enough.  The precise
+minimum microcode revision fixing the issue is provided by engineer from
+Intel.
 
-On 4/11/24 04:28, Vinod Koul wrote:
-> On 05-04-24, 10:12, Pierre-Louis Bossart wrote:
->> On 4/5/24 06:45, Vinod Koul wrote:
->>> On 26-03-24, 09:01, Bard Liao wrote:
->>>> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>>>
->>>> We have an existing debugfs files to read standard registers
->>>> (DP0/SCP/DPn).
->>>>
->>>> This patch provides a more generic interface to ANY set of read/write
->>>> contiguous registers in a peripheral device. In follow-up patches,
->>>> this interface will be extended to use BRA transfers.
->>>>
->>>> The sequence is to use the following files added under the existing
->>>> debugsfs directory for each peripheral device:
->>>>
->>>> command (write 0, read 1)
->>>> num_bytes
->>>> start_address
->>>> firmware_file (only for writes)
->>>> read_buffer (only for reads)
->>>>
->>>> Example for a read command - this checks the 6 bytes used for
->>>> enumeration.
->>>>
->>>> cd /sys/kernel/debug/soundwire/master-0-0/sdw\:0\:025d\:0711\:01/
->>>> echo 1 > command
->>>> echo 6 > num_bytes
->>>> echo 0x50 > start_address
->>>> echo 1 > go
->>>
->>> can we have a simpler interface? i am not a big fan of this kind of
->>> structure for debugging.
->>>
->>> How about two files read_bytes and write_bytes where you read/write
->>> bytes.
->>>
->>> echo 0x50 6 > read_bytes
->>> cat read_bytes
->>>
->>> in this format I would like to see addr and values (not need to print
->>> address /value words (regmap does that too)
->>>
->>> For write
->>>
->>> echo start_addr N byte0 byte 1 ... byte N > write_bytes
->>
->> I think you missed the required extension where we will add a new
->> 'command_type' to specify which of the regular or BTP/BRA accesses is used.
->>
->> Also the bytes can come from a firmware file, it would be very odd to
->> have a command line with 32k value, wouldn't it?
-> 
-> ofc no one should expect that... it should be written directly from the firmware file
-> 
->> I share your concern about making the interface as simple as possible,
->> but I don't see how it can be made simpler really. We have to specify
->> - read/write
->> - access type (BRA or regular)
->> - start address
->> - number of bytes
->> - a firmware file for writes
->> - a means to see the read data.
->>
->> And I personally prefer one 1:1 mapping between setting and debugfs
->> file, rather than a M:1 mapping that require users to think about the
->> syntax and which value maps to what setting. At my age I have to define
->> things that I will remember on the next Monday.
-> 
-> Exactly, you won't remember all the files to write to, my idea was a
-> simple format or addr, N and data.. a TLV kind of structure..
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Michael Kelley <mhklinux@outlook.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>
+Link: https://lore.kernel.org/all/168436059559.404.13934972543631851306.tip-bot2@tip-bot2/
+Link: https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/releases/tag/microcode-20240312
+Link: https://cdrdv2.intel.com/v1/dl/getContent/740518 # RPL042, rev. 13
+Link: https://cdrdv2.intel.com/v1/dl/getContent/682436 # ADL063, rev. 24
+Link: https://lore.kernel.org/all/20240325231300.qrltbzf6twm43ftb@desk/
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/x86/mm/init.c | 34 ++++++++++++++++++++++------------
+ 1 file changed, 22 insertions(+), 12 deletions(-)
 
-So your updated proposal for a write is
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 679893ea5e68..c318cdc35467 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -261,33 +261,43 @@ static void __init probe_page_size_mask(void)
+ 	}
+ }
+ 
+-#define INTEL_MATCH(_model) { .vendor  = X86_VENDOR_INTEL,	\
+-			      .family  = 6,			\
+-			      .model = _model,			\
+-			    }
++#define INTEL_MATCH(_model, _fixed_microcode)	\
++	{					\
++	  .vendor	= X86_VENDOR_INTEL,	\
++	  .family	= 6,			\
++	  .model	= _model,		\
++	  .driver_data	= _fixed_microcode,	\
++	}
++
+ /*
+  * INVLPG may not properly flush Global entries
+- * on these CPUs when PCIDs are enabled.
++ * on these CPUs when PCIDs are enabled and the
++ * microcode is not updated to fix the issue.
+  */
+ static const struct x86_cpu_id invlpg_miss_ids[] = {
+-	INTEL_MATCH(INTEL_FAM6_ALDERLAKE   ),
+-	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L ),
+-	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT ),
+-	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE  ),
+-	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P),
+-	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S),
++	INTEL_MATCH(INTEL_FAM6_ALDERLAKE,	0x2e),
++	INTEL_MATCH(INTEL_FAM6_ALDERLAKE_L,	0x42c),
++	INTEL_MATCH(INTEL_FAM6_ATOM_GRACEMONT,	0x11),
++	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE,	0x118),
++	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_P,	0x4117),
++	INTEL_MATCH(INTEL_FAM6_RAPTORLAKE_S,	0x2e),
+ 	{}
+ };
+ 
+ static void setup_pcid(void)
+ {
++	const struct x86_cpu_id *invlpg_miss_match;
++
+ 	if (!IS_ENABLED(CONFIG_X86_64))
+ 		return;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_PCID))
+ 		return;
+ 
+-	if (x86_match_cpu(invlpg_miss_ids)) {
++	invlpg_miss_match = x86_match_cpu(invlpg_miss_ids);
++
++	if (invlpg_miss_match &&
++	    boot_cpu_data.microcode < invlpg_miss_match->driver_data) {
+ 		pr_info("Incomplete global flushes, disabling PCID");
+ 		setup_clear_cpu_cap(X86_FEATURE_PCID);
+ 		return;
+-- 
+2.44.0
 
-echo 1 0 0x50 6 test.bin > write_bytes
-
-Mine was
-
-echo 1 > command
-echo 0 > access
-echo 0x50 > start_addr
-echo 6 > num_bytes
-echo test.bin > firmware
-echo 1 > go
-
-I find the last version a lot more explicit and self-explanatory. There
-is no need to look-up the documentation of the list and order of arguments.
-You can argue that there are just three files needed (write command,
-read command, read results), but there's more work to parse arguments
-and remember the arguments order.
-
-There's also the scripting part. In my tests, I relied on scripts where
-I modified one line, it's just easier to visualize than modifying one
-argument in the middle of a line.
-
-The last point is extensibility. In the existing BPT/BRA tests, the data
-is sent by chunks in each frame. We know that some peripherals cannot
-tolerate back-to-back transfers in contiguous frames, that would require
-additional arguments to control the flow. If we have to do this with a
-list of arguments, it's not straightforward to do without a versioning
-scheme.
-
-The risk of getting things wrong is not really a concern, if the
-destination or number of bytes is incorrect the command will fail. It
-will not cause any issues. It's a debugfs interface to inject commands,
-it's expected that people will actually try to make things fail...
-
-Again, this is NOT how the BPT/BRA protocol would be used in a real
-product. The integration would rely on the codec driver initiating those
-transfers. What this debugfs interface helps with is only for initial
-integration tests between a host and peripheral to simulate that the
-codec driver will do in the final iteration.
-
-> What would happen if you issue go, but missed writing one of the files.
-> Also I would expect you to do error checking of inputs...
-
-Please see the patch, the inputs are checked when possible to avoid
-buffer overflows, etc, but as mentioned above it's important to allow
-for bad commands to be issued to test the robustness of the driver.
-There is e.g. no check on the start_addr, number of bytes, the interface
-allows access to any part of the peripheral memory space. That's a
-feature, not a bug.
