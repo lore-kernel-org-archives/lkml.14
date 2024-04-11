@@ -1,85 +1,139 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85FD61C124F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79241C1241
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849879; cv=none; b=kdRI0GzvVZm4iDBTS9jTC+ADFMQ4PxaHGvghkxmYcfTSVttF1wVg+17sI5gv73JH7QYwfT1C0nYtnC8fZsBxudcENDAaF/CJEiLQjEMqFXkIyDE3AAFonp4WGraSzk9CVMqyYSN88pSfjojdend/JxvWtvyhnnUxyZLSoFjEkhc=
+	t=1712849879; cv=none; b=oFJkNQSTv1CfbnXQfCHQNZO+Rc1WySeoefWeaAUjOO0WbtUi1Vq7QvQEtMSXujoZL4DGRTxP611TaV2ISCkWRzUCpwKcMTGWHKAa63qIH2tnm5C+XtxpB66XoxZwYa5YOdsciunZzA5MPL+T4zesLGrH2tdGfzot59OmcGo9g0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849879; c=relaxed/simple;
-	bh=MAMYui+jp1n4vPA6ZwebIUQNWsmP7XShJzR/yynCjEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IgWte94ir1gGqZLXSlyK4iCeFkBaWXq/Fu7uB0aOSYbpKakFsVE6Wnp4Iw3OD7x3uTAV4XvLvaVnqOHtVlojzGH0VGlvCJD3jB2mWYgD/oc4YRrO5lAwfA3V77OAzTKkM1wulxhJwXYNtz8EYS9CubP01J6q2vYzasKVDe+S+Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EB48113E;
-	Thu, 11 Apr 2024 08:38:27 -0700 (PDT)
-Received: from [10.1.38.151] (XHFQ2J9959.cambridge.arm.com [10.1.38.151])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBD303F6C4;
-	Thu, 11 Apr 2024 08:37:56 -0700 (PDT)
-Message-ID: <ac5ebf6d-fbe2-4354-8a9d-8f269dfd3a1a@arm.com>
-Date: Thu, 11 Apr 2024 16:37:55 +0100
+	bh=eBQ5PolULrG7X1JocqFDWqUH0cPAdjxu60/Hv9y8eeg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bbK2OmTadFID55DSTvIV7sH6Zgb6gG8hZEg8UnLod0w+qiby/J7H4LuLsInbySAMTnjIRKP1T/t6PmDy/FD5eBuNf4Vrhq+oAE9wSiIzkr4ebXTE9lzoTWmSdvOw7iavhJzJjRfETDJevCAkXc6VoNqZKw3K7orjVkvaRxmUDy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=1zgtg6GR; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="1zgtg6GR"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36a34b68277so113465ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849876; x=1713454676; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dBG0Icemg3I1csuXuhMuMpuiVldFWp6vm8d9fo6GTjE=;
+        b=1zgtg6GRoHaSTWDkF/2pl/IhO8zq0SysCWh75SjJZcepZN6ROAcsonmQXqSgDA0GPG
+         DhAzBjJG3V2NWhJiIfpHFGKevLkSJ+8DnYXCya3gloQFEouSYwspsDsPHysQFUzLgdiE
+         55rZxlIi0R36riEYFMH2W9Xww2YFTYvoxtfrgBlsgz8AHoAXpskvGFrJgHgIbIbi6x4T
+         aXmJzDsm784+5R3i/dFndwJgY7yynbQikq4KbwTn8Ca0uL3COiWNUz4F3hlVN4b0yU71
+         i6gwspU+CXlb9sMkqzO68IcKgm2mewh1NGc4Tygcy44VyduMWOsskzXNu7YXLuFM6n3R
+         LHCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712849876; x=1713454676;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dBG0Icemg3I1csuXuhMuMpuiVldFWp6vm8d9fo6GTjE=;
+        b=X+inUqjSrYkavwJUvEA5uRyoI7JBYgJ+jFeoY00pXcaor23U/XUCjZbKK0tx3Lqf6H
+         eBvjkUpLZXiCjQr3qaQG6RnuwijHrt2MpZzh53nvdYoMmZdRW19ix2zL/pIPcYpVb8bG
+         2qDgEyqUi7U1XL6ahXsF+PpI6VdcNwMs+BSjOlSUhPekNVpcDSSGpHDa528lAOXkP/+V
+         UXFGl6XYeZ7MrwSdajaPaqKDkAoYUqbW+Cd7loKtfR+7dSWWcEAl4k/2oVsWhPcXH3TE
+         5LwLF0nMrFA9EHUmetLxjtBCEQZOyUqNMIO1o/tXOpkdE6lQV6aV6nNuOioVPNIIgW4a
+         n+3A==
+X-Gm-Message-State: AOJu0Yz7yrmUcpJglAjYbVG31ABMnq/0pfsRuT+ExXXuLNt5H3DuxnTQ
+	+CHBed9WJ3yWPsmAJVGGqacLwQeJkr+iPBKvpjyD+kkBG1b+Eh6RUOFkQ1YiGehZedR5DaO+Qnc
+	T
+X-Google-Smtp-Source: AGHT+IFwjYlOkkCwuMKp/loKt26xX8GHZiCPqI3W6/dL9QRd9qRU17Nak5JAWlOnGaPP/xK2LG7jbw==
+X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr192286iob.0.1712849876517;
+        Thu, 11 Apr 2024 08:37:56 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:37:56 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 225/437] drivers/mfd: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:16:05 -0600
+Message-ID: <20240411153126.16201-226-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: mm: Don't remap pgtables for allocate vs
- populate
-Content-Language: en-GB
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, David Hildenbrand <david@redhat.com>,
- Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Itaru Kitayama <itaru.kitayama@fujitsu.com>
-References: <20240404143308.2224141-1-ryan.roberts@arm.com>
- <20240404143308.2224141-4-ryan.roberts@arm.com>
- <ZhffSyrqCQsMV2pG@FVFF77S0Q05N>
- <37d4c278-3780-49ce-bd7e-e8f2ff4501fd@arm.com>
- <Zhf4LqNhQFN8ezx1@FVFF77S0Q05N>
- <d9582c0e-af24-46a1-9c3e-b9dc68af20d8@arm.com>
- <ZhgA8WDkZDbYIDHg@FVFF77S0Q05N>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <ZhgA8WDkZDbYIDHg@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/04/2024 16:25, Mark Rutland wrote:
-> On Thu, Apr 11, 2024 at 03:57:04PM +0100, Ryan Roberts wrote:
->> On 11/04/2024 15:48, Mark Rutland wrote:
->>> On Thu, Apr 11, 2024 at 02:37:49PM +0100, Ryan Roberts wrote:
->>>> On 11/04/2024 14:02, Mark Rutland wrote:
->>>>> but the logic remains fairly simple, and I suspect the overhead for late
->>>>> allocations might not matter since the bulk of late changes are non-allocating.
->>>>
->>>> Its just the fixmap overhead that remains...
->>>
->>> True; my thinking there is that almost all of the later changes are for smaller
->>> ranges than the linear map (~10s of MB vs GBs in your test data), so I'd expect
->>> the overhead of those to be dominated by the cost of mappin the linear map.
->>>
->>> The only big exception is arch_add_memory(), but memory hotplug is incredibly
->>> rare, and we're not making it massively slower than it already was...
->>
->> What about something like coco guest mem (or whatever its called). Isn't that
->> scrubbed out of the linear map? So if a coco VM is started with GBs of memory,
->> could that be a real case we want to optimize?
-> 
-> I think that's already handled -- the functions we have to carve portions out
-> of the linear map use apply_to_page_range(), which doesn't use the fixmap. See
-> set_memory_*() and set_direct_map_*() in arch/arm64/mm/pageattr.c.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/mfd/aat2870-core.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-Ahh gottya. Yet another table walker :)
-
-> 
-> Note that apply_to_page_range() does what its name implies and *only* handles
-> mappings at page granularity. Hence not using that for
-> mark_linear_text_alias_ro() and mark_rodata_ro() which need to be able to
-> handle blocks.
-> 
-> Mark.
+diff --git a/drivers/mfd/aat2870-core.c b/drivers/mfd/aat2870-core.c
+index 2fee62f1016c..78a8809908ff 100644
+--- a/drivers/mfd/aat2870-core.c
++++ b/drivers/mfd/aat2870-core.c
+@@ -248,10 +248,9 @@ static ssize_t aat2870_dump_reg(struct aat2870_data *aat2870, char *buf)
+ 	return count;
+ }
+ 
+-static ssize_t aat2870_reg_read_file(struct file *file, char __user *user_buf,
+-				     size_t count, loff_t *ppos)
++static ssize_t aat2870_reg_read_file(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct aat2870_data *aat2870 = file->private_data;
++	struct aat2870_data *aat2870 = iocb->ki_filp->private_data;
+ 	char *buf;
+ 	ssize_t ret;
+ 
+@@ -261,18 +260,17 @@ static ssize_t aat2870_reg_read_file(struct file *file, char __user *user_buf,
+ 
+ 	ret = aat2870_dump_reg(aat2870, buf);
+ 	if (ret >= 0)
+-		ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
++		ret = simple_copy_from_iter(buf, &iocb->ki_pos, ret, to);
+ 
+ 	kfree(buf);
+ 
+ 	return ret;
+ }
+ 
+-static ssize_t aat2870_reg_write_file(struct file *file,
+-				      const char __user *user_buf, size_t count,
+-				      loff_t *ppos)
++static ssize_t aat2870_reg_write_file(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct aat2870_data *aat2870 = file->private_data;
++	struct aat2870_data *aat2870 = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(from);
+ 	char buf[32];
+ 	ssize_t buf_size;
+ 	char *start = buf;
+@@ -280,7 +278,7 @@ static ssize_t aat2870_reg_write_file(struct file *file,
+ 	int ret;
+ 
+ 	buf_size = min(count, (size_t)(sizeof(buf)-1));
+-	if (copy_from_user(buf, user_buf, buf_size)) {
++	if (!copy_from_iter_full(buf, buf_size, from)) {
+ 		dev_err(aat2870->dev, "Failed to copy from user\n");
+ 		return -EFAULT;
+ 	}
+@@ -314,8 +312,8 @@ static ssize_t aat2870_reg_write_file(struct file *file,
+ 
+ static const struct file_operations aat2870_reg_fops = {
+ 	.open = simple_open,
+-	.read = aat2870_reg_read_file,
+-	.write = aat2870_reg_write_file,
++	.read_iter = aat2870_reg_read_file,
++	.write_iter = aat2870_reg_write_file,
+ };
+ 
+ static void aat2870_init_debugfs(struct aat2870_data *aat2870)
+-- 
+2.43.0
 
