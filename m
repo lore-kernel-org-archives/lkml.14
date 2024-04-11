@@ -1,303 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09014D534;
-	Thu, 11 Apr 2024 19:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECC417756
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712865215; cv=none; b=e7lCQmS0XlGL2ipd8AukWbAWbKOnVSGUNuB8stgW8u6Ao+QWV6zDb5LeD4X/DoSlxdY2/GwNgBPS9DFgE9h8Nrbk9rO0B7/s5Nnu4wVZE4vrPv4H3i9C4KnK8KYA2zlCBnK6Crd0VDzJKEU23IdxLC5mQPgjSbY7WluUMmXqKwY=
+	t=1712865314; cv=none; b=dKtgH27tT74VVsS12Udu/bhuyfoHCt4O9XixxaHbxGQzaV2KU2qdRDwOHmkSk5uv9dNYE5hni+forM3KhnRrhgRZuVh+L+ZzQ4LBWFTggaBQ7LHx5PtJ40ZDpGsEQGNfJ7JjSI9OGHIPrZBRqjfdrhl4bnrh+K+xJ6WSKvvQHLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712865215; c=relaxed/simple;
-	bh=ooc/3U/BIHQw6GI+B/XxilcVEV/bYvn4gSSCUU399o4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OIjy/AoD9GAZYXrzt2Zrvm+CZans+n5eL4krkBIZ/sEnTxtalvjOVv5nbCrM9ikxiqOnhbySJNmki19l9fAJDgMTcJraWyZTqrJg6ZJx5JNom8kakkStjxA8Tf5/qInmeWgY46oKVit8tbd/nnACRODIIgHKzvHTqyAAfI5UGKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TuaiYfpC; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712865314; c=relaxed/simple;
+	bh=nDyyUET79lhvJ2d6vwJw1c9rZYZ1SDMzb3E3qhz+QvA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=F1HANkpCZFuYI8Tjesn/zDuZZ1sLRyHKX9QA7NFnwLPhZG16J+UkAThsC2NhcBiGeK5H7gCaoQmH8Rp3Aa4p5WEQuld6bKnKonlFuDOO3046Yg9wiHFCVjrdaxuUnqGrdl+z7xUoBuMXTiJDAwLlfrNmKww1asu1qcVxA7mSM/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=mJHCzK2t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TuaiYfpC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712865215; x=1744401215;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ooc/3U/BIHQw6GI+B/XxilcVEV/bYvn4gSSCUU399o4=;
-  b=TuaiYfpCVXmQ5Lu+BwJ7+QjPv4loMPgVEZdXfrBDbNXqVQ692UktZa2S
-   owZLvNqK+MP1wCiGvN9Jhk/dVK6P6f9ezXXWb8ZDA1mEkohPU2ctgPjj+
-   mQ3xhlmk4b1IT7oEQei4G3gUpgW5tGxwiIhjcHsLSxusjTLuvhaR+Cz1F
-   S+RnxRDCTt7UFXgSa5dOJ4DY04WgRaBXOIE5YnCl0l3UsFQO9tK0vYwlZ
-   lEllOwvzQ7J2BAm3M0wBNzwzWTHY1tQM5UbY32rs24ud9vtCua9Lwwxfz
-   I679CmFwFkCglKJswyQk/Vo7TSR+iLHvlONZvQGkSUTx0HAy+FQvEC6rx
-   g==;
-X-CSE-ConnectionGUID: nQI8nukZTP6t59+kEbo3Bw==
-X-CSE-MsgGUID: 5KiGRKVLQhWW7asoTwZ83w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="12095154"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="12095154"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 12:53:34 -0700
-X-CSE-ConnectionGUID: Q6Avs5dnRAKNgmSRyDPoYA==
-X-CSE-MsgGUID: ib36SwfwQaaftes4YDnKgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="21600326"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 12:53:34 -0700
-Received: from [10.212.101.117] (kliang2-mobl1.ccr.corp.intel.com [10.212.101.117])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 3C28320921DA;
-	Thu, 11 Apr 2024 12:53:31 -0700 (PDT)
-Message-ID: <23af8648-ca9f-41d2-8782-f2ffc3c11e9e@linux.intel.com>
-Date: Thu, 11 Apr 2024 15:53:29 -0400
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="mJHCzK2t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F3BC072AA;
+	Thu, 11 Apr 2024 19:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1712865314;
+	bh=nDyyUET79lhvJ2d6vwJw1c9rZYZ1SDMzb3E3qhz+QvA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mJHCzK2tV7bsMvJbZVU46I2autk19PyIxys/PH5HDUzHmoYyV7KAD8As6v9c82Acj
+	 w+7GpgayuopjxkbPjzJ1w4EHOcNeFSslB1+evBg9JNjudrr+7e+TivGYDZ3RQWaI0z
+	 ZehO2wKNdHuZf5a+M7hA0Y1HIb2BxT9xCIQ1Tynk=
+Date: Thu, 11 Apr 2024 12:55:13 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+ddf4b4c0005944105a9e@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ syzkaller-bugs@googlegroups.com, Peter Xu <peterx@redhat.com>
+Subject: Re: [syzbot] [mm?] WARNING in try_to_migrate_one (2)
+Message-Id: <20240411125513.b779991117a4dea92ce77269@linux-foundation.org>
+In-Reply-To: <000000000000dce0530615c89210@google.com>
+References: <0000000000001a87b90613389171@google.com>
+	<000000000000dce0530615c89210@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
-To: Sean Christopherson <seanjc@google.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com,
- kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
- <ZhgmrczGpccfU-cI@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZhgmrczGpccfU-cI@google.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Wed, 10 Apr 2024 19:04:21 -0700 syzbot <syzbot+ddf4b4c0005944105a9e@syzkaller.appspotmail.com> wrote:
 
+> syzbot has found a reproducer for the following issue on:
 
-On 2024-04-11 2:06 p.m., Sean Christopherson wrote:
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 683dc086ef10..59471eeec7e4 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -3803,6 +3803,8 @@ static inline void group_update_userpage(struct perf_event *group_event)
->>  		event_update_userpage(event);
->>  }
->>  
->> +static DEFINE_PER_CPU(bool, __perf_force_exclude_guest);
->> +
->>  static int merge_sched_in(struct perf_event *event, void *data)
->>  {
->>  	struct perf_event_context *ctx = event->ctx;
->> @@ -3814,6 +3816,14 @@ static int merge_sched_in(struct perf_event *event, void *data)
->>  	if (!event_filter_match(event))
->>  		return 0;
->>  
->> +	/*
->> +	 * The __perf_force_exclude_guest indicates entering the guest.
->> +	 * No events of the passthrough PMU should be scheduled.
->> +	 */
->> +	if (__this_cpu_read(__perf_force_exclude_guest) &&
->> +	    has_vpmu_passthrough_cap(event->pmu))
+Thanks.
+
+> HEAD commit:    480e035fc4c7 Merge tag 'drm-next-2024-03-13' of https://gi..
+> git tree:       upstream
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=14db82bd180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5b814e91787669
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ddf4b4c0005944105a9e
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13111a4d180000
+
+Seems to be userfaultfd related.
+
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156ae155180000
 > 
-> As mentioned in the previous reply, I think perf should WARN and reject any attempt
-> to trigger a "passthrough" context switch if such a switch isn't supported by
-> perf, not silently let it go through and then skip things later.
-
-perf supports many PMUs. The core PMU is one of them. Only the core PMU
-supports "passthrough", and will do the "passthrough" context switch if
-there are active events.
-For other PMUs, they should not be impacted. The "passthrough" context
-switch should be transparent for there.
-
-Here is to reject an existing host event in the schedule stage. If a
-"passthrough" guest is running, perf should rejects any existing host
-events of the "passthrough" supported PMU.
-
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/5f73b6ef963d/disk-480e035f.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/46c949396aad/vmlinux-480e035f.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/e3b4d0f5a5f8/bzImage-480e035f.xz
 > 
->> +		return 0;
->> +
->>  	if (group_can_go_on(event, *can_add_hw)) {
->>  		if (!group_sched_in(event, ctx))
->>  			list_add_tail(&event->active_list, get_event_list(event));
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+ddf4b4c0005944105a9e@syzkaller.appspotmail.com
 > 
-> ...
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 5134 at arch/x86/include/asm/pgtable.h:404 pte_uffd_wp arch/x86/include/asm/pgtable.h:404 [inline]
+> WARNING: CPU: 0 PID: 5134 at arch/x86/include/asm/pgtable.h:404 try_to_migrate_one+0x18e9/0x3ae0 mm/rmap.c:2256
+> Modules linked in:
+> CPU: 0 PID: 5134 Comm: syz-executor306 Not tainted 6.8.0-syzkaller-08073-g480e035fc4c7 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+> RIP: 0010:pte_uffd_wp arch/x86/include/asm/pgtable.h:404 [inline]
+> RIP: 0010:try_to_migrate_one+0x18e9/0x3ae0 mm/rmap.c:2256
+> Code: ac ff 41 83 e7 42 bf 40 00 00 00 4c 89 fe e8 9e 74 ac ff 49 83 ff 40 0f 84 91 08 00 00 e8 af 6f ac ff eb 09 e8 a8 6f ac ff 90 <0f> 0b 90 49 83 cd 04 48 8b 3c 24 e8 b7 89 ff ff 89 c3 48 b8 00 00
+> RSP: 0018:ffffc9000458f1e0 EFLAGS: 00010293
+> RAX: ffffffff81e885a8 RBX: d000000000000000 RCX: ffff8880177a3c00
+> RDX: 0000000000000000 RSI: 0000000000000400 RDI: 0000000000000000
+> RBP: ffffc9000458f550 R08: ffffffff81e88560 R09: 1ffffd40003c10d8
+> R10: dffffc0000000000 R11: fffff940003c10d9 R12: 0000000000000001
+> R13: d7ffe7fff0fbc802 R14: 0000000000000002 R15: 000000007821bc67
+> FS:  00007f2b2a0666c0(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f2b2a06b9f0 CR3: 0000000023ffe000 CR4: 00000000003506f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  rmap_walk_anon+0x36f/0x680 mm/rmap.c:2599
+>  try_to_migrate+0x3de/0x4b0
+>  migrate_folio_unmap mm/migrate.c:1244 [inline]
+>  migrate_pages_batch+0x10b4/0x3570 mm/migrate.c:1675
+>  migrate_pages_sync mm/migrate.c:1841 [inline]
+>  migrate_pages+0x1eaf/0x3320 mm/migrate.c:1950
+>  do_mbind mm/mempolicy.c:1344 [inline]
+>  kernel_mbind mm/mempolicy.c:1486 [inline]
+>  __do_sys_mbind mm/mempolicy.c:1560 [inline]
+>  __se_sys_mbind+0x11f5/0x1a70 mm/mempolicy.c:1556
+>  do_syscall_64+0xfb/0x240
+>  entry_SYSCALL_64_after_hwframe+0x6d/0x75
+> RIP: 0033:0x7f2b2a0af089
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f2b2a066228 EFLAGS: 00000246 ORIG_RAX: 00000000000000ed
+> RAX: ffffffffffffffda RBX: 00007f2b2a138408 RCX: 00007f2b2a0af089
+> RDX: 0000000000000000 RSI: 0000000000003000 RDI: 0000000020ffd000
+> RBP: 00007f2b2a138400 R08: 0000000000000000 R09: 0000000000000002
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2b2a1054f4
+> R13: 0000000000000011 R14: 00007ffca01beb70 R15: 00007ffca01bec58
+>  </TASK>
 > 
->> +/*
->> + * When a guest enters, force all active events of the PMU, which supports
->> + * the VPMU_PASSTHROUGH feature, to be scheduled out. The events of other
->> + * PMUs, such as uncore PMU, should not be impacted. The guest can
->> + * temporarily own all counters of the PMU.
->> + * During the period, all the creation of the new event of the PMU with
->> + * !exclude_guest are error out.
->> + */
->> +void perf_guest_enter(void)
->> +{
->> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->> +
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	if (__this_cpu_read(__perf_force_exclude_guest))
 > 
-> This should be a WARN_ON_ONCE, no?
-
-To debug the improper behavior of KVM?
-I guess yes.
-
-> 
->> +		return;
->> +
->> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->> +
->> +	perf_force_exclude_guest_enter(&cpuctx->ctx);
->> +	if (cpuctx->task_ctx)
->> +		perf_force_exclude_guest_enter(cpuctx->task_ctx);
->> +
->> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +
->> +	__this_cpu_write(__perf_force_exclude_guest, true);
->> +}
->> +EXPORT_SYMBOL_GPL(perf_guest_enter);
->> +
->> +static void perf_force_exclude_guest_exit(struct perf_event_context *ctx)
->> +{
->> +	struct perf_event_pmu_context *pmu_ctx;
->> +	struct pmu *pmu;
->> +
->> +	update_context_time(ctx);
->> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
->> +		pmu = pmu_ctx->pmu;
->> +		if (!has_vpmu_passthrough_cap(pmu))
->> +			continue;
-> 
-> I don't see how we can sanely support a CPU that doesn't support writable
-> PERF_GLOBAL_STATUS across all PMUs.
-
-Only core PMU has the PERF_GLOBAL_STATUS. Other PMUs, e.g., uncore PMU,
-aren't impacted by the MSR. Those MSRs should be ignored.
-
-> 
->> +
->> +		perf_pmu_disable(pmu);
->> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
->> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
->> +		perf_pmu_enable(pmu);
->> +	}
->> +}
->> +
->> +void perf_guest_exit(void)
->> +{
->> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
->> +
->> +	lockdep_assert_irqs_disabled();
->> +
->> +	if (!__this_cpu_read(__perf_force_exclude_guest))
-> 
-> WARN_ON_ONCE here too?
-> 
->> +		return;
->> +
->> +	__this_cpu_write(__perf_force_exclude_guest, false);
->> +
->> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->> +
->> +	perf_force_exclude_guest_exit(&cpuctx->ctx);
->> +	if (cpuctx->task_ctx)
->> +		perf_force_exclude_guest_exit(cpuctx->task_ctx);
->> +
->> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
->> +}
->> +EXPORT_SYMBOL_GPL(perf_guest_exit);
->> +
->> +static inline int perf_force_exclude_guest_check(struct perf_event *event,
->> +						 int cpu, struct task_struct *task)
->> +{
->> +	bool *force_exclude_guest = NULL;
->> +
->> +	if (!has_vpmu_passthrough_cap(event->pmu))
->> +		return 0;
->> +
->> +	if (event->attr.exclude_guest)
->> +		return 0;
->> +
->> +	if (cpu != -1) {
->> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, cpu);
->> +	} else if (task && (task->flags & PF_VCPU)) {
->> +		/*
->> +		 * Just need to check the running CPU in the event creation. If the
->> +		 * task is moved to another CPU which supports the force_exclude_guest.
->> +		 * The event will filtered out and be moved to the error stage. See
->> +		 * merge_sched_in().
->> +		 */
->> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, task_cpu(task));
->> +	}
-> 
-> These checks are extremely racy, I don't see how this can possibly do the
-> right thing.  PF_VCPU isn't a "this is a vCPU task", it's a "this task is about
-> to do VM-Enter, or just took a VM-Exit" (the "I'm a virtual CPU" comment in
-> include/linux/sched.h is wildly misleading, as it's _only_ valid when accounting
-> time slices).
->
-
-This is to reject an !exclude_guest event creation for a running
-"passthrough" guest from host perf tool.
-Could you please suggest a way to detect it via the struct task_struct?
-
-
-> Digging deeper, I think __perf_force_exclude_guest has similar problems, e.g.
-> perf_event_create_kernel_counter() calls perf_event_alloc() before acquiring the
-> per-CPU context mutex.
-
-Do you mean that the perf_guest_enter() check could be happened right
-after the perf_force_exclude_guest_check()?
-It's possible. For this case, the event can still be created. It will be
-treated as an existing event and handled in merge_sched_in(). It will
-never be scheduled when a guest is running.
-
-The perf_force_exclude_guest_check() is to make sure most of the cases
-can be rejected at the creation place. For the corner cases, they will
-be rejected in the schedule stage.
-
-> 
->> +	if (force_exclude_guest && *force_exclude_guest)
->> +		return -EBUSY;
->> +	return 0;
->> +}
->> +
->>  /*
->>   * Holding the top-level event's child_mutex means that any
->>   * descendant process that has inherited this event will block
->> @@ -11973,6 +12142,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
->>  		goto err_ns;
->>  	}
->>  
->> +	if (perf_force_exclude_guest_check(event, cpu, task)) {
-> 
-> This should be:
-> 
-> 	err = perf_force_exclude_guest_check(event, cpu, task);
-> 	if (err)
-> 		goto err_pmu;
-> 
-> i.e. shouldn't effectively ignore/override the return result.
->
-
-Sure.
-
-Thanks,
-Kan
-
->> +		err = -EBUSY;
->> +		goto err_pmu;
->> +	}
->> +
->>  	/*
->>  	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
->>  	 * events (they don't make sense as the cgroup will be different
->> -- 
->> 2.34.1
->>
+> ---
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
