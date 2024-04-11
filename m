@@ -1,114 +1,106 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D78417559;
-	Thu, 11 Apr 2024 19:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F07171C9
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712864145; cv=none; b=HQExBJoWoRY5eRuBKM12FPutgKlMWHSz/GoVdpEFC4HyIMduNWtwx1qxdlWcDzl6Kv3PnVtWo8XVcHn/x99VgYkrmngJcqPgzwyJChkTh5MTbPBqUVe3y3Jirs0D0fpdrorUAsJ59047JYZa/X268pwmrLqbFv8MXmABSMGlUn8=
+	t=1712864245; cv=none; b=P1YpBY6P+qVDKZOftb/2m/mhLZjeqV7YG4GRt3lOrYpBblsMiXeH6i964hInzX+ADTlR86JBeHVYW67Gy+JCpU4a1Tg2SLJiF276iDEVhFy/IAaf4AgtVyl8Hqv6b2fXynV81Ngi1rFjVtmQTep3vgoE5C27FdE3pnQRIMmdenc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712864145; c=relaxed/simple;
-	bh=hCrHI3N1KKEbZ9Ju9XCvyw4U1X4GrngN7equ1CZR5RQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBYadDCbOrpHX64Alr+pAKCsndwYr4iB+HbG5WWTyw5HnbDgXFgTKnCrN92uUfJezFqjZaHYK08rpvwez/w5exDMDZfHYPWoo4w4uKB4UryphE3mOh4rpWvUiO6TX7iF2FbgiX5DjnT1Ts+1f462/TCkJfDqAU1BzSd3+aAE4Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=RaPvBAkF; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1712864245; c=relaxed/simple;
+	bh=Gl8eUkD08CMPCn17a5LUCFQwsdrr+BTJp82u/LJ464E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fogO81BAjIAlTmvh38v48c2KBaLu7ipx9achO2G/FHpR+N8RwCpx+MlFioh37DEvoDJVHRnCQ31ihH0gUnN6H2feKqf1XmJSxMiDofKsRolwtpZmqveOYa6QEnIjSoKgNgkJrMOrMnihHGZNL0Z6KhKQFquL7RpQysCKKW6YliU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GkXdMT0y; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="RaPvBAkF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=fZ3fmdT9oUgO2wmrYEOWhcDcwgmf7m8Sawtw85kAd7M=; b=RaPvBAkFj96SS8PNgIcab5bNln
-	3MSQA3IrTG4mjLcalN1p4H35xpSgRoOH8L3SuVARRMo9Q003N7Mib3bUjFLFEcwYXSti+ZhXsbU96
-	MVNJ4chMCGpxKX57ohtCn6HvvvHaZnn5mHAdauSGAJMVDUNciWMBXKr0OZH4/IqTNTV6S6wri8aZq
-	FsHSb5lxoaV0gtog+4ARjnfeEgD12MOWIyqo9RAS634XncuQCIdxWUDGfW7/C/mTo3Zag10UnUaWD
-	YmNliruWvoTA2d9kXnCXM8DpWeIoclQqaaS9nkDsNeersLgA0I0+uYPKAVBvS6N1HfBqHsRQsO29t
-	6aK39wcQ==;
-Received: from [189.111.43.233] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1ruzqC-003fQg-MV; Thu, 11 Apr 2024 21:12:08 +0200
-Message-ID: <3391c693-cf54-526b-79a8-d565e7140947@igalia.com>
-Date: Thu, 11 Apr 2024 16:11:55 -0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GkXdMT0y"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-69b40061bbeso1256176d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:37:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712864243; x=1713469043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gaZ8PNPW8x1uU3bx7SgotAf3Gi9LIM4a4uzTn6Vt2w=;
+        b=GkXdMT0yPgfIZdOMrvvyM2Yk42tja2P6tBgQigKhubso6S/gOlDFUZq8IdJz8GYdWZ
+         KnvveHtPrhdKdwqB+DVDlAAXKaj5UvAS3dxzToB4L6HSoRcDscY2XxpPsc5+HSJutfxK
+         LS3dbhoZogsApJAWOKfWKpsVWcyC2z0K8wxw1rk9ZVSLs9zsoRTkVlmGPZo8OjL+UNUh
+         oFUTO7Lup1W05prPGRSDNI9bFE4m10M5t1w6/p2qXOnp8VyuBaBLAObSaIuRfUQxyN8T
+         ksQqMWQBp897v5dy427z/YdubVW2yKg2gTf8It0perft6oQkOVNUyjuZX9AQ6GqIhCat
+         0IpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712864243; x=1713469043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7gaZ8PNPW8x1uU3bx7SgotAf3Gi9LIM4a4uzTn6Vt2w=;
+        b=C3Y/zLVrDeuIjWINbz7GnOlfWblAFCwxl1XgdrnFPE4BtY9hZieWINgBkjPYCW8v+b
+         E+AWiX50TpyKftH/tucuICfCQVZOEAeo5KgPiHb8WqElyO4dG1z6hMradsWI7I6NG6mS
+         SqfLWqRhysHX8jwqDCH9FJa2+n9+RSSokaKkyKc/Xol0SY/JSvhZibV9VvHzr9WN6s97
+         GFvCLEWeNd9E8Z8pEtIcwKWiPDQ6IRPfDm8Y7rIvXpow/LTXz6l0U43ezEIp93sG0V8U
+         /BJ9ji5gskAyN4zyletK0aMgg8HsEu3O3zQiqRv5Mbaw+nHeybE0D4t4XIO1raXXA6Sl
+         gcvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXBIsgbMWvMgm7AJbbYR/mGNZHXF/9lrMap9Cpl3IfbsMnm9eG9YW5M0gSy67LipLW2BeHIvaf4halOZTYrt65BpCZTW2SqL59T1NN/
+X-Gm-Message-State: AOJu0Yzl0TjbtgC/hW0ufztmpVBLdB9R5uS7HBtoQaS/5puneiIWvHur
+	RLT87ZZU5fYi1pO6fDaXzEU04b+lyJBHP+2O7IosVtdSCzjz1v1JPZ2i8DOtJiAVaqvXEyQsY1K
+	AUWKeKbkqZBrs+5AwIO+Q0xeWKZzB08BlZMhI
+X-Google-Smtp-Source: AGHT+IHrTNsTajLfM6vlDskL/RW7t8LKDaCP9DtOscLyK8RqjJnIqxBEqvIo/4H4Zc/+wNBbw0jAa1TTD0veOmsdSPM=
+X-Received: by 2002:a05:6214:1933:b0:69b:1e64:413d with SMTP id
+ es19-20020a056214193300b0069b1e64413dmr734971qvb.52.1712864242836; Thu, 11
+ Apr 2024 12:37:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [POC][RFC][PATCH 0/2] pstore/mm/x86: Add wildcard memmap to map
- pstore consistently
-To: "Luck, Tony" <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>,
- Steven Rostedt <rostedt@goodmis.org>, Joel Fernandes <joel@joelfernandes.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Lorenzo Stoakes <lstoakes@gmail.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- Guenter Roeck <linux@roeck-us.net>, Ross Zwisler <zwisler@google.com>,
- "wklin@google.com" <wklin@google.com>,
- Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
- Suleiman Souhlal <suleiman@google.com>,
- Linus Torvalds <torvalds@linuxfoundation.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-References: <20240409210254.660888920@goodmis.org>
- <20240409172358.34ea19f0@gandalf.local.home> <202404091519.B7B2221@keescook>
- <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <SJ1PR11MB608317E066B6B3390F55FCB1FC072@SJ1PR11MB6083.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240408180918.2773238-1-jfraker@google.com> <20240409172602.3284f1c6@kernel.org>
+ <66175758bab7c_2dcc3c294a@willemb.c.googlers.com.notmuch>
+In-Reply-To: <66175758bab7c_2dcc3c294a@willemb.c.googlers.com.notmuch>
+From: John Fraker <jfraker@google.com>
+Date: Thu, 11 Apr 2024 12:37:11 -0700
+Message-ID: <CAGH0z2Hn-D1_wEZEN-Y9+hO1c+Ddn3dsO5_XCG6qQ8KioeGeGg@mail.gmail.com>
+Subject: Re: [PATCH net-next] gve: Correctly report software timestamping capabilities
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org, 
+	Praveen Kaligineedi <pkaligineedi@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shailend Chand <shailend@google.com>, Willem de Bruijn <willemb@google.com>, 
+	"David S. Miller" <davem@davemloft.net>, Junfeng Guo <junfeng.guo@intel.com>, 
+	Ziwei Xiao <ziweixiao@google.com>, Jeroen de Borst <jeroendb@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 09/04/2024 19:25, Luck, Tony wrote:
->>> I forgot to mention that this makes it trivial for any machine that doesn't
->>> clear memory on soft-reboot, to enable console ramoops (to have access to
->>> the last boot dmesg without needing serial).
->>>
->>> I tested this on a couple of my test boxes and on QEMU, and it works rather
->>> well.
->>
->> I've long wanted a "stable for this machine and kernel" memory region
->> like this for pstore. It would make testing much easier.
-> 
-> Which systems does this work on? I'd assume that servers (and anything
-> else with ECC memory) would nuke contents while resetting ECC to clean
-> state.
-> 
-> -Tony
+On Wed, Apr 10, 2024 at 8:22=E2=80=AFPM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> Jakub Kicinski wrote:
+> > On Mon,  8 Apr 2024 11:09:01 -0700 John Fraker wrote:
+> > > gve has supported software timestamp generation since its inception,
+> > > but has not advertised that support via ethtool. This patch correctly
+> > > advertises that support.
+> > >
+> > > Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
+> > > Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+> > > Signed-off-by: John Fraker <jfraker@google.com>
+> >
+> > I think it should be a single line diff:
+> >
+> > +     .get_ts_info =3D ethtool_op_get_ts_info,
+> >
+> > right?
+>
+> If inserted above .get_link_ksettings that works. The current
+> ordering is not based on actual struct layout anyway.
+>
+> Probably all statements should just end in a comma, including a
+> trailing comma. To avoid these two line changes on each subsequent
+> change.
 
-Thanks Steve! Like Kees, I've been wanting a consistent way of mapping
-some RAM for pstore for a while, without resorting to platform drivers
-like Chromebooks do...
+Thanks all!
 
-The idea seems very interesting and helpful, I'll test it here. My only
-concern / "complain" is that it's currently only implemented for builtin
-ramoops, which is not the default in many distros (like Arch, Ubuntu,
-Debian). I read patch 2 (and discussion), so I think would be good to
-have that builtin helper implemented upfront to allow modular usage of
-ramoops.
+I'll send the one-line v2.
 
-Now, responding to Tony: Steam Deck also uses pstore/ram to store logs,
-and I've tested in my AMD desktop, it does work. Seems disabling memory
-retraining in BIOS (to speedup boot?) is somewhat common, not sure for
-servers though. As Joel mentioned as well, quite common to use
-pstore/ram in ARM embedded world.
-
-Cheers,
-
-
-Guilherme
+> The rest of the discussion in this thread is actually quite
+> unrelated to this patch. Didn't meant to sidetrack that.
