@@ -1,104 +1,82 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 633B017D15D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91E51CA6BA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849922; cv=none; b=cvXgMzR4Akmi6l6WXxAr4UiOp5g2iWipzKK5uLt40nUtSu5uGiy/Y54YA32QFH5J1j5gaPVoacMNJggL0sFRa75KI89JJ3LCsXiS6n+SgY+8XLpGD+m4SI7Avn5BbxyhuQugOgOd271UbsFPJVQwP8efBfu6DLy/ogaMzVVQuHY=
+	t=1712849923; cv=none; b=qX/BhX3EMbodPNgDL39DdZHFCCfnRhE+L3+um4DTA8rQjo/rvRBP9o8lFnrPs2OAPG1zpAjG6216lzN3c7Nm/O///ec7kFsPu24mjwSVSt/X7UD7Y5SI65nbD/F7X2tnGNgZt91iLXF7G9yuzvN3HnF1MlIkQ85UW4dSq+XMnHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849922; c=relaxed/simple;
-	bh=yvj6Fx2S8MgjUf4sPizIzz/1gQ6nUrv6shwg9v2Oi2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E6067YNy1oN7S12yIFGxec0kqSOmyceGFr8uxWrMxJ2yH7oCC4LXBaQDj181tryiwgWYywuk+uBg1uyQaVmmr+Dp/ZxIii2guA7DU4PjuauO+9BL69c26pGY2wf5t4TYJyAGM0xXRyhkcxk6JCW52eZlaSKxtIhUnAT/aNZ7i9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=vahgsLwS; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712849923; c=relaxed/simple;
+	bh=0XIFigNg8okTi2XcwCJDslMjIxGNFSCDsSh68/q0Ud4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hl06GZOQTmgqiin3OLd7xhP+qQEOwqQC5EvtdnxAopEepzgDsI7MIXioLMVGGFWHiSGwRDgQzkxK21XTG4CyQAv34oBgOdrXowY8F587J4SScviNGPPFbN6dZzES/GGWkH64YXYOYZA0LnvHTdORDdxYIez4XnlrPSVU07SvAB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aGaTBU7d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="vahgsLwS"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8998639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849920; x=1713454720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlTiJyqp1UTe69uWYXEk00kh5Kvuj6AMI5UGQjYjQno=;
-        b=vahgsLwSyGC3CxbEGGMrVeGszY5AKTXii26wQKBcmOxU5ow5G0OxGveTUvBOthj78V
-         N1sao+6Nl4dOC6pFINkdabN7PwJ60vc2+DMCmyJ3u6q+S8Fk1HUAt4A6JyVliWSHg77c
-         dFqMobX4UAA0apqNu2pGR+PUPnH/90CGufjUQNTjcXNdMqaqW8LNlb2uGBg3Dd6JAwST
-         3lAfOQfwa4v5kngiUp0wtgV1U38DnDoBQppypJYLgc904D/M4pTHXsh3w82SRvjp2DIL
-         fESB+PhAHpe5L3gAu0vSuiEtknR/jR+hm8IlqBf2VB6X/zVI6DD8xKgutdjssJv0Svkg
-         Qmdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849920; x=1713454720;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OlTiJyqp1UTe69uWYXEk00kh5Kvuj6AMI5UGQjYjQno=;
-        b=cAYdyg3p1DJzHjaEqFgxmy24ZHAOvZhfq4a5YxgMNiG7MbYhbYwuuRtEPxsLcyMRAk
-         B5qct4SQ7k4785qNjOcfXtUy09Dh7TtlFjcmQq+T+cZ0iuLcCcqwP/pVtUplnPIjdKlD
-         MMIIDD8lahLCbcNr57pX+b8k2n8qbWRCINaLGNiwEiWWiMTu+BJWY7cb5ZW7zAyL4NRt
-         JRYr1plWdtDOCGETnOU3Y30ityj8xQ2DHfk8JeDFAiQ76nGqkvJgdSfX2cUvMspgiCjc
-         cR9Y9PC4QZNC3ieoF/Js7hWv82pr+BvsvAUcRutLK/zmqvcXP7qNDU6o6s68rBCfTkbp
-         3zUg==
-X-Gm-Message-State: AOJu0YzG3GjOG/T8IhaPG4udZD54rifRlg6hVGly1ENZiGQB5MFqMtbN
-	O8e31y6Vw9dgRCxqBPAkPspnOoq/6AQLUMyWfU73bI43VjRWwzJ9ZDWhJLYlmWHc3640UZjdEEr
-	P
-X-Google-Smtp-Source: AGHT+IFwu2SbuFOvmNnvtle476cDHH8Rw5UilYmORIunXUwkT0lHMbmPaK4+7lPb/wPGTXnrkwKDUA==
-X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr228148ioh.0.1712849919961;
-        Thu, 11 Apr 2024 08:38:39 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:38:39 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 253/437] watchdog: sbc_epx_c3: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:16:33 -0600
-Message-ID: <20240411153126.16201-254-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aGaTBU7d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE207C113CE;
+	Thu, 11 Apr 2024 15:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712849923;
+	bh=0XIFigNg8okTi2XcwCJDslMjIxGNFSCDsSh68/q0Ud4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aGaTBU7dJ/KuPVA22cvjffRpSftlAU4O+LZZLSuPk3heq+ij90Fsc7u3tN9JEsmIU
+	 lt6D6iwTiFikA3C0RWCvWY1lIdpzdaDrnUJeyMPYpI/oOSiSj+oDQrdRZKnt0IqKOE
+	 7D9KZ2d51dyUy3fqlmFxFECXFdXtiwlklgm2RhJhwIIo3IJ8ivMcfzzeabnW57Irqd
+	 lPWciXlA5yanNZE8QiY2lE66HZoawFU9OTMsRQFmMO8zH0YRcrOq00SaJsJmR4YWbX
+	 SEu0Q1TzjcQCjKyUR9JdkI/4Mqu0+3JSGch87GkcLkhh+BRFknnUkA7kO29MmPTcx6
+	 LrwpuKlS+G+Eg==
+Date: Thu, 11 Apr 2024 08:38:41 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 5/7] x86/bugs: Only harden syscalls when needed
+Message-ID: <20240411153841.zexbsqrdli54kiez@treble>
+References: <cover.1712813475.git.jpoimboe@kernel.org>
+ <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+ <90405c43-daca-48e4-b424-d66d6bf4dd87@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <90405c43-daca-48e4-b424-d66d6bf4dd87@citrix.com>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/watchdog/sbc_epx_c3.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Thu, Apr 11, 2024 at 11:06:37AM +0100, Andrew Cooper wrote:
+> > +#define __do_syscall(table, func_direct, nr, regs)			\
+> > +({									\
+> > +	unsigned long __rax, __rdi, __rsi;				\
+> > +									\
+> > +	asm_inline volatile(						\
+> > +		ALTERNATIVE("call " __stringify(func_direct) "\n\t",	\
+> > +			    ANNOTATE_RETPOLINE_SAFE			\
+> > +			    "call *%[func_ptr]\n\t",			\
+> 
+> This wants to be a plain maybe-thunk'd indirect call, and without the
+> ANNOTATE_RETPOLINE_SAFE.
+> 
+> Or you're going to get into cases where some combinations of command
+> line options do unexpected things e.g. retpolining everything except the
+> syscall dispatch.
 
-diff --git a/drivers/watchdog/sbc_epx_c3.c b/drivers/watchdog/sbc_epx_c3.c
-index 5e3a9ddb952e..6bbb9db5e57e 100644
---- a/drivers/watchdog/sbc_epx_c3.c
-+++ b/drivers/watchdog/sbc_epx_c3.c
-@@ -89,9 +89,9 @@ static int epx_c3_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t epx_c3_write(struct file *file, const char __user *data,
--			size_t len, loff_t *ppos)
-+static ssize_t epx_c3_write(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t len = iov_iter_count(from);
- 	/* Refresh the timer. */
- 	if (len)
- 		epx_c3_pet();
-@@ -154,7 +154,7 @@ static int epx_c3_notify_sys(struct notifier_block *this, unsigned long code,
- static const struct file_operations epx_c3_fops = {
- 	.owner		= THIS_MODULE,
- 	.llseek		= no_llseek,
--	.write		= epx_c3_write,
-+	.write_iter	= epx_c3_write,
- 	.unlocked_ioctl	= epx_c3_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
- 	.open		= epx_c3_open,
+In that case won't X86_FEATURE_INDIRECT_SAFE get cleared, resulting in
+the above using a direct call?  Or did I miss something?
+
 -- 
-2.43.0
-
+Josh
