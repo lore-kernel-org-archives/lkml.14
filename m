@@ -1,156 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E7013DDBD;
-	Thu, 11 Apr 2024 06:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0181213CA9D;
+	Thu, 11 Apr 2024 06:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818726; cv=none; b=miFS3s5dflOXqGYzBH/GxG2ShE9gk5K4krNfUvZtvkdMEuUBwwt7oaH0MfRZ/vTIVYS5xzZlD75A+bBAw96SNxeJ3IC6LVVI6pD5GhTrT1dabAEnGYPTb8QZO4y1EgVE1HRSxJoaYBDfcbVl7DKPylwm07Ulzy9gEVjOT3mFZec=
+	t=1712818785; cv=none; b=MJtdj4v+0g5WK5RcytFSknU3lie+TEmUjIzVHGRSm2AcwsgGJDztGO/L+Qe7sWzKkGkj6g6RGRm/rL7u8O0u1+fIe6oJ+4jTZa1BDVAuGkjjQLCQ7+ONnDr//uEMCpvOwWc6yUFqfps6ktiqwIWwuKQLTRgKQJiZgHCt7iDqD6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818726; c=relaxed/simple;
-	bh=LMM+ez524Aboe2mGPKwqNrGqAQc9aK5c4yyXY0LCoss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hx77fKP/wdyQ7m8Jjb2AfmiW1BDctESpH9LIGJeqMdiQKGWoopWzr8aqFHVXcJW2VBvqiRIxw/XZXooNW2IQidmEw/ffla8mlpk8zv4fSyoJq3zbpkiNDY2XDAnlW/4T983N0hktrT1JRQbqWXt7hlz1TrXXOks/q/Vrn3LwHIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IyMZwl5F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712818785; c=relaxed/simple;
+	bh=CLIHvR6i/zyhzt5JI8XylHfPT0OLFLJMBlrvECGG4vQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DGA/uFjNjlZrpCHIDHCvMR+ChBsw5km/k/aEGzzelo2VQtpZ6z914skC2PJwI2MBwZpQVf4tJdmnwVlsz+r6bnF7kscwP/w0CTWNCkUnYY5it/pOYRG9yTPK/dZLcuvwuSoK+QotE8qk4VlZWxMwyBkMwXAP2oFArOtBm+fyfDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=w5NvIG0u; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IyMZwl5F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA2E5C433F1;
-	Thu, 11 Apr 2024 06:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712818726;
-	bh=LMM+ez524Aboe2mGPKwqNrGqAQc9aK5c4yyXY0LCoss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IyMZwl5FpJTPzEbw308SeJc3Ty8Un2aBddHUk/JLXbiBBH165npc4RDa4iuNxYX6h
-	 nzWXejLUWk9e59IKjl7fGYFQtb8GyPsUMMhhJTSB+BQPagt73nRfUNaw7ETL10RZq+
-	 upjX3vcsrNeDu1CXU8PxaOAc8UmjPzrbvybMUhVM=
-Date: Thu, 11 Apr 2024 08:58:43 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Sam Sun <samsun1006219@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	Alan Stern <stern@rowland.harvard.edu>, swboyd@chromium.org,
-	ricardo@marliere.net, hkallweit1@gmail.com,
-	heikki.krogerus@linux.intel.com, mathias.nyman@linux.intel.com,
-	royluo@google.com, syzkaller-bugs@googlegroups.com,
-	xrivendell7@gmail.com
-Subject: Re: [Linux kernel bug] general protection fault in disable_store
-Message-ID: <2024041125-anemic-decorated-52aa@gregkh>
-References: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="w5NvIG0u"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=u+3jXxTlJC/OokZC4T91IlfkrsewPG6txXyqceJ/cZU=; t=1712818784;
+	x=1713250784; b=w5NvIG0u8L20U7GXrCR1k+OPt7SDAe/hCO0nKf1KgV0VshKuQDVq6DscSWtxC
+	bucTSl5rGuMaGTxKWIZkZFJ7c4nHVf+S7ifYLxA6a20ZTCkrS3E7YhZc1O8gl90xRwAX/zem8Rwpc
+	AreFcqALRVMjtM5nSARXbAtb6bPU03xOd+HJd4G+Ms2HlwxgBQrHOZP1Bv4zhfaXPXgdLb0Kssz38
+	kHRAlgYDzDxcHCFZ8LRAwUMh5sXnl7ln9VG+6gefIerZDTvcVSje8BqZJFw9ujTt74X73khOJqGRM
+	fGT3NvSfiTJDZ6U05zALYsZCxCJtDd69vxOSzQ2VCSuGGeAzvQ==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ruoPM-0001V0-Eq; Thu, 11 Apr 2024 08:59:40 +0200
+Message-ID: <3f395eca-fc24-469b-b5fc-de47ab2a6861@leemhuis.info>
+Date: Thu, 11 Apr 2024 08:59:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] docs: stable-kernel-rules: mention "no
+ semi-automatic backport"
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ stable@vger.kernel.org, workflows@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1712812895.git.linux@leemhuis.info>
+ <c0a08b160b286e8c98549eedb37404c6e784cf8a.1712812895.git.linux@leemhuis.info>
+ <2024041156-backache-dolly-a420@gregkh>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <2024041156-backache-dolly-a420@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1712818784;6f43151f;
+X-HE-SMSGID: 1ruoPM-0001V0-Eq
 
-On Thu, Apr 11, 2024 at 02:52:27PM +0800, Sam Sun wrote:
-> Dear developers and maintainers,
+On 11.04.24 07:29, Greg Kroah-Hartman wrote:
+> On Thu, Apr 11, 2024 at 07:25:04AM +0200, Thorsten Leemhuis wrote:
+>> Some developers deliberately steer clear of 'Fixes:' tags to prevent
+>> changes from being backported semi-automatically by the stable team.
+>> That somewhat undermines the reason for the existence of the Fixes: tag,
+>> hence point out there is an alternative to reach the same effect.
+>>
+>> Link: https://lore.kernel.org/all/dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info/
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  Documentation/process/stable-kernel-rules.rst | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/process/stable-kernel-rules.rst b/Documentation/process/stable-kernel-rules.rst
+>> index 7bb16d42a51833..ebd57cb9277f7b 100644
+>> --- a/Documentation/process/stable-kernel-rules.rst
+>> +++ b/Documentation/process/stable-kernel-rules.rst
+>> @@ -117,6 +117,12 @@ comment to pass arbitrary or predefined notes:
+>>     Note, such tagging is unnecessary if the stable team can derive the
+>>     appropriate versions from Fixes: tags.
+>>  
+>> + * Prevent semi-automatic backporting of changes carrying a 'Fixes:' tag:
+>> +
+>> +   .. code-block:: none
+>> +
+>> +     Cc: <stable@vger.kernel.org> # no semi-automatic backport
 > 
-> We encountered a general protection fault in function disable_store.
-> It is tested against the latest upstream linux (tag 6.9-rc3). C repro
-> and kernel config are attached to this email. Kernel crash log is
-> listed below.
-> ```
-> general protection fault, probably for non-canonical address
-> 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-> CPU: 1 PID: 9459 Comm: syz-executor414 Not tainted 6.7.0-rc7 #2
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
-> RIP: 0010:disable_store+0xd0/0x3d0 drivers/usb/core/port.c:88
-> Code: 02 00 00 4c 8b 75 40 4d 8d be 58 ff ff ff 4c 89 ff e8 a4 20 fa
-> ff 48 89 c2 48 89 c5 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c
-> 02 00 0f 85 b0 02 00 00 48 8b 45 00 48 8d bb 34 05 00 00 48
-> RSP: 0018:ffffc90006e3fc08 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: ffff88801d4d4008 RCX: ffffffff86706be8
-> RDX: 0000000000000000 RSI: ffffffff86706c4d RDI: 0000000000000005
-> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff92000dc7f85
-> R13: ffff88810f4bfb18 R14: ffff88801d4d10a8 R15: ffff88801d4d1000
-> FS:  00007fa0af71b640(0000) GS:ffff888135c00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fa0af71a4b8 CR3: 0000000022f5f000 CR4: 0000000000750ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> Call Trace:
->  <TASK>
->  dev_attr_store+0x54/0x80 drivers/base/core.c:2366
->  sysfs_kf_write+0x114/0x170 fs/sysfs/file.c:136
->  kernfs_fop_write_iter+0x337/0x500 fs/kernfs/file.c:334
->  call_write_iter include/linux/fs.h:2020 [inline]
->  new_sync_write fs/read_write.c:491 [inline]
->  vfs_write+0x96a/0xd80 fs/read_write.c:584
->  ksys_write+0x122/0x250 fs/read_write.c:637
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0x40/0x110 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x63/0x6b
-> RIP: 0033:0x7fa0aff9ee1f
-> Code: 89 54 24 18 48 89 74 24 10 89 7c 24 08 e8 a9 f4 02 00 48 8b 54
-> 24 18 48 8b 74 24 10 41 89 c0 8b 7c 24 08 b8 01 00 00 00 0f 05 <48> 3d
-> 00 f0 ff ff 77 31 44 89 c7 48 89 44 24 08 e8 ec f4 02 00 48
-> RSP: 002b:00007fa0af71a460 EFLAGS: 00000293 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007fa0aff9ee1f
-> RDX: 0000000000000004 RSI: 00007fa0af71acc0 RDI: 0000000000000005
-> RBP: 0000000000000005 R08: 0000000000000000 R09: 00007fffdb6af2cf
-> R10: 0000000000000000 R11: 0000000000000293 R12: 00007fa0af71acc0
-> R13: 000000000000006e R14: 00007fa0aff613d0 R15: 00007fa0af6fb000
->  </TASK>
-> Modules linked in:
-> ---[ end trace 0000000000000000 ]---
-> RIP: 0010:disable_store+0xd0/0x3d0 drivers/usb/core/port.c:88
-> Code: 02 00 00 4c 8b 75 40 4d 8d be 58 ff ff ff 4c 89 ff e8 a4 20 fa
-> ff 48 89 c2 48 89 c5 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c
-> 02 00 0f 85 b0 02 00 00 48 8b 45 00 48 8d bb 34 05 00 00 48
-> RSP: 0018:ffffc90006e3fc08 EFLAGS: 00010246
-> RAX: dffffc0000000000 RBX: ffff88801d4d4008 RCX: ffffffff86706be8
-> RDX: 0000000000000000 RSI: ffffffff86706c4d RDI: 0000000000000005
-> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff92000dc7f85
-> R13: ffff88810f4bfb18 R14: ffff88801d4d10a8 R15: ffff88801d4d1000
-> FS:  00007fa0af71b640(0000) GS:ffff888063a00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000055d23050c460 CR3: 0000000022f5f000 CR4: 0000000000750ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> PKRU: 55555554
-> ----------------
-> Code disassembly (best guess):
->    0:    02 00                    add    (%rax),%al
->    2:    00 4c 8b 75              add    %cl,0x75(%rbx,%rcx,4)
->    6:    40                       rex
->    7:    4d 8d be 58 ff ff ff     lea    -0xa8(%r14),%r15
->    e:    4c 89 ff                 mov    %r15,%rdi
->   11:    e8 a4 20 fa ff           call   0xfffa20ba
->   16:    48 89 c2                 mov    %rax,%rdx
->   19:    48 89 c5                 mov    %rax,%rbp
->   1c:    48 b8 00 00 00 00 00     movabs $0xdffffc0000000000,%rax
->   23:    fc ff df
->   26:    48 c1 ea 03              shr    $0x3,%rdx
-> * 2a:    80 3c 02 00              cmpb   $0x0,(%rdx,%rax,1) <--
-> trapping instruction
->   2e:    0f 85 b0 02 00 00        jne    0x2e4
->   34:    48 8b 45 00              mov    0x0(%rbp),%rax
->   38:    48 8d bb 34 05 00 00     lea    0x534(%rbx),%rdi
->   3f:    48                       rex.W
-> ```
-> We analyzed the root cause of this bug. When calling disable_store()
-> in drivers/usb/core/port.c, if function authorized_store() is calling
-> usb_deauthorized_device() concurrently, the usb_interface will be
-> removed by usb_disable_device. However, in function disable_store,
-> usb_hub_to_struct_hub() would try to deref interface, causing
-> nullptr-deref. We also tested other functions in
-> drivers/usb/core/port.c. So far we haven't found a similar problem.
-> 
-> If you have any questions, please contact us.
-> 
-> Reported by Yue Sun <samsun1006219@gmail.com>
-> Reported by xingwei lee <xrivendell7@gmail.com>
+> I do not understand, why are you saying "cc: stable" here if you do NOT
+> want it backported?
 
-Do you have a proposed patch to fix this as you have a way to easily
-test this?
+Because the only alternative the developers have to make the stable team
+not pick a single patch[1] is to deliberately omit a Fixes: tag even if
+the patch normally should have one. Like it was done here:
+https://lore.kernel.org/all/cover.1712226175.git.antony.antony@secunet.com/
 
-thanks,
+And that somehow felt wrong to me, as discussed earlier in
+https://lore.kernel.org/all/dfd87673-c581-4b4b-b37a-1cf5c817240d@leemhuis.info/
 
-greg k-h
+[1] e.g. if they don't have or want their whole subsystem marked as
+'ignore for the AUTOSEL and the "Fixes tag only" tools'
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/ignore_list
+
+> And what do you mean by "semi-automatic"?
+
+E.g. 'ignore for the AUTOSEL and the "Fixes tag only" tools'. That was
+the best term I came up with.
+
+Ciao, Thorsten
