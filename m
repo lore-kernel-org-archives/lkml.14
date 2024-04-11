@@ -1,63 +1,63 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563E3158D95
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D035A15990F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849708; cv=none; b=PwAYT3fJA2iYvcrSH7rxYuWQg/KHvqvTJKEH1p5o/5RolaRsxsiRFeafjuJkXe3xWmAk66sbyZAD/dVwt9lGK8uogN3hT38PxW96LMEAmTb63QOHP5zXhSnrg7OkEpfFOqftfnwJdIqg4/d+sBHAoC5ozUk+FZ/vGu1hcZxztZo=
+	t=1712849711; cv=none; b=VUnh5mIomsBz0ha6ytQNWTR59M/pzzZ/R+IfOqRWV2b3B0Ul7ulTUF8i2WivZmwfIVoMu9JQapVE04WQq7Ra8Ze1v2FD9tOHaZQSgX4RqfDSIomz/13+/dT8mDQBSFIfUMVphgpx5EcqF0aQScYzRye7gDdSK5rOP+TRzqQa8QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849708; c=relaxed/simple;
-	bh=Y2CuPnfNGCTlH89sPwvg5Qqu+KAOzE/jZXq27+ZlmTI=;
+	s=arc-20240116; t=1712849711; c=relaxed/simple;
+	bh=2jpgqsaRNnfM5RlyfhsLchALqZkLfgI9lutsTG6mMOA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TYLJBA95MTkT2u4i1PxNrQIyr84/kbH8/y9of1mS1j5COSJLI24Ha7vSV3IPGQnJpPsaP6N9lhhDYqguujJ9FIkz6Q3BeBF8Ge37xA5qXa/MdEQsxsctQwXhKs3JcBMMBSI/V54088y8IRftazhKo8RrX83IafltpfHM8FK+LGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Nr94BhZM; arc=none smtp.client-ip=209.85.166.45
+	 MIME-Version; b=AEkJujCbQuhPWEtiTUNBRVdWYsN7xLsf6keOsiCrQ9RKTwFRGlyAIDS5YLEKfQESXm9FILephnGEgNMiA253QbMT43eWZb/MASWY5dOxHT+AqE6vvhMCEvyzmhA8uW7kGkCG4i792nc1fxWoWw/3lLiSD9kjOtQ0VrTJCi6Qtlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=frpYVgdW; arc=none smtp.client-ip=209.85.166.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Nr94BhZM"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8922739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:35:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="frpYVgdW"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170492239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849705; x=1713454505; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849709; x=1713454509; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jctYABsZiacNIUyvtBgQSkUe95IwzkHgR2PUGlrc25M=;
-        b=Nr94BhZMJW3LQxH3W9dJ2M5jwZUXyi1nP1HcJYZm8QR1F5nJ8HK04lbDbHfomtGGBu
-         1tnOUyqIuHD6ESycs14QVwDIb9awUamfapAtKHvQElQCzG/LLX5jyw59iv94CCc4gnpT
-         CNlNseV9ZBdPDyWau9vOxVSMWfHoGMRiC8IQAC2U86LQL/vS0HEOtTABPmtu69eG24U1
-         vT8kC3qJ0JVQmXAo6WmX7BZ32s4JEOSjnpYGxtyJeONVaKLjCebJa0/TDVa+JSAQlPk6
-         67CBJmCxTJNVpMSawFIsKoVPqzFKCNFO9OHNLyj/p/1mQmpIR6fD5TMyi63B8LX0OUIm
-         DkgQ==
+        bh=P11kmzenZH0wLpPwDrZo3WxQIM4domjvSQ3qEPqaXb0=;
+        b=frpYVgdWM9AGpuHLHROq2S3HXrUGvirwYldEu+WH/pNz4EPREODat0rKgQDDfoLR2h
+         ERH+/ovJ2XxiNqIWXAxY4B9w/C/LbHY9onsrvrO/lsnj9IwulvzzgI+X1MatIqDdwSZt
+         mi44FUdiAlba7d4mk9/E7FG5jIeTo7xaEMjetmm5PVySy7UGCBcyr8fr/qWI+pVkunep
+         1q9oPy8N3/VCEMYn3ouhluHIXwok3pdLBc+zBirf8Dg5Motv2gSqzj6r6lcY4PMb9IYt
+         gRLlpoxaWTVzAmO6NcaE1Y4pgtnJyXPokFXaGrEDn2iD87PX1ZH8fjNQ97BhopL2/Hjm
+         /Tdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849705; x=1713454505;
+        d=1e100.net; s=20230601; t=1712849709; x=1713454509;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jctYABsZiacNIUyvtBgQSkUe95IwzkHgR2PUGlrc25M=;
-        b=CzRAHhBkcdhOaLsFnVQTzYw8hNutuYHgLmyz0+A3FbcN0UwYJfabN4jctF4gCAAOfy
-         TAsk7O/nwaoo1PIlM4fRKfKBRLuIRVOrI/ls+kbD+C2KnNDDa/Tzwl0gkKuoOYrnfIRo
-         0fROpigddSmqL2dPjAfGznm5fbmK8gH4dIqZWTw9e5OZPGleUiwENv/tTQkLPwBWYkEi
-         fQQIgVPaKIa6HulddptBI8JgWCfVAy5U/ekvEHB+Ha54VN63EE9g5OPUQ2mdyQzA2dwz
-         PfR6RYbggvni+IPqJgQhWIkar1EcC+qEETvmV1TEXRbj17PnxsR+ttXW5Xx9gx8P99Is
-         D2Jg==
-X-Gm-Message-State: AOJu0Yyp8gHD9HvjX4nwebsZtembU5uUwyW/n4g2cFqKO/W8W7SpPltD
-	HlRtaMwEKDy/OIQGNOO6bpUu6GHfJuhgt2l7XL8ChG8ZfGGs1F6LN01yWKwXiqphDqg7RyXiHgU
-	S
-X-Google-Smtp-Source: AGHT+IF9gFig6M+UH9WnMfXESZo6hf1MnyyC+bzgiTIP7ZEz+OCipcMpgkovUtXNnZ/hCbTaC+ccNA==
-X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr219626ioh.0.1712849705156;
-        Thu, 11 Apr 2024 08:35:05 -0700 (PDT)
+        bh=P11kmzenZH0wLpPwDrZo3WxQIM4domjvSQ3qEPqaXb0=;
+        b=YGMwNWEDLOG8whvxDDR6P/1pDXBGFC5noi964gmjcEiKASxi7xW3jp+ZBho34jOHCC
+         UcpaKXWWsWK2efaPKEWLh48yBylRZmW+OYvlHQJ41qVo96BN32fRggYGBPZg4ilxyrCR
+         wTXWezFwflzGNdQD3SPte+CP/gTFsrC/jCoTzBB0opkHB1qI/UN6ryOpIP5GpLk0aUEi
+         5tCg/xcpPAp7ae6o/gPBT06QaMV7llgniWPDy9Sg83qHNAfxqFxVxDCnPg/ytgYmYszQ
+         s1C+uH5l0JPvts5WYWoAyf06sdepkjaeQ/JY1JI03bvaTVpEYoRy+xnL5/nH7Cjjv3sk
+         33qA==
+X-Gm-Message-State: AOJu0YxrXD7uibhEnxsz+4/qLR8ee2Bc3ZEizkYtFLhyK8br4bDAJwRQ
+	+LmBt3NVrR31BM+kKxOs5uhXBGog7TxcdT+GbyP8lsA8pMhC6QqIYc9Rdt5KDcSQ8AlPxnj3QN5
+	z
+X-Google-Smtp-Source: AGHT+IFukpgdzcNWpSIoHYUcXeStn0qs+nfuEHZIgD4pc8FP+snAfV+Dv4NT61aX+yZoPyfOE8wuOA==
+X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr178447ioj.2.1712849708683;
+        Thu, 11 Apr 2024 08:35:08 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.35.03
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.35.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:35:03 -0700 (PDT)
+        Thu, 11 Apr 2024 08:35:07 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 121/437] drivers/input: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:21 -0600
-Message-ID: <20240411153126.16201-122-axboe@kernel.dk>
+Subject: [PATCH 123/437] fs/fuse: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:14:23 -0600
+Message-ID: <20240411153126.16201-124-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,411 +71,185 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/input/evdev.c                  |  6 ++++--
- drivers/input/joydev.c                 | 22 +++++++++++-----------
- drivers/input/keyboard/applespi.c      | 11 +++++------
- drivers/input/misc/uinput.c            |  6 ++++--
- drivers/input/mousedev.c               | 16 +++++++++-------
- drivers/input/serio/serio_raw.c        |  6 ++++--
- drivers/input/serio/userio.c           | 22 +++++++++++-----------
- drivers/input/touchscreen/edt-ft5x06.c | 19 ++++++++++---------
- 8 files changed, 58 insertions(+), 50 deletions(-)
+ fs/fuse/control.c | 70 ++++++++++++++++++++---------------------------
+ 1 file changed, 30 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/input/evdev.c b/drivers/input/evdev.c
-index 51e0c4954600..9f41631df926 100644
---- a/drivers/input/evdev.c
-+++ b/drivers/input/evdev.c
-@@ -536,6 +536,7 @@ static ssize_t evdev_write(struct file *file, const char __user *buffer,
- 	mutex_unlock(&evdev->mutex);
- 	return retval;
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index 0ca1d1f418c3..e572013d345e 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -43,8 +43,7 @@ static ssize_t fuse_conn_abort_write(struct kiocb *iocb, struct iov_iter *from)
+ 	return iov_iter_count(from);
  }
-+FOPS_WRITE_ITER_HELPER(evdev_write);
  
- static int evdev_fetch_next_event(struct evdev_client *client,
- 				  struct input_event *event)
-@@ -605,6 +606,7 @@ static ssize_t evdev_read(struct file *file, char __user *buffer,
- 
- 	return read;
- }
-+FOPS_READ_ITER_HELPER(evdev_read);
- 
- /* No kernel lock - fine */
- static __poll_t evdev_poll(struct file *file, poll_table *wait)
-@@ -1291,8 +1293,8 @@ static long evdev_ioctl_compat(struct file *file,
- 
- static const struct file_operations evdev_fops = {
- 	.owner		= THIS_MODULE,
--	.read		= evdev_read,
--	.write		= evdev_write,
-+	.read_iter	= evdev_read_iter,
-+	.write_iter	= evdev_write_iter,
- 	.poll		= evdev_poll,
- 	.open		= evdev_open,
- 	.release	= evdev_release,
-diff --git a/drivers/input/joydev.c b/drivers/input/joydev.c
-index 5824bca02e5a..e84acc296aaa 100644
---- a/drivers/input/joydev.c
-+++ b/drivers/input/joydev.c
-@@ -23,6 +23,7 @@
- #include <linux/init.h>
- #include <linux/device.h>
- #include <linux/cdev.h>
-+#include <linux/uio.h>
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>");
- MODULE_DESCRIPTION("Joystick device interfaces");
-@@ -338,8 +339,7 @@ static int joydev_fetch_next_event(struct joydev_client *client,
-  * Old joystick interface
-  */
- static ssize_t joydev_0x_read(struct joydev_client *client,
--			      struct input_dev *input,
--			      char __user *buf)
-+			      struct input_dev *input, struct iov_iter *to)
+-static ssize_t fuse_conn_waiting_read_iter(struct kiocb *iocb,
+-					   struct iov_iter *to)
++static ssize_t fuse_conn_waiting_read(struct kiocb *iocb, struct iov_iter *to)
  {
- 	struct joydev *joydev = client->joydev;
- 	struct JS_DATA_TYPE data;
-@@ -366,7 +366,7 @@ static ssize_t joydev_0x_read(struct joydev_client *client,
- 
- 	spin_unlock_irq(&input->event_lock);
- 
--	if (copy_to_user(buf, &data, sizeof(struct JS_DATA_TYPE)))
-+	if (!copy_to_iter(&data, sizeof(struct JS_DATA_TYPE), to))
- 		return -EFAULT;
- 
- 	return sizeof(struct JS_DATA_TYPE);
-@@ -380,12 +380,12 @@ static inline int joydev_data_pending(struct joydev_client *client)
- 		client->head != client->tail;
+ 	char tmp[32];
+ 	size_t size;
+@@ -63,27 +62,27 @@ static ssize_t fuse_conn_waiting_read_iter(struct kiocb *iocb,
+ 	return simple_copy_to_iter(tmp, &iocb->ki_pos, size, to);
  }
  
--static ssize_t joydev_read(struct file *file, char __user *buf,
--			   size_t count, loff_t *ppos)
-+static ssize_t joydev_read(struct kiocb *iocb, struct iov_iter *to)
+-static ssize_t fuse_conn_limit_read(struct file *file, char __user *buf,
+-				    size_t len, loff_t *ppos, unsigned val)
++static ssize_t fuse_conn_limit_read(struct kiocb *iocb, struct iov_iter *to,
++				    unsigned val)
  {
--	struct joydev_client *client = file->private_data;
-+	struct joydev_client *client = iocb->ki_filp->private_data;
- 	struct joydev *joydev = client->joydev;
- 	struct input_dev *input = joydev->handle.dev;
-+	size_t count = iov_iter_count(to);
- 	struct js_event event;
- 	int retval;
+ 	char tmp[32];
+ 	size_t size = sprintf(tmp, "%u\n", val);
  
-@@ -396,9 +396,9 @@ static ssize_t joydev_read(struct file *file, char __user *buf,
+-	return simple_read_from_buffer(buf, len, ppos, tmp, size);
++	return simple_copy_to_iter(tmp, &iocb->ki_pos, size, to);
+ }
+ 
+-static ssize_t fuse_conn_limit_write(struct file *file, const char __user *buf,
+-				     size_t count, loff_t *ppos, unsigned *val,
+-				     unsigned global_limit)
++static ssize_t fuse_conn_limit_write(struct kiocb *iocb, struct iov_iter *from,
++				     unsigned *val, unsigned global_limit)
+ {
+ 	unsigned long t;
+ 	unsigned limit = (1 << 16) - 1;
++	size_t count = iov_iter_count(from);
+ 	int err;
+ 
+-	if (*ppos)
++	if (iocb->ki_pos)
  		return -EINVAL;
  
- 	if (count == sizeof(struct JS_DATA_TYPE))
--		return joydev_0x_read(client, input, buf);
-+		return joydev_0x_read(client, input, to);
+-	err = kstrtoul_from_user(buf, count, 0, &t);
++	err = kstrtoul_from_iter(from, count, 0, &t);
+ 	if (err)
+ 		return err;
  
--	if (!joydev_data_pending(client) && (file->f_flags & O_NONBLOCK))
-+	if (!joydev_data_pending(client) && (iocb->ki_filp->f_flags & O_NONBLOCK))
- 		return -EAGAIN;
- 
- 	retval = wait_event_interruptible(joydev->wait,
-@@ -412,7 +412,7 @@ static ssize_t joydev_read(struct file *file, char __user *buf,
- 	while (retval + sizeof(struct js_event) <= count &&
- 	       joydev_generate_startup_event(client, input, &event)) {
- 
--		if (copy_to_user(buf + retval, &event, sizeof(struct js_event)))
-+		if (!copy_to_iter_full(&event, sizeof(struct js_event), to))
- 			return -EFAULT;
- 
- 		retval += sizeof(struct js_event);
-@@ -421,7 +421,7 @@ static ssize_t joydev_read(struct file *file, char __user *buf,
- 	while (retval + sizeof(struct js_event) <= count &&
- 	       joydev_fetch_next_event(client, &event)) {
- 
--		if (copy_to_user(buf + retval, &event, sizeof(struct js_event)))
-+		if (!copy_to_iter_full(&event, sizeof(struct js_event), to))
- 			return -EFAULT;
- 
- 		retval += sizeof(struct js_event);
-@@ -709,7 +709,7 @@ static long joydev_ioctl(struct file *file,
- 
- static const struct file_operations joydev_fops = {
- 	.owner		= THIS_MODULE,
--	.read		= joydev_read,
-+	.read_iter	= joydev_read,
- 	.poll		= joydev_poll,
- 	.open		= joydev_open,
- 	.release	= joydev_release,
-diff --git a/drivers/input/keyboard/applespi.c b/drivers/input/keyboard/applespi.c
-index cf25177b4830..fa1ce0d23f14 100644
---- a/drivers/input/keyboard/applespi.c
-+++ b/drivers/input/keyboard/applespi.c
-@@ -994,19 +994,18 @@ static int applespi_tp_dim_open(struct inode *inode, struct file *file)
- 	return nonseekable_open(inode, file);
+@@ -98,35 +97,31 @@ static ssize_t fuse_conn_limit_write(struct file *file, const char __user *buf,
+ 	return count;
  }
  
--static ssize_t applespi_tp_dim_read(struct file *file, char __user *buf,
--				    size_t len, loff_t *off)
-+static ssize_t applespi_tp_dim_read(struct kiocb *iocb, struct iov_iter *to)
+-static ssize_t fuse_conn_max_background_read(struct file *file,
+-					     char __user *buf, size_t len,
+-					     loff_t *ppos)
++static ssize_t fuse_conn_max_background_read(struct kiocb *iocb,
++					     struct iov_iter *to)
  {
--	struct applespi_data *applespi = file->private_data;
-+	struct applespi_data *applespi = iocb->ki_filp->private_data;
+ 	struct fuse_conn *fc;
+ 	unsigned val;
  
--	return simple_read_from_buffer(buf, len, off, applespi->tp_dim_val,
--				       strlen(applespi->tp_dim_val));
-+	return simple_copy_to_iter(applespi->tp_dim_val, &iocb->ki_pos,
-+				       strlen(applespi->tp_dim_val), to);
+-	fc = fuse_ctl_file_conn_get(file);
++	fc = fuse_ctl_file_conn_get(iocb->ki_filp);
+ 	if (!fc)
+ 		return 0;
+ 
+ 	val = READ_ONCE(fc->max_background);
+ 	fuse_conn_put(fc);
+ 
+-	return fuse_conn_limit_read(file, buf, len, ppos, val);
++	return fuse_conn_limit_read(iocb, to, val);
+ }
+-FOPS_READ_ITER_HELPER(fuse_conn_max_background_read);
+ 
+-static ssize_t fuse_conn_max_background_write(struct file *file,
+-					      const char __user *buf,
+-					      size_t count, loff_t *ppos)
++static ssize_t fuse_conn_max_background_write(struct kiocb *iocb,
++					      struct iov_iter *from)
+ {
+ 	unsigned val;
+ 	ssize_t ret;
+ 
+-	ret = fuse_conn_limit_write(file, buf, count, ppos, &val,
+-				    max_user_bgreq);
++	ret = fuse_conn_limit_write(iocb, from, &val, max_user_bgreq);
+ 	if (ret > 0) {
+-		struct fuse_conn *fc = fuse_ctl_file_conn_get(file);
++		struct fuse_conn *fc = fuse_ctl_file_conn_get(iocb->ki_filp);
+ 		if (fc) {
+ 			spin_lock(&fc->bg_lock);
+ 			fc->max_background = val;
+@@ -140,38 +135,34 @@ static ssize_t fuse_conn_max_background_write(struct file *file,
+ 
+ 	return ret;
+ }
+-FOPS_WRITE_ITER_HELPER(fuse_conn_max_background_write);
+ 
+-static ssize_t fuse_conn_congestion_threshold_read(struct file *file,
+-						   char __user *buf, size_t len,
+-						   loff_t *ppos)
++static ssize_t fuse_conn_congestion_threshold_read(struct kiocb *iocb,
++						   struct iov_iter *to)
+ {
+ 	struct fuse_conn *fc;
+ 	unsigned val;
+ 
+-	fc = fuse_ctl_file_conn_get(file);
++	fc = fuse_ctl_file_conn_get(iocb->ki_filp);
+ 	if (!fc)
+ 		return 0;
+ 
+ 	val = READ_ONCE(fc->congestion_threshold);
+ 	fuse_conn_put(fc);
+ 
+-	return fuse_conn_limit_read(file, buf, len, ppos, val);
++	return fuse_conn_limit_read(iocb, to, val);
  }
  
- static const struct file_operations applespi_tp_dim_fops = {
- 	.owner = THIS_MODULE,
- 	.open = applespi_tp_dim_open,
--	.read = applespi_tp_dim_read,
-+	.read_iter = applespi_tp_dim_read,
+-static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
+-						    const char __user *buf,
+-						    size_t count, loff_t *ppos)
++static ssize_t fuse_conn_congestion_threshold_write(struct kiocb *iocb,
++						    struct iov_iter *from)
+ {
+ 	unsigned val;
+ 	struct fuse_conn *fc;
+ 	ssize_t ret;
+ 
+-	ret = fuse_conn_limit_write(file, buf, count, ppos, &val,
+-				    max_user_congthresh);
++	ret = fuse_conn_limit_write(iocb, from, &val, max_user_congthresh);
+ 	if (ret <= 0)
+ 		goto out;
+-	fc = fuse_ctl_file_conn_get(file);
++	fc = fuse_ctl_file_conn_get(iocb->ki_filp);
+ 	if (!fc)
+ 		goto out;
+ 
+@@ -180,7 +171,6 @@ static ssize_t fuse_conn_congestion_threshold_write(struct file *file,
+ out:
+ 	return ret;
+ }
+-FOPS_WRITE_ITER_HELPER(fuse_conn_congestion_threshold_write);
+ 
+ static const struct file_operations fuse_ctl_abort_ops = {
+ 	.open = nonseekable_open,
+@@ -190,21 +180,21 @@ static const struct file_operations fuse_ctl_abort_ops = {
+ 
+ static const struct file_operations fuse_ctl_waiting_ops = {
+ 	.open = nonseekable_open,
+-	.read_iter = fuse_conn_waiting_read_iter,
++	.read_iter = fuse_conn_waiting_read,
  	.llseek = no_llseek,
  };
  
-diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index d98212d55108..960a0c729bc2 100644
---- a/drivers/input/misc/uinput.c
-+++ b/drivers/input/misc/uinput.c
-@@ -651,6 +651,7 @@ static ssize_t uinput_write(struct file *file, const char __user *buffer,
- 
- 	return retval;
- }
-+FOPS_WRITE_ITER_HELPER(uinput_write);
- 
- static bool uinput_fetch_next_event(struct uinput_device *udev,
- 				    struct input_event *event)
-@@ -723,6 +724,7 @@ static ssize_t uinput_read(struct file *file, char __user *buffer,
- 
- 	return retval;
- }
-+FOPS_READ_ITER_HELPER(uinput_read);
- 
- static __poll_t uinput_poll(struct file *file, poll_table *wait)
- {
-@@ -1111,8 +1113,8 @@ static const struct file_operations uinput_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= uinput_open,
- 	.release	= uinput_release,
--	.read		= uinput_read,
--	.write		= uinput_write,
-+	.read_iter	= uinput_read_iter,
-+	.write_iter	= uinput_write_iter,
- 	.poll		= uinput_poll,
- 	.unlocked_ioctl	= uinput_ioctl,
- #ifdef CONFIG_COMPAT
-diff --git a/drivers/input/mousedev.c b/drivers/input/mousedev.c
-index 505c562a5daa..5d1905f078d1 100644
---- a/drivers/input/mousedev.c
-+++ b/drivers/input/mousedev.c
-@@ -24,6 +24,7 @@
- #include <linux/device.h>
- #include <linux/cdev.h>
- #include <linux/kernel.h>
-+#include <linux/uio.h>
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>");
- MODULE_DESCRIPTION("Mouse (ExplorerPS/2) device interfaces");
-@@ -712,17 +713,18 @@ static ssize_t mousedev_write(struct file *file, const char __user *buffer,
- 
- 	return count;
- }
-+FOPS_WRITE_ITER_HELPER(mousedev_write);
- 
--static ssize_t mousedev_read(struct file *file, char __user *buffer,
--			     size_t count, loff_t *ppos)
-+static ssize_t mousedev_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct mousedev_client *client = file->private_data;
-+	struct mousedev_client *client = iocb->ki_filp->private_data;
- 	struct mousedev *mousedev = client->mousedev;
-+	size_t count = iov_iter_count(to);
- 	u8 data[sizeof(client->ps2)];
- 	int retval = 0;
- 
- 	if (!client->ready && !client->buffer && mousedev->exist &&
--	    (file->f_flags & O_NONBLOCK))
-+	    (iocb->ki_filp->f_flags & O_NONBLOCK))
- 		return -EAGAIN;
- 
- 	retval = wait_event_interruptible(mousedev->wait,
-@@ -748,7 +750,7 @@ static ssize_t mousedev_read(struct file *file, char __user *buffer,
- 
- 	spin_unlock_irq(&client->packet_lock);
- 
--	if (copy_to_user(buffer, data, count))
-+	if (!copy_to_iter_full(data, count, to))
- 		return -EFAULT;
- 
- 	return count;
-@@ -772,8 +774,8 @@ static __poll_t mousedev_poll(struct file *file, poll_table *wait)
- 
- static const struct file_operations mousedev_fops = {
- 	.owner		= THIS_MODULE,
--	.read		= mousedev_read,
--	.write		= mousedev_write,
-+	.read_iter	= mousedev_read,
-+	.write_iter	= mousedev_write_iter,
- 	.poll		= mousedev_poll,
- 	.open		= mousedev_open,
- 	.release	= mousedev_release,
-diff --git a/drivers/input/serio/serio_raw.c b/drivers/input/serio/serio_raw.c
-index 1e4770094415..3b4e72fdcd4f 100644
---- a/drivers/input/serio/serio_raw.c
-+++ b/drivers/input/serio/serio_raw.c
-@@ -194,6 +194,7 @@ static ssize_t serio_raw_read(struct file *file, char __user *buffer,
- 
- 	return read;
- }
-+FOPS_READ_ITER_HELPER(serio_raw_read);
- 
- static ssize_t serio_raw_write(struct file *file, const char __user *buffer,
- 			       size_t count, loff_t *ppos)
-@@ -235,6 +236,7 @@ static ssize_t serio_raw_write(struct file *file, const char __user *buffer,
- 	mutex_unlock(&serio_raw_mutex);
- 	return retval;
- }
-+FOPS_WRITE_ITER_HELPER(serio_raw_write);
- 
- static __poll_t serio_raw_poll(struct file *file, poll_table *wait)
- {
-@@ -255,8 +257,8 @@ static const struct file_operations serio_raw_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= serio_raw_open,
- 	.release	= serio_raw_release,
--	.read		= serio_raw_read,
--	.write		= serio_raw_write,
-+	.read_iter	= serio_raw_read_iter,
-+	.write_iter	= serio_raw_write_iter,
- 	.poll		= serio_raw_poll,
- 	.fasync		= serio_raw_fasync,
- 	.llseek		= noop_llseek,
-diff --git a/drivers/input/serio/userio.c b/drivers/input/serio/userio.c
-index 9ab5c45c3a9f..3688579d69d2 100644
---- a/drivers/input/serio/userio.c
-+++ b/drivers/input/serio/userio.c
-@@ -118,10 +118,10 @@ static int userio_char_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
--				size_t count, loff_t *ppos)
-+static ssize_t userio_char_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct userio_device *userio = file->private_data;
-+	struct userio_device *userio = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(to);
- 	int error;
- 	size_t nonwrap_len, copylen;
- 	unsigned char buf[USERIO_BUFSIZE];
-@@ -153,7 +153,7 @@ static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
- 			break;
- 
- 		/* buffer was/is empty */
--		if (file->f_flags & O_NONBLOCK)
-+		if (iocb->ki_filp->f_flags & O_NONBLOCK)
- 			return -EAGAIN;
- 
- 		/*
-@@ -170,16 +170,16 @@ static ssize_t userio_char_read(struct file *file, char __user *user_buffer,
- 	}
- 
- 	if (copylen)
--		if (copy_to_user(user_buffer, buf, copylen))
-+		if (!copy_to_iter_full(buf, copylen, to))
- 			return -EFAULT;
- 
- 	return copylen;
- }
- 
--static ssize_t userio_char_write(struct file *file, const char __user *buffer,
--				 size_t count, loff_t *ppos)
-+static ssize_t userio_char_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct userio_device *userio = file->private_data;
-+	struct userio_device *userio = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct userio_cmd cmd;
- 	int error;
- 
-@@ -188,7 +188,7 @@ static ssize_t userio_char_write(struct file *file, const char __user *buffer,
- 		return -EINVAL;
- 	}
- 
--	if (copy_from_user(&cmd, buffer, sizeof(cmd)))
-+	if (!copy_from_iter_full(&cmd, sizeof(cmd), from))
- 		return -EFAULT;
- 
- 	error = mutex_lock_interruptible(&userio->mutex);
-@@ -264,8 +264,8 @@ static const struct file_operations userio_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= userio_char_open,
- 	.release	= userio_char_release,
--	.read		= userio_char_read,
--	.write		= userio_char_write,
-+	.read_iter	= userio_char_read,
-+	.write_iter	= userio_char_write,
- 	.poll		= userio_char_poll,
- 	.llseek		= no_llseek,
- };
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 2a1db1134476..fe1b0a2c0925 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -31,6 +31,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-+#include <linux/uio.h>
- 
- #include <asm/unaligned.h>
- 
-@@ -735,20 +736,20 @@ static int edt_ft5x06_debugfs_mode_set(void *data, u64 mode)
- DEFINE_SIMPLE_ATTRIBUTE(debugfs_mode_fops, edt_ft5x06_debugfs_mode_get,
- 			edt_ft5x06_debugfs_mode_set, "%llu\n");
- 
--static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
--						char __user *buf, size_t count,
--						loff_t *off)
-+static ssize_t edt_ft5x06_debugfs_raw_data_read(struct kiocb *iocb,
-+						struct iov_iter *to)
- {
--	struct edt_ft5x06_ts_data *tsdata = file->private_data;
-+	struct edt_ft5x06_ts_data *tsdata = iocb->ki_filp->private_data;
- 	struct i2c_client *client = tsdata->client;
- 	int retries  = EDT_RAW_DATA_RETRIES;
-+	size_t count = iov_iter_count(to);
- 	unsigned int val;
- 	int i, error;
- 	size_t read = 0;
- 	int colbytes;
- 	u8 *rdbuf;
- 
--	if (*off < 0 || *off >= tsdata->raw_bufsize)
-+	if (iocb->ki_pos < 0 || iocb->ki_pos >= tsdata->raw_bufsize)
- 		return 0;
- 
- 	mutex_lock(&tsdata->mutex);
-@@ -798,13 +799,13 @@ static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
- 		rdbuf += colbytes;
- 	}
- 
--	read = min_t(size_t, count, tsdata->raw_bufsize - *off);
--	if (copy_to_user(buf, tsdata->raw_buffer + *off, read)) {
-+	read = min_t(size_t, count, tsdata->raw_bufsize - iocb->ki_pos);
-+	if (!copy_to_iter_full(tsdata->raw_buffer + iocb->ki_pos, read, to)) {
- 		error = -EFAULT;
- 		goto out;
- 	}
- 
--	*off += read;
-+	iocb->ki_pos += read;
- out:
- 	mutex_unlock(&tsdata->mutex);
- 	return error ?: read;
-@@ -812,7 +813,7 @@ static ssize_t edt_ft5x06_debugfs_raw_data_read(struct file *file,
- 
- static const struct file_operations debugfs_raw_data_fops = {
- 	.open = simple_open,
--	.read = edt_ft5x06_debugfs_raw_data_read,
-+	.read_iter = edt_ft5x06_debugfs_raw_data_read,
+ static const struct file_operations fuse_conn_max_background_ops = {
+ 	.open = nonseekable_open,
+-	.read_iter = fuse_conn_max_background_read_iter,
+-	.write_iter = fuse_conn_max_background_write_iter,
++	.read_iter = fuse_conn_max_background_read,
++	.write_iter = fuse_conn_max_background_write,
+ 	.llseek = no_llseek,
  };
  
- static void edt_ft5x06_ts_prepare_debugfs(struct edt_ft5x06_ts_data *tsdata,
+ static const struct file_operations fuse_conn_congestion_threshold_ops = {
+ 	.open = nonseekable_open,
+-	.read = fuse_conn_congestion_threshold_read,
+-	.write_iter = fuse_conn_congestion_threshold_write_iter,
++	.read_iter = fuse_conn_congestion_threshold_read,
++	.write_iter = fuse_conn_congestion_threshold_write,
+ 	.llseek = no_llseek,
+ };
+ 
 -- 
 2.43.0
 
