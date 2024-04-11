@@ -1,166 +1,127 @@
-Received: from smtpdh20-2.aruba.it (smtpdh20-2.aruba.it [62.149.155.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 417B713E04E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBBA13E3F8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820239; cv=none; b=Z0rlk7zCImtJpDMqCV1jJlDAaTDCra9T2oMf1AVyJbRcWYwyLDuXwU1cctlubU5QpQrkEVA3iP63j2ERr348GKDkSXk9qeHza2iy3mzIFrbHHyACMFF1NwDoZCeFEOxONU7i9OQSV3jO78+dnV+mWRtqjQZWBiYVUpXjtUAhlug=
+	t=1712820244; cv=none; b=uChOBu/S7Tltqgq0NtVp1zTHwcT8lwpSXHA1UQA6KvmWBGfcGE9GZZmg9qW8MjqLau2JT4EREMsgpC52T6qif3DuOu4cF2joqfPdSPHTmeAeVBiUDASCotUrLe0BTwHe8SCK9DI4LR9n9YHpGTI87/wux2h0NOU03f6+KGkrtzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820239; c=relaxed/simple;
-	bh=VrywK8vMaYwbpYQvPGENaJzZBcgxgNbgsuu98ieZ/uY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HSoYTPkH8PTUAu5PPQtdQPJRxMbu2REUcv2HAMzB4DlEdhVSjaMROckZFYC+UqSTO8QtT/7wKh/N7tm0yXN8L/7DGQh4vve+5HJosgfsyw0pUJqjpwn/8hfzhh44s5QkZhrDNhHuSthcuOUnQrG57d2J08GALxf96i6t1PEAAfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=YdjJJIXh; arc=none smtp.client-ip=62.149.155.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="YdjJJIXh"
-Received: from [192.168.1.57] ([79.0.204.227])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id uojkr2Vp5wWj2uojkrpbFz; Thu, 11 Apr 2024 09:20:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1712820044; bh=VrywK8vMaYwbpYQvPGENaJzZBcgxgNbgsuu98ieZ/uY=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=YdjJJIXh1cK5BvSTukjoSQKDooRx+BYrFek0vN76Jt3TMYpfj1itK/TpSJeoFSJqv
-	 LNC4BpDNQSnbL1hsF7VeA7oGA19fZA8ywxSnjsNBXFovquZHuRG3jqOjlmHTkEQyse
-	 9I3KkEBp7B5L3YbgKR5qmNwbV6+bKqJeBKIkiO3gEMHyawoI0eHy3ORCSmV7SRW71H
-	 mJno+gpx6Q6Y9pvOfRXT0nyYv36vl/9M+dawWdEzrsxLWrj3CEdlvNNvyas5aBFhhi
-	 P+Zul0G5HgsJoBuQKn6dRmb8ANQubk0pwdwNqzSDFqPVyo3pq2gGk+wv+14zItsprA
-	 p+Au9rAjEHEew==
-Message-ID: <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
-Date: Thu, 11 Apr 2024 09:20:44 +0200
+	s=arc-20240116; t=1712820244; c=relaxed/simple;
+	bh=ENzsqCkEZF7w3w+dj2MlSXHDdkhowWbzZYt+sJi8kUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mK/Za6p6+258JTeabl12QD4WDv2O7XF7XXuZ2J7gztto7AuiPO2BxWTjvg13KG0V+bGUNCAAoOizZqs5yeTPTyQ/zPLMlf9mnOkpDoGNGOlge1Ur1jxotp64MAaSG/8Bwv+ujhLMaxXX700q/A43RwVHP0dVIoOrYHRJ66mcZcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-61587aa956eso71221937b3.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:24:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712820240; x=1713425040;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DT9wpQertwUtJrUq+JoryAh7T5yA817K6uGSpPBNwoo=;
+        b=vsKLEemDyQ0FIMOurDVLBHp52zZSqfG5QBP1CMJb+V8XYQEndI7G4WsbNUgbs67Bgj
+         NobVefWIr0SD3C/PeNIpyWiO2jusSuZB0JRh0+OuAwhA5lmlnbULjYKtUPJ0STVGLpDd
+         hXlrDMLCg1Cz+gtBWO4t6kAcK8AgG6e+Y4VB8QWnR9pswp4KjCHD1mzGDtKjS/fLHB4g
+         cuh+THc0YQp2N9XSeOdAIWyb1M75dIMtrgjBVoL+eP/voMUtWL2kxD+g6HHt8kQ7sd+D
+         5ICYbHIZ9198RaZv3Oujkk3iswXnoPQWkpsc34xbi1+CTf6P4syl1i8ZE1ND8Y6g5PsW
+         sLzw==
+X-Gm-Message-State: AOJu0YyyEs1gzIZPB+pVV/ssQUdmYhuVX5RYsPddiM/mMcFvqjc91YmB
+	cgy6OFLkVZT+DJ9Q13AwlxwA+QYn107U533HdNHANggupjJPJMWymj4Xdwop
+X-Google-Smtp-Source: AGHT+IFMZuIUyw3nCr55DwhxZVzM5Si66C68GE114CGyi+JnkDEaL9b45KHRwtt9dydPBQFttBgSWg==
+X-Received: by 2002:a5b:3cd:0:b0:dc2:5553:ca12 with SMTP id t13-20020a5b03cd000000b00dc25553ca12mr4644197ybp.14.1712820240359;
+        Thu, 11 Apr 2024 00:24:00 -0700 (PDT)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id k12-20020a5b0a0c000000b00dcdba3056e9sm176652ybq.25.2024.04.11.00.23.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 00:23:59 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dde0b30ebe2so6425357276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:23:59 -0700 (PDT)
+X-Received: by 2002:a05:6902:149:b0:dcd:5e5d:4584 with SMTP id
+ p9-20020a056902014900b00dcd5e5d4584mr4662119ybh.34.1712820239378; Thu, 11 Apr
+ 2024 00:23:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
- when not needed
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
- <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
- <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
- <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
- <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-Content-Language: en-US, it, it-IT
-In-Reply-To: <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfBf9SqngBaJytq1bLc3vrKUnXV0CQmAOXvhbl7fWYAFO/AjP4ml1SU80jtwuVs0tJRK373tBTDsfiFAwyN5nmxp3T0/Gp7MD0gavFm5Q5SFNG5A4YYhu
- 5qsu3ysZHBRyaNYHZ6B7M+GL4KRYhqohZvccjruHY8YVI4vjiE9Aq5Si5QAitheYH30YnCkreEIrvYy6bcXVCyqQ1em0UpkvfvmoubPjUEjQ6pks1EH8DH0C
- E8tF8lI3/dNh+v27OTWrOtRLoF2iv+9gOGM+vINdF5XceCnx+/XgM2PeZf59ojyhjb/IG2Vn2F8C6F1Jx84nHLlOzqWT4K/0+eyutd3k/RkiMe81OyL1TGzw
- tgyzuOdnZrx444WCKwLgaf67SoaQGw==
+References: <20240411032155.208042-1-ytcoode@gmail.com>
+In-Reply-To: <20240411032155.208042-1-ytcoode@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 11 Apr 2024 09:23:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdULF9KemeFkv09s3b9T8Ka-AkC8A8-pc_FpdXnjrOjwgQ@mail.gmail.com>
+Message-ID: <CAMuHMdULF9KemeFkv09s3b9T8Ka-AkC8A8-pc_FpdXnjrOjwgQ@mail.gmail.com>
+Subject: Re: [PATCH] init/main.c: Fix potential static_command_line memory overflow
+To: Yuntao Wang <ytcoode@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, 
+	"ndesaulniers@google.com" <ndesaulniers@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Tejun Heo <tj@kernel.org>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Krister Johansen <kjlx@templeofstupid.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/04/24 18:05, Bastien Curutchet wrote:
-> 
-> 
-> On 4/10/24 17:24, Rodolfo Giometti wrote:
->> On 10/04/24 16:46, Bastien Curutchet wrote:
->>> Hi Rodolfo,
->>>
->>> On 4/10/24 16:23, Rodolfo Giometti wrote:
->>>> On 10/04/24 13:35, Bastien Curutchet wrote:
->>>>> In the IRQ handler, the GPIO's state is read to verify the direction of
->>>>> the edge that triggered the interruption before generating the PPS event.
->>>>> If a pulse is too short, the GPIO line can reach back its original state
->>>>> before this verification and the PPS event is lost.
->>>>>
->>>>> This check is needed when info->capture_clear is set because it needs
->>>>> interruptions on both rising and falling edges. When info->capture_clear
->>>>> is not set, interruption is triggered by one edge only so this check can
->>>>> be omitted.
->>>>>
->>>>> Bypass the edge's direction verification when info->capture_clear is not
->>>>> set.
->>>>>
->>>>> Signed-off-by: Bastien Curutchet <bastien.curutchet@bootlin.com>
->>>>> ---
->>>>>   drivers/pps/clients/pps-gpio.c | 9 +++++++++
->>>>>   1 file changed, 9 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
->>>>> index 2f4b11b4dfcd..c2a96e3e3836 100644
->>>>> --- a/drivers/pps/clients/pps-gpio.c
->>>>> +++ b/drivers/pps/clients/pps-gpio.c
->>>>> @@ -52,6 +52,15 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void 
->>>>> *data)
->>>>>       info = data;
->>>>> +    if (!info->capture_clear) {
->>>>> +        /*
->>>>> +         * If capture_clear is unset, IRQ is triggered by one edge only.
->>>>> +         * So the check on edge direction is not needed here
->>>>> +         */
->>>>> +        pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
->>>>> +        return IRQ_HANDLED;
->>>>> +    }
->>>>> +
->>>>>       rising_edge = gpiod_get_value(info->gpio_pin);
->>>>>       if ((rising_edge && !info->assert_falling_edge) ||
->>>>>               (!rising_edge && info->assert_falling_edge))
->>>>
->>>> Apart the code duplication, which are the real benefits of doing so?
->>>>
->>>
->>> It prevents from losing a PPS event when the pulse is so short (or the
->>> kernel so busy) that the trailing edge of the pulse occurs before the
->>> interrupt handler can read the state of the GPIO pin.
->>
->> Have you a real case when this happens?
->>
-> 
-> Yes, on my use case, a GPS provides a tiny pulse (~10 us) that is
-> sometimes missed when CPU is very busy.
+CC Hiramatsu-san
 
-I see...
+On Thu, Apr 11, 2024 at 5:25=E2=80=AFAM Yuntao Wang <ytcoode@gmail.com> wro=
+te:
+> We allocate memory of size 'xlen + strlen(boot_command_line) + 1' for
+> static_command_line, but the strings copied into static_command_line are
+> extra_command_line and command_line, rather than extra_command_line and
+> boot_command_line.
+>
+> When strlen(command_line) > strlen(boot_command_line), static_command_lin=
+e
+> will overflow.
+>
+> Fixes: f5c7310ac73e ("init/main: add checks for the return value of membl=
+ock_alloc*()")
+> Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> ---
+>  init/main.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/init/main.c b/init/main.c
+> index 2ca52474d0c3..a7b1f5f3e3b6 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -625,11 +625,13 @@ static void __init setup_command_line(char *command=
+_line)
+>         if (extra_init_args)
+>                 ilen =3D strlen(extra_init_args) + 4; /* for " -- " */
+>
+> -       len =3D xlen + strlen(boot_command_line) + 1;
+> +       len =3D xlen + strlen(boot_command_line) + ilen + 1;
+>
+> -       saved_command_line =3D memblock_alloc(len + ilen, SMP_CACHE_BYTES=
+);
+> +       saved_command_line =3D memblock_alloc(len, SMP_CACHE_BYTES);
+>         if (!saved_command_line)
+> -               panic("%s: Failed to allocate %zu bytes\n", __func__, len=
+ + ilen);
+> +               panic("%s: Failed to allocate %zu bytes\n", __func__, len=
+);
+> +
+> +       len =3D xlen + strlen(command_line) + 1;
+>
+>         static_command_line =3D memblock_alloc(len, SMP_CACHE_BYTES);
+>         if (!static_command_line)
 
->> In any cases we should avoid code duplication... so I think we should do 
->> something as below:
->>
->> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
->> index 2f4b11b4dfcd..f05fb15ed7f4 100644
->> --- a/drivers/pps/clients/pps-gpio.c
->> +++ b/drivers/pps/clients/pps-gpio.c
->> @@ -52,7 +52,9 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
->>
->>          info = data;
->>
->> -       rising_edge = gpiod_get_value(info->gpio_pin);
->> +       rising_edge = info->capture_clear ? \
->> +                       gpiod_get_value(info->gpio_pin) : \
->> +                       !info->assert_falling_edge;
->>          if ((rising_edge && !info->assert_falling_edge) ||
->>                          (!rising_edge && info->assert_falling_edge))
->>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
->>
->> Please, review and test it before resubmitting. :)
->>
-> 
-> I'll try this and send a V2 after my tests, thank you.
+Gr{oetje,eeting}s,
 
-OK, thanks.
+                        Geert
 
-However we should think very well about this modification since it could be the 
-case where we have a device sending both assert and clear events but we wish to 
-catch just the asserts... in this case we will get doubled asserts!
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Maybe, can we add a special flag within the DTS (something as 
-"support-tiny-pulses" or something like that) to specify that we are in this 
-special condition and then checking this setting against capture_clear flag?
-
-Ciao,
-
-Rodolfo
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
