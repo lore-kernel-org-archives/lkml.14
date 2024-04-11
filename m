@@ -1,63 +1,63 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7543BBC7
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1AD824A0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849855; cv=none; b=Lx4MJ8v4/h9A+AbznfRKFPjfblVbDoLu23PoN/Mf5hdvIJuE6KgfxiGO99wXa2x7x7foZZ2Mvy1vYKAwi8FDd5t2AC8n7vcVdW7hseFv2LI4i/YsMIS0OvQzFFZxe/OwI0avS70SZyjCUsbc7MzGUV2lxpwNadoDrX02BLdCYE8=
+	t=1712849858; cv=none; b=l10iaP2Ve0Sie5fQaXRIxWksxFiuyhZedJdaBkGMhkBixS+bDThCJHB/Lir8LMIQUNFG9fvjwCnNYcKduDTo9LriEZftlqQj++g/9BCDSUTBmKg7PeV8YaJ1ecz3mVeKsczD2uqEp79haI4N3Wl2z/rUTJoxg7kCQ1py9tTUJFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849855; c=relaxed/simple;
-	bh=Jj/NcxDqsb3ke7CqA5w00fJhJUeMhJsECJ2fjtlkHS0=;
+	s=arc-20240116; t=1712849858; c=relaxed/simple;
+	bh=BAPWAjZLiDROs8jxMHAOxFaSHauyl2uBclzPLslEJ2s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n9UC9AUO8JowJiSOELuknWLpwatsNGL0qI4mfoWk63Nfw9NLOHqshFUHz1+hpEusRu91ujBUN/ZUCv8qUOWKQVTKLBiXCF+DwCAdbzo3/1tycA5oM1soGOoNhlpKB8G3/f2mUx5Bm9KYSQlCKJt8uvDPgIxx2VXmWDdLNFTDbEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=j3hkh06g; arc=none smtp.client-ip=209.85.166.45
+	 MIME-Version; b=dgHX9Apjyf7wDcNH4nkNrVaRPyl1kVx2nnoYmRCG6jDh65AOwxP6Q6KJGUZyi8ee2LSW+nMhKaBhTpwLOkMGBQmWNKzBXR1T1V+pkJKUXj5YPhf23B0nHKHKAUlN/WElFHl+0hIuCjDoz095NZMMP5G9p3B+IbU54NouBk8aRPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TZPzQtGf; arc=none smtp.client-ip=209.85.166.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="j3hkh06g"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8975039f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:37:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TZPzQtGf"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58108139f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849853; x=1713454653; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849856; x=1713454656; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nnCvDuWCdqbx45susY4lKXAhNpbfLhWCqwRwbKGo0sM=;
-        b=j3hkh06gB1K16vvNeTGw35z4a4FteMe8rQBdc1aCAr2HaSM2JolvR3Zn3QySJdRIM3
-         FroRnDJPlzr8s63o6Ye8ujfdxPGz3sE1gExYQlepRgrOLu29S6Bg9i+jQTPXnuVo+pcG
-         FCNSYky3VJvRljPjdpdBJUpum0GDGcyg/FIPHmqPJlfeqagEiOiT3Dp+3uQydlyGsBaM
-         F/haa/BdY3hkpu4veaCtBg6piyt8nBu2a3dO3JTdc9GlTq4tWbsz9yg/bcPruELfm5qc
-         sfqa4sjJ59C9PrHJ7ab5bffSA7pe9NeEL8EcxidOblSUGap1AS4QrMGOAwYLXu+yFewp
-         k7zQ==
+        bh=URP2qTC8kfAbg68QrAJNbB4HOOdUB0afPA5uur+wxo0=;
+        b=TZPzQtGfkEqixlwJDx/4aMPxQsA650iHZOkSqaLCqhsTJyH+1OtnNRMfduMqkabeZK
+         seYzVftWaEpNGKYf7env9x8iIpvM6Mh/xSWeaakIpox1JgrxI7+hNOMkOoJY+/t7j6F7
+         5Y76w/u0swX8udv0scANjHrDLeKaCt+AXqZWu4MY4T4KBWHRKOcGHbZA8UGg7b6ockA3
+         romxGAt8rBP82GaAvgK/6RKdK0nukJcT94SEhN6xGC09gozArpeE2hPf/91QIYBMRB0z
+         gm/+ed2bqgxQW/1KEkY6gPPfRPjKCSROzINOTqhuS6UKzoY6Di1hHzjDx0IY47uWLPS7
+         6PNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849853; x=1713454653;
+        d=1e100.net; s=20230601; t=1712849856; x=1713454656;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nnCvDuWCdqbx45susY4lKXAhNpbfLhWCqwRwbKGo0sM=;
-        b=lUDB8C8LmIwOMbLqp67gweZYdkiJyJI3QYiwWazpDHutcPv68IRKZM06cdiKHpg8gB
-         HLDSH+YX5jMXDtg1oOfVZVo3myE8V24T8O7+NHVK+L54AU110YwUjHPzziVSQz1K9qsj
-         LocBOy3WmP2bjSFXLE5TdcstN2CySMwjbM2o9VxFv3Fnizn5ekG7yKfWSeHIgi11XLxI
-         9VtsKyD7OOcy8VB29KuRpQ2AFTKag7BPKU4mdJWmErR+bZBCN57+S6M5DZq1UNpoF1Zq
-         QFALgS4v23XHmwysspkA9X9TSm5XIPgFHSEGlsRLF56MchoYQFw9pcE/gn4PRd04oxTE
-         TTxg==
-X-Gm-Message-State: AOJu0Yy02OLeXH+am4a+VrTTAkcfYayCoTW2bqqYuLOVbblyO+gNgopm
-	8++BcaqQzxlr4bz8HVk3CP0cwhMI+dNBHdOfNecwIkzVpiUSY78hKvQiERXIewEBa7rAnuHRxTy
-	X
-X-Google-Smtp-Source: AGHT+IFP88+t14a0gCZ4AAPs0EFTnm4sLMkslOZbEiO0AB3P/WW3J3e5pySiphlIuoPzja9E1UjhrQ==
-X-Received: by 2002:a05:6602:21d7:b0:7d6:9ddf:5095 with SMTP id c23-20020a05660221d700b007d69ddf5095mr19999ioc.1.1712849853069;
-        Thu, 11 Apr 2024 08:37:33 -0700 (PDT)
+        bh=URP2qTC8kfAbg68QrAJNbB4HOOdUB0afPA5uur+wxo0=;
+        b=rXyqNiCS38Wk6aYyV2YG5bicfMyP+QFN8niT8kL0mG30Ez1REVGWoQSnwUA7TXe4jv
+         oF8J1mFGh9+b1/TmgbmcYtGdl3bY73c6nvsdF1joOt4fWyiVSvL0tjyGi2/JYMg65l+2
+         ul5FPJ/vpVYfK/ZqL5xKzi5NuLuGQSmINrFdRd8g3WYX7VEYn/5FjTtAz8OrRA908ROg
+         gerLC8+6+2i0hFdOZK+dZ4s8dpnomgFxj5JPbcFmAf+awJ/X//DH4/wibxTLSjDzekpg
+         tV47IuQeLaX/eHExzNKUg4l6SaZFgWn+dFVVxQvPyaI82Qo2m/igi6VaVFrbeM5z4OfS
+         9Qeg==
+X-Gm-Message-State: AOJu0YwJs0mPs4b4fIICn0EdnLOK1tRcdk06Vdv1YdQXHhKrHgAY+yiK
+	werG9nf/TBbc2fHvW5DdOoEATmzEUDy+AyR59NsBWctHvVuzpicDugACdPTE/Uv+CpsfTyHigLo
+	p
+X-Google-Smtp-Source: AGHT+IG8jZcgUW4t+29t9+YD5GFKkaOIqqAeOZyjQT4aIh4EWqH71jFBjK14TXyyp/9pIy400ODDzw==
+X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr165215ioh.1.1712849855715;
+        Thu, 11 Apr 2024 08:37:35 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.32
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:37:32 -0700 (PDT)
+        Thu, 11 Apr 2024 08:37:35 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 211/437] drivers/iommu: convert omap to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:51 -0600
-Message-ID: <20240411153126.16201-212-axboe@kernel.dk>
+Subject: [PATCH 213/437] misc: lis3lv02d: convert to iterators
+Date: Thu, 11 Apr 2024 09:15:53 -0600
+Message-ID: <20240411153126.16201-214-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,53 +71,64 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/iommu/omap-iommu-debug.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/misc/lis3lv02d/lis3lv02d.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 259f65291d90..46798b7584b5 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -11,6 +11,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
-+#include <linux/uio.h>
+diff --git a/drivers/misc/lis3lv02d/lis3lv02d.c b/drivers/misc/lis3lv02d/lis3lv02d.c
+index 49868a45c0ad..e12677611146 100644
+--- a/drivers/misc/lis3lv02d/lis3lv02d.c
++++ b/drivers/misc/lis3lv02d/lis3lv02d.c
+@@ -27,6 +27,7 @@
  #include <linux/pm_runtime.h>
- #include <linux/debugfs.h>
- #include <linux/platform_data/iommu-omap.h>
-@@ -80,10 +81,10 @@ static ssize_t omap_iommu_dump_ctx(struct omap_iommu *obj, char *buf,
- 	return bytes;
+ #include <linux/atomic.h>
+ #include <linux/of.h>
++#include <linux/uio.h>
+ #include "lis3lv02d.h"
+ 
+ #define DRIVER_NAME     "lis3lv02d"
+@@ -596,12 +597,12 @@ static int lis3lv02d_misc_release(struct inode *inode, struct file *file)
+ 	return 0;
  }
  
--static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
--			       size_t count, loff_t *ppos)
-+static ssize_t debug_read_regs(struct kiocb *iocb, struct iov_iter *to)
+-static ssize_t lis3lv02d_misc_read(struct file *file, char __user *buf,
+-				size_t count, loff_t *pos)
++static ssize_t lis3lv02d_misc_read(struct kiocb *iocb, struct iov_iter *to)
  {
--	struct omap_iommu *obj = file->private_data;
-+	struct omap_iommu *obj = iocb->ki_filp->private_data;
+-	struct lis3lv02d *lis3 = container_of(file->private_data,
++	struct lis3lv02d *lis3 = container_of(iocb->ki_filp->private_data,
+ 					      struct lis3lv02d, miscdev);
+ 
 +	size_t count = iov_iter_count(to);
- 	char *p, *buf;
- 	ssize_t bytes;
+ 	DECLARE_WAITQUEUE(wait, current);
+ 	u32 data;
+ 	unsigned char byte_data;
+@@ -617,7 +618,7 @@ static ssize_t lis3lv02d_misc_read(struct file *file, char __user *buf,
+ 		if (data)
+ 			break;
  
-@@ -100,7 +101,7 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
- 	bytes = omap_iommu_dump_ctx(obj, p, count);
- 	if (bytes < 0)
- 		goto err;
--	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
-+	bytes = simple_copy_to_iter(buf, &iocb->ki_pos, bytes, to);
+-		if (file->f_flags & O_NONBLOCK) {
++		if (iocb->ki_filp->f_flags & O_NONBLOCK) {
+ 			retval = -EAGAIN;
+ 			goto out;
+ 		}
+@@ -638,7 +639,7 @@ static ssize_t lis3lv02d_misc_read(struct file *file, char __user *buf,
+ 	/* make sure we are not going into copy_to_user() with
+ 	 * TASK_INTERRUPTIBLE state */
+ 	set_current_state(TASK_RUNNING);
+-	if (copy_to_user(buf, &byte_data, sizeof(byte_data)))
++	if (!copy_to_iter_full(&byte_data, sizeof(byte_data), to))
+ 		retval = -EFAULT;
  
- err:
- 	mutex_unlock(&iommu_debug_lock);
-@@ -231,7 +232,7 @@ static int pagetable_show(struct seq_file *s, void *data)
- #define DEBUG_FOPS_RO(name)						\
- 	static const struct file_operations name##_fops = {	        \
- 		.open = simple_open,					\
--		.read = debug_read_##name,				\
-+		.read_iter = debug_read_##name,				\
- 		.llseek = generic_file_llseek,				\
- 	}
- 
+ out:
+@@ -670,7 +671,7 @@ static int lis3lv02d_misc_fasync(int fd, struct file *file, int on)
+ static const struct file_operations lis3lv02d_misc_fops = {
+ 	.owner   = THIS_MODULE,
+ 	.llseek  = no_llseek,
+-	.read    = lis3lv02d_misc_read,
++	.read_iter    = lis3lv02d_misc_read,
+ 	.open    = lis3lv02d_misc_open,
+ 	.release = lis3lv02d_misc_release,
+ 	.poll    = lis3lv02d_misc_poll,
 -- 
 2.43.0
 
