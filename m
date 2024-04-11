@@ -1,72 +1,67 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F64F15E208;
-	Thu, 11 Apr 2024 16:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033F515E215
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852106; cv=none; b=E/Emrq9efIZGvUEw1w/b9hHnTbYNRyIMG20VKwMhngNHYynyMW727fU6pceijmaqTXnjG3g18XLhoOKJOs3Lpa257TVpRkT1DC1BV2ckRzjYwuZ3GVgp3DYsGMpvGykATqSZIewcjpYnTcZNOUIXwDh6FekiQVq6YfjgEagIIiY=
+	t=1712852108; cv=none; b=ddmuy+iK+aW0YPAQ72N18sO0CGFBKLma3qeuh2Z2WvDm3M7mVn7p4HseY1W5GrqTZPehS0CpxlID0SotZBx/HpkVLWX5wAKkeoTq1cXztWM1Jx1XwN2p1m75igP8bvcmJ+RGLXPMbogEA3G3fhp3xIlhGjo9z5HHl36g9p8T1GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852106; c=relaxed/simple;
-	bh=zFthHjjh9Aso3EVZFd6I/EjfK4r2+rzfemyi6bGp4hI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bv4MsA2amkJbw/0k50zZjWcsvZYloE+b5TUtnGkKsWQTc6zjiWONNwZnABUK+XERDHCD+XWAtrkY7z100hS4p7Btu6sPZrpb1vEI5GK9zggszHouTLFMd4x5fterOOndi8h6I7nMgKFn6Hr0tajBiu1NRL2r+7aAhUiOG6eMiPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Frce3vEG; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712852108; c=relaxed/simple;
+	bh=EffdTTq97YcuRZ8vDwF+UAMXSPioZwk+HMzUFS3/S+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gF37Awl4/OY4Kc+Ucf8kuiRi56VjqYVVsO8xnrzG1ahTdxlbkB4O10S2ZPkb5MJrljgg0hUOrDTjrBorDNmOq1fjbG2XI0quVAY5kw6IDI8mwpXr+yugmTbhTX0ts1FnbHiWCt8l+D1WxtbGm7yMr0icBU66Qql1dymZqOvEh+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hBl09Lms; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Frce3vEG"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ecee5c08e6so38018b3a.3;
-        Thu, 11 Apr 2024 09:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712852104; x=1713456904; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bHKLXIL7AGZ7PCEor3/6k+rOZmYsF608r3G1HPhZ/Ds=;
-        b=Frce3vEGai+M6/ExhG5Tpba6zw8jl9RYa+DDE/FMyjkpyo4O40Gnf0mp5c8qGQy6QO
-         ltSwqpxE/5p6WDvEeuWpbPmJmMXM2FSF9rOliY8dv4wDSlht7o9vXi2oEoqhFI9pCKTX
-         CKCUg7YkPq7QLKmwN2VHwgYwuqqWV8swvWPB5W9ySqxe7gtS9mPxicNVISdde58C8h+j
-         WT2IFNMYCYGwtL4wRRE1OeI85kRQN/XHVSmnjdbMo1MK5jaqMjW6C/G6dp5VftxZz/xT
-         u5afE+B6pY/+cX2zRuWpPLmAi9G/SNDvy5jtmDBdwMgxUueXcVr3FvBfGQFoYppVaHor
-         JKzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712852104; x=1713456904;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bHKLXIL7AGZ7PCEor3/6k+rOZmYsF608r3G1HPhZ/Ds=;
-        b=RMLjO3lXNA8mVozIB8hL29SqeCkZW1C/doQ6nlPgGhyYZZ3IRZp3WQOGq3KLT2xH6B
-         CtfFvpvIZyDTnEBH/2ClEM+QLPg+lKTEFpvDaHMDZvqvDg02CZoUvgZQ/b8D+73kmn5n
-         k7UXeU5bUP+n3fUJ+NwMcFo2pwYjQsdUr9vQDKIIltqVZKj6pG1ZWydX1mFtPIZIKfdJ
-         /Vtn4iNpAdj98rknopkdDvoUBPyeGTe6RNjogKOv422nB/tKOvBaT7b1sz/jj7UOMZs8
-         QRn80baDXlWr7LBCYhezSnMM4RT+fcIpDeDD0AlnEsvPzJlIF19Hh9IOYWIf7TM6qtIB
-         zM9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWin5Ke2OB7JarSkJ3VqE9P8qhZRkHL+iGGZ/wD/WfYjw4iwWiae2AOiqUXsYBTLMYy0nesMJJPPeumPWqk5i6OkloCik/mb5H0IInjXAV9JfBNvbpazGuPF/gYrWCOUN+n8LiB7GDQ/A==
-X-Gm-Message-State: AOJu0YxHDOuV/NBzEhdVJIkonln0OHQmwuZgvk+pOVv1UOHwd3c/JxD1
-	/EZWR1NvaUQylrDpKV0rojg232jMWWcEi821M5RrIluAtBQQpLPu
-X-Google-Smtp-Source: AGHT+IGFtEPQKiuEQiynF7E0e+oZQ/02XP6gKtgqvqBPUSFKvM58AzS0FM2xcxRBqwpZ7OTrkf1t5g==
-X-Received: by 2002:a05:6a20:f3b0:b0:1a7:52f7:8a38 with SMTP id qr48-20020a056a20f3b000b001a752f78a38mr307671pzb.15.1712852104412;
-        Thu, 11 Apr 2024 09:15:04 -0700 (PDT)
-Received: from frhdebian.corp.toradex.com ([201.82.41.210])
-        by smtp.gmail.com with ESMTPSA id t184-20020a632dc1000000b005f410b67e60sm1254185pgt.22.2024.04.11.09.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 09:15:04 -0700 (PDT)
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: [PATCH] arm64: dts: freescale: imx8m[mp]-verdin: Update audio card name
-Date: Thu, 11 Apr 2024 13:14:41 -0300
-Message-Id: <20240411161441.70262-1-hiagofranco@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hBl09Lms"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712852104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5Gc5EzQD4KCJRDKgqgJn1MWb8b3Qcq3MV0Fega+6Dww=;
+	b=hBl09LmsIRR3V4/Mq8krhx0zvvKV5YWnGs7D9u8e3FWxBKrNwbidX1Vr8QNP7+IB4CBpIl
+	TyOwkiETZJX224w+fTZiXDykGs2jUEOMebfqty1sizJGAAi4j8MDSnFc/F059ixoOY4A7G
+	uC+UaXL3PdkXafgEHRGST/0ONz3iBzk=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-237-AyIYVHnbPImCEUVwQUyQAA-1; Thu, 11 Apr 2024 12:14:55 -0400
+X-MC-Unique: AyIYVHnbPImCEUVwQUyQAA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 926B71887313;
+	Thu, 11 Apr 2024 16:14:54 +0000 (UTC)
+Received: from t14s.redhat.com (unknown [10.39.194.173])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8FC1D1074E;
+	Thu, 11 Apr 2024 16:14:50 +0000 (UTC)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	David Hildenbrand <david@redhat.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Andrea Arcangeli <aarcange@redhat.com>,
+	kvm@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH v3 1/2] mm/userfaultfd: don't place zeropages when zeropages are disallowed
+Date: Thu, 11 Apr 2024 18:14:40 +0200
+Message-ID: <20240411161441.910170-2-david@redhat.com>
+In-Reply-To: <20240411161441.910170-1-david@redhat.com>
+References: <20240411161441.910170-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,78 +69,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-From: Hiago De Franco <hiago.franco@toradex.com>
+s390x must disable shared zeropages for processes running VMs, because
+the VMs could end up making use of "storage keys" or protected
+virtualization, which are incompatible with shared zeropages.
 
-On the Dahlia and Development carrier boards for the Verdin family
-(iMX8MM and iMX8MP), WM8904 and NAU8822 codecs are used. Instead of
-module-specific names, switch to more generic names based on the codec
-employed on the carrier board itself.
+Yet, with userfaultfd it is possible to insert shared zeropages into
+such processes. Let's fallback to simply allocating a fresh zeroed
+anonymous folio and insert that instead.
 
-This modification facilitates access to ALSA card names, ensuring
-consistency across iMX8MP and iMX8MM, as they share the same carrier
-board.
+mm_forbids_zeropage() was introduced in commit 593befa6ab74 ("mm: introduce
+mm_forbids_zeropage function"), briefly before userfaultfd went
+upstream.
 
-Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+Note that we don't want to fail the UFFDIO_ZEROPAGE request like we do
+for hugetlb, it would be rather unexpected. Further, we also
+cannot really indicated "not supported" to user space ahead of time: it
+could be that the MM disallows zeropages after userfaultfd was already
+registered.
+
+Fixes: c1a4de99fada ("userfaultfd: mcopy_atomic|mfill_zeropage: UFFDIO_COPY|UFFDIO_ZEROPAGE preparation")
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi    | 2 +-
- arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi | 2 +-
- arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi    | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ mm/userfaultfd.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi
-index 1cff0b829357..45f7b8d87517 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dahlia.dtsi
-@@ -10,7 +10,7 @@ sound_card: sound-card {
- 		simple-audio-card,format = "i2s";
- 		simple-audio-card,frame-master = <&dailink_master>;
- 		simple-audio-card,mclk-fs = <256>;
--		simple-audio-card,name = "imx8mm-wm8904";
-+		simple-audio-card,name = "verdin-wm8904";
- 		simple-audio-card,routing =
- 			"Headphone Jack", "HPOUTL",
- 			"Headphone Jack", "HPOUTR",
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
-index 3c4b8ca125e3..1f6a37f232da 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin-dev.dtsi
-@@ -10,7 +10,7 @@ sound_card: sound-card {
- 		simple-audio-card,format = "i2s";
- 		simple-audio-card,frame-master = <&dailink_master>;
- 		simple-audio-card,mclk-fs = <256>;
--		simple-audio-card,name = "imx8mm-nau8822";
-+		simple-audio-card,name = "verdin-nau8822";
- 		simple-audio-card,routing =
- 			"Headphones", "LHP",
- 			"Headphones", "RHP",
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-index 7e9e4b13b5c5..e9ef9c553a47 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dahlia.dtsi
-@@ -10,7 +10,7 @@ sound {
- 		simple-audio-card,format = "i2s";
- 		simple-audio-card,frame-master = <&codec_dai>;
- 		simple-audio-card,mclk-fs = <256>;
--		simple-audio-card,name = "imx8mp-wm8904";
-+		simple-audio-card,name = "verdin-wm8904";
- 		simple-audio-card,routing =
- 			"Headphone Jack", "HPOUTL",
- 			"Headphone Jack", "HPOUTR",
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-index a509b2b7fa85..65cbf905a1d9 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-verdin-dev.dtsi
-@@ -22,7 +22,7 @@ sound {
- 		simple-audio-card,format = "i2s";
- 		simple-audio-card,frame-master = <&codec_dai>;
- 		simple-audio-card,mclk-fs = <256>;
--		simple-audio-card,name = "imx8mp-nau8822";
-+		simple-audio-card,name = "verdin-nau8822";
- 		simple-audio-card,routing =
- 			"Headphones", "LHP",
- 			"Headphones", "RHP",
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 3c3539c573e7..7eb3dd0f8a49 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -316,6 +316,37 @@ static int mfill_atomic_pte_copy(pmd_t *dst_pmd,
+ 	goto out;
+ }
+ 
++static int mfill_atomic_pte_zeroed_folio(pmd_t *dst_pmd,
++		 struct vm_area_struct *dst_vma, unsigned long dst_addr)
++{
++	struct folio *folio;
++	int ret = -ENOMEM;
++
++	folio = vma_alloc_zeroed_movable_folio(dst_vma, dst_addr);
++	if (!folio)
++		return ret;
++
++	if (mem_cgroup_charge(folio, dst_vma->vm_mm, GFP_KERNEL))
++		goto out_put;
++
++	/*
++	 * The memory barrier inside __folio_mark_uptodate makes sure that
++	 * zeroing out the folio become visible before mapping the page
++	 * using set_pte_at(). See do_anonymous_page().
++	 */
++	__folio_mark_uptodate(folio);
++
++	ret = mfill_atomic_install_pte(dst_pmd, dst_vma, dst_addr,
++				       &folio->page, true, 0);
++	if (ret)
++		goto out_put;
++
++	return 0;
++out_put:
++	folio_put(folio);
++	return ret;
++}
++
+ static int mfill_atomic_pte_zeropage(pmd_t *dst_pmd,
+ 				     struct vm_area_struct *dst_vma,
+ 				     unsigned long dst_addr)
+@@ -324,6 +355,9 @@ static int mfill_atomic_pte_zeropage(pmd_t *dst_pmd,
+ 	spinlock_t *ptl;
+ 	int ret;
+ 
++	if (mm_forbids_zeropage(dst_vma->vm_mm))
++		return mfill_atomic_pte_zeroed_folio(dst_pmd, dst_vma, dst_addr);
++
+ 	_dst_pte = pte_mkspecial(pfn_pte(my_zero_pfn(dst_addr),
+ 					 dst_vma->vm_page_prot));
+ 	ret = -EAGAIN;
 -- 
-2.39.2
+2.44.0
 
