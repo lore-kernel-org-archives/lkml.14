@@ -1,100 +1,140 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E9318037
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E695917BB6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 20:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712865585; cv=none; b=P6B8yYY7OIfx7yTtI7BtTJOFO6oytVou4q3qVn/r94w3QmKE8yt4rWo2oo/jR+TqfYE22n6eN5uBatXsnztNw6l969Xth/TtTL1tsgd2ousMl+/litJnTs9mLlUZMvpCo6kEmT0c1IupD7/XZmxtZDTPAJDlFnP4f3v+6ebtnlM=
+	t=1712865937; cv=none; b=Ldd8CBNSxVoMQNew75DHQaFRrIvhSdAMweAy/wzJur5XDsKqdlPFH6ICmtwc7QCj7QUlruTD2kvaRwdGYB/SgcgVR4njcEpKaefmRYNnHro5NNYJK+dLozG17ilUuZ3+lqsbkBqnsha4KOnkjsnsAwX6FfOA7iIiyiyWNukqeAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712865585; c=relaxed/simple;
-	bh=dW8XAmqM7eeyW4vgfPztKLtEUda+8GEk7kYd6Pd6ni8=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=F0FPPtG+hz4sSJ8RZ2VOnP5FsXX0/gUK3LUqV7r8dMOE3lWosrx+5DxnEfKjYu+903lIvQd8PqwMSG0BuzXa/QKFGJnVcL3MO79INhJ1jbM5vEqRYMfrJLC6dQgOc0JiO/Qi72atN5/DNnwqCDaDXAOfJ+mKsFfSCmpg0ugCSHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rfoSI3MU; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1712865937; c=relaxed/simple;
+	bh=AwzRCjPDc91MDoHSUS4611CZaA7Epw9DmMTbScEHcOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s54sxWBP/cL/+0kpxMmYj8fzC11DrcI87ZoX30tz64S47l9p3MOHgDotxtG/+Yi9TI3DaWj36Z6m9cAOjCsPDJfY10qamAe7LRIw8bSuUEeELcPLX29pOwYF5nMbXg/e8clpiO4Wr9dmPEjhaupi4dUE/WfW8VZ6/p8FscHs/s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OoXgGN05; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rfoSI3MU"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6ecf8ebff50so145134b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:59:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OoXgGN05"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d3a470d5so224201e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712865583; x=1713470383; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FjT+6o0lq0aPcW1oUwnjeSeQ1BXltNR4mobET1Ks5iw=;
-        b=rfoSI3MU9PoLxX3Xl0qnpQORHr/yIeoBU7PnqNW6Yzef92nCw81UmEth8M8EJbrbrS
-         VxdvZ1yxEw1Py9eRkeSbhfro0sglx45suuGPP0zY7gVLrSx/pSLdJ3Jzuv9cbhNOq/Q3
-         Swl3RxVgPt3ZpESg1hYiBbxTmSi5HWll2ySVF5xq+kFB0uNQLIyJG3cnuuXirlxDlIlv
-         twh5Vx3a0bkau2OqfkMDS1ghTY0z+dBqGBXFSjv9TmNvFMF5TpgAsPGRZHhxUqOTzCgZ
-         NTDeO6mtilg+eg46982T5TXHUaqG+9M0No6llDMRmxHdM05eZk9uhkasHes3NZSVvQSW
-         u5vg==
+        d=linaro.org; s=google; t=1712865934; x=1713470734; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=23X31wBk3BfhcWEk6ltxZSp3rP6W6hNoB7vDkcBeLnU=;
+        b=OoXgGN05bK0YJK35duMTJd4NInfkPfMmhfw2dNbrpE7BdmDCpsCiwRIOLQi9TMeCu0
+         Jvt5c4VfS0jwSRezJxYw5q3cQhCvZqS4j0xth35dvQqn4Wvf2fcBJU8iSMW8f3I9wSg7
+         FXCGfoJBEvFfkC8boOdugRzacofH8FQnHZLz71FuTELI5nEkHjKrDsKg9svI9ERy7qGI
+         XnQkCQXF8GMoZsqm1cyFrRGt6EfS6Csgc1fTLoww5qk3vyf122obYCfufES68FXiRZ+g
+         sumHln7bVn0CRythrd/BXxxxDXrlag8H0S8AaeybSsoskAv4skSrhs1SyMVt7BONuucP
+         5ULg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712865583; x=1713470383;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FjT+6o0lq0aPcW1oUwnjeSeQ1BXltNR4mobET1Ks5iw=;
-        b=k3JywDYGQQNWiCRuAgvR/ciJmQqIDobaatDf6vOKMnbdHmLzy2EvaPSPEDqkffEJEw
-         LTH4PpBL/zYaRy0tvV/Wz8IqY2Iam+6u8StwOx+3KBcGjbv/UeRJ19AHFtFmdClFwo3D
-         mlZKZtSWPoys5PUD6SCa2Vk0GFXVroHPIS4CgUesD7YBJXanrbZ3LJHv7yrQqHzXBFdP
-         v33itHhrgCKiSoxmnxlT7vLhjbytyKXvbWnSYWMbTCl+7bauj9gq+W3I678nwLteEZYD
-         EDEYmueDFXLMYZ4o18c2scoXZ1cOPm9ZMfhFpXV6nLH9z9Ps5q1b37A270LPlxU02w62
-         rRdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAtkC+JC7BPTN1Wrqk0NhmEhX9HSCiiAvomBftdUh3mqlu0qruSATQK+i4j3aEvvEM9o8zGAhWAlqDja3kddA5vQWdJ+AWhmGPlV07
-X-Gm-Message-State: AOJu0YzXBvzMzeGk4+2EeXxRLAUet+oJUGXTfFU+JCVxjdFCrxtPO8DP
-	HhNDyv7B2TxkEGErDf5cCZo1wBZ2VelTzbKM9OsJmUAYY8MdnghXJV8QgCN1VmA=
-X-Google-Smtp-Source: AGHT+IHx+CIoxL14UTCSROAp5Y5aR0T5W2Mz/yPhBy5R39P5WnajKLD/VsBki0J7hnVrX6QyZDI6tg==
-X-Received: by 2002:aa7:888b:0:b0:6ec:fa34:34ab with SMTP id z11-20020aa7888b000000b006ecfa3434abmr844703pfe.9.1712865582845;
-        Thu, 11 Apr 2024 12:59:42 -0700 (PDT)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id b12-20020a056a000a8c00b006ed64f4767asm1538680pfl.112.2024.04.11.12.59.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 12:59:42 -0700 (PDT)
-Date: Thu, 11 Apr 2024 12:59:42 -0700 (PDT)
-X-Google-Original-Date: Thu, 11 Apr 2024 12:58:54 PDT (-0700)
-Subject:     Re: linux-next: manual merge of the risc-v tree with the rust-fixes tree
-In-Reply-To: <CANiq72mdRgMuQVD53Kp=hqaoiSNwPVZVSrbbMxRYehi73FZf9A@mail.gmail.com>
-CC: Stephen Rothwell <sfr@canb.auug.org.au>, Paul Walmsley <paul@pwsan.com>,
-  ojeda@kernel.org, tim.chenbw@gmail.com, Conor Dooley <conor.dooley@microchip.com>,
-  gary@garyguo.net, linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: miguel.ojeda.sandonis@gmail.com
-Message-ID: <mhng-7603cdcc-24ee-4b19-b049-64d1bd4151b9@palmer-ri-x1c9a>
+        d=1e100.net; s=20230601; t=1712865934; x=1713470734;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=23X31wBk3BfhcWEk6ltxZSp3rP6W6hNoB7vDkcBeLnU=;
+        b=jwnksE0FoiRkrIVhs4kHsdgh4Zz8FeiGDZ0WkIqx25O7KynEoynBCHFjLle3v2pWja
+         AMPI6obhDkjWJUBnFsc6TaRJf4NeUCNeqVuSkQA5lu0yqdLX2CK8fOlguFxyT+1gHL+W
+         Fg9UmD5VWNfM4Eo1VlLUyXqyEVLsbNbTwzNIqWtUUD/zDQmHB+/5xcwzdFrl6z0wJ9ZR
+         nNiUrsAYBvg6alKXiLbnh+DKjmMlotZYpOm7R4QhsphvCd6gmJL2PptUyJHGvXw5QvwN
+         2y48LYAEWA0V6Ug/NMj701quP4+hL+STfWuLUtQyhydM1OtTOdxfDCOr5J9uxS8FqT9d
+         2MQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8Zg2eh3a2NnGrZIIhKG5NQRpAtyePJ6mvBjyy/zebJVWxw86tz8QXH/HXohhA7I3CnTE8SAY4omAOl1UQO0CwWLy9MJUaUiLlXJnr
+X-Gm-Message-State: AOJu0Yxju/N0AmizKnNCs9Z8y+t+XsVniSHtif9wEQ9eJ2Dxc4o/fbK6
+	R3wVLv/L+TeTAafREqB6pdgPBm+yjy1F+jXGUEzkxC8LYzhRdhQCWFANs4Ijr00=
+X-Google-Smtp-Source: AGHT+IF6zl6iOEo7DKIvfS9423W4hfUtCzBCOkPNljsNjdrxqjXqK8MLYOibvZw1RSh2w+0l6aXFNQ==
+X-Received: by 2002:ac2:47ee:0:b0:513:ca65:8c58 with SMTP id b14-20020ac247ee000000b00513ca658c58mr456382lfp.43.1712865933904;
+        Thu, 11 Apr 2024 13:05:33 -0700 (PDT)
+Received: from [172.30.204.35] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id r16-20020ac25f90000000b00516bfd7e856sm292837lfe.57.2024.04.11.13.05.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 13:05:33 -0700 (PDT)
+Message-ID: <2c2bca6c-b429-4cef-b63a-ee3bd6c9eecb@linaro.org>
+Date: Thu, 11 Apr 2024 22:05:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] soc: qcom: Move some socinfo defines to the header,
+ expand them
+To: Elliot Berman <quic_eberman@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>
+References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
+ <20240405-topic-smem_speedbin-v1-1-ce2b864251b1@linaro.org>
+ <20240410132510649-0700.eberman@hu-eberman-lv.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240410132510649-0700.eberman@hu-eberman-lv.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 11 Apr 2024 03:47:43 PDT (-0700), miguel.ojeda.sandonis@gmail.com wrote:
-> On Thu, Apr 11, 2024 at 1:43 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+
+
+On 4/11/24 20:55, Elliot Berman wrote:
+> On Fri, Apr 05, 2024 at 10:41:29AM +0200, Konrad Dybcio wrote:
+>> In preparation for parsing the chip "feature code" (FC) and "product
+>> code" (PC) (essentially the parameters that let us conclusively
+>> characterize the sillicon we're running on, including various speed
+>> bins), move the socinfo version defines to the public header and
+>> include some more FC/PC defines.
 >>
->>   =============  ================  ==============================================
->>   ``arm64``      Maintained        Little Endian only.
->>  -``loongarch``  Maintained        -
->>  +``loongarch``  Maintained        \-
->> + ``riscv``      Maintained        ``riscv64`` only.
->>   ``um``         Maintained        ``x86_64`` only.
->>   ``x86``        Maintained        ``x86_64`` only.
->>   =============  ================  ==============================================
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+
+[...]
+
+>> +	SOCINFO_FC_EXT_RESERVE,
+>> +};
 > 
-> Looks good, of course, thanks!
+> SOCINFO_FC_EXT_RESERVE was a convenient limit since we mapped
+> SOCINFO_FC_AA -> string "AA" via an array, and we've only needed the 8
+> feature codes so far.
+> 
+> We should remove the EXT_RESERVE and test for the Y0-YF (internal
+> feature code) values instead.
 
-Ya, and I think there's not a ton we can do about this one.  Just two 
-in-flight features colliding in the docs, some sort of shared tag seems 
-overkill.
-
-I'm assuming rust-fixes will make it up to Linus well before I send the RISC-V
-for-next (ie, next merge window).  So I'll just call this one out when I send
-it up.
-
-Thanks!
+OK
 
 > 
-> Cheers,
-> Miguel
+>> +
+>> +/* Internal feature codes */
+>> +/* Valid values: 0 <= n <= 0xf */
+>> +#define SOCINFO_FC_Yn(n)		(0xf1 + n)
+>> +#define SOCINFO_FC_INT_RESERVE		SOCINFO_FC_Yn(0x10)
+> 
+> We probably should've named this SOCINFO_FC_INT_MAX. Reserve implies
+> it's reserved for some future use, but it's really the max value it
+> could be.
+
+So, should SOCINFO_FC_Yn(0x10) also be considered valid, or is (0xf)
+the last one?
+
+> 
+>> +
+>> +/* Product codes */
+>> +#define SOCINFO_PC_UNKNOWN		0
+>> +/* Valid values: 0 <= n <= 8, the rest is reserved */
+>> +#define SOCINFO_PCn(n)			(n + 1)
+>> +#define SOCINFO_PC_RESERVE		(BIT(31) - 1)
+> 
+> Similar comments here as the SOCINFO_FC_EXT_*. It's more like known
+> values are [0,8], but more values could come in future chipsets.
+
+Ok, sounds good, I'll remove the comment then
+
+Konrad
