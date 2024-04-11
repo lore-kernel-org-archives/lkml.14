@@ -1,580 +1,221 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288961E86C
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:12:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F86205E0D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:15:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712869931; cv=none; b=LxF1bwCUL6/7vuU3bt2yFVRqjDROmVmAUEAsMFTj1xtScRMzKqdtbGUk/Yx316c4bdWy2wrPWj1gkwtJvN8/l7fIYTSZt6sXi4A61o9qYbgre55rLL2wBCj3trxlFUGUClt7etkQV5HFrp9JzgnOF0jPQz5XiPerlb/BCakrLK0=
+	t=1712870114; cv=none; b=ar+4vzIMvmXrb0pINkTF3rtaiLwwPN2IGQBtfn+2R2t1SJ7bA8Dkr2x+/oH9fp9aUbApr0NQ0pxU/nAJoxe/7Qp+7zMIbj2kc12xByFSwm2vR0AqxdeTlj7jeKKe8RefEyCusrMwwy21Bcdh42dSIak+ktpD6rfURZfPPGrjFFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712869931; c=relaxed/simple;
-	bh=HLUt01dpujFD5Zm/bcFagcCd1Bjz7kbWy8bUEjkQOTo=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XZWOMjN7gc//YA0uS64P7x0uEZvVahcwOgoGLBkxF5kf6cuEqtXReovHLGNryYZlRL+Vh7jncoCwzy3scWHove8ypjYZ+eVVpJfone3uPZDW9yL/7dlCjaeu4Z8iDPvWsj6JO8epd6FWH0mTdXqnK5uFXibaIPubUKTX/tmZoF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bkTWIp7q; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1712870114; c=relaxed/simple;
+	bh=hT2KTgjGoVpgVS2aijsAdopXAUGogODnUkUE6fDKj3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iekGbxO/C7xK91D+PgeNAwLJ5up8ODgRlOC+QZm5bB5PBVDmKIsLyCVO8GfslBnHqorOppdmaPOQJKNR2IoPNYVQ6ME9Ad6HFBtZbCP+8Y1QBSOhaPSzOYhGjzbLK0Hirk15OM9AOovNKlshqGf8FcRJIssqyEnLjE7/IdklEJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JZ+8cdWY; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bkTWIp7q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JZ+8cdWY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712869927;
+	s=mimecast20190719; t=1712870111;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KD10ErDcqiA3oY/5LADddUIUOe6QeTWo+ixtSrVoYkU=;
-	b=bkTWIp7qf7CxiPxVRiSebYM1yAaasjessxM/52H8XMBuUZ568uyn4iQnsayBRbNuhTP8uS
-	dIRPYyBkY3g3bZUfpstFbUC5XFrhx5Du2Pm5PEFqs+eGvJgqAKGu07SdsyPkg6HmlU/P/r
-	OEWaKbq7pRb2TU/GJznSCflu0430iHQ=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=yylrJJTpzBKLsbryev3Q2gs/RGLTJIZuZiKkoe32pE8=;
+	b=JZ+8cdWYDujTDwdKlbYtU/lvwePe9Fc4eL6kimPBQa0tSCzoj7INN+SSBoO2+Zky3MeIRJ
+	FCx7yWsvqeU34OUle1rabAeG0p0uQuUPpMyA7sbqsNvzYYBdIEoMGAEdvCnNV+u6eOHccX
+	66Hdur58TK+wGsubAdviQnQ9zurTn/Q=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-356-3JnmxPlXNk6u7vnVj_Qv_Q-1; Thu, 11 Apr 2024 17:12:06 -0400
-X-MC-Unique: 3JnmxPlXNk6u7vnVj_Qv_Q-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-61853333c00so668417b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:12:06 -0700 (PDT)
+ us-mta-414-2_mBbR7LNUO7PpVX7xyhOQ-1; Thu, 11 Apr 2024 17:15:10 -0400
+X-MC-Unique: 2_mBbR7LNUO7PpVX7xyhOQ-1
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-417cf901ab4so1475175e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:15:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712869926; x=1713474726;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1712870109; x=1713474909;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KD10ErDcqiA3oY/5LADddUIUOe6QeTWo+ixtSrVoYkU=;
-        b=ExZYIMazsv3fqpFnMrM+uK4GKSO3YJGQnoVUlO8dQLQ8o2Glz2v1OfHdQbjO1ypZFe
-         gijqaTBv/6pi+7oseToF5/ahtfihf2RO9CB2zI8XYp7DH7jA+FvLmlGUNixoUkSNn/kR
-         3EA8Upe9mKTFAXU+UFH6l8TMB4twZ3s4XvBjP6Q+wceSY4qbBm9EguWcIUJ6TaUSukS6
-         h4gVfwMpKMxKitqg2R+0cqHkjH3G4YfAbvQRzYQur/nlS+iJcMrVDUr55Tkb97x94A30
-         1IDrf8/dj8ztyD29kJvBxJB6TuRm31JdRxaz+2fm7UY4YwhsyLouN4UnFtTKhb8g+YDr
-         CqxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVErkrXscyQQdC24u9hpRPY6vKFN5PxLXIyNpaJ5CZHHf3+0PjMXtqMJMR5C7h/Utzb1UmZSgMPgxBjpejfjcxynkwnQvqMoBSBR9Fb
-X-Gm-Message-State: AOJu0YwTvG7GmtbuH78YDhc7mchGpiPOM4iL32MMqjE10lbMvkpVaBtI
-	h1/XbsRGG59h4fdi0RdDBTqrjmUuxI3cQr5Z/T7c0SK/v4TQKsYkX9eYdvuaqDpbb1SwJm4FO0k
-	AzJgKpDWziz2onnMrKNB4TRYrwQA5SIUxuFLd1UVgYZz2tUklmm6Re7c6bpcyOA==
-X-Received: by 2002:a0d:d817:0:b0:60a:55b7:8e6b with SMTP id a23-20020a0dd817000000b0060a55b78e6bmr583849ywe.1.1712869925458;
-        Thu, 11 Apr 2024 14:12:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHhhBRL4tuZTHXE186N6T2CHnBWNzkbnZImnEEjATs4knvQ7ufekChnMuHJEj55Ref52L4bPQ==
-X-Received: by 2002:a0d:d817:0:b0:60a:55b7:8e6b with SMTP id a23-20020a0dd817000000b0060a55b78e6bmr583820ywe.1.1712869924795;
-        Thu, 11 Apr 2024 14:12:04 -0700 (PDT)
-Received: from x1n (pool-99-254-121-117.cpe.net.cable.rogers.com. [99.254.121.117])
-        by smtp.gmail.com with ESMTPSA id q18-20020a0cfa12000000b0069b2392fe65sm1402954qvn.83.2024.04.11.14.12.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 14:12:04 -0700 (PDT)
-Date: Thu, 11 Apr 2024 17:12:02 -0400
-From: Peter Xu <peterx@redhat.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	Alistair Popple <apopple@nvidia.com>
-Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
-Message-ID: <ZhhSItiyLYBEdAX3@x1n>
-References: <20240410170621.2011171-1-peterx@redhat.com>
- <20240411171319.almhz23xulg4f7op@revolver>
+        bh=yylrJJTpzBKLsbryev3Q2gs/RGLTJIZuZiKkoe32pE8=;
+        b=p/PVkBw0KOsRtRBan2lxoiN/lcvBEnKceRFovYi2Or7/CZcigwdn2pJFVgHi+hQ6iA
+         rCCtNJWhCbkpD+EHkukQYiYdPtndmUg3XW/8TPXJBGp43rEGFxtCCXuWwPXTXhCPXfvY
+         uAUJoQO/V8lmWBJlsyvDAazigs5Hku7+mCi3GZcpXDHBIqZOK7vnBfzcx722Y+HpDC39
+         waEjU8dN7FRSKjlGgS7TKSJTaq6jGkP5tI8J2qWoF+GuQbpMDgR4Ufoa+KavpgidnjUG
+         XMtW0gPZbRvDxYpp2io3ExURih3p8JpjjlwrfKsrjLAtSi9VcLxp7WqUamubeVGnmrUH
+         bCQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDWvs3vaCvkHgEvcVp/GF+zAzqRkcmwI7y4Kn+8NrNesoCS0HDiBdr6FH7tjP3D7wiv3eqauJYyFK0RNyHMqn1bnQIYEp33Fcjv2t1
+X-Gm-Message-State: AOJu0YwJqygd7EXTJsgiejipH5mayOc0qy6PhX50INT/F95D0BMO3nJO
+	p2z0rGHwqG2vyS+dHZPhYhaAEC+WtkBOUmSbQ5+3KIyWT3RSFwN09q+nqzwv+dItUsFfE/2Rwe+
+	eFvEeki1LYyIgTE9Ai3n9m/OsrtBt8UpVwQWJ/VxqYOTTYdPpFIZLHZb9I6ufzg==
+X-Received: by 2002:a05:600c:1e1e:b0:417:dc53:69ae with SMTP id ay30-20020a05600c1e1e00b00417dc5369aemr719524wmb.2.1712870109182;
+        Thu, 11 Apr 2024 14:15:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAr5GN3NnI29RIv1pVedpIRAyABzSWZtVL8G/wY8o/puoLJ4mgrRTJCCy1oHJcAAn6eMy+Cg==
+X-Received: by 2002:a05:600c:1e1e:b0:417:dc53:69ae with SMTP id ay30-20020a05600c1e1e00b00417dc5369aemr719507wmb.2.1712870108729;
+        Thu, 11 Apr 2024 14:15:08 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c724:4300:430f:1c83:1abc:1d66? (p200300cbc7244300430f1c831abc1d66.dip0.t-ipconnect.de. [2003:cb:c724:4300:430f:1c83:1abc:1d66])
+        by smtp.gmail.com with ESMTPSA id f10-20020a056000128a00b003436a3cae6dsm2620530wrx.98.2024.04.11.14.15.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 14:15:08 -0700 (PDT)
+Message-ID: <86722546-1d54-4224-9f31-da4f368cd47e@redhat.com>
+Date: Thu, 11 Apr 2024 23:15:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240411171319.almhz23xulg4f7op@revolver>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/rmap: do not add fully unmapped large folio to
+ deferred split list
+To: Yang Shi <shy828301@gmail.com>
+Cc: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, Barry Song <21cnbao@gmail.com>,
+ linux-kernel@vger.kernel.org
+References: <20240411153232.169560-1-zi.yan@sent.com>
+ <ffbbade3-2de5-4bbe-a6e4-49d2ff7a2f0e@redhat.com>
+ <CAHbLzkr99knWKZvE4WCWKKr=eezkg89idpE59oo_oBneAQynAA@mail.gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAHbLzkr99knWKZvE4WCWKKr=eezkg89idpE59oo_oBneAQynAA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hey, Liam,
-
-Thanks a lot for the comments.
-
-On Thu, Apr 11, 2024 at 01:13:19PM -0400, Liam R. Howlett wrote:
-> * Peter Xu <peterx@redhat.com> [240410 13:06]:
-> > anon_vma is a tricky object in the context of per-vma lock, because it's
-> > racy to modify it in that context and mmap lock is needed if it's not
-> > stable yet.
+On 11.04.24 21:01, Yang Shi wrote:
+> On Thu, Apr 11, 2024 at 8:46 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 11.04.24 17:32, Zi Yan wrote:
+>>> From: Zi Yan <ziy@nvidia.com>
+>>>
+>>> In __folio_remove_rmap(), a large folio is added to deferred split list
+>>> if any page in a folio loses its final mapping. It is possible that
+>>> the folio is unmapped fully, but it is unnecessary to add the folio
+>>> to deferred split list at all. Fix it by checking folio mapcount before
+>>> adding a folio to deferred split list.
+>>>
+>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>> ---
+>>>    mm/rmap.c | 9 ++++++---
+>>>    1 file changed, 6 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>> index 2608c40dffad..d599a772e282 100644
+>>> --- a/mm/rmap.c
+>>> +++ b/mm/rmap.c
+>>> @@ -1494,7 +1494,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>                enum rmap_level level)
+>>>    {
+>>>        atomic_t *mapped = &folio->_nr_pages_mapped;
+>>> -     int last, nr = 0, nr_pmdmapped = 0;
+>>> +     int last, nr = 0, nr_pmdmapped = 0, mapcount = 0;
+>>>        enum node_stat_item idx;
+>>>
+>>>        __folio_rmap_sanity_checks(folio, page, nr_pages, level);
+>>> @@ -1506,7 +1506,8 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>                        break;
+>>>                }
+>>>
+>>> -             atomic_sub(nr_pages, &folio->_large_mapcount);
+>>> +             mapcount = atomic_sub_return(nr_pages,
+>>> +                                          &folio->_large_mapcount) + 1;
+>>
+>> That becomes a new memory barrier on some archs. Rather just re-read it
+>> below. Re-reading should be fine here.
+>>
+>>>                do {
+>>>                        last = atomic_add_negative(-1, &page->_mapcount);
+>>>                        if (last) {
+>>> @@ -1554,7 +1555,9 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>                 * is still mapped.
+>>>                 */
+>>>                if (folio_test_large(folio) && folio_test_anon(folio))
+>>> -                     if (level == RMAP_LEVEL_PTE || nr < nr_pmdmapped)
+>>> +                     if ((level == RMAP_LEVEL_PTE &&
+>>> +                          mapcount != 0) ||
+>>> +                         (level == RMAP_LEVEL_PMD && nr < nr_pmdmapped))
+>>>                                deferred_split_folio(folio);
+>>>        }
+>>
+>> But I do wonder if we really care? Usually the folio will simply get
+>> freed afterwards, where we simply remove it from the list.
+>>
+>> If it's pinned, we won't be able to free or reclaim, but it's rather a
+>> corner case ...
+>>
+>> Is it really worth the added code? Not convinced.
 > 
-> How is it racy in your view?  There isn't a way to get in a situation
-> where its state isn't certain, is there?
-
-My apologies on these confusing wordings.  AFAICT we're on the same page
-all over the place on this matter, so I will amend these wordings if I'll
-repost, and skip many of below comments if I'm confident we're aligned on
-the understandings.
-
-And actually, I'll already attach one new version that should remove all
-bad side effects, but hopefully only bring good ones, see below.
-
+> It is actually not only an optimization, but also fixed the broken
+> thp_deferred_split_page counter in /proc/vmstat.
 > 
-> > 
-> > So far there are three places that sanity checks anon_vma for that:
-> > 
-> >   - lock_vma_under_rcu(): this is the major entrance of per-vma lock, where
-> >     we have taken care of anon memory v.s. potential anon_vma allocations.
+> The counter actually counted the partially unmapped huge pages (so
+> they are on deferred split queue), but it counts the fully unmapped
+> mTHP as well now. For example, when a 64K THP is fully unmapped, the
+> thp_deferred_split_page is not supposed to get inc'ed, but it does
+> now.
 > 
-> Well, not exactly.  Single vma faults vs potential modifications beyond
-> one vma (including uses of adjacent vmas with anon_vmas)
+> The counter is also useful for performance analysis, for example,
+> whether a workload did a lot of partial unmap or not. So fixing the
+> counter seems worthy. Zi Yan should have mentioned this in the commit
+> log.
 
-(this is also the wording issue; I'll fix it)
+Yes, all that is information that is missing from the patch description. 
+If it's a fix, there should be a "Fixes:".
 
-> 
-> > 
-> >   - lock_vma(): even if it looks so generic as an API, it's only used in
-> >     userfaultfd context to leverage per-vma locks.  It does extra check
-> >     over MAP_PRIVATE file mappings for the same anon_vma issue.
-> 
-> This static function is in mm/userfaultfd so, yes, it's not generic -
-> the name is generic, but I didn't see a reason to hold up the patch for
-> a static name that is descriptive.  It's static so I'm not concerned
-> about usage growing.
-> 
-> I would expect such a check will eventually need to be moved to common
-> code, and then potentially change the name to something more
-> descriptive.  This seems premature with a single user though.
-> 
-> > 
-> >   - vmf_anon_prepare(): it works for private file mapping faults just like
-> >     what lock_vma() wanted to cover above.  One trivial difference is in
-> >     some extremely corner case, the fault handler will still allow per-vma
-> >     fault to happen, like a READ on a privately mapped file.
-> 
-> What is happening here is that we are detecting when the virtual memory
-> space is stable vs when the vma is stable.  In some cases, when we need
-> to check prev/next, then we need to make sure the virtual memory space
-> is stable.  In other cases, the vma is all that matters to the operation
-> and so we can continue without stopping anyone else from modifying the
-> virtual memory space - that is, we are allowing writes in other areas.
-> 
-> > 
-> > The question is whether that's intended to make it as complicated.  Per my
-> > question in the thread, it is not intended, and Suren also seems to agree [1].
-> > 
-> > So the trivial side effect of such patch is:
-> > 
-> >   - We may do slightly better on the first WRITE of a private file mapping,
-> >   because we can retry earlier (in lock_vma_under_rcu(), rather than
-> >   vmf_anon_prepare() later).
-> > 
-> >   - We may always use mmap lock for the initial READs on a private file
-> >   mappings, while before this patch it _can_ (only when no WRITE ever
-> >   happened... but it doesn't make much sense for a MAP_PRIVATE..) do the
-> >   read fault with per-vma lock.
-> > 
-> > Then noted that right after any WRITE the anon_vma will be stablized, then
-> > there will be no difference.
-> 
-> In my view, the anon_vma is always stable.  During a write it is
-> initialised.
-> 
-> >And I believe that should be the majority
-> > cases too; I also did try to run a program, writting to MAP_PRIVATE file
-> > memory (that I pre-headed in the page cache) and I can hardly measure a
-> > difference in performance.
-> > 
-> > Let's simply ignore all those trivial corner cases and unify the anon_vma
-> > check from three places into one.  I also didn't check the rest users of
-> > lock_vma_under_rcu(), where in a !fault context it could even fix something
-> > that used to race with private file mappings but I didn't check further.
-> 
-> This change will increase mmap semaphore contention.  I'd like to move
-> to a more common structured layout, but I think we need to find a way to
-> do this without failing the lock_vma_under_rcu() more frequently.  In
-> fact, we need to be looking for ways to make it fail less.
-> 
-> The UFFD code is more strict on what is acceptable for a per-vma lock
-> [1].  This user has a restriction that will decrease the benefits of the
-> per-vma lock, but we shouldn't make this case the common one.
-> 
-> As I'm sure you are aware, the page fault path is the most common path
-> for using per-vma locks and should minimize taking the mmap lock as much
-> as possible.
-> 
-> I don't think we should increase the lock contention to simplify the
-> code.
-
-Right.  I believe the major issue right now with this patch is that it can
-reduce some performance, I didn't worry on that, but it seems that's a
-concern to many already.  It could be that I am just too bold on such
-attempt.
-
-However note that what I want to do (put all anon_vma magic together)
-should be orthogonal issue v.s. above perf degrade.  So please feel free to
-have a look at below, I believe it won't degrade anything, but afaiu it
-should speed up two things even if only trivially:
-
-  - The WRITE on private file mapping will now retry earlier than before
-  - The READ on anon zero pages will now allow per-vma lock
-
-Neither of above will be allowed without below patch.  And below patch
-should also put all anon_vma checks together.
-
-I didn't even compile test it yet, but let me send it out first to see
-whether any of you has any comments, so take it as super-rfc versions.
-
-Note that I attached patch 1 on a hugetlb change, that'll be needed by
-patch 2 otherwise we can hit issue with hugetlb private mappings.  However
-patch 1 alone will need some justifications too, but IMHO we can ignore it
-for now and just look at patch 2.  I attached patch 1 just in case it's
-good to reference.
-
-Thanks,
-
-===8<===
-From fed3c10ef87a9614a328edbfd7d4b7047d3f5e57 Mon Sep 17 00:00:00 2001
-From: Peter Xu <peterx@redhat.com>
-Date: Thu, 11 Apr 2024 16:23:50 -0400
-Subject: [PATCH 1/2] mm/hugetlb: Match behavior on read-only private mappings
-
-The default behavior for reading a private file mapping should fill in the
-page cache and map the page read-only.  Hugetlb didn't do like it.  Make it
-behave the same.
-
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/hugetlb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index a8536349de13..bc3c97c476d2 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6199,6 +6199,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
- 	struct folio *folio;
- 	pte_t new_pte;
- 	bool new_folio, new_pagecache_folio = false;
-+	bool is_write = vmf->flags & FAULT_FLAG_WRITE;
- 	u32 hash = hugetlb_fault_mutex_hash(mapping, vmf->pgoff);
- 
- 	/*
-@@ -6276,7 +6277,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
- 		__folio_mark_uptodate(folio);
- 		new_folio = true;
- 
--		if (vma->vm_flags & VM_MAYSHARE) {
-+		if (!is_write || vma->vm_flags & VM_MAYSHARE) {
- 			int err = hugetlb_add_to_page_cache(folio, mapping,
- 							vmf->pgoff);
- 			if (err) {
-@@ -6294,6 +6295,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
- 			}
- 			new_pagecache_folio = true;
- 		} else {
-+			/* Write on a private mapping */
- 			folio_lock(folio);
- 
- 			ret = vmf_anon_prepare(vmf);
-@@ -6333,7 +6335,7 @@ static vm_fault_t hugetlb_no_page(struct address_space *mapping,
- 	 * any allocations necessary to record that reservation occur outside
- 	 * the spinlock.
- 	 */
--	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED)) {
-+	if (is_write && !(vma->vm_flags & VM_SHARED)) {
- 		if (vma_needs_reservation(h, vma, vmf->address) < 0) {
- 			ret = VM_FAULT_OOM;
- 			goto backout_unlocked;
+Likely we want to have a folio_large_mapcount() check in the code below. 
+(I yet have to digest the condition where this happens -- can we have an 
+example where we'd use to do the wrong thing and now would do the right 
+thing as well?)
 -- 
-2.44.0
+Cheers,
 
-From b9b57fb580992115ae1258fc1ecd8586a5bd70d2 Mon Sep 17 00:00:00 2001
-From: Peter Xu <peterx@redhat.com>
-Date: Thu, 4 Apr 2024 16:05:55 -0400
-Subject: [PATCH 2/2] mm: Always sanity check anon_vma first for per-vma locks
-
-anon_vma is a tricky object in the context of per-vma lock, because
-sometimes it is required later for mapping the pages, while it's not safe
-to prepare anon_vma with per-vma lock due to the fact that we can try to
-access anon_vma of adjacent VMAs, which we don't yet hold any lock.
-
-So far there are three places that per-vma lock will check against the
-existance of anon_vma for that:
-
-  1) lock_vma_under_rcu(): this is the major entrance of per-vma lock,
-  where we have taken care of anon memory.
-
-  2) lock_vma(): even if it looks so generic as an API, it's only used in
-  userfaultfd context to leverage per-vma locks.  It does extra check over
-  MAP_PRIVATE file mappings for the same anon_vma issue.  Note that this
-  only applies to the dest vma not src vma, as we don't ask for src vma's
-  anon_vma even if it should just present regardless.
-
-  3) vmf_anon_prepare(): it works for private file mapping faults just like
-  what lock_vma() wanted to cover above.  However this check is done only
-  afterwards deeper in the fault stack.
-
-The question is whether that's intended to make it as complicated.  For
-example, why don't we check anon_vma for anonymous too later when prepare
-anon_vma, however we do it late for file memory.  AFAICT there's nothing
-special with file memory in this case.
-
-To unify anon_vma checks, do it always right after we get the per-vma lock.
-We should have enough information already at this point, and it doesn't
-need to be postponed for file-only.  The only missing information here is
-whether the caller of the per-vma rcu lock will install a writable mapping
-or not.  That info is passed into lock_vma_under_rcu() with a boolean now.
-
-So the trivial (all good) side effect of such patch is:
-
-  - We may do slightly better on the first WRITE of a private file mapping,
-  because we can retry earlier (in lock_vma_under_rcu(), rather than
-  vmf_anon_prepare() later).
-
-  - We may start to allow per-vma page faults on zero pages even for
-  anonymous.  While prior to this patch we don't allow that to happen even
-  if installation of zero page does not require anon_vma's existance.
-
-I still left a WARN_ON_ONCE() in vmf_anon_prepare() to double check we're
-all good.
-
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Lokesh Gidra <lokeshgidra@google.com>
-Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
-Cc: Alistair Popple <apopple@nvidia.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/arm/mm/fault.c     |  2 +-
- arch/arm64/mm/fault.c   |  2 +-
- arch/powerpc/mm/fault.c |  2 +-
- arch/riscv/mm/fault.c   |  2 +-
- arch/s390/mm/fault.c    |  2 +-
- arch/x86/mm/fault.c     |  2 +-
- include/linux/mm.h      |  7 ++++---
- mm/memory.c             | 46 +++++++++++++++++++++++++++++++----------
- mm/userfaultfd.c        | 21 +++++++------------
- net/ipv4/tcp.c          |  3 ++-
- 10 files changed, 55 insertions(+), 34 deletions(-)
-
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 5c4b417e24f9..20c21ecec25c 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -288,7 +288,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	if (!(flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
- 
--	vma = lock_vma_under_rcu(mm, addr);
-+	vma = lock_vma_under_rcu(mm, addr, flags & FAULT_FLAG_WRITE);
- 	if (!vma)
- 		goto lock_mmap;
- 
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 405f9aa831bd..4be946ca80bd 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -566,7 +566,7 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
- 	if (!(mm_flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
- 
--	vma = lock_vma_under_rcu(mm, addr);
-+	vma = lock_vma_under_rcu(mm, addr, flags & FAULT_FLAG_WRITE);
- 	if (!vma)
- 		goto lock_mmap;
- 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 215690452495..7a2adf40d65d 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -480,7 +480,7 @@ static int ___do_page_fault(struct pt_regs *regs, unsigned long address,
- 	if (!(flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
- 
--	vma = lock_vma_under_rcu(mm, address);
-+	vma = lock_vma_under_rcu(mm, addrress, is_write);
- 	if (!vma)
- 		goto lock_mmap;
- 
-diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
-index 5224f3733802..17d8b011105e 100644
---- a/arch/riscv/mm/fault.c
-+++ b/arch/riscv/mm/fault.c
-@@ -286,7 +286,7 @@ void handle_page_fault(struct pt_regs *regs)
- 	if (!(flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
- 
--	vma = lock_vma_under_rcu(mm, addr);
-+	vma = lock_vma_under_rcu(mm, addr, flags & FAULT_FLAG_WRITE);
- 	if (!vma)
- 		goto lock_mmap;
- 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 162ca2576fd4..8b53eefb947a 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -320,7 +320,7 @@ static void do_exception(struct pt_regs *regs, int access)
- 		flags |= FAULT_FLAG_WRITE;
- 	if (!(flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
--	vma = lock_vma_under_rcu(mm, address);
-+	vma = lock_vma_under_rcu(mm, address, is_write);
- 	if (!vma)
- 		goto lock_mmap;
- 	if (!(vma->vm_flags & access)) {
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 67b18adc75dd..2cf38befaf45 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1356,7 +1356,7 @@ void do_user_addr_fault(struct pt_regs *regs,
- 	if (!(flags & FAULT_FLAG_USER))
- 		goto lock_mmap;
- 
--	vma = lock_vma_under_rcu(mm, address);
-+	vma = lock_vma_under_rcu(mm, address, flags & FAULT_FLAG_WRITE);
- 	if (!vma)
- 		goto lock_mmap;
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 07c73451d42f..b3a088ce584d 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -777,7 +777,8 @@ static inline void assert_fault_locked(struct vm_fault *vmf)
- }
- 
- struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
--					  unsigned long address);
-+					  unsigned long address,
-+					  bool writable);
- 
- #else /* CONFIG_PER_VMA_LOCK */
- 
-@@ -790,8 +791,8 @@ static inline void vma_assert_write_locked(struct vm_area_struct *vma)
- static inline void vma_mark_detached(struct vm_area_struct *vma,
- 				     bool detached) {}
- 
--static inline struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
--		unsigned long address)
-+static inline struct vm_area_struct *lock_vma_under_rcu(
-+    struct mm_struct *mm, unsigned long address, bool writable)
- {
- 	return NULL;
- }
-diff --git a/mm/memory.c b/mm/memory.c
-index b6fa5146b260..e8168ebc8095 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3218,10 +3218,8 @@ vm_fault_t vmf_anon_prepare(struct vm_fault *vmf)
- 
- 	if (likely(vma->anon_vma))
- 		return 0;
--	if (vmf->flags & FAULT_FLAG_VMA_LOCK) {
--		vma_end_read(vma);
--		return VM_FAULT_RETRY;
--	}
-+	/* We shouldn't try a per-vma fault at all if anon_vma isn't solid */
-+	WARN_ON_ONCE(vmf->flags & FAULT_FLAG_VMA_LOCK);
- 	if (__anon_vma_prepare(vma))
- 		return VM_FAULT_OOM;
- 	return 0;
-@@ -5842,13 +5840,38 @@ struct vm_area_struct *lock_mm_and_find_vma(struct mm_struct *mm,
- #endif
- 
- #ifdef CONFIG_PER_VMA_LOCK
--/*
-- * Lookup and lock a VMA under RCU protection. Returned VMA is guaranteed to be
-- * stable and not isolated. If the VMA is not found or is being modified the
-- * function returns NULL.
-+
-+bool vma_needs_stable_anon_vma(struct vm_area_struct *vma, bool writable)
-+{
-+	/*
-+	 * If to install a read-only mapping, we should never need an
-+	 * anon_vma later.  For anon, it should be the zero page.  For
-+	 * file, it normally should be a page cache except special mappings
-+	 * (e.g. tcp zerocopy provides its own read-only pages).
-+	 */
-+	if (!writable)
-+		return false;
-+
-+	/* Anonymous writable mappings always will ask for anon_vma */
-+	if (vma_is_anonymous(vma))
-+		return true;
-+
-+	/* For file memory, only need anon_vma if it's private */
-+	return !(vma->vm_flags & VM_SHARED);
-+}
-+
-+/**
-+ * @lock_vma_under_rcu() - Lookup and lock a VMA under RCU protection.
-+ * @mm: target mm struct
-+ * @address: target virtual address
-+ * @writable: whether we may inject a writable mapping with the VMA
-+ *
-+ * Returned VMA is guaranteed to be stable and not isolated. If the VMA is
-+ * not found or is being modified the function returns NULL.
-  */
- struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
--					  unsigned long address)
-+					  unsigned long address,
-+					  bool writable)
- {
- 	MA_STATE(mas, &mm->mm_mt, address, address);
- 	struct vm_area_struct *vma;
-@@ -5866,9 +5889,10 @@ struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
- 	 * find_mergeable_anon_vma uses adjacent vmas which are not locked.
- 	 * This check must happen after vma_start_read(); otherwise, a
- 	 * concurrent mremap() with MREMAP_DONTUNMAP could dissociate the VMA
--	 * from its anon_vma.
-+	 * from its anon_vma.  This applies to both anon or private file maps.
- 	 */
--	if (unlikely(vma_is_anonymous(vma) && !vma->anon_vma))
-+	if (unlikely(vma_needs_stable_anon_vma(vma, writable) &&
-+		     !vma->anon_vma))
- 		goto inval_end_read;
- 
- 	/* Check since vm_start/vm_end might change before we lock the VMA */
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index f6267afe65d1..b518c111e37a 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -71,18 +71,10 @@ static struct vm_area_struct *lock_vma(struct mm_struct *mm,
- {
- 	struct vm_area_struct *vma;
- 
--	vma = lock_vma_under_rcu(mm, address);
--	if (vma) {
--		/*
--		 * lock_vma_under_rcu() only checks anon_vma for private
--		 * anonymous mappings. But we need to ensure it is assigned in
--		 * private file-backed vmas as well.
--		 */
--		if (!(vma->vm_flags & VM_SHARED) && unlikely(!vma->anon_vma))
--			vma_end_read(vma);
--		else
--			return vma;
--	}
-+	/* This is the dst vma, we always need the anon_vma */
-+	vma = lock_vma_under_rcu(mm, address, true);
-+	if (vma)
-+		return vma;
- 
- 	mmap_read_lock(mm);
- 	vma = find_vma_and_prepare_anon(mm, address);
-@@ -1462,8 +1454,11 @@ static int uffd_move_lock(struct mm_struct *mm,
- 	 * vma_start_read(src_vma)
- 	 * mmap_read_lock(mm)
- 	 *					vma_start_write(dst_vma)
-+	 *
-+	 * Note that here we won't touch src vma's anon_vma.  It should be
-+	 * there, but here we don't need to ask for it.
- 	 */
--	*src_vmap = lock_vma_under_rcu(mm, src_start);
-+	*src_vmap = lock_vma_under_rcu(mm, src_start, false);
- 	if (likely(*src_vmap))
- 		return 0;
- 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index e767721b3a58..5940847b616c 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2053,7 +2053,8 @@ static struct vm_area_struct *find_tcp_vma(struct mm_struct *mm,
- 					   unsigned long address,
- 					   bool *mmap_locked)
- {
--	struct vm_area_struct *vma = lock_vma_under_rcu(mm, address);
-+	/* TCP zerocopy pages are always read-only, see tcp_mmap() */
-+	struct vm_area_struct *vma = lock_vma_under_rcu(mm, address, false);
- 
- 	if (vma) {
- 		if (vma->vm_ops != &tcp_vm_ops) {
--- 
-2.44.0
-
-
--- 
-Peter Xu
+David / dhildenb
 
