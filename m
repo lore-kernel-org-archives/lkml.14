@@ -1,108 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62A063D;
-	Thu, 11 Apr 2024 06:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA4213D622
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 06:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818516; cv=none; b=aapPD4F7sH2+26H+pmEjPGOwMeWc511JkC5wsk2ZTMz0G/jmcz1eIwYEEzIrLJ9NDonJ3lgIh0OMvjhwr8oQ1Mj5zOOmoD4wr+mTOu2IogYZZOax+gkiNZCMZ1LyxuqwszVxfkv/aE0MSkY5xyd7maCSxm4tDiLT7PZEMP44Ifk=
+	t=1712818520; cv=none; b=jMUMTH0R+watiJyC6nGERw+jxsX863qmDeEJD0WtbdJLKFKLFR6OsQkGR2nt/PhZCY7kSSHjoowRO5S0+t10h30GusQaNyy1hGVk/B7LJDbRN7WvDxC7sHFSEjyz73Pg49Dokhys8JKuy9S74NEWz/8rkuL2R7uDS1XPFLBC5ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818516; c=relaxed/simple;
-	bh=g5uFzpLBD5mMvoeBx8hAdujf+J4m8llZ6LvgrHfw/qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aq0Qop138Q7x/7X0ILv2SYOypie2nFIJy5hC2j0qHfZwdtM4go/3BB0BZ6U0rh1bTdO/bCPWyt+Hjcch07tOLdUsplQmcgjMaOQBgvm/f9ZHEaioeIoBlGaFYUFGrHbLYCdSuTkuh68IZyNMbiH9/ipXZQH0tpwjw/Ygp2krH1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvNxYyjs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvNxYyjs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F3AC433C7;
-	Thu, 11 Apr 2024 06:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712818516;
-	bh=g5uFzpLBD5mMvoeBx8hAdujf+J4m8llZ6LvgrHfw/qs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BvNxYyjsAvCfq31BNCEVkvEyXMKqXg17zoo7EoJSAq2MhkmyRtqBo2DG+2Ssxh0TN
-	 0mtKRf7SNGnt4dwLynbgqlfJ2dgqXrwu52VMW6bXvShCdH7WF89v9WoNW3hj0nIzba
-	 jffDoK1d5Fp3YmDVOciJfQQlJ7HDJTgcCy4GQEHNv6vh9TR9kBTl3ngPRT5G69VI85
-	 MXgiWEZTCbnWSyzbZzKDdGh/+g/HuUsPq6nz2DqeYu2PtRF7nf5GCpJGY6aUJJGuUN
-	 QU9Fww/Ln77Q3okVcn7v0WKeIXxi5fKU2aDYHErN5KaEOfszOylPhdAl1U8b3PPGjD
-	 72xWSWZmp3Wig==
-Date: Thu, 11 Apr 2024 07:55:11 +0100
-From: Lee Jones <lee@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: ChiaEn Wu <chiaen_wu@richtek.com>, pavel@ucw.cz, matthias.bgg@gmail.com,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, peterwu.pub@gmail.com,
-	cy_huang@richtek.com
-Subject: Re: [PATCH] leds: mt6360: Fix the second LED can not enable torch
- mode by V4L2
-Message-ID: <20240411065511.GB6194@google.com>
-References: <d1d1419bb322e2b0f40d34edd3a66979015b668c.1712657386.git.chiaen_wu@richtek.com>
- <c98ea7c9-6c9b-466d-bc49-ec76874ac6da@collabora.com>
+	s=arc-20240116; t=1712818520; c=relaxed/simple;
+	bh=QKav+5y61ZdnV0RW5NGa87eeulpAiivRJ79CGIruxTs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jaKNUcrVp0hii/E+baDOsOxpI1gWCyCUeVpzE70GlXvdHZVeLnSlvVKlh0LxOWkaGPs8KY2tO08pNYEcWnML410mc3i0dwofqrEMcgX5a+WRHXl3EHqcVbu6aONS2vCw4Y68iCN3BZ3DyU4yY1n/x/bDlIboLCdSRhSPV2/80OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VFVkF5RFcz2NW75;
+	Thu, 11 Apr 2024 14:52:21 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 30338180063;
+	Thu, 11 Apr 2024 14:55:14 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 11 Apr
+ 2024 14:55:12 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
+	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
+	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
+	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
+	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>, <liwei391@huawei.com>,
+	<peterz@infradead.org>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
+	<kristina.martsenko@arm.com>, <robh@kernel.org>,
+	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
+	<shijie@os.amperecomputing.com>, <bhe@redhat.com>,
+	<akpm@linux-foundation.org>, <horms@kernel.org>,
+	<rmk+kernel@armlinux.org.uk>, <Jonathan.Cameron@huawei.com>,
+	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
+	<frederic@kernel.org>, <reijiw@google.com>, <ruanjinjie@huawei.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+Subject: [PATCH v2 0/9] Rework the DAIF mask, unmask and track API
+Date: Thu, 11 Apr 2024 06:48:49 +0000
+Message-ID: <20240411064858.3232574-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c98ea7c9-6c9b-466d-bc49-ec76874ac6da@collabora.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Tue, 09 Apr 2024, AngeloGioacchino Del Regno wrote:
+This patch series reworks the DAIF mask, unmask, and track API for the
+upcoming FEAT_NMI extension added in Armv8.8.
 
-Not sure why, but this mail was sent unthreaded from the original.
+As platform and virtualization[1] supports for FEAT_NMI is emerging, and
+Mark Brown's FEAT_NMI patch series[2] highlighted the need for clean up
+the existing hacking style approach about DAIF management code before
+adding NMI functionality, furthermore, we discover some subtle bugs
+during 'perf' and 'ipi_backtrace' transition from PSEUDO_NMI to
+FEAT_NMI, in summary, all of these emphasize the importance of rework.
 
-> Il 09/04/24 12:21, ChiaEn Wu ha scritto:
-> > V4L2 will disable strobe mode of the LED device when enable torch mode,
-> > but this logic will conflict with the "priv->fled_torch_used"
-> > in "mt6360_strobe_set()". So after enabling torch mode of the first
-> > LED, the second LED will not be able to enable torch mode correctly.
-> > 
-> > Therefore, at the beginning of "mt6360_strobe_set()", check whether the
-> > state of the upcoming change and the current LED device state are the
-> > same, so as to avoid the above problem.
-> > 
-> > Signed-off-by: ChiaEn Wu <chiaen_wu@richtek.com>
-> > ---
-> >   drivers/leds/flash/leds-mt6360.c | 12 +++++++++++-
-> >   1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/leds/flash/leds-mt6360.c b/drivers/leds/flash/leds-mt6360.c
-> > index a90de82f4568..1b75b4d36834 100644
-> > --- a/drivers/leds/flash/leds-mt6360.c
-> > +++ b/drivers/leds/flash/leds-mt6360.c
-> > @@ -241,10 +241,20 @@ static int mt6360_strobe_set(struct led_classdev_flash *fl_cdev, bool state)
-> >   	u32 enable_mask = MT6360_STROBEN_MASK | MT6360_FLCSEN_MASK(led->led_no);
-> >   	u32 val = state ? MT6360_FLCSEN_MASK(led->led_no) : 0;
-> >   	u32 prev = priv->fled_strobe_used, curr;
-> > -	int ret;
-> > +	int ret = 0;
-> 
-> I prefer that you leave ret uninitialized here, and...
+This series of reworking patches follows the suggestion from Mark
+Rutland mentioned in Mark Brown's patchset. In summary, he think the
+better way for DAIF manangement look likes as following:
 
-What's the reason for this?
+(a) Adding entry-specific helpers to manipulate abstract exception masks
+    covering DAIF + PMR + ALLINT. Those need unmask-at-entry and
+    mask-at-exit behaviour, and today only need to manage DAIF + PMR.
 
-> >   	mutex_lock(&priv->lock);
-> > +	/*
-> > +	 * If the state of the upcoming change is the same as the current LED
-> > +	 * device state, then skip the subsequent code to avoid conflict
-> > +	 * with the flow of turning on LED torch mode in V4L2.
-> > +	 */
-> > +	if (state == !!(BIT(led->led_no) & prev)) {
-> > +		dev_info(lcdev->dev, "No change in strobe state [0x%x]\n", prev);
-> 
-> ...that you do here, instead
-> 
-> 		ret = 0;
-> 		goto unlock;
-> 
-> With that addressed,
-> 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collaobra.com>
-> 
-> 
+    It should be possible to do this ahead of ALLINT / NMI support.
+
+(b) Adding new "logical exception mask" helpers that treat DAIF + PMR +
+    ALLINT as separate elements. 
+
+This patches cherry-pick a part of Mark Brown' FEAT_NMI series, in order
+to pass compilation and basic testing, includes perf and ipi_backtrace.
+
+[1] https://lore.kernel.org/all/20240407081733.3231820-1-ruanjinjie@huawei.com/
+[2] https://lore.kernel.org/linux-arm-kernel/Y4sH5qX5bK9xfEBp@lpieralisi/
+
+v2->v1:
+Add SoB tags following the origin author's SoBs.
+
+Jinjie Ruan (1):
+  arm64/cpufeature: Simplify detect PE support for FEAT_NMI
+
+Liao Chang (5):
+  arm64/cpufeature: Use alternatives to check enabled ARM64_HAS_NMI
+    feature
+  arm64: daifflags: Add logical exception masks covering DAIF + PMR +
+    ALLINT
+  arm64: Unify exception masking at entry and exit of exception
+  arm64: Deprecate old local_daif_{mask,save,restore}
+  irqchip/gic-v3: Improve the maintainability of NMI masking in GIC
+    driver
+
+Mark Brown (3):
+  arm64/sysreg: Add definitions for immediate versions of MSR ALLINT
+  arm64/cpufeature: Detect PE support for FEAT_NMI
+  arm64/nmi: Add Kconfig for NMI
+
+ arch/arm64/Kconfig                   |  17 ++
+ arch/arm64/include/asm/cpufeature.h  |   6 +
+ arch/arm64/include/asm/daifflags.h   | 296 ++++++++++++++++++++++-----
+ arch/arm64/include/asm/nmi.h         |  27 +++
+ arch/arm64/include/asm/sysreg.h      |   2 +
+ arch/arm64/include/uapi/asm/ptrace.h |   1 +
+ arch/arm64/kernel/acpi.c             |  10 +-
+ arch/arm64/kernel/cpufeature.c       |  58 +++++-
+ arch/arm64/kernel/debug-monitors.c   |   7 +-
+ arch/arm64/kernel/entry-common.c     |  96 +++++----
+ arch/arm64/kernel/entry.S            |   2 -
+ arch/arm64/kernel/hibernate.c        |   6 +-
+ arch/arm64/kernel/irq.c              |   2 +-
+ arch/arm64/kernel/machine_kexec.c    |   2 +-
+ arch/arm64/kernel/setup.c            |   2 +-
+ arch/arm64/kernel/smp.c              |   6 +-
+ arch/arm64/kernel/suspend.c          |   6 +-
+ arch/arm64/kvm/hyp/vgic-v3-sr.c      |   6 +-
+ arch/arm64/kvm/hyp/vhe/switch.c      |   4 +-
+ arch/arm64/mm/mmu.c                  |   6 +-
+ arch/arm64/tools/cpucaps             |   2 +
+ drivers/irqchip/irq-gic-v3.c         |   6 +-
+ 22 files changed, 438 insertions(+), 132 deletions(-)
+ create mode 100644 arch/arm64/include/asm/nmi.h
 
 -- 
-Lee Jones [李琼斯]
+2.34.1
+
