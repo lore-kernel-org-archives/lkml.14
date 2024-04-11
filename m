@@ -1,239 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECCC14E2C8;
-	Thu, 11 Apr 2024 14:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2106214E2C5;
+	Thu, 11 Apr 2024 14:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844023; cv=none; b=XRy+sC7yqNsirSDjEDHHx4P+/nFMZ6N1pIdIbQtF1z5656sN84tIj6VsFKayvBnp0AO+zl/pgXJdY9pGi7LEM4A7KGOQ+folF4euMyrD3Fwu0PdPuK/IgvzRfjO/WdcomStiq7ici5/kpIdaGp3YBibDibjaWZns1zso8Tdf4D8=
+	t=1712844024; cv=none; b=ULvJ8Rdme/nIM5uO3wVB3t6z/2aAprXc7OSk8D3UJQmX3d0EH6h0OOJeYRBz471ICSeaAhtDYHGjLeLvaIwHEsGWtDVzJKF6bMPGGp6pLhn2uvxtZ4vmvQV/eUtpQ0M4tOE2pdRm5RQdfGcymcnMVACHU+vyJ9Jw9NeF4PkZLx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844023; c=relaxed/simple;
-	bh=tRqmwlzhcYdgVr2YujS1WgTqkzUd0nEXs80I0voRZ+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fQmJBxqLBSL/CaLPMizOHVM4HrtlV/BCh94Tq5IU+EDU9j2EyKDNoLNAv4+mq48watUtCnmKYsnQxHInGgRfZEflKyVtZj5omPkNXzte0iv/akVX8EFqmJ7AvuEdjMlQ5pNCMJZNyEptX2kUA9bXUG1I5i4zy5IaWxLDnt1Jo40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IuYQoFWL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IuYQoFWL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4C7FC113CD;
-	Thu, 11 Apr 2024 14:00:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712844022;
-	bh=tRqmwlzhcYdgVr2YujS1WgTqkzUd0nEXs80I0voRZ+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IuYQoFWLDW0TewoWOc1egpvTc7oRKlFdRDOxTdOO6mj8F+jf/LWNPnH6utlZMgCRp
-	 Wlm7VdDje7q00dBLqJawgrlJWje3n8r7h5914tgSM1R4vzFi/aElZWtaxhbFhhmRgC
-	 e58DoLz7Np5deIUBaY59yKM3JF4OYy/zVNTZAdncc0IZG9wlVf/Lp3ONzbho3qDhxA
-	 7PiLNDS4jimFjHuyBxgGXNcQIY7QPBXIJgMAFhYS1GK6mqT4LKEvKcSN1Nce0pzVqp
-	 IrVB4USDmK+/pPizmKeVnvc18vBGueLeCeNv0UC1glnbvyiNGiLZG0DyscUb1jvVjk
-	 uYc17bsqWwNLA==
-Date: Thu, 11 Apr 2024 16:00:16 +0200
-From: Helge Deller <deller@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, Arnd Bergmann <arnd@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] video: Handle HAS_IOPORT dependencies
-Message-ID: <Zhfs8CN5XdgldKUn@carbonx1>
-References: <20240410142329.3567824-1-schnelle@linux.ibm.com>
- <20240410142329.3567824-2-schnelle@linux.ibm.com>
+	s=arc-20240116; t=1712844024; c=relaxed/simple;
+	bh=mpHu4d4Q4JeZIMZ5puvyvVG8jptaMTEuga2ont41Wdo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Hhedyc3BGLvlZZ1QmMRB5VBealgK9dMIoiZb+jUC2N5Asjyhbt+adJuflnA9fJQqD+/dpAvkIL4/ivuvL4HYIQgIanGnqkgha3znm5Kkjv1uvgeJny2SKfRbP28pgKbGDEhxg2o4gpQKPIoDHg1f64qZeGbAboGNUA7coMa5GNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56e47843cc7so5418675a12.0;
+        Thu, 11 Apr 2024 07:00:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712844021; x=1713448821;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2GDpaKQ90WYO0sLid+cb+1t26hG02cHYGSR1vXVItmw=;
+        b=iW5Jb/gkSqWcjpGuQQ0GHGStOysXQOfhd1n1t7yF/XQpYsl3CG2qZRH/U29ME0//tE
+         wKBzshEtMJO9EyJKsVrtCYO5tUiE+jg+fUwyF7f04weuECOgZurtRsnGDNiJzf6MNcSA
+         7GmWxAuFQ27x9k36LSF06tiqeOu48lwb3fwjU1ZlW5rjKXpOar47M0D5YFxojhJTJw59
+         ibd/i48ziuR/uakoEBmRhIiv60SN0FQAx1PEwy2HEn9ng9ZcnY2DmLbgpbJtqDETwZMn
+         EBNaqQDOA+QXe/P4uOEgzk80G83uyFJ5LnPqSib4arbVtEh1MjmgJYCoRzxYAym6YZ7h
+         /OCA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4CDTll29xIsNc4V7Cgma2uCle+IU4N4EuyCUpHpKim5+iBAI9NN0rGus4uRCh9dPzakBXBjWNRsisGIG6il/3oOVT6ftjcaBMDnt/85gmDHk3FluLpGLL/wBG10hyt062AunynVamD1qSJHq2pOGfOmgOHWy+/63qioroJ2CPsAP3IaN7MHZCKEu6RN3CsHH3t3jKh4cYjm4=
+X-Gm-Message-State: AOJu0YxOvpmEYTWHRT1vxCJpDNe7Nre2gpquNPGOU9r6+ezo0y3BqEWZ
+	PHFPSemy9KEX00KC/42h0cJHRgnwG9MfP5HJRAGGURTgy9QeYOKOE6tWqw==
+X-Google-Smtp-Source: AGHT+IFQB7CTD5vVZVKJvYchQtBMUSZkhyhJfcrxmoTEhqiVxx5mJf3J2kvOSx8nJClwvF+BlqBtkw==
+X-Received: by 2002:a50:9fc1:0:b0:56d:f00c:2b13 with SMTP id c59-20020a509fc1000000b0056df00c2b13mr3238272edf.32.1712844021389;
+        Thu, 11 Apr 2024 07:00:21 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-118.fbsv.net. [2a03:2880:30ff:76::face:b00c])
+        by smtp.gmail.com with ESMTPSA id i29-20020a0564020f1d00b0056fe8a3d7d3sm597256eda.8.2024.04.11.07.00.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 07:00:21 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: aleksander.lobakin@intel.com,
+	kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com,
+	elder@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	nbd@nbd.name,
+	sean.wang@mediatek.com,
+	Mark-MC.Lee@mediatek.com,
+	lorenzo@kernel.org,
+	taras.chornyi@plvision.eu,
+	ath11k@lists.infradead.org,
+	ath10k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	geomatsi@gmail.com,
+	kvalo@kernel.org
+Cc: quic_jjohnson@quicinc.com,
+	leon@kernel.org,
+	dennis.dalessandro@cornelisnetworks.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	idosch@idosch.org,
+	leitao@debian.org,
+	Ido Schimmel <idosch@nvidia.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Simon Horman <horms@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH net-next v6 03/10] net: create a dummy net_device allocator
+Date: Thu, 11 Apr 2024 06:59:27 -0700
+Message-ID: <20240411135952.1096696-4-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411135952.1096696-1-leitao@debian.org>
+References: <20240411135952.1096696-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410142329.3567824-2-schnelle@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-* Niklas Schnelle <schnelle@linux.ibm.com>:
-> In a future patch HAS_IOPORT=n will disable inb()/outb() and friends at
-> compile time. We thus need to #ifdef functions and their callsites which
-> unconditionally use these I/O accessors. In the include/video/vga.h
-> these are conveniently all those functions with the vga_io_* prefix.
+It is impossible to use init_dummy_netdev together with alloc_netdev()
+as the 'setup' argument.
 
-Why don't you code it like in the patch below?
-inb_p(), outb_p() and outw() would then need to be defined externally
-without an implementation so that they would generate link time errors
-(instead of compile time errors).
+This is because alloc_netdev() initializes some fields in the net_device
+structure, and later init_dummy_netdev() memzero them all. This causes
+some problems as reported here:
 
-diff --git a/include/video/vga.h b/include/video/vga.h
-index 947c0abd04ef..32c915e109fa 100644
---- a/include/video/vga.h
-+++ b/include/video/vga.h
-@@ -203,18 +203,20 @@ extern int restore_vga(struct vgastate *state);
+	https://lore.kernel.org/all/20240322082336.49f110cc@kernel.org/
+
+Split the init_dummy_netdev() function in two. Create a new function called
+init_dummy_netdev_core() that does not memzero the net_device structure.
+Then have init_dummy_netdev() memzero-ing and calling
+init_dummy_netdev_core(), keeping the old behaviour.
+
+init_dummy_netdev_core() is the new function that could be called as an
+argument for alloc_netdev().
+
+Also, create a helper to allocate and initialize dummy net devices,
+leveraging init_dummy_netdev_core() as the setup argument. This function
+basically simplify the allocation of dummy devices, by allocating and
+initializing it. Freeing the device continue to be done through
+free_netdev()
+
+Suggested-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
+---
+ include/linux/netdevice.h |  3 +++
+ net/core/dev.c            | 54 ++++++++++++++++++++++++++-------------
+ 2 files changed, 39 insertions(+), 18 deletions(-)
+
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index d45f330d083d..f849e7d110ed 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -4519,6 +4519,9 @@ static inline void netif_addr_unlock_bh(struct net_device *dev)
  
- static inline unsigned char vga_io_r (unsigned short port)
- {
--	return inb_p(port);
-+	return IS_ENABLED(CONFIG_HAS_IOPORT) ? inb_p(port) : 0;
+ void ether_setup(struct net_device *dev);
+ 
++/* Allocate dummy net_device */
++struct net_device *alloc_netdev_dummy(int sizeof_priv);
++
+ /* Support for loadable net-drivers */
+ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+ 				    unsigned char name_assign_type,
+diff --git a/net/core/dev.c b/net/core/dev.c
+index c74b42bc6888..417abfd12871 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -10414,25 +10414,12 @@ int register_netdevice(struct net_device *dev)
  }
+ EXPORT_SYMBOL(register_netdevice);
  
- static inline void vga_io_w (unsigned short port, unsigned char val)
+-/**
+- *	init_dummy_netdev	- init a dummy network device for NAPI
+- *	@dev: device to init
+- *
+- *	This takes a network device structure and initializes the minimum
+- *	amount of fields so it can be used to schedule NAPI polls without
+- *	registering a full blown interface. This is to be used by drivers
+- *	that need to tie several hardware interfaces to a single NAPI
+- *	poll scheduler due to HW limitations.
++/* Initialize the core of a dummy net device.
++ * This is useful if you are calling this function after alloc_netdev(),
++ * since it does not memset the net_device fields.
+  */
+-void init_dummy_netdev(struct net_device *dev)
++static void init_dummy_netdev_core(struct net_device *dev)
  {
--	outb_p(val, port);
-+	if (IS_ENABLED(CONFIG_HAS_IOPORT))
-+		outb_p(val, port);
+-	/* Clear everything. Note we don't initialize spinlocks
+-	 * as they aren't supposed to be taken by any of the
+-	 * NAPI code and this dummy netdev is supposed to be
+-	 * only ever used for NAPI polls
+-	 */
+-	memset(dev, 0, sizeof(struct net_device));
+-
+ 	/* make sure we BUG if trying to hit standard
+ 	 * register/unregister code path
+ 	 */
+@@ -10453,8 +10440,28 @@ void init_dummy_netdev(struct net_device *dev)
+ 	 * its refcount.
+ 	 */
  }
+-EXPORT_SYMBOL_GPL(init_dummy_netdev);
  
- static inline void vga_io_w_fast (unsigned short port, unsigned char reg,
- 				  unsigned char val)
- {
--	outw(VGA_OUT16VAL (val, reg), port);
-+	if (IS_ENABLED(CONFIG_HAS_IOPORT))
-+		outw(VGA_OUT16VAL (val, reg), port);
++/**
++ *	init_dummy_netdev	- init a dummy network device for NAPI
++ *	@dev: device to init
++ *
++ *	This takes a network device structure and initializes the minimum
++ *	amount of fields so it can be used to schedule NAPI polls without
++ *	registering a full blown interface. This is to be used by drivers
++ *	that need to tie several hardware interfaces to a single NAPI
++ *	poll scheduler due to HW limitations.
++ */
++void init_dummy_netdev(struct net_device *dev)
++{
++	/* Clear everything. Note we don't initialize spinlocks
++	 * as they aren't supposed to be taken by any of the
++	 * NAPI code and this dummy netdev is supposed to be
++	 * only ever used for NAPI polls
++	 */
++	memset(dev, 0, sizeof(struct net_device));
++	init_dummy_netdev_core(dev);
++}
++EXPORT_SYMBOL_GPL(init_dummy_netdev);
+ 
+ /**
+  *	register_netdev	- register a network device
+@@ -11074,6 +11081,17 @@ void free_netdev(struct net_device *dev)
  }
+ EXPORT_SYMBOL(free_netdev);
  
- static inline unsigned char vga_mm_r (void __iomem *regbase, unsigned short port)
++/**
++ * alloc_netdev_dummy - Allocate and initialize a dummy net device.
++ * @sizeof_priv: size of private data to allocate space for
++ */
++struct net_device *alloc_netdev_dummy(int sizeof_priv)
++{
++	return alloc_netdev(sizeof_priv, "dummy#", NET_NAME_UNKNOWN,
++			    init_dummy_netdev_core);
++}
++EXPORT_SYMBOL_GPL(alloc_netdev_dummy);
++
+ /**
+  *	synchronize_net -  Synchronize with packet receive processing
+  *
+-- 
+2.43.0
 
-
-
-> 
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
-> Note: This patch does not depend any not-yet-mainline HAS_IOPORT changes
-> and may be merged via subsystem specific trees at your earliest
-> convenience.
-> 
->  include/video/vga.h | 35 +++++++++++++++++++++++++----------
->  1 file changed, 25 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/video/vga.h b/include/video/vga.h
-> index 947c0abd04ef..ed89295941c4 100644
-> --- a/include/video/vga.h
-> +++ b/include/video/vga.h
-> @@ -201,6 +201,7 @@ extern int restore_vga(struct vgastate *state);
->   * generic VGA port read/write
->   */
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  static inline unsigned char vga_io_r (unsigned short port)
->  {
->  	return inb_p(port);
-> @@ -210,12 +211,12 @@ static inline void vga_io_w (unsigned short port, unsigned char val)
->  {
->  	outb_p(val, port);
->  }
-> -
->  static inline void vga_io_w_fast (unsigned short port, unsigned char reg,
->  				  unsigned char val)
->  {
->  	outw(VGA_OUT16VAL (val, reg), port);
->  }
-> +#endif /* CONFIG_HAS_IOPORT */
->  
->  static inline unsigned char vga_mm_r (void __iomem *regbase, unsigned short port)
->  {
-> @@ -235,28 +236,34 @@ static inline void vga_mm_w_fast (void __iomem *regbase, unsigned short port,
->  
->  static inline unsigned char vga_r (void __iomem *regbase, unsigned short port)
->  {
-> -	if (regbase)
-> -		return vga_mm_r (regbase, port);
-> -	else
-> +#ifdef CONFIG_HAS_IOPORT
-> +	if (!regbase)
->  		return vga_io_r (port);
-> +	else
-> +#endif /* CONFIG_HAS_IOPORT */
-> +		return vga_mm_r (regbase, port);
->  }
->  
->  static inline void vga_w (void __iomem *regbase, unsigned short port, unsigned char val)
->  {
-> -	if (regbase)
-> -		vga_mm_w (regbase, port, val);
-> -	else
-> +#ifdef CONFIG_HAS_IOPORT
-> +	if (!regbase)
->  		vga_io_w (port, val);
-> +	else
-> +#endif /* CONFIG_HAS_IOPORT */
-> +		vga_mm_w (regbase, port, val);
->  }
->  
->  
->  static inline void vga_w_fast (void __iomem *regbase, unsigned short port,
->  			       unsigned char reg, unsigned char val)
->  {
-> -	if (regbase)
-> -		vga_mm_w_fast (regbase, port, reg, val);
-> -	else
-> +#ifdef CONFIG_HAS_IOPORT
-> +	if (!regbase)
->  		vga_io_w_fast (port, reg, val);
-> +	else
-> +#endif /* CONFIG_HAS_IOPORT */
-> +		vga_mm_w_fast (regbase, port, reg, val);
->  }
->  
->  
-> @@ -280,6 +287,7 @@ static inline void vga_wcrt (void __iomem *regbase, unsigned char reg, unsigned
->  #endif /* VGA_OUTW_WRITE */
->  }
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  static inline unsigned char vga_io_rcrt (unsigned char reg)
->  {
->          vga_io_w (VGA_CRT_IC, reg);
-> @@ -295,6 +303,7 @@ static inline void vga_io_wcrt (unsigned char reg, unsigned char val)
->          vga_io_w (VGA_CRT_DC, val);
->  #endif /* VGA_OUTW_WRITE */
->  }
-> +#endif /* CONFIG_HAS_IOPORT */
->  
->  static inline unsigned char vga_mm_rcrt (void __iomem *regbase, unsigned char reg)
->  {
-> @@ -333,6 +342,7 @@ static inline void vga_wseq (void __iomem *regbase, unsigned char reg, unsigned
->  #endif /* VGA_OUTW_WRITE */
->  }
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  static inline unsigned char vga_io_rseq (unsigned char reg)
->  {
->          vga_io_w (VGA_SEQ_I, reg);
-> @@ -348,6 +358,7 @@ static inline void vga_io_wseq (unsigned char reg, unsigned char val)
->          vga_io_w (VGA_SEQ_D, val);
->  #endif /* VGA_OUTW_WRITE */
->  }
-> +#endif /* CONFIG_HAS_IOPORT */
->  
->  static inline unsigned char vga_mm_rseq (void __iomem *regbase, unsigned char reg)
->  {
-> @@ -385,6 +396,7 @@ static inline void vga_wgfx (void __iomem *regbase, unsigned char reg, unsigned
->  #endif /* VGA_OUTW_WRITE */
->  }
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  static inline unsigned char vga_io_rgfx (unsigned char reg)
->  {
->          vga_io_w (VGA_GFX_I, reg);
-> @@ -400,6 +412,7 @@ static inline void vga_io_wgfx (unsigned char reg, unsigned char val)
->          vga_io_w (VGA_GFX_D, val);
->  #endif /* VGA_OUTW_WRITE */
->  }
-> +#endif /* CONFIG_HAS_IOPORT */
->  
->  static inline unsigned char vga_mm_rgfx (void __iomem *regbase, unsigned char reg)
->  {
-> @@ -434,6 +447,7 @@ static inline void vga_wattr (void __iomem *regbase, unsigned char reg, unsigned
->          vga_w (regbase, VGA_ATT_W, val);
->  }
->  
-> +#ifdef CONFIG_HAS_IOPORT
->  static inline unsigned char vga_io_rattr (unsigned char reg)
->  {
->          vga_io_w (VGA_ATT_IW, reg);
-> @@ -445,6 +459,7 @@ static inline void vga_io_wattr (unsigned char reg, unsigned char val)
->          vga_io_w (VGA_ATT_IW, reg);
->          vga_io_w (VGA_ATT_W, val);
->  }
-> +#endif /* CONFIG_HAS_IOPORT */
->  
->  static inline unsigned char vga_mm_rattr (void __iomem *regbase, unsigned char reg)
->  {
-> -- 
-> 2.40.1
-> 
