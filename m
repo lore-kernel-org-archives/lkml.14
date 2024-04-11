@@ -1,96 +1,82 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2871E140E3C;
-	Thu, 11 Apr 2024 10:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54F9146A70
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832827; cv=none; b=q0Q8D0lScb7b1yHu25zGm5a+5HptxEts0Y4EdJIpOohmEr1yeacYWdRH+tWIK0fQEgSxL5QEhBgHgCHs9hbo0EgSlfvD+4a602JxYhu7Okxq1doNIEyaGlKbNiF0wTJsDXVVezRH/5m+EtX/M5dG3wwiq74SnO2UHHndeEcaz/I=
+	t=1712832970; cv=none; b=irS9cDkT/2ciGIlnnyOHxs5t23c9EesNpmw0KHVsX9fphG7sVl/ZrIpEyXg7pqqprusE8mbpXpAFMOs5sLVv3V4G28iki0qeEKOIfEg57y6+er0pTUOrsNs3rxrOFzhEwBAXVPGefsKn8udUrHq4rQwJALps+tGHWcfTku6wgm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712832827; c=relaxed/simple;
-	bh=Sy9vwHM9lL5sKyKFDT+sqtrTgE6HSdTNapyCUyx55lE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=vDkkv1/Ug+xA+GMXr/TZIaJgxwWjk+WKsOJhT2drdzylzBIx/E2fBgrxE3gdWnTBhqplGeJknGokVAQw9HiFwW2CqweCvuzS+ss1ggvVpo6kcUHAUr9znWdVaEHkP1WbcjjA1+WTNj75AmjKgb+BDkz/qPSbn/eaJxH/uo+D2yM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=FE0s0iX7; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1712832970; c=relaxed/simple;
+	bh=1OtbrOxLVvaVQ7yBCqWo4EV6mpg+GvWT44z8ZTojnuI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dN+j1SkrOtvDBesVXJTG9tAr7Jy07YnHJxXWcB4vujbDqN5HcTlxShJ0PnGaSF0uPd92qpakCCo8GT9Xh9VtpNXaWEl7zI47hGvf6PCQUUVyicedhPEdemex3R9MX19kva8jZ58qGyd+CyRNqR61Fvz+fTr0F9AT95MqjfGIzpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiIxGAsq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="FE0s0iX7"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 6293D600A9;
-	Thu, 11 Apr 2024 10:53:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1712832815;
-	bh=Sy9vwHM9lL5sKyKFDT+sqtrTgE6HSdTNapyCUyx55lE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FE0s0iX7zfOIYHPXs42ynIILdQ6X+cBY/6D9s+2ACqgR/LBQAwRAYxrpoLAz6Dspt
-	 Y0kPsGL3LwzsgVKQ6ertwd69M2HUevzEMopa8vmY2L8bukT87K9xr3Kx700+Xajwyh
-	 0ZGSx6vAu/ua/ULEZzko76gRaB64aJbRWotkzen8AImRa1QmwdwFIIaq1E1hxCZdAT
-	 ewJWmeGCLZdGBUrao5uM2JkotYK2VMiRNhxeGxsOBAqkFZcliQ+cYdYhutwhsG94cS
-	 5sZhdsZDH0fLkTojE2KMYYUxKcNib+7aBZQnB/GmhI8/jJIM8eHfs9J8kC04MhIxgw
-	 9Mzn9WJuUYwrw==
-Received: by x201s (Postfix, from userid 1000)
-	id BE2F120EF37; Thu, 11 Apr 2024 10:53:16 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Louis Peens <louis.peens@corigine.com>,
-	Yanguo Li <yanguo.li@corigine.com>,
-	oss-drivers@corigine.com,
-	Taras Chornyi <taras.chornyi@plvision.eu>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Edward Cree <ecree.xilinx@gmail.com>,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>
-Subject: [PATCH net-next v3 3/4] net: prestera: flower: validate control flags
-Date: Thu, 11 Apr 2024 10:52:56 +0000
-Message-ID: <20240411105302.112091-4-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411105302.112091-1-ast@fiberby.net>
-References: <20240411105302.112091-1-ast@fiberby.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiIxGAsq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE9DC433F1;
+	Thu, 11 Apr 2024 10:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712832970;
+	bh=1OtbrOxLVvaVQ7yBCqWo4EV6mpg+GvWT44z8ZTojnuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZiIxGAsqnUbHwSgidgbQlc22Yrc2G9WBsP1Q1A8326OjDWEfqEKwsk2Y980lCfJuk
+	 6FIzcRtnT2NrjoHK/Kb0Eopew1TbouNET6qX4Raz6yXt4J+6kBRDxU58s9AlMk8vGr
+	 rT/jZYL7D27p65cxsIKtKEzX5mYUs8/9wA3o3ow6eagp2o/w41MnEhYa+1Ecvvv/BP
+	 szuPnINDV3tyv4HICBTatWmB8gsX3clNvLEN2cidOYN5v5jDMFU9tR8+306ySUxMfo
+	 AkNRB+pS2OCem0H/5RYMSbbqjIPXyiSO6LUP/N6SXakNhsw1WtecoZNUuBnMLAa67K
+	 FhYjUU76fT3tw==
+Date: Thu, 11 Apr 2024 11:56:07 +0100
+From: Lee Jones <lee@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/6] mfd: kempld: A few cleanups
+Message-ID: <20240411105607.GE1980182@google.com>
+References: <20240223195113.880121-1-andriy.shevchenko@linux.intel.com>
+ <Zgwk1tr7x4HnnlD9@smile.fi.intel.com>
+ <20240411092928.GB1980182@google.com>
+ <Zhe5YPsvEp1rzsTp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Zhe5YPsvEp1rzsTp@smile.fi.intel.com>
 
-Add check for unsupported control flags.
+On Thu, 11 Apr 2024, Andy Shevchenko wrote:
 
-Only compile-tested, no access to HW.
+> On Thu, Apr 11, 2024 at 10:29:28AM +0100, Lee Jones wrote:
+> > On Tue, 02 Apr 2024, Andy Shevchenko wrote:
+> > > On Fri, Feb 23, 2024 at 09:49:49PM +0200, Andy Shevchenko wrote:
+> > > > Just a set of ad-hoc cleanups. No functional change intended.
+> > > 
+> > > Any comments?
+> > > 
+> > > (I assume the 6+ weeks in the mailing list is enough for all kind of CIs
+> > >  to complain. But they hadn't AFAICS.)
+> > 
+> > Not sure why these were dropped from my queue.
+> > 
+> > Likely another Mutt "feature".
+> 
+> Hmm... Using mutt as well, but probably not in advanced way.
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- drivers/net/ethernet/marvell/prestera/prestera_flower.c | 4 ++++
- 1 file changed, 4 insertions(+)
+I use:
 
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_flower.c b/drivers/net/ethernet/marvell/prestera/prestera_flower.c
-index 8b9455d8a4f7a..418101a931490 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_flower.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_flower.c
-@@ -229,6 +229,10 @@ static int prestera_flower_parse(struct prestera_flow_block *block,
- 
- 		flow_rule_match_control(f_rule, &match);
- 		addr_type = match.key->addr_type;
-+
-+		if (flow_rule_has_control_flags(match.mask->flags,
-+						f->common.extack))
-+			return -EOPNOTSUPP;
- 	}
- 
- 	if (flow_rule_match_key(f_rule, FLOW_DISSECTOR_KEY_BASIC)) {
+  I               flag-message               toggle a message's 'important' flag
+
+... to mark messages as requiring review.
+
+Sometimes Mutt drops them for seemingly no reason.  It's also not
+uncommon for me to fetch new mail or open Mutt to find 300 unread mails
+which I've already parsed.  When that happens, all of the mails that
+I've previously flagged have also been (not so) helpfully unflagged!
+
+It's just something that I've grown accustomed to.
+
 -- 
-2.43.0
-
+Lee Jones [李琼斯]
