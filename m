@@ -1,188 +1,133 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24754199EBF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360EA19DF5E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849763; cv=none; b=Wz7LRuL3Zt4LtgLVj/cNBXFHx8jaC4huGRICsUDAYCkatByuWGHBjIk1aRtfSTdAWHwJqnVXZs0ZaMFVDzkmi8/LpfVvaS3MALS4aC2OJKcQwGQtgvC/Ak1aFE5tbRQvZuG0b9A5QrywBVIRCV6kS+flrKX18Sp+7IvVl8RmZvg=
+	t=1712849765; cv=none; b=uJKdmNT9fjBQkNiQD8agyFUkvfaQJ7gqMb/DogUyE8CbqagximeZR83Kx536umxN5fw7kdCaGVATfK2vHrZGK7Dv+RZe9cG6fim9dQlzkEFwwPqCLlL4Nzsg/P87pBht9eiw0kjX/MxmvQHmJ9T7oPsCzkNAliA7RvG5ICGMrn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849763; c=relaxed/simple;
-	bh=a4TEIQTuQWFkcw6pA1NWC0rqKJ0PG83hksmnYR8rtaQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GSHCfTPny3uPgrVxDKTWqR4ULcGNhvQZ1mcDTeW17NkQDyutSaF2fk8FniMVxBsRb9JxQd3cX6Fnbob8fa1s8cyVnsX8C6x4hw7BVe3FiPvoLGYsmdBE0ppCuXpMlCw6fHaSiZ5F11OW/I3h8+w3cY5JA+pl7DbgmFeWNsHOjl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=roVGWfkc; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="roVGWfkc"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69564339f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849761; x=1713454561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EuLUXClpT72M8hfQh2VGidcAIqmjsaMeBif3YhVOe5g=;
-        b=roVGWfkcgKjfnDpOu2WBodKWhNMI5lVh0gGAvqNTFCW6h5yF0QTcBiplmH1fhXGcqF
-         YKe47Uho04F7Cerws7O14J0VeSoM6ZwgWR2+orZYiX8h8nI3U5PVIzbadAVWAAuuPA4l
-         /ekGCnjp61+lHhVn8BZn6/hWcNjSuQw5BKlWCS/VlvSh+40rmlFhJEoscw6iufL5fpWq
-         Mk/6Y86Zzo+SqdU6LazCvFogSkqjJnjoJDwqtf0MnVS3e6WBxgFV1xRbt+SNPAW+7YG5
-         /QLIMIzc+Bl8aGt/zLYDoNwcy9Vis19/g4Ucp0HihOX4GvGqQA/DsnUDI0Eq9GLaYTzv
-         e0Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849761; x=1713454561;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EuLUXClpT72M8hfQh2VGidcAIqmjsaMeBif3YhVOe5g=;
-        b=BWsJQFsBgHC39zZyE9nZaVmL56rppq08PCW3abQcnpCogK6/xi+4qXY11yVz0S0BvM
-         MIADQGD4vfvY8IX3qqIdr54WY/h5k+1xdBfSo5x+jWYk/8hXb4E9e+B+/j8bO/uPR6ca
-         tEOzXgRJHpVtultrCtRhQAcomMteQmC0L1PZIIF57dOKUMmGafV3upa5883SiUu7pOLE
-         LXIOIbL4OG3fwHL0IU0bKRAJCw8l9T6KBOzdiFNggR0gXQ1YTyqsIsMh6uGkGAUX2Y4z
-         bShL2mXNApLDHvt4BSXHngQvFQHUMD3N2WCkMLgJg1Fn0h4El8909wsjgriIRB2xf2Xp
-         hQyA==
-X-Gm-Message-State: AOJu0YzLNDTNUBhBaB8xSVE9lheT2m6DY23gY/ryatydM3UV2rKr2hO0
-	whlxi93wnlwid3kkZ94AWd3fl3gNPIGxACEbohKiS4/1cYExUJ29skKxPdeqKKOKHdykvlUh+HQ
-	L
-X-Google-Smtp-Source: AGHT+IHMoN//d5n+dYVZkBHVUXPCZfUakGLAlDeQ1Kprkb1py5eGlbGGHAZB6g0lsGBhZce0AEseow==
-X-Received: by 2002:a92:de01:0:b0:36a:cf8:3fe6 with SMTP id x1-20020a92de01000000b0036a0cf83fe6mr5771996ilm.1.1712849760966;
-        Thu, 11 Apr 2024 08:36:00 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.35.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:35:59 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 154/437] fs/debugfs: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:54 -0600
-Message-ID: <20240411153126.16201-155-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	s=arc-20240116; t=1712849765; c=relaxed/simple;
+	bh=0VVDSxDozDuY9366NJCNFekjulkSHGITutb5i0OFTy0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9CYrEn/8Pax0BYKYP4vBtTq2Bu00IVqsUu5w8SoV+5G3mpL2a2RNephDLzGzuaP3YUVZGzGh0DIiJKE2ikH9vdwfLrVWO6htIqRdBsMl00XeD9BOUXFwM8CBg/L5fno0onX7VWDDrHx0c84h0k/CwHxKvo4VTCaVIqSgKGVABo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0626D113E;
+	Thu, 11 Apr 2024 08:36:33 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 960F23F6C4;
+	Thu, 11 Apr 2024 08:36:00 -0700 (PDT)
+Date: Thu, 11 Apr 2024 16:35:58 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Shawn Wang <shawnwang@linux.alibaba.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 10/31] x86/resctrl: Move monitor init work to a
+ resctrl init call
+Message-ID: <ZhgDXhcUgS/uV3p5@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-11-james.morse@arm.com>
+ <beee157c-6e7b-466e-93cd-81a9eb033fe7@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <beee157c-6e7b-466e-93cd-81a9eb033fe7@linux.alibaba.com>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- fs/debugfs/file.c | 54 +++++++++++++++++------------------------------
- 1 file changed, 19 insertions(+), 35 deletions(-)
+On Wed, Apr 10, 2024 at 10:57:30AM +0800, Shawn Wang wrote:
+> Hi James,
+> 
+> On 3/22/24 12:50 AM, James Morse wrote:
+> > rdt_get_mon_l3_config() is called from the architecture's
+> > resctrl_arch_late_init(), and initialises both architecture specific
+> > fields, such as hw_res->mon_scale and resctrl filesystem fields
+> > by calling dom_data_init().
+> > 
+> > To separate the filesystem and architecture parts of resctrl, this
+> > function needs splitting up.
+> > 
+> > Add resctrl_mon_resource_init() to do the filesystem specific work,
+> > and call it from resctrl_init(). This runs later, but is still before
+> > the filesystem is mounted and the rmid_ptrs[] array can be used.
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > ---
+> >   arch/x86/kernel/cpu/resctrl/internal.h |  1 +
+> >   arch/x86/kernel/cpu/resctrl/monitor.c  | 24 +++++++++++++++++-------
+> >   arch/x86/kernel/cpu/resctrl/rdtgroup.c |  4 ++++
+> >   3 files changed, 22 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> > index 031948322eab..7a0c74779c53 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> > +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> > @@ -540,6 +540,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
+> >   void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
+> >   		    struct rdt_domain *d, struct rdtgroup *rdtgrp,
+> >   		    int evtid, int first);
+> > +int resctrl_mon_resource_init(void);
+> >   void mbm_setup_overflow_handler(struct rdt_domain *dom,
+> >   				unsigned long delay_ms,
+> >   				int exclude_cpu);
+> > diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > index 06565153ceb2..929ec1430b45 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> > @@ -1003,12 +1003,28 @@ static void l3_mon_evt_init(struct rdt_resource *r)
+> >   		list_add_tail(&mbm_local_event.list, &r->evt_list);
+> >   }
+> > +int resctrl_mon_resource_init(void)
+> > +{
+> > +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
+> > +	int ret;
+> > +
+> > +	if (!r->mon_capable)
+> > +		return 0;
+> > +
+> > +	ret = dom_data_init(r);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	l3_mon_evt_init(r);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> 
+> Now x86 platform defaults to all monitoring features on the L3 cache, but some monitoring features may also be on the L2 cache or memory controller according to the MPAM spec. For example, the memory bandwidth monitors could be on the memory controller.
+> 
+> Will resctrl_mon_resource_init() consider this scenario?
+> 
+> Best Regards,
+> Shawn
 
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 31749d8c35f8..6463b4a274d4 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -318,15 +318,13 @@ FULL_PROXY_FUNC(llseek, loff_t, filp,
- 		PROTO(struct file *filp, loff_t offset, int whence),
- 		ARGS(filp, offset, whence));
- 
--FULL_PROXY_FUNC(read, ssize_t, filp,
--		PROTO(struct file *filp, char __user *buf, size_t size,
--			loff_t *ppos),
--		ARGS(filp, buf, size, ppos));
-+FULL_PROXY_FUNC(read_iter, ssize_t, iocb->ki_filp,
-+		PROTO(struct kiocb *iocb, struct iov_iter *to),
-+		ARGS(iocb, to));
- 
--FULL_PROXY_FUNC(write, ssize_t, filp,
--		PROTO(struct file *filp, const char __user *buf, size_t size,
--			loff_t *ppos),
--		ARGS(filp, buf, size, ppos));
-+FULL_PROXY_FUNC(write_iter, ssize_t, iocb->ki_filp,
-+		PROTO(struct kiocb *iocb, struct iov_iter *from),
-+		ARGS(iocb, from));
- 
- FULL_PROXY_FUNC(unlocked_ioctl, long, filp,
- 		PROTO(struct file *filp, unsigned int cmd, unsigned long arg),
-@@ -376,10 +374,10 @@ static void __full_proxy_fops_init(struct file_operations *proxy_fops,
- 	proxy_fops->release = full_proxy_release;
- 	if (real_fops->llseek)
- 		proxy_fops->llseek = full_proxy_llseek;
--	if (real_fops->read)
--		proxy_fops->read = full_proxy_read;
--	if (real_fops->write)
--		proxy_fops->write = full_proxy_write;
-+	if (real_fops->read_iter)
-+		proxy_fops->read_iter = full_proxy_read_iter;
-+	if (real_fops->write_iter)
-+		proxy_fops->write_iter = full_proxy_write_iter;
- 	if (real_fops->poll)
- 		proxy_fops->poll = full_proxy_poll;
- 	if (real_fops->unlocked_ioctl)
-@@ -914,19 +912,17 @@ void debugfs_create_atomic_t(const char *name, umode_t mode,
- }
- EXPORT_SYMBOL_GPL(debugfs_create_atomic_t);
- 
--static ssize_t __debugfs_read_file_bool(struct file *file,
--					char __user *user_buf, size_t count,
--					loff_t *ppos)
-+ssize_t debugfs_read_file_bool(struct kiocb *iocb, struct iov_iter *to)
- {
- 	char buf[2];
- 	bool val;
- 	int r;
--	struct dentry *dentry = F_DENTRY(file);
-+	struct dentry *dentry = F_DENTRY(iocb->ki_filp);
- 
- 	r = debugfs_file_get(dentry);
- 	if (unlikely(r))
- 		return r;
--	val = *(bool *)file->private_data;
-+	val = *(bool *)iocb->ki_filp->private_data;
- 	debugfs_file_put(dentry);
- 
- 	if (val)
-@@ -934,25 +930,19 @@ static ssize_t __debugfs_read_file_bool(struct file *file,
- 	else
- 		buf[0] = 'N';
- 	buf[1] = '\n';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
--}
--
--ssize_t debugfs_read_file_bool(struct kiocb *iocb, struct iov_iter *to)
--{
--	return vfs_read_iter(iocb, to, __debugfs_read_file_bool);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- EXPORT_SYMBOL_GPL(debugfs_read_file_bool);
- 
--static ssize_t __debugfs_write_file_bool(struct file *file,
--					 const char __user *user_buf,
--					 size_t count, loff_t *ppos)
-+ssize_t debugfs_write_file_bool(struct kiocb *iocb, struct iov_iter *from)
- {
- 	bool bv;
- 	int r;
--	bool *val = file->private_data;
--	struct dentry *dentry = F_DENTRY(file);
-+	bool *val = iocb->ki_filp->private_data;
-+	struct dentry *dentry = F_DENTRY(iocb->ki_filp);
-+	size_t count = iov_iter_count(from);
- 
--	r = kstrtobool_from_user(user_buf, count, &bv);
-+	r = kstrtobool_from_iter(from, count, &bv);
- 	if (!r) {
- 		r = debugfs_file_get(dentry);
- 		if (unlikely(r))
-@@ -964,12 +954,6 @@ static ssize_t __debugfs_write_file_bool(struct file *file,
- 	return count;
- }
- 
--ssize_t debugfs_write_file_bool(struct kiocb *iocb, struct iov_iter *from)
--{
--	return vfs_write_iter(iocb, from, __debugfs_write_file_bool);
--}
--EXPORT_SYMBOL_GPL(debugfs_write_file_bool);
--
- static const struct file_operations fops_bool = {
- 	.read_iter =	debugfs_read_file_bool,
- 	.write_iter =	debugfs_write_file_bool,
--- 
-2.43.0
+My understanding is limited here, so this will probably have to wait
+until James gets back for a full answer.
 
+The resctrl userspace filesystem interface looks like it can describe
+monitors at multiple levels of the memory system, so my assumption would
+be that it should be possible to wire it up.
+
+This series focuses on refactoring and does not try to add new
+functionality, though.
+
+Cheers
+---Dave
