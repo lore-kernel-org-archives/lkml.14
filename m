@@ -1,63 +1,63 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCC71B5C71
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B7D1B680C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849818; cv=none; b=tAZDXfW7ZzAFWjxR3GF1v46MVUwpevXdW8eIESApz8XZA4pkcLTZ6HXuZzmdCJfMjem9WciTtysri/bySysvm3cyMSxTSRZNLuL4D1UrHX3Gdkatd0W6mRvcH12sEgvB+TXb1lso+4CG4H1zLorI8bcBlJI3PsrhyAdXQYmtmDM=
+	t=1712849820; cv=none; b=FJa9AZp1XF4fDGo355Wre1g510FxJVq0cYy0LCUKpEVdS/lYoQ2m/cbvSZMKrk1AIcSSrhLemw33+kC62V7fFGJAn7dlNdlnkfl+0UtxlXOTBhy4IJRrBCFpj0r4JhdtXIle/lwaGmfklcV1BPfnKl0DsLabMT3KriJh1gDD9PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849818; c=relaxed/simple;
-	bh=CC1svicLdhaCZjlfFeGhHfz/dADQtWSLZWgsjapD24o=;
+	s=arc-20240116; t=1712849820; c=relaxed/simple;
+	bh=O7lZ/hhLmBQ7iZ9zpUnKqu87tUwBAsVmNJtxcuJqXS0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QePY4HY6G6NFQCi53h0kzuEsLi85+cbgRK3wijtVVim9oXifVfQftoEtYRt9PmxXE+NI3osVhpEqFEielfGEMDkbUBU86Wrr5S5iRFiKOInC4RBSlDweOCjbqE3RPIpVyDec36J5WVQggTmGZzhS9Ndd4zY7+ZoZo67E2a9pSQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Vx3+GN7z; arc=none smtp.client-ip=209.85.166.46
+	 MIME-Version; b=VypCEdO3f0igdoN7obHKS2TpGXleRHxi/CbY1R+b7XLxL5fn1SNT57F8D9l/jgqfHIgI7td/H8sjc/Thpv/3DSBn+rhWNXRjbajcNahkk8/r8zSFLeRBr7/WZIlSHORWAAaQgwc0tEVv5FD6El8Tx+lLdxuFnBlJA+60PSiMzvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jfk00Jsz; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Vx3+GN7z"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8962739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jfk00Jsz"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8964339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849815; x=1713454615; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849818; x=1713454618; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l+P5h9EHRqAZnU4fmhFvxdCq3ZFo6GEMZOC+/tcWY+Q=;
-        b=Vx3+GN7zSp9uTMXiiGovRZb166y+aQlT46eCKmK8GXOIYocDZBui/sFWKCeHuSr12N
-         epp8Q2B+31/fdrAV4ZJdE+EMrHirPDgYKjApuUORoyJm2/Vad4n6NhXcjcYkTyn0Etry
-         U6yjnk9MYG+drfZ7RyrQx0WsE8wtdkY2IiG4PNfq2h+sWm/yBE/dERzUFGBzgZ2FY2z+
-         MwjCYS75DzUVIhQD0AaTENBlNMEz4maiyNiF71FJsL5cdG2woAP2LDc57tpCEMzIk/Tj
-         9RC2Ej+X7uKY01Xs8bMQ2E465QwQWsxfoAZEPqfavA7mh1KiMnWcVNmgX9vN2og6Mxx6
-         yLcg==
+        bh=vMmAvR/fEaupoAUATuQL+LXaXxKdjFUmcU+pS5j3aQM=;
+        b=jfk00JsztQkZ0oTR/ZugWu8mN1UfHQliO8Vz2ObkbQura8PdgaYcqvKeAnUhzpUv9o
+         sNDFK3kHxs4B2SUaoM91mrjuA7ZlyreIjxP68nHWdDuMDGMzssIMi/oDVh6pQ9wqmIU5
+         dIf170V7dSVOggL/+9LxpU1wx3UlAOCTmHIDsC/9E+/lBQCZTmlcgblJV6JLHZD0AZ0w
+         H93ZemfqAULMoXKI1C7c/RVYBE9jXUJA9itsINekT44FZ79NtXq9W4+vrFahdJo1g9+a
+         Yja4cbOvjpyB8J+vugLL1SF/6XNG3chAgugTL+m6KQbmjGf3lGHJYhebW6cKsqpN2VAI
+         9K7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849815; x=1713454615;
+        d=1e100.net; s=20230601; t=1712849818; x=1713454618;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=l+P5h9EHRqAZnU4fmhFvxdCq3ZFo6GEMZOC+/tcWY+Q=;
-        b=NoAn46wCS2bXr5Mp3hQOiiBSW3uO5HkrXH2gLHsTPqoX+U+bX7o6K8/prhOHgrR6Pv
-         XG1xEJAV6w5Z+FsDJJV8IrfB1TFFLC1M9c3KiZTz4yM8o6bHdqOfQMwKh/k+PVnYktyg
-         KLDthZyzaBSO9LKdEGWnCpnGYwIrwex7Es/2epp6/CEjRtWUrEqBkmk+2TvYXSTVZePY
-         Jj6DaYADgjgzIfG7PqI0bCVPVmbnk8+hA+ugicXs0tSUfQaXr6ITYbZ1O5+Uqe5pN0gk
-         jXvfct3mKISZHgdq9FsuyxmfbDN+EN5CmIP3L/+vScTUUFYVQ4PiMQiS91vFrc4I+tRz
-         +A9A==
-X-Gm-Message-State: AOJu0Yx6JmfOv1eq4xDSWtOtKaQ4mFZ/X9l9+lbMsC+d3eC5nrSkBpbz
-	8A3ltPM1UTHxaEYASMAEAgqDa5MSmjVni1iLaZeK9w9XzeqCiY/161lXjSKljdGZwVqRMOLthy9
-	b
-X-Google-Smtp-Source: AGHT+IGDBdNyh7jdQ201cBXvSwj8qQJzK6uSpttLxgyYt5o8rwY9vuij5Z8tDQL9xw66cbUEjXPYKg==
-X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr223815ioh.0.1712849815292;
-        Thu, 11 Apr 2024 08:36:55 -0700 (PDT)
+        bh=vMmAvR/fEaupoAUATuQL+LXaXxKdjFUmcU+pS5j3aQM=;
+        b=SDXFA0C7Al3GKxNy7i1PYq3BNVayyn95g8z0t5CN8aFrXhkR638b9OKmfXMjAjuVix
+         kG5zD4frmD7+nE8ngUxr/WnSTohNW0KvJu6jtiSJ9V4YLm4+kzXRhYhsSiiluYU+/+Kb
+         wlmgFGSw8hVt0b5T4vFGh17T92ek+r5Aak4QC0Z536CsdjE9RmKqqKA9R5y7GjAtAF+A
+         PRe6WRQKQcLnRZ3jKSeehPOpUSVt+JN5cyIsyiXKeNl1wGOtISCVVZGh1JdoKYRsyNTk
+         9zDh8brh7a0UVwik2B5PEqNk9fHDT7exRewLfXjzZsrS6v3df1zFZSlSSwGUDiGxwHhS
+         XvDw==
+X-Gm-Message-State: AOJu0YycPguTfX3Nh0vqeqIWaz2qufw/7CQUq1LlQvrBl85g/IweX4ef
+	dZV7EkZK8YbAFLt9TIR9saLqpYBlPKkDONwxgSLSeKj8fVW4jN7vGR1T5QPDz1MJ8vUYFcKVEvO
+	D
+X-Google-Smtp-Source: AGHT+IEY0ef6J/nJCsO51GHWZB/gDmrRUuk9I+hMPeWKmkwlwDMev9yXPHFZrRnqXXfnlbNgZ897ng==
+X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr223899ioh.0.1712849817966;
+        Thu, 11 Apr 2024 08:36:57 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.53
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:36:53 -0700 (PDT)
+        Thu, 11 Apr 2024 08:36:57 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 188/437] scsi: hisi_sas: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:28 -0600
-Message-ID: <20240411153126.16201-189-axboe@kernel.dk>
+Subject: [PATCH 190/437] scsi: megaraid: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:15:30 -0600
+Message-ID: <20240411153126.16201-191-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,266 +71,39 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 105 ++++++++++++-------------
- 1 file changed, 52 insertions(+), 53 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_debugfs.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 7d2a33514538..79ad1662f601 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -3858,17 +3858,17 @@ static void debugfs_create_files_v3_hw(struct hisi_hba *hisi_hba)
- 			    &debugfs_ras_v3_hw_fops);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_debugfs.c b/drivers/scsi/megaraid/megaraid_sas_debugfs.c
+index c69760775efa..d0b8626eebd8 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_debugfs.c
++++ b/drivers/scsi/megaraid/megaraid_sas_debugfs.c
+@@ -45,15 +45,14 @@
+ struct dentry *megasas_debugfs_root;
+ 
+ static ssize_t
+-megasas_debugfs_read(struct file *filp, char __user *ubuf, size_t cnt,
+-		      loff_t *ppos)
++megasas_debugfs_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct megasas_debugfs_buffer *debug = filp->private_data;
++	struct megasas_debugfs_buffer *debug = iocb->ki_filp->private_data;
+ 
+ 	if (!debug || !debug->buf)
+ 		return 0;
+ 
+-	return simple_read_from_buffer(ubuf, cnt, ppos, debug->buf, debug->len);
++	return simple_copy_to_iter(debug->buf, &iocb->ki_pos, debug->len, to);
  }
  
--static ssize_t debugfs_trigger_dump_v3_hw_write(struct file *file,
--						const char __user *user_buf,
--						size_t count, loff_t *ppos)
-+static ssize_t debugfs_trigger_dump_v3_hw_write(struct kiocb *iocb,
-+						struct iov_iter *from)
- {
--	struct hisi_hba *hisi_hba = file->f_inode->i_private;
-+	struct hisi_hba *hisi_hba = iocb->ki_filp->f_inode->i_private;
-+	size_t count = iov_iter_count(from);
- 	char buf[8];
- 
- 	if (count > 8)
- 		return -EFAULT;
- 
--	if (copy_from_user(buf, user_buf, count))
-+	if (!copy_from_iter_full(buf, count, from))
- 		return -EFAULT;
- 
- 	if (buf[0] != '1')
-@@ -3885,7 +3885,7 @@ static ssize_t debugfs_trigger_dump_v3_hw_write(struct file *file,
- }
- 
- static const struct file_operations debugfs_trigger_dump_v3_hw_fops = {
--	.write = &debugfs_trigger_dump_v3_hw_write,
-+	.write_iter = debugfs_trigger_dump_v3_hw_write,
- 	.owner = THIS_MODULE,
- };
- 
-@@ -3923,12 +3923,12 @@ static int debugfs_bist_linkrate_v3_hw_show(struct seq_file *s, void *p)
- 	return 0;
- }
- 
--static ssize_t debugfs_bist_linkrate_v3_hw_write(struct file *filp,
--						 const char __user *buf,
--						 size_t count, loff_t *ppos)
-+static ssize_t debugfs_bist_linkrate_v3_hw_write_iter(struct kiocb *iocb,
-+						      struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
- 	struct hisi_hba *hisi_hba = m->private;
-+	size_t count = iov_iter_count(from);
- 	char kbuf[16] = {}, *pkbuf;
- 	bool found = false;
- 	int i;
-@@ -3939,7 +3939,7 @@ static ssize_t debugfs_bist_linkrate_v3_hw_write(struct file *filp,
- 	if (count >= sizeof(kbuf))
- 		return -EOVERFLOW;
- 
--	if (copy_from_user(kbuf, buf, count))
-+	if (!copy_from_iter_full(kbuf, count, from))
- 		return -EINVAL;
- 
- 	pkbuf = strstrip(kbuf);
-@@ -3997,12 +3997,11 @@ static int debugfs_bist_code_mode_v3_hw_show(struct seq_file *s, void *p)
- 	return 0;
- }
- 
--static ssize_t debugfs_bist_code_mode_v3_hw_write(struct file *filp,
--						  const char __user *buf,
--						  size_t count,
--						  loff_t *ppos)
-+static ssize_t debugfs_bist_code_mode_v3_hw_write_iter(struct kiocb *iocb,
-+						       struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct hisi_hba *hisi_hba = m->private;
- 	char kbuf[16] = {}, *pkbuf;
- 	bool found = false;
-@@ -4014,7 +4013,7 @@ static ssize_t debugfs_bist_code_mode_v3_hw_write(struct file *filp,
- 	if (count >= sizeof(kbuf))
- 		return -EINVAL;
- 
--	if (copy_from_user(kbuf, buf, count))
-+	if (!copy_from_iter_full(kbuf, count, from))
- 		return -EOVERFLOW;
- 
- 	pkbuf = strstrip(kbuf);
-@@ -4036,19 +4035,19 @@ static ssize_t debugfs_bist_code_mode_v3_hw_write(struct file *filp,
- }
- DEFINE_SHOW_STORE_ATTRIBUTE(debugfs_bist_code_mode_v3_hw);
- 
--static ssize_t debugfs_bist_phy_v3_hw_write(struct file *filp,
--					    const char __user *buf,
--					    size_t count, loff_t *ppos)
-+static ssize_t debugfs_bist_phy_v3_hw_write_iter(struct kiocb *iocb,
-+						 struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
- 	struct hisi_hba *hisi_hba = m->private;
-+	size_t count = iov_iter_count(from);
- 	unsigned int phy_no;
- 	int val;
- 
- 	if (hisi_hba->debugfs_bist_enable)
- 		return -EPERM;
- 
--	val = kstrtouint_from_user(buf, count, 0, &phy_no);
-+	val = kstrtouint_from_iter(from, count, 0, &phy_no);
- 	if (val)
- 		return val;
- 
-@@ -4070,19 +4069,19 @@ static int debugfs_bist_phy_v3_hw_show(struct seq_file *s, void *p)
- }
- DEFINE_SHOW_STORE_ATTRIBUTE(debugfs_bist_phy_v3_hw);
- 
--static ssize_t debugfs_bist_cnt_v3_hw_write(struct file *filp,
--					const char __user *buf,
--					size_t count, loff_t *ppos)
-+static ssize_t debugfs_bist_cnt_v3_hw_write_iter(struct kiocb *iocb,
-+						 struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
- 	struct hisi_hba *hisi_hba = m->private;
-+	size_t count = iov_iter_count(from);
- 	unsigned int cnt;
- 	int val;
- 
- 	if (hisi_hba->debugfs_bist_enable)
- 		return -EPERM;
- 
--	val = kstrtouint_from_user(buf, count, 0, &cnt);
-+	val = kstrtouint_from_iter(from, count, 0, &cnt);
- 	if (val)
- 		return val;
- 
-@@ -4130,12 +4129,12 @@ static int debugfs_bist_mode_v3_hw_show(struct seq_file *s, void *p)
- 	return 0;
- }
- 
--static ssize_t debugfs_bist_mode_v3_hw_write(struct file *filp,
--					     const char __user *buf,
--					     size_t count, loff_t *ppos)
-+static ssize_t debugfs_bist_mode_v3_hw_write_iter(struct kiocb *iocb,
-+						  struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
- 	struct hisi_hba *hisi_hba = m->private;
-+	size_t count = iov_iter_count(from);
- 	char kbuf[16] = {}, *pkbuf;
- 	bool found = false;
- 	int i;
-@@ -4146,7 +4145,7 @@ static ssize_t debugfs_bist_mode_v3_hw_write(struct file *filp,
- 	if (count >= sizeof(kbuf))
- 		return -EINVAL;
- 
--	if (copy_from_user(kbuf, buf, count))
-+	if (!copy_from_iter_full(kbuf, count, from))
- 		return -EOVERFLOW;
- 
- 	pkbuf = strstrip(kbuf);
-@@ -4167,16 +4166,16 @@ static ssize_t debugfs_bist_mode_v3_hw_write(struct file *filp,
- }
- DEFINE_SHOW_STORE_ATTRIBUTE(debugfs_bist_mode_v3_hw);
- 
--static ssize_t debugfs_bist_enable_v3_hw_write(struct file *filp,
--					       const char __user *buf,
--					       size_t count, loff_t *ppos)
-+static ssize_t debugfs_bist_enable_v3_hw_write_iter(struct kiocb *iocb,
-+						    struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
- 	struct hisi_hba *hisi_hba = m->private;
-+	size_t count = iov_iter_count(from);
- 	unsigned int enable;
- 	int val;
- 
--	val = kstrtouint_from_user(buf, count, 0, &enable);
-+	val = kstrtouint_from_iter(from, count, 0, &enable);
- 	if (val)
- 		return val;
- 
-@@ -4218,15 +4217,15 @@ static const struct {
- 	{ "SATA_6_0_GBPS" },
- };
- 
--static ssize_t debugfs_v3_hw_write(struct file *filp,
--				   const char __user *buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t debugfs_v3_hw_write_iter(struct kiocb *iocb,
-+					struct iov_iter *from)
- {
--	struct seq_file *m = filp->private_data;
-+	struct seq_file *m = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	u32 *val = m->private;
- 	int res;
- 
--	res = kstrtouint_from_user(buf, count, 0, val);
-+	res = kstrtouint_from_iter(from, count, 0, val);
- 	if (res)
- 		return res;
- 
-@@ -4243,16 +4242,16 @@ static int debugfs_v3_hw_show(struct seq_file *s, void *p)
- }
- DEFINE_SHOW_STORE_ATTRIBUTE(debugfs_v3_hw);
- 
--static ssize_t debugfs_phy_down_cnt_v3_hw_write(struct file *filp,
--						const char __user *buf,
--						size_t count, loff_t *ppos)
-+static ssize_t debugfs_phy_down_cnt_v3_hw_write_iter(struct kiocb *iocb,
-+						     struct iov_iter *from)
- {
--	struct seq_file *s = filp->private_data;
-+	struct seq_file *s = iocb->ki_filp->private_data;
- 	struct hisi_sas_phy *phy = s->private;
-+	size_t count = iov_iter_count(from);
- 	unsigned int set_val;
- 	int res;
- 
--	res = kstrtouint_from_user(buf, count, 0, &set_val);
-+	res = kstrtouint_from_iter(from, count, 0, &set_val);
- 	if (res)
- 		return res;
- 
-@@ -4370,15 +4369,15 @@ static int debugfs_update_fifo_config_v3_hw(struct hisi_sas_phy *phy)
- 	return 0;
- }
- 
--static ssize_t debugfs_fifo_update_cfg_v3_hw_write(struct file *filp,
--						   const char __user *buf,
--						   size_t count, loff_t *ppos)
-+static ssize_t debugfs_fifo_update_cfg_v3_hw_write(struct kiocb *iocb,
-+						   struct iov_iter *from)
- {
--	struct hisi_sas_phy *phy = filp->private_data;
-+	struct hisi_sas_phy *phy = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	bool update;
- 	int val;
- 
--	val = kstrtobool_from_user(buf, count, &update);
-+	val = kstrtobool_from_iter(from, count, &update);
- 	if (val)
- 		return val;
- 
-@@ -4394,7 +4393,7 @@ static ssize_t debugfs_fifo_update_cfg_v3_hw_write(struct file *filp,
- 
- static const struct file_operations debugfs_fifo_update_cfg_v3_hw_fops = {
- 	.open = simple_open,
--	.write = debugfs_fifo_update_cfg_v3_hw_write,
-+	.write_iter = debugfs_fifo_update_cfg_v3_hw_write,
- 	.owner = THIS_MODULE,
+ static int
+@@ -92,7 +91,7 @@ megasas_debugfs_release(struct inode *inode, struct file *file)
+ static const struct file_operations megasas_debugfs_raidmap_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open           = megasas_debugfs_raidmap_open,
+-	.read           = megasas_debugfs_read,
++	.read_iter      = megasas_debugfs_read,
+ 	.release        = megasas_debugfs_release,
  };
  
 -- 
