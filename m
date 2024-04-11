@@ -1,213 +1,116 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51241E3144
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 17:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A1B15E7E4;
+	Thu, 11 Apr 2024 17:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712855418; cv=none; b=ERv7etxpitrRuyvn0b61sQK9OQE4MPZ5UeGCnfqSueCJJ5O8X2BC5iCyYjPCEm+WX7NQvul4bjBRFXy0WfhTJE8wcW2je4vSiAe5bcPIbE+UaxX44UBI4ds6j+KhzTU+baUvbicv3YtsRNdngUMOlpxiFxHZmMjRVmHoopv5ZeQ=
+	t=1712855550; cv=none; b=hIDoAfTXm5WLy8rnMXRX2gmRJ/JBEzi3dWbf71z86EdF7Fa3rC9iKaa2Wh9WkgGwSevhxfz2EOYC95uNODqPX89dykdjKaBckZkA2UiyH2x6oNINY2+PfWtMYTTk58K8O5dUsr9irXAob0E7MTII3qDv+Mv8woKcHymw0pebTEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712855418; c=relaxed/simple;
-	bh=dmKeq3gjQHketjHdFgh0tTPetYNhcUGY5aju66evTiw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IGP4SJjT0aazdTRi9sBKmxwsqIbVlf8Cq8E25wkKWSOqPtqh/vUJc2C0IhTYOLBPrAn5MW+9bV/KaVJ5xmn2Co4MS4uORHNrsCktDGP65nAw4Q1ybnICwT9HKml2sBb9rubG6hxIUNGCZ9jPo0R3oWqVTwFbY4yAV372alfWoPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CceMjX6l; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712855550; c=relaxed/simple;
+	bh=nWIC2wi/d7G1FnSaSYJnrH6f8AXjkGPfN3MaeSlImoI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MgRx1eL587acNkF3yCESsil5TyOvo1yBjygMMi5p/jIJe+vOqk4R1vZmDZdd4LveouH1Gne+ebaRsdLLdI2zpkuNXypEID5J/vTBzZki3V/aVMnmqO+G629kqVkvrxb2tXJsnpbpMaxpMgAZ+Ud3svsRhvRIY24L0anlK7OUq4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ys5e+9B1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CceMjX6l"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6ed663aa4a7so88114b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712855416; x=1713460216; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqXx6wTtROsa6SZ3KmJP214yZkN6Kwx8ERJJrHhG1vo=;
-        b=CceMjX6l2Cz45qzShKisH2VHL1AfeIkXJVgQUEqRCOvf0YxPB4oiJEiT/cMYoi8ugJ
-         rxNKvJvhjehzbrdebs2Ewz5fXDLhnQRAEheT721mvivbM5p6ujT6bBHppVCIkaVdspJc
-         qCG+d02BdJGYg6P0qQNLTI1NT/fp8AFVnVRwbrawYjprmk2T+0wNUONVc+x9d5Fykxhi
-         ZxnNlCuBfYtu8igG/9JWl7CJY6Etn9DUp4MXGUyQCopAr6YfJB/8DbR+ab2Zif9dmQPh
-         39OXWHTLriN8Cuegmbc5EPzYyP55GovnDUlVJ/08XtYyfV7clG7R0whcX3YenVBNPakN
-         0APg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712855416; x=1713460216;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rqXx6wTtROsa6SZ3KmJP214yZkN6Kwx8ERJJrHhG1vo=;
-        b=PzlVQgybZWCzpzsVwEuHx6uxcnG1k67lDUdiD/oF460CgkcOZxWV89UwPns+Oxhy1P
-         eyUX/eDiTFAXy0yyFUQ1cEbnGh32q5UiqzoylVIaVIn7Ow5gO8YvMWg9+z/bpPJ+QIkQ
-         /F8UVEkNHEuxsw4Wse0UZK4qYjL2rjvzhpX4CassZsLhY0tJMPwWOJEf9ZmQ0IK237Ac
-         VYJlYjcBWUpswl93aLIpJ9trJdEKWJns6dpYjc1Yzw6vQTkXoy6+9o8paHKHHb7QZ63F
-         PuM8DrAEd+mxbaE8lx+pTjWYAiTACb9JzMalQrdaZLXI/kPXfkbZRK4g0QZfIOwuQVlz
-         jQ5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXR0XW7M2CgQIhhiVC9SoNx5RMZ78ZHweVnwjVZIdgKj2Q4N3Yw3Zq6pqZyK7VZ2JoWs6JXic+Cz62rGg6Sgrw/YR69h2HH0vcYOjPh
-X-Gm-Message-State: AOJu0YztxbnE148wFv75kdMcBWvLJ5x54TTPDlIWJU8gaucbJs9CZD/4
-	zEFPQx3qbVhkGSAb+LSLwJ7Yb/BjC0wJ38mXxVZug/N6onp4l944WLKqMjhZogygOvKih44Plrh
-	eHQ==
-X-Google-Smtp-Source: AGHT+IEWqI08gfw2t+6Fzb+9wExPbJl6VfWkbAcDvPmIq8ztEkz7m45QcxqiyQ2biLbx6nyvk5kMDoNGazI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6a00:3986:b0:6ec:ee42:b143 with SMTP id
- fi6-20020a056a00398600b006ecee42b143mr7598pfb.2.1712855416032; Thu, 11 Apr
- 2024 10:10:16 -0700 (PDT)
-Date: Thu, 11 Apr 2024 10:10:14 -0700
-In-Reply-To: <20240126085444.324918-5-xiong.y.zhang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ys5e+9B1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA1AAC2BBFC;
+	Thu, 11 Apr 2024 17:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712855550;
+	bh=nWIC2wi/d7G1FnSaSYJnrH6f8AXjkGPfN3MaeSlImoI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ys5e+9B185oUwpdUtd+LklScSa352u/V+J8TEqGkCGID65NLEW2FnlpYztTd6CZK8
+	 Vq/KiOZO7STsr7y4XBllcQk+hDhZKAs+rZ03PpZjV+xJf4xFX5e4rC3cdyefl9fBBc
+	 y9ZQ2ml50fam4d8z8g96w77/XciJlJ6dglM/O7ynakEVDWYNgE6pbF5dQ7hKV6r8Ag
+	 wwmwuiolva2whhzJb3y+VUn2pDLYCHIX06JDiN4+uoeoKe+KLwU1uoMpCkl3KT7DxW
+	 hq3cNpppWireKlQ9f3GEMHU6e7onUjJKI/46UAFMCvkVX+AQoGiCGBFEQ2ZGbnxwFw
+	 n3wb52pEynpFQ==
+From: SeongJae Park <sj@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	stable@vger.kernel.org,
+	patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org,
+	akpm@linux-foundation.org,
+	linux@roeck-us.net,
+	shuah@kernel.org,
+	patches@kernelci.org,
+	lkft-triage@lists.linaro.org,
+	pavel@denx.de,
+	jonathanh@nvidia.com,
+	f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net,
+	rwarsow@gmx.de,
+	conor@kernel.org,
+	allen.lkml@gmail.com,
+	broonie@kernel.org,
+	damon@lists.linux.dev
+Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
+Date: Thu, 11 Apr 2024 10:12:26 -0700
+Message-Id: <20240411171226.156386-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240411095407.982258070@linuxfoundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-5-xiong.y.zhang@linux.intel.com>
-Message-ID: <ZhgZdqAB6LlvJLof@google.com>
-Subject: Re: [RFC PATCH 04/41] perf: core/x86: Add support to register a new
- vector for PMI handling
-From: Sean Christopherson <seanjc@google.com>
-To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> From: Xiong Zhang <xiong.y.zhang@intel.com>
+Hello,
+
+On Thu, 11 Apr 2024 11:57:08 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+> This is the start of the stable review cycle for the 5.15.155 release.
+> There are 57 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Create a new vector in the host IDT for PMI handling within a passthrough
-> vPMU implementation. In addition, add a function to allow the registration
-> of the handler and a function to switch the PMI handler.
+> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
+> Anything received after that time might be too late.
 > 
-> This is the preparation work to support KVM passthrough vPMU to handle its
-> own PMIs without interference from PMI handler of the host PMU.
-> 
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/include/asm/hardirq.h           |  1 +
->  arch/x86/include/asm/idtentry.h          |  1 +
->  arch/x86/include/asm/irq.h               |  1 +
->  arch/x86/include/asm/irq_vectors.h       |  2 +-
->  arch/x86/kernel/idt.c                    |  1 +
->  arch/x86/kernel/irq.c                    | 29 ++++++++++++++++++++++++
->  tools/arch/x86/include/asm/irq_vectors.h |  1 +
->  7 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
-> index 66837b8c67f1..c1e2c1a480bf 100644
-> --- a/arch/x86/include/asm/hardirq.h
-> +++ b/arch/x86/include/asm/hardirq.h
-> @@ -19,6 +19,7 @@ typedef struct {
->  	unsigned int kvm_posted_intr_ipis;
->  	unsigned int kvm_posted_intr_wakeup_ipis;
->  	unsigned int kvm_posted_intr_nested_ipis;
-> +	unsigned int kvm_vpmu_pmis;
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.155-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
 
-Somewhat off topic, does anyone actually ever use these particular stats?  If the
-desire is to track _all_ IRQs, why not have an array and bump the counts in common
-code?
+This rc kernel passes DAMON functionality test[1] on my test machine.
+Attaching the test results summary below.  Please note that I retrieved the
+kernel from linux-stable-rc tree[2].
 
->  #endif
->  	unsigned int x86_platform_ipis;	/* arch dependent */
->  	unsigned int apic_perf_irqs;
-> diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
-> index 05fd175cec7d..d1b58366bc21 100644
-> --- a/arch/x86/include/asm/idtentry.h
-> +++ b/arch/x86/include/asm/idtentry.h
-> @@ -675,6 +675,7 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);
->  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
->  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	sysvec_kvm_posted_intr_wakeup_ipi);
->  DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	sysvec_kvm_posted_intr_nested_ipi);
-> +DECLARE_IDTENTRY_SYSVEC(KVM_VPMU_VECTOR,	        sysvec_kvm_vpmu_handler);
+Tested-by: SeongJae Park <sj@kernel.org>
 
-I vote for KVM_VIRTUAL_PMI_VECTOR.  I don't see any reasy to abbreviate "virtual",
-and the vector is a for a Performance Monitoring Interupt.
+[1] https://github.com/awslabs/damon-tests/tree/next/corr
+[2] 857e7024b96f ("Linux 5.15.155-rc1")
 
->  #endif
->  
->  #if IS_ENABLED(CONFIG_HYPERV)
-> diff --git a/arch/x86/include/asm/irq.h b/arch/x86/include/asm/irq.h
-> index 836c170d3087..ee268f42d04a 100644
-> --- a/arch/x86/include/asm/irq.h
-> +++ b/arch/x86/include/asm/irq.h
-> @@ -31,6 +31,7 @@ extern void fixup_irqs(void);
->  
->  #ifdef CONFIG_HAVE_KVM
->  extern void kvm_set_posted_intr_wakeup_handler(void (*handler)(void));
-> +extern void kvm_set_vpmu_handler(void (*handler)(void));
+Thanks,
+SJ
 
-virtual_pmi_handler()
+[...]
 
->  #endif
->  
->  extern void (*x86_platform_ipi_callback)(void);
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 3a19904c2db6..120403572307 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -77,7 +77,7 @@
->   */
->  #define IRQ_WORK_VECTOR			0xf6
->  
-> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
-> +#define KVM_VPMU_VECTOR			0xf5
+---
 
-This should be inside
-
-	#ifdef CONFIG_HAVE_KVM
-
-no?
-
->  #define DEFERRED_ERROR_VECTOR		0xf4
->  
->  /* Vector on which hypervisor callbacks will be delivered */
-> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-> index 8857abc706e4..6944eec251f4 100644
-> --- a/arch/x86/kernel/idt.c
-> +++ b/arch/x86/kernel/idt.c
-> @@ -157,6 +157,7 @@ static const __initconst struct idt_data apic_idts[] = {
->  	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
->  	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
->  	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
-> +	INTG(KVM_VPMU_VECTOR,		        asm_sysvec_kvm_vpmu_handler),
-
-kvm_virtual_pmi_handler
-
-> @@ -332,6 +351,16 @@ DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi)
->  	apic_eoi();
->  	inc_irq_stat(kvm_posted_intr_nested_ipis);
->  }
-> +
-> +/*
-> + * Handler for KVM_PT_PMU_VECTOR.
-
-Heh, not sure where the PT part came from...
-
-> + */
-> +DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_vpmu_handler)
-> +{
-> +	apic_eoi();
-> +	inc_irq_stat(kvm_vpmu_pmis);
-> +	kvm_vpmu_handler();
-> +}
->  #endif
->  
->  
-> diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-> index 3a19904c2db6..3773e60f1af8 100644
-> --- a/tools/arch/x86/include/asm/irq_vectors.h
-> +++ b/tools/arch/x86/include/asm/irq_vectors.h
-> @@ -85,6 +85,7 @@
->  
->  /* Vector for KVM to deliver posted interrupt IPI */
->  #ifdef CONFIG_HAVE_KVM
-> +#define KVM_VPMU_VECTOR			0xf5
-
-Heh, and your copy+paste is out of date.
-
->  #define POSTED_INTR_VECTOR		0xf2
->  #define POSTED_INTR_WAKEUP_VECTOR	0xf1
->  #define POSTED_INTR_NESTED_VECTOR	0xf0
-> -- 
-> 2.34.1
-> 
+ok 1 selftests: damon: debugfs_attrs.sh
+ok 1 selftests: damon-tests: kunit.sh
+ok 2 selftests: damon-tests: huge_count_read_write.sh
+ok 3 selftests: damon-tests: buffer_overflow.sh
+ok 4 selftests: damon-tests: rm_contexts.sh
+ok 5 selftests: damon-tests: record_null_deref.sh
+ok 6 selftests: damon-tests: dbgfs_target_ids_read_before_terminate_race.sh
+ok 7 selftests: damon-tests: dbgfs_target_ids_pid_leak.sh
+ok 8 selftests: damon-tests: damo_tests.sh
+ok 9 selftests: damon-tests: masim-record.sh
+ok 10 selftests: damon-tests: build_i386.sh
+ok 11 selftests: damon-tests: build_arm64.sh
+ok 12 selftests: damon-tests: build_m68k.sh
+ok 13 selftests: damon-tests: build_i386_idle_flag.sh
+ok 14 selftests: damon-tests: build_i386_highpte.sh
+ok 15 selftests: damon-tests: build_nomemcg.sh
+ [33m
+ [92mPASS [39m
