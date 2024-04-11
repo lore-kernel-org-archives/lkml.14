@@ -1,139 +1,281 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.167])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A52C13CA96;
-	Thu, 11 Apr 2024 06:51:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818271; cv=none; b=DKQPkfa1gEpjFxK1kpkMvGqb37iHPSICjNyvhAHQHhPExG063gAk4T+x6oD63EB+ebZIa7rrP3eQeqEOMlf4qGkd0XLloO6qif5V/w8doKgEegYJn1grNU1XnF1X3tREcbxN4vcJYlcf2WH1V7wT2foENAEXTbZMTRV+Up+NMyE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818271; c=relaxed/simple;
-	bh=asJDC2tCsCIKUlk1uvdNpI9ztJYtDMb1G5pVM5ATV0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qEJFRP/mSqMR2LYTxX8v5Ox8yC/EKx8F+7JHUGnfhaYm0Bh2vhnsPu7e92D21QZcYD5qyryos2DjGxp2Jle5GJt/Q/ocq2PYw8XNtskJfnUcrWAroFD49L7zLloIt2zoiopnqJrPbOldxLh5eicS4VMQ67Fg4XLWQ12d1e0OU20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=BH8mVLxJ; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=uHO55evr reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2488F13CA96;
+	Thu, 11 Apr 2024 06:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.167
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712818326; cv=pass; b=tbBlYTJrggmvGa3GQS6r4dREjmlU5KjrmBoZE3sTFbagqeosV7ez1HoOSbWVngrFdgUhQQOYxOyYU1M8Te0leYS25ufz5WwNLLgGplm50Ee1lHrMEVf6K800R5Mk/hDGmO+LYWcq/SEtqcwM7iqJH70IECng6Ox8CR+a3N5hXcs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712818326; c=relaxed/simple;
+	bh=TH4HZtEjG/LwmYSC5o0HNA9LRh0YL4WwK9LPpSWAYQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUKSqm5zQlzyuy9ZwPXXAV9VG/vHQNWVCXU+jlzQLnDRC+FYihgH4WVcSkhRJ8BvkTRK7cPWFVul6gRrMxiWVoWvQIB3XXJ1Js9nqRMq6GQkQDBBz1jAkydxc96/XCmafG/yqvwbNLXOgR2gozguqc1gnqPsN00iVqDsjxZEhAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=TJ8Txo6a; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=TlARS+X0; arc=pass smtp.client-ip=81.169.146.167
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="BH8mVLxJ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="uHO55evr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1712818266; x=1744354266;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Low/TPMD1pUUoPwWdlQu8aIxFappqVJowC749G0kgkI=;
-  b=BH8mVLxJvUETgnJ7BdguPxNCfkWVHUO1TeBqVEENcVAo+yUDH+W7keDV
-   FGDB66HKnkde7i4D4/WA93LIP3K45Zn6kPDGChDXodJAW0kOl9WcxN2i1
-   qehrsI0hMOHbrUwRpFUvCusI50UB33mK5ImT3Y8xcYnLO/X7IKwJe6AQz
-   q2rwT1GQeU/S1bD0AEl+YDadER5D8Xcec/XdxxrYEbs7Y8krf+blBnNwX
-   PORupnKcx/KvQuhHx0l25Q1wkHUNQWEaD+C+28XkroYxgDzdbBCHwZEoD
-   mWDJiVsU7hel5HBDT4cIljqlHpyYCnFk3VCkPv9yWPG9Mh/W82o31GCQ9
-   Q==;
-X-IronPort-AV: E=Sophos;i="6.07,192,1708383600"; 
-   d="scan'208";a="36358588"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 11 Apr 2024 08:49:52 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5FECC161507;
-	Thu, 11 Apr 2024 08:49:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1712818188;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=Low/TPMD1pUUoPwWdlQu8aIxFappqVJowC749G0kgkI=;
-	b=uHO55evrzbTutyrpVePZSFM48wYSp1zAa5AgL4Jam0q2mpwECoLv31npjAvfE5q5w90wXW
-	Uu4NBJB0OxIr+Iqx6OfJIAbbx8TpaZuYiOEddK8ODQT7PkSUAGhHrje8ibA2dGxyoDB11N
-	c3eW+GkVXXQL192tzqlp+SaoEN9s2x21itSGXy+1CLl05ZToEjk7xyqi6w2dvlJNRWcfFl
-	BMbY9qFB4rK2pDL/MA9J+5y/BXzohlLTYMSQ4eoD/80210zU2I3Hu1HdvhChBKPmVyEbtm
-	1LTI5pYXbAYRReatNAR6DvHImxw4NVComkW16X99qVI0d/FSlrRotlRj6eOWhQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 1/1] mmc: slot-gpio: Use irq_handler_t type
-Date: Thu, 11 Apr 2024 08:49:47 +0200
-Message-ID: <12416790.O9o76ZdvQC@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240410195618.1632778-1-andriy.shevchenko@linux.intel.com>
-References: <20240410195618.1632778-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="TJ8Txo6a";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="TlARS+X0"
+ARC-Seal: i=1; a=rsa-sha256; t=1712818320; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=V8iXPikpPqqlqbqu21p8ivJsMap4iH5bHN34ekv/bkLFtYgssRbJ7pGHD22mzdcqQi
+    ffgimiMvGc7rUVBWQMVfW3V9Nuxqa/OAYmDE00RzGrqFuJGaGtTOVpuE5eL0cGC5BT6B
+    s4tbElyr9WPRMdYsgJ6sfNcuLtj7kU5SMdQE3Iy5F1hbcZiybTTwRn+iGpXNAC56XZ0k
+    BD1IzCguRYe4w2ifTzwSf1lBMSOsn2Lu8IwYxs9c/LoO6iTWCi9GpsDZyTCBqRMBV0PF
+    hiQz+1NDoBEGsqQpQW50O6lGgSWyjOriQw4jyocnMg32xOZpm2aMtH3c3QRi3JujPomE
+    AB2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712818320;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=JFtOoHWMyTr+PHKm8LuDpKKbuPuSWvT6kPgYbpFClyk=;
+    b=nYYqb0WjX+sbyEZ6l2AhqT+K+zvqsGtCBfCjrVtGLHAUOE7KPiUWVJh2ko/Vwhq28J
+    xrUwW8sYUraNb16Sev8LNYP7Ey9PZxPMyWZ6Nbcwy/BQJB+mwBzF6IqJ4l/v27LWVv4V
+    Mv/gdwqAogMjbdsM/Mh0902E5ZXAc0RjDhgITx25WWdZTIBxhkLi6JZPxf6QuXPpFhmt
+    CBvOjhZfuvAMSfzn2Mi6hD27lz9+Dpt0yTLAZsog7gIyAy9ta7gHuiyokobBA1DLApmH
+    iBOxOq28jk4W9LIktBlffGOFAcmy+oENwdM7xvavLryAKlzDx+htZvN8WJ1nIK22P68a
+    qg4A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712818320;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=JFtOoHWMyTr+PHKm8LuDpKKbuPuSWvT6kPgYbpFClyk=;
+    b=TJ8Txo6auZYNQskve2e7sgGquK91scpaPth3RPe2juBtECrwBe9mEqeXDU7HALcTHb
+    UvHoFvyVcsjBFiXXwAQ6IKrr4VNIFGH3AKsW+BuWJMWN+gi7rlOQ1c0V/yBLhW2O5Gf/
+    6uQAYhZTAiuNm2L3oQmCHnxTzN6BK8kEK7uOd9ih5j1MvFOg45+2rJibQrGZ3TaHlXLA
+    ny+OO0WgKW6PYke3UTW6QgVTqXVVkMRKjXH0tp1fMsM0EmvqZPD/mZjauvD+hZh3fWwv
+    AFtJD4g+05H1Yrcu90LV74duopFJX8CR118bzBcF8fUz1V43SiXrjCQlgLKQswO85ev4
+    /HkA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712818320;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=JFtOoHWMyTr+PHKm8LuDpKKbuPuSWvT6kPgYbpFClyk=;
+    b=TlARS+X09eyH+QShynE0SPXdrh+WqcO8SyyFxOT8Ie8o5HDHKX4S9Tl/FWRxnjND5l
+    RZBvuDrTcrSYZaGxImAw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA+p3h"
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
+    with ESMTPSA id Raf12503B6pxZm2
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Thu, 11 Apr 2024 08:51:59 +0200 (CEST)
+Date: Thu, 11 Apr 2024 08:51:52 +0200
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sa8155p-adp: use correct gpio for
+ SDHC2 CD
+Message-ID: <ZheIiMZaTAFrxCOm@gerhold.net>
+References: <20240410134022.732767-1-volodymyr_babchuk@epam.com>
+ <Zhb53i8-pJhDMVZM@gerhold.net>
+ <87cyqw6fvh.fsf@epam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87cyqw6fvh.fsf@epam.com>
+Content-Transfer-Encoding: 7bit
 
-Am Mittwoch, 10. April 2024, 21:56:18 CEST schrieb Andy Shevchenko:
-> The irq_handler_t is already defined globally, let's use it
-> in slot-gpio code.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Wed, Apr 10, 2024 at 09:57:02PM +0000, Volodymyr Babchuk wrote:
+> Stephan Gerhold <stephan@gerhold.net> writes:
+> > On Wed, Apr 10, 2024 at 01:41:30PM +0000, Volodymyr Babchuk wrote:
+> >> Card Detect pin for SHDC2 on SA8155P-ADP is connected to GPIO4 of
+> >> PMM8155AU_1, not to internal TLMM. This change fixes two issues at
+> >> once: not working ethernet (because GPIO4 is used for MAC TX) and SD
+> >> detection.
+> >> 
+> >> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+> >> ---
+> >>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> >> index 5e4287f8c8cd1..6b08ce246b78c 100644
+> >> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> >> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> >> @@ -384,7 +384,7 @@ &remoteproc_cdsp {
+> >>  &sdhc_2 {
+> >>  	status = "okay";
+> >>  
+> >> -	cd-gpios = <&tlmm 4 GPIO_ACTIVE_LOW>;
+> >> +	cd-gpios = <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
+> >
+> > Good catch!
+> 
+> Yeah... It took time to understand why ethernet is not working
+> sometimes. It appeared that there were race between SDHC and MAC
+> initialization.
+> 
+> >
+> >>  	pinctrl-names = "default", "sleep";
+> >>  	pinctrl-0 = <&sdc2_on>;
+> >>  	pinctrl-1 = <&sdc2_off>;
+> >
+> > These two pinctrl configure "gpio96" for "sd-cd-pins". Yet another wrong
+> > GPIO? Should probably drop that and add proper pinctrl for the actual
+> > GPIO in the PMIC. Seems like Qualcomm configured the PMIC GPIO with
+> > pull-up downstream [1] (not sure if this is the right file). It might be
+> > redundant if there is an external pull-up on the board, but only the
+> > schematic could tell that for sure.
+> 
+> If I only had schematic for this board... gpio96 puzzles me as well. I
+> can understand where wrong GPIO4 come from. But gpio96 origin is
+> completely unclear. I have user manual for the board, it mention
+> functions of some GPIOs, but there is nothing about gpio96. Anyways, I
+> removed it from the DTS (see diff below) and I see no issues with SD card.
+> 
 
-Looks good to me:
-Reviewed-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+I believe this might have been mistakenly copied from some SM8150
+example, there you can occasionally find cd-gpios defined as <&tlmm 96>.
+E.g. in sm8150-pinctrl.dtsi downstream:
 
-> ---
->  drivers/mmc/core/slot-gpio.c  | 5 ++---
->  include/linux/mmc/slot-gpio.h | 5 ++---
->  2 files changed, 4 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/mmc/core/slot-gpio.c b/drivers/mmc/core/slot-gpio.c
-> index 39f45c2b6de8..8e4750558101 100644
-> --- a/drivers/mmc/core/slot-gpio.c
-> +++ b/drivers/mmc/core/slot-gpio.c
-> @@ -19,7 +19,7 @@
->  struct mmc_gpio {
->  	struct gpio_desc *ro_gpio;
->  	struct gpio_desc *cd_gpio;
-> -	irqreturn_t (*cd_gpio_isr)(int irq, void *dev_id);
-> +	irq_handler_t cd_gpio_isr;
->  	char *ro_label;
->  	char *cd_label;
->  	u32 cd_debounce_delay_ms;
-> @@ -162,8 +162,7 @@ EXPORT_SYMBOL(mmc_gpio_set_cd_wake);
->  /* Register an alternate interrupt service routine for
->   * the card-detect GPIO.
->   */
-> -void mmc_gpio_set_cd_isr(struct mmc_host *host,
-> -			 irqreturn_t (*isr)(int irq, void *dev_id))
-> +void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr)
->  {
->  	struct mmc_gpio *ctx =3D host->slot.handler_priv;
-> =20
-> diff --git a/include/linux/mmc/slot-gpio.h b/include/linux/mmc/slot-gpio.h
-> index 5d3d15e97868..3e4d4836a2bb 100644
-> --- a/include/linux/mmc/slot-gpio.h
-> +++ b/include/linux/mmc/slot-gpio.h
-> @@ -8,8 +8,8 @@
->  #ifndef MMC_SLOT_GPIO_H
->  #define MMC_SLOT_GPIO_H
-> =20
-> +#include <linux/interrupt.h>
->  #include <linux/types.h>
-> -#include <linux/irqreturn.h>
-> =20
->  struct mmc_host;
-> =20
-> @@ -21,8 +21,7 @@ int mmc_gpiod_request_cd(struct mmc_host *host, const c=
-har *con_id,
->  			 unsigned int debounce);
->  int mmc_gpiod_request_ro(struct mmc_host *host, const char *con_id,
->  			 unsigned int idx, unsigned int debounce);
-> -void mmc_gpio_set_cd_isr(struct mmc_host *host,
-> -			 irqreturn_t (*isr)(int irq, void *dev_id));
-> +void mmc_gpio_set_cd_isr(struct mmc_host *host, irq_handler_t isr);
->  int mmc_gpio_set_cd_wake(struct mmc_host *host, bool on);
->  void mmc_gpiod_request_cd_irq(struct mmc_host *host);
->  bool mmc_can_gpio_cd(struct mmc_host *host);
->=20
+https://git.codelinaro.org/clo/la/kernel/msm-4.14/-/blob/484af352989c912db8f3b6393fc090006029066f/arch/arm64/boot/dts/qcom/sm8150-pinctrl.dtsi#L70-81
 
+> > FWIW: Looking closer at the broken commit, the regulator voltage setup
+> > of &sdhc_2 looks suspicious too. Typically one would want a 1.8V capable
+> > regulator for the vqmmc-supply to properly use ultra high-speed modes,
+> > but &vreg_l13c_2p96 seems to be configured with 2.504V-2.960V at the
+> > moment. On downstream it seems to be 1.8V-2.96V [2] (again, not sure if
+> > this is the right file). I would recommend re-checking this too and
+> > testing if UHS cards are detected correctly (if you have the board).
+> 
+> This is actually a good catch. I changed the voltage range to 1.8V-2.96V and
+> now my card detects in UHS/SDR104 mode. Prior to this change it worked only
+> in HS mode.
+> 
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+Yay!
 
+> > &vreg_l17a_2p96 has the same 2.504V-2.960V, but has 2.704V-2.960V
+> > downstream [3]. This is close at least, might be fine as-is (but I'm not
+> > convinced there is a good reason to differ there).
+> >
+> 
+> Well, I believe that downstream configuration is more correct, but I
+> can't prove it, so I'll leave it as is.
+> 
 
+Ack.
+
+> Diff for additional changes looks like this:
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> index 6b08ce246b78c..b2a3496ff68ad 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> @@ -283,7 +283,7 @@ vreg_l12c_1p808: ldo12 {
+>  
+>                 vreg_l13c_2p96: ldo13 {
+>                         regulator-name = "vreg_l13c_2p96";
+> -                       regulator-min-microvolt = <2504000>;
+> +                       regulator-min-microvolt = <1800000>;
+>                         regulator-max-microvolt = <2960000>;
+>                         regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>                 };
+> @@ -386,8 +386,8 @@ &sdhc_2 {
+>  
+>         cd-gpios = <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
+>         pinctrl-names = "default", "sleep";
+> -       pinctrl-0 = <&sdc2_on>;
+> -       pinctrl-1 = <&sdc2_off>;
+> +       pinctrl-0 = <&sdc2_on &pmm8155au_1_sdc2_on>;
+> +       pinctrl-1 = <&sdc2_off &pmm8155au_1_sdc2_off>;
+>         vqmmc-supply = <&vreg_l13c_2p96>; /* IO line power */
+>         vmmc-supply = <&vreg_l17a_2p96>;  /* Card power line */
+>         bus-width = <4>;
+> @@ -505,13 +505,6 @@ data-pins {
+>                         bias-pull-up;           /* pull up */
+>                         drive-strength = <16>;  /* 16 MA */
+>                 };
+> -
+> -               sd-cd-pins {
+> -                       pins = "gpio96";
+> -                       function = "gpio";
+> -                       bias-pull-up;           /* pull up */
+> -                       drive-strength = <2>;   /* 2 MA */
+> -               };
+>         };
+>  
+>         sdc2_off: sdc2-off-state {
+>         @@ -532,13 +525,6 @@ data-pins {
+>                         bias-pull-up;           /* pull up */
+>                         drive-strength = <2>;   /* 2 MA */
+>                 };
+> -
+> -               sd-cd-pins {
+> -                       pins = "gpio96";
+> -                       function = "gpio";
+> -                       bias-pull-up;           /* pull up */
+> -                       drive-strength = <2>;   /* 2 MA */
+> -               };
+>         };
+>  
+>         usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
+> @@ -604,3 +590,25 @@ phy-reset-pins {
+>                 };
+>         };
+>  };
+> +
+> +&pmm8155au_1_gpios {
+> +       pmm8155au_1_sdc2_on: pmm8155au_1-sdc2-on-state {
+> +               sd-cd-pin {
+> +                       pins = "gpio4";
+> +                       function = "normal";
+> +                       input-enable;
+> +                       bias-pull-up;
+> +                       power-source = <0>;
+> +               };
+> +       };
+> +
+> +       pmm8155au_1_sdc2_off: pmm8155au_1-sdc2-off-state {
+> +               sd-cd-pin {
+> +                       pins = "gpio4";
+> +                       function = "normal";
+> +                       input-enable;
+> +                       bias-pull-up;
+> +                       power-source = <0>;
+> +               };
+> +       };
+
+Since the configuration is the same for both on and off state, you can
+combine this into one node and then reference it twice. Also, the single
+subnode should not be needed:
+
+	pmm8155au_1_sdc2_cd: pmm8155au_1-sdc2-cd-state {
+		pins = "gpio4";
+		function = "normal";
+		input-enable;
+		bias-pull-up;
+		power-source = <0>;
+	};
+
+&sdhc_2 {
+	pinctrl-0 = <&sdc2_on &pmm8155au_1_sdc2_cd>;
+	pinctrl-1 = <&sdc2_off &pmm8155au_1_sdc2_cd>;
+};
+
+Looks good to me otherwise, thanks for cleaning this up!
+
+> 
+> I am planning to send v2 tomorrow.
+> 
+
+Thanks!
+Stephan
