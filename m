@@ -1,63 +1,63 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF7991F4FB9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106191F4FBC
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850151; cv=none; b=WLNvnl5w49MOjtHMNe+ztji01VtPSRK4o/baHB/ns1fji3JOEpSbdYEsT8A24Z17UNhzRnIeMWc4LAyBxoYMSouIl3cKCq15mMaRCEzDfHB6YvEsyYr38O15mPkZv3XhWkv+gGv/pp7ulyoCKOdL24scgR7hm7U18zp+Lg9LBYk=
+	t=1712850151; cv=none; b=lwzquC5WgpXtAVq8IW3Ti07pNaUb/WW3k6yM/Jb0Ed6DNGjK2jibBJtpuJnCoQ7vkl6p5PJlWEx68pzKgNJL6fmoICkKkRVocibSe3+or2GVcQfiYi4p8pNM63gYLdvZEU2iX1JyiY0KMJDzsHmwU33ufmq4gPEqdNUgfAQhM7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712850151; c=relaxed/simple;
-	bh=yHI+BWKfxlzjtD09azAbAJ+Mhk3rpeNr2iRrEofPK/A=;
+	bh=p7WctMMlRWAdNTE5fVv6wre2OmE47Vk1NhNg4CBgEmg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CPOd+cIMNddsofo1aDl2nM8OLDnsbjlxx+0go/2WI9MS0SC41Vf0DsWRkd0R6OMhnLItkiQfPwwqLqn7+yVydrnj/VN/xYvRcs+f4kpMgDT54EkZrwNGbkwRVnB3JT/lfaa3uoXuUYBcPnBIV1PZ9NHMr2lco4oLbitWShvdREY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zR8cbVEC; arc=none smtp.client-ip=209.85.166.42
+	 MIME-Version; b=klofzsIXSY0SfljlKy7fCFKHNVQPSUcQhFo9BmT05d6bz/zh8BM0EEGeiS0152fj+X0gWom5VbA2Romkkm5Wg0rO3y80TZwzZImQ78KiFnCwN4kr67a8sIkigZ3y18QkhryQB8Gr2McrmbAjOO5VmvQJtq2NrgPcus4LUvwWTTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=kbmlCuHw; arc=none smtp.client-ip=209.85.166.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zR8cbVEC"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69688039f.1
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="kbmlCuHw"
+Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7d67d1073easo9933039f.0
         for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850148; x=1713454948; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WprLLrhZ1kxKSEWAUekqBTwheyCz8FjrA6ZS3/IHQR0=;
-        b=zR8cbVECcphIdh4xro/V8NDOPfcC9dHMBy9AwSKccVpyBswl4E2a6tA80QZWeXG/9S
-         cs++PebO4bJ849sFOKrFTOYWNbdQ1354IGc40UQ5I0fqd1dzhWZ1LkwJOH/sQIatsn/L
-         VXlRlNKDKYvEmxLiqqa493A+1NFV9hyevIhwHllEr2W0eI5khJSJJKqMQwV6q9AKasfC
-         wJhB0wIdGA0YjPJcbqAfoQo6ulGljluafVxM3jHgX8n8VusnCfrMZTMEjujXVlGFTakM
-         Z2ubj1z1HRkphfiEhV/G6OPkfoYQeuDEip5lJMu09Q+f4/xZYKxhEC19imM+m9slrGrx
-         UDgw==
+        bh=gE2I3/W/bjcYxnc4E8ZkJcIASksO6YWQlrWRDVCmGeU=;
+        b=kbmlCuHwaadVLTlGki8nRKiSq/LUS17l1Ri9aUtCzupcczQS25mL4yUyT9MSQpGR6C
+         Z5bPgaVoQoI2iYpV+Q/m4CvntLUJ4P/UEVmJ+q7xtNmYr+EEvvJktkxnOL6Sb+CBN8Ry
+         30VlDkkQBQ2rQWNEvwtNqctcxwXskeu3bShu3T4gfw38eDkOXDeIlSUaEwKi3Aw4FVpZ
+         j6CXyRWR/Yyp0F0lefNYR9mYyajLaTpsyzFlX1oLO6yk3lY472VD/etNGXEv9fs142bn
+         QGxtY2sAYRPg9eYAts+VHq0fRs7eSksY8l2kNKa3/ZQN2GYDb03AgfUvQaojrQ38ZkEP
+         owaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712850148; x=1713454948;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WprLLrhZ1kxKSEWAUekqBTwheyCz8FjrA6ZS3/IHQR0=;
-        b=O410ZfzRrx5H2jMjYnFVonqxmmBMYe6GvGdTzLJzySuIl193ej2Zh2Ru3oWFV7bIsZ
-         L0OBnkMJYxKVqfZ22LYOJIVtg1a4hJNo1u6K2jSn2rOdBr5z7Zz8ruSwdVGc6kb9zE2O
-         uZsz+4AJoWRkviuqb6308UhF467nQ+oL34aCnSE0O70aAOADrY6mUwxvwco/Ll+f3GRs
-         pHB9A7KgwJIc3rFcq3r6+eM6+hvmyMwPz0DJMLkgZ4WfgJhzdK8Ju5TB5L1cSamlvXuT
-         gRpyVQwQa+32IyAKXH7WmIp2MAtzH9yOtakPlDDc10Q6ZVDRPjPQ1bmY5lLZDb+yl3vU
-         PJGw==
-X-Gm-Message-State: AOJu0YwXelYfZ8yufLXjtlq5nH+dbjWHaQWhqy/iHf0ifptROvK1Yfw2
-	oUSWsN96bM0BtcPa8JVOiQ3fMasYVJXEnbWvIHdhZ+GThXUeDMxfJJGqOXZyP9aKWVa0rgpQzMX
-	E
-X-Google-Smtp-Source: AGHT+IFueRfS9bGXz/c5C96P9J6ykQa1ovLOhtEUXogObPI/65tXV/zTNeHvMFSz/IW7zUbUSHBc4A==
-X-Received: by 2002:a05:6602:84:b0:7d6:9d75:6de2 with SMTP id h4-20020a056602008400b007d69d756de2mr55388iob.2.1712850146799;
-        Thu, 11 Apr 2024 08:42:26 -0700 (PDT)
+        bh=gE2I3/W/bjcYxnc4E8ZkJcIASksO6YWQlrWRDVCmGeU=;
+        b=JQPBfeesmdB/F42ONn3J4AviQB+6lBzyI7NVhmHQseoiqzNqBqLIDreWlKf/CEKLGF
+         oTJMBAtgtbCPc0BLFm8y1P5n9sqoC8/SAoH29q9Bja7DQsJPiHc/kCiMA5kvGt4f6z1+
+         c9ZyAfPzrKDlckGNdZIEKjrazIBpsBiPShQRS4MovYRe9hXfNX+DjagKe79likru9fsu
+         RgoaE7/wPCbrsBYKrBdHeWFxZDfWMc5oaGITQEwu4hnmxjrk1NdzweRlHv8t2a4H2005
+         CAlQgCwzjQPytOd8J6IXhVZxtfx/dexY4XXLxWG2LcygzCCDpqoGwMZkOwxHuFwGF3l2
+         eA0w==
+X-Gm-Message-State: AOJu0YypKRbiK1wF/4wKyNieJmaSvneD3EOpI+fWhmzh28DE9k1Emf16
+	PFE4SW2sdkcqMcCkN5aWKTxlBNOpoW8avlS+7OS/tGWPEaJI+uePsAqtTcTSeWUVVL5cy93+BwL
+	6
+X-Google-Smtp-Source: AGHT+IHAJsov8U6CuMQNiOy2a4pMXy8XEU9tTAyFifxKw0xmawEYZk7u7YMT5fEeNl3bREyVG6redw==
+X-Received: by 2002:a6b:7b05:0:b0:7d6:60dc:bc8e with SMTP id l5-20020a6b7b05000000b007d660dcbc8emr209308iop.1.1712850148360;
+        Thu, 11 Apr 2024 08:42:28 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.42.25
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.42.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:42:25 -0700 (PDT)
+        Thu, 11 Apr 2024 08:42:27 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 384/437] stm class: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:18:44 -0600
-Message-ID: <20240411153126.16201-385-axboe@kernel.dk>
+Subject: [PATCH 386/437] EDAC/versal: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:18:46 -0600
+Message-ID: <20240411153126.16201-387-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,46 +71,76 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/hwtracing/stm/core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/edac/versal_edac.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index 534fbefc7f6a..c66f1864adcd 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -615,11 +615,11 @@ stm_write(struct stm_device *stm, struct stm_output *output,
- 	return err;
- }
- 
--static ssize_t stm_char_write(struct file *file, const char __user *buf,
--			      size_t count, loff_t *ppos)
-+static ssize_t stm_char_write(struct kiocb *iocb, struct iov_iter *from)
+diff --git a/drivers/edac/versal_edac.c b/drivers/edac/versal_edac.c
+index 1688a5050f63..bd3abd3598ba 100644
+--- a/drivers/edac/versal_edac.c
++++ b/drivers/edac/versal_edac.c
+@@ -781,16 +781,16 @@ static void xddr_inject_data_ce_store(struct mem_ctl_info *mci, u8 ce_bitpos)
+  *
+  * Upon doing a read to the address the errors are injected.
+  */
+-static ssize_t inject_data_ce_store(struct file *file, const char __user *data,
+-				    size_t count, loff_t *ppos)
++static ssize_t inject_data_ce_store(struct kiocb *iocb, struct iov_iter *from)
  {
--	struct stm_file *stmf = file->private_data;
-+	struct stm_file *stmf = iocb->ki_filp->private_data;
- 	struct stm_device *stm = stmf->stm;
+-	struct device *dev = file->private_data;
++	struct device *dev = iocb->ki_filp->private_data;
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct edac_priv *priv = mci->pvt_info;
 +	size_t count = iov_iter_count(from);
- 	char *kbuf;
- 	int err;
+ 	u8 ce_bitpos;
+ 	int ret;
  
-@@ -649,7 +649,7 @@ static ssize_t stm_char_write(struct file *file, const char __user *buf,
- 	if (!kbuf)
- 		return -ENOMEM;
+-	ret = kstrtou8_from_user(data, count, 0, &ce_bitpos);
++	ret = kstrtou8_from_iter(from, count, 0, &ce_bitpos);
+ 	if (ret)
+ 		return ret;
  
--	err = copy_from_user(kbuf, buf, count);
-+	err = !copy_from_iter_full(kbuf, count, from);
- 	if (err) {
- 		kfree(kbuf);
+@@ -812,7 +812,7 @@ static ssize_t inject_data_ce_store(struct file *file, const char __user *data,
+ 
+ static const struct file_operations xddr_inject_ce_fops = {
+ 	.open = simple_open,
+-	.write = inject_data_ce_store,
++	.write_iter = inject_data_ce_store,
+ 	.llseek = generic_file_llseek,
+ };
+ 
+@@ -845,19 +845,19 @@ static void xddr_inject_data_ue_store(struct mem_ctl_info *mci, u32 val0, u32 va
+  *
+  * Upon doing a read to the address the errors are injected.
+  */
+-static ssize_t inject_data_ue_store(struct file *file, const char __user *data,
+-				    size_t count, loff_t *ppos)
++static ssize_t inject_data_ue_store(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct device *dev = file->private_data;
++	struct device *dev = iocb->ki_filp->private_data;
+ 	struct mem_ctl_info *mci = to_mci(dev);
+ 	struct edac_priv *priv = mci->pvt_info;
++	size_t count = iov_iter_count(from);
+ 	char buf[6], *pbuf, *token[2];
+ 	u32 val0 = 0, val1 = 0;
+ 	u8 len, ue0, ue1;
+ 	int i, ret;
+ 
+ 	len = min_t(size_t, count, sizeof(buf));
+-	if (copy_from_user(buf, data, len))
++	if (!copy_from_iter_full(from, len, from))
  		return -EFAULT;
-@@ -835,7 +835,7 @@ stm_char_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- static const struct file_operations stm_fops = {
- 	.open		= stm_char_open,
- 	.release	= stm_char_release,
--	.write		= stm_char_write,
-+	.write_iter	= stm_char_write,
- 	.mmap		= stm_char_mmap,
- 	.unlocked_ioctl	= stm_char_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
+ 
+ 	buf[len] = '\0';
+@@ -903,7 +903,7 @@ static ssize_t inject_data_ue_store(struct file *file, const char __user *data,
+ 
+ static const struct file_operations xddr_inject_ue_fops = {
+ 	.open = simple_open,
+-	.write = inject_data_ue_store,
++	.write_iter = inject_data_ue_store,
+ 	.llseek = generic_file_llseek,
+ };
+ 
 -- 
 2.43.0
 
