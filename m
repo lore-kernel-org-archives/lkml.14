@@ -1,112 +1,111 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A008B145B24;
-	Thu, 11 Apr 2024 08:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7A714659E;
+	Thu, 11 Apr 2024 08:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824327; cv=none; b=Vikvk+2hEmMZtGJWhlpD/aPED/ozbx3EE5qNdCyEUVFxtYSpH+Vszaehy0pc22PjmBlsSC7vnlyoF7Xj8AQH+lrweq+jO8BZ2l18oOae1xn+suXEanivz5+YAGNNG2PrjOddy5k0QiUps1oxln2HghBrzchJaSIiqd55DEWktbk=
+	t=1712824327; cv=none; b=HHgpWNRAGHHL9eW3d1Lr102Um1g2nobulR/evM+nT2VS3OFFFHY+QARyWL/a6wYQM0HUvINx+x+BsEpj3x33r2K9HpAkrhHbhxbvLy9OqT5x3yZ+eswMkjObMOYGLma+/WFw+33SLaJI0WJjEpwc0rLOqgGcsXPZZsFL8xsvD6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712824327; c=relaxed/simple;
-	bh=XK0zxw+V4wjxT5QG5ieb50qefYNILSY0qmHMtFLbqcI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CBkOaE0Hr23xAuLdndQtt6vmgpb6JDnNlSF5CNesTw45r4eWrhZbswzZ72IFNY6kLvIAZMcGE8+wuX3rCaCuYYcIZrBlLGwd4kmy6o0tXdwS3CcyNLyD6MPXYXiGHh+xkWH3ZTCD4hpNxoPAEA9k7fQgKvNC1mv3hN0wKZ3qZZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LAFh3vc4; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=4TU/zftz2/VHnWzV3r9cBoeolRMOB6be9XResQyxXNw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Qcd48NDfXihgrPh09g7jkBUwoKyeZJhZOrl0NIMO/XEODfIaqEVRhzRFyelXKJLAayslbjuuryTZWmeDFIQFYq/HRXWUAZQEJY6zXThiWLvFns8Gz3U8kH8WyqLxM7pyTLYEMq+siy524oOZIuzYu5HO7MozCTcbd61hS8G4EjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOg5Nnn0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LAFh3vc4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712824323;
-	bh=XK0zxw+V4wjxT5QG5ieb50qefYNILSY0qmHMtFLbqcI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LAFh3vc4lZpN/yQ0ihuB1SgL/ZUEWS0qCuhvzfxsPXTP1sbaxdJnovVkvq1DAtAZA
-	 +4FP1cAO2DL+XPgUy1jzRA3wW58cOSvaYrSuT4fl9m0iMcWUq4tZcGXaKXdFJ6gJ2B
-	 eZasrZfb4toePj7m0dFNWWmsPdgKkspV9sK84MmKIYTM9RvqdjNqmluXHf+e6mGaCS
-	 wUkMH4risTJOShZsB870kwBn6ZQvBuFecgcDV6Z2lKMNjFW/2olfkFzhM5WhksJuYS
-	 OgFCqqRmqfgcpGqgw9+uNDV0gQ/DdPOJPUcnfQpz/+Lt/pGdwHpAFi0k7SYfpL9gBv
-	 BArYlzDJz63JQ==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 99C193782137;
-	Thu, 11 Apr 2024 08:32:02 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: linux-scsi@vger.kernel.org
-Cc: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	peter.wang@mediatek.com,
-	chu.stanley@gmail.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	stanley.chu@mediatek.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com
-Subject: [PATCH v1 7/8] dt-bindings: ufs: mediatek,ufs: Document additional clocks
-Date: Thu, 11 Apr 2024 10:31:48 +0200
-Message-ID: <20240411083149.78537-8-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240411083149.78537-1-angelogioacchino.delregno@collabora.com>
-References: <20240411083149.78537-1-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOg5Nnn0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E00E9C43399;
+	Thu, 11 Apr 2024 08:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712824326;
+	bh=4TU/zftz2/VHnWzV3r9cBoeolRMOB6be9XResQyxXNw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=VOg5Nnn0XLASgyj0MK6huHrdw6waf1y0yuC+oblarqy429PvIdQQhqbC+SnEww80X
+	 zVlb30yNyivgdsMwyCu1RW4vXAaIj6MntbyYjoukpPOjacIEGeOJ2b+34KngNZq+km
+	 28RbGCvlW4sA970rsoi3pj9RjyjBWvoukrt89hlGOBp50qMnXJ056YkPQ3o+JR+BLv
+	 ARP5s5xsYvSA/a3rXtkNkNLEp7TnC98HrvYJhymMLBuEh89myZT1Dohlc5d2YlIBuz
+	 6k3hSQhdR18p264tXhayF2jjLw5WrAzlRBHk9WrG99l+qION4XU2aAAH0+40qcrfJG
+	 P7lf9k+0gkFgQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0309CD1292;
+	Thu, 11 Apr 2024 08:32:06 +0000 (UTC)
+From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
+Date: Thu, 11 Apr 2024 16:30:57 +0800
+Subject: [PATCH v9 1/4] input: pm8xxx-vibrator: correct VIB_MAX_LEVELS
+ calculation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240411-pm8xxx-vibrator-new-design-v9-1-7bf56cb92b28@quicinc.com>
+References: <20240411-pm8xxx-vibrator-new-design-v9-0-7bf56cb92b28@quicinc.com>
+In-Reply-To: <20240411-pm8xxx-vibrator-new-design-v9-0-7bf56cb92b28@quicinc.com>
+To: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Fenglin Wu <quic_fenglinw@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712824325; l=1231;
+ i=quic_fenglinw@quicinc.com; s=20240327; h=from:subject:message-id;
+ bh=XkZnFbyEclgfZYkpfzfPCbadhXwXzt48J68H2vEZT+g=;
+ b=TT6XRoITbYVVVhdgUixCMPRemA7UdNfcjUqCgfwIwiEaNpsvUjDchxv0aIz4se5E8QC2TGwBS
+ 44bYehx2zFYA4kyAGQQ9wEQa6hFCWBCfackEp6DGSPjrGRvSWXyI+3C
+X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
+ pk=BF8SA4IVDk8/EBCwlBehKtn2hp6kipuuAuDAHh9s+K4=
+X-Endpoint-Received: by B4 Relay for quic_fenglinw@quicinc.com/20240327
+ with auth_id=146
+X-Original-From: Fenglin Wu <quic_fenglinw@quicinc.com>
+Reply-To: quic_fenglinw@quicinc.com
 
-Add additional clocks, used on all MediaTek SoCs' UFSHCI controllers:
-some of these clocks are optional and used only for scaling purposes
-to save power, or to improve performance in the case of the crypt
-clocks.
+From: Fenglin Wu <quic_fenglinw@quicinc.com>
 
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+The output voltage is inclusive hence the max level calculation is
+off-by-one-step. Correct it.
+
+Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
 ---
- .../devicetree/bindings/ufs/mediatek,ufs.yaml       | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/input/misc/pm8xxx-vibrator.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-index e2c276da3f2c..df2e2d388e70 100644
---- a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-+++ b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-@@ -26,11 +26,22 @@ properties:
-           - const: mediatek,mt8183-ufshci
+diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
+index 04cb87efd799..89f0f1c810d8 100644
+--- a/drivers/input/misc/pm8xxx-vibrator.c
++++ b/drivers/input/misc/pm8xxx-vibrator.c
+@@ -14,7 +14,8 @@
  
-   clocks:
--    maxItems: 1
-+    minItems: 1
+ #define VIB_MAX_LEVEL_mV	(3100)
+ #define VIB_MIN_LEVEL_mV	(1200)
+-#define VIB_MAX_LEVELS		(VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV)
++#define VIB_PER_STEP_mV	(100)
++#define VIB_MAX_LEVELS		(VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV + VIB_PER_STEP_mV)
  
-   clock-names:
-+    minItems: 1
-     items:
-       - const: ufs
-+      - const: ufs-aes
-+      - const: ufs-tick
-+      - const: unipro-sys
-+      - const: unipro-tick
-+      - const: ufs-sap
-+      - const: ufs-tx-symbol
-+      - const: ufs-mem
-+      - const: crypt-mux
-+      - const: crypt-lp
-+      - const: crypt-perf
+ #define MAX_FF_SPEED		0xff
  
-   phys:
-     maxItems: 1
+@@ -118,10 +119,10 @@ static void pm8xxx_work_handler(struct work_struct *work)
+ 		vib->active = true;
+ 		vib->level = ((VIB_MAX_LEVELS * vib->speed) / MAX_FF_SPEED) +
+ 						VIB_MIN_LEVEL_mV;
+-		vib->level /= 100;
++		vib->level /= VIB_PER_STEP_mV;
+ 	} else {
+ 		vib->active = false;
+-		vib->level = VIB_MIN_LEVEL_mV / 100;
++		vib->level = VIB_MIN_LEVEL_mV / VIB_PER_STEP_mV;
+ 	}
+ 
+ 	pm8xxx_vib_set(vib, vib->active);
+
 -- 
-2.44.0
+2.25.1
+
 
