@@ -1,121 +1,152 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2CF14F65
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CA313AE2
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712864055; cv=none; b=iZpRpacKG1S9dbKg+ysoLKLOj6DqRHVngk5fAevNjJcoYarL94n5LG0yMaiHD2uxHhq5LBezrbmHZKKEGJQjs8tyuXYcwss5/nsT/PCwu2u/MA2Xf/v1PjyeZbci1MqPJ8JcvGHb8WjqiqORHvHo53D5AHiuvqj6slWgEV4k43g=
+	t=1712864114; cv=none; b=KFD+SrW9iueLBXv2KOdpDa9GYebtM3ihdDVI4AvrmzMj0MH4UxGMweRY9tyxAXfBWx0LgfvfVGjXS2bAPkNMcLcyO+buwGu0v7XaXRvBKI50NTRPTugxbG4t1128sPSs1KgPlWGmIeFHDRVinVCfil03/KZFn0xS/Iui4zXYviE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712864055; c=relaxed/simple;
-	bh=181iAP1TufLKZKB+puXLtuvQxMsTxzf0ulGdf48JV40=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mhhO3WSdo/5lPdB58fjx4mmxRIj1Tcl6Dkz4kq5hkhWhivxvJloCqU6OpDx6RAn1/sKv9XELuU7jchah95NCkZGgexHWFW5TPml4ro8yEvH7bFblhXykqNOMw8OD+SzbVZKS0y2GdZZrpWilo+Yn7CQCs2MFqlJ1H/qdVidPKp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tyBBakwg; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712864114; c=relaxed/simple;
+	bh=5KVFeFerRH8GLwfSRDO//pTmkAv+uv/gwR3NCKN8Cdg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WyutQgUxwfsXhpSzP8RUZdr2iw1qDYQMB+OCDvT765lkOtRTvREkM3HUg5Hdf+QQsoajJY1UBnyDQgZSjNOIP9V4ukH3aE0vc0gdnpevy2EAH2qR0JQ43dACvCW0Q+plDNxw8IFH12vK+5KC9sXCSLTeEJi35Mis7STcxTMHIWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=WTzaXJlO; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tyBBakwg"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1e44b8ebf43so1647195ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:34:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="WTzaXJlO"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d8129797fcso1409181fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:35:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712864054; x=1713468854; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Owi5VY3bx0eyfYbbHYaIgtR1PawXuLE8VEd3XEO08mc=;
-        b=tyBBakwgrVzFPqyWZH6iEUiHfF8Z7oboQ4EzgZ5wK+8WrmQoorOYmTEdbkQxGMLTDV
-         E3dr+duUmtMjbwfzmfKMjBFJE66v1Ylgp98IW0oI/sjbJgUI7dWD2al1gzxwr1kFvdnU
-         V6+hoAdxqL+a2QoCX3x+sY6vJSlst9sQmG3y+HNgthLa2zMvUZzFo2/DAdC252SCzZRl
-         x6te9RotKlqjAZRN9Q8w3A5BS0rJDpgHf3RJklEm7968jnSowfM4EqRuYnk/ZqJOKDWX
-         Na6zGinej9xusBoOduRdm+tr4Ee74ygfe8RtrM2A0o8tMIJS0esyG5t197nRiltBGG1L
-         7y6Q==
+        d=linux-foundation.org; s=google; t=1712864110; x=1713468910; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhujaawioP0edqzESewC5qrutyIfvYKamEof/gouabc=;
+        b=WTzaXJlOO/kVxxr1UkWojPQ/xwlyFTzOJSP5b0jR/awylRo5f1TXq5e9VoMDDY3kO2
+         FFLH/bUak6hUenp9hECToGe5ICfRIfzKfk90FANs+DTVMzj3e0K5xRZ7x080OufLuOAP
+         z6rlyTv541da48Ok+wcK3uaiY64r9X/GDlcuY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712864054; x=1713468854;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Owi5VY3bx0eyfYbbHYaIgtR1PawXuLE8VEd3XEO08mc=;
-        b=bbcVUXsRsKz94ZpO/i6azhhLi4poL7lYvQC4acJ3FGo0buL+vKghkq4yMJl4Zwy7Of
-         JiAUmOyu67IXUWrbB9qhizDf1bfo7QihtELVEBqNyCgPienuTS4HBHBwfqkm+9tULLpq
-         qYzz8E5IjAGl80DVzgV9mIsTSBsGnvkg/bZNFJ6byHmEHVI2RHvllyoT4y0rcCDfSrAz
-         64/wWklmlrBdqoZydQqaJaAP4563ew2GGP6C2dARYEAh370J54OYPy8IaeX7ntmz3AlP
-         76mhrN+3sHrGZYCwRQI0WiJINV9YvuIndjoeBXm89Iqs0OviSdxkg8g6iHMRI09R2aAl
-         WQpg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZHVDmARDfAHlnZezoAYwDDd/UrphoqOsurTBWBco+WpOaZVruJt+KyHRZJkYTwbeNfDQJ7CJC7H9y51pYVmam5eXqr/2FxsWfz0yo
-X-Gm-Message-State: AOJu0YxDkd/0cBjEbaRPsOumeR2p/AMmNVDXH8irjYeiv0497Fq6mNdQ
-	vQDSriKZNu7kEZiF93NSBcGMe3ggSW+9cgWK5RrNpfsqNApdD8T3fI6+q9VkMr/CtkDDL3NQ6Bg
-	olw==
-X-Google-Smtp-Source: AGHT+IGZ+qny5vsAryEUnYuYWfWFnPNMFNS3iikjoJhbHBN2jn6aXOOhLAyFbwTh2/A/B+k9D+DvbhyoZDs=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f68c:b0:1e3:cf18:7472 with SMTP id
- l12-20020a170902f68c00b001e3cf187472mr1091plg.9.1712864053929; Thu, 11 Apr
- 2024 12:34:13 -0700 (PDT)
-Date: Thu, 11 Apr 2024 12:34:12 -0700
-In-Reply-To: <Zhg3X_5A6BslIg-u@google.com>
+        d=1e100.net; s=20230601; t=1712864110; x=1713468910;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qhujaawioP0edqzESewC5qrutyIfvYKamEof/gouabc=;
+        b=HS2SoQFUyUh1r03He6h8svjUmrHD2gjl3YbVDCcPAxrXsf0PjvCWoscnuHBxKiFUm8
+         yCIbqTf8Ni5fAMTdULxy2ncM5e3MF6pZCiUNgnFiToBMCS0Y6VgNs/oPpLAnLLQEyWjx
+         276pZfHKvtUUdNZulEvOlrr2B2AtjR3stg2xOpUOUtKccEwq14MlMqm5sWoUVKf5S85g
+         o4CkHpZncczorkF2FQemQOPOymO92yGji2+WwtaNmGBdOri0z32DyzGhOvN8S3RRlBxP
+         qwZdCzxs5sPBOqVKOAH/UfS+9iu1+P5boMTCJU3sU39C+l4V6Nc1uQaKC7Xdd+GbMbM7
+         UhVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWf+Jjeqvg+ryC9y061oCeUFmg0F0cgCC3pCMS+Zd9PTicPz8/saM6+ayJijrkdkHU29jiXiXQSrbxy/wRGEued0HELQwNOgyEo9iRz
+X-Gm-Message-State: AOJu0YxTeXrhPDMqmqSLeLXRRuxtSroekFiTCUoZWDzWseYXR6cgw193
+	G3enFnHNQmJchuqDFnQ6VXZ3gdPBiN6nWv+1n6bpySrLtGGjlebq9hvmBy9zbJ7MkhhHoW9BvUV
+	6FufrtA==
+X-Google-Smtp-Source: AGHT+IFw2+Lh2FafyqDQylF2+vel37vCZLYMzft8itWuJW5AD2fZCz6DcWMfMjdi9ali/AYwCB6lwg==
+X-Received: by 2002:a2e:be86:0:b0:2d8:d472:581e with SMTP id a6-20020a2ebe86000000b002d8d472581emr528389ljr.37.1712864110364;
+        Thu, 11 Apr 2024 12:35:10 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id f15-20020a2e6a0f000000b002d868f2939bsm276785ljc.103.2024.04.11.12.35.09
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 12:35:09 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-516d2600569so275958e87.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:35:09 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVPwyMcBgDMERRSML1YVdLwHvKFfMwV0Vas0boYuD90S3dq+RdYUj9p4RtXpoWpksJ9Y74NTqGoIYJ15h2nu7TwJAvcI8DVWOxLw5KT
+X-Received: by 2002:a19:3855:0:b0:516:d11b:5532 with SMTP id
+ d21-20020a193855000000b00516d11b5532mr402271lfj.23.1712864109199; Thu, 11 Apr
+ 2024 12:35:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-7-xiong.y.zhang@linux.intel.com> <Zhg3X_5A6BslIg-u@google.com>
-Message-ID: <Zhg7NO9jHsh5rfGa@google.com>
-Subject: Re: [RFC PATCH 06/41] perf: x86: Add function to switch PMI handler
-From: Sean Christopherson <seanjc@google.com>
-To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com, Xiong Zhang <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
+ <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com>
+ <20240411-alben-kocht-219170e9dc99@brauner> <CAHk-=wjrPDx=f5OSnQVbbJ4id6SZk-exB1VW9Uz3R7rKFvTQeQ@mail.gmail.com>
+ <CABe3_aGbsPHY9Z5B9WyVWakeWFtief4DpBrDxUiD00qk1irMrg@mail.gmail.com>
+ <CABe3_aGGf7kb97gE4FdGmT79Kh5OhbB_2Hqt898WZ+4XGg6j4Q@mail.gmail.com>
+ <CABe3_aE_quPE0zKe-p11DF1rBx-+ecJKORY=96WyJ_b+dbxL9A@mail.gmail.com> <CAHk-=wjuzUTH0ZiPe0dAZ4rcVeNoJxhK8Hh_WRBY-ZqM-pGBqg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjuzUTH0ZiPe0dAZ4rcVeNoJxhK8Hh_WRBY-ZqM-pGBqg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 11 Apr 2024 12:34:52 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgEdyUeiu=94iuJsf2vEfeyjqTXa+dSpUD6F4jvJ=87cw@mail.gmail.com>
+Message-ID: <CAHk-=wgEdyUeiu=94iuJsf2vEfeyjqTXa+dSpUD6F4jvJ=87cw@mail.gmail.com>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+To: Charles Mirabile <cmirabil@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 11, 2024, Sean Christopherson wrote:
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > From: Xiong Zhang <xiong.y.zhang@intel.com>
-> > 
-> > Add function to switch PMI handler since passthrough PMU and host PMU will
-> > use different interrupt vectors.
-> > 
-> > Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> > ---
-> >  arch/x86/events/core.c            | 15 +++++++++++++++
-> >  arch/x86/include/asm/perf_event.h |  3 +++
-> >  2 files changed, 18 insertions(+)
-> > 
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 40ad1425ffa2..3f87894d8c8e 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -701,6 +701,21 @@ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr, void *data)
-> >  }
-> >  EXPORT_SYMBOL_GPL(perf_guest_get_msrs);
-> >  
-> > +void perf_guest_switch_to_host_pmi_vector(void)
-> > +{
-> > +	lockdep_assert_irqs_disabled();
-> > +
-> > +	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> > +}
-> > +EXPORT_SYMBOL_GPL(perf_guest_switch_to_host_pmi_vector);
-> > +
-> > +void perf_guest_switch_to_kvm_pmi_vector(void)
-> > +{
-> > +	lockdep_assert_irqs_disabled();
-> > +
-> > +	apic_write(APIC_LVTPC, APIC_DM_FIXED | KVM_VPMU_VECTOR);
-> > +}
-> > +EXPORT_SYMBOL_GPL(perf_guest_switch_to_kvm_pmi_vector);
-> 
-> Why slice and dice the context switch if it's all in perf?  Just do this in
-> perf_guest_enter().  
+On Thu, 11 Apr 2024 at 11:13, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> So while I understand your motivation, I actually think it's actively
+> wrong to special-case __O_TMPFILE, because it encourages a pattern
+> that is bad.
 
-Ah, because perf_guest_enter() isn't x86-specific.
+Just to clarify: I think the ns_capable() change is a good idea and
+makes sense. The whole "limited to global root" makes no sense if the
+file was opened within a namespace, and I think it always just came
+from the better check not being obvious at the point where
+AT_EMPTY_PATH was checked for.
 
-That can be solved by having the exported APIs be arch specific, e.g.
-x86_perf_guest_enter(), and making perf_guest_enter() a perf-internal API.
+Similarly, while the FMODE_PATH test _looks_ very similar to an
+O_TMPFILE check, I think it's fundamentally different in a conceptual
+sense: not only is FMODE_PATH filesystem-agnostic, a FMODE_PATH file
+is *only* useful as a pathname (ie no read/write semantics).
 
-That has the advantage of making it impossible to call perf_guest_enter() on an
-unsupported architecture (modulo perf bugs).
+And so if a FMODE_PATH file descriptor is passed in from the outside,
+I feel like the "you cannot use this to create a path" is kind of a
+fundamentally nonsensical rule.
+
+IOW, whoever is passing that FMODE_PATH file descriptor around must
+have actually thought about it, and must have opened it with O_PATH,
+and it isn't useful for anything else than as a starting point for a
+path lookup.
+
+So while I don't think the __O_TMPFILE exception would necessarily be
+wrong per se, I am afraid that it would result in people writing
+convenient code that "appears to work" in testing, but then fails when
+run in an environment where the directory is mounted over NFS (or any
+other filesystem that doesn't do ->tmpfile()).
+
+I am certainly open to be convinced otherwise, but I really think that
+the real pattern to aim for should just be "look, I opened the file
+myself, then filled in the detail, and now I'm doing a linkat() to
+expose it" and that the real protection issue should be that "my
+credentials are the same for open and linkat".
+
+The other rules (ie the capability check or the FMODE_PATH case) would
+be literally about situations where you *want* to pass things around
+between protection domains.
+
+In that context, the ns_capable() and the FMODE_PATH check make sense to me.
+
+In contrast, the __O_TMPFILE check just feels like a random detail.
+
+Hmm?
+
+Anyway, end result of that is that this is what that part of the patch
+looks like for me right now:
+
++               if (flags & LOOKUP_DFD_MATCH_CREDS) {
++                       const struct cred *cred = f.file->f_cred;
++                       if (!(f.file->f_mode & FMODE_PATH) &&
++                           cred != current_cred() &&
++                           !ns_capable(cred->user_ns, CAP_DAC_READ_SEARCH)) {
++                               fdput(f);
++                               return ERR_PTR(-ENOENT);
++                       }
++               }
+
+and that _seems_ sensible to me.
+
+But yes, this all has been something that we have failed to do right
+for at least a quarter of a century so far, so this needs a *lot* of
+thought, even if the patch itself is rather small and looks relatively
+obvious.
+
+                 Linus
