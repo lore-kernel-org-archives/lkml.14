@@ -1,173 +1,66 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4556614EC6A;
-	Thu, 11 Apr 2024 14:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3242C14E2F3;
+	Thu, 11 Apr 2024 14:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844282; cv=none; b=MBMbe5BD03nKMEsRxXFXUnW2cjAHvuMT0mvoOEOvbWKewVxmlW7d9Y4mbNUBxHEt7/UwY7r7RwMXiAREx0e/Puey0SYKD4soUvnc4rYDp8NA9aToSPmY6j6ZTD4gzOVJBXorkm34bfhv5Dj26Tx7AcRar/CpFY63h6zLbR2GWeU=
+	t=1712844303; cv=none; b=tRvgYi74XtH57iCRfYAV23WfG8maRW8bxHd49BgQ3WgZKBaR5TiZB/atlMv+Gppu8wGTbIffFhwc+ZQG7g3Dgajrxr+O7sW7iTwPej2Oty19xDg1koxiPvpRb9S43gpEzl7fs3qb0yux8NvXLX11TVv/zefOv7VUnas6zR7JSQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844282; c=relaxed/simple;
-	bh=ZrCt6oej6WWRtK9ajy4DESiiMvZN55Rd82Z7cAO61lE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=u+KgXPEieQ3WCmSiDLMfKLZFDyc7YYoqIWsr7VZAPgtJgFCv/CxS/YFnP7iT+j7nAxM/2pX9LOHqcY1jHnsdc6T4ev//9MmsN+AuaD7TJfyo+yJv4v2bfo/lUjjTS6oh0UR+CJKGPWGEOZ9BrhCe+JfJxifO7NGeSbZDR2U7Dz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dW6gxsCV; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712844303; c=relaxed/simple;
+	bh=ytIt7aVICYWiSyBTJMxhm3EFDHA6cIURV9v2+R6cvIc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=OdzCRdEo4JDR0vnXakr8q7otbC2g7YafzcCUdi53NXNWfc1E7fmUZ3yhLe55tsEmE166oCDKPSNzYCvpCS78o6DZdajEzBBdYixOVdS/++WlJvFFY/Yg4Sum7WnBlUp8/QCCf1v/8LrN39Vgpg1/7pHHXVgtBLb1V95UqIcqAxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVsrSYXW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dW6gxsCV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 923E7C0008;
-	Thu, 11 Apr 2024 14:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712844277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yHMOCEThioFNBRb0/pbHA6siONYSvI8bftJSI3SDdxw=;
-	b=dW6gxsCVgdghqn/IQbcGvOrg1mwarJk5nvxU2EHuog49c2PESSCXprtlxzegLMubTQWTll
-	ob7G/iNruURS6u6995ukRb7IuuEDM+JwqApqib94ioelO8Q01YlC4cK+J1K9MOQolSPRRw
-	3nBIHdL0PD0DQyx9r2Gckk9WbK+dX5wRN/h54M2U0K/V5BxtTqZzyzKXsOQbOmuC7Ezwr6
-	xwpVw7nK3o/VUhABP2sr4Pb0b3DYlCqAXYwyWUDaSgAh4fHhEAZdfIuD5OqTAO/2TVdRGV
-	8LO4Vqf2fDiQLDyx44laxhlTBWi7vcFAKRsxNMTdvEhwPcFDTIZVPLUNzael8g==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVsrSYXW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2B5C072AA;
+	Thu, 11 Apr 2024 14:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712844302;
+	bh=ytIt7aVICYWiSyBTJMxhm3EFDHA6cIURV9v2+R6cvIc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=iVsrSYXWr51w1eCDiSWsBTICrua+FhVQs6GssL9kKYTkVuvr0xUJjARwWZlRY0QNk
+	 O8NLnNjSqQM3mpG/KRdCxDGmoZLLtDK0uMaydAbl7PuLSCc+0Is5vopQ9ZZ2RlhgAx
+	 qD3/jTq2t6UGPev8dazEbSxqfeQzSk6asLloIbvReAwmPvQEByfsfIndWYghexy8EY
+	 wGdwS7FowsWglgW7jafMiTBSi1xEznEBexTSvrS4ZnXSpuTukb2se8iVXMeK5hnPgM
+	 9S+IZBddqvQEJqMTeQH+nLgsN8xDlyqJm1O2IAm6L0EoW0t5fdp4jfnc3KZTwPO9F1
+	 d85bTEPbF3lkQ==
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240411-fix-hid-bpf-v1-1-4ae913031a8c@kernel.org>
+References: <20240411-fix-hid-bpf-v1-1-4ae913031a8c@kernel.org>
+Subject: Re: [PATCH] HID: bpf: fix hid_bpf_input_report() when hid-core is
+ not ready
+Message-Id: <171284430162.439729.14775529796667980544.b4-ty@kernel.org>
+Date: Thu, 11 Apr 2024 16:05:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 11 Apr 2024 16:04:36 +0200
-Message-Id: <D0HCMDMWTO61.1F860N5I5SKS3@bootlin.com>
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 03/11] dt-bindings: reset: mobileye,eyeq5-reset: add
- EyeQ6L and EyeQ6H
-X-Mailer: aerc 0.15.2
-References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
- <20240410-mbly-olb-v1-3-335e496d7be3@bootlin.com>
- <975a8554-a299-4394-be15-c910cf9688ae@linaro.org>
-In-Reply-To: <975a8554-a299-4394-be15-c910cf9688ae@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-Hello,
+On Thu, 11 Apr 2024 09:05:56 +0200, Benjamin Tissoires wrote:
+> Reported by linux-next:
+> After merging the hid tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+> 
+> x86_64-linux-gnu-ld: vmlinux.o: in function `hid_bpf_input_report':
+> (.text+0x1c75181): undefined reference to `hid_input_report'
+> 
+> [...]
 
-On Thu Apr 11, 2024 at 8:14 AM CEST, Krzysztof Kozlowski wrote:
-> On 10/04/2024 19:12, Th=C3=A9o Lebrun wrote:
-> > Add bindings for EyeQ6L and EyeQ6H reset controllers.
-> >=20
-> > Some controllers host a single domain, meaning a single cell is enough.
-> > We do not enforce reg-names for such nodes.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  .../bindings/reset/mobileye,eyeq5-reset.yaml       | 88 ++++++++++++++=
-++++----
-> >  MAINTAINERS                                        |  1 +
-> >  2 files changed, 74 insertions(+), 15 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/reset/mobileye,eyeq5-res=
-et.yaml b/Documentation/devicetree/bindings/reset/mobileye,eyeq5-reset.yaml
-> > index 062b4518347b..799bcf15bed9 100644
-> > --- a/Documentation/devicetree/bindings/reset/mobileye,eyeq5-reset.yaml
-> > +++ b/Documentation/devicetree/bindings/reset/mobileye,eyeq5-reset.yaml
-> > @@ -4,11 +4,13 @@
-> >  $id: http://devicetree.org/schemas/reset/mobileye,eyeq5-reset.yaml#
-> >  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> > =20
-> > -title: Mobileye EyeQ5 reset controller
-> > +title: Mobileye EyeQ reset controller
-> > =20
-> >  description:
-> > -  The EyeQ5 reset driver handles three reset domains. Its registers li=
-ve in a
-> > -  shared region called OLB.
-> > +  EyeQ reset controller handles one or more reset domains. They live i=
-n shared
-> > +  regions called OLB. EyeQ5 and EyeQ6L host one OLB each, each with on=
-e reset
-> > +  instance. EyeQ6H hosts 7 OLB regions; three of those (west, east,
-> > +  accelerator) host reset controllers. West and east are duplicates.
-> > =20
-> >  maintainers:
-> >    - Gr=C3=A9gory Clement <gregory.clement@bootlin.com>
-> > @@ -17,27 +19,83 @@ maintainers:
-> > =20
-> >  properties:
-> >    compatible:
-> > -    const: mobileye,eyeq5-reset
-> > +    enum:
-> > +      - mobileye,eyeq5-reset
-> > +      - mobileye,eyeq6l-reset
-> > +      - mobileye,eyeq6h-we-reset
-> > +      - mobileye,eyeq6h-acc-reset
-> > =20
-> > -  reg:
-> > -    maxItems: 3
-> > +  reg: true
->
-> Same mistakes. Please open existing bindings with multiple variants,
-> e.g. some Qualcomm, and take a look how it is done there.
+Applied to hid/hid.git (for-6.10/hid-bpf), thanks!
 
-Thanks for the pointer to good example, that is useful! So if we take
-one random binding matching
-Documentation/devicetree/bindings/clock/qcom,*.yaml and that contains
-the "reg-names" string, we see:
+[1/1] HID: bpf: fix hid_bpf_input_report() when hid-core is not ready
+      https://git.kernel.org/hid/hid/c/b912cf042072
 
-  reg:
-    items:
-      - description: LPASS qdsp6ss register
-      - description: LPASS top-cc register
-
-  reg-names:
-    items:
-      - const: qdsp6ss
-      - const: top_cc
-
-I don't understand one thing; this doesn't tell you:
-
-   You can provide 2 MMIO blocks, which must be qdsp6ss and top_cc.
-
-But it tells you:
-
-   Block zero must be qdsp6ss.
-   Block one must be top_cc.
-
-If we do that I do not get the point of reg-names; we put more
-information in our devicetree that is in any case imposed.
-
-This is why I went with a different approach looking like:
-
-  reg:
-    minItems: 2
-    maxItems: 2
-  reg-names:
-    minItems: 2
-    maxItems: 2
-    items:
-      enum: [ d0, d1 ]
-
-I know this is not perfect, but at least you don't enforce an order for
-no reason. If "items: const..." approach should be taken, then I'll
-remove reg-names which bring no benefit.
-
-Thanks Krzysztof,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+-- 
+Benjamin Tissoires <bentiss@kernel.org>
 
