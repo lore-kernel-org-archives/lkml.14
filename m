@@ -1,66 +1,52 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26A42556E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553522BCF6;
+	Thu, 11 Apr 2024 15:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849504; cv=none; b=f1mMsiBTNPdcFUBor+uEY4ifQkD/mnep5GIME1ss08jClEexuPa/aX0frvsXN+tz+GB6sIktd0/Zq8f3qEm9/0OvGJOCG56Sjk/qeuItnQB1xB1xtzS1JMqKdVLDKuwwWnyxQv5vS6Mmkm+TajVC3yUqLYYdfln5YCP6AQPSY4Q=
+	t=1712849504; cv=none; b=mgJaVzgkKvCrYU3k8JHUOb3WC7T+dfJs8eTE8BNnuipyqJwFkHi9YpgwzGr2kzTcRZhEYH12IeNpx4UrPA/nsc9OJRUCMQNCOv9GpD3SKv0gMYm6U18eDM3E9UJkqwDcrnkVTi76lmR0kiFgXFWVsI7NAIpOhGsZiumhOAX5yBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849504; c=relaxed/simple;
-	bh=TZBv3QxQEHQifRazqOUvpuU1rG3ph2R3aVTk3X9Gap0=;
+	bh=tbZsr0sSGSCxXMIDvmmKVl5pXk4Bjcijff8HHwfeNhY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FC3ja+bOI/8MrL0JWdXuo7U104SDrTlJFt+M4sISxIvkz81Xss2Qs06js7k8BrFecdDBY3B8Rvwy2d7hqV1j3O1xXvOOZZT4ES9E7r4v86s2z0ZPvAVM0EU7MaXw1Q4/4g/uKjZ+CtLJj2B/95eiddZXwDk3AOMEHAbNUozGp+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=g/tCYKRS; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 MIME-Version; b=ElSwteQOTIHTELI5Ljl5A6ncUrcTOFL8P0nGgblm+oNiH3cibQ7abAu5yxvJYfoN4b2i8v44Xa5szKmjvWQTfyrqcEwkRcR1Bed3BSW2TUS7lsiGjXMYiMqkc2y1nLw7PrufT0oVVufbWq3LbfcuJiXc3VSQ4UF8Q87QY7T/h5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sylv.io; spf=pass smtp.mailfrom=sylv.io; dkim=pass (2048-bit key) header.d=sylv.io header.i=@sylv.io header.b=UACaogNa; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sylv.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sylv.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="g/tCYKRS"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d0772bb5ffso180583239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849500; x=1713454300; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vnTaAM7cR5Yq5Ow6bam+JWxgxFhkDbGidFejqzVzbL8=;
-        b=g/tCYKRS4Gmfowos5Xy4WF98hwrGj8aGi010fS5yC/rsdTDOylQ27kAm8iIJbLmSgT
-         97NFfrnsiLt8MEnEv06QwYmaYxMn63YmHeXmTcSOjyD1AOCxwaBgjwt/1bgCoGF2fkoB
-         m8l+PC6DyjdMEYFtWiU7f/GqZpn7pE5hu3rdgpzV8hDbSDrKL+Yy/Q7L8tfskMKu1MK9
-         h7G8URRWolNkqw/UdZw+eV0Dbpb1BEDfrK98uHBpaem5fEEgMHrPNiyGUjlp53amjzE+
-         +5DeFIdg+2IKw0N/yH0EUoi1kXe8CNUAj5BE2W4tRKOChduX9+qfoaO5MHaOrA3+9AcD
-         kFDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849500; x=1713454300;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vnTaAM7cR5Yq5Ow6bam+JWxgxFhkDbGidFejqzVzbL8=;
-        b=drHNVq6J5byvSpiUdO6saZuZ/1VYRBY5RZl8dcZJfuFaAwtnjE8VkJnhDNnVj7pAs/
-         W64ECY3YGrvTojHFHaRRylX98fayzZCEu8MHItAUlgFzFwi9JvstUH+v5XvFJG8zOA3J
-         I91ucJitz7J34z5mINo4K65cqbshfui/6uzasH3+fdMtwZFPaRPFAjaCyim4MYxfJaDw
-         xQHrVhjjpVbi9YuUKoEcMbTJwATxRzyjht9SzV403T+8e7wTpZhetLiVusSqtYRpkyHM
-         s/VI3CNoRyeGdHzc7/51uDxCs4tkU6fCNAs7f5yA/VDDxouoKK8o3vHMoeZSIpPeB4NG
-         7hlg==
-X-Gm-Message-State: AOJu0YwaGN9GiE08NM20IX6bhNVXfAsXSWwT//SoXsDs4huco//EcdBr
-	OGJyn8zUlj3nuz4Lr/xEioNOy9q4tZHheLfV32cR3sWvWQtPy5Uzz8YVNA4ktrh41eDpJe/+ayI
-	G
-X-Google-Smtp-Source: AGHT+IHCYhbVjeiN6ZbVGZ5FXT6s+PbBwUNcZSjkCcgCxerd5TEJ92G6njbB511lBWV6yPsPhU9+ZQ==
-X-Received: by 2002:a92:c56f:0:b0:369:e37d:541f with SMTP id b15-20020a92c56f000000b00369e37d541fmr6975632ilj.1.1712849500395;
-        Thu, 11 Apr 2024 08:31:40 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.31.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:31:38 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 007/437] mm/util: add iterdup_nul() and iterdup() helpers
-Date: Thu, 11 Apr 2024 09:12:27 -0600
-Message-ID: <20240411153126.16201-8-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=sylv.io header.i=@sylv.io header.b="UACaogNa"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4VFk3G2nd8z9scY;
+	Thu, 11 Apr 2024 17:22:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sylv.io; s=MBO0001;
+	t=1712848970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KwqedZ54CZtZon3qVCNXRRs4jtBdEtTfdznuqHMNeLk=;
+	b=UACaogNaDNFa9u/9pXHrT5EB5/wcUyBLPaCzojGFh0mSjyQgDFsYOW2V/Kz6tIK6aeVqTP
+	nzAH25k4TITgEKYNKmCp8vsgXQk895XA+HjUqRKfCO5FTLow3p+vuloPYqEvZYGHbdwDjl
+	t4MFl47IjSKwnUeO8k4XMiJ8eTcS+DbE/oJ6O279gRQnqd6Jrc5NaOReJDB85YVsblIADS
+	vsQFcoop7F3DjMvhbgTa21CRvCeOFNVF8VCOyIXBIWNa+wKIZ7GhaDPxRUyjL0887EAPsd
+	Me5Oq7+UAasXWy5fps8CfUH77PqdXhVE7O+4DyEsswSgyXbqTK/mszWpscaKAQ==
+From: Marcello Sylvester Bauer <sylv@sylv.io>
+To: linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Marcello Sylvester Bauer <marcello.bauer@9elements.com>,
+	Matthias Stoeckl <matthias.stoeckl@secunet.com>,
+	Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
+	Marcello Sylvester Bauer <sylv@sylv.io>
+Subject: [PATCH v1 1/2] usb: gadget: dummy_hcd: Switch to hrtimer transfer scheduler
+Date: Thu, 11 Apr 2024 17:22:10 +0200
+Message-ID: <57a1c2180ff74661600e010c234d1dbaba1d0d46.1712843963.git.sylv@sylv.io>
+In-Reply-To: <cover.1712843963.git.sylv@sylv.io>
+References: <cover.1712843963.git.sylv@sylv.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,106 +54,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Message-ID: <20240411152210.zJj03LGtB0nqclR-hl2oCV3NN_RSek86oZ_Op4d-tNU@z>
 
-This is identical to the memdup variants, except it operates on a struct
-iov_iter rather than a direct user pointer.
+The dummy_hcd transfer scheduler assumes that the internal kernel timer
+frequency is set to 1000Hz to give a polling interval of 1ms. Reducing
+the timer frequency will result in an anti-proportional reduction in
+transfer performance. Switch to a hrtimer to decouple this association.
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
 ---
- include/linux/string.h |  4 +++
- mm/util.c              | 57 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
+ drivers/usb/gadget/udc/dummy_hcd.c | 35 +++++++++++++++++-------------
+ 1 file changed, 20 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 9ba8b4597009..1983d2bf8840 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -18,6 +18,10 @@ extern void *memdup_user(const void __user *, size_t);
- extern void *vmemdup_user(const void __user *, size_t);
- extern void *memdup_user_nul(const void __user *, size_t);
+diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+index 0953e1b5c030..dab559d8ee8c 100644
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -30,7 +30,7 @@
+ #include <linux/slab.h>
+ #include <linux/errno.h>
+ #include <linux/init.h>
+-#include <linux/timer.h>
++#include <linux/hrtimer.h>
+ #include <linux/list.h>
+ #include <linux/interrupt.h>
+ #include <linux/platform_device.h>
+@@ -240,7 +240,7 @@ enum dummy_rh_state {
+ struct dummy_hcd {
+ 	struct dummy			*dum;
+ 	enum dummy_rh_state		rh_state;
+-	struct timer_list		timer;
++	struct hrtimer			timer;
+ 	u32				port_status;
+ 	u32				old_status;
+ 	unsigned long			re_timeout;
+@@ -1301,8 +1301,8 @@ static int dummy_urb_enqueue(
+ 		urb->error_count = 1;		/* mark as a new urb */
  
-+struct iov_iter;
-+void *iterdup_nul(struct iov_iter *, size_t);
-+void *iterdup(struct iov_iter *, size_t);
-+
- /**
-  * memdup_array_user - duplicate array from user space
-  * @src: source address in user space
-diff --git a/mm/util.c b/mm/util.c
-index 669397235787..5d701cf693b0 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -224,6 +224,32 @@ void *memdup_user(const void __user *src, size_t len)
- }
- EXPORT_SYMBOL(memdup_user);
+ 	/* kick the scheduler, it'll do the rest */
+-	if (!timer_pending(&dum_hcd->timer))
+-		mod_timer(&dum_hcd->timer, jiffies + 1);
++	if (!hrtimer_active(&dum_hcd->timer))
++		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
  
-+/**
-+ * iterdup - duplicate memory region
-+ *
-+ * @src: source iov_iter
-+ * @len: number of bytes to copy
-+ *
-+ * Return: an ERR_PTR() on failure.  Result is physically
-+ * contiguous, to be freed by kfree().
-+ */
-+void *iterdup(struct iov_iter *src, size_t len)
-+{
-+	void *p;
-+
-+	p = kmalloc_track_caller(len, GFP_USER | __GFP_NOWARN);
-+	if (!p)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (!copy_from_iter_full(p, len, src)) {
-+		kfree(p);
-+		return ERR_PTR(-EFAULT);
-+	}
-+
-+	return p;
-+}
-+EXPORT_SYMBOL(iterdup);
-+
- /**
-  * vmemdup_user - duplicate memory region from user space
-  *
-@@ -312,6 +338,37 @@ void *memdup_user_nul(const void __user *src, size_t len)
- }
- EXPORT_SYMBOL(memdup_user_nul);
+  done:
+ 	spin_unlock_irqrestore(&dum_hcd->dum->lock, flags);
+@@ -1323,7 +1323,7 @@ static int dummy_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
+ 	rc = usb_hcd_check_unlink_urb(hcd, urb, status);
+ 	if (!rc && dum_hcd->rh_state != DUMMY_RH_RUNNING &&
+ 			!list_empty(&dum_hcd->urbp_list))
+-		mod_timer(&dum_hcd->timer, jiffies);
++		hrtimer_start(&dum_hcd->timer, ns_to_ktime(0), HRTIMER_MODE_REL);
  
-+/**
-+ * iterdup_nul - duplicate memory region from iov_iter and NUL-terminate
-+ *
-+ * @src: source address to copy from
-+ * @len: number of bytes to copy
-+ *
-+ * Return: an ERR_PTR() on failure.
-+ */
-+void *iterdup_nul(struct iov_iter *src, size_t len)
-+{
-+	char *p;
-+
-+	/*
-+	 * Always use GFP_KERNEL, since copy_from_iter_full() can sleep and
-+	 * cause pagefault, which makes it pointless to use GFP_NOFS
-+	 * or GFP_ATOMIC.
-+	 */
-+	p = kmalloc_track_caller(len + 1, GFP_KERNEL);
-+	if (!p)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (!copy_from_iter_full(p, len, src)) {
-+		kfree(p);
-+		return ERR_PTR(-EFAULT);
-+	}
-+	p[len] = '\0';
-+
-+	return p;
-+}
-+EXPORT_SYMBOL(iterdup_nul);
-+
- /* Check if the vma is being used as a stack by this task */
- int vma_is_stack_for_current(struct vm_area_struct *vma)
+ 	spin_unlock_irqrestore(&dum_hcd->dum->lock, flags);
+ 	return rc;
+@@ -1777,7 +1777,7 @@ static int handle_control_request(struct dummy_hcd *dum_hcd, struct urb *urb,
+  * drivers except that the callbacks are invoked from soft interrupt
+  * context.
+  */
+-static void dummy_timer(struct timer_list *t)
++static enum hrtimer_restart dummy_timer(struct hrtimer *t)
  {
+ 	struct dummy_hcd	*dum_hcd = from_timer(dum_hcd, t, timer);
+ 	struct dummy		*dum = dum_hcd->dum;
+@@ -1808,8 +1808,6 @@ static void dummy_timer(struct timer_list *t)
+ 		break;
+ 	}
+ 
+-	/* FIXME if HZ != 1000 this will probably misbehave ... */
+-
+ 	/* look at each urb queued by the host side driver */
+ 	spin_lock_irqsave(&dum->lock, flags);
+ 
+@@ -1817,7 +1815,7 @@ static void dummy_timer(struct timer_list *t)
+ 		dev_err(dummy_dev(dum_hcd),
+ 				"timer fired with no URBs pending?\n");
+ 		spin_unlock_irqrestore(&dum->lock, flags);
+-		return;
++		return HRTIMER_NORESTART;
+ 	}
+ 	dum_hcd->next_frame_urbp = NULL;
+ 
+@@ -1995,10 +1993,12 @@ static void dummy_timer(struct timer_list *t)
+ 		dum_hcd->udev = NULL;
+ 	} else if (dum_hcd->rh_state == DUMMY_RH_RUNNING) {
+ 		/* want a 1 msec delay here */
+-		mod_timer(&dum_hcd->timer, jiffies + msecs_to_jiffies(1));
++		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&dum->lock, flags);
++
++	return HRTIMER_NORESTART;
+ }
+ 
+ /*-------------------------------------------------------------------------*/
+@@ -2387,7 +2387,7 @@ static int dummy_bus_resume(struct usb_hcd *hcd)
+ 		dum_hcd->rh_state = DUMMY_RH_RUNNING;
+ 		set_link_state(dum_hcd);
+ 		if (!list_empty(&dum_hcd->urbp_list))
+-			mod_timer(&dum_hcd->timer, jiffies);
++			hrtimer_start(&dum_hcd->timer, ns_to_ktime(0), HRTIMER_MODE_REL);
+ 		hcd->state = HC_STATE_RUNNING;
+ 	}
+ 	spin_unlock_irq(&dum_hcd->dum->lock);
+@@ -2465,7 +2465,8 @@ static DEVICE_ATTR_RO(urbs);
+ 
+ static int dummy_start_ss(struct dummy_hcd *dum_hcd)
+ {
+-	timer_setup(&dum_hcd->timer, dummy_timer, 0);
++	hrtimer_init(&dum_hcd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	dum_hcd->timer.function = dummy_timer;
+ 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
+ 	dum_hcd->stream_en_ep = 0;
+ 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
+@@ -2494,7 +2495,8 @@ static int dummy_start(struct usb_hcd *hcd)
+ 		return dummy_start_ss(dum_hcd);
+ 
+ 	spin_lock_init(&dum_hcd->dum->lock);
+-	timer_setup(&dum_hcd->timer, dummy_timer, 0);
++	hrtimer_init(&dum_hcd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
++	dum_hcd->timer.function = dummy_timer;
+ 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
+ 
+ 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
+@@ -2513,8 +2515,11 @@ static int dummy_start(struct usb_hcd *hcd)
+ 
+ static void dummy_stop(struct usb_hcd *hcd)
+ {
+-	device_remove_file(dummy_dev(hcd_to_dummy_hcd(hcd)), &dev_attr_urbs);
+-	dev_info(dummy_dev(hcd_to_dummy_hcd(hcd)), "stopped\n");
++	struct dummy_hcd	*dum_hcd = hcd_to_dummy_hcd(hcd);
++
++	hrtimer_cancel(&dum_hcd->timer);
++	device_remove_file(dummy_dev(dum_hcd), &dev_attr_urbs);
++	dev_info(dummy_dev(dum_hcd), "stopped\n");
+ }
+ 
+ /*-------------------------------------------------------------------------*/
 -- 
-2.43.0
+2.44.0
 
