@@ -1,63 +1,50 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F21482E4;
-	Thu, 11 Apr 2024 11:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845B11474AB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712833713; cv=none; b=nI3y/jLc/GFXkbPlwyEKT6qGnYlZe+J7ojTzfrlf/RUUW2RNVM+wC2plaqncGkvfMCy7KwE+CrLJXXdOPbAo44PBu4y6z7tJ/lnspHTR42eCapWfkRGZkJZfvL6J3JFoMPl0wbUfd4XqYZeuspkSU9xtK6i3+Qxu+L/zrg7orRY=
+	t=1712833739; cv=none; b=byhj9lnwPeZ29pd5oDcBPLQ0Sxh5maqNStYf0aAx9b8WnDKGevkeDKnV8qg15iUcwON/nwhS78Un4oN8ndKC+m5gIqekMA2CYadOGHbIjqbq/sIlnHWPz1uAOZT9nCsE7Az4Vyy40aMkakUzjsn+C8Z4Krfa/goz+oMbZlwAWTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712833713; c=relaxed/simple;
-	bh=AMWp2LHHPlkid311uJ50F+pEQ152qqit1D1tRFBrxBs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hIXB4wrZkvfHUau9+Xtf4X7EX8fr2IOcskGGApjxmNiJ0IK16ALLu9HBcT9AznsVIyAlOopgYlXvyjPkMHw3baKe8a+mrcRrWwd3SduZkxp3UB4oJctZ3amZ8hl94SJdMRpvHHYaZVQRB9oPkz0tLtQ4hap1/8RK6P5UVYgkHyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DNZmS5Co; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1712833739; c=relaxed/simple;
+	bh=4yerjFFTsRI1XLGWxI1mWV+vwXM2RIzb82EVWzwsnw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cgPxS/urSHMa0GZ55Yhav/9/0ug+zAsOk0BC+iS9QLyQim3+bgLcJ1olec9/quShrZ76VDmwu2a8FvD2lfGJsM5JpTMigMiLPrKimfItuiYfVVrDJJmCbK/vVkSuxAVffknEf2xjZVNxVC6RNevm9qx7azdlExDYckUV3Sl8qzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=YeQFpoGj; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DNZmS5Co"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43B40AxV009489;
-	Thu, 11 Apr 2024 06:08:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=hZy+g1IZf9QdRbbXbBeYAz5FpFJFKy2zhpm4F9dfA7Q=; b=
-	DNZmS5Co7Z/wHOqMydpv9jZNPegJAGwAcztyljhuf3SgHBkyAfg1gi6jiJqkvMvW
-	XI7i7QS1DR4QB0fvctwFvcb3FZiZ9vtuXfptWICyEuaA5fSPeINSY5P2PKBqsTVA
-	gtoZhiihI1K/6NqlfPsGPGF6e7PQ2MRnX2d5NKgPseb6kPjsT0JmJ6tRwGPieAVw
-	YCPqnbAV5R2P+EPaGBg44Rql/So5WJgbWuZpkzVMKgRxaV/mMAQLS9tOSHpuie2z
-	EuihAgTmXId1qN7bFFhKYZ9S4SP7uhD377BnzPAim8352hWD54kIOlPdqn5IaXla
-	/ba8Nve4ZhDYgjT/8dqWuQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxpva8-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 06:08:19 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
- 2024 12:08:16 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Thu, 11 Apr 2024 12:08:16 +0100
-Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.64.140])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 7C2B3820245;
-	Thu, 11 Apr 2024 11:08:16 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Richard
- Fitzgerald" <rf@opensource.cirrus.com>,
-        Stefan Binding
-	<sbinding@opensource.cirrus.com>
-Subject: [PATCH v2 6/7] ALSA: hda: cs35l41: Remove redundant argument to cs35l41_request_firmware_file()
-Date: Thu, 11 Apr 2024 12:08:12 +0100
-Message-ID: <20240411110813.330483-7-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411110813.330483-1-sbinding@opensource.cirrus.com>
-References: <20240411110813.330483-1-sbinding@opensource.cirrus.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="YeQFpoGj"
+Received: from tundra.lovozera (unknown [178.176.79.151])
+	by mail.ispras.ru (Postfix) with ESMTPSA id CA9684073CFC;
+	Thu, 11 Apr 2024 11:08:50 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru CA9684073CFC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1712833732;
+	bh=6nS8pm5CRwKEHxdOcbSSAvsWDn+jjKR17A7PSN1Ed+k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YeQFpoGjy7hnaJAj9pGdBRzJT+B+l0eZezXjucGk1ztAq8+FgooxPjA7HSbzlsKEX
+	 /BOyJNhYY/7HVZ+hUXY8/6P5n9HjoULhT7geCYVvwNf/3O1hb6nh9ARWCDpLk15MVj
+	 X+4m0PHtp+ZS9iFkVFQr1mcL99sHbriovxwIa/xc=
+From: Mikhail Kobuk <m.kobuk@ispras.ru>
+To: Karol Herbst <kherbst@redhat.com>
+Cc: Mikhail Kobuk <m.kobuk@ispras.ru>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@redhat.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Ben Skeggs <bskeggs@redhat.com>,
+	Francisco Jerez <currojerez@riseup.net>,
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>
+Subject: [PATCH v2] drm: nv04: Fix out of bounds access
+Date: Thu, 11 Apr 2024 14:08:52 +0300
+Message-ID: <20240411110854.16701-1-m.kobuk@ispras.ru>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,192 +52,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: BYf2bpTdIOn0pCeJ7RpuyoQmFmEJrJ3l
-X-Proofpoint-GUID: BYf2bpTdIOn0pCeJ7RpuyoQmFmEJrJ3l
-X-Proofpoint-Spam-Reason: safe
 
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
+When Output Resource (dcb->or) value is assigned in
+fabricate_dcb_output(), there may be out of bounds access to
+dac_users array in case dcb->or is zero because ffs(dcb->or) is
+used as index there.
+The 'or' argument of fabricate_dcb_output() must be interpreted as a
+number of bit to set, not value.
 
-In every case the 'dir' argument to cs35l41_request_firmware_file() is passed
-the string "cirrus/", so this is a redundant argument and can be removed.
+Utilize macros from 'enum nouveau_or' in calls instead of hardcoding.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 2e5702aff395 ("drm/nouveau: fabricate DCB encoder table for iMac G4")
+Fixes: 670820c0e6a9 ("drm/nouveau: Workaround incorrect DCB entry on a GeForce3 Ti 200.")
+Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
 ---
- sound/pci/hda/cs35l41_hda.c | 39 ++++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 24 deletions(-)
+Changes in v2:
+- Instead of checking ffs(dcb->or), adjust function calls to match
+  argument semantics
+- Link to v1: https://lore.kernel.org/all/20240331064552.6112-1-m.kobuk@ispras.ru/
 
-diff --git a/sound/pci/hda/cs35l41_hda.c b/sound/pci/hda/cs35l41_hda.c
-index 4d4f1e1aca09..74076fa45dd6 100644
---- a/sound/pci/hda/cs35l41_hda.c
-+++ b/sound/pci/hda/cs35l41_hda.c
-@@ -23,7 +23,6 @@
- #include "hda_cs_dsp_ctl.h"
- #include "cs35l41_hda_property.h"
+ drivers/gpu/drm/nouveau/nouveau_bios.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
+index 479effcf607e..79cfab53f80e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_bios.c
++++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
+@@ -23,6 +23,7 @@
+  */
  
--#define CS35L41_FIRMWARE_ROOT "cirrus/"
- #define CS35L41_PART "cs35l41"
+ #include "nouveau_drv.h"
++#include "nouveau_bios.h"
+ #include "nouveau_reg.h"
+ #include "dispnv04/hw.h"
+ #include "nouveau_encoder.h"
+@@ -1677,7 +1678,7 @@ apply_dcb_encoder_quirks(struct drm_device *dev, int idx, u32 *conn, u32 *conf)
+ 	 */
+ 	if (nv_match_device(dev, 0x0201, 0x1462, 0x8851)) {
+ 		if (*conn == 0xf2005014 && *conf == 0xffffffff) {
+-			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, 1);
++			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, DCB_OUTPUT_B);
+ 			return false;
+ 		}
+ 	}
+@@ -1763,26 +1764,26 @@ fabricate_dcb_encoder_table(struct drm_device *dev, struct nvbios *bios)
+ #ifdef __powerpc__
+ 	/* Apple iMac G4 NV17 */
+ 	if (of_machine_is_compatible("PowerMac4,5")) {
+-		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, 1);
+-		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, 2);
++		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, DCB_OUTPUT_B);
++		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, DCB_OUTPUT_C);
+ 		return;
+ 	}
+ #endif
  
- #define HALO_STATE_DSP_CTL_NAME		"HALO_STATE"
-@@ -172,7 +171,7 @@ static int cs35l41_request_tuning_param_file(struct cs35l41_hda *cs35l41, char *
+ 	/* Make up some sane defaults */
+ 	fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG,
+-			     bios->legacy.i2c_indices.crt, 1, 1);
++			     bios->legacy.i2c_indices.crt, 1, DCB_OUTPUT_B);
  
- static int cs35l41_request_firmware_file(struct cs35l41_hda *cs35l41,
- 					 const struct firmware **firmware, char **filename,
--					 const char *dir, const char *ssid, const char *amp_name,
-+					 const char *ssid, const char *amp_name,
- 					 int spkid, const char *filetype)
- {
- 	const char * const dsp_name = cs35l41->cs_dsp.name;
-@@ -180,23 +179,23 @@ static int cs35l41_request_firmware_file(struct cs35l41_hda *cs35l41,
- 	int ret = 0;
+ 	if (nv04_tv_identify(dev, bios->legacy.i2c_indices.tv) >= 0)
+ 		fabricate_dcb_output(dcb, DCB_OUTPUT_TV,
+ 				     bios->legacy.i2c_indices.tv,
+-				     all_heads, 0);
++				     all_heads, DCB_OUTPUT_A);
  
- 	if (spkid > -1 && ssid && amp_name)
--		*filename = kasprintf(GFP_KERNEL, "%s%s-%s-%s-%s-spkid%d-%s.%s", dir, CS35L41_PART,
-+		*filename = kasprintf(GFP_KERNEL, "cirrus/%s-%s-%s-%s-spkid%d-%s.%s", CS35L41_PART,
- 				      dsp_name, hda_cs_dsp_fw_ids[cs35l41->firmware_type],
- 				      ssid, spkid, amp_name, filetype);
- 	else if (spkid > -1 && ssid)
--		*filename = kasprintf(GFP_KERNEL, "%s%s-%s-%s-%s-spkid%d.%s", dir, CS35L41_PART,
-+		*filename = kasprintf(GFP_KERNEL, "cirrus/%s-%s-%s-%s-spkid%d.%s", CS35L41_PART,
- 				      dsp_name, hda_cs_dsp_fw_ids[cs35l41->firmware_type],
- 				      ssid, spkid, filetype);
- 	else if (ssid && amp_name)
--		*filename = kasprintf(GFP_KERNEL, "%s%s-%s-%s-%s-%s.%s", dir, CS35L41_PART,
-+		*filename = kasprintf(GFP_KERNEL, "cirrus/%s-%s-%s-%s-%s.%s", CS35L41_PART,
- 				      dsp_name, hda_cs_dsp_fw_ids[cs35l41->firmware_type],
- 				      ssid, amp_name, filetype);
- 	else if (ssid)
--		*filename = kasprintf(GFP_KERNEL, "%s%s-%s-%s-%s.%s", dir, CS35L41_PART,
-+		*filename = kasprintf(GFP_KERNEL, "cirrus/%s-%s-%s-%s.%s", CS35L41_PART,
- 				      dsp_name, hda_cs_dsp_fw_ids[cs35l41->firmware_type],
- 				      ssid, filetype);
- 	else
--		*filename = kasprintf(GFP_KERNEL, "%s%s-%s-%s.%s", dir, CS35L41_PART,
-+		*filename = kasprintf(GFP_KERNEL, "cirrus/%s-%s-%s.%s", CS35L41_PART,
- 				      dsp_name, hda_cs_dsp_fw_ids[cs35l41->firmware_type],
- 				      filetype);
+ 	else if (bios->tmds.output0_script_ptr ||
+ 		 bios->tmds.output1_script_ptr)
+ 		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS,
+ 				     bios->legacy.i2c_indices.panel,
+-				     all_heads, 1);
++				     all_heads, DCB_OUTPUT_B);
+ }
  
-@@ -237,13 +236,11 @@ static int cs35l41_request_firmware_files_spkid(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub<-spkidN><-ampname>.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT,
- 					    cs35l41->acpi_subsystem_id, cs35l41->amp_name,
- 					    cs35l41->speaker_id, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-spkidN><-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id, cs35l41->amp_name,
- 						    cs35l41->speaker_id, "bin");
- 		if (ret)
-@@ -254,12 +251,11 @@ static int cs35l41_request_firmware_files_spkid(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub<-ampname>.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, cs35l41->acpi_subsystem_id,
-+					    cs35l41->acpi_subsystem_id,
- 					    cs35l41->amp_name, -1, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-spkidN><-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id, cs35l41->amp_name,
- 						    cs35l41->speaker_id, "bin");
- 		if (ret)
-@@ -270,18 +266,17 @@ static int cs35l41_request_firmware_files_spkid(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub<-spkidN>.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, cs35l41->acpi_subsystem_id,
-+					    cs35l41->acpi_subsystem_id,
- 					    NULL, cs35l41->speaker_id, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-spkidN><-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id,
- 						    cs35l41->amp_name, cs35l41->speaker_id, "bin");
- 		if (ret)
- 			/* try cirrus/part-dspN-fwtype-sub<-spkidN>.bin */
- 			ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware,
--							    coeff_filename, CS35L41_FIRMWARE_ROOT,
-+							    coeff_filename,
- 							    cs35l41->acpi_subsystem_id, NULL,
- 							    cs35l41->speaker_id, "bin");
- 		if (ret)
-@@ -292,18 +287,17 @@ static int cs35l41_request_firmware_files_spkid(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, cs35l41->acpi_subsystem_id,
-+					    cs35l41->acpi_subsystem_id,
- 					    NULL, -1, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-spkidN><-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id, cs35l41->amp_name,
- 						    cs35l41->speaker_id, "bin");
- 		if (ret)
- 			/* try cirrus/part-dspN-fwtype-sub<-spkidN>.bin */
- 			ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware,
--							    coeff_filename, CS35L41_FIRMWARE_ROOT,
-+							    coeff_filename,
- 							    cs35l41->acpi_subsystem_id, NULL,
- 							    cs35l41->speaker_id, "bin");
- 		if (ret)
-@@ -330,13 +324,13 @@ static int cs35l41_fallback_firmware_file(struct cs35l41_hda *cs35l41,
- 
- 	/* fallback try cirrus/part-dspN-fwtype.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, NULL, NULL, -1, "wmfw");
-+					    NULL, NULL, -1, "wmfw");
- 	if (ret)
- 		goto err;
- 
- 	/* fallback try cirrus/part-dspN-fwtype.bin */
- 	ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--					    CS35L41_FIRMWARE_ROOT, NULL, NULL, -1, "bin");
-+					    NULL, NULL, -1, "bin");
- 	if (ret) {
- 		release_firmware(*wmfw_firmware);
- 		kfree(*wmfw_filename);
-@@ -365,12 +359,11 @@ static int cs35l41_request_firmware_files(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub<-ampname>.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, cs35l41->acpi_subsystem_id,
-+					    cs35l41->acpi_subsystem_id,
- 					    cs35l41->amp_name, -1, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id, cs35l41->amp_name,
- 						    -1, "bin");
- 		if (ret)
-@@ -381,18 +374,16 @@ static int cs35l41_request_firmware_files(struct cs35l41_hda *cs35l41,
- 
- 	/* try cirrus/part-dspN-fwtype-sub.wmfw */
- 	ret = cs35l41_request_firmware_file(cs35l41, wmfw_firmware, wmfw_filename,
--					    CS35L41_FIRMWARE_ROOT, cs35l41->acpi_subsystem_id,
-+					    cs35l41->acpi_subsystem_id,
- 					    NULL, -1, "wmfw");
- 	if (!ret) {
- 		/* try cirrus/part-dspN-fwtype-sub<-ampname>.bin */
- 		ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--						    CS35L41_FIRMWARE_ROOT,
- 						    cs35l41->acpi_subsystem_id,
- 						    cs35l41->amp_name, -1, "bin");
- 		if (ret)
- 			/* try cirrus/part-dspN-fwtype-sub.bin */
- 			ret = cs35l41_request_firmware_file(cs35l41, coeff_firmware, coeff_filename,
--							    CS35L41_FIRMWARE_ROOT,
- 							    cs35l41->acpi_subsystem_id, NULL, -1,
- 							    "bin");
- 		if (ret)
+ static int
 -- 
-2.34.1
+2.44.0
 
