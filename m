@@ -1,48 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D943A219FF;
-	Thu, 11 Apr 2024 14:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3601C2C18D;
+	Thu, 11 Apr 2024 14:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846418; cv=none; b=JrpM186HG/Tczo1hc6B0K7cGFyKClWqOaBxepqhtcDAeBglhqrf61onQGbSpUOCoguzzjsm2kEQ+EqCyY15ODP941Of4zHUzRGkCZBcDIWZu69QzCQQK45AFR9juvzIdlbH4L5n5Kkev/NvWcDZVUPNLHXVcBZefll5hiYbeZ94=
+	t=1712846421; cv=none; b=oDgRyveTFXhxfAURexHPX6nU3le1qeUBlxcLaGt87JMIueTCs8PKPJu+e3hQr/x+G3uz6eCVxM2YIdvDJ4bFF382cCxHc4Z5VALLIg4J8obounPfA+Z39kW+vUVV4RKFGqP2qD/4vFRck4fIo8ZK/gJb1H2SUPAlkydBzl1JZAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846418; c=relaxed/simple;
-	bh=KqIzjIXDRy7bmxFkI5JP21C11AhDPkvBuXIyFp7tOGQ=;
+	s=arc-20240116; t=1712846421; c=relaxed/simple;
+	bh=Go1h6GbxB+by0U4JdQ0bJayFPJ6ZBOT6IRmjL6xR1X4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ta3eGcKhAB8G4XXLIS6pCiH291RJVsBI6dQJ3uvR1y/req6DcOj8A70AWsQTsiJWISJiljPBSkwKDMRzDMJRoybs5mjVPCVhVdgOsnxMg1HiogxUp8Ldr4LDgx0wmUEjkbdXi+GZCs5lQ4eBzj83s4GDwBtMGbNz0P8xLwfz8pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=05hr5bql; arc=none smtp.client-ip=91.207.212.93
+	 MIME-Version:Content-Type; b=n4omKPIUU8mwkq8dUpQwnkCp1jmKDc9zx++wGivJdYHSZ6AzhCXzVirIpkv0HVbasKGJXxHzFP2tEqV4yYLXcHN22nrYtzlBSQz0SsWejcQWnVN5ojuz2pp7GuFelw/fX6k/R2IAfQqWvnlrp/jP4CF4PfrvrCdbYEyOd+uYBRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=PudlQIRv; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="05hr5bql"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BDROjo029165;
-	Thu, 11 Apr 2024 16:39:50 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="PudlQIRv"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BBtfmB009772;
+	Thu, 11 Apr 2024 16:40:02 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=lmuT1TQX9KX0XMZKPrpyK3DzjQlXsMn6u/Q9ctOGe5I=; b=05
-	hr5bqlgUo0AFYhH55jTzcpfFx0dCQEblHkeMpX6a6F/CTpsszW4KQ9j8Tw8ZwN/B
-	URb3bWBIpqdo+4RQms2tUW8qz/kS9uWKLuXfVvimCFCcL/mmo+N2U0L3lRn5hrAr
-	LwWeh6HqNWIGHrGwb5vVhpU/eJ34l4JZsv8UfEKvKxH6/c9+d7ok5dijCJKVtn85
-	+kOW0iMCbQsLlTWBfKklmYKRSrmx249IdVddTVX2ZdOqCJDNV6Js/Qx/juONSs9r
-	A98klyxb6cn4NikAx9xFJ2JzMwYAz/3eBL7T8qTrw0ExMyi32SQC/ananOc9nxIf
-	UeX9d5mnGbEjVugPi6tQ==
+	selector1; bh=leLPZiLCktPIospyQ9FP6+cf6VRekIBzP4HKYwDuK9M=; b=Pu
+	dlQIRvk31aoz1QOjb3sWqYlLINa5UTgJirJht7kHEYE+lsRuSGp5Lvnc9my0UIRj
+	FDPkAlmgCOJE/F8DAaMcE9NIxJGJgDxbKVlXCaoRb1c7gi2fcv8TvIHOl0eq9mg4
+	LbNpKgGehgRkgHo0Axd3NVonPmRQ5RvHbzqNUxtyuve+fadEVg62X1z22uOYI2Wm
+	Ene5waDN1lD2GCarShdIc6dvsLi/NDBB7/gCBoHq2i5/C+qlU4b9mOixFkbIt7GU
+	LP62BvKUfrrfdBLarn+Fr8TmH0AbdJPLV4NuqhS1nqhYGQGz49QChv3ITbygg/0M
+	DTDSLtSYuDfabUGRPQMw==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xauh5dd0t-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbfy13r2b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 16:39:50 +0200 (MEST)
+	Thu, 11 Apr 2024 16:40:02 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D046E40044;
-	Thu, 11 Apr 2024 16:39:46 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 00DC940044;
+	Thu, 11 Apr 2024 16:39:58 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2478621BF52;
-	Thu, 11 Apr 2024 16:38:37 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6D6DD21BF42;
+	Thu, 11 Apr 2024 16:39:50 +0200 (CEST)
 Received: from localhost (10.48.86.106) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Apr
- 2024 16:38:36 +0200
+ 2024 16:39:50 +0200
 From: Christophe Roullier <christophe.roullier@foss.st.com>
 To: "David S . Miller" <davem@davemloft.net>,
         Eric Dumazet
@@ -64,9 +64,9 @@ To: "David S . Miller" <davem@davemloft.net>,
 CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 06/11] net: ethernet: stm32: clean the way to manage wol irqwake
-Date: Thu, 11 Apr 2024 16:36:53 +0200
-Message-ID: <20240411143658.1049706-7-christophe.roullier@foss.st.com>
+Subject: [PATCH 11/11] ARM: multi_v7_defconfig: Add MCP23S08 pinctrl support
+Date: Thu, 11 Apr 2024 16:36:58 +0200
+Message-ID: <20240411143658.1049706-12-christophe.roullier@foss.st.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240411143658.1049706-1-christophe.roullier@foss.st.com>
 References: <20240411143658.1049706-1-christophe.roullier@foss.st.com>
@@ -84,136 +84,28 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-11_08,2024-04-09_01,2023-05-22_02
 
-On STM32 platforms it is no longer needed to use a dedicated wakeup to
-wake up system from CStop. This patch removes the dedicated wake up usage
-and clean the way to register the wake up irq.
+Need to enable MCP23S08 I/O expanders to manage Ethernet phy
+reset in STM32MP135F-DK board
+STMMAC driver defer is not silent, need to put this config in
+built-in to avoid huge of Ethernet messages
 
 Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 66 +++++++++----------
- 1 file changed, 32 insertions(+), 34 deletions(-)
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-index e648c4e790a78..5d8f4eac4bc0f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-@@ -81,7 +81,6 @@ struct stm32_dwmac {
- 	int enable_eth_ck;
- 	int eth_clk_sel_reg;
- 	int eth_ref_clk_sel_reg;
--	int irq_pwr_wakeup;
- 	u32 mode_reg;		 /* MAC glue-logic mode register */
- 	u32 mode_mask;
- 	struct regmap *regmap;
-@@ -312,9 +311,7 @@ static int stm32_dwmac_parse_data(struct stm32_dwmac *dwmac,
- static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 			       struct device *dev)
- {
--	struct platform_device *pdev = to_platform_device(dev);
- 	struct device_node *np = dev->of_node;
--	int err = 0;
- 
- 	/* Ethernet PHY have no crystal */
- 	dwmac->ext_phyclk = of_property_read_bool(np, "st,ext-phyclk");
-@@ -346,29 +343,24 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
- 	if (IS_ERR(dwmac->syscfg_clk))
- 		dwmac->syscfg_clk = NULL;
- 
--	/* Get IRQ information early to have an ability to ask for deferred
--	 * probe if needed before we went too far with resource allocation.
--	 */
--	dwmac->irq_pwr_wakeup = platform_get_irq_byname_optional(pdev,
--							"stm32_pwr_wakeup");
--	if (dwmac->irq_pwr_wakeup == -EPROBE_DEFER)
--		return -EPROBE_DEFER;
--
--	if (!dwmac->clk_eth_ck && dwmac->irq_pwr_wakeup >= 0) {
--		err = device_init_wakeup(&pdev->dev, true);
--		if (err) {
--			dev_err(&pdev->dev, "Failed to init wake up irq\n");
--			return err;
--		}
--		err = dev_pm_set_dedicated_wake_irq(&pdev->dev,
--						    dwmac->irq_pwr_wakeup);
--		if (err) {
--			dev_err(&pdev->dev, "Failed to set wake up irq\n");
--			device_init_wakeup(&pdev->dev, false);
--		}
--		device_set_wakeup_enable(&pdev->dev, false);
-+	return 0;
-+}
-+
-+static int stm32_dwmac_wake_init(struct device *dev,
-+				 struct stmmac_resources *stmmac_res)
-+{
-+	int err;
-+
-+	device_set_wakeup_capable(dev, true);
-+
-+	err = dev_pm_set_wake_irq(dev, stmmac_res->wol_irq);
-+	if (err) {
-+		dev_err(dev, "Failed to set wake up irq\n");
-+		device_set_wakeup_capable(dev, false);
-+		return err;
- 	}
--	return err;
-+
-+	return 0;
- }
- 
- static int stm32_dwmac_probe(struct platform_device *pdev)
-@@ -406,11 +398,17 @@ static int stm32_dwmac_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	if (stmmac_res.wol_irq && !dwmac->clk_eth_ck) {
-+		ret = stm32_dwmac_wake_init(&pdev->dev, &stmmac_res);
-+		if (ret)
-+			goto err_wake_init_disable;
-+	}
-+
- 	plat_dat->bsp_priv = dwmac;
- 
- 	ret = stm32_dwmac_init(plat_dat, false);
- 	if (ret)
--		return ret;
-+		goto err_wake_init_disable;
- 
- 	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
- 	if (ret)
-@@ -420,7 +418,11 @@ static int stm32_dwmac_probe(struct platform_device *pdev)
- 
- err_clk_disable:
- 	stm32_dwmac_clk_disable(dwmac, false);
--
-+err_wake_init_disable:
-+	if (stmmac_res.wol_irq && !dwmac->clk_eth_ck) {
-+		dev_pm_clear_wake_irq(&pdev->dev);
-+		device_set_wakeup_capable(&pdev->dev, false);
-+	}
- 	return ret;
- }
- 
-@@ -428,16 +430,12 @@ static void stm32_dwmac_remove(struct platform_device *pdev)
- {
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct stmmac_priv *priv = netdev_priv(ndev);
--	struct stm32_dwmac *dwmac = priv->plat->bsp_priv;
- 
- 	stmmac_dvr_remove(&pdev->dev);
-+	stm32_dwmac_clk_disable(priv->plat->bsp_priv, false);
- 
--	stm32_dwmac_clk_disable(dwmac, false);
--
--	if (dwmac->irq_pwr_wakeup >= 0) {
--		dev_pm_clear_wake_irq(&pdev->dev);
--		device_init_wakeup(&pdev->dev, false);
--	}
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
- }
- 
- static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index b2955dcb5a53b..0abbe00372dff 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -469,6 +469,7 @@ CONFIG_SPI_XILINX=y
+ CONFIG_SPI_SPIDEV=y
+ CONFIG_SPMI=y
+ CONFIG_PINCTRL_AS3722=y
++CONFIG_PINCTRL_MCP23S08=y
+ CONFIG_PINCTRL_MICROCHIP_SGPIO=y
+ CONFIG_PINCTRL_OCELOT=y
+ CONFIG_PINCTRL_PALMAS=y
 -- 
 2.25.1
 
