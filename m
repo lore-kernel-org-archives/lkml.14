@@ -1,137 +1,236 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF381311B3
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BD2B4131E3A
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849637; cv=none; b=HXM1DBfa8Ho9UUb4AZNRDxKmsJ3HaXOagyyOT8z/hvMhrOvLaj9ACnPsn0UgCqvxyQ52/KjjXG8LgbK+7ouQLWlUHJPpkH8qEPA63lYyIX0WXxWNdTwEaLtj9IadhllAfH7GJwykh/tScokqdA4iZOh1g8K30rNRTZEE+gHTH94=
+	t=1712849641; cv=none; b=qsZo9ad0EqoqcA4k3M1ML/GzpZgFOLZiZHDR7sfuiWnYnl4rIxzxASsbW4lCToVzRwa2WcisMUiuy9lje4NDM1dM9BuV8SISe1uHUR4BAwV1A3qmb/PUWSTd2VQTtcOuM2DnvMVoxAbcTuO5R9/V/9zYVGV+rPXOrYMOAMrJcjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849637; c=relaxed/simple;
-	bh=cx8sOxAamrCB0v2KTIn+gNq5QolJZna1nbYPjQwTEWk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jNXbXKNFZWr+YHCUu7LM2xUNcrTKkeOD9fnX6p8RgFASULnztaN9PO6Wk5B/ncGnijaSYEVlyqjl2f8XYjuEiZSrA8YDuGyjyAhi1gpaFST8zXtrqNdT1KK3bTiLpQCE0aFP4omd+Jh9cFt1+E3rbhq1jIVqEzpVgYAfYKkg2Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=SJj2VXYK; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="SJj2VXYK"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170466539f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849635; x=1713454435; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7KRZcfeSiCxixOlLZytLoGKi7V9jw2W3rB1wcxBqkZw=;
-        b=SJj2VXYKNYV1lhlNV1YnNyM5/Us6i5LnAVuiO4FShO+eEwQZXlF5AlYRqPgin3EeCi
-         4hFxO0WKvJr+IzK0mqw/j1s9SzSyB0KMsaO4JSSEjn5Lf0bWZ/gKPS9zJc/LvfxcN4L8
-         vPl9YbBZYSaoph093ZzKfXDublVULzzClj7TrbLBSJgA7VN6XyogH0nyyjR8CQToHIm0
-         Mvnnwm787nNrwUwKQ2FkTxlhtKWfrp8h/pGjnVSrGNjx+99kwvW4GLQKMVQ2sHh0v32u
-         /ADrY3pr3B++Vw0g2dE+4Ip3vJYO77uAerTlUP0jSZynKGu5XiPUHuDoV9/0fyiFV+2D
-         Gsng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849635; x=1713454435;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7KRZcfeSiCxixOlLZytLoGKi7V9jw2W3rB1wcxBqkZw=;
-        b=QIjK/ehtEcEsJImrBJhdJLxLoHA+AZJ9ZVcOb9DcK3t/nYCH4VaR8y3xCMrbWWUkoZ
-         3+iGBtjIAg5OPGzlVqAVEWo3w3+hsLhrOfKkaCuX3ZMUPtPBwtWXYYJ7nJnI+I3XzCYs
-         F9URxGkHJ+dH62ESVyktQmXztYtxbeHxORB50xA4k4GV02mQYI+zXUnmb5sQNQT4VtPx
-         gyDvonVo7oFIveSNsFqdH7+8rii69RKiMNQbLZIwe3yVRLp5uAZsvNpvIdF1FjX1/ZE7
-         WM/35dVlA02Xoh6Sq83W6DoHI8ou0ZjOEIODCa+/Fg2idLL0vcXlYh/Vd4z0EifU09yi
-         fnKg==
-X-Gm-Message-State: AOJu0YxaQwsIns2y+aZQ01NQa/9Nnd5QHUDRtvOOEFapX0PL86s+sDAS
-	io20ZIwM/cwj7iS8pWxfMSlMP8xjjfwilj+u9uxR4e5VtyLdM+kO0PS+zWTVBlpZv4NQ5cUydcx
-	/
-X-Google-Smtp-Source: AGHT+IFNXNPZUtWST48LMa5VIx+biIQVxOYZ0RcBSyWVLUPz5r+m0/O95rubJk70hV6qYXon31SKoQ==
-X-Received: by 2002:a05:6602:21d7:b0:7d6:9ddf:5095 with SMTP id c23-20020a05660221d700b007d69ddf5095mr8636ioc.1.1712849634778;
-        Thu, 11 Apr 2024 08:33:54 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:33:53 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 078/437] kernel/time: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:13:38 -0600
-Message-ID: <20240411153126.16201-79-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	s=arc-20240116; t=1712849641; c=relaxed/simple;
+	bh=1+6YDXwbCpxGbp/uhTyuUqLzfyfMgk+8nnvTf69RPCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QXy/wZ8v+i8ciLbkpbY7C3ARY5Ur6BsOPwYWGjBoKhEqG6jXdSL3TpCu5sevWoRd52zRBqgTFfGAS30IRYcZB/9jfrbAaETBfw98Yw8ZV2vHYfCcUaZzmkYe55ODsfrf5r+QYylJB13zkeTX6Nxv5tuM0dvECxB3ulgBcdcWGr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33778113E;
+	Thu, 11 Apr 2024 08:34:28 -0700 (PDT)
+Received: from [10.1.38.151] (XHFQ2J9959.cambridge.arm.com [10.1.38.151])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8313F6C4;
+	Thu, 11 Apr 2024 08:33:56 -0700 (PDT)
+Message-ID: <1008d688-757a-4c2d-86bd-793f5e787d30@arm.com>
+Date: Thu, 11 Apr 2024 16:33:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] mm: swap: entirely map large folios found in
+ swapcache
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org
+Cc: baolin.wang@linux.alibaba.com, chrisl@kernel.org, david@redhat.com,
+ hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com,
+ kasong@tencent.com, surenb@google.com, v-songbaohua@oppo.com,
+ willy@infradead.org, xiang@kernel.org, ying.huang@intel.com,
+ yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com,
+ linux-kernel@vger.kernel.org
+References: <20240409082631.187483-1-21cnbao@gmail.com>
+ <20240409082631.187483-5-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240409082631.187483-5-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- kernel/time/posix-clock.c |  3 ++-
- kernel/time/test_udelay.c | 10 +++++-----
- 2 files changed, 7 insertions(+), 6 deletions(-)
+On 09/04/2024 09:26, Barry Song wrote:
+> From: Chuanhua Han <hanchuanhua@oppo.com>
+> 
+> When a large folio is found in the swapcache, the current implementation
+> requires calling do_swap_page() nr_pages times, resulting in nr_pages
+> page faults. This patch opts to map the entire large folio at once to
+> minimize page faults. Additionally, redundant checks and early exits
+> for ARM64 MTE restoring are removed.
+> 
+> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  mm/memory.c | 64 +++++++++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 52 insertions(+), 12 deletions(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index c4a52e8d740a..9818dc1893c8 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3947,6 +3947,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	pte_t pte;
+>  	vm_fault_t ret = 0;
+>  	void *shadow = NULL;
+> +	int nr_pages = 1;
+> +	unsigned long start_address = vmf->address;
+> +	pte_t *start_pte = vmf->pte;
 
-diff --git a/kernel/time/posix-clock.c b/kernel/time/posix-clock.c
-index 4782edcbe7b9..766ff113753a 100644
---- a/kernel/time/posix-clock.c
-+++ b/kernel/time/posix-clock.c
-@@ -54,6 +54,7 @@ static ssize_t posix_clock_read(struct file *fp, char __user *buf,
- 
- 	return err;
- }
-+FOPS_READ_ITER_HELPER(posix_clock_read);
- 
- static __poll_t posix_clock_poll(struct file *fp, poll_table *wait)
- {
-@@ -169,7 +170,7 @@ static int posix_clock_release(struct inode *inode, struct file *fp)
- static const struct file_operations posix_clock_file_operations = {
- 	.owner		= THIS_MODULE,
- 	.llseek		= no_llseek,
--	.read		= posix_clock_read,
-+	.read_iter	= posix_clock_read_iter,
- 	.poll		= posix_clock_poll,
- 	.unlocked_ioctl	= posix_clock_ioctl,
- 	.open		= posix_clock_open,
-diff --git a/kernel/time/test_udelay.c b/kernel/time/test_udelay.c
-index 20d5df631570..9b6e832f4f47 100644
---- a/kernel/time/test_udelay.c
-+++ b/kernel/time/test_udelay.c
-@@ -96,9 +96,9 @@ static int udelay_test_open(struct inode *inode, struct file *file)
- 	return single_open(file, udelay_test_show, inode->i_private);
- }
- 
--static ssize_t udelay_test_write(struct file *file, const char __user *buf,
--		size_t count, loff_t *pos)
-+static ssize_t udelay_test_write(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t count = iov_iter_count(from);
- 	char lbuf[32];
- 	int ret;
- 	int usecs;
-@@ -107,7 +107,7 @@ static ssize_t udelay_test_write(struct file *file, const char __user *buf,
- 	if (count >= sizeof(lbuf))
- 		return -EINVAL;
- 
--	if (copy_from_user(lbuf, buf, count))
-+	if (!copy_from_iter_full(lbuf, count, from))
- 		return -EFAULT;
- 	lbuf[count] = '\0';
- 
-@@ -128,8 +128,8 @@ static ssize_t udelay_test_write(struct file *file, const char __user *buf,
- static const struct file_operations udelay_test_debugfs_ops = {
- 	.owner = THIS_MODULE,
- 	.open = udelay_test_open,
--	.read = seq_read,
--	.write = udelay_test_write,
-+	.read_iter = seq_read_iter,
-+	.write_iter = udelay_test_write,
- 	.llseek = seq_lseek,
- 	.release = single_release,
- };
--- 
-2.43.0
+possible bug?: there are code paths that assign to vmf-pte below in this
+function, so couldn't start_pte be stale in some cases? I'd just do the
+assignment (all 4 of these variables in fact) in an else clause below, after any
+messing about with them is complete.
+
+nit: rename start_pte -> start_ptep ?
+
+> +	bool any_swap_shared = false;
+
+Suggest you defer initialization of this to your "We hit large folios in
+swapcache" block below, and init it to:
+
+	any_swap_shared = !pte_swp_exclusive(vmf->pte);
+
+Then the any_shared semantic in swap_pte_batch() can be the same as for
+folio_pte_batch().
+
+>  
+>  	if (!pte_unmap_same(vmf))
+>  		goto out;
+> @@ -4137,6 +4141,35 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	 */
+>  	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+>  			&vmf->ptl);
+
+bug: vmf->pte may be NULL and you are not checking it until check_pte:. Byt you
+are using it in this block. It also seems odd to do all the work in the below
+block under the PTL but before checking if the pte has changed. Suggest moving
+both checks here.
+
+> +
+> +	/* We hit large folios in swapcache */
+> +	if (start_pte && folio_test_large(folio) && folio_test_swapcache(folio)) {
+
+What's the start_pte check protecting?
+
+> +		int nr = folio_nr_pages(folio);
+> +		int idx = folio_page_idx(folio, page);
+> +		unsigned long folio_start = vmf->address - idx * PAGE_SIZE;
+> +		unsigned long folio_end = folio_start + nr * PAGE_SIZE;
+> +		pte_t *folio_ptep;
+> +		pte_t folio_pte;
+> +
+> +		if (unlikely(folio_start < max(vmf->address & PMD_MASK, vma->vm_start)))
+> +			goto check_pte;
+> +		if (unlikely(folio_end > pmd_addr_end(vmf->address, vma->vm_end)))
+> +			goto check_pte;
+> +
+> +		folio_ptep = vmf->pte - idx;
+> +		folio_pte = ptep_get(folio_ptep);
+> +		if (!is_swap_pte(folio_pte) || non_swap_entry(pte_to_swp_entry(folio_pte)) ||
+> +		    swap_pte_batch(folio_ptep, nr, folio_pte, &any_swap_shared) != nr)
+> +			goto check_pte;
+> +
+> +		start_address = folio_start;
+> +		start_pte = folio_ptep;
+> +		nr_pages = nr;
+> +		entry = folio->swap;
+> +		page = &folio->page;
+> +	}
+> +
+> +check_pte:
+>  	if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte)))
+>  		goto out_nomap;
+>  
+> @@ -4190,6 +4223,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  			 */
+>  			exclusive = false;
+>  		}
+> +
+> +		/* Reuse the whole large folio iff all entries are exclusive */
+> +		if (nr_pages > 1 && any_swap_shared)
+> +			exclusive = false;
+
+If you init any_shared with the firt pte as I suggested then you could just set
+exclusive = !any_shared at the top of this if block without needing this
+separate fixup.
+>  	}
+>  
+>  	/*
+> @@ -4204,12 +4241,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	 * We're already holding a reference on the page but haven't mapped it
+>  	 * yet.
+>  	 */
+> -	swap_free(entry);
+> +	swap_free_nr(entry, nr_pages);
+>  	if (should_try_to_free_swap(folio, vma, vmf->flags))
+>  		folio_free_swap(folio);
+>  
+> -	inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
+> -	dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
+> +	folio_ref_add(folio, nr_pages - 1);
+> +	add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
+> +	add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
+> +
+>  	pte = mk_pte(page, vma->vm_page_prot);
+>  
+>  	/*
+> @@ -4219,33 +4258,34 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	 * exclusivity.
+>  	 */
+>  	if (!folio_test_ksm(folio) &&
+> -	    (exclusive || folio_ref_count(folio) == 1)) {
+> +	    (exclusive || (folio_ref_count(folio) == nr_pages &&
+> +			   folio_nr_pages(folio) == nr_pages))) {
+>  		if (vmf->flags & FAULT_FLAG_WRITE) {
+>  			pte = maybe_mkwrite(pte_mkdirty(pte), vma);
+>  			vmf->flags &= ~FAULT_FLAG_WRITE;
+>  		}
+>  		rmap_flags |= RMAP_EXCLUSIVE;
+>  	}
+> -	flush_icache_page(vma, page);
+> +	flush_icache_pages(vma, page, nr_pages);
+>  	if (pte_swp_soft_dirty(vmf->orig_pte))
+>  		pte = pte_mksoft_dirty(pte);
+>  	if (pte_swp_uffd_wp(vmf->orig_pte))
+>  		pte = pte_mkuffd_wp(pte);
+
+I'm not sure about all this... you are smearing these SW bits from the faulting
+PTE across all the ptes you are mapping. Although I guess actually that's ok
+because swap_pte_batch() only returns a batch with all these bits the same?
+
+> -	vmf->orig_pte = pte;
+
+Instead of doing a readback below, perhaps:
+
+	vmf->orig_pte = pte_advance_pfn(pte, nr_pages);
+
+>  
+>  	/* ksm created a completely new copy */
+>  	if (unlikely(folio != swapcache && swapcache)) {
+> -		folio_add_new_anon_rmap(folio, vma, vmf->address);
+> +		folio_add_new_anon_rmap(folio, vma, start_address);
+>  		folio_add_lru_vma(folio, vma);
+>  	} else {
+> -		folio_add_anon_rmap_pte(folio, page, vma, vmf->address,
+> -					rmap_flags);
+> +		folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, start_address,
+> +					 rmap_flags);
+>  	}
+>  
+>  	VM_BUG_ON(!folio_test_anon(folio) ||
+>  			(pte_write(pte) && !PageAnonExclusive(page)));
+> -	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
+> -	arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
+> +	set_ptes(vma->vm_mm, start_address, start_pte, pte, nr_pages);
+> +	vmf->orig_pte = ptep_get(vmf->pte);
+> +	arch_do_swap_page(vma->vm_mm, vma, start_address, pte, pte);
+>  
+>  	folio_unlock(folio);
+>  	if (folio != swapcache && swapcache) {
+> @@ -4269,7 +4309,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  	}
+>  
+>  	/* No need to invalidate - it was non-present before */
+> -	update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+> +	update_mmu_cache_range(vmf, vma, start_address, start_pte, nr_pages);
+>  unlock:
+>  	if (vmf->pte)
+>  		pte_unmap_unlock(vmf->pte, vmf->ptl);
 
