@@ -1,37 +1,59 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C0A145FEE;
-	Thu, 11 Apr 2024 11:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9E113D258
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:38:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712835454; cv=none; b=LujU0no0l1zSKoRZgpvoQM7zWWaG8Wbpqq2DI5PuxSPWD3qDON1nDeMFH7ai6bLx0jCVrigrUbv3PsdxxDFzao4852HFBMtW54aSBhz2iRehWGwk1DhUY65Xi9xlKCFdnx2oOHAj/4ZCnMtMAhm2EAEgR1gtnmq+AyqDMpBAn7Y=
+	t=1712835521; cv=none; b=s9WJgPzzv5RsnQgkmslQS4/Ww89kaJCMaX3aFEeD8F+vvblfc9KgpWcWk+DaOvBwwRlHer5mhDJCij5UuANVFcPOHMYl5d4ny7pxergms95M/1PVhEnba4E/Ztv49gt1Laji15QhWrotwDnRIWnUs3vm6YU5pZ2EnC72eYR6oKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712835454; c=relaxed/simple;
-	bh=WT7wkvVIHbP0Pzdy7tiBfkTaqzDPZgt5cF1NSgYRwLk=;
+	s=arc-20240116; t=1712835521; c=relaxed/simple;
+	bh=ZxHp8ITrIEiX0F6r4/e1KAWdoBX/J1qTpB0vXYOSEa8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KRzvuahQmjvuJ3oWeSCOt+wl7rRGRZels6stnU5kbS8DgVkRTVAb4Oe00PoJDnul6FN09tQtXvu9O+ActQKwWIVUFSyKZviuuApSgr7yCvD3AOZ9a4is7EogB2XVJ+E+XMiz6eeMHadmJSPY+bUFgUa1a4UIIEHCjN1OwH3e1eA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=gplRZsKO; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	 In-Reply-To:Content-Type; b=mpUKMt4fV9fdpeUEpzNK3o8QQBk1JIZ7rS8F17A2pVzjsJUXCX3tlntYeKXtoSb+HRa2pZCnWKvwmRDMRfBAXTWi901MSc3RHDRiJwoCyb+IpkJxrIkO4BgmwXeRET3CJehGpxU13QZ0VAr4okL5RMtvQO+2Im76HyS7seVNec0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S3n9JEHE; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="gplRZsKO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=nKO/TyiA2ADxN3lG58pUofPkZZ9JfAH4uwFCinpnz4E=;
-	t=1712835452; x=1713267452; b=gplRZsKOa9ADIfj2agsiCwBccF+MS/t/ACzVBloj905lp4D
-	JGKyMq2ScnP49Zr8Rohfw2c2sEO74HdQj1QSK3eHY/fjAd9icm+0NeIpbqQY7htXRu01M3cWoSvbQ
-	67m5p5SvheabscqVd++Kwi5T8QbuYfA9GkTlKUvxF6ClTbgGtjXdpFCQdY4TTjAasFADxVjvEsOqL
-	FrQOYQVM1ufAK4xY3vWBdkq8aslfrB9FJ8M50VhQzQwzMuXC6DuvMyd11WkXdKm3qpUfTpXEPa5Wq
-	wsiMfqQcnyHPUYsGoqDeAvDnxRF2MWXG6ROQWJz5gc9iBGKFauSIQNnSG/hzvvQw==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ruskE-0000dt-6e; Thu, 11 Apr 2024 13:37:30 +0200
-Message-ID: <6d4d3956-baf3-441c-86b6-493eb3ff72bd@leemhuis.info>
-Date: Thu, 11 Apr 2024 13:37:29 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3n9JEHE"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so1330257b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 04:38:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712835519; x=1713440319; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vdp3UwWTNvXvK/PdbOB2Hm4+HGKrxllwvhZL9gBURvY=;
+        b=S3n9JEHExRMUIf8SS94eRi9Rdn0YKEY+2bX21ku6dDq3AWYw4KdtcqAG7zrxEUW03l
+         +nYyrv8n7lGOtmWMn61+7yJpfe9lGcCIyCqu2KrsKYLOG3G2zoSnYW4Zk/+UR3la1c2h
+         FMzCs6QEHJQyYybBJ0H2nttkFGvLLph0kOqZFsIdqDFAH29Mhq6J3ZHyFxw+eeBPrSNL
+         hBMnHX2DfUtoBtXBqMk0BplCDVK1CW/+MVKa6iYEh9appBwCDlpCr++t9ueiktIRM7S1
+         meuRNlzyxvWxDZ8cHE8Ed4JvHT0njCnxz56Zsp4DiGlZ89C1NTMXSrHPNj91TcESY+B9
+         3pyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712835519; x=1713440319;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdp3UwWTNvXvK/PdbOB2Hm4+HGKrxllwvhZL9gBURvY=;
+        b=wRjp36GHCatUK3F4PKW1wxIlYhqEGsjEuGFrIoK2eZ1oGg19E72Oty7s+584KP3mb1
+         PvAwkHf/qIqfcTD73dYIrDAohzjGRWROzW5U+8UefY1zxwifANeunK0rXtzeYwDyedb5
+         c5+pWpv9d1rlY9sVan54bk/rQS3lljfuO4F8+jpRs7HNFZW2k7y/3579AVZAykUgxx1C
+         ZCGrHEKVQrr5rwAe9qOBsjq0by5JYz4wvFpQJ040wDyaH2t9NpUWXF5xTyr5GMPds9su
+         EN3svcza7DWfXxS9xAgSVC7EoRHe8/uU7of7U+rEDdthqrNqIbk7+KzSPlVWyXXIF+xo
+         4OSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXYosQtuq/lc24sxuk9HnZRDhj2FICvd+MxEqIeXxM6CGePXwpIz2x+InR9jllzqVrQxY+pHmY6QujftE/PnKBFfeyiqRq+X2F08T6
+X-Gm-Message-State: AOJu0YynkA+UbAr0rNSPaHiuNGsJ5ZPt/7V81GNPWnEE/cYzlsOnHweU
+	4VZ+S1QC70iyfF/dGBSOcOAeSdbmA8KQpzX+pENkyZI5WwOTddBePXJthiyj
+X-Google-Smtp-Source: AGHT+IFt65DFPrigbB2JOQONrUhjQ97LaZepLdA1cRZkT1Zbi2Gc5OMsJI+lmSwU+Ud2lFs0D+3Lfg==
+X-Received: by 2002:aa7:888f:0:b0:6ed:1c7:8c65 with SMTP id z15-20020aa7888f000000b006ed01c78c65mr5975004pfe.10.1712835519444;
+        Thu, 11 Apr 2024 04:38:39 -0700 (PDT)
+Received: from [192.168.255.10] ([43.132.141.20])
+        by smtp.gmail.com with ESMTPSA id gj4-20020a056a00840400b006ed92b011desm999510pfb.169.2024.04.11.04.38.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 04:38:38 -0700 (PDT)
+Message-ID: <5101e32f-cf22-4ecf-843a-47ee5d6fc45d@gmail.com>
+Date: Thu, 11 Apr 2024 19:38:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,64 +61,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [patch 0/2] x86/cpu/amd: Fixup the topology rework fallout
-To: Laura Nao <laura.nao@collabora.com>, tglx@linutronix.de
-Cc: kernel@collabora.com, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, x86@kernel.org,
- "kernelci.org bot" <bot@kernelci.org>
-References: <20240410194002.909839385@linutronix.de>
- <20240411112743.232798-1-laura.nao@collabora.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20240411112743.232798-1-laura.nao@collabora.com>
+Subject: Re: [PATCH v5 08/10] mm/ksm: Convert chain series funcs and replace
+ get_ksm_page
+To: David Hildenbrand <david@redhat.com>, alexs@kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, zik.eidus@ravellosystems.com,
+ willy@infradead.org, aarcange@redhat.com, hughd@google.com,
+ chrisw@sous-sol.org
+Cc: Izik Eidus <izik.eidus@ravellosystems.com>
+References: <20240411061713.1847574-1-alexs@kernel.org>
+ <20240411061713.1847574-9-alexs@kernel.org>
+ <8a79bfbd-b01d-4425-8fd9-de2d3e6cd1af@redhat.com>
+Content-Language: en-US
+From: Alex Shi <seakeel@gmail.com>
+In-Reply-To: <8a79bfbd-b01d-4425-8fd9-de2d3e6cd1af@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1712835452;dd3a3ba4;
-X-HE-SMSGID: 1ruskE-0000dt-6e
+Content-Transfer-Encoding: 8bit
 
-On 11.04.24 13:27, Laura Nao wrote:
+
+
+On 4/11/24 3:53 PM, David Hildenbrand wrote:
+>>
+>>       if (folio_test_swapcache(folio))
+>>           folio_clear_swapcache(folio);
 > 
-> On 4/10/24 21:45, Thomas Gleixner wrote:
->> Testing at Collabora unearthed two issues in the new AMD topology parser
->> code:
->>
->>    1) The CPUID 0x80000008 parser initializes the wrong topology domain
->>       level.
->>
->>    2) The NODEID_MSR parser uses bitfields in a union wrongly which results
->>       in reading out the wrong value and finally in a division by zero.
->>
->> Many thanks to Laura for helping to debug this issue.
->>
->>         tglx
->>
->>
+> I'd have moved these 3 into a separate patch, but fine with me
 > 
-> Thanks a lot for investigating and solving the issue!> [...]
-> 
-> The regression was originally reported by KernelCI, so:
-> 
-> Reported-by: "kernelci.org bot" <bot@kernelci.org>
-> Tested-by: Laura Nao <laura.nao@collabora.com>
-> 
-> I'll make sure to update the Regzbot tag when the series is merged.
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
-No need to wait, we can do that now:
 
-#regzbot fix: x86/cpu/amd: Make the NODEID_MSR union actually work
-
-But ideally Thomas would add Link: or Closes: tag to the patch
-description (e.g.
-
- Closes:
-https://lore.kernel.org/all/20240322175210.124416-1-laura.nao@collabora.com/
-
-) just like Linus asked him to do a while ago already[1], as then this
-would not be necessary at all. ;) (SCNR)
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-[1]
-https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+Thanks a lot!
+Alex
