@@ -1,643 +1,117 @@
-Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFA813ADC;
-	Thu, 11 Apr 2024 15:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 8CCF413AE2
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.131.102.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849428; cv=none; b=CWLObmEivuriUHCspb2dSuKWtcRkA1fovpVmUqHfNSZ2wGRGx+YhoFl9FjeaQD6uusg33FXiFsDjI1X4hR8PCqQCEoC0HhBh6H/2EtLnu9TrtPuRjzcJe6cPMBbIM8YcWmGX/RJ4JjNqkcJrroCypOVN7xYb563ijLu0RQ7Ob1Y=
+	t=1712849483; cv=none; b=PkDw33Oz3wJsp/SqkITHG5VuxixNVflc3VeKw8e75AXJ2X72kzw1Bcuzkczw9oKE5RZGS+yPHRiBANGKadaYPMiXL0ABbx26ITo6JC4Ar4ZD7ms+ibfmuaDm46rBz+hWsty0W1qIKs4D8dqoxfWm2MIcxIq2ce6Kw1ywyoaVCXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849428; c=relaxed/simple;
-	bh=bH5EJNNyaiBTp6uK6ySgp1XkjTEWgRw0YXQaar9Rm0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlOLHYofhdsHGKDQLuCF70NAUNN7TGg3qEy+sLfRmaBO7/ou6XfNTkz/Y2flsX5H2WgeXy6nYI/RfBF8OeXylrgL3p3X6ShnKlcuA6RxFENZj03mMZXQGFu9gD+JEhfOhb37YOAuMrF5E0+lnuNLudaWw74I23mhwSMZrK11Fzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: by air.basealt.ru (Postfix, from userid 490)
-	id AA2612F20243; Thu, 11 Apr 2024 15:30:24 +0000 (UTC)
-X-Spam-Level: 
-Received: from [10.88.128.156] (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id 38BCA2F2021D;
-	Thu, 11 Apr 2024 15:30:22 +0000 (UTC)
-Message-ID: <f8bb62a7-5845-53ed-7fbe-c0557c2745f2@basealt.ru>
-Date: Thu, 11 Apr 2024 18:30:22 +0300
+	s=arc-20240116; t=1712849483; c=relaxed/simple;
+	bh=LV3XxHklggyH1m5MNwe1hhpT3rkIrYb8jHihU8HACXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pn3FY8W/rajX4kBBfTyf2RMG1gNKoQ5ISrBYRksb6HS9b9pjadJgvfRs4mchrtzMviFycJSgZvLdjQTyI577mbhWDsfsdQ34H+WCc3MDe2aylekrL/uSULoXCMrFdFgFVdIWWNAnuEjUckeI+zi5QX3VDScfxwFA8JfW1JXe23o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu; spf=pass smtp.mailfrom=netrider.rowland.org; arc=none smtp.client-ip=192.131.102.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netrider.rowland.org
+Received: (qmail 248476 invoked by uid 1000); 11 Apr 2024 11:24:39 -0400
+Date: Thu, 11 Apr 2024 11:24:39 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Sam Sun <samsun1006219@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+  Greg KH <gregkh@linuxfoundation.org>, swboyd@chromium.org,
+  ricardo@marliere.net, hkallweit1@gmail.com, heikki.krogerus@linux.intel.com,
+  mathias.nyman@linux.intel.com, royluo@google.com,
+  syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
+Subject: Re: [Linux kernel bug] general protection fault in disable_store
+Message-ID: <92fe8e95-bc01-4d7d-9678-8cfc55cc4a7b@rowland.harvard.edu>
+References: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH net] Bluetooth: hci_event: fix double hci_conn_drop() when
- conn->state == BT_CONNECTED
-Content-Language: en-US
-To: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: lvc-project@linuxtesting.org, nickel@altlinux.org,
- oficerovas@altlinux.org, dutyrok@altlinux.org, stable@vger.kernel.org
-References: <20240411151810.403167-1-kovalev@altlinux.org>
-From: kovalev@altlinux.org
-In-Reply-To: <20240411151810.403167-1-kovalev@altlinux.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
 
-11.04.2024 18:18, kovalev@altlinux.org wrote:
-> From: Vasiliy Kovalev <kovalev@altlinux.org>
+On Thu, Apr 11, 2024 at 02:52:27PM +0800, Sam Sun wrote:
+> Dear developers and maintainers,
 > 
-> There is no need to drop the connection of some functions in which the
-> conn->state in BT_CONNECTED is marked, since in the future the same check
-> takes place (for example, in the hci_encrypt_change_evt() function) and
-> the hci_conn_drop() is called.
+> We encountered a general protection fault in function disable_store.
+> It is tested against the latest upstream linux (tag 6.9-rc3). C repro
+> and kernel config are attached to this email. Kernel crash log is
+> listed below.
+> ```
+> general protection fault, probably for non-canonical address
+> 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> CPU: 1 PID: 9459 Comm: syz-executor414 Not tainted 6.7.0-rc7 #2
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> RIP: 0010:disable_store+0xd0/0x3d0 drivers/usb/core/port.c:88
+> Code: 02 00 00 4c 8b 75 40 4d 8d be 58 ff ff ff 4c 89 ff e8 a4 20 fa
+> ff 48 89 c2 48 89 c5 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c
+> 02 00 0f 85 b0 02 00 00 48 8b 45 00 48 8d bb 34 05 00 00 48
+> RSP: 0018:ffffc90006e3fc08 EFLAGS: 00010246
+> RAX: dffffc0000000000 RBX: ffff88801d4d4008 RCX: ffffffff86706be8
+> RDX: 0000000000000000 RSI: ffffffff86706c4d RDI: 0000000000000005
+> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff92000dc7f85
+> R13: ffff88810f4bfb18 R14: ffff88801d4d10a8 R15: ffff88801d4d1000
+> FS:  00007fa0af71b640(0000) GS:ffff888135c00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007fa0af71a4b8 CR3: 0000000022f5f000 CR4: 0000000000750ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> PKRU: 55555554
+
+> ----------------
+> Code disassembly (best guess):
+>    0:    02 00                    add    (%rax),%al
+>    2:    00 4c 8b 75              add    %cl,0x75(%rbx,%rcx,4)
+>    6:    40                       rex
+>    7:    4d 8d be 58 ff ff ff     lea    -0xa8(%r14),%r15
+>    e:    4c 89 ff                 mov    %r15,%rdi
+>   11:    e8 a4 20 fa ff           call   0xfffa20ba
+>   16:    48 89 c2                 mov    %rax,%rdx
+>   19:    48 89 c5                 mov    %rax,%rbp
+>   1c:    48 b8 00 00 00 00 00     movabs $0xdffffc0000000000,%rax
+>   23:    fc ff df
+>   26:    48 c1 ea 03              shr    $0x3,%rdx
+> * 2a:    80 3c 02 00              cmpb   $0x0,(%rdx,%rax,1) <--
+> trapping instruction
+>   2e:    0f 85 b0 02 00 00        jne    0x2e4
+>   34:    48 8b 45 00              mov    0x0(%rbp),%rax
+>   38:    48 8d bb 34 05 00 00     lea    0x534(%rbx),%rdi
+>   3f:    48                       rex.W
+> ```
+> We analyzed the root cause of this bug. When calling disable_store()
+> in drivers/usb/core/port.c, if function authorized_store() is calling
+> usb_deauthorized_device() concurrently, the usb_interface will be
+> removed by usb_disable_device. However, in function disable_store,
+> usb_hub_to_struct_hub() would try to deref interface, causing
+> nullptr-deref. We also tested other functions in
+> drivers/usb/core/port.c. So far we haven't found a similar problem.
+
+I don't see how this explanation could be correct.  disable_store() is a 
+sysfs attribute file for the port device, so when it is called the port 
+device structure must still be registered.  The interface structure 
+doesn't get removed until after usb_disable_device() calls device_del(), 
+which won't return until hub_disconnect() returns, which won't happen 
+until after the port devices are unregistered, which doesn't happen 
+until disable_store() calls sysfs_break_active_protection(), which is 
+after the call to usb_hub_to_struct_hub().
+
+Can you do a little extra debugging to find out exactly which C 
+statement causes the trap?  The disassembly above indicates the trap 
+happens during a compare against 0 inside disable_store() -- not inside 
+usb_hub_to_struct_hub().  Can you figure out which comparison that is?
+
+Alan Stern
+
+> If you have any questions, please contact us.
 > 
-> Otherwise, the conn->refcnt will become below zero, which will trigger a
-> warning and may cause a crash on kernels with the panic_on_warn parameter
-> enabled.
+> Reported by Yue Sun <samsun1006219@gmail.com>
+> Reported by xingwei lee <xrivendell7@gmail.com>
 > 
-repro.c generated by syzkaller:
-
-#define _GNU_SOURCE
-
-#include <dirent.h>
-#include <endian.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <pthread.h>
-#include <sched.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/epoll.h>
-#include <sys/ioctl.h>
-#include <sys/mount.h>
-#include <sys/prctl.h>
-#include <sys/resource.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <sys/wait.h>
-#include <time.h>
-#include <unistd.h>
-
-#include <linux/capability.h>
-#include <linux/rfkill.h>
-
-static void sleep_ms(uint64_t ms)
-{
-         usleep(ms * 1000);
-}
-
-static uint64_t current_time_ms(void)
-{
-         struct timespec ts;
-         if (clock_gettime(CLOCK_MONOTONIC, &ts))
-         exit(1);
-         return (uint64_t)ts.tv_sec * 1000 + (uint64_t)ts.tv_nsec / 1000000;
-}
-
-static bool write_file(const char* file, const char* what, ...)
-{
-         char buf[1024];
-         va_list args;
-         va_start(args, what);
-         vsnprintf(buf, sizeof(buf), what, args);
-         va_end(args);
-         buf[sizeof(buf) - 1] = 0;
-         int len = strlen(buf);
-         int fd = open(file, O_WRONLY | O_CLOEXEC);
-         if (fd == -1)
-                 return false;
-         if (write(fd, buf, len) != len) {
-                 int err = errno;
-                 close(fd);
-                 errno = err;
-                 return false;
-         }
-         close(fd);
-         return true;
-}
-
-#define MAX_FDS 30
-
-#define BTPROTO_HCI 1
-#define ACL_LINK 1
-#define SCAN_PAGE 2
-
-typedef struct {
-         uint8_t b[6];
-} __attribute__((packed)) bdaddr_t;
-
-#define HCI_COMMAND_PKT 1
-#define HCI_EVENT_PKT 4
-#define HCI_VENDOR_PKT 0xff
-
-struct hci_command_hdr {
-         uint16_t opcode;
-         uint8_t plen;
-} __attribute__((packed));
-
-struct hci_event_hdr {
-         uint8_t evt;
-         uint8_t plen;
-} __attribute__((packed));
-
-#define HCI_EV_CONN_COMPLETE 0x03
-struct hci_ev_conn_complete {
-         uint8_t status;
-         uint16_t handle;
-         bdaddr_t bdaddr;
-         uint8_t link_type;
-         uint8_t encr_mode;
-} __attribute__((packed));
-
-#define HCI_EV_CONN_REQUEST 0x04
-struct hci_ev_conn_request {
-         bdaddr_t bdaddr;
-         uint8_t dev_class[3];
-         uint8_t link_type;
-} __attribute__((packed));
-
-#define HCI_EV_REMOTE_FEATURES 0x0b
-struct hci_ev_remote_features {
-         uint8_t status;
-         uint16_t handle;
-         uint8_t features[8];
-} __attribute__((packed));
-
-#define HCI_EV_CMD_COMPLETE 0x0e
-struct hci_ev_cmd_complete {
-         uint8_t ncmd;
-         uint16_t opcode;
-} __attribute__((packed));
-
-#define HCI_OP_WRITE_SCAN_ENABLE 0x0c1a
-
-#define HCI_OP_READ_BUFFER_SIZE 0x1005
-struct hci_rp_read_buffer_size {
-         uint8_t status;
-         uint16_t acl_mtu;
-         uint8_t sco_mtu;
-         uint16_t acl_max_pkt;
-         uint16_t sco_max_pkt;
-} __attribute__((packed));
-
-#define HCI_OP_READ_BD_ADDR 0x1009
-struct hci_rp_read_bd_addr {
-         uint8_t status;
-         bdaddr_t bdaddr;
-} __attribute__((packed));
-
-#define HCI_EV_LE_META 0x3e
-struct hci_ev_le_meta {
-         uint8_t subevent;
-} __attribute__((packed));
-
-#define HCI_EV_LE_CONN_COMPLETE 0x01
-struct hci_ev_le_conn_complete {
-         uint8_t status;
-         uint16_t handle;
-         uint8_t role;
-         uint8_t bdaddr_type;
-         bdaddr_t bdaddr;
-         uint16_t interval;
-         uint16_t latency;
-         uint16_t supervision_timeout;
-         uint8_t clk_accurancy;
-} __attribute__((packed));
-
-struct hci_dev_req {
-         uint16_t dev_id;
-         uint32_t dev_opt;
-};
-
-struct vhci_vendor_pkt {
-         uint8_t type;
-         uint8_t opcode;
-         uint16_t id;
-};
-
-#define HCIDEVUP _IOW('H', 201, int)
-#define HCISETSCAN _IOW('H', 221, int)
-
-static int vhci_fd = -1;
-
-static void rfkill_unblock_all()
-{
-         int fd = open("/dev/rfkill", O_WRONLY);
-         if (fd < 0)
-         exit(1);
-         struct rfkill_event event = {0};
-         event.idx = 0;
-         event.type = RFKILL_TYPE_ALL;
-         event.op = RFKILL_OP_CHANGE_ALL;
-         event.soft = 0;
-         event.hard = 0;
-         if (write(fd, &event, sizeof(event)) < 0)
-         exit(1);
-         close(fd);
-}
-
-static void hci_send_event_packet(int fd, uint8_t evt, void* data, 
-size_t data_len)
-{
-         struct iovec iv[3];
-         struct hci_event_hdr hdr;
-         hdr.evt = evt;
-         hdr.plen = data_len;
-         uint8_t type = HCI_EVENT_PKT;
-         iv[0].iov_base = &type;
-         iv[0].iov_len = sizeof(type);
-         iv[1].iov_base = &hdr;
-         iv[1].iov_len = sizeof(hdr);
-         iv[2].iov_base = data;
-         iv[2].iov_len = data_len;
-         if (writev(fd, iv, sizeof(iv) / sizeof(struct iovec)) < 0)
-         exit(1);
-}
-
-static void hci_send_event_cmd_complete(int fd, uint16_t opcode, void* 
-data, size_t data_len)
-{
-         struct iovec iv[4];
-         struct hci_event_hdr hdr;
-         hdr.evt = HCI_EV_CMD_COMPLETE;
-         hdr.plen = sizeof(struct hci_ev_cmd_complete) + data_len;
-         struct hci_ev_cmd_complete evt_hdr;
-         evt_hdr.ncmd = 1;
-         evt_hdr.opcode = opcode;
-         uint8_t type = HCI_EVENT_PKT;
-         iv[0].iov_base = &type;
-         iv[0].iov_len = sizeof(type);
-         iv[1].iov_base = &hdr;
-         iv[1].iov_len = sizeof(hdr);
-         iv[2].iov_base = &evt_hdr;
-         iv[2].iov_len = sizeof(evt_hdr);
-         iv[3].iov_base = data;
-         iv[3].iov_len = data_len;
-         if (writev(fd, iv, sizeof(iv) / sizeof(struct iovec)) < 0)
-         exit(1);
-}
-
-static bool process_command_pkt(int fd, char* buf, ssize_t buf_size)
-{
-         struct hci_command_hdr* hdr = (struct hci_command_hdr*)buf;
-         if (buf_size < (ssize_t)sizeof(struct hci_command_hdr) ||
-             hdr->plen != buf_size - sizeof(struct hci_command_hdr))
-         exit(1);
-         switch (hdr->opcode) {
-         case HCI_OP_WRITE_SCAN_ENABLE: {
-                 uint8_t status = 0;
-                 hci_send_event_cmd_complete(fd, hdr->opcode, &status, 
-sizeof(status));
-                 return true;
-         }
-         case HCI_OP_READ_BD_ADDR: {
-                 struct hci_rp_read_bd_addr rp = {0};
-                 rp.status = 0;
-                 memset(&rp.bdaddr, 0xaa, 6);
-                 hci_send_event_cmd_complete(fd, hdr->opcode, &rp, 
-sizeof(rp));
-                 return false;
-         }
-         case HCI_OP_READ_BUFFER_SIZE: {
-                 struct hci_rp_read_buffer_size rp = {0};
-                 rp.status = 0;
-                 rp.acl_mtu = 1021;
-                 rp.sco_mtu = 96;
-                 rp.acl_max_pkt = 4;
-                 rp.sco_max_pkt = 6;
-                 hci_send_event_cmd_complete(fd, hdr->opcode, &rp, 
-sizeof(rp));
-                 return false;
-         }
-         }
-         char dummy[0xf9] = {0};
-         hci_send_event_cmd_complete(fd, hdr->opcode, dummy, sizeof(dummy));
-         return false;
-}
-
-static void* event_thread(void* arg)
-{
-         while (1) {
-                 char buf[1024] = {0};
-                 ssize_t buf_size = read(vhci_fd, buf, sizeof(buf));
-                 if (buf_size < 0)
-         exit(1);
-                 if (buf_size > 0 && buf[0] == HCI_COMMAND_PKT) {
-                         if (process_command_pkt(vhci_fd, buf + 1, 
-buf_size - 1))
-                                 break;
-                 }
-         }
-         return NULL;
-}
-#define HCI_HANDLE_1 200
-#define HCI_HANDLE_2 201
-
-static void initialize_vhci()
-{
-         int hci_sock = socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI);
-         if (hci_sock < 0)
-         exit(1);
-         vhci_fd = open("/dev/vhci", O_RDWR);
-         if (vhci_fd == -1)
-         exit(1);
-         const int kVhciFd = 202;
-         if (dup2(vhci_fd, kVhciFd) < 0)
-         exit(1);
-         close(vhci_fd);
-         vhci_fd = kVhciFd;
-         struct vhci_vendor_pkt vendor_pkt;
-         if (read(vhci_fd, &vendor_pkt, sizeof(vendor_pkt)) != 
-sizeof(vendor_pkt))
-         exit(1);
-         if (vendor_pkt.type != HCI_VENDOR_PKT)
-         exit(1);
-         pthread_t th;
-         if (pthread_create(&th, NULL, event_thread, NULL))
-         exit(1);
-         int ret = ioctl(hci_sock, HCIDEVUP, vendor_pkt.id);
-         if (ret) {
-                 if (errno == ERFKILL) {
-                         rfkill_unblock_all();
-                         ret = ioctl(hci_sock, HCIDEVUP, vendor_pkt.id);
-                 }
-                 if (ret && errno != EALREADY)
-         exit(1);
-         }
-         struct hci_dev_req dr = {0};
-         dr.dev_id = vendor_pkt.id;
-         dr.dev_opt = SCAN_PAGE;
-         if (ioctl(hci_sock, HCISETSCAN, &dr))
-         exit(1);
-         struct hci_ev_conn_request request;
-         memset(&request, 0, sizeof(request));
-         memset(&request.bdaddr, 0xaa, 6);
-         *(uint8_t*)&request.bdaddr.b[5] = 0x10;
-         request.link_type = ACL_LINK;
-         hci_send_event_packet(vhci_fd, HCI_EV_CONN_REQUEST, &request, 
-sizeof(request));
-         struct hci_ev_conn_complete complete;
-         memset(&complete, 0, sizeof(complete));
-         complete.status = 0;
-         complete.handle = HCI_HANDLE_1;
-         memset(&complete.bdaddr, 0xaa, 6);
-         *(uint8_t*)&complete.bdaddr.b[5] = 0x10;
-         complete.link_type = ACL_LINK;
-         complete.encr_mode = 0;
-         hci_send_event_packet(vhci_fd, HCI_EV_CONN_COMPLETE, &complete, 
-sizeof(complete));
-         struct hci_ev_remote_features features;
-         memset(&features, 0, sizeof(features));
-         features.status = 0;
-         features.handle = HCI_HANDLE_1;
-         hci_send_event_packet(vhci_fd, HCI_EV_REMOTE_FEATURES, 
-&features, sizeof(features));
-         struct {
-                 struct hci_ev_le_meta le_meta;
-                 struct hci_ev_le_conn_complete le_conn;
-         } le_conn;
-         memset(&le_conn, 0, sizeof(le_conn));
-         le_conn.le_meta.subevent = HCI_EV_LE_CONN_COMPLETE;
-         memset(&le_conn.le_conn.bdaddr, 0xaa, 6);
-         *(uint8_t*)&le_conn.le_conn.bdaddr.b[5] = 0x11;
-         le_conn.le_conn.role = 1;
-         le_conn.le_conn.handle = HCI_HANDLE_2;
-         hci_send_event_packet(vhci_fd, HCI_EV_LE_META, &le_conn, 
-sizeof(le_conn));
-         pthread_join(th, NULL);
-         close(hci_sock);
-}
-
-static long syz_emit_vhci(volatile long a0, volatile long a1)
-{
-         if (vhci_fd < 0)
-                 return (uintptr_t)-1;
-         char* data = (char*)a0;
-         uint32_t length = a1;
-         return write(vhci_fd, data, length);
-}
-
-static void setup_common()
-{
-         if (mount(0, "/sys/fs/fuse/connections", "fusectl", 0, 0)) {
-         }
-}
-
-static void setup_binderfs()
-{
-         if (mkdir("/dev/binderfs", 0777)) {
-         }
-         if (mount("binder", "/dev/binderfs", "binder", 0, NULL)) {
-         }
-         if (symlink("/dev/binderfs", "./binderfs")) {
-         }
-}
-
-static void loop();
-
-static void sandbox_common()
-{
-         prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
-         setsid();
-         struct rlimit rlim;
-         rlim.rlim_cur = rlim.rlim_max = (200 << 20);
-         setrlimit(RLIMIT_AS, &rlim);
-         rlim.rlim_cur = rlim.rlim_max = 32 << 20;
-         setrlimit(RLIMIT_MEMLOCK, &rlim);
-         rlim.rlim_cur = rlim.rlim_max = 136 << 20;
-         setrlimit(RLIMIT_FSIZE, &rlim);
-         rlim.rlim_cur = rlim.rlim_max = 1 << 20;
-         setrlimit(RLIMIT_STACK, &rlim);
-         rlim.rlim_cur = rlim.rlim_max = 0;
-         setrlimit(RLIMIT_CORE, &rlim);
-         rlim.rlim_cur = rlim.rlim_max = 256;
-         setrlimit(RLIMIT_NOFILE, &rlim);
-         if (unshare(CLONE_NEWNS)) {
-         }
-         if (mount(NULL, "/", NULL, MS_REC | MS_PRIVATE, NULL)) {
-         }
-         if (unshare(CLONE_NEWIPC)) {
-         }
-         if (unshare(0x02000000)) {
-         }
-         if (unshare(CLONE_NEWUTS)) {
-         }
-         if (unshare(CLONE_SYSVSEM)) {
-         }
-         typedef struct {
-                 const char* name;
-                 const char* value;
-         } sysctl_t;
-         static const sysctl_t sysctls[] = {
-             {"/proc/sys/kernel/shmmax", "16777216"},
-             {"/proc/sys/kernel/shmall", "536870912"},
-             {"/proc/sys/kernel/shmmni", "1024"},
-             {"/proc/sys/kernel/msgmax", "8192"},
-             {"/proc/sys/kernel/msgmni", "1024"},
-             {"/proc/sys/kernel/msgmnb", "1024"},
-             {"/proc/sys/kernel/sem", "1024 1048576 500 1024"},
-         };
-         unsigned i;
-         for (i = 0; i < sizeof(sysctls) / sizeof(sysctls[0]); i++)
-                 write_file(sysctls[i].name, sysctls[i].value);
-}
-
-static int wait_for_loop(int pid)
-{
-         if (pid < 0)
-         exit(1);
-         int status = 0;
-         while (waitpid(-1, &status, __WALL) != pid) {
-         }
-         return WEXITSTATUS(status);
-}
-
-static void drop_caps(void)
-{
-         struct __user_cap_header_struct cap_hdr = {};
-         struct __user_cap_data_struct cap_data[2] = {};
-         cap_hdr.version = _LINUX_CAPABILITY_VERSION_3;
-         cap_hdr.pid = getpid();
-         if (syscall(SYS_capget, &cap_hdr, &cap_data))
-         exit(1);
-         const int drop = (1 << CAP_SYS_PTRACE) | (1 << CAP_SYS_NICE);
-         cap_data[0].effective &= ~drop;
-         cap_data[0].permitted &= ~drop;
-         cap_data[0].inheritable &= ~drop;
-         if (syscall(SYS_capset, &cap_hdr, &cap_data))
-         exit(1);
-}
-
-static int do_sandbox_none(void)
-{
-         if (unshare(CLONE_NEWPID)) {
-         }
-         int pid = fork();
-         if (pid != 0)
-                 return wait_for_loop(pid);
-         setup_common();
-         initialize_vhci();
-         sandbox_common();
-         drop_caps();
-         if (unshare(CLONE_NEWNET)) {
-         }
-         setup_binderfs();
-         loop();
-         exit(1);
-}
-
-static void kill_and_wait(int pid, int* status)
-{
-         kill(-pid, SIGKILL);
-         kill(pid, SIGKILL);
-         for (int i = 0; i < 100; i++) {
-                 if (waitpid(-1, status, WNOHANG | __WALL) == pid)
-                         return;
-                 usleep(1000);
-         }
-         DIR* dir = opendir("/sys/fs/fuse/connections");
-         if (dir) {
-                 for (;;) {
-                         struct dirent* ent = readdir(dir);
-                         if (!ent)
-                                 break;
-                         if (strcmp(ent->d_name, ".") == 0 || 
-strcmp(ent->d_name, "..") == 0)
-                                 continue;
-                         char abort[300];
-                         snprintf(abort, sizeof(abort), 
-"/sys/fs/fuse/connections/%s/abort", ent->d_name);
-                         int fd = open(abort, O_WRONLY);
-                         if (fd == -1) {
-                                 continue;
-                         }
-                         if (write(fd, abort, 1) < 0) {
-                         }
-                         close(fd);
-                 }
-                 closedir(dir);
-         } else {
-         }
-         while (waitpid(-1, status, __WALL) != pid) {
-         }
-}
-
-static void setup_test()
-{
-         prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
-         setpgrp();
-         write_file("/proc/self/oom_score_adj", "1000");
-}
-
-static void close_fds()
-{
-         for (int fd = 3; fd < MAX_FDS; fd++)
-                 close(fd);
-}
-
-static void execute_one(void);
-
-#define WAIT_FLAGS __WALL
-
-static void loop(void)
-{
-         int iter = 0;
-         for (;; iter++) {
-                 int pid = fork();
-                 if (pid < 0)
-         exit(1);
-                 if (pid == 0) {
-                         setup_test();
-                         execute_one();
-                         close_fds();
-                         exit(0);
-                 }
-                 int status = 0;
-                 uint64_t start = current_time_ms();
-                 for (;;) {
-                         if (waitpid(-1, &status, WNOHANG | WAIT_FLAGS) 
-== pid)
-                                 break;
-                         sleep_ms(1);
-                         if (current_time_ms() - start < 5000)
-                                 continue;
-                         kill_and_wait(pid, &status);
-                         break;
-                 }
-         }
-}
-
-void execute_one(void)
-{
-*(uint8_t*)0x20000040 = 4;
-*(uint8_t*)0x20000041 = 8;
-*(uint8_t*)0x20000042 = 4;
-*(uint8_t*)0x20000043 = 0xf9;
-*(uint16_t*)0x20000044 = 0xc8;
-*(uint8_t*)0x20000046 = 2;
-syz_emit_vhci(0x20000040, 7);
-
-}
-int main(void)
-{
-                 syscall(__NR_mmap, 0x1ffff000ul, 0x1000ul, 0ul, 0x32ul, 
--1, 0ul);
-         syscall(__NR_mmap, 0x20000000ul, 0x1000000ul, 7ul, 0x32ul, -1, 
-0ul);
-         syscall(__NR_mmap, 0x21000000ul, 0x1000ul, 0ul, 0x32ul, -1, 0ul);
-                         do_sandbox_none();
-         return 0;
-}
-
--- 
-Regards,
-Vasiliy Kovalev
+> Best Regards,
+> Yue
