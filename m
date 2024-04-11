@@ -1,186 +1,116 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23D084FB7
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7547D85281
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849615; cv=none; b=lR55NoTlQJ0XggAMjUlUxCHUXRi9X4IaOdq0ArQ8lIxueHUclx43ogP6Mxpe8LXuGaHZSDwkOzVFYS6Wy1M0XTldYkasRPUncq2WeuKhpCyw6t10wYP8Hd549bOZHATl+A3RJ16tBd8t8caB7ZSpzm6aSYK/eM3Z4IA1Ey/pcGI=
+	t=1712849616; cv=none; b=DgP0HIIsbRV4Qt69JFfvz0e78nq1BvkLsUGW/fnmEjPuUah8Or+TFadobJt5IC4aeNTz57Tz0vOMi8Y5usLIZh/V1Bkv7l5KBmWj+UKgFv1/HatseFQjnjbTBlXB3hSzEu+Pcfun8+xatcWC29vNUZ97yx7jMngLfgSIQPbCxdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849615; c=relaxed/simple;
-	bh=ho5BYy4kjaNliS0dta3eXDNM6tashxw66DjHd8RfcUs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MUtoFunElu/mxyz0gxA6M4mNdVcISYJujrKcuIPe2QSjN4XzF6MY+b3uNzvky4F4vlj1ToGxPdlwzCYlreKpEtC9wtTMzCyM+6+fEALp5hc7f1l6BwbCqU9cjwuktCRL8RPKZix2+FmT+rOfYPX7yxgBh9wqdx7yBDvctbmWun4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=LABjQUUP; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712849616; c=relaxed/simple;
+	bh=PbLspCwu5bkgUdK2U9YWWFJDaTS6qgXYBAw1NQGhQTc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BONGxgHqalKAlYvGTB5G9xbCR5L/TACD0weWnxdU3LKctw6FT7xk9vJSTGqgURk32u8GBZMuvpEAqWQPokUJOTPna3Q1C0zkcbaGrwMuGFGZhTa3lgHY/fNkLkuse72q6BwhV+dMrqbnt2kaZcoXPDkVQqfxoCwr4mtG/D2G13k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DfIUfbjf; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="LABjQUUP"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8886339f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DfIUfbjf"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41687826509so93545e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849613; x=1713454413; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1712849614; x=1713454414; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BeXF07ow4/eUdAaHGHjqzj3DOsbnM3ucSWi9ZbxCRt4=;
-        b=LABjQUUPGirHHTyR+91vudx0l0QgSNBxAuigGWXvmeO2PIQIGx/rCEEoM/3qgD0yCR
-         MRxNX2f3rxzWfJYBmVd10NY5iRzCS1l5XACcC1y4R0B+JHm2ysTUIIf0wG5lCBTm/3Jp
-         spDXCFTMr+Ech67QuP57gCu7VmkXx8s0CDlS2jC9rTfAljruEUotoPl7/40UBiSESC8R
-         8pnmrsUO2SYGN29ey90C7OdrJy4s2/wzJXPO4IZK3py2jDr2li7GWSIEdNrZdySjzYHP
-         DMSJ3Q9OADbzfX3CD9bGcB3ha0yogJp6L3F249hqWhTl1YsThjK+cP1qq00/ITT3+wYe
-         4QfQ==
+        bh=WWEKgvL/ZOpKjtTgIwws6qhc3HHfgaLuekbpj/jm1oc=;
+        b=DfIUfbjfC35idweQK7LNh05x+QHPEk6q6gaQAtg8Lbv75BznVDCQI/yKui6fvLDhLi
+         OLVB9sI1Zv0VqZvTly7QyiVTUpfXd7w6zyqj8DAkg8tH3zVgcUTLakzL2Wo6Stl1g+gi
+         cX8qVz+xEwD0OX10qn0xx4cQJ9mKxvPNy7gKino9urfmR6OHCXJNeX5RiUkPcY2ArUMV
+         bG7rjElKIj8ePleuSlqfZ6VUOMLiSXTeGdzNV9u9ME/kQSQrzkwpIGqGNhSq6BdjvYw7
+         PnTJRuUz+S7DMwSURQMFv5adDi2glOl6Fe7fSxIH3+pcNfzd2Fb/KNXF+ABq/rpGsvQ6
+         vH4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849613; x=1713454413;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712849614; x=1713454414;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BeXF07ow4/eUdAaHGHjqzj3DOsbnM3ucSWi9ZbxCRt4=;
-        b=h1H0xL0Wmwx8vyqsKBVxkhvxWaKrMEN5K4QYIMizU4T2oqcbobrFnXaQ87wCJO90th
-         B0xJ4ItG+2DFMSdhjuQXMk+W49IvkQsdAaJZQ53hULQfzoKiVtpicgZ5zxWWhVNwyVw4
-         HQTwSWITJDVAm9FypNOU//w7or5HxVgS15aiTqWrwPqDlEFC5VGOHsosxXp0qv5zSBE5
-         z5faQf/Lz2lTVck/+vKf82U7rblmnAewtAaW7SRDULowoZ7d7/ncU5n7lMD0UiCsJAZZ
-         QXJYtOay1aIYjen7KxC1nBjtOnfO4/Pm8wyvfPu46+pgHECj6/e+QOhgf8XsJplXFz9J
-         mniA==
-X-Gm-Message-State: AOJu0Yyj3v6I2HhHp64HideGmWa6N1s1OtzovrNIQYuPoxEyyPxwaUFl
-	VLLVwiSIix92Wb1IGLz0FX1hf6x6E8BV93rpdHhXAB5/za93cVpkREz6T2izOF4t3Xw3PFlrhol
-	I
-X-Google-Smtp-Source: AGHT+IFwbKV6QcKE6nqVwb1dWUEeMiR97kz3ImI6jz4Vk3g7S9cz4TZs43H+GmNOgQLLZHk3+hXRlA==
-X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr173742ioj.2.1712849612818;
-        Thu, 11 Apr 2024 08:33:32 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:33:31 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 065/437] SoC: SOF: icp4: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:13:25 -0600
-Message-ID: <20240411153126.16201-66-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+        bh=WWEKgvL/ZOpKjtTgIwws6qhc3HHfgaLuekbpj/jm1oc=;
+        b=IoJJMzozEZwYhyrjneG5hboEFUCgIEfGwGTbC10LhYJ9cpVR/y+uZ/bC4sUQbaUVC6
+         D3QSOLp354hI+dU4xtCezhEIOfNbBcEdWEVMiuzc8/o1lpOEdwQB+wnq1BqDf6hZm2zb
+         kRjfU/3bwC42PdxYuvhJwVcZ9a+FiQ3uKMdMRCYHUcuMJNyJBwOn2Sp5xsc6/gCc6X/S
+         /CJwtpsr8WX1SgDlzyE1kTwwC+uoaL0quWeEOeAuv5HFcRCvO1+T65iFbZAcsGWaHjQo
+         QDPfqkfN7eUFstHAw8dtb4Skk+3N78bwFr/QXE9kOmHgxSZbPrKoo04kCneuSHWKBi7e
+         LT2g==
+X-Forwarded-Encrypted: i=1; AJvYcCVE8QWp0AGycoyddYzj64fv3s+oQXfNZpG0VzOjwXMJwvW2vWzlFbgvStpZmn75joB3grIOB8MxCM6b2SoDR3Xa87xJiTr0JewwLfb8
+X-Gm-Message-State: AOJu0YzydrS+LulNYifWggoRfvQ6LmdMJx8gNXhs8cnn2aNfYaQMaSsb
+	4cmq4sSJWjEXnwjpe3axr6foY18pfCcOa1jAc/QU4BEZYS+srzDaeQjCRqq4JQgN9Lzg0fFphRw
+	+D+94nhPl6BaJS85OLFIOr4QQeZdFi/67+ls=
+X-Google-Smtp-Source: AGHT+IFSA46efEwvLckuLo22i0EaoWGKSXc3A8+EHYGsJ0Jh6gXKAMZ59K5Ow6WfR7oga9HRD4hRH0d17iec05aSqZo=
+X-Received: by 2002:a05:600c:3b93:b0:417:3f9e:5cac with SMTP id
+ n19-20020a05600c3b9300b004173f9e5cacmr177314wms.3.1712849613449; Thu, 11 Apr
+ 2024 08:33:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <87sf02bgez.ffs@tglx> <87r0fmbe65.ffs@tglx> <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
+ <87o7aqb6uw.ffs@tglx> <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
+ <87frw2axv0.ffs@tglx> <20240404145408.GD7153@redhat.com> <87le5t9f14.ffs@tglx>
+ <20240406150950.GA3060@redhat.com> <a9a4a964-6f0c-43a5-9fa8-10926d74fbf1@sirena.org.uk>
+In-Reply-To: <a9a4a964-6f0c-43a5-9fa8-10926d74fbf1@sirena.org.uk>
+From: John Stultz <jstultz@google.com>
+Date: Thu, 11 Apr 2024 08:33:20 -0700
+Message-ID: <CANDhNCp=7mTSSO4cXQjYbtLrK8XRCbCyse8Bq5Wbt5V4G-K_dQ@mail.gmail.com>
+Subject: Re: [PATCH] selftests/timers/posix_timers: reimplement check_timer_distribution()
+To: Mark Brown <broonie@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
+	kasan-dev@googlegroups.com, Edward Liaw <edliaw@google.com>, 
+	Carlos Llamas <cmllamas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- sound/soc/sof/ipc4-mtrace.c    | 17 +++++++++--------
- sound/soc/sof/ipc4-telemetry.c | 14 +++++++-------
- 2 files changed, 16 insertions(+), 15 deletions(-)
+On Thu, Apr 11, 2024 at 5:42=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
+te:
+> On Sat, Apr 06, 2024 at 05:09:51PM +0200, Oleg Nesterov wrote:
+> > Without the commit bcb7ee79029d ("posix-timers: Prefer delivery of sign=
+als
+> > to the current thread") the test-case fails immediately, the very 1st t=
+ick
+> > wakes the leader up. Otherwise it quickly succeeds after 100 ticks.
+>
+> This has landed in -next and is causing warning spam throughout
+> kselftest when built with clang:
+>
+> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:435:6: warni=
+ng: variable 'major' is used uninitialized whenever '||' condition is true =
+[-Wsometimes-uninitialized]
+>         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor=
+) !=3D 2)
+>             ^~~~~~~~~~~~
+> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:438:9: note:=
+ uninitialized use occurs here
+>         return major > min_major || (major =3D=3D min_major && minor >=3D=
+ min_minor);
+>                ^~~~~
+> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:435:6: note:=
+ remove the '||' if its condition is always false
+>         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor=
+) !=3D 2)
+>             ^~~~~~~~~~~~~~~
+> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:432:20: note=
+: initialize the variable 'major' to silence this warning
+>         unsigned int major, minor;
+>                           ^
+>                            =3D 0
 
-diff --git a/sound/soc/sof/ipc4-mtrace.c b/sound/soc/sof/ipc4-mtrace.c
-index 0e04bea9432d..976951a486b5 100644
---- a/sound/soc/sof/ipc4-mtrace.c
-+++ b/sound/soc/sof/ipc4-mtrace.c
-@@ -274,6 +274,7 @@ static ssize_t sof_ipc4_mtrace_dfs_read(struct file *file, char __user *buffer,
- 
- 	return count;
- }
-+FOPS_READ_ITER_HELPER(sof_ipc4_mtrace_dfs_read);
- 
- static int sof_ipc4_mtrace_dfs_release(struct inode *inode, struct file *file)
- {
-@@ -291,17 +292,17 @@ static int sof_ipc4_mtrace_dfs_release(struct inode *inode, struct file *file)
- 
- static const struct file_operations sof_dfs_mtrace_fops = {
- 	.open = sof_ipc4_mtrace_dfs_open,
--	.read = sof_ipc4_mtrace_dfs_read,
-+	.read_iter = sof_ipc4_mtrace_dfs_read_iter,
- 	.llseek = default_llseek,
- 	.release = sof_ipc4_mtrace_dfs_release,
- 
- 	.owner = THIS_MODULE,
- };
- 
--static ssize_t sof_ipc4_priority_mask_dfs_read(struct file *file, char __user *to,
--					       size_t count, loff_t *ppos)
-+static ssize_t sof_ipc4_priority_mask_dfs_read(struct kiocb *iocb,
-+					       struct iov_iter *to)
- {
--	struct sof_mtrace_priv *priv = file->private_data;
-+	struct sof_mtrace_priv *priv = iocb->ki_filp->private_data;
- 	int i, ret, offset, remaining;
- 	char *buf;
- 
-@@ -322,8 +323,7 @@ static ssize_t sof_ipc4_priority_mask_dfs_read(struct file *file, char __user *t
- 			 priv->state_info.logs_priorities_mask[i]);
- 	}
- 
--	ret = simple_read_from_buffer(to, count, ppos, buf, strlen(buf));
--
-+	ret = simple_copy_to_iter(buf, &iocb->ki_pos, strlen(buf), to);
- 	kfree(buf);
- 	return ret;
- }
-@@ -368,11 +368,12 @@ static ssize_t sof_ipc4_priority_mask_dfs_write(struct file *file,
- 	kfree(buf);
- 	return ret;
- }
-+FOPS_WRITE_ITER_HELPER(sof_ipc4_priority_mask_dfs_write);
- 
- static const struct file_operations sof_dfs_priority_mask_fops = {
- 	.open = simple_open,
--	.read = sof_ipc4_priority_mask_dfs_read,
--	.write = sof_ipc4_priority_mask_dfs_write,
-+	.read_iter = sof_ipc4_priority_mask_dfs_read,
-+	.write_iter = sof_ipc4_priority_mask_dfs_write_iter,
- 	.llseek = default_llseek,
- 
- 	.owner = THIS_MODULE,
-diff --git a/sound/soc/sof/ipc4-telemetry.c b/sound/soc/sof/ipc4-telemetry.c
-index ec4ae9674364..8b4ef6ae8753 100644
---- a/sound/soc/sof/ipc4-telemetry.c
-+++ b/sound/soc/sof/ipc4-telemetry.c
-@@ -32,13 +32,13 @@ static void __iomem *sof_ipc4_query_exception_address(struct snd_sof_dev *sdev)
- 	return sdev->bar[sdev->mailbox_bar] + offset;
- }
- 
--static ssize_t sof_telemetry_entry_read(struct file *file, char __user *buffer,
--					size_t count, loff_t *ppos)
-+static ssize_t sof_telemetry_entry_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct snd_sof_dfsentry *dfse = file->private_data;
-+	struct snd_sof_dfsentry *dfse = iocb->ki_filp->private_data;
- 	struct snd_sof_dev *sdev = dfse->sdev;
-+	size_t count = iov_iter_count(to);
- 	void __iomem *io_addr;
--	loff_t pos = *ppos;
-+	loff_t pos = iocb->ki_pos;
- 	size_t size_ret;
- 	u8 *buf;
- 
-@@ -59,13 +59,13 @@ static ssize_t sof_telemetry_entry_read(struct file *file, char __user *buffer,
- 		return -ENOMEM;
- 
- 	memcpy_fromio(buf, io_addr, SOF_IPC4_DEBUG_SLOT_SIZE - 4);
--	size_ret = copy_to_user(buffer, buf + pos, count);
-+	size_ret = !copy_to_iter_full(buf + pos, count, to);
- 	if (size_ret) {
- 		kfree(buf);
- 		return -EFAULT;
- 	}
- 
--	*ppos = pos + count;
-+	iocb->ki_pos = pos + count;
- 	kfree(buf);
- 
- 	return count;
-@@ -73,7 +73,7 @@ static ssize_t sof_telemetry_entry_read(struct file *file, char __user *buffer,
- 
- static const struct file_operations sof_telemetry_fops = {
- 	.open = simple_open,
--	.read = sof_telemetry_entry_read,
-+	.read_iter = sof_telemetry_entry_read,
- };
- 
- void sof_ipc4_create_exception_debugfs_node(struct snd_sof_dev *sdev)
--- 
-2.43.0
+I hit this one too yesterday and included a fix for it here:
+  https://lore.kernel.org/lkml/20240410232637.4135564-2-jstultz@google.com/
 
+thanks
+-john
