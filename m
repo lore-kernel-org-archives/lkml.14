@@ -1,66 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6022614D70A;
-	Thu, 11 Apr 2024 14:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0082D14E2F4;
+	Thu, 11 Apr 2024 14:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844372; cv=none; b=hWNNgcQTy0V4tcFvapN2P3QZ4Z7TlnmzR3GTR1+519L6qpspXCiGd4pKMCZmd8SUkxHyHO5M3ZPehhz9C7m4PIZf/GjN/Ks5XrHzcqBqWdUHts0Ch+IDlEtIK9KQl5UheOuIpNwoOMo2ZKXT3Ul8ZTA1FeSHSmMX1gzGQT4ujjU=
+	t=1712844472; cv=none; b=OFdtXybWuUsAZq3KlsiUp9bggGPetBedoa6SA1ylNEU4p/3+nBLPbant1ohED1pnfc8AKJgyY5yQNW0rT+idGP49nvPJwXWcQSi91jGLCSiZa1KFJ/zRc8pjRos45ULkosFqRzuvcfdroq8mF+19WZUDXJ7Q748Q6JzjwUrqZaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844372; c=relaxed/simple;
-	bh=d6e46jWnDxZRYyl+CFbOQVmEbwHLtW1MhnFOZwpQzwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NvR9cxR/x3TR5DyNzS2jxpmy4e10keIK5jr6T9kZcr4fJTXFTwTjjnwqFhgxdvKUrfQRU42FpY4z4yzZHiwylg3Xz+6WqrNt1OeXL9bvvnOORTMliEcnKzWL12uqzZC6vad8ox74WjbIqcYAe8f0CKr03v8F5qxxyJ2aAeo1CfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=koYu8r5E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712844472; c=relaxed/simple;
+	bh=BPmT92KF/HjYiJCEk7DpLeaA43uZzuo5q9+GlepQGN0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=erE1BCUzSFsb5bToVVTRpk0GXRYnL2gBHCjzN1nYhhafTgzHiLV2E3k0/8auMWP1KsLPP+9lRuGFanuCz0kIjIZSK7BKGqVZ9C4gxXRDTk3LmIfL+g7Q5INJMk97ygWMwueOtYDmlzxnzBqcozq8Hjqt0sO6nvQXtqPbx4zwYpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVMeqrSo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="koYu8r5E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42F5C4AF0A;
-	Thu, 11 Apr 2024 14:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVMeqrSo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6BCFC113CD;
+	Thu, 11 Apr 2024 14:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712844371;
-	bh=d6e46jWnDxZRYyl+CFbOQVmEbwHLtW1MhnFOZwpQzwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=koYu8r5Eg3RLMZlDh92Cwd4y/NSQj73VMtMyxs3qQHFW/XV47CE/QArglKAJ2qrRc
-	 QDjqqjNW2fbTm6YAaB2uiPU7YOOuNovhDx8aZVjjTTf2fYq0WAO9lniMn6WfUAkybi
-	 VwQ1iuB/gNTn1H7AcARD3lIyUz0WiZKbp/UCdtwknKf5ml3kBi/Z5T799MKccWePyV
-	 XPzGaHWbDNskLJ/IB9UYoXVdhBjmqENGkNRxINZIju9PmXz7cHwSXuuVXddD7uRIvk
-	 smhZjk6kkpG0+3c52ZRmeoWBMuVIhbocGdC9+rvbxZ3oCQ3LQKEaW9nt5VU7fUpNt4
-	 5y8Xt7UowDY7Q==
-Date: Thu, 11 Apr 2024 09:06:09 -0500
-From: Rob Herring <robh@kernel.org>
-To: Hugues Fruchet <hugues.fruchet@foss.st.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-kernel@vger.kernel.org,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH] media: dt-bindings: media: add access-controllers to
- STM32MP25 video codecs
-Message-ID: <171284436693.3504816.3115362318052404070.robh@kernel.org>
-References: <20240410144222.714172-1-hugues.fruchet@foss.st.com>
+	s=k20201202; t=1712844471;
+	bh=BPmT92KF/HjYiJCEk7DpLeaA43uZzuo5q9+GlepQGN0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aVMeqrSotjKFvJlnF81f+NIRpPwPzd+z/VdTfdJ4Cwuq5N3nljmrSKX/2KPy91nH5
+	 k4YU34dDx1Jhek+s8TUIU9cgIqtXI2aBKh+LsxjJlTwDXbQCwXppKzMrmBKPFgFB8a
+	 GlzqSbetZqLMCoWaMOczqXtRDayOJQNhy85fyWwJgLnPiO6o/nlYcBbaBrq5KLNW+d
+	 27pYqyGA4x2cQjGyibYtw63yHtDWflPzEYx28ITOJtpyPAS6sFs3/4mQazL6Wx98i1
+	 7Vz21BG6Ek1DDPmkf+mHPHbEN4f7rXksA2M/MhERf9ZXCE+/RQHEUHNOsHMP/sPVrO
+	 ogto9Qw/siiIA==
+Date: Thu, 11 Apr 2024 23:07:45 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Yuntao Wang <ytcoode@gmail.com>, linux-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, "Peter Zijlstra (Intel)"
+ <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, "ndesaulniers@google.com"
+ <ndesaulniers@google.com>, Tejun Heo <tj@kernel.org>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Krister Johansen <kjlx@templeofstupid.com>,
+ Changbin Du <changbin.du@huawei.com>, Arnd Bergmann <arnd@arndb.de>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] init/main.c: Remove redundant space from
+ saved_command_line
+Message-Id: <20240411230745.dba6cfa97ec068d909550fd5@kernel.org>
+In-Reply-To: <CAMuHMdU1-F0eZAXUyVCt2ik2w9J+vTm1DnvTVwx2hNz1CDZc1g@mail.gmail.com>
+References: <20240411041200.225356-1-ytcoode@gmail.com>
+	<CAMuHMdU1-F0eZAXUyVCt2ik2w9J+vTm1DnvTVwx2hNz1CDZc1g@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410144222.714172-1-hugues.fruchet@foss.st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On Thu, 11 Apr 2024 09:19:32 +0200
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-On Wed, 10 Apr 2024 16:42:22 +0200, Hugues Fruchet wrote:
-> access-controllers is an optional property that allows a peripheral to
-> refer to one or more domain access controller(s).
+> CC Hiramatsu-san (now for real :-)
+
+Thanks!
+
 > 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
-> ---
->  .../devicetree/bindings/media/st,stm32mp25-video-codec.yaml   | 4 ++++
->  1 file changed, 4 insertions(+)
+> On Thu, Apr 11, 2024 at 6:13 AM Yuntao Wang <ytcoode@gmail.com> wrote:
+> > extra_init_args ends with a space, so when concatenating extra_init_args
+> > to saved_command_line, be sure to remove the extra space.
+
+Hi Yuntao,
+
+Hmm, if you want to trim the end space, you should trim extra_init_args
+itself instead of this adjustment. Also, can you share the example?
+
+Thank you,
+
+> >
+> > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+> > ---
+> >  init/main.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/init/main.c b/init/main.c
+> > index 2ca52474d0c3..cf2c22aa0e8c 100644
+> > --- a/init/main.c
+> > +++ b/init/main.c
+> > @@ -660,12 +660,14 @@ static void __init setup_command_line(char *command_line)
+> >                         strcpy(saved_command_line + len, extra_init_args);
+> >                         len += ilen - 4;        /* strlen(extra_init_args) */
+> >                         strcpy(saved_command_line + len,
+> > -                               boot_command_line + initargs_offs - 1);
+> > +                               boot_command_line + initargs_offs);
+> >                 } else {
+> >                         len = strlen(saved_command_line);
+> >                         strcpy(saved_command_line + len, " -- ");
+> >                         len += 4;
+> >                         strcpy(saved_command_line + len, extra_init_args);
+> > +                       len += ilen - 4; /* strlen(extra_init_args) */
+> > +                       saved_command_line[len-1] = '\0'; /* remove trailing space */
+> >                 }
+> >         }
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68korg
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
