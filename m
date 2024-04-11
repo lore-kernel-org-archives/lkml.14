@@ -1,63 +1,63 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3081C1AE6
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8801C2FD1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849882; cv=none; b=Rba1FCcJSM2LfqXIh5gyjB92huD7Z1W67kFTTTBCpyr6sgUKBqPexuokyOolRbBftEsNgHflnLtMUCnEUtR2IBW7i2IUzVpeC9PCYWuA6H2OS+Gs4FFjW/sc6T9I31BOPT7INZ/iCljg/jv7fDzE0g2vEcQPpRIWoPRVp6dnH6Y=
+	t=1712849886; cv=none; b=ig3eyuB4WCvs5q083Yah+M1zS4lJLIslKzLzQrI66QguC3E+2tPfCilzrQD7FQwVw32TG8fStqHh/+fUZcbJgjsOSoo12Tvpcs+DGmLCmUTW8N593c039IwBu7U+5UMBTxI7T0vzFrvO2+Iu14AOYCUMDonTTDdJQzZO+b2uJh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849882; c=relaxed/simple;
-	bh=6X6jAKa3dWU3lq3ru8ux95v8OJLf7IzSdNHkXzZB8OE=;
+	s=arc-20240116; t=1712849886; c=relaxed/simple;
+	bh=v8C/lvedvI6wXG2vqxwSCKy1AMIR477ttE6+t9PHQKo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tBOnAXkXxHI7qb5pO/xIehxO1rXRFQIhV+yaDYbIAf4RxaVNy00FPXrvni0GUuWkeRPSXIZA69x0+K42uNQ4q6+SlpHsn5fzxWUVZvpWv/7jAWu9Kpl7WOd8tKZxQYwuBUUqUEe04ie8+n9R9RvySz4VZp9Hi+Un2cczzc3fVDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=x1tJ53kN; arc=none smtp.client-ip=209.85.166.44
+	 MIME-Version; b=VtNx023k9F2QN44kGH8JXnhvPwqZ3emB/k/7zixQnZJOTXtoZ2WSE6IRPHM8HJllN9RJPc3YbF8PMRuv+xVfvs9kOsYaLvMEXO89kR3A8qLjVVJ0unt0eulUMrVDOrfFAHJ53MIwcGkfVUBEfPrtXby0EWA6C110vZqBkEzLHTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=qzoRC7x6; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="x1tJ53kN"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d67d1073easo9830239f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="qzoRC7x6"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58119239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849879; x=1713454679; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849883; x=1713454683; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=c8tWM1HuHPpRlDt3cdCZk4Rq3a8/t27j4pr9RvVTiQw=;
-        b=x1tJ53kNOkdfmhpAh3hFLz4VrevEvyFGYp47wU9Xq4V723wpRkiPDJAhX1dIZOUfSv
-         mgwsxnzBsqXSBsjBLnKcwa0Dtc1zkTKKkjA75d3cOAH2HpLZwRdrZKbqr69hjrX+6Hhn
-         Jd7/X7vgci56z3hkQHpE9vlPv/sYIb3onCfqWqMTZJW0jf/w4qT+VcjUWE1E5piK3irm
-         ewRtA0bjlgnSXrm/mjhhMWQLsFnQEZz0CjkmAM0Nz4mObYMfclKop0u8I/dh13hXvcVd
-         04r5NhDbMNsUqVHVwamO9ts5Q56IRaam7c2nG54A8b6L+zb25AEGjDR9IwgLyV771N3H
-         2OBw==
+        bh=AaoK8FTbbHnEwz1cy7WsiiIGpGZVFO82Tn20A2e7QqE=;
+        b=qzoRC7x6F5GixRMGzv7OjufYiiBg2ouUeVd75CSYIL6n3MewBm3NIYU27lfOZLY9Fn
+         +R3IB9/8YP+qTkShWQ7T7GdexxjxDHIxKdy/DapZdzB8/udWfslj9vB5v6bRF/EIPBht
+         fFJpaISvtvMP3r9q79XrdQhNAleU2602DZbZoW8GThKRah0Bfg+eHwbJbgClPyRFPJht
+         kcGECPnPhhiFuFmeIBXNqDaPmd+zaws170yN8zPftEASMRFsBIZSx/XpirnCV8/ooRud
+         fxZW+OhsGxVfDvZq6Gqe75ZtHMND8lysiaYGZBx/a8yJx7JoAI8H/G2qlEBDdWocxH7N
+         Y4Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849879; x=1713454679;
+        d=1e100.net; s=20230601; t=1712849883; x=1713454683;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=c8tWM1HuHPpRlDt3cdCZk4Rq3a8/t27j4pr9RvVTiQw=;
-        b=RFBds3HotLAbrvJpysytukgZPe/zfV/OcQc00ZzwS+R3TzESKSbsnFmBZRXH1ngK0W
-         peeooIHUgm9pJfkPDvn5BZrCiNsqg4kC4UfsTG3NOYwCcmD6c5zpnnd9fvXPImVGTG7D
-         JEiJv62vzNQ6+hWG19kAOgTwF2/9CtqaT33aWjwbOOSscLk3tqsVZz22+PYdqvGcbrSZ
-         d8Tfxr2TTf6X0p4muNEGtG7L0odWUyw76sYMZKUbWji6Pec35si2IjJ32Tcyg2MGKDOO
-         qZ326pXO+DV0o2zD81kyf6Q7kDdxHRNkUEolutjNCIHnkKdE61W46hGpwmeUnh2mF4HB
-         ASMQ==
-X-Gm-Message-State: AOJu0YzzbgkSciDrsr0n+tOR9gfAV0HNmIPH8raSGPBrBuSjmXjc5ozK
-	5nO+7W4WyxbdCgXczsvMZ/YzNDntGnN/YzqbMsik6rPAPM3SXbf4EbJ3E6lWyPrqMlSQKAscf19
-	3
-X-Google-Smtp-Source: AGHT+IHMkSCiCyAQ43i3rGFmnOms9FbdSB+Lgec75jE2V21MxYMsWwTg2GqPaKFenYH199gPJkWELw==
-X-Received: by 2002:a05:6602:84:b0:7d6:9d75:6de2 with SMTP id h4-20020a056602008400b007d69d756de2mr46000iob.2.1712849879651;
-        Thu, 11 Apr 2024 08:37:59 -0700 (PDT)
+        bh=AaoK8FTbbHnEwz1cy7WsiiIGpGZVFO82Tn20A2e7QqE=;
+        b=aiqYOTZERcMzGTwo4ip6PCL9gSt+Benoryud8MMcXco46CeL1dA3D862d+KcRHqY4r
+         xGL7IYuCvI4EW9fCCSDIZ+cZOxtAr9XLXxXkx1QisqAkXxAt07BbQhjs1wtUIokECzdh
+         sdmCM1uYMacUkBV2blhtkOskXCwl8BiIFA5khLGD44yLVCOA9dxzTyEsLFHnnSqq3hMj
+         1S5MX4uhtfZmCiFkTHdI5XJLeAC6KItFuqUisr9gHl9ygJA9IPmwEm3rdeW/KSt1EUOf
+         0eQcUbBGhV2hULJS/on51kbScxLPDm6pcsgfxVecfoZ9bV7Z1+wRwPkLwAufc1w2obQM
+         cvng==
+X-Gm-Message-State: AOJu0YyowwTkOTHvZT1ePBzf3RMX6fOWq/hIPN7/iJBTiceWTTS09n2/
+	nsA31UjgAEOsisCQS5KUdcVqVJdPgVblDfauvh9mzBsbeha/omiJCnPN8pZrQTbxVEPmPHkWDq6
+	K
+X-Google-Smtp-Source: AGHT+IEbPn05+VYqd8pmO3GqN7HdKihwl2X6Tdn6pmFycduls/9U2b0zQiJfOzAHSrunkkGw8wz5cQ==
+X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr166641ioh.1.1712849883197;
+        Thu, 11 Apr 2024 08:38:03 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.57
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:37:58 -0700 (PDT)
+        Thu, 11 Apr 2024 08:38:01 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 227/437] misc: ibmasm: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:16:07 -0600
-Message-ID: <20240411153126.16201-228-axboe@kernel.dk>
+Subject: [PATCH 229/437] drivers/nfc: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:16:09 -0600
+Message-ID: <20240411153126.16201-230-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,266 +71,70 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/misc/ibmasm/ibmasmfs.c | 94 ++++++++++++++++++----------------
- 1 file changed, 50 insertions(+), 44 deletions(-)
+ drivers/nfc/virtual_ncidev.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/misc/ibmasm/ibmasmfs.c b/drivers/misc/ibmasm/ibmasmfs.c
-index c44de892a61e..8f7ea4214d20 100644
---- a/drivers/misc/ibmasm/ibmasmfs.c
-+++ b/drivers/misc/ibmasm/ibmasmfs.c
-@@ -256,18 +256,19 @@ static int command_file_close(struct inode *inode, struct file *file)
- 	return 0;
- }
+diff --git a/drivers/nfc/virtual_ncidev.c b/drivers/nfc/virtual_ncidev.c
+index 590b038e449e..59c75de758d7 100644
+--- a/drivers/nfc/virtual_ncidev.c
++++ b/drivers/nfc/virtual_ncidev.c
+@@ -79,10 +79,10 @@ static const struct nci_ops virtual_nci_ops = {
+ 	.send = virtual_nci_send
+ };
  
--static ssize_t command_file_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
-+static ssize_t command_file_read(struct kiocb *iocb, struct iov_iter *to)
+-static ssize_t virtual_ncidev_read(struct file *file, char __user *buf,
+-				   size_t count, loff_t *ppos)
++static ssize_t virtual_ncidev_read(struct kiocb *iocb, struct iov_iter *to)
  {
--	struct ibmasmfs_command_data *command_data = file->private_data;
-+	struct ibmasmfs_command_data *command_data = iocb->ki_filp->private_data;
+-	struct virtual_nci_dev *vdev = file->private_data;
++	struct virtual_nci_dev *vdev = iocb->ki_filp->private_data;
 +	size_t count = iov_iter_count(to);
- 	struct command *cmd;
- 	int len;
- 	unsigned long flags;
+ 	size_t actual_len;
  
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count == 0 || count > IBMASM_CMD_MAX_BUFFER_SIZE)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
+ 	mutex_lock(&vdev->mtx);
+@@ -95,7 +95,7 @@ static ssize_t virtual_ncidev_read(struct file *file, char __user *buf,
  
- 	spin_lock_irqsave(&command_data->sp->lock, flags);
-@@ -284,7 +285,7 @@ static ssize_t command_file_read(struct file *file, char __user *buf, size_t cou
- 		return -EIO;
- 	}
- 	len = min(count, cmd->buffer_size);
--	if (copy_to_user(buf, cmd->buffer, len)) {
-+	if (!copy_to_iter_full(cmd->buffer, len, to)) {
- 		command_put(cmd);
+ 	actual_len = min_t(size_t, count, vdev->send_buff->len);
+ 
+-	if (copy_to_user(buf, vdev->send_buff->data, actual_len)) {
++	if (!copy_to_iter_full(vdev->send_buff->data, actual_len, to)) {
+ 		mutex_unlock(&vdev->mtx);
  		return -EFAULT;
  	}
-@@ -293,17 +294,18 @@ static ssize_t command_file_read(struct file *file, char __user *buf, size_t cou
- 	return len;
+@@ -110,18 +110,17 @@ static ssize_t virtual_ncidev_read(struct file *file, char __user *buf,
+ 	return actual_len;
  }
  
--static ssize_t command_file_write(struct file *file, const char __user *ubuff, size_t count, loff_t *offset)
-+static ssize_t command_file_write(struct kiocb *iocb, struct iov_iter *from)
+-static ssize_t virtual_ncidev_write(struct file *file,
+-				    const char __user *buf,
+-				    size_t count, loff_t *ppos)
++static ssize_t virtual_ncidev_write(struct kiocb *iocb, struct iov_iter *from)
  {
--	struct ibmasmfs_command_data *command_data = file->private_data;
-+	struct ibmasmfs_command_data *command_data = iocb->ki_filp->private_data;
+-	struct virtual_nci_dev *vdev = file->private_data;
++	struct virtual_nci_dev *vdev = iocb->ki_filp->private_data;
 +	size_t count = iov_iter_count(from);
- 	struct command *cmd;
- 	unsigned long flags;
+ 	struct sk_buff *skb;
  
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count == 0 || count > IBMASM_CMD_MAX_BUFFER_SIZE)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	/* commands are executed sequentially, only one command at a time */
-@@ -314,7 +316,7 @@ static ssize_t command_file_write(struct file *file, const char __user *ubuff, s
- 	if (!cmd)
+ 	skb = alloc_skb(count, GFP_KERNEL);
+ 	if (!skb)
  		return -ENOMEM;
  
--	if (copy_from_user(cmd->buffer, ubuff, count)) {
-+	if (!copy_from_iter_full(cmd->buffer, count, from)) {
- 		command_put(cmd);
+-	if (copy_from_user(skb_put(skb, count), buf, count)) {
++	if (!copy_from_iter_full(skb_put(skb, count), count, from)) {
+ 		kfree_skb(skb);
  		return -EFAULT;
  	}
-@@ -365,19 +367,20 @@ static int event_file_close(struct inode *inode, struct file *file)
- 	return 0;
- }
+@@ -191,8 +190,8 @@ static long virtual_ncidev_ioctl(struct file *file, unsigned int cmd,
  
--static ssize_t event_file_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
-+static ssize_t event_file_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ibmasmfs_event_data *event_data = file->private_data;
-+	struct ibmasmfs_event_data *event_data = iocb->ki_filp->private_data;
- 	struct event_reader *reader = &event_data->reader;
- 	struct service_processor *sp = event_data->sp;
-+	size_t count = iov_iter_count(to);
- 	int ret;
- 	unsigned long flags;
- 
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count == 0 || count > IBMASM_EVENT_MAX_SIZE)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	spin_lock_irqsave(&sp->lock, flags);
-@@ -397,7 +400,7 @@ static ssize_t event_file_read(struct file *file, char __user *buf, size_t count
- 		goto out;
- 	}
- 
--        if (copy_to_user(buf, reader->data, reader->data_size)) {
-+        if (!copy_to_iter_full(reader->data, reader->data_size, to)) {
- 		ret = -EFAULT;
- 		goto out;
- 	}
-@@ -408,15 +411,16 @@ static ssize_t event_file_read(struct file *file, char __user *buf, size_t count
- 	return ret;
- }
- 
--static ssize_t event_file_write(struct file *file, const char __user *buf, size_t count, loff_t *offset)
-+static ssize_t event_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ibmasmfs_event_data *event_data = file->private_data;
-+	struct ibmasmfs_event_data *event_data = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count != 1)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	ibmasm_cancel_next_event(&event_data->reader);
-@@ -449,17 +453,18 @@ static int r_heartbeat_file_close(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t r_heartbeat_file_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
-+static ssize_t r_heartbeat_file_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ibmasmfs_heartbeat_data *rhbeat = file->private_data;
-+	struct ibmasmfs_heartbeat_data *rhbeat = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(to);
- 	unsigned long flags;
- 	int result;
- 
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count == 0 || count > 1024)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	/* allow only one reverse heartbeat per process */
-@@ -477,15 +482,16 @@ static ssize_t r_heartbeat_file_read(struct file *file, char __user *buf, size_t
- 	return result;
- }
- 
--static ssize_t r_heartbeat_file_write(struct file *file, const char __user *buf, size_t count, loff_t *offset)
-+static ssize_t r_heartbeat_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct ibmasmfs_heartbeat_data *rhbeat = file->private_data;
-+	struct ibmasmfs_heartbeat_data *rhbeat = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count != 1)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	if (rhbeat->active)
-@@ -499,9 +505,9 @@ static int remote_settings_file_close(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t remote_settings_file_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
-+static ssize_t remote_settings_file_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	void __iomem *address = (void __iomem *)file->private_data;
-+	void __iomem *address = (void __iomem *)iocb->ki_filp->private_data;
- 	int len = 0;
- 	unsigned int value;
- 	char lbuf[20];
-@@ -509,28 +515,28 @@ static ssize_t remote_settings_file_read(struct file *file, char __user *buf, si
- 	value = readl(address);
- 	len = snprintf(lbuf, sizeof(lbuf), "%d\n", value);
- 
--	return simple_read_from_buffer(buf, count, offset, lbuf, len);
-+	return simple_copy_to_iter(lbuf, &iocb->ki_pos, len, to);
- }
- 
--static ssize_t remote_settings_file_write(struct file *file, const char __user *ubuff, size_t count, loff_t *offset)
-+static ssize_t remote_settings_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	void __iomem *address = (void __iomem *)file->private_data;
-+	void __iomem *address = (void __iomem *)iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	char *buff;
- 	unsigned int value;
- 
--	if (*offset < 0)
-+	if (iocb->ki_pos < 0)
- 		return -EINVAL;
- 	if (count == 0 || count > 1024)
- 		return 0;
--	if (*offset != 0)
-+	if (iocb->ki_pos != 0)
- 		return 0;
- 
- 	buff = kzalloc (count + 1, GFP_KERNEL);
- 	if (!buff)
- 		return -ENOMEM;
- 
--
--	if (copy_from_user(buff, ubuff, count)) {
-+	if (!copy_from_iter_full(buff, count, from)) {
- 		kfree(buff);
- 		return -EFAULT;
- 	}
-@@ -545,32 +551,32 @@ static ssize_t remote_settings_file_write(struct file *file, const char __user *
- static const struct file_operations command_fops = {
- 	.open =		command_file_open,
- 	.release =	command_file_close,
--	.read =		command_file_read,
--	.write =	command_file_write,
-+	.read_iter =	command_file_read,
-+	.write_iter =	command_file_write,
- 	.llseek =	generic_file_llseek,
- };
- 
- static const struct file_operations event_fops = {
- 	.open =		event_file_open,
- 	.release =	event_file_close,
--	.read =		event_file_read,
--	.write =	event_file_write,
-+	.read_iter =	event_file_read,
-+	.write_iter =	event_file_write,
- 	.llseek =	generic_file_llseek,
- };
- 
- static const struct file_operations r_heartbeat_fops = {
- 	.open =		r_heartbeat_file_open,
- 	.release =	r_heartbeat_file_close,
--	.read =		r_heartbeat_file_read,
--	.write =	r_heartbeat_file_write,
-+	.read_iter =	r_heartbeat_file_read,
-+	.write_iter =	r_heartbeat_file_write,
- 	.llseek =	generic_file_llseek,
- };
- 
- static const struct file_operations remote_settings_fops = {
- 	.open =		simple_open,
- 	.release =	remote_settings_file_close,
--	.read =		remote_settings_file_read,
--	.write =	remote_settings_file_write,
-+	.read_iter =	remote_settings_file_read,
-+	.write_iter =	remote_settings_file_write,
- 	.llseek =	generic_file_llseek,
- };
- 
+ static const struct file_operations virtual_ncidev_fops = {
+ 	.owner = THIS_MODULE,
+-	.read = virtual_ncidev_read,
+-	.write = virtual_ncidev_write,
++	.read_iter = virtual_ncidev_read,
++	.write_iter = virtual_ncidev_write,
+ 	.open = virtual_ncidev_open,
+ 	.release = virtual_ncidev_close,
+ 	.unlocked_ioctl = virtual_ncidev_ioctl
 -- 
 2.43.0
 
