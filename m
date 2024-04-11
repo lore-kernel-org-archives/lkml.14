@@ -1,74 +1,179 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A88B13C806;
-	Thu, 11 Apr 2024 05:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4671813C806
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 06:01:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712815188; cv=none; b=SlM8KwVWWULp9OvlI45vE5O6Xt8hmc6AD+VsUse6b9mhpAiWQDUiq0KOaIZIOsSgiGQKNg7oBz8Bhm38XDRP0JM5q47TRCMBMkStpo6xqxNhRFTB+m0Bo8iRoSHH5v9DXDW+VS7nh0pOj9+3fJUNaHg0g5dWdNWU1eYZhriaaNg=
+	t=1712815305; cv=none; b=n48ASxj4nUh9Jf4hRbnmcpkvoSYkFq8uD4U6kEHAJJK/EgiQPq4Adz6Yz4g+xW01dYX7OGZKUUXDKaZZRIU00r73ZIeB37xbUzBN9QhxBIsiFkbO2I8yh6xVE9+VUlXOput+N0jesCuhP4NtAkXhI5AGAWnCCg74lLERGQxzvG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712815188; c=relaxed/simple;
-	bh=swbeK4DJ7LPs/mIk5Mf0PwIYPP6cgE8DuNRWYr0mNIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XD/Brhfa5iNtoefklza5bKAbDk6EwWyOa87ji4iWgXOgOFUabgt3uQVQd6iLQy6pMF3aNBtgxIuW//p7jS2H7ytwkz9DhtUe5Q4OTRFxrp5tc7V+0IHp7XKrltXU99JlIrABlBnEY+juAVpihkVrbB4KRtJa2/fo4F0nV8ac4I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=tRS0lQdX; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1712815305; c=relaxed/simple;
+	bh=0j1wO6gT1rsgYI/sKzrSCM/PFQz4FqHTMhfoYhp7GDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HhBfuDwdiyW4x77IPeefZBEG8jBekew/FYhuPiWOdkkebycp5Rl7j7AXtMbVWYwWUXE/JVIiK9J6h/RRw3AyigJW+L6w7bihwcnmNsLBOKBLFew7XDygw5h8ZCGC/ekOu0bMMueOxWFw5Xo+YNGh1jxw+TGQqEDQ0T45rVUPleA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oqRl1ts8; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="tRS0lQdX"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 12134603E6;
-	Thu, 11 Apr 2024 05:59:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1712815185;
-	bh=swbeK4DJ7LPs/mIk5Mf0PwIYPP6cgE8DuNRWYr0mNIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tRS0lQdXk51Ymbj/ChyZPXFbjmyrzT7nS71JsdRPKSqF7w4ZR1ExXrV9DwA8e6Cck
-	 g0+/AK2b6MiKztsZaD0NLKq72uNB5SJKDYlIGD5A15641XYBWQdRO30KuK6/oAPtKV
-	 DGrDBziI5A/nJM0Tf6UmfeQe0uAtGFePp3/yy9mgnIpnjGmtlU2A1CWIwMC5IrPGdR
-	 zxeJ3nd6D64hPJchajC/eaL/O2pfzBNf9/OXCgtqBD0tekc8TYwK1CTv5puUQox+bs
-	 yquhwyQH79cbIjdFUC/cxdiNHJ4YyW/SSo1OHheK/DT1JgeV5N8xtopbllj+d7X7AS
-	 5hp+T7swM1FCg==
-Date: Thu, 11 Apr 2024 08:59:33 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Greg KH <greg@kroah.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the tty tree
-Message-ID: <20240411055933.GD5156@atomide.com>
-References: <20240411154844.5bbcde63@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oqRl1ts8"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41550858cabso51654735e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 23:01:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712815302; x=1713420102; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8fmohO7T1++synaauLEpAb8emlhUfZcFIxEX439dfQ=;
+        b=oqRl1ts82jxik8y1UskvLupt47RGP1xEH4DhMNKy607Gvm3+2LfAJsIPGlihKKf5UK
+         suD7VB1e/7lj+/iOv/LBnVqAofdjpdQQnnA1rdO3wz2q0I3fxO9nd22GF3oIZH9SDIj2
+         wUWY+c3KYbToI1Zc7sOSnXPdU7k20VfYxtd5fnK9/RAfg+0xEOBe4MPRHPQp+JwnguI7
+         8PAJPCCDlZ/FXaBhL9rS7l0iIfrIhxodbknMs0aFp8bzZMKwpoB+akkprpaLX4cMM90Z
+         5cDvqSGynzQmFn8k/MkqLkJh2XrmaP1a8hFG3b2pLOWM+M6lLcQxd4WL9HUkpb+bnvE+
+         +iMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712815302; x=1713420102;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v8fmohO7T1++synaauLEpAb8emlhUfZcFIxEX439dfQ=;
+        b=sKykjNAvpTL1l9xhvDqK76SDyvS+dNJ++EzPDUFbXG6dOC2X1Jcl4U/wv/GmBNfXLW
+         PJjTNXfaxjVorDyAdNQsOeI8peKbwdZ/yO9eC64odrOBYe7nBCSrv7htoy80JUlcoR0A
+         JzrbCsmrFTx1dceD32kbIqkjQ3iIVESeoM6P6NCVQmpnsAAEmumu+4RLD6TJeSem6BM3
+         gN2FVdL1kWxBPebN08ik8OiJSBDp9nGcRFRCUWwhZW2oZX/xuGow+z9UVcfDezhvKVPw
+         AVH5Y+xOhvpTOXgBfnLlTFqgPDJaqroIEhbo4g6ghrh9JWg9WBYWz5n0LJ469dDzA9uy
+         aueg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPztjk5AQ1+/O6iSUz6l3Njo2u+Lcto9hSEEE1EyRyDKxtB5qycL9BlMNTradukLD43JGbAd2wOODO5/lTzB9MP0gTNR+3T8ur+sPi
+X-Gm-Message-State: AOJu0YwMLnQtNOh0DMn65evdjT6Hgl93laQAZCjNPA5mxr/FDp/KEgJD
+	+z0Jr5e6Et+2TZD5t+0UlZSH33DMbOHYPIr4Hkp2uz59UidnlZP0oGXVU2eVaa8=
+X-Google-Smtp-Source: AGHT+IExh/RwpZU2Xew7FQyFiljXtBGSrR2vUKJVXz5J8zfz2RaNPajH4w4YfMSAkgHDGGpC1LSCXg==
+X-Received: by 2002:a05:600c:46cd:b0:416:bed3:e537 with SMTP id q13-20020a05600c46cd00b00416bed3e537mr3400865wmo.38.1712815301511;
+        Wed, 10 Apr 2024 23:01:41 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id ay7-20020a05600c1e0700b00417d4f60692sm1151772wmb.44.2024.04.10.23.01.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 Apr 2024 23:01:40 -0700 (PDT)
+Message-ID: <458ce909-0616-487d-b4bd-42b58d059198@linaro.org>
+Date: Thu, 11 Apr 2024 08:01:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240411154844.5bbcde63@canb.auug.org.au>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] dt-bindings: PCI: mediatek,mt7621: add missing
+ child node reg
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Hector Martin <marcan@marcan.st>,
+ Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Jim Quinlan <jim2101024@gmail.com>,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>, Will Deacon <will@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Srikanth Thokala <srikanth.thokala@intel.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Jianjun Wang
+ <jianjun.wang@mediatek.com>,
+ Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Daire McNamara <daire.mcnamara@microchip.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Marek Vasut <marek.vasut+renesas@gmail.com>,
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+ Shawn Lin <shawn.lin@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>,
+ Jingoo Han <jingoohan1@gmail.com>,
+ Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>,
+ Michal Simek <michal.simek@amd.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Magnus Damm <magnus.damm@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Mark Kettenis <kettenis@openbsd.org>, Tom Joseph <tjoseph@cadence.com>,
+ Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org
+References: <20240410212638.GA2159326@bhelgaas>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240410212638.GA2159326@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-* Stephen Rothwell <sfr@canb.auug.org.au> [240411 05:48]:
-> Hi all,
->=20
-> After merging the tty tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
->=20
-> ERROR: modpost: "serial_base_add_isa_preferred_console" [drivers/tty/seri=
-al/8250/8250.ko] undefined!
->=20
-> Caused by commit
->=20
->   a8b04cfe7dad ("serial: 8250: Add preferred console in serial8250_isa_in=
-it_ports()")
->=20
-> I have used the tty tree from next-20240410 for today.
+On 10/04/2024 23:26, Bjorn Helgaas wrote:
+> On Wed, Apr 10, 2024 at 08:15:19PM +0200, Krzysztof Kozlowski wrote:
+>> MT7621 PCI host bridge has children which apparently are also PCI host
+>> bridges, at least that's what the binding suggest.
+> 
+> What does it even mean for a PCI host bridge to have a child that is
+> also a PCI host bridge?
+> 
+> Does this mean a driver binds to the "parent" host bridge, enumerates
+> the PCI devices below it, and finds a "child" host bridge?
 
-OK thanks, I'll take a look and send a fix.
+I think the question should be towards Mediatek folks. I don't know what
+this hardware is exactly, just looks like pci-pci-bridge. The driver
+calls the children host bridges as "ports".
 
-Regards,
-
-Tony
+Best regards,
+Krzysztof
 
