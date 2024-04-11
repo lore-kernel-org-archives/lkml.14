@@ -1,92 +1,70 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3C417742;
-	Thu, 11 Apr 2024 16:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B911CAE62;
+	Thu, 11 Apr 2024 16:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712854032; cv=none; b=eCe7w8t7E7AIorwlqRDKSk9qAQXfzdMdStyDBsrZRrUoS12ofyeSCSIBlHlLzNN0ewE+AucVhVOZ65E/U+U0I+IjrY6UQlRsFC9XwTfgGKhm8DvjEjgjV9HQGxLrUkOHh2u+TCbeaQlCCv0o0kWi/kMVQF6iNBjUtTI92zFA4oY=
+	t=1712854120; cv=none; b=DwxNgK7JCTBOJH+D78ifVNfManuj2CVtaXkcG1KzQoZZ+TtKldRPEFs0WB7/wj0JFQ5TrMw1P8Tti3haOly/1f8CpHPi5HVf+sxeFqTCsRWbToVRsvk/CP40uS2vB2SWq069pMMr52CQT8rhvq6E+8fiV8uPsZMss35Lr144WKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712854032; c=relaxed/simple;
-	bh=RyVOe6pCtx0/g7zEV7rXDdHduJWvub6mOy5PsGRPM7I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F19ALh1GPErHZEv2/sM1gzjxiGaJwgidBP760MyPmwd11340edpTzWwOqKntP6vhuujpvOfia4IaL2150ArNqPVsegYUTOqy+/U7sZZ6NUm6WgfkXzCdaZMhqNZNTkTvfthzXPEIF3RdIel66IK1v3Z3HfM60kzJ0wQvuFy3CfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=provod.works; spf=pass smtp.mailfrom=provod.works; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=provod.works
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=provod.works
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <me@provod.works>)
-	id 1ruxZs-002Jw4-5h; Thu, 11 Apr 2024 18:47:08 +0200
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <me@provod.works>)
-	id 1ruxZm-0004Du-KJ; Thu, 11 Apr 2024 18:47:02 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (959450)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1ruxZl-00BPCo-2M; Thu, 11 Apr 2024 18:47:01 +0200
-From: Ivan Avdeev <me@provod.works>
-To: laurent.pinchart@ideasonboard.com,
-	dan.scally@ideasonboard.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ivan Avdeev <me@provod.works>
-Subject: [PATCH] usb: gadget: uvc: use correct buffer size when parsing configfs lists
-Date: Thu, 11 Apr 2024 12:46:16 -0400
-Message-ID: <20240411164616.4130163-1-me@provod.works>
-X-Mailer: git-send-email 2.43.2
+	s=arc-20240116; t=1712854120; c=relaxed/simple;
+	bh=LWlrTCJGqYKdS9PYJSR2H64H7PQGjxik5FHnH+YFRek=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=b4lghRai251c1Q5i7kqeWDYa1bgsyzRAOjWRGQx1PS6QEbpplD73QKvrN45NcfJtzPGANI8qYw60DPA6mRb8byAQU4I3wFcCJjlv+HEQzXNF+dWzjy2YVG1XENuAOedOEujy+bLXKySDXB9j3m9v038O0+j5obhvP12tYOkWsX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRw9gbg3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRw9gbg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11011C072AA;
+	Thu, 11 Apr 2024 16:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712854120;
+	bh=LWlrTCJGqYKdS9PYJSR2H64H7PQGjxik5FHnH+YFRek=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SRw9gbg3ILr9SlXTXTQ+BUnw1oNfqMDP46YMiFKH2ywD5rU1P0dEI+ifC98brtzT3
+	 sK/T8pTySfw5lZUKqDGe0eomeXbvOgcJM/BmFRtMyceO9GX3DEYpYSdTMuatLQPJxf
+	 nLplnjGvyUcQBu8NuzBliq2HTBtzk1/Fcj/fZKzNGAXhRQHB2JVF12XTExdynCf9t8
+	 iSd6+nVzTg9fkeIUENqsjt2GH2BlY0YH44BpSEAJyqvHQScjw5PfyNprZUfnH0d4xT
+	 8scaN3SbJU5zDwE2FhccU4BjirKFtM2vAR5V2+KZcKZ+bIF59FTLnEtNBJBPHycIyy
+	 /Ptqgg7AuvOGA==
+From: Lee Jones <lee@kernel.org>
+To: pavel@ucw.cz, lee@kernel.org, matthias.bgg@gmail.com, 
+ angelogioacchino.delregno@collabora.com, ChiaEn Wu <chiaen_wu@richtek.com>
+Cc: linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+ peterwu.pub@gmail.com, cy_huang@richtek.com
+In-Reply-To: <28FE6F1712799128000.chiaen_wu@richtek.com>
+References: <28FE6F1712799128000.chiaen_wu@richtek.com>
+Subject: Re: (subset) [PATCH] leds: mt6360: Fix the second LED can not
+ enable torch mode by V4L2
+Message-Id: <171285411780.2498946.3824215880975158305.b4-ty@kernel.org>
+Date: Thu, 11 Apr 2024 17:48:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.4
 
-This commit fixes uvc gadget support on 32-bit platforms.
+On Tue, 09 Apr 2024 18:21:54 +0800, ChiaEn Wu wrote:
+> V4L2 will disable strobe mode of the LED device when enable torch mode,
+> but this logic will conflict with the "priv->fled_torch_used"
+> in "mt6360_strobe_set()". So after enabling torch mode of the first
+> LED, the second LED will not be able to enable torch mode correctly.
+> 
+> Therefore, at the beginning of "mt6360_strobe_set()", check whether the
+> state of the upcoming change and the current LED device state are the
+> same, so as to avoid the above problem.
+> 
+> [...]
 
-Commit 0df28607c5cb ("usb: gadget: uvc: Generalise helper functions for
-reuse") introduced a helper function __uvcg_iter_item_entries() to aid
-with parsing lists of items on configfs attributes stores. This function
-is a generalization of another very similar function, which used a
-stack-allocated temporary buffer of fixed size for each item in the list
-and used the sizeof() operator to check for potential buffer overruns.
-The new function was changed to allocate the now variably sized temp
-buffer on heap, but wasn't properly updated to also check for max buffer
-size using the computed size instead of sizeof() operator.
+Applied, thanks!
 
-As a result, the maximum item size was 7 (plus null terminator) on
-64-bit platforms, and 3 on 32-bit ones. While 7 is accidentally just
-barely enough, 3 is definitely too small for some of UVC configfs
-attributes. For example, dwFrameInteval, specified in 100ns units,
-usually has 6-digit item values, e.g. 166666 for 60fps.
+[1/1] leds: mt6360: Fix the second LED can not enable torch mode by V4L2
+      commit: 0dcd0488a7a5b8762256b393a8bd0c21e5e4e0fb
 
-Fixes: 0df28607c5cb ("usb: gadget: uvc: Generalise helper functions for reuse")
-Signed-off-by: Ivan Avdeev <me@provod.works>
----
- drivers/usb/gadget/function/uvc_configfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
-index 7e704b2bcfd1..a4377df612f5 100644
---- a/drivers/usb/gadget/function/uvc_configfs.c
-+++ b/drivers/usb/gadget/function/uvc_configfs.c
-@@ -92,10 +92,10 @@ static int __uvcg_iter_item_entries(const char *page, size_t len,
- 
- 	while (pg - page < len) {
- 		i = 0;
--		while (i < sizeof(buf) && (pg - page < len) &&
-+		while (i < bufsize && (pg - page < len) &&
- 		       *pg != '\0' && *pg != '\n')
- 			buf[i++] = *pg++;
--		if (i == sizeof(buf)) {
-+		if (i == bufsize) {
- 			ret = -EINVAL;
- 			goto out_free_buf;
- 		}
-
-base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
--- 
-2.43.2
+--
+Lee Jones [李琼斯]
 
