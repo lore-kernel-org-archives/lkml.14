@@ -1,123 +1,70 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28C7F14AD3F;
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EC114A0AE;
 	Thu, 11 Apr 2024 11:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712835908; cv=none; b=UjFzeE5gUnw+nfxQiHaInSco9S4V5M+6SmPV1lhdXkodExGHVPln+7v83BB9u9nh94d+zLkuhjlkCKvdwJQ5rVBCRE7xq5vydRRGLSfORzi7SLZa3FAdizg+O6tQeDGbVNnWW65PG4iV2OHwopmpfP0nAxDY1+0bj1Bc2l194PQ=
+	t=1712835909; cv=none; b=O5QBp94iR7qGC/sJ7a7rs0RT2jmdRB+8BUkIjoiHpVSrFqngAUdY/27V7r+onFcHefd0XZrc8q7JrKvYKVMhEd/QLjV0Eo5v5aZ0svqGJWO8b5IHXKYn3a37BMkLCZz1XbY/QL7hWjEaO/MJY+5sPrrEPfviXh4KodEIX5Zf2u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712835908; c=relaxed/simple;
-	bh=rpjBKncb2PPsMI+z0Kjkp03iK4cJcujdCC28t4DeLjI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ehMNGAfE17AcpO7RwYFxU3YEll9HZdNFsEZCa+WuJHMIVouXQEB+Gr6yfWnGz7OcYd9IIKH5jBhLh8mJm1wpK1LJ+lW3gVfbHvQLKK0l+TFk6eQB1yLmf0/s5aPzWwQ5BxnG4z3ZVMclrEujRIGiHE3vV/X/0FVBOdYbdMeYKzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,193,1708354800"; 
-   d="scan'208";a="205076264"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Apr 2024 20:44:59 +0900
-Received: from renesas-deb12.cephei.uk (unknown [10.226.93.85])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 982B742017D7;
-	Thu, 11 Apr 2024 20:44:55 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/4] net: ravb: Count packets instead of descriptors in R-Car RX path
-Date: Thu, 11 Apr 2024 12:44:30 +0100
-Message-Id: <20240411114434.26186-2-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
-References: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1712835909; c=relaxed/simple;
+	bh=XRFBR7q3J3br3yr1FBOa62Y1C7spuDVeCqnhCIGgb4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=c10YGWOgdGyQhk373Ed98zW+J4AuAiApTOMfJlGzVNTuxZ1n8VdHSsi87G6WPY8nGACzHDVWhLCt5hXx5K/UA9X7Ffg7Bmk3lVGYKD8ufqPG3y9295996k+A5w5scVGN1snwFyLl+QbzJ/eC65Tp+QhjtJ90pob1TOqJ7hdOdNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VFd8h3qZhz1R5XY;
+	Thu, 11 Apr 2024 19:42:12 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2BE0C140E9F;
+	Thu, 11 Apr 2024 19:44:57 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Apr 2024 19:44:56 +0800
+Message-ID: <cedafaa6-5507-41d3-bd1e-a8964b8630ba@huawei.com>
+Date: Thu, 11 Apr 2024 19:44:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bcachefs: fix typo in reference to BCACHEFS_DEBUG
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Lukas Bulwahn <lbulwahn@redhat.com>, Kent Overstreet
+	<kent.overstreet@linux.dev>, Brian Foster <bfoster@redhat.com>,
+	<linux-bcachefs@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Lukas Bulwahn <lukas.bulwahn@redhat.com>
+References: <20240411082931.56362-1-lukas.bulwahn@redhat.com>
+ <a2683fad-07db-4857-9ebf-7adf31a09e50@huawei.com>
+ <b6d90387-7892-4c28-9855-ae35faacfe9c@moroto.mountain>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <b6d90387-7892-4c28-9855-ae35faacfe9c@moroto.mountain>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 
-The units of "work done" in the RX path should be packets instead of
-descriptors.
+Thanks, I got it!
 
-Descriptors which are used by the hardware to record error conditions or
-are empty in the case of a DMA mapping error should not count towards
-our RX work budget.
-
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
----
- drivers/net/ethernet/renesas/ravb_main.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index ba01c8cc3c90..70f2900648d4 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -892,29 +892,25 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 	struct ravb_private *priv = netdev_priv(ndev);
- 	const struct ravb_hw_info *info = priv->info;
- 	int entry = priv->cur_rx[q] % priv->num_rx_ring[q];
--	int boguscnt = (priv->dirty_rx[q] + priv->num_rx_ring[q]) -
--			priv->cur_rx[q];
- 	struct net_device_stats *stats = &priv->stats[q];
- 	struct ravb_ex_rx_desc *desc;
- 	struct sk_buff *skb;
- 	dma_addr_t dma_addr;
- 	struct timespec64 ts;
-+	int rx_packets = 0;
- 	u8  desc_status;
- 	u16 pkt_len;
- 	int limit;
-+	int i;
- 
--	boguscnt = min(boguscnt, *quota);
--	limit = boguscnt;
-+	limit = priv->dirty_rx[q] + priv->num_rx_ring[q] - priv->cur_rx[q];
- 	desc = &priv->rx_ring[q].ex_desc[entry];
--	while (desc->die_dt != DT_FEMPTY) {
-+	for (i = 0; i < limit && rx_packets < *quota && desc->die_dt != DT_FEMPTY; i++) {
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
- 		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
- 
--		if (--boguscnt < 0)
--			break;
--
- 		/* We use 0-byte descriptors to mark the DMA mapping errors */
- 		if (!pkt_len)
- 			continue;
-@@ -960,7 +956,7 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 			if (ndev->features & NETIF_F_RXCSUM)
- 				ravb_rx_csum(skb);
- 			napi_gro_receive(&priv->napi[q], skb);
--			stats->rx_packets++;
-+			rx_packets++;
- 			stats->rx_bytes += pkt_len;
- 		}
- 
-@@ -995,9 +991,9 @@ static bool ravb_rx_rcar(struct net_device *ndev, int *quota, int q)
- 		desc->die_dt = DT_FEMPTY;
- 	}
- 
--	*quota -= limit - (++boguscnt);
--
--	return boguscnt <= 0;
-+	stats->rx_packets += rx_packets;
-+	*quota -= rx_packets;
-+	return *quota == 0;
- }
- 
- /* Packet receive function for Ethernet AVB */
--- 
-2.39.2
-
+On 2024/4/11 18:21, Dan Carpenter wrote:
+> On Thu, Apr 11, 2024 at 05:21:05PM +0800, Hongbo Li wrote:
+>> Also, I am curious why such spelling errors cannot be detected at the
+>> compilation stage.
+>>
+> 
+> The IS_ENABLED() macro is testing whether the define exists or not.
+> In this case both "CONFIG_BCACHEFS_DEBUG" and "CONFIG_BCACHEFS_DEBU" do
+> not exist for this config.
+> 
+> Lukas's scripts make a list of macros we expect to exist and then checks
+> against the list.
+> 
+> regards,
+> dan carpenter
+> 
