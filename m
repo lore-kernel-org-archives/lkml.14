@@ -1,136 +1,86 @@
-Received: from wfhigh5-smtp.messagingengine.com (wfhigh5-smtp.messagingengine.com [64.147.123.156])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A15713E407;
-	Thu, 11 Apr 2024 07:31:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B0913E04A;
+	Thu, 11 Apr 2024 07:32:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820712; cv=none; b=hSnhnWhShodI7T9aFqlS+GL6OLNz4DdlIB/Q7kkI0OdfgpfY30hC0ikcYAjqRa837hKPhwOjpAxSqE5/ZMs9k4PZXK6pppSMWS+Zcj+kkGT/qAMoyM1nHMG/Xc5wnCGohkO+2SHTm1ZSYgw0HwQXCUvdQ5aAG7G4uEY5DO2ySko=
+	t=1712820741; cv=none; b=FdQ6mS3QnqC8suk+cGYcL+hRJ9ZsxN9pKE5VzfsZ9BKUVSEPfNAXvnf/3mhk3kpdA8Sh1uaYsaJ/FVBFD0R0hmopetekIDegbwIDCP+bwKmYaIpNBzGxTehEazJLt3pjOShW2CnqQ3HeO9Ac/B0j1wlP7t/vndfA7OWIFXyFPO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820712; c=relaxed/simple;
-	bh=q5rsC/05nhzdHrqrF7mVpbW5ArjHrqlJx/EHmQo3OnI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HgrBE2pCtYLSm8+giKhZuuMTJQRjh+iV1jVYD/MnCjnGgomRUikJNlCcBfwGuXAHti1XfGOow5EpR2/iAuBp7X08thFjXNvAMLSz49H2n6zSdyTipFDoF/OjT5H81OqWt000+0UoW/hvDVvORGCTCO4BobZF+91dE7EnFXpTyH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fAFRq2a4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DzSFGGOr; arc=none smtp.client-ip=64.147.123.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712820741; c=relaxed/simple;
+	bh=o9XNePphrFGLADbN374hkRmD+LG18cKySdDPj/hyjWA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wr3IPut8i9YaO38Zz2967ckpGob73xOFEcNFWG10fSoAjApcckHOlBNVL8tc8CF0LVvVPGZ8vphHvyw3vzAxln5JW5bMOFUg9czCF/eLrsoxnzqqIzcQ57A4DRivuAZMyuGhTjj7fECjkjHdThgmpc95wRjk6yqWtm9hClmWuXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=M2lOxx7X; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fAFRq2a4";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DzSFGGOr"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 81E2218000CB;
-	Thu, 11 Apr 2024 03:31:48 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 11 Apr 2024 03:31:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1712820708; x=1712907108; bh=ss9obh18Sk
-	iQHEXzh7qcLFdvdlxpa80B0Z7MJyyJWOs=; b=fAFRq2a4RR5m0uoGjxvbSDZhhg
-	XBLt22beIqBHO1PhCVLZIYorAfbGnpIs6i0KjnrNMag6CtHF8mAtIX4+g4JkM/y4
-	oNakw3qvrAtMITJTRe3dP5XCRbSlUNRMtgb+FJogTSdTceTcdRzappHrax+eWmGC
-	C48KZTiW2+745Tpmz56zPJgFu5sXmnDOXQgOHhBxECqtppJaW42Os3TNEDRkpPfI
-	7xKy28dP14Q+rdv1IglqoN1MM2Wo71oJ88dpxu76wssTF5yL3dssA5ZNSuq2aEsa
-	sQ7EBo/MLbjI9e+DTEeltLlDImftLLOUzlWPomQgt5r5GI+C7bz29lbepBoQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1712820708; x=1712907108; bh=ss9obh18SkiQHEXzh7qcLFdvdlxp
-	a80B0Z7MJyyJWOs=; b=DzSFGGOr+zqR4sfSmeOxAZvA6tvMP0LGFanC2+BgYdJy
-	+4hbOwbt0daWkKElaJ7hw1qTgNt7659JrHfKx7+c2NRv2nXqcVlsOuvhc37YXOZ6
-	/5MKG6iTFCQ6aufnWu+0iv1mQHtdHJ4K9QX9ZNac5sLfv829dYcU7OrtBhvzAPeJ
-	qvI5fpyEZjo1rJqt0In+B4EMVZTz3BIN6xIPeqBy76lVWIdHpPj7mI1hWq7dyIWT
-	CnWqJQpCHMCE2NVdUfy2AgXYjJNlhFvPsLF/BoiRix4BR68kBN/e6viA7DoExAkP
-	1lsK1ob4cyEjdsraiMT0hwoBXzOe78DNkW/8wTm9dg==
-X-ME-Sender: <xms:45EXZr7T_OnGStrr7SKzpEUpju9NZAoJ-lpF9Idxf_AAZawFa25PqQ>
-    <xme:45EXZg74AAZ239bjRLX7EeRcHaT8wGi_jFHosNYQYKIaCYvcpDRxLFrBw8T1Wh8fR
-    jo4RGsgbbTYIfp5aDQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudehjedguddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:45EXZieKjjVog6Wf67CQD8NJtTers1M6KFeWe75e-UlBkt2QP7uJXg>
-    <xmx:45EXZsJIp1DUMatuZM3plg1HZpaO63G81PNWgtOVl7mQ4q3U6QDMgA>
-    <xmx:45EXZvIKtC1NGjybHKKb-88n2S8h7w1gUs0XzOcd8JC5HH3wCWVBpA>
-    <xmx:45EXZlyxfKvoW4q6bfCKoSeKRYfJBEypsh0ZQzt4uZT200LeFEQ3Rw>
-    <xmx:45EXZuaOX9x1nVPc-UnZtz-zaIuHLseO3kmjE2oKiQEaEOt4QcV-JewM>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 5E761B60092; Thu, 11 Apr 2024 03:31:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="M2lOxx7X"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=QPDpZoE/tjUUBV8p6vi4T9AN0aehyjX15I4+zRojGDo=; t=1712820737; x=1713425537; 
+	b=M2lOxx7XCAryXeWFDXXIQvdJ4W+/7Qx8wrQ81e+OOifF9rD6ep9dmWsKh7NW3IIusFjmEQlTglW
+	wPZZDjfqZFsve0tYHSbOG1D2Lo2UWz25uuHXAvjNH9r20v3JJy4G4mbzBFqePUWkcBQSY7otOJZhB
+	S3kAvCDPxgJUxkH1WOeCM2/oCexAm/bUA+a8YJIF2FUAE4Djbp3JojyFIWbY5Hajdi4LhI361xaEy
+	r1aNywcwYy4K+2i/w56PGm3rsEVdgavxY2S1lirY/5IfgyzaLSi8GZN/CZuwxe5fLSYFtICLZHoPH
+	sclBtU+IMKk2ZqdGvtS0wYmSv9TRIQADr2LA==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1ruout-00000002zUf-32Mw; Thu, 11 Apr 2024 09:32:15 +0200
+Received: from p5b13a9fd.dip0.t-ipconnect.de ([91.19.169.253] helo=[192.168.178.20])
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1ruout-00000002XFi-27xs; Thu, 11 Apr 2024 09:32:15 +0200
+Message-ID: <404299f95cf50003eeee5d6598bd484117fe5378.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH] fbdev/sh7760fb: allow modular build
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Helge Deller <deller@gmx.de>, Randy Dunlap <rdunlap@infradead.org>, 
+	linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, Javier Martinez Canillas <javierm@redhat.com>, Sam
+ Ravnborg <sam@ravnborg.org>, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+Date: Thu, 11 Apr 2024 09:32:14 +0200
+In-Reply-To: <5191337e-9ffc-44b7-9700-eb5f1f2fc4cc@gmx.de>
+References: <20240210053938.30558-1-rdunlap@infradead.org>
+	 <4d01127a9130ce46b7c1d447811c89c1d1503199.camel@physik.fu-berlin.de>
+	 <c5436115-0b26-4369-8d71-154cc3c95659@infradead.org>
+	 <5191337e-9ffc-44b7-9700-eb5f1f2fc4cc@gmx.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <c0e170f7-5498-40ed-ba35-2ac392c2dd2a@app.fastmail.com>
-In-Reply-To: 
- <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
-References: <20240329072441.591471-1-samuel.holland@sifive.com>
- <20240329072441.591471-14-samuel.holland@sifive.com>
- <87wmp4oo3y.fsf@linaro.org> <75a37a4b-f516-40a3-b6b5-4aa1636f9b60@sifive.com>
- <87wmp4ogoe.fsf@linaro.org> <4c8e63d6-ba33-47fe-8150-59eba8babf2d@sifive.com>
- <CAMj1kXGW5XQxXrYaPhT6sCjH7s0EwqzNjWies3b8UWnUBW5Ngw@mail.gmail.com>
-Date: Thu, 11 Apr 2024 09:31:27 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ard Biesheuvel" <ardb@kernel.org>,
- "Samuel Holland" <samuel.holland@sifive.com>
-Cc: "Thiago Jung Bauermann" <thiago.bauermann@linaro.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- linux-arm-kernel@lists.infradead.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- "Christoph Hellwig" <hch@lst.de>, loongarch@lists.linux.dev,
- amd-gfx@lists.freedesktop.org, "Alex Deucher" <alexander.deucher@amd.com>
-Subject: Re: [PATCH v4 13/15] drm/amd/display: Use ARCH_HAS_KERNEL_FPU_SUPPORT
-Content-Type: text/plain
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Thu, Apr 11, 2024, at 09:15, Ard Biesheuvel wrote:
-> On Thu, 11 Apr 2024 at 03:11, Samuel Holland <samuel.holland@sifive.com> wrote:
->> On 2024-04-10 8:02 PM, Thiago Jung Bauermann wrote:
->> > Samuel Holland <samuel.holland@sifive.com> writes:
->>
->> >> The short-term fix would be to drop the `select ARCH_HAS_KERNEL_FPU_SUPPORT` for
->> >> 32-bit arm until we can provide these runtime library functions.
->> >
->> > Does this mean that patch 2 in this series:
->> >
->> > [PATCH v4 02/15] ARM: Implement ARCH_HAS_KERNEL_FPU_SUPPORT
->> >
->> > will be dropped?
->>
->> No, because later patches in the series (3, 6) depend on the definition of
->> CC_FLAGS_FPU from that patch. I will need to send a fixup patch unless I can
->> find a GPL-2 compatible implementation of the runtime library functions.
->>
->
-> Is there really a point to doing that? Do 32-bit ARM systems even have
-> enough address space to the map the BARs of the AMD GPUs that need
-> this support?
->
-> Given that this was not enabled before, I don't think the upshot of
-> this series should be that we enable support for something on 32-bit
-> ARM that may cause headaches down the road without any benefit.
->
-> So I'd prefer a fixup patch that opts ARM out of this over adding
-> support code for 64-bit conversions.
+On Wed, 2024-04-10 at 15:17 +0200, Helge Deller wrote:
+> On 4/10/24 06:54, Randy Dunlap wrote:
+> > Hi,
+> >=20
+> > Will someone be merging this patch?
+>=20
+> I've just added it to the fbdev git tree.
 
-I have not found any dts file for a 32-bit platform with support
-for a 64-bit prefetchable BAR, and there are very few that even
-have a pcie slot (as opposed on on-board devices) you could
-plug a card into.
+Ah, good. Then I can drop it from my queue again.
 
-That said, I also don't think we should encourage the use of
-floating-point code in random device drivers. There is really
-no excuse for the amdgpu driver to use floating point math
-here, and we should get AMD to fix their driver instead.
+Adrian
 
-     Arnd
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
