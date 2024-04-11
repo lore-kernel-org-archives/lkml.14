@@ -1,129 +1,129 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CC5156CF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE9115E85;
+	Thu, 11 Apr 2024 15:10:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848198; cv=none; b=o236Gv3UKFlPWpP/dYGuugOx7ezFbBJ1zJXO9owdOHiMqLiAJUdUDk/b0Pqi2FKXpD8lT4rtrrfGLHaPoFF2VdU+kUYUmykjl6gjBIF/BelhIpMVr4Taq4CCtYXsVTx8KrgTdOnSWDeIwpo4flEuuI3QlmOy9YgDXYxnnqhdpsk=
+	t=1712848212; cv=none; b=oW3/kfWF2EFiTgDxrPQlUYZ/67H8jtyAyhNvnKYTpFaQKQPIXKNg47nZFIQTwa2ae/ovn/NC2sHr6uBx6wdU7q0YAwiY1rP7TS0ywBX1ZcexSa4Q2JcvgbjqNitcC1LNYAi22rlRN4AJ/vK10aXTax0ZuevcKEhxuv04IJ40NfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712848198; c=relaxed/simple;
-	bh=4625D/B3C/UFea8y+oXUw6ruHkwZk1o0sRh6oX8bUZE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ngYDIKKlUBG/Mm6616QrEZkQhyi6LVChfZRlbY0aKlxgZPl8Fdy9MMPEucDLDZLx+1YtXluVbyg0OnDfLMc+cb+cfIJICREpskGUV7lKZFEVKZOq3C1POvvNtydzDce4v9Jc/bavCPmWGhBUEPSancKx2xkopEIIL3ydDFXSLvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DTiKJazT; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712848212; c=relaxed/simple;
+	bh=tH5GwggbPz305Kl6EbUr95HFBDOSgGMYA7QcHk6KzVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JujqfxPzhQbHH/3niTkScXfw/ym4qDDuKCnJbIUy125veS4LGYxrsUs8ESFi7C6naxNXER98j72J6m4Ly+qFH5tnwU3EiahUKN54VESobogM5jHJQ1G9G+hSLJC/eDyfYv1dViTJq8TPqA0qmxW6zXKfqWuG3JybU39R1Qh6uHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vCWsz4ut; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DTiKJazT"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6eb52d3aa1eso212307a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:09:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712848196; x=1713452996; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZyuj75Ez/rddFFT5oB20s7V0CQchh27dVHWZ4w414Q=;
-        b=DTiKJazTA8s7i01hgDKIAMG8kB0xOOM2EBfJB/sBjqlV7gjocpXKVysiQ7z5x9tUcZ
-         CXoEYFj/Nh7v8sHo/UufGy9zVD4Ial1ao92KmZK3ilcLCdsuOnkLlfGYr/1O4gHsq4OU
-         orkh4e4d4XgomIFgw3ojutn+v5mbMuD90zXBE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712848196; x=1713452996;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OZyuj75Ez/rddFFT5oB20s7V0CQchh27dVHWZ4w414Q=;
-        b=E5RNMxpME+Kl+vDJTEN0jjXwiV9AWvs8VziuMLBuROPyGYi0Xsh4FBhVkASAWvVuP/
-         mrpJY3QwPc6j6eZt8I3EFQTezZdLuY1vygHCRTFE13BdrpM9YUo9ZRbwib48NuL/2R10
-         1FA91wLkT/HvEK/Bdezpfy+Ocs9jdukJkLS4bUZ7zB5kxV/VCS/KYYeTqfqfiglspBOC
-         OL+IoJje0vMoH816xnwwYsYojplZiSO1WROyiO2SOVQjcfWpMrowtoOp0ovFQrWRLgsB
-         mI8A5fU8MtwO8JWebVIS8htNXyN6/0crxrib9uN2Rk0C60bEs7HhSkLeMmtq5iYQiiNi
-         Ek+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUTsmfXdVMNBN1ebIETFVyvtPK4o/XuLTfLij+wyQ5GwAAjEyDBjUI25sH/gsaihtCMB+H+b5GM9CdXk+aP8QPT3VKGv/eI4viZIiNW
-X-Gm-Message-State: AOJu0Yxie/FgnqjEmF7Aq/d2fT09rqymfCwodPtg3/iw2tyaDZY0MwGO
-	gEaSWJXPypitZsHwTta2AfVM7L5irqH+t+kBBwCPAiAGC7H2bqEK27JyegTaATWxXJuiaKiG+bY
-	=
-X-Google-Smtp-Source: AGHT+IFVSS5c2Wxlba4wbhQIYe8YmbIxRDm9IhFzPbDdC/k+m7mmpBhAriLUr2SR2JVp3wJXtIUa2A==
-X-Received: by 2002:a05:6830:c9:b0:6e9:f2f0:fadd with SMTP id x9-20020a05683000c900b006e9f2f0faddmr5706653oto.1.1712848196015;
-        Thu, 11 Apr 2024 08:09:56 -0700 (PDT)
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com. [209.85.167.174])
-        by smtp.gmail.com with ESMTPSA id x13-20020a9d628d000000b006ea2013b948sm320412otk.58.2024.04.11.08.09.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 08:09:54 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bbbc6e51d0so3331711b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:09:54 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWpsTH6W+9YV/nHU9Jqh7736qUj1f6DvOcBCAQg7iP/eW702z28i0L35Z3e/mwescSM5e+7YHGuVSjKZjKyWBlaniZL4g/+50DH6reJ
-X-Received: by 2002:aca:2b16:0:b0:3c6:58f:8792 with SMTP id
- i22-20020aca2b16000000b003c6058f8792mr5313561oik.20.1712848194156; Thu, 11
- Apr 2024 08:09:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vCWsz4ut"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3738EC113CD;
+	Thu, 11 Apr 2024 15:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712848212;
+	bh=tH5GwggbPz305Kl6EbUr95HFBDOSgGMYA7QcHk6KzVo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vCWsz4utmYewzyojhx2V/JATN+mTcnX3uUCcUXBn8RrUxl3EcU+vM1rnGHeehzkDm
+	 mEYEYcAKBiLAxdxoGhlEBppFtAMOcQ8ZFAQscjY1Iyq2SnjBAStAvFTu/bXLTPOGyG
+	 RfdG2OhyIteF+eIpIrHZ2siXlHpxIXDOIq9mvakK9J+z/Z+eniQ3u/sXW0xNDx2c4x
+	 id3FHIisD3k5kTlOIt1haLd1xpdfh5oyE6IkcdFCy/10pXwMSyd64Zcmny3e6gVI8j
+	 FgPJBIgNIpYiPYWOtS8WKcMBO0Iln9LzSSqDADXyL3d9s80SKDkbSsV6dE3kGtqmy7
+	 wGnwWa6PYObZQ==
+Date: Thu, 11 Apr 2024 16:10:06 +0100
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-scsi@vger.kernel.org, alim.akhtar@samsung.com,
+	avri.altman@wdc.com, bvanassche@acm.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	peter.wang@mediatek.com, chu.stanley@gmail.com, jejb@linux.ibm.com,
+	martin.petersen@oracle.com, lgirdwood@gmail.com, broonie@kernel.org,
+	matthias.bgg@gmail.com, stanley.chu@mediatek.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 7/8] dt-bindings: ufs: mediatek,ufs: Document
+ additional clocks
+Message-ID: <20240411-filth-trekker-8a8c185d589b@spud>
+References: <20240411114300.169055-1-angelogioacchino.delregno@collabora.com>
+ <20240411114300.169055-8-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240409035355.27659-1-jason-ch.chen@mediatek.com>
-In-Reply-To: <20240409035355.27659-1-jason-ch.chen@mediatek.com>
-From: Fei Shao <fshao@chromium.org>
-Date: Thu, 11 Apr 2024 23:09:16 +0800
-X-Gmail-Original-Message-ID: <CAC=S1nhc-5QRmd21Mi28pKCbzK8zt0ntsdo8J9xxp+BHJ7ONnw@mail.gmail.com>
-Message-ID: <CAC=S1nhc-5QRmd21Mi28pKCbzK8zt0ntsdo8J9xxp+BHJ7ONnw@mail.gmail.com>
-Subject: Re: [PATCH] soc: mediatek: mtk-socinfo: Correct the marketing name
- for MT8188GV
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Jason-ch Chen <jason-ch.chen@mediatek.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="83ERy7+r+DSooO69"
+Content-Disposition: inline
+In-Reply-To: <20240411114300.169055-8-angelogioacchino.delregno@collabora.com>
+
+
+--83ERy7+r+DSooO69
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 9, 2024 at 11:54=E2=80=AFAM Jason-ch Chen
-<jason-ch.chen@mediatek.com> wrote:
->
-> From: Jason-ch Chen <Jason-ch.Chen@mediatek.com>
->
-> Change 'Kompanio 830' to 'Kompanio 838'.
->
-> Signed-off-by: Jason-ch Chen <Jason-ch.Chen@mediatek.com>
+On Thu, Apr 11, 2024 at 01:42:59PM +0200, AngeloGioacchino Del Regno wrote:
+> Add additional clocks, used on all MediaTek SoCs' UFSHCI controllers:
+
+I appreciate being told they're on all, rather than it being unsaid and
+having to ask.
+
+> some of these clocks are optional and used only for scaling purposes
+> to save power, or to improve performance in the case of the crypt
+> clocks.
+>=20
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
 > ---
->  drivers/soc/mediatek/mtk-socinfo.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/soc/mediatek/mtk-socinfo.c b/drivers/soc/mediatek/mt=
-k-socinfo.c
-> index 6943ab29f095..74672a9d6d13 100644
-> --- a/drivers/soc/mediatek/mtk-socinfo.c
-> +++ b/drivers/soc/mediatek/mtk-socinfo.c
-> @@ -48,8 +48,8 @@ static struct socinfo_data socinfo_data_table[] =3D {
->         MTK_SOCINFO_ENTRY("MT8183", "MT8183V/AZA", "Kompanio 500", 0x0001=
-0043, 0x00000940),
->         MTK_SOCINFO_ENTRY("MT8186", "MT8186GV/AZA", "Kompanio 520", 0x818=
-61001, CELL_NOT_USED),
->         MTK_SOCINFO_ENTRY("MT8186T", "MT8186TV/AZA", "Kompanio 528", 0x81=
-862001, CELL_NOT_USED),
-> -       MTK_SOCINFO_ENTRY("MT8188", "MT8188GV/AZA", "Kompanio 830", 0x818=
-80000, 0x00000010),
-> -       MTK_SOCINFO_ENTRY("MT8188", "MT8188GV/HZA", "Kompanio 830", 0x818=
-80000, 0x00000011),
-> +       MTK_SOCINFO_ENTRY("MT8188", "MT8188GV/AZA", "Kompanio 838", 0x818=
-80000, 0x00000010),
-> +       MTK_SOCINFO_ENTRY("MT8188", "MT8188GV/HZA", "Kompanio 838", 0x818=
-80000, 0x00000011),
->         MTK_SOCINFO_ENTRY("MT8192", "MT8192V/AZA", "Kompanio 820", 0x0000=
-1100, 0x00040080),
->         MTK_SOCINFO_ENTRY("MT8192T", "MT8192V/ATZA", "Kompanio 828", 0x00=
-000100, 0x000400C0),
->         MTK_SOCINFO_ENTRY("MT8195", "MT8195GV/EZA", "Kompanio 1200", 0x81=
-950300, CELL_NOT_USED),
-> --
+>  .../devicetree/bindings/ufs/mediatek,ufs.yaml      | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml b/Do=
+cumentation/devicetree/bindings/ufs/mediatek,ufs.yaml
+> index e2c276da3f2c..21b038db100c 100644
+> --- a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
+> +++ b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
+> @@ -26,11 +26,23 @@ properties:
+>            - const: mediatek,mt8183-ufshci
+> =20
+>    clocks:
+> -    maxItems: 1
+> +    minItems: 1
 
-I've spoken to the MediaTek folks who are familiar with the MT8188 SoC.
-This is an intended marketing name change, so
+Could you add an itemised list to the clocks property please?
 
-Reviewed-by: Fei Shao <fshao@chromium.org>
+> =20
+>    clock-names:
+> +    minItems: 1
+>      items:
+>        - const: ufs
+> +      - const: ufs-aes
 
-Regards,
-Fei
+
+> +      - const: ufs-tick
+> +      - const: unipro-sys
+> +      - const: unipro-tick
+> +      - const: ufs-sap
+> +      - const: ufs-tx-symbol
+> +      - const: ufs-rx-symbol
+> +      - const: ufs-mem
+> +      - const: crypt-mux
+> +      - const: crypt-lp
+> +      - const: crypt-perf
+> =20
+>    phys:
+>      maxItems: 1
+> --=20
+> 2.44.0
+>=20
+
+--83ERy7+r+DSooO69
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhf9TgAKCRB4tDGHoIJi
+0nPsAQDR9MO4nmtSmAMmQ8o43G0oFD2I4Ib5sc7/3XCMceiSbAD/ZQOJyUwxivM/
+5IxvlYIjm4x83lwZ0N6c2CYnEQXh0QE=
+=NwEY
+-----END PGP SIGNATURE-----
+
+--83ERy7+r+DSooO69--
