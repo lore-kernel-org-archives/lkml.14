@@ -1,157 +1,147 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E29714A094;
-	Thu, 11 Apr 2024 11:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143B514A0A4
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712836521; cv=none; b=elUc1XiTYlcaZfD3O3nyGnMus5utac1TQbH3jr8A6FBP/w7NuXnDw/kK0QNOs0RVqEHc9TmEJvhrdrT9asGTwDpk2QmNtQNROgN3Jaxw1lq9BjlJLmdk7b2svOUY9N/ZUUuJ3CdM+iL7i/tkyZpEtJP/n0mWBtLj5tkDs4HEkzs=
+	t=1712836534; cv=none; b=F6lu1W5HDUbwXiyT9dxxoR8uuPmSDRNAqXboHZB44z+/AIvk/nruvzMlh3Wy4BgFqb02TziK0wsQrMi1vc5an7TLmGAe62va+fSRVHAAOCplC88Ss+92U2xJZdF2/AlZ5dWSbOnZeCkeHvD0bKnViLvvzySiJH/2cW0y3NWLFAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712836521; c=relaxed/simple;
-	bh=qUHLbICK+OzVzpgAugTLlBx/+ikYrtOfR4K8Nx4oYfw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sr3rCctWzL7tBgODvASomc3yId/sR/r0qOevb+lhYrs04lcZ2vFqAXLmxjEASs19YdSI3sh8LIxJ8exVBpJO6SSir1VdeyVsoOJwgItQ5SVCPNUocZx+HY8eFqa+cvJkANTgbwd+YlfZjOSR6P5qhjGAypIXIdanB+uZAyaIdcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bP56bhYa; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712836534; c=relaxed/simple;
+	bh=alXo0H8ANdaI1GJGeUlWdQEWdSZmaHDInU3myDZ1M5Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=f9ARIXqolcSuypZwXXVzIjiKxNCzwJvsA7CyTuGBcE0J2+/3M/QR3LOxr/W0JMy5uOvZT6phEweicoMSP17RKaYipQH9l3o8ItVQzHbdZi6rl32bnj6h+yzmX9vdaNW3r8E/dCCih+Fzktkh3K4HWwvwizL0hpSC0nef61/jyXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X1FkFekt; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bP56bhYa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X1FkFekt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712836519; x=1744372519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qUHLbICK+OzVzpgAugTLlBx/+ikYrtOfR4K8Nx4oYfw=;
-  b=bP56bhYazXE6fy9pzuspJ00L7+mAYf9fViRTI/B1qbtIWpCrX5UoQgUr
-   bsim6FASELIQkXU8tHt60EukTZDXe0LjQuo4NSLV+7S/Fj3JtebeURRLi
-   cDS+/LaqmRv/U5HpGBa+A5vS1tV67B+o49zbWnUQhS2Zp97F3DZX0S+Pr
-   Bz3kT3FrCrjtDT/8reOa+zOyVND2f//FmvRwndqA4tZT4Q010JJw77jTu
-   A5YlSZEczLKN3i8aWAsom5h5/zlz22O0DNnmIfW+KJVpFhf0gxZq8I5Ms
-   o2jQu7ShpC9vB/21on4GXcydv0LkNlmK2kcWIQ5JyG8s/qJPJBrhbBwbg
-   g==;
-X-CSE-ConnectionGUID: z5vJuW0ISXO47ggJt+rbgA==
-X-CSE-MsgGUID: mQWA4GzKR12LP6aGbYLBwA==
-X-IronPort-AV: E=Sophos;i="6.07,193,1708412400"; 
-   d="asc'?scan'208";a="251356126"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 04:55:16 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Apr 2024 04:54:36 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 11 Apr 2024 04:54:33 -0700
-Date: Thu, 11 Apr 2024 12:53:43 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-CC: Deepak Gupta <debug@rivosinc.com>, Conor Dooley <conor@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Anup Patel <anup@brainfault.org>, Shuah
- Khan <shuah@kernel.org>, Atish Patra <atishp@atishpatra.org>,
-	<linux-doc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
-Message-ID: <20240411-backwater-opal-00c9aed2231e@wendy>
-References: <20240410091106.749233-1-cleger@rivosinc.com>
- <20240410091106.749233-8-cleger@rivosinc.com>
- <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
- <20240410-jawless-cavalry-a3eaf9c562a4@spud>
- <20240410-judgingly-appease-5df493852b70@spud>
- <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
- <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
- <20240411-superglue-errant-b32e5118695f@wendy>
- <c86f9fa8-e273-4509-83fa-f21d3265d5c9@rivosinc.com>
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712836533; x=1744372533;
+  h=message-id:date:mime-version:cc:subject:from:to:
+   references:in-reply-to:content-transfer-encoding;
+  bh=alXo0H8ANdaI1GJGeUlWdQEWdSZmaHDInU3myDZ1M5Q=;
+  b=X1FkFekt1xqwtcZLRZXNh0wxGgir6wzuoWQa9uucx41mpQ0xWdjbmW7v
+   BNEA3p9Nt/kwJSBEmqTmbCOiqkkcSE30D8rV6FSQAzOOLtoXcavM/izrn
+   3EhB9d2GWkWnO987pelw3App7rXK7b035p0nmVWKi0yxuHNwY8kOgHhfb
+   tmFu60r7kld9dNFzGhg4tqL7o7bCSXyQoEXgAueSCgvWTzY4kFLAfI+yq
+   tS7YqZ+jU17nT2jlhBJYdJDsT93hF8qfs1IEYiy0OhJwgBVoV9/LPgM89
+   Ax380LLoRKXkzzA94wy7Q7p/BGyJoWAYFsaM+3wGBn5s7e3lF2BVbcK7k
+   Q==;
+X-CSE-ConnectionGUID: EAdMRYFBSS6inQG8fDvrUA==
+X-CSE-MsgGUID: waUSnDCrSFSplcpSIYjU1A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="30721963"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="30721963"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 04:55:33 -0700
+X-CSE-ConnectionGUID: LvEhbi8zSCCUwyc42P2LpA==
+X-CSE-MsgGUID: 8OVffHXmQnqfIrIkENzLUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="51845828"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.86]) ([10.124.237.86])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 04:55:31 -0700
+Message-ID: <a012652c-d1d3-4556-a521-6f0721650160@linux.intel.com>
+Date: Thu, 11 Apr 2024 19:55:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jM0CNQ7ZIr2lhGV/"
-Content-Disposition: inline
-In-Reply-To: <c86f9fa8-e273-4509-83fa-f21d3265d5c9@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+ Xuchun Shang <xuchun.shang@linux.alibaba.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] iommu/vt-d: Fix WARN_ON in iommu probe path
+From: Baolu Lu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>, Kevin Tian <kevin.tian@intel.com>
+References: <20240411030744.273460-1-baolu.lu@linux.intel.com>
+ <20240411030744.273460-4-baolu.lu@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <20240411030744.273460-4-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---jM0CNQ7ZIr2lhGV/
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2024/4/11 11:07, Lu Baolu wrote:
+> Commit 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
+> devices") adds all devices probed by the iommu driver in a rbtree
+> indexed by the source ID of each device. It assumes that each device
+> has a unique source ID. This assumption is incorrect and the VT-d
+> spec doesn't state this requirement either.
+> 
+> The reason for using a rbtree to track devices is to look up the device
+> with PCI bus and devfunc in the paths of handling ATS invalidation time
+> out error and the PRI I/O page faults. Both are PCI ATS feature related.
+> 
+> Only track the devices that have PCI ATS capabilities in the rbtree to
+> avoid unnecessary WARN_ON in the iommu probe path. Otherwise, on some
+> platforms below kernel splat will be displayed and the iommu probe results
+> in failure.
+> 
+>   WARNING: CPU: 3 PID: 166 at drivers/iommu/intel/iommu.c:158 intel_iommu_probe_device+0x319/0xd90
+>   Call Trace:
+>    <TASK>
+>    ? __warn+0x7e/0x180
+>    ? intel_iommu_probe_device+0x319/0xd90
+>    ? report_bug+0x1f8/0x200
+>    ? handle_bug+0x3c/0x70
+>    ? exc_invalid_op+0x18/0x70
+>    ? asm_exc_invalid_op+0x1a/0x20
+>    ? intel_iommu_probe_device+0x319/0xd90
+>    ? debug_mutex_init+0x37/0x50
+>    __iommu_probe_device+0xf2/0x4f0
+>    iommu_probe_device+0x22/0x70
+>    iommu_bus_notifier+0x1e/0x40
+>    notifier_call_chain+0x46/0x150
+>    blocking_notifier_call_chain+0x42/0x60
+>    bus_notify+0x2f/0x50
+>    device_add+0x5ed/0x7e0
+>    platform_device_add+0xf5/0x240
+>    mfd_add_devices+0x3f9/0x500
+>    ? preempt_count_add+0x4c/0xa0
+>    ? up_write+0xa2/0x1b0
+>    ? __debugfs_create_file+0xe3/0x150
+>    intel_lpss_probe+0x49f/0x5b0
+>    ? pci_conf1_write+0xa3/0xf0
+>    intel_lpss_pci_probe+0xcf/0x110 [intel_lpss_pci]
+>    pci_device_probe+0x95/0x120
+>    really_probe+0xd9/0x370
+>    ? __pfx___driver_attach+0x10/0x10
+>    __driver_probe_device+0x73/0x150
+>    driver_probe_device+0x19/0xa0
+>    __driver_attach+0xb6/0x180
+>    ? __pfx___driver_attach+0x10/0x10
+>    bus_for_each_dev+0x77/0xd0
+>    bus_add_driver+0x114/0x210
+>    driver_register+0x5b/0x110
+>    ? __pfx_intel_lpss_pci_driver_init+0x10/0x10 [intel_lpss_pci]
+>    do_one_initcall+0x57/0x2b0
+>    ? kmalloc_trace+0x21e/0x280
+>    ? do_init_module+0x1e/0x210
+>    do_init_module+0x5f/0x210
+>    load_module+0x1d37/0x1fc0
+>    ? init_module_from_file+0x86/0xd0
+>    init_module_from_file+0x86/0xd0
+>    idempotent_init_module+0x17c/0x230
+>    __x64_sys_finit_module+0x56/0xb0
+>    do_syscall_64+0x6e/0x140
+>    entry_SYSCALL_64_after_hwframe+0x71/0x79
+> 
+> Fixes: 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed devices")
+> Closes:https://gitlab.freedesktop.org/drm/intel/-/issues/10689
+> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
+> Link:https://lore.kernel.org/r/20240407011429.136282-1-baolu.lu@linux.intel.com
+> ---
+>   drivers/iommu/intel/iommu.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
 
-On Thu, Apr 11, 2024 at 11:08:21AM +0200, Cl=E9ment L=E9ger wrote:
-> >> If we consider to have potentially broken isa string (ie extensions
-> >> dependencies not correctly handled), then we'll need some way to
-> >> validate this within the kernel.
-> >=20
-> > No, the DT passed to the kernel should be correct and we by and large we
-> > should not have to do validation of it. What I meant above was writing
-> > the binding so that something invalid will not pass dtbs_check.
->=20
-> Acked, I was mainly answering Deepak question about dependencies wrt to
-> using __RISCV_ISA_EXT_SUPERSET() which does not seems to be relevant
-> since we expect a correct isa string to be passed.
+Kevin gave his r-b.
 
-Ahh, okay.
+https://lore.kernel.org/linux-iommu/BN9PR11MB52768106FE4890D6481E73178C052@BN9PR11MB5276.namprd11.prod.outlook.com/
 
-> But as you stated, DT
-> validation clearly make sense. I think a lot of extensions strings would
-> benefit such support (All the Zv* depends on V, etc).
+Include that in the pull request so that b4 can pick it up.
 
-I think it is actually as simple something like this, which makes it
-invalid to have "d" without "f":
-
-| diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Do=
-cumentation/devicetree/bindings/riscv/extensions.yaml
-| index 468c646247aa..594828700cbe 100644
-| --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
-| +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
-| @@ -484,5 +484,20 @@ properties:
-|              Registers in the AX45MP datasheet.
-|              https://www.andestech.com/wp-content/uploads/AX45MP-1C-Rev.-=
-5.0.0-Datasheet.pdf
-| =20
-| +allOf:
-| +  - if:
-| +      properties:
-| +        riscv,isa-extensions:
-| +          contains:
-| +            const: "d"
-| +          not:
-| +            contains:
-| +              const: "f"
-| +    then:
-| +      properties:
-| +        riscv,isa-extensions:
-| +          false
-| +
-| +
-|  additionalProperties: true
-|  ...
-
-If you do have d without f, the checker will say:
-cpu@2: riscv,isa-extensions: False schema does not allow ['i', 'm', 'a', 'd=
-', 'c']
-
-At least that's readable, even though not clear about what to do. I wish
-the former could be said about the wall of text you get for /each/
-undocumented entry in the string.
-
---jM0CNQ7ZIr2lhGV/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhfPRwAKCRB4tDGHoIJi
-0stXAP9uCAN5bZHcv91EPinTAeqedRCedCrkE5YEE9f8JUyrxgD8CAHddpGznZHx
-TNOtc9GaDiQRS4tdrlJo9+Hn1Puv4w0=
-=k3aJ
------END PGP SIGNATURE-----
-
---jM0CNQ7ZIr2lhGV/--
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
