@@ -1,195 +1,139 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E360605CD;
-	Thu, 11 Apr 2024 01:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AA629CE6;
+	Thu, 11 Apr 2024 01:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712799388; cv=none; b=SW2Pgy2peTTT/6Opt4im2hBXM6W6hR/Q1kxwLF6+e32MO2p+9kBi3+oq3/YCl5A5CiMPq8aopigcC2tceweYvJkNILXzXKbqtl4ZnkwRurdMwdcxsAIP8HYyEqhfso6mf3H4qF3XH6J5zwYDiusSiWPT/VbHHXqVdPRQRVHCJ/g=
+	t=1712799522; cv=none; b=q5QH0fOcJqVfJgI6Kq4GyHc6C41iUdVgcimQ6ukgsWU2Q+MRIb6+w5QspQ+zqqe+3xZs0pXjnpBa60LKpk4NrtNWx0ywfZQ2tE83bG7w7dtiLNFYcqK/ps4dNoQEoNAU2ABfxyIhtzc1rgWnUhskGzuns3rIL+gUNGrIoc326bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712799388; c=relaxed/simple;
-	bh=Bv17sivQjVSRil5/m7NyguLXoC8iZa+4bbs4tHa3P+4=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=k2GM7mdvS4qPykwl8H1bQ5ceJaZk8Fzbg8iP7F20jkO6SJq0boRuZoSf9pn3jo74lV7x868ueFJOMVgxc8WOd8YH3X/jkIsnXQSc/lWJ5Z7aEzLx5Qfub4TjtH77Ol8ngoHI6M6tI1nfg3AKdDQqQCwbgSrLsIYjZU3PT3p488s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m1TH+013; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712799522; c=relaxed/simple;
+	bh=jT6pUYF+gNcGo47vf9X95umMLPeSkId51q5nzxueMJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NZsW/+Tv9jYnRUtFVh1GqVVm47iwIU/LZjGnjxxLjuflJXDisaIqtrwXqUWgBiE4YqYC1wzh8e5Qs0uxmgb9bMZR2AEPqcnO5aKE7aP3Sk6yS+hrayiqysFms0zaezES6m3VKyv9gSCEsa0ZhzvSPiZR0UEsnrjbVJcNsJNVzdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=M0vq7m0X; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m1TH+013"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-78d57bd577dso364691285a.2;
-        Wed, 10 Apr 2024 18:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712799386; x=1713404186; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tbSovFXxhV1ZzfQY3zmzSZkZK0djY0/pPM92ABTCFDY=;
-        b=m1TH+013lFtunm8g8489gm7HbX3DfRTVXgAFquxUWnxtX43spZ9WA7g5AXo/QgQ8yz
-         53IyGIwQhJVecCfm2OcfsLDfqvbfhlLTsq8ruMddPqLQtWlv3fEcemCXZz6lIbdOYrt8
-         sMW0kh7+BhM+Y1kHHhjaeRlqIVGtDgj7P/mcQfwBYGFqtLCi1g3UwMg6XcfNtEcXODJP
-         l2gDuYgEzydcAQnEpzcHE92NgNnP1bmXO1wQ009Gk1HFQ0mFK7w5lLDXw68ww2vVLxUt
-         rGQ3zIs+OQIPle7BVAdxHXtwQM4wo9daoFwznplRId1F2S7t61zSuMeRZrZMGUl1friY
-         9Zrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712799386; x=1713404186;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tbSovFXxhV1ZzfQY3zmzSZkZK0djY0/pPM92ABTCFDY=;
-        b=KiGJnhRYrm5cu7sO2nfSbV/X6UgB2lUoNVytnlHxT5TfmK5dwXI9zFFp8skxA+CtkN
-         wiNZJ2zAD/6McrffeWhn+58QY0/gUB+N9LcgITTEt7XIH3xbQ4OLUSS9ByPoW9tfjscb
-         hGPsTgU4cnZvrwz0jL434HsJO7AzzFZNqk+Cq95daZ/3C+MXI8UBO83CVMR6X/f/rxOb
-         DjGfMPNwxc6sToNoXm+iIhfiwUhRhQmijmvPneKEoLmcHA6308Krqe/mwRDwlDY1gYbP
-         cca7AfQuIOKQzbcpdq4/c0kzSrQQjs/Cp5to8i915JfCmAA4BH1M7YUjVi9MMT5sFh5S
-         e/Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4Rv8bsnzEFVYDt0oK4Q3faycANoK49rFdMfH36pPj9RVYuGNxYSrPaH1bon8wkiPFTWTbxkEgrVHS89qyC6ZHVcUGf12vKCrmUAnjzRTLnu7AqxNRzENZ9o0XxyOoJ9H6zto9
-X-Gm-Message-State: AOJu0YwUXRGNaD716OfwNy0VizFa6VjMSnJb7hIevhNyYX2ghr3F2V+2
-	KlLkUbQou36fO2epmz2odgt1jV7gABgfvc1xV4knlIgUDwY8FzmM
-X-Google-Smtp-Source: AGHT+IE/blMsmh23x6zYnhsQngea6jAiJ2NdK39aQR7Qy6pMA6O44kVEKfUmCGuK9qqW0iH1NUUj1A==
-X-Received: by 2002:a05:620a:ec8:b0:78d:68de:e3ac with SMTP id x8-20020a05620a0ec800b0078d68dee3acmr3397684qkm.76.1712799385975;
-        Wed, 10 Apr 2024 18:36:25 -0700 (PDT)
-Received: from localhost (73.84.86.34.bc.googleusercontent.com. [34.86.84.73])
-        by smtp.gmail.com with ESMTPSA id l25-20020a05620a211900b0078d67d40c49sm334328qkl.70.2024.04.10.18.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 18:36:25 -0700 (PDT)
-Date: Wed, 10 Apr 2024 21:36:25 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Rahul Rameshbabu <rrameshbabu@nvidia.com>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
- John Fraker <jfraker@google.com>, 
- netdev@vger.kernel.org, 
- Praveen  Kaligineedi <pkaligineedi@google.com>, 
- Harshitha Ramamurthy <hramamurthy@google.com>, 
- Shailend Chand <shailend@google.com>, 
- Willem de  Bruijn <willemb@google.com>, 
- "David S. Miller" <davem@davemloft.net>, 
- Junfeng Guo <junfeng.guo@intel.com>, 
- Ziwei Xiao <ziweixiao@google.com>, 
- Jeroen de Borst <jeroendb@google.com>, 
- linux-kernel@vger.kernel.org, 
- kory.maincent@bootlin.com, 
- andrew@lunn.ch, 
- richardcochran@gmail.com
-Message-ID: <66173e9972287_2d6bc6294d1@willemb.c.googlers.com.notmuch>
-In-Reply-To: <874jc8ww68.fsf@nvidia.com>
-References: <20240408180918.2773238-1-jfraker@google.com>
- <661550e348224_23a2b2294f7@willemb.c.googlers.com.notmuch>
- <20240409172838.247738f3@kernel.org>
- <87jzl5akh5.fsf@nvidia.com>
- <20240410061928.712ff9a3@kernel.org>
- <6616e92cbcca_2bfabf294c5@willemb.c.googlers.com.notmuch>
- <874jc8ww68.fsf@nvidia.com>
-Subject: Re: [PATCH net-next] gve: Correctly report software timestamping
- capabilities
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M0vq7m0X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1712799517;
+	bh=zeub6wzGgYoN50TfkzxBwUllVnK72jWbC8vD4JoZgDA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=M0vq7m0XQt85Xl44jMp1YvSljh8CBazhm/l9UwhMvQsustwRaodgHNxH2P06mpBQs
+	 8u1aRgPt7iWa/Ef5iWDjCohsWAFqpkBD/B5C4XnqB1XoNy/O1AdapwHBLB4Y763Wsk
+	 KrmGf5TDLSwr+rsujyQ/iobW76DJVbKESY0OjbEAoQ0vAgh1d2KTep0iDPz4XMynmU
+	 ABAKCrtOwyqBfmbWCAtazUBDzGwkLnHqQ448ElfjdzVWQOx3lEZi5brciP6ujsYOUC
+	 eJCLyn8C+nMKdniyb/y50vSS/wPbN/vmWLulo34PYtAHbA2JD8cMBdseqnSRyxuusn
+	 dle41iOUv0ZKA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VFMmD4h8Cz4wb2;
+	Thu, 11 Apr 2024 11:38:36 +1000 (AEST)
+Date: Thu, 11 Apr 2024 11:38:35 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Eric Dumazet <edumazet@google.com>, David Miller <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20240411113835.713ccf11@canb.auug.org.au>
+In-Reply-To: <CANn89iJyXNKycL1kd_KP8NH-qU7siv8BGW5PGLexjmqaXXGciA@mail.gmail.com>
+References: <20240409114028.76ede66a@canb.auug.org.au>
+	<CANn89iJyXNKycL1kd_KP8NH-qU7siv8BGW5PGLexjmqaXXGciA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/X+hQJFyq5z7MEux5de__XW/";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Rahul Rameshbabu wrote:
-> 
-> On Wed, 10 Apr, 2024 15:31:56 -0400 Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-> > Jakub Kicinski wrote:
-> >> On Tue, 09 Apr 2024 21:40:46 -0700 Rahul Rameshbabu wrote:
-> >> > > My gut tells me we force drivers to set the ethtool op because
-> >> > > while at it they will probably also implement tx stamping.  
-> >> > 
-> >> > I think the logic should be the other way (in terms of the
-> >> > relationship). A call to skb_tx_timestamp should throw a warning if the
-> >> > driver does not advertise its timestamping capabilities. This way, a
-> >> > naive netdev driver for some lightweight device does not need to worry
-> >> > about this. I agree that anyone implementing tx timestamping should have
-> >> > this operation defined. An skb does not contain any mechanism to
-> >> > reference the driver's ethtool callback. Maybe the right choice is to
-> >> > have a ts capability function registered for each netdev that can be
-> >> > used by the core stack and that powers the ethtool operation as well
-> >> > instead of the existing callback for ethtool?
-> >> 
-> >> Adding a check which only need to runs once in the lifetime of
-> >> the driver to the fastpath may be a little awkward. Another option
-> >> would be a sufficiently intelligent grep, which would understand
-> >> which files constitute a driver. At which point grepping for 
-> >> the ethtool op and skb_tx_timestamp would be trivial?
-> >
-> > Many may not define the flags themselves, but defer this to
-> > ethtool_op_get_ts_info.
-> >
-> > A not so much intelligent, but sufficiently ugly, grep indicates
-> > not a a massive amount of many missing entries among ethernet
-> > drivers. But this first attempt is definitely lossy.
-> >
-> > $ for symbol in skb_tx_timestamp get_ts_info SOF_TIMESTAMPING_TX_SOFTWARE ethtool_op_get_ts_info "(SOF_TIMESTAMPING_TX_SOFTWARE|ethtool_op_get_ts_info)"; do
-> >     echo -n "$symbol: ";
-> >     for i in `grep -nrIE "$symbol" drivers/net/ethernet/ | awk '{print $1}' | xargs dirname | uniq`; do echo $i; done | wc -l;
-> >   done
-> >
-> > skb_tx_timestamp: 69
-> > get_ts_info: 66
-> > SOF_TIMESTAMPING_TX_SOFTWARE: 33
-> > ethtool_op_get_ts_info: 40
-> > (SOF_TIMESTAMPING_TX_SOFTWARE|ethtool_op_get_ts_info): 59
-> >
-> > This does not add up, but that's because some drivers share prefixes,
-> > and some drivers have different paths where one open codes and the
-> > other calls ethtool_op_get_ts_info. Marvell is a good example of both:
-> >
-> > $ grep -nrIE '(SOF_TIMESTAMPING_TX_SOFTWARE|ethtool_op_get_ts_info)' drivers/net/ethernet
-> > /marvell
-> > drivers/net/ethernet/marvell/pxa168_eth.c:1367: .get_ts_info    = ethtool_op_get_ts_info,
-> > drivers/net/ethernet/marvell/mv643xx_eth.c:1756:        .get_ts_info            = ethtool_op_get_ts_info,
-> > drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c:5266:   info->so_timestamping = SOF_TIMESTAMPING_TX_SOFTWARE |
-> > drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c:962:          return ethtool_op_get_ts_info(netdev, info);
-> > drivers/net/ethernet/marvell/octeontx2/nic/otx2_ethtool.c:964:  info->so_timestamping = SOF_TIMESTAMPING_TX_SOFTWARE |
-> 
-> If there is a desire to enforce all drivers need to implement
-> .get_is_info, would the following make sense?
+--Sig_/X+hQJFyq5z7MEux5de__XW/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The only reason to enforce this is if we want to enforce them to also
-implement tx software timestamping. Generally, these features are opt
-in.
+Hi all,
 
-> My biggest objection to
-> this idea was mainly my concern that the drivers would miss setting
-> info->so_timestamping with SOF_TIMESTAMPING_RX_SOFTWARE |
-> SOF_TIMESTAMPING_SOFTWARE, which I do not think should be a
-> responsibility of the driver author since this is happening in the core
-> stack.
-> 
-> So maybe something like this (taking Willem's proposal for
-> __ethtool_get_ts_info and modifying it a bit)?
-> 
->         int err = 0;
-> 
->         ...
-> 
->         info->phc_index = -1;
-> 
->         if (phy_has_tsinfo(phydev))
->                 err = phy_ts_info(phydev, info);
->         else
->                 err = ops->get_ts_info(dev, info);
-> 
->         info->so_timestamping |= SOF_TIMESTAMPING_RX_SOFTWARE |
->                                  SOF_TIMESTAMPING_SOFTWARE;
-> 
->         return err;
-
-Yes, this is what I meant as well. (the code I showed was just copied
-verbatim from net-next as context, not a suggested change.)
-
+On Tue, 9 Apr 2024 07:10:40 +0200 Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Tue, Apr 9, 2024 at 3:40=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.or=
+g.au> wrote:
 > >
-> > One more aside, no driver should have to advertise
-> > SOF_TIMESTAMPING_SOFTWARE or SOF_TIMESTAMPING_RAW_HARDWARE. Per
-> > Documentation/networking/timestamping.rst these are reporting flags,
-> > not recording flags. Devices only optionall record a timestamp.
-> 
-> I think this view aligns with my opinion above (though good point about
-> timestamping reporting bits in general should be deduced based on the
-> timestamp generation bits set rather than needing to be set as well).
+> > After merging the net-next tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > In file included from <command-line>:
+> > In function 'tcp_struct_check',
+> >     inlined from 'tcp_init' at net/ipv4/tcp.c:4703:2:
+> > include/linux/compiler_types.h:460:45: error: call to '__compiletime_as=
+sert_940' declared with attribute error: BUILD_BUG_ON failed: offsetof(stru=
+ct tcp_sock, __cacheline_group_end__tcp_sock_write_txrx) - offsetofend(stru=
+ct tcp_sock, __cacheline_group_begin__tcp_sock_write_txrx) > 92
+> >   460 |         _compiletime_assert(condition, msg, __compiletime_asser=
+t_, __COUNTER__)
+> >       |                                             ^
+> > include/linux/compiler_types.h:441:25: note: in definition of macro '__=
+compiletime_assert'
+> >   441 |                         prefix ## suffix();                    =
+         \
+> >       |                         ^~~~~~
+> > include/linux/compiler_types.h:460:9: note: in expansion of macro '_com=
+piletime_assert'
+> >   460 |         _compiletime_assert(condition, msg, __compiletime_asser=
+t_, __COUNTER__)
+> >       |         ^~~~~~~~~~~~~~~~~~~
+> > include/linux/build_bug.h:39:37: note: in expansion of macro 'compileti=
+me_assert'
+> >    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond),=
+ msg)
+> >       |                                     ^~~~~~~~~~~~~~~~~~
+> > include/linux/build_bug.h:50:9: note: in expansion of macro 'BUILD_BUG_=
+ON_MSG'
+> >    50 |         BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #co=
+ndition)
+> >       |         ^~~~~~~~~~~~~~~~
+> > include/linux/cache.h:108:9: note: in expansion of macro 'BUILD_BUG_ON'
+> >   108 |         BUILD_BUG_ON(offsetof(TYPE, __cacheline_group_end__##GR=
+OUP) - \
+> >       |         ^~~~~~~~~~~~
+> > net/ipv4/tcp.c:4673:9: note: in expansion of macro 'CACHELINE_ASSERT_GR=
+OUP_SIZE'
+> >  4673 |         CACHELINE_ASSERT_GROUP_SIZE(struct tcp_sock, tcp_sock_w=
+rite_txrx, 92);
+> >       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Presumably caused by commit
+> >
+> >   d2c3a7eb1afa ("tcp: more struct tcp_sock adjustments")
+> >
+> > I have reverted that commit for today. =20
+>=20
+> Yeah, a build bot gave us a warning yesterday, I will fix this today.
 
+I am still getting this build failure.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/X+hQJFyq5z7MEux5de__XW/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYXPxsACgkQAVBC80lX
+0GzuKwgAnkJD0uqw5ZtXjSDD8uCFvlBwEqSeumc2wsMbPKDqvz0f5SjYeKCfWrht
+efuN+i8DZg7rbw8OszvdWIgyPU8Cw0lOn1+Ojv+kgHt0d4Q6iW/xQH5TlNOY8oGs
+Zx2Ga9TB26Y2lHKAWrSx0TpvZS2hJNNdIdFuUkPBK0ukzOcppxl36b6jXm6V2qOW
+S4pxr6imP33SQRO81f0ceJ5avNiCm887k4iGenYFvAbAISFV8Ew3mmzJarHJCD2M
+y6dlqXr7bb1ev2E2BliTnCARHIqWHjn1fA+v5L5I1neShOTPt9BHCBzefolOm7mX
+nyPDdnAxMobBWeMHD+Ly8w/XUwpeFQ==
+=ZyYn
+-----END PGP SIGNATURE-----
+
+--Sig_/X+hQJFyq5z7MEux5de__XW/--
