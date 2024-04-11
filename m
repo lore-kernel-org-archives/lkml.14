@@ -1,118 +1,128 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D27F168DD
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E55205E15;
+	Thu, 11 Apr 2024 18:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712859373; cv=none; b=Z3ADbgurrLgjGjt+PzjBAE+jVW114TyTKbmKl2lMXhFr2tnlnimQrraj9FfZW4PvbpGCNI7oIP6kRhQu5vGbUk7UWHVyIeHa4s4ZEBHKxAZV6GqCvIL7xh4KkHRWLikrHSYUHdr78TiIQ676esx4UxMH3IDyaxn10Vp6/zKrtyA=
+	t=1712859440; cv=none; b=RD960ni0dJYzgm7QKbBsNx9nMBoLERZNyjxzwGahx0ix9y7gYsSD/+nQtxmhHY2ZzRkflKlrxEqu0Sef4T4jlVzNTx/QCBLh5mDpbpenimPIYGRU8YEjoO0xVMhUsi2VmHUkL6gWSUhkhuXFfUDcG20AHP140gC/wlvhH04fRwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712859373; c=relaxed/simple;
-	bh=Ho5HKMrHsYHBj97jJ6q/xDBtZbPcTs+t1YmVTN+iWoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m8vMXwCxTjtCkJJcGfuAAXM2cn57TPfg+FgVsN1VyQ/1gsCQ7PZMC4lFOsmNCLTi1dzzquHn2S+4SlXyGWtJwRNZltKNyFdGYUt5K9v8sr38eRSk8sE8b75oM2C45VsNxR4dVPQQCE8rKtoL2spAWkrqkxnvtTc8jxSPQzYl6RA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NujZLe3A; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712859440; c=relaxed/simple;
+	bh=b6PPJY9P9PsJamKQ3wTtANrrHHGiwci1Vnn5BEBKsy4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=irey9946sGdf2AqjtLmq73b21HYFk/FA9vwVOp0JwbqiJ+EwK42FUC34RRGl3zUU2+/5T0HscnS+lJrQqADVlnZZFy0t2fGozHYzWI3/D1Wvi1nR6U91B3WkdZfr6xPd0uFbHbo5TuIxNX/31WQyICrUP8ZAq72qYh2DObYYQqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwjgXOhN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NujZLe3A"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-22a96054726so121694fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712859371; x=1713464171; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TDS6c2ghnYUkSwWbtZftPqPTODtRchsS8qiLJfzkVWw=;
-        b=NujZLe3AkI0Jut6UPlGMvxMlB0yOalI9cFij1lYoQ2fsJWCOC6V2GA33m0l2IsOJnY
-         gwrwHh1B/7qPP24wpeZItgKIGP7plj/nO9kB4w4XSxdVoCFy4/voQWLm3tcdd2DUK6Qs
-         O7Eie3PE1pKilAdH/+8NU4C67yO4subQ2FUWYlq9cmdj97phaFmYZCosA374aL01oG0V
-         XFb07kcylFvMeC3jOrqG6yQbEK93F/AFFUSY5fR5V+nUGXNug/FkEd1zsKwnb6Mc9yEb
-         sT2df3QFTGIpJ2AHKIxL2kwJzsUX41SctfsYij6d1EBsnIIkO6znU/odbBEp1PGJ3CBS
-         2mzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712859371; x=1713464171;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TDS6c2ghnYUkSwWbtZftPqPTODtRchsS8qiLJfzkVWw=;
-        b=BaeehsvwimUKzR9gW9NTBJywbrfHPgrqDnWywol5RJOYrrISzXSeYri26PqfPcHXq3
-         a61425dPPBV5XriVEs9LnNaqcrqhc7974QeEfBKWrR1y+z+rNbaMKu39oRhUsxBcKR3P
-         233LoEacIg0rDNRORv+d8SBVRY7XZrBhNTCNrnjccCGCF8yG6yWHJSNwK+tIdUGORZuc
-         3IGcYcuX3lzkDWsdj531EU8Ylb7Oc8AwNhuARhCWj0ZHu/ur69vsir5gn31YyXk3LDQF
-         EH03A45a0UDmXnPq0sjgKUMzK/NFfSJy4w8QtKZebp5LODRqgEPlKn4LmtX6AscNhDqI
-         xD0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWvdYjVmokRecUERvJVk9uGoTVHXanVvXkqKJZgqvyX9n0t1BMJsOAtwfwI1BqaAMGNzSP59BpvebqoD1IlQ/p4ht48Pp0LtOq81wMi
-X-Gm-Message-State: AOJu0Yw+Fh0xdEEmpwdK6FfIQ9tYQoIF8xQohDbjuP9eBgzb23C6oBpS
-	VN2piXaFKJc4VC0tBkMEXj9vRl7ynC23GpK8+qLA78cLQ8Y04pbyCbAoDdUBl4GSpXr+sAk0+aC
-	G5bwYWOkDRSvHRkoseST+Yd5bfA==
-X-Google-Smtp-Source: AGHT+IF2hVKasS43gNxPvK3Yxqe3GnEmv7WnsgCokhD0KHgBvCacyvI7d2RHHBMtMHdJooKADEYd0Vu236vMpiguadg=
-X-Received: by 2002:a05:6871:8795:b0:22a:dc7:7d64 with SMTP id
- td21-20020a056871879500b0022a0dc77d64mr267337oab.10.1712859371153; Thu, 11
- Apr 2024 11:16:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwjgXOhN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF25C113CD;
+	Thu, 11 Apr 2024 18:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712859440;
+	bh=b6PPJY9P9PsJamKQ3wTtANrrHHGiwci1Vnn5BEBKsy4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZwjgXOhNBXHQfDdQq3S2xKYRXuAAeXn+Py2fBF3NCGyyBROyrdH9kkfbQM8GHPB9/
+	 KAlMNHAZTNG06mztOVeXZ60KcAlBWKtM7TB9PzDEeAes1PC1RaUktTA3ebQuPIc266
+	 8v5vdRf1mMZWS6sJGHpXkxV409GI6HHUUZ/RMdXv8vG/dz7mcVjHZDsNg+4R6vwAhX
+	 EWAQsx528Q62x9zCOxAHwL2b7xOJxxG7ICNPCPhn/NxnxAYEBI36dlH/sjGvwPdlHN
+	 F4W6WzIfL/ie/sW/DrfsQLQGDhCh8nXlgw3q3+GT9mSvqIDh7upIGIpKbSk4aKW2hY
+	 iScsF0XtoSn0Q==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH v2 2/3] perf hist: Add weight fields to hist entry stats
+Date: Thu, 11 Apr 2024 11:17:17 -0700
+Message-ID: <20240411181718.2367948-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+In-Reply-To: <20240411181718.2367948-1-namhyung@kernel.org>
+References: <20240411181718.2367948-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410194850.39994-1-jason.andryuk@amd.com> <20240410194850.39994-3-jason.andryuk@amd.com>
- <CAMzpN2h6S69bOLXCUhmkVJErvoKxq-wPmfoaqR7eGHYLgirn+Q@mail.gmail.com> <74465ac2-0060-4047-97d7-acadcdff4cd4@amd.com>
-In-Reply-To: <74465ac2-0060-4047-97d7-acadcdff4cd4@amd.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Thu, 11 Apr 2024 14:15:58 -0400
-Message-ID: <CAMzpN2iCYXuQXXHmg9qevJXDuzvxDF9L=Vw+w2ZAaPk6vZZFDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] x86/pvh: Make PVH entrypoint PIC for x86-64
-To: Jason Andryuk <jason.andryuk@amd.com>
-Cc: Juergen Gross <jgross@suse.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 11:26=E2=80=AFAM Jason Andryuk <jason.andryuk@amd.c=
-om> wrote:
->
-> On 2024-04-10 17:00, Brian Gerst wrote:
-> > On Wed, Apr 10, 2024 at 3:50=E2=80=AFPM Jason Andryuk <jason.andryuk@am=
-d.com> wrote:
->
-> >>          /* 64-bit entry point. */
-> >>          .code64
-> >>   1:
-> >> +       UNWIND_HINT_END_OF_STACK
-> >> +
-> >>          /* Set base address in stack canary descriptor. */
-> >>          mov $MSR_GS_BASE,%ecx
-> >> -       mov $_pa(canary), %eax
-> >> +       leal rva(canary)(%ebp), %eax
-> >
-> > Since this is in 64-bit mode, RIP-relative addressing can be used.
-> >
-> >>          xor %edx, %edx
-> >>          wrmsr
-> >>
-> >>          call xen_prepare_pvh
-> >>
-> >>          /* startup_64 expects boot_params in %rsi. */
-> >> -       mov $_pa(pvh_bootparams), %rsi
-> >> -       mov $_pa(startup_64), %rax
-> >> +       lea rva(pvh_bootparams)(%ebp), %rsi
-> >> +       lea rva(startup_64)(%ebp), %rax
-> >
-> > RIP-relative here too.
->
-> Yes, thanks for catching that.  With the RIP-relative conversion, there
-> is now:
-> vmlinux.o: warning: objtool: pvh_start_xen+0x10d: relocation to !ENDBR:
-> startup_64+0x0
->
-> I guess RIP-relative made it visible.  That can be quieted by adding
-> ANNOTATE_NOENDBR to startup_64.
+Like period and sample numbers, it'd be better to track weight values
+and display them in the output rather than having them as sort keys.
 
-Change it to a direct jump, since branches are always RIP-relative.
+This patch just adds a few more fields to save the weights in a hist
+entry.  It'll be displayed as new output fields in the later patch.
 
-Brian Gerst
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.c | 12 ++++++++++--
+ tools/perf/util/hist.h |  3 +++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index fa359180ebf8..9d43f8ae412d 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -308,6 +308,9 @@ static void he_stat__add_stat(struct he_stat *dest, struct he_stat *src)
+ 	dest->period_us		+= src->period_us;
+ 	dest->period_guest_sys	+= src->period_guest_sys;
+ 	dest->period_guest_us	+= src->period_guest_us;
++	dest->weight1		+= src->weight1;
++	dest->weight2		+= src->weight2;
++	dest->weight3		+= src->weight3;
+ 	dest->nr_events		+= src->nr_events;
+ }
+ 
+@@ -315,7 +318,9 @@ static void he_stat__decay(struct he_stat *he_stat)
+ {
+ 	he_stat->period = (he_stat->period * 7) / 8;
+ 	he_stat->nr_events = (he_stat->nr_events * 7) / 8;
+-	/* XXX need decay for weight too? */
++	he_stat->weight1 = (he_stat->weight1 * 7) / 8;
++	he_stat->weight2 = (he_stat->weight2 * 7) / 8;
++	he_stat->weight3 = (he_stat->weight3 * 7) / 8;
+ }
+ 
+ static void hists__delete_entry(struct hists *hists, struct hist_entry *he);
+@@ -614,7 +619,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 		cmp = hist_entry__cmp(he, entry);
+ 		if (!cmp) {
+ 			if (sample_self) {
+-				he_stat__add_period(&he->stat, period);
++				he_stat__add_stat(&he->stat, &entry->stat);
+ 				hist_entry__add_callchain_period(he, period);
+ 			}
+ 			if (symbol_conf.cumulate_callchain)
+@@ -731,6 +736,9 @@ __hists__add_entry(struct hists *hists,
+ 		.stat = {
+ 			.nr_events = 1,
+ 			.period	= sample->period,
++			.weight1 = sample->weight,
++			.weight2 = sample->ins_lat,
++			.weight3 = sample->p_stage_cyc,
+ 		},
+ 		.parent = sym_parent,
+ 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 8f072f3749eb..f34f101c36c2 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -163,6 +163,9 @@ struct he_stat {
+ 	u64			period_us;
+ 	u64			period_guest_sys;
+ 	u64			period_guest_us;
++	u64			weight1;
++	u64			weight2;
++	u64			weight3;
+ 	u32			nr_events;
+ };
+ 
+-- 
+2.44.0.683.g7961c838ac-goog
+
