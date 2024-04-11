@@ -1,41 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82993144308;
-	Thu, 11 Apr 2024 09:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF21A143C51;
+	Thu, 11 Apr 2024 09:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712826982; cv=none; b=CWpCEXAHNPfMMOS3ReC3BL9ki+Mpnl4ncIv8jxbdwyX0k933aM8S0gjIXhEslrluglotkaWBVuFzhB/Qtsof+b4ygDHA9E6jZGDBEmq9M/vBWs+xfB7rzaZJ5NiqMG8AP4t0OXcEwZBCy8SchqnL2SWdBGJKdQPfmd8RrBeoKsg=
+	t=1712827012; cv=none; b=pws5G/Q+a5cCyxCpBBvyAzjOccgB9ocolGtMdFijgjCzt8rOABjONtO7B3GrIqAZjb7oeBDct+dIbM1i1fjypAYJh6EL/lZlTLoSUJGGbVUE/NYrGZGMk/MqsUGEw6Si+uJ70aaxhFiBjxYrJdRmCOQG3BXsXqMoIM4gB9fxl6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712826982; c=relaxed/simple;
-	bh=FD7ZMwASDJLrGL9Q6rjiGOks+Hr3Q/CkNdWe0CnAC5Y=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LAuWMQiIFfcmmlsZf+0GKkrbBN/rAAhGz2qfGOhl+UvNTH/9z83uPffpeD53Nm11g8i//hnyDUjGJhaoyuBEpXWet3D5mWct1ELijnljThbJcJtzFr0UHQQrgNmCzMJXVcy55jtr1FR8cq5uvEiet0YOZNRzs5xdyJDtQrri9b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxQgfbfo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712827012; c=relaxed/simple;
+	bh=hYm53TXlQfcyeB+z5vDUlyedpFv/vu34UbEEPPHY+XE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ROmw8WazikpYpOxxFHaNyV1qkTstG9VuPJpU5kC7rctQTIbbc9oKEe9XlcA+puwvN3Dirv4VkQyuRbxAa6bxCN4gIMLGs9wFv2S3wItD9Ad9GLOjSe2GF9qpqvuEykS5VkzmVkHwlZCnnP0BZA5Qr98RfehaxI6QXjoYlxvqpOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PoIk+CP1; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxQgfbfo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725DCC43390;
-	Thu, 11 Apr 2024 09:16:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712826982;
-	bh=FD7ZMwASDJLrGL9Q6rjiGOks+Hr3Q/CkNdWe0CnAC5Y=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=JxQgfbfoQPXO75Bvknepu7S5cybTc3MuoQxVXQLt2ysmPPAaTjqT02Nd97CxO0pOO
-	 +1URVbwdMMYoIA/kMSt4tEl73wG3Uv9yTcFg4l8DweKTfYYmOz70yk2tdTZzySXy+G
-	 aElkNiC7Rr7vn8UQyfLKL7SIHuJ/J7V997QuSv5ZYnHJi8tG61SdtdM4Ysu0DKVCXE
-	 3t4z4kuo2V17Ox/+p9TyCgojMPsl5mg4IvclbQUADWH+9gEz4DTlj7nJ5B9s97gEIA
-	 gT9T0/RCTwIT1dQ1IfKsvQW26nQo21nE06KUa+3vp2Om56N22GlnrTP6gfdDtEm3h4
-	 3TwLQQPGas0lg==
-Date: Thu, 11 Apr 2024 11:16:18 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/18] i2c: i801: remove printout on handled timeouts
-Message-ID: <uvnhbxkhj4skur5uhmbdtmbc4ebodrdujfzqmrv6tjejwvjrxk@xvad5h5ciiay>
-References: <20240410112418.6400-20-wsa+renesas@sang-engineering.com>
- <20240410112418.6400-26-wsa+renesas@sang-engineering.com>
- <242ogjpole3ltk5nu53knbfsxmmwcqfrbcivjh7fnkngvrroq5@cwspwdrtepwh>
- <zmkluzi3ncze67wei6eccd67cpuab2k7qw7cdgju4tg7rermv2@hw6ukejz4cvy>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PoIk+CP1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712827011; x=1744363011;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hYm53TXlQfcyeB+z5vDUlyedpFv/vu34UbEEPPHY+XE=;
+  b=PoIk+CP13PNb+y6MSoFicDJzZIQyW8Hk9FBtHIuUO0KE85dTN6LHsLGs
+   Akdf7XKHnqb3kjZ6fmJJ+bbCBZ41tlm1j4rZPsGUdMq6HUgAXQP012SSQ
+   rjNz/K0yYfmzdJ0Hsl+ZuYPLepI/XD+BQVXSPMPwiu/Dwq1RbumLL//gw
+   C799E9B9kiETTBdcyhfviraOd/UoT9tzARxADcz4F8D7q3J1Wbb6ICDof
+   7M9B0TIgYWSUo4p3peKszgr5a2t1G02lCl153JDPFuM5tPa1mQtfiVMqw
+   fOyCtROQU9A8SwybRT9PR3qsy5odNwyMCnHURl8vJRMbCO3FXULEEWYsM
+   A==;
+X-CSE-ConnectionGUID: du3qVAslQUa9NNgrEpIxfQ==
+X-CSE-MsgGUID: b4o/dJqiQhCp70JHU5q8Uw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11187719"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="11187719"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:16:50 -0700
+X-CSE-ConnectionGUID: AoAFNDtVSGCeodYJQe9kWw==
+X-CSE-MsgGUID: 2hhegYBSSI6eLdjjaGCipA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="20803972"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa009.jf.intel.com with ESMTP; 11 Apr 2024 02:16:47 -0700
+Date: Thu, 11 Apr 2024 17:11:43 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Marco Pagani <marpagan@redhat.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] fpga: region: add owner module and take its refcount
+Message-ID: <ZhepT8emGl27Fo5N@yilunxu-OptiPlex-7050>
+References: <20240327160022.202934-1-marpagan@redhat.com>
+ <Zgp/jNst2yuXEbpU@yilunxu-OptiPlex-7050>
+ <64c1685a-b544-408e-97e4-8c3cff6aca6c@redhat.com>
+ <ZhS/M6pa9AHyvb0y@yilunxu-OptiPlex-7050>
+ <9d016f83-8e7f-4bdf-8610-e3d0b49f7097@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,106 +67,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <zmkluzi3ncze67wei6eccd67cpuab2k7qw7cdgju4tg7rermv2@hw6ukejz4cvy>
+In-Reply-To: <9d016f83-8e7f-4bdf-8610-e3d0b49f7097@redhat.com>
 
-Hi Wolfram,
-
-On Thu, Apr 11, 2024 at 09:02:52AM +0200, Wolfram Sang wrote:
-> On Wed, Apr 10, 2024 at 02:21:58PM +0200, Andi Shyti wrote:
-> > On Wed, Apr 10, 2024 at 01:24:20PM +0200, Wolfram Sang wrote:
-> > > I2C and SMBus timeouts are not something the user needs to be informed
-> > > about on controller level. The client driver may know if that really is
-> > > a problem and give more detailed information to the user. The controller
-> > > should just pass this information upwards. Turn all timeout related
-> > > printouts to debug level.
-> > > 
-> > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > > ---
-> > > 
-> > > Here, I did not delete the printout to support checking the termination
-> > > process. The other drivers in this series do not have this SMBus
-> > > specific termination step.
-> > > 
-> > >  drivers/i2c/busses/i2c-i801.c | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> > > index 4294c0c63cef..a42b5152f9bd 100644
-> > > --- a/drivers/i2c/busses/i2c-i801.c
-> > > +++ b/drivers/i2c/busses/i2c-i801.c
-> > > @@ -400,7 +400,7 @@ static int i801_check_post(struct i801_priv *priv, int status)
-> > >  	 * If the SMBus is still busy, we give up
-> > >  	 */
-> > >  	if (unlikely(status < 0)) {
-> > > -		dev_err(&priv->pci_dev->dev, "Transaction timeout\n");
-> > > +		dev_dbg(&priv->pci_dev->dev, "Transaction timeout\n");
+On Wed, Apr 10, 2024 at 11:42:23AM +0200, Marco Pagani wrote:
+> 
+> 
+> On 2024-04-09 06:08, Xu Yilun wrote:
+> > On Wed, Apr 03, 2024 at 03:34:22PM +0200, Marco Pagani wrote:
+> >>
+> >>
+> >> On 2024-04-01 11:34, Xu Yilun wrote:
+> >>> On Wed, Mar 27, 2024 at 05:00:20PM +0100, Marco Pagani wrote:
+> >>>> The current implementation of the fpga region assumes that the low-level
+> >>>> module registers a driver for the parent device and uses its owner pointer
+> >>>> to take the module's refcount. This approach is problematic since it can
+> >>>> lead to a null pointer dereference while attempting to get the region
+> >>>> during programming if the parent device does not have a driver.
+> >>>>
+> >>>> To address this problem, add a module owner pointer to the fpga_region
+> >>>> struct and use it to take the module's refcount. Modify the functions for
+> >>>> registering a region to take an additional owner module parameter and
+> >>>> rename them to avoid conflicts. Use the old function names for helper
+> >>>> macros that automatically set the module that registers the region as the
+> >>>> owner. This ensures compatibility with existing low-level control modules
+> >>>> and reduces the chances of registering a region without setting the owner.
+> >>>>
+> >>>> Also, update the documentation to keep it consistent with the new interface
+> >>>> for registering an fpga region.
+> >>>>
+> >>>> Other changes: unlock the mutex before calling put_device() in
+> >>>> fpga_region_put() to avoid potential use after release issues.
+> >>>
+> >>> Please try not to mix different changes in one patch, especially for
+> >>> a "bug fix" as you said.
+> >>
+> >> You are right. I'll split out the change and eventually send it as a
+> >> separate patch.
+> >>
+> >>> And I do have concern about the fix, see below.
+> >>>
+> >>> [...]
+> >>>
+> >>>> @@ -53,7 +53,7 @@ static struct fpga_region *fpga_region_get(struct fpga_region *region)
+> >>>>  	}
+> >>>>  
+> >>>>  	get_device(dev);
+> >>>> -	if (!try_module_get(dev->parent->driver->owner)) {
+> >>>> +	if (!try_module_get(region->br_owner)) {
+> >>>>  		put_device(dev);
+> >>>>  		mutex_unlock(&region->mutex);
+> >>>>  		return ERR_PTR(-ENODEV);
+> >>>> @@ -75,9 +75,9 @@ static void fpga_region_put(struct fpga_region *region)
+> >>>>  
+> >>>>  	dev_dbg(dev, "put\n");
+> >>>>  
+> >>>> -	module_put(dev->parent->driver->owner);
+> >>>> -	put_device(dev);
+> >>>> +	module_put(region->br_owner);
+> >>>>  	mutex_unlock(&region->mutex);
+> >>>
+> >>> If there is concern the region would be freed after put_device(), then
+> >>> why still keep the sequence in fpga_region_get()?
+> >>
+> >> Ouch, sorry, I forgot to make the change also in fpga_region_get().
+> >>
+> >>> And is it possible region is freed before get_device() in
+> >>> fpga_region_get()?
+> >>
+> >> If the user follows the usual pattern (i.e., waiting for
 > > 
-> > why after 5 patches of removing dev_err's, here you are changing
-> > them to dev_dbg?
+> > I can see the only safe way is fpga_region_program_fpga() or fpga_region_get()
+> > should be included in:
+> > 
+> >   region = fpga_region_class_find();
+> >   ...
+> >   put_device(&region->dev);
+> > 
+> > That is to say, fpga_region_get() should not be called when there is no
+> > region dev reference hold beforehand. In this case, no use after release
+> > risk. That's why I was thinking about some documentation.
+> > 
+> > Another concern is we'd better keep the get/put operations symmetrical
+> > for easy maintaining, as long as it doesn't cause problem.
 > 
-> The reasoning was explained above:
+> Now I see your point. So, you suggest changing only the docs to clarify
+> that the region must be taken with fpga_region_class_find() before
+> programming it with fpga_region_program_fpga()?
+
+Like:
+
+The reference to the region must already been hold. E.g. by
+fpga_region_class_find().
+
 > 
-> > > Here, I did not delete the printout to support checking the termination
-> > > process. The other drivers in this series do not have this SMBus
-> > > specific termination step.
-> 
-> This is also why I converted two calls here to dev_dbg. But read on
-> first.
+> That's fine by me. However, this made me wonder why we need to take the
+> region dev with get_device() in fpga_region_program_fpga()->fpga_region_get().
+> If we assume that the user must always call fpga_region_class_find()
+> before programming with fpga_region_program_fpga(), why do we need the
+> double get?
 
-It would make sense if the debug would give some more
-information...
-
-> > It's still good, but if we want to be strict, errors should
-> > print errors: as we are returning -ETIMEDOUT, then we are
-> > treating the case as an error and we should print error.
-> 
-> I strongly disagree. While we use an errno, we don't know if this is a
-> real error yet. It is more a return value saying that the transfer timed
-> out. The client driver knows. For some I2C clients this may be an error,
-> but for an EEPROM this might be an "oh, it might still be erasing a
-> page, let's try again after some defined delay".
-> 
-> Think of 'i2cdetect': If we printout something in the -ENXIO case (no
-> device responded to the address), the log file would have more than 100
-> entries on a typical I2C bus. Although we know that -ENXIO will be the
-> majority of cases and are fine with it.
-> 
-> > As you did before, I would just remove the printout here.
-> 
-> Maybe we could because there is still the "Terminating the current
-> operation" string as debug message making the code flow still clear.
-
-... e.g. for me it's not totally right if we do:
-
-	dev_dbg("timed out")
-	return -ETIMEDOUT;
-
-Considering that this might not be a real error I would let the
-calling function decide and print. Indeed i801_access() is not
-even checking the error but letting the caller of smbus_xfer()
-decide.
-
-It would make more sense if we provide more information like:
-
-	dev_dbg("Terminating current operation because the bus is busy and we timed out");
-
-Just merged the two consecutive messages (we could still trim it
-a bit and reduce dmesg spam).
-
-The second /dev_err/dev_dbg/ in this file to me is fine (even
-though it's not really self explaining).
-
-> > I will wait a bit for more comments and take patches 1 to 5 so
-> > that I can unburden you a little from them.
-> 
-> The patches have no dependencies. To keep mail traffic low, I suggest
-> you continue reviewing and I only resend the i801 patch?
-
-Yeah... I'll wait a few more days and give more time for reviews
-and comments. I checked the rest of the series and it's fine.
-
-If you are willing to send a V2 you could send it as reply to
-this mail instead of resending everything.
+Yeah, I have the same concern when I visit this part. I don't think it
+is necessary.
 
 Thanks,
-Andi
+Yilun
+
+> 
+> Thanks,
+> Marco
+>  
+> >> fpga_region_program_fpga() to complete before calling
+> >> fpga_region_unregister()) there should be no problem. However, I think
+> >> releasing the device before unlocking the mutex contained in the context
+> >> associated with the device makes the code brittle and more prone to
+> >> problems.
+> >>
+> >>> Or we should clearly document how/when to use these functions?
+> >>  
+> >> I think it is not necessary to change the documentation since the
+> >> in-kernel programming API will not be affected by the change.
+> >>
+> [...]
+> 
