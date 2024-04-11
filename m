@@ -1,124 +1,87 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1441426E;
-	Thu, 11 Apr 2024 12:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8AA1EB26
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712840328; cv=none; b=BxaTmH85+ElhDCGhC/VfcW+/Yr985L4wQV0z0C4vQSOfnWlac9SALMsO1rN3+n9lpCzbUiXhKTBetsJeleMQUGsnWtPDx/L1tbSUejFdLd2FIRvK0cFMcruqMC4hDiOJSWfiNE9cCJX1Ok2Ee3/KaCFB81luYlOTWraUuOErO2s=
+	t=1712840457; cv=none; b=a8OydxmP9cPa/a4k6dTLHNusl/R8F/mJDIrT16loNojYK4Q154Jin2fbxA/Ci/w8B/5Z/XiJJiCxBCQQDFOu6YRiozVZdfEuBjTu60z/tAJQHi3CHuKAT6gXX0N5i//AKWfkLuetb8N2oxqxoAfNnGNCUF9u69SsCen/kjW3dek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712840328; c=relaxed/simple;
-	bh=BfL3on5Vy64bGST9xExl/O1IdYPFsrOFPQCut2DMxUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dzFn0nW+gSxD8QzBfBll3u6QMPq4rLBgxKnL6ggaXcq3D2QA1qT80bgDyOVkI//+dVerA2GEl7o02t3VneYaav+ofDd4rTDSd7dEa3pwiYBLyOnhESNbNiJRtp3ap7logfJGhLn+/XV8B6bhbCNwPtswWNXqFhoZmVyw0bDPrQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=q2r76ijW; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1712840457; c=relaxed/simple;
+	bh=98TrFhUIOGBPLgvKQW9yiisACadTMu7wmvJOzNKD9mg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n/STeNSgFq1gAgRH6m6DGKV2QC7NcfTAouq6lhk4uFcBfR0IvVhmY6bkPTAI+mc4a9+bBeqtwwKFauzZ7uAz7mc+SIiYBfyhG4XflmpHkwwukogWCJHR1VIFe4YcSrnufRcGo2kwLbVGo4yZ2RsZv9mpltLKNG1QKPsvwb040FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lLvYw14k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="q2r76ijW"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BCl6GX029833;
-	Thu, 11 Apr 2024 14:58:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=SCP/OM/t7m+EjiP6PIvcvQc/MwCc6wLfedFPwnczz9U=; b=q2
-	r76ijWKXtRiFqvL9fTrLv8DqwVeIzyFsQfcnygRPVNquSsWnMImP7RF0Ps/xdMq9
-	c35oceeUjLaj5xx4xkWQUcGmuysFeg6tsNhsCZtbK1nGBm5lQ3LRBgJM47Obn6VG
-	ZRE2xMSf3ShPfjFPpbW14/1yC3IQEzHbUC8eXBdvyAkserUy2CVOB2b9ExHzFXBT
-	h8ChFm1JUi+JXk85GZnXrnrZfSEH42ekvWZk0TERvnFsyhPweKQRzoNr10Shk/KZ
-	YvA/WjGZ2teNssP/8WQqfHWneUvmvtCzsTNMObyBsZ18+aPnBRIexZXQyodX25sX
-	Ei9xy53M3hhBq7T1JhVw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbfy13bq6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 14:58:24 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E705D4002D;
-	Thu, 11 Apr 2024 14:58:20 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0C59A214550;
-	Thu, 11 Apr 2024 14:57:38 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Apr
- 2024 14:57:37 +0200
-Message-ID: <278bccaa-edc0-4f3d-8e9e-6159d2b47394@foss.st.com>
-Date: Thu, 11 Apr 2024 14:57:36 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lLvYw14k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A1F7C43390;
+	Thu, 11 Apr 2024 13:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712840457;
+	bh=98TrFhUIOGBPLgvKQW9yiisACadTMu7wmvJOzNKD9mg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lLvYw14kjYbXUT/XD6jSaVNTNMrZ8qsDrIN+dhsW5GS1vLg75iHBz+EiNxAWF6bZA
+	 +DDpzPLfMKK/EZumhAKlCXuWZDmfs9N5oI8R/g+8aBxefLYu5NvwZ9bqfIfoFRMeTR
+	 416KlX1mEYk4y3T6EdmVgxMxfRJN+0J1vUvN6AUDnQzXwUlEuXiXFnTEPF8F+zRz5w
+	 mCNEU6hPzukTUNpSkVUMcMGLzP8goIMtfJePBCxdTVrfkAlGSVyBqDHGscsnywBskw
+	 g1/YdcdwgiwN7DikS9Scofv1kN3GB3FW4mgzsO2I/MNopOQmWawIXExW/J/LcbVEzB
+	 bB/GPNi5mQaJQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1ruu2w-003Twy-N3;
+	Thu, 11 Apr 2024 14:00:54 +0100
+Date: Thu, 11 Apr 2024 14:00:53 +0100
+Message-ID: <86pluwrr3u.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Guanrui Huang <guanrui.huang@linux.alibaba.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	shannon.zhao@linux.alibaba.com,
+	tglx@linutronix.de,
+	yuzenghui@huawei.com
+Subject: Re: [PATCH v2] irqchip/gic-v3-its: Fix double free on error
+In-Reply-To: <20240411115805.115673-1-guanrui.huang@linux.alibaba.com>
+References: <86r0fcrvsz.wl-maz@kernel.org>
+	<20240411115805.115673-1-guanrui.huang@linux.alibaba.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: dt-bindings: media: add access-controllers to
- STM32MP25 video codecs
-To: Rob Herring <robh@kernel.org>, Hugues Fruchet <hugues.fruchet@foss.st.com>
-CC: Rob Herring <robh+dt@kernel.org>, <linux-media@vger.kernel.org>,
-        Mauro
- Carvalho Chehab <mchehab@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-References: <20240410144222.714172-1-hugues.fruchet@foss.st.com>
- <171276671618.403884.13818480350194550959.robh@kernel.org>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <171276671618.403884.13818480350194550959.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_06,2024-04-09_01,2023-05-22_02
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: guanrui.huang@linux.alibaba.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shannon.zhao@linux.alibaba.com, tglx@linutronix.de, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Rob
+On Thu, 11 Apr 2024 12:58:05 +0100,
+Guanrui Huang <guanrui.huang@linux.alibaba.com> wrote:
+> 
+> if (vm != domain->host_data)
+> 
+> This is just a safety check. It looks unlikely happened.
 
-On 4/10/24 18:31, Rob Herring wrote:
-> 
-> On Wed, 10 Apr 2024 16:42:22 +0200, Hugues Fruchet wrote:
->> access-controllers is an optional property that allows a peripheral to
->> refer to one or more domain access controller(s).
->>
->> Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
->> ---
->>   .../devicetree/bindings/media/st,stm32mp25-video-codec.yaml   | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/st,stm32mp25-video-codec.yaml: access-controllers: missing type definition
-> 
-> doc reference errors (make refcheckdocs):
-> 
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240410144222.714172-1-hugues.fruchet@foss.st.com
-> 
-> The base for the series is generally the latest rc1. A different dependency
-> should be noted in *this* patch.
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-> 
-> pip3 install dtschema --upgrade
-> 
-> Please check and re-submit after running the above command yourself. Note
-> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-> your schema. However, it must be unset to test all examples with your schema.
-> 
+It's not a safety check. It is just papering over problems. If you
+don't trust the vm pointer, why do you trust the domain pointer? Why
+do you trust *anything* at all?
 
-This patch depends on STM32 firewall bus YAML which has been recently 
-added in stm32-next branch. I tested it on top of stm32-next and there 
-is no YAML issues (neiter dt-bindings checks nor dtbs_check). If you 
-agree to ack it, I could merge it on stm32-next.
+> After all, vm is obtained from the args. If the caller has a bug,
+> can we check here to avoid possible problems that may arise in later
+> code?
 
-Thanks
-Alex
+If the caller has a bug, please fix the caller. Don't paper over it.
+
+And you can remove the BUG_ON(!vm) which is equally useless.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
