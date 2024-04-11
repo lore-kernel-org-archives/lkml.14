@@ -1,109 +1,120 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtpcmd13147.aruba.it (smtpcmd13147.aruba.it [62.149.156.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08088DDD2;
-	Thu, 11 Apr 2024 15:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B44749F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849260; cv=none; b=Qxtxb3lsIeQpg55BfNPOoegNXvhuPF/VLQCrPyh7myAO2LlBJNC9SactbQg1dbUjFw/qweobxyQcS8oFSaxvnmxjNMumFlmWVdn1Nc967OsQlHUaYrqKAG99ZMmsszEuhcBeNO8GYp4ic1RRWj4reJwR9anbWttkpm34PO0PUn4=
+	t=1712849377; cv=none; b=gLO8tf4OBgNLlF7g8exOjIwOXbgn3jpZE8BCpfiRLrAyKBnoTNdlQjI+6VxkKOor5idrO9fH7TQOa36w9qBlqaKNW3+szdQkG79BWq/UKQgEMbCspyAcKqobO90aThvmm73/pWRqTLlzqJt6bJSzJM38BG1sqWil8qO8fRpoqGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849260; c=relaxed/simple;
-	bh=MOR8RtxiDkLGM2xaVJZv8KMXL6ANR67L9pVcj11H1Y8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCLTtFizLk/tfemR2TztXEhB8icS67FuHgHrI2lYOYCdIYBn6AgmOKadkYWzlJhKpQHhOJFWMU7l3QBGPBbm7zTCSeSezORczo4gNDx52mShItlJCMqwQAHZvS4FGY0lQMl5xZVVs2DXx8MgkHwA4ZEya6HCELT7ExduC3rGDmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=isOzmkaP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712849377; c=relaxed/simple;
+	bh=abzdobl6kFhj/cxNTOy15fncC/KDGWetUBzv0ypOZo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D5aZvy14hBubVrcXnf2mInl/eOdwfZVWsl/UbD5ZeLeCRwa/7B5QoS9W32GBT+GFEnsapDX/7497vwdzYMj2SHHU1AlLZt2HKUOnc6GrxBD/EtImEaSe34grBkGRG2AjGM8Asbx+r1TFORSF+ui7Wjc7rcU64CGFRsAK2bGn0Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=jRzWdfru; arc=none smtp.client-ip=62.149.156.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="isOzmkaP"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43BDjjO7011546;
-	Thu, 11 Apr 2024 15:27:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=SU914IS7nWQIMQGrQnY97
-	Qwb042xHHXVq9oEdqDgzAg=; b=isOzmkaPX906H0Bw5sB5wNJ3VQvtFBrHZBxMh
-	f0O1HxHfkpHcEGKAOLKfww4tiCNQgskhuO+3zho7Bt4CfAROCgK0QGMC3C903OYb
-	YLhoE8b4E3oc3hKSDXtaK/phVfOCJdG9LhIghSnyGJ3+kETdkHB4VDKnl1apQ3RN
-	G7lwQQ+8LyCUob5KROfOfhd0fMPWhgz35ELXuixFzr3cI7y9aKUFoXH3xTwqKIwj
-	kcR46BVcLiqDorLXt1fSuLd3jqDdIk3VeCrXLTbfJlbGl/6Uf8Ah0VMr8XUHl2Sc
-	gI+vZkOIo1Zdg4bcbyS+rR0+Wf35jWZllM7Sr9WJE598Kwbxg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xebq1sk69-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 15:27:25 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BFROHL025554
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 15:27:24 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 11 Apr 2024 08:27:23 -0700
-Date: Thu, 11 Apr 2024 08:27:22 -0700
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/msm: Drop msm_read/writel
-Message-ID: <ZhgBWv5BjDvQbWWi@hu-bjorande-lv.qualcomm.com>
-References: <20240410-topic-msm_rw-v1-1-e1fede9ffaba@linaro.org>
- <bwhfcobfkddhw2jdj6orvtbejap6ast7njahkbggj6lpelibqi@ae7357lpepmf>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="jRzWdfru"
+Received: from engicam ([77.32.15.153])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id uwMhr0X3qiznzuwMirpLmf; Thu, 11 Apr 2024 17:29:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712849368; bh=abzdobl6kFhj/cxNTOy15fncC/KDGWetUBzv0ypOZo8=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=jRzWdfrup0jJXs2SDRrY070NJDoze6PlPrPAxb7Bx8vG6HoTgRKWbRhpFz3dKW6+x
+	 oRL3T+QgL1yzMet7dDqqwyBsqmd/nrVD4jzGMMPqcwDSw0/UWWy0Kk7qNdTYXAMnhr
+	 vzoNeYyz0XkqVxUmykYmZ4EJffoqldpZnvy6cqcC4sBBzWGyFlOHzxVdE0zQkL1Xiv
+	 +4dhm4jx6/a2uoByEdSmGMgdHzoUoOkJ4mef2vNB33B/iQcc3TouR6jmHbUj7bdzHL
+	 jTB/QksWmABvaqOujvk2hQfNxCEjvIMOqy50NIw5XJuEh27NzQKm5WBnu9WaT9Oivz
+	 0FU7Gyz+J064g==
+Date: Thu, 11 Apr 2024 17:29:26 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: Re: [PATCH v2 1/1] regulator: pca9450: make warm reset on PMIC_RST_B
+ assertion
+Message-ID: <ZhgB1ifgrg0zeZtv@engicam>
+References: <20240411100138.366292-1-fabio.aiuto@engicam.com>
+ <20240411100138.366292-2-fabio.aiuto@engicam.com>
+ <b805ed86-ce3c-4ecb-8a46-59bfa4678c4b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bwhfcobfkddhw2jdj6orvtbejap6ast7njahkbggj6lpelibqi@ae7357lpepmf>
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: L2mm3oB7bSj7y85U5AUwn-1c4eJIxsqY
-X-Proofpoint-GUID: L2mm3oB7bSj7y85U5AUwn-1c4eJIxsqY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_08,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=879 spamscore=0
- suspectscore=0 clxscore=1011 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404110113
+In-Reply-To: <b805ed86-ce3c-4ecb-8a46-59bfa4678c4b@kernel.org>
+X-CMAE-Envelope: MS4xfGIjvZ3taEFr1w1uLq7uYueOLsi7SIVx2p/w6mM8uoMQrXGSlTb9JMvarRY52+akmUi2mcQ/CYAttTYRc3+3jhRfomEzinAspw2dkOiNfHjZDRGpitSC
+ 2fFJDvPNkVbbarFxJVrVloIEwhLcxtYjvrZ6K4atWWnweAzdJnCCXhQxvikt0oz58mxZ48/58q1Y9rqRZE0MePHHRrobfWPoM30Bw67LMJ1pGtolkzfoGYzR
+ +YuhpeL3DMlo8SB+b8uhPxoLqTxZRUCS4GW/eyxtY/i+tcDsc8MSXGsi3vG6EB+WfyhrjrSxPcXTOf5RxeUCfuwmAOYa3RJWaIC/9217fq3OnHytISvTMGlB
+ MhbpNBTL
 
-On Thu, Apr 11, 2024 at 04:31:41AM +0300, Dmitry Baryshkov wrote:
-> On Wed, Apr 10, 2024 at 11:52:52PM +0200, Konrad Dybcio wrote:
-[..]
-> > diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> > index e4275d3ad581..5a5dc3faa971 100644
-> > --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> > +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> > @@ -12,10 +12,10 @@
-> >  
-> >  #include "dsi.h"
-> >  
-> > -#define dsi_phy_read(offset) msm_readl((offset))
-> > -#define dsi_phy_write(offset, data) msm_writel((data), (offset))
-> > -#define dsi_phy_write_udelay(offset, data, delay_us) { msm_writel((data), (offset)); udelay(delay_us); }
-> > -#define dsi_phy_write_ndelay(offset, data, delay_ns) { msm_writel((data), (offset)); ndelay(delay_ns); }
-> > +#define dsi_phy_read(offset) readl((offset))
-> > +#define dsi_phy_write(offset, data) writel((data), (offset))
-> > +#define dsi_phy_write_udelay(offset, data, delay_us) { writel((data), (offset)); udelay(delay_us); }
-> > +#define dsi_phy_write_ndelay(offset, data, delay_ns) { writel((data), (offset)); ndelay(delay_ns); }
+Dear Krzysztof,
+
+Il Thu, Apr 11, 2024 at 04:46:06PM +0200, Krzysztof Kozlowski ha scritto:
+> On 11/04/2024 12:01, Fabio Aiuto wrote:
+> > The default configuration of the PMIC behavior makes the PMIC
+> > power cycle most regulators on PMIC_RST_B assertion. This power
+> > cycling causes the memory contents of OCRAM to be lost.
+> > Some systems needs some memory that survives reset and
+> > reboot, therefore this patch is created.
+> > 
+> > This patch extends commit 2364a64d0673 ("regulator: pca9450:
+> > Make warm reset on WDOG_B assertion") to the other reset
+> > input source PMIC_RST_B as per pmic specs.
+> > 
+> > CC: Matteo Lisi <matteo.lisi@engicam.com>
+> > CC: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+> > Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+> > ---
+> >  .../bindings/regulator/nxp,pca9450-regulator.yaml     |  6 ++++++
 > 
-> What about also inlining these wrappers?
+> Please run scripts/checkpatch.pl and fix reported warnings. Then please
+> run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
+> Some warnings can be ignored, especially from --strict run, but the code
+> here looks like it needs a fix. Feel free to get in touch if the warning
+> is not clear.
 > 
+> >  drivers/regulator/pca9450-regulator.c                 | 11 ++++++++---
+> >  include/linux/regulator/pca9450.h                     |  6 ++++++
+> >  3 files changed, 20 insertions(+), 3 deletions(-)
+> > 
+> 
+> Please use scripts/get_maintainers.pl to get a list of necessary people
+> and lists to CC. It might happen, that command when run on an older
+> kernel, gives you outdated entries. Therefore please be sure you base
+> your patches on recent Linux kernel.
+> 
+> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+> people, so fix your workflow. Tools might also fail if you work on some
+> ancient tree (don't, instead use mainline), work on fork of kernel
+> (don't, instead use mainline) or you ignore some maintainers (really
+> don't). Just use b4 and everything should be fine, although remember
+> about `b4 prep --auto-to-cc` if you added new patches to the patchset.
+> 
+> You missed at least devicetree list (maybe more), so this won't be
+> tested by automated tooling. Performing review on untested code might be
+> a waste of time, thus I will skip this patch entirely till you follow
+> the process allowing the patch to be tested.
+> 
+> Please kindly resend and include all necessary To/Cc entries.
+> 
+> 
+> 
+> Also: underscores are not allowed in property names.
 
-But that should be done in a separate commit, no?
+thanks a lot for all suggestions, will send a patchset soon.
 
-PS. Too much scrolling to find your comments, please trim your replies.
+kind regards,
 
-Thanks,
-Bjorn
+fabio
+
+> 
+> Best regards,
+> Krzysztof
+> 
