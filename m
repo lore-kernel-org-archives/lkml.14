@@ -1,166 +1,220 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A18C14F61;
-	Thu, 11 Apr 2024 15:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEFED13FF6;
+	Thu, 11 Apr 2024 15:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848588; cv=none; b=g/oGY3gdyxZSQKTM5rAgDGq5W8U75vqNcryxxuKna10ZHSzS+eD0FG0v2Xk2/adG50N2zSpbkm6vs9j5EROAGCbvPaUvHGZOM1e59KqqSIXRdtHw1tHNeuIXMZA+6JngMgfZ9l2rLyQpwIog4ccQqA2xNDJ/bU3+0pU2pU+xBhM=
+	t=1712848713; cv=none; b=GvszkhN5W+fop/0NG5LFmNasgV+qrsSwyuzDZv6qxLdrJc+7i5hqZroUswAriCAmBSMfmNVnllI4ORVV8G8KiTdZFjNY5+a24gO4MI1VcyVbqZAMpjX9thnpf3ga8ha3+4POEeXaCgZ3EUzz3Y8CjqXQUwZHiyG3kYe8n3tC89M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712848588; c=relaxed/simple;
-	bh=lVC9B1IxKNezJlsW9o1nTkrk+HcRCjDg79ZgiyQJjWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BnwXBPdYS0Tp0c4pbbAJDPq9whEua5HwAUSrfP4KkYQqvExv/dAZ1vgOY5nazVpkW7Zjtwc8rkMwgAn3YoimG7ITBWXeX0UHEtHwk7f5R5PLcdKqf8h1g1Q1yMXlo84DMhJrReClUJDm9e0qNJnuRIYEGRLtWbVnNvoaFbWNMkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b0uoEBIw; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b0uoEBIw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712848586; x=1744384586;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lVC9B1IxKNezJlsW9o1nTkrk+HcRCjDg79ZgiyQJjWM=;
-  b=b0uoEBIwDxosro6wO1mJMXDsrzPYp/YClmmXKUJj6+Utuc7zhoz7rsNE
-   BtV1cWDmWYzyt8srbn4f+SMSD2QKSnAmmqgMFp1L6n8SAYmEJRD4/GgsI
-   +gShWzNiw160O5XpUK2gH6Rm7gwayy43mN5GmMbHlkNFWnXCu2RZLuTzv
-   NpuvASUYN0OBh7d+yKwr4I767pvGhqPCd9yQ1B2uJKgdZ64o6G7BfThI1
-   52Kl8W0h7SeAOnnwGYr8MrjtE02P59slJGGq7hUkxUGbvAom+yMTIrIlK
-   2TNIAU+3vowTyAdbzwTsA1dAnuWXg6zESbDEmpiJqyMaxXKGUbrJW+cG9
-   w==;
-X-CSE-ConnectionGUID: ALYiUuGoTjqWAfYmmhaxPA==
-X-CSE-MsgGUID: H3mMwBL/TKaQt+n6Y+YFww==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8123111"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8123111"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:16:25 -0700
-X-CSE-ConnectionGUID: V5RbhwPNR2SR5w/fw0G6Xg==
-X-CSE-MsgGUID: pgvLL74GRxOGz//JyPY66A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="21522233"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.242.48]) ([10.124.242.48])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:16:22 -0700
-Message-ID: <2c11bb62-874e-4e9e-89b1-859df5b560bc@intel.com>
-Date: Thu, 11 Apr 2024 23:16:19 +0800
+	s=arc-20240116; t=1712848713; c=relaxed/simple;
+	bh=NQqcyGqgDOL6Kp/5gAj8Hg3naHUnvrOWmSGNERpOGF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pRe2bWMVezOGGIkggXQRNOAv8paylQ7gN4c5gdc2FZXNSm5CzR1z76hGEIt4MqxUf2TMF8g9+1LC+6Z5ly85/xkNMWdNoyMHDZ/xJThRwmHM9utBuVwJywWU81YHmPXJjyUQS1eVO7g1V4kYbzQVhVuUuGt7DmoXC/JHEIqXHoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: by air.basealt.ru (Postfix, from userid 490)
+	id 0C5242F20242; Thu, 11 Apr 2024 15:18:21 +0000 (UTC)
+X-Spam-Level: 
+Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
+	by air.basealt.ru (Postfix) with ESMTPSA id 7BE132F20238;
+	Thu, 11 Apr 2024 15:18:15 +0000 (UTC)
+From: kovalev@altlinux.org
+To: marcel@holtmann.org,
+	johan.hedberg@gmail.com,
+	luiz.dentz@gmail.com,
+	linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: lvc-project@linuxtesting.org,
+	nickel@altlinux.org,
+	oficerovas@altlinux.org,
+	dutyrok@altlinux.org,
+	Vasiliy Kovalev <kovalev@altlinux.org>,
+	stable@vger.kernel.org
+Subject: [PATCH net] Bluetooth: hci_event: fix double hci_conn_drop() when conn->state == BT_CONNECTED
+Date: Thu, 11 Apr 2024 18:18:10 +0300
+Message-Id: <20240411151810.403167-1-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [ANNOUNCE] PUCK Notes - 2024.04.03 - TDX Upstreaming Strategy
-To: Sean Christopherson <seanjc@google.com>,
- Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc: "davidskidmore@google.com" <davidskidmore@google.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "srutherford@google.com" <srutherford@google.com>,
- "pankaj.gupta@amd.com" <pankaj.gupta@amd.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- Isaku Yamahata <isaku.yamahata@intel.com>, Wei W Wang <wei.w.wang@intel.com>
-References: <ZhQ8UCf40UeGyfE_@google.com>
- <5faaeaa7bc66dbc4ea86a64ef8e8f9b22fd22ef4.camel@intel.com>
- <ZhRxWxRLbnrqwQYw@google.com>
- <957b26d18ba7db611ed6582366066667267d10b8.camel@intel.com>
- <ZhSb28hHoyJ55-ga@google.com>
- <8b40f8b1d1fa915116ef1c95a13db0e55d3d91f2.camel@intel.com>
- <ZhVdh4afvTPq5ssx@google.com>
- <4ae4769a6f343a2f4d3648e4348810df069f24b7.camel@intel.com>
- <ZhVsHVqaff7AKagu@google.com>
- <b1d112bf0ff55073c4e33a76377f17d48dc038ac.camel@intel.com>
- <ZhfyNLKsTBUOI7Vp@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <ZhfyNLKsTBUOI7Vp@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/11/2024 10:22 PM, Sean Christopherson wrote:
-> On Thu, Apr 11, 2024, Rick P Edgecombe wrote:
->> On Tue, 2024-04-09 at 09:26 -0700, Sean Christopherson wrote:
->>>> Haha, if this is the confusion, I see why you reacted that way to "JSON".
->>>> That would be quite the curious choice for a TDX module API.
->>>>
->>>> So it is easy to convert it to a C struct and embed it in KVM. It's just not
->>>> that useful because it will not necessarily be valid for future TDX modules.
->>>
->>> No, I don't want to embed anything in KVM, that's the exact same as hardcoding
->>> crud into KVM, which is what I want to avoid.  I want to be able to roll out a
->>> new TDX module with any kernel changes, and I want userspace to be able to
->>> assert
->>> that, for a given TDX module, the effective guest CPUID configuration aligns
->>> with
->>> userspace's desired the vCPU model, i.e. that the value of fixed bits match up
->>> with the guest CPUID that userspace wants to define.
->>>
->>> Maybe that just means converting the JSON file into some binary format that
->>> the
->>> kernel can already parse.  But I want Intel to commit to providing that
->>> metadata
->>> along with every TDX module.
->>
->> Oof. It turns out in one of the JSON files there is a description of a different
->> interface (TDX module runtime interface) that provides a way to read CPUID data
->> that is configured in a TD, including fixed bits. It works like:
->> 1. VMM queries which CPUID bits are directly configurable.
->> 2. VMM provides directly configurable CPUID bits, along with XFAM and
->> ATTRIBUTES, via TDH.MNG.INIT. (KVM_TDX_INIT_VM)
->> 3. Then VMM can use this other interface via TDH.MNG.RD, to query the resulting
->> values of specific CPUID leafs.
->>
->> This does not provide a way to query the fixed bits specifically, it tells you
->> what ended up getting configuring in a specific TD, which includes the fixed
->> bits and anything else. So we need to do KVM_TDX_INIT_VM before KVM_SET_CPUID in
->> order to have something to check against. But there was discussion of
->> KVM_SET_CPUID on CPU0 having the CPUID state to pass to KVM_TDX_INIT_VM. So that
->> would need to be sorted.
->>
->> If we pass the directly configurable values with KVM_TDX_INIT_VM, like we do
->> today, then the data provided by this interface should allow us to check
->> consistency between KVM_SET_CPUID and the actual configured TD CPUID behavior.
-> 
-> I think it would be a good (optional?) sanity check, e.g. KVM_BUG_ON() if the
-> post-KVM_TDX_INIT_VM CPUID set doesn't match KVM's internal data.  But that alone
-> provides a terrible experience for userspace.
-> 
->   - The VMM would still need to hardcode knowledge of fixed bits, without a way
->     to do a sanity check of its own.
+From: Vasiliy Kovalev <kovalev@altlinux.org>
 
-Maybe we can do it this way to avoid hardcode:
+There is no need to drop the connection of some functions in which the
+conn->state in BT_CONNECTED is marked, since in the future the same check
+takes place (for example, in the hci_encrypt_change_evt() function) and
+the hci_conn_drop() is called.
 
-1. KVM can get the configurable CPUID bits from TDX module with 
-TDH.SYS.RD (they are the old info of TD_SYSINFO.CPUID_CONFIG[]), and 
-report them to userspace;
+Otherwise, the conn->refcnt will become below zero, which will trigger a
+warning and may cause a crash on kernels with the panic_on_warn parameter
+enabled.
 
-2. userspace configures the configurable CPUID bits and pass them to KVM 
-to init TD.
+Syzkaller hit 'WARNING in hci_conn_timeout' bug.
 
-3. After TD is initialized via TDH.MNG.INIT, KVM can get a full CPUID 
-list of TD via TDH.MNG.RD. KVM provides interface to report the full 
-CPUID list to userspace.
+[   23.485892] Bluetooth: Core ver 2.22
+[   23.485916] NET: Registered PF_BLUETOOTH protocol family
+[   23.485917] Bluetooth: HCI device and connection manager initialized
+[   23.486407] Bluetooth: HCI socket layer initialized
+[   23.486410] Bluetooth: L2CAP socket layer initialized
+[   23.486413] Bluetooth: SCO socket layer initialized
+[   24.507112] Bluetooth: hci0: unexpected cc 0x0c03 length: 249 > 1
+[   24.507142] Bluetooth: hci0: unexpected cc 0x1003 length: 249 > 9
+[   24.507165] Bluetooth: hci0: unexpected cc 0x1001 length: 249 > 9
+[   24.508091] Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > 4
+[   24.508109] Bluetooth: hci0: unexpected cc 0x0c25 length: 249 > 3
+[   24.508117] Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > 2
+[   24.545962] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+[   24.545969] Bluetooth: BNEP filters: protocol multicast
+[   24.545973] Bluetooth: BNEP socket layer initialized
+[   24.547521] Bluetooth: MGMT ver 1.22
+[   26.553008] Bluetooth: hci0: command tx timeout
+[   26.561518] Bluetooth: RFCOMM TTY layer initialized
+[   26.561526] Bluetooth: RFCOMM socket layer initialized
+[   26.561532] Bluetooth: RFCOMM ver 1.11
+[   28.602024] Bluetooth: hci0: Opcode 0x0c13 failed: -110
+[   28.602054] Bluetooth: hci0: command tx timeout
+[   30.650011] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   30.650021] Bluetooth: hci0: command tx timeout
+[   32.696973] Bluetooth: hci0: command tx timeout
+[   32.696985] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   34.744973] Bluetooth: hci0: command 0x0406 tx timeout
+[   34.745008] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   36.792966] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   36.792980] Bluetooth: hci0: command 0x0406 tx timeout
+[   38.841027] Bluetooth: hci0: command 0x0406 tx timeout
+[   38.841035] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   40.889026] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   40.889999] Bluetooth: hci0: command 0x0406 tx timeout
+[   40.890012] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   40.893629] NET: Registered PF_ALG protocol family
+[   42.937008] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   42.937023] Bluetooth: hci0: command 0x0406 tx timeout
+[   44.984984] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   44.985008] Bluetooth: hci0: command 0x0406 tx timeout
+[   47.033023] Bluetooth: hci0: Opcode 0x0c1a failed: -110
+[   47.033044] Bluetooth: hci0: command 0x0406 tx timeout
+[   49.080976] Bluetooth: hci0: command 0x0406 tx timeout
+[   49.080985] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   51.129140] Bluetooth: hci0: Opcode 0x0c24 failed: -110
+[   51.130051] Bluetooth: hci0: command 0x0406 tx timeout
+[   53.177011] Bluetooth: hci0: command 0x0406 tx timeout
+[   55.225969] Bluetooth: hci0: command 0x0406 tx timeout
+[   57.272968] Bluetooth: hci0: command 0x0406 tx timeout
+[   59.320982] Bluetooth: hci0: command 0x0406 tx timeout
+[   61.368989] Bluetooth: hci0: command 0x0406 tx timeout
+[  148.474066] ------------[ cut here ]------------
+[  148.474072] WARNING: CPU: 0 PID: 3835 at net/bluetooth/hci_conn.c:612
+				hci_conn_timeout+0x16/0x60 [bluetooth]
+[  148.474115] Modules linked in: cmac algif_hash algif_skcipher af_alg
+	rfcomm bnep hci_vhci bluetooth ecdh_generic uinput af_packet
+	rfkill joydev hid_generic usbhid hid qrtr intel_rapl_msr
+	intel_rapl_common intel_pmc_core kvm_intel nls_utf8 iTCO_wdt
+	intel_pmc_bxt iTCO_vendor_support nls_cp866 vfat fat kvm irqbypass
+	crct10dif_pclmul crc32_pclmul snd_hda_codec_generic crc32c_intel
+	ghash_clmulni_intel ledtrig_audio sha512_ssse3 snd_hda_intel
+	sha256_ssse3 sha1_ssse3 snd_intel_dspcfg snd_intel_sdw_acpi
+	snd_hda_codec aesni_intel crypto_simd cryptd i2c_i801 snd_hda_core
+	psmouse snd_hwdep i2c_smbus xhci_pci pcspkr snd_pcm lpc_ich
+	xhci_pci_renesas xhci_hcd tiny_power_button qemu_fw_cfg button
+	sch_fq_codel vboxvideo drm_vram_helper drm_ttm_helper ttm vboxsf
+	vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi
+	snd_seq_device snd_timer snd soundcore msr fuse efi_pstore dm_mod
+	ip_tables x_tables autofs4 virtio_gpu virtio_net virtio_dma_buf
+	drm_shmem_helper net_failover drm_kms_helper
+[  148.474210]  virtio_rng drm virtio_scsi rng_core virtio_console
+	virtio_balloon virtio_blk failover ahci libahci libata evdev
+	input_leds serio_raw scsi_mod scsi_common virtio_pci
+	virtio_pci_legacy_dev virtio_pci_modern_dev virtio_ring virtio
+	intel_agp intel_gtt
+[  148.474234] CPU: 0 PID: 3835 Comm: kworker/u5:2
+		Not tainted 6.1.85-un-def-alt1 #1
+[  148.474238] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+		BIOS 1.16.0-alt1 04/01/2014
+[  148.474241] Workqueue: hci0 hci_conn_timeout [bluetooth]
+[  148.474265] RIP: 0010:hci_conn_timeout+0x16/0x60 [bluetooth]
+[  148.474288] Code: 00 00 66 89 44 24 06 e8 58 a7 ff ff eb a8 e8 41 7b ee
+		c1 90 0f 1f 44 00 00 8b 87 20 fd ff ff 85 c0 78 07 74 07 c3
+		cc cc cc cc <0f> 0b 55 0f b6 87 49 fd ff ff 48 8d af 10 fd
+		ff ff 3c 01 74 12 be
+[  148.474291] RSP: 0018:ffffa7fd80b53e90 EFLAGS: 00010286
+[  148.474295] RAX: 00000000fffe728b RBX: ffff8959c46ab180 RCX: ffff8959c3b70028
+[  148.474297] RDX: 0000000000000001 RSI: ffff8959c86ce0b0 RDI: ffff895a105aeaf0
+[  148.474299] RBP: ffff895a105aeaf0 R08: ffff8959c86ce0b0 R09: ffff8959c46ab1f4
+[  148.474301] R10: 0000000000000005 R11: 0000000000000005 R12: ffff8959c3b70000
+[  148.474302] R13: ffff8959ec495400 R14: 0000000000000000 R15: ffff8959ec495405
+[  148.474305] FS:  0000000000000000(0000) GS:ffff895a3dc00000(0000)
+						knlGS:0000000000000000
+[  148.474308] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  148.474310] CR2: 00007f2a1b7baa48 CR3: 0000000034b98000 CR4: 0000000000750ef0
+[  148.474317] PKRU: 55555554
+[  148.474319] Call Trace:
+[  148.474323]  <TASK>
+[  148.474327]  ? __warn+0x79/0xc0
+[  148.474343]  ? hci_conn_timeout+0x16/0x60 [bluetooth]
+[  148.474364]  ? report_bug+0xff/0x150
+[  148.474375]  ? handle_bug+0x49/0xa0
+[  148.474398]  ? exc_invalid_op+0x14/0x70
+[  148.474402]  ? asm_exc_invalid_op+0x16/0x20
+[  148.474408]  ? hci_conn_timeout+0x16/0x60 [bluetooth]
+[  148.474441]  process_one_work+0x217/0x3e0
+[  148.474467]  worker_thread+0x4d/0x3c0
+[  148.474473]  ? process_one_work+0x3e0/0x3e0
+[  148.474478]  kthread+0xd6/0x100
+[  148.474482]  ? kthread_complete_and_exit+0x20/0x20
+[  148.474486]  ret_from_fork+0x1f/0x30
+[  148.474500]  </TASK>
+[  148.474502] ---[ end trace 0000000000000000 ]---
 
-4. Userspace can sanity check the full CPUID list.
-    - the configurable bits reported in #1 should be what they have been 
-configured;
-    - the dynamic bits and other special bits will be checked case by case;
-    - the rest bits should be fixed. If the value is not what user 
-wants, userspace prints error to user and stop.
+Fixes: 0fe29fd1cd77 ("Bluetooth: Read LE remote features during connection establishment")
+Fixes: 769be974d0c7 ("[Bluetooth] Use ACL config stage to retrieve remote features")
+Fixes: f8558555f31e ("[Bluetooth] Initiate authentication during connection establishment")
+Cc: stable@vger.kernel.org
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+---
+ net/bluetooth/hci_event.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Does it sounds reasonable?
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index a8b8cfebe0180c..64477e1bde7cec 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3529,7 +3529,6 @@ static void hci_auth_complete_evt(struct hci_dev *hdev, void *data,
+ 		} else {
+ 			conn->state = BT_CONNECTED;
+ 			hci_connect_cfm(conn, ev->status);
+-			hci_conn_drop(conn);
+ 		}
+ 	} else {
+ 		hci_auth_cfm(conn, ev->status);
+@@ -3776,7 +3775,6 @@ static void hci_remote_features_evt(struct hci_dev *hdev, void *data,
+ 	if (!hci_outgoing_auth_needed(hdev, conn)) {
+ 		conn->state = BT_CONNECTED;
+ 		hci_connect_cfm(conn, ev->status);
+-		hci_conn_drop(conn);
+ 	}
+ 
+ unlock:
+@@ -5030,7 +5028,6 @@ static void hci_remote_ext_features_evt(struct hci_dev *hdev, void *data,
+ 	if (!hci_outgoing_auth_needed(hdev, conn)) {
+ 		conn->state = BT_CONNECTED;
+ 		hci_connect_cfm(conn, ev->status);
+-		hci_conn_drop(conn);
+ 	}
+ 
+ unlock:
+@@ -6561,7 +6558,6 @@ static void hci_le_remote_feat_complete_evt(struct hci_dev *hdev, void *data,
+ 
+ 			conn->state = BT_CONNECTED;
+ 			hci_connect_cfm(conn, status);
+-			hci_conn_drop(conn);
+ 		}
+ 	}
+ 
+-- 
+2.33.8
 
->   - Lack of a sanity check means the VMM can't fail VM creation early.
-> 
->   - KVM_SET_CPUID2 doesn't have a way to inform userspace _which_ CPUID bits are
->     "bad".
-> 
->   - Neither userspace nor KVM can programming detect when bits are fixed vs.
->     flexible.  E.g. it's not impossible that userspace would want to do X if a
->     feature is fixed, but Y if it's flexible.
-
-flexible (configurable) bits is known to VMM (KVM and userspace) because 
-TDX module has interface to report them. So we can treat a bit as fixed 
-if it is not reported in the flexible group. (of course the dynamic bits 
-are special and excluded.)
