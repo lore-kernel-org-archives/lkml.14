@@ -1,95 +1,124 @@
-Received: from forward102c.mail.yandex.net (forward102c.mail.yandex.net [178.154.239.213])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B317C14884E;
-	Thu, 11 Apr 2024 10:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.213
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D9914600E;
+	Thu, 11 Apr 2024 10:30:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712831442; cv=none; b=XSv7r0i4b2LGOd7rjH+gQk7bgnBWkPq9TZnWOGM8s+ZvtCxI5ZIWTQRKj9u5LwuHnpUvh0yDtu039CGMQMIBqMDdXQ/eCtz+/75So1tkp5fQs5vWwx7QHUGyG/w63zfUEN5FuNpzUQIvxI/0Qpnm4WCBdUQT1+UVy2GC3yQ3LZU=
+	t=1712831456; cv=none; b=OzS74lzhynEwYX2fFhOLfiBPZnYAf7hChAv9BgH8IW4C9jGkTsmUgoSVMFUyR+Mq6ziIXuIoVYloaQ426KINh118OhSd0ogMFr7ClBq8IoxOxYgBDzwa2QWksk7KIcELedFwaKnRb3Ra/T4i8CvJJClFGqghn4+5DbUsnkpk+yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712831442; c=relaxed/simple;
-	bh=Tyd5sjSQq0uCOIAQla9jv62vIEKZInGcvL7SV3Eq3Zo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g5VJmF2qwjXehNWIgwwfiocrdJZF1Jv2hjQIKBqZNA2bCyqATFz+BznAt7WhRD5T9ms3PnUWsIFmTAlUJvKA9kPkL27dPuM7qgljQlVMSkJ8SIL0bAeHU05w8Of1XZEx77ZTI/KzgwWJ3ZYJpL2C3gfNh/Kv5b6Pk/d7kT8FtXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=u1S11NYq; arc=none smtp.client-ip=178.154.239.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1712831456; c=relaxed/simple;
+	bh=wRis+jvLiwfcvURS3pt9dGRgB6cIii2qwGUUMZpjF6g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZiafAL3cVqGJHw2JOtIUSfapg0DeUqh1ORoA3++8TBTuU8A1Kfkm2v3kIGdaEkEibz2l/4poY7Iu5xS9yACRucF/0FcK0MuzkOAbYhsh9l2PYTyKVeaTe5BfbRUNYLcdsWr4uqj0gKmJUIgUE8BnF3Xc8/xceIgrzFqN9+owsJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=qnR0lz6c; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="u1S11NYq"
-Received: from mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:40a8:0:640:e4a0:0])
-	by forward102c.mail.yandex.net (Yandex) with ESMTPS id CD7C8608C4;
-	Thu, 11 Apr 2024 13:30:29 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GUYvfB6Aa0U0-eq8haQBw;
-	Thu, 11 Apr 2024 13:30:29 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1712831429; bh=0U309rUe4lYr52AcQxtvvnxUZcPXlp+u/Y/o6hkGyZI=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=u1S11NYqae0MtTOiEqXrQt/PitXzQLm6BeWlLEi7t1094HbIapfPIH3QrrqzTdxmI
-	 YxZR9ZiEJtNBuJ1J49yFZru0joH/S5On00oyjUzwVTDR8biNGFfitIf/opSpFqDKjL
-	 bu2Gu0ZLWnoIOmfXuTLTm9hi2jFEeiQ/K7cxQoOs=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Mikhail Ukhin <mish.uxin2012@yandex.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Mikhail Ukhin <mish.uxin2012@yandex.ru>,
-	stable@vger.kernel.org,
-	linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pavel Koshutin <koshutin.pavel@yandex.ru>,
-	lvc-project@linuxtesting.org,
-	Artem Sadovnikov <ancowi69@gmail.com>,
-	Mikhail Ivanov <iwanov-23@bk.ru>
-Subject: [PATCH v2 5.10/5.15] ata: libata-scsi: check cdb length for VARIABLE_LENGTH_CMD commands
-Date: Thu, 11 Apr 2024 13:30:13 +0300
-Message-Id: <20240411103013.5547-1-mish.uxin2012@yandex.ru>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="qnR0lz6c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1712831454; x=1744367454;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wRis+jvLiwfcvURS3pt9dGRgB6cIii2qwGUUMZpjF6g=;
+  b=qnR0lz6cQJ0dslC09SxcEDakX3mqJKiW5FwYmT2jjz6D0jYEDUMRjrfS
+   n6SNolNt/C33IWIhEV96zynEUI6+7S+GFPAL+10wwydTzkewiSH9mxCuN
+   8KlPS291FgLnVdFWpPu6NlX7CagiVXzS/K/RF+21ODo/onap/LiCanEkQ
+   ZW2hEgb2cV4QdDa4gc7KCvd/e5J+q1o2kzaLif3DMVF0Z5TyaNIwMeMh8
+   2eprMGyBnk1AcdbLDBslZRlB88br9BzXAVPhRm+66NFh2c7jxRd/l6gin
+   WA4RZ1hz23pIF4qOLxRUobsFqTfpfpgS0o+YC5QhqYOBMWSTduzvmxkRG
+   g==;
+X-CSE-ConnectionGUID: 0of7XxqXRZujtHuEzDEvOw==
+X-CSE-MsgGUID: 5pyW+N2xTlub9U791V2XWA==
+X-IronPort-AV: E=Sophos;i="6.07,193,1708412400"; 
+   d="asc'?scan'208";a="251346984"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 03:30:53 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Apr 2024 03:30:44 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Thu, 11 Apr 2024 03:30:41 -0700
+Date: Thu, 11 Apr 2024 11:29:51 +0100
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Stephen Boyd <sboyd@kernel.org>
+CC: Sia Jee Heng <jeeheng.sia@starfivetech.com>, <aou@eecs.berkeley.edu>,
+	<conor@kernel.org>, <emil.renner.berthing@canonical.com>,
+	<hal.feng@starfivetech.com>, <kernel@esmil.dk>,
+	<krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+	<p.zabel@pengutronix.de>, <palmer@dabbelt.com>, <paul.walmsley@sifive.com>,
+	<robh+dt@kernel.org>, <xingyu.wu@starfivetech.com>,
+	<linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<leyfoon.tan@starfivetech.com>
+Subject: Re: [RFC v3 00/16] Basic clock and reset support for StarFive JH8100
+ RISC-V SoC
+Message-ID: <20240411-euphemism-ended-706f23d4a5ca@wendy>
+References: <20240110133128.286657-1-jeeheng.sia@starfivetech.com>
+ <a83130157adf70f6f58f4d2e6b9d25db.sboyd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lisQmnqROX183EFJ"
+Content-Disposition: inline
+In-Reply-To: <a83130157adf70f6f58f4d2e6b9d25db.sboyd@kernel.org>
 
-No upstream commit exists for this patch.
+--lisQmnqROX183EFJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fuzzing of 5.10 stable branch reports a slab-out-of-bounds error in
-ata_scsi_pass_thru.
+On Thu, Apr 11, 2024 at 12:40:09AM -0700, Stephen Boyd wrote:
+> Quoting Sia Jee Heng (2024-01-10 05:31:12)
+> > This patch series enabled basic clock & reset support for StarFive
+> > JH8100 SoC.
+> >=20
+> > This patch series depends on the Initial device tree support for
+> > StarFive JH8100 SoC patch series which can be found at [1].
+> >=20
+> > As it is recommended to refrain from merging fundamental patches like
+> > Device Tree, Clock & Reset, and PINCTRL tested on FPGA/Emulator, into t=
+he
+> > RISC-V Mainline, this patch series has been renamed to "RFC" patches. Y=
+et,
+> > thanks to the reviewers who have reviewed the patches at [2]. The chang=
+es
+> > are captured below.
+>=20
+> I don't think that's what should be happening. Instead, clk patches
+> should be sent to clk maintainers, reset patches to reset maintainers,
+> pinctrl patches to pinctrl maintainers, etc. The DTS can be sent later
+> when it's no longer an FPGA/Emulator? Right now I'm ignoring this series
+> because it's tagged as an RFC.
 
-The error is fixed in 5.18 by commit ce70fd9a551a ("scsi: core: Remove the
-cmd field from struct scsi_request") upstream.
-Backporting this commit would require significant changes to the code so
-it is bettter to use a simple fix for that particular error.
+Since this comes back to something I said, what I didn't want to happen
+was a bunch of pinctrl/clock/reset dt-binding headers that getting merged
+(and therefore exported to other projects) and then have those change
+later on when the chip was taped out. I don't really care if the drivers
+themselves get merged. If the JH8100 is being taped out soon (or already
+has been internally) and there's unlikely to be any changes, there's not
+really a reason to block the binding headers any more.
 
-The problem is that the length of the received SCSI command is not
-validated if scsi_op == VARIABLE_LENGTH_CMD. It can lead to out-of-bounds
-reading if the user sends a request with SCSI command of length less than
-32.
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+--lisQmnqROX183EFJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
-Signed-off-by: Mikhail Ivanov <iwanov-23@bk.ru>
-Signed-off-by: Mikhail Ukhin <mish.uxin2012@yandex.ru>
----
- v2: The new addresses were added and the text was updated. 
- drivers/ata/libata-scsi.c | 3 +++
- 1 file changed, 3 insertions(+)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
-index dfa090ccd21c..77589e911d3d 100644
---- a/drivers/ata/libata-scsi.c
-+++ b/drivers/ata/libata-scsi.c
-@@ -4065,6 +4065,9 @@ int __ata_scsi_queuecmd(struct scsi_cmnd *scmd, struct ata_device *dev)
- 
- 	if (unlikely(!scmd->cmd_len))
- 		goto bad_cdb_len;
-+
-+	if (scsi_op == VARIABLE_LENGTH_CMD && scmd->cmd_len < 32)
-+		goto bad_cdb_len;
- 
- 	if (dev->class == ATA_DEV_ATA || dev->class == ATA_DEV_ZAC) {
- 		if (unlikely(scmd->cmd_len > dev->cdb_len))
--- 
-2.25.1
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhe7ngAKCRB4tDGHoIJi
+0oN8AQDJCMKWJWymNQyrXdSAIbIQWmLkJXGtohqPQ27J6cA5rQD9FaZ3m59i+b/i
+qcLnFDJe8daHP7ulI/YtwBRLJ+WBHAs=
+=Bkv+
+-----END PGP SIGNATURE-----
 
+--lisQmnqROX183EFJ--
