@@ -1,63 +1,63 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9A31C78A3
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD441C78B8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849913; cv=none; b=R3Qfqt1NEpCv/9HeQrbKPnCoS4cDhXVRdL7LnnmhAvcDoVx/auZGVk0UYgZQov7u38STSLolvYJ0WNKSp/RGy7KR+K9WK6R2Cy3EncM15r9pLxuWlZ0DUoFo/BZTzuOxll4oD035V1u+/+uacKObkuzX7yKrgs+CwJ6N+KugEXc=
+	t=1712849915; cv=none; b=k5pkd6qkDubwlqcrv0mZz42SfYoqxnC0G+l7JgoIhU/d7ApEiyENlwR8JOW9WnP0lktPiMj9aURxTUEzHSFAbW+HRzJFhojDSGcQBEPL9yu6FVTM8osX/xhZmjXWoHIlV0/gq6sAZ2qshk+5Zv8u6KkFs92UEeOk/itcMpMxffg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849913; c=relaxed/simple;
-	bh=BasxfhQEod1bJbCsdbb2lOU/at88LePhdvuBSWPDt+8=;
+	s=arc-20240116; t=1712849915; c=relaxed/simple;
+	bh=+a9yMv63GNbPPQbv5rx9qnLZOj3TsWDDG0kOJBo0jB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ul7CME5s3/manVRHZkkhJlT1/Zt9tWdpfU7oF0c4wRj8WGC5qPPCIgrOiU9uoedIhWF2rUQBjmOh5nJMRhpG2fhKz/lC6oXaV4RE7/Qec/4SCuARQeeoLhP9ukrVWzRrke1AyNYUjVeDruQFsLH14wgFgRFLisZEHTBwOb3Hbpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WffN6EoQ; arc=none smtp.client-ip=209.85.166.46
+	 MIME-Version; b=fXK+XSqx+eTsUo5493dSB6kP9H7PcWedcC+88PCBQ7qrUe8tytV36r0gP6Whu2zohvsLjhpUguTyKOyDfj68V3YhuWeha3RBvwNLevowt4xew+1xGzCj3pfTqHFXHyukGGlNwopJO5+am5lR05wAsiRDLvcc8VLldIk7jvnYWzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=STWKswIH; arc=none smtp.client-ip=209.85.166.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WffN6EoQ"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8995639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="STWKswIH"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69620339f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849910; x=1713454710; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849912; x=1713454712; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5wyltxKqyWDKiScpm9eN+uoTYMnZ87KTKt8KHo7rP74=;
-        b=WffN6EoQNThbn27nDgh3ZhwR9HzUyCr7FBcnuEHijBqFoZYeTSADnlieE8ifYfWXvC
-         k6AyuYku4yttTRiWQwzxH+6WDiw+4dcQWTSFur6UdcSIt/k6hggAkIf16dKBGa1CvAnk
-         db8Eeq5SFI2cLjUd3yg5D73T3DUrt3qrAlc8GWj1wZCuqr73KCVgaiqDi7KUJTqpcWfD
-         K2Bs3BV2H5FFw1TxUcaxJ64Wkcnj12vzjQIKuTj/VAPBzP+DkldjA8+cdzvESPDTlGiG
-         QlQXnazOqMW9yC/UsbV4bISp2zGdgJhT/Fcw+ISekjAUE0aOySZlKqyVYupaqMAX4I9G
-         fBsg==
+        bh=Y456vMouMnj4swZsS7YmKvdJiW0TUbGoVTArYCeV1kk=;
+        b=STWKswIHXUSrn9dnUrOd40DImLNjJa7djRZoanY/Wzr3QJeVB5V+t7WRxISgsOX90i
+         yv7y3CF2BSc66nA0JRsAkECUsNh16zhz0szhn/4yfJBXxNAXWZQxnWILtGxjdaESjJ5i
+         +W6oO739mSyOMJegy4FO7w7R2O9ofjJmLQQRTjowlRfASwadzFHIBH510gtLXwVuoCf6
+         nV3Y3S3Nh+tVBBarVII3kJiddnGXt8hJdkJygaDWhwMkZmhhlMPVhLRaj3U/GuoR9VdQ
+         3xvXHkpg7Tg4E+uxOXsawgmFJ06AxDHXa/hkznBOgtg+euZ/OdBfLZ4/FEoomoZzczCa
+         PkFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849910; x=1713454710;
+        d=1e100.net; s=20230601; t=1712849912; x=1713454712;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5wyltxKqyWDKiScpm9eN+uoTYMnZ87KTKt8KHo7rP74=;
-        b=J+2nL1UQJ0ZWjvWLXOHLp7wAWD8FsEcgvKcE23NM3bvy4EFgQOiFOxRb54Hat35Tz4
-         ieuSkx3BB+HcMWC276VMU8pB8oWPQd8i+eAMIfIAthqtLLr/2xPUePrarRsgY01WT9pK
-         j4P92LAnEVtAMzh/PA/a1eykxWpYzkluTWnbWRS2pRhXbTHD/p1i1FPWxx/POwLpQF8S
-         t7eKu6o6fgnZ+tiI+Ixc7SG9fHtE8UbaXjP1Byk+W9LqVc8mH4ke7oAinWBEp1+tvFnJ
-         vUACzd6nh0OBs+sHH+vUTjfkoYLMFkaQtELTIzImGXIhgqo3g5kHihxfjl+21qiBqou2
-         tZHw==
-X-Gm-Message-State: AOJu0Yxx0vsCl2vKbm73o7cnqwtUf4JknYZr0fxH8jn6uTQqrE9RVUhA
-	26uISbgv5y3teV2SZYLaOarTuSyzD99Um3D1J/b7iLZgo8uk6C4ZRejr9XdkSl7pURfOxkOMOjC
-	M
-X-Google-Smtp-Source: AGHT+IHgbydv83su+kgFyC6+IcuI6zRw/TO/axqCwmPZRj/J1EA/dAJi7AAFXUYX3xeR5zxVdpX4rQ==
-X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr187141ioj.2.1712849910038;
-        Thu, 11 Apr 2024 08:38:30 -0700 (PDT)
+        bh=Y456vMouMnj4swZsS7YmKvdJiW0TUbGoVTArYCeV1kk=;
+        b=ZjZ6XSPem2UeavPQk4iZ8G8z+Y9HUUDZY8GDANVMIt6Z8ity/4a4JPLs639BMma9ly
+         T6DSSRpqVSwfblwHlRD5V+WGvZpaHnjJ021Dg9TiRn9JvNYT2xo3f8IgcZy1H6s9tRbv
+         jvGb5E0Pr6FlpbTMPyJAkbW4PCdNeuTxcB1mfm5A0+Myvh1qB8lm2gXlryENSKP//wLF
+         dM/LY2EwRTbOC1WIwMqCBkQ5MXvfSJDJ3hUYl3yGN9h9H0FVY+HT6ZYe/85om61rPANd
+         kU/tAy9rN9YfnZAiy6CfxWAFz3LhCX/ucDeOZilNkyRy60Ncvn+/JchHeRXmiZ7NqxsB
+         qKlw==
+X-Gm-Message-State: AOJu0YykbV3fO6eV3C5bYaJtoMyC7jH1lyBsuoc7n2kBaG708co/cCrV
+	0TG3WJNaYmbHB44JRdA7KaMP3Kb6+BjFBg6+WLWDM7+LeMey0vHi38WMiBioX+25FvKQmOULOPf
+	9
+X-Google-Smtp-Source: AGHT+IE4OWXW2o2MsDWyflkQWF3oIitZ8eWiwp/C6ZBmEtntvHLaJ8FsEPNMCyIyO2SlrK0ayPwRlw==
+X-Received: by 2002:a6b:7b05:0:b0:7d6:60dc:bc8e with SMTP id l5-20020a6b7b05000000b007d660dcbc8emr199106iop.1.1712849912398;
+        Thu, 11 Apr 2024 08:38:32 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.28
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:38:28 -0700 (PDT)
+        Thu, 11 Apr 2024 08:38:31 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 246/437] watchdog: nv_tco: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:16:26 -0600
-Message-ID: <20240411153126.16201-247-axboe@kernel.dk>
+Subject: [PATCH 248/437] watchdog: pcwd_pci: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:16:28 -0600
+Message-ID: <20240411153126.16201-249-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,43 +71,70 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/watchdog/nv_tco.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/watchdog/pcwd_pci.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/watchdog/nv_tco.c b/drivers/watchdog/nv_tco.c
-index ac4a9c16341d..e9535ba7eba7 100644
---- a/drivers/watchdog/nv_tco.c
-+++ b/drivers/watchdog/nv_tco.c
-@@ -174,9 +174,9 @@ static int nv_tco_release(struct inode *inode, struct file *file)
- 	return 0;
- }
+diff --git a/drivers/watchdog/pcwd_pci.c b/drivers/watchdog/pcwd_pci.c
+index 54d86fcb1837..6b7b3bd2ed83 100644
+--- a/drivers/watchdog/pcwd_pci.c
++++ b/drivers/watchdog/pcwd_pci.c
+@@ -431,9 +431,9 @@ static int pcipcwd_get_timeleft(int *time_left)
+  *	/dev/watchdog handling
+  */
  
--static ssize_t nv_tco_write(struct file *file, const char __user *data,
--			    size_t len, loff_t *ppos)
-+static ssize_t nv_tco_write(struct kiocb *iocb, struct iov_iter *from)
+-static ssize_t pcipcwd_write(struct file *file, const char __user *data,
+-			     size_t len, loff_t *ppos)
++static ssize_t pcipcwd_write(struct kiocb *iocb, struct iov_iter *from)
  {
 +	size_t len = iov_iter_count(from);
  	/* See if we got the magic character 'V' and reload the timer */
  	if (len) {
  		if (!nowayout) {
-@@ -194,7 +194,7 @@ static ssize_t nv_tco_write(struct file *file, const char __user *data,
- 			 */
+@@ -447,7 +447,7 @@ static ssize_t pcipcwd_write(struct file *file, const char __user *data,
+ 			 * magic character */
  			for (i = 0; i != len; i++) {
  				char c;
 -				if (get_user(c, data + i))
 +				if (get_iter(c, from))
  					return -EFAULT;
  				if (c == 'V')
- 					tco_expect_close = 42;
-@@ -265,7 +265,7 @@ static long nv_tco_ioctl(struct file *file, unsigned int cmd,
- static const struct file_operations nv_tco_fops = {
- 	.owner =		THIS_MODULE,
- 	.llseek =		no_llseek,
--	.write =		nv_tco_write,
-+	.write_iter =		nv_tco_write,
- 	.unlocked_ioctl =	nv_tco_ioctl,
- 	.compat_ioctl =		compat_ptr_ioctl,
- 	.open =			nv_tco_open,
+ 					expect_release = 42;
+@@ -597,15 +597,14 @@ static int pcipcwd_release(struct inode *inode, struct file *file)
+  *	/dev/temperature handling
+  */
+ 
+-static ssize_t pcipcwd_temp_read(struct file *file, char __user *data,
+-				size_t len, loff_t *ppos)
++static ssize_t pcipcwd_temp_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+ 	int temperature;
+ 
+ 	if (pcipcwd_get_temperature(&temperature))
+ 		return -EFAULT;
+ 
+-	if (copy_to_user(data, &temperature, 1))
++	if (!copy_to_iter_full(&temperature, 1, to))
+ 		return -EFAULT;
+ 
+ 	return 1;
+@@ -644,7 +643,7 @@ static int pcipcwd_notify_sys(struct notifier_block *this, unsigned long code,
+ static const struct file_operations pcipcwd_fops = {
+ 	.owner =	THIS_MODULE,
+ 	.llseek =	no_llseek,
+-	.write =	pcipcwd_write,
++	.write_iter =	pcipcwd_write,
+ 	.unlocked_ioctl = pcipcwd_ioctl,
+ 	.compat_ioctl = compat_ptr_ioctl,
+ 	.open =		pcipcwd_open,
+@@ -660,7 +659,7 @@ static struct miscdevice pcipcwd_miscdev = {
+ static const struct file_operations pcipcwd_temp_fops = {
+ 	.owner =	THIS_MODULE,
+ 	.llseek =	no_llseek,
+-	.read =		pcipcwd_temp_read,
++	.read_iter =	pcipcwd_temp_read,
+ 	.open =		pcipcwd_temp_open,
+ 	.release =	pcipcwd_temp_release,
+ };
 -- 
 2.43.0
 
