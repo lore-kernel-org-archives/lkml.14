@@ -1,200 +1,199 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA2613DDC7;
-	Thu, 11 Apr 2024 08:05:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1047C664DD;
+	Thu, 11 Apr 2024 08:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712822719; cv=pass; b=bdOcYP3nisW1GdUt8adaEE9DN30mrWs74zGEatVWsUgTH2eL1zorbApAFTJxuI6uANL4KjxXk+8xow5FrQsbCDqiuCX0Pj2INL/iYGRfh38XrcVG3ZUd9TKbWI9US6kMbYMS71dE0lftsD4oI1FF2tbZq1PLi4oQE8NkewOBsSA=
+	t=1712822823; cv=fail; b=OWhOl82IzjNO8aO7UzAKmEItlUMk6D9rIQkdTnl4Snips3sLQHh1h8RT0/xxoINNkKIEkvSTt0vx06sktXkX6+WqA//JwYhKT6QXKdE+MrVZ/rgmvnPLBZfRAnexJhHvzf5NddNdAAUZ6cl4L04PE52cPifV6xbdDEUqOMjh/fs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712822719; c=relaxed/simple;
-	bh=k0x/r8Jn3g2BWe8zJBk6R2s9O4m7icoE49i7gn3SsAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hnltR4lQq6Eb3n2PwBBkGjZIhqLs+Rq/JY9xBEyf/yVtLlCgtY4thm41VW/aMDa/jM49a7AdKNK7QQ7J/Z+TyLk01stpFVK8wXJb8PCP31Or6anrQ2WTdfkk+e1Ifb/9NCxVC1Vn+1ktm+7xHrd2ndfwwI1I1ypUB7/7aP71Phk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=K32ceWbo; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=hbAjU+1d; arc=pass smtp.client-ip=85.215.255.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
+	s=arc-20240116; t=1712822823; c=relaxed/simple;
+	bh=LZZ9PfwBFY7w/QvSQsKrHpH+bj89pqYkTqy1Xogn+ok=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hx3xUpC4c3x+1ypXVo+jtugztMGYaqUl3d1gWMH22pS6UHiRRbib/sR5CPivjiRQrxkD4eXMUZoBJaSPr3xMFb94ij9BavOi44Z1xszzJac0zjw3NrMHf4FKA7ME3NHSi85Q66NZhdzw6p17vFh6YySO7VjXTcWTPkUZfmD5RTg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=XmROqLru; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=srElMAH9; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="K32ceWbo";
-	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="hbAjU+1d"
-ARC-Seal: i=1; a=rsa-sha256; t=1712822529; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=P/kcwuIeoUbeZUYYUbIfF7pkrc/zL9KXLbblkcQMlKTuEg054A5KjJcKXMqyevkWiu
-    /q16ASNZAxnxEXn4hAD2/mVfSmsz/VNFbhPjJDFO9oBIiZNo8NivMEsIoSEIgDB5wdgm
-    7chzm/VM65Vpl5UUhSgJSvZMCUCfjCvjqrQzZ9LJu61Zmuk8TyXaMjpFyFUv66AL4MqA
-    z3SketrLhdmtXzTz/mD2G/b+qHbPj5VJIMgaytqBniNi4YUAn69yh52Fs0LtCoeU5jOC
-    S8Tefwceun5HVFo44Ysel2fnODs4ENmvFq5D2mKpATB+eJA5TcNX4qzpocuysr7zOcNi
-    NOiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712822529;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=ppwbDmup2wMDKDBXkN+XHpscPYZpnGSiu/96bn4RuWI=;
-    b=n+Hv92WnPunROayR9CAVpMFCGyNIh+8Ouqt6Q/13ZJ6pCPEOHwS8gjlTOVNjpiRCqY
-    pPpzCv6l70F4xqJv7n+ngpcLBBGMDOAdXJhQDswKqriDzpFseeUVXjVLNF2J6xlUYpUn
-    7i1anutXfGedvk2Q0Ig84J7hbq6pbv02vmwHifQSkhmmVQ4Jkq2CYYswlmbpJYgLdAmP
-    QCmUHsmmMo1n7yzmgj6CQyaUMgjuPVnm9jT7P+upVQxxacbjDOpHSlbhT856wOcawHCi
-    Nk+BmH9lBq8rwNoBDFhJrr2+fR6kuaRNyqVJ/AtAperWqMSxvo5/e8Cr0hbuLrk0VU5y
-    DPbQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712822529;
-    s=strato-dkim-0002; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=ppwbDmup2wMDKDBXkN+XHpscPYZpnGSiu/96bn4RuWI=;
-    b=K32ceWbo3Nrd2/oo7IB36ugdBJCa0xqS7kbgWFQRei+WOzcEjR5dVDM2B9KDUyoKzt
-    mm6BMvQMfeGkJACmcf4W0QimxLBnCPzD+MKLpY8TKO9vDvkLrJgXpO+i8Ps1bHMooYLi
-    RTa/+56U9/M147rYnjQSMA+W8uvGsX4ymV2HOJ0D1QDIr3h+FTm0X+IUx5gYy/AdodKm
-    3RxSb3dOHtygWfjIMdX716LZrw9WWDBjA+VSpJD/CCDoRQUwqwAkW2ym1/ZUAbjUvXKP
-    cLsrtex/+8WHfPqeWPyZLAIUIg1wj8EtaYszd+4Y/MPWPRevrmdN3tmEBwWqDUs64vnK
-    IvnA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712822529;
-    s=strato-dkim-0003; d=gerhold.net;
-    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
-    From:Subject:Sender;
-    bh=ppwbDmup2wMDKDBXkN+XHpscPYZpnGSiu/96bn4RuWI=;
-    b=hbAjU+1dVcVP51hOdENK5yo8tg2sqP+aopngPKHQVPiR9CFmZR129TP8ngMhC2aXBh
-    vVoFC7Rb21FpEf2kZJDw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA+p3h"
-Received: from gerhold.net
-    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
-    with ESMTPSA id Raf12503B828aP2
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Thu, 11 Apr 2024 10:02:08 +0200 (CEST)
-Date: Thu, 11 Apr 2024 10:02:01 +0200
-From: Stephan Gerhold <stephan@gerhold.net>
-To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-Cc: Caleb Connolly <caleb.connolly@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Rob Clark <robdclark@gmail.com>, Stephen Boyd <swboyd@chromium.org>,
-	Nikita Travkin <nikita@trvn.ru>
-Subject: Re: [PATCH] soc: qcom: cmd-db: map shared memory as WT, not WB
-Message-ID: <ZheY-S5VY2AZD7V-@gerhold.net>
-References: <20240327200917.2576034-1-volodymyr_babchuk@epam.com>
- <e0586d43-284c-4bef-a8be-4ffbc12bf787@linaro.org>
- <87a5mjz8s3.fsf@epam.com>
- <f4ebe819-9718-42c3-9874-037151587d0c@linaro.org>
- <cd549ee8-22dc-4bc4-af09-9c5c925ee03a@linaro.org>
- <ZgU_YDUhBeyS5wuh@gerhold.net>
- <875xwo6f57.fsf@epam.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XmROqLru";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="srElMAH9"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43B70SDY008867;
+	Thu, 11 Apr 2024 08:06:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=vcXcA4ffpHZ/rqS6D2KgwABq1LjKHmq4RdQIs/RJ244=;
+ b=XmROqLrub8kqzFDNd8aSrk+2ISPJmF4FrOn5XqRVM7CG0wVNW4+ZU7WuVJi7j3CTWnXg
+ WoszkLzipczEn5OZEy7p4baaArQV9fFJ2JQ6oB/oCdAE5RYmMPnuCZ82ygyEt2jfGK4P
+ rmtDS4TdblT+rPbkBJE6iwoSDOvQxbgx27R0OwCMVKFaDW7UrCuWxAjJna8iAY8lG4kd
+ Vm04T2Qs/YQJ2Z3D25XKJSd6SR0RXhoAKIMZ5HxwbVDgYSABIkTwYKFhTlrCQVwRbIfJ
+ SmuDraqKJu8wYxsPXtoRVhE+weTP6S2SQ8HBuTjC92WBSoWiTzm3vIllqR3EQ0dP6SkK gA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xaxxvh28a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 08:06:33 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43B6L4Di010514;
+	Thu, 11 Apr 2024 08:06:32 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2168.outbound.protection.outlook.com [104.47.56.168])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xavu97m0u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 08:06:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ebOXx6KybQt5GsCwL03jKz64CqacfCMUV9vnVyuxFv3Zu2gn0N7QKSyz+cNOoMhSZRqf70p3bfIHEafwEFRHJecNGIdFFLJN2Dw1mdV9a8vc2zQCYNenbGTP2kKJ/ChAOLml9WfF06ve1lW8it6IoYISxR63+Muw87LoKWyhQqNaIHZRseg9nLHkkLAP2CcbOJPjLw9wq2CnZF+L5hpoqmnQAZept7n0f2IP/pXjaOgTABeMTpeij+h538Xkmn9nzyTJSPe4nWAp0f39gXvuCrm1/Ns+qvw5a5xdfQc35c8wCuq5d9S6ov6H12zEbbWzuAwneVFfxoVufPD9xr9T9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vcXcA4ffpHZ/rqS6D2KgwABq1LjKHmq4RdQIs/RJ244=;
+ b=Kyin0E5ShkfQqliwNTjUUfWfOke2KbaozhOJUwj7hq5RUe14WJNNnVGPTgy45bWLXd5HTNEl4LLXCSewML3+JShJj71x+ykqL7jU3+BDqF3yXNyVRPHZJhuRKpjWqXcd3AwYBhibfI41aLuGSZn1HoI8lxQfttxfOE1d7zhMq6BNWQokr0nCPSGyFCCnjh6sjAEoNLlwefO/MD/oN9lifIKtw5pBT3XLCQHFz26EpNcvtkB1Ki48zJztUjl+mQb7hOeAHpPe8bMj7HZi5Nexzo91KhDLenEhXCwXj5LqfO/R20h9FWIc3NBwL0JuB9HghHmVVwbmVGG6OezG37nyyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vcXcA4ffpHZ/rqS6D2KgwABq1LjKHmq4RdQIs/RJ244=;
+ b=srElMAH969J0MWU/HCgKL/6c6FHEW/Sq5vmacWf4VLJVF9/OF3sEwRdk/nNzpJMhpiPBpvKYteb4jzWQrJGzB6swzh7MuHw5KZh9U8bBs7TAc+cnJo85KYVW5ETUnSzE8XR0g7pHs55BfKDINsahgAz7+rQmZUgnyEMaM9n25vE=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH0PR10MB5756.namprd10.prod.outlook.com (2603:10b6:510:146::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 08:06:29 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::ae68:7d51:133f:324%4]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
+ 08:06:29 +0000
+Message-ID: <849639fa-e672-40ed-ad5a-fd1f72f4180c@oracle.com>
+Date: Thu, 11 Apr 2024 09:06:23 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 02/10] block: Call blkdev_dio_unaligned() from
+ blkdev_direct_IO()
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
+        jejb@linux.ibm.com, martin.petersen@oracle.com, djwong@kernel.org,
+        viro@zeniv.linux.org.uk, brauner@kernel.org, dchinner@redhat.com,
+        jack@suse.cz, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
+        linux-scsi@vger.kernel.org, ojaswin@linux.ibm.com, linux-aio@kvack.org,
+        linux-btrfs@vger.kernel.org, io-uring@vger.kernel.org,
+        nilay@linux.ibm.com, ritesh.list@gmail.com, willy@infradead.org
+References: <20240326133813.3224593-1-john.g.garry@oracle.com>
+ <20240326133813.3224593-3-john.g.garry@oracle.com>
+ <ZhcYddRtAoMghtvr@bombadil.infradead.org>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <ZhcYddRtAoMghtvr@bombadil.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0466.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1aa::21) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <875xwo6f57.fsf@epam.com>
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH0PR10MB5756:EE_
+X-MS-Office365-Filtering-Correlation-Id: a586c645-4486-4a6a-a177-08dc59fe4ae0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	0agl5rq83Z7WafSRCVusBu+Y/DuJQeKydTdcUpgl+Kfqj3lJTJJA96eshKh8thj4PAj9I7rspABB7nKSAiF7DOfErrGFP+kvvBro2KJ+IPFJstJ1IRQdkdLYtl+ckS0emFPxPAuIzSyRYkxSUtXMeyFCC1i16Myws85HE7ciyA4xVaVJb1EaJsY7LAEYh/TvMwlr1QDBrqigdVWB/hdAcW98I2rgW/JYtcR2n6Ku32eZYylLJMt9e53+2b5bBygUVYElFYL+l66R3gtMbPXd099ITcLJaJBkGQUiFP/9nM0WKpOP0JLwOBxXFMTL6iMMdDR76eV85tFlCzz8H9YwnT527F7ziPfOhZQSJHdhRNf1sM1YJW5N0BnOIBDHaQ32/P+nWGHVxgdlMNzy1gZC+JuaRJvubQocRw3xBYcNX+8k48wqbrRHjuXekRC4D0eugw5HJLVjdWLiefp8CwK6buI3VCaG6XkEHY4S5NLmnoTd/zv6AK7/YvsMIG+w01HdWigNOSd8O+Mtv6Wwtg8DMb8NO5APwrzAuAlnMBXlcXmQBDqt9n+srAxfnjg07oqICJL/O4yIBzb44wq2MFXlJ4hu9WMHkqyFaUEdQt0JTtP2vXRsgVzKhM4ul65Dlvbl58ydWRR41MpgUwxrNdMynZDQiYanXt7zAIRy2JIUPS4=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?c29Ebk5aM3BLQ0RySXI5QmN2bDcrLy94MHRoaVlLSlNSTmord2l3MUc0T1Ey?=
+ =?utf-8?B?QmxUS1VjNitGMnJqUGN4SFJVQThybSs1aEl4QTA4TzNIT2ZaRTdIemhYRE44?=
+ =?utf-8?B?eGV0NWtPUU9aUERXN01OTG0rMkFCanJNbHQ2SHA0eWwxUm1IS2xEcXdxZzJx?=
+ =?utf-8?B?UDJPQWJMRHgxbzgyOGRrdks4b3RaTXZEZmt6QTZqQmlUSmRKS2hpeUFvTGEw?=
+ =?utf-8?B?b3FHNGJBU0pNNHgyaW9RYXE2VzJxNmJCN3B0dHJjeWJ3bGR2dnlzcXpNMVRj?=
+ =?utf-8?B?b2EyYkJDYXJnMUxCV2lKaFFOSUdrNmNRc1gzMmdnenp5a25wT243b21pS1pS?=
+ =?utf-8?B?UFhONGVieDQrMENDTjNlZk1kSExQMmpVbXB2MjlQZlM1MTQ4UUlYeFljUmJS?=
+ =?utf-8?B?NWpKQW44NnAyVkhrYVZneENBQmFaSjB2a1pTWVBPVHF6bjdHdHdDQjhTVkI3?=
+ =?utf-8?B?bkhZZFRDVEU3Vk5pdG9QMzVCMXI5OCswRWhTbHNBYjZsWDE1OTd2bUtFMlhL?=
+ =?utf-8?B?TDVBT0o0b2pSbTh0eEpMeHNLSFo1M0EvcEEwSitJam1VUzcrVVQ4b2pCL1FD?=
+ =?utf-8?B?TGd6RWEwOGswU1BsRnVFTFZtWnlkNmh4UHFFczFoVS9WcG54OUYxTGd5c09I?=
+ =?utf-8?B?M0tSSjE2TVg1U3psU3hlQTBKbmJPUjQyTGp0OWdYTmJQY3RPcEp0R1g4dERh?=
+ =?utf-8?B?RWE2Q2UwVmljZmtjRUhyS1RZMFNnNlM1ODdyV052RkRuSm1zN3BKSUdXalZm?=
+ =?utf-8?B?US9vT1c2QzlzNUo0d0o1Nzl1d2xDVmJXeUlieGRUZnZCbzNXWml6bHFBYkJh?=
+ =?utf-8?B?TFRaZ2ZUUEFMRTc1dEdBV1lJWVhBM1hWU1RLZzMrMUxjNzhNS05sSEVUR1Vm?=
+ =?utf-8?B?UldNNlp0SllRdkswTFBJbHRZQWlWL3dxWkU2RDBIK0J3N083QXBGUE9DNW93?=
+ =?utf-8?B?dGwvbThZMU5BVkExSDIrdUdEZVZPWFltL1ZNQ1NVQWsxbUNyZS85cEFTMDB3?=
+ =?utf-8?B?SHFZTWVOSWpBMmJPa2ZZZG52aFkwWlU5cFVLR09OUnpadXhkcjdYQlRudHhF?=
+ =?utf-8?B?UlJlSHFPNGtSYnUrRWhnOHVxM3VFNUhqeHBualFFRlhXaktMRnVjTit5SXBO?=
+ =?utf-8?B?S1lMQlBLRVE0dmlSNVJaUHhnYVZhbXpaTnVob0tWUjBBUVhvN2ZYOFVscUxh?=
+ =?utf-8?B?QTlnU09pNFd3SC90MlFHWkhSSFQ5Q0VqK1N1R2ppcnBkRFFqQVlOVHFIYWpm?=
+ =?utf-8?B?alNhTTdRdG02ZWtKOEs1R3NiMjZwWnpvOW5PZDRBckJ0M2FKUUh5UzVBZ2Zi?=
+ =?utf-8?B?UUFZVVV1OTRlNkVQYmsyUVlwQldZa3B1RWYzS0NXY3RLdG5mbERGMVBPREgw?=
+ =?utf-8?B?c1FVTVVXYm1LK0VrRHA0TzBBd0JsTG9ORmhjNWk5YmNLVU93VXNkL3kyN0dF?=
+ =?utf-8?B?QzgxRnBvUEhlYy82cm0xckRNR1BvZDRLQW9HRjRsSlh2WU15enB1amprb3JJ?=
+ =?utf-8?B?QUtKWGlBOTl0R1gvQm9yeVFDaDJnRlhyK3lIRktRdklvekNJRE5Ic2JZSW9Y?=
+ =?utf-8?B?dlpuSEc1QVRjY09KYWNvQ29qU0NTdjRLMzFOMFpEeVZDcEhmOEhvVXBINmov?=
+ =?utf-8?B?ZHZVNFdsVHQ0cEhWMHByOUFDbkNPWSttNHEyaW1sa1lrVlRGeHdOUUl5WTc5?=
+ =?utf-8?B?YnM3SWZVMys2N0U3VTEzKzV6UFlMNVY4cDRWVEVCRE5mWHBnVVRLbXBzd2tk?=
+ =?utf-8?B?cVdwaG9kMjdWUlpFSlYrQjJrTEdILzR6ZFpUYnIrM2hTR0hWVHp3OFdLZk5y?=
+ =?utf-8?B?WkZFUGVDVWVmV2dYZXNnWk1hdFprSndiZnhmZ21mdHN4ZzRlejJLMXV0bkM0?=
+ =?utf-8?B?ZTJoeTN0ZHN4UXRGejB3U1FHbjZOOTdQN3RVb3pEQnVXVlVUbTdkTFIzNExu?=
+ =?utf-8?B?UXpmYnM3bGxpVFlTbEFmUFpxL1orTGFFS3BQNTJCcldpdnoxeDZLSVZ2R3hQ?=
+ =?utf-8?B?a29tRllxUGk2N0ROMHhqUWdpZzVOdnE1ckJvb2hrbFBibGZMTGZTTVJ0QllR?=
+ =?utf-8?B?Tnl0cW5oeUN5RitaK3ZkazJRNlliSk9UekphVzhlMUtnSlJoU2xGWGI3Y3h6?=
+ =?utf-8?Q?0vBIkH34GWI6yIM0mqu+cK1cc?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	6UIn6XtXbwyHzzWqPqhGBeKJvXTA8pYPBbFzO5573QYShIzOjeXKZ/UmrY3rnMUzNYOVd3zJnlL/d/xU0dewgl99BdZsj/0KQiXqEns+l1eY8ijvU63yV78CR65HntgGzsu7s+IMzBPt6tr573li2Qp4su7tt6DyVxvfdQCrkK4hwaDKhrb+4R/ldUEyJnuOxPF/He7yd2F+0i4thnMjqSKaLJQWTAOeh9oZv2ExzKwnEfHz8cKJaC4tkfGQmqdPQQAVdTkeV7ZFaaXsP2Q5DvzdFsFexiqNwUdhct43coPju4hI8AV+vBtuJrQJO516ZwpCO7g3I3R4v9hQwPZYS5NSfowd1sNp2FpcjwwIAorzz4V9uYsT2SzvvfzXLjvdBBv/l/Z5s1Jp4Z21UPaBkCXxxM0LlPXYSlHbvdWPYJhdbHQ4qXGGXoEyqX9L/ms06A18NL+7j3TT7Lzxu2mmW+M+7zqE4X972cSedy980SpzXvYREii7xCyKSMmcfwjpEuwYiAcR6p8hGkKVlSaI7EUg1lyJ69YyUN1+NeaojOF8yVg93IPNYpeFnnLz/wY0E+Etg07a/6cRqY23jOcEF1004hYFyk54RFi+LLumcaI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a586c645-4486-4a6a-a177-08dc59fe4ae0
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 08:06:29.4775
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W1gdXHF/ihkxwiTxK/DP8AcXfof4brM2e6uvmKExRmlOtRMdOl2PCmCd5o4W6SaGffXudUJbpyDQ/CnBikVLAQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5756
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-11_02,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404110057
+X-Proofpoint-ORIG-GUID: VPpjFEQ4ZS4Wu9jAR2OgBzJNy7UBd7qK
+X-Proofpoint-GUID: VPpjFEQ4ZS4Wu9jAR2OgBzJNy7UBd7qK
 
-On Wed, Apr 10, 2024 at 10:12:37PM +0000, Volodymyr Babchuk wrote:
-> Stephan Gerhold <stephan@gerhold.net> writes:
-> > On Wed, Mar 27, 2024 at 11:29:09PM +0000, Caleb Connolly wrote:
-> >> On 27/03/2024 21:06, Konrad Dybcio wrote:
-> >> > On 27.03.2024 10:04 PM, Volodymyr Babchuk wrote:
-> >> >> Konrad Dybcio <konrad.dybcio@linaro.org> writes:
-> >> >>> On 27.03.2024 9:09 PM, Volodymyr Babchuk wrote:
-> >> >>>> It appears that hardware does not like cacheable accesses to this
-> >> >>>> region. Trying to access this shared memory region as Normal Memory
-> >> >>>> leads to secure interrupt which causes an endless loop somewhere in
-> >> >>>> Trust Zone.
-> >> >>>>
-> >> >>>> The only reason it is working right now is because Qualcomm Hypervisor
-> >> >>>> maps the same region as Non-Cacheable memory in Stage 2 translation
-> >> >>>> tables. The issue manifests if we want to use another hypervisor (like
-> >> >>>> Xen or KVM), which does not know anything about those specific
-> >> >>>> mappings. This patch fixes the issue by mapping the shared memory as
-> >> >>>> Write-Through. This removes dependency on correct mappings in Stage 2
-> >> >>>> tables.
-> >> >>>>
-> >> >>>> I tested this on SA8155P with Xen.
-> >> >>>>
-> >> >>>> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
-> >> >>>> ---
-> >> >>>
-> >> >>> Interesting..
-> >> >>>
-> >> >>> +Doug, Rob have you ever seen this on Chrome? (FYI, Volodymyr, chromebooks
-> >> >>> ship with no qcom hypervisor)
-> >> >>
-> >> >> Well, maybe I was wrong when called this thing "hypervisor". All I know
-> >> >> that it sits in hyp.mbn partition and all what it does is setup EL2
-> >> >> before switching to EL1 and running UEFI.
-> >> >>
-> >> >> In my experiments I replaced contents of hyp.mbn with U-Boot, which gave
-> >> >> me access to EL2 and I was able to boot Xen and then Linux as Dom0.
-> >> > 
-> >> > Yeah we're talking about the same thing. I was just curious whether
-> >> > the Chrome folks have heard of it, or whether they have any changes/
-> >> > workarounds for it.
-> >> 
-> >> Does Linux ever write to this region? Given that the Chromebooks don't
-> >> seem to have issues with this (we have a bunch of them in pmOS and I'd
-> >> be very very surprised if this was an issue there which nobody had tried
-> >> upstreaming before) I'd guess the significant difference here is between
-> >> booting Linux in EL2 (as Chromebooks do?) vs with Xen.
-> >> 
-> >
-> > FWIW: This old patch series from Stephen Boyd is closely related:
-> > https://urldefense.com/v3/__https://lore.kernel.org/linux-arm-msm/20190910160903.65694-1-swboyd@chromium.org/__;!!GF_29dbcQIUBPA!yGecMHGezwkDU9t7XATVTI80PNGjZdQV2xsYFTl6EhpMMsRf_7xryKx8mEVpmTwTcKMGaaWomtyvr05zFcmsf2Kk$
-> > [lore[.]kernel[.]org]
-> >
-> >> The main use case I have is to map the command-db memory region on
-> >> Qualcomm devices with a read-only mapping. It's already a const marked
-> >> pointer and the API returns const pointers as well, so this series
-> >> makes sure that even stray writes can't modify the memory.
-> >
-> > Stephen, what was the end result of that patch series? Mapping the
-> > cmd-db read-only sounds cleaner than trying to be lucky with the right
-> > set of cache flags.
-> >
+On 10/04/2024 23:53, Luis Chamberlain wrote:
+> On Tue, Mar 26, 2024 at 01:38:05PM +0000, John Garry wrote:
+>> blkdev_dio_unaligned() is called from __blkdev_direct_IO(),
+>> __blkdev_direct_IO_simple(), and __blkdev_direct_IO_async(), and all these
+>> are only called from blkdev_direct_IO().
+>>
+>> Move the blkdev_dio_unaligned() call to the common callsite,
+>> blkdev_direct_IO().
+>>
+>> Pass those functions the bdev pointer from blkdev_direct_IO() as it is non-
+>> trivial to calculate.
+>>
+>> Reviewed-by: Keith Busch<kbusch@kernel.org>
+>> Reviewed-by: Christoph Hellwig<hch@lst.de>
+>> Signed-off-by: John Garry<john.g.garry@oracle.com>
+> Reviewed-by: Luis Chamberlain<mcgrof@kernel.org>
 > 
-> I checked the series, but I am afraid that I have no capacity to finish
-> this. Will it be okay to move forward with my patch? I understand that
-> this is not the best solution, but it is simple and it works. If this is
-> fine, I'll send v2 with all comments addressed.
-> 
 
-My current understanding is that the important property here is to have
-a non-cacheable mapping, which is the case for both MEMREMAP_WT and
-MEMREMAP_WC, but not MEMREMAP_WB. Unfortunately, the MEMREMAP_RO option
-Stephen introduced is also a cacheable mapping, which still seems to
-trigger the issue in some cases. I'm not sure why a cache writeback
-still happens when the mapping is read-only and nobody writes anything.
+cheers
 
-You can also test it if you want. For a quick test,
+> I think this patch should just be sent separately already and not part
+> of this series.
 
--	cmd_db_header = memremap(rmem->base, rmem->size, MEMREMAP_WB);
-+	cmd_db_header = ioremap_prot(rmem->base, rmem->size, _PAGE_KERNEL_RO);
+That just creates a merge dependency, since I have later changes which 
+depend on this. I suppose that since we're nearly at rc4, I could do that.
 
-should be (largely) equivalent to MEMREMAP_RO with Stephen's patch
-series. I asked Nikita to test this on SC7180 and it still seems to
-cause the crash.
+John
 
-It seems to work only with a read-only non-cacheable mapping, e.g. with
-
-+	cmd_db_header = ioremap_prot(rmem->base, rmem->size,
-				     ((PROT_NORMAL_NC & ~PTE_WRITE) | PTE_RDONLY));
-
-The lines I just suggested for testing are highly architecture-specific
-though so not usable for a proper patch. If MEMREMAP_RO does not solve
-the real problem here then the work to make an usable read-only mapping
-would go beyond just finishing Stephen's patch series, since one would
-need to introduce some kind of MEMREMAP_RO_NC flag that creates a
-read-only non-cacheable mapping.
-
-It is definitely easier to just change the driver to use the existing
-MEMREMAP_WC. Given the crash you found, the hardware/firmware seems to
-have a built-in write protection on most platforms anyway. :D
-
-Thanks,
-Stephan
