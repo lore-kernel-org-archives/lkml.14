@@ -1,241 +1,272 @@
-Received: from alln-iport-1.cisco.com (alln-iport-1.cisco.com [173.37.142.88])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAB654BE8;
-	Thu, 11 Apr 2024 17:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=173.37.142.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712856538; cv=fail; b=Ga7Xnb2vAWizDEX7tdxoc67UNtqDYe2opLFuyf5csytksyzvQW+tMkrjXjW4pBHiZtjJoYHYRPhEzw5XGafD5DA2rYNfdgW8Xw+iuMJJfIROA4X8KqG65YazcjQqZWgsbUXDOQwsKfflqXX94gMbTcFDHJBWsce74KMX/DAIkVo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712856538; c=relaxed/simple;
-	bh=lPwfzHM/8MSJvLXpKRDLLt/7G3QgB+wsnR8Lq4sH3Sg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=cn7nQDXhMXW+2Z6LZiueejm8I31Ehg/E7/V6caQZeFMyTRWPh3epjfroidrsP14YMKACFC6ilc5xGWhFHBm+SO2j4ymYF0KjvAY5Vg5cuv3baQZg/89FsOmeIEWLgxa99kGxwTOfe9fm4rJDuFRIeZZN7jnFmMuy6jTT36FAVjo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=eyaHuL6o; dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b=Nr8vcigl; arc=fail smtp.client-ip=173.37.142.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C215FDA5
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 17:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712856615; cv=none; b=enff9/ZCquEFq0cTelHWqkN1px88uluPzdhynALa7MtxVwy9eJeO4SnboAPjgSyQDjWJUe8oh9fuYpsWecf0zbai+XhH/FUj9rOwuL8lCxp2tY9XPplPUPUTiQlMxzwq8bU98g6VAQhLgOZnNDtyWjo+mjbuxgWZsLdrdp4yytg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712856615; c=relaxed/simple;
+	bh=coXlODZfnq7h5xpUpn/o3CBsPtjfYjFFjiRQ4X0YcmI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Sb0X3bXAKFvIos/WFyNqIzeXZ1OYTd7ZdcC8PS0ddmKekoWxD7jojMt50+FBpuLJ8vTCDmjOtexgXBDpsnaAAGbWvfwGqssZEbTxFw4u1PPBvv1/hl5QOkRV8uarCID+TQFIKAdeercoNh5a3AZ/xR6xQJkAiCyc0HB3yIvhkVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AcrNhveZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="eyaHuL6o";
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Nr8vcigl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=cisco.com; i=@cisco.com; l=1195; q=dns/txt; s=iport;
-  t=1712856536; x=1714066136;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=dIJUJGn6kGns5Gh1XWGLKoN/X/R/8wJToYt9TjupAZ0=;
-  b=eyaHuL6oWZDEPYCe4u7RhQNZv5Rv8Dn+tXt54ScGlrc/Q0wjFSCRnPLS
-   m9jktHW6ZDr3jt0i1JjkdlQb4vMMHKA9bSTj69fSIex8rwmphhDxbzcaP
-   GwxBTKjG7RX20WY456GPYQooRC4FfbAgBpxMmMd/r68WknD6MFNSn6UOB
-   o=;
-X-CSE-ConnectionGUID: /diDNKqJQPKuVEkWnut8Yg==
-X-CSE-MsgGUID: eMx4fNE3QUSnnhkv8R7usg==
-X-IPAS-Result: =?us-ascii?q?A0CbAQBQHRhmmJxdJa1aHgEBCxIMQCWBHwuBclJ6gRlIi?=
- =?us-ascii?q?CEDhS2GSoIlhXqMSxyLJ4ElA1YPAQEBDQEBRAQBAYUGAogWAiY2Bw4BAgICA?=
- =?us-ascii?q?QEBAQMCAwEBAQEBAQEBBgEBBQEBAQIBBwUUAQEBAQEBAQEeGQUQDieFbQ2GW?=
- =?us-ascii?q?gEBAQMSKAYBATcBDwIBCA4KHhAQISUCBA4gB4JegmADAaUXAYFAAoooeIE0g?=
- =?us-ascii?q?QGCCgEBBgQF3XUJGIEwiCwBijcnG4FJRIQ/PoJhAoFghkODG5I3gRSBcII4h?=
- =?us-ascii?q?hxUfRwDWSERAUsKNAk6DwwaAi8NJCMCLEoKEAIWAx0YMhEJCyYDKgY2AhIMB?=
- =?us-ascii?q?gYGWyAWCQQjAwgEA1ADIHARAwQaBAsHOD2BfoE9BBNHgUKKFwyDMymBUCmBE?=
- =?us-ascii?q?oMtQnGEIFcDRB1AA3g9NRQbBiIBolaBLXArD5V5rgWBPAqEE6INg3KMfpkxm?=
- =?us-ascii?q?GKoWwIEAgQFAg8BAQaBawEygVtwFYMiUhkPjiAZg2GePng7AgcLAQEDCYpoA?=
- =?us-ascii?q?QE?=
-IronPort-PHdr: A9a23:isdUlxzipbE+vpXXCzMVngc9DxPP853uNQITr50/hK0LK+Ko/o/pO
- wrU4vA+xFPKXICO8/tfkKKWqKHvX2Uc/IyM+G4Pap1CVhIJyI0WkgUsDdTDCBjTJ//xZCt8F
- 8NHBxd+53/uCUFOA47lYkHK5Hi77DocABL6YAZ8IOX4HpHbp8+2zOu1vZbUZlYAiD+0e7gnN
- Byttk2RrpwMjIlvIbp5xhrS931PfekXjW89LlOIlBG67cC1lKM=
-IronPort-Data: A9a23:TWj6p64/vnFUqbVsBYnUawxRtP3HchMFZxGqfqrLsTDasY5as4F+v
- jQfDGuGPq2DNzSgfNx3YIjlpkpTuZfUmt9lQAY6rCE2Zn8b8sCt6fZ1gavT04J+CuWZESqLO
- u1HMoGowPgcFyKa/lH1dOG58RGQ7InQLpLkEunIJyttcgFtTSYlmHpLlvUw6mJSqYDR7zil5
- 5Wq/KUzBHf/g2Qoaj5NsvrZwP9SlK2aVA0w7wRWic9j5Dcyp1FNZLoDKKe4KWfPQ4U8NoZWk
- M6akdlVVkuAl/scIovNfoTTKyXmcZaOVeS6sUe6boD56vR0SoPe5Y5gXBYUQR8/ZzxkBLmdw
- v0V3XC7YV9B0qEhBI3xXjEAexySM5Gq95eALXmTl++K7XT+UGbS7vZRClwqbbwXr7Mf7WFmr
- ZT0KRgXZRyFwumx2r/+F69nh98oK4/gO4Z3VnNIlG6CS615B8GYBfyXu7e03x9o7ixKNfrXY
- csUbSVmRB/BeBZIfFwQDfrSmc/y2ySgK20J9g/9Sawf7k3DkAJX/ePUDeHTfNyJW5VvwVuDq
- TeTl4j+KkpHbIPEk2XtHmiXruvOmz7rHYEfDru18tZ0j1CJgG8eEhsbUR28u/bRokq/Xc9Pb
- kAT8QIwoqUosk+mVN/wW1u/unHslhodXcdAVu4w9QCJxoLK7AuDQGsJVDhMbJohrsBeeNAx/
- kWCk9WsDjt1vfjID3mc7byT6zi1PED5MFPuewdDQQopxfr6grgLrQ/xY9VcFrOp3uz6TGSYL
- y+xkAAygLAajMgu3qq9/Ezajz/EmnQvZlBujukwdjz8hj6VdLKYi5qUBU83BMuswa6DRVWH+
- XMDgcXbsaYFDIqGk2qGR+Bl8FCVCxStbmC0bb1HRsVJG9GRF5iLJt44DNZWfxkBDyr8UWW1C
- HI/QCsIjHOpAFOkbLVsf6W6ANkwwK7rGLzND6+NNIUROcguL1Lco0mCgHJ8OUizyCDAdolia
- P+mnTqEXB729Iw+lWXmGb1BuVPV7nlvnzi7qW/HI+SPiufGOyXPFt/pwXOFb/sy6+ufsR7J/
- tNEf8qMwFM3bQENSne/zGLnFnhTdSJTLcmv86R/L7fTSiI4QztJI6GKntscl3lNwv49ehHgp
- C/tAye1CTPX2BX6FOl9Qi05MeOyB8Yg8xrW/0UEZD6V5pTqWq72hI83fJosdr5h/+tmpcOYh
- dFZEylcKpyjkgj6xgk=
-IronPort-HdrOrdr: A9a23:e+jqsqppVNaKSbhRPB+ccf4aV5tZLNV00zEX/kB9WHVpm5Oj5q
- OTdaUgtSMc1gxxZJh5o6HwBEDhex/hHZ4c2/hpAV87NDOW+VdAX7sSnbcKpAeQWxEWl9Qtm5
- uIFpIOauEYYmIK8PoSjDPIdOrIheP3jpxA5t2ujEuFLzsaF52Ihj0RYm30YygGIDWuR6BJa6
- Z0jfA33wZIDE5nFPhTcUN1JNQryee78q4OSCR2dSIP2U2ltx/twrj8FBSTwxcZVB1y4ZpKyw
- L4uj28zJ+O99WgxDHh90K71flrcd3apedrNYipsIw4Oz/sggGnaMBKQLuZpg04p+mp9RIDjM
- TMiw1IBbU311rhOkWO5Tf90Qjp1zgjr1X4z0WDvHflqcvlABonFst6g55DeBex0TtlgDg86t
- MN44uqjesPMfryplWk2zEObWAwqqOAmwtlrQfUtQ0EbWJRUs4NkWVVxjInLH5JJlOO1GlgKp
- gtMCkZj8wmLm9zqBvizzVS6c3pUXIpEhicRE8e/sSTzjhNhXh8i1AV3coFgx47hd8AorR/lq
- /5255T5ftzZ95Tabg4CPYKQMOxBGCISRXQMHiKKVCiEK0cIXrCp5P+/b1wvYiRCdM15Yp3nI
- 6EXEJTtGY0dU6rAcqS3IdT+hSIRGmmRzzixsxX+pA8sLzhQ7jgNzGFVTkV4oediuRaBteeV+
- e4OZpQDfOmJWzyGZxR1wm7QJVWIWl2arxchj/6YSPGnivmEPydigWASoemGFPEK0dSZl/C
-X-Talos-CUID: =?us-ascii?q?9a23=3AVDaR/2gxKEV6/xuMwkyBdbSwwDJuNXHc4FHzOm2?=
- =?us-ascii?q?BMUV0dpCWdlmN5PNVnJ87?=
-X-Talos-MUID: 9a23:IzGo4QsjYzTZ1VgARM2niRRyaMlOzv+XNXsLl5UFpZm+ajFrNGLI
-X-IronPort-Anti-Spam-Filtered: true
-Received: from rcdn-core-5.cisco.com ([173.37.93.156])
-  by alln-iport-1.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 17:27:47 +0000
-Received: from rcdn-opgw-1.cisco.com (rcdn-opgw-1.cisco.com [72.163.7.162])
-	by rcdn-core-5.cisco.com (8.15.2/8.15.2) with ESMTPS id 43BHRlnd032114
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Apr 2024 17:27:47 GMT
-X-CSE-ConnectionGUID: yZGJQtO3Q+281CniCISftg==
-X-CSE-MsgGUID: ygbEhW2eRDylscrmOCyYWQ==
-Authentication-Results: rcdn-opgw-1.cisco.com; dkim=pass (signature verified) header.i=@cisco.com; spf=Pass smtp.mailfrom=danielwa@cisco.com; dmarc=pass (p=reject dis=none) d=cisco.com
-X-IronPort-AV: E=Sophos;i="6.07,193,1708387200"; 
-   d="scan'208";a="8524497"
-Received: from mail-mw2nam10lp2100.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.100])
-  by rcdn-opgw-1.cisco.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 17:27:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EVmyoco/83AsccemWP23HvO0X8amKmf2pmaHIcblSvsFHZ0/QEAZeug16b5jT4knBE3uaAqewUJWOJAHPmeUdlfHqe0Y+pM5tGfL1dpzIX+7/Q+ZZBtsXCsdkukl6U7+GI33yi+lx/WY1rETUTyqGjvcpBSPbPD1/5p1gKosI8QnvrwDtNsd4ba21HecQ0MLUp2ck2AhLumA/qD1Lx+XxABA7of3K3sHb6Usanli6H1qYhXTgBxQFqDdz42GYiXbPK2nCvGKjHr9Kg7Uk9CKcrzOjt+bwTdyLZqfGCyCA7SGebU/yJLTNVZv/273cejBqiGOSe7ginyqr7P+v4o92w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dIJUJGn6kGns5Gh1XWGLKoN/X/R/8wJToYt9TjupAZ0=;
- b=fLGJ16QaXLiAuP0TSneTdqE9abIkMZoLMwGCIp2CIE0mhN2DwCi1iXaJS3pDSbwT4+NKPfkfAjgANfPXQPQV8OvTDowe5NrnzwDs4vMVUxfBYiAj9ws1UxW2P704MROtpIN7SIDjn5wuKnJT7e0rRxsaPAwiQbUKmZ0YJhNfNZChf+b3DPSeJALZ9gA3Nktntf7vG2ZiY4R7Sw6qDnnPmZFB2J21urDfRO+lXwKvjuKdBRaewOofjl2no/8zMa0F1a8iGv8bAyJFVmNwxRPTHSV+cCDcp7ZL55EfQH7itfEIHqEycKQhrtYVgFegUlLLdWdg4D9F8PsJmRYVIy9cag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dIJUJGn6kGns5Gh1XWGLKoN/X/R/8wJToYt9TjupAZ0=;
- b=Nr8vciglxR8Lu1JTbN4VzThv8cBg5SXM0dUf5oqSg7Ju5ok7us7TAvKrCqc0Uh6S89AADyQjOHvW51mJ0mW5soGCx98ytqDYhIwlU1dIIq8Anhk57A02ovksGD7Sga/dwYF2S7o48cd0h76bMihjpounweSVkHlolJ20hd4CIrY=
-Received: from SJ0PR11MB5790.namprd11.prod.outlook.com (2603:10b6:a03:422::15)
- by CH3PR11MB7771.namprd11.prod.outlook.com (2603:10b6:610:125::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.25; Thu, 11 Apr
- 2024 17:27:43 +0000
-Received: from SJ0PR11MB5790.namprd11.prod.outlook.com
- ([fe80::22f4:4617:117:7a44]) by SJ0PR11MB5790.namprd11.prod.outlook.com
- ([fe80::22f4:4617:117:7a44%6]) with mapi id 15.20.7452.019; Thu, 11 Apr 2024
- 17:27:43 +0000
-From: "Daniel Walker (danielwa)" <danielwa@cisco.com>
-To: Nicolas Schier <n.schier@avm.de>
-CC: "Valerii Chernous -X (vchernou - GLOBALLOGIC INC at Cisco)"
-	<vchernou@cisco.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan
- Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        "linux-kbuild@vger.kernel.org"
-	<linux-kbuild@vger.kernel.org>,
-        "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] Add MO(mod objs) variable to process ext modules with
- subdirs
-Thread-Topic: [PATCH v3] Add MO(mod objs) variable to process ext modules with
- subdirs
-Thread-Index: AQHajDWPNw0w9AAG+kK+xjeBwf3pzA==
-Date: Thu, 11 Apr 2024 17:27:42 +0000
-Message-ID: <ZhgdjpE+yl3IYSzl@goliath>
-References: <20240405165610.1537698-1-vchernou@cisco.com>
- <ZhfLrGrED-ls6i5V@buildd.core.avm.de>
-In-Reply-To: <ZhfLrGrED-ls6i5V@buildd.core.avm.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ0PR11MB5790:EE_|CH3PR11MB7771:EE_
-x-ms-office365-filtering-correlation-id: 56f16051-6dc8-42a1-992c-08dc5a4cb1ff
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- J2QdO53Q1lai2mVmFGkCVB19KfDsXKkplHVpvF6UJpD/MNRMReYQVO7icirpnYZwDZ9cy15WgNJLf266jij9Xd11ZXi+EEjyDjwql9VehG/MkRJqCH5z5uhXEk5nBFMO4cis1OPys2OFv+Tn8JKocul+Ej1Dkj4Q43cupQ6D3pdib8cUcm+ovQTL9cKdf5BCg7+NL1kP/UgRc2dordpHI2bB4PtoVtgBgF24NS15xGpxy12e07+/MjtUmWKyKB/bK7QatKUHFILbm4Nh1wmR4G4uyipc3GUU+Zv2g4LDO6e6Q4Wk6mv8On1VP/Y5fWnhC4WKnSDknbvg12pHauPDU/rArXWEQWwVTmHIid95KSKN+YIBI006AoHVvLai5JlI1MQdSjZjra5tbwEyoN9P3XSNfesBHmTAcJxwEkhkCjOGFZKTPKIH7NdzDqp4l3meLTfK51wTTN/IBVv5+2l9TcMhSVwdyIkq7WjeRKPdkgZySsyaYjf0nWXybDa0sLXli/qea4YY4d2G4YwfsntApJrAM5auxPHLDYQ3vc2bahJ7D/cl6xFgDzo0IaTSubUW/nBeRWg02QlvHlTqEuWDr6tTJxluKVHroYykdr3n/4f9Te2RC1vuf+rjjhrzIei08S2U38Dk7SZW8CoqnO2IWV2Jqu+0vwiaMVSPftyFoTaougu/a/E1scCNH2P/C6lTIAfyGNMFhKIUhUUmD+kAWg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR11MB5790.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?iIIDhQe9g8Z62eQkB7c1WYpRqw2AHVJaPs5Uq+PQtVQKVNQr+QbqwH4NCIew?=
- =?us-ascii?Q?aO8RGyS4ihl8JEbBcyCwDn4hjed7GH/WgcW3/JcViRJhLaWXI0zP3lNI2oS7?=
- =?us-ascii?Q?lSreWDDpeZdJH+3CLeEewEqRMe2eXRHERuSaYzlKJmdqa1mkSOsr6IBI+2nk?=
- =?us-ascii?Q?InSdvkPEqWsurKQh/Eq89ZPbWhlpp1ffJVMstmGaXUGcwj6gJzLX+vPT4et4?=
- =?us-ascii?Q?L0qFYcV0d1E+pLTxh4UvpzNTVczIeEAT4vpnEnmNzKtrMuVM8BvH26GBipuL?=
- =?us-ascii?Q?PrunizYl3hT/8vtYJOW+V1KcJl9q3PEYpXMkZD6+nk8H1nQWqo09aofBTkHK?=
- =?us-ascii?Q?316oc63iLR3sH9URe/4+DPBH1LvjMT9QBB+l+DIRk6sVJiJPNzQpR5eub6Iw?=
- =?us-ascii?Q?C+7xGS4FDgfIZCRCiiHHFyybg50UYF8LM4XxqlnBiU9TwDGL+HkCqx6bLQEB?=
- =?us-ascii?Q?BaBU1JqpvzO9Xx1e7rKnpBDXg4LBKv3cxbmVCOyAjbRinHFDZqY0jYb4mRGC?=
- =?us-ascii?Q?QaYS4BItV+QgfUpDb/5+34FhX2VID40FbSnpOp5OdNpq0pLAOnEpD2UOx5Ep?=
- =?us-ascii?Q?JONRZzAqfiPZjRBF0Orzdi1cqyRy1zKiW4kOOrna0MF58xONvEl6hJwgd+85?=
- =?us-ascii?Q?En/fDCLscJDHXiw2ekLokXuxuSjTJlzxIqOl3mm26ih0nQOXwP5UtHwdYqe1?=
- =?us-ascii?Q?b1rDK+N8pLgYcet6xew6LaC7s608NPa0m7KNkHg8q9DXp5+Z9FUruPxH52M0?=
- =?us-ascii?Q?YTWCP90bx4Sivz6E606Wsr/PcsodmR/4EB2cYBxrn0o9YnwioK6hWvInXFuY?=
- =?us-ascii?Q?o8su7Z8tezk7wuKnWNjbehTrm6BgLzYpfhMOy8By4pCWtNAGLHKl15LfbZaa?=
- =?us-ascii?Q?X6wtrxTaHpbnHkKTcNp/D73QLBs8Y2wrjzAgu04DKBjSP3iGa6MgtChDLunz?=
- =?us-ascii?Q?PoVcOuzUErkIl9moRIknBDJACH8C22GW/sCJQum+Jm11/a43w4JEg/8gQ9b4?=
- =?us-ascii?Q?HKdN59jKZ19Toe4k693ojAUEg5d6rQqtt7ObikIuupcJoGcXT8jlHA9FxnrY?=
- =?us-ascii?Q?HQAXwrp7O4PiDTHGZwh2ikdzErnxiSLEN4nEYHWPkNRn/khW8FZ4ZkP9ZdRB?=
- =?us-ascii?Q?BII/tiJ2fevTV55NUXTxI46vIzkEFrbEuz4fSS/2z77q+R+9ON1ut69uFNQ2?=
- =?us-ascii?Q?wdkOlA47v6Y3zPGznCabG4lxve/YeA+7k9qEicYr9VhrXRl9mPJc/raO+MJU?=
- =?us-ascii?Q?rQo3mo/mh9fjXB76m1ANeqPo2e2PytphwvnlUxR9F5OVOspnusSrTXrzIcFQ?=
- =?us-ascii?Q?iQdUvqLAzbhAIZgNSco0Vihd2GC+EMM/FVLOun3CymIzCq5ZnsTKJMpVthr9?=
- =?us-ascii?Q?ZPcQNixpTTW19aSU8h4y0F8F2oQjhyIbBJaEvesFnbA1CJLNafhyPhHjusln?=
- =?us-ascii?Q?lGoC8nUe+hVOkoWB1TqntbgTIGYgOri0TLchck5bWA5LBmidT8mk5X08qYSs?=
- =?us-ascii?Q?jgExG5VytwhgIoCBjDXR3eDh5aYFPyHaA0dYBBA0gePp0knqstqZRvgfKx9c?=
- =?us-ascii?Q?e5Ef0iJeDBKtyXwSdeUUbX/USEBkP6LkIZrXdX20?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8387B0AAA8DAA645AE3802112E3C52D5@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AcrNhveZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712856612;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JA70ylDgRN0gmRtnn7ierQ4wSnxSZyu6IwhBgJQKKoo=;
+	b=AcrNhveZtmLb8+cAu0SfoeATDArqHZQadYWUJp/cJYj6DVXaXY03smQhMRNX+R3Rji/2td
+	B1HfY8f7pXJ2ipqbifNQUgw1vzktN9vyt4sw/tiHK7roJAoRixIIzPvTVpQXQBGHsIe6Aw
+	WErIG/I8UBwVgrYDIA9FhrOf8XVIv00=
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
+ [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-482-XUx43BG3M1yOkK_1nCRF2A-1; Thu, 11 Apr 2024 13:30:11 -0400
+X-MC-Unique: XUx43BG3M1yOkK_1nCRF2A-1
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4daa117d98fso16563e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:30:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712856611; x=1713461411;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JA70ylDgRN0gmRtnn7ierQ4wSnxSZyu6IwhBgJQKKoo=;
+        b=fswYhx2uXTGN2NbXIGj1x0zWRq6LrDPrijT/PBozehG2Jd0Ln/DDvexQ5FyaWm2F3V
+         RiBf8ia3uHTAqTcgIoJ7hO3fADbOgovnvLlAQnfGM1vl33xWoORy0K3TDu3ncyb9dXXP
+         8C/WqF+ys9ybjz2W/nWKy4XVvgVsIqGWKZalc6/xW8QEvBZZjyWhvbc7/0rNQbcW9I/F
+         fZV6vTPphSWhUKIQXUe1HhT192JK7rtiDf8p0FeDzoxX1eu1rxsdPD3GrITQB+OgzZGA
+         2CVJrf//QYnoiARKTs/jpSTqfWg3xDJ8uZYUm5fHgmO4Y1QdNo8Wlc28Wvjpgnzf66O+
+         9m1A==
+X-Forwarded-Encrypted: i=1; AJvYcCUFg94SVnz+efJFjG5BOfpwB25lkBF6BOQLGvfThtGy8AY/B64XbgAL9oJ6Lw6MmyN96Jll9um8oEhXM1+PAmU2mhjyl2Xq5F+75tZt
+X-Gm-Message-State: AOJu0YwvFHfYtvsgjgD/ar7Enl7R6A/yVczCMQzrn6fjOeEs971PTemK
+	MwHjI95+EvCjC2fbktNelCURkZMCj7or9l1EbHIukHF9C/emBRlqaziREZlvfdcON7pg8nEtv3T
+	zf3zSynIrcpuCYrDpwgDMh/soDHIo7SiAs5fOjocA90BXEgBa9Q2vT5pMPwIEMK4MV2OyEkQZZA
+	m9+XgmHhXV41mMlHb8XYi0kJQ0JPMx9xpcFKulo8IGhN+FnbI=
+X-Received: by 2002:a05:6122:250e:b0:4d4:11a6:a4ff with SMTP id cl14-20020a056122250e00b004d411a6a4ffmr506652vkb.3.1712856610441;
+        Thu, 11 Apr 2024 10:30:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGioIN4sX6H5w/uce8bUQd7RADoNIWXoYNWiGNhTkE+MvuXBmR+hfpEeNC1U/pe/bfWGLV+LDpHBplGVebCjmE=
+X-Received: by 2002:a05:6122:250e:b0:4d4:11a6:a4ff with SMTP id
+ cl14-20020a056122250e00b004d411a6a4ffmr506610vkb.3.1712856609810; Thu, 11 Apr
+ 2024 10:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cisco.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR11MB5790.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56f16051-6dc8-42a1-992c-08dc5a4cb1ff
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2024 17:27:42.9604
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2Lc26VujeAOPHerAzvaNL9Y5QLwILKCB/DUHrk+Rz30Se2O/5DopKB8wgcYm319b/vUa3A57LaGC8E+8FDQMUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7771
-X-Outbound-SMTP-Client: 72.163.7.162, rcdn-opgw-1.cisco.com
-X-Outbound-Node: rcdn-core-5.cisco.com
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
+ <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com>
+ <20240411-alben-kocht-219170e9dc99@brauner> <CAHk-=wjrPDx=f5OSnQVbbJ4id6SZk-exB1VW9Uz3R7rKFvTQeQ@mail.gmail.com>
+ <CABe3_aGbsPHY9Z5B9WyVWakeWFtief4DpBrDxUiD00qk1irMrg@mail.gmail.com>
+In-Reply-To: <CABe3_aGbsPHY9Z5B9WyVWakeWFtief4DpBrDxUiD00qk1irMrg@mail.gmail.com>
+From: Charles Mirabile <cmirabil@redhat.com>
+Date: Thu, 11 Apr 2024 13:29:58 -0400
+Message-ID: <CABe3_aGGf7kb97gE4FdGmT79Kh5OhbB_2Hqt898WZ+4XGg6j4Q@mail.gmail.com>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024 at 01:38:20PM +0200, Nicolas Schier wrote:
-> Hi Valerii,
->=20
-> thanks for your patch.  I know several non-upstream kernel developers
-> that would like to see support for out-of-source builds of external
-> kmods (and we developed several work-arounds at AVM as well); but please
-> be aware that patches that don't fix or enhance the in-tree kernel/kmod
-> build but only add feature for out-of-tree stuff, are rarely accepted.
->=20
+Here is an updated version of linus's patch that makes the check
+namespace relative
+---
+ fs/namei.c            | 17 ++++++++++++-----
+ include/linux/namei.h |  1 +
+ 2 files changed, 13 insertions(+), 5 deletions(-)
 
-If that were true we would not have driver/uio/ for example. It seems like
-Cisco and NVM should work together produce a solution.
+diff --git a/fs/namei.c b/fs/namei.c
+index 4e0de939fea1..2bcc10976ba7 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2419,6 +2419,14 @@ static const char *path_init(struct nameidata
+*nd, unsigned flags)
+         if (!f.file)
+             return ERR_PTR(-EBADF);
 
-You could run into this issue even with entirely in tree modules. For examp=
-le,
-we may have a v6.6 kernel but we need some modules from v5.15 for some inco=
-mpatibility
-reason in v6.6. Then we may build the v5.15 modules as out of tree modules
-against the v6.6 kernel.
++        if (flags & LOOKUP_DFD_MATCH_CREDS) {
++            if (f.file->f_cred !=3D current_cred() &&
++                !ns_capable(f.file->f_cred->user_ns, CAP_DAC_READ_SEARCH))=
+ {
++                fdput(f);
++                return ERR_PTR(-ENOENT);
++            }
++        }
++
+         dentry =3D f.file->f_path.dentry;
 
-You also have just normal developers making kernel modules which always sta=
-rt as
-out of tree modules before they are upstreamed. Those modules could be any =
-level
-of complexity.
+         if (*s && unlikely(!d_can_lookup(dentry))) {
+@@ -4640,14 +4648,13 @@ int do_linkat(int olddfd, struct filename
+*old, int newdfd,
+         goto out_putnames;
+     }
+     /*
+-     * To use null names we require CAP_DAC_READ_SEARCH
++     * To use null names we require CAP_DAC_READ_SEARCH or
++     * that the open-time creds of the dfd matches current.
+      * This ensures that not everyone will be able to create
+      * handlink using the passed filedescriptor.
+      */
+-    if (flags & AT_EMPTY_PATH && !capable(CAP_DAC_READ_SEARCH)) {
+-        error =3D -ENOENT;
+-        goto out_putnames;
+-    }
++    if (flags & AT_EMPTY_PATH)
++        how |=3D LOOKUP_DFD_MATCH_CREDS;
 
-I don't think it make sense to view this as strictly enhancing large of the=
- tree
-modules with no upstream potential.
+     if (flags & AT_SYMLINK_FOLLOW)
+         how |=3D LOOKUP_FOLLOW;
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 74e0cc14ebf8..678ffe4acf99 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -44,6 +44,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+ #define LOOKUP_BENEATH        0x080000 /* No escaping from starting point.=
+ */
+ #define LOOKUP_IN_ROOT        0x100000 /* Treat dirfd as fs root. */
+ #define LOOKUP_CACHED        0x200000 /* Only do cached lookup */
++#define LOOKUP_DFD_MATCH_CREDS    0x400000 /* Require that dfd creds
+match current */
+ /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
+ #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
 
-Daniel=
+--=20
+2.44.0
+
+On Thu, Apr 11, 2024 at 12:44=E2=80=AFPM Charles Mirabile <cmirabil@redhat.=
+com> wrote:
+>
+> On Thu, Apr 11, 2024 at 12:15=E2=80=AFPM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Thu, 11 Apr 2024 at 02:05, Christian Brauner <brauner@kernel.org> wr=
+ote:
+> > >
+> > > I had a similar discussion a while back someone requested that we rel=
+ax
+> > > permissions so linkat can be used in containers.
+> >
+> > Hmm.
+> >
+> > Ok, that's different - it just wants root to be able to do it, but
+> > "root" being just in the container itself.
+> >
+> > I don't think that's all that useful - I think one of the issues with
+> > linkat(AT_EMPTY_PATH) is exactly that "it's only useful for root",
+> > which means that it's effectively useless. Inside a container or out.
+> >
+> > Because very few loads run as root-only (and fewer still run with any
+> > capability bits that aren't just "root or nothing").
+> >
+> > Before I did all this, I did a Debian code search for linkat with
+> > AT_EMPTY_PATH, and it's almost non-existent. And I think it's exactly
+> > because of this "when it's only useful for root, it's hardly useful at
+> > all" issue.
+> >
+> > (Of course, my Debian code search may have been broken).
+> >
+> > So I suspect your special case is actually largely useless, and what
+> > the container user actually wanted was what my patch does, but they
+> > didn't think that was possible, so they asked to just extend the
+> > "root" notion.
+> >
+> Yes, that is absolutely the case. When Christian poked holes in my
+> initial submission, I started working on a v2 but haven't had a chance
+> to send it because I wanted to make sure my arguments etc were
+> airtight because I am well aware of just how long and storied the
+> history of flink is. In the v2 that I didn't post yet, I extended the
+> ability to link *any* file from only true root to also "root" within a
+> container following the potentially suspect approach that christian
+> suggested (I see where you are coming from with the unobvious approach
+> to avoiding toctou though I obviously support this patch being
+> merged), but I added a followup patch that checks for whether the file
+> in question is an `__O_TMPFILE` file which is trivial once we are
+> jumping through the hoops of looking up the struct file. If it is a
+> tmpfile (i.e. linkcount =3D 0) I think that all the concerns raised
+> about processes that inherit a fd being able to create links to the
+> file inappropriately are moot. Here is an excerpt from the cover
+> letter I was planning to send that explains my reasoning.
+>
+>  -  the ability to create an unnamed file, adjust its contents
+> and attributes (i.e. uid, gid, mode, xattrs, etc) and then only give it a=
+ name
+> once they are ready is exactly the ideal use-case for a hypothetical `fli=
+nk`
+> system call. The ability to use `AT_EMPTY_PATH` with `linkat` essentially=
+ turns
+> it into `flink`, but these restrictions hamper it from actually being use=
+d, as
+> most code is not privileged. By checking whether the file to be linked is=
+ a
+> temporary (i.e. unnamed) file we can allow this useful case without allow=
+ing
+> the more risky cases that could have security implications.
+>
+>  - Although it might appear that the security posture is affected, it is =
+not.
+> Callers who open an extant file on disk in read only mode for sharing wit=
+h
+> potentially untrustworthy code can trust that this change will not affect=
+ them
+> because it only applies to temporary files. Callers who open a temporary =
+file
+> need to do so with write access if they want to actually put any data in =
+it,
+> so they will already have to reopen the file (e.g. by linking it to a pat=
+h
+> and opening that path, or opening the magic symlink in proc) if they want=
+ to
+> share it in read-only mode with untrustworthy code. As such, that new fil=
+e
+> description will no longer be marked as a temporary file and thus these c=
+hanges
+> do not apply. The final case I can think of is the unlikely possibility o=
+f
+> intentionally sharing read write access to data stored in a temporary fil=
+e with
+> untrustworthy code, but where that code being able to make a link would s=
+till
+> be deleterious. In such a bizarre case, the `O_EXCL` can and should be us=
+ed to
+> fully prevent the temporary file from ever having a name, and this change=
+ does
+> not alter its efficacy.
+>
+> > I've added Charles to the Cc.
+> >
+> > But yes, with my patch, it would now be trivial to make that
+> >
+> >         capable(CAP_DAC_READ_SEARCH)
+> >
+> > test also be
+> >
+> >         ns_capable(f.file->f_cred->user_ns, CAP_DAC_READ_SEARCH)
+> >
+> > instead. I suspect not very many would care any more, but it does seem
+> > conceptually sensible.
+> >
+> > As to your patch - I don't like your nd->root  games in that patch at
+> > all. That looks odd.
+> >
+> > Yes, it makes lookup ignore the dfd (so you avoid the TOCTOU issue),
+> > but it also makes lookup ignore "/". Which happens to be ok with an
+> > empty path, but still...
+> >
+> > So it feels to me like that patch of yours mis-uses something that is
+> > just meant for vfs_path_lookup().
+> >
+> > It may happen to work, but it smells really odd to me.
+> >
+> >              Linus
+> >
+
