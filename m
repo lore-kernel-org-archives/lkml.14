@@ -1,182 +1,205 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C87014D44D;
-	Thu, 11 Apr 2024 14:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8780815098A;
+	Thu, 11 Apr 2024 14:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.120.2.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844356; cv=none; b=MtLbTTm9qKWj7TVIYT7Ng6VmafOLyyDRYmXvzebFUkFTMIIYikzsNqD6Mj2H3slFrS1Xr7Ca6BNvHM/v5Kls0aW18Qv25hRu1IpAA8xdtE6ad6cW0KmPjG/tyNFRlT8XEXopGLZRJx4/I5HuKFTMu+T6dVlGOL8NaAxxRdY5U1c=
+	t=1712844361; cv=none; b=EHLz41Ne9GUVe2cMiG3XTAwcU5sdnQiqYGITsicNIEkQ0dovuoAh6yO4PxjCOI/9DA5Tw2UVfsZEkbDIVZ9Eikn2z3fBsngbqx8EjfsAt+h7o/YtAXqg8emmipWcXD2oNq2dX6v7om2B9SxHxOtah73rqY+BifLRISyM1HdStbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844356; c=relaxed/simple;
-	bh=w02JCMP3BbzdBAjdyFpEXBM6uQChrEYUSHmWMjV3wlo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HC8UrSiI3i67xIBNIGe0FT6DLyAcBiRdJhvFHMLQE+H/WCWKdT0ZvxQmi5zoGfjWPLLRa4U/ylhv/YExxnf5+LqcqBIGteCT3MzZXhXGWG3XaCJgSlg7C8H/kSsMT3Kv+JoEuakRzjJYamSpEnebD3RDSmkfm8/MfLAGWoUIkLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LsjVOHx8; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LsjVOHx8"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0E6D94000B;
-	Thu, 11 Apr 2024 14:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712844351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=99XoepWmaxoXSZpnM0X9ck++OvRAJQLOkxrhY2CyXm8=;
-	b=LsjVOHx8DIQnU5iKlRvy7tXAeU70ECSr9FiiBw0siyrjylQ9vLfFpZsyVLhfz3DVKZ1gRT
-	Wx6ANDMv/8DKJNynXoW4e0tuZXR8UlS9nVZPHlypJr2PtsgXjyDvfvJBPoK4sk0jG/ypHr
-	oBsW0UYfEvwYvuw4LVvSkXhPL49LN2YTLXO8LS9rrGzWzBtzRoH1pNsfRQXGShiCGlkoQp
-	NYvZjanqFs+t5jkFihuA/I/C+Z7LR/iV3mIoYntWnvSkjwenZyx+0fk+8IkxLkmn4Nj1UG
-	b596yJmKoyAd6DZb89CaYyMVtX/mHVjPENd86ieCi9bIaszBsP/Ud2XcjXWSrQ==
-Date: Thu, 11 Apr 2024 16:05:48 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>, Max
- Zhen <max.zhen@amd.com>, Sonal Santan <sonal.santan@amd.com>, Stefano
- Stabellini <stefano.stabellini@xilinx.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>, Allan
- Nielsen <allan.nielsen@microchip.com>, Horatiu Vultur
- <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Subject: Re: [PATCH v2 0/2] Attach DT nodes to existing PCI devices
-Message-ID: <20240411160548.06fa9b11@bootlin.com>
-In-Reply-To: <CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
-References: <20231215145207.0cf098e5@bootlin.com>
-	<20240319152513.GA1227721@bhelgaas>
-	<20240319173404.019b424a@bootlin.com>
-	<CAL_JsqJOgkJtOipzskWc_NzUYUE1g0VsTT3eyPbbKw=NZO_4aQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1712844361; c=relaxed/simple;
+	bh=nW543UmCuzyTfxa5GK23YA/xxrdunGVtlo+B03BjHmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RRAO2Z+pLrs1NfSkLB1gsEo4oDujT8R7o3J09lBJE9PfhDZgn7YZ6l4Hejg3+8M63rQIcVz5uAeDOKmT7bRZMv75/kSA7XnwHbsQgSTtVAE/Mw9ahtjpnBM+pjQH0dcEE5FV06ylz9r0QTPOmhUvyMbFifOqo3wl/s4IFIDlw6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass smtp.mailfrom=sjtu.edu.cn; arc=none smtp.client-ip=202.120.2.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sjtu.edu.cn
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id D02B01006BD67;
+	Thu, 11 Apr 2024 22:05:44 +0800 (CST)
+Received: from broadband.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id DB8DF37C974;
+	Thu, 11 Apr 2024 22:05:39 +0800 (CST)
+From: Zheyun Shen <szy0127@sjtu.edu.cn>
+To: thomas.lendacky@amd.com,
+	seanjc@google.com,
+	pbonzini@redhat.com,
+	tglx@linutronix.de
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zheyun Shen <szy0127@sjtu.edu.cn>
+Subject: [PATCH v4 2/2] KVM: SVM: Flush cache only on CPUs running SEV guest
+Date: Thu, 11 Apr 2024 22:04:45 +0800
+Message-Id: <20240411140445.1038319-3-szy0127@sjtu.edu.cn>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240411140445.1038319-1-szy0127@sjtu.edu.cn>
+References: <20240411140445.1038319-1-szy0127@sjtu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
 
-On Wed, 10 Apr 2024 16:41:43 -0500
-Rob Herring <robh@kernel.org> wrote:
+On AMD CPUs without ensuring cache consistency, each memory page
+reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(),
+thereby affecting the performance of other programs on the host.
 
-> On Tue, Mar 19, 2024 at 11:34 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Hi Bjorn,
-> >
-> > On Tue, 19 Mar 2024 10:25:13 -0500
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >  
-> > > [+cc Krzysztof]
-> > >
-> > > On Fri, Dec 15, 2023 at 02:52:07PM +0100, Herve Codina wrote:  
-> > > > On Mon, 4 Dec 2023 07:59:09 -0600
-> > > > Rob Herring <robh@kernel.org> wrote:  
-> > > > > On Mon, Dec 4, 2023 at 6:43 AM Herve Codina <herve.codina@bootlin.com> wrote:  
-> > > > > > On Fri, 1 Dec 2023 16:26:45 -0600
-> > > > > > Rob Herring <robh@kernel.org> wrote:  
-> > > > > > > On Thu, Nov 30, 2023 at 10:57 AM Herve Codina <herve.codina@bootlin.com> wrote:
-> > > > > > > ...  
-> > >  
-> > > > > > > --- a/drivers/pci/of.c
-> > > > > > > +++ b/drivers/pci/of.c
-> > > > > > > @@ -31,6 +31,8 @@ int pci_set_of_node(struct pci_dev *dev)
-> > > > > > >                 return 0;
-> > > > > > >
-> > > > > > >         node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> > > > > > > +       if (!node && pci_is_bridge(dev))
-> > > > > > > +               of_pci_make_dev_node(dev);
-> > > > > > >         if (!node)
-> > > > > > >                 return 0;  
-> > > > > >
-> > > > > > Maybe it is too early.
-> > > > > > of_pci_make_dev_node() creates a node and fills some properties based on
-> > > > > > some already set values available in the PCI device such as its struct resource
-> > > > > > values.
-> > > > > > We need to have some values set by the PCI infra in order to create our DT node
-> > > > > > with correct values.  
-> > > > >
-> > > > > Indeed, that's probably the issue I'm having. In that case,
-> > > > > DECLARE_PCI_FIXUP_HEADER should work. That's later, but still before
-> > > > > device_add().
-> > > > >
-> > > > > I think modifying sysfs after device_add() is going to race with
-> > > > > userspace. Userspace is notified of a new device, and then the of_node
-> > > > > link may or may not be there when it reads sysfs. Also, not sure if
-> > > > > we'll need DT modaliases with PCI devices, but they won't work if the
-> > > > > DT node is not set before device_add().  
-> > > >
-> > > > DECLARE_PCI_FIXUP_HEADER is too early as well as doing the DT node creation
-> > > > just before the device_add() call.
-> > > > Indeed, in order to fill the DT properties, resources need to be assigned
-> > > > (needed for the 'ranges' property used for addresses translation).
-> > > > The resources assignment is done after the call to device_add().  
-> > >
-> > > Do we need to know the actual address *value* before creating the
-> > > sysfs file, or is it enough to know that the file should *exist*, even
-> > > if the value may be changed later?  
-> >
-> > I think, the problematic file is 'of_node'.
-> > This file is a symlink present in the device directory pointing to the
-> > node in a device-tree subdir.
-> >
-> > How can we create this of_node symlink without having the device-tree
-> > subdir available ?
-> >  
-> > >  
-> > > > Some PCI sysfs files are already created after adding the device by the
-> > > > pci_create_sysfs_dev_files() call:
-> > > >   https://elixir.bootlin.com/linux/v6.6/source/drivers/pci/bus.c#L347
-> > > >
-> > > > Is it really an issue to add the of_node link to sysfs on an already
-> > > > present device ?  
-> > >
-> > > Yes, I think this would be an issue.  We've been trying to get rid of
-> > > pci_create_sysfs_dev_files() altogether because there's a long history
-> > > of race issues related to it:
-> > >
-> > >   https://lore.kernel.org/r/1271099285.9831.13.camel@localhost/ WARNING: at fs/sysfs/dir.c:451 sysfs_add_one: sysfs: cannot create duplicate filename '/devices/pci0000:00/0000:00:01.0/slot'
-> > >   https://lore.kernel.org/r/19461.26166.427857.612983@pilspetsen.it.uu.se/ [2.6.35-rc1 regression] sysfs: cannot create duplicate filename ... XVR-600 related?
-> > >   https://lore.kernel.org/r/20200716110423.xtfyb3n6tn5ixedh@pali/ PCI: Race condition in pci_create_sysfs_dev_files
-> > >   https://lore.kernel.org/r/m3eebg9puj.fsf@t19.piap.pl/ PCI: Race condition in pci_create_sysfs_dev_files (can't boot)
-> > >   https://bugzilla.kernel.org/show_bug.cgi?id=215515 sysfs: cannot create duplicate filename '.../0000:e0'
-> > >
-> > > And several previous attempts to fix them:
-> > >
-> > >   https://lore.kernel.org/r/4469eba2-188b-aab7-07d1-5c77313fc42f@gmail.com/ Guard pci_create_sysfs_dev_files with atomic value
-> > >   https://lore.kernel.org/r/20230316103036.1837869-1-alexander.stein@ew.tq-group.com PCI/sysfs: get rid of pci_sysfs_init late_initcall
-> > >   https://lore.kernel.org/r/1702093576-30405-1-git-send-email-ssengar@linux.microsoft.com/ PCI/sysfs: Fix race in pci sysfs creation
-> > >  
-> >
-> > I am not sure we are facing in the same kind of issues.
-> > The ones you mentioned are related to some sysfs duplication.
-> > In the of_node case, the issue (if any) is that the symlink will be created
-> > after the other device's file. Not sure that it can lead to some file
-> > duplication.  
-> 
-> Again, if you notify userspace and it wants to make some decisions
-> based on of_node, then it has to be there when the notification
-> happens. As Greg says frequently, you've raced with userspace and
-> lost.
-> 
-> I imagine Bjorn won't like it, but may we need another fixup point?
-> 
-> Rob
+Typically, an AMD server may have 128 cores or more, while the SEV guest
+might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
+to bind these 8 vCPUs to specific physical CPUs.
 
-I'am not sure that a fixup point can fix the issue.
+Therefore, keeping a record of the physical core numbers each time a vCPU
+runs can help avoid flushing the cache for all CPUs every time.
 
-In order to have the of_node available before the notification, we need
-to a have the of_node set and filled before the device_add() call.
+Since the usage of sev_flush_asids() isn't tied to a single VM, we just
+replace all wbinvd_on_all_cpus() with sev_do_wbinvd() except for that
+in sev_flush_asids().
 
-In order to create the 'ranges' property in the DT node, we need PCI
-resources computed. These resources are computed after the device_add()
-call.
+Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
+---
+ arch/x86/kvm/svm/sev.c | 48 ++++++++++++++++++++++++++++++++++++++----
+ arch/x86/kvm/svm/svm.c |  2 ++
+ arch/x86/kvm/svm/svm.h |  4 ++++
+ 3 files changed, 50 insertions(+), 4 deletions(-)
 
-Hervé
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index f760106c3..3a129aa61 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -215,6 +215,42 @@ static void sev_asid_free(struct kvm_sev_info *sev)
+ 	sev->misc_cg = NULL;
+ }
+ 
++static struct cpumask *sev_get_wbinvd_dirty_mask(struct kvm *kvm)
++{
++	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
++
++	return sev->wbinvd_dirty_mask;
++}
++
++void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
++{
++	/*
++	 * The per-VM wbinvd_dirty_mask should record all physical CPUs
++	 * that are running a SEV guest and be used in memory reclamation.
++	 *
++	 * Migrating vCPUs between pCPUs is tricky. We cannot clear
++	 * this mask each time reclamation finishes and record it again
++	 * before VMRUN, because we cannot guarantee the pCPU will exit
++	 * to VMM before the next reclamation happens.
++	 *
++	 * Thus we just keep stale pCPU numbers in the mask if vCPU
++	 * migration happens.
++	 */
++	cpumask_set_cpu(cpu, sev_get_wbinvd_dirty_mask(vcpu->kvm));
++}
++
++static void sev_do_wbinvd(struct kvm *kvm)
++{
++	struct cpumask *dirty_mask = sev_get_wbinvd_dirty_mask(kvm);
++
++	/*
++	 * Although dirty_mask is not maintained perfectly and may lead
++	 * to wbinvd on physical CPUs that are not running a SEV guest,
++	 * it's still better than wbinvd_on_all_cpus().
++	 */
++	wbinvd_on_many_cpus(dirty_mask);
++}
++
+ static void sev_decommission(unsigned int handle)
+ {
+ 	struct sev_data_decommission decommission;
+@@ -265,6 +301,9 @@ static int sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp)
+ 	ret = sev_platform_init(&argp->error);
+ 	if (ret)
+ 		goto e_free;
++	if (!zalloc_cpumask_var(&sev->wbinvd_dirty_mask, GFP_KERNEL_ACCOUNT))
++		goto e_free;
++
+ 
+ 	INIT_LIST_HEAD(&sev->regions_list);
+ 	INIT_LIST_HEAD(&sev->mirror_vms);
+@@ -2048,7 +2087,7 @@ int sev_mem_enc_unregister_region(struct kvm *kvm,
+ 	 * releasing the pages back to the system for use. CLFLUSH will
+ 	 * not do this, so issue a WBINVD.
+ 	 */
+-	wbinvd_on_all_cpus();
++	sev_do_wbinvd(kvm);
+ 
+ 	__unregister_enc_region_locked(kvm, region);
+ 
+@@ -2152,7 +2191,7 @@ void sev_vm_destroy(struct kvm *kvm)
+ 	 * releasing the pages back to the system for use. CLFLUSH will
+ 	 * not do this, so issue a WBINVD.
+ 	 */
+-	wbinvd_on_all_cpus();
++	sev_do_wbinvd(kvm);
+ 
+ 	/*
+ 	 * if userspace was terminated before unregistering the memory regions
+@@ -2168,6 +2207,7 @@ void sev_vm_destroy(struct kvm *kvm)
+ 
+ 	sev_unbind_asid(kvm, sev->handle);
+ 	sev_asid_free(sev);
++	free_cpumask_var(sev->wbinvd_dirty_mask);
+ }
+ 
+ void __init sev_set_cpu_caps(void)
+@@ -2343,7 +2383,7 @@ static void sev_flush_encrypted_page(struct kvm_vcpu *vcpu, void *va)
+ 	return;
+ 
+ do_wbinvd:
+-	wbinvd_on_all_cpus();
++	sev_do_wbinvd(vcpu->kvm);
+ }
+ 
+ void sev_guest_memory_reclaimed(struct kvm *kvm)
+@@ -2351,7 +2391,7 @@ void sev_guest_memory_reclaimed(struct kvm *kvm)
+ 	if (!sev_guest(kvm))
+ 		return;
+ 
+-	wbinvd_on_all_cpus();
++	sev_do_wbinvd(kvm);
+ }
+ 
+ void sev_free_vcpu(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index e90b429c8..6ec118df3 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1560,6 +1560,8 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	}
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		avic_vcpu_load(vcpu, cpu);
++	if (sev_guest(vcpu->kvm))
++		sev_vcpu_load(vcpu, cpu);
+ }
+ 
+ static void svm_vcpu_put(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 8ef95139c..dfb889c91 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -90,6 +90,9 @@ struct kvm_sev_info {
+ 	struct list_head mirror_entry; /* Use as a list entry of mirrors */
+ 	struct misc_cg *misc_cg; /* For misc cgroup accounting */
+ 	atomic_t migration_in_progress;
++
++    /* CPUs invoked VMRUN should do wbinvd after guest memory is reclaimed */
++	struct cpumask *wbinvd_dirty_mask;
+ };
+ 
+ struct kvm_svm {
+@@ -694,6 +697,7 @@ void sev_es_vcpu_reset(struct vcpu_svm *svm);
+ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
+ void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa);
+ void sev_es_unmap_ghcb(struct vcpu_svm *svm);
++void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
+ 
+ /* vmenter.S */
+ 
+-- 
+2.34.1
+
