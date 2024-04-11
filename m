@@ -1,63 +1,63 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7EA6CDB3
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D1676C61
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849592; cv=none; b=ZOAOLP4TvlR90dndX1kt0ed7hP0nho3eFF+hnSFz808KmnYCPa1i/DLZETTiSEhONmyV1Ly3I+B/ek9QM2R7vfE+CsTqqHbZlxy4++e74z92U0heFRsJvqC1wXM+bXT1LTBWsfSor2msY8KV1fGg4Za4wpZ2QjfMBZ98+9ILD2I=
+	t=1712849595; cv=none; b=ENbUZy9Dp0VKMeml8bcf0Rgt6TCArf0QEgYmfc3o8MjjiBT2/aP0n7dR8C4nU3J57ckh51E6ai2BHCerINOU+VwTEf7B5oUc6Aak4lhxTutuyLt7844DFCqLILWzT+q+D/UMd23Tkm5FeMUJAwjTNisVBHzYJ6zNyuQriCnG8XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849592; c=relaxed/simple;
-	bh=sTP8rsrKxUZBohRj1v3SSYyY04HA7Nmsipa22jIW3Uw=;
+	s=arc-20240116; t=1712849595; c=relaxed/simple;
+	bh=EytEfueZdmHeZjMKVtERN8jT8/dREiZxCWtZspGZpjI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q9sUOmsBDaUtZgFymBaCHqcYPWJW32Z+Y2Ady06QnmI4DlJEpQXpoUC1O3PQhVB/4UXm/cRps6o6cFofoUcPZNVPgc4yVBdwF+MC+CXWAw+MKW9KVyUJvFs1FcFzhcFvgNCD+/zx4gUa1/2OP2Ds/H1MvT3KrwFLcBvmQkS9uPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=wofaxCjC; arc=none smtp.client-ip=209.85.166.45
+	 MIME-Version; b=sAWH8ZZuwuCP0JU+1PNbYqOq00/EED5atAPlczhguci0UGZeUPV0oNV518mFnRaqFSGKrAmdf2wyxgPs8+e2xDAu5pR3pHe80jUwBlsgoRO1sFbvH15ulYiDvV7MF88OQ8QBg2cL+fD9GXbnR4aRsEuJBViwLykC+19LMDv6cYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ywOLjbPT; arc=none smtp.client-ip=209.85.166.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="wofaxCjC"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170444339f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ywOLjbPT"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7d67d1073easo9725139f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849588; x=1713454388; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849593; x=1713454393; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4S4qyslAavPK8ZPFMWkHgRsl95Bjo1/MpiDGtaiWSMU=;
-        b=wofaxCjClRkcrY8mZBFmFL8z2gz55753GhZFxD0h6h9f+KzjBHpuRGQ0naoqlh8YUS
-         v8GnkCiIjeEAoVjG2cm3ghwzpFYNGSNc7CcKgKZ/EMZzgqPnFr2T30gcIgOESuIqBTk9
-         vE7/0tvy3OxSjCFtG5/artWtx9bSWln9A/3mT8eDhGCyOovJbJf0HTd0JbeRgXM2jyPm
-         I7aosk+WWCm2porx5B6XBn8xmPf/E/hFPI1nSEE0yFA8uHdoskPkr4yklHWeRxo5mqC1
-         iAmsSVSkfJutrwC5OeLJDrkQD2Bt/ySU+8y+z+qQMDo1NRAPeuT1rcZ4LkyAN/uCojR3
-         yjow==
+        bh=ttGc03mslHrJppIMBAAwcoGoLF7eUDlInI7/mEOC2ro=;
+        b=ywOLjbPTlR77bw7gyvAudd6Le4jWE0Jx67miifsH9g/KP6NEQ0FaUuRF6my0ZLAiPS
+         gh7LuyNt/Z3J94MJ0A92FRcoS5BO78hwvf6I0u9h4gWfzQdl6hG1VSpLI9ANZN2mdnOa
+         yuCl+TmjiBAWolzSf5NC5OzUmFFGz4ul04LZcTJ2d7RGiPdT3DEEkJ0wrmsscli3zKSM
+         t8BKDYT1B7rVSZQz2qk086uRiQiFjn5bZnF6bA4Q9yjBBj5Fkzl6iQWmNdW+DN4DglxV
+         5r0ap6zF/eAaF4TRiVzKxtRF+XKAQShkV915+wa97zsuYHsuxJpdzjVAonouhzSyTBOh
+         L1Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849588; x=1713454388;
+        d=1e100.net; s=20230601; t=1712849593; x=1713454393;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4S4qyslAavPK8ZPFMWkHgRsl95Bjo1/MpiDGtaiWSMU=;
-        b=Az+FbPsuVOODVRkiMFGZCazWHuyXa+wkL6R2YN9WDq4FZtaV+rrg4IFmrFbc6gKrnS
-         xTEiT5ZyvYwn0eCPoYsl4NuRZ2Z91WTal9TxS+q1kfajl7ST5QFqnqG/X7LlGkW3uMTN
-         jL517+hD2UU5jva35xF+caMdodxcIBqCyxfWKc302rHtouagGbpf2fbKT9BBlu2dVolm
-         R0sHOFMzhZvjuYALoyvvqj3sMzAJ1LsCzuULG1JbejhjxBMmML56eugzJXtdmW6uedcT
-         26pg05Fvxcs6N/nROVLZJ+UhbyEZhgg5nJ6CEADIFoLXmRP+Y/9jw+gSWE8pUGcJVNsS
-         whAg==
-X-Gm-Message-State: AOJu0Yyce99lfgaty8CZ6yKJ4Ys1xtomlI/zNGyzTT1WF1ClAs62AtF8
-	q+eKP2rLwrMVfXIk8qK/YRu/8zEjXc2X7YoTO02RMMjKfmy2NS/EfYAQkWZWyEUrCFAhCKkPaH4
-	y
-X-Google-Smtp-Source: AGHT+IFDznKLj7AbuI+y5QWIcZ8ghthMmNGsTTAO78MLXp8ZB/1JY2P3Xe0s2Zpgwk3zOX+ZDe+ksg==
-X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr213962ioh.0.1712849588298;
-        Thu, 11 Apr 2024 08:33:08 -0700 (PDT)
+        bh=ttGc03mslHrJppIMBAAwcoGoLF7eUDlInI7/mEOC2ro=;
+        b=o+jImyvh704AAlBJmzVPfUf85fg+4o35IOulzTzr+nc1ZmGR0CtnlPEmwO6p6qjOVC
+         X9W//yopRFQ4l90xqVnJHr2F+IvmTfl8Kznsmc7h5kDYKpzLYRS3eyoe3c8nXenI/3xZ
+         4QfigcX/t5dNXNoOzJASjGIGcf/UH+EgRvxzOAt2UL3eXNKgPn9vI4xvFptviV3CUVmw
+         dI0SgOfGts8g0iU4Hc+De5FWHQU3XRMyOGhjzF9Kmow8xmS7KLgcQ9dxC9s6nZoumfSv
+         /ztuDQFSWntAxxmN7wEhWQwu9qBKyrQ34hKCH+prl4Pj18w7g3vqEOVGPqROM2uDkXtk
+         /p2A==
+X-Gm-Message-State: AOJu0YynNmntlV4ZDwf6H5GwTEtQZoZpXbKX6ru1I8IAJV0+v50LM6g8
+	TOPjlOTzBWD7J49ZdgSeHd0Ywe9yFW4wbEHc9QIeDBxRxygpSUkX62qmXfcGnrvvgbJGztCBQib
+	g
+X-Google-Smtp-Source: AGHT+IE4ZaUQLplCisu3bQYyi2+xumFquATwSGoMfA34ws/KXcHy4IYRj9o7157hhzrfT2YuZT9s/Q==
+X-Received: by 2002:a6b:c34e:0:b0:7d6:7b7c:8257 with SMTP id t75-20020a6bc34e000000b007d67b7c8257mr206732iof.0.1712849593194;
+        Thu, 11 Apr 2024 08:33:13 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.06
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:33:06 -0700 (PDT)
+        Thu, 11 Apr 2024 08:33:11 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 051/437] Bluetooth: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:13:11 -0600
-Message-ID: <20240411153126.16201-52-axboe@kernel.dk>
+Subject: [PATCH 054/437] net: sunrpc: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:13:14 -0600
+Message-ID: <20240411153126.16201-55-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,464 +71,136 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- net/bluetooth/6lowpan.c     |  12 ++-
- net/bluetooth/hci_debugfs.c | 150 ++++++++++++++++--------------------
- net/bluetooth/selftest.c    |   9 +--
- net/bluetooth/smp.c         |   9 +--
- 4 files changed, 80 insertions(+), 100 deletions(-)
+ net/sunrpc/cache.c    | 14 +++++++++-----
+ net/sunrpc/debugfs.c  |  4 ++--
+ net/sunrpc/rpc_pipe.c |  8 +++++---
+ 3 files changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index 27520a8a486f..74e8ce90f12b 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -1079,19 +1079,17 @@ static int lowpan_enable_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(lowpan_enable_fops, lowpan_enable_get,
- 			 lowpan_enable_set, "%llu\n");
+diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
+index 95ff74706104..451b93494585 100644
+--- a/net/sunrpc/cache.c
++++ b/net/sunrpc/cache.c
+@@ -1774,6 +1774,7 @@ static ssize_t cache_read_pipefs(struct file *filp, char __user *buf,
  
--static ssize_t lowpan_control_write(struct file *fp,
--				    const char __user *user_buffer,
--				    size_t count,
--				    loff_t *position)
-+static ssize_t lowpan_control_write(struct kiocb *iocb, struct iov_iter *from)
+ 	return cache_read(filp, buf, count, ppos, cd);
+ }
++FOPS_READ_ITER_HELPER(cache_read_pipefs);
+ 
+ static ssize_t cache_write_pipefs(struct file *filp, const char __user *buf,
+ 				  size_t count, loff_t *ppos)
+@@ -1782,6 +1783,7 @@ static ssize_t cache_write_pipefs(struct file *filp, const char __user *buf,
+ 
+ 	return cache_write(filp, buf, count, ppos, cd);
+ }
++FOPS_WRITE_ITER_HELPER(cache_write_pipefs);
+ 
+ static __poll_t cache_poll_pipefs(struct file *filp, poll_table *wait)
  {
- 	char buf[32];
-+	size_t count = iov_iter_count(from);
- 	size_t buf_size = min(count, sizeof(buf) - 1);
- 	int ret;
- 	bdaddr_t addr;
- 	u8 addr_type;
- 	struct l2cap_conn *conn = NULL;
+@@ -1816,8 +1818,8 @@ static int cache_release_pipefs(struct inode *inode, struct file *filp)
+ const struct file_operations cache_file_operations_pipefs = {
+ 	.owner		= THIS_MODULE,
+ 	.llseek		= no_llseek,
+-	.read		= cache_read_pipefs,
+-	.write		= cache_write_pipefs,
++	.read_iter	= cache_read_pipefs_iter,
++	.write_iter	= cache_write_pipefs_iter,
+ 	.poll		= cache_poll_pipefs,
+ 	.unlocked_ioctl	= cache_ioctl_pipefs, /* for FIONREAD */
+ 	.open		= cache_open_pipefs,
+@@ -1840,7 +1842,7 @@ static int content_release_pipefs(struct inode *inode, struct file *filp)
  
--	if (copy_from_user(buf, user_buffer, buf_size))
-+	if (!copy_to_iter_full(buf, buf_size, from))
- 		return -EFAULT;
- 
- 	buf[buf_size] = '\0';
-@@ -1173,8 +1171,8 @@ static int lowpan_control_open(struct inode *inode, struct file *file)
- 
- static const struct file_operations lowpan_control_fops = {
- 	.open		= lowpan_control_open,
+ const struct file_operations content_file_operations_pipefs = {
+ 	.open		= content_open_pipefs,
 -	.read		= seq_read,
--	.write		= lowpan_control_write,
 +	.read_iter	= seq_read_iter,
-+	.write_iter	= lowpan_control_write,
  	.llseek		= seq_lseek,
- 	.release	= single_release,
+ 	.release	= content_release_pipefs,
  };
-diff --git a/net/bluetooth/hci_debugfs.c b/net/bluetooth/hci_debugfs.c
-index ce3ff2fa72e5..736c265e3ddf 100644
---- a/net/bluetooth/hci_debugfs.c
-+++ b/net/bluetooth/hci_debugfs.c
-@@ -32,31 +32,28 @@
- #include "hci_debugfs.h"
+@@ -1866,6 +1868,7 @@ static ssize_t read_flush_pipefs(struct file *filp, char __user *buf,
  
- #define DEFINE_QUIRK_ATTRIBUTE(__name, __quirk)				      \
--static ssize_t __name ## _read(struct file *file,			      \
--				char __user *user_buf,			      \
--				size_t count, loff_t *ppos)		      \
-+static ssize_t __name ## _read(struct kiocb *iocb, struct iov_iter *to)	      \
- {									      \
--	struct hci_dev *hdev = file->private_data;			      \
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;		      \
- 	char buf[3];							      \
- 									      \
- 	buf[0] = test_bit(__quirk, &hdev->quirks) ? 'Y' : 'N';		      \
- 	buf[1] = '\n';							      \
- 	buf[2] = '\0';							      \
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);	      \
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);	      \
- }									      \
- 									      \
--static ssize_t __name ## _write(struct file *file,			      \
--				 const char __user *user_buf,		      \
--				 size_t count, loff_t *ppos)		      \
-+static ssize_t __name ## _write(struct kiocb *iocb, struct iov_iter *from)    \
- {									      \
--	struct hci_dev *hdev = file->private_data;			      \
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;		      \
-+	size_t count = iov_iter_count(from);				      \
- 	bool enable;							      \
- 	int err;							      \
- 									      \
- 	if (test_bit(HCI_UP, &hdev->flags))				      \
- 		return -EBUSY;						      \
- 									      \
--	err = kstrtobool_from_user(user_buf, count, &enable);		      \
-+	err = kstrtobool_from_iter(from, count, &enable);		      \
- 	if (err)							      \
- 		return err;						      \
- 									      \
-@@ -70,8 +67,8 @@ static ssize_t __name ## _write(struct file *file,			      \
- 									      \
- static const struct file_operations __name ## _fops = {			      \
- 	.open		= simple_open,					      \
--	.read		= __name ## _read,				      \
--	.write		= __name ## _write,				      \
-+	.read_iter	= __name ## _read,				      \
-+	.write_iter	= __name ## _write,				      \
- 	.llseek		= default_llseek,				      \
- }									      \
- 
-@@ -274,39 +271,37 @@ static int conn_info_max_age_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(conn_info_max_age_fops, conn_info_max_age_get,
- 			  conn_info_max_age_set, "%llu\n");
- 
--static ssize_t use_debug_keys_read(struct file *file, char __user *user_buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t use_debug_keys_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_USE_DEBUG_KEYS) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
+ 	return read_flush(filp, buf, count, ppos, cd);
  }
++FOPS_READ_ITER_HELPER(read_flush_pipefs);
  
- static const struct file_operations use_debug_keys_fops = {
- 	.open		= simple_open,
--	.read		= use_debug_keys_read,
-+	.read_iter	= use_debug_keys_read,
- 	.llseek		= default_llseek,
+ static ssize_t write_flush_pipefs(struct file *filp,
+ 				  const char __user *buf,
+@@ -1875,11 +1878,12 @@ static ssize_t write_flush_pipefs(struct file *filp,
+ 
+ 	return write_flush(filp, buf, count, ppos, cd);
+ }
++FOPS_WRITE_ITER_HELPER(write_flush_pipefs);
+ 
+ const struct file_operations cache_flush_operations_pipefs = {
+ 	.open		= open_flush_pipefs,
+-	.read		= read_flush_pipefs,
+-	.write		= write_flush_pipefs,
++	.read_iter	= read_flush_pipefs_iter,
++	.write_iter	= write_flush_pipefs_iter,
+ 	.release	= release_flush_pipefs,
+ 	.llseek		= no_llseek,
  };
- 
--static ssize_t sc_only_mode_read(struct file *file, char __user *user_buf,
--				 size_t count, loff_t *ppos)
-+static ssize_t sc_only_mode_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_SC_ONLY) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
- static const struct file_operations sc_only_mode_fops = {
- 	.open		= simple_open,
--	.read		= sc_only_mode_read,
-+	.read_iter	= sc_only_mode_read,
- 	.llseek		= default_llseek,
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index a176d5a0b0ee..8fb085c614ef 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -112,7 +112,7 @@ tasks_release(struct inode *inode, struct file *filp)
+ static const struct file_operations tasks_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= tasks_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= tasks_release,
  };
- 
-@@ -428,21 +423,20 @@ static int voice_setting_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(voice_setting_fops, voice_setting_get,
- 			  NULL, "0x%4.4llx\n");
- 
--static ssize_t ssp_debug_mode_read(struct file *file, char __user *user_buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t ssp_debug_mode_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hdev->ssp_debug_mode ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
- static const struct file_operations ssp_debug_mode_fops = {
- 	.open		= simple_open,
--	.read		= ssp_debug_mode_read,
-+	.read_iter	= ssp_debug_mode_read,
- 	.llseek		= default_llseek,
+@@ -211,7 +211,7 @@ xprt_info_release(struct inode *inode, struct file *filp)
+ static const struct file_operations xprt_info_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= xprt_info_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= xprt_info_release,
  };
- 
-@@ -500,28 +494,25 @@ static int auto_accept_delay_get(void *data, u64 *val)
- DEFINE_DEBUGFS_ATTRIBUTE(auto_accept_delay_fops, auto_accept_delay_get,
- 			  auto_accept_delay_set, "%llu\n");
- 
--static ssize_t force_bredr_smp_read(struct file *file,
--				    char __user *user_buf,
--				    size_t count, loff_t *ppos)
-+static ssize_t force_bredr_smp_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_FORCE_BREDR_SMP) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 910a5d850d04..73189ac4d9f7 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -320,6 +320,7 @@ rpc_pipe_read(struct file *filp, char __user *buf, size_t len, loff_t *offset)
+ 	inode_unlock(inode);
+ 	return res;
  }
++FOPS_READ_ITER_HELPER(rpc_pipe_read);
  
--static ssize_t force_bredr_smp_write(struct file *file,
--				     const char __user *user_buf,
--				     size_t count, loff_t *ppos)
-+static ssize_t force_bredr_smp_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	bool enable;
- 	int err;
+ static ssize_t
+ rpc_pipe_write(struct file *filp, const char __user *buf, size_t len, loff_t *offset)
+@@ -334,6 +335,7 @@ rpc_pipe_write(struct file *filp, const char __user *buf, size_t len, loff_t *of
+ 	inode_unlock(inode);
+ 	return res;
+ }
++FOPS_WRITE_ITER_HELPER(rpc_pipe_write);
  
--	err = kstrtobool_from_user(user_buf, count, &enable);
-+	err = kstrtobool_from_iter(from, count, &enable);
- 	if (err)
- 		return err;
- 
-@@ -534,8 +525,8 @@ static ssize_t force_bredr_smp_write(struct file *file,
- 
- static const struct file_operations force_bredr_smp_fops = {
- 	.open		= simple_open,
--	.read		= force_bredr_smp_read,
--	.write		= force_bredr_smp_write,
-+	.read_iter	= force_bredr_smp_read,
-+	.write_iter	= force_bredr_smp_write,
- 	.llseek		= default_llseek,
+ static __poll_t
+ rpc_pipe_poll(struct file *filp, struct poll_table_struct *wait)
+@@ -386,8 +388,8 @@ rpc_pipe_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ static const struct file_operations rpc_pipe_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.llseek		= no_llseek,
+-	.read		= rpc_pipe_read,
+-	.write		= rpc_pipe_write,
++	.read_iter	= rpc_pipe_read_iter,
++	.write_iter	= rpc_pipe_write_iter,
+ 	.poll		= rpc_pipe_poll,
+ 	.unlocked_ioctl	= rpc_pipe_ioctl,
+ 	.open		= rpc_pipe_open,
+@@ -449,7 +451,7 @@ rpc_info_release(struct inode *inode, struct file *file)
+ static const struct file_operations rpc_info_operations = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= rpc_info_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= rpc_info_release,
  };
- 
-@@ -745,31 +736,29 @@ static int static_address_show(struct seq_file *f, void *p)
- 
- DEFINE_SHOW_ATTRIBUTE(static_address);
- 
--static ssize_t force_static_address_read(struct file *file,
--					 char __user *user_buf,
--					 size_t count, loff_t *ppos)
-+static ssize_t force_static_address_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_FORCE_STATIC_ADDR) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
--static ssize_t force_static_address_write(struct file *file,
--					  const char __user *user_buf,
--					  size_t count, loff_t *ppos)
-+static ssize_t force_static_address_write(struct kiocb *iocb,
-+					  struct iov_iter *from)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	bool enable;
- 	int err;
- 
- 	if (hdev_is_powered(hdev))
- 		return -EBUSY;
- 
--	err = kstrtobool_from_user(user_buf, count, &enable);
-+	err = kstrtobool_from_iter(from, count, &enable);
- 	if (err)
- 		return err;
- 
-@@ -783,8 +772,8 @@ static ssize_t force_static_address_write(struct file *file,
- 
- static const struct file_operations force_static_address_fops = {
- 	.open		= simple_open,
--	.read		= force_static_address_read,
--	.write		= force_static_address_write,
-+	.read_iter	= force_static_address_read,
-+	.write_iter	= force_static_address_write,
- 	.llseek		= default_llseek,
- };
- 
-@@ -1147,29 +1136,26 @@ DEFINE_DEBUGFS_ATTRIBUTE(auth_payload_timeout_fops,
- 			  auth_payload_timeout_get,
- 			  auth_payload_timeout_set, "%llu\n");
- 
--static ssize_t force_no_mitm_read(struct file *file,
--				  char __user *user_buf,
--				  size_t count, loff_t *ppos)
-+static ssize_t force_no_mitm_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_FORCE_NO_MITM) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
--static ssize_t force_no_mitm_write(struct file *file,
--				   const char __user *user_buf,
--				   size_t count, loff_t *ppos)
-+static ssize_t force_no_mitm_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	char buf[32];
- 	size_t buf_size = min(count, (sizeof(buf) - 1));
- 	bool enable;
- 
--	if (copy_from_user(buf, user_buf, buf_size))
-+	if (!copy_from_iter_full(buf, buf_size, from))
- 		return -EFAULT;
- 
- 	buf[buf_size] = '\0';
-@@ -1186,8 +1172,8 @@ static ssize_t force_no_mitm_write(struct file *file,
- 
- static const struct file_operations force_no_mitm_fops = {
- 	.open		= simple_open,
--	.read		= force_no_mitm_read,
--	.write		= force_no_mitm_write,
-+	.read_iter	= force_no_mitm_read,
-+	.write_iter	= force_no_mitm_write,
- 	.llseek		= default_llseek,
- };
- 
-@@ -1273,22 +1259,21 @@ void hci_debugfs_create_conn(struct hci_conn *conn)
- 	conn->debugfs = debugfs_create_dir(name, hdev->debugfs);
- }
- 
--static ssize_t dut_mode_read(struct file *file, char __user *user_buf,
--			     size_t count, loff_t *ppos)
-+static ssize_t dut_mode_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_DUT_MODE) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
--static ssize_t dut_mode_write(struct file *file, const char __user *user_buf,
--			      size_t count, loff_t *ppos)
-+static ssize_t dut_mode_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	struct sk_buff *skb;
- 	bool enable;
- 	int err;
-@@ -1296,7 +1281,7 @@ static ssize_t dut_mode_write(struct file *file, const char __user *user_buf,
- 	if (!test_bit(HCI_UP, &hdev->flags))
- 		return -ENETDOWN;
- 
--	err = kstrtobool_from_user(user_buf, count, &enable);
-+	err = kstrtobool_from_iter(from, count, &enable);
- 	if (err)
- 		return err;
- 
-@@ -1324,31 +1309,30 @@ static ssize_t dut_mode_write(struct file *file, const char __user *user_buf,
- 
- static const struct file_operations dut_mode_fops = {
- 	.open		= simple_open,
--	.read		= dut_mode_read,
--	.write		= dut_mode_write,
-+	.read_iter	= dut_mode_read,
-+	.write_iter	= dut_mode_write,
- 	.llseek		= default_llseek,
- };
- 
--static ssize_t vendor_diag_read(struct file *file, char __user *user_buf,
--				size_t count, loff_t *ppos)
-+static ssize_t vendor_diag_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
- 	char buf[3];
- 
- 	buf[0] = hci_dev_test_flag(hdev, HCI_VENDOR_DIAG) ? 'Y' : 'N';
- 	buf[1] = '\n';
- 	buf[2] = '\0';
--	return simple_read_from_buffer(user_buf, count, ppos, buf, 2);
-+	return simple_copy_to_iter(buf, &iocb->ki_pos, 2, to);
- }
- 
--static ssize_t vendor_diag_write(struct file *file, const char __user *user_buf,
--				 size_t count, loff_t *ppos)
-+static ssize_t vendor_diag_write(struct kiocb *iocb, struct iov_iter *from)
- {
--	struct hci_dev *hdev = file->private_data;
-+	struct hci_dev *hdev = iocb->ki_filp->private_data;
-+	size_t count = iov_iter_count(from);
- 	bool enable;
- 	int err;
- 
--	err = kstrtobool_from_user(user_buf, count, &enable);
-+	err = kstrtobool_from_iter(from, count, &enable);
- 	if (err)
- 		return err;
- 
-@@ -1380,8 +1364,8 @@ static ssize_t vendor_diag_write(struct file *file, const char __user *user_buf,
- 
- static const struct file_operations vendor_diag_fops = {
- 	.open		= simple_open,
--	.read		= vendor_diag_read,
--	.write		= vendor_diag_write,
-+	.read_iter	= vendor_diag_read,
-+	.write_iter	= vendor_diag_write,
- 	.llseek		= default_llseek,
- };
- 
-diff --git a/net/bluetooth/selftest.c b/net/bluetooth/selftest.c
-index f49604d44b87..e8f3e5d63c01 100644
---- a/net/bluetooth/selftest.c
-+++ b/net/bluetooth/selftest.c
-@@ -183,16 +183,15 @@ static int __init test_ecdh_sample(struct crypto_kpp *tfm, const u8 priv_a[32],
- 
- static char test_ecdh_buffer[32];
- 
--static ssize_t test_ecdh_read(struct file *file, char __user *user_buf,
--			      size_t count, loff_t *ppos)
-+static ssize_t test_ecdh_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	return simple_read_from_buffer(user_buf, count, ppos, test_ecdh_buffer,
--				       strlen(test_ecdh_buffer));
-+	return simple_copy_to_iter(test_ecdh_buffer, &iocb->ki_pos,
-+				   strlen(test_ecdh_buffer), to);
- }
- 
- static const struct file_operations test_ecdh_fops = {
- 	.open		= simple_open,
--	.read		= test_ecdh_read,
-+	.read_iter	= test_ecdh_read,
- 	.llseek		= default_llseek,
- };
- 
-diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
-index 1e7ea3a4b7ef..fcd35201712b 100644
---- a/net/bluetooth/smp.c
-+++ b/net/bluetooth/smp.c
-@@ -3729,16 +3729,15 @@ static int __init test_h6(struct crypto_shash *tfm_cmac)
- 
- static char test_smp_buffer[32];
- 
--static ssize_t test_smp_read(struct file *file, char __user *user_buf,
--			     size_t count, loff_t *ppos)
-+static ssize_t test_smp_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	return simple_read_from_buffer(user_buf, count, ppos, test_smp_buffer,
--				       strlen(test_smp_buffer));
-+	return simple_copy_to_iter(test_smp_buffer, &iocb->ki_pos,
-+				   strlen(test_smp_buffer), to);
- }
- 
- static const struct file_operations test_smp_fops = {
- 	.open		= simple_open,
--	.read		= test_smp_read,
-+	.read_iter	= test_smp_read,
- 	.llseek		= default_llseek,
- };
- 
 -- 
 2.43.0
 
