@@ -1,108 +1,140 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33684652D;
-	Thu, 11 Apr 2024 16:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643DC46522
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712853776; cv=none; b=JMJDW3lppWVnAByuzPTffPP8IkMib3KxTyEXaLOKbDFR6/OYjEX7sKgXhoNnV76Re8H2KqAg461wtJR4BU6Vjy+3Nh9+56YovUntndF9FLYiTQrUscxwedB1QayLtufjOHR5eApQuYXJSoKdde8/8+5IcECv4fss53VaVsXEpxY=
+	t=1712853836; cv=none; b=GOLV1FHjy+qpK3quFaHFe7n+Cs9kc7W/ti3sX/yA+/ppU02/HxewdXgcEX2YfV78JRLoLKz6ea878q/m+jHeMvQQ6Vjydpr6/988eeGtPJG6gPg8EJ7hvi1AVHPMDSgWNzKys1oziTEHuxK4yETakzly4fiXHb987mZEvw4zjww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712853776; c=relaxed/simple;
-	bh=iWW/qCaP0P9tau2/wi1UmwH7bekDCUCjwopj3xWE5g4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lI0em8jYi7TNy93Jk6AVVv2NB4IleCudbNuva4EO1hwmsxpimSSV98++enc9bEB7b7YKY8w0mHrq2IzKMT802mbIGMtpGq3wRARF80q8XNkqTCKfmKUv+PhAj7nzaCSdKMOwhSWcqkKLw3Avxj22lAcOLnGlxX5W9/I9/w2GutE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noOcEE8f; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noOcEE8f"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-417c5aa361cso395285e9.1;
-        Thu, 11 Apr 2024 09:42:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712853772; x=1713458572; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SZmEpr7qdrpveg9LiEZiAb+CNWkMrLC0rQ3S13EVdo0=;
-        b=noOcEE8fyJg3arZ+WFgFsEGt8EMerdAEoG6Tq0c6LOmrU8XEVMbnknWdav9MUP1oQz
-         mzwTvYkzoSq9WCmIzBRZwCH71Kz/nJW17cZX6jWfofl07Rx0BZhfDDkiqOvOFJr+9q9K
-         EjJl1wWEjOfx+Bb7ZoNlIllxzHGnlfiixx56KgawNNhrdTcvw4xzQVqaNWpyV0Y/Zi9b
-         P6GRQYcMF5wR04AKX0A2BImmiG3sjcocabPuFThxhb6ElR9ZUNTrx7uaoOmX+6sjAVFn
-         XnZSFj42sNpySeYZAXV14rh6SkZVHpVUfVG7qXoPx7mOqD3B7SoTyY1CC9n+/tvFdbOp
-         OWSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712853772; x=1713458572;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SZmEpr7qdrpveg9LiEZiAb+CNWkMrLC0rQ3S13EVdo0=;
-        b=rLric5Sjrh9LvLyPk3aH5alUblHKLMXa1DPnRIZxKuaYndNEh0IR3St9LCRHBefzX+
-         O2mt2FOhrM6Uz/e7J61f/Iv0WT7t8kofKhGGCfCN6UEfoNDFF+DW2Yqyctg1aYDlGBzw
-         VwTwqit0AU6a23/klp2/s3n1HHernIqb0IIPxPYUi+UkY3M0cK8U15FBbUOTyT3N77H6
-         WkxJ1TOruTLwzOuCYreYgUBvzWzWE8BWBxROFmE+Bpsccu0r7TRAWTsjpUVGpHfYbqBa
-         6FDvpEKmeHvnx/leMD6CSmo5/2QHHuTADjgIJYDMf3mIx/E54GzMdS9J6oWyq1hxR/sK
-         yoow==
-X-Gm-Message-State: AOJu0YzMZA7HQH+i/pYz7DTDEXC82KcplrGUP3M+RhgN7wZnh0AMO7MK
-	p86pTrB6/Yj584d5oIioLB5Inaua8JeBCcHjc+A+V2kM+7JE7jyOszxQUA==
-X-Google-Smtp-Source: AGHT+IE1nwZZGnCs9lN5mKQ9+e0avbIXauPOHN5tbzbqmoviyDEd3bg07vRozyPSakQKtuVq9FCARQ==
-X-Received: by 2002:a05:600c:500f:b0:416:a8a7:9505 with SMTP id n15-20020a05600c500f00b00416a8a79505mr219018wmr.5.1712853771996;
-        Thu, 11 Apr 2024 09:42:51 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id iv11-20020a05600c548b00b0041665b6e111sm6025351wmb.12.2024.04.11.09.42.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 09:42:51 -0700 (PDT)
-From: Stafford Horne <shorne@gmail.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Subject: [PATCH v2 2/2] openrisc: Add support for more module relocations
-Date: Thu, 11 Apr 2024 17:42:32 +0100
-Message-ID: <20240411164234.1997000-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240411164234.1997000-1-shorne@gmail.com>
-References: <20240411164234.1997000-1-shorne@gmail.com>
+	s=arc-20240116; t=1712853836; c=relaxed/simple;
+	bh=0SyqSdqS/KQm0XugWabY7DRVTWjg+dy5UbwBkao/aq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cBzo9VL+Z1VKZ9hTulqZI7ApkH55m8w+cHAZmpL7gzecRhXFaF3U9AXqtMneJX7u1YPdTLX37PuU/xfrvvqrNw6OL2TNgRnb5oDBwrMD1iIGBHUP2lGlyazX1DJ7uPoxlihor7/su4tKL5JRtnAh2ylculiTkATzX90A/AsKhhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51C8D113E;
+	Thu, 11 Apr 2024 09:44:24 -0700 (PDT)
+Received: from [10.1.38.151] (XHFQ2J9959.cambridge.arm.com [10.1.38.151])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D4A03F6C4;
+	Thu, 11 Apr 2024 09:43:53 -0700 (PDT)
+Message-ID: <f56d3f42-c7c9-4c0a-9e1a-b89e92a3cc97@arm.com>
+Date: Thu, 11 Apr 2024 17:43:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] mm: add per-order mTHP anon_swpout and
+ anon_swpout_fallback counters
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>, david@redhat.com,
+ akpm@linux-foundation.org, linux-mm@kvack.org
+Cc: cerasuolodomenico@gmail.com, chrisl@kernel.org, kasong@tencent.com,
+ peterx@redhat.com, surenb@google.com, v-songbaohua@oppo.com,
+ willy@infradead.org, yosryahmed@google.com, yuzhao@google.com,
+ linux-kernel@vger.kernel.org
+References: <20240405102704.77559-1-21cnbao@gmail.com>
+ <20240405102704.77559-3-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240405102704.77559-3-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When testing modules in OpenRISC I found R_OR1K_AHI16 (signed adjusted
-high 16-bit) and R_OR1K_SLO16 (split low 16-bit) relocations are used in
-modules but not implemented yet.
+On 05/04/2024 11:27, Barry Song wrote:
+> From: Barry Song <v-songbaohua@oppo.com>
+> 
+> This helps to display the fragmentation situation of the swapfile,
+> knowing the proportion of how much we haven't split large folios.
+> So far, we only support non-split swapout for anon memory, with
+> the possibility of expanding to shmem in the future.  So, we add
+> the "anon" prefix to the counter names.
+> 
+> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> ---
+>  include/linux/huge_mm.h | 2 ++
+>  mm/huge_memory.c        | 4 ++++
+>  mm/page_io.c            | 6 +++++-
+>  mm/vmscan.c             | 3 +++
+>  4 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index c5d33017a4dd..1d893a358df6 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -267,6 +267,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>  enum mthp_stat_item {
+>  	MTHP_STAT_ANON_ALLOC,
+>  	MTHP_STAT_ANON_ALLOC_FALLBACK,
+> +	MTHP_STAT_ANON_SWPOUT,
+> +	MTHP_STAT_ANON_SWPOUT_FALLBACK,
+>  	__MTHP_STAT_COUNT
+>  };
+>  
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 5b875f0fc923..28113f8fdf18 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -554,10 +554,14 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+>  
+>  DEFINE_MTHP_STAT_ATTR(anon_alloc, MTHP_STAT_ANON_ALLOC);
+>  DEFINE_MTHP_STAT_ATTR(anon_alloc_fallback, MTHP_STAT_ANON_ALLOC_FALLBACK);
+> +DEFINE_MTHP_STAT_ATTR(anon_swpout, MTHP_STAT_ANON_SWPOUT);
+> +DEFINE_MTHP_STAT_ATTR(anon_swpout_fallback, MTHP_STAT_ANON_SWPOUT_FALLBACK);
+>  
+>  static struct attribute *stats_attrs[] = {
+>  	&anon_alloc_attr.attr,
+>  	&anon_alloc_fallback_attr.attr,
+> +	&anon_swpout_attr.attr,
+> +	&anon_swpout_fallback_attr.attr,
+>  	NULL,
+>  };
+>  
+> diff --git a/mm/page_io.c b/mm/page_io.c
+> index a9a7c236aecc..7669452e8b4d 100644
+> --- a/mm/page_io.c
+> +++ b/mm/page_io.c
+> @@ -212,13 +212,17 @@ int swap_writepage(struct page *page, struct writeback_control *wbc)
+>  
+>  static inline void count_swpout_vm_event(struct folio *folio)
+>  {
+> +	long nr_pages = folio_nr_pages(folio);
+> +
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>  	if (unlikely(folio_test_pmd_mappable(folio))) {
+>  		count_memcg_folio_events(folio, THP_SWPOUT, 1);
+>  		count_vm_event(THP_SWPOUT);
+>  	}
+> +	if (nr_pages > 0)
+> +		count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPOUT);
 
-This patch implements the relocations. I have tested with a few modules.
+I think you mean "nr_pages > 1"? Although as established in my comments against
+patch 1, its safe to call for order-0, so could just unconditionally call this
+(as you effectively are at the moment).
 
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
- arch/openrisc/kernel/module.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>  #endif
+> -	count_vm_events(PSWPOUT, folio_nr_pages(folio));
+> +	count_vm_events(PSWPOUT, nr_pages);
+>  }
+>  
+>  #if defined(CONFIG_MEMCG) && defined(CONFIG_BLK_CGROUP)
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index ffc4553c8615..b30e6294f82a 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1247,6 +1247,9 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+>  						count_vm_event(
+>  							THP_SWPOUT_FALLBACK);
+>  					}
+> +					if (nr_pages > 0)
+> +						count_mthp_stat(get_order(nr_pages * PAGE_SIZE),
+> +							MTHP_STAT_ANON_SWPOUT_FALLBACK);
 
-diff --git a/arch/openrisc/kernel/module.c b/arch/openrisc/kernel/module.c
-index 292f0afe27b9..c9ff4c4a0b29 100644
---- a/arch/openrisc/kernel/module.c
-+++ b/arch/openrisc/kernel/module.c
-@@ -55,6 +55,16 @@ int apply_relocate_add(Elf32_Shdr *sechdrs,
- 			value |= *location & 0xfc000000;
- 			*location = value;
- 			break;
-+		case R_OR1K_AHI16:
-+			/* Adjust the operand to match with a signed LO16.  */
-+			value += 0x8000;
-+			*((uint16_t *)location + 1) = value >> 16;
-+			break;
-+		case R_OR1K_SLO16:
-+			/* Split value lower 16-bits.  */
-+			value = ((value & 0xf800) << 10) | (value & 0x7ff);
-+			*location = (*location & ~0x3e007ff) | value;
-+			break;
- 		default:
- 			pr_err("module %s: Unknown relocation: %u\n",
- 			       me->name, ELF32_R_TYPE(rel[i].r_info));
--- 
-2.44.0
+Same comment.
+
+>  #endif
+>  					if (!add_to_swap(folio))
+>  						goto activate_locked_split;
 
