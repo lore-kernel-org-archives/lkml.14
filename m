@@ -1,87 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F62F3F9CB;
-	Thu, 11 Apr 2024 18:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FF148CF0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858738; cv=none; b=U1Q31EpeoGpDcuwy9OFs0r2HHbkjeMo5kYPy9zUmLyY6HQSyAfxk1DnOsDdczHfKTCa7K253Q9kcel+NlDiCliaF8blDc0JoN3wU25K2Q/VOZCxXKbzDGqxbBw1WVWSYTXfWTK3iojJWjTV9RWxcVeqL3Tyz0un9ES5H0Bdnnb0=
+	t=1712858801; cv=none; b=jM5GBrZaYigOosBdBOKGkS4YJ3S0qNEnovXsacN5v+vbeSig4bXRqWANgYTyvy96SowfGm06nUirQ/EiIa9AgAad6J8gdwdbzz0cJPPGY1DTc4L+XFXps58p8/vz23Wb4tMscVT71PxGI+dk6gvbR+x0ofXYUBsfzJ2DGrYQWbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858738; c=relaxed/simple;
-	bh=Po6fGcLwrJPZP+lyaV/Dz9zY4SdnZLRnO8QH7Qa0QN8=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=KWbJItcBQ/8ydutIGl47smc4t9r2rOaJbpcKSlzr3534TygXB963QfD6v5vhqDFM6DcksPWzuKFixBJ997ixHejHkKzX4E2I6OMFStg/U4eJQ+G4Su0S4d8eMNtC3i7CJr0gWbH2p/+mP7+lBu6Fa4IZFLxxHyUrDmL98Oxi1gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIA+dJTK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712858801; c=relaxed/simple;
+	bh=YOTZKjL3bWzR+U2HGFh3CrQiGRxDH7YCmn8lKN3Z9WE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qw28okB7TogBFuymbZP9MZkWN0dqOKfpXiL0gzOc3xrmOXwmIITA4dIz2uoT17XS7MOajoPNkxIx6rD2sG9j9TO5dYCbsn6B7r22S0KoQdGpoy34DB9evQQ6klN5ZvgQWfBvgfgoG/1pwBHE62pX+3wjp8HrNMK3MClpPbahXcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KMZCcpG8; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIA+dJTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB7FBC113CD;
-	Thu, 11 Apr 2024 18:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712858737;
-	bh=Po6fGcLwrJPZP+lyaV/Dz9zY4SdnZLRnO8QH7Qa0QN8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=dIA+dJTKwPKgM0A4xLFrrF0z1bbzAMaN3e9RK0sRmiKS0k8fqsCEnoZpDcnjzsD70
-	 7Z1x9e7cHY9GIDUoLkEv9je/3IRU6vvGhhOHud6I8UPEXiLzSWRHBZoctF27u/BTEM
-	 TdwMgdR/Me7PphDc6NnFa/IhgpVw9Mme/vJTtNkek2BRy+zBZ2a0YTEDYJfjAUeqtN
-	 HKThy6qi1pSWDUrvZB6IBQAOzKX2COO/JguyGRmPcbRc5qK06ufZcVBE6sFuMrcZpp
-	 53U/7Jq8BbN3O/ImVYSvLIEvDZLFaBLPAZSElyWB499GiTjs6UFRVZTEhisiqCzICJ
-	 lrTKH/LThnvqA==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-22ede5f7e0fso19094fac.0;
-        Thu, 11 Apr 2024 11:05:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU113RLLkYORShARXCG1UZjo94faMixyr0uH94ZFJfq3waLNA1tz88p99ax8B4l0ye+2w5CKOA+peIS8w1BABOnXeQa1ADEAlUM7zy8
-X-Gm-Message-State: AOJu0Yx9Fly0dgvr3WvDf0x++aVS6PqsPuie5qiuQtQNVj8zvOSt+Nba
-	oAdcnCeBoZ3qlcars0g9sMqw0gRc6U5mqJqW9RT5RWx0oZg/MT8FdA2hr/MO89b48fCtwJXLogp
-	pvHPNSPgSqG0GwSDH8q6dFEAilBk=
-X-Google-Smtp-Source: AGHT+IHnGp1VDFRsIZBhnbclgmZybGtmOyXZ59XPZFm4wZRkd9aL9Lio8U1EpYqrOjjxKWAG4OhtOttBqyTMj2LMSXs=
-X-Received: by 2002:a05:6870:e9a9:b0:229:e46d:763a with SMTP id
- r41-20020a056870e9a900b00229e46d763amr306351oao.0.1712858737159; Thu, 11 Apr
- 2024 11:05:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMZCcpG8"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5dcbb769a71so95531a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712858799; x=1713463599; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
+        b=KMZCcpG8t4eVXjZNqvoOu1520oK5BzutSG3kHoRp7G2vBZc4M9iZPc41t3kEI4iYCF
+         WvOZ2EaBUnsmfWsifUYKdlXDaNS9KOZtdtFjKds+6ZWUX3grpB0yoJnkinafn/E6LuSa
+         0tfae9s+zqkfoh2VT4y6368yGToHGtviBe8oJSI+uiigGWnx74lKQD7FbbcfwfJ+bnQc
+         A2KL66METhA3X2ox04n6WMW9Rb6fWAGpDhwRJaBAWAgVTyRUFlO/4WnpaWmXnGD+VOar
+         4Jg3jj4Sy3dwcXHePeia0jp/RkIuXR4tCsjYvjL+Vnxa0NhsCLJsjuGKvoxqQRDBH10l
+         flfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712858799; x=1713463599;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GGhUQmTooa3lX9A5NM0MmOVLthQr3cREHLR/XHq7cF0=;
+        b=A+8AesTLjHTUYyiuNEkc4U7H5TI+tdt0V4YZRpM72wgeb11WIW0nVlZRgdVnCc4c/P
+         ehkiqnfh3I3iSB1Njp4V4wT2ET61DdXWEGNF+grZruCrTZ2IJMfYq8qdTh3MF6PB7AXJ
+         P5DwL8U5GFhnQ5JT9GBo1Q3T97lz4AXS4Agb8Mo+MxmpEQRP3D6PVhQiNVcMGWRaGY3e
+         K1pu0Byvypv4xBiGjUKQdrbXVRUWycnp6oyeKtAoUwhcnO2/wyygqKMwItobJMRTkv6G
+         OKKDKXvvcCmBUp/GqEwmVE4D6+wT/wr4Kr12AMhRub1GJTAIEJ70KHyMn+kTJEsyysMZ
+         mUhA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRNgOtssipyfE02FdL/kasccjuwZOexBdWG8coSwgzyTeYF0MqnDO4IFWECdw5st2eP8v4jI7xXFjQowKm6LOmxFYvp8T5a0N5W3Vr
+X-Gm-Message-State: AOJu0YzYdo7QEK0MSJ38XTeccCugNfNUNKy7+sB2LLRVtgexOaHUeOda
+	2V+yAWoKQleoENDYg8RY6hCfIr+Fc2jvVQfbPzrf+QK9SnPPdrbHA1wrGlz1TMZUkWFha6pWtDD
+	GAQ==
+X-Google-Smtp-Source: AGHT+IGRmhNL+LYtfNLknZs4rkju5jm70OObUUVz9BOFnRyKJalzlRxy3ib78cNNkdoV+Yxe5+yMp480ebU=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a63:f919:0:b0:5db:edca:d171 with SMTP id
+ h25-20020a63f919000000b005dbedcad171mr586pgi.6.1712858799398; Thu, 11 Apr
+ 2024 11:06:39 -0700 (PDT)
+Date: Thu, 11 Apr 2024 11:06:37 -0700
+In-Reply-To: <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 11 Apr 2024 20:05:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hCwmi=c_HC26APBEayNjzP4zepy9dMTypYz_Nh6fYk0w@mail.gmail.com>
-Message-ID: <CAJZ5v0hCwmi=c_HC26APBEayNjzP4zepy9dMTypYz_Nh6fYk0w@mail.gmail.com>
-Subject: [GIT PULL] Power management fix for v6.9-rc4
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-3-xiong.y.zhang@linux.intel.com>
+Message-ID: <ZhgmrczGpccfU-cI@google.com>
+Subject: Re: [RFC PATCH 02/41] perf: Support guest enter/exit interfaces
+From: Sean Christopherson <seanjc@google.com>
+To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
+	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com, Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Linus,
+On Fri, Jan 26, 2024, Xiong Zhang wrote:
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 683dc086ef10..59471eeec7e4 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3803,6 +3803,8 @@ static inline void group_update_userpage(struct perf_event *group_event)
+>  		event_update_userpage(event);
+>  }
+>  
+> +static DEFINE_PER_CPU(bool, __perf_force_exclude_guest);
+> +
+>  static int merge_sched_in(struct perf_event *event, void *data)
+>  {
+>  	struct perf_event_context *ctx = event->ctx;
+> @@ -3814,6 +3816,14 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  	if (!event_filter_match(event))
+>  		return 0;
+>  
+> +	/*
+> +	 * The __perf_force_exclude_guest indicates entering the guest.
+> +	 * No events of the passthrough PMU should be scheduled.
+> +	 */
+> +	if (__this_cpu_read(__perf_force_exclude_guest) &&
+> +	    has_vpmu_passthrough_cap(event->pmu))
 
-Please pull from the tag
+As mentioned in the previous reply, I think perf should WARN and reject any attempt
+to trigger a "passthrough" context switch if such a switch isn't supported by
+perf, not silently let it go through and then skip things later.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.9-rc4
+> +		return 0;
+> +
+>  	if (group_can_go_on(event, *can_add_hw)) {
+>  		if (!group_sched_in(event, ctx))
+>  			list_add_tail(&event->active_list, get_event_list(event));
 
-with top-most commit 3c89a068bfd0698a5478f4cf39493595ef757d5e
+...
 
- PM: s2idle: Make sure CPUs will wakeup directly on resume
+> +/*
+> + * When a guest enters, force all active events of the PMU, which supports
+> + * the VPMU_PASSTHROUGH feature, to be scheduled out. The events of other
+> + * PMUs, such as uncore PMU, should not be impacted. The guest can
+> + * temporarily own all counters of the PMU.
+> + * During the period, all the creation of the new event of the PMU with
+> + * !exclude_guest are error out.
+> + */
+> +void perf_guest_enter(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (__this_cpu_read(__perf_force_exclude_guest))
 
-on top of commit fec50db7033ea478773b159e0e2efb135270e3b7
+This should be a WARN_ON_ONCE, no?
 
- Linux 6.9-rc3
+> +		return;
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	perf_force_exclude_guest_enter(&cpuctx->ctx);
+> +	if (cpuctx->task_ctx)
+> +		perf_force_exclude_guest_enter(cpuctx->task_ctx);
+> +
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +
+> +	__this_cpu_write(__perf_force_exclude_guest, true);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_enter);
+> +
+> +static void perf_force_exclude_guest_exit(struct perf_event_context *ctx)
+> +{
+> +	struct perf_event_pmu_context *pmu_ctx;
+> +	struct pmu *pmu;
+> +
+> +	update_context_time(ctx);
+> +	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+> +		pmu = pmu_ctx->pmu;
+> +		if (!has_vpmu_passthrough_cap(pmu))
+> +			continue;
 
-to receive a power management fix for 6.9-rc4.
+I don't see how we can sanely support a CPU that doesn't support writable
+PERF_GLOBAL_STATUS across all PMUs.
 
-This fixes the suspend-to-idle core code to guarantee that timers
-queued on CPUs other than the one that has first left the idle state,
-which should expire directly after resume, will be handled (Anna-Maria
-Behnsen).
+> +
+> +		perf_pmu_disable(pmu);
+> +		pmu_groups_sched_in(ctx, &ctx->pinned_groups, pmu);
+> +		pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
+> +		perf_pmu_enable(pmu);
+> +	}
+> +}
+> +
+> +void perf_guest_exit(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (!__this_cpu_read(__perf_force_exclude_guest))
 
-Thanks!
+WARN_ON_ONCE here too?
 
+> +		return;
+> +
+> +	__this_cpu_write(__perf_force_exclude_guest, false);
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	perf_force_exclude_guest_exit(&cpuctx->ctx);
+> +	if (cpuctx->task_ctx)
+> +		perf_force_exclude_guest_exit(cpuctx->task_ctx);
+> +
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_exit);
+> +
+> +static inline int perf_force_exclude_guest_check(struct perf_event *event,
+> +						 int cpu, struct task_struct *task)
+> +{
+> +	bool *force_exclude_guest = NULL;
+> +
+> +	if (!has_vpmu_passthrough_cap(event->pmu))
+> +		return 0;
+> +
+> +	if (event->attr.exclude_guest)
+> +		return 0;
+> +
+> +	if (cpu != -1) {
+> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, cpu);
+> +	} else if (task && (task->flags & PF_VCPU)) {
+> +		/*
+> +		 * Just need to check the running CPU in the event creation. If the
+> +		 * task is moved to another CPU which supports the force_exclude_guest.
+> +		 * The event will filtered out and be moved to the error stage. See
+> +		 * merge_sched_in().
+> +		 */
+> +		force_exclude_guest = per_cpu_ptr(&__perf_force_exclude_guest, task_cpu(task));
+> +	}
 
----------------
+These checks are extremely racy, I don't see how this can possibly do the
+right thing.  PF_VCPU isn't a "this is a vCPU task", it's a "this task is about
+to do VM-Enter, or just took a VM-Exit" (the "I'm a virtual CPU" comment in
+include/linux/sched.h is wildly misleading, as it's _only_ valid when accounting
+time slices).
 
-Anna-Maria Behnsen (1):
-      PM: s2idle: Make sure CPUs will wakeup directly on resume
+Digging deeper, I think __perf_force_exclude_guest has similar problems, e.g.
+perf_event_create_kernel_counter() calls perf_event_alloc() before acquiring the
+per-CPU context mutex.
 
----------------
+> +	if (force_exclude_guest && *force_exclude_guest)
+> +		return -EBUSY;
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Holding the top-level event's child_mutex means that any
+>   * descendant process that has inherited this event will block
+> @@ -11973,6 +12142,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  		goto err_ns;
+>  	}
+>  
+> +	if (perf_force_exclude_guest_check(event, cpu, task)) {
 
- kernel/power/suspend.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+This should be:
+
+	err = perf_force_exclude_guest_check(event, cpu, task);
+	if (err)
+		goto err_pmu;
+
+i.e. shouldn't effectively ignore/override the return result.
+
+> +		err = -EBUSY;
+> +		goto err_pmu;
+> +	}
+> +
+>  	/*
+>  	 * Disallow uncore-task events. Similarly, disallow uncore-cgroup
+>  	 * events (they don't make sense as the cgroup will be different
+> -- 
+> 2.34.1
+> 
