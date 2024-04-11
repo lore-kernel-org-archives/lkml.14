@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7A714659E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85751146A8C;
 	Thu, 11 Apr 2024 08:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824327; cv=none; b=HHgpWNRAGHHL9eW3d1Lr102Um1g2nobulR/evM+nT2VS3OFFFHY+QARyWL/a6wYQM0HUvINx+x+BsEpj3x33r2K9HpAkrhHbhxbvLy9OqT5x3yZ+eswMkjObMOYGLma+/WFw+33SLaJI0WJjEpwc0rLOqgGcsXPZZsFL8xsvD6U=
+	t=1712824327; cv=none; b=B15EfP+EVwq5ATgkUiQk5w7EgoPiY07NS+EFTr/FcqS2BjUobGpJVrB200UEtlpaiHgD8Ifq1DQ0vbLBI4tFTCqJF6jrTLmWFsAi1667Zb7dMGlqMKtgupovcYcaqVoKFUbJUDd6c9/H3u3YRP008+L+4K0ki0z8veXbVWVBqd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712824327; c=relaxed/simple;
-	bh=4TU/zftz2/VHnWzV3r9cBoeolRMOB6be9XResQyxXNw=;
+	bh=2pSJ5RtkTJUIWZtuMClF1MziyBCDcsQTg8O2HQnpmqY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qcd48NDfXihgrPh09g7jkBUwoKyeZJhZOrl0NIMO/XEODfIaqEVRhzRFyelXKJLAayslbjuuryTZWmeDFIQFYq/HRXWUAZQEJY6zXThiWLvFns8Gz3U8kH8WyqLxM7pyTLYEMq+siy524oOZIuzYu5HO7MozCTcbd61hS8G4EjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOg5Nnn0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CLNAf0XdTokiSDTujS6ROgM9bzUbJYHFTNTxN4F24JBZFlWzR5+99wweW1ekwd3bpu3nu2t/qbvsLzxmxHL1BT4FZ6geJM9IX990UVn60temrYE+he17JV3jd29xUQ3SRBriI5Og3xlwp06sDjBpmg02r/D+k+K0SRZDvwUh7sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1TxZ7Hj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOg5Nnn0"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E00E9C43399;
-	Thu, 11 Apr 2024 08:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1TxZ7Hj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 07894C433B1;
+	Thu, 11 Apr 2024 08:32:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712824326;
-	bh=4TU/zftz2/VHnWzV3r9cBoeolRMOB6be9XResQyxXNw=;
+	s=k20201202; t=1712824327;
+	bh=2pSJ5RtkTJUIWZtuMClF1MziyBCDcsQTg8O2HQnpmqY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VOg5Nnn0XLASgyj0MK6huHrdw6waf1y0yuC+oblarqy429PvIdQQhqbC+SnEww80X
-	 zVlb30yNyivgdsMwyCu1RW4vXAaIj6MntbyYjoukpPOjacIEGeOJ2b+34KngNZq+km
-	 28RbGCvlW4sA970rsoi3pj9RjyjBWvoukrt89hlGOBp50qMnXJ056YkPQ3o+JR+BLv
-	 ARP5s5xsYvSA/a3rXtkNkNLEp7TnC98HrvYJhymMLBuEh89myZT1Dohlc5d2YlIBuz
-	 6k3hSQhdR18p264tXhayF2jjLw5WrAzlRBHk9WrG99l+qION4XU2aAAH0+40qcrfJG
-	 P7lf9k+0gkFgQ==
+	b=A1TxZ7Hj6II42OysevajMY6o3hNAwyYleYDBdZEJReniV5AypzzOQ6MqUcBOAztKF
+	 +qjckBplSIC2GlQeLqHX0CqnEb9S1JjeW8jblQeahn82NWoQtaH4TGQIbYNLff9PK2
+	 l/D/S+++UbRvRWEYxkK27aPgdSSePgwqhVD0RIIgz0gwBun+km6ulnWKR/4RuxygaJ
+	 fLzrAb7GLWc8jNidp+Hm5rX62dvtKUkduKjRr2+X9wsCqYxALfChIVntyFyJ6KxMtC
+	 b0ZaxEjGnqufpLpHd7+rFkNTUOJGLHkOhJWviQyZ2RKOxS/xCj2t3U9QtPRvoUYdXs
+	 sVhtsgvcGVszA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0309CD1292;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED88ACD128A;
 	Thu, 11 Apr 2024 08:32:06 +0000 (UTC)
 From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
-Date: Thu, 11 Apr 2024 16:30:57 +0800
-Subject: [PATCH v9 1/4] input: pm8xxx-vibrator: correct VIB_MAX_LEVELS
- calculation
+Date: Thu, 11 Apr 2024 16:30:59 +0800
+Subject: [PATCH v9 3/4] dt-bindings: input: qcom,pm8xxx-vib: add new SPMI
+ vibrator module
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240411-pm8xxx-vibrator-new-design-v9-1-7bf56cb92b28@quicinc.com>
+Message-Id: <20240411-pm8xxx-vibrator-new-design-v9-3-7bf56cb92b28@quicinc.com>
 References: <20240411-pm8xxx-vibrator-new-design-v9-0-7bf56cb92b28@quicinc.com>
 In-Reply-To: <20240411-pm8xxx-vibrator-new-design-v9-0-7bf56cb92b28@quicinc.com>
 To: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
@@ -53,13 +53,14 @@ To: kernel@quicinc.com, Andy Gross <agross@kernel.org>,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Cc: linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Fenglin Wu <quic_fenglinw@quicinc.com>
+ Fenglin Wu <quic_fenglinw@quicinc.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712824325; l=1231;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712824325; l=1205;
  i=quic_fenglinw@quicinc.com; s=20240327; h=from:subject:message-id;
- bh=XkZnFbyEclgfZYkpfzfPCbadhXwXzt48J68H2vEZT+g=;
- b=TT6XRoITbYVVVhdgUixCMPRemA7UdNfcjUqCgfwIwiEaNpsvUjDchxv0aIz4se5E8QC2TGwBS
- 44bYehx2zFYA4kyAGQQ9wEQa6hFCWBCfackEp6DGSPjrGRvSWXyI+3C
+ bh=SwnogURbBf0S1flEa633BZvpsevy5nBnFae6M+y7bFo=;
+ b=2lEkdbrPEw81OD95Z9DZiCTOC2ragbnwcYnsSVGs1egINyGATNjqy2mHHE0QtSL+ecbEecMkS
+ y89PApfOMQZBPW+RwXtdMVhKLa9oUfFCOlvrJ8h/v5ifPQ+w12GtZPz
 X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
  pk=BF8SA4IVDk8/EBCwlBehKtn2hp6kipuuAuDAHh9s+K4=
 X-Endpoint-Received: by B4 Relay for quic_fenglinw@quicinc.com/20240327
@@ -69,41 +70,42 @@ Reply-To: quic_fenglinw@quicinc.com
 
 From: Fenglin Wu <quic_fenglinw@quicinc.com>
 
-The output voltage is inclusive hence the max level calculation is
-off-by-one-step. Correct it.
+Add compatible strings to support vibrator module inside PMI632,
+PMI7250B, PM7325B, PM7550BA.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
 ---
- drivers/input/misc/pm8xxx-vibrator.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/input/qcom,pm8xxx-vib.yaml       | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
-index 04cb87efd799..89f0f1c810d8 100644
---- a/drivers/input/misc/pm8xxx-vibrator.c
-+++ b/drivers/input/misc/pm8xxx-vibrator.c
-@@ -14,7 +14,8 @@
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
+index c8832cd0d7da..2025d6a5423e 100644
+--- a/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
++++ b/Documentation/devicetree/bindings/input/qcom,pm8xxx-vib.yaml
+@@ -11,10 +11,18 @@ maintainers:
  
- #define VIB_MAX_LEVEL_mV	(3100)
- #define VIB_MIN_LEVEL_mV	(1200)
--#define VIB_MAX_LEVELS		(VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV)
-+#define VIB_PER_STEP_mV	(100)
-+#define VIB_MAX_LEVELS		(VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV + VIB_PER_STEP_mV)
+ properties:
+   compatible:
+-    enum:
+-      - qcom,pm8058-vib
+-      - qcom,pm8916-vib
+-      - qcom,pm8921-vib
++    oneOf:
++      - enum:
++          - qcom,pm8058-vib
++          - qcom,pm8916-vib
++          - qcom,pm8921-vib
++          - qcom,pmi632-vib
++      - items:
++          - enum:
++              - qcom,pm7250b-vib
++              - qcom,pm7325b-vib
++              - qcom,pm7550ba-vib
++          - const: qcom,pmi632-vib
  
- #define MAX_FF_SPEED		0xff
- 
-@@ -118,10 +119,10 @@ static void pm8xxx_work_handler(struct work_struct *work)
- 		vib->active = true;
- 		vib->level = ((VIB_MAX_LEVELS * vib->speed) / MAX_FF_SPEED) +
- 						VIB_MIN_LEVEL_mV;
--		vib->level /= 100;
-+		vib->level /= VIB_PER_STEP_mV;
- 	} else {
- 		vib->active = false;
--		vib->level = VIB_MIN_LEVEL_mV / 100;
-+		vib->level = VIB_MIN_LEVEL_mV / VIB_PER_STEP_mV;
- 	}
- 
- 	pm8xxx_vib_set(vib, vib->active);
+   reg:
+     maxItems: 1
 
 -- 
 2.25.1
