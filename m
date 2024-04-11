@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0231B626DF;
-	Thu, 11 Apr 2024 01:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB5A657AD;
+	Thu, 11 Apr 2024 01:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712798787; cv=none; b=bcjKh0hFGm4A+fPG+djB8Y2aoxCSv2sV1zBOoWaJKFueWqvgpTyKb0kDcfwm/sfLGqq35xQAiczcOpSTplTVX7cwylDCnD65Lx+DANzMxB4wAbRfbP9N2Ff1tldrAic4KYH9BOaAQD8JXN6oypvy1RISDjxMt6YYln9DRSbUfGU=
+	t=1712798787; cv=none; b=EIxRlaHqFYlN1benZ87uO7fDVAw50JqgjYaBRk5Rkd1/Pnm4ZYGg9sj3WVwb+vDhedc7WweDkJ4wu7igE3RxnzzCvMJxxLkmTFjYswdwHd+sZEyQxGqXwr4g2e3ZcjRTgRok3DyBa9Vljn466wztTYc85fnuJIjDnoHgl2O+Eg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712798787; c=relaxed/simple;
-	bh=j7R15Vswkf2LNk7KzUJnfJqxLnSVENe3zwazAuIc2Ic=;
+	bh=2BB6TvBEG9JxTSuiXtOY5mfN3oEafelle7GnLEa5JII=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=nUxPesWPR4YsNS4+gR1rPe8f4GZxK7Wv6MYT8bZ10U0XLZ5qoQipDeMo881wqQoOrrp++JP+GVQp2G9yWkz1IjREMXUqPTmg6loTtL820bnor6fANws5eeyvSWtJVgmmKktrfzpU5gaVd/603EDM+a2OHT6CSpCaRjjmh/hduyg=
+	 Content-Type; b=uZE/pxR9RWHzcGo44JLXPN1youoEbPsrnPK+t7edNeyWIAZoBXrlB2Ni+FLCclOUrlZPGjFFW84TedfFt/YOvIkkN698zuEQfZPi26CCR7LvFuPtm/LLDN5A9cASRGQ4cSYm8rreQoCIZGd7jt//FB9B4F5/L4TgZOve8nLfF+E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81018C43142;
-	Thu, 11 Apr 2024 01:26:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B84CC3278E;
+	Thu, 11 Apr 2024 01:26:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rujFQ-00000000nVw-3Zls;
-	Wed, 10 Apr 2024 21:29:04 -0400
-Message-ID: <20240411012904.715156108@goodmis.org>
+	id 1rujFR-00000000nXu-24h2;
+	Wed, 10 Apr 2024 21:29:05 -0400
+Message-ID: <20240411012905.354430601@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 10 Apr 2024 21:25:45 -0400
+Date: Wed, 10 Apr 2024 21:25:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -43,8 +43,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  "Paul E. McKenney" <paulmck@kernel.org>,
  David Howells <dhowells@redhat.com>
-Subject: [PATCH v2 04/11] tracing: Implement creating an instance based on a given memory
- region
+Subject: [PATCH v2 08/11] ring-buffer: Save text and data locations in mapped meta data
 References: <20240411012541.285904543@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,151 +55,75 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Allow for creating a new instance by passing in an address and size to map
-the ring buffer for the instance to.
-
-This will allow features like a pstore memory mapped region to be used for
-an tracing instance ring buffer that can be retrieved from one boot to the
-next.
+When a ring buffer is mapped to a specific address, save the address of a
+text function and some data. This will be used to determine the delta
+between the last boot and the current boot for pointers to functions as
+well as to data.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 50 +++++++++++++++++++++++++++++++++++---------
- kernel/trace/trace.h |  3 +++
- 2 files changed, 43 insertions(+), 10 deletions(-)
+ kernel/trace/ring_buffer.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 83194bf7b1df..31067de977fc 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4921,6 +4921,11 @@ static int tracing_open(struct inode *inode, struct file *file)
- static bool
- trace_ok_for_array(struct tracer *t, struct trace_array *tr)
- {
-+#ifdef CONFIG_TRACER_SNAPSHOT
-+	/* arrays with mapped buffer range do not have snapshots */
-+	if (tr->range_addr_start && t->use_max_tr)
-+		return false;
-+#endif
- 	return (tr->flags & TRACE_ARRAY_FL_GLOBAL) || t->allow_instances;
- }
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 6f19e7612472..c68695ae2749 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -45,6 +45,8 @@
+ static void update_pages_handler(struct work_struct *work);
  
-@@ -8673,11 +8678,13 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 				tr, cpu, &tracing_entries_fops);
+ struct ring_buffer_meta {
++	unsigned long	text_addr;
++	unsigned long	data_addr;
+ 	unsigned long	first_buffer;
+ 	unsigned long	head_buffer;
+ 	unsigned long	commit_buffer;
+@@ -539,6 +541,9 @@ struct trace_buffer {
+ 	unsigned long			range_addr_start;
+ 	unsigned long			range_addr_end;
  
- #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
--				tr, cpu, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-+				      tr, cpu, &snapshot_fops);
- 
--	trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
--				tr, cpu, &snapshot_raw_fops);
-+		trace_create_cpu_file("snapshot_raw", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &snapshot_raw_fops);
-+	}
- #endif
- }
- 
-@@ -9214,7 +9221,18 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 
- 	buf->tr = tr;
- 
--	buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	if (tr->range_addr_start && tr->range_addr_size) {
-+		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
-+						      tr->range_addr_start,
-+						      tr->range_addr_size);
-+		/*
-+		 * This is basically the same as a mapped buffer,
-+		 * with the same restrictions.
-+		 */
-+		tr->mapped++;
-+	} else {
-+		buf->buffer = ring_buffer_alloc(size, rb_flags);
-+	}
- 	if (!buf->buffer)
- 		return -ENOMEM;
- 
-@@ -9251,6 +9269,10 @@ static int allocate_trace_buffers(struct trace_array *tr, int size)
- 		return ret;
- 
- #ifdef CONFIG_TRACER_MAX_TRACE
-+	/* Fix mapped buffer trace arrays do not have snapshot buffers */
-+	if (tr->range_addr_start)
-+		return 0;
++	long				last_text_delta;
++	long				last_data_delta;
 +
- 	ret = allocate_trace_buffer(tr, &tr->max_buffer,
- 				    allocate_snapshot ? size : 1);
- 	if (MEM_FAIL(ret, "Failed to allocate trace buffer\n")) {
-@@ -9351,7 +9373,9 @@ static int trace_array_create_dir(struct trace_array *tr)
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+ 	unsigned int			max_data_size;
+@@ -1827,10 +1832,15 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	}
  }
  
- static struct trace_array *
--trace_array_create_systems(const char *name, const char *systems)
-+trace_array_create_systems(const char *name, const char *systems,
-+			   unsigned long range_addr_start,
-+			   unsigned long range_addr_size)
- {
- 	struct trace_array *tr;
- 	int ret;
-@@ -9377,6 +9401,10 @@ trace_array_create_systems(const char *name, const char *systems)
- 			goto out_free_tr;
- 	}
- 
-+	/* Only for boot up memory mapped ring buffers */
-+	tr->range_addr_start = range_addr_start;
-+	tr->range_addr_size = range_addr_size;
++/* Used to calculate data delta */
++static char rb_data_ptr[] __initdata = "";
 +
- 	tr->trace_flags = global_trace.trace_flags & ~ZEROED_TRACE_FLAGS;
- 
- 	cpumask_copy(tr->tracing_cpumask, cpu_all_mask);
-@@ -9434,7 +9462,7 @@ trace_array_create_systems(const char *name, const char *systems)
- 
- static struct trace_array *trace_array_create(const char *name)
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
  {
--	return trace_array_create_systems(name, NULL);
-+	return trace_array_create_systems(name, NULL, 0, 0);
- }
+ 	struct ring_buffer_meta *meta;
+ 	unsigned long delta;
++	unsigned long this_text = (unsigned long)rb_range_meta_init;
++	unsigned long this_data = (unsigned long)rb_data_ptr;
+ 	void *subbuf;
+ 	int cpu;
+ 	int i;
+@@ -1847,6 +1857,10 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 			meta->first_buffer += delta;
+ 			meta->head_buffer += delta;
+ 			meta->commit_buffer += delta;
++			buffer->last_text_delta = this_text - meta->text_addr;
++			buffer->last_data_delta = this_data - meta->data_addr;
++			meta->text_addr = this_text;
++			meta->data_addr = this_data;
+ 			continue;
+ 		}
  
- static int instance_mkdir(const char *name)
-@@ -9488,7 +9516,7 @@ struct trace_array *trace_array_get_by_name(const char *name, const char *system
- 			goto out_unlock;
- 	}
+@@ -1863,6 +1877,8 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 		subbuf = rb_subbufs_from_meta(meta);
  
--	tr = trace_array_create_systems(name, systems);
-+	tr = trace_array_create_systems(name, systems, 0, 0);
+ 		meta->first_buffer = (unsigned long)subbuf;
++		meta->text_addr = this_text;
++		meta->data_addr = this_data;
  
- 	if (IS_ERR(tr))
- 		tr = NULL;
-@@ -9681,8 +9709,10 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 		MEM_FAIL(1, "Could not allocate function filter files");
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
--	trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
--			  tr, &snapshot_fops);
-+	if (!tr->range_addr_start) {
-+		trace_create_file("snapshot", TRACE_MODE_WRITE, d_tracer,
-+				  tr, &snapshot_fops);
-+	}
- #endif
- 
- 	trace_create_file("error_log", TRACE_MODE_WRITE, d_tracer,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 749a182dab48..d22d7c3b770a 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -338,6 +338,9 @@ struct trace_array {
- 	unsigned int		snapshot;
- 	unsigned int		mapped;
- 	unsigned long		max_latency;
-+	/* The below is for memory mapped ring buffer */
-+	unsigned long		range_addr_start;
-+	unsigned long		range_addr_size;
- #ifdef CONFIG_FSNOTIFY
- 	struct dentry		*d_max_latency;
- 	struct work_struct	fsnotify_work;
+ 		/*
+ 		 * The buffers[] array holds the order of the sub-buffers
 -- 
 2.43.0
 
