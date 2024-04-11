@@ -1,127 +1,163 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBBA13E3F8
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7610313DBB1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820244; cv=none; b=uChOBu/S7Tltqgq0NtVp1zTHwcT8lwpSXHA1UQA6KvmWBGfcGE9GZZmg9qW8MjqLau2JT4EREMsgpC52T6qif3DuOu4cF2joqfPdSPHTmeAeVBiUDASCotUrLe0BTwHe8SCK9DI4LR9n9YHpGTI87/wux2h0NOU03f6+KGkrtzo=
+	t=1712820311; cv=none; b=DVBX+OCLa2XX+JURAZEG5e4DAEvGOueGkIpxIGvCCEt1/lK7XTq0z8pelPNRDchmAzdsCFL+w4CYL3ZDq8DrVhsZUevSXdjuCtXX1NxgdUEqDYYKHC0faUOlZu78pAT7cU8evmnQ7alW5uZI15KjKW0iSI9JOWZVp65H2pf2hao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820244; c=relaxed/simple;
-	bh=ENzsqCkEZF7w3w+dj2MlSXHDdkhowWbzZYt+sJi8kUA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mK/Za6p6+258JTeabl12QD4WDv2O7XF7XXuZ2J7gztto7AuiPO2BxWTjvg13KG0V+bGUNCAAoOizZqs5yeTPTyQ/zPLMlf9mnOkpDoGNGOlge1Ur1jxotp64MAaSG/8Bwv+ujhLMaxXX700q/A43RwVHP0dVIoOrYHRJ66mcZcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-61587aa956eso71221937b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:24:02 -0700 (PDT)
+	s=arc-20240116; t=1712820311; c=relaxed/simple;
+	bh=pJ8R9jxOZjfn6ejs9V833kwm1L/LeDLWxab3d8yLYsw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kg3h+XAn8PYgmf8RcPfetzIa/J7TtIZODlZHAFUxCF98gR9wuTjqocJuVxPLKR4C799a8OiaQgC886dDHhL2mzAnu5PU3LQVtd7pSTQA36TiI8toI5TYhDUCwCsDsPwMYukjOna4DLHhlrW6x1RG9WJqws6v589fDbs4SiDK/g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kj+VHARA; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kj+VHARA"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-346a5dea2f4so162591f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:25:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712820308; x=1713425108; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JrjK0EsdKVt9QT2OnXkSvn4/gsAT0jsR16VIcuO+mkY=;
+        b=kj+VHARA3JQNk+YG+fgc9qULTOdLzWbfJbtJZZwhgHMAhvAhu1c4jKEao99NPKQgoe
+         MGZUvDaQnpZqmcMB+9ofvCsvK5QJjKbwyZsv7QjvkrDKyc2eg9DHHo4oYwGmdh2Xf6MP
+         V+hW7jO374WlUnh/qa9xx/rUWLGzjQM4uyFaadb3sm60lJ1dfyEcoL+CuIQDbObSggii
+         IZxRVBmbnJ/0IkAUiH3rLQNJA+qPmcpIeMGtjLlls5DYhFc9OP4rWbQN/kw7h2XDG3Ux
+         9HZpl+vbKADGael0/TXsO3yBRy7GsRqEbSQRwcIHDI9TT9VAA1r7vcIm9B8smLnTmzv8
+         fCaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712820240; x=1713425040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DT9wpQertwUtJrUq+JoryAh7T5yA817K6uGSpPBNwoo=;
-        b=vsKLEemDyQ0FIMOurDVLBHp52zZSqfG5QBP1CMJb+V8XYQEndI7G4WsbNUgbs67Bgj
-         NobVefWIr0SD3C/PeNIpyWiO2jusSuZB0JRh0+OuAwhA5lmlnbULjYKtUPJ0STVGLpDd
-         hXlrDMLCg1Cz+gtBWO4t6kAcK8AgG6e+Y4VB8QWnR9pswp4KjCHD1mzGDtKjS/fLHB4g
-         cuh+THc0YQp2N9XSeOdAIWyb1M75dIMtrgjBVoL+eP/voMUtWL2kxD+g6HHt8kQ7sd+D
-         5ICYbHIZ9198RaZv3Oujkk3iswXnoPQWkpsc34xbi1+CTf6P4syl1i8ZE1ND8Y6g5PsW
-         sLzw==
-X-Gm-Message-State: AOJu0YyyEs1gzIZPB+pVV/ssQUdmYhuVX5RYsPddiM/mMcFvqjc91YmB
-	cgy6OFLkVZT+DJ9Q13AwlxwA+QYn107U533HdNHANggupjJPJMWymj4Xdwop
-X-Google-Smtp-Source: AGHT+IFMZuIUyw3nCr55DwhxZVzM5Si66C68GE114CGyi+JnkDEaL9b45KHRwtt9dydPBQFttBgSWg==
-X-Received: by 2002:a5b:3cd:0:b0:dc2:5553:ca12 with SMTP id t13-20020a5b03cd000000b00dc25553ca12mr4644197ybp.14.1712820240359;
-        Thu, 11 Apr 2024 00:24:00 -0700 (PDT)
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id k12-20020a5b0a0c000000b00dcdba3056e9sm176652ybq.25.2024.04.11.00.23.59
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1712820308; x=1713425108;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JrjK0EsdKVt9QT2OnXkSvn4/gsAT0jsR16VIcuO+mkY=;
+        b=EHrr+M/5/I84NY1zBSuBKDxIe+7wN+iGVj2is2/nuVJO7PiZ568brmU6Xj384jHnAE
+         7e8/4ZFphLe2lmt5uKTkAVNQ6DDw20rZ3hr8VSYcC9WPsFIcwd3hEZ+CYwqoOoGyRlia
+         q8uwFhNA/OAbzDyuMDbvpVJ4NE3av877GC5fGZ4x7xiksiE56+rP5f4/e0wCEEjQiLN+
+         6+PxodGJaByXoZBtX1+AcHroikaTmQVAhXwMelTq7SNa61Zc0kQAJLDWKnsnB0Ec19uK
+         LrsLRKmt/6m66yy4Qz7hmfMjf7JouSbW2HKf/Vd+h8ue0M88ng1+st6FBKLuq/xyOcZq
+         f5ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUNsI+VR0Q2U6zznTgVAJjsFD/cpGfXPEWMonI4U6AwtyMq2zKYbPU1d16R919KKrccIJAy0eFLFiztBbZnEMENStOPjtf0yLld50zb
+X-Gm-Message-State: AOJu0YzJ1iePgENW/UyKcNCtK7MsYM9Zw2jzeGJkRjvuNO6zhh5j46vy
+	x4OQSASiLF2wJ3vs6wKc5qZuOK8meiGqKF0dG2qftsRdmQXOYk6LeMnAIUevrHE=
+X-Google-Smtp-Source: AGHT+IH7bDLPf+9sHTexaPC0l7JskFDeRSsnaH3OC8OfIIJJ6Vv6zjsrHnmGf08EGNEGbKXzsGI5Kw==
+X-Received: by 2002:a5d:4150:0:b0:346:4945:8851 with SMTP id c16-20020a5d4150000000b0034649458851mr3608971wrq.0.1712820307707;
+        Thu, 11 Apr 2024 00:25:07 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:999:a3a0:3624:d9b3:4998:d76b? ([2a01:e0a:999:a3a0:3624:d9b3:4998:d76b])
+        by smtp.gmail.com with ESMTPSA id b10-20020a056000054a00b00341b7d5054bsm1083326wrf.72.2024.04.11.00.25.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 00:23:59 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dde0b30ebe2so6425357276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:23:59 -0700 (PDT)
-X-Received: by 2002:a05:6902:149:b0:dcd:5e5d:4584 with SMTP id
- p9-20020a056902014900b00dcd5e5d4584mr4662119ybh.34.1712820239378; Thu, 11 Apr
- 2024 00:23:59 -0700 (PDT)
+        Thu, 11 Apr 2024 00:25:07 -0700 (PDT)
+Message-ID: <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
+Date: Thu, 11 Apr 2024 09:25:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411032155.208042-1-ytcoode@gmail.com>
-In-Reply-To: <20240411032155.208042-1-ytcoode@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 11 Apr 2024 09:23:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdULF9KemeFkv09s3b9T8Ka-AkC8A8-pc_FpdXnjrOjwgQ@mail.gmail.com>
-Message-ID: <CAMuHMdULF9KemeFkv09s3b9T8Ka-AkC8A8-pc_FpdXnjrOjwgQ@mail.gmail.com>
-Subject: Re: [PATCH] init/main.c: Fix potential static_command_line memory overflow
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	"ndesaulniers@google.com" <ndesaulniers@google.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, Tejun Heo <tj@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Krister Johansen <kjlx@templeofstupid.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Mike Rapoport <rppt@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
+To: Deepak Gupta <debug@rivosinc.com>, Conor Dooley <conor@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Anup Patel <anup@brainfault.org>, Shuah Khan <shuah@kernel.org>,
+ Atish Patra <atishp@atishpatra.org>, linux-doc@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org
+References: <20240410091106.749233-1-cleger@rivosinc.com>
+ <20240410091106.749233-8-cleger@rivosinc.com>
+ <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
+ <20240410-jawless-cavalry-a3eaf9c562a4@spud>
+ <20240410-judgingly-appease-5df493852b70@spud>
+ <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
+Content-Language: en-US
+From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+In-Reply-To: <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-CC Hiramatsu-san
 
-On Thu, Apr 11, 2024 at 5:25=E2=80=AFAM Yuntao Wang <ytcoode@gmail.com> wro=
-te:
-> We allocate memory of size 'xlen + strlen(boot_command_line) + 1' for
-> static_command_line, but the strings copied into static_command_line are
-> extra_command_line and command_line, rather than extra_command_line and
-> boot_command_line.
->
-> When strlen(command_line) > strlen(boot_command_line), static_command_lin=
-e
-> will overflow.
->
-> Fixes: f5c7310ac73e ("init/main: add checks for the return value of membl=
-ock_alloc*()")
-> Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> ---
->  init/main.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/init/main.c b/init/main.c
-> index 2ca52474d0c3..a7b1f5f3e3b6 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -625,11 +625,13 @@ static void __init setup_command_line(char *command=
-_line)
->         if (extra_init_args)
->                 ilen =3D strlen(extra_init_args) + 4; /* for " -- " */
->
-> -       len =3D xlen + strlen(boot_command_line) + 1;
-> +       len =3D xlen + strlen(boot_command_line) + ilen + 1;
->
-> -       saved_command_line =3D memblock_alloc(len + ilen, SMP_CACHE_BYTES=
-);
-> +       saved_command_line =3D memblock_alloc(len, SMP_CACHE_BYTES);
->         if (!saved_command_line)
-> -               panic("%s: Failed to allocate %zu bytes\n", __func__, len=
- + ilen);
-> +               panic("%s: Failed to allocate %zu bytes\n", __func__, len=
-);
-> +
-> +       len =3D xlen + strlen(command_line) + 1;
->
->         static_command_line =3D memblock_alloc(len, SMP_CACHE_BYTES);
->         if (!static_command_line)
 
-Gr{oetje,eeting}s,
+On 11/04/2024 00:32, Deepak Gupta wrote:
+> On Wed, Apr 10, 2024 at 11:27:16PM +0100, Conor Dooley wrote:
+>> On Wed, Apr 10, 2024 at 11:16:11PM +0100, Conor Dooley wrote:
+>>> On Wed, Apr 10, 2024 at 02:32:41PM -0700, Deepak Gupta wrote:
+>>> > On Wed, Apr 10, 2024 at 11:11:00AM +0200, Clément Léger wrote:
+>>> > > Add parsing for Zcmop ISA extension which was ratified in commit
+>>> > > b854a709c00 ("Zcmop is ratified/1.0") of the riscv-isa-manual.
+>>> > >
+>>> > > Signed-off-by: Clément Léger <cleger@rivosinc.com>
+>>> > > ---
+>>> > > arch/riscv/include/asm/hwcap.h | 1 +
+>>> > > arch/riscv/kernel/cpufeature.c | 1 +
+>>> > > 2 files changed, 2 insertions(+)
+>>> > >
+>>> > > diff --git a/arch/riscv/include/asm/hwcap.h
+>>> b/arch/riscv/include/asm/hwcap.h
+>>> > > index b7551bad341b..cff7660de268 100644
+>>> > > --- a/arch/riscv/include/asm/hwcap.h
+>>> > > +++ b/arch/riscv/include/asm/hwcap.h
+>>> > > @@ -86,6 +86,7 @@
+>>> > > #define RISCV_ISA_EXT_ZCB        77
+>>> > > #define RISCV_ISA_EXT_ZCD        78
+>>> > > #define RISCV_ISA_EXT_ZCF        79
+>>> > > +#define RISCV_ISA_EXT_ZCMOP        80
+>>> > >
+>>> > > #define RISCV_ISA_EXT_XLINUXENVCFG    127
+>>> > >
+>>> > > diff --git a/arch/riscv/kernel/cpufeature.c
+>>> b/arch/riscv/kernel/cpufeature.c
+>>> > > index 09dee071274d..f1450cd7231e 100644
+>>> > > --- a/arch/riscv/kernel/cpufeature.c
+>>> > > +++ b/arch/riscv/kernel/cpufeature.c
+>>> > > @@ -265,6 +265,7 @@ const struct riscv_isa_ext_data
+>>> riscv_isa_ext[] = {
+>>> > >     __RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
+>>> > >     __RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
+>>> > >     __RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
+>>> > > +    __RISCV_ISA_EXT_DATA(zcmop, RISCV_ISA_EXT_ZCMOP),
+>>> >
+>>> > As per spec zcmop is dependent on zca. So perhaps below ?
+>>> >
+>>> > __RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZCMOP,
+>>> RISCV_ISA_EXT_ZCA)
+>>>
+>>> What's zicboz got to do with it, copy-pasto I guess?
+> 
+> Yes, copy-pasta :-)
+> 
+>>> If we're gonna imply stuff like this though I think we need some
+>>> comments explaining why it's okay.
+>>
+>> Also, I'm inclined to call that out specifically in the binding, I've
+>> not yet checked if dependencies actually work for elements of a string
+>> array like the do for individual properties. I'll todo list that..
+> 
+> Earlier examples of specifying dependency on envcfg actually had functional
+> use case.
+> So you are right, I am not sure if its actually needed in this
+> particular case.
 
-                        Geert
+I actually saw that and think about addressing it but AFAICT, this
+should be handled by the machine firmware passing the isa string to the
+kernel (ie, it should be valid). In the case of QEMU, it takes care of
+setting the extension that are required by this extension itself.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+If we consider to have potentially broken isa string (ie extensions
+dependencies not correctly handled), then we'll need some way to
+validate this within the kernel.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Clément
+
+> 
+> And yes definitley, dependency should be mentioned in binding.
+> 
+> 
