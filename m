@@ -1,67 +1,67 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D23145B07
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB8814430D
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712829707; cv=none; b=coO4HmkzKsF0/I9tiB3xOueJiI45cPIkfZJL8v/dqz0UBJToARTSUycDKyvVDSK8P0qznJye1Goj7P6a0e0CVTEm61V1xAE4CClllURKSuNfP3yG1INKjbAeL2zDQS/gwjDqklmoEz17fCpjU8mqrDcc0pLyLbiwak49BN+IplE=
+	t=1712829760; cv=none; b=AwF2lbjueqMwsREiG5E2JLd3raE57M0d//2zXpt1EE4jkVT7u0T09tw31WunDwgWbNwb+cX82yVecHRAl4BbCh7kLNBvtzZS7x6EGc6vv+b/0vf2x7hGDFsppnF+kn93UhqCse8oi6Q8yiFB6DFSbjX90Z2SmlAAfRygcLfhqiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712829707; c=relaxed/simple;
-	bh=oy8LcJ+W0uqOLu9PnTh84K8sqY89rg5jjjcpg2OZPJc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Q5lcpRFhXyMCJL0mBdJxEVNdLWt31EUqxoPKsO/E9LHBjnL5EExsbMMY+SeFYXF29h4FIxo357yeO4+GmvfOSIWPCe4wp/4Mfw1PxLtBySIoNGAdKKuYlA/3+xvoSawe1BCHjvtcLTkpHI9l2LwpKTdPMaaTY3naaLu4/F5NWc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Jz4u73zd; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1712829760; c=relaxed/simple;
+	bh=QrC1BibEBbfwG9NYkcZQa2WaLpV/UZ4wPIEf3tMCeo8=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SHOZKfK//X1gmuLFN10vbHZ92jdB77kqWUXNRW9uOOhPd893zsM+FARsVICzlH7Uu8CwNyRAw9pg23tmV0WVR6pRGal67mf2LB/SCtiZbPpTKpngquOwG/rBWjVXGLDZM3Bgja7DDuFK96DHi7JKd5TIiEfwVlFlCNgCW4/xE+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oDfWFNlQ; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jz4u73zd"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34339f01cd2so5561871f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:01:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oDfWFNlQ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-417d14b39feso4606565e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:02:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712829704; x=1713434504; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712829757; x=1713434557; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LmB3K/ttL5cmOZJWlbskxN8kkVBLB3rM/aYCLco3xYQ=;
-        b=Jz4u73zdV9h2W9LdaONnSrA1f0rutyA4tpLbl8yV2iOaZtlSy2QGGHkZTFUHxXD3g6
-         hhQ9MF1M9NvxHH8w8gnrrFygjn6RCNjWe23HVeBCM/IL/XyrjZnbf/nULkuKQkU42Civ
-         7acUN4f80i5Z6/40cEyIQUsTOncMHhcFudoaIkF8vRpcoPazatvxFb8MH8lFx3eUgYXw
-         3K7Hv+LDUIKfYnPEQM06iWTgQd0yB98O9Rmg5qwr7aDLMZ7rrfb3TH+H6KsClfaomMUD
-         zzSsrMjStDwsCL03KAsMtNYUp+Wg9T/4xp2mUNGelSzjeeRJL7X+DSuQFazEud/rKuQc
-         r1Ww==
+         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zHjRnv3zn3VWRmLST7NBJtQFKtM0e8fa1inbfbi5UZc=;
+        b=oDfWFNlQrNmJZgk6oPMUPsurhE7MNxbpWUFMlgb2JuD+iWyGYv/3ZyVwGcBUoxMgqc
+         sqfJsfGUh97dlpPc1W5sRd9UqygbOrEt07y0JRpJxFuHAP6gsSiZ4F1pEvofyNfTIKPD
+         CByyWZMWddCJjCoQV/You+puytaKQrwSGig/jQt1pIg3K97QTpQzxnELGXNACpRRgoFy
+         mXIIjb0DP0jZRIDpalT4Lbz6axSTJ3nAp1IGECVQmHTvg2dZr0/5CKRPn2BOYbEk6spp
+         BOjCTcX3rA4zud1Lly3v3j5mrzmLqyZTA8Ut6aWtH3RK84ZIO7VWRwrmOxgE8nwpFFSD
+         MLaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712829704; x=1713434504;
+        d=1e100.net; s=20230601; t=1712829757; x=1713434557;
         h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LmB3K/ttL5cmOZJWlbskxN8kkVBLB3rM/aYCLco3xYQ=;
-        b=RfBKOVt5g5Y4mfKODWiXAjO9+FpZ5onQueJznk3l6zvgzL9zD2wQAp2d+Qpq2alHhj
-         FNwGnuGE/XSUDH61xhiO76wT8g7DhxmDSTtiM0e+vPE8wKaNJFrIFrOw+O0P6mD/CdwG
-         zV/Rz/3vuD5R8KY2nFq5UabSNnyzpeJoPKAAOoTTLwC/yxCEKIknYB558UFEtg7jIgUH
-         /wcBF05L2dWH28dc4NZhiMMJc9X3gJhA9Ad3/55naIcLcTP9e5ax2KJBoHDhRZnnqPzx
-         +ywahh2pmZRFdVmm2TywCG7maV/VMxiLIsgBEoU99W061LJ4XEYhHKS33n+8aJcgiVie
-         cMtA==
-X-Gm-Message-State: AOJu0YzZJgpTpeoiQ4M5BdG5n0BL4hMgtav+ZR2T54zUGTzqaiQ0OH63
-	Zhd3c9UVHa9miL+4Bkv4YSWvM/NeCGN7j3pdUWG6uDD41AF3EoQ+1CH/CyfZkLQ=
-X-Google-Smtp-Source: AGHT+IETbfh3cmO5zObGlyrhjCfOUwsQGqnW5cGKh9QdYOqA8aZr6EN+QPdsIzL1kim8IaQcHleLNA==
-X-Received: by 2002:a5d:620c:0:b0:343:eb8d:4365 with SMTP id y12-20020a5d620c000000b00343eb8d4365mr3161567wru.42.1712829704279;
-        Thu, 11 Apr 2024 03:01:44 -0700 (PDT)
+        bh=zHjRnv3zn3VWRmLST7NBJtQFKtM0e8fa1inbfbi5UZc=;
+        b=NEaj7Iu7A7QP0HKmy5sVL7p4F7VaFEbbYDimJe7tWgBZT5rddekSaTepxgxG5cgfB0
+         JoNNw5Q0CuLOBpHSC9G1Cq6lyKUoKk1wQuo/7Y60GqfoHxJ8hRyWmtwuSNOzlk+8N2bs
+         cUwZQ4di7cPQokD/rJCYPiNX/blseMSkuBvt4sgswp1/1kvFQQJsAy9sY6RwXlAEDajP
+         nIOa1vWirm2jd0Vvrz/Loa8B3pAdeGg8LeB+Lx+ddxo1XeZImOkVBFtuIHte079kg/+U
+         YfD/4JIymftxIpfprlM01ioopewOxqLxhMmbbOAVDuCr21u96N3YskyrQfARJ3T5b4/O
+         AkNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXwKvF9EjT0Ad8k0fGqya8CjoMFK6VE1JAQAWbclDBKK/RMIl4t8yaMdYkh4F+8JgW14umfyMo0UblVcQs36E6Mxe1YPZ8LnzzWlQMi
+X-Gm-Message-State: AOJu0Yz1S/sC7PjtpbqoSOsLe50SgxN5/qj4f5Y7L5z3wKTk3xad+tjZ
+	/WHbGwGRLBh4KPYuzk2HEsxUf2H+P8rR1YEoBt+8cfcv54m7o+CVGw2239YPrAU=
+X-Google-Smtp-Source: AGHT+IFfF2Ta+hlSfCu284Xq3Q4nSwGdMU1l5GkrzuDhIRJGb6w3eJTvSVeZV5GqHEjxkY1bIZ0J+g==
+X-Received: by 2002:a05:600c:d3:b0:416:3365:b9c7 with SMTP id u19-20020a05600c00d300b004163365b9c7mr3763489wmm.13.1712829756797;
+        Thu, 11 Apr 2024 03:02:36 -0700 (PDT)
 Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id w13-20020a5d680d000000b003433bf6651dsm1381810wru.75.2024.04.11.03.01.43
+        by smtp.gmail.com with ESMTPSA id p1-20020a05600c358100b00416b28651e1sm1827381wmq.36.2024.04.11.03.02.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 03:01:43 -0700 (PDT)
+        Thu, 11 Apr 2024 03:02:36 -0700 (PDT)
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, 
- Michael Walle <mwalle@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-kernel@vger.kernel.org
-In-Reply-To: <20240329-module-owner-nvmem-v1-0-d700685f08e1@linaro.org>
-References: <20240329-module-owner-nvmem-v1-0-d700685f08e1@linaro.org>
-Subject: Re: [PATCH 0/3] nvmem: layouts: store owner from modules with
- nvmem_layout_driver_register()
-Message-Id: <171282970361.159167.848249101676337371.b4-ty@linaro.org>
-Date: Thu, 11 Apr 2024 11:01:43 +0100
+To: Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20240410172634.255480-1-krzk@kernel.org>
+References: <20240410172634.255480-1-krzk@kernel.org>
+Subject: Re: [PATCH 1/2] nvmem: sc27xx: fix module autoloading
+Message-Id: <171282975615.159249.5037935876880487448.b4-ty@linaro.org>
+Date: Thu, 11 Apr 2024 11:02:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,26 +73,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.12.2
 
 
-On Fri, 29 Mar 2024 17:13:34 +0100, Krzysztof Kozlowski wrote:
-> Merging
-> =======
-> All further patches depend on the first patch.
+On Wed, 10 Apr 2024 19:26:33 +0200, Krzysztof Kozlowski wrote:
+> Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
+> based on the alias from of_device_id table.
 > 
-> Description
-> ===========
-> Modules registering driver with nvmem_layout_driver_register() might
-> forget to set .owner field.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/3] nvmem: layouts: store owner from modules with nvmem_layout_driver_register()
-      commit: e428f11ae8fb23c4c9e4ca7c178ca22e8b6335b6
-[2/3] nvmem: layouts: onie-tlv: drop driver owner initialization
-      commit: 995b22c48ed05ef2149a364e2f4025fa14f8bb70
-[3/3] nvmem: layouts: sl28vpd: drop driver owner initialization
-      commit: 3575d48e5d2f7fcb258f1ee951f2d4706d8ff715
+[1/2] nvmem: sc27xx: fix module autoloading
+      commit: fc7d05b8e427937591e3cf6c2ca493aac9ade5a8
+[2/2] nvmem: sprd: fix module autoloading
+      commit: fbd0d725d4fada00426611a5d6ac70602509be94
 
 Best regards,
 -- 
