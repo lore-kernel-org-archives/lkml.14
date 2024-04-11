@@ -1,25 +1,42 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6918213D258
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030EA145B08;
+	Thu, 11 Apr 2024 11:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712834874; cv=none; b=FKAjjRU8khb1kB5ru2Vh1ZD+rs92i7TMTVYEPIKMcYIPbIYy92NkvZGjWmIibX/O/qaUjk6ZkmWCG9z/q8kBKkuvhtTcXqr09IcjN2HYGAgFY+fY2KOM+cEEgGQFdxhOr+tcbfUI2cyICew9M3sxLVDS0sOf0U7YNkCmHn74l/k=
+	t=1712835013; cv=none; b=C8X4/jX0I67H/j4MDO3MNinfJqiydrNkJsdm21L8ukQlYwEo8M+wInQJO1PR1BEWajaVhDkQNoGCenB10kwbnckkTw6gDzwj17trj/USw31LHkoBJZPhfgtbknA0iJwy+o76V6148KFjqbO4ls1+pfCRbZPKHwTK4AwArs8sM5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712834874; c=relaxed/simple;
-	bh=9zkVJL8zRVuR9kRv+VB0FpDhOZ3XwqRKYTV5gfmfVMc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qs6LiQGzYMIuFIlMHKNR0AkmEehwy9ODgmtyFo2Nd6A3/hPBs+WF7cHcf4k6hjcsKTPA6VSXZdYZRTAb2VmKS3u1/zh1ZW2uLcqamhDizet9B8wVtjGsqJDcmUjzo1X0gmNkhjCEFmY94wiTWxwfpyRP5H1YUslPg/zgJ9kQ8k8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56423113E;
-	Thu, 11 Apr 2024 04:28:21 -0700 (PDT)
-Received: from [10.1.38.151] (XHFQ2J9959.cambridge.arm.com [10.1.38.151])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 229323F64C;
-	Thu, 11 Apr 2024 04:27:49 -0700 (PDT)
-Message-ID: <a59496b6-ffdf-40ce-b030-283cc911203e@arm.com>
-Date: Thu, 11 Apr 2024 12:27:47 +0100
+	s=arc-20240116; t=1712835013; c=relaxed/simple;
+	bh=1APKQilN3KOr/QtnFwq4ziD2NuoZYSGfZUZ72o0YZC8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FYjYRktXCbwdW3/7gWVtRDVph+NkTQ4qo7dmUL7cFiYGBC7TH3xyQGx2uyzqpGRECZsIzmenDwTryz/oVRgZdUNjl5biYm/P90My69Lyu3YXM3vwivoL0RKEzbWrIvh7DdCK4Em3yi33ALjWyoWJxBu5cUkAfDMbgR1piph4b0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=CqpnU+BP; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="CqpnU+BP"
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id DF9C7100002;
+	Thu, 11 Apr 2024 14:29:48 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1712834988; bh=vfdGuoVAYV58AUhj/zofkCcJDkvE34z/umq0QY3tVtQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	b=CqpnU+BPtIXoHL27lTCUB//pJ/oI7+UiMbh3szTXfRpXA8CnXmVQQiLHxygyWtLUj
+	 qKTdLrv5s1PgwQvJPr+GqH3mAExr90VgrbKLu/Nw9sFQ2Je1fqBqimQvwTNt/CRNax
+	 kW0Two4BFNPX2EF4MZqqk9bE9B/ALjiqFUPC+BA2Y9VoKAldOpgpBp38dOloRnsIBs
+	 Gs0WFPci0Jj/AJSZNbTmk3s/r88n+MuKN5Ax4GTQr+D9g1toL1A0K6Ywn0TprLSQ+h
+	 q42sCK1BXn0V5BSQYdOW0zpM6IkFtsiW23focFz5UEZdCm5KMsrnt7ErV3/iO5uYy9
+	 NnfYS1PtZua4w==
+Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu, 11 Apr 2024 14:27:48 +0300 (MSK)
+Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
+ 2024 14:27:28 +0300
+Message-ID: <478ad5a2-88b7-4069-aa9b-52084ffeda67@t-argos.ru>
+Date: Thu, 11 Apr 2024 14:24:58 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,111 +44,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/2] mm/madvise: optimize lazyfreeing with mTHP in
- madvise_free
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, Lance Yang <ioworker0@gmail.com>,
- akpm@linux-foundation.org
-Cc: 21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com,
- zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com,
- wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com,
- minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240408042437.10951-1-ioworker0@gmail.com>
- <20240408042437.10951-2-ioworker0@gmail.com>
- <38c4add8-53a2-49ca-9f1b-f62c2ee3e764@arm.com>
- <013334d5-62d2-4256-8045-168893a0a0cf@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <013334d5-62d2-4256-8045-168893a0a0cf@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] drivers: thermal: tsens: Fix null pointer dereference
+Content-Language: ru
+To: Konrad Dybcio <konrad.dybcio@linaro.org>, Christian Marangi
+	<ansuelsmth@gmail.com>
+CC: Amit Kucheria <amitk@kernel.org>, Thara Gopinath
+	<thara.gopinath@gmail.com>, Bjorn Andersson <andersson@kernel.org>, "Rafael
+ J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	<linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+References: <20240405090720.16419-1-amishin@t-argos.ru>
+ <2cd986c0-8663-4143-9d35-4af94fe5e4bb@linaro.org>
+From: Aleksandr Mishin <amishin@t-argos.ru>
+In-Reply-To: <2cd986c0-8663-4143-9d35-4af94fe5e4bb@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184672 [Apr 11 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_arrow_text}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/11 07:47:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/11 10:13:00 #24743273
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On 11/04/2024 12:20, David Hildenbrand wrote:
-> On 11.04.24 13:11, Ryan Roberts wrote:
->> On 08/04/2024 05:24, Lance Yang wrote:
->>> This patch optimizes lazyfreeing with PTE-mapped mTHP[1]
->>> (Inspired by David Hildenbrand[2]). We aim to avoid unnecessary folio
->>> splitting if the large folio is fully mapped within the target range.
->>>
->>> If a large folio is locked or shared, or if we fail to split it, we just
->>> leave it in place and advance to the next PTE in the range. But note that
->>> the behavior is changed; previously, any failure of this sort would cause
->>> the entire operation to give up. As large folios become more common,
->>> sticking to the old way could result in wasted opportunities.
->>>
->>> On an Intel I5 CPU, lazyfreeing a 1GiB VMA backed by PTE-mapped folios of
->>> the same size results in the following runtimes for madvise(MADV_FREE) in
->>> seconds (shorter is better):
->>>
->>> Folio Size |   Old    |   New    | Change
->>> ------------------------------------------
->>>        4KiB | 0.590251 | 0.590259 |    0%
->>>       16KiB | 2.990447 | 0.185655 |  -94%
->>>       32KiB | 2.547831 | 0.104870 |  -95%
->>>       64KiB | 2.457796 | 0.052812 |  -97%
->>>      128KiB | 2.281034 | 0.032777 |  -99%
->>>      256KiB | 2.230387 | 0.017496 |  -99%
->>>      512KiB | 2.189106 | 0.010781 |  -99%
->>>     1024KiB | 2.183949 | 0.007753 |  -99%
->>>     2048KiB | 0.002799 | 0.002804 |    0%
->>>
->>> [1] https://lkml.kernel.org/r/20231207161211.2374093-5-ryan.roberts@arm.com
->>> [2] https://lore.kernel.org/linux-mm/20240214204435.167852-1-david@redhat.com
->>>
->>> Signed-off-by: Lance Yang <ioworker0@gmail.com>
->>> ---
->>>   include/linux/pgtable.h |  34 +++++++++
->>>   mm/internal.h           |  12 +++-
->>>   mm/madvise.c            | 149 ++++++++++++++++++++++------------------
->>>   mm/memory.c             |   4 +-
->>>   4 files changed, 129 insertions(+), 70 deletions(-)
->>>
->>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>> index 0f4b2faa1d71..4dd442787420 100644
->>> --- a/include/linux/pgtable.h
->>> +++ b/include/linux/pgtable.h
->>> @@ -489,6 +489,40 @@ static inline pte_t ptep_get_and_clear(struct mm_struct
->>> *mm,
->>>   }
->>>   #endif
->>>   +#ifndef mkold_clean_ptes
->>> +/**
->>> + * mkold_clean_ptes - Mark PTEs that map consecutive pages of the same folio
->>> + *        as old and clean.
->>> + * @mm: Address space the pages are mapped into.
->>> + * @addr: Address the first page is mapped at.
->>> + * @ptep: Page table pointer for the first entry.
->>> + * @nr: Number of entries to mark old and clean.
->>> + *
->>> + * May be overridden by the architecture; otherwise, implemented by
->>> + * get_and_clear/modify/set for each pte in the range.
->>> + *
->>> + * Note that PTE bits in the PTE range besides the PFN can differ. For example,
->>> + * some PTEs might be write-protected.
->>> + *
->>> + * Context: The caller holds the page table lock.  The PTEs map consecutive
->>> + * pages that belong to the same folio.  The PTEs are all in the same PMD.
->>> + */
->>> +static inline void mkold_clean_ptes(struct mm_struct *mm, unsigned long addr,
->>> +                    pte_t *ptep, unsigned int nr)
->>
->> Just thinking out loud, I wonder if it would be cleaner to convert mkold_ptes()
->> (which I added as part of swap-out) to something like:
->>
->> clear_young_dirty_ptes(struct mm_struct *mm, unsigned long addr,
->>                pte_t *ptep, unsigned int nr,
->>                bool clear_young, bool clear_dirty);
->>
->> Then we can use the same function for both use cases and also have the ability
->> to only clear dirty in future if we ever need it. The other advantage is that we
->> only need to plumb a single function down the arm64 arch code. As it currently
->> stands, those 2 functions would be duplicating most of their code.
+
+
+On 09.04.2024 12:52, Konrad Dybcio wrote:
 > 
-> Yes. Maybe better use proper __bitwise flags, the compiler should be smart
-> enough to optimize either way.
+> 
+> On 4/5/24 11:07, Aleksandr Mishin wrote:
+>> compute_intercept_slope() is called from calibrate_8960() (in 
+>> tsens-8960.c)
+>> as compute_intercept_slope(priv, p1, NULL, ONE_PT_CALIB) which lead to 
+>> null
+>> pointer dereference (if DEBUG or DYNAMIC_DEBUG set).
+>> Fix this bug by adding null pointer check.
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>
+>> Fixes: dfc1193d4dbd ("thermal/drivers/tsens: Replace custom 8960 apis 
+>> with generic apis")
+>> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+>> ---
+> 
+> Maybe we can replace p2[i] with p2 ? p2[i] : 0
 
-Agreed. I was also thinking perhaps it makes sense to start using output bitwise
-flags for folio_pte_batch() since this patch set takes us up to 3 optional bool
-pointers for different things. Might be cleaner to have input flags to tell it
-what we care about and output flags to highlight those things. I guess the
-compiler should be able to optimize in the same way.
+Your solution look better for me. Thanks. I'll offer v2 patch
 
+> 
+> Konrad
+
+-- 
+Kind regards
+Aleksandr
