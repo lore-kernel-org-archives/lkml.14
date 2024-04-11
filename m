@@ -1,109 +1,142 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42C01F786F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201AC1F7874
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850164; cv=none; b=EWLjvuEiVNSsdDzUy3iIzZz5zvRKC+aVFuoh0f3+AXHQcRxJDmAHxrKQIJ364ScutWyBel/a+EgcBleGFhScDPQj9EZemShDHz7qKZh9RVUgLtvHBTXBSICDKKRoO0jG55OqV1moadaaSsjn++9QOlDO9ziidCIG9bdwksFBfgk=
+	t=1712850164; cv=none; b=cuM+jPC6p2NCoIsEPgbRjFSNjm74tgXg7lGHAdBFPIpcH01vAW2oiPqk9g4/kT3aK9YIL22S4zf/YznDJNy48go3+zZIYs7l6UergEqKthc2rHP4Rxk09Ed7NDdg7FD/pkGeMKzprafhY3j92n3+SrHZ1KRG58jcttfifoV0++M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712850164; c=relaxed/simple;
-	bh=QZbH30wbKxgTA91ANcVOQZJdEUlr13dkhciBnGreMAA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mFjySj3mTZ0IwHcgskpk4/qTi2i3WjmJ4Z85f9y0K0LHHIXu1qoTZeHmAhkubB0vZWLwlAtsLkxrvI8tVy/r1NJ0htMvUhhxNZO0fdo9xMyk2rF6VwaeBgOWtt0jJSKtgerzNKZmzf9lGF71eneyoBluMEi81QOEaY2EMrQR1f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dpQFmWsX; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	bh=gAk05EH19UAZRUTc19SOoBN9Gb3h0YStlhtozE7ap2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MitAcivNkbQj5wjKbxqY0FQ6OjAzhMUWUV9wL611SsrgBH7FL8n9ZiGmZkJp/GAEyWV41Ssep8lAXGqTfcPkYnJqDAjbS7Yvg+OqUnNvMOMDHqmEnBFmsaVk82e8ey0mkM418uAmWW24V8BapCycYx1UekaGcNHDzxWe1A2LQBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=R6F/EN5N; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dpQFmWsX"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de0f9a501d6so4394799276.3
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="R6F/EN5N"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58270239f.1
         for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:42:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712850162; x=1713454962; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850162; x=1713454962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=emVrn6/X7HIVwrwVbAdXhWseE0fgME6QfLwQFErW8lw=;
-        b=dpQFmWsXe2Jsld+ALs4saIwkWT8mS6bbVXg5YKYRSfRDESBJ8jPYQUmTYR2vQNDtdV
-         yDIJNHhO9FplR1T38HyW1jfazeQ4GjheoEhJSxBhp1m+QosBgy8n0VEQA6SRCm+gzmvb
-         vUI5GCalGFkk77cnaXOL/dETbsfVnswYZeXjL12qcQ8GVdzwpj3hbG4Irf2pYY/RZ8mu
-         11mPO2NbGBaJSMFW4M73cP7Sq9r4vEE0q3Y0uOq+i+acjhqghRS9xQfjhBxl2BMbIe8s
-         ZOxilpwlEtoPLt2zRihDXktxUBO1ELUgBDvQ3TXQs/YK3pQCnuUKOvNiEwo5JDmAf+Eq
-         9I2Q==
+        bh=mWOu08smcrzd/mJ5G2zeBk679SixjLGMg/kkuPWqYhs=;
+        b=R6F/EN5NLYc32NCpc2LcKUik/mFIo0OVlSeX5BbgA8JhZ8QIyNmddXvPXTJrhBDdDe
+         lzpcvzU9Jz+zwB6wILKqp24DTBKIm8D3dVDwhz49qJ1bFhcIk8B788xwP5XCVQCmEG3s
+         tfa7TJ7oQoNmmJzTe20iKDWyJ3su+f7hp9N8hA2ABkOvKUZ6nV4jKBnRKACZzmwWgawW
+         6TQWWJae8HfxOCIt7LbTbhQJiA28SFsNZnTF3CDaGCZbN6DDF/58G3i2/QavOqulg2co
+         MFUHqONl7lOTkRrqmUrdH07JO9/siSPJqBjgXuoC5S1P0Xizy2HqW97Ykvz+xUSJ/FLk
+         kKxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712850162; x=1713454962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=emVrn6/X7HIVwrwVbAdXhWseE0fgME6QfLwQFErW8lw=;
-        b=RGXgI+DQtQRwwalTy1d6mipNaJkG/v6h0j07oeBNnz45i771Prp0iFFrmnKfHFoDa+
-         NALkCfHzb92d//sDYhE9A9A/wIjQldnhozf44uuGzKmwSSy4rPBWw4etq8j5WGXngumc
-         i39NlzgSjxrS8nhu23xkzR1c+nai86J2FvuPJtw7bLVOmbJ10cpypZ8PanfhZAA6q0rm
-         5bKmRDb5cuca8OSGX6lBk2IVjRneqaj2svSQqN7LGOmlLSM2vLg7tKLz2429I1YRlvTS
-         JQPxBN3dliNaTXotcV9s5ZMXfqMG+/RqJkfWZv4e+IsFoMTNn4nkW0FIfS3XhUnVNsN2
-         7PoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqXYJyDRB6W8jqrQSUTWjlq/NaNn7IgFmNZNUOtD7cVCa9FHimM+bsWKfTkKgmrqZ8kPEilnqffDTxfbQsiwYps6Jc64G0CdBQOpWL
-X-Gm-Message-State: AOJu0YwFJfXCu1rnWbdvqt3IJBvmCvUbaEa/mhPuB+X617cJqqqTxcgP
-	C+s6p/QgTdY73cNGDuYgJBPN5PLYSEv0HVXIiMmsPURff3Ks4AKV2zY6AwcIQBBnrx1yRUjj8Af
-	IiJhPCxSjhgVl4IFj1DyLZJRuJpt5JLoa9wXG
-X-Google-Smtp-Source: AGHT+IHdqaGJdNHQZfv8/iARuu43IXA9KciendMfPcOMNTNNrWbe69SecPwxLIupNq50imWvq+MmoXztMkheqgcH3OE=
-X-Received: by 2002:a25:a527:0:b0:dc6:bbeb:d889 with SMTP id
- h36-20020a25a527000000b00dc6bbebd889mr5412038ybi.52.1712850156683; Thu, 11
- Apr 2024 08:42:36 -0700 (PDT)
+        bh=mWOu08smcrzd/mJ5G2zeBk679SixjLGMg/kkuPWqYhs=;
+        b=eq59p39IIEqIBVFc5W6CfbH3sNpjvk3px4/nLrPEFrc/kuYXD471z5GJMrXlkTi/iD
+         0Vnq/pf/PH6KbTLO38o+jUfdKrxkC0sbIr1KLzEHNIOmmXvek2s+7y1nwcp+ACY9/hvb
+         +q5L7OobAG6BuBLrlqtk7y/p0wnYVhBXxp/0wSYh3Rj4kaj2/Isra4e7pOjWAq4JFup2
+         ddBLTxytGxOa0wEwiGifNOo5/bwj+IiQ2jz/8ORNmSXdSmI/nV3IfaigUhn9myfksiaM
+         QZt1W7vIgeEEXDMh2DwDWLZ6/sfKQXrtxHQQwasQ9j7SOuqyT6aQ5isfmeRbY5BqCkWk
+         6LCw==
+X-Gm-Message-State: AOJu0YxP5Llz0jGR4mKC9mD/J1cNUr3JhS+hn8EAdZ95rz38K6wYiFrk
+	liDeV+nRIQ3/0zTmCQ+eO8OcHMjXlnR5NDLni3Lm3BM3R4oldv9rW1KwIRhBYX7S/8658rRLQ2O
+	g
+X-Google-Smtp-Source: AGHT+IHTRSKtHBfiZphx13tJYfdKn73f270WntxG5CMhhspJu3UQV8YH+ezCv0l3lVnbmDlt3WU4dA==
+X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr179491ioh.1.1712850162060;
+        Thu, 11 Apr 2024 08:42:42 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:42:40 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 394/437] drivers/hsi: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:18:54 -0600
+Message-ID: <20240411153126.16201-395-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240410170621.2011171-1-peterx@redhat.com> <Zhb2BWntckP3ZhDc@casper.infradead.org>
-In-Reply-To: <Zhb2BWntckP3ZhDc@casper.infradead.org>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 11 Apr 2024 08:42:23 -0700
-Message-ID: <CAJuCfpHKAP6vP98VCYx+UVeHUkYZMkG+oksQBzUJk4myssUniQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Lokesh Gidra <lokeshgidra@google.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Alistair Popple <apopple@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 10, 2024 at 1:26=E2=80=AFPM Matthew Wilcox <willy@infradead.org=
-> wrote:
->
-> On Wed, Apr 10, 2024 at 01:06:21PM -0400, Peter Xu wrote:
-> > anon_vma is a tricky object in the context of per-vma lock, because it'=
-s
-> > racy to modify it in that context and mmap lock is needed if it's not
-> > stable yet.
->
-> I object to this commit message.  First, it's not a "sanity check".  It's
-> a check to see if we already have an anon VMA.  Second, it's not "racy
-> to modify it" at all.  The problem is that we need to look at other
-> VMAs, for which we do not hold the lock.
->
-> > So the trivial side effect of such patch is:
-> >
-> >   - We may do slightly better on the first WRITE of a private file mapp=
-ing,
-> >   because we can retry earlier (in lock_vma_under_rcu(), rather than
-> >   vmf_anon_prepare() later).
-> >
-> >   - We may always use mmap lock for the initial READs on a private file
-> >   mappings, while before this patch it _can_ (only when no WRITE ever
-> >   happened... but it doesn't make much sense for a MAP_PRIVATE..) do th=
-e
-> >   read fault with per-vma lock.
->
-> But that's a super common path!  Look at 'cat /proc/self/maps'.  All
-> your program text (including libraries) is mapped PRIVATE, and never
-> written to (except by ptrace, I guess).
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/hsi/clients/hsi_char.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Uh, indeed I didn't realize this would be the side-effect from this
-early check. And that's exactly why I wanted Matthew's input on this
-in [1].
+diff --git a/drivers/hsi/clients/hsi_char.c b/drivers/hsi/clients/hsi_char.c
+index 71ce7dbfe31d..47ddfe14459b 100644
+--- a/drivers/hsi/clients/hsi_char.c
++++ b/drivers/hsi/clients/hsi_char.c
+@@ -409,10 +409,10 @@ static inline void hsc_tx_get(struct hsi_client *cl, struct hsc_tx_config *txc)
+ 	txc->arb_mode = cl->tx_cfg.arb_mode;
+ }
+ 
+-static ssize_t hsc_read(struct file *file, char __user *buf, size_t len,
+-						loff_t *ppos __maybe_unused)
++static ssize_t hsc_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct hsc_channel *channel = file->private_data;
++	struct hsc_channel *channel = iocb->ki_filp->private_data;
++	size_t len = iov_iter_count(to);
+ 	struct hsi_msg *msg;
+ 	ssize_t ret;
+ 
+@@ -451,8 +451,8 @@ static ssize_t hsc_read(struct file *file, char __user *buf, size_t len,
+ 	msg = hsc_get_first_msg(channel, &channel->rx_msgs_queue);
+ 	if (msg) {
+ 		if (msg->status != HSI_STATUS_ERROR) {
+-			ret = copy_to_user((void __user *)buf,
+-			sg_virt(msg->sgt.sgl), hsc_msg_len_get(msg));
++			ret = !copy_to_iter_full(sg_virt(msg->sgt.sgl),
++						 hsc_msg_len_get(msg), to);
+ 			if (ret)
+ 				ret = -EFAULT;
+ 			else
+@@ -468,10 +468,10 @@ static ssize_t hsc_read(struct file *file, char __user *buf, size_t len,
+ 	return ret;
+ }
+ 
+-static ssize_t hsc_write(struct file *file, const char __user *buf, size_t len,
+-						loff_t *ppos __maybe_unused)
++static ssize_t hsc_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct hsc_channel *channel = file->private_data;
++	struct hsc_channel *channel = iocb->ki_filp->private_data;
++	size_t len = iov_iter_count(from);
+ 	struct hsi_msg *msg;
+ 	ssize_t ret;
+ 
+@@ -488,7 +488,7 @@ static ssize_t hsc_write(struct file *file, const char __user *buf, size_t len,
+ 		clear_bit(HSC_CH_WRITE, &channel->flags);
+ 		return -ENOSPC;
+ 	}
+-	if (copy_from_user(sg_virt(msg->sgt.sgl), (void __user *)buf, len)) {
++	if (!copy_from_iter_full(sg_virt(msg->sgt.sgl), len, from)) {
+ 		ret = -EFAULT;
+ 		goto out;
+ 	}
+@@ -655,8 +655,8 @@ static int hsc_release(struct inode *inode __maybe_unused, struct file *file)
+ 
+ static const struct file_operations hsc_fops = {
+ 	.owner		= THIS_MODULE,
+-	.read		= hsc_read,
+-	.write		= hsc_write,
++	.read_iter	= hsc_read,
++	.write_iter	= hsc_write,
+ 	.unlocked_ioctl	= hsc_ioctl,
+ 	.open		= hsc_open,
+ 	.release	= hsc_release,
+-- 
+2.43.0
 
->
-> NAK this patch.
->
