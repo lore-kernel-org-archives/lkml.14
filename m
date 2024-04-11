@@ -1,390 +1,237 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDD613BACD;
-	Thu, 11 Apr 2024 11:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093641474BB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712833335; cv=none; b=t/cf5Fjs/tpA+MnLC3vhG80H97Zi2A1z7eJ54Hyx9EpweUm0hUjyf6kZKL8hIRp+fUuKvIaRQD94tkeeAgNvPjnuWY8DEwVIfdE8SJ3nD91feCo9TPEp6Kr/vhPLrAduT0X4T/jEIFdcv0Rvhbx8biZ6F8vTeF9WU8t4DjObbSM=
+	t=1712833361; cv=none; b=uI4UCODG64h/VAubVLE7R5SlE+XQBpNRP+gvTiYrGEOr7xVsA7DvFXOB2+B2zbCxLlZtnyRXxDjd/n6T3HCWrCujefOCKJ74TNeLDgm5aZEhJmdT7iylLxHQDtWIABfyBk9ffqXawsWlWUmGYZCUiz9jBmAXW4pc4HCN0hw/vu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712833335; c=relaxed/simple;
-	bh=49RGkbUbh1ZYJfCd93/Msh6F3LL9akBjASXKS2hiCV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AaX2oBOkxzqzrR2vuyeNybxabWTDPj5CJrBQWtNEvYFRwl1XYctDwWCgphXvEO6VpHxG+M0MRi7u7oHgTghhwHi0bCk5LrzzNpdnSH2kc2i9ihAUTCv7cqV0GZcm5Ss0hk3T1KbRzwa+v1J5eO+e9yq/GwL6YbRAyzyyQLNtF3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Ai0UYLub; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1712833361; c=relaxed/simple;
+	bh=koAJ18xijCKpgh9Hxgs6EZ/agSJ7rjMVowQIHOKcihM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t+X8oSpUJ5PqRjMI7crIfZGXIHKhpubOr0T8tCl5+acrVDXTY/xEa1NEmT4BaFvPTpdStLeJrm3KiBNSEtU7a3oTYteF0b5mcFyn0yRr2N+EgJ6166BrgTKiS7ZoACr8rDm/rWhS4oIbSWZeym9Z1YInoQVsk4jItLGRAd1KbmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J+ieevYi; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Ai0UYLub"
-Received: from [192.168.1.105] (unknown [103.251.226.65])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AA39623F;
-	Thu, 11 Apr 2024 13:01:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712833287;
-	bh=49RGkbUbh1ZYJfCd93/Msh6F3LL9akBjASXKS2hiCV8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ai0UYLubZKVuDdcrlGQsndJH1ozFBihThmVG+5Hzor9HAwucFGsXaswN6kgqsbS15
-	 6hb6YCSXUVxmosZJqtn8P79o0J5Te4LQTJGPLti/zXnsRRkowtfWTOp6wlnLTYvWnB
-	 sgtfi5MPmm+6y029mwc1ZW1xnvuCOVOZt69NcvhI=
-Message-ID: <f8e293b7-6a06-4477-9c7e-d1b83163f8e1@ideasonboard.com>
-Date: Thu, 11 Apr 2024 16:32:02 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+ieevYi"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-61149e50602so5218397b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 04:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712833359; x=1713438159; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2mHoLWByMG5hFDATGezwiAdEXftWUdi3XEvIaRp+Grs=;
+        b=J+ieevYidQPN/OMZMFD+/oVAUd2FRm41CrCahvabNUOqk60ERdCEUAQX5nsi7W/ppt
+         oxGhTQXMzvrBngTR5Age3zAectO1RQy2dE4XwMO6rcbRuppugtqHW0VOUntjrcDpS5bD
+         byHS2hI8ymnMhOvmC/GEsQ1EfQnRaB8nqBuOghA5o3BBzCu6NdswwKQFhO9YYoTDYZBd
+         xQxnEm7yRd1Qx9HWRS1yuzH2s38bcrMNTZ5HwEApJATkO08ODmSVgXYod11SdSSRwfs1
+         w5+Z5RspcvDYqXC07wzbvn65n+ylmRRZGduJT278EQ/qhsFvmOC0zdmO8pJ+H/8tw4PP
+         rM9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712833359; x=1713438159;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2mHoLWByMG5hFDATGezwiAdEXftWUdi3XEvIaRp+Grs=;
+        b=dWfHcC6x8KIRsDa4OJh1Yvv85zcZckQRo5K22UgkBMM+yQSs1T6EKHb3QetPFFytxE
+         iaczoZ4aU7NrY4qLiQjsLzFF0WEBJJ84KOGHTpy4kIIIcXDBNVG9FtptpZ6UXLqagOrS
+         G2YePyP92kmOmBXamgBA8qknd9GdnBSL1taF9yxYDMUNgwDMkxV4adhiOTFU30fPl70E
+         XkvV/W4UJ28JZa0GwQqlVU1hl0hqwgGr+Me+X4PSK2U3CxvfeKWtEZEeglcA2VcV6Zb4
+         AplsmqidHoTtOc3+VIdHgHPYzCT9WcMfuM/QAtIGSpYcC+ChMOFO03trRxzlHDvihaTt
+         cFdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGjCgHsSgkHeV4G0J95SI3X9Pzm8kr1X5y0Qc2AE2r5xW8qCAOvXq3XOL7IJi1YkzIMFnWpiIM6ouq16pMwPQJHPr2dMymCSejVLSP
+X-Gm-Message-State: AOJu0Yzcd54IMTiYeLpLZWZLBcRZDIzy+/QRMr95zshduZ2EZM2cQuvM
+	FQDCg4mzEt59eidHeL9TfcvNMQOAjYnl+zUY2zf0DNOoZ74ZnIfHqSpjnJ2yOb45PnV5B3TtETN
+	0fOEEKvCaF9XBb9CI20tDcRVI3Kx67qGET7D4Ig==
+X-Google-Smtp-Source: AGHT+IHh3bUULY9MUYjKN8n1JEV1+Ozve/17NFF9n0p/vOM0uIES+twT0cn21u0mGgHaaPc0bylLuIv5XjeucA3l8cg=
+X-Received: by 2002:a05:690c:6a0e:b0:618:1eff:24e4 with SMTP id
+ ih14-20020a05690c6a0e00b006181eff24e4mr1775777ywb.15.1712833358989; Thu, 11
+ Apr 2024 04:02:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 9/9] media: subdev: Support single-stream case in
- v4l2_subdev_enable/disable_streams()
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240410-enable-streams-impro-v3-0-e5e7a5da7420@ideasonboard.com>
- <20240410-enable-streams-impro-v3-9-e5e7a5da7420@ideasonboard.com>
-Content-Language: en-US
-From: Umang Jain <umang.jain@ideasonboard.com>
-In-Reply-To: <20240410-enable-streams-impro-v3-9-e5e7a5da7420@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240411-pm8xxx-vibrator-new-design-v9-0-7bf56cb92b28@quicinc.com>
+ <20240411-pm8xxx-vibrator-new-design-v9-4-7bf56cb92b28@quicinc.com>
+In-Reply-To: <20240411-pm8xxx-vibrator-new-design-v9-4-7bf56cb92b28@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Thu, 11 Apr 2024 14:02:28 +0300
+Message-ID: <CAA8EJprJ4s-o1uPiPjRpq4nwG4cdV7K8XMhVLOQn2D=kJLiVzQ@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] input: pm8xxx-vibrator: add new SPMI vibrator support
+To: quic_fenglinw@quicinc.com
+Cc: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Tomi,
-
-On 10/04/24 6:05 pm, Tomi Valkeinen wrote:
-> At the moment the v4l2_subdev_enable/disable_streams() functions call
-> fallback helpers to handle the case where the subdev only implements
-> .s_stream(), and the main function handles the case where the subdev
-> implements streams (V4L2_SUBDEV_FL_STREAMS, which implies
-> .enable/disable_streams()).
+On Thu, 11 Apr 2024 at 11:32, Fenglin Wu via B4 Relay
+<devnull+quic_fenglinw.quicinc.com@kernel.org> wrote:
 >
-> What is missing is support for subdevs which do not implement streams
-> support, but do implement .enable/disable_streams(). Example cases of
-> these subdevices are single-stream cameras, where using
-> .enable/disable_streams() is not required but helps us remove the users
-> of the legacy .s_stream(), and subdevices with multiple source pads (but
-> single stream per pad), where .enable/disable_streams() allows the
-> subdevice to control the enable/disable state per pad.
+> From: Fenglin Wu <quic_fenglinw@quicinc.com>
 >
-> The two single-streams cases (.s_stream() and .enable/disable_streams())
-> are very similar, and with small changes we can change the
-> v4l2_subdev_enable/disable_streams() functions to support all three
-> cases, without needing separate fallback functions.
+> Add support for a new SPMI vibrator module which is very similar
+> to the vibrator module inside PM8916 but has a finer drive voltage
+> step and different output voltage range, its drive level control
+> is expanded across 2 registers. The vibrator module can be found
+> in following Qualcomm PMICs: PMI632, PM7250B, PM7325B, PM7550BA.
 >
-> A few potentially problematic details, though:
-
-Does this mean the patch needs to be worked upon more ?
-
-I quickly tested the series by applying it locally with my use case of 
-IMX283 .enable/disable streams and s_stream as the helper function and 
-it seems I am still seeing the same behaviour as before (i.e. not being 
-streamed) and have to carry the workaround as mentioned in [1] **NOTE**
-
-[1] 
-https://lore.kernel.org/linux-media/20240313070705.91140-1-umang.jain@ideasonboard.com/
-
->
-> - For the single-streams cases we use sd->enabled_pads field, which
->    limits the number of pads for the subdevice to 64. For simplicity I
->    added the check for this limitation to the beginning of the function,
->    and it also applies to the streams case.
->
-> - The fallback functions only allowed the target pad to be a source pad.
->    It is not very clear to me why this check was needed, but it was not
->    needed in the streams case. However, I doubt the
->    v4l2_subdev_enable/disable_streams() code has ever been tested with
->    sink pads, so to be on the safe side, I added the same check
->    to the v4l2_subdev_enable/disable_streams() functions.
->
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
 > ---
->   drivers/media/v4l2-core/v4l2-subdev.c | 187 ++++++++++++++--------------------
->   1 file changed, 79 insertions(+), 108 deletions(-)
+>  drivers/input/misc/pm8xxx-vibrator.c | 51 +++++++++++++++++++++++++++++-------
+>  1 file changed, 42 insertions(+), 9 deletions(-)
 >
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index 0d376d72ecc7..4a73886741f9 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -2106,6 +2106,13 @@ static void v4l2_subdev_collect_streams(struct v4l2_subdev *sd,
->   					u64 *found_streams,
->   					u64 *enabled_streams)
->   {
-> +	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS)) {
-> +		*found_streams = BIT_ULL(0);
-> +		if (sd->enabled_pads & BIT_ULL(pad))
-> +			*enabled_streams = BIT_ULL(0);
-> +		return;
-> +	}
+> diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
+> index 2959edca8eb9..35bb6f450fd2 100644
+> --- a/drivers/input/misc/pm8xxx-vibrator.c
+> +++ b/drivers/input/misc/pm8xxx-vibrator.c
+> @@ -12,10 +12,10 @@
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+>
+> -#define VIB_MAX_LEVEL_mV       (3100)
+> -#define VIB_MIN_LEVEL_mV       (1200)
+> -#define VIB_PER_STEP_mV        (100)
+> -#define VIB_MAX_LEVELS         (VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV + VIB_PER_STEP_mV)
+> +#define VIB_MAX_LEVEL_mV(vib)  (vib->drv2_addr ? 3544 : 3100)
+> +#define VIB_MIN_LEVEL_mV(vib)  (vib->drv2_addr ? 1504 : 1200)
+> +#define VIB_PER_STEP_mV(vib)   (vib->drv2_addr ? 8 : 100)
+> +#define VIB_MAX_LEVELS(vib)    (VIB_MAX_LEVEL_mV(vib) - VIB_MIN_LEVEL_mV(vib) + VIB_PER_STEP_mV(vib))
+>
+>  #define MAX_FF_SPEED           0xff
+>
+> @@ -26,6 +26,9 @@ struct pm8xxx_regs {
+>         unsigned int drv_offset;
+>         unsigned int drv_mask;
+>         unsigned int drv_shift;
+> +       unsigned int drv2_offset;
+> +       unsigned int drv2_mask;
+> +       unsigned int drv2_shift;
+>         unsigned int drv_en_manual_mask;
+>  };
+>
+> @@ -45,6 +48,18 @@ static struct pm8xxx_regs pm8916_regs = {
+>         .drv_en_manual_mask = 0,
+>  };
+>
+> +static struct pm8xxx_regs pmi632_regs = {
+> +       .enable_offset = 0x46,
+> +       .enable_mask = BIT(7),
+> +       .drv_offset = 0x40,
+> +       .drv_mask = GENMASK(7, 0),
+> +       .drv_shift = 0,
+> +       .drv2_offset = 0x41,
+> +       .drv2_mask = GENMASK(3, 0),
+> +       .drv2_shift = 8,
+> +       .drv_en_manual_mask = 0,
+> +};
 > +
->   	*found_streams = 0;
->   	*enabled_streams = 0;
->   
-> @@ -2127,6 +2134,14 @@ static void v4l2_subdev_set_streams_enabled(struct v4l2_subdev *sd,
->   					    u32 pad, u64 streams_mask,
->   					    bool enabled)
->   {
-> +	if (!(sd->flags & V4L2_SUBDEV_FL_STREAMS)) {
-> +		if (enabled)
-> +			sd->enabled_pads |= BIT_ULL(pad);
-> +		else
-> +			sd->enabled_pads &= ~BIT_ULL(pad);
-> +		return;
-> +	}
+>  /**
+>   * struct pm8xxx_vib - structure to hold vibrator data
+>   * @vib_input_dev: input device supporting force feedback
+> @@ -53,6 +68,7 @@ static struct pm8xxx_regs pm8916_regs = {
+>   * @regs: registers' info
+>   * @enable_addr: vibrator enable register
+>   * @drv_addr: vibrator drive strength register
+> + * @drv2_addr: vibrator drive strength upper byte register
+>   * @speed: speed of vibration set from userland
+>   * @active: state of vibrator
+>   * @level: level of vibration to set in the chip
+> @@ -65,6 +81,7 @@ struct pm8xxx_vib {
+>         const struct pm8xxx_regs *regs;
+>         unsigned int enable_addr;
+>         unsigned int drv_addr;
+> +       unsigned int drv2_addr;
+>         int speed;
+>         int level;
+>         bool active;
+> @@ -82,6 +99,10 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
+>         unsigned int val = vib->reg_vib_drv;
+>         const struct pm8xxx_regs *regs = vib->regs;
+>
+> +       /* vibrator without drv2_addr needs be programmed in step increments */
+
+How are these two items related? Are you using vib->drv2_addr as a
+marker for 'particular generation'? In such a case please use a flag
+instead.
+
+The rest looks good to me.
+
+> +       if (!vib->drv2_addr)
+> +               vib->level /= VIB_PER_STEP_mV(vib);
 > +
->   	for (unsigned int i = 0; i < state->stream_configs.num_configs; ++i) {
->   		struct v4l2_subdev_stream_config *cfg =
->   			&state->stream_configs.configs[i];
-> @@ -2136,51 +2151,6 @@ static void v4l2_subdev_set_streams_enabled(struct v4l2_subdev *sd,
->   	}
->   }
->   
-> -static int v4l2_subdev_enable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
-> -					       u64 streams_mask)
-> -{
-> -	struct device *dev = sd->entity.graph_obj.mdev->dev;
-> -	int ret;
-> -
-> -	/*
-> -	 * The subdev doesn't implement pad-based stream enable, fall back
-> -	 * to the .s_stream() operation.
-> -	 */
-> -	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
-> -		return -EOPNOTSUPP;
-> -
-> -	/*
-> -	 * .s_stream() means there is no streams support, so only allowed stream
-> -	 * is the implicit stream 0.
-> -	 */
-> -	if (streams_mask != BIT_ULL(0))
-> -		return -EOPNOTSUPP;
-> -
-> -	/*
-> -	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
-> -	 * with 64 pads or less can be supported.
-> -	 */
-> -	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
-> -		return -EOPNOTSUPP;
-> -
-> -	if (sd->enabled_pads & BIT_ULL(pad)) {
-> -		dev_dbg(dev, "pad %u already enabled on %s\n",
-> -			pad, sd->entity.name);
-> -		return -EALREADY;
-> -	}
-> -
-> -	/* Start streaming when the first pad is enabled. */
-> -	if (!sd->enabled_pads) {
-> -		ret = v4l2_subdev_call(sd, video, s_stream, 1);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	sd->enabled_pads |= BIT_ULL(pad);
-> -
-> -	return 0;
-> -}
-> -
->   int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->   			       u64 streams_mask)
->   {
-> @@ -2189,21 +2159,33 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->   	bool already_streaming;
->   	u64 enabled_streams;
->   	u64 found_streams;
-> +	bool use_s_stream;
->   	int ret;
->   
->   	/* A few basic sanity checks first. */
->   	if (pad >= sd->entity.num_pads)
->   		return -EINVAL;
->   
-> +	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
-> +		return -EOPNOTSUPP;
+>         if (on)
+>                 val |= (vib->level << regs->drv_shift) & regs->drv_mask;
+>         else
+> @@ -93,6 +114,17 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
+>
+>         vib->reg_vib_drv = val;
+>
+> +       if (regs->drv2_mask) {
+> +               if (on)
+> +                       val = (vib->level << regs->drv2_shift) & regs->drv2_mask;
+> +               else
+> +                       val = 0;
 > +
-> +	/*
-> +	 * We use a 64-bit bitmask for tracking enabled pads, so only subdevices
-> +	 * with 64 pads or less can be supported.
-> +	 */
-> +	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
-> +		return -EOPNOTSUPP;
+> +               rc = regmap_write_bits(vib->regmap, vib->drv2_addr, regs->drv2_mask, val);
+> +               if (rc < 0)
+> +                       return rc;
+> +       }
 > +
->   	if (!streams_mask)
->   		return 0;
->   
->   	/* Fallback on .s_stream() if .enable_streams() isn't available. */
-> -	if (!v4l2_subdev_has_op(sd, pad, enable_streams))
-> -		return v4l2_subdev_enable_streams_fallback(sd, pad,
-> -							   streams_mask);
-> +	use_s_stream = !v4l2_subdev_has_op(sd, pad, enable_streams);
->   
-> -	state = v4l2_subdev_lock_and_get_active_state(sd);
-> +	if (!use_s_stream)
-> +		state = v4l2_subdev_lock_and_get_active_state(sd);
-> +	else
-> +		state = NULL;
->   
->   	/*
->   	 * Verify that the requested streams exist and that they are not
-> @@ -2231,9 +2213,18 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->   
->   	already_streaming = v4l2_subdev_is_streaming(sd);
->   
-> -	/* Call the .enable_streams() operation. */
-> -	ret = v4l2_subdev_call(sd, pad, enable_streams, state, pad,
-> -			       streams_mask);
-> +	if (!use_s_stream) {
-> +		/* Call the .enable_streams() operation. */
-> +		ret = v4l2_subdev_call(sd, pad, enable_streams, state, pad,
-> +				       streams_mask);
-> +	} else {
-> +		/* Start streaming when the first pad is enabled. */
-> +		if (!already_streaming)
-> +			ret = v4l2_subdev_call(sd, video, s_stream, 1);
-> +		else
-> +			ret = 0;
-> +	}
-> +
->   	if (ret) {
->   		dev_dbg(dev, "enable streams %u:%#llx failed: %d\n", pad,
->   			streams_mask, ret);
-> @@ -2243,34 +2234,32 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->   	/* Mark the streams as enabled. */
->   	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, true);
->   
-> -	if (!already_streaming)
-> +	if (!use_s_stream && !already_streaming)
->   		v4l2_subdev_enable_privacy_led(sd);
->   
->   done:
-> -	v4l2_subdev_unlock_state(state);
-> +	if (!use_s_stream)
-> +		v4l2_subdev_unlock_state(state);
->   
->   	return ret;
->   }
->   EXPORT_SYMBOL_GPL(v4l2_subdev_enable_streams);
->   
-> -static int v4l2_subdev_disable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
-> -						u64 streams_mask)
-> +int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
-> +				u64 streams_mask)
->   {
->   	struct device *dev = sd->entity.graph_obj.mdev->dev;
-> +	struct v4l2_subdev_state *state;
-> +	u64 enabled_streams;
-> +	u64 found_streams;
-> +	bool use_s_stream;
->   	int ret;
->   
-> -	/*
-> -	 * If the subdev doesn't implement pad-based stream enable, fall back
-> -	 * to the .s_stream() operation.
-> -	 */
-> -	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
-> -		return -EOPNOTSUPP;
-> +	/* A few basic sanity checks first. */
-> +	if (pad >= sd->entity.num_pads)
-> +		return -EINVAL;
->   
-> -	/*
-> -	 * .s_stream() means there is no streams support, so only allowed stream
-> -	 * is the implicit stream 0.
-> -	 */
-> -	if (streams_mask != BIT_ULL(0))
-> +	if (!(sd->entity.pads[pad].flags & MEDIA_PAD_FL_SOURCE))
->   		return -EOPNOTSUPP;
->   
->   	/*
-> @@ -2280,46 +2269,16 @@ static int v4l2_subdev_disable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
->   	if (pad >= sizeof(sd->enabled_pads) * BITS_PER_BYTE)
->   		return -EOPNOTSUPP;
->   
-> -	if (!(sd->enabled_pads & BIT_ULL(pad))) {
-> -		dev_dbg(dev, "pad %u already disabled on %s\n",
-> -			pad, sd->entity.name);
-> -		return -EALREADY;
-> -	}
-> -
-> -	/* Stop streaming when the last streams are disabled. */
-> -	if (!(sd->enabled_pads & ~BIT_ULL(pad))) {
-> -		ret = v4l2_subdev_call(sd, video, s_stream, 0);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
-> -	sd->enabled_pads &= ~BIT_ULL(pad);
-> -
-> -	return 0;
-> -}
-> -
-> -int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
-> -				u64 streams_mask)
-> -{
-> -	struct device *dev = sd->entity.graph_obj.mdev->dev;
-> -	struct v4l2_subdev_state *state;
-> -	u64 enabled_streams;
-> -	u64 found_streams;
-> -	int ret;
-> -
-> -	/* A few basic sanity checks first. */
-> -	if (pad >= sd->entity.num_pads)
-> -		return -EINVAL;
-> -
->   	if (!streams_mask)
->   		return 0;
->   
->   	/* Fallback on .s_stream() if .disable_streams() isn't available. */
-> -	if (!v4l2_subdev_has_op(sd, pad, disable_streams))
-> -		return v4l2_subdev_disable_streams_fallback(sd, pad,
-> -							    streams_mask);
-> +	use_s_stream = !v4l2_subdev_has_op(sd, pad, disable_streams);
->   
-> -	state = v4l2_subdev_lock_and_get_active_state(sd);
-> +	if (!use_s_stream)
-> +		state = v4l2_subdev_lock_and_get_active_state(sd);
-> +	else
-> +		state = NULL;
->   
->   	/*
->   	 * Verify that the requested streams exist and that they are not
-> @@ -2345,9 +2304,19 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->   
->   	dev_dbg(dev, "disable streams %u:%#llx\n", pad, streams_mask);
->   
-> -	/* Call the .disable_streams() operation. */
-> -	ret = v4l2_subdev_call(sd, pad, disable_streams, state, pad,
-> -			       streams_mask);
-> +	if (!use_s_stream) {
-> +		/* Call the .disable_streams() operation. */
-> +		ret = v4l2_subdev_call(sd, pad, disable_streams, state, pad,
-> +				       streams_mask);
-> +	} else {
-> +		/* Stop streaming when the last streams are disabled. */
-> +
-> +		if (!(sd->enabled_pads & ~BIT_ULL(pad)))
-> +			ret = v4l2_subdev_call(sd, video, s_stream, 0);
-> +		else
-> +			ret = 0;
-> +	}
-> +
->   	if (ret) {
->   		dev_dbg(dev, "disable streams %u:%#llx failed: %d\n", pad,
->   			streams_mask, ret);
-> @@ -2357,10 +2326,12 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->   	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, false);
->   
->   done:
-> -	if (!v4l2_subdev_is_streaming(sd))
-> -		v4l2_subdev_disable_privacy_led(sd);
-> +	if (!use_s_stream) {
-> +		if (!v4l2_subdev_is_streaming(sd))
-> +			v4l2_subdev_disable_privacy_led(sd);
->   
-> -	v4l2_subdev_unlock_state(state);
-> +		v4l2_subdev_unlock_state(state);
-> +	}
->   
->   	return ret;
->   }
+>         if (regs->enable_mask)
+>                 rc = regmap_update_bits(vib->regmap, vib->enable_addr,
+>                                         regs->enable_mask, on ? regs->enable_mask : 0);
+> @@ -115,17 +147,16 @@ static void pm8xxx_work_handler(struct work_struct *work)
+>                 return;
+>
+>         /*
+> -        * pmic vibrator supports voltage ranges from 1.2 to 3.1V, so
+> +        * pmic vibrator supports voltage ranges from MIN_LEVEL to MAX_LEVEL, so
+>          * scale the level to fit into these ranges.
+>          */
+>         if (vib->speed) {
+>                 vib->active = true;
+> -               vib->level = ((VIB_MAX_LEVELS * vib->speed) / MAX_FF_SPEED) +
+> -                                               VIB_MIN_LEVEL_mV;
+> -               vib->level /= VIB_PER_STEP_mV;
+> +               vib->level = VIB_MIN_LEVEL_mV(vib);
+> +               vib->level += mult_frac(VIB_MAX_LEVELS(vib), vib->speed, MAX_FF_SPEED);
+>         } else {
+>                 vib->active = false;
+> -               vib->level = VIB_MIN_LEVEL_mV / VIB_PER_STEP_mV;
+> +               vib->level = VIB_MIN_LEVEL_mV(vib);
+>         }
+>
+>         pm8xxx_vib_set(vib, vib->active);
+> @@ -203,6 +234,7 @@ static int pm8xxx_vib_probe(struct platform_device *pdev)
+>
+>         vib->enable_addr = reg_base + regs->enable_offset;
+>         vib->drv_addr = reg_base + regs->drv_offset;
+> +       vib->drv2_addr = reg_base + regs->drv2_offset;
+>
+>         /* operate in manual mode */
+>         error = regmap_read(vib->regmap, vib->drv_addr, &val);
+> @@ -257,6 +289,7 @@ static const struct of_device_id pm8xxx_vib_id_table[] = {
+>         { .compatible = "qcom,pm8058-vib", .data = &pm8058_regs },
+>         { .compatible = "qcom,pm8921-vib", .data = &pm8058_regs },
+>         { .compatible = "qcom,pm8916-vib", .data = &pm8916_regs },
+> +       { .compatible = "qcom,pmi632-vib", .data = &pmi632_regs },
+>         { }
+>  };
+>  MODULE_DEVICE_TABLE(of, pm8xxx_vib_id_table);
+>
+> --
+> 2.25.1
+>
 >
 
+
+-- 
+With best wishes
+Dmitry
