@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64C413FD66
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B19633
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712838558; cv=none; b=MJPsUTcOKpuMWkEeKeAY0oQJysGsbuNc/rhnP3JQY8ARBDyiI8XuT965i38P7GNYa9nMxGyCgd6w5sLxEk19tHCa43J7ZweQgAufsWTbpHp7CBr4FAd/y7irY43XLgaHv9cB4A+tVmXaedVOKQXoGR8Foyogo/EHxva4UX7blQ4=
+	t=1712838641; cv=none; b=gfC/q7MAQ37nP06jnFfFm+KVatThk9f4TnMqGwcNLskAVU+5LdrCisrsh7k0rhw9FfUcnh0kFXSIefzKu83yUvGvAQtAN3XbcImNFfE+vWGRBprLc1hnFkBmaz9yot8Vu7tCrMwqeBLC0frBd10focWo6kQPFCAgD/mV2hSwh4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712838558; c=relaxed/simple;
-	bh=T0ns5dvXycLoFSs/ZW0S27KfnrJk+DvUNdebJc1uDsw=;
+	s=arc-20240116; t=1712838641; c=relaxed/simple;
+	bh=19SThbH+HroCA8DKalKKz3GnvI8MQEhAC7iHyh5IYxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYufBz8bm9pYe2OGVxG7zicObGpQ03ImtGvujfXfYIVle6EwMnTbrU9tZg2VAZYLVRUr9/zjomGAYneCFXPztnG73Xp766HE9C63NMMAVf1cw4dqmGg0gbRNAn/jK/h1AMptjvdCXKtlif1U1cMPrXGUMfGCAcpzeUKgbAQFE08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MpRBso6X; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=uDa1hyPXeecdslz0GpaQVbrgVsPOinmR38fjbVyZZWY5KmWAXqcep/LiRSZ9bdLXdp5unVrTGLNBX53PPHKBVyqlnVjF8VvLbZ8kVA52S6WA3QbKS91RRwyxeynWFOHdzanzP/AFz1eAgtyTm1t8mwbjdgzp+c+O74mLSEH/OVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NC1XB3dt; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MpRBso6X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712838557; x=1744374557;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=T0ns5dvXycLoFSs/ZW0S27KfnrJk+DvUNdebJc1uDsw=;
-  b=MpRBso6XnJgZS+Rf3IakfCgG/PyI9pw4ZNL2mowHSWMXjpSEDVQnvjiy
-   0m81R/sq3RSPUmc+RPPuwlrQfSKCwe8MhvIfHISDmho90pgIIV/6jgJpv
-   UNJDgSh2sexEQlZmpHWQ3iuUOMEkK8o51Fxy0fwOqOqLKpL7aBCEwfebA
-   uf6WjfMQNAx42LClGH9EvEkUWTYthAYYfCMN9qzlEpmJ7hk1rp99GY+aR
-   0XCne4BFQXoJgVgPhQfaWN18NGDeFgR9ifHfb0qnp/vYUqS1PUIU3VKXx
-   tAMAUQer7EORf7SMbxKxTXMmJeOPF9VlCqOxyzV1atoUgsqvt0i0/DYo7
-   A==;
-X-CSE-ConnectionGUID: 0LSPnLblQrKWBMRpMfBY0w==
-X-CSE-MsgGUID: MnPwbCL8R66bAvfFSUyPtA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="19665149"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="19665149"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:29:17 -0700
-X-CSE-ConnectionGUID: 63HJSZdjRS2Ac3+rV8u/TA==
-X-CSE-MsgGUID: V8CFhsgbRxOeNFNtCoyL1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="20932733"
-Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.124.237.254]) ([10.124.237.254])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:29:13 -0700
-Message-ID: <1fa9f7f8-5bf7-4f4f-80f0-9f23e4653242@linux.intel.com>
-Date: Thu, 11 Apr 2024 20:29:10 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NC1XB3dt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712838638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=y7TwXs97cGKCSPlZat8D9T+J4ssIvDgilxKFcQCp65o=;
+	b=NC1XB3dt40KDfzAC4finCdEkTmKlDqh5E7h0Y9xjrlENwHzoBtB/IU2TAdlYTvRi0tSK1+
+	ZolJ9ScZBayri5Dg3hLbc+8t/ETT8NXbvSr2gFZiQxxPCXbeTV8PTo5+7HqJVziNTAKxFH
+	hd8ZtNXFwC8DPKxhe9Z8TU8Xt83H4Vo=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-MxlYUF96M9yhNJ93DPK89Q-1; Thu, 11 Apr 2024 08:30:37 -0400
+X-MC-Unique: MxlYUF96M9yhNJ93DPK89Q-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2d6c94d98afso73819701fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:30:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712838636; x=1713443436;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=y7TwXs97cGKCSPlZat8D9T+J4ssIvDgilxKFcQCp65o=;
+        b=iBZacvsrwxx31wGjQougCgRdRDnOQjN7Jc3OQqzcAn7i1GMdJxqjZEvloCNFN+l8bu
+         XsJ3YTjdgs0PlakjEnpw+1NO+NMl/awKVs0jM1d7+1+z3LXTn3Un/uXAVMRFjBfqcPxy
+         cZrxFVN4HTMfm5PbjSN4gDWa9ljwiK97Q8ZHtJg5MDwekICcyUijfu5/+XFAtGJ+EBhn
+         0ObhyVV0yj1IfGHLvigVf93pxP2YjRvyyUvsKHpP96sThZ0j7ZYeVULUgXsH+m88bqmV
+         j6QA8utvtMVirkHPpGr6SW4m7PjDw4vXyKvo7etFsCAOON/mNEEvVPhW8Is8zLlWfIPV
+         6RjQ==
+X-Gm-Message-State: AOJu0YyvUv5TiKam9U/L1BzSx8dIfJ5UwHTUH03ynt/05gUh+sXmTLVv
+	A9AxcQ5sf9lhdmuw+TUNrjLuv67aX26j+/tFZKHv34SHfT/vAJmh7ycBY5xC6f0whdVb7uN4U0x
+	nCSWS8cwUZ/vfjuOVSU4MFw9vNRp5PhWWVvFLzK/MaVNfd3dd8v/FxjtnVwOSTRN05FYa2A==
+X-Received: by 2002:a2e:98c7:0:b0:2d8:dd28:8748 with SMTP id s7-20020a2e98c7000000b002d8dd288748mr2945372ljj.1.1712838636016;
+        Thu, 11 Apr 2024 05:30:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNhbKnm91UzHHYzeclwSv0GXVTE0gXbsFHBBDgl8GE19+0m4lF65G2tfbEM69kj3DPzwh/3g==
+X-Received: by 2002:a2e:98c7:0:b0:2d8:dd28:8748 with SMTP id s7-20020a2e98c7000000b002d8dd288748mr2945334ljj.1.1712838635554;
+        Thu, 11 Apr 2024 05:30:35 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c724:4300:430f:1c83:1abc:1d66? (p200300cbc7244300430f1c831abc1d66.dip0.t-ipconnect.de. [2003:cb:c724:4300:430f:1c83:1abc:1d66])
+        by smtp.gmail.com with ESMTPSA id p15-20020a05600c1d8f00b00417e134dd2dsm1142306wms.37.2024.04.11.05.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 05:30:35 -0700 (PDT)
+Message-ID: <b9d9af94-5935-4034-bf3f-9ba283df3ede@redhat.com>
+Date: Thu, 11 Apr 2024 14:30:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,138 +67,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] iommu/vt-d: Fix WARN_ON in iommu probe path
-To: "Tian, Kevin" <kevin.tian@intel.com>, Lu Baolu
- <baolu.lu@linux.intel.com>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240407011429.136282-1-baolu.lu@linux.intel.com>
- <BN9PR11MB52760913F36DACBC612088668C002@BN9PR11MB5276.namprd11.prod.outlook.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-In-Reply-To: <BN9PR11MB52760913F36DACBC612088668C002@BN9PR11MB5276.namprd11.prod.outlook.com>
+Subject: Re: [PATCH v2 1/2] mm/userfaultfd: don't place zeropages when
+ zeropages are disallowed
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+ linux-s390@vger.kernel.org
+References: <20240327171737.919590-1-david@redhat.com>
+ <20240327171737.919590-2-david@redhat.com>
+ <ZhfW7qzAGPQo3mJN@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ZhfW7qzAGPQo3mJN@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/8/2024 11:52 AM, Tian, Kevin wrote:
->> From: Lu Baolu <baolu.lu@linux.intel.com>
->> Sent: Sunday, April 7, 2024 9:14 AM
->>
->> Commit 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
->> devices") adds all devices probed by the iommu driver in a rbtree
->> indexed by the source ID of each device. It assumes that each device
->> has a unique source ID. This assumption is incorrect and the VT-d
->> spec doesn't state this requirement either.
->>
->> The reason for using a rbtree to track devices is to look up the device
->> with PCI bus and devfunc in the paths of handling ATS invalidation time
->> out error and the PRI I/O page faults. Both are PCI ATS feature related.
->>
->> Only track the devices that have PCI ATS capabilities in the rbtree to
->> avoid unnecessary WARN_ON in the iommu probe path. Otherwise, on some
->> platforms below kernel splat will be displayed and the iommu probe results
->> in failure.
-> Just be curious. What about two ATS capable devices putting behind
-> a PCI-to-PCIe bridge?
+On 11.04.24 14:26, Alexander Gordeev wrote:
+> On Wed, Mar 27, 2024 at 06:17:36PM +0100, David Hildenbrand wrote:
+> 
+> Hi David,
+> ...
+>>   static int mfill_atomic_pte_zeropage(pmd_t *dst_pmd,
+>>   				     struct vm_area_struct *dst_vma,
+>>   				     unsigned long dst_addr)
+>> @@ -324,6 +355,9 @@ static int mfill_atomic_pte_zeropage(pmd_t *dst_pmd,
+>>   	spinlock_t *ptl;
+>>   	int ret;
+>>   
+>> +	if (mm_forbids_zeropage(dst_vma->mm))
+> 
+> I assume, you were going to pass dst_vma->vm_mm here?
+> This patch does not compile otherwise.
 
-No PCI-to-PCIe bridges such device AFAIK, ATS TLP couldn't be
-routed via PCIe-to-PCI bridge unmodified. ATS is based on PCIe.
+Ah, I compiled it only on x86, where the parameter is ignored ... and 
+for testing the code path I forced mm_forbids_zeropage to be 1 on x86.
 
-But the device-rbtree is possible holding mutiple device nodes behind
-PCIe-to-PCI bridge indexed by the same requester-ID.
+Yes, this must be dst_vma->vm_mm.
 
-Thanks,
-Ethan
+Thanks!
 
->>   WARNING: CPU: 3 PID: 166 at drivers/iommu/intel/iommu.c:158
->> intel_iommu_probe_device+0x319/0xd90
->>   Call Trace:
->>    <TASK>
->>    ? __warn+0x7e/0x180
->>    ? intel_iommu_probe_device+0x319/0xd90
->>    ? report_bug+0x1f8/0x200
->>    ? handle_bug+0x3c/0x70
->>    ? exc_invalid_op+0x18/0x70
->>    ? asm_exc_invalid_op+0x1a/0x20
->>    ? intel_iommu_probe_device+0x319/0xd90
->>    ? debug_mutex_init+0x37/0x50
->>    __iommu_probe_device+0xf2/0x4f0
->>    iommu_probe_device+0x22/0x70
->>    iommu_bus_notifier+0x1e/0x40
->>    notifier_call_chain+0x46/0x150
->>    blocking_notifier_call_chain+0x42/0x60
->>    bus_notify+0x2f/0x50
->>    device_add+0x5ed/0x7e0
->>    platform_device_add+0xf5/0x240
->>    mfd_add_devices+0x3f9/0x500
->>    ? preempt_count_add+0x4c/0xa0
->>    ? up_write+0xa2/0x1b0
->>    ? __debugfs_create_file+0xe3/0x150
->>    intel_lpss_probe+0x49f/0x5b0
->>    ? pci_conf1_write+0xa3/0xf0
->>    intel_lpss_pci_probe+0xcf/0x110 [intel_lpss_pci]
->>    pci_device_probe+0x95/0x120
->>    really_probe+0xd9/0x370
->>    ? __pfx___driver_attach+0x10/0x10
->>    __driver_probe_device+0x73/0x150
->>    driver_probe_device+0x19/0xa0
->>    __driver_attach+0xb6/0x180
->>    ? __pfx___driver_attach+0x10/0x10
->>    bus_for_each_dev+0x77/0xd0
->>    bus_add_driver+0x114/0x210
->>    driver_register+0x5b/0x110
->>    ? __pfx_intel_lpss_pci_driver_init+0x10/0x10 [intel_lpss_pci]
->>    do_one_initcall+0x57/0x2b0
->>    ? kmalloc_trace+0x21e/0x280
->>    ? do_init_module+0x1e/0x210
->>    do_init_module+0x5f/0x210
->>    load_module+0x1d37/0x1fc0
->>    ? init_module_from_file+0x86/0xd0
->>    init_module_from_file+0x86/0xd0
->>    idempotent_init_module+0x17c/0x230
->>    __x64_sys_finit_module+0x56/0xb0
->>    do_syscall_64+0x6e/0x140
->>    entry_SYSCALL_64_after_hwframe+0x71/0x79
->>
->> Fixes: 1a75cc710b95 ("iommu/vt-d: Use rbtree to track iommu probed
->> devices")
->> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
->> ---
->>   drivers/iommu/intel/iommu.c | 11 +++++++----
->>   1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->> index 50eb9aed47cc..a7ecd90303dc 100644
->> --- a/drivers/iommu/intel/iommu.c
->> +++ b/drivers/iommu/intel/iommu.c
->> @@ -4299,9 +4299,11 @@ static struct iommu_device
->> *intel_iommu_probe_device(struct device *dev)
->>   	}
->>
->>   	dev_iommu_priv_set(dev, info);
->> -	ret = device_rbtree_insert(iommu, info);
->> -	if (ret)
->> -		goto free;
->> +	if (pdev && pci_ats_supported(pdev)) {
->> +		ret = device_rbtree_insert(iommu, info);
->> +		if (ret)
->> +			goto free;
->> +	}
-> probably replace device_rbtree with ats_rbtree?
->
->>   	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev)) {
->>   		ret = intel_pasid_alloc_table(dev);
->> @@ -4336,7 +4338,8 @@ static void intel_iommu_release_device(struct
->> device *dev)
->>   	struct intel_iommu *iommu = info->iommu;
->>
->>   	mutex_lock(&iommu->iopf_lock);
->> -	device_rbtree_remove(info);
->> +	if (dev_is_pci(dev) && pci_ats_supported(to_pci_dev(dev)))
->> +		device_rbtree_remove(info);
->>   	mutex_unlock(&iommu->iopf_lock);
->>
->>   	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev) &&
->> --
->> 2.34.1
->
+-- 
+Cheers,
+
+David / dhildenb
+
