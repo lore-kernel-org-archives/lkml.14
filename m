@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15B1B14A4D4;
-	Thu, 11 Apr 2024 12:10:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E2814AD35
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837425; cv=none; b=HGQEUXQVpyqXR/b+eIAEtUCLTB7jfEcGFDbvX2EQYbyHZWivH27iCxHo28axrZr0j8XQB+0B+1hKudVedq5XYekWyYFXthpSkK1AAhdwgDva+6X+iC6cOq6jbB5dJeNqeO13h4QGsi82DBYmp4zkSd7wJvgeOTA4CaLOTkpzNsg=
+	t=1712837460; cv=none; b=bc+dZcKtuIyYSaq59w9HARLh2Sy+nW08XLIkixc94OgZlpJcxYo1i7dGbTj3zZ7niSNLn2TFvIhoAxMNkNw8gcf+x4TL0tb4j4wTyuetwbRhsDTHFopE5ZNS5GWcXkSybx5cBSLvzT+pKE0TgR8cOsfCSia8+hWZPu+CgC2vZr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837425; c=relaxed/simple;
-	bh=ocRnIxs6wujZ806WOVns+Tmp+Ey4F4aPQWLBpel6pYk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n2z9p5+WVoOO7BEW3sNZg2bOf43PhjtXlGOhb/w/yfq/cYtt1neC1DD5JN6RDa3CCNCUblbhTeZS6ASWkLOnJ3ANWSaj1iBHyGe3z3IgZiZlAUmtXBq8aPgk/Dhn+hzqRo4vs1KEJKxNKfyxWF1SOqnFT03RVeBb5RUItx/26ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B51CE113E;
-	Thu, 11 Apr 2024 05:10:51 -0700 (PDT)
-Received: from [10.163.57.160] (unknown [10.163.57.160])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F1A33F64C;
-	Thu, 11 Apr 2024 05:10:07 -0700 (PDT)
-Message-ID: <f57685aa-fdbf-4625-900b-d612ffb747f3@arm.com>
-Date: Thu, 11 Apr 2024 17:40:04 +0530
+	s=arc-20240116; t=1712837460; c=relaxed/simple;
+	bh=bX6OSCLUI+vJ1fK3gTL9hSh9PUm6yiHfWc9V9WQwdlg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WQSRRvV6h/vUH++Lsgg6M6V+pqmaGoNqCIwdj7A8XdLz2XIa0PeZnnRsegyXiDmJ+O8icFgnccrkLiTeOEVqUtjmEHmwixcYSx805lSlhoA2mGMkCVXooYuaYN3xQ6AXm04GOVrdn80JmE2NF0pjypgXK2ZeaiMri9l1zCS+wns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cVEJNBqN; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cVEJNBqN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712837457; x=1744373457;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=bX6OSCLUI+vJ1fK3gTL9hSh9PUm6yiHfWc9V9WQwdlg=;
+  b=cVEJNBqNOWTmWZggyh+0LX1xvRijra0KGF3Kq6cod87tiZhYxMWrvKOI
+   9hwFMia+HwqjBXXHLmekRivXH2J3VLYLryVtoyvE7W6Rx/vmkQaWknJOL
+   ZkhT7yoQwoFM0frDA8z8mxNw8KKhOdsY9OER605EeBkx13/Cc9i9sCT4u
+   Lg7YUWmYZ9Tu1HBrN2j1emB7jfjhKcIWFGFhaidzVr4DBtoPM5dxksiua
+   mt+cNCBjkB002hK5/jr/lCpEO3SeA4MNnTdpF0j3eTnKYf3bGUqXMzKk/
+   m+wKN1e5bny9wh39MxYVhYAPb8HG6WpqdidO6sZUhHWkl2wXk1PLc+ngX
+   A==;
+X-CSE-ConnectionGUID: 8Y0qhunBRUuhUrSl3NEW5A==
+X-CSE-MsgGUID: mDKRNDp8TamLjuCKu2vGrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8105888"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="8105888"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:10:57 -0700
+X-CSE-ConnectionGUID: hVb94zt2SliXovopBz0bqg==
+X-CSE-MsgGUID: UhvH6d5OTSOwaO9rbRqT6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="51849819"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.86]) ([10.124.237.86])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 05:10:55 -0700
+Message-ID: <4449fe72-78c9-4c39-aa4c-29829de1a545@linux.intel.com>
+Date: Thu, 11 Apr 2024 20:10:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,52 +52,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/8] perf tools: Fix test "perf probe of function from
- different CU"
+Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Tina Zhang <tina.zhang@intel.com>,
+ Yi Liu <yi.l.liu@intel.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] iommu/vt-d: Add cache tag assignment interface
+To: Jason Gunthorpe <jgg@ziepe.ca>
+References: <20240325021705.249769-1-baolu.lu@linux.intel.com>
+ <20240325021705.249769-2-baolu.lu@linux.intel.com>
+ <20240410154134.GG223006@ziepe.ca>
 Content-Language: en-US
-To: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
- james.clark@arm.com, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Chenyuan Mi <cymi20@fudan.edu.cn>,
- Masami Hiramatsu <mhiramat@kernel.org>, Ravi Bangoria
- <ravi.bangoria@amd.com>,
- =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
- Colin Ian King <colin.i.king@gmail.com>, Changbin Du
- <changbin.du@huawei.com>, Kan Liang <kan.liang@linux.intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Tiezhu Yang <yangtiezhu@loongson.cn>, =?UTF-8?Q?Georg_M=C3=BCller?=
- <georgmueller@gmx.net>, Liam Howlett <liam.howlett@oracle.com>,
- bpf@vger.kernel.org, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240408062230.1949882-1-ChaitanyaS.Prakash@arm.com>
- <d0dc91b6-98ee-4ddd-b0a9-ba74e1b6c85f@p183>
-From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
-In-Reply-To: <d0dc91b6-98ee-4ddd-b0a9-ba74e1b6c85f@p183>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20240410154134.GG223006@ziepe.ca>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 2024/4/10 23:41, Jason Gunthorpe wrote:
+> On Mon, Mar 25, 2024 at 10:16:54AM +0800, Lu Baolu wrote:
+>> Caching tag is a combination of tags used by the hardware to cache various
+>> translations. Whenever a mapping in a domain is changed, the IOMMU driver
+>> should invalidate the caches with the caching tags. The VT-d specification
+>> describes caching tags in section 6.2.1, Tagging of Cached Translations.
+>>
+>> Add interface to assign caching tags to an IOMMU domain when attached to a
+>> RID or PASID, and unassign caching tags when a domain is detached from a
+>> RID or PASID. All caching tags are listed in the per-domain tag list and
+>> are protected by a dedicated lock.
+>>
+>> In addition to the basic IOTLB and devTLB caching tag types, PARENT_IOTLB
+>> and PARENT_DEVTLB tag types are also introduced. These tags are used for
+>> caches that store translations for DMA accesses through a nested user
+>> domain. They are affected by changes to mappings in the parent domain.
+>>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.h  |  25 +++++
+>>   drivers/iommu/intel/cache.c  | 192 +++++++++++++++++++++++++++++++++++
+>>   drivers/iommu/intel/iommu.c  |  31 +++++-
+>>   drivers/iommu/intel/nested.c |  21 +++-
+>>   drivers/iommu/intel/svm.c    |  12 ++-
+>>   drivers/iommu/intel/Makefile |   2 +-
+>>   6 files changed, 274 insertions(+), 9 deletions(-)
+>>   create mode 100644 drivers/iommu/intel/cache.c
+>>
+>> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+>> index 404d2476a877..e3723b7a0b31 100644
+>> --- a/drivers/iommu/intel/iommu.h
+>> +++ b/drivers/iommu/intel/iommu.h
+>> @@ -607,6 +607,9 @@ struct dmar_domain {
+>>   	struct list_head devices;	/* all devices' list */
+>>   	struct list_head dev_pasids;	/* all attached pasids */
+>>   
+>> +	spinlock_t cache_lock;		/* Protect the cache tag list */
+>> +	struct list_head cache_tags;	/* Cache tag list */
+> 
+> That is quite a neat trick - though building a dedicated invalidation
+> list duplicates data stored in the attached devices list?
 
-On 4/9/24 11:02, Alexey Dobriyan wrote:
-> On Mon, Apr 08, 2024 at 11:52:22AM +0530, Chaitanya S Prakash wrote:
->> - Add str_has_suffix() and str_has_prefix() to tools/lib/string.c
->> - Delete ends_with() and replace its usage with str_has_suffix()
->> - Delete strstarts() from tools/include/linux/string.h and replace its
->>    usage with str_has_prefix()
-> It should be the other way: starts_with is normal in userspace.
-> C++, Python, Java, C# all have it. JavaScript too!
+Yes. The device and dev_pasid lists appear to be duplicate. I am about
+to remove these two lists later.
 
-This is done in accordance with Ian's comments on V1 of this patch
-series. Please find the link to the same below.
+> You didn't try to make it RCU safe for invalidation?
 
-https://lore.kernel.org/all/CAP-5=fUFmeoTjLuZTgcaV23iGQU1AdddG+7Rw=d6buMU007+1Q@mail.gmail.com/
+The queued invalidation interface is a bit complicated, especially when
+it comes to device TLB invalidation. Device TLB invalidation might
+result in a timeout, which requires special treatment.
 
->
+>> +struct cache_tag {
+>> +	struct list_head node;
+>> +	enum cache_tag_type type;
+>> +	struct intel_iommu *iommu;
+>> +	struct device *dev;
+> 
+> iommu and dev probably don't both need to be stored together. We have
+> iommu_get_iommu_dev() now.. I suppose this is probably a union of the
+> two pointers depending on tag. DEVTLB needs the dev and IOTLB needs
+> the iommu.
+> 
+>> +	u16 domain_id;
+>> +	ioasid_t pasid;
+>> +	int users;
+> 
+> unsigned int
+
+Sure.
+
+> 
+>> +static int __cache_tag_assign_parent_domain(struct dmar_domain *domain, u16 did,
+>> +					    struct device *dev, ioasid_t pasid)
+>> +{
+>> +	struct device_domain_info *info = dev_iommu_priv_get(dev);
+>> +	int ret;
+>> +
+>> +	ret = cache_tag_assign(domain, did, dev, pasid, CACHE_TAG_TYPE_PARENT_IOTLB);
+>> +	if (ret || !info->ats_enabled)
+>> +		return ret;
+> 
+> I'm not sure I understood the point of PARENT_IOTLB? I didn't see any
+> different implementation?
+> 
+> Isn't this backwards though? Each domain should have a list of things
+> to invalidate if the domain itself changes.
+> 
+> So the nesting parent should have a list of CHILD_DEVTLB's that need
+> cleaning. That list is changed when the nesting domains are attached
+> to something.
+> 
+> And a list of CHILD_IOTLBs, but the HW doesn't seem to need that?
+
+This is a partial replacement of below series.
+
+https://lore.kernel.org/all/20240208082307.15759-1-yi.l.liu@intel.com/
+
+Best regards,
+baolu
 
