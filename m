@@ -1,100 +1,205 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F77E35F18;
-	Thu, 11 Apr 2024 08:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD34140366
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712825358; cv=none; b=PJFTOeuIXTL79YwgNjzIWe/qsiV+WTCzArQ0M9EO1WSUIJHgS1+E3i5znVG4Gf7rvOvaztoHAybTY+2B/QmLm3ISIv3m2Fsin5fXnG937IM0xi/7nvAt7/1veJaS7vezuTx+3nQFLJBilIaCoX93u5+wy1NDicEueeOobKbILgw=
+	t=1712825532; cv=none; b=Ri76DSw1TPfiHwKVRAKVQRiiYapfPlHOdhboJ8zgE1fFs2js/F772FtlNB2QBleM8Z6JXk1o7YGjW5TBhVi2mEMUgc3O3OnCmiho4MEpCNsaitqKoRfD4a1wMQ2/rM2EHxZbBMjIY2VZkJEpzxqx7q8XiCSF/qNbTyjJk1PMdgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712825358; c=relaxed/simple;
-	bh=chQTnWSlVUh4fTmtbvWlQnO2lU0Riy/R0Hldxq1A9w0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cEGn9WX2amiNEXy+iQTSPbMi3PFWkKoE6XY+p6PYjAVPHVw25LQJjvZmyw7L2EDATC261Ic1J7NRYnVt9gIomzsGFwSrgmhIKneveFSKU+drbvdCJYHPVYJUI/xyI8eX9uY/XTeCKm1iLQQrPk+zlFktJ6R80I2kTAZ2Vsxh3+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JngeEH8F; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712825532; c=relaxed/simple;
+	bh=pFn/mSbRjf0iy6p9eQifrjWfK/3Yqa/UGNvAao52vf4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fv5oOrHaE1YhkUZtq1bwvzV6Va6OH57EEv3814sJgQ83ZycNV03eeowiKj+pQ5ERqh65wK6GVBnSIidytuuRzlMZ7H8OcM06U/JsqeZMCWhi29Yl6dDhmXfT7TfV/FurRy26PwG+ERaF3WaHCFa7GpbKdrj0kY2XiDvr2+DOjU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yrNNxX9h; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JngeEH8F"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-516d09bd434so8485835e87.1;
-        Thu, 11 Apr 2024 01:49:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yrNNxX9h"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41687826509so58405e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 01:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712825354; x=1713430154; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ce3+OUkZq40m+efQaypNKgk9aBlLNcnyZ4pRprOWxa0=;
-        b=JngeEH8FcygieFZIybLvy+v/qv2YHzjtstDbkcy2gaGMGVNzUy1pouuBR7N0PTMn7v
-         JadufODpyDkdCgsOpulzGF38ZPj9fsVEVwfM2vgqQNXoGBNyD1KrsdVv++deurDtgn78
-         iIQP+Tcc+gAClHkTMxFwcVyUZ4hvPNakXs7kLr2NeT6++wgiKA9JCmvSZk0O61ZP5PD9
-         VPcqajLwy9Ofzi30+kQHZFt6R/5G8ehlXYeRq8rAR+OZm1anmcQQb9vvkx459f5FWPKX
-         17qU6RcejF0qiks6AcdjChHj6/i+Qap1qsBo1lUQThibKqFpQr64CN/HZ86bTim446WI
-         4Cog==
+        d=google.com; s=20230601; t=1712825529; x=1713430329; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BmVuDao6rc6hBIHx5Ev3aZcNpyMOiHsa4Eq9hXFl4JM=;
+        b=yrNNxX9hy9qxw474Ui83xH/l8j5bJ+rHMHv/XJqKG691HB9dhRsurdyZS6crQBslz7
+         wWSGrCN4W9zBce0d8JToxvjqf6ZLLJ17iUal41ESbOxb38GZ7ww1/2IOxuqhBSBtXFXB
+         URRcESuUpGt9NIHr1kVjfEcWqphybashL7/jgkEhywsopaZ9nyO8iLHYp9gUZI1yQmHu
+         8SXKtaWe9HtW/Ga0akyo+smaPT7HTwauED5XOhFGu0e2E331mtA4lqRd3Bz3MZtPBO5A
+         /ajb6CQnBDORH1lYnKFyX++Em1xL2VFW6dfNQ//G6SvOBr60QPF1utqkD/p39oboFcj6
+         kZ/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712825354; x=1713430154;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ce3+OUkZq40m+efQaypNKgk9aBlLNcnyZ4pRprOWxa0=;
-        b=kAKDWJZY4Yt5gmPhVVRan1tAOJRy5U0RUox2Ik8fRj9KqIlzquHnVNhza/NVuqnoRy
-         HpGSXI1thDUjgmctfOw+x3qdCSbUF9mpyMBWEktuFnvw2xkb1DPfGVxOI7BBrys/Wa9w
-         IPjPUfJIlulvTYTaPeEwtF8BjtMG5tEJLfKOz4U/tWfT2afe3BrZ9A4/qH1mwZxl46jk
-         YOJue39SaYTVHsvgABtYl7T3Od6ML0SiBFGEJmRq/3Smp9k582msrzoEguY7AtzHKV1J
-         dHbnLWY0sEmjm4HtesLwuvqdVacOJCo5pgFHlYZKWvqktZfY9TrfxjdCrFbxaKibIHg+
-         oJmg==
-X-Forwarded-Encrypted: i=1; AJvYcCWo2pe5gwPGwajFvfvzkakJ3ZgKHNgy8rDVEQUOxxBnaMwtAphJRcWAsF+2OzaSW65DmQ37dlQGYEEVNNUnJ9kaNod0NMDvrpT2mqtu1zhxTzg2ocBzFJbBLcNdcMxYYNVzvWQt3XowTXRf8UDX
-X-Gm-Message-State: AOJu0Yy/NMotELB3ajEeMqSV3dU0k3s7gznJUkXibu1jnih7nGWwKGz9
-	9xdJGjRxU3roriLZf/ZTcfoboUN/uNq8TusEZOoxL1E0RO+IPacku4R0DTLA
-X-Google-Smtp-Source: AGHT+IFmzoMFrQQ2KSPtvwMFPgsLDBPqZH4WpawT8dEaC3sMYw4joUMwdrJBv9YtUNXWhi3CE4XYYw==
-X-Received: by 2002:a05:6512:68c:b0:515:c195:d6b8 with SMTP id t12-20020a056512068c00b00515c195d6b8mr3852456lfe.60.1712825354309;
-        Thu, 11 Apr 2024 01:49:14 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id b11-20020adfe30b000000b0034625392416sm1237204wrj.104.2024.04.11.01.49.13
+        d=1e100.net; s=20230601; t=1712825529; x=1713430329;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BmVuDao6rc6hBIHx5Ev3aZcNpyMOiHsa4Eq9hXFl4JM=;
+        b=QESba4+Ku1gxjdQ8UArjan7akqUnp50j4+nUrKSUAGA3QxiEMXwIIr6xfKnR3NsFrf
+         xuY7cZ039L8U32jRkms/K/Id4wS1xtFqvzqi7CRLLeV6Jft3CCLS0c4pL4oMb57zfBSy
+         cXo/Q/17b9bCAlXKcTcFwDw0ya8OZp8fR4M63uHHVTEAIv8kWhHrgxTPrubc4D5rm5uu
+         RJdBEL/KNX10NeUdx0cCBev0/w2ivlg4RyjTtwu4nc69nZLMXu7F9Dn4trfIuPcarcWs
+         c/XMPaO69QOQVtODqWecCNInc0notRNCFUkQHiwDGywyxwRGqgSbs7SnhLhE6P/A0Z0L
+         QvUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ1o9v+mI2D9nNqgTpsZOuz//Ju61qlQhtoXLVYwv+y8NK6Of9EG1ypzTB19fqQp6MauC0THlav+6Xu1oZ4c1UxhfNZziXyJKn4Lj1
+X-Gm-Message-State: AOJu0YyYJ3QHQYsRrzAkungP1A2P6x9VPpWYpXxwXPusc7m83LpQ/LfT
+	59e8TBTYkZdWoS7xbvnNgq5hylfAho+2UaQkQBoowqE5F891OaX3cZYa5MuO8A==
+X-Google-Smtp-Source: AGHT+IEHyQAF1b0TC6DYctDGP2A1rpYsfzyhRAynoAl9y0PZ04YsPHHdl/c1/oosy8F6BWBGGSq7og==
+X-Received: by 2002:a05:600c:3d18:b0:417:d7a4:2a0e with SMTP id bh24-20020a05600c3d1800b00417d7a42a0emr88682wmb.5.1712825528471;
+        Thu, 11 Apr 2024 01:52:08 -0700 (PDT)
+Received: from google.com (248.199.140.34.bc.googleusercontent.com. [34.140.199.248])
+        by smtp.gmail.com with ESMTPSA id he8-20020a05600c540800b00416a08788a5sm4855277wmb.27.2024.04.11.01.52.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 01:49:13 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] tpm/eventlog: remove redundant assignment to variabel ret
-Date: Thu, 11 Apr 2024 09:49:13 +0100
-Message-Id: <20240411084913.305780-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Thu, 11 Apr 2024 01:52:07 -0700 (PDT)
+Date: Thu, 11 Apr 2024 08:52:05 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
+	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+	tabba@google.com, will@kernel.org, yuzenghui@huawei.com,
+	vdonnefort@google.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH] KVM: arm64: Add support for FFA_PARTITION_INFO_GET
+Message-ID: <ZhektURnNMnIbSJG@google.com>
+References: <20240409151908.541589-1-sebastianene@google.com>
+ <Zhaoz9E/sw6jVnci@lpieralisi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zhaoz9E/sw6jVnci@lpieralisi>
 
-Variable ret is being assigned and error code that is never read, it is
-either being re-assigned in an error exit path or never referenced again
-on the non-error path. The assignment is redundant and can be removed.
+On Wed, Apr 10, 2024 at 04:57:19PM +0200, Lorenzo Pieralisi wrote:
+> On Tue, Apr 09, 2024 at 03:19:08PM +0000, Sebastian Ene wrote:
+> > Handle the FFA_PARTITION_INFO_GET host call inside the pKVM hypervisor
+> > and copy the response message back to the host buffers. Save the
+> > returned FF-A version as we will need it later to interpret the response
+> > from the TEE.
+> > 
+> > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > ---
+> >  arch/arm64/kvm/hyp/nvhe/ffa.c | 49 +++++++++++++++++++++++++++++++++++
+> >  1 file changed, 49 insertions(+)
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > index 320f2eaa14a9..72fc365bc7a8 100644
+> > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+> > @@ -67,6 +67,7 @@ struct kvm_ffa_buffers {
+> >   */
+> >  static struct kvm_ffa_buffers hyp_buffers;
+> >  static struct kvm_ffa_buffers host_buffers;
+> > +static u32 ffa_version;
+> >  
+> >  static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
+> >  {
+> > @@ -640,6 +641,49 @@ static bool do_ffa_features(struct arm_smccc_res *res,
+> >  	return true;
+> >  }
+> >  
+> > +static void do_ffa_part_get(struct arm_smccc_res *res,
+> > +			    struct kvm_cpu_context *ctxt)
+> > +{
+> > +	DECLARE_REG(u32, uuid0, ctxt, 1);
+> > +	DECLARE_REG(u32, uuid1, ctxt, 2);
+> > +	DECLARE_REG(u32, uuid2, ctxt, 3);
+> > +	DECLARE_REG(u32, uuid3, ctxt, 4);
+> > +	DECLARE_REG(u32, flags, ctxt, 5);
+> > +	u32 off, count, sz, buf_sz;
+> > +
+> > +	hyp_spin_lock(&host_buffers.lock);
+> > +	if (!host_buffers.rx) {
+> > +		ffa_to_smccc_res(res, FFA_RET_INVALID_PARAMETERS);
+> > +		goto out_unlock;
+> > +	}
+> > +
+> > +	arm_smccc_1_1_smc(FFA_PARTITION_INFO_GET, uuid0, uuid1,
+> > +			  uuid2, uuid3, flags, 0, 0,
+> > +			  res);
+> > +
+> > +	if (res->a0 != FFA_SUCCESS)
+> > +		goto out_unlock;
+> > +
+> > +	count = res->a2;
+> > +	if (!count)
+> > +		goto out_unlock;
+> > +
+> > +	if (ffa_version > FFA_VERSION_1_0) {
+> > +		buf_sz = sz = res->a3;
+> > +		if (sz > sizeof(struct ffa_partition_info))
+> > +			buf_sz = sizeof(struct ffa_partition_info);
 
-Cleans up clang scan build warning:
-drivers/char/tpm/eventlog/acpi.c:145:2: warning: Value stored to 'ret'
-is never read [deadcode.DeadStores]
+Hello Lorenzo,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/char/tpm/eventlog/acpi.c | 1 -
- 1 file changed, 1 deletion(-)
+> 
+> We are copying buf_sz but (correctly ?) returning res->a3 to the caller,
+> which is allowed to expect res->a3 bytes to be filled since that's what
+> firmware reported.
+> 
+> Technically this is not a problem at present, because the caller
+> (ie the FF-A driver) and the hypervisor rely on the same descriptor
+> structures (and buf_sz can't be != sizeof(struct ffa_partition_info),
+> anything else is a bug as we stand); they must be kept in sync though as
+> the firmware version changes (*if* there are changes in the partition
+> descriptor - eg fields are added).
+> 
+> An option would consist in just copying res->a3 bytes as firmware reports
+> (obviously keeping the RX buffer boundary checks for the memcpy).
+> 
 
-diff --git a/drivers/char/tpm/eventlog/acpi.c b/drivers/char/tpm/eventlog/acpi.c
-index bd757d836c5c..69533d0bfb51 100644
---- a/drivers/char/tpm/eventlog/acpi.c
-+++ b/drivers/char/tpm/eventlog/acpi.c
-@@ -142,7 +142,6 @@ int tpm_read_log_acpi(struct tpm_chip *chip)
- 
- 	log->bios_event_log_end = log->bios_event_log + len;
- 
--	ret = -EIO;
- 	virt = acpi_os_map_iomem(start, len);
- 	if (!virt) {
- 		dev_warn(&chip->dev, "%s: Failed to map ACPI memory\n", __func__);
--- 
-2.39.2
+Ack, let me fix this an spin up a new version.
 
+
+> It is just a heads-up because I noticed it, no more, I will let Sudeep
+> comment on this since he knows better.
+> 
+> Lorenzo
+> 
+
+Thanks for having a look,
+Seb
+
+
+> > +	} else {
+> > +		/* FFA_VERSION_1_0 lacks the size in the response */
+> > +		buf_sz = sz = 8;
+> > +	}
+> > +
+> > +	WARN_ON((count - 1) * sz + buf_sz > PAGE_SIZE);
+> > +	for (off = 0; off < count * sz; off += sz)
+> > +		memcpy(host_buffers.rx + off, hyp_buffers.rx + off, buf_sz);
+> > +out_unlock:
+> > +	hyp_spin_unlock(&host_buffers.lock);
+> > +}
+> > +
+> >  bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+> >  {
+> >  	struct arm_smccc_res res;
+> > @@ -686,6 +730,9 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
+> >  	case FFA_MEM_FRAG_TX:
+> >  		do_ffa_mem_frag_tx(&res, host_ctxt);
+> >  		goto out_handled;
+> > +	case FFA_PARTITION_INFO_GET:
+> > +		do_ffa_part_get(&res, host_ctxt);
+> > +		break;
+> >  	}
+> >  
+> >  	if (ffa_call_supported(func_id))
+> > @@ -726,6 +773,8 @@ int hyp_ffa_init(void *pages)
+> >  	if (FFA_MAJOR_VERSION(res.a0) != 1)
+> >  		return -EOPNOTSUPP;
+> >  
+> > +	ffa_version = res.a0;
+> > +
+> >  	arm_smccc_1_1_smc(FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0, &res);
+> >  	if (res.a0 != FFA_SUCCESS)
+> >  		return -EOPNOTSUPP;
+> > -- 
+> > 2.44.0.478.gd926399ef9-goog
+> > 
