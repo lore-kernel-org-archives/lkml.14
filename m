@@ -1,63 +1,52 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAE24D11B;
-	Thu, 11 Apr 2024 22:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AF424778E;
+	Thu, 11 Apr 2024 22:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712876000; cv=none; b=CHYpu1u34d9cKbIqAp+pRHc8zX0Vzah2795HUok5gwKMKa5zjeuJG9FNV3AP8oi6ZTO2c/uTG9VrhtW4tSNGKz5eQupU8tuhA6De9m2ruSy4lXkyp96DS0y/dApbZElYYBeFUOKcO/JlOkGmPZMIMmBAnB0JwcQpV3HDnvq0N4c=
+	t=1712876031; cv=none; b=je80hVh7fsHX9ApK2aS+8IvY6oW0bNf/wWtwHlbMNVpch3QpnvtibtgacRDGkATRCaKI9XXOw7lBjGvCBy3Ufa4SFSEyfq6ejibSSJ7NUsoZjwznKC8fTp565CwLHjUUeVD6G04UWdjNwluNHucVrveBywhxcb4CGvtyonAXxY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712876000; c=relaxed/simple;
-	bh=fnwZwdTZHz7xYfHZkK8HW17q7uRXp9xrFm416v6m5KA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mt1F5eNtw6qPlpjY1uFWGp5dFLDllE5yEH9WBxeONPOkJMK5FgTsKUgANNTao4jj+7AXUjmX4XodFYi4bVLniO8JwUZdZkfdjopQRzfvhSwCoFf40u0Bsu7OW+BLTCt6xCMkkUoGF6BNSna4mHe4lOJFtq7CeMD9sznfZf74c+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=VGP6d1eA; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1712876031; c=relaxed/simple;
+	bh=qWSQajGvAFp8rYeLSWNIrAWsrlGO3m7nZf+qzgyXh60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u+6puQQOh6W6dfE39v1lEEzMlOz5KyIv1R8JCZPPyaHYLO1aDhe1QacGOMWJVjKST9NKYlo53yWWny/E5akuKgnKCEcsKyPjGh52L+Pf1oSOaDQrwq/AdBXeL4KYbvxotsCyANLfRsc18ONkITFSoIHklHGJk3TtU3igW/J8Ebk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=qzatVyx4; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VGP6d1eA"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43BMqvCJ033916;
-	Thu, 11 Apr 2024 17:52:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712875978;
-	bh=izg+oGQCuUwOQiPJW6J8T+O9QAeRgI3fYhFwd8fM1Pc=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=VGP6d1eA94Cfxc1xdiVJgOZ7h5NL+n3Q0EnvCMjDZyixWBRZB5jkhJiDVmfH4SkSs
-	 SnnH6Kh5yd7jwpm89wjk7Utu+Nkb9cd14VpDAnghL/APxl2LJDfbVeVH+4Z1zmg0BL
-	 J3L0OkPqc2qvRPa4FRYj4LKh8vYK78w3k5pJjuuk=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43BMqv7R083766
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 11 Apr 2024 17:52:57 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 11
- Apr 2024 17:52:57 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 11 Apr 2024 17:52:57 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43BMqv7X002381;
-	Thu, 11 Apr 2024 17:52:57 -0500
-From: Judith Mendez <jm@ti.com>
-To: Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>
-CC: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Bhavya Kapoor <b-kapoor@ti.com>,
-        Dasnavis
- Sabiya <sabiya.d@ti.com>, Udit Kumar <u-kumar1@ti.com>
-Subject: [PATCH 1/7] arm64: dts: ti: k3-am65-main: Update sdhci properties
-Date: Thu, 11 Apr 2024 17:52:51 -0500
-Message-ID: <20240411225257.383889-2-jm@ti.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240411225257.383889-1-jm@ti.com>
-References: <20240411225257.383889-1-jm@ti.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="qzatVyx4"
+Received: from nell-linux-vm-03-21.gri2q54hbuce1hot0vo1lnhzqd.bx.internal.cloudapp.net (unknown [172.191.244.78])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9E2F920EC318;
+	Thu, 11 Apr 2024 15:53:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E2F920EC318
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712876030;
+	bh=llre/MDl7IywXh8WJ6+smgivWD460w0JI7M1HXl7uHU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qzatVyx42RykiqdKow7smAP17n/BvU/34tiZ1k7zzuvss7nhYzH9zPuec7yln8qJy
+	 eIbAZAmxYVPQmviKjIl4uQLgDhSqTvNiIbFXuHMJA8YYzN8v6Y8+DPtyKSEc3QweDt
+	 L9ns8Gs3OBDvt2POGQKwmKFv7Kq4QXz7/KkUU/9I=
+From: Nell Shamrell-Harrington <nells@linux.microsoft.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	wedsonaf@gmail.com
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	aliceryhl@google.com,
+	fujita.tomonori@gmail.com,
+	tmgross@umich.edu,
+	yakoyoku@gmail.com,
+	kent.overstreet@gmail.com,
+	matthew.brost@intel.com,
+	kernel@valentinobst.de,
+	netdev@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rust: remove unneeded `kernel::prelude` imports from doctests
+Date: Thu, 11 Apr 2024 22:53:31 +0000
+Message-Id: <20240411225331.274662-1-nells@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,76 +54,91 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Update otap-del-sel properties as per datasheet [0].
+Rust doctests implicitly include `kernel::prelude::*`.
 
-Add missing clkbuf-sel and itap-del-sel values also as per
-datasheet [0].
+Removes explicit `kernel::prelude` imports from doctests.
 
-Move clkbuf-sel and ti,trm-icp above the otap-del-sel properties
-so the sdhci nodes could be more uniform across platforms.
-
-[0] https://www.ti.com/lit/ds/symlink/am6548.pdf
-
-Fixes: eac99d38f861 ("arm64: dts: ti: k3-am654-main: Update otap-del-sel values")
-Fixes: d7600d070fb0 ("arm64: dts: ti: k3-am65-main: Add support for sdhci1")
-Signed-off-by: Judith Mendez <jm@ti.com>
+Suggested-by: Miguel Ojeda <ojeda@kernel.org>
+Link: https://github.com/Rust-for-Linux/linux/issues/1064
+Signed-off-by: Nell Shamrell-Harrington <nells@linux.microsoft.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ rust/kernel/init.rs      | 6 +++---
+ rust/kernel/net/phy.rs   | 1 -
+ rust/kernel/workqueue.rs | 3 ---
+ 3 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 670557c89f756..0803a8b9bfe84 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -435,6 +435,8 @@ sdhci0: mmc@4f80000 {
- 		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,trm-icp = <0x8>;
- 		ti,otap-del-sel-legacy = <0x0>;
- 		ti,otap-del-sel-mmc-hs = <0x0>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
-@@ -445,8 +447,7 @@ sdhci0: mmc@4f80000 {
- 		ti,otap-del-sel-ddr50 = <0x5>;
- 		ti,otap-del-sel-ddr52 = <0x5>;
- 		ti,otap-del-sel-hs200 = <0x5>;
--		ti,otap-del-sel-hs400 = <0x0>;
--		ti,trm-icp = <0x8>;
-+		ti,itap-del-sel-ddr52 = <0x0>;
- 		dma-coherent;
- 		status = "disabled";
- 	};
-@@ -458,18 +459,22 @@ sdhci1: mmc@4fa0000 {
- 		clocks = <&k3_clks 48 0>, <&k3_clks 48 1>;
- 		clock-names = "clk_ahb", "clk_xin";
- 		interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-+		ti,clkbuf-sel = <0x7>;
-+		ti,trm-icp = <0x8>;
- 		ti,otap-del-sel-legacy = <0x0>;
- 		ti,otap-del-sel-mmc-hs = <0x0>;
- 		ti,otap-del-sel-sd-hs = <0x0>;
--		ti,otap-del-sel-sdr12 = <0x0>;
--		ti,otap-del-sel-sdr25 = <0x0>;
-+		ti,otap-del-sel-sdr12 = <0xf>;
-+		ti,otap-del-sel-sdr25 = <0xf>;
- 		ti,otap-del-sel-sdr50 = <0x8>;
- 		ti,otap-del-sel-sdr104 = <0x7>;
- 		ti,otap-del-sel-ddr50 = <0x4>;
- 		ti,otap-del-sel-ddr52 = <0x4>;
- 		ti,otap-del-sel-hs200 = <0x7>;
--		ti,clkbuf-sel = <0x7>;
--		ti,trm-icp = <0x8>;
-+		ti,itap-del-sel-legacy = <0xa>;
-+		ti,itap-del-sel-sd-hs = <0x1>;
-+		ti,itap-del-sel-sdr12 = <0xa>;
-+		ti,itap-del-sel-sdr25 = <0x1>;
- 		dma-coherent;
- 		status = "disabled";
- 	};
+diff --git a/rust/kernel/init.rs b/rust/kernel/init.rs
+index 424257284d16..8f0380697c09 100644
+--- a/rust/kernel/init.rs
++++ b/rust/kernel/init.rs
+@@ -87,7 +87,7 @@
+ //!
+ //! ```rust
+ //! # #![allow(clippy::disallowed_names)]
+-//! # use kernel::{sync::Mutex, prelude::*, new_mutex, init::PinInit, try_pin_init};
++//! # use kernel::{sync::Mutex, new_mutex, init::PinInit, try_pin_init};
+ //! #[pin_data]
+ //! struct DriverData {
+ //!     #[pin]
+@@ -121,7 +121,7 @@
+ //!
+ //! ```rust
+ //! # #![allow(unreachable_pub, clippy::disallowed_names)]
+-//! use kernel::{prelude::*, init, types::Opaque};
++//! use kernel::{init, types::Opaque};
+ //! use core::{ptr::addr_of_mut, marker::PhantomPinned, pin::Pin};
+ //! # mod bindings {
+ //! #     #![allow(non_camel_case_types)]
+@@ -412,7 +412,7 @@ macro_rules! stack_try_pin_init {
+ ///
+ /// ```rust
+ /// # #![allow(clippy::disallowed_names)]
+-/// # use kernel::{init, pin_init, prelude::*, init::*};
++/// # use kernel::{init, pin_init, init::*};
+ /// # use core::pin::Pin;
+ /// # #[pin_data]
+ /// # struct Foo {
+diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
+index 96e09c6e8530..d10a415c376f 100644
+--- a/rust/kernel/net/phy.rs
++++ b/rust/kernel/net/phy.rs
+@@ -766,7 +766,6 @@ const fn as_int(&self) -> u32 {
+ /// # mod module_phy_driver_sample {
+ /// use kernel::c_str;
+ /// use kernel::net::phy::{self, DeviceId};
+-/// use kernel::prelude::*;
+ ///
+ /// kernel::module_phy_driver! {
+ ///     drivers: [PhySample],
+diff --git a/rust/kernel/workqueue.rs b/rust/kernel/workqueue.rs
+index c22504d5c8ad..7884f0007b38 100644
+--- a/rust/kernel/workqueue.rs
++++ b/rust/kernel/workqueue.rs
+@@ -33,7 +33,6 @@
+ //! we do not need to specify ids for the fields.
+ //!
+ //! ```
+-//! use kernel::prelude::*;
+ //! use kernel::sync::Arc;
+ //! use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkItem};
+ //!
+@@ -75,7 +74,6 @@
+ //! The following example shows how multiple `work_struct` fields can be used:
+ //!
+ //! ```
+-//! use kernel::prelude::*;
+ //! use kernel::sync::Arc;
+ //! use kernel::workqueue::{self, impl_has_work, new_work, Work, WorkItem};
+ //!
+@@ -411,7 +409,6 @@ pub unsafe fn raw_get(ptr: *const Self) -> *mut bindings::work_struct {
+ /// like this:
+ ///
+ /// ```no_run
+-/// use kernel::prelude::*;
+ /// use kernel::workqueue::{impl_has_work, Work};
+ ///
+ /// struct MyWorkItem {
 -- 
-2.43.2
+2.34.1
 
