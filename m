@@ -1,115 +1,90 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0247BD51D;
-	Thu, 11 Apr 2024 14:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C37AB646
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846071; cv=none; b=P2Hwn/z3qx1Iu/hMP1bAyBe4MCWp0DcE+kcJ8Zb+9A4ZmYzCKCwW7IJ5rR+StIAsbUV0qys+eBSjkWYseKAa3fMToqB2k2SUdmvTCC95py9+zWfNbUb9d68LnRFLOGYXck/5mySI2poKiV+t3A8kM7HrcngfJWonFkQpedbBtpw=
+	t=1712846287; cv=none; b=s12d25hPDAVYj5PIpfgz9iRp49L8/snVdb6E4eY9eKWGL+qquzUXFO91eEug4JjHIcbDDyHvIMlusvTrMHIHpWkQZgAOHszs+u0qMFSNLn7k+YT3G1sZos+sgFompmmSYb0dNMfFW99nxadP+kwY+QcRlAVI+tceu8NW33PCA7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846071; c=relaxed/simple;
-	bh=BPWvX7FMnfSHBT1g9xfH5nN+hbcEQ+/3zdHIQgPG0LU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=RLNYD9256/JvB6RoQDH+QxkcGtc3158xpg1z5+BRu7LLHu8naO9z+PWWNvuyLKPkc/mJwGUXVCFw+cBpycr6U41YOO+yl4DXru1Yv7wwKWgZ2JVItVMzbdrYHhyEy/EHvtZzJU/AZ6WGzZKK+TtSwIIUDKZWJh2yiqiA6PMQtgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Woy0/ww9; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Woy0/ww9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 16DB5FF806;
-	Thu, 11 Apr 2024 14:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712846060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TqUHfFkbPFXkINPYBOMZ3yos79n09w01Malpi4hMiNk=;
-	b=Woy0/ww92LZI/zvaNa6V/i/nNLiYIj1d7++rqOyTjF9of0Yd5gY7fGfDZUGr4nJDspWaPl
-	SjKzDrjNny9O7dQz96809N9VX7fDrC293nMfTFLZoaP9i3Z01K08JXQTZfz8J/DBrM+qRI
-	wLE16x8ARJBceC1RTGvZkAmf0j5KTh0su1TZa+Q4uW6em23D40841bYWZfY51ld9hy/CaF
-	HTRwzU+Un/asZ88OgAuQTpNXq/1moG32vTSyP2C/JFSR9YaVErA9MoD0y1JE2/ywcnlTfX
-	U+Rwi9qALTB7M4ioEN2/OK8QQ/5ynuh9UtY5OPL/CmeYQgiOOzqYn6BQT+jrTg==
+	s=arc-20240116; t=1712846287; c=relaxed/simple;
+	bh=92wBbAB6KhpN+zXwllSeBQokZidS5cHSIVW7bjUyxsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEmUsERvjbVWO3oo/ewEStVF/mqa0k3gukeeFFQKKaHAGX24BjkRZ4RElRJEv2AP9g87ujTZH6sS7WWtbBucRlE6my+s1Eoc6QCuix9e4dRYOh+AnstqzarBlOEOIh0bxWMZjKTr+7JB/ZZjxAH8o4Xj6cDiOd/e4GRALgRmTuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CF08339;
+	Thu, 11 Apr 2024 07:38:35 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B33973F64C;
+	Thu, 11 Apr 2024 07:38:02 -0700 (PDT)
+Date: Thu, 11 Apr 2024 15:38:00 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 31/31] x86/resctrl: Move the resctrl filesystem code
+ to /fs/resctrl
+Message-ID: <Zhf1yF7Qc/df67jn@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-32-james.morse@arm.com>
+ <a8a95b4f-8913-4896-b01c-cbf80f931894@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 11 Apr 2024 16:34:18 +0200
-Message-Id: <D0HD94HI3W7W.3KLAW6WFIN6ZE@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 08/11] MIPS: mobileye: eyeq5: add OLB syscon node
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
- <20240410-mbly-olb-v1-8-335e496d7be3@bootlin.com>
- <faa0769f-bd5e-4c6b-9f61-1a369830ad28@linaro.org>
-In-Reply-To: <faa0769f-bd5e-4c6b-9f61-1a369830ad28@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8a95b4f-8913-4896-b01c-cbf80f931894@intel.com>
 
-Hello,
+On Mon, Apr 08, 2024 at 08:43:30PM -0700, Reinette Chatre wrote:
+> Hi James,
+> 
+> On 3/21/2024 9:51 AM, James Morse wrote:
+> > resctrl is linux's defacto interface for managing cache and bandwidth
+> > policies for groups of tasks.
+> > 
+> > To allow other architectures to make use of this pseudo filesystem,
+> > move it live in /fs/resctrl instead of /arch/x86.
+> 
+> "move it live" -> "move it to live"?
 
-On Thu Apr 11, 2024 at 8:15 AM CEST, Krzysztof Kozlowski wrote:
-> On 10/04/2024 19:12, Th=C3=A9o Lebrun wrote:
-> > The OLB ("Other Logic Block") is a syscon region hosting clock, reset
-> > and pin controllers. It contains registers such as I2C speed mode that
-> > need to be accessible by other nodes.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+Noted, thanks.
+
+> > 
+> > This move leaves behind the parts of resctrl that form the architecture
+> > interface for x86.
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
 > > ---
-> >  arch/mips/boot/dts/mobileye/eyeq5.dtsi | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dt=
-s/mobileye/eyeq5.dtsi
-> > index 6cc5980e2fa1..e82d2a57f6da 100644
-> > --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> > +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-> > @@ -100,6 +100,14 @@ uart2: serial@a00000 {
-> >  			clock-names =3D "uartclk", "apb_pclk";
-> >  		};
-> > =20
-> > +		olb: system-controller@e00000 {
-> > +			compatible =3D "mobileye,eyeq5-olb", "syscon", "simple-mfd";
-> > +			reg =3D <0 0xe00000 0x0 0x400>;
-> > +			ranges =3D <0x0 0x0 0xe00000 0x400>;
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <1>;
->
-> Do not add incomplete node. ranges, address/size-cells are incorrect in
-> this context and you will have warnings.
->
-> Add complete node, so these properties make sense.
+> > Discussion needed on how/when to merge this, as it would conflict with
+> > all outstanding series. It's probably worth deferring to some opportune
+> > time, but is included here for illustration.
+> > ---
+> 
+> For reference, there are currently two series that are ready to be
+> considered for inclusion:
+> 
+> https://lore.kernel.org/lkml/20240308213846.77075-1-tony.luck@intel.com/
+> https://lore.kernel.org/lkml/20240408092303.26413-1-haifeng.xu@shopee.com/
+> 
+> Reinette
 
-I'll squash all four commits into one. For reference, commits are:
+Understood.
 
- - MIPS: mobileye: eyeq5: add OLB syscon node
- - MIPS: mobileye: eyeq5: use OLB clocks controller node
- - MIPS: mobileye: eyeq5: add OLB reset controller node
- - MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
-
-This means two things: (1) it won't be partially applicable and (2) it
-will make one big commit adding pins and editing clocks.
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Cheers
+---Dave
