@@ -1,71 +1,84 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8991813C677
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AF821F176;
+	Thu, 11 Apr 2024 03:29:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712806063; cv=none; b=DImd8Nq4wJZSbqO2KbM9KwB60ZttLJPIxjBXB2hRqw8+TJygtNkSoFtk5hobBzhqyCxn0zFSRmSNcG16E44khKchFLq/jZA4Uhdv0bYKkCGaLVqNNvtpByIBiAX0cns/2BARLHDVMMS8PXlAtVmdKS2aQXVLq6dAVp7afSkGUeI=
+	t=1712806161; cv=none; b=EfDx9B8/WNCUXY5kccUXtdnaRqGRu93M/ECKXXVEkhRNHIksAx16mbQHXOvl5AgXGf2fUCaT4webjnaFzEBBM+E9ZmMdfdJJmqNg7KJLs4R0drXWHmeZlI5NckZiiDicNRwrPFGijx8//ISilm6AU+JEb3AdH16OkNoURoLJpUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712806063; c=relaxed/simple;
-	bh=rHGH6lCkBOQ/TXVwUpLe/mbxZddhNL23jRwKH3SUq1o=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PO87NC9dJZsSprNhMLNaIUdVk7lrUPTr+f6qR4YcA+a9PRaF1g74Zk9/NTW5hI6szek3xINOmMd5jWYXeXs6vcugqnpafvi3uvcFUsIhsNol/I4u8oBpVeCHuPrZLX0UC0BfA6RhTSWeh/K4sKbfSd37JmYW5GRwkpTIO6LOHe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VFQ6t6HLsz1R5Sm;
-	Thu, 11 Apr 2024 11:24:54 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0F68B14010C;
-	Thu, 11 Apr 2024 11:27:39 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
- (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
- 2024 11:27:31 +0800
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <ben.hutchings@mind.be>,
-	<daniel@makrotopia.org>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 0/4] ubi: Fix serious of resource leaking problems
-Date: Thu, 11 Apr 2024 11:18:59 +0800
-Message-ID: <20240411031903.3050278-1-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712806161; c=relaxed/simple;
+	bh=cba4HFVhpgHUdpdn6qrYkmNbC0aJQbwZ0EBzpbCf9+4=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=bTM9VrZd9ML70wS2Wv2gv+xds9lDHXeZDLlgt66kKbh1we4NRAkzfwJXpk5atl6NEIpYUZg6Y9Q2L2qmIWqjE0O/KpqCwZdhUIKezSt9fCpsVYYh/dsoEFkeKahuOMa0iAxoyc+FMqry6nHc5nMPUUbrj5+NinYIyM6UTij1mBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABFzBPDw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABFzBPDw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E330AC433F1;
+	Thu, 11 Apr 2024 03:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712806161;
+	bh=cba4HFVhpgHUdpdn6qrYkmNbC0aJQbwZ0EBzpbCf9+4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=ABFzBPDw5QsEtop5NwJ2ScfXbNayKJgf5ME9pe52VcvL8lDRWMNJe8RjQHnNOaDoR
+	 YZWR4emJ2l44p4pxApZQEUq58lnolKwz9GWuWFm2BJJKI48H3iOLD9NoVljKjqt5IO
+	 07aq8iu5KbknRdD56sCjCW0OeGuAix2e2I0qluO7EaHdrmU+P4SPGkQqedzgc2CFpf
+	 MJzg4QOqQgFggoJ5FrPNcuSxZ0XirPr4eHlZylCbqec0rcFf53pMZ1+/0FchkO16IH
+	 Y4eihSz2dpevLjhyN2E0Mv3ujGx8Bz4rv+mtvvzNK/BAnjFs97SyHL1ha4xLNyHEVL
+	 NkMmn49a7o1mw==
+Message-ID: <574577121eb0b397a7a5b9aef59cd6b3.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
+References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com> <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
+Subject: Re: [PATCH 01/11] dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+To: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Date: Wed, 10 Apr 2024 20:29:18 -0700
+User-Agent: alot/0.10
 
-v1->v2:
-  Combine Ben[1] and my[2] patches.
-  Modify second patch in [1], don't drop warning message if debugfs
-  failed to be initialized.
-  Modify second patch in [2], move ubiblock_init to the end of ubi_init.
-  Add new patch to replace IS_ERR_OR_NULL with IS_ERR.
+Quoting Th=C3=A9o Lebrun (2024-04-10 10:12:30)
+> diff --git a/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq=
+5-olb.yaml b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-=
+olb.yaml
+> new file mode 100644
+> index 000000000000..c4e33a167fab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.y=
+aml
+> @@ -0,0 +1,125 @@
+[..]
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 1
+> +
+> +  ranges: true
+> +
+> +patternProperties:
+> +  '^clock-controller@[0-9a-f]+$':
+> +    $ref: /schemas/clock/mobileye,eyeq5-clk.yaml#
+> +
+> +  '^reset-controller@[0-9a-f]+$':
+> +    $ref: /schemas/reset/mobileye,eyeq5-reset.yaml#
+> +
+> +  '^pinctrl@[0-9a-f]+$':
+> +    $ref: /schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
 
-[1] https://lore.kernel.org/linux-mtd/cover.1712788087.git.ben.hutchings@mind.be/
-[2] https://lore.kernel.org/lkml/20240410074033.2523399-3-chengzhihao1@huawei.com/T/
-
-Ben Hutchings (1):
-  mtd: ubi: Ignore all debugfs initialisation failures
-
-Zhihao Cheng (3):
-  ubi: ubi_init: Fix missed debugfs cleanup in error handling path
-  ubi: ubi_init: Fix missed ubiblock cleanup in error handling path
-  ubi: debugfs: Replace IS_ERR_OR_NULL with IS_ERR in error checking
-    path
-
- drivers/mtd/ubi/build.c | 61 ++++++++++++++++++++---------------------
- drivers/mtd/ubi/debug.c | 35 +++++++++--------------
- drivers/mtd/ubi/debug.h |  4 +--
- 3 files changed, 44 insertions(+), 56 deletions(-)
-
--- 
-2.39.2
-
+Yep, there shouldn't be subnodes for these. Instead, olb should have
+#clock-cells, #reset-cells, etc. and the driver registers auxiliary
+devices for each driver like the clk driver, reset driver, pinctrl
+driver. Then we don't need syscon or simple-mfd and random other drivers
+can't use the regmap.
