@@ -1,178 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B11F131BAA;
-	Thu, 11 Apr 2024 16:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9656A132C16;
+	Thu, 11 Apr 2024 16:03:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712851389; cv=none; b=Cb51qyuHAJ4It1Yl37WP7dDtntoOUM8uf7oD/4vFwj3UAzG3gs3S7FUWnbb7U2C8JwuEvmBMPPrctDdnTazIRvqN160/Rskfg60lwVAzSMpCsoFLnQw42ZaWEdEPBP2EJtzAvJL7Ir5N5+UcULDmDm/nGoR78FVIyi7j5/mgzEk=
+	t=1712851397; cv=none; b=MKHtqLbXypAaG6tyvBz28pC6fMHEWVP0R8lda/BkGRkR6Esdvc9brkjPHW0/YpYENBAC6Y9k2dwM8FvwcyralGaekleNW5+WYBSUWMxaDWDJO/tVkseMLH0HCwxGQ2f6h2NS/ZrZECyDXZi4EwLPlpPE2dpVVkBlF/mgY6V+qnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712851389; c=relaxed/simple;
-	bh=SKr2KE9uheUItEEdb+3dSNIPv9WQiBLJhcJ7LNHhua4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g7qlWYcAhvOwfrFncjPHnNh4ChxpaBTKAX4di+81EcvvqvKdgRp8QoRxF+8j2A0CtD3BBDG7oOXp1VNIq09PudbJCgLryh8uF4jjtPJnOM6ySm21Vk+zgsCubUgSntGTy2n2jNL9dVfpAU3Bx6FzX3G+nJ4jcMcdN73xRBod2BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/Pdoybv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712851397; c=relaxed/simple;
+	bh=0N+/I5DLiHYV45vZIHFVMpIxTUwvM1Dvt5hV2unXXl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LeCTZMc9d1LB/aICa463ULmW6/GBuO/jH2D0mjcQC8plr18gTeiZrCD4b+Fzbpzp1G0MkXI5rWG5qJOZGfXqn0946LzmJBHFsgqF9NThRFmpNhllpfhCWl0347HUSsfaGhZKA6CGl/FHMioskA8UZZadSrDu7s/yAlkwn1dyNOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFKAUFGr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/Pdoybv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAFAC32786;
-	Thu, 11 Apr 2024 16:02:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFKAUFGr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6AE8C2BBFC;
+	Thu, 11 Apr 2024 16:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712851389;
-	bh=SKr2KE9uheUItEEdb+3dSNIPv9WQiBLJhcJ7LNHhua4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h/PdoybvhERinJCMHC+yQRAsmlncc6oU4utcSyu6AELKgJzyJVfzHf76aaTeaChXL
-	 MpldlBly/9Jjz8av31uReShwgA9Wlq2qOfGfuBchPHxdljzoz5ojSKTJpFz36B8Zc1
-	 2DsNtXjnq9CfKqqcXehaFdvhsqD42GyFk1ShEVXSbkFTR23dC8pO70bc8xYUW9wBzi
-	 rRIEIbV18psznTztZqe/QTtYLOFeXNHkH8OQND+pcN7VGhqgRVfK5LTckwJ9fwgq3g
-	 Q7po7BjAwo+Tu8x8tAJ4K4X4LQNucwifMC/HQQYPJ3qGF8eKjk76GPUw4vrFfWned9
-	 MeSvQp+0Gx30w==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v4 08/15] arm64: extend execmem_info for generated code allocations
-Date: Thu, 11 Apr 2024 19:00:44 +0300
-Message-ID: <20240411160051.2093261-9-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411160051.2093261-1-rppt@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
+	s=k20201202; t=1712851397;
+	bh=0N+/I5DLiHYV45vZIHFVMpIxTUwvM1Dvt5hV2unXXl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JFKAUFGrw3IsxTZbgxXgHhrqdiPFt4v9Xuys1LwjkbvcQ4nQpzeGlA6MhNoZA9QLH
+	 YKOK6MZUUYwk8SG18qXCkQKplxYQhM9de8hub1SUyrl4f/mO5xRPGQ3yM1vC+4/BlA
+	 f8MWYJPzSGl+8OwZMsqu56+DYgRU33O3vCqa/A6TMmk9qhZLbsUNNPohMdeFMWxi8U
+	 v5xypegj0oEEIoOewPd1xIwWvk6boEM/aK3ieOQ4Pjvl03hhrC9cNR35XBD1dy0pbx
+	 2y4PGUa+7Hhaq8LzzL4mp9bfBXRbnGrisuNgJBg8DsF9iTA0GcBhKKFPQBcX3PIJJL
+	 5n+vxv8H7nhug==
+Date: Thu, 11 Apr 2024 17:03:10 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
+	Marco Elver <elver@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+	Edward Liaw <edliaw@google.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] selftests/timers/posix_timers: reimplement
+ check_timer_distribution()
+Message-ID: <280faf88-9bcd-4f0d-b02a-eb72cbefbb3e@sirena.org.uk>
+References: <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
+ <87o7aqb6uw.ffs@tglx>
+ <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
+ <87frw2axv0.ffs@tglx>
+ <20240404145408.GD7153@redhat.com>
+ <87le5t9f14.ffs@tglx>
+ <20240406150950.GA3060@redhat.com>
+ <f0523b3a-ea08-4615-b0fb-5b504a2d39df@sirena.org.uk>
+ <87il0o0yrc.ffs@tglx>
+ <20240411155053.GD5494@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6X+i8LxTiBMSWKj7"
+Content-Disposition: inline
+In-Reply-To: <20240411155053.GD5494@redhat.com>
+X-Cookie: How come we never talk anymore?
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-The memory allocations for kprobes and BPF on arm64 can be placed
-anywhere in vmalloc address space and currently this is implemented with
-overrides of alloc_insn_page() and bpf_jit_alloc_exec() in arm64.
+--6X+i8LxTiBMSWKj7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Define EXECMEM_KPROBES and EXECMEM_BPF ranges in arm64::execmem_info and
-drop overrides of alloc_insn_page() and bpf_jit_alloc_exec().
+On Thu, Apr 11, 2024 at 05:50:53PM +0200, Oleg Nesterov wrote:
+> On 04/11, Thomas Gleixner wrote:
 
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Acked-by: Will Deacon <will@kernel.org>
----
- arch/arm64/kernel/module.c         | 14 ++++++++++++++
- arch/arm64/kernel/probes/kprobes.c |  7 -------
- arch/arm64/net/bpf_jit_comp.c      | 11 -----------
- 3 files changed, 14 insertions(+), 18 deletions(-)
+> > Grrr. Let me stare at this.
 
-diff --git a/arch/arm64/kernel/module.c b/arch/arm64/kernel/module.c
-index a377a3217cf2..aa9e2b3d7459 100644
---- a/arch/arm64/kernel/module.c
-+++ b/arch/arm64/kernel/module.c
-@@ -115,6 +115,12 @@ static struct execmem_info execmem_info __ro_after_init = {
- 		[EXECMEM_DEFAULT] = {
- 			.alignment = MODULE_ALIGN,
- 		},
-+		[EXECMEM_KPROBES] = {
-+			.alignment = 1,
-+		},
-+		[EXECMEM_BPF] = {
-+			.alignment = 1,
-+		},
- 	},
- };
- 
-@@ -143,6 +149,14 @@ struct execmem_info __init *execmem_arch_setup(void)
- 		r->end = module_plt_base + SZ_2G;
- 	}
- 
-+	execmem_info.ranges[EXECMEM_KPROBES].pgprot = PAGE_KERNEL_ROX;
-+	execmem_info.ranges[EXECMEM_KPROBES].start = VMALLOC_START;
-+	execmem_info.ranges[EXECMEM_KPROBES].end = VMALLOC_END;
-+
-+	execmem_info.ranges[EXECMEM_BPF].pgprot = PAGE_KERNEL;
-+	execmem_info.ranges[EXECMEM_BPF].start = VMALLOC_START;
-+	execmem_info.ranges[EXECMEM_BPF].end = VMALLOC_END;
-+
- 	return &execmem_info;
- }
- 
-diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
-index 327855a11df2..4268678d0e86 100644
---- a/arch/arm64/kernel/probes/kprobes.c
-+++ b/arch/arm64/kernel/probes/kprobes.c
-@@ -129,13 +129,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 	return 0;
- }
- 
--void *alloc_insn_page(void)
--{
--	return __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
--			GFP_KERNEL, PAGE_KERNEL_ROX, VM_FLUSH_RESET_PERMS,
--			NUMA_NO_NODE, __builtin_return_address(0));
--}
--
- /* arm kprobe: install breakpoint in text */
- void __kprobes arch_arm_kprobe(struct kprobe *p)
- {
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 122021f9bdfc..456f5af239fc 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -1793,17 +1793,6 @@ u64 bpf_jit_alloc_exec_limit(void)
- 	return VMALLOC_END - VMALLOC_START;
- }
- 
--void *bpf_jit_alloc_exec(unsigned long size)
--{
--	/* Memory is intended to be executable, reset the pointer tag. */
--	return kasan_reset_tag(vmalloc(size));
--}
--
--void bpf_jit_free_exec(void *addr)
--{
--	return vfree(addr);
--}
--
- /* Indicate the JIT backend supports mixing bpf2bpf and tailcalls. */
- bool bpf_jit_supports_subprog_tailcalls(void)
- {
--- 
-2.43.0
+> Damn ;)
 
+> Can't we just turn ksft_min_kernel_version() into
+
+> 	static inline int ksft_min_kernel_version(unsigned int min_major,
+> 						  unsigned int min_minor)
+> 	{
+> 	#ifdef NOLIBC
+> 		return -1;
+> 	#else
+
+That'd probably work well enough here.  I think it's reasonable for
+someone who wants to build a test that uses ksft_min_kernel_version()
+with nolibc to figure out how to implement it, right now it's not
+actually getting used with nolibc and just happens to be seen due to
+being in the same header.
+
+> Not sure what should check_timer_distribution() do in this case, to me
+> ksft_test_result_fail() is fine.
+
+I'd go with skip but yeah.
+
+--6X+i8LxTiBMSWKj7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYYCb4ACgkQJNaLcl1U
+h9Corgf+If9pRewR2Sf7yuBxPHFwhekXG3uOsPuQGQrq/fl0/zgB+V1ToPn9FsrD
++INicy+H4EAfPy4Zr1aWOSJc9O9fsavsvYg59sfnRmYiwSHjQEbIj0ZUSVzEpCRH
+39YNs2AEF8MtR0530GNjsDJqYFGdGj/ZCkcgaAHLrvkTWe97LPNaFDhxRfvR6HJz
+Y9Dub0bcfCQUt9bg2zGOMzgdll5TF6h2TApiEeedMpS0qO6/uvDH8Ws1gnVlH2dV
+HNW/grfhC5too7+GFpDDnBDaWaWD3vWDwuVDcGIWm1Nm9e8Yi1pwjXiGXSRMsBID
+8MBmTlnBXsIEKJEnVpTu9zVw9Fg1Sw==
+=G3lU
+-----END PGP SIGNATURE-----
+
+--6X+i8LxTiBMSWKj7--
