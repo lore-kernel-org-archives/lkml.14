@@ -1,66 +1,72 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95451DDE9
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824052; cv=fail; b=TVDc2lnrSAoU9EPMRvfYQ993Z9s18G6Y74ffiyQ5rMPa2WH++ofJXSB/sFs3OteCw20Mal7S7gYLHnv+LJ8EehZpfbL0B6T+aavNSfq+mSqYtYxXvv6ImKjACw63KwbfgDtS7bUC2DNmkZ2KiZaKGFnlTGNbauXXFZhyg9raF8A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712824052; c=relaxed/simple;
-	bh=cYGRJCZShMuKyrlnAhRZe+TzxQzhrjgKn2+ArOeYBx4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZPkrUqTLswdhVteJGFw9DWawdqbMbYppRgbf+qN2ATPeJFSf7N81pWZuAsJovKtFHChMYPzgldvR55p/xTLx/wpyjduY5z8FYkX9kHqXP1LoVPAb0F4whQ3S+WJM84J4RDOzF9527GOoA3+4wjwGJEJziWQoRf7u66gfB85niCI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Rvh1fOHw; arc=fail smtp.client-ip=40.107.223.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EBD13D8BD
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712824185; cv=none; b=OeVj+VQ1ox+1mCYxE4qZMXvBjwFOW9I/+3aM0SxwUTG3jR4pC/Tt+d9wbEwOZL1yrfbnAjS1Rw+AWoTRtitDv2K+roaKxg25wXJYYt/G7zCBeHxG+gE/vBvR2bWzw6W8v0MmHoP5b9lQ3JbJQIGB0MFssrveV9CWpFv7iOU8Ifk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712824185; c=relaxed/simple;
+	bh=jUEd61ZFpptZ5KtCvlfoBSHaTCEbZsxcbpzfL6Ny9wc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A1XhJL41YBZi4A0IahUXMkmI8nezQgXz0CkutmyZbd7N+QA12WLMlRiD/WQ+yFj/g9Rzs2X7iQW0xgq7YwHvZsu3kQNyW8BvzpCYsGbnbLCUUuMZmhamfymXi/tpg4ud8pSx16AGyQ+QmJXPBdP8wHpIwJrCkYbrAJOx8ncaQTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ddn5vdWN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Rvh1fOHw"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ik7+KYQXazMaNQ0XME0PrwW9s+P6fi4RC6AmByo/sEBN+WynqTCF1O220mZJKSxfagCe6SdPAZ5Ck8y+bxC2AINBR4rr/ayNSfrf334tmb7TurRdFGJQjoC5II6Am33rhonP9EExT91Kau/qw8XOHqLJqtEMaY+YvtujeY9azIv23jvC+pPPsu6rYOFAX7G295tE6gkEyaHFwgRttNxCp6Y8P4BVcb9zYbZVD51QCElo4Ti96kULsUqek0pimdnqGwo1LNZTg+ufk/aOKDa4gkpDkIw1vimrghzppBPJ7SzW9wI4W7Zc4yNARNGq20YwdOPjbP1Mvdb4t1ip+ZhBfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+//6eg9xNj6sPX2YEG8c45puH8WnsvFC0DdWxmTd7wQ=;
- b=fFIFmeH3Ih8ZTW698rQjbsUGjmW0fIqy4DyCx2S5g9bZ6YexG/o6xx2KXzsl2yG6r0jh0/3gO8FBmIHs44LYM5xzLH4PROntKUZ7hp+WNnIK2HwPn9ZZq3VHVQxbjSQSVmRyMvb2D/xdkn1bUFLK5Nf7IBQMaD/Hd+RDLC7Cc42cRAkCa+wvRlNh9I8GYsDX9gdinAfAo3QS+Wb8ReiBhrQCCGt/LWjKEaqtVNiaIlMDYwmi6yGBCrw7g9Tre3yGo3fEKzznOgdaeFTKCzMqoUw8MWHHW3PWZ8bCH90c4ez9EeKyxAlbXwpgd09d1t+rpG6N8P5hLepN8fRSsyPAbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+//6eg9xNj6sPX2YEG8c45puH8WnsvFC0DdWxmTd7wQ=;
- b=Rvh1fOHwmZpKQgROCtNI+GaqjK/4qzjigcrfIgwytpKyhYE5XZpHWqGeQywcPihJVDyKfURS+1nDagXHC+lpbGn3oAt3qJm5AAE69eebzqEpmFACP5h+SN/ML1IYDyF4GDJQSASXWBkz0sJpmRrLnKL8IBrKIxKf2CzkGGL3hbM=
-Received: from MW4PR04CA0378.namprd04.prod.outlook.com (2603:10b6:303:81::23)
- by MW6PR12MB7071.namprd12.prod.outlook.com (2603:10b6:303:238::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
- 2024 08:27:28 +0000
-Received: from MWH0EPF000971E2.namprd02.prod.outlook.com
- (2603:10b6:303:81:cafe::7f) by MW4PR04CA0378.outlook.office365.com
- (2603:10b6:303:81::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.22 via Frontend
- Transport; Thu, 11 Apr 2024 08:27:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000971E2.mail.protection.outlook.com (10.167.243.69) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7452.22 via Frontend Transport; Thu, 11 Apr 2024 08:27:28 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 11 Apr
- 2024 03:27:26 -0500
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Rob Herring <robh@kernel.org>
-Subject: [PATCH] microblaze: Remove early printk call from cpuinfo-static.c
-Date: Thu, 11 Apr 2024 10:27:21 +0200
-Message-ID: <2f10db506be8188fa07b6ec331caca01af1b10f8.1712824039.git.michal.simek@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ddn5vdWN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712824182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kr8yZ/39CaZL7/MdJLoFtWvQBJY7UICTTRAwrtIhMhU=;
+	b=Ddn5vdWN/BIrrK4j1jCNjsDRblFE2sW7kw0ZVTjqbQOJ3DdzxqTi/n6PQ2yO0lJz0bd1g9
+	3FX6vKMGxlK1t+mnXnTvv+dz/ShIhwyKV1Hbv998945OIWRAj+Kq1jsnTsEUiHN2NFxMiM
+	3uKvuwfZUdDnn6ekOHDs6MDYeS7kfGo=
+Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
+ [209.85.222.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-28-wqpviNcsP9WoCwYguS2NVw-1; Thu, 11 Apr 2024 04:29:39 -0400
+X-MC-Unique: wqpviNcsP9WoCwYguS2NVw-1
+Received: by mail-ua1-f70.google.com with SMTP id a1e0cc1a2514c-7e7b784d6b2so697742241.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 01:29:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712824179; x=1713428979;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kr8yZ/39CaZL7/MdJLoFtWvQBJY7UICTTRAwrtIhMhU=;
+        b=BcINQ/fyvymWBxlowc7ki0G4eXH4JHYaYS2Jc1Wu+qXNXF1ju9o4XOOgmofk5nRsj4
+         ewG+vLMfo/IxndARzOIRSwTC1Aun+n08HZOQ4WpOxLT2RZ6ICDMG3452ETEqQsHJsq3n
+         otfHCFRF6uw6eXAMoaEjU6CLyJa+FTHLVMBjztIpE7npoM6dvwgV2OG4jqpTa54PiRfh
+         VutqZX8HEE+Ono15VuGh+7DzNvkIsw//MYV1Q6C8M0zlZTj1XKlEIzvoJeA6QMeIEigc
+         X1/bC6XSK8mYxFYMR1Z25qlWc2u5/RELauZKEAJmjLPbNPz5iRhoZdJiWC0PaA7upha0
+         pMwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfZcinEtgzxhNYnJ8X8sSBB8SOkiAWgGIrtae2KPe6xvPYR3t4+HmoVB50QayHYHYA/abWqGxJBsQwnK7WCpUO0dEkE6ZJLTom4/LX
+X-Gm-Message-State: AOJu0YzdIUrYnVcN5kF26vJ9U9eJRuFVFUVf0FunEPrMApNc1wjDlqGR
+	nhPVjIZ+BL3Q63TM5ElM+Bfqgzuml9TzpUw4z0efz4WDjyeP9RSLhdntybONgc0Pfnzbpg+u5mQ
+	Jt+jQ5h/IYrDmkojtc2pKgf6liMFXuYYs/PJRXmDi1dbzwnd+RbpnVZE9dBF6Yw==
+X-Received: by 2002:a05:6102:3594:b0:47a:3a6d:4d4d with SMTP id h20-20020a056102359400b0047a3a6d4d4dmr533852vsu.10.1712824179103;
+        Thu, 11 Apr 2024 01:29:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG5GnC0mBUTHupeuCkWYsDJWKGEPm++wTV8jzZf8vaD4JQ9NdRD7MvBPp53DY/6Bg4JWsv9Ng==
+X-Received: by 2002:a05:6102:3594:b0:47a:3a6d:4d4d with SMTP id h20-20020a056102359400b0047a3a6d4d4dmr533810vsu.10.1712824177361;
+        Thu, 11 Apr 2024 01:29:37 -0700 (PDT)
+Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
+        by smtp.gmail.com with ESMTPSA id f16-20020ac86ed0000000b004348d54a873sm632760qtv.57.2024.04.11.01.29.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 01:29:36 -0700 (PDT)
+From: Lukas Bulwahn <lbulwahn@redhat.com>
+X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	Brian Foster <bfoster@redhat.com>,
+	linux-bcachefs@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Subject: [PATCH] bcachefs: fix typo in reference to BCACHEFS_DEBUG
+Date: Thu, 11 Apr 2024 10:29:31 +0200
+Message-ID: <20240411082931.56362-1-lukas.bulwahn@redhat.com>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -68,59 +74,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=michal.simek@amd.com; h=from:subject:message-id; bh=cYGRJCZShMuKyrlnAhRZe+TzxQzhrjgKn2+ArOeYBx4=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhjTxea/3LTCa4SG5+uezadyv/RceOe94dbVsy3+Zav4zV ZcuRNp5dsSyMAgyMciKKbJI21w5s7dyxhThi4flYOawMoEMYeDiFICJ3BZlmB9zN0RgPcdf+c1H Yq72rj/ivX/PtIcM84P5OJaUW+q1rv4+bePuv1+rPpinfwUA
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E2:EE_|MW6PR12MB7071:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd92ce1a-5b67-46f6-f889-08dc5a01395a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	WHTU29YXleha3/zviijRHfpM+dx7IkacCp9Rfhq1+PGiOW4zIpRSUjwpqq9i1TpjXNRut0QH0WcK6GZoj6qvaOLPHFnxW6bkc5Glya8MNfF4lkbVspA4SXwzdepCwTAJeDY3jmQCYt/ueTw5dD8Y4OP1dh/JmY/Oa5WLELajI/7pSBm7Cxvx22dK0k+nlKUQnVKQyEiSV5CX5tN86PIyQ+Vj9d/4Sgk7ylRTYKo2EO98/B8+ImrPSNPb2lEtqkSFoDGDbjMIfZOBsK7/hRhO43jX/ztvzYh7X6g+LoKS4zIM4O6VSKpOER+P7NzmnPMEeZ7ejj8VU8H+jRb2dxatbUd8042avkQ/eRgszlildFbGhM+jB7ZjZDLxPqIbMS/d7iu3jjg5Pk8LZl/wtmvqvdVDklyXCgXvTGXVx/K1oNGUCgC1BUFDHQg0faU9oGMoFKAD98rK4lABiOAXecFM9dQdtSYbdby9ewM7cECcOpwl65wSF5WlDGn1wvZrSsEWmoV7gOr0HkyzBYACBAzIzRhspvyzdRRH1DsmXjKzBmK91zkYAQYk7SP6EaTDWqU83FaZXIvVPl8FFSy450/fvzupwCuYWfGq2t1XUGWoZOpaNCF4aygEDTdT6hl3n0rRUMumKngoarUSnhaV9CivJq9oUVOY2f7w3Yjofrp70u0BQjPfT3dthkIKhsbrIzF/qzjpefwWAy31O8T6snEutogKJGHiOHw+Qli8Hkver+67g66kynfnzuP9luff8LWh
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400014)(36860700004)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 08:27:28.1935
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd92ce1a-5b67-46f6-f889-08dc5a01395a
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E2.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7071
 
-Early printk has been removed already that's why also remove calling it.
-Similar change has been done in cpuinfo-pvr-full.c by commit cfbd8d1979af
-("microblaze: Remove early printk setup").
+Commit ec9cc18fc2e6 ("bcachefs: Add checks for invalid snapshot IDs")
+intends to check the sanity of a snapshot and panic when
+BCACHEFS_DEBUG is set, but that conditional has a typo.
 
-Fixes: 96f0e6fcc9ad ("microblaze: remove redundant early_printk support")
-Signed-off-by: Michal Simek <michal.simek@amd.com>
+Fix the typo to refer to the actual existing Kconfig symbol.
+
+This was found with ./scripts/checkkconfigsymbols.py.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
 ---
-
- arch/microblaze/kernel/cpu/cpuinfo-static.c | 2 +-
+ fs/bcachefs/snapshot.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/kernel/cpu/cpuinfo-static.c b/arch/microblaze/kernel/cpu/cpuinfo-static.c
-index 85dbda4a08a8..03da36dc6d9c 100644
---- a/arch/microblaze/kernel/cpu/cpuinfo-static.c
-+++ b/arch/microblaze/kernel/cpu/cpuinfo-static.c
-@@ -18,7 +18,7 @@ static const char family_string[] = CONFIG_XILINX_MICROBLAZE0_FAMILY;
- static const char cpu_ver_string[] = CONFIG_XILINX_MICROBLAZE0_HW_VER;
+diff --git a/fs/bcachefs/snapshot.h b/fs/bcachefs/snapshot.h
+index b7d2fed37c4f..3fdb41b33d2d 100644
+--- a/fs/bcachefs/snapshot.h
++++ b/fs/bcachefs/snapshot.h
+@@ -77,7 +77,7 @@ static inline u32 __bch2_snapshot_parent(struct bch_fs *c, u32 id)
+ 		return 0;
  
- #define err_printk(x) \
--	early_printk("ERROR: Microblaze " x "-different for kernel and DTS\n");
-+	pr_err("ERROR: Microblaze " x "-different for kernel and DTS\n");
- 
- void __init set_cpuinfo_static(struct cpuinfo *ci, struct device_node *cpu)
- {
+ 	u32 parent = s->parent;
+-	if (IS_ENABLED(CONFIG_BCACHEFS_DEBU) &&
++	if (IS_ENABLED(CONFIG_BCACHEFS_DEBUG) &&
+ 	    parent &&
+ 	    s->depth != snapshot_t(c, parent)->depth + 1)
+ 		panic("id %u depth=%u parent %u depth=%u\n",
 -- 
 2.44.0
 
