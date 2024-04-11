@@ -1,146 +1,246 @@
 Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0194143868;
-	Thu, 11 Apr 2024 09:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95D213FD76;
+	Thu, 11 Apr 2024 09:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712827557; cv=none; b=bAu9/Xxd/rYEX54+uQbkFK8WMq6PSBlSrxGX2xU8sj6MXqyNn+jiBzODmFVqMvu0Vz47eX/fhlIdEfvs4XwkKjYyWB6Q0HPUkR3MGXqMkArYRmEGI8ulESPyl8ak2jcXZf3qcyxdcAi2JQ9nG6BnU1fuXFD/wl1S0zn/eMyBFXk=
+	t=1712827575; cv=none; b=apQZG9nMsU4T+MffZfrKxsw8BRiIcZnhlD4fVszsoLgqa0oL2NqnMiHkqM6HuratiNEN7CNQvISWqEmvw/hCUdL9j1RH2Zz9QHRqEJ8gqYvP5No8TTRPE/A9WYH7JdEE9e1xRNxOkoNxFX+2VfbzTxg9wixvN3EsGy2UM644gfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712827557; c=relaxed/simple;
-	bh=lpH3Pg5opeW9yilRG6jpjNBucP0rgbthlWRy8sbS36Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jBqTC7Xi7aQ4wITVHFoEKl54sjA679uZbMbZ5qDxDInm0NxAXODmI4cowLtcSgJ9wyVMvBB1EHKJcPfe8WYNu9Ar06Ho4m8ivpoyz/Hu1hOILskeBzRvLHmIf088KUmfB2gb68UMYkgQnDwPYY3PcWh1mqfwvj/CdVXGkVUmxf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=f8ghDbR0; arc=none smtp.client-ip=91.207.212.93
+	s=arc-20240116; t=1712827575; c=relaxed/simple;
+	bh=yKL/GD2g+PqqgINfyNMStamCKLF/QziBlhTPzWm6TAg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=p8Odff4XxmusH2A1b4Y6lAdKtQBxde1g4iXkpPIwVV/q95SLEIVZKS2lKdkLHYpaq2swQF7YwTOLzPVSv30YpxCm8uLbauYK4g9oSLdtgegUg61AYqhg882xxe1bvPCbHpTmbBmXxuQp0YX1jMR6vcW2j2lxhGRvwfWpdoz4v2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=7uSxd1yP; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="f8ghDbR0"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43B75YPm009700;
-	Thu, 11 Apr 2024 11:25:19 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="7uSxd1yP"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43B7qcKO017772;
+	Thu, 11 Apr 2024 11:25:56 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=TUGotz/RGgZ0ogm1f0DO+fTxmgoJm/qfo/BcIhv3uTA=; b=f8
-	ghDbR00PE6qnZfX0dzmLDa7aMYJHZCxeKnpfIS/E/GjB90q2uq31BhSLuLzSfcAL
-	T+wITslxuyv4F3TwfqeYGFxDT3NPsR488v8hVxQnjdwCXABdGAydkHYrZ1Tt7pEg
-	7ccUetfAO5+EJekbPXAcwMvwvk3BGTt36RagOYF+MKAArAqAXjgzeNVbBLQk+hhP
-	1vuOXNoE5sIae3bIiPo4yY2ILRtwzXqW1hCab2WmzwKwVYT/V5UvVuHd9Co9VGxS
-	/iSlKJXlVCEtv158UnCzN87kcRcnTurL9TJPgU9rSoCz8fvWPJJQZv4NXlVqY5Vz
-	lNCOxiIxeMrg4ZMiPy2g==
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=r6X6BGtuJHlAwq5hKk1XL9iK7bAsTfplYeEEaPUDmGs=; b=7u
+	Sxd1yPdI4XGINNxlPGMjR9PKr0kacLfcKFbaXTrCSBM19iQxPtxicJKuD5AQpHsq
+	qQYkHiJun3eBnfltFc2idQ6fkbwgdJ7E9pf72qkHLmL/4bMRg97If9iVjdzkVhrW
+	e3iai0w3AXiQxU7u1tJegTT1jrc9kRAsRzRS8oFdCj/b9MHV2tx52RvTNquDn6qL
+	F78qUtIUEPvgnHOQgmEWpnkNTaneLC16JW6g63NGz01QEE90JdiSe4OhMKfCz9zZ
+	vW8PGrYQOFmO9elQpTYco9cIbUeLxcLrLRx5kpJ7tqWoAdBsGOlJXKGv7jAKwdhj
+	d5qiTFqGA3Q5sB0E9fMA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xaw9d41f0-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xauh5c54s-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 11:25:19 +0200 (MEST)
+	Thu, 11 Apr 2024 11:25:56 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 645624002D;
-	Thu, 11 Apr 2024 11:25:14 +0200 (CEST)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 293A540049;
+	Thu, 11 Apr 2024 11:25:50 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 71AE1212FB5;
-	Thu, 11 Apr 2024 11:24:23 +0200 (CEST)
-Received: from [10.48.86.110] (10.48.86.110) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7C1D2212FB4;
+	Thu, 11 Apr 2024 11:25:00 +0200 (CEST)
+Received: from localhost (10.48.86.110) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Apr
- 2024 11:24:22 +0200
-Message-ID: <9eda526d-a38c-4680-9886-114cddf34f00@foss.st.com>
-Date: Thu, 11 Apr 2024 11:24:21 +0200
+ 2024 11:25:00 +0200
+From: <gabriel.fernandez@foss.st.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+	<sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 1/4] clk: stm32mp13: use platform device APIs
+Date: Thu, 11 Apr 2024 11:24:50 +0200
+Message-ID: <20240411092453.243633-2-gabriel.fernandez@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240411092453.243633-1-gabriel.fernandez@foss.st.com>
+References: <20240411092453.243633-1-gabriel.fernandez@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 3/4] clk: stm32: introduce clocks for STM32MP257
- platform
-To: Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240409171241.274600-1-gabriel.fernandez@foss.st.com>
- <20240409171241.274600-4-gabriel.fernandez@foss.st.com>
- <7498985788263268d4acfcd1589a5994.sboyd@kernel.org>
-Content-Language: en-US
-From: Gabriel FERNANDEZ <gabriel.fernandez@foss.st.com>
-In-Reply-To: <7498985788263268d4acfcd1589a5994.sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
  (10.75.129.69)
 X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-04-11_03,2024-04-09_01,2023-05-22_02
 
+From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
-On 4/11/24 08:36, Stephen Boyd wrote:
-> Quoting gabriel.fernandez@foss.st.com (2024-04-09 10:12:40)
->> diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-stm32mp25.c
->> new file mode 100644
->> index 000000000000..23876e7d9863
->> --- /dev/null
->> +++ b/drivers/clk/stm32/clk-stm32mp25.c
->> @@ -0,0 +1,1876 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
->> + * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicroelectronics.
->> + */
->> +
->> +#include <linux/clk.h>
-> Use clk-provider.h not clk.h
-ok
->
->> +#include <linux/of_address.h>
-> Doubt this is the right include. Drop?
+Convert devm_platform_ioremap_resource() and remove unnecessary
+dependency check with SCMI clock driver.
 
-yes i will drop
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+---
+ drivers/clk/stm32/clk-stm32-core.c | 11 +++--
+ drivers/clk/stm32/clk-stm32mp13.c  | 72 +++---------------------------
+ 2 files changed, 10 insertions(+), 73 deletions(-)
 
+diff --git a/drivers/clk/stm32/clk-stm32-core.c b/drivers/clk/stm32/clk-stm32-core.c
+index 58705fcad334..1721a3ed7386 100644
+--- a/drivers/clk/stm32/clk-stm32-core.c
++++ b/drivers/clk/stm32/clk-stm32-core.c
+@@ -25,7 +25,6 @@ static int stm32_rcc_clock_init(struct device *dev,
+ {
+ 	const struct stm32_rcc_match_data *data = match->data;
+ 	struct clk_hw_onecell_data *clk_data = data->hw_clks;
+-	struct device_node *np = dev_of_node(dev);
+ 	struct clk_hw **hws;
+ 	int n, max_binding;
+ 
+@@ -64,7 +63,7 @@ static int stm32_rcc_clock_init(struct device *dev,
+ 			hws[cfg_clock->id] = hw;
+ 	}
+ 
+-	return of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
+ }
+ 
+ int stm32_rcc_init(struct device *dev, const struct of_device_id *match_data,
+@@ -638,7 +637,7 @@ struct clk_hw *clk_stm32_mux_register(struct device *dev,
+ 	mux->lock = lock;
+ 	mux->clock_data = data->clock_data;
+ 
+-	err = clk_hw_register(dev, hw);
++	err = devm_clk_hw_register(dev, hw);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 
+@@ -659,7 +658,7 @@ struct clk_hw *clk_stm32_gate_register(struct device *dev,
+ 	gate->lock = lock;
+ 	gate->clock_data = data->clock_data;
+ 
+-	err = clk_hw_register(dev, hw);
++	err = devm_clk_hw_register(dev, hw);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 
+@@ -680,7 +679,7 @@ struct clk_hw *clk_stm32_div_register(struct device *dev,
+ 	div->lock = lock;
+ 	div->clock_data = data->clock_data;
+ 
+-	err = clk_hw_register(dev, hw);
++	err = devm_clk_hw_register(dev, hw);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 
+@@ -701,7 +700,7 @@ struct clk_hw *clk_stm32_composite_register(struct device *dev,
+ 	composite->lock = lock;
+ 	composite->clock_data = data->clock_data;
+ 
+-	err = clk_hw_register(dev, hw);
++	err = devm_clk_hw_register(dev, hw);
+ 	if (err)
+ 		return ERR_PTR(err);
+ 
+diff --git a/drivers/clk/stm32/clk-stm32mp13.c b/drivers/clk/stm32/clk-stm32mp13.c
+index d4ecb3c34a1b..bf81d7491708 100644
+--- a/drivers/clk/stm32/clk-stm32mp13.c
++++ b/drivers/clk/stm32/clk-stm32mp13.c
+@@ -1536,77 +1536,16 @@ static const struct of_device_id stm32mp13_match_data[] = {
+ };
+ MODULE_DEVICE_TABLE(of, stm32mp13_match_data);
+ 
+-static int stm32mp1_rcc_init(struct device *dev)
+-{
+-	void __iomem *rcc_base;
+-	int ret = -ENOMEM;
+-
+-	rcc_base = of_iomap(dev_of_node(dev), 0);
+-	if (!rcc_base) {
+-		dev_err(dev, "%pOFn: unable to map resource", dev_of_node(dev));
+-		goto out;
+-	}
+-
+-	ret = stm32_rcc_init(dev, stm32mp13_match_data, rcc_base);
+-out:
+-	if (ret) {
+-		if (rcc_base)
+-			iounmap(rcc_base);
+-
+-		of_node_put(dev_of_node(dev));
+-	}
+-
+-	return ret;
+-}
+-
+-static int get_clock_deps(struct device *dev)
+-{
+-	static const char * const clock_deps_name[] = {
+-		"hsi", "hse", "csi", "lsi", "lse",
+-	};
+-	size_t deps_size = sizeof(struct clk *) * ARRAY_SIZE(clock_deps_name);
+-	struct clk **clk_deps;
+-	int i;
+-
+-	clk_deps = devm_kzalloc(dev, deps_size, GFP_KERNEL);
+-	if (!clk_deps)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < ARRAY_SIZE(clock_deps_name); i++) {
+-		struct clk *clk = of_clk_get_by_name(dev_of_node(dev),
+-						     clock_deps_name[i]);
+-
+-		if (IS_ERR(clk)) {
+-			if (PTR_ERR(clk) != -EINVAL && PTR_ERR(clk) != -ENOENT)
+-				return PTR_ERR(clk);
+-		} else {
+-			/* Device gets a reference count on the clock */
+-			clk_deps[i] = devm_clk_get(dev, __clk_get_name(clk));
+-			clk_put(clk);
+-		}
+-	}
+-
+-	return 0;
+-}
+-
+ static int stm32mp1_rcc_clocks_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	int ret = get_clock_deps(dev);
++	void __iomem *base;
+ 
+-	if (!ret)
+-		ret = stm32mp1_rcc_init(dev);
+-
+-	return ret;
+-}
+-
+-static void stm32mp1_rcc_clocks_remove(struct platform_device *pdev)
+-{
+-	struct device *dev = &pdev->dev;
+-	struct device_node *child, *np = dev_of_node(dev);
++	base = devm_platform_ioremap_resource(pdev, 0);
++	if (WARN_ON(IS_ERR(base)))
++		return PTR_ERR(base);
+ 
+-	for_each_available_child_of_node(np, child)
+-		of_clk_del_provider(child);
++	return stm32_rcc_init(dev, stm32mp13_match_data, base);
+ }
+ 
+ static struct platform_driver stm32mp13_rcc_clocks_driver = {
+@@ -1615,7 +1554,6 @@ static struct platform_driver stm32mp13_rcc_clocks_driver = {
+ 		.of_match_table = stm32mp13_match_data,
+ 	},
+ 	.probe = stm32mp1_rcc_clocks_probe,
+-	.remove_new = stm32mp1_rcc_clocks_remove,
+ };
+ 
+ static int __init stm32mp13_clocks_init(void)
+-- 
+2.25.1
 
->> +#include <linux/platform_device.h>
->> +
->> +#include "clk-stm32-core.h"
->> +#include "reset-stm32.h"
->> +#include "stm32mp25_rcc.h"
->> +
->> +#include <dt-bindings/clock/st,stm32mp25-rcc.h>
-> [...]
->> +       .clock_data     = &stm32mp25_clock_data,
->> +       .reset_data     = &stm32mp25_reset_data,
->> +};
->> +
->> +static const struct of_device_id stm32mp25_match_data[] = {
->> +       { .compatible = "st,stm32mp25-rcc", .data = &stm32mp25_data, },
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(of, stm32mp25_match_data);
->> +
->> +static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       void __iomem *base;
->> +
->> +       base = devm_platform_ioremap_resource(pdev, 0);
->> +       if (WARN_ON(IS_ERR(base)))
-> Drop WARN_ON
-
-ok
-
-Thank's
-
-Best Regards
-
-Gabriel
-
-
->> +               return PTR_ERR(base);
