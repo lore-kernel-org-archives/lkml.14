@@ -1,75 +1,81 @@
-Received: from smtpcmd13147.aruba.it (smtpcmd13147.aruba.it [62.149.156.147])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9933145FFA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A651C14AD22;
+	Thu, 11 Apr 2024 13:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712841940; cv=none; b=poutxoVkTA9IJcRv0dmdnEQxvfjd2iALqwnZlrT+0scLHumIjVw412JhuUIvBU8DvFvnT0DEyHge2aktvt/TW2swcFC9cqx29KRVDebW1tjpZPSWdXYOPuZ9Y0+fmrvPCKl7A6ng0lUJeUNGpIY3KigJ/AW57M05UBbL/dGrq+E=
+	t=1712842093; cv=none; b=fcbyTLkzoOx/islzs/rjdnu7iycY3RuXom1rrt9zKB06JOROXbfaSsgLhWdps9nw1W+GOQQz2/fQHurV/sWpxIPKZQkg5YnMKNKiflOoRr9pKvs24M2huQ7mDyMP+FFik7n5RMxs2mwDLEw9rVjTFnZ1nMYJACsULVey6Kgfxdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712841940; c=relaxed/simple;
-	bh=F/4VlDVKnyWrcnoOPdyocDWU5sYwgOSBDCSbs6FvBs4=;
+	s=arc-20240116; t=1712842093; c=relaxed/simple;
+	bh=rN3vnamxh1y4e19vWKAPhoeeESNA3w+VvGOlWEyFGns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cwgj85CijBP+dGRXQQdvOPE9u5FwRoonKQma4GXaalR0Xo6bOfHvDgfJHi5VKwaPd3OlTgcr0zbCjvatj4JwJ2NodVjVmEn5XWN5fD4QLI6zC7BfGf8lcL7SUrzseTqHvZ4/DV0FHjlRexVb/dJ608hV8YlZXGcBRRVyofr4Tak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=egsevXKs; arc=none smtp.client-ip=62.149.156.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LNQHsr0QVob70HnY5cNwuMe/4+sw4VqBQcWVXkU0AsfbGBwjLljx6FdUUY3JtRWHqLzw0wGr8k0qJZ0aO78jh0sowe1ZAOouyFMSfZei6jSsVjWCClSHFLervuZlMzBEok1qlwe/oe8/cqg6stlNeVy9nI35/cxyteFvz2zKPSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S9Q6Z+W7; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="egsevXKs"
-Received: from engicam ([77.32.15.153])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id uuNiryEQZiznzuuNjrna0P; Thu, 11 Apr 2024 15:22:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1712841744; bh=F/4VlDVKnyWrcnoOPdyocDWU5sYwgOSBDCSbs6FvBs4=;
-	h=Date:From:To:Subject:MIME-Version:Content-Type;
-	b=egsevXKsfLiGmcfxqngWvyYRqUwwUGsUelDN4sDjSGoCnVsbd620za5+cJCMk+W/Y
-	 mFlrOdl/d8B67Sb7x7aTwNdw1bYew+TiM2xO0OUWrijdLb5SCqgX50+ZrSfeXZR0Vl
-	 E1SuY//3GVGyhpJFykUmLy6S9+fRUX4pgTSFcmH6cG2suWbBIpUKLGK68LQuAq/VsY
-	 58MmICNZIcmljeAcJqgPucSnuIFo44IvSgdYzUXxQFKUyu85zoGOO7MFoKgqFyBt6T
-	 9v3HjjcqOWgC/VqWCYH3b1xjyFq6c1nPAyKrzGDRcKV/867Z8/8poVE8VhDd/n1/sT
-	 xfMEd1+4nMzWA==
-Date: Thu, 11 Apr 2024 15:22:22 +0200
-From: Fabio Aiuto <fabio.aiuto@engicam.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/1] regulator: pca9450: make warm reset on PMIC_RST_B
- assertion
-Message-ID: <ZhfkDrDYlTFd1gOJ@engicam>
-References: <20240411100138.366292-1-fabio.aiuto@engicam.com>
- <243d9eb2-aaab-4ede-bd07-aa609b5d149e@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S9Q6Z+W7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712842091; x=1744378091;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rN3vnamxh1y4e19vWKAPhoeeESNA3w+VvGOlWEyFGns=;
+  b=S9Q6Z+W7o1vnYlqo9nMo3eIuBz0Z7vrbM63vn+qexxoeGePkjGXCq5GX
+   UOM3dXq+SsyyhByR5FsVQwOZyyv8MDrfdvM5rRw5io+SVn9sMpjIs2I8N
+   /hsOwMykQ2O5awLRk7NgjXhxg+6koue/ISevnOgryvT8mxq8au0XiLkUJ
+   FqdWpXjZcEOkvZaDxVO5Pstg1z1PHiBg2CYFO+dW0k+QjN34Nv8ZDsDxQ
+   Rku3hXL9rdKFf3IBKyfVfvLlC50K8FPhlw+3Zta1PUuPr6ySuGVrYZAYK
+   6qcm7WZ6c4EcOG6oPOLkIpBjr+obmojlq4wdeikFsgTWWDrVeolDMGtmE
+   g==;
+X-CSE-ConnectionGUID: W3wfzMj5SPOnTsD0KihHqg==
+X-CSE-MsgGUID: bcY6aqeDTJaRmcCl1vat/w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8102458"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="8102458"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 06:28:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="937096973"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="937096973"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2024 06:28:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id EB28532A; Thu, 11 Apr 2024 16:28:06 +0300 (EEST)
+Date: Thu, 11 Apr 2024 16:28:06 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 0/2] gpiolib: acpi: A couple of error checks amendmends
+Message-ID: <20240411132806.GB112498@black.fi.intel.com>
+References: <20240410202243.1658129-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <243d9eb2-aaab-4ede-bd07-aa609b5d149e@sirena.org.uk>
-X-CMAE-Envelope: MS4xfH2JJT/EWTYhzkwzkuiL+ZHgD5zKPRY6eNZmjOR09r9LkMECwzwiJ2HfOKFxE4IZ9BBl4qHWc6ZCkY1/OXP+y3ljkZMeOVgxiXo/6JKrjbuEtEmi9VJ7
- e9rmwPBchV43ggxblYUb/azpNALAT9FpT2Ul6JaVl8blsv68pQQEcLG7NI4QoQyMMJrQmX6DETQFqBd2G/rSfgFrtm9HwhqSyh8+SIIUBM8oWdJ9jU1Hf/uC
- FZh/cFhaXv2Ry447LuMgkw==
+In-Reply-To: <20240410202243.1658129-1-andriy.shevchenko@linux.intel.com>
 
-Dear Mark,
-
-Il Thu, Apr 11, 2024 at 01:37:48PM +0100, Mark Brown ha scritto:
-> On Thu, Apr 11, 2024 at 12:01:37PM +0200, Fabio Aiuto wrote:
-> > Hello all,
-> > 
-> > sorry for spamming, this one have the correct email addresses.
-> > This patch adds a property for to control reset behavior on
-> > PMIC_RST_B assertion.
+On Wed, Apr 10, 2024 at 11:21:45PM +0300, Andy Shevchenko wrote:
+> One error check is moved and one is dropped.
+> No functional changes intended.
 > 
-> Please don't send cover letters for single patches, if there is anything
-> that needs saying put it in the changelog of the patch or after the ---
-> if it's administrative stuff.  This reduces mail volume and ensures that 
-> any important information is recorded in the changelog rather than being
-> lost. 
+> Andy Shevchenko (2):
+>   gpiolib: acpi: Remove never true check in acpi_get_gpiod_by_index()
+>   gpiolib: acpi: Check for errors first in acpi_find_gpio()
 
-I've got it, thanks. Do you want me to send a v3 or are you taking in
-consideration this one?
+Both,
 
-kr
-
-fabio
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
