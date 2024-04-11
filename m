@@ -1,184 +1,80 @@
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [80.241.59.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137DA134BE;
-	Thu, 11 Apr 2024 15:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.59.207
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A38EEAC7
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712847677; cv=none; b=gZwz9o8UvnfvQYfu04jDRV0mIrSUfwwRwK+pd45vzbZtPQMPetq2jOpXYJB6iiyBD++pBJwX6KKBEzV4d6uAr7M2o5bbBv+nZbFW5whJvquazkZ6r4kR1OfWPKnQUFE3tRpoNsqG9T2qg+cRGUkSOG6r+PLPg8Cuw1mMh2Q2AUM=
+	t=1712847765; cv=none; b=pv88BDUr7FZzRc/71O6RwQ2nHzmCLQu/1KLr+10UJmVB/nuaglyPvEeQjgPV/Z+1xj+H9xu5vdopx5ZisM70GEqXvsD3G1iMrF5GnohE3as7i7DN8vuZ8hBG5O8VZtm+27vNSexWoNO3VMK3dYM/grvpWOXcZRW/d9mo1rTQu10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712847677; c=relaxed/simple;
-	bh=4Ukjqm4Uw1XkLoSWFdID5VT/BDuOQuEsIMIYWMR4nv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mfe7+5HXi0F1HQoKrjuu7hvR/YXEcAeaH6SwfMX6RFRTcyzRzpHZ0Comenrxz4AcFNoSfiAvfKjO32XqCsM+DgUZgO4tWjRjKtPxEEeF++oJofXgnyJcyfg/3h2+bSRImksUOVnroJ+aYLTAAhGnqdQwRhZEsEQBnZ3b9R4WvR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=permerror (bad message/signature format); arc=none smtp.client-ip=80.241.59.207
-Authentication-Results:smtp.subspace.kernel.org; dkim=permerror (bad message/signature format)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4VFjMf6XX8z9svy;
-	Thu, 11 Apr 2024 16:51:58 +0200 (CEST)
-From: Marcello Sylvester Bauer <email>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Marcello Sylvester Bauer <sylv@sylv.io>,
-	Marcello Sylvester Bauer <marcello.bauer@9elements.com>,
-	=?UTF-8?q?Matthias=20St=C3=B6ckl?= <matthias.stoeckl@secunet.com>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] usb: gadget: dummy_hcd: Switch to hrtimer transfer scheduler
-Date: Thu, 11 Apr 2024 16:51:28 +0200
-Message-ID: <57a1c2180ff74661600e010c234d1dbaba1d0d46.1712843963.git.sylv@sylv.io>
-In-Reply-To: <cover.1712843963.git.sylv@sylv.io>
-References: <cover.1712843963.git.sylv@sylv.io>
+	s=arc-20240116; t=1712847765; c=relaxed/simple;
+	bh=GxW7D8iDkkqi0EJ/T0AcUYMtwyqpLWSID7jQo7v8e2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nVlxmgty2fI69dErLsbwX5/h4roGzjglohjXLe4tKh6Hp7lTe4II2ghHtNvfmrgQnzUNg2j6SboO5eh+3WjfsVH3FL3CJlEDw2YnhgY2Ts7Ig88tGKwgMlwLQUwZSSXxIqoHqG1BbjOqE5fRRETrA4nK2xZuW5NK1Uyf00zamoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55C5C113E;
+	Thu, 11 Apr 2024 08:03:12 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08B223F6C4;
+	Thu, 11 Apr 2024 08:02:39 -0700 (PDT)
+Date: Thu, 11 Apr 2024 16:02:37 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 01/31] x86/resctrl: Fix allocation of cleanest CLOSID
+ on platforms with no monitors
+Message-ID: <Zhf7jZFPARAWFDyO@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-2-james.morse@arm.com>
+ <1e19965c-51f2-4f7a-8d29-e40f4e54a72c@redhat.com>
+ <8d1d39ca-60f0-47e9-a090-f630c6df19ae@intel.com>
+ <735f18df-0f63-44ba-adfc-70ead9ce9495@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 4VFjMf6XX8z9svy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <735f18df-0f63-44ba-adfc-70ead9ce9495@redhat.com>
 
-From: Marcello Sylvester Bauer <sylv@sylv.io>
+On Tue, Apr 09, 2024 at 05:06:03PM +0200, David Hildenbrand wrote:
+> On 09.04.24 17:02, Reinette Chatre wrote:
+> > Hi David,
+> > 
+> 
+> Hi,
+> 
+> > (Thank you very much for taking a look at these)
+> 
+> I'm planning on reviewing more; as most of resctrl is code I haven't really
+> read before, I'm not able to make progress as fast as I normally would in
+> core-MM ... :)
 
-The dummy_hcd transfer scheduler assumes that the internal kernel timer
-frequency is set to 1000Hz to give a polling interval of 1ms. Reducing
-the timer frequency will result in an anti-proportional reduction in
-transfer performance. Switch to a hrtimer to decouple this association.
+[...]
 
-Signed-off-by: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
----
- drivers/usb/gadget/udc/dummy_hcd.c | 35 +++++++++++++++++-------------
- 1 file changed, 20 insertions(+), 15 deletions(-)
+> -- 
+> Cheers,
+> 
+> David / dhildenb
 
-diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-index 0953e1b5c030..dab559d8ee8c 100644
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -30,7 +30,7 @@
- #include <linux/slab.h>
- #include <linux/errno.h>
- #include <linux/init.h>
--#include <linux/timer.h>
-+#include <linux/hrtimer.h>
- #include <linux/list.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
-@@ -240,7 +240,7 @@ enum dummy_rh_state {
- struct dummy_hcd {
- 	struct dummy			*dum;
- 	enum dummy_rh_state		rh_state;
--	struct timer_list		timer;
-+	struct hrtimer			timer;
- 	u32				port_status;
- 	u32				old_status;
- 	unsigned long			re_timeout;
-@@ -1301,8 +1301,8 @@ static int dummy_urb_enqueue(
- 		urb->error_count = 1;		/* mark as a new urb */
- 
- 	/* kick the scheduler, it'll do the rest */
--	if (!timer_pending(&dum_hcd->timer))
--		mod_timer(&dum_hcd->timer, jiffies + 1);
-+	if (!hrtimer_active(&dum_hcd->timer))
-+		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
- 
-  done:
- 	spin_unlock_irqrestore(&dum_hcd->dum->lock, flags);
-@@ -1323,7 +1323,7 @@ static int dummy_urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
- 	rc = usb_hcd_check_unlink_urb(hcd, urb, status);
- 	if (!rc && dum_hcd->rh_state != DUMMY_RH_RUNNING &&
- 			!list_empty(&dum_hcd->urbp_list))
--		mod_timer(&dum_hcd->timer, jiffies);
-+		hrtimer_start(&dum_hcd->timer, ns_to_ktime(0), HRTIMER_MODE_REL);
- 
- 	spin_unlock_irqrestore(&dum_hcd->dum->lock, flags);
- 	return rc;
-@@ -1777,7 +1777,7 @@ static int handle_control_request(struct dummy_hcd *dum_hcd, struct urb *urb,
-  * drivers except that the callbacks are invoked from soft interrupt
-  * context.
-  */
--static void dummy_timer(struct timer_list *t)
-+static enum hrtimer_restart dummy_timer(struct hrtimer *t)
- {
- 	struct dummy_hcd	*dum_hcd = from_timer(dum_hcd, t, timer);
- 	struct dummy		*dum = dum_hcd->dum;
-@@ -1808,8 +1808,6 @@ static void dummy_timer(struct timer_list *t)
- 		break;
- 	}
- 
--	/* FIXME if HZ != 1000 this will probably misbehave ... */
--
- 	/* look at each urb queued by the host side driver */
- 	spin_lock_irqsave(&dum->lock, flags);
- 
-@@ -1817,7 +1815,7 @@ static void dummy_timer(struct timer_list *t)
- 		dev_err(dummy_dev(dum_hcd),
- 				"timer fired with no URBs pending?\n");
- 		spin_unlock_irqrestore(&dum->lock, flags);
--		return;
-+		return HRTIMER_NORESTART;
- 	}
- 	dum_hcd->next_frame_urbp = NULL;
- 
-@@ -1995,10 +1993,12 @@ static void dummy_timer(struct timer_list *t)
- 		dum_hcd->udev = NULL;
- 	} else if (dum_hcd->rh_state == DUMMY_RH_RUNNING) {
- 		/* want a 1 msec delay here */
--		mod_timer(&dum_hcd->timer, jiffies + msecs_to_jiffies(1));
-+		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
- 	}
- 
- 	spin_unlock_irqrestore(&dum->lock, flags);
-+
-+	return HRTIMER_NORESTART;
- }
- 
- /*-------------------------------------------------------------------------*/
-@@ -2387,7 +2387,7 @@ static int dummy_bus_resume(struct usb_hcd *hcd)
- 		dum_hcd->rh_state = DUMMY_RH_RUNNING;
- 		set_link_state(dum_hcd);
- 		if (!list_empty(&dum_hcd->urbp_list))
--			mod_timer(&dum_hcd->timer, jiffies);
-+			hrtimer_start(&dum_hcd->timer, ns_to_ktime(0), HRTIMER_MODE_REL);
- 		hcd->state = HC_STATE_RUNNING;
- 	}
- 	spin_unlock_irq(&dum_hcd->dum->lock);
-@@ -2465,7 +2465,8 @@ static DEVICE_ATTR_RO(urbs);
- 
- static int dummy_start_ss(struct dummy_hcd *dum_hcd)
- {
--	timer_setup(&dum_hcd->timer, dummy_timer, 0);
-+	hrtimer_init(&dum_hcd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	dum_hcd->timer.function = dummy_timer;
- 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
- 	dum_hcd->stream_en_ep = 0;
- 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
-@@ -2494,7 +2495,8 @@ static int dummy_start(struct usb_hcd *hcd)
- 		return dummy_start_ss(dum_hcd);
- 
- 	spin_lock_init(&dum_hcd->dum->lock);
--	timer_setup(&dum_hcd->timer, dummy_timer, 0);
-+	hrtimer_init(&dum_hcd->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	dum_hcd->timer.function = dummy_timer;
- 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
- 
- 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
-@@ -2513,8 +2515,11 @@ static int dummy_start(struct usb_hcd *hcd)
- 
- static void dummy_stop(struct usb_hcd *hcd)
- {
--	device_remove_file(dummy_dev(hcd_to_dummy_hcd(hcd)), &dev_attr_urbs);
--	dev_info(dummy_dev(hcd_to_dummy_hcd(hcd)), "stopped\n");
-+	struct dummy_hcd	*dum_hcd = hcd_to_dummy_hcd(hcd);
-+
-+	hrtimer_cancel(&dum_hcd->timer);
-+	device_remove_file(dummy_dev(dum_hcd), &dev_attr_urbs);
-+	dev_info(dummy_dev(dum_hcd), "stopped\n");
- }
- 
- /*-------------------------------------------------------------------------*/
--- 
-2.44.0
+Thanks, all review is appreciated (I'm somewhat in the same boat myself,
+but gradually finding my way around...)
 
+Cheers
+---Dave
