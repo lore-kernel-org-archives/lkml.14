@@ -1,137 +1,269 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF6847A40;
-	Thu, 11 Apr 2024 16:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1269481AA;
+	Thu, 11 Apr 2024 16:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712854233; cv=none; b=JqxAfIEPJAsSXTnSBLJdAMbtpHbI8DpPtSZWloIKrSFDScgdY5on+BVCbivnxdXX5BSCDymhC0iaxkyN9daDNsgFDJrwS1fOGfYOqvBhFiJ2XK2/ssPLsxbWcciOdGe3ONhSwKqkW7bDZdmKHHgJZpHuqwPWXtdXC/rUIIne01M=
+	t=1712854278; cv=none; b=ikE8S/IVx7qMnWkTZT3ss+WTbVcgOMEG+gARqmDXAALZcw06k1XTEstvkdyqkZvfjU4a+ENFYsCjgCoqrp0R6QGiSH/u4gznJQttct1szN3SP9U6uvbZVbeiWbAjpuJAOpPQue3Kun5VZJ0lC5g5SDRRjfAVsNLyW3VQ5Nqikms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712854233; c=relaxed/simple;
-	bh=nrMuPIFuCVO7sj/iecEjqXTHll+3KKDW+NZvU4wMcGU=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UxdPmQkGQvL49U2vvzpqcv+nOgSLsaIzOb+5KFew2Mkd7HJOJwFHiOXTGr3L+12j/nlk6xdzxIsh4RR4/Pgq1ErQ8YriZ5SL6kSPh7mPos6X1H9q9fti87SLPHzchiBFDoyrmsPD/G3ii5TMDQQY26dnSJ94QeIzS988G2IRS5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.1.105] (178.176.74.224) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Thu, 11 Apr
- 2024 19:50:25 +0300
-Subject: Re: [PATCH net 3/4] net: ravb: Fix GbEth jumbo packet RX checksum
- handling
-To: Paul Barker <paul.barker.ct@bp.renesas.com>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240411114434.26186-1-paul.barker.ct@bp.renesas.com>
- <20240411114434.26186-4-paul.barker.ct@bp.renesas.com>
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <c9c624c0-cd26-bceb-e011-7debce338493@omp.ru>
-Date: Thu, 11 Apr 2024 19:50:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+	s=arc-20240116; t=1712854278; c=relaxed/simple;
+	bh=d1/jptrgMSQUzJQQQ1uzHJiUIs9jlC0C1nX9hEjOPGw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q1EE77Fipq/G3QkLPuoFxXaXb5Tx24rSCD7X+lWPgVaYSNdFG4R/GjSvqg7Z0/SkyW4Lhr+Noh/Irz8e79EKnSCvhfQvYfFexczbWNIGkHAN8hH2wsemU9ob/DFItEke3BQOWwq3vXQuKTmIjgBmdVWST9YcetzwjhqZNPsTx+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H3Li+qQj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MVdoSrAm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H3Li+qQj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MVdoSrAm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712854274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ukR6eilnG/pWmnW4ihYd+kVMND3BQSTM5uSyxQDF9cM=;
+	b=H3Li+qQjhMKedJ3HsEeGikAzfFe1bXY/GeUuFQG21667CdpQXhWwlRm2qbA5ZzE7lf898e
+	66wTsqPiQ/5JF8Cein7BMswM/oofPnLOs3ki07lBKDGSP8x1d/Kt9V7gbF/nI3BwPyWYpY
+	oaBvxfBitH8cobGlefOnELtX9C6btHC6NVVoj5BKVx7+r6e34mOgqJTy5FpbILrDMxP7Hv
+	Vr3rNW3ajcP+43V9LpqL+QmG11VNQD77YEifALOYbHmycz2oNSsL8mmvI7EECRZ17k6jjf
+	95wBy9RxJqIJoluO8jm9IlJMguKB/vT96GeIEOxB4JYGGkRklHFqr+fH86pUhA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712854274;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ukR6eilnG/pWmnW4ihYd+kVMND3BQSTM5uSyxQDF9cM=;
+	b=MVdoSrAmMvg+YHWpF7/tmr49WE81XVIeM6P/Kz79N7Ptj6Dy88c80NB3myObBYbd/F1c8f
+	5ie9qY5SNllqEjDQ==
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, LKML
+ <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Lu Baolu
+ <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, Dave Hansen
+ <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>
+Cc: Paul Luse <paul.e.luse@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, Raj Ashok
+ <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>,
+ jim.harris@samsung.com, a.manzanares@samsung.com, Bjorn Helgaas
+ <helgaas@kernel.org>, guang.zeng@intel.com, robert.hoo.linux@gmail.com,
+ Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v2 05/13] x86/irq: Reserve a per CPU IDT vector for
+ posted MSIs
+In-Reply-To: <20240405223110.1609888-6-jacob.jun.pan@linux.intel.com>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+ <20240405223110.1609888-6-jacob.jun.pan@linux.intel.com>
+Date: Thu, 11 Apr 2024 18:51:14 +0200
+Message-ID: <87edbb267x.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240411114434.26186-4-paul.barker.ct@bp.renesas.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 04/11/2024 16:32:17
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 184677 [Apr 11 2024]
-X-KSE-AntiSpam-Info: Version: 6.1.0.4
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 16 0.3.16
- 6e64c33514fcbd07e515710c86ba61de7f56194e
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.74.224
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 04/11/2024 16:36:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 4/11/2024 10:51:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain
 
-On 4/11/24 2:44 PM, Paul Barker wrote:
+On Fri, Apr 05 2024 at 15:31, Jacob Pan wrote:
+> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
+> index d18bfb238f66..1ee00be8218d 100644
+> --- a/arch/x86/include/asm/irq_vectors.h
+> +++ b/arch/x86/include/asm/irq_vectors.h
+> @@ -97,9 +97,16 @@
+>  
+>  #define LOCAL_TIMER_VECTOR		0xec
+>  
+> +/*
+> + * Posted interrupt notification vector for all device MSIs delivered to
+> + * the host kernel.
+> + */
+> +#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
+>  #define NR_VECTORS			 256
+>  
+> -#ifdef CONFIG_X86_LOCAL_APIC
+> +#ifdef CONFIG_X86_POSTED_MSI
+> +#define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
+> +#elif defined(CONFIG_X86_LOCAL_APIC)
+>  #define FIRST_SYSTEM_VECTOR		LOCAL_TIMER_VECTOR
+>  #else
+>  #define FIRST_SYSTEM_VECTOR		NR_VECTORS
 
-> Sending a 7kB ping packet to the RZ/G2L in Linux v6.9-rc2 causes the
-> following backtrace:
-> 
-> 	WARNING: CPU: 0 PID: 0 at include/linux/skbuff.h:3127 skb_trim+0x30/0x38
-> 	Modules linked in:
-> 	CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W          6.9.0-rc1-00222-gde11614025b1 #3
-> 	Hardware name: Renesas SMARC EVK based on r9a07g044l2 (DT)
-> 	pstate: 20400005 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> 	pc : skb_trim+0x30/0x38
-> 	lr : ravb_rx_csum_gbeth+0x40/0x90
-> 	sp : ffff800080003d40
-> 	x29: ffff800080003d40 x28: 0000000000000400 x27: ffff00000d0f0000
-> 	x26: 0000000000000001 x25: ffff800080003e84 x24: 0000000000000e52
-> 	x23: 0000000000000000 x22: ffff00000d0f0960 x21: 000000000000ffff
-> 	x20: 000000000000f6ff x19: ffff00000cf4cb00 x18: 0000000000000000
-> 	x17: ffff7ffffdd4f000 x16: ffff800080000000 x15: e7e6e5e4e3e2e1e0
-> 	x14: dfdedddcdbdad9d8 x13: 0000131211100f0e x12: 0d0c0b0a09080706
-> 	x11: 0000000013121110 x10: 0000000000000000 x9 : 0000000000000001
-> 	x8 : ffff800080003cf0 x7 : 0000000000000000 x6 : ffff00007faf4590
-> 	x5 : 000000000010000b x4 : a1a8362deecb53ea x3 : 0000000000000080
-> 	x2 : 00000000ffff0000 x1 : 000000000cf4ccfc x0 : ffff00000cf4cb00
-> 	Call trace:
-> 	 skb_trim+0x30/0x38
-> 	 ravb_rx_gbeth+0x56c/0x5cc
-> 	 ravb_poll+0xa0/0x204
-> 	 __napi_poll+0x38/0x17c
-> 	 net_rx_action+0x124/0x268
-> 	 __do_softirq+0x100/0x26c
-> 	 ____do_softirq+0x10/0x1c
-> 	 call_on_irq_stack+0x24/0x4c
-> 	 do_softirq_own_stack+0x1c/0x2c
-> 	 irq_exit_rcu+0xbc/0xd8
-> 	 el1_interrupt+0x38/0x68
-> 	 el1h_64_irq_handler+0x18/0x24
-> 	 el1h_64_irq+0x64/0x68
-> 	 default_idle_call+0x28/0x3c
-> 	 do_idle+0x204/0x25c
-> 	 cpu_startup_entry+0x38/0x3c
-> 	 kernel_init+0x0/0x1d8
-> 	 start_kernel+0x504/0x5f0
-> 	 __primary_switched+0x80/0x88
-> 	---[ end trace 0000000000000000 ]---
-> 
-> This is caused by ravb_rx_gbeth() calling ravb_rx_csum_gbeth() with the
-> wrong skb for a packet which spans multiple descriptors. To fix this,
-> use the correct skb.
-> 
-> Fixes: c2da9408579d ("ravb: Add Rx checksum offload support for GbEth")
-> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+This is horrible and we had attempts before to make the system vector
+space dense. They all did not work and making an exception for this is
+not what we want.
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+If we really care then we do it proper for _all_ of them. Something like
+the uncompiled below. There is certainly a smarter way to do the build
+thing, but my kbuild foo is rusty.
 
-[...]
+Thanks,
 
-MBR, Sergey
+        tglx
+---
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -245,6 +245,7 @@ archscripts: scripts_basic
+ 
+ archheaders:
+ 	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
++	$(Q)$(MAKE) $(build)=arch/x86/kernel/irqvectors all
+ 
+ ###
+ # Kernel objects
+--- a/arch/x86/include/asm/irq_vectors.h
++++ b/arch/x86/include/asm/irq_vectors.h
+@@ -43,59 +43,46 @@
+  */
+ #define ISA_IRQ_VECTOR(irq)		(((FIRST_EXTERNAL_VECTOR + 16) & ~15) + irq)
+ 
++#ifndef __ASSEMBLY__
+ /*
+- * Special IRQ vectors used by the SMP architecture, 0xf0-0xff
+- *
+- *  some of the following vectors are 'rare', they are merged
+- *  into a single vector (CALL_FUNCTION_VECTOR) to save vector space.
+- *  TLB, reschedule and local APIC vectors are performance-critical.
++ * Special IRQ vectors used by the SMP architecture, 0xff and downwards
+  */
++enum {
++	__SPURIOUS_APIC_VECTOR,
++	__ERROR_APIC_VECTOR,
++	__RESCHEDULE_VECTOR,
++	__CALL_FUNCTION_VECTOR,
++	__CALL_FUNCTION_SINGLE_VECTOR,
++	__THERMAL_APIC_VECTOR,
++	__THRESHOLD_APIC_VECTOR,
++	__REBOOT_VECTOR,
++	__X86_PLATFORM_IPI_VECTOR,
++	__IRQ_WORK_VECTOR,
++	__DEFERRED_ERROR_VECTOR,
+ 
+-#define SPURIOUS_APIC_VECTOR		0xff
+-/*
+- * Sanity check
+- */
+-#if ((SPURIOUS_APIC_VECTOR & 0x0F) != 0x0F)
+-# error SPURIOUS_APIC_VECTOR definition error
++#if IS_ENABLED(CONFIG_HYPERVISOR_GUEST)
++	__HYPERVISOR_CALLBACK_VECTOR,
+ #endif
+ 
+-#define ERROR_APIC_VECTOR		0xfe
+-#define RESCHEDULE_VECTOR		0xfd
+-#define CALL_FUNCTION_VECTOR		0xfc
+-#define CALL_FUNCTION_SINGLE_VECTOR	0xfb
+-#define THERMAL_APIC_VECTOR		0xfa
+-#define THRESHOLD_APIC_VECTOR		0xf9
+-#define REBOOT_VECTOR			0xf8
+-
+-/*
+- * Generic system vector for platform specific use
+- */
+-#define X86_PLATFORM_IPI_VECTOR		0xf7
+-
+-/*
+- * IRQ work vector:
+- */
+-#define IRQ_WORK_VECTOR			0xf6
+-
+-/* 0xf5 - unused, was UV_BAU_MESSAGE */
+-#define DEFERRED_ERROR_VECTOR		0xf4
+-
+-/* Vector on which hypervisor callbacks will be delivered */
+-#define HYPERVISOR_CALLBACK_VECTOR	0xf3
+-
+-/* Vector for KVM to deliver posted interrupt IPI */
+-#define POSTED_INTR_VECTOR		0xf2
+-#define POSTED_INTR_WAKEUP_VECTOR	0xf1
+-#define POSTED_INTR_NESTED_VECTOR	0xf0
+-
+-#define MANAGED_IRQ_SHUTDOWN_VECTOR	0xef
++#if IS_ENABLED(CONFIG_KVM)
++	/* Vector for KVM to deliver posted interrupt IPI */
++	__POSTED_INTR_VECTOR,
++	__POSTED_INTR_WAKEUP_VECTOR,
++	__POSTED_INTR_NESTED_VECTOR,
++#endif
++	__MANAGED_IRQ_SHUTDOWN_VECTOR,
+ 
+ #if IS_ENABLED(CONFIG_HYPERV)
+-#define HYPERV_REENLIGHTENMENT_VECTOR	0xee
+-#define HYPERV_STIMER0_VECTOR		0xed
++	__HYPERV_REENLIGHTENMENT_VECTOR,
++	__HYPERV_STIMER0_VECTOR,
+ #endif
++	__LOCAL_TIMER_VECTOR,
++};
++#endif /* !__ASSEMBLY__ */
+ 
+-#define LOCAL_TIMER_VECTOR		0xec
++#ifndef COMPILE_OFFSETS
++#include <asm/irqvectors.h>
++#endif
+ 
+ #define NR_VECTORS			 256
+ 
+--- /dev/null
++++ b/arch/x86/kernel/irqvectors/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++
++irqvectors-file	:= arch/$(SRCARCH)/include/generated/asm/irqvectors.h
++targets 	+= arch/$(SRCARCH)/kernel/irqvectors/irqvectors.s
++
++$(irqvectors-file): arch/$(SRCARCH)/kernel/irqvectors/irqvectors.s FORCE
++	$(call filechk,offsets,__ASM_IRQVECTORS_H__)
++
++PHONY += all
++all: $(irqvectors-file)
++	@:
+--- /dev/null
++++ b/arch/x86/kernel/irqvectors/irqvectors.c
+@@ -0,0 +1,42 @@
++// SPDX-License-Identifier: GPL-2.0
++#define COMPILE_OFFSETS
++
++#include <linux/kbuild.h>
++#include <asm/irq_vectors.h>
++
++#define VECNR(v)	(0xFF - __##v)
++#define VECTOR(v)	DEFINE(v, VECNR(v))
++
++static void __used common(void)
++{
++	VECTOR(SPURIOUS_APIC_VECTOR);
++	VECTOR(ERROR_APIC_VECTOR);
++	VECTOR(RESCHEDULE_VECTOR);
++	VECTOR(CALL_FUNCTION_VECTOR);
++	VECTOR(CALL_FUNCTION_SINGLE_VECTOR);
++	VECTOR(THERMAL_APIC_VECTOR);
++	VECTOR(THRESHOLD_APIC_VECTOR);
++	VECTOR(REBOOT_VECTOR);
++	VECTOR(X86_PLATFORM_IPI_VECTOR);
++	VECTOR(IRQ_WORK_VECTOR);
++	VECTOR(DEFERRED_ERROR_VECTOR);
++
++#if IS_ENABLED(CONFIG_HYPERVISOR_GUEST)
++	VECTOR(HYPERVISOR_CALLBACK_VECTOR);
++#endif
++
++#if IS_ENABLED(CONFIG_KVM)
++	/* Vector for KVM to deliver posted interrupt IPI */
++	VECTOR(POSTED_INTR_VECTOR);
++	VECTOR(POSTED_INTR_WAKEUP_VECTOR);
++	VECTOR(POSTED_INTR_NESTED_VECTOR);
++#endif
++	VECTOR(MANAGED_IRQ_SHUTDOWN_VECTOR);
++
++#if IS_ENABLED(CONFIG_HYPERV)
++	VECTOR(HYPERV_REENLIGHTENMENT_VECTOR);
++	VECTOR(HYPERV_STIMER0_VECTOR);
++#endif
++	VECTOR(LOCAL_TIMER_VECTOR);
++}
++
+
+
+
