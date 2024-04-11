@@ -1,113 +1,91 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-u-204.mailbox.org (mout-u-204.mailbox.org [80.241.59.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FE4101DA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A9CDDC5;
+	Thu, 11 Apr 2024 15:01:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.59.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712847633; cv=none; b=pIeA+QKvXTQPqOjYfg2ujA5pYnMN7nMaTGjxjwPmr8mfE7GlVoRsJw0twTFad/GHYBl+ZayQ7X/OcmpfET9HIOVYPmCDBUIIveaqDDFM3PRIM3RizVmLPgotmPkvhFpyBh6sfC73qG5Fd/AL6bx4VgolrubzMBaBPEwO6z7tFuA=
+	t=1712847669; cv=none; b=ClKelO+Zpzvulj+7C4v6ZY10YWMlwiNGEFwEk353aTuT144WKDbkAUtqLVsRXGLePOFCvaCnxPups/01djiVr/eEK/6p1D9qloxQhnlOS3PzTcqO4cA8b213tsGc5uZaMRXA5m/3L4dc1yLaNFYyzZsC10BZllWzWT5hmjCv/jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712847633; c=relaxed/simple;
-	bh=dvM6yc+Dk+cKTgmEM4dCnyBu8WZu/Jpf3J4qPjeVWEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmaFTT8UZotnWbmB78X5n+YDVuXspX8T5QWCr5IQBmYXkv2w0q7oJMQEaF8aZHWgKmrE/5N9dHU7ETmxJDZsdFLbIIVBLFFOSKYWiSFGwJDnp997+8mse3rUjZ4Cut2S+/QKULqDkIq3SzEwfX6NNtAqhVAxXOHkAk7lzgXy4lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NnLLIQ9+; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NnLLIQ9+"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56fead80bacso885665a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712847630; x=1713452430; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4AAP2GSXMI8XPS99qq0u7uGwu5bsp52Ho72AkcY7Vto=;
-        b=NnLLIQ9+zRf/raXKvF6SgJHLYkre9/4mJQ0dA8Rh7AgDZSFQIGmxyt9TxROtoDFiGK
-         OU+lXqmYikk59EnJemOarSJVCzFY1TpyVUenQz3/+eaBIFQvAwFQIRkatb9GtlaQQu3Y
-         7UMIiyL3kXKz7z6MAimwm51hH/IVO14BlptMxEY8J373BXdvhVRaMwSZP29lzCnkw7qb
-         6SgjHYfPmB6Kg1ZoumJphBLgaCfB9rpTc9e1pgzpgIV+iDhDzpX2TLwMm29qlQc5kPqC
-         yzhUnXskoLl5xfz9+SLaX5bjVyQ8hhQ76t3UiJC2qVuRwM+2FC4qcoNMBdC6rAbZ6LfG
-         Yh/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712847630; x=1713452430;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4AAP2GSXMI8XPS99qq0u7uGwu5bsp52Ho72AkcY7Vto=;
-        b=SK2vUdadMujg7j32woP5bBf32FuHn/jrVbzKadi3G3/EUNskO43LkgyeI/5iEYfv9D
-         vOYPyeUKdpd1eixJZKJBsez9aNU8Op2WI8sDBy0cYA2DDplocgCwjkx4LK00OfWhkch5
-         +KjeTash6y07oWT7EwhXPZ/UcI/FIF8KLldwBYCFo5UFjMcUzLImiaGxZu4q1VVU4+3v
-         KMggbIpZRABrlptdTvdGzaJsm+qxF0VMZmmeQjVh2YIORXi3pFwVgZKUKDl1WnalMXYu
-         jpsXWAPua5HIPcSiG2GevD5WhrzerMvZSw2DqtTdGJYVjtGtZ8sXpTHeGA6GXxvAQxsz
-         rVXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXj5kN8OnNvWi5JV/fWpKBusrwvR6cTaGUtmws/5UvNhsbwW+0xJWcClItPAWetPjp4/OehaWZ8giPKxRt+7DKG7SCdxccY25hO+uxL
-X-Gm-Message-State: AOJu0Yzbzgno9U4kjX5hPCu2gz5A0iy2MvBq49JcXBTdSPbVo84bZ0a9
-	FKDoU/5cLdURXvF4DoNSWgOtjy15wSJNg59pzXCo0M8rNUoBZmiNiE2IXKNF0pk=
-X-Google-Smtp-Source: AGHT+IHKuxw3VXAdRk5CGOofjhK2As1WNciZ/SxTO3eBCva4YM3a3X0Ku7wGIQlM2F3nXzy4iTRQag==
-X-Received: by 2002:a17:906:b24a:b0:a52:129d:ca66 with SMTP id ce10-20020a170906b24a00b00a52129dca66mr3090939ejb.21.1712847629683;
-        Thu, 11 Apr 2024 08:00:29 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id h24-20020a17090634d800b00a51b3d4bb39sm829976ejb.59.2024.04.11.08.00.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:00:29 -0700 (PDT)
-Date: Thu, 11 Apr 2024 18:00:25 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: David Gow <davidgow@google.com>, Will Deacon <will@kernel.org>,
-	mic@digikod.net, keescook@chromium.org, rmoar@google.com,
-	lkft-triage@lists.linaro.org, kunit-dev@googlegroups.com,
-	linux-kernel@vger.kernel.org, peterz@infradead.org,
-	mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-	anders.roxell@linaro.org, arnd@arndb.de, linux@roeck-us.net,
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Subject: Re: BUG: KASAN: null-ptr-deref in _raw_spin_lock_irq next-20240410
-Message-ID: <f2d02e35-185e-44d1-9b58-1034336e2e0d@moroto.mountain>
-References: <20240410102710.35911-1-naresh.kamboju@linaro.org>
- <20240410152307.GA25111@willie-the-truck>
- <CABVgOSmJX=scCGZ7FWafpKB8CdQD17Uh5MuTeoFx2BhGC0DMSw@mail.gmail.com>
- <CA+G9fYuuLXnVuc2fqy_-EY3QBiUxroU9uw74vZ2i08qW=-q1tQ@mail.gmail.com>
- <CA+G9fYt6U4YzYGvYWxDVvUVKNc0pgVYiGafZ5_OSEf=5r1=YYA@mail.gmail.com>
+	s=arc-20240116; t=1712847669; c=relaxed/simple;
+	bh=tmaDp/QcCqlmZkdQph/55Yo3msDZ1EbEfOjyva7sbr8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GQ6H7js6wqjkcktavgD4oFW4WMI2Dkk6GW6DXNzRpwxKFFDvk+njdpT4KvMSfMQE1vub4/eqs0aeBxUFZDdl9gNp43K6Tye97cPr8mfG+wJ+1iZf3sjS3vB+8XDA091dz8yxsDjD/SFFPwWW/k5azOId1dyMonXNFPtPJTyak6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=permerror (bad message/signature format); arc=none smtp.client-ip=80.241.59.204
+Authentication-Results:smtp.subspace.kernel.org; dkim=permerror (bad message/signature format)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-u-204.mailbox.org (Postfix) with ESMTPS id 4VFjMk09PRz9t9r;
+	Thu, 11 Apr 2024 16:52:02 +0200 (CEST)
+From: Marcello Sylvester Bauer <email>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Marcello Sylvester Bauer <sylv@sylv.io>,
+	Marcello Sylvester Bauer <marcello.bauer@9elements.com>,
+	=?UTF-8?q?Matthias=20St=C3=B6ckl?= <matthias.stoeckl@secunet.com>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 2/2] usb: gadget: dummy_hcd: Set transfer interval to 1 microframe
+Date: Thu, 11 Apr 2024 16:51:29 +0200
+Message-ID: <6295dbb84ca76884551df9eb157cce569377a22c.1712843963.git.sylv@sylv.io>
+In-Reply-To: <cover.1712843963.git.sylv@sylv.io>
+References: <cover.1712843963.git.sylv@sylv.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYt6U4YzYGvYWxDVvUVKNc0pgVYiGafZ5_OSEf=5r1=YYA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 08:20:55PM +0530, Naresh Kamboju wrote:
-> 
-> I use to notice kernel panic while running kunit tests
-> now I have noticed this
-> 
-> Unable to handle kernel paging request at virtual address
-> KASAN: null-ptr-deref in range
-> pc : kunit_test_null_dereference (lib/kunit/kunit-test.c:119)
-> lr : kunit_generic_run_threadfn_adapter (lib/kunit/try-catch.c:31)
-> 
-> The kunit tests run to completion and the system is stable.
-> Kernel did not panic.
-> 
+From: Marcello Sylvester Bauer <sylv@sylv.io>
 
-[ Snip ]
+Currently, the transfer polling interval is set to 1ms, which is the
+frame rate of full-speed and low-speed USB. The USB 2.0 specification
+introduces microframes (125 microseconds) to improve the timing
+precision of data transfers.
 
-> <0>[   76.808597] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
-> <4>[   76.809876] Modules linked in:
-> <4>[   76.812055] CPU: 1 PID: 567 Comm: kunit_try_catch Tainted: G
-> B            N 6.9.0-rc3-next-20240410 #1
-> <4>[   76.812987] Hardware name: linux,dummy-virt (DT)
-> <4>[   76.814123] pstate: 12400009 (nzcV daif +PAN -UAO +TCO -DIT
-> -SSBS BTYPE=--)
-> <4>[ 76.814947] pc : kunit_test_null_dereference (lib/kunit/kunit-test.c:119)
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is a new intentional NULL dereferencer that was added yesterday.
+Reducing the transfer interval to 1 microframe increases data throughput
+for high-speed and super-speed USB communication
 
-Maybe these should have a big printk, "Intentional NULL dereference
-coming up!\n".
+Signed-off-by: Marcello Sylvester Bauer <marcello.bauer@9elements.com>
+Signed-off-by: Marcello Sylvester Bauer <sylv@sylv.io>
+---
+ drivers/usb/gadget/udc/dummy_hcd.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-regards,
-dan carpenter
+diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+index dab559d8ee8c..f37b0d8386c1 100644
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -50,6 +50,8 @@
+ #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
+ #define POWER_BUDGET_3	900	/* in mA */
+ 
++#define DUMMY_TIMER_INT_NSECS	125000 /* 1 microframe */
++
+ static const char	driver_name[] = "dummy_hcd";
+ static const char	driver_desc[] = "USB Host+Gadget Emulator";
+ 
+@@ -1302,7 +1304,7 @@ static int dummy_urb_enqueue(
+ 
+ 	/* kick the scheduler, it'll do the rest */
+ 	if (!hrtimer_active(&dum_hcd->timer))
+-		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
++		hrtimer_start(&dum_hcd->timer, ns_to_ktime(DUMMY_TIMER_INT_NSECS), HRTIMER_MODE_REL);
+ 
+  done:
+ 	spin_unlock_irqrestore(&dum_hcd->dum->lock, flags);
+@@ -1993,7 +1995,7 @@ static enum hrtimer_restart dummy_timer(struct hrtimer *t)
+ 		dum_hcd->udev = NULL;
+ 	} else if (dum_hcd->rh_state == DUMMY_RH_RUNNING) {
+ 		/* want a 1 msec delay here */
+-		hrtimer_start(&dum_hcd->timer, ms_to_ktime(1), HRTIMER_MODE_REL);
++		hrtimer_start(&dum_hcd->timer, ns_to_ktime(DUMMY_TIMER_INT_NSECS), HRTIMER_MODE_REL);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&dum->lock, flags);
+-- 
+2.44.0
 
