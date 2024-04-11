@@ -1,325 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CB879FD;
-	Thu, 11 Apr 2024 10:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670841E48E;
+	Thu, 11 Apr 2024 10:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832602; cv=none; b=J6Zu6VuaF7TpDjYcUyv+Ecm2IbfoU3NBMN4dQSmWFD8Dn6MD+jNy7f8wtZTQxiOJvKjt9vv4ftGjPo58yHFagYogdhmcJtHm+Vkqn6dIBU20Yccw+QzyfQ8kV/V1kpAxDLsY4BiGYSaHnGwK7251Cf2iz1VH81RuVa9jc7ZiW4w=
+	t=1712832615; cv=none; b=rrfz0jqpIP0BhJKWvaFYu12kcAfnAiT4ZfcHkEGH4rv2lDa+AlIppd1pU9Gu9CGM2PqLdxuLVxSRS0QFsS6q5MkLmGFvjz84shXKwm/aRBbSIxf3FccwHHcvIH3/q0s8IrClPA9l2YPdw5HPL5KQRCtuTQj2xTDREsv9SjroCfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712832602; c=relaxed/simple;
-	bh=9dioLCwe2gL/VOYhX/ypV3hnwp7uRX4Q5jneak3jRmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kqNtxqxE+dHn1csGADSf8GGaL0CXniRl8vTqwysfcSq0ANznlLWB2AzHHl5W9L/QZ612Co9NlCRnIGQ7S7PZGpzxe5KmcAcWlDHQMqCL4WZtvzEM3wXc4xSKexdgF7UVlaXjY8KI4yFwS+9WVmNZg8GAmck77YNN+RU0zCGolAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uK7FINQu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712832615; c=relaxed/simple;
+	bh=40G/2iJhs7b/9hSb3u6zcH2MWcwO6qO4lwKmJTuf4Ko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Msn660BqckxQO9m0grJ049l6oZVktQ6Yj7mGzrp9gyek7xCS8ms5dX3S5g3sv0Jz0a/oe3KqDYOx0ia4sjpjNifcmqd4YihZyjcgUH/V5gAe/W1nLOf/oR/roBTR8uBUE3rJ8z+lcKSaMELpbAV95LonU91h0oJSANYRgjgRIF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c/gF3M1M; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uK7FINQu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 702A3C433C7;
-	Thu, 11 Apr 2024 10:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712832602;
-	bh=9dioLCwe2gL/VOYhX/ypV3hnwp7uRX4Q5jneak3jRmE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uK7FINQu/j00qvEqU6s7IKOdUgjjvXEYZIBpBo6o6PogBd9MESWvGvjGk0eDsZazM
-	 XWQ1iWLRabbCyw04m3PW52oOO4wrX8cUY2uK+k98Pj8xEBhSiqaqpID+vZaOrD9tdZ
-	 gzzMwB0CljEDrKNl4HS/ESIzKfh87AC8OL0a2IeY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com,
-	broonie@kernel.org
-Subject: [PATCH 5.15 00/57] 5.15.155-rc1 review
-Date: Thu, 11 Apr 2024 11:57:08 +0200
-Message-ID: <20240411095407.982258070@linuxfoundation.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/gF3M1M"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e3c9300c65so48958875ad.0;
+        Thu, 11 Apr 2024 03:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712832614; x=1713437414; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0V8AVI188fF5AbLDUaefOD559npRcC/Ay2FvGZtxQ64=;
+        b=c/gF3M1Mx8qsK02izeo+dBs3ax9p/1XTB/386WOg7gEipYGvlAqoV8oEk9RLPbILuY
+         HPwz++6ftm+qM2UPAxJoB3wnV3Ex7pfxM3HDmIYP+9m6NKaHCyXxMu2XDyhMGn/R6mM+
+         hgjhu1cGczlNdveKsQvMdvVEmgPfx4yXxPFaNi1u4tUzEZLWJTuwEk/31a3bDox+zpqf
+         V90fHoQTKI260UZZDbEmtXFmYqmT+N/4K0qUhB2WNXlSDeWNGuWSfh/M8yjt7ydzmNlP
+         GSup/s0qRSo9U/gNNES5KPqIRpyovvUqLNJVO+Bjf8uisYKo09XQm0kuPx9yuOpOk7q0
+         9hzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712832614; x=1713437414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0V8AVI188fF5AbLDUaefOD559npRcC/Ay2FvGZtxQ64=;
+        b=jdCKBvIbKfnn+mfFtRCgKCjMWtmPlQ5djPVtYHct7QoiOnmV5TRGgX5LUlcKsNlsXo
+         W7SE48LTaXEcXuiOUwcPHJTPBieeDcIDne+jnhSc1VetQ0nEO7oniw6DVRjT7iWHCdIb
+         xqwPulO9wyXr06kRSgdaXH45wh3yBCgmHuCl/JTqbiHKnA8N5pTIfAIMhfVzaLgwGu86
+         iwuMt0oDUSe9GNmkZwiqDv4cxlNQ8uWNkg3U8b2K0u0pUcmbRO0WBBABba5UH6/h3C1Z
+         rNaaIqNXEMM0uhnXZ8Da1D6UZiY1zV37Zo0wlyS+9H2pVr7uhveGbEo/ITVFyjgzuHD1
+         g9rg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpe7R9OYJamZrl6RrSVa3iP066RvJTRtZzFJGOR9rId4wKlcDJiecU2GEflKGOkgYVyPf/LEHrobhGEi1zSN6foR+zV0rTbJMSJBJK55n2iYWIF79oMAsAVvRw4xf59H2OuStSjsdjbrLx8x5+bq+9neaShT9DaEdIQVgXKlsOYT2tU/ZV1AjS
+X-Gm-Message-State: AOJu0YwsQ6Lv5/zL8ZU+mcANX5zrsXfHdokNKeFkpnQiqPu5GrscHZ3I
+	OzkWDYhq15YtdH3/cUvS7/dpp5w4srvRA1MDZlQAjG40GvvdpASGyadVmg==
+X-Google-Smtp-Source: AGHT+IEtQzHYcZhHF+ujcl2W4gfyTb2Kq41fyleepPcTD77/19WDgStiPTVulVfZQkv3bnNhXD/5EQ==
+X-Received: by 2002:a17:903:18d:b0:1e5:62:7ac0 with SMTP id z13-20020a170903018d00b001e500627ac0mr4509674plg.14.1712832613536;
+        Thu, 11 Apr 2024 03:50:13 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id l6-20020a170902d34600b001def175bbbfsm912997plk.251.2024.04.11.03.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 03:50:12 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 106E3184799FF; Thu, 11 Apr 2024 17:50:09 +0700 (WIB)
+Date: Thu, 11 Apr 2024 17:50:09 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>, linux-integrity@vger.kernel.org
+Cc: Alexander Steffen <Alexander.Steffen@infineon.com>,
+	"Daniel P . Smith" <dpsmith@apertussolutions.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Corbet <corbet@lwn.net>,
+	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+	Mimi Zohar <zohar@linux.ibm.com>, Peter Huewe <peterhuewe@gmx.de>,
+	Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] Documentation: tpm_tis
+Message-ID: <ZhfAYVLwoYAPnYbI@archie.me>
+References: <20240409190847.10869-1-jarkko@kernel.org>
+ <20240409190847.10869-3-jarkko@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.155-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.15.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.15.155-rc1
-X-KernelTest-Deadline: 2024-04-13T09:54+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 5.15.155 release.
-There are 57 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.155-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.15.155-rc1
-
-Vasiliy Kovalev <kovalev@altlinux.org>
-    VMCI: Fix possible memcpy() run-time warning in vmci_datagram_invoke_guest_handler()
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: btintel: Fixe build regression
-
-Gwendal Grignou <gwendal@chromium.org>
-    platform/x86: intel-vbtn: Update tablet mode switch at end of probe
-
-Kees Cook <keescook@chromium.org>
-    randomize_kstack: Improve entropy diffusion
-
-David Hildenbrand <david@redhat.com>
-    x86/mm/pat: fix VM_PAT handling in COW mappings
-
-David Hildenbrand <david@redhat.com>
-    virtio: reenable config if freezing device failed
-
-Ard Biesheuvel <ardb@kernel.org>
-    gcc-plugins/stackleak: Avoid .head.text section
-
-Kees Cook <keescook@chromium.org>
-    gcc-plugins/stackleak: Ignore .noinstr.text and .entry.text
-
-Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-    tty: n_gsm: require CAP_NET_ADMIN to attach N_GSM0710 ldisc
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: discard table flag update with pending basechain deletion
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: release mutex after nft_gc_seq_end from abort path
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: release batch on table validation from abort path
-
-Roman Smirnov <r.smirnov@omp.ru>
-    fbmon: prevent division by zero in fb_videomode_from_videomode()
-
-Jiawei Fu (iBug) <i@ibugone.com>
-    drivers/nvme: Add quirks for device 126f:2262
-
-Aleksandr Burakov <a.burakov@rosalinux.ru>
-    fbdev: viafb: fix typo in hw_bitblt_1 and hw_bitblt_2
-
-Chancel Liu <chancel.liu@nxp.com>
-    ASoC: soc-core.c: Skip dummy codec when adding platforms
-
-Colin Ian King <colin.i.king@gmail.com>
-    usb: sl811-hcd: only defined function checkdone if QUIRK2 is defined
-
-Marco Felsch <m.felsch@pengutronix.de>
-    usb: typec: tcpci: add generic tcpci fallback compatible
-
-Petre Rodan <petre.rodan@subdimension.ro>
-    tools: iio: replace seekdir() in iio_generic_buffer
-
-linke li <lilinke99@qq.com>
-    ring-buffer: use READ_ONCE() to read cpu_buffer->commit_page in concurrent environment
-
-Ricardo B. Marliere <ricardo@marliere.net>
-    ktest: force $buildonly = 1 for 'make_warnings_file' test type
-
-Alban Boyé <alban.boye@protonmail.com>
-    platform/x86: touchscreen_dmi: Add an extra entry for a variant of the Chuwi Vi8 tablet
-
-Gergo Koteles <soyer@irl.hu>
-    Input: allocate keycode for Display refresh rate toggle
-
-Manjunath Patil <manjunath.b.patil@oracle.com>
-    RDMA/cm: add timeout to cm_destroy_id wait
-
-Roman Smirnov <r.smirnov@omp.ru>
-    block: prevent division by zero in blk_rq_stat_sum()
-
-Ian Rogers <irogers@google.com>
-    libperf evlist: Avoid out-of-bounds access
-
-Daniel Drake <drake@endlessos.org>
-    Revert "ACPI: PM: Block ASUS B1400CEAE from suspend to idle by default"
-
-Dai Ngo <dai.ngo@oracle.com>
-    SUNRPC: increase size of rpc_wait_queue.qlen from unsigned short to unsigned int
-
-Aric Cyr <aric.cyr@amd.com>
-    drm/amd/display: Fix nanosec stat overflow
-
-Ye Bin <yebin10@huawei.com>
-    ext4: forbid commit inconsistent quota data when errors=remount-ro
-
-Zhang Yi <yi.zhang@huawei.com>
-    ext4: add a hint for block bitmap corrupt state in mb_groups
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: firewire-lib: handle quirk to calculate payload quadlets as data block counter
-
-Arnd Bergmann <arnd@arndb.de>
-    media: sta2x11: fix irq handler cast
-
-Alex Henrie <alexhenrie24@gmail.com>
-    isofs: handle CDs with bad root inode but good Joliet root directory
-
-Justin Tee <justin.tee@broadcom.com>
-    scsi: lpfc: Fix possible memory leak in lpfc_rcv_padisc()
-
-Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-    sysv: don't call sb_bread() with pointers_lock held
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
-
-Kunwu Chan <chentao@kylinos.cn>
-    Input: synaptics-rmi4 - fail probing if memory allocation for "phys" fails
-
-Edward Adam Davis <eadavis@qq.com>
-    Bluetooth: btintel: Fix null ptr deref in btintel_read_version
-
-Eric Dumazet <edumazet@google.com>
-    net/smc: reduce rtnl pressure in smc_pnet_create_pnetids_list()
-
-David Sterba <dsterba@suse.com>
-    btrfs: send: handle path ref underflow in header iterate_inode_ref()
-
-David Sterba <dsterba@suse.com>
-    btrfs: export: handle invalid inode or root reference in btrfs_get_parent()
-
-David Sterba <dsterba@suse.com>
-    btrfs: handle chunk tree lookup error in btrfs_relocate_sys_chunks()
-
-Baochen Qiang <quic_bqiang@quicinc.com>
-    wifi: ath11k: decrease MHI channel buffer length to 8KB
-
-Serge Semin <fancer.lancer@gmail.com>
-    net: pcs: xpcs: Return EINVAL in the internal methods
-
-Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-    tools/power x86_energy_perf_policy: Fix file leak in get_pkg_num()
-
-Kunwu Chan <chentao@kylinos.cn>
-    pstore/zone: Add a null pointer check to the psz_kmsg_read
-
-Shannon Nelson <shannon.nelson@amd.com>
-    ionic: set adminq irq affinity
-
-Johan Jonker <jbx6244@gmail.com>
-    arm64: dts: rockchip: fix rk3399 hdmi ports node
-
-Johan Jonker <jbx6244@gmail.com>
-    arm64: dts: rockchip: fix rk3328 hdmi ports node
-
-C Cheng <C.Cheng@mediatek.com>
-    cpuidle: Avoid potential overflow in integer multiplication
-
-John Ogness <john.ogness@linutronix.de>
-    panic: Flush kernel log buffer at the end
-
-Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-    VMCI: Fix memcpy() run-time warning in dg_dispatch_as_host()
-
-Markus Elfring <elfring@users.sourceforge.net>
-    batman-adv: Improve exception handling in batadv_throw_uevent()
-
-Markus Elfring <elfring@users.sourceforge.net>
-    batman-adv: Return directly after a failed batadv_dat_select_candidates() in batadv_dat_forward_data()
-
-Dmitry Antipov <dmantipov@yandex.ru>
-    wifi: ath9k: fix LNA selection in ath_ant_try_scan()
-
-Vladimir Oltean <vladimir.oltean@nxp.com>
-    net: dsa: fix panic when DSA master device unbinds on shutdown
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 11 ++++-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 12 +++++-
- arch/x86/mm/pat/memtype.c                          | 49 +++++++++++++++-------
- block/blk-stat.c                                   |  2 +-
- drivers/acpi/sleep.c                               | 12 ------
- drivers/bluetooth/btintel.c                        |  2 +-
- drivers/cpuidle/driver.c                           |  3 +-
- .../gpu/drm/amd/display/modules/inc/mod_stats.h    |  4 +-
- drivers/infiniband/core/cm.c                       | 20 ++++++++-
- drivers/input/rmi4/rmi_driver.c                    |  6 ++-
- drivers/media/pci/sta2x11/sta2x11_vip.c            |  9 ++--
- drivers/misc/vmw_vmci/vmci_datagram.c              |  6 ++-
- drivers/net/ethernet/pensando/ionic/ionic_lif.c    |  5 ++-
- drivers/net/pcs/pcs-xpcs.c                         |  4 +-
- drivers/net/wireless/ath/ath11k/mhi.c              |  2 +-
- drivers/net/wireless/ath/ath9k/antenna.c           |  2 +-
- drivers/nvme/host/pci.c                            |  3 ++
- drivers/pinctrl/renesas/core.c                     |  4 +-
- drivers/platform/x86/intel/vbtn.c                  |  5 ++-
- drivers/platform/x86/touchscreen_dmi.c             |  9 ++++
- drivers/scsi/lpfc/lpfc_nportdisc.c                 |  6 ++-
- drivers/tty/n_gsm.c                                |  3 ++
- drivers/usb/host/sl811-hcd.c                       |  2 +
- drivers/usb/typec/tcpm/tcpci.c                     |  1 +
- drivers/video/fbdev/core/fbmon.c                   |  7 ++--
- drivers/video/fbdev/via/accel.c                    |  4 +-
- drivers/virtio/virtio.c                            | 10 ++++-
- fs/btrfs/export.c                                  |  9 +++-
- fs/btrfs/send.c                                    | 10 ++++-
- fs/btrfs/volumes.c                                 | 12 +++++-
- fs/ext4/mballoc.c                                  |  5 ++-
- fs/ext4/super.c                                    | 12 ++++++
- fs/isofs/inode.c                                   | 18 +++++++-
- fs/pstore/zone.c                                   |  2 +
- fs/sysv/itree.c                                    | 10 ++---
- include/linux/randomize_kstack.h                   |  2 +-
- include/linux/sunrpc/sched.h                       |  2 +-
- include/uapi/linux/input-event-codes.h             |  1 +
- kernel/panic.c                                     |  8 ++++
- kernel/trace/ring_buffer.c                         |  2 +-
- mm/memory.c                                        |  4 ++
- net/batman-adv/distributed-arp-table.c             |  3 +-
- net/batman-adv/main.c                              | 14 ++++---
- net/dsa/dsa2.c                                     | 25 +++--------
- net/netfilter/nf_tables_api.c                      | 47 ++++++++++++++++-----
- net/smc/smc_pnet.c                                 | 10 +++++
- scripts/gcc-plugins/stackleak_plugin.c             |  6 +++
- sound/firewire/amdtp-stream.c                      | 12 ++++--
- sound/firewire/amdtp-stream.h                      |  4 ++
- sound/soc/soc-core.c                               |  3 ++
- tools/iio/iio_utils.c                              |  2 +-
- tools/lib/perf/evlist.c                            | 18 +++++---
- tools/lib/perf/include/internal/evlist.h           |  4 +-
- .../x86_energy_perf_policy.c                       |  1 +
- tools/testing/ktest/ktest.pl                       |  1 +
- 56 files changed, 326 insertions(+), 128 deletions(-)
-
-
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="QQMkQKtETCXLqH/I"
+Content-Disposition: inline
+In-Reply-To: <20240409190847.10869-3-jarkko@kernel.org>
+
+
+--QQMkQKtETCXLqH/I
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Apr 09, 2024 at 10:08:47PM +0300, Jarkko Sakkinen wrote:
+> diff --git a/Documentation/security/tpm/tpm_tis.rst b/Documentation/secur=
+ity/tpm/tpm_tis.rst
+> new file mode 100644
+> index 000000000000..b448ea3db71d
+> --- /dev/null
+> +++ b/Documentation/security/tpm/tpm_tis.rst
+> @@ -0,0 +1,46 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> +TPM FIFO interface driver
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> +
+> +TCG PTP Specification defines two interface types: FIFO and CRB. The for=
+mer is
+> +based on sequenced read and write operations,  and the latter is based o=
+n a
+> +buffer containing the full command or response.
+> +
+> +FIFO (First-In-First-Out) interface is used by the tpm_tis_core dependent
+> +drivers. Originally Linux had only a driver called tpm_tis, which covered
+> +memory mapped (aka MMIO) interface but it was later on extended to cover=
+ other
+> +physical interfaces supported by the TCG standard.
+> +
+> +For legacy compliance the original MMIO driver is called tpm_tis and the
+Did you mean "For historical reasons above ..."?
+> +framework for FIFO drivers is named as tpm_tis_core. The postfix "tis" in
+> +tpm_tis comes from the TPM Interface Specification, which is the hardware
+> +interface specification for TPM 1.x chips.
+> +
+> +Communication is based on a 20 KiB buffer shared by the TPM chip through=
+ a
+> +hardware bus or memory map, depending on the physical wiring. The buffer=
+ is
+> +further split into five equal-size 4 KiB buffers, which provide equivale=
+nt
+> +sets of registers for communication between the CPU and TPM. These
+> +communication endpoints are called localities in the TCG terminology.
+> +
+> +When the kernel wants to send commands to the TPM chip, it first reserves
+> +locality 0 by setting the requestUse bit in the TPM_ACCESS register. The=
+ bit is
+> +cleared by the chip when the access is granted. Once it completes its
+> +communication, the kernel writes the TPM_ACCESS.activeLocality bit. This
+> +informs the chip that the locality has been relinquished.
+> +
+> +Pending localities are served in order by the chip in descending order, =
+one at
+> +a time:
+> +
+> +- Locality 0 has the lowest priority.
+> +- Locality 5 has the highest priority.
+> +
+> +Further information on the purpose and meaning of the localities can be =
+found
+> +in section 3.2 of the TCG PC Client Platform TPM Profile Specification.
+> +
+> +References
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +TCG PC Client Platform TPM Profile (PTP) Specification
+> +https://trustedcomputinggroup.org/resource/pc-client-platform-tpm-profil=
+e-ptp-specification/
+
+Other than that,
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--QQMkQKtETCXLqH/I
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZhfAXQAKCRD2uYlJVVFO
+oyTWAQDDh/ybYEQfUhhhVix+XJRKnyJS+qX3oVhOtCnaV4rdbwD/T7FQM2fd19g6
+yntkKwA+0kOawAxi5rYvOITeNGaiTwo=
+=eLHn
+-----END PGP SIGNATURE-----
+
+--QQMkQKtETCXLqH/I--
