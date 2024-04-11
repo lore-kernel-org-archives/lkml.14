@@ -1,48 +1,48 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA24913E8B5;
-	Thu, 11 Apr 2024 07:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEB613FD7B;
+	Thu, 11 Apr 2024 07:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820892; cv=none; b=SLUzETEZ1lreFG4yp2yFrGmH9oqhkynXgyFN2vIFskjM28USxgIkM9Bg9inrZxsT3kdGpwL4q9Hu+Zbpao5OvjfQDJPKSO2rorEDV168k6BuwNXyuqDw9Ci812uhxRsUFEVstqOYxpufQO3cBkSxoyzt6Fzwcqu00+/QBO5uf2Q=
+	t=1712820894; cv=none; b=eEqQcT6Ccme6G2bUzE0aObhMWiHH7JUtm5btz3BSBcXeI3JN4dPypc/hXFir7dmwwqrjs3s9S/8v84O9zaxY5hGKCwmNj+Eh7JiHfwk6m5Lw6PxeMsLN3l8Uvae1vRZop4ngy+/kPKc9U2Ksm0n0p26PkL1AfVfxawOf448LhRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820892; c=relaxed/simple;
-	bh=TuDc+Rm4R7FNVcs0UIV7226BdvuZ1MVJx+8a8upoLLU=;
+	s=arc-20240116; t=1712820894; c=relaxed/simple;
+	bh=dC/UUzAe+l4/nCTiw9wUyVrJ0rABADq2vofU68EWSTA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Qr+VePfg5JaXQHmt0bizXdf0B6KX0YNx6RMNau/6UMFyL9OnbHFlGmH+v1XecZt+mAimRlSTGhRgP3uNUZAeWCwhaK15hFE3/VtbsfnNwxgbZ6Ifenw24XXq8ijshxSyfrDS41cKOPrJbPM1lg4sUA/Vuk1R3T2Izc4nSoRca7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=ts6bBUGa; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=Vu1UDYqOGtmBszTBNIsCPRAGIXtmYqrOPVINwVdlngeKl996gaDn9Ezgh2vZBUomtiWjLft8h6cCVpaWKjyG8eWOV1eGhfBUONv3fHm+X7OMtNBhvk05HLgIIc26mgt3H2ndJ3wrxFa/84MmAhIC0hWxc4EdTjEP+vggkLNasLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pycnh6j4; arc=none smtp.client-ip=68.232.153.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="ts6bBUGa"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pycnh6j4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712820891; x=1744356891;
+  t=1712820892; x=1744356892;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TuDc+Rm4R7FNVcs0UIV7226BdvuZ1MVJx+8a8upoLLU=;
-  b=ts6bBUGaQ2LrqW2J0rV1eM0rmZQDJSsfhWPntLGk9L9gFZ78zEzaF8oP
-   JbPDRO7ZKy4Br80MKHCLmfNMLNx2Lylk1od3AHt3D+t9foOPsPTpcE0XN
-   ax3nK6DLKsYVz2BeFZBd/HM3oA+uD73XRY234FWe8WyHgSTK525gfCK+k
-   +xpTR/oqScMDxL3pk5yo7q9I0wo0RTipt3YvitFF3OOV3KNzqXsMDS0cu
-   AgSwEJP8Vu+CcAzZ9xlEBozr8raiTXeI0ujpxRyUm76fyFXRmfYicNARe
-   q8D/oBh/x1QVQapFEKX+9uTCUEEDs2b2avKZt4Z2uvIhUZoTSmk00i3nL
-   A==;
+  bh=dC/UUzAe+l4/nCTiw9wUyVrJ0rABADq2vofU68EWSTA=;
+  b=pycnh6j47Y53B/LwEUPIsaKcp6cAPdURGiozpmgC1Pf18UabY706NWp3
+   yiUi1FOc921LXTPGU6nv8OY9v25u+ENn9iBuM26XjtMmxFDSUQteF0sCx
+   6h7Ruefsr1T8Icm+8b8Ds2WdOFRi9INdQYZJBn2VqG+3AipBIPCludjas
+   WvFPCT8fzYoZjgtRN3n2seGYuYpg913bC2WIBIWtwgrOerSOmDXm5jsVu
+   wmyX3a7zZtdfNLnvrRq+O3GFBLQKZetxPo+GJhII6gl/qNJ+FRQ02GB1s
+   +5tj0J/sqtwVcC85TApS7S5h9aSo1khTQeatxzAOkT1LbMYkmOeqzS0Xe
+   g==;
 X-CSE-ConnectionGUID: dQ5jbtg2Q1GDLCjGLtSnbQ==
-X-CSE-MsgGUID: LGjnS33YRB6Q1Kew+8VPDQ==
+X-CSE-MsgGUID: bUU5TWokT+eQUmZl1kpuLA==
 X-IronPort-AV: E=Sophos;i="6.07,192,1708412400"; 
-   d="scan'208";a="20534671"
+   d="scan'208";a="20534675"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 00:34:48 -0700
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 00:34:49 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Apr 2024 00:34:34 -0700
+ 15.1.2507.35; Thu, 11 Apr 2024 00:34:39 -0700
 Received: from archlinux.microchip.com (10.10.85.11) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Thu, 11 Apr 2024 00:34:32 -0700
+ 15.1.2507.35 via Frontend Transport; Thu, 11 Apr 2024 00:34:37 -0700
 From: Mihai Sain <mihai.sain@microchip.com>
 To: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
 	<conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
@@ -50,9 +50,9 @@ To: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
 	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-kernel@vger.kernel.org>
 CC: Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH 10/13] ARM: dts: microchip: sama5d3_eds: Remove the empty line 24
-Date: Thu, 11 Apr 2024 10:33:50 +0300
-Message-ID: <20240411073353.3831-11-mihai.sain@microchip.com>
+Subject: [PATCH 12/13] ARM: dts: microchip: sama5d4_xplained: Remove the empty line 247
+Date: Thu, 11 Apr 2024 10:33:52 +0300
+Message-ID: <20240411073353.3831-13-mihai.sain@microchip.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240411073353.3831-1-mihai.sain@microchip.com>
 References: <20240411073353.3831-1-mihai.sain@microchip.com>
@@ -65,18 +65,18 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 
-Remove the empty line 24 from gpio-keys node.
+Remove the empty line 247 from gpio-keys node.
 
 Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
 ---
- arch/arm/boot/dts/microchip/at91-sama5d3_eds.dts | 1 -
+ arch/arm/boot/dts/microchip/at91-sama5d4_xplained.dts | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d3_eds.dts b/arch/arm/boot/dts/microchip/at91-sama5d3_eds.dts
-index c287b03d768b..094ce5751956 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d3_eds.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d3_eds.dts
-@@ -21,7 +21,6 @@ chosen {
+diff --git a/arch/arm/boot/dts/microchip/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/microchip/at91-sama5d4_xplained.dts
+index 95d701d13fef..a4c71dd96738 100644
+--- a/arch/arm/boot/dts/microchip/at91-sama5d4_xplained.dts
++++ b/arch/arm/boot/dts/microchip/at91-sama5d4_xplained.dts
+@@ -244,7 +244,6 @@ rootfs@800000 {
  
  	gpio-keys {
  		compatible = "gpio-keys";
