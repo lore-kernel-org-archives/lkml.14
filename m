@@ -1,63 +1,63 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63A4824B1
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0479F3B2A8
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849859; cv=none; b=bqV2UJwBWZJY30UC7mfnT3wS/AsRWfJ2q5KC/w2XRE2+RgIkp0pRxhKtwtATlRRpqX5HvEaxfmrRmfZ6cs3hH4y7gsaueScfg5CC7xYG6R7xixJI3scjKSUmyJv9GRdJeV3DoaXojLVon5h7oCha/pSFizHV8IMwdFe6IVe9rqw=
+	t=1712849860; cv=none; b=Ho0U+8aohNnNDhnFEU6cc2Ld1HYaoU7+pVilxPklzKmhFaslp6aWOQD1jSlpgczUBeI9M2GPDXJIO4KiNPCc7Qsr1QVnvTJ6fxmeK2tk48VbDU1yd/eXGmHpLjuP6x+t77ML7c562XO8W3ORR+3uySKZClgkjsnjG4fEnef3vrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849859; c=relaxed/simple;
-	bh=sF5CnpUgy1jnJz8h8X7hCF8xIhL0U1ovl4Q04fzjlSE=;
+	s=arc-20240116; t=1712849860; c=relaxed/simple;
+	bh=fuNH7H35Fr1gbYOH3tDTlpJb1H8dO6w2oUmmxKFFPCY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W1LzzwswE+bDKiyOKYDbFfUJIoe/1yHDCA78t9zCXW+BMNAirUBBdQKJmx9zXNtjF0ee2gtFWjkHq0BVbGG41tYxj/XBPE44dOiQOOS2Y9IDVtlcVYqgUhAoEOUjN2GQmw2Peu3U8JGu81BqZnLFbIrPieKZFnST+iCAwLQaMK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=3Ozb8xI+; arc=none smtp.client-ip=209.85.166.51
+	 MIME-Version; b=YmS+NpbVdyng2YJ9hL7iso+TkYHkKDE/xunxv0SVFQdYV9bHd8+10OhW2TRgXkdVdf7LRsnvFuCGRBFKYpcwm1vdCukDp0/EEIpE3T0oODWUVj1fgemEJRZ7BoHBQXSRQ3B8cRmFRZwQztrvqhpKhXygZJW3C03UofpOUiVfhMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=inMV2Mjz; arc=none smtp.client-ip=209.85.166.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="3Ozb8xI+"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170543839f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:37:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="inMV2Mjz"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36a224d7414so185945ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:37:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849856; x=1713454656; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849858; x=1713454658; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rsFGX0TYl3O1OSJSeVzEizUpvXJtnGL1+uYUf77M1nU=;
-        b=3Ozb8xI+hxmahmERtsyWFoxiWw89WVLFPy9JW8qq0qhTf9KrcRI8oUE8a4KH2rildy
-         UNXLqr++qxNol2DjbmblUj1hajJuBkpGFLKqt8OtICTX0bzEu5V9s7a/AjGDLfW5vyth
-         a+hR/wrvPPqhIlBBcEi2EXsyQuDFyh9sEBv76QLWpBclX8UTO8GObLa++9zs13jVU7wP
-         q8SO9LrY83Z62uy7PbZY/oiWAMtL6Hz2QLIPZPc7gUMTrUQmamwV8mzM4okQ12Bt6fe6
-         YooNjzkpK9mDececZLnYmmKmHg95+HfzqGhSMIBwYHyHINLsSrBnNo5bopDOvvTxic8m
-         HQHQ==
+        bh=DkxbKUE7zw8SWj7NeL7kJSvCh3cG4pC9ZQfME48WxZw=;
+        b=inMV2MjzKoN+cf3DzJHPQuVvJviolz7MUoaVtiouD+ZxB7nunvPS/PxpCwA0M5kvp4
+         CFIuNHIq5yDxV/1lsYtAIDMx0erA6MQv9sWdnXvT9BeMtlbVu98lo8/cL41FovOEY7wq
+         FHm6o4XwArumDCHuov1Q2AZLzh5MwYt/D2r66k69pVKqUDPoDLVK3FCcipyKxv0fuBhu
+         YlRYsJ9IyY1nfa6seuOMTTMhm/mSB+Y8wPCXjZoSDc/+sNmMdnt8WdVImwx5ETQuuhaZ
+         ym/cC2c0zNoNKkvmsKrV2h15wbNIZnCQ3x3CNPjyZ2cx8xYzgvnVSPaWVkIb7T80fEi8
+         9HNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849856; x=1713454656;
+        d=1e100.net; s=20230601; t=1712849858; x=1713454658;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rsFGX0TYl3O1OSJSeVzEizUpvXJtnGL1+uYUf77M1nU=;
-        b=upYT7DIYFANibfgerVQkLHQXbIpAA4JnxPGIUP+GmPcgtDcJXyQ0W6VzUZ3yLeH2Wf
-         tXT7l0sicuQsItJNhS67bQg4zD/DPelvKt/oLvtdteXNsI7wc7lwCWPIhGVXJcaMzdUP
-         mMDxbqp8YjIzAiCdwtzJRwwf/OgZ03Eg2JHBQEiKrYyN7RaBCCPWgv/v4d5ImdOOESJa
-         Yq74JihIy5PqhFS6iHTiJ5AcUhOZYejOQnqN0h/PTcnCILCftMyCX5sEBU+ZAVnMnAtt
-         3qJsqYwMQJuPzbyeFKnTxzVjltNmwusqyDikli6VNuQikhJGfR4MqM2ZJ6F4tT22X9ZV
-         u71Q==
-X-Gm-Message-State: AOJu0YwBMVLGXXHQzITDj7PYWPkkkI+BvUJcPB8yiYdhlOl/tFfpyzXb
-	SuWwHba1Px6GkolCR2eOBzxV/Gcrccadqsdf9HfoYnYKNtG2lW6wmjfr4CWR9OZyhqnyzdWztp8
-	U
-X-Google-Smtp-Source: AGHT+IEQ0qgle4KJlGoYgug2VFdto2t72uKs/ssKrgEqzUoFAI3nRkJ5TyBiUnhjFRmIr0tRrmh2rg==
-X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr184463ioj.2.1712849855019;
-        Thu, 11 Apr 2024 08:37:35 -0700 (PDT)
+        bh=DkxbKUE7zw8SWj7NeL7kJSvCh3cG4pC9ZQfME48WxZw=;
+        b=fgURrv44nFI64iO++vgoYF1TZn4rWEHNPzGZkGT7m/WHV1ZjpfDTHHoqCxpN1tVBnY
+         JRL/4/MqFnaEP7RXz2eNHBitzHbgNpTf1U18hiyivvTm42xUgCZrZ38l6xi9qrTgw2yZ
+         a1UuC4B9QKImIYdk0uBTXFHwDZ47P+ii1wQ72duCaVwFkBbavC8wTWrzM04k7dPGpoQz
+         PSxLu7GVFvvQUdxmizyiQGhLe7yablnofQYaGQkz8WhfO3eCkuHqXCPfx9XnCfjT1O+e
+         5XWDlm6yee1I0MvtDe+vgpiXEDvhA3NB2nvtm4BUedG/pec+2ooC+OVlRFfooRIC7hcT
+         9F7w==
+X-Gm-Message-State: AOJu0YwAX+evFMCORqdaiMq6MSh0iIx/3Njnv/OY27cDOQyu0kfyfIik
+	xcCnhVjkoCv53C3EQ2DxHks9vB/qRsppUaCtFF/TTJD8IDqF3X+FF7B9QJrdWaA3lld597+vRJQ
+	Y
+X-Google-Smtp-Source: AGHT+IGXxfNPFZVg02CSpk2D+4CXTmtslsx+KNhszjd3sOKYvU0s9Xsise+s1/EAJOXbgUaWYjL6NA==
+X-Received: by 2002:a6b:6605:0:b0:7d4:1dae:da1a with SMTP id a5-20020a6b6605000000b007d41daeda1amr152695ioc.2.1712849857826;
+        Thu, 11 Apr 2024 08:37:37 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.33
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.37.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:37:33 -0700 (PDT)
+        Thu, 11 Apr 2024 08:37:36 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 212/437] misc: bcm_vk: convert to iterators
-Date: Thu, 11 Apr 2024 09:15:52 -0600
-Message-ID: <20240411153126.16201-213-axboe@kernel.dk>
+Subject: [PATCH 214/437] misc: eeprom/idt_89hpesx: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:15:54 -0600
+Message-ID: <20240411153126.16201-215-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,125 +71,72 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/misc/bcm-vk/bcm_vk.h     |  6 ++----
- drivers/misc/bcm-vk/bcm_vk_dev.c |  4 ++--
- drivers/misc/bcm-vk/bcm_vk_msg.c | 23 ++++++++++-------------
- 3 files changed, 14 insertions(+), 19 deletions(-)
+ drivers/misc/eeprom/idt_89hpesx.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/misc/bcm-vk/bcm_vk.h b/drivers/misc/bcm-vk/bcm_vk.h
-index 386884c2a263..efc91635fa42 100644
---- a/drivers/misc/bcm-vk/bcm_vk.h
-+++ b/drivers/misc/bcm-vk/bcm_vk.h
-@@ -487,10 +487,8 @@ static inline bool bcm_vk_msgq_marker_valid(struct bcm_vk *vk)
- }
- 
- int bcm_vk_open(struct inode *inode, struct file *p_file);
--ssize_t bcm_vk_read(struct file *p_file, char __user *buf, size_t count,
--		    loff_t *f_pos);
--ssize_t bcm_vk_write(struct file *p_file, const char __user *buf,
--		     size_t count, loff_t *f_pos);
-+ssize_t bcm_vk_read(struct kiocb *iocb, struct iov_iter *to);
-+ssize_t bcm_vk_write(struct kiocb *iocb, struct iov_iter *from);
- __poll_t bcm_vk_poll(struct file *p_file, struct poll_table_struct *wait);
- int bcm_vk_release(struct inode *inode, struct file *p_file);
- void bcm_vk_release_data(struct kref *kref);
-diff --git a/drivers/misc/bcm-vk/bcm_vk_dev.c b/drivers/misc/bcm-vk/bcm_vk_dev.c
-index d4a96137728d..1fadb7b2dec1 100644
---- a/drivers/misc/bcm-vk/bcm_vk_dev.c
-+++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
-@@ -1258,8 +1258,8 @@ static long bcm_vk_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- static const struct file_operations bcm_vk_fops = {
- 	.owner = THIS_MODULE,
- 	.open = bcm_vk_open,
--	.read = bcm_vk_read,
--	.write = bcm_vk_write,
-+	.read_iter = bcm_vk_read,
-+	.write_iter = bcm_vk_write,
- 	.poll = bcm_vk_poll,
- 	.release = bcm_vk_release,
- 	.mmap = bcm_vk_mmap,
-diff --git a/drivers/misc/bcm-vk/bcm_vk_msg.c b/drivers/misc/bcm-vk/bcm_vk_msg.c
-index 1f42d1d5a630..31418a677ecd 100644
---- a/drivers/misc/bcm-vk/bcm_vk_msg.c
-+++ b/drivers/misc/bcm-vk/bcm_vk_msg.c
-@@ -13,6 +13,7 @@
- #include <linux/sizes.h>
- #include <linux/spinlock.h>
- #include <linux/timer.h>
-+#include <linux/uio.h>
- 
- #include "bcm_vk.h"
- #include "bcm_vk_msg.h"
-@@ -998,18 +999,16 @@ int bcm_vk_open(struct inode *inode, struct file *p_file)
- 	return rc;
- }
- 
--ssize_t bcm_vk_read(struct file *p_file,
--		    char __user *buf,
--		    size_t count,
--		    loff_t *f_pos)
-+ssize_t bcm_vk_read(struct kiocb *iocb, struct iov_iter *to)
+diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
+index 327afb866b21..dfb68c0cc999 100644
+--- a/drivers/misc/eeprom/idt_89hpesx.c
++++ b/drivers/misc/eeprom/idt_89hpesx.c
+@@ -900,20 +900,20 @@ static ssize_t eeprom_read(struct file *filp, struct kobject *kobj,
+  * "<reg addr>:<value>". Register address must be aligned within 4 bytes
+  * (one DWORD).
+  */
+-static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
+-				   size_t count, loff_t *offp)
++static ssize_t idt_dbgfs_csr_write(struct kiocb *iocb, struct iov_iter *from)
  {
- 	ssize_t rc = -ENOMSG;
--	struct bcm_vk_ctx *ctx = p_file->private_data;
-+	struct bcm_vk_ctx *ctx = iocb->ki_filp->private_data;
- 	struct bcm_vk *vk = container_of(ctx->miscdev, struct bcm_vk,
- 					 miscdev);
- 	struct device *dev = &vk->pdev->dev;
- 	struct bcm_vk_msg_chan *chan = &vk->to_h_msg_chan;
- 	struct bcm_vk_wkent *entry = NULL, *iter;
-+	size_t count = iov_iter_count(to);
- 	u32 q_num;
- 	u32 rsp_length;
- 
-@@ -1047,7 +1046,7 @@ ssize_t bcm_vk_read(struct file *p_file,
- 		/* retrieve the passed down msg_id */
- 		set_msg_id(&entry->to_h_msg[0], entry->usr_msg_id);
- 		rsp_length = entry->to_h_blks * VK_MSGQ_BLK_SIZE;
--		if (copy_to_user(buf, entry->to_h_msg, rsp_length) == 0)
-+		if (!copy_to_iter_full(entry->to_h_msg, rsp_length, to))
- 			rc = rsp_length;
- 
- 		bcm_vk_free_wkent(dev, entry);
-@@ -1060,7 +1059,7 @@ ssize_t bcm_vk_read(struct file *p_file,
- 		 */
- 		set_msg_id(&tmp_msg, entry->usr_msg_id);
- 		tmp_msg.size = entry->to_h_blks - 1;
--		if (copy_to_user(buf, &tmp_msg, VK_MSGQ_BLK_SIZE) != 0) {
-+		if (!copy_to_iter_full(&tmp_msg, VK_MSGQ_BLK_SIZE, to)) {
- 			dev_err(dev, "Error return 1st block in -EMSGSIZE\n");
- 			rc = -EFAULT;
- 		}
-@@ -1068,17 +1067,15 @@ ssize_t bcm_vk_read(struct file *p_file,
- 	return rc;
- }
- 
--ssize_t bcm_vk_write(struct file *p_file,
--		     const char __user *buf,
--		     size_t count,
--		     loff_t *f_pos)
-+ssize_t bcm_vk_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	ssize_t rc;
--	struct bcm_vk_ctx *ctx = p_file->private_data;
-+	struct bcm_vk_ctx *ctx = iocb->ki_filp->private_data;
- 	struct bcm_vk *vk = container_of(ctx->miscdev, struct bcm_vk,
- 					 miscdev);
- 	struct bcm_vk_msgq __iomem *msgq;
- 	struct device *dev = &vk->pdev->dev;
+-	struct idt_89hpesx_dev *pdev = filep->private_data;
++	struct idt_89hpesx_dev *pdev = iocb->ki_filp->private_data;
+ 	char *colon_ch, *csraddr_str, *csrval_str;
 +	size_t count = iov_iter_count(from);
- 	struct bcm_vk_wkent *entry;
- 	u32 sgl_extra_blks;
- 	u32 q_num;
-@@ -1107,7 +1104,7 @@ ssize_t bcm_vk_write(struct file *p_file,
- 	}
+ 	int ret;
+ 	u32 csraddr, csrval;
+ 	char *buf;
  
- 	/* now copy msg from user space, and then formulate the work entry */
--	if (copy_from_user(&entry->to_v_msg[0], buf, count)) {
-+	if (!copy_from_iter_full(&entry->to_v_msg[0], count, from)) {
- 		rc = -EFAULT;
- 		goto write_free_ent;
- 	}
+-	if (*offp)
++	if (iocb->ki_pos)
+ 		return 0;
+ 
+ 	/* Copy data from User-space */
+-	buf = memdup_user_nul(ubuf, count);
++	buf = iterdup(from, count);
+ 	if (IS_ERR(buf))
+ 		return PTR_ERR(buf);
+ 
+@@ -987,10 +987,9 @@ static ssize_t idt_dbgfs_csr_write(struct file *filep, const char __user *ubuf,
+  * It just prints the pair "0x<reg addr>:0x<value>" to passed buffer.
+  */
+ #define CSRBUF_SIZE	((size_t)32)
+-static ssize_t idt_dbgfs_csr_read(struct file *filep, char __user *ubuf,
+-				  size_t count, loff_t *offp)
++static ssize_t idt_dbgfs_csr_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct idt_89hpesx_dev *pdev = filep->private_data;
++	struct idt_89hpesx_dev *pdev = iocb->ki_filp->private_data;
+ 	u32 csraddr, csrval;
+ 	char buf[CSRBUF_SIZE];
+ 	int ret, size;
+@@ -1008,7 +1007,7 @@ static ssize_t idt_dbgfs_csr_read(struct file *filep, char __user *ubuf,
+ 		(unsigned int)csraddr, (unsigned int)csrval);
+ 
+ 	/* Copy data to User-space */
+-	return simple_read_from_buffer(ubuf, count, offp, buf, size);
++	return simple_copy_to_iter(buf, &iocb->ki_pos, size, to);
+ }
+ 
+ /*
+@@ -1025,8 +1024,8 @@ static BIN_ATTR_RW(eeprom, EEPROM_DEF_SIZE);
+ static const struct file_operations csr_dbgfs_ops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.write = idt_dbgfs_csr_write,
+-	.read = idt_dbgfs_csr_read
++	.write_iter = idt_dbgfs_csr_write,
++	.read_iter = idt_dbgfs_csr_read
+ };
+ 
+ /*===========================================================================
 -- 
 2.43.0
 
