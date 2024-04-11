@@ -1,96 +1,81 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECE3146D75;
-	Thu, 11 Apr 2024 10:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D596146D79;
+	Thu, 11 Apr 2024 10:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712831386; cv=none; b=cm2MDBM3TwoIHVbJiR+Pe1O8uLIbiwNXmV/Ixut/DZ0Ku/t0XW/0X7P9Y8ry7qzF5n9H6c1Ot5dHDczi9qH3wifFYQ2iPzXjAEHYwf0qvEB33n4cm8XLazNbLSUGs3CMHN2N59u7Oa0Cp9lPqsIQwaX5VCRLr/lgWYAq0jYuQYM=
+	t=1712831429; cv=none; b=UhnFrrkIbquX4KmyWwgsdWxqQR4ccp51nWnGtyCsHoXwBRXAKewT0FiW53dwIO2mDFk1cl3fgvQcJd756/cWVvweXIFMALLjbsdxOyLad1tF/FHo2z3+L/ULeSELJ+azQQrueK2PW2ogw5rBqsPMw3SgQ9JuvW8Tq4mjyzlq5O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712831386; c=relaxed/simple;
-	bh=WU2j9c5SydTDoSuq42VPpvpclkSAyuUOXeevkVUcLb4=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=dzp1EpZ4bKgQVIJxy5Rk+J//7JiVsaaaapIPwA1NELIw60vMBWlmDynixNQ/a3RPju/Z3gZs6yMTMJcceRYBUijAIV6639VkKZLX+p6MWrZ5349o+ikQJ5CXrzC6PNVBQ9ZVWgEf93rJkW1oIO9uyNpq36cnURAa/jhX5KJFAgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 196211A0E09;
-	Thu, 11 Apr 2024 12:29:38 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB3131A0059;
-	Thu, 11 Apr 2024 12:29:37 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id C12D61820F76;
-	Thu, 11 Apr 2024 18:29:35 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	s=arc-20240116; t=1712831429; c=relaxed/simple;
+	bh=wComOVfoaefWwC2Rt0UKt2s8/ND86+TBpIl7IK3UsSg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MnDJVlghXABE9/vx5VirleCbo3GMNILMda0TZTQ4FG9+xknAb/Zr05AxsnCOhfP6+rsj9KZqiPKOxjL+I8l78X8tQvY/Slys4KU8H4CPAVkVZ98MuRJo1O0y0Pd1FfuVxxJlcRdxz31hObR7W5B3hBKMhOm8r2vwzaX0m7alQDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00654C433F1;
+	Thu, 11 Apr 2024 10:30:26 +0000 (UTC)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 2/2] ARM: dts: imx6: exchange fallback and specific compatible string
-Date: Thu, 11 Apr 2024 18:11:45 +0800
-Message-Id: <1712830305-31350-3-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1712830305-31350-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1712830305-31350-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	Guo Ren <guoren@kernel.org>,
+	Xuerui Wang <kernel@xen0n.name>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [GIT PULL] LoongArch fixes for v6.9-rc4
+Date: Thu, 11 Apr 2024 18:30:00 +0800
+Message-ID: <20240411103000.2655846-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Exchange fallback and specific compatible string for spdif sound card.
-The specific compatble string need to be in first place, the fallback
-compatbile string need to be in the end.
+The following changes since commit fec50db7033ea478773b159e0e2efb135270e3b7:
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi | 4 ++--
- arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi        | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+  Linux 6.9-rc3 (2024-04-07 13:22:46 -0700)
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
-index 68e97180d33e..51517e27418c 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
-@@ -144,8 +144,8 @@ sound-cs42888 {
- 	};
- 
- 	sound-spdif {
--		compatible = "fsl,imx-audio-spdif",
--			   "fsl,imx-sabreauto-spdif";
-+		compatible = "fsl,imx-sabreauto-spdif",
-+			     "fsl,imx-audio-spdif";
- 		model = "imx-spdif";
- 		spdif-controller = <&spdif>;
- 		spdif-in;
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-index c6e85e4a0883..67872c16372a 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
-@@ -184,8 +184,8 @@ panel_in: endpoint {
- 	};
- 
- 	sound-spdif {
--		compatible = "fsl,imx-audio-spdif",
--			   "fsl,imx6sx-sdb-spdif";
-+		compatible = "fsl,imx6sx-sdb-spdif",
-+			     "fsl,imx-audio-spdif";
- 		model = "imx-spdif";
- 		spdif-controller = <&spdif>;
- 		spdif-out;
--- 
-2.34.1
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/chenhuacai/linux-loongson.git tags/loongarch-fixes-6.9-1
+
+for you to fetch changes up to a07c772fa658645887119184de48b255bf19a46e:
+
+  LoongArch: Include linux/sizes.h in addrspace.h to prevent build errors (2024-04-10 21:08:51 +0800)
+
+----------------------------------------------------------------
+LoongArch fixes for v6.9-rc4
+
+Make {virt, phys, page, pfn} translation work with KFENCE for LoongArch
+(otherwise NVMe and virtio-blk cannot work with KFENCE enabled), update
+dts files for Loongson-2K series to make devices work correctly, and fix
+a build error.
+----------------------------------------------------------------
+Huacai Chen (7):
+      mm: Move lowmem_page_address() a little later
+      LoongArch: Make {virt, phys, page, pfn} translation work with KFENCE
+      LoongArch: Make virt_addr_valid()/__virt_addr_valid() work with KFENCE
+      LoongArch: Update dts for Loongson-2K1000 to support ISA/LPC
+      LoongArch: Update dts for Loongson-2K2000 to support ISA/LPC
+      LoongArch: Update dts for Loongson-2K2000 to support PCI-MSI
+      LoongArch: Update dts for Loongson-2K2000 to support GMAC/GNET
+
+Randy Dunlap (1):
+      LoongArch: Include linux/sizes.h in addrspace.h to prevent build errors
+
+ arch/loongarch/boot/dts/loongson-2k1000.dtsi    |  7 ++++++
+ arch/loongarch/boot/dts/loongson-2k2000-ref.dts | 33 +++++++++++++++++++++++++
+ arch/loongarch/boot/dts/loongson-2k2000.dtsi    | 24 +++++++++++++++---
+ arch/loongarch/include/asm/addrspace.h          |  1 +
+ arch/loongarch/include/asm/io.h                 | 20 +++++++++++----
+ arch/loongarch/include/asm/kfence.h             |  9 +++++++
+ arch/loongarch/include/asm/page.h               | 26 ++++++++++++++++++-
+ arch/loongarch/mm/mmap.c                        |  4 +++
+ arch/loongarch/mm/pgtable.c                     |  4 +--
+ include/linux/mm.h                              | 10 ++++----
+ 10 files changed, 121 insertions(+), 17 deletions(-)
