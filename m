@@ -1,33 +1,32 @@
 Received: from smtpdh18-1.aruba.it (smtpdh18-1.aruba.it [62.149.155.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DCF4F5FA
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DF94F605
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 17:01:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712854874; cv=none; b=o3Z4GJr8X1ON6cI8LBjQEzpyZPDIS8yJ0v0vzRkz0Xk6tsvXAdXe2+0q29y2VVuCHUteq20sDbksCd8800C7FAC2MiASEN68yHXKm985ufwxJH+YaSrVS60FCfSkRZWETuxtwrR2dTqscmhkDFoOoGpHON2eon9gUjxKsyVCvo0=
+	t=1712854874; cv=none; b=l1kYOET0ueDngK4Wvm/7Xg1WFm33woJzKfWslm0cMpFZFGwoCIkv225Z3ioOZTAiNZBIEtRD1MiunCacHm3TA1Se7w4sCxATIBHweQm7U6d/TjtIp2R3Bk+GdCA56uQ4LnypKxR0mv6EpbkvxIegYceNPzGtsJWVUdgL+rM0ciI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712854874; c=relaxed/simple;
-	bh=wokwSIBQiIeFcBRXPB14uD6rIQQtKsyeMXpmFXC5hCc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BVToAoksSM6ID2MfoWC3J4fTP9X2VzRz3symjeQ0L+8cmvSEfbEp4an2C7NZMIwHZaQ3vFyWPk+2Uuz1ktoHFD8MW6B9fiLrFQ7oG1eIORwoH/TNmMO8keb176tQTIF6URWDaw7DStLXX68SVuRZxglmuAiJ3BrKAujW4UPSEyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=YCeYWXVg; arc=none smtp.client-ip=62.149.155.132
+	bh=Hr8kCrNCfpdzIOQGV4xnnmTsIZA8QPh4fh5vhToJ2Ug=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MVUMXjjpJyskhv5kC0niNjFE0bKmS3xu9aXMUCwN2MaueyyszTxVRLeVH1sP9m4IphD2jXOl48g2M+UEemsjaqf9ZSG3KGiIqv7fsfLzNSyJhRT8WIHL2nejA98geSpAMUuIHIFqKeaLg2LOjoyiqaS6LjxF7g0flmCm5ApTvUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=OgwAeWSB; arc=none smtp.client-ip=62.149.155.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="YCeYWXVg"
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="OgwAeWSB"
 Received: from engicam.com ([77.32.15.153])
 	by Aruba Outgoing Smtp  with ESMTPSA
-	id uxkPr7ow7wcFeuxkQrcyeL; Thu, 11 Apr 2024 18:58:02 +0200
+	id uxkPr7ow7wcFeuxkPrcye5; Thu, 11 Apr 2024 18:58:02 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1712854682; bh=wokwSIBQiIeFcBRXPB14uD6rIQQtKsyeMXpmFXC5hCc=;
+	t=1712854682; bh=Hr8kCrNCfpdzIOQGV4xnnmTsIZA8QPh4fh5vhToJ2Ug=;
 	h=From:To:Subject:Date:MIME-Version;
-	b=YCeYWXVg928xf8y/IWDS+fmzqnm9YeCAz5vbm7ReRvzFqfzyFtIRKqOQvqMKQ/MCo
-	 MYrO+GpkxsNYCmXd3AJHQfYQqNU6RU0ECHbdnK1GAqDEfAAT6KZbiOCa+Q3jAkuDvg
-	 /5zzQQV5X6DyzJASfiks236XxWgBH89SfsNJh1FX06UyhTj6iAnV2/nkjaY6Fln/GH
-	 ydN/vGFmoAnZBGlNiINlpqEK8g3ArVbt2inrrMICovgqz1eQojQWUI2/eYv0NymIjP
-	 0KdFjmnhq6Zd7hvaSKjjYL0BwrgaUztF9r70UN/flRvOyyoI5PZeCU8uyGr2zlRbi1
-	 VRaNs3nX+OM3w==
+	b=OgwAeWSBnp3BmYZccHzgTkr2u5pTRb6y0DzxgNxtrstWNrtcQUGV9hRzr4vc/Y5DB
+	 7oAhtwg3W8DGjd1aKoovYxSjuKTLNKZqonjWFdTdmLGfpuIvyER/xKU4GkOREZ2r2O
+	 An3ndQvyEMSDBgSZ2Cbd5VL9AxnUkf03JMIq2PUqtUgoydkoV/6tarnXs10SKFyGhU
+	 OzakIDSbLkmQrlvxXkyD53XSNIdUKjCOJlHHsrWjOoHv8Ql0RIHX6enA22Zwp3HcSA
+	 tV4l8AGoQEv4mc89whpRkwyxdk1VYiRbnNtcq8ctbwklJ7Ss1l/4h8kfKHAbGDs7Yp
+	 kgBzceRUlqwyw==
 From: Fabio Aiuto <fabio.aiuto@engicam.com>
 To: Mark Brown <broonie@kernel.org>,
 	Liam Girdwood <lgirdwood@gmail.com>,
@@ -36,15 +35,11 @@ To: Mark Brown <broonie@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
 Cc: Robin Gong <yibin.gong@nxp.com>,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Matteo Lisi <matteo.lisi@engicam.com>,
-	Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Subject: [PATCH v3 1/2] regulator: dt-bindings: pca9450: add PMIC_RST_B warm reset property
-Date: Thu, 11 Apr 2024 18:58:00 +0200
-Message-Id: <20240411165801.143160-2-fabio.aiuto@engicam.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] regulator: pca9450: make warm reset on PMIC_RST_B assertion
+Date: Thu, 11 Apr 2024 18:57:59 +0200
+Message-Id: <20240411165801.143160-1-fabio.aiuto@engicam.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411165801.143160-1-fabio.aiuto@engicam.com>
-References: <20240411165801.143160-1-fabio.aiuto@engicam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,37 +48,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-CMAE-Envelope: MS4xfJYRY/5Ve08dc1q/JaUZVbtbk14aNWluJ7DfA7lGePbtos/ErNjMJzXXPKUbX/pIHdlzqbCgyaHmVkWKnqfO//WkXh9vAdXvAySzk82jYhykv1eSISF4
- 9qn8lRVbuQFqiHUGVT0q8CVbDwvTNsZcMhwknMyazijrz3eztZQl4O1vmP/lvGzwvP3R8THiPQBWx9/mRK+0lLoRfl8AZ0jrbeZXEn2CaJGnVgCjFceH5oL3
- J/SuoMUILSUCcaGlXOXN+kS/oo3IZieC+jYeGvTQZI17LzJqzMu7eV2c9BRIyiwpd515qaR5XsqROrir0ROvd5OQ+LlSPK6JUGd/FkKCfQ9N0RY1yMpkCEwb
- J57ktMvaQHtOa4pELOrv0Z+r9qF87rNTPhXym+IW9rqu8NIt7MBqN5J8lTmAL7MovtfZPtA/EMM6wUYqX1+FFtwhQW4f6lQRwoPpmHQ2jiWVwqhuM1aBwAhw
- jsw2Zv8mlL8I4ehV
+ 9qn8lRVbuQFqiA7kfJrNNsjVx6j/maTpAGjuN+eBKtGrIR9odAQdgC9qDCsxQ1OVDLQwROM/scQWq1UfGF8tuugFJqWc5Ovn2VpKCQLrt/aWATMbokq1oh+8
+ bUXK9LUoBqG7cboiEJHQSjihzAKvcfZAzxsejKn/vXAMMFSgDl5jqKALkcYctcPR+q0fIbq8ppHTMqsAeYm69nNlfLpPfWKZNZixJmlkzZq2bkCApMUjH2ax
+ /3cverUreuw+DZA7K4WTlqaqxmgs63m2vlAsgUNh2Vx9ut5E6N3SgyUwBKg2pf/JBsuWobE7
 
-Add property to trigger warm reset on PMIC_RST_B assertion
+Hello all,
 
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
-Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+the following two patches add a property in devicetree
+to enable warm reset on PMIC_RST_B pin assertion.
+
+kr
+
 ---
- .../bindings/regulator/nxp,pca9450-regulator.yaml           | 6 ++++++
- 1 file changed, 6 insertions(+)
+v2 ---> v3:
+	- split patch in two: bindings patch comes first
+	- add missing mailing lists and maintainers
+	- remove underscore in property name
 
-diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
-index 849bfa50bdba..865b259dac37 100644
---- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
-+++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
-@@ -93,6 +93,12 @@ properties:
-       When WDOG_B signal is asserted a warm reset will be done instead of cold
-       reset.
- 
-+  nxp,pmic-rst-b-warm-reset:
-+    type: boolean
-+    description:
-+      When PMIC_RST_B signal is asserted a warm reset will be done instead of cold
-+      reset.
-+
- required:
-   - compatible
-   - reg
+v1 ---> v2:
+	- Fix email addresses
+
+Fabio Aiuto (2):
+  regulator: dt-bindings: pca9450: add PMIC_RST_B warm reset property
+  regulator: pca9450: make warm reset on PMIC_RST_B assertion
+
+ .../bindings/regulator/nxp,pca9450-regulator.yaml     |  6 ++++++
+ drivers/regulator/pca9450-regulator.c                 | 11 ++++++++---
+ include/linux/regulator/pca9450.h                     |  6 ++++++
+ 3 files changed, 20 insertions(+), 3 deletions(-)
+
 -- 
 2.34.1
 
