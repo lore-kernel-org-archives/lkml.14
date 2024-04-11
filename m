@@ -1,148 +1,67 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BB14D43D;
-	Thu, 11 Apr 2024 14:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE3914D443
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:03:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712844163; cv=none; b=jeqExNkw8t+A/01Rc9HsoztcHcmdStgz4Oh2JLo0bwyOd5VB1nqKR+o3YDXGw7E81PU041jwpbcKDwTxmtnqgUx84bi/XH2bkFSbLNHWtXkPm2PbUcer70D2znj5J9FfPZ7ZVsYDRtLeQZQMLj5j0/p/+318eQzpbwTsMaafDhc=
+	t=1712844183; cv=none; b=ShY+eCfSuPDg6gVmQdF36YHY2ZBF+joyP2mtfw0CdTONa7m32bscSctIBi/aPiaCEihGEjp7OgemYIdocOYlecedurFK9iMDZhiGqDf27y0Tl4dcpMLQQ2hlHR9t+TXYWM80lz3nWRt7FAIkPbKi4zDOBmDmncROwA65WKndQF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712844163; c=relaxed/simple;
-	bh=2pFqs1VB9hO/Q7vOmAgQiyRnAX8T6W5RcsCtTiaNsUI=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=phFdz7ThymUREeQHECR7RoIGGd6v1NYDatNRMzyFLbEQa2Hnaojn/e+h6kvaLJnUMf4r/sUfarYQ/uVsH8ulR5V4LxdkjyCrKdqoN90PYAam/lelmLndZVPUgOscY/kf0KqR7gH+/qB/hlFpwmQYmb4CIXGADp6mebnL8YvDoJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFhDm1vTDz6K6Hw;
-	Thu, 11 Apr 2024 22:00:56 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 45134140519;
-	Thu, 11 Apr 2024 22:02:37 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
- 2024 15:02:36 +0100
-Date: Thu, 11 Apr 2024 15:02:35 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Miguel Luis <miguel.luis@oracle.com>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>
-Subject: Re: [RFC PATCH 4/4] ACPI: processor: refactor
- acpi_processor_remove: isolate acpi_unmap_cpu under CONFIG_ACPI_HOTPLUG_CPU
-Message-ID: <20240411150235.0000355c@Huawei.com>
-In-Reply-To: <25259BC7-8CDB-4714-AEDE-CFFD14986148@oracle.com>
-References: <20240409150536.9933-1-miguel.luis@oracle.com>
-	<20240409150536.9933-5-miguel.luis@oracle.com>
-	<20240410143101.00001f5a@Huawei.com>
-	<25259BC7-8CDB-4714-AEDE-CFFD14986148@oracle.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1712844183; c=relaxed/simple;
+	bh=6UJZZ6IjHCrKomyVcGWFI8QkbjcakZqKcaKnyTXHAhA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BPFoi6fnlV/J36uzFdoSuYJibgIK0X18L6BmUgsQwADlQlOfXV3zlyFySmSMhWxOnRdoueiiZV60tf+uyMpgFlVrRZrm2Lq17sBACBaU7K74rmxt0v/Mkr0jKKYcwq89F5vxUByl1tQ15oyvtg2fg3rtAGdql+f4oMSwKjbm+ZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0NcGI5ol; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0NcGI5ol"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE959C072AA;
+	Thu, 11 Apr 2024 14:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712844183;
+	bh=6UJZZ6IjHCrKomyVcGWFI8QkbjcakZqKcaKnyTXHAhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0NcGI5oljWMkz32EWruHRpi43mJPvYvSKu4mleZsj5+GOQTshIcV111wtKcQHvsNp
+	 XXfxmBKYOpZh4N6vL8eBzbUdsIlu//opGukHcs5BzJI+9f8trzvxeTsj6dlgnoiYd/
+	 32oIUS7dqxBHJXAPFn+chDjOyRDZHMGN0+u/Y2ts=
+Date: Thu, 11 Apr 2024 16:03:00 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: li.hao40@zte.com.cn
+Cc: jirislaby@kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: hvc: wakeup hvc console immediately when needed
+Message-ID: <2024041151-crewmate-entail-62a5@gregkh>
+References: <20240411215017604oDcKsSipiLnfwd2SzAnsj@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411215017604oDcKsSipiLnfwd2SzAnsj@zte.com.cn>
 
-On Thu, 11 Apr 2024 11:02:37 +0000
-Miguel Luis <miguel.luis@oracle.com> wrote:
+On Thu, Apr 11, 2024 at 09:50:17PM +0800, li.hao40@zte.com.cn wrote:
+> From: Li Hao <li.hao40@zte.com.cn>
+> 
+> Cancel the do_wakeup flag in hvc_struct, and change it to immediately
+> wake up tty when hp->n_outbuf is 0 in hvc_push().
+> 
+> When we receive a key input character, the interrupt handling function
+> hvc_handle_interrupt() will be executed, and the echo thread
+> flush_to_ldisc() will be added to the queue.
+> 
+> If the user is currently using tcsetattr(), a hang may occur. tcsetattr()
+> enters kernel and waits for hp->n_outbuf to become 0 via
+> tty_wait_until_sent(). If the echo thread finishes executing before
+> reaching tty_wait_until_sent (for example, put_chars() takes too long),
+> it will cause while meeting the wakeup condition (hp->do_wakeup = 1),
+> tty_wait_until_sent() cannot be woken up (missed the tty_wakeup() of
+> this round&apos;s tty_poll). Unless the next key input character comes,
+> hvc_poll will be executed, and tty_wakeup() will be performed through
+> the do_wakeup flag.
+> 
+> Signed-off-by: Li Hao
 
-> > On 10 Apr 2024, at 13:31, Jonathan Cameron <Jonathan.Cameron@Huawei.com> wrote:
-> > 
-> > On Tue,  9 Apr 2024 15:05:33 +0000
-> > Miguel Luis <miguel.luis@oracle.com> wrote:
-> >   
-> >> acpi_unmap_cpu is architecture dependent. Isolate it.
-> >> The pre-processor guard for detach may now be restricted to
-> >> cpu unmap.
-> >> 
-> >> Signed-off-by: Miguel Luis <miguel.luis@oracle.com>  
-> > Again the why question isn't answered by the patch description.
-> > 
-> > I assume this is to try and resolve the remove question of releasing
-> > resources that was outstanding on vCPU HP v4 series Russell posted.
-> > 
-> > I've not looked as closely at the remove path as the add one yet, but
-> > my gut feeling is same issue applies.
-> > This code that runs in here should not be dependent on whether
-> > CONFIG_ACPI_HOTPLUG_CPU is enabled or not.  
-> 
-> I agree.
-> 
-> >  What we do for the
-> > make disabled flow should not run a few of the steps in 
-> > acpi_processor_remove() we should make that clear by calling
-> > a different function that doesn't have those steps.
-> >   
-> 
-> Perhaps this got answered already elsewhere but is it OK for the detach handler
-> to be out of CONFIG_ACPI_HOTPLUG_CPU ?
-
-There is code that is again specific to CONFIG_ACPI_HOTPLUG_CPU and
-code that is specific to the disabling only case.  So I think the conditions
-will end up looking pretty similar to the attach path.
-> 
-> Miguel
-> 
-> >> ---
-> >> drivers/acpi/acpi_processor.c | 13 +++++++++----
-> >> 1 file changed, 9 insertions(+), 4 deletions(-)
-> >> 
-> >> diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-> >> index c6e2f64a056b..edcd6a8d4735 100644
-> >> --- a/drivers/acpi/acpi_processor.c
-> >> +++ b/drivers/acpi/acpi_processor.c
-> >> @@ -492,6 +492,14 @@ static int acpi_processor_add(struct acpi_device *device,
-> >> }
-> >> 
-> >> #ifdef CONFIG_ACPI_HOTPLUG_CPU
-> >> +static void acpi_processor_hotunplug_unmap_cpu(struct acpi_processor *pr)
-> >> +{
-> >> + acpi_unmap_cpu(pr->id);
-> >> +}
-> >> +#else
-> >> +static void acpi_processor_hotunplug_unmap_cpu(struct acpi_processor *pr) {}
-> >> +#endif /* CONFIG_ACPI_HOTPLUG_CPU */
-> >> +
-> >> /* Removal */
-> >> static void acpi_processor_remove(struct acpi_device *device)
-> >> {
-> >> @@ -524,7 +532,7 @@ static void acpi_processor_remove(struct acpi_device *device)
-> >> 
-> >> /* Remove the CPU. */
-> >> arch_unregister_cpu(pr->id);
-> >> - acpi_unmap_cpu(pr->id);
-> >> + acpi_processor_hotunplug_unmap_cpu(pr);
-> >> 
-> >> cpus_write_unlock();
-> >> cpu_maps_update_done();
-> >> @@ -535,7 +543,6 @@ static void acpi_processor_remove(struct acpi_device *device)
-> >> free_cpumask_var(pr->throttling.shared_cpu_map);
-> >> kfree(pr);
-> >> }
-> >> -#endif /* CONFIG_ACPI_HOTPLUG_CPU */
-> >> 
-> >> #ifdef CONFIG_ARCH_MIGHT_HAVE_ACPI_PDC
-> >> bool __init processor_physically_present(acpi_handle handle)
-> >> @@ -660,9 +667,7 @@ static const struct acpi_device_id processor_device_ids[] = {
-> >> static struct acpi_scan_handler processor_handler = {
-> >> .ids = processor_device_ids,
-> >> .attach = acpi_processor_add,
-> >> -#ifdef CONFIG_ACPI_HOTPLUG_CPU
-> >> .detach = acpi_processor_remove,
-> >> -#endif
-> >> .hotplug = {
-> >> .enabled = true,
-> >> },  
-> > 
-> >   
-> 
+Did checkpatch say this was ok?
 
