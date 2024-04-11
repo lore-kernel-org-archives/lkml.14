@@ -1,87 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F39E41AAC;
-	Thu, 11 Apr 2024 06:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD0613CA86;
+	Thu, 11 Apr 2024 06:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712817339; cv=none; b=hkgbJ5lDHv2NKLW69+JgcD1xA+GPnXaQIHWhnWs2bi+pIcexv9ERkX83JsE97W4zyMMdGfgiCr+xq/aTXcRrsJgRlrPApCQuQQIOjhgsCtlzREKui94KXH7M8hYqymddEOLRd1nuR6Qtm4Hxw+rMyYflHu+rWWuW1tXl7syV94c=
+	t=1712817381; cv=none; b=mmt1of5D/hhORCIUDZ7ziIFJvsicd0UlcQMe5Wc9PbzsvAw0NHwc3a3cch5Dh8OxNP2mLLCe4Ni3aHICqvxjwPZ/l2KUgNoMOBkm69YxhyX3y1yqIodzscVPEgG4vjjM3UlkCzwHBeAE2yNaCashJ6mMTAbA5MrZW1X6IsFZypM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712817339; c=relaxed/simple;
-	bh=1MPVI2kYWj1qJxWiiW5osq9U4UgjXlkSWpkwjxb/RRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h0/uA8fblqwa6HcpHaeF6otPx+TQQXBrnOczdD2ZqA5gbLhR9gl8ESofF9lMG/mhRv/5lJtxwpLmGiQXsf7+3ze50bK9jbWj9BgxXSb4wNQPC7uXVHO+B6/hDSq8e/hYn3AIJq8avbMG05K6u1RHH8T0TSJtmsQ0aCCOZMaDYM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEBC1113E;
-	Wed, 10 Apr 2024 23:36:04 -0700 (PDT)
-Received: from [10.57.75.96] (unknown [10.57.75.96])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1ED863F766;
-	Wed, 10 Apr 2024 23:35:33 -0700 (PDT)
-Message-ID: <1080e95f-f0ff-471e-b265-8bfd1355ebd8@arm.com>
-Date: Thu, 11 Apr 2024 07:35:37 +0100
+	s=arc-20240116; t=1712817381; c=relaxed/simple;
+	bh=N+fjYrC1p/JcTL+qhfdZbXsjzDIX8vxqPTYbZPrnCQg=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=pR1JKcR0ANbCDZFJVV0JzU8HJMzyWxhRc32E+b3k5T/v2x3gWEhRfDvw3+jMWoJbBw1Tv8SVEk5LwG/TkzSAWZoJb5dAO1MwIvJqh/5xEqATT7BpshUDdTRlIAI5teDmXVzkvjAQNNu/128dWDNrDkoFE5hianZIIJU/V+/yof8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5wcyx9n; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5wcyx9n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D261C433C7;
+	Thu, 11 Apr 2024 06:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712817380;
+	bh=N+fjYrC1p/JcTL+qhfdZbXsjzDIX8vxqPTYbZPrnCQg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=E5wcyx9nERJq65xe1mhmfAecCHZFGwm1UobT29TuZ7f6V46z8wOKe86uJbqntraVw
+	 9z+i1M4I37TtComxsxwO6ct8jGB/Va2N2VgXp56X5tuJGJr38e+7Ii8l1uGzgun6tf
+	 BMfcMzMhXMldPgF4iTLJ6K7hf8J8MMA5Zocqyb6Eh9p4xBwCgm0vyJw6k79d6Y/Iaj
+	 fvTlzXL2QFDEi19XBnxaqjnIp3/pqdLb8dGl6m0dVyOG0IAcFXgbgfaF+vq5ZcFEkS
+	 wHpyKuXzWRsCjCTO5MgLIT+7fTEvObXceJZxVTu4IzTs+stpyO43Ycjz+j/kXXi9r7
+	 uoEvcsUDcdAEw==
+Message-ID: <7498985788263268d4acfcd1589a5994.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] thermal: core: Relocate critical and hot trip
- handling
-Content-Language: en-US
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
-References: <4558251.LvFx2qVVIh@kreacher> <3556878.iIbC2pHGDl@kreacher>
- <CAJZ5v0j0jKi9=w_RiYqSZuQtveskcE8jKZHDwaP1EmNOxLk-RQ@mail.gmail.com>
- <a4e421d2-7279-4b03-9113-db0776dd5355@arm.com>
- <CAJZ5v0igWeyW=x0DOeUVAvgUp4O+_QrXfwy=o3nj1+KAQ+B8pw@mail.gmail.com>
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0igWeyW=x0DOeUVAvgUp4O+_QrXfwy=o3nj1+KAQ+B8pw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240409171241.274600-4-gabriel.fernandez@foss.st.com>
+References: <20240409171241.274600-1-gabriel.fernandez@foss.st.com> <20240409171241.274600-4-gabriel.fernandez@foss.st.com>
+Subject: Re: [PATCH v10 3/4] clk: stm32: introduce clocks for STM32MP257 platform
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@foss.st.com>, Conor Dooley <conor+dt@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Date: Wed, 10 Apr 2024 23:36:18 -0700
+User-Agent: alot/0.10
 
+Quoting gabriel.fernandez@foss.st.com (2024-04-09 10:12:40)
+> diff --git a/drivers/clk/stm32/clk-stm32mp25.c b/drivers/clk/stm32/clk-st=
+m32mp25.c
+> new file mode 100644
+> index 000000000000..23876e7d9863
+> --- /dev/null
+> +++ b/drivers/clk/stm32/clk-stm32mp25.c
+> @@ -0,0 +1,1876 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+> + * Author: Gabriel Fernandez <gabriel.fernandez@foss.st.com> for STMicro=
+electronics.
+> + */
+> +
+> +#include <linux/clk.h>
 
+Use clk-provider.h not clk.h
 
-On 4/10/24 16:56, Rafael J. Wysocki wrote:
-> Hi Lukasz,
-> 
-> On Fri, Apr 5, 2024 at 9:35 AM Lukasz Luba <lukasz.luba@arm.com> wrote:
->>
->> Hi Rafael,
->>
->> On 4/4/24 10:03, Rafael J. Wysocki wrote:
->>> On Tue, Apr 2, 2024 at 9:04 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->>>>
->>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>
->>>> Modify handle_thermal_trip() to call handle_critical_trips() only after
->>>> finding that the trip temperature has been crossed on the way up and
->>>> remove the redundant temperature check from the latter.
->>>>
->>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>
->>> This change is premature, as it will cause handle_non_critical_trips()
->>> to be called for hot/critical trips which is questionable, so I'm
->>> withdrawing it for now.
->>>
->>> The rest of the series is still applicable, though.
->>>
->>>
->>
->> Could you explain your concerns about this, please?
->> Is about the extra execution time for the non-critical trip,
->> while we are in section of handling critical ASAP?
->> (also it would require that extra sorting there IMO)
-> 
-> No, it is mostly about exposing the critical and hot trips to the
-> governor code that may not be ready for seeing them and get somewhat
-> surprised.  In particular, this would cause the User Space governor to
-> send uevents regarding critical and hot trip points which it has not
-> been doing so far and so user space may get confused.
+> +#include <linux/of_address.h>
 
-Got it, thanks!
+Doubt this is the right include. Drop?
+
+> +#include <linux/platform_device.h>
+> +
+> +#include "clk-stm32-core.h"
+> +#include "reset-stm32.h"
+> +#include "stm32mp25_rcc.h"
+> +
+> +#include <dt-bindings/clock/st,stm32mp25-rcc.h>
+[...]
+> +       .clock_data     =3D &stm32mp25_clock_data,
+> +       .reset_data     =3D &stm32mp25_reset_data,
+> +};
+> +
+> +static const struct of_device_id stm32mp25_match_data[] =3D {
+> +       { .compatible =3D "st,stm32mp25-rcc", .data =3D &stm32mp25_data, =
+},
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32mp25_match_data);
+> +
+> +static int stm32mp25_rcc_clocks_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       void __iomem *base;
+> +
+> +       base =3D devm_platform_ioremap_resource(pdev, 0);
+> +       if (WARN_ON(IS_ERR(base)))
+
+Drop WARN_ON
+
+> +               return PTR_ERR(base);
