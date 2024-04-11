@@ -1,63 +1,63 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC837FBB0
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4677FBB0
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849603; cv=none; b=tljDmrUAILrQqejWVsdzus2Aw2DqT+CEgbqc5b1yEEMFB8XKqy9TY5kpe03Io6yhjPXsZ3USJ5OKOlKYnzn1f5p34p9j5I4HYPeU8QtffhH8kbB7Qh/6OAngSQPcK6rnq92jVQ7euFzywJRloGGEl83Lq9hoSMgKXPKycxksdKM=
+	t=1712849608; cv=none; b=SBdhsZVR9N7mWC8GPtwd4lBrzSeqWdgX4yP+iVIfvCag+T+6LozVzU66Qo3tHmeu6Pyh2dj33XHZtVOSJhiVTFy9vgsfh9cKk7NG+25tplFJ/2hcvv1RKn8SLgk6O3Z1778gFoYL1SsoyUPttQZE6RtxLzjGDqApskT8ZzqgMAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849603; c=relaxed/simple;
-	bh=+zTtp6NA4SHbH8H0M6K4Xl+0VEVe9wGeFSItGDOWGd4=;
+	s=arc-20240116; t=1712849608; c=relaxed/simple;
+	bh=ixAxhsQ5BEDYRb0oFjH7cCMlrYuKljtAZJNh9CQ7ETk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H3nh2eQ39fVSSm3FmJ/nfAgZsboAU0slPghz070DX71+8L9x6KogotRLxlDo919tdwtYOXiq5WU0/ylA8a7jQEulMbX+ZIffK1ZlQmViA95bPPPvlZ/SzOg4Dpq1dkisdisRyI04O+FV5TmELBffhpF6n1MmKLjRVz4TBur28oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=x/KTf3BV; arc=none smtp.client-ip=209.85.166.41
+	 MIME-Version; b=Ud5p1YJdOZPqCx49mh0XnQFz8eo2oXCizb8Q3DTRZXrb3DdR8XkcjWA7WC6T6pLjEl0bP2qItQLzbTqedob8IM8ioEp62SByFG2Xw2tcTAnLLO2u1BTQ8UfMQFYa5C0BdH25vKyG3RIXhT685g5BE3FBvCHakcIOGaD6gLnYKcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=dnOSiAgp; arc=none smtp.client-ip=209.85.166.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="x/KTf3BV"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d0772bb5ffso180620739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="dnOSiAgp"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36a224d7414so177825ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849601; x=1713454401; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849606; x=1713454406; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kLAdAdRZHwZNysaGixn7u/LgA9hoPoumk3u1iKTi2oY=;
-        b=x/KTf3BV4kZtTALifDWAQf1jFXMazdtDN0nQXnz3H83JmO4L4Bs765KMNSQ244yH7V
-         GtcSXCxaCng/4yNFyCDuh6fJ+TMw5hXmMm+kvzo+FeuMkkK3u6nAKcbhMXto+mQDeEqA
-         MG+gkSVsZKxTkYfqGw0IJd1CjHOlaIs1aaWvflym6/Lp6NdNqeQTCXefuKdo8S4gSo60
-         kAIu4SVFrd0+NBh4x0YKuTkRsRjDKjF0jYVnGgRCqB0yl9hZ/XCFCmaPdGRWmZ0dbYhd
-         18vOLaixbxamj83NPAFKtsV88WTRu1pDJVHATtd+QcVfdIaN/jRs/EwGBgx4tZ6V5tXF
-         e74g==
+        bh=iPq3O8JL5wt2QNsDusZeSAcsf+5km/B4tpNnOzV1qYY=;
+        b=dnOSiAgpNHmTLY5/0kMWHuvrzjiaryUcAGxy1Lqnsq7RAtVOuriYSsFy4zSxy4KVEj
+         zR6QD96xbNMC4Q0mkqNrNTgb/4hYv8aaTDBQITvoZ4tvEjfcd2WdNnp0gyd4tOJ7km7m
+         9y7n7IXdJGj3Gcqriidtj0wqZnN1Qfwqn3hYxcFqyQy15Cnt61B1tNIpIH5ONnoz1tw8
+         I3dGc2iuHns8l43b/JRzdr+ZXTPT+xoZMIoWTGYrCN6C0lIxQ20h3MTuTNPfvm5lY0Zh
+         1PC6o4BhjkjM4rWyNMR6Ouebj8oQJfRLUpls/7Vb+dvp6RD40T01om8jPWKCKiRHrqnV
+         p6ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849601; x=1713454401;
+        d=1e100.net; s=20230601; t=1712849606; x=1713454406;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kLAdAdRZHwZNysaGixn7u/LgA9hoPoumk3u1iKTi2oY=;
-        b=wo7CXeiURcWtUzIsMBTfKnwymoPyfXOuqk4FsH18MVT2gtwwXUfPcXjWM78+chlLVr
-         zesMAlqM0n2PD2Ezymeref2PdLIqq+tgJdhyjtyplRjf3zkGi+1LsTEO2FZFpJklWYIR
-         lyTRIj+hkNY8DBKrD2sIpsCFBnnz4bzqi1UO637muBGEy+FMlp5JqpXvizv1JI1EQaoJ
-         zVh5Z0fQ03eYPWWIuIL7q01YfjXcov+nfZKP9DcdnKKE9ff7ATI7o+UCuWnls7z84zt8
-         YQMPjqpm7zZbWNsQT+igsM+KpGz50Ezz4WKAAwa+VgLPlnuVtp6Bh9Ahrne0NcP7v2mJ
-         1Iyw==
-X-Gm-Message-State: AOJu0YxkTVJI76Pe/0A2pfeSrUUY7o0XjwcNXKo83rF+oE2Fgyk+PyGX
-	5af4XyU51qt5P3LuxMvOej76XNnOrrOxAhWX278yTvYpuXpaMLVtIyG2iex1hpf4C70txIjBBsk
-	u
-X-Google-Smtp-Source: AGHT+IHs94RIFqk2tSa/xfrq5oIslDpMAMLG4Anc/WEmvFzu5co0Srta4X7hANVQkWlsTC8X8l4jJw==
-X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr181482iob.0.1712849601109;
-        Thu, 11 Apr 2024 08:33:21 -0700 (PDT)
+        bh=iPq3O8JL5wt2QNsDusZeSAcsf+5km/B4tpNnOzV1qYY=;
+        b=wuMR1W8vsBmuTr+vF4dMV4vnoa1pIlfUHxTTguvgZsPRLM0vyHMuedw3cAsZZhKP3t
+         6akaO8EF4JHXtqMe1CfATcnity02ZZoyq1FdNpd2rwqEPhcGiau0p9i7QDqxDmnIki9M
+         l1LKBmWWyGhZSNU59g8DhJTVwq5pybPrOp52zoRDGHHyglnlJEf0hUmDCnEaTj7jlwNm
+         QwMhgahzrt287FFiANOidFJxroIBUB6BbqiXqmH6TIR0q1iTa4pPLBdX7PKizR3xhoJ6
+         Rsuu3MbWc/ri15t73LpVcZAW0xsfcHzGiF17axR6zVkDiRcs2UZmrAJyeV2VVau5yJdu
+         BN5w==
+X-Gm-Message-State: AOJu0YwS9bgB1/ctUYmbtDUaaa4nPkIXVzn5PRJepz3Ui6AETMul4B/b
+	tly+Q+SmXz/nTZJ5AKROgIJBJHfU7JCisAWwV1jeLk/QULY3slrrpYJrk9QbBgQ+XaLIe/dPxNv
+	k
+X-Google-Smtp-Source: AGHT+IH5t6HtZHh7e9CZQsUccf+2a8Au74rt5JiWF7yyJbw+ZFDyhLcAVWljcPHRfzIKdBqtqS+xAw==
+X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr181723iob.0.1712849605692;
+        Thu, 11 Apr 2024 08:33:25 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.18
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:33:18 -0700 (PDT)
+        Thu, 11 Apr 2024 08:33:24 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 058/437] fs: add IOCB_VECTORED flags
-Date: Thu, 11 Apr 2024 09:13:18 -0600
-Message-ID: <20240411153126.16201-59-axboe@kernel.dk>
+Subject: [PATCH 061/437] ASoC: fsl: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:13:21 -0600
+Message-ID: <20240411153126.16201-62-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -69,41 +69,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This allows a user of ->read_iter() or ->write_iter() to tell if this
-request originally came as a readv/writev, or if it was a normal
-read/write operation.
-
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/read_write.c    | 1 +
- include/linux/fs.h | 2 ++
- 2 files changed, 3 insertions(+)
+ sound/soc/fsl/imx-audmux.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 1d035293607b..efddd395d436 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -733,6 +733,7 @@ static ssize_t do_iter_readv_writev(struct file *filp, struct iov_iter *iter,
- 	ret = kiocb_set_rw_flags(&kiocb, flags);
- 	if (ret)
- 		return ret;
-+	kiocb.ki_flags |= IOCB_VECTORED;
- 	kiocb.ki_pos = (ppos ? *ppos : 0);
+diff --git a/sound/soc/fsl/imx-audmux.c b/sound/soc/fsl/imx-audmux.c
+index 747ab2f1aae3..479fd59e329c 100644
+--- a/sound/soc/fsl/imx-audmux.c
++++ b/sound/soc/fsl/imx-audmux.c
+@@ -53,12 +53,11 @@ static const char *audmux_port_string(int port)
+ 	}
+ }
  
- 	if (type == READ)
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 483c70d3941e..69e4dfac2853 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -346,6 +346,8 @@ struct readahead_control;
- #define IOCB_DIO_CALLER_COMP	(1 << 22)
- /* kiocb is a read or write operation submitted by fs/aio.c. */
- #define IOCB_AIO_RW		(1 << 23)
-+/* came from readv/writev */
-+#define IOCB_VECTORED		(1 << 24)
+-static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
+-				size_t count, loff_t *ppos)
++static ssize_t audmux_read_file(struct kiocb *iocb, struct iov_iter *to)
+ {
+ 	ssize_t ret;
+ 	char *buf;
+-	uintptr_t port = (uintptr_t)file->private_data;
++	uintptr_t port = (uintptr_t)iocb->ki_filp->private_data;
+ 	u32 pdcr, ptcr;
  
- /* for use in trace events */
- #define TRACE_IOCB_STRINGS \
+ 	ret = clk_prepare_enable(audmux_clk);
+@@ -119,16 +118,14 @@ static ssize_t audmux_read_file(struct file *file, char __user *user_buf,
+ 			"\nData received from %s\n",
+ 			audmux_port_string((pdcr >> 13) & 0x7));
+ 
+-	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
+-
++	ret = simple_copy_to_iter(buf, &iocb->ki_pos, ret, to);
+ 	kfree(buf);
+-
+ 	return ret;
+ }
+ 
+ static const struct file_operations audmux_debugfs_fops = {
+ 	.open = simple_open,
+-	.read = audmux_read_file,
++	.read_iter = audmux_read_file,
+ 	.llseek = default_llseek,
+ };
+ 
 -- 
 2.43.0
 
