@@ -1,73 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E86013C67A
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47B513C3F4
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712811792; cv=none; b=Efe2GjWpMWJn4TpZfOkOH+5yDxVxixtT/Xzs73q8WLu+84PjZql6QoOrXPF2WA7MiDas4wSDu9o0dOnuvyNByKNSFICAxWas0HMXj8T/7uTjENz3+jsoIotvoLH7vkRreOy6EpqpPAqXLG8cfKYW8JjEu9sGHpp5tFheVvvp6C8=
+	t=1712812304; cv=none; b=cDd5FpW701GWSWZG3UYymJ6QYZBOy3skWK4PEB56fa3/N2SxNWL70ITIpwWPo+3Q9onn1b71RT3fskl2mBK9lOzDHE/HpXdSPx3Jx1B4KzR45AUjQ7+JjfBJYwmaYORfz632MxUNKRtiMx5frhViFz0fNlu2DPOArXcVnBqsanw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712811792; c=relaxed/simple;
-	bh=TvH6TCVgnMATPSKOuH94vxgD6+OFPlbAAQCEQs9hoqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IZ/bIfTO9mb+xzwf4Ro1nSkPSXKkItNkq6NLXOBnxTZvUT0Dney6mmDXztywH+4YAU0ikMfeRYYKNcHCAsJLKmjPqbNpOKpy57A2q2CZIL5mAIhRPaRt9zFg2OjAHOvA2Xk8vKdm8rqnxeJl+G88d1Wv5w7hyFnWLBvPHyDUYRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D29mvb7p; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712812304; c=relaxed/simple;
+	bh=eqKzfNEMu+huefit3g4pn5FoMsoCmnjs0w4DjLQ9syo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oQR9vESaS163RY3VTVruXD6e50V2vRt+g4BoS37MPdeImJipI9AqZ8iDXK4vkytePQGI0Pdvel3gwyLUT2FBonRiKNP9NN5CMWSfaKOlk42NF/QVYmWGBimkUj9AqcCWVsk9h5uxkdX6hfNUIEBi346gbQmUntrvaF71uQAVpU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=xWdhQNFY; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D29mvb7p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712811789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oeHu73ZcJFVvJyZ55x/dnWlLLWe8HGo5I+YvO7V0U40=;
-	b=D29mvb7ptQIPmeYO/y+AaqM/iVslSBZ5pxUhP6t0Cnjoe+aX7TMceGoD3B8mWf7gU3nVoy
-	AHMT/V8iYNKZZn6DSMhT53PclqUoMiMuLf0pewd+jeVmP5IEFZmLLC4gpMgHx+wSCvy5bW
-	59nmQ0hSndgwELzr+6wlVPBuFuA5CtM=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-PVG7CLAtMkq0Y7w6nwZd2A-1; Thu, 11 Apr 2024 01:03:06 -0400
-X-MC-Unique: PVG7CLAtMkq0Y7w6nwZd2A-1
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-56e34264982so2280264a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 22:03:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="xWdhQNFY"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41551500a7eso57474405e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 22:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1712812301; x=1713417101; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/1XDD90AWzc/KDkSNe2VgDtV2pTCGWasSc0lX5ppAyo=;
+        b=xWdhQNFY8XWkockbveuV4gAXGxvGhJWtPWASj3iKU5oosO8utPesy2ukjEEEPfOuif
+         Lj7Hw1lkEuqpe6t26DTPUDZqvX7mThM+VCwoQPN4DdB0Zh1cNimBJM3RF8TnZ0ciwiAW
+         zaF6Y5/xdzCb2iqF3qPjIysDTVcY707SnQ2SczXsmPc3maM2MdbN+bROvlXE7tGSBGA4
+         mcoEJCtBQYha5+1il5eB6bXW6eE6AW7eV05ti2TWpoFl8rI16FBmwdiWxvtmVCxuhzW1
+         gkkW3zwM4U6Sy1UEiuD4twcps33fU11L3rbncUN/9xQjCYRLvrY0ll0bjyFi6MQmljfO
+         xVng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712811785; x=1713416585;
+        d=1e100.net; s=20230601; t=1712812301; x=1713417101;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oeHu73ZcJFVvJyZ55x/dnWlLLWe8HGo5I+YvO7V0U40=;
-        b=pKu1mNF7OAp2KFvKV6ukqO7R4PDRgBeYYn8IB0VHc1CGb3PPTm5FbaGlyfVv5+QFR2
-         8/6pMOvWxdOt4hKx8C1CAd1ymorOhmh+xpRebU+RXLPm2+F6huheR2FywvVb0Tgly8DW
-         oQLx3KKbsyAFNEs67XOyS4wXaxmI+RuFvkk6UgItH0pVstC+eXyFOphcMtBkAOrobt/Z
-         ZkSSv+DbnMtBxifb77rUCDJCbNYZo+D7GupoJqpmfD/1/8wKQ2hoj0cUMkwN9udy7sox
-         O2wh0w8GTQGiu2aIKBgKeneND16ujbFeQj+4/9MeD/QXUs1nKaH4naqfTx3Da4QwuGMV
-         HdCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUlPq89UrXGvRgwReTxO+9usU+sHSPp1l5vA3H26C5wjfJxLQC7JPG9kRblw6ANkA+lBcSRVMQ/jiIFWO+QlB2ok5e2Mzv/gWu+QP4
-X-Gm-Message-State: AOJu0YyqmdqSPfvD5ZE9FyznQ16GN4QS1S4ole8hMq4G5KweNFofk/PU
-	GJPaSD+xQ9bfUUD7NjAB1a5V+1j4ARB/HjOwkus998k5cZE6Y5fIMXeWsF6sLUCnvkQpIybyqnm
-	rfOe8lV7brK9hib/GHp3RTXR0JM4SGjnm4iIAaR15/hpFnpDx6cCaAk1GDozj6g==
-X-Received: by 2002:a50:a451:0:b0:568:3362:ccd1 with SMTP id v17-20020a50a451000000b005683362ccd1mr3738111edb.1.1712811785466;
-        Wed, 10 Apr 2024 22:03:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYDiEm5uYLCp9Y2cNrKiKw+GCEoP2XQC/NiQOax90o2ewqRFDQclGGyG9LYC0R8itI1t1O2Q==
-X-Received: by 2002:a50:a451:0:b0:568:3362:ccd1 with SMTP id v17-20020a50a451000000b005683362ccd1mr3738099edb.1.1712811785138;
-        Wed, 10 Apr 2024 22:03:05 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id c1-20020aa7c741000000b0056fd8155792sm323337eds.25.2024.04.10.22.03.04
+        bh=/1XDD90AWzc/KDkSNe2VgDtV2pTCGWasSc0lX5ppAyo=;
+        b=FDBhdPmt/V6eIbYQbXBdG8Cfo3rO/78uZFRdiusV5ncvTeV5hrEh5CulgE1K/xYfjg
+         8GimcaezD9GIX9gIkymUZZ7b/RQ1Iz8fBCMRCBnCmfb5r3qNDaD4iS4Nx35ltPn1qYOA
+         wB2Ta1KozdzooeSekhbt3mBYRyIkw/2hE2YqrfC3GQbhBDXJbLnbIwIHccT49gB8vhD+
+         pEWcn7oeBy4L2VIJIlW5B6kOFr7JhlRPwLFr4ZLrgDF2OaDrY6rtVlbFPlf9y4EHCy5G
+         g8Z742kyi1xGs/+UUfI8GfUqSRuo7Z6Sjy0IglVcGzcjOLLGEwYO+dCeL2dIAl1Z9Urj
+         G/8Q==
+X-Gm-Message-State: AOJu0YxYKSjNkj0yyDR6LjJs4EWtxFT+iwisyE0Oq6XEgd2v/OFGYJ8U
+	U2rAT0fgw2cx9T2K0dbakAAbtwzs+Ra8kGGPkz9zYVivf+dfgNmKdSQJiTA6Efw=
+X-Google-Smtp-Source: AGHT+IFrsYS9Liwv2FaXJoTlVoOGxdTxr8zhnBZ1Zxxsie09N3MqZMCUxKWrFSuqivi0LdxMInoJoA==
+X-Received: by 2002:a05:600c:1d21:b0:415:5fd6:44c7 with SMTP id l33-20020a05600c1d2100b004155fd644c7mr3232445wms.27.1712812300902;
+        Wed, 10 Apr 2024 22:11:40 -0700 (PDT)
+Received: from localhost.localdomain ([2a06:c701:46c7:8900:15f8:24e1:258e:dbd5])
+        by smtp.gmail.com with ESMTPSA id t7-20020a05600c198700b0041622c88852sm4370190wmq.16.2024.04.10.22.11.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 22:03:04 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Animesh Agarwal <animeshagarwal28@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	linux-i2c@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: adjust file entry in ARM/LPC32XX SOC SUPPORT
-Date: Thu, 11 Apr 2024 07:02:57 +0200
-Message-ID: <20240411050257.42943-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.44.0
+        Wed, 10 Apr 2024 22:11:40 -0700 (PDT)
+From: Yuri Benditovich <yuri.benditovich@daynix.com>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Jason Wang <jasowang@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	yan@daynix.com,
+	andrew@daynix.com
+Subject: [PATCH net v2 0/1] net: change maximum number of UDP segments to 128
+Date: Thu, 11 Apr 2024 08:11:23 +0300
+Message-Id: <20240411051124.386817-1-yuri.benditovich@daynix.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,33 +74,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 20c9819ccd9e ("dt-bindings: i2c: nxp,pnx-i2c: Convert to dtschema")
-converts i2c-pnx.txt to nxp,pnx-i2c.yaml, but misses to adjust the file
-entry in ARM/LPC32XX SOC SUPPORT.
+v1->v2:
+Fixed placement of 'Fixed:' line
+Extended commit message
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
-broken reference.
+Yuri Benditovich (1):
+  net: change maximum number of UDP segments to 128
 
-Adjust the file entry in ARM/LPC32XX SOC SUPPORT after this conversion.
+ include/linux/udp.h                  | 2 +-
+ tools/testing/selftests/net/udpgso.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 06d685a97b4b..edf6176a5530 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2360,7 +2360,7 @@ M:	Vladimir Zapolskiy <vz@mleia.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- T:	git git://github.com/vzapolskiy/linux-lpc32xx.git
--F:	Documentation/devicetree/bindings/i2c/i2c-pnx.txt
-+F:	Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
- F:	arch/arm/boot/dts/nxp/lpc/lpc32*
- F:	arch/arm/mach-lpc32xx/
- F:	drivers/i2c/busses/i2c-pnx.c
 -- 
-2.44.0
+2.40.1
 
