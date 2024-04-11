@@ -1,63 +1,63 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C201C2318
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBF61C233E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849776; cv=none; b=m7JFOfmp5OZYUbqjIlLHQWUD3BCP4YkraIxsotr5xDYbGPr6wCgg2VAklfiizbzgUX+ljalHmX2MSeC5ieLbEMJOIfSuRukWRp5jAQ+0NtvJyAhuIVFkZDixDQi4kkXvQJtKETJPEHRyN0PXCr/lgfLsxX+Aae+/+gJUoK3ne0g=
+	t=1712849778; cv=none; b=D6Gwb+8oVT8ToJtQUIUgcZ6u/PcOC7FTQEwEezvrA8xSXD4gIei2YgISPqykr5s/IGf1QHf5kwUydY+hnFaN2LpoZnf9DHGDEasFBYdgZnP+XRXvcXt6mN9Xoabl7ew7qD7OyPcdhzkHDlp+iF4v15cbbDzotxKfxoe/Kz5KCDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849776; c=relaxed/simple;
-	bh=BC4YfS4UJrprHPjQHWKbdcG+YbYW3uvVEK7Blfupi04=;
+	s=arc-20240116; t=1712849778; c=relaxed/simple;
+	bh=/R2BeYlhfrBa/htPCC3HHf2TvwcQYfAjQ5baP8YTlLs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XAiA/jr9Y9EJd1Px0rSkmagSo3FEMY6KN2xoc6eHAwNavqdFL9Abs6KQM6ThAJaXu6r9+kCJ88UXVLdwboyyufMkAIWXjJHqtmtkxrx5DIn5QWAcAeLJpxZSBx/QO12blal4t963EXtgQMqq5ro9SPzIeNE8R/cCX3hlIP1Czps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=a5zrAbpa; arc=none smtp.client-ip=209.85.166.48
+	 MIME-Version; b=SA1Cg8vwGNDLVZScgqEf/hmJEzdn0l7LQr0uC0lJr0zFF2fOVS/mBpBpcqoRFP6h1vfx0RdYlMH3zOKE2+N5i1JA4ao3hXLb6Xn/BRLeAAyPVHNOnRNkrHiALqgTSEyTyVsr02uuRbw9B5ki8EBYtbIjhDtw6b+Q61sqyu9QAts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Lgpw3Tqx; arc=none smtp.client-ip=209.85.166.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="a5zrAbpa"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170515439f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Lgpw3Tqx"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36a34b68277so110735ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849773; x=1713454573; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849776; x=1713454576; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H5wAewb/wpyAp3Mbq5eWFLi8QS3luSEPM1me2UTw1/4=;
-        b=a5zrAbpa6pproFD25RLCPLfBe3PbytRtPNEfNvEwnd2qAV3IZP5KsW/WF6htVjlCxF
-         PGLgf6LnOdU7EDOIqlqGRaHX466QnIBK6dfEpZ4lPoC8ef7MhzlaoUIvfZYNxdCVrYVE
-         brneLEFGwuZQK298mqnose55OK9eEct83NFLOawbYWpJZ1v/jtGgIu9AOMvNIAIfSHp1
-         kwJ3aMZFuGJkcRyKbSoJuLq86NggQMF/Q9fhKrz9rGS6hr2Og7l9jerDFZ1KwHYUQlDk
-         BJ2G1hwMucOTjiw1N4dmQcjpN29wyLBsPnMYZP6uX/YmYwi5xhx6HWOXAvzhUnQygxDs
-         G4JQ==
+        bh=pbp/RQnmR075DrC7x5KXesv8hnwC9YQtvtSngsJEyrQ=;
+        b=Lgpw3TqxQvdeqR4iWNmLah9LmXFR3VL8tUxTffJO/0cSEkbb/cm8GuE53+qhmM+ncD
+         lD4WH7qQZjjbyM41blzmTuLBE1Ug+hz6w2x4nz9nHL3/PgxwtsrccRuiHhqFADYP8Mgh
+         JzfUZTcfahwaAmENdo3HhTnHab3h9Zq/j70OrXAnD85nhgE7CjgNvj5ZN5YnMp6J51Zc
+         ZDxMljnqSkI/9XkduENh8kfWykD2LXX5WriDJnXug+z6y+aEdD9TzF1Jif/72c2ZPxhV
+         XyofPjwKUwnr3wdgqvNUtVWsKa8WHEHnBPRkKrdQ9GotSvY4I0kQjFDOGz3PGYQfKYIp
+         SyIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849773; x=1713454573;
+        d=1e100.net; s=20230601; t=1712849776; x=1713454576;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H5wAewb/wpyAp3Mbq5eWFLi8QS3luSEPM1me2UTw1/4=;
-        b=Ge6hhkSAKo95yUi5AD/zOHrU2Xa8GOomwyFPpcMyUGQ5mSEEAzeyeqNxrds+rBuitq
-         jCYaXb3DE/u/2GSsWKY0v6VnQ6Uqm/5mmwc0/td+wVZbr10uCLSf3aI6UE4CY66CMw+v
-         BNUNTZezhbTKwuZ0dAzF2P28LybH46JZTdCHW4tAJeB59la/c9mEFOa2tv16bf5G+swU
-         fkws1kQkBl+D4zpILXGLwO9/ScEtvFuxaiBSnoiQCEeGukmy7vak0kE4wVsi+rlMqWnI
-         VXdOJDlazwINTP/1fapZP1GWZLUghPQkYdUbD0/byL9xTC7RSBNB53qzirw3OTJNyySY
-         HliQ==
-X-Gm-Message-State: AOJu0Yx6ew4c3b0o46yhLe4g6i97OoCVR0AHPYDM/Zh9lL4XnYl6c9nM
-	SxtsmzQ2RE8Y+gWkJmHxBrLhDExR4dcnQF6w43jjFlqUJYjS1yTfTFQqjBiwzTJDEnexov0RF8j
-	c
-X-Google-Smtp-Source: AGHT+IEwuj0l1bxi7wMi61akCWwp48mGax/V0582PCSWzfaTaOKdP6hFm8qscE9vaCwt61Ydi9qKEg==
-X-Received: by 2002:a05:6602:21d7:b0:7d6:9ddf:5095 with SMTP id c23-20020a05660221d700b007d69ddf5095mr15731ioc.1.1712849773401;
-        Thu, 11 Apr 2024 08:36:13 -0700 (PDT)
+        bh=pbp/RQnmR075DrC7x5KXesv8hnwC9YQtvtSngsJEyrQ=;
+        b=m9A4vFfevgMj8fc1NHegeo5o8NLyBMmZ20nhAEHr+JlTbWTzpeXGbaMxewLJupKVBF
+         nEIlRPX5wqyRr0o63c1VH37sQT2gQqDWQXe4pK62p5KRpIZTQBOyUkNQ56AB2/bnzER4
+         0ksr9cI5ZSCCFNliyJxu8wG0k8TfF7V7EoiV4Yt0joI5Ot6NbJ4UonCRGPDikjoR3rpw
+         ojdp6WSfPv0u+fcMMKXtEYVS6cUxZSPjMJNBpOasBUJmjkj3+3q6HJ+4PgcJa39UqCqq
+         2pjmgUFF19/lXEqJiYXlp90PGiCHFJAnpNVwYOOKTwWpWWHJ2X3Hwr1q0m7wK3okzwxB
+         Hsrw==
+X-Gm-Message-State: AOJu0Yzeor0Z3KfUDOcUGS3zrw4BAfDgaOvhUbueBCP15ietALsWBLTj
+	AtSeWsQQQNvQJDkq7SF0QEDkautc6Qxe2NIkAwbDSwD2juaYjM8X1SqUVM117VPgWiKOj3v5VRY
+	n
+X-Google-Smtp-Source: AGHT+IGLq54DEe1zhqCraahGOdGsPkzsePVXA+w4AS3YhdrJmGgj6lDhuKgH977fWczZg5qz3VHK9A==
+X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr188498iob.0.1712849776330;
+        Thu, 11 Apr 2024 08:36:16 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.11
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:36:12 -0700 (PDT)
+        Thu, 11 Apr 2024 08:36:15 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 161/437] usb: fotg210-hcd: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:01 -0600
-Message-ID: <20240411153126.16201-162-axboe@kernel.dk>
+Subject: [PATCH 163/437] usb: host: ehci: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:15:03 -0600
+Message-ID: <20240411153126.16201-164-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,16 +71,16 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/usb/fotg210/fotg210-hcd.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ drivers/usb/host/ehci-dbg.c | 19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/fotg210/fotg210-hcd.c b/drivers/usb/fotg210/fotg210-hcd.c
-index 8c5aaf860635..6a7334164ca7 100644
---- a/drivers/usb/fotg210/fotg210-hcd.c
-+++ b/drivers/usb/fotg210/fotg210-hcd.c
-@@ -283,27 +283,27 @@ static int debug_periodic_open(struct inode *, struct file *);
+diff --git a/drivers/usb/host/ehci-dbg.c b/drivers/usb/host/ehci-dbg.c
+index c063fb042926..c9390a17c432 100644
+--- a/drivers/usb/host/ehci-dbg.c
++++ b/drivers/usb/host/ehci-dbg.c
+@@ -293,13 +293,13 @@ static int debug_bandwidth_open(struct inode *, struct file *);
+ static int debug_periodic_open(struct inode *, struct file *);
  static int debug_registers_open(struct inode *, struct file *);
- static int debug_async_open(struct inode *, struct file *);
  
 -static ssize_t debug_output(struct file*, char __user*, size_t, loff_t*);
 +static ssize_t debug_output(struct kiocb *, struct iov_iter *);
@@ -94,6 +94,16 @@ index 8c5aaf860635..6a7334164ca7 100644
  	.release	= debug_close,
  	.llseek		= default_llseek,
  };
+@@ -307,7 +307,7 @@ static const struct file_operations debug_async_fops = {
+ static const struct file_operations debug_bandwidth_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= debug_bandwidth_open,
+-	.read		= debug_output,
++	.read_iter	= debug_output,
+ 	.release	= debug_close,
+ 	.llseek		= default_llseek,
+ };
+@@ -315,7 +315,7 @@ static const struct file_operations debug_bandwidth_fops = {
  static const struct file_operations debug_periodic_fops = {
  	.owner		= THIS_MODULE,
  	.open		= debug_periodic_open,
@@ -102,6 +112,7 @@ index 8c5aaf860635..6a7334164ca7 100644
  	.release	= debug_close,
  	.llseek		= default_llseek,
  };
+@@ -323,7 +323,7 @@ static const struct file_operations debug_periodic_fops = {
  static const struct file_operations debug_registers_fops = {
  	.owner		= THIS_MODULE,
  	.open		= debug_registers_open,
@@ -110,7 +121,7 @@ index 8c5aaf860635..6a7334164ca7 100644
  	.release	= debug_close,
  	.llseek		= default_llseek,
  };
-@@ -773,10 +773,9 @@ static int fill_buffer(struct debug_buffer *buf)
+@@ -952,10 +952,9 @@ static int fill_buffer(struct debug_buffer *buf)
  	return ret;
  }
  
@@ -120,20 +131,20 @@ index 8c5aaf860635..6a7334164ca7 100644
  {
 -	struct debug_buffer *buf = file->private_data;
 +	struct debug_buffer *buf = iocb->ki_filp->private_data;
- 	int ret = 0;
+ 	int ret;
  
  	mutex_lock(&buf->mutex);
-@@ -789,9 +788,7 @@ static ssize_t debug_output(struct file *file, char __user *user_buf,
+@@ -968,9 +967,7 @@ static ssize_t debug_output(struct file *file, char __user *user_buf,
  	}
  	mutex_unlock(&buf->mutex);
  
 -	ret = simple_read_from_buffer(user_buf, len, offset,
--			buf->output_buf, buf->count);
+-				      buf->output_buf, buf->count);
 -
 +	ret = simple_copy_to_iter(buf->output_buf, &iocb->ki_pos, buf->count, to);
  out:
  	return ret;
- 
+ }
 -- 
 2.43.0
 
