@@ -1,226 +1,101 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EECD13FFC;
-	Thu, 11 Apr 2024 19:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE53134D1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 19:26:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712863528; cv=none; b=UX7eohrmQfMPQEZeLfexb+NUaVXCXlhNAJUb8WXs4IQlzrzn4IT8cLjfCpq4kMQI5NbdyBi/V9dfgzoxxSSnW7zWLMFzxN6eW9gUHNFrGtMhrCsG/B8FC64a5pBsyqxaDInWCOPvnWQrkgKOETYP8CM0tne2yjbOyuQg4UlrYRQ=
+	t=1712863604; cv=none; b=VmUK4izv8XxQ3f0VUIi6BsyHfmh6C+5XTgc/vt9K/nmJcBu+UqXeyrqYEoEy+K1di6VdEsDE4nkcI54B6ha4APz/kInXcPHN6F3EOniEXYKD17Ghq+5oEKD+eX+M52ajZPbbIpQ3Ksish+G4Frju3ip9jCvqqm+amtBJcBx/j58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712863528; c=relaxed/simple;
-	bh=RksIQbExvaCJUcl0G0CcojxzWfnl6xUQsFg4B3A8VxM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iEb3n4FIVYCLSXbYEAwPy9ci73VZynGCAX2o4w6T9Ah+Nrz3MFGZGG+hkqYCmf/Z2stvFFKvQjTqOJjelB+y7tbQoPgRHdL+5pafSr0f0lx4AVRa2LdbLBg0pXFbjYwImwjJegb7bXr9cAMrnuSmRoS7HV+SwPfj6yffj6hT1+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NXai15Yc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cYarYQZN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NXai15Yc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=cYarYQZN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1712863604; c=relaxed/simple;
+	bh=0XgHpG9vX/kIvmtLehNYvc8OJhfk98bHSrvRyoWR2Kw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CWcT5iZZ+Ovnegl4c9g0IVhvL+ySMP/NS5jGPq1gO7f0hLCqLme0F6gA7/HpPTS/FW0VQ62oXuLpkHEPWA7aomSf+J59w0MgD+uUCxidf/ProVNGKeVBxuxBS6aT2FNHrL2BP+v9MajugwHnPNYrK8aY3urpqquwQBTw4lzbElY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BTfyBTn4; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NXai15Yc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cYarYQZN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NXai15Yc";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="cYarYQZN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id A747B5D430;
-	Thu, 11 Apr 2024 19:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712863523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCHGpeVSvZ41S2YiaygRkdmX2r+S8qFcFRruOh3fP68=;
-	b=NXai15YcYjFYP8nF3KNJin/UlgLz6V+g04lF0JS8rUIaAEqdkG+o1iAi2WYuUysrSNW28E
-	y3xM1tVsDCK+nPftORBjO/9k35B+nLFgfIOexwOzXZXClqwfLC2ziaI+qXgm+shTXtij77
-	0Ohp7hQk3hvKIZ/Hlp6CE8apUan6oQg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712863523;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCHGpeVSvZ41S2YiaygRkdmX2r+S8qFcFRruOh3fP68=;
-	b=cYarYQZNFNpy4leSIBv43g9d6QSQkgzXwZE/8pKybhzZ7TLpKQTIE8eLfZ9y1SVcwM30VQ
-	MiaYmv+vxrvaenAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=NXai15Yc;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=cYarYQZN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712863523; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCHGpeVSvZ41S2YiaygRkdmX2r+S8qFcFRruOh3fP68=;
-	b=NXai15YcYjFYP8nF3KNJin/UlgLz6V+g04lF0JS8rUIaAEqdkG+o1iAi2WYuUysrSNW28E
-	y3xM1tVsDCK+nPftORBjO/9k35B+nLFgfIOexwOzXZXClqwfLC2ziaI+qXgm+shTXtij77
-	0Ohp7hQk3hvKIZ/Hlp6CE8apUan6oQg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712863523;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zCHGpeVSvZ41S2YiaygRkdmX2r+S8qFcFRruOh3fP68=;
-	b=cYarYQZNFNpy4leSIBv43g9d6QSQkgzXwZE/8pKybhzZ7TLpKQTIE8eLfZ9y1SVcwM30VQ
-	MiaYmv+vxrvaenAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 566B413685;
-	Thu, 11 Apr 2024 19:25:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id OiHpCCM5GGZuJgAAD6G6ig
-	(envelope-from <krisman@suse.de>); Thu, 11 Apr 2024 19:25:23 +0000
-From: Gabriel Krisman Bertazi <krisman@suse.de>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Jan Kara <jack@suse.cz>,  syzbot
- <syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com>,
-  linux-ext4@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
-  linux-kernel@vger.kernel.org,  repnop@google.com,
-  syzkaller-bugs@googlegroups.com, khazhy@chromium.org
-Subject: Re: [syzbot] [ext4?] KASAN: slab-use-after-free Read in fsnotify
-In-Reply-To: <CAOQ4uxi9L_Rs7q=fcLGqJMx15jLAArOWGwGfdCL8LOUCPR3L+w@mail.gmail.com>
-	(Amir Goldstein's message of "Thu, 11 Apr 2024 19:07:00 +0300")
-Organization: SUSE
-References: <00000000000042c9190615cdb315@google.com>
-	<20240411121319.adhz4ylacbv6ocuu@quack3>
-	<CAOQ4uxi9L_Rs7q=fcLGqJMx15jLAArOWGwGfdCL8LOUCPR3L+w@mail.gmail.com>
-Date: Thu, 11 Apr 2024 15:25:21 -0400
-Message-ID: <875xwn8zxa.fsf@mailhost.krisman.be>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BTfyBTn4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso266345276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:26:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712863602; x=1713468402; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6/MgwNwffmIAS0R8bxGeJvh6mxdWCPK8g/Rb9tm+ISo=;
+        b=BTfyBTn4+xT4GNw6Un9Vnjx/3EZ+7K8S6ZyJdjK/KqigtyYZB4h2C3f2Arwpf79C6G
+         Zc+Jy5zkfv9ThKFGnynTHP4bmWBM8JWZZ/hHv2KgO9LNiRU7qCEkOrFgIuJYyoSu+W5E
+         bXhw3o+uOHx7/C57TKe/X9e9O7UE/YXZ1EQ3ytOvJZJtqIAfl80CJ4UynE0KmomdpDx6
+         LJcfrDNWXN81AAqOBrcccbJinmGWH6zLqX6ooLa/JIpFWNx0Sb2l3p6e3VuMlnIzrUQy
+         VnM1bnGi3jtKAgE4UnMW7gDDqmEhhJxUWwvD5pK3t6+dfUdGH9owtxw4lC/0wo9qwBPm
+         bDEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712863602; x=1713468402;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6/MgwNwffmIAS0R8bxGeJvh6mxdWCPK8g/Rb9tm+ISo=;
+        b=C8KB+TdLgwuAQoU3mmijd8gx+kg2fgSkUrT4Mydf1rizw2hmypd75/T9uGv7PL0cNR
+         mZGJn/0CuydIjBw7AqZLVw7L0OBKYGeFBJ1HH2Vq2K7EvAnoYL8EqcrKsWIuKlIOpC7o
+         2b657Kwh6NC+AG+uCXgkzoi0ENo0D7kcCYOOKXnXEJzc5ExdLz0KOtH1HFw65mXRNeC6
+         O+b7DCbQX+NKC2TJXHkZh0kllaG2pfr5PQFCMaRn74t3WSwHk1A/z0lpf0YUFM+gPoFH
+         zIS5U5zKkNMcA/RkU0l0sI+ccTHu5axYStUtBidCrrvIcc6ONm/nBPbzQwtR5NvaZJIc
+         YPxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkVTlod9Ad9VZhhTMnJbvH9RYtjkUJtkykjWlXF35mRj0QG8HifIe/W/4ITq4MNFF9Q6Bfl1XXw6x2mnkOesfE5WL1uwjAeB0UDbYX
+X-Gm-Message-State: AOJu0YxIZT0eUQhR2WT6knkG26DUP4cB+f3vC0NwtfPZPUft2NEOM/l8
+	i29Xqa9Eky0EPvKTmoCqhnC7DddjK9AzoWLD74irfUvVBCvgX7WIMuRzLI2JbGByo9YcO/gxGcE
+	T3g==
+X-Google-Smtp-Source: AGHT+IGmzgf5KeeFYGZBCXwZQqfg4fCxOlevM9CoUirZy2bp2SeSl/953tOx5wakGYYh0uQowopD/M4RiEQ=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a25:aac1:0:b0:de1:d50:ad47 with SMTP id
+ t59-20020a25aac1000000b00de10d50ad47mr120058ybi.13.1712863602281; Thu, 11 Apr
+ 2024 12:26:42 -0700 (PDT)
+Date: Thu, 11 Apr 2024 12:26:40 -0700
+In-Reply-To: <20240126085444.324918-10-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=16ca158ef7e08662];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	HAS_ORG_HEADER(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim];
-	TAGGED_RCPT(0.00)[5e3f9b2a67b45f16d4e6];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: A747B5D430
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -2.01
+Mime-Version: 1.0
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-10-xiong.y.zhang@linux.intel.com>
+Message-ID: <Zhg5cFPL9GgujFKV@google.com>
+Subject: Re: [RFC PATCH 09/41] perf: core/x86: Forbid PMI handler when guest
+ own PMU
+From: Sean Christopherson <seanjc@google.com>
+To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
+	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
+	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
+	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
+	chao.gao@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-Amir Goldstein <amir73il@gmail.com> writes:
+On Fri, Jan 26, 2024, Xiong Zhang wrote:
+> +	/*
+> +	 * When PMU is pass-through into guest, this handler should be forbidden from
+> +	 * running, the reasons are:
+> +	 * 1. After perf_guest_switch_to_kvm_pmi_vector() is called, and before cpu
+> +	 *    enter into non-root mode, NMI could happen, but x86_pmu_handle_irq()
+> +	 *    restore PMU to use NMI vector, which destroy KVM PMI vector setting.
+> +	 * 2. When VM is running, host NMI other than PMI causes VM exit, KVM will
+> +	 *    call host NMI handler (vmx_vcpu_enter_exit()) first before KVM save
+> +	 *    guest PMU context (kvm_pmu_save_pmu_context()), as x86_pmu_handle_irq()
+> +	 *    clear global_status MSR which has guest status now, then this destroy
+> +	 *    guest PMU status.
+> +	 * 3. After VM exit, but before KVM save guest PMU context, host NMI other
+> +	 *    than PMI could happen, x86_pmu_handle_irq() clear global_status MSR
+> +	 *    which has guest status now, then this destroy guest PMU status.
+> +	 */
+> +	if (perf_is_in_guest_passthrough())
 
-> On Thu, Apr 11, 2024 at 3:13=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
->>
->> On Thu 11-04-24 01:11:20, syzbot wrote:
->> > Hello,
->> >
->> > syzbot found the following issue on:
->> >
->> > HEAD commit:    6ebf211bb11d Add linux-next specific files for 20240410
->> > git tree:       linux-next
->> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D12be955d18=
-0000
->> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D16ca158ef7=
-e08662
->> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D5e3f9b2a67b4=
-5f16d4e6
->> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for =
-Debian) 2.40
->> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13c91175=
-180000
->> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1621af9d18=
-0000
->> >
->> > Downloadable assets:
->> > disk image: https://storage.googleapis.com/syzbot-assets/b050f81f73ed/=
-disk-6ebf211b.raw.xz
->> > vmlinux: https://storage.googleapis.com/syzbot-assets/412c9b9a536e/vml=
-inux-6ebf211b.xz
->> > kernel image: https://storage.googleapis.com/syzbot-assets/016527216c4=
-7/bzImage-6ebf211b.xz
->> > mounted in repro: https://storage.googleapis.com/syzbot-assets/75ad050=
-c9945/mount_0.gz
->> >
->> > IMPORTANT: if you fix the issue, please add the following tag to the c=
-ommit:
->> > Reported-by: syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com
->> >
->> > Quota error (device loop0): do_check_range: Getting block 0 out of ran=
-ge 1-5
->> > EXT4-fs error (device loop0): ext4_release_dquot:6905: comm kworker/u8=
-:4: Failed to release dquot type 1
->> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> > BUG: KASAN: slab-use-after-free in fsnotify+0x2a4/0x1f70 fs/notify/fsn=
-otify.c:539
->> > Read of size 8 at addr ffff88802f1dce80 by task kworker/u8:4/62
->> >
->> > CPU: 0 PID: 62 Comm: kworker/u8:4 Not tainted 6.9.0-rc3-next-20240410-=
-syzkaller #0
->> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIO=
-S Google 03/27/2024
->> > Workqueue: events_unbound quota_release_workfn
->> > Call Trace:
->> >  <TASK>
->> >  __dump_stack lib/dump_stack.c:88 [inline]
->> >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
->> >  print_address_description mm/kasan/report.c:377 [inline]
->> >  print_report+0x169/0x550 mm/kasan/report.c:488
->> >  kasan_report+0x143/0x180 mm/kasan/report.c:601
->> >  fsnotify+0x2a4/0x1f70 fs/notify/fsnotify.c:539
->> >  fsnotify_sb_error include/linux/fsnotify.h:456 [inline]
->> >  __ext4_error+0x255/0x3b0 fs/ext4/super.c:843
->> >  ext4_release_dquot+0x326/0x450 fs/ext4/super.c:6903
->> >  quota_release_workfn+0x39f/0x650 fs/quota/dquot.c:840
->> >  process_one_work kernel/workqueue.c:3218 [inline]
->> >  process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3299
->> >  worker_thread+0x86d/0xd70 kernel/workqueue.c:3380
->> >  kthread+0x2f0/0x390 kernel/kthread.c:389
->> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
->> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->> >  </TASK>
->>
->> Amir, I believe this happens on umount when the filesystem calls
->> fsnotify_sb_error() after calling fsnotify_sb_delete(). In theory these =
-two
->> calls can even run in parallel and fsnotify() can be holding
->> fsnotify_sb_info pointer while fsnotify_sb_delete() is freeing it so we
->> need to figure out some proper synchronization for that...
->
-> Is it really needed to handle any for non SB_ACTIVE sb?
+Maybe a name more along the lines of:
 
-I think it should be fine to exclude volumes being teared down.  Cc'ing
-Khazhy, who sponsored this work at the time and owned the use-case.
+	if (perf_is_guest_context_loaded())
 
---=20
-Gabriel Krisman Bertazi
+because that makes it more obvious that the NMI _can't_ belong to the host PMU.
+
+For that matter, I would also rename __perf_force_exclude_guest to
+perf_guest_context_loaded (or "active" if that's better).  The boolean tracks
+the state (guest vs. host context loaded/active), where as forcing perf events
+to exclude_guest is an action based on that state.
