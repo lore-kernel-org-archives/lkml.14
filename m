@@ -1,283 +1,231 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1825284FB9;
-	Thu, 11 Apr 2024 17:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712857113; cv=none; b=RESZLqlZPvJfYwmy9W72xwOJ7/WTcu6leWk3SSZ0QN5FmPviJzv7N3Yopj3oE6LF6OtkUS/F/7Bhh4+Y0hxN059mfXAYj6g2YpY9/90ZxrCkaz5q7ofQV43nnh68ZRl/YbGNKT4Qz3aO09YHE/xkZhWDHINz44mzX7O70gM+TXU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712857113; c=relaxed/simple;
-	bh=/ppWfbWsKd/vtU/KAgj6kfo561bqeGX4nuUVnQ0yucY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p/iYLchz9EZtvuLH/vZQ9dljXfNV70FIywaPuZeHowBZn3Dcrzw+kbDCf5bSXXQqOXMMKVswSvU2IQVgb3CyKrRRl7CvD5Lygs2mBne5T6KY303fjtzqQn+C0xPqn/NU4OduTzm7R75tcEsVLRF+pNXqam/r8dL4jTU22XpqwGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etVfMtxx; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8B612BF21
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 17:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712857156; cv=fail; b=R4fO9MI4O23NwUPbLG+FXsENG46Ig7UMBjrNys3pTuTLrnVzZHt8qWvADO2H6twY+ykT0w5cm/HP6aRk16fUBSf7S8aKyziT7eSNHEauiFeyN/mLOxHR7MPbis5kJ/eyqoTfGjBvmMeTwXBEL+abB7KXHD1xpYODll60ZiE0OeU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712857156; c=relaxed/simple;
+	bh=J3GP0ljxhM1QVVe9qB8M6jcqUPgSOH2igAWCDfYdFng=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JNCeILQ+vd6QYnHfkiQsWr/2bc7pD7InuG08XiNv52IpmafGv0Hnfkct2fQ0io3zHPNP+znoG7atGjgSDdGRL4hHodG1JvHZsmzXJYIFiyhrZXNTU3MMU20/GrAIk0D4cS1alQ97Kzx9sTCa5TCNTBCGtc8A8+zw8RXLBNGv62w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWbgYReL; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etVfMtxx"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ecf1bb7f38so139410b3a.0;
-        Thu, 11 Apr 2024 10:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712857111; x=1713461911; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WFf2rziloQsBNtn8MN+cl9d+3fgl7aoSqeYIidWC6OY=;
-        b=etVfMtxxJp1p/YcFcW7M1Ldyb0ZMf9rtqmD7b6kodFEJUTs3KZFPW57i9UOOUDW9Am
-         unsRFwR1zU9PZYc+P4L5BRdk5lOzKDp49WAQAjSi56DOU7Tq0GhVGR9LuZlZjBfGbHTS
-         f6oyU86ZhA6qDxgslJLLZjFIk2olX4wavgq92qkz9yZK0dflyeSCNBEJGN2dcztBXiH4
-         Gpne0wlRTYbjlG4h6mM/GXZe1coDUidEhdujNiLl8dpqoCYnq9U3+pBhMHAacfE9Tsxx
-         TTbfnuNjlvTKDEh5BkEE8B08yw9UqeThd8nNJvGTMuEvggK67ESV9JE45Z0xtcdUI1h0
-         Ufig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712857111; x=1713461911;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WFf2rziloQsBNtn8MN+cl9d+3fgl7aoSqeYIidWC6OY=;
-        b=MBPsnH02Hfib9Tq1ASf2vTZBMLIcuEGQ2otzttnNvsMrNjLkyUwrBaqxmCvOtKyGvw
-         n3ncZsAyni5dOQXL4SkjnhFE3VdQz4r7uFs7MbuIObgZQdQ6HUzBexYltElmtlfDB7QG
-         qg8nlFG7LyMp9t2/jzKvoM61ZIjjEIaMM1khdyNzLu8cIZL3x0lIpv6CMLzGZAcroXq8
-         TkDRJhOz9O22dh0PeZjdoCtckIBLpviZKsLBpoAsbY9b7i48earO6WuHcs3Z/9tiy5f5
-         B5ecnZ3/NihfLB+qJblG33eIlwAutKZlaYDCObieWTHitMuUnzaf/SNVkx0vK5KCNRKl
-         5Fmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWUGX+o+UTViOAWeRPF7Q0hF22rFoCCWoRbaS1+K1IuRKAbQGaXE84MiiNNYgeamdl7pRCfzs3DrgUES/YwSsKeEf+vCid8WUWCsWLjMDsq9tdOcb5Sd7KjLKbB8hjU5EkASPnA8HGoYOhAoqIMWf50pshQT0ruz1ERazY8A+dwKRQBSYCx
-X-Gm-Message-State: AOJu0YyuviA6PZNU4/V1dWYktlkM6YLuQYOCrG1JSLvaWVKdf+HSD4QC
-	/6A/KZbfUHv1NGzNB3EBjvHhFT9TshPhtvsmWi9jYdqMtlKFSfGVY1F0amOJ8CQ14tyulTtOZMT
-	0Tms5NVCpX0ruXrFQe16zsLqrNeM=
-X-Google-Smtp-Source: AGHT+IF0zP6I83vHCHUxFWyDK8ntc01PNKHR4xAZMm4tbfiQpKNDm4L6eJzS4qcwkyWgeqHMov8EgeRO1Z3T6ufsp6c=
-X-Received: by 2002:a17:90a:9ac:b0:2a0:4c3b:2c39 with SMTP id
- 41-20020a17090a09ac00b002a04c3b2c39mr266428pjo.23.1712857111182; Thu, 11 Apr
- 2024 10:38:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWbgYReL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712857155; x=1744393155;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=J3GP0ljxhM1QVVe9qB8M6jcqUPgSOH2igAWCDfYdFng=;
+  b=PWbgYReLt647MK59DWcciv+uuHAhOFjzJonVuu/Ar+XlN48wSIskBIT7
+   z969d3ORMdnrf7gyRjaDw7rHFj2txBXjAk9NeP+yo+LcqO25zKy/z3kd8
+   K+8o4J//IVArHd/zBN2WblIB3FDsovyti1NXQ0TC9orCdtlJB5OpT1pDQ
+   T+4gvHjrA04sWv1HQKPlIuSQHZhjzJ+oiMJee7xjgXZ99a8AqylYlKo8C
+   CdW5HerNMVWRiR9X9+jguYMV+hvgEuhNiL/wXkykFQv2mBsorR/laBmDp
+   B3uAzvCMbXJ5GZkCMuMxHLwZjuzbJxQ1FTs50/FGglRUcpE+p4T7uOIPo
+   A==;
+X-CSE-ConnectionGUID: Toc7G6UNQD+Ri7/LwIozDg==
+X-CSE-MsgGUID: NNx8qHVLS6iY2fXobdkxjQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="33682969"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="33682969"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 10:39:13 -0700
+X-CSE-ConnectionGUID: YFun7vDUTLu5DctXWg4yTA==
+X-CSE-MsgGUID: Yk/rE3H5S6uH4c5t1BQbAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="25753877"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa005.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Apr 2024 10:39:13 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Apr 2024 10:39:12 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 11 Apr 2024 10:39:12 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.169)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Apr 2024 10:39:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fRR6wokqgUxGOLYtPtp+QV0oBAd64CKiY8EydN1+iErYCUSy0HqKnsYZ+iSGun7F1iPaPkLqgDhmt/xg0HVG/xOQJE2ooCzlpqlGvuc1Bjt+0+GmbgbYDSisJ5J+wC9/PnHMXpTsvHlGO7a2dJ6+68tDLkqBTRSqkPrDhjC6TAy+xjxX6qUbdhWI7rst6j/AJuTMtIAUA0XZ6OYl4GPWbf3eYwBMl4K9Fw5TlP/uTXPoSlZ9+dyeuSCsnDt2DOks8x/3AaeOJBzgiby4IyfWkLQoAYRYna93tf4+zCoRdz9m8Q8cmet4yvjHq9Po3PxS9JpJMGb11XA5z1QpnJiEsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=apUUN3SFVhiDGefjFH9EGsWXdIzgTY4wN8iE25OZxzo=;
+ b=gR9jtxlwrUWuQrryHwFmizCQvmJGUpXDLULWWKYWSvkWXAMWO3OhYgoeQyx+XhGPO7R+XLAUGsQecq+s+yFo6bwUya6ORlpNz2HR9BiKz4MDW23h5GlOhUI003yPlWfhX+qMm6Gq6OBRiBR1/3VMRR4Ur8OWnDvrMBU2fHHs65X5IcLcgv0O32nqbO/Ldxr1xz1v9lUQMKke0/kLcrqH592q8ltKk5EOuCLsEsv8P8FsV7JwAjbpq9gIk5bbcX+w+Zg2lL9jNI7wtYBCAckRA6+2GSq3+UbH/vpDgmpV0KHn8kjfm3/re+EoT9gVOqb3RRerRXmFDjySJOpbKkQEUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by BN9PR11MB5225.namprd11.prod.outlook.com (2603:10b6:408:132::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7452.26; Thu, 11 Apr
+ 2024 17:39:10 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::d610:9c43:6085:9e68]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::d610:9c43:6085:9e68%7]) with mapi id 15.20.7452.019; Thu, 11 Apr 2024
+ 17:39:09 +0000
+Message-ID: <c96cdf6a-02a8-4ee2-91f5-e4329015e276@intel.com>
+Date: Thu, 11 Apr 2024 10:39:06 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 17/31] x86/resctrl: Move mbm_cfg_mask to struct
+ rdt_resource
+To: Dave Martin <Dave.Martin@arm.com>
+CC: James Morse <james.morse@arm.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, Fenghua Yu <fenghua.yu@intel.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
+	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
+ Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
+	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
+	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-18-james.morse@arm.com>
+ <966b7b32-6600-4b1f-9535-0298fedd57a7@intel.com>
+ <Zhfwzh4sHvTYyTJ1@e133380.arm.com>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <Zhfwzh4sHvTYyTJ1@e133380.arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0025.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::30) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411151810.403167-1-kovalev@altlinux.org>
-In-Reply-To: <20240411151810.403167-1-kovalev@altlinux.org>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 11 Apr 2024 13:38:16 -0400
-Message-ID: <CABBYNZJs1FHX_KihTTeVaV5i1AbenHw6gwfrM4TzicJjs038MQ@mail.gmail.com>
-Subject: Re: [PATCH net] Bluetooth: hci_event: fix double hci_conn_drop() when
- conn->state == BT_CONNECTED
-To: kovalev@altlinux.org
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, 
-	linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	lvc-project@linuxtesting.org, nickel@altlinux.org, oficerovas@altlinux.org, 
-	dutyrok@altlinux.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|BN9PR11MB5225:EE_
+X-MS-Office365-Filtering-Correlation-Id: 733cfb7d-b885-4206-da65-08dc5a4e4b58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: akPpqCBs1k0ZHW3U76JqJx/nKAULQo3aUH+6MBpT+Usj+fQo4EadAZ9AxIPc0FdvIYprV5YIQXUxs3yO3i8ajqKqhQDJKZJXXchznoqpJ39rFiNIlaeuj0Tz3XqF0Nrshb/lbiwbU7/AKpGHDXXvve/BlVwqjLporDFndKv4PcFeBBxFTxAybdJhbCxzij5xTDTqu9glreDBPBKVEvnXKBo0VwL6Nwr9ETBq2FpNytWGa1qOxPlfHKMdf7LuccSHizvYlvoavJRytU0PWGOlal8VfBGlNjoC4AEzXxU9BMzbx9aYEcDTxKnpHG0Wtx5EbjJTrAROx0aX2u3kpTQaPGhJ39V4b7gV+Su55eUO3gWkotWUnpK+wenDkuYY7J5AjBFozmz4qCZ3IUSZhUrGqSdrEJNwKDhrx1tLtAXJAc6sV4E4jD6o2jAv9ecrKRetzh3Y5JHEbQFFXaOP3+Smq7bU3PXyQQBqIXRvg8Ym+J5irNfssMnEIlR/hIXkUqfba1twlkJ4b/Ze/+UjkaZ+kn52zJputQJzVHNy0Wuh+tWBCtQmQyFBW7PYSjcl97V8RK+FTSFRLNTNwrEXs4t4EqnAty5jHDOcYczUeXngi9fw9dV3ARKijg7HTmIjKNzCF2U64+k54XFy9Ze+9WlQ1aA3S68KGMcR/v6r+mymtx8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1Uza0NCZ0FGVTYvQXZjczE4d3pKNTRyTUljeWZWYm0rTXYreU45VGpoemlm?=
+ =?utf-8?B?Y2pJdG1TVW8rcjZ3ZFpOWFVpeG5nWW9mcWhUUXJnSm1LQzIvQWcvTVdNcXlB?=
+ =?utf-8?B?b2tiYXlDUitqbHJiaGtFWEMwUzZvdm9acmh6a29PcmkyeW5mNi9RQ1diWUhZ?=
+ =?utf-8?B?dGpZUXo0UFdROG9iekc2RFdRZUhKZ3dPYmFOdFZyS21icGZzM1J0YnlzM2s4?=
+ =?utf-8?B?NjZkZElPWHFIWDJRVHMxUFpCRzJKcFJIdVRLNU9IQVp5azJFSEVFV2xXc2Zl?=
+ =?utf-8?B?RGZHbGdYWTBWV3pCdlV1dDlubXRXUGdSTnRXQWY1dHdJWDEranh3SnQwZncx?=
+ =?utf-8?B?cklrYktHc0tuUGlaN2IvWnh6bTZRZW5mcHhvUmI0Q01tSktWZ2ptb3Y1VDk2?=
+ =?utf-8?B?Y2F3ZGVTVjRCSXJaMUt1SDFvN2hieHlFVVRPKzFIL0xFVm05aWZwWFpYZWVX?=
+ =?utf-8?B?R2xvY1BWdHhhb2FxUU45OVY2ZUJlbXVqelBrRWxzTlRNMTVkTytpdWxsOGVt?=
+ =?utf-8?B?eWszNi9rSlpvcDRHNTAzZ1dBKzhQdmZwSTRpS2dFOE4vSDRRcVRKVjhNRXBG?=
+ =?utf-8?B?N3RMaDBZbjFIQVF3ZXpqZXNzbGlaVzZaU05FaDcvNmlIbkwrbWJQMHhMTk5W?=
+ =?utf-8?B?bGdxd1J4L084ZUxtYTBJWXA4N2tEMFR1RjZyZ2JiTW1hVnYrb3E3Rk1GNktF?=
+ =?utf-8?B?alhCbHh6cENCNHgyamYyQ2lPMzlmRW9oY3NzdWNwZlltL1Q3MUM2bjREY2cy?=
+ =?utf-8?B?K3lLOWlOZC9XS3IrM1FVRDFDMTZvTy9vZzJlM2RCOW5lNHFWV2xONVBIWkxX?=
+ =?utf-8?B?ZDhUL3lnVlhkaU5pNnpUN3FsYTA5cVFybEJMT3RjU25tMjZNOWpWSFgzckc2?=
+ =?utf-8?B?RnZzdnE5TXc4cXd0ZllNWXFMR29NZktTWVhNSG5RRzVLZUhVMGNPYW5Qa0k2?=
+ =?utf-8?B?QkJFMzltUDlHM1VlcmF5cGhGbzlEdjk0ZHQ2UDdtVm1BK2c5b2FKenlHMDhF?=
+ =?utf-8?B?dng5RXNaV1JkYkttMWxES2tGeHM4TjJrUmZSY0xvaUVLVnpBTnUvamxYbVQ1?=
+ =?utf-8?B?eDZIaWZQbHd1UDZJMTdqamFJYnpsUy9mTDk0OFpPR05yVGpnRUhuWXp4RjJY?=
+ =?utf-8?B?YlVaQXRRREhQQ3ZYSUVkZzZBczBjcm13WnFXNHFxRzFZWUlLRzhjSnlDQnlV?=
+ =?utf-8?B?TWE0RkU5MDE2T1gvMXRkVDhld2VQYWlNdWxtK081S1k1VFpWdERhQVc5K2Jx?=
+ =?utf-8?B?Q1BaZmpycFJFYjBlRzUyUjlMam9QR0tYVDUwbDh5N2sxY29EV2czUXpFVXZT?=
+ =?utf-8?B?NE9WMHFJelJHSEtJWWtqem5yZk14aENPSUN2NzY1ZkFqYVlndzdzbnVYUVgz?=
+ =?utf-8?B?TGY1TXlGTFN2WGJydnNITU4ybnRMVVY2dFZVbU1BSENZLzluY3R5U2NvL2Q4?=
+ =?utf-8?B?dWUxUGdyNmlqQ1piTGlrbUoxWEdFaFlLV1hpbzZ5VHE5TU9aYitjOVhtSnp0?=
+ =?utf-8?B?SnJ0aG1WdVplR3duYThYQXlPMG1wNnVSbXNhV3NRcnRoOVpreCtlakp5YWJD?=
+ =?utf-8?B?VWtZL2o4QWtub3FvcUIwWDZrc1Ryekh4eHk3SXgwYSsxRERwMzlkNEZhOG1T?=
+ =?utf-8?B?Q2JuNzByZnhweGdKRHoxZlJJZW1JYzBJT0h2dXVxVll5QytEWVdBVHAyVW5a?=
+ =?utf-8?B?MnZFalg3S2ZsMEtQTEN6bTNwK1NrbGlIYmNaeC9KSDZYZGhpSW4rZE8rKzd3?=
+ =?utf-8?B?bmZOVXUwalVQNXUxWUtqTHEvd1duYUJGUzNWbWpwRXZ5eThRWFhpZHhNVk1G?=
+ =?utf-8?B?R0l3QjMvb3AwV1ludWV6YzNKZFhzR0ZjWFNML1IzUzQ5bHlTdk9paTYxL1ZX?=
+ =?utf-8?B?OW9Ba054eDJEWVNORXg1eW1Db3dFRmNHS3pWbUd2SWNnd24vdDZUcGZIaEVp?=
+ =?utf-8?B?bnlJWlhpOFFCemdZZTUvek85ZUdHVmF2VVE0TloxbGZZaFYxYVNRS0l1QWYz?=
+ =?utf-8?B?T2V3OG1xbU9ieUlYYU9vQWViY056MXBuTFBMQXBBT3dVTGgyelpNSTNZMG44?=
+ =?utf-8?B?UjNJbEJVU1BLOTQ0MERSN3EvditYN0pYcTl5NXlYcTJzWWMxeDFiTVA2dWkv?=
+ =?utf-8?B?dGxJM3MvVGJCd2xqUDlMam1uZ3dUQ243Sm42a1FvYUpadEU3bndKajlQdjRZ?=
+ =?utf-8?B?ekE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 733cfb7d-b885-4206-da65-08dc5a4e4b58
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 17:39:09.8899
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tjjW1hGNEGU/DT45LDm+v9uhMkBlbkMqWe8UrzFQYrniw91OD5C4tqLpyKk8L/Y4ainhXZ9OHBb5QlRyDYWDnYIjB6lH+198gCT+PQUwwaY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5225
+X-OriginatorOrg: intel.com
 
-Hi,
+Hi Dave,
 
-On Thu, Apr 11, 2024 at 11:18=E2=80=AFAM <kovalev@altlinux.org> wrote:
->
-> From: Vasiliy Kovalev <kovalev@altlinux.org>
->
-> There is no need to drop the connection of some functions in which the
-> conn->state in BT_CONNECTED is marked, since in the future the same check
-> takes place (for example, in the hci_encrypt_change_evt() function) and
-> the hci_conn_drop() is called.
->
-> Otherwise, the conn->refcnt will become below zero, which will trigger a
-> warning and may cause a crash on kernels with the panic_on_warn parameter
-> enabled.
->
-> Syzkaller hit 'WARNING in hci_conn_timeout' bug.
->
-> [   23.485892] Bluetooth: Core ver 2.22
-> [   23.485916] NET: Registered PF_BLUETOOTH protocol family
-> [   23.485917] Bluetooth: HCI device and connection manager initialized
-> [   23.486407] Bluetooth: HCI socket layer initialized
-> [   23.486410] Bluetooth: L2CAP socket layer initialized
-> [   23.486413] Bluetooth: SCO socket layer initialized
-> [   24.507112] Bluetooth: hci0: unexpected cc 0x0c03 length: 249 > 1
-> [   24.507142] Bluetooth: hci0: unexpected cc 0x1003 length: 249 > 9
-> [   24.507165] Bluetooth: hci0: unexpected cc 0x1001 length: 249 > 9
-> [   24.508091] Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > 4
-> [   24.508109] Bluetooth: hci0: unexpected cc 0x0c25 length: 249 > 3
-> [   24.508117] Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > 2
-> [   24.545962] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-> [   24.545969] Bluetooth: BNEP filters: protocol multicast
-> [   24.545973] Bluetooth: BNEP socket layer initialized
-> [   24.547521] Bluetooth: MGMT ver 1.22
-> [   26.553008] Bluetooth: hci0: command tx timeout
-> [   26.561518] Bluetooth: RFCOMM TTY layer initialized
-> [   26.561526] Bluetooth: RFCOMM socket layer initialized
-> [   26.561532] Bluetooth: RFCOMM ver 1.11
-> [   28.602024] Bluetooth: hci0: Opcode 0x0c13 failed: -110
-> [   28.602054] Bluetooth: hci0: command tx timeout
-> [   30.650011] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   30.650021] Bluetooth: hci0: command tx timeout
-> [   32.696973] Bluetooth: hci0: command tx timeout
-> [   32.696985] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   34.744973] Bluetooth: hci0: command 0x0406 tx timeout
-> [   34.745008] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   36.792966] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   36.792980] Bluetooth: hci0: command 0x0406 tx timeout
-> [   38.841027] Bluetooth: hci0: command 0x0406 tx timeout
-> [   38.841035] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   40.889026] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   40.889999] Bluetooth: hci0: command 0x0406 tx timeout
-> [   40.890012] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   40.893629] NET: Registered PF_ALG protocol family
-> [   42.937008] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   42.937023] Bluetooth: hci0: command 0x0406 tx timeout
-> [   44.984984] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   44.985008] Bluetooth: hci0: command 0x0406 tx timeout
-> [   47.033023] Bluetooth: hci0: Opcode 0x0c1a failed: -110
-> [   47.033044] Bluetooth: hci0: command 0x0406 tx timeout
-> [   49.080976] Bluetooth: hci0: command 0x0406 tx timeout
-> [   49.080985] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   51.129140] Bluetooth: hci0: Opcode 0x0c24 failed: -110
-> [   51.130051] Bluetooth: hci0: command 0x0406 tx timeout
-> [   53.177011] Bluetooth: hci0: command 0x0406 tx timeout
-> [   55.225969] Bluetooth: hci0: command 0x0406 tx timeout
-> [   57.272968] Bluetooth: hci0: command 0x0406 tx timeout
-> [   59.320982] Bluetooth: hci0: command 0x0406 tx timeout
-> [   61.368989] Bluetooth: hci0: command 0x0406 tx timeout
-> [  148.474066] ------------[ cut here ]------------
-> [  148.474072] WARNING: CPU: 0 PID: 3835 at net/bluetooth/hci_conn.c:612
->                                 hci_conn_timeout+0x16/0x60 [bluetooth]
-> [  148.474115] Modules linked in: cmac algif_hash algif_skcipher af_alg
->         rfcomm bnep hci_vhci bluetooth ecdh_generic uinput af_packet
->         rfkill joydev hid_generic usbhid hid qrtr intel_rapl_msr
->         intel_rapl_common intel_pmc_core kvm_intel nls_utf8 iTCO_wdt
->         intel_pmc_bxt iTCO_vendor_support nls_cp866 vfat fat kvm irqbypas=
-s
->         crct10dif_pclmul crc32_pclmul snd_hda_codec_generic crc32c_intel
->         ghash_clmulni_intel ledtrig_audio sha512_ssse3 snd_hda_intel
->         sha256_ssse3 sha1_ssse3 snd_intel_dspcfg snd_intel_sdw_acpi
->         snd_hda_codec aesni_intel crypto_simd cryptd i2c_i801 snd_hda_cor=
-e
->         psmouse snd_hwdep i2c_smbus xhci_pci pcspkr snd_pcm lpc_ich
->         xhci_pci_renesas xhci_hcd tiny_power_button qemu_fw_cfg button
->         sch_fq_codel vboxvideo drm_vram_helper drm_ttm_helper ttm vboxsf
->         vboxguest snd_seq_midi snd_seq_midi_event snd_seq snd_rawmidi
->         snd_seq_device snd_timer snd soundcore msr fuse efi_pstore dm_mod
->         ip_tables x_tables autofs4 virtio_gpu virtio_net virtio_dma_buf
->         drm_shmem_helper net_failover drm_kms_helper
-> [  148.474210]  virtio_rng drm virtio_scsi rng_core virtio_console
->         virtio_balloon virtio_blk failover ahci libahci libata evdev
->         input_leds serio_raw scsi_mod scsi_common virtio_pci
->         virtio_pci_legacy_dev virtio_pci_modern_dev virtio_ring virtio
->         intel_agp intel_gtt
-> [  148.474234] CPU: 0 PID: 3835 Comm: kworker/u5:2
->                 Not tainted 6.1.85-un-def-alt1 #1
-> [  148.474238] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
->                 BIOS 1.16.0-alt1 04/01/2014
-> [  148.474241] Workqueue: hci0 hci_conn_timeout [bluetooth]
-> [  148.474265] RIP: 0010:hci_conn_timeout+0x16/0x60 [bluetooth]
-> [  148.474288] Code: 00 00 66 89 44 24 06 e8 58 a7 ff ff eb a8 e8 41 7b e=
-e
->                 c1 90 0f 1f 44 00 00 8b 87 20 fd ff ff 85 c0 78 07 74 07 =
-c3
->                 cc cc cc cc <0f> 0b 55 0f b6 87 49 fd ff ff 48 8d af 10 f=
-d
->                 ff ff 3c 01 74 12 be
-> [  148.474291] RSP: 0018:ffffa7fd80b53e90 EFLAGS: 00010286
-> [  148.474295] RAX: 00000000fffe728b RBX: ffff8959c46ab180 RCX: ffff8959c=
-3b70028
-> [  148.474297] RDX: 0000000000000001 RSI: ffff8959c86ce0b0 RDI: ffff895a1=
-05aeaf0
-> [  148.474299] RBP: ffff895a105aeaf0 R08: ffff8959c86ce0b0 R09: ffff8959c=
-46ab1f4
-> [  148.474301] R10: 0000000000000005 R11: 0000000000000005 R12: ffff8959c=
-3b70000
-> [  148.474302] R13: ffff8959ec495400 R14: 0000000000000000 R15: ffff8959e=
-c495405
-> [  148.474305] FS:  0000000000000000(0000) GS:ffff895a3dc00000(0000)
->                                                 knlGS:0000000000000000
-> [  148.474308] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  148.474310] CR2: 00007f2a1b7baa48 CR3: 0000000034b98000 CR4: 000000000=
-0750ef0
-> [  148.474317] PKRU: 55555554
-> [  148.474319] Call Trace:
-> [  148.474323]  <TASK>
-> [  148.474327]  ? __warn+0x79/0xc0
-> [  148.474343]  ? hci_conn_timeout+0x16/0x60 [bluetooth]
-> [  148.474364]  ? report_bug+0xff/0x150
-> [  148.474375]  ? handle_bug+0x49/0xa0
-> [  148.474398]  ? exc_invalid_op+0x14/0x70
-> [  148.474402]  ? asm_exc_invalid_op+0x16/0x20
-> [  148.474408]  ? hci_conn_timeout+0x16/0x60 [bluetooth]
-> [  148.474441]  process_one_work+0x217/0x3e0
-> [  148.474467]  worker_thread+0x4d/0x3c0
-> [  148.474473]  ? process_one_work+0x3e0/0x3e0
-> [  148.474478]  kthread+0xd6/0x100
-> [  148.474482]  ? kthread_complete_and_exit+0x20/0x20
-> [  148.474486]  ret_from_fork+0x1f/0x30
-> [  148.474500]  </TASK>
-> [  148.474502] ---[ end trace 0000000000000000 ]---
->
-> Fixes: 0fe29fd1cd77 ("Bluetooth: Read LE remote features during connectio=
-n establishment")
-> Fixes: 769be974d0c7 ("[Bluetooth] Use ACL config stage to retrieve remote=
- features")
-> Fixes: f8558555f31e ("[Bluetooth] Initiate authentication during connecti=
-on establishment")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
-> ---
->  net/bluetooth/hci_event.c | 4 ----
->  1 file changed, 4 deletions(-)
->
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index a8b8cfebe0180c..64477e1bde7cec 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -3529,7 +3529,6 @@ static void hci_auth_complete_evt(struct hci_dev *h=
-dev, void *data,
->                 } else {
->                         conn->state =3D BT_CONNECTED;
->                         hci_connect_cfm(conn, ev->status);
-> -                       hci_conn_drop(conn);
->                 }
->         } else {
->                 hci_auth_cfm(conn, ev->status);
-> @@ -3776,7 +3775,6 @@ static void hci_remote_features_evt(struct hci_dev =
-*hdev, void *data,
->         if (!hci_outgoing_auth_needed(hdev, conn)) {
->                 conn->state =3D BT_CONNECTED;
->                 hci_connect_cfm(conn, ev->status);
-> -               hci_conn_drop(conn);
->         }
->
->  unlock:
-> @@ -5030,7 +5028,6 @@ static void hci_remote_ext_features_evt(struct hci_=
-dev *hdev, void *data,
->         if (!hci_outgoing_auth_needed(hdev, conn)) {
->                 conn->state =3D BT_CONNECTED;
->                 hci_connect_cfm(conn, ev->status);
-> -               hci_conn_drop(conn);
->         }
->
->  unlock:
-> @@ -6561,7 +6558,6 @@ static void hci_le_remote_feat_complete_evt(struct =
-hci_dev *hdev, void *data,
->
->                         conn->state =3D BT_CONNECTED;
->                         hci_connect_cfm(conn, status);
-> -                       hci_conn_drop(conn);
->                 }
->         }
->
-> --
-> 2.33.8
+On 4/11/2024 7:16 AM, Dave Martin wrote:
+> On Mon, Apr 08, 2024 at 08:21:24PM -0700, Reinette Chatre wrote:
+>> Hi James,
+>>
+>> On 3/21/2024 9:50 AM, James Morse wrote:
+>>> The mbm_cfg_mask field lists the bits that user-space can set when
+>>> configuring an event. This value is output via the last_cmd_status
+>>> file.
+>>>
+>>> Once the filesystem parts of resctrl are moved to live in /fs/, the
+>>> struct rdt_hw_resource is inaccessible to the filesystem code. Because
+>>> this value is output to user-space, it has to be accessible to the
+>>> filesystem code.
+>>>
+>>> Move it to struct rdt_resource.
+>>>
+>>> Signed-off-by: James Morse <james.morse@arm.com>
+>>
+>> ..
+>>
+>>> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+>>> index 975b80102fbe..8a7367d1ce45 100644
+>>> --- a/include/linux/resctrl.h
+>>> +++ b/include/linux/resctrl.h
+>>> @@ -140,6 +140,8 @@ struct resctrl_membw {
+>>>   * @format_str:		Per resource format string to show domain value
+>>>   * @evt_list:		List of monitoring events
+>>>   * @fflags:		flags to choose base and info files
+>>> + * @mbm_cfg_mask:	Bandwidth sources that can be tracked when Bandwidth
+>>> + *			Monitoring Event Configuration (BMEC) is supported.
+> 
+> [...]
+> 
+>> Reinette
+>>
+>> BMEC is an AMD term. If MPAM is planning to use this member then this comment
+>> should be made generic.
+> 
+> MPAM can (at least) filter reads and/or writes, and it looks like James
+> is expecting to support this.
+> 
+> However, it probably does make sense to keep the comments neutral in a
+> common header.
+> 
+> Would the following work?
+> 
+> 	* @ mbm_cfg_mask:	Arch-specific event configuration flags
+> 
+> 
+> 
+> I think that's broad enough to cover all bases, but I'll wait for your
+> response.
 
-The instances are called when the connection procedure is considered
-finished so hci_connect_cfm is called, etc, which is assumed to be
-done only once per hci_conn, we could in theory even do the state
-change and hci_conn_drop inside hci_connect_cfm and ignore if there
-are calls to it after it had move to connected state for example,
-anyway szykaller probably doesn't really follow the procedures
-accordingly and just generate events regardless if there are commands
-being generated or not which would explain why we have never seem this
-with real controllers, but you can't really remove these calls like
-this because it would probably result in memory leaks.
+Since this is exposed to user space, ideally all architectures would use
+the same bits to mean the same thing. I assumed that is what James intended
+by placing the existing (AMD BMEC) bits in the global resctrl_types.h.
 
---=20
-Luiz Augusto von Dentz
+Reinette
