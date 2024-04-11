@@ -1,226 +1,222 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201EF1474BE;
-	Thu, 11 Apr 2024 11:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712834052; cv=none; b=RVgrDce/QKZZPTnr4Igs88hyNYSJYhGpKh0cFBJa2wjum97w2LCDGg/JgJrzokhlQtkr8UJNS0eGO9yz2rKF7TDZ8l0+Ixc24VkAG3AqRN+jhAQhtSrNNNhWqmfFZkkKNzqYf13BU3c/w7ZDsJZLs1mK36WReMy2JUgelWTrSgI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712834052; c=relaxed/simple;
-	bh=qvx2mawf3ghJ8pkjK1npUg1bbbAJVNMh44XNGAu8YZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rOxWsa70K/LoqNeeM6QXx1BdGyzO8/udTRp5e19vhs3q7Bg8nXFzcXuZRojLHFAaGCmzUj8HrzjQpBugUyxII/cZ5LHCK8PTHbW31JJWxVum9kxPj1RD0WPESLcAftzql9XbMl4sDziJxT2xZbtznN6Ov78H1X7+TDSaVYvfQuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=Cr0bOjjL; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8311F147C86;
+	Thu, 11 Apr 2024 11:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712834072; cv=fail; b=N8U93FSdHcR/+mInEzbx1mmlZafA8Y4l13A1mM67UwE4gI1FXHI1CQe/Yu+YvYZHpL0BLly03BYrmnt4HghXU4GBEnCQnvsT8330PWuEepiwx0YaVSZRBEpzV/4I/oh5BqtCe+BsSnvMXA1lp8pejJduW19GnMMv8jbI7Csrz5Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712834072; c=relaxed/simple;
+	bh=5VTBFh0LEYoNQsPPqF89OvhVGrNRn9zxM8LvZPyhTLU=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=J+YrMx91xU/stjHdQLx7kEK6CzOAybldVHTSh5Jv+lnmGpqbprTi0lsDqdYjrMwxPAivxdYoKz0fpKGpMq27Nn2sGaW2AAydREQY1If5X4Wp2YYgOvMnJpzbZxVOr49NFgUBWVLaUUTfs4sWSF26A4hbQVtFgxM7eQ2dopBf+WE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O+8aCwvh; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="Cr0bOjjL"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id C07B2600A2;
-	Thu, 11 Apr 2024 11:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1712834046;
-	bh=qvx2mawf3ghJ8pkjK1npUg1bbbAJVNMh44XNGAu8YZI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Cr0bOjjLP+KfhIaEIypx14rlYVzFCgJtk9YqryPHuda93iiRSfr3v6AZfeJK3gDR3
-	 mBX37xSWAqP/unG7GpPpzRybd2E/TAC/V0pyE+3aHegl1X0qwxWIAoB6pPcBogg7fu
-	 q3kCnBlh1q8BlEaSb4NQVHx8Kt2WyUbhkaGOyyn+G8lhy6kPp2+j7it7GAtXa6yKCL
-	 xMpK+K2LyAmaqKDM0imMAdtiw+K08B8aJ41e7YIz6fWIFqOhZ3igGFyM5ERi6xCdiC
-	 B2r1TvWlxwLojpcJbQIiLVI6ksI3x7N4DcN4J8mMeAdqqbosDvtwrw8TExucpjNMB8
-	 +CLpj7aVemw1Q==
-Received: by x201s (Postfix, from userid 1000)
-	id 447E120106A; Thu, 11 Apr 2024 11:14:02 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	Steen Hegelund <Steen.Hegelund@microchip.com>,
-	Lars Povlsen <lars.povlsen@microchip.com>,
-	Daniel Machon <daniel.machon@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH net v3] net: sparx5: flower: fix fragment flags handling
-Date: Thu, 11 Apr 2024 11:13:18 +0000
-Message-ID: <20240411111321.114095-1-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O+8aCwvh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712834071; x=1744370071;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=5VTBFh0LEYoNQsPPqF89OvhVGrNRn9zxM8LvZPyhTLU=;
+  b=O+8aCwvhjs5MKMEKUxabHXLSNSb576c4dBHZXSwuefs5rn7BJDucoOEm
+   B9CC3WrnFKoBHBK5Ol6LoWAWzH60e0rQiDjTjIGZP6mknwcXkVcyu8Eu6
+   pfIZf7Al/DpTHDzk/7DvPd7RDclkc7QpqiMgKIMBXOlOxXSmiUEkT04bj
+   YbLQ7DSuiZtnbZs0WZ4aSy8K6avsbDGpvKXZvo1Wl9EGn2tgZmyPw4AXX
+   Ze4AUdenU2gxZhWxvBt4fhbaW++RdlqK5tKECHJctdyBgcaDbiZDrBmkh
+   Owxro5tildAoNh5H+MkQmHVoNdinXwr8RIj5ztu+9tbTio16q/MLkWUUf
+   g==;
+X-CSE-ConnectionGUID: QglIWYJGQdCJr2szo4n54A==
+X-CSE-MsgGUID: n5GXrKP8QnK0K0PA15/avg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="19628130"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="19628130"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 04:14:29 -0700
+X-CSE-ConnectionGUID: x38YZeh4TrKVBwwLFhVUVg==
+X-CSE-MsgGUID: pgFnCclMRrCyN+CQiqnO6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="58289634"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Apr 2024 04:14:28 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 11 Apr 2024 04:14:27 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 11 Apr 2024 04:14:27 -0700
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 11 Apr 2024 04:14:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hBCnBFp9a0JzWouaVb1ljtyql84Nz52/TpW7N8601wgLd5xuNDDJQQ+p+rOqeZAv9rQYsQsNw0ZjS5r/dfnL62vOEw8lWgAzbY0R+L74hW+cuuKyJv2e5XfInWM7mNGoM5SvH1aN3XDmMECBLkdnOFRhYkN2035MR1o9Wp9vbjzQs40NFI9/A1k300b+AQfCvMCf0FY43OIvNghccm3ZW6aFM43lACPeNPWNd5i1ZKRLtk/5+r9K0sTxqr5v91F3c7CWuzpa98oIGECbWthbxqnXm/WJQryoDycG4Ztc6fc1iB2FjqDVjQC0cz/TKHHkqiKNswl0fUB2qgxsm1ErHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ip3hW/vcmTYKwOYaFixe4kuqqG8kDKt4sA3lkuXVue4=;
+ b=SBljyebddpGmTChmlLtC+BsvERNZ09gxogtYYLwyoA/Vt+nq9tmuVUtv2NLpf/c8ie3iQ3eGCvc0sSQjN5tHIlL4CF38eW7RzwikaQFGlORBuz1aP49/503VxEpA7gGSsBoDMT7JlQKww61K0x0LN5GAeiGhcCcisG8FQdbjBKl4CRi/A8+5ZCMle//i8oe8WZ5hHLVs3CMbmfPIwlOIJ9lpHwoqIHFFGMto7u2BZQHZ+ScHsI/UYDqdQTX6zJQ1aSC7GCThNBDAbf70a/PXy+HMcpN0uH5TBOS6s0328Tn8teELbja5bcT/iiL5BT/pr2MEDDq1Q7fJIiAri1HAyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
+ by CH3PR11MB7676.namprd11.prod.outlook.com (2603:10b6:610:127::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 11:14:25 +0000
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::5c8:d560:c544:d9cf]) by MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::5c8:d560:c544:d9cf%5]) with mapi id 15.20.7430.045; Thu, 11 Apr 2024
+ 11:14:25 +0000
+Message-ID: <b9804c32-9ba2-493b-bfb8-a6ac4f108175@intel.com>
+Date: Thu, 11 Apr 2024 13:14:20 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] kernel-doc: fix struct_group_tagged() parsing
+To: Alexander Lobakin <aleksander.lobakin@intel.com>, Jonathan Corbet
+	<corbet@lwn.net>
+CC: Kees Cook <keescook@chromium.org>, Jakub Kicinski <kuba@kernel.org>, "Dan
+ Williams" <dan.j.williams@intel.com>, "Gustavo A. R. Silva"
+	<gustavoars@kernel.org>, Keith Packard <keithp@keithp.com>,
+	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>, <linux-doc@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240411093208.2483580-1-aleksander.lobakin@intel.com>
+Content-Language: en-US
+From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+In-Reply-To: <20240411093208.2483580-1-aleksander.lobakin@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU2PR04CA0283.eurprd04.prod.outlook.com
+ (2603:10a6:10:28c::18) To MN6PR11MB8102.namprd11.prod.outlook.com
+ (2603:10b6:208:46d::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|CH3PR11MB7676:EE_
+X-MS-Office365-Filtering-Correlation-Id: f055befe-3372-4460-5566-08dc5a188be0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0Ni/yvY+z4xjvcM0OAStoUthllE3AiWYEBRLpMjHk86WeCm5dfWzWD5fgFEwesLmeYHW7JpbefOZQsFhenuXlWqy1kY13MwOb+vwFcR+dmvZQ3lcmSnxxY9DgI5yL9lE9wYBa/1o5iiTPk5axLjHl/yq3hYJZUYBse+HlzgXfnYKFIdrXGQ6MQxKrf8fE19ety/aMN9mN0hhKPPLx8xBA+Eu86rZ39ZJI2eVJVY2lB/eDBe5ZVbo0yjXbznvVbj5j/dK82TU0UEfBcLVf6YxMMGwGspt/Nu/JJfPSmUy+hTuwm7yDCLgsnHT88d9pGK+HOFDpHgCPBh5yPO2GNpRZ1Io/YCdUZZCV1ro7pFBEKwsBjvT+AIecqhg2bEUazi9xUDVX8ahDWO9oyJjqW8v7NePaGFK/k0p9LWmzORs8wICSUKfkEMueZTVplDNegQ9aw2g1vqCno3KgKOd8KYATaiHJCmasatfdyxte7c8c85hPE33JigI3nUjsom4jH8vKrhy3qDo8Ni6UpByhh3ROdeoT/2Xup7cXa535Hwrclj7FXQPZGtXJx9Z0T7yDfB4I5mJMaa2a/RQaSoN48NuKvxH4n/QnajBN/jQFRhyrhhER30KdVUiKq4BEw8i8CjMiajxZbRPIv4oDNStGa0UvBZYx8fxOB5MXdOtbMxVUW8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q2Z1SUZkZFNQYjVEODQ2aDM1cnh6NlRTeU1Vcks2eU92ZEVWN2xZc1QxbHly?=
+ =?utf-8?B?VFBoSmlya0FtSGxFTDM0TnB6SERlL3ZzWmlzdS9rUVZnRkxaNTV1ckRHb0tF?=
+ =?utf-8?B?OTA3TjFkYVQzYVNjV2FLUmhBUGtRbWIwbEs1dStCaktLTnVkejZKWmFnNUdH?=
+ =?utf-8?B?T2xEOWV6UUw4UkQwWDRhVzdMWlNuZFhFS0I3MlAvbGdWclQ3SUl2OGVLZ2g4?=
+ =?utf-8?B?azZLdHBMTlpBdjIwZ2FKWVpRLzRML001Q3RCSlphQjZ1Zjd6SkI4N01NZFZo?=
+ =?utf-8?B?YnpWWm5xSW9oaTRPcUp5TEhHSTFhaTRtMGI5WmlZV3p5bjdtaW5SdVVmeEky?=
+ =?utf-8?B?UUMxbXpyaGIxMUoxYjl2ZjdwQ1FqQW1YTm1VUlVkaStkakFwMmZDdkpWSitl?=
+ =?utf-8?B?cVA3NFQ2eDNCRUNyQW1zNHJNYzQzd3Q5QitENVJmQXZmbW9sS1MvdVVHQVFC?=
+ =?utf-8?B?RlkvYVFyZWx3QzBwZzVZYlNtYjNIOXp0ajdGV0QrVVViaWVBdUcyOEFJQzdP?=
+ =?utf-8?B?K3RwcWtuL3pxb1JwclhsYSsvUjZtU2p5WU9pS0NOdUdLc0J5NFd1eVJVdU0x?=
+ =?utf-8?B?ZnJuc1hvNk0zYjZCcE5zRmhFRXExQzl1azNxL29Rd3pvNHBpSW1jOXFkdUVq?=
+ =?utf-8?B?a0o0amFycVprR3hUMjNZZTcyZFBzaEJNSDNlQ3lTZjFHMHc2dFh6SWRURnBq?=
+ =?utf-8?B?YXRJZ01aZStHcmdRUEs0dXpUTmhPYlhGNkNGNmUrbC92ZHlMbGwrSjNYc25w?=
+ =?utf-8?B?SGJPNzZxVWlBYjJDZlRjbWVMdU1pRjdjUWlNcXRacjhWcHdwR3FUNFgrV1Vy?=
+ =?utf-8?B?bmpUaC8rbTR4VWE2UHRibG15K1BmRDVNSC9Sd00xZ2hDTjh5bmhYR3ozM3NG?=
+ =?utf-8?B?azlaenQzNFVkbU1aWjF2aENoNXhxMGhpVnF0NWN1bVZvaTVqbFV1MU1sTnQr?=
+ =?utf-8?B?UFpOSmo3L2RvVHdTa09mdk10eGFSZFFMQmxJNm5kRjc1bCtFVmVwSVFzc3RB?=
+ =?utf-8?B?cjIvUElrQ0RJam5FaWF6dE51bUw2aEJYaDdVa1RkOUcrZ0oydWY3ZnBLZjJM?=
+ =?utf-8?B?OEJVeEg4VGFFaGlUc1FyTzBWR2crRUF6OVJ1L3B5Y1ExU1FqbnFwRDQvRCs3?=
+ =?utf-8?B?WWNaKzExYjIrT3UrQXFuL01od0l2ZjFDcmoxaVBYRVNTZENZaW92WXpkajdo?=
+ =?utf-8?B?QUs1bGVvQTFwYzVMOGVjaVJ5RGdsRGtQK3RYbElKU1hNWEczYnpmakZPdFR2?=
+ =?utf-8?B?YmZjUEJWcXdVd0ZyRmVjcGkrcEkvdHVvdkdQMVFHS3NCakZoWWFuRVF1K0Ri?=
+ =?utf-8?B?bUVqVDNhZmdHMDFSWk9va09tdldONlNDNGNtOElsRlZRNTJodk5NYXNENGFr?=
+ =?utf-8?B?MklWVHJ4VGlhVUhUdnpuVEVkL0VZMGhabExEaUFyTkJsV25Yc1I3ZVdZdGZT?=
+ =?utf-8?B?MEdOSDFQaHJCYVlxREQvbGY2SmJNQmNXMnY3amh6N0JCVkJrZ0Z5V1JjM2FL?=
+ =?utf-8?B?ZUVWRURiekFuOE1LOW1ZdTEwTlVRY0h2b2szTllLRzQ3NHFkOUp4U01MTVU5?=
+ =?utf-8?B?VUZnUWhyMnBydkZpZnZjRVdDeTM0N0x5bHpuS1VwQ2E0Ri9yc1VFdDVGWlRH?=
+ =?utf-8?B?NDUrZ2ZmNGF3ckdXTlB3Q2ZlUit2QWMxVllxSGpzQk5ONUZwbmRZQzE3SVkv?=
+ =?utf-8?B?dlcwRUVZSTlmNFVOaHEwMWRqRGN1K213YmNJYVM3dmcrTHcwR0V1cXliN2U3?=
+ =?utf-8?B?VW5DME5uYnZVQ3kxZk5EL1N6dHBPS3BhNDAwTkZ4dEdIUlJxcGhMeUQwUTJQ?=
+ =?utf-8?B?VGJxK3g3V0dvLzJacEpnbjdpeWpUK0E1WFd3QVZCN2hRUVM1aDgwNUUzeGdp?=
+ =?utf-8?B?cS9EdGtzUVFZV05MMzlMV1ZBck1uRGs3UjFSS2p4QUNCZGhWK1NjQXlYTFg4?=
+ =?utf-8?B?WE5ZTWVzRzEvZXVmb0VGMXR5NStFTG1CTmh1Mk1RZFh3UmhKTGs5bkVjN2hm?=
+ =?utf-8?B?am5rNS9jRFEwWVBQK0hUNzlCYUs2bm1JZGx3a2J0c2hqd2o0SzNHR3N6UDBq?=
+ =?utf-8?B?dFF1SkpVajcyOU1YdFdJY2lxSTR6ZEhXSU84Z3pMUnBXaWJDM0hzQ0g2dHF2?=
+ =?utf-8?B?MGtNaUw4VVpPS0dWV3dRZlViL3FPbTlwL2dsVmxITnlJNGd3S1Z2aElUdlh5?=
+ =?utf-8?B?MGc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f055befe-3372-4460-5566-08dc5a188be0
+X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 11:14:25.3134
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NoUPlXdZX9GCrrK3dhJeUKGIDQtyuTzK1vvemvCdDfcP5LLWTReHJLmWcBHxXcec4Q95/BeNzDZK0oMs6rkNPWMiTjKvDzXuWbYjcPYPIfU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7676
+X-OriginatorOrg: intel.com
 
-I noticed that only 3 out of the 4 input bits were used,
-mt.key->flags & FLOW_DIS_IS_FRAGMENT was never checked.
+On 4/11/24 11:32, Alexander Lobakin wrote:
+> From: Kees Cook <keescook@chromium.org>
+> 
+> kernel-doc emits a warning on struct_group_tagged() if you describe your
+> struct group member:
+> 
+> include/net/libeth/rx.h:69: warning: Excess struct member 'fp' description in 'libeth_fq'
+> 
+> The code:
+> 
+> /**
+>   * struct libeth_fq - structure representing a buffer queue
+>   * @fp: hotpath part of the structure
+>   * @pp: &page_pool for buffer management
+> [...]
+>   */
+> struct libeth_fq {
+> 	struct_group_tagged(libeth_fq_fp, fp,
+> 		struct page_pool	*pp;
+> [...]
+> 	);
+> 
+> When a struct_group_tagged() is encountered, we need to build a
+> `struct TAG NAME;` from it, so that it will be treated as a valid
+> embedded struct.
+> Decouple the regex and do the replacement there. As far as I can see,
+> this doesn't produce any new warnings on the current mainline tree.
+> 
+> Reported-by: Jakub Kicinski <kuba@kernel.org>
+> Closes: https://lore.kernel.org/netdev/20240405212513.0d189968@kernel.org
+> Fixes: 50d7bd38c3aa ("stddef: Introduce struct_group() helper macro")
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Co-developed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+> ---
+>   scripts/kernel-doc | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+> index 43a30f2de513..01ac8f794b30 100755
+> --- a/scripts/kernel-doc
+> +++ b/scripts/kernel-doc
+> @@ -1152,7 +1152,8 @@ sub dump_struct($$) {
+>           # - first eat non-declaration parameters and rewrite for final match
+>           # - then remove macro, outer parens, and trailing semicolon
+>           $members =~ s/\bstruct_group\s*\(([^,]*,)/STRUCT_GROUP(/gos;
+> -        $members =~ s/\bstruct_group_(attr|tagged)\s*\(([^,]*,){2}/STRUCT_GROUP(/gos;
+> +        $members =~ s/\bstruct_group_attr\s*\(([^,]*,){2}/STRUCT_GROUP(/gos;
+> +        $members =~ s/\bstruct_group_tagged\s*\(([^,]*),([^,]*),/struct $1 $2; STRUCT_GROUP(/gos;
+>           $members =~ s/\b__struct_group\s*\(([^,]*,){3}/STRUCT_GROUP(/gos;
+>           $members =~ s/\bSTRUCT_GROUP(\(((?:(?>[^)(]+)|(?1))*)\))[^;]*;/$2/gos;
+>   
 
-In order to avoid a complicated maze, I converted it to
-use a 16 byte mapping table.
+I would complain on code that matches `[^,]*` part with 0 characters,
+meaning no tag for struct_group_tagged(), or no attrs for
+struct_group_attrs(). In such cases simpler struct_group() call should
+be suggested. However, that issue was presented prior to your patch.
 
-As shown in the table below the old heuristics doesn't
-always do the right thing, ie. when FLOW_DIS_IS_FRAGMENT=1/1
-then it used to only match follow-up fragment packets.
-
-Here are all the combinations, and their resulting new/old
-VCAP key/mask filter:
-
-  /- FLOW_DIS_IS_FRAGMENT (key/mask)
-  |    /- FLOW_DIS_FIRST_FRAG (key/mask)
-  |    |    /-- new VCAP fragment (key/mask)
-  v    v    v    v- old VCAP fragment (key/mask)
-
- 0/0  0/0  -/-  -/-     impossible (due to entry cond. on mask)
- 0/0  0/1  -/-  0/3 !!  invalid (can't match non-fragment + follow-up frag)
- 0/0  1/0  -/-  -/-     impossible (key > mask)
- 0/0  1/1  1/3  1/3     first fragment
-
- 0/1  0/0  0/3  3/3 !!  not fragmented
- 0/1  0/1  0/3  3/3 !!  not fragmented (+ not first fragment)
- 0/1  1/0  -/-  -/-     impossible (key > mask)
- 0/1  1/1  -/-  1/3 !!  invalid (non-fragment and first frag)
-
- 1/0  0/0  -/-  -/-     impossible (key > mask)
- 1/0  0/1  -/-  -/-     impossible (key > mask)
- 1/0  1/0  -/-  -/-     impossible (key > mask)
- 1/0  1/1  -/-  -/-     impossible (key > mask)
-
- 1/1  0/0  1/1  3/3 !!  some fragment
- 1/1  0/1  3/3  3/3     follow-up fragment
- 1/1  1/0  -/-  -/-     impossible (key > mask)
- 1/1  1/1  1/3  1/3     first fragment
-
-In the datasheet the VCAP fragment values are documented as:
- 0 = no fragment
- 1 = initial fragment
- 2 = suspicious fragment
- 3 = valid follow-up fragment
-
-Result: 3 combinations match the old behavior,
-        3 combinations have been corrected,
-        2 combinations are now invalid, and fail,
-        8 combinations are impossible.
-
-It should now be aligned with how FLOW_DIS_IS_FRAGMENT
-and FLOW_DIS_FIRST_FRAG is set in __skb_flow_dissect() in
-net/core/flow_dissector.c
-
-Since the VCAP fragment values are not a bitfield, we have
-to ignore the suspicious fragment value, eg. when matching
-on any kind of fragment with FLOW_DIS_IS_FRAGMENT=1/1.
-
-Only compile tested, and logic tested in userspace, as I
-unfortunately don't have access to this switch chip (yet).
-
-Fixes: d6c2964db3fe ("net: microchip: sparx5: Adding more tc flower keys for the IS2 VCAP")
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
-Reviewed-by: Steen Hegelund <Steen.Hegelund@microchip.com>
-Tested-by: Daniel Machon <daniel.machon@microchip.com>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
----
-
-Changelog:
-
-v3:
-- Added Reviewed-by from Jacob Keller.
-- Start NL msg and comments with uppercase (requested by Daniel)
-
-v2: https://lore.kernel.org/netdev/20240410095224.6372-1-ast@fiberby.net/
-- Improved in-line documentation of mapping table (requested by Steen)
-- Relocated enum and mapping table (requested by Steen)
-- Added Reviewed-by from Steen Hegelund
-- Added Tested-by from Daniel Machon
-
-v1: https://lore.kernel.org/netdev/20240408172738.96447-1-ast@fiberby.net/
-
- .../microchip/sparx5/sparx5_tc_flower.c       | 61 ++++++++++++-------
- 1 file changed, 40 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-index 523e0c470894f..55f255a3c9db6 100644
---- a/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-+++ b/drivers/net/ethernet/microchip/sparx5/sparx5_tc_flower.c
-@@ -36,6 +36,27 @@ struct sparx5_tc_flower_template {
- 	u16 l3_proto; /* protocol specified in the template */
- };
- 
-+/* SparX-5 VCAP fragment types:
-+ * 0 = no fragment, 1 = initial fragment,
-+ * 2 = suspicious fragment, 3 = valid follow-up fragment
-+ */
-+enum {                   /* key / mask */
-+	FRAG_NOT   = 0x03, /* 0 / 3 */
-+	FRAG_SOME  = 0x11, /* 1 / 1 */
-+	FRAG_FIRST = 0x13, /* 1 / 3 */
-+	FRAG_LATER = 0x33, /* 3 / 3 */
-+	FRAG_INVAL = 0xff, /* invalid */
-+};
-+
-+/* Flower fragment flag to VCAP fragment type mapping */
-+static const u8 sparx5_vcap_frag_map[4][4] = {		  /* is_frag */
-+	{ FRAG_INVAL, FRAG_INVAL, FRAG_INVAL, FRAG_FIRST }, /* 0/0 */
-+	{ FRAG_NOT,   FRAG_NOT,   FRAG_INVAL, FRAG_INVAL }, /* 0/1 */
-+	{ FRAG_INVAL, FRAG_INVAL, FRAG_INVAL, FRAG_INVAL }, /* 1/0 */
-+	{ FRAG_SOME,  FRAG_LATER, FRAG_INVAL, FRAG_FIRST }  /* 1/1 */
-+	/* 0/0	      0/1	  1/0	      1/1 <-- first_frag */
-+};
-+
- static int
- sparx5_tc_flower_es0_tpid(struct vcap_tc_flower_parse_usage *st)
- {
-@@ -145,29 +166,27 @@ sparx5_tc_flower_handler_control_usage(struct vcap_tc_flower_parse_usage *st)
- 	flow_rule_match_control(st->frule, &mt);
- 
- 	if (mt.mask->flags) {
--		if (mt.mask->flags & FLOW_DIS_FIRST_FRAG) {
--			if (mt.key->flags & FLOW_DIS_FIRST_FRAG) {
--				value = 1; /* initial fragment */
--				mask = 0x3;
--			} else {
--				if (mt.mask->flags & FLOW_DIS_IS_FRAGMENT) {
--					value = 3; /* follow up fragment */
--					mask = 0x3;
--				} else {
--					value = 0; /* no fragment */
--					mask = 0x3;
--				}
--			}
--		} else {
--			if (mt.mask->flags & FLOW_DIS_IS_FRAGMENT) {
--				value = 3; /* follow up fragment */
--				mask = 0x3;
--			} else {
--				value = 0; /* no fragment */
--				mask = 0x3;
--			}
-+		u8 is_frag_key = !!(mt.key->flags & FLOW_DIS_IS_FRAGMENT);
-+		u8 is_frag_mask = !!(mt.mask->flags & FLOW_DIS_IS_FRAGMENT);
-+		u8 is_frag_idx = (is_frag_key << 1) | is_frag_mask;
-+
-+		u8 first_frag_key = !!(mt.key->flags & FLOW_DIS_FIRST_FRAG);
-+		u8 first_frag_mask = !!(mt.mask->flags & FLOW_DIS_FIRST_FRAG);
-+		u8 first_frag_idx = (first_frag_key << 1) | first_frag_mask;
-+
-+		/* Lookup verdict based on the 2 + 2 input bits */
-+		u8 vdt = sparx5_vcap_frag_map[is_frag_idx][first_frag_idx];
-+
-+		if (vdt == FRAG_INVAL) {
-+			NL_SET_ERR_MSG_MOD(st->fco->common.extack,
-+					   "Match on invalid fragment flag combination");
-+			return -EINVAL;
- 		}
- 
-+		/* Extract VCAP fragment key and mask from verdict */
-+		value = (vdt >> 4) & 0x3;
-+		mask = vdt & 0x3;
-+
- 		err = vcap_rule_add_key_u32(st->vrule,
- 					    VCAP_KF_L3_FRAGMENT_TYPE,
- 					    value, mask);
--- 
-2.43.0
-
+This is clearly an improvement, so:
+Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
