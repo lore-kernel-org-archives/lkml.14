@@ -1,50 +1,44 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA83C17C6A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94A017BD4;
 	Thu, 11 Apr 2024 20:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712867164; cv=none; b=OY9nNew8rvDe2UXmFjHs7D701mse/RXBqxWDVImACtkMB95eqGN6lcQJsRrq3cVNADYYi1lCABCDNL88mh8i4pKM2YhorQh+/tbLo6CXkEgFCVM6fy0WrUNLf7fSU7I+LQlht8H0LUOqVjB41/qzCxWPjy0qbnjqulmqdqH4gxY=
+	t=1712867165; cv=none; b=Le8tHkLAHwKLywvxg1ICQoxN3+4OQsc4Wv7TrufU0bZahNKuxXUpcNj4wt+mKc6gN52fC+fz26HWRUhC23YBjrdwUlMyOA4j4Sen05RBenGOjMAp8ELcAJGB3x+s0aMUl+mxMB1UwvlUg7VDYUSlO9sQ3rs+bEhaRa1fI4qtECw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712867164; c=relaxed/simple;
-	bh=XoApVgnrMaufCiheBxdu3E9GYzATKwq4UZrsxBcGihY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j6ay3ACy4qtH4Qlxhm+l9hUiE5hPbAeHugJX6tILNOtL8UBxtukQnZM87MvchzzKLHtwzBiIhonQrotT4TfKSJKnyHN+HtZhz68aZDXqb/n3rnj9dfRTrrEviREGXa4i4UPtUUDL2L/OLDwGCxMu1FG/RlSaeLd4X4MQcGsmUAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=i6iH4hiR; arc=none smtp.client-ip=74.208.4.196
+	s=arc-20240116; t=1712867165; c=relaxed/simple;
+	bh=LDIXVCb6LHYhQvsivq7jCY36uodU+fCNx85pPyntecI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKOqHUye7AjBbeQqSPpkKUeaJeMzMfBy1BqDPYKu+HTs40IZsjzrRhrAU3ZzgL6UTEBBL9JDSksiijl3rcO8klvop0YY8flTnvwBIp+gvac+dW2nVky2Y6Fs8DgsY3/4k4vK/ZuldzjRJTy1e2xJ3SCFFrDzUcJEU009wkTaH/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=uILZbEWM; arc=none smtp.client-ip=74.208.4.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="i6iH4hiR"
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="uILZbEWM"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
 	s=s1-ionos; t=1712867157; x=1713471957; i=parker@finest.io;
-	bh=jDtycroHBuO6M79KMq7clDQ2cxUyLfrUzN08PqttkGg=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
-	 References:MIME-Version:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=i6iH4hiRs01wemE31sWZqXm9UzqsGXcoMWH40UXGf87cxkc4vgpIlSVCD5w33i9m
-	 dbQ94CkdYq+SHgQMAXS8gScBsPVIws82OklIJ2P1AaiV8tPJk0baVSEv6bogmRhu+
-	 sLQZ8uugaJQMvhTQnnB5GEim7xdlukv4DMw5u4ajDN90HKkNxZ9e2DAZFOg5DCMk8
-	 ecPVGmdWGwXdtiQ7hp03WuItPd/Acy42+Eet4Btcoz1r67LPRqxteKbfofqPDR7i3
-	 LgUaneB2sDr84RJA89zB/4XVWVhI0sqnI2X7rtsRjr3FJERT7dsde11k4ffWv57D1
-	 6GkuvLO5+puSYpmqyA==
+	bh=TCukniCmiJlFXJkYUeOOK8Y0LFIFkQtEUht+JsI0uWU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=uILZbEWM0Dx0HwskptMO62BgJqkQDp6uOdlGv4+8iyGdIv2tmc+eCrXiDKNJNX05
+	 yjeg60DONDbh59uHYJ8cJC7OipxIzuIPSObI2z2do2FMAZIC6e5jr4YLG4QpqKuY8
+	 E2GlTLwtINXA/RLdeXsQUGG228EON/u1o4mqWocC31BdnFYxzfWaxx2fKpIFBL6hv
+	 zZ1VfJPNFTA4ZaUnpLAw1hr5IIY+TjIEZeHb3y2YzwaKlpNTUTEPNiM93gu2bHLQm
+	 tlePDZQnI9NTUCtolay3zfeItPbl+8N+TXMQb7959ZnV8uwJ6FJ1lDQ5CFbAYO8OD
+	 vCBXYLC//pxJoIwSLg==
 X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
 Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0M9IQC-1s3Ijb2DOw-0032Yw; Thu, 11 Apr
- 2024 22:25:57 +0200
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0MhBdX-1s8R6b3j2v-00W18b; Thu, 11 Apr
+ 2024 22:25:56 +0200
 From: parker@finest.io
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Jiri Slaby <jirislaby@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-serial@vger.kernel.org
 Cc: Parker Newman <pnewman@connecttech.com>
-Subject: [PATCH v2 2/7] serial: exar: add support for reading from Exar EEPROM
-Date: Thu, 11 Apr 2024 16:25:40 -0400
-Message-ID: <d16cb88f916914278e125023c856bbf85d0908c1.1712863999.git.pnewman@connecttech.com>
+Subject: [PATCH v2 0/7] serial: exar: add Connect Tech serial cards to Exar driver
+Date: Thu, 11 Apr 2024 16:25:38 -0400
+Message-ID: <cover.1712863999.git.pnewman@connecttech.com>
 X-Mailer: git-send-email 2.43.2
-In-Reply-To: <cover.1712863999.git.pnewman@connecttech.com>
-References: <cover.1712863999.git.pnewman@connecttech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,167 +46,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Y4RPmjxQqQ4vafUt1kFgZGKHOYLk7BwGDAxQV2jDQxdTtiQcTRO
- jvRby1j2c6/Af1yc47C6LccmwT122stXSxmqbTNJNn2nm0a5DDuKlKRYE00rQahWTVbczBc
- dXRwLDjhGFFBZWA8PHZq/xju+DgjcKQctbyWObDTTg+0X2/NL4cLxorIDOyNDr3oPPnXKNV
- 8p4ZcyyChahMvX1BOv6eA==
+X-Provags-ID: V03:K1:keuYo7IoL7zHMss6ufd5ZM/kGYYN/UQgpmS2Phj6qju4LM//Aoi
+ KYGu5gpsu+Id//c7ZXkCB//saBrCNYartYQ3A2bCAKJ6HVo8G12jskb/kWN+guR8GZsT4iw
+ WzruQnjnM1B4r+IR/HuAHid9F22GFv3lj8pjSW4Ng4C3sXKTBJHoC9XxhpAxrAafG+CyvsI
+ t+B+04EUDRQOvBVNaCv+Q==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:upnVXHs+xiY=;fYUxVut5gLhHQy/JpxbZcD7qSbs
- 4cbk4AK2b1I5gwNvVC+EeRHtKx14bxGJHpt0WQ0vG5Qt+jGTIR1dj7eWdSZMCTDXv5NDS/2is
- 6PR2GsZLUI/Qag0jzBa3FGDfs9tnIyjy+5fk62fEHtKru5yz1ICGnm8F04PwId4/kqxAGMbyU
- Wfr2RJ2vHKv/ttcTiuz65gzLRe3TFKjxOenjz3C7sd59tAG9EJf9YTPwSR4qedk6ihKUIk0ka
- EbbP1gCXUMdFid0HHrPGn5VtqxJqdxdYDG4zTtKJ1qo/JTpDRc60wyWGraygSwFjY/mi5oOhS
- jNZ70TZR0fe6E99PVjHaD8COPBWQ6C25zTjn6JgTyiA/9TlQhKD2LancAH10s4WK4E+FjcLGy
- 3iZdNDsGS21OVZwPbCxtRu3UxsopzOWm3GT8/N8DnnuVpRvVRPdvBCCtzbWFwWFidMHhU3a61
- 4waDD5zen4HIu80vqrVs2fSDRh9NWoEQnXvpeHDdw4r4ZlBCjB9tIGPwiibjY6EpgK//32jmz
- otdicFyp9ZZRwifxuduQPF0caLXEiKqLZXfZGqrIbV3teoQ05XtX5gRhMboFlAXQToBggrNi7
- T4qq8aN3pwdbIB1waQfRfUUCgUzkgsDe9QW1mYlxQmqA7efWd54FTf6s8GvxTXBe3K+u/kou+
- b9pFs3ahCHv6rfYbl3s8wA7UmSdS39+euk89JsdY20lGtRw1MWHqg3AMFdQvhpLwP+TIwAgWp
- 0KcBYk/CU/JokSjUBshOKaHiK2I6xt9xPrm/VBS0jCb0zbZ4Q8F/3s=
+UI-OutboundReport: notjunk:1;M01:P0:znEOoshHSL0=;0/XCIqmQMvCFYHqy32hpX9+MZWA
+ +rRcK6F3PdzmjW2mz5XdrIC9ZhGmNx6mSAIgdCX+GENSFkeIGs0FcE+3o905IZLGTQM/piFGW
+ QVIeecU6I8UYWNlGUasuUcOkU/lw18Q73XX0XEyY4SZeZ0Jr6AW7/ivGT+6ArCBM8aKawsE+C
+ x+TBzcvZ4s5i3Ma1oNJbCRTzDrnL7gPWFNCWGr8sdE0xPQD9+KNMOU76yTlIks/pfQy7K2AZF
+ 4UgYMuiv9cjohLfyh5pjbLlO0F1Xiq0s7D4meddOJqmV772Glo8v/PgafG+dZrvXzA0RigBks
+ szFm6as04GtE0W+ePde1qQSZatUBPcyS1DUTIL/dKvXkGS2ukTaE7nTR9v6a8VSahMYwJMmtS
+ x1vzUoSs5MVMvKsxlRQY6a32Ls97UP7dYQKyhTH6dwLTIbU2V+dItjATCF+PYfZX8fcTySRLK
+ GaYAgXMjCKcougzpt7nZl1aqXXcLqIWgf1d2FJEzwW52WS5dJHiFnskeqT2e1EUZ8iyu/y3MR
+ 8+Xm5jpXPr67fepEXhO1aqT5Y/YzVgJGO6EmeGyLU+ygiKP9LDKMNEIPvMMHQ0nEvHCGNMnT7
+ yHhp5tKEMgcpTewHRSw5bllraaViJkdApwlMEga8Pe5s5szqZaQlFGTdmn3FcfVOqAI2STbx5
+ dn5iS7SsOFo9zR2Q+JWcStgPamokLAZHuO/NKgY35uaZBH6s8eDMrGp2vOGTTV2Krjpez8AWH
+ rIuPTAHyuX9oAXBu1GDxzdCtbFf+d/V/z/GKDF/RdqFgEsJ9BOgDH4=
 
 From: Parker Newman <pnewman@connecttech.com>
 
-- Adds support for reading a word from the Exar EEPROM.
-- Adds exar_write_reg/exar_read_reg for reading and writing to the UART's
-config registers.
+Hello,
+These patches add proper support for most of Connect Tech's (CTI) Exar
+based serial cards. Previously, only a subset of CTI's cards would work
+with the Exar driver while the rest required the CTI out-of-tree driver.
+These patches are intended to phase out the out-of-tree driver.
 
-Signed-off-by: Parker Newman <pnewman@connecttech.com>
-=2D--
- drivers/tty/serial/8250/8250_exar.c | 110 ++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+I am new to the mailing lists and contributing to the kernel so please
+let me know if I have made any mistakes or if you have any feedback.
 
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
-/8250_exar.c
-index 4d1e07343d0b..49d690344e65 100644
-=2D-- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -128,6 +128,16 @@
- #define UART_EXAR_DLD			0x02 /* Divisor Fractional */
- #define UART_EXAR_DLD_485_POLARITY	0x80 /* RS-485 Enable Signal Polarity =
-*/
+Changes in v2:
+- Put missing PCI IDs in 8250_exar.c instead of pci_ids.h
+- Split large patch into smaller ones
 
-+/* EEPROM registers */
-+#define UART_EXAR_REGB                  0x8e
-+#define UART_EXAR_REGB_EECK             BIT(4)
-+#define UART_EXAR_REGB_EECS             BIT(5)
-+#define UART_EXAR_REGB_EEDI             BIT(6)
-+#define UART_EXAR_REGB_EEDO             BIT(7)
-+#define UART_EXAR_REGB_EE_ADDR_SIZE     6
-+#define UART_EXAR_REGB_EE_DATA_SIZE     16
-+
-+
- /*
-  * IOT2040 MPIO wiring semantics:
-  *
-@@ -195,6 +205,106 @@ struct exar8250 {
- 	int			line[];
- };
+Thank you,
 
-+static inline void exar_write_reg(struct exar8250 *priv,
-+				unsigned int reg, uint8_t value)
-+{
-+	if (!priv || !priv->virt)
-+		return;
-+
-+	writeb(value, priv->virt + reg);
-+}
-+
-+static inline uint8_t exar_read_reg(struct exar8250 *priv, unsigned int r=
-eg)
-+{
-+	if (!priv || !priv->virt)
-+		return 0;
-+
-+	return readb(priv->virt + reg);
-+}
-+
-+static inline void exar_ee_select(struct exar8250 *priv, bool enable)
-+{
-+	uint8_t value =3D 0x00;
-+
-+	if (enable)
-+		value |=3D UART_EXAR_REGB_EECS;
-+
-+	exar_write_reg(priv, UART_EXAR_REGB, value);
-+	udelay(2);
-+}
-+
-+static inline void exar_ee_write_bit(struct exar8250 *priv, int bit)
-+{
-+	uint8_t value =3D UART_EXAR_REGB_EECS;
-+
-+	if (bit)
-+		value |=3D UART_EXAR_REGB_EEDI;
-+
-+	//Clock out the bit on the i2c interface
-+	exar_write_reg(priv, UART_EXAR_REGB, value);
-+	udelay(2);
-+
-+	value |=3D UART_EXAR_REGB_EECK;
-+
-+	exar_write_reg(priv, UART_EXAR_REGB, value);
-+	udelay(2);
-+}
-+
-+static inline uint8_t exar_ee_read_bit(struct exar8250 *priv)
-+{
-+	uint8_t regb;
-+	uint8_t value =3D UART_EXAR_REGB_EECS;
-+
-+	//Clock in the bit on the i2c interface
-+	exar_write_reg(priv, UART_EXAR_REGB, value);
-+	udelay(2);
-+
-+	value |=3D UART_EXAR_REGB_EECK;
-+
-+	exar_write_reg(priv, UART_EXAR_REGB, value);
-+	udelay(2);
-+
-+	regb =3D exar_read_reg(priv, UART_EXAR_REGB);
-+
-+	return (regb & UART_EXAR_REGB_EEDO ? 1 : 0);
-+}
-+
-+/**
-+ * exar_ee_read() - Read a word from the EEPROM
-+ * @priv: Device's private structure
-+ * @ee_addr: Offset of EEPROM to read word from
-+ *
-+ * Read a single 16bit word from an Exar UART's EEPROM
-+ *
-+ * Return: EEPROM word on success, negative error code on failure
-+ */
-+static int exar_ee_read(struct exar8250 *priv, uint8_t ee_addr)
-+{
-+	int i;
-+	int data =3D 0;
-+
-+	exar_ee_select(priv, true);
-+
-+	//Send read command (opcode 110)
-+	exar_ee_write_bit(priv, 1);
-+	exar_ee_write_bit(priv, 1);
-+	exar_ee_write_bit(priv, 0);
-+
-+	//Send address to read from
-+	for (i =3D 1 << (UART_EXAR_REGB_EE_ADDR_SIZE - 1); i; i >>=3D 1)
-+		exar_ee_write_bit(priv, (ee_addr & i));
-+
-+	//Read data 1 bit at a time
-+	for (i =3D 0; i <=3D UART_EXAR_REGB_EE_DATA_SIZE; i++) {
-+		data <<=3D 1;
-+		data |=3D exar_ee_read_bit(priv);
-+	}
-+
-+	exar_ee_select(priv, false);
-+
-+	return data;
-+}
-+
- static void exar_pm(struct uart_port *port, unsigned int state, unsigned =
-int old)
- {
- 	/*
+Parker Newman (7):
+  serial: exar: adding missing CTI and Exar PCI ids
+  serial: exar: add support for reading from Exar EEPROM
+  serial: exar: add support for config/set single MPIO
+  serial: exar: add optional board_setup function
+  serial: exar: add some CTI helper functions
+  serial: exar: add CTI board and port setup functions
+  serial: exar: fix: fix crash during shutdown if setup fails
+
+ drivers/tty/serial/8250/8250_exar.c | 1083 +++++++++++++++++++++++++--
+ 1 file changed, 1017 insertions(+), 66 deletions(-)
+
+
+base-commit: fec50db7033ea478773b159e0e2efb135270e3b7
 =2D-
 2.43.2
 
