@@ -1,85 +1,52 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C0413D61D;
-	Thu, 11 Apr 2024 06:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56834F5FE;
+	Thu, 11 Apr 2024 06:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818133; cv=none; b=KOWi1MCLtcOELiOvSemioGoD2t6ge9jmR2eURbQWlc0tEsL19EL77RZXAM9i8dV8eKXqcEMT+b35Mzm+TC2e2SMD7gmb1XE6YQyUN6aK9+Tb8HA7JT0tTvtIqCizDVmxBnufg0M1X2joKbH4r5zgIO0jwRhziBI9IDIE+eRywG0=
+	t=1712818213; cv=none; b=Gos4wyeZ0INdrryqiW2N+DyRNKMp7oVwAuCMwaR5T+03YJCl3TlWd1DVItfNcfiaQTbpHHePKCIjdhlArwft1S6HG8dJroggQcurkWrhIvc9GmG9y1Gu6Cr4YQLItOhveSM+DvTJvIppt2BLb2mNuJVj4R4XPGSOfCW3bJbDH1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818133; c=relaxed/simple;
-	bh=LxDnqQD/Ynf2v6X4vOkgAXNsM8jplzr/Ybx4tashRDc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=CNf+G6Qqb5X7z7A3lFxFKF/jbPxd1AI3zOqqLIJh1oB9i+yaYCY8+9IO5LYcWNUP6GpTZhHLHmXJrvdYTn6EezRgr3vPBVK2qsj8BmLS3p6qhXIzcsit0dKMavM7rGMLLAInmDJhVmbgC72QCby4tX93RdE6MUptlbw2g5TV57A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UI85FZoB; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1712818213; c=relaxed/simple;
+	bh=p5X7+YSGykaoroLDc3Utq5/1Ao3D7BavVji7tMzRmo0=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=VkzilHFKO8lZS45hoiziMdND1wJDWwS866JPmT0GqbSSYporR/RCDXGIJPD2Rn2SQUx8xOwTEGxB+YP4PdEnngmLQlijcbpJb4BgiqSM4iM4eYu2zsYEJQj+vgpUJrHxNKu1/I88qsPeakhs0xKv8JfGncdOhXyUNNvIzbhX9RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blqZo9iW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UI85FZoB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5AFD7FF803;
-	Thu, 11 Apr 2024 06:48:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712818127;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ht4yL7p2G9syjEPhGbbLFmsLSUE4MFaHnCtOBwa2f0U=;
-	b=UI85FZoBJxkSr5IRNhTf81V9ubkj+rBrOmYUQdxIB2xHindV3eFcedgof+/ctlJxTgJOKo
-	WWAG8oOTy3wWc4njjvvtTLHkCMKpX3hM+k+qbYOe+sSPR67i6fq59mJt9PhzNqIJIbQcek
-	kyti06DfTIHAM100jdTvgfA9aLu9vH/ZrWmsQUOnZKUd6t0n7WeNkKXagnBBY+47Nj7cKh
-	6K4zEMvfn7S/cnrx+cFY8zurNZ7nwHP1KLCay/Y4NLHj7TGO1vnK6x6J/51VDC7UruHRcW
-	ShkAGAVDIpNFHpiPmN34kIMkB6KZwEGPe4fmQyo1KK7V/sv0JW3vOiVJnqBshg==
-Date: Thu, 11 Apr 2024 08:49:22 +0200 (CEST)
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-cc: Jakub Kicinski <kuba@kernel.org>, 
-    Romain Gantois <romain.gantois@bootlin.com>, 
-    "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-    Rob Herring <robh@kernel.org>, 
-    Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-    Conor Dooley <conor+dt@kernel.org>, 
-    Geert Uytterhoeven <geert+renesas@glider.be>, 
-    Magnus Damm <magnus.damm@gmail.com>, 
-    Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-    Jose Abreu <joabreu@synopsys.com>, 
-    Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-    =?ISO-8859-15?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>, 
-    Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
-    devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    linux-renesas-soc@vger.kernel.org, 
-    linux-stm32@st-md-mailman.stormreply.com, 
-    linux-arm-kernel@lists.infradead.org, 
-    Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v2 3/5] net: stmmac: dwmac-socfpga: use
- pcs_init/pcs_exit
-In-Reply-To: <ZhbmVVXgu27ZZaNf@shell.armlinux.org.uk>
-Message-ID: <5efb5cb1-92ad-0e94-9431-f525c837b98a@bootlin.com>
-References: <20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com> <20240409-rzn1-gmac1-v2-3-79ca45f2fc79@bootlin.com> <20240409183404.7d3eb04f@kernel.org> <ZhbmVVXgu27ZZaNf@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blqZo9iW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B29EC433F1;
+	Thu, 11 Apr 2024 06:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712818213;
+	bh=p5X7+YSGykaoroLDc3Utq5/1Ao3D7BavVji7tMzRmo0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=blqZo9iWReUjpET1lHp0b9kHsBlA8hKUyBSlYe4VSjHLRs87yVZBZl4BIcTx/n8vc
+	 NGgW0e8wO6RX6qHiFl1PWHUs3T0VzX1AsnGMswu4k/yY9KlPcQVC/RxQwdFmZ9ns2m
+	 CwX0IRp/dp9d0H98HXYf/ikYhPdIbLFQ2cJlpEo11HdF/nPgj8GfPfsQ0bLPns71q7
+	 PFIQy+zumfYPizcQFxP4nw/P1wMUOCYSvbafxCfNSlpMzo41DQaUDZFMV2IMRW/h5/
+	 kLRSdnqWGM7+PLG7WdZcSMsFkOSzTFR9RT9VCT6n+9wpq5xEa9E+ot0BRoNQoBGqK/
+	 svWXR0kCSrz0w==
+Message-ID: <7e12d6b1c0066b85e39e9af359f6f573.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240225065234.413687-1-mmyangfl@gmail.com>
+References: <20240225065234.413687-1-mmyangfl@gmail.com>
+Subject: Re: [PATCH v7 00/13] clk: hisilicon: Migrate devm APIs
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Yang Xiwen <forbidden405@outlook.com>, David Yang <mmyangfl@gmail.com>, Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org
+To: David Yang <mmyangfl@gmail.com>, linux-clk@vger.kernel.org
+Date: Wed, 10 Apr 2024 23:50:10 -0700
+User-Agent: alot/0.10
 
-Hello Russell,
+Quoting David Yang (2024-02-24 22:52:15)
+> Migrate devm APIs for HiSilicon clock drivers and remove redundant codes.
+>=20
+> This series is a partial improvement of [1]
 
-On Wed, 10 Apr 2024, Russell King (Oracle) wrote:
-
-> patch as a theoretical solution to Romain. After build-testing it locally
-> I did notice it. I would've thought that Romain would've build-tested
-> before sending out his patch set and would've fixed it up... I didn't
-> have time to properly fix up my patch (essentially would've ment
-
-I build-tested the patches but didn't realize that CONFIG_DWMAC_SOCFPGA was not 
-enabled in my configuration. So that's my bad, sorry.
-
-Best Regards,
-
--- 
-Romain Gantois, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+This doesn't compile on v6.9-rc1. Please rebase and resend.
