@@ -1,137 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E4914D6F5;
-	Thu, 11 Apr 2024 13:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B8914D707
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842948; cv=none; b=ACr73MGEPj/wFoXyHbiCzF2LYweKwxB6Uy5juqTljgGrt42mr6kIg0NIxvkHKS8FeKoh1KTyl40K38OOqvDiK9wVTn+kuphiDfNxBHBI6/RrtlKYmzqQWIpktTlUpJPn0c+JUbVbczJ1GXfnfzAcE52BbZ6OJGBPi4wraVVjCP8=
+	t=1712842993; cv=none; b=D2eQAX9U645MrVivF6GeWvBAF/x2FAsjy+qrw30/kdMRMw0gV5hEW8suY57enUgZSnMhUFrOeo0I6o2cPK3fWugCGhTi3XuX/boWBPzUwkbhsLVkXqc12BSuaOLSYw82+lzgjS5Wc+idf7M9EDTp8U7n6Cp0bjYHyLMNORLV7Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842948; c=relaxed/simple;
-	bh=9V6B2FO1AfQz7iRZm7KKOdCMjIz0pjVVA3oJL+1fQF4=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=J+HWteeFLgkbWzB8QrjpVAUTE+ISZzW6sGCuHJWXMfMleUlIxrDzeCpBTxV9vs5AnUYxIIlonpRtGQRscVM8yvzrOSmdUnmSPkVsoNZCYEhwh3SXpjqQ2CIuZY9Nhw5qu3gLx1xyZsFiJmMb9G1WAthGQTcy4oF+0sO3LR9gKDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=os45frAu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712842993; c=relaxed/simple;
+	bh=SJ34ciTQhJ3fV8rma6LmvGWcZJp39aNGbHDDG8dbKWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpM259qp45sqtDLXvSQS+BNnLI/U0YvdsPAWjN0STxnUaNQtpcPa0A3F2q5ySk/fW4ZJ/IuKJk/PJ0uuxIEy9ek/KDiV07Yhx9HGgNn/GLd26r3zTrWByrOwZPY30bZ/RcljMqqUL5XFUROfkA2odYANT+qWIglGHzWaM2AMYaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BP2nN3A6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="os45frAu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43270C072AA;
-	Thu, 11 Apr 2024 13:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712842947;
-	bh=9V6B2FO1AfQz7iRZm7KKOdCMjIz0pjVVA3oJL+1fQF4=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=os45frAuxivL5UsqOsX4nD5FYkvM/2X1ZsSxyIUqlc7AuDOhSZWqJyGbYnfOSiO90
-	 T2jZxaacChyTVSyDlq11VS7GMf2svoz9p2lPvGUqMZl0fC7SI8xYnKJDMA07Q2j3PX
-	 0mKwZnm9AnbLjz3cvjQliddfwjNvyHUuxRTu95R1V+KQYZR/Exqc5D4wlFrtab/7Fk
-	 9aZNU/Uw2BSpkqMxqigBAYeRCYdvPrfV/XlPcgtEmE7SjOC0GkY2z+VshzcV71heIu
-	 LQhIC1RkZa/voGfaQtyI3pzcJLXjF7VCtu0Gg6+Fml8L8NI4garqzB2K3kK5+CiwBm
-	 h90uWPp1TbuBQ==
-Date: Thu, 11 Apr 2024 08:42:26 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BP2nN3A6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712842990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=94SyIWf/l9sBuxilNW3hNkOFqAXyJGS5kVqeXmxJOr8=;
+	b=BP2nN3A6PuTw3ISLaPee1wATVJrrQOWpnUN0mxLg9ro0p961vaKXe0dJO8gCvmGqibrclX
+	RzxOHrvaDpgjYu+kpNJWNRW6fn/ZGsCOI+qXsvpwW6elQjsJ3jVUk1ygNWkiRn9HKBYPwW
+	m1rOFBQruwV5XxKvM6lqOy+jGyqZv0o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-369-CzxCm4qdNOq75Ny8zAF92w-1; Thu, 11 Apr 2024 09:43:07 -0400
+X-MC-Unique: CzxCm4qdNOq75Ny8zAF92w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 251DF188E9C3;
+	Thu, 11 Apr 2024 13:43:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.235])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 2D3692026D06;
+	Thu, 11 Apr 2024 13:43:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 11 Apr 2024 15:41:41 +0200 (CEST)
+Date: Thu, 11 Apr 2024 15:41:33 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Nicholas Piggin <npiggin@gmail.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	linux-kernel@vger.kernel.org, Junyao Zhao <junzhao@redhat.com>,
+	Chris von Recklinghausen <crecklin@redhat.com>
+Subject: Re: Nohz_full on boot CPU is broken (was: Re: [PATCH v2 1/1] wq:
+ Avoid using isolated cpus' timers on queue_delayed_work)
+Message-ID: <20240411134133.GC5494@redhat.com>
+References: <20240402105847.GA24832@redhat.com>
+ <Zg2qFinSkAOmRHcM@slm.duckdns.org>
+ <20240403203814.GD31764@redhat.com>
+ <20240405140449.GB22839@redhat.com>
+ <ZhByg-xQv6_PC3Pd@localhost.localdomain>
+ <20240407130914.GA10796@redhat.com>
+ <ZhUu0uQxPgcXmQes@localhost.localdomain>
+ <20240409130727.GC29396@redhat.com>
+ <D0G5OX8W9NH9.1HE33RVAROAJK@gmail.com>
+ <20240410135518.GA25421@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-Cc: linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Bjorn Andersson <andersson@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-In-Reply-To: <20240410-samsung-galaxy-zfold5-q5q-v5-0-9311ee9a55f7@yahoo.com>
-References: <20240410-samsung-galaxy-zfold5-q5q-v5-0-9311ee9a55f7@yahoo.com>
-Message-Id: <171284284762.3456856.9357372275932519811.robh@kernel.org>
-Subject: Re: [PATCH v5 0/2] Samsung Galaxy Z Fold5 initial support
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240410135518.GA25421@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
+On 04/10, Oleg Nesterov wrote:
+>
+> Will you agree with the change above or what do you suggest instead as
+> a simple workaround?
 
-On Wed, 10 Apr 2024 23:28:32 +0200, Alexandru Marc Serdeliuc wrote:
-> This documents and add intial dts support for Samsung Galaxy Z Fold5 (samsung,q5q)
-> which is a foldable phone by Samsung based on the sm8550 SoC.
-> 
-> ChangeLog
-> 
-> - v5
->   . Added ChangeLog
->   . Added missing Acked-by tags in their respective section in ChangeLog
-> 
-> - v4
->   . removed a spurious new line
->   . removed pcie_1_phy_aux_clk as requested
->   . removed secondary pcie1 which does not exists on the device
->   . changed firmware extension from .mbn to .mdt
->   . added missing reserved memory regions required by firmware to properly load
-> 
-> - v3
->   . added b4 version 3
->   . removed address and size cells in device description
->   Acked-by: Rob Herring <robh@kernel.org>
-> 
-> - v2
->   . added both but added an extra v2 in the subject line instead to b4 subject header, was requested to send the patch again, along with following mods:
->   . removed whole bootargs line
->   . fixed underscores in reserved memory by removing all reserved memory regions
->   . added missing idetation to  spash_screen remark
->   . validated the dts with "dtbs_check"
->   . removed all comments at the end of nodes
->   . moved status of the node at the end of the node
->   . reversed pin control name with control numbers
->   . ordered the  nodes alphabetically
-> 
-> - v1
->   . The initial request was split in two patches sent due to the following checkpatch warning, was requested to re send them together:
->     WARNING: DT binding docs and includes should be a separate patch. See: Documentation/devicetree/bindings/submitting-patches.rst
->   Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> Signed-off-by: Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> ---
-> Alexandru Marc Serdeliuc (2):
->       dt-bindings: arm: qcom: Document the Samsung Galaxy Z Fold5
->       arm64: dts: qcom: sm8550: Add support for Samsung Galaxy Z Fold5
-> 
->  Documentation/devicetree/bindings/arm/qcom.yaml |   1 +
->  arch/arm64/boot/dts/qcom/Makefile               |   1 +
->  arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dts | 593 ++++++++++++++++++++++++
->  3 files changed, 595 insertions(+)
-> ---
-> base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
-> change-id: 20240410-samsung-galaxy-zfold5-q5q-d31cdeeac09f
-> 
-> Best regards,
-> --
-> Alexandru Marc Serdeliuc <serdeliuk@yahoo.com>
-> 
-> 
-> 
+OK, let me send the patch.
 
+Nicholas, Frederic, please review.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+> Again, I am not sure I understand, but I too thought that something like
+>
+> 	housekeeping_check(void)
+> 	{
+> 		for_each_set_bit(type, &housekeeping.flags, HK_TYPE_MAX) {
+> 			if (!cpumask_intersects(cpu_online, housekeeping.cpumasks[type]))
+> 				panic();
+> 		}
+>
+> after bringup_nonboot_cpus(setup_max_cpus).
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+It seems we can make a simpler patch for this. It will (should) fix another
+problem when maxcpus < first-housekeeping.
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
+I'll recheck and try to do this later, lets solve the reported problem first.
 
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y qcom/sm8550-samsung-q5q.dtb' for 20240410-samsung-galaxy-zfold5-q5q-v5-0-9311ee9a55f7@yahoo.com:
-
-arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dtb: pcie-1-phy-aux-clk: 'clock-frequency' is a required property
-	from schema $id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
-arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dtb: phy@1c0e000: clock-output-names: ['pcie1_pipe_clk'] is too short
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-arch/arm64/boot/dts/qcom/sm8550-samsung-q5q.dtb: phy@1c0e000: #clock-cells:0:0: 1 was expected
-	from schema $id: http://devicetree.org/schemas/phy/qcom,sc8280xp-qmp-pcie-phy.yaml#
-
-
-
-
+Oleg.
 
