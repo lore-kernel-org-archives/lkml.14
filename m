@@ -1,526 +1,117 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2446B13E8A4
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 06:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB33C13D89C;
+	Thu, 11 Apr 2024 06:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712818530; cv=none; b=Q7GHxoPpguP2XPWFagReQXC2ldSNf0TBq2LFbeM497+unpXmDdrXUiTO7J8kKSLfXIpLBET5aN0JQvVUSQ4BX8nTMTAe9kFmEQs30nN7h7kv2FDoe/AxPN5Z6pZM1/7ldQMwW8Ms55pN2Tbzf2E/tcQgfmO/mg8Tt0tH2l1ysAo=
+	t=1712818619; cv=none; b=nC3UYLaTKGTLsqGMPS6YTW082hIj/1QwSaqYe4lLiluX1LI9f5XV8qByrdiBUB08KdrgSAOjsSm137K9ba78aiAE4C7Ing9dsXlpPE9f40/iFCge1qYopNiFcCyJj7e+dR44qGeuOc9RXKejndkHFeE9PJ3PXn/G1MCaSbGm9kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712818530; c=relaxed/simple;
-	bh=93ZY6fAk+/FoiMTXqVJsHI9FbD2ZdEAVGbJ8j10VmQE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gdngl4sOIkFURtk+w475fSmpNyMTCzQXywDDoY2nfYgfYiBSe4ArGMHgFIecArjQa1jFvx+e+XetiyK3DuT2HObvHhqg9740Vtbajz0wANP1jqZSASBYEZ1A1/+ouXDbNuLgwbbHtCkIdAiNDoiF18C7++ZFS7GZne1EoMgrI98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VFVl55yY9zNncQ;
-	Thu, 11 Apr 2024 14:53:05 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id C72ED18006B;
-	Thu, 11 Apr 2024 14:55:22 +0800 (CST)
-Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
- (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Thu, 11 Apr
- 2024 14:55:21 +0800
-From: Liao Chang <liaochang1@huawei.com>
-To: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <mark.rutland@arm.com>,
-	<ardb@kernel.org>, <broonie@kernel.org>, <liaochang1@huawei.com>,
-	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
-	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
-	<daniel.thompson@linaro.org>, <sumit.garg@linaro.org>, <liwei391@huawei.com>,
-	<peterz@infradead.org>, <jpoimboe@kernel.org>, <ericchancf@google.com>,
-	<kristina.martsenko@arm.com>, <robh@kernel.org>,
-	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
-	<shijie@os.amperecomputing.com>, <bhe@redhat.com>,
-	<akpm@linux-foundation.org>, <horms@kernel.org>,
-	<rmk+kernel@armlinux.org.uk>, <Jonathan.Cameron@huawei.com>,
-	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
-	<frederic@kernel.org>, <reijiw@google.com>, <ruanjinjie@huawei.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-Subject: [PATCH v2 7/9] arm64: Unify exception masking at entry and exit of exception
-Date: Thu, 11 Apr 2024 06:48:56 +0000
-Message-ID: <20240411064858.3232574-8-liaochang1@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411064858.3232574-1-liaochang1@huawei.com>
-References: <20240411064858.3232574-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1712818619; c=relaxed/simple;
+	bh=yVqJ3A0xnmgb2uzbb/DoieZ74OGykytejpIxQdzl9Uc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LAFtCmLU3/zCou5g0UicCHAZkoEFbb9sZURnYiyee/tEwXA4EsOFTsfgTz40BsNFPS3Z+R76o8VvVhF51OsXel9V0fF/JtKOyQL/y7gC2fiiSt8n8DC3NGJ70yG9AjCH8TBZjo+Dp1pFJTL+8U7F4omCgnGol5YG8MZP0//sJU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Qy84Hba4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Qy84Hba4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0123BC4163A;
+	Thu, 11 Apr 2024 06:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712818618;
+	bh=yVqJ3A0xnmgb2uzbb/DoieZ74OGykytejpIxQdzl9Uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qy84Hba4HQsqQD67bhS+Rbn4Um+fuicRMAp8WrRu38cdqYlVmdZY8SbEgct4pFPRX
+	 B0xpQC1jSI2/YqCHEmdcIo1Q2C+qfp6APrFt/5lhU/3fw9zgcogEbkvr00onB3nzYQ
+	 jRqyoJqzxJ4oBGXpqikTHHB78gKnwJdLTk3Km/Bs=
+Date: Thu, 11 Apr 2024 08:56:55 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	stable@vger.kernel.org, workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] docs: stable-kernel-rules: call mainline by its
+ name and change example
+Message-ID: <2024041130-trickster-naturist-0448@gregkh>
+References: <cover.1712812895.git.linux@leemhuis.info>
+ <ec5dff37a62681beb74f89f8fcde41b6618152f0.1712812895.git.linux@leemhuis.info>
+ <2024041156-nintendo-paddling-eaad@gregkh>
+ <963811ba-6c12-47d1-942e-ba7bcf93a766@leemhuis.info>
+ <2024041127-attach-removed-f9f0@gregkh>
+ <898e813d-883c-4ccb-91ad-03aff40d59e3@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <898e813d-883c-4ccb-91ad-03aff40d59e3@leemhuis.info>
 
-Currently, different exception types require specific mask. For example:
+On Thu, Apr 11, 2024 at 08:50:19AM +0200, Thorsten Leemhuis wrote:
+> On 11.04.24 08:10, Greg Kroah-Hartman wrote:
+> > On Thu, Apr 11, 2024 at 07:50:29AM +0200, Thorsten Leemhuis wrote:
+> >> On 11.04.24 07:30, Greg Kroah-Hartman wrote:
+> >>> On Thu, Apr 11, 2024 at 07:25:05AM +0200, Thorsten Leemhuis wrote:
+> >>>>  
+> >>>> -     Cc: <stable@vger.kernel.org> # after 4 weeks in mainline
+> >>>> +     Cc: <stable@vger.kernel.org> # after 6 weeks in a stable mainline release
+> >>>
+> >>> I do not know what "stable mainline release" means here, sorry.  "after
+> >>> 4 weeks in mainline" means "after in Linus's tree for 4 weeks, but
+> >>> Linus's tree is not "stable mainline".
+> >>
+> >> I meant a proper mainline release like 6.7 or 6.8 to make it obvious
+> >> that this does not mean a "pre-release".
+> >>
+> >> I actually had used the term "proper mainline release" earlier in a
+> >> draft, but a quick search on the net showed that this is not really used
+> >> out there. "stable mainline release" is not popular either, but seemed
+> >> to be a better match; I also considered "final mainline release", but
+> >> that felt odd.
+> >>
+> >> It feels like there must be some better term my mind just stumbles to
+> >> come up with. Please help. :-D
+> > 
+> > Well, what is the goal here?  Just put it in words, I have seen stuff
+> > like:
+> > 	Cc: <stable@vger.kernel.org> # wait until -rc3
+> > 	Cc: <stable@vger.kernel.org> # wait until 6.1 is released
+> > 	Cc: <stable@vger.kernel.org> # after -rc2
+> > 
+> > and so on.
+> > 
+> > Just pick a specific time/release might be better?  "after X weeks" is
+> > assuming that we all know and remember how many weeks something
+> > happened...
+> 
+> My reasoning was: a developer that submits a patch has no full control
+> over when the patch mainlined -- and plans sometimes change, too.
+> 
+> So a patch that was meant to go into 6.1-rc with a tag like "# wait
+> until 4 weeks after 6.1 is released" might only be mainlined for 6.2-rc1
+> -- and then the tag does not express the developers intention.
 
-  - Interrupt handlers: Mask IRQ, FIQ, and NMI on entry.
-  - Synchronous handler: Restore exception masks to pre-exception value.
-  - Serror handler: Mask all interrupts and Serror on entry (strictest).
-  - Debug handler: Keep all exception masked as exception taken.
+I've normally seen patches end up in Linus's tree "too early" more often
+(i.e. cc: stable for stuff that has never been in a stable tree yet),
+but sure, I can see how changes can also take too long.
 
-This patch introduces new helper functions to unify exception masking
-behavior at the entry and exit of exceptions on arm64. This approach
-improves code clarity and maintainability.
+> But that might be a corner case that we could ignore. So maybe "# wait
+> until 4 weeks after 6.1 is released" is the better example (from what
+> I've heard something like that is what developer would like to have
+> sometimes).
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- arch/arm64/include/asm/daifflags.h | 81 ++++++++++++++++++-------
- arch/arm64/kernel/entry-common.c   | 96 ++++++++++++++----------------
- arch/arm64/kernel/entry.S          |  2 -
- 3 files changed, 105 insertions(+), 74 deletions(-)
+Yes, referencing off of a fixed point like a release is best as that's
+much easier for humans to calculate.
 
-diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-index df4c4989babd..6d391d221432 100644
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -121,28 +121,6 @@ static inline void local_daif_restore(unsigned long flags)
- 		trace_hardirqs_off();
- }
- 
--/*
-- * Called by synchronous exception handlers to restore the DAIF bits that were
-- * modified by taking an exception.
-- */
--static inline void local_daif_inherit(struct pt_regs *regs)
--{
--	unsigned long flags = regs->pstate & DAIF_MASK;
--
--	if (interrupts_enabled(regs))
--		trace_hardirqs_on();
--
--	if (system_uses_irq_prio_masking())
--		gic_write_pmr(regs->pmr_save);
--
--	/*
--	 * We can't use local_daif_restore(regs->pstate) here as
--	 * system_has_prio_mask_debugging() won't restore the I bit if it can
--	 * use the pmr instead.
--	 */
--	write_sysreg(flags, daif);
--}
--
- /*
-  * For Arm64 processor support Armv8.8 or later, kernel supports three types
-  * of irqflags, they used for corresponding configuration depicted as below:
-@@ -381,4 +359,63 @@ static inline void local_allint_inherit(struct pt_regs *regs)
- 			_allint_clear();
- 	}
- }
-+
-+/*
-+ * local_allint_disable - Disable IRQ, FIQ and NMI, with or without
-+ * superpriority.
-+ */
-+static inline void local_allint_disable(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags.fields.daif = DAIF_PROCCTX_NOIRQ;
-+	irqflags.fields.pmr = GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET;
-+	irqflags.fields.allint = 1;
-+	local_allint_restore(irqflags);
-+}
-+
-+/*
-+ * local_allint_mark_enabled - When the kernel enables priority masking,
-+ * interrupts cannot be handled util ICC_PMR_EL1 is set to GIC_PRIO_IRQON
-+ * and PSTATE.IF is cleared. This helper function indicates that interrupts
-+ * remains in a semi-masked state, requring further clearing of PSTATE.IF.
-+ *
-+ * Kernel will give a warning, if some function try to enable semi-masked
-+ * interrupt via the arch_local_irq_enable() defined in <asm/irqflags.h>.
-+ *
-+ * This function is typically used before handling the Debug exception.
-+ */
-+static inline void local_allint_mark_enabled(void)
-+{
-+	if (system_uses_irq_prio_masking())
-+		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET);
-+}
-+
-+/*
-+ * local_errint_disable - Disable all types of interrupt including IRQ, FIQ,
-+ * Serror and NMI, with or without superpriority.
-+ */
-+static inline void local_errint_disable(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags.fields.daif = DAIF_ERRCTX;
-+	irqflags.fields.pmr = GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET;
-+	irqflags.fields.allint = 1;
-+	local_allint_restore(irqflags);
-+}
-+
-+/*
-+ * local_errint_enable - Enable all types of interrupt including IRQ, FIQ,
-+ * Serror and NMI, with or without superpriority.
-+ */
-+static inline void local_errint_enable(void)
-+{
-+	arch_irqflags_t irqflags;
-+
-+	irqflags.fields.daif = DAIF_PROCCTX;
-+	irqflags.fields.pmr = GIC_PRIO_IRQON;
-+	irqflags.fields.allint = 0;
-+	local_allint_restore(irqflags);
-+}
- #endif
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index b77a15955f28..99168223508b 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -168,7 +168,7 @@ static __always_inline void exit_to_user_mode_prepare(struct pt_regs *regs)
- 	if (unlikely(flags & _TIF_WORK_MASK))
- 		do_notify_resume(regs, flags);
- 
--	local_daif_mask();
-+	local_allint_mask();
- 
- 	lockdep_sys_exit();
- }
-@@ -428,9 +428,9 @@ static void noinstr el1_abort(struct pt_regs *regs, unsigned long esr)
- 	unsigned long far = read_sysreg(far_el1);
- 
- 	enter_from_kernel_mode(regs);
--	local_daif_inherit(regs);
-+	local_allint_inherit(regs);
- 	do_mem_abort(far, esr, regs);
--	local_daif_mask();
-+	local_allint_mask();
- 	exit_to_kernel_mode(regs);
- }
- 
-@@ -439,33 +439,36 @@ static void noinstr el1_pc(struct pt_regs *regs, unsigned long esr)
- 	unsigned long far = read_sysreg(far_el1);
- 
- 	enter_from_kernel_mode(regs);
--	local_daif_inherit(regs);
-+	local_allint_inherit(regs);
- 	do_sp_pc_abort(far, esr, regs);
--	local_daif_mask();
-+	local_allint_mask();
- 	exit_to_kernel_mode(regs);
- }
- 
- static void noinstr el1_undef(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_kernel_mode(regs);
--	local_daif_inherit(regs);
-+	local_allint_inherit(regs);
- 	do_el1_undef(regs, esr);
--	local_daif_mask();
-+	local_allint_mask();
- 	exit_to_kernel_mode(regs);
- }
- 
- static void noinstr el1_bti(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_kernel_mode(regs);
--	local_daif_inherit(regs);
-+	local_allint_inherit(regs);
- 	do_el1_bti(regs, esr);
--	local_daif_mask();
-+	local_allint_mask();
- 	exit_to_kernel_mode(regs);
- }
- 
- static void noinstr el1_dbg(struct pt_regs *regs, unsigned long esr)
- {
--	unsigned long far = read_sysreg(far_el1);
-+	unsigned long far;
-+
-+	local_allint_mark_enabled();
-+	far = read_sysreg(far_el1);
- 
- 	arm64_enter_el1_dbg(regs);
- 	if (!cortex_a76_erratum_1463225_debug_handler(regs))
-@@ -476,9 +479,9 @@ static void noinstr el1_dbg(struct pt_regs *regs, unsigned long esr)
- static void noinstr el1_fpac(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_kernel_mode(regs);
--	local_daif_inherit(regs);
-+	local_allint_inherit(regs);
- 	do_el1_fpac(regs, esr);
--	local_daif_mask();
-+	local_allint_mask();
- 	exit_to_kernel_mode(regs);
- }
- 
-@@ -543,7 +546,7 @@ static __always_inline void __el1_irq(struct pt_regs *regs,
- static void noinstr el1_interrupt(struct pt_regs *regs,
- 				  void (*handler)(struct pt_regs *))
- {
--	write_sysreg(DAIF_PROCCTX_NOIRQ, daif);
-+	local_allint_disable();
- 
- 	if (IS_ENABLED(CONFIG_ARM64_PSEUDO_NMI) && !interrupts_enabled(regs))
- 		__el1_pnmi(regs, handler);
-@@ -565,7 +568,7 @@ asmlinkage void noinstr el1h_64_error_handler(struct pt_regs *regs)
- {
- 	unsigned long esr = read_sysreg(esr_el1);
- 
--	local_daif_restore(DAIF_ERRCTX);
-+	local_errint_disable();
- 	arm64_enter_nmi(regs);
- 	do_serror(regs, esr);
- 	arm64_exit_nmi(regs);
-@@ -576,7 +579,7 @@ static void noinstr el0_da(struct pt_regs *regs, unsigned long esr)
- 	unsigned long far = read_sysreg(far_el1);
- 
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_mem_abort(far, esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -594,7 +597,7 @@ static void noinstr el0_ia(struct pt_regs *regs, unsigned long esr)
- 		arm64_apply_bp_hardening();
- 
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_mem_abort(far, esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -602,7 +605,7 @@ static void noinstr el0_ia(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_fpsimd_acc(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_fpsimd_acc(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -610,7 +613,7 @@ static void noinstr el0_fpsimd_acc(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_sve_acc(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_sve_acc(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -618,7 +621,7 @@ static void noinstr el0_sve_acc(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_sme_acc(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_sme_acc(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -626,7 +629,7 @@ static void noinstr el0_sme_acc(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_fpsimd_exc(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_fpsimd_exc(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -634,7 +637,7 @@ static void noinstr el0_fpsimd_exc(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_sys(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_sys(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -647,7 +650,7 @@ static void noinstr el0_pc(struct pt_regs *regs, unsigned long esr)
- 		arm64_apply_bp_hardening();
- 
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_sp_pc_abort(far, esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -655,7 +658,7 @@ static void noinstr el0_pc(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_sp(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_sp_pc_abort(regs->sp, esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -663,7 +666,7 @@ static void noinstr el0_sp(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_undef(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_undef(regs, esr);
- 	exit_to_user_mode(regs);
- }
-@@ -671,7 +674,7 @@ static void noinstr el0_undef(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_bti(struct pt_regs *regs)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_bti(regs);
- 	exit_to_user_mode(regs);
- }
-@@ -679,7 +682,7 @@ static void noinstr el0_bti(struct pt_regs *regs)
- static void noinstr el0_mops(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_mops(regs, esr);
- 	exit_to_user_mode(regs);
- }
-@@ -687,7 +690,7 @@ static void noinstr el0_mops(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_inv(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	bad_el0_sync(regs, 0, esr);
- 	exit_to_user_mode(regs);
- }
-@@ -695,11 +698,14 @@ static void noinstr el0_inv(struct pt_regs *regs, unsigned long esr)
- static void noinstr el0_dbg(struct pt_regs *regs, unsigned long esr)
- {
- 	/* Only watchpoints write FAR_EL1, otherwise its UNKNOWN */
--	unsigned long far = read_sysreg(far_el1);
-+	unsigned long far;
-+
-+	local_allint_mark_enabled();
-+	far = read_sysreg(far_el1);
- 
- 	enter_from_user_mode(regs);
- 	do_debug_exception(far, esr, regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	exit_to_user_mode(regs);
- }
- 
-@@ -708,7 +714,7 @@ static void noinstr el0_svc(struct pt_regs *regs)
- 	enter_from_user_mode(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
- 	fp_user_discard();
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_svc(regs);
- 	exit_to_user_mode(regs);
- }
-@@ -716,7 +722,7 @@ static void noinstr el0_svc(struct pt_regs *regs)
- static void noinstr el0_fpac(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_fpac(regs, esr);
- 	exit_to_user_mode(regs);
- }
-@@ -785,7 +791,7 @@ static void noinstr el0_interrupt(struct pt_regs *regs,
- {
- 	enter_from_user_mode(regs);
- 
--	write_sysreg(DAIF_PROCCTX_NOIRQ, daif);
-+	local_allint_disable();
- 
- 	if (regs->pc & BIT(55))
- 		arm64_apply_bp_hardening();
-@@ -797,24 +803,14 @@ static void noinstr el0_interrupt(struct pt_regs *regs,
- 	exit_to_user_mode(regs);
- }
- 
--static void noinstr __el0_irq_handler_common(struct pt_regs *regs)
--{
--	el0_interrupt(regs, handle_arch_irq);
--}
--
- asmlinkage void noinstr el0t_64_irq_handler(struct pt_regs *regs)
- {
--	__el0_irq_handler_common(regs);
--}
--
--static void noinstr __el0_fiq_handler_common(struct pt_regs *regs)
--{
--	el0_interrupt(regs, handle_arch_fiq);
-+	el0_interrupt(regs, handle_arch_irq);
- }
- 
- asmlinkage void noinstr el0t_64_fiq_handler(struct pt_regs *regs)
- {
--	__el0_fiq_handler_common(regs);
-+	el0_interrupt(regs, handle_arch_fiq);
- }
- 
- static void noinstr __el0_error_handler_common(struct pt_regs *regs)
-@@ -822,11 +818,11 @@ static void noinstr __el0_error_handler_common(struct pt_regs *regs)
- 	unsigned long esr = read_sysreg(esr_el1);
- 
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_ERRCTX);
-+	local_errint_disable();
- 	arm64_enter_nmi(regs);
- 	do_serror(regs, esr);
- 	arm64_exit_nmi(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	exit_to_user_mode(regs);
- }
- 
-@@ -839,7 +835,7 @@ asmlinkage void noinstr el0t_64_error_handler(struct pt_regs *regs)
- static void noinstr el0_cp15(struct pt_regs *regs, unsigned long esr)
- {
- 	enter_from_user_mode(regs);
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_cp15(esr, regs);
- 	exit_to_user_mode(regs);
- }
-@@ -848,7 +844,7 @@ static void noinstr el0_svc_compat(struct pt_regs *regs)
- {
- 	enter_from_user_mode(regs);
- 	cortex_a76_erratum_1463225_svc_handler();
--	local_daif_restore(DAIF_PROCCTX);
-+	local_errint_enable();
- 	do_el0_svc_compat(regs);
- 	exit_to_user_mode(regs);
- }
-@@ -899,12 +895,12 @@ asmlinkage void noinstr el0t_32_sync_handler(struct pt_regs *regs)
- 
- asmlinkage void noinstr el0t_32_irq_handler(struct pt_regs *regs)
- {
--	__el0_irq_handler_common(regs);
-+	el0_interrupt(regs, handle_arch_irq);
- }
- 
- asmlinkage void noinstr el0t_32_fiq_handler(struct pt_regs *regs)
- {
--	__el0_fiq_handler_common(regs);
-+	el0_interrupt(regs, handle_arch_fiq);
- }
- 
- asmlinkage void noinstr el0t_32_error_handler(struct pt_regs *regs)
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 7ef0e127b149..0b311fefedc2 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -316,8 +316,6 @@ alternative_else_nop_endif
- 
- 	mrs_s	x20, SYS_ICC_PMR_EL1
- 	str	x20, [sp, #S_PMR_SAVE]
--	mov	x20, #GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET
--	msr_s	SYS_ICC_PMR_EL1, x20
- 
- .Lskip_pmr_save\@:
- #endif
--- 
-2.34.1
+Also because, the original "after 4 weeks", doesn't give me a reference
+point to judge what the starting time is easily.  Yes, I have tools for
+that, but most people don't.
 
+So how about changing it to use the "fixed point" reference please?  The
+phrasing "after -rc3" is probably what most people almost always want
+anyway, given the huge churn that -rc1 is.
+
+thanks,
+
+greg k-h
