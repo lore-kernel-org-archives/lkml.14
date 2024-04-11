@@ -1,124 +1,98 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ED91C42FD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4581C4C5A
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849901; cv=none; b=mLFNM97rzTXZ2d099zTpdxL9UomIdk7TIoza05BIzroCzQ32v4aIsWCm6xAV2V8QhdZrNK40meauCVkWGViqAF8XFvNVyryFV+w1qT5o2LFyiWEcOsL9jA5WGAvahp9iyIGYFBIsKcSp+pKUiMuW2702r7JMqznB5fVBsXWy8d8=
+	t=1712849901; cv=none; b=We5pDLN9Sh8CJotP1GqZ7+HOdM9jM86NbIv1gJPCl8weg0lW7f8wCVkPr3UW13AvTJoJ/o8Zes0U98jtmUbE5cym8ITawLRDt2z7ZCKM6lnlSEpQKvP89ftCz1hn7i9nBEjYIQWyTmcZVOmAstMb76wgpcgvwG4qilhGYe5OFx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849901; c=relaxed/simple;
-	bh=r0gpEGLufdSSDJSUSmGBpzIFe7zazyP/Lyd4xKydQHw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mFOYor3UOIDmEILISl48uMGHWADcn+pI/n3uQbT/pCQGUJNsrnzBzTbBkZBi8qLsTOLFy9ZHTd68tpTHkIiw1pzJSZhjk8qey/YMrdHx/WAaib6Ca3kK3DI6UnhUYv1YeJLB0GAkpe7FHa6F0AjL7BmRRdcg7gifFiQ/eVSTeHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Ot29EPLW; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	bh=c7ZbKM02ozoInY9TLL5WaNcYw6jZxIxWCpv/8aHKlWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qD4LvA3Vlpqt9ORx1zhK3S36L+Axdw+7wh8J1OQca/8LmfGJJtI3TzQj1/PFWke8AgiTAHCV4AVyOSAOUc/pJ41x9nUDcB5PQAx1YUUyoWLoIYpgBTOVYW+XZVqqqf6IEx+15efo2MKqh68xArDYEhTDTtQ2wId38u/etiNCXbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=LH8sSnq3; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Ot29EPLW"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58130839f.1
+	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="LH8sSnq3"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ea260f51b8so1947165a34.3
         for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849899; x=1713454699; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KIhvJ0QTKEm+dZZbpq9+5Ejm0PJbjdv4ucEw2PtmBxk=;
-        b=Ot29EPLWSRAXEAXyghEyhV32mFkzJzTQmpoONGUc7fWj9l17KK+U/CoUOD4MY2elrO
-         cNli+yf0iKYZ38hFCCmh1lV7mvAYAmvP6rPTPh0u6cKZMUc5xHx4xrL44OH7dCV6CuVD
-         HA+C4NfxRGu7wO1nRJgGquj8MURKUqjlDEz6BO8oPc8iyddWuYo0VrqxcPM/UG6R1wPi
-         riOshhzLOsHl7Hj+ZYYcUXjrEeYTycl7OCHWxTDBwlP6oDcArZv+BqX0dsIe1nQLsSVa
-         cV/U+xqNl7Xz5X5ep3BsTblGX8hVpHB33Lrt+8n6tyzU1nzblDmaWkpnNDSnbUBt9I+0
-         pBGQ==
+        d=linuxtx.org; s=google; t=1712849898; x=1713454698; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SQF8pW0Q5UZae20gtyOFCGbbxCzCiJFtoc6YhdkZSao=;
+        b=LH8sSnq32JmoM8M0NdsnRbS6+jV8xpne0zaOegeuaxOPfUQAGVRXMPPapf/r8wTkJz
+         5Rx0ZIODxRVh74zRTkQ++x8S/Nvpxz7wxRepLtOyl8I0gLB8nz43HsXB+YzCNOGO1rZr
+         emS0O0IV/2v6OsVIw97rQkSyrk6HZ8pp4SaK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849899; x=1713454699;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712849898; x=1713454698;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KIhvJ0QTKEm+dZZbpq9+5Ejm0PJbjdv4ucEw2PtmBxk=;
-        b=RtgAP2BAQ1FkeBZy2uId3e70HWAgLpNIipHP+nhQwD8ZqsHTbd7FjBlIoVQfqEuKtT
-         fI+nHFes+D5/lF4ZiBNVzOCQ0RQFkBzCuX9E2R8fXhLKa/nmNuoG43v+oro9YCU+nBHk
-         D5B0fu/vQ4KDw5URKduIS0ZnH407u/U9sSQRyxsMgSHD9N2AqVzPCjxyOu7VOoZagwR2
-         7hojMkt+iWI/NmYdcxayjL8Jfk04hQyGlj8chbOQA63+EoX7BdQYfLBmDxIk8rF+/Fu9
-         q2LC/EwDGjVDluUV/KbSREIohIDvdj1xTgHMDSoxtO21h0GsVkEvwlyVIQtJaMaH2+ja
-         D3WA==
-X-Gm-Message-State: AOJu0YyoXziU69SPaKWtY1uZmvBD1WuJIFDjcpmdgUjY/40PauV8Ui4A
-	GJleBoAyIy30ietSOkjvm7ctTfvremFwBfMMgz3okXvaSz9XCwLHzb8TLrj4HP7V0lNqNpEEvoc
-	S
-X-Google-Smtp-Source: AGHT+IEstS7kc7SyMyIlbgeC5GZU3Pzkh4u9326ew14GjN70UKhmkHatszxWPiWpe4+fhx/VKL1iwQ==
-X-Received: by 2002:a6b:cd08:0:b0:7d5:fe3e:90ff with SMTP id d8-20020a6bcd08000000b007d5fe3e90ffmr207390iog.0.1712849898846;
+        bh=SQF8pW0Q5UZae20gtyOFCGbbxCzCiJFtoc6YhdkZSao=;
+        b=GCcnO86MKXFdr5KAIIrj8wr3frkVL0RUlcZjzpa5FDqztKjtMt0wqGUyqhAavE62YH
+         UGXBPFeSZl4mXjPg8UK29D307C5GQJ8tjDKAXrO0uTNqY4hsegjpf7tE0Am1tvqsYtu0
+         AoROa8J6cpgASBxByEbK5R/2wmopUSK6jMSSPjJpoeZwcM6wLbOSEcfqQ3rqcdgALIUl
+         Az45oYlPpzJPSOSTrOv9+3TFapHtIgasClryPwiqJoNVtv1Sv7EZ2fTHxYgOMj9cNF0u
+         q0rz8/LaneF9crtK8kql09zitejgy2nJ93dKaum3bBem+ZyajoQPwNOTJW5HpgNyEazT
+         vtTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVKmOoyBcunFGdc7+Mhiog4SHVfPvmB8Ybo+ItcIZSSZb6Y0YrYBSMzRlDfEps7bip1UmgV+nnNYUtRK3MO6ndWiiWgKfookqMT2uvf
+X-Gm-Message-State: AOJu0YwhFhbr1wS2hnCdEnKO2INFq3uf/BiPZUin42+vDi63ggGImtqw
+	UD3RB6uVMjbSYDViZ6U8moXqWRxnCUtsFjXOsl2Yytmnm+I/Ph/EkZ6R+1ZGQA==
+X-Google-Smtp-Source: AGHT+IHuutycOm+XsRHDl0LWcOxTy9NbRP7BpNLELnhVE5UZheCq3gAcUJShOSLCoSLKJdlEGR/O1A==
+X-Received: by 2002:a05:6830:4d:b0:6ea:1189:de3c with SMTP id d13-20020a056830004d00b006ea1189de3cmr5851360otp.34.1712849898444;
         Thu, 11 Apr 2024 08:38:18 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.17
+Received: from fedora64.linuxtx.org ([99.47.93.78])
+        by smtp.gmail.com with ESMTPSA id q14-20020a05683033ce00b006eb507d4257sm238520ott.33.2024.04.11.08.38.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:38:17 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 239/437] watchdog: eurotechwdt: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:16:19 -0600
-Message-ID: <20240411153126.16201-240-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+        Thu, 11 Apr 2024 08:38:18 -0700 (PDT)
+Sender: Justin Forbes <jmforbes@linuxtx.org>
+Date: Thu, 11 Apr 2024 10:38:16 -0500
+From: Justin Forbes <jforbes@fedoraproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
+Subject: Re: [PATCH 6.8 000/143] 6.8.6-rc1 review
+Message-ID: <ZhgD6FVwprj26KBU@fedora64.linuxtx.org>
+References: <20240411095420.903937140@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411095420.903937140@linuxfoundation.org>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/watchdog/eurotechwdt.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+On Thu, Apr 11, 2024 at 11:54:28AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.8.6 release.
+> There are 143 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-diff --git a/drivers/watchdog/eurotechwdt.c b/drivers/watchdog/eurotechwdt.c
-index e26609ad4c17..e11b4acfa8ed 100644
---- a/drivers/watchdog/eurotechwdt.c
-+++ b/drivers/watchdog/eurotechwdt.c
-@@ -186,18 +186,16 @@ static void eurwdt_ping(void)
- 
- /**
-  * eurwdt_write:
-- * @file: file handle to the watchdog
-- * @buf: buffer to write (unused as data does not matter here
-- * @count: count of bytes
-- * @ppos: pointer to the position to write. No seeks allowed
-+ * @iocb: metadata for IO
-+ * @from: buffer to write (unused as data does not matter here
-  *
-  * A write to a watchdog device is defined as a keepalive signal. Any
-  * write of data will do, as we don't define content meaning.
-  */
- 
--static ssize_t eurwdt_write(struct file *file, const char __user *buf,
--size_t count, loff_t *ppos)
-+static ssize_t eurwdt_write(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t count = iov_iter_count(from);
- 	if (count) {
- 		if (!nowayout) {
- 			size_t i;
-@@ -206,7 +204,7 @@ size_t count, loff_t *ppos)
- 
- 			for (i = 0; i != count; i++) {
- 				char c;
--				if (get_user(c, buf + i))
-+				if (get_iter(c, from))
- 					return -EFAULT;
- 				if (c == 'V')
- 					eur_expect_close = 42;
-@@ -369,7 +367,7 @@ static int eurwdt_notify_sys(struct notifier_block *this, unsigned long code,
- static const struct file_operations eurwdt_fops = {
- 	.owner		= THIS_MODULE,
- 	.llseek		= no_llseek,
--	.write		= eurwdt_write,
-+	.write_iter	= eurwdt_write,
- 	.unlocked_ioctl	= eurwdt_ioctl,
- 	.compat_ioctl	= compat_ptr_ioctl,
- 	.open		= eurwdt_open,
--- 
-2.43.0
+Tested rc1 against the Fedora build system (aarch64, ppc64le, s390x,
+x86_64), and boot tested x86_64. No regressions noted.
 
+Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
