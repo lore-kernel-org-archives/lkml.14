@@ -1,50 +1,68 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out203-205-251-84.mail.qq.com (unknown [203.205.251.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845B11474AB
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C1F1465AA;
+	Thu, 11 Apr 2024 11:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712833739; cv=none; b=byhj9lnwPeZ29pd5oDcBPLQ0Sxh5maqNStYf0aAx9b8WnDKGevkeDKnV8qg15iUcwON/nwhS78Un4oN8ndKC+m5gIqekMA2CYadOGHbIjqbq/sIlnHWPz1uAOZT9nCsE7Az4Vyy40aMkakUzjsn+C8Z4Krfa/goz+oMbZlwAWTE=
+	t=1712833850; cv=none; b=VSXav+vSJOsfae2Kl/sHZBviOO4MKKEPy6D0HCAJTiKoJ79WiSa/g4p7CII3O2qwS0XfS0raECEmc4dPD8uvNrxGR+gaeFJTvBLP1uJoZ76CNOxIUas9KZt8H4l0oFb1v2O9HQAZeqanotGhgIWo0HB456aCdkcx32JSdjZ7HWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712833739; c=relaxed/simple;
-	bh=4yerjFFTsRI1XLGWxI1mWV+vwXM2RIzb82EVWzwsnw0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cgPxS/urSHMa0GZ55Yhav/9/0ug+zAsOk0BC+iS9QLyQim3+bgLcJ1olec9/quShrZ76VDmwu2a8FvD2lfGJsM5JpTMigMiLPrKimfItuiYfVVrDJJmCbK/vVkSuxAVffknEf2xjZVNxVC6RNevm9qx7azdlExDYckUV3Sl8qzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=YeQFpoGj; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1712833850; c=relaxed/simple;
+	bh=irR7rrMoFz+kSmrXAtZFx7Z4FrGRW8a7lrZdbidVk7c=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=kd67mOivyDAGDu92310U+XMk7ioZ38nw6bj45T6CeUaGoZ01OtFzE+ukSAIvdb6ft4lSvcUl6APatTUh8rMvxuuM3URdoLbrPIq1hn4vPLIq3UtV5AVCcyh4Oo7FHioKNe2neg88CKnGs1Ejs1M26E8kVTbqeWNu1P3UomBfRws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yKe3Oh6g; arc=none smtp.client-ip=203.205.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="YeQFpoGj"
-Received: from tundra.lovozera (unknown [178.176.79.151])
-	by mail.ispras.ru (Postfix) with ESMTPSA id CA9684073CFC;
-	Thu, 11 Apr 2024 11:08:50 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru CA9684073CFC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1712833732;
-	bh=6nS8pm5CRwKEHxdOcbSSAvsWDn+jjKR17A7PSN1Ed+k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YeQFpoGjy7hnaJAj9pGdBRzJT+B+l0eZezXjucGk1ztAq8+FgooxPjA7HSbzlsKEX
-	 /BOyJNhYY/7HVZ+hUXY8/6P5n9HjoULhT7geCYVvwNf/3O1hb6nh9ARWCDpLk15MVj
-	 X+4m0PHtp+ZS9iFkVFQr1mcL99sHbriovxwIa/xc=
-From: Mikhail Kobuk <m.kobuk@ispras.ru>
-To: Karol Herbst <kherbst@redhat.com>
-Cc: Mikhail Kobuk <m.kobuk@ispras.ru>,
-	Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@redhat.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Ben Skeggs <bskeggs@redhat.com>,
-	Francisco Jerez <currojerez@riseup.net>,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yKe3Oh6g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712833539; bh=iW8aWXvN4mbA0WEGSj8YcKPKHDgDK7E/gRDBL2Bh1eg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=yKe3Oh6gdg531OfBw43CRNUKsQgWvXsUsbqL4REjhWRWV/EyQEdrVIPBBxhbQ6Wrl
+	 uuEd8GqnykwLaOZjANMsTohCJzwCacYB3UAVC5dchhbfYum2drYrs96DeGaFsN7WKW
+	 G7/mjy+gPsau7YI7w5oIeKkn7hbiOy2ShrvOTQZw=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 162A8876; Thu, 11 Apr 2024 19:05:34 +0800
+X-QQ-mid: xmsmtpt1712833534tlne241la
+Message-ID: <tencent_5437464AAA7407772566583C29372E964409@qq.com>
+X-QQ-XMAILINFO: OKKHiI6c9SH3AsUbxSTqAm1aPqHoG6wb2nOwfjMYc+bqlS1kwVIRXEAwYBBERt
+	 QbCiin0C5bVqMplz4dl9vTcDDMYP7hAZO+hM1n0jGudJ3wFMqw75nDi6Ar9VwEzqKOmhKLYLVoOr
+	 QaJNV+Fagrx4dx2jXdMq4Wl8Un5e6k1fYhhp+q7vg7mOqvraeER+n8UeEp8L/Z17RWCdJxdOqVIP
+	 swEgTIYpf6sXbmr7PUmc6leLos2wya5ZsXPnxUFjVYEB3hHbx9CQJmOGS53Zliwg+Kbf5EFtLHDI
+	 +zoFnq1w/z7BIe2DJ1KLADjm8xZ/KBxD/tlJvrGFnB2NIJDQJfXMjdTJ24SClRGqZo5a8fvwCuXA
+	 7pTNbtT3F4/7V4wiazYeEpHPPIpp1oWd5OWJMRxtpnDq4MJdxrTV4UeJbYkyRKsd2NQcTLHqYrn7
+	 XVgHOQDOnAw0YWdKi9QzUr3Tqm+l7ZplpSyNC7Qf5Mvj16FXNcSiM5qDG0mipJvQ+/KFS2pbc30x
+	 rLKHflaOisJm6dTtaMBbj3p5HEbI9bF588B47HxUazY71dRY9gjoki27OTtGNHEvKo5y2eTz6PV+
+	 Z8XdHHOviEsCXaBhbhj9ODWa71pYo/yh3Ib1vqsTAD7Ybom8XeBpYRxQVV3xZIAbKfs92kFHvrD5
+	 EuU3sOpgqvqRarVH90fcuTHyDm/uG9BAv2v10W+JVoIL3rSAiWl0VJ9YHHTExiHXB/OgBEQQpsX6
+	 z6EUUBpL/jv7ioEgoIPe+xmp8PbdmpgeB50BU9Ivc5z9j+0nQ1sBL+NNF/4Y97qMLQAv9xtzxStf
+	 4CmoNXVs7z8owUvuhzP0FDaOQfyE2Ayx7ZH+RlgGlBJiaPYewgvDCyPd2BVy+qC0e8buVqDX2BZl
+	 50bjoHO6+5zsfWRTAAJMefByiS1A3kyxuRqPFtN9/POUtmFfEgzGdX6NPZN0xi+T30UqTJ1ltQ
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: yonghong.song@linux.dev
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eadavis@qq.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
 	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Fedor Pchelkin <pchelkin@ispras.ru>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: [PATCH v2] drm: nv04: Fix out of bounds access
-Date: Thu, 11 Apr 2024 14:08:52 +0300
-Message-ID: <20240411110854.16701-1-m.kobuk@ispras.ru>
-X-Mailer: git-send-email 2.44.0
+	martin.lau@linux.dev,
+	sdf@google.com,
+	song@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] bpf: strnchr not suitable for getting NUL-terminator
+Date: Thu, 11 Apr 2024 19:05:19 +0800
+X-OQ-MSGID: <20240411110518.1245753-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <4bfc3494-a3e9-4b4c-9d93-fa1049a10235@linux.dev>
+References: <4bfc3494-a3e9-4b4c-9d93-fa1049a10235@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,82 +71,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When Output Resource (dcb->or) value is assigned in
-fabricate_dcb_output(), there may be out of bounds access to
-dac_users array in case dcb->or is zero because ffs(dcb->or) is
-used as index there.
-The 'or' argument of fabricate_dcb_output() must be interpreted as a
-number of bit to set, not value.
-
-Utilize macros from 'enum nouveau_or' in calls instead of hardcoding.
-
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-Fixes: 2e5702aff395 ("drm/nouveau: fabricate DCB encoder table for iMac G4")
-Fixes: 670820c0e6a9 ("drm/nouveau: Workaround incorrect DCB entry on a GeForce3 Ti 200.")
-Signed-off-by: Mikhail Kobuk <m.kobuk@ispras.ru>
----
-Changes in v2:
-- Instead of checking ffs(dcb->or), adjust function calls to match
-  argument semantics
-- Link to v1: https://lore.kernel.org/all/20240331064552.6112-1-m.kobuk@ispras.ru/
-
- drivers/gpu/drm/nouveau/nouveau_bios.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_bios.c b/drivers/gpu/drm/nouveau/nouveau_bios.c
-index 479effcf607e..79cfab53f80e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_bios.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_bios.c
-@@ -23,6 +23,7 @@
-  */
- 
- #include "nouveau_drv.h"
-+#include "nouveau_bios.h"
- #include "nouveau_reg.h"
- #include "dispnv04/hw.h"
- #include "nouveau_encoder.h"
-@@ -1677,7 +1678,7 @@ apply_dcb_encoder_quirks(struct drm_device *dev, int idx, u32 *conn, u32 *conf)
- 	 */
- 	if (nv_match_device(dev, 0x0201, 0x1462, 0x8851)) {
- 		if (*conn == 0xf2005014 && *conf == 0xffffffff) {
--			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, 1);
-+			fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 1, 1, DCB_OUTPUT_B);
- 			return false;
- 		}
- 	}
-@@ -1763,26 +1764,26 @@ fabricate_dcb_encoder_table(struct drm_device *dev, struct nvbios *bios)
- #ifdef __powerpc__
- 	/* Apple iMac G4 NV17 */
- 	if (of_machine_is_compatible("PowerMac4,5")) {
--		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, 1);
--		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, 2);
-+		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS, 0, all_heads, DCB_OUTPUT_B);
-+		fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG, 1, all_heads, DCB_OUTPUT_C);
- 		return;
- 	}
- #endif
- 
- 	/* Make up some sane defaults */
- 	fabricate_dcb_output(dcb, DCB_OUTPUT_ANALOG,
--			     bios->legacy.i2c_indices.crt, 1, 1);
-+			     bios->legacy.i2c_indices.crt, 1, DCB_OUTPUT_B);
- 
- 	if (nv04_tv_identify(dev, bios->legacy.i2c_indices.tv) >= 0)
- 		fabricate_dcb_output(dcb, DCB_OUTPUT_TV,
- 				     bios->legacy.i2c_indices.tv,
--				     all_heads, 0);
-+				     all_heads, DCB_OUTPUT_A);
- 
- 	else if (bios->tmds.output0_script_ptr ||
- 		 bios->tmds.output1_script_ptr)
- 		fabricate_dcb_output(dcb, DCB_OUTPUT_TMDS,
- 				     bios->legacy.i2c_indices.panel,
--				     all_heads, 1);
-+				     all_heads, DCB_OUTPUT_B);
- }
- 
- static int
--- 
-2.44.0
+> > The strnchr() is not suitable for obtaining the end of a string with a length
+> > exceeding 1 and ending with a NUL character.
+> 
+> Could you give more detailed explanation with specific examples? I think
+> strnchr() does the right thing here. Note that if fmt is not NULL,
+> strnchrnul() never returns NULL pointer so in the change below,
+> 'if (!fmt_end)' will be always false.
+My mistake, strnchr() work well.
+> 
+> >
 
