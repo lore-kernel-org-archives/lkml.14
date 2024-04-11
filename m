@@ -1,160 +1,90 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E1F14EC58
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4D914F9C4;
+	Thu, 11 Apr 2024 13:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842384; cv=none; b=ffuWY1JRGjoEXsxCr25y0qulzQb6ZUtO8voDpdqwx17HkQz3LfCGkMDjp1lMcdogyedUcqk/igohTXukzlJsimy9vYyyNU9knt0hVI+ximhEMQ77ZvDrjTtNbA7pH2cFDhJrGCkqavvKbyxJ/MSGCa8ZEbCBAzkhXOHH/oYa9hU=
+	t=1712842388; cv=none; b=kPVs2v2zHLbVM8d5iq/Oh+IwgTsheeneEzJkysY3wm1xs7yY+q2o/5migwcKvIsIdp+7eTcKKzIxeOrBbKY1Y+hcsNtxRoF7lvnmDChgPvSfuzck1GH1wDu5XK2OCB91nAQ35nVtfI1woDxab4ka/jUC+DK3xGtgMxlOeyTIkYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842384; c=relaxed/simple;
-	bh=teK/eqWCTvzCc35yaa/euuldPp2NUAcqVNLGmqtWPgI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=qUFRb/ihimursIrZNZU/8kVGBTv+cRdlCvgHjAnU2MWepsX+mXlh0LCL2yMJuy1TP/KRt6faMGGRuEdFYmoXgszUq+jmL9kxQJauqw7xPWU7CheIo2ghSOM2jOG1H98Alig6Y9da2w4PznFunpJnDCXjLsYJUKGNhvaM5j3EjQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YyxcqhAz; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sebastianene.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YyxcqhAz"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-41663c713b7so4687225e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 06:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712842381; x=1713447181; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jLbdCZtEB493P/s/ORJxcOLOX4Rib20uKwmrnMJ0nuE=;
-        b=YyxcqhAz5oygn7KV2KMsSGZXtDNv2C2oXuTLqyVyxSZtT3/nVLfG3geCteuaMbiXKq
-         0PRyMxK3cukZFZcQBZYTY5kX14eIo89ulMJaia/ZO1TMPX0MGtilcrW+rbcMmYHfegwi
-         Xg2irPFc7m9ksSVkk6LMwUUiaePV2AaWk6F97FhQmLReC8tRCi9c3XqrEXkhFacsq0Fu
-         Q9rhY9W8BTExVNRtny4Jt986pXBcK2p6safrHJDncZnBN1al29BQ7kWSN5bIveFqwPTR
-         1pWSAd/6254bfBkfThZboD0oKLb04AgPMM8kVB7ad6mhanrRoD3aXdL17kylsDNIzA4k
-         K+nQ==
+	s=arc-20240116; t=1712842388; c=relaxed/simple;
+	bh=Hu1xN2JiY9qMgKFHZgQq9iT0bgOzpOMrTuCFIleiTJA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cPWuSPXnqC29ZMS6bqTuWu2Gt8po9C7OUDZ0gCGtDHit64tsoDbz6DL3HEikCSxTuyjDQNbb6JFJ0bD0cUmTra10u3wtPsV6aFWVFbr6tlEVUPONxFYwG63OIQ0Mnz2p9Y7JnrZI925bzbIqLeo0TMwFfzAF1rqx5E93PFV0F9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d89346eb45so56129561fa.0;
+        Thu, 11 Apr 2024 06:33:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712842381; x=1713447181;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jLbdCZtEB493P/s/ORJxcOLOX4Rib20uKwmrnMJ0nuE=;
-        b=k3ig4G2C4jFi+T8HtDqe+lmyMd7/w0kq6uT3WgvluVt95qmrnl9f3GHUyE+tnKxPT3
-         dtOiknK7A+EkHY8qE0rzlY/DAb+thGriZ6CqneR4On+telpsdms5g0SPCOAnBlPJ3dN5
-         Hr2BNA9ZrvkMhlEVBuwkG/b9musKxNDaAujYo983+jvj8Hcfmc7ZKMlTX+F82xXGOL7i
-         R8R1pytpVti4Yu0JkZiW0wvSvkhdzm2nk+cShLuMFF7LI+PLdzHAq6GQ/ktYgONuitNu
-         3tHAjbtfsdX5Mjk3rRReMzg6ajabLGuOj2zSSTcjAxR5yhsobjJHZ7bJbj9FgIc1YIW2
-         RvFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmFQXIJY7vRTjGDdxXYXlpZ98yeB6S5mvhj7x63w811pKcPnt10QCOJCaIvTm+UTDC38chb4TKqWL6/EYLLv5/B5YuKKu+ccPaVvDI
-X-Gm-Message-State: AOJu0Yx21tVu9R7dNuXHU2tPtLoo5OskTX/Ww+RoubV8Hr3eWhgLuNN2
-	eWTv4re/76SlDTJ3WwpkURU+YuvCYsLGMxTdmDUdOVcareCfgt8NT+RZso5g7AV7n+g2869iQwu
-	+lf/iJpiB6fUYiYXlx2HUYR3DIg==
-X-Google-Smtp-Source: AGHT+IEBtyO1OCnSzcg3FPObYJAZ6zsaFmfxsv4pfdATs2M1m7kwFkbGnhcitqth2TnArhHYAdgWS+f4LvVTF396FzQ=
-X-Received: from sebkvm.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:cd5])
- (user=sebastianene job=sendgmr) by 2002:a05:600c:511d:b0:416:98c7:9b96 with
- SMTP id o29-20020a05600c511d00b0041698c79b96mr42890wms.2.1712842380871; Thu,
- 11 Apr 2024 06:33:00 -0700 (PDT)
-Date: Thu, 11 Apr 2024 13:32:49 +0000
+        d=1e100.net; s=20230601; t=1712842385; x=1713447185;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VoFgjJ32tsxlVGtTa5gGB28oxhJFPr7M0nD6tH1rarM=;
+        b=PthL68uElizIUQwzTwjN6yt6Z+fgLYo2II/YyW9w9F7lZGndqBecamnVOqaAwcKrND
+         xBOqBXSL241mDE2ugZXfCuHH4FZ9Ddxq+Q3mGT4rvnskW7of55e+W5KvcpQ1YPJnom1I
+         0ssBBHGUf/zxrrrLGlnUJ/5qvPtwDL6tUQlEkGQw7zfqvefBcBlYLKROY/nVBMUJpmyv
+         lKx2n26T0tuqSBt/Sy/ASaxBcgp02s7lyXAjtroA942eVaMHt/C9WgKsfYwtGMGRX5CN
+         dpQ3QMQU46orcXTr5tMevtaJdlrj2InYYkBs421ZIEg76YtQpBhNJJpQ9whc46B1Dp03
+         HObg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUAFWStBALYBLNHU3G4xfitcdID/AgO2mDiYUQnRCXrpLNe5SHC1XIIOPT9PEyzigLnKXaeTm5G3ZDRzsVlARN5ugcPCVsFrMCwjh8KQABSbPzouYU2Pr8K1mmdHId/u05jvkbzGNPqW6hS4KYOfSPG0q83+QXdg7a7ZU4DlZBpQ+1
+X-Gm-Message-State: AOJu0YzUP/9fuTJSr3nvDR9kud+gnYG5VCHHOhgJgFVRtY+L6daVG5k8
+	vvwzMfHkJUxsQSoX1ktQs0qKgxdTH3zv7fUOKTnPgTx4khWI9dRf
+X-Google-Smtp-Source: AGHT+IFByJfC9hbYBeCLoTSUE6m3SAZ56TJRBSVxKGqApn7flbJoLNyy3Sp4kVZ3NmAPlJJgNRuidw==
+X-Received: by 2002:a2e:a9a6:0:b0:2d8:8633:ff70 with SMTP id x38-20020a2ea9a6000000b002d88633ff70mr6469091ljq.30.1712842385060;
+        Thu, 11 Apr 2024 06:33:05 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
+        by smtp.gmail.com with ESMTPSA id k11-20020a170906578b00b00a51be2b75f3sm760606ejq.35.2024.04.11.06.33.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 06:33:04 -0700 (PDT)
+Date: Thu, 11 Apr 2024 06:33:02 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Josef Bacik <josef@toxicpanda.com>, Jens Axboe <axboe@kernel.dk>,
+	leit@meta.com,
+	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <cgroups@vger.kernel.org>,
+	"open list:CONTROL GROUP - BLOCK IO CONTROLLER (BLKIO)" <linux-block@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] blk-iocost: Fix shift-out-of-bounds in iocg_kick_delay()
+Message-ID: <Zhfmjoa2l04fXIVr@gmail.com>
+References: <20240410193642.1303741-1-leitao@debian.org>
+ <ZhbuUKXQwBwye1_r@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240411133249.2134696-1-sebastianene@google.com>
-Subject: [PATCH v2] KVM: arm64: Add support for FFA_PARTITION_INFO_GET
-From: Sebastian Ene <sebastianene@google.com>
-To: catalin.marinas@arm.com, james.morse@arm.com, maz@kernel.org, 
-	oliver.upton@linux.dev, qperret@google.com, qwandor@google.com, 
-	suzuki.poulose@arm.com, tabba@google.com, will@kernel.org, 
-	yuzenghui@huawei.com, vdonnefort@google.com, lpieralisi@kernel.org
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Sebastian Ene <sebastianene@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhbuUKXQwBwye1_r@slm.duckdns.org>
 
-Handle the FFA_PARTITION_INFO_GET host call inside the pKVM hypervisor
-and copy the response message back to the host buffers. Save the
-returned FF-A version as we will need it later to interpret the response
-from the TEE.
+On Wed, Apr 10, 2024 at 09:53:52AM -1000, Tejun Heo wrote:
+> Hello, Breno.
+> 
+> On Wed, Apr 10, 2024 at 12:36:41PM -0700, Breno Leitao wrote:
+> > When running iocg_kick_delay(), iocg->delay_at could be way behind "now",
+> > which causes a huge tdelta difference.
+> > 
+> > The tdelta value is used to shift some bits around, raising the
+> > following UBSAN splat:
+> > 
+> > 	UBSAN: shift-out-of-bounds in block/blk-iocost.c:1366:23
+> > 
+> > Debugging this, these are some values I got in my machine with 6.9-rc3.
+> > 
+> >  now = 3626064295
+> >  iocg->delay_at = 3275794093
+> > 
+> > Fix this by validating that the shift if valid, otherwise bail out,
+> > similarly to commit 2a427b49d029 ("blk-iocost: Fix an UBSAN
+> > shift-out-of-bounds warning")
+> 
+> Rik alreaady sent a fix:
+> 
+>   http://lkml.kernel.org/r/20240404123253.0f58010f@imladris.surriel.com
+> 
+> which got commited as beaa51b36012fad5a4d3c18b88a617aea7a9b96d.
 
-Signed-off-by: Sebastian Ene <sebastianene@google.com>
----
- arch/arm64/kvm/hyp/nvhe/ffa.c | 45 +++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
-
-diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-index 320f2eaa14a9..31ad740137fd 100644
---- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-+++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-@@ -67,6 +67,7 @@ struct kvm_ffa_buffers {
-  */
- static struct kvm_ffa_buffers hyp_buffers;
- static struct kvm_ffa_buffers host_buffers;
-+static u32 ffa_version;
- 
- static void ffa_to_smccc_error(struct arm_smccc_res *res, u64 ffa_errno)
- {
-@@ -640,6 +641,45 @@ static bool do_ffa_features(struct arm_smccc_res *res,
- 	return true;
- }
- 
-+static void do_ffa_part_get(struct arm_smccc_res *res,
-+			    struct kvm_cpu_context *ctxt)
-+{
-+	DECLARE_REG(u32, uuid0, ctxt, 1);
-+	DECLARE_REG(u32, uuid1, ctxt, 2);
-+	DECLARE_REG(u32, uuid2, ctxt, 3);
-+	DECLARE_REG(u32, uuid3, ctxt, 4);
-+	DECLARE_REG(u32, flags, ctxt, 5);
-+	u32 count, sz;
-+
-+	hyp_spin_lock(&host_buffers.lock);
-+	if (!host_buffers.rx) {
-+		ffa_to_smccc_res(res, FFA_RET_INVALID_PARAMETERS);
-+		goto out_unlock;
-+	}
-+
-+	arm_smccc_1_1_smc(FFA_PARTITION_INFO_GET, uuid0, uuid1,
-+			  uuid2, uuid3, flags, 0, 0,
-+			  res);
-+
-+	if (res->a0 != FFA_SUCCESS)
-+		goto out_unlock;
-+
-+	count = res->a2;
-+	if (!count)
-+		goto out_unlock;
-+
-+	/* FFA_VERSION_1_0 lacks the size in the response */
-+	if (ffa_version > FFA_VERSION_1_0)
-+		sz = res->a3;
-+	else
-+		sz = 8;
-+
-+	WARN_ON(count * sz > PAGE_SIZE);
-+	memcpy(host_buffers.rx, hyp_buffers.rx, count * sz);
-+out_unlock:
-+	hyp_spin_unlock(&host_buffers.lock);
-+}
-+
- bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
- {
- 	struct arm_smccc_res res;
-@@ -686,6 +726,9 @@ bool kvm_host_ffa_handler(struct kvm_cpu_context *host_ctxt, u32 func_id)
- 	case FFA_MEM_FRAG_TX:
- 		do_ffa_mem_frag_tx(&res, host_ctxt);
- 		goto out_handled;
-+	case FFA_PARTITION_INFO_GET:
-+		do_ffa_part_get(&res, host_ctxt);
-+		goto out_handled;
- 	}
- 
- 	if (ffa_call_supported(func_id))
-@@ -726,6 +769,8 @@ int hyp_ffa_init(void *pages)
- 	if (FFA_MAJOR_VERSION(res.a0) != 1)
- 		return -EOPNOTSUPP;
- 
-+	ffa_version = res.a0;
-+
- 	arm_smccc_1_1_smc(FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0, &res);
- 	if (res.a0 != FFA_SUCCESS)
- 		return -EOPNOTSUPP;
--- 
-2.44.0.478.gd926399ef9-goog
-
+Even easier then. Thanks!
