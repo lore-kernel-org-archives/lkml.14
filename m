@@ -1,120 +1,113 @@
-Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29FE1EE291;
-	Thu, 11 Apr 2024 15:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.10
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B731EE2AB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850116; cv=none; b=el7rT4LJ/udDMUSfVz176+VPijTuUkCHSR0DIKDeFt5YOv3n2b/wwrtnlEIggES6v6Ezzz0Klp290VAsU+jMdxRCeBtG2bqpvPiYRew2hwyUZsrbf/QH2ZbCt1fjErqeViIRgRhEDMyd452QUrvvurupquxEPY7/Mz7wUvh66CY=
+	t=1712850114; cv=none; b=oHPSOus/ZVNT1+11lGeMJNJNm5z+t6wH/Ziv2lxWF78NlEGRPDXwKsBlm0zJT0qHiz1lehIBUhCHKL4P4vJJvB5Mon/Bg7BZyDinn0hWhNIQ/LpjUQX+cIfKxkLj1TjF5AAG4tfpaRKVMIK6oADv406Ftkh6b0SigqkdbNtRB3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850116; c=relaxed/simple;
-	bh=sdve3zvrGeQnGmwpoWkNGk88ZE0iuKbJSVfpS5ImZi0=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=eG17ohzook5dyw3NTiTpwe/6Hl+SNhNfuATBtHWEt8uvNwTquCl+WWKKCh2+jzcB+NyrmdNka86gBJSQrpZNsNAzvLRVkdCGMgrHeRnT7dNzQcb2k7bolSYWCRwv3bTDLxoHTklkWvfvUpc+79x7cfq5gGux/Ag+d7n8ttO3bug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 924F94D70E;
-	Thu, 11 Apr 2024 17:35:36 +0200 (CEST)
-Received: from localhost.localdomain (unknown [82.64.135.138])
-	by smtp2-g21.free.fr (Postfix) with ESMTPS id D66822003CA;
-	Thu, 11 Apr 2024 17:35:24 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-	id 2369040039; Thu, 11 Apr 2024 17:34:32 +0200 (CEST)
-Date: Thu, 11 Apr 2024 17:34:32 +0200
-From: Etienne Buira <etienne.buira@free.fr>
-To: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][RFC][resend after bogus] gpio-syscon: do not report bogus
- error
-Message-ID: <ZhgDCKhcHdwGoJ4Y@Z926fQmE5jqhFMgp6>
-Mail-Followup-To: linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+	s=arc-20240116; t=1712850114; c=relaxed/simple;
+	bh=Y/iSvpIjGlIRFVx4u2nZZL2wUzPPNJ4zB+MKklb6/ek=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u+EqMFyWBcUHFcrl3Uw646PL57YqEZYO/69QOwZF6O4s7xTnTgy+8lW0s1MK7qU63uc6AQxVDvNPQbOY/ftsbUK5Zn9WCwxYJ1X2YaNCSODT2jfJImGkUnBHRtdZIb9TVMP7oxuUpqz2mMQU2vuVADDXEJn2EE0o2t76a/elYZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=R4yRdgqR; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="R4yRdgqR"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36a34b68277so121415ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:41:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850112; x=1713454912; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bg2rFEF/+oIdUQ14ghwtCcWSCSUbBNSWYK4tXZxz9dU=;
+        b=R4yRdgqROj2OP2ypNihEScjRcJq0VupodHLKEJvZ0Pt2p0Nad5NLVV1BpPZBH04RkE
+         m/hhmIL5j1r+Q9x/hu2V291JJ3FWS99GyjbBWt9GV6AisOJShjU02H993G/CaOsFVgNs
+         fm6pex0AzFr/jPyDGEMYtQN6COTuo6/xW+nuzmIwGxr9W2v0tZauxKtNrdp9CD4BVJO+
+         FMjLmyFj3pDfGsGX0uB9BplGN32ZeetpVcXRJS+9kb+6UuPIV4PZP0OaLtY7kXQm3M+j
+         6bbaPjmOqIt0eOig9pU+jmPiocoqvBB5VQ/0HEVFZw7pQYMNzKI2k7uo/S4rgiUDCgJI
+         I/QQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712850112; x=1713454912;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bg2rFEF/+oIdUQ14ghwtCcWSCSUbBNSWYK4tXZxz9dU=;
+        b=VR2HpvI4S0s/olMvK3qOiV05NFkc1Av8CpY1Nm1F1igiC1NfzxOv1mVWxuj8BVQQuK
+         T1WH/6QQGzABioFf+TAqB+FRnIxnZyzC4qdfDWJKc1ix76KcstKxRzOYaSnzpHcYke9z
+         YO+M/oUxpGefp3VIIDyDaXhNssQo/2qn+59A+Hw1qCbGYnCDaPDk8ePw4NU5vTJUacRD
+         zRbL2W0yViZgD1WWP051Up8xVKzOzGBO3D95L5cQVHiVS9WK43wg5FG621S3qIN0GvQk
+         E9ifXXAR4w2S4eCU9lFPL7zMRjvyKfzNLKShoaPT72KORXyaWYAbYJWKa1AjlvDM/0b2
+         EXeQ==
+X-Gm-Message-State: AOJu0YyJONA7KpP57L79BAJMLzWqdfulmi84nM4trYe+LuAtSWGz0VRm
+	baj47uGPoEk2ymqdVbdtMDwzNA46F6kGVXM7Q71VeePew+cSz7Mu72bsZjdOOeLS67OyKep7d9V
+	Z
+X-Google-Smtp-Source: AGHT+IEHU4dZHhwHkQD4H7YG9tJchvLQ2aCeiuD3KjckGsACToq/lu35Ca+PKnLM4MMA3SXcdVIkUw==
+X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr202685iob.1.1712850112472;
+        Thu, 11 Apr 2024 08:41:52 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.41.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:41:50 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 365/437] hwmon: pmbus: core: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:18:25 -0600
+Message-ID: <20240411153126.16201-366-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Do not call dev_err when gpio,syscon-dev is not set albeit unneeded.
-gpio-syscon is used with rk3328 chip, but this iomem region is
-documented in
-Documentation/devicetree/bindings/gpio/rockchip,rk3328-grf-gpio.yaml and
-does not look like to require gpio,syscon-dev setting.
-
-Signed-off-by: Etienne Buira <etienne.buira@free.fr>
-X-Prefers: kind explanations over rotten tomatoes
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/gpio/gpio-syscon.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/hwmon/pmbus/pmbus_core.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 6e1a2581e6ae..14c4f224eb07 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -16,6 +16,7 @@
- #define GPIO_SYSCON_FEAT_IN	BIT(0)
- #define GPIO_SYSCON_FEAT_OUT	BIT(1)
- #define GPIO_SYSCON_FEAT_DIR	BIT(2)
-+#define GPIO_SYSCON_FEAT_NODEV	BIT(3)
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index cb4c65a7f288..39b340024c28 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -3303,11 +3303,10 @@ static int pmbus_debugfs_get_status(void *data, u64 *val)
+ DEFINE_DEBUGFS_ATTRIBUTE(pmbus_debugfs_ops_status, pmbus_debugfs_get_status,
+ 			 NULL, "0x%04llx\n");
  
- /* SYSCON driver is designed to use 32-bit wide registers */
- #define SYSCON_REG_SIZE		(4)
-@@ -27,7 +28,8 @@
-  * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
-  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
-  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
-- *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
-+ *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction,
-+ *			GPIO_SYSCON_FEAT_NODEV:	gpio,syscon-dev do not have to be set.
-  * @bit_count:		Number of bits used as GPIOs.
-  * @dat_bit_offset:	Offset (in bits) to the first GPIO bit.
-  * @dir_bit_offset:	Optional offset (in bits) to the first bit to switch
-@@ -149,7 +151,7 @@ static void rockchip_gpio_set(struct gpio_chip *chip, unsigned int offset,
+-static ssize_t pmbus_debugfs_mfr_read(struct file *file, char __user *buf,
+-				       size_t count, loff_t *ppos)
++static ssize_t pmbus_debugfs_mfr_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+ 	int rc;
+-	struct pmbus_debugfs_entry *entry = file->private_data;
++	struct pmbus_debugfs_entry *entry = iocb->ki_filp->private_data;
+ 	struct pmbus_data *pdata = i2c_get_clientdata(entry->client);
+ 	char data[I2C_SMBUS_BLOCK_MAX + 2] = { 0 };
  
- static const struct syscon_gpio_data rockchip_rk3328_gpio_mute = {
- 	/* RK3328 GPIO_MUTE is an output only pin at GRF_SOC_CON10[1] */
--	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.flags		= GPIO_SYSCON_FEAT_OUT | GPIO_SYSCON_FEAT_NODEV,
- 	.bit_count	= 1,
- 	.dat_bit_offset = 0x0428 * 8 + 1,
- 	.set		= rockchip_gpio_set,
-@@ -221,19 +223,21 @@ static int syscon_gpio_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->syscon))
- 		return PTR_ERR(priv->syscon);
+@@ -3326,13 +3325,12 @@ static ssize_t pmbus_debugfs_mfr_read(struct file *file, char __user *buf,
+ 	/* Include newline into the length */
+ 	rc += 1;
  
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
--					 &priv->dreg_offset);
--	if (ret)
--		dev_err(dev, "can't read the data register offset!\n");
-+	if (!(priv->data->flags & GPIO_SYSCON_FEAT_NODEV)) {
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
-+						 &priv->dreg_offset);
-+		if (ret)
-+			dev_err(dev, "can't read the data register offset!\n");
+-	return simple_read_from_buffer(buf, count, ppos, data, rc);
++	return simple_copy_to_iter(data, &iocb->ki_pos, rc, to);
+ }
  
--	priv->dreg_offset <<= 3;
-+		priv->dreg_offset <<= 3;
+ static const struct file_operations pmbus_debugfs_ops_mfr = {
+ 	.llseek = noop_llseek,
+-	.read = pmbus_debugfs_mfr_read,
+-	.write = NULL,
++	.read_iter = pmbus_debugfs_mfr_read,
+ 	.open = simple_open,
+ };
  
--	ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
--					 &priv->dir_reg_offset);
--	if (ret)
--		dev_dbg(dev, "can't read the dir register offset!\n");
-+		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
-+						 &priv->dir_reg_offset);
-+		if (ret)
-+			dev_dbg(dev, "can't read the dir register offset!\n");
- 
--	priv->dir_reg_offset <<= 3;
-+		priv->dir_reg_offset <<= 3;
-+	}
- 
- 	priv->chip.parent = dev;
- 	priv->chip.owner = THIS_MODULE;
-
-base-commit: 4cece764965020c22cff7665b18a012006359095
 -- 
 2.43.0
 
