@@ -1,63 +1,63 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A2214F10D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C687914F9DE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849684; cv=none; b=fbVzp80c6X8CxuHW5VWLdxMe2YRsYUz08sIHyfNxDjf91qqBZL9M4IIRCpf6Xso0701e1IDqGxwVf9naNY2aMzC4BqFS1SVF+08Xzm9BZ2hEh/2Ynq3UYSNczbaUb+pdo2+6wfia2oALoBwCC3LUjFR5UppXr9nHErne4LXwQSs=
+	t=1712849687; cv=none; b=EvpHxa40K+zSaQdi8wOXuuwKnM+G93I0hp5Viv6TaTpNd2Ueeu2J0yQR3RQK3VZPdmwLNUiVP6Myz2TDR90s7YyPjVntNBn5329YYDJ9aL8+JxAKAeHcRDtaULVW+aidF+yT9q33eWsHy2UGaL7AwNZKPxoJdTq/3GedtBsZADs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849684; c=relaxed/simple;
-	bh=/V2nDSGA2WJ8j0aJzxxZ7WU80ll3brlP0dqm97rRTxg=;
+	s=arc-20240116; t=1712849687; c=relaxed/simple;
+	bh=mafGK7ArZ4CgMWc69oJvrXEr6bmtaktMynKhOq0IW24=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ISwcfD+WJz38tvKmDPaY7HgcKjswA6mUvbtBMELI5Fg5rRmtRu26PXbZeMEAdKmunjeGcTCI+5Z4oAdD3OAUbDhpGbO69OHrplUnGUaFgItxcFrKLW2rSFWSxmynwCYX8shxWKcK8LsB7R52Bn+v/hWH64aKcdWCWd0afU8Wfz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=q9jUByJA; arc=none smtp.client-ip=209.85.166.41
+	 MIME-Version; b=Y9yINSwWMDJOb2bW/W8ncHfogKVQXtQqSAoLJrm1abgvDBKgPeeyq9QMScRR6GY9ibKEg4OOCG/qyczE/DW5ph/WtakJC0cTj74psHGZsuulx4E8+gkFMDUb+HqKexISNWXStwhfhKTEivVW4ad9qIS0TCZYnkKgOkqbLxdhh2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=EvQk/zCC; arc=none smtp.client-ip=209.85.166.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="q9jUByJA"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170483639f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="EvQk/zCC"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36a224d7414so179835ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849681; x=1713454481; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849684; x=1713454484; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kh1ucZljRBsvFGWd0sOkihqQbHDmkAAiC0gmdJ8NTkA=;
-        b=q9jUByJAsV78D+4DJcbTQRI+oFfsiRbA2r5JSqhZ+EYVsd/qSe6+TtafZV1rajxn/V
-         9vmz6dw10MtP97nsDGsUoDoO0x3WQrlofttUjuzz7QWrBKqvvtwrxjgHYikFEh0LVw1Y
-         Gad5tYpaGsYmv3uipIHowk4Od8KcuLZzQXN4LkpJB6qHYYzn23DV99Iu/rxSZ6p4gafX
-         4MgsXf0fIYpg9yY75kSFkqANmCYVPX5gghp7Q9J0g6SeI43c63e7RwUOLW68VNUqD7m8
-         D4Xj3byplZf5Ojto5gHn/9uC3NnyDz/PQUGO20YVjoFYewx5soc4gXHVeyd8/LSJbPyc
-         Vtjg==
+        bh=CjanmKNhtskVVrpiFYIE9220cXjVfSIWUIi+sU6GL7c=;
+        b=EvQk/zCCEV586vQKUrJQw3pCN9BvzOYOwNBG7Na2fKeBMV/S3d2YYemMJE/zj0ystL
+         BG0pwTRw8TBg/4rw1Mt6h5tdn/jeD+NNdPW9PDodm/rPvY2eBck6oNYyykaHPoEE114n
+         npp0LMTkGQwXH30QtybmHIJH2dzudDaGG8pvWRnLca3FrewsR5B7pwzjsWFlUWfhIHDR
+         Vx4a3TKoqECt22RzmduHtDRB53nr8RKcew6uT1XZ0Xfo2RTfz2iJqB/SY/uiXKSTPcWL
+         GkCJ6fSoSsH36eYC+TKdQ+ENNY9szrNK/lqBPhPhn239O/ujZJW2ywOCi3DQ8hWS2wzR
+         Mj/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849681; x=1713454481;
+        d=1e100.net; s=20230601; t=1712849684; x=1713454484;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kh1ucZljRBsvFGWd0sOkihqQbHDmkAAiC0gmdJ8NTkA=;
-        b=UFmdLr6PbdTNv9iwClAZamU9D9opw8shPD8msV6xY2VyBTxY4ti/Hi3pvM8M8y4qPq
-         CJGIG1sch+TCk7dz36j3tGgn5WvebVzhWadoHAsSIfKttQnQxgq0FpD/UVcurwQA6BDB
-         Zft6xlXW2NIKPKSZdb8mPnJs2GOgUgU6FEsgayeXAHqy5b3BasUhLHIXYCu5cFdb00vW
-         3dUDBCWtgag39+usUTIoJwXcKGw4OLYc+f++e0PtvFv00hWiJP2aOiUHyuuf4aiCvi8P
-         PgTRys+5urX6tdrnUPkbqgnuU48P7UCSYj1Ptu4OH9NbPyZvook4GPIDj0O7/rh8AwjE
-         WFRQ==
-X-Gm-Message-State: AOJu0YwL8JYd+T9hpC+Nc1yBDF2U0XeSFnBYfD35+FS6z79xHccyIZhL
-	xbOjQR1hNADFO2W6e/5v8kB5BPPoY8xhXdC5pQ791z66J8C/G9njFnwFa8kjt1fC3JwVcal23pA
-	P
-X-Google-Smtp-Source: AGHT+IHKRJzVb/E63cNfhPXysdLBm0GQJMZ0fxu/1JRstY55LUiAf+g7OGQZ3MTvalu/7S88ruQVtg==
-X-Received: by 2002:a92:2912:0:b0:36a:f9aa:5757 with SMTP id l18-20020a922912000000b0036af9aa5757mr3578867ilg.2.1712849681293;
-        Thu, 11 Apr 2024 08:34:41 -0700 (PDT)
+        bh=CjanmKNhtskVVrpiFYIE9220cXjVfSIWUIi+sU6GL7c=;
+        b=v59iOGJzCJzifyaqKRD0WmF9MK92BuWvjaRgUhaFIcnOTEKhVtSxINOp/nRJ8TphLk
+         haiNK5sro9zfM/16ciBL2HD9wnqIvC/FYQO3+beJeIdFVBxohAZn14Mwf1TbN/gW2y56
+         ySO7GZBun9KmvhD2OOU5d+u0Bvggu/EVAoccodcisluzTZvMJn2Pi3ToEbgdJ6oSw1dy
+         I/peEvxUf7mDaPtc9r4k0P0ERkP4WAP67+Up705LvLkudAPTcfdyWdlgfIeXPOKFSWPO
+         tO9vOcb0EaTlBGIbhk3G5jfcfNPWQ7qt7cXt27/P1tqhPAOozmvmT+xijMF04vJpFTmy
+         kepA==
+X-Gm-Message-State: AOJu0YzRcYcfA7zqZ8R9OcSHEugb8FtcAVo589EgdnSAmoggo1Q7SvFm
+	b5vzxiDHZDs64eYYsTlbQJujuyrdGDIlOOEbYVIqTyqMF1FMwedQ0J7/Ps5ldbpCkfTl5PuyopS
+	U
+X-Google-Smtp-Source: AGHT+IFXWdGqIAW+oXfRgAYntKkHRsP+78puzHM3i9xxc0np3X7A8nuVOEUjNMoU9TubyKaosDyE9A==
+X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr182071iob.1.1712849684534;
+        Thu, 11 Apr 2024 08:34:44 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.40
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:34:40 -0700 (PDT)
+        Thu, 11 Apr 2024 08:34:44 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 107/437] crypto: iaa: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:07 -0600
-Message-ID: <20240411153126.16201-108-axboe@kernel.dk>
+Subject: [PATCH 109/437] crypto: cpp: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:14:09 -0600
+Message-ID: <20240411153126.16201-110-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,22 +71,146 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/crypto/intel/iaa/iaa_crypto_stats.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccp/ccp-debugfs.c | 51 ++++++++++++++------------------
+ 1 file changed, 22 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/crypto/intel/iaa/iaa_crypto_stats.c b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-index c9f83af4b307..8ae1cf87ddca 100644
---- a/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-+++ b/drivers/crypto/intel/iaa/iaa_crypto_stats.c
-@@ -238,7 +238,7 @@ static int wq_stats_open(struct inode *inode, struct file *file)
+diff --git a/drivers/crypto/ccp/ccp-debugfs.c b/drivers/crypto/ccp/ccp-debugfs.c
+index a1055554b47a..34bf31386994 100644
+--- a/drivers/crypto/ccp/ccp-debugfs.c
++++ b/drivers/crypto/ccp/ccp-debugfs.c
+@@ -39,10 +39,9 @@
+ #define	RI_NLSB_SHIFT	19
+ #define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
  
- static const struct file_operations wq_stats_fops = {
- 	.open = wq_stats_open,
--	.read = seq_read,
-+	.read_iter = seq_read_iter,
- 	.llseek = seq_lseek,
- 	.release = single_release,
+-static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
+-				      size_t count, loff_t *offp)
++static ssize_t ccp5_debugfs_info_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct ccp_device *ccp = filp->private_data;
++	struct ccp_device *ccp = iocb->ki_filp->private_data;
+ 	unsigned int oboff = 0;
+ 	unsigned int regval;
+ 	ssize_t ret;
+@@ -85,7 +84,7 @@ static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
+ 	oboff += OSCNPRINTF("LSB Entries: %d\n",
+ 		   (regval & RI_LSB_ENTRIES) >> RI_NLSB_SHIFT);
+ 
+-	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
+ 	kfree(obuf);
+ 
+ 	return ret;
+@@ -94,10 +93,9 @@ static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
+ /* Return a formatted buffer containing the current
+  * statistics across all queues for a CCP.
+  */
+-static ssize_t ccp5_debugfs_stats_read(struct file *filp, char __user *ubuf,
+-				       size_t count, loff_t *offp)
++static ssize_t ccp5_debugfs_stats_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct ccp_device *ccp = filp->private_data;
++	struct ccp_device *ccp = iocb->ki_filp->private_data;
+ 	unsigned long total_xts_aes_ops = 0;
+ 	unsigned long total_3des_ops = 0;
+ 	unsigned long total_aes_ops = 0;
+@@ -147,7 +145,7 @@ static ssize_t ccp5_debugfs_stats_read(struct file *filp, char __user *ubuf,
+ 	oboff += OSCNPRINTF("                     ECC: %ld\n",
+ 			    total_ecc_ops);
+ 
+-	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
+ 	kfree(obuf);
+ 
+ 	return ret;
+@@ -171,27 +169,25 @@ static void ccp5_debugfs_reset_queue_stats(struct ccp_cmd_queue *cmd_q)
+  * should be used to reset the queue counters across
+  * that device.
+  */
+-static ssize_t ccp5_debugfs_stats_write(struct file *filp,
+-					const char __user *ubuf,
+-					size_t count, loff_t *offp)
++static ssize_t ccp5_debugfs_stats_write(struct kiocb *iocb,
++					struct iov_iter *from)
+ {
+-	struct ccp_device *ccp = filp->private_data;
++	struct ccp_device *ccp = iocb->ki_filp->private_data;
+ 	int i;
+ 
+ 	for (i = 0; i < ccp->cmd_q_count; i++)
+ 		ccp5_debugfs_reset_queue_stats(&ccp->cmd_q[i]);
+ 	ccp->total_interrupts = 0L;
+ 
+-	return count;
++	return iov_iter_count(from);
+ }
+ 
+ /* Return a formatted buffer containing the current information
+  * for that queue
+  */
+-static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
+-				       size_t count, loff_t *offp)
++static ssize_t ccp5_debugfs_queue_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct ccp_cmd_queue *cmd_q = filp->private_data;
++	struct ccp_cmd_queue *cmd_q = iocb->ki_filp->private_data;
+ 	unsigned int oboff = 0;
+ 	unsigned int regval;
+ 	ssize_t ret;
+@@ -233,7 +229,7 @@ static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
+ 		oboff += OSCNPRINTF(" COMPLETION");
+ 	oboff += OSCNPRINTF("\n");
+ 
+-	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
++	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
+ 	kfree(obuf);
+ 
+ 	return ret;
+@@ -242,36 +238,33 @@ static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
+ /* A value was written to the stats variable for a
+  * queue. Reset the queue counters to this value.
+  */
+-static ssize_t ccp5_debugfs_queue_write(struct file *filp,
+-					const char __user *ubuf,
+-					size_t count, loff_t *offp)
++static ssize_t ccp5_debugfs_queue_write(struct kiocb *iocb,
++					struct iov_iter *from)
+ {
+-	struct ccp_cmd_queue *cmd_q = filp->private_data;
++	struct ccp_cmd_queue *cmd_q = iocb->ki_filp->private_data;
+ 
+ 	ccp5_debugfs_reset_queue_stats(cmd_q);
+-
+-	return count;
++	return iov_iter_count(from);
+ }
+ 
+ static const struct file_operations ccp_debugfs_info_ops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = ccp5_debugfs_info_read,
+-	.write = NULL,
++	.read_iter = ccp5_debugfs_info_read,
  };
+ 
+ static const struct file_operations ccp_debugfs_queue_ops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = ccp5_debugfs_queue_read,
+-	.write = ccp5_debugfs_queue_write,
++	.read_iter = ccp5_debugfs_queue_read,
++	.write_iter = ccp5_debugfs_queue_write,
+ };
+ 
+ static const struct file_operations ccp_debugfs_stats_ops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = ccp5_debugfs_stats_read,
+-	.write = ccp5_debugfs_stats_write,
++	.read_iter = ccp5_debugfs_stats_read,
++	.write_iter = ccp5_debugfs_stats_write,
+ };
+ 
+ static struct dentry *ccp_debugfs_dir;
 -- 
 2.43.0
 
