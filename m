@@ -1,137 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372BF134A6
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EA8D534;
+	Thu, 11 Apr 2024 15:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848145; cv=none; b=YRi4U4ZeacJJwUUwU14cOr/3qQKSumqTFO61uYWninB2c/WwH9nckfS2b30TPjFyMxp5d5GE4UFtGHSgB3JFuOuCXww6me8qlKKKhsA0e3c6tb5o9fZ7BH+Qqw9UQax0HT3D/bZDl0+rAEreJrfqlgI35tNyWPvOZ27PZW2hQec=
+	t=1712848186; cv=none; b=GsPnhbzsbh8HiwH02qo+4HfOs+0VwGin7oEwumyELaYWq2Izt5toVkxKXHw25z1zW3QmWTRIq24VNo+JYaXVas2MdAHQnhHPBjWvZoUMzbGnJZopSWwYcIP426HUMzO7eu493A/hepGOBQFICLStSBm8HxF8EGGPf+sruKfuzyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712848145; c=relaxed/simple;
-	bh=RVORxIAI43gTiQrKWQVAC9zIU4DsuLvhV4Kx4jfwHSw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=T1gesl46Riu24ni4dz4S1RKT3+rCnrdpXWcOyKk6MKno8cfxC3U12v+zt9kNKeJnpmtzsywUKXEUGsdXF2zHQFb6JlXm0JYc8w30eabOaOq7fmIuUVZlUBKnSCZ4X4IjAZBuDtcSmdSp4BBphvFEOesiZFYJmJmEOzxZkkzlAiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bbOhPmBV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712848186; c=relaxed/simple;
+	bh=Weouvo161mz85+Ws3kWCHEAN8xCME/9Sry1jGNBqSMk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:From:
+	 References:In-Reply-To; b=jSDbCY6qQws53GZUgVbNSNtz062+J71d1hcs7nycPv1yY6ocP7ZeoPV3dULSz7AYLbf/IomDudIpfvbEvMUNRleLaV0DIeGytQ/udepXPnH7eGlpeS6FcQbyTUcgGowP7A4YmjLA2dr+g8NXdTeXjw5lwUh39luxnSDb9qBF020=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=aZbdSLyI; arc=none smtp.client-ip=195.113.20.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bbOhPmBV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6C0BC072AA;
-	Thu, 11 Apr 2024 15:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712848143;
-	bh=RVORxIAI43gTiQrKWQVAC9zIU4DsuLvhV4Kx4jfwHSw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bbOhPmBVluMbGNnFm8dJm3MaHLuHVNTGgV/zUSV2cpGCbxTpfRjSsBGx6gGA0IeXx
-	 tFAPlcA+ttz0wTaV/RGNrVwCF7PXnxVjTm5zY2WBTKdggeJffZtOaWITxtnC2nHd+6
-	 Z+z2GhSO3q6QjN94f6cizbSOUu32KIr5wIbgILBhkSSzekyKjtpKl/z6qXOE7XAY7e
-	 VXlrA0prld3mRQbVn7UQVvlz3LY+aOm0CgrOkUGBPw7Zpo3hEmSe15IWtjO6naGiKK
-	 b0Y8UmBPqp4+/CaLYFRLNWr+YcpAePnVnUW/LYaDkQNIBoGb+eD9h+cD+Cw2Hzcnnm
-	 Qt9tAh4qFwKag==
-Date: Fri, 12 Apr 2024 00:08:58 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yuntao Wang <ytcoode@gmail.com>
-Cc: rppt@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
- christophe.leroy@csgroup.eu, geert@linux-m68k.org, jpoimboe@kernel.org,
- kjlx@templeofstupid.com, linux-kernel@vger.kernel.org, mhiramat@kernel.org,
- ndesaulniers@google.com, peterz@infradead.org, tglx@linutronix.de,
- tj@kernel.org
-Subject: Re: [PATCH] init/main.c: Fix potential static_command_line memory
- overflow
-Message-Id: <20240412000858.7d81a7b946af172e6aed554d@kernel.org>
-In-Reply-To: <20240411142735.245515-1-ytcoode@gmail.com>
-References: <Zhfj4T1-u354E_KP@kernel.org>
-	<20240411142735.245515-1-ytcoode@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="aZbdSLyI"
+X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
+	serial F5FD910E8FE2121B897F7E55B84E351D
+	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
+	auth type TLS.CUNI
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
+	s=submission; t=1712848147; x=1714148147;
+	bh=cCeEsEVNtOvyeZAP8P6CFO9h6vuYp0g9sWCTeF8QBqc=; h=From;
+	b=aZbdSLyIVl3tvrFOIk+Zr5D1SzvZAbhOXUdHCwd0UGiy1HV/xtG2xvif53SQKGZVD
+	 GlSQSwoDJnZAU18Tn8N3UoMiINOwj2Eoh9Ohs4RAg/Qas/XfZmkqHLHTDowJHhz9Dn
+	 zGAK1q4EoU6T42iW01R3rM7xDiNXGiajh8N5VqD6uf4tPE55vigQj1M7/TdSu7MPVx
+	 PG9bfGFkXeRhofxZXZ56749LgtBba2obs6DrXTd+2FGglYVN5OVvLJXRVSjunagMRg
+	 iEE93/oB2n+Mdp12ees3RkmlxOcetPxmkq0hrmM17dPmR59egM5i/0fDQ48QZXOICh
+	 dhBomyUksKlPQ==
+Received: from localhost (koleje-wifi-0017.koleje.cuni.cz [78.128.191.17])
+	(authenticated)
+	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 43BF95MH032359
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 17:09:07 +0200 (CEST)
+	(envelope-from balejk@matfyz.cz)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Date: Thu, 11 Apr 2024 17:09:40 +0200
+Message-Id: <D0HE07BHD1T8.HQLIBUHTRVGT@matfyz.cz>
+Cc: "Rob Herring" <robh@kernel.org>,
+        "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>,
+        "Conor Dooley" <conor+dt@kernel.org>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "Liam Girdwood"
+ <lgirdwood@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        =?utf-8?q?Duje_Mihanovi=C4=87?=
+ <duje.mihanovic@skole.hr>,
+        <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] mfd: add driver for Marvell 88PM886 PMIC
+To: "Lee Jones" <lee@kernel.org>
+From: "Karel Balej" <balejk@matfyz.cz>
+References: <20240331105608.7338-2-balejk@matfyz.cz>
+ <20240331105608.7338-4-balejk@matfyz.cz>
+ <20240411113726.GH1980182@google.com>
+In-Reply-To: <20240411113726.GH1980182@google.com>
 
-On Thu, 11 Apr 2024 22:27:23 +0800
-Yuntao Wang <ytcoode@gmail.com> wrote:
+Lee Jones, 2024-04-11T12:37:26+01:00:
+[...]
+> > diff --git a/drivers/mfd/88pm886.c b/drivers/mfd/88pm886.c
+> > new file mode 100644
+> > index 000000000000..e06d418a5da9
+> > --- /dev/null
+> > +++ b/drivers/mfd/88pm886.c
+> > @@ -0,0 +1,157 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include <linux/i2c.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/module.h>
+> > +#include <linux/notifier.h>
+> > +#include <linux/of.h>
+> > +#include <linux/reboot.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#include <linux/mfd/88pm886.h>
+> > +
+> > +#define PM886_REG_INT_STATUS1			0x05
+> > +
+> > +#define PM886_REG_INT_ENA_1			0x0a
+> > +#define PM886_INT_ENA1_ONKEY			BIT(0)
+> > +
+> > +#define PM886_IRQ_ONKEY				0
+> > +
+> > +#define PM886_REGMAP_CONF_MAX_REG		0xef
+>
+> Why have you split the defines up between here and the header?
 
-> On Thu, 11 Apr 2024 16:21:37 +0300, Mike Rapoport <rppt@kernel.org> wrote:
-> > On Thu, Apr 11, 2024 at 09:23:47AM +0200, Geert Uytterhoeven wrote:
-> > > CC Hiramatsu-san
-> > > 
-> > > On Thu, Apr 11, 2024 at 5:25 AM Yuntao Wang <ytcoode@gmail.com> wrote:
-> > > > We allocate memory of size 'xlen + strlen(boot_command_line) + 1' for
-> > > > static_command_line, but the strings copied into static_command_line are
-> > > > extra_command_line and command_line, rather than extra_command_line and
-> > > > boot_command_line.
-> > > >
-> > > > When strlen(command_line) > strlen(boot_command_line), static_command_line
-> > > > will overflow.
-> > 
-> > Can this ever happen? 
-> > Did you observe the overflow or is this a theoretical bug?
-> 
-> I didn't observe the overflow, it's just a theoretical bug.
-> 
-> > > > Fixes: f5c7310ac73e ("init/main: add checks for the return value of memblock_alloc*()")
-> > 
-> > f5c7310ac73e didn't have the logic for calculating allocation size, we
-> > surely don't want to go back that far wiht Fixes.
-> 
-> Before commit f5c7310ac73e, the memory size allocated for static_command_line
-> was 'strlen(command_line) + 1', but commit f5c7310ac73e changed this size
-> to 'strlen(boot_command_line) + 1'. I think this should be wrong.
+I tried to keep defines tied to the code which uses them and only put
+defines needed in multiple places in the header. With the exception of
+closely related things, such as register bits which I am keeping
+together with the respective register definitions for clarity. Does that
+not make sense?
 
-Ah, OK. that sounds reasonable. 
+> Please place them all in the header.
 
-> 
-> > > > Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
-> > > > ---
-> > > >  init/main.c | 8 +++++---
-> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/init/main.c b/init/main.c
-> > > > index 2ca52474d0c3..a7b1f5f3e3b6 100644
-> > > > --- a/init/main.c
-> > > > +++ b/init/main.c
-> > > > @@ -625,11 +625,13 @@ static void __init setup_command_line(char *command_line)
-> > > >         if (extra_init_args)
-> > > >                 ilen = strlen(extra_init_args) + 4; /* for " -- " */
-> > > >
-> > > > -       len = xlen + strlen(boot_command_line) + 1;
-> > > > +       len = xlen + strlen(boot_command_line) + ilen + 1;
-> > > >
-> > > > -       saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
-> > > > +       saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
-> > > >         if (!saved_command_line)
-> > > > -               panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
-> > > > +               panic("%s: Failed to allocate %zu bytes\n", __func__, len);
-> > > > +
-> > > > +       len = xlen + strlen(command_line) + 1;
+Would you then also have me move all the definitions from the regulators
+driver there?
 
-Ah, I missed this line. Sorry. So this looks good to me but you don't need any
-other lines, because those are not related to the bug you want to fix.
-Please just focus on 1 fix.
+[...]
+
+> > +	err =3D devm_mfd_add_devices(dev, 0, pm886_devs, ARRAY_SIZE(pm886_dev=
+s),
+>
+> Why 0?
+
+PLATFORM_DEVID_AUTO then? Or will PLATFORM_DEVID_NONE suffice since the
+cells all have different names now (it would probably cause problems
+though if the driver was used multiple times for some reason, wouldn't
+it?)?
 
 Thank you,
-
-> > > >
-> > > >         static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
-> > > >         if (!static_command_line)
-> > > 
-> > > Gr{oetje,eeting}s,
-> > > 
-> > >                         Geert
-> > > 
-> > > -- 
-> > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> > > 
-> > > In personal conversations with technical people, I call myself a hacker. But
-> > > when I'm talking to journalists I just say "programmer" or something like that.
-> > >                                 -- Linus Torvalds
-> > 
-> > -- 
-> > Sincerely yours,
-> > Mike.
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+K. B.
