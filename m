@@ -1,114 +1,149 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A3117C6D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 20:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D57D17C6D;
+	Thu, 11 Apr 2024 20:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712867054; cv=none; b=O1W6ojC2nUkR8lZdFVj/LPq24z7YmYAGbM34DQjzPeY16UIr/UK+I75dlfJSerLDQ1xf/oAtlHg++hV/ef2E9ec3wtBYOWKkKPwmhcKoqkLThpB80cCpCIQUeaTVUDLsWBgbJqLCgJ0ESWhT6bEi5wCCyb6wMUGGfkT5O8boPC8=
+	t=1712867165; cv=none; b=H51favclpXV0QrYcyZ47tuRydkZEP8DHdlPF9+kbE4IpVIMNFS0XkA9mfpS9mJN9PLLYLNK72DKFJLsvQeEEne6ifknyYfx2oU7gcrB4tub95YFlR2FWVf8Q0kVxFCUOw/Boiiyhq+3ANZSjJUtnE7+OZXLrpABQTeCKeQUrJH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712867054; c=relaxed/simple;
-	bh=QqxmKREBd98R95lxy1BDt4/C4X/1ZCgWeLkeabMbOEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GD1TMsJX2tSKYeT75qvmrxvf0ZswmRdJw0hj5wkLlRF9D1DLuzluecsEYCzvLGZ7gu0RnHJf0myLgxUXkHPLzLMJE/NbbMj4O+qnyvlQ0641NsdqtS+NSRe2uWPB4Pc/J5E4ETGvBhkXgvYo+83+yxnXkEkYtBJ8/RCjDGEr3i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HEPP92Ch; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712867165; c=relaxed/simple;
+	bh=TkhjnlvjFGVhpEGIBO9ktab1bjtXa/Gww45F0qnwaGw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IYPNgHeNSp+knz318rJ6z2e/qvi4sGbmM21n+jSIyFI2Jg0hYNhZDBFVyjX0UdddXfUtQgaIcJtKJh/zHRulGtRLrXLjM0YwAjXZEnFVVMyb1ZQljMTg76SGk5hHJ+vU+3XBKr4ft6NJTRhdkw+zkeCiJc/vy4FUo4uw+5pBpDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=SwLrta9o; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HEPP92Ch"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d485886545so2670391fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712867051; x=1713471851; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OkivZAy8vHp+8K7Um26GAxu/l7QEtqH2ogeAPyc9feU=;
-        b=HEPP92ChPg4pOcong9yW0dsFZyHT0Pau2psj7nyeyyH7dnFsQGY4Y0h8klNpaIPMFr
-         uB1oCbuOnyZ/QQu4ltfgALX6pNC/G7Sh7z4twNAlZx5wIuoBbSrdqdKIvmQhq9z2R/MR
-         +FdaocwAISbH14MZQHBHxIID+chGKo2W6UFwVVXucOu/C0yWXPd6Tj7d5i2BiTvRC4KB
-         IoZDWRlpLYoB0ofPYmPPsq1I4GdWCbBCjy6ks9KT9nC/gLQLaIxMvfJ8GIC4L6GNC5fe
-         SLIDs3RhnrOGijK63uTkIC1GZDTBu8UFn+Chy0WQaEBxiXSZnTzCpUSL5RZMFni0CcYG
-         h9BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712867051; x=1713471851;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OkivZAy8vHp+8K7Um26GAxu/l7QEtqH2ogeAPyc9feU=;
-        b=b92BSNOYRVVdgH4GCxaYFqtZSHsZW520h9db37TfGkcPJwNjeRauGB5qRbW+t5ianS
-         MA5UkdeSk+JXgidoBj538h0qeWgq/+aojAvs61LSEupo22s6c2T0eJcerLILNWiNY7Fx
-         L90D8f8nF44ZfXEPbFu+Ecwj0IhlLhNHjHmzcK1Ey30bUzxkaoosZDoWpY031hSgSLeM
-         oJX1Y+I89ENi1YwctpfgBbTWWWHtWr6ZOjhyWyYzCTa7cLJJwqloW9Nl7LexPBfrOiaa
-         4GfnTulFgb/2vom1Tl628Dgf7KGWRrSGJxfKFGB+ne2E68vspWiZa+LiCVmZIZbY8R+t
-         q9Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWyPoUweGD/hQ7plWrNCwreygWwnFthPP2A9XFcRCyaRgz5GBGQpzPLBRD4H0X2lIalQQm+iqW/dw2/Vz5zqMCVIpEGv91oi08hWmJ
-X-Gm-Message-State: AOJu0YxpIzoRymFWUlN29PI69w2LsRcugG8WbqzZZCnlKKbmqqEefpTG
-	KKCJz+fN9TKaNKRRSj+XlTzhJOMYA4bJEmHBARL+FloqXj3KYa/XBE22F3ug7Ic=
-X-Google-Smtp-Source: AGHT+IFmKV1cZUNf2RDPXfgrp5jM/80Z18N3yhtpLtRxKHZ1VDKWNvDrx521CSjJRJIGHFCmxXfoWA==
-X-Received: by 2002:a2e:7d15:0:b0:2d4:49d1:38e with SMTP id y21-20020a2e7d15000000b002d449d1038emr508466ljc.28.1712867050958;
-        Thu, 11 Apr 2024 13:24:10 -0700 (PDT)
-Received: from [172.30.204.35] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id f24-20020a2e6a18000000b002d4295d8563sm291115ljc.62.2024.04.11.13.24.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 13:24:10 -0700 (PDT)
-Message-ID: <bbec514f-9672-4e5a-bd83-20ab59b3dcd9@linaro.org>
-Date: Thu, 11 Apr 2024 22:24:08 +0200
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="SwLrta9o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1712867158; x=1713471958; i=parker@finest.io;
+	bh=iyYbMwbsoalW7f0BZDynP1kALXT2YHy5NY0+s2Dr6Fs=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=SwLrta9oqLc9LjSfpwh6cf9yGX5e6RutuK+e7NSaECXA1tR8nidYQ4eDR2JU2ywI
+	 1+iAixV9+bo2dipTkSsGtG9e6uom7qPLU+t06XWr30yAAkJXucoaGIj1HbETbxDoj
+	 C8zQP0gpfgU6ywkitJEcSZ4FzlaWQ8eVBdilo4ZxH86cNNsdMc8CHvaDA8+FAAFw+
+	 uz0cD+NxYY23FeCjuvnfQoCb9H14PSEkWqu6ePqjZHrk1wHFgSlhow0Ikj5Dfdi4i
+	 AWaq8dDKZX5BxhoirIm48XnIN7HyPhT12kLIuZZWaQ5whptM2UYhY2sxYZVLfaID3
+	 Dw/xDWihgdz/36wndw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0MStu7-1sMkSZ0m6n-00HffZ; Thu, 11 Apr
+ 2024 22:25:58 +0200
+From: parker@finest.io
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>
+Subject: [PATCH v2 4/7] serial: exar: add optional board_setup function
+Date: Thu, 11 Apr 2024 16:25:42 -0400
+Message-ID: <69677365f4c753cbe6b5c028f530db49e6712ab3.1712863999.git.pnewman@connecttech.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <cover.1712863999.git.pnewman@connecttech.com>
+References: <cover.1712863999.git.pnewman@connecttech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] soc: qcom: Move some socinfo defines to the header,
- expand them
-To: Elliot Berman <quic_eberman@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Clark <robdclark@gmail.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
- Neil Armstrong <neil.armstrong@linaro.org>
-References: <20240405-topic-smem_speedbin-v1-0-ce2b864251b1@linaro.org>
- <20240405-topic-smem_speedbin-v1-1-ce2b864251b1@linaro.org>
- <20240410132510649-0700.eberman@hu-eberman-lv.qualcomm.com>
- <2c2bca6c-b429-4cef-b63a-ee3bd6c9eecb@linaro.org>
- <20240411130802689-0700.eberman@hu-eberman-lv.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240411130802689-0700.eberman@hu-eberman-lv.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cGlYfgxUzp/dk+YlF7OoGo/8PXhPAY+qB3wIDrtCULnQKHcJ2Ey
+ zVfZISSB7kE3OunQRk0o4w0I72C90WOpchanDUIj7YBMukIsHjt7dkYLoT1vmaMUTgm+YEb
+ EgkjbDWk7a2WXhduxd0BTq43qseMJBtCb5E9rDq4o4+PEV+GrEFQFD1a6/rCdOgmAqythds
+ d30hTd+raE42y2dWhNH8Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:CeSaNtNqE98=;cEBVWnOpTBRRd8aBZe4JWF9WmQo
+ MgA8fU/bkfIwDJrj/+mpW3WHwRY4KvnU7TiAga5ss1MWVK5k84tHNwy1jAg1wOJ+bp8FMnMHZ
+ RRvaGQFMJNxTvMXl1L7OPHJvaQ48bElfzv/a0NWMHBKLVZ6vF23SUsb5zICFo8IItCSWVX7OB
+ 8mx5MQ6hNEkWSRA6qu9J0N6Hc6wl5YRn6Kgk+bJEgW6XZsihJa6RnPBpyey1mHMx1KCCyzoNc
+ dQhQ4NfDQ5b2Vsx1JYzkXit+Dze7sJ5juec1Qx1m3fcClNrx+AtEvisbKKCQxD1ezeZhq27Da
+ 62Qh2XfAgVJyzltkuirKcKBsDeVp3VDA2y1oum+ha2EdbaUl9UnodGR75KOCL0XIRXqcRtO0p
+ BamuNZ0LF5yFXHBuiVWMRF7AvR2JsHvQuAwWfwiBomzaC/mDWRDoMJdPJIavitbHboiulJ1on
+ 0+qO7NFvX3w2OWjubwpBYiGcRxcWoShjxh3R1T9BZPWstTLYEG+zXJgsrVqkwu5rg9VoyBm5v
+ 8VJEE9gKsQ9LkrtpQgaQezUjh7ZvCxYNeqzjruX8SWdno+rPfIkMFACscyHw86J2PWgTlCeaB
+ ZNYXR6NQa60Fg1eKiRcg3ByypxaEThPWF+M09TBX5ZzYSKHXgBwymhPcnjbuoSttF4LcBOcYi
+ 5GA031wGNJ9hrqry0AUI4xM/OAbd2lmsyp//6zsQ/drzfusPUB4m8lXc1CYQdu85hQPwOZpYg
+ GXlZTZrDyJ1iBHR2Xr0oXXNjyeGHf1S9G2jYGa3GUEk9GR6KbS0QdY=
 
+From: Parker Newman <pnewman@connecttech.com>
 
+Adds an optional "board_setup" function pointer to struct
+exar8250_board. This gets called once during probe prior to setting up
+the ports.
 
-On 4/11/24 22:09, Elliot Berman wrote:
-> On Thu, Apr 11, 2024 at 10:05:30PM +0200, Konrad Dybcio wrote:
->>
->>
->> On 4/11/24 20:55, Elliot Berman wrote:
->>> On Fri, Apr 05, 2024 at 10:41:29AM +0200, Konrad Dybcio wrote:
->>>> In preparation for parsing the chip "feature code" (FC) and "product
->>>> code" (PC) (essentially the parameters that let us conclusively
->>>> characterize the sillicon we're running on, including various speed
->>>> bins), move the socinfo version defines to the public header and
->>>> include some more FC/PC defines.
->>>>
->>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>>> ---
+Signed-off-by: Parker Newman <pnewman@connecttech.com>
+=2D--
+ drivers/tty/serial/8250/8250_exar.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
-[...]
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
+/8250_exar.c
+index 9915a99cb7c6..b30f3855652a 100644
+=2D-- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -143,7 +143,7 @@
+  *
+  * MPIO		Port	Function
+  * ----		----	--------
+- * 0		2 	Mode bit 0
++ * 0		2	Mode bit 0
+  * 1		2	Mode bit 1
+  * 2		2	Terminate bus
+  * 3		-	<reserved>
+@@ -179,22 +179,24 @@ struct exar8250_platform {
+ 	int (*rs485_config)(struct uart_port *port, struct ktermios *termios,
+ 			    struct serial_rs485 *rs485);
+ 	const struct serial_rs485 *rs485_supported;
+-	int (*register_gpio)(struct pci_dev *, struct uart_8250_port *);
+-	void (*unregister_gpio)(struct uart_8250_port *);
++	int (*register_gpio)(struct pci_dev *pcidev, struct uart_8250_port *port=
+);
++	void (*unregister_gpio)(struct uart_8250_port *port);
+ };
 
-> 
-> 0xf is the last one.
+ /**
+  * struct exar8250_board - board information
+  * @num_ports: number of serial ports
+  * @reg_shift: describes UART register mapping in PCI memory
+- * @setup: quirk run at ->probe() stage
++ * @board_setup: quirk run once at ->probe() stage before setting up port=
+s
++ * @setup: quirk run at ->probe() stage for each port
+  * @exit: quirk run at ->remove() stage
+  */
+ struct exar8250_board {
+ 	unsigned int num_ports;
+ 	unsigned int reg_shift;
+-	int	(*setup)(struct exar8250 *, struct pci_dev *,
+-			 struct uart_8250_port *, int);
++	int     (*board_setup)(struct exar8250 *priv);
++	int	(*setup)(struct exar8250 *priv, struct pci_dev *pcidev,
++			 struct uart_8250_port *port, int idx);
+ 	void	(*exit)(struct pci_dev *pcidev);
+ };
 
-One more question, are the "internal/external feature codes" referring to
-internality/externality of the chips (i.e. "are they QC-lab-only engineering
-samples), or what else does that represent?
+@@ -966,6 +968,15 @@ exar_pci_probe(struct pci_dev *pcidev, const struct p=
+ci_device_id *ent)
+ 	if (rc)
+ 		return rc;
 
-Konrad
++	if (board->board_setup) {
++		rc =3D board->board_setup(priv);
++		if (rc) {
++			pci_err(pcidev,
++				"failed to setup serial board: %d\n", rc);
++			return rc;
++		}
++	}
++
+ 	for (i =3D 0; i < nr_ports && i < maxnr; i++) {
+ 		rc =3D board->setup(priv, pcidev, &uart, i);
+ 		if (rc) {
+=2D-
+2.43.2
+
