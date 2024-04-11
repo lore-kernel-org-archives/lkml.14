@@ -1,101 +1,238 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5281175A6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A6115E85
 	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849498; cv=none; b=mMWl5qvzVTe/C9SweY6fTjESGai8qlylFSK8vfmOw8d10UARKzFvNoJLegPm5X5fkpol6PhcPkSUYYXk4Ls/xI5Tc9bNKlg5jnZ4tkCv2yGyHTMdw8I0YFH2mY7+MMAEaElGYfGnMHMfYzE62xdvLjJNHq28ehM8VycSoxZOMrY=
+	t=1712849498; cv=none; b=WxYHkNuBmLhs91BU1XoRsEJIz3nVpC0E1pTHF+ZzrsPyBK/kToAB7iuqH7avsjK8Zt21BiB3T3hm8X3ouI2fFccA89fCEkT3QV1ZfM+qhO8Wm0vbw2ss8Md7EUkiQyEMAKYTPamJLk6fjaQR6pbwz6uUz14vDIBGwKX6WRPilxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849498; c=relaxed/simple;
-	bh=1F8FDCWi7kV0VWLSz4mlwqNZHS3BzwqFKom/1e6MPAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhcmkywuvYeReIX9O3w4BFjjBc99jD0kcLrkeDYp1BYmmISbJg8S7eCVsPxoqht1jzXNEIhd0qihVXNN+FfuYPDSg5qEKnqKAC3luvN9ASwjTW9cwIr0Z6TxLUzM/lO6kB+R+vJ/NnOtpYXMPZmgj4UE76UiuRWgC8tXOz4gxeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R3YY2n/0; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=zl9Msdkd0nKzFoMLDCdsFP4j4tTnGoCIX29BIyR8eJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EYyaVjbCAgw2u8iLw65bxo34+TfGCgiL0ljY2UfMhDfaGIWOqxRtFMAVRcmbKJwcH1Mexf23TKXJlkef7sTAaU4Q/a+Jd5mIPdUvd10QzMs2QAXnf0IWDvRLWhXlaj5uGRFFC2Nh51E9XTI4JXqexAQIthXosRdYq8M74n/Nyco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Nry89w5o; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3YY2n/0"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e3ca4fe4cfso37123405ad.2
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Nry89w5o"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69474339f.1
         for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712849496; x=1713454296; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
-        b=R3YY2n/0VwUwWve61b5CZ3IBPO30oLs/f2nMFH8EREXjpTHIHlEmK6get3jv1H+7Nr
-         LzLwT/KT3I9cYPiTYeAtKbFQ6f901IeroZqNTuKDBaW3EylhQBA8i1SXI31oI+p33vMs
-         5VvKi8iWLhGCK22xr7AnHWH+fsEQ0KNWXvrlI=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849495; x=1713454295; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4y1MiOXGemo/TYam3ZjcBOEptr5sK5Ww3DxqkARLkVA=;
+        b=Nry89w5o0NzJsYHsdZGweo/b+scWzyHZ+uc2rn6IEwTaXGab8Uq+igF7vFYQewUFVe
+         11GBYFr91edzBJwzrZlPxTJbjDDs2azMroAh57poRUVQrMuOWX4gn3sQrvPntTZ3v1zS
+         X+UCiZQTVQJ0530BalnN4McJdJlcnktqo6Q5aTJ/DXT6TBz25Y3hsmgHcRpNMK/ze6DU
+         WfGpm9UyEMfRQr7M1h01wSRsz2ag5Vu2K2ZT0egNNdO/JMB5cQIi5MNnevDa2NArtkCh
+         aGzicfNmZqZE55G8udoHbk4WIxMkAyUqZEKboe6saXT2nmq+s8hQ+QX1N9ja/ppipk8S
+         8auQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849496; x=1713454296;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
-        b=lBz866X6CARvjBkukdl2B9WgLZPPj5Kzb7DrRhCvzdQrH8R5ohhJ5BW/u6yKiLOQXP
-         yLoXHI31MkrhLP6N612ovrRdBRHUXpCRAM0RDkNQrA2TT+rbhwkTHxcgpUU1J0raRc2t
-         AqFUBzXwdx8DXz50BkRP/a0bKMnTqh93/uyMY/R4p5Qe6WxAT0Gnv33whdN/N/JQRlFy
-         GoWKlEIk/qOvh2FoYfMQO8dB4Y7ohzaHQNEHHV/JnHzyggMxGEhbkynSJ+QQC+6fmbON
-         suBa2mnpAmmAcETv+mcdL0tYUN+w8unzTZZCRpYvG2d2etjVNYBKoyJHN3G/CKtY4RkP
-         3Kbg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+l8OrAUoLaB8uIyRe4bZU5K3EIvii5jCciQRXvEXPIkTOe2TUik4QzN7QXIIQRhM/3cAMzcxfckgcIyBMk+v+DUcNqXB2dPUbuVhx
-X-Gm-Message-State: AOJu0Yz+uCxM+NNtm4qF7dcIYefwg88CjMchCe6tzDOMZLyAoT4ieH6n
-	BnTio+rBf9uu0Dw8mfHxcvp+fN/zdODpJLZkSfS3lhxHBRohwpCq6JKf0z7zfw==
-X-Google-Smtp-Source: AGHT+IEejten/fI5yIJ4OdU9ANzlh7kmTzwwsMRkhZrYGCJfDgxUgiz8KKlY5DuuhFAg3kagyyJlHw==
-X-Received: by 2002:a17:902:e80f:b0:1e3:e0a2:ccc3 with SMTP id u15-20020a170902e80f00b001e3e0a2ccc3mr6911262plg.30.1712849495918;
-        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id l5-20020a170902d34500b001e26191b9c2sm1304039plk.67.2024.04.11.08.31.35
+        d=1e100.net; s=20230601; t=1712849495; x=1713454295;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4y1MiOXGemo/TYam3ZjcBOEptr5sK5Ww3DxqkARLkVA=;
+        b=ShzxvFa+3mYNG126eTNmaw82ioXmF+9bp1iml/SiANKZlghDyd4beyVtsNGAymkpff
+         enuyd9+F1QnX8N1GHDsVYfjK4geLZcudu5nXsunMPh0q3BiCeMl6lQAOo8NE8umseY5k
+         te/3mGn918F0F8ijrQx2hZkhso2jaQH5LkWyOeYrjWV/LQrNKPIIHhB5p63WJ92mMXOu
+         gn/aTtoooHCWi1j2+kp+SdU1js1PSVImHI9Lg5FYzZmdgYyhFrimefHRnlyu9uOePeTH
+         T7bSwiQscIVX7mnNE9HY+IdvetL01ffqUF4PdW/gPXnsS7C5lpujYfNiJJTXMpUoCo9g
+         FMQg==
+X-Gm-Message-State: AOJu0Yw8HkhBPlWJV+l+7NPZppd9z125I6WMY2D2CIpB5m4EfoClZ4ac
+	VcGcksHG5SiFdIX4KxcmO66Zz6r/iH/k7w1tbt2hVvjG6K/xIEmxL6a9AF0CNlMx4E15eZv1EQB
+	M
+X-Google-Smtp-Source: AGHT+IFQ3QOTzL5/dGQPgVmdYNRGJWtEW/djL7xOVilycMQmk8ilbkP+TblwbyajMiq7Kbm6TUjd1w==
+X-Received: by 2002:a05:6e02:1d87:b0:36a:fba4:ec45 with SMTP id h7-20020a056e021d8700b0036afba4ec45mr3413130ila.3.1712849494840;
+        Thu, 11 Apr 2024 08:31:34 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.31.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
-Date: Thu, 11 Apr 2024 08:31:34 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
-Message-ID: <202404110829.D3A5A56@keescook>
-References: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com>
- <202404090921.A203626A@keescook>
- <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
+        Thu, 11 Apr 2024 08:31:33 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 004/437] fs: add simple_copy_{to,from}_iter() helpers
+Date: Thu, 11 Apr 2024 09:12:24 -0600
+Message-ID: <20240411153126.16201-5-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 
-On Wed, Apr 10, 2024 at 01:45:21PM -0700, Justin Stitt wrote:
-> On Tue, Apr 9, 2024 at 9:22 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > -     /* 1 larger than sb_fname, so this ensures a trailing NUL char */
-> > > -     memset(label, 0, sizeof(label));
-> > >       spin_lock(&mp->m_sb_lock);
-> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
-> > > +     strscpy_pad(label, sbp->sb_fname);
-> >
-> > Is sbp->sb_fname itself NUL-terminated? This looks like another case of
-> > needing the memtostr() helper?
-> >
-> 
-> I sent a patch [1].
-> 
-> Obviously it depends on your implementation patch landing first; what
-> tree should it go to?
+While doing so, rename the networking helper that has the same name.
 
-This "flavor" of conversion may need to wait a release? There's no
-urgency on the conversion, and there are plenty more to do for this
-cycle. ;)
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ fs/libfs.c          | 73 ++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/fs.h  |  5 ++++
+ net/core/datagram.c | 10 +++----
+ 3 files changed, 82 insertions(+), 6 deletions(-)
 
--Kees
-
-> [1]: https://lore.kernel.org/r/20240410-strncpy-xfs-split1-v2-1-7c651502bcb0@google.com
-
+diff --git a/fs/libfs.c b/fs/libfs.c
+index 3a6f2cb364f8..074cfacc377f 100644
+--- a/fs/libfs.c
++++ b/fs/libfs.c
+@@ -1102,13 +1102,84 @@ ssize_t simple_write_to_buffer(void *to, size_t available, loff_t *ppos,
+ 	if (count > available - pos)
+ 		count = available - pos;
+ 	res = copy_from_user(to + pos, from, count);
++	if (res < 0)
++		return res;
++	count -= res;
++	*ppos = pos + count;
++	return count;
++}
++EXPORT_SYMBOL(simple_write_to_buffer);
++
++/**
++ * simple_copy_to_iter - copy data userspace to iter
++ * @from: the buffer to read from
++ * @ppos: the current position in the buffer
++ * @count: the maximum number of bytes to copy
++ * @to: the iov_iter to copy to
++ *
++ * The simple_copy_to_iter() function reads up to @count bytes from the
++ * buffer @from at offset @ppos into the user space address starting at @to.
++ *
++ * On success, the number of bytes copied is returned, or negative value is
++ * returned on error.
++ **/
++ssize_t simple_copy_to_iter(const void *from, loff_t *ppos, size_t count,
++			    struct iov_iter *to)
++{
++	size_t available = iov_iter_count(to);
++	loff_t pos = *ppos;
++	size_t ret;
++
++	if (pos < 0)
++		return -EINVAL;
++	if (pos >= available || !count)
++		return 0;
++	if (count > available - pos)
++		count = available - pos;
++	ret = copy_to_iter(from + pos, count, to);
++	if (ret < 0)
++		return ret;
++	count -= ret;
++	*ppos = pos + count;
++	return count;
++}
++EXPORT_SYMBOL(simple_copy_to_iter);
++
++/**
++ * simple_copy_from_iter - copy data from iter to user space buffer
++ * @to: the buffer to write to
++ * @available: the size of the buffer
++ * @ppos: the current position in the buffer
++ * @from: the user space buffer to read from
++ * @count: the maximum number of bytes to read
++ *
++ * The simple_write_to_buffer() function reads up to @count bytes from the user
++ * space address starting at @from into the buffer @to at offset @ppos.
++ *
++ * On success, the number of bytes written is returned and the offset @ppos is
++ * advanced by this number, or negative value is returned on error.
++ **/
++ssize_t simple_copy_from_iter(void *to, loff_t *ppos, size_t count,
++			      struct iov_iter *from)
++{
++	size_t available = iov_iter_count(to);
++	loff_t pos = *ppos;
++	size_t res;
++
++	if (pos < 0)
++		return -EINVAL;
++	if (pos >= available || !count)
++		return 0;
++	if (count > available - pos)
++		count = available - pos;
++	res = copy_from_iter(to + pos, count, from);
+ 	if (res == count)
+ 		return -EFAULT;
+ 	count -= res;
+ 	*ppos = pos + count;
+ 	return count;
+ }
+-EXPORT_SYMBOL(simple_write_to_buffer);
++EXPORT_SYMBOL(simple_copy_from_iter);
+ 
+ /**
+  * memory_read_from_buffer - copy data from the buffer
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 72de0b1d5647..f75049fa1d50 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3353,6 +3353,11 @@ extern ssize_t simple_read_from_buffer(void __user *to, size_t count,
+ extern ssize_t simple_write_to_buffer(void *to, size_t available, loff_t *ppos,
+ 		const void __user *from, size_t count);
+ 
++ssize_t simple_copy_to_iter(const void *from, loff_t *ppos, size_t count,
++			    struct iov_iter *to);
++ssize_t simple_copy_from_iter(void *to, loff_t *ppos, size_t count,
++			      struct iov_iter *from);
++
+ struct offset_ctx {
+ 	struct maple_tree	mt;
+ 	unsigned long		next_offset;
+diff --git a/net/core/datagram.c b/net/core/datagram.c
+index a8b625abe242..3dfdddeaf695 100644
+--- a/net/core/datagram.c
++++ b/net/core/datagram.c
+@@ -399,7 +399,7 @@ int skb_kill_datagram(struct sock *sk, struct sk_buff *skb, unsigned int flags)
+ }
+ EXPORT_SYMBOL(skb_kill_datagram);
+ 
+-INDIRECT_CALLABLE_DECLARE(static size_t simple_copy_to_iter(const void *addr,
++INDIRECT_CALLABLE_DECLARE(static size_t __simple_copy_to_iter(const void *addr,
+ 						size_t bytes,
+ 						void *data __always_unused,
+ 						struct iov_iter *i));
+@@ -417,7 +417,7 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+ 	if (copy > 0) {
+ 		if (copy > len)
+ 			copy = len;
+-		n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
++		n = INDIRECT_CALL_1(cb, __simple_copy_to_iter,
+ 				    skb->data + offset, copy, data, to);
+ 		offset += n;
+ 		if (n != copy)
+@@ -440,7 +440,7 @@ static int __skb_datagram_iter(const struct sk_buff *skb, int offset,
+ 
+ 			if (copy > len)
+ 				copy = len;
+-			n = INDIRECT_CALL_1(cb, simple_copy_to_iter,
++			n = INDIRECT_CALL_1(cb, __simple_copy_to_iter,
+ 					vaddr + skb_frag_off(frag) + offset - start,
+ 					copy, data, to);
+ 			kunmap(page);
+@@ -526,7 +526,7 @@ int skb_copy_and_hash_datagram_iter(const struct sk_buff *skb, int offset,
+ }
+ EXPORT_SYMBOL(skb_copy_and_hash_datagram_iter);
+ 
+-static size_t simple_copy_to_iter(const void *addr, size_t bytes,
++static size_t __simple_copy_to_iter(const void *addr, size_t bytes,
+ 		void *data __always_unused, struct iov_iter *i)
+ {
+ 	return copy_to_iter(addr, bytes, i);
+@@ -544,7 +544,7 @@ int skb_copy_datagram_iter(const struct sk_buff *skb, int offset,
+ {
+ 	trace_skb_copy_datagram_iovec(skb, len);
+ 	return __skb_datagram_iter(skb, offset, to, len, false,
+-			simple_copy_to_iter, NULL);
++			__simple_copy_to_iter, NULL);
+ }
+ EXPORT_SYMBOL(skb_copy_datagram_iter);
+ 
 -- 
-Kees Cook
+2.43.0
+
