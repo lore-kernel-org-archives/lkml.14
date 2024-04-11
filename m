@@ -1,73 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9B71758E;
-	Thu, 11 Apr 2024 15:50:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D0B4F88B;
+	Thu, 11 Apr 2024 15:51:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850602; cv=none; b=u///ULlJ6VuHFFPcJqL9p8ZjDj3Mdvq+MCL7s6d7ndH8pG5zfHMurcdBsByYQbNrnloHjS/NEQB0VZzkjxNpV4+0977uPszbxvngQTTvyloY10i1WHraerpIBxl3GxH6CPozC4EXDJk+iBwJFsNeIcdZmrtx39CNJh/l5xw/K24=
+	t=1712850662; cv=none; b=FEdh04yPlbPHXQ652M9fdBZADjCfgh+kGHLAFBkuKEqZIAasTLpf/3aJYeUqjWEzqFyxNaQ/4+/ZYzoUdjU7g1hbuNMolwJswBeTk7y7JcBrmRXoOcLhXgB2zD8YVXagFAww48ayqc8CFiaAsUwk8VdqVukFkg4VGikRakCwg4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850602; c=relaxed/simple;
-	bh=saAr95qwLl/VVq4r7QoO3CStQ+s/DJFXve0Mzafnytk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WtiPG1WL33LMd5cAJTSJPZyECy1XtnkHdL2CNtX/Bw3nyLbG7ScyoGjoxCTtXQ+uZBQ07MFsGxn4WX+S47yVWJmNmDGWlJDoESKtPWr41aFCtlg5lyA4a3D8YAG3E2urlM4jm48fY9JI07FBxS8qxQ/kKrkuAqQuZgCt0R24eC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k9iZ8IxS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712850662; c=relaxed/simple;
+	bh=5a8Ggj/Vj9rXkUXznIAW7aZ3v6ArcbbuVb8Q07FRUYY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=su7b/hNK8qht0mM/9DpviR7HFc1PtP/1hXAIt1KECmr5EWvooehjJtWErlTs66ZS1PVAenIW9uCyYVvdLgxNeq49tt2O9TlumsoiyEtVJjfuSPlhQGOUCoQdJoyTNETJGd75Clake2QEOFhzdC665NDxOEbSuKD8YlgpLx98Sq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1hBSZP8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k9iZ8IxS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97400C072AA;
-	Thu, 11 Apr 2024 15:49:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1hBSZP8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C893C072AA;
+	Thu, 11 Apr 2024 15:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712850602;
-	bh=saAr95qwLl/VVq4r7QoO3CStQ+s/DJFXve0Mzafnytk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k9iZ8IxSEpgtHdoqwv9wP9tOWTzmciz1LtF+WAxXu8twLOg6gia8hCSjxZqVX+t4t
-	 hIl+GJsa/+oM0URZ2gNrfPo+HsbYAv10KAxWBTI7JyXuLz9ZlLzHV9comUIv68aN2J
-	 6cqOe5nL5uAzrdJxo72v0hzZjvn5jE6UnNQ2Qfe9kLf+CcWDQ1Xzw+ldHRl1c//sn/
-	 QjKp206xXBTntpenbAexONomDg+KrEJl9OCf++q7aCvIi/7Aq+QLdg3ujweI2K352K
-	 wBhTXdcSpu1OleulZIicoNrOWyvofa0AjyUwN5wDT+JNxrFwncNadtWlRd4mgCEKzH
-	 pua4+kPHETEyw==
-Date: Thu, 11 Apr 2024 16:49:56 +0100
+	s=k20201202; t=1712850662;
+	bh=5a8Ggj/Vj9rXkUXznIAW7aZ3v6ArcbbuVb8Q07FRUYY=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=G1hBSZP8EM+NU9CyuGee2kekCmUlWdJupViFdAChfuBSInRE9tcvlE4zzI/EkhxN4
+	 CkW0HFRsHFcXMbJHEhlq9GFrNtyfoAstDbFSlE5j6rTiizcDiyFTIjtL036n5Crf48
+	 enuI5kfPQp6anq87UYZmk4Dk8TwU2ER+jxoRsYuTLk0dbfP8dvI1zCSy5bzD/C+MWi
+	 0XKN3vY/mQSFGFzXMyDwFKF8SGzX7iGtcFwj9Bq0doJmv3CqD4VC+SDkOK7J1C7y1J
+	 5KHn444sz0hZaRZXvUkgpwu4qJBbn/LUxV3h+vU7cxRjWxbaCrfazRSkkhzZFOA4i1
+	 MJEbe918jqxhQ==
 From: Lee Jones <lee@kernel.org>
-To: Peter Colberg <peter.colberg@intel.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v2] mfd: intel-m10-bmc: Change staging size to a variable
-Message-ID: <20240411154956.GH2399047@google.com>
-References: <20240402184925.1065932-1-peter.colberg@intel.com>
+To: pavel@ucw.cz, lee@kernel.org, robh@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ INAGAKI Hiroshi <musashino.open@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240323074326.1428-1-musashino.open@gmail.com>
+References: <20240323074326.1428-1-musashino.open@gmail.com>
+Subject: Re: [PATCH v2 0/2] dt-bindings: leds: add LED_FUNCTION_* mainly
+ for router devices
+Message-Id: <171285065997.2464516.13537165356997238017.b4-ty@kernel.org>
+Date: Thu, 11 Apr 2024 16:50:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240402184925.1065932-1-peter.colberg@intel.com>
+X-Mailer: b4 0.12.4
 
-On Tue, 02 Apr 2024, Peter Colberg wrote:
-
-> From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+On Sat, 23 Mar 2024 16:36:08 +0900, INAGAKI Hiroshi wrote:
+> This patch series adds some LED_FUNCTION_* definitions mainly for router
+> devices.
+> Those definitions are useful for OpenWrt or something.
 > 
-> The secure update driver does a sanity-check of the image size in
-> comparison to the size of the staging area in FLASH. Instead of
-> hard-wiring M10BMC_STAGING_SIZE, move the staging size to the
-> m10bmc_csr_map structure to make the size assignment more flexible.
+> v1 -> v2
 > 
-> Co-developed-by: Russ Weight <russell.h.weight@intel.com>
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> Signed-off-by: Peter Colberg <peter.colberg@intel.com>
+> - fix sort order of LED_FUNCTION_MOBILE
+> - improve the commit description of the first commit
+> 
+> [...]
 
-Xu Yilun, Peter,
+Applied, thanks!
 
-Do you require a pull-request from an immutable branch for this?
+[1/2] dt-bindings: leds: add LED_FUNCTION_MOBILE for mobile network
+      commit: b65a10938791d90c88ef4f3ecddee22b9fc23b2e
+[2/2] dt-bindings: leds: add LED_FUNCTION_SPEED_* for link speed on LAN/WAN
+      commit: 03075af4c95133dfa14f434dab3b7b97e6cb9b56
 
--- 
+--
 Lee Jones [李琼斯]
+
