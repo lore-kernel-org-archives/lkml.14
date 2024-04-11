@@ -1,72 +1,39 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB5E13B58D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454021F176
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 03:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712805932; cv=none; b=bFHFqN3xDGLiESg/EFKEnrtGRG1V6n/g3sBUufNW2N8F3HLAwUU6O1CN8jdbhO08OvcZCPaMAx6kjlf8VRHA2CKqD0P6cC+n9e5PsgVgWeNiahrDaXSAKRDiHXnB/bJBJgy/UOK+wz83fVY38rhHtrfz2+gn8MYPNoSUNxH4IyE=
+	t=1712806058; cv=none; b=DLcTS5xO5tY03X0/xv+TdxFww8ALXkdJUn/7XtK/Y7pt6gs3+LkXq6NAAlAsYt55/NNKPXh/QKs860LIbHyelOaGxlLmcJYVUzb6PHKEsWM2mfl4P6bVfZvE962sY1J3znclTFGGEjYO5+UJmky4rWkkJZg9C74o8UVSxJqPGtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712805932; c=relaxed/simple;
-	bh=KeJpTltWvp34aLVwOhgfYkJ5qkUafemwD40qWwAeh3A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z8RY+sd3TjAqfVGSi/+0Zsjy8cx2H66SSflQnilQ42hUlipyEtZMOQvSHaY1djqv6seyY8AO4q8RLMCfGTEbrIDLb0415lcpQn35gmmuULIOLoWD2Y0mOCz27b90oz6m6zkmSWDOA0kfbyv68Bk5KXRrul4yWoJHk8EMEXHpZ1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE8y4XgB; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE8y4XgB"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ed04c91c46so5411505b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 20:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712805930; x=1713410730; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZCVQwQdR/DxF6xfmiAlaAl/0HcO8Z3D8nID8IjezKs=;
-        b=gE8y4XgBc95HY0UikWCKZ+TZ/GdyGxC886oMCzSpzIUTM5L0cD1JaFrxXNvqNOP4nI
-         jsjbb5dG60YsIsaYC+SVSB5NQquyHBmgGei8Cqxexx99f/pzOeZz8xTYKjbt2Zlan0/h
-         0L710SzEEw05MBE9YZl1LuKgkrev1m3HEOfS1iKfLWjY2wcEYytyyhniESm7J9xfMHpy
-         +GxjiaM1RJN/k1bNge3yfsaWU0dMR28WZ4h7kv1ysxowgpjlptcJeY+nMgjBhOvNt9eL
-         RTLv9d9oMYv5/Gu43hBqlc5PxQxDz1YGE9+7pBe787kXK4xexobAo8xtOZh8RmWFoWps
-         pPtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712805930; x=1713410730;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ZCVQwQdR/DxF6xfmiAlaAl/0HcO8Z3D8nID8IjezKs=;
-        b=kMNAO51qG0dG93UN/fCeMi5Y/DdPHxTGmc72Yn3UDZGcCGpSK2gqxnC5O3G95jykpC
-         sK//I/PQHxnPZfUbB19Z751cLEqlUFEJHcnnZP7gUj/NjS15N4ZxKvBmLLiOV/RAgJz2
-         1d6Fci43Ze9CYVtF9C4ECx590NokHKeaHx78bofD6efnkc2NjQqictohRMqgOSKnb1xx
-         dqEZTkx7R1umIWmdBl9rz5+c49UrE1fNZRJ/36ec9URSeBCR5J+0NYWJQa2igq0PY5yb
-         rx4grHgzBgSUHlgyrJqS0g3cqhp646sRf8BUF0s9nZeelXggn+b/vBbZezUAHUSxcLal
-         Qxuw==
-X-Gm-Message-State: AOJu0YwseB2nnwSI1g0a9FMnmrUUA5FauwHmSDi0259ysSufNsj9YBUd
-	FGrk6brcyCX1UO3+AfP4RQOiPtBRDuRQ56MLaCQWIdTS9Gajtd5/YOk4FrYM
-X-Google-Smtp-Source: AGHT+IEatWGVQe7Ck21EmGAwH0HjtX/BkRCYMl2wwqQvwBZih3ySnsqeQLvG6b52v0LEawM+IEOvfw==
-X-Received: by 2002:a05:6a21:3396:b0:1a7:23ae:92c3 with SMTP id yy22-20020a056a21339600b001a723ae92c3mr5428278pzb.12.1712805929823;
-        Wed, 10 Apr 2024 20:25:29 -0700 (PDT)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id je14-20020a170903264e00b001e22e8a859asm297139plb.108.2024.04.10.20.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 20:25:29 -0700 (PDT)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"ndesaulniers@google.com" <ndesaulniers@google.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
-	Tejun Heo <tj@kernel.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Krister Johansen <kjlx@templeofstupid.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Mike Rapoport <rppt@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>
-Subject: [PATCH] init/main.c: Fix potential static_command_line memory overflow
-Date: Thu, 11 Apr 2024 11:21:55 +0800
-Message-ID: <20240411032155.208042-1-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1712806058; c=relaxed/simple;
+	bh=L7+yEMnAAQhrm90UXztYYYVX1BAD5yIkJu/9V9n1ex4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=O5AThAW9rMEYw6VI7j+EZeAGw3P9OtDQTsycG3crmZmNJwFwtrZoYFL9AFq0hLtqNPoK3JPEilUd8eU0hfsfgDUTdsouWkd6lEw/q6rEayHYF7T1zrHcBr4GoS5DraTTAHaL6P7TKeBN2gK9wFZYVxte80sX4DRMiUzvuenA7hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VFQ923Rjpz1GGdb;
+	Thu, 11 Apr 2024 11:26:46 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4D2541A0172;
+	Thu, 11 Apr 2024 11:27:33 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600013.china.huawei.com
+ (7.193.23.68) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
+ 2024 11:27:32 +0800
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+To: <richard@nod.at>, <miquel.raynal@bootlin.com>, <ben.hutchings@mind.be>,
+	<daniel@makrotopia.org>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/4] ubi: ubi_init: Fix missed debugfs cleanup in error handling path
+Date: Thu, 11 Apr 2024 11:19:00 +0800
+Message-ID: <20240411031903.3050278-2-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240411031903.3050278-1-chengzhihao1@huawei.com>
+References: <20240411031903.3050278-1-chengzhihao1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,42 +41,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-We allocate memory of size 'xlen + strlen(boot_command_line) + 1' for
-static_command_line, but the strings copied into static_command_line are
-extra_command_line and command_line, rather than extra_command_line and
-boot_command_line.
+The debugfs dir is created in ubi_init, but it is not destroyed in error
+handling path of ubi_init when ubi is loaded by inserting module (eg.
+attaching failure), which leads to subsequent ubi_init calls failed.
+Fix it by destroying debugfs dir in corresponding error handling path.
 
-When strlen(command_line) > strlen(boot_command_line), static_command_line
-will overflow.
-
-Fixes: f5c7310ac73e ("init/main: add checks for the return value of memblock_alloc*()")
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
+Fixes: 927c145208b0 ("mtd: ubi: attach from device tree")
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
 ---
- init/main.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/mtd/ubi/build.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/init/main.c b/init/main.c
-index 2ca52474d0c3..a7b1f5f3e3b6 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -625,11 +625,13 @@ static void __init setup_command_line(char *command_line)
- 	if (extra_init_args)
- 		ilen = strlen(extra_init_args) + 4; /* for " -- " */
+diff --git a/drivers/mtd/ubi/build.c b/drivers/mtd/ubi/build.c
+index a7e3a6246c0e..7f95fd7968a8 100644
+--- a/drivers/mtd/ubi/build.c
++++ b/drivers/mtd/ubi/build.c
+@@ -1372,7 +1372,7 @@ static int __init ubi_init(void)
  
--	len = xlen + strlen(boot_command_line) + 1;
-+	len = xlen + strlen(boot_command_line) + ilen + 1;
+ 		/* See comment above re-ubi_is_module(). */
+ 		if (ubi_is_module())
+-			goto out_slab;
++			goto out_debugfs;
+ 	}
  
--	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
-+	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
- 	if (!saved_command_line)
--		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
-+		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
-+
-+	len = xlen + strlen(command_line) + 1;
+ 	register_mtd_user(&ubi_mtd_notifier);
+@@ -1387,6 +1387,8 @@ static int __init ubi_init(void)
  
- 	static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
- 	if (!static_command_line)
+ out_mtd_notifier:
+ 	unregister_mtd_user(&ubi_mtd_notifier);
++out_debugfs:
++	ubi_debugfs_exit();
+ out_slab:
+ 	kmem_cache_destroy(ubi_wl_entry_slab);
+ out_dev_unreg:
 -- 
-2.44.0
+2.39.2
 
