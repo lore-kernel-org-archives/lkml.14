@@ -1,42 +1,40 @@
-Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030EA145B08;
-	Thu, 11 Apr 2024 11:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2031A145B08;
+	Thu, 11 Apr 2024 11:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712835013; cv=none; b=C8X4/jX0I67H/j4MDO3MNinfJqiydrNkJsdm21L8ukQlYwEo8M+wInQJO1PR1BEWajaVhDkQNoGCenB10kwbnckkTw6gDzwj17trj/USw31LHkoBJZPhfgtbknA0iJwy+o76V6148KFjqbO4ls1+pfCRbZPKHwTK4AwArs8sM5k=
+	t=1712835053; cv=none; b=VoX4WD+QhU+suzFmTQbBtOoDBvnUCAKdkPlUxii6x9F9CvtwNZhpLEs1o6aVUcuQLgM66kIC165Jseh/wvoqugxEhrNcvvAbDyirFUcMaaOzP9LHoexhmlfLGfSpbNzff2rxF6flcF9I22RLeYH0ncNxIaePrZ9R0wBQ/r0hYLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712835013; c=relaxed/simple;
-	bh=1APKQilN3KOr/QtnFwq4ziD2NuoZYSGfZUZ72o0YZC8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FYjYRktXCbwdW3/7gWVtRDVph+NkTQ4qo7dmUL7cFiYGBC7TH3xyQGx2uyzqpGRECZsIzmenDwTryz/oVRgZdUNjl5biYm/P90My69Lyu3YXM3vwivoL0RKEzbWrIvh7DdCK4Em3yi33ALjWyoWJxBu5cUkAfDMbgR1piph4b0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=CqpnU+BP; arc=none smtp.client-ip=109.73.34.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+	s=arc-20240116; t=1712835053; c=relaxed/simple;
+	bh=4uxuOFC2LQMADBNRGOlEQBqFMMT+ww4A8mDJbPx4eGk=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=BYfPA+RpCzuIR2bvkq7tvUWIzc/l5d11f8AvyLdEeFo9rqMx8xDhmSKHntKFerMumiUtO6svOtUtU7+tcdihcD4+KDmUQFQm6BswA3P5ZhL93jQnD9TysO25fHZkrrqZz0BMqq3b2TPepKoXSKFVLGHVgTMdZTvIinlzqNY1B5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=I6ZlEQ2J; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="CqpnU+BP"
-Received: from mx1.t-argos.ru (localhost [127.0.0.1])
-	by mx1.t-argos.ru (Postfix) with ESMTP id DF9C7100002;
-	Thu, 11 Apr 2024 14:29:48 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
-	t=1712834988; bh=vfdGuoVAYV58AUhj/zofkCcJDkvE34z/umq0QY3tVtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	b=CqpnU+BPtIXoHL27lTCUB//pJ/oI7+UiMbh3szTXfRpXA8CnXmVQQiLHxygyWtLUj
-	 qKTdLrv5s1PgwQvJPr+GqH3mAExr90VgrbKLu/Nw9sFQ2Je1fqBqimQvwTNt/CRNax
-	 kW0Two4BFNPX2EF4MZqqk9bE9B/ALjiqFUPC+BA2Y9VoKAldOpgpBp38dOloRnsIBs
-	 Gs0WFPci0Jj/AJSZNbTmk3s/r88n+MuKN5Ax4GTQr+D9g1toL1A0K6Ywn0TprLSQ+h
-	 q42sCK1BXn0V5BSQYdOW0zpM6IkFtsiW23focFz5UEZdCm5KMsrnt7ErV3/iO5uYy9
-	 NnfYS1PtZua4w==
-Received: from mx1.t-argos.ru.ru (mail.t-argos.ru [172.17.13.212])
-	by mx1.t-argos.ru (Postfix) with ESMTP;
-	Thu, 11 Apr 2024 14:27:48 +0300 (MSK)
-Received: from [172.17.214.6] (172.17.214.6) by ta-mail-02 (172.17.13.212)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
- 2024 14:27:28 +0300
-Message-ID: <478ad5a2-88b7-4069-aa9b-52084ffeda67@t-argos.ru>
-Date: Thu, 11 Apr 2024 14:24:58 +0300
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="I6ZlEQ2J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1712835032; x=1713439832; i=markus.elfring@web.de;
+	bh=1MsBQoKPQBvY56tmOKQbngcG97IfyuuH90Ag15As1m8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=I6ZlEQ2JvSUikaceGmWfyc1DG7vRViPOuFxRwagGeKyzODQ8D2uybYbB+4aUFcgd
+	 laELh9hB1A2CEjKNLRWm+Dg1dM6WTATFL1kTi8rNVb2/TPinmNvrk+FTP7vWFcb/r
+	 T+vbA5bAw6UaS3IZ8NTeZfiPUzCEw670ZZzOetunK48vYAiq4yOx/80btN8fjSz++
+	 Ja1QPuAWOmvvBKnatMsZAh2YOaqy0OMVcGf+KskdV7ipgPS0pAQWSbP11eRNFiXEm
+	 dUjj0rkpjle0cFyxSts/qjPmcaEdap93vSs5GVj+sVMYezARcPEJ/ou/AONjcxRBg
+	 xYZy+Rnx6ZSQ47ydYg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.81.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Mc1VF-1sUDBf1l3X-00dFah; Thu, 11
+ Apr 2024 13:30:32 +0200
+Message-ID: <505b6da5-93ca-481d-ab57-c246ad9a4eaf@web.de>
+Date: Thu, 11 Apr 2024 13:30:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,67 +42,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers: thermal: tsens: Fix null pointer dereference
-Content-Language: ru
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, Christian Marangi
-	<ansuelsmth@gmail.com>
-CC: Amit Kucheria <amitk@kernel.org>, Thara Gopinath
-	<thara.gopinath@gmail.com>, Bjorn Andersson <andersson@kernel.org>, "Rafael
- J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	<linux-pm@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-References: <20240405090720.16419-1-amishin@t-argos.ru>
- <2cd986c0-8663-4143-9d35-4af94fe5e4bb@linaro.org>
-From: Aleksandr Mishin <amishin@t-argos.ru>
-In-Reply-To: <2cd986c0-8663-4143-9d35-4af94fe5e4bb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
- (172.17.13.212)
-X-KSMG-Rule-ID: 1
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184672 [Apr 11 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_arrow_text}, {Tracking_from_domain_doesnt_match_to}, t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/04/11 07:47:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/04/11 10:13:00 #24743273
-X-KSMG-AntiVirus-Status: Clean, skipped
+To: Richard Fitzgerald <rf@opensource.cirrus.com>,
+ patches@opensource.cirrus.com, kernel-janitors@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240411103724.54063-1-rf@opensource.cirrus.com>
+Subject: Re: [PATCH] regmap: kunit: Fix memory leaks in gen_regmap() and
+ gen_raw_regmap()
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240411103724.54063-1-rf@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:G36xJVj5LcbfRx1/yNSc7IodjkuXRLfKxjiAdK0J1wkEvyjMcA7
+ a0SCDCGKuf1a/dwgB4C0emJJ89KheufFpvauj6S9bJev4yaJZZmii5q9zpYGji4+CZKn2XM
+ it3XzoHNSbkZrUDIHwqGoR8ncYxnjLhFXIkGFPGIyoTd2fHPbaXM4R9P4kx+xreGdSof93x
+ iDGd9SlADc2eAfurdJ5RA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:M614dYlKZ94=;o/oEVF9NGqD24Cfy52KMSmY5Qd9
+ WZRy8PZlqsv7dnNRTROG+xZhf7PvxvfC9KgxF/U0/SHKv5kPjZbVBUHPoDZRFfTKQdono69kR
+ DezKnsjGYrjC0unjqQIkRWzAjTw2fWhwTh0Dzvh8WakzG8XJ1uY7S0R87dTvbhPM3+JRzYn+s
+ rGxoBkU7FHGYPaDDpDu/dpESrMRSRlSTNWYRFzSImNhujATfEiuOrjljM3pXyV6zJHDmwNgCa
+ xIVkOVQ9sXR05/NOBu3fmLNQ7D5M655jIp4bJWard6BON3HNAUOz9jct+BpLsb8sWMjPCx1uv
+ 1bnk0obzE7UJgakmBvlRbu2Ylnm4duQrXKKnuP2As9qKr1ZIR4WIj3tOoLiQxNVsOMrQvCl6j
+ K0+RNcpEfnP1IEDXwRBBnTdNLb55vdtEecy8RgGafAEK6bHuXkkKizyTMXTehfkfF6eXmg4Yv
+ 2rU6Y54r/U/Gyy3ROisyHJaaEcnp8wmMzUBZxP0RGdQpUdzPA7JSmT9LH4P4XD6J1lpoWFET8
+ wWKR5htqpp+RwBlJW3dMP5LiQAJjUxDruB4djImsmvF408uSUdBTFjlxWNYYNhmtvLKGm1qGn
+ DTvQJvsqoIHja375XJ2qYR+9V8v7A+qLvxJWjFn7G/dpolkTnKg8YbqhcuO8vQlNrPdpNa0OB
+ J+DuX7BSYjBNdir56zNHwBlo4rzfyPdnkPY7ZJJnt5v7CMp/plZJVVxyHwJxHfXoOjRb+K313
+ KdnZ5dWdaTiN5aSlARby4YclPLyfO5xcwRUH8gy2zUUKg/NSNRdVl4kjBqWOlhMuGZ9+I3GWh
+ 6rB0ACqdv9dlJ8FT6sSFLWTTEjykNA+XoeK2Er5IQTJtQ=
+
+=E2=80=A6
+> - kfree() the buf and *data buffers on the error paths.
+=E2=80=A6
+
+Will development interests grow for scope-based resource management?
 
 
+=E2=80=A6
++++ b/drivers/base/regmap/regmap-kunit.c
+@@ -145,9 +145,9 @@ static struct regmap *gen_regmap(struct kunit *test,
+=E2=80=A6
+-	struct regmap *ret;
++	struct regmap *ret =3D ERR_PTR(-ENOMEM);
+=E2=80=A6
 
-On 09.04.2024 12:52, Konrad Dybcio wrote:
-> 
-> 
-> On 4/5/24 11:07, Aleksandr Mishin wrote:
->> compute_intercept_slope() is called from calibrate_8960() (in 
->> tsens-8960.c)
->> as compute_intercept_slope(priv, p1, NULL, ONE_PT_CALIB) which lead to 
->> null
->> pointer dereference (if DEBUG or DYNAMIC_DEBUG set).
->> Fix this bug by adding null pointer check.
->>
->> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>
->> Fixes: dfc1193d4dbd ("thermal/drivers/tsens: Replace custom 8960 apis 
->> with generic apis")
->> Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
->> ---
-> 
-> Maybe we can replace p2[i] with p2 ? p2[i] : 0
+How do you think about to use the statement =E2=80=9Creturn ERR_PTR(-ENOME=
+M);=E2=80=9D at the end
+instead of the extra variable initialisation?
 
-Your solution look better for me. Thanks. I'll offer v2 patch
 
-> 
-> Konrad
+=E2=80=A6
+@@ -172,15 +172,17 @@ static struct regmap *gen_regmap(struct kunit *test,
 
--- 
-Kind regards
-Aleksandr
+ 	*data =3D kzalloc(sizeof(**data), GFP_KERNEL);
+ 	if (!(*data))
+-		return ERR_PTR(-ENOMEM);
++		goto out_free;
+=E2=80=A6
+
+I suggest to reconsider the label selection.
+
+Regards,
+Markus
