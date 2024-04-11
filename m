@@ -1,61 +1,62 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349991E895;
-	Thu, 11 Apr 2024 12:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CD31E895;
+	Thu, 11 Apr 2024 12:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837958; cv=none; b=rDaRcTYZTNv3Rbqy5AR13/LtsYXcJSTbRDqPWYNQrkVTenWjwDj+lxChenP4PM1WwcRfOe520Jodsrwfy1gQkTNdyoPgnzYBAO2DQNlTM4B2NGnIZP2D2KP68aiB3joIfH+GfzIMixZ3ef+g5L+JfjHCfEALkILbyAPCi7K/xxA=
+	t=1712837969; cv=none; b=XKNvNXN8C6kuP4ldl8l2j2daaMNISXr1ygfv3cvkzTrleJTUEtagBGk9QrTLf4O6LFt7/2wD1f4/QhXHbRHghlIPQq6KU4neidlIS2HJA7KBbfBYlZJ9sYvGRa3Wo0qnOl6lHzvnL9EWcp4EBdvu06BN7LZvzGnKdmx3u41M38A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837958; c=relaxed/simple;
-	bh=RT+xIqfnDDbgIj8uJAxoJ4nw3qi4SV6fgAP1DKs9/dc=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=elVNCaa4+e62Tog+x85mVWadFHuZyXA34qP/iDX379wA3Aw3zu8UGop/ZwLXmkruN2YT+QJGrDdBmHKVlGKNAukIqBLrgfsCIstNUdgOxZo80JNUPqsN7DQauLhOqFC2Xav1kL2ZJadYV8E9hdLeTYyr0V+pl21Q0Qm/C9FLOYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l40O6oGQ; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1712837969; c=relaxed/simple;
+	bh=7Pt8dFqdmkgDseOZCZN9SU6TS2/8bhh/tjBmk3dgvvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=szPrJBk1lNdIwK3ruwqUX9FfUdH8sEzZXq0Y6ZbJ8RTUbUFNurU/duuHKVTKoPrqVuvCROOFo+nCc/DGQupoFMEFurLfftRcS430J9wteg2aP1hHf+UIwT4Myubgh/WqnTmNEDLfwu3WgEGc7kf2ZpMTbRPAcXCgoxwFd0vJCQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=NpcVn+Uk; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l40O6oGQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712837945; bh=tuHA1e8X3klZLTfe7IoJd81w8+BJeqW9FDqVUSy7N5g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l40O6oGQj8+qU/cY/eOfzWo0valnvf/ojuIbetfL5r0nJUc3sCxtFdesVRo4I1tM3
-	 UIZxGhXGVqHcb7rMUdCilTrvR8nrS6ENJZfEyxqUa1r4ohOX79dhuAEkMJ/2bYiu3G
-	 PiYaWOOl31v/cgUZLW8s5P3fE/yzhU6fdsluZS+w=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszc19-0.qq.com (NewEsmtp) with SMTP
-	id 15BBE4D3; Thu, 11 Apr 2024 20:05:27 +0800
-X-QQ-mid: xmsmtpt1712837127th3fua2c4
-Message-ID: <tencent_4AA6ED5ECD6879FE6FD02EFD6D109638E80A@qq.com>
-X-QQ-XMAILINFO: OZZSS56D9fAjI4P3w0jk/ucTXkXPH6oE2Y8+QRawsqZtKzMg9Settplp+91tJC
-	 mwwQUC7HFmA5AvdnpBfoJf/mGj0IxYphBZbw0J1rfhCBY4tJ+RZcwUb1i6uUkR0LFaIwUxZgls9G
-	 KLUHY7YEDSoxIlzQpUv1lp9TIYKevlcYwfv3/uglMg3PZn22pYD26YDc0fgllE3Y3/0GS4EQabWg
-	 LURnCE3str0hVFa6boFUZDltVIAqHGZrkjl3xVF9Eonx1EnmlXuyYkFERvAxzJMimKe+ZIsihKWa
-	 ZW8CSON7pUP2yQStVrqE3cWwj0YIQ4DhbYcQXPCPsCblwILMFe/SWhExLL9M3ul4SdzBH69gLVWh
-	 1xr61RsRMWnOZfjfuND64kYirZaD5g99pTJinO8Tonk2+rwDvP7BdQ3Kq18osiju+M3QGFuIBseP
-	 KEg3xygKnWgG2DQjEwVjVmz73KVcymsyWQmcv7BHeMmKK2kkfODLQIQjpFviA0trxt9GsqjyB6tG
-	 kx0De1kGb141dPZ7Ns8dTxU/e6otA2FacCi2QIR+zcWsqOFPj39LvuUZlKZnEZcCDBMWXrKa359p
-	 9vIm/WFae9t5uXL9iGVJFH3G5Cgh3E1YZyUHs7xHcS+6D+47rMEwkMOzCQ0FMguwpK6LWzTOu4so
-	 BnB3/RpIIQjPinIGER7tOuolzN8m01TZ9zizWTVGKdJYdcEvmRNjSVttV9zC99ceqXNeboitrwcU
-	 SwCtMus1xJW4SeRgN4Fr8Q37ig3S5UeFn4TjI8YsUnVrhu+R4uy8W2H9RSakzPBWtFG8oA8Le/zL
-	 Dw3PlkKxPK9eMvNScBuSHSAPo+cmLkxe85ZI55jxqLQDAKiXrjYHhwxhQKQYckU6wugLwwdKXpUN
-	 r6jsFuSpp6Vl2QDJXf6RYff+OsJFjAqdlj++eGFHTRM9O05iN97jqUqCq8ErjoESKouUVd7e8sVo
-	 8xmAsQjhcgr5B5sFIoelvQjwIPgpnv
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Edward Adam Davis <eadavis@qq.com>
-To: dave.kleikamp@oracle.com
-Cc: eadavis@qq.com,
-	jfs-discussion@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH V2] jfs: fix null ptr deref in dtInsertEntry
-Date: Thu, 11 Apr 2024 20:05:28 +0800
-X-OQ-MSGID: <20240411120527.1315528-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <f4f7c644-b229-486b-973b-97c55dac334f@oracle.com>
-References: <f4f7c644-b229-486b-973b-97c55dac334f@oracle.com>
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="NpcVn+Uk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=OFC6vlIC5xxsnahqWRPLFMKUZuRchmHsyERBhw8Wza4=; b=NpcVn+UkzjSX1PEDCokLVzcxOV
+	XhnWnn92ymmTRo5nOAHuE4bKrRVaUO1I3Mvu4LB7wqHqGBU0e1N3wuicwaF+bFH6lU78axLwM6qm/
+	FcethsKWnB5ZptoJcQ9HXRCRk+NMgrN3vKGqXlnd6CXR9r0U5F/Xr5I87eYZbSre0JxR4FXjCD4Y2
+	XmdX+wzONc+afTpCvyP+PGfNrE5YHbkbqFar0CMmW1X/qEUxy7vNe+usp1wvyiYkdJBqq3njj79hm
+	tNoU/BPXCl5GUtD6KUmBNk3SeAW7K71DcpdF4l1sKo96I9tejNsX80SG4hsb+ZlqyAm03w9z9bpQq
+	flUYqHsg==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rutOm-000O2e-Ey; Thu, 11 Apr 2024 14:19:24 +0200
+Received: from [185.17.218.86] (helo=localhost)
+	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <esben@geanix.com>)
+	id 1rutOl-000CbL-2B;
+	Thu, 11 Apr 2024 14:19:23 +0200
+From: Esben Haabendal <esben@geanix.com>
+To: Marc Kleine-Budde <mkl@pengutronix.de>,
+	Sergey Organov <sorganov@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3] serial: imx: Introduce timeout when waiting on transmitter empty
+Date: Thu, 11 Apr 2024 14:19:23 +0200
+Message-ID: <919647898c337a46604edcabaf13d42d80c0915d.1712837613.git.esben@geanix.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <cf197182beab7acf6ea7ead54fb4324e97e18cbc.1712733269.git.esben@geanix.com>
+References: <cf197182beab7acf6ea7ead54fb4324e97e18cbc.1712733269.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,44 +64,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27242/Thu Apr 11 10:25:12 2024)
 
-[syzbot reported]
-general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 PID: 5061 Comm: syz-executor404 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:dtInsertEntry+0xd0c/0x1780 fs/jfs/jfs_dtree.c:3713
-...
-[Analyze]
-In dtInsertEntry(), when the pointer h has the same value as p, after writing
-name in UniStrncpy_to_le(), p->header.flag will be cleared. This will cause the
-previously true judgment "p->header.flag & BT-LEAF" to change to no after writing
-the name operation, this leads to entering an incorrect branch and accessing the
-uninitialized object ih when judging this condition for the second time.
+By waiting at most 1 second for USR2_TXDC to be set, we avoid a potential
+deadlock.
 
-[Fix]
-After got the page, check freelist first, if freelist == 0 then exit dtInsert()
-and return -EINVAL.
+In case of the timeout, there is not much we can do, so we simply ignore
+the transmitter state and optimistically try to continue.
 
-Reported-by: syzbot+bba84aef3a26fb93deb9@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
- fs/jfs/jfs_dtree.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 031d8f570f58..5d3127ca68a4 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -834,6 +834,8 @@ int dtInsert(tid_t tid, struct inode *ip,
- 	 * the full page.
- 	 */
- 	DT_GETSEARCH(ip, btstack->top, bn, mp, p, index);
-+	if (p->header.freelist == 0)
-+		return -EINVAL;
+v2:
+- Fixed commit message typo
+- Remove reference to patch series it originated from. This is a
+  stand-alone patch
+
+v3:
+- Moved this version information into the correct patch section
+
+ drivers/tty/serial/imx.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index e14813250616..09c1678ddfd4 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/io.h>
++#include <linux/iopoll.h>
+ #include <linux/dma-mapping.h>
  
- 	/*
- 	 *	insert entry for new key
+ #include <asm/irq.h>
+@@ -2010,7 +2011,7 @@ imx_uart_console_write(struct console *co, const char *s, unsigned int count)
+ 	struct imx_port *sport = imx_uart_ports[co->index];
+ 	struct imx_port_ucrs old_ucr;
+ 	unsigned long flags;
+-	unsigned int ucr1;
++	unsigned int ucr1, usr2;
+ 	int locked = 1;
+ 
+ 	if (sport->port.sysrq)
+@@ -2041,8 +2042,8 @@ imx_uart_console_write(struct console *co, const char *s, unsigned int count)
+ 	 *	Finally, wait for transmitter to become empty
+ 	 *	and restore UCR1/2/3
+ 	 */
+-	while (!(imx_uart_readl(sport, USR2) & USR2_TXDC));
+-
++	read_poll_timeout_atomic(imx_uart_readl, usr2, usr2 & USR2_TXDC,
++				 0, USEC_PER_SEC, false, sport, USR2);
+ 	imx_uart_ucrs_restore(sport, &old_ucr);
+ 
+ 	if (locked)
 -- 
-2.43.0
+2.44.0
 
