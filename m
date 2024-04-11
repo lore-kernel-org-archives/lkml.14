@@ -1,109 +1,92 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466DC1FFC59
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732DC1FFC5C;
+	Thu, 11 Apr 2024 15:43:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850213; cv=none; b=AEnowk7uleTdhEy8u4Iu4+/dGWWpBDxW02aa4PoKG/I1yczN2S8eQaIu0vFyAp+i4CVw3ZQkFXgjX/Ir9rUPGUtThSshmv2S+YEMjaPpsxoE3Y+Ld4uj14bVYV8l9tQp4A+GAkBkOM5ivhhIurX9CgpkTII4H6oT9p/Nfd69WRg=
+	t=1712850214; cv=none; b=UUPtjEslIPE4H0bQih5T1hJ8h+2RTxnVFlFAUlYeMoX4Hc9D9XLeHtPu4qJdE4COXlgVcohAUExXqWWq+zs7GKNfLqKzfYWo9VdM1fnIOzyOq3x9PdLpl1Rk8J+RmHpKhxhuOtUrr1XGRA8ps3OZKGYuPDBSaL2JlVpOYU132+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850213; c=relaxed/simple;
-	bh=+r+U7yOE2//Dm1l89AQ/p8TdVgErUnJeolAc2VuDal0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MME6w5/lnilLykrOPYyeJ1XIDjphyNIVKP+XVjefbRi5hbx4me5/rkwFy7XdUulymECE3ZNam3XrCKCGR9+3yI80K75ygt+bB3jv+9JQQk0AOyW7sBq0+O6SYsSV7J5irX1UljzPhLnwJERM7GpCSc5svL5+qWMd04m5EfXTpos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ir7F30PZ; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712850214; c=relaxed/simple;
+	bh=G/uDq8R2cEJGETysdgyw+/FbbvpRatIhc4DdkmlZI7U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rQ6I8/gSc3L2JqJPDzOUSPO2tvZ2+KaHCiytmffbjlLY7p+m5vLA4kkf/CCAMEdh1ZwGIDt/zn+NNbQ0E5zxk7bofBRQMdiAvdDriS2SX3cV2ys6XOwca+0VTFccLwQxbmikR9ipiRuUC095udtHYjNN7yhQf6ku3SEoxjj+ZQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=N+JmWxX8; arc=none smtp.client-ip=74.208.4.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ir7F30PZ"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-36a34b68277so125125ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:43:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850210; x=1713455010; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HHTPq1Y3fOvLbs3hQO1iRO6uGsna0yiG5KXgQ6la0bw=;
-        b=ir7F30PZJYfKhZJb0A3R0g1gvJcH1GgREnnU+6ft2DcyRlN4KDP47LC2ybuDrmpChv
-         I3O9/0/26S3+LflPyeG2UsJaVud5vjlynW7t4EVYqpnBBYSGFLwdDVtCn+6ma3k8FAsR
-         YVJqhwAb5TkEqnoyNRrydJ6oqHf7S7mWNECGLUDDqIzhK8i7Bb0Eq/A+Wn0q0JWpnUxG
-         AG4DtZPycC7XBhBAaDN1HtRy72CsuiFFTupnOb5bev1lu5hlVdYcEpoubVCNY8XqCvrH
-         NDO+1RZhg7IL8MwsXQC6pTeZMbpw3ew5okke+h7Ff0Y1GBlVSyzgJ+9/SeL0roiIs9Q/
-         QEOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850210; x=1713455010;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HHTPq1Y3fOvLbs3hQO1iRO6uGsna0yiG5KXgQ6la0bw=;
-        b=LqMiv99la3YvG8Rc1dxcN/k0LFNxtan/GotjqgA8ll613yfvr99ND3eIWMoaoDnwVM
-         QkT8nZRZD3hhN/8M1psvN0SZnlzIyoNlBMKx24u38hNJIewJNybubSSkStzJVG33gVHz
-         WC4ssAtg+zoZH7c9iVgCPBAFtoaVtvR905ihRjm4U40I9veMqzW+vK24bzqUm0585Itt
-         b5t20l4HsBNZadAzMAd/6Z2ZGVbtvf9h8Y4aBdi0/gvEibyN89XEvNXgjaN39KQ9nHxJ
-         hOJV1mKltiFB56wsxPLLC8hl9eWU0FRbqbsiRiPEIIOnsnDZYLBWn13+QJw5AdktS2mL
-         7ycg==
-X-Gm-Message-State: AOJu0Yxsk2IwxSb+jlq+HW3i8/55nidLj808b7C+j8noz+eqvn0bCqNc
-	NP74Wp6vpEyI5319ftiEwX7Qd31aooDzXclvP3hBboKyUXbPjfEokiXkA9ZZIy1t3v0fNpr1AF7
-	T
-X-Google-Smtp-Source: AGHT+IEsqESPkatlu+L2CquxS+m1WPOIPK0uUL6JHwp39Y3zglmUOSn8CBHF0+cYCvHFjVs09Imzug==
-X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr207016iob.1.1712850210125;
-        Thu, 11 Apr 2024 08:43:30 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.43.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:43:28 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 424/437] media: usb: uvc: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:19:24 -0600
-Message-ID: <20240411153126.16201-425-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="N+JmWxX8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1712850207; x=1713455007; i=parker@finest.io;
+	bh=Wmyh4+ECtBW0Jh/HVjgWQOVgBLp1r/1BdeWBCqXIMJU=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=N+JmWxX8X2C7iukAkyyle1+I3fOz7RM7RDk0GDHH1HhP0zu4JLEFcd96sXkELpB+
+	 LGM7jd0Py4pCpqzkTpJBwzgA9f6TXel4lA9P6+E/UYc4Xyjn2dLRirSBwaEhDkWmT
+	 c9NlzfkZ8xvBwLiYXt8O2ksx54Efyft1Tg7ZH6Re4U2epCTeEN6wiUpEhQjdJKsPL
+	 yA+aLj6vqvjlG8Tl1UBQpGjyF0ej4sSTpW77Jne7iFWmbgy24wnmsnnUqoQR1rCKe
+	 Gw0X80eq9/TVFx9gCFn63ZCu00MrEzAvG/hj7k60UA2ZwmBeYOh9LpT9qH7HIB7rE
+	 rhwueu2nxhw5l41jyw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0LsBB3-1suW0J0tXL-00to1W; Thu, 11 Apr
+ 2024 17:30:04 +0200
+From: parker@finest.io
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org
+Cc: Parker Newman <pnewman@connecttech.com>
+Subject: [PATCH 0/2] serial: exar: add Connect Tech serial cards to Exar driver
+Date: Thu, 11 Apr 2024 11:29:25 -0400
+Message-ID: <cover.1712846025.git.pnewman@connecttech.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xqtzeB7BoSjGN76zplJXS9B9wmmGlf1dciTVJVO/D8DMswVfxcC
+ Jz8+JXKQu2GMLzZdvxrVG+dGGWoe5r6dmqzd1bx14wa+dKMu8noevmQx9rlyXprlTMdukSG
+ yK1KHNe8K1OskvxzGad1doerz6uOFgiNwdm8wlIDIPXjtFGa8D60PJM7kJU4bK3YcfJRJbO
+ LY0Vnmona40ZK0nlDWQ8g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XfH5YioreMY=;q20CEaQ7J56knqbZMJLYmfWUUgK
+ XmmlL0se7pW3gdsuAS3egnk7UTa8F/j+4dt/4tR5asMi+6zB/Jf1X1g82huV5o65LTh6dki74
+ eIQpVRbePI17eH1RF6lgve0cXxMVNAqzMwkXOxsWEtxcTXygI7O+K2IWK+q/Wgg3HEZbr8SpH
+ Z9jXS88vufPqjIw8K4//vG/gBYKqsl75/0cf5Pj6XEq8jHf8MAVo9kDnXAcWprNqvxLFFQVLW
+ tYe0NfpjrSfFL7TSJRbn0vAd9VqiB+xoTkzS6W89M1MvkvOrlUWmx+s24uHwaH6NDEmxef8re
+ ikMFZ3BIc5rlXC9nljVrPd8R2JcIg/qIagUHzKQwt2nvaN9mJ44W4XOi6F0hZSh/wlglDUNjo
+ KbJLybG2nbd2YkqBWuZK5QphcJpEkjRdqIdZgvy6n0pJvXWPixXk9Y7ZtlhcLJYXWtxYOQI4B
+ vsi+RMh4V+6LofVYOWcSeQGn1ROB6sq5Us9p+V7CBNkInVgGX3Ev85QbG8CLLYO8NKIR91W3M
+ Y/sheKDNQLL6ndiVYV29qdM1o1g5mqsd/toh8eJSdxBKx1fpm3dAhxdkVWChmac+MBulMIT5B
+ VxCiSeWOU/kbFOf6CQvjqqvUTrAFvPhIr0mYcDzotaoY+txoQspkd6ZS0Bv8uQI17Z5V6ZS7J
+ TJivTsfZWQDFShp9oCjTQ02Z6s6SXB3Sd8YZyCwerftwdYOnKh8pQ6kwcoVPcC5XuIeVINfWn
+ FPT6kNji1yLowUUeWUVAafL6tXJdZja6KDt8Ht/1Mq6DrXvnxi5oZE=
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/media/usb/uvc/uvc_debugfs.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+From: Parker Newman <pnewman@connecttech.com>
 
-diff --git a/drivers/media/usb/uvc/uvc_debugfs.c b/drivers/media/usb/uvc/uvc_debugfs.c
-index 1a1258d4ffca..2c4935a0257e 100644
---- a/drivers/media/usb/uvc/uvc_debugfs.c
-+++ b/drivers/media/usb/uvc/uvc_debugfs.c
-@@ -39,13 +39,11 @@ static int uvc_debugfs_stats_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static ssize_t uvc_debugfs_stats_read(struct file *file, char __user *user_buf,
--				      size_t nbytes, loff_t *ppos)
-+static ssize_t uvc_debugfs_stats_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct uvc_debugfs_buffer *buf = file->private_data;
-+	struct uvc_debugfs_buffer *buf = iocb->ki_filp->private_data;
- 
--	return simple_read_from_buffer(user_buf, nbytes, ppos, buf->data,
--				       buf->count);
-+	return simple_copy_to_iter(buf->data, &iocb->ki_pos, buf->count, to);
- }
- 
- static int uvc_debugfs_stats_release(struct inode *inode, struct file *file)
-@@ -60,7 +58,7 @@ static const struct file_operations uvc_debugfs_stats_fops = {
- 	.owner = THIS_MODULE,
- 	.open = uvc_debugfs_stats_open,
- 	.llseek = no_llseek,
--	.read = uvc_debugfs_stats_read,
-+	.read_iter = uvc_debugfs_stats_read,
- 	.release = uvc_debugfs_stats_release,
- };
- 
--- 
-2.43.0
+Hello,
+These patches add proper support for most of Connect Tech's (CTI) Exar
+based serial cards. Previously, only a subset of CTI's cards would work
+with the Exar driver while the rest required the CTI out-of-tree driver.
+These patches are intended to phase out the out-of-tree driver.
+
+I am new to the mailing lists and contributing to the kernel so please
+let me know if I have made any mistakes or if you have any feedback.
+
+Thank you,
+
+Parker Newman (2):
+  serial: exar: add missing CTI/Exar PCI IDs to include/linux/pci_ids.h
+  serial: exar: adding CTI PCI/PCIe serial port support to 8250_exar
+
+ drivers/tty/serial/8250/8250_exar.c | 1092 +++++++++++++++++++++++++--
+ include/linux/pci_ids.h             |  104 ++-
+ 2 files changed, 1094 insertions(+), 102 deletions(-)
+
+=2D-
+2.43.2
 
