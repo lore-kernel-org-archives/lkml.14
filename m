@@ -1,67 +1,68 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7256513FD8C;
-	Thu, 11 Apr 2024 08:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B01E142902;
+	Thu, 11 Apr 2024 08:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712824830; cv=none; b=ps6B4Zz6kwjQ6NtCEpRxi/9onP9n6eV6hDG7iUIEjtco7RFyPB9kVBGWMZrrnND4MuQQZlWzDoBil0IMmraOn0yf9foNT8fkYnLvcfwBlsGkaGfS1lQbTFnymMnvfXK31oTn60T9QxaGlogLBiC8zNpQu+iDpuKHcrNeZumbowk=
+	t=1712824832; cv=none; b=K8RgA11K95oJKwAPGTImAkNSzcmjWS4qvwhcFn1KGJzb0H6EKyBB75FPYjkbg2gr8RsHKluQXSqU7FiD8T1QOPoJA7vP6ZU/51Qd8p74Nxjxj97r0BP5ocox9doIFHF4unlnl4njHUcEBXLqOB8OZ4zzEqj9Du6SvpQf/FGlr6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712824830; c=relaxed/simple;
-	bh=6ztzXLOMSdSjFwg/pwhagEJ7se4wiFLJeciQkXk8idU=;
+	s=arc-20240116; t=1712824832; c=relaxed/simple;
+	bh=CBQUfP/uYzplIuFFeF17qpaANzmufuOl/I1FAWUEC+o=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GwQ1ddcvloV4ZEuHoCtjYPBSeKpD0EEgw9MrzdKrPNnGRqHFgXlgeSXR+pWO2J7tWd/L2cm02y3FMsI7eUPr0NTtvpaqdx948ZxU5AtJpe3IBRBEd26GOWqOXs9EupVMSbyaDqRrvNxwBHhFIi9//Y/eMADNRmM5HiiKAYWuBwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y92DZqPv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CPZkbE/1; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=I/3+vCTJEgsmrjImcGfxQ7vMnLmDsFoKpyiNEbesMgJ2QpUuYohxwvgZVky563B63H3S4SqmrWJgYo/F62U6TQXJ0vuEg3UxG8vUTso4jlMW/CylPvuqYpfImiIkr/6fuSJR0P+g3l/ddZ4nHrUcFPaoBgKNBQWaMaQe/vlgifY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QuSSNlOp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+V9+VtfE; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y92DZqPv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CPZkbE/1"
-Date: Thu, 11 Apr 2024 08:40:19 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QuSSNlOp";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+V9+VtfE"
+Date: Thu, 11 Apr 2024 08:40:22 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712824820;
+	s=2020; t=1712824823;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QANrVq3DVGefTlFrqUoXDTrnAiDTrpceGyPGIVGm/Pk=;
-	b=y92DZqPvpd/E2kOUnKc4ma2n8msIUKXEf+gduqQQZCQvAMG36W4+9/DjNYbwP3lb6xt8rZ
-	Cn8EV8Y/whWcy18bTvX4ZhkBgN8LoEGulkoFibScxQJGPx5DixgrfUgtkbs3Jk4yYWojgM
-	PtOfFtF7/+jP+6gr5lgnlHsdRb8eFW0Qsd+fxsq4A8E9Xj1kXf3perE1+/lth1OZAFxVfF
-	w6Fb9aE/PNG9JD0Vuc45QVghR+7ai77hDoghPJdcQPOiA3a8VdznALqaef4cBNSFcZnXni
-	PzpGGxcVwPlcR5r9+DMRHhPYvITFhV+XuG5IxgTarcZaZ1hNfRM6CWj56m3rXA==
+	bh=fxa+WhHL7X9w88LCkA3WuYFysX1pM0f1GBrTSu6M5DU=;
+	b=QuSSNlOpC0KvlsLTiP7lOYaqH/qZxmQPxOD727bw1wQ+GuhYmDpLYzBD9YfqdMZc78SjwQ
+	INqa6SX/0OsP7FGv+7v9CsfNai5xyQwIyDPkUS2xdCK3Ai8hVL9hGywm4+uVTQPSBUd0ks
+	VJtWUHrD/QxCEDxAfhfXsybz7tvcbupsYSwmElT8ckJJWhMwmFipOQLo90ynyb/mwHy7i5
+	2PNK1p4g+hrtP85SeSMyGGsLIfDeqxYvxIcfERbSxMS/eB4XC4Shq4Ch5uY3BnKQ+CU6CR
+	NTSgRzGWQxSt5x5RN/unMLb4MRXZwcz4Q0/3fXvK66yaXMA19n2pyj7Dtf8EJw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712824820;
+	s=2020e; t=1712824823;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=QANrVq3DVGefTlFrqUoXDTrnAiDTrpceGyPGIVGm/Pk=;
-	b=CPZkbE/1sTv573ap70IXkejOiRtdyjl60/y0BYXoh30Qi4SbWCti4lozmLfH66+0qDZsM9
-	jDLNtG21PyJrTMCA==
+	bh=fxa+WhHL7X9w88LCkA3WuYFysX1pM0f1GBrTSu6M5DU=;
+	b=+V9+VtfE2xRTr5SLx2ZG2UVHLz/I+oGQY20jKzke83+qfkVrF4WNZX+P+cMfj+F9pLQ/wa
+	X9UB1ZGtR6nAUaAA==
 From: "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/bugs: Only harden syscalls when needed
+Subject:
+ [tip: x86/urgent] x86/bugs: Cache the value of MSR_IA32_ARCH_CAPABILITIES
 Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
  Nikolay Borisov <nik.borisov@suse.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Sean Christopherson <seanjc@google.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 In-Reply-To:
- <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+ <9592a18a814368e75f8f4b9d74d3883aa4fd1eaf.1712813475.git.jpoimboe@kernel.org>
 References:
- <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+ <9592a18a814368e75f8f4b9d74d3883aa4fd1eaf.1712813475.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171282481978.10875.11842078420317057256.tip-bot2@tip-bot2>
+Message-ID: <171282482285.10875.9205013042321475431.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,284 +72,137 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     92dc47c57eac757c0987b0af0405d12192feff80
-Gitweb:        https://git.kernel.org/tip/92dc47c57eac757c0987b0af0405d12192feff80
+Commit-ID:     cb2db5bb04d7f778fbc1a1ea2507aab436f1bff3
+Gitweb:        https://git.kernel.org/tip/cb2db5bb04d7f778fbc1a1ea2507aab436f1bff3
 Author:        Josh Poimboeuf <jpoimboe@kernel.org>
-AuthorDate:    Wed, 10 Apr 2024 22:40:49 -07:00
+AuthorDate:    Wed, 10 Apr 2024 22:40:46 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Thu, 11 Apr 2024 10:30:33 +02:00
 
-x86/bugs: Only harden syscalls when needed
+x86/bugs: Cache the value of MSR_IA32_ARCH_CAPABILITIES
 
-Syscall hardening (i.e., converting the syscall indirect branch to a
-series of direct branches) may cause performance regressions in certain
-scenarios.  Only use the syscall hardening when indirect branches are
-considered unsafe.
+There's no need to keep reading MSR_IA32_ARCH_CAPABILITIES over and
+over.  It's even read in the BHI sysfs function which is a big no-no.
+Just read it once and cache it.
 
-Fixes: 1e3ad78334a6 ("x86/syscall: Don't force use of indirect calls for system calls")
+Fixes: ec9404e40e8f ("x86/bhi: Add BHI mitigation knob")
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Nikolay Borisov <nik.borisov@suse.com>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Sean Christopherson <seanjc@google.com>
-Link: https://lore.kernel.org/r/97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org
+Link: https://lore.kernel.org/r/9592a18a814368e75f8f4b9d74d3883aa4fd1eaf.1712813475.git.jpoimboe@kernel.org
 ---
- arch/x86/entry/common.c            | 30 ++++++++++++++++++++++++---
- arch/x86/entry/syscall_32.c        | 11 +----------
- arch/x86/entry/syscall_64.c        |  8 +-------
- arch/x86/entry/syscall_x32.c       |  7 +++++-
- arch/x86/include/asm/cpufeatures.h |  1 +-
- arch/x86/include/asm/syscall.h     |  8 ++++++-
- arch/x86/kernel/cpu/bugs.c         | 32 ++++++++++++++++++++++++++++-
- 7 files changed, 74 insertions(+), 23 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 6de50b8..80d432d 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -39,6 +39,28 @@
- 
- #ifdef CONFIG_X86_64
- 
-+/*
-+ * Do either a direct or an indirect call, depending on whether indirect calls
-+ * are considered safe.
-+ */
-+#define __do_syscall(table, func_direct, nr, regs)			\
-+({									\
-+	unsigned long __rax, __rdi, __rsi;				\
-+									\
-+	asm_inline volatile(						\
-+		ALTERNATIVE("call " __stringify(func_direct) "\n\t",	\
-+			    ANNOTATE_RETPOLINE_SAFE			\
-+			    "call *%[func_ptr]\n\t",			\
-+			    X86_FEATURE_INDIRECT_SAFE)			\
-+		: "=D" (__rdi), "=S" (__rsi), "=a" (__rax),		\
-+		  ASM_CALL_CONSTRAINT					\
-+		: "0" (regs), "1" (nr), [func_ptr] "r" (table[nr])	\
-+		: "rdx", "rcx", "r8", "r9", "r10", "r11",		\
-+		  "cc", "memory");					\
-+									\
-+	__rax;								\
-+})
-+
- static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
- {
- 	/*
-@@ -49,7 +71,7 @@ static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
- 
- 	if (likely(unr < NR_syscalls)) {
- 		unr = array_index_nospec(unr, NR_syscalls);
--		regs->ax = x64_sys_call(regs, unr);
-+		regs->ax = __do_syscall(sys_call_table, x64_sys_call, unr, regs);
- 		return true;
- 	}
- 	return false;
-@@ -66,7 +88,7 @@ static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
- 
- 	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(xnr < X32_NR_syscalls)) {
- 		xnr = array_index_nospec(xnr, X32_NR_syscalls);
--		regs->ax = x32_sys_call(regs, xnr);
-+		regs->ax = __do_syscall(x32_sys_call_table, x32_sys_call, xnr, regs);
- 		return true;
- 	}
- 	return false;
-@@ -147,6 +169,8 @@ static int ia32_emulation_override_cmdline(char *arg)
- 	return kstrtobool(arg, &__ia32_enabled);
- }
- early_param("ia32_emulation", ia32_emulation_override_cmdline);
-+#else
-+#define __do_syscall(table, func_direct, nr, regs) table[nr](regs)
- #endif
- 
- /*
-@@ -162,7 +186,7 @@ static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs, int nr)
- 
- 	if (likely(unr < IA32_NR_syscalls)) {
- 		unr = array_index_nospec(unr, IA32_NR_syscalls);
--		regs->ax = ia32_sys_call(regs, unr);
-+		regs->ax = __do_syscall(ia32_sys_call_table, ia32_sys_call, unr, regs);
- 	} else if (nr != -1) {
- 		regs->ax = __ia32_sys_ni_syscall(regs);
- 	}
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index c2235ba..9185870 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -14,25 +14,16 @@
- #endif
- 
- #define __SYSCALL(nr, sym) extern long __ia32_##sym(const struct pt_regs *);
--
- #include <asm/syscalls_32.h>
- #undef __SYSCALL
- 
--/*
-- * The sys_call_table[] is no longer used for system calls, but
-- * kernel/trace/trace_syscalls.c still wants to know the system
-- * call address.
-- */
--#ifdef CONFIG_X86_32
- #define __SYSCALL(nr, sym) __ia32_##sym,
--const sys_call_ptr_t sys_call_table[] = {
-+__visible const sys_call_ptr_t ia32_sys_call_table[] = {
- #include <asm/syscalls_32.h>
- };
- #undef __SYSCALL
--#endif
- 
- #define __SYSCALL(nr, sym) case nr: return __ia32_##sym(regs);
--
- long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index 33b3f09..c368048 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -11,19 +11,13 @@
- #include <asm/syscalls_64.h>
- #undef __SYSCALL
- 
--/*
-- * The sys_call_table[] is no longer used for system calls, but
-- * kernel/trace/trace_syscalls.c still wants to know the system
-- * call address.
-- */
- #define __SYSCALL(nr, sym) __x64_##sym,
--const sys_call_ptr_t sys_call_table[] = {
-+asmlinkage const sys_call_ptr_t sys_call_table[] = {
- #include <asm/syscalls_64.h>
- };
- #undef __SYSCALL
- 
- #define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
--
- long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
-index 03de4a9..89a7172 100644
---- a/arch/x86/entry/syscall_x32.c
-+++ b/arch/x86/entry/syscall_x32.c
-@@ -11,8 +11,13 @@
- #include <asm/syscalls_x32.h>
- #undef __SYSCALL
- 
--#define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
-+#define __SYSCALL(nr, sym) __x64_##sym,
-+asmlinkage const sys_call_ptr_t x32_sys_call_table[] = {
-+#include <asm/syscalls_x32.h>
-+};
-+#undef __SYSCALL
- 
-+#define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
- long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 3c74343..7c87fe8 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -470,6 +470,7 @@
- #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
- #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
-+#define X86_FEATURE_INDIRECT_SAFE	(21*32+ 4) /* "" Indirect branches aren't vulnerable to Spectre v2 */
- 
- /*
-  * BUG word(s)
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index 2fc7bc3..dfb5952 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -16,14 +16,20 @@
- #include <asm/thread_info.h>	/* for TS_COMPAT */
- #include <asm/unistd.h>
- 
--/* This is used purely for kernel/trace/trace_syscalls.c */
- typedef long (*sys_call_ptr_t)(const struct pt_regs *);
- extern const sys_call_ptr_t sys_call_table[];
- 
-+#if defined(CONFIG_X86_32)
-+#define ia32_sys_call_table sys_call_table
-+#else
- /*
-  * These may not exist, but still put the prototypes in so we
-  * can use IS_ENABLED().
-  */
-+extern const sys_call_ptr_t ia32_sys_call_table[];
-+extern const sys_call_ptr_t x32_sys_call_table[];
-+#endif
-+
- extern long ia32_sys_call(const struct pt_regs *, unsigned int nr);
- extern long x32_sys_call(const struct pt_regs *, unsigned int nr);
- extern long x64_sys_call(const struct pt_regs *, unsigned int nr);
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 9eeb60f..b4ec0f0 100644
+index 27f5004..ff59fa8 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1669,6 +1669,15 @@ static void __init bhi_select_mitigation(void)
- 	if (!IS_ENABLED(CONFIG_X86_64))
+@@ -61,6 +61,8 @@ EXPORT_PER_CPU_SYMBOL_GPL(x86_spec_ctrl_current);
+ u64 x86_pred_cmd __ro_after_init = PRED_CMD_IBPB;
+ EXPORT_SYMBOL_GPL(x86_pred_cmd);
+ 
++static u64 __ro_after_init ia32_cap;
++
+ static DEFINE_MUTEX(spec_ctrl_mutex);
+ 
+ void (*x86_return_thunk)(void) __ro_after_init = __x86_return_thunk;
+@@ -144,6 +146,8 @@ void __init cpu_select_mitigations(void)
+ 		x86_spec_ctrl_base &= ~SPEC_CTRL_MITIGATIONS_MASK;
+ 	}
+ 
++	ia32_cap = x86_read_arch_cap_msr();
++
+ 	/* Select the proper CPU mitigations before patching alternatives: */
+ 	spectre_v1_select_mitigation();
+ 	spectre_v2_select_mitigation();
+@@ -301,8 +305,6 @@ static const char * const taa_strings[] = {
+ 
+ static void __init taa_select_mitigation(void)
+ {
+-	u64 ia32_cap;
+-
+ 	if (!boot_cpu_has_bug(X86_BUG_TAA)) {
+ 		taa_mitigation = TAA_MITIGATION_OFF;
+ 		return;
+@@ -341,7 +343,6 @@ static void __init taa_select_mitigation(void)
+ 	 * On MDS_NO=1 CPUs if ARCH_CAP_TSX_CTRL_MSR is not set, microcode
+ 	 * update is required.
+ 	 */
+-	ia32_cap = x86_read_arch_cap_msr();
+ 	if ( (ia32_cap & ARCH_CAP_MDS_NO) &&
+ 	    !(ia32_cap & ARCH_CAP_TSX_CTRL_MSR))
+ 		taa_mitigation = TAA_MITIGATION_UCODE_NEEDED;
+@@ -401,8 +402,6 @@ static const char * const mmio_strings[] = {
+ 
+ static void __init mmio_select_mitigation(void)
+ {
+-	u64 ia32_cap;
+-
+ 	if (!boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA) ||
+ 	     boot_cpu_has_bug(X86_BUG_MMIO_UNKNOWN) ||
+ 	     cpu_mitigations_off()) {
+@@ -413,8 +412,6 @@ static void __init mmio_select_mitigation(void)
+ 	if (mmio_mitigation == MMIO_MITIGATION_OFF)
  		return;
  
-+	/*
-+	 * There's no hardware mitigation in place, so mark indirect branches
-+	 * as unsafe.
-+	 *
-+	 * One could argue the SW loop makes indirect branches safe again, but
-+	 * Linus prefers it this way.
-+	 */
-+	setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+
- 	/* Mitigate KVM by default */
- 	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
- 	pr_info("Spectre BHI mitigation: SW BHB clearing on vm exit\n");
-@@ -1687,6 +1696,21 @@ static void __init spectre_v2_select_mitigation(void)
- 	enum spectre_v2_mitigation mode = SPECTRE_V2_NONE;
- 
+-	ia32_cap = x86_read_arch_cap_msr();
+-
  	/*
-+	 * X86_FEATURE_INDIRECT_SAFE indicates whether indirect calls can be
-+	 * considered safe.  That means either:
-+	 *
-+	 *   - the CPU isn't vulnerable to Spectre v2 or its variants;
-+	 *
-+	 *   - a hardware mitigation is in place (e.g., IBRS, BHI_DIS_S); or
-+	 *
-+	 *   - the user turned off mitigations altogether.
-+	 *
-+	 * Assume innocence until proven guilty: set the cap bit now, then
-+	 * clear it later if/when needed.
-+	 */
-+	setup_force_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+
-+	/*
- 	 * If the CPU is not affected and the command line mode is NONE or AUTO
- 	 * then nothing to do.
+ 	 * Enable CPU buffer clear mitigation for host and VMM, if also affected
+ 	 * by MDS or TAA. Otherwise, enable mitigation for VMM only.
+@@ -508,7 +505,7 @@ static void __init rfds_select_mitigation(void)
+ 	if (rfds_mitigation == RFDS_MITIGATION_OFF)
+ 		return;
+ 
+-	if (x86_read_arch_cap_msr() & ARCH_CAP_RFDS_CLEAR)
++	if (ia32_cap & ARCH_CAP_RFDS_CLEAR)
+ 		setup_force_cpu_cap(X86_FEATURE_CLEAR_CPU_BUF);
+ 	else
+ 		rfds_mitigation = RFDS_MITIGATION_UCODE_NEEDED;
+@@ -659,8 +656,6 @@ void update_srbds_msr(void)
+ 
+ static void __init srbds_select_mitigation(void)
+ {
+-	u64 ia32_cap;
+-
+ 	if (!boot_cpu_has_bug(X86_BUG_SRBDS))
+ 		return;
+ 
+@@ -669,7 +664,6 @@ static void __init srbds_select_mitigation(void)
+ 	 * are only exposed to SRBDS when TSX is enabled or when CPU is affected
+ 	 * by Processor MMIO Stale Data vulnerability.
  	 */
-@@ -1720,6 +1744,7 @@ static void __init spectre_v2_select_mitigation(void)
+-	ia32_cap = x86_read_arch_cap_msr();
+ 	if ((ia32_cap & ARCH_CAP_MDS_NO) && !boot_cpu_has(X86_FEATURE_RTM) &&
+ 	    !boot_cpu_has_bug(X86_BUG_MMIO_STALE_DATA))
+ 		srbds_mitigation = SRBDS_MITIGATION_TSX_OFF;
+@@ -813,7 +807,7 @@ static void __init gds_select_mitigation(void)
+ 	/* Will verify below that mitigation _can_ be disabled */
  
- 	case SPECTRE_V2_CMD_RETPOLINE_LFENCE:
- 		pr_err(SPECTRE_V2_LFENCE_MSG);
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
- 		mode = SPECTRE_V2_LFENCE;
- 		break;
- 
-@@ -1772,11 +1797,16 @@ static void __init spectre_v2_select_mitigation(void)
- 		break;
- 
- 	case SPECTRE_V2_LFENCE:
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+		fallthrough;
- 	case SPECTRE_V2_EIBRS_LFENCE:
- 		setup_force_cpu_cap(X86_FEATURE_RETPOLINE_LFENCE);
--		fallthrough;
-+		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
-+		break;
- 
- 	case SPECTRE_V2_RETPOLINE:
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+		fallthrough;
- 	case SPECTRE_V2_EIBRS_RETPOLINE:
- 		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
- 		break;
+ 	/* No microcode */
+-	if (!(x86_read_arch_cap_msr() & ARCH_CAP_GDS_CTRL)) {
++	if (!(ia32_cap & ARCH_CAP_GDS_CTRL)) {
+ 		if (gds_mitigation == GDS_MITIGATION_FORCE) {
+ 			/*
+ 			 * This only needs to be done on the boot CPU so do it
+@@ -1908,8 +1902,6 @@ static void update_indir_branch_cond(void)
+ /* Update the static key controlling the MDS CPU buffer clear in idle */
+ static void update_mds_branch_idle(void)
+ {
+-	u64 ia32_cap = x86_read_arch_cap_msr();
+-
+ 	/*
+ 	 * Enable the idle clearing if SMT is active on CPUs which are
+ 	 * affected only by MSBDS and not any other MDS variant.
+@@ -2818,7 +2810,7 @@ static const char *spectre_bhi_state(void)
+ 	else if  (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP))
+ 		return "; BHI: SW loop, KVM: SW loop";
+ 	else if (boot_cpu_has(X86_FEATURE_RETPOLINE) &&
+-		 !(x86_read_arch_cap_msr() & ARCH_CAP_RRSBA))
++		 !(ia32_cap & ARCH_CAP_RRSBA))
+ 		return "; BHI: Retpoline";
+ 	else if  (boot_cpu_has(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT))
+ 		return "; BHI: Syscall hardening, KVM: SW loop";
