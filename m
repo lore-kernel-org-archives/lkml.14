@@ -1,63 +1,63 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B4A15535B
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21D747A55
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849973; cv=none; b=NcJmRg6frFjD+Sy+daNZVZsn4Pcon4fFhn4Dsa9O0GipDRWrTfV5mThNVtoaVQi+hLpcSAAAWcEiM3pF0CYRRZVft+b0RvTahQabYaDWfia1ahEkkOrvkzbqlxwwSAdN6rJ6lxqciOB29JZ+gU4kAbuN+XTSw2UkLjwlQhLkNFA=
+	t=1712849974; cv=none; b=I1BXlYlaDVEZFQSPX2MFPRtoZqT0e8PYM+bMl7L0gvLMHTIQhzvbVleuNil6gfzOJ21JHVjMxJIfAFjHRc89ZpbuZ1Z8HJ/edjUq5ShuZm64Esc1seSqisuCqENi9eXAKcZ9w69pjo6ycsnPjvAUod9HOGbs9dDYBwHucNoo4wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849973; c=relaxed/simple;
-	bh=kBOG6gh9L+YlXUEO5PvC5HwNjQ+tJN1HQ2raep5WTkw=;
+	s=arc-20240116; t=1712849974; c=relaxed/simple;
+	bh=dpjjwJpMsVv1KxGUBCsBNvBL0/N3BNgZWI4u6TND3cM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d0e3t/ge5CZW2AS39c/fOUOSNoYc9+atSUwOQleQAvvem7/Fy7NM+QHyNscw3qOEHaaTGXlRDGygGitgerJxM+IatTffSWebOGSSnrQuPHagGRpN1FTUHoryMOGpSsNjDJ2ZbwAxVO0zOSSonXXJ/FZKWbkoPGrKxGyUlrd4L1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jmfoVQB2; arc=none smtp.client-ip=209.85.166.52
+	 MIME-Version; b=YI5+In9huDb8JM39xsRyBi3Qgej6ob+SSHpv/hTlBgtbepqHPq+zMmSQgE+tqj5v/I03Qf66eDtZKaFRlvBVzNCKZQedKyGnLG/miRbergTz/yH0TQ9mmajMtYTURNlXUwwsM4VNK88fyKFasUWLmY/znjE22/woWJjORDAhReM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=L5M2j7BA; arc=none smtp.client-ip=209.85.166.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jmfoVQB2"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69635839f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:39:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="L5M2j7BA"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69636339f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:39:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849969; x=1713454769; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849971; x=1713454771; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wyiv3PYk9uivp8uRbPKfheMtxKLuVXL7eV2fO7HBsks=;
-        b=jmfoVQB2l7npa+vChySWBlEM7k9h/jRMrg3OL++SemkaaPhXopomw2KYADHoOuE688
-         yBjtb8szD28w05ikvOzt2v2720i+kMJWKXhFxF2dqo6LygiHIbyP9a/s1U4C/AXF0wQc
-         JPWh75ul5gWCi3ApwZD/YEyripLBCTJAJSdkYFKVK7uKJXZQ11zGxYnm/lL78z3csCsE
-         FxDawscqYeSX0/E9TGztT7jjec5Cr9HklhTCFpfxkNcUjoUofdbIAO6NoLD1l2HSDsZ3
-         bjIHevRakpBMW4XhMDW0Bl4mb8LtI4U49O753G5eCOzMWRQeYXiDXo3PmbXfmZpQusW8
-         LdRw==
+        bh=Xh/LnGv4wN19TgvJnr2PitMJOHvtGuK64MU0s7R/ELU=;
+        b=L5M2j7BAm+RXF0na0TxAGovYldAaE2SwppnTPj619wpuIuvyCbF9X95TRcdpbg0lFo
+         SMScmp4C56cL8hQYnzGkgU9RtlKDkUJiSgBrg+kbXAVQ/CGl6wAVpSZWHNFSapQbqgfX
+         cUuXWqw+RXwz3+uclLE5QMNkGwHtRrmZL32/3TTeiB2fuouechP1CnJGKjhABf+62JaP
+         +PfJvQTg/zVBJvKyMdHtpmrk7vqrBP53Ki0fBkqbci4Fne79IvbZbT+zMrfCP2nbkuk/
+         IXy2UaA89as9dJr7+1dXZ40sZcxPR3n2IgWHUYgCrRCbOav2GiCpRxbGsXHu1RKLBazD
+         IEaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849969; x=1713454769;
+        d=1e100.net; s=20230601; t=1712849971; x=1713454771;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wyiv3PYk9uivp8uRbPKfheMtxKLuVXL7eV2fO7HBsks=;
-        b=akGMd67fkZgXjGIrEO8vI4fKiVK37z1JYxA3V4akQzviKOR6sSDMcuiT82fwz8s4rq
-         Xqif3BXKjtEmYowPWHe1vAudNoNk8WJtoLSXfxHA+QE//oY/RDrGaET5OTjHWOBkbfH4
-         CoapP51ct8gAQNHQ41NDkHID/6fjwmRAmWMieeTwqn7kr8KvzFvrRw2AW84d9uYTYV9M
-         2aGMfZIVnoqyYbLbvyUMPVS/xyM03sGBNRVL/M7xvkWzSOLsxKA9X8KjRwZNc10k3nQI
-         o0VtVcITd8Ztq+G9zdNT8MVNLuI6xsFg/jFi68vrsQn5uYDLWf1Ti9yj6BnyO1c1k9Ky
-         kWEg==
-X-Gm-Message-State: AOJu0YxBEBX9vYd8Vw7gA1nUyJaoevGNue9T46ouZqwhjIWRngIf2KG9
-	KvAQxj5quEQVvXlHta4ePcxnwiAKUHwhb+UZnrkfRxMJI30ctDUTe7eik94tHCOCd8L9oRPUCog
-	h
-X-Google-Smtp-Source: AGHT+IHnHqHFdbaYWaxk1fQBzMyd2DbudQT1Wh4gn2HLzuhQ7Cs4H7PH0h48GZ0QDr0OdZw8jfahzg==
-X-Received: by 2002:a6b:c34e:0:b0:7d6:7b7c:8257 with SMTP id t75-20020a6bc34e000000b007d67b7c8257mr227452iof.0.1712849969399;
-        Thu, 11 Apr 2024 08:39:29 -0700 (PDT)
+        bh=Xh/LnGv4wN19TgvJnr2PitMJOHvtGuK64MU0s7R/ELU=;
+        b=DynUYjXU5bKo0lj7RioxXfHBF1zNUiwfPaaRaGYkONmZLDVJGthv1Ud8f6JYPpXFik
+         TdpgiSsmEhpXjkdBLxvJRmpcYVonxG9VsRLHoJOPRSLl2m8pFxDx8Dv/evx96m/2jWyB
+         ZRz1KeEhJiDqLBkHQShSHft5Y1DPchYgXqf1UtlCCgtTkoPFE85vtt6A5fgW7yzL6scZ
+         wQiF1kC+ncBmOzKVlJ9HvrgDFRkdPoN1pNWUCzXtW6kFWIUBfHeggvgHaruDfyIDSWeI
+         cW18Az64q4L+LHvyyKWh7hgBqVGunjsojSU43fTLdJicSf6j3Kc/16MYBEtl40704Ulr
+         sPbg==
+X-Gm-Message-State: AOJu0YzUja587/I3JvFq+78jUH6bwQZKvj5Rf45DKS1hyMFTtVk1ztIr
+	9FVy5rZIVGpnuuw/G4lY2/P8XBzsSzkEhomHQWLpQuhhsGPdfackzE0NE2TwwY6cGA1+8seFR7R
+	B
+X-Google-Smtp-Source: AGHT+IEO7aRCs6Pg4FzBAtH2QjSaW9e0qzDN92Fs8nDkVQE7QOHAtWtg0prfuYeC8GVs/H2Y7css8A==
+X-Received: by 2002:a6b:c34e:0:b0:7d6:7b7c:8257 with SMTP id t75-20020a6bc34e000000b007d67b7c8257mr227522iof.0.1712849971438;
+        Thu, 11 Apr 2024 08:39:31 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.39.28
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.39.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:39:28 -0700 (PDT)
+        Thu, 11 Apr 2024 08:39:30 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 283/437] fs/binfmt_misc: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:17:03 -0600
-Message-ID: <20240411153126.16201-284-axboe@kernel.dk>
+Subject: [PATCH 285/437] fs/nfsd: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:17:05 -0600
+Message-ID: <20240411153126.16201-286-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,92 +71,79 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- fs/binfmt_misc.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ fs/nfsd/nfs4state.c |  5 +++--
+ fs/nfsd/nfsctl.c    | 10 ++++++----
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/fs/binfmt_misc.c b/fs/binfmt_misc.c
-index 68fa225f89e5..f44b626c4df7 100644
---- a/fs/binfmt_misc.c
-+++ b/fs/binfmt_misc.c
-@@ -734,10 +734,9 @@ static void remove_binfmt_handler(struct binfmt_misc *misc, Node *e)
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 84d4093ca713..cbe82431633a 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -2958,7 +2958,7 @@ static int client_opens_release(struct inode *inode, struct file *file)
  
- /* /<entry> */
- 
--static ssize_t
--bm_entry_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
-+static ssize_t bm_entry_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	Node *e = file_inode(file)->i_private;
-+	Node *e = file_inode(iocb->ki_filp)->i_private;
- 	ssize_t res;
- 	char *page;
- 
-@@ -747,7 +746,7 @@ bm_entry_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
- 
- 	entry_status(e, page);
- 
--	res = simple_read_from_buffer(buf, nbytes, ppos, page, strlen(page));
-+	res = simple_copy_to_iter(page, &iocb->ki_pos, strlen(page), to);
- 
- 	free_page((unsigned long) page);
- 	return res;
-@@ -794,10 +793,11 @@ static ssize_t bm_entry_write(struct file *file, const char __user *buffer,
- 
- 	return count;
+ static const struct file_operations client_states_fops = {
+ 	.open		= client_states_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= client_opens_release,
+ };
+@@ -3011,9 +3011,10 @@ static ssize_t client_ctl_write(struct file *file, const char __user *buf,
+ 	drop_client(clp);
+ 	return 7;
  }
-+FOPS_WRITE_ITER_HELPER(bm_entry_write);
++FOPS_WRITE_ITER_HELPER(client_ctl_write);
  
- static const struct file_operations bm_entry_operations = {
--	.read		= bm_entry_read,
--	.write		= bm_entry_write,
-+	.read_iter	= bm_entry_read,
-+	.write_iter	= bm_entry_write_iter,
- 	.llseek		= default_llseek,
+ static const struct file_operations client_ctl_fops = {
+-	.write		= client_ctl_write,
++	.write_iter	= client_ctl_write_iter,
+ 	.release	= simple_transaction_release,
  };
  
-@@ -882,23 +882,23 @@ static ssize_t bm_register_write(struct file *file, const char __user *buffer,
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index ecd18bffeebc..788194ac663d 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -118,6 +118,7 @@ static ssize_t nfsctl_transaction_write(struct file *file, const char __user *bu
+ 	simple_transaction_set(file, rv);
+ 	return size;
+ }
++FOPS_WRITE_ITER_HELPER(nfsctl_transaction_write);
+ 
+ static ssize_t nfsctl_transaction_read(struct file *file, char __user *buf, size_t size, loff_t *pos)
+ {
+@@ -132,10 +133,11 @@ static ssize_t nfsctl_transaction_read(struct file *file, char __user *buf, size
  	}
- 	return count;
+ 	return simple_transaction_read(file, buf, size, pos);
  }
-+FOPS_WRITE_ITER_HELPER(bm_register_write);
++FOPS_READ_ITER_HELPER(nfsctl_transaction_read);
  
- static const struct file_operations bm_register_operations = {
--	.write		= bm_register_write,
-+	.write_iter	= bm_register_write_iter,
- 	.llseek		= noop_llseek,
- };
- 
- /* /status */
- 
--static ssize_t
--bm_status_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
-+static ssize_t bm_status_read(struct kiocb *iocb, struct iov_iter *to)
- {
- 	struct binfmt_misc *misc;
- 	char *s;
- 
--	misc = i_binfmt_misc(file_inode(file));
-+	misc = i_binfmt_misc(file_inode(iocb->ki_filp));
- 	s = misc->enabled ? "enabled\n" : "disabled\n";
--	return simple_read_from_buffer(buf, nbytes, ppos, s, strlen(s));
-+	return simple_copy_to_iter(s, &iocb->ki_pos, strlen(s), to);
- }
- 
- static ssize_t bm_status_write(struct file *file, const char __user *buffer,
-@@ -944,10 +944,11 @@ static ssize_t bm_status_write(struct file *file, const char __user *buffer,
- 
- 	return count;
- }
-+FOPS_WRITE_ITER_HELPER(bm_status_write);
- 
- static const struct file_operations bm_status_operations = {
--	.read		= bm_status_read,
--	.write		= bm_status_write,
-+	.read_iter	= bm_status_read,
-+	.write_iter	= bm_status_write_iter,
+ static const struct file_operations transaction_ops = {
+-	.write		= nfsctl_transaction_write,
+-	.read		= nfsctl_transaction_read,
++	.write_iter	= nfsctl_transaction_write_iter,
++	.read_iter	= nfsctl_transaction_read_iter,
+ 	.release	= simple_transaction_release,
  	.llseek		= default_llseek,
  };
+@@ -162,7 +164,7 @@ static int exports_nfsd_open(struct inode *inode, struct file *file)
  
+ static const struct file_operations exports_nfsd_operations = {
+ 	.open		= exports_nfsd_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= seq_release,
+ };
+@@ -177,7 +179,7 @@ DEFINE_SHOW_ATTRIBUTE(export_features);
+ 
+ static const struct file_operations pool_stats_operations = {
+ 	.open		= nfsd_pool_stats_open,
+-	.read		= seq_read,
++	.read_iter	= seq_read_iter,
+ 	.llseek		= seq_lseek,
+ 	.release	= seq_release,
+ };
 -- 
 2.43.0
 
