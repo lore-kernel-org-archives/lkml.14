@@ -1,50 +1,57 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3930B13B2A8;
-	Thu, 11 Apr 2024 09:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC801448EF
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712828386; cv=none; b=PusHeacMlNx8UuWmN4NbKIVMZcoaG4BKdYp/SRlPNHPaGq7Rwb+PW/8TeXzmByAFPL92qZzyKbEJcOZ4NenJa5ad2MTA0JAHKNKLmsVfQq50PurIT2O6Ec5W45O9pDBU34ahT4O7JZEVWwZkM5L1RPSqmMbfk9KKMxTPd13di5U=
+	t=1712828430; cv=none; b=X5bclCxm0R9HpTJ1R1cUbJBUTVpSj8rAniNHzbITqLckx5hDwqQ8kbp0RCeQld0Z6RVufx7PydyQNh12aASjZQVkF3rtbTV1mbHZqrzutffeEo551zQyAvweBEbiJ20ALxQebdBN5g0taKRAZlYBAim7mtyW0JeFAGGfxfguNC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712828386; c=relaxed/simple;
-	bh=wanp9p18Kaf0ShHZ0lGWcX4M0b7lk+ryk6Qlal5cEOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=V6pVbqzfPJc7ZepFHHLG6R+/HQ+5hm4Dc0FsZoEHB3Hc68T4bRN5eJ70O2/BbP32elGL92pHfIMI7/c/cL3fCAZO/Gp+YmlWgbpxnSo7s7CkOgg+2cwxg9N81U08ZmXL4G3l725gJxlw0bjioDZYAED3jKQCnnonw4a5+zdEqZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RH23LTku; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1712828430; c=relaxed/simple;
+	bh=XtVgoBqvi7tRd0O01cuQB9/hEhPrLIGhPVaipVmqYoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mHBIMWJkjEBD1GH07C4Urn4gwqCIGnD1FNfrzWP9hUUvHC/m2QN/SenLtxaTkIYj+EF5Y6wx/EYUMhs/InM+hu/1ljtRlCV5DoqTXnPuAvw+s1QEteoTsPKwm7F7L23zs0HDnX0zoQis4rkgcVAeihvxdx6snJJtDtxRMHTykPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=a+CngiCa; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RH23LTku"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43B7Pfi7029833;
-	Thu, 11 Apr 2024 11:38:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=6rfS5zPiSmzZMMxQ4v6y7X7sH1FVnmMas6q+NGiPbP0=; b=RH
-	23LTkuSOQZgrLqSQPcyDWEaHansF0FyzusSDHHejYeeQubA/RF03+Fcw0JO1uxMG
-	vxF1TpPcpGgm0D5a22KTGFQ7B10VA0NGWF7kWPIuCEes6xP+vVpTvGT3WcMqMrto
-	D4vR5lrxgA/glhjYfqpRe5c0L23nsZVK7DVfPfG0lEV5OCEp0AXAts6p2Sz8Eqn+
-	pfNDTysrxZZj3w6etWkPop5DdColzGvEkh0mS5oMq1L4D7HeqW1uQ1DiKhu8ho9x
-	WWExS/Zmj9aq87LkaFiH+L0wv8VNYlPBEg0uHS/sXlEIu+kMGooWvN+/JWrTbuwL
-	XfW02l4cyVpCxpiEPg5w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xbfy12h6s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 11:38:51 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D322A4002D;
-	Thu, 11 Apr 2024 11:38:34 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 906DE2132CA;
-	Thu, 11 Apr 2024 11:37:27 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 11 Apr
- 2024 11:37:25 +0200
-Message-ID: <ee47d2e8-763f-4451-b9f3-b46ded4c1b97@foss.st.com>
-Date: Thu, 11 Apr 2024 11:37:24 +0200
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="a+CngiCa"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-69b137d09e3so25566906d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 02:40:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1712828427; x=1713433227; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=XtVgoBqvi7tRd0O01cuQB9/hEhPrLIGhPVaipVmqYoo=;
+        b=a+CngiCalZv7jS16aPdOv6VSmchBwbM+3E9/SMGnee6kXQMx/s1QrvSNp6eu6BH4zp
+         kkP82Ccnxc75Ed0fPWCEjrylJoYr6Isu2C8WNdAGcMi9qYUt8xQQ008Hxu5k4W5g1MRn
+         AdQ0sD7d1FNIMjts0r1vI63ux4OQ7GdjYIgtQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712828427; x=1713433227;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XtVgoBqvi7tRd0O01cuQB9/hEhPrLIGhPVaipVmqYoo=;
+        b=RKzSJ0jIOy74x9cNuOanlbj3sbIwWmIpnSB8lZlrB9ZTmShv6wsgk9riKYxRaYEKSh
+         FbAcnJmZn3rs5UyNZd62xVJc+JoeqO+3ssZa3FmtQxDkUUhwwWmZ3tkcM2y6R2UQFBQq
+         3MxLwYome6ioc+ZHEVCVDpX+7VnuhWZPfFrtDs+EFhrqblTvmDGwCmsBLxWE1ocaWegt
+         Gd9h7plbUBkroFXg8fGsExTRk9DHCNaN2d6s+fh2mQJRhNYh9PB9dkmnxOisN0lx4T0d
+         kEcZRGbNySpceKWamRZJbKJ3ksHRiK+QtHWLbciWgfKfeUsUdwuZEsAw0o++tKluDE9+
+         cqAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyOC3TAMXZ9Efn6did/NmxWcmFo9pJ1FwlCxdJkjYDRzXk7aFZ6Vyo3aCFVyiejImOcRb8j6BM8eO48Y9hFoFNlIVO1voPHTU1iAv2
+X-Gm-Message-State: AOJu0Yz9MV9u72hwurWWmf3ktO2bQQkWW8D1E5nP6eaPICS6uU05FUcD
+	NBASyOoxus/TUPZExVegFQyAwoRHQZ4Z4QhWZ9w/swamrP77rYoNpq/vweO4Jd8=
+X-Google-Smtp-Source: AGHT+IEqSlysx5Ztqrr0xQRwlY+rEbz6uhpiR7eNvMNbh5kLrrwa90+GVRP37bme9oG0C9GBDVKETw==
+X-Received: by 2002:a05:6214:5096:b0:69b:9f0:aee3 with SMTP id kk22-20020a056214509600b0069b09f0aee3mr6047454qvb.2.1712828427598;
+        Thu, 11 Apr 2024 02:40:27 -0700 (PDT)
+Received: from [10.80.67.140] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
+        by smtp.gmail.com with ESMTPSA id d7-20020ad450a7000000b0069b26d7f061sm719821qvq.99.2024.04.11.02.40.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 02:40:27 -0700 (PDT)
+Message-ID: <8a8845ca-1ac7-4768-a2ea-2a4f9fc5acef@citrix.com>
+Date: Thu, 11 Apr 2024 10:40:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,132 +59,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 00/13] Introduce STM32 Firewall framework
-To: Rob Herring <robh+dt@kernel.org>
-CC: Gatien Chevallier <gatien.chevallier@foss.st.com>,
-        <Oleksii_Moisieiev@epam.com>, <gregkh@linuxfoundation.org>,
-        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <vkoul@kernel.org>, <jic23@kernel.org>, <olivier.moysan@foss.st.com>,
-        <arnaud.pouliquen@foss.st.com>, <mchehab@kernel.org>,
-        <fabrice.gasnier@foss.st.com>, <andi.shyti@kernel.org>,
-        <ulf.hansson@linaro.org>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <hugues.fruchet@foss.st.com>, <lee@kernel.org>,
-        <will@kernel.org>, <catalin.marinas@arm.com>, <arnd@kernel.org>,
-        <richardcochran@gmail.com>, Frank Rowand <frowand.list@gmail.com>,
-        <peng.fan@oss.nxp.com>, <lars@metafoo.de>, <rcsekar@samsung.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>,
-        <linux-crypto@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <dmaengine@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <linux-media@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-serial@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-References: <20240105130404.301172-1-gatien.chevallier@foss.st.com>
- <61608010-fbce-46c6-a83d-94c04d0f000d@foss.st.com>
- <CAL_JsqJTiBK3qzdMzL-ZuARosKGqnf_PjyCj13_H=V415y9sHQ@mail.gmail.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <CAL_JsqJTiBK3qzdMzL-ZuARosKGqnf_PjyCj13_H=V415y9sHQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global
+ INVLPG flushes" is fixed by microcode
+To: Xi Ruoyao <xry111@xry111.site>, Sean Christopherson <seanjc@google.com>,
+ Michael Kelley <mhklinux@outlook.com>
+Cc: Dave Hansen <dave.hansen@intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Dexuan Cui <decui@microsoft.com>
+References: <20240324190503.116160-1-xry111@xry111.site>
+ <SN6PR02MB41576028614CB7FE9A11EBEBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <Zg7S5dk3J4Zc82nj@google.com>
+ <d1cc1f7c-9df0-4e3c-88ae-aedcd556ba95@citrix.com>
+ <Zg7jLn-lV55Yh6mH@google.com>
+ <SN6PR02MB415717D76F71C023A574841ED43C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <f8df14f3-ae6a-4e08-927a-7a7c2ebe8352@intel.com>
+ <SN6PR02MB4157FDA1C431A92873AA1AAED4002@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <ZhSdSwqUprIgLVtr@google.com>
+ <d82cf14a-e949-4265-ae37-ec01685e1080@citrix.com>
+ <8e12f79a8275ffa40858763acade4d54b3e96212.camel@xry111.site>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ xsFNBFLhNn8BEADVhE+Hb8i0GV6mihnnr/uiQQdPF8kUoFzCOPXkf7jQ5sLYeJa0cQi6Penp
+ VtiFYznTairnVsN5J+ujSTIb+OlMSJUWV4opS7WVNnxHbFTPYZVQ3erv7NKc2iVizCRZ2Kxn
+ srM1oPXWRic8BIAdYOKOloF2300SL/bIpeD+x7h3w9B/qez7nOin5NzkxgFoaUeIal12pXSR
+ Q354FKFoy6Vh96gc4VRqte3jw8mPuJQpfws+Pb+swvSf/i1q1+1I4jsRQQh2m6OTADHIqg2E
+ ofTYAEh7R5HfPx0EXoEDMdRjOeKn8+vvkAwhviWXTHlG3R1QkbE5M/oywnZ83udJmi+lxjJ5
+ YhQ5IzomvJ16H0Bq+TLyVLO/VRksp1VR9HxCzItLNCS8PdpYYz5TC204ViycobYU65WMpzWe
+ LFAGn8jSS25XIpqv0Y9k87dLbctKKA14Ifw2kq5OIVu2FuX+3i446JOa2vpCI9GcjCzi3oHV
+ e00bzYiHMIl0FICrNJU0Kjho8pdo0m2uxkn6SYEpogAy9pnatUlO+erL4LqFUO7GXSdBRbw5
+ gNt25XTLdSFuZtMxkY3tq8MFss5QnjhehCVPEpE6y9ZjI4XB8ad1G4oBHVGK5LMsvg22PfMJ
+ ISWFSHoF/B5+lHkCKWkFxZ0gZn33ju5n6/FOdEx4B8cMJt+cWwARAQABzSlBbmRyZXcgQ29v
+ cGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXguY29tPsLBegQTAQgAJAIbAwULCQgHAwUVCgkI
+ CwUWAgMBAAIeAQIXgAUCWKD95wIZAQAKCRBlw/kGpdefoHbdD/9AIoR3k6fKl+RFiFpyAhvO
+ 59ttDFI7nIAnlYngev2XUR3acFElJATHSDO0ju+hqWqAb8kVijXLops0gOfqt3VPZq9cuHlh
+ IMDquatGLzAadfFx2eQYIYT+FYuMoPZy/aTUazmJIDVxP7L383grjIkn+7tAv+qeDfE+txL4
+ SAm1UHNvmdfgL2/lcmL3xRh7sub3nJilM93RWX1Pe5LBSDXO45uzCGEdst6uSlzYR/MEr+5Z
+ JQQ32JV64zwvf/aKaagSQSQMYNX9JFgfZ3TKWC1KJQbX5ssoX/5hNLqxMcZV3TN7kU8I3kjK
+ mPec9+1nECOjjJSO/h4P0sBZyIUGfguwzhEeGf4sMCuSEM4xjCnwiBwftR17sr0spYcOpqET
+ ZGcAmyYcNjy6CYadNCnfR40vhhWuCfNCBzWnUW0lFoo12wb0YnzoOLjvfD6OL3JjIUJNOmJy
+ RCsJ5IA/Iz33RhSVRmROu+TztwuThClw63g7+hoyewv7BemKyuU6FTVhjjW+XUWmS/FzknSi
+ dAG+insr0746cTPpSkGl3KAXeWDGJzve7/SBBfyznWCMGaf8E2P1oOdIZRxHgWj0zNr1+ooF
+ /PzgLPiCI4OMUttTlEKChgbUTQ+5o0P080JojqfXwbPAyumbaYcQNiH1/xYbJdOFSiBv9rpt
+ TQTBLzDKXok86M7BTQRS4TZ/ARAAkgqudHsp+hd82UVkvgnlqZjzz2vyrYfz7bkPtXaGb9H4
+ Rfo7mQsEQavEBdWWjbga6eMnDqtu+FC+qeTGYebToxEyp2lKDSoAsvt8w82tIlP/EbmRbDVn
+ 7bhjBlfRcFjVYw8uVDPptT0TV47vpoCVkTwcyb6OltJrvg/QzV9f07DJswuda1JH3/qvYu0p
+ vjPnYvCq4NsqY2XSdAJ02HrdYPFtNyPEntu1n1KK+gJrstjtw7KsZ4ygXYrsm/oCBiVW/OgU
+ g/XIlGErkrxe4vQvJyVwg6YH653YTX5hLLUEL1NS4TCo47RP+wi6y+TnuAL36UtK/uFyEuPy
+ wwrDVcC4cIFhYSfsO0BumEI65yu7a8aHbGfq2lW251UcoU48Z27ZUUZd2Dr6O/n8poQHbaTd
+ 6bJJSjzGGHZVbRP9UQ3lkmkmc0+XCHmj5WhwNNYjgbbmML7y0fsJT5RgvefAIFfHBg7fTY/i
+ kBEimoUsTEQz+N4hbKwo1hULfVxDJStE4sbPhjbsPCrlXf6W9CxSyQ0qmZ2bXsLQYRj2xqd1
+ bpA+1o1j2N4/au1R/uSiUFjewJdT/LX1EklKDcQwpk06Af/N7VZtSfEJeRV04unbsKVXWZAk
+ uAJyDDKN99ziC0Wz5kcPyVD1HNf8bgaqGDzrv3TfYjwqayRFcMf7xJaL9xXedMcAEQEAAcLB
+ XwQYAQgACQUCUuE2fwIbDAAKCRBlw/kGpdefoG4XEACD1Qf/er8EA7g23HMxYWd3FXHThrVQ
+ HgiGdk5Yh632vjOm9L4sd/GCEACVQKjsu98e8o3ysitFlznEns5EAAXEbITrgKWXDDUWGYxd
+ pnjj2u+GkVdsOAGk0kxczX6s+VRBhpbBI2PWnOsRJgU2n10PZ3mZD4Xu9kU2IXYmuW+e5KCA
+ vTArRUdCrAtIa1k01sPipPPw6dfxx2e5asy21YOytzxuWFfJTGnVxZZSCyLUO83sh6OZhJkk
+ b9rxL9wPmpN/t2IPaEKoAc0FTQZS36wAMOXkBh24PQ9gaLJvfPKpNzGD8XWR5HHF0NLIJhgg
+ 4ZlEXQ2fVp3XrtocHqhu4UZR4koCijgB8sB7Tb0GCpwK+C4UePdFLfhKyRdSXuvY3AHJd4CP
+ 4JzW0Bzq/WXY3XMOzUTYApGQpnUpdOmuQSfpV9MQO+/jo7r6yPbxT7CwRS5dcQPzUiuHLK9i
+ nvjREdh84qycnx0/6dDroYhp0DFv4udxuAvt1h4wGwTPRQZerSm4xaYegEFusyhbZrI0U9tJ
+ B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
+ d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
+ 6+ahAA==
+In-Reply-To: <8e12f79a8275ffa40858763acade4d54b3e96212.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_03,2024-04-09_01,2023-05-22_02
 
-Hi Rob
+On 11/04/2024 6:38 am, Xi Ruoyao wrote:
+> On Tue, 2024-04-09 at 08:56 +0100, Andrew Cooper wrote:
+>> On 09/04/2024 2:43 am, Sean Christopherson wrote:
+>>> On Mon, Apr 08, 2024, Michael Kelley wrote:
+>>>> From: Dave Hansen <dave.hansen@intel.com> Sent: Thursday, April 4, 2024 11:09 AM
+>>>>> On 4/4/24 10:48, Michael Kelley wrote:
+>>>>>> I agree one could argue that it is a hypervisor bug to present PCID to the guest
+>>>>>> in this situation. It's a lot cleaner to not have a guest be checking FMS and
+>>>>>> microcode versions. But whether that's practical in the real world, at least
+>>>>>> for Hyper-V, I don't know. What's the real impact of running with PCID while
+>>>>>> the flaw is still present? I don’t know the history here ...
+>>>>> There's a chance that INVLPG will appear ineffective.
+>>>>>
+>>>>> The bad sequence would go something like this: The kernel does the
+>>>>> INVLPG on a global mapping.  Later, when switching PCIDs, the TLB entry
+>>>>> mysteriously reappears.  No PCIDs switching means no mysterious
+>>>>> reappearance.
+>>>> Xi Ruoyao's patch identifies these errata:  RPL042 and ADL063.  In the links
+>>>> to the documents Xi provided, both of these errata have the following
+>>>> statement in the Errata Details section:
+>>>>
+>>>>     This erratum does not apply in VMX non-root operation.  It applies only
+>>>>     when PCIDs are enabled and either in VMX root operation or outside
+>>>>     VMX operation.
+>>>>
+>>>> I don't have deep expertise on the terminology here, but this sounds
+>>>> like it is saying the erratum doesn’t apply in a guest VM.  Or am I
+>>>> misunderstanding?
+>>> Huh.  My read of that is the same as yours.  If that's the case, then it probably
+>>> makes sense to have KVM advertise support if PCID is available in hardware, even
+>>> if PCID is disabled by the host kernel.
+>> My reading is the same also.  Seems like VMs are fine.
+> So... Should I sent a v6 with the hypervisor checking reverted [ i.e.
+> always enable PCID if boot_cpu_has(X86_FEATURE_HYPERVISOR) ]?
 
-On 4/9/24 19:13, Rob Herring wrote:
-> On Mon, Apr 8, 2024 at 3:44 AM Alexandre TORGUE
-> <alexandre.torgue@foss.st.com> wrote:
->>
->> Hi Gatien,
->>
->> On 1/5/24 14:03, Gatien Chevallier wrote:
->>> Introduce STM32 Firewall framework for STM32MP1x and STM32MP2x
->>> platforms. STM32MP1x(ETZPC) and STM32MP2x(RIFSC) Firewall controllers
->>> register to the framework to offer firewall services such as access
->>> granting.
->>>
->>> This series of patches is a new approach on the previous STM32 system
->>> bus, history is available here:
->>> https://lore.kernel.org/lkml/20230127164040.1047583/
->>>
->>> The need for such framework arises from the fact that there are now
->>> multiple hardware firewalls implemented across multiple products.
->>> Drivers are shared between different products, using the same code.
->>> When it comes to firewalls, the purpose mostly stays the same: Protect
->>> hardware resources. But the implementation differs, and there are
->>> multiple types of firewalls: peripheral, memory, ...
->>>
->>> Some hardware firewall controllers such as the RIFSC implemented on
->>> STM32MP2x platforms may require to take ownership of a resource before
->>> being able to use it, hence the requirement for firewall services to
->>> take/release the ownership of such resources.
->>>
->>> On the other hand, hardware firewall configurations are becoming
->>> more and more complex. These mecanisms prevent platform crashes
->>> or other firewall-related incoveniences by denying access to some
->>> resources.
->>>
->>> The stm32 firewall framework offers an API that is defined in
->>> firewall controllers drivers to best fit the specificity of each
->>> firewall.
->>>
->>> For every peripherals protected by either the ETZPC or the RIFSC, the
->>> firewall framework checks the firewall controlelr registers to see if
->>> the peripheral's access is granted to the Linux kernel. If not, the
->>> peripheral is configured as secure, the node is marked populated,
->>> so that the driver is not probed for that device.
->>>
->>> The firewall framework relies on the access-controller device tree
->>> binding. It is used by peripherals to reference a domain access
->>> controller. In this case a firewall controller. The bus uses the ID
->>> referenced by the access-controller property to know where to look
->>> in the firewall to get the security configuration for the peripheral.
->>> This allows a device tree description rather than a hardcoded peripheral
->>> table in the bus driver.
->>>
->>> The STM32 ETZPC device is responsible for filtering accesses based on
->>> security level, or co-processor isolation for any resource connected
->>> to it.
->>>
->>> The RIFSC is responsible for filtering accesses based on Compartment
->>> ID / security level / privilege level for any resource connected to
->>> it.
->>>
->>> STM32MP13/15/25 SoC device tree files are updated in this series to
->>> implement this mecanism.
->>>
->>
->> ...
->>
->> After minor cosmetic fixes, series applied on stm32-next.
->> Seen with Arnd: it will be part on my next PR and will come through
->> arm-soc tree.
-> 
-> And there's some new warnings in next with it:
-> 
->        1  venc@480e0000: 'access-controllers' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
->        1  vdec@480d0000: 'access-controllers' does not match any of the
-> regexes: 'pinctrl-[0-9]+'
+If Linux can see a hypervisor, then yes it should be safe to use PCID.
 
-Yes I noticed it to my colleague. YAML update has been sent for VEND/VDENC.
-
-https://lore.kernel.org/lkml/171276671618.403884.13818480350194550959.robh@kernel.org/T/
-
-As soon as it is acked I could merge it in my tree.
-
-Alex
-
-> 
-> Rob
-
-
-
+~Andrew
