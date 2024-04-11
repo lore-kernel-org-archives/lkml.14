@@ -1,187 +1,152 @@
-Received: from mr4.vodafonemail.de (mr4.vodafonemail.de [145.253.228.164])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0E213E8A1;
-	Thu, 11 Apr 2024 07:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.253.228.164
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B106C13E8A1
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712822116; cv=none; b=suzdeQ1cKqkg7pCtrxPieW+wfgSp3koHs5fZ5ArJKnoVAe4kNpZ4Yy0+by6pQ6WHh0A+6bNBFLtXQDG8CbeZU6ij5OiY3kXa6OtMljVb+L8eq5FeUlHghl2FreDXfOYyx7aZrvRCSbF+w/B/+XF/J3ZoHKGxXni33sZMoKFldwU=
+	t=1712822136; cv=none; b=FxjbwPy/gU4fPHps2dXknA0fgSlPw3kD4GvXkTMOSYQcU3swC3C5UT9UbWVBhtOvGK4K92b2Rbabbi+l6Hs2ks/gGsRTBW+qnaYubt9Bi4PtR+8n9hK+PU1KTlhlHR4vsY+RGGjBUHbWsTvtGWwu/OTfc8z0C4iyNVtMZftw9yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712822116; c=relaxed/simple;
-	bh=Vf9bYYGypv9FbN+9XbupcrTchpbiruWl7TSDs4c4LfQ=;
-	h=Message-ID:From:To:Cc:References:In-Reply-To:Subject:Date:
-	 MIME-Version:Content-Type; b=JVXHMgt/vdqUo8x76dVzo5C7iWjg1dGnKCd3YeaqW+tiZv8UiSq9XcfpRn9IFpG9x9pWjulwb3UZ7Ei+2bl2JhW0L8UFk2eEaxG2+ux/LGbVzubyFP8oGJoq9ozEDs47liJqpPpdo49nSK1+popBlyz88rxTNlDFE00yJR79Wxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de; spf=pass smtp.mailfrom=nexgo.de; dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b=ByEFufFF; arc=none smtp.client-ip=145.253.228.164
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexgo.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexgo.de
+	s=arc-20240116; t=1712822136; c=relaxed/simple;
+	bh=q72lxMlvPxkQkV6vJrABmqrdyyrgnfqMg/dyvBCO1wg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qaWWwaEpnHEjf1kooR7svCGnBxH7XpwViUIjpnsXHT/FjTdxxHoJ6zSqA88rLdr0upHibN6RIi/Qricpfeo/KuKM1e66NrBx5l4AqnTW6MlC6gFerC8YGUAR1cnNwmL/DlV9LzbFHK1gAcTmgkbBv6z0lTQzAn97b+0+sGUzuFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G6V1glR2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexgo.de header.i=@nexgo.de header.b="ByEFufFF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nexgo.de;
-	s=vfde-mb-mr2-23sep; t=1712821648;
-	bh=OHW+Te4LEk/4CfJcGxAerYIwwgEc8XtDQqYGwFWpVHY=;
-	h=Message-ID:From:To:References:In-Reply-To:Subject:Date:
-	 Content-Type:X-Mailer:From;
-	b=ByEFufFFulZirbqQeBZHlqXY/Jt5tnRFDkQIpQ21oMYmMcSqWeJi8oBsBpYvxQKg3
-	 xPt2XQk6DQkxqeBzpr1a0u/Y/Ci0ColXtbI7oL1UsjQSDeaDAZLXcM10UN1QQXdTc1
-	 yNF2w359+AjUfuTCnJVElyJrpBzdJSwk2qRAGLdY=
-Received: from smtp.vodafone.de (unknown [10.0.0.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by mr4.vodafonemail.de (Postfix) with ESMTPS id 4VFWxr0RwVz1y9W;
-	Thu, 11 Apr 2024 07:47:28 +0000 (UTC)
-Received: from H270 (p54805648.dip0.t-ipconnect.de [84.128.86.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.vodafone.de (Postfix) with ESMTPSA id 4VFWxZ4RxJz9scP;
-	Thu, 11 Apr 2024 07:47:11 +0000 (UTC)
-Message-ID: <450F5ED9B5834B2EA883786C32E1A30E@H270>
-From: "Stefan Kanthak" <stefan.kanthak@nexgo.de>
-To: "Eric Biggers" <ebiggers@kernel.org>
-Cc: <linux-crypto@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<ardb@kernel.org>
-References: <20240409124216.9261-1-ebiggers@kernel.org> <20240409124216.9261-2-ebiggers@kernel.org> <C0FA88ECA90F43B1BF9E7849C53440D7@H270> <20240409233650.GA1609@quark.localdomain>
-In-Reply-To: <20240409233650.GA1609@quark.localdomain>
-Subject: Re: [PATCH 1/2] crypto: x86/sha256-ni - convert to use rounds macros
-Date: Thu, 11 Apr 2024 09:42:00 +0200
-Organization: Me, myself & IT
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G6V1glR2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712822133;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fPCoHgtiTKpu9ASaPWJaDAvA3d0JPvkanzrJssj2gso=;
+	b=G6V1glR2+43SxSDKhFJLNoaYEezxzp6XtmXr3jDsL+fA7Wqux9Zht3CaIL1L8LKebHlPz9
+	ir9N9usehY8FQkTLue1S56ui59nQKD+/qxNEamJouMRnn4VYhCFiS9XvGOky3Y/7qjsgR8
+	RhgmgwCuy7i12Vb0IhSaxA24g79es0o=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-173-_1CRU-W6ODCZcUC-Cu8ZXA-1; Thu, 11 Apr 2024 03:55:31 -0400
+X-MC-Unique: _1CRU-W6ODCZcUC-Cu8ZXA-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-346c08df987so171542f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:55:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712822131; x=1713426931;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fPCoHgtiTKpu9ASaPWJaDAvA3d0JPvkanzrJssj2gso=;
+        b=ZY5AOMYefiUxeYQGNt0zpkch0hawE7PwMX1a4/THiUlyL3zjmkgXFsWayahuLG1opn
+         9fFEcvkI5H1iZgWY5OFdMYkT5l2V08EJbzWFvpnZd4H9KHAAc8oL67+3mCV8GWWceuxm
+         s/AyFDsQvy1M/93V1G/wwpokRGGd3MQz0t8OKcWVo0alj/Z7KPrsntKNeHb1BCZfac62
+         WzUshf2kqMloY7u619fcLpOth8WEr9MuxdRsUm0riB9vzuNRsxCEy4fT8GUUTecFsKfS
+         xkRVeuhwkqwpToxPYkjpKbCm8kpoWEGax6Ve0D8+Rb70Dh+VooCxfT2sHUNy/liw+DCi
+         zGtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWadFmjpF9ECnVjTL/054NeyYC4W0i6UPuJPTC6TzRk4G55aUslwaV+PRkVWFcTWdDSU7TMLMHB5R+meEDVxFsyFgweiJMjCSWz1DhE
+X-Gm-Message-State: AOJu0YzA4fn/YG9t2zaoMQIxHeUy+DxoKUSb7E5aaGv92x/RvvO4Fptg
+	x+jorixkBvbWoOwqDjfZX0/XE5LUV0HQ0ZIq9FNUWFFlefv6Ltq4FX5wPnmJ+V5/5IJAOoswDtX
+	10KM2VzXBcGWVOEg0x9TFmY1y1xZYLwv7znT4rK6A98gGufQRlDf7jHmOhePh06GytdfoCg==
+X-Received: by 2002:a05:6000:4006:b0:346:47a6:e77e with SMTP id cp6-20020a056000400600b0034647a6e77emr1844097wrb.27.1712822130808;
+        Thu, 11 Apr 2024 00:55:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG9AmsYxXvXQXwEpsvnPg3XQSLSVayxSfS1yNRkFIPlc5W+1UJ5DZBa6f3wVBP1H8tON0S6WQ==
+X-Received: by 2002:a05:6000:4006:b0:346:47a6:e77e with SMTP id cp6-20020a056000400600b0034647a6e77emr1844074wrb.27.1712822130412;
+        Thu, 11 Apr 2024 00:55:30 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c724:4300:430f:1c83:1abc:1d66? (p200300cbc7244300430f1c831abc1d66.dip0.t-ipconnect.de. [2003:cb:c724:4300:430f:1c83:1abc:1d66])
+        by smtp.gmail.com with ESMTPSA id l15-20020a5d560f000000b0033ea499c645sm1150485wrv.4.2024.04.11.00.55.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 00:55:30 -0700 (PDT)
+Message-ID: <db95e01f-9334-4db8-8f8b-83f25a7dda87@redhat.com>
+Date: Thu, 11 Apr 2024 09:55:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="iso-8859-1"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/10] transfer page to folio in KSM
+To: alexs@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ zik.eidus@ravellosystems.com, willy@infradead.org, aarcange@redhat.com,
+ hughd@google.com, chrisw@sous-sol.org
+References: <20240411061713.1847574-1-alexs@kernel.org>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240411061713.1847574-1-alexs@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Windows Mail 6.0.6002.18197
-X-MimeOLE: Produced By Microsoft MimeOLE V6.1.7601.24158
-X-purgate-type: clean
-X-purgate: clean
-X-purgate-size: 4380
-X-purgate-ID: 155817::1712821643-BCFF7A47-8CAAE437/0/0
 
-"Eric Biggers" <ebiggers@kernel.org> wrote:
-
-> On Tue, Apr 09, 2024 at 06:52:02PM +0200, Stefan Kanthak wrote:
->> "Eric Biggers" <ebiggers@kernel.org> wrote:
->> 
->> > +.macro do_4rounds i, m0, m1, m2, m3
->> > +.if \i < 16
->> > +        movdqu  \i*4(DATA_PTR), MSG
->> > +        pshufb  SHUF_MASK, MSG
->> > +        movdqa  MSG, \m0
->> > +.else
->> > +        movdqa  \m0, MSG
->> > +.endif
->> > +        paddd   \i*4(SHA256CONSTANTS), MSG
->> 
->> To load the round constant independent from and parallel to the previous
->> instructions which use \m0 I recommend to change the first lines of the
->> do_4rounds macro as follows (this might save 1+ cycle per macro invocation,
->> and most obviously 2 lines):
->> 
->> .macro do_4rounds i, m0, m1, m2, m3
->> .if \i < 16
->>         movdqu  \i*4(DATA_PTR), \m0
->>         pshufb  SHUF_MASK, \m0
->> .endif
->>         movdqa  \i*4(SHA256CONSTANTS), MSG
->>         paddd   \m0, MSG
->> ...
+On 11.04.24 08:17, alexs@kernel.org wrote:
+> From: "Alex Shi (tencent)" <alexs@kernel.org>
 > 
-> Yes, your suggestion looks good.  I don't see any performance difference on
-> Ice Lake, but it does shorten the source code.  It belongs in a separate patch
-> though, since this patch isn't meant to change the output.
+> This is the first part of page to folio transfer on KSM. Since only
+> single page could be stored in KSM, we could safely transfer stable tree
+> pages to folios.
+> This patchset could reduce ksm.o 57kbytes from 2541776 bytes on latest
+> akpm/mm-stable branch with CONFIG_DEBUG_VM enabled. It pass the KSM testing
+> in LTP and kernel selftest.
 
-Hmmm... the output was already changed: 2 palignr/pblendw and 16 pshufd
-have been replaced with punpck?qdq, and 17 displacements changed.
+Just a nit (no need to address for this patch set): "transfer page to 
+folio" sounds very misleading to me. I'm not a native speaker, but I'd 
+have called this patch set
 
-Next simplification, and 5 more lines gone: replace the macro do_16rounds
-with a repetition
+"mm/ksm: convert some KSM code to use folios"
 
-@@ ...
--.macro do_16rounds i
--        do_4rounds (\i + 0),  MSGTMP0, MSGTMP1, MSGTMP2, MSGTMP3
--        do_4rounds (\i + 4),  MSGTMP1, MSGTMP2, MSGTMP3, MSGTMP0
--        do_4rounds (\i + 8),  MSGTMP2, MSGTMP3, MSGTMP0, MSGTMP1
--        do_4rounds (\i + 12), MSGTMP3, MSGTMP0, MSGTMP1, MSGTMP2
--.endm
--
-@@ ...
--        do_16rounds 0
--        do_16rounds 16
--        do_16rounds 32
--        do_16rounds 48
-+.irp i, 0, 16, 32, 48
-+        do_4rounds (\i + 0),  MSGTMP0, MSGTMP1, MSGTMP2, MSGTMP3
-+        do_4rounds (\i + 4),  MSGTMP1, MSGTMP2, MSGTMP3, MSGTMP0
-+        do_4rounds (\i + 8),  MSGTMP2, MSGTMP3, MSGTMP0, MSGTMP1
-+        do_4rounds (\i + 12), MSGTMP3, MSGTMP0, MSGTMP1, MSGTMP2
-+.endr
+It's rather code conversion/transformation, not a transfer.
 
-This doesn't change the instructions generated, so it belongs to this patch.
+But again, I'm not a native speaker ...
 
+-- 
+Cheers,
 
-The following suggestion changes instructions: AFAIK all processors which
-support the SHA extensions support AVX too
+David / dhildenb
 
-@@ ...
-+.ifnotdef AVX
-         movdqa          STATE0, MSGTMP4
-         punpcklqdq      STATE1, STATE0                  /* FEBA */
-         punpckhqdq      MSGTMP4, STATE1                 /* DCHG */
-         pshufd          $0x1B, STATE0,  STATE0          /* ABEF */
-         pshufd          $0xB1, STATE1,  STATE1          /* CDGH */
-+.else
-+        vpunpckhqdq     STATE0, STATE1, MSGTMP0         /* DCHG */
-+        vpunpcklqdq     STATE0, STATE1, MSGTMP1         /* BAFE */
-+        pshufd          $0xB1, MSGTMP0, STATE0          /* CDGH */
-+        pshufd          $0xB1, MSGTMP1, STATE1          /* ABEF */
-+.endif
-@@ ...
-+.ifnotdef AVX
-         movdqa  \i*4(SHA256CONSTANTS), MSG
-         paddd   \m0, MSG
-+.else
-+        vpaddd  \i*4(SHA256CONSTANTS), \m0, MSG
-+.endif
-@@ ...
-+.ifnotdef AVX
-         movdqa  \m0, MSGTMP4
-         palignr $4, \m3, MSGTMP4
-+.else
-+        vpalignr $4, \m3, \m0, MSGTMP4
-+.endif
-@@ ...
-+.ifnotdef AVX
-         movdqa          STATE1, MSGTMP4
-         punpcklqdq      STATE0, STATE1                  /* EFGH */
-         punpckhqdq      MSGTMP4, STATE0                 /* CDAB */
-         pshufd          $0x1B, STATE0,  STATE0          /* DCBA */
-         pshufd          $0xB1, STATE1,  STATE1          /* HGFE */
-+.else
-+        vpunpckhqdq     STATE0, STATE1, MSGTMP0         /* ABCD */
-+        vpunpcklqdq     STATE0, STATE1, MSGTMP1         /* EFGH */
-+        pshufd          $0x1B, MSGTMP0, STATE0          /* DCBA */
-+        pshufd          $0x1B, MSGTMP1, STATE1          /* HGFE */
-+.endif
-
-
-And last: are the "#define ... %xmm?" really necessary?
-
-- MSG can't be anything but %xmm0;
-- MSGTMP4 is despite its prefix MSG also used to shuffle STATE0 and STATE1,
-  so it should be named TMP instead (if kept);
-- MSGTMP0 to MSGTMP3 are the circular message schedule, they should be named
-  MSG0 to MSG3 instead (if kept).
-
-I suggest to remove at least those which are now encapsulated in the macro
-and the repetition.
-
-
-regards
-Stefan
