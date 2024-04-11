@@ -1,139 +1,117 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027781C6897
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C511E1C68B7
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849780; cv=none; b=IZB1XuGgtP+G/QBrTxXrLexVLnf0AL53x2miRFc0AeLb9L/DYN3SXA/kVfOj9xJLbHXjVOyj+NL3I20x56clHYbCFeMZ5nuIMNkNhhRxeQypXBDys9YruBXuXB+FYVj+karES9a7p4Fo9egvuv3qfqoK2d6RTmKlbGjMXUxsPe8=
+	t=1712849782; cv=none; b=QLa+65EHFqFMHpE8cw1mQU2bWdRDLLiyF3eUTNjwsWGKBZGanLwHWJfpfkL3JMlCIIRTYqNWM705f7kEiPSTdN9OGeYdKcgAHncK0ApDUbiIzMb/INcfW/galEhP6GP6eY0Ev5m2yN93CX+IirK0CDtnrjfhffHOYtZau0oM9IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849780; c=relaxed/simple;
-	bh=1TJUdxOn8SvAXo66++GiAauAMR1729Nqfb3kGJAZDIE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RDUSO93DCLQzy2Nemf8Fi581JXDxatLrxVVW8ZEzi+cfbuFcuHy24Gu7ahQ71zu8wgeYcsQxJh7vXN/9A+VIdVrNpzfXVKVu+k/pMvUfhqScdmfiyxzZt+YB2Iccp+FI1PZUY9q8iSsR5uzYgpqitXa5Fg0lJgaPzZlUbKrGyLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=nzORRSOT; arc=none smtp.client-ip=209.85.166.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="nzORRSOT"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d5ed700c2dso16163039f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849778; x=1713454578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBv8IDfSRUn7twlyubV+EXaW21C9+wFsBX7NFxTWmg8=;
-        b=nzORRSOTrAvyZa5xczWkuu7rcrMpH2Ow4epWZGpBEBzYqKkdiJitXCOPP91IBQVnN8
-         /KpOaCfZQExnP0AjRulGlWpckkQzSGOQ5kmNAIYDA9/EAI0Y1cJy85oaj2qXjHZ6BjQa
-         PcijK7WjzqSIizID2QKtOwK8lNxixrxlrmC0xraNqScKAgVHLXhvMAU6uiMSxEIwdIQV
-         D3KEsvBq8TcK/YBf8wN1jcn6ZGpyG+5tdJ4D76R/IvzNqjEA92l0rhJTm3iVUYiHXDRF
-         XvcIo0YZbxLYiVtZuZRMEISZOdCtD4BUVcUSBHVZSbuys53FKbNVpkIVysP9qFWiW+qk
-         SMKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849778; x=1713454578;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBv8IDfSRUn7twlyubV+EXaW21C9+wFsBX7NFxTWmg8=;
-        b=Mgq6qSGXliYXpmOoMk2zpOg7QvhnrpNnk2nritynJbauqXgNMXNTvXRPXpjUvTc6NR
-         kdcQKMFEWQOVVJi5GHbLWyJsnU7K+D7wmPXRWoeNOfcssW8Oa1Ma3vZAG5tcTU0gyJqe
-         p/Idulzug0sERYnfmNkex5Y5zFc2nxe1tP7Z/Rwz0XuGsHbvkvneTRCWWWPpSiNBw6n1
-         CsZOHam7uY8oi6zQEBwDBbIwXjMjIcn8meetpq6vHu2yHiuJhM5dAPZ6sulbrxQlT5xy
-         cohCkwt2jNrjPpsJKuKZ3MAVl+W7v7hVbIaRu1mUwqmPvpq72gZ8Nj1K+y3iuXBLpIps
-         VAxg==
-X-Gm-Message-State: AOJu0YxER+frnreifGoocOYXk3gpCmyjQ/h+9u4Mj4sDWEoe09vdkQ2G
-	/JAstBIFrB59fNKuZ5MMpqLjzYP2vwJ6L4a6NLF/3AL4UEMVJhaFHxbHu4nR4pM51cp8pEY7fD0
-	k
-X-Google-Smtp-Source: AGHT+IGMI/yfjAT3P3XF1d37Q192CNsL+f0/c34WOuNXUh+w+XXfzuRfJ1JP3RVpic8nNGkmIiHlXw==
-X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr161397ioh.1.1712849777808;
-        Thu, 11 Apr 2024 08:36:17 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:36:16 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 164/437] usb: host: ohci: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:04 -0600
-Message-ID: <20240411153126.16201-165-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	s=arc-20240116; t=1712849782; c=relaxed/simple;
+	bh=lSpO5N3OlyIzN7lj7ATsayB4xRn97x2Y1rSLv/7Juc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BGXOa9p0sC2afmas8EzB+MjZFkk0qpXBlx01PvuCmtMSP/BJkxe7aoJJSpIT6sdClH/L70ev+JYTCLrX2uMaLZ1aDHpbU5+nqr9OPH9rIBb8uPMXGrgKw32u4OAKOpv6vpDTj1Rug1eH2BFD0YTCnBmDtYvlFQ9QIydzPJRO4Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6FEC113E;
+	Thu, 11 Apr 2024 08:36:49 -0700 (PDT)
+Received: from [10.1.38.151] (XHFQ2J9959.cambridge.arm.com [10.1.38.151])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04FD43F6C4;
+	Thu, 11 Apr 2024 08:36:17 -0700 (PDT)
+Message-ID: <ccbcbbb5-24eb-4503-ac7b-3171d39536e7@arm.com>
+Date: Thu, 11 Apr 2024 16:36:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] mm: swap_pte_batch: add an output argument to
+ reture if all swap entries are exclusive
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>,
+ akpm@linux-foundation.org, linux-mm@kvack.org
+Cc: baolin.wang@linux.alibaba.com, chrisl@kernel.org, hanchuanhua@oppo.com,
+ hannes@cmpxchg.org, hughd@google.com, kasong@tencent.com, surenb@google.com,
+ v-songbaohua@oppo.com, willy@infradead.org, xiang@kernel.org,
+ ying.huang@intel.com, yosryahmed@google.com, yuzhao@google.com,
+ ziy@nvidia.com, linux-kernel@vger.kernel.org
+References: <20240409082631.187483-1-21cnbao@gmail.com>
+ <20240409082631.187483-4-21cnbao@gmail.com>
+ <744f795b-7ce8-40ab-911b-60906aa4fed1@arm.com>
+ <a5a55919-46bc-4107-a0fc-14dc404e8c90@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <a5a55919-46bc-4107-a0fc-14dc404e8c90@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/usb/host/ohci-dbg.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+On 11/04/2024 16:00, David Hildenbrand wrote:
+> On 11.04.24 16:54, Ryan Roberts wrote:
+>> On 09/04/2024 09:26, Barry Song wrote:
+>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>
+>>> Add a boolean argument named any_shared. If any of the swap entries are
+>>> non-exclusive, set any_shared to true. The function do_swap_page() can
+>>> then utilize this information to determine whether the entire large
+>>> folio can be reused.
+>>>
+>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>> ---
+>>>   mm/internal.h | 9 ++++++++-
+>>>   mm/madvise.c  | 2 +-
+>>>   mm/memory.c   | 2 +-
+>>>   3 files changed, 10 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/mm/internal.h b/mm/internal.h
+>>> index 9d3250b4a08a..cae39c372bfc 100644
+>>> --- a/mm/internal.h
+>>> +++ b/mm/internal.h
+>>> @@ -238,7 +238,8 @@ static inline pte_t pte_next_swp_offset(pte_t pte)
+>>>    *
+>>>    * Return: the number of table entries in the batch.
+>>>    */
+>>> -static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t pte)
+>>> +static inline int swap_pte_batch(pte_t *start_ptep, int max_nr, pte_t pte,
+>>> +                bool *any_shared)
+>>
+>> Please update the docs in the comment above this for the new param; follow
+>> folio_pte_batch()'s docs as a template.
+>>
+>>>   {
+>>>       pte_t expected_pte = pte_next_swp_offset(pte);
+>>>       const pte_t *end_ptep = start_ptep + max_nr;
+>>> @@ -248,12 +249,18 @@ static inline int swap_pte_batch(pte_t *start_ptep, int
+>>> max_nr, pte_t pte)
+>>>       VM_WARN_ON(!is_swap_pte(pte));
+>>>       VM_WARN_ON(non_swap_entry(pte_to_swp_entry(pte)));
+>>>   +    if (any_shared)
+>>> +        *any_shared |= !pte_swp_exclusive(pte);
+>>
+>> This is different from the approach in folio_pte_batch(). It inits *any_shared
+>> to false and does NOT include the value of the first pte. I think that's odd,
+>> personally and I prefer your approach. I'm not sure if there was a good reason
+>> that David chose the other approach?
+> 
+> Because in my case calling code does
+> 
+> nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
+>              &any_writable);
+> 
+> ...
+> 
+> if (any_writable)
+>     pte = pte_mkwrite(pte, src_vma);
+> 
+> ...
+> 
+> and later checks in another function pte_write().
+> 
+> So if the common pattern is that the original PTE will be used for checks, then
+> it doesn't make sense to unnecessary checks+setting for the first PTE.
 
-diff --git a/drivers/usb/host/ohci-dbg.c b/drivers/usb/host/ohci-dbg.c
-index 76bc8d56325d..dc40e655f824 100644
---- a/drivers/usb/host/ohci-dbg.c
-+++ b/drivers/usb/host/ohci-dbg.c
-@@ -361,27 +361,27 @@ static int debug_async_open(struct inode *, struct file *);
- static int debug_periodic_open(struct inode *, struct file *);
- static int debug_registers_open(struct inode *, struct file *);
- static int debug_async_open(struct inode *, struct file *);
--static ssize_t debug_output(struct file*, char __user*, size_t, loff_t*);
-+static ssize_t debug_output(struct kiocb *, struct iov_iter *);
- static int debug_close(struct inode *, struct file *);
- 
- static const struct file_operations debug_async_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_async_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
- static const struct file_operations debug_periodic_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_periodic_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
- static const struct file_operations debug_registers_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_registers_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
-@@ -701,10 +701,9 @@ static int fill_buffer(struct debug_buffer *buf)
- 	return ret;
- }
- 
--static ssize_t debug_output(struct file *file, char __user *user_buf,
--			size_t len, loff_t *offset)
-+static ssize_t debug_output(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct debug_buffer *buf = file->private_data;
-+	struct debug_buffer *buf = iocb->ki_filp->private_data;
- 	int ret;
- 
- 	mutex_lock(&buf->mutex);
-@@ -717,9 +716,7 @@ static ssize_t debug_output(struct file *file, char __user *user_buf,
- 	}
- 	mutex_unlock(&buf->mutex);
- 
--	ret = simple_read_from_buffer(user_buf, len, offset,
--				      buf->page, buf->count);
--
-+	ret = simple_copy_to_iter(buf->page, &iocb->ki_pos, buf->count, to);
- out:
- 	return ret;
- 
--- 
-2.43.0
+Yep understood. And I think adopting your semantics for any_shared actually
+simplifies the code in patch 4 too; I've just commented that.
+
+
 
