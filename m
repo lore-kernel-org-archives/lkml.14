@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D8F629E6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B532769314;
 	Thu, 11 Apr 2024 01:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712798787; cv=none; b=eKKZfxzTy5j/xer5CfwX3uBy4uYHwWpXRxV5vwYlwYJURozzbBhIcfKOyq7QjAgsBj5FVfC5nNJSm7uIZMW+BEX9vdYzsWeOiniKqPPjoXscHlec0oIq1BEIk7DZQrh31tYR4PAaZlitl4umn8OQO6wqwJ4qObmTn2iZpr0BJ70=
+	t=1712798787; cv=none; b=Mo2oEqnXZ8tukVHUHf8jf/T8SdNg5cHikzLtlnBkXb54Uo0rLEWzdmJJCFpxIW89N2dHM9JiayxLFMtgdUJgP6rIkXpREPTXcZfuAzQUFiUWzGG0smMxXX44AkYvz9TpECj+/NFgCFvfYLMcu2MbzX8vEdDMNodBdE+qlF6QqpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712798787; c=relaxed/simple;
-	bh=viBLZ0M/vmoMhCS+p6zv4rpqOP5As3oDZWwPYYlYQTg=;
+	bh=Ertzit/1teBML8ZsgAn3OsCPk/nGsMK+MB0FCFsLJMA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=WXmHmkU1NA+MEP6lXDkRLNnYkxpWLpQmUEbX+eEn9B5VcuF9Y62Nlvn6+R6OTKZ0rrYvaH9UqViWKcCvRbA/zBOdf8Cd/j/8h+4UQnK2AonPPJ35ylROKx92QGhxA7hwaFqJ10Xwr/jD0/uCuA81eOwQm2AZiNVXpZSAPPn6miI=
+	 Content-Type; b=IT1x/wX1tdwtMlG7VD7J7ABXmvfcsUSI/9fEvr+cCefJ3hiLIgpUqyPp4c44nMKFZpJgpRf2hJWyttkvWbpBpr2YgduErXj87YM/yUNR2wL6fzrE8DznDFVa9pRvBS30Iyj57mEgkkX/smP4VpXGW5PCYdoGDNwVP5WG0S6ModI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE941C41674;
-	Thu, 11 Apr 2024 01:26:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67857C4163B;
+	Thu, 11 Apr 2024 01:26:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rujFR-00000000nWQ-04Fy;
+	id 1rujFR-00000000nYu-3O3p;
 	Wed, 10 Apr 2024 21:29:05 -0400
-Message-ID: <20240411012904.873466915@goodmis.org>
+Message-ID: <20240411012905.668885748@goodmis.org>
 User-Agent: quilt/0.67
-Date: Wed, 10 Apr 2024 21:25:46 -0400
+Date: Wed, 10 Apr 2024 21:25:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -43,7 +43,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  "Paul E. McKenney" <paulmck@kernel.org>,
  David Howells <dhowells@redhat.com>
-Subject: [PATCH v2 05/11] ring-buffer: Add output of ring buffer meta page
+Subject: [PATCH v2 10/11] tracing: Handle old buffer mappings for event strings and functions
 References: <20240411012541.285904543@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,197 +55,113 @@ Content-Type: text/plain; charset=UTF-8
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Add a buffer_meta per-cpu file for the trace instance that is mapped to
-boot memory. This shows the current meta-data and can be used by user
-space tools to record off the current mappings to help reconstruct the
-ring buffer after a reboot.
+Use the saved text_delta and data_delta of a persistent memory mapped ring
+buffer that was saved from a previous boot, and use the delta in the trace
+event print output so that strings and functions show up normally.
 
-It does not expose any virtual addresses, just indexes into the sub-buffer
-pages.
+That is, for an event like trace_kmalloc() that prints the callsite via
+"%pS", if it used the address saved in the ring buffer it will not match
+the function that was saved in the previous boot if the kernel remaps
+itself between boots.
+
+For RCU events that point to saved static strings where only the address
+of the string is saved in the ring buffer, it too will be adjusted to
+point to where the string is on the current boot.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 77 ++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace.c       | 30 ++++++++++++++-
- kernel/trace/trace.h       |  2 +
- 3 files changed, 107 insertions(+), 2 deletions(-)
+ kernel/trace/trace.c | 42 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 39 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index db8762faef77..ee3a5c6966e2 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -32,6 +32,8 @@
- #include <asm/local64.h>
- #include <asm/local.h>
- 
-+#include "trace.h"
-+
- /*
-  * The "absolute" timestamp in the buffer is only 59 bits.
-  * If a clock has the 5 MSBs set, it needs to be saved and
-@@ -1635,6 +1637,81 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
- 	}
- }
- 
-+static void *rbm_start(struct seq_file *m, loff_t *pos)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val;
-+
-+	if (!meta)
-+		return NULL;
-+
-+	if (*pos > meta->nr_subbufs)
-+		return NULL;
-+
-+	val = *pos;
-+	val++;
-+
-+	return (void *)val;
-+}
-+
-+static void *rbm_next(struct seq_file *m, void *v, loff_t *pos)
-+{
-+	(*pos)++;
-+
-+	return rbm_start(m, pos);
-+}
-+
-+static int rb_meta_subbuf_idx(struct ring_buffer_meta *meta, void *subbuf);
-+
-+static int rbm_show(struct seq_file *m, void *v)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = m->private;
-+	struct ring_buffer_meta *meta = cpu_buffer->ring_meta;
-+	unsigned long val = (unsigned long)v;
-+
-+	if (val == 1) {
-+		seq_printf(m, "head_buffer:   %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->head_buffer));
-+		seq_printf(m, "commit_buffer: %d\n",
-+			   rb_meta_subbuf_idx(meta, (void *)meta->commit_buffer));
-+		seq_printf(m, "subbuf_size:   %d\n", meta->subbuf_size);
-+		seq_printf(m, "nr_subbufs:    %d\n", meta->nr_subbufs);
-+		return 0;
-+	}
-+
-+	val -= 2;
-+	seq_printf(m, "buffer[%ld]:    %d\n", val, meta->buffers[val]);
-+
-+	return 0;
-+}
-+
-+static void rbm_stop(struct seq_file *m, void *p)
-+{
-+}
-+
-+static const struct seq_operations rb_meta_seq_ops = {
-+	.start		= rbm_start,
-+	.next		= rbm_next,
-+	.show		= rbm_show,
-+	.stop		= rbm_stop,
-+};
-+
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu)
-+{
-+	struct seq_file *m;
-+	int ret;
-+
-+	ret = seq_open(file, &rb_meta_seq_ops);
-+	if (ret)
-+		return ret;
-+
-+	m = file->private_data;
-+	m->private = buffer->buffers[cpu];
-+
-+	return 0;
-+}
-+
- static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
- 		long nr_pages, struct list_head *pages)
- {
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 31067de977fc..b2b16be6e4ec 100644
+index 33ef5311fa39..bac5db67cf15 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -5018,7 +5018,7 @@ static int show_traces_open(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static int show_traces_release(struct inode *inode, struct file *file)
-+static int tracing_seq_release(struct inode *inode, struct file *file)
+@@ -3671,8 +3671,11 @@ static void test_can_verify(void)
+ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 			 va_list ap)
  {
- 	struct trace_array *tr = inode->i_private;
++	long text_delta = iter->tr->text_delta;
++	long data_delta = iter->tr->data_delta;
+ 	const char *p = fmt;
+ 	const char *str;
++	bool good;
+ 	int i, j;
  
-@@ -5059,7 +5059,7 @@ static const struct file_operations show_traces_fops = {
- 	.open		= show_traces_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
--	.release	= show_traces_release,
-+	.release	= tracing_seq_release,
- };
+ 	if (WARN_ON_ONCE(!fmt))
+@@ -3691,7 +3694,10 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
  
- static ssize_t
-@@ -6860,6 +6860,22 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
- }
+ 		j = 0;
  
-+static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
-+{
-+	struct trace_array *tr = inode->i_private;
-+	int cpu = tracing_get_cpu(inode);
-+	int ret;
+-		/* We only care about %s and variants */
++		/*
++		 * We only care about %s and variants
++		 * as well as %p[sS] if delta is non-zero
++		 */
+ 		for (i = 0; p[i]; i++) {
+ 			if (i + 1 >= iter->fmt_size) {
+ 				/*
+@@ -3720,6 +3726,11 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 				}
+ 				if (p[i+j] == 's')
+ 					break;
 +
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
++				if (text_delta && p[i+1] == 'p' &&
++				    ((p[i+2] == 's' || p[i+2] == 'S')))
++					break;
 +
-+	ret = ring_buffer_meta_seq_init(filp, tr->array_buffer.buffer, cpu);
-+	if (ret < 0)
-+		__trace_array_put(tr);
-+	return ret;
-+}
-+
- static ssize_t
- tracing_free_buffer_write(struct file *filp, const char __user *ubuf,
- 			  size_t cnt, loff_t *ppos)
-@@ -7436,6 +7452,13 @@ static const struct file_operations tracing_entries_fops = {
- 	.release	= tracing_release_generic_tr,
- };
+ 				star = false;
+ 			}
+ 			j = 0;
+@@ -3733,6 +3744,24 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		iter->fmt[i] = '\0';
+ 		trace_seq_vprintf(&iter->seq, iter->fmt, ap);
  
-+static const struct file_operations tracing_buffer_meta_fops = {
-+	.open		= tracing_buffer_meta_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= tracing_seq_release,
-+};
++		/* Add delta to %pS pointers */
++		if (p[i+1] == 'p') {
++			unsigned long addr;
++			char fmt[4];
 +
- static const struct file_operations tracing_total_entries_fops = {
- 	.open		= tracing_open_generic_tr,
- 	.read		= tracing_total_entries_read,
-@@ -8677,6 +8700,9 @@ tracing_init_tracefs_percpu(struct trace_array *tr, long cpu)
- 	trace_create_cpu_file("buffer_size_kb", TRACE_MODE_READ, d_cpu,
- 				tr, cpu, &tracing_entries_fops);
- 
-+	if (tr->range_addr_start)
-+		trace_create_cpu_file("buffer_meta", TRACE_MODE_READ, d_cpu,
-+				      tr, cpu, &tracing_buffer_meta_fops);
- #ifdef CONFIG_TRACER_SNAPSHOT
- 	if (!tr->range_addr_start) {
- 		trace_create_cpu_file("snapshot", TRACE_MODE_WRITE, d_cpu,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d22d7c3b770a..ccff4891c2ac 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -644,6 +644,8 @@ trace_buffer_lock_reserve(struct trace_buffer *buffer,
- 			  unsigned long len,
- 			  unsigned int trace_ctx);
- 
-+int ring_buffer_meta_seq_init(struct file *file, struct trace_buffer *buffer, int cpu);
++			fmt[0] = '%';
++			fmt[1] = 'p';
++			fmt[2] = p[i+2]; /* Either %ps or %pS */
++			fmt[3] = '\0';
 +
- struct trace_entry *tracing_get_trace_entry(struct trace_array *tr,
- 						struct trace_array_cpu *data);
++			addr = va_arg(ap, unsigned long);
++			addr += text_delta;
++			trace_seq_printf(&iter->seq, fmt, (void *)addr);
++
++			p += i + 3;
++			continue;
++		}
++
+ 		/*
+ 		 * If iter->seq is full, the above call no longer guarantees
+ 		 * that ap is in sync with fmt processing, and further calls
+@@ -3751,6 +3780,14 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		/* The ap now points to the string data of the %s */
+ 		str = va_arg(ap, const char *);
+ 
++		good = trace_safe_str(iter, str, star, len);
++
++		/* Could be from the last boot */
++		if (data_delta && !good) {
++			str += data_delta;
++			good = trace_safe_str(iter, str, star, len);
++		}
++
+ 		/*
+ 		 * If you hit this warning, it is likely that the
+ 		 * trace event in question used %s on a string that
+@@ -3760,8 +3797,7 @@ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 		 * instead. See samples/trace_events/trace-events-sample.h
+ 		 * for reference.
+ 		 */
+-		if (WARN_ONCE(!trace_safe_str(iter, str, star, len),
+-			      "fmt: '%s' current_buffer: '%s'",
++		if (WARN_ONCE(!good, "fmt: '%s' current_buffer: '%s'",
+ 			      fmt, seq_buf_str(&iter->seq.seq))) {
+ 			int ret;
  
 -- 
 2.43.0
