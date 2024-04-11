@@ -1,149 +1,190 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02olkn2032.outbound.protection.outlook.com [40.92.43.32])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E4B144D30;
-	Thu, 11 Apr 2024 09:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.43.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712827988; cv=fail; b=AbJ5msc/FHyS5ciTq5Fp3iD+hHwuSXCQfEJO1PNZ1drt4S8z64FFgL8bfmQpahAjxh7P4SUhEjfYyUMIkZdGo2y8gcRFjOZYrj6iBNTzTBTxUScUGogzWFEjiJylIBuXEodSss2XeOtXr+BryZlx6QWbZ3mya6mlN197jWKjzKU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712827988; c=relaxed/simple;
-	bh=zgqDq+eqVr0u1Y9y7W11rrZ6O4LvwhPHX5iryx8PFzk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FovRscn9rln2q6CKTt1ezhFhZb9+J1pKrblRsEeT9ii318rtmBD2Ul48gNMw1AADXZQ2aB+QDOjOXYfa7Jr5b/nKa95j/PuFfeWyQcodwHJ2Af0AamzxjGxGbc/LHEZOM4YbQV+doLuHSut8L8MNIu87Q75vJtcH2tYJzJrOvzI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=PwlXeffR; arc=fail smtp.client-ip=40.92.43.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB62F144D2A;
+	Thu, 11 Apr 2024 09:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712828004; cv=none; b=QC3tkd26JoJNBRpx7hnQh+sUkYE8MLhZuSW7ca/tYEzINS8fDxMXqlwekNEd+7344yw/qEdXCElFlpEAZB1my0PdwCxEPLNA8NP/9YsnA4jePydDSHWqlRk1ZRzuKJcFZ4YMRq9+TC8xQ5ibiQXTuOSdoPHI2ZfjkK+FOg6sOsE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712828004; c=relaxed/simple;
+	bh=NPUjbygY7dOut/w/ZBzQBO8x18aPGw21EDbfje4x9Wc=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FwA3pKH9beoMJ0Dmgod80pXJ0J7cSCxsyvp1AIFMWvI82lhHiaOadyRI2NFyNydMW5SmAI1Sf62BqfG3qwRm+nBvKTc2XKiAs8fqxtfXMtmlcApvjcXvciSHPceuqtvLFFLgEmS/nX3u/u9pKySL7CuPPBl5FP2i0RmGRn9kGNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gyt1CYYw; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="PwlXeffR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K3LwW1IhO1SudGzUYqlAGZD7YNlMtL2xagdmX51vBpLnYalr8proUwKy4a5qD6t/OrnUdhydhVy47dGoWwlYpWLyXi7XKycPsGxY1IMEf5nnzeq8R/EoS/6bJ+9AaftmxpJZ/lviQDWeDYNs9YcMvAA7rIeRHRFexBC8w+nai7LavqYrPg+CBRuYlALots9IO0widzyZB/+pryNb+nhwI1wvtblsap9a7Vt9NbmQOFAyTFlrv8d4zddvq+4SkqLf9zhfZXJdOCuu6DI2WdNIgdkM0/mrcrmt2/fGnN4DaSbXta7JlPtFr/TTAORwTOfTRZWP0kQKb7SBGIHFZq7Unw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aZDKVq0N/Pg2wETew1ZQfXqLkv08ThLu6QVXpB1WLkE=;
- b=VwwuO91JHZaHPf+kimKXLO5rOc4EZmKr84wAv2RViAkk/+/HBUs3dZHsKqzFoVzrgCFmTJRAM7o1vHOHCDe2AZSJmFvDQ7t/zGarOPjktfl/gnsTbFC56krRTO8aSFraXSzaJgj11Mw4zstAvGAK1N4Y11w2BA1VrPxZdDcHPqBYWltQ5LqZgUYeVuBQiN8kfKGmik0+UnqAvjXnVdwqO2EQAQ/ZgKkDUuznYGJ2uHFH/Ug9xelNSRxUN316zi406PE+IhhCk0mIDO4gRrs0WueDo66cUWe73JzyvA2M5LxTVGI5cbEdBiSRu2SxCeF+7A8SvOT2l+5GUhTbcTOoNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aZDKVq0N/Pg2wETew1ZQfXqLkv08ThLu6QVXpB1WLkE=;
- b=PwlXeffRI3fWroQLJV5okNHD9N4ulOWdT7bOgfu1dJVVTamcWfaipl+462uVZSJw3N0KRZSwqaFqsGQXHsjFRvWtlYpnzycqvoNw+70NfoyekQIGEkuUeWpFTYdPyht72wI646lKknwuJhvKZ9D61TkAFuCG8rxvKP2BdiI9/zW7WFhrNiFQZsErqgn4vcgl49j8l65h3XtOOoqgHFcaI9iyQGlW9BRHsvBWBvtaMPfu+1o/9DM1Mz9PekGNUteFLCSml9KJr8C4n7mR2ltFRaruWyLYGNJRqq+9FxOT4Hfx8CJDiV+gt0liu76FytfDuGp5gLoC8S2OfvS4+kGtbg==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by DM4PR20MB4727.namprd20.prod.outlook.com (2603:10b6:8:b1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
- 2024 09:33:04 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
- 09:33:04 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Chen Wang <unicorn_wang@outlook.com>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Inochi Amaoto <inochiama@outlook.com>
-Cc: Jisheng Zhang <jszhang@kernel.org>,
-	Liu Gui <kenneth.liu@sophgo.com>,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
-	dlan@gentoo.org,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] riscv: sophgo: add i2c and spi device to CV180x/SG2000x SoCs
-Date: Thu, 11 Apr 2024 17:33:23 +0800
-Message-ID:
- <IA1PR20MB4953D0B75F3166917EDA0524BB052@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <IA1PR20MB49539A9C5F5CFF6644ED2C2ABB442@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <IA1PR20MB49539A9C5F5CFF6644ED2C2ABB442@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gyt1CYYw"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43B91IU7011364;
+	Thu, 11 Apr 2024 09:33:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=GNfbBQyMK7y6+Ln1Yl3MWg1C2ZKWaofyJvThpeHIeB4=;
+ b=gyt1CYYwYp7U/XDm2LaIZ+8nuGFUcIG2KOgilFgsKCEYvlmQRZBAu2aL9o78kl6KkP7H
+ iyF+NytN3lT8V97mEKxeMqTHobv0Jv+aUDgz/iPWQOIBCuJWqFiB3YB3RKZWk99EZlXO
+ SPz3ZHn575u4sN8QEdlUpFOzPP0ahxcpSpFnyEC77QrQxwmH/femkZF41+5wV/v7ONRm
+ jUKJGSairtA1nwmPnSm74kHPYrJum7Qrgre9hXTUz4kFRrG32HDmyK8tQP/t7msddAGq
+ MR6Ib38LwqkW4p4OtpB2DOS0GKjjjfij/EfOMupbUE+fdY/Hc9an0je0dYzDDIHseLYm Cw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xeap80d1g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Apr 2024 09:33:12 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 43B9XBWY030359;
+	Thu, 11 Apr 2024 09:33:11 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xeap80d1c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Apr 2024 09:33:11 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43B7xEFt017031;
+	Thu, 11 Apr 2024 09:33:10 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xbke2sxdu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Apr 2024 09:33:10 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43B9X7t119923690
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 09:33:09 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C630B58066;
+	Thu, 11 Apr 2024 09:33:05 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6BCE958072;
+	Thu, 11 Apr 2024 09:33:02 +0000 (GMT)
+Received: from [9.179.30.10] (unknown [9.179.30.10])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 11 Apr 2024 09:33:02 +0000 (GMT)
+Message-ID: <ddd181fc-307f-4c2f-bc9b-6941a17f16d9@linux.ibm.com>
+Date: Thu, 11 Apr 2024 11:32:58 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH net-next v5 00/11] net/smc: SMC intra-OS shortcut with
+ loopback-ism
+Content-Language: en-GB
+To: Wen Gu <guwen@linux.alibaba.com>, Gerd Bayer <gbayer@linux.ibm.com>,
+        jaka@linux.ibm.com
+Cc: wintera@linux.ibm.com, twinkler@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20240324135522.108564-1-guwen@linux.alibaba.com>
+ <ae3ea4bc-4a9c-416e-a593-2885fea96ae5@linux.alibaba.com>
+ <27deaa5dbb30c467fcdaa0667ef39da86bcee03f.camel@linux.ibm.com>
+ <fc274220-cb6e-43be-aa76-69e37449e535@linux.alibaba.com>
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <fc274220-cb6e-43be-aa76-69e37449e535@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: BSFtNKy1vmi4bC4EQpAeMyxktRppxZCx
+X-Proofpoint-ORIG-GUID: JB91-AKHYEvEA27xqbpBi3V2FdwQY33H
 Content-Transfer-Encoding: 8bit
-X-TMN: [XUyl0fX9uQ7exBqKy2iOb+TD08wrEC7XfxzYbHsw7UU=]
-X-ClientProxiedBy: TYAPR01CA0108.jpnprd01.prod.outlook.com
- (2603:1096:404:2a::24) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <171282797355.638379.7504915185168452805.b4-ty@outlook.com>
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|DM4PR20MB4727:EE_
-X-MS-Office365-Filtering-Correlation-Id: afdc9bf3-a520-4180-1636-08dc5a0a6319
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	DT5Ofux9KPuJNKSVXm93r7Z6rjW/L5+c7B0i2FtjSN1QZ/OVLb7tWNyVQYJfAJRUgsfWCeKqfWN6AbLLFZSGtlR8fwK5f+2gxobf0UbQi2eKQZqEKTiure/WSWa0r++eJScUe5mKMsn8KB0xd39aTQwi462OcIQ0WvX5u7Tt2lLehGbnT+jmiMrG20yoUgWOLFbwdLG74FibtyBVBH2Yo8vGgc+QLZuQ9Zj16TtNFnXGHHzZFpF5A/tZ9i0BEg3uZsMMVo2VHTN+F9TVRXR0fai8d4KWUNoaVBup0BRVWyO495Sx3z4eRASR48jiv21w+E5YB1mOLHYBUSxBY2DAXMOFSpz7QrfrA2xGRjUzlTxdbCW3JUnTEntutpD7gCXMV45nN8TQdHcISte/mvw+ey3Omu8nSqAxHZQjP5hf7UZEx/6EfLNabe9hWEYs4sMxN32C6jwKcuGnlHbdHDqwSaypwyIagzwhyawFM5yZz2p4ZDWYBS6e7ZvNMPi9hG0mPJ7k4ug45hVUqBnuCgYcNTFBtNUup0vU7xXuW7cRj7gbql8KGUisdg3Ed426X7TvhhUzGOX60IKT4IATyVomWxAe9UaHup9GwW/9VZo9yFjsQZyhdF1Bpd6pD9yMH0jvpICl85XwWKUwMNWClI/CHIgxsyD5NSQnF2jOqckQBJCH5v1BpbWYjpN6nXiKkWHo
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YmFqYS9xMU5SK0MrWHpRL1BWTTYzQzBCL3JiV0Q4ekFOd0NUeHBGcEJVTnMy?=
- =?utf-8?B?ZzFta080dHliZXkwRWVCNHM2N2pZQzVnS2lHOXhJZ0p0TTVGdzB0dTZFeFFR?=
- =?utf-8?B?SGp3N0YwZThkL2puVzN6bFNzY01Qc1pOeWg5OEJYRGlSeVJ4U1RhQzNlOXJP?=
- =?utf-8?B?b0ZQSmxDZTVzZEp1WGZIRUNlNi8zbkZZb0svRXNVOVZPc1VQS3ozSWM5QllF?=
- =?utf-8?B?MDluWDV4M2MxSGZHN2l3aDVkQjlKYmlCRFp1Q3RYcnl2a2FQU3JmUDNOUHJZ?=
- =?utf-8?B?ZlBaMncyMjJwWi9HMmxPZ1Y2dzZSRjJybW9NMHhLd3JVOFgvNGRtL3BwcWdp?=
- =?utf-8?B?Yy9LV241OEpsbGxtSHNhSDQxT2hVa0ZEdTZSNkNDRkFOaWdwclRINUJocVZP?=
- =?utf-8?B?d3A0NWg4Z3B5b0dxQjUrb1NTTExzVmlrUUExbmlsVkM4TFZxbjlUVnNKRXJr?=
- =?utf-8?B?SHpZaWpzckd3M2xuTkF4N01PT3BpdlJCRjBUTURTQm9XMHF3U2pBTi9qZHNi?=
- =?utf-8?B?aFhBR1hISnMxeWs5MU4vd1BPZDNnUUVBRC8ybkQ5cm1nUWNLWU41VVdiaEQ0?=
- =?utf-8?B?bGZtdXp6emltd095YVd6aHRqaHhYUElycjR4MHVJYVZPL3dhTGhDNFdELzdD?=
- =?utf-8?B?SlVFT01WUzhCVEYvY2tpNjNTOHdPS1RJcHVKM2U4cHA5bGNMQ25mWlZGc2hj?=
- =?utf-8?B?MzRNS0RkRUxiNHhlZGRSV0FRRWczb05IN0h5RDhpR0c0SExYQTg1c2pUbWVC?=
- =?utf-8?B?anN4dzdYY3ZiRjcrbEhyczV4K3Q5YU93Q202U0V2Z1N3enF4WFlwNjlUQ2gy?=
- =?utf-8?B?MXZVdDlOMEZpd0h2N3FkblV1bUs0RnRLYlVISDlsNlFlcVUxeFlTY1RLV1Rj?=
- =?utf-8?B?aEFoR0wxUzEzR3RUTys2WHhCR2dxZmh4WUs1ck00NXZaWEFzb0FGQzQ4RW1r?=
- =?utf-8?B?d3BVaUo3eWxWcDZ2Tlo5T3ZzWFhLdXd6MFFER0lRZlphV0hGOE1MNGlzb0dM?=
- =?utf-8?B?NWJsY0ROMzdId2ZmUG4rT3ovdUcwY2RSRWl3RG9ka01ycFJkeFNWT3Q3UHlJ?=
- =?utf-8?B?UjJhcDk0Q1I4cWhKb0x5bUFzU3BkT1V2c2w2V1I3azluUVJvbzdLbGdMNjBJ?=
- =?utf-8?B?VnFOcURzcVZLZkw5Q2t5WU83SU9qTmY4bWlFWXB4SzVjb2U5U3Jld2lqMGQ4?=
- =?utf-8?B?Mk5DcVcxbUlIcytkT1hzRTU2UHBiYmpEZjJFdHNKUEJTTnJVaVBLWFFhN0FI?=
- =?utf-8?B?NWNyRjJQUTNxZE12SXhrNDd6NzJVRTJsQ25kdUNBRysxcFlzSnZaM1hFVi9y?=
- =?utf-8?B?RE50eUMvLzBOaE56RFNrekVGRWR4SmZKbEtxSEVtUmlwdHQrVTBzL3RvZGJD?=
- =?utf-8?B?WUEwY1ZVQmZVZ1NHWVlFSEtMWXZyYlRvNnJaaFNkVXNQenFPdUVTeDR6UXha?=
- =?utf-8?B?NXN1eEhkVEs5TGFaaEZXeVRUNDFMM3d0c1J5T1NFbW41WjFhb1RGTWw4RUtW?=
- =?utf-8?B?Y2FBcmJaVDBvQVdaQXJDY3JXOG56R3RzVHFtMC9tblBINStPZ2NacGlCbW5q?=
- =?utf-8?B?S0Fua1hWdFpSTGN4M2VoR3hXaUZqR01idi80cmV5RU9LOUk4MWRMTWhUK1lx?=
- =?utf-8?B?RmR5dHpLWU9mOHEvNlNjYjNQN01UR04yRnpRYi9uTGFNZFEvcExpcnIvNHps?=
- =?utf-8?Q?rLDksMxfsfDYLZ/uHHWw?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: afdc9bf3-a520-4180-1636-08dc5a0a6319
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 09:33:04.0229
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR20MB4727
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-11_03,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ clxscore=1011 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 priorityscore=1501 mlxscore=0 adultscore=0 mlxlogscore=999
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404110068
 
-On Thu, 8 Feb 2024 08:21:29 +0800, Inochi Amaoto wrote:
-> Add i2c and spi devices
-> 
-> The patch depends on the clk patch:
-> https://lore.kernel.org/all/IA1PR20MB4953C774D41EDF1EADB6EC18BB6D2@IA1PR20MB4953.namprd20.prod.outlook.com/
-> 
-> Changed from v1:
-> 1. adjust the order of properties in dts.
-> 
-> [...]
 
-Applied to sophgo/for-next, thanks!
 
-[1/2] riscv: dts: sophgo: cv18xx: Add spi devices
-      https://github.com/sophgo/linux/commit/4281f8f1489951a97af856e360c5d0bb8dc43096
-[2/2] riscv: dts: sophgo: cv18xx: Add i2c devices
-      https://github.com/sophgo/linux/commit/65fcc08b4cfe92d5d2c39710b3145d0b56e8391d
+On 11.04.24 09:45, Wen Gu wrote:
+> 
+> 
+> On 2024/4/3 19:10, Gerd Bayer wrote:
+>> On Wed, 2024-04-03 at 14:35 +0800, Wen Gu wrote:
+>>>
+>>>
+>>> On 2024/3/24 21:55, Wen Gu wrote:
+>>>> This patch set acts as the second part of the new version of [1]
+>>>> (The first
+>>>> part can be referred from [2]), the updated things of this version
+>>>> are listed
+>>>> at the end.
+>>>
+>>>> Change log:
+>>>>
+>>>> RFC v5->RFC v4:
+>>>> - Patch #2: minor changes in description of config SMC_LO and
+>>>> comments.
+>>>> - Patch #10: minor changes in comments and
+>>>> if(smc_ism_support_dmb_nocopy())
+>>>>     check in smcd_cdc_msg_send().
+>>>> - Patch #3: change smc_lo_generate_id() to smc_lo_generate_ids()
+>>>> and SMC_LO_CHID
+>>>>     to SMC_LO_RESERVED_CHID.
+>>>> - Patch #5: memcpy while holding the ldev->dmb_ht_lock.
+>>>> - Some expression changes in commit logs.
+>>>>
+>>>
+>>> Hi, Jan. Do you have any comments on this version and should I post a
+>>> new patch series without 'RFC'? Thank you.
+>>
+>> Hi Wen,
+>>
+>> Jan has been out sick for a little while now, and Wenjia is expected
+>> back from a longer vacation tomorrow. So if you could hold off until
+>> begin of next week, Wenjia might have some more feedback.
+>>
+>> In the meantime, I'm looking at your patchset...
+>>
+>> Thank you, Gerd
+>>
+> 
+> Hi Gerd, is there any further information? I am wondering if I
+> should wait for more feedback from SMC maintainers. Thanks!
+> 
+> 
+> Hi Wenjia, when it's convenient for you, could you please confirm
+> if [1] and [2] need to be included in the next version? Thanks!
+> 
+> [1] 
+> https://lore.kernel.org/netdev/7291dd1b2d16fd9bbd90988ac5bcc3a46d17e3f4.camel@linux.ibm.com/
+> [2] 
+> https://lore.kernel.org/netdev/60b4aec0b4bf4474d651b653c86c280dafc4518a.camel@linux.ibm.com/
+> 
+
+Hi Wen,
+
+I'm just back, thank you for the patience!
+
+Firstly I want to thank Gerd and Niklas for review and bringing up these 
+points!
+
+Here are some of my options on that:
+
+To [1]:
+I agree to document the ops as otional if it must not be supported. 
+Since I don't really have any ideas, the classification souds reasonable 
+to me. Going to the details, what about to take following options as 
+mandatory:
+
+* query_remote_gid()
+* register_dmb()/unregister_dmb()
+* move_data() : I do see the necessary here.
+* get_local_gid()
+* get_chid()
+* get_dev()
+
+To [2]:
+I also agree to keep the ism-loopback at the very beginning of the List. 
+That acting is also what I imaged previously. Thank you, gerd, again for 
+testing it and find it out!
 
 Thanks,
-Inochi
-
+Wenjia
