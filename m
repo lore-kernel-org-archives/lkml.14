@@ -1,108 +1,317 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52465161301
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC851649D3;
+	Thu, 11 Apr 2024 15:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849746; cv=none; b=UUV00mka+8bBoeM593Wvxgwh9inWOnFVgm1zRnqW2eidrwnneDiDg1v1Cw5h4XYlr3s0dSCF9L9+5KWCsT7RxkhYBjQi5llsKRmBll3xaU+HUz020VHs3hUQnhbBUM+f3qSYA42LM9r1lNoJjNJsAuSX6MgbYGOD3pRSMpb2Ms4=
+	t=1712849746; cv=none; b=cLsOanCzh+gc9KR8k2YL+AToBqsLrutxw5vErkzj5ACYeNMnpOWidDHJQE9GvH5nz86XaoJ9VmOAevw41N5n1Mte8O+//KH3fdu3URMggjj4TWltb9HrpOYwLvrVSa8pEcn6oC4sWJU9I3mLh+oqNeHAV+Ts7paqyJrw9iQEXZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712849746; c=relaxed/simple;
-	bh=lFWKPmtADZ77fK4ueBYj9oz0C6yf67EywTWQwCps9UA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SsMz6vJPOPIwBpmZw/jjUBbVqoAfEsUHsbjK2EeTiMf+x7lA/LtMgwGpQ0C3OufLrQSGGP1OkEFrTvB9/rnHSyjTeRHS/kRguKuLtjqbG+US+DV+iOyuQeafkG8V63T/1zJrqh7sNeJGLbdq0uv+E5SMD9mbhO+B9CAR6KxEK2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=r3DjbFjr; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	bh=BkVLzO5ab9hdqdrtlid2lBANXaXcdaYaXGzsDD/ESxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hCO1X9NHk7cpu6kyXx4o5UOLQWaFSrxmZ6eUVd0iwAyn6BDn2d/PMuKBubJ4FB/AVJ3KSFtq14anxxkd6pxZZnAdZfR2DmXYwET7vbISvkZkZ3qm2hJYM4Vx1A/lHQXLDKETz7uY8YVU6C6/y9RR0z4L78H0HdqP4gTMm8gmCFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DIvBX9cz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="r3DjbFjr"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7d5ed700c2dso16150739f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849744; x=1713454544; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n6mqJFUy2iUjIxDPhjI3lLEspk5VVjXPoCyQkSzQDwo=;
-        b=r3DjbFjrBt6yGwH+hg/z8ES1Q8tTQPLNmHRSOHV+7ZjWgQZhSZdzJ550Pq39oMKaMl
-         qSq2r9a/omp3d7VnhCjzSMjghj5pfywM9qUE0h24aKxvG0j0abs5BkcN+n/uLFbNC4Uc
-         KdB+qKoeAY/GkVFTLWcEZnKlYBafR3pheY1kYMCrIRg1T4S3BNVr2mHyvnkk6viDKOVv
-         mEcsypP4OmxKJ79t/MpR0IZqYzZV0aYw6pqbTzxdv9/GbWd2xz7LK1ibYzVUBjgnNyvv
-         Dk/wq4y4eS+z5BPloHBANNROxu+kqLliO3IpJ3pfCWmJ7E8nrr6a1Sf4bNwVSfcDCY2o
-         LzQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849744; x=1713454544;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n6mqJFUy2iUjIxDPhjI3lLEspk5VVjXPoCyQkSzQDwo=;
-        b=kqaFKapDgwv0jSermPJ88JWKFsb9FjBOhwD32pyBy5FI7kW4V8MmITvVRhDARmK1gj
-         ZcEWpAG2wsS/9zJCd1nSZGLZfGuLlodTXtzMi0iawt5tU9pP+3Ds4S5kGZ1ldwJeXL47
-         H8od6P93EDcHqorUzc8M8RUa+kd4ZsxbFkSokj0KHVdIlKY9S0SnCQ4udK6QhJTufm6S
-         6SUEi9Dk4CBBoY65hvYLWspN1bqQAJU1gRoFJROm7jOdUhVcgDLYRvqUZT9eXLSh/+nu
-         xZD7qn8pgRTykq7Uj3x0t4npNoWyiSV1DsuA3/qMkukAILHtGflCQ+TaUOX0/PmSiiZe
-         oDjw==
-X-Gm-Message-State: AOJu0YzyKdZo/s7K/eNMmtoMqNQgYAeJALFwP+sI+EW8aPQrqnyuM08h
-	oeJ+oOhPUiqxP3KAvAjjOWdSOJEByVchUCBtmYtfZKHpGFzrq3AXEcC04fYLgms0Cm01hkFbGKI
-	k
-X-Google-Smtp-Source: AGHT+IEKVU5p0lHw7ZbqDjprrXcw8tYzsPT3YOqu+wDxZN8OtyLpvHMqI1us2mx4quV/CJL6eoFcmA==
-X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr182837iov.2.1712849744086;
-        Thu, 11 Apr 2024 08:35:44 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.35.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:35:42 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 145/437] drm/imagination: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:45 -0600
-Message-ID: <20240411153126.16201-146-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DIvBX9cz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0BAAC072AA;
+	Thu, 11 Apr 2024 15:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712849745;
+	bh=BkVLzO5ab9hdqdrtlid2lBANXaXcdaYaXGzsDD/ESxY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DIvBX9czkfrLh7m/HK/UjJH61NULoTIeAeWLYc5bn9LpZvbCmboTIDNHxNheNzwlo
+	 AssMoufN2ujwMpdkzLmYIHYeAf78UGopCO9csScJvxvKy0DGvtwEyQbzIAvvPX4PIz
+	 fmLw4ioeRL3p/lq4SIKjZoQ1Oeep9Ksa/wsFpft5jNPSusA9y0e/gGTdeeDrAzY96s
+	 7y+N5frso/yEJQre3G6QiYydrzDeapMo+2PNQ3LapJ4sHpc4mYVCWjJXd5cpmClc9e
+	 XO3TOmJLoX74helwu+LHdvu9aWOlTy5PLWahVY4xQE9/ycefb7sMlowdyH5YOFrDpQ
+	 /mRNM5U/8JOqw==
+Date: Thu, 11 Apr 2024 09:35:42 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] smb: smb2pdu.h: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <ZhgDTj1nwLEtSd9h@neat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+-Wflex-array-member-not-at-end is coming in GCC-14, and we are getting
+ready to enable it globally.
+
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `__struct_group()` helper
+to separate the flexible array from the rest of the members in the
+flexible structure, and use the tagged `struct create_context_hdr`
+instead of `struct create_context`.
+
+So, with these changes, fix 51 of the following warnings[1]:
+
+fs/smb/client/../common/smb2pdu.h:1225:31: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Link: https://gist.github.com/GustavoARSilva/772526a39be3dd4db39e71497f0a9893 [1]
+Link: https://github.com/KSPP/linux/issues/202
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/imagination/pvr_fw_trace.c | 2 +-
- drivers/gpu/drm/imagination/pvr_params.c   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ fs/smb/client/smb2pdu.h | 12 ++++++------
+ fs/smb/common/smb2pdu.h | 33 ++++++++++++++++++---------------
+ fs/smb/server/smb2pdu.h | 18 +++++++++---------
+ 3 files changed, 33 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/imagination/pvr_fw_trace.c b/drivers/gpu/drm/imagination/pvr_fw_trace.c
-index 31199e45b72e..ff5827dd6390 100644
---- a/drivers/gpu/drm/imagination/pvr_fw_trace.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw_trace.c
-@@ -438,7 +438,7 @@ static int fw_trace_release(struct inode *inode, struct file *file)
- static const struct file_operations pvr_fw_trace_fops = {
- 	.owner = THIS_MODULE,
- 	.open = fw_trace_open,
--	.read = seq_read,
-+	.read_iter = seq_read_iter,
- 	.llseek = seq_lseek,
- 	.release = fw_trace_release,
+diff --git a/fs/smb/client/smb2pdu.h b/fs/smb/client/smb2pdu.h
+index c72a3b2886b7..1a02bd9e0c00 100644
+--- a/fs/smb/client/smb2pdu.h
++++ b/fs/smb/client/smb2pdu.h
+@@ -145,7 +145,7 @@ struct durable_context_v2 {
+ } __packed;
+ 
+ struct create_durable_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct durable_context_v2 dcontext;
+ } __packed;
+@@ -167,7 +167,7 @@ struct durable_reconnect_context_v2_rsp {
+ } __packed;
+ 
+ struct create_durable_handle_reconnect_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct durable_reconnect_context_v2 dcontext;
+ 	__u8   Pad[4];
+@@ -175,7 +175,7 @@ struct create_durable_handle_reconnect_v2 {
+ 
+ /* See MS-SMB2 2.2.13.2.5 */
+ struct crt_twarp_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ 	__le64	Timestamp;
+ 
+@@ -183,12 +183,12 @@ struct crt_twarp_ctxt {
+ 
+ /* See MS-SMB2 2.2.13.2.9 */
+ struct crt_query_id_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ } __packed;
+ 
+ struct crt_sd_ctxt {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8	Name[8];
+ 	struct smb3_sd sd;
+ } __packed;
+@@ -415,7 +415,7 @@ struct smb2_posix_info_parsed {
  };
-diff --git a/drivers/gpu/drm/imagination/pvr_params.c b/drivers/gpu/drm/imagination/pvr_params.c
-index b91759f362c5..4fe0105ca0c9 100644
---- a/drivers/gpu/drm/imagination/pvr_params.c
-+++ b/drivers/gpu/drm/imagination/pvr_params.c
-@@ -119,8 +119,8 @@ static struct {
- 		.owner = THIS_MODULE,                      \
- 		.open = __pvr_device_param_##name_##_open, \
- 		.release = simple_attr_release,            \
--		.read = simple_attr_read,                  \
--		.write = simple_attr_write,                \
-+		.read_iter = simple_attr_read_iter,        \
-+		.write_iter = simple_attr_write_iter,      \
- 		.llseek = generic_file_llseek,             \
- 	},
- 	PVR_DEVICE_PARAMS
+ 
+ struct smb2_create_ea_ctx {
+-	struct create_context ctx;
++	struct create_context_hdr ctx;
+ 	__u8 name[8];
+ 	struct smb2_file_full_ea_info ea;
+ } __packed;
+diff --git a/fs/smb/common/smb2pdu.h b/fs/smb/common/smb2pdu.h
+index 1b594307c9d5..eab9d49c63ba 100644
+--- a/fs/smb/common/smb2pdu.h
++++ b/fs/smb/common/smb2pdu.h
+@@ -1171,12 +1171,15 @@ struct smb2_server_client_notification {
+ #define SMB2_CREATE_FLAG_REPARSEPOINT 0x01
+ 
+ struct create_context {
+-	__le32 Next;
+-	__le16 NameOffset;
+-	__le16 NameLength;
+-	__le16 Reserved;
+-	__le16 DataOffset;
+-	__le32 DataLength;
++	/* New members must be added within the struct_group() macro below. */
++	__struct_group(create_context_hdr, hdr, __packed,
++		__le32 Next;
++		__le16 NameOffset;
++		__le16 NameLength;
++		__le16 Reserved;
++		__le16 DataOffset;
++		__le32 DataLength;
++	);
+ 	__u8 Buffer[];
+ } __packed;
+ 
+@@ -1222,7 +1225,7 @@ struct smb2_create_rsp {
+ } __packed;
+ 
+ struct create_posix {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8    Name[16];
+ 	__le32  Mode;
+ 	__u32   Reserved;
+@@ -1230,7 +1233,7 @@ struct create_posix {
+ 
+ /* See MS-SMB2 2.2.13.2.3 and MS-SMB2 2.2.13.2.4 */
+ struct create_durable {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[16];
+@@ -1243,14 +1246,14 @@ struct create_durable {
+ 
+ /* See MS-SMB2 2.2.13.2.5 */
+ struct create_mxac_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 Timestamp;
+ } __packed;
+ 
+ /* See MS-SMB2 2.2.14.2.5 */
+ struct create_mxac_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 QueryStatus;
+ 	__le32 MaximalAccess;
+@@ -1286,13 +1289,13 @@ struct lease_context_v2 {
+ } __packed;
+ 
+ struct create_lease {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct lease_context lcontext;
+ } __packed;
+ 
+ struct create_lease_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct lease_context_v2 lcontext;
+ 	__u8   Pad[4];
+@@ -1300,7 +1303,7 @@ struct create_lease_v2 {
+ 
+ /* See MS-SMB2 2.2.14.2.9 */
+ struct create_disk_id_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 DiskFileId;
+ 	__le64 VolumeId;
+@@ -1309,7 +1312,7 @@ struct create_disk_id_rsp {
+ 
+ /* See MS-SMB2 2.2.13.2.13 */
+ struct create_app_inst_id {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8 Name[16];
+ 	__le32 StructureSize; /* Must be 20 */
+ 	__u16 Reserved;
+@@ -1318,7 +1321,7 @@ struct create_app_inst_id {
+ 
+ /* See MS-SMB2 2.2.13.2.15 */
+ struct create_app_inst_id_vers {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8 Name[16];
+ 	__le32 StructureSize; /* Must be 24 */
+ 	__u16 Reserved;
+diff --git a/fs/smb/server/smb2pdu.h b/fs/smb/server/smb2pdu.h
+index bd1d2a0e9203..643f5e1cfe35 100644
+--- a/fs/smb/server/smb2pdu.h
++++ b/fs/smb/server/smb2pdu.h
+@@ -64,7 +64,7 @@ struct preauth_integrity_info {
+ #define SMB2_SESSION_TIMEOUT		(10 * HZ)
+ 
+ struct create_durable_req_v2 {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 Timeout;
+ 	__le32 Flags;
+@@ -73,7 +73,7 @@ struct create_durable_req_v2 {
+ } __packed;
+ 
+ struct create_durable_reconn_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[16];
+@@ -85,7 +85,7 @@ struct create_durable_reconn_req {
+ } __packed;
+ 
+ struct create_durable_reconn_v2_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct {
+ 		__u64 PersistentFileId;
+@@ -96,13 +96,13 @@ struct create_durable_reconn_v2_req {
+ } __packed;
+ 
+ struct create_alloc_size_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le64 AllocationSize;
+ } __packed;
+ 
+ struct create_durable_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	union {
+ 		__u8  Reserved[8];
+@@ -114,7 +114,7 @@ struct create_durable_rsp {
+ /* Flags */
+ #define SMB2_DHANDLE_FLAG_PERSISTENT	0x00000002
+ struct create_durable_v2_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	__le32 Timeout;
+ 	__le32 Flags;
+@@ -122,7 +122,7 @@ struct create_durable_v2_rsp {
+ 
+ /* equivalent of the contents of SMB3.1.1 POSIX open context response */
+ struct create_posix_rsp {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8    Name[16];
+ 	__le32 nlink;
+ 	__le32 reparse_tag;
+@@ -381,13 +381,13 @@ struct smb2_ea_info {
+ } __packed; /* level 15 Query */
+ 
+ struct create_ea_buf_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct smb2_ea_info ea;
+ } __packed;
+ 
+ struct create_sd_buf_req {
+-	struct create_context ccontext;
++	struct create_context_hdr ccontext;
+ 	__u8   Name[8];
+ 	struct smb_ntsd ntsd;
+ } __packed;
 -- 
-2.43.0
+2.34.1
 
