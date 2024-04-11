@@ -1,158 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC9C13FD8E;
-	Thu, 11 Apr 2024 09:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9231411FE
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712826117; cv=none; b=LoG4owra30ipdKxJvW+uFrM4LnAPSt1PLH9eM00Ee7HLtRYSbyQrOBy6cg7Q5tF0N6WUa+Z9F/jARPELDFy6wkE1qd93sPcNhYgLSm0GXLCETsCNdXxwezVRM0FlkGdxm2cVdTgKHpG/DKjl5jV8PXYpYoxQHqFS3VQ0kfGlHmg=
+	t=1712826199; cv=none; b=DkTIqFE/2UYomboQpnulsnzOnlyLF85Aj/LcVM57Oe6nI41dzXgPmRE0pQ4soQsPcuKWlBwwt3pETqbGZ99u/y8yQ1wQp2Yc5xnGV+g1GYg1hf7I2hPaSA9vJASWr+MNY9WbE3cZ9PqdlnP/4ZAHOLf22KhKl3JubORHe6tj38Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712826117; c=relaxed/simple;
-	bh=xVedsV4VfEGQGozEUtdTCCWXlxXgIeyFTHtRuT3EuY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQ7B2DKUFqoHer1+/gIvSLf/XG10ZwTIUf/sQloLReic7DEkdsSxvboLhIrw0971I713Bl1uaHV15JmgvgKQHg9hqRprR67tYnD6wyBcU8O/G/iD1Hcz4Vr1IuzNxIgUtx8X6HcNlRcratsEgkGevG4lQ8l8zVVdnJlaZ8vWbwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mDNRm6y9; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712826199; c=relaxed/simple;
+	bh=+pzbJC+YgKM6sW4DExjI1R1UL5aMJjWWQiNOgEkYM2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rQBEdrzES6Jwynh3fTGHpYZwNEOkfqJDE3n40fM8pszHGZMz3EXXocGdPsoLpgiKmh2adGwkVbZk56KeFd/LTN6TjzTsApGeQjJsNzps+3/0SgP8ZpHn9LpG4aiGAeXfYb2YC4mxjxJJ1azLFoTmH/YQF+mhxvrW7vaonCjJ+6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RXIRIN1z; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mDNRm6y9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712826115; x=1744362115;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xVedsV4VfEGQGozEUtdTCCWXlxXgIeyFTHtRuT3EuY8=;
-  b=mDNRm6y9Q0AIhdmyI8HNXQB7TF/kxi/eMNb4KmkpPkW1CBbcoHD1U2l8
-   JoxFkRG+fnA3weHYuNwSXz3rrLWLnn/hlNQ9EpcD9QsTihofqdjka+LUk
-   +Lh/wLT6ipGyxYqkDGZN/dOdcoHsXbFjp95C3LCzaaH/IrWTkdhKCZyPO
-   osLg/X+G26dAgdDXW9zXwwn8qY/UXUmVCcDQTVEwAaMAZEj2tv3720V3Q
-   +h8QmavlY2lFr3yVNB5Bm/2EZG5itzbzKcfi7MRzHiodcz5UKbv9goCBi
-   MKBQI8+mB5u75IF0Cq7w9p6gAuO6hlAQciZ6VIXbu7I0ReohhRHjK+LCV
-   A==;
-X-CSE-ConnectionGUID: JCKLWtmrQnu6q4LSSnb2Zw==
-X-CSE-MsgGUID: rh+gDR0+SqKcSbADgvUOtg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8444815"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8444815"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:01:54 -0700
-X-CSE-ConnectionGUID: koQlii8mRDy4cv4dCye4BQ==
-X-CSE-MsgGUID: 5TFrG8/vT4GgcnntO57C4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="21436532"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.215.66])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 02:01:53 -0700
-Message-ID: <7ef5951b-fab2-4364-99cd-3ad8fef2dd3f@intel.com>
-Date: Thu, 11 Apr 2024 12:01:48 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RXIRIN1z"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41699bbfb91so61155e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 02:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712826195; x=1713430995; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QqfSLSB/AB48WWgXAVHlYTdSSFdUvK5wajBEFofuXQg=;
+        b=RXIRIN1zSYQxfj3PByqBLDJp2o/9JcUSQq+lviUcYv2ZLm0tkEiVyxEmvDbsBq5x7j
+         TumNRForGL6EISwrU04nnXvIYZyaKy1k+t/7XgfFsSr2hH8Jlb/EXl3GL3yCl7Wv2zb2
+         u/XWYi6pjzn2tEax15gmN1pEnWyRn5O7MaDhuFPemANdS7GYvtr8dvy2s5t+3j4jJvgT
+         V1OaBHB2tmCHzt+YVc3aeztZyBBalMdKaYkXNzn7yQdMenOMqDkJKSNVaqE9VSfkh83P
+         t9KjKZiXfvbfeNUFPic6eqGB2IxbPwEpMD4EzxpZj+Ot4FcFqoNkFyNWzUtFB0uX19V2
+         0flw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712826195; x=1713430995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QqfSLSB/AB48WWgXAVHlYTdSSFdUvK5wajBEFofuXQg=;
+        b=Aui7Fz/BFBjAxodbZ0cjG7l9WJPBfqU6Cr4DwYiUxS1fx8KBeXz9ingZ7kw2Yckt6v
+         4ksl2ab8BQXFAR/FoyLYAtcBzDbzbmJDYYQakTjSyO/Us4BTiET4Ec9DTGAfzcf5jdc2
+         t/xwDMucuneW3pTrHJwZ9Y4SuzRgQJXZbQqtxsKWzNJ85qbtMEEk+Zp/cUZQTbZUyaVP
+         MVWN0+CmmG3bMZz2y1RSBCekeJl/6icfPokHtGMvoA4Ye58BKN3uDqPQZZJtimW5mrf5
+         SbuqtMwV7g7+z6k5fCi1NunPO1jFRjW3i0kA84IeO0DhiNN5gqloRJHlAIzLCi4+oBFw
+         KPxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUF8p2/Kh3w1jLKZcDK57JiXxKjLLhxsdgTJr+ipVQUAviXNxIWzSQC3o4jabW86289y6CVkS2nyXqQUCL37dWg8t5H7QizPz9vkTeh
+X-Gm-Message-State: AOJu0Yw7WUKJhM3lZBjMz+/gRtV7R+b3/a9qc2Sy/PDY8LT8VvqSffgc
+	J+mPz6Q7GBHsWlEioW1JVqlXRMovrITqYHs2j6lc/yctivCjxapHfcayg3i3DA==
+X-Google-Smtp-Source: AGHT+IH78w0bgEGjDyrKEfk+d9ic/SSQTwVwM1da8T9d732zT8YK/kjBPq2FLqf/BbcoknBcTcJF2A==
+X-Received: by 2002:a05:600c:3d93:b0:417:d73e:b3de with SMTP id bi19-20020a05600c3d9300b00417d73eb3demr95804wmb.0.1712826195396;
+        Thu, 11 Apr 2024 02:03:15 -0700 (PDT)
+Received: from google.com (248.199.140.34.bc.googleusercontent.com. [34.140.199.248])
+        by smtp.gmail.com with ESMTPSA id c18-20020a5d5292000000b00341b451a31asm1271306wrv.36.2024.04.11.02.03.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 02:03:15 -0700 (PDT)
+Date: Thu, 11 Apr 2024 09:03:13 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
+	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
+	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
+	tabba@google.com, will@kernel.org, yuzenghui@huawei.com,
+	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH] KVM: arm64: Add support for FFA_PARTITION_INFO_GET
+Message-ID: <ZhenUTPeAF7i_i-3@google.com>
+References: <20240409151908.541589-1-sebastianene@google.com>
+ <ZhVpmF2js1NJp1qF@google.com>
+ <ZhZYsuqggl_Hzv8X@google.com>
+ <ZhZhm4UXyClAqXDM@google.com>
+ <ZhZnaibTBaa2J4a5@google.com>
+ <ZhbIDUO9BULaiSh3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf tools: Simplify is_event_supported()
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240410104450.15602-1-adrian.hunter@intel.com>
- <CAP-5=fXw+HEnyiry=6LWhpPcexbNu=CzknNfcjr=MHa78ujkpw@mail.gmail.com>
- <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAM9d7cg54QYtyOO0986ffBFU2yV49RV7OgTmX5drRAqV84aKSQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhbIDUO9BULaiSh3@google.com>
 
-On 10/04/24 20:45, Namhyung Kim wrote:
-> On Wed, Apr 10, 2024 at 9:08 AM Ian Rogers <irogers@google.com> wrote:
->>
->> On Wed, Apr 10, 2024 at 3:45 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>
->>> Simplify is_event_supported by using sys_perf_event_open() directly like
->>> other perf API probe functions and move it into perf_api_probe.c where
->>> other perf API probe functions reside.
->>>
->>> A side effect is that the probed events do not appear when debug prints
->>> are enabled, which is beneficial because otherwise they can be confused
->>> with selected events.
->>>
->>> This also affects "Test per-thread recording" in
->>> "Miscellaneous Intel PT testing" which expects the debug prints of
->>> only selected events to appear between the debug prints:
->>> "perf record opening and mmapping events" and
->>> "perf record done opening and mmapping events"
->>>
->>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>
->> nit:
->> Closes: https://lore.kernel.org/lkml/ZhVfc5jYLarnGzKa@x1/
->>
->>> ---
->>>  tools/perf/util/perf_api_probe.c | 40 +++++++++++++++++++++++++
->>>  tools/perf/util/perf_api_probe.h |  2 ++
->>>  tools/perf/util/pmus.c           |  1 +
->>>  tools/perf/util/print-events.c   | 50 +-------------------------------
->>>  tools/perf/util/print-events.h   |  1 -
->>>  5 files changed, 44 insertions(+), 50 deletions(-)
->>>
->>> diff --git a/tools/perf/util/perf_api_probe.c b/tools/perf/util/perf_api_probe.c
->>> index 1de3b69cdf4a..13acb34a4e1c 100644
->>> --- a/tools/perf/util/perf_api_probe.c
->>> +++ b/tools/perf/util/perf_api_probe.c
->>> @@ -195,3 +195,43 @@ bool perf_can_record_cgroup(void)
->>>  {
->>>         return perf_probe_api(perf_probe_cgroup);
->>>  }
->>> +
->>> +bool is_event_supported(u8 type, u64 config)
->>> +{
->>> +       struct perf_event_attr attr = {
->>> +               .type = type,
->>> +               .config = config,
->>> +               .disabled = 1,
->>> +       };
->>> +       int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
->>
->> It looks like this is a change to the actual perf_event_open
->> arguments, I don't think it is an issue but wanted to flag it.
->>
->>> +
->>> +       if (fd < 0) {
->>> +               /*
->>> +                * The event may fail to open if the paranoid value
->>> +                * /proc/sys/kernel/perf_event_paranoid is set to 2
->>> +                * Re-run with exclude_kernel set; we don't do that by
->>> +                * default as some ARM machines do not support it.
->>> +                */
->>> +               attr.exclude_kernel = 1;
->>
->> I worry about the duplicated fallback logic getting out of sync,
->> perhaps we could have a quiet option for evsel__open option, or better
->> delineate the particular log entries.
+On Wed, Apr 10, 2024 at 06:10:37PM +0100, Vincent Donnefort wrote:
 
-That seemed like it would be messy, but upon closer inspection
-was straight forward.  Patch here:
+Hi Vincent,
 
-	https://lore.kernel.org/linux-perf-users/20240411075447.17306-1-adrian.hunter@intel.com/T/#u	
-
->>                                       I don't really have a good
->> alternative idea and kind of like that detecting an event is available
->> loses the evsel baggage. I would kind of like event parsing just to
->> give 1 or more perf_event_attr for similar reasons.
+> On Wed, Apr 10, 2024 at 10:18:18AM +0000, Sebastian Ene wrote:
+> > On Wed, Apr 10, 2024 at 10:53:31AM +0100, Vincent Donnefort wrote:
+> > > [...]
+> > > 
+> > > > > > +static void do_ffa_part_get(struct arm_smccc_res *res,
+> > > > > > +			    struct kvm_cpu_context *ctxt)
+> > > > > > +{
+> > > > > > +	DECLARE_REG(u32, uuid0, ctxt, 1);
+> > > > > > +	DECLARE_REG(u32, uuid1, ctxt, 2);
+> > > > > > +	DECLARE_REG(u32, uuid2, ctxt, 3);
+> > > > > > +	DECLARE_REG(u32, uuid3, ctxt, 4);
+> > > > > > +	DECLARE_REG(u32, flags, ctxt, 5);
+> > > > > > +	u32 off, count, sz, buf_sz;
+> > > > > > +
+> > > > > > +	hyp_spin_lock(&host_buffers.lock);
+> > > > > > +	if (!host_buffers.rx) {
+> > > > > > +		ffa_to_smccc_res(res, FFA_RET_INVALID_PARAMETERS);
+> > > > > > +		goto out_unlock;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	arm_smccc_1_1_smc(FFA_PARTITION_INFO_GET, uuid0, uuid1,
+> > > > > > +			  uuid2, uuid3, flags, 0, 0,
+> > > > > > +			  res);
+> > > > > > +
+> > > > > > +	if (res->a0 != FFA_SUCCESS)
+> > > > > > +		goto out_unlock;
+> > > > > > +
+> > > > > > +	count = res->a2;
+> > > > > > +	if (!count)
+> > > > > > +		goto out_unlock;
+> > > > > 
+> > > > > Looking at the table 13.34, it seems what's in "count" depends on the flag.
+> > > > > Shouldn't we check its value, and only memcpy into the host buffers if the flag
+> > > > > is 0?
+> > > > > 
+> > > > 
+> > > > When the flag is `1` the count referes to the number of partitions
+> > > > deployed. In both cases we have to copy something unless count == 0.
+> > > 
+> > > I see "Return the count of partitions deployed in the system corresponding to
+> > > the specified UUID in w2"
+> > > 
+> > > Which I believe means nothing has been copied in the buffer?
+> > > 
+> > 
+> > When the flag in w5 is 1 the size argument stored in w3 will be zero and
+> > the loop will not be executed, so nothing will be copied to the host
+> > buffers.
 > 
-> We have the missing feature check in the evsel open code,
-> and I think we should check the exclude-bits first than others.
-> Currently struct pmu has missing_features.exclude_guest only
-> and it can have exclude_kernel or others too.
+> Ha right, all good here then.
 > 
-> Anyway, I'm ok with this change.
+> > 
+> > > > 
+> > > > > > +
+> > > > > > +	if (ffa_version > FFA_VERSION_1_0) {
+> > > > > > +		buf_sz = sz = res->a3;
+> > > > > > +		if (sz > sizeof(struct ffa_partition_info))
+> > > > > > +			buf_sz = sizeof(struct ffa_partition_info);
+> > > > > 
+> > > > > What are you trying to protect against here? We have to trust EL3 anyway, (as
+> > > > > other functions do).
+> > > > > 
+> > > > > The WARN() could be kept though to make sure we won't overflow our buffer. But
+> > > > > it could be transformed into an error? FFA_RET_ABORTED?
+> > > > > 
+> > > > >
+> > > > 
+> > > > I think we can keep it as a WARN_ON because it is not expected to have
+> > > > a return code of FFA_SUCCESS but the buffer to be overflown. The TEE is
+> > > > expected to return NO_MEMORY in w2 if the results cannot fit in the RX
+> > > > buffer.
+> > > 
+> > > WARN() is crashing the hypervisor. It'd be a shame here as we can easily recover
+> > > by just sending an error back to the caller.
+> > 
+> > I agree with you but this is not expected to happen unless TZ messes up
+> > something/is not complaint with the spec, in which case I would like to
+> > catch this.
 > 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks,
-> Namhyung
+> Hum, still I don't see the point in crashing anything here, nothing is
+> compromised. The driver can then decide what to do based on that reported
+> failure.
 
+I still think we should keep this (as we discussed offilne). We do WARN_ON 
+when the behaviour doesn't follow the spec guidelines. For this
+particular case, if the result doesn't fit in the caller's buffer the TEE
+is expected to return FFA_ERROR in w0 with NO_MEMORY in w2. If it
+returns success but the caller doesn't have enough space to copy then
+something is going horribly wrong on the TEE side.
+
+Thanks,
+Seb
