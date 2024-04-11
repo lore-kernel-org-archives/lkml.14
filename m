@@ -1,116 +1,176 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7547D85281
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E1B85935
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849616; cv=none; b=DgP0HIIsbRV4Qt69JFfvz0e78nq1BvkLsUGW/fnmEjPuUah8Or+TFadobJt5IC4aeNTz57Tz0vOMi8Y5usLIZh/V1Bkv7l5KBmWj+UKgFv1/HatseFQjnjbTBlXB3hSzEu+Pcfun8+xatcWC29vNUZ97yx7jMngLfgSIQPbCxdc=
+	t=1712849618; cv=none; b=eHliynHDFVtfpIHh83yXqwxe8ZLq8ZYePSvt4vroDHDwzecoFt1ePTOWxkVjbwQAbbg9CvMgpEn9hubG5BgYcmHX6m62v56WVILSzcSSKRng4+IacOPdeG2FobRosFTrwZXZUe2cDoL2238fsdJxf8tomW/Q5Ru4/Sn5JrlqFmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849616; c=relaxed/simple;
-	bh=PbLspCwu5bkgUdK2U9YWWFJDaTS6qgXYBAw1NQGhQTc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BONGxgHqalKAlYvGTB5G9xbCR5L/TACD0weWnxdU3LKctw6FT7xk9vJSTGqgURk32u8GBZMuvpEAqWQPokUJOTPna3Q1C0zkcbaGrwMuGFGZhTa3lgHY/fNkLkuse72q6BwhV+dMrqbnt2kaZcoXPDkVQqfxoCwr4mtG/D2G13k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DfIUfbjf; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712849618; c=relaxed/simple;
+	bh=L1CEr14c7mBj4sr4CNjxSe0f4NZNFDDr5bqgk55pJ9g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=scnXIF0qKDZh4xgrVtlyN5Qc3xCeHBQ1eLbmBQgHHZC/NHqnS6vQqQ6+09nsvtsNS9F5xkZJH+AYq2z8roBo9VmLLn9FavqM/VSdzFXZtUmxT04BawTFT9akkIV6Pd6kMV0pu61ijiAV0s1+YIhSWUhKBD687TK8+3KEjfkeeew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=bXOdftaJ; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DfIUfbjf"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41687826509so93545e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="bXOdftaJ"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69517239f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:33:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712849614; x=1713454414; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849615; x=1713454415; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WWEKgvL/ZOpKjtTgIwws6qhc3HHfgaLuekbpj/jm1oc=;
-        b=DfIUfbjfC35idweQK7LNh05x+QHPEk6q6gaQAtg8Lbv75BznVDCQI/yKui6fvLDhLi
-         OLVB9sI1Zv0VqZvTly7QyiVTUpfXd7w6zyqj8DAkg8tH3zVgcUTLakzL2Wo6Stl1g+gi
-         cX8qVz+xEwD0OX10qn0xx4cQJ9mKxvPNy7gKino9urfmR6OHCXJNeX5RiUkPcY2ArUMV
-         bG7rjElKIj8ePleuSlqfZ6VUOMLiSXTeGdzNV9u9ME/kQSQrzkwpIGqGNhSq6BdjvYw7
-         PnTJRuUz+S7DMwSURQMFv5adDi2glOl6Fe7fSxIH3+pcNfzd2Fb/KNXF+ABq/rpGsvQ6
-         vH4Q==
+        bh=0Yp9XiWZV4f9xB1HqyHZEA0yY6Ji0QcCa2CoWMJQVdk=;
+        b=bXOdftaJWdol5Uzcp/F3yP8C/C4BYpyu7CE0vBcEDQNp2mNiX7bqd4Yh8BYfxhtMpz
+         wB8VMrF3MWX4QNWTGiO1e0WNPEuyQMmovVIl7QLLBsTa7kf6gg6oqWA+GOwQUQlWQzXF
+         hUulzqhXNzxlFZatwhqGyrMY9WF4bi2Xk1sOfnXFd7anFmuGcJ5Zu8FZeJxA+OmWrr8r
+         DTRQOCCcytPURqa4cU0ofWIZXgpkBY037lIHBfjVPUVnKBWOGy/tRgW9K8/TpsaN8JOj
+         ynE4xa/tS7pFUhPMRll/JpJ9mT0uoLJH7b38g5Mj03gzVrqU16aLV8AziCD+Lb+hOSeJ
+         UD2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849614; x=1713454414;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712849615; x=1713454415;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WWEKgvL/ZOpKjtTgIwws6qhc3HHfgaLuekbpj/jm1oc=;
-        b=IoJJMzozEZwYhyrjneG5hboEFUCgIEfGwGTbC10LhYJ9cpVR/y+uZ/bC4sUQbaUVC6
-         D3QSOLp354hI+dU4xtCezhEIOfNbBcEdWEVMiuzc8/o1lpOEdwQB+wnq1BqDf6hZm2zb
-         kRjfU/3bwC42PdxYuvhJwVcZ9a+FiQ3uKMdMRCYHUcuMJNyJBwOn2Sp5xsc6/gCc6X/S
-         /CJwtpsr8WX1SgDlzyE1kTwwC+uoaL0quWeEOeAuv5HFcRCvO1+T65iFbZAcsGWaHjQo
-         QDPfqkfN7eUFstHAw8dtb4Skk+3N78bwFr/QXE9kOmHgxSZbPrKoo04kCneuSHWKBi7e
-         LT2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVE8QWp0AGycoyddYzj64fv3s+oQXfNZpG0VzOjwXMJwvW2vWzlFbgvStpZmn75joB3grIOB8MxCM6b2SoDR3Xa87xJiTr0JewwLfb8
-X-Gm-Message-State: AOJu0YzydrS+LulNYifWggoRfvQ6LmdMJx8gNXhs8cnn2aNfYaQMaSsb
-	4cmq4sSJWjEXnwjpe3axr6foY18pfCcOa1jAc/QU4BEZYS+srzDaeQjCRqq4JQgN9Lzg0fFphRw
-	+D+94nhPl6BaJS85OLFIOr4QQeZdFi/67+ls=
-X-Google-Smtp-Source: AGHT+IFSA46efEwvLckuLo22i0EaoWGKSXc3A8+EHYGsJ0Jh6gXKAMZ59K5Ow6WfR7oga9HRD4hRH0d17iec05aSqZo=
-X-Received: by 2002:a05:600c:3b93:b0:417:3f9e:5cac with SMTP id
- n19-20020a05600c3b9300b004173f9e5cacmr177314wms.3.1712849613449; Thu, 11 Apr
- 2024 08:33:33 -0700 (PDT)
+        bh=0Yp9XiWZV4f9xB1HqyHZEA0yY6Ji0QcCa2CoWMJQVdk=;
+        b=kO7qt0K5CXLoQMmIfeDw/ri4By6brxSYsjHWrzeere+PZS2arzN2avKFtJ58olZbtQ
+         tse9TJKs8eAclLFRjRPwbWsXTmH+EUHhSIA/69Hu1DWEl8sie6hWQSaftTLsiqQgMdVY
+         TLoRhuRWCUmTIs4Afr+YLDnWi9DY+hZhIYGugG7CKg35WYu4VKmJDqzv8SCvNu/GPTBv
+         da4QjG5jWShOirbYe+Syh/A5G3rlOvPKAODpKEQeJu0Rl/lYhDGuaRwF0kxgQqyr/U6T
+         zjNWcddrrvTK2o23HvYS7n+8WokV08EjoY71fLiFxU+x7nYr58H86x/p0XR3F7zbGF0w
+         XmMw==
+X-Gm-Message-State: AOJu0Yw7y9yJ07RO1vL5T9l9Ml3NyGs2uyFmrs/ebJqSHBiu2l98Mkyh
+	eTP+EtWLE+ca7KRw0CJWH0HQWxyt3t3zYo8KNY8s/2Hc2eHihE91q6dY4rtEaQh03r6obgxCtz6
+	1
+X-Google-Smtp-Source: AGHT+IHJajsXylJ3ozZ++Bed7L/PWKRTz7PUdHfFio7rpOyj8GQBDJOG7WNByvCOXG/K8U43dd/3uQ==
+X-Received: by 2002:a05:6602:84:b0:7d6:9d75:6de2 with SMTP id h4-20020a056602008400b007d69d756de2mr35160iob.2.1712849615382;
+        Thu, 11 Apr 2024 08:33:35 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:33:34 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 067/437] ASoC: SOF: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:13:27 -0600
+Message-ID: <20240411153126.16201-68-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87sf02bgez.ffs@tglx> <87r0fmbe65.ffs@tglx> <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
- <87o7aqb6uw.ffs@tglx> <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
- <87frw2axv0.ffs@tglx> <20240404145408.GD7153@redhat.com> <87le5t9f14.ffs@tglx>
- <20240406150950.GA3060@redhat.com> <a9a4a964-6f0c-43a5-9fa8-10926d74fbf1@sirena.org.uk>
-In-Reply-To: <a9a4a964-6f0c-43a5-9fa8-10926d74fbf1@sirena.org.uk>
-From: John Stultz <jstultz@google.com>
-Date: Thu, 11 Apr 2024 08:33:20 -0700
-Message-ID: <CANDhNCp=7mTSSO4cXQjYbtLrK8XRCbCyse8Bq5Wbt5V4G-K_dQ@mail.gmail.com>
-Subject: Re: [PATCH] selftests/timers/posix_timers: reimplement check_timer_distribution()
-To: Mark Brown <broonie@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Marco Elver <elver@google.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>, 
-	kasan-dev@googlegroups.com, Edward Liaw <edliaw@google.com>, 
-	Carlos Llamas <cmllamas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 5:42=E2=80=AFAM Mark Brown <broonie@kernel.org> wro=
-te:
-> On Sat, Apr 06, 2024 at 05:09:51PM +0200, Oleg Nesterov wrote:
-> > Without the commit bcb7ee79029d ("posix-timers: Prefer delivery of sign=
-als
-> > to the current thread") the test-case fails immediately, the very 1st t=
-ick
-> > wakes the leader up. Otherwise it quickly succeeds after 100 ticks.
->
-> This has landed in -next and is causing warning spam throughout
-> kselftest when built with clang:
->
-> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:435:6: warni=
-ng: variable 'major' is used uninitialized whenever '||' condition is true =
-[-Wsometimes-uninitialized]
->         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor=
-) !=3D 2)
->             ^~~~~~~~~~~~
-> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:438:9: note:=
- uninitialized use occurs here
->         return major > min_major || (major =3D=3D min_major && minor >=3D=
- min_minor);
->                ^~~~~
-> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:435:6: note:=
- remove the '||' if its condition is always false
->         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor=
-) !=3D 2)
->             ^~~~~~~~~~~~~~~
-> /home/broonie/git/bisect/tools/testing/selftests/kselftest.h:432:20: note=
-: initialize the variable 'major' to silence this warning
->         unsigned int major, minor;
->                           ^
->                            =3D 0
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ sound/soc/soc-dapm.c | 21 ++++++++-------------
+ sound/soc/soc-pcm.c  | 10 ++++------
+ 2 files changed, 12 insertions(+), 19 deletions(-)
 
-I hit this one too yesterday and included a fix for it here:
-  https://lore.kernel.org/lkml/20240410232637.4135564-2-jstultz@google.com/
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index ad8ba8fbbaee..f3cfbf70f8a4 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -2094,11 +2094,9 @@ static int dapm_power_widgets(struct snd_soc_card *card, int event)
+ }
+ 
+ #ifdef CONFIG_DEBUG_FS
+-static ssize_t dapm_widget_power_read_file(struct file *file,
+-					   char __user *user_buf,
+-					   size_t count, loff_t *ppos)
++static ssize_t dapm_widget_power_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct snd_soc_dapm_widget *w = file->private_data;
++	struct snd_soc_dapm_widget *w = iocb->ki_filp->private_data;
+ 	enum snd_soc_dapm_direction dir, rdir;
+ 	char *buf;
+ 	int in, out;
+@@ -2155,22 +2153,20 @@ static ssize_t dapm_widget_power_read_file(struct file *file,
+ 
+ 	snd_soc_dapm_mutex_unlock(w->dapm);
+ 
+-	ret = simple_read_from_buffer(user_buf, count, ppos, buf, ret);
+-
++	ret = simple_copy_to_iter(buf, &iocb->ki_pos, ret, to);
+ 	kfree(buf);
+ 	return ret;
+ }
+ 
+ static const struct file_operations dapm_widget_power_fops = {
+ 	.open = simple_open,
+-	.read = dapm_widget_power_read_file,
++	.read_iter = dapm_widget_power_read,
+ 	.llseek = default_llseek,
+ };
+ 
+-static ssize_t dapm_bias_read_file(struct file *file, char __user *user_buf,
+-				   size_t count, loff_t *ppos)
++static ssize_t dapm_bias_read_file(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct snd_soc_dapm_context *dapm = file->private_data;
++	struct snd_soc_dapm_context *dapm = iocb->ki_filp->private_data;
+ 	char *level;
+ 
+ 	switch (dapm->bias_level) {
+@@ -2192,13 +2188,12 @@ static ssize_t dapm_bias_read_file(struct file *file, char __user *user_buf,
+ 		break;
+ 	}
+ 
+-	return simple_read_from_buffer(user_buf, count, ppos, level,
+-				       strlen(level));
++	return simple_copy_to_iter(level, &iocb->ki_pos, strlen(level), to);
+ }
+ 
+ static const struct file_operations dapm_bias_fops = {
+ 	.open = simple_open,
+-	.read = dapm_bias_read_file,
++	.read_iter = dapm_bias_read_file,
+ 	.llseek = default_llseek,
+ };
+ 
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 77ee103b7cd1..611845526491 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -164,10 +164,9 @@ static ssize_t dpcm_show_state(struct snd_soc_pcm_runtime *fe,
+ 	return offset;
+ }
+ 
+-static ssize_t dpcm_state_read_file(struct file *file, char __user *user_buf,
+-				    size_t count, loff_t *ppos)
++static ssize_t dpcm_state_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct snd_soc_pcm_runtime *fe = file->private_data;
++	struct snd_soc_pcm_runtime *fe = iocb->ki_filp->private_data;
+ 	ssize_t out_count = PAGE_SIZE, offset = 0, ret = 0;
+ 	int stream;
+ 	char *buf;
+@@ -190,15 +189,14 @@ static ssize_t dpcm_state_read_file(struct file *file, char __user *user_buf,
+ 						  out_count - offset);
+ 	snd_soc_dpcm_mutex_unlock(fe);
+ 
+-	ret = simple_read_from_buffer(user_buf, count, ppos, buf, offset);
+-
++	ret = simple_copy_to_iter(buf, &iocb->ki_pos, offset, to);
+ 	kfree(buf);
+ 	return ret;
+ }
+ 
+ static const struct file_operations dpcm_state_fops = {
+ 	.open = simple_open,
+-	.read = dpcm_state_read_file,
++	.read_iter = dpcm_state_read,
+ 	.llseek = default_llseek,
+ };
+ 
+-- 
+2.43.0
 
-thanks
--john
