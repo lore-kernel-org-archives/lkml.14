@@ -1,108 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAB714430D;
-	Thu, 11 Apr 2024 09:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C2C13FD80
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712829190; cv=none; b=TEyMnB5qBAqCzEdpT93P24br5cSJNK06+ZDzHcl2YX7ArmcJU/QzeIMdbBBvi8mhSm7DB6jqA1sjgQcq80RMjwb1snLl1RjYXWFOApA4IZ8Am1DjxOvcCEipEQHXAZ8z9v/B9O4jyt9BOcX5XIY4OfFXx6BCs7dhVLSFmBgO7Qs=
+	t=1712829325; cv=none; b=gNsIVUg6JKF26yh47EwV7rXIXiUWjV8GnvXrta8yoXWM5QVnGYHv4CVeEpKjZMe7uMXxstGquQ0S2Z3354BTGLETqKJuxF19wP6jaU0+blosKzhJcqC79m3NYgD73/cQ/Pu7zAUDgQPlXIN8OMDXF5/BiGGF0o6vOuNnv0Dvf1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712829190; c=relaxed/simple;
-	bh=8SQ0a8KIXg+9Q6wH7l7+OtKBY0yEhH+2/6JYQpE8re8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vB5hEHyywfhcvcv+fvEEZf8d2X/uyJN/Hy7ui94BBySY4H4gPvrGl+P+/zSeMDVYQCd5dqresws/5G84xkgk4Fd0ExQTHfWb4jkyfOtB8FUkOeKall+CrssRv61xTpUhTcNQ511UOZG3kiozxgDKR/PWO3bk5+pHiz3wtzzvls4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=G9gbSkp7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712829325; c=relaxed/simple;
+	bh=x58WqDrW54mbSDZg6DVW0SdiBq5P4n8LYvlGtzYZ5Fc=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=g/My6iNZRJbDeX9Tl+02bi2fGb40I8t3//XIZgFsMExgR2ctb7M9MS90bHyAIR43vYt7BA43sRioez5hcfqhI6eyEmmCV9wReGPfCF1UUl89hLEOIIW9l5agCUgrYR1CM1Derbren6JRo/vhnP+tmsvy3fwvsMuc/ntkudxkMWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yA8U6O4G; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="G9gbSkp7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A9EEC433F1;
-	Thu, 11 Apr 2024 09:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712829189;
-	bh=8SQ0a8KIXg+9Q6wH7l7+OtKBY0yEhH+2/6JYQpE8re8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G9gbSkp7oEzeuI3Q0PgtuXj1sVQzFoshmy35z6knqC8VODQ8M+jRQp7yJomxLQOXD
-	 dNeFOGL+XQjg1Lf2s1UGNC+/Gb7l6z6PIuHfU5o20nIO11lpOhSIOQ3Ur3vC7CZ+k4
-	 PEcm0JAXlJGRqkpmoG1eD++BQeSEoTmEozBpgA5s=
-Date: Thu, 11 Apr 2024 11:53:07 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	Sasha Levin <sashal@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	stable@vger.kernel.org, workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/4] docs: stable-kernel-rules: mention "no
- semi-automatic backport"
-Message-ID: <2024041151-reflected-dancing-607a@gregkh>
-References: <cover.1712812895.git.linux@leemhuis.info>
- <c0a08b160b286e8c98549eedb37404c6e784cf8a.1712812895.git.linux@leemhuis.info>
- <2024041156-backache-dolly-a420@gregkh>
- <3f395eca-fc24-469b-b5fc-de47ab2a6861@leemhuis.info>
- <2024041123-earthling-primarily-4656@gregkh>
- <dad33d1c-77da-4b97-a0ec-4bf566f8d861@leemhuis.info>
- <2024041159-undone-deacon-3170@gregkh>
- <CAMuHMdXMRJM1xQLHDc6yKWvs97W2iTZnYnNNZE=8-WrtnGRNfw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yA8U6O4G"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-417d08135b6so4959075e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 02:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712829322; x=1713434122; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TlGP44dphA3R+UbqzP2my5uJQJOQh7ETKlgiCn1Z/F4=;
+        b=yA8U6O4G/m0vgMpIU0vNFdBGkOMB+yn79fMcWT2ebwn16jTuzHVQR/IRyGHnmT5SeV
+         kxmvIKlfkyDHoumxXZOCWcJHGAGBLhM3LlTkJAjX1i0ghJ4JgN2QHzkYU9WZM0M30IvD
+         Bry+le8TM4t5ja3vif3ndhVqGGAuR+MoVRv0MT6/6+tooQ/boIAV7U8vc2yCt5ydEgGp
+         Badz1/blPoY0SVfqKwM/XMI8rJ8amHMq1jQc29/sL/t9f8fBH6WYVpFS3MdZ9lCMVfdc
+         cMF/eET3uP/Ncd0GmLmEjxVzOI0Tb8cdfpvD2heOvJWgEorRE4vCU5qQSNDHYzv3KEfT
+         wuHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712829322; x=1713434122;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TlGP44dphA3R+UbqzP2my5uJQJOQh7ETKlgiCn1Z/F4=;
+        b=YBiXUM6ShUKTofBWideLFnOecp/YUwu0fDuW+ZO2EB+muoYw6J2C83WnRwhTAmiKCV
+         S/EB7dTNX3yR2HrsQXF8HNOebHsKUbasEK+X2GWGBvLddHbKz35ZmB/jTQITfIKhy7AE
+         ZA/pq4GSuz6IMBNQ2p0sCpFCU/3wJCYhd3M2Lxwh48zb0Ur/A6fnjNFfzUclZ9AcGorX
+         Y9leiKkwr14osf059XqRvZJ70r9p/GTm3CuJYDJJRfcaqES9HZu0Pnp8MbtZbbPhF8i3
+         fYUtGEshXfEQfTjrnv2NWRx9nJq1GwXFKNS9mnodoTqMob5xiotdPXHS0DGmuE0CusIK
+         S25g==
+X-Forwarded-Encrypted: i=1; AJvYcCWn6ATBydkD7WFKEW34ZBPDVt3VY7UYqHFxcr2+2YoMNXf66pg1rdojpKUIIMgtlwr1dtXnTbauXx6L2Fuu6jbXb4twc25cMnmEDbwB
+X-Gm-Message-State: AOJu0YxTFBDp7RVl1F7Lz0jZnjhqzlzU2oPuY9ZFJ3WXvFCoKI5b9cjC
+	1koSM3HS1nK+up4E+T0T3XBGAwwMAyN24Q3FVQqhxJJS5i5apzeUZHY2Ee47K6M=
+X-Google-Smtp-Source: AGHT+IH+8tjSkXLDnfEBY8Nl1q3OV/1O/GEG0fXg6mYcVntFO0qT8luy7ERWu78WyTA0HYHQdNoBwg==
+X-Received: by 2002:a05:600c:1388:b0:415:46be:622f with SMTP id u8-20020a05600c138800b0041546be622fmr4697912wmf.14.1712829321839;
+        Thu, 11 Apr 2024 02:55:21 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.gmail.com with ESMTPSA id j3-20020a05600c1c0300b0041690a1c9desm1792206wms.30.2024.04.11.02.55.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 02:55:21 -0700 (PDT)
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: andersson@kernel.org, konrad.dybcio@linaro.org, 
+ linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org, 
+ linux-kernel@vger.kernel.org, Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Cc: quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com, 
+ quic_anupkulk@quicinc.com, quic_cchiluve@quicinc.com, 
+ stable@vger.kernel.org
+In-Reply-To: <20240306091642.9123-1-quic_vdadhani@quicinc.com>
+References: <20240306091642.9123-1-quic_vdadhani@quicinc.com>
+Subject: Re: [PATCH v2] slimbus: qcom-ngd-ctrl: Add timeout for wait
+ operation
+Message-Id: <171282932055.158508.13864797939880326855.b4-ty@linaro.org>
+Date: Thu, 11 Apr 2024 10:55:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdXMRJM1xQLHDc6yKWvs97W2iTZnYnNNZE=8-WrtnGRNfw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.2
 
-On Thu, Apr 11, 2024 at 11:19:57AM +0200, Geert Uytterhoeven wrote:
-> On Thu, Apr 11, 2024 at 11:13 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Thu, Apr 11, 2024 at 09:50:24AM +0200, Thorsten Leemhuis wrote:
-> > > On 11.04.24 09:40, Greg Kroah-Hartman wrote:
-> > > > On Thu, Apr 11, 2024 at 08:59:39AM +0200, Thorsten Leemhuis wrote:
-> > > >> On 11.04.24 07:29, Greg Kroah-Hartman wrote:
-> > > >>> On Thu, Apr 11, 2024 at 07:25:04AM +0200, Thorsten Leemhuis wrote:
-> > > >>>> Some developers deliberately steer clear of 'Fixes:' tags to prevent
-> > > >>>> changes from being backported semi-automatically by the stable team.
-> > > >>>> That somewhat undermines the reason for the existence of the Fixes: tag,
-> > > >>>> hence point out there is an alternative to reach the same effect.
-> > > > [...]
-> > > >>> I do not understand, why are you saying "cc: stable" here if you do NOT
-> > > >>> want it backported?
-> > > >> Because the only alternative the developers have to make the stable team
-> > > >> not pick a single patch[1] is to deliberately omit a Fixes: tag even if
-> > > >> the patch normally should have one. Like it was done here:
-> > > >> https://lore.kernel.org/all/cover.1712226175.git.antony.antony@secunet.com/
-> > > > That feels odd, but ok I now see the need for this for some minor set of
-> > > > changes (i.e. this has rarely come up in the past 15+ years)
-> > > >
-> > > > [...]
-> > > >> E.g. 'ignore for the AUTOSEL and the "Fixes tag only" tools'. That was
-> > > >> the best term I came up with.
-> > > >
-> > > > Thinking about it more, I think we need to be much more explicit, and
-> > > > provide the reason why.
-> > > >
-> > > > How about:
-> > > >     cc: <do-not-apply-to-stable@kernel.org> # Reason goes here, and must be present
-> > > >
-> > > > and we can make that address be routed to /dev/null just like
-> > > > <stable@kernel.org> is?
-> > >
-> > > Totally fine with me, but that feels somewhat long and hard to type.
-> >
-> > I want it long and hard to type and very very explicit that this is what
-> > the developer/maintainer wants to have happen (again, because this is
-> > such a rare occurrence.)
-> >
-> > > How
-> > > about just 'no-stable@kernel.org' (or 'nostable@kernel.org')?
-> >
-> > More words are better :)
+
+On Wed, 06 Mar 2024 14:46:42 +0530, Viken Dadhaniya wrote:
+> In current driver qcom_slim_ngd_up_worker() indefinitely
+> waiting for ctrl->qmi_up completion object. This is
+> resulting in workqueue lockup on Kthread.
 > 
-> And after that, someone discovers this turns out to be (a hard
-> dependency for) a very critical fix that does need backporting?
+> Added wait_for_completion_interruptible_timeout to
+> allow the thread to wait for specific timeout period and
+> bail out instead waiting infinitely.
+> 
+> [...]
 
-Then we backport it and let the person know like always.
+Applied, thanks!
 
-thanks,
+[1/1] slimbus: qcom-ngd-ctrl: Add timeout for wait operation
+      commit: b12bd525ca6e06c5ba93a49904f580f7f0021cbd
 
-greg k-h
+Best regards,
+-- 
+Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
