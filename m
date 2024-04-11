@@ -1,426 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D7715E1F0
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A2E15E7E4
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852108; cv=none; b=A9ElBzOZRWOU29XGGBSRaHenIGs3YFAjV6UDk9ytTyaM2zF3K70L/XD6VjsmAXggDsNXzN5ScPaUNQgvpgrH4v868MGrmiR6K1FSCpTMB942F4bF5X/L9azVcpsheib7p2vTd7G6he/kjR2NwMf8HKMtTMRXIOpptwdlyJHI4KM=
+	t=1712852132; cv=none; b=n/Ae6bR8X+lJp2iH455l3hPTulN2n5YwFbGl53zkRmcs8WEqqPDOu3VrCY+7HuVoO3SAcusAJv8nZigfITzwuOC3wLwz7duQzsI00rzb9BPU2DRn2T2OQmShfxQXscrTuXzECSeYQT9ESdbDPz+GbAbUm+fgOa/ZPIlsAfNbSLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852108; c=relaxed/simple;
-	bh=d9k2HE43EvWXBgzWnvQ6s1RvnidSOaEXdmgTPsik9X8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Pc4TnEpsSxrkcv3mou/D6O+5kKYaBPslofoLuhfKAcq0rS0c8cYJKtrkISV+ESdj9taMEQGLAZwNZj9G5K6N7XIbc5MhgAPZ3guUASjTg0seDKetR7LpF67fUOgYfjsd38FKf3uEBSCXEUj1zP6X4hDmqLRvFnMJxu5p+fgHdEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hj0tFwF0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712852132; c=relaxed/simple;
+	bh=LkGZWrwcM7i1Yw0nWiLzlJnspf96t1s3gPexteQnoII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dc4P1rfTZEWsW0Dvqnpafw+TSrS9MIvJzOjpUlqUxncMhZ4tVRVTYa2Fx2d5pyEWW+op3cGCb666wByOcQzer5d2TRo4uXj4ozod5HpbXJQv2/SPUKuE6qX7rHl5tvXWTkw9TxDq6X0DNObXyBIszLXMXxx/peb0IdL1718yHUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PvpttXMq; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hj0tFwF0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712852104;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZFA0bMj9z9/14SwcV51t/qxixBb0kWdqBqGoNQMkwz8=;
-	b=Hj0tFwF0rAvTxKpfDIVksfDZXFrPUYXHYBt6h3zjiCqZnME6mpwRyZaocsbNncBjgOdVsS
-	Pmk/WFBqDQWQ4fatFUE/7A1eHNpqdrABwJ7bxdaBKNDPpA3P6BB6OHslNzULQFhMq7XrHn
-	eJnp14otsqpGSPgrBQ7faS0wpKEtUJw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-73-W0rdtmfUNGuk1XEjadqnCQ-1; Thu,
- 11 Apr 2024 12:14:59 -0400
-X-MC-Unique: W0rdtmfUNGuk1XEjadqnCQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F420C3803914;
-	Thu, 11 Apr 2024 16:14:58 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.194.173])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F24BC10E4B;
-	Thu, 11 Apr 2024 16:14:54 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org
-Subject: [PATCH v3 2/2] s390/mm: re-enable the shared zeropage for !PV and !skeys KVM guests
-Date: Thu, 11 Apr 2024 18:14:41 +0200
-Message-ID: <20240411161441.910170-3-david@redhat.com>
-In-Reply-To: <20240411161441.910170-1-david@redhat.com>
-References: <20240411161441.910170-1-david@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PvpttXMq"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d700beb60bso129171281fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:15:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1712852128; x=1713456928; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YBU5cbcti1MoT6SGDsy6z4cIdlnVeSMn7eSvY9b74qk=;
+        b=PvpttXMqhyOCJz+iu0AnVRjMW1DGLYX//13HX/uoNuQS5Db9uMZb1etPQTpC97Qkfd
+         OMFLYm/B6gbFTDPxdehxgqQ6R32+C5EgoP8xFzFpfttpk88wpS62L1ORULHm/FMK6Dzw
+         eLVf96rxuGN7ygULbg8NqgjCoStq0DLnNfMlQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712852128; x=1713456928;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YBU5cbcti1MoT6SGDsy6z4cIdlnVeSMn7eSvY9b74qk=;
+        b=PYVKXTTb0AG0JpAVxQCB7wELexWeoQAKFg6MVyo3tAs5Mtt5q9iG/48LwyLWO6yhUD
+         t+4LXiHA4dKVBpvJeViGXaIC40MeK8W/eITu09o6MKq9xSggqhu9H+etgghICikBLqUp
+         xFCNB7PLYNHfwz5+lsgnu1vdSCNDXIhz9uyTfQX+/uHLQs+LrsjWRzEKutcraam9uzWp
+         6AennJVe1rh8Yoi35Na3hdNL2MDiTtaa5zxujf5bDM1F07kDCCLgP8HEfV5bcMyFp8g+
+         rX8/vZLBG6xMMHQKb9gH+KN3Oq/Y6Gmil/YVU2Zc6iiUmhHF7VVS/qKA3OUsxY0TbLmQ
+         mjog==
+X-Forwarded-Encrypted: i=1; AJvYcCWGmcR0otOyy3Js4sa1GcW6SY2NkqMgLque7g3d0jJFS82t/h0pKRE/x3WIF0Vb+fsygdDsAZ6rRj64D+GK2XQd8GPVouwDJB7suemd
+X-Gm-Message-State: AOJu0Yx0cW2p2CHo9Q2REcOlvqSSJSB4ufoKuV65pppEkYx+/Fwoj9ci
+	RIP+a/seTMKB68ESanJDhIjCWSRAwk8h0HfElmVlDP+GLWgFUOYEv1CNH373qUmn1j+vaVIkTNJ
+	GFcUGyQ==
+X-Google-Smtp-Source: AGHT+IH1elo3uGEHQxgNB1kpOsGQXpUlTcHoFlDE9L57JbSYcSVx3POREy4tu5uBrMfaABtbwqYusA==
+X-Received: by 2002:a2e:890c:0:b0:2d6:e148:2463 with SMTP id d12-20020a2e890c000000b002d6e1482463mr82555lji.24.1712852128575;
+        Thu, 11 Apr 2024 09:15:28 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id e14-20020a2e930e000000b002d6b801a863sm252500ljh.34.2024.04.11.09.15.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 09:15:27 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2d82713f473so137875891fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:15:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWzFtTvovjtovOE1e5re/GlvOWHQoNksHuZ+AY7NFssEv/kpEtj/DNG6xLYLX5fUHgNcygTgrfiZKvW9OuW1ov59n5cHqRWfpV13tyw
+X-Received: by 2002:a2e:b90a:0:b0:2d4:6a34:97bf with SMTP id
+ b10-20020a2eb90a000000b002d46a3497bfmr57110ljb.49.1712852127138; Thu, 11 Apr
+ 2024 09:15:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
+ <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com> <20240411-alben-kocht-219170e9dc99@brauner>
+In-Reply-To: <20240411-alben-kocht-219170e9dc99@brauner>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 11 Apr 2024 09:15:10 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjrPDx=f5OSnQVbbJ4id6SZk-exB1VW9Uz3R7rKFvTQeQ@mail.gmail.com>
+Message-ID: <CAHk-=wjrPDx=f5OSnQVbbJ4id6SZk-exB1VW9Uz3R7rKFvTQeQ@mail.gmail.com>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+To: Christian Brauner <brauner@kernel.org>, Charles Mirabile <cmirabil@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 
-commit fa41ba0d08de ("s390/mm: avoid empty zero pages for KVM guests to
-avoid postcopy hangs") introduced an undesired side effect when combined
-with memory ballooning and VM migration: memory part of the inflated
-memory balloon will consume memory.
+On Thu, 11 Apr 2024 at 02:05, Christian Brauner <brauner@kernel.org> wrote:
+>
+> I had a similar discussion a while back someone requested that we relax
+> permissions so linkat can be used in containers.
 
-Assuming we have a 100GiB VM and inflated the balloon to 40GiB. Our VM
-will consume ~60GiB of memory. If we now trigger a VM migration,
-hypervisors like QEMU will read all VM memory. As s390x does not support
-the shared zeropage, we'll end up allocating for all previously-inflated
-memory part of the memory balloon: 50 GiB. So we might easily
-(unexpectedly) crash the VM on the migration source.
+Hmm.
 
-Even worse, hypervisors like QEMU optimize for zeropage migration to not
-consume memory on the migration destination: when migrating a
-"page full of zeroes", on the migration destination they check whether the
-target memory is already zero (by reading the destination memory) and avoid
-writing to the memory to not allocate memory: however, s390x will also
-allocate memory here, implying that also on the migration destination, we
-will end up allocating all previously-inflated memory part of the memory
-balloon.
+Ok, that's different - it just wants root to be able to do it, but
+"root" being just in the container itself.
 
-This is especially bad if actual memory overcommit was not desired, when
-memory ballooning is used for dynamic VM memory resizing, setting aside
-some memory during boot that can be added later on demand. Alternatives
-like virtio-mem that would avoid this issue are not yet available on
-s390x.
+I don't think that's all that useful - I think one of the issues with
+linkat(AT_EMPTY_PATH) is exactly that "it's only useful for root",
+which means that it's effectively useless. Inside a container or out.
 
-There could be ways to optimize some cases in user space: before reading
-memory in an anonymous private mapping on the migration source, check via
-/proc/self/pagemap if anything is already populated. Similarly check on
-the migration destination before reading. While that would avoid
-populating tables full of shared zeropages on all architectures, it's
-harder to get right and performant, and requires user space changes.
+Because very few loads run as root-only (and fewer still run with any
+capability bits that aren't just "root or nothing").
 
-Further, with posctopy live migration we must place a page, so there,
-"avoid touching memory to avoid allocating memory" is not really
-possible. (Note that a previously we would have falsely inserted
-shared zeropages into processes using UFFDIO_ZEROPAGE where
-mm_forbids_zeropage() would have actually forbidden it)
+Before I did all this, I did a Debian code search for linkat with
+AT_EMPTY_PATH, and it's almost non-existent. And I think it's exactly
+because of this "when it's only useful for root, it's hardly useful at
+all" issue.
 
-PV is currently incompatible with memory ballooning, and in the common
-case, KVM guests don't make use of storage keys. Instead of zapping
-zeropages when enabling storage keys / PV, that turned out to be
-problematic in the past, let's do exactly the same we do with KSM pages:
-trigger unsharing faults to replace the shared zeropages by proper
-anonymous folios.
+(Of course, my Debian code search may have been broken).
 
-What about added latency when enabling storage kes? Having a lot of
-zeropages in applicable environments (PV, legacy guests, unittests) is
-unexpected. Further, KSM could today already unshare the zeropages
-and unmerging KSM pages when enabling storage kets would unshare the
-KSM-placed zeropages in the same way, resulting in the same latency.
+So I suspect your special case is actually largely useless, and what
+the container user actually wanted was what my patch does, but they
+didn't think that was possible, so they asked to just extend the
+"root" notion.
 
-Reviewed-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Tested-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-Fixes: fa41ba0d08de ("s390/mm: avoid empty zero pages for KVM guests to avoid postcopy hangs")
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/include/asm/gmap.h        |   2 +-
- arch/s390/include/asm/mmu.h         |   5 +
- arch/s390/include/asm/mmu_context.h |   1 +
- arch/s390/include/asm/pgtable.h     |  16 ++-
- arch/s390/kvm/kvm-s390.c            |   4 +-
- arch/s390/mm/gmap.c                 | 163 +++++++++++++++++++++-------
- 6 files changed, 144 insertions(+), 47 deletions(-)
+I've added Charles to the Cc.
 
-diff --git a/arch/s390/include/asm/gmap.h b/arch/s390/include/asm/gmap.h
-index 5cc46e0dde62..9725586f4259 100644
---- a/arch/s390/include/asm/gmap.h
-+++ b/arch/s390/include/asm/gmap.h
-@@ -146,7 +146,7 @@ int gmap_mprotect_notify(struct gmap *, unsigned long start,
- 
- void gmap_sync_dirty_log_pmd(struct gmap *gmap, unsigned long dirty_bitmap[4],
- 			     unsigned long gaddr, unsigned long vmaddr);
--int gmap_mark_unmergeable(void);
-+int s390_disable_cow_sharing(void);
- void s390_unlist_old_asce(struct gmap *gmap);
- int s390_replace_asce(struct gmap *gmap);
- void s390_uv_destroy_pfns(unsigned long count, unsigned long *pfns);
-diff --git a/arch/s390/include/asm/mmu.h b/arch/s390/include/asm/mmu.h
-index bb1b4bef1878..4c2dc7abc285 100644
---- a/arch/s390/include/asm/mmu.h
-+++ b/arch/s390/include/asm/mmu.h
-@@ -32,6 +32,11 @@ typedef struct {
- 	unsigned int uses_skeys:1;
- 	/* The mmu context uses CMM. */
- 	unsigned int uses_cmm:1;
-+	/*
-+	 * The mmu context allows COW-sharing of memory pages (KSM, zeropage).
-+	 * Note that COW-sharing during fork() is currently always allowed.
-+	 */
-+	unsigned int allow_cow_sharing:1;
- 	/* The gmaps associated with this context are allowed to use huge pages. */
- 	unsigned int allow_gmap_hpage_1m:1;
- } mm_context_t;
-diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
-index 929af18b0908..a7789a9f6218 100644
---- a/arch/s390/include/asm/mmu_context.h
-+++ b/arch/s390/include/asm/mmu_context.h
-@@ -35,6 +35,7 @@ static inline int init_new_context(struct task_struct *tsk,
- 	mm->context.has_pgste = 0;
- 	mm->context.uses_skeys = 0;
- 	mm->context.uses_cmm = 0;
-+	mm->context.allow_cow_sharing = 1;
- 	mm->context.allow_gmap_hpage_1m = 0;
- #endif
- 	switch (mm->context.asce_limit) {
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 60950e7a25f5..259c2439c251 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -566,10 +566,20 @@ static inline pud_t set_pud_bit(pud_t pud, pgprot_t prot)
- }
- 
- /*
-- * In the case that a guest uses storage keys
-- * faults should no longer be backed by zero pages
-+ * As soon as the guest uses storage keys or enables PV, we deduplicate all
-+ * mapped shared zeropages and prevent new shared zeropages from getting
-+ * mapped.
-  */
--#define mm_forbids_zeropage mm_has_pgste
-+#define mm_forbids_zeropage mm_forbids_zeropage
-+static inline int mm_forbids_zeropage(struct mm_struct *mm)
-+{
-+#ifdef CONFIG_PGSTE
-+	if (!mm->context.allow_cow_sharing)
-+		return 1;
-+#endif
-+	return 0;
-+}
-+
- static inline int mm_uses_skeys(struct mm_struct *mm)
- {
- #ifdef CONFIG_PGSTE
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 5147b943a864..db3392f0be21 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2631,9 +2631,7 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
- 		if (r)
- 			break;
- 
--		mmap_write_lock(current->mm);
--		r = gmap_mark_unmergeable();
--		mmap_write_unlock(current->mm);
-+		r = s390_disable_cow_sharing();
- 		if (r)
- 			break;
- 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 094b43b121cd..9233b0acac89 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2549,41 +2549,6 @@ static inline void thp_split_mm(struct mm_struct *mm)
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
--/*
-- * Remove all empty zero pages from the mapping for lazy refaulting
-- * - This must be called after mm->context.has_pgste is set, to avoid
-- *   future creation of zero pages
-- * - This must be called after THP was disabled.
-- *
-- * mm contracts with s390, that even if mm were to remove a page table,
-- * racing with the loop below and so causing pte_offset_map_lock() to fail,
-- * it will never insert a page table containing empty zero pages once
-- * mm_forbids_zeropage(mm) i.e. mm->context.has_pgste is set.
-- */
--static int __zap_zero_pages(pmd_t *pmd, unsigned long start,
--			   unsigned long end, struct mm_walk *walk)
--{
--	unsigned long addr;
--
--	for (addr = start; addr != end; addr += PAGE_SIZE) {
--		pte_t *ptep;
--		spinlock_t *ptl;
--
--		ptep = pte_offset_map_lock(walk->mm, pmd, addr, &ptl);
--		if (!ptep)
--			break;
--		if (is_zero_pfn(pte_pfn(*ptep)))
--			ptep_xchg_direct(walk->mm, addr, ptep, __pte(_PAGE_INVALID));
--		pte_unmap_unlock(ptep, ptl);
--	}
--	return 0;
--}
--
--static const struct mm_walk_ops zap_zero_walk_ops = {
--	.pmd_entry	= __zap_zero_pages,
--	.walk_lock	= PGWALK_WRLOCK,
--};
--
- /*
-  * switch on pgstes for its userspace process (for kvm)
-  */
-@@ -2601,22 +2566,140 @@ int s390_enable_sie(void)
- 	mm->context.has_pgste = 1;
- 	/* split thp mappings and disable thp for future mappings */
- 	thp_split_mm(mm);
--	walk_page_range(mm, 0, TASK_SIZE, &zap_zero_walk_ops, NULL);
- 	mmap_write_unlock(mm);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(s390_enable_sie);
- 
--int gmap_mark_unmergeable(void)
-+static int find_zeropage_pte_entry(pte_t *pte, unsigned long addr,
-+		unsigned long end, struct mm_walk *walk)
-+{
-+	unsigned long *found_addr = walk->private;
-+
-+	/* Return 1 of the page is a zeropage. */
-+	if (is_zero_pfn(pte_pfn(*pte))) {
-+
-+		/*
-+		 * Shared zeropage in e.g., a FS DAX mapping? We cannot do the
-+		 * right thing and likely don't care: FAULT_FLAG_UNSHARE
-+		 * currently only works in COW mappings, which is also where
-+		 * mm_forbids_zeropage() is checked.
-+		 */
-+		if (!is_cow_mapping(walk->vma->vm_flags))
-+			return -EFAULT;
-+
-+		*found_addr = addr;
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+static const struct mm_walk_ops find_zeropage_ops = {
-+	.pte_entry	= find_zeropage_pte_entry,
-+	.walk_lock	= PGWALK_WRLOCK,
-+};
-+
-+/*
-+ * Unshare all shared zeropages, replacing them by anonymous pages. Note that
-+ * we cannot simply zap all shared zeropages, because this could later
-+ * trigger unexpected userfaultfd missing events.
-+ *
-+ * This must be called after mm->context.allow_cow_sharing was
-+ * set to 0, to avoid future mappings of shared zeropages.
-+ *
-+ * mm contracts with s390, that even if mm were to remove a page table,
-+ * and racing with walk_page_range_vma() calling pte_offset_map_lock()
-+ * would fail, it will never insert a page table containing empty zero
-+ * pages once mm_forbids_zeropage(mm) i.e.
-+ * mm->context.allow_cow_sharing is set to 0.
-+ */
-+static int __s390_unshare_zeropages(struct mm_struct *mm)
-+{
-+	struct vm_area_struct *vma;
-+	VMA_ITERATOR(vmi, mm, 0);
-+	unsigned long addr;
-+	int rc;
-+
-+	for_each_vma(vmi, vma) {
-+		/*
-+		 * We could only look at COW mappings, but it's more future
-+		 * proof to catch unexpected zeropages in other mappings and
-+		 * fail.
-+		 */
-+		if ((vma->vm_flags & VM_PFNMAP) || is_vm_hugetlb_page(vma))
-+			continue;
-+		addr = vma->vm_start;
-+
-+retry:
-+		rc = walk_page_range_vma(vma, addr, vma->vm_end,
-+					 &find_zeropage_ops, &addr);
-+		if (rc <= 0)
-+			continue;
-+
-+		/* addr was updated by find_zeropage_pte_entry() */
-+		rc = handle_mm_fault(vma, addr,
-+				     FAULT_FLAG_UNSHARE | FAULT_FLAG_REMOTE,
-+				     NULL);
-+		if (rc & VM_FAULT_OOM)
-+			return -ENOMEM;
-+		/*
-+		 * See break_ksm(): even after handle_mm_fault() returned 0, we
-+		 * must start the lookup from the current address, because
-+		 * handle_mm_fault() may back out if there's any difficulty.
-+		 *
-+		 * VM_FAULT_SIGBUS and VM_FAULT_SIGSEGV are unexpected but
-+		 * maybe they could trigger in the future on concurrent
-+		 * truncation. In that case, the shared zeropage would be gone
-+		 * and we can simply retry and make progress.
-+		 */
-+		cond_resched();
-+		goto retry;
-+	}
-+
-+	return rc;
-+}
-+
-+static int __s390_disable_cow_sharing(struct mm_struct *mm)
- {
-+	int rc;
-+
-+	if (!mm->context.allow_cow_sharing)
-+		return 0;
-+
-+	mm->context.allow_cow_sharing = 0;
-+
-+	/* Replace all shared zeropages by anonymous pages. */
-+	rc = __s390_unshare_zeropages(mm);
- 	/*
- 	 * Make sure to disable KSM (if enabled for the whole process or
- 	 * individual VMAs). Note that nothing currently hinders user space
- 	 * from re-enabling it.
- 	 */
--	return ksm_disable(current->mm);
-+	if (!rc)
-+		rc = ksm_disable(mm);
-+	if (rc)
-+		mm->context.allow_cow_sharing = 1;
-+	return rc;
-+}
-+
-+/*
-+ * Disable most COW-sharing of memory pages for the whole process:
-+ * (1) Disable KSM and unmerge/unshare any KSM pages.
-+ * (2) Disallow shared zeropages and unshare any zerpages that are mapped.
-+ *
-+ * Not that we currently don't bother with COW-shared pages that are shared
-+ * with parent/child processes due to fork().
-+ */
-+int s390_disable_cow_sharing(void)
-+{
-+	int rc;
-+
-+	mmap_write_lock(current->mm);
-+	rc = __s390_disable_cow_sharing(current->mm);
-+	mmap_write_unlock(current->mm);
-+	return rc;
- }
--EXPORT_SYMBOL_GPL(gmap_mark_unmergeable);
-+EXPORT_SYMBOL_GPL(s390_disable_cow_sharing);
- 
- /*
-  * Enable storage key handling from now on and initialize the storage
-@@ -2685,7 +2768,7 @@ int s390_enable_skey(void)
- 		goto out_up;
- 
- 	mm->context.uses_skeys = 1;
--	rc = gmap_mark_unmergeable();
-+	rc = __s390_disable_cow_sharing(mm);
- 	if (rc) {
- 		mm->context.uses_skeys = 0;
- 		goto out_up;
--- 
-2.44.0
+But yes, with my patch, it would now be trivial to make that
 
+        capable(CAP_DAC_READ_SEARCH)
+
+test also be
+
+        ns_capable(f.file->f_cred->user_ns, CAP_DAC_READ_SEARCH)
+
+instead. I suspect not very many would care any more, but it does seem
+conceptually sensible.
+
+As to your patch - I don't like your nd->root  games in that patch at
+all. That looks odd.
+
+Yes, it makes lookup ignore the dfd (so you avoid the TOCTOU issue),
+but it also makes lookup ignore "/". Which happens to be ok with an
+empty path, but still...
+
+So it feels to me like that patch of yours mis-uses something that is
+just meant for vfs_path_lookup().
+
+It may happen to work, but it smells really odd to me.
+
+             Linus
