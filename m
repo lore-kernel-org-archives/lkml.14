@@ -1,190 +1,133 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F6947F51
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 23:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816E047A6A;
+	Thu, 11 Apr 2024 23:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712877701; cv=none; b=rsP4M1NP/V7s2YpScroKMn2C/YekVg95yafl2Xlt5K/mY0tUqKR9JqVL4AYjem7F75SRoOBwnAF6i7ECIXTJjFB6WwRtE3mu22e/ebujAkeHmMwG1IzcVZvUgI7MTst4SWsaTW1peak9vlqdKFkv5wRE1c+djxKpM6ber7TMBHE=
+	t=1712877725; cv=none; b=M+dusWYxwADeF8aqOvtNlX1EVlpzUsUV8DxBsTu40uw453dm0vNbn9qvh50Opv1suL6XfgNCBP15yWGAvL/D/XJyklSK58QcZOlQzprvggBrkZgZJWbjPv2LtudjKjcL470pJLhedBBuOOfFsOig+FWAHAcKhtj8UOIVTBUaH8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712877701; c=relaxed/simple;
-	bh=6ZwCVg4MusV6lQ7ItLH6EESwYxCw9nUT7b8OHDZdHT4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nQaPwf++H2Qj888PPjCKXA/Ne6W0OMv/5lDs6wg/Rl7Pc9QWQcBd5fiNb8L4FGuDt9oPeSmnhqt1JfSKLcpqx3lqAQAvsfsbiT2b7i/nArPIxT9u4w0DyknxJANUWxw2rjIte/Y00uo6RMkE2gOhkSa2RnGaKNEmXxRYYQio61w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h7BaZD4L; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712877725; c=relaxed/simple;
+	bh=NiPMNkequhP1rKOVRsz2ygaVmwY+Odd+UMHIEOdjPRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u1U6LMIenjFh/Pe6gB/06SeaqmSRnT5Om2pKQ77SKoDpqBk9mGj8FXtojlhDUDOHBkmYJBMvbCCHpwtryjtnOwcF1wtcwl69TTRLRXrR1mm3nB5+B8UWfrEeRAD0vnAjDpLXg7rmcso60KFqjXBcf/Qu83dBvE1CXNNTMdsV5HQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Aye2Cc5c; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h7BaZD4L"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dbe9e13775aso610717276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:21:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712877698; x=1713482498; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lorpjlq0547PTTOUkeSdAvU0WcM/oDvCo7GfzO8Vzks=;
-        b=h7BaZD4Lk7bbJVf/l/WvglQtSL2oGI6oS/d1AH7bUYm+lo1z2xDLUY0dfo/4y2LIr7
-         PEVf3LdP2yZqpt0DU9lRh2RjgHURaaNrP7bi+Rky7JWbSjz8J69QOtotAS297aR8Cuzw
-         zFGz/qAcF6PA/uqrkDDghqN5dwnWE3TcYb2gHs4SGkECk/un+GplfeDgEh9Myt2PxE46
-         6sNlkGTPa35AvCV/z1b1AikRfkclAZx7WrJjGXc1ZI+pH5ox/EI1SDulF9unikyHvXnM
-         tJl9IpeKGLQVFT5AiEcv2LyBPZzklIFKQkSMY/CTL+93kE94O8OpJ1su+ihzuhmiyGBz
-         z1aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712877698; x=1713482498;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lorpjlq0547PTTOUkeSdAvU0WcM/oDvCo7GfzO8Vzks=;
-        b=t//SnTNpMbY94WmfNe1lm0pjqUj3hKZH4SQWa5kpDPnbKguNbsMzynjFjTHYnCJVLB
-         w04S7nJwwZbjl/A2CfuXALXPCrvIbjVSt3AyqkTHfwDFlhWCj+cisvgv2kOe/57RDcR+
-         m85Jt1bGJk/uFyjm2j3aaZ5kU6JhhN0HW7qtwSa0MsyKxJhaQVh5OU148NMJJyDR6FZI
-         /b7jGzbE1rSwXIRjKXTpctVOuhdnrU3tzocV/jGTbgk1T6VMty4sbZQtcRLe6q2zEyGF
-         FFou5grLbZYl+AgNpbbvDRlhwTPpp2rg3TUh0XGfVDotc8WJ0XWuRTmLYAr7m/9zcamP
-         kH8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXeUL4D+8lEUoSDrRYXp7alhku4cGbT1ZwkmhouNndMsU68J1U37n7kAHNK9gXk4o2znR+dMeotoDmB8WRaKdgVOSomPr+l6Z867i7l
-X-Gm-Message-State: AOJu0YycFh0hnghV0mmfa5deUtZtlSq9bakX82OQcR6xImQCZpQCu0sF
-	MMAylWXEg57KrSHO3b9N5dqQ+Tam57sM7WSDQXYsP9Y6Iht2gQshrf9VLh8sXzTkssEV6ryaJkY
-	9zQ==
-X-Google-Smtp-Source: AGHT+IFVKkpv5zYi+YuG2a/YkPh8ZcgQ30c7S48yC8dspxgNJRM9VCSeO9DRhVk55/D5JlCVeG/xmM/XmkU=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:1002:b0:dc6:e5d3:5f03 with SMTP id
- w2-20020a056902100200b00dc6e5d35f03mr293019ybt.4.1712877698131; Thu, 11 Apr
- 2024 16:21:38 -0700 (PDT)
-Date: Thu, 11 Apr 2024 16:21:36 -0700
-In-Reply-To: <20240126085444.324918-42-xiong.y.zhang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Aye2Cc5c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1712877261;
+	bh=7t25lDnXDTwlXYTBIkcJWNtQ9phcP0AeetbMBZHXvJA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Aye2Cc5chYgbkiOX39UaWQTduBeCtERu/fZjEO57S1JV0cRwqlmSmZPn+8rn86ruv
+	 Fg8LpVql49pwM1nYbmN+7A41oynnmRtty7dGEa6iIQXlgI7lVOBHisX15QFrxhJWdC
+	 8OL/qw9aT4ZqQqs2PWrKc+txf/+GJWTS8DNvRWAHzHks/0vQ+ZeomGUjMY3dztH+cs
+	 E7pBdodjylkOR/uWCapenf5aGeA2iewfKxjOcmx65PAcLMVv3h+KEyaCmKUObWS2wN
+	 7QoN50hDRMbygchhY1Ui6xWgxL9r5MkA8JLiHJG6NjQiQ2QSYR/1OzuF5wDKoGHbHL
+	 DO+T5rnYbZznQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VFwWK3D9Hz4wcb;
+	Fri, 12 Apr 2024 09:14:21 +1000 (AEST)
+Date: Fri, 12 Apr 2024 09:14:20 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Barry Song <v-songbaohua@oppo.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mm tree
+Message-ID: <20240412091420.3d7c39ee@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com> <20240126085444.324918-42-xiong.y.zhang@linux.intel.com>
-Message-ID: <ZhhwgFzFgklQFisv@google.com>
-Subject: Re: [RFC PATCH 41/41] KVM: nVMX: Add nested virtualization support
- for passthrough PMU
-From: Sean Christopherson <seanjc@google.com>
-To: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-Cc: pbonzini@redhat.com, peterz@infradead.org, mizhang@google.com, 
-	kan.liang@intel.com, zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, 
-	jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com, 
-	irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/j+xycq552cwx/eM8GNWel+a";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> From: Mingwei Zhang <mizhang@google.com>
-> 
-> Add nested virtualization support for passthrough PMU by combining the MSR
-> interception bitmaps of vmcs01 and vmcs12. Readers may argue even without
-> this patch, nested virtualization works for passthrough PMU because L1 will
-> see Perfmon v2 and will have to use legacy vPMU implementation if it is
-> Linux. However, any assumption made on L1 may be invalid, e.g., L1 may not
-> even be Linux.
-> 
-> If both L0 and L1 pass through PMU MSRs, the correct behavior is to allow
-> MSR access from L2 directly touch HW MSRs, since both L0 and L1 passthrough
-> the access.
-> 
-> However, in current implementation, if without adding anything for nested,
-> KVM always set MSR interception bits in vmcs02. This leads to the fact that
-> L0 will emulate all MSR read/writes for L2, leading to errors, since the
-> current passthrough vPMU never implements set_msr() and get_msr() for any
-> counter access except counter accesses from the VMM side.
-> 
-> So fix the issue by setting up the correct MSR interception for PMU MSRs.
-> 
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 52 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index c5ec0ef51ff7..95e1c78152da 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -561,6 +561,55 @@ static inline void nested_vmx_set_intercept_for_msr(struct vcpu_vmx *vmx,
->  						   msr_bitmap_l0, msr);
->  }
->  
-> +/* Pass PMU MSRs to nested VM if L0 and L1 are set to passthrough. */
-> +static void nested_vmx_set_passthru_pmu_intercept_for_msr(struct kvm_vcpu *vcpu,
+--Sig_/j+xycq552cwx/eM8GNWel+a
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Heh, 50 instances of passthrough, and then someone decides to shave a few characters
-with passthru :-)  Long live mediated PMU!!!
+Hi all,
 
-> +							  unsigned long *msr_bitmap_l1,
-> +							  unsigned long *msr_bitmap_l0)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	int i;
-> +
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +						 msr_bitmap_l0,
-> +						 MSR_ARCH_PERFMON_EVENTSEL0 + i,
-> +						 MSR_TYPE_RW);
-> +		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +						 msr_bitmap_l0,
-> +						 MSR_IA32_PERFCTR0 + i,
-> +						 MSR_TYPE_RW);
-> +		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +						 msr_bitmap_l0,
-> +						 MSR_IA32_PMC0 + i,
-> +						 MSR_TYPE_RW);
-> +	}
-> +
-> +	for (i = 0; i < vcpu_to_pmu(vcpu)->nr_arch_fixed_counters; i++) {
+After merging the mm tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Curly braces aren't needed, and this can use "pmu" instead of "vcpu_to_pmu".
+mm/memory.c: In function 'do_swap_page':
+mm/memory.c:4169:17: error: implicit declaration of function 'count_mthp_st=
+at' [-Werror=3Dimplicit-function-declaration]
+ 4169 |                 count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_=
+SWPIN_REFAULT);
+      |                 ^~~~~~~~~~~~~~~
+mm/memory.c:4169:53: error: 'MTHP_STAT_ANON_SWPIN_REFAULT' undeclared (firs=
+t use in this function)
+ 4169 |                 count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_=
+SWPIN_REFAULT);
+      |                                                     ^~~~~~~~~~~~~~~=
+~~~~~~~~~~~~~
+mm/memory.c:4169:53: note: each undeclared identifier is reported only once=
+ for each function it appears in
+cc1: some warnings being treated as errors
 
-> +		nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +						 msr_bitmap_l0,
-> +						 MSR_CORE_PERF_FIXED_CTR0 + i,
-> +						 MSR_TYPE_RW);
-> +	}
-> +	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +					 msr_bitmap_l0,
-> +					 MSR_CORE_PERF_FIXED_CTR_CTRL,
-> +					 MSR_TYPE_RW);
-> +
-> +	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +					 msr_bitmap_l0,
-> +					 MSR_CORE_PERF_GLOBAL_STATUS,
-> +					 MSR_TYPE_RW);
-> +	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +					 msr_bitmap_l0,
-> +					 MSR_CORE_PERF_GLOBAL_CTRL,
-> +					 MSR_TYPE_RW);
-> +	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1,
-> +					 msr_bitmap_l0,
-> +					 MSR_CORE_PERF_GLOBAL_OVF_CTRL,
-> +					 MSR_TYPE_RW);
-> +}
-> +
->  /*
->   * Merge L0's and L1's MSR bitmap, return false to indicate that
->   * we do not use the hardware.
-> @@ -660,6 +709,9 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
->  	nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
->  					 MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
->  
-> +	if (is_passthrough_pmu_enabled(vcpu))
-> +		nested_vmx_set_passthru_pmu_intercept_for_msr(vcpu, msr_bitmap_l1, msr_bitmap_l0);
+Caused by commits
 
-More code that's probably cleaner if the helper handles the PMU type.
+  d46de7357458 ("mm: add per-order mTHP anon_alloc and anon_alloc_fallback =
+counters")
+  37a4ecbf36cb ("mm: add per-order mTHP swpin_refault counter")
 
-	nested_vmx_set_pmu_msr_intercepts(vcpu, msr_bitmap_l1, msr_bitmap_l0);
+I have applied the following patch for today:
 
-and then
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 12 Apr 2024 09:11:42 +1000
+Subject: [PATCH] fix up for ""mm: add per-order mTHP anon_alloc and
+ anon_alloc_fallback counters"
 
-	if (!enable_mediated_pmu || !pmu->version)
-		return;
+and "mm: add per-order mTHP swpin_refault counter"
 
-> +
->  	kvm_vcpu_unmap(vcpu, &vmx->nested.msr_bitmap_map, false);
->  
->  	vmx->nested.force_msr_bitmap_recalc = false;
-> -- 
-> 2.34.1
-> 
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ mm/memory.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index b6fa5146b260..b3c33a76bcfa 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4166,7 +4166,9 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 		nr_pages =3D nr;
+ 		entry =3D folio->swap;
+ 		page =3D &folio->page;
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 		count_mthp_stat(folio_order(folio), MTHP_STAT_ANON_SWPIN_REFAULT);
++#endif
+ 	}
+=20
+ check_pte:
+--=20
+2.43.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/j+xycq552cwx/eM8GNWel+a
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmYYbswACgkQAVBC80lX
+0GxhKwf/VBJlmoGu6BUKeV2TRToe7I72vIK+VCLydL5u1qQx5rW0WHy0iq5GMlWe
+a4pPQqed1aDfMmsrd6j0kCFmNDGRxgwMoy8/Br2m2ZR8ncKEVqXR7sqKoykjShlU
+/klWRzWoDhnw4Bw6Z9ZBcltridjOUKLObHKUnvjabvAh6xXeelI3/LPkvx7+Gkvo
+Noa7/JPvN4bpMzUI6yFZrceUT4X6UWz6pQ8QFNWyV+wRgTcyDSDs/R4a9yDwdVYo
+MMWI5TlRkRBtUBIq6fw6xK59O9UyabdMtjrEH/FVojmU0OKjwGDKOSAnAPiBrdF6
+grV2PcxXvm+gOA6gNrLZ3k/4c0h0ig==
+=Vcqg
+-----END PGP SIGNATURE-----
+
+--Sig_/j+xycq552cwx/eM8GNWel+a--
