@@ -1,98 +1,113 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4581C4C5A
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7210B3FE4B
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849901; cv=none; b=We5pDLN9Sh8CJotP1GqZ7+HOdM9jM86NbIv1gJPCl8weg0lW7f8wCVkPr3UW13AvTJoJ/o8Zes0U98jtmUbE5cym8ITawLRDt2z7ZCKM6lnlSEpQKvP89ftCz1hn7i9nBEjYIQWyTmcZVOmAstMb76wgpcgvwG4qilhGYe5OFx8=
+	t=1712849903; cv=none; b=Ks1WzWV2tTzXw+h4ejlmYfHjZh22ZRXgk7gzC1+SYYr2XY+Qz8zr4eNVVH5WCZG9ZQSGlOsGRs2I1QXEbIbAABjF/Jh3WBy49ks71NxH3swL4O6Na3Rpl9H3xJrPg35qzapchfqGDUZjPP/1SWaLNIWAY9+vk9NqSd5aWZHXGok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849901; c=relaxed/simple;
-	bh=c7ZbKM02ozoInY9TLL5WaNcYw6jZxIxWCpv/8aHKlWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qD4LvA3Vlpqt9ORx1zhK3S36L+Axdw+7wh8J1OQca/8LmfGJJtI3TzQj1/PFWke8AgiTAHCV4AVyOSAOUc/pJ41x9nUDcB5PQAx1YUUyoWLoIYpgBTOVYW+XZVqqqf6IEx+15efo2MKqh68xArDYEhTDTtQ2wId38u/etiNCXbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=LH8sSnq3; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1712849903; c=relaxed/simple;
+	bh=QkykjnyhiIsmqxTqNUJFbZcIYgen5qApI74Rmh1qFY0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aDSClpMd8eldl2KrHIuIlFsY4NV04y3yvuToBpOd0MAmpbb45b14l6qQ1z2/I7+JwdT4/ra0/CI/7OEmHyWbEM5SLcx4xfrfGafkvXziRiH3ie/66yp0p/JvdUI3enwvu1qx4U7fPnTM1JhGsqVcKwNA9T7fuIsyG3n6Exs18Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rXyI+QWR; arc=none smtp.client-ip=209.85.166.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="LH8sSnq3"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ea260f51b8so1947165a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rXyI+QWR"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7cc0e831e11so170556739f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:38:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1712849898; x=1713454698; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SQF8pW0Q5UZae20gtyOFCGbbxCzCiJFtoc6YhdkZSao=;
-        b=LH8sSnq32JmoM8M0NdsnRbS6+jV8xpne0zaOegeuaxOPfUQAGVRXMPPapf/r8wTkJz
-         5Rx0ZIODxRVh74zRTkQ++x8S/Nvpxz7wxRepLtOyl8I0gLB8nz43HsXB+YzCNOGO1rZr
-         emS0O0IV/2v6OsVIw97rQkSyrk6HZ8pp4SaK8=
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849901; x=1713454701; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3feDQWPp0h4HB2jNcmqUMgdeJ8japBxB2SfPZpWZN3M=;
+        b=rXyI+QWRzjv/1Ip4BcK7l343U9F7UCXR7eq2F4XlzgDhfSCoS5WDh3X0q7QSd1/tL0
+         gd3iCzTndf2ZOLJJMmV728jMZCPovS2dGdlsstjAXeS4GIyh1Sb8UTEL56OprcA7PtyT
+         5y9mzIVlC6pLFWQ9lUI9u0ae9+Z0oy+KwERRAUkt6kVnpiURaty2dWai9zuPGp4NZKXL
+         afD7uDrDm2jtddckRKbumvqeISBJIm5BNIH52mf27PhRaV/2e0HEMtnhesQEOMBzAqDE
+         W76rs+HRlHHO3H/rnpBb3KWIj5rQ5KTK+NwgSdhEycRsZNuCnjcjwVk0ggpWZSsxgMzI
+         hS2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849898; x=1713454698;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1712849901; x=1713454701;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SQF8pW0Q5UZae20gtyOFCGbbxCzCiJFtoc6YhdkZSao=;
-        b=GCcnO86MKXFdr5KAIIrj8wr3frkVL0RUlcZjzpa5FDqztKjtMt0wqGUyqhAavE62YH
-         UGXBPFeSZl4mXjPg8UK29D307C5GQJ8tjDKAXrO0uTNqY4hsegjpf7tE0Am1tvqsYtu0
-         AoROa8J6cpgASBxByEbK5R/2wmopUSK6jMSSPjJpoeZwcM6wLbOSEcfqQ3rqcdgALIUl
-         Az45oYlPpzJPSOSTrOv9+3TFapHtIgasClryPwiqJoNVtv1Sv7EZ2fTHxYgOMj9cNF0u
-         q0rz8/LaneF9crtK8kql09zitejgy2nJ93dKaum3bBem+ZyajoQPwNOTJW5HpgNyEazT
-         vtTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVKmOoyBcunFGdc7+Mhiog4SHVfPvmB8Ybo+ItcIZSSZb6Y0YrYBSMzRlDfEps7bip1UmgV+nnNYUtRK3MO6ndWiiWgKfookqMT2uvf
-X-Gm-Message-State: AOJu0YwhFhbr1wS2hnCdEnKO2INFq3uf/BiPZUin42+vDi63ggGImtqw
-	UD3RB6uVMjbSYDViZ6U8moXqWRxnCUtsFjXOsl2Yytmnm+I/Ph/EkZ6R+1ZGQA==
-X-Google-Smtp-Source: AGHT+IHuutycOm+XsRHDl0LWcOxTy9NbRP7BpNLELnhVE5UZheCq3gAcUJShOSLCoSLKJdlEGR/O1A==
-X-Received: by 2002:a05:6830:4d:b0:6ea:1189:de3c with SMTP id d13-20020a056830004d00b006ea1189de3cmr5851360otp.34.1712849898444;
-        Thu, 11 Apr 2024 08:38:18 -0700 (PDT)
-Received: from fedora64.linuxtx.org ([99.47.93.78])
-        by smtp.gmail.com with ESMTPSA id q14-20020a05683033ce00b006eb507d4257sm238520ott.33.2024.04.11.08.38.17
+        bh=3feDQWPp0h4HB2jNcmqUMgdeJ8japBxB2SfPZpWZN3M=;
+        b=IwkEUrysn66rzdq8ChH5dc4pLZVF/FouSYspvKwJ1E6KD/2KipGzC+Tk3HbUMpzwhk
+         dYs4TE2LEaT2xVnwlAJDR3LaKhU0s1VKNM23r8+aupgh1AWV9unHjR7mDblT8pkkz47G
+         tACOFCN4OAEg895Nisk7aNttj7c9zOIcz3X9jc/Z5RtFeHmFc3BK/7bWpYgQe8tGYeZs
+         flw1TS9hPe2BwYZANNp4cGHXS/CUBM075MUYb0vPpcTypdT00FrjfUxDjUKPWfv3b2Yk
+         cyDbYXkV5sQx1x6z2ZPnAGOmR50ZmgmkX7ws3VScmvVEnjT+QwCY9Air2Fn/ecXWWZUU
+         Gh1g==
+X-Gm-Message-State: AOJu0YwkzJY94pQ3GeWX9rWsPnyM67k71/tAddA9Nhh4wZH01xkPukEN
+	cZYD8uLwnlZA6Tf6nzO2xd82y1lGXsJi0Lm2ZtfhN9QPqvhGmDCrBrC1iBoJMy+yedutJ1zqcLS
+	x
+X-Google-Smtp-Source: AGHT+IFK/kmmEeAD+Q+Gz99Ep0sisFLM6Ckl7gV99dZbTFVo2hKKE2rkIT0pfK+XOPDrblDiAfohGg==
+X-Received: by 2002:a05:6602:21d7:b0:7d6:9ddf:5095 with SMTP id c23-20020a05660221d700b007d69ddf5095mr22163ioc.1.1712849901349;
+        Thu, 11 Apr 2024 08:38:21 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.38.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:38:18 -0700 (PDT)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Thu, 11 Apr 2024 10:38:16 -0500
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org
-Subject: Re: [PATCH 6.8 000/143] 6.8.6-rc1 review
-Message-ID: <ZhgD6FVwprj26KBU@fedora64.linuxtx.org>
-References: <20240411095420.903937140@linuxfoundation.org>
+        Thu, 11 Apr 2024 08:38:20 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 241/437] watchdog: ib700wdt: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:16:21 -0600
+Message-ID: <20240411153126.16201-242-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411095420.903937140@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 11:54:28AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.8.6 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.8.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.8.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ drivers/watchdog/ib700wdt.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Tested rc1 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
+diff --git a/drivers/watchdog/ib700wdt.c b/drivers/watchdog/ib700wdt.c
+index 39ea97009abd..e5daeed9cd5c 100644
+--- a/drivers/watchdog/ib700wdt.c
++++ b/drivers/watchdog/ib700wdt.c
+@@ -141,9 +141,9 @@ static int ibwdt_set_heartbeat(int t)
+  *	/dev/watchdog handling
+  */
+ 
+-static ssize_t ibwdt_write(struct file *file, const char __user *buf,
+-						size_t count, loff_t *ppos)
++static ssize_t ibwdt_write(struct kiocb *iocb, struct iov_iter *from)
+ {
++	size_t count = iov_iter_count(from);
+ 	if (count) {
+ 		if (!nowayout) {
+ 			size_t i;
+@@ -153,7 +153,7 @@ static ssize_t ibwdt_write(struct file *file, const char __user *buf,
+ 
+ 			for (i = 0; i != count; i++) {
+ 				char c;
+-				if (get_user(c, buf + i))
++				if (get_iter(c, from))
+ 					return -EFAULT;
+ 				if (c == 'V')
+ 					expect_close = 42;
+@@ -257,7 +257,7 @@ static int ibwdt_close(struct inode *inode, struct file *file)
+ static const struct file_operations ibwdt_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.llseek		= no_llseek,
+-	.write		= ibwdt_write,
++	.write_iter	= ibwdt_write,
+ 	.unlocked_ioctl	= ibwdt_ioctl,
+ 	.compat_ioctl	= compat_ptr_ioctl,
+ 	.open		= ibwdt_open,
+-- 
+2.43.0
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
