@@ -1,330 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B034613CFA6
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63DE51FBB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712814121; cv=none; b=MLysz0zZsBUOloFYiKc3Vhr1XYS1nHbRQ+3ic7AApXIeyeo8TECHfYVvepT0Ka2reef6wNZEgwVNPcfyovBHHTTBdVmVDggCPKBQXmLvFx2hVI9+7MCfoHKxMF7iTxVqfR5YeCQw6EkLUEapZ8w3rPqdxMa5AxPmWLfFqpBsmLU=
+	t=1712814255; cv=none; b=nhllQRFOSGLUHTLuReCPu9SqNdcDi02zqhdpKNmE313T5ras9FNNBFh4km5wbGhbi5dzOAq5csGswFH+Ge7yD7i6QOao4KZWfLRjkXNdVWvkCIx0Q+XEBwPsYzh4u64axsGnmgC4QoAdJwo6GSc9hSDbQyaYkOMWpuWzv1M8mCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712814121; c=relaxed/simple;
-	bh=MIxbPiLz3JeRSinxe0pJNrdpV53uSPO0/XHjtw8vB1E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IG3eIYRmucsJMquVn28ToOaKSiXRPTchUmlScy2umvcoXVB4VbjFjU0EY/YB3xnRcIaYhn2PkxwFsLtxTwF8EIGqIaDhOOnJRi1k0kA5PsIZ09uyZL6vdkjzUOMAjZnycqmwF9rNVHAAdJ/zYIWDvLD/DZ8wQvasU9w2MTNKQXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuG95pSm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712814255; c=relaxed/simple;
+	bh=PoX3VR6mX7cWIItNfToD8IFe75eNHPdkN9a85sokL8Y=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JUz7qEtmNNFUBIiD3chrdDba3e1YhqAkVwZmviy5afzyQ4CdkmipzU3E5Id9LXosE8x1D8IF1qu05vFCzChOEg5JFyw0a3SLa+TgStjbCJlUjEzR5pOfkwBUe0Tgr4ScTe7rncZQoYAfOx0AkBqA7mTmYEgX4n9Wgt5uJBJgXjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=KOWj8/6F; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuG95pSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F04FC43390;
-	Thu, 11 Apr 2024 05:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712814121;
-	bh=MIxbPiLz3JeRSinxe0pJNrdpV53uSPO0/XHjtw8vB1E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iuG95pSmtjXcZrq8qawMpbEizgtqbTEE3s3CC8o/Ay5bDNhkzyy8ajX2bEaqlpNQh
-	 YSWVk6+YW1H/lyHW3I62fS2JHbnp00UwK+UoPPl7DF+XwPPMIVzA8wy0KO65fwhpnI
-	 DceCi2VgDaEVW26xjABIeUfpDyaw0H9/RprJ9LXUihKoiA9o5eyNFhEy+rdZ2NPdr5
-	 FBtD1Q/1mDR96rhCQJdsY2Hmq/cdf5DCDxhsU6UjX/p71IYaM6bqdgvczhCe+en8TP
-	 AuRmWDH5sXOjV8ln9q1L557ir7gqS0LZ3ZG7M2fMWeLBrUE6MyvVf63N/RkKNG3Q7H
-	 PRNlX/3YYlUAw==
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 5/7] x86/bugs: Only harden syscalls when needed
-Date: Wed, 10 Apr 2024 22:40:49 -0700
-Message-ID: <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <cover.1712813475.git.jpoimboe@kernel.org>
-References: <cover.1712813475.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="KOWj8/6F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1712813926;
+	bh=PoX3VR6mX7cWIItNfToD8IFe75eNHPdkN9a85sokL8Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=KOWj8/6FlwUXJ85gdx6nYLGSno2kKd8SkFZX+ov3fOdVB2ypkJd4OVKBHNlkF75/k
+	 LK3BMQ4MsanUa+JSa+Hcu2IUraJ5lAIef0s6zBG+sXqRunsw/3PnUZ54pTDhMt1Aug
+	 lKoARbOn1zVNYAg284THY3avG6cyRgWY8vK9oox0=
+Received: from [IPv6:240e:358:11a8:c800:dc73:854d:832e:7] (unknown [IPv6:240e:358:11a8:c800:dc73:854d:832e:7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 1EAA967163;
+	Thu, 11 Apr 2024 01:38:39 -0400 (EDT)
+Message-ID: <8e12f79a8275ffa40858763acade4d54b3e96212.camel@xry111.site>
+Subject: Re: [PATCH v2] x86/mm: Don't disable INVLPG if "incomplete Global
+ INVLPG flushes" is fixed by microcode
+From: Xi Ruoyao <xry111@xry111.site>
+To: Andrew Cooper <andrew.cooper3@citrix.com>, Sean Christopherson
+	 <seanjc@google.com>, Michael Kelley <mhklinux@outlook.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo
+ Molnar <mingo@redhat.com>,  Borislav Petkov <bp@alien8.de>, "H. Peter
+ Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,  Dexuan Cui
+ <decui@microsoft.com>
+Date: Thu, 11 Apr 2024 13:38:33 +0800
+In-Reply-To: <d82cf14a-e949-4265-ae37-ec01685e1080@citrix.com>
+References: <20240324190503.116160-1-xry111@xry111.site>
+	 <SN6PR02MB41576028614CB7FE9A11EBEBD4362@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <Zg7S5dk3J4Zc82nj@google.com>
+	 <d1cc1f7c-9df0-4e3c-88ae-aedcd556ba95@citrix.com>
+	 <Zg7jLn-lV55Yh6mH@google.com>
+	 <SN6PR02MB415717D76F71C023A574841ED43C2@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <f8df14f3-ae6a-4e08-927a-7a7c2ebe8352@intel.com>
+	 <SN6PR02MB4157FDA1C431A92873AA1AAED4002@SN6PR02MB4157.namprd02.prod.outlook.com>
+	 <ZhSdSwqUprIgLVtr@google.com>
+	 <d82cf14a-e949-4265-ae37-ec01685e1080@citrix.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Syscall hardening (i.e., converting the syscall indirect branch to a
-series of direct branches) may cause performance regressions in certain
-scenarios.  Only use the syscall hardening when indirect branches are
-considered unsafe.
+On Tue, 2024-04-09 at 08:56 +0100, Andrew Cooper wrote:
+> On 09/04/2024 2:43 am, Sean Christopherson wrote:
+> > On Mon, Apr 08, 2024, Michael Kelley wrote:
+> > > From: Dave Hansen <dave.hansen@intel.com> Sent: Thursday, April 4, 20=
+24 11:09 AM
+> > > > On 4/4/24 10:48, Michael Kelley wrote:
+> > > > > I agree one could argue that it is a hypervisor bug to present PC=
+ID to the guest
+> > > > > in this situation. It's a lot cleaner to not have a guest be chec=
+king FMS and
+> > > > > microcode versions. But whether that's practical in the real worl=
+d, at least
+> > > > > for Hyper-V, I don't know. What's the real impact of running with=
+ PCID while
+> > > > > the flaw is still present? I don=E2=80=99t know the history here =
+...
+> > > > There's a chance that INVLPG will appear ineffective.
+> > > >=20
+> > > > The bad sequence would go something like this: The kernel does the
+> > > > INVLPG on a global mapping.=C2=A0 Later, when switching PCIDs, the =
+TLB entry
+> > > > mysteriously reappears.=C2=A0 No PCIDs switching means no mysteriou=
+s
+> > > > reappearance.
+> > > Xi Ruoyao's patch identifies these errata:=C2=A0 RPL042 and ADL063.=
+=C2=A0 In the links
+> > > to the documents Xi provided, both of these errata have the following
+> > > statement in the Errata Details section:
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0 This erratum does not apply in VMX non-root operat=
+ion.=C2=A0 It applies only
+> > > =C2=A0=C2=A0=C2=A0 when PCIDs are enabled and either in VMX root oper=
+ation or outside
+> > > =C2=A0=C2=A0=C2=A0 VMX operation.
+> > >=20
+> > > I don't have deep expertise on the terminology here, but this sounds
+> > > like it is saying the erratum doesn=E2=80=99t apply in a guest VM.=C2=
+=A0 Or am I
+> > > misunderstanding?
 
-Fixes: 1e3ad78334a6 ("x86/syscall: Don't force use of indirect calls for system calls")
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- arch/x86/entry/common.c            | 30 +++++++++++++++++++++++++---
- arch/x86/entry/syscall_32.c        | 11 +---------
- arch/x86/entry/syscall_64.c        |  8 +-------
- arch/x86/entry/syscall_x32.c       |  7 ++++++-
- arch/x86/include/asm/cpufeatures.h |  1 +
- arch/x86/include/asm/syscall.h     |  8 +++++++-
- arch/x86/kernel/cpu/bugs.c         | 32 +++++++++++++++++++++++++++++-
- 7 files changed, 74 insertions(+), 23 deletions(-)
+> > Huh.=C2=A0 My read of that is the same as yours.=C2=A0 If that's the ca=
+se, then it probably
+> > makes sense to have KVM advertise support if PCID is available in hardw=
+are, even
+> > if PCID is disabled by the host kernel.
+>=20
+> My reading is the same also.=C2=A0 Seems like VMs are fine.
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 6de50b80702e..80d432d2fe44 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -39,6 +39,28 @@
- 
- #ifdef CONFIG_X86_64
- 
-+/*
-+ * Do either a direct or an indirect call, depending on whether indirect calls
-+ * are considered safe.
-+ */
-+#define __do_syscall(table, func_direct, nr, regs)			\
-+({									\
-+	unsigned long __rax, __rdi, __rsi;				\
-+									\
-+	asm_inline volatile(						\
-+		ALTERNATIVE("call " __stringify(func_direct) "\n\t",	\
-+			    ANNOTATE_RETPOLINE_SAFE			\
-+			    "call *%[func_ptr]\n\t",			\
-+			    X86_FEATURE_INDIRECT_SAFE)			\
-+		: "=D" (__rdi), "=S" (__rsi), "=a" (__rax),		\
-+		  ASM_CALL_CONSTRAINT					\
-+		: "0" (regs), "1" (nr), [func_ptr] "r" (table[nr])	\
-+		: "rdx", "rcx", "r8", "r9", "r10", "r11",		\
-+		  "cc", "memory");					\
-+									\
-+	__rax;								\
-+})
-+
- static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
- {
- 	/*
-@@ -49,7 +71,7 @@ static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
- 
- 	if (likely(unr < NR_syscalls)) {
- 		unr = array_index_nospec(unr, NR_syscalls);
--		regs->ax = x64_sys_call(regs, unr);
-+		regs->ax = __do_syscall(sys_call_table, x64_sys_call, unr, regs);
- 		return true;
- 	}
- 	return false;
-@@ -66,7 +88,7 @@ static __always_inline bool do_syscall_x32(struct pt_regs *regs, int nr)
- 
- 	if (IS_ENABLED(CONFIG_X86_X32_ABI) && likely(xnr < X32_NR_syscalls)) {
- 		xnr = array_index_nospec(xnr, X32_NR_syscalls);
--		regs->ax = x32_sys_call(regs, xnr);
-+		regs->ax = __do_syscall(x32_sys_call_table, x32_sys_call, xnr, regs);
- 		return true;
- 	}
- 	return false;
-@@ -147,6 +169,8 @@ static int ia32_emulation_override_cmdline(char *arg)
- 	return kstrtobool(arg, &__ia32_enabled);
- }
- early_param("ia32_emulation", ia32_emulation_override_cmdline);
-+#else
-+#define __do_syscall(table, func_direct, nr, regs) table[nr](regs)
- #endif
- 
- /*
-@@ -162,7 +186,7 @@ static __always_inline void do_syscall_32_irqs_on(struct pt_regs *regs, int nr)
- 
- 	if (likely(unr < IA32_NR_syscalls)) {
- 		unr = array_index_nospec(unr, IA32_NR_syscalls);
--		regs->ax = ia32_sys_call(regs, unr);
-+		regs->ax = __do_syscall(ia32_sys_call_table, ia32_sys_call, unr, regs);
- 	} else if (nr != -1) {
- 		regs->ax = __ia32_sys_ni_syscall(regs);
- 	}
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index c2235bae17ef..9185870a3ab3 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -14,25 +14,16 @@
- #endif
- 
- #define __SYSCALL(nr, sym) extern long __ia32_##sym(const struct pt_regs *);
--
- #include <asm/syscalls_32.h>
- #undef __SYSCALL
- 
--/*
-- * The sys_call_table[] is no longer used for system calls, but
-- * kernel/trace/trace_syscalls.c still wants to know the system
-- * call address.
-- */
--#ifdef CONFIG_X86_32
- #define __SYSCALL(nr, sym) __ia32_##sym,
--const sys_call_ptr_t sys_call_table[] = {
-+__visible const sys_call_ptr_t ia32_sys_call_table[] = {
- #include <asm/syscalls_32.h>
- };
- #undef __SYSCALL
--#endif
- 
- #define __SYSCALL(nr, sym) case nr: return __ia32_##sym(regs);
--
- long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index 33b3f09e6f15..c368048efa41 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -11,19 +11,13 @@
- #include <asm/syscalls_64.h>
- #undef __SYSCALL
- 
--/*
-- * The sys_call_table[] is no longer used for system calls, but
-- * kernel/trace/trace_syscalls.c still wants to know the system
-- * call address.
-- */
- #define __SYSCALL(nr, sym) __x64_##sym,
--const sys_call_ptr_t sys_call_table[] = {
-+asmlinkage const sys_call_ptr_t sys_call_table[] = {
- #include <asm/syscalls_64.h>
- };
- #undef __SYSCALL
- 
- #define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
--
- long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
-index 03de4a932131..89a717267fab 100644
---- a/arch/x86/entry/syscall_x32.c
-+++ b/arch/x86/entry/syscall_x32.c
-@@ -11,8 +11,13 @@
- #include <asm/syscalls_x32.h>
- #undef __SYSCALL
- 
--#define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
-+#define __SYSCALL(nr, sym) __x64_##sym,
-+asmlinkage const sys_call_ptr_t x32_sys_call_table[] = {
-+#include <asm/syscalls_x32.h>
-+};
-+#undef __SYSCALL
- 
-+#define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
- long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
- {
- 	switch (nr) {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 3c7434329661..7c87fe80c696 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -470,6 +470,7 @@
- #define X86_FEATURE_BHI_CTRL		(21*32+ 2) /* "" BHI_DIS_S HW control available */
- #define X86_FEATURE_CLEAR_BHB_HW	(21*32+ 3) /* "" BHI_DIS_S HW control enabled */
- #define X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT (21*32+ 4) /* "" Clear branch history at vmexit using SW loop */
-+#define X86_FEATURE_INDIRECT_SAFE	(21*32+ 4) /* "" Indirect branches aren't vulnerable to Spectre v2 */
- 
- /*
-  * BUG word(s)
-diff --git a/arch/x86/include/asm/syscall.h b/arch/x86/include/asm/syscall.h
-index 2fc7bc3863ff..dfb59521244c 100644
---- a/arch/x86/include/asm/syscall.h
-+++ b/arch/x86/include/asm/syscall.h
-@@ -16,14 +16,20 @@
- #include <asm/thread_info.h>	/* for TS_COMPAT */
- #include <asm/unistd.h>
- 
--/* This is used purely for kernel/trace/trace_syscalls.c */
- typedef long (*sys_call_ptr_t)(const struct pt_regs *);
- extern const sys_call_ptr_t sys_call_table[];
- 
-+#if defined(CONFIG_X86_32)
-+#define ia32_sys_call_table sys_call_table
-+#else
- /*
-  * These may not exist, but still put the prototypes in so we
-  * can use IS_ENABLED().
-  */
-+extern const sys_call_ptr_t ia32_sys_call_table[];
-+extern const sys_call_ptr_t x32_sys_call_table[];
-+#endif
-+
- extern long ia32_sys_call(const struct pt_regs *, unsigned int nr);
- extern long x32_sys_call(const struct pt_regs *, unsigned int nr);
- extern long x64_sys_call(const struct pt_regs *, unsigned int nr);
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index a65c70709bb5..efffd87381b1 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1669,6 +1669,15 @@ static void __init bhi_select_mitigation(void)
- 	if (!IS_ENABLED(CONFIG_X86_64))
- 		return;
- 
-+	/*
-+	 * There's no hardware mitigation in place, so mark indirect branches
-+	 * as unsafe.
-+	 *
-+	 * One could argue the SW loop makes indirect branches safe again, but
-+	 * Linus prefers it this way.
-+	 */
-+	setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+
- 	/* Mitigate KVM by default */
- 	setup_force_cpu_cap(X86_FEATURE_CLEAR_BHB_LOOP_ON_VMEXIT);
- 	pr_info("Spectre BHI mitigation: SW BHB clearing on vm exit\n");
-@@ -1686,6 +1695,21 @@ static void __init spectre_v2_select_mitigation(void)
- 	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
- 	enum spectre_v2_mitigation mode = SPECTRE_V2_NONE;
- 
-+	/*
-+	 * X86_FEATURE_INDIRECT_SAFE indicates whether indirect calls can be
-+	 * considered safe.  That means either:
-+	 *
-+	 *   - the CPU isn't vulnerable to Spectre v2 or its variants;
-+	 *
-+	 *   - a hardware mitigation is in place (e.g., IBRS, BHI_DIS_S); or
-+	 *
-+	 *   - the user turned off mitigations altogether.
-+	 *
-+	 * Assume innocence until proven guilty: set the cap bit now, then
-+	 * clear it later if/when needed.
-+	 */
-+	setup_force_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+
- 	/*
- 	 * If the CPU is not affected and the command line mode is NONE or AUTO
- 	 * then nothing to do.
-@@ -1720,6 +1744,7 @@ static void __init spectre_v2_select_mitigation(void)
- 
- 	case SPECTRE_V2_CMD_RETPOLINE_LFENCE:
- 		pr_err(SPECTRE_V2_LFENCE_MSG);
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
- 		mode = SPECTRE_V2_LFENCE;
- 		break;
- 
-@@ -1772,11 +1797,16 @@ static void __init spectre_v2_select_mitigation(void)
- 		break;
- 
- 	case SPECTRE_V2_LFENCE:
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+		fallthrough;
- 	case SPECTRE_V2_EIBRS_LFENCE:
- 		setup_force_cpu_cap(X86_FEATURE_RETPOLINE_LFENCE);
--		fallthrough;
-+		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
-+		break;
- 
- 	case SPECTRE_V2_RETPOLINE:
-+		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-+		fallthrough;
- 	case SPECTRE_V2_EIBRS_RETPOLINE:
- 		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
- 		break;
--- 
-2.44.0
+So... Should I sent a v6 with the hypervisor checking reverted [ i.e.
+always enable PCID if boot_cpu_has(X86_FEATURE_HYPERVISOR) ]?
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
