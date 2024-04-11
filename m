@@ -1,198 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9685F13329C;
-	Thu, 11 Apr 2024 16:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EDE134750;
+	Thu, 11 Apr 2024 16:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712851399; cv=none; b=pajju4r+52geYmIGH4n7U8TqevmbyZ3Dj/gZaET+eny9uKBLIFz5yK3UErx3bTgjGcbjPV+AB6nZHJuJ+jaqtJaVPlG19ZfdWbzRuAhke+k3IBs/M4ffnnlrktxjXU2AhJGL40sCz/R0bYlgUKqb8v2UB/LlKQy0x4nk8yAtCqo=
+	t=1712851403; cv=none; b=Nowc/o5hr9hMQ1ePJnK9Y+fc20LEVuBvg0y6SJx0TcjNitrKqFuckFJkeb0FLnu4jLLUiEDy3NXSBPnTaKSlaz9+6WjuW5lRvU4C0/tKKrnQ/xrX8fpjJtyN1J6MAA5CVyP+j05FNR0PH2TUAFre0TSs7jOZTBiFtlWQP66Vb9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712851399; c=relaxed/simple;
-	bh=MDN1WZXA3xhpqzlVolNbN2nPNGabqu/EHQ96vnrSojU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JaQtBB3bAIncCS7EIcIPvTca4gC8MJRCi3cRfHk9TjywHqLRpLJTpA1U78N43aop++x7kkRwgomHpfun3gcxgZX61neWnaTG0SvHuq3nml8QaFoHdq+6f8JvCvx5JUaGs5Zq36mSlJmJfU8wViEnn0cz6Ntk7IB74k9sW2QACkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhJUoNdh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712851403; c=relaxed/simple;
+	bh=BduVLd6senfYQDjjc2EDd4dHZbvRxRDiGRqpAmy1XG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GZeUllPdSN9R7D8sg1yIo6yKArCVgWnb2aQ0JLqiIlyUvxY4J2ItbvsZPSXTVuWVYfD3gV9eX+6ur/OCzVmum3Lu6ILBLQNBiDFGTCktOd3ohE6KHZi+GIaQXtDsmjEvLJIb3ttHA3dDrXaEV/3vRxksn+rnnjOn7tDlO8J6T84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=hP1+J8LP; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhJUoNdh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94880C2BD11;
-	Thu, 11 Apr 2024 16:03:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712851399;
-	bh=MDN1WZXA3xhpqzlVolNbN2nPNGabqu/EHQ96vnrSojU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LhJUoNdhtV0oZXoRrDXU6eMRqs3zZ5XHBNvrq+6ByzAMbDAa6uq7MBqyMKgbGqZFW
-	 HrzUCiC8TYoTAiZJ4eUrIKHEBCy1h9cvybi1lknpDvZxBUbpLxDlWVac4fFQo8y3tl
-	 6XYZrA/ZIeDOZnAcush9O5J+oz/E9mCdnu9FG5iSvvfxcbchbVMnbZJ0Ot60g9khR8
-	 6hlVhoKuSdfItxauM9IOtBNhB/qhuG+DV//AyfCzDUlFwdosD585kNGC5cwqVdOxlh
-	 8Zby1LP7fTPzIayJ9Zh0PVhOV8QUnueDvX81krMeKPRGIRxcKLNazZfZgzVpP34N6W
-	 ovAGcgA2RpWQg==
-From: Mike Rapoport <rppt@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S. Miller" <davem@davemloft.net>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Helge Deller <deller@gmx.de>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Mike Rapoport <rppt@kernel.org>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Puranjay Mohan <puranjay12@gmail.com>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Song Liu <song@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Will Deacon <will@kernel.org>,
-	bpf@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-modules@vger.kernel.org,
-	linux-parisc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	loongarch@lists.linux.dev,
-	netdev@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: [PATCH v4 09/15] riscv: extend execmem_params for generated code allocations
-Date: Thu, 11 Apr 2024 19:00:45 +0300
-Message-ID: <20240411160051.2093261-10-rppt@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411160051.2093261-1-rppt@kernel.org>
-References: <20240411160051.2093261-1-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="hP1+J8LP"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43B4cAmU024765;
+	Thu, 11 Apr 2024 11:02:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	PODMain02222019; bh=/twGumiTIF1zrVK9lUsJUzl36p7oTXhdLfL49IKSSZ8=; b=
+	hP1+J8LPZgg3mX5BGq5T5F3+biTC4zzO8c3RN3jBiLdVVbcUMrgms2rIeCRxGuLQ
+	S1tM4IFVCk0KO3XchWAYzNYIP6TaykTa7N4LQ5oTNDAOoJXFVXqKnAOA9TXewiiH
+	pUUc1IPBLbIF/n5PYkx0UYbLyia738KDo8aBZm/n9BB1CV7L5z1rygnFt1PFcNQk
+	o72mC5dzRP6ZVbu1qkvc4nzjd0kMZeVeSmV3GZcIPj7YWF+UVkZF6jcAYuHgSJhG
+	rY4xqnKfZ074SggSgZx4aWt2aK87jdN1N8jRMsbaPjqaBEWKi0bLNIFdiLgDVAfV
+	cyfZtB6R/qhPIaeu1jm8SQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxq94m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 11 Apr 2024 11:02:44 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 11 Apr
+ 2024 17:02:42 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Thu, 11 Apr 2024 17:02:42 +0100
+Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 50939820242;
+	Thu, 11 Apr 2024 16:02:42 +0000 (UTC)
+Message-ID: <a49dc5e4-9e04-4f18-85bf-e3edf0baa3e4@opensource.cirrus.com>
+Date: Thu, 11 Apr 2024 17:02:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] ASoC: cs35l41: Update DSP1RX5/6 Sources for DSP config
+To: Stefan Binding <sbinding@opensource.cirrus.com>,
+        Mark Brown
+	<broonie@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+References: <20240411142648.650921-1-sbinding@opensource.cirrus.com>
+Content-Language: en-GB
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+In-Reply-To: <20240411142648.650921-1-sbinding@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: WxM7XQ2Y3OO6eWFsJB2nx3a-2_V6AIvt
+X-Proofpoint-GUID: WxM7XQ2Y3OO6eWFsJB2nx3a-2_V6AIvt
+X-Proofpoint-Spam-Reason: safe
 
-From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+On 11/04/2024 15:26, Stefan Binding wrote:
+> Currently, all ASoC systems are set to use VPMON for DSP1RX5_SRC,
+> however, this is required only for internal boost systems.
+> External boost systems require VBSTMON instead of VPMON to be the
+> input to DSP1RX5_SRC.
+> Shared Boost Active acts like Internal boost (requires VPMON).
+> Shared Boost Passive acts like External boost (requires VBSTMON)
+> All systems require DSP1RX6_SRC to be set to VBSTMON.
+> 
+> Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
 
-The memory allocations for kprobes and BPF on RISC-V are not placed in
-the modules area and these custom allocations are implemented with
-overrides of alloc_insn_page() and  bpf_jit_alloc_exec().
-
-Slightly reorder execmem_params initialization to support both 32 and 64
-bit variants, define EXECMEM_KPROBES and EXECMEM_BPF ranges in
-riscv::execmem_params and drop overrides of alloc_insn_page() and
-bpf_jit_alloc_exec().
-
-Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/kernel/module.c         | 21 ++++++++++++++++++++-
- arch/riscv/kernel/probes/kprobes.c | 10 ----------
- arch/riscv/net/bpf_jit_core.c      | 13 -------------
- 3 files changed, 20 insertions(+), 24 deletions(-)
-
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index ad32e2a8621a..aad158bb2022 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -906,20 +906,39 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	return 0;
- }
- 
--#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-+#ifdef CONFIG_MMU
- static struct execmem_info execmem_info __ro_after_init = {
- 	.ranges = {
- 		[EXECMEM_DEFAULT] = {
- 			.pgprot = PAGE_KERNEL,
- 			.alignment = 1,
- 		},
-+		[EXECMEM_KPROBES] = {
-+			.pgprot = PAGE_KERNEL_READ_EXEC,
-+			.alignment = 1,
-+		},
-+		[EXECMEM_BPF] = {
-+			.pgprot = PAGE_KERNEL,
-+			.alignment = PAGE_SIZE,
-+		},
- 	},
- };
- 
- struct execmem_info __init *execmem_arch_setup(void)
- {
-+#ifdef CONFIG_64BIT
- 	execmem_info.ranges[EXECMEM_DEFAULT].start = MODULES_VADDR;
- 	execmem_info.ranges[EXECMEM_DEFAULT].end = MODULES_END;
-+#else
-+	execmem_info.ranges[EXECMEM_DEFAULT].start = VMALLOC_START;
-+	execmem_info.ranges[EXECMEM_DEFAULT].end = VMALLOC_END;
-+#endif
-+
-+	execmem_info.ranges[EXECMEM_KPROBES].start = VMALLOC_START;
-+	execmem_info.ranges[EXECMEM_KPROBES].end = VMALLOC_END;
-+
-+	execmem_info.ranges[EXECMEM_BPF].start = BPF_JIT_REGION_START;
-+	execmem_info.ranges[EXECMEM_BPF].end = BPF_JIT_REGION_END;
- 
- 	return &execmem_info;
- }
-diff --git a/arch/riscv/kernel/probes/kprobes.c b/arch/riscv/kernel/probes/kprobes.c
-index 2f08c14a933d..e64f2f3064eb 100644
---- a/arch/riscv/kernel/probes/kprobes.c
-+++ b/arch/riscv/kernel/probes/kprobes.c
-@@ -104,16 +104,6 @@ int __kprobes arch_prepare_kprobe(struct kprobe *p)
- 	return 0;
- }
- 
--#ifdef CONFIG_MMU
--void *alloc_insn_page(void)
--{
--	return  __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START, VMALLOC_END,
--				     GFP_KERNEL, PAGE_KERNEL_READ_EXEC,
--				     VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
--				     __builtin_return_address(0));
--}
--#endif
--
- /* install breakpoint in text */
- void __kprobes arch_arm_kprobe(struct kprobe *p)
- {
-diff --git a/arch/riscv/net/bpf_jit_core.c b/arch/riscv/net/bpf_jit_core.c
-index 6b3acac30c06..e238fdbd5dbc 100644
---- a/arch/riscv/net/bpf_jit_core.c
-+++ b/arch/riscv/net/bpf_jit_core.c
-@@ -219,19 +219,6 @@ u64 bpf_jit_alloc_exec_limit(void)
- 	return BPF_JIT_REGION_SIZE;
- }
- 
--void *bpf_jit_alloc_exec(unsigned long size)
--{
--	return __vmalloc_node_range(size, PAGE_SIZE, BPF_JIT_REGION_START,
--				    BPF_JIT_REGION_END, GFP_KERNEL,
--				    PAGE_KERNEL, 0, NUMA_NO_NODE,
--				    __builtin_return_address(0));
--}
--
--void bpf_jit_free_exec(void *addr)
--{
--	return vfree(addr);
--}
--
- void *bpf_arch_text_copy(void *dst, void *src, size_t len)
- {
- 	int ret;
--- 
-2.43.0
-
+Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
