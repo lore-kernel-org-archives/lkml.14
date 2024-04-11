@@ -1,101 +1,130 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA0D25575
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 20:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C892615E8C;
+	Thu, 11 Apr 2024 20:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712868918; cv=none; b=YJpZjGKK59IE/j6IpXsocgJ6IwkNfHPrdPx3e8+Qvz29OL4eElCBt2Jh6Xzu/W0eUcjeNmWOIhOGTNIwXVDW+24YiFNGLz/BDpmx0lSF5hnUY35wAKCqdR5yJM9QZc6H+2YvYVKjAPj/j1z4FBpt9/J2+IKP8Gk4QJb32empYQ8=
+	t=1712869001; cv=none; b=fa75gW8ocPr0LVUJtfSO/JTB1mBsLECpCsmmxyeezErJN/6o9Mwg+Tb5D8aXaqes6QopQb6m2qIlMm448DPJeELw26rE6HYBflVLfm4+ogu9blimJ3Mnhg/nyM/+Lmxpijw2FjcNukNUjX7Zd6S0Vg5HgXXVtbmNf+Jd4ujH17o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712868918; c=relaxed/simple;
-	bh=k9VBLg1H9CzivP0CT3EcHbPvxlP9ags2QLYALoadN0Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=evMucOcrw7Lx1EcbDnqRH1fU1mHcujA/vep4mMT/W4KLiJSbCtiWqmi2W6ssvi29Rr3hMFl4n5o9GWFyvVUv56QXvPlzPHv6Z877HxYcFFdJlliU3U7iy8EBeoLA8x2XYusPgPBhnVznedz9S5QUlip+2AvwEPoneB2znjiHnY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=ImPLbIuQ; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="ImPLbIuQ"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a51a1c8d931so24672266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712868915; x=1713473715; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XGeIUkWiU2G7D7Pkgh73ZiOzseLlkdctPoHzYVgSQ10=;
-        b=ImPLbIuQ08Be1mWjv3m6YXNHZ479EJ0RQOI9iQj5a1TVbRcC4wp3NbLzS8wPorFB0M
-         qki/z24xH8Obc03X5Z+2h3IDSZzRunAU+NeJ8Hlw+UyKHyGRtp1VgNnhWbTwfPMqQ0Xl
-         vAs23ol/9iWsqkJF+Pm1Vafod6F+nRXx8IwkbglvDFR4EqTXnMT0GYZ5FPlCPSS/80X8
-         PM8v+4FDK+tIKKO8zd7JKAEizwpseyEKI/1OQXhcyvPnaGgn/N2h34LBAhyr8KjBadAP
-         /Q5J8qASFG+WunGUyJJiElC/p5hGxAWITkSJ664tyigaV/mHoQ31GlYUaB2M9QgFbw1h
-         paHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712868915; x=1713473715;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XGeIUkWiU2G7D7Pkgh73ZiOzseLlkdctPoHzYVgSQ10=;
-        b=CL9rc+Z+MoHrsGQdbyY/4CBiPfn82g+6aVAMLfAbfGzwvp0/FcEW5deHpnTqXVsUtt
-         YoKrhakRGHPiTxVYkwtC1q2L6jcvWbCCZfdW8fxLH5ybFlP9bZooivtMycoUCCD+75G4
-         pvrpNlsAJ1cdIArkn7lJLc8+KsU0fbNcDlV3W0Dxm/PQdo+1KZVvnBv2p3TyV2M3jPcQ
-         Y3aO53lKHLXsTxdcWv3tmxI8CcRk9URBhDGDLDeEsXv3XElRpGaL71pFaEH0A5YMw9MU
-         5w81DDkKU2BwGXm6555Mwr4DB8IuhpYO6lYomLzA2/z/QqjfdusERVkbO86T6T/JtnwK
-         upUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpOMhTwzJupKKzqad2z3RJA2a2LngqnEso0fSEWKAGVTFArQIVlrRVuLXj5MSVEfKm06d2l9TBMTmZyb02ZcbgHGAY198S3GMdfSfW
-X-Gm-Message-State: AOJu0YyhxVy2x56HEXZfnkmXKf1wYN4jPFigOBqKh/9fUsOMopzrDtHB
-	HjTMd/pjnMl/tHH6NsLgjURdXGNJJhvsGYWTjEKLgG9zaTIMkLYFt70woddjKihQ2qenMRDJQqd
-	vfqA=
-X-Google-Smtp-Source: AGHT+IGwc97UXhoPZ6M3Kgu7iGdB98KgV5PyUpA28YHAnjcOxwHKPtp8UV7sfm2xKhMn9v2qab9rJg==
-X-Received: by 2002:a17:907:7da1:b0:a51:db9e:4cce with SMTP id oz33-20020a1709077da100b00a51db9e4ccemr585965ejc.3.1712868915426;
-        Thu, 11 Apr 2024 13:55:15 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
-        by smtp.gmail.com with ESMTPSA id nb17-20020a1709071c9100b00a4e6582edf8sm1063406ejc.102.2024.04.11.13.55.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 13:55:15 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@samsung.com>,
-	Alice Ryhl <aliceryhl@google.com>
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] rust: helpers: Fix grammar in comment
-Date: Thu, 11 Apr 2024 22:54:28 +0200
-Message-ID: <20240411205428.537700-1-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1712869001; c=relaxed/simple;
+	bh=4BT8U1oZexspBctfz3dQlPM2UzZbOyaBzY8R86jX8Ks=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rUvFA/4NvAy/7dIrvUBK/2ut4f3QliS+rBkstfwaSksoIDcbEFxoj2kv2mgHcOHxt1mqOKkoujay78MJLvazUgXZ8xOs46Nni6TJFk5JdrzEro1YpoFN8U3jbeHHtDxBb+iyU7eZa09t86bUIxdc54c5Ri8i+DTvji0JgV1KMOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 28CEC40D0E;
+	Thu, 11 Apr 2024 20:56:32 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf11.hostedemail.com (Postfix) with ESMTPA id 21DE62002A;
+	Thu, 11 Apr 2024 20:56:29 +0000 (UTC)
+Message-ID: <1a4554d39229c790c98bebb213bc9f2423cd32de.camel@perches.com>
+Subject: Re: [PATCH v4] checkpatch: add check for snprintf to scnprintf
+From: Joe Perches <joe@perches.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Justin Stitt
+ <justinstitt@google.com>, Andy Whitcroft <apw@canonical.com>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, 
+ linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>, Finn
+ Thain <fthain@linux-m68k.org>
+Date: Thu, 11 Apr 2024 13:56:27 -0700
+In-Reply-To: <48d593c1-c706-4af3-aacf-d1329a8b0d4b@wanadoo.fr>
+References: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
+	 <48d593c1-c706-4af3-aacf-d1329a8b0d4b@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Stat-Signature: rx4sspfkygb7qi1g3x6n1z1wisttt8zn
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 21DE62002A
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1825JZAII+H5iFHVvm8VKIoRHYFoNimUP4=
+X-HE-Tag: 1712868989-801773
+X-HE-Meta: U2FsdGVkX1+XfDs6nV8rYVUsyMz+i+9Jl3FVBcsNyS4KtY2HbKa3OthSlP71edsaGj2CZq31SHFGeLS7ywU8Yvs3Yh9DdpDzdieZdQA7OC8SRzPOtxQFkutAiSKM4tiCaGWkB6sWh2osxXPlG1gc7+crqf0bDhyus5rfZat9sW74LUXr+/5/4ucYushMHZe4auxv5SSSql+oFWSidxTn+Xe8HIaYFH1qQ4YSwUTzUrPrSYVzgCr69yd6MugPx/ING4HlbL8q+Nu30Uph61h0zqNu3bo3ikZi07UnCx2pHmXhsQg8obdSYkp0d51ou26028oeF8mVWzqlS8hSJqI6Lv+JeMUqf1/viIukVpMtxEHztZ/bUnhlz5NhLAzU9ss1LGAOw16rWpoHLKfzAnDnjg/eZrttrSjYWmArT+8tJMilbT2WJc4yI2eng4pfHa0krpE1TLKL/vADL1a3P0XLY4iWFUhtIW/nc+ar2sG+w5s=
 
-s/directly the bindings/the bindings directly/
+On Thu, 2024-04-11 at 22:01 +0200, Christophe JAILLET wrote:
+> Le 08/04/2024 =E0 22:53, Justin Stitt a =E9crit=A0:
+> > I am going to quote Lee Jones who has been doing some snprintf ->
+> > scnprintf refactorings:
+> >=20
+> > "There is a general misunderstanding amongst engineers that
+> > {v}snprintf() returns the length of the data *actually* encoded into th=
+e
+> > destination array.  However, as per the C99 standard {v}snprintf()
+> > really returns the length of the data that *would have been* written if
+> > there were enough space for it.  This misunderstanding has led to
+> > buffer-overruns in the past.  It's generally considered safer to use th=
+e
+> > {v}scnprintf() variants in their place (or even sprintf() in simple
+> > cases).  So let's do that."
+> >=20
+> > To help prevent new instances of snprintf() from popping up, let's add =
+a
+> > check to checkpatch.pl.
+> >=20
+> > Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> > Changes in v4:
+> > - also check for vsnprintf variant (thanks Bill)
+> > - Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3=
+-1-a451e7664306@google.com
+> >=20
+> > Changes in v3:
+> > - fix indentation
+> > - add reference link (https://github.com/KSPP/linux/issues/105) (thanks=
+ Joe)
+> > - Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2=
+-1-9baeb59dae30@google.com
+> >=20
+> > Changes in v2:
+> > - Had a vim moment and deleted a character before sending the patch.
+> > - Replaced the character :)
+> > - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1=
+-1-3ac5025b5961@google.com
+> > ---
+> >  From a discussion here [1].
+> >=20
+> > [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@l=
+inux-m68k.org/
+> > ---
+> >   scripts/checkpatch.pl | 6 ++++++
+> >   1 file changed, 6 insertions(+)
+> >=20
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 9c4c4a61bc83..a0fd681ea837 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -7012,6 +7012,12 @@ sub process {
+> >   			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - s=
+ee: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+> >   		}
+> >  =20
+> > +# {v}snprintf uses that should likely be {v}scnprintf
+> > +		if ($line =3D~ /\b(v|)snprintf\s*\(\s*/) {
+>=20
+> Hi,
+>=20
+> for my understanding, what is the purpose of the 2nd "\s*"?
+> IMHO, it could be just removed.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- rust/helpers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It could.
 
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 70e59efd92bc..4c8b7b92a4f4 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -4,7 +4,7 @@
-  * cannot be called either. This file explicitly creates functions ("helpers")
-  * that wrap those so that they can be called from Rust.
-  *
-- * Even though Rust kernel modules should never use directly the bindings, some
-+ * Even though Rust kernel modules should never use the bindings directly, some
-  * of these helpers need to be exported because Rust generics and inlined
-  * functions may not get their code generated in the crate where they are
-  * defined. Other helpers, called from non-inline functions, may not be
--- 
-2.44.0
+# {v}snprintf uses that should likely be {v}scnprintf
+		if ($line =3D~ /\b((v?)snprintf)\s*\(/) {
+			WARN("SNPRINTF",
+			     "Prefer ${2}scnprintf over $1 - see: https://github.com/KSPP/linux/=
+issues/105\n" . $herecurr);
+		}
+
+
+
+Though I also think it's better to use lore rather than github
 
