@@ -1,180 +1,130 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd04131.aruba.it (smtpcmd04131.aruba.it [62.149.158.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9571144D34;
-	Thu, 11 Apr 2024 09:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7588614532B
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712828210; cv=none; b=Yrtl4PvEZkOJolhx+x6wZTEezZYK9xRaf4LfdOkSysowmtUIKMyewPmTcqQ6yQCXEnlyknbeFmxFmFmaMGRBKGo3gDi7XaCuCxEW7qea/daphOsNaDSgSBKgbyCXBlJlLCXLRPeNnq05/tafQ2pAeRUQJKgojYzvVXP66c0CiwQ=
+	t=1712828235; cv=none; b=VDrGDhz6UWVisTa80+iyxn9NdqNCCD4d1Zl1V2y+aNfqUgHcdXYkyPPoFWGlc9g4pMV1+iHm/UnxQQ954BlF7MYJ583rySMNcgrghC+fFuSCp+APuCNqPVWoVF8anlhc5PmLFCd3cKch9V0sJcCcNIN1vHnFX+/e8JkUNq9MCtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712828210; c=relaxed/simple;
-	bh=REeRqtaQ2rFSfiCowbECkyQJKI4O8gMscXMzcxayvNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qsFUCi/hBy4X+xBmXeQeiH+o1sDh+CyvlsZ5hMKrVLqMjxpwdky3Zr5x2o7MaUlYGtCMBkm1iHB1NE1lXT9VLYZhbd/OBoEO9I6HjRuf1Yd0V/K7psCI7SWd53pGRM4sxUyyqvDfgoQBd2k0Px5QJiFIyeJKWJi6BCNUIICP320=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HsNXjcIs; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712828235; c=relaxed/simple;
+	bh=bd3RHSHXqw7tx+hIYChwRjq7T4Nyu2hNejvq5QDXPyk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AOLWStmU/mnig35nKRDRzoJIWJ7eOQ95kdBO8PETfclQTHUCCaDE0tP48BAkUp1uW2SS2tW/ch69+FWDTqaqXlgpC32Q8o2BGxZ5rQW4Z/C1hWHoqwyKPuOzDUJ54/BUCqHfX+6xJNDmv3Mt7WXT5OoOPBDqrLWAtjcjl2zYt/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=mXwhYx2p; arc=none smtp.client-ip=62.149.158.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsNXjcIs"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516d727074eso7435766e87.0;
-        Thu, 11 Apr 2024 02:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712828207; x=1713433007; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3M5xqvnR68b34qM9yTb1YB3DFbXI/mKaCv5TejEheiw=;
-        b=HsNXjcIsznOMo5BitDuXY7tp/Oluv6zB+z/mCkXjBxbaYNlVgumwlLnWzyBoQNcmUw
-         5YkvHPQce1L+VhNV/q5NdmTOusmXhtWuGPQhL2zt5hhiGI0vQ9rfsjm/2DOVb+ndQqQX
-         ZftiQn2sFFAIVHplDJY3cFxL5ZaNWShOhrzqwZ9QYmrx4UBXw2SjHoY+wrc4i38nFhl3
-         wr+x70JxFDUErn2azd5Rp4NwBm63tlXvZMo7oDHxhfKBmqpC1PjTFqkhTaVBAUSYYpSi
-         7v84MqkvXDzO07LIdephDe78VA77dKr5QclP9DRk9di+mg4B3BSTdC20n/cDQPSae9a2
-         HUMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712828207; x=1713433007;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3M5xqvnR68b34qM9yTb1YB3DFbXI/mKaCv5TejEheiw=;
-        b=iBcbhIR5JwsZNjRqO9/JmHHvXMphhFqOWiZ8x8rpUR0K/smZuceD83g7q4hBgQihXY
-         ncxKDOohZdGTQsPWUXy96W7eXUjf6iuYstkluiZ8OaB5y6aS/Zg+xhKrSaDzqTPPbK95
-         j3UnPm6Eu+n1ajAmwPdpCeFp4taoY+EAWOfNuk2JYj/YyiGxXN/12c4Uw6Uk0RbFAkbd
-         PQAYkiMhIvAJ6rZLVb3vLvLBnKpSMrichdfVd2YsrfBPrJ83KMy6t39mWQ46KqsYhtB1
-         5fI6qjwCIk+1WN6/srTXhq7m7Eg68cmyH76x2KW+IGCU+CMdapouWALWRcwZdX4eGsEQ
-         v01Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXx1cFLFDlXU/sO3mj2Xx4FhYpS/RTwKlyKtLkC/v1ZP8dcsYI/e6qC9gg+Ri/BIFqjk+ZeuB3ozz1nKChxwzUN4kmwlZ9l4P6Bik1DQubvSq0yimR14m+QdoZKDyP6wfvEwQ78AeIpbUk=
-X-Gm-Message-State: AOJu0Yx3pZtdX/+r0MIvjB4+QW0bYIoaS3lGPcAq1LO6WYletksF6D9P
-	W3wBTRjjDRjU/nmcbf7MAKcvCGJQfRyeqpNBWmpm9pglGpOJXGYD
-X-Google-Smtp-Source: AGHT+IEBk4yLGJVnXJIG/b6gsPkg1Rwqcp/DF6rt3pFuZPY5Nk+rF0So3u9vnM+7E5NMc79IEyWd4g==
-X-Received: by 2002:a05:6512:2826:b0:516:ea55:324e with SMTP id cf38-20020a056512282600b00516ea55324emr3515441lfb.26.1712828206600;
-        Thu, 11 Apr 2024 02:36:46 -0700 (PDT)
-Received: from localhost.localdomain ([178.70.43.28])
-        by smtp.gmail.com with ESMTPSA id q13-20020ac2514d000000b00515d1dfab34sm159647lfd.81.2024.04.11.02.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 02:36:46 -0700 (PDT)
-Date: Thu, 11 Apr 2024 12:36:44 +0300
-From: Ivan Bornyakov <brnkv.i1@gmail.com>
-To: "jackson.lee" <jackson.lee@chipsnmedia.com>
-Cc: Nas Chung <nas.chung@chipsnmedia.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Sebastian Fricke <sebastian.fricke@collabora.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: RE: [PATCH v3 0/5] Wave515 decoder IP support
-Message-ID: <hxgmjezr77jpa4uw45w2inple7t3zkb3ol4qlpgu3p6znuiil7@24h26cqmm2vm>
-References: <20240405164112.24571-1-brnkv.i1@gmail.com>
- <SE1P216MB130385EC5A67C80D9CB61522ED052@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="mXwhYx2p"
+Received: from engicam.com ([77.32.15.153])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id uqokrAj0ioq80uqokrCOjw; Thu, 11 Apr 2024 11:34:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712828043; bh=bd3RHSHXqw7tx+hIYChwRjq7T4Nyu2hNejvq5QDXPyk=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=mXwhYx2poT6NxxSnmGahZ2cdbNEnh1OKnGV4wcKTCPBQ3qTKd4FerGpyAQco4aGD/
+	 9pgeMwxFerRXZwtWW/Ts8hU8jQE/Ri23QjfHxIh2TmoDYPW/O9xazCxOECr/rKAUxA
+	 FqJpB3SS3k/L9i7FFLAWkTZyAl5ZAPq1kSYtig9SUPH4tHdYUhqrtSd41skRTf2x1D
+	 Pt2XsCJD92Dt1NMsL07zcI1/IMRWenvS3bCfxuLFV8UF8mM+JBK7KRK9UwqgDggtPC
+	 U3KNWSBzj+lzyk0AUOH4PrTI890dib5vgJDL1MH3KUbONYVhuaiseNaaD7am192onk
+	 cgfFMMKV+nZRA==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Liam Girdwood <lgirdwood@dmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org
+Cc: Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: [PATCH] regulator: pca9450: make warm reset on PMIC_RST_B assertion
+Date: Thu, 11 Apr 2024 11:34:02 +0200
+Message-Id: <20240411093402.365798-1-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SE1P216MB130385EC5A67C80D9CB61522ED052@SE1P216MB1303.KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfDDp6ogaIiBoEkAIgQ97RWd+qbVYTyMMtdl0setns+0mU/6eS5C29FV01U7uArYjRfHG2v9yEFwSMfIsSFcrJsdSo2P33YP2ggM/6Hfp6H1YLCst6mD5
+ ZTMfnwSSETD4IrREAcoJ8m2C56TusKfyEJr/ECyCMzbE3zoePFyfs89s6Jh8/COlggXyibAAjzOnj5vXt3mufzhiIZXArz+0tfoZECS0HrC0ADsyElN4WCJw
+ kM2iaRTban4n3zwZi/23ZlrjcHFz8lkLLno+0VuEd2Ae6cy6EBmiE1emOT8yZNOtVCzSHVRrRw8mWpdu/LffP2LBvIAYX2bmMgaisgK3ENI=
 
-Hi
+The default configuration of the PMIC behavior makes the PMIC
+power cycle most regulators on PMIC_RST_B assertion. This power
+cycling causes the memory contents of OCRAM to be lost.
+Some systems needs some memory that survives reset and
+reboot, therefore this patch is created.
 
-On Thu, Apr 11, 2024 at 08:13:39AM +0000, jackson.lee wrote:
-> Hi Ivan
-> 
-> Can you provide a score for testing a fluster tool so that we can verify the change on your HW?
-> 
+This patch extends commit 2364a64d0673 ("regulator: pca9450:
+Make warm reset on WDOG_B assertion") to the other reset
+input source PMIC_RST_B as per pmic specs.
 
-I did that, didn't I?
+CC: Matteo Lisi <matteo.lisi@engicam.com>
+CC: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
+---
+ .../bindings/regulator/nxp,pca9450-regulator.yaml     |  6 ++++++
+ drivers/regulator/pca9450-regulator.c                 | 11 ++++++++---
+ include/linux/regulator/pca9450.h                     |  6 ++++++
+ 3 files changed, 20 insertions(+), 3 deletions(-)
 
-> Thanks
-> Jackson
-> 
-> > -----Original Message-----
-> > From: Ivan Bornyakov <brnkv.i1@gmail.com>
-> > Sent: Saturday, April 6, 2024 1:41 AM
-> > To: Nas Chung <nas.chung@chipsnmedia.com>; jackson.lee
-> > <jackson.lee@chipsnmedia.com>; Mauro Carvalho Chehab <mchehab@kernel.org>;
-> > Philipp Zabel <p.zabel@pengutronix.de>; Sebastian Fricke
-> > <sebastian.fricke@collabora.com>
-> > Cc: Ivan Bornyakov <brnkv.i1@gmail.com>; linux-media@vger.kernel.org;
-> > linux-kernel@vger.kernel.org
-> > Subject: [PATCH v3 0/5] Wave515 decoder IP support
-> > 
-> > Initial support for Wave515 multi-decoder IP among other refinements.
-> > This was tested on FPGA prototype, so wave5_dt_ids[] was not expanded.
-> > 
-> > fluster score for JCT-VC-HEVC_V1 testsuite with
-> > GStreamer-H.265-V4L2-Gst1.0 decoder is 132/147
-> > 
+diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+index 849bfa50bdba..1030375a8578 100644
+--- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+@@ -93,6 +93,12 @@ properties:
+       When WDOG_B signal is asserted a warm reset will be done instead of cold
+       reset.
+ 
++  nxp,pmic_rst_b-warm-reset:
++    type: boolean
++    description:
++      When PMIC_RST_B signal is asserted a warm reset will be done instead of cold
++      reset.
++
+ required:
+   - compatible
+   - reg
+diff --git a/drivers/regulator/pca9450-regulator.c b/drivers/regulator/pca9450-regulator.c
+index be488c5dff14..6e3823032e6c 100644
+--- a/drivers/regulator/pca9450-regulator.c
++++ b/drivers/regulator/pca9450-regulator.c
+@@ -999,11 +999,16 @@ static int pca9450_i2c_probe(struct i2c_client *i2c)
+ 	else
+ 		reset_ctrl = WDOG_B_CFG_COLD_LDO12;
+ 
+-	/* Set reset behavior on assertion of WDOG_B signal */
++	if (of_property_read_bool(i2c->dev.of_node, "nxp,pmic_rst_b-warm-reset"))
++		reset_ctrl |= PMIC_RST_CFG_WARM;
++	else
++		reset_ctrl |= PMIC_RST_CFG_COLD_LDO12;
++
++	/* Set reset behavior on assertion of WDOG_B/PMIC_RST_B signal */
+ 	ret = regmap_update_bits(pca9450->regmap, PCA9450_REG_RESET_CTRL,
+-				 WDOG_B_CFG_MASK, reset_ctrl);
++				 WDOG_B_CFG_MASK | PMIC_RST_CFG_MASK, reset_ctrl);
+ 	if (ret) {
+-		dev_err(&i2c->dev, "Failed to set WDOG_B reset behavior\n");
++		dev_err(&i2c->dev, "Failed to set WDOG_B/PMIC_RST_B reset behavior\n");
+ 		return ret;
+ 	}
+ 
+diff --git a/include/linux/regulator/pca9450.h b/include/linux/regulator/pca9450.h
+index 243633c8dceb..d87f0b410b00 100644
+--- a/include/linux/regulator/pca9450.h
++++ b/include/linux/regulator/pca9450.h
+@@ -227,6 +227,12 @@ enum {
+ #define WDOG_B_CFG_COLD_LDO12		0x80
+ #define WDOG_B_CFG_COLD			0xC0
+ 
++#define PMIC_RST_CFG_MASK		0x30
++#define PMIC_RST_CFG_NONE		0x00
++#define PMIC_RST_CFG_WARM		0x10
++#define PMIC_RST_CFG_COLD_LDO12		0x20
++#define PMIC_RST_CFG_COLD		0x30
++
+ /* PCA9450_REG_CONFIG2 bits */
+ #define I2C_LT_MASK			0x03
+ #define I2C_LT_FORCE_DISABLE		0x00
+-- 
+2.34.1
 
-Here it is. Above is the score, below is notes about failed tests.
-
-> > The issue with Main10 tests is that fluster expects decoded file to be in
-> > yuv420p10le format while this driver decodes HEVC Main10 into 8-bit
-> > yuv420p. Though result is looks alright to the naked eye, proper decoding
-> > into yuv420p10le is to be added.
-> > 
-> > The rest failed fluster tests are common with Wave521.
-> > 
-> > ChangeLog:
-> >   v1:
-> > https://lore.kernel.org/linux-media/20240318144225.30835-1-
-> > brnkv.i1@gmail.com/
-> >   v2:
-> > https://lore.kernel.org/linux-media/20240325064102.9278-1-
-> > brnkv.i1@gmail.com/
-> >     * drop patch "dt-bindings: media: cnm,wave521c: drop resets
-> > restriction"
-> >       The only user of Wave5 in mainline is TI K3 boards, thus there is
-> >       no real need to alter dt-bindings
-> >     * in patch "media: chips-media: wave5: support decoding HEVC Main10
-> > profile"
-> >       add check for flag "support_hevc10bit_dec"
-> >     * in patch "media: chips-media: wave5: support reset lines" move
-> >       reset_control_deassert() out of else branch, add
-> >       reset_control_assert() to probe error path.
-> >     * rework patch "media: chips-media: wave5: drop "sram-size" DT prop"
-> >        - don't move alloc/free form device open/close
-> >        - intead of exact configuration of reserved SRAM memory in DT and
-> > 	 allocating all of it, allocate all available SRAM memory up to
-> > 	 WAVE5_MAX_SRAM_SIZE from whatever pool provided.
-> >     * adjust patch "media: chips-media: wave5: support Wave515 decoder"
-> >       according to changes in patches
-> >       "media: chips-media: wave5: support decoding HEVC Main10 profile" and
-> >       "media: chips-media: wave5: drop "sram-size" DT prop"
-> >   v3:
-> >     * reword patch "media: chips-media: wave5: separate irq setup routine"
-> >       a bit.
-> >     * in patch "media: chips-media: wave5: drop "sram-size" DT prop"
-> >        - move MAX_SRAM_SIZE define into match_data->sram_size
-> >        - add placeholders for validation that allocated SRAM memory is
-> > 	 enough to encode/decode bitstream of given resolution before
-> > 	 setting W5_USE_SEC_AXI and W5_CMD_ENC_PIC_USE_SEC_AXI registers
-> >        - reword accordingly
-> >     * in patch "media: chips-media: wave5: support Wave515 decoder"
-> >        - add comments around SRAM memory allocation/freeing about
-> > 	 Wave515 specifics
-> >        - add comments about BSOPTION_RD_PTR_VALID_FLAG bit in
-> > 	 W5_BS_OPTION register
-> >        - add W[AVE]521_ prefix to defines, for wich there are W[AVE]515_
-> > 	 alternatieves
-> >        - add semi-magic Wave515 specific formulas to estimate SRAM usage
-> > 
-> > Ivan Bornyakov (5):
-> >   media: chips-media: wave5: support decoding HEVC Main10 profile
-> >   media: chips-media: wave5: support reset lines
-> >   media: chips-media: wave5: separate irq setup routine
-> >   media: chips-media: wave5: drop "sram-size" DT prop
-> >   media: chips-media: wave5: support Wave515 decoder
-> > 
-> >  .../platform/chips-media/wave5/wave5-helper.c |   8 +-
-> >  .../platform/chips-media/wave5/wave5-hw.c     | 395 +++++++++++++-----
-> >  .../chips-media/wave5/wave5-regdefine.h       |   5 +
-> >  .../platform/chips-media/wave5/wave5-vdi.c    |  27 +-
-> >  .../chips-media/wave5/wave5-vpu-dec.c         |  51 ++-
-> >  .../chips-media/wave5/wave5-vpu-enc.c         |   2 +-
-> >  .../platform/chips-media/wave5/wave5-vpu.c    |  35 +-
-> >  .../platform/chips-media/wave5/wave5-vpuapi.h |   3 +
-> >  .../chips-media/wave5/wave5-vpuconfig.h       |  16 +-
-> >  .../media/platform/chips-media/wave5/wave5.h  |   6 +
-> >  10 files changed, 407 insertions(+), 141 deletions(-)
-> > 
-> > --
-> > 2.44.0
-> 
