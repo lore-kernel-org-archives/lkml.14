@@ -1,311 +1,263 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E2B14D451;
-	Thu, 11 Apr 2024 13:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712842097; cv=fail; b=otbLFpEpNMRjMJizov7I86OUVnl4x/R9GRGmjRGaRETNZIRHMckvJI9InGPwmgTsROuacmecFyoINh7HBKGTUCtjnT8EjjAk11pbJtXE0KSe8wuvofXBfJWlEUDGVActaJ5oKWnoKlfp9yTOPa9BXgaTUhg2f/mLzzTFKLSWtZk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712842097; c=relaxed/simple;
-	bh=3U0QTxPEfZ4Xp1IeyE+EF7j2MANQoen+KwPYCNWUGXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ufphC5euvtCSMtL6wZiNKx6cP3y9P/2oT/Pl3Q7OlpjjKLHXtcgII2WebVDu+1eWnyvraJe/nOUFZE22FP3QRMwv/VFNJuyIGUlvzD0WzkhqhmM6aSHjZwtrXdnXUdfxVnaayPvY+I2nM51pOx1eRLm0/i3eDoCPGEWg2mdNj5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WxI0VglP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oMBh1m2x; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8945114B088;
+	Thu, 11 Apr 2024 13:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712842133; cv=none; b=dtyj3Kx9YONQK4QNdi5MTmVHX9x79uGmVOGnmWKzF6wmGvsmkcgxgV2HVM74bK6OWlGw8wRteXHpsV+hS841xlj+5Ha8rv2ugmWV+klhPhmIlGVfzkaRL3VahtV6EN8jhgyfTWZPR2bx0NirJ367btuvs3VGJg6pqOssAh8rYeM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712842133; c=relaxed/simple;
+	bh=B9lrEy9mhy2sYREGwZD2TBToT5T7/+a7Ol4R4AArnoc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HtztyBA2OnaPj3B8zzDEwZ3fzvPhT01qnhr4VIDTvr+PoSmvbN5F2JjtL1Ccm9qz1isxPBi7ooDkE841yjJtwyofFc+Rd7hlJzLmZg8LlKCtwbL5sTWsWgwq1s7L5VjUmeS3+CTMPEzxvNhNtJ/OZLpfsWhgtEbYP8SJ7sU6jmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J96sxA1S; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WxI0VglP";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oMBh1m2x"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43BCPueM004063;
-	Thu, 11 Apr 2024 13:28:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=eYmIg8MAyNUyyLB/Iql+7Sopbi5A6NVwJ4jyaUBAtn8=;
- b=WxI0VglPxD9TX1hvhHYzneihQiJaC8QpZvGxNykxm2UelSwH/15Oq+Dt30wUa0imBt7S
- bIuCN0MZmH9vDTrLpOlNfBqmbDNBgK9hUw0gEATz3ZjwYhhcoSb7n2UDbqpw991hPZDb
- WT3tsTPy1rMUyfmOGcEaRw05JiEdN5a6l4tZ6io4/bLjZ+mcI4Ww1tT7Q/fk0KwsZY9p
- 9Ru6NVj+rYi8imSeZsS9rB2YOtgQ7l1kD4I1GyeTfhqciJ5/lel9Ovw+H9m1qTnZZFmc
- plETA+SXfrOTqWOYY2RDYOtYUki6CQTVNzWr3Agf/wPZwaJIL1EgcdbIC9zHZEoKFn3l Ug== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xaw029nc6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Apr 2024 13:28:00 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43BCYVFW010765;
-	Thu, 11 Apr 2024 13:27:59 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2168.outbound.protection.outlook.com [104.47.73.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xavu9gp7b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 11 Apr 2024 13:27:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rqtq4B9tB2zkcnniTb/51MZvt7owvrZlsyExK1qNxbGStzmOxqdx2Q4fYs2VqCmzG98Xa/a2uQfRq/zmqL04XqZ1TLZPamnZ7uoMM1FdqtjvkCq4VMFukQq6UiVo8lgcpz9+9cxJYvLc3A2M8xYE/uGiaHwVqKwSRwwvXwl5L3xv6fW6m4YTp/VfnG7A6iidB13MWawgWA2RZdI9gsQImkp6Hr4bcH5vOp4slB/+TPjrnDvWpnVUJlWij0KByuWGXsQK5fdh2OKrOnB4462BquEofnS1OJY9vymgqeziyTj+YmNYGHETi/Bg2HnKBpDqtUcFrgxuKWxZrLihOoSPGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eYmIg8MAyNUyyLB/Iql+7Sopbi5A6NVwJ4jyaUBAtn8=;
- b=d4GdzEICf9rBcldx8Xo4NiHXu25Wts6nK+YoS3P3V/0xWqfEtPOdGpDM8zT6IT7PiPV0/FjRsyunnwo+4FoXRb5VsnCUD6PonPsh0xymL1Si1RBgs4kHTQcm0bs5xZuzUKigSo0Xq1M5dq7v0/Jd9Cf+5OnFDXsiAVOSYkf1j6suGjzREZZnslThgdX7tUznuG2FfH+4yqN0D+HzpDXTKh8Y9xFUxCIq6YcDINNdykWHaUMLJYT+nFpx30dqRkk8oFLGbgTPY0iwTtSx15mru8/hYR2gSeavwL1ZnPMu2KFpsGUmGjHShKghGyt9BCeF+6EhRgHkBdogVkteaKcN9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eYmIg8MAyNUyyLB/Iql+7Sopbi5A6NVwJ4jyaUBAtn8=;
- b=oMBh1m2xBm9/1zzdeJ1mX4mWLy/HWXgrMkjwZPvKgheHqghzhGTwHjOrmaIVcpFB0q6YSe54W+MFY8PJEAbszHwznmS1rC+iDIQ1vIyEJz8hm5Nm65Fpcn8fgqPUSQ3iDMrTcviQWtoGx4J+NaXb2+kqpTmj8i3in8qeEABU3ZM=
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by CY8PR10MB7147.namprd10.prod.outlook.com (2603:10b6:930:75::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Thu, 11 Apr
- 2024 13:27:56 +0000
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::a541:2604:8ad8:bdf8]) by DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::a541:2604:8ad8:bdf8%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
- 13:27:56 +0000
-Date: Thu, 11 Apr 2024 09:27:54 -0400
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] NFSD: fix endianness issue in nfsd4_encode_fattr4
-Message-ID: <ZhflWqUg88h1Cuse@tissot.1015granger.net>
-References: <patch.git-0ff58649313e.your-ad-here.call-01712828617-ext-4049@work.hours>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <patch.git-0ff58649313e.your-ad-here.call-01712828617-ext-4049@work.hours>
-X-ClientProxiedBy: CH5P222CA0013.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:610:1ee::14) To DS7PR10MB5134.namprd10.prod.outlook.com
- (2603:10b6:5:3a1::23)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J96sxA1S"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=MIME-Version:Content-Type:References:
+	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=B9lrEy9mhy2sYREGwZD2TBToT5T7/+a7Ol4R4AArnoc=; b=J96sxA1SXjfWjSUBUk6WCjnhIo
+	gyreybnYXKZ/US9aRDtdxMYfPaIZ3tsR2EMHgydjidVFLGVr2nfF9fKbaem9eLXp9aI/kQI9sgjq+
+	b/gk9KSmiuVE3dfYuPPUE2Wj9bWgm72rwueOo7LAa5f7sCfgdz4/nVnHI87OJvkFWZ9r95ln7/WdL
+	Wpig7M3kBvj7YtGrhIuAA87uMIXPdtTlQwz0RoGl0AV44rYVskLQjMnhBdEDPWaEubyk5kf4zLOmu
+	/YbGcne4+PUan8MmsXj4Y16bTKp6Rb9CkmE++iexhaerNsrc9Kc7wYJaHC5e5DAXZ5HM2m6/jIRWP
+	vxfYFU4A==;
+Received: from [2001:8b0:10b:5:585d:a26c:db22:46e5] (helo=u3832b3a9db3152.ant.amazon.com)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1ruuTm-000000071sd-3h50;
+	Thu, 11 Apr 2024 13:28:38 +0000
+Message-ID: <f6c9c757a1f4eb2d3c7ce06d27827e099923ef6b.camel@infradead.org>
+Subject: Re: [PATCH 2/2] KVM: selftests: Add KVM/PV clock selftest to prove
+ timer drift correction
+From: David Woodhouse <dwmw2@infradead.org>
+To: "9377995a-26a4-2523-e421-be1cd92bdc34@oracle.com"
+ <9377995a-26a4-2523-e421-be1cd92bdc34@oracle.com>,
+ "dongli.zhang@oracle.com" <dongli.zhang@oracle.com>
+Cc: "corbet@lwn.net" <corbet@lwn.net>, "kvm@vger.kernel.org"
+ <kvm@vger.kernel.org>, "shuah@kernel.org" <shuah@kernel.org>, 
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>,  "mingo@redhat.com"
+ <mingo@redhat.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+ "tglx@linutronix.de" <tglx@linutronix.de>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>,  "hpa@zytor.com" <hpa@zytor.com>,
+ "paul@xen.org" <paul@xen.org>, "bp@alien8.de" <bp@alien8.de>, 
+ "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+ "Allister, Jack" <jalliste@amazon.co.uk>,  "x86@kernel.org" <x86@kernel.org>
+Date: Thu, 11 Apr 2024 14:28:37 +0100
+In-Reply-To: <4f1ca4e1a8a9a31eae8057f9a813fc13d3172f77.camel@amazon.co.uk>
+References: <4f1ca4e1a8a9a31eae8057f9a813fc13d3172f77.camel@amazon.co.uk>
+Content-Type: multipart/signed; micalg="sha-256"; protocol="application/pkcs7-signature";
+	boundary="=-OO7M3RmA0rYarTLMgT6+"
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|CY8PR10MB7147:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61cf8de9-3c67-4adb-1304-08dc5a2b330a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	dI8s3oQTDxHMwvRRMfvB2P8NZpVP0pfx7iM5HcBGiwE63VRjKao3gYYGEUrcRAaCdT74fZnPS4cXMTri4dHZmgBSFIO40vwK7zq0IEtx8XLeY9kg7H41azLM0Lj+ue+105NWUqnvMY5dIyxhO3/MKS82NGVwmSSkwVrt/re+m4JGaOQt612K2tUTlNo1A/5uSw6TQHwVvfj4J1c72oNS97PjjqC4MHBqWI5JmrauVQzMYei7yUI2IW3AmTkf5Iccvoo1O6GwEbyQUug/l7sAhplDMSJWXJGfqyvIMPVfBhKJpKfVoDirK/0Nbe30za+RpfSlqhRZnWf5aUPV5A5xP8YK/ATCKNlRD6eC6wsVXrpv8Vsr56X1qcKC9xU9wtaq3yIrdWU9b4c+wgHRB7i1e3D7jxaQ8wZjVFbN43xI4bROkJf1qtCAIyLFJudej+JJfv2cSHD3QMgPHNZsM/4hRHoLNh48AXlntfbAYHCv25owCHAHPk1+eERJ5lJMLLooV9ac+AA1xvbAf/g9+qgPtPttd+k+vDkrbxG4P6nmrWkqFW+qvSiLkQ+G6ul54XuewgISLaUcYvs+7HZ73xTX/0MXLaUJpdpgFkz0B6Pw8H3lcoaA66TU9lacJBx8fb7VpJ62mqeGUjFQ+E8U/8JDGFNAFzp8yMbZxXNfLriW5Mw=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?YE3QiDE9J1J2Kq18JCqJzm1wv6Hy99p/eeN/aSuMfwRdM8u8bJxz9I3GdrQX?=
- =?us-ascii?Q?JG/VuJVDl0R2FQW++PD4szbKqb/8YGy8mSrKDc1ytyp8xzT27LINSUlIR5SM?=
- =?us-ascii?Q?4/ISoSqSt9hVzrsV4ZXa+g0XUI5Py1cMTaf8B25x0sxkLcYC5fBCkLItFTsV?=
- =?us-ascii?Q?Si/MT1AliT2p+DvfEAG0v9YA0H2NhPi/0H+nv1X4LyMbdwdb72ifIXngp52c?=
- =?us-ascii?Q?K5i0ma2Pcozma6/aAJmIvgL9onLc6mgYWFSZKpRUxmpswV5d+aEUjYgU5SHX?=
- =?us-ascii?Q?1Fl1G+L9HHjm/lYM9ZLtkATw7CNI2Q0DM0r1ARTMLk7A8UQYcaLjcuKINlNv?=
- =?us-ascii?Q?Qo1l8keMWcedSRC3O1T+D7GRqNC1WSGbg3hm9/Jsi+Sn6Ks1FLAxoLVIrZ9G?=
- =?us-ascii?Q?UnNWxfj34qcc+DoiqJnCUUDnIBuW41lWgPyGf5zADSPNroC6VPhukbsiObhf?=
- =?us-ascii?Q?M/RaWXzGtO+WgmE3pZx0hyqwFXPB5W5xm10+xSssP2BMwOygSsXov/ySoRKk?=
- =?us-ascii?Q?3mAMaVJKT4DptSAGjtSloyYEwRgnVyjEuD4D5lsFkHvCYZIiygkRAVXULzXW?=
- =?us-ascii?Q?xnc33E0DufgMuAE5l3mu01ix9aR1ZQ/TUwzHpdZGCgd1DeTewwc7aPfgStPQ?=
- =?us-ascii?Q?+AP2tWwB3LKUOAB2ihX0l7WwOZX+OOK0tM+lq3pj1/tkQGH8pM3DLAU4LpQ7?=
- =?us-ascii?Q?gxWEMO65ohGLlQ89OPjskYPcL1HKWtkzkhpsoXOxrqVNSOmo/9S6qLNH6ier?=
- =?us-ascii?Q?4NnHpI/mupzoosPQUNjRU/At3UHbXag6l6kZLQdrXiiCnJ0QLpBgoy08W/Hi?=
- =?us-ascii?Q?8pn7bdiFZZ7IQuvW96wAqvHquxplwXGCHVUvfwuZu38MIzcMJNjTQfJrDHFS?=
- =?us-ascii?Q?8r9YqN6bMeDCG4+g3okJ+ZcqLtbvgVTbFapwsOmCHSvoqwHT8hrF1aqGY35n?=
- =?us-ascii?Q?mmUZZzQi7dARWc/j2UTDoVNa6s8XWpt/2m67yzfvK6dgpa2HyiGcW2A5QfsS?=
- =?us-ascii?Q?4dWa6DiwXAxJGisq/3UbmWILb/n1qIEXs3MnvTxFPej/oANmvYFrqWSzT5x0?=
- =?us-ascii?Q?+vo7zSXmiz8Z5gNQeh1hwEmyx93LLKT0O3yr9t8wLIzsTjnFvhtDIfXAWmbd?=
- =?us-ascii?Q?AUWNSgWPWzDU5RwG7WKcTXp75TPsg+LsaSCisj+iTCPyI3qeUNRhYpHbIHZN?=
- =?us-ascii?Q?oZREYpd+yyoKYZXxJE410x45QS+nddtqbFTNAZ+BDyLzsujuoS2xZN0mTu1r?=
- =?us-ascii?Q?mL56qN6Vzv3SUUElMWmQpXhD4/fmUeugJULQ9JHs5+AczG/V2/3yM14Oxn9O?=
- =?us-ascii?Q?GFPvhUcydUyJkLT6nTbgoNcEJ3T+DshMOlcdBLBON9tae2yIvRSK6N0LJE9l?=
- =?us-ascii?Q?P8R6eWt3z/XQEZaj/yjcLt/pTs2AwTAe9MTG7fNH7V9kCVQ8O2Yv5CNggjPT?=
- =?us-ascii?Q?5DfhrPlU6/e5D0jG/QDHb4S1OYs+rVkFEs+3XAyw3DFkIYPD81YqISxsjZac?=
- =?us-ascii?Q?ibm9NET1e/VaMTgtoL6NoNpH40TEQQat14a5wgWjej8CWmZXWt9jCrcLcAXv?=
- =?us-ascii?Q?mddO7m0ZwMSwaDOjbWocSRirT4k/7/MbOoyjqH3LX1TbJW38jVzR1MvNfc39?=
- =?us-ascii?Q?bA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	UN0k8iBBQRICAokclO73AOc2ENeuI9/3HiFQn5VLcLMSkmGHWG3pp9QcZiCXw7bH7WQP3xCSNSwPPmUc6S9qsg8uvdXSBvrJ+8Y99udJeSTxxvP1a8E9C0t417ldWh4gjF5F1gRPCLE49fFDHGAX+Mn9JCh7xJOmUtZfUNgygJb6i1+r7avwi2ShzBkzRgv85JVevo2tpTOkZ0QG2vZBG4mrgBZ4S62q9jv8oiEHztk+l7FjjdhKjfGG7C322uQj3ICC4DJ3ciopyS8A1i7LT6OsmH4oiJCfKOjOFH1w+P9n6toPBxDlKfs3J7fldoLIBmN/XkVjTiq7VAAwKnzVEIgY7sNtzvu8GDK7Pdr3iDCfc52gp5cRfWAWHc/Yypabg/QR6OxaW4rl+Yt8LALQ2woKJ+c7ohselIBkwd7RjqBYbyjILSpIG8JsOAzzedFsCL0GOadAXjbIMbc0Y7KHXNzgJKrkXMNa421eUmlxXHOu2/vifIBsSzontmcUaz5rfnyDytNHaDQrnsaxOKFaOf9/jgvmQdSFWgyVAqJuOUHjI8vGaCR9enmoEoXUoizeX8Q1izV7S1/jvxMq/pTi/NngslhCIfm5Meun8ndT5yU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61cf8de9-3c67-4adb-1304-08dc5a2b330a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 13:27:56.7776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iobgurmVywGds2Ug2UKZkEoOFyWrQ7u3VP8bs4K8+mfKHmmCjxcfplgFxSKwn6i3q+XGF61ZJolKgJs+B9+wlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB7147
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_06,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404110098
-X-Proofpoint-ORIG-GUID: lImtKuxz4WNXEKZr3RJQS8mKDqcXazOJ
-X-Proofpoint-GUID: lImtKuxz4WNXEKZr3RJQS8mKDqcXazOJ
-
-On Thu, Apr 11, 2024 at 11:45:57AM +0200, Vasily Gorbik wrote:
-> The nfs4 mount fails with EIO on 64-bit big endian architectures since
-> v6.7. The issue arises from employing a union in the nfsd4_encode_fattr4()
-> function to overlay a 32-bit array with a 64-bit values based bitmap,
-> which does not function as intended. Address the endianness issue by
-> utilizing bitmap_from_arr32() to copy 32-bit attribute masks into a
-> bitmap in an endianness-agnostic manner.
-> 
-> Cc: <stable@vger.kernel.org>
-> Fixes: fce7913b13d0 ("NFSD: Use a bitmask loop to encode FATTR4 results")
-> Link: https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/2060217
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-
-Thank you for the bug fix! Applied to nfsd-fixes (for v6.9-rc).
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
 
-> ---
->  fs/nfsd/nfs4xdr.c | 47 +++++++++++++++++++++++------------------------
->  1 file changed, 23 insertions(+), 24 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 10439d569d9c..85d43b3249f9 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -3519,11 +3519,13 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  		    struct dentry *dentry, const u32 *bmval,
->  		    int ignore_crossmnt)
->  {
-> +	DECLARE_BITMAP(attr_bitmap, ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
->  	struct nfsd4_fattr_args args;
->  	struct svc_fh *tempfh = NULL;
->  	int starting_len = xdr->buf->len;
->  	__be32 *attrlen_p, status;
->  	int attrlen_offset;
-> +	u32 attrmask[3];
->  	int err;
->  	struct nfsd4_compoundres *resp = rqstp->rq_resp;
->  	u32 minorversion = resp->cstate.minorversion;
-> @@ -3531,10 +3533,6 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  		.mnt	= exp->ex_path.mnt,
->  		.dentry	= dentry,
->  	};
-> -	union {
-> -		u32		attrmask[3];
-> -		unsigned long	mask[2];
-> -	} u;
->  	unsigned long bit;
->  	bool file_modified = false;
->  	u64 size = 0;
-> @@ -3550,20 +3548,19 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  	/*
->  	 * Make a local copy of the attribute bitmap that can be modified.
->  	 */
-> -	memset(&u, 0, sizeof(u));
-> -	u.attrmask[0] = bmval[0];
-> -	u.attrmask[1] = bmval[1];
-> -	u.attrmask[2] = bmval[2];
-> +	attrmask[0] = bmval[0];
-> +	attrmask[1] = bmval[1];
-> +	attrmask[2] = bmval[2];
->  
->  	args.rdattr_err = 0;
->  	if (exp->ex_fslocs.migrated) {
-> -		status = fattr_handle_absent_fs(&u.attrmask[0], &u.attrmask[1],
-> -						&u.attrmask[2], &args.rdattr_err);
-> +		status = fattr_handle_absent_fs(&attrmask[0], &attrmask[1],
-> +						&attrmask[2], &args.rdattr_err);
->  		if (status)
->  			goto out;
->  	}
->  	args.size = 0;
-> -	if (u.attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
-> +	if (attrmask[0] & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
->  		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry),
->  					&file_modified, &size);
->  		if (status)
-> @@ -3582,16 +3579,16 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  
->  	if (!(args.stat.result_mask & STATX_BTIME))
->  		/* underlying FS does not offer btime so we can't share it */
-> -		u.attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-> -	if ((u.attrmask[0] & (FATTR4_WORD0_FILES_AVAIL | FATTR4_WORD0_FILES_FREE |
-> +		attrmask[1] &= ~FATTR4_WORD1_TIME_CREATE;
-> +	if ((attrmask[0] & (FATTR4_WORD0_FILES_AVAIL | FATTR4_WORD0_FILES_FREE |
->  			FATTR4_WORD0_FILES_TOTAL | FATTR4_WORD0_MAXNAME)) ||
-> -	    (u.attrmask[1] & (FATTR4_WORD1_SPACE_AVAIL | FATTR4_WORD1_SPACE_FREE |
-> +	    (attrmask[1] & (FATTR4_WORD1_SPACE_AVAIL | FATTR4_WORD1_SPACE_FREE |
->  		       FATTR4_WORD1_SPACE_TOTAL))) {
->  		err = vfs_statfs(&path, &args.statfs);
->  		if (err)
->  			goto out_nfserr;
->  	}
-> -	if ((u.attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
-> +	if ((attrmask[0] & (FATTR4_WORD0_FILEHANDLE | FATTR4_WORD0_FSID)) &&
->  	    !fhp) {
->  		tempfh = kmalloc(sizeof(struct svc_fh), GFP_KERNEL);
->  		status = nfserr_jukebox;
-> @@ -3606,10 +3603,10 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  		args.fhp = fhp;
->  
->  	args.acl = NULL;
-> -	if (u.attrmask[0] & FATTR4_WORD0_ACL) {
-> +	if (attrmask[0] & FATTR4_WORD0_ACL) {
->  		err = nfsd4_get_nfs4_acl(rqstp, dentry, &args.acl);
->  		if (err == -EOPNOTSUPP)
-> -			u.attrmask[0] &= ~FATTR4_WORD0_ACL;
-> +			attrmask[0] &= ~FATTR4_WORD0_ACL;
->  		else if (err == -EINVAL) {
->  			status = nfserr_attrnotsupp;
->  			goto out;
-> @@ -3621,17 +3618,17 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  
->  #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
->  	args.context = NULL;
-> -	if ((u.attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) ||
-> -	     u.attrmask[0] & FATTR4_WORD0_SUPPORTED_ATTRS) {
-> +	if ((attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) ||
-> +	     attrmask[0] & FATTR4_WORD0_SUPPORTED_ATTRS) {
->  		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
->  			err = security_inode_getsecctx(d_inode(dentry),
->  						&args.context, &args.contextlen);
->  		else
->  			err = -EOPNOTSUPP;
->  		args.contextsupport = (err == 0);
-> -		if (u.attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) {
-> +		if (attrmask[2] & FATTR4_WORD2_SECURITY_LABEL) {
->  			if (err == -EOPNOTSUPP)
-> -				u.attrmask[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-> +				attrmask[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
->  			else if (err)
->  				goto out_nfserr;
->  		}
-> @@ -3639,8 +3636,8 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
->  
->  	/* attrmask */
-> -	status = nfsd4_encode_bitmap4(xdr, u.attrmask[0],
-> -				      u.attrmask[1], u.attrmask[2]);
-> +	status = nfsd4_encode_bitmap4(xdr, attrmask[0], attrmask[1],
-> +				      attrmask[2]);
->  	if (status)
->  		goto out;
->  
-> @@ -3649,7 +3646,9 @@ nfsd4_encode_fattr4(struct svc_rqst *rqstp, struct xdr_stream *xdr,
->  	attrlen_p = xdr_reserve_space(xdr, XDR_UNIT);
->  	if (!attrlen_p)
->  		goto out_resource;
-> -	for_each_set_bit(bit, (const unsigned long *)&u.mask,
-> +	bitmap_from_arr32(attr_bitmap, attrmask,
-> +			  ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops));
-> +	for_each_set_bit(bit, attr_bitmap,
->  			 ARRAY_SIZE(nfsd4_enc_fattr4_encode_ops)) {
->  		status = nfsd4_enc_fattr4_encode_ops[bit](xdr, &args);
->  		if (status != nfs_ok)
-> -- 
-> 2.41.0
+--=-OO7M3RmA0rYarTLMgT6+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Chuck Lever
+On Wed, 2024-04-10 at 10:15 +0000, Allister, Jack wrote:
+> > AFAIR, I copied check_clocksource() from existing code during that >
+> time.
+>=20
+> > The commit e440c5f2e ("KVM: selftests: Generalize check_clocksource()
+> > from kvm_clock_test") has introduced sys_clocksource_is_tsc(). Later
+> > it is renamed to sys_clocksource_is_based_on_tsc().
+> > Any chance to re-use sys_clocksource_is_based_on_tsc()?
+>=20
+> Yes I'm more than happy to change it to that. I was using your original
+> mail as a reference and did not realise there was a utility present for
+> this.
+>=20
+> > Is configure_scaled_tsc() anecessary? Or how about to make it an=C2=A0 =
+>
+> option/arg?
+> > Then I will be able to test it on a VM/server without TSC scaling.
+>=20
+> So if TSC scaling from 3GHz (host) -> 1.5GHz (guest) I do see a skew of
+> ~3500ns after the update. Where as without scaling a delta can be seen
+> but is roughly ~180ns.
+
+I don't think it's as simple as "TSC scaling makes the drift larger".
+I suspect that's just the way the arithmetic precision works out for
+those frequencies. With other frequencies of host and guest you might
+find that it works out closer *with* the scaling.
+
+Consider a graph of "time" in the Y axis, against the host TSC as the X
+axis. As an example, let's assume the host has a TSC frequency of 3GHz.
+
+Each of the three definitions of the KVM clock (A based on
+CLOCK_MONOTONIC_RAW, B based on the guest TSC, C based directly on the
+host TSC) will have a gradient of *roughly* 1 ns per three ticks.
+
+Due to arithmetic precision, the gradient of each is going to vary
+slightly. We hope that CLOCK_MONOTONIC_RAW is going to do the best, as=20
+the other two are limited by the precision of the pvclock ABI that's
+exposed to the guest. You can use http://david.woodhou.se/tsdrift.c to
+see where the latter two land, for different TSC frequencies.
+
+ $ ./tsdrift 2500000000 3000000000 | tail -1
+TSC 259200000000000, guest TSC 215999999979883, guest ns 86399999971836 hos=
+t ns 86399999979883 (delta -8047)
+ $ ./tsdrift 2700000000 3000000000 | tail -1
+TSC 259200000000000, guest TSC 233279999975860, guest ns 86399999983012 hos=
+t ns 86399999979883 (delta 3129)
+
+So after a day, let's assume CLOCK_MONOTONIC_RAW will have advanced by
+86400 seconds. The KVM clock based on the host TSC will be 20=C2=B5s slow,
+while a KVM clock based on a guest TSC frequency of 2.5GHz would be an
+*additional* 8=C2=B5s slower. But a guest TSC frequency of 2.7GHz would
+actually run *faster* than the host-based one, and would only be 17=C2=B5s
+behind reality.
+
+Your test is measuring how *much* the host CLOCK_MONOTONIC_RAW (my
+definition A) drifts from definition B which is derived from the guest
+TSC.
+
+It demonstrates the discontinuity that KVM_REQ_MASTERCLOCK_UPDATE
+introduces, by clamping the KVM clock back to the 'definition A' line.
+
+Fixing that is in the TODO list I shared. Basically it involves
+realising that in use_master_clock mode, the delta between the KVM
+clock and CLOCK_MONOTONIC_RAW (ka->kvmclock_offset) is *varying* over
+time. So instead of just blindly using kvmclock_offset, we should
+*recalculate* it in precisely the way that your KVM_SET_CLOCK_GUEST
+does.
+
+Having said all that... scaling from 3GHz to 1.5GHz *doesn't* lose any
+precision; it shouldn't make any difference. But I guess your host TSC
+isn't *really* 3GHz, it's measured against the PIT or something awful,
+and comes out at a shade above or below 3GHz, leading to a more
+interesting scaling factor?
+
+> In V2 I've adjusted the test so that now by default scaling won't take
+> place, however if someone wants to test with it enabled they can pass
+> "-s/--scale-tsc" to induce the greater delta.
+
+Please do it automatically based on the availability of the feature.
+
+
+--=-OO7M3RmA0rYarTLMgT6+
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEkQw
+ggYQMIID+KADAgECAhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQG
+EwJVUzETMBEGA1UECBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoT
+FVRoZSBVU0VSVFJVU1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQG
+EwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYD
+VQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAyjztlApB/975Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUf
+ItMltrMaXqcESJuK8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeW
+QcpGEGFUUd0kN+oHox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YB
+rf24k5Ee1sLTHsLtpiK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewD
+ch/8kHPo5fZl5u1B0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAU
+U3m/WqorSs9UgOHYm8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEF
+BQcDBDARBgNVHSAECjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2Vy
+dHJ1c3QuY29tL1VTRVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUF
+BwEBBGowaDA/BggrBgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJT
+QUFkZFRydXN0Q0EuY3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0G
+CSqGSIb3DQEBDAUAA4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+
+xswhh2GqkW5JQrM8zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9
+IHk96VwsacIvBF8JfqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7
+kkmka2RQb9d90nmNHdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1
+eoYV7lNwNBKpeHdNuO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4
+KxaYIhvqPqUMWqRdWyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL
+1Ygz3SBsyECa0waq4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQ
+OZ1YL5ezMTX0ZSLwrymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qod
+x/PL+5jR87myx5uYdBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i
+5ZgtwCLXgAIe5W8mybM2JzCCBhQwggT8oAMCAQICEQDGvhmWZ0DEAx0oURL6O6l+MA0GCSqGSIb3
+DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYD
+VQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28g
+UlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTIyMDEwNzAw
+MDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9y
+ZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3GpC2bomUqk+91wLYBzDMcCj5C9m6
+oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZHh7htyAkWYVoFsFPrwHounto8xTsy
+SSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT9YgcBqKCo65pTFmOnR/VVbjJk4K2
+xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNjP+qDrh0db7PAjO1D4d5ftfrsf+kd
+RR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy2U+eITZ5LLE5s45mX2oPFknWqxBo
+bQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3BgBEmfsYWlBXO8rVXfvPgLs32VdV
+NZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/7auNVRmPB3v5SWEsH8xi4Bez2V9U
+KxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmdlFYhAflWKQ03Ufiu8t3iBE3VJbc2
+5oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9aelIl6vtbhMA+l0nfrsORMa4kobqQ5
+C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMBAAGjggHMMIIByDAfBgNVHSMEGDAW
+gBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeDMcimo0oz8o1R1Nver3ZVpSkwDgYD
+VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMC
+MEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGln
+by5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGln
+b1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEB
+BH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50
+QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29j
+c3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5mcmFkZWFkLm9yZzANBgkqhkiG9w0B
+AQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQvQ/fzPXmtR9t54rpmI2TfyvcKgOXp
+qa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvIlSPrzIB4Z2wyIGQpaPLlYflrrVFK
+v9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9ChWFfgSXvrWDZspnU3Gjw/rMHrGnql
+Htlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0whpBtXdyDjzBtQTaZJ7zTT/vlehc/
+tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9IzCCBhQwggT8oAMCAQICEQDGvhmW
+Z0DEAx0oURL6O6l+MA0GCSqGSIb3DQEBCwUAMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3Jl
+YXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0
+ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJl
+IEVtYWlsIENBMB4XDTIyMDEwNzAwMDAwMFoXDTI1MDEwNjIzNTk1OVowJDEiMCAGCSqGSIb3DQEJ
+ARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALQ3
+GpC2bomUqk+91wLYBzDMcCj5C9m6oZaHwvmIdXftOgTbCJXADo6G9T7BBAebw2JV38EINgKpy/ZH
+h7htyAkWYVoFsFPrwHounto8xTsySSePMiPlmIdQ10BcVSXMUJ3Juu16GlWOnAMJY2oYfEzmE7uT
+9YgcBqKCo65pTFmOnR/VVbjJk4K2xE34GC2nAdUQkPFuyaFisicc6HRMOYXPuF0DuwITEKnjxgNj
+P+qDrh0db7PAjO1D4d5ftfrsf+kdRR4gKVGSk8Tz2WwvtLAroJM4nXjNPIBJNT4w/FWWc/5qPHJy
+2U+eITZ5LLE5s45mX2oPFknWqxBobQZ8a9dsZ3dSPZBvE9ZrmtFLrVrN4eo1jsXgAp1+p7bkfqd3
+BgBEmfsYWlBXO8rVXfvPgLs32VdVNZxb/CDWPqBsiYv0Hv3HPsz07j5b+/cVoWqyHDKzkaVbxfq/
+7auNVRmPB3v5SWEsH8xi4Bez2V9UKxfYCnqsjp8RaC2/khxKt0A552Eaxnz/4ly/2C7wkwTQnBmd
+lFYhAflWKQ03Ufiu8t3iBE3VJbc25oMrglj7TRZrmKq3CkbFnX0fyulB+kHimrt6PIWn7kgyl9ae
+lIl6vtbhMA+l0nfrsORMa4kobqQ5C5rveVgmcIad67EDa+UqEKy/GltUwlSh6xy+TrK1tzDvAgMB
+AAGjggHMMIIByDAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+omULPyeCtADAdBgNVHQ4EFgQUzMeD
+Mcimo0oz8o1R1Nver3ZVpSkwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYw
+FAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYMKwYBBAGyMQECAQEBMCUwIwYIKwYB
+BQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1UdHwRTMFEwT6BNoEuGSWh0dHA6Ly9j
+cmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1h
+aWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcwAoZJaHR0cDovL2NydC5zZWN0aWdv
+LmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFpbENBLmNydDAj
+BggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAyW6MUir5dm495teKqAQjDJwuFCi35h4xgnQv
+Q/fzPXmtR9t54rpmI2TfyvcKgOXpqa7BGXNFfh1JsqexVkIqZP9uWB2J+uVMD+XZEs/KYNNX2PvI
+lSPrzIB4Z2wyIGQpaPLlYflrrVFKv9CjT2zdqvy2maK7HKOQRt3BiJbVG5lRiwbbygldcALEV9Ch
+WFfgSXvrWDZspnU3Gjw/rMHrGnqlHtlyebp3pf3fSS9kzQ1FVtVIDrL6eqhTwJxe+pXSMMqFiN0w
+hpBtXdyDjzBtQTaZJ7zTT/vlehc/tDuqZwGHm/YJy883Ll+GP3NvOkgaRGWEuYWJJ6hFCkXYjyR9
+IzGCBMcwggTDAgEBMIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVz
+dGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMT
+NVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA
+xr4ZlmdAxAMdKFES+jupfjANBglghkgBZQMEAgEFAKCCAeswGAYJKoZIhvcNAQkDMQsGCSqGSIb3
+DQEHATAcBgkqhkiG9w0BCQUxDxcNMjQwNDExMTMyODM3WjAvBgkqhkiG9w0BCQQxIgQgy0tx3tHa
+X/CuppcXAcioDknx35r8YAUFkLa4ZC/b1lIwgb0GCSsGAQQBgjcQBDGBrzCBrDCBljELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEYMBYG
+A1UEChMPU2VjdGlnbyBMaW1pdGVkMT4wPAYDVQQDEzVTZWN0aWdvIFJTQSBDbGllbnQgQXV0aGVu
+dGljYXRpb24gYW5kIFNlY3VyZSBFbWFpbCBDQQIRAMa+GZZnQMQDHShREvo7qX4wgb8GCyqGSIb3
+DQEJEAILMYGvoIGsMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UECBMSR3JlYXRlciBNYW5jaGVzdGVy
+MRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdvIExpbWl0ZWQxPjA8BgNVBAMTNVNl
+Y3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEAxr4Z
+lmdAxAMdKFES+jupfjANBgkqhkiG9w0BAQEFAASCAgAKP6SnRPluyZ0P294Xx3kTefWmh0kPGNAV
+AI06rovgesa2xPcNu4Tn829ajNiWEQ8TBKfLYzTdN3g/W/RQ4x+Ng2fmghniKreMcqRXpQ1r9W9d
+XKy9fNEewsOyFRA5KqLiVZ/+Gi1ZYhxNDwgzsQ7IgtWTm5QMC4vmBorbnVEAG7z2e7owa65XSJ0i
+lRrBf3UXqqwEJIUBTPWEufBC/8yE6+xtqf5gtw2dGQ0ElQdhVlvqBSYZWXGipkm+8Bt19wY69Tzi
+co2lY7vohSE1E5NS4W6jEu/2CFNyS062VqJvxGRK1QTQfaHwOVnFreaeXm6r+sdTNkFTpH+nSzV1
+h+aeN5bRFbbQ3wksch7sb5zA8ZrKiPJ8xafqdAQpAhqSJ3IW/gyapkdJowsrjFU7RfVkyQb90QgM
+ImSsT4HHhRG7V3qDzIBfBL/+CERXiuKf/sI0Zwp3K2WT1P2xoUIW1i3gnbJEjAYaGTGy9tyrlG1l
+OOQj0RrfvKaN2Z77kPdGKP6i9jMIq9Hj8/T4kLyOKuNMcYkG06XLjhSY6MbvutRC+couSrUITZEl
+cN1xTiS1sw6Bf3OkbcZSYTtC/LDivf2slxaZebLEMQTvz7i5s75iMIv+irdUVbIWUlXMDRmLk0J6
+w7gYqMSa55k8fpku4/NyNLhkwA9IjsfRyViu3afbtAAAAAAAAA==
+
+
+--=-OO7M3RmA0rYarTLMgT6+--
