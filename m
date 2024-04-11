@@ -1,103 +1,237 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C99C11E6F5F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1FF1E7921
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850061; cv=none; b=fKKc1f90ZG9AJxdn6paR1oFWxKZsjK9K4jucvnJLgpw0QouexrEZ5tnSCtccGoXk4T0omUlQacoWWX5XHivq+b4g1Zue9Piet2vWpIU7tBzPu+Yr/hFk5fVcjfVPabHIC58ZBCRr0bqzYZv6pzfslkZDjFLriSpst45TJ6a6RqM=
+	t=1712850062; cv=none; b=AqFb/KbRVMh0M3O0jlHIOdiBkYn2fWSeZ0FY2DddRGHMU73nPF696D/4hXRFPIncvtbc2fmkzzFrynqFjAeb3BMFbEapgLmIR7TPICZkJtnhshUjndWXlfCmj+3DguQWpC15hOMPiEW/4MycTnd5xNge4WjLDOLOis36mVxnFcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850061; c=relaxed/simple;
-	bh=20UuiQFkTockG+yyYjHc4F13je0ENmFxiz4QhWzCdQ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A1oEll6g/PX2/s1HgQdjqzv+DXZ5jJ3eFktFybAcceLhcnHPIhcSNIm+1f0UkNSBVxvgIF3obbOka92QtCoUnZCttaZrrNyonxD6gmZ/6Bn4z7LZX8Z1YFDusK0/jDJ6oTiRDMQbfOqgQvi0GEpr5p6n0mp3hhHIkAHOMJJ9Qr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K2jBXDJZ; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712850062; c=relaxed/simple;
+	bh=jth+F4uG70vpe2kxvXga6lwNcJInrS0k3t+O9eF+9cA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ds08Njj3vFM5TiBM0W89NXcW3NXUPN5Bgvf4uXYCUT95rH7Cm8cq3YHEajG7N2eik9gcbl/7tlgqOAQIc3a+c5sneraAp1lpzvb8dpfDCZLM6kjPPomYr8+GtXKMoRuz6Q44ZnOtY+201fB/4BJFSfz+rZLVgeU00DTircNIlzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=FJFRpNC4; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K2jBXDJZ"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2a68a2b3747so313048a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:40:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="FJFRpNC4"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-36a224d7414so194055ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:41:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712850059; x=1713454859; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850059; x=1713454859; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TNCBXKOK5vc3YGKFYUbQmuJn7ivy3cDWCe8OlWYsEZM=;
-        b=K2jBXDJZ7wjvKfKnwiMLofu6RwQ6rusISxBzPJ5lI3R7EyiNkROirQre/eI+PorQXO
-         auLgTDXyOBcC9CduWzqhBTHI/2vifhzkGkIvUd2cOrHFB5gvqa1yQ2FWoL8cu7U0n5bJ
-         uIFH8weIUJsHtaLPXOzo0KdSu8coM3QSMMfrc=
+        bh=ZkBOZHCj0mE4s6Wdz7tnu5mnp36Z+tn/wx/FdDRdxgE=;
+        b=FJFRpNC49EeXqMuP3b9SAnsRDHlkeeHIsIhi7Htq5UXTqD4Venf2vQ4uAASHXDBBVp
+         khBOYbVrQVNLA8lH3nNTjU9EX0bdb9MUXdP6lv/goIRMfrWNDFxxsp9QJ7pKBLrl2eNH
+         KspjXHsqYG9FiKg9qw/wN1lNTRsUtAOCLzYNEraTm0Bmow4br/OBkINbszBc4BZ1ShdA
+         F93DXWt1juCwsHzq8UXgb2/1FzwQbQfIdwdsn0vUsk90dzhVNVEkQIt8jHWkjyigsGdp
+         x8+xSI38c71NCs9U9I9GdCa3hJ58EwsKn6mirOKSrM9FEEh86A5DwcmFT1/+wVNfJXN9
+         5KBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1712850059; x=1713454859;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TNCBXKOK5vc3YGKFYUbQmuJn7ivy3cDWCe8OlWYsEZM=;
-        b=pTPOcMiqGdUyLDRdkRjpGEB4/i9iPvmi9bkqG+7neYS7OIsN5lLZnPq0/YVEENcoDG
-         Fk78tSULZWq1thPwK0h2swlvLpLYB7ZwI7SLjFMSSItZrybYZ6e8WPqnJGlYhZneDAIb
-         7a/8ZVcAkQyPrIGJokl1o1T5nnAfFB3WO6r27AEWxJ5G9KDTthNjkFGUXJ4M7c0PWjX+
-         hUxkNNl1WDokp4GoqKWd4GBmbsHYdZ0Bq1HkFpGRr9HVBqBXuDkNPLObOD4T4hQOhAX9
-         0iq0an+d9lAb2/J89WJoz6jl1EzZrn2P8iFc559JHkHEmZ+Sf9ZoT7r5wKxNXoa0337P
-         DhwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXOozmBy/BWN6EY0wBiT92+pMeyV2LMtc34U4RLh3WVIhlb7tbjsWej2yOwEcDaIw3BQTDBCtVCwKEpZtIQCAKwt1OTZaeQkM+3uMGG
-X-Gm-Message-State: AOJu0YxB+WG87Jke+h9t3iFVCJDq7YSXFQHmrqNdkr+E3Ohzj0Wa8TOv
-	TpM+MCIC3pqxMJ66EvV28XwQVGeDtEbHD3X1KLi819t05duuQ9lsf1EWvWHPVQ==
-X-Google-Smtp-Source: AGHT+IH9jxm0Fb4/9rDpVIPFtRTSYrpVWRroIqBhY1mn62exKNoGoLU12zMbf7I0bbrEMi3h9K0kNg==
-X-Received: by 2002:a17:90a:f3c5:b0:2a5:7e31:5030 with SMTP id ha5-20020a17090af3c500b002a57e315030mr5833139pjb.15.1712850058943;
-        Thu, 11 Apr 2024 08:40:58 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id gk16-20020a17090b119000b002a42d247a93sm1266081pjb.36.2024.04.11.08.40.58
+        bh=ZkBOZHCj0mE4s6Wdz7tnu5mnp36Z+tn/wx/FdDRdxgE=;
+        b=cn6w6q8gzKa6tZlXf1mxUVPUqzJHEPQ6mPLlrTYOGJ4yB3pN9cgOm9gDeUnXWi/WXs
+         mpdLXfYFyFl+asDsKSkbVZ+DyGJt8kJHwIG6as3G7/GfmPQe6pjV0liSRPPgRxa219p4
+         T1PXE2iC3uxL/flD7xr9UOjc/UEZ1DZWO+t5riVJY6rXnW4e7bRyKe0898M2Dn33bRUt
+         8yVYzhDySgvUH9jwajzkf5RslZ5y4MPlNMiXN4v/Qmob335eIyHD0hytLZadBc4gtvl1
+         OzSz6eoUHnX8AQXjTqLMj0NmiHcvvNTBcICgoyCd0LvgSEydwg+wg5ulAh+QAVbWG45V
+         PaMA==
+X-Gm-Message-State: AOJu0Yz2f8rmmHoonSaaXCKaR4DeVsQz6W22THc810qHjvLadlkKD3mX
+	u6qZtC0XmLVCnpgJ4rvF23onWaxNWkdAAxie3yUxwhTXjwmL/1uEmwXOWX208q47GkcVMqPuGhj
+	R
+X-Google-Smtp-Source: AGHT+IHANMRC/OqyyT5nzJmEm8dFpxo/Sq1GVyItdO/jf9Y+VJ4GQ3gs22GIiu0fBZr8bFokQxb6bg==
+X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr199420iob.0.1712850059176;
+        Thu, 11 Apr 2024 08:40:59 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.40.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:40:58 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Marco Elver <elver@google.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Azeem Shaikh <azeemshaikh38@gmail.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH v2] tracing: Add sched_prepare_exec tracepoint
-Date: Thu, 11 Apr 2024 08:40:51 -0700
-Message-Id: <171285004930.3255679.4082124903503205236.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411102158.1272267-1-elver@google.com>
-References: <20240411102158.1272267-1-elver@google.com>
+        Thu, 11 Apr 2024 08:40:57 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 337/437] powerpc/kernel: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:17:57 -0600
+Message-ID: <20240411153126.16201-338-axboe@kernel.dk>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Apr 2024 12:20:57 +0200, Marco Elver wrote:
-> Add "sched_prepare_exec" tracepoint, which is run right after the point
-> of no return but before the current task assumes its new exec identity.
-> 
-> Unlike the tracepoint "sched_process_exec", the "sched_prepare_exec"
-> tracepoint runs before flushing the old exec, i.e. while the task still
-> has the original state (such as original MM), but when the new exec
-> either succeeds or crashes (but never returns to the original exec).
-> 
-> [...]
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+---
+ arch/powerpc/kernel/eeh.c | 58 ++++++++++++++++-----------------------
+ 1 file changed, 24 insertions(+), 34 deletions(-)
 
-Applied to for-next/execve, thanks!
-
-[1/1] tracing: Add sched_prepare_exec tracepoint
-      https://git.kernel.org/kees/c/5c5fad46e48c
-
-Take care,
-
+diff --git a/arch/powerpc/kernel/eeh.c b/arch/powerpc/kernel/eeh.c
+index ab316e155ea9..35ea1c80e0de 100644
+--- a/arch/powerpc/kernel/eeh.c
++++ b/arch/powerpc/kernel/eeh.c
+@@ -1588,9 +1588,8 @@ static int proc_eeh_show(struct seq_file *m, void *v)
+ #ifdef CONFIG_DEBUG_FS
+ 
+ 
+-static struct pci_dev *eeh_debug_lookup_pdev(struct file *filp,
+-					     const char __user *user_buf,
+-					     size_t count, loff_t *ppos)
++static struct pci_dev *eeh_debug_lookup_pdev(struct kiocb *iocb,
++					     struct iov_iter *from)
+ {
+ 	uint32_t domain, bus, dev, fn;
+ 	struct pci_dev *pdev;
+@@ -1598,7 +1597,7 @@ static struct pci_dev *eeh_debug_lookup_pdev(struct file *filp,
+ 	int ret;
+ 
+ 	memset(buf, 0, sizeof(buf));
+-	ret = simple_write_to_buffer(buf, sizeof(buf)-1, ppos, user_buf, count);
++	ret = simple_copy_from_iter(buf, &iocb->ki_pos, sizeof(buf)-1, from);
+ 	if (!ret)
+ 		return ERR_PTR(-EFAULT);
+ 
+@@ -1637,17 +1636,16 @@ static int eeh_enable_dbgfs_get(void *data, u64 *val)
+ DEFINE_DEBUGFS_ATTRIBUTE(eeh_enable_dbgfs_ops, eeh_enable_dbgfs_get,
+ 			 eeh_enable_dbgfs_set, "0x%llx\n");
+ 
+-static ssize_t eeh_force_recover_write(struct file *filp,
+-				const char __user *user_buf,
+-				size_t count, loff_t *ppos)
++static ssize_t eeh_force_recover_write(struct kiocb *iocb, struct iov_iter *from)
+ {
++	size_t count = iov_iter_count(from);
+ 	struct pci_controller *hose;
+ 	uint32_t phbid, pe_no;
+ 	struct eeh_pe *pe;
+ 	char buf[20];
+ 	int ret;
+ 
+-	ret = simple_write_to_buffer(buf, sizeof(buf), ppos, user_buf, count);
++	ret = simple_copy_from_iter(buf, &iocb->ki_pos, sizeof(buf), from);
+ 	if (!ret)
+ 		return -EFAULT;
+ 
+@@ -1690,28 +1688,23 @@ static ssize_t eeh_force_recover_write(struct file *filp,
+ static const struct file_operations eeh_force_recover_fops = {
+ 	.open	= simple_open,
+ 	.llseek	= no_llseek,
+-	.write	= eeh_force_recover_write,
++	.write_iter = eeh_force_recover_write,
+ };
+ 
+-static ssize_t eeh_debugfs_dev_usage(struct file *filp,
+-				char __user *user_buf,
+-				size_t count, loff_t *ppos)
++static ssize_t eeh_debugfs_dev_usage(struct kiocb *iocb, struct iov_iter *to)
+ {
+ 	static const char usage[] = "input format: <domain>:<bus>:<dev>.<fn>\n";
+ 
+-	return simple_read_from_buffer(user_buf, count, ppos,
+-				       usage, sizeof(usage) - 1);
++	return simple_copy_to_iter(usage, &iocb->ki_pos, sizeof(usage) - 1, to);
+ }
+ 
+-static ssize_t eeh_dev_check_write(struct file *filp,
+-				const char __user *user_buf,
+-				size_t count, loff_t *ppos)
++static ssize_t eeh_dev_check_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	struct pci_dev *pdev;
+ 	struct eeh_dev *edev;
+ 	int ret;
+ 
+-	pdev = eeh_debug_lookup_pdev(filp, user_buf, count, ppos);
++	pdev = eeh_debug_lookup_pdev(iocb, from);
+ 	if (IS_ERR(pdev))
+ 		return PTR_ERR(pdev);
+ 
+@@ -1728,14 +1721,14 @@ static ssize_t eeh_dev_check_write(struct file *filp,
+ 
+ 	pci_dev_put(pdev);
+ 
+-	return count;
++	return iov_iter_count(from);
+ }
+ 
+ static const struct file_operations eeh_dev_check_fops = {
+ 	.open	= simple_open,
+ 	.llseek	= no_llseek,
+-	.write	= eeh_dev_check_write,
+-	.read   = eeh_debugfs_dev_usage,
++	.write_iter = eeh_dev_check_write,
++	.read_iter = eeh_debugfs_dev_usage,
+ };
+ 
+ static int eeh_debugfs_break_device(struct pci_dev *pdev)
+@@ -1831,14 +1824,12 @@ static int eeh_debugfs_break_device(struct pci_dev *pdev)
+ 	return 0;
+ }
+ 
+-static ssize_t eeh_dev_break_write(struct file *filp,
+-				const char __user *user_buf,
+-				size_t count, loff_t *ppos)
++static ssize_t eeh_dev_break_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+ 	struct pci_dev *pdev;
+ 	int ret;
+ 
+-	pdev = eeh_debug_lookup_pdev(filp, user_buf, count, ppos);
++	pdev = eeh_debug_lookup_pdev(iocb, from);
+ 	if (IS_ERR(pdev))
+ 		return PTR_ERR(pdev);
+ 
+@@ -1848,25 +1839,24 @@ static ssize_t eeh_dev_break_write(struct file *filp,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return count;
++	return iov_iter_count(from);
+ }
+ 
+ static const struct file_operations eeh_dev_break_fops = {
+ 	.open	= simple_open,
+ 	.llseek	= no_llseek,
+-	.write	= eeh_dev_break_write,
+-	.read   = eeh_debugfs_dev_usage,
++	.write_iter = eeh_dev_break_write,
++	.read_iter = eeh_debugfs_dev_usage,
+ };
+ 
+-static ssize_t eeh_dev_can_recover(struct file *filp,
+-				   const char __user *user_buf,
+-				   size_t count, loff_t *ppos)
++static ssize_t eeh_dev_can_recover(struct kiocb *iocb, struct iov_iter *from)
+ {
++	size_t count = iov_iter_count(from);
+ 	struct pci_driver *drv;
+ 	struct pci_dev *pdev;
+ 	size_t ret;
+ 
+-	pdev = eeh_debug_lookup_pdev(filp, user_buf, count, ppos);
++	pdev = eeh_debug_lookup_pdev(iocb, from);
+ 	if (IS_ERR(pdev))
+ 		return PTR_ERR(pdev);
+ 
+@@ -1901,8 +1891,8 @@ static ssize_t eeh_dev_can_recover(struct file *filp,
+ static const struct file_operations eeh_dev_can_recover_fops = {
+ 	.open	= simple_open,
+ 	.llseek	= no_llseek,
+-	.write	= eeh_dev_can_recover,
+-	.read   = eeh_debugfs_dev_usage,
++	.write_iter = eeh_dev_can_recover,
++	.read_iter = eeh_debugfs_dev_usage,
+ };
+ 
+ #endif
 -- 
-Kees Cook
+2.43.0
 
