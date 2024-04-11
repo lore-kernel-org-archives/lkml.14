@@ -1,63 +1,63 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBF61C233E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397D51C2324
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849778; cv=none; b=D6Gwb+8oVT8ToJtQUIUgcZ6u/PcOC7FTQEwEezvrA8xSXD4gIei2YgISPqykr5s/IGf1QHf5kwUydY+hnFaN2LpoZnf9DHGDEasFBYdgZnP+XRXvcXt6mN9Xoabl7ew7qD7OyPcdhzkHDlp+iF4v15cbbDzotxKfxoe/Kz5KCDU=
+	t=1712849777; cv=none; b=hj8FrwsM5BTGuMYhddCi6fkkk9yTjCYrWZI3xInmlz+Cfcoy8PU7pD/UastlsdMiPM3bk5QhLjF9bwPvn0OG+LmGuDwIoRxB55GGKFHa5TYrj2ZSI5Jpot5k8ZaZtNhm5JaIWTzQj3owCr50LG/Xw7qOtPhrof2uG60syqH1Kcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849778; c=relaxed/simple;
-	bh=/R2BeYlhfrBa/htPCC3HHf2TvwcQYfAjQ5baP8YTlLs=;
+	s=arc-20240116; t=1712849777; c=relaxed/simple;
+	bh=ISBdg+ViLwWRx11BXE9o/rqRrX42qLFfD7iOm+Nfqj0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SA1Cg8vwGNDLVZScgqEf/hmJEzdn0l7LQr0uC0lJr0zFF2fOVS/mBpBpcqoRFP6h1vfx0RdYlMH3zOKE2+N5i1JA4ao3hXLb6Xn/BRLeAAyPVHNOnRNkrHiALqgTSEyTyVsr02uuRbw9B5ki8EBYtbIjhDtw6b+Q61sqyu9QAts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Lgpw3Tqx; arc=none smtp.client-ip=209.85.166.180
+	 MIME-Version; b=ow+evnU5pC+qm5PX+8wfzfx5hBEsV9oz5ZV+p7MUJL7c7lJB+SRc7urQBwob97nWwsuzBl2k01+dagU711i4Xl7y+MgdAGSoBHQH/K7nHeq8+vZGTZCQ16PISNtJFT8ZK6jSm8uKecDLmTZWDD0wR8+r5tzwg2cOoAe8RrXwIuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=u9+9jIBu; arc=none smtp.client-ip=209.85.166.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Lgpw3Tqx"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36a34b68277so110735ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="u9+9jIBu"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58074939f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849776; x=1713454576; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849775; x=1713454575; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pbp/RQnmR075DrC7x5KXesv8hnwC9YQtvtSngsJEyrQ=;
-        b=Lgpw3TqxQvdeqR4iWNmLah9LmXFR3VL8tUxTffJO/0cSEkbb/cm8GuE53+qhmM+ncD
-         lD4WH7qQZjjbyM41blzmTuLBE1Ug+hz6w2x4nz9nHL3/PgxwtsrccRuiHhqFADYP8Mgh
-         JzfUZTcfahwaAmENdo3HhTnHab3h9Zq/j70OrXAnD85nhgE7CjgNvj5ZN5YnMp6J51Zc
-         ZDxMljnqSkI/9XkduENh8kfWykD2LXX5WriDJnXug+z6y+aEdD9TzF1Jif/72c2ZPxhV
-         XyofPjwKUwnr3wdgqvNUtVWsKa8WHEHnBPRkKrdQ9GotSvY4I0kQjFDOGz3PGYQfKYIp
-         SyIA==
+        bh=+weEyOvy9CnYy06W/XGJXPiUa/KuSqJLTOLgcqE6BvI=;
+        b=u9+9jIBu8+kkGc/eoNVgNfr8qn4+fGgRJ5vjwFVoLgnygQ3aiByMGF9GnK8W3ILBJa
+         SnRJGzgmojjHApl9i4E6laPtOCQEMLZGIIPi1munWcIoLHurMpj/O79POnJ8t/Ifctsx
+         az1MAmo8IsjJRsXv0XMWVAD/VF8fAUHRUrgCrdD0QAQdQkVzAbKqQxUNodWjoqD0Qcik
+         LhqajDO7QqLDPyUQAihX1TxydXYAOl9G0TklOVc/xaSJO1pfn21Awhe52eOLu8dURPeB
+         Uefp2Ykofv07HLGIiPAJJaYePJX8WvYbYmcOp+VLr7ahSFyhxlvxONXMJnMkRivtCOzl
+         gqgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849776; x=1713454576;
+        d=1e100.net; s=20230601; t=1712849775; x=1713454575;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pbp/RQnmR075DrC7x5KXesv8hnwC9YQtvtSngsJEyrQ=;
-        b=m9A4vFfevgMj8fc1NHegeo5o8NLyBMmZ20nhAEHr+JlTbWTzpeXGbaMxewLJupKVBF
-         nEIlRPX5wqyRr0o63c1VH37sQT2gQqDWQXe4pK62p5KRpIZTQBOyUkNQ56AB2/bnzER4
-         0ksr9cI5ZSCCFNliyJxu8wG0k8TfF7V7EoiV4Yt0joI5Ot6NbJ4UonCRGPDikjoR3rpw
-         ojdp6WSfPv0u+fcMMKXtEYVS6cUxZSPjMJNBpOasBUJmjkj3+3q6HJ+4PgcJa39UqCqq
-         2pjmgUFF19/lXEqJiYXlp90PGiCHFJAnpNVwYOOKTwWpWWHJ2X3Hwr1q0m7wK3okzwxB
-         Hsrw==
-X-Gm-Message-State: AOJu0Yzeor0Z3KfUDOcUGS3zrw4BAfDgaOvhUbueBCP15ietALsWBLTj
-	AtSeWsQQQNvQJDkq7SF0QEDkautc6Qxe2NIkAwbDSwD2juaYjM8X1SqUVM117VPgWiKOj3v5VRY
-	n
-X-Google-Smtp-Source: AGHT+IGLq54DEe1zhqCraahGOdGsPkzsePVXA+w4AS3YhdrJmGgj6lDhuKgH977fWczZg5qz3VHK9A==
-X-Received: by 2002:a05:6602:4ed7:b0:7d5:ddc8:504d with SMTP id gk23-20020a0566024ed700b007d5ddc8504dmr188498iob.0.1712849776330;
-        Thu, 11 Apr 2024 08:36:16 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=+weEyOvy9CnYy06W/XGJXPiUa/KuSqJLTOLgcqE6BvI=;
+        b=E/ZvzPJaAVOjv/19ARguO/uM2IVwR4frK7DkM+h9UA4HLguc7bJbhfpLCkWD2VSP2E
+         E0pVhJG1hp7oPvA88TTwAAsHZFwzVXDaz0FsVmWOPBe7j79dSP3MrSekxbwPjJRIHJHo
+         Xncl1H1O7ErGe5kuCXY982lWKAE+q/mni0+0DME7smFfxbe6rpnxrFcWX6DKKePrigBR
+         55trwenv4PSHFd15IKELxZ8S8+ybE7OETLNFZckVAN2NdV5OO0GD1K00tsKI1niozDt7
+         8LkRKxPhwobonHYhlEIBARxnZuvtMWgLAZYJAEtOyHG+X3K8QbWReVmWRVP5qhyJx0zS
+         80dw==
+X-Gm-Message-State: AOJu0YzU4AgeC2vLF42ATPxuo8kSkRc++bfdzsR15sE+C2kc4iyxX5y6
+	4/f4ZfjOWgKIIWYJbM6DuxrwrTUctoBquLYT/dvqsmgwLnqI70n2yApsHdCJKVPMb7miL+M8EtN
+	g
+X-Google-Smtp-Source: AGHT+IGdVKrO++8guGRIpZur7pdvmmrS1LnNRDDwV8dTiFYe3YdS0UWF1orUngBLo7aiF990/jncaQ==
+X-Received: by 2002:a6b:f312:0:b0:7d5:de23:13a9 with SMTP id m18-20020a6bf312000000b007d5de2313a9mr161234ioh.1.1712849775054;
         Thu, 11 Apr 2024 08:36:15 -0700 (PDT)
+Received: from localhost.localdomain ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:36:13 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 163/437] usb: host: ehci: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:03 -0600
-Message-ID: <20240411153126.16201-164-axboe@kernel.dk>
+Subject: [PATCH 162/437] usb: gadget: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:15:02 -0600
+Message-ID: <20240411153126.16201-163-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,80 +71,261 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/usb/host/ehci-dbg.c | 19 ++++++++-----------
- 1 file changed, 8 insertions(+), 11 deletions(-)
+ drivers/usb/gadget/function/f_fs.c      |  6 ++++--
+ drivers/usb/gadget/function/f_hid.c     | 17 ++++++++--------
+ drivers/usb/gadget/function/f_printer.c | 26 ++++++++++++-------------
+ drivers/usb/gadget/legacy/inode.c       |  6 ++++--
+ drivers/usb/gadget/udc/renesas_usb3.c   | 14 ++++++-------
+ 5 files changed, 36 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-dbg.c b/drivers/usb/host/ehci-dbg.c
-index c063fb042926..c9390a17c432 100644
---- a/drivers/usb/host/ehci-dbg.c
-+++ b/drivers/usb/host/ehci-dbg.c
-@@ -293,13 +293,13 @@ static int debug_bandwidth_open(struct inode *, struct file *);
- static int debug_periodic_open(struct inode *, struct file *);
- static int debug_registers_open(struct inode *, struct file *);
- 
--static ssize_t debug_output(struct file*, char __user*, size_t, loff_t*);
-+static ssize_t debug_output(struct kiocb *, struct iov_iter *);
- static int debug_close(struct inode *, struct file *);
- 
- static const struct file_operations debug_async_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_async_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
-@@ -307,7 +307,7 @@ static const struct file_operations debug_async_fops = {
- static const struct file_operations debug_bandwidth_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_bandwidth_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
-@@ -315,7 +315,7 @@ static const struct file_operations debug_bandwidth_fops = {
- static const struct file_operations debug_periodic_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_periodic_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
-@@ -323,7 +323,7 @@ static const struct file_operations debug_periodic_fops = {
- static const struct file_operations debug_registers_fops = {
- 	.owner		= THIS_MODULE,
- 	.open		= debug_registers_open,
--	.read		= debug_output,
-+	.read_iter	= debug_output,
- 	.release	= debug_close,
- 	.llseek		= default_llseek,
- };
-@@ -952,10 +952,9 @@ static int fill_buffer(struct debug_buffer *buf)
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index bffbc1dc651f..e3514d295e55 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -495,6 +495,7 @@ static ssize_t ffs_ep0_write(struct file *file, const char __user *buf,
+ 	mutex_unlock(&ffs->mutex);
  	return ret;
  }
++FOPS_WRITE_ITER_HELPER(ffs_ep0_write);
  
--static ssize_t debug_output(struct file *file, char __user *user_buf,
--		size_t len, loff_t *offset)
-+static ssize_t debug_output(struct kiocb *iocb, struct iov_iter *to)
+ /* Called with ffs->ev.waitq.lock and ffs->mutex held, both released on exit. */
+ static ssize_t __ffs_ep0_read_events(struct ffs_data *ffs, char __user *buf,
+@@ -632,6 +633,7 @@ static ssize_t ffs_ep0_read(struct file *file, char __user *buf,
+ 	kfree(data);
+ 	return ret;
+ }
++FOPS_READ_ITER_HELPER(ffs_ep0_read);
+ 
+ static int ffs_ep0_open(struct inode *inode, struct file *file)
  {
--	struct debug_buffer *buf = file->private_data;
-+	struct debug_buffer *buf = iocb->ki_filp->private_data;
- 	int ret;
+@@ -720,8 +722,8 @@ static const struct file_operations ffs_ep0_operations = {
+ 	.llseek =	no_llseek,
  
- 	mutex_lock(&buf->mutex);
-@@ -968,9 +967,7 @@ static ssize_t debug_output(struct file *file, char __user *user_buf,
- 	}
- 	mutex_unlock(&buf->mutex);
- 
--	ret = simple_read_from_buffer(user_buf, len, offset,
--				      buf->output_buf, buf->count);
--
-+	ret = simple_copy_to_iter(buf->output_buf, &iocb->ki_pos, buf->count, to);
- out:
- 	return ret;
+ 	.open =		ffs_ep0_open,
+-	.write =	ffs_ep0_write,
+-	.read =		ffs_ep0_read,
++	.write_iter =	ffs_ep0_write_iter,
++	.read_iter =	ffs_ep0_read_iter,
+ 	.release =	ffs_ep0_release,
+ 	.unlocked_ioctl =	ffs_ep0_ioctl,
+ 	.poll =		ffs_ep0_poll,
+diff --git a/drivers/usb/gadget/function/f_hid.c b/drivers/usb/gadget/function/f_hid.c
+index 3c8a9dd585c0..13e5bab6e1b2 100644
+--- a/drivers/usb/gadget/function/f_hid.c
++++ b/drivers/usb/gadget/function/f_hid.c
+@@ -414,6 +414,7 @@ static ssize_t f_hidg_read(struct file *file, char __user *buffer,
+ 	else
+ 		return f_hidg_ssreport_read(file, buffer, count, ptr);
  }
++FOPS_READ_ITER_HELPER(f_hidg_read);
+ 
+ static void f_hidg_req_complete(struct usb_ep *ep, struct usb_request *req)
+ {
+@@ -431,10 +432,10 @@ static void f_hidg_req_complete(struct usb_ep *ep, struct usb_request *req)
+ 	wake_up(&hidg->write_queue);
+ }
+ 
+-static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
+-			    size_t count, loff_t *offp)
++static ssize_t f_hidg_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct f_hidg *hidg  = file->private_data;
++	struct f_hidg *hidg  = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(from);
+ 	struct usb_request *req;
+ 	unsigned long flags;
+ 	ssize_t status = -ENOMEM;
+@@ -451,7 +452,7 @@ static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
+ 	/* write queue */
+ 	while (!WRITE_COND) {
+ 		spin_unlock_irqrestore(&hidg->write_spinlock, flags);
+-		if (file->f_flags & O_NONBLOCK)
++		if (iocb->ki_filp->f_flags & O_NONBLOCK)
+ 			return -EAGAIN;
+ 
+ 		if (wait_event_interruptible_exclusive(
+@@ -473,8 +474,8 @@ static ssize_t f_hidg_write(struct file *file, const char __user *buffer,
+ 		goto release_write_pending;
+ 	}
+ 
+-	status = copy_from_user(req->buf, buffer, count);
+-	if (status != 0) {
++	status = copy_from_iter_full(req->buf, count, from);
++	if (!status) {
+ 		ERROR(hidg->func.config->cdev,
+ 			"copy_from_user error\n");
+ 		status = -EINVAL;
+@@ -906,8 +907,8 @@ static const struct file_operations f_hidg_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= f_hidg_open,
+ 	.release	= f_hidg_release,
+-	.write		= f_hidg_write,
+-	.read		= f_hidg_read,
++	.write_iter	= f_hidg_write,
++	.read_iter	= f_hidg_read_iter,
+ 	.poll		= f_hidg_poll,
+ 	.llseek		= noop_llseek,
+ };
+diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
+index 076dd4c1be96..de3863f0bfb6 100644
+--- a/drivers/usb/gadget/function/f_printer.c
++++ b/drivers/usb/gadget/function/f_printer.c
+@@ -426,10 +426,10 @@ setup_rx_reqs(struct printer_dev *dev)
+ 	}
+ }
+ 
+-static ssize_t
+-printer_read(struct file *fd, char __user *buf, size_t len, loff_t *ptr)
++static ssize_t printer_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct printer_dev		*dev = fd->private_data;
++	struct printer_dev		*dev = iocb->ki_filp->private_data;
++	size_t				len = iov_iter_count(to);
+ 	unsigned long			flags;
+ 	size_t				size;
+ 	size_t				bytes_copied;
+@@ -485,7 +485,7 @@ printer_read(struct file *fd, char __user *buf, size_t len, loff_t *ptr)
+ 		 * If no data is available check if this is a NON-Blocking
+ 		 * call or not.
+ 		 */
+-		if (fd->f_flags & (O_NONBLOCK|O_NDELAY)) {
++		if (iocb->ki_filp->f_flags & (O_NONBLOCK|O_NDELAY)) {
+ 			mutex_unlock(&dev->lock_printer_io);
+ 			return -EAGAIN;
+ 		}
+@@ -522,10 +522,9 @@ printer_read(struct file *fd, char __user *buf, size_t len, loff_t *ptr)
+ 		else
+ 			size = len;
+ 
+-		size -= copy_to_user(buf, current_rx_buf, size);
++		size -= copy_to_iter(current_rx_buf, size, to);
+ 		bytes_copied += size;
+ 		len -= size;
+-		buf += size;
+ 
+ 		spin_lock_irqsave(&dev->lock, flags);
+ 
+@@ -568,10 +567,10 @@ printer_read(struct file *fd, char __user *buf, size_t len, loff_t *ptr)
+ 		return -EAGAIN;
+ }
+ 
+-static ssize_t
+-printer_write(struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
++static ssize_t printer_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct printer_dev	*dev = fd->private_data;
++	struct printer_dev	*dev = iocb->ki_filp->private_data;
++	size_t			len = iov_iter_count(from);
+ 	unsigned long		flags;
+ 	size_t			size;	/* Amount of data in a TX request. */
+ 	size_t			bytes_copied = 0;
+@@ -604,7 +603,7 @@ printer_write(struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ 		 * If write buffers are available check if this is
+ 		 * a NON-Blocking call or not.
+ 		 */
+-		if (fd->f_flags & (O_NONBLOCK|O_NDELAY)) {
++		if (iocb->ki_filp->f_flags & (O_NONBLOCK|O_NDELAY)) {
+ 			mutex_unlock(&dev->lock_printer_io);
+ 			return -EAGAIN;
+ 		}
+@@ -642,7 +641,7 @@ printer_write(struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ 		/* Don't leave irqs off while doing memory copies */
+ 		spin_unlock_irqrestore(&dev->lock, flags);
+ 
+-		if (copy_from_user(req->buf, buf, size)) {
++		if (!copy_from_iter_full(req->buf, size, from)) {
+ 			list_add(&req->list, &dev->tx_reqs);
+ 			mutex_unlock(&dev->lock_printer_io);
+ 			return bytes_copied;
+@@ -650,7 +649,6 @@ printer_write(struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ 
+ 		bytes_copied += size;
+ 		len -= size;
+-		buf += size;
+ 
+ 		spin_lock_irqsave(&dev->lock, flags);
+ 
+@@ -794,8 +792,8 @@ printer_ioctl(struct file *fd, unsigned int code, unsigned long arg)
+ static const struct file_operations printer_io_operations = {
+ 	.owner =	THIS_MODULE,
+ 	.open =		printer_open,
+-	.read =		printer_read,
+-	.write =	printer_write,
++	.read_iter =	printer_read,
++	.write_iter =	printer_write,
+ 	.fsync =	printer_fsync,
+ 	.poll =		printer_poll,
+ 	.unlocked_ioctl = printer_ioctl,
+diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+index 03179b1880fd..2898840a7a41 100644
+--- a/drivers/usb/gadget/legacy/inode.c
++++ b/drivers/usb/gadget/legacy/inode.c
+@@ -1080,6 +1080,7 @@ ep0_read (struct file *fd, char __user *buf, size_t len, loff_t *ptr)
+ 	spin_unlock_irq (&dev->lock);
+ 	return retval;
+ }
++FOPS_READ_ITER_HELPER(ep0_read);
+ 
+ static struct usb_gadgetfs_event *
+ next_event (struct dev_data *dev, enum usb_gadgetfs_event_type type)
+@@ -1919,6 +1920,7 @@ dev_config (struct file *fd, const char __user *buf, size_t len, loff_t *ptr)
+ 	dev->buf = NULL;
+ 	return value;
+ }
++FOPS_WRITE_ITER_HELPER(dev_config);
+ 
+ static int
+ gadget_dev_open (struct inode *inode, struct file *fd)
+@@ -1942,8 +1944,8 @@ static const struct file_operations ep0_operations = {
+ 	.llseek =	no_llseek,
+ 
+ 	.open =		gadget_dev_open,
+-	.read =		ep0_read,
+-	.write =	dev_config,
++	.read_iter =	ep0_read_iter,
++	.write_iter =	dev_config_iter,
+ 	.fasync =	ep0_fasync,
+ 	.poll =		ep0_poll,
+ 	.unlocked_ioctl = gadget_dev_ioctl,
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index 3b01734ce1b7..61f5d7ac47ee 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -2603,18 +2603,18 @@ static int renesas_usb3_b_device_open(struct inode *inode, struct file *file)
+ 	return single_open(file, renesas_usb3_b_device_show, inode->i_private);
+ }
+ 
+-static ssize_t renesas_usb3_b_device_write(struct file *file,
+-					   const char __user *ubuf,
+-					   size_t count, loff_t *ppos)
++static ssize_t renesas_usb3_b_device_write(struct kiocb *iocb,
++					   struct iov_iter *from)
+ {
+-	struct seq_file *s = file->private_data;
++	struct seq_file *s = iocb->ki_filp->private_data;
+ 	struct renesas_usb3 *usb3 = s->private;
++	size_t count = iov_iter_count(from);
+ 	char buf[32];
+ 
+ 	if (!usb3->driver)
+ 		return -ENODEV;
+ 
+-	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
++	if (!copy_from_iter_full(&buf, min_t(size_t, sizeof(buf) - 1, count), from))
+ 		return -EFAULT;
+ 
+ 	usb3->start_to_connect = false;
+@@ -2637,8 +2637,8 @@ static ssize_t renesas_usb3_b_device_write(struct file *file,
+ 
+ static const struct file_operations renesas_usb3_b_device_fops = {
+ 	.open = renesas_usb3_b_device_open,
+-	.write = renesas_usb3_b_device_write,
+-	.read = seq_read,
++	.write_iter = renesas_usb3_b_device_write,
++	.read_iter = seq_read_iter,
+ 	.llseek = seq_lseek,
+ 	.release = single_release,
+ };
 -- 
 2.43.0
 
