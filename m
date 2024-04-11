@@ -1,50 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821842EAE5
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8041664CC0;
+	Thu, 11 Apr 2024 10:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832148; cv=none; b=DzezDda9tCeIJOCSPQIUzaVZoAHVAsh/XMtq0aVCGRw8LUS3vpda6cd5gKbbXLcD78KzkrwGI7GVpCE3g32D6SIe2y+PPcs88FgSOvnLyKP+S1oJnJ2/We+aFvU7qzDu/x/wHP9ZnetIYinqBnrSc3DIcpF8GTzWhk5gzCSIOac=
+	t=1712832234; cv=none; b=oDK5/IHfUaHXw3nv6Q2jHy+azmR1RJ9rTugeC1sxIMuTZc7b68woLsNGcKEzrjJejlx2q1Sgmr82m2ptiwguyPAVHs5gWM0iePrahyLWcRujPB77OS5WF+xuMWgcBxUN8mba83P9rQoqdl7SptGf6fDbyJ6e+2u3l2scXHklIuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712832148; c=relaxed/simple;
-	bh=OwXbvvCmxzRGwwaybj47loKYypz/fXRm1xIcyTzXQbM=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DNJ50GLpmbZVkHHsScZB6bAkfe50+D/fct841ITnjLbCi8etaSkZDVPfdkuaApdPSG3IxoLAmHfZpM+ZTls5DjXHIHVVVPVbUihdkcKfDTJMST2x8OhzZRvWXUKlcTO4eqyq/upD1EcBRdMmm/CH5FgGA+pNdO5hTYYvRrBZ49c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lnSPDfTe; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712832234; c=relaxed/simple;
+	bh=sF1QdEzB4+79Ul3csFZ7HCaZU7ZqVllCaS9cSmm1YRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MyXjO9kACWBRDD/e8HkldH55oGrf6+yxnv2bnMyMBVoZfIvOsfL2pifVbADHvZZqAlQWZf2nrOGgh5PfDo5rOTKFV0FIZ209anbLqkHNojRNwYE9/tAuFWdoA2qbCiSC/62+vFFFDORHLxP9ssSu9sI58TpDWjIMMW6QiepCvXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cUPod8+r; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lnSPDfTe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712832146; x=1744368146;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=OwXbvvCmxzRGwwaybj47loKYypz/fXRm1xIcyTzXQbM=;
-  b=lnSPDfTeiutikpDgVBtleIoHDyRA96AKx06vScz4LcryhSnKowxz5Sey
-   MIH35bvEoqN7pLvxYpkvk6PWcIkaTxfslU/I3JK/uJvtEur0dtOXcp8my
-   ltkUmKg7sWI1gsNMUovugydv+C7LMmtUYGHP2fZ/h19IBBXjdgTXvHexM
-   xngqOuPYc5WcTcrBTSZbfTLVm9azwGlNtUVpVFdXq54tbo52ySr7rMUng
-   AOGSbb4a8A5z5VrVaFmL+9xCdRLSSuCDm4QcIaIQReQx8s6UcfJlR+oqv
-   EOFwUrdZEJxfUizbbARgjC6wCRDRjJlYSPs+mC/oYDL6UObr7VpZ7WmPc
-   Q==;
-X-CSE-ConnectionGUID: /LyUPWaSSZ2tAvpa0WXDzA==
-X-CSE-MsgGUID: L8h2RdPYSkOjEotnF9kALg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="8454301"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8454301"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 03:42:26 -0700
-X-CSE-ConnectionGUID: hDZT6KtFTeuTEAq3eTW6Og==
-X-CSE-MsgGUID: jTcZalKBS2qx+VHLg4eWmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="25515549"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.124.237.86]) ([10.124.237.86])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 03:42:23 -0700
-Message-ID: <3f0e134a-3da4-4a45-851a-3d15a8786f9a@linux.intel.com>
-Date: Thu, 11 Apr 2024 18:42:20 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cUPod8+r"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-417d029bee7so5102905e9.1;
+        Thu, 11 Apr 2024 03:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712832231; x=1713437031; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lZnfyjtIT3oMZRJBF5vD8DE1B6KGKzMNst0HGwqZHrY=;
+        b=cUPod8+ruEDTQ7q+NwU3FgU87/E6tqxJGEaOZRPvI/IApCBKNdINUHueDx4394WA9t
+         WAdYKfMYZtt9+4qAS5Bt5AgGb51ARHC8SleCkuEGzxFdUKW9dY51n8YnSDS018OTgfOp
+         NoNbsb0Em/Bg0ZvEmuWXZL5Sul+x9gJ28YvEtcfFjvUO6IEtgphirNb9/sMQzk6kZLv7
+         gWKxAdzn8NqvB9Bqe0qYgHC+MO15poAU9lxKSJgW9RjeGR8w+EIDM/oDFf7A/3uNQlJv
+         u82IEkqmnT9WqLD7caMeFyNGqrdlTm7jsoogZ8KIf7z5cMbo+c81AK34uTnuw64MwAy+
+         59jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712832231; x=1713437031;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lZnfyjtIT3oMZRJBF5vD8DE1B6KGKzMNst0HGwqZHrY=;
+        b=kiE5hzBe65l+ZndNk6EGOPPnMBDHFSlXBARtypb11fsaiLGgsRJGKYywzA7G4CA1Pn
+         QJOnVvrtRDZnjhOOQLQCbH+y/6TmNsMn3kieb1v29t2si1Ey88x2RJM7emFcJYIn1szP
+         sbhZB+ULt0npIIo4k6zcmYoSNDmkYBOrpYf6ifEUQTN/dw83rapk/KdtOBcG9AE2oEtu
+         l7d9ARgkAP1AM0FtZFXoMoxmUZwkoESPTEblo8IAroFiE4Zyd/VR/Lx+mn5BfBsaFZSM
+         hp5aTvyj1CA2aBzU6Z5PLqXQ1qZrnWWmBAGP67bKC9mxu/PfohTPZ3S8ZvQxxs/QveYb
+         qzgg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+ADnEkqTDTTZjDyGtAgR6QkbE7oFktScAzhiAc3Ymo6zrkj02n5M1jq+iKXFf9dh9okkj6MndcLwxLzdyhZ+iI66WAw08VlXNc/Rc71Tuoj1MGAIVMSqBjbVQl140G0vbogoe8hVymvL6HMhsRp+VbRXIBPH+PshHjeTDQsPdZgkTZuko
+X-Gm-Message-State: AOJu0YyARpCSbZ/SoH4joX4yf+NF9dUTFHnNZ2jhbB/2FNUvs9wbLVGm
+	BGSYxrlKAlK5pLqCArpQUXDEx7TxDncCLJdjEJBA6tDKWsBcIkjQ
+X-Google-Smtp-Source: AGHT+IGN2GMFqd9FOV0kra1xu4P5IN/AfV9m1iCLs3mIOn4B1HgTRjbh1WA09kLOCmvFxVKFpmmvQw==
+X-Received: by 2002:a05:600c:4ec8:b0:417:d624:d009 with SMTP id g8-20020a05600c4ec800b00417d624d009mr1056093wmq.5.1712832230565;
+        Thu, 11 Apr 2024 03:43:50 -0700 (PDT)
+Received: from [192.168.0.101] (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.googlemail.com with ESMTPSA id g16-20020a05600c311000b00417e31724c3sm706829wmo.13.2024.04.11.03.43.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Apr 2024 03:43:50 -0700 (PDT)
+Message-ID: <3011ca26-08d4-4b4e-847e-d68c0751f98d@gmail.com>
+Date: Thu, 11 Apr 2024 11:43:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,79 +61,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- "Zhang, Tina" <tina.zhang@intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+Subject: Re: [PATCH][next] tipc: remove redundant assignment to ret, simplify
+ code
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Tung Quang Nguyen <tung.q.nguyen@dektech.com.au>
+Cc: Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "tipc-discussion@lists.sourceforge.net"
+ <tipc-discussion@lists.sourceforge.net>,
+ "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 12/12] iommu/vt-d: Retire struct intel_svm
-To: "Tian, Kevin" <kevin.tian@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-References: <20240410020844.253535-1-baolu.lu@linux.intel.com>
- <20240410020844.253535-13-baolu.lu@linux.intel.com>
- <20240410154951.GH223006@ziepe.ca>
- <b24f3380-1ac3-41c4-9163-56c1dcff6297@linux.intel.com>
- <BN9PR11MB52767D3287A7E000AD17BC9B8C052@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240411091704.306752-1-colin.i.king@gmail.com>
+ <AS4PR05MB96479D9B6F9EC765371AA8A588052@AS4PR05MB9647.eurprd05.prod.outlook.com>
+ <ce0a63fc-1985-4e25-a08b-c0045ae095f4@moroto.mountain>
 Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52767D3287A7E000AD17BC9B8C052@BN9PR11MB5276.namprd11.prod.outlook.com>
+From: "Colin King (gmail)" <colin.i.king@gmail.com>
+In-Reply-To: <ce0a63fc-1985-4e25-a08b-c0045ae095f4@moroto.mountain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2024/4/11 16:32, Tian, Kevin wrote:
->> From: Baolu Lu<baolu.lu@linux.intel.com>
->> Sent: Thursday, April 11, 2024 3:56 PM
->>
->> On 2024/4/10 23:49, Jason Gunthorpe wrote:
->>> On Wed, Apr 10, 2024 at 10:08:44AM +0800, Lu Baolu wrote:
->>>> @@ -4388,14 +4386,8 @@ static void
->> intel_iommu_remove_dev_pasid(struct device *dev, ioasid_t pasid)
->>>>    	WARN_ON_ONCE(!dev_pasid);
->>>>    	spin_unlock_irqrestore(&dmar_domain->lock, flags);
->>>>
->>>> -	/*
->>>> -	 * The SVA implementation needs to handle its own stuffs like the
->> mm
->>>> -	 * notification. Before consolidating that code into iommu core, let
->>>> -	 * the intel sva code handle it.
->>>> -	 */
->>>>    	if (domain->type == IOMMU_DOMAIN_SVA) {
->>>>    		cache_tag_unassign_domain(dmar_domain,
->> FLPT_DEFAULT_DID, dev, pasid);
->>>> -		intel_svm_remove_dev_pasid(domain);
->>>>    	} else {
->>>>    		did = domain_id_iommu(dmar_domain, iommu);
->>>>    		cache_tag_unassign_domain(dmar_domain, did, dev, pasid);
->>> It seems very strange that SVA has a different DID scheme, why is
->>> this? PASID and SVA should not be different at this layer.
->> The VT-d spec recommends that all SVA domains share a single domain ID.
->> The PASID is unique to each SVA domain, hence the cache tags are unique.
->> Currently, the Intel IOMMU driver assigns different domain IDs for all
->> domains except the SVA type.
->>
->> Sharing a domain ID is not specific to SVA. In general, for devices
->> under a single IOMMU, domains with unique PASIDs can share the same
->> domain ID.
->>
->> In the long term (also on my task list), we will extend the cache tag
->> code to support sharing domain IDs and remove the domain type check from
->> the main code. This will also benefit the nesting case, where user
->> domains nested on the same parent could share a domain ID.
->>
-> at least above might be changed to a unified call with the helper
-> accepting an iommu parameter and then finding proper did
-> internally based on domain type, e.g.
+On 11/04/2024 11:31, Dan Carpenter wrote:
+> On Thu, Apr 11, 2024 at 10:04:10AM +0000, Tung Quang Nguyen wrote:
+>>>
+>> I suggest that err variable should be completely removed. Could you
+>> please also do the same thing for this code ?
+>> "
+>> ...
+>> err = skb_handler(skb, cb, tsk);
+>> if (err) {
 > 
-> cache_tag_unassign_domain(domain, iommu, dev, pasid)
-> {
-> 	if (domain->type == IOMMU_DOMAIN_SVA)
-> 		did = FLPT_DEFAULT_DID;
-> 	else
-> 		did = domain_id_iommu(domain, iommu);
+> If we write the code as:
 > 
-> 	...
-> }
+> 	if (some_function(parameters)) {
+> 
+> then at first that looks like a boolean.  People probably think the
+> function returns true/false.  But if we leave it as-is:
+> 
+> 	err = some_function(parameters);
+> 	if (err) {
+> 
+> Then that looks like error handling.
+> 
+> So it's better and more readable to leave it as-is.
+> 
+> regards,
+> dan carpenter
 
-Yeah, your code is more graceful.
+I concur with Dan's comments.
 
-Best regards,
-baolu
+Colin
