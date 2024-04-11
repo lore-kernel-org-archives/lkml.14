@@ -1,132 +1,174 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2B113BC33;
-	Thu, 11 Apr 2024 11:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA49B1F171
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712834633; cv=none; b=OZiBYcIpsJZs1G1xBTUnT9I/K+i7L/+Gt2TvDXVSIbPlvdPC1K9kWh7rsTq7IgcpfICJHy+L3vSv6wDWodW3Dc6uzK2wZwIthIZGBVMzOJKMPMYs5d7uoZPk0Tjl9E6ZLhVipbRX8EHamSFt+Roeq5VXFXmoqABAxTWsciTKRdM=
+	t=1712834841; cv=none; b=cfDoV/fYIiYuriY0Uaepo3gSAQYn2Q1j3I/CWrRK9B8du5At+gWVs+FB5DMQusNmhS2JdCF1DIoqVxCeB4rubNqRvxIK+2qgwbS8OdZPvuxiG5TSZDflytFZPWhm4qlXao/aYwieaGr7h0vZNxBjGvg47F74Qk89Xl9wV3d47dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712834633; c=relaxed/simple;
-	bh=Sw/8LCKgD4CWZon5IHvfbD8ji7b2G+eyIbQZeE+Po1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dspfQeILqiSt3bXQZngIz+I/b26Uo+F/zBCeAkhWZvp0t39UvA+JU4OSsyXzrcrqyZ7iJjmvIrgtx4GBD4ykZwk6fbuSC2Wdc7crOietrPupEEXxCJ7sT2dqSFPTV8sDeyQ12n+lNUXHqZAK+VeCjpRXDy8oWTnJZ0jOpDj7wvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o/VNHZV+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712834841; c=relaxed/simple;
+	bh=SXj9y6dEQyLjYVUDk/uY67G232uAsHDAK22JxGiQ7zc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NMEijUzIHebIsQqXKoLMZrX7Tf6R89Ul30hDtYn/n7mLVSwrSKaenTcIbhv9/FS18hRa5uzf93z9DESO1/XsCtDFFVzMymeN2x5H4kcdX1Fpm5IreiS2i0On8FjoKZ42559ccuiT/BJbSLLZg/4tjArp9YLCxW+tUd4+FsjbPyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L082FRQF; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o/VNHZV+"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43B8NXpX007621;
-	Thu, 11 Apr 2024 11:23:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=lBNpdyE9SdRnA12ZknqnrRm+EDCD9cxh+l5Im7UQVsg=; b=o/
-	VNHZV+brOLJTR0sqQMshoRKcGD5ZSVTADK0WKgPrdqJJZY12aF37AET+Aobvu2uK
-	QkLdTOWmDQ0vl9/hRrueUSSvEUB3/NKAWxY9vorTbYrHaqJ5M5AGe14umdv+pb5F
-	nuX+URNr4KPKzdsVArIVCDtfhZ70ukR1H9adATRkQfUctGXwZbEXcTlJDwEnrTtd
-	tI+ek0jTpVGG72kC0gG9gCfzwrlemt/zNzSUD6w6hTzrfRAGREOiF0s5A8/IS+yQ
-	PQ50ubC3PA+vT15fMH8o0mbaa7iLEsN7gQ4ulviFXJOeh5RG5QU8vXyiYDnn+tHE
-	E7Z9qiTWQ4o3SESIm8Mw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xebq1rwpg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 11:23:46 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43BBNj41028492
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 11 Apr 2024 11:23:45 GMT
-Received: from [10.216.18.215] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 11 Apr
- 2024 04:23:42 -0700
-Message-ID: <46c0d72d-d629-429b-94ec-d21f719db348@quicinc.com>
-Date: Thu, 11 Apr 2024 16:53:31 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L082FRQF"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56c5d05128dso8726789a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 04:27:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712834838; x=1713439638; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JPgHHwHJQUjcN9+ZETRpKSXHrtMV9qPUP/hzLNBulq4=;
+        b=L082FRQFnAl2gmqT3iHTAD04J85CNWw2zd7i9oITMl+sox/OdsvJ54jy4Y0iGLMgM5
+         xQpmhGqv8XkoCsxEQPb6xTVUcqurpTfB8QGs4EjObDWSnRL3xaTkevjuB0SnpD2R+wtq
+         Bfo6ef7cKOHy73MchxRrN+Cgg9rzH/rawAGMvL5bf5/8WTpW40ru24dWu3OWjfcQjUkX
+         wGbt+6lpdkSUkU8xfF43w7214iCTYCGLcL35FJTaj5D6OumB1ayNmNIN6bN8I3gbQ5rF
+         Hr+Z2cTfX/LxQPpR8OdpSGu4r/8IBJ2bf05J7woxcfg5TFazDyrsqhleR8XUBLcGMmOJ
+         vKQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712834838; x=1713439638;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JPgHHwHJQUjcN9+ZETRpKSXHrtMV9qPUP/hzLNBulq4=;
+        b=FRjk/pi9tVOwejJUMDyxbf7pgxMJqcym+GObbSVih4hj5XojjSQsUt6zc99nFp/HWg
+         MalMT93o1DvO2HmtGyJDKrHGSm8DFK6yDDY2N9IEHGcwEPOmaPG+FxHja2lTzBZA8EZC
+         yBSgE0S57MMsEnHJ1ywsIvkrb+SCvUd9SWOmQVHcv4PzeDA11YqW8aFNhUqVVBAOJIe6
+         XEqVSVAtxLDtSo9saic9QFiWOU+TSJJ2FRFpAAyEJJz6BCge3utQueVmpPMTdySgZuBA
+         CdBoP2nQjmAV+tYB/dVVg1wkrDzhMXEXUpCUSwnQabJw1LqCCQYoqGA/HI8HCw8GhzH4
+         Od/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXUfeaku6QGwPbgPU9aKK0s6SYBgTHNkXzebKLDKsnMkeVvzjc3u0mpwr5NRK+kfu/YgwF/Uk2ag6rJcOkiWUcQLOaYHXphoVWGIyPd
+X-Gm-Message-State: AOJu0YzTnvzBN5Pq6tZLEFbwY8JHKLGGFjVQkJjs9G7u2Wufgjxn60Yu
+	lZsTqES/eAcOcDqBrQRaYv0nS98fNz2meRjgFyclPmh0C80RpZiy9IXedhsFUks=
+X-Google-Smtp-Source: AGHT+IFwLt+iueu2j3MLe7sPxKEVm12o1woUYsl+DRSYf62oseMX9GHG+9X4QGSFZmjrEH6UfyAexA==
+X-Received: by 2002:a50:ab18:0:b0:56d:c4eb:6328 with SMTP id s24-20020a50ab18000000b0056dc4eb6328mr3413547edc.29.1712834837783;
+        Thu, 11 Apr 2024 04:27:17 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id er15-20020a056402448f00b0056e637f188fsm592949edb.11.2024.04.11.04.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 04:27:17 -0700 (PDT)
+Date: Thu, 11 Apr 2024 14:27:13 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Tung Quang Nguyen <tung.q.nguyen@dektech.com.au>
+Cc: "Colin King (gmail)" <colin.i.king@gmail.com>,
+	Jon Maloy <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"tipc-discussion@lists.sourceforge.net" <tipc-discussion@lists.sourceforge.net>,
+	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] tipc: remove redundant assignment to ret, simplify
+ code
+Message-ID: <a9c41116-98b6-461b-b936-37995a343a51@moroto.mountain>
+References: <20240411091704.306752-1-colin.i.king@gmail.com>
+ <AS4PR05MB96479D9B6F9EC765371AA8A588052@AS4PR05MB9647.eurprd05.prod.outlook.com>
+ <ce0a63fc-1985-4e25-a08b-c0045ae095f4@moroto.mountain>
+ <3011ca26-08d4-4b4e-847e-d68c0751f98d@gmail.com>
+ <AS4PR05MB9647FC45E89AECEDC01068C388052@AS4PR05MB9647.eurprd05.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 0/3] clk: qcom: clk-rcg2: introduce support for
- multiple conf for same freq
-To: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20231220221724.3822-1-ansuelsmth@gmail.com>
- <a70e7219-5fd8-4797-be43-199f8995409b@quicinc.com>
- <5fc87d10b06f8b5b3024ac6c5674b18b.sboyd@kernel.org>
-Content-Language: en-US
-From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <5fc87d10b06f8b5b3024ac6c5674b18b.sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: mzOIeadyFYbzxdddQ0eRp0Lph8iZ0Lu8
-X-Proofpoint-GUID: mzOIeadyFYbzxdddQ0eRp0Lph8iZ0Lu8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-11_04,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- suspectscore=0 clxscore=1011 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2404110082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AS4PR05MB9647FC45E89AECEDC01068C388052@AS4PR05MB9647.eurprd05.prod.outlook.com>
+
+On Thu, Apr 11, 2024 at 11:04:15AM +0000, Tung Quang Nguyen wrote:
+> >Subject: Re: [PATCH][next] tipc: remove redundant assignment to ret, simplify code
+> >
+> >On 11/04/2024 11:31, Dan Carpenter wrote:
+> >> On Thu, Apr 11, 2024 at 10:04:10AM +0000, Tung Quang Nguyen wrote:
+> >>>>
+> >>> I suggest that err variable should be completely removed. Could you
+> >>> please also do the same thing for this code ?
+> >>> "
+> >>> ...
+> >>> err = skb_handler(skb, cb, tsk);
+> >>> if (err) {
+> >>
+> >> If we write the code as:
+> >>
+> >> 	if (some_function(parameters)) {
+> >>
+> >> then at first that looks like a boolean.  People probably think the
+> >> function returns true/false.  But if we leave it as-is:
+> >>
+> >> 	err = some_function(parameters);
+> >> 	if (err) {
+> >>
+> >> Then that looks like error handling.
+> >>
+> >> So it's better and more readable to leave it as-is.
+> >>
+> >> regards,
+> >> dan carpenter
+> >
+> >I concur with Dan's comments.
+> >
+> >Colin
+> I have a different view.
+> It does not make sense to me to use stack variable 'err' just for
+> checking return code of the functions (__tipc_nl_add_sk/
+> __tipc_add_sock_diag) that we know always return true on error.
+>
+
+I think you are trying to mirco optimize the code at the expense
+of readability.  It is unnecessary.  The compiler is smart enough to
+generate the same code either way.  I have just tested this on my system
+and it is true.
+
+$ md5sum net/tipc/socket.o.*
+f5ebea97eeb9736c5b8097158c2b12e5  net/tipc/socket.o.without_var
+f5ebea97eeb9736c5b8097158c2b12e5  net/tipc/socket.o.with_var
+$
+
+When you're doing these tests, you need to ensure that the line numbers
+do change so I have commented out the old lines instead of deleting
+them.
+
+regards,
+dan carpenter
+
+diff --git a/net/tipc/socket.c b/net/tipc/socket.c
+index 7e4135db5816..879a8a9786b0 100644
+--- a/net/tipc/socket.c
++++ b/net/tipc/socket.c
+@@ -3560,24 +3560,21 @@ int tipc_nl_sk_walk(struct sk_buff *skb, struct netlink_callback *cb,
+ {
+ 	struct rhashtable_iter *iter = (void *)cb->args[4];
+ 	struct tipc_sock *tsk;
+-	int err;
++//	int err;
+ 
+ 	rhashtable_walk_start(iter);
+ 	while ((tsk = rhashtable_walk_next(iter)) != NULL) {
+ 		if (IS_ERR(tsk)) {
+-			err = PTR_ERR(tsk);
+-			if (err == -EAGAIN) {
+-				err = 0;
++			if (PTR_ERR(tsk) == -EAGAIN)
+ 				continue;
+-			}
+ 			break;
+ 		}
+ 
+ 		sock_hold(&tsk->sk);
+ 		rhashtable_walk_stop(iter);
+ 		lock_sock(&tsk->sk);
+-		err = skb_handler(skb, cb, tsk);
+-		if (err) {
++//		err = skb_handler(skb, cb, tsk);
++		if (skb_handler(skb, cb, tsk)) {
+ 			release_sock(&tsk->sk);
+ 			sock_put(&tsk->sk);
+ 			goto out;
 
 
-
-On 4/11/2024 10:31 AM, Stephen Boyd wrote:
-> Quoting Kathiravan Thirumoorthy (2024-01-22 09:46:23)
->>
->>
->> On 12/21/2023 3:47 AM, Christian Marangi wrote:
->>> This small series fix a current problem with ipq8074 where the 2 uniphy
->>> port doesn't work in some corner case with some clk configuration. The
->>> port to correctly work require a specific frequency, using the wrong one
->>> results in the port not transmitting data.
->>>
->>> With the current code with a requested freq of 125MHz, the frequency is
->>> set to 105MHz. This is caused by the fact that there are 2 different
->>> configuration to set 125MHz and it's always selected the first one that
->>> results in 105MHz.
->>>
->>> In the original QSDK code, the frequency configuration selection is
->>> different and the CEIL FLOOR logic is not present. Instead it's used a
->>> BEST approach where the frequency table is checked and then it's checked
->>> if there are duplicate entry.
->>>
->>> This proposed implementation is more specific and introduce an entire new
->>> set of ops and a specific freq table to support this special configuration.
->>>
->>> A union is introduced in rcg2 struct to not duplicate the struct.
->>> A new set of ops clk_rcg2_fm_ops are introduced to support this new kind
->>> of frequency table.
->>>
->>
->>
->> Bjorn / Stephen Boyd,
->>
->> I would like to know if there are any comments on this series. To enable
->> the clocks required for the Ethernet interfaces on the IPQ platforms,
->> these patches are needed. If no concerns, can this be picked up for v6.9?
->>
-> 
-> I'm fine if Bjorn wants to pick it up.
-> 
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-
-
-Thanks Stephen. Bjorn, can this series picked up for v6.10, if no 
-concerns from your side?
-
-Thanks,
-Kathiravan.
