@@ -1,160 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C2C14A98
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA68D534;
+	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712846918; cv=none; b=bb7r2zuPeFSUdtTi4CUoX1ThZC6P0YFEkLrajAVfgFxW8U8N78g3Wv2/6BYqrIeuw7OIo+Jy5YzBA1EIb+hPU2fBynd7xGurm06C8AScvHjjCcx5L4yaj+30CInK12BJrEBXngpRee13/w3C4BuoiRaYFCrbMpM00gqBLqELlBc=
+	t=1712847028; cv=none; b=r5/4x9E0dBNrteonZqQuuDLp+wB2wuyXFYxsx95dqCuAucfEatRSaBv8atQWmeFMl0QTAXMLm1yP8ou8tWhqJXl93pWaaKh3aZDV269H/aJ3zKY/NByf5F7f79H5La5UaiEZlmptzXtPi7HSE4Ww4/BUXcK3yxBS4JmpuOLbT9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712846918; c=relaxed/simple;
-	bh=HuCr67FKfls9MKIB5l7uhILKDr5jfMpXLnxYODBSiQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPWXxHObv1nBPyjO9hnXnZ4H7wNQmpJXkFhDKw2sBgk6AfC0a8XwHXBjyPafonHN8fR1Sg/3GJ0sbVPkkvVIjCv4A9P3so6dD+zCq13ipJbPhKOTaghcZFqumz8LdxP8YDw9c5DGNx/1lxYy7bf9exoE1OJCcCa9/Fks2hjRZ0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23C6B339;
-	Thu, 11 Apr 2024 07:49:05 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.16.129])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D13E93F64C;
-	Thu, 11 Apr 2024 07:48:33 -0700 (PDT)
-Date: Thu, 11 Apr 2024 15:48:24 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Donald Dutile <ddutile@redhat.com>,
-	Eric Chanudet <echanude@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Itaru Kitayama <itaru.kitayama@fujitsu.com>
-Subject: Re: [PATCH v2 3/4] arm64: mm: Don't remap pgtables for allocate vs
- populate
-Message-ID: <Zhf4LqNhQFN8ezx1@FVFF77S0Q05N>
-References: <20240404143308.2224141-1-ryan.roberts@arm.com>
- <20240404143308.2224141-4-ryan.roberts@arm.com>
- <ZhffSyrqCQsMV2pG@FVFF77S0Q05N>
- <37d4c278-3780-49ce-bd7e-e8f2ff4501fd@arm.com>
+	s=arc-20240116; t=1712847028; c=relaxed/simple;
+	bh=RK8HPzL73Quew+tMOrVpkfmMzV4s5rg6BXSQRmSLg8w=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Y7rQJEkNKqSqQSAvRxrF3OAGKcJ6Y0lvnWjpyca7CS8VpIbYMZHGcPq03PYzGMgIIS0+w/LS+opr8IbIp5R7srIobXGX3Nd15efnvswQLdlbGG8HwMVtczSxgK3U5fwFKVtqulleMSaPPGaCyT1NC8g3Yw1IcphwAg7EnXHrcjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jd5AQd9c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jd5AQd9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B9A01C113CE;
+	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712847027;
+	bh=RK8HPzL73Quew+tMOrVpkfmMzV4s5rg6BXSQRmSLg8w=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Jd5AQd9c+Y+DVjeZhRA51xRwPAFPk6ny9Nly0y/GGIhczEKr22hWMYCjS18dsAbcm
+	 SBvNIG6yngZiZjIFrzq3yM41dxSy5YvzBJXVyvpgBMrdFVf4EVKS2K5cLuPVkNWung
+	 3eC9SvbTIAM9/ksLbXoQE93t6AUsWvQTZWbiF1VYooRD0dy7gqU101QW9cCW9oEOnT
+	 +MK0xXDmbSEY0Co6guBWZukqGhMkwOSoBhUulamUCMO/9z7fm0RfxIlgXKSB2znv97
+	 TSy7J79SVgJFcl5MaxOCfihWDsIeZky6uT++YnsTeenQO7oUvKaNdBFXYujUjq7RDJ
+	 Kz6gFOWlrbORg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A465FC4339F;
+	Thu, 11 Apr 2024 14:50:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37d4c278-3780-49ce-bd7e-e8f2ff4501fd@arm.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/3] RDMA/mana_ib: Add flex array to struct
+ mana_cfg_rx_steer_req_v2
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171284702766.5792.6538200625585720132.git-patchwork-notify@kernel.org>
+Date: Thu, 11 Apr 2024 14:50:27 +0000
+References: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+In-Reply-To: <AS8PR02MB72374BD1B23728F2E3C3B1A18B022@AS8PR02MB7237.eurprd02.prod.outlook.com>
+To: Erick Archer <erick.archer@outlook.com>
+Cc: longli@microsoft.com, sharmaajay@microsoft.com, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ keescook@chromium.org, gustavoars@kernel.org, nathan@kernel.org,
+ ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
+ jgg@ziepe.ca, leon@kernel.org, shradhagupta@linux.microsoft.com,
+ kotaranov@microsoft.com, linux-rdma@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ llvm@lists.linux.dev
 
-On Thu, Apr 11, 2024 at 02:37:49PM +0100, Ryan Roberts wrote:
-> On 11/04/2024 14:02, Mark Rutland wrote:
-> > On Thu, Apr 04, 2024 at 03:33:07PM +0100, Ryan Roberts wrote:
-> >> During linear map pgtable creation, each pgtable is fixmapped /
-> >> fixunmapped twice; once during allocation to zero the memory, and a
-> >> again during population to write the entries. This means each table has
-> >> 2 TLB invalidations issued against it. Let's fix this so that each table
-> >> is only fixmapped/fixunmapped once, halving the number of TLBIs, and
-> >> improving performance.
-> >>
-> >> Achieve this by abstracting pgtable allocate, map and unmap operations
-> >> out of the main pgtable population loop code and into a `struct
-> >> pgtable_ops` function pointer structure. This allows us to formalize the
-> >> semantics of "alloc" to mean "alloc and map", requiring an "unmap" when
-> >> finished. So "map" is only performed (and also matched by "unmap") if
-> >> the pgtable has already been allocated.
-> >>
-> >> As a side effect of this refactoring, we no longer need to use the
-> >> fixmap at all once pages have been mapped in the linear map because
-> >> their "map" operation can simply do a __va() translation. So with this
-> >> change, we are down to 1 TLBI per table when doing early pgtable
-> >> manipulations, and 0 TLBIs when doing late pgtable manipulations.
-> >>
-> >> Execution time of map_mem(), which creates the kernel linear map page
-> >> tables, was measured on different machines with different RAM configs:
-> >>
-> >>                | Apple M2 VM | Ampere Altra| Ampere Altra| Ampere Altra
-> >>                | VM, 16G     | VM, 64G     | VM, 256G    | Metal, 512G
-> >> ---------------|-------------|-------------|-------------|-------------
-> >>                |   ms    (%) |   ms    (%) |   ms    (%) |    ms    (%)
-> >> ---------------|-------------|-------------|-------------|-------------
-> >> before         |   13   (0%) |  162   (0%) |  655   (0%) |  1656   (0%)
-> >> after          |   11 (-15%) |  109 (-33%) |  449 (-31%) |  1257 (-24%)
-> > 
-> > Do we know how much of that gain is due to the early pgtable creation doing
-> > fewer fixmap/fixunmap ops vs the later operations using the linear map?
-> > 
-> > I suspect that the bulk of that is down to the early pgtable creation, and if
-> > so I think that we can get most of the benefit with a simpler change (see
-> > below).
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Leon Romanovsky <leon@kernel.org>:
+
+On Sat,  6 Apr 2024 16:23:34 +0200 you wrote:
+> The "struct mana_cfg_rx_steer_req_v2" uses a dynamically sized set of
+> trailing elements. Specifically, it uses a "mana_handle_t" array. So,
+> use the preferred way in the kernel declaring a flexible array [1].
 > 
-> All of this improvement is due to early pgtable creation doing fewer
-> fixmap/fixunmaps; I'm only measuring the execution time of map_mem(), which only
-> uses the early ops.
+> At the same time, prepare for the coming implementation by GCC and Clang
+> of the __counted_by attribute. Flexible array members annotated with
+> __counted_by can have their accesses bounds-checked at run-time via
+> CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
+> strcpy/memcpy-family functions).
 > 
-> I haven't even looked to see if there are any hot paths where the late ops
-> benefit. I just saw it as a happy side-effect.
+> [...]
 
-Ah, of course. I skimmed this and forgot this was just timing map_mem().
+Here is the summary with links:
+  - [v3,1/3] net: mana: Add flex array to struct mana_cfg_rx_steer_req_v2
+    https://git.kernel.org/netdev/net-next/c/bfec4e18f943
+  - [v3,2/3] RDMA/mana_ib: Prefer struct_size over open coded arithmetic
+    https://git.kernel.org/netdev/net-next/c/29b8e13a8b4c
+  - [v3,3/3] net: mana: Avoid open coded arithmetic
+    https://git.kernel.org/netdev/net-next/c/a68292eb4316
 
-[...]
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> > There's a lot of boilerplate that results from having the TYPE_Pxx enumeration
-> > and needing to handle that in the callbacks, and it's somewhat unfortunate that
-> > the callbacks can't use the enum type directly (becuase the KPTI allocator is
-> > in another file).
-> > 
-> > I'm not too keen on all of that.
-> 
-> Yes, I agree its quite a big change. And all the switches are naff. But I
-> couldn't see a way to avoid it and still get all the "benefits".
-> 
-> > As above, I suspect that most of the benefit comes from minimizing the
-> > map/unmap calls in the early table creation, and I think that we can do that
-> > without needing all this infrastructure if we keep the fixmapping explciit
-> > in the alloc_init_pXX() functions, but factor that out of
-> > early_pgtable_alloc().
-> > 
-> > Does something like the below look ok to you? 
-> 
-> Yes this is actually quite similar to my first attempt, but then I realised I
-> could get rid of the redudancies too.
-> 
-> > The trade-off performance-wise is
-> > that late uses will still use the fixmap, and will redundantly zero the tables,
-> 
-> I think we can mitigate the redudant zeroing for most kernel configs; tell the
-> allocator we don't need it to be zeroed. There are some obscure configs where
-> pages are zeroed on free instead of on alloc IIRC, so those would still have a
-> redundant clear but they are not widely used AIUI. (see bleow).
 
-That sounds fine to me; minor comment below.
-
-> > but the logic remains fairly simple, and I suspect the overhead for late
-> > allocations might not matter since the bulk of late changes are non-allocating.
-> 
-> Its just the fixmap overhead that remains...
-
-True; my thinking there is that almost all of the later changes are for smaller
-ranges than the linear map (~10s of MB vs GBs in your test data), so I'd expect
-the overhead of those to be dominated by the cost of mappin the linear map.
-
-The only big exception is arch_add_memory(), but memory hotplug is incredibly
-rare, and we're not making it massively slower than it already was...
-
-> I'll benchmark with your below change, and also have a deeper look to check if
-> there are real places where fixmap might cause slowness for late ops.
-
-Thanks!
-
-[...]
-
-> > @@ -475,8 +491,6 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
-> >  	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL);
-> 
-> How about:
-> 
-> 	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
-
-Looks good to me, assuming we add a comment to say it'll be zeroed in
-init_clear_pgtable().
-
-Mark.
