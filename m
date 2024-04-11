@@ -1,248 +1,125 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6377353E22;
-	Thu, 11 Apr 2024 02:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712802842; cv=none; b=kKZEEvXVZH0fPc+rS1tk8mQ4OzS0mMzgaUbblb3babq8A03ejJ1wK2wT+Of3xs6+UCKtHEM2mfCqOPZiDVAoOC902pwDbLqy61BlZTc3kY4Ej/IffY6RcXGNvceIeBj7xoL1qDxmEpTTFuI8+GsnVef25LEA2AxV4uNf+vQxO7k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712802842; c=relaxed/simple;
-	bh=lNif+lKEoqBkvswjoiZ8yhsUzffxXtJV4yw8YqoSU7c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SlLNDCxIgLtK7wcvjh1JBKz8F0m3nbq41k5NHjPmKFF76i8dLhAa+HE3zZonw2Qs/q8Xl/tA07IupKxdhNRoksv7rDe0Y+e9djMlrygeuXU/GlkPlCRAKFoYSRx1WVINYnsJaxU0Dm6poHytH9+ZjZOB8rrAEB24eo3cv+nsl1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OpaP7yaP; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2128.outbound.protection.outlook.com [40.107.7.128])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C3613AD21;
+	Thu, 11 Apr 2024 02:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712803004; cv=fail; b=IxhqpdI0Of54orHkx7+6EZY4OuyaouIryEkRFXR8CNrn0G7uLA7roSC0KeVNwdwU22DXG/oy7WMZYvtLGDUnr3Op7hA9tretIlcjQD/mWtt8Vm7EmjHhqgmqijp8B97gsgCbNfKmcrmpkDEHI0Wr7X//lxldPCZEUGBgslw2G6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712803004; c=relaxed/simple;
+	bh=tX265sbi79Pu040bIFCGj1m0Bh338HDwnPtUOo80U0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Zcjn54yNWVDDgxPDIPMDiHgP3hP51s+5IJopsLcOjQJMf/O7889iziGzQS9pEU+ntSYz64HNDfrB+znTRXvrmO8/0VJV3C0L3a8bzlPv6n0DmIyrU+5w5+dqVH73GGXMYPiwjUqv/M7YJCjCVrOOZlapPxJtJZROuJRHt9qZKDM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Bwl2Fdbb; arc=fail smtp.client-ip=40.107.7.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OpaP7yaP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=166/9
-	c+ZR3QEyTBHtTV+6dvgcOnbYCqdPwSXzWFrUQI=; b=OpaP7yaPtYlKaj1rmHB+G
-	MfR1LCHY/JT13BB3Jg6V8d5/rYUlQWoCl1My9tXQLDAZwX3lyw2ON95+bEu725pQ
-	jsPtevyiS1HIiuwncSuPXEvKoTRWcJn1wm+TreFIgalLGzG6tT8x15RMBsrwhdxF
-	rZEI65drrvUvuXnt6/Swj8=
-Received: from localhost.localdomain (unknown [193.203.214.57])
-	by gzga-smtp-mta-g3-3 (Coremail) with SMTP id _____wD3P67sSxdmgI5MAA--.7719S2;
-	Thu, 11 Apr 2024 10:33:18 +0800 (CST)
-From: Peilin He <peilinhe2020@163.com>
-To: kerneljasonxing@gmail.com
-Cc: davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	fan.yu9@zte.com.cn,
-	he.peilin@zte.com.cn,
-	jiang.xuexin@zte.com.cn,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	liu.chun2@zte.com.cn,
-	mhiramat@kernel.org,
-	netdev@vger.kernel.org,
-	peilinhe2020@163.com,
-	qiu.yutan@zte.com.cn,
-	rostedt@goodmis.org,
-	xu.xin16@zte.com.cn,
-	yang.yang29@zte.com.cn,
-	zhang.yunkai@zte.com.cn
-Subject: Re: Re: Re: Subject: [PATCH net-next v4] net/ipv4: add tracepoint for icmp_send
-Date: Thu, 11 Apr 2024 02:33:16 +0000
-Message-Id: <20240411023316.137800-1-peilinhe2020@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAL+tcoC0wRbXfFziaXzvP9wuw4Qe6tZj5QRxbUhAcW5Np6kEgw@mail.gmail.com>
-References: <CAL+tcoC0wRbXfFziaXzvP9wuw4Qe6tZj5QRxbUhAcW5Np6kEgw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Bwl2Fdbb"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ug0C35cjQivoB3mFEp6FtKieIVTYFAGnkzLchmKS68/F9Dx3zoviTgOqMfJwrTj/fz/rrAO9x8iNsOGYZq3tuhucPwfhdF9P5vmRlJXALvmp0A7+dBMvJHoo0nEDZRFbZV0cGjRk9s/idvhIZvAwe9DJond8xg6AvhqoEJpYpw0h2jzFDy+aRaK311SSoZrct+8yeu+cwIBRRFHZH2JFSIOPugYdQ1iNsALqVYPL0quLvT8a7C9mMHgZY00AP+UdJkUVlnthf6tDf6ajLV6ZlZL+dQbwbDJcC2bh9mt2GBCvN+AjIpK2agDUfy2Zg7JZpavNYDcZK5uQueUmESM8JQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bpe/T8giLK7UT8DxsrSx0Txh0rlOr6bfxIcdJfBkDJ8=;
+ b=VyEsAQeebDdFc3l1FSEpPtN+TT4VAe6IkZiBKyJU5FCxFCQkFbQgqBJ1p9oB3IyQTzwjsxdubO3iJKznRl0iyC4Wr6KbGxTi39QOmAxoHuTShH48yPnSMirN8VjiPhfuiB63VdV+GdVH/T4uONOIvzpLFDad6LBBtqM7bxxOmW9PDL5PCO27Ny6rh++zqHeoiWtb0cc41hFjvXYX6cvLlAzUHBLb2NGXSAXNOJtqCxWnvRIJ2XIplmtc1X8fA72xZkhzOSdxlg86KAcLVwO5reV9kawNoqDHgwlGax12+nB0EjKky4fwbcowfz6VZPKMEJgaApQoGgfGwpjQgTrZ1w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bpe/T8giLK7UT8DxsrSx0Txh0rlOr6bfxIcdJfBkDJ8=;
+ b=Bwl2FdbbZs1Cx666ozEE2ZidKwaxFFZPE/VRko55lOnrmPg7SAsbgCCIGOGL8hMXYF7YQH5B6IlqGWt0OikEKOI4WPTek+Sn4JsqepilICT2hlpuwiiVCBMc7J7AezlsLdoZL6twP4d+5DCmizK/gS79Mxbq1WLomj6c8otclAk=
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
+ by DU2PR04MB8599.eurprd04.prod.outlook.com (2603:10a6:10:2da::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 02:36:39 +0000
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba]) by AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
+ 02:36:37 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: frank.li@nxp.com,
+	peng.fan@nxp.com,
+	vkoul@kernel.org
+Cc: imx@lists.linux.dev,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/1] optimize fsl-edma for imx8QM
+Date: Thu, 11 Apr 2024 10:44:16 +0800
+Message-Id: <20240411024417.2170609-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0028.apcprd02.prod.outlook.com
+ (2603:1096:3:18::16) To AS4PR04MB9386.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4e9::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wD3P67sSxdmgI5MAA--.7719S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3ArWUXFWruFy5Kw48WFyxGrg_yoWxXrykpF
-	yjyFnYkr4DJr47CryI93ySqFnav3y8Wryjgr17Ww1akw1qqr17JFZ2qr1YkrykArs8Krya
-	vF1jy343Ca45ZrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pRFtCwUUUUU=
-X-CM-SenderInfo: xshlzxhqkhjiisq6il2tof0z/1tbiZRS9sWXAlFS6fgAAsc
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9386:EE_|DU2PR04MB8599:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	L9ydlOpWlRazUmD8YgB2JdsuIGYb0YAl95S61WMjvYz2zSfXKPOFQOXpjeN70JvwOGb32AjcBGUNvj8+dP+jzofYZZDPHHaYQjM7cGP8ydBjYlytFNznryGO1Ps7fHHhp7hHNEQBjCE82I2emfkBvfmVT/tXX4nKf3f0XE79+NqTYb/NZbnjhFSGz9pBnd74WtFsQBZfhqdmXjLg4Fohbn8PzA4va/SkCHs2pjtyMIvoBqOMmiMfoil28xHR898mTRdbMd3qD6txfkKhANh7+haytEUYK0rbywdxJsg3KBPaEYLPqeHkb4RbiMrGumnOjmd3SC8BQisMY/5kICUmNEmuoxlAUJ0ZsPCnhaG7RenlwOHuoU2Som0muQmxnAaPwIaMU5Otn3+ONdkYMHb9f4vyBnPYZtDwHxYffNaz8Mge2aunpkBfcRbCvHf9odqHAt+5QD+x8M752BO9aqLEREEwHN3asfJyiKBK4gjQyJ3QIJ5iyQt94qhxwXAuGlO/t7NxuHRLHvhNuzfHhSacJRgC+wNJxykrR0IHTbl5Bkqe6gtVzmsyTBr4Uvg1RookmVJUE5fj/n8noorviqcxqy7yJlJKn/O09CNowP8VoOuuAiTGfXDJf15fyiNBUxF3T80MUSL7jVJkdutXp/1ILKjUj3lES06H07f+6+nV20aJZgE8ByuBg79daPXu563i0WNU4NK5BWhxvYH36PRV9w==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(52116005)(1800799015)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rw9FIGDFDETqsqRsvTeKuP76m70IAVuX9nN4jCopqrUZgSBsbtsRykB9Tqz4?=
+ =?us-ascii?Q?ngrhuTPwxDUt0iJAA1NZlTQirXG1y2OZ4/5lHFmUhPNdQkIwA/9Q02gg23G0?=
+ =?us-ascii?Q?9hFam2J+Q5FnK9E6FidSugRoX9DVOb51Upzi0wzzcWNU3t0FyUUB6mUt/JOq?=
+ =?us-ascii?Q?pusJ1vi8d2SoBoWL69qOhPZLNLAggvhwMuEPUXdA4Y2yO8C7/+oAn8MPR4Q8?=
+ =?us-ascii?Q?A7hwxfCDshW/DKHzpU/8ow60ngwbCkr5xw4dmiBsVgY8MGZOJynHrJ3cJUX8?=
+ =?us-ascii?Q?PjN9TEwEK/wdK1rIMAevYugUDfpxgfJnW5l/zv6WyYtHEFwDnuBiuMn3ZHbb?=
+ =?us-ascii?Q?M1AWGbinTLgzho5re1d0T/Fszkb2vjYKI2yaRD8z9N2xHpK3UOHhDdt2xn8v?=
+ =?us-ascii?Q?AsMmLjBw/eA4uMQgPRrMaiemg0ikacvz4RmlG7yVu+W4QzmU5r9gQjT2jzN0?=
+ =?us-ascii?Q?qMD3ceUAHOCbmbrzQCyUt4QJReHpwAKAGPc7AW+2ry3QuAR/uzIzFHQOe3sC?=
+ =?us-ascii?Q?J2ZqMESUKbTqzutP/w0h9D1A0DfUxYMerIyX5BNr7HZEmku71yCF6C8gwAVC?=
+ =?us-ascii?Q?LSqWucnGp5GiKdKMkY4yU4ep1/xC/eRHywyEPQKrdkFPYK8dtQEKb/zRnK+T?=
+ =?us-ascii?Q?GXohup3yd//ZM/d6wmI77US/rFhHPe9+oHkXOdGh8zXpb9HdFXaB5Xn2w+zA?=
+ =?us-ascii?Q?jsRoXydN9voumHRt0zl+7i7L3OWmQbOAXCoW9pVDEDR4nmtUH3ZCz+yVvHJF?=
+ =?us-ascii?Q?VALsiO2uFaI5lRrbjx9k3E/eTo4wPifwRgm7+I1ACyyxawppuuyN6uXmv2m6?=
+ =?us-ascii?Q?5MONB2opn16+Lasy5Lf2rthuzGS9haaaKmPC4V8zYljbIHUG9aTqfU8Cj2pf?=
+ =?us-ascii?Q?3XX0h1E47DveFuXA50/g/yDkwHzrZ270LcD9dOPhRoB+OPuUIcfrXTWFpHEC?=
+ =?us-ascii?Q?d3mh+hE+FuCfiWdW40KStjt1RC6FOApcfGWi+qL1OfEMEI9MM+6326Q2g9WM?=
+ =?us-ascii?Q?C4I3rFx5ic6q5aCHu5nMd/kkLVZ23EE3rI5SByMRS7yTqhaW3xTRHKgzH7eJ?=
+ =?us-ascii?Q?amg+jAqge+Q1RwdkL5Un5o0ALAtdhVAalQci5I4Bz5QCfcS5DD1TFsbRPrdY?=
+ =?us-ascii?Q?wxC8GF5xauPgXHz+BW85HoRu51mwPfg/smTkNWjn3rOv39HxOQzp6EczWSxP?=
+ =?us-ascii?Q?6WBY/5z7WOFb6otwpBc7TJjZ4vI5HJnM6vLeOWQq1JHSovNQaFyW2IX25fJf?=
+ =?us-ascii?Q?MMh4clpJwmlMwSbbKpN5Yq/J2SctlXE8x6a9rDhd5KbySHLN84loHR8H5bxb?=
+ =?us-ascii?Q?yCJNYgwqp06H4z6WjhGy50deJcKViTGirfS8jTdQzr/K3FAp3zo7G7nHzYHQ?=
+ =?us-ascii?Q?eEZ/SBkzpFv7K5AZXax4BcGGcfX7mQcAVaIfSv1dK6wumLGFd9x85dm6AkDb?=
+ =?us-ascii?Q?2zagLUi+EhdgStKznKV5tCZ2nWuJw1AlJNTcqUBIT2LqrqvZINYMKLSWy9eu?=
+ =?us-ascii?Q?PXoQWPsoTF129wdnYdaFd3U+pOV4SJUMQiSSAhAQXViEP/xylH9YiLqCamQR?=
+ =?us-ascii?Q?ye1JbgGrnLHpE6ejsVgWps2Tzbbu/DYjHTGoPBMa?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f221a183-78a6-4dad-557f-08dc59d035fc
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 02:36:37.6799
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +VyyLLrWmzT7Mg8/1YTnYbGovYMSP9uxNQLCz3Dwlrs4zqeWs8y1JED97EX/0HdT
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8599
 
->[...]
->> >I think my understanding based on what Eric depicted differs from you:
->> >we're supposed to filter out those many invalid cases and only trace
->> >the valid action of sending a icmp, so where to add a new tracepoint
->> >is important instead of adding more checks in the tracepoint itself.
->> >Please refer to what trace_tcp_retransmit_skb() does :)
->> >
->> >Thanks,
->> >Jason
->> Okay, thank you for your suggestion. In order to avoid filtering out
->> those many invalid cases and only tracing the valid action of sending
->> a icmp, the next patch will add udd_fail_no_port trancepoint to the
->> include/trace/events/udp.h. This will solve the problem you mentioned
->> very well. At this point, only UDP protocol exceptions will be tracked,
->> without the need to track them in icmp_send.
->
->I'm not against what you did (tracing all the icmp_send() for UDP) in
->your original patch. I was suggesting that you could put
->trace_icmp_send() in the right place, then you don't have to check the
->possible error condition (like if the skb->head is valid or not, ...)
->in your trace function.
->
->One example that can avoid various checks existing in the
->__icmp_send() function:
->diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->index e63a3bf99617..2c9f7364de45 100644
->--- a/net/ipv4/icmp.c
->+++ b/net/ipv4/icmp.c
->@@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int type,
->int code, __be32 info,
->        if (!fl4.saddr)
->                fl4.saddr = htonl(INADDR_DUMMY);
->
->+       trace_icmp_send(skb_in, type, code);
->        icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
-> ende:
->        ip_rt_put(rt);
->
->If we go here, it means we are ready to send the ICMP skb because
->we're done extracting the right information in the 'struct sk_buff
->skb_in'. Simpler and easier, right?
->
->Thanks,
->Jason
+The patchset optimize fsl-edma.
+For the details, please check the patch commit log.
 
-I may not fully agree with this viewpoint. When trace_icmp_send is placed
-in this position, it cannot guarantee that all skbs in icmp are UDP protocols
-(UDP needs to be distinguished based on the proto_4!=IPPROTO_UDP condition),
-nor can it guarantee the legitimacy of udphdr (*uh legitimacy check is required).
+Joy Zou (1):
+  dmaengine: fsl-edma: optimize edma driver for imx8QM
 
-With best wishes
-Peilin He
+ drivers/dma/fsl-edma-common.c | 16 ++++------------
+ drivers/dma/fsl-edma-main.c   |  8 --------
+ 2 files changed, 4 insertions(+), 20 deletions(-)
 
->>
->> >> 2.Target this patch for net-next.
->> >>
->> >> v2->v3:
->> >> Some fixes according to
->> >> https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
->> >> 1. Change the tracking directory to/sys/kernel/tracking.
->> >> 2. Adjust the layout of the TP-STRUCT_entry parameter structure.
->> >>
->> >> v1->v2:
->> >> Some fixes according to
->> >> https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=3DsZtRnKRu_tnUwqHuFQTJvJsv=
->> >-nz1xPDw@mail.gmail.com/
->> >> 1. adjust the trace_icmp_send() to more protocols than UDP.
->> >> 2. move the calling of trace_icmp_send after sanity checks
->> >> in __icmp_send().
->> >>
->> >> Signed-off-by: Peilin He<he.peilin@zte.com.cn>
->> >> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
->> >> Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
->> >> Cc: Yang Yang <yang.yang29@zte.com.cn>
->> >> Cc: Liu Chun <liu.chun2@zte.com.cn>
->> >> Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
->> >> ---
->> >>  include/trace/events/icmp.h | 65 +++++++++++++++++++++++++++++++++++++
->> >>  net/ipv4/icmp.c             |  4 +++
->> >>  2 files changed, 69 insertions(+)
->> >>  create mode 100644 include/trace/events/icmp.h
->> >>
->> >> diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
->> >> new file mode 100644
->> >> index 000000000000..7d5190f48a28
->> >> --- /dev/null
->> >> +++ b/include/trace/events/icmp.h
->> >> @@ -0,0 +1,65 @@
->> >> +/* SPDX-License-Identifier: GPL-2.0 */
->> >> +#undef TRACE_SYSTEM
->> >> +#define TRACE_SYSTEM icmp
->> >> +
->> >> +#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
->> >> +#define _TRACE_ICMP_H
->> >> +
->> >> +#include <linux/icmp.h>
->> >> +#include <linux/tracepoint.h>
->> >> +
->> >> +TRACE_EVENT(icmp_send,
->> >> +
->> >> +               TP_PROTO(const struct sk_buff *skb, int type, int code),
->> >> +
->> >> +               TP_ARGS(skb, type, code),
->> >> +
->> >> +               TP_STRUCT__entry(
->> >> +                       __field(const void *, skbaddr)
->> >> +                       __field(int, type)
->> >> +                       __field(int, code)
->> >> +                       __array(__u8, saddr, 4)
->> >> +                       __array(__u8, daddr, 4)
->> >> +                       __field(__u16, sport)
->> >> +                       __field(__u16, dport)
->> >> +                       __field(unsigned short, ulen)
->> >> +               ),
->> >> +
->> >> +               TP_fast_assign(
->> >> +                       struct iphdr *iph =3D ip_hdr(skb);
->> >> +                       int proto_4 =3D iph->protocol;
->> >> +                       __be32 *p32;
->> >> +
->> >> +                       __entry->skbaddr =3D skb;
->> >> +                       __entry->type =3D type;
->> >> +                       __entry->code =3D code;
->> >> +
->> >> +                       struct udphdr *uh =3D udp_hdr(skb);
->> >> +                       if (proto_4 !=3D IPPROTO_UDP || (u8 *)uh < skb->h=
->> >ead ||
->> >> +                               (u8 *)uh + sizeof(struct udphdr) > skb_ta=
->> >il_pointer(skb)) {
->> >> +                               __entry->sport =3D 0;
->> >> +                               __entry->dport =3D 0;
->> >> +                               __entry->ulen =3D 0;
->> >> +                       } else {
->> >> +                               __entry->sport =3D ntohs(uh->source);
->> >> +                               __entry->dport =3D ntohs(uh->dest);
->> >> +                               __entry->ulen =3D ntohs(uh->len);
->> >> +                       }
->> >> +
->> >> +                       p32 =3D (__be32 *) __entry->saddr;
->> >> +                       *p32 =3D iph->saddr;
->> >> +
->> >> +                       p32 =3D (__be32 *) __entry->daddr;
->> >> +                       *p32 =3D iph->daddr;
->> >> +               ),
->> >> +
->> >> +               TP_printk("icmp_send: type=3D%d, code=3D%d. From %pI4:%u =
->> >to %pI4:%u ulen=3D%d skbaddr=3D%p",
->> >> +                       __entry->type, __entry->code,
->> >> +                       __entry->saddr, __entry->sport, __entry->daddr,
->> >> +                       __entry->dport, __entry->ulen, __entry->skbaddr)
->> >> +);
->> >> +
->> >> +#endif /* _TRACE_ICMP_H */
->> >> +
->> >> +/* This part must be outside protection */
->> >> +#include <trace/define_trace.h>
->> >> \ No newline at end of file
->> >> diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
->> >> index 8cebb476b3ab..224551d75c02 100644
->> >> --- a/net/ipv4/icmp.c
->> >> +++ b/net/ipv4/icmp.c
->> >> @@ -92,6 +92,8 @@
->> >>  #include <net/inet_common.h>
->> >>  #include <net/ip_fib.h>
->> >>  #include <net/l3mdev.h>
->> >> +#define CREATE_TRACE_POINTS
->> >> +#include <trace/events/icmp.h>
->> >>
->> >>  /*
->> >>   *     Build xmit assembly blocks
->> >> @@ -672,6 +674,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, in=
->> >t code, __be32 info,
->> >>                 }
->> >>         }
->> >>
->> >> +       trace_icmp_send(skb_in, type, code);
->> >> +
->> >>         /* Needed by both icmp_global_allow and icmp_xmit_lock */
->> >>         local_bh_disable();
->> >>
->> >> --
->> >> 2.25.1
+-- 
+2.37.1
 
