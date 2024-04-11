@@ -1,97 +1,106 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0A947A64
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7D547A64
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712853883; cv=none; b=g7xxp3VilVmGDtnR0i75WzSDOCXA6nkcQLnEUwdrppacGBduHLOz82s2sMHkWG3wgwOFz5a1wOxaKG1deNR0uFQcvs/DpcVx8zKBrs0vBiSAyJbc3DXkES/8BA8Znva0J6Hk/pzBXCtyzpes6/JT/mxXgP4OMW6pEi+pqA9dJOw=
+	t=1712853902; cv=none; b=MjZfO6Ew1ioGG+l5MJKtRAdU0Nc0JPFEry+1BW51Cu8xEr7x/NmdC9Vs7vYOGVPIzwUirK3vJZNoM4zq6RT1ppkpJHSpoJIXInzt/Yn9UeDUzCHb4pnT8LSqnzFOcOhYUFzNndYOoupSsuQ/FAKli3bWxQQ+/YJymlLgmoi7TiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712853883; c=relaxed/simple;
-	bh=UnBJFcPPvwWzi0FfiqnRkFfUQdXHP/a35MX/pq5LyAg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jyQUV3BuazYBRDaLA4OtS40+8HlwsrRbr35+NWxy9ZbGPh5U/8ciHT5S0jdH0iFrc5d9aaNyZcw2JNIsTAFS40N3TETgyAj0aWfqzs2pnwnFzNDOMutQ5u7RhYcHM8TvTWKRGeE6qkXvrOfa/QVJnivVs6QdAZ5KGnadHJe7u20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Fm6vMQyb; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712853902; c=relaxed/simple;
+	bh=L/lbl4FoIUs6UZhGod6ET5XcpMpQIGR9o3M2LvmcI74=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JKWhy+ns89mSu3rCG83AHf+TfQfSnEH2ePDgNrtWg1hVreR14cJ8ZBJBkuYTEg6kqgjBZ58BZBzP98rgZ5DIOeBbCRWH4brlAnCeRWDQ1CHM7fE+49UruqY3OruY2AvY/P15nF/R/fRXQKKW5LPCIZMK6Z8B+X3MvHagmfMaol8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=PuQsFBwt; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Fm6vMQyb"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so65639f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:44:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="PuQsFBwt"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2d717603aa5so93594351fa.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 09:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712853881; x=1713458681; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tbctDn2ebNI1qx8fESTV2MUnI/LKkzIT0RDCKmLmiV4=;
-        b=Fm6vMQybnvgWX4Zj1birgEwefGXabexCFNFeu3nDiW+dKJaQ6x1adpEq/l8hsFAY4X
-         SdCLS4nYpxVIrk7CeO7ZxsigL3KvAYhEPuskgc/XTwCvP+kCLnG4VMvvxnzjA3vICJrR
-         T1ikmXVTfcmTdhUX/q85ZjE/gE8uEWv7DJOtjGKmYRtkvUZoKkqoLhC2i9TOkA+q+6ty
-         ksm497BdKaNudTDbp0VEzSGCz33S1a/XNSmL3+YB7RNLJfO7vepp7KrdolnJGvgaiFXI
-         J3pegBmm+LTN21Tu0KKtTgmQj+9sAyRTzx17eo+0w/NL8VrMtiYKDsF3TLXLyXSk/UT8
-         2FSw==
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1712853899; x=1713458699; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rciLgnl7jf3ltOZtOlJxI5UnFTTiSa13ydmrz5IK0H8=;
+        b=PuQsFBwtol4LegRne+QPeidNSP82MtA9+eOEw6uWQLB9Hoz1VUYaUz3yLHFhvIuqzx
+         VdKYsGeNhTikBlGgNpk97+uWrfmsKbRiSs7KfQYyKQz91jdRb0H1N2V9ovBlkh6RcWsf
+         Uq6liugBhxqu/7g/mcC3MUDMPpvNF9nwMYO3Hsdx7tWnBCuMWEUhMBNjjcPIrzwrKyL5
+         DkWTUAZ+HIv3WxGCdmIfVLZJej1aAa9MzBvogbsuzbOQV97NbiNFTWcIUct5lAa9BnZ6
+         QhduDU8DuFnjlpu1mEAqUKfS5AEFoxF+llXPaoKwI7Jb7qldEHlNyz11jxAY3jvM9d5j
+         WOag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712853881; x=1713458681;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tbctDn2ebNI1qx8fESTV2MUnI/LKkzIT0RDCKmLmiV4=;
-        b=AmZUtAgsKbfLWT4UycupOQhrCGt7umzr3uOvuOkhKYkf8V/n4AqYyxlKk5U6ny3Zt0
-         KI+g2U9DSyfGWSQgZZalZuv6KV+as5WYFfegJZ505MqaFfOQTkZojF5khtLuXUQdIHU/
-         6JBVfg/uf6ZAFIwv6fdUi7O6eOMHgemhNdWileDejZLlIgQSn6YsJ6ihFNt7yDQr4DnD
-         3peOwwPKUNDTPEPtXAJrBOrS4zeMZ79Pt5mVWgKnaLBvrblVJFRCb+f/1m7+6UITA4h9
-         LpVoqjMIpOBv0Dq/XXhd1mNsaXiqEp11UgC7OS4l12mRxrIvCKbnoQKYTGsGRuO4j9jx
-         MfOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLr0s0RWrwDcPdrwFT7qOPmeOpVPGcG5GLMicuptYyXWqC34DYzowl3+dZVu/8cibjcziJGoqGNYiGDv0q1LcXG4NMPrgSZ4Rlx7t8
-X-Gm-Message-State: AOJu0Yz7tEekx07G7nfBdM/sxw6maHKQiOkeHIuQw9g3dsvDwfhuSWMS
-	YAmjycKNBxkHZ5xUtaeXzYg3UKQoD2q8ouZ2mByY4oiUXhMHB9grHxeItCP/PcleB8D6N0Uhl3N
-	g
-X-Google-Smtp-Source: AGHT+IEUTrM6OumzLR/N7eIq3bgozrwf1Oz1pYJe82O+IuxY0yootlN+7gFIk0CkUsJh86R4wYtIKA==
-X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr395259ioj.2.1712853880943;
-        Thu, 11 Apr 2024 09:44:40 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ii8-20020a0566026b8800b007cc7612f093sm492800iob.43.2024.04.11.09.44.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 09:44:40 -0700 (PDT)
-Message-ID: <9a4f8738-6ad5-407e-a938-83395aa1df4f@kernel.dk>
-Date: Thu, 11 Apr 2024 10:44:39 -0600
+        d=1e100.net; s=20230601; t=1712853899; x=1713458699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rciLgnl7jf3ltOZtOlJxI5UnFTTiSa13ydmrz5IK0H8=;
+        b=WjOcdBH7QvLKW3enEIWbDnvP5uhk36WelNWdSwfou3aB9YkXnz++c4UjI6qB8B/Dvd
+         YlqWbd7oKqdima+HC+DAUAGY4dk3lCh00VcfulV4Wa3si8c1pib5H1TkR1x6e29crgg/
+         6HwDI4sDmdoR7+7diT4WaoTNwIh7pjuagmK4i3/KqzSfiSSCwqR+oD7/JyzjphSjpJ09
+         guSiVNrUpYLxFbKHxcQDLB8jBXpTBhvEfkPXHcPA4B/9VRcRy9oE8XUGaViL4TP6CwqT
+         PpshazMGiy1JNCepmEBe/tUfgY4cOE5w7+pcVKn8fcV1Jt0Hfa4AnRwTkBnbgA2wmsYd
+         r44A==
+X-Forwarded-Encrypted: i=1; AJvYcCUETMBvpU+9r0mUr2AMrtCDZuQDZeTCg0bZWAvkHCVIVtZMrHvrQ+tzavb9y1J1QWr/2I8CBHqRNxjhT2iIt1Y3M+ND57965HvRLYKf
+X-Gm-Message-State: AOJu0YwoR9ggI5KXUnO1HCYdel+n068Nwua8AQhHdMRx0avJDae5sTKD
+	+43DSz/++imAp1Zd82PjdUyPcw/+FmgWuc2bJ8TxdyfEEOfYywMXvMfpDqIis94=
+X-Google-Smtp-Source: AGHT+IEwll1rsUMGNeW1FuXusul1A8HmVEsJ7Cvp9KCtA/BhU0LJTecUFPwwGIjIOVXlugNh32cL9w==
+X-Received: by 2002:a05:651c:512:b0:2d6:8e54:80a1 with SMTP id o18-20020a05651c051200b002d68e5480a1mr168779ljp.19.1712853898891;
+        Thu, 11 Apr 2024 09:44:58 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-82-135-80-212.dynamic.mnet-online.de. [82.135.80.212])
+        by smtp.gmail.com with ESMTPSA id ig4-20020a056402458400b0056fe7e308c3sm766529edb.0.2024.04.11.09.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 09:44:58 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Quentin Monnet <qmo@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [RESEND PATCH] bpftool: Fix typo in error message
+Date: Thu, 11 Apr 2024 18:43:00 +0200
+Message-ID: <20240411164258.533063-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next 1/2] block: fix that blk_time_get_ns() doesn't
- update time after schedule
-Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>, johannes.thumshirn@wdc.com
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- yukuai3@huawei.com, yi.zhang@huawei.com, yangerkun@huawei.com
-References: <20240411032349.3051233-1-yukuai1@huaweicloud.com>
- <20240411032349.3051233-2-yukuai1@huaweicloud.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240411032349.3051233-2-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/10/24 9:23 PM, Yu Kuai wrote:
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index a16b5abdbbf5..e317d7bc0696 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1195,6 +1195,7 @@ void __blk_flush_plug(struct blk_plug *plug, bool from_schedule)
->  	if (unlikely(!rq_list_empty(plug->cached_rq)))
->  		blk_mq_free_plug_rqs(plug);
->  
-> +	plug->cur_ktime = 0;
->  	current->flags &= ~PF_BLOCK_TS;
->  }
+s/at at/at a/
 
-We can just use blk_plug_invalidate_ts() here, but not really important.
-I think this one should go into 6.9, and patch 2 should go into 6.10,
-however.
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+Resending this because I forgot to CC the mailing lists
+---
+ tools/bpf/bpftool/prog.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 9cb42a3366c0..c5cb0f9beb07 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -2078,7 +2078,7 @@ static int profile_parse_metrics(int argc, char **argv)
+ 		NEXT_ARG();
+ 	}
+ 	if (selected_cnt > MAX_NUM_PROFILE_METRICS) {
+-		p_err("too many (%d) metrics, please specify no more than %d metrics at at time",
++		p_err("too many (%d) metrics, please specify no more than %d metrics at a time",
+ 		      selected_cnt, MAX_NUM_PROFILE_METRICS);
+ 		return -1;
+ 	}
 -- 
-Jens Axboe
+2.44.0
 
