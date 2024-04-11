@@ -1,35 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED8B13FD9F;
-	Thu, 11 Apr 2024 10:53:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2871E140E3C;
+	Thu, 11 Apr 2024 10:53:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832826; cv=none; b=IbXddb7bWhTVpT+gk9I/HI2AEUq37iLNEOYaeTAtcryufToo7gVD3ejrGgtc5r2IiaLIX7LayHJpq1ONK9vFyXqLvBHaUUflKxjdJVpnqP7GjfB9tXpDCgRhj5yM7RONTrXQFLQhgXPGNP5hdB4zrCEG73TYlbF29/gqYwZmOjc=
+	t=1712832827; cv=none; b=q0Q8D0lScb7b1yHu25zGm5a+5HptxEts0Y4EdJIpOohmEr1yeacYWdRH+tWIK0fQEgSxL5QEhBgHgCHs9hbo0EgSlfvD+4a602JxYhu7Okxq1doNIEyaGlKbNiF0wTJsDXVVezRH/5m+EtX/M5dG3wwiq74SnO2UHHndeEcaz/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712832826; c=relaxed/simple;
-	bh=egO/vAh9sg8JKDmjwBGCeMd6eTlrmF10HvWiI4WWttY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UAyx/Usv8aF2E6OeptZb7hxHzz3L0/pQIJ56E6XutL1a2YhsT4EGAFtJeWK2n2lvt+fMaZkoXDQnKkHqFLj09dyYYrz4t5lWScC3jIJJmeRQkID3UFWKc3VWu2zEEdIPUpReGBKyDqaEFYNGoitNx7vEMUPfq3zZhfltWo6EEh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=PGhZUIoG; arc=none smtp.client-ip=193.104.135.124
+	s=arc-20240116; t=1712832827; c=relaxed/simple;
+	bh=Sy9vwHM9lL5sKyKFDT+sqtrTgE6HSdTNapyCUyx55lE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vDkkv1/Ug+xA+GMXr/TZIaJgxwWjk+WKsOJhT2drdzylzBIx/E2fBgrxE3gdWnTBhqplGeJknGokVAQw9HiFwW2CqweCvuzS+ss1ggvVpo6kcUHAUr9znWdVaEHkP1WbcjjA1+WTNj75AmjKgb+BDkz/qPSbn/eaJxH/uo+D2yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=FE0s0iX7; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="PGhZUIoG"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="FE0s0iX7"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 69CCE600AF;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 6293D600A9;
 	Thu, 11 Apr 2024 10:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1712832815;
-	bh=egO/vAh9sg8JKDmjwBGCeMd6eTlrmF10HvWiI4WWttY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PGhZUIoGBuJlwh5sgK+Obk/vnip+ESpDvITnd+y162h7XQ+ZZcwG+SjcJayGnh5iQ
-	 CFK6Jg0xg4cuLsu3rU8tnmI3mqK3gB9c20dyX6AuxuV7U34SwDoawY3rVqozZ5ruX0
-	 NQGN8Xq6Z5zferE36l9WraXJ+817a+RzW3ZBV68w/iFPPjKo4E46XIrMiU3rxWeuA7
-	 LHPyrPmvgK7doIij/KUXfTYIrPXT9pv2ug4zl3b0lvVl09MsoKE849fYsO2WtDfiIo
-	 vcD0yrbCga230QL36Ld5kNSvAkKJgjIt+JlwgwaUSw1H2UU1Ask0CDcLOjKSFWmG0d
-	 X72dF3YB1qWHA==
+	bh=Sy9vwHM9lL5sKyKFDT+sqtrTgE6HSdTNapyCUyx55lE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FE0s0iX7zfOIYHPXs42ynIILdQ6X+cBY/6D9s+2ACqgR/LBQAwRAYxrpoLAz6Dspt
+	 Y0kPsGL3LwzsgVKQ6ertwd69M2HUevzEMopa8vmY2L8bukT87K9xr3Kx700+Xajwyh
+	 0ZGSx6vAu/ua/ULEZzko76gRaB64aJbRWotkzen8AImRa1QmwdwFIIaq1E1hxCZdAT
+	 ewJWmeGCLZdGBUrao5uM2JkotYK2VMiRNhxeGxsOBAqkFZcliQ+cYdYhutwhsG94cS
+	 5sZhdsZDH0fLkTojE2KMYYUxKcNib+7aBZQnB/GmhI8/jJIM8eHfs9J8kC04MhIxgw
+	 9Mzn9WJuUYwrw==
 Received: by x201s (Postfix, from userid 1000)
-	id 404D720E2DC; Thu, 11 Apr 2024 10:53:10 +0000 (UTC)
+	id BE2F120EF37; Thu, 11 Apr 2024 10:53:16 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -51,10 +52,12 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Jamal Hadi Salim <jhs@mojatatu.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
 	Jiri Pirko <jiri@resnulli.us>
-Subject: [PATCH net-next v3 0/4] flower: validate control flags
-Date: Thu, 11 Apr 2024 10:52:53 +0000
-Message-ID: <20240411105302.112091-1-ast@fiberby.net>
+Subject: [PATCH net-next v3 3/4] net: prestera: flower: validate control flags
+Date: Thu, 11 Apr 2024 10:52:56 +0000
+Message-ID: <20240411105302.112091-4-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240411105302.112091-1-ast@fiberby.net>
+References: <20240411105302.112091-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,47 +67,30 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I have reviewed the flower control flags code.
-In all, but one (sfc), the flags field wasn't
-checked properly for unsupported flags.
+Add check for unsupported control flags.
 
-In this series I have only included a single example
-user for each helper function. Once the helpers are in,
-I will submit patches for all other drivers implementing
-flower.
+Only compile-tested, no access to HW.
 
-After which there will be:
-- 6 drivers using flow_rule_is_supp_control_flags()
-- 8 drivers using flow_rule_has_control_flags()
-- 11 drivers using flow_rule_match_has_control_flags()
-
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
-Changelog:
+ drivers/net/ethernet/marvell/prestera/prestera_flower.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-v3:
-- Added Reviewed-by from Louis Peens (first two patches)
-- Properly fixed kernel-doc format
-
-v2: https://lore.kernel.org/netdev/20240410093235.5334-1-ast@fiberby.net/
-- Squashed the 3 helper functions to one commmit (requested by Baowen Zheng)
-- Renamed helper functions to avoid double negatives (suggested by Louis Peens)
-- Reverse booleans in some functions and callsites to align with new names
-- Fix autodoc format
-
-v1: https://lore.kernel.org/netdev/20240408130927.78594-1-ast@fiberby.net/
-
-Asbjørn Sloth Tønnesen (4):
-  flow_offload: add control flag checking helpers
-  nfp: flower: fix check for unsupported control flags
-  net: prestera: flower: validate control flags
-  net: dsa: microchip: ksz9477: flower: validate control flags
-
- drivers/net/dsa/microchip/ksz9477_tc_flower.c |  3 +
- .../marvell/prestera/prestera_flower.c        |  4 ++
- .../ethernet/netronome/nfp/flower/offload.c   |  6 +-
- include/net/flow_offload.h                    | 55 +++++++++++++++++++
- 4 files changed, 65 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/net/ethernet/marvell/prestera/prestera_flower.c b/drivers/net/ethernet/marvell/prestera/prestera_flower.c
+index 8b9455d8a4f7a..418101a931490 100644
+--- a/drivers/net/ethernet/marvell/prestera/prestera_flower.c
++++ b/drivers/net/ethernet/marvell/prestera/prestera_flower.c
+@@ -229,6 +229,10 @@ static int prestera_flower_parse(struct prestera_flow_block *block,
+ 
+ 		flow_rule_match_control(f_rule, &match);
+ 		addr_type = match.key->addr_type;
++
++		if (flow_rule_has_control_flags(match.mask->flags,
++						f->common.extack))
++			return -EOPNOTSUPP;
+ 	}
+ 
+ 	if (flow_rule_match_key(f_rule, FLOW_DISSECTOR_KEY_BASIC)) {
 -- 
 2.43.0
 
