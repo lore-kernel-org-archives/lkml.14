@@ -1,86 +1,71 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79C314D6FC
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7A9149C7F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:25:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712845422; cv=none; b=Vjqy2RGu+ds/h2KwdTu9ofoCY1YFYGSGaAWRH6oi2Pw0G/CzsTZxmvteJrrl0+W8nPxQ6ZkFTWNWypEupXVqxscrG22X1bh8gc2tGOCTVuMRSy9IaaqS1PSmRC3k6pVQV1G+uX4E2qpnv6LyjMhHz3oQ/0inxWUk+INxxHxu9B0=
+	t=1712845513; cv=none; b=PplfQ1NZ33/NJvPwAIVK+TCHvh3NS7JOotkIhklAtgOtvJILtofMWk6+5ErVvjmS7G5zlbEw2G9j8/QSQauZBsrDuNlgcISEv0et2s83xxnX5P8I2pYTyK8eQ+aMayW/rKlI2NELHThgBrdevexS5mL99ObaB9gqrB1Z0ZpHnh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712845422; c=relaxed/simple;
-	bh=LUtbADJQAYJxj/Ogfyr9IscI3lkrbxOS5D0BwfwnczY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r1Rzj8y4G6bfAMWNFzylb+L2YaHnUtspvCMWbrkbSKahBITS2w8PRqlQhMvEkrVio4Vtw67lDcGnb6cWSjDx6LwxZvPIBeKOY+4iYJbXrdgCK2S2bmdyLGBpeLA0e4octC6RtsmygqPrxlZ++0xG4HPZo8yw30yX8XqbAfGZGN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZIaEiIWe; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1712845513; c=relaxed/simple;
+	bh=PZP5QcVK83AK5kTIbDXf89GtmzISnvQfTR1cmMBW7y4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FSguYeSAn7SsdWumImNeod+0GDNKG78gB5i9x0PaAgztvoZkr5B8mCsWVJeEnZNkYe5mim7iIxA0N3imE5ArnVFMg+54Df8RcoUPhJMi0imfY2K7c3Dp+a6qwyUK+0WqrUumU7nL2Fh0R0h9WqOivYrSa2kxolAoJkTRtODBi0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EJ3bs3fC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IxgkO6uq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZIaEiIWe"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d8b2389e73so33651051fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:23:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712845419; x=1713450219; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LUtbADJQAYJxj/Ogfyr9IscI3lkrbxOS5D0BwfwnczY=;
-        b=ZIaEiIWebG2vtqDM3ZAa8oK7bMvVH5yIqVL1dgs+McEuEgzuiF0D0iFY0WKrWOcSmU
-         fq0FhbTHU67nMtnFX2Ix855HUg4nQCA4KtJZc6l5HfrVvjT7q33OKbiHlP0Q6rItep9q
-         t7JjgT1Nf/0gTgyUneHkrQiH8gkVnc5Jf+cVc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712845419; x=1713450219;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LUtbADJQAYJxj/Ogfyr9IscI3lkrbxOS5D0BwfwnczY=;
-        b=cCMEfOtTA1QCODDsQcQ1uty8P6LKXG0ejAxoBOwPIcRdVhz7stvyR3qYjPAOQjEfuA
-         wkjikwZPxEIwxINFCXmz48jAy+JPImvxcR4zxFR3QPUMthQkqMpGg49BFa3y8X0j8VB8
-         xjcaH6GscB9uEODLfenxfi3h9XcanY7zqPfrma8z1st10VynNweB/ua/Da++aFBWkx4Z
-         /CS33+3w2uQPuwlAGlD/BrKcZ5wNJ10aAIJeVDPhDsrNJoaJxP3FMesbNuBMUeekiuak
-         ak3oUtq8ImDZ2t2JJLmMovk+KW5qCmNHEkO5TMlC/F0H+7RCy4b4VV9r0eAymCBIZ0kP
-         NEDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXXCTFIlZrjE8mdqENk/RyXMpyUhMot7yeDI5TBNw3cjDFlcqWEk5W7WDZhufiM2PN403U9iXbPdDMm/ya5zIE9yRF9K/nFpwUpsBt
-X-Gm-Message-State: AOJu0YyGk0CEg98u1vrTinIQAc8DrSwDGgZhn4UQDWjLCywtQg8QlxKj
-	uKBcLf35h0jeagAV83E09S0WYjqIpVSuBumcdQZSX9mhDUnnvq6yHGnVYKW7vCt6KUe4kz9T3la
-	F/NLTA7/CHcunILrdhp+sYwvxNKWP0KPQLk2k
-X-Google-Smtp-Source: AGHT+IFNVcyx8krFZBQPjsFLg9xfCidm6tFM482BIiTiDZp8tHCIzPhuHhKYCeZTeFT6FNZdUnqtE+lVlPb3l1XeNNQ=
-X-Received: by 2002:a2e:7d12:0:b0:2d8:7200:38ff with SMTP id
- y18-20020a2e7d12000000b002d8720038ffmr3769523ljc.24.1712845418803; Thu, 11
- Apr 2024 07:23:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EJ3bs3fC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IxgkO6uq"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712845510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SEKIPLmzSrj2/vg+Hg5MOencwz/q/754oDxsJ/Tx2DI=;
+	b=EJ3bs3fC1I/+RSvJYqb7XXQV67cp4yS8p/3KrTfLdd/pmMc5EW+iP1gZpL14yi4GTvJ2pq
+	w9SD1TJpLKYDepgFukqrRP4iKU/eAfbla5dXalVQ88CaTQVo/8CMUGYZ2VRcTLGM9zEo4w
+	MSKxgxkgdumZ9aOydhzQjzGCt2hgiOtZWXyV+LIpz+Jxq6ETHvDjNCw5KCeMv+bOnjZL3b
+	SjUbVlYftfm6QCrVbtkqpaBfdcXx6bUI/SNCEcC38uuXpUcJXvRfhn7GAaQ+tsQ733oMTW
+	kQbxSU5FP6KY3M+GUhwZ7M2RdESwWzbI5vRzw5Ta6BNcAX4gj53Cowr1wgnBZA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712845510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SEKIPLmzSrj2/vg+Hg5MOencwz/q/754oDxsJ/Tx2DI=;
+	b=IxgkO6uqCPYcJmHwXfKg5lok+Rx2ZIvaovD0qUG+ioF46cvSN0ypdxn3+bck4YD1Kr5ChE
+	osa3lk2CeEaYT1DQ==
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, John Stultz
+ <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Eric Biederman
+ <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 08/50] posix-cpu-timers: Save interval only for armed
+ timers
+In-Reply-To: <20240410165551.442678509@linutronix.de>
+References: <20240410164558.316665885@linutronix.de>
+ <20240410165551.442678509@linutronix.de>
+Date: Thu, 11 Apr 2024 16:25:10 +0200
+Message-ID: <875xwougc9.fsf@somnus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240405102436.3479210-1-lma@chromium.org> <ZhOccGFkTFkUkRUI@hovoldconsulting.com>
- <CAE5UKNqufWZfKLAXLcpBYKQpJEVt6jPD4Xtr=Nesh34VkNOETg@mail.gmail.com> <ZhVix-HJrqQbiPrB@hovoldconsulting.com>
-In-Reply-To: <ZhVix-HJrqQbiPrB@hovoldconsulting.com>
-From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
-Date: Thu, 11 Apr 2024 16:23:27 +0200
-Message-ID: <CAE5UKNp3uS9cqDbQjcP3SbfxVi3wPFG4LtP6z=WU_V+M9x6LtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] HID: i2c-hid: wait for i2c touchpad deep-sleep to
- power-up transition
-To: Johan Hovold <johan@kernel.org>
-Cc: Jiri Kosina <jikos@kernel.org>, Dmitry Torokhov <dtor@chromium.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, Douglas Anderson <dianders@chromium.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <mripard@kernel.org>, 
-	Kai-Heng Feng <kai.heng.feng@canonical.com>, Johan Hovold <johan+linaro@kernel.org>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Radoslaw Biernacki <rad@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-> Sure, but what about other transactions that are initiated by the host
-> (e.g. SET_POWER)?
+Thomas Gleixner <tglx@linutronix.de> writes:
+
+> There is no point to return the interval for timers which have been
+> disarmed.
 >
-Somehow it is problematic only on reboot and works just fine on
-suspend/resume and
-set_power.
-I will dig more and try to find out what the difference is.
 
-> Perhaps this hack at probe is enough for your use case, but is an
-> incomplete hack and at a minimum you'd need to add a comment explaining
-> why it is there.
->
-You mean a comment in the code ?
+common_timer_get() returns/updates interval unconditionally - so
+behavior then differs.
 
-Lukasz
+Thanks,
+
+	Anna-Maria
