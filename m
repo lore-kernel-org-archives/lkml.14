@@ -1,154 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECDB13FF6;
-	Thu, 11 Apr 2024 15:18:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B091617C7B
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848727; cv=none; b=CG3wRS8PowYZ7kUpPCg6ARq/OHPcdQgM361Vd8ADRp/7DQrmDthNL1d0XYSw3PtLjfT6c1Tx2hlYq5qBBmnvFt6IhS+xdA67qGGkdNOQ77/qONVLyjHxVsc5M7lZLFYtwAi7I4Ewl+bZ+IYW+t5Qo57f6by0ySBr/qOuZhttUgs=
+	t=1712848735; cv=none; b=MX1ulQqdDBzPhqBuxXS4eHiITJ9qDRkUt1CD40ioScwdcF0Y5n194TZv8BHLnfb7b+QpsbOITkGIuF2JOoZ1WEisJJdKzBAe3KSh+hjx7BDhCntSZQxlYR2d9cewD+e6Y9Y3TmEAHmDfRfOarUgdlUyXCtSKeV8KNBif2KKGX+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712848727; c=relaxed/simple;
-	bh=IVfpujiqFE7Wz//nwMyDR2FjbxTDeZ4CZN8xF6MI70w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAK0qFdgSTwZ3fcZVVUuP+oDBiaXK61b52DBQvIRoEVMuEpR0kbYk7sFuIawAWEmIc7MZIOfdACukKoAtPvMTqx9AlrSATw4qFUARzcb7tOpjNxCk/63ggbhusTru6p0GKJSnGG/LYCAOk2ejdBHdT9GvbhSKpeeHFqw+yhLdQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1tuCVeN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712848735; c=relaxed/simple;
+	bh=mS3XpqrtEw/9wg+qFlBy8jz9sIb/oyLwgCvRhmYMKl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nubat4qbA+VanlbBnioC90XdY2uYSlT7hclqvBRDkBAx4ZSohhtaNCiUqQAoOXgJUOBjoVcU3P4dI5mDdSi3v4i5GsAUHHovvlWQzoj31Tvetw90oaST40+Y4WbhSJT3Ren86vdj5jLHqSxItXukhDGd5FHdGUiMvyM35uNvLXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCZY6d/s; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1tuCVeN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC9AC072AA;
-	Thu, 11 Apr 2024 15:18:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712848726;
-	bh=IVfpujiqFE7Wz//nwMyDR2FjbxTDeZ4CZN8xF6MI70w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R1tuCVeNUKpp6zEOSjIfgsnalqciR99+p5fDV76dBQnfwf1wpZNmhunVF9ebrmXDV
-	 5BMi57E1CkD4/YwFU2mwLj79o4lqqc9JLfTlwcVYieNh6CstJ+EYirLZi4f5B934Iu
-	 V2ci9VAl1j7ceZzaZsDvZA7P/x75QZvcvTNpCcM1DxSFq94oiO9SPGzy2O7X0TfxE2
-	 y84pB2PRT6PO6K5CNy2ZUId0v53FSOlbYYCIjr6mzXawZ/BNa8ItiVnVuqL0i9aIeS
-	 bAWfr0kXIhTQq+YPRlVcJihJvg4hLoKrz1GQRGj/9SpDmIu2fGYRH9XAdUnZVkBOXj
-	 VuoDEOZ9EW8xw==
-Date: Thu, 11 Apr 2024 16:18:40 +0100
-From: Conor Dooley <conor@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-scsi@vger.kernel.org, alim.akhtar@samsung.com,
-	avri.altman@wdc.com, bvanassche@acm.org, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	peter.wang@mediatek.com, chu.stanley@gmail.com, jejb@linux.ibm.com,
-	martin.petersen@oracle.com, lgirdwood@gmail.com, broonie@kernel.org,
-	matthias.bgg@gmail.com, stanley.chu@mediatek.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 7/8] dt-bindings: ufs: mediatek,ufs: Document
- additional clocks
-Message-ID: <20240411-curvy-satirical-8c50cf79d703@spud>
-References: <20240411114300.169055-1-angelogioacchino.delregno@collabora.com>
- <20240411114300.169055-8-angelogioacchino.delregno@collabora.com>
- <20240411-filth-trekker-8a8c185d589b@spud>
- <f7fcbae7-fd54-4ad5-8dc6-4deb80088b79@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCZY6d/s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712848734; x=1744384734;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=mS3XpqrtEw/9wg+qFlBy8jz9sIb/oyLwgCvRhmYMKl0=;
+  b=GCZY6d/secRBJMJbFD/ouY6aRtQVAtQxjQ0PEUJcswg41onem5C7vFpy
+   VA8ui9glco9Z/ZIGD3QHujRUP5CxFxF7WGIdgJ8KtCG7jxG91jjF91hWl
+   FtTZxWF6eyws4dufyfmc3mICyFL5RzRu6nVbWP9G0taDFbgSwW/H6Xd3j
+   V37uEP4JlcTsW9IHzH6eufudreVG3zCQp5xhw//hBZ1Fi2HT1pyMDieFq
+   eESMRlCjUZc3NoaWTnJV8qDPZzwrJtjQJS/9brVpOk3p6uKZORX58k5i0
+   IaEMlHj9VB3Hkh3EMSfxatcaUesGDHRNK833sf6slmrKk+VY2aOjB8pbs
+   A==;
+X-CSE-ConnectionGUID: 7mNGsIOrR1iUC+AGTb6oqw==
+X-CSE-MsgGUID: ATcKTrveSPyv1ovDyugF/A==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8116797"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="8116797"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:18:54 -0700
+X-CSE-ConnectionGUID: BSGRf2OeRz+tRQ/AyhlKTQ==
+X-CSE-MsgGUID: CncflsZBTiGgTPo4x/t9jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="52110751"
+Received: from tgrabows-mobl.amr.corp.intel.com (HELO [10.209.89.64]) ([10.209.89.64])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:18:52 -0700
+Message-ID: <99d6583a-1541-499f-a682-e1818507e472@intel.com>
+Date: Thu, 11 Apr 2024 08:18:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="BPJ3krEP7ZWCC7l0"
-Content-Disposition: inline
-In-Reply-To: <f7fcbae7-fd54-4ad5-8dc6-4deb80088b79@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] x86/mm: Don't disable INVLPG if "incomplete Global
+ INVLPG flushes" is fixed by microcode or the kernel is running in a
+ hypervisor
+To: Xi Ruoyao <xry111@xry111.site>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Michael Kelley <mhklinux@outlook.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org,
+ Sean Christopherson <seanjc@google.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>
+References: <20240411104822.6429-1-xry111@xry111.site>
+ <3ee70b6c-3399-43f9-8934-cb5a0e51f006@intel.com>
+ <1f5d53596e2ac8948332570e3bda17c3877fd499.camel@xry111.site>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <1f5d53596e2ac8948332570e3bda17c3877fd499.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+On 4/11/24 07:48, Xi Ruoyao wrote:
+> On Thu, 2024-04-11 at 07:44 -0700, Dave Hansen wrote:
+>> On 4/11/24 03:48, Xi Ruoyao wrote:
+>>> +	/*
+>>> +	 * The Intel errata claims: "this erratum does not apply in VMX
+>>> +	 * non-root operation.  It applies only when PCIDs are enabled
+>>> +	 * and either in VMX root operation or outside VMX operation."
+>>> +	 * So we are safe if we are surely running in a hypervisor.
+>>> +	 */
+>> When you revise this, could you please work to make this more succinct?
+>> The Intel language on these things tends to be a bit flowery and is not
+>> always well-suited for the kernel.
+> Oops, bad timing.  I just sent v7 before getting this reply.
+
+One way to avoid bad timing like this is to wait more than 4 hours
+between patch revisions.
+
+> I'm not a native English speaker, so could you give some hint about how
+> to write this comment clearly?
+
+Something like this would be fine:
+
+	/* Only bare-metal is affected.  PCIDs in guests are OK. */
 
 
---BPJ3krEP7ZWCC7l0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 11, 2024 at 05:14:34PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 11/04/24 17:10, Conor Dooley ha scritto:
-> > On Thu, Apr 11, 2024 at 01:42:59PM +0200, AngeloGioacchino Del Regno wr=
-ote:
-> > > Add additional clocks, used on all MediaTek SoCs' UFSHCI controllers:
-> >=20
-> > I appreciate being told they're on all, rather than it being unsaid and
-> > having to ask.
-> >=20
->=20
-> You're welcome :-)
->=20
-> > > some of these clocks are optional and used only for scaling purposes
-> > > to save power, or to improve performance in the case of the crypt
-> > > clocks.
-> > >=20
-> > > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@=
-collabora.com>
-> > > ---
-> > >   .../devicetree/bindings/ufs/mediatek,ufs.yaml      | 14 +++++++++++=
-++-
-> > >   1 file changed, 13 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml =
-b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-> > > index e2c276da3f2c..21b038db100c 100644
-> > > --- a/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-> > > +++ b/Documentation/devicetree/bindings/ufs/mediatek,ufs.yaml
-> > > @@ -26,11 +26,23 @@ properties:
-> > >             - const: mediatek,mt8183-ufshci
-> > >     clocks:
-> > > -    maxItems: 1
-> > > +    minItems: 1
-> >=20
-> > Could you add an itemised list to the clocks property please?
-> >=20
->=20
-> Not really... Honestly, I'm not confident that the description will be 10=
-0%
-> correct for all of them... can we do that at a later time, when I will be
-> really that much confident in writing down a proper description for each
-> of them?
->=20
-> The only thing that I'm really sure of is exactly what I wrote in this co=
-mmit,
-> nothing less, nothing more... for now :')
-
-fwiw, my motivation here was a better explanation for what "ufs" means
-as a clock. When the block has some "ufs" clock and a "axi" clock it's
-kinda clear what they do, but with 7 ufs clocks now, it's not really
-clear what the bare "ufs" one actually does.
-
-If you can't provide an itemised list, please set maxitems.
-=20
-> > >     clock-names:
-> > > +    minItems: 1
-> > >       items:
-> > >         - const: ufs
-> > > +      - const: ufs-aes
-> >=20
-> >=20
-> > > +      - const: ufs-tick
-> > > +      - const: unipro-sys
-> > > +      - const: unipro-tick
-> > > +      - const: ufs-sap
-> > > +      - const: ufs-tx-symbol
-> > > +      - const: ufs-rx-symbol
-> > > +      - const: ufs-mem
-> > > +      - const: crypt-mux
-> > > +      - const: crypt-lp
-> > > +      - const: crypt-perf
-> > >     phys:
-> > >       maxItems: 1
-> > > --=20
-> > > 2.44.0
-> > >=20
->=20
-
---BPJ3krEP7ZWCC7l0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhf/UAAKCRB4tDGHoIJi
-0jVLAQCdNb1Gih80RDqdXRY3kcs4MBVqtfkDT6i122nbuJOL1AEAx+wKLmQLY3RJ
-Ld/HWV+CNWWPYqHyLYE+D2RFn9PYlAo=
-=2ddv
------END PGP SIGNATURE-----
-
---BPJ3krEP7ZWCC7l0--
