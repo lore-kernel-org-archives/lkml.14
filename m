@@ -1,141 +1,116 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A3913E05F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B0813DDB2;
+	Thu, 11 Apr 2024 07:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712821126; cv=none; b=dRz2bP7ECOGO8qWKPEiwQSsTACu8shutPJVl3X6gR4zi0Fo9TOqlfeRPO3nckspGWgpz/AKRKsCIJ2PMhpV4fcruZFB1WALlfHrCjNTLKKhwEQ5YE5mcXs46utuINCZIJW3JoKMEtaH2izmpaZNQk0m8sCUEvu+1VgON9WUij8Q=
+	t=1712821171; cv=none; b=tqxHFRKL9bR3S3OCpsewMFSkaclKVgGk4+x6KC9X5bRLKaNa1nl/npTc5bo75l+yIq0KHJUPk1hgt8dg6+bMwqxH/bcf4Eb+Dfx+w6LuKnxbGmOiPliLRrGzCaO7mzErqutlqMzESmU7k40KX4RuW+ZDWBH0srfuijhkg1AYYAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712821126; c=relaxed/simple;
-	bh=1vkXgr7mU8ODetSlTUd524GtmWxMzUtCT+xXdKXnC+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c2lrlw2xcNoVFnx69oJ2GvzSxOLgEydL2mfHP8i6/7C/JgamqYEhGa7nK+6L2YNGqfX/utrPz+HOkDuKKux6hFg2lGJlnRAZil/huBf9WC8NJlNgWHsho2TDYONu+bcTO3TomBJVBVMcp6QQa/iNAnXMkA5gJQv6DDEid24Pi+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=PyXZMQnv; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1712821171; c=relaxed/simple;
+	bh=hsuaPyyXe500cwQ9jJuWJ0HPIXunGpuk5Dto5iwuLao=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=N4uZnjmI++12yNH//QWNlegGhnRjZ38x+WHH24PXrzG9ncsD5uMGYmt5cU+1vjPajef6q8cgMdrZjuW8OQkom2nk1FaO+keUWVF/GMsOa+a/78Z8pqueZMVUAp+kr3M6DIP0qDlnNFIizfXdbtGfoFnlRpzK8hQEEJLkvt3bWAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zJTpkWsP; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="PyXZMQnv"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5224dfa9adso28264066b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712821122; x=1713425922; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Qi1RHVmEtAvgNYlK/Z30HZoUwL3LvYqcc/16dHeni2I=;
-        b=PyXZMQnv7q/B4067/6mgaOEdkORETeuEB3mvFDQ4A0rKtG2pvW2uRyba18ydAUoWmM
-         6AUgOfSAYS1UorUFUhBo88UfWUOA2xPYmi84UgPQMJxKYo/pykINfEuKLiyx4crR14fq
-         nUsk5eUgBVGU0QsugfbOyQ/WLxwRXxSQ9R6LbXqY8vRueJpePn4WFi9FK1G/VbwYZ/kC
-         VL5z1uE86679A0/BxlJIegJiLKMFt9oiA/SVNS3bdtfbrdfDdzdiKJuwgVPqcp8gdLDY
-         6S5qVnuyXtGd5ztBBL+ddfBQJmMQDmN1rYIlemg1I41JRAWPSP33boe+WKqaXHAPp5Xm
-         rEyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712821122; x=1713425922;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qi1RHVmEtAvgNYlK/Z30HZoUwL3LvYqcc/16dHeni2I=;
-        b=gOCZsPWHjOIBBx9EO1W2XSuR9w9aojLIr2tHOunyzgofMQfbQSR55mQ70gSzhQFs2a
-         Vkvaq9SuQJuoOyRzl3AsH/57IpMNf+s1Wz9QCaeMJ8CjJjv2X0aJNIzUjvJgETbetS9S
-         v7aw/qQOTRubUee771/f9pMl2IwMMhr5Xv4yNA2pivIfYZXsCeyirT/7ExUr7ATXVG8M
-         6+uAcZHdgKqQNIuTVF1Ti8lCaagDNik7auQ6EP2cVXEJbBRtOLsdlWc6xMP61ScxtUbB
-         7ck+XHX+oZfEQxgqJrmByIOGSHndoPhyqDCqk/96VbFz7iY6bOmP9ygpm0xjm81Aw/SH
-         o5Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVGYJnZVrB+BGCRGpLmxRVFvTHRDEmA87EXy+ksA3wr3LBjvu2142N+8w3DpJPMhOtpMYwG7Q2C3Gc4h9KMhVvnFdWQSh20udzjRcI2
-X-Gm-Message-State: AOJu0Yx2Zvx8Re/Liq6nPWpyxhQ1gDYCG2s6CtUwYx0qrOCXX9bOj1f7
-	Pvrc6mRlgMdu3sm+PjzFc/BTrfnlr+gRVPhF3pm+O/uvwY+ONziPZSlVdSaMnkaDHqvMWhDNGah
-	R
-X-Google-Smtp-Source: AGHT+IHndxelT9zzrPtEEf61xurR5ZhY/uXW2mp7zI7XhBJBneHaSOP3oqNpAKZ/ndwpR0RWwH9wFg==
-X-Received: by 2002:a17:907:1c2a:b0:a4e:410e:9525 with SMTP id nc42-20020a1709071c2a00b00a4e410e9525mr1764454ejc.30.1712821122486;
-        Thu, 11 Apr 2024 00:38:42 -0700 (PDT)
-Received: from localhost (cst2-173-16.cust.vodafone.cz. [31.30.173.16])
-        by smtp.gmail.com with ESMTPSA id gv7-20020a170906f10700b00a4e0df9e793sm478233ejb.136.2024.04.11.00.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 00:38:42 -0700 (PDT)
-Date: Thu, 11 Apr 2024 09:38:41 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, linux-kernel@vger.kernel.org, 
-	Anup Patel <anup@brainfault.org>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alexghiti@rivosinc.com>, Conor Dooley <conor.dooley@microchip.com>, 
-	Guo Ren <guoren@kernel.org>, Icenowy Zheng <uwu@icenowy.me>, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Shuah Khan <shuah@kernel.org>, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 07/15] RISC-V: KVM: No need to exit to the user space
- if perf event failed
-Message-ID: <20240411-6fe47ccc32d9cb7baa121b4d@orel>
-References: <20240229010130.1380926-1-atishp@rivosinc.com>
- <20240229010130.1380926-8-atishp@rivosinc.com>
- <20240302-1a3c0df25f2422e1e6abecf3@orel>
- <CAOnJCUJCQjBfLZFW-3iLUB6ygyRmz1Anu+fhfrT4Lpoj2iNB5Q@mail.gmail.com>
- <20240404-ea40bc0237635d671e64fef6@orel>
- <7d02c86e-8c36-4e78-9fa8-5e30f3431eb3@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zJTpkWsP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1712821167;
+	bh=hsuaPyyXe500cwQ9jJuWJ0HPIXunGpuk5Dto5iwuLao=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=zJTpkWsP+ijw64CxiA+6UhA5cy26ShfKAQCEvdPBmas2QwsdDornHYdz8tvpl/gRg
+	 au2FO2XY3m9/E4q9S+G4VVCldwx8FhIXrgyY7KgXKmsopveF9WJx8x8/jv0YsL/6UO
+	 5Z/EnfcCLkUlFR1rPo5Ho6F7uBVEb22DLhSgFaaRun64GqT6Gq9wR8ChI6gfH364Jm
+	 9N082Zcrci3QA4LM8SUL4fem/WBrGYIRJU2uoOf16jPl5isGYfkon/HHJF7JP6DmU9
+	 SjTPRvzyj8Vtv2k74JlmGsEsJbUdBoctkZVxJabWM40TBHLnuv9BAseVDPZoo1uAJM
+	 7gIjxCzWe55Lw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 6B4CD3781107;
+	Thu, 11 Apr 2024 07:39:26 +0000 (UTC)
+Message-ID: <6e8e553b-8c5f-404a-a396-17d8b3440d93@collabora.com>
+Date: Thu, 11 Apr 2024 09:39:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: mediatek: Support MT8188
+ dual-core SCP
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: "olivia.wen" <olivia.wen@mediatek.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Tinghan Shen <tinghan.shen@mediatek.com>,
+ linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ jason-ch.chen@mediatek.com, yaya.chang@mediatek.com, teddy.chen@mediatek.com
+References: <20240411033750.6476-1-olivia.wen@mediatek.com>
+ <20240411033750.6476-2-olivia.wen@mediatek.com>
+ <5cf005b9-d737-4509-a9fb-f0e59465482c@collabora.com>
+Content-Language: en-US
+In-Reply-To: <5cf005b9-d737-4509-a9fb-f0e59465482c@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d02c86e-8c36-4e78-9fa8-5e30f3431eb3@rivosinc.com>
 
-On Wed, Apr 10, 2024 at 03:44:32PM -0700, Atish Patra wrote:
-> On 4/4/24 05:16, Andrew Jones wrote:
-> > On Mon, Apr 01, 2024 at 03:37:01PM -0700, Atish Patra wrote:
-> > > On Sat, Mar 2, 2024 at 12:16 AM Andrew Jones <ajones@ventanamicro.com> wrote:
-> > > > 
-> > > > On Wed, Feb 28, 2024 at 05:01:22PM -0800, Atish Patra wrote:
-> > > > > Currently, we return a linux error code if creating a perf event failed
-> > > > > in kvm. That shouldn't be necessary as guest can continue to operate
-> > > > > without perf profiling or profiling with firmware counters.
-> > > > > 
-> > > > > Return appropriate SBI error code to indicate that PMU configuration
-> > > > > failed. An error message in kvm already describes the reason for failure.
-> > > > 
-> > > > I don't know enough about the perf subsystem to know if there may be
-> > > > a concern that resources are temporarily unavailable. If so, then this
-> > > 
-> > > Do you mean the hardware resources unavailable because the host is using it ?
-> > 
-> > Yes (I think). The issue I'm thinking of is if kvm_pmu_create_perf_event
-> > (perf_event_create_kernel_counter) returns something like EBUSY and then
-> > we translate that to SBI_ERR_NOT_SUPPORTED. I'm not sure guests would
-> > interpret not-supported as an error which means they can retry. Or if
-> > they retry and get something other than not-supported if they'd be
-> > confused.
-> > 
+Il 11/04/24 09:34, AngeloGioacchino Del Regno ha scritto:
+> Il 11/04/24 05:37, olivia.wen ha scritto:
+>> Under different applications, the MT8188 SCP can be used as single-core
+>> or dual-core.
+>>
+>> Signed-off-by: olivia.wen <olivia.wen@mediatek.com>
+>> ---
+>>   Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml 
+>> b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+>> index 507f98f..7e7b567 100644
+>> --- a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+>> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+>> @@ -22,7 +22,7 @@ properties:
+>>         - mediatek,mt8192-scp
+>>         - mediatek,mt8195-scp
+>>         - mediatek,mt8195-scp-dual
+>> -
 > 
-> At least in Linux driver, treats -ENOTSUPP and it just fails. Other guest OS
-> implementation may interpret it differently. But they should fail at that
-> point as well. I don't see how can they interpret to be retry.
+> Don't remove the blank line, it's there for readability.
 > 
-> The perf user can retry again with assumption that may be enough counters
-> are not available at this moment. But that's different from return a retry
-> from driver code.
-> 
-> Even if we support a retry error code, when does the caller retry it ?
-> The driver doesn't know how long the user is going to run the perf command
-> to keep the hardware resources occupied.
-> 
-> I feel the perf user is the best entity to know that and should retry if it
-> knows the previous run is over which might have released the hardware
-> resources.
+>> +      - mediatek,mt8188-scp-dual
 
-I agree, but how does the user know that retrying makes sense? I presume
--ENOTSUPP will get propagated all the way to the user in a form that
-means "not supported". Or, can the user list all resources and then
-when they see "not supported" know that means "not supported at the
-moment", as they've already seen that the resources exist?
+Ah, sorry, one more comment. Please, keep the entries ordered by name.
+8188 goes before 8195.
 
-Anyway, as I said, I don't know enough about the perf subsystem to know
-if this is a real concern or not, but it sort of looks like we have
-potential to tell users that something isn't supported when in fact it
-is supported, but only temporarily unavailable.
+> 
+> After addressing that comment,
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+>>     reg:
+>>       description:
+>>         Should contain the address ranges for memory regions SRAM, CFG, and,
+>> @@ -195,6 +195,7 @@ allOf:
+>>           compatible:
+>>             enum:
+>>               - mediatek,mt8195-scp-dual
+>> +            - mediatek,mt8188-scp-dual
 
-Thanks,
-drew
+same here.
+
+>>       then:
+>>         properties:
+>>           reg:
+> 
+> 
+
