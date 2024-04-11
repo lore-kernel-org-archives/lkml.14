@@ -1,121 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235571514C7
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D8615B566;
+	Thu, 11 Apr 2024 16:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712852004; cv=none; b=qCDwvvqW3DQZoNnzHNcafwORaFoDqcwetGHqnlg0pwVBT+dSOmJWEDxUFzyzz4NPXBFp4zhTpYeJLtdlSBYM1fn8UtFdkocSEaK0A9QSJFT7crRXBTZVs8HT+XutXdnsIcXRrRGjxmWddQZBK7QMPqqj9PowGjtxks4qYQmxvl4=
+	t=1712852068; cv=none; b=azsOJCZpadzDFHtp4Sz4m96KD+IPu4s11rovHHs3DUjyWA2ziBAt3mkZob4+l2N4jTTYaKjTbkyNnALBNczir3ggH7hL6T0Pfj935jtxHDs4KJPLjnhcZtzZ8oyjlTk48CfTjPOIZFGq8q7CBOny9QNBsYxOKDIqRg7RGJAWkYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712852004; c=relaxed/simple;
-	bh=tCCBcJnRbz3n4CBXmbeZiDjsy06LWfoWVjBmcrN/U7A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ri2C2lm/+uNWWOiqCP8nsBNHZSpEHBTjo9UEIC+bivv1WSOjwb/wI0wezkpiNc8vCCGbcww0dKT1jl1+pnqX2aFivh+TGoax3b9bhEJFAlrqmeli+XsUxgJadiReMRk8dhNaQFKkycFYYpS+I1smayHRprMcnagmfjGeGworVWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OF74/pDH; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712852068; c=relaxed/simple;
+	bh=wX+Sb9KE1goHL85Uuw7AAvgTdqo2KwK3euLm9IJTgao=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBPsT0xQQVO4Y0dPbCd4URRAbCyyH1bY20bOmRpZGzMRw4hHa1OXsJ6wK+TtEtxcOC7mMgTTJ01q2H20uC+z9v/ZT5PFiDGQT9M5b+LQtbiUzVKvRn2QO+yrk3GACeytpZehUXu8V4xE9hXW/J9aeDIhqvjFKmeKwACty3wNowo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsEb+ODw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OF74/pDH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712852003; x=1744388003;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=tCCBcJnRbz3n4CBXmbeZiDjsy06LWfoWVjBmcrN/U7A=;
-  b=OF74/pDH0aFmGTWnSXcLkMEm4dYxIPYfUtG3xHcmwwTYsdHtO4qlJA+C
-   iOiWcISOH+p5b4q7i4TxuQh1KBOo7O0dfq49Md9CuWtoPJ4w/b3sG5D64
-   Kgqewzt1mrguQmUIbXqcSFt2Sm7Y7RDGjXbHNpvpKvUVXX+DUSAw6pjDh
-   D774ain/d715tSeuqQmRJZ+VWwKgcfu8de3FS6rXHifj7IpJLYbD5Rdx8
-   q5oFwHVi0rMJ2tifdSla9KEPynJXicSN38vYMqSl10gpZFftThyZSd+x8
-   nLV8ZxhPmiFz7QAFfoqph7wWuIOKlBsFiSxSS+3o/XVa0d/u06vkBwSSI
-   w==;
-X-CSE-ConnectionGUID: Ypri3OcVSZWMbBK5MDtoHg==
-X-CSE-MsgGUID: m2Tq9zuIRg6MB/22ruhyPw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8405198"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="8405198"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 09:13:19 -0700
-X-CSE-ConnectionGUID: wmsppSE+T3KmTbVvEwIwYw==
-X-CSE-MsgGUID: 78q6r7BoSc6CYStYktSTHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="58364178"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 09:13:19 -0700
-Date: Thu, 11 Apr 2024 09:17:49 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, "Liu, Yi L" <yi.l.liu@intel.com>, Joerg Roedel
- <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
- <robin.murphy@arm.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 2/2] iommu/vt-d: Remove caching mode check before devtlb
- flush
-Message-ID: <20240411091749.20afae6b@jacob-builder>
-In-Reply-To: <BN9PR11MB5276DDE04A315B1F870872468C062@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240407144232.190355-1-baolu.lu@linux.intel.com>
-	<20240407144232.190355-2-baolu.lu@linux.intel.com>
-	<20240408140329.6290377f@jacob-builder>
-	<aff42b8f-b757-4422-9ebe-741a4b894b6c@linux.intel.com>
-	<20240409103146.0d155e45@jacob-builder>
-	<BN9PR11MB52763F42ED6719E6D03D0D308C062@BN9PR11MB5276.namprd11.prod.outlook.com>
-	<20240410091955.5c00e411@jacob-builder>
-	<BN9PR11MB5276DDE04A315B1F870872468C062@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsEb+ODw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 993BDC072AA;
+	Thu, 11 Apr 2024 16:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712852068;
+	bh=wX+Sb9KE1goHL85Uuw7AAvgTdqo2KwK3euLm9IJTgao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JsEb+ODwVxBzaUD7a4CzBXXIZu92Ml/s0phvhSArvWN9K8QDWmfl8rE6SQnO9qIxM
+	 LEFAkYyNgTM1DjmP0BgRKspC1OqZBxTzb/CUCD4gUEC9Nh17eosafmPmgxXXGVoZRG
+	 IcRJ20cZH2zCnj5WPf8MmmNuZJrg4p40KW2/QRJ76ztSIIEQpUjOJUYk07Dpbn7uLp
+	 iQQnBNC8TFcQ+IIAMywRzJDEGiAicin/+Y3WuQ2JjJ0LwpHeNnror3DZuqSZY3Tvuo
+	 MEUaiigaHRtMO0tL6BLQpHCni+rouQwVtdXCDL32BOTBB6B/yjnaB1oLXI0pCWu0dL
+	 5UCOWWnzYCPmA==
+Date: Thu, 11 Apr 2024 17:14:23 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Michael Opdenacker <michael.opdenacker@bootlin.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: dts: sophgo: add initial Milk-V Duo S board
+ device tree
+Message-ID: <20240411-persuaded-symptom-b14a8cfee57f@spud>
+References: <20240409064504.4010353-1-michael.opdenacker@bootlin.com>
+ <IA1PR20MB49532A8D4294ADCE0C33A654BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <20240409-prevent-deepness-2d22bf009b16@spud>
+ <IA1PR20MB49534E00CAE29D24F7D7E718BB072@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <1514d28a-5e96-4531-a972-894e41902efa@bootlin.com>
+ <IA1PR20MB4953CA04D33EA0C7902DFA3ABB062@IA1PR20MB4953.namprd20.prod.outlook.com>
+ <ZhZo0iJFSn1te-6d@xhacker>
+ <5fdda638-21ba-4fa7-b666-33cf2fd69dda@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-Hi Kevin,
-
-On Wed, 10 Apr 2024 23:23:57 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
-
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Thursday, April 11, 2024 12:20 AM
-> > 
-> > Hi Kevin,
-> > 
-> > On Wed, 10 Apr 2024 00:32:06 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-> > wrote:
-> >   
-> > > > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > Sent: Wednesday, April 10, 2024 1:32 AM
-> > > >
-> > > > If the guest uses SL page tables in vIOMMU, we don;t expose ATS to
-> > > > the guest. So ATS is not relevant here, does't matter map or unmap.
-> > > >  
-> > >
-> > > ATS is orthogonal to SL vs. FL. Where is this restriction coming
-> > > from?  
-> > For practical purposes, what would be the usage to have SL in the guest
-> > and ATS enabled. i.e. shadowing SL but directly expose ATS?
-> >   
-> 
-> ATS is about the protocol between device and iommu to look up
-> translations. Why does it care about internal paging layout in
-> iommu?
-> 
-Maybe the original intent was missed, I was suggesting the devTLB flush
-should be based on ATS cap (as you said here) not map/unmap.
- 
--       /*
--        * In caching mode, changes of pages from non-present to present require
--        * flush. However, device IOTLB doesn't need to be flushed in this case.
--        */
--       if (!cap_caching_mode(iommu->cap) || !map)
--               iommu_flush_dev_iotlb(domain, addr, mask);
-+       iommu_flush_dev_iotlb(domain, addr, mask);
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="MFXo6Ns2Jdu07e2i"
+Content-Disposition: inline
+In-Reply-To: <5fdda638-21ba-4fa7-b666-33cf2fd69dda@bootlin.com>
 
 
-Thanks,
+--MFXo6Ns2Jdu07e2i
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Jacob
+On Thu, Apr 11, 2024 at 10:35:55AM +0200, Michael Opdenacker wrote:
+> Hi Jisheng,
+>=20
+> On 4/10/24 at 12:24, Jisheng Zhang wrote:
+> > setting the correct bus-width is necessary for better performance
+> > no-1-8-v can be removed, but it doesn't harm anything because
+> > the board doesn't supply 1.8v
+> >=20
+> > no-mmc and no-sdio to make the probe a bit quicker
+>=20
+> Many thanks for your advice!
+>=20
+> However, whether I apply these changes or not,
+> git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git is now broken for
+> me:
+> Error: arch/riscv/boot/dts/sophgo/sg2000-milkv-duos.dts:32.1-8 Label or p=
+ath
+> sdhci0 not found
+
+This is probably just because you need to use the for-next branch of
+https://github.com/sophgo/linux.git as your base. Palmer doesn't apply
+dts patchs to the riscv repo. Usually working on linux-next is fine for
+these kinds of activities.
+
+> I was previously testing with linux-next, but it's now broken too, though=
+ in
+> a different way:
+> [=A0=A0=A0 1.306811] /dev/root: Can't open blockdev
+> [=A0=A0=A0 1.311200] VFS: Cannot open root device "/dev/mmcblk0p2" or
+> unknown-block(0,0): error -6
+>=20
+> Shall I submit my updates anyway?
+
+This is probably worth investigating by someone, providing a longer log
+would help if you don't wanna do so yourself. Did you rebase on a more
+recent linux-next and this cropped up?
+
+--MFXo6Ns2Jdu07e2i
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhgMXwAKCRB4tDGHoIJi
+0izEAP9BMtHM9XrULQAvBFk8Lzjfx7aDOB1RFamiBRseR4yYvQD+LVtg9ja4UyKL
+TWkuivznsZkY8kuYquTYOwl8jiAijQY=
+=HZD6
+-----END PGP SIGNATURE-----
+
+--MFXo6Ns2Jdu07e2i--
