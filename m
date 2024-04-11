@@ -1,143 +1,317 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12olkn2051.outbound.protection.outlook.com [40.92.23.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5FE14AD2E
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:13:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.23.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837593; cv=fail; b=ByH7aLqE3ILpi99c0X7T8CR47rAeI3jnZvYByJyX9+CyXhCdhTljf3sEWF2oy12AAe/E5vWExQkkOOEz7970OvIGVdz+YuMWmjqrefWbzurrA569l6dvrXDPeoP9i4WHRB81qkxa2JqMlkAp06uxLX5wDiFNiRDihFchqv08rVU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837593; c=relaxed/simple;
-	bh=mPx/N8rxKhVUhvWYM2HYh5edCTCX6ZRLCyHUbIkw/ps=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HymTt6mEf27A9JXsutBXLU1sAsTQNTS0pdRCJ+fUvKt3adtZYBJ0iNBHap9w7tJjkzNk+B75N069T3r9buW7wssWN0gH4oH9PUVJ5T2HwiK2KBFu1L+1NLHHWp5H64nrN0XKXGEc9qapghoU01UYhbqKs3Dqi8Dp3Ew26KPJ7SM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Mw8Og5v7; arc=fail smtp.client-ip=40.92.23.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECEF14AD2E;
+	Thu, 11 Apr 2024 12:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712837607; cv=none; b=br/8gvurGh8uhl/Ct2F4pl2A3ecGBpAR81Mc4GiNZCiRAoerjVqOtCfmc5i8y0WFyBsr2SX4BWzJzf67LgGbhK0L6O39OyCklqwm+tN0KZB8Tqk0EnCfURGHi9G/82nciLjzNTk4hWEGBZtEcrt63dnGkCZiFZoC+eVVBKwJJao=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712837607; c=relaxed/simple;
+	bh=Uo/keZaPgmoZnFzr4XmtbNX9/qmwuyRIAFaWvv/OD40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fma/v18HT8Hu2E5xPxtcqJrmkxZOh32edH681VFw7RgvXdHeEKnXjw4Lr6xn+VxcWGiOWmP6/1Mg2bMcFMWpEbeOXEvqXzOuizmnZvkuvtX/QvTbWy8xN2eHNtNwbBUIZIh6JiSsRl1i9tU/cIFj19dyOmbErveo8hiEGx29EQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=07doc78H; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=FMFMwST2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=wJxrtyX3; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sy1DkKZY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Mw8Og5v7"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ey3M7S56M2EBbzHBLV1WctuoffkH0m0n8tDad32TwnZNVKHmcR4uXn/5ItMxAr3NBmqSohXU71TRtx6Th0SqBCQ1BpblS7lzLEoByXiKVLu835ORy0MsD+HEnBQGIe1attazKFQK2rJ20FyKP4jEY4ZdQuhZnM83wTv5mLV8tU63dBPwAqRY44pR+nvKCnOcuqgSIvCoVi6VgjDhVTi5RIxhaeO8rHXQXyMOPkwG1VXOhJpiagTtYJnp2IwoVEky32wopIVPtIEKzkDMB9Ry8E8WF5/rxb6SLHXI/UhUY/bJUNzIGwbmRFkFoLdpoJsW8zi6OgGsTpQMKjFvdjI/Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mPx/N8rxKhVUhvWYM2HYh5edCTCX6ZRLCyHUbIkw/ps=;
- b=lfo4Y49rfY5VTYpS4jYHK463SCda2vt3AbfV13rH9pS1sqsn913aJ65uEkfN+WwykANZ/ymmAs9rjbwtRP+w28yVeWB9bUvN40SrqzuUFu+lTqf1lW7iaD9X8Lv+cO8k37hqkryPIlPsKTXcFuvhNNf5ym9REx26p9J5PUsqvhJUKzsD/ANDVHdQUX8D2nK5iFXeI6xZRpo0sMDcY1HlSmgYfPhFt81aimaYJ4If68RiraQjJDDeqDpSsulZUoDZy4I8Jk2A2iuTfCKOSpcX2T++s638ECLO9erXpA8U4dYQyFzqHQTSfpT5az/1m7+tQnx65jg5vL8f13hBKB+Fhg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mPx/N8rxKhVUhvWYM2HYh5edCTCX6ZRLCyHUbIkw/ps=;
- b=Mw8Og5v7yc3NPy0sZfaXmo6dd1JHSvfI+wE+kzgqzmeKcbT+XJKrcou4LJPBaW+o8ggzEqaSy26gvRLQIGdeKKfvYvkURNYsMb4DHqISZmTAxGPRtB60gSOVl6eYdb9tQxH3IaECMzUjeL1UMK/GzJcvEXGWfjNfAa50Si579gSAqTaohe4PkIO4htDHMdZUSUgXDMEJSCKJOff/FP4MozuM4ef7ITA0kKXqCqADY6xvpPZDHb5ov02cc7JTSt81GDzQaJLxjBdAgQNdoD9Bg0lZeKkZatIIrnI+2X++RmuPg+YgtCGfSHHtHVoi0I8v7QE8lybGlC3JsXq8DL1oVA==
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
- by MN0PR20MB7552.namprd20.prod.outlook.com (2603:10b6:208:4c2::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
- 2024 12:13:08 +0000
-Received: from IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819]) by IA1PR20MB4953.namprd20.prod.outlook.com
- ([fe80::182f:841b:6e76:b819%2]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
- 12:13:08 +0000
-From: Inochi Amaoto <inochiama@outlook.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Guo Ren <guoren@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Sven Joachim <svenjoac@gmx.de>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Drew Fustini <dfustini@baylibre.com>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jisheng Zhang <jszhang@kernel.org>
-Subject: [PATCH] riscv: defconfig: Enable CONFIG_CLK_SOPHGO_CV1800
-Date: Thu, 11 Apr 2024 20:12:40 +0800
-Message-ID:
- <IA1PR20MB49537E8B2D1FAAA7D5B8BDA2BB052@IA1PR20MB4953.namprd20.prod.outlook.com>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [Y4DSgkAXPTHFRrqTMgUqInKXDcsgxFiz8jUEv1ffrF0=]
-X-ClientProxiedBy: TY2PR0101CA0025.apcprd01.prod.exchangelabs.com
- (2603:1096:404:8000::11) To IA1PR20MB4953.namprd20.prod.outlook.com
- (2603:10b6:208:3af::19)
-X-Microsoft-Original-Message-ID:
- <20240411121241.766521-1-inochiama@outlook.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="07doc78H";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FMFMwST2";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="wJxrtyX3";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sy1DkKZY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BACA637444;
+	Thu, 11 Apr 2024 12:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712837600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VAM8Ph4HfYwyb6rD0atMH++TCGob0pM6dlZ/MMA8TZg=;
+	b=07doc78HBfvspOBkIDrYDxKwjVrT/icDEMOawOeSMPXRG98NCo+SB7N8TGIGRItlAjeUmh
+	7m/6VCWR3eBCvGpBhBLsYey5z/nnVRZJ0JHQdheVd7Je+FaRcZ6LJ5Ju/lx02LZ3cL3EUG
+	lL3SS0TZFcNvRu8Qf/72aObP7BLvJ98=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712837600;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VAM8Ph4HfYwyb6rD0atMH++TCGob0pM6dlZ/MMA8TZg=;
+	b=FMFMwST2pvT+JNIGzXZx/lHVPhqtu2gz3KwyhXOqowO+Qscwyirzxt8GfU/8Xo9D4Z8qYL
+	gbcjjP6InUPu/0AQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=wJxrtyX3;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=sy1DkKZY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712837599; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VAM8Ph4HfYwyb6rD0atMH++TCGob0pM6dlZ/MMA8TZg=;
+	b=wJxrtyX3iW4IzAdiqsi9yCadjNWvek2DkEscpxOuRmeSrohIbWe6DL/+XYfgSA4l0dZGAR
+	zgduTSN1fDskEk1oSSXWcFBbXv84erDHGF194WiSl93UMeuCHarO62b/8tZx8e4g8YRxy4
+	VuF0CyHmz8oSy7BOwhXm3s3qkIWyEas=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712837599;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VAM8Ph4HfYwyb6rD0atMH++TCGob0pM6dlZ/MMA8TZg=;
+	b=sy1DkKZYQ5mSnU1Zw0PPiBihXLQ20nwpYHek1yKZrABJAxAxKnWzLSlw5E7fjAK7Zhbh95
+	S+4ANIjY7ZwnRuCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD397139DE;
+	Thu, 11 Apr 2024 12:13:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id LV5FKt/TF2YvFgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 11 Apr 2024 12:13:19 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 3C50AA06F8; Thu, 11 Apr 2024 14:13:19 +0200 (CEST)
+Date: Thu, 11 Apr 2024 14:13:19 +0200
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com>
+Cc: amir73il@gmail.com, jack@suse.cz, linux-ext4@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	repnop@google.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ext4?] KASAN: slab-use-after-free Read in fsnotify
+Message-ID: <20240411121319.adhz4ylacbv6ocuu@quack3>
+References: <00000000000042c9190615cdb315@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|MN0PR20MB7552:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcf47366-8700-4f74-11f0-08dc5a20bfe9
-X-MS-Exchange-SLBlob-MailProps:
-	7J/vb0KDx3hNW/QzN4bhXInBglfd1vi3ZicbJMk2jJ+lDt3Kp6+ICYsfDmt0dFPKKYQm+flPC2EVFDKQV1fvboymWKyvq7pSkaR+Rb3jDp/cRGtDZFnernmtWPD8jicr/8RAV1x0BEUxFQo8d5IoWabnNMvQhvh9lSQ0SAyqHeLAYOlOf/HXFSaZ1jqGKE000t3gbXZVT28+Zq36twHWRLv5FRo5QbbjiejoWrCSSkftqSDMy7cg3Mi/UwNs8FHhHu0C1Wx0AmYTUdRXd9sI4b8mkygnnS21RzMwxtiKXSoNG9uI8tQULCKieM85uxhv0HOqbKEGlCNMlARXXT43XSJ4HLXEdZB6pBavDXk3YmDmLJVRLqGM6zpMb3Iw4myB6Cnzh1DfjaTUjtryxQv12keUi7mjH4pNlM9fDcNsfXG4E+rGkbJEVowDvl7vHU+jA8UMQDhyYDbRSfi6lqaJLgFB4iv3XmG1EUnu2q/W/YEF4Uqi3OYFJtHNsTgGXId3brdu8qGyunV2TF0gQoYyxtKwFzmFTj5W+fCyUqISO4EkfOinjlgYHL12NmeNDO8u8eYS+w7TNdr4uKNAl5EmvvTIuK0Y5oURpnbQaNcPbHyPYRFXSg0D5Y/hBYJxdrD/FLefdxlZxOs3MsbpFtqbWLaKWiCeDy8GUPrIh6dOsgbcj68sIycmopqrcDGeA0uiS00PJob7e5tNUpZreSpJZW69GMlFRWo4qSPhZ4TZU7RASCU1yy1fbltsr9qfNqk56wwMHF0lStUodpTkd2OiKq3oaiPZ5KKa45oETftu4Xk=
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	4YAE5qHL5AVldFyDlLMSgPNzCDGhXYrU9T5kv7ByZ8ywtbXTuaIQl9A+b8gfPuTloHkC2hsZa7U6FBe76LCj+kJlXSkIueTe50GtsgIEdwsrGwwpcOX87ZoPa3HpZU3nxBY8QU7XB0yVCdG5Mm5sn6Lc51O+uDRS6pYF5r+/LydWboEv8YXHylr4z9rli9AAPQbDkjTk/BH5G2b/Ob/UdKAFCILliQnxZlpN73xsq6e0co+hmipsIQ82CLyBf6pcuYdfYt0XsNONtZYs9gYUFNyUorIkBDhC1gtvUOsFAedqNVWXs+I0EOTBoqcFLqzgQQQHyLXUbEdhPfuLjcDohFs9c3q1gk0KwshRM/kz3RMW/vrWqP1vhK+W7UKNltwTdD3S9WTwcTA9SCLzYwK+dWZLTrMz9gFD2I6Z6qpKumSwx00HpABnIY7TJttFtEUZMRkOnVXiyHmD5ExN08j4G/fzl7pty7h0ATscYmPm8noIicu9irVAp7itLbyGxUZQouocFcBmtpfJLs7qRFNVI6H7lmZGoPNGV1btRhhqp8HssOHX0eMN98rc+zLZp2Mn5kSbIwt2m9TW2baK6EXkRDmJnrxqQPe9U322MMnMUhyz+K7rVb7xidIR0LIfbkgK
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YEnY8fkNlBEzp1wtlH8bS/TOHKRKeoL5XKcREOURK7ebX1qiLqq8SpHkxmw9?=
- =?us-ascii?Q?ONkFgD/mxV/aw4Ze3dN1pkZj2quj0Rr0hJs6WArgfb8Igb3W7QorSW1Icsij?=
- =?us-ascii?Q?yxdpSrs5rsyhg96U9pJivdYmH522xK0IGXlai4uoXKYCbebawiHIRaFmOrKA?=
- =?us-ascii?Q?jTGBNOBHngHvwu8Z3R6mlpFj1ZjLpjyRCGbAOmwiygnrYkK8jEdyhEMWBHhY?=
- =?us-ascii?Q?ldkIU+QGQHpu0iNxnMalHjbZpccdQYei+QuI6shTv+bkngX18XsiF1HX707i?=
- =?us-ascii?Q?1yT2TbyOOKl0/EKLi/am07dMygH6+fxxdsqgcZbznWmv6ITadn6QTyMWVV8Q?=
- =?us-ascii?Q?Wx1fndb5+uEHEjLm8aLvUhugzcLG1cKpn1IiZPElm7wgii8o1p1vBmCjSGoV?=
- =?us-ascii?Q?gzS/BTXgPNPCBl6BcnLz8Nk9H7YFAUIQqdpn3rCCLs6ErfYtd7oK2L432erH?=
- =?us-ascii?Q?hCQPZD6Zii564N8zLtYgWL7v7Bp60MAMiU1ByD2ElwrU5BVXWRz69/EbqOrO?=
- =?us-ascii?Q?F1gr7PHMcxKWdgF2TULLyqDkCp0cmHcFscthExGIl5ipzEnD4PnF/QsgvTft?=
- =?us-ascii?Q?2kAr/430k9b/Eqx05HF/0hYEmp+nCHkH3Ij6l+OpGwP/wLhqxueZC7jIqBmq?=
- =?us-ascii?Q?yjq5/+tb5I3GOTxX9juQZZ1L0XtENeZvwk3ORDFuYfVc44CVOAwlFR3C5hCI?=
- =?us-ascii?Q?fFm4Qz2JZO5V2TvL8agfJblpMrx7evuwkAOt7X41LTQVlOYEqP4n9J8Dt5J6?=
- =?us-ascii?Q?sFXxw9gBNwXOlN6yzm2TwPOa7enTMuRMqdRJooNA6/rCdSYicw1oA+yAmyox?=
- =?us-ascii?Q?ziqYk63p3KLaJKqAhgkxjgcZ6gMH+8i7PzXyXPAkRbpm9/jNz33YU9Ca/dtP?=
- =?us-ascii?Q?2SPlzchNRNl0v844b9vdN8AJFb8tqiuOmL4d/31HwP2b8cNxQN4u3oLV1mPy?=
- =?us-ascii?Q?7MiqlHx+ucUHFXRoLMVfzU3/p8upcxnwH8yMEOVobEQZ5XH3exp5If2IB3hm?=
- =?us-ascii?Q?0EWjxPwIfvxyNiW1Ddui3Utl57AiBP8PeR3PMZ2Bs8ejbrSYG/TY9aVTgLYx?=
- =?us-ascii?Q?4rnYv9KscS/jbVcGfZXgNK7rOkfQX5XYRiBD2/lfEqiJm9LnDUzt95drFcEm?=
- =?us-ascii?Q?TnxJUhy9urZFGOYIJ5VMrhQwcwdt1oohrZ0fSiBgmJgcCaMepfx0/EFA6g7Z?=
- =?us-ascii?Q?CDzs2zzszpAiNGByFAOI1xlJuQMKV5G6MUHuqTZKRDfpmL+if/4t1f+v9wNc?=
- =?us-ascii?Q?v4Uakx6x1k9MUdWh31Xw?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcf47366-8700-4f74-11f0-08dc5a20bfe9
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 12:13:08.7843
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR20MB7552
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00000000000042c9190615cdb315@google.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=16ca158ef7e08662];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,suse.cz,vger.kernel.org,google.com,googlegroups.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,syzkaller.appspot.com:url,suse.com:email];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[5e3f9b2a67b45f16d4e6];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	REDIRECTOR_URL(0.00)[goo.gl];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	SUBJECT_HAS_QUESTION(0.00)[]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: BACA637444
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -1.51
 
-CONFIG_CLK_SOPHGO_CV1800 is required when booting the minimum
-system for CV1800 series board.
+On Thu 11-04-24 01:11:20, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    6ebf211bb11d Add linux-next specific files for 20240410
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=12be955d180000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=16ca158ef7e08662
+> dashboard link: https://syzkaller.appspot.com/bug?extid=5e3f9b2a67b45f16d4e6
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c91175180000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1621af9d180000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/b050f81f73ed/disk-6ebf211b.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/412c9b9a536e/vmlinux-6ebf211b.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/016527216c47/bzImage-6ebf211b.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/75ad050c9945/mount_0.gz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com
+> 
+> Quota error (device loop0): do_check_range: Getting block 0 out of range 1-5
+> EXT4-fs error (device loop0): ext4_release_dquot:6905: comm kworker/u8:4: Failed to release dquot type 1
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in fsnotify+0x2a4/0x1f70 fs/notify/fsnotify.c:539
+> Read of size 8 at addr ffff88802f1dce80 by task kworker/u8:4/62
+> 
+> CPU: 0 PID: 62 Comm: kworker/u8:4 Not tainted 6.9.0-rc3-next-20240410-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+> Workqueue: events_unbound quota_release_workfn
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+>  print_address_description mm/kasan/report.c:377 [inline]
+>  print_report+0x169/0x550 mm/kasan/report.c:488
+>  kasan_report+0x143/0x180 mm/kasan/report.c:601
+>  fsnotify+0x2a4/0x1f70 fs/notify/fsnotify.c:539
+>  fsnotify_sb_error include/linux/fsnotify.h:456 [inline]
+>  __ext4_error+0x255/0x3b0 fs/ext4/super.c:843
+>  ext4_release_dquot+0x326/0x450 fs/ext4/super.c:6903
+>  quota_release_workfn+0x39f/0x650 fs/quota/dquot.c:840
+>  process_one_work kernel/workqueue.c:3218 [inline]
+>  process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3299
+>  worker_thread+0x86d/0xd70 kernel/workqueue.c:3380
+>  kthread+0x2f0/0x390 kernel/kthread.c:389
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+>  </TASK>
 
-Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
----
- arch/riscv/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Amir, I believe this happens on umount when the filesystem calls
+fsnotify_sb_error() after calling fsnotify_sb_delete(). In theory these two
+calls can even run in parallel and fsnotify() can be holding
+fsnotify_sb_info pointer while fsnotify_sb_delete() is freeing it so we
+need to figure out some proper synchronization for that...
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index fc0ec2ee13bc..8c8a77f8eac2 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -233,6 +233,7 @@ CONFIG_VIRTIO_BALLOON=y
- CONFIG_VIRTIO_INPUT=y
- CONFIG_VIRTIO_MMIO=y
- CONFIG_RENESAS_OSTM=y
-+CONFIG_CLK_SOPHGO_CV1800=y
- CONFIG_SUN8I_DE2_CCU=m
- CONFIG_SUN50I_IOMMU=y
- CONFIG_RPMSG_CHAR=y
---
-2.44.0
+								Honza
 
+> Allocated by task 5085:
+>  kasan_save_stack mm/kasan/common.c:47 [inline]
+>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+>  poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+>  __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+>  kasan_kmalloc include/linux/kasan.h:211 [inline]
+>  kmalloc_trace_noprof+0x19c/0x2b0 mm/slub.c:4109
+>  kmalloc_noprof include/linux/slab.h:660 [inline]
+>  kzalloc_noprof include/linux/slab.h:775 [inline]
+>  fsnotify_attach_info_to_sb fs/notify/mark.c:600 [inline]
+>  fsnotify_add_mark_list fs/notify/mark.c:692 [inline]
+>  fsnotify_add_mark_locked+0x3b2/0xe60 fs/notify/mark.c:777
+>  fanotify_add_new_mark fs/notify/fanotify/fanotify_user.c:1267 [inline]
+>  fanotify_add_mark+0xbbd/0x1330 fs/notify/fanotify/fanotify_user.c:1334
+>  do_fanotify_mark+0xbcc/0xd90 fs/notify/fanotify/fanotify_user.c:1896
+>  __do_sys_fanotify_mark fs/notify/fanotify/fanotify_user.c:1919 [inline]
+>  __se_sys_fanotify_mark fs/notify/fanotify/fanotify_user.c:1915 [inline]
+>  __x64_sys_fanotify_mark+0xb5/0xd0 fs/notify/fanotify/fanotify_user.c:1915
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Freed by task 5085:
+>  kasan_save_stack mm/kasan/common.c:47 [inline]
+>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+>  kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
+>  poison_slab_object+0xe0/0x150 mm/kasan/common.c:240
+>  __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
+>  kasan_slab_free include/linux/kasan.h:184 [inline]
+>  slab_free_hook mm/slub.c:2190 [inline]
+>  slab_free mm/slub.c:4393 [inline]
+>  kfree+0x149/0x350 mm/slub.c:4514
+>  fsnotify_sb_delete+0x686/0x6f0 fs/notify/fsnotify.c:106
+>  generic_shutdown_super+0xa5/0x2d0 fs/super.c:632
+>  kill_block_super+0x44/0x90 fs/super.c:1675
+>  ext4_kill_sb+0x68/0xa0 fs/ext4/super.c:7323
+>  deactivate_locked_super+0xc4/0x130 fs/super.c:472
+>  cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
+>  task_work_run+0x24f/0x310 kernel/task_work.c:180
+>  exit_task_work include/linux/task_work.h:38 [inline]
+>  do_exit+0xa1b/0x27e0 kernel/exit.c:878
+>  do_group_exit+0x207/0x2c0 kernel/exit.c:1027
+>  __do_sys_exit_group kernel/exit.c:1038 [inline]
+>  __se_sys_exit_group kernel/exit.c:1036 [inline]
+>  __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1036
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> The buggy address belongs to the object at ffff88802f1dce80
+>  which belongs to the cache kmalloc-32 of size 32
+> The buggy address is located 0 bytes inside of
+>  freed 32-byte region [ffff88802f1dce80, ffff88802f1dcea0)
+> 
+> The buggy address belongs to the physical page:
+> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2f1dc
+> flags: 0xfff80000000000(node=0|zone=1|lastcpupid=0xfff)
+> page_type: 0xffffefff(slab)
+> raw: 00fff80000000000 ffff888015041500 ffffea000096b540 dead000000000004
+> raw: 0000000000000000 0000000080400040 00000001ffffefff 0000000000000000
+> page dumped because: kasan: bad access detected
+> page_owner tracks the page as allocated
+> page last allocated via order 0, migratetype Unmovable, gfp_mask 0x12cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY), pid 1, tgid -625457465 (swapper/0), ts 1, free_ts 0
+>  set_page_owner include/linux/page_owner.h:32 [inline]
+>  post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1468
+>  prep_new_page mm/page_alloc.c:1476 [inline]
+>  get_page_from_freelist+0x2ce2/0x2d90 mm/page_alloc.c:3438
+>  __alloc_pages_noprof+0x256/0x6c0 mm/page_alloc.c:4696
+>  __alloc_pages_node_noprof include/linux/gfp.h:244 [inline]
+>  alloc_pages_node_noprof include/linux/gfp.h:271 [inline]
+>  alloc_slab_page+0x5f/0x120 mm/slub.c:2259
+>  allocate_slab+0x5a/0x2e0 mm/slub.c:2422
+>  new_slab mm/slub.c:2475 [inline]
+>  ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3624
+>  __slab_alloc+0x58/0xa0 mm/slub.c:3714
+>  __slab_alloc_node mm/slub.c:3767 [inline]
+>  slab_alloc_node mm/slub.c:3945 [inline]
+>  __do_kmalloc_node mm/slub.c:4077 [inline]
+>  kmalloc_node_track_caller_noprof+0x286/0x440 mm/slub.c:4098
+>  kstrdup+0x3a/0x80 mm/util.c:62
+>  kobject_set_name_vargs+0x61/0x120 lib/kobject.c:274
+>  kobject_add_varg lib/kobject.c:368 [inline]
+>  kobject_init_and_add+0xde/0x190 lib/kobject.c:457
+>  sysfs_slab_add+0x7a/0x290 mm/slub.c:6877
+>  slab_sysfs_init+0x66/0x170 mm/slub.c:6961
+>  do_one_initcall+0x248/0x880 init/main.c:1263
+>  do_initcall_level+0x157/0x210 init/main.c:1325
+>  do_initcalls+0x3f/0x80 init/main.c:1341
+> page_owner free stack trace missing
+> 
+> Memory state around the buggy address:
+>  ffff88802f1dcd80: 00 00 05 fc fc fc fc fc 00 00 00 00 fc fc fc fc
+>  ffff88802f1dce00: 00 00 00 06 fc fc fc fc fa fb fb fb fc fc fc fc
+> >ffff88802f1dce80: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>                    ^
+>  ffff88802f1dcf00: fa fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
+>  ffff88802f1dcf80: fa fb fb fb fc fc fc fc 00 00 00 fc fc fc fc fc
+> ==================================================================
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
