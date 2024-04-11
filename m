@@ -1,146 +1,310 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3A67BAF8;
-	Thu, 11 Apr 2024 17:34:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05F6757FB
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712856859; cv=none; b=O4RBrxkvsT6xSjfQUjyB0SIJzV6XkwlhkYiO8EqwsSpmHgSm1tQ+Yyd1p3EZdhdqnLun0PU9wcd6vPJBCS+VidMTHr3M0IF1CvdFNaLcE3QvWdI6VUF8Mv5ikhNhYRV7Du1hSn4Da3dZEHApB2aB80kuHJVTg7Ys0yRaMerKRTg=
+	t=1712856932; cv=none; b=DjXJ2qTpjc15GbXLrsAtSSe8TMvuOQSeUS8R+c2W8v/Y4pWH2848v1atX5KhfJpDu4KmNWaheObOpzKCAxOIsnr5qOLkrUNJp4lLZ4e1MJF3MUwEllTrv1S+0lMllgFrEl8o7OQGlCVldxOShYUq92vtEs75jo8tZLui5QgMKug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712856859; c=relaxed/simple;
-	bh=BXJ4rYsFbdYq9tuBBdm+ZHYZ7dtQaqzMQCkTTRJEguM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nVBE21As3dBckQM7HblcyuF//r2SbGeuGJ5rqn6QIY83oocrwogzE5hrdbjUhIn0IClcHWhE6KLQx1dJfp8zlAYLNsxB+DZtynGaKqlz3VrhntCCZoZW99JKpBmE15MOLgMbS/JOPJ+4DkktGQEwTR8yXnX97y7O3lqgOcfWEnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nYYjl2Bd; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712856932; c=relaxed/simple;
+	bh=J7LR5Hf7+dDBQteFZMOyJrJ4NUxjAlwCJgIikvGQaAA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jxPJ+wb4MqDPwDgC6yplrmtY/b70VvBlHM5g6tUyGe31VVKhuD7Pk87GBaeYi/R0O7x9rb2tvUKw0loWMB9LL8bVdW6VJzJadDXmBexxSR43ic8EJ60tAOx7oKanLOsa8EDgUZG6zKGNUxRjf5egoHySv6cM8SYs3C607HZtRqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T5wT765g; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nYYjl2Bd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712856858; x=1744392858;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BXJ4rYsFbdYq9tuBBdm+ZHYZ7dtQaqzMQCkTTRJEguM=;
-  b=nYYjl2BdvuWHTjgH62UrtFEwqOC4rrOHudWzWkXhG5qTQGnMbJptUEK9
-   4QQza+YCHxk+q4AHVI+h1gZF9DB3sKKJXCZk6vSw593PCrU9C+aYjVxJ7
-   mdVkvBAqvjF8YRwjuwSHkr3/v5R7nOI63ZzDhQag5u2URdM1oT/u08TYN
-   pHvIsxZ7ZQxCjLwm/vSAAPCNjLhmgZLp/ckx57blIrQmRUobq/w5jWUwe
-   Z2DPWQ+22eElkav8bDs9hKy7YCcKg4osYo8cXUWuDLx6DQfLUAlj/BMVj
-   enLrc+Jle1Xgt/uKUWXYu1OVeT7QJIjsoSurHNDEs8nE6Sqb6DwM0OqC/
-   A==;
-X-CSE-ConnectionGUID: NTWoEdsfTZq/jU2ijd5QpQ==
-X-CSE-MsgGUID: F3JHQ9KjQC+a7ynt+XCMgw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="19437589"
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="19437589"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 10:34:17 -0700
-X-CSE-ConnectionGUID: 18gQPbGiQouq/wmAbL8AxQ==
-X-CSE-MsgGUID: m8ZxjFTcTxWns/sMaxePEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
-   d="scan'208";a="25759756"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 10:34:17 -0700
-Date: Thu, 11 Apr 2024 10:38:47 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
- <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
- Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
- <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
- J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
- <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
- "seanjc@google.com" <seanjc@google.com>, Robin Murphy
- <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
- "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
- <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
- "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 08/13] x86/irq: Install posted MSI notification
- handler
-Message-ID: <20240411103847.57f47a48@jacob-builder>
-In-Reply-To: <BN9PR11MB5276C4932F6CFD217CC50AD78C052@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
-	<20240405223110.1609888-9-jacob.jun.pan@linux.intel.com>
-	<BN9PR11MB5276C4932F6CFD217CC50AD78C052@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T5wT765g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712856929;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=waiQo/S/fV/3q254XNynpxfakfB0+xsUplfr9uR6x9Q=;
+	b=T5wT765gbGveAc3i5nQB1sMq1CEbUep9Xjbui6Gev3LU+BY4KHuxWaK5veA2e1cAI2Krit
+	FYAiydGeA4QzKPHtH99k8+hLNkaknL1GipBoUEuqjXNtADnswcWjWL46z+hHr1uO06MCSR
+	9nYsqWrT/MFBjc3sOrEpPmEbe9EQ54c=
+Received: from mail-vk1-f199.google.com (mail-vk1-f199.google.com
+ [209.85.221.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-108-liErzy-tN0WYsDn8WHy7qQ-1; Thu, 11 Apr 2024 13:35:28 -0400
+X-MC-Unique: liErzy-tN0WYsDn8WHy7qQ-1
+Received: by mail-vk1-f199.google.com with SMTP id 71dfb90a1353d-4daf5203e54so25914e0c.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 10:35:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712856927; x=1713461727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=waiQo/S/fV/3q254XNynpxfakfB0+xsUplfr9uR6x9Q=;
+        b=sRjEM7NlrbaErpiB0PV5RBX7vKIeX0XQuJ728/M8PjIkOcAhX8Tgjts4y7hHiNhkAD
+         BsFnRK0J3sFto3QFbpsdFs2UvXFrIFA0JzJZy/5ECtwmOFTktCWE50MQ31NUsUCCrHPQ
+         ACjeFmJdcOGLziBcktOVsV9KmQJxGmMygbRD7EloiaUrXoR48BIZ+/U1bFn22muqqpf5
+         KCc/CPVPJN/ol49R02nbf1u8WQD9xazTcNx2xMUweu6Kp8GQtAMWfdhzh/27yaIeHtOI
+         fiX1ZgPc96UEx74wSFynfGd4uLQVnPUe/TJbah9QJtxnE+MB2QBF4HkP4CoWTtj4z0oD
+         RyMA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1vTYC06dA4KhJEJLKFq6hGHpnp8YVYfo6ryTBHTZYPT3Pk38hw5JvDDyjs51az7LEeQMbjtfe626nQ8nTO1amNqPicCjoA2VmMMxh
+X-Gm-Message-State: AOJu0Yxyp5FdHqtSC5Sx/ati1gQEkrgKaap7iTfKrVxW4h1QH7iUGMux
+	lu9cSt15MS8w1RcZdfcZcfU7nJ5U9Dd7CjGhAAM8nOoEMd7hBNiRKs/cS/OfNZXV7q6sASyZoVl
+	tnGAG3kgQJ/Tbj5PUeemTDCQ3JZfPXINwMdwdxeNgUp2OWZgFC1q44gZjbRhvfDfXZhA/b1QMKn
+	GGyZmZFi1JCiKWUaK8PrlSNTKZe95XRmykCcx5
+X-Received: by 2002:a05:6122:308c:b0:4c9:f704:38c with SMTP id cd12-20020a056122308c00b004c9f704038cmr583014vkb.11.1712856927590;
+        Thu, 11 Apr 2024 10:35:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHpuw4cnXxBkdHR16+5jrVeWHz5XxjiP8Qo797YNvzFb9J14GqTwjxbpXyeQMu0B0yZh66S5GfW1/lgJxc9B4=
+X-Received: by 2002:a05:6122:308c:b0:4c9:f704:38c with SMTP id
+ cd12-20020a056122308c00b004c9f704038cmr582991vkb.11.1712856927252; Thu, 11
+ Apr 2024 10:35:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
+ <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com>
+ <20240411-alben-kocht-219170e9dc99@brauner> <CAHk-=wjrPDx=f5OSnQVbbJ4id6SZk-exB1VW9Uz3R7rKFvTQeQ@mail.gmail.com>
+ <CABe3_aGbsPHY9Z5B9WyVWakeWFtief4DpBrDxUiD00qk1irMrg@mail.gmail.com> <CABe3_aGGf7kb97gE4FdGmT79Kh5OhbB_2Hqt898WZ+4XGg6j4Q@mail.gmail.com>
+In-Reply-To: <CABe3_aGGf7kb97gE4FdGmT79Kh5OhbB_2Hqt898WZ+4XGg6j4Q@mail.gmail.com>
+From: Charles Mirabile <cmirabil@redhat.com>
+Date: Thu, 11 Apr 2024 13:35:16 -0400
+Message-ID: <CABe3_aE_quPE0zKe-p11DF1rBx-+ecJKORY=96WyJ_b+dbxL9A@mail.gmail.com>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() - requirements
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Kevin,
+And a slightly dubious addition to bypass these checks for tmpfiles
+across the board.
 
-On Thu, 11 Apr 2024 07:52:28 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+I don't like putting the details of this in the path lookup code, but
+it is definitely nicer here than
+looking up the fd twice, once here and again in do_linkat
+
+These changes not strictly necessary, because the existing patch
+allows unprivileged
+tmpfile flink as long as the creds don't change, but I do think that
+my reasoning is sound
+that linking a tmpfile should always be ok whether or not creds have change=
+d
+
+---
+ fs/namei.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/namei.c b/fs/namei.c
+index 2bcc10976ba7..5c9fabc39481 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2421,6 +2421,7 @@ static const char *path_init(struct nameidata
+*nd, unsigned flags)
+
+                if (flags & LOOKUP_DFD_MATCH_CREDS) {
+                        if (f.file->f_cred !=3D current_cred() &&
++                           !(f.file->f_flags & __O_TMPFILE) &&
+                            !ns_capable(f.file->f_cred->user_ns,
+CAP_DAC_READ_SEARCH)) {
+                                fdput(f);
+                                return ERR_PTR(-ENOENT);
+
+On Thu, Apr 11, 2024 at 1:29=E2=80=AFPM Charles Mirabile <cmirabil@redhat.c=
+om> wrote:
+>
+> Here is an updated version of linus's patch that makes the check
+> namespace relative
+> ---
+>  fs/namei.c            | 17 ++++++++++++-----
+>  include/linux/namei.h |  1 +
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 4e0de939fea1..2bcc10976ba7 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2419,6 +2419,14 @@ static const char *path_init(struct nameidata
+> *nd, unsigned flags)
+>          if (!f.file)
+>              return ERR_PTR(-EBADF);
+>
+> +        if (flags & LOOKUP_DFD_MATCH_CREDS) {
+> +            if (f.file->f_cred !=3D current_cred() &&
+> +                !ns_capable(f.file->f_cred->user_ns, CAP_DAC_READ_SEARCH=
+)) {
+> +                fdput(f);
+> +                return ERR_PTR(-ENOENT);
+> +            }
+> +        }
+> +
+>          dentry =3D f.file->f_path.dentry;
+>
+>          if (*s && unlikely(!d_can_lookup(dentry))) {
+> @@ -4640,14 +4648,13 @@ int do_linkat(int olddfd, struct filename
+> *old, int newdfd,
+>          goto out_putnames;
+>      }
+>      /*
+> -     * To use null names we require CAP_DAC_READ_SEARCH
+> +     * To use null names we require CAP_DAC_READ_SEARCH or
+> +     * that the open-time creds of the dfd matches current.
+>       * This ensures that not everyone will be able to create
+>       * handlink using the passed filedescriptor.
+>       */
+> -    if (flags & AT_EMPTY_PATH && !capable(CAP_DAC_READ_SEARCH)) {
+> -        error =3D -ENOENT;
+> -        goto out_putnames;
+> -    }
+> +    if (flags & AT_EMPTY_PATH)
+> +        how |=3D LOOKUP_DFD_MATCH_CREDS;
+>
+>      if (flags & AT_SYMLINK_FOLLOW)
+>          how |=3D LOOKUP_FOLLOW;
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 74e0cc14ebf8..678ffe4acf99 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -44,6 +44,7 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+>  #define LOOKUP_BENEATH        0x080000 /* No escaping from starting poin=
+t. */
+>  #define LOOKUP_IN_ROOT        0x100000 /* Treat dirfd as fs root. */
+>  #define LOOKUP_CACHED        0x200000 /* Only do cached lookup */
+> +#define LOOKUP_DFD_MATCH_CREDS    0x400000 /* Require that dfd creds
+> match current */
+>  /* LOOKUP_* flags which do scope-related checks based on the dirfd. */
+>  #define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)
+>
+> --
+> 2.44.0
+>
+> On Thu, Apr 11, 2024 at 12:44=E2=80=AFPM Charles Mirabile <cmirabil@redha=
+t.com> wrote:
+> >
+> > On Thu, Apr 11, 2024 at 12:15=E2=80=AFPM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:
+> > >
+> > > On Thu, 11 Apr 2024 at 02:05, Christian Brauner <brauner@kernel.org> =
 wrote:
+> > > >
+> > > > I had a similar discussion a while back someone requested that we r=
+elax
+> > > > permissions so linkat can be used in containers.
+> > >
+> > > Hmm.
+> > >
+> > > Ok, that's different - it just wants root to be able to do it, but
+> > > "root" being just in the container itself.
+> > >
+> > > I don't think that's all that useful - I think one of the issues with
+> > > linkat(AT_EMPTY_PATH) is exactly that "it's only useful for root",
+> > > which means that it's effectively useless. Inside a container or out.
+> > >
+> > > Because very few loads run as root-only (and fewer still run with any
+> > > capability bits that aren't just "root or nothing").
+> > >
+> > > Before I did all this, I did a Debian code search for linkat with
+> > > AT_EMPTY_PATH, and it's almost non-existent. And I think it's exactly
+> > > because of this "when it's only useful for root, it's hardly useful a=
+t
+> > > all" issue.
+> > >
+> > > (Of course, my Debian code search may have been broken).
+> > >
+> > > So I suspect your special case is actually largely useless, and what
+> > > the container user actually wanted was what my patch does, but they
+> > > didn't think that was possible, so they asked to just extend the
+> > > "root" notion.
+> > >
+> > Yes, that is absolutely the case. When Christian poked holes in my
+> > initial submission, I started working on a v2 but haven't had a chance
+> > to send it because I wanted to make sure my arguments etc were
+> > airtight because I am well aware of just how long and storied the
+> > history of flink is. In the v2 that I didn't post yet, I extended the
+> > ability to link *any* file from only true root to also "root" within a
+> > container following the potentially suspect approach that christian
+> > suggested (I see where you are coming from with the unobvious approach
+> > to avoiding toctou though I obviously support this patch being
+> > merged), but I added a followup patch that checks for whether the file
+> > in question is an `__O_TMPFILE` file which is trivial once we are
+> > jumping through the hoops of looking up the struct file. If it is a
+> > tmpfile (i.e. linkcount =3D 0) I think that all the concerns raised
+> > about processes that inherit a fd being able to create links to the
+> > file inappropriately are moot. Here is an excerpt from the cover
+> > letter I was planning to send that explains my reasoning.
+> >
+> >  -  the ability to create an unnamed file, adjust its contents
+> > and attributes (i.e. uid, gid, mode, xattrs, etc) and then only give it=
+ a name
+> > once they are ready is exactly the ideal use-case for a hypothetical `f=
+link`
+> > system call. The ability to use `AT_EMPTY_PATH` with `linkat` essential=
+ly turns
+> > it into `flink`, but these restrictions hamper it from actually being u=
+sed, as
+> > most code is not privileged. By checking whether the file to be linked =
+is a
+> > temporary (i.e. unnamed) file we can allow this useful case without all=
+owing
+> > the more risky cases that could have security implications.
+> >
+> >  - Although it might appear that the security posture is affected, it i=
+s not.
+> > Callers who open an extant file on disk in read only mode for sharing w=
+ith
+> > potentially untrustworthy code can trust that this change will not affe=
+ct them
+> > because it only applies to temporary files. Callers who open a temporar=
+y file
+> > need to do so with write access if they want to actually put any data i=
+n it,
+> > so they will already have to reopen the file (e.g. by linking it to a p=
+ath
+> > and opening that path, or opening the magic symlink in proc) if they wa=
+nt to
+> > share it in read-only mode with untrustworthy code. As such, that new f=
+ile
+> > description will no longer be marked as a temporary file and thus these=
+ changes
+> > do not apply. The final case I can think of is the unlikely possibility=
+ of
+> > intentionally sharing read write access to data stored in a temporary f=
+ile with
+> > untrustworthy code, but where that code being able to make a link would=
+ still
+> > be deleterious. In such a bizarre case, the `O_EXCL` can and should be =
+used to
+> > fully prevent the temporary file from ever having a name, and this chan=
+ge does
+> > not alter its efficacy.
+> >
+> > > I've added Charles to the Cc.
+> > >
+> > > But yes, with my patch, it would now be trivial to make that
+> > >
+> > >         capable(CAP_DAC_READ_SEARCH)
+> > >
+> > > test also be
+> > >
+> > >         ns_capable(f.file->f_cred->user_ns, CAP_DAC_READ_SEARCH)
+> > >
+> > > instead. I suspect not very many would care any more, but it does see=
+m
+> > > conceptually sensible.
+> > >
+> > > As to your patch - I don't like your nd->root  games in that patch at
+> > > all. That looks odd.
+> > >
+> > > Yes, it makes lookup ignore the dfd (so you avoid the TOCTOU issue),
+> > > but it also makes lookup ignore "/". Which happens to be ok with an
+> > > empty path, but still...
+> > >
+> > > So it feels to me like that patch of yours mis-uses something that is
+> > > just meant for vfs_path_lookup().
+> > >
+> > > It may happen to work, but it smells really odd to me.
+> > >
+> > >              Linus
+> > >
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, April 6, 2024 6:31 AM
-> > 
-> > +
-> > +/*
-> > + * De-multiplexing posted interrupts is on the performance path, the
-> > code
-> > + * below is written to optimize the cache performance based on the
-> > following
-> > + * considerations:
-> > + * 1.Posted interrupt descriptor (PID) fits in a cache line that is
-> > frequently
-> > + *   accessed by both CPU and IOMMU.
-> > + * 2.During posted MSI processing, the CPU needs to do 64-bit read and
-> > xchg
-> > + *   for checking and clearing posted interrupt request (PIR), a 256
-> > bit field
-> > + *   within the PID.
-> > + * 3.On the other side, the IOMMU does atomic swaps of the entire PID
-> > cache
-> > + *   line when posting interrupts and setting control bits.
-> > + * 4.The CPU can access the cache line a magnitude faster than the
-> > IOMMU.
-> > + * 5.Each time the IOMMU does interrupt posting to the PIR will evict
-> > the PID
-> > + *   cache line. The cache line states after each operation are as
-> > follows:
-> > + *   CPU		IOMMU			PID Cache line
-> > state
-> > + *   ---------------------------------------------------------------
-> > + *...read64					exclusive
-> > + *...lock xchg64				modified
-> > + *...			post/atomic swap	invalid
-> > + *...-------------------------------------------------------------
-> > + *  
-> 
-> According to VT-d spec: 5.2.3 Interrupt-Posting Hardware Operation:
-> 
-> "
-> - Read contents of the Posted Interrupt Descriptor, claiming exclusive
->   ownership of its hosting cache-line.
->   ...
-> - Modify the following descriptor field values atomically:
->   ...
-> - Promote the cache-line to be globally observable, so that the
-> modifications are visible to other caching agents. Hardware may
-> write-back the cache-line anytime after this step.
-> "
-> 
-> sounds that the PID cache line is not evicted after IOMMU posting?
-IOMMU follows the same MESI protocol defined in SDM. VT-d spec. also says
-"This atomic read-modify-write operation will always snoop processor caches"
-
-So if the PID cache line is in modified state (caused by writing ON bit,
-clear PIR, etc.), IOMMU request ownership will evict the cache.
-
-
-Thanks,
-
-Jacob
