@@ -1,217 +1,130 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E8713E049
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 07:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Received: from zg8tmja5ljk3lje4ms43mwaa.icoremail.net (zg8tmja5ljk3lje4ms43mwaa.icoremail.net [209.97.181.73])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C9513DDB3;
+	Thu, 11 Apr 2024 07:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.97.181.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820331; cv=none; b=IPkFqWkGbGyhEC6fYukqa8VBJeHMa6rUY8nlKlaUgjmSD4N5h6T+ok6JWATGmCRYYmZgACkrg0w5wKbqLL0vORGYO1fZdgIuGHhsp43hBHSGIrFE4GFt2GT0+2+K9twg2WgvovfOG62v8/CtoBpQq01XQYXXXgYXeQzLe4Q9+4c=
+	t=1712820380; cv=none; b=UqPLdLE/R/ESCKM6Y7PwxG8vd+gu7xmblxjZ+fkSgzQ1Geggp+P88kWfjerGFPJay3XGwz+szW9R8Eu9DpwI/zEEILQGZl3EuUD1jnm6o4LPe1v3+llfira3zwMp/jjlfK5R0OSUtuAXkS+zVJylc2a2KH28zCOfQW8qX4tiqMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820331; c=relaxed/simple;
-	bh=h4dFsYtnlN8ZUYzMeIJnNwkAeG3dqWQK76oIMf60zOg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=IKe2cjewe6+FABFcbDX7WJjcNzJClCzJrphnyj9RHiIQjx2GkICGy68n9+ysV6fSp1OeiAaGUU0+tY6mK9q/AQFcOy04sZWWQSw+G7wQM4WaTvypHztO8ARhvDYg372kIdrbJvloT2GEIvdzHUBwIdlVsQsCipQnLgp+d4JOUgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IAsiio4o; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAsiio4o"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41551500a7eso57905405e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 00:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712820328; x=1713425128; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=9zwE2+Q5g17pW6wKSw7re4stV4qmExBkSpcgkO2N+1Q=;
-        b=IAsiio4oYOe5rDh1z4GldBPE57RaYejmAA5gSM8IrZi9eLsagZG/rvT6yoDXDhfbJU
-         OOsMG+MVLMLaSTM5c0fXq2TsOoivgUUPy956UYkj0x1rPV0cQCYn8h5ojeaOHsn+Kl60
-         W2/FJxwe54JJmtOFeQfP2m8sh5AtG1FeBzFsKL8KtZWIiUMn8NNfDW5SGN1o6R1sA1FQ
-         2TF2p4LlPN+t2OPYwUhiPhaaP9Uv1HBOhb9sQxWxJi0gpj6vEDEEL7FSy5W0Rtmq9o9S
-         F9GcRxYCjAzlvhwjKhuzxNjLvZ9s8obeCRca60EsEFIZ2uZ69RlGFtd82/uZa6loukO5
-         uaWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712820328; x=1713425128;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9zwE2+Q5g17pW6wKSw7re4stV4qmExBkSpcgkO2N+1Q=;
-        b=sYi01/M31RnIFKu/tkiqARXeundhrhfOF26Izr64JYlP6o+4yT3NW9FAJtMLiEzhvr
-         bKPPIJ+6dV98vdC9MtFKSDh65lclk5gN5OgewrLuO/Q53pcrHuTMNiLtFx8B5dhXKLEG
-         3rsF5P6zYGuPjnK7SQ4sO9eysdhV9U4pbS/xzqtYUleUppRc7c/gWY9usrhYo9s8Qi0c
-         LyNkVS2GDiJbIRklS3lvKPrlzJvN6MYkIZF4FV+vqXaxUfGXT/r0JqOp8goqEspB+6Nh
-         sCaJ4LCLoijoNVw3yS5EsD6VCtjaVScPa8Xix7GrKuIT0NoiDVXlM0pdhcMlVo/T2NWj
-         1FlA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+y/xiBQrx4SPM785HWloYbW45LDC2xJw9etZzN/W3+wV7ujpHlhRFKvx9vLExX9aqjIhGKH8Lww0HahN0X8dpC5O8QguiNNqZmJDP
-X-Gm-Message-State: AOJu0YxeYU7SvR8P5I5hDc68FgG5DwGSpxx9+i7zhrxkGYIy0S4INC/A
-	am+SDhVsAVsfY3JPJPmrVEHRSb2C3FnoJurZicKDRRHgJ2plEsRMGSxmF+PHaaQ=
-X-Google-Smtp-Source: AGHT+IHorrDqbK9zt/IoHlc21hKNjB613X7hy+TtL6kaGHau0izWH/4cPFxd84HwbzhID2FR+rKNSw==
-X-Received: by 2002:a5d:6d4e:0:b0:346:72f4:c805 with SMTP id k14-20020a5d6d4e000000b0034672f4c805mr2713947wri.66.1712820327621;
-        Thu, 11 Apr 2024 00:25:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id u13-20020a5d434d000000b00346bda84bf9sm816474wrr.78.2024.04.11.00.25.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 00:25:27 -0700 (PDT)
-Message-ID: <051c6e44-4844-48b9-846d-cf9b81611415@linaro.org>
-Date: Thu, 11 Apr 2024 09:25:25 +0200
+	s=arc-20240116; t=1712820380; c=relaxed/simple;
+	bh=TpZ+XTCmRSUK0FH7HxlY1n3auYAjW2LvyNipcYqwEfo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=Cbq3MR5D8lZ3dWkTZDHK8bLT+mKcTgOmQ483uIcHjq2X5WVc2GEkz86+NNZw1mXZkWx96nOGWTyS1dtGYUr3fKdm8+RyY6mTimRqYb28QZ3RvGOiJlMj8OCdSmLfZkdhwY/l6cArLYoaVdw0syrjN2vejGFdBLx+ZonIaD/QSkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.181.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from liangshenlin$eswincomputing.com ( [10.12.96.90] ) by
+ ajax-webmail-app2 (Coremail) ; Thu, 11 Apr 2024 15:24:07 +0800 (GMT+08:00)
+Date: Thu, 11 Apr 2024 15:24:07 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Shenlin Liang" <liangshenlin@eswincomputing.com>
+To: "Anup Patel" <anup@brainfault.org>
+Cc: atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, kvm@vger.kernel.org, 
+	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, 
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] RISCV: KVM: add tracepoints for entry and exit
+ events
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT6.0.3 build 20220420(169d3f8c)
+ Copyright (c) 2002-2024 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <CAAhSdy0DgW055iV7=_D6iOLr1iVeK9SZmG8hqBG0_hb1z=+07g@mail.gmail.com>
+References: <20240328031220.1287-1-liangshenlin@eswincomputing.com>
+ <20240328031220.1287-2-liangshenlin@eswincomputing.com>
+ <CAAhSdy0DgW055iV7=_D6iOLr1iVeK9SZmG8hqBG0_hb1z=+07g@mail.gmail.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: usb: add common Type-C USB Switch schema
-To: Luca Weiss <luca.weiss@fairphone.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, linux-usb@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-References: <20240122094406.32198-1-krzysztof.kozlowski@linaro.org>
- <D0H3VE6RLM2I.MK2NT1P9N02O@fairphone.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <D0H3VE6RLM2I.MK2NT1P9N02O@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <66245675.2875.18ecc0add4b.Coremail.liangshenlin@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgAHGrwXkBdmkhMGAA--.3616W
+X-CM-SenderInfo: xold0whvkh0z1lq6v25zlqu0xpsx3x1qjou0bp/1tbiAQEEDGYWXM
+	cgsAABsy
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
 
-On 11/04/2024 09:13, Luca Weiss wrote:
-> On Mon Jan 22, 2024 at 10:44 AM CET, Krzysztof Kozlowski wrote:
->> Several bindings implement parts of Type-C USB orientation and mode
->> switching, and retiming.  Keep definition of such properties in one
->> place, new usb-switch schema, to avoid duplicate defines.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> ---
->>
->> Changes in v2:
->> 1. Fix language typos handle->handler (Luca)
->> 2. Drop debugging left-over (Luca)
->> ---
->>  .../devicetree/bindings/usb/fcs,fsa4480.yaml  | 12 ++--
->>  .../devicetree/bindings/usb/gpio-sbu-mux.yaml | 12 ++--
->>  .../devicetree/bindings/usb/nxp,ptn36502.yaml | 12 ++--
->>  .../bindings/usb/onnn,nb7vpq904m.yaml         | 13 ++--
->>  .../bindings/usb/qcom,wcd939x-usbss.yaml      | 12 ++--
->>  .../devicetree/bindings/usb/usb-switch.yaml   | 67 +++++++++++++++++++
->>  6 files changed, 92 insertions(+), 36 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/usb-switch.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml b/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
->> index f9410eb76a62..8b25b9a01ced 100644
->> --- a/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
->> +++ b/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
->> @@ -27,13 +27,8 @@ properties:
->>    vcc-supply:
->>      description: power supply (2.7V-5.5V)
->>  
->> -  mode-switch:
->> -    description: Flag the port as possible handle of altmode switching
->> -    type: boolean
->> -
->> -  orientation-switch:
->> -    description: Flag the port as possible handler of orientation switching
->> -    type: boolean
->> +  mode-switch: true
->> +  orientation-switch: true
->>  
->>    port:
->>      $ref: /schemas/graph.yaml#/$defs/port-base
->> @@ -79,6 +74,9 @@ required:
->>    - reg
->>    - port
->>  
->> +allOf:
->> +  - $ref: usb-switch.yaml#
->> +
->>  additionalProperties: false
->>  
->>  examples:
-> 
-> Hi Krzysztof,
-> 
-> This patch seems to break validation for fsa4480 if data-lanes is set in
-> the endpoint like the following
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml b/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
-> index f9410eb76a62..3aa03fd65556 100644
-> --- a/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
-> +++ b/Documentation/devicetree/bindings/usb/fcs,fsa4480.yaml
-> @@ -102,6 +102,7 @@ examples:
->            port {
->              fsa4480_ept: endpoint {
->                remote-endpoint = <&typec_controller>;
-> +              data-lanes = <0 1>;
->              };
->            };
->          };
-> 
-> Similar to how it's already used on qcom/qcm6490-fairphone-fp5.dts
-> 
-> I'm guessing the 'port' definition in the common schema somehow
-> disallows the fsa4480 schema from describing it further?
-
-There is no such code in qcm6490-fairphone-fp5.dts. There was no such
-code in the example of fsa4480 when I was testing my changes (and
-examples should be complete), so this did not pop up.
-
-You right, new schema does not allow extending the port. However the
-true question is, why muxing happens on the port to the SoC controller?
-The graph in commit msg fad89aa14 shows it happens on the side of the
-connector.
-
-Looks like fsa4480 mixes connector with the controller.
-
-Best regards,
-Krzysztof
-
+T24gMjAyNC0wNC0wOCAyMDozNywgQW51cCBQYXRlbCA8YW51cEBicmFpbmZhdWx0Lm9yZz4gd3Jv
+dGU6Cgo+IAo+IE9uIFRodSwgTWFyIDI4LCAyMDI0IGF0IDg6NDnigK9BTSBTaGVubGluIExpYW5n
+Cj4gPGxpYW5nc2hlbmxpbkBlc3dpbmNvbXB1dGluZy5jb20+IHdyb3RlOgo+ID4KPiA+IExpa2Ug
+b3RoZXIgYXJjaGl0ZWN0dXJlcywgUklTQ1YgS1ZNIGFsc28gbmVlZHMgdG8gYWRkIHRoZXNlIGV2
+ZW50Cj4gPiB0cmFjZXBvaW50cyB0byBjb3VudCB0aGUgbnVtYmVyIG9mIHRpbWVzIGt2bSBndWVz
+dCBlbnRyeS9leGl0Lgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IFNoZW5saW4gTGlhbmcgPGxpYW5n
+c2hlbmxpbkBlc3dpbmNvbXB1dGluZy5jb20+Cj4gPiAtLS0KPiA+ICBhcmNoL3Jpc2N2L2t2bS90
+cmFjZV9yaXNjdi5oIHwgNjAgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4g
+PiAgYXJjaC9yaXNjdi9rdm0vdmNwdS5jICAgICAgICB8ICA3ICsrKysrCj4gPiAgMiBmaWxlcyBj
+aGFuZ2VkLCA2NyBpbnNlcnRpb25zKCspCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvcmlz
+Y3Yva3ZtL3RyYWNlX3Jpc2N2LmgKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9rdm0v
+dHJhY2VfcmlzY3YuaCBiL2FyY2gvcmlzY3Yva3ZtL3RyYWNlX3Jpc2N2LmgKPiA+IG5ldyBmaWxl
+IG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjU4NDgwODNjN2E1ZQo+ID4gLS0t
+IC9kZXYvbnVsbAo+ID4gKysrIGIvYXJjaC9yaXNjdi9rdm0vdHJhY2VfcmlzY3YuaAo+ID4gQEAg
+LTAsMCArMSw2MCBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4g
+PiArLyoKPiA+ICsgKiBUcmFjZXBvaW50cyBmb3IgUklTQy1WIEtWTQo+ID4gKyAqCj4gPiArICog
+Q29weXJpZ2h0IDIwMjQgQmVpamluZyBFU1dJTiBDb21wdXRpbmcgVGVjaG5vbG9neSBDby4sIEx0
+ZC4KPiA+ICsgKgo+ID4gKyAqLwo+ID4gKyNpZiAhZGVmaW5lZChfVFJBQ0VfUlNJQ1ZfS1ZNX0gp
+IHx8IGRlZmluZWQoVFJBQ0VfSEVBREVSX01VTFRJX1JFQUQpCj4gPiArI2RlZmluZSBfVFJBQ0Vf
+UlNJQ1ZfS1ZNX0gKPiAKPiBzL19SU0lDVl8vX1JJU0NWXy8KPiAKPiA+ICsKPiA+ICsjaW5jbHVk
+ZSA8bGludXgvdHJhY2Vwb2ludC5oPgo+ID4gKwo+ID4gKyN1bmRlZiBUUkFDRV9TWVNURU0KPiA+
+ICsjZGVmaW5lIFRSQUNFX1NZU1RFTSBrdm0KPiA+ICsKPiA+ICtUUkFDRV9FVkVOVChrdm1fZW50
+cnksCj4gPiArICAgICAgIFRQX1BST1RPKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSksCj4gPiArICAg
+ICAgIFRQX0FSR1ModmNwdSksCj4gPiArCj4gPiArICAgICAgIFRQX1NUUlVDVF9fZW50cnkoCj4g
+PiArICAgICAgICAgICAgICAgX19maWVsZCh1bnNpZ25lZCBsb25nLCBwYykKPiA+ICsgICAgICAg
+KSwKPiA+ICsKPiA+ICsgICAgICAgVFBfZmFzdF9hc3NpZ24oCj4gPiArICAgICAgICAgICAgICAg
+X19lbnRyeS0+cGMgICAgID0gdmNwdS0+YXJjaC5ndWVzdF9jb250ZXh0LnNlcGM7Cj4gPiArICAg
+ICAgICksCj4gPiArCj4gPiArICAgICAgIFRQX3ByaW50aygiUEM6IDB4JTAxNmx4IiwgX19lbnRy
+eS0+cGMpCj4gPiArKTsKPiA+ICsKPiA+ICtUUkFDRV9FVkVOVChrdm1fZXhpdCwKPiA+ICsgICAg
+ICAgVFBfUFJPVE8oc3RydWN0IGt2bV92Y3B1ICp2Y3B1LCB1bnNpZ25lZCBsb25nIGV4aXRfcmVh
+c29uLAo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBzY2F1c2UpLAo+
+ID4gKyAgICAgICBUUF9BUkdTKHZjcHUsIGV4aXRfcmVhc29uLCBzY2F1c2UpLAo+ID4gKwo+ID4g
+KyAgICAgICBUUF9TVFJVQ1RfX2VudHJ5KAo+ID4gKyAgICAgICAgICAgICAgIF9fZmllbGQodW5z
+aWduZWQgbG9uZywgcGMpCj4gPiArICAgICAgICAgICAgICAgX19maWVsZCh1bnNpZ25lZCBsb25n
+LCBleGl0X3JlYXNvbikKPiA+ICsgICAgICAgICAgICAgICBfX2ZpZWxkKHVuc2lnbmVkIGxvbmcs
+IHNjYXVzZSkKPiAKPiBUaGlzIGlzIG5vdCB0aGUgcmlnaHQgY29udGVudHMgZGVzY3JpYmluZyBh
+IEtWTSBleGl0Lgo+IAo+IFRoZSBmaWVsZHMgb3ZlciBoZXJlIHNob3VsZCBiZSBhbGlnbmVkIHdp
+dGggInN0cnVjdCBrdm1fY3B1X3RyYXAiCj4gc28gd2Ugc2hvdWxkIGhhdmUgZm9sbG93aW5nIGZp
+ZWxkczoKPiAgICAgX19maWVsZCh1bnNpZ25lZCBsb25nLCBzZXBjKQo+ICAgICBfX2ZpZWxkKHVu
+c2lnbmVkIGxvbmcsIHNjYXVzZSkKPiAgICAgX19maWVsZCh1bnNpZ25lZCBsb25nLCBzdHZhbCkK
+PiAgICAgX19maWVsZCh1bnNpZ25lZCBsb25nLCBodHZhbCkKPiAgICAgX19maWVsZCh1bnNpZ25l
+ZCBsb25nLCBodGluc3QpCj4gCj4gPiArICAgICAgICksCj4gPiArCj4gPiArICAgICAgIFRQX2Zh
+c3RfYXNzaWduKAo+ID4gKyAgICAgICAgICAgICAgIF9fZW50cnktPnBjICAgICAgICAgICAgID0g
+dmNwdS0+YXJjaC5ndWVzdF9jb250ZXh0LnNlcGM7Cj4gPiArICAgICAgICAgICAgICAgX19lbnRy
+eS0+ZXhpdF9yZWFzb24gICAgPSBleGl0X3JlYXNvbjsKPiA+ICsgICAgICAgICAgICAgICBfX2Vu
+dHJ5LT5zY2F1c2UgICAgICAgICA9IHNjYXVzZTsKPiA+ICsgICAgICAgKSwKPiA+ICsKPiA+ICsg
+ICAgICAgVFBfcHJpbnRrKCJFWElUX1JFQVNPTjoweCVseCxQQzogMHglMDE2bHgsU0NBVVNFOjB4
+JWx4IiwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIF9fZW50cnktPmV4aXRfcmVhc29uLCBf
+X2VudHJ5LT5wYywgX19lbnRyeS0+c2NhdXNlKQo+ID4gKyk7Cj4gPiArCj4gPiArI2VuZGlmIC8q
+IF9UUkFDRV9SU0lDVl9LVk1fSCAqLwo+ID4gKwo+ID4gKyN1bmRlZiBUUkFDRV9JTkNMVURFX1BB
+VEgKPiA+ICsjZGVmaW5lIFRSQUNFX0lOQ0xVREVfUEFUSCAuCj4gPiArI3VuZGVmIFRSQUNFX0lO
+Q0xVREVfRklMRQo+ID4gKyNkZWZpbmUgVFJBQ0VfSU5DTFVERV9GSUxFIHRyYWNlX3Jpc2N2Cj4g
+PiArCj4gPiArLyogVGhpcyBwYXJ0IG11c3QgYmUgb3V0c2lkZSBwcm90ZWN0aW9uICovCj4gPiAr
+I2luY2x1ZGUgPHRyYWNlL2RlZmluZV90cmFjZS5oPgo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcmlz
+Y3Yva3ZtL3ZjcHUuYyBiL2FyY2gvcmlzY3Yva3ZtL3ZjcHUuYwo+ID4gaW5kZXggYjVjYTlmMmU5
+OGFjLi5lZDA5MzJmMGQ1MTQgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL3Jpc2N2L2t2bS92Y3B1LmMK
+PiA+ICsrKyBiL2FyY2gvcmlzY3Yva3ZtL3ZjcHUuYwo+ID4gQEAgLTIxLDYgKzIxLDkgQEAKPiA+
+ICAjaW5jbHVkZSA8YXNtL2NhY2hlZmx1c2guaD4KPiA+ICAjaW5jbHVkZSA8YXNtL2t2bV92Y3B1
+X3ZlY3Rvci5oPgo+ID4KPiA+ICsjZGVmaW5lIENSRUFURV9UUkFDRV9QT0lOVFMKPiA+ICsjaW5j
+bHVkZSAidHJhY2VfcmlzY3YuaCIKPiA+ICsKPiA+ICBjb25zdCBzdHJ1Y3QgX2t2bV9zdGF0c19k
+ZXNjIGt2bV92Y3B1X3N0YXRzX2Rlc2NbXSA9IHsKPiA+ICAgICAgICAgS1ZNX0dFTkVSSUNfVkNQ
+VV9TVEFUUygpLAo+ID4gICAgICAgICBTVEFUU19ERVNDX0NPVU5URVIoVkNQVSwgZWNhbGxfZXhp
+dF9zdGF0KSwKPiA+IEBAIC03ODIsNiArNzg1LDggQEAgaW50IGt2bV9hcmNoX3ZjcHVfaW9jdGxf
+cnVuKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSkKPiA+ICAgICAgICAgICAgICAgICAgKi8KPiA+ICAg
+ICAgICAgICAgICAgICBrdm1fcmlzY3ZfbG9jYWxfdGxiX3Nhbml0aXplKHZjcHUpOwo+ID4KPiA+
+ICsgICAgICAgICAgICAgICB0cmFjZV9rdm1fZW50cnkodmNwdSk7Cj4gPiArCj4gPiAgICAgICAg
+ICAgICAgICAgZ3Vlc3RfdGltaW5nX2VudGVyX2lycW9mZigpOwo+ID4KPiA+ICAgICAgICAgICAg
+ICAgICBrdm1fcmlzY3ZfdmNwdV9lbnRlcl9leGl0KHZjcHUpOwo+ID4gQEAgLTgyMCw2ICs4MjUs
+OCBAQCBpbnQga3ZtX2FyY2hfdmNwdV9pb2N0bF9ydW4oc3RydWN0IGt2bV92Y3B1ICp2Y3B1KQo+
+ID4KPiA+ICAgICAgICAgICAgICAgICBsb2NhbF9pcnFfZW5hYmxlKCk7Cj4gPgo+ID4gKyAgICAg
+ICAgICAgICAgIHRyYWNlX2t2bV9leGl0KHZjcHUsIHJ1bi0+ZXhpdF9yZWFzb24sIHRyYXAuc2Nh
+dXNlKTsKPiA+ICsKPiA+ICAgICAgICAgICAgICAgICBwcmVlbXB0X2VuYWJsZSgpOwo+ID4KPiA+
+ICAgICAgICAgICAgICAgICBrdm1fdmNwdV9zcmN1X3JlYWRfbG9jayh2Y3B1KTsKPiA+IC0tCj4g
+PiAyLjM3LjIKPiA+Cj4gCj4gUmVnYXJkcywKPiBBbnVwCgpUaGFuayB5b3UgZm9yIHRoZSByZXZp
+ZXcuIEkgd2lsbCBzZW5kIHRoZSB2MiB2ZXJzaW9uLg==
