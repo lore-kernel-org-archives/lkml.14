@@ -1,83 +1,112 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F05134B0;
-	Thu, 11 Apr 2024 15:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730A016419
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712848508; cv=none; b=tIVOWeGq9uh+ZFVQZLKqB12XpzYyY2rLGQEIomSgbMHtigwHYrItI9XquF3rZH1974MUSwmw86DYg9nDCaRgX1dVxZISyYJAD8k2GhU0EJ5Q5cQlCvVglyfQYihdse7egZvXy/SyTgf+5GL/KynGJ7wZBCg+2DQxqsVfBMKtkIo=
+	t=1712848508; cv=none; b=gDSCMUiPqQBh+5FCvaZCdyavRpYi4vFU+Dgut6nwM5fgx1RCxNzMc/zJ0k3uhyC7Ake+4ok9v1y/2+uHCviyK+GKOcYN1SM+LQCdciY4jT3M3zLRhL+oMDNBaZO+rLFRmuBB8AI18bq4fbJ/CgKhjLBu3v8muAgr/1lB63uPVHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712848508; c=relaxed/simple;
-	bh=JYFfYgPqUFb865Mf27i1hGQL9j2iqDH7TZlTJELDLRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KCEhu8Enm54f2U2brCjQSD9jOsne+v2Z/XX3tH2BR5s0cG8JkNJ1fy7JR8ttlSp7B49rx25k+SmU70VqV6cJGTcGeL2cFPOupWWTo7U4LLgnZgBL/EbPJpb9A7Sul9vQaohC9G8HdDY7+XHFbFOf6essvTWzPO/PnGCkRBP9UoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FiqyGx3B; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=ykrCsBxsPgKhyE3GYL+XJuoXa3s/bXlZI1ZvQ8tnwOY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tljIeGYF4PXxbMoV6nTWX5uEE5GyZd7TUU/6I5rc4lLbhwapGcrGrFyY2YBtSixfn1kUXMZmXyrBM7K+S046DyWAAnoVTygW9dFQu3giNTBysZeIBKQAA3ugc9ddeUals/kY33WML6m95SA29bg2SYQyA77BwRSRQigtY9zYpag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RhcAV1jX; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FiqyGx3B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712848505;
-	bh=JYFfYgPqUFb865Mf27i1hGQL9j2iqDH7TZlTJELDLRs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FiqyGx3Bf9yVBYg3tO7PjAsHN5EgcUUShJZl7ueLYtfX3wIKj4COemgGompwfQ2TX
-	 eHySSC4a5g6ktoxoKwTlQwUSaVxnkeM2+YjpgPMBGzdZ+tw+OnFaD8puJoF83WZvFv
-	 uZIih6V4EqpdTio+ar1qzIHksWOsMgyMs+KZ9zSni+WsUXyx76Wxw3gzjrbUBxY2wK
-	 AD/9E02Yb3pGjyj0wvWU344sMBSEs2AGalKt/0cEy145/bRHnMPcpB0QPvXq/SQx5R
-	 62wawEgW8U+n6Zge6u6eY7MTPnSpU93xGj+HKdmFZJ4kRZxsNC1PVJYrE3F7uKmacQ
-	 U0y7Lg45gxUBw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DC7E037813C0;
-	Thu, 11 Apr 2024 15:15:03 +0000 (UTC)
-Message-ID: <de76dc16-8edd-4322-927e-61cdac374a3a@collabora.com>
-Date: Thu, 11 Apr 2024 17:15:03 +0200
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RhcAV1jX"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2a564ca6f67so2692211a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1712848507; x=1713453307; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y27o1QGaPj1N7cZ8H8ZqjEg3waA9EItOMXyHWJlIzfk=;
+        b=RhcAV1jXYquKsfeQAGdwKyX38/JQZ67w2RROeMkzd00GXyVUy2w5m1/NQ0vT9LdD6r
+         /xuwKZO/e2OD64H8Zx8VoRJSgpf8TYgtH6sFlO0XZrb2Sbrf3yQFdFO+i3tzdGmE7Lx3
+         zQxjiiydx/fkL1xsUzNnsU4dyOiRUq+Qfa+HE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712848507; x=1713453307;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y27o1QGaPj1N7cZ8H8ZqjEg3waA9EItOMXyHWJlIzfk=;
+        b=nlIsR5dTy44OQ9bWml0RjSc4IIe2yctSmaUvjv/pe5Wm1thq71nraK2EqD8Mbfu7Sk
+         /jZLd+5EqDRWqb/QaN7S+BhwvLhUx5tZ5p9Pfp7+BlztVryPsgohqG6Cnpy2gun3pQAG
+         pxhm+xoBcGakQAHss80IUqV5Uied35akcOIeU9PgU7/cC4gB+LYJUtAIOP+W5ocWoLLR
+         6e8u3FLfLl/svRGxuVIvbqhuhmXtBmRN/MCnP1/FreXWTst71T2QW/JELws5ayYqLcDy
+         4qQhLir6b+dItj/lhzU4vp7lPJWGenmS/iOrFrJxzGdOF9WhpztzOP9jwBOE9zVUtKmq
+         AFYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5YwwCkmXZXoxxRXkpXV2rq1xcka639JT8DJjY1JyLRDFPhZPQi73DVSKt7d+xnjzPJuLRgOrDM7gwiFzxpmtOnMFG1ebk6HfH1Pe2
+X-Gm-Message-State: AOJu0Yzm2wlqHVy5XQwHJYPXNCfBxT3j9BrFRdKNcrIBnBAj7AJ1LW7V
+	ZxPbcRmHq79K0j+RqRjrQYYKee82awukskHWR7Jguc6X8in2DapNBAA1ySe7rQ==
+X-Google-Smtp-Source: AGHT+IFXnLf46pENpWqaLeFh27xQfZIeEOpHx3elub8SYDi07FpFtNbcgpbZ5CexGlBw+CMhsVGm7Q==
+X-Received: by 2002:a17:90a:bd8e:b0:29f:7fad:ba50 with SMTP id z14-20020a17090abd8e00b0029f7fadba50mr5988643pjr.8.1712848506772;
+        Thu, 11 Apr 2024 08:15:06 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e6-20020a17090ac20600b0029bf9969afbsm2963349pjt.53.2024.04.11.08.15.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 08:15:06 -0700 (PDT)
+Date: Thu, 11 Apr 2024 08:15:05 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Marco Elver <elver@google.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Azeem Shaikh <azeemshaikh38@gmail.com>,
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH v2] tracing: Add sched_prepare_exec tracepoint
+Message-ID: <202404110814.B219872F76@keescook>
+References: <20240411102158.1272267-1-elver@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 8/8] dt-bindings: ufs: mediatek,ufs: Document optional
- dvfsrc/va09 regulators
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-scsi@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
- bvanassche@acm.org, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, peter.wang@mediatek.com, chu.stanley@gmail.com,
- jejb@linux.ibm.com, martin.petersen@oracle.com, lgirdwood@gmail.com,
- broonie@kernel.org, matthias.bgg@gmail.com, stanley.chu@mediatek.com,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20240411114300.169055-1-angelogioacchino.delregno@collabora.com>
- <20240411114300.169055-9-angelogioacchino.delregno@collabora.com>
- <20240411-oaf-stove-b291a21ef404@spud>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240411-oaf-stove-b291a21ef404@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411102158.1272267-1-elver@google.com>
 
-Il 11/04/24 17:11, Conor Dooley ha scritto:
-> On Thu, Apr 11, 2024 at 01:43:00PM +0200, AngeloGioacchino Del Regno wrote:
->> Document the optional dvfsrc-vcore and va09 regulators used for,
->> respectively, crypt boost and internal MPHY power management in
->> when powering on/off the (external) MediaTek UFS PHY.
->>
->> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+On Thu, Apr 11, 2024 at 12:20:57PM +0200, Marco Elver wrote:
+> Add "sched_prepare_exec" tracepoint, which is run right after the point
+> of no return but before the current task assumes its new exec identity.
 > 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Unlike the tracepoint "sched_process_exec", the "sched_prepare_exec"
+> tracepoint runs before flushing the old exec, i.e. while the task still
+> has the original state (such as original MM), but when the new exec
+> either succeeds or crashes (but never returns to the original exec).
 > 
-> btw:
-> <stanley.chu@mediatek.com>: host mailgw01.mediatek.com[216.200.240.184] said:
->      550 Relaying mail to stanley.chu@mediatek.com is not allowed (in reply to
->      RCPT TO command)
+> Being able to trace this event can be helpful in a number of use cases:
 > 
-> We should probably delete them from the binding (and maybe add yourself).
+>   * allowing tracing eBPF programs access to the original MM on exec,
+>     before current->mm is replaced;
+>   * counting exec in the original task (via perf event);
+>   * profiling flush time ("sched_prepare_exec" to "sched_process_exec").
+> 
+> Example of tracing output:
+> 
+>  $ cat /sys/kernel/debug/tracing/trace_pipe
+>     <...>-379  [003] .....  179.626921: sched_prepare_exec: interp=/usr/bin/sshd filename=/usr/bin/sshd pid=379 comm=sshd
+>     <...>-381  [002] .....  180.048580: sched_prepare_exec: interp=/bin/bash filename=/bin/bash pid=381 comm=sshd
+>     <...>-385  [001] .....  180.068277: sched_prepare_exec: interp=/usr/bin/tty filename=/usr/bin/tty pid=385 comm=bash
+>     <...>-389  [006] .....  192.020147: sched_prepare_exec: interp=/usr/bin/dmesg filename=/usr/bin/dmesg pid=389 comm=bash
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
 
-Yeah, count that done for v3 (tomorrow)!
+This looks good to me. If tracing wants to take it:
 
-Cheers
+Acked-by: Kees Cook <keescook@chromium.org>
+
+If not, I can take it in my tree if I get a tracing Ack. :)
+
+-Kees
+
+-- 
+Kees Cook
