@@ -1,67 +1,110 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBC629416;
-	Thu, 11 Apr 2024 18:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385092BCF9;
+	Thu, 11 Apr 2024 18:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712859798; cv=none; b=Pv108EgrcrXzzxVpUDsK3jUdH4d3EolwUxhlY4uLmy9CZBO6+6DwHxzUHj1ehV+JG4YsdQ6QGoqWUNRSLneQ2AAETJibse3EbjqDzhhg76i4yCvG4DV71ORDQGtPvW2fDqi2P3vcJ/6IOu/w8SmtE9IUoFuHhSOCUfHHE6jY3jU=
+	t=1712859903; cv=none; b=c4oOjAi1f/b1vRszMvaOXcppWNcxOsXJFZAeLKSC5Ba47Yh7uYRDTqCnJwVO5iHvZ8v6rmMLDzXzA+VWUDS76kEJBptfgVUxyoOi+GwYlQ44i3sYHDg5qnwxGBWDwqXJS+o9iSL6tvYAROARzCBZ2QfnaweJqBQYDRK65Kuh/hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712859798; c=relaxed/simple;
-	bh=FRIggP1YvWWV3rj+5WU1Cj2nMoZrQOSbDSPE/2jMC40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uJApwUQdkMU2LVnA3kOAdmT5QabOQmsc4DpkWamx54uHIY7xr2B6n9oFUQTqNeCOBPV4huteUp8c3jRd4vThSlzQEpfio9y7T3bwgiXGM6Xj/azWTq/6MbrpILtxDY0H5uPYV5QGnb7FDW/bJboLAdTFjMNC0Pj3l3q4CV142wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=ztVqzLNc; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1712859903; c=relaxed/simple;
+	bh=c2g0tbUCqfPKXbZUyvRm01VrhJY6EMVcc1wcJ3a0Ym0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rgeagb8HhXGEUQgj7qk+M6gOnUS7KMoPQldUlwAn+k+6nO0CwUbSxJ1jhl6V8O9/Dpwb7m0oq2/lArCWY+hVex+RFCikg/jI6Q1HSxevFUk7Cao5CxEXirsVDswqLMR0skC3rBngWGpb1P7HjkhM5mzCK4TnC8+M6Ax0GHYKwW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HXwVDBYw; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="ztVqzLNc"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VFp3L30MYz6Cnk8t;
-	Thu, 11 Apr 2024 18:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1712859787; x=1715451788; bh=FRIggP1YvWWV3rj+5WU1Cj2n
-	MoZrQOSbDSPE/2jMC40=; b=ztVqzLNcki93qPYwl22dc3jRpgrZo5cKjYRQ4Bf2
-	W0+E8Uhn4JBUUmVyEPYlp6qI+lHns4xGuIHTWiWR3nTD3cvm7biTShu6x4hocQxF
-	gFIlD1uxRzTJVktZSgZ0Gr+JlxtHmoZn4ywiD+NQe/rxbdfACNdpHWPpueB1zvH5
-	1e66aOsdJQtPp+er3Wxnq/ZHDRi18Cwly6fyAxc2sgKdkj2F3Tl4+7hhhi06r0S/
-	Dwp9/6D5W8v4gXgY2vuiaun9m9iwpe5Oooqbn8ofqHafXbllD5vyDkNVmOtOwqig
-	rSauuP6Tz7D3/luY1aHG3s05ur0cL10kUsYkpQG3FVp7qw==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id L8PhjzVZZJ8Z; Thu, 11 Apr 2024 18:23:07 +0000 (UTC)
-Received: from [100.96.154.26] (unknown [104.132.0.90])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VFp3C5dfhz6Cnk8m;
-	Thu, 11 Apr 2024 18:23:03 +0000 (UTC)
-Message-ID: <7c546232-0ad5-4ad3-bb12-2927c1b65c0e@acm.org>
-Date: Thu, 11 Apr 2024 11:23:01 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HXwVDBYw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712859902; x=1744395902;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=c2g0tbUCqfPKXbZUyvRm01VrhJY6EMVcc1wcJ3a0Ym0=;
+  b=HXwVDBYwjzoa7OLJXyu0+WjdeCyW1HwL3j8ClOAYiBlQpbzutB2DEMiH
+   9ppQunxR22MivraSiVHpQ3Aq1tgOh4OUcGAAV+rqnmr6iv9VPVXnSs1xo
+   UA8+GfHF1pNqFuYChJrxAv0/H+XSLi8RIqaoX4/9P7qoeSTgDL79++S12
+   j9KJRCkdXZ6cWX865I+dZXH/pBNaBR+iJ8xQJVFtIxZ6A54z50Y7FMFTO
+   LU6tZTaa4b34YzQQEYZsRV3e+njJb+TZThJR0eAeP14pHz0n8/CjGI4j1
+   TV1XwtCyocjed3cpTfpdie1CgDgwqzH6EAIUbI4jQ7SYkwy5u6lazCpE5
+   w==;
+X-CSE-ConnectionGUID: +oITaEHjQ1u24PElUBtbTQ==
+X-CSE-MsgGUID: QIbuvSixQIWCu4Qejlnxlw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8514939"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="8514939"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 11:25:01 -0700
+X-CSE-ConnectionGUID: 3QOiQzoGR0OiHwTo7hCQqQ==
+X-CSE-MsgGUID: GUYxnY+LQ9+gm23AkhcO6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="51936865"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 11:25:01 -0700
+Date: Thu, 11 Apr 2024 11:29:32 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, iommu@lists.linux.dev, Lu Baolu
+ <baolu.lu@linux.intel.com>, kvm@vger.kernel.org, Dave Hansen
+ <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>, Paul Luse <paul.e.luse@intel.com>, Dan Williams
+ <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, Raj Ashok
+ <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>,
+ jim.harris@samsung.com, a.manzanares@samsung.com, Bjorn Helgaas
+ <helgaas@kernel.org>, guang.zeng@intel.com, robert.hoo.linux@gmail.com,
+ jacob.jun.pan@linux.intel.com, xin3.li@intel.com
+Subject: Re: [PATCH v2 08/13] x86/irq: Install posted MSI notification
+ handler
+Message-ID: <20240411112932.6b1a4dbb@jacob-builder>
+In-Reply-To: <87bk6f262i.ffs@tglx>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+	<20240405223110.1609888-9-jacob.jun.pan@linux.intel.com>
+	<87bk6f262i.ffs@tglx>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] scsi: ufs: core: changing the status to check inflight
-To: SEO HOYOUNG <hy50.seo@samsung.com>, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
- jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
- kwangwon.min@samsung.com, kwmad.kim@samsung.com, sh425.lee@samsung.com,
- quic_nguyenb@quicinc.com, cpgs@samsung.com, h10.kim@samsung.com
-References: <CGME20240411071042epcas2p4b2e6937a952e6dfa879db166983b1c54@epcas2p4.samsung.com>
- <20240411071444.51873-1-hy50.seo@samsung.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20240411071444.51873-1-hy50.seo@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Hi Thomas,
+
+On Thu, 11 Apr 2024 18:54:29 +0200, Thomas Gleixner <tglx@linutronix.de>
+wrote:
+
+> On Fri, Apr 05 2024 at 15:31, Jacob Pan wrote:
+> >  
+> >  #ifdef CONFIG_SMP
+> > diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+> > index fc37c8d83daf..f445bec516a0 100644
+> > --- a/arch/x86/kernel/idt.c
+> > +++ b/arch/x86/kernel/idt.c
+> > @@ -163,6 +163,9 @@ static const __initconst struct idt_data
+> > apic_idts[] = { # endif
+> >  	INTG(SPURIOUS_APIC_VECTOR,
+> > asm_sysvec_spurious_apic_interrupt), INTG(ERROR_APIC_VECTOR,
+> > 		asm_sysvec_error_interrupt), +# ifdef
+> > CONFIG_X86_POSTED_MSI
+> > +	INTG(POSTED_MSI_NOTIFICATION_VECTOR,
+> > asm_sysvec_posted_msi_notification), +# endif
+> >  #endif
+> >  };  
+> 
+> Obviously lacks FRED support...
+Good point, forgot FRED is merged :)
+
+Will add an entry to entry_fred.c. I would not be able to test performance
+though.
+
+Thanks,
+
+Jacob
