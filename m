@@ -1,110 +1,101 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 808A214012
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5281175A6
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849497; cv=none; b=DEHQWORCzoWjPFY1BRbYgFM8PD1xHCa18iG1Qr6VfUsVlOVHRlGH17e6hQz2dRC+KXftiOrursLtDqTiXnEyKiVby7l4Q8cd39cH+uOYx1ypSW9ifIDdHnNgVJAdbeeIvM6dYEjqVczHHzc6lFS52z5/GElpWNIgRzDxwLLiBo8=
+	t=1712849498; cv=none; b=mMWl5qvzVTe/C9SweY6fTjESGai8qlylFSK8vfmOw8d10UARKzFvNoJLegPm5X5fkpol6PhcPkSUYYXk4Ls/xI5Tc9bNKlg5jnZ4tkCv2yGyHTMdw8I0YFH2mY7+MMAEaElGYfGnMHMfYzE62xdvLjJNHq28ehM8VycSoxZOMrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849497; c=relaxed/simple;
-	bh=cxewkZyxRElYmBVpDBfnzLzE9Qi5Af8AY4SLKQB4suA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GOH4HaqEG7+OXohWipOJFkxWzxRjU5bDOsawEASjE25REGCGWasL0q6VIuntDe9EcjeIvE/VWCfpWvNvJElPnNNVe6sGD+kuJ4h1sIWy5DZ/wFXpOvC48DFpe2jwNQnPvDgGgNELrMPPA1WBqYuwaxIApt4Et7dczT2RzgXS720=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MLiTucjT; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712849498; c=relaxed/simple;
+	bh=1F8FDCWi7kV0VWLSz4mlwqNZHS3BzwqFKom/1e6MPAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhcmkywuvYeReIX9O3w4BFjjBc99jD0kcLrkeDYp1BYmmISbJg8S7eCVsPxoqht1jzXNEIhd0qihVXNN+FfuYPDSg5qEKnqKAC3luvN9ASwjTW9cwIr0Z6TxLUzM/lO6kB+R+vJ/NnOtpYXMPZmgj4UE76UiuRWgC8tXOz4gxeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R3YY2n/0; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MLiTucjT"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7cb9dd46babso81829539f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:31:34 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R3YY2n/0"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e3ca4fe4cfso37123405ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:31:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849493; x=1713454293; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vF7rljSyWSXVyabtJWrttCeWBftBj9OG2VAhwMADVj4=;
-        b=MLiTucjTPhCwJzW9rX0LyKeyiRyQUbPdoxj9gdxUu77bbcfASnAxVUJpRMvGtk/0gQ
-         hT8qihVirZS91vexQSXDN+Mm5a+mA65PKuhOQBVJNyhjOCE6qfNr07qqJmAnU8p1nKBY
-         /TYquLI4dnbJqpS8x4t9jKEztfTjLKhUVK/gI7LlfqPGaPaZFHLvLFLuwlH/K9thYW24
-         qBe2oZlnB3y4wj3TlCoJojSJ7qVtPxKULDNFsuniORoon4l9ax+0mc/m5xVKSfg+Q1Sl
-         oe/T9jvtrQYAxswFtHcxR7LAgoyFNNcvdbkJDt5TpfIS0ygphWFP+pUjhBjN+AQ8SfQL
-         D4uw==
+        d=chromium.org; s=google; t=1712849496; x=1713454296; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
+        b=R3YY2n/0VwUwWve61b5CZ3IBPO30oLs/f2nMFH8EREXjpTHIHlEmK6get3jv1H+7Nr
+         LzLwT/KT3I9cYPiTYeAtKbFQ6f901IeroZqNTuKDBaW3EylhQBA8i1SXI31oI+p33vMs
+         5VvKi8iWLhGCK22xr7AnHWH+fsEQ0KNWXvrlI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849493; x=1713454293;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vF7rljSyWSXVyabtJWrttCeWBftBj9OG2VAhwMADVj4=;
-        b=XPxr9HjCEL+BRndQKIJ98f6Djwo881UIRJfAUvl24c1g2odS5BnlWvEk8glOhB/Mq8
-         WPXH7V85P+I4x7KyTrkqe8dYkHqVOA9fXpZt9KPooXECGxJdGPO5M3DSCyJi1nBl5uyF
-         N9F1jf/gUpe0CuyX2EDknKRu7dxqlIbh7X/EiJsGMyJC0XmMjsVEF94X81eZ95hZCuPA
-         yWKuXYUslTLuiu1UPCZpXGMKtwtonrGnGnAxuja1AwQb2Fq0VuIcZQ0jZTuojL2EskgN
-         1YXJ7UD4Mv5TFHpArM96OyAtJfWU8Ew5ihyEzkW+/4li9nudf6YATsV/bV+W2c0JiNG0
-         Djqw==
-X-Gm-Message-State: AOJu0Yz/wQdPoptGEBYdPtzg49yNbYSn0MCtPiQhTl4oSVpGPLWUyVCy
-	x+v+4zpp899r6oBgXdieh1QfHjLWPA5vPTcfJYd8ayhSxyF8Q9dc/6ip0qXFCMolQYpKObKF6Tn
-	6
-X-Google-Smtp-Source: AGHT+IHL07y7tk9NAT2xCfJWz8ws6u5vrK5l9/JHjQwJXCuH/jjbMnQXq3p3+2diesUY/1sdOfA4yQ==
-X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr170561iob.1.1712849493038;
-        Thu, 11 Apr 2024 08:31:33 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.31.30
+        d=1e100.net; s=20230601; t=1712849496; x=1713454296;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h26jApcI47a9THxXWamb//DMym3AleVu6sOiT6ZGH/o=;
+        b=lBz866X6CARvjBkukdl2B9WgLZPPj5Kzb7DrRhCvzdQrH8R5ohhJ5BW/u6yKiLOQXP
+         yLoXHI31MkrhLP6N612ovrRdBRHUXpCRAM0RDkNQrA2TT+rbhwkTHxcgpUU1J0raRc2t
+         AqFUBzXwdx8DXz50BkRP/a0bKMnTqh93/uyMY/R4p5Qe6WxAT0Gnv33whdN/N/JQRlFy
+         GoWKlEIk/qOvh2FoYfMQO8dB4Y7ohzaHQNEHHV/JnHzyggMxGEhbkynSJ+QQC+6fmbON
+         suBa2mnpAmmAcETv+mcdL0tYUN+w8unzTZZCRpYvG2d2etjVNYBKoyJHN3G/CKtY4RkP
+         3Kbg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+l8OrAUoLaB8uIyRe4bZU5K3EIvii5jCciQRXvEXPIkTOe2TUik4QzN7QXIIQRhM/3cAMzcxfckgcIyBMk+v+DUcNqXB2dPUbuVhx
+X-Gm-Message-State: AOJu0Yz+uCxM+NNtm4qF7dcIYefwg88CjMchCe6tzDOMZLyAoT4ieH6n
+	BnTio+rBf9uu0Dw8mfHxcvp+fN/zdODpJLZkSfS3lhxHBRohwpCq6JKf0z7zfw==
+X-Google-Smtp-Source: AGHT+IEejten/fI5yIJ4OdU9ANzlh7kmTzwwsMRkhZrYGCJfDgxUgiz8KKlY5DuuhFAg3kagyyJlHw==
+X-Received: by 2002:a17:902:e80f:b0:1e3:e0a2:ccc3 with SMTP id u15-20020a170902e80f00b001e3e0a2ccc3mr6911262plg.30.1712849495918;
+        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id l5-20020a170902d34500b001e26191b9c2sm1304039plk.67.2024.04.11.08.31.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:31:30 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 003/437] fs: add helpers for defining read/write iterator helpers
-Date: Thu, 11 Apr 2024 09:12:23 -0600
-Message-ID: <20240411153126.16201-4-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+        Thu, 11 Apr 2024 08:31:35 -0700 (PDT)
+Date: Thu, 11 Apr 2024 08:31:34 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] xfs: replace deprecated strncpy with strscpy_pad
+Message-ID: <202404110829.D3A5A56@keescook>
+References: <20240405-strncpy-xfs-split1-v1-1-3e3df465adb9@google.com>
+ <202404090921.A203626A@keescook>
+ <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8pr5XycTH1iCUgBodCOV8_WY_da=aH+WZGPXfuOY5_Zgg@mail.gmail.com>
 
-To ease conversion for drivers, add helpers that allow a driver to simply
-wrap their existing read/write file_operations hook and turn it into one
-that is appropriate for ->read_iter() or ->write_iter().
+On Wed, Apr 10, 2024 at 01:45:21PM -0700, Justin Stitt wrote:
+> On Tue, Apr 9, 2024 at 9:22 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > -     /* 1 larger than sb_fname, so this ensures a trailing NUL char */
+> > > -     memset(label, 0, sizeof(label));
+> > >       spin_lock(&mp->m_sb_lock);
+> > > -     strncpy(label, sbp->sb_fname, XFSLABEL_MAX);
+> > > +     strscpy_pad(label, sbp->sb_fname);
+> >
+> > Is sbp->sb_fname itself NUL-terminated? This looks like another case of
+> > needing the memtostr() helper?
+> >
+> 
+> I sent a patch [1].
+> 
+> Obviously it depends on your implementation patch landing first; what
+> tree should it go to?
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/fs.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+This "flavor" of conversion may need to wait a release? There's no
+urgency on the conversion, and there are plenty more to do for this
+cycle. ;)
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index fd862985a309..72de0b1d5647 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2141,6 +2141,22 @@ extern loff_t vfs_dedupe_file_range_one(struct file *src_file, loff_t src_pos,
- 					struct file *dst_file, loff_t dst_pos,
- 					loff_t len, unsigned int remap_flags);
- 
-+/*
-+ * Drivers can use these to ease transition to using ->read_iter() instead
-+ * of ->read(), and ->write_iter() instead of ->write(). Ideally these will
-+ * go away one day.
-+ */
-+#define FOPS_READ_ITER_HELPER(name)					\
-+static ssize_t name## _iter(struct kiocb *iocb, struct iov_iter *to)	\
-+{									\
-+	return vfs_read_iter(iocb, to, name);				\
-+}
-+#define FOPS_WRITE_ITER_HELPER(name)					\
-+static ssize_t name## _iter(struct kiocb *iocb, struct iov_iter *from)	\
-+{									\
-+	return vfs_write_iter(iocb, from, name);			\
-+}
-+
- /**
-  * enum freeze_holder - holder of the freeze
-  * @FREEZE_HOLDER_KERNEL: kernel wants to freeze or thaw filesystem
+-Kees
+
+> [1]: https://lore.kernel.org/r/20240410-strncpy-xfs-split1-v2-1-7c651502bcb0@google.com
+
 -- 
-2.43.0
-
+Kees Cook
