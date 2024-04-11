@@ -1,121 +1,63 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5721547F79
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 23:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D14E3FE54;
+	Thu, 11 Apr 2024 23:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712878280; cv=none; b=gV8frmcMVcmX3imkWOVlSpUynkgkBMI1PM5ijI+rGZJEAAVd8MCIdbYkIJQZdU0aHmvt67Il9fX0PD+BdQg6K3hLsK7fpqW9Z3RIxMsz+yFU+3ol/OdYVb7JndCYXVy4CH14T/OqK7mEIRMV3EBP2jSlCwUjxW5T66KKrEEzTyE=
+	t=1712878451; cv=none; b=HNp19bA3cVVqfP5qx6D+krSA8n/2B13i+Py22goqjPXO6+taE31+UtzIvymTznt+zBFZdyIby9dvnOg2BvSZMSfBNcQ1P6cOzgdipSa4zDsPoO864upkLlwgyIo11S/De5KwccxXq7kcvjIIcKxzwjLnYebl232sdt60VR/vDks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712878280; c=relaxed/simple;
-	bh=4SuOykEybb7HcIIt3unOysdTVnJJ7Js5I2n5NiYPPNs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uyWI3MwN633larc54tb3ImhRX0Ef/EgWTRpuh5mGpdqniONEpzGig5IuCROqOuoqKwKOy7L+N1D8bf3bz/Fmv+Uc7A1i1810B4ji0PKir8yxqJFSO48phBm7qDrTjfBezEQxTq/r2sI0jUU2Wc7F+2zW2WTBpmjOv3St+s5vkGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XCdv+mXo; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1712878451; c=relaxed/simple;
+	bh=fPg+U9aZpiI4UGkeN8+yCCn4g5+/FS3gaks5GuNPqsI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nefrmY4dNqZCQ9+DFra29uzIxZiDcVWea4LtwlISdhxGd1+QdBXc5qQb+xJtV2MfgPJSnsI9b7nyx8J9pcDJiDPeuWNY4AQcWnIm7JCS+HrpcMr5G3ZCLzDJIbXhewwq1AX/E/m4zInnBNit6HNeMxtRkI4bhHP3NX4UlU1P0dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=0YUw6krO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XCdv+mXo"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2a48ed89c7eso284524a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 16:31:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712878279; x=1713483079; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xfAluTUg9e6YSqecG2tHKocCu1vhJlnxyS6nHwDSGiw=;
-        b=XCdv+mXoF+oAD/CndueJFUU/0KaBRTzosFD2IIIg+FduonvtCgZSohu3O60oglcnIG
-         aU/5XOzUlPwqlxsAtGVZMNHlghA4Q0n9x+GNUxnh3WulAaeSdcdHArrCaIvffW2VyLAq
-         lg75Vu2dWSstrwtVNo41lV9VnHURHI3d77Yyr4gii143HRbfr7e4J34SC11c0O8c4q9O
-         3Nf4jTvzlOxEnFeHTd/k6ktnZryg/k0C3TWF/MLE3bqdtmJOH8Mn/581xYp4XSaX66bw
-         5kThN0SsFy/qjGwZmOg0p2JFZQdETEA3Gduw4vy1jkriDdcAqds6xYhVhxpyDXqWD7xN
-         BgDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712878279; x=1713483079;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xfAluTUg9e6YSqecG2tHKocCu1vhJlnxyS6nHwDSGiw=;
-        b=IqGvo6Bd/AeGvz8Yebytei51I2fgX0q8dTEnKD7pG6MsDVmuZFQO3YPIa7wLn7QA1l
-         8WgbcnRVfksMKaioU2RnLk7XXzV7BoldEteCZqOlhYBnn6/0DXl0GvwbSqeg7Z6UTRQl
-         LFoi/eIcq1mNKvBHVD6AtzzCCt2hhSEt9lx7PKwm1bqazzaDeYwDfarVzfLNcYMoq/On
-         4JSikvYmDWczJR1WC6qRzZNPCOaN+cA77T5J89hc0xtbosuvIIn/fFs2OhCzE5VtKq4n
-         m+C/y48IZvDEGTLnl9N7DMHHkun5XDvJyJF15VoyRCwHgvF1mOyDTw6jQDmMHnS39vqM
-         M0rA==
-X-Forwarded-Encrypted: i=1; AJvYcCUX+GBHG7hiRIRG82RygPeYywWEGahDFZiUWEzYHtMlUzxvpCA1csC0QQlqBuOBJdfpjXYEiD5G6BO2qztA2Li4vKRVgx9JBaEz3iXy
-X-Gm-Message-State: AOJu0YylOcQH3EscHNtNsXZl4f1pE6QibFNN2MsX466DIdh/8syWa7JY
-	XuhALFbLDSAuhCVOQRq5cvZnR52YtAXIsS3mvB4x56feR+JIbuUt7D8idAkIvnS0g9wGi+Ko/6C
-	DJA==
-X-Google-Smtp-Source: AGHT+IGACbup5qhwqtDsAZiOCGvghLAulCS/fhvTb+pjJJrKJViinsDcOsCtXCLMfcO+uGTvn4qi6C0+hKI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:9cd:b0:2a6:ce35:d357 with SMTP id
- 71-20020a17090a09cd00b002a6ce35d357mr2765pjo.0.1712878278596; Thu, 11 Apr
- 2024 16:31:18 -0700 (PDT)
-Date: Thu, 11 Apr 2024 16:31:17 -0700
-In-Reply-To: <CALMp9eS4H-WZXRCrp+6aAgwAp+qP2BgJx5ik5kA7vdyQ9qzARg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="0YUw6krO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B724C072AA;
+	Thu, 11 Apr 2024 23:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1712878450;
+	bh=fPg+U9aZpiI4UGkeN8+yCCn4g5+/FS3gaks5GuNPqsI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=0YUw6krOuT6SZxP9n4r3R5rl2hdNWCjy2HLJZ5JuNBa15CUzYnU7By+GcQOzZwRFE
+	 trfMhj3erdcbHW3gNafLSTlBxf2jnNWAJzxdmW4yPQg8wDAkFHyTN1LIyv2xkQhk1d
+	 GF2K9rElo7ry/kGDNheLRq+31AxIU+kXqTswbVbQ=
+Date: Thu, 11 Apr 2024 16:34:09 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Edward Liaw <edliaw@google.com>
+Cc: linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>, Andy
+ Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, Shuah
+ Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick
+ Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>,
+ Justin Stitt <justinstitt@google.com>, Peter Xu <peterx@redhat.com>, David
+ Hildenbrand <david@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>,
+ "Mike Rapoport (IBM)" <rppt@kernel.org>, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, linux-mm@kvack.org, llvm@lists.linux.dev
+Subject: Re: [PATCH] selftests/harness: remove use of LINE_MAX
+Message-Id: <20240411163409.4f8969fa8a46b63d04a28f77@linux-foundation.org>
+In-Reply-To: <20240411231954.62156-1-edliaw@google.com>
+References: <20240411231954.62156-1-edliaw@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-24-xiong.y.zhang@linux.intel.com> <ZhhZush_VOEnimuw@google.com>
- <CALMp9eS4H-WZXRCrp+6aAgwAp+qP2BgJx5ik5kA7vdyQ9qzARg@mail.gmail.com>
-Message-ID: <ZhhyxT66RdpiCRA2@google.com>
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 11, 2024, Jim Mattson wrote:
-> On Thu, Apr 11, 2024 at 2:44=E2=80=AFPM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> > > +     /* Clear host global_ctrl and global_status MSR if non-zero. */
-> > > +     wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> >
-> > Why?  PERF_GLOBAL_CTRL will be auto-loaded at VM-Enter, why do it now?
-> >
-> > > +     rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> > > +     if (global_status)
-> > > +             wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status);
-> >
-> > This seems especially silly, isn't the full MSR being written below?  O=
-r am I
-> > misunderstanding how these things work?
->=20
-> LOL! You expect CPU design to follow basic logic?!?
->=20
-> Writing a 1 to a bit in IA32_PERF_GLOBAL_STATUS_SET sets the
-> corresponding bit in IA32_PERF_GLOBAL_STATUS to 1.
->=20
-> Writing a 0 to a bit in to IA32_PERF_GLOBAL_STATUS_SET is a nop.
->=20
-> To clear a bit in IA32_PERF_GLOBAL_STATUS, you need to write a 1 to
-> the corresponding bit in IA32_PERF_GLOBAL_STATUS_RESET (aka
-> IA32_PERF_GLOBAL_OVF_CTRL).
+On Thu, 11 Apr 2024 23:19:49 +0000 Edward Liaw <edliaw@google.com> wrote:
 
-If only C had a way to annotate what the code is doing. :-)
+> Android was seeing a compliation error because its C library does not
+> define LINE_MAX.  This replaces the use of LINE_MAX / snprintf with
+> asprintf, which will change the behavior to not truncate the test name
+> if it is over 2048 chars long.
 
-> > > +     wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
+Thanks, I'll grab and shall send it Linuswards for 6.9-rcX.
 
-IIUC, that means this should be:
+I added
 
-	if (pmu->global_status)
-		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status);
+Fixes: 38c957f07038 ("selftests: kselftest_harness: generate test name once")
 
-or even better:
-
-	toggle =3D pmu->global_status ^ global_status;
-	if (global_status & toggle)
-		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
-	if (pmu->global_status & toggle)
-		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
