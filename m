@@ -1,36 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C352A2EAE5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDC81448EF;
 	Thu, 11 Apr 2024 10:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712832826; cv=none; b=T6ff7Y9+KQzjlz4EC+HqZQJEF/hdcyTZKKofpE0UL8MHsGko6XvnVqHQnvwJHeCodmTWlalimmCiVj3WfH3ByJTragGeVs69AMe5mDYpC9nQPL4wPPFKjs3fJMfvZsHORoezLEv9UsAfpUiA7qb3PLC+H5id1LZB+aERA39EN5s=
+	t=1712832826; cv=none; b=orN6d5IXPf9uQOqlbFvJ+IuLWDhBXgYGkXlcmq5L/wz752VP4P2mmN4YdByKcp/HOyuWsQr2u863k+Ai1SjdNcSeZHGdZiR2JNFLiGHgRC4OEcBhglIk9O/FXU+FqoY2cOHj0Tmq1VoYxScJFIzap1/dhe0cXJf6ef+zR6qbizA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712832826; c=relaxed/simple;
-	bh=hA4bLqry0f38bkJtkBZ2E//5jq8jhyAZdUEvMOe9BL8=;
+	bh=9YVU8sC5lyA2gQoDE2b9psBJEuL/8EhzWJnh02ASQX0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bvHAwYkWcbTzAN85H23yAwTkRHV24TZYJMmHu+wLmNxnzNBi7bhAnIxfY2BiwA0YMVFccdBGkJUeZmATgbLl64W/mKjBFFnqHCMicjB4oBmDwJIjuA14Toiz4BEuhTGluyxXiM6Q5f9Bke/HY2y27Hf1mkgzK6zcV0pA1Uvv2m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=UYmPND8P; arc=none smtp.client-ip=193.104.135.124
+	 MIME-Version:Content-Type; b=T0mSIPynRKm7Nq90TGiyAHmfZsW7RUSEUt4X1o+Bn7lBf9CyGqCsazZZ6A2heM18lv8irzNHAGkQHe5yRZoCmIf2oLn87OsIyIe/4re+eZGn0BBG7kdnY4Gvk0/cnamz5R6gpCvrkH8h5XpjYnOkTeiAzDhT9Bx2aBDnMkIKv3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=mX2+yU/K; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="UYmPND8P"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="mX2+yU/K"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 55E8D600A2;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 5875D600A5;
 	Thu, 11 Apr 2024 10:53:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1712832815;
-	bh=hA4bLqry0f38bkJtkBZ2E//5jq8jhyAZdUEvMOe9BL8=;
+	bh=9YVU8sC5lyA2gQoDE2b9psBJEuL/8EhzWJnh02ASQX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UYmPND8PWvAcLq6omI3g5jtVViO9/dxL2Wk03v6XNMtrT6XHlbH7nu/7jW8noNUqZ
-	 3S1kQrrriI9Ad6vdVoYnonijbCx+at6UB2jobo2ts6p8cdx2vQncrIVUL35wvVZA/u
-	 EeT6I03o5GcgzvQNa+PY1cFSYHEIygkTznzWTDXoJbnqivS7xBf1wrwTuHJrw2Drf0
-	 6nXPkb9zD9Iukr24ssq/Epw7wVLLaQzIMvVdFCxjPGCRQFRciZFEp7L5x7QeKrAncf
-	 G+O6S5xjV0u7EGJfvc5T3cRmTVBdXk8Ukr8SJgbaGz17PX4QG3LNIypPr1YT/YlzYp
-	 MN89YGRRQ/Vzg==
+	b=mX2+yU/KhoZUmwWalHJVw5OA5QOwvXERX7UUuRxvkKcd+M4ngWuItmyAm9Rme0kX8
+	 Y+jBSnLqD2LUQyIM9h7YvBypjvZRm/mL3MIwUHg3awRXZaluEBH4xa8syaZtsvu5q7
+	 95YD2pt3FA+AMDikecxoccUaK7/Q09KzUW1kisK2qMBJRVPYu16KuqRHucq5LO1fhW
+	 kjWUTBObSERTb3eBNV6UCHf3mvpHAk7vfX2Ol1jZkNIZnTMgg+xGxpScIZAt2x31jZ
+	 w13KJwT2NoHn/LN1lQil3qkhe8TM8Sv2nNTyMc7E6edZGifOnK/O89AQn1o4GCmTvH
+	 LUZwMoUMy09tA==
 Received: by x201s (Postfix, from userid 1000)
-	id B250620EF3B; Thu, 11 Apr 2024 10:53:18 +0000 (UTC)
+	id B817D20EF33; Thu, 11 Apr 2024 10:53:15 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -52,9 +52,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Jamal Hadi Salim <jhs@mojatatu.com>,
 	Cong Wang <xiyou.wangcong@gmail.com>,
 	Jiri Pirko <jiri@resnulli.us>
-Subject: [PATCH net-next v3 4/4] net: dsa: microchip: ksz9477: flower: validate control flags
-Date: Thu, 11 Apr 2024 10:52:57 +0000
-Message-ID: <20240411105302.112091-5-ast@fiberby.net>
+Subject: [PATCH net-next v3 2/4] nfp: flower: fix check for unsupported control flags
+Date: Thu, 11 Apr 2024 10:52:55 +0000
+Message-ID: <20240411105302.112091-3-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411105302.112091-1-ast@fiberby.net>
 References: <20240411105302.112091-1-ast@fiberby.net>
@@ -67,29 +67,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add check for unsupported control flags.
+Use flow_rule_is_supp_control_flags()
 
-Only compile-tested, no access to HW.
+Check the mask, not the key, for unsupported control flags.
+
+Only compile-tested, no access to HW
 
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+Reviewed-by: Louis Peens <louis.peens@corigine.com>
 ---
- drivers/net/dsa/microchip/ksz9477_tc_flower.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/netronome/nfp/flower/offload.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/dsa/microchip/ksz9477_tc_flower.c b/drivers/net/dsa/microchip/ksz9477_tc_flower.c
-index 8b2f5be667e01..ca7830ab168ac 100644
---- a/drivers/net/dsa/microchip/ksz9477_tc_flower.c
-+++ b/drivers/net/dsa/microchip/ksz9477_tc_flower.c
-@@ -124,6 +124,9 @@ static int ksz9477_flower_parse_key(struct ksz_device *dev, int port,
- 		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/offload.c b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+index 0aceef9fe5826..8e0a890381b60 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/offload.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/offload.c
+@@ -527,10 +527,10 @@ nfp_flower_calculate_key_layers(struct nfp_app *app,
+ 		struct flow_match_control ctl;
+ 
+ 		flow_rule_match_control(rule, &ctl);
+-		if (ctl.key->flags & ~NFP_FLOWER_SUPPORTED_CTLFLAGS) {
+-			NL_SET_ERR_MSG_MOD(extack, "unsupported offload: match on unknown control flag");
++
++		if (!flow_rule_is_supp_control_flags(NFP_FLOWER_SUPPORTED_CTLFLAGS,
++						     ctl.mask->flags, extack))
+ 			return -EOPNOTSUPP;
+-		}
  	}
  
-+	if (flow_rule_match_has_control_flags(rule, extack))
-+		return -EOPNOTSUPP;
-+
- 	if (flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_BASIC) ||
- 	    flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ETH_ADDRS)) {
- 		ret = ksz9477_flower_parse_key_l2(dev, port, extack, rule,
+ 	ret_key_ls->key_layer = key_layer;
 -- 
 2.43.0
 
