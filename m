@@ -1,136 +1,207 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2065.outbound.protection.outlook.com [40.107.21.65])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F36BB29;
-	Thu, 11 Apr 2024 11:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712835281; cv=fail; b=OpNWyyOSnJ+4iu4BTta0VRfV22aj05bgnY+Cv38Z7f5/ZqXB3izAfjG4hrCY7rfKo14bza1ME7NH8BI5rgJwjzHTVi4CyhJ7MGw8n1mh71B4Y4KqKf2bLU91KnUfLncEPDjvtEFHg4AMssCTk6HjbAby0NCioQHCd+8uNm5MPP8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712835281; c=relaxed/simple;
-	bh=HauHJk5gtZM9JPJhhi8HjMBTtcNE1bpYr8/bmHEt6Tc=;
-	h=Date:From:To:Cc:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=E0M4sb2j2iqbD/NOEmA9ym7TYhO5kvA7CqYFaB1jMfTC1IJoGFV2kvtrPYW+Cs6sBKwkmabP57k8bgEaoccWb0qaKRxY93irLwSNGDcmSdKxwzZXIn4/KkbzsHl5NxjKEWcYfTj5zaYVjelfQCk+EljpCZBSR3vvhr3JTEeBFBA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=k3BCELdK; arc=fail smtp.client-ip=40.107.21.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="k3BCELdK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WUeAnsd6LVtw53b25qSKPVjQ5Gm/oyJwfbost7zd1XuC0RYlGd2+K0z/8s20I5NFEmP0UIqun72bVnUS3hx0WyKPc4TVpyLD6cEWLxOA9NTdcwd5FKiuTvthz9X/0T9crxhrSQnx9CExcdw6w6xvwyBC4t7zV17yKs+KRXONTg+chBEhzaq+5Fxu06saRbRr0PQnOMABtrgdyPWbRwMJBLd4v7bXX6LQoSqiwYTUOaiQPYgfsMFGlvBvhNxo3DFwTXNLAeRhqSnkW1y6XvTZ1AbtuziGrBMoGlnpPZ23M+j21QeHnhkczgmEyyL0Tk4ppe9y2wrfj0+PI/Ej1JACYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a2SiR8bA2CbPROE9xekVxKhP0OSFwySnsZIujpK4jSA=;
- b=RnWJBqXr4wnJnQdanphnL8iHWOeZwPcXSCmso0HW+S72EQtAWfRu1bk4ZmeE4ncwk4BtDcK6JBzsfYzCtLmUwoCmZErKe3dkLwkKV+s1P3VOn1qGiOBF2/fpQGICWhCyNiSGDnY65jhOl7I29nZmaF+b0UO9cT3E6+qi+8CLTQXPyxoALTY4XYpbyAWl95cTuT5UkVxvq+/bTBm99gBW0ldy1MZAa8S3UYLsaw2QMTqDe+ZGYckELya8gXMPGJCEKkPf5UHg3/yJq6vAoMxHtoImwNDi/R78XKe3IUN9YGB7rW7sFfJz1OQxL53L9WzPipB+Ep23Yeca4/kUED1eUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a2SiR8bA2CbPROE9xekVxKhP0OSFwySnsZIujpK4jSA=;
- b=k3BCELdK+MphHTR0EhJCIaR2PpCWYp100pgrFCrnthTge61nSToI0q3qLApssc8oGjxpe4mLKo6vZRp4WsCmHEl1s6jQNILZ9D+HqUY3Jews2Xt9Nygmax15CmKmR0Klv3m6DHUdO7la082BWjXb8G9vmfvmRQXmf5FKRQ2X25M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB7374.eurprd04.prod.outlook.com (2603:10a6:800:1ac::11)
- by AS1PR04MB9559.eurprd04.prod.outlook.com (2603:10a6:20b:483::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
- 2024 11:34:36 +0000
-Received: from VE1PR04MB7374.eurprd04.prod.outlook.com
- ([fe80::2975:705f:b952:c7f6]) by VE1PR04MB7374.eurprd04.prod.outlook.com
- ([fe80::2975:705f:b952:c7f6%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
- 11:34:35 +0000
-Date: Thu, 11 Apr 2024 14:34:33 +0300
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Camelia Groza <camelia.groza@nxp.com>,
-	David Gouarin <dgouarin@gmail.com>, david.gouarin@thalesgroup.com,
-	Madalin Bucur <madalin.bucur@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH net v4] dpaa_eth: fix XDP queue index
-Message-ID: <20240411113433.ulnnink3trehi44b@skbuf>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240410194055.2bc89eeb@kernel.org>
-X-ClientProxiedBy: VE1PR08CA0003.eurprd08.prod.outlook.com
- (2603:10a6:803:104::16) To VE1PR04MB7374.eurprd04.prod.outlook.com
- (2603:10a6:800:1ac::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53A5145B08;
+	Thu, 11 Apr 2024 11:35:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712835330; cv=none; b=Hbehevc1NMptQTQf3LGreMFahzHdL70Wkk+NdrRQmXW1AQ+3VBK/iDa3ippdLxIdYHkGRL3WZxoSvRoU4WD8b/H68y4oGgGUkTIWAgAvPYrd5W18Icvr3CkCTXG9pxgQgj6gPjUKwMsH6KXMG15Xk0S/N1Vb/Fy0bFjCrFrhLTI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712835330; c=relaxed/simple;
+	bh=2QoydNUa8ohr5BSqBTKFBG9DaUQmDb6Pl/IqqSheoek=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Siggv+M5vIGlvTY4z9aEuhxh2gsnyc2VMBeiz7H9duYZ4+dwfLobYhJl4M5uqNNyFq3pQoQvFdnjqlvhXVpG4ttlA1Gn82ZGX1E4NnzfNpsVjZgXwZDqTaPkt4GgbHQ8Kp2HKR49SqpkZ8a/Li53/NzSKhFymZtnxWE/sevlz80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VFcyt3VLqz6JB2Q;
+	Thu, 11 Apr 2024 19:33:42 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 09DC51400E7;
+	Thu, 11 Apr 2024 19:35:25 +0800 (CST)
+Received: from localhost (10.122.247.231) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 11 Apr
+ 2024 12:35:24 +0100
+Date: Thu, 11 Apr 2024 12:35:23 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
+	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse
+	<james.morse@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Luis
+	<miguel.luis@oracle.com>
+Subject: Re: [PATCH RFC v4 12/15] arm64: psci: Ignore DENIED CPUs
+Message-ID: <20240411123523.0000487a@huawei.com>
+In-Reply-To: <E1rVDnK-0027ZN-40@rmk-PC.armlinux.org.uk>
+References: <Zbp5xzmFhKDAgHws@shell.armlinux.org.uk>
+	<E1rVDnK-0027ZN-40@rmk-PC.armlinux.org.uk>
+Organization: Huawei Technologies R&D (UK) Ltd.
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VE1PR04MB7374:EE_|AS1PR04MB9559:EE_
-X-MS-Office365-Filtering-Correlation-Id: c04d8b9a-f303-4e41-1d7d-08dc5a1b5d56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	GBsNrHlfWf2mBWjn2PBcSesF3Ho0mhb9D5kzl26RJc9owyMe3H0Cp48NFeVS0/QggOtL16OgA3bxmpXfhGOx3EzhANqIrh1/2/qoqkg/2ee4Szd9Zaj0LT9h1UBqlZZg8mJh1CFDmN0WxIVbPBHGzIPP788BpR0p9pX7S9tHE40DJzdFOEH4TbRUhPrIBgi4Tv1YL6Mw+xC7P/TxGJixbIZxd4drB6E5KmlCLGd3TVRGBZmknzWnqEYwqMQzfStdt+2LgEZonSiJM2/xYxoebaUZB79OdEfh6Y7Gdl5Ymy0PnevibLIdRjTBS3PvXBqcuRSlXWFGnCKy5ue0noAzryZ46HOAkkyW6e8ATaA73rZAFsaNEt9R0d3Iy1xlz2UMFRRXsJV8p876+y++hjCR8T2eR5tAiL2/Xa6/bfI904vXue6vwk5mX3SIJZaaNR8MU/0rCDsurBfgH02PSKzsIpAjjjkcXNADvIub80qi+tiN1ShpmDB4JuIMYSyPNb16Exr3sGSbD5453zi+l4tDzog8xMOqELjM+WgFAhSyTFyqTGa7GRErlyOXhv4qrKokL4EVCXU9qaSfCEcDtzai/AnLpLc1FX1cGgLNglL+g+QNZ6rj9oRsmIUvvHlcirFDs/h/3QZyr2PT3vckEAk9Blh7dPvNxtkLzYsNVumGxcs=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB7374.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?dGTE4nfq2vahUXCZFxNwTrwOiw4ZDljInS3YX4D1AO3I0feMKnzvtwXa1Qw2?=
- =?us-ascii?Q?wTaWWavswsNQPO7iWSuKAbUZR4yyKlgIqpmACL0zOFZzCYbwp4lMNNuu98Qu?=
- =?us-ascii?Q?ObBgKbKEBapjGicnYwlK6NK5BEvmnwrcPEb0cM/GVjHA5+Igr5f7OQajOMbs?=
- =?us-ascii?Q?kGq1VPCD0SuXmpD9YC4Z+HCTefRSDQTQx/4ncACclqBrZrw5GFC4rzRQfRgU?=
- =?us-ascii?Q?eHfWhf6XrZqiM2SBPO29oMyEM30BwjvHSNwqsZDfO1cr9iKV5oAmcO9Z8uyW?=
- =?us-ascii?Q?e++rs8lCAw9cpgf76gY34brIQhwQW25rt1yWAbBWGvDOaYQqm5ubYIRkUFZd?=
- =?us-ascii?Q?C2uhOqD6vb17j6hcxE/+1yPwB3oq0Ip4NPprVrEXF5aHjQqPCW3mAAMXbDOl?=
- =?us-ascii?Q?b6YDo9mfEu/sCm+tB8ASKg4nWaUtsYuwzppzI7OL+AiQ0hfMmyjyvdp6lo6I?=
- =?us-ascii?Q?MB2+H79+2hJPz88AZnif3VGVHSp5zGbzTHoCR77tJ5zmvXlJfEOpYHiJGc+o?=
- =?us-ascii?Q?lCz5ouSvIQE5eQkkHZnhlQttElr6RIs5E53mp4V3LhPTkyCqbjmU65q2mQlU?=
- =?us-ascii?Q?xzkWmRHBCDUo0iT+kRXuUl3msMwv48WSvfh0DBsIxVSszdLxGzMz2EBPNOv6?=
- =?us-ascii?Q?bEreE4xlIIt3cw514/Q9IOwKyt9+/R1OxIcaF2Hn+6c9WWVXOQltQG94CPoZ?=
- =?us-ascii?Q?QrPIwmQo6h6ft+qOsBIUtx7iS+e1bpot5gsh1AqUxbEXSSYAUQzkJuduRjtS?=
- =?us-ascii?Q?knJvq4kKyi3x3avFXzknRVSYa+/xJh2zwbpPnpFbmE1zJ4XWKKmBCR+uLBqc?=
- =?us-ascii?Q?+J/S6HA412XNDLq8xSW/AByb0a5cB4P8wECkd7e5Vme+UuCmEzoMsD/qthci?=
- =?us-ascii?Q?En+epTVVVJTCVj30U2BzAU+pYCqHddO5zWBLl6uRJ6cb7aS3TeUKFcr5VLc3?=
- =?us-ascii?Q?cnwLuMqS3sL1/8T3nHRORTBmAuHxgTXMQKuDW2AKtTVlXYq+gAKvulR50F0m?=
- =?us-ascii?Q?c001eBNO8gW1zcxNJRfb1YVKGWcLR5fwZoNB9kAFlkoqhYlhoecyMediPdN4?=
- =?us-ascii?Q?SzY/pmjwH6PU4vi8/qbvp+4aicfk6c6brL1DX8im0SjFa9qYZLQzgEdWuf3q?=
- =?us-ascii?Q?dX5DEc8U32JnSA1veYilC1YiTDgSHdyKc2grnMFRgR8rMdzlGw/mOkx++UEH?=
- =?us-ascii?Q?yTo5Hpge82bLH0U0n6KNBh8M00IFE62nWuoi8Vj9W1TCzIF2Znpc+9IdhNAD?=
- =?us-ascii?Q?E/tWxkd7mG6yX4iOCppYAEMHWTeoAOHgdjdhJ7FxG7dqMUIFg5s8ZISOxdj/?=
- =?us-ascii?Q?eoE/BppgyzFt6ezKI3Hmy2kHgwEJ9kC7zQkShqtKqIhFLKL2WDN3pftQxf3U?=
- =?us-ascii?Q?gHp2IK45KJ1i7U6cwiWAgWXLGMFZ/5JW5DT6qRGnA9MFKtA86CSiK8dVjtPV?=
- =?us-ascii?Q?hbJfNVucKPoNznpqs0iwzCHn90LGKExbAxntn0e7g41IVftTc5Sv7CdVW2Mn?=
- =?us-ascii?Q?V0WDOiAkRrSvzO3SNPgeZ1WGNjZRn19uEUQJ7Jc7fsJhweUcFPh5yxqTdmzO?=
- =?us-ascii?Q?9nhnuaNdg8Uq2Jv2xWdK8ut5pny5OF0U4rhdiHVTQr+QpglcxXw9YFcmcYws?=
- =?us-ascii?Q?vKDF7cRnjks0zcxKlpucSXk=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c04d8b9a-f303-4e41-1d7d-08dc5a1b5d56
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB7374.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 11:34:35.8716
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KtjCgpd9UJ3/I98WPrUNGmY5YXpibpO/9GFh1UyC2vJ1ZZ6AwSG1B9hB2+kIsQWd6WMGnuJGX1INej3H0gD0PQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9559
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Wed, Apr 10, 2024 at 07:40:55PM -0700, Jakub Kicinski wrote:
-> On Tue,  9 Apr 2024 11:30:46 +0200 David Gouarin wrote:
-> > Make it possible to bind a XDP socket to a queue id.
-> > The DPAA FQ Id was passed to the XDP program in the
-> > xdp_rxq_info->queue_index instead of the Ethernet device queue number,
-> > which made it unusable with bpf_map_redirect.
-> > Instead of the DPAA FQ Id, initialise the XDP rx queue with the queue number.
+On Wed, 31 Jan 2024 16:50:38 +0000
+Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > 
-> Camelia, looks good?
+> When a CPU is marked as disabled, but online capable in the MADT, PSCI
+> applies some firmware policy to control when it can be brought online.
+> PSCI returns DENIED to a CPU_ON request if this is not currently
+> permitted. The OS can learn the current policy from the _STA enabled bit.
+> 
+> Handle the PSCI DENIED return code gracefully instead of printing an
+> error.
+> 
+> See https://developer.arm.com/documentation/den0022/f/?lang=en page 58.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> [ morse: Rewrote commit message ]
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
 
-Please allow me some time to prepare a response, even if this means the
-patch misses this week's 'net' pull request.
+This change to return failure from __cpu_up in non error cases exposes
+an possible issue with cpu_up() in kernel/cpu.c in that it brings the numa node
+before we try (and fail) to bring up CPUs that may be denied.
+
+We could try offlining the numa node on error, or just register it later.
+
+Currently I'm testing this change which I think is harmless for cases that don't
+fail the cpu_up()
+
+For the cpu hotplug path note the node only comes online wiht the cpu online, not
+the earlier hotplug. Reasonable given there is nothing online in the node before
+that point.
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 537099bf5d02..a4730396ccea 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1742,10 +1742,6 @@ static int cpu_up(unsigned int cpu, enum cpuhp_state target)
+                return -EINVAL;
+        }
+
+-       err = try_online_node(cpu_to_node(cpu));
+-       if (err)
+-               return err;
+-
+        cpu_maps_update_begin();
+
+        if (cpu_hotplug_disabled) {
+@@ -1760,7 +1756,10 @@ static int cpu_up(unsigned int cpu, enum cpuhp_state target)
+        err = _cpu_up(cpu, 0, target);
+ out:
+        cpu_maps_update_done();
+-       return err;
++       if (err)
++               return err;
++
++       return try_online_node(cpu_to_node(cpu));
+ }
+
+There is a kicker in the remove path where currently check_cpu_on_node()
+checks for_each_present_cpu() whereas to work for us we need to use
+for_each_online_cpu() or the node is never removed.
+
+Now my current view is that we should only show
+nodes in /sys/bus/nodes/devices/ if there is a CPU online (assuming no other
+reasons the node should be online such as memory).
+That's easy enough to make work but all I'm really learning is that the semantics
+of what is an online form a node point of view is not consistent.
+
+Fixing this will create a minor change on x86 but does anyone really care
+about what happens in the offline path wrt to 'when' the node disappears?
+I think the corner case is.
+
+1. Add 2 CPUs (A, B) in a CPU only node.
+2. Online CPU A - this brings /sys/bus/devices/nodeX online
+3. Remove CPU A - no effect because the check for try_remove is on presence and CPU B is
+   still present.
+4. Online CPU B - no change.
+5. Offline CPU B - no change.
+4. Remove CPU B - /sys/bus/device/nodeX offline (disappears)
+
+To make it work on arm64 where we never make CPUs not present.
+
+1. Add 2 CPUs (A, B) in a CPU only node.
+2. Online CPU A - this brings /sys/bus/devices/nodeX online
+3. Remove CPU A - /sys/bus/devices/nodeX offline (disappears)
+4. Online CPU B - this brings /sys/bus/device/nodeX online
+5. Offline CPU B - no change (node updates only happen in hotplug code)
+6. Remove CPU B - /sys/bus/device/nodeX offline (disappears).
+
+Step 5 may seem weird but I think we can't mess with nodes there because
+userspace may well rely on them still being around for some reason
+(it's a much more common situation).
+
+My assumption is that step3 removing the node isn't going to hurt anyone?
+
+If no one shouts, i'll go ahead with rolling a v5 patch set where this is done.
+
+
+Jonathan
+
+
+
+
+
+> Changes since RFC v2
+>  * Add specification reference
+>  * Use EPERM rather than EPROBE_DEFER
+> Changes since RFC v3:
+>  * Use EPERM everywhere
+>  * Drop unnecessary changes to drivers/firmware/psci/psci.c
+> ---
+>  arch/arm64/kernel/psci.c | 2 +-
+>  arch/arm64/kernel/smp.c  | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> index 29a8e444db83..fabd732d0a2d 100644
+> --- a/arch/arm64/kernel/psci.c
+> +++ b/arch/arm64/kernel/psci.c
+> @@ -40,7 +40,7 @@ static int cpu_psci_cpu_boot(unsigned int cpu)
+>  {
+>  	phys_addr_t pa_secondary_entry = __pa_symbol(secondary_entry);
+>  	int err = psci_ops.cpu_on(cpu_logical_map(cpu), pa_secondary_entry);
+> -	if (err)
+> +	if (err && err != -EPERM)
+>  		pr_err("failed to boot CPU%d (%d)\n", cpu, err);
+>  
+>  	return err;
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 4ced34f62dab..dc0e0b3ec2d4 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -132,7 +132,8 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+>  	/* Now bring the CPU into our world */
+>  	ret = boot_secondary(cpu, idle);
+>  	if (ret) {
+> -		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+> +		if (ret != -EPERM)
+> +			pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
+>  		return ret;
+>  	}
+>  
+
