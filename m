@@ -1,317 +1,305 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 313001F4FAF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54661F4FD5;
+	Thu, 11 Apr 2024 15:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850150; cv=none; b=CaXBDmjFhUzasP5715rOvslYhHYhc8Eyh6pTU4M7c0h/GdRjVANelu+JQWDq0qNXjDVoq4X48c4tLjDqLKZHuS85z1VOuFmZ9R/ZXvc1k30b6kHHPqWyjRs3vgpVfCuqKcAu2n2h++uublOv7tQgjP/vjWH3JThOVujhsOTDrYE=
+	t=1712850151; cv=none; b=DipSc2+zjdhiWpDKrp1/I0VbExWchs0oMULluqdoaa8W8O4qihD29bnVBKRvxu2np3MY3YGz8cSlg/72Mpjn8Fo5GM4RBYkavVzcC2XHikPI7r3HD/mBPTxcJjYRkbews6x6u+yUb1677Dufha6GX9CIo1lwjgoa6I1a1s15l/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850150; c=relaxed/simple;
-	bh=mJAw9t0NrgR3ha0gcKYHqXmy3EWAXDE7YP/6L6BdfCs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Tm+hruw1uJHMQ8A2mCO0FbFEXvuLEWPoC6wkRqW0/hGP2jY4s9eohveGJz8f8kNozhx/T2tbMxPd6juQFdE2PqOnbRI2kPbXlgNYkBokwcBuQt1ZVMgvCFvflVGwapBc5AadR+MbPRcrrnRc28v3Va4DTV0wGaBE2d40vBgNQHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=zPHKt0pg; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712850151; c=relaxed/simple;
+	bh=+nZnGEmZrNB3s5CE4OLicwn7PuejwQracpvWJM0WbEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nuERQU9EIUG7gRHwWrLXRupJm6P4G9ORhr/vctC3dVtmVbFUwqKgukyjr6N+X0aPbnsFsxBDuiBrdJSYOXVKVVvztFtLksimBEeX/ZWH0fwRoxZsPhADJPFG3bofcKLTebo9MSxKeWB23PlKA7lfzIcu1+9GAymZ2qFVFodiPq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzu3g4H8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="zPHKt0pg"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36a224d7414so196955ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850147; x=1713454947; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VsB8zH87dmI7er9oXHLg2/9heWL8uz59DS+bw6PT870=;
-        b=zPHKt0pgfkSfg57x9JRNav5d+DwIenMCuihuuedYYQ7bRmrJjP5qALFQm8NOIoavPd
-         9ig9ixkm4odt1DSaVvC7hiBgmzj1ZHJ+LhHWjf6a5p4HGN8FYp7+aWL8bs2vm83l4LXp
-         44ibQRjbz1q7wpXAUXGH06XxqABHzKFenpyp6Upj76PEKdDTp5BJDtY3HoUVDKELy0zo
-         BkeFUBKy4q+s6ZZYJIvHbvPSyd/QJaAwEIQZs0f8inxMoF6TTwbyGEVklHTkf4o2NzTB
-         T8c6lqYNjsLUYne5s8yicQL1uu0E3Nhb6gzCIXnIdg95S8aNhbEMp8MJFGjFbeRySEH3
-         AEnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850147; x=1713454947;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VsB8zH87dmI7er9oXHLg2/9heWL8uz59DS+bw6PT870=;
-        b=pXM9jszBauAUC6et52As68Xol6W8Kx2O/aQlNhLEdcc5CX/La9ub5FrrlBjjl09RMI
-         tYYdYP2Ia3ZptCkTuYYg63JGpbg2BDU6ht2t2gyXSmcvvCSaPAcaAK5gvdWNks0dTff3
-         tSGee9vZbC4zhakrgNSo95GWwkUJvVS7C2XfD55VkrGdGJ0Qsds0Mhss8FtgbHgL7aVv
-         xfRScaE+Qet31T/f86eeJIRHUUinWldhGBXDhU8ydKj7Dp4XvC+71Iw34cGxT4WkyW6B
-         ZyCd++XnpFuWTO6SRO8G3d1PJO37foohkGdPXD3K0QJ4Phv+YBZ9VUx/RI9Oh0T8oUHk
-         CgaA==
-X-Gm-Message-State: AOJu0Yw1ytQ93YWGkZh3aBv93w/VrN/58GBVQ83LO2YQzxZAJwNDlBwh
-	Esh9UyJMLhDjxe9xt+0r+D+jGjhx8cvIS0rhaFGf86EmQi96mH63A3bLKXAb475HWF90J4+82Qn
-	O
-X-Google-Smtp-Source: AGHT+IFZ3PMZ517pG9kXwDFMQxA4gKUOWYSRQC23SdQZrsX8jZJMPWx7toeljT1gIoz6ReuJbQyRCA==
-X-Received: by 2002:a6b:6605:0:b0:7d4:1dae:da1a with SMTP id a5-20020a6b6605000000b007d41daeda1amr163740ioc.2.1712850147609;
-        Thu, 11 Apr 2024 08:42:27 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.42.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:42:27 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 385/437] speakup: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:18:45 -0600
-Message-ID: <20240411153126.16201-386-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzu3g4H8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20728C072AA;
+	Thu, 11 Apr 2024 15:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712850150;
+	bh=+nZnGEmZrNB3s5CE4OLicwn7PuejwQracpvWJM0WbEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jzu3g4H8bnBM0ZLCtVvhes9KXW6ycau1nmlbhhYlXWT2j0ilPWJ/qM0/B/a3giiCh
+	 roAK28frU9Qv9qSJJRQOzNv1QB9xbjjrAoK3Ov1REgGCsEkfS6hg/yNltpusDo4GhM
+	 ZoHORWasJM9lg7DYIeXNzLCn1IEJIs7yu49wSTfNf5cPQNOQeLG0JVagQyanMueyCg
+	 G8JYW/aCJr3R6nm6kX+J1N3qHvaAK+Qk1KHpu6o4j6qwpt2wbDfPfA1OOJ7PfC5TUw
+	 TdodwJdFigXYmcZSSiJG13GWlBiyOqhhMaRO/6mgBqgwpEmVioA+tHKb1770XIOjuP
+	 u7TN4Lyvn8V8A==
+Date: Thu, 11 Apr 2024 16:42:24 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Alban Browaeys <alban.browaeys@gmail.com>
+Cc: dev@folker-schwesinger.de, Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Chris Ruehl <chris.ruehl@gtsys.com.hk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christopher Obbard <chris.obbard@collabora.com>,
+	Doug Anderson <dianders@chromium.org>,
+	Brian Norris <briannorris@chromium.org>,
+	Jensen Huang <jensenhuang@friendlyarm.com>,
+	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3] phy: rockchip: emmc: Enable pulldown for strobe line
+Message-ID: <20240411-mushily-pucker-732583c1d340@spud>
+References: <20240326-rk-default-enable-strobe-pulldown-v1-0-f410c71605c0@folker-schwesinger.de>
+ <20240326-rk-default-enable-strobe-pulldown-v1-1-f410c71605c0@folker-schwesinger.de>
+ <20240326-tactical-onlooker-3df8d2352dc2@spud>
+ <871f0b24a38208d9c5d6abc87d83b067162c103e.camel@gmail.com>
+ <20240328-unnatural-unsorted-e53a13f5e87e@spud>
+ <313d5a24b6cffa1a9160e624bb6855aa7f66589e.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aLBybTFZShsDA3p/"
+Content-Disposition: inline
+In-Reply-To: <313d5a24b6cffa1a9160e624bb6855aa7f66589e.camel@gmail.com>
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/accessibility/speakup/devsynth.c     | 27 +++++-------
- drivers/accessibility/speakup/speakup_soft.c | 46 +++++++++-----------
- 2 files changed, 31 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/accessibility/speakup/devsynth.c b/drivers/accessibility/speakup/devsynth.c
-index cb7e1114e8eb..dd65b3882344 100644
---- a/drivers/accessibility/speakup/devsynth.c
-+++ b/drivers/accessibility/speakup/devsynth.c
-@@ -11,11 +11,10 @@ static int synth_registered, synthu_registered;
- static int dev_opened;
- 
- /* Latin1 version */
--static ssize_t speakup_file_write(struct file *fp, const char __user *buffer,
--				  size_t nbytes, loff_t *ppos)
-+static ssize_t speakup_file_write(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t nbytes = iov_iter_count(from);
- 	size_t count = nbytes;
--	const char __user *ptr = buffer;
- 	size_t bytes;
- 	unsigned long flags;
- 	u_char buf[256];
-@@ -24,10 +23,9 @@ static ssize_t speakup_file_write(struct file *fp, const char __user *buffer,
- 		return -ENODEV;
- 	while (count > 0) {
- 		bytes = min(count, sizeof(buf));
--		if (copy_from_user(buf, ptr, bytes))
-+		if (!copy_from_iter_full(buf, bytes, from))
- 			return -EFAULT;
- 		count -= bytes;
--		ptr += bytes;
- 		spin_lock_irqsave(&speakup_info.spinlock, flags);
- 		synth_write(buf, bytes);
- 		spin_unlock_irqrestore(&speakup_info.spinlock, flags);
-@@ -36,11 +34,10 @@ static ssize_t speakup_file_write(struct file *fp, const char __user *buffer,
- }
- 
- /* UTF-8 version */
--static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
--				   size_t nbytes, loff_t *ppos)
-+static ssize_t speakup_file_writeu(struct kiocb *iocb, struct iov_iter *from)
- {
-+	size_t nbytes = iov_iter_count(from);
- 	size_t count = nbytes, want;
--	const char __user *ptr = buffer;
- 	size_t bytes;
- 	unsigned long flags;
- 	unsigned char buf[256];
-@@ -54,7 +51,7 @@ static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
- 	while (count >= want) {
- 		/* Copy some UTF-8 piece from userland */
- 		bytes = min(count, sizeof(buf));
--		if (copy_from_user(buf, ptr, bytes))
-+		if (!copy_from_iter_full(buf, bytes, from))
- 			return -EFAULT;
- 
- 		/* Convert to u16 */
-@@ -112,7 +109,6 @@ static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
- 		}
- 
- 		count -= bytes;
--		ptr += bytes;
- 
- 		/* And speak this up */
- 		if (out) {
-@@ -127,8 +123,7 @@ static ssize_t speakup_file_writeu(struct file *fp, const char __user *buffer,
- 	return (ssize_t)(nbytes - count);
- }
- 
--static ssize_t speakup_file_read(struct file *fp, char __user *buf,
--				 size_t nbytes, loff_t *ppos)
-+static ssize_t speakup_file_read(struct kiocb *iocb, struct iov_iter *to)
- {
- 	return 0;
- }
-@@ -149,15 +144,15 @@ static int speakup_file_release(struct inode *ip, struct file *fp)
- }
- 
- static const struct file_operations synth_fops = {
--	.read = speakup_file_read,
--	.write = speakup_file_write,
-+	.read_iter = speakup_file_read,
-+	.write_iter = speakup_file_write,
- 	.open = speakup_file_open,
- 	.release = speakup_file_release,
- };
- 
- static const struct file_operations synthu_fops = {
--	.read = speakup_file_read,
--	.write = speakup_file_writeu,
-+	.read_iter = speakup_file_read,
-+	.write_iter = speakup_file_writeu,
- 	.open = speakup_file_open,
- 	.release = speakup_file_release,
- };
-diff --git a/drivers/accessibility/speakup/speakup_soft.c b/drivers/accessibility/speakup/speakup_soft.c
-index 6d446824677b..bc88e7e25910 100644
---- a/drivers/accessibility/speakup/speakup_soft.c
-+++ b/drivers/accessibility/speakup/speakup_soft.c
-@@ -215,17 +215,17 @@ static int softsynth_close(struct inode *inode, struct file *fp)
- 	return 0;
- }
- 
--static ssize_t softsynthx_read(struct file *fp, char __user *buf, size_t count,
--			       loff_t *pos, int unicode)
-+static ssize_t softsynthx_read(struct kiocb *iocb, struct iov_iter *to,
-+			       int unicode)
- {
- 	int chars_sent = 0;
--	char __user *cp;
- 	char *init;
- 	size_t bytes_per_ch = unicode ? 3 : 1;
- 	u16 ch;
- 	int empty;
- 	unsigned long flags;
- 	DEFINE_WAIT(wait);
-+	size_t count = iov_iter_count(to);
- 
- 	if (count < bytes_per_ch)
- 		return -EINVAL;
-@@ -241,7 +241,7 @@ static ssize_t softsynthx_read(struct file *fp, char __user *buf, size_t count,
- 				break;
- 		}
- 		spin_unlock_irqrestore(&speakup_info.spinlock, flags);
--		if (fp->f_flags & O_NONBLOCK) {
-+		if (iocb->ki_filp->f_flags & O_NONBLOCK) {
- 			finish_wait(&speakup_event, &wait);
- 			return -EAGAIN;
- 		}
-@@ -254,7 +254,6 @@ static ssize_t softsynthx_read(struct file *fp, char __user *buf, size_t count,
- 	}
- 	finish_wait(&speakup_event, &wait);
- 
--	cp = buf;
- 	init = get_initstring();
- 
- 	/* Keep 3 bytes available for a 16bit UTF-8-encoded character */
-@@ -278,22 +277,20 @@ static ssize_t softsynthx_read(struct file *fp, char __user *buf, size_t count,
- 		if ((!unicode && ch < 0x100) || (unicode && ch < 0x80)) {
- 			u_char c = ch;
- 
--			if (copy_to_user(cp, &c, 1))
-+			if (!copy_to_iter_full(&c, 1, to))
- 				return -EFAULT;
- 
- 			chars_sent++;
--			cp++;
- 		} else if (unicode && ch < 0x800) {
- 			u_char s[2] = {
- 				0xc0 | (ch >> 6),
- 				0x80 | (ch & 0x3f)
- 			};
- 
--			if (copy_to_user(cp, s, sizeof(s)))
-+			if (!copy_to_iter_full(s, sizeof(s), to))
- 				return -EFAULT;
- 
- 			chars_sent += sizeof(s);
--			cp += sizeof(s);
- 		} else if (unicode) {
- 			u_char s[3] = {
- 				0xe0 | (ch >> 12),
-@@ -301,46 +298,43 @@ static ssize_t softsynthx_read(struct file *fp, char __user *buf, size_t count,
- 				0x80 | (ch & 0x3f)
- 			};
- 
--			if (copy_to_user(cp, s, sizeof(s)))
-+			if (!copy_to_iter_full(s, sizeof(s), to))
- 				return -EFAULT;
- 
- 			chars_sent += sizeof(s);
--			cp += sizeof(s);
- 		}
- 
- 		spin_lock_irqsave(&speakup_info.spinlock, flags);
- 	}
--	*pos += chars_sent;
-+	iocb->ki_pos += chars_sent;
- 	empty = synth_buffer_empty();
- 	spin_unlock_irqrestore(&speakup_info.spinlock, flags);
- 	if (empty) {
- 		speakup_start_ttys();
--		*pos = 0;
-+		iocb->ki_pos = 0;
- 	}
- 	return chars_sent;
- }
- 
--static ssize_t softsynth_read(struct file *fp, char __user *buf, size_t count,
--			      loff_t *pos)
-+static ssize_t softsynth_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	return softsynthx_read(fp, buf, count, pos, 0);
-+	return softsynthx_read(iocb, to, 0);
- }
- 
--static ssize_t softsynthu_read(struct file *fp, char __user *buf, size_t count,
--			       loff_t *pos)
-+static ssize_t softsynthu_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	return softsynthx_read(fp, buf, count, pos, 1);
-+	return softsynthx_read(iocb, to, 1);
- }
- 
- static int last_index;
- 
--static ssize_t softsynth_write(struct file *fp, const char __user *buf,
--			       size_t count, loff_t *pos)
-+static ssize_t softsynth_write(struct kiocb *iocb, struct iov_iter *from)
- {
- 	unsigned long supplied_index = 0;
-+	size_t count = iov_iter_count(from);
- 	int converted;
- 
--	converted = kstrtoul_from_user(buf, count, 0, &supplied_index);
-+	converted = kstrtoul_from_iter(from, count, 0, &supplied_index);
- 
- 	if (converted < 0)
- 		return converted;
-@@ -376,8 +370,8 @@ static unsigned char get_index(struct spk_synth *synth)
- static const struct file_operations softsynth_fops = {
- 	.owner = THIS_MODULE,
- 	.poll = softsynth_poll,
--	.read = softsynth_read,
--	.write = softsynth_write,
-+	.read_iter = softsynth_read,
-+	.write_iter = softsynth_write,
- 	.open = softsynth_open,
- 	.release = softsynth_close,
- };
-@@ -385,8 +379,8 @@ static const struct file_operations softsynth_fops = {
- static const struct file_operations softsynthu_fops = {
- 	.owner = THIS_MODULE,
- 	.poll = softsynth_poll,
--	.read = softsynthu_read,
--	.write = softsynth_write,
-+	.read_iter = softsynthu_read,
-+	.write_iter = softsynth_write,
- 	.open = softsynth_open,
- 	.release = softsynth_close,
- };
--- 
-2.43.0
+--aLBybTFZShsDA3p/
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Apr 10, 2024 at 08:28:57PM +0200, Alban Browaeys wrote:
+> Le jeudi 28 mars 2024 =E0 18:01 +0000, Conor Dooley a =E9crit=A0:
+> > On Thu, Mar 28, 2024 at 06:00:03PM +0100, Alban Browaeys wrote:
+> > > Le mardi 26 mars 2024 =E0 19:46 +0000, Conor Dooley a =E9crit=A0:
+> > > > On Tue, Mar 26, 2024 at 07:54:35PM +0100, Folker Schwesinger via
+> > > > B4
+> > > > Relay wrote:
+> > > > > From: Folker Schwesinger <dev@folker-schwesinger.de>
+> > > > > -	if (of_property_read_bool(dev->of_node,
+> > > > > "rockchip,enable-
+> > > > > strobe-pulldown"))
+> > > > > -		rk_phy->enable_strobe_pulldown =3D
+> > > > > PHYCTRL_REN_STRB_ENABLE;
+> > > > > +	if (of_property_read_bool(dev->of_node,
+> > > > > "rockchip,disable-
+> > > > > strobe-pulldown"))
+> > > > > +		rk_phy->enable_strobe_pulldown =3D
+> > > > > PHYCTRL_REN_STRB_DISABLE;
+> > > >=20
+> > > > Unfortunately you cannot do this.
+> > > > Previously no property at all meant disabled and a property was
+> > > > required
+> > > > to enable it. With this change the absence of a property means
+> > > > that
+> > > > it
+> > > > will be enabled.
+> > > > An old devicetree is that wanted this to be disabled would have
+> > > > no
+> > > > property and will now end up with it enabled. This is an ABI
+> > > > break
+> > > > and is
+> > > > clearly not backwards compatible, that's a NAK unless it is
+> > > > demonstrable
+> > > > that noone actually wants to disable it at all.
+> > >=20
+> > >=20
+> > > But the patch that introduced the new default to disable the
+> > > pulldown
+> > > explicitely introduced a regression for at least 4 boards.
+> > > It took time to sort out that the default to disable pulldown was
+> > > the
+> > > culprit but still.
+> > > Will we carry this new behavor that breaks the default design for
+> > > rk3399 because since the regression was introduced new board
+> > > definition
+> > > might have expceted this new behavior.
+> > >=20
+> > > Could the best option be to revert to =E9not set a default
+> > > enable/disable
+> > > pulldown" (as before the commit that introduced the regression) and
+> > > allow one to force the pulldown via the enable/disable pulldown
+> > > property?
+> > > I mean the commit that introduced a default value for the pulldown
+> > > did
+> > > not seem to be about fixing anything. But it broke a lot. ANd it
+> > > was
+> > > really really hard to find the description of this commit to
+> > > understand
+> > > that one had to enable pulldown to restore hs400.
+> > >=20
+> > > In more than 3 years, only one board maintainer noticed that this
+> > > property was required to get back HS400=A0 and thanks to a user
+> > > telling
+> > > me that this board was working I found from this board that this
+> > > property was "missing" from most board definitions (while it was
+> > > not
+> > > required before).
+> > >=20
+> > >=20
+> > > I am all for not breaking ABI. But what about not reverting a patch
+> > > that already broke ABI because this patch introduced a new ABI that
+> > > we
+> > > don't want to break?
+> > > I mean shouldn't a new commit with a new ABI that regressed the
+> > > kernel
+> > > be reverted?
+> >=20
+> > I think I said it after OP replied to me yesterday, but this is a
+> > pretty
+> > shitty situation in that the original default picked for the property
+> > was actually incorrect. Given it's been like this for four years
+> > before
+> > anyone noticed, and others probably depend on the current behaviour,
+> > that's hard to justify.
+> >=20
+>=20
+> A lot of people noticed fast that HS400 was broken in the 5.10 branch
+> but due to another commit (more later, ie double regulator init that
+> messed up emmc) this second breakage was not detected. But mostly
+> downstream. And most if not all rk3399 boards in Armbian had HS400
+> disabled.
+>=20
+>=20
+> It took 3 years to detect that HS400 was broken on a few boards like
+> Rock Pi4 in the upstream kernel. Any might still be broken.
+> I would not count on the fact that keeping the current behavior equals
+> no more broken boards.
+>=20
+> From the previous exchanges the boards that requires the pulldown to be
+> disabled seems well known.
+>=20
+> Though I am fine with adding a property to set enable pulldown to any
+> board definition file where that is required.
+>=20
+> Only I do not believe keeping the statu quo equal everything works
+> because it has been 3 years.
+
+FWIW, I didn't say this. Clearly if that was the case, this patch would
+never have arrived.
+
+> In fact this commit reached the downstream kernels way later. Any
+> stayed with the 5.10 branch for years.
+>=20
+> But on the other side the disable pulldown by default is alraedy in
+> stable/linux-rolling-lts .
+>=20
+> > > Mind fixing the initial regression 8b5c2b45b8f0 "phy: rockchip: set
+> > > pulldown for strobe line in dts" does not necessarily mean changing
+> > > the
+> > > default to the opposite value but could also be reverting to not
+> > > setting a default.
+> >=20
+> > That's also problematic, as the only way to do this is make setting
+> > one of the enabled or disabled properties required, which is also an
+> > ABI
+> > break, since you'd then be rejecting probe if one is not present.
+>=20
+>=20
+> I don't understand.
+> How reverting to not set either pulldown enabled or disabled by default
+> force all board to set either enabled or disabled.
+> I was telling about making the pulldown set by kernel optional be it
+> enabled or disabled to revert to the previous behavior.=20
+>=20
+> I mean before the patch to set a default pulldown value (to disabled)
+> there were no forced value.
+
+Ah, maybe I misunderstood what the code originally did. Did the original
+code leave the bit however the bootloader or reset value had left it?
+In that case, probe wouldn't be rejected and you'd not have the sort of
+issue that I mentioned above.
+
+> > > Though I don't know if there are pros to setting a default.
+> >=20
+> > What you probably have to weigh up is the cons of each side. If what
+> > you
+> > lose is HS400 mode with what's in the kernel right now but switching
+> > to
+> > what's been proposed would entirely break some boards, I know which
+> > I think the lesser of two evils is.
+>=20
+> More boards (even if not the most wide spread it seems) are broken by
+> the current behavior.
+>=20
+> I agree that only HS400 is broken by keeping the status quo. But as far
+> as I understand only HS400 will be broken either way.
+> Be that by keeping the current disable pulldown which break the boards
+> based on the rockchip default design or the boards that are non-
+> standard or have a broken design.
+> Both case this lead to data corruption on boot to eMMC.
+>=20
+> The only pro of keeping the current value the default is that most
+> board broken by the new default introduced in 2020 "might" already be
+> fixed (but that is just a guess).
+>=20
+> > It's probably up to the platform maintainer to weigh in at this
+> > point.
+>=20
+> I am not knowledged into the delegation scope. You mean that from now
+> on it is up to the rockchip maintainer?
+> I am fine with it either way.
+
+Yes, I meant the rockchip maintainer. I'm only a lowly bindings
+maintainer, without any knowledge of rockchip specfics or the type of
+boards we're talking about being broken here. Someone has to make a
+judgement call about which "no property" behaviour is used going forward
+and I don't want that to be me!
+
+> I just wanted to point out that maybe we don't have to set a pulldown
+> value after all. And that then all boards will be fine as before
+> setting the pulldown explicitly was introduced.
+
+By "all boards will be fine" you mean "all boards that expected the
+kernel didn't touch this bit will be fine". The boards that need the
+kernel to set this bit because it {comes out of reset,is set by firmware}
+incorrectly are going to need a property added if we revert the default
+behaviour to not touching the bit.
+
+> In fact I am more eager to get this fixed be it by adding a enable-
+> pulldown property to the board definitions, than to change the current
+> behavior.
+> Just wanted to sort out if that was not the wrong way to fix this
+> issue. (ie if adding a setting on most boards was wrong).
+
+> During more than 2 years, I tried various patches and discussed on
+> forums about the HS400 breakage. I had bisected the regulator init
+> issue in the 5.10 branch. Sadly it took so much time for this issue to
+> be understood that when the force pulldown to disable commit was
+> introduced downstream before the first issue go fixed.
+> This only made the matter worse because when one fixed the double
+> regulator init issue HS400 was still broken, this time because the
+> pulldown was forced to disable. But nobody noticed this commit that
+> forced a default pulldown state (that was older than the regulator
+> commit from 5.13 backported to the 5.10 stable branch commit, but that
+> reached downstream later due to not having been backported to 5.10 from
+> 5.11).
+> Otherwise we would have emailed immeditaly.
+> Bisecting was only able to catch the first breakage (as it was only
+> fixed after the second breakage was introduced).
+>=20
+> Maybe the problem is that me and others did not complained to the
+> kernel upstream ML because we were using heavily patched downstream
+> kernels (like most if not all downstream ARM kernels). So sadly, the
+> forums from back then are filled with complaints but nothing seemed to
+> have reached the Linux ML.
+
+Aye, and all I can really say there is to buy boards from a vendor that
+doesn't use some horribly hacked downstream kernel, which I know is
+clearly an unsatisfactory suggestion. That said, we probably should have
+caught that the new default behaviour when the changes were made was not
+the default before. There was only one DT maintainer then though, and
+things just slip by :/
+
+--aLBybTFZShsDA3p/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhgE4AAKCRB4tDGHoIJi
+0vZnAP0TIt845yAiy0oBXp77jO++qGtE1WNNLRxIX6CYf3M/3QEAgrVA1XfZbrbH
+qEbevdZeVvM96FmZexF+UTJAHmwC2wo=
+=AiwS
+-----END PGP SIGNATURE-----
+
+--aLBybTFZShsDA3p/--
