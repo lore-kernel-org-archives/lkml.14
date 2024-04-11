@@ -1,140 +1,84 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39B513B7AA
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9B0E57F
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 05:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712813793; cv=none; b=kMVFmQ2yr+asADYuzatf0Xh6wrgjyuqoNqI3Mrexp0a7tOj74mZvnsVeXo7zE7IR3J1ONoaBvuhGyQHDpVe4so2CO+FCzJ9US0HS7qCJ2HmNZm1E2X9NOlaQ1oHm2B5yKXeWvZuNDyPQ6cZ4KgX0zH+ddCRQp3bnoxMWcO4EaMQ=
+	t=1712814117; cv=none; b=VuosBFjPwvuOwF3qIrZC1PtycTcnrGow24r4lHIDpiFDEOn9pPilRPfGASL/iiC4foZmjkMnv711LDg5iy1A7wEnXg4NLd6cVT0Ixkv79CTKLe7RPlKfiNDAnpS2dcJwqgcrkpgrl8NUeIBMfnQ5zS720990vlwbxRt99p7o3Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712813793; c=relaxed/simple;
-	bh=9Pa5OXbNJf9HL7UJhH3JcFa5n8z2BXnqXldXUMG2phA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oHlcrs5atHAZPSnZ6jZ9+nZ1EVNBgTSQL5TbqOVbZx9YJ8dt+VTVQfl049BPg9UuE7ZYkn3QkkoAojmP1p/yDUoIQy4z0+ZiXKNoqcBAvo9TblX0r38WLGzh6W9OV4xNJwlZVbcYABBvtozyblxLpijHyrI9xHm8goEvT2wC9eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=none smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=UVEA5coY; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1712814117; c=relaxed/simple;
+	bh=UxjF62Kauzg32l2Xaebivdamax7t6IDMUPCds7LpphY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cO+lODqXwxYmVKuxH3xx1sZOVwc+KcVxt2dYdMWNkY2JGDmu5jyDP8vAwIxvMVF4V4t+GnHHRgEez2M2msTru3V61a2/iIEzG5KIFbeieXSjPGUQWG15enP6vPRP/oDN30G0Ka9UHivtGIbpEd5cm5BqUkY9HiITWLGm1HLWUBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJJR4NwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="UVEA5coY"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-434c695ec3dso16727241cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 10 Apr 2024 22:36:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1712813790; x=1713418590; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5O5BYI4OdHldRtjTHclfiNrTCLX6On9bTqWbaBCK7vA=;
-        b=UVEA5coYYeRS8uJ/hQdFaOIXudpCoLobLBTccakXm0Jyi/CMcxJbV87hXhB+g288IO
-         nO1t0+AtE6NoMd7ULm8mDKJPUBZXvqwSqAoQhKL49YJ9qNJ4iS8UYX90YNH8RmLsGeG9
-         uiduuU9TNk/JEWgebJZFhmsYyXGobYyK7TynOxqkYXy0GmkTSIAzf4twCCQMTp7ewm1O
-         bGTSinl2jts3Rpw1r3D+9y29/a/mqzNqcj3eq+vdswTpfffeJc109bJRVnY2QqD+F99H
-         DGRDReEpKwQCihIaGfXHOjVN90Z7epVBaScEyer1BXHuG5fEAoTgpxjsASGC565C+eNb
-         EVsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712813790; x=1713418590;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5O5BYI4OdHldRtjTHclfiNrTCLX6On9bTqWbaBCK7vA=;
-        b=RRlEzhOIj9TC6sZzehF0FLFWGotMPCvl4h1bu4hdf239tAnZvwYOkoRwH2GLP75GMk
-         UihMhG0TMMcXmV4EqaLK6bgdNLU4zPAaTT//ee1hxmww7PvuecGqCXCJIsJVXCXQgRu6
-         MwqYcy4QSBI3xoIrw/A+mbgDIB+jvLZaTiequt7Rn79U+i4Ba55wHR+/9i/Sx28fb04+
-         yvVjje/KILsDdpAfwYQIiqRyL+RrtPbfVS/ihbOvBJjljl5kclnEzDpkyarNPM9PoKN4
-         HPRdXGp5R9rf+9xp8hl76FkcUDPOHu2ez4A7+pm1tGMRt+5QR/yLSDtVwRJVjoHeFc55
-         Q8/g==
-X-Gm-Message-State: AOJu0Yxw4yyr5p8YhjN5LbJWdUF6vKHQSvtzMZyHBhWlNixwb7kzpTBk
-	BD7EYrLuULEQoDJgmd7hUZCQ2BdT/YFRA+nyef3wpAQkqimy7bTGVO14JhWmYxiBsa2jTH7D8tP
-	eKQz6VxmxgjfaAc9PmfUTyDNPDYYOfelZBwLErSP+fHz57Bb7
-X-Google-Smtp-Source: AGHT+IHXub++9CumsI9Ywnl2w4/5t7+EuZITPbvJVWOGFVEzJbCVmljtvqkv2l8ii4JKL3C+bb02heSSmwmSGs85R3Q=
-X-Received: by 2002:a05:622a:130f:b0:436:5951:6005 with SMTP id
- v15-20020a05622a130f00b0043659516005mr1527116qtk.22.1712813790711; Wed, 10
- Apr 2024 22:36:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJJR4NwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C9BC433C7;
+	Thu, 11 Apr 2024 05:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712814116;
+	bh=UxjF62Kauzg32l2Xaebivdamax7t6IDMUPCds7LpphY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nJJR4NwNsSvhHf/p1YsY5oeQDmaEZGDBUJBWYueA/uxwtr4ar/PhrgaPmg8g6q4sl
+	 5chDOH0UQyOsuAmXoQ5WkXI+mXSdYwnOWv50+FufB/nCcLMLrnT1uXUF+2qnMTGiz2
+	 zS3Vxp+ZPaPmz403I61WUxkwd1ytUJEELo86CpceHONjPkuS8EBEXQHwqJEfVb0h91
+	 pIbS3T/Y+IOdHOF10XAiAsP3h07jGjoZUR6y+mAuNMKaapWvq+aNpuM2bStTeXfDBP
+	 w15CHu5/MqmofYTAL0B6z8NDEbvh4hH7vvDdNJKZwe6nbRlQr66PRS8mxNWrRRdViT
+	 ImAgIR6UUDlIg==
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>
+Subject: [PATCH 0/7] x86/bugs: BHI fixes / improvements
+Date: Wed, 10 Apr 2024 22:40:44 -0700
+Message-ID: <cover.1712813475.git.jpoimboe@kernel.org>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411051124.386817-1-yuri.benditovich@daynix.com> <20240411051124.386817-2-yuri.benditovich@daynix.com>
-In-Reply-To: <20240411051124.386817-2-yuri.benditovich@daynix.com>
-From: Yuri Benditovich <yuri.benditovich@daynix.com>
-Date: Thu, 11 Apr 2024 08:36:19 +0300
-Message-ID: <CAOEp5OdiSW9ddv53JQHY57fCTwGc3eq-uWstSGcYFsMaW-FtOw@mail.gmail.com>
-Subject: Re: [PATCH net v2 1/1] net: change maximum number of UDP segments to 128
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-	"David S . Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
-	Jason Wang <jasowang@redhat.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, yan@daynix.com, andrew@daynix.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-I've just fixed the 'Fixed:' line and extended the commit message.
-We can continue the discussion in the previous email thread or move it here=
-.
+An assortment of BHI fixes.
 
-On Thu, Apr 11, 2024 at 8:11=E2=80=AFAM Yuri Benditovich
-<yuri.benditovich@daynix.com> wrote:
->
-> The commit fc8b2a619469
-> ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validation")
-> adds check of potential number of UDP segments vs
-> UDP_MAX_SEGMENTS in linux/virtio_net.h.
-> After this change certification test of USO guest-to-guest
-> transmit on Windows driver for virtio-net device fails,
-> for example with packet size of ~64K and mss of 536 bytes.
-> In general the USO should not be more restrictive than TSO.
-> Indeed, in case of unreasonably small mss a lot of segments
-> can cause queue overflow and packet loss on the destination.
-> Limit of 128 segments is good for any practical purpose,
-> with minimal meaningful mss of 536 the maximal UDP packet will
-> be divided to ~120 segments.
-> The number of segments for UDP packets is validated vs
-> UDP_MAX_SEGMENTS also in udp.c (v4,v6), this does not affect
-> quest-to-guest path but does affect packets sent to host, for
-> example.
-> It is important to mention that UDP_MAX_SEGMENTS is kernel-only
-> define and not available to user mode socket applications.
-> In order to request MSS smaller than MTU the applications
-> just uses setsockopt with SOL_UDP and UDP_SEGMENT and there is
-> no limitations on socket API level.
->
-> Fixes: fc8b2a619469 ("net: more strict VIRTIO_NET_HDR_GSO_UDP_L4 validati=
-on")
-> Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
-> ---
->  include/linux/udp.h                  | 2 +-
->  tools/testing/selftests/net/udpgso.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/udp.h b/include/linux/udp.h
-> index 3748e82b627b..7e75ccdf25fe 100644
-> --- a/include/linux/udp.h
-> +++ b/include/linux/udp.h
-> @@ -108,7 +108,7 @@ struct udp_sock {
->  #define udp_assign_bit(nr, sk, val)            \
->         assign_bit(UDP_FLAGS_##nr, &udp_sk(sk)->udp_flags, val)
->
-> -#define UDP_MAX_SEGMENTS       (1 << 6UL)
-> +#define UDP_MAX_SEGMENTS       (1 << 7UL)
->
->  #define udp_sk(ptr) container_of_const(ptr, struct udp_sock, inet.sk)
->
-> diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftes=
-ts/net/udpgso.c
-> index 1d975bf52af3..85b3baa3f7f3 100644
-> --- a/tools/testing/selftests/net/udpgso.c
-> +++ b/tools/testing/selftests/net/udpgso.c
-> @@ -34,7 +34,7 @@
->  #endif
->
->  #ifndef UDP_MAX_SEGMENTS
-> -#define UDP_MAX_SEGMENTS       (1 << 6UL)
-> +#define UDP_MAX_SEGMENTS       (1 << 7UL)
->  #endif
->
->  #define CONST_MTU_TEST 1500
-> --
-> 2.40.1
->
+Josh Poimboeuf (7):
+  x86/bugs: BHI documentation fixes
+  x86/bugs: Cache the value of MSR_IA32_ARCH_CAPABILITIES
+  x86/bugs: Fix BHI handling of RRSBA
+  x86/bugs: Clarify that syscall hardening isn't a BHI mitigation
+  x86/bugs: Only harden syscalls when needed
+  x86/bugs: Remove CONFIG_BHI_MITIGATION_AUTO and spectre_bhi=auto
+  x86/bugs: Replace CONFIG_SPECTRE_BHI_{ON,OFF} with
+    CONFIG_MITIGATION_SPECTRE_BHI
+
+ Documentation/admin-guide/hw-vuln/spectre.rst | 22 ++---
+ .../admin-guide/kernel-parameters.txt         | 12 +--
+ arch/x86/Kconfig                              | 22 +----
+ arch/x86/entry/common.c                       | 30 +++++-
+ arch/x86/entry/syscall_32.c                   | 11 +--
+ arch/x86/entry/syscall_64.c                   |  8 +-
+ arch/x86/entry/syscall_x32.c                  |  7 +-
+ arch/x86/include/asm/cpufeatures.h            |  1 +
+ arch/x86/include/asm/syscall.h                |  8 +-
+ arch/x86/kernel/cpu/bugs.c                    | 98 +++++++++++--------
+ 10 files changed, 119 insertions(+), 100 deletions(-)
+
+-- 
+2.44.0
+
