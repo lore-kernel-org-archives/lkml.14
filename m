@@ -1,98 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29C44AEF6;
-	Thu, 11 Apr 2024 18:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07427502B5;
+	Thu, 11 Apr 2024 18:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858819; cv=none; b=JDc/hnJ1KQL31+E8pTk5jvqJM3vnsC9usL9meeQfT0j3QfJrFLNht9GzLvmb5t03nyNYoHex6rUV+GavHrB70C8Q7s8F1/oWNljPJp6zY+uz2lter6m5uTRpS/EdbOkhejjKA85OEn0KCqzEAKMS2CTep+iulHXi7BaKvq7k/XU=
+	t=1712858831; cv=none; b=b7b7Wad+kvxYDHNiGtdiziJsGq+o6/OkPBpSWoGqSWWbGujHyT1SESKjK8vBt2lY3P2DdT6+z95ylELCdaJ4huln56E0xEQYogSkmRol50+dbGixI0dkl+cEEWdCvx9MKi81THytFuOwQGkWunFR33aZ3pN8D9Kdn6RisrZKQNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858819; c=relaxed/simple;
-	bh=OBtJj7ZcYW9SVRHkZ8Ppp3O8vjrSvDbG3fOF0xOk690=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=FYlGTXHxRfXJxoUsM1q0Yq4IdJS5+89CevT9S05/lw6KYyZbin5E9ackExcviYeWWymC9MNhevjoywnoxn1tIGw7NEeNv74eUx2//X+EYSZIuvcxz+Cnj4IeRfjnTYo3H9h0lRe/G13cIc9M1rGaaS9jjKdmUqIuYGi/n6FqwgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1sjHJRc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712858831; c=relaxed/simple;
+	bh=h05CbtcAxI8aFNKx4QsEB4SWlbdKRKn/4mkPD2O/G50=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k8cU41YIfDUofAKp6VnS6lcKAF58GQyG5Jmp1wvtjFTyn1w50IjGsXuL+EdLnIuGvlJBk96dcVhf4BSm0b8GuSi0tYRIX0huq2hNuWMyAcCwUeqr91ohY9qoW8/m2zVWpiWLRenxcul5vYxPIFd8PfOA+xdqdelMPM7NAiXM37s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NKghfGn/; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1sjHJRc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515C8C113CD;
-	Thu, 11 Apr 2024 18:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712858819;
-	bh=OBtJj7ZcYW9SVRHkZ8Ppp3O8vjrSvDbG3fOF0xOk690=;
-	h=From:Date:Subject:To:Cc:From;
-	b=E1sjHJRcmAr7dYRq/xOaSMm0QKZqtA5gpGFb5Dlg0lAC2ipYJ+6jUcwyHqNU0HRsP
-	 F4LfxCL6/aoW35PK3tIBZxR65G8JnRs0K4xXI/4+PoMazruYwcB7iw+VbafR8F7+rf
-	 4G6RgWizq52t2MU3J3SLsk9fblAV0t5m/xAj47T1yIIyuy6LNdBNm9X2EweG88gaCR
-	 46N2E0GTVk56Q8dY1MbCyHHeEAjlHtmI9OfeQod+AK9OiCuh8Y37R+Y7vQ1CPEMmY7
-	 SyJQ3p6F1owph8MOQYqGdw27AiSBw+cs3Dd/uOOakNUsWZWyUU5pWVR6gZ24nyHx5N
-	 SNdr2jRGgZkzA==
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-22ed9094168so37279fac.1;
-        Thu, 11 Apr 2024 11:06:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCURjbqHpNNh1w5l94RtqAQAba0eDgi5dyZ2zOCxXlMwTednWWSPMVqcossqPnHIca9GYRkafvGPkfGzaJcH4LvFDpM5hTbPcX7VadmZ
-X-Gm-Message-State: AOJu0YwAnonuLY3UKWaJNPYoEvdu748FUoPUd6/2yCkSYcupZxaU5xJl
-	PPMo+zWcSQE/sjXM7SMIS+zgb20/HbcSVSFHyrE1PGEvtnk6y03IBXbtah4NWOcytwCs+H+K2q0
-	d8HuF9lUJBtavPb6VWCP/jIsZugg=
-X-Google-Smtp-Source: AGHT+IHH6DIatP4LCBLRv1/7UkplGXpudSu3Xpr5O0NHr8dyFntl9eTZZGSg65NpawsRSDpm77MDno8ofi02EE5ZJMY=
-X-Received: by 2002:a05:6871:612:b0:229:ee6d:77da with SMTP id
- w18-20020a056871061200b00229ee6d77damr293559oan.2.1712858818614; Thu, 11 Apr
- 2024 11:06:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NKghfGn/"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-343d7ff2350so22872f8f.0;
+        Thu, 11 Apr 2024 11:07:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712858828; x=1713463628; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yWLNY8BuzmLk8t2ZD8eDNEWlsMPvC04pg9vc4aQu/60=;
+        b=NKghfGn/DICxY5vkB71tbaro01KTIpAUUc+9NnI0L2xYEXOt8YyxgK7IFysFW+NyyE
+         A4tgstu93Gpj1PNN+V+W6YiAW4+OWlcaico8lVlQxzWHKImxrntVx9xkYyqgtkamGFjA
+         G1GgZ99+iKhZ0OBCLwx1iDEB/Ij7jcjLFPJOflC+Atc/MfNpSRwNl+LqODurC0gCkcg+
+         9HBI9AAWaG63btPGsIHb1bsl/bbAs64Vm/XDpnYPF9klfLz6iMxumsbLjh/e4Oau0bT+
+         Yze7VySvokxFlL9QZupGkb/EmgZ1Kh1VTzGAg2MziCZtcfTcZ8kc/AIuLBy0dPotFDhh
+         YI9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712858828; x=1713463628;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yWLNY8BuzmLk8t2ZD8eDNEWlsMPvC04pg9vc4aQu/60=;
+        b=nGuuHj9wXhd4yt3937lT1Xue9LQOlP36o8Bp9G+V4+n9DuSi0TAeIQ2PYKVPBwrz3b
+         ORzbWbwXVLkTMH+Z2CHb2pfyZL8nrSSD9sg6W5kOtr8fBGV4JL9yjahxq5o20IgnSgEJ
+         vdn5/O5aM1eA23rcH8CPRZTeym+c5qaqKvol0vnD1MI1A860NqkWDVtDLUOA2R1c1/WK
+         9LisOYcvrBvXHampNn0w9O1vqELobopJZL7aMfOrvcjycNMomehLiJDuubhiEMckmDOE
+         mdOFx+Q5GA1fY1z4RVEA7umJ8ugGz/5reUWdOoKtyhwVPJNb7qJLrohcWmFvlPH0/XUe
+         KcCg==
+X-Gm-Message-State: AOJu0YxkUUE3JLWlOe3KiCrLzEz7LzJNbJo3tVgSh86hfvpuOODYXPMM
+	dd4Ajabs2bESTffhAGf+fE4LfxDb6gBm6al9GW5YpvVMeeJzDXj/DEIn9Q==
+X-Google-Smtp-Source: AGHT+IGwl4TS8EnUa5huGs5MMxc9kEB4SXxgszl+vnh77zhUlqYTRFW5luIwoiE/NoEpy4YydiENIA==
+X-Received: by 2002:a5d:47c2:0:b0:343:6b0c:7553 with SMTP id o2-20020a5d47c2000000b003436b0c7553mr223025wrc.55.1712858827273;
+        Thu, 11 Apr 2024 11:07:07 -0700 (PDT)
+Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
+        by smtp.gmail.com with ESMTPSA id k9-20020adfe3c9000000b00344a8f9cf18sm2324640wrm.7.2024.04.11.11.07.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 11:07:06 -0700 (PDT)
+From: Stafford Horne <shorne@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
+	Stafford Horne <shorne@gmail.com>
+Subject: [PATCH 0/5] OpenRISC FPU and Signal handling fixups
+Date: Thu, 11 Apr 2024 19:06:27 +0100
+Message-ID: <20240411180644.2023991-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 11 Apr 2024 20:06:47 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jH8rKc3=rNzDdWOobGb4xCCjK46eYoE3U729yRwpgCFQ@mail.gmail.com>
-Message-ID: <CAJZ5v0jH8rKc3=rNzDdWOobGb4xCCjK46eYoE3U729yRwpgCFQ@mail.gmail.com>
-Subject: [GIT PULL] ACPI fixes for v6.9-rc4
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Linus,
+This series has some fixups found when I was doing a deep dive
+documentation of the OpenRISC FPU support which was added in 2023.
 
-Please pull from the tag
+  http://stffrdhrn.github.io/hardware/embedded/openrisc/2023/08/24/or1k-fpu-linux-and-compilers.html
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- acpi-6.9-rc4
+The FPU handling has issues of being inefficient and also not providing the
+proper state if signals are received when handling syscalls.
 
-with top-most commit d7da7e7cec9868b24f0e39298156caf0277e82c7
+The series is small, so should be easy to see from the commit list but in
+summary does:
 
- Merge branch 'acpi-bus'
+ - Fixup some issues with exception handling.
+ - Adds CONFIG_FPU to allow disabling FPU support
+ - Fixups to e FPU handling logic moving the FPCSR state out of the kernel
+   stack pt_regs and into the task_struct.
 
-on top of commit fec50db7033ea478773b159e0e2efb135270e3b7
+Stafford Horne (5):
+  openrisc: traps: Convert printks to pr_<level> macros
+  openrisc: traps: Remove calls to show_registers before die
+  openrisc: traps: Don't send signals to kernel mode threads
+  openrisc: Add FPU config
+  openrisc: Move FPU state out of pt_regs
 
- Linux 6.9-rc3
+ arch/openrisc/Kconfig                 |   9 ++
+ arch/openrisc/include/asm/fpu.h       |  22 ++++
+ arch/openrisc/include/asm/processor.h |   1 +
+ arch/openrisc/include/asm/ptrace.h    |   3 +-
+ arch/openrisc/kernel/entry.S          |  15 +--
+ arch/openrisc/kernel/process.c        |   5 +
+ arch/openrisc/kernel/ptrace.c         |  18 ++--
+ arch/openrisc/kernel/signal.c         |  36 ++++++-
+ arch/openrisc/kernel/traps.c          | 144 ++++++++++++++------------
+ 9 files changed, 160 insertions(+), 93 deletions(-)
+ create mode 100644 arch/openrisc/include/asm/fpu.h
 
-to receive ACPI fixes for 6.9-rc4.
+-- 
+2.44.0
 
-These fix the handling of dependencies between devices in the ACPI
-device enumeration code and address a _UID matching regression from
-6.8 development cycle.
-
-Specifics:
-
- - Modify the ACPI device enumeration code to avoid counting
-   dependencies that have been met already as unmet (Hans de Goede).
-
- - Make _UID matching take the integer value of 0 into account as
-   appropriate (Raag Jadav).
-
-Thanks!
-
-
----------------
-
-Hans de Goede (1):
-      ACPI: scan: Do not increase dep_unmet for already met dependencies
-
-Raag Jadav (1):
-      ACPI: bus: allow _UID matching for integer zero
-
----------------
-
- drivers/acpi/scan.c     | 3 ++-
- include/acpi/acpi_bus.h | 8 +++++---
- 2 files changed, 7 insertions(+), 4 deletions(-)
