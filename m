@@ -1,35 +1,37 @@
-Received: from mout.perfora.net (mout.perfora.net [74.208.4.197])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE5E17C7F;
-	Thu, 11 Apr 2024 20:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04AF17C9B;
+	Thu, 11 Apr 2024 20:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712867165; cv=none; b=JPiOuWSQOz2u095d6xULQxCsdT/bKDzFncMm51DhfzrysZKnxikx3JZg6rsqJrs1EFIRGrUunDuKvyG1tMC6u7Mx2P+Cv88PmklNh3ryCv60jNLaPtN23+hO+/IpWEjUKcAjBTJJRzKCmz3GPzTC7V1Ah0VykY5dnLqSBYofFFA=
+	t=1712867166; cv=none; b=dU3vGsQ4D5I48RqFI5aPX5h47TUCtwjg1aJjFm4dPjGDEECnMuOHp7m2Mn6rsp/1mzttf4Z20mGJlYhwnTbKS9Cv5JDqyUJ9uys3VGbn3+Xv56FYEPm9HHEkSyxyGD8uaRmTI/i3PJ/+Pwes5FhHJmloNJ/U4K2M98JAXHJidD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712867165; c=relaxed/simple;
-	bh=+2XwDQ6lAn4Bx7+V6jX/KojsTWOswymbTXhB7XkGjWw=;
+	s=arc-20240116; t=1712867166; c=relaxed/simple;
+	bh=ZIhUJYvk/wOqSM1Ia5ds5H6P5YLEAb5YuO7xaYAFlVI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cHQ1l7H73QFN6e9zJgf9GMbj2iTCpZ6Y1EEOH3TIh93RGgn9Kv/+cWy70kOkmM7mg2fQQoSoR8WF4qmmNaD/oHh+8T3fOJq1cWmXnPo7ufff5EJEP2qPv59j81m4cx0YIona9FoJFu3gCB9A/309hNjICZrM0eArcozTaXYrRA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=TtlHFyvR; arc=none smtp.client-ip=74.208.4.197
+	 MIME-Version; b=sUbxzTca63pCMvbnZ4tbc3N43/CtjHYLsoF9zCV6JLVZoPWHvzLPmXWmcoL0OgF23Eg5FGLlK22iu+w/qNS+RR0UX45niFs3LuWaRFNEHJ0tsDbQzsJcj1ua27xS3XYfc6jpnPlv3I6KtfxCXwmdSYV4TUMneAhxn+Ame1h4Sq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=kk1nSTVt; arc=none smtp.client-ip=74.208.4.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="TtlHFyvR"
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="kk1nSTVt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
-	s=s1-ionos; t=1712867158; x=1713471958; i=parker@finest.io;
-	bh=uAlKCcZd53Dk25E1mU4G5eUWhLwVSNKWLZARPx1Vd/k=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=TtlHFyvRI6Kr9lAjljKBLlf7S2jloEqhkZQZzEI5SpolyfIMupBf4tzDmaVQ5E8m
-	 QHjuh1T/rLHQqkLJfOY5nMnnKSCnd1OSU7howzSWncicMBDxxJBzuRjkb42UD9AJR
-	 u0tBwfNOsyEUY1G+ZCDF25/hSiYaE1kHoG10MtTACMTWznOGm8JDDuYZgW64oxjl2
-	 C6Wo/VRHl8j2xCz2BzbWc5aLMXYciYgsgjQnsD52Ay/GPITW/+h6ccVS0KiQg2n4I
-	 oRtGMLiLjmJ9tSqu3pGx+hhsT+9euELnv1eyuqKGVLsU4YDxU0yDQ/ci1JxssGZ9t
-	 i6fpttzP/ymK4S6Ydg==
+	s=s1-ionos; t=1712867157; x=1713471957; i=parker@finest.io;
+	bh=/pMNEblpoORPGqBosh2QqloC4JBppA9VbN2iUpBE/p8=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=kk1nSTVtVfu2ynp1qOzpLu0CuH3B53XzvIyrqnB4GbOoREOIeraU2mSbqF6n5Wam
+	 nRgrT81pUR82Dc6iNqAtD5s41LoZ49Z34TUFMvQ1c9RLDn4cyDw0oj5as6URXYHVU
+	 67xk8oYRO/uC4PuF6Jc6Hr207es1qXt90qmBjYbVHS8qlADm/lxAKyC+0MAG3RtV6
+	 hNjrUZWl6HCp+pZVJDy6N/25yKJzERxzGuOZsMcO1uzuhof3u7wOsQsCQWwzoZCMO
+	 jjY3c6rN1d0e1C0SLnjOYaL4LtYRXouYn3kw/UfvrUQ5kUbdbCZ0xtQp0vXTcsZnr
+	 gNzhvsBf/4Cjat9Spg==
 X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
 Received: from finest.io ([98.159.241.229]) by mrelay.perfora.net (mreueus002
- [74.208.5.2]) with ESMTPSA (Nemesis) id 0LaEeW-1scdYJ3bTi-00cNNe; Thu, 11 Apr
+ [74.208.5.2]) with ESMTPSA (Nemesis) id 0MbODK-1sDdlx0u9s-00QmTM; Thu, 11 Apr
  2024 22:25:57 +0200
 From: parker@finest.io
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -37,9 +39,9 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-serial@vger.kernel.org
 Cc: Parker Newman <pnewman@connecttech.com>
-Subject: [PATCH v2 3/7] serial: exar: add support for config/set single MPIO
-Date: Thu, 11 Apr 2024 16:25:41 -0400
-Message-ID: <3e671b6c0d11a2d0c292947675ed087eaaa5445e.1712863999.git.pnewman@connecttech.com>
+Subject: [PATCH v2 1/7] serial: exar: adding missing CTI and Exar PCI ids
+Date: Thu, 11 Apr 2024 16:25:39 -0400
+Message-ID: <0a62e3c831ab93a583e5f29affdea87bd27ae9d6.1712863999.git.pnewman@connecttech.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <cover.1712863999.git.pnewman@connecttech.com>
 References: <cover.1712863999.git.pnewman@connecttech.com>
@@ -50,135 +52,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:yXBxXgdcJalhXxtH8gjTeGnupsP1RKxLCVurqpPIXIFf7CIdcfr
- JHmai1w/JQ4yp+ktShW+hu+yi6m/RhETynrnoNxAv61gBEgDoX7e5GPicA9QG0KyY5lJIjr
- cI5II2tdeo3Cj3E/x3xoQ01Yq7g+fNHKbcK02Ux7eJgIch9J/N5pA9zufh0HseGV6O50Aej
- i7TBIbMJ1PYrOKvpIKMuA==
+X-Provags-ID: V03:K1:cXmJLp/tzSoLCUkKqfmuM1UaagLN2AmJ3EvkXEYcSB4NZCiUkS6
+ z2BzbyJBI0yCNNW3lWT1iwTuGWvyRM5bXE1G0EYh8xJ0YE5+dAa+vtdZZc9zgaZq992n15C
+ 2Ss8g3nIqKe2Igse2VwIZ1aodDn971BT8KLu6R2T9uOyYTJIBCDiIT0J8nl0Gx2venDCuwK
+ SK6DIaXqDJezgFlbqOE6A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DpKvsfJhqzk=;cG+QJzw+y/TjMJhI+R3NDMhHo38
- Y05pfv2h7JRdf5o0S2/lBKtExZrYB8u5RDuePCwDFg2i98IlKFyzcHMos1wLWK416LdxSvMOH
- YNoPmi3W1MOg1nxzUy4lhe/yprLb00yiXknghTKU9AS45NBLJSrMjym75pH54+uqOn4fxGakr
- nUo1dhy3YY53VpnC1FNLz8VNE+ShsFGPX9qGnWcBUCZ8xMf+ZACNF8lOx9GZA8HhGLfNCNgq4
- xRFnOcRXcfCm5TbTJ50qd6oLRKHkbmIiqmX+qLMI11ijmqMHaywA7pAY2HkcRQcUQsU4VQG+v
- LU2OEAS93k3jNqppG6aop3s2jCIwYjc83MleaYUrLHPo3ZHXcwGimy4yV9CZjxt7+zO3M/NSq
- SmPRHMUT09mvLAoT6I6kMb5mclFREinMoX/tarxaMYMeGdAecQ3Aj2aqsYPbEyOvngb88EmDr
- QELkO6c/7jwVtC71vgfL4TB17TDG2cxEsnJIjA5z9dtzyWo7Wr9BVnJLqicltZODgiHnaCi37
- UyAsQ4GA1yV4GS+dQ63Q5alql9klj6Wj7V8Q/TmH2lp9+5WQv/+udfTwpoS8HI2VoNALz7mU+
- /kO6DyO1dSVkbzdn8sjO41NmR4JY4/0P3vUNAPYfQ2Csj267Av55uLXCwMFyxM/jaSvTLGUjC
- uu5aP/YT5mwTJ3GBcw6CbEcD1DID0BcQ6X3cbduonI5F4XP2+YrBUfmU9LTb7ajrItJCEK1dw
- w7kA8PKRKcUUg263CEMkKJ+7SCnXCSHmfXWBZGEVBSXoy+LbD/JiLc=
+UI-OutboundReport: notjunk:1;M01:P0:BSekdH7t9NU=;d2x6hKxVTe4Zt81uKmdZWJUoHSw
+ 0f8n5RgM+gXguAGFedwRNFXg4IAgyCXxdiXLw6a/MZAy1KygShEf8FSwQlxwZ+LUtkZ4xfAI6
+ p2f3bv+nzR8g4BpIP54GuIXSpDdKj0zlVsoBOK3uBO/mFmdR7TxCrw5ZLshmnBMD0ydX3iKJ2
+ INC+ic/LslRPLez4ReHZfTPTUsrnMB+FDThw4iPWLWU9Y1AjE3rUeLnmtgshyhvTMrlfqn4z7
+ UvuroCghhadEl3o6tPaOEvjUzGrIntQs71s/jWZ06mqNCtlr3jp6a26lqzOKhZIHeEiaMUAwO
+ J4VneNVSnPjoQJ2u6edQycygCE0ToQ2mh/ixHe5gdjhxOMVn0RRl9oeAqqCrsShmZ7ER7+2So
+ WsngorxHc22nIB67nYe9CigfftWdaNFB8C7UHR5uJBmtK1zCDeqXGV61Avp8af/FAap8vsGqP
+ GZN2YOBd2bfEyytBE3lSD9vD2/mCTwP245WSc5pSpnmG/D3FwQEMD+4QT6qsQzSu8dkHZ0396
+ gCLHgpDnkmkHBFbW0plQSElln//wYNv3tUd5n8cv/ZuYtq2wDY+U6imCC0CECfDhFi4QEfcG2
+ cCNxS7W24OrgCXt5lF2PvHD2fKr1kVf3mLjJgkFmmdUpSW6/rzskj2ns1QmucIeQ1eNc+alDd
+ C8UywUF7Q6VQxgxHkxI/fTnzYUZyUywJZDHacaWIUcCiIVH1tZuqOIIbXdxrjGQ1x8X2IFjZa
+ 5MsfJ92cmhTjIaUnWim083Rtls6avDRBYbCdxUmci4aPHLhU+79uHs=
 
 From: Parker Newman <pnewman@connecttech.com>
 
-Adds support for configuring and setting a single MPIO
+- Added Connect Tech and Exar IDs not already in pci_ids.h
 
 Signed-off-by: Parker Newman <pnewman@connecttech.com>
 =2D--
- drivers/tty/serial/8250/8250_exar.c | 88 +++++++++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ drivers/tty/serial/8250/8250_exar.c | 42 +++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
 diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250=
 /8250_exar.c
-index 49d690344e65..9915a99cb7c6 100644
+index 0440df7de1ed..4d1e07343d0b 100644
 =2D-- a/drivers/tty/serial/8250/8250_exar.c
 +++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -305,6 +305,94 @@ static int exar_ee_read(struct exar8250 *priv, uint8_=
-t ee_addr)
- 	return data;
- }
+@@ -46,8 +46,50 @@
+ #define PCI_DEVICE_ID_COMMTECH_4228PCIE		0x0021
+ #define PCI_DEVICE_ID_COMMTECH_4222PCIE		0x0022
 
-+/**
-+ * exar_mpio_config() - Configure an EXar MPIO as input or output
-+ * @priv: Device's private structure
-+ * @mpio_num: MPIO number/offset to configure
-+ * @output: Configure as output if true, inout if false
-+ *
-+ * Configure a single MPIO as an input or output and disable trisate.
-+ * If configuring as output it is reccomended to set value with
-+ * exar_mpio_set prior to calling this function to ensure default state.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int exar_mpio_config(struct exar8250 *priv,
-+			unsigned int mpio_num, bool output)
-+{
-+	uint8_t sel_reg; //MPIO Select register (input/output)
-+	uint8_t tri_reg; //MPIO Tristate register
-+	uint8_t value;
-+	unsigned int bit;
++#define PCI_VENDOR_ID_CONNECT_TECH				0x12c4
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_SP_OPTO        0x0340
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_A      0x0341
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_B      0x0342
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS           0x0350
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_A         0x0351
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_B         0x0352
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS           0x0353
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_A        0x0354
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_B        0x0355
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS_OPTO      0x0360
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_A    0x0361
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_B    0x0362
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP             0x0370
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232         0x0371
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_485         0x0372
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP           0x0373
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP           0x0374
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP           0x0375
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232_NS      0x0376
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_LEFT   0x0380
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_RIGHT  0x0381
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XP_OPTO        0x0382
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_XPRS_OPTO    0x0392
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP        0x03A0
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232    0x03A1
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_485    0x03A2
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232_NS 0x03A3
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XEG001               0x0602
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_BASE           0x1000
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_2              0x1002
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_4              0x1004
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_8              0x1008
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_12             0x100C
++#define PCI_SUBDEVICE_ID_CONNECT_TECH_PCIE_XR35X_16             0x1010
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X          0x110c
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X          0x110d
++#define PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16                 0x1110
 +
-+	if (mpio_num < 8) {
-+		sel_reg =3D UART_EXAR_MPIOSEL_7_0;
-+		tri_reg =3D UART_EXAR_MPIO3T_7_0;
-+		bit =3D mpio_num;
-+	} else if (mpio_num >=3D 8 && mpio_num < 16) {
-+		sel_reg =3D UART_EXAR_MPIOSEL_15_8;
-+		tri_reg =3D UART_EXAR_MPIO3T_15_8;
-+		bit =3D mpio_num - 8;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	//Disable MPIO pin tri-state
-+	value =3D exar_read_reg(priv, tri_reg);
-+	value &=3D ~(BIT(bit));
-+	exar_write_reg(priv, tri_reg, value);
-+
-+	value =3D exar_read_reg(priv, sel_reg);
-+	//Set MPIO as input (1) or output (0)
-+	if (output)
-+		value &=3D ~(BIT(bit));
-+	else
-+		value |=3D BIT(bit);
-+
-+	exar_write_reg(priv, sel_reg, value);
-+
-+	return 0;
-+}
-+/**
-+ * exar_mpio_set() - Set an Exar MPIO output high or low
-+ * @priv: Device's private structure
-+ * @mpio_num: MPIO number/offset to set
-+ * @high: Set MPIO high if true, low if false
-+ *
-+ * Set a single MPIO high or low. exar_mpio_config must also be called
-+ * to configure the pin as an output.
-+ *
-+ * Return: 0 on success, negative error code on failure
-+ */
-+static int exar_mpio_set(struct exar8250 *priv,
-+		unsigned int mpio_num, bool high)
-+{
-+	uint8_t reg;
-+	uint8_t value;
-+	unsigned int bit;
-+
-+	if (mpio_num < 8) {
-+		reg =3D UART_EXAR_MPIOSEL_7_0;
-+		bit =3D mpio_num;
-+	} else if (mpio_num >=3D 8 && mpio_num < 16) {
-+		reg =3D UART_EXAR_MPIOSEL_15_8;
-+		bit =3D mpio_num - 8;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	value =3D exar_read_reg(priv, reg);
-+
-+	if (high)
-+		value |=3D BIT(bit);
-+	else
-+		value &=3D ~(BIT(bit));
-+
-+	exar_write_reg(priv, reg, value);
-+
-+	return 0;
-+}
-+
- static void exar_pm(struct uart_port *port, unsigned int state, unsigned =
-int old)
- {
- 	/*
+ #define PCI_DEVICE_ID_EXAR_XR17V4358		0x4358
+ #define PCI_DEVICE_ID_EXAR_XR17V8358		0x8358
++#define PCI_DEVICE_ID_EXAR_XR17V252		0x0252
++#define PCI_DEVICE_ID_EXAR_XR17V254		0x0254
++#define PCI_DEVICE_ID_EXAR_XR17V258		0x0258
+
+ #define PCI_SUBDEVICE_ID_USR_2980		0x0128
+ #define PCI_SUBDEVICE_ID_USR_2981		0x0129
 =2D-
 2.43.2
 
