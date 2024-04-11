@@ -1,64 +1,64 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFD91E3123
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208224C629
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850036; cv=none; b=FiKfooPevnI/Giag8cPd0gFInKqr65B7LlNl575pgTii6jSritpgLwXb0kSbWTLVFG0IqoBGYovyuqA7MPBt2auETxlTzn0obreLYLkeyh2A/4HK8RhiU91g9WA72Lin7v23gkR1fJX/wT4dgL4M5dRt3m1SBlnVucpynICa8zw=
+	t=1712850040; cv=none; b=XYPbFNEaQNPPEYm8Z/deX93L5AXsAze6WYTL9adwstZ632lFGsBj/ZCZtoIxQ80g+TDQGeCtQzx60AYyG//0jyuysjzJbTntxvjp1bXaMTGut5HSDyMeRcOdzfvfipMqt/hpqoUFqDPB1gZBWFc82q3Z5txEXNfVbh6E9ANHWBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850036; c=relaxed/simple;
-	bh=8bicZQbR5m2GnpNZQdJYfFi51HQMVdJ5DvIl9f4EbRw=;
+	s=arc-20240116; t=1712850040; c=relaxed/simple;
+	bh=AwZXzKiJTYRdXaYdXL0N+5qs7IS58CqVmTMpxbbdZaw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pyGt/xVJ6x+Eay06oJT7wq1vxhKhJbllbhi/GtdAWbEt56ZFzueWBuGX8gLsZUBPEt2Jmsho7Pl0df+Z95k1hwf47pYPbbSDVl001M1nZFVyXkW3BwGU6CIC1qlA+SlXR+aqMLG5rVhrcoeVItjqYNyvk6VLSgDPuHiTrnNDETM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WsU+Nv+x; arc=none smtp.client-ip=209.85.166.43
+	 MIME-Version; b=Gk3uUQ9uC3Bkr51IjpAQzhPtKFyHzDZNcKSwkC67NTJGpozy5rft0KbcnCS4OfTg2UP0M5NrRrYjr979G4Qm5tO9rHw685YQXvTYfoOCq0358W/x/89CjppItYp3wGCRZBpOLdh4SUsuL8So1NHyHC9nf9SdvHNqVMCW6Op67LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=mFnasMKk; arc=none smtp.client-ip=209.85.166.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WsU+Nv+x"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7d67d1073easo9883139f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:40:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="mFnasMKk"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so9054339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:40:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850034; x=1713454834; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850038; x=1713454838; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=47AcYampKeXQ0+2Iq8emlTFqiO1ZspG1iXs14Hyverg=;
-        b=WsU+Nv+xB0RwwQkccgsdjTbR/3n0bLFs3OOjl6wmQcRn8JfLTYBj948lchgYJ5BNyl
-         li/vb0Yvtoz+5MEZXLChV8LnXQYhTP6bkQN2Yk+sQnW7v1zB4yPkiVN2wyGujdN+7Yc9
-         aLe/A3EpZVSvA1Lcn4xiz1ALVSL5uG0taplOFQhsDG/0q7MnO5av/gickLKtTO++ZGfc
-         +BbbT9aqxR233k0Dq92/EZ8EAwMIa2IKHMTiudhrgbEBYb0IpYfHrLgnn66Au1CVC4IX
-         vw+sIlS8QkFMipElqj4rpxp7/mMl3OO6lb/l2kDu8UmB2rFP4n7G5fUeHyHMNFQaQebZ
-         c5bA==
+        bh=3b8H2/mDLiAhX37cZSYPDjNbHw29AJDHtMyBA0JRgZc=;
+        b=mFnasMKky60oAJVkFsp87uOj+S336QaUrkbM9guUFFNxGRvLonPFZi0Y+0mxGfM1zr
+         xZCtgBb3zEmQ9uyu3QeXOavy235KDAPsfZqwefo8Q2WzWH6M1SC7qe2WEZl9JBZuMh9W
+         LPpHmB6++qtp+EHtqH+yi5pKhHDZu2BLqM2+kI+zzOXhuPSmF3wzso8QKpCAgBHvqVpU
+         M/kvTw0iQokKhdKoEB1GdwgyfI6i51K+lSX+t48nbid7WHuKlXNXHRUxEIY3mK6PvYPC
+         REdfSgucgDL+9UOA3wcuVmlxyL/WF11vb1zyD+jRx573+hZXvK2VOmVi33b/QfilXtYJ
+         vjHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850034; x=1713454834;
+        d=1e100.net; s=20230601; t=1712850038; x=1713454838;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=47AcYampKeXQ0+2Iq8emlTFqiO1ZspG1iXs14Hyverg=;
-        b=iGO3xP/0sdogNcp1VhGI0l2RKZ33exKK9MXYTARc7sd8l4XeV0hadt3/FdALBA8ncE
-         pnTVryUzxbHOKUoyjGeHglHNPeqkuJP6tRokul/cn2KhxsceI1xJf6rFa3YVoRaAOgsV
-         s833PIjh0HVViyKkpI5aGOwZmsCvcobMvfMVS9KcTo/fz1VC3vxN7XJnqqjmnutrc1fY
-         41JI8I3rfK8rCqbqOV3EPbagrrt4ZJHKnDnMGya2MZfDq+wKD3vfCD76R2Te5J1NsjM5
-         65xWTvFrQApsxbXGZlb8aNMDXC6J6Zgo1QRAk4jiUhbjlzgMlRFZrWv1HJMTpoYfBmu6
-         IWrA==
-X-Gm-Message-State: AOJu0YysPKBDs7S6FWL1QP/Bk5R43xY15OtGzDw/Ax7jlj0jMg6athOy
-	0KpWFHzge2qoZi4SYV/GeZcNOLk0344kh1RX9h//eCnPpFRfLA5nf1JOZcoTFmsVU8RvHAOnWKg
-	L
-X-Google-Smtp-Source: AGHT+IEYHWlHdDNYKroQIYZoLudkzfECjrR35E/0LXNLmSytlsU4GE7JwO9dJ3AeipllalACceRrUw==
-X-Received: by 2002:a6b:c34e:0:b0:7d6:7b7c:8257 with SMTP id t75-20020a6bc34e000000b007d67b7c8257mr230741iof.0.1712850033685;
-        Thu, 11 Apr 2024 08:40:33 -0700 (PDT)
+        bh=3b8H2/mDLiAhX37cZSYPDjNbHw29AJDHtMyBA0JRgZc=;
+        b=jfC48eA5vRKKy/IeE7DqC7hw4J07eBibhGNZfIpWU4a9Q0c8lSmSBjE218AAjlWAw0
+         zaurU/O9KRLN247YYghwHIuRWUcp1I/QymnhkoTB+3a3x+cbR3KmRidgC4ZCn0czxlpk
+         l9YUG13fgRL9sxBF1rOlmH4bs/Cm/RBdaD0Ik3RKRwjbUhwhXM9uTsq6SzNeZV+BKjp3
+         IoItdlxSyAiY3rJ5MeWA/J9We2KT8FkppemgdvtNQ8h/yK+yfsw+uVoSfG0VblD64j/u
+         MHYzsW5HmAGhY7jZiyj9kC/iDnEZFMPhI3skQx1PKs3tw2NwfKeIiqpKgxAjLWzzhghC
+         x8rA==
+X-Gm-Message-State: AOJu0YxU1egjzY+YHkz5WvJT5XEhMuxLfGG+Rv7fDq1xBlN0xb+ON5Ls
+	IBteRDOAy1kmgBpS9znG4d7Ji5blfbVgBKleKPrHq2nTbNdMEmrbXZH7XwPlhegdRuIOzdi6bC7
+	Z
+X-Google-Smtp-Source: AGHT+IGHs7bJvGdPqJOq2+aO4KrAh02ZIW+nmTYfdMU0CaErq8ymPLXcayxdXoWJ/ANllrLIUlMeNw==
+X-Received: by 2002:a5e:9907:0:b0:7d6:751f:192 with SMTP id t7-20020a5e9907000000b007d6751f0192mr192471ioj.2.1712850037856;
+        Thu, 11 Apr 2024 08:40:37 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.40.32
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.40.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:40:32 -0700 (PDT)
+        Thu, 11 Apr 2024 08:40:36 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Bui Quang Minh <minhquangbui99@gmail.com>,
 	Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 322/437] drivers/net/ethernet/intel-ice: ensure the copied buf is NULL terminated
-Date: Thu, 11 Apr 2024 09:17:42 -0600
-Message-ID: <20240411153126.16201-323-axboe@kernel.dk>
+Subject: [PATCH 325/437] drivers/net/ethernet/hisilicon: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:17:45 -0600
+Message-ID: <20240411153126.16201-326-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -72,60 +72,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Bui Quang Minh <minhquangbui99@gmail.com>
 
-Currently, we allocate a count-sized kernel buffer and copy count bytes
-from userspace to that buffer. Later, we use sscanf on this buffer but we
-don't ensure that the string is terminated inside the buffer, this can lead
-to OOB read when using sscanf. Fix this issue by using memdup_user_nul
-instead of memdup_user.
-
-Fixes: 96a9a9341cda ("ice: configure FW logging")
-Fixes: 73671c3162c8 ("ice: enable FW logging")
 Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/net/ethernet/intel/ice/ice_debugfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../net/ethernet/hisilicon/hns3/hns3_debugfs.c    | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_debugfs.c b/drivers/net/ethernet/intel/ice/ice_debugfs.c
-index d252d98218d0..9fc0fd95a13d 100644
---- a/drivers/net/ethernet/intel/ice/ice_debugfs.c
-+++ b/drivers/net/ethernet/intel/ice/ice_debugfs.c
-@@ -171,7 +171,7 @@ ice_debugfs_module_write(struct file *filp, const char __user *buf,
- 	if (*ppos != 0 || count > 8)
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+index 807eb3bbb11c..0ea141e12655 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c
+@@ -1257,10 +1257,9 @@ static int hns3_dbg_read_cmd(struct hns3_dbg_data *dbg_data,
+ 	return ops->dbg_read_cmd(dbg_data->handle, cmd, buf, len);
+ }
  
--	cmd_buf = memdup_user(buf, count);
-+	cmd_buf = memdup_user_nul(buf, count);
- 	if (IS_ERR(cmd_buf))
- 		return PTR_ERR(cmd_buf);
+-static ssize_t hns3_dbg_read(struct file *filp, char __user *buffer,
+-			     size_t count, loff_t *ppos)
++static ssize_t hns3_dbg_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct hns3_dbg_data *dbg_data = filp->private_data;
++	struct hns3_dbg_data *dbg_data = iocb->ki_filp->private_data;
+ 	struct hnae3_handle *handle = dbg_data->handle;
+ 	struct hns3_nic_priv *priv = handle->priv;
+ 	ssize_t size = 0;
+@@ -1301,8 +1300,8 @@ static ssize_t hns3_dbg_read(struct file *filp, char __user *buffer,
+ 			goto out;
+ 	}
  
-@@ -257,7 +257,7 @@ ice_debugfs_nr_messages_write(struct file *filp, const char __user *buf,
- 	if (*ppos != 0 || count > 4)
- 		return -EINVAL;
+-	size = simple_read_from_buffer(buffer, count, ppos, read_buf,
+-				       strlen(read_buf));
++	size = simple_copy_to_iter(read_buf, &iocb->ki_pos, strlen(read_buf),
++				   to);
+ 	if (size > 0) {
+ 		mutex_unlock(&handle->dbgfs_lock);
+ 		return size;
+@@ -1320,9 +1319,9 @@ static ssize_t hns3_dbg_read(struct file *filp, char __user *buffer,
+ }
  
--	cmd_buf = memdup_user(buf, count);
-+	cmd_buf = memdup_user_nul(buf, count);
- 	if (IS_ERR(cmd_buf))
- 		return PTR_ERR(cmd_buf);
+ static const struct file_operations hns3_dbg_fops = {
+-	.owner = THIS_MODULE,
+-	.open  = simple_open,
+-	.read  = hns3_dbg_read,
++	.owner     = THIS_MODULE,
++	.open      = simple_open,
++	.read_iter = hns3_dbg_read_iter,
+ };
  
-@@ -332,7 +332,7 @@ ice_debugfs_enable_write(struct file *filp, const char __user *buf,
- 	if (*ppos != 0 || count > 2)
- 		return -EINVAL;
- 
--	cmd_buf = memdup_user(buf, count);
-+	cmd_buf = memdup_user_nul(buf, count);
- 	if (IS_ERR(cmd_buf))
- 		return PTR_ERR(cmd_buf);
- 
-@@ -428,7 +428,7 @@ ice_debugfs_log_size_write(struct file *filp, const char __user *buf,
- 	if (*ppos != 0 || count > 5)
- 		return -EINVAL;
- 
--	cmd_buf = memdup_user(buf, count);
-+	cmd_buf = memdup_user_nul(buf, count);
- 	if (IS_ERR(cmd_buf))
- 		return PTR_ERR(cmd_buf);
- 
+ static int hns3_dbg_bd_file_init(struct hnae3_handle *handle, u32 cmd)
 -- 
 2.43.0
 
