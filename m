@@ -1,228 +1,147 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B6E21FFC2F
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5252A1FFC3A
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850210; cv=none; b=Nc9rLYD80ZStz9zHRTXLt5b7rMncM89E8D8uboEdM4RP+0xb7W9pl2WcRfGGALilhCMxKq+/Sy2f99SLEPJ8+/512te9kLvvvRyRIqr3dAIPKlcJmsivxeE1hrhvfmEbaUwlvLNcRbLmqqDXg/BpAEShKTScD7nz63RL60a6vKA=
+	t=1712850211; cv=none; b=i3xqwfHCXYPftipRJSH+QHfpKpMehnpUOqS+hSpdN9OlPlhAZyPio3QGJ1Kzx3mGTi+Sb2MO5533WLB0j1cYbH+cuYSF0hGRWcUBaIddw4WOLP3OyoULpJ6Ue67yimlqiMHF8ZL5+68FWHbB1/3v9jxStcRh0I1ZntfcmRA+XiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850210; c=relaxed/simple;
-	bh=HFTmnKylzPQwNXAAPpfS4aP5WV7Bkkzueob2mHtK75o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ATlok7o/ijEySn5HbrDSALEMuALtisD0kNvKYDjykeS2f9RI8k90fNTX2SG8sYJ8vXzKlU7QZIybC3ooENbrB5Jh+l/5w+a/DUYnWkGnLgAPk0iMaX3icz+ROOks1OTOfqzoSYXz4kIbWgesgpSGKL2N+L63BjGvU3ke2e+D+0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=TT+WWE69; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1712850211; c=relaxed/simple;
+	bh=MOMp6xSzpZJ/Pd9oy9m//zqob+TNdkNGOXiGMSI3XoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zq8T3QE+xzwXdi1+EpVcQb/4+1hz1sJyROdLnrL6k2BJNRkhzjsEvb1+qbyMJAbeh3ADXLdLBBRTccmaxJ9HpDepnq3PcupkjlavR7tGlUNLcsXMMotMjRX7rRruwPTExZoeJF/28VyRf0/BDqyzh/jWn3KZ/ue3WqdgjWW9+vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lrwhKEXH; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="TT+WWE69"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so9116439f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:43:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850208; x=1713455008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HxRhhQb6flOdBY7pA0oqcPyu7EgP/zuEEveEvFRgBG8=;
-        b=TT+WWE69e2CUz/TXX5yz10VMnImfWdJBBKNkmU2nDCLk6VRXitHo+hzCTbtzWrN77D
-         NMFkkqN7K5T7hRottWEeFjw3SVvePaB8AHv4tGls5syukUpCO19VN2NrJPPZUAZy5oKA
-         jucTc6Ofg2gs80WXCMT4AwVABJuW1e8pSOxa8x2zl6S10ewSYbfP8Ck1TnJu/Cf9Aucr
-         xPEP9mZHP9JrtBlIC7WKC+vtJjbsJDR/+yoXZIBOSPr1gxEyYX5Aw85YUDthM6c6fdqv
-         Bt0cG+VbAdqcdmwPsmGnB7VZAqo2qfdr14figsIGKIeGDCsyA7FhmzjKh9A7TWqgg03r
-         RDQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850208; x=1713455008;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HxRhhQb6flOdBY7pA0oqcPyu7EgP/zuEEveEvFRgBG8=;
-        b=XsfQL2O3YXCRQySyPfL4z6/XRRdsxGKGOCT9SpKFsOkf6bikfDuVFaHvN4F1IbZJud
-         B+zn2BNPS56u7WXeSomXyYeIH+C5uGt9//jrfAZiC/gtktfJynKlpc3jRJH5PlMcsWeM
-         b6yhApdpC8UmdHguBxpScDSaV0goqZ9OjK5znX9rq5koqTTpI1UUXcnf90xMen/plPm7
-         1PbVyItaFzS6IgcOzwAxlYOdnvu1n0TirRIXitXs/mgbhQehOuq2UyNLBGP6cECzH9nD
-         AQZeJIyCCnGGIg7/Y+TpbNQ42z93LAchWkc5xo5FlNqKSIb3kdcM6XL9KYSUqAp9bWE7
-         ShmA==
-X-Gm-Message-State: AOJu0Yz9jCb1FQGIgt4VSytZH9vp5p7EXGSSczGos1DP+kVYniF1PwdM
-	ZB6FUV/huSIwuZ3Umqyq8KYvLpQzYVvpPLyAi298WLZBs1DBkAk1+5KB6RHDFCOGkw1iREsfXCj
-	m
-X-Google-Smtp-Source: AGHT+IGiU6sMCdlNcu6qZwESg3GfbZJcWuLFytN8FT65wr/8E83rkepbFfxBHTtZy1jrH8apzogCDA==
-X-Received: by 2002:a6b:5b10:0:b0:7d0:bd2b:43ba with SMTP id v16-20020a6b5b10000000b007d0bd2b43bamr241178ioh.0.1712850208384;
-        Thu, 11 Apr 2024 08:43:28 -0700 (PDT)
-Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:43:26 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 423/437] media: radio-si476x: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:19:23 -0600
-Message-ID: <20240411153126.16201-424-axboe@kernel.dk>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lrwhKEXH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712850210; x=1744386210;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MOMp6xSzpZJ/Pd9oy9m//zqob+TNdkNGOXiGMSI3XoI=;
+  b=lrwhKEXHWV8qwzYblvS1peVCuvu0Jd87qYeF5fOH2nIoaMN3sQ4SV/l2
+   ckDsMKMIlawE1hjm2iCRSz/S11vq3Z6S4IicPG5XsZOydwsI4L4TZTXZM
+   6zwSWEskGJHHQv+IxPr2mB8worxga5O0k0pBn5swdRDEL3hFt3IVvbAEy
+   TOrrORCoKntDh97F7Qu/3aVfTjyxsKFcDlI9mZH03GXLbD0swlKH2Q3y+
+   I0u2SwBEA7YI/5PBU/8BN6VcEwLfs86YcqGmHUPkX0yj/lwAGbxcyJqte
+   ROkLTgIpy6UXwixG2x0tpqQ8K85/2z5O2+fPopEH7ybKnAClr0hpL6uZr
+   w==;
+X-CSE-ConnectionGUID: mTbPDmSLRCiaGRtyGfEQxg==
+X-CSE-MsgGUID: T//SbJdaQ2eIDfnp7xJEEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="30749443"
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="30749443"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:43:29 -0700
+X-CSE-ConnectionGUID: vNoOrQo8TUapo9H4WFRQKQ==
+X-CSE-MsgGUID: l4Fv5RjWQuaNE6rnNyAhvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,193,1708416000"; 
+   d="scan'208";a="21430413"
+Received: from tgrabows-mobl.amr.corp.intel.com (HELO [10.209.89.64]) ([10.209.89.64])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 08:43:29 -0700
+Message-ID: <cca972cc-8135-4037-9e4b-ac34dc600965@intel.com>
+Date: Thu, 11 Apr 2024 08:43:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] x86/mm: Don't disable INVLPG if "incomplete Global
+ INVLPG flushes" is fixed by microcode or the kernel is running in a
+ hypervisor
+To: Xi Ruoyao <xry111@xry111.site>, Dave Hansen
+ <dave.hansen@linux.intel.com>, Michael Kelley <mhklinux@outlook.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org,
+ Sean Christopherson <seanjc@google.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>
+References: <20240411104822.6429-1-xry111@xry111.site>
+ <3ee70b6c-3399-43f9-8934-cb5a0e51f006@intel.com>
+ <1f5d53596e2ac8948332570e3bda17c3877fd499.camel@xry111.site>
+ <99d6583a-1541-499f-a682-e1818507e472@intel.com>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <99d6583a-1541-499f-a682-e1818507e472@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- drivers/media/radio/radio-si476x.c | 60 +++++++++++++-----------------
- 1 file changed, 25 insertions(+), 35 deletions(-)
+On 4/11/24 08:18, Dave Hansen wrote:
+> 
+>> I'm not a native English speaker, so could you give some hint about how
+>> to write this comment clearly?
+> Something like this would be fine:
+> 
+> 	/* Only bare-metal is affected.  PCIDs in guests are OK. */
 
-diff --git a/drivers/media/radio/radio-si476x.c b/drivers/media/radio/radio-si476x.c
-index b2c5809a8bc7..fcc330d6dc75 100644
---- a/drivers/media/radio/radio-si476x.c
-+++ b/drivers/media/radio/radio-si476x.c
-@@ -1178,12 +1178,11 @@ static const struct video_device si476x_viddev_template = {
- 
- 
- 
--static ssize_t si476x_radio_read_acf_blob(struct file *file,
--					  char __user *user_buf,
--					  size_t count, loff_t *ppos)
-+static ssize_t si476x_radio_read_acf_blob(struct kiocb *iocb,
-+					  struct iov_iter *to)
- {
- 	int err;
--	struct si476x_radio *radio = file->private_data;
-+	struct si476x_radio *radio = iocb->ki_filp->private_data;
- 	struct si476x_acf_status_report report;
- 
- 	si476x_core_lock(radio->core);
-@@ -1196,22 +1195,20 @@ static ssize_t si476x_radio_read_acf_blob(struct file *file,
- 	if (err < 0)
- 		return err;
- 
--	return simple_read_from_buffer(user_buf, count, ppos, &report,
--				       sizeof(report));
-+	return simple_copy_to_iter(&report, &iocb->ki_pos, sizeof(report), to);
- }
- 
- static const struct file_operations radio_acf_fops = {
- 	.open	= simple_open,
- 	.llseek = default_llseek,
--	.read	= si476x_radio_read_acf_blob,
-+	.read_iter = si476x_radio_read_acf_blob,
- };
- 
--static ssize_t si476x_radio_read_rds_blckcnt_blob(struct file *file,
--						  char __user *user_buf,
--						  size_t count, loff_t *ppos)
-+static ssize_t si476x_radio_read_rds_blckcnt_blob(struct kiocb *iocb,
-+						  struct iov_iter *to)
- {
- 	int err;
--	struct si476x_radio *radio = file->private_data;
-+	struct si476x_radio *radio = iocb->ki_filp->private_data;
- 	struct si476x_rds_blockcount_report report;
- 
- 	si476x_core_lock(radio->core);
-@@ -1225,22 +1222,20 @@ static ssize_t si476x_radio_read_rds_blckcnt_blob(struct file *file,
- 	if (err < 0)
- 		return err;
- 
--	return simple_read_from_buffer(user_buf, count, ppos, &report,
--				       sizeof(report));
-+	return simple_copy_to_iter(&report, &iocb->ki_pos, sizeof(report), to);
- }
- 
- static const struct file_operations radio_rds_blckcnt_fops = {
- 	.open	= simple_open,
- 	.llseek = default_llseek,
--	.read	= si476x_radio_read_rds_blckcnt_blob,
-+	.read_iter = si476x_radio_read_rds_blckcnt_blob,
- };
- 
--static ssize_t si476x_radio_read_agc_blob(struct file *file,
--					  char __user *user_buf,
--					  size_t count, loff_t *ppos)
-+static ssize_t si476x_radio_read_agc_blob(struct kiocb *iocb,
-+					  struct iov_iter *to)
- {
- 	int err;
--	struct si476x_radio *radio = file->private_data;
-+	struct si476x_radio *radio = iocb->ki_filp->private_data;
- 	struct si476x_agc_status_report report;
- 
- 	si476x_core_lock(radio->core);
-@@ -1253,22 +1248,20 @@ static ssize_t si476x_radio_read_agc_blob(struct file *file,
- 	if (err < 0)
- 		return err;
- 
--	return simple_read_from_buffer(user_buf, count, ppos, &report,
--				       sizeof(report));
-+	return simple_copy_to_iter(&report, &iocb->ki_pos, sizeof(report), to);
- }
- 
- static const struct file_operations radio_agc_fops = {
- 	.open	= simple_open,
- 	.llseek = default_llseek,
--	.read	= si476x_radio_read_agc_blob,
-+	.read_iter = si476x_radio_read_agc_blob,
- };
- 
--static ssize_t si476x_radio_read_rsq_blob(struct file *file,
--					  char __user *user_buf,
--					  size_t count, loff_t *ppos)
-+static ssize_t si476x_radio_read_rsq_blob(struct kiocb *iocb,
-+					  struct iov_iter *to)
- {
- 	int err;
--	struct si476x_radio *radio = file->private_data;
-+	struct si476x_radio *radio = iocb->ki_filp->private_data;
- 	struct si476x_rsq_status_report report;
- 	struct si476x_rsq_status_args args = {
- 		.primary	= false,
-@@ -1288,22 +1281,20 @@ static ssize_t si476x_radio_read_rsq_blob(struct file *file,
- 	if (err < 0)
- 		return err;
- 
--	return simple_read_from_buffer(user_buf, count, ppos, &report,
--				       sizeof(report));
-+	return simple_copy_to_iter(&report, &iocb->ki_pos, sizeof(report), to);
- }
- 
- static const struct file_operations radio_rsq_fops = {
- 	.open	= simple_open,
- 	.llseek = default_llseek,
--	.read	= si476x_radio_read_rsq_blob,
-+	.read_iter = si476x_radio_read_rsq_blob,
- };
- 
--static ssize_t si476x_radio_read_rsq_primary_blob(struct file *file,
--						  char __user *user_buf,
--						  size_t count, loff_t *ppos)
-+static ssize_t si476x_radio_read_rsq_primary_blob(struct kiocb *iocb,
-+						  struct iov_iter *to)
- {
- 	int err;
--	struct si476x_radio *radio = file->private_data;
-+	struct si476x_radio *radio = iocb->ki_filp->private_data;
- 	struct si476x_rsq_status_report report;
- 	struct si476x_rsq_status_args args = {
- 		.primary	= true,
-@@ -1323,14 +1314,13 @@ static ssize_t si476x_radio_read_rsq_primary_blob(struct file *file,
- 	if (err < 0)
- 		return err;
- 
--	return simple_read_from_buffer(user_buf, count, ppos, &report,
--				       sizeof(report));
-+	return simple_copy_to_iter(&report, &iocb->ki_pos, sizeof(report), to);
- }
- 
- static const struct file_operations radio_rsq_primary_fops = {
- 	.open	= simple_open,
- 	.llseek = default_llseek,
--	.read	= si476x_radio_read_rsq_primary_blob,
-+	.read_iter = si476x_radio_read_rsq_primary_blob,
- };
- 
- 
--- 
-2.43.0
+One more thing...  Instead if cluttering up the main PCID setup path
+that everybody has to read, you can put this in the macro:
 
+#define INTEL_MATCH(_model)		    \
+	{				    \
+	  .vendor  = X86_VENDOR_INTEL,      \
+	  .feature = X86_FEATURE_HYPERVISOR \
+          .family  = 6,                     \
+	  .model   = _model,                \
+	}
+
+Then you can supplement the "INVLPG may not properly flush Global
+entries..." comment.
+
+/*
+  * INVLPG may not properly flush Global entries. But
+  * it only misbehaves when PCIDs are in use on bare
+  * metal on specific CPU models. It is completely
+  * fixed with updated microcode.
+  */
