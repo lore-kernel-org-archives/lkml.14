@@ -1,63 +1,63 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5AD4202A6D
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B740203580
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:43:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712850221; cv=none; b=EQgJRAtDJkycSRSl2ZdNFsDUr5MEJHskusmHdlr0HAWIaD+RpY4grqIwx/ndzBFbXgQCOdXIUZqk8x0rZtOoJrlHu40BZjXzuujtGCjOFoAnvLwfBEYJxIyE3ae7PHqI6TZ7DcSLF/CYj6qY/AvXMNqBc0Ht4CNXSHdjTSbI29g=
+	t=1712850222; cv=none; b=FDkDAGgJfE4EENsM2+hJJm9RwZw7N/KeX3G/iIkpc6UH7z2oa7ES79+XUxEzqVxsagkgyJIUN1Y6NEf6y17ELUe3/uh/5P4f4zHsL6f6TWcETsKXRFAFWJJk3sE8NXTezy8ywFi9N6v0XZ38vS/7xbcIQllSoJnUJlxw4J8HfQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712850221; c=relaxed/simple;
-	bh=GJK7XXFh5gnnKJH43kYoV0NfBP/fp6A1qBURcN2Yy4g=;
+	s=arc-20240116; t=1712850222; c=relaxed/simple;
+	bh=i81SoTpfZoCttmw03BT4HXoOjPTFbjdS87pTUWjCFL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qEbuQrUwpzBkb3Gy1VpJZBOVQ3R1QGjFLhDaBBE1G5ZJqyK7UhRnfnLzf/eV0fMitQJT/jpsKDQV5zi1of6iJPaVOq0O6RNo1dgiVWCJMrGRrDDScfVTVVnyQSJlqX7xVfE7ZP9w42me0D0gH8NBqRHtXagGDoxHM3erx+OGWlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=U4YU+PZp; arc=none smtp.client-ip=209.85.166.49
+	 MIME-Version; b=J1wtI9WeiO4dqR16MRz0E6l2KZVajE+M9xMBu+PcFOZVAm4EvSfzjEmnMMU9cnnmCc3CjgtJAsz32FzEMrHCeA7UIWjRQbuGWInyDdk/JhtZxzSYKc7VIioctmuA70fsIzapWuDa6YxeCLFVBKaSu7iwA7HEbTg5x/K4qLDP7Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MThp6PIw; arc=none smtp.client-ip=209.85.166.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="U4YU+PZp"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso69704939f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:43:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MThp6PIw"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7d67d1073easo9953439f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:43:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850218; x=1713455018; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712850220; x=1713455020; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qRxGlN/pwy9RyKX4DwH5rXOxL/UwdSpMUyhLjmgkt+c=;
-        b=U4YU+PZpydsQGtCu1qbFC215lUrhCEFaSxfuclTY1GAFjPkA7D/w606hjmoJ3L9xtm
-         nPGhgNori3v/X1suQHmGUlblSOxDAKXJ+Vl+01B4UCuWdgih2XKaPqIKYyd9vHOJSh+f
-         VU8N6gdIlave1gIJspwe7sSGXFbOCduzLkoueNslRG58N1QhP4VVNk7/rsFLnKbzFXMe
-         WSptJUBvdVZFJ//Vu8x/q7duQ6bq4xPqSs4OLHdeys03f3ZQQ3hWkNWukajOGeJGuxkY
-         QTYHP1n3K6ejh5ngjB5dnxmZQkKAp0uLHUOFzyZl5cqAh5iGKYTZKSHtz+XTNZWyzLkK
-         kg4A==
+        bh=Y693zVyKx5Xj5+ZmbaRfysNOquN2tS7NYbAkTC+dKIw=;
+        b=MThp6PIwqqd1AKVdrh3Sl4r/w2jk35nlbunr0LQ2WpRg+zab4mTkybCeamSJDEKUHm
+         oKgBNsbs2klJP97RwCPqsx4rRIHfuUVtMut2XWDU/elA2OcY8nh+QrBsbJ+4ceFRXNbA
+         Ip3qDCY+tkY29z6A+q1hp72coRRmrzwjU5wQn0r/l+gHbpp2Fgu/WTRzxTlapvGTtQqm
+         M6aT4ItrTPZ3UnkDl9Pe4tNfACfLXcOWg7M4k+YeP1eOYdaUGcVNlPirBRXJ61HarRVv
+         A0WU7x6MQaanOBanXEbmcyF0ZmG25bX0ytnrn8la8xBbQF5RkZYFUWkvhN8QrIajBXnz
+         5W6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712850218; x=1713455018;
+        d=1e100.net; s=20230601; t=1712850220; x=1713455020;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qRxGlN/pwy9RyKX4DwH5rXOxL/UwdSpMUyhLjmgkt+c=;
-        b=D7dVsCudYvjGjHk1eMX7sSGodqNnvv7EuVibpIIJNZXVARtzfo/EyTvNfhQ5vEAXex
-         ByCsFCMz7EaDdX1YHuTu1ptsb60AZcajO62jHIYZcuUIi1vOz3sEBDFRUiU8phRtUBY7
-         Ey6A9G12cDp8Jz1lmYw6iaXLE0bjwX3aO8YsUbzR9/5qds7lEm54nMJzARN3AYx7j2BJ
-         8LOWDgMRNJQO/j74RP2+8ovb6MwuZGxLe8tJ75jYPSDG4G64s3Dt8G84JFVnsW36HI1s
-         MhQ6qxgs5+3HjkdN+SXD+A4KAfuw8or7zsqCeRHINQWnJoGbXbneaeydAPvieckrL+8E
-         XxeA==
-X-Gm-Message-State: AOJu0Yzag4MC4D9fSdWxG31NuBjp2VDpcI8sM7HaC7PfRuWjnY6gx/v9
-	qeSeekW+cT7CJtN4NdU3BJEwwRvMV7u0D3p0s46jNSJ1Y8Lu2/eKMquZOY/9qKWRsJOoSowFFfJ
-	x
-X-Google-Smtp-Source: AGHT+IHL5GoHW7sKYQvvRcB8RVKCpTARffC0A2lfDao3ExJIurqZOydR/ogbF1QCaoJxZBOZg7PAPQ==
-X-Received: by 2002:a6b:7b05:0:b0:7d6:60dc:bc8e with SMTP id l5-20020a6b7b05000000b007d660dcbc8emr212536iop.1.1712850218624;
-        Thu, 11 Apr 2024 08:43:38 -0700 (PDT)
+        bh=Y693zVyKx5Xj5+ZmbaRfysNOquN2tS7NYbAkTC+dKIw=;
+        b=HqRpP4fuZNiTOficH1YAXqCc11PEXm0X8kIGK4njUWlrspW3S1zzqwdAINSmHCvXGm
+         yMooHN3pcRJEJ2YLSKYK4EZrCK3Z3E1fqdu8+EiE6RKTQIIo5EJ1xCRc2ps5DxLNsT1Z
+         4SEtKkLEvcKywYuaBCJ3lDsZP/nyHYsBiBHYIcjknVmbDCBV2wdJdiWYuBMoBEVVRRj6
+         HHJe9jNCNl1jXiugfcHoHQ0vC9En62T8S5UI1uhNTbHk+YCMD+MSAYJ/HmlRTLbdRrte
+         jvTX2bDaYsy0aaxUt71s7FB94icKsGQlWnwft0lTLqYo0HMWLkBO7nmoRku8Xk6nx1cD
+         esVg==
+X-Gm-Message-State: AOJu0YzHNW/90rFz67wSwlDgLDPXAZ9SSPkTcARbggiJrcuui2HyOd87
+	ij0NvlOLrqxc/S+H8+e+RNXAl73onkI4QDgTPLbXjVThmSqoaM0krQPcyIF0Y45hS9XZZFzboa4
+	2
+X-Google-Smtp-Source: AGHT+IEWrfbd88bnUiW00XiRmvhgc0AOpozz4nHHdElKVS126DsFNkT+7m7nooW2oaaqlTHqgd2YMg==
+X-Received: by 2002:a05:6602:84:b0:7d6:9d75:6de2 with SMTP id h4-20020a056602008400b007d69d756de2mr58046iob.2.1712850220403;
+        Thu, 11 Apr 2024 08:43:40 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.43.36
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.43.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:43:37 -0700 (PDT)
+        Thu, 11 Apr 2024 08:43:38 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 429/437] sbus: envctrl: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:19:29 -0600
-Message-ID: <20240411153126.16201-430-axboe@kernel.dk>
+Subject: [PATCH 430/437] sbus: flash: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:19:30 -0600
+Message-ID: <20240411153126.16201-431-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,130 +71,52 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/sbus/char/envctrl.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ drivers/sbus/char/flash.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/sbus/char/envctrl.c b/drivers/sbus/char/envctrl.c
-index 491cc6c0b3f9..ceebe708647d 100644
---- a/drivers/sbus/char/envctrl.c
-+++ b/drivers/sbus/char/envctrl.c
-@@ -533,8 +533,7 @@ static unsigned char envctrl_i2c_voltage_status(struct i2c_child_t *pchild,
- /* Function Description: Read a byte from /dev/envctrl. Mapped to user read().
-  * Return: Number of read bytes. 0 for error.
-  */
+diff --git a/drivers/sbus/char/flash.c b/drivers/sbus/char/flash.c
+index 05d37d31c3b8..4b21dc0cb3c4 100644
+--- a/drivers/sbus/char/flash.c
++++ b/drivers/sbus/char/flash.c
+@@ -98,11 +98,10 @@ flash_llseek(struct file *file, long long offset, int origin)
+ 	return file->f_pos;
+ }
+ 
 -static ssize_t
--envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-+static ssize_t envctrl_read(struct kiocb *iocb, struct iov_iter *to)
+-flash_read(struct file * file, char __user * buf,
+-	   size_t count, loff_t *ppos)
++static ssize_t flash_read(struct kiocb *iocb, struct iov_iter *to)
  {
- 	struct i2c_child_t *pchild;
- 	unsigned char data[10];
-@@ -545,14 +544,14 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 	 * Get the data and put back to the user buffer.
+-	loff_t p = *ppos;
++	size_t count = iov_iter_count(to);
++	loff_t p = iocb->ki_pos;
+ 	int i;
+ 
+ 	if (count > flash.read_size - p)
+@@ -110,12 +109,11 @@ flash_read(struct file * file, char __user * buf,
+ 
+ 	for (i = 0; i < count; i++) {
+ 		u8 data = upa_readb(flash.read_base + p + i);
+-		if (put_user(data, buf))
++		if (put_iter(data, to))
+ 			return -EFAULT;
+-		buf++;
+ 	}
+ 
+-	*ppos += count;
++	iocb->ki_pos += count;
+ 	return count;
+ }
+ 
+@@ -148,7 +146,7 @@ static const struct file_operations flash_fops = {
  	 */
- 
--	switch ((int)(long)file->private_data) {
-+	switch ((int)(long)iocb->ki_filp->private_data) {
- 	case ENVCTRL_RD_WARNING_TEMPERATURE:
- 		if (warning_temperature == 0)
- 			return 0;
- 
- 		data[0] = (unsigned char)(warning_temperature);
- 		ret = 1;
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -562,7 +561,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 
- 		data[0] = (unsigned char)(shutdown_temperature);
- 		ret = 1;
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -570,7 +569,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		if (!(pchild = envctrl_get_i2c_child(ENVCTRL_MTHRBDTEMP_MON)))
- 			return 0;
- 		ret = envctrl_read_noncpu_info(pchild, ENVCTRL_MTHRBDTEMP_MON, data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -580,7 +579,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		ret = envctrl_read_cpu_info(read_cpu, pchild, ENVCTRL_CPUTEMP_MON, data);
- 
- 		/* Reset cpu to the default cpu0. */
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -590,7 +589,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		ret = envctrl_read_cpu_info(read_cpu, pchild, ENVCTRL_CPUVOLTAGE_MON, data);
- 
- 		/* Reset cpu to the default cpu0. */
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -598,7 +597,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		if (!(pchild = envctrl_get_i2c_child(ENVCTRL_SCSITEMP_MON)))
- 			return 0;
- 		ret = envctrl_read_noncpu_info(pchild, ENVCTRL_SCSITEMP_MON, data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -606,7 +605,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 		if (!(pchild = envctrl_get_i2c_child(ENVCTRL_ETHERTEMP_MON)))
- 			return 0;
- 		ret = envctrl_read_noncpu_info(pchild, ENVCTRL_ETHERTEMP_MON, data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -615,7 +614,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 			return 0;
- 		data[0] = envctrl_i2c_read_8574(pchild->addr);
- 		ret = envctrl_i2c_fan_status(pchild,data[0], data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 	
-@@ -624,7 +623,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 			return 0;
- 		data[0] = envctrl_i2c_read_8574(pchild->addr);
- 		ret = envctrl_i2c_globaladdr(pchild, data[0], data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -635,7 +634,7 @@ envctrl_read(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- 				return 0;
- 		data[0] = envctrl_i2c_read_8574(pchild->addr);
- 		ret = envctrl_i2c_voltage_status(pchild, data[0], data);
--		if (copy_to_user(buf, data, ret))
-+		if (!copy_to_iter_full(data, ret, to))
- 			ret = -EFAULT;
- 		break;
- 
-@@ -711,7 +710,7 @@ envctrl_release(struct inode *inode, struct file *file)
- 
- static const struct file_operations envctrl_fops = {
- 	.owner =		THIS_MODULE,
--	.read =			envctrl_read,
-+	.read_iter =		envctrl_read,
- 	.unlocked_ioctl =	envctrl_ioctl,
- 	.compat_ioctl =		compat_ptr_ioctl,
- 	.open =			envctrl_open,
+ 	.owner =	THIS_MODULE,
+ 	.llseek =	flash_llseek,
+-	.read =		flash_read,
++	.read_iter =	flash_read,
+ 	.mmap =		flash_mmap,
+ 	.open =		flash_open,
+ 	.release =	flash_release,
 -- 
 2.43.0
 
