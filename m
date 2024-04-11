@@ -1,328 +1,224 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69321C294
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 20:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712868408; cv=none; b=fmuHmyXXHPWDbApmUrVFqhx19m9oyxe6CkVwLJXKqNYfwASkk9wErGhX7YrdTQUUUvdNpOIIGv/hkO6x2l/RNjTOgEADBjtO3DP6bYaV0FsCnioSIPWf40a4Fq2X9mNNkK+0rvEXJBlowxuKC3hodEzodh2pbbSGNRKdcJJAPyc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712868408; c=relaxed/simple;
-	bh=OxJotFEVcyZpSuyTpPU36bAgJGIAZrz7JYB5vj7LE9c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rN3iNIe+n/TPBnhLslz5NUJIJbBbPqCSHLiPSFB2lgaLglkBKrPLv7FTFbfXp389OA0soferDaW6l2g95ukO1ELHoSVja0RemEGMfrWOYDE4/9N+/zyYevGab+frXJp28K4XTIuqWXlUHFnnJJ4zu31/bxO7T8/sk7YMalkr+pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dH6DWJCr; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC3F1CFB6;
+	Thu, 11 Apr 2024 20:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712868667; cv=fail; b=UtwLtOGMif3vLAd8jh/JWfpTFdaEyC6GUeo8rdG4Dq1wnVWZJDFn3/fEqJOHUVYrE5Yus81DR3vzvfbp0VIOkY4W5f2Dn7cLUsjl8HWhuyTuSlhkZStAn+6CxwonaHkRaELQ5NUwl40TJXIeA2skVNck9abt6aBqrD37wmVNDUM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712868667; c=relaxed/simple;
+	bh=tjbSS7cdxOHSpT0RNjxvXTXwzZH8nY3sIeD93wmw9VQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=axUMq6B29WK5VaoPghS92NLrSRUJWdVZuRCuC3DBhFvTL0nEqhm0hspK+fbzEwAp47U08lZHRSHurk/yWdqQXbq62imrE/761fPWBvdm4JskL1xJ45DqmHhe/D4Qtd4rGjmKXqteW/bxFsc8jJPCZW2kMNJx34p+c3zyojA1wzA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WXBc+SgS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZHgM5pA8; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dH6DWJCr"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e0bfc42783so2139185ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 13:46:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WXBc+SgS";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZHgM5pA8"
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43BGtLGS009390;
+	Thu, 11 Apr 2024 20:50:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=corp-2023-11-20;
+ bh=EFiWjcposViGS3NtHgp+QVpzUaYRpEooTtYZkbEdzew=;
+ b=WXBc+SgSopzA9WqgLfD87tzfE8RmI4vWGUgbIRJ9YZUxBXq5Qe2ggQ7QvdpRe7mcbD2f
+ BF3t7z/PwtQQb4DAAgCjHud370icG+Naz/PHWTOvigS4t0IW3tMGh9L0f6ypaND+Oz38
+ DXvzgxQLsiRoVT+MAgkkIVtDwmzwF4JLnBohGUaatHVwUnelbUyByXgL0IxBVW1mSp+Q
+ e6YhChXuzM6PG4oNvjJA8xaanLeLyWo4YwxbRIyTrTYIhD93UZf4atW0XbxupTx0yA2x
+ MBXKBUty5cuMAFhkE09zHL/W3g6nW/AeShpaLYk2FpVrpBNfK4+VL8qQ8hCIS/rxb9+z bA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xed4jsbf7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 20:50:37 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43BIqI8W026515;
+	Thu, 11 Apr 2024 20:50:36 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xdrst61dn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Apr 2024 20:50:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q3D6IhnPbFU/y5Uyc0KaqM+6BIE2dwV7MPzWYxSSmSmqrLcKmKj5eyOxQqcluEZLOHhw+eNd2uOKB1XB6Zpm+mpMGDuX3DW9jPGIIMr5+Uv1Yp80zeynNafreBsnChUahHiShiZks4rZciGWs9FxeNjUCBXXbV7BT/O5wHRrOjHqqdQ/YPkisnu0RZ73dzH/ZEXhf+vjbIzcMvjr0hu9Vgf8vM/9o2iL5YlM+mQUXVSQ/8Ke3vTvijmKUsoiFx20A+Wt+taD7CD4R7W07zlTyVA4hUwiFnlE6eHkExkc9tFXjsRCLEpW1Wq5uiXJ0AdlUQ0zj+8YVLho99VDKVqdwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EFiWjcposViGS3NtHgp+QVpzUaYRpEooTtYZkbEdzew=;
+ b=mtcffGzGDHQkeX9n6WnApX1xEK7lNs0lEqONhDYIdU+O4eUK/9JjovTwbT6vfpcvCQ7M2W4xEgGsIAYpMES+CCrMfppogAgw2rceioShHzi9pVKbXV7PTHkqZ0lLYQxqtmQXgAzkfG5hzzDt8qDn7Hqzw7x9DOUet0f8mlgLsSWhQhUCV79hbIiEH8Roq5WTCHyXsetM5jmLqt+eTDco4QBVwMasGLfSXce6NN2B0s4S+ciOtLGqoez+meanyGWM0QrpZWnREmodIUd1Hj2bui3GES7dF/6rR24NHadLvG2dwYejtyj2s0/7tvHnQz1L6lEZP3SIJnMD7M0a0Oos0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712868406; x=1713473206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SIDVajEu5qVpvE8z50G25VfbDDiky2dkQVswDqavWmw=;
-        b=dH6DWJCrC+i1iUnJMQRQkwJxsPfSkNFJSkl+ZQJvoCD9JVQHbAggzl2BU1qP5Cyc01
-         CvBhxTo4G8Zn8Aoj+6azRThSB9NcePVpk7kXXRU5aetAAyet9crrb+9bP0L7ojtXo/Wb
-         DjLrwqJJgo/APvVYqMnJoeKxm6GNrPMGPD01s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712868406; x=1713473206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SIDVajEu5qVpvE8z50G25VfbDDiky2dkQVswDqavWmw=;
-        b=cxZSgJd57iJ0h3aJ0ImhCdh7NHgtKwqzTSo73VnlxPovex6DwuIUDJKZO5/gyHK+dr
-         7IT+1lFaszihrUSNzk0oj8PZ1Ub9mFU/JbhLENijYuqyFYL0Ey7xItX+5NyuGGZcvRQL
-         UKtcI5wysJS48SBiJtm6T2Z9ZNz93QHECxT2SZt9KWiiM2taNOSQ/2fG9WbYsPB/5lzK
-         2telyXdJ1r9ScXXp4M6MGnv3tFHl1E1pNzVmbhv6A6m+kgDq1m0e6dES7gVIfSHQIRXX
-         J04oNU47ORI6TpL1z2fWmguAyDLcJchGNmjuHLQNm8mfVvD0oXufSFWDEELgrDQbSJrP
-         9CYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKHn6t+I8rvmkjLL1IEpyviGTR9MRl6UOT4Tp6/mdBE4JmeguRLK6n0KtjOx5ZoOsBD4xhebYCkrwyCQvkjnth2ZouJ476v7uHdWR1
-X-Gm-Message-State: AOJu0YwReZ/1U01sNI27PoLsdjhlNF1HGmxRUH2G+xTEy9f7/5+Vy69L
-	3eWBsqJj4g76a9Pp0hc3w7RwNp3vac4GvHac3bCoVJcKxDWRXA7Q6rxzUjxqZoqGrvlpVkXhtjF
-	s6sYqD0UScxwB4872OuyfV3sFlkKNNdOpF3lVvY9QKUFnYw8rg0AxepQ=
-X-Google-Smtp-Source: AGHT+IHaPFmbWl4CRobBCOwnVbN1ApnbwICulL1MHyiOpyCXRJEfB/+tR9nlXdoQX2nVlx/a/PWkPUPCTsjRQkCZQqs=
-X-Received: by 2002:a17:902:ecc7:b0:1e5:2885:2 with SMTP id
- a7-20020a170902ecc700b001e528850002mr558906plh.68.1712868406134; Thu, 11 Apr
- 2024 13:46:46 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EFiWjcposViGS3NtHgp+QVpzUaYRpEooTtYZkbEdzew=;
+ b=ZHgM5pA8VGIgjgZ1VDRGT03ogDIFaAdwXZWcGLOApW1LEFe8y1C5PFjVNsVimH2umkgo7aJWoNH/Y3Mevxz2j1rXIRJf6DPE1fOzypDMU1oWS5HsazrlbBRXY/6YOpMf0h5hZVxgT2+hEhxxi+34+VD8N6H9+t/WV2AorFda4GU=
+Received: from DM4PR10MB6719.namprd10.prod.outlook.com (2603:10b6:8:111::19)
+ by CH2PR10MB4309.namprd10.prod.outlook.com (2603:10b6:610:ae::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Thu, 11 Apr
+ 2024 20:50:34 +0000
+Received: from DM4PR10MB6719.namprd10.prod.outlook.com
+ ([fe80::4581:e656:3f19:5977]) by DM4PR10MB6719.namprd10.prod.outlook.com
+ ([fe80::4581:e656:3f19:5977%7]) with mapi id 15.20.7409.042; Thu, 11 Apr 2024
+ 20:50:34 +0000
+Date: Thu, 11 Apr 2024 16:50:12 -0400
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        daniel.sneddon@linux.intel.com, pawan.kumar.gupta@linux.intel.com,
+        tglx@linutronix.de, peterz@infradead.org, gregkh@linuxfoundation.org,
+        seanjc@google.com, dave.hansen@linux.intel.com, nik.borisov@suse.com,
+        kpsingh@kernel.org, longman@redhat.com, bp@alien8.de
+Subject: Re: [PATCH] KVM: x86: Set BHI_NO in guest when host is not affected
+ by BHI
+Message-ID: <ZhhNBCtY0rgfJdRK@char.us.oracle.com>
+References: <7f1faa48-6252-4409-aefc-2ed2f38fb1c3@citrix.com>
+ <caa51938-c587-4403-a9cd-16e8b585bc13@oracle.com>
+ <CABgObfai1TCs6pNAP4i0x99qAjXTczJ4uLHiivNV7QGoah1pVg@mail.gmail.com>
+ <abbaeb7c-a0d3-4b2d-8632-d32025b165d7@oracle.com>
+ <2afb20af-d42e-4535-a660-0194de1d0099@citrix.com>
+ <ff3cf105-ef2a-426c-ba9b-00fb5c2559c7@oracle.com>
+ <CABgObfZU_uLAPzDV--n67H3Hq6OKxUO=FQa2MH3CjdgTQR8pJg@mail.gmail.com>
+ <99ad2011-58b7-42c8-9ee5-af598c76a732@oracle.com>
+ <CABgObfa_mkk-c3NZ623WzYDxw59NcYB_tEQ8tFX4CECHW3JxQQ@mail.gmail.com>
+ <ZhgIN4LIu2K5vf5y@chao-email>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhgIN4LIu2K5vf5y@chao-email>
+X-ClientProxiedBy: BYAPR05CA0029.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::42) To DM4PR10MB6719.namprd10.prod.outlook.com
+ (2603:10b6:8:111::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119110842.772606-1-abailon@baylibre.com> <20240119110842.772606-3-abailon@baylibre.com>
-In-Reply-To: <20240119110842.772606-3-abailon@baylibre.com>
-From: Pin-yen Lin <treapking@chromium.org>
-Date: Thu, 11 Apr 2024 16:46:35 -0400
-Message-ID: <CAEXTbpeJ=3kxeKy4rXUfNEO==XYQ2DQx+ex2nLNkur_X6p1VVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] thermal: Add support of multi sensors to thermal_core
-To: Alexandre Bailon <abailon@baylibre.com>
-Cc: rafael@kernel.org, daniel.lezcano@linaro.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, rui.zhang@intel.com, 
-	lukasz.luba@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Hsin-Te Yuan <yuanhsinte@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB6719:EE_|CH2PR10MB4309:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9c6ee25-2bcf-4428-2966-08dc5a690870
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	iqqTz5d9lUGz+r8z8imepM7h9Sd2vCqnUKsn1t92N8pBCvlPEtsNeuflRZ4VyMPjmOw8pH9uS5k+TEH/pVOz95oR+8AwqcA3NlaTrdFq1jeU6RIKM4xx8x2N1nbrA1efc93t92UnCVCO32sclrnR7gqDv+ByTr+UPLseP6c1VBaVT3sIPRlMLKmAtKx4pnFZJ5FCnzEOWp5E1lvI3Px9uN0BFRkDBgX2uoiOx1zR0+eX4/hScLzAW/5relWPcQT+EiDVX7Mr/v4CzXxCils7lnsaujtcgYhch1pwDgcKpbBqVOt+djRFk+grjJi0T6jh6GnNRO40jQO8f8pXS6Nx4BU6XGksaUepjp1O3QgBy7nXvlE3JnB3gHxh1qFonSH2xyfaqNrEhuQ8oXLvonQPKXd4xF/EWMa76ziaxhCIae8s+Ail1ME1jx0XkqaSuPONe52SBdmsvZ0jmbq8RkB7SvPuY2MTGCWNgj3tHpHr6GQHtv9+8f6MC1mlzxN4Xacz3qb89nOEj+LTL1VG78GbdLPPbVAhldKR3eJuDuW4lN2QUeaq48Bo6wFmANTDtyAYzQik6N/quQlqci9SRmW8nHrRgWgkTleiELAXcO/clCr2m1LZ0Ka025z5HX471fJ5xU7LzRPEfJolH4wKZ2mQ28MspLV7urVv92m/9uJ0Vic=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB6719.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?d3VJU0xrOVlPWGlaRVo4K1BpZlBSOUIrdm1yL2diZnoxd3BTY1Qzd1IwV21i?=
+ =?utf-8?B?NWtNMmxmckR1TEVqaG9sS2RiQjN3czBZUnV5ZFozd1lYdGtoNER1Rk1CS2w1?=
+ =?utf-8?B?RkVjR3lmZUFqdVJBb3N1V1FHOG5YYlBqRkEwaElOVThmVU5BcU45d2VlYUFW?=
+ =?utf-8?B?VnJwZmM4M1hzWGtHeFk0b1VQdHFQMFh3SHVBR2NqN3dYSzJGTFZhMitNd1hK?=
+ =?utf-8?B?TTZNRlhNSFZpeWJlTTJUWFpvbUdvdENMQklhWUFkM01lVVlMbU1TbG82dEFI?=
+ =?utf-8?B?VXl4NjM3b2FMcjF3anZ6NXhsM2NNcWx4SXVhL0VJZ1p5czZEalZOL2JTcC9W?=
+ =?utf-8?B?ODM1YVJvRlNHV3dkanZpa0p2eis4YzR5UWtzRXJEZlo3YjRQbElSNkNhRkM4?=
+ =?utf-8?B?V2s0RklPTkQwaVlRUXl2NEJRb3VEZnFvbWYwejQ5anczallTSjJzMG1BM2NS?=
+ =?utf-8?B?c1RuNms3a3hROGcxVGhnbVNJcmFOcGRZdHBLN2xwcGpIeVBXQ3ZqQkFPQTdw?=
+ =?utf-8?B?a2VCWnc2aWZMVm1udG9GSzhUbzh1M2RKdmRlNXB5V1ZLMWZmNWpOa1dFYzBP?=
+ =?utf-8?B?dWFEa0xNZDhJUlRSV1hBZ3lmd1kxbGV5bjhoWkFzWk4zaXYxbytRTno3b2oz?=
+ =?utf-8?B?RU5LQTEwR1crVnBJak5TVU9KbytrT0VpaVEwY0M1YXdVNVF6K3pRdGJmSEtw?=
+ =?utf-8?B?OTE4QkhueWJhMUh0WEpvVFQxbUNTOXZFZi9BbEZVNENMN2xsNXhDMFMxbUVV?=
+ =?utf-8?B?dHFQTkN4S0diWlphY05sM1dtbnVjR1V6ZGpLWjR2d3VIaEw1Z1YxYUpoRjgz?=
+ =?utf-8?B?VkVTRVFVM2xXWkpVZzVkbU5PZ3lueTAvKzN4V3Jwb2ZYMUp5amFzTWNCTUZr?=
+ =?utf-8?B?MXRxd1dYcUF1aEU0NTZicnZETWtmQ2tsTk1hM2FxOUU5UE9xNGVLWWZPSk4z?=
+ =?utf-8?B?SFdVRnRyandIaVdtV2RlRGZ1cU5xS2ZZaHpNVTlWelJ0cXIwUFhRTW40YlBJ?=
+ =?utf-8?B?OGFSK251Ty8yRTJUVVp2VWNMSG5EenVEcEw5OWdja2JnOEJ1NlJmckpjZ0I2?=
+ =?utf-8?B?TEZXcGtibFd5cUJVT2hZUCthczh4dUVNSnVNWHRrSTlGR1RJOHkrRVR4ckkx?=
+ =?utf-8?B?VlNXS2pYalNvaVhyZDJaOFdMY1NiUFhlWndjVHRMdDUxSE9oNk5MczJXY201?=
+ =?utf-8?B?YmFTdkZ6d3BvdUt6bTMzdG5BMFIwTTZ1Vyt1ajNtZlpKaDZnTGQvK3RDSEFH?=
+ =?utf-8?B?eEVWREhOMzNoMkVDMU1xWVkwczdqdEJCWkhUelJLRVlJSEZTR3htcDZBdmFp?=
+ =?utf-8?B?MjF2dHhoOEs0TzEydnovQjBTRW9jU3k4eVVtSEo2eStacjFqbG9XWmlGdG9u?=
+ =?utf-8?B?dU5SemxmV1p0SHUzcjFISGFpMXduNTdFY3U3K3d6YXhZaTgzRTYzaGpRLzF5?=
+ =?utf-8?B?WUM3UmZDNHB2WkloUEhpQjY0QTlKUTkzVDlMYTNxNGN4VFEvOGJNMGFxcE9X?=
+ =?utf-8?B?b0xoQ2VGSWNXRDkxZXIzMVAvL1NCeU1PRW42aENjZ1JoRmFnbklQTDJzb0xl?=
+ =?utf-8?B?RjBRWWMrM2Iyb2Z4M0FEcktxdCthbE0wVFdtL0pJLzh4QU0yUEJSdlJPOVlX?=
+ =?utf-8?B?eWwvc1ZEYWlSYW5vVDgyZDJPZDNQR2dSa2tqaWpFZlo1b3RseFBuRUE4VExF?=
+ =?utf-8?B?YXpXemtEMHF3dWxrNTdrVE5sNmNkS1dvMTAxM1ZWd2dHQmV5M2dIZEVWbU1y?=
+ =?utf-8?B?YWdUb2Q2Z0I0WlUxVUhQcklDN3d2M1hqQW1GcTk0UXhzb0pkbFhoMFFrT2l4?=
+ =?utf-8?B?OWl4R3BUbnFhVGNJSXV1WFNONzhUdEFKRlFQdUFZS3ppamZUTWdUdFU1dUhF?=
+ =?utf-8?B?M3JyNjZnRS9IMnR2QUJpOHphR0xGSFkxTGMvWmRyWVUrNGpJZzMzS3NQYzRm?=
+ =?utf-8?B?T0twNlozSGpTYUFZSVFTVEZUWmc3aHJOU1Z6dDhnbVdlZ0F2V3J2WkVJRStI?=
+ =?utf-8?B?Z21UNDg4em5tTDdGYkpJRW1CbFBKTlNPR1ZRak9EMVRBWjVpY1MvR3VuL0I3?=
+ =?utf-8?B?MG82NHR6dnBmcGM0Q0c3U1VsL09GdGhjYU9idkEwd1RRUTNhVGhuUGJpbE9O?=
+ =?utf-8?B?MkFHN05pNWU4bEZzb3lzdWNOMzF5aFE4ai9Cd2x1dVhKY3dDNGRXbXduK0lF?=
+ =?utf-8?B?OUE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	6HSCKXT6FKbkYVgEFSY9rXoTjDi2hpJH3LTlTtVBkGkbRd7evAFJZ84t2sYb6DQRTXonOqNkRSBDIOn1jIaOgqAS70w0VkoOeRnu6O1JNxb73T8IBXXsJa57Ltmez47ZThX3xHGLQh3cHI/p1+XKVlyVW/QwDdaIwCTEI8TQXA3/TzNax6JkxogZTL1AlotPjctj/EVF+wkUEXFXiwiAYtDu/8/K1VdkJn6gXUi/8dW2wJPfLWU3W7cxcANEFzOYFuQG9LionJhNxdiup7Qvo7ntPcU1dQ7u2NUu899/R1IdEnoWL9Eqp/wGvSdt37duOIZ04IVsFUfkqZ0Hq3u9RkbM29DhEulbi4n2HxFa2BKnsBStmrByYOXp7EjOtZw8HNcgzeiJcQN1czT51JG1EabFOWOMxYs6c8mMQCrlPKpPI0DC14omCMBHshd7B7BTXIqpnNi44jQyen8SEpNgbHZWJZLpYa8QYCqgNI2PErpYGE1g0XxrYP3fRvbl+VfHsRF+e/3IdZme0gUEHOWZGhWvCr4FaLp0gtKzPujXrEzHE8wztpPwNDEYD8CvGUmFvbmzmSQeacufdQ8o+lAEssBPEK7lcQvaViZBVl5URW0=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9c6ee25-2bcf-4428-2966-08dc5a690870
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB6719.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2024 20:50:34.2092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iAfQeqrBv39xLTNsi0oPEjA6K8f7BNoE17GrtJ6zGGwSmMMX/5/SAXrhxTlEo5GgwDgm1dsZRIcKh/a8txjcXA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4309
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-11_10,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ phishscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2404110151
+X-Proofpoint-GUID: 3-vwZCg6qROAdffXpKNNadaAQR7K_YLG
+X-Proofpoint-ORIG-GUID: 3-vwZCg6qROAdffXpKNNadaAQR7K_YLG
 
-Hi Alexandre,
+On Thu, Apr 11, 2024 at 11:56:39PM +0800, Chao Gao wrote:
+> On Thu, Apr 11, 2024 at 05:20:30PM +0200, Paolo Bonzini wrote:
+> >On Thu, Apr 11, 2024 at 5:13 PM Alexandre Chartre
+> ><alexandre.chartre@oracle.com> wrote:
+> >> I think that Andrew's concern is that if there is no eIBRS on the host then
+> >> we do not set X86_BUG_BHI on the host because we know the kernel which is
+> >> running and this kernel has some mitigations (other than the explicit BHI
+> >> mitigations) and these mitigations are enough to prevent BHI. But still
+> >> the cpu is affected by BHI.
+> >
+> >Hmm, then I'm confused. It's what I wrote before: "The (Linux or
+> >otherwise) guest will make its own determinations as to whether BHI
+> >mitigations are necessary. If the guest uses eIBRS, it will run with
+> >mitigations" but you said machines without eIBRS are fine.
+> >
+> >If instead they are only fine _with Linux_, then yeah we cannot set
+> >BHI_NO in general. What we can do is define a new bit that is in the
+> >KVM leaves. The new bit is effectively !eIBRS, except that it is
+> >defined in such a way that, in a mixed migration pool, both eIBRS and
+> >the new bit will be 0.
+> 
+> This looks a good solution.
+> 
+> We can also introduce a new bit indicating the effectiveness of the short
+> BHB-clearing sequence. KVM advertises this bit for all pre-SPR/ADL parts.
+> Only if the bit is 1, guests will use the short BHB-clearing sequence.
+> Otherwise guests should use the long sequence. In a mixed migration pool,
+> the VMM shouldn't expose the bit to guests.
 
-On Thu, Apr 11, 2024 at 4:34=E2=80=AFPM Alexandre Bailon <abailon@baylibre.=
-com> wrote:
->
-> This adds support of multi sensors to thermal.
-> Currently, this only support the get_temp operation.
-> This returns an average temperature of all the sensors.
-> If defined, a coefficient is applied to the value read from the sensor
-> before computing the average.
->
-> Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
-> ---
->  drivers/thermal/Makefile        |   1 +
->  drivers/thermal/thermal_core.h  |   7 ++
->  drivers/thermal/thermal_multi.c | 178 ++++++++++++++++++++++++++++++++
->  3 files changed, 186 insertions(+)
->  create mode 100644 drivers/thermal/thermal_multi.c
->
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index c934cab309ae..757289a406f7 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -6,6 +6,7 @@ CFLAGS_thermal_core.o           :=3D -I$(src)
->  obj-$(CONFIG_THERMAL)          +=3D thermal_sys.o
->  thermal_sys-y                  +=3D thermal_core.o thermal_sysfs.o
->  thermal_sys-y                  +=3D thermal_trip.o thermal_helpers.o
-> +thermal_sys-y                  +=3D thermal_multi.o
->
->  # netlink interface to manage the thermal framework
->  thermal_sys-$(CONFIG_THERMAL_NETLINK)          +=3D thermal_netlink.o
-> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_cor=
-e.h
-> index 0a3b3ec5120b..26e83a5c8298 100644
-> --- a/drivers/thermal/thermal_core.h
-> +++ b/drivers/thermal/thermal_core.h
-> @@ -138,6 +138,13 @@ ssize_t weight_show(struct device *, struct device_a=
-ttribute *, char *);
->  ssize_t weight_store(struct device *, struct device_attribute *, const c=
-har *,
->                      size_t);
->
-> +/* Multi sensors */
-> +int thermal_multi_sensor_validate_coeff(int *coeff, int count, int offse=
-t);
-> +int thermal_multi_sensor_register(const char *name,
-> +       struct thermal_zone_device *sensor_tz, int coeff);
-> +void thermal_multi_sensor_unregister(struct thermal_zone_device *sensor_=
-tz);
-> +
-> +
->  #ifdef CONFIG_THERMAL_STATISTICS
->  void thermal_cooling_device_stats_update(struct thermal_cooling_device *=
-cdev,
->                                          unsigned long new_state);
-> diff --git a/drivers/thermal/thermal_multi.c b/drivers/thermal/thermal_mu=
-lti.c
-> new file mode 100644
-> index 000000000000..a5a4f1f2d594
-> --- /dev/null
-> +++ b/drivers/thermal/thermal_multi.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/err.h>
-> +#include <linux/export.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +#include <linux/thermal.h>
-> +#include <linux/types.h>
-> +#include <linux/string.h>
-> +
-> +#include "thermal_core.h"
-> +
-> +struct sensor_interface {
-> +       struct thermal_zone_device *tz;
-> +       int coeff;
-> +
-> +       struct list_head node;
-> +};
-> +
-> +struct multi_sensor_thermal_zone {
-> +       struct thermal_zone_device *tz;
-> +       struct mutex sensors_lock;
-> +       struct list_head sensors;
-> +
-> +       struct list_head node;
-> +};
-> +
-> +static DEFINE_MUTEX(multi_tz_mutex);
-> +static LIST_HEAD(multi_tz_list);
-> +
-> +#define TJ_MAX 120000
-> +
-> +static int multi_sensor_get_temp(struct thermal_zone_device *tz, int *te=
-mp)
-> +{
-> +       struct multi_sensor_thermal_zone *multi_tz =3D tz->devdata;
-> +       struct sensor_interface *sensor;
-> +       int accumulated_temp =3D 0;
-> +       u32 accumulated_coeff;
+Is there a link to this 'short BHB-clearing sequence'?
 
-Should we initialize accumulated_coeff to 0 as well?
+But on your email, should a Skylake guests enable IBRS (or retpoline)
+and have the short BHB clearing sequence?
 
-> +       int ret;
-> +
-> +       mutex_lock(&multi_tz->sensors_lock);
-> +
-> +       if (list_empty(&multi_tz->sensors)) {
-> +               mutex_unlock(&multi_tz->sensors_lock);
-> +               return -ENODEV;
-> +       }
-> +
-> +       list_for_each_entry(sensor, &multi_tz->sensors, node) {
-> +               ret =3D thermal_zone_get_temp(sensor->tz, temp);
-> +               if (ret) {
-> +                       mutex_unlock(&multi_tz->sensors_lock);
-> +                       return ret;
-> +               }
-> +
-> +               accumulated_temp +=3D *temp * sensor->coeff;
-> +               accumulated_coeff +=3D sensor->coeff;
-> +       }
-> +
-> +       mutex_unlock(&multi_tz->sensors_lock);
-> +
-> +       *temp =3D accumulated_temp / accumulated_coeff;
-> +       return ret;
-> +}
-> +
-> +struct thermal_zone_device_ops multi_sensor_ops =3D {
-> +       .get_temp =3D multi_sensor_get_temp,
-> +};
-> +
-> +int thermal_multi_sensor_validate_coeff(int *coeff, int count, int offse=
-t)
-> +{
-> +       int max_accumulated_temp =3D 0;
-> +       int i;
-> +
-> +       for (i =3D 0; i < count; i++) {
-> +               max_accumulated_temp +=3D TJ_MAX * coeff[i];
-> +               if (max_accumulated_temp < 0)
-> +                       return -EOVERFLOW;
-> +       }
-> +
-> +       max_accumulated_temp +=3D offset;
-> +       return max_accumulated_temp < 0 ? -EOVERFLOW : 0;
-> +}
-> +
-> +static struct thermal_zone_device *multi_sensor_tz_alloc(const char *nam=
-e)
-> +{
-> +       struct thermal_zone_device *tz;
-> +       struct thermal_zone_params tzp =3D {};
-> +       struct multi_sensor_thermal_zone *multi_tz;
-> +
-> +       tz =3D thermal_zone_get_zone_by_name(name);
-> +       if (!IS_ERR(tz)) {
-> +               mutex_unlock(&multi_tz_mutex);
-> +               return tz;
-> +       }
-> +
-> +       multi_tz =3D kzalloc(sizeof(*multi_tz), GFP_KERNEL);
-> +       if (!multi_tz)
-> +               return ERR_PTR(-ENOMEM);
-> +       mutex_init(&multi_tz->sensors_lock);
-> +       INIT_LIST_HEAD(&multi_tz->sensors);
-> +
-> +       tzp.no_hwmon =3D true;
-> +       tzp.slope =3D 1;
-> +       tzp.offset =3D 0;
-> +
-> +       tz =3D thermal_tripless_zone_device_register(name, multi_tz,
-> +                                                  &multi_sensor_ops, &tz=
-p);
-> +       if (IS_ERR(tz)) {
-> +               kfree(multi_tz);
-> +       } else {
-> +               multi_tz->tz =3D tz;
-> +               list_add(&multi_tz->node, &multi_tz_list);
-> +       }
-> +
-> +       return tz;
-> +}
-> +
-> +int thermal_multi_sensor_register(const char *name,
-> +       struct thermal_zone_device *sensor_tz, int coeff)
-> +{
-> +       struct thermal_zone_device *tz;
-> +       struct multi_sensor_thermal_zone *multi_tz;
-> +       struct sensor_interface *sensor;
-> +
-> +       mutex_lock(&multi_tz_mutex);
-> +
-> +       tz =3D multi_sensor_tz_alloc(name);
-> +       if (IS_ERR(tz)) {
-> +               mutex_unlock(&multi_tz_mutex);
-> +               return PTR_ERR(tz);
-> +       }
-> +       multi_tz =3D  tz->devdata;
-> +
-> +       sensor =3D kzalloc(sizeof(*sensor), GFP_KERNEL);
-> +       if (!sensor) {
-> +               mutex_unlock(&multi_tz_mutex);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       sensor->tz =3D sensor_tz;
-> +       sensor->coeff =3D coeff;
-> +       mutex_lock(&multi_tz->sensors_lock);
-> +       list_add(&sensor->node, &multi_tz->sensors);
-> +       mutex_unlock(&multi_tz->sensors_lock);
-> +
-> +       thermal_zone_device_enable(tz);
-> +
-> +       mutex_unlock(&multi_tz_mutex);
-> +
-> +       return 0;
-> +}
-> +
-> +void thermal_multi_sensor_unregister(struct thermal_zone_device *sensor_=
-tz)
-> +{
-> +       struct multi_sensor_thermal_zone *multi_tz;
-> +       struct sensor_interface *sensor, *tmp;
-> +
-> +       mutex_lock(&multi_tz_mutex);
-> +       list_for_each_entry(multi_tz, &multi_tz_list, node) {
-> +               mutex_lock(&multi_tz->sensors_lock);
-> +               list_for_each_entry_safe(sensor, tmp, &multi_tz->sensors,=
- node) {
-> +                       if (sensor->tz =3D=3D sensor_tz) {
-> +                               list_del(&sensor->node);
-> +                               kfree(sensor);
-> +                               break;
-> +                       }
-> +               }
-> +
-> +               if (list_empty(&multi_tz->sensors)) {
-> +                       thermal_zone_device_unregister(multi_tz->tz);
-> +                       mutex_unlock(&multi_tz->sensors_lock);
-> +                       kfree(multi_tz);
-> +               } else {
-> +                       mutex_unlock(&multi_tz->sensors_lock);
-> +               }
-> +       }
-> +       mutex_unlock(&multi_tz_mutex);
-> +}
-> --
-> 2.41.0
->
+And IceLake/Cascade lake should use eIBRS (or retpoline) and short BHB
+clearing sequence?
 
-By the way, may I know why min/max aggregation is dropped in this
-version? I thought that checking max temperature is the most direct
-approach to protect the hardware and the users from high temperature.
+If we already know all of this why does the hypervisor need to advertise
+this to the guest? They can lookup the CPU data to make this determination, no?
 
-Best regards,
-Pin-yen
+I don't actually understand how one could do a mixed migration pool with
+the various mitigations one has to engage (or not) based on the host one
+is running under.
+> 
+> >
+> >Paolo
+> >
+> >
