@@ -1,56 +1,55 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036F92CCD7
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:11:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096F112E6C
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712869871; cv=none; b=UatQEqWXZSV+umRvsAdQLlfpOi6QKUg6rD5RMB1Jyov9/OIjGyQpbKXqAoT/ljwiA1YHaUc3lm/6thkvTDDHP+iAfu5+4KHMjBnUWV9pIrQCQJ7JyjxpobzGL5/PZ9EZXbfSdBRCxFk9dT4dKW7fWnP7tokAQ3L5mA93EZfgiN4=
+	t=1712869929; cv=none; b=HDumMT/V85JBOoKe8l/NZ6DAQwq7chHH++vaKbc6SaBxBCB0WIyBVpQ/fGmjVALM0tXgIN+AMPL7ZIp8QJHE1+KJnSD4bFTlPEl8+oUA6katBQ886VUmKKd34OoC+LuFtW11bL+UMJ4FgatoB6H1pCFMKPIPtoMy0Y1wZe9L+m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712869871; c=relaxed/simple;
-	bh=IEBJoFDSC/xhmN89SjQvJVuzGWr9gyS0EGlcaOZ8eMc=;
+	s=arc-20240116; t=1712869929; c=relaxed/simple;
+	bh=oZ8v4ePupLUg5etGiqmx+FUpnfb/FSvL2oIBZ3dpBF4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hghdoa3dbUE5BfJ+CH8GCV+T/ljfot15152Ld9Ix7aYOQZUYydslCnZJG4yxfH3tB1snvLfwINob53v/7JAvFNjzNwBy3SiEMNu9031F9tI7wGma9HRGjKrO/NhNkQtD/Hg1oNpXsdz/xnMj9VHuxrkOKi2H6FSuV2+TiZfE3sM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R9Z2wqZK; arc=none smtp.client-ip=209.85.166.46
+	 In-Reply-To:Content-Type; b=TFZNUENG9qcS5VALncQbEBirSUDkTIIrZ6JTiDV9t9ZexUbU7DnghtIAeQUBslSst5Ktaha6ymWzqitTIS5mAkL5swjWlTeU79+wHR72OH4wK0aox+nz4f8HziSae2Tbgxwib18kWSP5HhCiISvE96g1eXsQPrkR57rrqflXwU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Z71l2dp4; arc=none smtp.client-ip=209.85.166.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R9Z2wqZK"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-7c8e4c0412dso2935339f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:11:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Z71l2dp4"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d67d1073easo4906439f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1712869868; x=1713474668; darn=vger.kernel.org;
+        d=linuxfoundation.org; s=google; t=1712869926; x=1713474726; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=38LeeLy9B9nLfzSgbJxSutTG0T1HzptAeGhsMkzO9sI=;
-        b=R9Z2wqZKlDPndBsAvIivYDjvNSev/rgLBf4LwV3Kni+m23IgN+pDY7fFz4kNLdy9oI
-         vGm+hpHztC/B5G2tl4YXlLW/fLuLYOKO20cS9sFLm30Q16Nb8SB0NH1z/qQUZSSgRvFN
-         CuBaI4aGvrwTEqpRTBQfPPwmf8GqNLPCSzznU=
+        bh=5pYTo5GXTImg/khPgJCEyjaHMOI7shV0+j3Qu01jLxQ=;
+        b=Z71l2dp4zBg50YT78pSktQuj+BIpC7oQRpK4pXcc00gjGGLss4phYREA5p7h2g+Bkm
+         yeeveCMZ94FT9oIQneSFjSnmjgUpRdHgv8aC+Mz0B0vnAkBY9oQlO+kwQ0aRr/sfwefV
+         hbUtTAHNN8G8w2QeHmLIKL43X8xw2MJni4ZS0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712869868; x=1713474668;
+        d=1e100.net; s=20230601; t=1712869926; x=1713474726;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=38LeeLy9B9nLfzSgbJxSutTG0T1HzptAeGhsMkzO9sI=;
-        b=khfDFsSSG9RrJYTygVZidlQjqVGOcWIUZzTjiEB/A0rWOKPYPeFg24aHBnmWAT9H6j
-         Il97S0sYWUTrZd2ylQDvjAmCcjtHXcqcmRcdOhnrS+eEh6MLrZqoMLwh6+ua6VPSXskp
-         YOMwmY1zeSfSEXy94UCugntUOFb9nh5g23FLCnXtGbtGA98Y7N4DS5gpgTSoZReytIjr
-         yCED5V0va4MIvF1ufpBvCk53HAWdt0PaPy7bjxezgzEJbUKm9viT0hNPCcMNV1FEOWJI
-         dVYepk4oPpWv4gSJsQIDFxXxTVZh5ehBenCNNZIUUz/fCIKL2jd77b5m3XJdjXuzj4bW
-         wCdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWhwt1itcuLRUjndJQagnQ+r+vueFqLmdMi2AqJL+3yThQQvcxht+ldu411WOsIpyIk2d4xa2omi0CTRcg+tS3ouXOY4HJy6K/UnnA7
-X-Gm-Message-State: AOJu0Ywhq2MkAzm9MhYO6+9HQxClPRg058akecb/ErV8ef+27UWKOG8D
-	oaWETQuzC4AVkQ7ANvoiYjV5rAwmsnC5ig3m7BEteDZw43Hr93jobhs2KyLVlek=
-X-Google-Smtp-Source: AGHT+IEvOEEya92osbmmTcRV/7dhRZrlPtPgQIc4ZlZO618j3bCXYpmIxG7Z7CY+DhVW9kJ6yy/Esw==
-X-Received: by 2002:a6b:c34e:0:b0:7d6:7b7c:8257 with SMTP id t75-20020a6bc34e000000b007d67b7c8257mr1040368iof.0.1712869868075;
-        Thu, 11 Apr 2024 14:11:08 -0700 (PDT)
+        bh=5pYTo5GXTImg/khPgJCEyjaHMOI7shV0+j3Qu01jLxQ=;
+        b=xCoP/DjUjCDXMKKq58hoeIogTA2FRdziTQo2+RvKRsAe+BQy6ALZGAm2HYDshj0+tz
+         69Y6PTpXsxdX/75UiYR7rh0ANtufFDZ2j+GTDABy4jJDwFmcFDJwfmg323K/hRk8w7ZZ
+         ISMns8whS3Hx4NgkVPxeqURf08p4jkHiLaH+Swt6m61yi1oKSeplyO30RwWb0OOmtPuM
+         7UnezJd0sriuMAFyixrrhW+XJ/PPxIRkM7Bdglh/VgoeHkc8cXblDQpOIg2QY6QE09eW
+         dtDb7whsSnV5ZkwADJvwebyQp6FNxGbJPUJdrYalLFJ8uaMKCD752YFaO//pwNWTNXo8
+         2B9A==
+X-Gm-Message-State: AOJu0Yx3yp+V98qW6Q7x8FKax5Xav+QRVPPqxo7PzlsZQtMBbNpTsaGE
+	KVmB7kRKnfK5tQhVW33OjfR2KBSY8m4XfbOfrDoudM0c8iCpc+HM1VD9OPC5MjA=
+X-Google-Smtp-Source: AGHT+IGlRvKJzo56yTLwyjOFSWmLeGDpwy6jNHfGtSQrurgovx+V4MNpJI/2H+yHyG38tJbXWUo9yw==
+X-Received: by 2002:a6b:7b05:0:b0:7d6:60dc:bc8e with SMTP id l5-20020a6b7b05000000b007d660dcbc8emr1190271iop.1.1712869926226;
+        Thu, 11 Apr 2024 14:12:06 -0700 (PDT)
 Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id bv21-20020a056638449500b0048075de1461sm598414jab.90.2024.04.11.14.11.07
+        by smtp.gmail.com with ESMTPSA id bt3-20020a056638430300b0047ee01746f1sm615787jab.120.2024.04.11.14.12.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Apr 2024 14:11:07 -0700 (PDT)
-Message-ID: <8254ab4d-9cb6-402e-80dd-d9ec70d77de5@linuxfoundation.org>
-Date: Thu, 11 Apr 2024 15:11:07 -0600
+        Thu, 11 Apr 2024 14:12:05 -0700 (PDT)
+Message-ID: <394f886d-ac00-4ad2-9bfa-b77db7bc5998@linuxfoundation.org>
+Date: Thu, 11 Apr 2024 15:12:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,81 +57,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kselftest: Mark functions that unconditionally call
- exit() as __noreturn
-To: Nathan Chancellor <nathan@kernel.org>, tglx@linutronix.de,
- shuah@kernel.org, Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: oleg@redhat.com, anna-maria@linutronix.de, frederic@kernel.org,
- ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev, patches@lists.linux.dev,
- John Stultz <jstultz@google.com>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20240411-mark-kselftest-exit-funcs-noreturn-v1-1-b027c948f586@kernel.org>
+Subject: Re: [PATCH 1/3] selftests: timers: Fix posix_timers ksft_print_msg
+ warning
+To: John Stultz <jstultz@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Oleg Nesterov <oleg@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Edward Liaw <edliaw@google.com>, Carlos Llamas <cmllamas@google.com>,
+ kernel-team@android.com, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240410232637.4135564-1-jstultz@google.com>
+ <001f99f4-9463-451d-ac16-0cda91e37e67@linuxfoundation.org>
+ <CANDhNCoXW2=1nGXYyck6e-CztCjDpC15_qwNk_+dOc8PvB-b4A@mail.gmail.com>
 Content-Language: en-US
 From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20240411-mark-kselftest-exit-funcs-noreturn-v1-1-b027c948f586@kernel.org>
+In-Reply-To: <CANDhNCoXW2=1nGXYyck6e-CztCjDpC15_qwNk_+dOc8PvB-b4A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/11/24 12:45, Nathan Chancellor wrote:
-> After commit 6d029c25b71f ("selftests/timers/posix_timers: Reimplement
-> check_timer_distribution()"), clang warns:
+On 4/11/24 14:53, John Stultz wrote:
+> On Thu, Apr 11, 2024 at 1:45 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 4/10/24 17:26, John Stultz wrote:
+>>> After commit 6d029c25b71f ("selftests/timers/posix_timers:
+>>
+>> Tried to apply this for linux-kselftest next with Nathan's patch.
+>> I can't find this commit in Linux 6.9-rc3? Is this is timers
+>> tree?
 > 
->    tools/testing/selftests/timers/../kselftest.h:398:6: warning: variable 'major' is used uninitialized whenever '||' condition is true [-Wsometimes-uninitialized]
->      398 |         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor) != 2)
->          |             ^~~~~~~~~~~~
->    tools/testing/selftests/timers/../kselftest.h:401:9: note: uninitialized use occurs here
->      401 |         return major > min_major || (major == min_major && minor >= min_minor);
->          |                ^~~~~
->    tools/testing/selftests/timers/../kselftest.h:398:6: note: remove the '||' if its condition is always false
->      398 |         if (uname(&info) || sscanf(info.release, "%u.%u.", &major, &minor) != 2)
->          |             ^~~~~~~~~~~~~~~
->    tools/testing/selftests/timers/../kselftest.h:395:20: note: initialize the variable 'major' to silence this warning
->      395 |         unsigned int major, minor;
->          |                           ^
->          |                            = 0
+> Yes, it in tip/timers/urgent.
 > 
-> This is a false positive because if uname() fails, ksft_exit_fail_msg()
-> will be called, which unconditionally calls exit(), a noreturn function.
-> However, clang does not know that ksft_exit_fail_msg() will call exit()
-> at the point in the pipeline that the warning is emitted because
-> inlining has not occurred, so it assumes control flow will resume
-> normally after ksft_exit_fail_msg() is called.
-> 
-> Make it clear to clang that all of the functions that call exit()
-> unconditionally in kselftest.h are noreturn transitively by marking them
-> explicitly with '__attribute__((__noreturn__))', which clears up the
-> warning above and any future warnings that may appear for the same
-> reason.
-> 
-> Fixes: 6d029c25b71f ("selftests/timers/posix_timers: Reimplement check_timer_distribution()")
-> Reported-by: John Stultz <jstultz@google.com>
-> Closes: https://lore.kernel.org/all/20240410232637.4135564-2-jstultz@google.com/
-> Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-> ---
-> I have based this change on timers/urgent, as the commit that introduces
-> this particular warning is there and it is marked for stable, even
-> though this appears to be a generic kselftest issue. I think it makes
-> the most sense for this change to go via timers/urgent with Shuah's ack.
-> While __noreturn with a return type other than 'void' does not make much
-> sense semantically, there are many places that these functions are used
-> as the return value for other functions such as main(), so I did not
-> change the return type of these functions from 'int' to 'void' to
-> minimize the necessary changes for a backport (it is an existing issue
-> anyways).
-> 
-> I see there is another instance of this problem that will need to be
-> addressed in -next, introduced by commit f07041728422 ("selftests: add
-> ksft_exit_fail_perror()").
+
 
 Thank you. Assuming this is going through tip/timers/urgent
 
 Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-Usama, please send patch fixing this problem in next on top of
-
-commit f07041728422 ("selftests: add
-> ksft_exit_fail_perror()").
 
 thanks,
 -- Shuah
