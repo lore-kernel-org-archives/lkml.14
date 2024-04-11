@@ -1,63 +1,63 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C687914F9DE
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFFA14EC6A
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849687; cv=none; b=EvpHxa40K+zSaQdi8wOXuuwKnM+G93I0hp5Viv6TaTpNd2Ueeu2J0yQR3RQK3VZPdmwLNUiVP6Myz2TDR90s7YyPjVntNBn5329YYDJ9aL8+JxAKAeHcRDtaULVW+aidF+yT9q33eWsHy2UGaL7AwNZKPxoJdTq/3GedtBsZADs=
+	t=1712849685; cv=none; b=UJMrpVQGB9hHWRXiQhly1gCNEItTHWwg7aMHWj15rvy+jXb7WVGP/6oE/jkI1CrmYERaouBJiII6q3HUG6KbguJd0FbX4XjyPBsjhRANK8d9nqjkKroU424XmJrSNfQqhlqdPrALGHTVel4rtcbN93Y923fInMKMLV311qo+ZGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849687; c=relaxed/simple;
-	bh=mafGK7ArZ4CgMWc69oJvrXEr6bmtaktMynKhOq0IW24=;
+	s=arc-20240116; t=1712849685; c=relaxed/simple;
+	bh=EvF9GK5fbHclBik/U1ZhjLcyJWbBmhwlfutDJHY9YgA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Y9yINSwWMDJOb2bW/W8ncHfogKVQXtQqSAoLJrm1abgvDBKgPeeyq9QMScRR6GY9ibKEg4OOCG/qyczE/DW5ph/WtakJC0cTj74psHGZsuulx4E8+gkFMDUb+HqKexISNWXStwhfhKTEivVW4ad9qIS0TCZYnkKgOkqbLxdhh2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=EvQk/zCC; arc=none smtp.client-ip=209.85.166.171
+	 MIME-Version; b=sWZ2iYvyfbTp69ovre1/Y0g1v/gWw2ZOYr7PPh4AKLNEZhZbFLY1tdXFCtbgt03yBKCyPjm2AOY0BJyBa9sarUtxOGBhTXX2z/txWnBDt5zoI/l2weIna4vapEecIUTavpSs9UEueg0ji3xu+RkC3tT2NOXmORcOi+4dKYUmSxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=09yiS8Cc; arc=none smtp.client-ip=209.85.166.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="EvQk/zCC"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-36a224d7414so179835ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="09yiS8Cc"
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8913039f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849684; x=1713454484; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849680; x=1713454480; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CjanmKNhtskVVrpiFYIE9220cXjVfSIWUIi+sU6GL7c=;
-        b=EvQk/zCCEV586vQKUrJQw3pCN9BvzOYOwNBG7Na2fKeBMV/S3d2YYemMJE/zj0ystL
-         BG0pwTRw8TBg/4rw1Mt6h5tdn/jeD+NNdPW9PDodm/rPvY2eBck6oNYyykaHPoEE114n
-         npp0LMTkGQwXH30QtybmHIJH2dzudDaGG8pvWRnLca3FrewsR5B7pwzjsWFlUWfhIHDR
-         Vx4a3TKoqECt22RzmduHtDRB53nr8RKcew6uT1XZ0Xfo2RTfz2iJqB/SY/uiXKSTPcWL
-         GkCJ6fSoSsH36eYC+TKdQ+ENNY9szrNK/lqBPhPhn239O/ujZJW2ywOCi3DQ8hWS2wzR
-         Mj/g==
+        bh=X69VkKRBRS4SFDGlDKAfZ/Z/En9tZp2QBRLJAwyAOQw=;
+        b=09yiS8CcWQbJtgcH3fYbx+4F/FAEiTFz0FdSd+JmMMpIxqqgWhZ/IMbmwNFzQN5gUa
+         43L7x0kUTPhyBxpVYxJDgjZWAUcI/X8U51OMSj58eB1Q9dbJMr1fQfNL8fBSY5yBo3kJ
+         39HlNHnytEbAKqNaZROgQIS78wW3/io148f1KOwFHUIedxLSpz3SihNoKLs7H4D45lON
+         6NKQvVNBU3mi8Is8ZZJ31Ur/lqvGMug2mcA6/ZjeGFjztULH5ssqqAvXJDxyQn16fkdn
+         nDXhl3UflHPjLdwWI1OfTBJOe2Vaoke+YkYXBkNgqYQe68x1rAVuMxrIE1oVH1VZFD2p
+         rCKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849684; x=1713454484;
+        d=1e100.net; s=20230601; t=1712849680; x=1713454480;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CjanmKNhtskVVrpiFYIE9220cXjVfSIWUIi+sU6GL7c=;
-        b=v59iOGJzCJzifyaqKRD0WmF9MK92BuWvjaRgUhaFIcnOTEKhVtSxINOp/nRJ8TphLk
-         haiNK5sro9zfM/16ciBL2HD9wnqIvC/FYQO3+beJeIdFVBxohAZn14Mwf1TbN/gW2y56
-         ySO7GZBun9KmvhD2OOU5d+u0Bvggu/EVAoccodcisluzTZvMJn2Pi3ToEbgdJ6oSw1dy
-         I/peEvxUf7mDaPtc9r4k0P0ERkP4WAP67+Up705LvLkudAPTcfdyWdlgfIeXPOKFSWPO
-         tO9vOcb0EaTlBGIbhk3G5jfcfNPWQ7qt7cXt27/P1tqhPAOozmvmT+xijMF04vJpFTmy
-         kepA==
-X-Gm-Message-State: AOJu0YzRcYcfA7zqZ8R9OcSHEugb8FtcAVo589EgdnSAmoggo1Q7SvFm
-	b5vzxiDHZDs64eYYsTlbQJujuyrdGDIlOOEbYVIqTyqMF1FMwedQ0J7/Ps5ldbpCkfTl5PuyopS
-	U
-X-Google-Smtp-Source: AGHT+IFXWdGqIAW+oXfRgAYntKkHRsP+78puzHM3i9xxc0np3X7A8nuVOEUjNMoU9TubyKaosDyE9A==
-X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr182071iob.1.1712849684534;
-        Thu, 11 Apr 2024 08:34:44 -0700 (PDT)
+        bh=X69VkKRBRS4SFDGlDKAfZ/Z/En9tZp2QBRLJAwyAOQw=;
+        b=HQuqKSR8n8IGXZJWeKcrh0Od21MEjwxcSO0SvOjIbI1HM7ruywBbn4ppGdt71h0rqG
+         V/FolsjA5tDpryz8XEbzkDJwVC+p1EWrPg15ZOp5gFQmAw3uuZQCWPt+Nn5rLYEY185q
+         8QY1Oo7xlcF9qh1GW26UX3shvunAW7HnYgQfbLH7CG3m5NgY9D5RqTlqu9TrqGkr0KaF
+         9GzeFP/g32fuGLHl7IsnKYh9f4Tj5pZJ/yhE3oKtGelZvtRp+V7ngP99brk2ubln91cm
+         P5/5JiZD33hhlbrwi7VWywtb0ZAcH8IgcHyQzYo+XTA+lVF7k7517kCYfTQyC/2GDqIc
+         VZDg==
+X-Gm-Message-State: AOJu0YwKqM5VtsLAYuKeBUgrt4I3imYDO6MrUM6I935FMXUO8hfrZz8P
+	BrkrDsx1Tk0ac2CQdSSA6X4gkvMJBaOcQ6lk9BTZRyK1/ZLbUo7N75E4WBtCuFn5yhdIjHEQODA
+	n
+X-Google-Smtp-Source: AGHT+IFU9YDLxYgk/NRreQh4oW+aVM5ku7TnNUhdZGYxwT9BiCbmhU5jsiW27zt+ETFg3i2rXgXPgQ==
+X-Received: by 2002:a92:2912:0:b0:36a:f9aa:5757 with SMTP id l18-20020a922912000000b0036af9aa5757mr3578832ilg.2.1712849680519;
+        Thu, 11 Apr 2024 08:34:40 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.43
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:34:44 -0700 (PDT)
+        Thu, 11 Apr 2024 08:34:38 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 109/437] crypto: cpp: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:09 -0600
-Message-ID: <20240411153126.16201-110-axboe@kernel.dk>
+Subject: [PATCH 106/437] crypto: hisilicon: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:14:06 -0600
+Message-ID: <20240411153126.16201-107-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,146 +71,434 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/crypto/ccp/ccp-debugfs.c | 51 ++++++++++++++------------------
- 1 file changed, 22 insertions(+), 29 deletions(-)
+ drivers/crypto/hisilicon/debugfs.c        | 51 +++++++++++------------
+ drivers/crypto/hisilicon/hpre/hpre_main.c | 23 +++++-----
+ drivers/crypto/hisilicon/qm.c             | 22 +++++-----
+ drivers/crypto/hisilicon/sec2/sec_main.c  | 23 +++++-----
+ drivers/crypto/hisilicon/zip/zip_main.c   | 23 +++++-----
+ 5 files changed, 68 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/crypto/ccp/ccp-debugfs.c b/drivers/crypto/ccp/ccp-debugfs.c
-index a1055554b47a..34bf31386994 100644
---- a/drivers/crypto/ccp/ccp-debugfs.c
-+++ b/drivers/crypto/ccp/ccp-debugfs.c
-@@ -39,10 +39,9 @@
- #define	RI_NLSB_SHIFT	19
- #define	RI_NLSB(r)	(((r) * RI_LSB_ENTRIES) >> RI_NLSB_SHIFT)
- 
--static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
--				      size_t count, loff_t *offp)
-+static ssize_t ccp5_debugfs_info_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ccp_device *ccp = filp->private_data;
-+	struct ccp_device *ccp = iocb->ki_filp->private_data;
- 	unsigned int oboff = 0;
- 	unsigned int regval;
- 	ssize_t ret;
-@@ -85,7 +84,7 @@ static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
- 	oboff += OSCNPRINTF("LSB Entries: %d\n",
- 		   (regval & RI_LSB_ENTRIES) >> RI_NLSB_SHIFT);
- 
--	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
- 	kfree(obuf);
- 
- 	return ret;
-@@ -94,10 +93,9 @@ static ssize_t ccp5_debugfs_info_read(struct file *filp, char __user *ubuf,
- /* Return a formatted buffer containing the current
-  * statistics across all queues for a CCP.
-  */
--static ssize_t ccp5_debugfs_stats_read(struct file *filp, char __user *ubuf,
--				       size_t count, loff_t *offp)
-+static ssize_t ccp5_debugfs_stats_read(struct kiocb *iocb, struct iov_iter *to)
- {
--	struct ccp_device *ccp = filp->private_data;
-+	struct ccp_device *ccp = iocb->ki_filp->private_data;
- 	unsigned long total_xts_aes_ops = 0;
- 	unsigned long total_3des_ops = 0;
- 	unsigned long total_aes_ops = 0;
-@@ -147,7 +145,7 @@ static ssize_t ccp5_debugfs_stats_read(struct file *filp, char __user *ubuf,
- 	oboff += OSCNPRINTF("                     ECC: %ld\n",
- 			    total_ecc_ops);
- 
--	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
- 	kfree(obuf);
- 
- 	return ret;
-@@ -171,27 +169,25 @@ static void ccp5_debugfs_reset_queue_stats(struct ccp_cmd_queue *cmd_q)
-  * should be used to reset the queue counters across
-  * that device.
-  */
--static ssize_t ccp5_debugfs_stats_write(struct file *filp,
--					const char __user *ubuf,
--					size_t count, loff_t *offp)
-+static ssize_t ccp5_debugfs_stats_write(struct kiocb *iocb,
-+					struct iov_iter *from)
- {
--	struct ccp_device *ccp = filp->private_data;
-+	struct ccp_device *ccp = iocb->ki_filp->private_data;
- 	int i;
- 
- 	for (i = 0; i < ccp->cmd_q_count; i++)
- 		ccp5_debugfs_reset_queue_stats(&ccp->cmd_q[i]);
- 	ccp->total_interrupts = 0L;
- 
--	return count;
-+	return iov_iter_count(from);
+diff --git a/drivers/crypto/hisilicon/debugfs.c b/drivers/crypto/hisilicon/debugfs.c
+index cd67fa348ca7..6dd67b0fcf36 100644
+--- a/drivers/crypto/hisilicon/debugfs.c
++++ b/drivers/crypto/hisilicon/debugfs.c
+@@ -137,8 +137,7 @@ static struct hisi_qm *file_to_qm(struct debugfs_file *file)
+ 	return container_of(debug, struct hisi_qm, debug);
  }
  
- /* Return a formatted buffer containing the current information
-  * for that queue
-  */
--static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
--				       size_t count, loff_t *offp)
-+static ssize_t ccp5_debugfs_queue_read(struct kiocb *iocb, struct iov_iter *to)
+-static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
+-			   size_t count, loff_t *pos)
++static ssize_t qm_cmd_read(struct kiocb *iocb, struct iov_iter *to)
  {
--	struct ccp_cmd_queue *cmd_q = filp->private_data;
-+	struct ccp_cmd_queue *cmd_q = iocb->ki_filp->private_data;
- 	unsigned int oboff = 0;
- 	unsigned int regval;
- 	ssize_t ret;
-@@ -233,7 +229,7 @@ static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
- 		oboff += OSCNPRINTF(" COMPLETION");
- 	oboff += OSCNPRINTF("\n");
+ 	char buf[QM_DBG_READ_LEN];
+ 	int len;
+@@ -146,7 +145,7 @@ static ssize_t qm_cmd_read(struct file *filp, char __user *buffer,
+ 	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n",
+ 			"Please echo help to cmd to get help information");
  
--	ret = simple_read_from_buffer(ubuf, count, offp, obuf, oboff);
-+	ret = simple_copy_to_iter(obuf, &iocb->ki_pos, oboff, to);
- 	kfree(obuf);
- 
- 	return ret;
-@@ -242,36 +238,33 @@ static ssize_t ccp5_debugfs_queue_read(struct file *filp, char __user *ubuf,
- /* A value was written to the stats variable for a
-  * queue. Reset the queue counters to this value.
-  */
--static ssize_t ccp5_debugfs_queue_write(struct file *filp,
--					const char __user *ubuf,
--					size_t count, loff_t *offp)
-+static ssize_t ccp5_debugfs_queue_write(struct kiocb *iocb,
-+					struct iov_iter *from)
- {
--	struct ccp_cmd_queue *cmd_q = filp->private_data;
-+	struct ccp_cmd_queue *cmd_q = iocb->ki_filp->private_data;
- 
- 	ccp5_debugfs_reset_queue_stats(cmd_q);
--
--	return count;
-+	return iov_iter_count(from);
+-	return simple_read_from_buffer(buffer, count, pos, buf, len);
++	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
  }
  
- static const struct file_operations ccp_debugfs_info_ops = {
+ static void dump_show(struct hisi_qm *qm, void *info,
+@@ -502,14 +501,14 @@ static int qm_cmd_write_dump(struct hisi_qm *qm, const char *cmd_buf)
+ 	return ret;
+ }
+ 
+-static ssize_t qm_cmd_write(struct file *filp, const char __user *buffer,
+-			    size_t count, loff_t *pos)
++static ssize_t qm_cmd_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct hisi_qm *qm = filp->private_data;
++	struct hisi_qm *qm = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(from);
+ 	char *cmd_buf, *cmd_buf_tmp;
+ 	int ret;
+ 
+-	if (*pos)
++	if (iocb->ki_pos)
+ 		return 0;
+ 
+ 	ret = hisi_qm_get_dfx_access(qm);
+@@ -527,7 +526,7 @@ static ssize_t qm_cmd_write(struct file *filp, const char __user *buffer,
+ 		goto put_dfx_access;
+ 	}
+ 
+-	cmd_buf = memdup_user_nul(buffer, count);
++	cmd_buf = iterdup_nul(from, count);
+ 	if (IS_ERR(cmd_buf)) {
+ 		ret = PTR_ERR(cmd_buf);
+ 		goto put_dfx_access;
+@@ -557,8 +556,8 @@ static ssize_t qm_cmd_write(struct file *filp, const char __user *buffer,
+ static const struct file_operations qm_cmd_fops = {
  	.owner = THIS_MODULE,
  	.open = simple_open,
--	.read = ccp5_debugfs_info_read,
--	.write = NULL,
-+	.read_iter = ccp5_debugfs_info_read,
+-	.read = qm_cmd_read,
+-	.write = qm_cmd_write,
++	.read_iter = qm_cmd_read,
++	.write_iter = qm_cmd_write,
  };
  
- static const struct file_operations ccp_debugfs_queue_ops = {
+ /**
+@@ -704,10 +703,9 @@ static int current_qm_write(struct hisi_qm *qm, u32 val)
+ 	return 0;
+ }
+ 
+-static ssize_t qm_debug_read(struct file *filp, char __user *buf,
+-			     size_t count, loff_t *pos)
++static ssize_t qm_debug_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct debugfs_file *file = filp->private_data;
++	struct debugfs_file *file = iocb->ki_filp->private_data;
+ 	enum qm_debug_file index = file->index;
+ 	struct hisi_qm *qm = file_to_qm(file);
+ 	char tbuf[QM_DBG_TMP_BUF_LEN];
+@@ -736,7 +734,7 @@ static ssize_t qm_debug_read(struct file *filp, char __user *buf,
+ 
+ 	hisi_qm_put_dfx_access(qm);
+ 	ret = scnprintf(tbuf, QM_DBG_TMP_BUF_LEN, "%u\n", val);
+-	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
++	return simple_copy_to_iter(tbuf, &iocb->ki_pos, ret, to);
+ 
+ err_input:
+ 	mutex_unlock(&file->lock);
+@@ -744,24 +742,24 @@ static ssize_t qm_debug_read(struct file *filp, char __user *buf,
+ 	return -EINVAL;
+ }
+ 
+-static ssize_t qm_debug_write(struct file *filp, const char __user *buf,
+-			      size_t count, loff_t *pos)
++static ssize_t qm_debug_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct debugfs_file *file = filp->private_data;
++	struct debugfs_file *file = iocb->ki_filp->private_data;
+ 	enum qm_debug_file index = file->index;
+ 	struct hisi_qm *qm = file_to_qm(file);
++	size_t count = iov_iter_count(from);
+ 	unsigned long val;
+ 	char tbuf[QM_DBG_TMP_BUF_LEN];
+ 	int len, ret;
+ 
+-	if (*pos != 0)
++	if (iocb->ki_pos != 0)
+ 		return 0;
+ 
+ 	if (count >= QM_DBG_TMP_BUF_LEN)
+ 		return -ENOSPC;
+ 
+-	len = simple_write_to_buffer(tbuf, QM_DBG_TMP_BUF_LEN - 1, pos, buf,
+-				     count);
++	len = simple_copy_from_iter(tbuf, &iocb->ki_pos, QM_DBG_TMP_BUF_LEN - 1,
++					from);
+ 	if (len < 0)
+ 		return len;
+ 
+@@ -800,8 +798,8 @@ static ssize_t qm_debug_write(struct file *filp, const char __user *buf,
+ static const struct file_operations qm_debug_fops = {
  	.owner = THIS_MODULE,
  	.open = simple_open,
--	.read = ccp5_debugfs_queue_read,
--	.write = ccp5_debugfs_queue_write,
-+	.read_iter = ccp5_debugfs_queue_read,
-+	.write_iter = ccp5_debugfs_queue_write,
+-	.read = qm_debug_read,
+-	.write = qm_debug_write,
++	.read_iter = qm_debug_read,
++	.write_iter = qm_debug_write,
  };
  
- static const struct file_operations ccp_debugfs_stats_ops = {
+ static void dfx_regs_uninit(struct hisi_qm *qm,
+@@ -1051,23 +1049,22 @@ static int qm_state_show(struct seq_file *s, void *unused)
+ 
+ DEFINE_SHOW_ATTRIBUTE(qm_state);
+ 
+-static ssize_t qm_status_read(struct file *filp, char __user *buffer,
+-			      size_t count, loff_t *pos)
++static ssize_t qm_status_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct hisi_qm *qm = filp->private_data;
++	struct hisi_qm *qm = iocb->ki_filp->private_data;
+ 	char buf[QM_DBG_READ_LEN];
+ 	int val, len;
+ 
+ 	val = atomic_read(&qm->status.flags);
+ 	len = scnprintf(buf, QM_DBG_READ_LEN, "%s\n", qm_s[val]);
+ 
+-	return simple_read_from_buffer(buffer, count, pos, buf, len);
++	return simple_copy_to_iter(buf, &iocb->ki_pos, len, to);
+ }
+ 
+ static const struct file_operations qm_status_fops = {
  	.owner = THIS_MODULE,
  	.open = simple_open,
--	.read = ccp5_debugfs_stats_read,
--	.write = ccp5_debugfs_stats_write,
-+	.read_iter = ccp5_debugfs_stats_read,
-+	.write_iter = ccp5_debugfs_stats_write,
+-	.read = qm_status_read,
++	.read_iter = qm_status_read,
  };
  
- static struct dentry *ccp_debugfs_dir;
+ static void qm_create_debugfs_file(struct hisi_qm *qm, struct dentry *dir,
+diff --git a/drivers/crypto/hisilicon/hpre/hpre_main.c b/drivers/crypto/hisilicon/hpre/hpre_main.c
+index d93aa6630a57..b9257a368aa9 100644
+--- a/drivers/crypto/hisilicon/hpre/hpre_main.c
++++ b/drivers/crypto/hisilicon/hpre/hpre_main.c
+@@ -829,10 +829,9 @@ static void hpre_cluster_inqry_write(struct hpre_debugfs_file *file, u32 val)
+ 	writel(val, qm->io_base + offset + HPRE_CLUSTER_INQURY);
+ }
+ 
+-static ssize_t hpre_ctrl_debug_read(struct file *filp, char __user *buf,
+-				    size_t count, loff_t *pos)
++static ssize_t hpre_ctrl_debug_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct hpre_debugfs_file *file = filp->private_data;
++	struct hpre_debugfs_file *file = iocb->ki_filp->private_data;
+ 	struct hisi_qm *qm = hpre_file_to_qm(file);
+ 	char tbuf[HPRE_DBGFS_VAL_MAX_LEN];
+ 	u32 val;
+@@ -857,7 +856,7 @@ static ssize_t hpre_ctrl_debug_read(struct file *filp, char __user *buf,
+ 
+ 	hisi_qm_put_dfx_access(qm);
+ 	ret = snprintf(tbuf, HPRE_DBGFS_VAL_MAX_LEN, "%u\n", val);
+-	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
++	return simple_copy_to_iter(tbuf, &iocb->ki_pos, ret, to);
+ 
+ err_input:
+ 	spin_unlock_irq(&file->lock);
+@@ -865,23 +864,23 @@ static ssize_t hpre_ctrl_debug_read(struct file *filp, char __user *buf,
+ 	return -EINVAL;
+ }
+ 
+-static ssize_t hpre_ctrl_debug_write(struct file *filp, const char __user *buf,
+-				     size_t count, loff_t *pos)
++static ssize_t hpre_ctrl_debug_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct hpre_debugfs_file *file = filp->private_data;
++	struct hpre_debugfs_file *file = iocb->ki_filp->private_data;
+ 	struct hisi_qm *qm = hpre_file_to_qm(file);
++	size_t count = iov_iter_count(from);
+ 	char tbuf[HPRE_DBGFS_VAL_MAX_LEN];
+ 	unsigned long val;
+ 	int len, ret;
+ 
+-	if (*pos != 0)
++	if (iocb->ki_pos != 0)
+ 		return 0;
+ 
+ 	if (count >= HPRE_DBGFS_VAL_MAX_LEN)
+ 		return -ENOSPC;
+ 
+-	len = simple_write_to_buffer(tbuf, HPRE_DBGFS_VAL_MAX_LEN - 1,
+-				     pos, buf, count);
++	len = simple_copy_from_iter(tbuf, &iocb->ki_pos,
++					HPRE_DBGFS_VAL_MAX_LEN - 1, from);
+ 	if (len < 0)
+ 		return len;
+ 
+@@ -919,8 +918,8 @@ static ssize_t hpre_ctrl_debug_write(struct file *filp, const char __user *buf,
+ static const struct file_operations hpre_ctrl_debug_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = hpre_ctrl_debug_read,
+-	.write = hpre_ctrl_debug_write,
++	.read_iter = hpre_ctrl_debug_read,
++	.write_iter = hpre_ctrl_debug_write,
+ };
+ 
+ static int hpre_debugfs_atomic64_get(void *data, u64 *val)
+diff --git a/drivers/crypto/hisilicon/qm.c b/drivers/crypto/hisilicon/qm.c
+index 92f0a1d9b4a6..604cff89f0c8 100644
+--- a/drivers/crypto/hisilicon/qm.c
++++ b/drivers/crypto/hisilicon/qm.c
+@@ -3591,10 +3591,9 @@ static int qm_vf_read_qos(struct hisi_qm *qm)
+ 	return ret;
+ }
+ 
+-static ssize_t qm_algqos_read(struct file *filp, char __user *buf,
+-			       size_t count, loff_t *pos)
++static ssize_t qm_algqos_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct hisi_qm *qm = filp->private_data;
++	struct hisi_qm *qm = iocb->ki_filp->private_data;
+ 	char tbuf[QM_DBG_READ_LEN];
+ 	u32 qos_val, ir;
+ 	int ret;
+@@ -3622,7 +3621,7 @@ static ssize_t qm_algqos_read(struct file *filp, char __user *buf,
+ 	qos_val = ir / QM_QOS_RATE;
+ 	ret = scnprintf(tbuf, QM_DBG_READ_LEN, "%u\n", qos_val);
+ 
+-	ret = simple_read_from_buffer(buf, count, pos, tbuf, ret);
++	ret = simple_copy_to_iter(tbuf, &iocb->ki_pos, ret, to);
+ 
+ err_get_status:
+ 	clear_bit(QM_RESETTING, &qm->misc_ctl);
+@@ -3665,22 +3664,23 @@ static ssize_t qm_get_qos_value(struct hisi_qm *qm, const char *buf,
+ 	return 0;
+ }
+ 
+-static ssize_t qm_algqos_write(struct file *filp, const char __user *buf,
+-			       size_t count, loff_t *pos)
++static ssize_t qm_algqos_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct hisi_qm *qm = filp->private_data;
++	struct hisi_qm *qm = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(from);
+ 	char tbuf[QM_DBG_READ_LEN];
+ 	unsigned int fun_index;
+ 	unsigned long val;
+ 	int len, ret;
+ 
+-	if (*pos != 0)
++	if (iocb->ki_pos != 0)
+ 		return 0;
+ 
+ 	if (count >= QM_DBG_READ_LEN)
+ 		return -ENOSPC;
+ 
+-	len = simple_write_to_buffer(tbuf, QM_DBG_READ_LEN - 1, pos, buf, count);
++	len = simple_copy_from_iter(tbuf, &iocb->ki_pos, QM_DBG_READ_LEN - 1,
++					from);
+ 	if (len < 0)
+ 		return len;
+ 
+@@ -3722,8 +3722,8 @@ static ssize_t qm_algqos_write(struct file *filp, const char __user *buf,
+ static const struct file_operations qm_algqos_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = qm_algqos_read,
+-	.write = qm_algqos_write,
++	.read_iter = qm_algqos_read,
++	.write_iter = qm_algqos_write,
+ };
+ 
+ /**
+diff --git a/drivers/crypto/hisilicon/sec2/sec_main.c b/drivers/crypto/hisilicon/sec2/sec_main.c
+index c290d8937b19..bb168d97de30 100644
+--- a/drivers/crypto/hisilicon/sec2/sec_main.c
++++ b/drivers/crypto/hisilicon/sec2/sec_main.c
+@@ -718,10 +718,9 @@ static int sec_clear_enable_write(struct hisi_qm *qm, u32 val)
+ 	return 0;
+ }
+ 
+-static ssize_t sec_debug_read(struct file *filp, char __user *buf,
+-			       size_t count, loff_t *pos)
++static ssize_t sec_debug_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct sec_debug_file *file = filp->private_data;
++	struct sec_debug_file *file = iocb->ki_filp->private_data;
+ 	char tbuf[SEC_DBGFS_VAL_MAX_LEN];
+ 	struct hisi_qm *qm = file->qm;
+ 	u32 val;
+@@ -745,7 +744,7 @@ static ssize_t sec_debug_read(struct file *filp, char __user *buf,
+ 
+ 	hisi_qm_put_dfx_access(qm);
+ 	ret = snprintf(tbuf, SEC_DBGFS_VAL_MAX_LEN, "%u\n", val);
+-	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
++	return simple_copy_to_iter(tbuf, &iocb->ki_pos, ret, to);
+ 
+ err_input:
+ 	spin_unlock_irq(&file->lock);
+@@ -753,23 +752,23 @@ static ssize_t sec_debug_read(struct file *filp, char __user *buf,
+ 	return -EINVAL;
+ }
+ 
+-static ssize_t sec_debug_write(struct file *filp, const char __user *buf,
+-			       size_t count, loff_t *pos)
++static ssize_t sec_debug_write(struct kiocb *iocb, struct iov_iter *from)
+ {
+-	struct sec_debug_file *file = filp->private_data;
++	struct sec_debug_file *file = iocb->ki_filp->private_data;
++	size_t count = iov_iter_count(from);
+ 	char tbuf[SEC_DBGFS_VAL_MAX_LEN];
+ 	struct hisi_qm *qm = file->qm;
+ 	unsigned long val;
+ 	int len, ret;
+ 
+-	if (*pos != 0)
++	if (iocb->ki_pos != 0)
+ 		return 0;
+ 
+ 	if (count >= SEC_DBGFS_VAL_MAX_LEN)
+ 		return -ENOSPC;
+ 
+-	len = simple_write_to_buffer(tbuf, SEC_DBGFS_VAL_MAX_LEN - 1,
+-				     pos, buf, count);
++	len = simple_copy_from_iter(tbuf, &iocb->ki_pos,
++					SEC_DBGFS_VAL_MAX_LEN - 1, from);
+ 	if (len < 0)
+ 		return len;
+ 
+@@ -805,8 +804,8 @@ static ssize_t sec_debug_write(struct file *filp, const char __user *buf,
+ static const struct file_operations sec_dbg_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = sec_debug_read,
+-	.write = sec_debug_write,
++	.read_iter = sec_debug_read,
++	.write_iter = sec_debug_write,
+ };
+ 
+ static int sec_debugfs_atomic64_get(void *data, u64 *val)
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index c065fd867161..47319ba13873 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -689,10 +689,9 @@ static int clear_enable_write(struct hisi_qm *qm, u32 val)
+ 	return  0;
+ }
+ 
+-static ssize_t hisi_zip_ctrl_debug_read(struct file *filp, char __user *buf,
+-					size_t count, loff_t *pos)
++static ssize_t hisi_zip_ctrl_debug_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct ctrl_debug_file *file = filp->private_data;
++	struct ctrl_debug_file *file = iocb->ki_filp->private_data;
+ 	struct hisi_qm *qm = file_to_qm(file);
+ 	char tbuf[HZIP_BUF_SIZE];
+ 	u32 val;
+@@ -714,7 +713,7 @@ static ssize_t hisi_zip_ctrl_debug_read(struct file *filp, char __user *buf,
+ 
+ 	hisi_qm_put_dfx_access(qm);
+ 	ret = scnprintf(tbuf, sizeof(tbuf), "%u\n", val);
+-	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
++	return simple_copy_to_iter(tbuf, &iocb->ki_pos, ret, to);
+ 
+ err_input:
+ 	spin_unlock_irq(&file->lock);
+@@ -722,23 +721,23 @@ static ssize_t hisi_zip_ctrl_debug_read(struct file *filp, char __user *buf,
+ 	return -EINVAL;
+ }
+ 
+-static ssize_t hisi_zip_ctrl_debug_write(struct file *filp,
+-					 const char __user *buf,
+-					 size_t count, loff_t *pos)
++static ssize_t hisi_zip_ctrl_debug_write(struct kiocb *iocb,
++					 struct iov_iter *from)
+ {
+-	struct ctrl_debug_file *file = filp->private_data;
++	struct ctrl_debug_file *file = iocb->ki_filp->private_data;
+ 	struct hisi_qm *qm = file_to_qm(file);
++	size_t count = iov_iter_count(from);
+ 	char tbuf[HZIP_BUF_SIZE];
+ 	unsigned long val;
+ 	int len, ret;
+ 
+-	if (*pos != 0)
++	if (iocb->ki_pos != 0)
+ 		return 0;
+ 
+ 	if (count >= HZIP_BUF_SIZE)
+ 		return -ENOSPC;
+ 
+-	len = simple_write_to_buffer(tbuf, HZIP_BUF_SIZE - 1, pos, buf, count);
++	len = simple_copy_from_iter(tbuf, &iocb->ki_pos, HZIP_BUF_SIZE - 1, from);
+ 	if (len < 0)
+ 		return len;
+ 
+@@ -774,8 +773,8 @@ static ssize_t hisi_zip_ctrl_debug_write(struct file *filp,
+ static const struct file_operations ctrl_debug_fops = {
+ 	.owner = THIS_MODULE,
+ 	.open = simple_open,
+-	.read = hisi_zip_ctrl_debug_read,
+-	.write = hisi_zip_ctrl_debug_write,
++	.read_iter = hisi_zip_ctrl_debug_read,
++	.write_iter = hisi_zip_ctrl_debug_write,
+ };
+ 
+ static int zip_debugfs_atomic64_set(void *data, u64 val)
 -- 
 2.43.0
 
