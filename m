@@ -1,103 +1,110 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035CA1442FF
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D898F14B09E
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 12:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712837153; cv=none; b=RETMjlkg9nk9dHKWf6BEtUmKziALjILPlC4eU6HqhAN6Cginw5m7H8RFP+v5+U+LaFNh3xaR9iPmMxfqwI4cAMOHHj0bT8VftKyhck27cl8CbEqYKMyyHamyRHmuz+2mIj3BdtpTZhhnbYCMcfBSDK7oUUHAQhTqU/BTGWlg7XM=
+	t=1712837161; cv=none; b=rLdUOTB7xx3UPjV3yrXHRxcly0eefUtbpOBXJIQ8o6HZqdbP9y21S7NM/SNfRJNEnspkj8v4oAeGDBdCvUS9LzE7C+g+X3EC9cnCb4dywZFqxAe42+1/R23o3GoDcBzGHNxea//aHoKOFNX+qkOEfQg3zVsuSTl5anIPkPuj4g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712837153; c=relaxed/simple;
-	bh=HdYNqVCEe0x2X0F2EaUSXwNmY01gm1OpopI72QHOmK0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Yh8Q4PmFK1WC0f3WNU01QeNJ89YRBhCruDc/dKeHI74f062GZBPTfk8kTE00YwCf419LW/AQbG8sZPCSBG3Xu47KS3qJPrAbzjqTQBXnraNhxbEBz6XKyD8SJ7AOz/21YGgSOmUqeoahYco+KtBDtUlaKJKeF2OtJWaTKQwECNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VFdcm0dhXz1R5XH;
-	Thu, 11 Apr 2024 20:03:04 +0800 (CST)
-Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
-	by mail.maildlp.com (Postfix) with ESMTPS id B2D16140EA2;
-	Thu, 11 Apr 2024 20:05:48 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Thu, 11 Apr 2024 20:05:48 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.028;
- Thu, 11 Apr 2024 20:05:48 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: duchangbin <changbin.du@huawei.com>
-CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, "Mel
- Gorman" <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sched/cputime: remove unused vtime_account_kernel
-Thread-Topic: [PATCH] sched/cputime: remove unused vtime_account_kernel
-Thread-Index: AQHajAKDIkVvBXkJoUKksEBvgpwDs7Fi+RMA
-Date: Thu, 11 Apr 2024 12:05:48 +0000
-Message-ID: <b1befac0501944919cd99f20c4bcecaa@huawei.com>
-References: <20240411112212.2061899-1-changbin.du@huawei.com>
-In-Reply-To: <20240411112212.2061899-1-changbin.du@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.028)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <02E6C0AB2AB5CE48B135099171E224ED@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1712837161; c=relaxed/simple;
+	bh=CRfT2nz9BUNbS5W61TqhZC4a5CFzF8Z52TOUInd0dKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c44C188fp417ElqWBSXAFcJ1ZSxcXZdFc5RFL/apUcPs+D5xql0qCmu5XeruE4O1M1/GFQjnTUWM4n4TUsXu8gc1QA+uZ37mxt9mKKO4vBibvO5Qfu/peDri3DSfRyh+fV0I6BUDMFsfQ5WlPPfFyz0d3ChhZy8YH+Ij2hH0y8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dW5jHdo1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dW5jHdo1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712837155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ytNFNKtdcF5mu7UnZA6pPMlfQCsVJ9uzk0MPXgKTnEo=;
+	b=dW5jHdo1oMwOJlJu1RRFeymbnr/16d5fqH/c9fcYyPhb7ggkTLvyRaUlbhEuzVyl2XbRTW
+	4zJOmQba71Ivx2Ec4b+q2Az3PUjrhRugco0C83FVxsM5oRete2Vsk3xZXX6Nhqhelav+E4
+	cBnGQpL2NgvAJ4VjHRw2qXsrNqLz8NM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-JudkfC5UNjaE784uI2zziA-1; Thu, 11 Apr 2024 08:05:51 -0400
+X-MC-Unique: JudkfC5UNjaE784uI2zziA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DF2F8801797;
+	Thu, 11 Apr 2024 12:05:50 +0000 (UTC)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (unknown [10.39.193.36])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 072EB1C060D1;
+	Thu, 11 Apr 2024 12:05:47 +0000 (UTC)
+From: Valentin Schneider <vschneid@redhat.com>
+To: dccp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rt-users@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	mleitner@redhat.com,
+	David Ahern <dsahern@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v4 0/1] tcp/dcpp: Un-pin tw_timer
+Date: Thu, 11 Apr 2024 14:05:34 +0200
+Message-ID: <20240411120535.2494067-1-vschneid@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-The vtime_account_idle() can also be removed. Will update this change.
+Hi,
 
-On Thu, Apr 11, 2024 at 07:22:12PM +0800, Changbin Du wrote:
-> This removes the vtime_account_kernel() function in generic vtime
-> accounting. It's never used anymore.
->=20
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  kernel/sched/cputime.c | 12 ------------
->  1 file changed, 12 deletions(-)
->=20
-> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-> index af7952f12e6c..29320e66abdc 100644
-> --- a/kernel/sched/cputime.c
-> +++ b/kernel/sched/cputime.c
-> @@ -709,18 +709,6 @@ static void __vtime_account_kernel(struct task_struc=
-t *tsk,
->  		vtime_account_system(tsk, vtime);
->  }
-> =20
-> -void vtime_account_kernel(struct task_struct *tsk)
-> -{
-> -	struct vtime *vtime =3D &tsk->vtime;
-> -
-> -	if (!vtime_delta(vtime))
-> -		return;
-> -
-> -	write_seqcount_begin(&vtime->seqcount);
-> -	__vtime_account_kernel(tsk, vtime);
-> -	write_seqcount_end(&vtime->seqcount);
-> -}
-> -
->  void vtime_user_enter(struct task_struct *tsk)
->  {
->  	struct vtime *vtime =3D &tsk->vtime;
-> --=20
-> 2.34.1
->=20
+This is v4 of the series where the tw_timer is un-pinned to get rid of interferences in
+isolated CPUs setups.
 
---=20
-Cheers,
-Changbin Du
+Eric mentionned rsk_timer needs looking into, but I haven't had the time to do
+that. It doesn't show up in our testing, which might be due to its relatively
+low timeout (IIUC 3s).
+
+Revisions
+=========
+
+v3 -> v2
+++++++++
+
+o Rebased against latest Linus' tree
+o Added ehash lock usage to serialize scheduling vs descheduling of the tw_timer
+  (Paolo)
+
+v2 -> v3
+++++++++
+
+o Dropped bh_disable patch
+o Rebased against latest Linus' tree
+
+RFCv1 -> v2
+++++++++
+
+o Added comment in inet_twsk_deschedule_put() to highlight the race
+o Added bh_disable patch
+
+Valentin Schneider (1):
+  tcp/dcpp: Un-pin tw_timer
+
+ include/net/inet_timewait_sock.h |  6 ++--
+ net/dccp/minisocks.c             |  9 +++--
+ net/ipv4/inet_timewait_sock.c    | 59 +++++++++++++++++++++++---------
+ net/ipv4/tcp_minisocks.c         |  9 +++--
+ 4 files changed, 55 insertions(+), 28 deletions(-)
+
+--
+2.43.0
+
