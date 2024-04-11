@@ -1,174 +1,118 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71BEC143C62;
-	Thu, 11 Apr 2024 09:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1B6140396;
+	Thu, 11 Apr 2024 09:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712826250; cv=none; b=L3VKh8HszYV7A3xk+cdAd5FkhyRJBtD8VFyrKb2Vx7UESlwlU9naE7g6myLzMvi1MtONtZjpjcp4aVVQbLE6zF9Cbpg2z4r7JiCIsK4BfDskYdS0KBkiDPy/xJsoFg9UUYzycYmpozYfU69hoqW5hCB5X1Z3fJ9/5UebxUXb+Hc=
+	t=1712826305; cv=none; b=DnlQmxIh1ELqNhvYfuDQGx/tbcYCIO/62N3D1L08ykvwCvsMoODDK+7mv1Nziz1DDzqPwKt3f92wzGJONfyVb8cGQbECYxpfGfvGNWlP72LrMLqh9cyHYD+mO8cRnH+tKMWn+4v4Rk4eXkFcSQlowdY8wCHatv1BDrdws3GtN94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712826250; c=relaxed/simple;
-	bh=6TmusjUX3vnMkNQepVsH4u+5hT3VrOI3o3ZMH1yhilU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aF5Xhdb9KVgTHAzlMuxo3J3irhZvR79PAPIzvuP/En6CqNFTL3IO744Hrm8M1v+S4IltWiOnQyiiof30+p1QJkiDVG0rIp37cdcI95HsA2mRVYGY+k9qQey4WVH3RUiEh5nTpHfbuzEuLjCp05TK6uy0Zly3StSkYr/e32+M1rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=tlvu/boS; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712826305; c=relaxed/simple;
+	bh=o+/0y3Ieo193BWmJYH5o8du85gicknBAkm/zQSbBIY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DMY4Y1MCkXWoSX/liGxD0nBNEnqrKInP8RiVTLUmgS4DJDuhJsdE8ND5wo8BOiWbmKycoSgbL0Fpv3U5kn+Xu3q6t6V7omg4rQkBdvnoSMt6HDAjVAcMVy42x2iM+906YPqvaAc0IY/nOHhXSTLtL68Wyo4NfZyW33Ti5svdGQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0De4/C7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tlvu/boS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712826248; x=1744362248;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6TmusjUX3vnMkNQepVsH4u+5hT3VrOI3o3ZMH1yhilU=;
-  b=tlvu/boSLS6EuRsVNYCNe07oBP3KIstqVJKSGcysn2LCoaYO0Icn5Elk
-   e9QROPNo2INRavrnWtB4HLOfPgJPgkRj9PKjHMUdAjak9/GQD3H0wBWT6
-   g3mt4tg+CjQMm3er3iM5j+oG9hTMDQcWATJA/y6bKLZWrwW0g77q+lyq9
-   zmkqEEzbRFYRtTt8i3UvDmIjdas2VqpRx/GEEFX/fDshv6VZSI340j122
-   dQhtuSunlMynZPBtyQLzqaDoG53ELrigBDKtRsvFfwtYaeRd7kF7frGuN
-   yyam8huptlC9hp+wUph1cFR6zoh/PiQR8I03xczdZnUn6ox8PL8u8wCBD
-   g==;
-X-CSE-ConnectionGUID: sBUxEcpYQIqblsPw1hMyfQ==
-X-CSE-MsgGUID: 6LquUSg4QDGyfAHGclQ3bA==
-X-IronPort-AV: E=Sophos;i="6.07,193,1708412400"; 
-   d="asc'?scan'208";a="21080514"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 11 Apr 2024 02:04:03 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 11 Apr 2024 02:03:57 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex01.mchp-main.com (10.10.85.143)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 11 Apr 2024 02:03:53 -0700
-Date: Thu, 11 Apr 2024 10:03:03 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-CC: Deepak Gupta <debug@rivosinc.com>, Conor Dooley <conor@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Anup Patel <anup@brainfault.org>, Shuah
- Khan <shuah@kernel.org>, Atish Patra <atishp@atishpatra.org>,
-	<linux-doc@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <kvm-riscv@lists.infradead.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 07/10] riscv: add ISA extension parsing for Zcmop
-Message-ID: <20240411-superglue-errant-b32e5118695f@wendy>
-References: <20240410091106.749233-1-cleger@rivosinc.com>
- <20240410091106.749233-8-cleger@rivosinc.com>
- <ZhcFeVYUQJmBAKuv@debug.ba.rivosinc.com>
- <20240410-jawless-cavalry-a3eaf9c562a4@spud>
- <20240410-judgingly-appease-5df493852b70@spud>
- <ZhcTiakvfbjb2hon@debug.ba.rivosinc.com>
- <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0De4/C7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A143C433F1;
+	Thu, 11 Apr 2024 09:05:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712826304;
+	bh=o+/0y3Ieo193BWmJYH5o8du85gicknBAkm/zQSbBIY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T0De4/C7NxC5OdeB2sTjskbPNWWhQYBx5GyPYMEXilDrUsLdGguuBlEEB69qbIhYc
+	 pZ8Qc03Uc1uG0EbrSw3CASE+kcASpvWbKQ/IhHmHqAO5hZcZMcFsKN1+UAh27fMzA7
+	 yc4TEQW3Otnplxqt1EUwLcS6nFEcva2IbtZcwiyJa79420u5eqJE8f1Yfhve2op0fb
+	 wK4+Uab/js5XcL0UUok3DThHW8ItWNVaX87IyEe4SHdvaUDKYSlV2MX0DjXBG5UXRi
+	 32/VBO49xp5Jiri3T2g6rlhyYobGqMkQRfkrwChjpRt3fIxnivD8TSRZNNm9Jyx5kI
+	 yogJBhp0QpY6A==
+Date: Thu, 11 Apr 2024 11:04:59 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Andrew Lutomirski <luto@kernel.org>, Peter Anvin <hpa@zytor.com>
+Subject: Re: [PATCH] vfs: relax linkat() AT_EMPTY_PATH - aka flink() -
+ requirements
+Message-ID: <20240411-alben-kocht-219170e9dc99@brauner>
+References: <20240411001012.12513-1-torvalds@linux-foundation.org>
+ <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4EMZ8FslzLz1hx5z"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1287e6e9-cb8e-4a78-9195-ce29f1c4bace@rivosinc.com>
+In-Reply-To: <CAHk-=wiaoij30cnx=jfvg=Br3YTxhQjp4VWRc6=xYE2=+EVRPg@mail.gmail.com>
 
---4EMZ8FslzLz1hx5z
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 10, 2024 at 07:39:49PM -0700, Linus Torvalds wrote:
+> On Wed, 10 Apr 2024 at 17:10, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > +               if (flags & LOOKUP_DFD_MATCH_CREDS) {
+> > +                       if (f.file->f_cred != current_cred() &&
+> > +                           !capable(CAP_DAC_READ_SEARCH)) {
+> > +                               fdput(f);
+> > +                               return ERR_PTR(-ENOENT);
+> > +                       }
+> > +               }
+> 
+> Side note: I suspect that this could possibly be relaxed further, by
+> making the rule be that if something has been explicitly opened to be
+> used as a path (ie O_PATH was used at open time), we can link to it
+> even across different credentials.
 
-On Thu, Apr 11, 2024 at 09:25:06AM +0200, Cl=E9ment L=E9ger wrote:
->=20
->=20
-> On 11/04/2024 00:32, Deepak Gupta wrote:
-> > On Wed, Apr 10, 2024 at 11:27:16PM +0100, Conor Dooley wrote:
-> >> On Wed, Apr 10, 2024 at 11:16:11PM +0100, Conor Dooley wrote:
-> >>> On Wed, Apr 10, 2024 at 02:32:41PM -0700, Deepak Gupta wrote:
-> >>> > On Wed, Apr 10, 2024 at 11:11:00AM +0200, Cl=E9ment L=E9ger wrote:
-> >>> > > Add parsing for Zcmop ISA extension which was ratified in commit
-> >>> > > b854a709c00 ("Zcmop is ratified/1.0") of the riscv-isa-manual.
-> >>> > >
-> >>> > > Signed-off-by: Cl=E9ment L=E9ger <cleger@rivosinc.com>
-> >>> > > ---
-> >>> > > arch/riscv/include/asm/hwcap.h | 1 +
-> >>> > > arch/riscv/kernel/cpufeature.c | 1 +
-> >>> > > 2 files changed, 2 insertions(+)
-> >>> > >
-> >>> > > diff --git a/arch/riscv/include/asm/hwcap.h
-> >>> b/arch/riscv/include/asm/hwcap.h
-> >>> > > index b7551bad341b..cff7660de268 100644
-> >>> > > --- a/arch/riscv/include/asm/hwcap.h
-> >>> > > +++ b/arch/riscv/include/asm/hwcap.h
-> >>> > > @@ -86,6 +86,7 @@
-> >>> > > #define RISCV_ISA_EXT_ZCB=A0=A0=A0=A0=A0=A0=A0 77
-> >>> > > #define RISCV_ISA_EXT_ZCD=A0=A0=A0=A0=A0=A0=A0 78
-> >>> > > #define RISCV_ISA_EXT_ZCF=A0=A0=A0=A0=A0=A0=A0 79
-> >>> > > +#define RISCV_ISA_EXT_ZCMOP=A0=A0=A0=A0=A0=A0=A0 80
-> >>> > >
-> >>> > > #define RISCV_ISA_EXT_XLINUXENVCFG=A0=A0=A0 127
-> >>> > >
-> >>> > > diff --git a/arch/riscv/kernel/cpufeature.c
-> >>> b/arch/riscv/kernel/cpufeature.c
-> >>> > > index 09dee071274d..f1450cd7231e 100644
-> >>> > > --- a/arch/riscv/kernel/cpufeature.c
-> >>> > > +++ b/arch/riscv/kernel/cpufeature.c
-> >>> > > @@ -265,6 +265,7 @@ const struct riscv_isa_ext_data
-> >>> riscv_isa_ext[] =3D {
-> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcb, RISCV_ISA_EXT_ZCB),
-> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcd, RISCV_ISA_EXT_ZCD),
-> >>> > >=A0=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcf, RISCV_ISA_EXT_ZCF),
-> >>> > > +=A0=A0=A0 __RISCV_ISA_EXT_DATA(zcmop, RISCV_ISA_EXT_ZCMOP),
-> >>> >
-> >>> > As per spec zcmop is dependent on zca. So perhaps below ?
-> >>> >
-> >>> > __RISCV_ISA_EXT_SUPERSET(zicboz, RISCV_ISA_EXT_ZCMOP,
-> >>> RISCV_ISA_EXT_ZCA)
-> >>>
-> >>> What's zicboz got to do with it, copy-pasto I guess?
-> >=20
-> > Yes, copy-pasta :-)
-> >=20
-> >>> If we're gonna imply stuff like this though I think we need some
-> >>> comments explaining why it's okay.
-> >>
-> >> Also, I'm inclined to call that out specifically in the binding, I've
-> >> not yet checked if dependencies actually work for elements of a string
-> >> array like the do for individual properties. I'll todo list that..
-> >=20
-> > Earlier examples of specifying dependency on envcfg actually had functi=
-onal
-> > use case.
-> > So you are right, I am not sure if its actually needed in this
-> > particular case.
->=20
-> I actually saw that and think about addressing it but AFAICT, this
-> should be handled by the machine firmware passing the isa string to the
-> kernel (ie, it should be valid). In the case of QEMU, it takes care of
-> setting the extension that are required by this extension itself.
->=20
-> If we consider to have potentially broken isa string (ie extensions
-> dependencies not correctly handled), then we'll need some way to
-> validate this within the kernel.
+I had a similar discussion a while back someone requested that we relax
+permissions so linkat can be used in containers. And I drafted the
+following patch back then:
 
-No, the DT passed to the kernel should be correct and we by and large we
-should not have to do validation of it. What I meant above was writing
-the binding so that something invalid will not pass dtbs_check.
+https://lore.kernel.org/all/20231113-undenkbar-gediegen-efde5f1c34bc@brauner
 
---4EMZ8FslzLz1hx5z
-Content-Type: application/pgp-signature; name="signature.asc"
+IOW, I had intended to make this work with containers so that we check
+CAP_DAC_READ_SEARCH in the namespace of the opener of the file. My
+thinking had been that this can serve as a way to say "Hey, I could've
+opened this file in the openers namespace therefore let me make a path
+to it.". I didn't actually send it because I thought the original author
+would but imho, that would be a worthwhile addition to your patch if
+this makes sense...
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhenRgAKCRB4tDGHoIJi
-0ntrAP0Tj4WJ1c21e2spkfDS6PwV7wHiJYoWI9/4CiHZwAQORAEApMmTK1BWuikT
-fiLbYMmFEHJbe4+ND/jrK1UaiylnyQ8=
-=p9pA
------END PGP SIGNATURE-----
-
---4EMZ8FslzLz1hx5z--
+> 
+> IOW, the above could perhaps even be
+> 
+> +               if (flags & LOOKUP_DFD_MATCH_CREDS) {
+> +                       if (!(f.file->f_mode & FMODE_PATH) &&
+> +                           f.file->f_cred != current_cred() &&
+> +                           !capable(CAP_DAC_READ_SEARCH)) {
+> +                               fdput(f);
+> +                               return ERR_PTR(-ENOENT);
+> +                       }
+> +               }
+> 
+> which would _allow_ people to pass in paths as file descriptors if
+> they actually wanted to.
+> 
+> After all, the only thing you can do with an O_PATH file descriptor is
+> to use it as a path - there would be no other reason to use O_PATH in
+> the first place. So if you now pass it to somebody else, clearly you
+> are intentionally trying to make it available *as* a path.
+> 
+> So you could imagine doing something like this:
+> 
+>          // Open path as root
+>          int fd = open('filename", O_PATH);
+> 
+>         // drop privileges
+>         // setresuid(..) or chmod() or enter new namespace or whatever
+> 
+>         linkat(fd, "", AT_FDCWD, "newname", AT_EMPTY_PATH);
+> 
+> and it would open the path with one set of privileges, but then
+> intentionally go into a more restricted mode and create a link to the
+> source within that restricted environment.
+> 
+> Sensible? Who knows. I'm just throwing this out as another "this may
+> be the solution to our historical flink() issues".
+> 
+>            Linus
