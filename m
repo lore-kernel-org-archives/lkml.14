@@ -1,121 +1,140 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from msa.smtpout.orange.fr (smtp-66.smtpout.orange.fr [80.12.242.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D43C699
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 21:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC513D544;
+	Thu, 11 Apr 2024 21:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712872268; cv=none; b=ebeK6EkLgMXi9MVfpblVfWq7Uw+4/Vjq85E1tNhonvag14xAL9gZsEIH3mqXeWWT5fu2AUbBfbJ/R1M2h3AccThbXhO/v9hRw2BWEt0GtW1MyOOQsJnw2+f6K9srGyWsAuF/wV6BNhrAuTT+T6b6Bhi9uyEcP74JnomHFSE8LVw=
+	t=1712872294; cv=none; b=Fmu5q10xKND6bjFqjXLBxqoDUG8dNiP1oP7I0M2YpT6miOqgPwEhCrAZxhXUVxKLEyJKhwqWWSuUdp93DM3oy2bbRu0e9VdlUKurqb0Cr3Ox/bzs3pC63o3d+wv2nqk7qlASTOpEVG2w+S5Hex7Dq6QqM1BWe7afw/xjxj3a0do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712872268; c=relaxed/simple;
-	bh=YZXEpyh6Qyq3q3FDmQZ6QZBghTPhxupbBA0DdIJPUxU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bLoyky2D7FZDTwD7+aoo0EVjwJlr429b9y+t7qtaNrHfgrXhMQIMuR8yOt1alTxJggA7nHtFjc3XlReOLMBN6swE3PLNinnTSXOM8Rv757sE1kDzbT5G071BgMLDI45iSzKBXkx091EChEz3UfF5u3ErmS84L6g384NnqPvAY8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W2e4b+eN; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712872294; c=relaxed/simple;
+	bh=AVclvdL6//c5Rcr+h+dJy4tgWHKepODdJXELWxA94E4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dnHi2ig4rUWjvjFJiwV1pwkSMF3zHA2Y8Qf4Gqq0EbIDK+/C4+O3VK/HKSUuTk4LepgG53cxlMacienVcp1hiyXww/7DkK7+BsHLdI5toQxkdcYFUUtn7xLJ4rKOqHK07VaIuQ1y9n4bitWfGsV5mrDi4eFIhYz3APfapsZo7RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=BtgfNEll; arc=none smtp.client-ip=80.12.242.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2e4b+eN"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56e5174ffc2so1639a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 14:51:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712872265; x=1713477065; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zsXvjDmIL1pHPsNVexDlNKp4aRG773Sm1Z73SBHfIoM=;
-        b=W2e4b+eNp58B2CBjyD/DQyuOj/KlsxwqmI7xblF4gyxvTasO5jeYhj42DQ9gS5/Or+
-         U9odyJxo066eU+ZQeNXMOFaSnpkits3Dq21fYMFuABZKh8W+ckjYwe1pg357lmauFb3J
-         RCWX2qfvH1+yeiWy/46aPWm9/2y7g6WDWRod0UwWOuIyUYuLvf7u39Y9iIpJcRubnpJf
-         H5WQGd+Nu3mGYEb3LulnDnOw3Waij4U0fzr+28/AY8MDYW6Hg12oKQaANziaMwOS09GA
-         TlDY6+bfd2lwAJ/uHY6VIYAKRKrbeoVyGp3uR6OYwd+dC1qMKCYE78VpMNB7yKCCHVWZ
-         sjJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712872265; x=1713477065;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zsXvjDmIL1pHPsNVexDlNKp4aRG773Sm1Z73SBHfIoM=;
-        b=bm5LOaefUeRrxjzdCuFHEG1kXQ96MyAOWGAp5VaCK7T/HOd6iI/rNA7eaTtxi8l6Tq
-         G5HQXFuwf5vLFUC73lAyxDYaEUFui/g4t0ToINZGLzbaiLMw/9VyKGqAKq31SorYiFV4
-         C4VpzPs5FhJ3dqNMHDtrAe17mqqC6xdG6Xfy33oPNhEdg8uHIElpyCRuzXacU/6vGnTj
-         xDjmZmdTQUX7MOM/G+nQXMZLq2uC8Fj3mMq1y4vNbjXZRuBupkkUilH3RJESSVjlIdcO
-         b+7tLP3ZzCBzd+H/Eg9qnWTUe2/ypgU2LApXJvE18oGS1IwNQDzvj63Z76WLVZiAEAWn
-         gkDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZWG5AREAv/dab898ChN5wXOrycOKbqUvF3VVLNJZInf9QVg8E/QhsyRsRhiWk+gre2Q84ojpI61tJipfrSFB75/4dVaUlnMlAWRjf
-X-Gm-Message-State: AOJu0YzUbUZgcNjka8nGzqG4uHEY0JoQWUEEYEz9ThJfb8p/Z6v2V24v
-	pStSdG7/25UD3NVRkCcR+AKil7/TsP3CuQyUBRiAMwXx3+4xhtJpR+eVGP4eQu+/ynC7SkOXdns
-	iGjNOhy8DD5vp952s/hmm+RgM/noMgMrlMGGp
-X-Google-Smtp-Source: AGHT+IEwRZrcr/j8pOatkp+XSXulPkLq0p7ib0FXY5P6SbmHDgiAj3ftjjPDeO4k0bc1iL0DvbcFvsXHHlPYxag9zH8=
-X-Received: by 2002:a05:6402:2917:b0:56f:ce8d:8f9 with SMTP id
- ee23-20020a056402291700b0056fce8d08f9mr14121edb.3.1712872264859; Thu, 11 Apr
- 2024 14:51:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="BtgfNEll"
+Received: from [192.168.1.18] ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id v0c7r4ySyA2vSv0c7rijm1; Thu, 11 Apr 2024 22:01:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1712865700;
+	bh=DVVJHd+qbC3ifuZnV4XwadjAT7VtaXweCZnA1mXn8hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=BtgfNEllbSY5CLAf5rhYxFyA92jERCdt70gtxu6N4Gg5Ho7HLtj7f3BhdQJ9rD/lu
+	 G34584g1aTgi2d9IcJWg/F8FUNGqpKQr3HYAMmHsq/xhxFSGS45Tq3T5+mmOzlZ3ff
+	 kq20VkdmWOM47997evgwsvIJEsdefod9jQ8hkLvgL9pHwhB0OBI00SJ3TUceHEsXwY
+	 BdwVf0M8TbozlPji+ihr/CA3Y6/nxp1/zIL3MMmFtNVmRSAhSh91si/zk1TpSlCPUR
+	 rOSjzsJgQ9VrsJJtAH2P94MV/tPOByG9W+ZS4NJ9e0eXj8w0M8tSJObFNl+ht03B1s
+	 gjj65t2ISmjzA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Thu, 11 Apr 2024 22:01:40 +0200
+X-ME-IP: 86.243.17.157
+Message-ID: <48d593c1-c706-4af3-aacf-d1329a8b0d4b@wanadoo.fr>
+Date: Thu, 11 Apr 2024 22:01:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
- <20240126085444.324918-19-xiong.y.zhang@linux.intel.com> <ZhhUyk2uAXqG7GEd@google.com>
-In-Reply-To: <ZhhUyk2uAXqG7GEd@google.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Thu, 11 Apr 2024 14:50:50 -0700
-Message-ID: <CALMp9eR6-7va0XUbEYFNVtGdEzmWbAr9pXhLgSL=f9dJyAso7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 18/41] KVM: x86/pmu: Intercept full-width GP counter
- MSRs by checking with perf capabilities
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com, 
-	peterz@infradead.org, mizhang@google.com, kan.liang@intel.com, 
-	zhenyuw@linux.intel.com, dapeng1.mi@linux.intel.com, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhiyuan.lv@intel.com, eranian@google.com, irogers@google.com, 
-	samantha.alt@intel.com, like.xu.linux@gmail.com, chao.gao@intel.com, 
-	Xiong Zhang <xiong.y.zhang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] checkpatch: add check for snprintf to scnprintf
+To: Justin Stitt <justinstitt@google.com>, Andy Whitcroft
+ <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
+ linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+ Finn Thain <fthain@linux-m68k.org>
+References: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
+Content-Language: en-MW
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20240408-snprintf-checkpatch-v4-1-8697c96ac94b@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 2:23=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Fri, Jan 26, 2024, Xiong Zhang wrote:
-> > From: Mingwei Zhang <mizhang@google.com>
-> >
-> > Intercept full-width GP counter MSRs in passthrough PMU if guest does n=
-ot
-> > have the capability to write in full-width. In addition, opportunistica=
-lly
-> > add a warning if non-full-width counter MSRs are also intercepted, in w=
-hich
-> > case it is a clear mistake.
-> >
-> > Co-developed-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> > Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-> > Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> > ---
-> >  arch/x86/kvm/vmx/pmu_intel.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.=
-c
-> > index 7f6cabb2c378..49df154fbb5b 100644
-> > --- a/arch/x86/kvm/vmx/pmu_intel.c
-> > +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> > @@ -429,6 +429,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu=
-, struct msr_data *msr_info)
-> >       default:
-> >               if ((pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
-> >                   (pmc =3D get_gp_pmc(pmu, msr, MSR_IA32_PMC0))) {
-> > +                     if (is_passthrough_pmu_enabled(vcpu) &&
-> > +                         !(msr & MSR_PMC_FULL_WIDTH_BIT) &&
-> > +                         !msr_info->host_initiated) {
-> > +                             pr_warn_once("passthrough PMU never inter=
-cepts non-full-width PMU counters\n");
-> > +                             return 1;
->
-> This is broken, KVM must be prepared to handle WRMSR (and RDMSR and RDPMC=
-) that
-> come in through the emulator.
+Le 08/04/2024 à 22:53, Justin Stitt a écrit :
+> I am going to quote Lee Jones who has been doing some snprintf ->
+> scnprintf refactorings:
+> 
+> "There is a general misunderstanding amongst engineers that
+> {v}snprintf() returns the length of the data *actually* encoded into the
+> destination array.  However, as per the C99 standard {v}snprintf()
+> really returns the length of the data that *would have been* written if
+> there were enough space for it.  This misunderstanding has led to
+> buffer-overruns in the past.  It's generally considered safer to use the
+> {v}scnprintf() variants in their place (or even sprintf() in simple
+> cases).  So let's do that."
+> 
+> To help prevent new instances of snprintf() from popping up, let's add a
+> check to checkpatch.pl.
+> 
+> Suggested-by: Finn Thain <fthain@linux-m68k.org>
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v4:
+> - also check for vsnprintf variant (thanks Bill)
+> - Link to v3: https://lore.kernel.org/r/20240315-snprintf-checkpatch-v3-1-a451e7664306@google.com
+> 
+> Changes in v3:
+> - fix indentation
+> - add reference link (https://github.com/KSPP/linux/issues/105) (thanks Joe)
+> - Link to v2: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v2-1-9baeb59dae30@google.com
+> 
+> Changes in v2:
+> - Had a vim moment and deleted a character before sending the patch.
+> - Replaced the character :)
+> - Link to v1: https://lore.kernel.org/r/20240221-snprintf-checkpatch-v1-1-3ac5025b5961@google.com
+> ---
+>  From a discussion here [1].
+> 
+> [1]: https://lore.kernel.org/all/0f9c95f9-2c14-eee6-7faf-635880edcea4@linux-m68k.org/
+> ---
+>   scripts/checkpatch.pl | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 9c4c4a61bc83..a0fd681ea837 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -7012,6 +7012,12 @@ sub process {
+>   			     "Prefer strscpy, strscpy_pad, or __nonstring over strncpy - see: https://github.com/KSPP/linux/issues/90\n" . $herecurr);
+>   		}
+>   
+> +# {v}snprintf uses that should likely be {v}scnprintf
+> +		if ($line =~ /\b(v|)snprintf\s*\(\s*/) {
 
-Don't tell me that we are still supporting CPUs that don't have
-"unrestricted guest"! Sigh.
+Hi,
+
+for my understanding, what is the purpose of the 2nd "\s*"?
+IMHO, it could be just removed.
+
+> +			WARN("SNPRINTF",
+> +			     "Prefer {v}scnprintf over {v}snprintf - see: https://github.com/KSPP/linux/issues/105\n" . $herecurr);
+
+Maybe $1 instead of {v} in both places, so that is displays the real 
+function name that is and should be used?
+
+CJ
+
+> +		}
+> +
+>   # ethtool_sprintf uses that should likely be ethtool_puts
+>   		if ($line =~ /\bethtool_sprintf\s*\(\s*$FuncArg\s*,\s*$FuncArg\s*\)/) {
+>   			if (WARN("PREFER_ETHTOOL_PUTS",
+> 
+> ---
+> base-commit: b401b621758e46812da61fa58a67c3fd8d91de0d
+> change-id: 20240221-snprintf-checkpatch-a864ed67ebd0
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
+> 
+
