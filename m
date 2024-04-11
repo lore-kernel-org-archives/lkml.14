@@ -1,409 +1,175 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D9A4C601;
-	Thu, 11 Apr 2024 18:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C714D5AA
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712858848; cv=none; b=QU8SI48TRDB9RGwfATMzsuAfqK/ppS5O1k8ghRF0MGD6s+wb7ERwF6RF7v4ZnzIA9WLEptET6VvA790pBBy46qE2hqgkWDhFgjmn0EI1RdBhHTzPnjy+O7xRxICj+nCkaQ9EHE7Hdj7bZS1kXlQHblHONmEn8k2CCThYP667rN8=
+	t=1712858856; cv=none; b=mDEmI4S8nfziXco9GlhPqXUO8Ru+myYMu8luQiYI5BnnQRmFywEW4oLPjeI1Bnd66dIOiZYoNe8ClO7xFlMC3XLoRTufO1neQy0KWGfA0UkuFsO5Di4FafBJKE6HoOunsSA1vVZfcPq2Zz6Q5PC26e52BrJ5+wHiAL5EEve346M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712858848; c=relaxed/simple;
-	bh=uoypgfILpOV53u+PqSpW90h3uRnnMDs8RrJ/fNVLPnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h5EB09V56EPWeFOzAuotneZJxhBWtHEzXJSKePqcJzGVoACTy5MHxhkyceXqBhmVbF0NcfhsK7hgKdsX4+MPnEyOwH6sVhmgROHPuyNkokdEf2Dix3Y18ACBHacV/f4wBMxsxFVv2GdSKaEegDayqY7UiuALMcBPLeimVX37Cso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ajT89B8r; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajT89B8r"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-343d7ff2350so23045f8f.0;
-        Thu, 11 Apr 2024 11:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712858844; x=1713463644; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VVHctDY4yjRyI0xciRRAMqYJCTVTs5KhPgdzO+9ACCE=;
-        b=ajT89B8rHNGbzB1XUvgsD/Tq4SAiPyCKHq4QKSXnasD/cbUf+feJgbRU72XYB9jz12
-         1t8F9njzjnG3IuNnBY8M3Lc7oD2zSH3vNpbRP073aV1pGbxwbkJtvbZRIQLYOJtal53i
-         nE/Xhg1gFOi9eNpm1xAcYUOEirFb1FTDuunr/s8agrTxwqDB7cTj7pWEe9JSArZZVIKg
-         88CVxkuv+o5FT/b+/j1owHiubBaqKUVZze87yId+Htqfy7+OEjo6aKk0SJxonPFea4A+
-         M5KlwOJYeTxVYMFLMlWGmkwqakTM1YC+a/nHi+r1cGTMQAOOq+vnc/kei0IwkjMW9Xa1
-         32cA==
+	s=arc-20240116; t=1712858856; c=relaxed/simple;
+	bh=MsMlsdSq47Yk6dx2TNPOAxIFD+rS0FTMwbEajVrZuaw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o4b40eZE4J2bkOrKmoGV95V0DQam2ulSw+LevjzUXepuMWME6AjwMSKoqqE5aD7WE8RotdKzrpg6+AC739mmPG66JMNZeZds7bCAz5z5zlJoDx0KvrfTCcZoNFgwqn6afHjxLoKiJOPNiacW0iMi+fLN1aIqa1N//xnZByhrt38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5dbc0e4b3so7607839f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 11:07:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712858844; x=1713463644;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VVHctDY4yjRyI0xciRRAMqYJCTVTs5KhPgdzO+9ACCE=;
-        b=GPvoKzc9oPhbaDgfeJIemoMs3+PBBfxhlLwHCHYDc+tcfRVPD18BOZ61mq6NHQ8ZVJ
-         nxmO0XId0CfAb+DxZpbQbqxEd7zG7IJ9rG/2wAnLT+g/9DWmd/r8bXDB7zFHadFC8QXG
-         V1BVubVvF83gyEWGSCinoES6JIpn/SLr3CL1Iqy/AY3HZbKbyPK+n2UssusY6Z2V9/lE
-         yUCX8i1B7WnxMryzqvergariFvkIGftogr9O/rvOqFbM+soLReHx698cSjjJM+OSmHQl
-         YwSwZR2rzEz3pxtJyrynlJQ5m3r9JiIH0PLpZcHsjZlUfPpt4+ZrpRUAoqN2Ii/tU40z
-         g/Cg==
-X-Gm-Message-State: AOJu0Yyfmv+Tc4mYbWANNG9/2QGIcErpDYIXgIXCxjvJsjbDa/9oD3Yy
-	Hp1f0s8JVwQzVs7qVFYIyrNDl4DTDEL3dlCW9p3dNcE3au/Gl29bJ54OhA==
-X-Google-Smtp-Source: AGHT+IFzK4yl38sBR9rXf+9DqkqXC7YWeTg82+WE1s85TEPotZSV5CMnwrwvhHNPuJ3kGX0IqOPjwA==
-X-Received: by 2002:a5d:4e0c:0:b0:346:f906:f6c1 with SMTP id p12-20020a5d4e0c000000b00346f906f6c1mr13823wrt.0.1712858844244;
-        Thu, 11 Apr 2024 11:07:24 -0700 (PDT)
-Received: from localhost (cpc1-brnt4-2-0-cust862.4-2.cable.virginm.net. [86.9.131.95])
-        by smtp.gmail.com with ESMTPSA id o9-20020a5d6709000000b00343956e8852sm2309447wru.42.2024.04.11.11.07.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 11:07:23 -0700 (PDT)
-From: Stafford Horne <shorne@gmail.com>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Linux OpenRISC <linux-openrisc@vger.kernel.org>,
-	Stafford Horne <shorne@gmail.com>,
-	Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH 5/5] openrisc: Move FPU state out of pt_regs
-Date: Thu, 11 Apr 2024 19:06:32 +0100
-Message-ID: <20240411180644.2023991-6-shorne@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240411180644.2023991-1-shorne@gmail.com>
-References: <20240411180644.2023991-1-shorne@gmail.com>
+        d=1e100.net; s=20230601; t=1712858854; x=1713463654;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eMLutmDNFAekhD1OdqE8AAG8IxfKETrCJBx80Cj4cLY=;
+        b=C0ne4/d4uKUsXYnFDMC+pIGK0UQwlGecTjb8CCTeN/yHuuL0nssUkR8KORkMQuKJ0+
+         nMeFvW49KfxEgmJwZ1pBVfvPfiB9zcj75vvfxdwpBu6b0tnLyAGUGZf06BwFuhy5umef
+         haOF38cF/MG7fw5Ehdv/PRvnOX4xE/MFO/7HEiCOKIn3e64WywbfNEQ2kg9o9V+B/XoA
+         /Bw28tv+tLSomfdZ7UokVQ0gXiceC5BWNEEsmwiRJzcbfefKrMofqZMwYvSpVnkdrO+Z
+         3PFhnQNXED2CpYXtSQQB5l8v5Uxe4YYuTNkKXce0QtaF+JTVdXsuA52CmCvQSWoRKnIV
+         L+nA==
+X-Gm-Message-State: AOJu0YxdUprLX4vHeJdN+v4IH7RJN1Rou/LC+T5fsCFHYo9m60nE0fkV
+	1bg9NW8dcmiYKEnZgHZPz63WIM6VofeGqFYiv+zNJc73IoCr1ZGDW2m2uGEK07dUG0OuB6fs6Vq
+	fFg6Q20jrIf9BUagg2sgMdnNgnbT85BV1qhSDtdYBSSkmfCHfByHIqvg=
+X-Google-Smtp-Source: AGHT+IFvT1qDXxxtoROMgy9Bu4Bn/Nw43/S9Rj/eW044k4adq6xyKLFDfU5TRx5+yxFQ7jyIX3fjquXq4Br2/Xipl6gs32lrciUd
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:8910:b0:482:c4cd:4798 with SMTP id
+ jc16-20020a056638891000b00482c4cd4798mr1555jab.4.1712858853979; Thu, 11 Apr
+ 2024 11:07:33 -0700 (PDT)
+Date: Thu, 11 Apr 2024 11:07:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008ac77c0615d60760@google.com>
+Subject: [syzbot] [kernel?] INFO: rcu detected stall in sys_wait4 (4)
+From: syzbot <syzbot+6969434de600a6ba9f07@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-My original, naive, FPU support patch had the FPCSR register stored
-during both the *mode switch* and *context switch*.  This is wasteful.
+Hello,
 
-Also, the original patches did not save the FPU state when handling
-signals during the system call fast path.
+syzbot found the following issue on:
 
-We fix this by moving the FPCSR state to thread_struct in task_struct.
-We also introduce new helper functions save_fpu and restore_fpu which
-can be used to sync the FPU with thread_struct.  These functions are now
-called when needed:
+HEAD commit:    fe46a7dd189e Merge tag 'sound-6.9-rc1' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13dda955180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fe78468a74fdc3b7
+dashboard link: https://syzkaller.appspot.com/bug?extid=6969434de600a6ba9f07
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1091a5f6180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a22c13180000
 
- - Setting up and restoring sigcontext when handling signals
- - Before and after __switch_to during context switches
- - When handling FPU exceptions
- - When reading and writing FPU register sets
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/0f7abe4afac7/disk-fe46a7dd.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/82598d09246c/vmlinux-fe46a7dd.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/efa23788c875/bzImage-fe46a7dd.xz
 
-In the future we can further optimize this by doing lazy FPU save and
-restore.  For example, FPU sync is not needed when switching to and from
-kernel threads (x86 does this).  FPU save and restore does not need to
-be done two times if we have both rescheduling and signal work to do.
-However, since OpenRISC FPU state is a single register, I leave these
-optimizations for future consideration.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6969434de600a6ba9f07@syzkaller.appspotmail.com
 
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	0-...!: (1 ticks this GP) idle=e314/1/0x4000000000000000 softirq=5879/5879 fqs=0
+rcu: 	(detected by 1, t=10505 jiffies, g=6797, q=86 ncpus=2)
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 5083 Comm: syz-executor176 Not tainted 6.8.0-syzkaller-08951-gfe46a7dd189e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:__raw_spin_lock_irq include/linux/spinlock_api_smp.h:120 [inline]
+RIP: 0010:_raw_spin_lock_irq+0xd7/0x120 kernel/locking/spinlock.c:170
+Code: bf 01 00 00 00 e8 69 e1 e5 f5 49 8d 7c 24 18 31 f6 31 d2 31 c9 41 b8 01 00 00 00 45 31 c9 ff 75 08 e8 1d 90 f2 f5 48 83 c4 08 <4c> 89 e7 e8 c1 f0 f3 f5 48 c7 04 24 0e 36 e0 45 4b c7 04 2f 00 00
+RSP: 0018:ffffc90000007cc0 EFLAGS: 00000096
+RAX: c05eb13d16091700 RBX: 1ffff92000000f9c RCX: 0000000000000001
+RDX: dffffc0000000000 RSI: ffffffff8baad360 RDI: ffffffff8bfed300
+RBP: ffffc90000007d50 R08: ffffffff92ce550f R09: 1ffffffff259caa1
+R10: dffffc0000000000 R11: fffffbfff259caa2 R12: ffff8880b942c8c0
+R13: 1ffff92000000f98 R14: ffffc90000007ce0 R15: dffffc0000000000
+FS:  000055556b411380(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055556b411ca8 CR3: 000000002dd76000 CR4: 0000000000350ef0
+Call Trace:
+ <NMI>
+ </NMI>
+ <IRQ>
+ __run_hrtimer kernel/time/hrtimer.c:1696 [inline]
+ __hrtimer_run_queues+0x65a/0xd00 kernel/time/hrtimer.c:1756
+ hrtimer_interrupt+0x396/0x990 kernel/time/hrtimer.c:1818
+ local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1032 [inline]
+ __sysvec_apic_timer_interrupt+0x109/0x3a0 arch/x86/kernel/apic/apic.c:1049
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1043 [inline]
+ sysvec_apic_timer_interrupt+0xa1/0xc0 arch/x86/kernel/apic/apic.c:1043
+ </IRQ>
+ <TASK>
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0xd8/0x140 kernel/locking/spinlock.c:194
+Code: 9c 8f 44 24 20 42 80 3c 23 00 74 08 4c 89 f7 e8 4e 39 79 f6 f6 44 24 21 02 75 52 41 f7 c7 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> f3 e0 e5 f5 65 8b 05 44 c5 84 74 85 c0 74 43 48 c7 04 24 0e 36
+RSP: 0018:ffffc900042f7b40 EFLAGS: 00000206
+RAX: c05eb13d16091700 RBX: 1ffff9200085ef6c RCX: ffffffff944dd603
+RDX: dffffc0000000000 RSI: ffffffff8baac1e0 RDI: 0000000000000001
+RBP: ffffc900042f7bd8 R08: ffffffff8f873a6f R09: 1ffffffff1f0e74d
+R10: dffffc0000000000 R11: fffffbfff1f0e74e R12: dffffc0000000000
+R13: 1ffff9200085ef68 R14: ffffc900042f7b60 R15: 0000000000000246
+ do_wait+0x16e/0x540 kernel/exit.c:1627
+ kernel_wait4+0x2a7/0x3e0 kernel/exit.c:1790
+ __do_sys_wait4 kernel/exit.c:1818 [inline]
+ __se_sys_wait4 kernel/exit.c:1814 [inline]
+ __x64_sys_wait4+0x134/0x1e0 kernel/exit.c:1814
+ do_syscall_64+0xfd/0x240
+ entry_SYSCALL_64_after_hwframe+0x6d/0x75
+RIP: 0033:0x7f6df57cd893
+Code: fe ff e9 41 ff ff ff 31 c9 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 80 3d 11 f8 07 00 00 49 89 ca 74 14 b8 3d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 5d c3 0f 1f 40 00 48 83 ec 28 89 54 24 14 48
+RSP: 002b:00007ffe2065f398 EFLAGS: 00000202 ORIG_RAX: 000000000000003d
+RAX: ffffffffffffffda RBX: 000000000000000b RCX: 00007f6df57cd893
+RDX: 0000000040000001 RSI: 00007ffe2065f3bc RDI: 00000000ffffffff
+RBP: 00000000000f4240 R08: 0000000000000010 R09: 00007f6df578b0b0
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffe2065f3f0
+R13: 00000000000306b6 R14: 00007ffe2065f3bc R15: 0000000000000003
+ </TASK>
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 1.866 msecs
+rcu: rcu_preempt kthread timer wakeup didn't happen for 10504 jiffies! g6797 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
+rcu: 	Possible timer handling issue on cpu=0 timer-softirq=7994
+rcu: rcu_preempt kthread starved for 10505 jiffies! g6797 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
+rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
+rcu: RCU grace-period kthread stack dump:
+task:rcu_preempt     state:I stack:25400 pid:16    tgid:16    ppid:2      flags:0x00004000
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5409 [inline]
+ __schedule+0x17d3/0x4a20 kernel/sched/core.c:6736
+ __schedule_loop kernel/sched/core.c:6813 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6828
+ schedule_timeout+0x1be/0x310 kernel/time/timer.c:2572
+ rcu_gp_fqs_loop+0x2df/0x1370 kernel/rcu/tree.c:1663
+ rcu_gp_kthread+0xa7/0x3b0 kernel/rcu/tree.c:1862
+ kthread+0x2f2/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+ </TASK>
+
+
 ---
- arch/openrisc/include/asm/fpu.h       | 22 ++++++++++++++++
- arch/openrisc/include/asm/processor.h |  1 +
- arch/openrisc/include/asm/ptrace.h    |  3 +--
- arch/openrisc/kernel/entry.S          | 15 +----------
- arch/openrisc/kernel/process.c        |  5 ++++
- arch/openrisc/kernel/ptrace.c         | 12 +++------
- arch/openrisc/kernel/signal.c         | 36 +++++++++++++++++++++++++--
- arch/openrisc/kernel/traps.c          | 14 +++++++----
- 8 files changed, 76 insertions(+), 32 deletions(-)
- create mode 100644 arch/openrisc/include/asm/fpu.h
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/openrisc/include/asm/fpu.h b/arch/openrisc/include/asm/fpu.h
-new file mode 100644
-index 000000000000..57bc44d80d53
---- /dev/null
-+++ b/arch/openrisc/include/asm/fpu.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_OPENRISC_FPU_H
-+#define __ASM_OPENRISC_FPU_H
-+
-+struct task_struct;
-+
-+#ifdef CONFIG_FPU
-+static inline void save_fpu(struct task_struct *task)
-+{
-+	task->thread.fpcsr = mfspr(SPR_FPCSR);
-+}
-+
-+static inline void restore_fpu(struct task_struct *task)
-+{
-+	mtspr(SPR_FPCSR, task->thread.fpcsr);
-+}
-+#else
-+#define save_fpu(tsk)			do { } while (0)
-+#define restore_fpu(tsk)		do { } while (0)
-+#endif
-+
-+#endif /* __ASM_OPENRISC_FPU_H */
-diff --git a/arch/openrisc/include/asm/processor.h b/arch/openrisc/include/asm/processor.h
-index 3b736e74e6ed..e05d1b59e24e 100644
---- a/arch/openrisc/include/asm/processor.h
-+++ b/arch/openrisc/include/asm/processor.h
-@@ -44,6 +44,7 @@
- struct task_struct;
- 
- struct thread_struct {
-+	long fpcsr;		/* Floating point control status register. */
- };
- 
- /*
-diff --git a/arch/openrisc/include/asm/ptrace.h b/arch/openrisc/include/asm/ptrace.h
-index 375147ff71fc..1da3e66292e2 100644
---- a/arch/openrisc/include/asm/ptrace.h
-+++ b/arch/openrisc/include/asm/ptrace.h
-@@ -59,7 +59,7 @@ struct pt_regs {
- 	 * -1 for all other exceptions.
- 	 */
- 	long  orig_gpr11;	/* For restarting system calls */
--	long fpcsr;		/* Floating point control status register. */
-+	long dummy;		/* Cheap alignment fix */
- 	long dummy2;		/* Cheap alignment fix */
- };
- 
-@@ -115,6 +115,5 @@ static inline long regs_return_value(struct pt_regs *regs)
- #define PT_GPR31      124
- #define PT_PC	      128
- #define PT_ORIG_GPR11 132
--#define PT_FPCSR      136
- 
- #endif /* __ASM_OPENRISC_PTRACE_H */
-diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
-index c9f48e750b72..440711d7bf40 100644
---- a/arch/openrisc/kernel/entry.S
-+++ b/arch/openrisc/kernel/entry.S
-@@ -106,8 +106,6 @@
- 	l.mtspr r0,r3,SPR_EPCR_BASE				;\
- 	l.lwz   r3,PT_SR(r1)					;\
- 	l.mtspr r0,r3,SPR_ESR_BASE				;\
--	l.lwz	r3,PT_FPCSR(r1)					;\
--	l.mtspr	r0,r3,SPR_FPCSR					;\
- 	l.lwz   r2,PT_GPR2(r1)					;\
- 	l.lwz   r3,PT_GPR3(r1)					;\
- 	l.lwz   r4,PT_GPR4(r1)					;\
-@@ -177,8 +175,6 @@ handler:							;\
- 	/* r30 already save */					;\
- 	l.sw    PT_GPR31(r1),r31					;\
- 	TRACE_IRQS_OFF_ENTRY						;\
--	l.mfspr	r30,r0,SPR_FPCSR				;\
--	l.sw	PT_FPCSR(r1),r30				;\
- 	/* Store -1 in orig_gpr11 for non-syscall exceptions */	;\
- 	l.addi	r30,r0,-1					;\
- 	l.sw	PT_ORIG_GPR11(r1),r30
-@@ -219,8 +215,6 @@ handler:							;\
- 	/* Store -1 in orig_gpr11 for non-syscall exceptions */	;\
- 	l.addi	r30,r0,-1					;\
- 	l.sw	PT_ORIG_GPR11(r1),r30				;\
--	l.mfspr	r30,r0,SPR_FPCSR				;\
--	l.sw	PT_FPCSR(r1),r30				;\
- 	l.addi	r3,r1,0						;\
- 	/* r4 is exception EA */				;\
- 	l.addi	r5,r0,vector					;\
-@@ -852,6 +846,7 @@ _syscall_badsys:
- 
- EXCEPTION_ENTRY(_fpe_trap_handler)
- 	CLEAR_LWA_FLAG(r3)
-+
- 	/* r4: EA of fault (set by EXCEPTION_HANDLE) */
- 	l.jal   do_fpe_trap
- 	 l.addi  r3,r1,0 /* pt_regs */
-@@ -1100,10 +1095,6 @@ ENTRY(_switch)
- 	l.sw    PT_GPR28(r1),r28
- 	l.sw    PT_GPR30(r1),r30
- 
--	/* Store the old FPU state to new pt_regs */
--	l.mfspr	r29,r0,SPR_FPCSR
--	l.sw	PT_FPCSR(r1),r29
--
- 	l.addi	r11,r10,0			/* Save old 'current' to 'last' return value*/
- 
- 	/* We use thread_info->ksp for storing the address of the above
-@@ -1126,10 +1117,6 @@ ENTRY(_switch)
- 	l.lwz	r29,PT_SP(r1)
- 	l.sw	TI_KSP(r10),r29
- 
--	/* Restore the old value of FPCSR */
--	l.lwz	r29,PT_FPCSR(r1)
--	l.mtspr	r0,r29,SPR_FPCSR
--
- 	/* ...and restore the registers, except r11 because the return value
- 	 * has already been set above.
- 	 */
-diff --git a/arch/openrisc/kernel/process.c b/arch/openrisc/kernel/process.c
-index 3c27d1c72718..eef99fee2110 100644
---- a/arch/openrisc/kernel/process.c
-+++ b/arch/openrisc/kernel/process.c
-@@ -36,6 +36,7 @@
- #include <linux/reboot.h>
- 
- #include <linux/uaccess.h>
-+#include <asm/fpu.h>
- #include <asm/io.h>
- #include <asm/processor.h>
- #include <asm/spr_defs.h>
-@@ -244,6 +245,8 @@ struct task_struct *__switch_to(struct task_struct *old,
- 
- 	local_irq_save(flags);
- 
-+	save_fpu(current);
-+
- 	/* current_set is an array of saved current pointers
- 	 * (one for each cpu). we need them at user->kernel transition,
- 	 * while we save them at kernel->user transition
-@@ -256,6 +259,8 @@ struct task_struct *__switch_to(struct task_struct *old,
- 	current_thread_info_set[smp_processor_id()] = new_ti;
- 	last = (_switch(old_ti, new_ti))->task;
- 
-+	restore_fpu(current);
-+
- 	local_irq_restore(flags);
- 
- 	return last;
-diff --git a/arch/openrisc/kernel/ptrace.c b/arch/openrisc/kernel/ptrace.c
-index cf410193095f..5091b18eab4c 100644
---- a/arch/openrisc/kernel/ptrace.c
-+++ b/arch/openrisc/kernel/ptrace.c
-@@ -98,9 +98,7 @@ static int fpregs_get(struct task_struct *target,
- 		       const struct user_regset *regset,
- 		       struct membuf to)
- {
--	const struct pt_regs *regs = task_pt_regs(target);
--
--	return membuf_store(&to, regs->fpcsr);
-+	return membuf_store(&to, target->thread.fpcsr);
- }
- 
- static int fpregs_set(struct task_struct *target,
-@@ -108,13 +106,9 @@ static int fpregs_set(struct task_struct *target,
- 		       unsigned int pos, unsigned int count,
- 		       const void *kbuf, const void __user *ubuf)
- {
--	struct pt_regs *regs = task_pt_regs(target);
--	int ret;
--
- 	/* FPCSR */
--	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &regs->fpcsr, 0, 4);
--	return ret;
-+	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				  &target->thread.fpcsr, 0, 4);
- }
- #endif
- 
-diff --git a/arch/openrisc/kernel/signal.c b/arch/openrisc/kernel/signal.c
-index e2f21a5d8ad9..c7ab42e2cb7a 100644
---- a/arch/openrisc/kernel/signal.c
-+++ b/arch/openrisc/kernel/signal.c
-@@ -23,6 +23,7 @@
- #include <linux/stddef.h>
- #include <linux/resume_user_mode.h>
- 
-+#include <asm/fpu.h>
- #include <asm/processor.h>
- #include <asm/syscall.h>
- #include <asm/ucontext.h>
-@@ -39,6 +40,37 @@ asmlinkage long _sys_rt_sigreturn(struct pt_regs *regs);
- asmlinkage int do_work_pending(struct pt_regs *regs, unsigned int thread_flags,
- 			       int syscall);
- 
-+#ifdef CONFIG_FPU
-+static long restore_fp_state(struct sigcontext __user *sc)
-+{
-+	long err;
-+
-+	err = __copy_from_user(&current->thread.fpcsr, &sc->fpcsr, sizeof(unsigned long));
-+	if (unlikely(err))
-+		return err;
-+
-+	/* Restore the FPU state */
-+	restore_fpu(current);
-+
-+	return 0;
-+}
-+
-+static long save_fp_state(struct sigcontext __user *sc)
-+{
-+	long err;
-+
-+	/* Sync the user FPU state so we can copy to sigcontext */
-+	save_fpu(current);
-+
-+	err = __copy_to_user(&sc->fpcsr, &current->thread.fpcsr, sizeof(unsigned long));
-+
-+	return err;
-+}
-+#else
-+#define save_fp_state(sc) (0)
-+#define restore_fp_state(sc) (0)
-+#endif
-+
- static int restore_sigcontext(struct pt_regs *regs,
- 			      struct sigcontext __user *sc)
- {
-@@ -55,7 +87,7 @@ static int restore_sigcontext(struct pt_regs *regs,
- 	err |= __copy_from_user(regs, sc->regs.gpr, 32 * sizeof(unsigned long));
- 	err |= __copy_from_user(&regs->pc, &sc->regs.pc, sizeof(unsigned long));
- 	err |= __copy_from_user(&regs->sr, &sc->regs.sr, sizeof(unsigned long));
--	err |= __copy_from_user(&regs->fpcsr, &sc->fpcsr, sizeof(unsigned long));
-+	err |= restore_fp_state(sc);
- 
- 	/* make sure the SM-bit is cleared so user-mode cannot fool us */
- 	regs->sr &= ~SPR_SR_SM;
-@@ -118,7 +150,7 @@ static int setup_sigcontext(struct pt_regs *regs, struct sigcontext __user *sc)
- 	err |= __copy_to_user(sc->regs.gpr, regs, 32 * sizeof(unsigned long));
- 	err |= __copy_to_user(&sc->regs.pc, &regs->pc, sizeof(unsigned long));
- 	err |= __copy_to_user(&sc->regs.sr, &regs->sr, sizeof(unsigned long));
--	err |= __copy_to_user(&sc->fpcsr, &regs->fpcsr, sizeof(unsigned long));
-+	err |= save_fp_state(sc);
- 
- 	return err;
- }
-diff --git a/arch/openrisc/kernel/traps.c b/arch/openrisc/kernel/traps.c
-index 57e0d674eb04..c195be9cc9fc 100644
---- a/arch/openrisc/kernel/traps.c
-+++ b/arch/openrisc/kernel/traps.c
-@@ -31,6 +31,7 @@
- #include <linux/uaccess.h>
- 
- #include <asm/bug.h>
-+#include <asm/fpu.h>
- #include <asm/io.h>
- #include <asm/processor.h>
- #include <asm/unwinder.h>
-@@ -84,9 +85,8 @@ void show_registers(struct pt_regs *regs)
- 		in_kernel = 0;
- 
- 	pr_info("CPU #: %d\n"
--		"   PC: %08lx    SR: %08lx    SP: %08lx FPCSR: %08lx\n",
--		smp_processor_id(), regs->pc, regs->sr, regs->sp,
--		regs->fpcsr);
-+		"   PC: %08lx    SR: %08lx    SP: %08lx\n",
-+		smp_processor_id(), regs->pc, regs->sr, regs->sp);
- 	pr_info("GPR00: %08lx GPR01: %08lx GPR02: %08lx GPR03: %08lx\n",
- 		0L, regs->gpr[1], regs->gpr[2], regs->gpr[3]);
- 	pr_info("GPR04: %08lx GPR05: %08lx GPR06: %08lx GPR07: %08lx\n",
-@@ -183,7 +183,10 @@ asmlinkage void do_fpe_trap(struct pt_regs *regs, unsigned long address)
- 	if (user_mode(regs)) {
- 		int code = FPE_FLTUNK;
- #ifdef CONFIG_FPU
--		unsigned long fpcsr = regs->fpcsr;
-+		unsigned long fpcsr;
-+
-+		save_fpu(current);
-+		fpcsr = current->thread.fpcsr;
- 
- 		if (fpcsr & SPR_FPCSR_IVF)
- 			code = FPE_FLTINV;
-@@ -197,7 +200,8 @@ asmlinkage void do_fpe_trap(struct pt_regs *regs, unsigned long address)
- 			code = FPE_FLTRES;
- 
- 		/* Clear all flags */
--		regs->fpcsr &= ~SPR_FPCSR_ALLF;
-+		current->thread.fpcsr &= ~SPR_FPCSR_ALLF;
-+		restore_fpu(current);
- #endif
- 		force_sig_fault(SIGFPE, code, (void __user *)regs->pc);
- 	} else {
--- 
-2.44.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
