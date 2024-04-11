@@ -1,63 +1,63 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E985F13AD17
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB0113CABC
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849679; cv=none; b=YgoBaq9Lq/PCt+AO1ga6aaJKYIIAybhZgtj7jsEaJ8HVGCninmm6G1owQzPmtKphHIaOdFZXA+UnDjLSiHbADeskUXXD6Su4b0RKgNnntTRuxibobA2GV6CeYKDh2YkGJNcpNMdvKo9ZBhoI5xLBnGbZrJAffl8/Ev35GcB0h0o=
+	t=1712849681; cv=none; b=D10HNNR8ycuJhSK0vGQiVkSC5xv4uDttpWXDpVJoiFSIVzXt85OvyqLBlK4n5MCGQnHdjfWlXhIIersuTIngB2HQ2S9Jt3zvKp+ati/hv5dGHeoyHOjmEPk9baV+GJjUAyIY7ugIpmzxg7W8I7ouuoTnuShmC4IUrLdNClEXiVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849679; c=relaxed/simple;
-	bh=9iwBnyjscqkNxKDG/Io1VkU/8gPoyQWeh181FlHiehg=;
+	s=arc-20240116; t=1712849681; c=relaxed/simple;
+	bh=k0bXdrDyin3Wj/PM7UMBJF8YF3HORmVehNxhlkCmRj8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CN38fJuhrB54B66UABMpJjJENbnMDPRXxpgqhco+9X3/nNYcaFhb9Ph3Rl2cdL/gFIektv5VqXYucL5k4jOG8KobHZdneAeYyy3NLdohw64vVZBbp6QA2FRCngzmxca2xz1aKP12EZXBbhkq9ruKovY00DSLfctxMAr7h1V2Odk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=v3n65eDz; arc=none smtp.client-ip=209.85.166.177
+	 MIME-Version; b=GPf5nT9Qxd+/i+LPhwqrq1lZvAS/K5HKm17asSrApHhni9n/7eeMERy4/1hP1UUloG54VLVOansvfm+IuyWRvUg56iPhGVFVwlmteJv9QASYb0qj4nckoSM6Yye0JVh6Xhz1Q2vS2DI4Lx4UFfI8eEX7Gy6vrtpdDquyUL1JKjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=PTQ5wNR5; arc=none smtp.client-ip=209.85.166.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="v3n65eDz"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-36a1c0bf9faso4608125ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="PTQ5wNR5"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7d0772bb5ffso180631139f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:34:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849676; x=1713454476; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849678; x=1713454478; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xmU1aZy/lE4HT3Yy01T5BIJ8zKUrwZbC57s7AX7t8Gw=;
-        b=v3n65eDzvlauIwO4/kqnATSP8IpRn4TddtXtnF+tlVGQooah66g0OLua2ZTzIOiESA
-         L0e42xv9LUV+1Me0nFyRh2e9Y8iTHBXKKCh3pZQL4gJD7O5tw7bK/e5jTzRlDFZSSomH
-         M7sKIarpuwBuOdXkLp/X971EVRquql59Uo2hzZiuaoibvjhSoQDGdhDQN4i1s9Irxv/b
-         FbQ0KDZH07ebeUZEvhfGvVJuT+81TguuzBcj+2iy6QIISNcuXuLWjcMdbApuM5UPdb8r
-         7RkfOMuNRIi0ZcOkAgSd8VH4FZnCDrHv08MknrHxTqTtlna9XV28BCY8bpcfinFsyg/2
-         ddew==
+        bh=+ZdeOU8iSN+e2UssoppSLiJpH0PIhsTs61PcTzwDqgg=;
+        b=PTQ5wNR5wW/NhqirbsQOUi+J9W8BX2yiTGOJu2xeXggNJhSqj/mwM906VC0BwrY1Io
+         gRJ3xyvQjLtKvZUhFrLoAibI9ou8jAFLeUGNxkGWDaiQo0AeieJxNMeHcpct4g4MVvTo
+         OqczYkLRpb5j8nwMya4UwKos6KsNfuFPiKd0eVMdVrjNeFUcn0qVI6jX8PNAe1rhWu75
+         v3jl1g7WN72ynS0SBi3mCAP6Qu2eih62TbSaDWffwOPiBb5F4lrABIvtX/iQjJ9wk1AN
+         oeez/NXIL551AJW51+PJ4KtCN83QrumM3p9GdU8SvVaRd8DAZRmkdAGRd2vw8pkxu0iM
+         rwHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849676; x=1713454476;
+        d=1e100.net; s=20230601; t=1712849678; x=1713454478;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xmU1aZy/lE4HT3Yy01T5BIJ8zKUrwZbC57s7AX7t8Gw=;
-        b=OBmgWuOsmp0/TW3ISTITIapl6TXzCLeP/8rEoYbIrx9Dsga04rBHqUXHRo2de3ATu4
-         OYI/fnk2zmrfNnR5Pq8eqC22Wtpf0QM9AaQbHezOaApAhBWCLYVk+Us5RVK1AseVFJ5P
-         TuURlkOlZksFnykMEtc97dm/U5rGHATfTe5Rk3+d338G7lKtAAbXMFm/tclwQgRqQpOW
-         okHDLX7/t8m85AYRh4Mu/9XK4yv7kniRJCfYH7vMYIHFZHRglmpnVA023wfy1DscXvLV
-         FxYWkBX3oaTioBOuI6taTSSpLZtNX89wZHJZUeTDgXlPDNvpLDuPBm7HyHJ4FmW/EcLs
-         x1Og==
-X-Gm-Message-State: AOJu0YwnCsG/Wo3lLxqfogm7Y+5EuJrkqRiO4ZbdJlsn6jIpj9GJPEvE
-	fMhBBIh2oYvyPB30fiffl2IjQ207+n4HXqaBZXiq0/ojyYYMjmnf/t9FqkPIQUjxlvEiV7Oiivj
-	l
-X-Google-Smtp-Source: AGHT+IEyy+KST9s6pnfvsh0GKBVt/uD4oYpTJ+yGYVQ0R5EhzWSpgd8gsHxlJHxZQ1uK2XiUjk8lmA==
-X-Received: by 2002:a05:6e02:1fcb:b0:368:efa4:be12 with SMTP id dj11-20020a056e021fcb00b00368efa4be12mr7845214ilb.3.1712849676691;
-        Thu, 11 Apr 2024 08:34:36 -0700 (PDT)
+        bh=+ZdeOU8iSN+e2UssoppSLiJpH0PIhsTs61PcTzwDqgg=;
+        b=ZdS3dp519LMp5oE4IhWspZFFEK6eT8COeH/PGvH6e72WhIxTlGDIN42pxKI/ZhAaKp
+         sEnz9v6q9FdVc9TqZgBLvvg8lxikpGt90Hiitlp0QHB4dvWzCmbeyhsrWLKGN2vxiJNM
+         ioffHppIE43V04ZFfqBszbED/L+SPj77FcVhFmLslkHZGnlHSB273KNsPgzYkp6k2PtZ
+         KtTVlERhNnA7CyUpyTpQIZef5YxB1iGskGKuCHoFP6iSs28XdNsWJj+a72Rb7+kz36gm
+         nzX3JhA9dnV7kQSkWHR1GG2AZJOy8ekt6K0HVVtNADBggor4PEsJTYrqHyyG6bAA5ECU
+         ifAQ==
+X-Gm-Message-State: AOJu0YwpymOfGH/NO08RFYTyOZ88G4LRy6PTg0RqIkVM1eoGUavSXOAP
+	rZpEN+runTx7I/DtfeyCMSphuH8KgvpQO2npJ3AFWS4omokzL07uuD0y7srA9C4ebqmIs20w4dO
+	Z
+X-Google-Smtp-Source: AGHT+IEh4c5xpLB+IvAopjnun5XyIknJ3RGicPSat6tXdeRMPFvrECS1ttdRBTkeuWv7ecOFqtJn7g==
+X-Received: by 2002:a6b:4e14:0:b0:7d6:631d:7b0 with SMTP id c20-20020a6b4e14000000b007d6631d07b0mr181773iob.1.1712849678641;
+        Thu, 11 Apr 2024 08:34:38 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.35
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.34.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:34:35 -0700 (PDT)
+        Thu, 11 Apr 2024 08:34:38 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 103/437] ipc: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:14:03 -0600
-Message-ID: <20240411153126.16201-104-axboe@kernel.dk>
+Subject: [PATCH 105/437] drivers/acpi: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:14:05 -0600
+Message-ID: <20240411153126.16201-106-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,45 +71,168 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- ipc/mqueue.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/acpi/acpi_dbg.c      |  6 ++++--
+ drivers/acpi/apei/erst-dbg.c | 23 ++++++++++++-----------
+ drivers/acpi/ec_sys.c        |  6 ++++--
+ drivers/acpi/pfr_update.c    |  3 ++-
+ 4 files changed, 22 insertions(+), 16 deletions(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 5eea4dc0509e..812b03cf4273 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -632,10 +632,9 @@ static int mqueue_unlink(struct inode *dir, struct dentry *dentry)
- *	that are interesting from user point of view and aren't accessible
- *	through std routines)
- */
--static ssize_t mqueue_read_file(struct file *filp, char __user *u_data,
--				size_t count, loff_t *off)
-+static ssize_t mqueue_read_file(struct kiocb *iocb, struct iov_iter *to)
+diff --git a/drivers/acpi/acpi_dbg.c b/drivers/acpi/acpi_dbg.c
+index d50261d05f3a..2ee3bc767693 100644
+--- a/drivers/acpi/acpi_dbg.c
++++ b/drivers/acpi/acpi_dbg.c
+@@ -638,6 +638,7 @@ static ssize_t acpi_aml_read(struct file *file, char __user *buf,
+ 	}
+ 	return size > 0 ? size : ret;
+ }
++FOPS_READ_ITER_HELPER(acpi_aml_read);
+ 
+ static int acpi_aml_write_user(const char __user *buf, int len)
  {
--	struct inode *inode = file_inode(filp);
-+	struct inode *inode = file_inode(iocb->ki_filp);
- 	struct mqueue_inode_info *info = MQUEUE_I(inode);
- 	char buffer[FILENT_SIZE];
- 	ssize_t ret;
-@@ -652,8 +651,7 @@ static ssize_t mqueue_read_file(struct file *filp, char __user *u_data,
- 	spin_unlock(&info->lock);
- 	buffer[sizeof(buffer)-1] = '\0';
+@@ -707,6 +708,7 @@ static ssize_t acpi_aml_write(struct file *file, const char __user *buf,
+ 	}
+ 	return size > 0 ? size : ret;
+ }
++FOPS_WRITE_ITER_HELPER(acpi_aml_write);
  
--	ret = simple_read_from_buffer(u_data, count, off, buffer,
--				strlen(buffer));
-+	ret = simple_copy_to_iter(buffer, &iocb->ki_pos, strlen(buffer), to);
- 	if (ret <= 0)
- 		return ret;
+ static __poll_t acpi_aml_poll(struct file *file, poll_table *wait)
+ {
+@@ -722,8 +724,8 @@ static __poll_t acpi_aml_poll(struct file *file, poll_table *wait)
+ }
  
-@@ -1663,7 +1661,7 @@ static const struct inode_operations mqueue_dir_inode_operations = {
- static const struct file_operations mqueue_file_operations = {
- 	.flush = mqueue_flush_file,
- 	.poll = mqueue_poll_file,
--	.read = mqueue_read_file,
-+	.read_iter = mqueue_read_file,
+ static const struct file_operations acpi_aml_operations = {
+-	.read		= acpi_aml_read,
+-	.write		= acpi_aml_write,
++	.read_iter	= acpi_aml_read_iter,
++	.write_iter	= acpi_aml_write_iter,
+ 	.poll		= acpi_aml_poll,
+ 	.open		= acpi_aml_open,
+ 	.release	= acpi_aml_release,
+diff --git a/drivers/acpi/apei/erst-dbg.c b/drivers/acpi/apei/erst-dbg.c
+index 8bc71cdc2270..293fac1a2821 100644
+--- a/drivers/acpi/apei/erst-dbg.c
++++ b/drivers/acpi/apei/erst-dbg.c
+@@ -14,6 +14,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/uaccess.h>
++#include <linux/uio.h>
+ #include <acpi/apei.h>
+ #include <linux/miscdevice.h>
+ 
+@@ -79,20 +80,20 @@ static long erst_dbg_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
+ 	}
+ }
+ 
+-static ssize_t erst_dbg_read(struct file *filp, char __user *ubuf,
+-			     size_t usize, loff_t *off)
++static ssize_t erst_dbg_read(struct kiocb *iocb, struct iov_iter *to)
+ {
++	size_t usize = iov_iter_count(to);
+ 	int rc, *pos;
+ 	ssize_t len = 0;
+ 	u64 id;
+ 
+-	if (*off)
++	if (iocb->ki_pos)
+ 		return -EINVAL;
+ 
+ 	if (mutex_lock_interruptible(&erst_dbg_mutex) != 0)
+ 		return -EINTR;
+ 
+-	pos = (int *)&filp->private_data;
++	pos = (int *)&iocb->ki_filp->private_data;
+ 
+ retry_next:
+ 	rc = erst_get_record_id_next(pos, &id);
+@@ -141,7 +142,7 @@ static ssize_t erst_dbg_read(struct file *filp, char __user *ubuf,
+ 		goto out;
+ 
+ 	rc = -EFAULT;
+-	if (copy_to_user(ubuf, erst_dbg_buf, len))
++	if (!copy_to_iter_full(erst_dbg_buf, len, to))
+ 		goto out;
+ 	rc = 0;
+ out:
+@@ -149,9 +150,9 @@ static ssize_t erst_dbg_read(struct file *filp, char __user *ubuf,
+ 	return rc ? rc : len;
+ }
+ 
+-static ssize_t erst_dbg_write(struct file *filp, const char __user *ubuf,
+-			      size_t usize, loff_t *off)
++static ssize_t erst_dbg_write(struct kiocb *iocb, struct iov_iter *from)
+ {
++	size_t usize = iov_iter_count(from);
+ 	int rc;
+ 	struct cper_record_header *rcd;
+ 
+@@ -175,8 +176,8 @@ static ssize_t erst_dbg_write(struct file *filp, const char __user *ubuf,
+ 		erst_dbg_buf = p;
+ 		erst_dbg_buf_len = usize;
+ 	}
+-	rc = copy_from_user(erst_dbg_buf, ubuf, usize);
+-	if (rc) {
++	rc = copy_from_iter_full(erst_dbg_buf, usize, from);
++	if (!rc) {
+ 		rc = -EFAULT;
+ 		goto out;
+ 	}
+@@ -196,8 +197,8 @@ static const struct file_operations erst_dbg_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.open		= erst_dbg_open,
+ 	.release	= erst_dbg_release,
+-	.read		= erst_dbg_read,
+-	.write		= erst_dbg_write,
++	.read_iter	= erst_dbg_read,
++	.write_iter	= erst_dbg_write,
+ 	.unlocked_ioctl	= erst_dbg_ioctl,
+ 	.llseek		= no_llseek,
+ };
+diff --git a/drivers/acpi/ec_sys.c b/drivers/acpi/ec_sys.c
+index c074a0fae059..47c811cb75f4 100644
+--- a/drivers/acpi/ec_sys.c
++++ b/drivers/acpi/ec_sys.c
+@@ -60,6 +60,7 @@ static ssize_t acpi_ec_read_io(struct file *f, char __user *buf,
+ 	}
+ 	return count;
+ }
++FOPS_READ_ITER_HELPER(acpi_ec_read_io);
+ 
+ static ssize_t acpi_ec_write_io(struct file *f, const char __user *buf,
+ 				size_t count, loff_t *off)
+@@ -98,12 +99,13 @@ static ssize_t acpi_ec_write_io(struct file *f, const char __user *buf,
+ 	}
+ 	return count;
+ }
++FOPS_WRITE_ITER_HELPER(acpi_ec_write_io);
+ 
+ static const struct file_operations acpi_ec_io_ops = {
+ 	.owner = THIS_MODULE,
+ 	.open  = simple_open,
+-	.read  = acpi_ec_read_io,
+-	.write = acpi_ec_write_io,
++	.read_iter  = acpi_ec_read_io_iter,
++	.write_iter = acpi_ec_write_io_iter,
  	.llseek = default_llseek,
  };
  
+diff --git a/drivers/acpi/pfr_update.c b/drivers/acpi/pfr_update.c
+index 8b2910995fc1..a7a4d3bb74d3 100644
+--- a/drivers/acpi/pfr_update.c
++++ b/drivers/acpi/pfr_update.c
+@@ -481,10 +481,11 @@ static ssize_t pfru_write(struct file *file, const char __user *buf,
+ 
+ 	return ret ?: len;
+ }
++FOPS_WRITE_ITER_HELPER(pfru_write);
+ 
+ static const struct file_operations acpi_pfru_fops = {
+ 	.owner		= THIS_MODULE,
+-	.write		= pfru_write,
++	.write_iter	= pfru_write_iter,
+ 	.unlocked_ioctl = pfru_ioctl,
+ 	.llseek		= noop_llseek,
+ };
 -- 
 2.43.0
 
