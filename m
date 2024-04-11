@@ -1,63 +1,63 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8901C9EBE
-	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818B81C9ED3
+	for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 15:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712849786; cv=none; b=bL3IXedFeIWPTZc9G7JSEviMEAD+xcdqKEboRRfXAtVG1jA37drEGklhRs6BnIDRZODJcbrOER/5i58IrGaE1nI0p6280ZqbO02O3R610oVpGYgH/eshoSJVG3bD2EDZ2lN3KenOkyHGcm8OYW0pFWrw5IuLL5AqCn7amE62CCA=
+	t=1712849787; cv=none; b=pugJSeLLfj3XikUFzaGsghCYZv7qWe3jx/TFrfcwTb2zvD5vsbaQMa1VT9Nksa1zakKjyhMQ6OseE1qFtgNQZpAVSRkX5Z5Hu/U2UoNbKLpRxbFkBQwij6uj/HaTpM0Ti159/HXuoQdHrePmWHF/7y2wAmRH6cPQc1geiwCscyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712849786; c=relaxed/simple;
-	bh=BpbLbOP2afdvtIC9iamDC2khJ9q6WVB0dG51UsiIlNY=;
+	s=arc-20240116; t=1712849787; c=relaxed/simple;
+	bh=NVRs4dggM+Epm+8AHAcTeyE4WoLIT+cCoaaQM7m768Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PJD3n/ETJKpJ/FEQlbRRuzDuQEDJ7Uldcxp/cXf0OfKEq4xUg7XdytGYLley5Gc4ssnm/YwvMrfP5b+Ug9hlZxTkngwO3L35tH0rp6Tr45hMsr2t1mgJqJP7EySG8IuJM1WSIT8cLW0je52kXKtHgzf4ehPg48JOgopdO7mh5T8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=099V+exf; arc=none smtp.client-ip=209.85.166.53
+	 MIME-Version; b=iiRIWWPPy8jU00PZgptrNgzXIfbzYkoYka8kCRPHKPzUbMTDfyakR/aqlahqZrXUjXKR/4Hm1Igrh3xm6cxgKNBxLiDyg03mf5zZdXoOpPuSAc4wx+vMC+p/0z3NgQhnjA5XhnZBaxgJQUO2owt79f1gu8RX28VMBG4u8kGfciE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=udHddoX/; arc=none smtp.client-ip=209.85.166.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="099V+exf"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7d6112ba6baso58077739f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="udHddoX/"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d6812b37a6so8952339f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 08:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849782; x=1713454582; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1712849785; x=1713454585; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tzFflLsYEL6dEX0b2SgCkx7pDBMhEWrTGXs6PsOZyO8=;
-        b=099V+exfwsx5swO8TfrfwPvTCeoM+11acZIE5ugkNYu20ON7DNszD81NPzleRG4c0o
-         wFC0zR0wmw58Y7fNa0yVD+i5ziHAGiOwrQfXxgQDx6cQev+nd2EMM0m1T2AaxoxA1jhF
-         ZaHFRjgZemb784FfoJFShuFwbf0moLISddoGRmeSeZEdumryw667ZXXJk1Z12VqsOQa4
-         PmeLqVbF/KwgUlaI2+a8eIWglAylT8QVPs/5hBOInp/UfAao6TWgwoLno+VYqBYm4a7P
-         DThXSCRuSgvRJomQHSb7L3yVVUxhx1w9n7RFTN97Etahd9+S7v1g6kQFlbt2OPjUPDhH
-         v2vg==
+        bh=9m4dGsh4a7mpzDXDOdvreeKb63yVkSfsQX8D+D5oolY=;
+        b=udHddoX/+29UqlxTivy0sveuWnXCMsNVDX3ALbQk4wHQcE13PTLv7pLN39tTwb3XJS
+         NTuvINK47LPhsqcUr6pWRs8+BVDfntOF+XCnpF7/aD9BOv5MxqFg9Ubcv09c5oV0vQZH
+         cmRwcYlFSTPybx3vS912R2tccruSgsOtLvxBy2vqVK2k9f3vvXSBHiiuoV+7Sn2RVxIP
+         FKQH1mnm959XDEScXljfKpuaiEuh1IgrcYI05JkHITCmj+RbHiQj0qmdGhrCfMxgWllU
+         Gzt7XMUzfLf7mrNTMiJ3cQD4lPVrp/1Ig2J0wb0yT4vy254gzq9gxlokAUAFtIXUlXQn
+         9iOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712849782; x=1713454582;
+        d=1e100.net; s=20230601; t=1712849785; x=1713454585;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tzFflLsYEL6dEX0b2SgCkx7pDBMhEWrTGXs6PsOZyO8=;
-        b=YPg0kWaNXEyDkbtSApNJNTdUHAzTnOm/No7j7JZ2kYXcPu1IC2IN1FKXRSTX/xErOv
-         D3hM95Re7vIlTZDlCW7qMAZaBpw6os27oMC8JgxN9Wnmm19ySx/6MC2r6hhr211nnBnD
-         jM03lNgJFT/RRPWJHwj7MDismomXA2gwmSc8B28SdJQhlPsem2LMuwqkmLlHgco2reIW
-         LTzEvli9EyhJu6Se/b5cYy9gUkHGdaEoX+Ih9/6NY2/G7l+t06N1zwTFBvSP7vsTav2B
-         3xMxQaW5WcZpbKR7XOudU00Uhbrve44UXq2B7uTbpK5R6obsc9s/qbQYHe+kLlhgv/0m
-         7ixA==
-X-Gm-Message-State: AOJu0Yx4LZIX+VpGt5UyohCIrlasb/YXzwuCHLP7Cxe8V19XAybXIJ60
-	GzjzmgL1krRAuMveq7ATBcT7GRw6Ku/3A3JooBJO78Q09SfwkYUP4/I/E1ZDfo5TXtH6ezRwN6s
-	q
-X-Google-Smtp-Source: AGHT+IFszcf26vQCCbg8hYAeod09OX+GBgldCuTxvYlZ8bIe0UKrtuXkPk9+ZF/HKhcIDoEpxGcT2w==
-X-Received: by 2002:a05:6602:38d:b0:7d6:513b:254 with SMTP id f13-20020a056602038d00b007d6513b0254mr185368iov.2.1712849782653;
-        Thu, 11 Apr 2024 08:36:22 -0700 (PDT)
+        bh=9m4dGsh4a7mpzDXDOdvreeKb63yVkSfsQX8D+D5oolY=;
+        b=pi/dhYtqS+0iQvsTnN/Xx2q+UXI5cTr8wRW4FBon+BXMnwcbJYVJ9FoDiS2rEkG5WM
+         lTSpYxhISk4vfpiInAU+nRw4Qy1RSTVtmSmX2FqZrkJTSpYLYvUtFONd+ACNlO0PBto0
+         ZKl6Sgx8xz6omGByMbF506vC4mFHyHPj1af7+hZOKupyL3g7UAGgnCBlrsVWgKQiqnct
+         /NSEkOr+VhPHasv+SXIPMlSin3mkuqyI4+R8zvoLZiIoBgaS5cCLNVtn7jw8qYeYljrO
+         ext9fn2PgBP8xrJ90Pk3Ty/35OPtwX4EOnOCpCGc3YDgd38v+LpMTDLLX0Q96w/EM/8p
+         Vtxg==
+X-Gm-Message-State: AOJu0YzNLZWDQsTiC81ELaSDGjo3eQJ5YEyMwv2mvQP6al14N3FSUIbg
+	YkM5ceSPRUf2a2KELdum3KEZAnlamdmcYHP+0j6glUt0rlSU7oSYsuhrdrDUqyUf55ih5Or7aWY
+	P
+X-Google-Smtp-Source: AGHT+IFTfwhPk7/eXTPZUfgSoFQ8V0ilaiYLiDFM4QN9DUzhSCgLtuXioVlaxFiutxkib6gCDTbyuQ==
+X-Received: by 2002:a05:6602:21d7:b0:7d6:9ddf:5095 with SMTP id c23-20020a05660221d700b007d69ddf5095mr16493ioc.1.1712849785245;
+        Thu, 11 Apr 2024 08:36:25 -0700 (PDT)
 Received: from localhost.localdomain ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.21
+        by smtp.gmail.com with ESMTPSA id jc25-20020a056638891900b0047f14b7f6c0sm457056jab.5.2024.04.11.08.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 08:36:21 -0700 (PDT)
+        Thu, 11 Apr 2024 08:36:24 -0700 (PDT)
 From: Jens Axboe <axboe@kernel.dk>
 To: linux-kernel@vger.kernel.org
 Cc: Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 167/437] usb: image: mdc800: convert to read/write iterators
-Date: Thu, 11 Apr 2024 09:15:07 -0600
-Message-ID: <20240411153126.16201-168-axboe@kernel.dk>
+Subject: [PATCH 169/437] usb: mon: convert to read/write iterators
+Date: Thu, 11 Apr 2024 09:15:09 -0600
+Message-ID: <20240411153126.16201-170-axboe@kernel.dk>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
 References: <20240411153126.16201-1-axboe@kernel.dk>
@@ -71,61 +71,99 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 ---
- drivers/usb/image/mdc800.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/usb/mon/mon_bin.c  | 3 ++-
+ drivers/usb/mon/mon_stat.c | 9 ++++-----
+ drivers/usb/mon/mon_text.c | 6 ++++--
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/image/mdc800.c b/drivers/usb/image/mdc800.c
-index 7b7e1554ea20..ec52a144f8d7 100644
---- a/drivers/usb/image/mdc800.c
-+++ b/drivers/usb/image/mdc800.c
-@@ -677,10 +677,10 @@ static int mdc800_device_release (struct inode* inode, struct file *file)
- /*
-  * The Device read callback Function
-  */
--static ssize_t mdc800_device_read (struct file *file, char __user *buf, size_t len, loff_t *pos)
-+static ssize_t mdc800_device_read(struct kiocb *iocb, struct iov_iter *to)
- {
-+	size_t len = iov_iter_count(to);
- 	size_t left=len, sts=len; /* single transfer size */
--	char __user *ptr = buf;
- 	int retval;
- 
- 	mutex_lock(&mdc800->io_lock);
-@@ -754,12 +754,11 @@ static ssize_t mdc800_device_read (struct file *file, char __user *buf, size_t l
- 		else
- 		{
- 			/* Copy Bytes */
--			if (copy_to_user(ptr, &mdc800->out [mdc800->out_ptr],
--						sts)) {
-+			if (!copy_to_iter_full(&mdc800->out [mdc800->out_ptr],
-+						sts, to)) {
- 				mutex_unlock(&mdc800->io_lock);
- 				return -EFAULT;
- 			}
--			ptr+=sts;
- 			left-=sts;
- 			mdc800->out_ptr+=sts;
- 		}
-@@ -936,7 +935,7 @@ static ssize_t mdc800_device_write (struct file *file, const char __user *buf, s
- 	mutex_unlock(&mdc800->io_lock);
- 	return i;
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index 4e30de4db1c0..af88dd18eafe 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -867,6 +867,7 @@ static ssize_t mon_bin_read(struct file *file, char __user *buf,
+ 	mutex_unlock(&rp->fetch_lock);
+ 	return done;
  }
--
-+FOPS_WRITE_ITER_HELPER(mdc800_device_write);
++FOPS_READ_ITER_HELPER(mon_bin_read);
  
- /***************************************************************************
- 	Init and Cleanup this driver (Structs and types)
-@@ -946,8 +945,8 @@ static ssize_t mdc800_device_write (struct file *file, const char __user *buf, s
- static const struct file_operations mdc800_device_ops =
- {
+ /*
+  * Remove at most nevents from chunked buffer.
+@@ -1290,7 +1291,7 @@ static const struct file_operations mon_fops_binary = {
  	.owner =	THIS_MODULE,
--	.read =		mdc800_device_read,
--	.write =	mdc800_device_write,
-+	.read_iter =	mdc800_device_read,
-+	.write_iter =	mdc800_device_write_iter,
- 	.open =		mdc800_device_open,
- 	.release =	mdc800_device_release,
- 	.llseek =	noop_llseek,
+ 	.open =		mon_bin_open,
+ 	.llseek =	no_llseek,
+-	.read =		mon_bin_read,
++	.read_iter =	mon_bin_read_iter,
+ 	/* .write =	mon_text_write, */
+ 	.poll =		mon_bin_poll,
+ 	.unlocked_ioctl = mon_bin_ioctl,
+diff --git a/drivers/usb/mon/mon_stat.c b/drivers/usb/mon/mon_stat.c
+index 3c23805ab1a4..e13a81ade7cf 100644
+--- a/drivers/usb/mon/mon_stat.c
++++ b/drivers/usb/mon/mon_stat.c
+@@ -43,12 +43,11 @@ static int mon_stat_open(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
+-static ssize_t mon_stat_read(struct file *file, char __user *buf,
+-				size_t nbytes, loff_t *ppos)
++static ssize_t mon_stat_read(struct kiocb *iocb, struct iov_iter *to)
+ {
+-	struct snap *sp = file->private_data;
++	struct snap *sp = iocb->ki_filp->private_data;
+ 
+-	return simple_read_from_buffer(buf, nbytes, ppos, sp->str, sp->slen);
++	return simple_copy_to_iter(sp->str, &iocb->ki_pos, sp->slen, to);
+ }
+ 
+ static int mon_stat_release(struct inode *inode, struct file *file)
+@@ -63,7 +62,7 @@ const struct file_operations mon_fops_stat = {
+ 	.owner =	THIS_MODULE,
+ 	.open =		mon_stat_open,
+ 	.llseek =	no_llseek,
+-	.read =		mon_stat_read,
++	.read_iter =	mon_stat_read,
+ 	/* .write =	mon_stat_write, */
+ 	/* .poll =		mon_stat_poll, */
+ 	/* .unlocked_ioctl =	mon_stat_ioctl, */
+diff --git a/drivers/usb/mon/mon_text.c b/drivers/usb/mon/mon_text.c
+index 2fe9b95bac1d..ec50a0e23117 100644
+--- a/drivers/usb/mon/mon_text.c
++++ b/drivers/usb/mon/mon_text.c
+@@ -428,6 +428,7 @@ static ssize_t mon_text_read_t(struct file *file, char __user *buf,
+ 	mutex_unlock(&rp->printf_lock);
+ 	return ret;
+ }
++FOPS_READ_ITER_HELPER(mon_text_read_t);
+ 
+ /* ppos is not advanced since the llseek operation is not permitted. */
+ static ssize_t mon_text_read_u(struct file *file, char __user *buf,
+@@ -476,6 +477,7 @@ static ssize_t mon_text_read_u(struct file *file, char __user *buf,
+ 	mutex_unlock(&rp->printf_lock);
+ 	return ret;
+ }
++FOPS_READ_ITER_HELPER(mon_text_read_u);
+ 
+ static struct mon_event_text *mon_text_read_wait(struct mon_reader_text *rp,
+     struct file *file)
+@@ -686,7 +688,7 @@ static const struct file_operations mon_fops_text_t = {
+ 	.owner =	THIS_MODULE,
+ 	.open =		mon_text_open,
+ 	.llseek =	no_llseek,
+-	.read =		mon_text_read_t,
++	.read_iter =	mon_text_read_t_iter,
+ 	.release =	mon_text_release,
+ };
+ 
+@@ -694,7 +696,7 @@ static const struct file_operations mon_fops_text_u = {
+ 	.owner =	THIS_MODULE,
+ 	.open =		mon_text_open,
+ 	.llseek =	no_llseek,
+-	.read =		mon_text_read_u,
++	.read_iter =	mon_text_read_u_iter,
+ 	.release =	mon_text_release,
+ };
+ 
 -- 
 2.43.0
 
