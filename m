@@ -1,259 +1,136 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8D5553399
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2EC1E50299
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712913901; cv=none; b=olahEVjBzE+4A6a0w+IF+W0XrFgjD/86yFOKylWbQBkB+Zoz/Q+ei1Ck3kEmfqb7qIQsjtZQ6Rpa6kdfT2ygfQ3pfIK2Gd3TfoKP5gKjvHXdWdr2nhA8Y+4pSbohuu0W73akS4agLTpr2HgB7gKP21rgzwluP7s5CW5+jOZWeGw=
+	t=1712913925; cv=none; b=rBHoijx8rrA3wb46nGkbH19RTUeXV2r2EbQoPHqPtDaIcZzeFZcjKNI3hJwBiD+QM9XS48kWam0ku7FNyKNIHxhehIjC1gOacXRjdWKct99kA+GQXbQIFA2fm5p5cCF4sUCWVSgFslV73HaT+aiwreqf/URsLlCA3JIlirqBQ1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712913901; c=relaxed/simple;
-	bh=ClX5buHHt66svkg2lkRGeq7M9bw/T0fgF2y2uq7KpDc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d6YVnzwZ+5TqE8YHHFD2Z7uB3OVOwK+BCI5J7G/qa4+ttKvL0Hi/9J1v1wjZoJ/dU6qJ7/umBsgpAZhIZbDjmi/EwTrC19xwB5MmcQcm3osOHSvgSKZXFnQTMzjCnLejuuWcNABWmHCdTDka9EDEdGlU2s09j7zI3nKfKDfmT9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VGB1445JlzNnch;
-	Fri, 12 Apr 2024 17:22:32 +0800 (CST)
-Received: from kwepemm600020.china.huawei.com (unknown [7.193.23.147])
-	by mail.maildlp.com (Postfix) with ESMTPS id C18CC180073;
-	Fri, 12 Apr 2024 17:24:50 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:24:49 +0800
-From: Peng Zhang <zhangpeng362@huawei.com>
-To: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC: <akpm@linux-foundation.org>, <dennisszhou@gmail.com>,
-	<shakeelb@google.com>, <jack@suse.cz>, <surenb@google.com>,
-	<kent.overstreet@linux.dev>, <mhocko@suse.cz>, <vbabka@suse.cz>,
-	<yuzhao@google.com>, <yu.ma@intel.com>, <wangkefeng.wang@huawei.com>,
-	<sunnanyong@huawei.com>, <zhangpeng362@huawei.com>
-Subject: [RFC PATCH 1/3] Lazy percpu counters
-Date: Fri, 12 Apr 2024 17:24:39 +0800
-Message-ID: <20240412092441.3112481-2-zhangpeng362@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240412092441.3112481-1-zhangpeng362@huawei.com>
-References: <20240412092441.3112481-1-zhangpeng362@huawei.com>
+	s=arc-20240116; t=1712913925; c=relaxed/simple;
+	bh=Ms333QPBPkXGEfuU7DWm2MeYtBor2EJJghz3FR3A02o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCdb77DFuB03/SMkHP0gABnrkaNnJItU8Uf48JwXfZBXrtPx2mYA+f4rqUkfJjv18kKVTb6XzRvgJqOIwMq3EBR7pL9pKpea0ClRjuLm5tsUNs5pZPzu5sg5LJ9S4V9WTPwKsM8xgZflChF5MjT/y2M5LXQ8wNpHkjZfmIvemrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A520E339;
+	Fri, 12 Apr 2024 02:25:50 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.17.205])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A61953F64C;
+	Fri, 12 Apr 2024 02:25:19 -0700 (PDT)
+Date: Fri, 12 Apr 2024 10:25:16 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Donald Dutile <ddutile@redhat.com>,
+	Eric Chanudet <echanude@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Itaru Kitayama <itaru.kitayama@fujitsu.com>
+Subject: Re: [PATCH v2 3/4] arm64: mm: Don't remap pgtables for allocate vs
+ populate
+Message-ID: <Zhj9_HFVVxEZqdnB@FVFF77S0Q05N>
+References: <20240404143308.2224141-1-ryan.roberts@arm.com>
+ <20240404143308.2224141-4-ryan.roberts@arm.com>
+ <ZhffSyrqCQsMV2pG@FVFF77S0Q05N>
+ <37336367-f876-4429-a8a6-f887fc7f69ee@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600020.china.huawei.com (7.193.23.147)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <37336367-f876-4429-a8a6-f887fc7f69ee@arm.com>
 
-From: Kent Overstreet <kent.overstreet@linux.dev>
+On Fri, Apr 12, 2024 at 08:53:18AM +0100, Ryan Roberts wrote:
+> Hi Mark,
+> 
+> [...]
+> 
+> > Does something like the below look ok to you? The trade-off performance-wise is
+> > that late uses will still use the fixmap, and will redundantly zero the tables,
+> > but the logic remains fairly simple, and I suspect the overhead for late
+> > allocations might not matter since the bulk of late changes are non-allocating.
 
-This patch adds lib/lazy-percpu-counter.c, which implements counters
-that start out as atomics, but lazily switch to percpu mode if the
-update rate crosses some threshold (arbitrarily set at 256 per second).
+> > @@ -303,12 +301,18 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+> >  			pudval |= PUD_TABLE_PXN;
+> >  		BUG_ON(!pgtable_alloc);
+> >  		pmd_phys = pgtable_alloc(PMD_SHIFT);
+> > +
+> > +		pmdp = pmd_set_fixmap(pmd_phys);
+> > +		init_clear_pgtable(pmdp);
+> > +
+> >  		__pud_populate(pudp, pmd_phys, pudval);
+> >  		pud = READ_ONCE(*pudp);
+> > +	} else {
+> > +		pmdp = pmd_set_fixmap(pud_page_paddr(pud));
+> >  	}
+> >  	BUG_ON(pud_bad(pud));
+> >  
+> > -	pmdp = pmd_set_fixmap_offset(pudp, addr);
+> > +	pmdp += pmd_index(addr);
+> >  	do {
+> >  		pgprot_t __prot = prot;
+> >  
+> > @@ -345,12 +349,18 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+> >  			p4dval |= P4D_TABLE_PXN;
+> >  		BUG_ON(!pgtable_alloc);
+> >  		pud_phys = pgtable_alloc(PUD_SHIFT);
+> > +
+> > +		pudp = pud_set_fixmap(pud_phys);
+> > +		init_clear_pgtable(pudp);
+> > +
+> >  		__p4d_populate(p4dp, pud_phys, p4dval);
+> >  		p4d = READ_ONCE(*p4dp);
+> > +	} else {
+> > +		pudp = pud_set_fixmap(p4d_page_paddr(p4d));
+> 
+> With this change I end up in pgtable folding hell. pXX_set_fixmap() is defined
+> as NULL when the level is folded (and pXX_page_paddr() is not defined at all).
+> So it all compiles, but doesn't boot.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
----
- include/linux/lazy-percpu-counter.h | 82 +++++++++++++++++++++++++++++
- lib/Makefile                        |  2 +-
- lib/lazy-percpu-counter.c           | 82 +++++++++++++++++++++++++++++
- 3 files changed, 165 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/lazy-percpu-counter.h
- create mode 100644 lib/lazy-percpu-counter.c
+Sorry about that; I had not thought to check the folding logic when hacking
+that up.
 
-diff --git a/include/linux/lazy-percpu-counter.h b/include/linux/lazy-percpu-counter.h
-new file mode 100644
-index 000000000000..281b8dd88cb2
---- /dev/null
-+++ b/include/linux/lazy-percpu-counter.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Lazy percpu counters:
-+ * (C) 2022 Kent Overstreet
-+ *
-+ * Lazy percpu counters start out in atomic mode, then switch to percpu mode if
-+ * the update rate crosses some threshold.
-+ *
-+ * This means we don't have to decide between low memory overhead atomic
-+ * counters and higher performance percpu counters - we can have our cake and
-+ * eat it, too!
-+ *
-+ * Internally we use an atomic64_t, where the low bit indicates whether we're in
-+ * percpu mode, and the high 8 bits are a secondary counter that's incremented
-+ * when the counter is modified - meaning 55 bits of precision are available for
-+ * the counter itself.
-+ */
-+
-+#ifndef _LINUX_LAZY_PERCPU_COUNTER_H
-+#define _LINUX_LAZY_PERCPU_COUNTER_H
-+
-+#include <linux/atomic.h>
-+#include <asm/percpu.h>
-+
-+struct lazy_percpu_counter {
-+	atomic64_t			v;
-+	unsigned long			last_wrap;
-+};
-+
-+void lazy_percpu_counter_exit(struct lazy_percpu_counter *c);
-+void lazy_percpu_counter_add_slowpath(struct lazy_percpu_counter *c, s64 i);
-+
-+/*
-+ * We use the high bits of the atomic counter for a secondary counter, which is
-+ * incremented every time the counter is touched. When the secondary counter
-+ * wraps, we check the time the counter last wrapped, and if it was recent
-+ * enough that means the update frequency has crossed our threshold and we
-+ * switch to percpu mode:
-+ */
-+#define COUNTER_MOD_BITS		8
-+#define COUNTER_MOD_MASK		~(~0ULL >> COUNTER_MOD_BITS)
-+#define COUNTER_MOD_BITS_START		(64 - COUNTER_MOD_BITS)
-+
-+/*
-+ * We use the low bit of the counter to indicate whether we're in atomic mode
-+ * (low bit clear), or percpu mode (low bit set, counter is a pointer to actual
-+ * percpu counters:
-+ */
-+#define COUNTER_IS_PCPU_BIT		1
-+
-+static inline u64 __percpu *lazy_percpu_counter_is_pcpu(u64 v)
-+{
-+	if (!(v & COUNTER_IS_PCPU_BIT))
-+		return NULL;
-+
-+	v ^= COUNTER_IS_PCPU_BIT;
-+	return (u64 __percpu *)(unsigned long)v;
-+}
-+
-+/**
-+ * lazy_percpu_counter_add: Add a value to a lazy_percpu_counter
-+ *
-+ * @c: counter to modify
-+ * @i: value to add
-+ */
-+static inline void lazy_percpu_counter_add(struct lazy_percpu_counter *c, s64 i)
-+{
-+	u64 v = atomic64_read(&c->v);
-+	u64 __percpu *pcpu_v = lazy_percpu_counter_is_pcpu(v);
-+
-+	if (likely(pcpu_v))
-+		this_cpu_add(*pcpu_v, i);
-+	else
-+		lazy_percpu_counter_add_slowpath(c, i);
-+}
-+
-+static inline void lazy_percpu_counter_sub(struct lazy_percpu_counter *c, s64 i)
-+{
-+	lazy_percpu_counter_add(c, -i);
-+}
-+
-+#endif /* _LINUX_LAZY_PERCPU_COUNTER_H */
-diff --git a/lib/Makefile b/lib/Makefile
-index 2f4e17bfb299..7afa0c3e7cc7 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -46,7 +46,7 @@ obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
- 	 bust_spinlocks.o kasprintf.o bitmap.o scatterlist.o \
- 	 list_sort.o uuid.o iov_iter.o clz_ctz.o \
- 	 bsearch.o find_bit.o llist.o lwq.o memweight.o kfifo.o \
--	 percpu-refcount.o rhashtable.o base64.o \
-+	 percpu-refcount.o lazy-percpu-counter.o rhashtable.o base64.o \
- 	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
- 	 generic-radix-tree.o bitmap-str.o
- obj-$(CONFIG_STRING_KUNIT_TEST) += string_kunit.o
-diff --git a/lib/lazy-percpu-counter.c b/lib/lazy-percpu-counter.c
-new file mode 100644
-index 000000000000..e1914207214d
---- /dev/null
-+++ b/lib/lazy-percpu-counter.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/atomic.h>
-+#include <linux/gfp.h>
-+#include <linux/jiffies.h>
-+#include <linux/lazy-percpu-counter.h>
-+#include <linux/percpu.h>
-+
-+static inline s64 lazy_percpu_counter_atomic_val(s64 v)
-+{
-+	/* Ensure output is sign extended properly: */
-+	return (v << COUNTER_MOD_BITS) >>
-+		(COUNTER_MOD_BITS + COUNTER_IS_PCPU_BIT);
-+}
-+
-+static void lazy_percpu_counter_switch_to_pcpu(struct lazy_percpu_counter *c)
-+{
-+	u64 __percpu *pcpu_v = alloc_percpu_gfp(u64, GFP_ATOMIC|__GFP_NOWARN);
-+	u64 old, new, v;
-+
-+	if (!pcpu_v)
-+		return;
-+
-+	preempt_disable();
-+	v = atomic64_read(&c->v);
-+	do {
-+		if (lazy_percpu_counter_is_pcpu(v)) {
-+			free_percpu(pcpu_v);
-+			return;
-+		}
-+
-+		old = v;
-+		new = (unsigned long)pcpu_v | 1;
-+
-+		*this_cpu_ptr(pcpu_v) = lazy_percpu_counter_atomic_val(v);
-+	} while ((v = atomic64_cmpxchg(&c->v, old, new)) != old);
-+	preempt_enable();
-+}
-+
-+/**
-+ * lazy_percpu_counter_exit: Free resources associated with a
-+ * lazy_percpu_counter
-+ *
-+ * @c: counter to exit
-+ */
-+void lazy_percpu_counter_exit(struct lazy_percpu_counter *c)
-+{
-+	free_percpu(lazy_percpu_counter_is_pcpu(atomic64_read(&c->v)));
-+}
-+EXPORT_SYMBOL_GPL(lazy_percpu_counter_exit);
-+
-+void lazy_percpu_counter_add_slowpath(struct lazy_percpu_counter *c, s64 i)
-+{
-+	u64 atomic_i;
-+	u64 old, v = atomic64_read(&c->v);
-+	u64 __percpu *pcpu_v;
-+
-+	atomic_i  = i << COUNTER_IS_PCPU_BIT;
-+	atomic_i &= ~COUNTER_MOD_MASK;
-+	atomic_i |= 1ULL << COUNTER_MOD_BITS_START;
-+
-+	do {
-+		pcpu_v = lazy_percpu_counter_is_pcpu(v);
-+		if (pcpu_v) {
-+			this_cpu_add(*pcpu_v, i);
-+			return;
-+		}
-+
-+		old = v;
-+	} while ((v = atomic64_cmpxchg(&c->v, old, old + atomic_i)) != old);
-+
-+	if (unlikely(!(v & COUNTER_MOD_MASK))) {
-+		unsigned long now = jiffies;
-+
-+		if (c->last_wrap &&
-+		    unlikely(time_after(c->last_wrap + HZ, now)))
-+			lazy_percpu_counter_switch_to_pcpu(c);
-+		else
-+			c->last_wrap = now;
-+	}
-+}
-+EXPORT_SYMBOL(lazy_percpu_counter_add_slowpath);
--- 
-2.25.1
+> I think the simplest approach is to follow this pattern:
+> 
+> ----8<----
+> @@ -340,12 +338,15 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long
+> addr, unsigned long end,
+>                         p4dval |= P4D_TABLE_PXN;
+>                 BUG_ON(!pgtable_alloc);
+>                 pud_phys = pgtable_alloc(PUD_SHIFT);
+> +               pudp = pud_set_fixmap(pud_phys);
+> +               init_clear_pgtable(pudp);
+> +               pudp += pud_index(addr);
+>                 __p4d_populate(p4dp, pud_phys, p4dval);
+> -               p4d = READ_ONCE(*p4dp);
+> +       } else {
+> +               BUG_ON(p4d_bad(p4d));
+> +               pudp = pud_set_fixmap_offset(p4dp, addr);
+>         }
+> -       BUG_ON(p4d_bad(p4d));
+> 
+> -       pudp = pud_set_fixmap_offset(p4dp, addr);
+>         do {
+>                 pud_t old_pud = READ_ONCE(*pudp);
+> ----8<----
+> 
+> For the map case, we continue to use pud_set_fixmap_offset() which is always
+> defined (and always works correctly).
+> 
+> Note also that the previously unconditional BUG_ON needs to be prior to the
+> fixmap call to be useful, and its really only valuable in the map case because
+> for the alloc case we are the ones setting the p4d so we already know its not
+> bad. This means we don't need the READ_ONCE() in the alloc case.
+> 
+> Shout if you disagree.
 
+That looks good, and I agree with the reasoning here.
+
+Thanks for working on this!
+
+Mark.
