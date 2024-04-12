@@ -1,50 +1,49 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C71F12F5B3;
-	Fri, 12 Apr 2024 08:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtpdh20-2.aruba.it (smtpdh20-2.aruba.it [62.149.155.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E567C12C544
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911482; cv=none; b=ProvsTrY6FG3Taszz+cCLKjmhNXSkrqMCV5zDufEDma5etWP+Nn85QodqQJYkxDB9BDBjemQfVeosv0kBybibGK0zhkSGVaiAWdoEKxnHvhbrjMO1Jf4YlmzJy3LFja0v6PSeus42s64D+sdFQVJ+ZcYjI9V8Wii1xuya4inxLo=
+	t=1712911481; cv=none; b=kISmZKOCGWTdqBh8FIPQazboGMAn1sb6knyXfJt55ah20q6OmjzqMrS2EgHNekvnbfPxEds+WCAIicpv3977q6uD4g7PsNshVs6Gbhy04MrRCTflkjmwQqaQEPkTfJsR4mtmbS6YlqUhMapvILxlE30Of2wB5llmUMivG6eW7RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911482; c=relaxed/simple;
-	bh=6RO1mE0SljN5zB2ChRtne2Phm80D1UoEgDPQQrnkBvI=;
+	s=arc-20240116; t=1712911481; c=relaxed/simple;
+	bh=mCAvB0rO9lm/U91o/sD34CmBBvyvw1MORHao+rAUw9E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L8irY7zmECb/rcCyUW+piUFoXGb8pZt8IA7o0VIBy0EXRmGxiHB570G9j/pxhviwWTLk4A8UgRZfje6s2s5aCyHs1ZFyJm6cLTZ62CarN7DQHyvDqZEHx5d9L0CuweKrXz2min7Tcvpf5Q0ukygK5H3SJSPsHj9re72ZCRBR8X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35CA214BF;
-	Fri, 12 Apr 2024 01:45:10 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B34643F6C4;
-	Fri, 12 Apr 2024 01:44:38 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
+	 MIME-Version; b=d5hejFII1Uu9Z2HrwJQnv+mk1Qs/QNqr/ickkUpxkl2hkfOAocdVmw27agjZS2ze25sWPHXIkrOhhX6TGCX2N/8Abhujq3ZjvguCMXXcoucqLte9DekOiYFpsg87pYwcFYz4JIFDtqsGXZIE4WfXVz/BfrvBmmVmXAEfTgFbG6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=WbiNxpKg; arc=none smtp.client-ip=62.149.155.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="WbiNxpKg"
+Received: from engicam.com ([77.32.11.127])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id vCWKrIsVvwWj2vCWLr0hxG; Fri, 12 Apr 2024 10:44:29 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712911469; bh=mCAvB0rO9lm/U91o/sD34CmBBvyvw1MORHao+rAUw9E=;
+	h=From:To:Subject:Date:MIME-Version;
+	b=WbiNxpKgvikedTT6O3tvR4TQ2cxLMbT8Vto6PyJRht7WGd9f3Ubo9Qf8bVczhTBOE
+	 JxIpO2ch1RgHVShgoW7XZr/obqEHWDYX0wECpcLyPBb7dW4AIdTlp/kGcJoD5R9ELI
+	 QmNgzYNw2g+WrG2grcJhDilaUOdE7X5jxuoiim2ljgFp3i6LolBf/f943vqy+cF0Ue
+	 1gP9DnS5hdtx1F7ar0Bw4R6DiiCZuRXFkjGRju6zsETZnMko/t0ylcKAHY+cXiMMgo
+	 ZfWmTfiPCHFlGikX54cjgVOdLAnwXaoA0av+GFv4S6I/5c442rh4hffQvOswb6M6Gh
+	 hbuGntfZRAX4w==
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Mark Brown <broonie@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-	Steven Price <steven.price@arm.com>
-Subject: [PATCH v2 35/43] arm64: RME: Propagate number of breakpoints and watchpoints to userspace
-Date: Fri, 12 Apr 2024 09:43:01 +0100
-Message-Id: <20240412084309.1733783-36-steven.price@arm.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412084309.1733783-1-steven.price@arm.com>
-References: <20240412084056.1733704-1-steven.price@arm.com>
- <20240412084309.1733783-1-steven.price@arm.com>
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: [PATCH v4 1/2] regulator: dt-bindings: pca9450: add PMIC_RST_B warm reset property
+Date: Fri, 12 Apr 2024 10:44:27 +0200
+Message-Id: <20240412084428.400607-2-fabio.aiuto@engicam.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240412084428.400607-1-fabio.aiuto@engicam.com>
+References: <20240412084428.400607-1-fabio.aiuto@engicam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,80 +51,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfK4oHPsPdScFzaYXVXev1tdi4Txm6ETsUGH2jspVbqAutHrXEIWcUrjnGZ9ffT8sz70SQGyAJhqLj1JpS2icoNVbYd+jE0GQMAhMTewqK0tdlAFaWc4P
+ aSAA1Ufl4kz6ZD/yL1YyM+036tU2Adfcwmkb5y4mc1jDPKWQ5yPbDxqvn++pMVD65qNC+z+QDEMxboIHFcv1U1v9V6sr9ckSm1tadAs16zt1ogILT7M4HI84
+ eBXxgiTKjCBfmPXIDUgpYVNGs08tIKr0C/7Eb7+lEeeqfEdqPbzjt1pZEV0qQV0PAXQZb9yejU6C7YJ63h2aedMe6ejlYBpJUXfPkqE8vd56g6+DI01K2UUF
+ hZZ3tODALy3azWzjLCJBhKZ14Rq3AYuNIetp0he5MWieKgp8Ux6kcB88CsLtXNogBtsFgUBLjatCdXiZbKeGZDZKtd8+cb5tCRDqXw2+HHSI4pnSWUY=
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+The default configuration of the PMIC behavior makes the PMIC
+power cycle most regulators on PMIC_RST_B assertion. This power
+cycling causes the memory contents of OCRAM to be lost.
+Some systems needs some memory that survives reset and
+reboot, therefore add a property to mark the regulator as
+performing warm resets on PMIC_RST_B assertion.
 
-The RMM describes the maximum number of BPs/WPs available to the guest
-in the Feature Register 0. Propagate those numbers into ID_AA64DFR0_EL1,
-which is visible to userspace. A VMM needs this information in order to
-set up realm parameters.
-
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Steven Price <steven.price@arm.com>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Signed-off-by: Fabio Aiuto <fabio.aiuto@engicam.com>
 ---
- arch/arm64/include/asm/kvm_rme.h |  1 +
- arch/arm64/kvm/rme.c             | 22 ++++++++++++++++++++++
- arch/arm64/kvm/sys_regs.c        |  2 +-
- 3 files changed, 24 insertions(+), 1 deletion(-)
+ .../bindings/regulator/nxp,pca9450-regulator.yaml           | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-index 62d1fa82ac92..44aa95befc14 100644
---- a/arch/arm64/include/asm/kvm_rme.h
-+++ b/arch/arm64/include/asm/kvm_rme.h
-@@ -88,6 +88,7 @@ struct realm_rec {
+diff --git a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+index 849bfa50bdba..865b259dac37 100644
+--- a/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/nxp,pca9450-regulator.yaml
+@@ -93,6 +93,12 @@ properties:
+       When WDOG_B signal is asserted a warm reset will be done instead of cold
+       reset.
  
- int kvm_init_rme(void);
- u32 kvm_realm_ipa_limit(void);
-+u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val);
- 
- bool kvm_rme_supports_sve(void);
- 
-diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-index e60a1196a2fe..4edc8d98e1e6 100644
---- a/arch/arm64/kvm/rme.c
-+++ b/arch/arm64/kvm/rme.c
-@@ -271,6 +271,28 @@ u32 kvm_realm_ipa_limit(void)
- 	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
- }
- 
-+u64 kvm_realm_reset_id_aa64dfr0_el1(struct kvm_vcpu *vcpu, u64 val)
-+{
-+	u32 bps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_BPS);
-+	u32 wps = u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_NUM_WPS);
-+	u32 ctx_cmps;
++  nxp,pmic-rst-b-warm-reset:
++    type: boolean
++    description:
++      When PMIC_RST_B signal is asserted a warm reset will be done instead of cold
++      reset.
 +
-+	if (!kvm_is_realm(vcpu->kvm))
-+		return val;
-+
-+	/* Ensure CTX_CMPs is still valid */
-+	ctx_cmps = FIELD_GET(ID_AA64DFR0_EL1_CTX_CMPs, val) + 1;
-+	ctx_cmps = min(bps, ctx_cmps);
-+
-+	val &= ~(ID_AA64DFR0_EL1_BRPs_MASK | ID_AA64DFR0_EL1_WRPs_MASK |
-+		 ID_AA64DFR0_EL1_CTX_CMPs);
-+	val |= FIELD_PREP(ID_AA64DFR0_EL1_BRPs_MASK, bps - 1) |
-+	       FIELD_PREP(ID_AA64DFR0_EL1_WRPs_MASK, wps - 1) |
-+	       FIELD_PREP(ID_AA64DFR0_EL1_CTX_CMPs, ctx_cmps - 1);
-+
-+	return val;
-+}
-+
- static int get_start_level(struct realm *realm)
- {
- 	return 4 - stage2_pgtable_levels(realm->ia_bits);
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 60452c6519a4..cb3dc640a4a5 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1708,7 +1708,7 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
- 	/* Hide SPE from guests */
- 	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
- 
--	return val;
-+	return kvm_realm_reset_id_aa64dfr0_el1(vcpu, val);
- }
- 
- static int set_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+ required:
+   - compatible
+   - reg
 -- 
 2.34.1
 
