@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DE551C4C;
-	Fri, 12 Apr 2024 10:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2345524DC;
+	Fri, 12 Apr 2024 10:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712916207; cv=none; b=shXDECikBe862MrgqrEoHwZyVv+g/Zfg/+43MQRrxgs1Tcxd0aypHszvARzT8NDSoAuqO4usHtEPtrHxKTc239mvkZm69LL4qbsl7nOE014gsQ+ahQOYGtHr3cAYI6jHMj/f9E4GmEB4nSskcFVtlXmpKeLWUYsj1r2gGga3rfI=
+	t=1712916208; cv=none; b=iKHSyXQH+hZM9imqb+u9/OT4zReNjS4YX7mpEtSGH7g2ozBtel7rfMFm4pySZfg/et5K2b+HIttB0sPt1QvjkTyQ2bwaoh9+n/UO+5s+lvALZKSYQMDjn0co+gK/oiSNPSlZFHVL4UtNpA/oa/PFEbSL5mj2lg8NKDje9su2qiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712916207; c=relaxed/simple;
-	bh=GE3zewDFEJy62QBcsshA51A2GHr1MK+CmGMdKwDY9ew=;
+	s=arc-20240116; t=1712916208; c=relaxed/simple;
+	bh=bEl3kUTpvDa4VaEDle7B8um9qQie+8Rg3DQQlt/FmUo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=TdmxR39Vn09CwB1de5rmFqICKe4wFwpC5h3nxmilryS1T1v8Mtg4pwHKHrGThgRU8y13Zo1RzolTElz4ZBHlXa/KhgtIAzQAOZ1fOAxAVTC0NylYgcpvmM6LiysMwDQEHc6ONlqYxfOOi9Q7xT/9xjB+Us+MpxyPLc/Vw4an0Ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fiJIP4oF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m8XaeSpH; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jxoQGx7zO5ku2A81if30ulVfWX9U/U4848RBcRPiV+/5hoMdoGJQxyXGTI7ing5s7nPyL4+zwhgTPhXJoH2TszOkJjr+G6bMAjLnRMfZ4Efdm/opE5sLRvLlpObmnFRDk2CwZL/r/450sV8uAH2ZfZPYaO9blBocBe6w2pCMgPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mG/TtnUT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NOr7y53a; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fiJIP4oF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m8XaeSpH"
-Date: Fri, 12 Apr 2024 10:03:21 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mG/TtnUT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NOr7y53a"
+Date: Fri, 12 Apr 2024 10:03:23 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712916202;
+	s=2020; t=1712916204;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aXX4u4b55YoYWQNcUt9JRPqDtNAJ3+fmaYA8NC8A0CI=;
-	b=fiJIP4oFlhPHljGqD3623yYP5JeWPR8Sd2iBBSUw9ANwbC41GUCGYhi2UCRrBwu6+tucwl
-	dtyJyuE7wOBUHcEiMWNYYsNvv99vH/efRpYvoOQjJ7MRjHSx7AJZRGsmhvVS29X98qIKv1
-	vKPbsUrun8Y/7vJVstAd/gunbFlApdJwfZ3daI4Cm53PVtXvx6ZWJLkC52x3nWe6QFKGcg
-	D1WlcoGA/yrmn33x+frXp2FAfMMtJ/o3LdEmQxggxVNRFrAdeBeSyDplWn4e2SF0GnlsFu
-	oFq4+gPNsjyzaENFs9gsZLlvUoOGEVO/+UCVvgoBnDrKUFMFsGcF/9WaO1rDlw==
+	bh=eSJ6PCd5VkQ7nahH5WRJCH3XFdhG1eWcn/lOpn9ozUU=;
+	b=mG/TtnUTRfJybUn2YJemYZVP/a5w5GR3VhvZPwbLVvrw6VS0Yb+BV+kuxavO+a8qBhWq2s
+	UQWQ9vicw5GED8jketOiVDBgYmrNlqSw1iW2Zy91K3jzBbKRXb1Jzb/CSvZNsMBPyyJwFs
+	hzB3I4GYcfBJG3N4j479Zq9daq9R41tZPb3OMkjW1xbZ0in85tRrB0auWpa7EAmrwv/J3Y
+	Jg3FXCBJBHvLxhYeh2SiyQCBU+jYVRSNFshgvEeZLMFDbovG35Gg0MVYkVhfHd6qwx3t12
+	NtaPmgxZQbBhtq7U/VEetQ7+kMvSrnI6nsJPM6IPaOe+ySZFw4xSSdxcAywUEQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712916202;
+	s=2020e; t=1712916204;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aXX4u4b55YoYWQNcUt9JRPqDtNAJ3+fmaYA8NC8A0CI=;
-	b=m8XaeSpHmB91B5bmK20u2HKrMJEwJkFgr5XxVJdhzUAt//ompcalkQMZdWC/1kb1ScmCs3
-	796ILoqkwqmQYFDw==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+	bh=eSJ6PCd5VkQ7nahH5WRJCH3XFdhG1eWcn/lOpn9ozUU=;
+	b=NOr7y53atvqb6HGacNnpJxa4q7DMaORNh22mhuDJ5pmp2NswBaOpyBe0JBXxSU+zLyaETm
+	A1CsSCjOzqai1jAg==
+From: "tip-bot2 for Kyle Huey" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/bpf: Change the !CONFIG_BPF_SYSCALL stubs to
- static inlines
-Cc: Ingo Molnar <mingo@kernel.org>, Kyle Huey <me@kylehuey.com>,
+Subject: [tip: perf/core] perf/bpf: Allow a BPF program to suppress all sample
+ side effects
+Cc: Kyle Huey <khuey@kylehuey.com>, Ingo Molnar <mingo@kernel.org>,
+ Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <ZhkE9F4dyfR2dH2D@gmail.com>
-References: <ZhkE9F4dyfR2dH2D@gmail.com>
+In-Reply-To: <20240412015019.7060-7-khuey@kylehuey.com>
+References: <20240412015019.7060-7-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171291620188.10875.569943657110108283.tip-bot2@tip-bot2>
+Message-ID: <171291620346.10875.14979532789812701380.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,55 +69,52 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     93d3fde7fd19c2e2cde7220e7986f9a75e9c5680
-Gitweb:        https://git.kernel.org/tip/93d3fde7fd19c2e2cde7220e7986f9a75e9c5680
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Fri, 12 Apr 2024 11:55:00 +02:00
+Commit-ID:     c4fcc7d1f41532e878087c7c43f4cf247604d68b
+Gitweb:        https://git.kernel.org/tip/c4fcc7d1f41532e878087c7c43f4cf247604d68b
+Author:        Kyle Huey <me@kylehuey.com>
+AuthorDate:    Thu, 11 Apr 2024 18:50:18 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 12 Apr 2024 11:56:00 +02:00
+CommitterDate: Fri, 12 Apr 2024 11:49:50 +02:00
 
-perf/bpf: Change the !CONFIG_BPF_SYSCALL stubs to static inlines
+perf/bpf: Allow a BPF program to suppress all sample side effects
 
-Otherwise the compiler will be unhappy if they go unused,
-which they do on allnoconfigs.
+Returning zero from a BPF program attached to a perf event already
+suppresses any data output. Return early from __perf_event_overflow() in
+this case so it will also suppress event_limit accounting, SIGTRAP
+generation, and F_ASYNC signalling.
 
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Kyle Huey <me@kylehuey.com>
-Link: https://lore.kernel.org/r/ZhkE9F4dyfR2dH2D@gmail.com
+Acked-by: Song Liu <song@kernel.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/r/20240412015019.7060-7-khuey@kylehuey.com
 ---
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/events/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2212670..6708c11 100644
+index c6a6936..2212670 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -9638,21 +9638,21 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
- 	bpf_prog_put(prog);
- }
- #else
--static int bpf_overflow_handler(struct perf_event *event,
--				struct perf_sample_data *data,
--				struct pt_regs *regs)
-+static inline int bpf_overflow_handler(struct perf_event *event,
-+				       struct perf_sample_data *data,
-+				       struct pt_regs *regs)
- {
- 	return 1;
- }
+@@ -9677,6 +9677,9 @@ static int __perf_event_overflow(struct perf_event *event,
  
--static int perf_event_set_bpf_handler(struct perf_event *event,
--				      struct bpf_prog *prog,
--				      u64 bpf_cookie)
-+static inline int perf_event_set_bpf_handler(struct perf_event *event,
-+					     struct bpf_prog *prog,
-+					     u64 bpf_cookie)
- {
- 	return -EOPNOTSUPP;
- }
+ 	ret = __perf_event_account_interrupt(event, throttle);
  
--static void perf_event_free_bpf_handler(struct perf_event *event)
-+static inline void perf_event_free_bpf_handler(struct perf_event *event)
- {
- }
- #endif
++	if (event->prog && !bpf_overflow_handler(event, data, regs))
++		return ret;
++
+ 	/*
+ 	 * XXX event_limit might not quite work as expected on inherited
+ 	 * events
+@@ -9726,8 +9729,7 @@ static int __perf_event_overflow(struct perf_event *event,
+ 		irq_work_queue(&event->pending_irq);
+ 	}
+ 
+-	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
+-		READ_ONCE(event->overflow_handler)(event, data, regs);
++	READ_ONCE(event->overflow_handler)(event, data, regs);
+ 
+ 	if (*perf_event_fasync(event) && event->pending_kill) {
+ 		event->pending_wakeup = 1;
