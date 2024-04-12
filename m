@@ -1,97 +1,112 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D10814C582
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6566A14D431
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712941650; cv=none; b=qfRclhD+WPhW6TTx6qLVo3TwzG1dziv5vDUshlw8dfG4mQIAyKpJEc9A18V9OiCxpTctkyw9BvPR3O5l34MgX/fNjc8NfTsLqAG2jrC/LEwP7FGcitZQI/iM+Q7Zpqq90dkNvBiX+MGeLLwY0Mfu8GDOmQfbR+Mc1a4hT1sxjW8=
+	t=1712941657; cv=none; b=IS1pykVbykByu+dsbWPP6RHIkPxJpYVrlTA7RR+HUH08A9gey1Umz/W3gxZvs5lL5CSAChHWbo1A8DlIbHNQNXrb2RjspC9xazhChv+nu8uEl9MNgFlKyhs3eL0HuBVfjN6S/gecMq880S2LaR5I+VUKJE0cuaWb1/0PZRQvtCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712941650; c=relaxed/simple;
-	bh=5JFuYVePpmhoWdZk8WbeOoqlnSWSkoUYiXSyfRvyGWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ii7ELmMO6H5RwV8ZQYW66t8iJM0933uSE7mv1OQRG0gilmOzHuiFq3gljQalcCPSHmYbNR1YpLj1Fu8r6Pgz9RZIjF4ru0CJv5zq5WMugmb5hyrwPcsDNcN2AsCp/OVg8+0eYXGe9hQwHAMrYNMTQmv5mzahZ1lf77CM8VJ3dr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=TjDnn+YL; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1712941657; c=relaxed/simple;
+	bh=B04EjOgsZVPqyEh4DH0TEKubNhHXrgRXG0HP80hbpPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uWMORwkRYH2uRFLVhYyYRLO8AeL+IBNMfGrSFechGJ1zkbQJZCZkqdeHlRRmD93GQqrExXuV8wK+aJ4KoZB/sIXAv3FOmPO4eJkWeodW4AJqjddTVNlP52KJo29hJAtato29yFmO+9gsG+ZjYJ7kanASkI72j9JN4a1HWmjJ6Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b10B7Zi0; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="TjDnn+YL"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-434925427c6so5786431cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:07:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1712941648; x=1713546448; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ICZfIsGcQEVbd3Zt1qoYBnvko2GDh9Nz2dJVHbfGpSA=;
-        b=TjDnn+YLc4Pkh/akCRL4/SqjYG7P8QtAKysCpTbW8BKrCh58n6xjndCzTQrFbHWqZe
-         OVzj89ZGTc3+N2dTGLdSzwWPsZXQeznKMurGiBv4i/fgFNuMGFqSDVbmMObKeH7RRebc
-         NrjYo16o6FCAlwz2HOgVJoJKnRZQm3OZ5CqtE2uHNqEG64NJEzIi3SL+c2iW77RoUIwO
-         eKBkIUEv4B2BgQjStijlqQWZtcpbwpGDjMQeGwtQAO23uAcSsqnP6nYP0rPJbOuNkTvd
-         EIUwBn4o6Pz5hN/8RGiAUOtkcgfE/hLtdet7qZ/Vy5309XMhHtt2bnWVQ54xb9bQvrAU
-         PnqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712941648; x=1713546448;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ICZfIsGcQEVbd3Zt1qoYBnvko2GDh9Nz2dJVHbfGpSA=;
-        b=HgsUi9WD2gwYtlE6VRW457IdmimJdItWA3nlqzdL2zqsl2pAt5sPQczRHNqKWWXs/c
-         FPtc5WD0cxptxwuVfKoqMvaXqusimS8TANHJauLHpN0yKvkb6p2OgJzaojC3zj9KjlPb
-         vRA7782XKdhmoZDEKj0sX0MkV5mKMK6dCtwnbLttQ2xGYwP/qAwlYeqKaa2Thy3ObMk8
-         TKaa4imBikBM5KqB66cwum4WZ1rhy7VBC92NPM+Tkf+SzjNNCjWfKek4xz9+3eOtwtZj
-         e3oZSRkUMpPkvaGRVg/YXiOeYmoC6IOzArXrzejIzhkxzHe2LxtT/hp95Ui0ok4+cGWO
-         4mMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvRq2pw5M7SyDJopD2JxSAb//R1mSdc36rTilebyYGx7mRcBoCDJmtQrzCT7eXbsy0KRWbfnwchMNTZs5GW5A2oizkkV/fM1/zu8+4
-X-Gm-Message-State: AOJu0YyZGfVd4meDCe6b/7huSRlLecWb8oe7uWmq2APsSrOVvjxKJyQq
-	CJIljGaFhHNUVSRN3fuCogryubg8KMZBcZwzTr/Eu0xokKnu0QBmTCmMzQYwqEhbO4inLAWQzPh
-	QC37jPKeUx4if2iOPz5UvNjyXi7hT5iK9bM7POA==
-X-Google-Smtp-Source: AGHT+IEXzcV5Ah/di4pWjeRuzI8bp8L5qdlySBiHU1tn4/tN30fitecIDCoiEvXNx6whVxsKgO+qRvqVW4OxECf95F8=
-X-Received: by 2002:a05:622a:606:b0:434:89af:bd3b with SMTP id
- z6-20020a05622a060600b0043489afbd3bmr3794375qta.40.1712941648259; Fri, 12 Apr
- 2024 10:07:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b10B7Zi0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712941655; x=1744477655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=B04EjOgsZVPqyEh4DH0TEKubNhHXrgRXG0HP80hbpPM=;
+  b=b10B7Zi0lnKMtSy1RA3NDLHw5qy0Ro2cTRDPrw6o0VSlaIGrw0w4BAQS
+   jPdQj6EGPuo+IU5mAyHu9bsW6rwx5frf03ioygOtaQukmujVEhZIgSfid
+   yfi+luUfQ1ZGEXw5AqeG3cUpS1hBpnJy8aPEyen6IldC8YOqQtO9RFsJv
+   DGHWO7F7/YOVhtKKJG4oy73A4Mx1XJfNmLV3toAiqaVGghKzwbnQik9r3
+   Uoj7XVzN0wLl5iHCipNxd9rYMOAtBIMo3MUbhRhYAAwQdGTDwl88ncslo
+   tNcNc68Sr70Xxb85h8KY38z65cA3HbdXsF2enMdlXLeDZBBbeSsb/kykD
+   A==;
+X-CSE-ConnectionGUID: Rd8mZuETSky9+C9Yn7z5CQ==
+X-CSE-MsgGUID: MBIRj0M3SEiXo6L2IlDyoQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8958757"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="8958757"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:07:34 -0700
+X-CSE-ConnectionGUID: 1+gUySJsSrWAvD9uZENAsg==
+X-CSE-MsgGUID: 8FxrbthFQo6bvN8zu8QswA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="25976939"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:07:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rvKN8-00000003iHk-0Gx1;
+	Fri, 12 Apr 2024 20:07:30 +0300
+Date: Fri, 12 Apr 2024 20:07:29 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de, "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] driver core: Make dev_err_probe() silent for -ENOMEM
+Message-ID: <ZhlqUdywIur4dzgE@smile.fi.intel.com>
+References: <20240412164405.335657-2-u.kleine-koenig@pengutronix.de>
+ <ZhlmpPNbEMRye2wZ@smile.fi.intel.com>
+ <cl5fmton3n5ayzr7ondnw7lzjaxoppyqhnoervj2fn4et75ish@cyko4abxbslg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222173942.1481394-1-pasha.tatashin@soleen.com> <ZhkIhtTCWg6bgl1o@8bytes.org>
-In-Reply-To: <ZhkIhtTCWg6bgl1o@8bytes.org>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 12 Apr 2024 13:06:52 -0400
-Message-ID: <CA+CK2bCjXGTP7ie=rFtXrmRaWxn_6VmfZb5BXR13z9a3scfETg@mail.gmail.com>
-Subject: Re: [PATCH v5 00/11] IOMMU memory observability
-To: Joerg Roedel <joro@8bytes.org>
-Cc: akpm@linux-foundation.org, alim.akhtar@samsung.com, alyssa@rosenzweig.io, 
-	asahi@lists.linux.dev, baolu.lu@linux.intel.com, bhelgaas@google.com, 
-	cgroups@vger.kernel.org, corbet@lwn.net, david@redhat.com, 
-	dwmw2@infradead.org, hannes@cmpxchg.org, heiko@sntech.de, 
-	iommu@lists.linux.dev, jernej.skrabec@gmail.com, jonathanh@nvidia.com, 
-	krzysztof.kozlowski@linaro.org, linux-doc@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-rockchip@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-sunxi@lists.linux.dev, 
-	linux-tegra@vger.kernel.org, lizefan.x@bytedance.com, marcan@marcan.st, 
-	mhiramat@kernel.org, m.szyprowski@samsung.com, paulmck@kernel.org, 
-	rdunlap@infradead.org, robin.murphy@arm.com, samuel@sholland.org, 
-	suravee.suthikulpanit@amd.com, sven@svenpeter.dev, thierry.reding@gmail.com, 
-	tj@kernel.org, tomas.mudrunka@gmail.com, vdumpa@nvidia.com, wens@csie.org, 
-	will@kernel.org, yu-cheng.yu@intel.com, rientjes@google.com, 
-	bagasdotme@gmail.com, mkoutny@suse.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cl5fmton3n5ayzr7ondnw7lzjaxoppyqhnoervj2fn4et75ish@cyko4abxbslg>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-> Some problems with this:
->
->   1. I get DKIM failures when downloading this patch-set with b4, can
->      you please send them via a mailserver with working DKIM?
+On Fri, Apr 12, 2024 at 07:03:01PM +0200, Uwe Kleine-König wrote:
+> On Fri, Apr 12, 2024 at 07:51:48PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 12, 2024 at 06:44:05PM +0200, Uwe Kleine-König wrote:
+> > > For an out-of-memory error there should be no additional output. Adapt
+> > > dev_err_probe() to not emit the error message when err is -ENOMEM.
+> > > This simplifies handling errors that might among others be -ENOMEM.
 
-I was in the process of migrating from google domains to a different
-registrar, but I think now the issue is resolved. I will verify it.
+> > ...
+> > 
+> > 	BUILD_BUG_ON(err == -ENOMEM);
+> > 
+> > Done!
+> 
+> Well no, that doesn't do the trick. Consider for example device_add().
+> That function can return (at least) -EINVAL and -ENOMEM. To properly
+> ensure that the error handling is silent with the current
+> dev_err_probe(), we'd need to do:
+> 
+> 	ret = device_add(...);
+> 	if (ret) {
+> 		if (ret != -ENOMEM)
+> 			return dev_err_probe(...);
+> 		else
+> 			return ret;
+> 	}
+> 
+> With my suggested patch this can be reduced to:
+> 
+> 	ret = device_add(...);
+> 	if (ret)
+> 		return dev_err_probe(...);
 
->   2. They don't apply to v6.9-rc3. Please rebase to that version and
->      are-send.
+Fair enough, but these two should be combined.
+Mine is for the rejecting a dead code on the phase of the submission.
 
-I will.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks,
-Pasha
+
