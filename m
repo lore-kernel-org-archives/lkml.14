@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83708142E78;
-	Fri, 12 Apr 2024 18:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8AC14F136;
+	Fri, 12 Apr 2024 18:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946793; cv=none; b=EWejSM85wUsrZRy6edJ01yLFiXbba2xFPFg+Il0S6ERpEWKX7nm9xzyohJnKw4fLlcfPc71S/NDL6ZoYz45sNRciEp/bxiO4mHNokxLrw+sOdwgrcFr3jykyjgvMSwE2djk+OF1f5IyDUWUZwNP3OEyAM/Z8asF1raqfdCglZcQ=
+	t=1712946792; cv=none; b=Lkf/jDYSj3uym0+5TlB7zyiYi5fScVB7vkV4dAKmLWuOcj2QkN1n/Kwi8qfu67xoUibljASpVrmlHibXNZm/FAJ6qJxPvDQlwua69KfwG4fgfbBV7e0N8cmYoBUXXMutxcV6eUisNjBBdHVdG25cwpKGJCIynmSoPO5+pWx24g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946793; c=relaxed/simple;
-	bh=d46/j7SfBjlB5pOHNg/gyQVFI44DuFqnaghicJF9/+0=;
+	s=arc-20240116; t=1712946792; c=relaxed/simple;
+	bh=vaVisn2Hv+xkW0BEkChkfySYlnshZGIQoNtORS9lyKU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cfrmTcP6kK342u3EIYTamiBVTSuGKgSnXDLzvW1nf6dgazr09zN83GRlmo+WZK5TF1vq2Uurl9VwCA9M60yyOtt92aKEZQnSJIj9nqyoQVbt4IwE97P2V5efQo6LWHsbPVOfiggYc/oV/+leLcgUsbdKum26z3M1TKjYnerAeZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGRJdUmR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bIBBKKCBsFzE51RwIYS32RwT9Pw1fL4MqEoGDMY83Pu4GhbEr20IAoImrhmeRJ0CdETDoWBuAvSnxp9ZDyMfkikOuE508XQm8fWxr7o/Alnwjw7RweOZx9mGmgJAwe4V/PPc6Hrl8d2mgXrh3kbY2RdkepYLH+31JpdWH7YS4Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVoJ2eoK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGRJdUmR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 069A6C4AF0F;
-	Fri, 12 Apr 2024 18:33:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVoJ2eoK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01BFCC2BBFC;
+	Fri, 12 Apr 2024 18:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712946793;
-	bh=d46/j7SfBjlB5pOHNg/gyQVFI44DuFqnaghicJF9/+0=;
+	s=k20201202; t=1712946792;
+	bh=vaVisn2Hv+xkW0BEkChkfySYlnshZGIQoNtORS9lyKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hGRJdUmRz6JuH14PX2oW4J4iKBjLs5L9muwe1c2FZK29AehqdZ31TOhFYx5EhswF5
-	 BsY0I9tseGqOdZPk7PPwZ6IHEeff65pklUfyKU+Um97Wg0rMcBjnw+csgugB9hFBcY
-	 4/d/SdQtmJcKigKH8GNQD9+e2d2idRXzcZmISzH4e/EyyoMUwHyXBj1/laeRVFsKV3
-	 1HbkK+FZXUBTY/XfRuPyLDgkQ16V07C1ojJZOCJbjcLG8myUlu52tCHCET7deHfNgV
-	 FyCLTOs1z0FntzEseAYfggLgmvCfnQpNdVaaOlDYdKoJcUMMlLhdaQlkb3Ut6CaJVe
-	 rOHkpCkLIFXcA==
+	b=hVoJ2eoKqlPDIU5AGscdTPr6jQMwXYRf6BUQ8hk4g6Z9LR2dD7XjJzWXB4FAXJ5rq
+	 JPHZvlTy1iVsItaByVesEmels9hIQppxao7aF4gFp988sMWXPC6tCvWWLJmJfrNhuI
+	 Fo/NDXyQUjLZr6LO0dg8sgPyCHqrThbqv2MXHPWYE1bBtzPvudNJs14h/SFZV1SR8o
+	 ifKRTlztm9men99rMRxgZZ2eqCdwuQbvmjnAtoJBF/tGsoNnRzglr/2Z6K5yr03z8E
+	 DYQH4+6PqLnjtAGRkyCVBV/Z37eF0kTZVk6z73FKCWYomRikJCvR1ob8e871GXcyXD
+	 LWJbpSG/bqMJQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,11 +35,10 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 3/4] perf dwarf-aux: Check variable address range properly
-Date: Fri, 12 Apr 2024 11:33:09 -0700
-Message-ID: <20240412183310.2518474-4-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/4] perf annotate-data: Improve debug message with location info
+Date: Fri, 12 Apr 2024 11:33:07 -0700
+Message-ID: <20240412183310.2518474-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
 In-Reply-To: <20240412183310.2518474-1-namhyung@kernel.org>
 References: <20240412183310.2518474-1-namhyung@kernel.org>
@@ -51,83 +50,207 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In match_var_offset(), it just checked the end address of the variable
-with the given offset because it assumed the register holds a pointer
-to the data type and the offset starts from the base.
+To verify it found the correct variable, let's add the location
+expression to the debug message.
 
-But I found some cases that the stack pointer (rsp = reg7) register is
-used to pointer a stack variable while the frame base is maintained by a
-different register (rbp = reg6).  In that case, it cannot simply use the
-stack pointer as it cannot guarantee that it points to the frame base.
-So it needs to check the both boundaries of the variable location.
-
-Before:
+  $ perf --debug type-profile annotate --data-type
+  ...
   -----------------------------------------------------------
-  find data type for 0x7c(reg7) at tcp_getsockopt+0xb62
+  find data type for 0xaf0(reg15) at schedule+0xeb
+  CU for kernel/sched/core.c (die:0x1180523)
+  frame base: cfa=0 fbreg=6
+  found "rq" in scope=3/4 (die: 0x11b6a00) type_offset=0xaf0
+   variable location: reg15
+   type='struct rq' size=0xfc0 (die:0x11892e2)
+  -----------------------------------------------------------
+  find data type for 0x7bc(reg3) at tcp_get_info+0x62
   CU for net/ipv4/tcp.c (die:0x7b5f516)
   frame base: cfa=0 fbreg=6
-  no pointer or no type
-  check variable "tss" failed (die: 0x7b95801)
-   variable location: base reg7, offset=0x110
-   type='struct scm_timestamping_internal' size=0x30 (die:0x7b8c126)
-
-So the current code just checks register number for the non-PC and
-non-FB registers and assuming it has offset 0.  But this variable has
-offset 0x110 so it should not match to this.
-
-After:
+  offset: 1980 is bigger than size: 760
+  check variable "sk" failed (die: 0x7b92b2c)
+   variable location: reg3
+   type='struct sock' size=0x2f8 (die:0x7b63c3a)
   -----------------------------------------------------------
-  find data type for 0x7c(reg7) at tcp_getsockopt+0xb62
-  CU for net/ipv4/tcp.c (die:0x7b5f516)
-  frame base: cfa=0 fbreg=6
-  no pointer or no type
-  check variable "zc" failed (die: 0x7b9580a)
-   variable location: base=reg7, offset=0x40
-   type='struct tcp_zerocopy_receive' size=0x40 (die:7b947f4)
+  ...
 
-Now it find the correct variable "zc".  It was located at reg7 + 0x40
-and the size if 0x40 which means it should cover [0x40, 0x80).  And the
-access was for reg7 + 0x7c so it found the right one.  But it still
-failed to use the variable and it would be handled in the next patch.
+The first case is fine.  It looked up a data type in r15 with offset of
+0xaf0 at the schedule+0xeb.  It found CU die and the frame base info and
+the variable "rq" was found in the scope 3/4.  Its location is the r15
+register and the type size is 0xfc0 which includes 0xaf0.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+But the second case is not good.  It looked up a data type in rbx (reg3)
+with offset 0x7bc.  It found a CU and the frame base which is good so
+far.  And it also found a variable "sk" but the access offset is bigger
+than the type size (1980 vs. 760 or 0x7bc vs. 0x2f8).  The variable has
+the right location (reg3) but I need to figure out why it accesses
+beyond what it's supposed to.
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/util/annotate-data.c | 99 +++++++++++++++++++++++++++------
+ 1 file changed, 82 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index b361fd7ebd56..40cfbdfe2d75 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1372,6 +1372,9 @@ static bool match_var_offset(Dwarf_Die *die_mem, struct find_var_data *data,
- 		return true;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 1cd857400038..c6eb5b2cc4d5 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -46,6 +46,7 @@ static void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ {
+ 	struct strbuf sb;
+ 	char *str;
++	Dwarf_Word size = 0;
+ 
+ 	if (!debug_type_profile && verbose < 3)
+ 		return;
+@@ -72,13 +73,67 @@ static void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ 		break;
  	}
  
-+	if (addr_offset < addr_type)
-+		return false;
++	dwarf_aggregate_size(die, &size);
 +
- 	if (die_get_real_type(die_mem, &type_die) == NULL)
- 		return false;
+ 	strbuf_init(&sb, 32);
+ 	die_get_typename_from_type(die, &sb);
+ 	str = strbuf_detach(&sb, NULL);
+-	pr_info(" type=%s (die:%lx)\n", str, (long)dwarf_dieoffset(die));
++	pr_info(" type='%s' size=%#lx (die:%#lx)\n",
++		str, (long)size, (long)dwarf_dieoffset(die));
+ 	free(str);
+ }
  
-@@ -1446,7 +1449,6 @@ static int __die_find_var_reg_cb(Dwarf_Die *die_mem, void *arg)
++static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
++{
++	ptrdiff_t off = 0;
++	Dwarf_Attribute attr;
++	Dwarf_Addr base, start, end;
++	Dwarf_Op *ops;
++	size_t nops;
++
++	if (!debug_type_profile && verbose < 3)
++		return;
++
++	if (dwarf_attr(die, DW_AT_location, &attr) == NULL)
++		return;
++
++	while ((off = dwarf_getlocations(&attr, off, &base, &start, &end, &ops, &nops)) > 0) {
++		if (reg != DWARF_REG_PC && end < pc)
++			continue;
++		if (reg != DWARF_REG_PC && start > pc)
++			break;
++
++		pr_info(" variable location: ");
++		switch (ops->atom) {
++		case DW_OP_reg0 ...DW_OP_reg31:
++			pr_info("reg%d\n", ops->atom - DW_OP_reg0);
++			break;
++		case DW_OP_breg0 ...DW_OP_breg31:
++			pr_info("base=reg%d, offset=%#lx\n",
++				ops->atom - DW_OP_breg0, ops->number);
++			break;
++		case DW_OP_regx:
++			pr_info("reg%ld\n", ops->number);
++			break;
++		case DW_OP_bregx:
++			pr_info("base=reg%ld, offset=%#lx\n",
++				ops->number, ops->number2);
++			break;
++		case DW_OP_fbreg:
++			pr_info("use frame base, offset=%#lx\n", ops->number);
++			break;
++		case DW_OP_addr:
++			pr_info("address=%#lx\n", ops->number);
++			break;
++		default:
++			pr_info("unknown: code=%#x, number=%#lx\n",
++				ops->atom, ops->number);
++			break;
++		}
++		break;
++	}
++}
++
+ /*
+  * Type information in a register, valid when @ok is true.
+  * The @caller_saved registers are invalidated after a function call.
+@@ -1404,7 +1459,7 @@ static int find_data_type_block(struct data_loc_info *dloc, int reg,
+ 		found = find_data_type_insn(dloc, reg, &basic_blocks, var_types,
+ 					    cu_die, type_die);
+ 		if (found > 0) {
+-			pr_debug_dtp("found by insn track: %#x(reg%d) type-offset=%#x",
++			pr_debug_dtp("found by insn track: %#x(reg%d) type-offset=%#x\n",
+ 				     dloc->op->offset, reg, dloc->type_offset);
+ 			pr_debug_type_name(type_die, TSR_KIND_TYPE);
+ 			ret = 0;
+@@ -1440,16 +1495,16 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ 	char buf[64];
  
- 		/* Local variables accessed using frame base register */
- 		if (data->is_fbreg && ops->atom == DW_OP_fbreg &&
--		    data->offset >= (int)ops->number &&
- 		    check_allowed_ops(ops, nops) &&
- 		    match_var_offset(die_mem, data, data->offset, ops->number,
- 				     /*is_pointer=*/false))
-@@ -1537,9 +1539,6 @@ static int __die_find_var_addr_cb(Dwarf_Die *die_mem, void *arg)
- 		if (ops->atom != DW_OP_addr)
- 			continue;
+ 	if (dloc->op->multi_regs)
+-		snprintf(buf, sizeof(buf), " or reg%d", dloc->op->reg2);
++		snprintf(buf, sizeof(buf), "reg%d, reg%d", dloc->op->reg1, dloc->op->reg2);
+ 	else if (dloc->op->reg1 == DWARF_REG_PC)
+-		snprintf(buf, sizeof(buf), " (PC)");
++		snprintf(buf, sizeof(buf), "PC");
+ 	else
+-		buf[0] = '\0';
++		snprintf(buf, sizeof(buf), "reg%d", dloc->op->reg1);
  
--		if (data->addr < ops->number)
--			continue;
--
- 		if (check_allowed_ops(ops, nops) &&
- 		    match_var_offset(die_mem, data, data->addr, ops->number,
- 				     /*is_pointer=*/false))
+ 	pr_debug_dtp("-----------------------------------------------------------\n");
+-	pr_debug_dtp("%s [%"PRIx64"] for reg%d%s offset=%#x in %s\n",
+-		     __func__, dloc->ip - dloc->ms->sym->start,
+-		     dloc->op->reg1, buf, dloc->op->offset, dloc->ms->sym->name);
++	pr_debug_dtp("find data type for %#x(%s) at %s+%#"PRIx64"\n",
++		     dloc->op->offset, buf, dloc->ms->sym->name,
++		     dloc->ip - dloc->ms->sym->start);
+ 
+ 	/*
+ 	 * IP is a relative instruction address from the start of the map, as
+@@ -1468,14 +1523,15 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ 	reg = loc->reg1;
+ 	offset = loc->offset;
+ 
+-	pr_debug_dtp("CU die offset: %#lx\n", (long)dwarf_dieoffset(&cu_die));
++	pr_debug_dtp("CU for %s (die:%#lx)\n",
++		     dwarf_diename(&cu_die), (long)dwarf_dieoffset(&cu_die));
+ 
+ 	if (reg == DWARF_REG_PC) {
+ 		if (get_global_var_type(&cu_die, dloc, dloc->ip, dloc->var_addr,
+ 					&offset, type_die)) {
+ 			dloc->type_offset = offset;
+ 
+-			pr_debug_dtp("found PC-rel by addr=%#"PRIx64" offset=%#x",
++			pr_debug_dtp("found by addr=%#"PRIx64" type_offset=%#x\n",
+ 				     dloc->var_addr, offset);
+ 			pr_debug_type_name(type_die, TSR_KIND_TYPE);
+ 			ret = 0;
+@@ -1537,13 +1593,22 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+ 			pr_debug_dtp("found \"%s\" in scope=%d/%d (die: %#lx) ",
+ 				     dwarf_diename(&var_die), i+1, nr_scopes,
+ 				     (long)dwarf_dieoffset(&scopes[i]));
+-			if (reg == DWARF_REG_PC)
+-				pr_debug_dtp("%#x(PC) offset=%#x", loc->offset, offset);
+-			else if (reg == DWARF_REG_FB || is_fbreg)
+-				pr_debug_dtp("%#x(reg%d) stack fb_offset=%#x offset=%#x",
+-					     loc->offset, reg, fb_offset, offset);
+-			else
+-				pr_debug_dtp("%#x(reg%d)", loc->offset, reg);
++			if (reg == DWARF_REG_PC) {
++				pr_debug_dtp("addr=%#"PRIx64" type_offset=%#x\n",
++					     dloc->var_addr, offset);
++			} else if (reg == DWARF_REG_FB || is_fbreg) {
++				pr_debug_dtp("stack_offset=%#x type_offset=%#x\n",
++					     fb_offset, offset);
++			} else {
++				pr_debug_dtp("type_offset=%#x\n", offset);
++			}
++			pr_debug_location(&var_die, pc, reg);
++			pr_debug_type_name(type_die, TSR_KIND_TYPE);
++		} else {
++			pr_debug_dtp("check variable \"%s\" failed (die: %#lx)\n",
++				     dwarf_diename(&var_die),
++				     (long)dwarf_dieoffset(&var_die));
++			pr_debug_location(&var_die, pc, reg);
+ 			pr_debug_type_name(type_die, TSR_KIND_TYPE);
+ 		}
+ 		dloc->type_offset = offset;
 -- 
 2.44.0.683.g7961c838ac-goog
 
