@@ -1,212 +1,170 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638B717BA9
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712886658; cv=none; b=OV/U85f53ayn23Oi3cnAw8nBq97ce5ulFqID+d5t4fzyr0culpYgTDzwYm/sW5x3dZ/3mK4whp+fmGGlsp0zGCGzzCw/u9RegTScwdu08XGf+AV83qcxWu2Jrad4aZugshoBiaL85eyTEgVwdpUZ96a215X2wdY8m8U/oyXW31o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CE1179BE;
+	Fri, 12 Apr 2024 01:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712886658; cv=fail; b=kMa3qwgRsIRhRvJl9jZ1iniQjAmqisKzW21EGYXPGQZ9HRrIVvIwryhBXQrKkjlQhVWmiDMAV6tO8Ma03cs3MrNF8jgwMgpfbN4xQotYFiZif9hreS2fuaJYOKHhigiJ9fUi/t0eETRd4qOt44IwuF/kOJmRgiuw58Z+p//KJtU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712886658; c=relaxed/simple;
-	bh=NRmEZmEzOcudL2cLJi5SCwBCdAXkrrS/5QKylKnvPRI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NgVYg+3hggVJq2QKmN5YpkHdwnGIsWjSgKLvOYSrva0NYE5tSrfxkBy7R4gmCAr2JTH3fFzZubjR3PPPGdfLt+mCPmnoI1gLEb8kpd6xDx24diKA+q4V8abNhbj2xKPP1nsSOj+oS9CfcsDdKd6TLIwqvSD+EZzWpmc6pOqQcNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=Xn8JkP7N; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	bh=e6yTunzxvyH2+MPu5cwp+eg9LCMCEcKXActIBGslpeQ=;
+	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
+	 Content-Type:MIME-Version; b=bHmy89dorNoeHQbkG5pQ7xN1wZ/t5EOdI2EkFgR9K6ZpDuCz+dl+9YxO20kUpJq3Kdm4DRR9I4tAFrDWlGDiA4JEtAmwJIRD0VOJ+eyxQkJ98Emf8z5y2Njy0pvvOfnMp0uYwPLRx5g0DYbDULoqVv1pIP5tCmEbJJ0y2nIeKvM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=DTjsKPq0; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kEUAe/4H; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="Xn8JkP7N"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78d57bd577dso33818285a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:50:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DTjsKPq0";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kEUAe/4H"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43BNYK00008677;
+	Fri, 12 Apr 2024 01:50:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : in-reply-to : message-id : references : date : content-type :
+ mime-version; s=corp-2023-11-20;
+ bh=t/nicHX16iYVR7FAfQ0/9KnevRSOmnlNRtHK66XUuF8=;
+ b=DTjsKPq0HbaJ7x07QM54PMFs1Wh+HV1t9pMmHjbkZmk8kc23VbV7RxrgHdLuJZ+YHFcn
+ /piKSXN87wGFOxkjWECpNeSZoQM4HZ8fyuwGo3g0Fjropg9qNauBb1Qm4ygh7esrGmOr
+ IG2sL3uQGup77z5OvmklEY4meAMr8ooVcyTv7kIHLYozxuZdj9hmHWRAebryB0qoaAGz
+ UQgtr2Wo/tdqP1b4tzPuM+ifhx7UFFzATSfF63t1mCSzODfXAx6PlS2zoI2HnC1FHOxZ
+ PK9rst/+R0qBcRhw9hh3Sxs7aeMk6trl/6srYCS1lmj5a5kdNi2Jmi+dScky+N+TQo7v vA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xawactvbm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Apr 2024 01:50:37 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43BMwxR9032343;
+	Fri, 12 Apr 2024 01:50:36 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xavuaynq4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Apr 2024 01:50:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NuS6WehDFRpstLEzo6H2pJCJ40rCrINCDrJVW8mMKNUEVHYQNK8zDVhI5xdsVLf16wW4m99Sm9TyOqFU0NVKJqj9teKmticegrn77n6d7fXqz3iVlIIIzfBYynog23UvPDmpsKH8I6i4Db+RmeluXr8t13HQd0uCGzvlTyiDFSJWZZunXQm87TvX8x9/ax5Cz5P0DAYMgSzWInOVC+B4Wadp7rfn1vY0Wl8C8I3h5McDpmH5vzxBYGEHJ8JZwO0eZ4EHapF3FqpJs3NSJlpHj7w3CeLeDutq2GbUXDZP88VsPOHn479Riwve4Id1tKI39Cbsii451y5nES4KdxRBww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t/nicHX16iYVR7FAfQ0/9KnevRSOmnlNRtHK66XUuF8=;
+ b=ZJbY7CoeJ8qBCXFYvt3T7CbUlpu2t9pwQ6x78hWU+SH8u3nXNZ8Ikw4c5TK3Acp2X39LLKQHI6kA8h6hz80hpbT8iGeqi4fVU4Pa9m/zP1J/v3UEyUb3TlKmMnNpjQGFau/jD/0Q/sfrwRVj00Bo9MsWsoj7GHvVSMEa1bPEDvEyWTYqyQer41iPAMGLyGZ2s8sORtMoBEdHLvqMaqtwJAQIREpaWmizV7/KV6rXOj/Q4eY/DDxa48nyDfpxB2QbR7e0E/m322lbRswqTvI54/7o3jE0WO+LdtQctWsaDwWy2GeedcByc8wf/off6jPr36FqIm2QKux/HUTlkFmeZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1712886655; x=1713491455; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XmAdJT3ZUCPeWfD1wo8jRuZywHZwwpve3RZWOW9haf0=;
-        b=Xn8JkP7NU04LMLIgfilXIt3KHG4T6B1Vtz1uXM2qEKoiTj8FPRP5gA63Z4JLuoTKPa
-         BUCWI7e4/gN7/ilOtU16JGX26IzFpvJhhRBiifpadbzRHLLNNWEz77cpp/tY5gns7cFx
-         8f2/jiQ7kCpX4O9YskqqC9JsIQclJSMMziIFEKlzvOq4Dj33AT0moOJSK9wzjhpDcYoV
-         2CGc8CYJNxGvgbZZifH8HPnX0bJnIyQRxFvt6+mW+opRh3QdiRdXr6+3MlH8+Lc+0ALI
-         OYfgCe3oNsJ1PLp5eqiTM2Ehbs4QEtt4dwhtjWozsOXZ/Ej0ZcrY8tkoNTYEJ9jpDfXF
-         Cpkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712886655; x=1713491455;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XmAdJT3ZUCPeWfD1wo8jRuZywHZwwpve3RZWOW9haf0=;
-        b=bPdYgsyoZCZfbskgptmxS+JxP7Wi1U/46l2MHHSAVAiPIcpjDc2oe6KaSmyjXGk6Bw
-         SF7QBEfS27bQKtCn+t2m1EcZ3fPUlkG7wBBY1nc5MOWkU1fEhD73j3at4RIoXMO5Kdy1
-         d6frLWs3lhVKT4xP2gW926NBffWopOdFvgA1OYqVw5HW/pr8YOnI1UjfJtpzL51aZH5D
-         Q+E2yCuWHuN3N8a227sKEBXcopDH/Q4mL+ZEKSRNpLUC3sZSBhA6OQSyc7Oi5aQcS9f3
-         Zct9lt3c3kgjM47AtLSf2L6lbXF7u1S5uoHQPDTEvNbGO28rk476BrsgqtjsY4DhvO4O
-         JL1A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8j1DzC5w4U+oQ0I5jP5Q7ncv4du5Rp+LXOcH1u3aCVshB2p+I3pfyj7kI1RR2tDEuH2phvRg1Dt+e0XtBSdRp1Kx5vUj8Q8YVHOca
-X-Gm-Message-State: AOJu0Yw4C1alf79cKwanDdm/JA0zdzQyfcMVe0JhGIeHrL+Yuig/RX7s
-	MrOJ9eStTdV7M2D++4tFEi5DQ94PP6oInR0T72lc+Uu97MLqCOe8tMFc91h6kg==
-X-Google-Smtp-Source: AGHT+IH1CdfzeVz3pZajhCl9CVe8VCWrOdYFKQJn9dqM+zf6JXUpBa7+69QfvqWLEhWCHiBE2XF4sw==
-X-Received: by 2002:a05:620a:2211:b0:78d:68d6:c1e9 with SMTP id m17-20020a05620a221100b0078d68d6c1e9mr1314228qkh.47.1712886655388;
-        Thu, 11 Apr 2024 18:50:55 -0700 (PDT)
-Received: from ip-172-31-44-15.us-east-2.compute.internal (ec2-52-15-100-147.us-east-2.compute.amazonaws.com. [52.15.100.147])
-        by smtp.googlemail.com with ESMTPSA id f10-20020a05620a15aa00b0078d76c1178esm1756677qkk.119.2024.04.11.18.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 18:50:55 -0700 (PDT)
-From: Kyle Huey <me@kylehuey.com>
-X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
-To: Kyle Huey <khuey@kylehuey.com>,
-	linux-kernel@vger.kernel.org,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Marco Elver <elver@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Robert O'Callahan <robert@ocallahan.org>,
-	bpf@vger.kernel.org,
-	Will Deacon <will@kernel.org>,
-	Song Liu <song@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 5/7] perf/bpf: Remove unneeded uses_default_overflow_handler()
-Date: Thu, 11 Apr 2024 18:50:17 -0700
-Message-Id: <20240412015019.7060-6-khuey@kylehuey.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240412015019.7060-1-khuey@kylehuey.com>
-References: <20240412015019.7060-1-khuey@kylehuey.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t/nicHX16iYVR7FAfQ0/9KnevRSOmnlNRtHK66XUuF8=;
+ b=kEUAe/4HyhYFxCOiQ39Pigz2R59vPJzZfo/kZjHk+UBozLqA8iMJ3lpLbp2Vn77/Dk6wC21eyrBDKEzhpfx0mP+DjAmgDufoo6eH/febuPx/bQgkzD5Xmdzxmbp2pEbxZBNhqeHKoIHl0lyCacAmRKR7QkDJVw704SDd+TkuHBg=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by SA2PR10MB4667.namprd10.prod.outlook.com (2603:10b6:806:111::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Fri, 12 Apr
+ 2024 01:50:34 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::7856:8db7:c1f6:fc59]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::7856:8db7:c1f6:fc59%4]) with mapi id 15.20.7409.042; Fri, 12 Apr 2024
+ 01:50:34 +0000
+To: Avri Altman <avri.altman@wdc.com>
+Cc: "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen"
+ <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Bart Van Assche <bvanassche@acm.org>, Bean Huo <beanhuo@micron.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] scsi: ufs: Remove support for old UFSHCI versions
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+In-Reply-To: <20240410183720.908-2-avri.altman@wdc.com> (Avri Altman's message
+	of "Wed, 10 Apr 2024 21:37:19 +0300")
+Organization: Oracle Corporation
+Message-ID: <yq17ch3l57o.fsf@ca-mkp.ca.oracle.com>
+References: <20240410183720.908-1-avri.altman@wdc.com>
+	<20240410183720.908-2-avri.altman@wdc.com>
+Date: Thu, 11 Apr 2024 21:50:32 -0400
+Content-Type: text/plain
+X-ClientProxiedBy: PH1PEPF000132F3.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:518:1::38) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SA2PR10MB4667:EE_
+X-MS-Office365-Filtering-Correlation-Id: 56ab94fb-d13e-492e-0aca-08dc5a92f137
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	8notSr+A7W8IBcYWba9IZK4G/WjUdT745+7PAeee3jjWJuYFNuSrC8rs19DnMV/mw55D7x4pG0Z46CCHYx1sS8Xd8mDYF12jVWSyap7iWmpBWThbeXHTS0PIpwwqs/IF4f2ba6QntxgIHV2/4Wi80jIegezcnHib1UMdRxercECmnAFUTWoJ4ekyLMsqsmg204+EsGKKg8BWugCn6NUlRoh69+88spTGOY4A6d22O+88VfByBxxOwCDouR109fVM1aiG/hbcIfsq7Gwc1JDQNRA2kI5wfN1xRM7OEUt3H7Qev9Q5GBioUqpoWruvZgt3tP0hZlCsx5qtkmYDelL+3MMz68GVPa5zO7R/EDrtTmoXRQg4LMINI2R6CR7hZNKYcDXil1sOWUwonyx4Acu55byI9xA+k2mOI6X+WeOpUPJScXiSGJrH2WGSTFwAvv6F5J3OC5OUuVwtJ/zcKJ3s7g64TwkACUoFrL+VlDW/pR7jDCTJKXp+Fsu5+sLkLZHR++DV7HhxabqJgfQm24RJAFOrGJnCR+itSSn+JRKE5FQ7tNx4szf6n3PNh65lu7VYxVUymaNaiZ5oUXFn2YJ2kZ/9uBSjo4VuBn5hH8B/j4TGZNARyS8KpFwgauzHuTim2EQGSo6q4YJpt9/14DfltgQ0t1Gwwiroy+Qa3o96lWY=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?nKx798KbS2OlNI2UPs0LzNuPCk7Lw6Pcic7w3pOXyFRpNtNGF6UzRboL0o7F?=
+ =?us-ascii?Q?vxMlm5TKjnFAsFffmXksxxdT1s8zPpBdx/F44DvoVs7kuDuiJokcIeV6jz3a?=
+ =?us-ascii?Q?RkUpuEAbQ4rP+dKZToIfPmS1N1PcsQAg8DbmY1uu8G//XEpTOBJnMp3rmIz7?=
+ =?us-ascii?Q?quPiyySfoH50t3RfqO9CoCfyvzMU/gka+gjOVS+svjxwtzX1gvh5RNKif+Qx?=
+ =?us-ascii?Q?HoT7f2gESEXCkju2nrbcnFk2kAqi5R6Hds5CyYkio8W81CrDEJcJwkmwlIz/?=
+ =?us-ascii?Q?fGF15Wd+VDOPDfw8NNanPdxd60IJ2Ynh2RVvaxQTiZKZMs/IjFHaSwkvE7kh?=
+ =?us-ascii?Q?Y+fWeeQ8AXVwUW4Ca+uy+1Tp5VG0UKpcXSW5tsyfbq8NNYX7NH3/CjXBCSuq?=
+ =?us-ascii?Q?hXaWSmiT+XlCR0F/x+KsDDCbkMBc3PcEQBEidocnsW0610U/s8HrWiQrsBJY?=
+ =?us-ascii?Q?3uxShWKvuSuoZ2tzCH1GtZLp5ofRPk3G75xnk5jAL03wVuJ6xpUWafYSehNI?=
+ =?us-ascii?Q?lcSvpxzGSVnaNGcU7B0DbyV9uWgPg7x5JqYaKh93oXfGyC7HDV/saPYXbpK7?=
+ =?us-ascii?Q?yblJ2csPS9fszRaD/AFD7iQP7D1YVAXEdixwND4StkqpZFLD6WO8ohrRAF6C?=
+ =?us-ascii?Q?y0M+CD+aclnv4mcORzPSH1siVDhlXsGBnoE8pURyRhAm7VBMr0tXBBZ0QjX0?=
+ =?us-ascii?Q?AQX+FNKJUJa/1BCoZWbkKM4qpKhQqZrx2HeLA3LAQwVncMOkuo/vW/ARIhQd?=
+ =?us-ascii?Q?3KwR9dVPyWOcz+eNa0vbr1qRMvbdPxijXrPfAYfl6T+fNc58aweUFE8DMuvX?=
+ =?us-ascii?Q?E1J/ub5hQiP3d8hbS7B3/YUs4Gf6eBJ4kpnYxShf6goYUBTWyvmxQ974dras?=
+ =?us-ascii?Q?xwYuwP2FjwOxxgo5PhtI9mS6PmPmVxAAWe1TxJsF0sDckqU2GNUoKvQBkiCS?=
+ =?us-ascii?Q?atpIglR2Qe2kpL88WdJJCjCB4CUVM32mxRt54LQxKEQzydp0vtv/OhFrWbYU?=
+ =?us-ascii?Q?6IGmcTfc9ddd7ogbeKklc/nSQRABuLzUexA8wWo3Mufx5a+rvIcDrp1LBY1H?=
+ =?us-ascii?Q?g1SVLITFc0Zs8p/x6yhiKsbaUVzCxgeqYNZ25DV6KhE51vg+arU5hODvsSZM?=
+ =?us-ascii?Q?W/ItT+nAiMucnJTpXKH1bt3Xl8hBf+bgr8h1B9QbN1S7EtpLQzODw/MFqhnU?=
+ =?us-ascii?Q?DoPl9pNNzq/ITY86TmUjR+eSYfG9bD0tXUsBb5yxxX+qZJjugLHTMkNF+JCM?=
+ =?us-ascii?Q?D6UH+o1qWCZzi4l6b4oU4dXRtOkAgcHhOcnxSMsqNlJRrT32fzyCCF0ZtfkA?=
+ =?us-ascii?Q?k34sQ1e9/xxvLqeph6RTWLTxcsrIyxw9qYK05B31iwbndUirGtvhGr9dP+Tr?=
+ =?us-ascii?Q?F2W6Z9fhZcZorXa9K//r1WxOIiMQ1b3nrjgH6PnBGdeji+KMOzadAJDJWtJT?=
+ =?us-ascii?Q?rxC1LD9kobPSR/GwZz8HAZp7/YhQeUJfdBTw87gC4J7+l9M1nYqfg8FUDqq7?=
+ =?us-ascii?Q?N/Uy2WKAcFfUKLuBPvxf3TDnWFUFxSERmioQIwmbHqAN1bOU1uBxtNO9VuFC?=
+ =?us-ascii?Q?pgt2NOhBJYXi7aRK44wIINGvK+GbweLpcuMoxrZGCVxa/Agu2BLCSzTPGCBY?=
+ =?us-ascii?Q?9Q=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	di3P0oO7SWSguEulfZi/r1GBDYQ0hKHBMevY8VcPa8sC/VlF6V63G9W5h7jhRnqmSl4TS4hABbxk4ZmBvckEp/Jw1QOyee72kEyGtpW1OuMk/kGjYMD/tYpUiMWzXjzzjrI5YwIUu2Rvf9ioG3v8yNhTrE6TMen0Oyj+DxLB+6Z3SDol9ADugCW3yVYGlSuh0kTbGqoQQwl2e+ktcevi1D19Laly/CrnUu70g6KAheR5cvQq9uDckY2AC9wq/sT35TOOH1ZFlBfJ8GDaB9ISwVEoHtZxizZaBvR6FCLuFTrajRSp4iY/wAkm87iWuAVPgtEG9QStVvBRhDqj9LMuHvr/vCek9eBkYQAJMGb90KFYuhzdJl/VSKMQ6LnDyqlZPheGwZhWoOlrSrFOlikmlGlKEGwa/6cUSDNkfNoqdTGMArZIiGEqjNYVnYrzD8/XpbIYD9A5MWOi6Dl+NL+ektruPbMcq+PvGo363PzkAwbuoZc5Glo5j1V0NMr3lIn5j8iOuKUziHc6z/wobgYK0kBjxV5RaHtewRtr3EzEmPaWxbYAxYxoKJ/0xuYy4Fk3oryqnqd5wsapYr25fU9zeO+pSDxCWRcCRs1s/lLuIYw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56ab94fb-d13e-492e-0aca-08dc5a92f137
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 01:50:34.0110
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: scZ9cDpYoOcc+96OvIQIvwvw44BlbF547CSyhkWS52HqFuL9YEMKh5/yOc6Ak1uYNNq2sQhClkKGlDswL1NrE4UjBGn0j3GP76TnfBO+GO0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4667
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-11_14,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=999 mlxscore=0 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2404120012
+X-Proofpoint-GUID: dfJm1ujEJQ0czfL-9MSB80u_gVRHW_y7
+X-Proofpoint-ORIG-GUID: dfJm1ujEJQ0czfL-9MSB80u_gVRHW_y7
 
-Now that struct perf_event's orig_overflow_handler is gone, there's no need
-for the functions and macros to support looking past overflow_handler to
-orig_overflow_handler.
 
-This patch is solely a refactoring and results in no behavior change.
+Avri,
 
-Signed-off-by: Kyle Huey <khuey@kylehuey.com>
-Acked-by: Will Deacon <will@kernel.org>
-Acked-by: Song Liu <song@kernel.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
----
- arch/arm/kernel/hw_breakpoint.c   |  8 ++++----
- arch/arm64/kernel/hw_breakpoint.c |  4 ++--
- include/linux/perf_event.h        | 17 +++--------------
- 3 files changed, 9 insertions(+), 20 deletions(-)
+> UFS spec version 2.1 was published more than 10 years ago. It is
+> vanishingly unlikely that even there are out there platforms that uses
+> earlier host controllers, let alone that those ancient platforms will
+> ever run a V6.10 kernel.  To be extra cautious, leave out removal of
+> UFSHCI 2.0 support from this patch, and just remove support of host
+> controllers prior to UFS2.0.
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index dc0fb7a81371..054e9199f30d 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -626,7 +626,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address &= ~alignment_mask;
- 	hw->ctrl.len <<= offset;
- 
--	if (uses_default_overflow_handler(bp)) {
-+	if (is_default_overflow_handler(bp)) {
- 		/*
- 		 * Mismatch breakpoints are required for single-stepping
- 		 * breakpoints.
-@@ -798,7 +798,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		 * Otherwise, insert a temporary mismatch breakpoint so that
- 		 * we can single-step over the watchpoint trigger.
- 		 */
--		if (!uses_default_overflow_handler(wp))
-+		if (!is_default_overflow_handler(wp))
- 			continue;
- step:
- 		enable_single_step(wp, instruction_pointer(regs));
-@@ -811,7 +811,7 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
- 		info->trigger = addr;
- 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
- 		perf_bp_event(wp, regs);
--		if (uses_default_overflow_handler(wp))
-+		if (is_default_overflow_handler(wp))
- 			enable_single_step(wp, instruction_pointer(regs));
- 	}
- 
-@@ -886,7 +886,7 @@ static void breakpoint_handler(unsigned long unknown, struct pt_regs *regs)
- 			info->trigger = addr;
- 			pr_debug("breakpoint fired: address = 0x%x\n", addr);
- 			perf_bp_event(bp, regs);
--			if (uses_default_overflow_handler(bp))
-+			if (is_default_overflow_handler(bp))
- 				enable_single_step(bp, addr);
- 			goto unlock;
- 		}
-diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-index 2f5755192c2b..722ac45f9f7b 100644
---- a/arch/arm64/kernel/hw_breakpoint.c
-+++ b/arch/arm64/kernel/hw_breakpoint.c
-@@ -655,7 +655,7 @@ static int breakpoint_handler(unsigned long unused, unsigned long esr,
- 		perf_bp_event(bp, regs);
- 
- 		/* Do we need to handle the stepping? */
--		if (uses_default_overflow_handler(bp))
-+		if (is_default_overflow_handler(bp))
- 			step = 1;
- unlock:
- 		rcu_read_unlock();
-@@ -734,7 +734,7 @@ static u64 get_distance_from_watchpoint(unsigned long addr, u64 val,
- static int watchpoint_report(struct perf_event *wp, unsigned long addr,
- 			     struct pt_regs *regs)
- {
--	int step = uses_default_overflow_handler(wp);
-+	int step = is_default_overflow_handler(wp);
- 	struct arch_hw_breakpoint *info = counter_arch_bp(wp);
- 
- 	info->trigger = addr;
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 65ad1294218f..13a2b05cc431 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1339,8 +1339,10 @@ extern int perf_event_output(struct perf_event *event,
- 			     struct pt_regs *regs);
- 
- static inline bool
--__is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
-+is_default_overflow_handler(struct perf_event *event)
- {
-+	perf_overflow_handler_t overflow_handler = event->overflow_handler;
-+
- 	if (likely(overflow_handler == perf_event_output_forward))
- 		return true;
- 	if (unlikely(overflow_handler == perf_event_output_backward))
-@@ -1348,19 +1350,6 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- 	return false;
- }
- 
--#define is_default_overflow_handler(event) \
--	__is_default_overflow_handler((event)->overflow_handler)
--
--#ifdef CONFIG_BPF_SYSCALL
--static inline bool uses_default_overflow_handler(struct perf_event *event)
--{
--	return is_default_overflow_handler(event);
--}
--#else
--#define uses_default_overflow_handler(event) \
--	is_default_overflow_handler(event)
--#endif
--
- extern void
- perf_event_header__init_id(struct perf_event_header *header,
- 			   struct perf_sample_data *data,
+Applied to 6.10/scsi-staging, thanks!
+
 -- 
-2.34.1
-
+Martin K. Petersen	Oracle Linux Engineering
