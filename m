@@ -1,62 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865475102F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135A11C6B6
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911773; cv=none; b=MT/omeOO89TIGSMikU4U4LO38btaD7MNs5fJKET0sVqsTpw+m7s08/FV4pKN0pR8/Mf43IUJuW/9o+fnb6tLVfVDr6ov4N2LMtfmFL2LVf7UhPfhSi71zFfPGWYLGokef46Ls5dZY0GOft5YkLXHu0OhpjTSFy6aLjv5FOYxofE=
+	t=1712911827; cv=none; b=Di181ERbJKcU24oxnkx09oQJZ03FlvC0z5MKocVorDmHZSwkY+5kVsKG+t2MrvFkm57DaEdLW4eK2RMhK+MDP6TbSHzQynVH13H1yOPgBS2eSvgLvFKW9xzELTJawl15Z4D+Sc9zBpHvRYZV3ElQ4NSnQ0HYoD2VB527VOD3uM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911773; c=relaxed/simple;
-	bh=vckyitQ4Hj++2tnyft/GkS7Q8CWxgJuWmJ4pH7dgGNc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DqpHNEycoo8wuGhQqQWPw3FZmyZ8m3NmJyNViNDQHROuGIeGMyCb3VhAi6UE7kDQP5J8RsZKAicNrP6C0sfGbzjCwkrkouynkjxHU2ktRexLzqN91ISbJdBzRMEQdp/ZCuDG/UJnj7dkeUfgx3n9kXUyoKl0I7ZrvyRxXscTEM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hob7zJgv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712911827; c=relaxed/simple;
+	bh=bf4dIkV9LetyoNL/ouarPVJQ/zgpxdgdmJYWy/jU+ko=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EIzKrz61Z6ScmrT6yZprAwFEKPtMOVb29sE+CMAB2lwvgt5SAzlaj4SXZDfKGCZDCuvPt/g+JuiKJpMrcLR4y8tnf4uBMqN/apGh6XY5YtCjjnO+VfKPKMvUiVXaakKgNTG8ta8UYnRdXFDun6ngV9vqh9gMRF3okn0VQDdXp7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gjOxXuCj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hob7zJgv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3921DC113CD;
-	Fri, 12 Apr 2024 08:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712911771;
-	bh=vckyitQ4Hj++2tnyft/GkS7Q8CWxgJuWmJ4pH7dgGNc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=hob7zJgvmG/aT8tLR/PIGmH2u33sH4Lmw6vd0Xo+oPBiJEzlS7wxmLNrYYU7xNCjo
-	 d9/Z7oXt/N5bNbV/OHm/58nutoEqpoQQU734VHbOTb6rsOCRqBCGNwxtou9Ocj9dj+
-	 CK5+Rh/H3xzbua3zVlB7n8TicirgoE8WDa3aop+hQ0MWV6LkuNie4GS7uFLDFv52Fy
-	 gf0qEnagXQIYRt1yBkF5LPZJxhcSm4kjU8+XJEQLSjw+aT0HFAGu7hwLZqMQ8c+ket
-	 ocayXJj5RMPmq3lnohXrq9nM+U+GutpTrhbJwnZbfM1CXSnGgh2n+QQjRz6KccWlsM
-	 9Lj99653kw5gw==
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>, 
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <ZhjOj_4AUgC4Iwh_@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
-References: <ZhjOj_4AUgC4Iwh_@drtxq0yyyyyyyyyyyyyby-3.rev.dnainternet.fi>
-Subject: Re: (subset) [PATCH] mfd: bd71828: Remove commented code lines
-Message-Id: <171291176994.2961423.7661997536361021464.b4-ty@kernel.org>
-Date: Fri, 12 Apr 2024 09:49:29 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gjOxXuCj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712911826; x=1744447826;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=bf4dIkV9LetyoNL/ouarPVJQ/zgpxdgdmJYWy/jU+ko=;
+  b=gjOxXuCj+H/w6pUCcLcag3MhEEPg1bBkzPF9x+2UMCb396X+lsLGDv3h
+   JUV91dbJncDR1HWYISI2cS4F71bNqdSeL7GzxLLw3ZnZXHngc7zqnDZIf
+   sFCxjaJhlUO/bbfWaxg7Beybg/xdSgZzVlamHtZH54mEPEM/5zni0zkdg
+   gkjy7CYRkzBzJYhf7z/U6/TS8KH74/HwYYNMlzKUhTnAxrUy5miSW1EOj
+   X6xpqLm8kLQTiN6GkiJR7vBEhSywVb1GL0PPm1r1WIqQaAjknNmQpZsKN
+   4z5ySh3hz6ZFWLO18W8ONHQK9c860uvWoBkn2oYfX6doT8c/u3xms5d2b
+   Q==;
+X-CSE-ConnectionGUID: i206SMPxQGG55mOo+0OV6g==
+X-CSE-MsgGUID: G6U7T1gzRwaLh+r707862g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8220018"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="8220018"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:50:25 -0700
+X-CSE-ConnectionGUID: NcyoHsMzR8WZSAfF4z+NKg==
+X-CSE-MsgGUID: Usq70mwITMKMCYii2RGu6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="52331444"
+Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:50:22 -0700
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Bharata B Rao <bharata@amd.com>
+Cc: <linux-mm@kvack.org>,  <linux-kernel@vger.kernel.org>,
+  <akpm@linux-foundation.org>,  <mingo@redhat.com>,
+  <peterz@infradead.org>,  <mgorman@techsingularity.net>,
+  <raghavendra.kt@amd.com>,  <dave.hansen@linux.intel.com>,
+  <hannes@cmpxchg.org>
+Subject: Re: [RFC PATCH 0/2] Hot page promotion optimization for large
+ address space
+In-Reply-To: <8b073658-268d-4d3e-bd94-3fe95c948bd9@amd.com> (Bharata B. Rao's
+	message of "Fri, 12 Apr 2024 13:46:12 +0530")
+References: <20240327160237.2355-1-bharata@amd.com>
+	<87il16lxzl.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<dd2bc563-7654-4d83-896e-49a7291dd1aa@amd.com>
+	<87edbulwom.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<929b22ca-bb51-4307-855f-9b4ae0a102e3@amd.com>
+	<875xx5lu05.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<7e373c71-b2dc-4ae4-9746-c840f2a513a5@amd.com>
+	<87o7asfrm1.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<9ec3b04b-bde8-42ce-be1b-34f7d8e6762d@amd.com>
+	<87il0yet4z.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<8692d514-d1c8-4fbf-84d7-1ad609480070@amd.com>
+	<87cyqv59bj.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<8b073658-268d-4d3e-bd94-3fe95c948bd9@amd.com>
+Date: Fri, 12 Apr 2024 16:48:29 +0800
+Message-ID: <874jc755lu.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=ascii
 
-On Fri, 12 Apr 2024 09:02:55 +0300, Matti Vaittinen wrote:
-> Some commented out code was accidentally left in the header.
-> 
-> Clean up commented out macros.
-> 
-> 
+Bharata B Rao <bharata@amd.com> writes:
 
-Applied, thanks!
+> On 12-Apr-24 12:58 PM, Huang, Ying wrote:
+>> Bharata B Rao <bharata@amd.com> writes:
+>> 
+>>> On 03-Apr-24 2:10 PM, Huang, Ying wrote:
+>>>>> Here are the numbers for the 192nd chunk:
+>>>>>
+>>>>> Each iteration of 262144 random accesses takes around ~10ms
+>>>>> 512 such iterations are taking ~5s
+>>>>> numa_scan_seq is 16 when this chunk is accessed.
+>>>>> And no page promotions were done from this chunk. All the
+>>>>> time should_numa_migrate_memory() found the NUMA hint fault
+>>>>> latency to be higher than threshold.
+>>>>>
+>>>>> Are these time periods considered too short for the pages
+>>>>> to be detected as hot and promoted?
+>>>>
+>>>> Yes.  I think so.  This is burst accessing, not repeated accessing.
+>>>> IIUC, NUMA balancing based promotion only works for repeated accessing
+>>>> for long time, for example, >100s.
+>>>
+>>> Hmm... When a page is accessed 512 times over a period of 5s and it is
+>>> still not detected as hot. This is understandable if fresh scanning couldn't
+>>> be done as the accesses were bursty and hence they couldn't be captured via
+>>> NUMA hint faults. But here the access captured via hint fault is being rejected
+>>> as not hot because the scanning was done a while back. But I do see the challenge
+>>> here since we depend on scanning time to obtain the frequency-of-access metric.
+>> 
+>> Consider some pages that will be accessed once every 1 hour, should we
+>> consider it hot or not?  Will your proposed method deal with that
+>> correctly?
+>
+> The proposed method removes the absolute time as a factor for the decision and instead
+> relies on the number of hint faults that have occurred since that page was scanned last.
+> As long as there are enough hint faults happening in that 1 hour (which means a lot many
+> other accesses have been captured in that 1 hour), that page shouldn't be considered as
+> hot. You did mention earlier about hint fault rate varying a lot and one thing I haven't
+> tried yet is to vary the fault threshold based on current or historical fault rate.
 
-[1/1] mfd: bd71828: Remove commented code lines
-      commit: b13a46be702a9ab9e0ec646cfbb617dd17e1dd39
+In your original example, if a lot many other accesses between NUMA
+balancing page table scanning and 512 page accesses, you cannot identify
+the page as hot too, right?
+
+If the NUMA balancing page table scanning period is much longer than 5s,
+it's high possible that we cannot distinguish between 1 and 512 page
+accesses within 5s with your method and the original method.
+
+Better discuss the behavior with a more detail example, for example,
+when the page is scanned, how many pages are accessed, how long between
+accesses, etc.
 
 --
-Lee Jones [李琼斯]
-
+Best Regards,
+Huang, Ying
