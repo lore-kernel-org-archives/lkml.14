@@ -1,79 +1,52 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60F4148313;
-	Fri, 12 Apr 2024 16:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4227E148311;
+	Fri, 12 Apr 2024 16:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712939118; cv=none; b=kXaY1O4vX5DbuvpJnxJEqbEkAL7H5LhEi0XNAckK6sosJYHxHGrHewFSm2vagZr/vD1LFW0P8wAJJpM36WctmCpkCSdubePADXFfr8pnxmSruBw/dwYlDtIQIvFZvXne9cyEghZccpCAzKOmD8a7uMKl8jo/1ALcN7H/ALHe2jk=
+	t=1712939150; cv=none; b=CaOJe4EsIjzZfTEDgK/2cjHo7TsJ67Cvp9LSPhVMtBZf0qC+JVfoH0w78S1XKcr/l62zKlIx1Gw9kYbn1FWZTZnLRCFzKvpVkje4DQfpIZxPI4z6vabbfXBj6jh1FH8jcxPzS33U7gPDIQ5ofOM505AA7eAToflyD4uAN6XQqpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712939118; c=relaxed/simple;
-	bh=+/Ao6tah8HHTzxYdBhw2rCA83A9fOpuOCf642ssB/IA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bq84A9SohPuyRIkveS3j30uhroi1mEjhwmg3fLpwjXUGKOkpbnacrFgPgzR/DOb1naMGLjnqkUz0IpxC8JLASe3biq95q0gQ65Qbt81trLbsZnnI3NfImwUOsiiJ13aTOYgyBw6K0rC241DH/vPmyTPyHVl3nEQBPEHAFyK/WU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8504dgn; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8504dgn"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso11947051fa.0;
-        Fri, 12 Apr 2024 09:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712939115; x=1713543915; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j1ZiDdEdBLa6WUq6dSl5bzwxlD6MdFYlMkt9vqw7lek=;
-        b=e8504dgnbJ+K6UBCdyiyKmMZTjip0hVHGbjosKHXBBxV5ejQnU+YkxY2REMf6gS2KN
-         k94nYE6uvWl/8lkZsDdocwjBxUEt8+J0VYHn0eCR+wBN5maVFUME5B/P+l2MaMRNW7mI
-         AGFL7oMn3vEbPLAAcycpjd6C5ri34sWvFKxqXP/OOSXLApOhz3S8Yf0MP/XqiFBSQlAa
-         oAqOtwnQ6nM5cm/hoip0tAcTMXP3aJ4DL1q0rokhFnwjsUIHkEs8AKdZZF3g56LL0TFF
-         JJsMmLm1IJykGJIevevvPxNfjAim4IxHK5pNxrN8llNE7SwN900y0GMlj527BM9wUNjj
-         NmDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712939115; x=1713543915;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j1ZiDdEdBLa6WUq6dSl5bzwxlD6MdFYlMkt9vqw7lek=;
-        b=p/+9K/hfo6acze3Mjmsk5Zyo3QyCi0v93incSr78v3m8rPhqOQIwchAbJX97Ec2Czv
-         iZ7fftSv6hZexA9/5PM/9T1rB9h/aZUwWYrfqJ3hWkHjxXcDvswh9RAPU3FljeTXPKST
-         fYK0DaaCtsORNnABuxEZ/fUk+kbg+fj7O9r5UmjayjM+cXeaF3ptXSpmMa+fnEKyz3OV
-         dbiTot0smW+BXG0pm/CMwrkUkttldE0I547vAAz4o9GNZmuXYcr0rmauw7LFqDwL30+T
-         RWto5TpMthvSDrHLZ7rkDRvuUfkfVkdrmCnk3WuFMK8GcLiepmucn6zOzppFE9HO4O95
-         wHYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnFUPxT1HIElbv/3dWp7ChhxNbA7awOqLpO8wxEKrJSszgg4rSLGW7vXIO9PKIhi+tt2A2JEUUy6yUmfKMY9VKgzYXsyQkQ5JN4VWN1/Deq1ofG5iFA+szErvhppvSKSnHnwgQ3C0CiT9ERoIqXisLKOp+ujFoJLigfCfn8Cx9omRhJbx8MLL1taam84a6XYY7JBld6gWjbw0BTOGgpEdf
-X-Gm-Message-State: AOJu0Yz85IGk5Pxfa4cR+XdcstNGL5yVwAvBTa6yAu8F6d3w+17maHLn
-	aYnzQCxo9UheFFtD9nhgQIu9JIPsF76b8hwj5DzdO/s3i67b5/QY
-X-Google-Smtp-Source: AGHT+IEA2Mx2PVZ0wxEHfJ9V8RofGxmOrjMMCiJmTk1zmlFqSPe8iGWGd2yd72AmB/HZ5oyd/lApWA==
-X-Received: by 2002:a2e:7c19:0:b0:2d8:cd7f:3cc8 with SMTP id x25-20020a2e7c19000000b002d8cd7f3cc8mr2526091ljc.20.1712939114765;
-        Fri, 12 Apr 2024 09:25:14 -0700 (PDT)
-Received: from fedora.. (d-zg2-064.globalnet.hr. [213.149.37.64])
-        by smtp.googlemail.com with ESMTPSA id q4-20020adff504000000b0034635bd6ba5sm4576554wro.92.2024.04.12.09.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 09:25:14 -0700 (PDT)
-From: Robert Marko <robimarko@gmail.com>
-To: kvalo@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jjohnson@kernel.org,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Robert Marko <robimarko@gmail.com>
-Subject: [PATCH 2/2] wifi: ath11k: support DT ieee80211-freq-limit property to limit channels
-Date: Fri, 12 Apr 2024 18:24:09 +0200
-Message-ID: <20240412162510.29483-2-robimarko@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240412162510.29483-1-robimarko@gmail.com>
-References: <20240412162510.29483-1-robimarko@gmail.com>
+	s=arc-20240116; t=1712939150; c=relaxed/simple;
+	bh=noEGg3C/yA7DKHmdCn3MGEP9cOgqwwKmxb2RZDtBODg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s6JMwP4kbVPGWYTsCkIBpsrxgppmZfhyxRXdnKn0PAOvN8Z7DKEfSWZtADe8huiMZ+O0px8055NGzC9UJxJNfc+azz4Mgqllv8I/Iqc5ZtE1FHuu5u25l3eY48wjWdRvT3JZKly6OS9bCWu4wlGhic2bT87Qrp9z59B95JWU5p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMMQ1W91z6K5nQ;
+	Sat, 13 Apr 2024 00:24:02 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id BD2FA1400CF;
+	Sat, 13 Apr 2024 00:25:46 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:25:46 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 29/30] Documentation: ABI + trace: hisi_ptt: update paths to bus/event_source
+Date: Fri, 12 Apr 2024 17:10:56 +0100
+Message-ID: <20240412161057.14099-30-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,27 +54,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-The common DT property can be used to limit the available channels
-but ath11k has to manually call wiphy_read_of_freq_limits().
+To allow for assigning a suitable parent to the struct pmu device
+update the documentation to describe the device via the event_source
+bus where it will remain accessible.
 
-Signed-off-by: Robert Marko <robimarko@gmail.com>
+For the ABI documention file also rename the file as it is named
+after the path.
+
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/net/wireless/ath/ath11k/mac.c | 1 +
- 1 file changed, 1 insertion(+)
+ ...i_ptt => sysfs-bus-event_source-devices-hisi_ptt} | 12 ++++++------
+ Documentation/trace/hisi-ptt.rst                     |  4 ++--
+ MAINTAINERS                                          |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index c32be587000d..59bde128d351 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -10124,6 +10124,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
- 	if (ret)
- 		goto err;
+diff --git a/Documentation/ABI/testing/sysfs-devices-hisi_ptt b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hisi_ptt
+similarity index 90%
+rename from Documentation/ABI/testing/sysfs-devices-hisi_ptt
+rename to Documentation/ABI/testing/sysfs-bus-event_source-devices-hisi_ptt
+index d7e206b4901c..1119766564d7 100644
+--- a/Documentation/ABI/testing/sysfs-devices-hisi_ptt
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-hisi_ptt
+@@ -1,4 +1,4 @@
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+@@ -8,7 +8,7 @@ Description:	This directory contains files for tuning the PCIe link
  
-+	wiphy_read_of_freq_limits(ar->hw->wiphy);
- 	ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
- 	ath11k_mac_setup_he_cap(ar, cap);
+ 		See Documentation/trace/hisi-ptt.rst for more information.
  
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_cpl
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_cpl
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+@@ -18,7 +18,7 @@ Description:	(RW) Controls the weight of Tx completion TLPs, which influence
+ 		will return an error, and out of range values will be converted
+ 		to 2. The value indicates a probable level of the event.
+ 
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_np
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_np
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+@@ -28,7 +28,7 @@ Description:	(RW) Controls the weight of Tx non-posted TLPs, which influence
+ 		will return an error, and out of range values will be converted
+ 		to 2. The value indicates a probable level of the event.
+ 
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_p
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune/qos_tx_p
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+@@ -38,7 +38,7 @@ Description:	(RW) Controls the weight of Tx posted TLPs, which influence the
+ 		will return an error, and out of range values will be converted
+ 		to 2. The value indicates a probable level of the event.
+ 
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune/rx_alloc_buf_level
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune/rx_alloc_buf_level
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+@@ -49,7 +49,7 @@ Description:	(RW) Control the allocated buffer watermark for inbound packets.
+ 		will return an error, and out of range values will be converted
+ 		to 2. The value indicates a probable level of the event.
+ 
+-What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/tune/tx_alloc_buf_level
++What:		/sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune/tx_alloc_buf_level
+ Date:		October 2022
+ KernelVersion:	6.1
+ Contact:	Yicong Yang <yangyicong@hisilicon.com>
+diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+index 989255eb5622..6eef28ebb0c7 100644
+--- a/Documentation/trace/hisi-ptt.rst
++++ b/Documentation/trace/hisi-ptt.rst
+@@ -40,7 +40,7 @@ IO dies (SICL, Super I/O Cluster), where there's one PCIe Root
+ Complex for each SICL.
+ ::
+ 
+-    /sys/devices/hisi_ptt<sicl_id>_<core_id>
++    /sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>
+ 
+ Tune
+ ====
+@@ -53,7 +53,7 @@ Each event is presented as a file under $(PTT PMU dir)/tune, and
+ a simple open/read/write/close cycle will be used to tune the event.
+ ::
+ 
+-    $ cd /sys/devices/hisi_ptt<sicl_id>_<core_id>/tune
++    $ cd /sys/bus/event_source/devices/hisi_ptt<sicl_id>_<core_id>/tune
+     $ ls
+     qos_tx_cpl    qos_tx_np    qos_tx_p
+     tx_path_rx_req_alloc_buf_level
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aea47e04c3a5..2f0a97aa1e60 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9796,7 +9796,7 @@ M:	Yicong Yang <yangyicong@hisilicon.com>
+ M:	Jonathan Cameron <jonathan.cameron@huawei.com>
+ L:	linux-kernel@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/ABI/testing/sysfs-devices-hisi_ptt
++F:	Documentation/ABI/testing/sysfs-bus-event_source-devices-hisi_ptt
+ F:	Documentation/trace/hisi-ptt.rst
+ F:	drivers/hwtracing/ptt/
+ F:	tools/perf/arch/arm64/util/hisi-ptt.c
 -- 
-2.44.0
+2.39.2
 
