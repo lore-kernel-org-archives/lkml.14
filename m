@@ -1,86 +1,151 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CDE1487FF;
-	Fri, 12 Apr 2024 16:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C78149DF7;
+	Fri, 12 Apr 2024 16:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938600; cv=none; b=sykD5nTQHU/g8curEpKXxhO6dgjQmki/Gk2LKsqfSPTPXGERAOa8s4Zkfo8xjoxkTYxK4Z++RX2qWc+pFstCgW9olBllBpivyHQJ63QUJADZ+a+UVQxluRFinKUTp5eRk4bkH28zZFSijCGtYLAfkKamQy7k7Oc37H/7WWjMuKA=
+	t=1712938597; cv=none; b=Eja/Q+9Vtb2xpKAVvWGCSy3iY7z8gJMIksi00WypjOCjExJFZfbMajSSVOcO8YM3bAZqcRG3hzz43NlNntnLn3pcrCu2uaA4JLJhbrGxl/kjzVmQqvSWJ2EBd+NVZDqr15ty41SRkM9MXK09sJK2S1YULzQJ8JVpG+WMrq5aH0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938600; c=relaxed/simple;
-	bh=UTmBGfCL89xYsE05whtOjzMgevEx1fJhhdN5vbKvee0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IxYrYjOGp+yN2QlHtGCBxCkGBhNt+1i//7ZcEO3eFScyJcOlmCIQUj5bMxMzVt5sYsV05gFZeTP5npe/aEUz0Q5WaUqJZdADR7A+UQVVJcHeENHbgFUfv9nWSJM1cTat9R/nLiuIOf/8tqndSQQBcdL7QHG8Ovfz8vXNMB1/ALs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM8n1JBKz6K5s9;
-	Sat, 13 Apr 2024 00:14:49 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id AA0E11400F4;
-	Sat, 13 Apr 2024 00:16:33 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:16:33 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 11/30] perf/thunderx2: Assign parents for event_source devices
-Date: Fri, 12 Apr 2024 17:10:38 +0100
-Message-ID: <20240412161057.14099-12-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712938597; c=relaxed/simple;
+	bh=H8Ts+fPORPk2Ob90sLzmeh0iBBvTzDDrCOxsmMu0ifw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OS+qIMYp+pXMU713kLmQG+TysNmpBSYbej4E1Zfva4xQY/+W2axlN5uYBpjtcUAN6VFCWVkl3MiylwmkZRzc6NaZfrPoI7BE3apJDL8LqJi06zebbAyjF8f1C8u+W9b1Lokr9ayiACqG+eTEHqdNJTneRH5tEeXNFAfZBHAiNvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=t2n6MS3Q; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="t2n6MS3Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712938579; x=1713543379; i=w_armin@gmx.de;
+	bh=fV5LxrZ9sicKZYNtK1OwakvaLfgHSkOsJWQfLLQ6qj8=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=t2n6MS3QRzAncGvP9ucdHs4rFukblQs6NX6A0y+74djsII75PW01mILy1Iqxgi0l
+	 WpI2XDj50C55Nvfgd5sK874CLqs5E8pKHZc3lYgDQ3NYnd68ctiCzrFndwmwrEOP1
+	 yf/27rX0/CvRn9OCY/wd2vLWZZLmx6cmwW6Cw5hbRjTH0zBeHcSwIljywojJBtYq8
+	 J2CV5Wn58GTzUa2jQLQVI2qQqun4lcQ0dth7Yuxrr+LtktSJvjTWSIxoTNv0ak2HZ
+	 cqhbZ62VwgE62MvWbHpAu/ICgoSN5hYhyVjvrtq47eW5MqcTMGDe+rud9IsmQDMNq
+	 KqscBSu2A2cCzc21HA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmULr-1sdD741ToP-00iWgx; Fri, 12
+ Apr 2024 18:16:19 +0200
+Message-ID: <23c89f70-98d3-41a5-927c-ff4f2300ab7e@gmx.de>
+Date: Fri, 12 Apr 2024 18:16:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ACPICA: Fix memory leak then namespace lookup fails
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org,
+ dmantipov@yandex.ru, linux-acpi@vger.kernel.org,
+ acpica-devel@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240403004718.11902-1-W_Armin@gmx.de>
+ <CAJZ5v0i3TAyDERxCm5caud5x5kLbc6J6MKqXXFWecShYe-gCrA@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0i3TAyDERxCm5caud5x5kLbc6J6MKqXXFWecShYe-gCrA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:tj9wE446LKuHlyG8F4jGP0znuiIlFLqdnMAdKcVvr9zI8frC2zq
+ jPA41vUM0QadKXLE04LhDEB9jQRtm2SGEXDF+RVEE0X5MOgYB70k5WOE/+r8U1ZYRz21wLt
+ 7bTKTeEeFnvR2sFH+kAEFsZVej0qeWJNSP32p2m2hObQSSPAouSHwjBVLLVcc5QaFpoKXdh
+ +oX3KMxPSG7qCEd9RgjcA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:XsfWYk+fZUY=;ZZPIPGT2e76V8iqvObNO8Vep1KK
+ 5mIBaGIYMknE7r+D+ddNwQfTcJrS3eW4ecayXEWYQxXpk68gY3KJ8jrrNfAdFY6OJR+TmCeP0
+ r32VJbxnZyJlFxuhxlT1CN16J1kUGbZjHVKQEu+s2a/u1NwQ+KXKrltS8epsD8yoMu6z2r06p
+ ekE5K5dcNAlpG0ye3BRf163ksRgO0pYjitUJqsmz/YRKSSXZL/UDMTaNRL6SY0avIYUIlIpc9
+ Mu1WVmvGwmi5uxV9Sl4Yr1w2vLW+PgnNiOBKp9RQIpRkZ8843YVD2Sa/yoG1RfCOKvltnDLYu
+ nDjebNIc2V7PwUs/361Nd6tQIIn0LNAke7LbbL4TGeqisldD9ygyLFpFpzVWERDDam7aflNuE
+ JmyaZaACQauYW8lVB0iuTm+UHIjV8mq6KpeqLyd4WyaNfU/Ke4Zk14JUu20fV/Lz8WB6+dWR0
+ KqOsXCsCS3LTd7/uGNSKIBxmmBUX9i2f85lJJLS7tqphXrPk3ZER6MqP339P7Dyz6PRU7ESDw
+ AA4YPPfehSPGJsgu44JlT9HyugywG7F2ORsdbXpAV1iMkcZJXtilggitreiFWrawA/gUS0y6e
+ lFznKkiXynOZxgICLypxp2pSNhI/JtCBsIzoWB1b6Gwvn5HiaIj1FnslD3dwBg/DSIzh/NBL3
+ wbncWZVRuEeyqYextmoaf+AHc0lyLF10xZs+a5ov6ylZL7sDT0NANV4F8rJq1gnAbzINzbGs5
+ 7StkKPY9qVwktgtOoaSZKEQvIdoiwoRHr2yY+Iac23kOkrJyuBgibqm0cr260Kb2detPkpNVz
+ Zwe3p8hcULDlOvBURMhucQ8Yqxbq1E2hz/iS7R+bTA1YU=
 
-Currently all these devices appear directly under /sys/devices/
-Only root busses should appear there, so instead assign the pmu->dev
-parents to be the platform device.
+Am 08.04.24 um 16:29 schrieb Rafael J. Wysocki:
 
-Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
-Cc: Robert Richter <rric@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/perf/thunderx2_pmu.c | 1 +
- 1 file changed, 1 insertion(+)
+> On Wed, Apr 3, 2024 at 2:47=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> wrote=
+:
+>> When acpi_ps_get_next_namepath() fails due to a namespace lookup
+>> failure, the acpi_parse_object is not freed before returning the
+>> error code, causing a memory leak.
+>>
+>> Fix this by freeing the acpi_parse_object when encountering an
+>> error.
+>>
+>> Tested-by: Dmitry Antipov <dmantipov@yandex.ru>
+>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> Because ACPICA is an external project supplying code to the Linux
+> kernel, the way to change the ACPICA code in the kernel is to submit a
+> pull request to the upstream ACPICA project on GitHub and once that PR
+> has been merged, submit a Linux patch corresponding to it including
+> the Link: tag pointing to the PR in question and the git ID of the
+> corresponding upstream ACPICA commit.
+>
+> However, note that upstream ACPICA commits are automatically included
+> into the Linux kernel source code every time the upstream ACPICA
+> project makes a release, so it is not necessary to send the
+> corresponding Linux patches for them unless in the cases when timing
+> matters.
 
-diff --git a/drivers/perf/thunderx2_pmu.c b/drivers/perf/thunderx2_pmu.c
-index e16d10c763de..4af1510d196d 100644
---- a/drivers/perf/thunderx2_pmu.c
-+++ b/drivers/perf/thunderx2_pmu.c
-@@ -729,6 +729,7 @@ static int tx2_uncore_pmu_register(
- 	/* Perf event registration */
- 	tx2_pmu->pmu = (struct pmu) {
- 		.module         = THIS_MODULE,
-+		.parent		= tx2_pmu->dev,
- 		.attr_groups	= tx2_pmu->attr_groups,
- 		.task_ctx_nr	= perf_invalid_context,
- 		.event_init	= tx2_uncore_event_init,
--- 
-2.39.2
+I submitted a PR to upstream ACPICA and the changes where accepted.
 
+Dmitry, do you think that this memory leak is critical? If not, then i thi=
+nk
+we can wait till the next ACPICA release.
+
+Thanks,
+Armin Wolf
+
+>> ---
+>>   drivers/acpi/acpica/psargs.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/acpi/acpica/psargs.c b/drivers/acpi/acpica/psargs.=
+c
+>> index 422c074ed289..7debfd5ce0d8 100644
+>> --- a/drivers/acpi/acpica/psargs.c
+>> +++ b/drivers/acpi/acpica/psargs.c
+>> @@ -820,6 +820,10 @@ acpi_ps_get_next_arg(struct acpi_walk_state *walk_=
+state,
+>>                              acpi_ps_get_next_namepath(walk_state, pars=
+er_state,
+>>                                                        arg,
+>>                                                        ACPI_NOT_METHOD_=
+CALL);
+>> +                       if (ACPI_FAILURE(status)) {
+>> +                               acpi_ps_free_op(arg);
+>> +                               return_ACPI_STATUS(status);
+>> +                       }
+>>                  } else {
+>>                          /* Single complex argument, nothing returned *=
+/
+>>
+>> @@ -854,6 +858,10 @@ acpi_ps_get_next_arg(struct acpi_walk_state *walk_=
+state,
+>>                              acpi_ps_get_next_namepath(walk_state, pars=
+er_state,
+>>                                                        arg,
+>>                                                        ACPI_POSSIBLE_ME=
+THOD_CALL);
+>> +                       if (ACPI_FAILURE(status)) {
+>> +                               acpi_ps_free_op(arg);
+>> +                               return_ACPI_STATUS(status);
+>> +                       }
+>>
+>>                          if (arg->common.aml_opcode =3D=3D AML_INT_METH=
+ODCALL_OP) {
+>>
+>> --
+>> 2.39.2
+>>
+>>
