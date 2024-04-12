@@ -1,211 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1176985261
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:44:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91A684FAB;
+	Fri, 12 Apr 2024 13:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929463; cv=none; b=orGjoeqDDsCRJaivTMdeaL+wYUlIzPEJjmZrNMsMmfVYMTQS6LHeTab5iTMZo4ingveQeVcKUi6lx6IUdAkbgjlH7E3ODlbqRBB4M0ok5+t/bNBovWFZAJxYPgkBg9RfBgcUdrQDUSUjWTvMs2W7tmfW9xb0sxMgLNbWQKA+FwA=
+	t=1712929463; cv=none; b=B/x+EdVjXoSlCywLqIrhEUZz8XZK+whll6iWpPwnxLd5LIUoreoPfBK9aiNjkdf0++mqCc7SFR+73F6U5cITcE20Rx9KaiA6c6MKaiil2gvv0B19RhlUCoTdYeAWmnl+Ylqq8CxPk4U2GAEEmckE+vGDJSWrMXTI+nb01pluyUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712929463; c=relaxed/simple;
-	bh=A6BCPGJ14ENBTg9zhAGY9Mu4ckKO6EuAyGkOaKXiHHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a+yu5zIvMPBfPUs5NKd5UDYgWlnR3WZcuBRRCn/jzy+bVWyAS2XM+r62tCugltINUd0EMwcxZOR5bpyElzfxZMK2cYAVM/6A58H7wC+hizvsJ2KEbimsBbzg2QbR5ai+tOLubVkpEaE41kjP1OaLGOtyI0RvqfgpDhSH5Z+zs+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OFU3Lzy8; arc=none smtp.client-ip=10.30.226.201
+	bh=8geQCAid38ejEfA5++6WxsYiP02Q2buqSdVzCqz+9h4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qs2Weeko9C1gm0MR9SyNSJ3O1ZJauVRiGmSaSl02ZuK3QyWJkoZ0AX8pfYC7EuT9hkASQo7BDJB3UQOSlWDWxZQep9wcogmDHbkQuw9xMFeMu699fVrXuCRXPQ0XtXDbteFohCmZosqGI7u4v6FVaeMtEl2vycPqN+A3fdg1X+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dUmCERz1; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OFU3Lzy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F8AC2BD10;
-	Fri, 12 Apr 2024 13:44:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712929462;
-	bh=A6BCPGJ14ENBTg9zhAGY9Mu4ckKO6EuAyGkOaKXiHHc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OFU3Lzy8z+yqS3ejO+Tcv7VXdremci/vj/siJdZYf2xB1NQB2tC6yhrDX6BmYb/vG
-	 gj9m4waCMEED7nkXBaFWXY0jw81LE1NUtmZqdp5dOCcU7lEVvXpd62xtEygRfM+JPj
-	 Ssqy/+9duN9wzsIz2K/PXiDoPy7ab6vxcuICJ+itpIdKDz8s7zIRNJGAhMPV+3Ylcj
-	 X1erVsCLV/qeHr4iWxzon2l1smWICW6MaHR1og5iZWg9H1osBPf8OeT0BxksQ9XINi
-	 Y9SdTJmkF2gSR4aLOb6HxZbpfbNq4MezBkqNo3Pr1rBKx2vVnk3QxyIWGCdcaO6gye
-	 T/4IGBmBS297g==
-From: Michael Walle <mwalle@kernel.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH v1 4/6] mtd: spi-nor: remove .setup() callback
-Date: Fri, 12 Apr 2024 15:44:03 +0200
-Message-Id: <20240412134405.381832-5-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412134405.381832-1-mwalle@kernel.org>
-References: <20240412134405.381832-1-mwalle@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUmCERz1"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-56e78970853so3070036a12.0;
+        Fri, 12 Apr 2024 06:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712929460; x=1713534260; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5HaWhaqdaDfNBrfCl5nObWWrEOo5ajao2bIANOPV6KI=;
+        b=dUmCERz1taGZKLJeoAkVhnuB7GYeaxyeNCbJcCFr7l8pEwbi58ck7mdVcWw6//ubzn
+         /rp8MZiIAFea75+DSatrgb0/UixoRBUDXsR/Xdx3A2W3LUbJWdxllXcord61pCAxgGIV
+         fu/81wvwF2z4n3SPDOZlcp65jRza3bvOhkkKesjEutp/VJJK0sh1AvdPKsdKRzEBO7rh
+         id20Ywfbj1sTptN9DXZ6Xfsohn/6w3s8yaFheI6yFF2JVyKCEDL54RTbV81PYsLO/g7+
+         7RPzymj23BI9nU6X7qf7X5WucvqKiKvxO/RYiQR7kR2KvONe/sQ27d2a2/aN+hA1ThRt
+         aoeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712929460; x=1713534260;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5HaWhaqdaDfNBrfCl5nObWWrEOo5ajao2bIANOPV6KI=;
+        b=Vxk8FJARpaizA750UCDABDgomj9EB6JId0NKZB4joxUz1oG35xW04QLNpbmTARNn3P
+         m3ZQGyXLDx8UnBHqvS0xH+7+LFhAlELJTWv9dJuJLMa+Gf92eUk/6NQCOOoWkz718EUJ
+         yLMfqCyuRhZMnPRYVR4+Ms05BxXqObrMTQ0gqO2PJX9RpALqIYxSu1xHYk+7mml+6eX+
+         A3s521vm7GrLB8SG3yFp9CVE9Ullwjha/wWgO1MrDGDPDlfRhSd6w0RUrI/mj9I1dOT0
+         dI01eHtXOJJ5j+4rncYUlVFQoUYdAQSM3cdP2/AVNOUUD7jrI44Wt4K6L7oaUGZO/oRZ
+         3i8w==
+X-Forwarded-Encrypted: i=1; AJvYcCW2/X61F1181GzhA+oYmolxA8JOSypWuw2H3/CAIx1NvHKpLjxDfZ0J6H1XY6xngc4ORVVEsb8VwP1fZG48RcejUsK5D174/UH/g36eWj/B71FtyNOU9gsb1t8+sgpwAM0DwzdMzpPwZ9N74l5fvuIKTxcWqGiVIoDeNaK9Q594TRsKycLe
+X-Gm-Message-State: AOJu0YwdxiATibW//DKA9SN6B4BIoW8fCktlXnwp9IDimRc5DdMPCOBd
+	eANkeYWg5p5ZOfFGMfZXSp9w+HzQ82RFGGtLU6r4OrmGLA/MCnPsZLV9vzqMp3bJudd9K0NVLSB
+	3PlWHnBlzjwxRcRu4V4b4MI5/790=
+X-Google-Smtp-Source: AGHT+IFEC8uEkeMBRcT6w34by85kMHZS8oKJ5rLKlabaLd1wkl5XRtWFVYL35N3RsZ6AdPmJmF+szA/5GkrvS36dQyQ=
+X-Received: by 2002:a17:907:2ce6:b0:a52:a25:2077 with SMTP id
+ hz6-20020a1709072ce600b00a520a252077mr5020537ejc.14.1712929459777; Fri, 12
+ Apr 2024 06:44:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240410104002.1197-1-zhi.mao@mediatek.com> <20240410104002.1197-3-zhi.mao@mediatek.com>
+ <CAHp75VfF0pbrKXjWZg7sTr-T=_CbjP+deFQP-VLCGX8ooahctg@mail.gmail.com> <ZhkBIee2X0UY40yD@kekkonen.localdomain>
+In-Reply-To: <ZhkBIee2X0UY40yD@kekkonen.localdomain>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 12 Apr 2024 16:43:43 +0300
+Message-ID: <CAHp75VcKFCvzcESqsc8OQ5SVuO4gJiE5ZEUwkdoqvLzM=2PejQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] media: i2c: Add GT97xx VCM driver
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Zhi Mao <zhi.mao@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Heiko Stuebner <heiko@sntech.de>, Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Alain Volmat <alain.volmat@foss.st.com>, Paul Elder <paul.elder@ideasonboard.com>, 
+	Mehdi Djait <mehdi.djait@bootlin.com>, Bingbu Cao <bingbu.cao@intel.com>, 
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, shengnan.wang@mediatek.com, 
+	yaya.chang@mediatek.com, yunkec@chromium.org, 10572168@qq.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There is no flash driver using that hook. The original intention was to
-let the driver configure special requirements like page size an opcodes.
-This is already possible by other means and it is unlikely a flash will
-overwrite the (more or less complex) setup function.
+On Fri, Apr 12, 2024 at 12:39=E2=80=AFPM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> On Wed, Apr 10, 2024 at 07:00:02PM +0300, Andy Shevchenko wrote:
+> > > +static int gt97xx_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh=
+ *fh)
+> > > +{
+> > > +       return pm_runtime_resume_and_get(sd->dev);
+> > > +}
+> > > +
+> > > +static int gt97xx_close(struct v4l2_subdev *sd, struct v4l2_subdev_f=
+h *fh)
+> > > +{
+> > > +       return pm_runtime_put(sd->dev);
+> > > +}
+> >
+> > Hmm... Shouldn't v4l2 take care about these (PM calls)?
+>
+> Ideally yes. We don't have a good mechanism for this at the moment as the
+> lens isn't part of the image pipeline. Non-data links may be used for thi=
+s
+> in the future but that's not implemented yet.
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/mtd/spi-nor/core.c | 105 ++++++++++++++++---------------------
- drivers/mtd/spi-nor/core.h |   5 --
- 2 files changed, 45 insertions(+), 65 deletions(-)
+Aren't you using devlinks? It was designed exactly to make sure that
+the PM chain of calls goes in the correct order.
 
-diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-index 65e6531ada0a..bbfef7b3997f 100644
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
-@@ -2568,8 +2568,51 @@ static int spi_nor_select_erase(struct spi_nor *nor)
- 	return 0;
- }
- 
--static int spi_nor_default_setup(struct spi_nor *nor,
--				 const struct spi_nor_hwcaps *hwcaps)
-+static int spi_nor_set_addr_nbytes(struct spi_nor *nor)
-+{
-+	if (nor->params->addr_nbytes) {
-+		nor->addr_nbytes = nor->params->addr_nbytes;
-+	} else if (nor->read_proto == SNOR_PROTO_8_8_8_DTR) {
-+		/*
-+		 * In 8D-8D-8D mode, one byte takes half a cycle to transfer. So
-+		 * in this protocol an odd addr_nbytes cannot be used because
-+		 * then the address phase would only span a cycle and a half.
-+		 * Half a cycle would be left over. We would then have to start
-+		 * the dummy phase in the middle of a cycle and so too the data
-+		 * phase, and we will end the transaction with half a cycle left
-+		 * over.
-+		 *
-+		 * Force all 8D-8D-8D flashes to use an addr_nbytes of 4 to
-+		 * avoid this situation.
-+		 */
-+		nor->addr_nbytes = 4;
-+	} else if (nor->info->addr_nbytes) {
-+		nor->addr_nbytes = nor->info->addr_nbytes;
-+	} else {
-+		nor->addr_nbytes = 3;
-+	}
-+
-+	if (nor->addr_nbytes == 3 && nor->params->size > 0x1000000) {
-+		/* enable 4-byte addressing if the device exceeds 16MiB */
-+		nor->addr_nbytes = 4;
-+	}
-+
-+	if (nor->addr_nbytes > SPI_NOR_MAX_ADDR_NBYTES) {
-+		dev_dbg(nor->dev, "The number of address bytes is too large: %u\n",
-+			nor->addr_nbytes);
-+		return -EINVAL;
-+	}
-+
-+	/* Set 4byte opcodes when possible. */
-+	if (nor->addr_nbytes == 4 && nor->flags & SNOR_F_4B_OPCODES &&
-+	    !(nor->flags & SNOR_F_HAS_4BAIT))
-+		spi_nor_set_4byte_opcodes(nor);
-+
-+	return 0;
-+}
-+
-+static int spi_nor_setup(struct spi_nor *nor,
-+			 const struct spi_nor_hwcaps *hwcaps)
- {
- 	struct spi_nor_flash_parameter *params = nor->params;
- 	u32 ignored_mask, shared_mask;
-@@ -2626,64 +2669,6 @@ static int spi_nor_default_setup(struct spi_nor *nor,
- 		return err;
- 	}
- 
--	return 0;
--}
--
--static int spi_nor_set_addr_nbytes(struct spi_nor *nor)
--{
--	if (nor->params->addr_nbytes) {
--		nor->addr_nbytes = nor->params->addr_nbytes;
--	} else if (nor->read_proto == SNOR_PROTO_8_8_8_DTR) {
--		/*
--		 * In 8D-8D-8D mode, one byte takes half a cycle to transfer. So
--		 * in this protocol an odd addr_nbytes cannot be used because
--		 * then the address phase would only span a cycle and a half.
--		 * Half a cycle would be left over. We would then have to start
--		 * the dummy phase in the middle of a cycle and so too the data
--		 * phase, and we will end the transaction with half a cycle left
--		 * over.
--		 *
--		 * Force all 8D-8D-8D flashes to use an addr_nbytes of 4 to
--		 * avoid this situation.
--		 */
--		nor->addr_nbytes = 4;
--	} else if (nor->info->addr_nbytes) {
--		nor->addr_nbytes = nor->info->addr_nbytes;
--	} else {
--		nor->addr_nbytes = 3;
--	}
--
--	if (nor->addr_nbytes == 3 && nor->params->size > 0x1000000) {
--		/* enable 4-byte addressing if the device exceeds 16MiB */
--		nor->addr_nbytes = 4;
--	}
--
--	if (nor->addr_nbytes > SPI_NOR_MAX_ADDR_NBYTES) {
--		dev_dbg(nor->dev, "The number of address bytes is too large: %u\n",
--			nor->addr_nbytes);
--		return -EINVAL;
--	}
--
--	/* Set 4byte opcodes when possible. */
--	if (nor->addr_nbytes == 4 && nor->flags & SNOR_F_4B_OPCODES &&
--	    !(nor->flags & SNOR_F_HAS_4BAIT))
--		spi_nor_set_4byte_opcodes(nor);
--
--	return 0;
--}
--
--static int spi_nor_setup(struct spi_nor *nor,
--			 const struct spi_nor_hwcaps *hwcaps)
--{
--	int ret;
--
--	if (nor->params->setup)
--		ret = nor->params->setup(nor, hwcaps);
--	else
--		ret = spi_nor_default_setup(nor, hwcaps);
--	if (ret)
--		return ret;
--
- 	return spi_nor_set_addr_nbytes(nor);
- }
- 
-diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-index 9aa7d6399c8a..8552e31b1b07 100644
---- a/drivers/mtd/spi-nor/core.h
-+++ b/drivers/mtd/spi-nor/core.h
-@@ -369,10 +369,6 @@ struct spi_nor_otp {
-  * @convert_addr:	converts an absolute address into something the flash
-  *                      will understand. Particularly useful when pagesize is
-  *                      not a power-of-2.
-- * @setup:		(optional) configures the SPI NOR memory. Useful for
-- *			SPI NOR flashes that have peculiarities to the SPI NOR
-- *			standard e.g. different opcodes, specific address
-- *			calculation, page size, etc.
-  * @ready:		(optional) flashes might use a different mechanism
-  *			than reading the status register to indicate they
-  *			are ready for a new command
-@@ -404,7 +400,6 @@ struct spi_nor_flash_parameter {
- 	int (*quad_enable)(struct spi_nor *nor);
- 	int (*set_4byte_addr_mode)(struct spi_nor *nor, bool enable);
- 	u32 (*convert_addr)(struct spi_nor *nor, u32 addr);
--	int (*setup)(struct spi_nor *nor, const struct spi_nor_hwcaps *hwcaps);
- 	int (*ready)(struct spi_nor *nor);
- 
- 	const struct spi_nor_locking_ops *locking_ops;
--- 
-2.39.2
-
+--=20
+With Best Regards,
+Andy Shevchenko
