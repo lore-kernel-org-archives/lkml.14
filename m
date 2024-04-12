@@ -1,132 +1,86 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E2F014A082
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E6614A088;
+	Fri, 12 Apr 2024 16:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938890; cv=none; b=B6hOgL5tI9Rm9tSnLEtijc7FKcT58xIO6U5CZRlS1RF2KcAaJ7fFfijpn8ZSXbH2xQD31Bf1VCa6xPlRMwcxQQ2lQbJgbRS0XnD8/f8UNyqX2W6pP9ioa71xGU5ZY78VN2Bsm599cB0hSQmjmTmA/8htFWSOGGFS6EdMqM1COT0=
+	t=1712938905; cv=none; b=LYiiXu9XkaV0m41YHTt5upo/lcen4KNnnB1CxJDyXs/txgZXtFW4kEvxC1rd7irHHz8tFtVVmwWpv3E/A4Q4cIsM/zLEZnznQ6dHUtmmJ81kW8v1MCwgqC2ALLpwFRrD8WQNO+8Aweb1ng8Z/KPZCq+GSyQnSS41BngxV111wps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938890; c=relaxed/simple;
-	bh=/bBHf8+LhTSqvgNm4MM9zHrseS4i+FeUtlu8k8/NNp8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z6/0p2ejRq7FcpA3yC3PVVaTqjwL64fGIo0mUkpcbhCsYfPc9CVMDmUq2fugxA9wlM0ah+2gFGoTtcGfBGi9UPnV+QiAPmAqnFXyqLQuQW72r3+wHbxF1TQ4XDqK4RzKjZionW4vwfmnE3RUhxvJMKdxeZsGm+gUvUBJx+ooZfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SH4ffIlJ; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SH4ffIlJ"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-ddda842c399so1168416276.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712938887; x=1713543687; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1QDHavbQQqC9GC6PjPIJvqoa4bSQDzx9RT4mlUCMRk0=;
-        b=SH4ffIlJgdxPBfX/uf10HIlaPuQoH8KQCpIWonqXA2Xxm/3i2jcf7Kqpph/TXPjMfW
-         cBB9KEnUl6AC8BmcWyGi4tp/tcpdVQH5SquWRnFqS5XaLlCayEThS45c3irsOgWYo4cm
-         eJbR/ABn2CQwz1Ggb+ltSK2g+S/l+diMNLM6EweXsRnSo9ke6ZGPKJwGNi50luM5Fw+M
-         hDedPoALa8RcnJrx7Yqkkcy3cN5QRRtHbZ/STsFv74pa5ukjYF8+jIkfdOMOGQXA+l2i
-         Z52N5j72PLxBIZTVnq7iSXFLQuffJrijun1P3CXsSadu+cZRkmhqfpEsTGkIANPq3P4E
-         zAdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712938887; x=1713543687;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1QDHavbQQqC9GC6PjPIJvqoa4bSQDzx9RT4mlUCMRk0=;
-        b=P/7rCU/7MC3iWqJdLmy1+89PN/2s5TZiUgVqsiYEZRuR1OL+SLc7+aabxugR0IwIQA
-         S75t8wT/ybgnE6MACG1C6UPe4eGpvJY7inpB8q0aADI2//3Fip7NPjmvW19EPRp9pJAy
-         9Hpz8wO0Oah6a4w90fp0q6nvOszMYmuKIG/xBsdQad27tCCE8W/8pCkcZuJiOdD7E5aC
-         Yzkg6g1E6EBSZp13sV7NWJqPCvAGOFgdrSEa/K0pXtmWHqLKehBSP8j2HGBRqQ4yrti9
-         IBTJNxrguZplRdh/AhtK77MXUhRblgL4QZyCXLlJ1474H0Jax5I2Zc4mGn1ZwESfwCPt
-         6Ucw==
-X-Forwarded-Encrypted: i=1; AJvYcCXzFSocxg5cooKyB9gGxeHksGu7PHF27oAwev8V+F/YMnjb10jw6MCjJuLSiPi3xTgEhqQhuEFYpUVTcjwiP0hYhedfCVPtapfo9cl+
-X-Gm-Message-State: AOJu0Yzw17zE2KE0ShT3xJVd+ySbCZHS1/CNSVGeDvUmc+vKliL247oz
-	/GJtUFZvvnPBzOw2x2x7BligTo+XWY29QR7Uxzu0GWRoyn3b8bMqQYw8c48VsOHeQSXSTlDf0Yf
-	hi5wjW34aHwOMVDTyNODNEzUuAI5gQnSYw6fw7g==
-X-Google-Smtp-Source: AGHT+IEz3OKXrWLV/ZvgH28LAtC8lxPsu1c1fGVznFCJajSMmkV0jqGzuKxeinO2n+Acyg6VdAJNuyazJ5Qz39MvgvU=
-X-Received: by 2002:a05:6902:e13:b0:dc7:4367:2527 with SMTP id
- df19-20020a0569020e1300b00dc743672527mr3787576ybb.49.1712938887518; Fri, 12
- Apr 2024 09:21:27 -0700 (PDT)
+	s=arc-20240116; t=1712938905; c=relaxed/simple;
+	bh=7Ln1zGDs5VGL/Ua6TP+tyPoWlilVIdN9hdABXgxZgtE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E2IRXe7XnWbDh8/wQh+oWpJ+Mx0f25o3ocpOIclK0UY4/ssRVnnbMRe51PFUAYP1R03YXpf0bjnSgxO/QT1F/3eu85InM7aikN/0gz5+LAfMQ/z79LFrYwh1aGbwhh85UL6WMEPywpPylWoqE6ue8DUe+wI/VOwfgXm5e0WMfQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMC65n7Bz6K8gH;
+	Sat, 13 Apr 2024 00:16:50 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4BED11400F4;
+	Sat, 13 Apr 2024 00:21:41 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:21:40 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 21/30] perf/arm-dsu: Assign parents for event_source device
+Date: Fri, 12 Apr 2024 17:10:48 +0100
+Message-ID: <20240412161057.14099-22-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412-pm8xxx-vibrator-new-design-v10-0-0ec0ad133866@quicinc.com>
- <20240412-pm8xxx-vibrator-new-design-v10-1-0ec0ad133866@quicinc.com>
-In-Reply-To: <20240412-pm8xxx-vibrator-new-design-v10-1-0ec0ad133866@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 12 Apr 2024 19:21:16 +0300
-Message-ID: <CAA8EJpp-awdTyfngeYyJaOObOWz=UCSK9U08TfFPA0v=8Naz=A@mail.gmail.com>
-Subject: Re: [PATCH v10 1/4] input: pm8xxx-vibrator: correct VIB_MAX_LEVELS calculation
-To: quic_fenglinw@quicinc.com
-Cc: kernel@quicinc.com, Andy Gross <agross@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, linux-arm-msm@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 12 Apr 2024 at 15:36, Fenglin Wu via B4 Relay
-<devnull+quic_fenglinw.quicinc.com@kernel.org> wrote:
->
-> From: Fenglin Wu <quic_fenglinw@quicinc.com>
->
-> The output voltage is inclusive hence the max level calculation is
-> off-by-one-step. Correct it.
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the platform device.
 
-... while we are at it also add a define for the step size instead of
-using the magic value.
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/arm_dsu_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-With that in place:
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-
->
-> Fixes: 11205bb63e5c ("Input: add support for pm8xxx based vibrator driver")
-> Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
-> ---
->  drivers/input/misc/pm8xxx-vibrator.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/input/misc/pm8xxx-vibrator.c b/drivers/input/misc/pm8xxx-vibrator.c
-> index 04cb87efd799..844ca7e1f59f 100644
-> --- a/drivers/input/misc/pm8xxx-vibrator.c
-> +++ b/drivers/input/misc/pm8xxx-vibrator.c
-> @@ -14,7 +14,8 @@
->
->  #define VIB_MAX_LEVEL_mV       (3100)
->  #define VIB_MIN_LEVEL_mV       (1200)
-> -#define VIB_MAX_LEVELS         (VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV)
-> +#define VIB_PER_STEP_mV                (100)
-> +#define VIB_MAX_LEVELS         (VIB_MAX_LEVEL_mV - VIB_MIN_LEVEL_mV + VIB_PER_STEP_mV)
->
->  #define MAX_FF_SPEED           0xff
->
-> @@ -118,10 +119,10 @@ static void pm8xxx_work_handler(struct work_struct *work)
->                 vib->active = true;
->                 vib->level = ((VIB_MAX_LEVELS * vib->speed) / MAX_FF_SPEED) +
->                                                 VIB_MIN_LEVEL_mV;
-> -               vib->level /= 100;
-> +               vib->level /= VIB_PER_STEP_mV;
->         } else {
->                 vib->active = false;
-> -               vib->level = VIB_MIN_LEVEL_mV / 100;
-> +               vib->level = VIB_MIN_LEVEL_mV / VIB_PER_STEP_mV;
->         }
->
->         pm8xxx_vib_set(vib, vib->active);
->
-> --
-> 2.25.1
->
->
-
-
+diff --git a/drivers/perf/arm_dsu_pmu.c b/drivers/perf/arm_dsu_pmu.c
+index bae3ca37f846..ce98bf169574 100644
+--- a/drivers/perf/arm_dsu_pmu.c
++++ b/drivers/perf/arm_dsu_pmu.c
+@@ -751,6 +751,7 @@ static int dsu_pmu_device_probe(struct platform_device *pdev)
+ 
+ 	dsu_pmu->pmu = (struct pmu) {
+ 		.task_ctx_nr	= perf_invalid_context,
++		.parent		= &pdev->dev,
+ 		.module		= THIS_MODULE,
+ 		.pmu_enable	= dsu_pmu_enable,
+ 		.pmu_disable	= dsu_pmu_disable,
 -- 
-With best wishes
-Dmitry
+2.39.2
+
