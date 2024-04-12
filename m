@@ -1,41 +1,42 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4081494A8;
-	Fri, 12 Apr 2024 16:00:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6A4149C6E;
+	Fri, 12 Apr 2024 16:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712937659; cv=none; b=FWPI1ccam9ksFnbvAFRJYraNElrPyMsA4dH0rm/U6Y1HYtix/+iFnqrTQrYtO/x2v4XY3DZfKnjOSxMBJwgDZGqRwjopGKilngt1qK3/HWTHywFKHVY3lz3AgvDgQtt7SgGejVH3aFoV0DzE+RukkW3/6zeL/DzCevGrq0qfN00=
+	t=1712937666; cv=none; b=ICq2YwGyEP02/ca1CkIxTN+11JMinfsjd40t7EH0V4YFsSsNFsuB25KzNhlCfaJk0YKgcAerlZ56deMDvOW7oeODsiGab2fZWEK2ChyiJxcTNSq5Fc6xEtmyL3cgPdf4FpLIjRTKL4EsXTR+n7bfbka0itBG58xAXGIi3fcUc8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712937659; c=relaxed/simple;
-	bh=jNXV8hHoJduX5tXufEQNHt5F63rCqvvq3i2twRk/QcE=;
+	s=arc-20240116; t=1712937666; c=relaxed/simple;
+	bh=nedm6zi8DyZqLwdQGV6XrSR9pKc//sEbjxK8/qHwmRs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r56WvMD+QV/BLO/Y4mUM0C1jWL1AfSxW38Uw0iRb4/O4jUXDg6dZs7pFYGYUdXRwYrf05TzQrRx8osOkkyfrS0eiZx/rdpCPtwSOeQmpbFMb1Us2ZFa8ulYyaCEf70KUmsQwfBnTJKFxh/Ir5vBT7PyuquaGHJm6NvYytBGJk8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tK0qkGHG; arc=none smtp.client-ip=213.167.242.64
+	 MIME-Version; b=W2G0NebLYYR/vaAHKUM1YcjWvCdRyYDdzi6qOFJy6wdUamRoge0hhCTpqqVq+O/jFyXkiiKG/V9PBM9N5FBMVAOosh/Kxcwe9F/7lgLC/pO2A6yoMYZf/eHfD3e+dU/lUGEwjBG/O6KpDRjvumB8TtYYJPFKV6dM70rxq60hUFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=kjPw9QTA; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tK0qkGHG"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kjPw9QTA"
 Received: from umang.jain (unknown [103.251.226.65])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6018CA12;
-	Fri, 12 Apr 2024 18:00:10 +0200 (CEST)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 77615149D;
+	Fri, 12 Apr 2024 18:00:17 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712937613;
-	bh=jNXV8hHoJduX5tXufEQNHt5F63rCqvvq3i2twRk/QcE=;
+	s=mail; t=1712937620;
+	bh=nedm6zi8DyZqLwdQGV6XrSR9pKc//sEbjxK8/qHwmRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tK0qkGHGuNKwqiWGNCzS2ejCn8mDUhwD/UI3WriGP14gU8hZ0V6mQCR+0bAgstHpl
-	 eDX1kebiR+ywpBH7BDCfabQ/3Bp8jHSGEhbrPo2cxEw8+F0xgDL1opx/aXcmnT/Pfq
-	 TT+ukgFV3eJPozu7EtyJZ0893lV8NNNgUdrifLIM=
+	b=kjPw9QTAFhqqir9sru5BzNgJgCN5jhBiGBua26AAA/JxHht2fu2ewJ1gMNXzHkmud
+	 C9g5t1fRMBXcxsh6E0/1RhC66AI78GYGljE2ByIsRycVybwaFX3rWSpyWzRtO4+zGw
+	 9MG5JfOm7uH/IswYKCsv5KniNu7aj/tiXIE87CCU=
 From: Umang Jain <umang.jain@ideasonboard.com>
 To: linux-media@vger.kernel.org
 Cc: Alexander Shiyan <eagle.alexander923@gmail.com>,
 	Kieran Bingham <kieran.bingham@ideasonboard.com>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
 	open list <linux-kernel@vger.kernel.org>,
-	Umang Jain <umang.jain@ideasonboard.com>
-Subject: [PATCH v6 2/6] media: imx335: Parse fwnode properties
-Date: Fri, 12 Apr 2024 21:30:35 +0530
-Message-ID: <20240412160039.276743-3-umang.jain@ideasonboard.com>
+	Umang Jain <umang.jain@ideasonboard.com>,
+	Tommaso Merciai <tomm.merciai@gmail.com>
+Subject: [PATCH v6 4/6] media: imx335: Use integer values for size registers
+Date: Fri, 12 Apr 2024 21:30:37 +0530
+Message-ID: <20240412160039.276743-5-umang.jain@ideasonboard.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240412160039.276743-1-umang.jain@ideasonboard.com>
 References: <20240412160039.276743-1-umang.jain@ideasonboard.com>
@@ -47,48 +48,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Consider integer values for registers that are related to various
+sizes in the register map. This helps in improving the overall
+readability.
 
-Call the V4L2 fwnode device parser to handle controls that are
-standardised by the framework.
+No functional changes intended in this patch.
 
-Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+Reviewed-by: Tommaso Merciai <tomm.merciai@gmail.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 ---
- drivers/media/i2c/imx335.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/media/i2c/imx335.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-index c633ea1380e7..cebe8cfd77be 100644
+index ee22304f827e..7548518359bc 100644
 --- a/drivers/media/i2c/imx335.c
 +++ b/drivers/media/i2c/imx335.c
-@@ -1227,10 +1227,16 @@ static int imx335_init_controls(struct imx335 *imx335)
- {
- 	struct v4l2_ctrl_handler *ctrl_hdlr = &imx335->ctrl_handler;
- 	const struct imx335_mode *mode = imx335->cur_mode;
-+	struct v4l2_fwnode_device_properties props;
- 	u32 lpfr;
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 7);
-+	ret = v4l2_fwnode_device_parse(imx335->dev, &props);
-+	if (ret)
-+		return ret;
-+
-+	/* v4l2_fwnode_device_properties can add two more controls */
-+	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 9);
- 	if (ret)
- 		return ret;
- 
-@@ -1295,6 +1301,8 @@ static int imx335_init_controls(struct imx335 *imx335)
- 	if (imx335->hblank_ctrl)
- 		imx335->hblank_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
- 
-+	v4l2_ctrl_new_fwnode_properties(ctrl_hdlr, &imx335_ctrl_ops, &props);
-+
- 	if (ctrl_hdlr->error) {
- 		dev_err(imx335->dev, "control init failed: %d\n",
- 			ctrl_hdlr->error);
+@@ -251,12 +251,12 @@ static const struct cci_reg_sequence mode_2592x1940_regs[] = {
+ 	{ IMX335_REG_MODE_SELECT, 0x01 },
+ 	{ IMX335_REG_MASTER_MODE, 0x00 },
+ 	{ IMX335_REG_WINMODE, 0x04 },
+-	{ IMX335_REG_HTRIMMING_START, 0x0180 },
+-	{ IMX335_REG_HNUM, 0x0a20 },
+-	{ IMX335_REG_Y_OUT_SIZE, 0x0794 },
+-	{ IMX335_REG_AREA3_ST_ADR_1, 0x00b0 },
+-	{ IMX335_REG_AREA3_WIDTH_1, 0x0f58 },
+-	{ IMX335_REG_OPB_SIZE_V, 0x00 },
++	{ IMX335_REG_HTRIMMING_START, 384 },
++	{ IMX335_REG_HNUM, 2592 },
++	{ IMX335_REG_Y_OUT_SIZE, 1940 },
++	{ IMX335_REG_AREA3_ST_ADR_1, 176 },
++	{ IMX335_REG_AREA3_WIDTH_1, 3928 },
++	{ IMX335_REG_OPB_SIZE_V, 0 },
+ 	{ IMX335_REG_XVS_XHS_DRV, 0x00 },
+ 	{ CCI_REG8(0x3288), 0x21 },
+ 	{ CCI_REG8(0x328a), 0x02 },
 -- 
 2.43.0
 
