@@ -1,91 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0A7D1487E4
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:13:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92102148852;
+	Fri, 12 Apr 2024 16:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938411; cv=none; b=GTj2Adcbv0L/uEPZ+d0bjVNqE5k5HoGqIR/Kvvg5xrZ7hXDCGquC8pSmXTQDUKCN2ZTxCoiV5eLznOQmikEAn+e/j0byDjlnXRVkZIybB5wzMQqp+NSWWf2wKijG+oLopWTsTwMMg7Xf3Lzu/EEXbHTAIyfe+A1JZe+Y26gsLOs=
+	t=1712938412; cv=none; b=R4+ZjxPFh0QRxCVbEOXGKHbg4g1wvzGj2OrMMzHIT1QKcPgsQKzR59Sqsatr0T8AT72uq3jiFbH+6Z5CTUtsy5tVLCCsRP8AxdmEk23VyZMxKVjS/8aDLeyq1XHcv3Bmsdl6d7ppsPu4OyfR8cooqhx0D7o2EcN1Yuv3FBws3As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938411; c=relaxed/simple;
-	bh=Q4V6Zn9TStSChaSxBLObNVv7hgA1ULUGeyWgeYmigkY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtCbdldEl3II2Zp8m+4HzE3t3LpViZlZEeZtM3ISQYV66n9WP7tFQOoj6O1a4kiLZRcUCcu2IHHwDUDFNAZsXM7gLuohgdQbWyfa5sF5vR7QtsiIE/wWXUw/zIGhrmZy9ePIDfmI+J8Z4oafAxwZU7td4D96b8f/6FrRcHO1ofo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 255B0339;
-	Fri, 12 Apr 2024 09:13:58 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 340723F64C;
-	Fri, 12 Apr 2024 09:13:26 -0700 (PDT)
-Date: Fri, 12 Apr 2024 17:13:23 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 03/31] x86/resctrl: Move ctrlval string parsing policy
- away from the arch code
-Message-ID: <Zhldo59cSmSLwFGZ@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-4-james.morse@arm.com>
- <1776b49b-3c0e-41a7-bbc5-19310c428429@redhat.com>
+	s=arc-20240116; t=1712938412; c=relaxed/simple;
+	bh=XjrtP3T1hTZKulkOporA9XOhQqRvhyYGCrtzl5gRrZc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kA9FhwAHbAoWlI2xwgr7EZTM/KpeH7CjJ8JHFIrWv9NymOC61FeUKJt71pUwhl0n1bK+oX8zC0kqI0ciVuvR2bIfuk0ZR2Dn1uUU2uTSEVA0wTm9xA6GIzl4cL/J0167yW9RXvksBL8nXvh71WjvbhcaphUSrlrpCdUIZ5Q8Bq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM5D65sGz67g1F;
+	Sat, 13 Apr 2024 00:11:44 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5DDF8140119;
+	Sat, 13 Apr 2024 00:13:29 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:13:28 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 05/30] perf/hisi-hns3: Assign parents for event_source device
+Date: Fri, 12 Apr 2024 17:10:32 +0100
+Message-ID: <20240412161057.14099-6-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1776b49b-3c0e-41a7-bbc5-19310c428429@redhat.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi,
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the PCI device.
 
-On Tue, Apr 09, 2024 at 05:13:01PM +0200, David Hildenbrand wrote:
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/hisilicon/hns3_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-[...]
+diff --git a/drivers/perf/hisilicon/hns3_pmu.c b/drivers/perf/hisilicon/hns3_pmu.c
+index 16869bf5bf4c..5236acdcc2e1 100644
+--- a/drivers/perf/hisilicon/hns3_pmu.c
++++ b/drivers/perf/hisilicon/hns3_pmu.c
+@@ -1419,6 +1419,7 @@ static int hns3_pmu_alloc_pmu(struct pci_dev *pdev, struct hns3_pmu *hns3_pmu)
+ 	hns3_pmu->pmu = (struct pmu) {
+ 		.name		= name,
+ 		.module		= THIS_MODULE,
++		.parent		= &pdev->dev,
+ 		.event_init	= hns3_pmu_event_init,
+ 		.pmu_enable	= hns3_pmu_enable,
+ 		.pmu_disable	= hns3_pmu_disable,
+-- 
+2.39.2
 
-> > @@ -195,6 +204,14 @@ int parse_cbm(struct rdt_parse_data *data, struct resctrl_schema *s,
-> >   	return 0;
-> >   }
-> > +static ctrlval_parser_t *get_parser(struct rdt_resource *res)
-> > +{
-> > +	if (res->fflags & RFTYPE_RES_CACHE)
-> > +		return &parse_cbm;
-> > +	else
-> > +		return &parse_bw;
-> > +}
-> 
-> Besides what Reinette said, I'd have added here something that would fire in
-> case someone adds something unexpected in the future, like
-> 
-> WARN_ON_ONCE(!(res->fflags & (RFTYPE_RES_CACHE|RFTYPE_RES_MB));
-> 
-> At the beginning of the function.
-> 
-> 
-> Apart from that, nothing jumped at me.
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
-
-Thanks for that -- I guess that would benefit from discussion; please
-see my reply to Reinette on this patch.
-
-Cheers
----Dave
