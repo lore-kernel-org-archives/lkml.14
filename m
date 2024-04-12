@@ -1,96 +1,111 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6DC3FE5B;
-	Fri, 12 Apr 2024 06:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7605B2C87C
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712903290; cv=none; b=uF2/oOx7skK9SF3SstkB15evn9GstrLKcR5mjhIJyr/NKi5KqbywvvExykVDE4HaKPLhve5nSGgDLBmcSc+bnxnlIQ8KLdjCPOYazFmUaHbcVUg29AJ+N0TCPBM89xuOqA/uvRYy8shYdfgdry4AJ/8Dpw5S3QrAPQluaKoAr+8=
+	t=1712903336; cv=none; b=rH0b/pc82/ujW5Qqy+EhTC8aaLJRWxJsETSddyNkPbzRYDEiDSwUrSgzW1Thntvtri7luOQ6YW4Gjmrk1yqnaDpQ6jjedyvDd2sA8dQvopGai9pFoIocds7UKyCzpM+GPpg+So9lUcEFWWKuYmmeArgeevNfa/hpDZS3wP9gRVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712903290; c=relaxed/simple;
-	bh=s25N0TuD2mKVnak326HEWl8NP4R38SQt9FxwJaCaMSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UWZP2E6hRCZdOc97r0MEKlzqEqmCMwQ37uwt3Rm1JjoUinttGhFU5deGjhKZCl4KcTVvuJX/cxnw+WyovhIaP4U72tyQyy5aamMbzZ5ym5Vu8NXa/i6oM0V1IVWefHw+7i412RsYHH3cTSbwDOY0wBByQw6bGICJN18yWi9OkM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=I4TntV39; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1712903336; c=relaxed/simple;
+	bh=+RwbcFry8D89CJYvhce0MUVsj/oVUO7sMBwglPpCnGs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SSncdS3VnPgYcBls2hVBmPY3sTMQ38/qkUXg4aw7bqHf+StGsQFQZ3fB1lA8tSgrW8J+C7Rh4yQbx3j3tPIrdq0cyqfkDNuTchLteNvAfFZpD0reEvKkEBLmsU3cYiwOxhyVkgnEnyCDjYi7R2oSVEWoHkEpe2/5wQFW75+sSQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Byzm0yPe; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="I4TntV39"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43C0RJ5o014097;
-	Fri, 12 Apr 2024 08:27:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=s25N0TuD2mKVnak326HEWl8NP4R38SQt9FxwJaCaMSI=; b=I4
-	TntV39qdNvna/x0r4lkyP4NzQgLHdtb5KRXZXhmRYLAHBxfbGILwiOlyQySw7/N2
-	brRLGppXPHoQPVfMk5e/FG+PE33r3WSI8mW2L/ciNJnEmlcVMlfSDH23kfRWnWAZ
-	Gy7P+uAg7k9G+/BPY+njfs6w2OSnvfevI8hb6f+90goDO3hRxUStsMmt/Y2/1pxp
-	lazHYhTpaAKiJ20VUadXbsXn+DjvET9aKobGeawDuOa6r0lqBK7cnbJU9TUEYCmV
-	qDiHXAsL9uZixO/nwRo91Q2FoDHgIhMu/Fx5zke78HLfGI+dEA5A+KiLj/b9plTL
-	38vWRqK8d5os4zSm2cew==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xauh5fnqj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 08:27:45 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8E8324002D;
-	Fri, 12 Apr 2024 08:27:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B0AAA20DD96;
-	Fri, 12 Apr 2024 08:26:53 +0200 (CEST)
-Received: from [10.252.29.77] (10.252.29.77) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 12 Apr
- 2024 08:26:52 +0200
-Message-ID: <82b2a672-ecd9-40e6-83fb-c469498230af@foss.st.com>
-Date: Fri, 12 Apr 2024 08:26:52 +0200
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Byzm0yPe"
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E35083F17B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1712903325;
+	bh=+RwbcFry8D89CJYvhce0MUVsj/oVUO7sMBwglPpCnGs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=Byzm0yPe+uRrHVoGuXVRmJiuQEdwCUHhknpG4Q/b6fsYXHqOJ1tu+DRbW/TbWHlk2
+	 MNwLvUmb4gTbYKpUKH0ySWwNbE/pZX4JW+jJg5uVJyKYmB2JLLxBsHzIHbP+G8/m/5
+	 V7xuii9jJ9+P0KG4zfW2hfxQzLepWO8qXkiL+AgEmFCvD9Uj7khqxrwQetXG+zPsvr
+	 cCPQubAzZs4YqaSd+9PutkNb+P8gu1d8i0flj+BenUi9Jv5C6iE1jMZQOVNzdp925P
+	 GN+3z/Ud8dmiOCLyTutRpBJL2SNH6E7rkyY+PNv7kCbfhE/Yqo/Blqli95wiHNALcp
+	 GeJt8/o6QgMcw==
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2a517457163so536692a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 23:28:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712903324; x=1713508124;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+RwbcFry8D89CJYvhce0MUVsj/oVUO7sMBwglPpCnGs=;
+        b=hjoIgXNbX6HeTRLGCSVLN30v911+Bl+q7JG6h64Kw3cKfk5lLN77ppRqOBRWzxSYuR
+         fqLxpGI+fqmJ9/80LnZjHn2lUTLT0HgzVMhdkk3h36AXOBvrQGNaCJz5GN3+WQ2sk7m2
+         5iukW8O18UFZOFM7M6/6+t3Ca4LgkpfI94sSPXp9il87Ai5Ku6UiEdw1FnFUN72cxYgW
+         MgFiH3HRRw8rRfTNFYdoNEjUYwqSJIStOubpJi6fnUxot0nwYzqhqP/oZ9sxH+QESVSY
+         UQgRBOWMbJOQ+5AIG4DoIY5uaCaesH/x3jKknVpCoO+5Kl06UQN7fgdLmX+HXK1rDY3M
+         DyUw==
+X-Forwarded-Encrypted: i=1; AJvYcCW1aBZImjjuJIZ0fOfFAD/2kKHtBmsP0VCaHyUgiilj0fyeV8RreVQRZZ0txg82ovUaNRegrJpa12Du6vLTaRuRW23xr2kzhoL+jno/
+X-Gm-Message-State: AOJu0Yx4BPjCeXgk+CxhuncEbtccNEruUm6BBWfYSSooPMqUPxV+LYmE
+	RdLYf1kDn0h0QgWyvzYwwPDM+BtwHwha3LnQvMvvTBdQhpVJg1wEjjQiMNw7RJ3R1aLBKxuqZJi
+	fuJCsxYNQV+iQeoaE43tMKxc7TooVVRrttnlRzYhuuXx3SwStcXf0fkjJo3T3NHchCGrFI8Vgo5
+	nmIbsSsPytCrwYhzVJhJ8238RIXfAJNOVv5GbBUGqV1v6xcAT4x+P7
+X-Received: by 2002:a17:90a:6f84:b0:2a3:ba0:d9f with SMTP id e4-20020a17090a6f8400b002a30ba00d9fmr1707268pjk.11.1712903324487;
+        Thu, 11 Apr 2024 23:28:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3ziXTJu0QamXxvs6gYNvz/UNmyeoJRNxjKRKuN6UjDuQ4mIcj3plCiuEPcjfLbDFMjUnt4dCG4AFXjDUNO/s=
+X-Received: by 2002:a17:90a:6f84:b0:2a3:ba0:d9f with SMTP id
+ e4-20020a17090a6f8400b002a30ba00d9fmr1707254pjk.11.1712903324140; Thu, 11 Apr
+ 2024 23:28:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/4] clk: stm32: introduce clocks for STM32MP257
- platform
-To: Stephen Boyd <sboyd@kernel.org>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC: <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240411092453.243633-1-gabriel.fernandez@foss.st.com>
- <20240411092453.243633-4-gabriel.fernandez@foss.st.com>
- <7efb8858995d0c97ad2deccb24318353.sboyd@kernel.org>
-Content-Language: en-US
-From: Gabriel FERNANDEZ <gabriel.fernandez@foss.st.com>
-In-Reply-To: <7efb8858995d0c97ad2deccb24318353.sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_03,2024-04-09_01,2023-05-22_02
+References: <20240405102436.3479210-1-lma@chromium.org> <ZhOccGFkTFkUkRUI@hovoldconsulting.com>
+ <CAE5UKNqufWZfKLAXLcpBYKQpJEVt6jPD4Xtr=Nesh34VkNOETg@mail.gmail.com>
+ <ZhVix-HJrqQbiPrB@hovoldconsulting.com> <CAE5UKNp3uS9cqDbQjcP3SbfxVi3wPFG4LtP6z=WU_V+M9x6LtQ@mail.gmail.com>
+In-Reply-To: <CAE5UKNp3uS9cqDbQjcP3SbfxVi3wPFG4LtP6z=WU_V+M9x6LtQ@mail.gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Fri, 12 Apr 2024 14:28:32 +0800
+Message-ID: <CAAd53p54HYPZEbK2aKQXjZt0V0-u-+F+6yqFjLzSVZx5BXG91w@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: i2c-hid: wait for i2c touchpad deep-sleep to
+ power-up transition
+To: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Cc: Johan Hovold <johan@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+	Dmitry Torokhov <dtor@chromium.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+	Douglas Anderson <dianders@chromium.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Maxime Ripard <mripard@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Radoslaw Biernacki <rad@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi =C5=81ukasz,
 
-On 4/12/24 08:22, Stephen Boyd wrote:
-> Quoting gabriel.fernandez@foss.st.com (2024-04-11 02:24:52)
->> From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
->>
->> This driver is intended for the STM32MP25 clock family and utilizes
->> the stm32-core API, similar to the stm32mp13 clock driver.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
->> ---
-> Applied to clk-next
-Thank's Stephen
+On Thu, Apr 11, 2024 at 10:23=E2=80=AFPM =C5=81ukasz Majczak <lma@chromium.=
+org> wrote:
+>
+> > Sure, but what about other transactions that are initiated by the host
+> > (e.g. SET_POWER)?
+> >
+> Somehow it is problematic only on reboot and works just fine on
+> suspend/resume and
+> set_power.
+> I will dig more and try to find out what the difference is.
+
+If cold boot doesn't have such issue, maybe I2C_HID_PWR_SLEEP
+shouldn't be used by reboot?
+
+Kai-Heng
+
+>
+> > Perhaps this hack at probe is enough for your use case, but is an
+> > incomplete hack and at a minimum you'd need to add a comment explaining
+> > why it is there.
+> >
+> You mean a comment in the code ?
+>
+> Lukasz
