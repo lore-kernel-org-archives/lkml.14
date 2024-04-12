@@ -1,149 +1,179 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A8455774;
-	Fri, 12 Apr 2024 10:01:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0445151C54
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712916085; cv=none; b=dM07XuYnWfVT4PAd/8XXfNd+S5iLhgUBP5t7QQBxE0oAT7w5nTVAhPsIXvoUhxmYEgrUnyIzT5k+FxEh3m7Slnp1YZdpVOruJqLLTz0ezuw5s/oj7XeHwtos1xnVRi9bl76xVZI6PzBbQVo2NZKD6Npw2badA1cKQBeRIIFMjUs=
+	t=1712916110; cv=none; b=DCthEQ7lF6rZ5Rq5+y3F2NdIxLhr12Fr8RSbH7LeT7n4hhpjbcIdDs3GCKuBTDTwNk+lcHS7NvKemcJW33oOrR9ugyDf9Vogic06me7AiOVNxayT/NQRbKHCKGBTNUni8YWNoQCXPcytc2iQrMLSMiApNnZDDBgrDQtrLXh4Cjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712916085; c=relaxed/simple;
-	bh=MsTjAOc8LxDsKaFl5Csrf742XdcLyMoxIe5ic/J1zcs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gs/LpPW9zZXbvpLL0+2lbY4rDt3LHHRN65J6SKe1TQuv1DTyNsdBXW2icGfLvsrUn5od0UCLR/msNiq8jVb5XOggQScMP+J8j87e0aX7s9W1Ln1IejSYc28Kiwd/rzB69gzc5U0sHtIpyBekwjtxcAsw+xT5jG9MBnMSTsZk9fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-IronPort-AV: E=Sophos;i="6.07,195,1708354800"; 
-   d="scan'208";a="205195042"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 12 Apr 2024 19:01:20 +0900
-Received: from renesas-deb12.cephei.uk (unknown [10.226.93.65])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id C03AF41E0D3A;
-	Fri, 12 Apr 2024 19:01:15 +0900 (JST)
-From: Paul Barker <paul.barker.ct@bp.renesas.com>
-To: Sergey Shtylyov <s.shtylyov@omp.ru>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	YueHaibing <yuehaibing@huawei.com>,
-	netdev@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [net PATCH v2 4/4] net: ravb: Fix RX byte accounting for jumbo packets
-Date: Fri, 12 Apr 2024 11:00:24 +0100
-Message-Id: <20240412100024.2296-5-paul.barker.ct@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412100024.2296-1-paul.barker.ct@bp.renesas.com>
-References: <20240412100024.2296-1-paul.barker.ct@bp.renesas.com>
+	s=arc-20240116; t=1712916110; c=relaxed/simple;
+	bh=n5UIGDnGAnQhmspgpvLN1L4/vpZPbUm9S+DnELtT/rA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=f4u3ZA8aO8XR5pdnu7JT2GSB7BIAn/Tedbax195mqQsXDZGaHlAj79xqawXZShMD9laAUhfAhXtnh2Pj+Pswlx+bRjMWL7L6qSgOY+MSS4DtIemUDkYujpMSwUb2sS8bhM7E5Vw4U6LAFn92l9UfHwFpS5EcJPDrNGT98tMzh08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KH6DsjiM; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KH6DsjiM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712916106; x=1744452106;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=n5UIGDnGAnQhmspgpvLN1L4/vpZPbUm9S+DnELtT/rA=;
+  b=KH6DsjiMrGmanF1OoByJTDKT61PMa5qxffTyR6gH/B0DLxz0TKzLNGS0
+   O8zrBOvNe1t90f5U3aWpTwR1Uo6+lD3N5t3YQk3CtkUJEmRDrsAGvNmIT
+   g4cvPl1qFx+F4xZJdr1LzjE8+5p7n9nuvbW53ar2DsLBZTDDi1WP6TPj2
+   Tk79pX7yv+SIPAQTORxUAOBC2JKTwxKq6vhqNQ8u22wot+JDcfDiciS9r
+   G9DPYCrh7Sr05D6dkL43s9ivzdCc7ZsaAoKgvLYIhimOKFjvoyAkIbh1O
+   4R9cDxQ7ZatFkeNulnlgQ3Twfq3SoIodGyixRmoHfdrevOd+Na8dOdzcX
+   g==;
+X-CSE-ConnectionGUID: RefX/JqLQkSvN2iHfpoaug==
+X-CSE-MsgGUID: hyaFvKWYRRSppq97f+utug==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="18922738"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="18922738"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 03:01:45 -0700
+X-CSE-ConnectionGUID: IlXeGO8KSAa7B1wu4RcR3g==
+X-CSE-MsgGUID: gqWz5/k8RZ2rNOlwnX4DQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="52161505"
+Received: from mohdaris-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.61.65])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 03:01:43 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Steven Price <steven.price@arm.com>, Andrew Morton
+ <akpm@linux-foundation.org>, David Laight <David.Laight@ACULAB.COM>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Gow
+ <davidgow@google.com>, Christian =?utf-8?Q?K=C3=B6nig?=
+ <christian.koenig@amd.com>
+Subject: Re: [PATCH 0/4] log2: make is_power_of_2() more generic
+In-Reply-To: <8905800b-a977-e821-01ea-a43333f46904@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20230330104243.2120761-1-jani.nikula@intel.com>
+ <20230330125041.83b0f39fa3a4ec1a42dfd95f@linux-foundation.org>
+ <549987e4967d45159573901d330c96a0@AcuMS.aculab.com>
+ <20230330151846.fdbc8edbfbaa6eaddb056dc7@linux-foundation.org>
+ <87edp52ufk.fsf@intel.com> <8905800b-a977-e821-01ea-a43333f46904@arm.com>
+Date: Fri, 12 Apr 2024 13:01:36 +0300
+Message-ID: <87jzl2527z.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The RX byte accounting for jumbo packets was changed to fix a potential
-use-after-free bug. However, that fix used the wrong variable and so
-only accounted for the number of bytes in the final descriptor, not the
-number of bytes in the whole packet.
+On Wed, 05 Apr 2023, Steven Price <steven.price@arm.com> wrote:
+> On 31/03/2023 09:31, Jani Nikula wrote:
+>> On Thu, 30 Mar 2023, Andrew Morton <akpm@linux-foundation.org> wrote:
+>>> On Thu, 30 Mar 2023 21:53:03 +0000 David Laight <David.Laight@ACULAB.COM> wrote:
+>>>
+>>>>> But wouldn't all these issues be addressed by simply doing
+>>>>>
+>>>>> #define is_power_of_2(n) (n != 0 && ((n & (n - 1)) == 0))
+>>>>>
+>>>>> ?
+>>>>>
+>>>>> (With suitable tweaks to avoid evaluating `n' more than once)
+>>>>
+>>>> I think you need to use the 'horrid tricks' from min() to get
+>>>> a constant expression from constant inputs.
+>>>
+>>> This
+>>>
+>>> --- a/include/linux/log2.h~a
+>>> +++ a/include/linux/log2.h
+>>> @@ -41,11 +41,11 @@ int __ilog2_u64(u64 n)
+>>>   * *not* considered a power of two.
+>>>   * Return: true if @n is a power of 2, otherwise false.
+>>>   */
+>>> -static inline __attribute__((const))
+>>> -bool is_power_of_2(unsigned long n)
+>>> -{
+>>> -	return (n != 0 && ((n & (n - 1)) == 0));
+>>> -}
+>>> +#define is_power_of_2(_n)				\
+>>> +	({						\
+>>> +		typeof(_n) n = (_n);			\
+>>> +		n != 0 && ((n & (n - 1)) == 0);		\
+>>> +	})
+>>>  
+>>>  /**
+>>>   * __roundup_pow_of_two() - round up to nearest power of two
+>>> _
+>>>
+>>> worked for me in a simple test.
+>>>
+>>> --- a/fs/open.c~b
+>>> +++ a/fs/open.c
+>>> @@ -1564,3 +1564,10 @@ int stream_open(struct inode *inode, str
+>>>  }
+>>>  
+>>>  EXPORT_SYMBOL(stream_open);
+>>> +
+>>> +#include <linux/log2.h>
+>>> +
+>>> +int foo(void)
+>>> +{
+>>> +	return is_power_of_2(43);
+>>> +}
+>>> _
+>>>
+>>>
+>>> foo:
+>>> # fs/open.c:1573: }
+>>> 	xorl	%eax, %eax	#
+>>> 	ret	
+>>>
+>>>
+>>> Is there some more tricky situation where it breaks?
+>> 
+>> It doesn't work with BUILD_BUG_ON_ZERO().
+>
+> Like most programming problems, you just need another layer of
+> indirection! The below works for me in all the cases I could think of
+> (including __uint128_t).
+>
+>
+> #define __IS_POWER_OF_2(n) (n != 0 && ((n & (n - 1)) == 0))
+>
+> #define _IS_POWER_OF_2(n, unique_n)				\
+> 	({							\
+> 		typeof(n) unique_n = (n);			\
+> 		__IS_POWER_OF_2(unique_n);			\
+> 	})
+>
+> #define is_power_of_2(n)					\
+> 	__builtin_choose_expr(__is_constexpr((n)),		\
+> 			      __IS_POWER_OF_2((n)),		\
+> 			      _IS_POWER_OF_2(n, __UNIQUE_ID(_n)))
+>
+>
+> Although Jani's original might be easier to understand.
 
-To fix this, we can simply update our stats with the correct number of
-bytes before calling napi_gro_receive().
+I dropped the ball since I couldn't make heads or tails what I should be
+doing. And a year has passed. I'll note that the kernel has a number of
+helpers for "is power of 2" for u64 and for constant expressions,
+outside of log2.h.
 
-Also rename pkt_len to desc_len in ravb_rx_gbeth() to avoid any future
-confusion. The variable name pkt_len is correct in ravb_rx_rcar() as
-that function does not handle packets spanning multiple descriptors.
+I tried to make is_power_of_2() work for all the cases. Would it be more
+palatable if I just added all the variants separately to log2.h?
 
-Fixes: 5a5a3e564de6 ("ravb: Fix potential use-after-free in ravb_rx_gbeth()")
-Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
----
- drivers/net/ethernet/renesas/ravb_main.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+- Leave is_power_of_2() as is
+- Add is_power_of_2_u64() for 32-bit build compatible 64-bit checks
+- Add IS_POWER_OF_2() macro for constant expressions
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index e1e39f65224c..c4ac9fbe0af4 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -769,7 +769,7 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 	dma_addr_t dma_addr;
- 	int rx_packets = 0;
- 	u8  desc_status;
--	u16 pkt_len;
-+	u16 desc_len;
- 	u8  die_dt;
- 	int entry;
- 	int limit;
-@@ -787,10 +787,10 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 		/* Descriptor type must be checked before all other reads */
- 		dma_rmb();
- 		desc_status = desc->msc;
--		pkt_len = le16_to_cpu(desc->ds_cc) & RX_DS;
-+		desc_len = le16_to_cpu(desc->ds_cc) & RX_DS;
- 
- 		/* We use 0-byte descriptors to mark the DMA mapping errors */
--		if (!pkt_len)
-+		if (!desc_len)
- 			continue;
- 
- 		if (desc_status & MSC_MC)
-@@ -811,25 +811,25 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 			switch (die_dt) {
- 			case DT_FSINGLE:
- 				skb = ravb_get_skb_gbeth(ndev, entry, desc);
--				skb_put(skb, pkt_len);
-+				skb_put(skb, desc_len);
- 				skb->protocol = eth_type_trans(skb, ndev);
- 				if (ndev->features & NETIF_F_RXCSUM)
- 					ravb_rx_csum_gbeth(skb);
- 				napi_gro_receive(&priv->napi[q], skb);
- 				rx_packets++;
--				stats->rx_bytes += pkt_len;
-+				stats->rx_bytes += desc_len;
- 				break;
- 			case DT_FSTART:
- 				priv->rx_1st_skb = ravb_get_skb_gbeth(ndev, entry, desc);
--				skb_put(priv->rx_1st_skb, pkt_len);
-+				skb_put(priv->rx_1st_skb, desc_len);
- 				break;
- 			case DT_FMID:
- 				skb = ravb_get_skb_gbeth(ndev, entry, desc);
- 				skb_copy_to_linear_data_offset(priv->rx_1st_skb,
- 							       priv->rx_1st_skb->len,
- 							       skb->data,
--							       pkt_len);
--				skb_put(priv->rx_1st_skb, pkt_len);
-+							       desc_len);
-+				skb_put(priv->rx_1st_skb, desc_len);
- 				dev_kfree_skb(skb);
- 				break;
- 			case DT_FEND:
-@@ -837,17 +837,17 @@ static bool ravb_rx_gbeth(struct net_device *ndev, int *quota, int q)
- 				skb_copy_to_linear_data_offset(priv->rx_1st_skb,
- 							       priv->rx_1st_skb->len,
- 							       skb->data,
--							       pkt_len);
--				skb_put(priv->rx_1st_skb, pkt_len);
-+							       desc_len);
-+				skb_put(priv->rx_1st_skb, desc_len);
- 				dev_kfree_skb(skb);
- 				priv->rx_1st_skb->protocol =
- 					eth_type_trans(priv->rx_1st_skb, ndev);
- 				if (ndev->features & NETIF_F_RXCSUM)
- 					ravb_rx_csum_gbeth(priv->rx_1st_skb);
-+				stats->rx_bytes += priv->rx_1st_skb->len;
- 				napi_gro_receive(&priv->napi[q],
- 						 priv->rx_1st_skb);
- 				rx_packets++;
--				stats->rx_bytes += pkt_len;
- 				break;
- 			}
- 		}
+Please just tell me what to do and I'll do it.
+
+BR,
+Jani.
+
+
 -- 
-2.39.2
-
+Jani Nikula, Intel
