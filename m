@@ -1,166 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E28255E22C;
-	Fri, 12 Apr 2024 15:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from luna.linkmauve.fr (luna.linkmauve.fr [82.65.109.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF74D85285;
+	Fri, 12 Apr 2024 15:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.65.109.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712934203; cv=none; b=bE0KaBM8GHeJflbngjwJYphYtisbrzAGipzduKDmO0HsHYYxq1rUMfwutGlp3fBvlVzrnyvvDavATsps25/WN2w8u4F/+gypGLjM5q1gK2E87IdJX2SZeIDQEj4DRCm20LEpJ8bNLFX7GTm5G6fGri8Kcwo2tDy/gqZLZ6WK93A=
+	t=1712934449; cv=none; b=ApxkWRAqKwfOg5I1tQXQMHlhKuVeYi+oefgbWFt3kiVuhYIjeCIawXuTec8ozUT/ChtIvoOMW0I6zHNFRFAyIL6BJLQ87JJUL7PAia60qIrnSRYBuP4MMCE5IHQKJ8jSSvOhZphaeDHQN/4CtXS8c9ssUJP3OeTYaddGodIdYqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712934203; c=relaxed/simple;
-	bh=mDlAyg03Xf+YaOewa7opqqZcaya2AsaSnYev+L3GrAA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ec971CX36qcxjnRGrK23P1aWxcIH2LJCFcJKPNl3d084JeOwbWTZJ6MDPR3ldUY3w1vIMmhLAxzCX/c5vzKKnV67dvf9Cqg+er4cCD4N6DlEEw5y5h8YHNSxLu7Cf0N8Lug5+ztj2E7mFe7XkSIDkhoFPTxmbbR8JvU8LitedwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 385FF339;
-	Fri, 12 Apr 2024 08:03:47 -0700 (PDT)
-Received: from [192.168.20.58] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B84C83F64C;
-	Fri, 12 Apr 2024 08:03:15 -0700 (PDT)
-Message-ID: <2cde00c8-7878-45c0-8621-fca4e70c75e7@arm.com>
-Date: Fri, 12 Apr 2024 10:03:14 -0500
+	s=arc-20240116; t=1712934449; c=relaxed/simple;
+	bh=voCHpxixn5k41RDfN/siqd8KEKEYBlLi9myAWQrB8c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e7F4Pn3Yi2EsaF6+XMhwfg4S/6W0XpO51tWeV16tF/aAGx9kP6YV3SEDbJdk8Z23K0bs10qBQsSF/b85KsPKlGkMq9tM1uPVnbPn5prQUNkuHNqb4kqgzHow33Elc4qtvK+3ordMCi3tDpAhzGbLNWlzrpk3zCXDrYFaWI2GGgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr; spf=pass smtp.mailfrom=linkmauve.fr; arc=none smtp.client-ip=82.65.109.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linkmauve.fr
+Received: by luna.linkmauve.fr (Postfix, from userid 1000)
+	id 4EDA110A25E8; Fri, 12 Apr 2024 17:07:19 +0200 (CEST)
+Date: Fri, 12 Apr 2024 17:07:19 +0200
+From: Link Mauve <linkmauve@linkmauve.fr>
+To: Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Link Mauve <linkmauve@linkmauve.fr>, linux-kernel@vger.kernel.org,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Shreeya Patel <shreeya.patel@collabora.com>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+	linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev
+Subject: Re: [PATCH v2 0/2] Enable JPEG encoding on rk3588
+Message-ID: <ZhlOJ4gOuO9k-A37@desktop>
+References: <20240327134115.424846-1-linkmauve@linkmauve.fr>
+ <bbcb66e9499120a86b367e7abdac2d8e2e704bfb.camel@ndufresne.ca>
+ <ZhAI6tQZTD7BTosI@desktop>
+ <ed0b32ec6da10f46ff5d820612bfe700388fae1e.camel@ndufresne.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH 1/2] ACPI: PPTT: Populate cacheinfo
- entirely with PPTT
-Content-Language: en-US
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org
-References: <20240407123829.36474-1-cuiyunhui@bytedance.com>
- <abd135fa-c432-4e37-9792-07a0e17e93d5@arm.com>
- <CAEEQ3w=+C2J0ZS227-1P-B+pe_NRp_3i4c4CxGssiKqbpXx_qw@mail.gmail.com>
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <CAEEQ3w=+C2J0ZS227-1P-B+pe_NRp_3i4c4CxGssiKqbpXx_qw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ed0b32ec6da10f46ff5d820612bfe700388fae1e.camel@ndufresne.ca>
+Jabber-ID: linkmauve@linkmauve.fr
 
-Hi,
-
-
-On 4/10/24 21:28, yunhui cui wrote:
-> Hi Jeremy,
+On Sun, Apr 07, 2024 at 10:08:58AM +0200, Nicolas Dufresne wrote:
+> Le vendredi 05 avril 2024 à 16:21 +0200, Link Mauve a écrit :
+> > On Thu, Apr 04, 2024 at 01:41:15PM -0400, Nicolas Dufresne wrote:
+> > > Hi,
+> > 
+> > Hi,
+> > 
+> > > 
+> > > Le mercredi 27 mars 2024 à 14:41 +0100, Emmanuel Gil Peyrot a écrit :
+> > > > Only the JPEG encoder is available for now, although there are patches
+> > > > for the undocumented VP8 encoder floating around[0].
+> > > 
+> > > [0] seems like a broken link. The VP8 encoder RFC is for RK3399 (and Hantro H1
+> > > posted by ST more recently). The TRM says "VEPU121(JPEG encoder only)", which
+> > > suggest that the H.264 and VP8 encoders usually found on the VEPU121 are
+> > > removed. As Rockchip have remove the synthesize register while modifying the H1
+> > > IP, it is difficult to verify. Confusingly the H.264 specific registers are
+> > > documented in the TRM around VEPU121.
+> > 
+> > Ah, the link became, and was indeed ST’s series:
+> > https://patchwork.kernel.org/project/linux-rockchip/list/?series=789885&archive=both
+> > 
+> > But the TRM part 1 says the VEPU121 supports H.264 encoding (page 367),
+> > and it’s likely they didn’t remove just VP8 support since the codec
+> > features are pretty close to H.264’s.
+> > 
+> > > 
+> > > > 
+> > > > This has been tested on a rock-5b, resulting in four /dev/video*
+> > > > encoders.  The userspace program I’ve been using to test them is
+> > > > Onix[1], using the jpeg-encoder example, it will pick one of these four
+> > > > at random (but displays the one it picked):
+> > > > % ffmpeg -i <input image> -pix_fmt yuvj420p temp.yuv
+> > > > % jpeg-encoder temp.yuv <width> <height> NV12 <quality> output.jpeg
+> > > 
+> > > I don't like that we exposing each identical cores a separate video nodes. I
+> > > think we should aim for 1 device, and then multi-plex and schedule de cores from
+> > > inside the Linux kernel.
+> > 
+> > I agree, but this should be handled in the driver not in the device
+> > tree, and it can be done later.
 > 
-> On Wed, Apr 10, 2024 at 9:30 AM Jeremy Linton <jeremy.linton@arm.com> wrote:
->>
->> Hi,
->>
->>
->> First thanks for working on this.
->>
->> On 4/7/24 07:38, Yunhui Cui wrote:
->>> When the type and level information of this_leaf cannot be obtained
->>> from arch, cacheinfo is completely filled in with the content of PPTT.
->>
->> I started reviewing this, based on what I understood to be the need to
->> generate the topology entirely from the PPTT. But, it was raising more
->> questions than answers because the PPTT is far too flexable in its
->> ability to represent cache hierachies that arn't logically useful. For
->> example multiple I or D caches at the same level, or I or D caches
->> higher in the topology than unified ones.
->>
->> At least for arm64 (and I think others) there is an understood
->> simplification that there will be N levels of split I/D caches and M
->> unified levels. And from that, the number of cache leaves are computed
->> and allocated, and then we go in and largly skip PPTT cache nodes which
->> don't make sense in view of a generic topology like that. (see the
->> comment in cacheinfo.c:506)
->>
->> Both of those pieces of information are available in
->> acpi_get_cache_info(). The missing part is marking those N levels of I/D
->> cache as such.
->>
->> Looking at this code I don't really see all the error/allocation
->> logic/etc that assures the cache leaf indexing is allocated correctly
->> which worries me, although admidditly I could be missing something
->> important.
->>
->> In summary, did you consider just allocating matching I/D caches from
->> the number of split levels in acpi_get_cache_info() then removing or
->> invalidating the ones that don't have matching PPTT entries after
->> running cache_setup_acpi()? Thats a fairly trivial change AFAIK if the
->> decision is based on the lack of a cache_id or just changing the
->> this_leaf->type = CACHE_TYPE_UNIFIED assignment to the correct type and
->> assuring left over CACHE_TYPE_NOCACHE entries are removed. I think much
->> of the "significant work" is likely fixed for that to work. Just
->> tweaking detect_cache_level()/get_cache_type() to set
->> CACHE_TYPE_SEPERATE if the level is less than the acpi_get_cache_info()
->> split_level value probably also does the majority of what you need
->> outside of having unequal counts of I and D caches.
->>
->> There are probably other choices as well, thoughts?
->>
+> As the behaviour we want is that these cores becomes a group and get schedule
+> together, its certainly a good time to slow down and evaluate if that part needs
+> to be improve in the DT too.
 > 
-> First, I think the current state of the ACPI PPTT specification meets
-> the requirements and is logically complete. Otherwise, the PPTT
-> specification needs to be updated, right?
+> Hantro G1/H1 and VEPU/VDPU121 combos originally shared the same sram region. Its
+> not clear if any of these cores have this limitation and if this should be
+> expressed in the DT / driver.
 
-The specification is capable of representing all the actual physical 
-topologies I'm aware of, its also capable of representing quite a number 
-of topologies that don't make sense to (cant be) build and are largely 
-nonsense. There are some further details around replacement and 
-allocation which could be represented but were AFAIK not considered 
-worth the effort because it makes the representation far more complex.
+The TRM on page 369 mentions that:
+> Please note that VDPU121 and VDPU381 and VDPU720 and AV1 and VEPU121 and VEPU580
+> is different IP cores, so these processing core can be work together.
 
-So, except for minor clarifications I'm not aware of a need to update it.
-
-> Our discussion is best focused on the existing and usual case, even on
-> ARM64, which is as you say "N-level separated I/D cache, M-level
-> unified".
-
-I understood this was for RISC-V when I reviewed it, but i'm fairly 
-certain the general cache topologies of RISC-V machines don't vary in 
-their core concepts and layout much from the wide variety of 
-possibilities available elsewhere. So its roughly the same problem, you 
-will likely have one or two layers of split I/D caches and then a number 
-of unified private or shared caches above that.
-
+I understand that as them not sharing any memory and being able to work
+independently.
 
 > 
-> And then, the problem we have now is that the RISC-V architecture does
-> not have a set of registers to describe the cache level and type like
-> ARM64 does, so we need to fully trust the contents of the PPTT table.
-> Please check the patch:
-> https://patchwork.kernel.org/project/linux-riscv/patch/20240407123829.36474-2-cuiyunhui@bytedance.com/
-
-I don't think "fully trust" is something you really want, or is helpful 
-as I suggested above.
-
-I suspect all that is needed is the construction of the missing I/D 
-layers, as the existing code will create the Unified layers above as it 
-does today. On Arm64 the unified system level caches aren't usually 
-described by the core cache registers either, which is why there is that 
-existing bit of code to change unknown caches to unified. But it also 
-turns out the pptt walking code is capable of providing the information 
-to create the I/D layers as well, if they are matched (ex there exists 
-an I cache for every D cache at a certain level).
-
-So, more clarity about the kinds of topologies you expect is helpful to 
-understand where the current code is failing.
-
-AKA, As I mentioned I'm fairly certain that its possible to construct 
-the entire cache topology from the PPTT by changing get_cache_type() to 
-return "CACHE_TYPE_SEPERATE" when the level is less than the value 
-returned as "split_level" from acpi_get_cache_info(). That tends to 
-ignore some edge cases, but I might put them in the "don't to that" bucket.
-
-
-> .
+> > 
+> > > 
+> > > Not doing this now means we'll never have an optimal hardware usage
+> > > distribution. Just consider two userspace software wanting to do jpeg encoding.
+> > > If they both take a guess, they may endup using a single core. Where with proper
+> > > scheduling in V4L2, the kernel will be able to properly distribute the load. I
+> > > insist on this, since if we merge you changes it becomes an ABI and we can't
+> > > change it anymore.
+> > 
+> > Will it really become ABI just like that?  Userspace should always
+> > discover the video nodes and their capabilities and not hardcode e.g. a
+> > specific /dev/videoN file for a specific codec.  I would argue that this
+> > series would let userspace do JPEG encoding right away, even if in a
+> > less optimal way than if the driver would round-robin them through a
+> > single video node, but that can always be added in a future version.
 > 
-> Judging from this requirement, can you help review this patch? Thanks.
+> Might be on the gray side, but there is good chances software written for your
+> specific board can stop working after te grouping is done.
 
-If so, can you describe the edge case you care about that isn't solved 
-with a change like that?
+I will send a new series shortly which enables only one of these four
+cores, the functionality should be the same, it will just expose only
+one video node which can get a four times throughput upgrade later once
+we implement multi-core support in the driver.
 
 > 
+> > 
+> > > 
+> > > I understand that this impose a rework of the mem2mem framework so that we can
+> > > run multiple jobs, but this will be needed anyway on RK3588, since the rkvdec2,
+> > > which we don't have a driver yet is also multi-core, but you need to use 2 cores
+> > > when the resolution is close to 8K.
+> > 
+> > I think the mediatek JPEG driver already supports that, would it be ok
+> > to do it the same way?
 > 
-> Thanks,
-> Yunhui
+> I don't know for JPEG, the MTK vcoder do support cascading cores. This is
+> different from concurrent cores. In MTK architecture, for some of the codec,
+> there is LAT (entropy decoder) and CORE (the reconstruction block) that are
+> split.
 
+Ah, that’s different then, I only had a cursory look at them back when I
+implemented the JPEG decoder for sunxi.
+
+> 
+> Nicolas
+
+-- 
+Link Mauve
