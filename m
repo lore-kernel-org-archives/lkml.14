@@ -1,57 +1,57 @@
 Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D6EA14EC7B;
-	Fri, 12 Apr 2024 18:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA5614F9EA;
+	Fri, 12 Apr 2024 18:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712945049; cv=none; b=bAZ6RL5CzdXsWMqPtcUZ5HJ264oZUILbZErqzxDXJDyDN4717iqq1vl6wesYOiXx0ILAU+kihmAgApLHQuENhzfGrk41KL0XTEoqvPnUwO4qCHBTzM7NkN4YyHd/FQhTRKonRJk0u/hsBGYt7xUezcXStVFXYZzepMAdRn0tob4=
+	t=1712945053; cv=none; b=K60qOD+1ezRrn+FY3lUnPRXy2fudIJ4zn1tJ/Y32oP7SrmoTwrRt4dEh2nZoKmebKGthNV8Fm/iFz9uTaBmaTzDEqMFxCATUqJiYEj5ErkyE2f8oO0jG8IegVUExao2+KXhhvurYwQZVPBGKLTiWK95DOyBOifGbz/Zd6djjeo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712945049; c=relaxed/simple;
-	bh=H+DJg0zEQr8LzbY3dt0QnLd4raAs9+rzlHWu2fQFx4A=;
+	s=arc-20240116; t=1712945053; c=relaxed/simple;
+	bh=tbHO/TE0urFDQY0QRj9ooUJURLBzp9JI1C+6T25mPjw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E+orR2rGAlCIInQt1ZzPBxZflACTA8HZgdA+6lCoDzqK6SsxS3FXgz5a4nJabV56ryz95PrBMdOzy1e8VgsOQDrgUqzAJo9+gUFMWuWpN3fnKUWJctLzkjT3IrXPKedW8gTjWbdeXKBexTkGBd38Yr04t4O5H2E5UvskGFA4RS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IK4itjKD; arc=none smtp.client-ip=209.85.208.172
+	 MIME-Version; b=uVDufH72bPflAoA5ARj47NLn5KN6qTI/bucNN6MVaryEbNr/+XTk7TIpDhLmQkv2iXomsy/5tHIpj0SW7eviGPfkV1T12g7625fqCC9TGchIwb8oh1/GHWkZJAKcTHjpQQBcWp6yP/1Z/tz6soM2xDgsgCKqfSGoGDe1mayjn6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gWCXmCeY; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IK4itjKD"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d476d7972aso14922441fa.1;
-        Fri, 12 Apr 2024 11:04:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWCXmCeY"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d8b2389e73so11649771fa.3;
+        Fri, 12 Apr 2024 11:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712945046; x=1713549846; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1712945050; x=1713549850; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cN13xKrisJWzHEEUXlM2Kj3W0urUTpSnKk1qxa6jOEk=;
-        b=IK4itjKDyGKDGdDefsEmsG54E1aTidUVatsPpYjGGUYupInKcYlxgqzG9Ug5v0tgTh
-         Dgums5aHoarAgw1ZuQG7eTEOK2DwUS9LkSVULVWTaFjDNC9dCw0QDSil5ki/14OSNTox
-         xu5uVYMMg0aKnCTz6Ffp/cMXMyt1NwnlomHia7322SIZ6u5p1XzyhMZVyPQvUrFAZWbu
-         YpD4tq0U5rl71pPZPqYen6Ygwu28HmCXFJh7MQjwMR9N2/l3CAsPPKch7nMa+zSwzgEJ
-         y0ol3HzUGZ1nXZbnrfo+9jiTJUFvX3pUZ7NVg9uKwzV+uyM74+WeRgmj1Z2fs472oHoe
-         k8Fw==
+        bh=nVOumlgGtBlZ85ugSU3wCdejk77Ru/Jzabc/ZwR7GtA=;
+        b=gWCXmCeYCVeT+KMs0a874ELowlSjqqcZPufxhDqD229bYkBIEGnppGc/r/JWdIJsjr
+         SiRvkJYOCh3X2FcNC3/jG+0Hvo2mRtCLKnaaomSpaTObSyRizOFtrfL5cOU0gpFWUn2p
+         R0Iugdd/9AVqsXn83d12SDCOLXIqUJHHp7c+e5qhbIqDNyzOnRLyNXekXrTXJwW6nwtY
+         d9MB8X5hJBQR2H49ayXyVMvyWcaysaH94QbpdKkWmHVespcMJRBSgoNQ1BOBRvoAo63W
+         W5tNEaY9bNYG2htePV24kcVdX4gb107HjR9xKK2wQ/PiFkmCqgQwEjToMMXL8MpCNDA+
+         lYBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712945046; x=1713549846;
+        d=1e100.net; s=20230601; t=1712945050; x=1713549850;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cN13xKrisJWzHEEUXlM2Kj3W0urUTpSnKk1qxa6jOEk=;
-        b=Qo+iOi6SoFj93wONy1bTrnmkbuyVdaIVPw2/lmrtSgN8ZxdKTrPAE1M9VuK9fc3cKN
-         4hLxLkJEDNsehxCjUmCuij6sYAjHyV3PmsYv4lhF4X6oQ7CJQK1QB9DPbLyYZkrRgeEW
-         Ip8V3Fz3cF40Z1z0mdtwN4r3wh4zWrPgZAY38JRC4h80QSr422EJM5bng6F+RAsbaicA
-         jqGXGBvsdVzoWiN1oWUt6j5JtAmt9ZGlkqbe7i4zAtWkTGML3howGBdkEffmrE2ECVIy
-         TieOHPm5Fq6nMrV2INQlVZw6dePnDPaJEgAZyxUPiUjSMjeTMOLxUoF+fA0pJNxj7AbD
-         h6MA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2btqtD9KoC3z5phsm3VaurqhMxNQGVu5SBa3Z9rmrrnazF9+pmN8ivh5p0UBgGiq4sNPG8qLWuiHNDr0UUVe09Y+m/8VbW7S+m2gRNGbNl4VROL50vgjdOaegRLHH69nIDlTQ
-X-Gm-Message-State: AOJu0YyHbAyRtQDPjfmy7EUip/wZ194xVzQsKQgy/r3VYmFmkhuxouy7
-	kj66dsAB2hy6gs/gEuUzmsqZJsDZPjq0JZQzHjXd0qofzl98X2K2
-X-Google-Smtp-Source: AGHT+IEOHDnXn4A0X8osVWAoYeNfoKuOFh0OduIqkCo7A2A3nIvR3DQ2+Flg9QxnlP2QZA+Omg958Q==
-X-Received: by 2002:a05:651c:b0b:b0:2d8:3e07:5651 with SMTP id b11-20020a05651c0b0b00b002d83e075651mr3195379ljr.34.1712945045603;
-        Fri, 12 Apr 2024 11:04:05 -0700 (PDT)
+        bh=nVOumlgGtBlZ85ugSU3wCdejk77Ru/Jzabc/ZwR7GtA=;
+        b=vZy9CrnAnOPtlX00AMeT7MQF169mJHiWh62uaBvOt7ITG7hS/YvyGysB1FSkldPIWS
+         ad/yJLm2UtFOupc0DPBRbHOtKrngkLGErOXwYLKHESAoaa+xGFrYxNdWdRzJYBWLQgiF
+         iwuBCvjyNphUVilLx9UKTW0WkA3VCpgsnzgmJp9oE42PW4+K8HFxF3+8ytTlzi75uj9V
+         bgnP7ehEiRkHLIU3+sfkiO5sgGo7Fl5w6gHnSvozfrl9HXU4YS08OfVDjn2XHjOprCvr
+         YKkOHsgKcAq4dMjCB/8IYzuFbmqXWiC88w3vxqVUkgkvgdzmkwCN4OBsitdusyj2/rIw
+         f2/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXHgrix3iG2rGl/Kz/tIRYXLp65IqS6194RJYQ/vrsFwUvrennDaD3Gm7EvAdjpZqrJyMdIn1Pu8KRe+MZaPEft9eBbAsufPm/NEphneoKAHm/jHGs0p3k0nSpG2Y1XgayHzabA
+X-Gm-Message-State: AOJu0YzHkevp8NBeMX7EP/WmVdiRPtM92MC2CcX5A7FS6GVsKv6oYWat
+	Jf1nQHnay2TeXi+u7nRcJU3syTIj3SNoRwNC4rlTKcL9JsPIUTRx
+X-Google-Smtp-Source: AGHT+IErtp2nV7mcKdqRo+jq1OWZkiMk/4riy2CBgl5T4ICW2MsRDn+iJIiWgWyWac4RMpk9UBQ8Xg==
+X-Received: by 2002:a05:651c:33a:b0:2d8:6561:72ca with SMTP id b26-20020a05651c033a00b002d8656172camr2074103ljp.19.1712945049992;
+        Fri, 12 Apr 2024 11:04:09 -0700 (PDT)
 Received: from localhost ([95.79.241.172])
-        by smtp.gmail.com with ESMTPSA id f28-20020a05651c02dc00b002d2dfe8a36csm560225ljo.96.2024.04.12.11.04.04
+        by smtp.gmail.com with ESMTPSA id g20-20020a05651c079400b002d86998c8f6sm570047lje.88.2024.04.12.11.04.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 11:04:05 -0700 (PDT)
+        Fri, 12 Apr 2024 11:04:09 -0700 (PDT)
 From: Serge Semin <fancer.lancer@gmail.com>
 To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Jose Abreu <joabreu@synopsys.com>,
@@ -61,9 +61,7 @@ To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Russell King <linux@armlinux.org.uk>,
 	Yanteng Si <siyanteng@loongson.cn>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>,
-	"Gan, Yi Fang" <yi.fang.gan@intel.com>
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>
 Cc: Serge Semin <fancer.lancer@gmail.com>,
 	Simon Horman <horms@kernel.org>,
 	Huacai Chen <chenhuacai@kernel.org>,
@@ -75,9 +73,9 @@ Cc: Serge Semin <fancer.lancer@gmail.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net 2/4] net: stmmac: Fix max-speed being ignored on queue re-init
-Date: Fri, 12 Apr 2024 21:03:15 +0300
-Message-ID: <20240412180340.7965-3-fancer.lancer@gmail.com>
+Subject: [PATCH net-next 4/4] net: stmmac: Move MAC caps init to phylink MAC caps getter
+Date: Fri, 12 Apr 2024 21:03:17 +0300
+Message-ID: <20240412180340.7965-5-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240412180340.7965-1-fancer.lancer@gmail.com>
 References: <20240412180340.7965-1-fancer.lancer@gmail.com>
@@ -89,45 +87,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It's possible to have the maximum link speed being artificially limited on
-the platform-specific basis. It's done either by setting up the
-plat_stmmacenet_data::max_speed field or by specifying the "max-speed"
-DT-property. In such cases it's required that any specific
-MAC-capabilities re-initializations would take the limit into account. In
-particular the link speed capabilities may change during the number of
-active Tx/Rx queues re-initialization. But the currently implemented
-procedure doesn't take the speed limit into account.
+After a set of fixes the stmmac_phy_setup() and stmmac_reinit_queues()
+method have turned to having some duplicated code. Let's get rid from the
+duplication by moving the MAC-capabilities initialization to the PHYLINK
+MAC-capabilities getter. The getter is called during each network device
+interface open/close cycle. So the MAC-capabilities will be initialized in
+normal device functioning and in case of the Tx/Rx queues
+re-initialization as the original code semantics implies.
 
-Fix that by calling phylink_limit_mac_speed() in the
-stmmac_reinit_queues() method if the speed limitation was required in the
-same way as it's done in the stmmac_phy_setup() function.
-
-Fixes: 95201f36f395 ("net: stmmac: update MAC capabilities when tx queues are updated")
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 36 +++++++++----------
+ 1 file changed, 17 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index dd58c21b53ee..b8a1f02398ee 100644
+index 7c6fb14b5555..cb72dd93191e 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -7328,6 +7328,7 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
+@@ -936,6 +936,22 @@ static void stmmac_mac_flow_ctrl(struct stmmac_priv *priv, u32 duplex)
+ 			priv->pause, tx_cnt);
+ }
+ 
++static unsigned long stmmac_mac_get_caps(struct phylink_config *config,
++					 phy_interface_t interface)
++{
++	struct stmmac_priv *priv = netdev_priv(to_net_dev(config->dev));
++
++	/* Get the MAC-specific capabilities */
++	stmmac_mac_phylink_get_caps(priv);
++
++	config->mac_capabilities = priv->hw->link.caps;
++
++	if (priv->plat->max_speed)
++		phylink_limit_mac_speed(config, priv->plat->max_speed);
++
++	return config->mac_capabilities;
++}
++
+ static struct phylink_pcs *stmmac_mac_select_pcs(struct phylink_config *config,
+ 						 phy_interface_t interface)
+ {
+@@ -1105,6 +1121,7 @@ static void stmmac_mac_link_up(struct phylink_config *config,
+ }
+ 
+ static const struct phylink_mac_ops stmmac_phylink_mac_ops = {
++	.mac_get_caps = stmmac_mac_get_caps,
+ 	.mac_select_pcs = stmmac_mac_select_pcs,
+ 	.mac_config = stmmac_mac_config,
+ 	.mac_link_down = stmmac_mac_link_down,
+@@ -1204,7 +1221,6 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
+ 	int mode = priv->plat->phy_interface;
+ 	struct fwnode_handle *fwnode;
+ 	struct phylink *phylink;
+-	int max_speed;
+ 
+ 	priv->phylink_config.dev = &priv->dev->dev;
+ 	priv->phylink_config.type = PHYLINK_NETDEV;
+@@ -1225,15 +1241,6 @@ static int stmmac_phy_setup(struct stmmac_priv *priv)
+ 		xpcs_get_interfaces(priv->hw->xpcs,
+ 				    priv->phylink_config.supported_interfaces);
+ 
+-	/* Get the MAC specific capabilities */
+-	stmmac_mac_phylink_get_caps(priv);
+-
+-	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
+-
+-	max_speed = priv->plat->max_speed;
+-	if (max_speed)
+-		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
+-
+ 	fwnode = priv->plat->port_node;
+ 	if (!fwnode)
+ 		fwnode = dev_fwnode(priv->device);
+@@ -7327,7 +7334,6 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
  {
  	struct stmmac_priv *priv = netdev_priv(dev);
  	int ret = 0, i;
-+	int max_speed;
+-	int max_speed;
  
  	if (netif_running(dev))
  		stmmac_release(dev);
-@@ -7343,6 +7344,10 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
+@@ -7341,14 +7347,6 @@ int stmmac_reinit_queues(struct net_device *dev, u32 rx_cnt, u32 tx_cnt)
+ 			priv->rss.table[i] = ethtool_rxfh_indir_default(i,
+ 									rx_cnt);
  
- 	stmmac_mac_phylink_get_caps(priv);
- 
-+	max_speed = priv->plat->max_speed;
-+	if (max_speed)
-+		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
-+
+-	stmmac_mac_phylink_get_caps(priv);
+-
+-	priv->phylink_config.mac_capabilities = priv->hw->link.caps;
+-
+-	max_speed = priv->plat->max_speed;
+-	if (max_speed)
+-		phylink_limit_mac_speed(&priv->phylink_config, max_speed);
+-
  	stmmac_napi_add(dev);
  
  	if (netif_running(dev))
