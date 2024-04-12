@@ -1,186 +1,323 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6054754646;
-	Fri, 12 Apr 2024 10:25:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D50B553384
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712917504; cv=none; b=gIfKgY4S4aolDEigt8w2Bncs7VnQ1aXlg99d8Esl8fRdBg7eCcCbepAWMF5SpTSncWCPRo2FXN7DTau9aohPDXcTJw0MN/xZw3xx0/PuCdtHJM8XpNwgH+MJsA9t7EJdTGD96f5AGF2Cc1aqxQqtRQZ4pCVEzwUboQ019zOtteM=
+	t=1712917536; cv=none; b=QoZrGyziBzVq9Fs07d4dHBw3qNeVcV+hH2ammJ9biIxJNKv/M9IPtlSwAQFcxtVi1k6Bm9UHQn/SC8XD3I43c/t7mXB4digFDlrRw5TlufEBncnPecS0EszWvCFiJmw7D1331Jk2wB0lksu3qMa+5br8vnpvGzRGslQhNKwVIgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712917504; c=relaxed/simple;
-	bh=FI6PivxgPvrlGWfxc39bWEeLwYTaLLTEZfCmhrtJrvM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WahDyJMfjEofaVWKlRXAqefY/5aGvUhOBrrvGJgolETrQXNIiln3lJax4llgFPKhb6DUF2hblY1FW5BbSljctAwCeF+28am3REs2dEEVo2bY12c4zOVS2wV2oy3f6T6gV/KhQRFzOzqD0Yp0QcGgFgFcV26TTn640TIY/fdeNpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZfCm2mI6; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfCm2mI6"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-69b50b8239fso4680476d6.0;
-        Fri, 12 Apr 2024 03:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712917502; x=1713522302; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=miQDmesO/RBgoUpX1IHsaloLk8IF9hztcmdELINbAzk=;
-        b=ZfCm2mI640DvXZvErkGuJQnORsTE8OJtWm6eB8z33KqBWaFBazexTQd4g4S0HZug57
-         VmtlunZgILXBCN3lSsTKjqWCEy+LXfOdH5qI4iXV9kv29kKIt7++HsNuZmtd3x5VzUBp
-         A2OabwBPOetzQw4pQseOVc/fSE7lCQGRklOThopncvhyOTDxfKtEZbnH5EIJt0SSGJ0S
-         pEQjKQVPPZehT4tNegJgET24JrQyPb1593mUUQMUaOX4pHVLcMwE2smC47kj/gXRTnDa
-         FK83DYf8Ma4nTvZv/+ksxR00mB4X44weU8pkNdpzQS6KZB3EVgUnTyxQuPm+Jmg2xZEc
-         oICA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712917502; x=1713522302;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=miQDmesO/RBgoUpX1IHsaloLk8IF9hztcmdELINbAzk=;
-        b=kuNAo24xwFpK7cevMPwJfKVmUi9gaoEcdGbn1dHv4CSTedISBWUdUfVqytoNmVEOeV
-         kP9BNzeld1QPo6zapftbnjzSycXqu7bbrX/CCfBTZ7ycmdfJJQdD3Scx2AtCI+O3Gxfn
-         Dq5JbEeLPh7CHrk2yjDZJZj1xw+1jrgHkCcQWVqsTwaYg9lu0sGlaYTdyG0cshiX3Ie2
-         6oUSv7YK+nCjXMWYPSzJDv2fHyor/B/W1K4aXvN4hqtGk7dH8keh++0zSE4xE/OXC8O2
-         w0TmwFxRsbXNE9rx1mBCL+XXfO2z+BFSY30rWkuPTvjKmjv7gw8CCp4kS0QFpWsf4DEk
-         NBKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU55ARdpqrzvBlOW1KuASiaLLqz/2SjSRNONYh0GRCVBmZ1R+Z1HqkC5OCw3ewLsUCI+Sabp9OpmsbcQLaVxT4jciMZM6T4M5C0T6hYbaC3Ic8yKGHR/6YomffGr19CJI4WS/KAEE93dV2yXQ3/UI1MpcLVlwDabrvZPvk/zFTZ1hTf0NEspCs=
-X-Gm-Message-State: AOJu0YyCxFz8N57qqFioHNnBeMtHDpIaxlsmBZAEuPtGp2iiS7bCpubZ
-	H6ETuy5Z3ZpMeiwkfsu23vyx/CMOagyk5QesMTzld2+qawRCjppSPcKfQhn8e7aNXAj7GCjuVQn
-	YjHF7edghxOOC3IXDj+juVmXGIuE=
-X-Google-Smtp-Source: AGHT+IGWQy3i+0q8X18gTJzvFH5ZkbhtlxQHxMUy5SC06zctHFldepd/giD11xVq17YF/GBManhuwTQ2w6v348IZNZk=
-X-Received: by 2002:a05:6214:311:b0:69b:5f59:7bc0 with SMTP id
- i17-20020a056214031100b0069b5f597bc0mr106857qvu.16.1712917502317; Fri, 12 Apr
- 2024 03:25:02 -0700 (PDT)
+	s=arc-20240116; t=1712917536; c=relaxed/simple;
+	bh=wasIUb5/uQ7Q+XjSsgBnPUXBYRCkQ+aZzrUyKE3vPJs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pWlt3y2QsbPMOQhoi+MmoWETxpAOL2vbKgUrvFiJlsDUmShWbqzM9+JDX1MhUKlysg+3wOiWkH1I9yqTrerlD19jSfjPH6yRr9XasAVPZp7C2wIQovoLBVvgGOmU6tTUyCTPoCe8hiCzKSioNtSPYU6vqVVfZiUurYd4Tcp6zDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 607EB339;
+	Fri, 12 Apr 2024 03:26:02 -0700 (PDT)
+Received: from [10.57.73.208] (unknown [10.57.73.208])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25C9E3F64C;
+	Fri, 12 Apr 2024 03:25:31 -0700 (PDT)
+Message-ID: <744fc49e-d91b-4f5a-9a27-1a25c50c2154@arm.com>
+Date: Fri, 12 Apr 2024 11:25:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <00000000000042c9190615cdb315@google.com> <20240411121319.adhz4ylacbv6ocuu@quack3>
- <CAOQ4uxi9L_Rs7q=fcLGqJMx15jLAArOWGwGfdCL8LOUCPR3L+w@mail.gmail.com>
- <875xwn8zxa.fsf@mailhost.krisman.be> <CACGdZYLJESbS6VCAza_V6PAeNb8k9nU2wYhBi-KmeYqYJ337mA@mail.gmail.com>
-In-Reply-To: <CACGdZYLJESbS6VCAza_V6PAeNb8k9nU2wYhBi-KmeYqYJ337mA@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 12 Apr 2024 13:24:50 +0300
-Message-ID: <CAOQ4uxiw9+0ZPNgbby0_WJzKrcCk79n-Xd1fOMtvsr022Z8EwA@mail.gmail.com>
-Subject: Re: [syzbot] [ext4?] KASAN: slab-use-after-free Read in fsnotify
-To: Khazhy Kumykov <khazhy@chromium.org>
-Cc: Gabriel Krisman Bertazi <krisman@suse.de>, Jan Kara <jack@suse.cz>, 
-	syzbot <syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com>, 
-	linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, repnop@google.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/4] mm: add per-order mTHP anon_fault_alloc and
+ anon_fault_fallback counters
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, cerasuolodomenico@gmail.com,
+ chrisl@kernel.org, corbet@lwn.net, david@redhat.com, kasong@tencent.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterx@redhat.com,
+ surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org,
+ yosryahmed@google.com, yuzhao@google.com
+References: <f5d6e014-5d6b-441c-8379-252ff24e2260@arm.com>
+ <20240412101756.296971-1-21cnbao@gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240412101756.296971-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 11:27=E2=80=AFPM Khazhy Kumykov <khazhy@chromium.or=
-g> wrote:
->
-> On Thu, Apr 11, 2024 at 12:25=E2=80=AFPM Gabriel Krisman Bertazi
-> <krisman@suse.de> wrote:
-> >
-> > Amir Goldstein <amir73il@gmail.com> writes:
-> >
-> > > On Thu, Apr 11, 2024 at 3:13=E2=80=AFPM Jan Kara <jack@suse.cz> wrote=
-:
-> > >>
-> > >> On Thu 11-04-24 01:11:20, syzbot wrote:
-> > >> > Hello,
-> > >> >
-> > >> > syzbot found the following issue on:
-> > >> >
-> > >> > HEAD commit:    6ebf211bb11d Add linux-next specific files for 202=
-40410
-> > >> > git tree:       linux-next
-> > >> > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D12be95=
-5d180000
-> > >> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D16ca15=
-8ef7e08662
-> > >> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D5e3f9b2a=
-67b45f16d4e6
-> > >> > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils =
-for Debian) 2.40
-> > >> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D13c9=
-1175180000
-> > >> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1621af=
-9d180000
-> > >> >
-> > >> > Downloadable assets:
-> > >> > disk image: https://storage.googleapis.com/syzbot-assets/b050f81f7=
-3ed/disk-6ebf211b.raw.xz
-> > >> > vmlinux: https://storage.googleapis.com/syzbot-assets/412c9b9a536e=
-/vmlinux-6ebf211b.xz
-> > >> > kernel image: https://storage.googleapis.com/syzbot-assets/0165272=
-16c47/bzImage-6ebf211b.xz
-> > >> > mounted in repro: https://storage.googleapis.com/syzbot-assets/75a=
-d050c9945/mount_0.gz
-> > >> >
-> > >> > IMPORTANT: if you fix the issue, please add the following tag to t=
-he commit:
-> > >> > Reported-by: syzbot+5e3f9b2a67b45f16d4e6@syzkaller.appspotmail.com
-> > >> >
-> > >> > Quota error (device loop0): do_check_range: Getting block 0 out of=
- range 1-5
-> > >> > EXT4-fs error (device loop0): ext4_release_dquot:6905: comm kworke=
-r/u8:4: Failed to release dquot type 1
-> > >> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >> > BUG: KASAN: slab-use-after-free in fsnotify+0x2a4/0x1f70 fs/notify=
-/fsnotify.c:539
-> > >> > Read of size 8 at addr ffff88802f1dce80 by task kworker/u8:4/62
-> > >> >
-> > >> > CPU: 0 PID: 62 Comm: kworker/u8:4 Not tainted 6.9.0-rc3-next-20240=
-410-syzkaller #0
-> > >> > Hardware name: Google Google Compute Engine/Google Compute Engine,=
- BIOS Google 03/27/2024
-> > >> > Workqueue: events_unbound quota_release_workfn
-> > >> > Call Trace:
-> > >> >  <TASK>
-> > >> >  __dump_stack lib/dump_stack.c:88 [inline]
-> > >> >  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
-> > >> >  print_address_description mm/kasan/report.c:377 [inline]
-> > >> >  print_report+0x169/0x550 mm/kasan/report.c:488
-> > >> >  kasan_report+0x143/0x180 mm/kasan/report.c:601
-> > >> >  fsnotify+0x2a4/0x1f70 fs/notify/fsnotify.c:539
-> > >> >  fsnotify_sb_error include/linux/fsnotify.h:456 [inline]
-> > >> >  __ext4_error+0x255/0x3b0 fs/ext4/super.c:843
-> > >> >  ext4_release_dquot+0x326/0x450 fs/ext4/super.c:6903
-> > >> >  quota_release_workfn+0x39f/0x650 fs/quota/dquot.c:840
-> > >> >  process_one_work kernel/workqueue.c:3218 [inline]
-> > >> >  process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3299
-> > >> >  worker_thread+0x86d/0xd70 kernel/workqueue.c:3380
-> > >> >  kthread+0x2f0/0x390 kernel/kthread.c:389
-> > >> >  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
-> > >> >  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> > >> >  </TASK>
-> > >>
-> > >> Amir, I believe this happens on umount when the filesystem calls
-> > >> fsnotify_sb_error() after calling fsnotify_sb_delete().
-> Hmm, so we're releasing dquots after already shutting down the
-> filesystem? Is that expected? This "Failed to release dquot type"
-> error message only appears if we have an open handle from
-> ext4_journal_start (although this filesystem was mounted without a
-> journal, so we hit ext4_get_nojournal()...)
-> > In theory these two
-> > >> calls can even run in parallel and fsnotify() can be holding
-> > >> fsnotify_sb_info pointer while fsnotify_sb_delete() is freeing it so=
- we
-> > >> need to figure out some proper synchronization for that...
-> > >
-> > > Is it really needed to handle any for non SB_ACTIVE sb?
-> >
-> > I think it should be fine to exclude volumes being teared down.  Cc'ing
-> > Khazhy, who sponsored this work at the time and owned the use-case.
-> In terms of real-world use case... not sure there is one - you'll
-> notice the errors when you fsck/mount again later on, and any users
-> who care about notifs should be gone by the time we're unmounting. But
-> it seems weird to me that we can get write errors shutting everything
-> down.
+On 12/04/2024 11:17, Barry Song wrote:
+> On Fri, Apr 12, 2024 at 9:56 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 12/04/2024 10:43, Barry Song wrote:
+>>> On Fri, Apr 12, 2024 at 9:27 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> Hi Barry,
+>>>>
+>>>> 2 remaining comments - otherwise looks good. (same comments I just made in the
+>>>> v4 conversation).
+>>>>
+>>>> On 12/04/2024 08:37, Barry Song wrote:
+>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>
+>>>>> Profiling a system blindly with mTHP has become challenging due to the
+>>>>> lack of visibility into its operations.  Presenting the success rate of
+>>>>> mTHP allocations appears to be pressing need.
+>>>>>
+>>>>> Recently, I've been experiencing significant difficulty debugging
+>>>>> performance improvements and regressions without these figures.  It's
+>>>>> crucial for us to understand the true effectiveness of mTHP in real-world
+>>>>> scenarios, especially in systems with fragmented memory.
+>>>>>
+>>>>> This patch establishes the framework for per-order mTHP
+>>>>> counters. It begins by introducing the anon_fault_alloc and
+>>>>> anon_fault_fallback counters. Additionally, to maintain consistency
+>>>>> with thp_fault_fallback_charge in /proc/vmstat, this patch also tracks
+>>>>> anon_fault_fallback_charge when mem_cgroup_charge fails for mTHP.
+>>>>> Incorporating additional counters should now be straightforward as well.
+>>>>>
+>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>>>> Cc: Chris Li <chrisl@kernel.org>
+>>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>>> Cc: Domenico Cerasuolo <cerasuolodomenico@gmail.com>
+>>>>> Cc: Kairui Song <kasong@tencent.com>
+>>>>> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+>>>>> Cc: Peter Xu <peterx@redhat.com>
+>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>>> Cc: Suren Baghdasaryan <surenb@google.com>
+>>>>> Cc: Yosry Ahmed <yosryahmed@google.com>
+>>>>> Cc: Yu Zhao <yuzhao@google.com>
+>>>>> ---
+>>>>>  include/linux/huge_mm.h | 51 ++++++++++++++++++++++++++++++++++
+>>>>>  mm/huge_memory.c        | 61 +++++++++++++++++++++++++++++++++++++++++
+>>>>>  mm/memory.c             |  3 ++
+>>>>>  mm/page_alloc.c         |  4 +++
+>>>>>  4 files changed, 119 insertions(+)
+>>>>>
+>>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>>> index e896ca4760f6..c5beb54b97cb 100644
+>>>>> --- a/include/linux/huge_mm.h
+>>>>> +++ b/include/linux/huge_mm.h
+>>>>> @@ -264,6 +264,57 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>>>                                         enforce_sysfs, orders);
+>>>>>  }
+>>>>>
+>>>>> +enum mthp_stat_item {
+>>>>> +     MTHP_STAT_ANON_FAULT_ALLOC,
+>>>>> +     MTHP_STAT_ANON_FAULT_FALLBACK,
+>>>>> +     MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+>>>>> +     __MTHP_STAT_COUNT
+>>>>> +};
+>>>>> +
+>>>>> +struct mthp_stat {
+>>>>> +     unsigned long stats[0][__MTHP_STAT_COUNT];
+>>>>> +};
+>>>>> +
+>>>>> +extern struct mthp_stat __percpu *mthp_stats;
+>>>>> +
+>>>>> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+>>>>> +{
+>>>>> +     if (order <= 0 || order > PMD_ORDER || !mthp_stats)
+>>>>> +             return;
+>>>>> +
+>>>>> +     this_cpu_inc(mthp_stats->stats[order][item]);
+>>>>> +}
+>>>>> +
+>>>>> +static inline void count_mthp_stats(int order, enum mthp_stat_item item, long delta)
+>>>>> +{
+>>>>> +     if (order <= 0 || order > PMD_ORDER || !mthp_stats)
+>>>>> +             return;
+>>>>> +
+>>>>> +     this_cpu_add(mthp_stats->stats[order][item], delta);
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * Fold the foreign cpu mthp stats into our own.
+>>>>> + *
+>>>>> + * This is adding to the stats on one processor
+>>>>> + * but keeps the global counts constant.
+>>>>> + */
+>>>>> +static inline void mthp_stats_fold_cpu(int cpu)
+>>>>> +{
+>>>>> +     struct mthp_stat *fold_stat;
+>>>>> +     int i, j;
+>>>>> +
+>>>>> +     if (!mthp_stats)
+>>>>> +             return;
+>>>>> +     fold_stat = per_cpu_ptr(mthp_stats, cpu);
+>>>>> +     for (i = 1; i <= PMD_ORDER; i++) {
+>>>>> +             for (j = 0; j < __MTHP_STAT_COUNT; j++) {
+>>>>> +                     count_mthp_stats(i, j, fold_stat->stats[i][j]);
+>>>>> +                     fold_stat->stats[i][j] = 0;
+>>>>> +             }
+>>>>> +     }
+>>>>> +}
+>>>>
+>>>> This is a pretty horrible hack; I'm pretty sure just summing for all *possible*
+>>>> cpus should work.
+>>>>
+>>>>> +
+>>>>>  #define transparent_hugepage_use_zero_page()                         \
+>>>>>       (transparent_hugepage_flags &                                   \
+>>>>>        (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
+>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>>> index dc30139590e6..21c4ac74b484 100644
+>>>>> --- a/mm/huge_memory.c
+>>>>> +++ b/mm/huge_memory.c
+>>>>> @@ -526,6 +526,50 @@ static const struct kobj_type thpsize_ktype = {
+>>>>>       .sysfs_ops = &kobj_sysfs_ops,
+>>>>>  };
+>>>>>
+>>>>> +struct mthp_stat __percpu *mthp_stats;
+>>>>> +
+>>>>> +static unsigned long sum_mthp_stat(int order, enum mthp_stat_item item)
+>>>>> +{
+>>>>> +     unsigned long sum = 0;
+>>>>> +     int cpu;
+>>>>> +
+>>>>> +     cpus_read_lock();
+>>>>> +     for_each_online_cpu(cpu) {
+>>>>> +             struct mthp_stat *this = per_cpu_ptr(mthp_stats, cpu);
+>>>>> +
+>>>>> +             sum += this->stats[order][item];
+>>>>> +     }
+>>>>> +     cpus_read_unlock();
+>>>>> +
+>>>>> +     return sum;
+>>>>> +}
+>>>>> +
+>>>>> +#define DEFINE_MTHP_STAT_ATTR(_name, _index)                                 \
+>>>>> +static ssize_t _name##_show(struct kobject *kobj,                    \
+>>>>> +                     struct kobj_attribute *attr, char *buf)         \
+>>>>> +{                                                                    \
+>>>>> +     int order = to_thpsize(kobj)->order;                            \
+>>>>> +                                                                     \
+>>>>> +     return sysfs_emit(buf, "%lu\n", sum_mthp_stat(order, _index));  \
+>>>>> +}                                                                    \
+>>>>> +static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+>>>>> +
+>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
+>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+>>>>> +
+>>>>> +static struct attribute *stats_attrs[] = {
+>>>>> +     &anon_fault_alloc_attr.attr,
+>>>>> +     &anon_fault_fallback_attr.attr,
+>>>>> +     &anon_fault_fallback_charge_attr.attr,
+>>>>> +     NULL,
+>>>>> +};
+>>>>> +
+>>>>> +static struct attribute_group stats_attr_group = {
+>>>>> +     .name = "stats",
+>>>>> +     .attrs = stats_attrs,
+>>>>> +};
+>>>>> +
+>>>>>  static struct thpsize *thpsize_create(int order, struct kobject *parent)
+>>>>>  {
+>>>>>       unsigned long size = (PAGE_SIZE << order) / SZ_1K;
+>>>>> @@ -549,6 +593,12 @@ static struct thpsize *thpsize_create(int order, struct kobject *parent)
+>>>>>               return ERR_PTR(ret);
+>>>>>       }
+>>>>>
+>>>>> +     ret = sysfs_create_group(&thpsize->kobj, &stats_attr_group);
+>>>>> +     if (ret) {
+>>>>> +             kobject_put(&thpsize->kobj);
+>>>>> +             return ERR_PTR(ret);
+>>>>> +     }
+>>>>> +
+>>>>>       thpsize->order = order;
+>>>>>       return thpsize;
+>>>>>  }
+>>>>> @@ -691,6 +741,11 @@ static int __init hugepage_init(void)
+>>>>>        */
+>>>>>       MAYBE_BUILD_BUG_ON(HPAGE_PMD_ORDER < 2);
+>>>>>
+>>>>> +     mthp_stats = __alloc_percpu((PMD_ORDER + 1) * sizeof(mthp_stats->stats[0]),
+>>>>> +                     sizeof(unsigned long));
+>>>>
+>>>> Personally I think it would be cleaner to allocate statically using
+>>>> ilog2(MAX_PTRS_PER_PTE) instead of PMD_ORDER.
+>>>
+>>> Hi Ryan,
+>>>
+>>> I don't understand why MAX_PTRS_PER_PTE is the correct size. For ARM64,
+>>>
+>>> #define PMD_ORDER       (PMD_SHIFT - PAGE_SHIFT)
+>>>
+>>> #define MAX_PTRS_PER_PTE PTRS_PER_PTE
+>>>
+>>> #define PTRS_PER_PTE            (1 << (PAGE_SHIFT - 3))
+>>>
+>>> while PAGE_SIZE is 16KiB or 64KiB, PTRS_PER_PTE can be a huge number?
+>>>
+>>>
+>>> Am I missing something?
+>>
+>> PTRS_PER_PTE is the number of PTE entries in a PTE table. On arm64 its as follows:
+>>
+>> PAGE_SIZE       PAGE_SHIFT      PTRS_PER_PTE
+>> 4K              12              512
+>> 16K             14              2048
+>> 64K             16              8192
+>>
+>> So (PTRS_PER_PTE * PAGE_SIZE) = PMD_SIZE
+>>
+>> PMD_ORDER is ilog2(PMD_SIZE / PAGE_SIZE) = ilog2(PTRS_PER_PTE)
+>>
+>> MAX_PTRS_PER_PTE is just the maximum value that PTRS_PER_PTE will ever have,
+>> (and its equal to PTRS_PER_PTE except for powerpc).
+>>
+>> Pretty sure the math is correct?
+> 
+> I am not convinced the math is correct :-)
+> 
+> while page size is 64KiB, the page table is as below,
+> PMD_ORDER = L2 index bits = [41:29] = 13 != ilog2(8192)
 
-That's what I thought.
-Anyway, my naive fix breaks IN_UNMOUNT event as well as some other
-fanotify tests, so I will need to work on another fix.
+1 << 13 = 8192
 
-Thanks,
-Amir.
+Right? So:
+
+ilog2(8192) = 13
+
+What's wrong with that?
+
+I even checked in Python to make sure I'm not going mad:
+
+>>> import math
+>>> math.log2(8192)
+13.0
+
+> 
+> 
+> +--------+--------+--------+--------+--------+--------+--------+--------+
+> |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
+> +--------+--------+--------+--------+--------+--------+--------+--------+
+>  |                 |    |               |              |
+>  |                 |    |               |              v
+>  |                 |    |               |            [15:0]  in-page offset
+>  |                 |    |               +----------> [28:16] L3 index
+>  |                 |    +--------------------------> [41:29] L2 index
+>  |                 +-------------------------------> [47:42] L1 index (48-bit)
+>  |                                                   [51:42] L1 index (52-bit)
+>  +-------------------------------------------------> [63] TTBR0/1
+>  
+> while page size is 4KiB, the page table is as below,
+> 
+> +--------+--------+--------+--------+--------+--------+--------+--------+
+> |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
+> +--------+--------+--------+--------+--------+--------+--------+--------+
+>  |                 |         |         |         |         |
+>  |                 |         |         |         |         v
+>  |                 |         |         |         |   [11:0]  in-page offset
+>  |                 |         |         |         +-> [20:12] L3 index
+>  |                 |         |         +-----------> [29:21] L2 index
+>  |                 |         +---------------------> [38:30] L1 index
+>  |                 +-------------------------------> [47:39] L0 index
+>  +-------------------------------------------------> [63] TTBR0/1
+> 
+> PMD_ORDER = L2 index bits = [29:21] = 9 = ilog2(512).
+> 
+> You are only correct while page size = 4KiB.
+> 
+> 
+> 
+>  
+
