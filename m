@@ -1,109 +1,95 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBB9145B36;
-	Fri, 12 Apr 2024 14:54:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC907146D71
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:54:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712933657; cv=none; b=aku2LWtGaiOA4OMlfCqO+sOtYv6HLeGG37hziF2iMjGH5mMu6axqJvED27eh1Ln+Sv/Ur7GTm41TsokzEXQ7/3aHjJGvHre8lqbi6VNhMnW4TYPup6UpiO1NADK6sz07XB1t3H6UNfE1/HmM1NP3880lr4ElOnrGxCOKl3VMs9k=
+	t=1712933661; cv=none; b=nK/E+2DIcdy6ONo9vFBSBCoiw/m+vokq+7rkRWKUgiP0qMtJNhzjdzuWIVP/1c3HjWzYxLLNDpZMPIQIPTbBHdZeOlAvfZW0+dC1txjoOxjuqZJCAmCdazTIUjGfLHC6EG2RGnh06dzuGDIU5CYwJh3yK0PLrGKtNR8TiSgwPWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712933657; c=relaxed/simple;
-	bh=in6s0CayvsuzQeqaiNyjVowzPqlZrAQVR/B3bv4tggk=;
+	s=arc-20240116; t=1712933661; c=relaxed/simple;
+	bh=afqeI7wnK4mu5ocuG6kYCfL1dWMMCoS8i0jeYsFz9Us=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4BU6hTSz0iODNBmRxJzExBXNEXjrWG6ihQeOuEaivSuUOY9fBsUfAeqf5cwVM2ka8Bo6Lr18b7Sy8vDM1kYGZ93iSF1fy7wwuDyfVi9cpEwnXmkHEtNSnX81/D1/eJK2ABSmqB42fth85RB4pcSPWi2qembERwJ4wtjYieDCnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PZ+7TOIl; arc=none smtp.client-ip=192.198.163.19
+	 Content-Type:Content-Disposition:In-Reply-To; b=PxC38se7MBahBRoejAUJ4q691mt8fNYexrOvh+rBb7Nw7MxZ0WdMGRTs/m0CPTdQusuK2MVfn9UUXgmtAPptVm8KgsJQcoXlbiqcKjuqOW8xmpH5YOLlvWPC+tENVQQto0mELR8vk8vI3KwtStfrFPRzYTUPu6Fw+kf9zl+u4lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oEPUvAYY; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PZ+7TOIl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oEPUvAYY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712933656; x=1744469656;
+  t=1712933660; x=1744469660;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=in6s0CayvsuzQeqaiNyjVowzPqlZrAQVR/B3bv4tggk=;
-  b=PZ+7TOIl3IMkcVwvngqbigo3519xjbImb4htVZ5I/Ae5SO2umBr1U6cZ
-   ZoFxJMp7/lvDcoit1zc/mkZxZQfo94VDm09Ct0CrK8nof70cAcvPnZwKK
-   1JC4jwA3j8vw9fjKW3ZsfUpaFON6m2s5371j85RR4Lx78TrfdWf2DX79F
-   wv9dPSnuo3KTGXIjTcKJYCrH4KIthUS+qqKUEiRqGppfV97CYQVUe9ZzH
-   FfPNpuj6n3pRu2OBBVT9H6ozBsk5Ksap3v8ROVsMFPAHnYmktRQXBvvk/
-   ZsBBEqDCcu8jWcocQ+RpCZp0pCn917AhYFkfF9jGQnhmpCSVonjp0fcKh
-   A==;
-X-CSE-ConnectionGUID: EtnHBXRSSiGavd3eXC5xmw==
-X-CSE-MsgGUID: ZzY2kez7SpGHngCwWB3tDQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8249778"
+   mime-version:in-reply-to;
+  bh=afqeI7wnK4mu5ocuG6kYCfL1dWMMCoS8i0jeYsFz9Us=;
+  b=oEPUvAYYIg43BVe+qBahdtYRmZ6cXpa6Ej/hrYbkt5kY0a+kNyXOgJAp
+   7Tou2339qi8gyt7ty3ZUC0TGge5dAxDfH9y5ouwuP3LYjRetPqJePS/r9
+   uwOPENjHxxcIxNO0l4/r77I6Pdym8Le5Up4VyQiJaGKdSSCObMRU/E+cR
+   kx+2hn+8zJ2afwcEOKbkgGBsGUQjZ+ktp6H3FeTA+9mKMZM4yGWJ2COVI
+   c+4YQfa7lXNugZXXE+BBlBoMCX3I4o/qxacOAlB9kEY6eTYS0bQRCzkqF
+   4l0YmiXZ1XY7o7YKSYLPEB82Un6zR1eJHGmVIPE88Y5gr2KcpDvLK3QKb
+   Q==;
+X-CSE-ConnectionGUID: cruOWevMRuSV0MMJvjq7cQ==
+X-CSE-MsgGUID: fbFdY5BARmWxRfilBpA/ZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8249803"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8249778"
+   d="scan'208";a="8249803"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:54:15 -0700
-X-CSE-ConnectionGUID: 6fFYUjUFQBanhxX5HwRLfw==
-X-CSE-MsgGUID: 167iCC+KQkS2JkX98wu9pQ==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:54:19 -0700
+X-CSE-ConnectionGUID: OfRelUKURkSR1jEyQC/4RA==
+X-CSE-MsgGUID: VI1JjWtxTNOCSRjm6b0tmA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21238596"
+   d="scan'208";a="21238609"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:54:09 -0700
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 07:54:15 -0700
 Received: from andy by smile with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvHtF-00000003eRB-20ZW;
-	Fri, 12 Apr 2024 17:28:29 +0300
-Date: Fri, 12 Apr 2024 17:28:29 +0300
+	id 1rvHqJ-00000003eP8-0aUV;
+	Fri, 12 Apr 2024 17:25:27 +0300
+Date: Fri, 12 Apr 2024 17:25:26 +0300
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mark Brown <broonie@kernel.org>, Len Brown <lenb@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	kernel-team@android.com, Wolfram Sang <wsa@kernel.org>,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] of: dynamic: Fix overlayed devices not probing
- because of fw_devlink
-Message-ID: <ZhlFDeDxict3ThJO@smile.fi.intel.com>
-References: <20240411235623.1260061-1-saravanak@google.com>
- <20240411235623.1260061-3-saravanak@google.com>
- <CAL_JsqKRVVNzgQk6PETfJ9RrDuzT1CTjHWW02Twc_T4C82t__Q@mail.gmail.com>
+To: Kyle Meyer <kyle.meyer@hpe.com>
+Cc: linux-kernel@vger.kernel.org, yury.norov@gmail.com,
+	linux@rasmusvillemoes.dk, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+	russ.anderson@hpe.com, dimitri.sivanich@hpe.com, steve.wahl@hpe.com
+Subject: Re: [PATCH v2 2/2] sched/topology: Optimize topology_span_sane()
+Message-ID: <ZhlEVoW6FJC6uBVE@smile.fi.intel.com>
+References: <20240410213311.511470-1-kyle.meyer@hpe.com>
+ <20240410213311.511470-3-kyle.meyer@hpe.com>
+ <Zhe9ttm9Ppv2wT3S@smile.fi.intel.com>
+ <ZhhcPwFCgxDUhndo@DESKTOP-IR8JFSN.>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKRVVNzgQk6PETfJ9RrDuzT1CTjHWW02Twc_T4C82t__Q@mail.gmail.com>
+In-Reply-To: <ZhhcPwFCgxDUhndo@DESKTOP-IR8JFSN.>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Apr 12, 2024 at 07:54:32AM -0500, Rob Herring wrote:
-> On Thu, Apr 11, 2024 at 6:56 PM Saravana Kannan <saravanak@google.com> wrote:
+On Thu, Apr 11, 2024 at 04:55:11PM -0500, Kyle Meyer wrote:
+> On Thu, Apr 11, 2024 at 01:38:46PM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 10, 2024 at 04:33:11PM -0500, Kyle Meyer wrote:
 
-> I think it is better to not have this wrapper. We want it to be clear
-> when we're acquiring a ref. I know get_device() does that, but I have
-> to look up what get_dev_from_fwnode() does exactly.
+...
+
+> > > Since topology_span_sane() is called inside of for_each_cpu(), each
+> > > pervious CPU has already been compared against every other CPU. The
+> > 
+> > previous
 > 
-> Side note: I didn't know fwnode has a ptr to the struct device. I
-> wonder if we can kill off of_find_device_by_node() using that. That's
-> for platform devices though.
+> Thank you for pointing that out. Should I send an updated version or can
+> a maintainer correct my mistake?
 
-I don't like the idea because we already have a big design issue with fwnode
-that is used in struct device. Ideally, fwnode has to be a node in the linked
-list, head of which is provided by the user (struct device, for example).
-When it's done, it will be easy to handle.
+Depends on the maintainer. I'm not the one here, don't expect answer from me.
 
-Have you read the comment in the struct fwnode_handle definition?
+> > > current CPU only needs to be compared against higher-numbered CPUs.
 
 -- 
 With Best Regards,
