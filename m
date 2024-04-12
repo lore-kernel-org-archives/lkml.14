@@ -1,65 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C3853373;
-	Fri, 12 Apr 2024 10:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC93A53815;
+	Fri, 12 Apr 2024 10:03:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712916209; cv=none; b=AhUXbWG46INXELt3ezhrOUTg6BvcLArzJCmI16He1k+VlzSnZ/+9HNk1FHNM1URSoGMr228ePcEoRnXbW7igFEBw8O/zz1K6FtnSCPCNCVOy+DqGWbaUpvFtVZnXI263P6HuzcLNNC1Rz5oD4IIkZdDM9XsJUK8APoQcvr2ob/I=
+	t=1712916210; cv=none; b=uis+/Wx2EnZfwJig3A7K89n4cUt1RbqR9JMJM+goS1HQ1kUAgmS4q5G5SDy1XD6XLBcS9iQHU0vNKJEHthd9iyFQLVSzkLbRO/qaRJ0wbKGjoD6VvH9krtcSr5nLj3IUFjtL4hYrvn8CnPCKxHPycdHzZsZwAbP7TWKksur7Wo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712916209; c=relaxed/simple;
-	bh=0zIBIQeUn4d46LuH5dU3D3poxRyPy8U/DsOIFFWU5+Q=;
+	s=arc-20240116; t=1712916210; c=relaxed/simple;
+	bh=lCNee1828QqqQR3hshc5fVcZzrHDapC+fJ9N5c+1IIs=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=OHWMqEM+zU2uI/QKmvCZS+9usW50RtBbIPcovLo8TlWrQjrnrNkc0ec7HiX5OcaNHAEjO1Vvc+nxKnSw/eUi9pq3RRIBzGc95XVKmSLiVKBQIFSpbjw5ZLOXPtvXEO7zKv/jQJitk+/hORE8XD7pbDQvtNcXRsr9sy1aGV+VwDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bOGTgPzD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RbolePUL; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=HpvUbtYo2gc6Jcr+H94HVtJSRFd1HsLqcnWbr8meFFZDeygdWtLbipkBOYueV/XdBMeozi6ychuWjdwl3lekCEdxQQiVAVCnEx26653loQYhYZtWNk456XAf3RsIykFrQqk+91PMyR7MIbdNC/2TpbbLzKf1UOPMnqKfsNTIHuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ox3vR40S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qvzhoytv; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bOGTgPzD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RbolePUL"
-Date: Fri, 12 Apr 2024 10:03:24 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ox3vR40S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qvzhoytv"
+Date: Fri, 12 Apr 2024 10:03:25 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712916205;
+	s=2020; t=1712916206;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dUIq0gxrTeDmd9C5x2/2qge7B5M0XUhUeTvv4cmFhuU=;
-	b=bOGTgPzDYPCX7PShrWeMmocCk44eLZUgVJJp6BWUZQ2FqbtmDyJxuYctijF/f66+FjJy/i
-	Zuj7u0I51kf53k/Zoa8k20aWxKwXe6o5o3cOa4YLpfRNHFfqIQoSp8Q6SHUeN9PGP9Hw4h
-	YcVGK1zMVEsErY5j6n/6jDnLDMGAbbv0uUCxbsHyCLoMwFJeR6O5R4hR7cAj5u3svtYws6
-	PngTx0ntjMBchj9xXFClmxpERwl6L6trOjypQCvqNks8Mccz/FBNUDQCvo0sMKmuQxbYsY
-	7+AmCCC2YyVWPp3CAKsxFI2hgVrs8za5uQgW7/3n191m6jd43R7ylNGPFnULhA==
+	bh=4CrUIsikDc930c3uKYQLq7h6pHpykCaDJGjbMGxQ6OU=;
+	b=ox3vR40SrhvJ6BRFN/O2LtQL6g3joQb7Jyf1fsbgFbnYSjsRcG6Dn4jpQhgEgAGE895/uk
+	0tIGRL9lgAZgoqkvAmV/ldTDB5R5nKYTzcS89QqvNRkRNenBjWpHqhy5JDUG/CSnGDjvtJ
+	5R0QO/gUAVTy7f+Lrkjg++bkmzth3lJ/SKyP7P5aRg3UvEXGXRxVdDhw837oH1AtIyPT1J
+	2rItxMhBxiMrsDNbsOoyit2skUYGmoMFKNX0hnFMj9UoS/h/3Wd1r/A59RQkEtM2C2Qs3p
+	rvZpjQSHncdtVqZzqgUVDErkIIRPQfKxR6CibFjNIZQHQxDD1oaN+YEPV+m4bQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712916205;
+	s=2020e; t=1712916206;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dUIq0gxrTeDmd9C5x2/2qge7B5M0XUhUeTvv4cmFhuU=;
-	b=RbolePUL9uRIVi5mDrov9a6b2v8Xu+tM8SwGj5WpudUaMukyq+uWGncfMNfSHn4yPWwZmu
-	NLi9tFfGtqryrqCw==
+	bh=4CrUIsikDc930c3uKYQLq7h6pHpykCaDJGjbMGxQ6OU=;
+	b=qvzhoytvg0bIKxWOvWyE5nMN4YLPr+9gnsyDPtjUFoXoCasCJBMHabz5pLh85m2N9yKXLU
+	5IQ345QN/NfLv9Aw==
 From: "tip-bot2 for Kyle Huey" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/bpf: Call BPF handler directly, not through
- overflow machinery
-Cc: Namhyung Kim <namhyung@kernel.org>, Kyle Huey <khuey@kylehuey.com>,
- Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+Subject: [tip: perf/core] perf/bpf: Remove #ifdef CONFIG_BPF_SYSCALL from
+ struct perf_event members
+Cc: Ingo Molnar <mingo@kernel.org>, Kyle Huey <khuey@kylehuey.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240412015019.7060-5-khuey@kylehuey.com>
-References: <20240412015019.7060-5-khuey@kylehuey.com>
+In-Reply-To: <20240412015019.7060-4-khuey@kylehuey.com>
+References: <20240412015019.7060-4-khuey@kylehuey.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171291620497.10875.8359396733030637270.tip-bot2@tip-bot2>
+Message-ID: <171291620574.10875.5995937196604251484.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,142 +67,40 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f11f10bfa1ca23b32020b2073aa13131a27978fe
-Gitweb:        https://git.kernel.org/tip/f11f10bfa1ca23b32020b2073aa13131a27978fe
+Commit-ID:     14e40a9578b70cc5323e55f61292a7e021f6037c
+Gitweb:        https://git.kernel.org/tip/14e40a9578b70cc5323e55f61292a7e021f6037c
 Author:        Kyle Huey <me@kylehuey.com>
-AuthorDate:    Thu, 11 Apr 2024 18:50:16 -07:00
+AuthorDate:    Thu, 11 Apr 2024 18:50:15 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Fri, 12 Apr 2024 11:49:49 +02:00
 
-perf/bpf: Call BPF handler directly, not through overflow machinery
+perf/bpf: Remove #ifdef CONFIG_BPF_SYSCALL from struct perf_event members
 
-To ultimately allow BPF programs attached to perf events to completely
-suppress all of the effects of a perf event overflow (rather than just the
-sample output, as they do today), call bpf_overflow_handler() from
-__perf_event_overflow() directly rather than modifying struct perf_event's
-overflow_handler. Return the BPF program's return value from
-bpf_overflow_handler() so that __perf_event_overflow() knows how to
-proceed. Remove the now unnecessary orig_overflow_handler from struct
-perf_event.
+This will allow __perf_event_overflow() (which is independent of
+CONFIG_BPF_SYSCALL) to use struct perf_event's prog to decide whether to
+call bpf_overflow_handler().
 
-This patch is solely a refactoring and results in no behavior change.
-
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Kyle Huey <khuey@kylehuey.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Song Liu <song@kernel.org>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Link: https://lore.kernel.org/r/20240412015019.7060-5-khuey@kylehuey.com
+Link: https://lore.kernel.org/r/20240412015019.7060-4-khuey@kylehuey.com
 ---
- include/linux/perf_event.h |  6 +-----
- kernel/events/core.c       | 27 +++++++++++----------------
- 2 files changed, 12 insertions(+), 21 deletions(-)
+ include/linux/perf_event.h | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 50e01db..2ce2fbc 100644
+index 3e33b36..50e01db 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -809,7 +809,6 @@ struct perf_event {
+@@ -809,11 +809,9 @@ struct perf_event {
  	u64				(*clock)(void);
  	perf_overflow_handler_t		overflow_handler;
  	void				*overflow_handler_context;
--	perf_overflow_handler_t		orig_overflow_handler;
+-#ifdef CONFIG_BPF_SYSCALL
+ 	perf_overflow_handler_t		orig_overflow_handler;
  	struct bpf_prog			*prog;
  	u64				bpf_cookie;
+-#endif
  
-@@ -1361,10 +1360,7 @@ __is_default_overflow_handler(perf_overflow_handler_t overflow_handler)
- #ifdef CONFIG_BPF_SYSCALL
- static inline bool uses_default_overflow_handler(struct perf_event *event)
- {
--	if (likely(is_default_overflow_handler(event)))
--		return true;
--
--	return __is_default_overflow_handler(event->orig_overflow_handler);
-+	return is_default_overflow_handler(event);
- }
- #else
- #define uses_default_overflow_handler(event) \
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index d3f3f55..c6a6936 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9564,9 +9564,9 @@ static inline bool sample_is_allowed(struct perf_event *event, struct pt_regs *r
- }
- 
- #ifdef CONFIG_BPF_SYSCALL
--static void bpf_overflow_handler(struct perf_event *event,
--				 struct perf_sample_data *data,
--				 struct pt_regs *regs)
-+static int bpf_overflow_handler(struct perf_event *event,
-+				struct perf_sample_data *data,
-+				struct pt_regs *regs)
- {
- 	struct bpf_perf_event_data_kern ctx = {
- 		.data = data,
-@@ -9587,10 +9587,8 @@ static void bpf_overflow_handler(struct perf_event *event,
- 	rcu_read_unlock();
- out:
- 	__this_cpu_dec(bpf_prog_active);
--	if (!ret)
--		return;
- 
--	event->orig_overflow_handler(event, data, regs);
-+	return ret;
- }
- 
- static int perf_event_set_bpf_handler(struct perf_event *event,
-@@ -9626,8 +9624,6 @@ static int perf_event_set_bpf_handler(struct perf_event *event,
- 
- 	event->prog = prog;
- 	event->bpf_cookie = bpf_cookie;
--	event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
--	WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
- 	return 0;
- }
- 
-@@ -9638,15 +9634,15 @@ static void perf_event_free_bpf_handler(struct perf_event *event)
- 	if (!prog)
- 		return;
- 
--	WRITE_ONCE(event->overflow_handler, event->orig_overflow_handler);
- 	event->prog = NULL;
- 	bpf_prog_put(prog);
- }
- #else
--static void bpf_overflow_handler(struct perf_event *event,
--				 struct perf_sample_data *data,
--				 struct pt_regs *regs)
-+static int bpf_overflow_handler(struct perf_event *event,
-+				struct perf_sample_data *data,
-+				struct pt_regs *regs)
- {
-+	return 1;
- }
- 
- static int perf_event_set_bpf_handler(struct perf_event *event,
-@@ -9730,7 +9726,8 @@ static int __perf_event_overflow(struct perf_event *event,
- 		irq_work_queue(&event->pending_irq);
- 	}
- 
--	READ_ONCE(event->overflow_handler)(event, data, regs);
-+	if (!(event->prog && !bpf_overflow_handler(event, data, regs)))
-+		READ_ONCE(event->overflow_handler)(event, data, regs);
- 
- 	if (*perf_event_fasync(event) && event->pending_kill) {
- 		event->pending_wakeup = 1;
-@@ -11997,13 +11994,11 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 		overflow_handler = parent_event->overflow_handler;
- 		context = parent_event->overflow_handler_context;
- #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
--		if (overflow_handler == bpf_overflow_handler) {
-+		if (parent_event->prog) {
- 			struct bpf_prog *prog = parent_event->prog;
- 
- 			bpf_prog_inc(prog);
- 			event->prog = prog;
--			event->orig_overflow_handler =
--				parent_event->orig_overflow_handler;
- 		}
- #endif
- 	}
+ #ifdef CONFIG_EVENT_TRACING
+ 	struct trace_event_call		*tp_event;
