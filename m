@@ -1,89 +1,186 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FF81CD04;
-	Fri, 12 Apr 2024 07:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87961CD04
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712908791; cv=none; b=Fhzt7MW/u59TnlhYGzaLrIBgn5Wev1F+1P9777uLfD3il7Wc5DzSVMH4VrZk64QT54rj8NQJGvqaTaaZ/6u4FR1rh37F64+tcBtfz7F95AXlsq9TeV9mfQOE3A99AQPtpI0orTuicJVIsqn9vRPUT0SUW3Zu9xK3vUdef1WJXW0=
+	t=1712908893; cv=none; b=GtYbVDkHBq9ZIRIKwn228VqL3foeVzxinctSoogjxX2925FmARdJOcLGfukGuNcKt3j0N7WWulLQeppvycWXjcfLGZd9jg18a6q1Jm1LhJkJaBnZSfJeMkIVTkVTgEtdsQ+7vwT2XN9RrardmS6Afbo1g9B6JacwGA8SmxLnyXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712908791; c=relaxed/simple;
-	bh=9kpc36YLxfEtad6uDI4ebX5d/dPQszIr4wDX8T1iaos=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BAu/PcBKnR1B+qBcVo8aAfz5M4dpyNmwu78aMNG9rP1fispPxiY98Htgw9NEAlLiuJCBY1YqIcGr52G5RQnAs5sXAxYwNWVbPj0fSqVjh1fiH8f5FRo7fc3NQRUqfOn9PJYvkwg0xvFhorcIJRa7oVAvYmr+Es9rkch2LGcPigU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2N7oNR6; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712908893; c=relaxed/simple;
+	bh=xLHcNi08PM81Tq2UCF3td14VXetdDycTn4NlNFg8nug=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NW1rXkseiM1GTWF1lzZSHthk6WEnnIYUNnp3psXoVnDv2VExsXDUSmKx1+dSxciGTSIZi5Q54OMJLwM9kzcg7xJgn/m3mBbrFanX4x6WyCu/z/shvSy3I8J6+8eMjL/Tjvyn9mvTTT3FUTLvtgRpB3sMvBXRs/aJz7LSpS6r3no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=I3nsKH8T; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jgmnYoXA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=I3nsKH8T; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=jgmnYoXA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2N7oNR6"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2a484f772e2so339095a91.3;
-        Fri, 12 Apr 2024 00:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712908789; x=1713513589; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9kpc36YLxfEtad6uDI4ebX5d/dPQszIr4wDX8T1iaos=;
-        b=J2N7oNR6XpowICMG8bhO7Q3ua1q4zYr8DrMHQK/wpzUE6DNe/J6r1xh0WdNMDUxnm0
-         29KPL6S8R/v5SCZugx66tsb64MSMNr8JrkpnOze+nDs/1/z8FAz1My/cAp/iAWw8DPnu
-         3GmYuT9BDpepnRIhFxWLYEVPWZIm38lgdCJSbeMacibUfKoxqHumbDvrkymaFwLWKwos
-         2OczxTNHAWOlsMZkvkg4PXFrOoGJO/TX5qqv6FHkZzl5J0Y8dqHMLiuCfI8csISBjyZT
-         nfwGlJWXVkz5i7N3vwnm34QH2BOLAQaLeHfjbfVmdAjmfd1TftOfHuVkWpTmOObQQSkm
-         mjpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712908789; x=1713513589;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9kpc36YLxfEtad6uDI4ebX5d/dPQszIr4wDX8T1iaos=;
-        b=NTUYuO5FKE3nhzmV1rrda7aNnoBnZTGm21KGXBBMGXWxgw9KuW/Kis0A0BZSxh6ynX
-         7+nSjrmjWwdLMOnBh877KWlkgt0zhkago6Tksk0gHdedlOfjj2IUiP+m6C1KuWO0gEjZ
-         dJRaraTMmsqc1co1yF34dj/YMAEWT2opFSTQ+idNlbCWOEyja7qV4r+BhVradhtvxiqh
-         7pNjHD9i+FRrjKLZuOlcgFNx7SDq78kznp8JfDIkyf2jyo16exiyhqzUhdSDgUpwOFOG
-         GBJLoYhS2h9kgzwrImeqfzE+gZYYoYXN7Dcz3NzkbuTQ+dZ/lTvjutqMuYa4fJwgxDOx
-         Cz6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXSGm1gPVDGmnEhWPwnw5aEKtD6roYa6PCsxXc0dSWJiigIbRLKjn/vSP06meMOkVZ0Vdp/dq6zLv/2lNMlCsEgWWfLeyMZ9HPeRUC8Nz3U3eN1leZQhjOWYZn/FFLMG5D7Rku54QPlCEtHc1Y=
-X-Gm-Message-State: AOJu0Yw87YTKmOCvcEz3G50wkf0FHMtf0U63J4BvE+W42T3kA8fxPxmT
-	N0Ij/T+XZUC0mYmIkbjtKFNdgCNMIVUXAty53i6Ux46xWspVjS33Wzq9zuMEEGgZFgQ/u5M7uss
-	C43uLAjtriTNYqlge05GN6NprnHw=
-X-Google-Smtp-Source: AGHT+IF0LmnrUMH1fIRVp//RBL8ny0hZaULM61m5B+UVkT149AnGKaI8tyLWdVG+hmnpUnRermOk7Cz9D1ANXmmDu60=
-X-Received: by 2002:a17:90a:c397:b0:2a4:9836:aa2c with SMTP id
- h23-20020a17090ac39700b002a49836aa2cmr1681059pjt.28.1712908789034; Fri, 12
- Apr 2024 00:59:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="I3nsKH8T";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jgmnYoXA";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="I3nsKH8T";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="jgmnYoXA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A0FF85F9E3;
+	Fri, 12 Apr 2024 08:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712908889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUc1Cqz4RPVX2SIpYjGWH2HQMZ9B7ak3+uxMlPbKCI=;
+	b=I3nsKH8TD3BUGn8Rqu5l/op1xkSbJBqzJCJ4WbDEH6LR1t+f0134Pg/2RkTxAvJMtdhqtD
+	IyUrUpYuNsUbgem1c+akoSdrpo9SifDOSP8NRFkUAHN70Ec+lo9TbOvmzKqDJKXvvzcQaA
+	uAItrAWbVWTJpmkoqtjg3VY8m3ranzM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712908889;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUc1Cqz4RPVX2SIpYjGWH2HQMZ9B7ak3+uxMlPbKCI=;
+	b=jgmnYoXAr28Wi81ZFRAjJ+1VPZ4VEYGQhXmF1vJ4LxReWEyQ08wkPeuA0OgExT1vzqckTT
+	LREsdcM4HNcVBcAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1712908889; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUc1Cqz4RPVX2SIpYjGWH2HQMZ9B7ak3+uxMlPbKCI=;
+	b=I3nsKH8TD3BUGn8Rqu5l/op1xkSbJBqzJCJ4WbDEH6LR1t+f0134Pg/2RkTxAvJMtdhqtD
+	IyUrUpYuNsUbgem1c+akoSdrpo9SifDOSP8NRFkUAHN70Ec+lo9TbOvmzKqDJKXvvzcQaA
+	uAItrAWbVWTJpmkoqtjg3VY8m3ranzM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1712908889;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=JIUc1Cqz4RPVX2SIpYjGWH2HQMZ9B7ak3+uxMlPbKCI=;
+	b=jgmnYoXAr28Wi81ZFRAjJ+1VPZ4VEYGQhXmF1vJ4LxReWEyQ08wkPeuA0OgExT1vzqckTT
+	LREsdcM4HNcVBcAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8630C13942;
+	Fri, 12 Apr 2024 08:01:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EyVLIFnqGGY1dQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 12 Apr 2024 08:01:29 +0000
+Message-ID: <5d3c4a5e-0c27-4058-adf1-91e9602e5ccb@suse.cz>
+Date: Fri, 12 Apr 2024 10:01:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411230801.1504496-1-boqun.feng@gmail.com>
- <20240411230801.1504496-3-boqun.feng@gmail.com> <CANiq72nSSAVkynVaAq7bQKoL6N8K2JUXp8AOVvu7vN+siAhk-Q@mail.gmail.com>
- <f08c06a4e8361f2cb55cd0dc1fa2bc2b0a046049.camel@redhat.com>
-In-Reply-To: <f08c06a4e8361f2cb55cd0dc1fa2bc2b0a046049.camel@redhat.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 12 Apr 2024 09:58:57 +0200
-Message-ID: <CANiq72kMZ6mpK+LaL9Xfsp032CZOfAEtr6Dp9A2R-m6dC3gkWQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
-To: Philipp Stanner <pstanner@redhat.com>, Kees Cook <kees@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Miguel Ojeda <ojeda@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] slub: Clear __GFP_COMP flag when allocating 0 order page
+Content-Language: en-US
+To: "Christoph Lameter (Ampere)" <cl@linux.com>,
+ Haifeng Xu <haifeng.xu@shopee.com>, Matthew Wilcox <willy@infradead.org>
+Cc: penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+ akpm@linux-foundation.org, roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240411091832.608280-1-haifeng.xu@shopee.com>
+ <5482360c-0a0b-e5f5-b88e-4a6ec4d43f7d@linux.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <5482360c-0a0b-e5f5-b88e-4a6ec4d43f7d@linux.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.15 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	BAYES_HAM(-1.36)[90.60%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_TLS_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -1.15
+X-Spam-Flag: NO
 
-On Fri, Apr 12, 2024 at 9:43=E2=80=AFAM Philipp Stanner <pstanner@redhat.co=
-m> wrote:
->
-> Is that going to remain enabled by default or what was the plan here?
+On 4/11/24 6:51 PM, Christoph Lameter (Ampere) wrote:
+> On Thu, 11 Apr 2024, Haifeng Xu wrote:
+> 
+>> @@ -1875,6 +1875,13 @@ static inline struct slab *alloc_slab_page(gfp_t flags, int node,
+>> 	struct slab *slab;
+>> 	unsigned int order = oo_order(oo);
+>>
+>> +	/*
+>> +	 * If fallback to the minimum order allocation and the order is 0,
+>> +	 * clear the __GFP_COMP flag.
+>> +	 */
+>> +	if (order == 0)
+>> +		flags = flags & ~__GFP_COMP;
+> 
+> 
+> This would be better placed in allocate_slab() when the need for a
+> fallback to a lower order is detected after the first call to alloc_slab_page().
 
-The plan is to ideally keep it enabled by default, but I defer to Kees
-with whom we discussed this back then (Cc'd).
-
-The goal is that Rust code, since the beginning, has all wrapping
-operations marked explicitly as such.
-
-Cheers,
-Miguel
+Yeah. Although I don't really see the harm of __GFP_COMP with order-0 in the
+first place, if the only issue is that the error output might be confusing.
+I'd also hope we should eventually get rid of those odd non-__GFP_COMP
+high-order allocations and then can remove the flag.
