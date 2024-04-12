@@ -1,69 +1,65 @@
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E185F1B5A0;
-	Fri, 12 Apr 2024 08:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C631B5A0
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911094; cv=none; b=ogdLDPM2/gPhzOO1rVxRg/VEtMq0DQAGlB0/lVcSuMHEH5lLN5mLTKDOybHKJKw5+oU8RpvUOd5BW0+5AZr44dsmgJLCncROLTqohkq/Dhe9t/UWpmQuNzL14q9Jnqewot5wiWo2iWr2s6mCBEkKOef2ko1FfNrMiZ3aHvix0ZI=
+	t=1712911131; cv=none; b=jcprN1WZ6wtR4ay71c8W/p9ZPSZEyEzDkMajlrMhVm1qSBdpnRECNxs47k2dhmgAVcWZqbnbbSkGYQzh6A5RfK3FgoB4EAHJXM5RNqFYDavDUvUcJN14+86vg26BLugZIdCJgf3Cw526mSUIQWBw+pJr4yYVANS9N6RBTjliEJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911094; c=relaxed/simple;
-	bh=KgVYfdLUzep0SkrpXvuq683Itn9YhVNpEO1dPfvTN+4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=NPc9J81UQpg3w/0q+vwzZEAxdBpEQ5AdF30NiVKByXpDyRM143MZtUeLmMZ/SX3bXifS+Hdu4LpdWaR7WLuJx9sd7eU0Sr36TrpOSlXvK6INn3q3JA2n3EyuUQfsfQRcfQB1l3jlBPuaGApJahnH1YBCGNGxLqDGgVVVLfu1Z0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=gAimeoj9; arc=none smtp.client-ip=203.205.221.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1712911131; c=relaxed/simple;
+	bh=cLljHdlKbk8oW5qf2GQZA1xukk3FvSfGAx6fkKt2Sjc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b2gD5tx43Kx1G8WJSVJKWUD8lZa2waWC1hmqcJJZ6h+2YCUTcUtvPGgpwebEJGeIgnXWVsLKL1HDDhSKScqZ/rWT+t20hkEg4LVwMhuX+5fNHU5BeOiymmL7PJAZKTLTPCRd5TejH9zdo57AOq5ZHqG8/3sKaPf6NrtcTf2V9Gs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jeF+6BRs; arc=none smtp.client-ip=209.85.215.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="gAimeoj9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1712911082; bh=gE4UiwTwaZDj/y1D5EUtDgaY6Zh1vXQNUMpz2cuxwAs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=gAimeoj9xNuspZwpchRMK2dt8vExrlS/TlTFXycoarwZLr+EuNePo142jy1qb9aNG
-	 WhikFRSQRlYmLumVV4nLuVXuS7wk1ZoZQbezch1xwpz4u4ihQ9iRREmnf9iJ4HBd4D
-	 vDf9PXBIIvHXThnibifwFmDHYWAfADtGhjVU8qI4=
-Received: from Yangyus-MBP-2.lan ([219.141.235.82])
-	by newxmesmtplogicsvrszb16-0.qq.com (NewEsmtp) with SMTP
-	id EC914EF9; Fri, 12 Apr 2024 15:59:09 +0800
-X-QQ-mid: xmsmtpt1712908749tdf3a543a
-Message-ID: <tencent_C7B10C572AA62E84ABF1818F52904DFBCA05@qq.com>
-X-QQ-XMAILINFO: NY3HYYTs4gYSkUDCWdovIJbdRXTBoHzZJsvwt/KXGLaYIhohNB5cj0rYEUis96
-	 B4MM6TnQVwXI2teG/zqPf7QLeagvsUXP6EbnNy9qolyR9ELDaoSLqfDbvFRFcbJlB/iD5rMJ9VQL
-	 BYIm9j6ZMzkEMYi2rBL+HNQTe14yvQDPCMP+M5dAmsER4GAnvbKQ6UbMmFn4GsCxq5tNswy0MQq3
-	 Fg4+5yXSzL8spvZrhJ5Qp8uaUZ75dAZQbcoZUS14AeaGVZr3NhdV84/4kmLApm812Uot2P7Bn+62
-	 ej9Efp6uCT6MYtcSmL0EFrypwsGhfdOWWRsajYsFm0PeuS4essy+9qmWx9daFEf+L65E+AeazfPb
-	 fzWBwwfGwwBG0wi1f4/CsZycnu5pkpfOyQkhY+kcmRZfbu1Gkhl+FF7UcINAkL5YT/OJWNRtbloZ
-	 ZHimNhLvPfkV4KcUoUdFOcsgIKH3QFrknB8eVQVzVni+fp/dt6m1A5s0CXmRH/u21PqGMpDD1v4t
-	 Bb0nfLd2E4t/83uYzpsIPlC5ImX3Fa8l2d7vRlUY2R4+3qr7LHm2gmJ2SEC1HziZg3riTNqSxfWo
-	 eCgpOk2Q+qdsnsqY+no26TbRo7wOtbXEJk+PCX/2/8k3q1QHM7MsCCteJ46cziMtCBqdXdSYOxo5
-	 XWgAJdVR3VV+Uwrs9u8HZ3XfdATJM0Ra9Nm367Ufj9SndZt7QXpWNJIPgAhhM5ekM1/xbETn6VRA
-	 xc06JjhXx65doC6pPQS2ZmLLC+K5FEjCzWVB+lNvToaB+Dk6ziIhMJ4QUCfsh3/JUhViB8+BxD+4
-	 uuWNq+DTTx+/6D3rYvBavNdmvllhqNu5xx+TXgkFgwXwthGhGqCyI5yq37uuwnDJmcDV/EoZmKRq
-	 mohN2+X8WTJWyG2yKqRito/2dPLFs5u7tr7pU14ee1Fa5+aK57UpPSZJ/etfgJfTUWHAfx4OMSHs
-	 In2CnKWj+2S1VqQr9x7SM3++aLdp4ILAwjcw6ERWctsWMLIEImFt3I/hiHOB/G1yhgM2sj4VLkLS
-	 PEMj6SRBBmnAu7lPOw
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Yangyu Chen <cyy@cyyself.name>
-To: ebiggers@kernel.org
-Cc: andy.chiu@sifive.com,
-	aou@eecs.berkeley.edu,
-	ardb@kernel.org,
-	christoph.muellner@vrull.eu,
-	heiko@sntech.de,
-	hongrong.hsu@sifive.com,
-	jerry.shih@sifive.com,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	palmer@dabbelt.com,
-	paul.walmsley@sifive.com,
-	phoebe.chen@sifive.com
-Subject: Re: [PATCH v3 05/10] crypto: riscv - add vector crypto accelerated ChaCha20
-Date: Fri, 12 Apr 2024 15:59:08 +0800
-X-OQ-MSGID: <20240412075908.68485-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240122002024.27477-6-ebiggers@kernel.org>
-References: <20240122002024.27477-6-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeF+6BRs"
+Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso505149a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:38:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712911130; x=1713515930; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HDpbeX0iPVfonJMyHLwpARBi5sjPgC14ra6nRm3PiEA=;
+        b=jeF+6BRsD88O6SX6ORMiHGaw43+xUdZMj8G6eXx82gBioT5wG45JjnlXgjNGNW6Wx6
+         9LbvzXYr8kR/yfgFv+u86B4KQslT2+vEPMeyorUn45V4gorJRkrQGNnoFqFYMf8/x5k8
+         CA+WvVQ4gxj7jTgNEptkCVfygme5lNlx/BOp8wSRb26j3p3RZc4xKZdGMwKskSzQRvzq
+         bVSdAgBN/+69tm7jEYJ4vums4LbU76YuBSziEdxKec/Q7vJ1oQxYfx18pL3io9rBwfYH
+         udkolrj0cFYugSMJ800TmLiIcVRc/1JuqJZZqx6vd1D/W0LSxrxDvrvn9HD4AFAbJ4PE
+         4lzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712911130; x=1713515930;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HDpbeX0iPVfonJMyHLwpARBi5sjPgC14ra6nRm3PiEA=;
+        b=QymmqZaaQINYNLYDKu/4RRkBlQtB8gyB/PkS91p4tYQISlgr/R31WngVhnl8ksd9Il
+         gUx+LNUqJg3yOe3QPE1hjNZYT4j6JKQZgZZetJNjD3E8UUMobFY0ucyJEFTl8J6AH+4c
+         yYo9hj7uwLQtK5La8mdu+4ny9x1TRuZ3cfRwJHiG7vzXBNGBZcjI05QEGhRqa/I/4ZwX
+         dIY/RotS4sCT2lBBafXIqRxPhrgYbHqSbXvebxDDcaoJvy53MMWx2HDqjKRagOaOOms/
+         Fg6HtIN1p1Axz64K7TVW6aQugZDyyCSiOdUgoy3mvl/ZKVYvW/niMFMpXAw3Cdh3JVss
+         XreQ==
+X-Gm-Message-State: AOJu0YxFL42fmMG6laN7nD2s8JbkHbwQayPaBAs7XvEY6cFrOrtnEynl
+	fUewqE1/egbyBVisvW6/fNbvUbpw27s4m523Fv0zCifRgU9Pua9CG0fgOZ3p+qOGHA==
+X-Google-Smtp-Source: AGHT+IH/yhfkMuh8gXktV8C4CUL1Q1ThQK7KumbewV79Rr0mKEtToeguKzOvY6eLrICRnwB4vUGIrA==
+X-Received: by 2002:a05:6a20:dca0:b0:1a7:4a6f:f1a6 with SMTP id ky32-20020a056a20dca000b001a74a6ff1a6mr2289769pzb.3.1712911129616;
+        Fri, 12 Apr 2024 01:38:49 -0700 (PDT)
+Received: from lhy-a01-ubuntu22.. ([106.39.42.164])
+        by smtp.gmail.com with ESMTPSA id y1-20020a17090a1f4100b002a5e73ba87dsm2554173pjy.6.2024.04.12.01.38.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 01:38:49 -0700 (PDT)
+From: Huai-Yuan Liu <qq810974084@gmail.com>
+To: sudipm.mukherjee@gmail.com,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	baijiaju1990@gmail.com,
+	Huai-Yuan Liu <qq810974084@gmail.com>
+Subject: [PATCH V4] ppdev: Add an error check in register_device
+Date: Fri, 12 Apr 2024 16:38:40 +0800
+Message-Id: <20240412083840.234085-1-qq810974084@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,34 +68,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On 2024/1/22 08:19, Eric Biggers wrote:> From: Jerry Shih <jerry.shih@sifive.com>
-> 
-> Add an implementation of ChaCha20 using the Zvkb extension.  The
-> assembly code is derived from OpenSSL code (openssl/openssl#21923) that
-> was dual-licensed so that it could be reused in the kernel.
-> Nevertheless, the assembly has been significantly reworked for
-> integration with the kernel, for example by using a regular .S file
-> instead of the so-called perlasm, using the assembler instead of bare
-> '.inst', and reducing code duplication.
-> 
-> Signed-off-by: Jerry Shih <jerry.shih@sifive.com>
-> Co-developed-by: Eric Biggers <ebiggers@google.com>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
+In register_device, the return value of ida_simple_get is unchecked, 
+in witch ida_simple_get will use an invalid index value.
 
-Hi, Jerry Shih and Eric Biggers,
+To address this issue, index should be checked after ida_simple_get. When
+the index value is abnormal, a warning message should be printed, the port
+should be dropped, and the value should be recorded.
 
-Since this implementation is derived from OpenSSL, I have an issue on
-OpenSSL about this chacha20 implementation using Zvkb [1] and see a fixes
-PR by Jerry Shih [2].
+Fixes: 9a69645dde11 ("ppdev: fix registering same device name")
+Signed-off-by: Huai-Yuan Liu <qq810974084@gmail.com>
+---
+V2:
+* In patch V2, we found that parport_find_number implicitly calls 
+parport_get_port(). So when dealing with abnormal index values, we should
+call parport_put_port() to throw away the reference to the port.
+V3:
+* In patch V3, we made some additional adjustments to the jump labels,
+making the code more concise and readable.
+  Thanks to Christophe JAILLET for helpful suggestion.
+V4:
+* In patch V4, we found that a related function has changed, causing this
+patch inapplicable to the tree, so we regenerated the patch on version 
+'v6.9-rc3'.
+  Thanks to Greg KH for pointing this out.
+---
+ drivers/char/ppdev.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-I wonder will kernel need to port those fixes to handle the non-multiple
-block length of the chacha20 cipher? If yes, we should port it immediately
-to catch up with the v6.9 release if we can.
-
-[1] https://github.com/openssl/openssl/issues/24070
-[2] https://github.com/openssl/openssl/pull/24097
-
-Thanks,
-Yangyu Chen
+diff --git a/drivers/char/ppdev.c b/drivers/char/ppdev.c
+index ee951b265213..58e9dcc2a308 100644
+--- a/drivers/char/ppdev.c
++++ b/drivers/char/ppdev.c
+@@ -296,28 +296,35 @@ static int register_device(int minor, struct pp_struct *pp)
+ 	if (!port) {
+ 		pr_warn("%s: no associated port!\n", name);
+ 		rc = -ENXIO;
+-		goto err;
++		goto err_free_name;
+ 	}
+ 
+ 	index = ida_alloc(&ida_index, GFP_KERNEL);
++	if (index < 0) {
++		pr_warn("%s: failed to get index!\n", name);
++		rc = index;
++		goto err_put_port;
++	}
++
+ 	memset(&ppdev_cb, 0, sizeof(ppdev_cb));
+ 	ppdev_cb.irq_func = pp_irq;
+ 	ppdev_cb.flags = (pp->flags & PP_EXCL) ? PARPORT_FLAG_EXCL : 0;
+ 	ppdev_cb.private = pp;
+ 	pdev = parport_register_dev_model(port, name, &ppdev_cb, index);
+-	parport_put_port(port);
+ 
+ 	if (!pdev) {
+ 		pr_warn("%s: failed to register device!\n", name);
+ 		rc = -ENXIO;
+ 		ida_free(&ida_index, index);
+-		goto err;
++		goto err_put_port;
+ 	}
+ 
+ 	pp->pdev = pdev;
+ 	pp->index = index;
+ 	dev_dbg(&pdev->dev, "registered pardevice\n");
+-err:
++err_put_port:
++	parport_put_port(port);
++err_free_name:
+ 	kfree(name);
+ 	return rc;
+ }
+-- 
+2.34.1
 
