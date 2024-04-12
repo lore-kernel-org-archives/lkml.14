@@ -1,146 +1,135 @@
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2BF127E18;
-	Fri, 12 Apr 2024 14:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C5212D1FC
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931838; cv=none; b=BS4eWvREid1zIeOk349SbJm+i5FLYhrSsh8gvFn8wYmSmGN30r/xTTvVZg+aTW6iK7vH01yp+BRnXr/r3fB5+jXupjPD0S2MfRFBD6wgciZQD3DtfrdJpZ12k+kCn9yk4bJT2xoSERq7JHiEMIe/LjGLS/HcPR+9P9u2OKVx4Dw=
+	t=1712931844; cv=none; b=ERlSQAujruba2No0af6hwKbGzKFpmhBABjpCQthwFGNlMfgfjOU36q2nAt3NKhoD3zrW26vVVf0BQytK/S3jyodsqi7/QJ7xeP02V7wI0+9QojCS2rtovdASolm6TNXMIoYgYNNhxx//JzmZnYv3ZFH4PiujxtprCazYLTHAi28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931838; c=relaxed/simple;
-	bh=kpmI1kJ5CiC906Na2qpuKgKUS/Inlp19HDZ3ukQQDqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HVPfzZFO7LdKaLGPsD1CjbFvESuPuW7wWpVjq2PDJdXsr2taF61paxY+MLVAUyNAIk5gQxsvEJiFHHiAitN2ceT2B4271MLrttFtaT8WzgI6a/565z8tl1DIkhWQR5TrfLBJmoHerIa8bNN+NvFfppMaZRkVmim3QSR9Mo5y1VQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XtdUTAvW; arc=none smtp.client-ip=209.85.160.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712931844; c=relaxed/simple;
+	bh=xPJfvrJkroHWen1V+x+kRG0Fv8xPw4I9S3y/eqOkAa0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=KI5ms/at72mXGiU9bsiSGFmibHABqLolsxyb2ZbUFdNpmIUf62IQQ0yqMy6qBy3PHHgPgEbGFoLsY3xXCjMiE40XT2yPkd9FBuRiKgVd39K4xn7nb6VL5bp+haTjEagqmfReCWADIzDiWjcw817kxpPNYmTMVkoUmbkLji3WtBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=lfhlR26B; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtdUTAvW"
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-22edcfcd187so316641fac.2;
-        Fri, 12 Apr 2024 07:23:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="lfhlR26B"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4715991c32so122715466b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:24:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712931836; x=1713536636; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1712931841; x=1713536641; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rnop7Tz3u3A6Y7l9rLZDgV358HdsfnR1FGKtIeVuKBc=;
-        b=XtdUTAvWBSHMwTnvEh5gBc+1XQ5VjscOHCK2pTsP+RPcYWaFyKOO8XXpvbIJy2Gnif
-         5fT4JOavbQk7nNvAj7+L3EmjTEMI4grCClbLfdP4n6svj2MGh77jbYtmRMzyLJmbkq9e
-         0P6Ln4+Z0mb2ERvn9w2J/BauCKVIuRbEv1q6WBn2Uiap0t3gxFX86bFx7I4C24lnP81G
-         Ki1zQE0r4x2O4hmT892HF7L8W3z6RIo+iR587v/9q5qN8aclJRfEWxXEguDZ5L+S+3Eo
-         ZAfW0abjGs4EYw1fbXEaXwdu3vYfcj+PzT45uwdRyrI3chgZhr/jBtBEVejoeIJhLcp5
-         akaw==
+        bh=kGGpBuMkk3rcfY7clPvu4R5GEYInWk7ZpVaUvi+LAPw=;
+        b=lfhlR26B1CJ7iMkal+tk28o3iwUeAhLMtmPTXj9rzkjBwh69ghHQzEZ7Eg607QRIfL
+         FkWxkNvk4HO+TALIUDsynEUeJunJf/POFcSaVHdCJXkWGnJk5p1rK4uzUDFk2S0YBC5a
+         Wv9GQVwrpPPPGxuSZ4/hH+qMo94eCVlDf+OZ223sa+Ed9wgleQSF/kHni83zSwAReP/v
+         qRSpgfKh6l9lPw34ab34kqBYfPozrlXgquzrlxK0FHKCmVWpmQksxAGucDGyx2DpVIAj
+         vsjYjb+v1txV7Tm79qkLeUepvq+0SbeAHPZfWs2JdEtbqlwtnEZAABvCKmnujP+nOCrC
+         w+yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712931836; x=1713536636;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rnop7Tz3u3A6Y7l9rLZDgV358HdsfnR1FGKtIeVuKBc=;
-        b=JV7L/jdnh8xMI4GMwthxb2zKGlTsm67nLWJYyXCu+FhzerR/gHzFus6GjTfsplUi6R
-         4eevqLgwFFU+bFJPJnjV7wJqEeNedoXLa6Pa+sl7Ox8vdHoYH35K8ztTO7UgGAiOYSZR
-         cWlv+inFXCzU1L4rF/zXCf6qlOWJvYLguSyQaBhmXzQxLWlrUzWv//Pr5Qvgo5/qOgaF
-         CCymJULD5U0ag2d0YwOdnKxAu/FMO3q2PVwg7VFjeF2MzR7kdW7UuMME4ymONdk0+JGH
-         2myaVH1kuS+v2XkNsfa8aH+NmICimSaVn+9Pzv+83Zkq9QiV+Ghy8glntNdNMDbtRktk
-         BxJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJWHLA5aAZmgvLUTFzNSHHdz+EGfeqqBho+6iXsbFpL02B6fOtTRfIiVZW69tAyo7aqkZ7gUqVABobHNIpQISfWJCc6sj+BYHUQlwuhkvdgqAEzwFgMXjr1N+nHY6kuC4FaFmltJx8pejJGa5jekHfJ7zjI+PULaqKQfkV/68Cny8QpvN73L+UKlY=
-X-Gm-Message-State: AOJu0Yw4YyeqSW7LaiJCv2pZ9pgIY56e3oRrUb7uFFhP7FKxMHZLHB/r
-	2zWAPs0lWas14MUV8JYgVxJA5/gouL/i7zoNMJ0CBopMQuh406b+
-X-Google-Smtp-Source: AGHT+IESH4fkXQOzELFKbwow3I/3zmYaBjB31FBeox2i7Lpcl/4hma+H6YA6EljsfIfiVAabwskJIQ==
-X-Received: by 2002:a05:6870:4194:b0:22a:f96:28b3 with SMTP id y20-20020a056870419400b0022a0f9628b3mr3085006oac.53.1712931836388;
-        Fri, 12 Apr 2024 07:23:56 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id n43-20020a056a000d6b00b006e5af565b1dsm2946952pfv.201.2024.04.12.07.23.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 07:23:56 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Johan Hovold <johan@kernel.org>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] usb: ohci-exynos: Use devm_clk_get_enabled() helpers
-Date: Fri, 12 Apr 2024 19:52:52 +0530
-Message-ID: <20240412142317.5191-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240412142317.5191-1-linux.amoon@gmail.com>
-References: <20240412142317.5191-1-linux.amoon@gmail.com>
+        d=1e100.net; s=20230601; t=1712931841; x=1713536641;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kGGpBuMkk3rcfY7clPvu4R5GEYInWk7ZpVaUvi+LAPw=;
+        b=cNFIjquFSzqQcfn/yzrBT8TxIDw3rzcZpKfrlcykAiTd4bwE6ZFWAW8ixOOsFC7vdN
+         TP8M1z30xVMFZsnCo0LbsJOol/1Js9lr1Eq+3f1ECKXlxXXZKiS7bv9q60QCan7iq7oz
+         ShRzcT/l8fs5uX7y8gm8cVK5xuzSY9KUPcO5QDZGQ/8ULBup/lY9V8vbHID8D9uDAxdL
+         iIEA+qSGZOJhr7gPo1OocVd8xV0ZVVOXOXeK/sujY9B13fVequdzTTAmzap+pbgWX0o0
+         Y9KYRQPlNIOGTFsjEAjN61BywCdGRD+gI5Y/tNFhM7dwJ90bFNO3ht9w9Q/VMAc4DLVD
+         8cvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxNrEcrzEIb6twI9raNhM2iViyU9b3bGFyNHrWtFdJHIDO0bAy0bEwgk2yEnO5DFqI+59naif7OdRZXqMAYeG52bWcaYSOdgnD95Ya
+X-Gm-Message-State: AOJu0Yx0XvSCbsZspU6vPDvNBbnqgA22lAJ4Pch7+OO889qrxONxwKGO
+	SYN7MnWHKbajp6wZ2Kj4Vgh4lDpLa40L59iBHNDyaireGtQzcdf8c6+5b2mOqYo=
+X-Google-Smtp-Source: AGHT+IFRwnYmNxoacwMYfZHwJlXDTXp4RSdWCA1aODz1NYxwf5Bx9Aehjl/icfWlQ/9r67E/c8s6qw==
+X-Received: by 2002:a17:907:25c1:b0:a51:d7c8:300c with SMTP id ae1-20020a17090725c100b00a51d7c8300cmr2369381ejc.17.1712931840880;
+        Fri, 12 Apr 2024 07:24:00 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id hg20-20020a1709072cd400b00a5225c87f65sm1563965ejc.56.2024.04.12.07.24.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Apr 2024 07:24:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 12 Apr 2024 16:23:59 +0200
+Message-Id: <D0I7NRQQGOSJ.3JB82F1X4GIQM@fairphone.com>
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Luca Weiss" <luca.weiss@fairphone.com>, "Marcel Holtmann"
+ <marcel@holtmann.org>, "Johan Hedberg" <johan.hedberg@gmail.com>, "Luiz
+ Augusto von Dentz" <luiz.dentz@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>
+Cc: <~postmarketos/upstreaming@lists.sr.ht>,
+ <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <phone-devel@vger.kernel.org>
+Subject: Re: [PATCH] Bluetooth: Add more Bluetooth version defines
+X-Mailer: aerc 0.17.0
+References: <20240216-bluetooth-defines-v1-1-6c39aacc66a8@fairphone.com>
+In-Reply-To: <20240216-bluetooth-defines-v1-1-6c39aacc66a8@fairphone.com>
 
-The devm_clk_get_enabled() helpers:
-    - call devm_clk_get()
-    - call clk_prepare_enable() and register what is needed in order to
-      call clk_disable_unprepare() when needed, as a managed resource.
+On Fri Feb 16, 2024 at 2:22 PM CET, Luca Weiss wrote:
+> Add the various Bluetooth version identifiers found in the "Assigned
+> Numbers" document[0] from the Bluetooth SIG.
+>
+> [0] https://www.bluetooth.com/specifications/assigned-numbers/
 
-This simplifies the code and avoids the calls to clk_disable_unprepare().
+Hi all,
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v3: drop dev_err_probe to simplify the error handle.
+Is there any interest in this patch? Would be nice to get at least a
+positive or negative reaction to it.
 
-v2: new patch in this series
----
- drivers/usb/host/ohci-exynos.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+Regards
+Luca
 
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 20e26a474591..89e6587c089b 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -135,20 +135,16 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 
- 	err = exynos_ohci_get_phy(&pdev->dev, exynos_ohci);
- 	if (err)
--		goto fail_clk;
-+		goto fail_io;
- 
--	exynos_ohci->clk = devm_clk_get(&pdev->dev, "usbhost");
-+	exynos_ohci->clk = devm_clk_get_enabled(&pdev->dev, "usbhost");
- 
- 	if (IS_ERR(exynos_ohci->clk)) {
- 		dev_err(&pdev->dev, "Failed to get usbhost clock\n");
- 		err = PTR_ERR(exynos_ohci->clk);
--		goto fail_clk;
-+		goto fail_io;
- 	}
- 
--	err = clk_prepare_enable(exynos_ohci->clk);
--	if (err)
--		goto fail_clk;
--
- 	hcd->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(hcd->regs)) {
- 		err = PTR_ERR(hcd->regs);
-@@ -191,8 +187,6 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 	exynos_ohci_phy_disable(&pdev->dev);
- 	pdev->dev.of_node = exynos_ohci->of_node;
- fail_io:
--	clk_disable_unprepare(exynos_ohci->clk);
--fail_clk:
- 	usb_put_hcd(hcd);
- 	return err;
- }
-@@ -208,8 +202,6 @@ static void exynos_ohci_remove(struct platform_device *pdev)
- 
- 	exynos_ohci_phy_disable(&pdev->dev);
- 
--	clk_disable_unprepare(exynos_ohci->clk);
--
- 	usb_put_hcd(hcd);
- }
- 
--- 
-2.44.0
+>
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+> To be clear, I don't have a use case for these extra defines myself but
+> some time ago when working on Bluetooth I came across this and thought
+> it would be interesting to have the list complete. No other motives.
+> ---
+>  include/net/bluetooth/bluetooth.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bl=
+uetooth.h
+> index 7ffa8c192c3f..818eb142eda3 100644
+> --- a/include/net/bluetooth/bluetooth.h
+> +++ b/include/net/bluetooth/bluetooth.h
+> @@ -39,11 +39,20 @@
+>  #endif
+> =20
+>  /* Bluetooth versions */
+> +#define BLUETOOTH_VER_1_0B	0
+>  #define BLUETOOTH_VER_1_1	1
+>  #define BLUETOOTH_VER_1_2	2
+>  #define BLUETOOTH_VER_2_0	3
+>  #define BLUETOOTH_VER_2_1	4
+> +#define BLUETOOTH_VER_3_0	5
+>  #define BLUETOOTH_VER_4_0	6
+> +#define BLUETOOTH_VER_4_1	7
+> +#define BLUETOOTH_VER_4_2	8
+> +#define BLUETOOTH_VER_5_0	9
+> +#define BLUETOOTH_VER_5_1	10
+> +#define BLUETOOTH_VER_5_2	11
+> +#define BLUETOOTH_VER_5_3	12
+> +#define BLUETOOTH_VER_5_4	13
+> =20
+>  /* Reserv for core and drivers use */
+>  #define BT_SKB_RESERVE	8
+>
+> ---
+> base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
+> change-id: 20240216-bluetooth-defines-b810ce543191
+>
+> Best regards,
 
