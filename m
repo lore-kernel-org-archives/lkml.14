@@ -1,152 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7836C
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 00:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECC5036C;
+	Fri, 12 Apr 2024 00:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712880934; cv=none; b=Rg+yXCJu5hZVlPGB+F9SUSXM0ht158Lylq1KxHmy86HOgWQI06DNRHd8ckGmKdYG38iUWaLYDQstZgLASSuxv1avzXC6sywKCqN3q3N9vDDzCgxEOJEBdyeIFF0sCf4Tgc4pG/V9+vKtsdT0E1R2rQCN8JJvcFGvxW87cBdd9qw=
+	t=1712881072; cv=none; b=MAGFfNK6AqOshpk/B0SHANbvZtmq3JceTwfYzLy4eKScjxSIix08IQZG8pzShTYQ/oj4hVTjpH3xEAiI0msuK7/WpR6uIeyBSwA7YTx8STTET2lUAC5sQ1notSXuCStNakT1ogz8vSs6iqR1lhkz2y3jnTzkrJrdT6bv9X5KG/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712880934; c=relaxed/simple;
-	bh=MbYbHKaYYrxJIm4Fw2wvHNsnfpuTDp9lkXBmrxwCgpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMA6+1ZPop6fD+6C32h1/9jNHhtgH637C1PqO7btcOsSLw+E5VJb0CWjp5/dmjmutgs/36FzT7BknKRcxB3q24ghZjc7lz1I5UosolpeS1xddDjgk578cSLATALFBa579lA2zf82YCGMOzRYG9zAotnadnDsEFwuXi5+5nldSW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bkF+T73C; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712881072; c=relaxed/simple;
+	bh=50OZ7JlsHKGdWRWX51fnAYktmg1ytZjQKr9Ej9/1m/k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rKNgtWFSq9CPjk3Y0juLQLHIgTGlHDYAYxDh4SMGSWmuNEd+jDi1maXsEZasDIt0A/uMaoAgC3mkkRt1lyFTpaMK06W+sLfHfAjCd0TMBPTn0TeJp34R7Y37Aa41XjcIF4DIT7PVjJWaQDKUA3BoHzfEmQgOBEOqD0j7hIeTRp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=gxbzRCXd; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bkF+T73C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712880933; x=1744416933;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MbYbHKaYYrxJIm4Fw2wvHNsnfpuTDp9lkXBmrxwCgpg=;
-  b=bkF+T73ChBwd/8e99sGdI8GLNII3frVOl+zGiCDMQ6fQ9Mf2sCLi/Alc
-   KtuW3KJnEqqd8h083Z0oO0NBDGbXHSPFwvvevYcsK9vvws8sk8kHc8R4Y
-   nthwIS4B4u9l7XTDnSDB5bmMI5PRC0W6GgPegNA+smph2TcH9S4ZwfOcQ
-   8IHdpAIWGMJncsld4/h0+n0IEOsLv7Y2ixo5M6fUoTAv42hHgnWhPqYtG
-   Nj0mMeNHKaZ/gKpRAEAGAEA/bRMaTGUa8ysRwZ0Cd+EJo+LRQ+qyFwCAK
-   ApFVK8i1cRfBT81CKIi9vEM573inrS3w6q7NctEmINv4o6Vx+LlENJ7GD
-   w==;
-X-CSE-ConnectionGUID: zFrDygX8TUm5SfMTLfSgdA==
-X-CSE-MsgGUID: t2DOCICYRA21Twh1sYrTCA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="30806482"
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="30806482"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 17:15:32 -0700
-X-CSE-ConnectionGUID: RiGasNyXTBu/IwBZtzs4Ow==
-X-CSE-MsgGUID: YIq+Z4zeQPGFQy8b4Mmi9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="21501876"
-Received: from haigouhu-mobl1.amr.corp.intel.com (HELO desk) ([10.209.117.182])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 17:15:31 -0700
-Date: Thu, 11 Apr 2024 17:15:22 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexandre Chartre <alexandre.chartre@oracle.com>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
-	Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 5/7] x86/bugs: Only harden syscalls when needed
-Message-ID: <20240412001522.3zp2mzked4ksglkl@desk>
-References: <cover.1712813475.git.jpoimboe@kernel.org>
- <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="gxbzRCXd"
+Received: from localhost.localdomain (unknown [4.155.48.125])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8EAF620EC32A;
+	Thu, 11 Apr 2024 17:17:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8EAF620EC32A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1712881070;
+	bh=Zf+HTFpj8I9//v34h6ZpxRqKnTpj+6KrGfJr8S0wU4M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gxbzRCXdxkh7guY72Vjlr4GXwwDz/oDF8Eatxa7mIohHFZCqOF9dasRz5CahhOdqi
+	 a+8VRDzXhA0FsgyMBsGIknlRahgQwf0bnfrLiLb8atgrXcjG3UXDNxjEPaNZAjBDLK
+	 /zJyh+x1chEATmdXUDtzUh9r2iSb+YAUi/o+IBYI=
+From: Beau Belgrave <beaub@linux.microsoft.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	primiano@google.com,
+	aahringo@redhat.com,
+	dcook@linux.microsoft.com
+Subject: [RFC PATCH 3/4] perf/core: Factor perf_output_sample_udump()
+Date: Fri, 12 Apr 2024 00:17:31 +0000
+Message-Id: <20240412001732.475-4-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240412001732.475-1-beaub@linux.microsoft.com>
+References: <20240412001732.475-1-beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 10, 2024 at 10:40:49PM -0700, Josh Poimboeuf wrote:
-> Syscall hardening (i.e., converting the syscall indirect branch to a
-> series of direct branches) may cause performance regressions in certain
-> scenarios.  Only use the syscall hardening when indirect branches are
-> considered unsafe.
-> 
-> Fixes: 1e3ad78334a6 ("x86/syscall: Don't force use of indirect calls for system calls")
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> ---
->  arch/x86/entry/common.c            | 30 +++++++++++++++++++++++++---
->  arch/x86/entry/syscall_32.c        | 11 +---------
->  arch/x86/entry/syscall_64.c        |  8 +-------
->  arch/x86/entry/syscall_x32.c       |  7 ++++++-
->  arch/x86/include/asm/cpufeatures.h |  1 +
->  arch/x86/include/asm/syscall.h     |  8 +++++++-
->  arch/x86/kernel/cpu/bugs.c         | 32 +++++++++++++++++++++++++++++-
->  7 files changed, 74 insertions(+), 23 deletions(-)
-> 
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index 6de50b80702e..80d432d2fe44 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -39,6 +39,28 @@
->  
->  #ifdef CONFIG_X86_64
->  
-> +/*
-> + * Do either a direct or an indirect call, depending on whether indirect calls
-> + * are considered safe.
-> + */
-> +#define __do_syscall(table, func_direct, nr, regs)			\
-> +({									\
-> +	unsigned long __rax, __rdi, __rsi;				\
-> +									\
-> +	asm_inline volatile(						\
-> +		ALTERNATIVE("call " __stringify(func_direct) "\n\t",	\
-> +			    ANNOTATE_RETPOLINE_SAFE			\
-> +			    "call *%[func_ptr]\n\t",			\
+We now have two user dump sources (stack and tls). Both are doing the
+same logic to ensure the user dump ABI output is properly handled. The
+only difference is one gets the address within the method, and the other
+is passed the address.
 
-This will likely not insert the lfence before the indirect call in
-spectre_v2=eibrs,lfence mode. As X86_FEATURE_INDIRECT_SAFE is not
-cleared when eIBRS is enabled, this will not be converted to direct
-call.
+Add perf_output_sample_udump() and utilize it for both stack and tls
+sample dumps. The sp register is now fetched outside of this method and
+passed to it. This allows both stack and tls to utilize the same code.
 
-[...]
-> @@ -1720,6 +1744,7 @@ static void __init spectre_v2_select_mitigation(void)
->  
->  	case SPECTRE_V2_CMD_RETPOLINE_LFENCE:
->  		pr_err(SPECTRE_V2_LFENCE_MSG);
-> +		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ kernel/events/core.c | 68 +++++++++++++-------------------------------
+ 1 file changed, 19 insertions(+), 49 deletions(-)
 
-I don't know if it intentional, this seems to be the duplicate of
-X86_FEATURE_INDIRECT_SAFE clear later in SPECTRE_V2_LFENCE mode. Also it
-seems a bit odd to do this here in SPECTRE_V2_CMD handling.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index f848bf4be9bd..6b3cf5afdd32 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6998,47 +6998,10 @@ perf_sample_dump_size(u16 dump_size, u16 header_size, u64 task_size)
+ }
+ 
+ static void
+-perf_output_sample_ustack(struct perf_output_handle *handle, u64 dump_size,
+-			  struct pt_regs *regs)
+-{
+-	/* Case of a kernel thread, nothing to dump */
+-	if (!regs) {
+-		u64 size = 0;
+-		perf_output_put(handle, size);
+-	} else {
+-		unsigned long sp;
+-		unsigned int rem;
+-		u64 dyn_size;
+-
+-		/*
+-		 * We dump:
+-		 * static size
+-		 *   - the size requested by user or the best one we can fit
+-		 *     in to the sample max size
+-		 * data
+-		 *   - user stack dump data
+-		 * dynamic size
+-		 *   - the actual dumped size
+-		 */
+-
+-		/* Static size. */
+-		perf_output_put(handle, dump_size);
+-
+-		/* Data. */
+-		sp = perf_user_stack_pointer(regs);
+-		rem = __output_copy_user(handle, (void *) sp, dump_size);
+-		dyn_size = dump_size - rem;
+-
+-		perf_output_skip(handle, rem);
+-
+-		/* Dynamic size. */
+-		perf_output_put(handle, dyn_size);
+-	}
+-}
+-
+-static void
+-perf_output_sample_utls(struct perf_output_handle *handle, u64 addr,
+-			u64 dump_size, struct pt_regs *regs)
++perf_output_sample_udump(struct perf_output_handle *handle,
++			 unsigned long addr,
++			 u64 dump_size,
++			 struct pt_regs *regs)
+ {
+ 	/* Case of a kernel thread, nothing to dump */
+ 	if (!regs) {
+@@ -7054,7 +7017,7 @@ perf_output_sample_utls(struct perf_output_handle *handle, u64 addr,
+ 		 *   - the size requested by user or the best one we can fit
+ 		 *     in to the sample max size
+ 		 * data
+-		 *   - user tls dump data
++		 *   - user dump data
+ 		 * dynamic size
+ 		 *   - the actual dumped size
+ 		 */
+@@ -7507,9 +7470,16 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 	}
+ 
+ 	if (sample_type & PERF_SAMPLE_STACK_USER) {
+-		perf_output_sample_ustack(handle,
+-					  data->stack_user_size,
+-					  data->regs_user.regs);
++		struct pt_regs *regs = data->regs_user.regs;
++		unsigned long sp = 0;
++
++		if (regs)
++			sp = perf_user_stack_pointer(regs);
++
++		perf_output_sample_udump(handle,
++					 sp,
++					 data->stack_user_size,
++					 regs);
+ 	}
+ 
+ 	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE)
+@@ -7551,10 +7521,10 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 		perf_output_put(handle, data->code_page_size);
+ 
+ 	if (sample_type & PERF_SAMPLE_TLS_USER) {
+-		perf_output_sample_utls(handle,
+-					data->tls_addr,
+-					data->tls_user_size,
+-					data->regs_user.regs);
++		perf_output_sample_udump(handle,
++					 data->tls_addr,
++					 data->tls_user_size,
++					 data->regs_user.regs);
+ 	}
+ 
+ 	if (sample_type & PERF_SAMPLE_AUX) {
+-- 
+2.34.1
 
->  		mode = SPECTRE_V2_LFENCE;
->  		break;
->  
-> @@ -1772,11 +1797,16 @@ static void __init spectre_v2_select_mitigation(void)
->  		break;
->  
->  	case SPECTRE_V2_LFENCE:
-> +		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-> +		fallthrough;
->  	case SPECTRE_V2_EIBRS_LFENCE:
->  		setup_force_cpu_cap(X86_FEATURE_RETPOLINE_LFENCE);
-> -		fallthrough;
-> +		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
-> +		break;
->  
->  	case SPECTRE_V2_RETPOLINE:
-> +		setup_clear_cpu_cap(X86_FEATURE_INDIRECT_SAFE);
-> +		fallthrough;
->  	case SPECTRE_V2_EIBRS_RETPOLINE:
->  		setup_force_cpu_cap(X86_FEATURE_RETPOLINE);
->  		break;
