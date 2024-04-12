@@ -1,150 +1,159 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE33145B36
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 661481487C6
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712935055; cv=none; b=ituj6lHSuleLzUoBneNKKLnH9wtSneaekM3TFV3BBchYv7z0yuZQr8iWlMLbQyy1GB7u159B2tFoqz4zsQzHh9Ik87pzIT1CE0Z+6wss0HXDdLAYCSCJUvQNiQVoqQO9Tx4ZlE3uDDUUmbMR9MW3eGT3iMduubLSjvn3YAyrUO8=
+	t=1712935176; cv=none; b=LBKRUOH/H6dYKokPKg/GwfLzXzAC8INXPKSf7zg2v+BMjxUaAI7/M8+7QF6VwNMNntIb7oExpOHeaX0CdM9eRL6+fXwjv3gn7UPHoEZuF/uXk8NR3VjKgKFO7p92lVXTL5oWHP9dg9T8BPBi4HV36L4rDgKiAO3jab87HCuTLVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712935055; c=relaxed/simple;
-	bh=qcMiL2ufsHXp7WFWbsB9/Gxuc3YOSuDXAu/2vPMjgG8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EfL8dHLF8gmwOlEeEmp43tAkUbgc8Jfk6/2Lki3nxjjCyFhe8Enweinyo9b2+JnQTLoQPxkz9JGzC7Jrvu5xmCfAC0aKhK+qauya3OhmBvqNtiZQazBekpbuXX8yl+/BI2d10QHDyNY9mMFKrfaF/DnikxUi8FepjvlcffwTQRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSaKeSH7; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712935176; c=relaxed/simple;
+	bh=PbKlGesAILRM8egOcOsHeXdQ4cD9J0LY94ZDaOSVUjA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QQi/G/zEBYcsVhP7j14148+AyystykAm2oWXfaRil3YRoC9Nm6T/+luGN9YhH8VNCOtQVRMHiyoISKoCNmtVNspgdHBYrOaYLdcyYBx+BuutYhxT2LDI+t/PklniATfDefKonDG9peAmpsBZPUsd7GnOC+FCvgRklnpJ7CG/y24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TewO1ChV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSaKeSH7"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-343d32aba7eso301922f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712935052; x=1713539852; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oVORJrtQBGCZetsXVvQsSiJEGSqOyrmNrkV1tAuNtSE=;
-        b=iSaKeSH7sNcIAYy4nWS+EuXP8cszIXcbyw457FTuM40rzJ+BT70h2tBd0B2T3PZhn9
-         +MSyWCa1qy42ZfcTGorVoTLj30k3grlyh3Eo+j2aem0c0aDp23JKC1xbIbAt3Jvq9xsA
-         B9Mu9J4A3qNL12bJ6yt2Te2Oek3GbAVICj5h5UCV249uV2xEyFsBcY5dmfW1PLkj5Kx1
-         r9z97nyp06XeXMeX6ZaJpMXBzLPmjXnN1PTpqnfNmb7sf91D7N1Pw+udZKufnMHjjcQl
-         f/EeBIcxG+/cfCDAg4mLKT/x2T9HMrO+neU2m4HvAvMe7dFv/y/cV8m2Oo0L2IFrDZH1
-         wqtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712935052; x=1713539852;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oVORJrtQBGCZetsXVvQsSiJEGSqOyrmNrkV1tAuNtSE=;
-        b=A4YGygyn+dRUMJHJFL9DhX6Cjl14eHaRh8p4bRhTaR//bRbF7AzCbvXzTHkrT+Ancz
-         h1esuOMeGusVedbCkdPMT0ow7ozAeniRVSHST21DKsjxIkKWGC/fevjsH1BfjBz0B/LO
-         SYa6aW6swOCQkCsEDswRRsufHXpP1IsnfCOVEv/cYCpc/2psqbLtXTfsuA4ALHBOOSaK
-         UOlbB7+w96rZ5f7NxMWCO9d3XIXEK8HrM/PwnKyItZniWDekROe/YjmOXHPG/m4I+Lhr
-         TMH5eHZWulmZD6AJwLE9i8tYK+Wclf3bWIP8y9W3Mjff7ANMPN2SiNRATg9lZ9W9Z9D2
-         nvJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqveV6oBayBBR9RPQ6LG2CbU+4C/CMjwQHgoZ+HSJpzWq0+qQTkZLRvXV0jWWxz1CDIcxYbE+ifwa44FLYX4a5vbtjAk+EJp5AQUxv
-X-Gm-Message-State: AOJu0YxL89X5JMYRzb8FTAuG7U+7CGaafGm1Vzerg58hOYcAQASl+dQk
-	B+Z3DKOOW1MYQd9FMMamAdxJfIyY7zWuiO2AVA3dH9sTWxk0YamxTCp1Fg==
-X-Google-Smtp-Source: AGHT+IEv4YmJAi7c4JNV+frTjtshhbBZ/wuLesD2ZvAli872i2Xf2hKyjo7HlygcAY4V6H5bTvxStw==
-X-Received: by 2002:adf:f308:0:b0:346:500f:9297 with SMTP id i8-20020adff308000000b00346500f9297mr1990455wro.2.1712935052186;
-        Fri, 12 Apr 2024 08:17:32 -0700 (PDT)
-Received: from ivan-HLYL-WXX9.guest.codethink.co.uk ([167.98.27.226])
-        by smtp.gmail.com with ESMTPSA id c10-20020a5d4cca000000b0034698307cf8sm4474332wrt.15.2024.04.12.08.17.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 08:17:31 -0700 (PDT)
-From: Ivan Orlov <ivan.orlov0322@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: Ivan Orlov <ivan.orlov0322@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dca: make dca_class a static const structure
-Date: Fri, 12 Apr 2024 16:17:26 +0100
-Message-Id: <20240412151726.189030-1-ivan.orlov0322@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TewO1ChV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DGzof1GGkX+qr1HYb79Xnt9O/wZA8sRs08uMtKKlZes=; b=TewO1ChVJSortfw0EVN1FWaF3V
+	9e+5Nf+DUlIDtfXF35qysW/QHL5h6l86zbSKK8tiO//XPCRMp0WElDoyREyQozRKrn25Hk39cgfL3
+	HEOr1BhQOJnE57vhTbankwEpehQ915Qj4G05UmNRz4Ug71bCdM5s5pI8algyZzLZRH+53f2lmrys+
+	pFhmYIbeK8rnh1BW2VZFcT6g57cEuMjBYCr1bOaJRAE1J5eVjptbuq09B3UTPq5GtO7u2eagLC8At
+	BC5/WzWW6/A+77TP9+E18DBvv7/OD3gT7IOL4adO7BdO1JnNF04JQ52UaNlEC9MWy/Fe9MUwzOWeO
+	C4oqdq3Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rvIgZ-00000009UqM-3aUy;
+	Fri, 12 Apr 2024 15:19:27 +0000
+Date: Fri, 12 Apr 2024 16:19:27 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Peter Xu <peterx@redhat.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Lokesh Gidra <lokeshgidra@google.com>,
+	Alistair Popple <apopple@nvidia.com>
+Subject: Re: [PATCH] mm: Always sanity check anon_vma first for per-vma locks
+Message-ID: <ZhlQ_4Ve0vYNbWbl@casper.infradead.org>
+References: <20240411171319.almhz23xulg4f7op@revolver>
+ <ZhhSItiyLYBEdAX3@x1n>
+ <ZhhV3PKgEX9d7_vA@casper.infradead.org>
+ <ZhhaRXHKk7w_hKgi@x1n>
+ <Zhhd-A7w1A8JUadM@casper.infradead.org>
+ <ZhinCD-PoblxGFm0@casper.infradead.org>
+ <ZhkrY5tkxgAsL1GF@x1n>
+ <CAJuCfpG7YkQ2giKiv07TetTn=QHK9x723vnLaTjDCaQjUvAavw@mail.gmail.com>
+ <ZhlCVOz7qaDtldfL@casper.infradead.org>
+ <CAJuCfpGGUD6ev-KFhON2D2RqQRZSgjxFXvkNqeux-LrJw4L+iw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGGUD6ev-KFhON2D2RqQRZSgjxFXvkNqeux-LrJw4L+iw@mail.gmail.com>
 
-The driver core allows for struct class to be in read-only memory. Move
-the dca_class structure to be declared at build time placing it into
-read-only memory, instead of having to be dynamically allocated at boot
-time.
+On Fri, Apr 12, 2024 at 09:53:29AM -0500, Suren Baghdasaryan wrote:
+> Unless vmf_anon_prepare() already explains why vma->anon_vma poses a
+> problem for per-vma locks, we should have an explanation there. This
+> comment would serve that purpose IMO.
 
-Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Ivan Orlov <ivan.orlov0322@gmail.com>
----
- drivers/dca/dca-sysfs.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+I'll do you one better; here's some nice kernel-doc for
+vmd_anon_prepare():
 
-diff --git a/drivers/dca/dca-sysfs.c b/drivers/dca/dca-sysfs.c
-index fcc83ede0909..b915c2b4601e 100644
---- a/drivers/dca/dca-sysfs.c
-+++ b/drivers/dca/dca-sysfs.c
-@@ -13,7 +13,9 @@
- #include <linux/gfp.h>
- #include <linux/export.h>
+commit f89a1cd17f13
+Author: Matthew Wilcox (Oracle) <willy@infradead.org>
+Date:   Fri Apr 12 10:41:02 2024 -0400
+
+    mm: Delay the check for a NULL anon_vma
+    
+    Instead of checking the anon_vma early in the fault path where all page
+    faults pay the cost, delay it until we know we're going to need the
+    anon_vma to be filled in.  This will have a slight negative effect on the
+    first fault in an anonymous VMA, but it shortens every other page fault.
+    It also makes the code slightly cleaner as the anon and file backed
+    fault handling look more similar.
+    
+    Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index d8d2ed80b0bf..718f91f74a48 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1057,11 +1057,13 @@ vm_fault_t do_huge_pmd_anonymous_page(struct vm_fault *vmf)
+ 	gfp_t gfp;
+ 	struct folio *folio;
+ 	unsigned long haddr = vmf->address & HPAGE_PMD_MASK;
++	vm_fault_t ret;
  
--static struct class *dca_class;
-+static const struct class dca_class = {
-+	.name = "dca",
-+};
- static struct idr dca_idr;
- static spinlock_t dca_idr_lock;
+ 	if (!thp_vma_suitable_order(vma, haddr, PMD_ORDER))
+ 		return VM_FAULT_FALLBACK;
+-	if (unlikely(anon_vma_prepare(vma)))
+-		return VM_FAULT_OOM;
++	ret = vmf_anon_prepare(vmf);
++	if (ret)
++		return ret;
+ 	khugepaged_enter_vma(vma, vma->vm_flags);
  
-@@ -22,14 +24,14 @@ int dca_sysfs_add_req(struct dca_provider *dca, struct device *dev, int slot)
- 	struct device *cd;
- 	static int req_count;
- 
--	cd = device_create(dca_class, dca->cd, MKDEV(0, slot + 1), NULL,
-+	cd = device_create(&dca_class, dca->cd, MKDEV(0, slot + 1), NULL,
- 			   "requester%d", req_count++);
- 	return PTR_ERR_OR_ZERO(cd);
+ 	if (!(vmf->flags & FAULT_FLAG_WRITE) &&
+diff --git a/mm/memory.c b/mm/memory.c
+index 6e2fe960473d..46b509c3bbc1 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3213,6 +3213,21 @@ static inline vm_fault_t vmf_can_call_fault(const struct vm_fault *vmf)
+ 	return VM_FAULT_RETRY;
  }
  
- void dca_sysfs_remove_req(struct dca_provider *dca, int slot)
++/**
++ * vmf_anon_prepare - Prepare to handle an anonymous fault.
++ * @vmf: The vm_fault descriptor passed from the fault handler.
++ *
++ * When preparing to insert an anonymous page into a VMA from a
++ * fault handler, call this function rather than anon_vma_prepare().
++ * If this vma does not already have an associated anon_vma and we are
++ * only protected by the per-VMA lock, the caller must retry with the
++ * mmap_lock held.  __anon_vma_prepare() will look at adjacent VMAs to
++ * determine if this VMA can share its anon_vma, and that's not safe to
++ * do with only the per-VMA lock held for this VMA.
++ *
++ * Return: 0 if fault handling can proceed.  Any other value should be
++ * returned to the caller.
++ */
+ vm_fault_t vmf_anon_prepare(struct vm_fault *vmf)
  {
--	device_destroy(dca_class, MKDEV(0, slot + 1));
-+	device_destroy(&dca_class, MKDEV(0, slot + 1));
- }
- 
- int dca_sysfs_add_provider(struct dca_provider *dca, struct device *dev)
-@@ -49,7 +51,7 @@ int dca_sysfs_add_provider(struct dca_provider *dca, struct device *dev)
- 	if (ret < 0)
- 		return ret;
- 
--	cd = device_create(dca_class, dev, MKDEV(0, 0), NULL, "dca%d", dca->id);
-+	cd = device_create(&dca_class, dev, MKDEV(0, 0), NULL, "dca%d", dca->id);
- 	if (IS_ERR(cd)) {
- 		spin_lock(&dca_idr_lock);
- 		idr_remove(&dca_idr, dca->id);
-@@ -71,20 +73,22 @@ void dca_sysfs_remove_provider(struct dca_provider *dca)
- 
- int __init dca_sysfs_init(void)
- {
-+	int err;
-+
- 	idr_init(&dca_idr);
- 	spin_lock_init(&dca_idr_lock);
- 
--	dca_class = class_create("dca");
--	if (IS_ERR(dca_class)) {
-+	err = class_register(&dca_class);
-+	if (err) {
- 		idr_destroy(&dca_idr);
--		return PTR_ERR(dca_class);
-+		return err;
+ 	struct vm_area_struct *vma = vmf->vma;
+@@ -4437,8 +4452,9 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
  	}
- 	return 0;
- }
  
- void __exit dca_sysfs_exit(void)
- {
--	class_destroy(dca_class);
-+	class_unregister(&dca_class);
- 	idr_destroy(&dca_idr);
- }
+ 	/* Allocate our own private page. */
+-	if (unlikely(anon_vma_prepare(vma)))
+-		goto oom;
++	ret = vmf_anon_prepare(vmf);
++	if (ret)
++		return ret;
+ 	/* Returns NULL on OOM or ERR_PTR(-EAGAIN) if we must retry the fault */
+ 	folio = alloc_anon_folio(vmf);
+ 	if (IS_ERR(folio))
+@@ -5821,15 +5837,6 @@ struct vm_area_struct *lock_vma_under_rcu(struct mm_struct *mm,
+ 	if (!vma_start_read(vma))
+ 		goto inval;
  
--- 
-2.34.1
-
+-	/*
+-	 * find_mergeable_anon_vma uses adjacent vmas which are not locked.
+-	 * This check must happen after vma_start_read(); otherwise, a
+-	 * concurrent mremap() with MREMAP_DONTUNMAP could dissociate the VMA
+-	 * from its anon_vma.
+-	 */
+-	if (unlikely(vma_is_anonymous(vma) && !vma->anon_vma))
+-		goto inval_end_read;
+-
+ 	/* Check since vm_start/vm_end might change before we lock the VMA */
+ 	if (unlikely(address < vma->vm_start || address >= vma->vm_end))
+ 		goto inval_end_read;
