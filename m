@@ -1,34 +1,34 @@
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B318B5491B
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.67.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846C754F83
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712919572; cv=none; b=Mw4MS/LeSvx9avKtv0lItPX8s3hju6/bfzPFgm3BepinatUKFAoERtqSPaToVXhp38T8x9muzoN3E/FPgghIZJfflksui+KMcR2hJF6p4es5UUhHcm0cjPUZaO9htsNrEdv7sbltNkPPtc7Vt05Ws/4i/ChCLnYdEkwkI4KS0TA=
+	t=1712919575; cv=none; b=pqA44nC+ciXKjLjSMwSijcFgT2ZNqYadweN7PKRr0FpNSreLV43x1OdycoQvvdQW//Rka2r2ApQpogVQgkBq44kBIgpDaSdqY5+yaDDIULd7fuPFPPQz7znTwDI/mSeCNQVIBVIsuOZvdT4i8yysAw7y1sprMWMlJ9Apxzmv8nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712919572; c=relaxed/simple;
-	bh=89OWL6oKQL9eoj0BTb0SEH2HgmwDSvtWGUqC2G83MKw=;
+	s=arc-20240116; t=1712919575; c=relaxed/simple;
+	bh=YU9GY9kwwCwrYvzSsJ4J9pmYsZAzvBbQ+w74pN74GBI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ueqPK0YCwF0cwzumd1llzmZ93fauA2GTfWHslPCeBDqlzVhkg8srsLP/yjAcaNR/BAnZq14XJjju5Ruy6H96WkCXwVjzngqquYDt6DIc0fy06RxswYLHKL2QRwc/3vylqknZbDYyyAb49Zz2pftMl1StmUq5ngv4VjiII93KDi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=114.132.67.179
+	 MIME-Version; b=mZ+HH0TvKXKyDaFpw9CddZTM+ktQlfMHdgEQPUxcq3Bc3LDoncC4QekRFzWov+2ucxPx3YASdUviOQ2qeasARQMF/oIKCd5lZkV65Qunp6xsaJy85HP3mz/+ZLYGlN8SOBCrPX/XjdHhqqs3a2tiaHGwJpTA0d1cIjagt1dE5QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=52.59.177.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtp82t1712919548twkgcxfw
-X-QQ-Originating-IP: cTu8bWC6MQj9EpB/V8OFtgVpRbN3pOE3oBFgWv0OihE=
+X-QQ-mid: bizesmtpsz8t1712919561ta68hir
+X-QQ-Originating-IP: ZWB/B4IyZ0qUnNOZL+Tpusla3oVf3Lb8ZOYZb7lrUJE=
 Received: from localhost ( [112.0.147.129])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 12 Apr 2024 18:59:07 +0800 (CST)
+	id ; Fri, 12 Apr 2024 18:59:19 +0800 (CST)
 X-QQ-SSF: 01400000000000903000000A0000000
-X-QQ-FEAT: RrZlkntZBfmamcRyuPfoyReZ1wjERGVK+iTPLZgwTojoaJ8M98IfPlIFJMjVP
-	VYRr+4hX1twh8sTPH2sdFyggPmEN+vCMbfTm885aXD4a0kazTTdZYBVaqTzVPWzQjWxSMr6
-	tCkKOIki8KkWyQ9eYJ2d8gea8uBIcX/IUNMf/u+IQXQfpKUE6vfLkoChCJsH7k/9uL4QT0J
-	Z75YR/YFWJ+oXLNuCiW0O2eAOQ5VqElPIbxPzTV7WHPkLDlqxNMtQu7hqYuJaMi6LanxywJ
-	0TIyujtEQGZqknhgAQe+VVYCrZ4uw81UkVBi5/SnpkjpuTZjZJoTlx+G+4M4mpBi0dKvBag
-	cF1YgsBIFhCt/9yMwPcmTmA8Jy7W3LkIz+uhphaycwLywOD4OaZxcUwn1byriJ1sykK+kaU
-	NQqNqjmjqCcRVKAl3Nr9oVLLRH4ebc+y
+X-QQ-FEAT: RrZlkntZBfm95kGRViz3aLor3/0FhwLyKZAXNIWQAgktxGh8r1b1zwap8vw9f
+	Sm7//RYKxkWd50EwrJamIXK/afovqE2m1EnTP1keOpm2u6LKwYAlec6U8lCuxCFoNbEqLFK
+	JMJYDu/+a/G8St6t/wgv1GGjPxkI12MNlRFKu/YLQxitghtm0MLzWi9QUUI/P1HxoCslPtG
+	yiTwRDkVWzneMoNTAnx5Tfc18AlWPitA/HWMHCoYtigHAn4Cw6CV1ao9mECd3JmzvltHDTg
+	10w60sutnatI1p88Xyy6bihEWyLqaqDDw44AE0gCacHTJW0+vIS2anqKRyZN7JuzAqTQxIt
+	fyMMzqxGr6r7A2hxvDU670s6a7nmYTc7a0XrqSgkqepMamFlhOk6zrP0lklCnYEHvuvdhFC
+	ODD5wSMhesmr5DJ8GCH79rEIhfQoowb3
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 11251082261756714604
+X-BIZMAIL-ID: 845724314838511748
 From: Dawei Li <dawei.li@shingroup.cn>
 To: tglx@linutronix.de,
 	yury.norov@gmail.com
@@ -43,9 +43,9 @@ Cc: akpm@linux-foundation.org,
 	linux@rasmusvillemoes.dk,
 	linux-kernel@vger.kernel.org,
 	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH 2/6] irqchip/irq-bcm6345-l1: Avoid explicit cpumask allocation on stack
-Date: Fri, 12 Apr 2024 18:58:35 +0800
-Message-Id: <20240412105839.2896281-3-dawei.li@shingroup.cn>
+Subject: [PATCH 4/6] irqchip/loongson-eiointc: Avoid explicit cpumask allocation on stack
+Date: Fri, 12 Apr 2024 18:58:37 +0800
+Message-Id: <20240412105839.2896281-5-dawei.li@shingroup.cn>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20240412105839.2896281-1-dawei.li@shingroup.cn>
 References: <20240412105839.2896281-1-dawei.li@shingroup.cn>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
+Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
 In general it's preferable to avoid placing cpumasks on the stack, as
 for large values of NR_CPUS these can consume significant amounts of
@@ -68,30 +68,36 @@ the stack.
 
 Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
 ---
- drivers/irqchip/irq-bcm6345-l1.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-loongson-eiointc.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/irqchip/irq-bcm6345-l1.c b/drivers/irqchip/irq-bcm6345-l1.c
-index eb02d203c963..6df37957b39c 100644
---- a/drivers/irqchip/irq-bcm6345-l1.c
-+++ b/drivers/irqchip/irq-bcm6345-l1.c
-@@ -192,14 +192,11 @@ static int bcm6345_l1_set_affinity(struct irq_data *d,
- 	u32 mask = BIT(d->hwirq % IRQS_PER_WORD);
- 	unsigned int old_cpu = cpu_for_irq(intc, d);
- 	unsigned int new_cpu;
--	struct cpumask valid;
+diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
+index b64cbe3052e8..c9f30e96b5b5 100644
+--- a/drivers/irqchip/irq-loongson-eiointc.c
++++ b/drivers/irqchip/irq-loongson-eiointc.c
+@@ -92,19 +92,16 @@ static int eiointc_set_irq_affinity(struct irq_data *d, const struct cpumask *af
+ 	unsigned int cpu;
  	unsigned long flags;
- 	bool enabled;
+ 	uint32_t vector, regaddr;
+-	struct cpumask intersect_affinity;
+ 	struct eiointc_priv *priv = d->domain->host_data;
  
--	if (!cpumask_and(&valid, &intc->cpumask, dest))
--		return -EINVAL;
+ 	raw_spin_lock_irqsave(&affinity_lock, flags);
+ 
+-	cpumask_and(&intersect_affinity, affinity, cpu_online_mask);
+-	cpumask_and(&intersect_affinity, &intersect_affinity, &priv->cpuspan_map);
 -
--	new_cpu = cpumask_any_and(&valid, cpu_online_mask);
-+	new_cpu = cpumask_first_and_and(&intc->cpumask, dest,
-+					cpu_online_mask);
- 	if (new_cpu >= nr_cpu_ids)
+-	if (cpumask_empty(&intersect_affinity)) {
++	cpu = cpumask_first_and_and(&priv->cpuspan_map, affinity,
++				    cpu_online_mask);
++	if (cpu >= nr_cpu_ids) {
+ 		raw_spin_unlock_irqrestore(&affinity_lock, flags);
  		return -EINVAL;
+ 	}
+-	cpu = cpumask_first(&intersect_affinity);
  
+ 	vector = d->hwirq;
+ 	regaddr = EIOINTC_REG_ENABLE + ((vector >> 5) << 2);
 -- 
 2.27.0
 
