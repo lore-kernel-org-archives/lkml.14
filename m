@@ -1,115 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E98D14882A;
-	Fri, 12 Apr 2024 16:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124C913BC34
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712937930; cv=none; b=G9K7bJXQnq+gJ+P15/oUQbELSe6gJ/MQ+uYLyMMhRQNuaBGaCX+tUhbAtH+K2PN7vMW9mHcTVVjp5mO1+3DFu+oC26ZirOmVQH6I3cWv89V9O8lY0s0CqrSs0ZLXoRd5KIAYN5wua4En+MGgcBcAHC5aQYfxFBVlO2aFF6jHDzk=
+	t=1712938011; cv=none; b=hd+nITyW8nmtGsB/cpLw8ItD7ZZTWwNpoCQUGicUXWaUaNmQxFtpEZl8nVLAvQnRW47y+KGCifnBEBAjA5/EC/UPxAQga1HN5J/RVQvP6+7gxzN4gP3HwP3D0eu0shtKLSN1W8vaUqc/Qj08D3fvuZchsN3PCDwcDHyE3WYZTts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712937930; c=relaxed/simple;
-	bh=1/NB8a2s0JE38BjWaVVOqDk0x4r1aQh52BXzcj4GQys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LWjublxe8KQN4F/dtYAgkMX6mKMvgW99oOWqIjhtqvZUuG1MNOtLTCODbNUecaWjlhknZQQcbgn0NGsB3daUsb0E2Ga2vfYmAfVihWNCN1MlL7qklUJY1RaCxLSg8NE+zZLmmHtBqBovjI6A+zKklaBVSeiOSPg/oxh5JiQdeAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UhnURz+o; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712938011; c=relaxed/simple;
+	bh=5pH4s1XLerrXy9k1AYpN+fU13VFXyhA3Dz0ugkHOoSE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dr+K1ZPjixJgnr7l8pwWCkhuUubTFboDsMgps5pQXiSV81rZYWK8Xez7uhFmT49HPtZ7NFjeyaK8yPitbCtOp2Ma2U4hXdtzXEw8QkkJZR2ZrxcNCNB7HdJIVTXiYfdH8p0s3TkrOAyVlWisJRFRTs/pr3oXHkz0H6ELGGL9uLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cEK16wTB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UhnURz+o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712937929; x=1744473929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1/NB8a2s0JE38BjWaVVOqDk0x4r1aQh52BXzcj4GQys=;
-  b=UhnURz+oGh8uiKrRIU7VtHb0zOK74JMozviVJvtdBmxoisqh99MYWIBB
-   1u/IhO5MWcyOuOgO9VnosMlDAT0qMD3Imq5vi+lkVXJSBTt3dbb9jRYlh
-   A0hmL2m0XsT1ixLr4BC0oBtG1u500aI9Ypo5IVYNBUKhfgIc1/DVH6YNb
-   wzp8nGEKSkTEhS2d3xWkUfO4Hjx9iY+2dKqfwEKDpvTyk1UBAOT+f2r5z
-   5rjU/VFV5AaB1/gacEn6tSHQUfIcfWfm1ISqj6lRMcfsnuBS7mb/nuyDn
-   5BTlf5xHw78Jx0CHlqG8kha6br0G1uVxoeTZ69ONPtaH1Yzmhe0dWTa51
-   w==;
-X-CSE-ConnectionGUID: yIlp5hboQW2C6uKkuo3Rdg==
-X-CSE-MsgGUID: MTQ6WJPySvm/AJDMRhkamA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8567895"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8567895"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:03:23 -0700
-X-CSE-ConnectionGUID: uuLvFXSJRlefzpNDHNW8Wg==
-X-CSE-MsgGUID: bElCKXfUS1O9iknwz3CwWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="52420295"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:03:18 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvJMx-00000003hFE-3Duc;
-	Fri, 12 Apr 2024 19:03:15 +0300
-Date: Fri, 12 Apr 2024 19:03:15 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	David Thompson <davthompson@nvidia.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org, netdev@vger.kernel.org,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH v1 0/4] gpiolib: acpi: Use con_id in
- acpi_dev_gpio_irq_get_by()
-Message-ID: <ZhlbQ69161IC4AqM@smile.fi.intel.com>
-References: <20240411172540.4122581-2-andriy.shevchenko@linux.intel.com>
- <20240412101944.GE112498@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cEK16wTB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52559C113CC;
+	Fri, 12 Apr 2024 16:06:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712938010;
+	bh=5pH4s1XLerrXy9k1AYpN+fU13VFXyhA3Dz0ugkHOoSE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cEK16wTBCbtYNSl3+h8NXgXombKOUy9miD1/ty7ekxeuox4GuJ983Dg/xs5tCY7IA
+	 FCzKDa84C5nCPzPC3OL8YWRJr2s3O/lvW8DSVoR989+FZGCtfyEhwHYb5i/EOGTgxY
+	 /SUuXqfYTobRiw6roYvhnXctDKqEI0rFhG7Ygm9OBHcnbJtRRTq+XfuZCl81Lkk5FX
+	 CoWVi7eC0XBdGtsmHTmr1jeCq9f/ckYMO2XoW9w4UC6bA37bS/JZLBhJ7sgO85VooM
+	 yF0oQ1hX4QgqiZn9yhHAtWMtPwJjhCfFznBrw7uaCasHZlqYOW787/uRT8lnYHopnX
+	 Gp0ryNIbLCA4w==
+From: Will Deacon <will@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Gavin Shan <gshan@redhat.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	akpm@linux-foundation.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	ryan.roberts@arm.com,
+	apopple@nvidia.com,
+	rananta@google.com,
+	mark.rutland@arm.com,
+	v-songbaohua@oppo.com,
+	yangyicong@hisilicon.com,
+	shahuang@redhat.com,
+	yihyu@redhat.com,
+	shan.gavin@gmail.com
+Subject: Re: [PATCH v3 0/3] arm64: tlb: Fix TLBI RANGE operand
+Date: Fri, 12 Apr 2024 17:06:39 +0100
+Message-Id: <171283217883.1337455.2882364241442501889.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240405035852.1532010-1-gshan@redhat.com>
+References: <20240405035852.1532010-1-gshan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412101944.GE112498@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 12, 2024 at 01:19:44PM +0300, Mika Westerberg wrote:
-> On Thu, Apr 11, 2024 at 08:22:28PM +0300, Andy Shevchenko wrote:
-> > Use con_id instead of property in the acpi_dev_gpio_irq_get_by().
-> > It will be aligned with other GPIO library functions.
-> > 
-> > Assumed to go via my GPIO ACPI library tree follwoed by GPIO subsystem.
-> > 
-> > Andy Shevchenko (4):
-> >   gpiolib: acpi: Extract __acpi_find_gpio() helper
-> >   gpiolib: acpi: Simplify error handling in __acpi_find_gpio()
-> >   gpiolib: acpi: Move acpi_can_fallback_to_crs() out of
-> >     __acpi_find_gpio()
-> >   gpiolib: acpi: Pass con_id instead of property into
-> >     acpi_dev_gpio_irq_get_by()
-> > 
-> >  drivers/gpio/gpio-pca953x.c                   |  2 +-
-> >  drivers/gpio/gpiolib-acpi.c                   | 52 +++++++++++--------
+On Fri, 05 Apr 2024 13:58:49 +1000, Gavin Shan wrote:
+> A kernel crash on the destination VM after the live migration was
+> reported by Yihuang Yu. The issue is only reproducible on NVidia's
+> grace-hopper where TLBI RANGE feature is available. The kernel crash
+> is caused by incomplete TLB flush and missed dirty page. For the
+> root cause and analysis, please refer to PATCH[v3 1/3]'s commit log.
 > 
-> For the gpiolib-acpi.c parts,
+> Thanks to Marc Zyngier who proposed all the code changes.
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> [...]
 
-Pushed to my review and testing queue, thanks!
+Applied to arm64 (for-next/fixes), thanks!
 
-Note, I'll will wait for Acks for Mellanox and ACPI code
-for a while, the series will appear in Linux Next for the
-testing purposes, but if anybody objects, please let me
-know.
+[1/3] arm64: tlb: Fix TLBI RANGE operand
+      (no commit info)
+[2/3] arm64: tlb: Improve __TLBI_VADDR_RANGE()
+      https://git.kernel.org/arm64/c/e07255d69702
+[3/3] arm64: tlb: Allow range operation for MAX_TLBI_RANGE_PAGES
+      https://git.kernel.org/arm64/c/73301e464a72
 
+Cheers,
 -- 
-With Best Regards,
-Andy Shevchenko
+Will
 
-
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
