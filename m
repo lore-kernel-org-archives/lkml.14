@@ -1,55 +1,56 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2062.outbound.protection.outlook.com [40.107.241.62])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2059.outbound.protection.outlook.com [40.107.7.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087D74A29;
-	Fri, 12 Apr 2024 10:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD7144391;
+	Fri, 12 Apr 2024 10:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.59
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712918362; cv=fail; b=OXPyL041/a+7iuI+LLP+eC10Kh1QFV5M8vQiohZkHzyyTbI32RdIapfje1nNXPZ2igdnO5Pdj1Z60AHh7aTRgOrVLMgnTkXgyw7M+B8mk064qdBb0ZqOq4W5qILaJuXEzPsBuRC6exzEVnu6w+jTnKO5RVW/7EjTCrY85hgitCk=
+	t=1712918371; cv=fail; b=jDs931XlUg8pBGrftRF6HPxOW+7Oqbv9FbaJVxoNsyI0VTUpKEq0oJfjzMQ586m7UDBtef9ow1p6luNfePRHooYF2JAB6hjgwMWpdAr/ayfDRhFkcXqskEK5nvzgiyWV1cc2r4iycxw1/g3PEMcRW8QkHArqQlbpuG1OKwZm+HU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712918362; c=relaxed/simple;
-	bh=6yyXhWvNixHa2zUsDLll+uJ47f/KwcBvyL8EziSlrLo=;
-	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=HVZNZt4hO3nhvBYe6C+X8bxlCYGhB0LvHqVBZ3bcBYkFyslSppnKj2brsBXBOhmF8Sp+/p/Bp/XXS4RQAJEg/vOnXrxiWwY/hDEmHAgMoHeDME1cSBQZ3QvzgzAc0vfCW+m+Zs7ZOs1n+cA7NJn9JWZChxwpldZ5gBaqneXwejI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=SZ/V1cWb; arc=fail smtp.client-ip=40.107.241.62
+	s=arc-20240116; t=1712918371; c=relaxed/simple;
+	bh=L6mtIgfApBmmZ5IfxvjixCiu2wYEte3cXGlY7EExcYA=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=VpASl6PA1+p/NQQ7ZOK222q03bHWLuwhNDB5GAvy/R7yISxSNiSW8T/d0H3d/bFQVL9+rylwy2u22Vqp/bxH2bvKJN8O43uvU7/f3jvMYQ94YtObFhwTbTRcGtAgsdQA34b6HC7scRo25324GdaKeDvhwcU4XA4NWIzDYgNGAr0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=QG9E4IAI; arc=fail smtp.client-ip=40.107.7.59
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="SZ/V1cWb"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="QG9E4IAI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XPw1IuSEG+tdVqhPA89vU8C22gV0sdhvnnTO3zA4QCmmJCUDpv4wMrsF/Lmo2FA0iL8i4VgYhVW7j3UhGaeLOpQIcxtTO60PAmLs6Xty7gAo+MtmJ3Kkf0bjL3my3qJv1zCRoi80HTTwkSEnIC5TpGOBApW0gatW5OUpuFSuefOLLIzhxs64PzA8gkRldW/agWY0g6W50+dsvlivIF2MfDlRWCLkqq7TixIRw069LFgfdBxM5AWMCs9GRRNgwCDnYxZuljtYTSh0qDhqO7NBTtrxX+eozOx96kglDD1cN9RqcpmEOVna+2ouE6nMtR81Lu+xSZib92PngiGS++Ciyg==
+ b=gqWA7F5uo3P8h65XynFaitdDp5nPOO7UNqR/9q6Oc2k0w3LsiJLti+VuJZoqZAqa5b6uGd/fkpxbyOwGp2wiHAs0vWVCTIMtsEbHfjKKZCe4q0rC42aYekeIlmu2sDuL6Q7e7p9tsWDoFVvrkcZriNWFdXDrQz+Hon8TgFF9DRTNQ1A9JpPpcVdUuOTyNGzSOqa4pFg8qpk5Z4SeN6flshZcGs2j7L00fS3gZGaCUCK3NDA/5+urwyv4c0iTpH8nEClrKzWA1W2SmIMbzPU9HwFvEb9HS9nsae8XJ4PVUvNbiKcJKpkMALwu6W7MUfB6DJ3qD+ydI1QGjrY43YqCzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lGcWfAe1DmMqICbKuntNjhNkpxKonnPoCvBw6vbQPDM=;
- b=Ki6mXsQTC8Ub8QeJlAPG8axDSOgTxza4Pbxsp4ycjYy9V5rvKNsu545OO/XZurdvAyoONLsHP6uMvkqs5tJIvL/p+pME0Z33mh626Y0UBh7YR03ZYGkzcULbDI2WsfUm7iCX0HNXxvEa0nseUV7o9sSVIW2bmJVAMH5fWIMF9rtdFhj9E0SavP3nxcRBOLbzY1q0f9moemhETMd1D/wfx91jT1vaDz3b97IZqgTKxjcSjwzJa6d8bX7Qy+XB/i/q6ppybYXGLKechCepMKDz3PQV8px1dYYOWuIsurcKkpzW3x2Nyywi3MdVvCYXQIpfOjWp6ZAxTWgXHMOY8JFUbg==
+ bh=w7F6ZhX6iuZZeC8ehCng386DvE6AU7+VQse2eQzKgOA=;
+ b=B+jT22uWH+VtK1/t4em1oE7zSUBX8evx4AwO3uCnMuh61buGMAi6VAOMAYhsyJPIPwoPTtVXNyRBvQWN7kwpvdyqAo1IcfrrFBNwQjGJZJTkJGn7mw1cqBPszNk4zR0NHs07m/4l17uqbTKCmUYdpRXq9FPE67hjH9AetHhn/e89UjRx7qnJXm40FzueFWdIwqQyrzSz+eNsdEcg8uIBoJHgyYP0p/6WQwF2Ta0Sch70bC91gUmxrIcoo1J05ETG2d8ZK1LaKRLavmrVXxkhX/Zs1CCBcafbvR50qATGrAVmB9tuoz07abj7V5UXil5/S0+TKz5nQ51K+lfgVHAoMg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
  dkim=pass header.d=oss.nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
  s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGcWfAe1DmMqICbKuntNjhNkpxKonnPoCvBw6vbQPDM=;
- b=SZ/V1cWbOod5vw1Yts8iAG6XS1AhMp8QmnkcyoDo5g2o5lR557sy7WPA2IMmbG3wbT454vLGcf33SARMD0JUKWz8NrsfLRArR37+7ZUCD47bdHFqkCle4N3JdYklCZeuH4TEBcJgeRHYiYA4uvuCEUdI0vpqV6gBkCvT5RZc21c=
+ bh=w7F6ZhX6iuZZeC8ehCng386DvE6AU7+VQse2eQzKgOA=;
+ b=QG9E4IAIEbZGN98oXGuGRePPgAYrNfZNo7P8q10nYxjZr3CIpcgRbGap/wjWAeEEudsKRsbhMub4Ih5m8e5LJNKxV4v5j7uCQtPJZ/MKhbwwwaEbJMGGz0SsIEai5ZWlbxncGIT/yX5IsdP7ICaalSTm4s/jSu6eBUfRSw4B3qQ=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from PA4PR04MB9416.eurprd04.prod.outlook.com (2603:10a6:102:2ab::21)
- by VI2PR04MB10147.eurprd04.prod.outlook.com (2603:10a6:800:21e::6) with
+ by PA4PR04MB7839.eurprd04.prod.outlook.com (2603:10a6:102:c9::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.56; Fri, 12 Apr
- 2024 10:39:16 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Fri, 12 Apr
+ 2024 10:39:25 +0000
 Received: from PA4PR04MB9416.eurprd04.prod.outlook.com
  ([fe80::9d65:d883:afbd:7f54]) by PA4PR04MB9416.eurprd04.prod.outlook.com
  ([fe80::9d65:d883:afbd:7f54%3]) with mapi id 15.20.7409.039; Fri, 12 Apr 2024
- 10:39:16 +0000
+ 10:39:25 +0000
 From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Subject: [PATCH v3 0/6] firmware: support i.MX95 SCMI BBM/MISC Extenstion
-Date: Fri, 12 Apr 2024 18:47:06 +0800
-Message-Id: <20240412-imx95-bbm-misc-v2-v3-0-4380a4070980@nxp.com>
+Date: Fri, 12 Apr 2024 18:47:08 +0800
+Subject: [PATCH v3 2/6] dt-bindings: firmware: add i.MX95 SCMI Extension
+ protocol
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACoRGWYC/32NQQ6DIBBFr2Jm3WnoFIx05T0aFwpYZwEaaAyN4
- e6lHqDJ37yf/PcPSC6yS/BoDohu58RrqHC/NGCWMbwcsq0MJEgKKRSyz1rhNHn0nAzuhJNy2pI
- crZEEdbdFN3M+nc+h8sLpvcbPebHTr/1nqxGoZ6NvXdup1lAf8nY1q4ehlPIFRlfj6bAAAAA=
+Message-Id: <20240412-imx95-bbm-misc-v2-v3-2-4380a4070980@nxp.com>
+References: <20240412-imx95-bbm-misc-v2-v3-0-4380a4070980@nxp.com>
+In-Reply-To: <20240412-imx95-bbm-misc-v2-v3-0-4380a4070980@nxp.com>
 To: Jonathan Corbet <corbet@lwn.net>, Shawn Guo <shawnguo@kernel.org>, 
  Sascha Hauer <s.hauer@pengutronix.de>, 
  Pengutronix Kernel Team <kernel@pengutronix.de>, 
@@ -61,11 +62,11 @@ Cc: Peng Fan <peng.fan@nxp.com>, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
  linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1712918849; l=4715;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712918849; l=2879;
  i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
- bh=6yyXhWvNixHa2zUsDLll+uJ47f/KwcBvyL8EziSlrLo=;
- b=McT066kEwNvv3XG3N8fIod2jOjL+/W2S49YEAJ4ExwDPp205lyG1yEXebc52e/JKivd/tcMkX
- JmnvgtS2fsPCyj7ta3gEb6/TZi83ZL3ispGEtjgucLgc1E8Gv+29Afh
+ bh=kBV4FDeFdLHNHdghSed8ocvNmBpb7al6GBdfi5DzB/A=;
+ b=jNtAV/HgbMyj5+0To/cwcARNwVW3jtr1DH+hFL0+4jZb7yjeQsuYqH3p3w2bC37FL20K+dVZZ
+ ZWB0FbWloefC0Mp7QKCHxCjPfZ17vaefK+H7nAwabgnT1BmyHBolzb8
 X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
  pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
 X-ClientProxiedBy: SG2PR06CA0243.apcprd06.prod.outlook.com
@@ -79,170 +80,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR04MB9416:EE_|VI2PR04MB10147:EE_
-X-MS-Office365-Filtering-Correlation-Id: dbe552f2-cefd-4c3b-2443-08dc5adcccd9
+X-MS-TrafficTypeDiagnostic: PA4PR04MB9416:EE_|PA4PR04MB7839:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0c97a4e-750c-43e4-34c3-08dc5adcd2bd
 X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	GXv8Sqi7xlYP8ri4V6D9ySveG9FFTNwMvXnJQPY3Outq3Tlh1w0l+hWr5fGuUlZ+JZw2yz05bZ0izE1QutAhYbXj5K2f3hV+7WKXlCYGt7qCASo2DAH9GDjlnNsksm/q+SiYGLy5DIijFsYzBqtz8p8mcXSyJ9xybfevUZmjxbpIVaOstVNS5oqsZjZuxhYnr0bH/gHEb5PsHPvu+uMAM+DeovhwUwkqBKsN3X/t38S9pjjvCd1ZW7geNdknPnV1KZDwDRZxaw4NmWONkihkw3l/A07OkyhMoAIlfIl46pQc8OAgVcwkEcBfeHXxSXxxMj7MYffL1wKo636M6qG1qQ+RphdLXFiljPQh60xlFkrXwA9c8jNiJm9A7qyVkmSuDD3+DwaLEdwDbNxD+gDmAHA1dp8lUE4Nn5tFSBlDWTKe7i1mM+l/niHEmxXtmo896dgtFtXtKaO0GcBS29i1AgBzncQd1YszzhwXuQD+yqTB39ynK/6l/O0Gvb4e3cisaWnZ0fgVQf+CawkKjq3gov1N7/OH0PSA8PsGhYy5tKFz6aEk90b1rsLnM56wDwpPZPKIDm0P17xpkjqLxFXgHrSq1m7bdbMqY/lf7JAiBpIk/tWWRFtbyyhK6IjWeEII8jdo22g8fyGdCoebVuRGnUFZFhE5Oxx37hssmK2VDFzff/EgdGnYzHmU9hXKW07HnuOzo3qi9fyHADEVOnwMcAeF5t2eBsxE8NoIVFE7oVAT1KK9U4CscEuVYTyv4lBL
+	jXW8BL/f1qa37K3fjd+IMzU8BbG4GSFYfzYx6sLj7oMZo0QqqB1lG4BkX+wto7nfEoC++oGEhErEZF5T9eVi6ADmn8aW2OoXSYJtvh/OuxWvRziMIlS94CToi8V2pRFZro7rxAvF+dcKM9c0KOdcbVGKZKIuI4HZZPwyr9p6DV1pjTFmiDE0W8rqiQl/2WU9zaKNAA4tf9CcUU9+rPUUADqiLjBnI/+BtSmLOtf66IR+kRs45NyKQjKfBoS/EYIJxRRbaK6mKuV5Wg8yTxXUlEcwBwVoZ/v3nDc7BaYlZVKHgW3yrfdrGcAJ8oqmJUq7WDoTd4eHLUC8OZPMN+Wy/MmbstS2cuvDVRvGRDjoGaFQl+AJ2zdWiBuNJ6wHCkPbdICPaDXm8wDZZvp3JUsgo7tiXGU6buP+C43uGBiBaPHDhZVerf/a7oFsmZpmHbKacSjKzehxGE5OFPo7uK5I57kaXGhR/E6HgB0J6D1BPjAGdiaQhnmn8x+DlcPWPwx0rbSYI6AHTMdvzTolMLR2z/fVnWbCRBDLK8W+ge4zILAE5o8rPvyx+2OfZ4sovURqzz4ELQA+nG1BS3b8JPTi3FlKEPTX9/6YBx0Rhb71JCV+r1X1Ly/3+cjVWLzImOIQiaKbqE/1bl5H+kgG8W5LzIUsamwclSSCGwP9ysQkMq6QMNwdJqAG0kpdALyFROLv
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9416.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(52116005)(1800799015)(366007)(38350700005)(921011);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB9416.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(52116005)(1800799015)(376005)(366007)(921011)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L01vM1lvNmo2OWNYbExQclFSdWVLWVlpQXlhbG1vamxsR1pMYXRsdVcyb2dH?=
- =?utf-8?B?bTFFWjZTZmZBZWhXc0FDYWxScXR1Ly9xV3RXV3F1dU9kc24vMndNYUY3eStj?=
- =?utf-8?B?VTRMM0kxSUxlczIrN3ZkR3ZEejA1MldhWUlVTFJJdWg5WmE4MGQ3S3RqMjh0?=
- =?utf-8?B?WS8rc0RleVdvYTRYNUZhTWlTZFlKL083TjNjSXl4TnZ2enBxUkJKWEZ0ZVhm?=
- =?utf-8?B?ZXJQam9hREVwN2tpL1JwT1A2WUsvNnVYMVJmSjBHSE5iWlo2bStMS2tOYkY0?=
- =?utf-8?B?cGN5QjMzcE5TQU9pWmVSQVRRVVY5V21NVm9Kdy9pS1c1Q0JPaTFaMVc2d3ND?=
- =?utf-8?B?ZmdMSWpLTXZSTm9CMy9hdnNIUVdpY1ZqZCs2YnNuQXhBdzRzZzNLS2xaVDJt?=
- =?utf-8?B?RmFyazhwOXpXQWllT0Y0aWpFT241bFFSMVhwWFlYWlZZMm5lRkhNRmlkOEhK?=
- =?utf-8?B?aFpzL3ZKbllKdWUvRDlzdlBQMUhpam0xcVlxN2xjc09qOGVzWEJlODhkMEdy?=
- =?utf-8?B?M1lqNmptcE43aXJFNXRKYk1wWFdYQnVoYWJPQUZMeE1GYUlZVys4UHkrVHpS?=
- =?utf-8?B?OHNhZ0JGV3ArYVVPVnRGRXdMTmhFNWlLTkI5WTZsS3EyVlFxczBSVVRsbGdj?=
- =?utf-8?B?QlB5TC84TDdDMFV4UzR0czBRbW51MXhVYzROeDVWdWtMTTFzenRJRkk1V0JJ?=
- =?utf-8?B?RDBqZ25oL3RtdW5RblFTeFJEVnBzUlVQN25mZG5rV3lTV2piMVhyRmFuTW5E?=
- =?utf-8?B?NXpGUjZZYjRTcEZla3MzMVBDUWhRTXhQWTV3elhTL3JtdmVEdXlKd1IraW5u?=
- =?utf-8?B?dm1yQVVTV29YaUtWQkVXdlRtcGF0b25wVG5MaU1qa3NycTRiaW1oeW5weitU?=
- =?utf-8?B?SHhFeUdvbTdrclRKNWhoa1pzRXZGNmwxdTZIb05VekZlNXB4WWJUdGxwZUxR?=
- =?utf-8?B?V09CeGFPWWNvSTMyYk5UQlRPZEJ3dTk1TjNpQ0gyN2dpc0RqcE1yVWlaMGNW?=
- =?utf-8?B?L1ZHbFkyYUwwU2RnRFJvRWszUW5kN0p0OVhsZVhJMGVlMThxWGRlQVBPNkJP?=
- =?utf-8?B?RWJxd1hjelpiSTBoL2k1Qk85bkpGajYwckVpb3o3NTZEZ0Rsbytia3Rtekd5?=
- =?utf-8?B?RHQ2SUlGa1Vabkp0SC8zY2lDTHU4cU16dG45YnRnczZLMXpvbnNFZ2h6ckVm?=
- =?utf-8?B?WTVpTEVLZmQ3ZVRFYnpmSFFnOVUxMWNLWlMxRlppM2F2QmZZbDN3Qy9RVGhR?=
- =?utf-8?B?QVVzeUZoUlJ2NXhCMElacWJQcWZrLzZvVnQwUXlIRGZHVlgrZ1M5NnV5aWFC?=
- =?utf-8?B?NkcrS1R6ZGx5SjVjekhuMnJSczdjOE5CWTJWeSt0dG56cE1tZDBTMHExcFgx?=
- =?utf-8?B?RzV2MTRoZVloUUhtdGxYQjdubGZ3QW1wTzAwWVN5Ull3VHhmRkE5RDIralVZ?=
- =?utf-8?B?QVdqRmdUYzdNN1N0Z1lscXpkcVkrd01wWmtyYXFMY05kMWdVSGM1L1FseitU?=
- =?utf-8?B?dGVGbFpQZlVtVi9XS3ZRVTB3KytqMjZZVHpKSmxraVhGQ3RodEdkM0s5bENQ?=
- =?utf-8?B?TEhUb1dZc2RDT3JrNWp4S2pubGtHdTNDQTVwN3k5V3JMUCtNYkNOMmZoajFL?=
- =?utf-8?B?LzFzYjMxWjBUUjdFdk1OcDV6QXZrK0NkTFVsTkdWa1BzOFk2ZGM0MWJDN1dF?=
- =?utf-8?B?b1p2OXN0a2U4TmozNUJ3M0VFeVlLRjByTW8yNkdKZFpJL2hsd1pYUHBHOFdC?=
- =?utf-8?B?all4Zk5xYXpmb2V1RjFDWEJRMkJkbk11Yk5ZcXRmRE9rUTVuMWk3L3pERTQ1?=
- =?utf-8?B?aEdPV3djZXY0VEY1NHdwbTNNNmVkWi9QbXA1cEJxb2RCRGJGdUw3TW45V1ho?=
- =?utf-8?B?S2ZGNC91eUdhc2d3MTJIZW5ySHJ2cWFYL3JzdW1ZTmg3ajFoN2JWTm5KOGlt?=
- =?utf-8?B?Znh2U2RJQTF1Tks0cFdqTUpGandnVmNoaC91MUFNWmwycmNaSmFCSzFxR1VE?=
- =?utf-8?B?UGhvNjV1c3RUelFIeWl6YXhFc1dxOW1EVnA2alVjT2FqWGR1SzlpU2pMVGdh?=
- =?utf-8?B?ZzdkVVJqdWRUTVlrVk16MFR5ZkVBUDVmaUEwbjVuZ1pnalJhNkR1amVGZmZm?=
- =?utf-8?Q?uwqt1UQ89BnAcjbQftf9HP7mB?=
+	=?utf-8?B?eVZHUWR4TDRjSzZhSkhGSHJESzZwemhoUjJSQnpPZU0yaTBselJkS1p2Z3dP?=
+ =?utf-8?B?T0R5VUpZZm1xdStWR05Ed3F4VWkybmIrbi9CYnJmSDZYS3g0bW1CRWNXdVNN?=
+ =?utf-8?B?U0RRaGxkak11U0pMdGJKdlF2YUdrNEN4TFJnSHRrR21SSlVnamx3MG1EQjNE?=
+ =?utf-8?B?QnhVMDM3OTdla3NLRlZGWGwzelpNL2JSS08rRzdZVGJjMU9ncWFHWFVwbzhV?=
+ =?utf-8?B?Mk1aemYyYmxXN2tOb2tTYTFvMUpNV0J6Mmh2cnFmSnhFN2JFNFVZclQ4M21G?=
+ =?utf-8?B?MzFkTnhocVYwV1Z2UWZpUHZwMmpjZnZEMkZNRE5Pd0VJQXZaSUw1U3FGWC9t?=
+ =?utf-8?B?elhIRVRXWjl2L1YzZG5NaERBQ0tqWTFzM1h2ZFFaVkJsN2VNWXB1ZVU4UzQ3?=
+ =?utf-8?B?cnBYVTBXTjgxQk5FUElUYkF0MDRLcHlpOGdDZ3VhWnNHSXBhTEF6V0p0cDRN?=
+ =?utf-8?B?STRUcWlaYnJ5S0xVVEhOOURTMnFPQkhtMWQvVDdkUkV3S0ZjNlBmOWp6RlpJ?=
+ =?utf-8?B?eWRWQTM0ZkZMSGRkQVJWY0E2Z0VEckZtdkJsdzlqZTVnZkFwbmFVRElkNDhV?=
+ =?utf-8?B?L2FsSFFLK0VCbXZEbE56VlZnemJIbWhsc05zL1JsNjl3cVlSckFEQ1cxejJ2?=
+ =?utf-8?B?eUVINEF5Uk1tNWZPaVBGL2tKRmQxNkpvUTFTcFowSDZuMEdrdVhlcVorQU8z?=
+ =?utf-8?B?L2psVlpwQ3BvcGhYeHlYbW84UU5xQnBHNVc4ZHVTS2k1aVNCd0xBNlBpQitO?=
+ =?utf-8?B?ZFQyOWtyaEw3V2dzSTFhY1AvNkRwNzRUVExXNVVSMFNYMHkxdHhtWUxUZHpQ?=
+ =?utf-8?B?NWFKK3JETEJhbk0vRWw3dUM4K1JDb0FsVllCZjBQRGxaTElueDByanVnSnMx?=
+ =?utf-8?B?LzZOK0hlUzRrOWR3aTlVT3EzdFRHYTRCbXpPb2h6b3ZPVTV3dVhCV1ZSK1lV?=
+ =?utf-8?B?Y0QxaGRxSE9RVkVKaG1MWkc5elIzZVZCMXJESkVES3VkWmdPWFNmWXk1VkF2?=
+ =?utf-8?B?S0QrWTR2dzlaQk1mampwVndrczRsbWdGUHdpSTFXdklWYkw5eTU4RXhXMWJL?=
+ =?utf-8?B?K1ZOaDVvcXRIdGo0aS91QjdkbVZkRm5BdmcyTU9Qczh4S2ptbTdqSWFDUEV2?=
+ =?utf-8?B?Vkw1dTR1MkhhS1BaNDZTcEU4MFhsYVZ5YVN5OGVrclkrdDZTRjNUS1BtY0dW?=
+ =?utf-8?B?L085L09aOUZLS2tVWWlDR0c0VTVzdGIzOGpmMVZMZk5BMFMyaHpMdWRvemxt?=
+ =?utf-8?B?TTRoYWR5VWQzbTNxOHZpN0JBQ0pQeUx1MlpuNFJvbTRpZnJ0eVhvbUNGQ0RU?=
+ =?utf-8?B?bzA5MWVRZHI0Z0lKaHgyOEx3Q3dqWVdMZXlQSExYcXBpdDJjWUVVTVc4VHpO?=
+ =?utf-8?B?ZTg4RG5JeFFsTGtUYkFOMDM0aVBTSkhOSWZROExOS1dmSnpiUGx4bTN0MW1J?=
+ =?utf-8?B?a2k5UVFlTkRoYWpXZ1NDTnNaUlVjVEhhTStOczFmdXRaK1FzaXgrbUNkWDhM?=
+ =?utf-8?B?dkdZdDRuMWVkNW5peERZVnd5MU1TT1VmZjFWaTI3MEhzSDV2ektndTdpMlpu?=
+ =?utf-8?B?RkVZSlZzRzdGY2pZTHNTS0JCNVFVd3pqNWJiVUpxY21IV0t2azRlUXMyMmow?=
+ =?utf-8?B?T3pPY1k5ekZva3hjUms0OVZ1M1hVaUVWbG5mdHdidTQ5MW5XL2JvUkc3RGI0?=
+ =?utf-8?B?ZDZEVmRDdXFRV29yUXlCMHNQUWJNcE5hamoxZTF3TDJ5NXEwbCt2OEwzUUt6?=
+ =?utf-8?B?akN4UmYxSkdrOEp2cEMzNmlzR0VFRWVIMzZJTEl1R0lNalQ1b0M4TGtpdkFp?=
+ =?utf-8?B?VTFYdWhQcVUrelpQVUNvRlFBM09MZ3hMbWNqWVJFcWN4alJ6Yi9HUVhuV3lt?=
+ =?utf-8?B?MGR2OVZFbHJxWmZEOERuRGtMOEJDcWJkQ2EwcFNrTndHUi9SUDcxdWxjY3Nx?=
+ =?utf-8?B?ek9qM1M3L0tXNFdVL1dXNmZzSnlrak9WVVBnMXZ6Z3R6cGhwSnQvaXpIVEl6?=
+ =?utf-8?B?aitPdDZIa1I4c1YzODYxZ0hNZ3RGaUhzUEVaeUh4TVAzV3dMMkt0NnZDUTdW?=
+ =?utf-8?B?bDY2K2FzaFVsS2NmSVZxWXFvd29NMkRIUmRFL1BHay9FSXdGdmpJRGFXUnBx?=
+ =?utf-8?Q?QNU4ECUKKWyq/pYmipa700Wds?=
 X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbe552f2-cefd-4c3b-2443-08dc5adcccd9
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0c97a4e-750c-43e4-34c3-08dc5adcd2bd
 X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9416.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 10:39:15.8450
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 10:39:25.5792
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jd2cBiIqK3b5WVeRGvo2tXdkkXS+HYrLSK6VxAZRqy1jshJSbsMu/7yr2SN9JW84di4e7c05bTHOAxecDXx9gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI2PR04MB10147
+X-MS-Exchange-CrossTenant-UserPrincipalName: KZiPdFBOPWwg+8RyPjHNQFcW7ELRAny4Pgi1yXAbYJ2Tqsi+nY1y/XM/3/0H3En0EZuZPSR7TOrf4X0phXDgbA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7839
 
-i.MX95 System Manager Firmware source: https://github.com/nxp-imx/imx-sm
-To generate html from the repo: make html 
+From: Peng Fan <peng.fan@nxp.com>
 
-i.MX95 System Manager Firmware support vendor extension protocol:
-- Battery Backed Module(BBM) Protocol
-  This protocol is intended provide access to the battery-backed module.
-  This contains persistent storage (GPR), an RTC, and the ON/OFF button.
-  The protocol can also provide access to similar functions implemented via
-  external board components. The BBM protocol provides functions to:
-
-  - Describe the protocol version.
-  - Discover implementation attributes.
-  - Read/write GPR
-  - Discover the RTCs available in the system.
-  - Read/write the RTC time in seconds and ticks
-  - Set an alarm (per LM) in seconds
-  - Get notifications on RTC update, alarm, or rollover.
-  - Get notification on ON/OFF button activity.
-
-- MISC Protocol for misc settings
-  This includes controls that are misc settings/actions that must be exposed
-  from the SM to agents. They are device specific and are usually define to
-  access bit fields in various mix block control modules, IOMUX_GPR, and other
-  GPR/CSR owned by the SM.
-  This protocol supports the following functions:
-
-  - Describe the protocol version.
-  - Discover implementation attributes.
-  - Set/Get a control.
-  - Initiate an action on a control.
-  - Obtain platform (i.e. SM) build information.
-  - Obtain ROM passover data.
-  - Read boot/shutdown/reset information for the LM or the system.
-
-This patchset is to support the two protocols and users that use the
-protocols. The upper protocol infomation is also included in patch 1
+Add i.MX SCMI Extension protocols bindings for:
+ - Battery Backed Module(BBM) Protocol
+   This contains persistent storage (GPR), an RTC, and the ON/OFF button.
+   The protocol can also provide access to similar functions implemented via
+   external board components.
+ - MISC Protocol.
+   This includes controls that are misc settings/actions that must be exposed
+   from the SM to agents. They are device specific and are usually define to
+   access bit fields in various mix block control modules, IOMUX_GPR, and other
+   GPR/CSR owned by the SM.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
-To: Jonathan Corbet <corbet@lwn.net>
-To: Shawn Guo <shawnguo@kernel.org>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-To: Pengutronix Kernel Team <kernel@pengutronix.de>
-To: Fabio Estevam <festevam@gmail.com>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: imx@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-
-Changes in v3:
-- Update cover letter and patch commit log to include more information.
-- Add documentation for BBM and MISC protocols under
-  Documentation/firmware-guide/nxp. Not sure if this is a good place.
-- Fix the bindings, hope I have addressed the issues.
-  Drop imx,scmi.yaml.
-  Add nxp,imx95-scmi.yaml for NXP vendor protocol properties.
-  Add constraints, add nxp prefix for NXP vendor properties.
-  Use anyOf in arm,scmi.yaml to ref vendor yaml.
-- Use cpu_to_le32 per Cristian
-- Link to v2: https://lore.kernel.org/r/20240405-imx95-bbm-misc-v2-v2-0-9fc9186856c2@nxp.com
-
-Changes in v2:
-- Sorry for late update since v1.
-- Add a new patch 1
-- Address imx,scmi.yaml issues
-- Address comments for imx-sm-bbm.c and imx-sm-misc.c
-- I not add vendor id since related patches not landed in linux-next.
-- Link to v1: https://lore.kernel.org/r/20240202-imx95-bbm-misc-v1-0-3cb743020933@nxp.com
-
 ---
-Peng Fan (6):
-      Documentation: firmware-guide: add NXP i.MX95 SCMI documentation
-      dt-bindings: firmware: add i.MX95 SCMI Extension protocol
-      firmware: arm_scmi: add initial support for i.MX BBM protocol
-      firmware: arm_scmi: add initial support for i.MX MISC protocol
-      firmware: imx: support BBM module
-      firmware: imx: add i.MX95 MISC driver
+ .../devicetree/bindings/firmware/arm,scmi.yaml     | 21 +++++++++++++
+ .../bindings/firmware/nxp,imx95-scmi.yaml          | 36 ++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
 
- .../devicetree/bindings/firmware/arm,scmi.yaml     |  21 +
- .../bindings/firmware/nxp,imx95-scmi.yaml          |  36 +
- Documentation/firmware-guide/index.rst             |  10 +
- Documentation/firmware-guide/nxp/imx95-scmi.rst    | 877 +++++++++++++++++++++
- Documentation/firmware-guide/nxp/index.rst         |  10 +
- drivers/firmware/arm_scmi/Kconfig                  |  20 +
- drivers/firmware/arm_scmi/Makefile                 |   2 +
- drivers/firmware/arm_scmi/imx-sm-bbm.c             | 378 +++++++++
- drivers/firmware/arm_scmi/imx-sm-misc.c            | 305 +++++++
- drivers/firmware/imx/Makefile                      |   2 +
- drivers/firmware/imx/sm-bbm.c                      | 317 ++++++++
- drivers/firmware/imx/sm-misc.c                     |  92 +++
- include/linux/firmware/imx/sm.h                    |  33 +
- include/linux/scmi_imx_protocol.h                  |  62 ++
- 14 files changed, 2165 insertions(+)
----
-base-commit: 9ed46da14b9b9b2ad4edb3b0c545b6dbe5c00d39
-change-id: 20240405-imx95-bbm-misc-v2-b5e9d24adc42
+diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+index 93fb7d05f849..fa2cc910c485 100644
+--- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
++++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+@@ -247,6 +247,27 @@ properties:
+       reg:
+         const: 0x18
+ 
++  protocol@81:
++    $ref: '#/$defs/protocol-node'
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        const: 0x81
++
++  protocol@84:
++    type: object
++    anyOf:
++      - allOf:
++          - $ref: /schemas/firmware/nxp,imx95-scmi.yaml
++          - $ref: '#/$defs/protocol-node'
++
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        const: 0x84
++
+ additionalProperties: false
+ 
+ $defs:
+diff --git a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+new file mode 100644
+index 000000000000..b84c4a53b78a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+@@ -0,0 +1,36 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2024 NXP
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/firmware/nxp,imx95-scmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: i.MX95 System Control and Management Interface(SCMI) Vendor Protocols Extension
++
++maintainers:
++  - Peng Fan <peng.fan@nxp.com>
++
++properties:
++  nxp,wakeup-sources:
++    description:
++      Each entry consists of 2 integers, represents the source and electric signal edge
++    items:
++      items:
++        - description: the wakeup source
++        - description: the wakeup electric signal edge
++    minItems: 1
++    maxItems: 32
++    $ref: /schemas/types.yaml#/definitions/uint32-matrix
++
++if:
++  properties:
++    reg:
++      const: 0x84
++then:
++  properties:
++    nxp,wakeup-sources: true
++else:
++  properties:
++    nxp,wakeup-sources: false
++
++additionalProperties: true
 
-Best regards,
 -- 
-Peng Fan <peng.fan@nxp.com>
+2.37.1
 
