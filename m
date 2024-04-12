@@ -1,67 +1,64 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C0914EC76;
-	Fri, 12 Apr 2024 17:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A945491F;
+	Fri, 12 Apr 2024 17:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943049; cv=none; b=PdHVKee6f6KbyeUC72ZbCdLEsaUxPI5tbso3mwunMs8Vf+5OnaD5kzs8qJGM6f2Jn7N+7JiqMPXOIfxAXFFUzJq87yTebyKFN1heZN4ALO+cvox9PZdrgTU1SFcr21eAwTA7Mpi3Ea4a/YTSd8DUbQsiZN2jOaJjxE4yITGtYqg=
+	t=1712943222; cv=none; b=vF/xNFizHAVWI0qj88m6V/xAm4UQpvlhrg6UU1DLyNiEipV0uzAp2CbTnvcrc51mwEok1hcsftwwRgoHyO9wf5z+Z6SZBfLbFuiJ7EjVqck2N8ypcdp7He1QFyNYMgLK56YLNffoyUM9gDOJJL5gI1e9VBBxzTsGs3lhyanA3a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943049; c=relaxed/simple;
-	bh=0q/n4BB5A4qfKK7WTII1e9HuGi84JwM3B21N0UMYoMo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tiIZ9BVbcMitdQJZDQB+dGCGCnRVTR9k6PKuKjuvQO9iF1CpNFb8/0ijiPvGoq0gyZzSJcaLBVKln0QggzUVC+H+dQGicUtRlnQsQRTWzgYvMKWh4Zg3+AnHClk04Io+g/BdoghOJr8SZnf7dEmhf66rmmbK+3RtfONpKv3SP/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eKKRrOyb; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712943222; c=relaxed/simple;
+	bh=+Kb4STvNJ+pOq+Bbj0vo6MDVZVuYbMArjfmW9xuJGRM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V2aeP1KnFdBociHNc29FDYPL6LI3vDyhPYzN1i+Lp+f/NOWV4K9AI1CT9BQvQbMACADDv9xg9YrVSs8LS5pgcAT85X93dtkbkBxDurJ+lMvQSi0uz6Hqp1H4B161l0z5YN6L4ZDnpRQfdN05zPPE6vjJBZk6lPlZntqwsRlfen4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDbqWkc1; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eKKRrOyb"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDbqWkc1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712943048; x=1744479048;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=0q/n4BB5A4qfKK7WTII1e9HuGi84JwM3B21N0UMYoMo=;
-  b=eKKRrOybPFyQitMwSC8LilydS1LD+NAA3RKncuHdtoUbcsaiPtuRC4zx
-   UtVK5fELIYAdXX2liXAv1Yb1hJQBy5EwA1ETWlg9OHNbfiJFioYF5wcme
-   jKCUD0TF6LuhmWSD1Gj94/6vm0NSSDZUyBQrr6oW9zFtyGpJO+3txNEug
-   qzNggYevA4X6MvYHwf2R6E2VdU5D47DNSvYoZMfc1qn8zGTDjxi7TBmKc
-   mprn6qs1vy/88KZj0gba0+Pmj116N61pm28yGzk5G1+NTjyWDxdx7Pzaa
-   nC+S8ErSGhF/SdFSaYYch/KvlBsX+gqLzrrvHcM805nAw4pnh37DzfH4v
-   A==;
-X-CSE-ConnectionGUID: dsqflwa8Q7K5Iwdn+80Wbw==
-X-CSE-MsgGUID: SE20U8scR1G2W+0jQ3LQrQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="11365694"
+  t=1712943221; x=1744479221;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+Kb4STvNJ+pOq+Bbj0vo6MDVZVuYbMArjfmW9xuJGRM=;
+  b=YDbqWkc1C+vbY0lABkO1YMTeUx43Se7tvGWT6H+/sYc78H9yb777Qzmn
+   xHiiuirbns7h5AEjolHKYctOuNpwq1JCakZ3cQDy00jV5MXhoe/4kZjCx
+   n0ze3gdrcgSJIKtByuxIO2aPquYpSbhmDLG8aEx0LgePXURdcD+xFQf3+
+   Bt91Urs9pDh16D8GwtiUuIfYgH14tclZxoAsOp5gN+58obWgtlfix1BxY
+   UowbTeLXSUUEtyFktb/7ECqUHytJGQr8sV5APR2ErjoZr+vZ4J6zYZcyp
+   lHlB9pKUQWidjy4/Js9+ZliKRIb79ntM4BigZ1g1HH5yNQafotFaLr5Ws
+   w==;
+X-CSE-ConnectionGUID: wCycNY2DTS2Eetw2E0d61A==
+X-CSE-MsgGUID: gcps37+oT5a1Ab8HfOK8Eg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8578640"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="11365694"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:30:43 -0700
-X-CSE-ConnectionGUID: zPCuEzLMT5miAOxrOYdj0Q==
-X-CSE-MsgGUID: OFOLKwADSD+tETiNBK/HVQ==
+   d="scan'208";a="8578640"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:33:40 -0700
+X-CSE-ConnectionGUID: PepGGd6URwelQES4/NIPNQ==
+X-CSE-MsgGUID: 1KzlB0FzTxiRHI3zLn1afA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21780778"
-Received: from jithujos.sc.intel.com ([172.25.103.66])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:30:43 -0700
-From: Jithu Joseph <jithu.joseph@intel.com>
-To: ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	markgross@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	jithu.joseph@intel.com,
-	ashok.raj@intel.com,
-	tony.luck@intel.com,
-	rostedt@goodmis.org,
-	sathyanarayanan.kuppuswamy@intel.com,
-	ravi.v.shankar@intel.com,
-	patches@lists.linux.dev
-Subject: [PATCH 3/3] platform/x86/intel/ifs: Disable irq during one load stage
-Date: Fri, 12 Apr 2024 10:23:49 -0700
-Message-Id: <20240412172349.544064-4-jithu.joseph@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240412172349.544064-1-jithu.joseph@intel.com>
-References: <20240412172349.544064-1-jithu.joseph@intel.com>
+   d="scan'208";a="21326063"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 12 Apr 2024 10:33:38 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C3039FF; Fri, 12 Apr 2024 20:33:36 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH net-next v1 1/1] can: mcp251x: Fix up includes
+Date: Fri, 12 Apr 2024 20:33:32 +0300
+Message-ID: <20240412173332.186685-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,40 +67,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-One of the stages in IFS image loading process involves loading individual
-chunks (test patterns) from test image file to secure memory.
+This driver is including the legacy GPIO header <linux/gpio.h>
+but the only thing it is using from that header is the wrong
+define for GPIOF_DIR_OUT.
 
-Driver issues a WRMSR(MSR_AUTHENTICATE_AND_COPY_CHUNK) operation to do
-this. This operation can take up to 5 msec, and if an interrupt occurs
-in between, the AUTH_AND_COPY_CHUNK u-code implementation aborts the
-operation.
+Fix it up by using GPIO_LINE_DIRECTION_* macros respectively.
 
-Interrupt sources such as NMI or SMI are handled by retrying. Regular
-interrupts may occur frequently enough to prevent this operation from ever
-completing. Disable irq on local cpu around the aforementioned WRMSR to
-allow the operation to complete.
-
-Signed-off-by: Jithu Joseph <jithu.joseph@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel/ifs/load.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/can/spi/mcp251x.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/x86/intel/ifs/load.c b/drivers/platform/x86/intel/ifs/load.c
-index 584c44387e10..39f19cb51749 100644
---- a/drivers/platform/x86/intel/ifs/load.c
-+++ b/drivers/platform/x86/intel/ifs/load.c
-@@ -233,7 +233,9 @@ static int copy_hashes_authenticate_chunks_gen2(struct device *dev)
- 		chunk_table[0] = starting_chunk_nr + i;
- 		chunk_table[1] = linear_addr;
- 		do {
-+			local_irq_disable();
- 			wrmsrl(MSR_AUTHENTICATE_AND_COPY_CHUNK, (u64)chunk_table);
-+			local_irq_enable();
- 			rdmsrl(MSR_CHUNKS_AUTHENTICATION_STATUS, chunk_status.data);
- 			err_code = chunk_status.error_code;
- 		} while (err_code == AUTH_INTERRUPTED_ERROR && --retry_count);
+diff --git a/drivers/net/can/spi/mcp251x.c b/drivers/net/can/spi/mcp251x.c
+index 79c4bab5f724..643974b3f329 100644
+--- a/drivers/net/can/spi/mcp251x.c
++++ b/drivers/net/can/spi/mcp251x.c
+@@ -28,7 +28,6 @@
+ #include <linux/device.h>
+ #include <linux/ethtool.h>
+ #include <linux/freezer.h>
+-#include <linux/gpio.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+@@ -482,9 +481,9 @@ static int mcp251x_gpio_get_direction(struct gpio_chip *chip,
+ 				      unsigned int offset)
+ {
+ 	if (mcp251x_gpio_is_input(offset))
+-		return GPIOF_DIR_IN;
++		return GPIO_LINE_DIRECTION_IN;
+ 
+-	return GPIOF_DIR_OUT;
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int mcp251x_gpio_get(struct gpio_chip *chip, unsigned int offset)
 -- 
-2.25.1
+2.43.0.rc1.1336.g36b5255a03ac
 
