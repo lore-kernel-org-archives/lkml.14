@@ -1,255 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B32B84F5ED
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44017487A9;
+	Fri, 12 Apr 2024 08:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712908901; cv=none; b=QZOcevdLMFIp3rF7zNnAXxCd4isG4zevg7i7VRsCZHcmPIYzZsR1bx0QBD0+NSTGPLBzzY6semFRCbmeeTnkihyhHZgh296vq2mV44wgNGagBRm6NE87LzOa6T9iPp16lETpJ2FuGIa6mceXoE2g6EN5+BKwxrAII2FwVj/k12U=
+	t=1712908963; cv=none; b=aePQ1c9336eXRoPCy5FH98JcNYeFu2RiIEII5DHCK382Q8Y7732HbmSHSJoDMSEs6fGK4Df9ju5GzxIofLQ5+4tekNnnT8Ix4fNE3NzzuSNMpR1LDp5kSMRkt7agxtmGg460URJljXZNgy2Am4IHgZo/v8e03zVIJt4BpJkl8SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712908901; c=relaxed/simple;
-	bh=0j+5HPL4sBHKdP/Kbdee0DbgSk/Iu5PMlynhIqSIPJU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=XSza6Zs4f3ZopGwiiOm45kSou0vTVPvbzhcJEAIzsn3zgC98ZUhCcRPopB/iHV7rDpQ6YdOULai9mPe0zAROPOYnbDvU83loAK5r0nTvuyHOZ0dT9mXrEj99b8zm1u1qqDGUufIEQcPZ45a0hyG3LfGqsVC96Fi9k1JcBfKt0HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/D/0z9l; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712908963; c=relaxed/simple;
+	bh=HypH+HFfZe7sG9jT4MifVrW0ikey/sQI93jaxO2O35g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NCgFUik+d4/ecNtWw5KaXPZKFs5Ghx5GcrMarARM6SKXpnRMQMkRMYXzufUnOcOIcOKoTdL55ynCqIgyWYliXEem02SCT0Cm7qkzaU4nFdsKwX7h5lPX3A3fs6NJ28vBa//dX/zX1pcBwtLlM5nAQODX4iCvrWjYexMviC4w580=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lut6OKEf; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/D/0z9l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712908899; x=1744444899;
-  h=date:from:to:cc:subject:message-id;
-  bh=0j+5HPL4sBHKdP/Kbdee0DbgSk/Iu5PMlynhIqSIPJU=;
-  b=e/D/0z9lh+MRv6ZAmpy8XiL7VAGik7ShutVeCjvRVr9Gj1AjpHAr3slU
-   AKiz4h+TRKQjkeIp7UbqMwxkkWgSpRhj6g3yO9w5pOOihaC4nOfEYa/RQ
-   /MtSL+9zhpuW+gB7dclwOZ+OOHIbiaXBl1ZHe84+LXsXCtSkxZ5Xm85J8
-   MU4szvlrQ4bylypzjWej7M2+VsSDCpTfwxanSCTKT+U9PHqvRCA4rtnBn
-   uGI6rF+o770pbwdW7aOH5ycuuP2s3qP9Djn9eFTLrLXGXJwMdZ2RCpk4/
-   QxCQAqvaBAvSAr1SJVZYbgkfAvY5HAh9aM7zAmDC3elPq40YCnW6wvnxc
-   w==;
-X-CSE-ConnectionGUID: 7IKlLd9kRCqGn34tS2s+Qw==
-X-CSE-MsgGUID: yMmtpRDAT1Co2I2f4rt5jQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="25869232"
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="25869232"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 01:01:38 -0700
-X-CSE-ConnectionGUID: Zqt2CpFSSN2wON30DpdxaA==
-X-CSE-MsgGUID: YfIinLyASueSoqImXLPA/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21210250"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 12 Apr 2024 01:01:37 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rvBqo-0009XE-1w;
-	Fri, 12 Apr 2024 08:01:34 +0000
-Date: Fri, 12 Apr 2024 16:01:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:locking/core] BUILD SUCCESS
- 7316aec453e4f5cb7bd0d7b856c01ed71d64eafc
-Message-ID: <202404121624.2VzOCek3-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lut6OKEf"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43C81s5s124910;
+	Fri, 12 Apr 2024 03:01:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1712908914;
+	bh=VX0Xcvc7mqlW39h0bWx5qdbe1UgbFfhzdFxCTgi5tYs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=lut6OKEfEAifrJR0p1WxIxVaFKsg/KVIlAAEdNX55Nx2WeGQbqPMSQHQ+3CGzqc/a
+	 dj/0kzRP71mPFk8fT+WWjxsvyRxkRO/ZU8/3bfUy+PWCFPDESChQPeDCwQ7DXuIyz/
+	 Uge4C9c/GOJBFuO1A6nXkgblmxcIlwG5zCRRFAqE=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43C81sa4079143
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 12 Apr 2024 03:01:54 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
+ Apr 2024 03:01:54 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 12 Apr 2024 03:01:54 -0500
+Received: from [10.249.135.225] ([10.249.135.225])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43C81j69086571;
+	Fri, 12 Apr 2024 03:01:47 -0500
+Message-ID: <cae18a4a-0085-493d-93a1-1e3127a0bd64@ti.com>
+Date: Fri, 12 Apr 2024 13:31:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 3/3] net: ti: icssg-prueth: Add support for
+ ICSSG switch firmware
+To: Andrew Lunn <andrew@lunn.ch>, MD Danish Anwar <danishanwar@ti.com>
+CC: Diogo Ivo <diogo.ivo@siemens.com>, Rob Herring <robh@kernel.org>,
+        Dan
+ Carpenter <dan.carpenter@linaro.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>, Simon Horman <horms@kernel.org>,
+        Wolfram Sang
+	<wsa+renesas@sang-engineering.com>,
+        Arnd Bergmann <arnd@arndb.de>, Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Roger Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Jakub
+ Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        "David S.
+ Miller" <davem@davemloft.net>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>
+References: <20240327114054.1907278-1-danishanwar@ti.com>
+ <20240327114054.1907278-4-danishanwar@ti.com>
+ <27d960ed-8e67-431b-a910-e6b2fc12e292@lunn.ch>
+ <c94815f8-798a-4167-8f69-359b9b28b7ce@ti.com>
+ <cca25c3d-a352-4531-a8ae-5a0fb7de44df@lunn.ch>
+ <ff567495-d966-42c9-9015-ba0ba0dbe011@ti.com>
+ <0039b9d9-9dc5-4b88-99f0-92f275b0b4d3@lunn.ch>
+Content-Language: en-US
+From: "Anwar, Md Danish" <a0501179@ti.com>
+In-Reply-To: <0039b9d9-9dc5-4b88-99f0-92f275b0b4d3@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
-branch HEAD: 7316aec453e4f5cb7bd0d7b856c01ed71d64eafc  locking/pvqspinlock: Use try_cmpxchg_acquire() in trylock_clear_pending()
 
-elapsed time: 1037m
 
-configs tested: 178
-configs skipped: 3
+On 4/10/2024 6:12 PM, Andrew Lunn wrote:
+>> I have been working on this and have found a way to change firmwares
+>> without bringing the interfaces up / down.
+>>
+>> By default the interfaces are in MAC mode and the ICSSG EMAC firmwares
+>> are running on pru cores. To enable switch mode we will need to stop the
+>> cores and reload them with the ICSSG Switch firmwares. We can do this
+>> without bringing the interfaces up / down.
+>>
+>> When first interface is added to bridge it will still run emac
+>> firmwares. The moment second interface gets added to bridge, we will
+>> disable the ports and stop the pru cores. Load the switch firmwares on
+>> to the cores, start the cores and enable the ports. All of this is done
+>> from the driver.
+>>
+>> The user need not to bring the interfaces up / down. Loading / Reloading
+>> of firmwares will be handled inside the driver only. But we do need to
+>> stop the cores for changing firmwares. For stopping the cores we will
+>> change the port state to disable by sending r30 command to firmware.
+>>
+>> As we are not restarting the interfaces, the DRAM, SMEM and MSMC RAM
+>> doesn't get cleared. As a result with this approach all configurations
+>> will be saved.
+>>
+>> Please let me know if this approach looks ok to you.
+>>
+>> Below will be the commands to enable switch mode now,
+>>
+>>      ip link add name br0 type bridge
+>>      ip link set dev eth1 master br0
+>>      ip link set dev eth2 master br0 (At this point we will stop the
+>> cores, reload switch firmware, start the cores)
+>>      ip link set dev br0 up
+>>      bridge vlan add dev br0 vid 1 pvid untagged
+> 
+> This sounds a lot better.
+> 
+> Note that the bridge interface br0 might already be up when the
+> interfaces are added. So that is a different order to what you showed
+> here.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hi Andrew, I have tested with that sequence as well and forwarding
+works. Even if the second interface is added to bridge after bridge is
+up, the forwarding works fine.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20240412   gcc  
-arc                   randconfig-002-20240412   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                         mv78xx0_defconfig   clang
-arm                            qcom_defconfig   clang
-arm                   randconfig-001-20240412   gcc  
-arm                   randconfig-002-20240412   clang
-arm                   randconfig-003-20240412   clang
-arm                   randconfig-004-20240412   gcc  
-arm                        spear3xx_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240412   gcc  
-arm64                 randconfig-002-20240412   gcc  
-arm64                 randconfig-003-20240412   clang
-arm64                 randconfig-004-20240412   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240412   gcc  
-csky                  randconfig-002-20240412   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240412   clang
-hexagon               randconfig-002-20240412   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240412   gcc  
-i386         buildonly-randconfig-002-20240412   clang
-i386         buildonly-randconfig-003-20240412   gcc  
-i386         buildonly-randconfig-004-20240412   gcc  
-i386         buildonly-randconfig-005-20240412   gcc  
-i386         buildonly-randconfig-006-20240412   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240412   clang
-i386                  randconfig-002-20240412   gcc  
-i386                  randconfig-003-20240412   clang
-i386                  randconfig-004-20240412   clang
-i386                  randconfig-005-20240412   clang
-i386                  randconfig-006-20240412   gcc  
-i386                  randconfig-011-20240412   clang
-i386                  randconfig-012-20240412   gcc  
-i386                  randconfig-013-20240412   clang
-i386                  randconfig-014-20240412   gcc  
-i386                  randconfig-015-20240412   gcc  
-i386                  randconfig-016-20240412   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240412   gcc  
-loongarch             randconfig-002-20240412   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240412   gcc  
-nios2                 randconfig-002-20240412   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                generic-64bit_defconfig   gcc  
-parisc                randconfig-001-20240412   gcc  
-parisc                randconfig-002-20240412   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                       ebony_defconfig   clang
-powerpc                        fsp2_defconfig   gcc  
-powerpc                     kilauea_defconfig   clang
-powerpc                      makalu_defconfig   clang
-powerpc                   microwatt_defconfig   gcc  
-powerpc               randconfig-001-20240412   clang
-powerpc               randconfig-002-20240412   clang
-powerpc               randconfig-003-20240412   gcc  
-powerpc                     tqm8541_defconfig   clang
-powerpc64             randconfig-001-20240412   gcc  
-powerpc64             randconfig-002-20240412   gcc  
-powerpc64             randconfig-003-20240412   clang
-riscv                            alldefconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240412   clang
-riscv                 randconfig-002-20240412   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240412   gcc  
-s390                  randconfig-002-20240412   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240412   gcc  
-sh                    randconfig-002-20240412   gcc  
-sh                           se7721_defconfig   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240412   gcc  
-sparc64               randconfig-002-20240412   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240412   clang
-um                    randconfig-002-20240412   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240412   gcc  
-x86_64       buildonly-randconfig-002-20240412   gcc  
-x86_64       buildonly-randconfig-003-20240412   gcc  
-x86_64       buildonly-randconfig-004-20240412   clang
-x86_64       buildonly-randconfig-005-20240412   clang
-x86_64       buildonly-randconfig-006-20240412   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240412   clang
-x86_64                randconfig-002-20240412   gcc  
-x86_64                randconfig-003-20240412   gcc  
-x86_64                randconfig-004-20240412   clang
-x86_64                randconfig-005-20240412   clang
-x86_64                randconfig-006-20240412   clang
-x86_64                randconfig-011-20240412   clang
-x86_64                randconfig-012-20240412   gcc  
-x86_64                randconfig-013-20240412   clang
-x86_64                randconfig-014-20240412   clang
-x86_64                randconfig-015-20240412   clang
-x86_64                randconfig-016-20240412   gcc  
-x86_64                randconfig-071-20240412   gcc  
-x86_64                randconfig-072-20240412   clang
-x86_64                randconfig-073-20240412   clang
-x86_64                randconfig-074-20240412   gcc  
-x86_64                randconfig-075-20240412   gcc  
-x86_64                randconfig-076-20240412   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240412   gcc  
-xtensa                         virt_defconfig   gcc  
+> There will be some packet losses when you swap firmware, but it
+> probably is not that bad. When interfaces are added to a bridge
+> packets are dropped anywhere while spanning tree determines the
+> network topology. It will just appear your device is slow at doing
+> that.
+> 
+
+Yes there will be packet losses for a slight amount of time but that's
+something we can't avoid.
+
+I will post the next revision with these changes soon. Thanks for the
+review.
+
+> 	Andrew
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks and Regards,
+Md Danish Anwar
