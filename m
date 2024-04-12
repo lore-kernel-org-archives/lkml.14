@@ -1,96 +1,205 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAC9127E1A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5CF8594D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712932053; cv=none; b=fa0e0yA+1BsYH9FsnqFwGZ4Wh0tTJLsykADd6ZWLW6RjZpsgyimDEwAekZbXHz+SXKb39QZyivtHMbfSTZDv+GGxgd0VbRj/Aoy0fTRlmOMeRhc1HSr2RVHk1D3KA8T1JZWX46XYlstnzbVIg3g3MczWFdUsqd3ahGnFxthlJHc=
+	t=1712932165; cv=none; b=CEJfNg1R+SJZComGkNO/9Rh7Ee9hkvk7g+w7w4fArvPPPCyhrNHJ6LlNxiz9FK4DkfE+i7luLQQWt7G6t7JcaXSgQKSD4EAqIzAMHKh/LRwVkVMbnVmD4LOhUVf6jqjMA/hPggWIgqBG4xT5sGvxBunoTP0IR2KxrCVJLGrG3ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712932053; c=relaxed/simple;
-	bh=7ZpOjyhJVYHo6veueLDSfC6MEFzr8Ojbs3xFBxi2+W8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=afNjdXBSxJqxXEUYIiRGrNsPY/5HeMZB+Q8wo7+JzIpVRiZDh34Q/fHZyugBMQJ5kOJzmL6uDwycPM3XxxSe33tS3m63NQSWbPJIoJrd94KmH43J7BBXSmkyAsx3UcGMm9laEqKMGzP677JI+se+8gpIipE6NWvoF3nta8a/E2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AUhnlzLK; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AUhnlzLK"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-1e44b8ebf43so8431795ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712932052; x=1713536852; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CTokiC2mOzeQb1t9UZXBIQTwfHhJ1xAuH+06DQhJnus=;
-        b=AUhnlzLKqTZDu6/WL+d3R9yn9IsNJPxyUT8YB+Hmh0HHqPpg9NL6kQOPhRs0w8VyWk
-         NKtU+BojmF/+nRDY7AtsXxxLIDqPj2cStfcqX7VZlOqCgnGQUaEQeCLoPTDUzvpxbGV9
-         BNLou0SaOCdObdzUosPn28Y9CCZZKMg+01SO1b1JhvTmwaecBp6CQDnx1ve8DWyJuaUV
-         qWLzjWiFNoRC/C1zxYLDQ3Fwjf+ync/AfXUv0gLoRPk4enxkiqxR/7Lf0N/FlNmd6xFE
-         CqY2Qe7DtokvPjbWQD/CB1YJw02HOzXcAEcqnuScQTvoxob1c3xPOty4VYTu0tYcrqpc
-         G9KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712932052; x=1713536852;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CTokiC2mOzeQb1t9UZXBIQTwfHhJ1xAuH+06DQhJnus=;
-        b=Lk/CtYe2hUGlH/PJY3DCENbDAOXqZMhLxk9OI5rNgbn8VHXMhMARx1AQlbHTmdIBCu
-         H3TfUjCSmrg2ydrSksuMzGSfzwEverJfIWdB0pVbFTDpP0Ycfn6waPVsV08aofmzt2qb
-         Aw4H3Wjd32ZG96Dw5rhJY6liJhwXaHl5j0Hu1IZH09Vf9HLSxG4oXtZ7iJG2KLvwBnV4
-         JDlStzwASiLSMujj5nY4rONfkV3Pw4+gEXA66O1BxPs3ogXOqrapiVHtuFailWwXiWKL
-         6gfVxWzp3ewO7qGp1zUcsD4MLg6Z5XwbpPXRoUv+qhVOv12TLh2YfpgBZp8EjbkmRxKh
-         EEJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfm7utJVbXTBBZpa28ytlTE1lUCSsUR3In7lJjBm8AaYO0vfeeF3wDUpahO7S4l9LtXkESBZFOv0rf+fTmECeiSazlWJU4e8xB9WS2
-X-Gm-Message-State: AOJu0YwkLRD7m9o2oQ+DX9Q/2AgYLfeM5b500az3LkudsPYT5wp/Xm+F
-	+6ahEiNHY4Flb+NdYY1MbwVGnjzDQ2EJr2f8OGLJummsBopsEhUL+NrafA6e5uVgs9pfLU5z9Hf
-	GNg==
-X-Google-Smtp-Source: AGHT+IGLwF+HfzZtGn8zwa1qm1dvlv2UkAX6QqEas4f4AXsrP0etNn5dV5dMejYckrKUvPHWx3YS/a/UIOw=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:db08:b0:1e5:10e5:344 with SMTP id
- m8-20020a170902db0800b001e510e50344mr8380plx.3.1712932051773; Fri, 12 Apr
- 2024 07:27:31 -0700 (PDT)
-Date: Fri, 12 Apr 2024 07:27:30 -0700
-In-Reply-To: <BN9PR11MB527609928EA2290709CDB3E78C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1712932165; c=relaxed/simple;
+	bh=cOiPEaU/03Wpy1Gj2SfzH5mf7/403pqJE56CHBdRWUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dvn0nj9ucSGa96MSQjTP8Iu29cu1Op/glm5aM/sVBbSKWgOqm4zQgcF+gxU8HG15lGvxqPvG4XMWRpiG2sZKW7mwDinvWWq/mHxSiAyXBAgcWJRjKtPSQ75TlscoHDmxnrEpjgPhxYMk8RqRhgHvtEU5tKf5TE0lyoGrhdlA+mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293FBC2BD10;
+	Fri, 12 Apr 2024 14:29:23 +0000 (UTC)
+Date: Fri, 12 Apr 2024 10:32:04 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+ Prasad Pandit <pjp@fedoraproject.org>, Yang Li <yang.lee@linux.alibaba.com>
+Subject: [GIT PULL] tracing: Fixes for v6.9
+Message-ID: <20240412103204.453d912c@gandalf.local.home>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
- <20240405223110.1609888-6-jacob.jun.pan@linux.intel.com> <BN9PR11MB527609928EA2290709CDB3E78C042@BN9PR11MB5276.namprd11.prod.outlook.com>
-Message-ID: <ZhlEh7-NoknHcNX7@google.com>
-Subject: Re: [PATCH v2 05/13] x86/irq: Reserve a per CPU IDT vector for posted MSIs
-From: Sean Christopherson <seanjc@google.com>
-To: Kevin Tian <kevin.tian@intel.com>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-	X86 Kernel <x86@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, 
-	Lu Baolu <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	Dave Hansen <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, Peter Anvin <hpa@zytor.com>, 
-	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Paul E Luse <paul.e.luse@intel.com>, 
-	Dan Williams <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, 
-	Ashok Raj <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>, 
-	"a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas <helgaas@kernel.org>, 
-	Guang Zeng <guang.zeng@intel.com>, 
-	"robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024, Kevin Tian wrote:
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, April 6, 2024 6:31 AM
-> > 
-> > +/*
-> > + * Posted interrupt notification vector for all device MSIs delivered to
-> > + * the host kernel.
-> > + */
-> > +#define POSTED_MSI_NOTIFICATION_VECTOR	0xeb
-> >  #define NR_VECTORS			 256
-> > 
-> 
-> Every interrupt is kind of a notification.
 
-FWIW, I find value in having "notification" in the name to differentiate between
-the IRQ that is notifying the CPU that there's a posted IRQ to be processed, and
-the posted IRQ itself.
+Linus,
+
+Three trivial fixes and one non-trivial one.
+
+Tracing fixes for 6.9:
+
+- Fix the buffer_percent accounting as it is dependent on three variables:
+  1) pages_read - number of subbuffers read
+  2) pages_lost - number of subbuffers lost due to overwrite
+  3) pages_touched - number of pages that a writer entered
+  These three counters only increment, and to know how many active pages
+  there are on the buffer at any given time, the pages_read and
+  pages_lost are subtracted from pages_touched. But the pages touched
+  was incremented whenever any writer went to the next subbuffer even
+  if it wasn't the only one, so it was incremented more than it should
+  be causing the counter for how many subbuffers currently have content
+  incorrect, which caused the buffer_percent that holds waiters until
+  the ring buffer is filled to a given percentage to wake up early.
+
+- Fix warning of unused functions when PERF_EVENTS is not configured in
+
+- Replace bad tab with space in Kconfig for FTRACE_RECORD_RECURSION_SIZE
+
+- Fix to some kerneldoc function comments in eventfs code.
+
+
+Please pull the latest trace-v6.9-rc3 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-v6.9-rc3
+
+Tag SHA1: 184a6ab4ad1cf6e761bdf30b8a944774d1eb776a
+Head SHA1: ffe3986fece696cf65e0ef99e74c75f848be8e30
+
+
+Arnd Bergmann (1):
+      tracing: hide unused ftrace_event_id_fops
+
+Prasad Pandit (1):
+      tracing: Fix FTRACE_RECORD_RECURSION_SIZE Kconfig entry
+
+Steven Rostedt (Google) (1):
+      ring-buffer: Only update pages_touched when a new page is touched
+
+Yang Li (1):
+      eventfs: Fix kernel-doc comments to functions
+
+----
+ fs/tracefs/event_inode.c    | 14 ++++++++++----
+ kernel/trace/Kconfig        |  2 +-
+ kernel/trace/ring_buffer.c  |  6 +++---
+ kernel/trace/trace_events.c |  4 ++++
+ 4 files changed, 18 insertions(+), 8 deletions(-)
+---------------------------
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index dc067eeb6387..894c6ca1e500 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -336,6 +336,7 @@ static void update_inode_attr(struct dentry *dentry, struct inode *inode,
+ 
+ /**
+  * lookup_file - look up a file in the tracefs filesystem
++ * @parent_ei: Pointer to the eventfs_inode that represents parent of the file
+  * @dentry: the dentry to look up
+  * @mode: the permission that the file should have.
+  * @attr: saved attributes changed by user
+@@ -389,6 +390,7 @@ static struct dentry *lookup_file(struct eventfs_inode *parent_ei,
+ /**
+  * lookup_dir_entry - look up a dir in the tracefs filesystem
+  * @dentry: the directory to look up
++ * @pei: Pointer to the parent eventfs_inode if available
+  * @ei: the eventfs_inode that represents the directory to create
+  *
+  * This function will look up a dentry for a directory represented by
+@@ -478,16 +480,20 @@ void eventfs_d_release(struct dentry *dentry)
+ 
+ /**
+  * lookup_file_dentry - create a dentry for a file of an eventfs_inode
++ * @dentry: The parent dentry under which the new file's dentry will be created
+  * @ei: the eventfs_inode that the file will be created under
+  * @idx: the index into the entry_attrs[] of the @ei
+- * @parent: The parent dentry of the created file.
+- * @name: The name of the file to create
+  * @mode: The mode of the file.
+  * @data: The data to use to set the inode of the file with on open()
+  * @fops: The fops of the file to be created.
+  *
+- * Create a dentry for a file of an eventfs_inode @ei and place it into the
+- * address located at @e_dentry.
++ * This function creates a dentry for a file associated with an
++ * eventfs_inode @ei. It uses the entry attributes specified by @idx,
++ * if available. The file will have the specified @mode and its inode will be
++ * set up with @data upon open. The file operations will be set to @fops.
++ *
++ * Return: Returns a pointer to the newly created file's dentry or an error
++ * pointer.
+  */
+ static struct dentry *
+ lookup_file_dentry(struct dentry *dentry,
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..47345bf1d4a9 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -965,7 +965,7 @@ config FTRACE_RECORD_RECURSION
+ 
+ config FTRACE_RECORD_RECURSION_SIZE
+ 	int "Max number of recursed functions to record"
+-	default	128
++	default 128
+ 	depends on FTRACE_RECORD_RECURSION
+ 	help
+ 	  This defines the limit of number of functions that can be
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 25476ead681b..6511dc3a00da 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1393,7 +1393,6 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+ 	old_write = local_add_return(RB_WRITE_INTCNT, &next_page->write);
+ 	old_entries = local_add_return(RB_WRITE_INTCNT, &next_page->entries);
+ 
+-	local_inc(&cpu_buffer->pages_touched);
+ 	/*
+ 	 * Just make sure we have seen our old_write and synchronize
+ 	 * with any interrupts that come in.
+@@ -1430,8 +1429,9 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+ 		 */
+ 		local_set(&next_page->page->commit, 0);
+ 
+-		/* Again, either we update tail_page or an interrupt does */
+-		(void)cmpxchg(&cpu_buffer->tail_page, tail_page, next_page);
++		/* Either we update tail_page or an interrupt does */
++		if (try_cmpxchg(&cpu_buffer->tail_page, &tail_page, next_page))
++			local_inc(&cpu_buffer->pages_touched);
+ 	}
+ }
+ 
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7c364b87352e..52f75c36bbca 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1670,6 +1670,7 @@ static int trace_format_open(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PERF_EVENTS
+ static ssize_t
+ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ {
+@@ -1684,6 +1685,7 @@ event_id_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
+ 
+ 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, len);
+ }
++#endif
+ 
+ static ssize_t
+ event_filter_read(struct file *filp, char __user *ubuf, size_t cnt,
+@@ -2152,10 +2154,12 @@ static const struct file_operations ftrace_event_format_fops = {
+ 	.release = seq_release,
+ };
+ 
++#ifdef CONFIG_PERF_EVENTS
+ static const struct file_operations ftrace_event_id_fops = {
+ 	.read = event_id_read,
+ 	.llseek = default_llseek,
+ };
++#endif
+ 
+ static const struct file_operations ftrace_event_filter_fops = {
+ 	.open = tracing_open_file_tr,
