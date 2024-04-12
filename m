@@ -1,96 +1,185 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E663611D
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535C3241E2
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712903052; cv=none; b=tOL8WStA+tBkF8dD+XUSc93OrMo5kYpeZ94FviXNSRvpnw4qwRMugliCFmsToDkyys9m7d1J4CgXTcUK3CT98IvHVjSQllen43UOPyHhfm7OXijf//I3NhPgO/4Ifc+mEBQavWPKICEWhw6PKcoko3c54JmhoLuR57z+grSs13M=
+	t=1712903212; cv=none; b=E6ERa7bW5hEXNIE1KX+W/IOXCL598Ap9LtIOMGKLhVvwSeehdakdxqmuGtF+gbRqx4RcGqUCVUpjnGqcpeq4geSGCaiqUk476nqxR4CjtBPPjSWh5nE9+Ajjso7dd4CDnvWsL4L5QIkRvLxX0a7/+2/F3EAWoNsDjZP3AtHL/Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712903052; c=relaxed/simple;
-	bh=0GLmHSGNmiAF2DmpKbt49+aQB1/2U9npSjFezwUw/1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aTTYkFmtv8KPYaLssJ2iB11ZKnQX6+3vPGqNURJvTsy0U/kvOFGA92henFDaf6XukjUXY7dNWEtiNpjvumzd71tu1H6mnUFUcXIBZKc+ughzVR+qByZzz/plrVz5wGgoZQpkG+oLP7Reo7WEgJ46oxAhSwarpnVPqQRqSI0rWQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YB4N7eMq; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712903212; c=relaxed/simple;
+	bh=sDNbtYIHNde4yzG+mtMhm+CHahPBxWrK+Dlok/Vea98=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RQWZHYMIdGCBPiUkIXOEQZhaqFc3lPm+EyyDtTrjg4iVoOxju38MWzFegHSkVm87C8cTtXUrclg/XkhyaO5HN6X5Ye8KOv/B686PnG4QfDzYYNbUNbatbLriFcJRzR0RzysuF+LhBppWs7/8IZf1UiPrTsZO2zzusMwLzNYIQOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=RiLQlRpp; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YB4N7eMq"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e3c9300c65so5805905ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 23:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712903050; x=1713507850; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3K27Jb/EpKyrvqkBXTlJHPw4VsuOznOHMEoo+4oX24=;
-        b=YB4N7eMq4wuALSS++0dZlY/jbHcTNgnrM3cbKpKlLrLwp5TrMOO5PjXvdZzfA0UohG
-         R3pr+1s1o54Y+RdERNkGjona6RAT2tvjaYnhHeanaFswlnEOwWKzYo3L+ZBeTadbJwAh
-         l8HDJgMtexEwxw2ghhlVGV+8VeycGZa9aMm/YZhz73gRu7VReImCeonByzp1ogggQ7aj
-         ZWT3h7Ocy8beSyv5xWH9lxDzZmZuCTlt7KT+ZdjOFDRrwqkfWwGzUDs6w6x1OxTtg/PP
-         LjWjtwZlmvvEbRRXdeHsrDNYZ18AIH7ZRimOg4EzJcSTJjsYjhIKwmN2vdS8hcoFu4PI
-         uJ3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712903050; x=1713507850;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o3K27Jb/EpKyrvqkBXTlJHPw4VsuOznOHMEoo+4oX24=;
-        b=ChjerTJ1IB8DM9HaV9XgSb4StBIoGu07PMwb+GHKKjh2EixlQ0U90jN0MNvn//Faiv
-         lf84HdA5rLM/Jxg5cvltm8uHb3JpSblB5R5QAxLxlC8naQM0aeOolzS7r7zAAkObnFBc
-         S1jTrxqWQg6xcdJR4iNGYbqKUDJq3DOmPhhBoYLfA+cUK4AdHHTxECfJynZvbYsh5ZdA
-         z9stxdr9gWq3BxIb+ujX/vVRNX5/EVRbbgT5q0SXbgToq8hnTyOdunR9l4SB/ZiAX3Nc
-         ElqRBw5pMmCEBIo3tNVwoOa3TH1cez6tHzfjv1cwDO6T1jWp7O67wu68FrNhon7gBrwJ
-         TQgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVb7zrpZCu6ytYOzuwLG02Vgoo4z8mqXYxcza5JzpUKk3uzu0yxw1BBk64HbxzoYkQKkRfLXSd9krApKYxQjx8Ga4DfVnYDPuGOG3hZ
-X-Gm-Message-State: AOJu0YzwtpOcI+xY7+faWZc3j88O9J80DSftyFaOF1LscSUy49Hye5nc
-	fbBh20AKC8aRKCt5ATMDAM1EH9e8r0P897Oxw/1kKXF4Gictlff4prVBe5qNr94=
-X-Google-Smtp-Source: AGHT+IHapdYpNtazPiszbiSvldPufTiO193eywbvrlVIV0YTrq+KmZ8bVwsOOYSlFnjA/lSzfW0ZxA==
-X-Received: by 2002:a17:902:ed54:b0:1e3:e242:4dc9 with SMTP id y20-20020a170902ed5400b001e3e2424dc9mr1328786plb.33.1712903049849;
-        Thu, 11 Apr 2024 23:24:09 -0700 (PDT)
-Received: from localhost ([122.172.85.136])
-        by smtp.gmail.com with ESMTPSA id a12-20020a170902eccc00b001e3e081d07esm2210688plh.179.2024.04.11.23.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 23:24:09 -0700 (PDT)
-Date: Fri, 12 Apr 2024 11:54:07 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: lizhe <sensor1010@163.com>
-Cc: rafael <rafael@kernel.org>, linux-pm <linux-pm@vger.kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpufreq: exit() callback is optional
-Message-ID: <20240412062407.ntahibzv6xsbrnxs@vireshk-i7>
-References: <b97964653d02225f061e0c2a650b365c354b98c8.1712900945.git.viresh.kumar@linaro.org>
- <5759bc29.32d04.18ed0ef5037.Coremail.sensor1010@163.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="RiLQlRpp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1712903204;
+	bh=sDNbtYIHNde4yzG+mtMhm+CHahPBxWrK+Dlok/Vea98=;
+	h=From:Date:Subject:To:Cc:From;
+	b=RiLQlRpps2T9fke3w6Z+3tl8V6PyZ+y5k0F+0wLS9m3R2YWj6Jav2aOFUCbeZfuCY
+	 Nn8Stg73mfG34a9r8OYh4Zt60IiGhdlejRLTkqaENnaaoylJODQrSWdDkz89gdvd/+
+	 Ulij/frWTbxuXo43JIyNlzErgJiyI6JzIl3ruhPg=
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Date: Fri, 12 Apr 2024 08:26:40 +0200
+Subject: [PATCH v3] misc/pvpanic: add support for normal shutdowns
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5759bc29.32d04.18ed0ef5037.Coremail.sensor1010@163.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240412-pvpanic-shutdown-v3-1-c214e9873b3f@weissschuh.net>
+X-B4-Tracking: v=1; b=H4sIAB/UGGYC/33NQQ6CMBCF4auQrq3ptCUFV97DuChlsLMphELRE
+ O5uIXGlcfm/ZL5ZWcSRMLJLsbIRE0XqQw51KpjzNjyQU5ubSSEVgNB8SIMN5Hj089T2S+BlZ1V
+ lK1PbFlg+G0bs6HmQt3tuT3Hqx9fxIcG+/sEScOAlonF1o1AJuC5IMUbnZ38OOLFdTPKjaKFB/
+ lDkoZRaazCNA/OlbNv2BpfJIPf7AAAA
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1712903203; l=4209;
+ i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
+ bh=sDNbtYIHNde4yzG+mtMhm+CHahPBxWrK+Dlok/Vea98=;
+ b=4YJRC57gy8imlh/CoUA02y9HpGnd1FsYP8tRND2I6cJb7HztQThDH7FdRI3HcDzne2ns6NPgU
+ QQi3nDOVtsSDpMsCvh+v2RaFq0PxQqdW0elJbEXw0JDER1sWUvoAH6P
+X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
+ pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
 
-On 12-04-24, 14:12, lizhe wrote:
-> I was the first one to find this problem, so the patch should be submitted by me.
+Shutdown requests are normally hardware dependent.
+By extending pvpanic to also handle shutdown requests, guests can
+submit such requests with an easily implementable and cross-platform
+mechanism.
 
-:)
+Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+---
+Changes in v3:
+- Really drop RFC status
+- Update link to current revision of qemu patchset
+- Link to v2: https://lore.kernel.org/r/20240412-pvpanic-shutdown-v2-1-5e544417bc17@weissschuh.net
 
-This patch doesn't take away any of the work you have done. What you are trying
-to do is simplify drivers with empty exit callback and the unused return value
-of the callback.
+Changes in v2:
+- Drop RFC status
+- Drop define from header file as it was submitted on its own
+- Handle disabling of handler through sysfs
+- Link to v1: https://lore.kernel.org/r/20231104-pvpanic-shutdown-v1-1-5ee7c9b3e301@weissschuh.net
+---
+This patch is based on char-misc/char-misc-testing as it depends on
+commit ad76f3e8f57c ("misc/pvpanic: add shutdown event definition")
 
-And what I am trying to do is fix a bug in the cpufreq core, which only makes
-your other patches more acceptable.
+The corresponding patch to qemu has also been submitted[0].
+General discussions about the feature should happen on the other thread.
 
-So no, you never identified the problem this patch is trying to solve.
+[0] https://lore.kernel.org/qemu-devel/20240323-pvpanic-shutdown-v7-0-4ac1fd546d6f@t-8ch.de/
+---
+ drivers/misc/pvpanic/pvpanic.c | 43 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 42 insertions(+), 1 deletion(-)
 
-Please don't feel that anyone is trying to take away your hardwork. That's not
-how things are done here. We appreciate anyone who is spending time to make the
-kernel better.
+diff --git a/drivers/misc/pvpanic/pvpanic.c b/drivers/misc/pvpanic/pvpanic.c
+index df3457ce1cb1..17c0eb549463 100644
+--- a/drivers/misc/pvpanic/pvpanic.c
++++ b/drivers/misc/pvpanic/pvpanic.c
+@@ -19,6 +19,7 @@
+ #include <linux/module.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/platform_device.h>
++#include <linux/reboot.h>
+ #include <linux/spinlock.h>
+ #include <linux/sysfs.h>
+ #include <linux/types.h>
+@@ -35,6 +36,7 @@ struct pvpanic_instance {
+ 	void __iomem *base;
+ 	unsigned int capability;
+ 	unsigned int events;
++	struct sys_off_handler *sys_off;
+ 	struct list_head list;
+ };
+ 
+@@ -78,6 +80,39 @@ static struct notifier_block pvpanic_panic_nb = {
+ 	.priority = INT_MAX,
+ };
+ 
++static int pvpanic_sys_off(struct sys_off_data *data)
++{
++	pvpanic_send_event(PVPANIC_SHUTDOWN);
++
++	return NOTIFY_DONE;
++}
++
++static void pvpanic_synchronize_sys_off_handler(struct device *dev, struct pvpanic_instance *pi)
++{
++	/* The kernel core has logic to fall back to system halt if no
++	 * sys_off_handler is registered.
++	 * When the pvpanic sys_off_handler is disabled via sysfs the kernel
++	 * should use that fallback logic, so the handler needs to be unregistered.
++	 */
++
++	struct sys_off_handler *sys_off;
++
++	if (!(pi->events & PVPANIC_SHUTDOWN) == !pi->sys_off)
++		return;
++
++	if (!pi->sys_off) {
++		sys_off = register_sys_off_handler(SYS_OFF_MODE_POWER_OFF, SYS_OFF_PRIO_LOW,
++						   pvpanic_sys_off, NULL);
++		if (IS_ERR(sys_off))
++			dev_warn(dev, "Could not register sys_off_handler: %pe\n", sys_off);
++		else
++			pi->sys_off = sys_off;
++	} else {
++		unregister_sys_off_handler(pi->sys_off);
++		pi->sys_off = NULL;
++	}
++}
++
+ static void pvpanic_remove(void *param)
+ {
+ 	struct pvpanic_instance *pi_cur, *pi_next;
+@@ -91,6 +126,8 @@ static void pvpanic_remove(void *param)
+ 		}
+ 	}
+ 	spin_unlock(&pvpanic_lock);
++
++	unregister_sys_off_handler(pi->sys_off);
+ }
+ 
+ static ssize_t capability_show(struct device *dev, struct device_attribute *attr, char *buf)
+@@ -123,6 +160,7 @@ static ssize_t events_store(struct device *dev, struct device_attribute *attr,
+ 		return -EINVAL;
+ 
+ 	pi->events = tmp;
++	pvpanic_synchronize_sys_off_handler(dev, pi);
+ 
+ 	return count;
+ }
+@@ -156,12 +194,15 @@ int devm_pvpanic_probe(struct device *dev, void __iomem *base)
+ 		return -ENOMEM;
+ 
+ 	pi->base = base;
+-	pi->capability = PVPANIC_PANICKED | PVPANIC_CRASH_LOADED;
++	pi->capability = PVPANIC_PANICKED | PVPANIC_CRASH_LOADED | PVPANIC_SHUTDOWN;
+ 
+ 	/* initlize capability by RDPT */
+ 	pi->capability &= ioread8(base);
+ 	pi->events = pi->capability;
+ 
++	pi->sys_off = NULL;
++	pvpanic_synchronize_sys_off_handler(dev, pi);
++
+ 	spin_lock(&pvpanic_lock);
+ 	list_add(&pi->list, &pvpanic_list);
+ 	spin_unlock(&pvpanic_lock);
 
-If I were to take credit of your work, then I would have sent a big patch to fix
-the exit() callback issue you are trying to solve, with randomly sent patches.
+---
+base-commit: dc806bd48abc1b8a4ae72709a37e65db42a32048
+change-id: 20231104-pvpanic-shutdown-5fa38a879ad1
 
+Best regards,
 -- 
-viresh
+Thomas Weißschuh <linux@weissschuh.net>
+
