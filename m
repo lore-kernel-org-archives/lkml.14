@@ -1,135 +1,143 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C5212D1FC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBC61327E8;
+	Fri, 12 Apr 2024 14:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931844; cv=none; b=ERlSQAujruba2No0af6hwKbGzKFpmhBABjpCQthwFGNlMfgfjOU36q2nAt3NKhoD3zrW26vVVf0BQytK/S3jyodsqi7/QJ7xeP02V7wI0+9QojCS2rtovdASolm6TNXMIoYgYNNhxx//JzmZnYv3ZFH4PiujxtprCazYLTHAi28=
+	t=1712931846; cv=none; b=ZxQM0fe7sL/mN07AvEKdQ081GPS10QLR4QQF+jC1ok+Kg0I0eyTYVfdOKlqS2vq+1b/TU7x5RSmH2GNf5EErffb8luqcELTcWd8p9Rf/hj+ZdkjSHFRp9QBDRgZj2c/4SYoe+TvEDxxzZiNh8EfFkqVS5JQ8XYxnZI29CuuWl4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931844; c=relaxed/simple;
-	bh=xPJfvrJkroHWen1V+x+kRG0Fv8xPw4I9S3y/eqOkAa0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=KI5ms/at72mXGiU9bsiSGFmibHABqLolsxyb2ZbUFdNpmIUf62IQQ0yqMy6qBy3PHHgPgEbGFoLsY3xXCjMiE40XT2yPkd9FBuRiKgVd39K4xn7nb6VL5bp+haTjEagqmfReCWADIzDiWjcw817kxpPNYmTMVkoUmbkLji3WtBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=lfhlR26B; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1712931846; c=relaxed/simple;
+	bh=pvXRn+SGEozybqS3lhGoTzYl9NGJHGRBmtZjeThvLDU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g6zn6mcwsBOqeLDbDZL7R+fh6zaPAWuUafZ51jsXYeLZGCHU+RKlZ/PrV6ghuJyij+161/iVQgOjGC+4vfcRM/+VP+T/mCQN4DXierj7BM77soQJaKyhC0C/O2NZyPObOBDncKqXM1NLRV7VbCCv2dOhvajFve2Vo0ffFy4ZviQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7MJAlsu; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="lfhlR26B"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4715991c32so122715466b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:24:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7MJAlsu"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ecf3943040so856158b3a.0;
+        Fri, 12 Apr 2024 07:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1712931841; x=1713536641; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712931844; x=1713536644; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kGGpBuMkk3rcfY7clPvu4R5GEYInWk7ZpVaUvi+LAPw=;
-        b=lfhlR26B1CJ7iMkal+tk28o3iwUeAhLMtmPTXj9rzkjBwh69ghHQzEZ7Eg607QRIfL
-         FkWxkNvk4HO+TALIUDsynEUeJunJf/POFcSaVHdCJXkWGnJk5p1rK4uzUDFk2S0YBC5a
-         Wv9GQVwrpPPPGxuSZ4/hH+qMo94eCVlDf+OZ223sa+Ed9wgleQSF/kHni83zSwAReP/v
-         qRSpgfKh6l9lPw34ab34kqBYfPozrlXgquzrlxK0FHKCmVWpmQksxAGucDGyx2DpVIAj
-         vsjYjb+v1txV7Tm79qkLeUepvq+0SbeAHPZfWs2JdEtbqlwtnEZAABvCKmnujP+nOCrC
-         w+yg==
+        bh=DAWpmgXV6PrUtIYpHal4V+0TG6cIPqQRmUscp00ed0M=;
+        b=G7MJAlsuVLIRuhGaGesqPK5VxkY1R7sL2AXNUzLDY2ejAIITu0WAmVQrJEsM1uj4xa
+         IAEcIpXJGkSOR/MNMB0F/elWR6YBS6yhz+uUBoC/OuFs6G3ETxTrDtIquCF57JYp1cGp
+         rUrpl0SJnECb95p82ALPIATSyD34Jw1yE0CHp+bRdHFaDio1Ue1GHEUGIm9sWk1pwdFE
+         rWdHVPx9YGg26/QMAKPIWqj21mkO/60uVrdVkAWq9T6mel7LU8SaOFYilj13ozn4LRv0
+         nKBzBSjrlASvKVjMHNPUQ/Ozm2fsUdCaBYG8nxaKSbqAfcap+zxLN2eL2fwOEZfYTKQj
+         BHeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712931841; x=1713536641;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kGGpBuMkk3rcfY7clPvu4R5GEYInWk7ZpVaUvi+LAPw=;
-        b=cNFIjquFSzqQcfn/yzrBT8TxIDw3rzcZpKfrlcykAiTd4bwE6ZFWAW8ixOOsFC7vdN
-         TP8M1z30xVMFZsnCo0LbsJOol/1Js9lr1Eq+3f1ECKXlxXXZKiS7bv9q60QCan7iq7oz
-         ShRzcT/l8fs5uX7y8gm8cVK5xuzSY9KUPcO5QDZGQ/8ULBup/lY9V8vbHID8D9uDAxdL
-         iIEA+qSGZOJhr7gPo1OocVd8xV0ZVVOXOXeK/sujY9B13fVequdzTTAmzap+pbgWX0o0
-         Y9KYRQPlNIOGTFsjEAjN61BywCdGRD+gI5Y/tNFhM7dwJ90bFNO3ht9w9Q/VMAc4DLVD
-         8cvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxNrEcrzEIb6twI9raNhM2iViyU9b3bGFyNHrWtFdJHIDO0bAy0bEwgk2yEnO5DFqI+59naif7OdRZXqMAYeG52bWcaYSOdgnD95Ya
-X-Gm-Message-State: AOJu0Yx0XvSCbsZspU6vPDvNBbnqgA22lAJ4Pch7+OO889qrxONxwKGO
-	SYN7MnWHKbajp6wZ2Kj4Vgh4lDpLa40L59iBHNDyaireGtQzcdf8c6+5b2mOqYo=
-X-Google-Smtp-Source: AGHT+IFRwnYmNxoacwMYfZHwJlXDTXp4RSdWCA1aODz1NYxwf5Bx9Aehjl/icfWlQ/9r67E/c8s6qw==
-X-Received: by 2002:a17:907:25c1:b0:a51:d7c8:300c with SMTP id ae1-20020a17090725c100b00a51d7c8300cmr2369381ejc.17.1712931840880;
-        Fri, 12 Apr 2024 07:24:00 -0700 (PDT)
-Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id hg20-20020a1709072cd400b00a5225c87f65sm1563965ejc.56.2024.04.12.07.24.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Apr 2024 07:24:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712931844; x=1713536644;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DAWpmgXV6PrUtIYpHal4V+0TG6cIPqQRmUscp00ed0M=;
+        b=YgV3C96Ed2DdEfyrLjPUmw5RYOyjVYiehCEPVKgFHHXPdX5czvdQgTcmsNNC1iK64M
+         cLk3gdIn6fpD4ZP8GKVO9Z/TPpoXQiPFwQkDEckakTEq+r7LrLlahV0x92sGhwGQFli5
+         bPQcFNAxui/tnQ2+CJaVKjMMN2GkUab06b+BISTOw0uXhKTLvqd9Qkj7DM+6JId8cXH/
+         +Thivjax/WzjhiMdFwBfua6Z2Jiy/QYgi7NlROxGXTP68oLgnM6pYyMmDz01jtVOb6y9
+         G7v/QTZfYtfZc7vV34PlbRCi10pEKCbT3Ol1MVdddwHguMVbSjJCnrcm0cUP5pFtXywJ
+         Digw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8DguMeetFdNIGudSAH7WfX1AY3P8dHaCHSRWCjHw7oWcMttGLrwJvBM95LBcmBNcryPVzL0ZASUujMebvw7TiypOCFWIVikWpZihej5yxU9PEqeDiC3cq05kXuMYLGoWyytnvna/EcnXGBWzzNjkvzAYeXbyXlfvSnS//sKrB3iLufQHfp/it6CQ=
+X-Gm-Message-State: AOJu0YzDtEfK6nfwUj3puSCd+mpC0hHCLZ2cuU8I3JhlPDRIdd7askcA
+	8Odj6zg6/nUCAPJZDFdUUSWpiP2PDYMkFy8bIZEacOX5dAxPXpJq
+X-Google-Smtp-Source: AGHT+IEpGPBZdmTxxL9lDAtC+tf3WS6lK3QOjNLU9P/kh8HtQfqldD/Ks3PSn5Y+HC7kfzAkGlppsQ==
+X-Received: by 2002:a05:6a20:5659:b0:1a7:34c5:d141 with SMTP id is25-20020a056a20565900b001a734c5d141mr2909862pzc.24.1712931843931;
+        Fri, 12 Apr 2024 07:24:03 -0700 (PDT)
+Received: from localhost.localdomain ([113.30.217.222])
+        by smtp.gmail.com with ESMTPSA id n43-20020a056a000d6b00b006e5af565b1dsm2946952pfv.201.2024.04.12.07.24.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 07:24:03 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Johan Hovold <johan@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/5] usb: ohci-exynos: Use DEFINE_SIMPLE_DEV_PM_OPS for PM functions
+Date: Fri, 12 Apr 2024 19:52:53 +0530
+Message-ID: <20240412142317.5191-5-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240412142317.5191-1-linux.amoon@gmail.com>
+References: <20240412142317.5191-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Apr 2024 16:23:59 +0200
-Message-Id: <D0I7NRQQGOSJ.3JB82F1X4GIQM@fairphone.com>
-From: "Luca Weiss" <luca.weiss@fairphone.com>
-To: "Luca Weiss" <luca.weiss@fairphone.com>, "Marcel Holtmann"
- <marcel@holtmann.org>, "Johan Hedberg" <johan.hedberg@gmail.com>, "Luiz
- Augusto von Dentz" <luiz.dentz@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>
-Cc: <~postmarketos/upstreaming@lists.sr.ht>,
- <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <phone-devel@vger.kernel.org>
-Subject: Re: [PATCH] Bluetooth: Add more Bluetooth version defines
-X-Mailer: aerc 0.17.0
-References: <20240216-bluetooth-defines-v1-1-6c39aacc66a8@fairphone.com>
-In-Reply-To: <20240216-bluetooth-defines-v1-1-6c39aacc66a8@fairphone.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri Feb 16, 2024 at 2:22 PM CET, Luca Weiss wrote:
-> Add the various Bluetooth version identifiers found in the "Assigned
-> Numbers" document[0] from the Bluetooth SIG.
->
-> [0] https://www.bluetooth.com/specifications/assigned-numbers/
+This macro has the advantage over SIMPLE_DEV_PM_OPS that we don't have to
+care about when the functions are actually used.
 
-Hi all,
+Also make use of pm_ptr() to discard all PM related stuff if CONFIG_PM
+isn't enabled.
 
-Is there any interest in this patch? Would be nice to get at least a
-positive or negative reaction to it.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v3: fix using new DEFINE_SIMPLE_DEV_PM_OPS PM macro hence
+    change the $subject and the commit message
 
-Regards
-Luca
+v2: new file
+---
+ drivers/usb/host/ohci-exynos.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
->
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
-> To be clear, I don't have a use case for these extra defines myself but
-> some time ago when working on Bluetooth I came across this and thought
-> it would be interesting to have the list complete. No other motives.
-> ---
->  include/net/bluetooth/bluetooth.h | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/include/net/bluetooth/bluetooth.h b/include/net/bluetooth/bl=
-uetooth.h
-> index 7ffa8c192c3f..818eb142eda3 100644
-> --- a/include/net/bluetooth/bluetooth.h
-> +++ b/include/net/bluetooth/bluetooth.h
-> @@ -39,11 +39,20 @@
->  #endif
-> =20
->  /* Bluetooth versions */
-> +#define BLUETOOTH_VER_1_0B	0
->  #define BLUETOOTH_VER_1_1	1
->  #define BLUETOOTH_VER_1_2	2
->  #define BLUETOOTH_VER_2_0	3
->  #define BLUETOOTH_VER_2_1	4
-> +#define BLUETOOTH_VER_3_0	5
->  #define BLUETOOTH_VER_4_0	6
-> +#define BLUETOOTH_VER_4_1	7
-> +#define BLUETOOTH_VER_4_2	8
-> +#define BLUETOOTH_VER_5_0	9
-> +#define BLUETOOTH_VER_5_1	10
-> +#define BLUETOOTH_VER_5_2	11
-> +#define BLUETOOTH_VER_5_3	12
-> +#define BLUETOOTH_VER_5_4	13
-> =20
->  /* Reserv for core and drivers use */
->  #define BT_SKB_RESERVE	8
->
-> ---
-> base-commit: 841c35169323cd833294798e58b9bf63fa4fa1de
-> change-id: 20240216-bluetooth-defines-b810ce543191
->
-> Best regards,
+diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+index 89e6587c089b..3c4d68fd5c33 100644
+--- a/drivers/usb/host/ohci-exynos.c
++++ b/drivers/usb/host/ohci-exynos.c
+@@ -213,7 +213,6 @@ static void exynos_ohci_shutdown(struct platform_device *pdev)
+ 		hcd->driver->shutdown(hcd);
+ }
+ 
+-#ifdef CONFIG_PM
+ static int exynos_ohci_suspend(struct device *dev)
+ {
+ 	struct usb_hcd *hcd = dev_get_drvdata(dev);
+@@ -250,19 +249,13 @@ static int exynos_ohci_resume(struct device *dev)
+ 
+ 	return 0;
+ }
+-#else
+-#define exynos_ohci_suspend	NULL
+-#define exynos_ohci_resume	NULL
+-#endif
+ 
+ static const struct ohci_driver_overrides exynos_overrides __initconst = {
+ 	.extra_priv_size =	sizeof(struct exynos_ohci_hcd),
+ };
+ 
+-static const struct dev_pm_ops exynos_ohci_pm_ops = {
+-	.suspend	= exynos_ohci_suspend,
+-	.resume		= exynos_ohci_resume,
+-};
++static DEFINE_SIMPLE_DEV_PM_OPS(exynos_ohci_pm_ops,
++				exynos_ohci_suspend, exynos_ohci_resume);
+ 
+ #ifdef CONFIG_OF
+ static const struct of_device_id exynos_ohci_match[] = {
+@@ -278,7 +271,7 @@ static struct platform_driver exynos_ohci_driver = {
+ 	.shutdown	= exynos_ohci_shutdown,
+ 	.driver = {
+ 		.name	= "exynos-ohci",
+-		.pm	= &exynos_ohci_pm_ops,
++		.pm	= pm_ptr(&exynos_ohci_pm_ops),
+ 		.of_match_table	= of_match_ptr(exynos_ohci_match),
+ 	}
+ };
+-- 
+2.44.0
 
