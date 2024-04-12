@@ -1,242 +1,152 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C2A14E2F4
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CAC14E2ED
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946101; cv=none; b=ItjgsfUbkJ177kLbN3LBi5TJn6ATS0R8rtm0JfkPS64k+e/QCvZaaMsficFqitWx3DLE6RbLZBK6RDDM65ItXSisLL32AoCJVavWUVZuOUCE6XubKJkad2QEC3ADW8JJZ/2UFZaEq8qaju2liuNJNBQcEqDr9llI/HUeoDnXlB0=
+	t=1712946141; cv=none; b=JrrkHQSX97rrCRzjdqtdusqlpUtBlcFOI6liFmcEMzgm9Mt22LSeIADdvDqdG2QizvIj+FHjfJ97qGr2SJZZmhBbE324Lx2fZMKd9r5V0OkHGV3gXc3wj1fHzYVURPAMHNsaUoh+ooHM06GObAyjeMND8IRKIv77+/NM0KR1iOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946101; c=relaxed/simple;
-	bh=bJ51FuL6Co1Mvav9Tm57dra4xYpo9kkvA2sBvujP7t0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e3hVwAKVBeaakoB4NaCAdP83z3tdGxm2e+DPuOQVZY4ioKFP6DzjhH4GcZ7utHBWUBl9EmN/8xtFn6ljmfKzr++EOOOOMe1WY0Z3Do0IafS4B+JMnnZRs8G3C6fFwf/W8Z4cF1IkCTRKLnJKfEJZ+qXn2EmUfggBYvSzNeQ0FO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O8awwXEf; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712946141; c=relaxed/simple;
+	bh=3GwZHEj4k5rWl1wxWnzlMV8+5rajQDaKeZirl4b7xhM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fiFBvBho620I3E+4AYWmjvxP9pp1tEtLuwIZqk3ZJmbLVVnoBXbWzRMhgfW6XheizCj80b9r0dyu/K7PpAZxv1O4tgWKanZYRzqepvl5PsFVm6rQwDOeDCMMTjJUtfCYdtZD5ClzaJEDmim+Zde+8TyV8q3jhFOxiuKX2UTAN0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=O/zY5m5F; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O8awwXEf"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4dac3cbc8fdso421595e0c.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:21:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="O/zY5m5F"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so1096980b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:22:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712946099; x=1713550899; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GbDPWThQzRq9g92/UgIi+4fZJEEp+6vDg7Jtw60BICE=;
-        b=O8awwXEfFKatVuOOJbOKwmAPCgy+LQPACRLuhaGVTaqUuGX6bM/Wi+GNJtJJtUupZm
-         4ZCind3vtEUHnX23jRWEOSqzVYePv+6M0XS2p8wfWm9q2FsUedWW7Y71WqPonkTtD6XK
-         q6gvyF5RfOB0KSyz8rz6eTMXCq7NfpoHA7FGNhDjV2Ma26Q+zKfXEV5qDEGZLlJwllkU
-         Ayj7GJhkULgF2io3uYHEGxJQwNtf8ZLH/6cA9tF2Bhh7ag3M8WGNgXdYVob2uo1sY0V/
-         GpU5Q6zCWdRoQ93g2AXJ4kZ0GQPnjpm357tqqqn8A1XSVlgcjXA/yhj8ElJuwLmwwsqy
-         DuHw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712946140; x=1713550940; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wCHPnhyTcC9ocJWJcXngwPv4ks2H4M0UEeE7J2w7Lsc=;
+        b=O/zY5m5FP2CbA5DKvp1DxqyQU5vjyJIfhmYRAMR1srJ03P9LX+Cik8eWvtXS8cBXcg
+         j9SIKdGSk0waJ9EqWN9rkAish3Hzr8bYwlXGUpEM1Xy36eEcD7XEjv1n03jzXmzNLmsR
+         Xg9rHKeyWNqjVXFIwBCq0UdiroJYK9JioKBY64S/rKqPdTDcxLY7h7SQZZ+hogqfuFFr
+         c/epbC++2jkJbPVmhk05GyhF5PxkH0ksfIx1SEVnCQP2qDWxfdFzQa3Kh7n2yp9GZJtc
+         cDStlAGmtm/cYpOn0b08RUINTly1lpoKokjSWdkhjv0rcE0ZlpHsmjvx0OoArQWPXywW
+         FyZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712946099; x=1713550899;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GbDPWThQzRq9g92/UgIi+4fZJEEp+6vDg7Jtw60BICE=;
-        b=KXX9nSkXDbgNcjaC9SwxGprb4yQqLCpwztNIztrVuNqxyrtWxBIuEmp7Kvc60xOuvl
-         1pfT3gy9Ox6ejRN8sqQGmVzE6SUy6n+Nuegu00qRAaul77TJcNt9IuYsiaFYhF19AlWT
-         0FY+BGX80Xn5muX9ltlIukKdB3Swd44iYZN1gOJ3Yy4F5+ZCQ84bLTf0OrfCQxWbEqyt
-         nnamaxnluR8Jba8SDvnIz06f5zaVIXxtntDMg9V+tVynYnuaHdqsrHmV27S77WqH1qEq
-         YtpX/6YXW3qJmBLTyWguHMPXe/GtC/zMeLJStMjhTYuKXLxBvCR+hs8f5DgdSbvgEkyN
-         VxcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWFieNhaIwnZYN9E+WG4Wod+WV7bzsvrLqtTKeDIQLiFBjFzYCpIWWIew1npHHQ9P3TuFvTRe6MfVbqVwzIOzSJN2NJY/aQYmAQZ2w
-X-Gm-Message-State: AOJu0Yw7xVHQ6mZsrM8kkhEOGtxpAlnz5uikJKCy+BIiN3F4969oBuzw
-	57KJwq+F0t49P2AYESnadcTktFUi4nR6pMdHBbFpW/YduOFPiL+kO9jOm6G/1A/jyoaRyGDc64r
-	gN56XpgtrgLyZ/nguzSYajcRjUCfeMHX1effKFQ==
-X-Google-Smtp-Source: AGHT+IEWTmexC1lyQyj8nblvpkomiMU21LR4uV66KPXALKUABBi3nl59v1u5AmJSfB2te1zXvgt/nYHZOk79N3+wErE=
-X-Received: by 2002:a05:6122:91d:b0:4da:e6ee:5533 with SMTP id
- j29-20020a056122091d00b004dae6ee5533mr3632426vka.16.1712946098707; Fri, 12
- Apr 2024 11:21:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712946140; x=1713550940;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wCHPnhyTcC9ocJWJcXngwPv4ks2H4M0UEeE7J2w7Lsc=;
+        b=mZoW4RNNMM9Sb95t0VujvWw2f9pxsM3NciTkSAEUNrjDaj8nNr6Rw3rAoajGqL3qaX
+         r4pSsa/ZXoUv4XClJUKJB3mOedfRN6zz4KPui9liT3OjZrEHbTKwX5A6tzj2GjmaQvN1
+         clKc3wqOJWLxVtwoUMfe2DoK7OJkWDB0BM2t8bTLxwa1GRB9zSYWKg5IgqoZRrKxQdxK
+         QBqbJB2njlekNGaJLi/TV6MlHJK0ul8iRqVzvtQ5jZNAjZ14e3Eh1si1+py19yJX3IVR
+         p6MTSIvQK9/q8Qm6U4/3TC6RIxXBTBQ3ouWKXxn70hu7Q0Wvtt7PGTnst4dgf7PnaZSu
+         oJfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpTKB++pLKZGHNfJFz3EO1SCN2BUtC2zI63/h9PZmubcJFF0/FrIIOhgNuHXZOYwEjJxY1dzc/H3aIuLrZ3hBDI/yuY1BGExoxcZqG
+X-Gm-Message-State: AOJu0Yz1cb6JnQKMn750EIYcsEZ2dO+IPiEYvHWlYN2whHoyU5LwfVyd
+	lBZkuYBf5AJBd+1SsodPJdx/124fVnjalGSBpIgngtU+6e2sprBHIwLRUJqTTjM=
+X-Google-Smtp-Source: AGHT+IH3pC+f8pzqqXv0EovOv3q0ogIpnNxixUGOjWjSEXDo/maroqpNMt/5YXZL0hJP+QvlDJt4Ag==
+X-Received: by 2002:a05:6a20:3244:b0:1a7:59b5:4276 with SMTP id hm4-20020a056a20324400b001a759b54276mr3112304pzc.54.1712946139775;
+        Fri, 12 Apr 2024 11:22:19 -0700 (PDT)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id t21-20020aa78f95000000b006ed4aa9d48esm3179455pfs.212.2024.04.12.11.22.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 11:22:19 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:22:15 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Evan Green <evan@rivosinc.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 14/19] riscv: hwprobe: Disambiguate vector and
+ xtheadvector in hwprobe
+Message-ID: <Zhl717rsQ7XLBe2F@ghost>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-14-4af9815ec746@rivosinc.com>
+ <20240412-moonshine-acting-0df1a90b86d2@wendy>
+ <CALs-HsviR8E-sRvzz7pd5eVGb4+XsAdG1hhbZOPf+m3Cu4JP_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411095420.903937140@linuxfoundation.org>
-In-Reply-To: <20240411095420.903937140@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Apr 2024 23:51:27 +0530
-Message-ID: <CA+G9fYu-PyV0tgQyypQttEL-6k+jMVvVWVNAC9a=fu3VygJi5A@mail.gmail.com>
-Subject: Re: [PATCH 6.8 000/143] 6.8.6-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALs-HsviR8E-sRvzz7pd5eVGb4+XsAdG1hhbZOPf+m3Cu4JP_Q@mail.gmail.com>
 
-On Thu, 11 Apr 2024 at 15:37, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.8.6 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.8.6-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.8.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Apr 12, 2024 at 10:04:42AM -0700, Evan Green wrote:
+> On Fri, Apr 12, 2024 at 4:35 AM Conor Dooley <conor.dooley@microchip.com> wrote:
+> >
+> > On Thu, Apr 11, 2024 at 09:11:20PM -0700, Charlie Jenkins wrote:
+> > > Ensure that hwprobe does not flag "v" when xtheadvector is present.
+> > >
+> > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > ---
+> > >  arch/riscv/kernel/sys_hwprobe.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+> > > index 8cae41a502dd..e0a42c851511 100644
+> > > --- a/arch/riscv/kernel/sys_hwprobe.c
+> > > +++ b/arch/riscv/kernel/sys_hwprobe.c
+> > > @@ -69,7 +69,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+> > >       if (riscv_isa_extension_available(NULL, c))
+> > >               pair->value |= RISCV_HWPROBE_IMA_C;
+> > >
+> > > -     if (has_vector())
+> > > +     if (has_vector() && !riscv_has_vendor_extension_unlikely(RISCV_ISA_VENDOR_EXT_XTHEADVECTOR))
+> >
+> > Hmm, I think this is "dangerous". has_vector() is used across the kernel
+> > now in several places for the in-kernel vector. I don't think that
+> > has_vector() should return true for the T-Head stuff given that &
+> > has_vector() should represent the ratified spec. I'll have to think
+> > about this one and how nasty this makes any of the save/restore code
+> > etc.
+> 
+> Yeah, my nose crinkled here as well. If you're having to do a
+> vendorish thing in this generic spot, then others may too, suggesting
+> perhaps this isn't the cleanest way to go about it. Ideally extensions
+> are all additive, rather than subtractive, I guess?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+This was the "easiest" way to support this but I agree this is not
+ideal. The vector code is naturally coupled with having support for
+"v" and I wanted to leverage that. The other concern is all of the
+ifdefs for having V enabled. I can make all of those V or XTHEADVECTOR;
+that will increase the surface area of xtheadvector but it is probably
+the right(?) way to go.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+- Charlie
 
-## Build
-* kernel: 6.8.6-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-6.8.y
-* git commit: 1e41d76814ede65e1f73876f3316ea0f9e8aacdf
-* git describe: v6.8.5-144-g1e41d76814ed
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.8.y/build/v6.8.5=
--144-g1e41d76814ed
-
-## Test Regressions (compared to v6.8.4)
-
-## Metric Regressions (compared to v6.8.4)
-
-## Test Fixes (compared to v6.8.4)
-
-## Metric Fixes (compared to v6.8.4)
-
-## Test result summary
-total: 289169, pass: 251149, fail: 3767, skip: 33889, xfail: 364
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 129 total, 129 passed, 0 failed
-* arm64: 38 total, 38 passed, 0 failed
-* i386: 29 total, 29 passed, 0 failed
-* mips: 24 total, 24 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 34 total, 34 passed, 0 failed
-* riscv: 17 total, 17 passed, 0 failed
-* s390: 12 total, 12 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 33 total, 33 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-kvm
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-co[
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> 
+> 
+> >
+> > >               pair->value |= RISCV_HWPROBE_IMA_V;
+> > >
+> > >       /*
+> > > @@ -112,7 +112,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+> > >               EXT_KEY(ZACAS);
+> > >               EXT_KEY(ZICOND);
+> > >
+> > > -             if (has_vector()) {
+> > > +             if (has_vector() && !riscv_has_vendor_extension_unlikely(RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
+> > >                       EXT_KEY(ZVBB);
+> > >                       EXT_KEY(ZVBC);
+> > >                       EXT_KEY(ZVKB);
+> > >
+> > > --
+> > > 2.44.0
+> > >
