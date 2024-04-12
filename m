@@ -1,44 +1,83 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA96814EC60;
-	Fri, 12 Apr 2024 18:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D340714E2DA
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712947541; cv=none; b=vDj4yeVqd4SxaUbHs9D04Uonq90SQuHh9tWmdo+nTCUs6BJlPA11tNqun2RHOERYago39nCbVwlmUjyBSBQPOWt+c/RcTpghCdShnVqa51Dwlfpc9nE2d6oCyw3JzlQupuTc2Cx/7vQ+zYaRQEK5pZyxNIWvCaLItOppp25bmsU=
+	t=1712947588; cv=none; b=ptiJoMcw0iDemUP2qwT1anydYcEoR+TTVnCCBajEo8P6tmK08DAAp1oUMa3OLdIKHzOHLqzZqmsdj5C/Lu6vAQ9wyg0Q334kfDnjJoDodB3xZ0nZr46R9U5dc0He5GTrusTgSWip4fk362rYNwZi5xDl5FBgOImDxXEJMHIUQlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712947541; c=relaxed/simple;
-	bh=hM5Bar2U2SbNUBgeHwCsRu6FWTaanDGZpoF5JZ0mjKk=;
+	s=arc-20240116; t=1712947588; c=relaxed/simple;
+	bh=qKkswK18vpnSN345O9M11lS7tdby0F+ByaBIolhUUXA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUhYIuPvgYNXG1jOi1RqWOTo6pH/nFTaUxmODcEo3nFqmrd+/XyA/dPNSOD71Z5+h7SvAHq8SaZHtXwcU2CuzEgOJ0Ik9FFP3NBVGenzRAw0D57N84Xq49yW40OPuRSZeh4huBZu7c3NJis4FeivrSYRhrdTPntpLJeQ91YLfz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=gZSvfnsH; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HSVib03jPkJtzVqxSUp3Tw3T1FMtzXuEetXeHiIiqqhCjWERLWPExBu/Yyds1PZ7e1Wi+Qea87z41wCW3wGdJ3e9nVdITGb2JSmBbj9JalgYh/O6IWHoW79HfjMhyPeNXSgLTmHh81/fTc0fcrry4SjKymhTUyYoXwawnx2ofo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NJpSzMgO; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gZSvfnsH"
-Received: from pendragon.ideasonboard.com (85-76-65-73-nat.elisa-mobile.fi [85.76.65.73])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C9FB39D5;
-	Fri, 12 Apr 2024 20:44:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1712947494;
-	bh=hM5Bar2U2SbNUBgeHwCsRu6FWTaanDGZpoF5JZ0mjKk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gZSvfnsHkRha8KZvhjoj6aKwQyKzQUCTfrap+U1rbqUjUic+IgvdhBCrGVlKvdWIG
-	 BQec0NAZE0rEJgfAnQvhQaO9PdQekEsuuCM2yE0VKjv76frtKlpCJYUCAFHRjjMIEb
-	 VTuBPihgKryNFjXazlxVvGhOIEF5Awmmwhvh6+MU=
-Date: Fri, 12 Apr 2024 21:45:28 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/9] media: subdev: Refactor
- v4l2_subdev_enable/disable_streams()
-Message-ID: <20240412184528.GK31122@pendragon.ideasonboard.com>
-References: <20240410-enable-streams-impro-v3-0-e5e7a5da7420@ideasonboard.com>
- <20240410-enable-streams-impro-v3-8-e5e7a5da7420@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NJpSzMgO"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e5ebb30129so468575ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712947586; x=1713552386; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jhdmuDh97ehxPhYQBh/JW7pvCSTVsjtJJK5Y5QDdmM8=;
+        b=NJpSzMgO2NM1CljmTV21oKb+kmm/SZHqXiDfvfccELH/SOEs7LEzkEvsb+4qYM3vor
+         tc5dpUplGL0hrzgmIr6cUzgu7DdjlhvGYRQyEfpvK/vcY+xeEs+r0jrh+ZmxnKMaOjxP
+         fvXvex5wT0a35qa/W0E0GPNGAburVs8VktwlJEVe9eLVdgfZY+LiCLry4V4brkD864+t
+         PRGJZY4gr4U8Ts6AuCSOGFV/QXYQbLLn/Banboqtkf3tlq0m714BaV8l4e1Ya33IJCRs
+         XOR20todyiga2MsVgVNrnCm81n7gRgm5UfxM6em6f8b4uPm6nVO3Af9NST9YbXk6Wl4X
+         ivww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712947586; x=1713552386;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jhdmuDh97ehxPhYQBh/JW7pvCSTVsjtJJK5Y5QDdmM8=;
+        b=SSPxeux9JwE/RNM6QSMktdAWbtVwf526e2DoPpXneNsM7a6FekLkRV1pL7CSTxIFNe
+         PFxfsBapOKQ+A+hsMSM3iBwXH6CSidqWwlrGlLr8CIQH1EiYHA7/d6qLreQgbbdXWoEf
+         SpPAse2pXAT0aqMZoAO6uWZmMz4Li2CS/51XnaXgF1FchU764e0YGjYE/6G8VMSMM+9v
+         qe8bzn8lZ79ShhVGhoRrA48WKajhfW3EuBppoWz/wGQJ0YMe4CeVg6aElN6mqz4rk2aZ
+         bL3Pt0Z6rD31m2gTAtiqTKiLc1GF3lFQCq3XSTV8xjFXLZ+W3bb5eGGJisYEHJnGZMLS
+         8dkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWYtpRh07+dUJyYO/iHMDLhX1dWg8YKZIDIfm00oEVq0CipZW874IfC3kYKolsFwT0gdJH90Qnm0lF52H6DAMiByCtFDSzBsk8DTa68
+X-Gm-Message-State: AOJu0YxHqSvY9Hcvaw68DthUWIo0B41Y6iFBXwnhfWyfyThplfUJ2dsl
+	BJ4Zv2sKHNWSrruAYFX2TjjBXbr2a3S3XSazoPC+99kO7lTyRxF42n+JiFKNTF4=
+X-Google-Smtp-Source: AGHT+IFwxybYzCqREDQlA4G/991sEd0Qsau4lgiSO1q7Go2BFR9+aFqtd2m1c15qUgSnxQTpows9RQ==
+X-Received: by 2002:a17:903:8ce:b0:1e4:70d0:9333 with SMTP id lk14-20020a17090308ce00b001e470d09333mr4440423plb.9.1712947586221;
+        Fri, 12 Apr 2024 11:46:26 -0700 (PDT)
+Received: from ghost ([107.84.152.28])
+        by smtp.gmail.com with ESMTPSA id y2-20020a17090322c200b001e447bf336esm3300373plg.282.2024.04.12.11.46.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 11:46:25 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:46:21 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Evan Green <evan@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 02/19] riscv: cpufeature: Fix thead vector hwcap removal
+Message-ID: <ZhmBfaKXMMtolwSr@ghost>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-2-4af9815ec746@rivosinc.com>
+ <20240412-tuesday-resident-d9d07e75463c@wendy>
+ <CALs-HsuMZOMpDh8kwQx6FE2mawzt+qTD-WZ6Mvhrt+hUhkZimg@mail.gmail.com>
+ <20240412-employer-crier-c201704d22e3@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,210 +86,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240410-enable-streams-impro-v3-8-e5e7a5da7420@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240412-employer-crier-c201704d22e3@spud>
 
-Hi Tomi,
-
-Thank you for the patch.
-
-On Wed, Apr 10, 2024 at 03:35:55PM +0300, Tomi Valkeinen wrote:
-> Add two internal helper functions, v4l2_subdev_collect_streams() and
-> v4l2_subdev_set_streams_enabled(), which allows us to refactor
-> v4l2_subdev_enable/disable_streams() functions.
+On Fri, Apr 12, 2024 at 07:38:04PM +0100, Conor Dooley wrote:
+> On Fri, Apr 12, 2024 at 10:04:17AM -0700, Evan Green wrote:
+> > On Fri, Apr 12, 2024 at 3:26 AM Conor Dooley <conor.dooley@microchip.com> wrote:
+> > >
+> > > On Thu, Apr 11, 2024 at 09:11:08PM -0700, Charlie Jenkins wrote:
+> > > > The riscv_cpuinfo struct that contains mvendorid and marchid is not
+> > > > populated until all harts are booted which happens after the DT parsing.
+> > > > Use the vendorid/archid values from the DT if available or assume all
+> > > > harts have the same values as the boot hart as a fallback.
+> > > >
+> > > > Fixes: d82f32202e0d ("RISC-V: Ignore V from the riscv,isa DT property on older T-Head CPUs")
+> > >
+> > > If this is our only use case for getting the mvendorid/marchid stuff
+> > > from dt, then I don't think we should add it. None of the devicetrees
+> > > that the commit you're fixing here addresses will have these properties
+> > > and if they did have them, they'd then also be new enough to hopefully
+> > > not have "v" either - the issue is they're using whatever crap the
+> > > vendor shipped.
+> > > If we're gonna get the information from DT, we already have something
+> > > that we can look at to perform the disable as the cpu compatibles give
+> > > us enough information to make the decision.
+> > >
+> > > I also think that we could just cache the boot CPU's marchid/mvendorid,
+> > > since we already have to look at it in riscv_fill_cpu_mfr_info(), avoid
+> > > repeating these ecalls on all systems.
+> > >
+> > > Perhaps for now we could just look at the boot CPU alone? To my
+> > > knowledge the systems that this targets all have homogeneous
+> > > marchid/mvendorid values of 0x0.
+> > 
+> > It's possible I'm misinterpreting, but is the suggestion to apply the
+> > marchid/mvendorid we find on the boot CPU and assume it's the same on
+> > all other CPUs? Since we're reporting the marchid/mvendorid/mimpid to
+> > usermode in a per-hart way, it would be better IMO if we really do
+> > query marchid/mvendorid/mimpid on each hart. The problem with applying
+> > the boot CPU's value everywhere is if we're ever wrong in the future
+> > (ie that assumption doesn't hold on some machine), we'll only find out
+> > about it after the fact. Since we reported the wrong information to
+> > usermode via hwprobe, it'll be an ugly userspace ABI issue to clean
+> > up.
 > 
-> This (I think) makes the code a bit easier to read, and lets us more
-> easily add new functionality in the helper functions in the following
-> patch.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> You're misinterpreting, we do get the values on all individually as
+> they're brought online. This is only used by the code that throws a bone
+> to people with crappy vendor dtbs that put "v" in riscv,isa when they
+> support the unratified version.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Not quite, the alternatives are patched before the other cpus are
+booted, so the alternatives will have false positives resulting in
+broken kernels.
 
-> ---
->  drivers/media/v4l2-core/v4l2-subdev.c | 109 +++++++++++++++++++---------------
->  1 file changed, 60 insertions(+), 49 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index f44aaa4e1fab..0d376d72ecc7 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -2100,6 +2100,42 @@ int v4l2_subdev_routing_validate(struct v4l2_subdev *sd,
->  }
->  EXPORT_SYMBOL_GPL(v4l2_subdev_routing_validate);
->  
-> +static void v4l2_subdev_collect_streams(struct v4l2_subdev *sd,
-> +					struct v4l2_subdev_state *state,
-> +					u32 pad, u64 streams_mask,
-> +					u64 *found_streams,
-> +					u64 *enabled_streams)
-> +{
-> +	*found_streams = 0;
-> +	*enabled_streams = 0;
-> +
-> +	for (unsigned int i = 0; i < state->stream_configs.num_configs; ++i) {
-> +		const struct v4l2_subdev_stream_config *cfg =
-> +			&state->stream_configs.configs[i];
-> +
-> +		if (cfg->pad != pad || !(streams_mask & BIT_ULL(cfg->stream)))
-> +			continue;
-> +
-> +		*found_streams |= BIT_ULL(cfg->stream);
-> +		if (cfg->enabled)
-> +			*enabled_streams |= BIT_ULL(cfg->stream);
-> +	}
-> +}
-> +
-> +static void v4l2_subdev_set_streams_enabled(struct v4l2_subdev *sd,
-> +					    struct v4l2_subdev_state *state,
-> +					    u32 pad, u64 streams_mask,
-> +					    bool enabled)
-> +{
-> +	for (unsigned int i = 0; i < state->stream_configs.num_configs; ++i) {
-> +		struct v4l2_subdev_stream_config *cfg =
-> +			&state->stream_configs.configs[i];
-> +
-> +		if (cfg->pad == pad && (streams_mask & BIT_ULL(cfg->stream)))
-> +			cfg->enabled = enabled;
-> +	}
-> +}
-> +
->  static int v4l2_subdev_enable_streams_fallback(struct v4l2_subdev *sd, u32 pad,
->  					       u64 streams_mask)
->  {
-> @@ -2151,8 +2187,8 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->  	struct device *dev = sd->entity.graph_obj.mdev->dev;
->  	struct v4l2_subdev_state *state;
->  	bool already_streaming;
-> -	u64 found_streams = 0;
-> -	unsigned int i;
-> +	u64 enabled_streams;
-> +	u64 found_streams;
->  	int ret;
->  
->  	/* A few basic sanity checks first. */
-> @@ -2173,22 +2209,9 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->  	 * Verify that the requested streams exist and that they are not
->  	 * already enabled.
->  	 */
-> -	for (i = 0; i < state->stream_configs.num_configs; ++i) {
-> -		struct v4l2_subdev_stream_config *cfg =
-> -			&state->stream_configs.configs[i];
->  
-> -		if (cfg->pad != pad || !(streams_mask & BIT_ULL(cfg->stream)))
-> -			continue;
-> -
-> -		found_streams |= BIT_ULL(cfg->stream);
-> -
-> -		if (cfg->enabled) {
-> -			dev_dbg(dev, "stream %u already enabled on %s:%u\n",
-> -				cfg->stream, sd->entity.name, pad);
-> -			ret = -EALREADY;
-> -			goto done;
-> -		}
-> -	}
-> +	v4l2_subdev_collect_streams(sd, state, pad, streams_mask,
-> +				    &found_streams, &enabled_streams);
->  
->  	if (found_streams != streams_mask) {
->  		dev_dbg(dev, "streams 0x%llx not found on %s:%u\n",
-> @@ -2197,6 +2220,13 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->  		goto done;
->  	}
->  
-> +	if (enabled_streams) {
-> +		dev_dbg(dev, "streams 0x%llx already enabled on %s:%u\n",
-> +			enabled_streams, sd->entity.name, pad);
-> +		ret = -EINVAL;
-> +		goto done;
-> +	}
-> +
->  	dev_dbg(dev, "enable streams %u:%#llx\n", pad, streams_mask);
->  
->  	already_streaming = v4l2_subdev_is_streaming(sd);
-> @@ -2211,13 +2241,7 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
->  	}
->  
->  	/* Mark the streams as enabled. */
-> -	for (i = 0; i < state->stream_configs.num_configs; ++i) {
-> -		struct v4l2_subdev_stream_config *cfg =
-> -			&state->stream_configs.configs[i];
-> -
-> -		if (cfg->pad == pad && (streams_mask & BIT_ULL(cfg->stream)))
-> -			cfg->enabled = true;
-> -	}
-> +	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, true);
->  
->  	if (!already_streaming)
->  		v4l2_subdev_enable_privacy_led(sd);
-> @@ -2279,8 +2303,8 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->  {
->  	struct device *dev = sd->entity.graph_obj.mdev->dev;
->  	struct v4l2_subdev_state *state;
-> -	u64 found_streams = 0;
-> -	unsigned int i;
-> +	u64 enabled_streams;
-> +	u64 found_streams;
->  	int ret;
->  
->  	/* A few basic sanity checks first. */
-> @@ -2301,22 +2325,9 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->  	 * Verify that the requested streams exist and that they are not
->  	 * already disabled.
->  	 */
-> -	for (i = 0; i < state->stream_configs.num_configs; ++i) {
-> -		struct v4l2_subdev_stream_config *cfg =
-> -			&state->stream_configs.configs[i];
-> -
-> -		if (cfg->pad != pad || !(streams_mask & BIT_ULL(cfg->stream)))
-> -			continue;
->  
-> -		found_streams |= BIT_ULL(cfg->stream);
-> -
-> -		if (!cfg->enabled) {
-> -			dev_dbg(dev, "stream %u already disabled on %s:%u\n",
-> -				cfg->stream, sd->entity.name, pad);
-> -			ret = -EALREADY;
-> -			goto done;
-> -		}
-> -	}
-> +	v4l2_subdev_collect_streams(sd, state, pad, streams_mask,
-> +				    &found_streams, &enabled_streams);
->  
->  	if (found_streams != streams_mask) {
->  		dev_dbg(dev, "streams 0x%llx not found on %s:%u\n",
-> @@ -2325,6 +2336,13 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->  		goto done;
->  	}
->  
-> +	if (enabled_streams != streams_mask) {
-> +		dev_dbg(dev, "streams 0x%llx already disabled on %s:%u\n",
-> +			streams_mask & ~enabled_streams, sd->entity.name, pad);
-> +		ret = -EINVAL;
-> +		goto done;
-> +	}
-> +
->  	dev_dbg(dev, "disable streams %u:%#llx\n", pad, streams_mask);
->  
->  	/* Call the .disable_streams() operation. */
-> @@ -2336,14 +2354,7 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
->  		goto done;
->  	}
->  
-> -	/* Mark the streams as disabled. */
-> -	for (i = 0; i < state->stream_configs.num_configs; ++i) {
-> -		struct v4l2_subdev_stream_config *cfg =
-> -			&state->stream_configs.configs[i];
-> -
-> -		if (cfg->pad == pad && (streams_mask & BIT_ULL(cfg->stream)))
-> -			cfg->enabled = false;
-> -	}
-> +	v4l2_subdev_set_streams_enabled(sd, state, pad, streams_mask, false);
->  
->  done:
->  	if (!v4l2_subdev_is_streaming(sd))
-> 
+- Charlie
 
--- 
-Regards,
-
-Laurent Pinchart
