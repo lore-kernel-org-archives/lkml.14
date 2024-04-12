@@ -1,131 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58413148FFC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CE8148FFC;
+	Fri, 12 Apr 2024 16:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712939023; cv=none; b=RSYcec7ToVUJx5GnFGYL0AU0tgEAnt54pHM/zzAFz4eh25Tc8BdSKyt1kjyq5R28DE69kIwiuQpla6b5kQzsYSuKAs5GlpG7GHtfVM/2/vbCPRqSOyxMa6r/3cM+udz5Ze8X8g3Gt5AiXekbWFg1wUmrrW3PtenPY2sMywUPAkU=
+	t=1712939027; cv=none; b=OjS/UJXz3F++GkhKBP6cjhknQqzU4Ig/FIXBlXJrm+lOgdHyTwzQCHZQARLv3JswGVXdGcnXEsSC2tthqpUxMUDhs8RrYuZt3XqYid3CCCI/5CZkZnoklT8WYWcyNyXFfZyKam6+j1NkMwRnX7ARUOqu4H5Km8fSTem2Q71QLys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712939023; c=relaxed/simple;
-	bh=64X3LLbSaCOSlnkxg3lTMOHA/8UyVzC0UufYmcg9tF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rSsxg7yJ8w6QrGqglVMGRqt2LEJFBkU8YG+57y2duwtLkp3c8oR0rf0BIpHuw/X0sIlrPscJr+fnBLzs8xJX46lDjKArSKUhhtw3v//qYD7YypE09EZ0iOFmhiI7RKjnNfx3IcAi+bXKvKeSueCpcJXqBt5igbByM+zkU6UE3Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D940F339;
-	Fri, 12 Apr 2024 09:24:10 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E87CF3F64C;
-	Fri, 12 Apr 2024 09:23:38 -0700 (PDT)
-Date: Fri, 12 Apr 2024 17:23:36 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Babu Moger <Babu.Moger@amd.com>
-Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 29/31] fs/resctrl: Add boiler plate for external
- resctrl code
-Message-ID: <ZhlgCIhEqdTCS6pW@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-30-james.morse@arm.com>
- <fb4abe11-5859-4a53-a4db-bb4e59a571c6@intel.com>
- <ZhfzObobGI/p9ISP@e133380.arm.com>
- <23afb7ff-222f-40d0-a68e-3d7b0c3df55d@intel.com>
+	s=arc-20240116; t=1712939027; c=relaxed/simple;
+	bh=wsOqSTqzvpNvABZa14UFXjomfDxypv2G0d7b+onoYdc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g+ticZX7NnLWtUzpzMAbkwAgpPKI15Wh/vZrrmtqU/nSzM9VywCly/2pxwX7tyQJKWJDTnuPXWSfzUq6bfeMMGRbDgE1E7a2Uoa4WhxOGnEhCURPhZLLktUJNt4yhyPSdMQD0NCaExDSLDv13TFJJPE8KTa57cM8R8feyRcpPIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMK20zzMz6JB3G;
+	Sat, 13 Apr 2024 00:21:58 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 17E2E140595;
+	Sat, 13 Apr 2024 00:23:44 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:23:43 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 25/30] ARM: imx: Assign parents for mmdc event_source devices
+Date: Fri, 12 Apr 2024 17:10:52 +0100
+Message-ID: <20240412161057.14099-26-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23afb7ff-222f-40d0-a68e-3d7b0c3df55d@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Hi Babu,
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the platform device.
 
-[see below]
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ arch/arm/mach-imx/mmdc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, Apr 11, 2024 at 10:42:48AM -0700, Reinette Chatre wrote:
-> Hi Dave,
-> 
-> On 4/11/2024 7:27 AM, Dave Martin wrote:
-> > On Mon, Apr 08, 2024 at 08:41:04PM -0700, Reinette Chatre wrote:
-> >> Hi James,
-> >>
-> >> On 3/21/2024 9:51 AM, James Morse wrote:
-> >>> Add Makefile and Kconfig for fs/resctrl. Add ARCH_HAS_CPU_RESCTRL
-> >>> for the common parts of the resctrl interface and make X86_CPU_RESCTRL
-> >>> depend on this.
-> >>>
-> >>> Signed-off-by: James Morse <james.morse@arm.com>
+diff --git a/arch/arm/mach-imx/mmdc.c b/arch/arm/mach-imx/mmdc.c
+index 25893d109190..b68cb86dbe4c 100644
+--- a/arch/arm/mach-imx/mmdc.c
++++ b/arch/arm/mach-imx/mmdc.c
+@@ -437,6 +437,7 @@ static int mmdc_pmu_init(struct mmdc_pmu *pmu_mmdc,
+ {
+ 	*pmu_mmdc = (struct mmdc_pmu) {
+ 		.pmu = (struct pmu) {
++			.parent		= dev,
+ 			.task_ctx_nr    = perf_invalid_context,
+ 			.attr_groups    = attr_groups,
+ 			.event_init     = mmdc_pmu_event_init,
+-- 
+2.39.2
 
-[...]
-
-> >>> diff --git a/fs/resctrl/Kconfig b/fs/resctrl/Kconfig
-> >>> new file mode 100644
-> >>> index 000000000000..36a1ddbe6c21
-> >>> --- /dev/null
-> >>> +++ b/fs/resctrl/Kconfig
-> >>
-> >> Could you please review the contents of this file for
-> >> appropriate line length and consistent tab usage?
-> > 
-> > Noted.
-> > 
-> >>> @@ -0,0 +1,23 @@
-> >>> +config RESCTRL_FS
-> >>> +	bool "CPU Resource Control Filesystem (resctrl)"
-> >>> +	depends on ARCH_HAS_CPU_RESCTRL
-> >>> +	select KERNFS
-> >>> +	select PROC_CPU_RESCTRL               if PROC_FS
-> >>> +	help
-> >>> +	  Resctrl is a filesystem interface
-> >>> +	  to control allocation and
-> >>> +	  monitoring of system resources
-> >>> +	  used by the CPUs.
-> > 
-> > (Not quite a haiku, but I don't know how many syllables "resctrl"
-> > counts as...)
-> > 
-> > Since this is the Kconfig user's primary knob for enabling resctrl,
-> > maybe flesh this out and make it a bit more generic and newbie-friendly?
-> > Something like:
-> > 
-> > 	  Some architectures provide hardware facilities to group tasks and
-> > 	  monitor and control their usage of memory system resources such as
-> > 	  caches and memory bandwidth.  Examples of such facilities include
-> > 	  Intel's Resource Director Technology (Intel(R) RDT) and AMD's
-> > 	  Platform Quality of Service (AMD QoS).
-> 
-> Nit: We should double check with AMD how they want to refer to their
-> feature. Their contribution to the resctrl docs used the term you provide
-> but their spec uses PQOS.
-
-Babu, do you have a view on this?
-
-Initially I just pasted this across from the existing text in
-resctrl.rst and arch/x86/Kconfig.
-
-Looking at the AMD's spec though, I'd probably follow Reinette's
-suggestion and go for:
-
-	[...] AMD's Platform Quality of Service (PQOS)
-
-but I'm happy to take your recommendation if you think AMD would prefer
-different text here.
-
-Cheers
----Dave
