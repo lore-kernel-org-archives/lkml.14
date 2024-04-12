@@ -1,223 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFD983CB4;
-	Fri, 12 Apr 2024 13:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE79823DD;
+	Fri, 12 Apr 2024 13:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927904; cv=none; b=MXEsuIpBIubHQ0ZiJMmEFdsv3ctnd2m0+oVyCXXA0bMHYemnZUcvKq+pNgMVFGxJGP4J38OOOxd64jwVS7scf1K711PBsWqD4MdxQe4Fy/S+v/S1OMSzzxN3Ygp47pMwWD3zI72q4JErBH9HCt6kXhL1g5eov+1wrUj2IGhRddI=
+	t=1712927920; cv=none; b=W1O/7Gaoi9ga5uAJDytiTAkei+EeSs7Q7jc34ocvJy279iV2v/wDiL5AmExPQ0dTxhT2UkTR5Sc87Tw9Om3RN6PUad/+CZMAFtcHwPUqsB1OnAHPyCm6mRjWMF/N2N/uFnDAPsiBD97DOzZQW8muvi3z3v1YIrlybWr4yMyS/Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927904; c=relaxed/simple;
-	bh=J01T7vOWuk8XunIDkQev0J/k4GnQzoItYVn62qH2i+s=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YXxuhCPjWGfAKaRJbsD52XzZTVRSgwYwz5QNKlh1sW+U2ivb6091CfHwT1kiGHcHuF8JDuxrG4/7zhXFxoCqNtKiLQvzzfWrT/gBbmAlxO05s0g8aqgWzyzjjSCjfkPGkxuAdFdN1d8peT29deTGx1mdZ91z8wUTqfm1rbou0eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U72mNorB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712927920; c=relaxed/simple;
+	bh=Z9Zr9qGhk68dFbUMGN1jDdvvnvltbx0+U2tX4dpQlec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhC93k8WkMPojCaYQDGNAb4ZkLPsvCBuiv5KEJhS4mM/v7IVJqRCneScDS1UbJn4wFUUiaRfyrk5TiZ7s1CazTs3KueKG5MiWY429hi1VBL/D+mcCz1l0mnYitiUQoTrXvVnvjSZLawZUBKrcpu7SgD15Q2HYKlJYJcriLtJ3vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SKfQHbSX; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U72mNorB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8987EC3277B;
-	Fri, 12 Apr 2024 13:18:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712927904;
-	bh=J01T7vOWuk8XunIDkQev0J/k4GnQzoItYVn62qH2i+s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U72mNorBevIjAj4KEOavz2dshROeP0/LR8A52mqoUoaog5QW9JWkvxIFWautH53Xu
-	 VdfdnxRJ/LPSAaFbfJ+TdwqTTEOg/SGu90rH4RWLTS3lYnI0V0YmXW5VWusdgIs9YQ
-	 hn/Bhi8ZEFf3iEj2ka3I8FzoWh5b6ZAq8MVpu2UyvVF18heACsb82Sv3MvZGzyF/Rs
-	 9DIjtiuZz6lhyAS9YkiQWZ03r8O2ZE7inCdcl2vU6KVs9XkFYeyVk8xquya/Cfie3Y
-	 fVd6xnWsClrlY9uibqR8mmES+/GgI4O5J67Ave7kY/uPX2bnUPT1+sxPQ91X3dbcWZ
-	 WPC8EU8ZJ+dhQ==
-Date: Fri, 12 Apr 2024 22:18:20 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: qiang4.zhang@linux.intel.com
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Qiang Zhang <qiang4.zhang@intel.com>,
- Stable@vger.kernel.org
-Subject: Re: [PATCH v2] bootconfig: use memblock_free_late to free xbc
- memory to buddy
-Message-Id: <20240412221820.852abeb57feceec893ca0dad@kernel.org>
-In-Reply-To: <20240412104940.456257-1-qiang4.zhang@linux.intel.com>
-References: <20240412104940.456257-1-qiang4.zhang@linux.intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKfQHbSX"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6964b1c529cso6382986d6.0;
+        Fri, 12 Apr 2024 06:18:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712927918; x=1713532718; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rSNuM2Kf5MYQqfZJieIp/X2StUo6oV+qQVXx+kHA/pw=;
+        b=SKfQHbSXdgVHzabpe54wcNaifsvR/IUR1CUQwVLiW2vupZSLvhZW9EF5KwgU3peh1y
+         AoSJQ9OdYR19JWKxMtKr8Xys+btn44xh40AFMcSFRG6e/L9Tb29snWD510g6euhoQMkG
+         VacTNHcbVl0kkK5B+US66ByN37/SlKfuOHzokruY1zBABXnBB4geUOtwgs3Rh6uVBH5a
+         iFhdcqauJYDke6Ndg1Xgcslhkf4RWYsUwlmilOBI0tyvdcyVy7zUjj8z6Iih8kyUrq42
+         wInI3foYX7Gf90w1gnHpJsyxdwNNosVYPG4LUwsO/72CFLC8KuYXR/gH91Q6s53l9LDO
+         SnbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712927918; x=1713532718;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rSNuM2Kf5MYQqfZJieIp/X2StUo6oV+qQVXx+kHA/pw=;
+        b=dsXYQSATmNliqB49SFrH3daKQc7jIkMyRBNLedirD/l4MJ23jer4mognO7Z9RtQUOE
+         R/87CRuRuNdVsZEoiVAWiUlmQKoAYG4FS98V75jG0dRpGpWnrw8qt353Cj/B9LHCI6rC
+         xljV9bD6T2XT3xnKSsG9oRA19f2WlA4QYiMOzHJLbyiJtFF7NN6Hc27K5Yxz82ypA1i5
+         X9TkEcyFBasm91YxLeX0Quu8V3bMZmpSNcsQsHj9tjd6o01zM0PpZnnRavcpWX4yTBf9
+         FuELpJ8p7xuDmHTR153kb3NME4BUyUfnYCj1BkJVdi/UAd5ega6IDaqC8kbB5YuyJRVo
+         fQGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXamTo9cvYOT0GIrydOnMjZ1+jbGWnu8/c/vpagO+xm6Ypq6aYmPntwMebpvRPGgFdmPnjY11KQdwW1Wr2ySUlIfl+PYKeIcmf+7Zx7AcRR+OWUn7wUms4WiiEIJW3ycuNRTMxFKw902NDz7l4=
+X-Gm-Message-State: AOJu0Yym0x0za5JEMiEqpC690v3szwhLUG4VYln7fqf+nqwnu8Hh5hV8
+	GE3oa1fENDVnPv2U0DFyA7s78ybga8NQ8xxznUoa/4eceDwIkjH9
+X-Google-Smtp-Source: AGHT+IHZ/eq/CxIM+mg36xmxu8syXIoS3NwfCHd6hxjId2jrSd92vjK0q6Ytk+uO46AGtE233+1LZw==
+X-Received: by 2002:a05:6214:3211:b0:69b:54b2:1add with SMTP id qj17-20020a056214321100b0069b54b21addmr3569891qvb.50.1712927918431;
+        Fri, 12 Apr 2024 06:18:38 -0700 (PDT)
+Received: from fauth1-smtp.messagingengine.com (fauth1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id f15-20020a0cc30f000000b0069b114bcb2esm2311628qvi.46.2024.04.12.06.18.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 06:18:37 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfauth.nyi.internal (Postfix) with ESMTP id 47B5B1200043;
+	Fri, 12 Apr 2024 09:18:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 12 Apr 2024 09:18:37 -0400
+X-ME-Sender: <xms:rTQZZqur1yTLEbv6tcy8wGRvSiwvVf5StIWvInqW60lycuBw7-POUw>
+    <xme:rTQZZvfVqUen-Fdv5_qZqYhbajdVLPg5X-px0L96lj7eE56S2Hac5Ggew_y5ADrpu
+    UgD35g3_ARGdT4SMQ>
+X-ME-Received: <xmr:rTQZZlxcoILYCcbzV-JJHgWvU7USw1xspDSJkOq0IBdxHMmq1Pp7lGwZoQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiuddgieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhepvefghfeuveekudetgfevudeuudejfeeltdfhgfehgeekkeeigfdukefh
+    gfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:rTQZZlNn9eIAtGI0gvvrkQNUgg3MvYnUMSqyVkAq9olblASxyDIsHg>
+    <xmx:rTQZZq9UGZSc529Jm5gC8ZjXz_2jDapllLbMjv6egivKcOg_SR0KkQ>
+    <xmx:rTQZZtXkGCUFIICrqVXm7pbMJAudvJjMUK5XjCX6ESFw-SLSMGHdKA>
+    <xmx:rTQZZjdeKkZLElPxs02S1d64-91el3XxZWvgPtlr3nJhsGLML--a-g>
+    <xmx:rTQZZkdUFIbfqP2OAp22bPdl1zEpEtjIVCGU8czGP81upjNDcis_NWFF>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 12 Apr 2024 09:18:36 -0400 (EDT)
+Date: Fri, 12 Apr 2024 06:18:35 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Miguel Ojeda <ojeda@kernel.org>,
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Gary Guo <gary@garyguo.net>, bjorn3_gh@protonmail.com,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
+Message-ID: <Zhk0q-0eM4z5JHqn@Boquns-Mac-mini.home>
+References: <20240411230801.1504496-1-boqun.feng@gmail.com>
+ <20240411230801.1504496-3-boqun.feng@gmail.com>
+ <CAH5fLgg0CkZO9KF58boui6Y5ajpXHuGh0OxyNru2aEG5pNObwQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgg0CkZO9KF58boui6Y5ajpXHuGh0OxyNru2aEG5pNObwQ@mail.gmail.com>
 
-On Fri, 12 Apr 2024 18:49:41 +0800
-qiang4.zhang@linux.intel.com wrote:
-
-> From: Qiang Zhang <qiang4.zhang@intel.com>
+On Fri, Apr 12, 2024 at 10:36:05AM +0200, Alice Ryhl wrote:
+> On Fri, Apr 12, 2024 at 1:08 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > Currently since Rust code is compiled with "-Coverflow-checks=y", so a
+> > normal substraction may be compiled as an overflow checking and panic
+> > if overflow happens:
+> >
+> >         subq    %rsi, %rdi
+> >         jo      .LBB0_2
+> >         movq    %rdi, %rax
+> >         retq
+> > .LBB0_2:
+> >         pushq   %rax
+> >         leaq    str.0(%rip), %rdi
+> >         leaq    .L__unnamed_1(%rip), %rdx
+> >         movl    $33, %esi
+> >         callq   *core::panicking::panic::h59297120e85ea178@GOTPCREL(%rip)
+> >
+> > although overflow detection is nice to have, however this makes
+> > `Ktime::sub()` behave differently than `ktime_sub()`, moreover it's not
+> > clear that the overflow checking is helpful, since for example, the
+> > current binder usage[1] doesn't have the checking.
 > 
-> On the time to free xbc memory in xbc_exit(), memblock may has handed
-> over memory to buddy allocator. So it doesn't make sense to free memory
-> back to memblock. memblock_free() called by xbc_exit() even causes UAF bugs
-> on architectures with CONFIG_ARCH_KEEP_MEMBLOCK disabled like x86.
-> Following KASAN logs shows this case.
-> 
-> This patch fixes the xbc memory free problem by calling memblock_free()
-> in early xbc init error rewind path and calling memblock_free_late() in
-> xbc exit path to free memory to buddy allocator.
-> 
-> [    9.410890] ==================================================================
-> [    9.418962] BUG: KASAN: use-after-free in memblock_isolate_range+0x12d/0x260
-> [    9.426850] Read of size 8 at addr ffff88845dd30000 by task swapper/0/1
-> 
-> [    9.435901] CPU: 9 PID: 1 Comm: swapper/0 Tainted: G     U             6.9.0-rc3-00208-g586b5dfb51b9 #5
-> [    9.446403] Hardware name: Intel Corporation RPLP LP5 (CPU:RaptorLake)/RPLP LP5 (ID:13), BIOS IRPPN02.01.01.00.00.19.015.D-00000000 Dec 28 2023
-> [    9.460789] Call Trace:
-> [    9.463518]  <TASK>
-> [    9.465859]  dump_stack_lvl+0x53/0x70
-> [    9.469949]  print_report+0xce/0x610
-> [    9.473944]  ? __virt_addr_valid+0xf5/0x1b0
-> [    9.478619]  ? memblock_isolate_range+0x12d/0x260
-> [    9.483877]  kasan_report+0xc6/0x100
-> [    9.487870]  ? memblock_isolate_range+0x12d/0x260
-> [    9.493125]  memblock_isolate_range+0x12d/0x260
-> [    9.498187]  memblock_phys_free+0xb4/0x160
-> [    9.502762]  ? __pfx_memblock_phys_free+0x10/0x10
-> [    9.508021]  ? mutex_unlock+0x7e/0xd0
-> [    9.512111]  ? __pfx_mutex_unlock+0x10/0x10
-> [    9.516786]  ? kernel_init_freeable+0x2d4/0x430
-> [    9.521850]  ? __pfx_kernel_init+0x10/0x10
-> [    9.526426]  xbc_exit+0x17/0x70
-> [    9.529935]  kernel_init+0x38/0x1e0
-> [    9.533829]  ? _raw_spin_unlock_irq+0xd/0x30
-> [    9.538601]  ret_from_fork+0x2c/0x50
-> [    9.542596]  ? __pfx_kernel_init+0x10/0x10
-> [    9.547170]  ret_from_fork_asm+0x1a/0x30
-> [    9.551552]  </TASK>
-> 
-> [    9.555649] The buggy address belongs to the physical page:
-> [    9.561875] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x45dd30
-> [    9.570821] flags: 0x200000000000000(node=0|zone=2)
-> [    9.576271] page_type: 0xffffffff()
-> [    9.580167] raw: 0200000000000000 ffffea0011774c48 ffffea0012ba1848 0000000000000000
-> [    9.588823] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-> [    9.597476] page dumped because: kasan: bad access detected
-> 
-> [    9.605362] Memory state around the buggy address:
-> [    9.610714]  ffff88845dd2ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [    9.618786]  ffff88845dd2ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> [    9.626857] >ffff88845dd30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.634930]                    ^
-> [    9.638534]  ffff88845dd30080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.646605]  ffff88845dd30100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> [    9.654675] ==================================================================
-> 
-> Cc: Stable@vger.kernel.org
-> Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
+> I don't think this is a good idea at all. Any code that triggers an
+> overflow in Ktime::sub is wrong, and anyone who enables
+> CONFIG_RUST_OVERFLOW_CHECKS does so because they want such bugs to be
+> caught. You may have been able to find one example of a subtraction
+> that doesn't have a risk of overflow, but overflow bugs really do
 
-Looks good to me.
+The point is you won't panic the kernel because of an overflow. I
+agree that overflow is something we want to catch, but currently
+ktime_t doesn't panic if overflow happens.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Regards,
+Boqun
 
-Also,
-
-Fixes: 40caa127f3c7 ("init: bootconfig: Remove all bootconfig data when the init memory is removed")
-
-Let me pick this for bootconfig/fixes.
-
-Thanks!
-
-> ---
-> v2:
-> - add an early flag in xbc_free_mem() to free memory back to memblock in
->   xbc_init error path or put memory to buddy allocator in normal xbc_exit.
+> happen in the real world. I have seen real examples of bugs in Rust
+> code, where overflow checks were the reason the bug was not a security
+> vulnerability.
 > 
-> ---
->  include/linux/bootconfig.h |  7 ++++++-
->  lib/bootconfig.c           | 19 +++++++++++--------
->  2 files changed, 17 insertions(+), 9 deletions(-)
+> > Therefore make `Ktime::sub()` have the same semantics as `ktime_sub()`:
+> > overflow behaves like 2s-complement wrapping sub.
 > 
-> diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-> index e5ee2c694401..3f4b4ac527ca 100644
-> --- a/include/linux/bootconfig.h
-> +++ b/include/linux/bootconfig.h
-> @@ -288,7 +288,12 @@ int __init xbc_init(const char *buf, size_t size, const char **emsg, int *epos);
->  int __init xbc_get_info(int *node_size, size_t *data_size);
->  
->  /* XBC cleanup data structures */
-> -void __init xbc_exit(void);
-> +void __init _xbc_exit(bool early);
-> +
-> +static inline void xbc_exit(void)
-> +{
-> +	_xbc_exit(false);
-> +}
->  
->  /* XBC embedded bootconfig data in kernel */
->  #ifdef CONFIG_BOOT_CONFIG_EMBED
-> diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-> index c59d26068a64..f9a45adc6307 100644
-> --- a/lib/bootconfig.c
-> +++ b/lib/bootconfig.c
-> @@ -61,9 +61,12 @@ static inline void * __init xbc_alloc_mem(size_t size)
->  	return memblock_alloc(size, SMP_CACHE_BYTES);
->  }
->  
-> -static inline void __init xbc_free_mem(void *addr, size_t size)
-> +static inline void __init xbc_free_mem(void *addr, size_t size, bool early)
->  {
-> -	memblock_free(addr, size);
-> +	if (early)
-> +		memblock_free(addr, size);
-> +	else
-> +		memblock_free_late(__pa(addr), size);
->  }
->  
->  #else /* !__KERNEL__ */
-> @@ -73,7 +76,7 @@ static inline void *xbc_alloc_mem(size_t size)
->  	return malloc(size);
->  }
->  
-> -static inline void xbc_free_mem(void *addr, size_t size)
-> +static inline void xbc_free_mem(void *addr, size_t size, bool early)
->  {
->  	free(addr);
->  }
-> @@ -904,13 +907,13 @@ static int __init xbc_parse_tree(void)
->   * If you need to reuse xbc_init() with new boot config, you can
->   * use this.
->   */
-> -void __init xbc_exit(void)
-> +void __init _xbc_exit(bool early)
->  {
-> -	xbc_free_mem(xbc_data, xbc_data_size);
-> +	xbc_free_mem(xbc_data, xbc_data_size, early);
->  	xbc_data = NULL;
->  	xbc_data_size = 0;
->  	xbc_node_num = 0;
-> -	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX);
-> +	xbc_free_mem(xbc_nodes, sizeof(struct xbc_node) * XBC_NODE_MAX, early);
->  	xbc_nodes = NULL;
->  	brace_index = 0;
->  }
-> @@ -963,7 +966,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
->  	if (!xbc_nodes) {
->  		if (emsg)
->  			*emsg = "Failed to allocate bootconfig nodes";
-> -		xbc_exit();
-> +		_xbc_exit(true);
->  		return -ENOMEM;
->  	}
->  	memset(xbc_nodes, 0, sizeof(struct xbc_node) * XBC_NODE_MAX);
-> @@ -977,7 +980,7 @@ int __init xbc_init(const char *data, size_t size, const char **emsg, int *epos)
->  			*epos = xbc_err_pos;
->  		if (emsg)
->  			*emsg = xbc_err_msg;
-> -		xbc_exit();
-> +		_xbc_exit(true);
->  	} else
->  		ret = xbc_node_num;
->  
-> -- 
-> 2.39.2
+> From Miguel's reply, it sounds like 2s-complement wrapping is not even
+> the semantics of ktime_sub. The semantics are just UB.
 > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Alice
