@@ -1,150 +1,62 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB0813FF5;
-	Fri, 12 Apr 2024 02:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8660310A24;
+	Fri, 12 Apr 2024 02:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712890232; cv=none; b=J62YGn7Q1/fKyCHdBOnLgkFHyBdNr6A2EsaohWW4teAFD8Rm6mzbONE/stBu7I7QC388/yByAW+zm4hQ+7Z8TmuYxwFM9eo6VLGkDVTYJtx8eKp129UE2nXpmL7B+pv2L/ywTfhY2K9G0SEJbyj9T/+lMyTP095CZVaR+rh1hWM=
+	t=1712890291; cv=none; b=cTdtLjies0HM1o7W065hzqwRNAroa9E8ighN8tL6rMw9r77tfdF4eON+fOLaWO1JyXdvpfm8ST9ccZwWjsr0EBVoB84pugvzT8npX/vwKFLf7eqjZ+BeWhYmK7GYcZ2h9s/D3lqXoHABJvNrxOQFfAJnR0uE4VmS3geQs2tIdyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712890232; c=relaxed/simple;
-	bh=uT0MEC7EsVltlC/jI3B38b+8TYJHjBlK30NRBhrExfE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VVsTbpAzxnkuwBkmGDajdTZTbqBKzJYps2auvGDFWrsmoWh9FO8Owzk5jGtc9PCioEQ03yo8hEjUgFgFY5GP7cEWlE46lCwgiwRM+a/d9idTjn76DwHlj5xnAvxf9P8kAyGPjMl60cvSbfuFA8xsFHLaXNlf+AgU6rdGmxv2NfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M/9N66lN; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712890291; c=relaxed/simple;
+	bh=JLSsFNuTS/XXGmjbgOU7MixG+Yt1/H2zmieyO7GGxMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vba3NiOkNuzxsOrp1MRPPtGHfNeHdfEcjsQctn/gRV+jjcFdj/4Xme3jf3de7VC43TnHvLnVDGalG+CNU9u30M/2S4QPoDBppFOQKuRDC1gPwmwLsENoA3mdmmSWoFrtugc0jaiRlWXv8n7ALFslfDYSbJXtalVm8ZLuLNkOTVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR1JybLc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/9N66lN"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-36a1e9b94d4so2478095ab.1;
-        Thu, 11 Apr 2024 19:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712890230; x=1713495030; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pOdfCpl4d+sWw38XgvsjR5TOxV8nbr5ndLofzmhVJmc=;
-        b=M/9N66lNJY0FEiJewtGPwbVVetKjAr45SKnGBj4YHU3QPemn4HVO+cKGxC2QHjtSqz
-         DwBMnt1eAztCOe+grt4fIEID/B6DymraXyYFiIgGGijCa8jWfYdqPbClMxL9Ci8kNdg8
-         yXl/MHxQbwxTWqvxYit7kaKxZQpCUmWPAzzZuKGYervZJjdaiucF0SwzqkqmuW2A/8Ri
-         GbyIFD95piVaKTuuDVIm4nNIevGnPgT9n48fRQJwLoMslIUtkpTPIAkJnV7rPWccijKW
-         Z+LKSkgxL0Hthd0uhWK6H15s1Zq1MJs7KKFJI+Y6uPj6VG5P4mtrFQ9ITErV1PLob+WP
-         bsDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712890230; x=1713495030;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pOdfCpl4d+sWw38XgvsjR5TOxV8nbr5ndLofzmhVJmc=;
-        b=iTetSTtKu2gJoSrmH7xMTxCXH9zYivdhW9X7jzrklyij4tvU/wcDDbXkThIIH8hs1T
-         qrqQRu1BqLHS67P4gbGnEHaLt+4IVvZ3tyuiXvLAD0FauObqVbhglH0q8999zRlKpebq
-         XdY71BIvCNVMOOn+f2R6M/E4X52ml/9HrgO4TBTG+NLYOfGmKlIw4FtAoaIiS3kdAy1D
-         au+IS3cHIqZ1IQXIaAv58mQJ3murI0d3YdFf8hHsnaJDXJHb1uJ3wA+rrsxpJlMzRLW/
-         YDAsZyyKMk/0FGtjm8TLGzPS/fqeh0bbnxjbNtIZQD3o6IV3es1ofJUm6L+7RARlCtty
-         FDeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ4Pqd/pudaWwQwt7yeKzottbAZJNK+UPlFtCZ1puzD71/E0tZUZAhU5RINewFwB0umijOOd+C9DWE/VY4Tf59ynoRVAAZdulJ71lBcV2tRKC1c/NyCYYaNoRc8gy4F/FsWwGkHitf
-X-Gm-Message-State: AOJu0YzSSSnb88efNHeCTuogNZ6Hn/WxzIpOmUESZrz2lOUyXcsM3REl
-	fSOHqi7GkKYS3fBZYkRd3hfcgIohAVJJDaajsYHhwor2EblEnB4j
-X-Google-Smtp-Source: AGHT+IH+DcJ9qpHvdWnkfvBEQP13FTRtBpQdTrRUVXdq8MnpDDWWS0XFrK+rjzEvNKd91cNj3eGPjg==
-X-Received: by 2002:a05:6e02:1d0d:b0:36a:92dc:a390 with SMTP id i13-20020a056e021d0d00b0036a92dca390mr1458841ila.4.1712890229935;
-        Thu, 11 Apr 2024 19:50:29 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id w9-20020a63f509000000b005b458aa0541sm1759527pgh.15.2024.04.11.19.50.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 19:50:29 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 7CE7F1871EBED; Fri, 12 Apr 2024 09:50:26 +0700 (WIB)
-Date: Fri, 12 Apr 2024 09:50:26 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Zhang Qiao <zhangqiao22@huawei.com>, corbet@lwn.net
-Cc: mingo@kernel.org, chrubis@suse.cz, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] sched/Documentation: Add RT_RUNTIME_SHARE documentation
-Message-ID: <Zhihch_S1_-1JhwK@archie.me>
-References: <20240131123238.2332064-1-zhangqiao22@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR1JybLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CC69C072AA;
+	Fri, 12 Apr 2024 02:51:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712890291;
+	bh=JLSsFNuTS/XXGmjbgOU7MixG+Yt1/H2zmieyO7GGxMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DR1JybLcJI6E78CFpFQm2BDyx0OIXKm6fZPwjr/Nyu6Md+FqcBBemwL02ZZXqNM8+
+	 vgpDDW0pNaRRuMvuACSYt8A6NM+INoBUuZ3drApLMfJIY95lUdTzao7+ILFfmlA8IF
+	 dcLhGhwlkl4V9Cq6Cbya2+JdL0DaUQw7aL64oo24elKNDw43JvJC5a5fYz01EQpzut
+	 uouWdN0wfAYtRo8rUPxa8J420UVZFiaMeVn2hBZQ2HIybPqRsOH1WrvUhosiZ7oiXc
+	 cS69wqM+hR8W18Sm+FyH4irMAw+0I7ztNyXe/oC/ljPD45+/68E6LERrwJtyWnTiky
+	 gssoMX5k6Y5cw==
+Date: Thu, 11 Apr 2024 19:51:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+Cc: davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, Jarkko Palviainen
+ <jarkko.palviainen@gmail.com>
+Subject: Re: [PATCH] net: usb: ax88179_178a: avoid writing the mac address
+ before first reading
+Message-ID: <20240411195129.69ff2bac@kernel.org>
+In-Reply-To: <20240410095603.502566-1-jtornosm@redhat.com>
+References: <20240410095603.502566-1-jtornosm@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pta05BleG83gC9lZ"
-Content-Disposition: inline
-In-Reply-To: <20240131123238.2332064-1-zhangqiao22@huawei.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Wed, 10 Apr 2024 11:55:49 +0200 Jose Ignacio Tornos Martinez wrote:
+> After the commit d2689b6a86b9 ("net: usb: ax88179_178a: avoid two
+> consecutive device resets"), reset operation, in which the default mac
+> address from the device is read, is not executed from bind operation and
+> the random address, that is pregenerated just in case, is direclty written
+> the first time in the device, so the default one from the device is not
+> even read. This writing is not dangerous because is volatile and the
+> default mac address is not missed.
 
---pta05BleG83gC9lZ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+AFAICT the reset is synchronous to resume, right?
 
-On Wed, Jan 31, 2024 at 08:32:38PM +0800, Zhang Qiao wrote:
-> +2.4 RT_RUNTIME_SHARE sched feature
-> +----------------------------
-
-htmldocs build reports new warning:
-
-Documentation/scheduler/sched-rt-group.rst:151: WARNING: Title underline to=
-o short.
-
-2.4 RT_RUNTIME_SHARE sched feature
-----------------------------
-
-I have to extend the underline:
-
----- >8 ----
-diff --git a/Documentation/scheduler/sched-rt-group.rst b/Documentation/sch=
-eduler/sched-rt-group.rst
-index 4d8eceb71f5ed8..751113fcd35850 100644
---- a/Documentation/scheduler/sched-rt-group.rst
-+++ b/Documentation/scheduler/sched-rt-group.rst
-@@ -148,7 +148,7 @@ For now, this can be simplified to just the following (=
-but see Future plans):
-    \Sum_{i} runtime_{i} <=3D global_runtime
-=20
- 2.4 RT_RUNTIME_SHARE sched feature
------------------------------
-+----------------------------------
-=20
- RT_RUNTIME_SHARE allows a cpu borrows rt-runtime from other cpus if it runs
- out of its own rt-runtime.
-
-Wording suggestions below.
-
-> +
-> +RT_RUNTIME_SHARE allows a cpu borrows rt-runtime from other cpus if it r=
-uns
-"... to borrow rt-runtime ..."
-> +out of its own rt-runtime.
-> +
-> +With this feature enabled, a rt-task probably hits 100% cpu usage and st=
-arves
-"... a rt-task may hit ... and can stall other per-cpu tasks ..."
-> +per-cpu tasks like kworkers, as a result, it may hang up the whole syste=
-m.
-"..., which lead into system hang."
-> +Therefore, in order to avoid such exception, recommand to disable this f=
-eature
-> +by default unless you really know what you're up to.
-"Thus, it is advised to disable this feature by default to avoid aforementi=
-oned
-issue unless you know what you're doing."
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---pta05BleG83gC9lZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZhihbQAKCRD2uYlJVVFO
-o550AQDu03i1uJtG0AxGErdDS2JmvkRZ3c/WLBTu1QSqG6Sx0AEAtqzYZcvSGCS7
-u2XiNdlZMMXwZvzc1CJVuFyjGh8A/gA=
-=1lgf
------END PGP SIGNATURE-----
-
---pta05BleG83gC9lZ--
+I think you can use netif_device_detach() and netif_device_attach()
+to prevent getting called while suspended.
