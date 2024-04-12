@@ -1,187 +1,144 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40E91494C3;
-	Fri, 12 Apr 2024 16:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3A914884C;
+	Fri, 12 Apr 2024 16:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938157; cv=none; b=QsXSZN9PmYXmXbQOalddCi0PZR21VVqd8Sqw8Ph7Aq/aqM39kDgQKuAziuBYZBTzVtBu6a2uvEbTttzlznGezK5i8LDHtbIM9ERp5HkgPRUZdJLuOmMtbx7i3pNUegMqnXDIC20LnJEQ0K0EhGTlAk+xxOo1jssS1Dmgz67D7MI=
+	t=1712938176; cv=none; b=nDhjCQhYmBzTcLv8HLmzjHL2dgJaU0w1mLyT813x7df3Ms+yMuhoYaCRBlZNOGFEC+z94PJ+RhXBKBNB6SOAOrBjvxaLBFxyXIMv8z5wZeDJKULBHiMflS+tqS1mqrEqq6S4XWjzokLRwP72JM7s8g3t5LnojXIskqeo+f993bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938157; c=relaxed/simple;
-	bh=dU3V6Gu0KGvlhDaJGowbUsDhF9fkTIDZLblXxq3gcdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiAqOvCr0W84j3oLkW4rz97zqLe2KxM2RwkfkDwGTjeSSO7Q5g6Mkl9XK8Sa8oDD5yWfMdei7FiukrOJ8e6eNf71m/C4UADKxI38FX/F39YcMYTX3bk7m6h69G9ECnJ1GZWm65fCAqIkdcjx0WGHTQXj/Z+zbCmddcTmL61njWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BpkiKL99; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1712938176; c=relaxed/simple;
+	bh=key2rY0okj8iTY/sKjeNG8DebhT6mn/FJZAaKfGK91E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BEXLpjz7PsJbpirgwIDmvnutxNTrRNyRPxySzKnQAr2AZlBV6aex0uthEpctalgV+KnKcP3vy8tcn1RTGUzw9xfpTy0Wb2BwFbNlVvJSpVcW46wyzLfiubF881fytnS4VykgouUZawpC0NIPMl7PzQzS3W1j3PzNMURUY+DTURg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=m/5W5Ayg; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BpkiKL99"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1712938154;
-	bh=dU3V6Gu0KGvlhDaJGowbUsDhF9fkTIDZLblXxq3gcdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BpkiKL99SQrKKdw2SST9wNaqT2Pbi7yixEyuEVf27vkr3N85bQwkOzS7sR7tNpcCE
-	 /ilX2jzIxNb9Daj4/gumPlZt9oFibx5mr6G8LkSYKxRjNNiAg8tva+LyEL/faTI/Xr
-	 wI14qTGLfmUf0j6WAaiWED+q9j3yqNWvqCXG0vV0m8Z8GR2VgbP1tJ82apXQa0sQDL
-	 GaslDAL3t2iR0n+5sHNessYjd8xSggdIp07YZU1+BGS7rN+zQGeHZEmAgT08YqUR4Q
-	 QB/xJ51lnKNOJFsaF57QNHotN/u66NXGDIvWaN9ndi0+0kysZTkIOkNspWKnhXFMqx
-	 qaMDX14ar9f0g==
-Received: from mercury (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 0CDE8378212C;
-	Fri, 12 Apr 2024 16:09:14 +0000 (UTC)
-Received: by mercury (Postfix, from userid 1000)
-	id 9CA6A10608F9; Fri, 12 Apr 2024 18:09:13 +0200 (CEST)
-Date: Fri, 12 Apr 2024 18:09:13 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Jianfeng Liu <liujianfeng1994@gmail.com>, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, heiko@sntech.de, sfr@canb.auug.org.au, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: rockchip: remove startup-delay-us from
- vcc3v3_pcie2x1l0 on rock-5b
-Message-ID: <273slx5qkz6ja5qlfjgcaukuzifzsxkdabsld3qodvxaekbzet@ipir56a6afj3>
-References: <20240401081302.942742-1-liujianfeng1994@gmail.com>
- <432000a6-1de9-4452-beb7-6954677e34c8@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="m/5W5Ayg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1712938143; x=1713542943; i=w_armin@gmx.de;
+	bh=GfYGlzTabZ/Md6Ur06TpQylZldL1dEkuYiWABfiFon0=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=m/5W5Ayg/cLKO6mqu+hsj+RN9pqKhFwmqKRKSFCwCY0gV+qinWNOKYvpFF/lRTeR
+	 OQYLA0rpOYfYN6WvX8BajQ0+WNaDRexCLtOuK0M43KtsO6Hu6n7r+h2DfqnOiAoc3
+	 xVD6trFryUR9HyRjvEAghFYRcEo81mVmlGM945nUPH6jnaxVEUSwn80u6+MuwcGVe
+	 2y01YTIVE/Jz+sA68Q7TYbYUqcommHH56V0RTNv7lLhifG+z/jcxiB8yGjcEmIvBl
+	 B1mHlQUXTUxrM+cEgXFegxmUidPjmxRxIbgAQIk3aeassvfaXN9O8b4QKtuuCFCvK
+	 wdTTTKliQTVcI76Nag==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from mx-amd-b650.users.agdsn.de ([141.30.226.129]) by mail.gmx.net
+ (mrgmx004 [212.227.17.190]) with ESMTPSA (Nemesis) id
+ 1MHXFr-1rzSKU0AOv-00Db32; Fri, 12 Apr 2024 18:09:03 +0200
+From: Armin Wolf <W_Armin@gmx.de>
+To: mlj@danelec.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: jdelvare@suse.com,
+	linux@roeck-us.net,
+	linux@weissschuh.net,
+	ilpo.jarvinen@linux.intel.com,
+	linux-acpi@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH v3 1/2] hwmon: (core) Add support for power fault attribute
+Date: Fri, 12 Apr 2024 18:08:56 +0200
+Message-Id: <20240412160857.79858-1-W_Armin@gmx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w3aqmahkcw5xmohz"
-Content-Disposition: inline
-In-Reply-To: <432000a6-1de9-4452-beb7-6954677e34c8@rock-chips.com>
-
-
---w3aqmahkcw5xmohz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:FxN8oOpXNdjbD6CD5rAKuRlwWxOj0azlCpDAY3MnyB/WSTkNHyl
+ HE/auXD4vpPP6BXM+nU9pvumVwDf4Su+KryhDAmxqJDu8yiDN65uHKbPYAw97u/FiWmko1q
+ Hho5TLZCzT0BwtE7qJV4xiv3mJ/a8nOewjXizuGz1IP0TwXpaVSPDkpdyoI8WjdMpxv/mUW
+ QAgUgReNCQyayF+gFWCyQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:14VeDLJl1bg=;KEqr7ll/Hc3qkWPfpw6n4LsbJL1
+ c8x8CgG9ChVqgozx19NjB6vtmvVcPnWUZuIkUpXd2IoU1eZxfT8st/8o4e7LzBmt2gxfCuoZJ
+ dVWm+IxbFQr74U/KExjrG3HYcg1DmvcwKFzBg5KfT9Ng4slLYwOXl+DLprnJ/4sRxjKsLgEFj
+ ca90DiwEra/KsOtbhhXRxB2GaAE3PU6pfdu7jjtWey7U/YQULXX7X4oSK2nS7prKEaVZDtYMZ
+ EmG477JPhy1mZRtXIiqebhQCEXag6gBngjcjzJetSi/R2HbbHMA7ZgKyzLppjU8JsHdyn5hUK
+ 1J5O6tE8njQN3dbBb4I4lrqy+SfDiUXyqENKxPARclE1bAq+Mtxy27ItVMUxGlFBsod4EMXoj
+ GRMBeLmJi4GRPiYl39q4C1mcK4RQ0QhJiXNR0kLbbBN0n+tAD83sn5RRtkLmNWG+//eGEAFpq
+ PQIZMrfgM2afNEdermyHaO4Yywd1PEja+zdzVMi9VtJ0b7IECl3M3nBgW+Z30AgsGhqPyXz8f
+ om6O35uDstQ9wsH5lXRSO6Z5NoKCqVbhBlWa3Mu7YdaVOxKzGw9qy+Zuj6l4sBLNYVndcURaW
+ 0XG1mKeU5NG3rJPHlfgfbWh23k0lFJIZoTHzhZQ7vnkCUDEeZx79ND6loApE1IkwDJ/eJu8hJ
+ NId6Dv2NIk55CmVKgEynArgI0MuuMkzArq4PdrmN6NXGI339DSedyIgGf6+HDob2OCR2o2KGM
+ png1ApJBjheu5hAxEnGoqcuOgCf3oxZ5rMBguz8z2/hqGT8V4aqkrWLk9URKLV2dif/6krtQx
+ lvV4hWowzBevjjmigXh0FKNSsMK53JPj75lmKMi+8/iuc=
 
-Hi,
+Power sensor driver might want to signal that the power
+value is not usable. Add a new power fault attribute to
+report such failures.
 
-On Wed, Apr 10, 2024 at 02:30:16PM +0800, Shawn Lin wrote:
-> Hi Jianfeng,
->=20
-> On 2024/4/1 16:13, Jianfeng Liu wrote:
-> > Property startup-delay-us is copied from vendor dts and it will
-> > make kernel not detect pcie wifi device. If I run command:
-> > "echo 1 > /sys/bus/pci/rescan", pcie wifi device is detected, but
-> > my wifi device RTL8822CE failed to load driver. Another device
-> > RTL8723BE can load driver but no wifi signal is detected.
-> >=20
-> > Removing this property will fix issues above.
-> >=20
-> > Signed-off-by: Jianfeng Liu <liujianfeng1994@gmail.com>
->=20
-> startup-delay-us just make sure the power rail is stable before
-> any action is taken to start the link, preventing the device from
-> unable to work stably. So it shouldn't be the root cause I think.
->=20
-> Could you help try this patch to checkout if it works for you?
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> index d684214..df30127 100644
-> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-> @@ -167,7 +167,7 @@ static int rockchip_pcie_start_link(struct dw_pcie *p=
-ci)
->         struct rockchip_pcie *rockchip =3D to_rockchip_pcie(pci);
->=20
->         /* Reset device */
-> -       gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
-> +       //gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
+Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+=2D--
+Changes since v2:
+- added patch
+=2D--
+ Documentation/ABI/testing/sysfs-class-hwmon | 9 +++++++++
+ drivers/hwmon/hwmon.c                       | 1 +
+ include/linux/hwmon.h                       | 2 ++
+ 3 files changed, 12 insertions(+)
 
-Is this removal actually needed?
+diff --git a/Documentation/ABI/testing/sysfs-class-hwmon b/Documentation/A=
+BI/testing/sysfs-class-hwmon
+index cfd0d0bab483..ed01d43d2491 100644
+=2D-- a/Documentation/ABI/testing/sysfs-class-hwmon
++++ b/Documentation/ABI/testing/sysfs-class-hwmon
+@@ -882,6 +882,15 @@ Description:
 
->=20
->         rockchip_pcie_enable_ltssm(rockchip);
->=20
-> @@ -180,7 +180,7 @@ static int rockchip_pcie_start_link(struct dw_pcie *p=
-ci)
->          * We need more extra time as before, rather than setting just
->          * 100us as we don't know how long should the device need to rese=
-t.
->          */
-> -       msleep(100);
-> +       msleep(300);
->         gpiod_set_value_cansleep(rockchip->rst_gpio, 1);
->=20
->         return 0;
-> @@ -311,6 +311,8 @@ static int rockchip_pcie_probe(struct platform_device
-> *pdev)
->         if (ret)
->                 return ret;
->=20
-> +       gpiod_set_value_cansleep(rockchip->rst_gpio, 0);
+ 		RW
 
-I suppose it makes sense to use GPIOD_OUT_LOW in
-rockchip_pcie_resource_get(), so that the GPIO is requested low from
-the start instead of being high for a very short amount of time.
++What:		/sys/class/hwmon/hwmonX/powerY_fault
++Description:
++		Reports a power sensor failure.
++
++		- 1: Failed
++		- 0: Ok
++
++		RO
++
+ What:		/sys/class/hwmon/hwmonX/powerY_rated_min
+ Description:
+ 		Minimum rated power.
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index 3b259c425ab7..6150d64f5c4c 100644
+=2D-- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -560,6 +560,7 @@ static const char * const hwmon_power_attr_templates[]=
+ =3D {
+ 	[hwmon_power_crit] =3D "power%d_crit",
+ 	[hwmon_power_label] =3D "power%d_label",
+ 	[hwmon_power_alarm] =3D "power%d_alarm",
++	[hwmon_power_fault] =3D "power%d_fault",
+ 	[hwmon_power_cap_alarm] =3D "power%d_cap_alarm",
+ 	[hwmon_power_min_alarm] =3D "power%d_min_alarm",
+ 	[hwmon_power_max_alarm] =3D "power%d_max_alarm",
+diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
+index edf96f249eb5..00122e565dbf 100644
+=2D-- a/include/linux/hwmon.h
++++ b/include/linux/hwmon.h
+@@ -237,6 +237,7 @@ enum hwmon_power_attributes {
+ 	hwmon_power_max_alarm,
+ 	hwmon_power_lcrit_alarm,
+ 	hwmon_power_crit_alarm,
++	hwmon_power_fault,
+ 	hwmon_power_rated_min,
+ 	hwmon_power_rated_max,
+ };
+@@ -270,6 +271,7 @@ enum hwmon_power_attributes {
+ #define HWMON_P_MAX_ALARM		BIT(hwmon_power_max_alarm)
+ #define HWMON_P_LCRIT_ALARM		BIT(hwmon_power_lcrit_alarm)
+ #define HWMON_P_CRIT_ALARM		BIT(hwmon_power_crit_alarm)
++#define HWMON_P_FAULT			BIT(hwmon_power_fault)
+ #define HWMON_P_RATED_MIN		BIT(hwmon_power_rated_min)
+ #define HWMON_P_RATED_MAX		BIT(hwmon_power_rated_max)
 
-Greetings,
+=2D-
+2.39.2
 
--- Sebastian
-
-> +
->         /* DON'T MOVE ME: must be enable before PHY init */
->         rockchip->vpcie3v3 =3D devm_regulator_get_optional(dev, "vpcie3v3=
-");
->=20
->=20
->=20
-> > ---
-> >   arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 1 -
-> >   1 file changed, 1 deletion(-)
-> >=20
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm=
-64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > index d6bf2ee07..a9af654a0 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > @@ -76,7 +76,6 @@ vcc3v3_pcie2x1l0: vcc3v3-pcie2x1l0-regulator {
-> >   		regulator-boot-on;
-> >   		regulator-min-microvolt =3D <3300000>;
-> >   		regulator-max-microvolt =3D <3300000>;
-> > -		startup-delay-us =3D <50000>;
-> >   		vin-supply =3D <&vcc5v0_sys>;
-> >   	};
-> >=20
-> > --
-> > 2.34.1
-> >=20
-> >=20
-> > _______________________________________________
-> > Linux-rockchip mailing list
-> > Linux-rockchip@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-rockchip
->=20
-
---w3aqmahkcw5xmohz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmYZXJ8ACgkQ2O7X88g7
-+poq6w//dbFA18vJCILXgGK1j5A0KZ53Xji2T9WW5oeSKb8ypl6VgtPlKKdZIRDV
-zwHp6X+QXnzHP4wMfEDTxnmaYX0c5YVY3/ZpXVya2stFTuczmh2ugb9H7DgN1BD9
-XCQ4D1GGo3tBAuOfx10ovjjrSkvp5E4e3yI55ibR/BwuI7nQeKR/1A79Sqm/zx/s
-IG2vwZN1RsncE0kd9Ot1CNoOvAefrtMrmN0lBBMaDyOdN+rTfkV6w0FtyW+vdGff
-+A0A0P0RZF8Vnr2Q6Bwp2f1aL6SA2d+tjqEYNlwno5lyZqR+pVsy8KfIsnf39TLk
-5btkAnjFYAc40ulCFUF3jRSp9pC5DCmEET7pU5RWP5cqdiy/mZMJuac2qRsPIJvJ
-KjVRafxtRNCsVasFLD6I8wxouyStu0S0wRqs/Hft+WfJWSVDk1spbvrKBcPC5FVr
-EM82IWmEfKUxztKl4jItlJT55aF0EcIP/jrc4TNqW9bHS5tQXqX3QPvCotapwWon
-GrEdPMLNlIChIMwRZs0r5HKirfWgRGweaBst3tWtk/GjF+zO240zi3xSU7g4hJ0V
-WeddNgOZryXHH7vbN1oZeSpjiVZZ3F7n/YulUf003/9IkVjyhzWoWK+53luhU6AA
-ZKQ4IdSoLQ4nvV9fDDUyuwS6ClPp+oN7h3NZZtNRsSuhq+n9Z8c=
-=D3Tl
------END PGP SIGNATURE-----
-
---w3aqmahkcw5xmohz--
