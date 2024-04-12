@@ -1,129 +1,121 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94FEB4F8A1
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E10D4EB24;
+	Fri, 12 Apr 2024 07:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712907058; cv=none; b=IULUTCacg+aqhY73nq4rEdXHb+8qb4iOnrXc7rOE6NWrQyM5vW/klZt5jJTG23lrEJ0acDbYP/rHtsZ9kbI8j6ZpY/NjARHsXyDHXIcG7fAgD6cZGi1OCUbM5UyKZeTUeZoRCbDiHdTjw2amIzXQcWahhWd7suapxiK/jrbVOow=
+	t=1712907061; cv=none; b=nTi6hImbI/vPV7VtNFj8YuYUaXEcbW95Kl1MyVRskpvwGyz4iLv90zTdI8UYPbwL5BfG5TUiYrgw5uw27z0OV0uEJIPMoCoypoD/CkopsXO7fC3YXB/GC4hMY33djq4vBx8pZLQ4Kz2F0i0vnVPgYPhDUVaB42+piekfC75r11g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712907058; c=relaxed/simple;
-	bh=ELyJ+CJCoG1IVqX5X75YSbhALkKqT4a5dFGLgQ4/ZnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XEMMwl7y19hW/Luq7LbbDHB9zrMu3J6v6KZE6ltYSDAv5sbACQGwL3aTgEO28xs0O0SiTJjbzbYUFAGSK1QA7RkmHUprbE3SQzFHDlhGms6qXCwbxMKsq+659JB56+uOLhn+o4OZF20GOpxqRluaylSRvAFzpFTmp8KOHy+levU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AORJLYS/; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AORJLYS/"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6eced6fd98aso630237b3a.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 00:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712907055; x=1713511855; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0kD8JSa/wlHNA1KdEJbBxgwZ9LZz09AqTXMn/5iB0iI=;
-        b=AORJLYS/dU7fiuNfY1ETrdUwSLycDelJzn+mTsKDfbxyLAJLph9H4SvFMzzPZAaZzd
-         zXDOb1GbJ6gGbUo++HWnu3mwBFMod1FhB7zya0NmI6kNi9Of6yA3YGgep1spOmwJdAhK
-         SDetk1ghfShTvJRWYQs0wWq/IJuEMrz8JpIWs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712907055; x=1713511855;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0kD8JSa/wlHNA1KdEJbBxgwZ9LZz09AqTXMn/5iB0iI=;
-        b=FVZPZizkwPE/NbkDxBJU0jiD3WLT4OipJSHTGpGibMc+x+EeLYFhBzgjgRPIhkwTE0
-         NcI0pnePudKxSpB1/N1FwbSrnZkn727OW9Drc//nXnSdKfOpcTZHQWwldM6hkftABEFL
-         ZCxBasaSanL0Ujp5ivDvQqFv05tWiAhnJkxAUq5i+UrIvwHK4Khi6vYroeKVboT1+T+I
-         a9S9M+TB1YP8RgnSJBLoL261HPctzxoRjNo7YsfUx/h/WoxCqOXKIvxtY2ccj1Bo9PKj
-         +l4MEiWN1AEotWxJKSxZFrC1ZFU2DAd6EPHkUDNqGdRSO6L1dV1hCldvJuBiL2JeNaQn
-         eYWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlJtd451UJkUQl6+tuuo8K4kfDc+l1ZAN35D0KQpJeVzLbQv1khJKpkW6+6ZCEf4jVV/jOYN2R9UuzHWYFmyqkgjHnydDKEItpny42
-X-Gm-Message-State: AOJu0YxcnyciFMCLV/PTHuPZk3CbRrrwXuv/t4FPCluDcPad19QK5YdO
-	DecN18m+tjbcdXQFtu5H8+CUQguZjUJcLxEtkFnyuROr1uYuOQ/eEOFDJc3fPg==
-X-Google-Smtp-Source: AGHT+IH9TJ0GU71I2lqJVSkEubfs2YUSVV/7k6TyMcFaUg5ykPaPZHNJ1QhyNg9VCsr2/J7KXJRL0w==
-X-Received: by 2002:a05:6a00:3d44:b0:6ea:e841:5889 with SMTP id lp4-20020a056a003d4400b006eae8415889mr2368095pfb.33.1712907054781;
-        Fri, 12 Apr 2024 00:30:54 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:e3c8:6e1:dcfa:3e8c])
-        by smtp.gmail.com with ESMTPSA id d6-20020a637346000000b005d3bae243bbsm2149609pgn.4.2024.04.12.00.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 00:30:54 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Sean Wang <sean.wang@mediatek.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/2] bluetooth: mt7921s: Add binding and fixup existing dts
-Date: Fri, 12 Apr 2024 15:30:41 +0800
-Message-ID: <20240412073046.1192744-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
+	s=arc-20240116; t=1712907061; c=relaxed/simple;
+	bh=JzUBqVV2GtDa8Lur/NtFXs7KTrObWRaTEOv5fRP7nkE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eo6eCuJTY1QmfCH6sxUjG3O7IvqeCazqduAu++JC0JJ7um2DdTYeggh8InFR9nYhDjFIqt/sh4DTP7JUYAytvRmQGvk/WomApr4Yo2+BE7962+vneCxENCLoLsjW5T0jIhLo0FbPQgYAm5VtV922tDy4q0zhJsog58PygaBxT84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rvBMx-000lgX-Jc; Fri, 12 Apr 2024 15:30:44 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 12 Apr 2024 15:31:01 +0800
+Date: Fri, 12 Apr 2024 15:31:01 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Akhil R <akhilrajeev@nvidia.com>
+Cc: davem@davemloft.net, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com,
+	catalin.marinas@arm.com, will@kernel.org, mperttunen@nvidia.com,
+	airlied@gmail.com, daniel@ffwll.ch, linux-crypto@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v7 0/5] Add Tegra Security Engine driver
+Message-ID: <ZhjjNWKexg8p8cJp@gondor.apana.org.au>
+References: <20240403100039.33146-1-akhilrajeev@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240403100039.33146-1-akhilrajeev@nvidia.com>
 
-Hi everyone,
+On Wed, Apr 03, 2024 at 03:30:34PM +0530, Akhil R wrote:
+> Add support for Tegra Security Engine which can accelerates various
+> crypto algorithms. The Engine has two separate instances within for
+> AES and HASH algorithms respectively.
+> 
+> The driver registers two crypto engines - one for AES and another for
+> HASH algorithms and these operate independently and both uses the host1x
+> bus. Additionally, it provides  hardware-assisted key protection for up to
+> 15 symmetric keys which it can use for the cipher operations.
+> 
+> v6->v7:
+> * Move fallback_tfm and fallback_req to end of struct
+> * Set reqsize and statesize based on fallback_tfm
+> * Remove ofb(aes)
+> v5->v6:
+> * Move copy/pase of intermediate results in export()/import() to
+>   'update()' callback for CMAC as well.
+> * Check for rctx size when using fallback alg.
+> * Updated blocksizes to align with generic implementation
+> * Combined GCM and CCM init into aead_cra_init
+> * Updates to handle invalid cases better
+> * Reduce log levels for invalid cases to dev_dbg
+> v4->v5:
+> * Move copy/paste of intermediate results in export()/import() to
+>   'update()' callback
+> v3->v4:
+> * Remove unused header in bindings doc.
+> * Update commit message in host1x change.
+> * Fix test bot warning.
+> v2->v3:
+> * Update compatible in driver and device trees.
+> * Remove extra new lines and symbols in binding doc.
+> v1->v2:
+> * Update probe errors with 'dev_err_probe'.
+> * Clean up function prototypes and redundant prints.
+> * Remove readl/writel wrappers.
+> * Fix test bot warnings.
+> 
+> 
+> Akhil R (5):
+>   dt-bindings: crypto: Add Tegra Security Engine
+>   gpu: host1x: Add Tegra SE to SID table
+>   crypto: tegra: Add Tegra Security Engine driver
+>   arm64: defconfig: Enable Tegra Security Engine
+>   arm64: tegra: Add Tegra Security Engine DT nodes
+> 
+>  .../crypto/nvidia,tegra234-se-aes.yaml        |   52 +
+>  .../crypto/nvidia,tegra234-se-hash.yaml       |   52 +
+>  MAINTAINERS                                   |    5 +
+>  arch/arm64/boot/dts/nvidia/tegra234.dtsi      |   16 +
+>  arch/arm64/configs/defconfig                  |    1 +
+>  drivers/crypto/Kconfig                        |    8 +
+>  drivers/crypto/Makefile                       |    1 +
+>  drivers/crypto/tegra/Makefile                 |    9 +
+>  drivers/crypto/tegra/tegra-se-aes.c           | 1933 +++++++++++++++++
+>  drivers/crypto/tegra/tegra-se-hash.c          | 1060 +++++++++
+>  drivers/crypto/tegra/tegra-se-key.c           |  156 ++
+>  drivers/crypto/tegra/tegra-se-main.c          |  439 ++++
+>  drivers/crypto/tegra/tegra-se.h               |  560 +++++
+>  drivers/gpu/host1x/dev.c                      |   24 +
+>  14 files changed, 4316 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/nvidia,tegra234-se-aes.yaml
+>  create mode 100644 Documentation/devicetree/bindings/crypto/nvidia,tegra234-se-hash.yaml
+>  create mode 100644 drivers/crypto/tegra/Makefile
+>  create mode 100644 drivers/crypto/tegra/tegra-se-aes.c
+>  create mode 100644 drivers/crypto/tegra/tegra-se-hash.c
+>  create mode 100644 drivers/crypto/tegra/tegra-se-key.c
+>  create mode 100644 drivers/crypto/tegra/tegra-se-main.c
+>  create mode 100644 drivers/crypto/tegra/tegra-se.h
+> 
+> -- 
+> 2.43.2
 
-This is v3 of my MT7921S Bluetooth binding series.
-
-Changes since v2:
-- Expand description and commit message to clearly state that WiFi and
-  Bluetooth are separate SDIO functions, and that each function should
-  be a separate device node, as specified by the MMC binding.
-- Change 'additionalProperties' to 'unevaluatedProperties'
-- Add missing separating new line
-- s/ot/to/
-
-Changes since v1:
-- Reworded descriptions in binding
-- Moved binding maintainer section before binding description
-- Added missing reference to bluetooth-controller.yaml
-- Added missing GPIO header to example
-
-This short series adds a binding document for the MT7921S SDIO Bluetooth
-controller. The MT7921S is a SDIO-based WiFi/Bluetooth combo. WiFi and
-Bluetooth are separate SDIO functions. The chip has extra per-subsystem
-reset lines that can reset only WiFi or Bluetooth cores.
-
-Patch 1 documents the SDIO function and the reset line, based on
-existing device tree and driver usage. I listed Sean Wang, the original
-driver author and maintainer, as the maintainer of the binding.
-
-Patch 2 fixes up the sole existing usage of the compatible string by
-making it a proper SDIO function node.
-
-Please take a look. Not sure which tree patch 1 should be merged
-through? I suppose with proper acks it could go through the soc/mediatek
-tree together with patch 2.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (2):
-  dt-bindings: net: bluetooth: Add MediaTek MT7921S SDIO Bluetooth
-  arm64: dts: mediatek: mt8183-pico6: Fix bluetooth node
-
- .../bluetooth/mediatek,mt7921s-bluetooth.yaml | 55 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- .../mediatek/mt8183-kukui-jacuzzi-pico6.dts   |  3 +-
- 3 files changed, 58 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-bluetooth.yaml
-
+All applied.  Thanks.
 -- 
-2.44.0.683.g7961c838ac-goog
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
