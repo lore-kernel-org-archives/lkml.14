@@ -1,119 +1,127 @@
-Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [5.144.164.167])
+Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744D917F7
-	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 00:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DB1196
+	for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2024 00:10:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713312514; cv=none; b=buGHoBIzKvnmAe4Rc5OVd7b1O3WJ+SeOt4HQuT8Ro0A0OZsB0XTqXlaskr2fF4Al5dD6ut4HALtNU1igG1QmJb5MNJQ0TkRjRKRLCHwWsYDL6C8p3Q+/hNoTC/emHjc5kofixR2bUAX0zWsBX6Ee6EoBcbsa9GkLVqnBL+eJ4fQ=
+	t=1713312607; cv=none; b=U9S8akRcsT9uJB6oRZQxex7NB52FjkxaPb68Ir3Ngx5LN/+BY0akXaiV0oXZ87Pp7J1Idz3di5R+w3sxn9ZMvLI3tvty4f2B05qgaLg3E/xSoj6g1keWWYfcd/hDO1gLKqUMjQbie/yy7/qYpAnMK+DDvgzqPAMGRag8eiqFt58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713312514; c=relaxed/simple;
-	bh=yLdn0fJr0B1Y4lEC7tQYmAV4Y01+r9iOQvrUcRadDc4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RbmBF2u3fUNVOSZDTNTCQGDooQcVuoU6EuRIHcnRx+CRH3ZnA1IDVlhNYmo5vWbJpqgcxc5MZHai9290mNBmCG1YaQwPCDHZzDl7Q/9enXTpMxeQqkGyKgigiZzH/nXqBB3jdnpoxsJeg33/lCETWXGF+n4Kk5cfQGefQ3Pyjrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	s=arc-20240116; t=1713312607; c=relaxed/simple;
+	bh=1/QhQq/SNBvhM5Qukg8qId++gk6cla4fzJPkLM7SWYI=;
+	h=Message-Id:In-Reply-To:References:To:Cc:From:Date:Subject; b=L/u+MGEJsovGok5mQtElmZz2r2iA9YL7XVtjtKSOglg15wR301g/bOhDa4WBhUxZ6/vtvIedoIHRB2qcL4q1eFSFYmJiNFNwyDqWJIMSFBxpSmzMaoYuPmcnhp+2QKqSe76slngbt0/7C5xmOVWnVUwwK2pmNPq0vwMIW/8+4NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=ALFUaIzp; arc=none smtp.client-ip=148.163.152.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="ALFUaIzp"
+Received: from pps.filterd (m0355092.ppops.net [127.0.0.1])
+	by mx0b-00823401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43GEstYE010955;
+	Tue, 16 Apr 2024 17:24:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
+	message-id:in-reply-to:references:to:cc:from:date:subject; s=
+	DKIM202306; bh=bxlhcCLLu2nVwVVshKc9HTXBGPT+xoKrYdwmFjIADko=; b=A
+	LFUaIzpDXni0XvmvS0y2Pxqhcy4PQpTgtvxQlsDj8ehh8lmGWKw/KdeDd8BuUd8Q
+	hMBekukD2lvL+7VD+InMM3QMnnniANJSzk4HQYX0F3VzKOg16JlETL9y8pT4Uewi
+	K5mg5FPC/nPBzPUS7n4OW0xJ0Lx2W91X6kEbRo1tCH913lQPZqh7mMBqyFTn2Ke6
+	5RCAEdwT2KoGnNwjqDI+okLTM6csDjI07GYqTd23+rZUqoRAUzMrgungknlghjUI
+	otEww2i4ylzuDct59uiCTfJLLIqtdgfsHjXj7PtkQXqOKESgOg+YnW7bUlt/6/qV
+	3OSJR5JfFMbHDiub4UYuA==
+Received: from va32lpfpp02.lenovo.com ([104.232.228.22])
+	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xha96c2th-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 16 Apr 2024 17:24:57 +0000 (GMT)
+Received: from va32lmmrp01.lenovo.com (va32lmmrp01.mot.com [10.62.177.113])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by va32lpfpp02.lenovo.com (Postfix) with ESMTPS id 4VJrWs1PZ0z53xyY;
+	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
+Received: from ilclbld243.mot.com (ilclbld243.mot.com [100.64.22.29])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id E36273F040;
-	Wed, 17 Apr 2024 01:57:49 +0200 (CEST)
-From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Wed, 17 Apr 2024 01:57:46 +0200
-Subject: [PATCH 6/7] drm/msm/dsi: Set PHY usescase before registering DSI
- host
+	(Authenticated sender: mbland)
+	by va32lmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VJrWs15XGz2VZRf;
+	Tue, 16 Apr 2024 17:24:57 +0000 (UTC)
+Message-ID: <20240416122254.868007168-5-mbland@motorola.com>
+In-Reply-To: <20240416122254.868007168-1-mbland@motorola.com>
+References: <20240416122254.868007168-1-mbland@motorola.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Maxwell Bland <mbland@motorola.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Maxwell Bland <mbland@motorola.com>, linux-kernel@vger.kernel.org
+From: Maxwell Bland <mbland@motorola.com>
+Date: Fri, 12 Apr 2024 10:00:34 -0500
+Subject: [PATCH 4/5] arm64: dynamic enforcement of PXNTable
+X-Proofpoint-GUID: c40_PDWtT41G9D4WZ4RFrQBRvh-FsbVL
+X-Proofpoint-ORIG-GUID: c40_PDWtT41G9D4WZ4RFrQBRvh-FsbVL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-16_14,2024-04-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ impostorscore=0 mlxlogscore=624 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404160108
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-6-78ae3ee9a697@somainline.org>
-References: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org>
-In-Reply-To: <20240417-drm-msm-initial-dualpipe-dsc-fixes-v1-0-78ae3ee9a697@somainline.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Archit Taneja <architt@codeaurora.org>, 
- Chandan Uddaraju <chandanu@codeaurora.org>, Vinod Koul <vkoul@kernel.org>, 
- Sravanthi Kollukuduru <skolluku@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jordan Crouse <jordan@cosmicpenguin.net>, 
- Rajesh Yadav <ryadav@codeaurora.org>, 
- Jeykumar Sankaran <jsanka@codeaurora.org>, 
- ~postmarketos/upstreaming@lists.sr.ht, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Martin Botka <martin.botka@somainline.org>, 
- Jami Kettunen <jami.kettunen@somainline.org>, 
- Marijn Suijten <marijn.suijten@somainline.org>
-X-Mailer: b4 0.13.0
+Message-ID: <20240412150034.AqJR0-to9l3FiYVc0PgLDnemGUk8-KH663zENi2lOU0@z>
 
-Ordering issues here cause an uninitalized (default STANDALONE)
-usecase to be programmed (which appears to be a MUX) in some cases
-when msm_dsi_host_register() is called, leading to the slave PLL in
-bonded-DSI mode to source from a clock parent (dsi1vco) that is off.
+PXNTable is enforced during the init process to ensure that regions of
+user memory and kernel data cannot be executed from, preventing attacks
+which write to writable kernel pages and then modify the kernel's page
+tables to make this code executable. This patch ensures this protection
+is also preserved for dynamically allocated pages/pagetables, making it
+so that all PMDs populated outside of the module code region are
+PXNTable by default.
 
-This should seemingly not be a problem as the actual dispcc clocks from
-DSI1 that are muxed in the clock tree of DSI0 are way further down, this
-bit still seems to have an effect on them somehow and causes the right
-side of the panel controlled by DSI1 to not function.
-
-In an ideal world this code is refactored to no longer have such
-error-prone calls "across subsystems", and instead model the "PLL src"
-register field as a regular mux so that changing the clock parents
-programmatically or in DTS via `assigned-clock-parents` has the
-desired effect.
-But for the avid reader, the clocks that we *are* muxing into DSI0's
-tree are way further down, so if this bit turns out to be a simple mux
-between dsiXvco and out_div, that shouldn't have any effect as this
-whole tree is off anyway.
-
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+Signed-off-by: Maxwell Bland <mbland@motorola.com>
 ---
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index af2a287cb3bd..17f43b3c0494 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -85,6 +85,17 @@ static int dsi_mgr_setup_components(int id)
- 							msm_dsi : other_dsi;
- 		struct msm_dsi *slave_link_dsi = IS_MASTER_DSI_LINK(id) ?
- 							other_dsi : msm_dsi;
-+
-+		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode.
-+		 *
-+		 * Set the usecase before calling msm_dsi_host_register() to prevent it from
-+		 * enabling and configuring the usecase (which is just a mux bit) first.
-+		 */
-+		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
-+					MSM_DSI_PHY_MASTER);
-+		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
-+					MSM_DSI_PHY_SLAVE);
-+
- 		/* Register slave host first, so that slave DSI device
- 		 * has a chance to probe, and do not block the master
- 		 * DSI device's probe.
-@@ -100,10 +111,6 @@ static int dsi_mgr_setup_components(int id)
- 			return ret;
+diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+index 5785272144e8..2376b4e7915c 100644
+--- a/arch/arm64/include/asm/pgalloc.h
++++ b/arch/arm64/include/asm/pgalloc.h
+@@ -12,6 +12,7 @@
+ #include <asm/processor.h>
+ #include <asm/cacheflush.h>
+ #include <asm/tlbflush.h>
++#include <asm/module.h>
  
- 		/* PLL0 is to drive both 2 DSI link clocks in bonded DSI mode. */
--		msm_dsi_phy_set_usecase(clk_master_dsi->phy,
--					MSM_DSI_PHY_MASTER);
--		msm_dsi_phy_set_usecase(clk_slave_dsi->phy,
--					MSM_DSI_PHY_SLAVE);
- 		msm_dsi_host_set_phy_mode(msm_dsi->host, msm_dsi->phy);
- 		msm_dsi_host_set_phy_mode(other_dsi->host, other_dsi->phy);
- 	}
-
+ #define __HAVE_ARCH_PGD_FREE
+ #define __HAVE_ARCH_PUD_FREE
+@@ -119,6 +120,12 @@ static inline void __pmd_populate(pmd_t *pmdp, phys_addr_t ptep,
+ 	set_pmd(pmdp, __pmd(__phys_to_pmd_val(ptep) | prot));
+ }
+ 
++static inline bool vaddr_is_data(unsigned long vaddr)
++{
++	return ((vaddr + PMD_SIZE < MODULES_ASLR_START || vaddr >= MODULES_ASLR_END) &&
++		(vaddr + PMD_SIZE < (unsigned long) _text || vaddr >= (unsigned long) _etext));
++}
++
+ /*
+  * Populate the pmdp entry with a pointer to the pte.  This pmd is part
+  * of the mm address space.
+@@ -127,8 +134,11 @@ static inline void
+ pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmdp, pte_t *ptep,
+ 		    unsigned long vaddr)
+ {
++	pmdval_t pmd = PMD_TYPE_TABLE | PMD_TABLE_UXN;
+ 	VM_BUG_ON(mm && mm != &init_mm);
+-	__pmd_populate(pmdp, __pa(ptep), PMD_TYPE_TABLE | PMD_TABLE_UXN);
++	if (vaddr_is_data(vaddr))
++		pmd |= PMD_TABLE_PXN;
++	__pmd_populate(pmdp, __pa(ptep), pmd);
+ }
+ 
+ static inline void
 -- 
-2.44.0
+2.39.2
 
