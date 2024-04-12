@@ -1,108 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2C481AA;
-	Fri, 12 Apr 2024 06:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12027168A8;
+	Fri, 12 Apr 2024 06:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712904086; cv=none; b=FcEPPII0PjuyIcdaDdrNQgRGh0jHTZJ64CCC+El55BAD71bsFllRqYtMsxuiTRwmIH+6zZnvlB5y5AUl5wH3s1mCNb9YHQCKfE/+3nmyyCL49/KnMMSsVyiBZc7CZmYQuwVd73jZ75sEp6m8ftE0iY0OVcTg9b17N1jRVNm4YZ0=
+	t=1712904200; cv=none; b=XntNSv22joVfDUswl4IbOY1ZOhQ/zrSbSxLlJm5p4SBd+ElD2dZm81gNkk3PRSk/6PT3slYepjpD63+i1zKBJvI+86je4GWnfH3F8ty8tT0EdMgGC3y36dwrm4N0t5wvSrt4ehz6SIZ+iJn6t4nmXqvLrUoaZUAUD5SfhKK3LNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712904086; c=relaxed/simple;
-	bh=nnftp3y20mnefQs/zA7rIGucHoCz77k4ThTY/2DnxXQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WqZ4u2bp1etrmGwN4LvsEPc5P8AJHqF7YOdeX3PUsI0f7yW5353sMQfumFije+dnpo+1RbsV2oEBzu3BzyCh7zMWMGVGqHnsEXXP8w5YLHiRn6isxA0DilztxWv482/N9jaaplh0LdXlp6iYChmbPWluqpwmjkDKYt0JX8kP8AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iSIG88PM; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iSIG88PM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712904084; x=1744440084;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=nnftp3y20mnefQs/zA7rIGucHoCz77k4ThTY/2DnxXQ=;
-  b=iSIG88PM9b2YgdRQ4szSPTsiEdHfMD5rvawOOi/wLLg8jMk/6RvNaAhh
-   oT8MCDqfxNcRKZIaxcmdnyc5dZFarta68w/0F5iqI/qjN12Q0xqiv/d3W
-   MzpkPrK3w3Kcc1AHe6HVTykvzAnyMk67pILZRjDVT2hnvtRmoe/Cw2Fd+
-   /uyq9R6DLLbY1+VPi8oWLD8fXYhTK1fOKpK5axS7YL1HSBv2I+Lw0Wccf
-   fe1j1FKLmWJwforIh40KJUeHO8Jk2MX9Ubj2Z2DTWjc8yz7+KWokasxYk
-   5t7Q9ylV9NvBLIftWfB78uD0Vkjhd9A4DcbrwRJ02bVl04XgItkgpfDlz
-   A==;
-X-CSE-ConnectionGUID: Y0HDLEZfStSZpp9NVKZxxw==
-X-CSE-MsgGUID: /QL/ha6+TkaFPIYYcUqo0A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="19059686"
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="19059686"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:41:22 -0700
-X-CSE-ConnectionGUID: gXMdnuYmRRqCKEW6OOQMYA==
-X-CSE-MsgGUID: D1rZkMzDT4yyHA2nqy/ldg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21056020"
-Received: from gjantea-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.121])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 23:41:15 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Thorsten Blum <thorsten.blum@toblux.com>, Dan Carpenter
- <dan.carpenter@linaro.org>
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
- speakup@linux-speakup.org, intel-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-wireless@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-afs@lists.infradead.org, ecryptfs@vger.kernel.org,
- netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- linux-unionfs@vger.kernel.org, linux-arch@vger.kernel.org,
- io-uring@vger.kernel.org, cocci@inria.fr, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] treewide: Fix common grammar mistake "the the"
-In-Reply-To: <193B959E-60A3-499A-BFF3-EA7B2D0B6C12@toblux.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240411150437.496153-4-thorsten.blum@toblux.com>
- <0bd7ccc2-4d8c-455b-a6c2-972ebe1fcb08@moroto.mountain>
- <193B959E-60A3-499A-BFF3-EA7B2D0B6C12@toblux.com>
-Date: Fri, 12 Apr 2024 09:41:10 +0300
-Message-ID: <87y19j3wxl.fsf@intel.com>
+	s=arc-20240116; t=1712904200; c=relaxed/simple;
+	bh=KmsBlh6X0fVEerHCN0c8Qo3/DWdwma+/YNcAIv2VApE=;
+	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
+	 Message-ID:Subject; b=h6OiC6rGKkKEFJ/LMXCVvLfZwPOlD0qqSlczCAXJ06dxvPMSxd6K54SufuZy5llNO51HPGq3HM6eJmcMdxhUnfu3Ek2+RX6SWyyIfdW6QkIn8QYkFEVi/s1REkWE7aaiTpyEEfB+Qk+2bAkIzWRAXCEJi/lleM6nHLP6df0rhyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from harlem.collaboradmins.com (harlem.collaboradmins.com [IPv6:2a01:4f8:1c0c:5936::1])
+	by madrid.collaboradmins.com (Postfix) with ESMTP id AAC133780C22;
+	Fri, 12 Apr 2024 06:43:15 +0000 (UTC)
+From: "Shreeya Patel" <shreeya.patel@collabora.com>
+In-Reply-To: <20240411095424.875421572@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+X-Forward: 127.0.0.1
+References: <20240411095424.875421572@linuxfoundation.org>
+Date: Fri, 12 Apr 2024 07:43:15 +0100
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, broonie@kernel.org, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <3c0c9c-6618d800-5cf-194ac52@77440464>
+Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E4?= 000/215] 
+ =?utf-8?q?5=2E4=2E274-rc1?= review
+User-Agent: SOGoMail 5.10.0
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 12 Apr 2024, Thorsten Blum <thorsten.blum@toblux.com> wrote:
-> On 11. Apr 2024, at 17:25, Dan Carpenter <dan.carpenter@linaro.org> wrote:
->> 
->> It's tricky to know which tree a patch like this would go through.
->
-> The patch is based on the mainline tree. Should I have sent it directly to
-> Linus then?
->
-> I'm relatively new here and therefore only sent it to the corresponding mailing
-> lists.
+On Thursday, April 11, 2024 15:23 IST, Greg Kroah-Hartman <gregkh@linux=
+foundation.org> wrote:
 
-It's not just about mailing lists, it's also about changes flowing in to
-mainline via a plethora of subsystem and driver repos and branches. See
-MAINTAINERS. Or this old LWN page [1]. The development happens in those
-branches, and if you make treewide changes like this, it's not clear who
-should take it, and you also risk unnecessary conflicts if those places
-get modified in the individual branches. So it might just be easiest to
-split this up to smaller patches sent to the appropriate lists.
+> This is the start of the stable review cycle for the 5.4.274 release.
+> There are 215 patches in this series, all will be posted as a respons=
+e
+> to this one.  If anyone has any issues with these being applied, plea=
+se
+> let me know.
+>=20
+> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4=
+.274-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
+.git linux-5.4.y
+> and the diffstat can be found below.
+>=20
 
-Anyway, all that said,
+KernelCI report for stable-rc/linux-5.4.y for this week.
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
+## stable-rc HEAD for linux-5.4.y:
+Date: 2024-04-11
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
+git/log/?h=3D82d3ef7640657b7e1fb7091841ba7a47a7a29ab4
 
-on the i915 changes here.
+## Build failures:
+No build failures seen for the stable-rc/linux-5.4.y commit head \o/
 
+## Boot failures:
+No **new** boot failures seen for the stable-rc/linux-5.4.y commit head=
+ \o/
 
-BR,
-Jani.
+Tested-by: kernelci.org bot <bot@kernelci.org>
 
+Thanks,
+Shreeya Patel
 
-[1] https://lwn.net/Articles/737094/
-
--- 
-Jani Nikula, Intel
