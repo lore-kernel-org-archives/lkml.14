@@ -1,280 +1,173 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1EB05579F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2992754F87
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712921475; cv=none; b=hIbfcjbMGnfSsaViwwqN+FQINMSX66szIZ5kl0kzWH88hLEJ+Y3HfyaF1Qyppo/dAHr9e7qAX4JKKJ1+nreCu8nIT/7yJ5J2fc/FSO3sReIi6M/BVOLyvrTouY55SOF1VGe0QvgOlQuWt6Mikq6E/G9Ug1pFZebH897FDGKIZP0=
+	t=1712921482; cv=none; b=gVYqkxMch+vhHxda+zgph29FmLzzOo77+w8mEvMXA8h8Rav+XP8sNbm2tX3wJDQeHzL+6trmKddHj4DyB2Iz0KkkEeDXlHu8VPGlayB6JkxadDhPscnuc+mAB4mMGsBYRRqrT29DR/vbsxKROOAS9zDevmuyIuY4IdtPrV/RKU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712921475; c=relaxed/simple;
-	bh=2Tj7lNIpUpCYC+JAYGGDQXfoqtROazbatZ7tNnKHFQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Am6kj0RcPwCft4Qa1TYeQac0GHpr14U0/Jy4q0uH+xVWxGOyLf21i2+e2Wvo6x3617v5TSlBFJattTQ/2TrXn4WijjNu/es/riESS90SXaRatt6vTM2VfxOLG7XzFcqDxdTegcJsr9hautArQjFPMMm0yT6n8hTRuD49mENEWYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 149B7339;
-	Fri, 12 Apr 2024 04:31:41 -0700 (PDT)
-Received: from [10.57.73.208] (unknown [10.57.73.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B57F3F766;
-	Fri, 12 Apr 2024 04:31:09 -0700 (PDT)
-Message-ID: <2f6cc7a4-ea64-40aa-842a-8d85309a5cbd@arm.com>
-Date: Fri, 12 Apr 2024 12:31:07 +0100
+	s=arc-20240116; t=1712921482; c=relaxed/simple;
+	bh=ZoSyU+Qrcr9uh8qbOS2xd/lSpeAOebNenMFaShgPgOs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YvUboUBpzbN6tnxw7bAzMH9/s3i58ovKkjlj1FlV2sTJud8YvfuT8cQCbwWdWHcn2wuyBzMvNvbgp/Z4SyqqAAuSDbvTJEnci5mc21sDex42ZGkOv2KkFtYepViYFYVO56bf3vy4kBXFjQcdQzhhxR/VhPjsqV+1PS2rCQzJ5Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sufxpuQj; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sufxpuQj"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-ddda842c399so831315276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:31:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712921479; x=1713526279; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qPNOn0GLuQk8KwNG0ziRn0Mun0YoWTdTe+51qrseWJo=;
+        b=sufxpuQjwIwTinfC6VmHT9h7jX7ovJ+rsp4ScJr5FNhM9VaaN90WvFOI3lqG3h1krA
+         c12vUkAlOM5vlGNeWGwEhbx1sxHNqvu/o2kPBvMz7J8nssIPSbitYQwnpQF9qGCE1yCM
+         kXZOZM5ccVn3B/BYfpmak4eRTqCjZlBV7OPc7zac5m8Xlx9L4WQGW8ZfUa2ovJMGLn1Y
+         UwolpslDcIMzy6R7fVMdTzwqdNIHhkfOlaFKXKaHStoUBPCiDF98MaOmMRx0sgMcFVQi
+         QryzS8MOEQRHp4qmmH0fjXDjByBvUFS84yNukvnFLggbq14F8JUbnoFBPvQlnVrPJIPm
+         oPKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712921479; x=1713526279;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qPNOn0GLuQk8KwNG0ziRn0Mun0YoWTdTe+51qrseWJo=;
+        b=k/qCMPw235eori1vXVzRha3Z8AtHHBqPYmFhzb/Pcn4RUVby9Z4+xU1AXWTAsXL4D1
+         Mv0/kiTUvvsph01/o4AiOmaFn7TJdpH3BpNLoXUFXR0nF8AgJv9hA8vFIhCdatMFY1bV
+         Kl0b3erlYMqxwWxs6biY9/j3MhwPG3pY1KX7oc06oDaQ7+mJsZFPB7cz3ApsKUGV67Vu
+         9KJWrMyVqjtVaU+nkhI+Ps+SrcwRUM6tgZQbq3lREotP08RIWI3TF39Cc6jge/CJ5pVr
+         jOtalE7qB2i4iS/DyofBtxbLCVUWRxhZL5TLQEVybwMhBJFVDjyr8lcLNG+kqja+yxXK
+         EUDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPItur2kbKIDZxqwhWJgD4xl/ouelHJ+yK40DkSIONLQbUVfz7rvaNSMouHqynnVSKnP+SYirZUZ+TIkw64QM74p2839h34xYWYBeL
+X-Gm-Message-State: AOJu0Yxz9NcDH1hEleuogZc01X/NB9Dtu0j7aDGurE0RnwJO8xqq0znH
+	wIzv3U37zFnZ1ra98h7NZdOtkwaLnXcvys6uwwICm/BBJGmJP9HEAl+Q34wFP+puKIjBxXhhn/i
+	SttBS883+Hr2DnV16Fut6UIqxdkBIrVMb8SKuaw==
+X-Google-Smtp-Source: AGHT+IEGrhRwJIjO4KiFsAW/ZNbIF+dkGaOgsaB02MvYBIzWfJNTMR4i8201QPvrr2Qs77dSB1uO3NhGLefzi1RtS4Y=
+X-Received: by 2002:a25:810b:0:b0:dc6:9399:849e with SMTP id
+ o11-20020a25810b000000b00dc69399849emr2180984ybk.11.1712921479121; Fri, 12
+ Apr 2024 04:31:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] mm: swap: entirely map large folios found in
- swapcache
-Content-Language: en-GB
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
- baolin.wang@linux.alibaba.com, chrisl@kernel.org, david@redhat.com,
- hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com,
- kasong@tencent.com, surenb@google.com, v-songbaohua@oppo.com,
- willy@infradead.org, xiang@kernel.org, ying.huang@intel.com,
- yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com,
- linux-kernel@vger.kernel.org
-References: <20240409082631.187483-1-21cnbao@gmail.com>
- <20240409082631.187483-5-21cnbao@gmail.com>
- <1008d688-757a-4c2d-86bd-793f5e787d30@arm.com>
- <CAGsJ_4wqXFcS=WnfTSuS1osPh-NGtUF_izA2U3VVEv3wEhsudA@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAGsJ_4wqXFcS=WnfTSuS1osPh-NGtUF_izA2U3VVEv3wEhsudA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240410122657.2051132-1-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20240410122657.2051132-1-claudiu.beznea.uj@bp.renesas.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Fri, 12 Apr 2024 13:30:43 +0200
+Message-ID: <CAPDyKFr405qt58wrqNdSn8bQPRqPKJ1omUZHS_VpQrX5zxUJug@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] clk: renesas: rzg2l: Add support for power domains
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: geert+renesas@glider.be, mturquette@baylibre.com, sboyd@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	magnus.damm@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 12/04/2024 00:30, Barry Song wrote:
-> On Fri, Apr 12, 2024 at 3:33 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 09/04/2024 09:26, Barry Song wrote:
->>> From: Chuanhua Han <hanchuanhua@oppo.com>
->>>
->>> When a large folio is found in the swapcache, the current implementation
->>> requires calling do_swap_page() nr_pages times, resulting in nr_pages
->>> page faults. This patch opts to map the entire large folio at once to
->>> minimize page faults. Additionally, redundant checks and early exits
->>> for ARM64 MTE restoring are removed.
->>>
->>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
->>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
->>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>> ---
->>>  mm/memory.c | 64 +++++++++++++++++++++++++++++++++++++++++++----------
->>>  1 file changed, 52 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/mm/memory.c b/mm/memory.c
->>> index c4a52e8d740a..9818dc1893c8 100644
->>> --- a/mm/memory.c
->>> +++ b/mm/memory.c
->>> @@ -3947,6 +3947,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>       pte_t pte;
->>>       vm_fault_t ret = 0;
->>>       void *shadow = NULL;
->>> +     int nr_pages = 1;
->>> +     unsigned long start_address = vmf->address;
->>> +     pte_t *start_pte = vmf->pte;
->>
->> possible bug?: there are code paths that assign to vmf-pte below in this
->> function, so couldn't start_pte be stale in some cases? I'd just do the
->> assignment (all 4 of these variables in fact) in an else clause below, after any
->> messing about with them is complete.
->>
->> nit: rename start_pte -> start_ptep ?
-> 
-> Agreed.
-> 
->>
->>> +     bool any_swap_shared = false;
->>
->> Suggest you defer initialization of this to your "We hit large folios in
->> swapcache" block below, and init it to:
->>
->>         any_swap_shared = !pte_swp_exclusive(vmf->pte);
->>
->> Then the any_shared semantic in swap_pte_batch() can be the same as for
->> folio_pte_batch().
->>
->>>
->>>       if (!pte_unmap_same(vmf))
->>>               goto out;
->>> @@ -4137,6 +4141,35 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>        */
->>>       vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
->>>                       &vmf->ptl);
->>
->> bug: vmf->pte may be NULL and you are not checking it until check_pte:. Byt you
->> are using it in this block. It also seems odd to do all the work in the below
->> block under the PTL but before checking if the pte has changed. Suggest moving
->> both checks here.
-> 
-> agreed.
-> 
->>
->>> +
->>> +     /* We hit large folios in swapcache */
->>> +     if (start_pte && folio_test_large(folio) && folio_test_swapcache(folio)) {
->>
->> What's the start_pte check protecting?
-> 
-> This is exactly protecting the case vmf->pte==NULL but for some reason it was
-> assigned in the beginning of the function incorrectly. The intention of the code
-> was actually doing start_pte = vmf->pte after "vmf->pte = pte_offset_map_lock".
-> 
->>
->>> +             int nr = folio_nr_pages(folio);
->>> +             int idx = folio_page_idx(folio, page);
->>> +             unsigned long folio_start = vmf->address - idx * PAGE_SIZE;
->>> +             unsigned long folio_end = folio_start + nr * PAGE_SIZE;
->>> +             pte_t *folio_ptep;
->>> +             pte_t folio_pte;
->>> +
->>> +             if (unlikely(folio_start < max(vmf->address & PMD_MASK, vma->vm_start)))
->>> +                     goto check_pte;
->>> +             if (unlikely(folio_end > pmd_addr_end(vmf->address, vma->vm_end)))
->>> +                     goto check_pte;
->>> +
->>> +             folio_ptep = vmf->pte - idx;
->>> +             folio_pte = ptep_get(folio_ptep);
->>> +             if (!is_swap_pte(folio_pte) || non_swap_entry(pte_to_swp_entry(folio_pte)) ||
->>> +                 swap_pte_batch(folio_ptep, nr, folio_pte, &any_swap_shared) != nr)
->>> +                     goto check_pte;
->>> +
->>> +             start_address = folio_start;
->>> +             start_pte = folio_ptep;
->>> +             nr_pages = nr;
->>> +             entry = folio->swap;
->>> +             page = &folio->page;
->>> +     }
->>> +
->>> +check_pte:
->>>       if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte)))
->>>               goto out_nomap;
->>>
->>> @@ -4190,6 +4223,10 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>                        */
->>>                       exclusive = false;
->>>               }
->>> +
->>> +             /* Reuse the whole large folio iff all entries are exclusive */
->>> +             if (nr_pages > 1 && any_swap_shared)
->>> +                     exclusive = false;
->>
->> If you init any_shared with the firt pte as I suggested then you could just set
->> exclusive = !any_shared at the top of this if block without needing this
->> separate fixup.
-> 
-> Since your swap_pte_batch() function checks that all PTEs have the same
-> exclusive bits, I'll be removing any_shared first in version 3 per David's
-> suggestions. We could potentially develop "any_shared" as an incremental
-> patchset later on .
+On Wed, 10 Apr 2024 at 14:27, Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Hi,
+>
+> Series adds support for power domains on rzg2l driver.
+>
+> RZ/G2L kind of devices support a functionality called MSTOP (module
+> stop/standby). According to hardware manual the module could be switch
+> to standby after its clocks are disabled. The reverse order of operation
+> should be done when enabling a module (get the module out of standby,
+> enable its clocks etc).
+>
+> In [1] the MSTOP settings were implemented by adding code in driver
+> to attach the MSTOP state to the IP clocks. But it has been proposed
+> to implement it as power domain. The result is this series.
+>
+> Along with MSTOP functionality there is also module power down
+> functionality (which is currently available only on RZ/G3S). This has
+> been also implemented through power domains.
+>
+> The DT bindings were updated with power domain IDs (plain integers
+> that matches the DT with driver data structures). The current DT
+> bindings were updated with module IDs for the modules listed in tables
+> with name "Registers for Module Standby Mode" (see HW manual) exception
+> being RZ/G3S where, due to the power down functionality, the DDR,
+> TZCDDR, OTFDE_DDR were also added, to avoid system being blocked due
+> to the following lines of code from patch 6/9.
+>
+> +       /* Prepare for power down the BUSes in power down mode. */
+> +       if (info->pm_domain_pwrdn_mstop)
+> +               writel(CPG_PWRDN_MSTOP_ENABLE, priv->base + CPG_PWRDN_MSTOP);
+>
+> Domain IDs were added to all SoC specific bindings.
+>
+> Thank you,
+> Claudiu Beznea
+>
+> Changes in v3:
+> - collected tags
+> - dinamically detect if a SCIF is serial console and populate
+>   pd->suspend_check
+> - dropped patch 09/10 from v2
+>
+> Changes in v2:
+> - addressed review comments
+> - dropped:
+>     - dt-bindings: clock: r9a09g011-cpg: Add always-on power domain IDs
+>     - clk: renesas: r9a07g043: Add initial support for power domains
+>     - clk: renesas: r9a07g044: Add initial support for power domains
+>     - clk: renesas: r9a09g011: Add initial support for power domains
+>     - clk: renesas: r9a09g011: Add initial support for power domains
+>     - arm64: dts: renesas: r9a07g043: Update #power-domain-cells = <1>
+>     - arm64: dts: renesas: r9a07g044: Update #power-domain-cells = <1>
+>     - arm64: dts: renesas: r9a07g054: Update #power-domain-cells = <1>
+>     - arm64: dts: renesas: r9a09g011: Update #power-domain-cells = <1>
+>   as suggested in the review process
+> - dropped "arm64: dts: renesas: rzg3s-smarc-som: Guard the ethernet IRQ
+>   GPIOs with proper flags" patch as it was integrated
+> - added suspend to RAM support
+> - collected tag
+>
+> [1] https://lore.kernel.org/all/20231120070024.4079344-4-claudiu.beznea.uj@bp.renesas.com/
+>
+>
+> Claudiu Beznea (9):
+>   dt-bindings: clock: r9a07g043-cpg: Add power domain IDs
+>   dt-bindings: clock: r9a07g044-cpg: Add power domain IDs
+>   dt-bindings: clock: r9a07g054-cpg: Add power domain IDs
+>   dt-bindings: clock: r9a08g045-cpg: Add power domain IDs
+>   dt-bindings: clock: renesas,rzg2l-cpg: Update #power-domain-cells =
+>     <1> for RZ/G3S
+>   clk: renesas: rzg2l: Extend power domain support
+>   clk: renesas: r9a08g045: Add support for power domains
+>   clk: renesas: rzg2l-cpg: Add suspend/resume support for power domains
 
-Ahh yes, good point. I'll admit that your conversation about this went over my
-head at the time since I hadn't yet looked at this.
+In particular patches like the above I would appreciate to be cced on
+to help review, but I understand that it's easy to miss in cases like
+this.
 
-> 
->>>       }
->>>
->>>       /*
->>> @@ -4204,12 +4241,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>        * We're already holding a reference on the page but haven't mapped it
->>>        * yet.
->>>        */
->>> -     swap_free(entry);
->>> +     swap_free_nr(entry, nr_pages);
->>>       if (should_try_to_free_swap(folio, vma, vmf->flags))
->>>               folio_free_swap(folio);
->>>
->>> -     inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
->>> -     dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
->>> +     folio_ref_add(folio, nr_pages - 1);
->>> +     add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
->>> +     add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
->>> +
->>>       pte = mk_pte(page, vma->vm_page_prot);
->>>
->>>       /*
->>> @@ -4219,33 +4258,34 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>        * exclusivity.
->>>        */
->>>       if (!folio_test_ksm(folio) &&
->>> -         (exclusive || folio_ref_count(folio) == 1)) {
->>> +         (exclusive || (folio_ref_count(folio) == nr_pages &&
->>> +                        folio_nr_pages(folio) == nr_pages))) {
->>>               if (vmf->flags & FAULT_FLAG_WRITE) {
->>>                       pte = maybe_mkwrite(pte_mkdirty(pte), vma);
->>>                       vmf->flags &= ~FAULT_FLAG_WRITE;
->>>               }
->>>               rmap_flags |= RMAP_EXCLUSIVE;
->>>       }
->>> -     flush_icache_page(vma, page);
->>> +     flush_icache_pages(vma, page, nr_pages);
->>>       if (pte_swp_soft_dirty(vmf->orig_pte))
->>>               pte = pte_mksoft_dirty(pte);
->>>       if (pte_swp_uffd_wp(vmf->orig_pte))
->>>               pte = pte_mkuffd_wp(pte);
->>
->> I'm not sure about all this... you are smearing these SW bits from the faulting
->> PTE across all the ptes you are mapping. Although I guess actually that's ok
->> because swap_pte_batch() only returns a batch with all these bits the same?
-> 
-> Initially, I didn't recognize the issue at all because the tested
-> architecture arm64
-> didn't include these bits. However, after reviewing your latest swpout series,
-> which verifies the consistent bits for soft_dirty and uffd_wp, I now
-> feel  its safety
-> even for platforms with these bits.
+That said, maybe we should start separating and moving the
+power-domain parts out from the clk directory into the pmdomain
+directory instead, that should improve these situations!?
 
-Yep, agreed.
+>   arm64: dts: renesas: r9a08g045: Update #power-domain-cells = <1>
+>
+>  .../bindings/clock/renesas,rzg2l-cpg.yaml     |  18 +-
+>  arch/arm64/boot/dts/renesas/r9a08g045.dtsi    |  20 +-
+>  drivers/clk/renesas/r9a08g045-cpg.c           |  61 ++++
+>  drivers/clk/renesas/rzg2l-cpg.c               | 269 +++++++++++++++++-
+>  drivers/clk/renesas/rzg2l-cpg.h               |  77 +++++
+>  include/dt-bindings/clock/r9a07g043-cpg.h     |  52 ++++
+>  include/dt-bindings/clock/r9a07g044-cpg.h     |  58 ++++
+>  include/dt-bindings/clock/r9a07g054-cpg.h     |  58 ++++
+>  include/dt-bindings/clock/r9a08g045-cpg.h     |  70 +++++
+>  9 files changed, 659 insertions(+), 24 deletions(-)
+>
 
-> 
->>
->>> -     vmf->orig_pte = pte;
->>
->> Instead of doing a readback below, perhaps:
->>
->>         vmf->orig_pte = pte_advance_pfn(pte, nr_pages);
-> 
-> Nice !
-> 
->>
->>>
->>>       /* ksm created a completely new copy */
->>>       if (unlikely(folio != swapcache && swapcache)) {
->>> -             folio_add_new_anon_rmap(folio, vma, vmf->address);
->>> +             folio_add_new_anon_rmap(folio, vma, start_address);
->>>               folio_add_lru_vma(folio, vma);
->>>       } else {
->>> -             folio_add_anon_rmap_pte(folio, page, vma, vmf->address,
->>> -                                     rmap_flags);
->>> +             folio_add_anon_rmap_ptes(folio, page, nr_pages, vma, start_address,
->>> +                                      rmap_flags);
->>>       }
->>>
->>>       VM_BUG_ON(!folio_test_anon(folio) ||
->>>                       (pte_write(pte) && !PageAnonExclusive(page)));
->>> -     set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
->>> -     arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
->>> +     set_ptes(vma->vm_mm, start_address, start_pte, pte, nr_pages);
->>> +     vmf->orig_pte = ptep_get(vmf->pte);
->>> +     arch_do_swap_page(vma->vm_mm, vma, start_address, pte, pte);
->>>
->>>       folio_unlock(folio);
->>>       if (folio != swapcache && swapcache) {
->>> @@ -4269,7 +4309,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->>>       }
->>>
->>>       /* No need to invalidate - it was non-present before */
->>> -     update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
->>> +     update_mmu_cache_range(vmf, vma, start_address, start_pte, nr_pages);
->>>  unlock:
->>>       if (vmf->pte)
->>>               pte_unmap_unlock(vmf->pte, vmf->ptl);
->>
-> 
-> Thanks
-> Barry
-
+Kind regards
+Uffe
