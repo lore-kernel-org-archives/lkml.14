@@ -1,210 +1,120 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77EE51514FF
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 20:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26E01509B7;
+	Fri, 12 Apr 2024 20:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712953255; cv=none; b=DfJq3oCk11Z+hDL6QQO2Mk4+wn2Wy7Uyv4sk2SESYmd1Ou3MECUINYSDNuLp54Q9PT2H5H1Yhi6285U5X6iX0B5wUC3EV/7knFfU/XH6331NdITpCGlp5Kc9//y+ID+Cu+Wx//ykwZVn1r7YeTupZEbE0PdAcDkgR5Rwrl0CWts=
+	t=1712953293; cv=none; b=kKaZ95I5V1oo1hAviX30pQleyirIkc1YiuRwbZzvcOQKGLdvZgnQoSkqkOPIrFBgIkzJQ+ipA9kt/xg+OAjNPaN6XMN1JFr7WtU2PMzCwNEp0PmRVeOc0nwBvjKkG1aPFN2ZmNHT18Pe5raOAr/J3wZjj9XAw7pJEGefuq/bkx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712953255; c=relaxed/simple;
-	bh=kTu+9JONgo0n93qVfsyKW4hMHl/xGnuFMlqDaJn3mAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ku67c0DnAEqNnla7ajSXOABaUUXtHmORK9Tc9HgyRd0Y8D/UYjXvZGE11s9F9AhJG5jqzxvF/QsNNIUuqySIgbt84W55iXqyV4OPnoOh4g+9RXQiT/k2aMdLRYvMXnm89cuGoMO3XCvM+o/DwFRuasnQ/Neai2fmC0Uq1gANrSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pqeWIKFB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G3Wj2ndT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cHuo85r/; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mUuuEEUP; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712953293; c=relaxed/simple;
+	bh=D1LNnJyJyc/QLuWcAtYlqb7DUfFc0XhDzRcdfauRS+c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SdYtHwh09QZKuZpeLTz/MYK7RVHz7+E+P+imHlE5F0KmnSA80HbcII02EqwzwtJjCVT2Gcg+vmpU8qHJf13Cc4SHly/BSeKpFnVq+3QdhT/4mvwRjtmbBzQ9fk0y5DfzZnZDYiwZfX9JSfwdWqjdHH16mT3RGihu81lPZWv6RBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TSK08Iyp; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pqeWIKFB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G3Wj2ndT";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cHuo85r/";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mUuuEEUP"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 10EAB1FB41;
-	Fri, 12 Apr 2024 20:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712953250; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iDvcjL3Sj6DKOzUiHUApilKt2yFR24gfxfskdIfdUpQ=;
-	b=pqeWIKFBalcTGIjsv9SHiKeP2hbNrh4QwWTHSmCpCGMg/MwQK0I7jXAUa3Ln/60UOAwYoh
-	u6wgWniuw7rC5A1uDENlJa7DzS3OB6saa8yC6kJfXsv8kXEf9SmV4vnw2qlcu197Z4gcfl
-	K7Z3PaG6wOKUJ0QK7W/Prbuy5drn4Mw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712953250;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iDvcjL3Sj6DKOzUiHUApilKt2yFR24gfxfskdIfdUpQ=;
-	b=G3Wj2ndTaPc0XlbRZDVeEZErkJGkGf644xTB35jbiqE3fFwEYjHKgD69ZCgHOEkYfZiCwV
-	JG7FYvcafuURisBg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="cHuo85r/";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=mUuuEEUP
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712953249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iDvcjL3Sj6DKOzUiHUApilKt2yFR24gfxfskdIfdUpQ=;
-	b=cHuo85r/LG3lYg5CQx5E+cU7bxMXnspk3zTcvDcsw1u1zxsJ5x50y0Deao9SrPKFxqep1Q
-	FeQuWyb40o03AOOWom/dlGKOTMgu4kFVtuyP6xGhwTwN2x6c2tSmWmFa2y583OnAR5HzUI
-	FMpzppAGuukort0QiYW4tZZOgY0zF/Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712953249;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=iDvcjL3Sj6DKOzUiHUApilKt2yFR24gfxfskdIfdUpQ=;
-	b=mUuuEEUP8X2E6WEPMSdDC7G05hD3IGo+Zp8RraHrbutmWK2kXq1aTiu58rQst0rDqVaftO
-	b9CJutxifouL2RAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E42171368B;
-	Fri, 12 Apr 2024 20:20:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id JylfN6CXGWapWAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 12 Apr 2024 20:20:48 +0000
-Message-ID: <1207c5d7-8bb7-4574-b811-0cd5f7eaf33d@suse.cz>
-Date: Fri, 12 Apr 2024 22:20:48 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSK08Iyp"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2a4df5d83c7so808226a91.0;
+        Fri, 12 Apr 2024 13:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712953291; x=1713558091; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xRhxtl0wttxPAELEpzn5FbA0uT6tMNbWqPbBtzgT++s=;
+        b=TSK08Iyp1wRfsJK8LxwqE7O3yk61twmYlzYiwe+KrQmFYvaNL3SRMvu8FNOlEkDSL9
+         UHxckQ+WqGdQAnKJraVLjJJIyoeVa3n8QlwlCaF5ftllmohwzrShM+yoe9G4P1wLCfKX
+         kvKOSafB/WP1dj0MUwCoAed1HCnsoaGBbQTu0LHwE3nNlxbFN7vQyQUr2mUrXaGx9cLD
+         q395sjumTZnmxTktU1YbyxosOIYAO6zITWw+c6vIzHh0NSyt4mMS40uV+hrRm9iIYSsv
+         1sUFXNkX74TEdS3W+U1dcZXJjbCq/DMu9V0FsZneQZW+ZgPcAYbCuzPdY5/x4J0UwGyU
+         BB/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712953291; x=1713558091;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xRhxtl0wttxPAELEpzn5FbA0uT6tMNbWqPbBtzgT++s=;
+        b=TZ7ZeTEeGTiYcyE8Hnz2sO+DSiQuYtVObw9HyDa1KPHDL4y0gKRTax/sIseC/gduMj
+         TBt32UUYIcnlUro6y+KHVQ5cA+NgGa1MHaz6rhkySRN8WB+hv4t/7lfjI5amldiljvz2
+         kJbRs8EU7MRVrOIL3whgaBc8nKw8Aw40BZyYG1rsmQXTOHVZaGMkM5nQ0Qcu6fCE2R55
+         guCoLQgoeFHIY3nPDRSQkQArwI1bTZ/aQL8WWFf8M4X5stXkEIgcFmQwESG570OxrTbk
+         1JvZkZ1rryDCsnCaYBp9DA6PPxzPuOrXiaO7jWpeImeJqCCL5DoJd0RMJH9hIuVR1xLv
+         80Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVu0lfN8qwuS1VZVJvAYEqVNIKWh2uTjbrVboD1VSp3hRCP7D8f/SS+3x8O+8V0yMTBzbZg2gwz8K5FBOyEwBxw2NFJI3k0mtXrXmKU6VgV5UsG1cDUUzHgsAPURpByd2u4/1dlz6nbG5ol8v0jCpmoUXgMGqriUKqGZgSK6EpHE8WVOwJnfj2rx+KtHyRl4i3iYT+Qy3TPI+YEqHjyQH5M
+X-Gm-Message-State: AOJu0YxSPJWuKlod0BAN8BeWXP3TV0jYlrFfK4kNgYiqCcDAtJAkivod
+	/1QrOXUx+Vtifiot90tMgWpuxnzJLp3L/p6fgQWyeuYNqOOPse18mT1M5t81GMrOhE3rqMwQv8/
+	SL01veJA6pCe+TD9mYNKxJbRKUg8=
+X-Google-Smtp-Source: AGHT+IG7KN6iabo0XlVcK5USdt9XWkJn5cfypcOd3GkkkkUO155mnzCkwslkc6n9NeCzDgFyg6ui/1cj7xcnMb2xXCA=
+X-Received: by 2002:a17:90b:3a86:b0:2a6:f977:39e0 with SMTP id
+ om6-20020a17090b3a8600b002a6f97739e0mr2640378pjb.3.1712953291083; Fri, 12 Apr
+ 2024 13:21:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] : Re: [PATCH] slub: limit number of slabs to scan in
- count_partial()
-Content-Language: en-US
-To: Jianfeng Wang <jianfeng.w.wang@oracle.com>,
- "Christoph Lameter (Ampere)" <cl@linux.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, penberg@kernel.org,
- rientjes@google.com, iamjoonsoo.kim@lge.com, akpm@linux-foundation.org,
- junxiao.bi@oracle.com
-References: <20240411164023.99368-1-jianfeng.w.wang@oracle.com>
- <e0222219-eb2d-5e1e-81e1-548eeb5f73e0@linux.com>
- <38ef26aa-169b-48ad-81ad-8378e7a38f25@suse.cz>
- <a8e208fb-7842-4bca-9d2d-3aae21da030c@oracle.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <a8e208fb-7842-4bca-9d2d-3aae21da030c@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.50 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	XM_UA_NO_VERSION(0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 10EAB1FB41
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.50
+References: <20240412162510.29483-1-robimarko@gmail.com> <20240412162510.29483-2-robimarko@gmail.com>
+ <4a1e0cb6-c319-4eb1-9bd1-5ff13eabfe1b@isd.uni-stuttgart.de>
+In-Reply-To: <4a1e0cb6-c319-4eb1-9bd1-5ff13eabfe1b@isd.uni-stuttgart.de>
+From: Robert Marko <robimarko@gmail.com>
+Date: Fri, 12 Apr 2024 22:21:19 +0200
+Message-ID: <CAOX2RU60K0JqeNWD5go4nM8aDnZmHQzF-Zx89MetqGxK4ySb2w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] wifi: ath11k: support DT ieee80211-freq-limit
+ property to limit channels
+To: Christian Lamparter <christian.lamparter@isd.uni-stuttgart.de>
+Cc: kvalo@kernel.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jjohnson@kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, ath11k@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/12/24 7:29 PM, Jianfeng Wang wrote:
-> 
-> 
-> On 4/12/24 12:48 AM, Vlastimil Babka wrote:
->> On 4/11/24 7:02 PM, Christoph Lameter (Ampere) wrote:
->>> On Thu, 11 Apr 2024, Jianfeng Wang wrote:
->>>
->>>> So, the fix is to limit the number of slabs to scan in
->>>> count_partial(), and output an approximated result if the list is too
->>>> long. Default to 10000 which should be enough for most sane cases.
->>>
->>>
->>> That is a creative approach. The problem though is that objects on the 
->>> partial lists are kind of sorted. The partial slabs with only a few 
->>> objects available are at the start of the list so that allocations cause 
->>> them to be removed from the partial list fast. Full slabs do not need to 
->>> be tracked on any list.
->>>
->>> The partial slabs with few objects are put at the end of the partial list 
->>> in the hope that the few objects remaining will also be freed which would 
->>> allow the freeing of the slab folio.
->>>
->>> So the object density may be higher at the beginning of the list.
->>>
->>> kmem_cache_shrink() will explicitly sort the partial lists to put the 
->>> partial pages in that order.
->>>
->>> Can you run some tests showing the difference between the estimation and 
->>> the real count?
-> 
-> Yes.
-> On a server with one NUMA node, I create a case that uses many dentry objects.
+On Fri, 12 Apr 2024 at 21:52, Christian Lamparter
+<christian.lamparter@isd.uni-stuttgart.de> wrote:
+>
+> On 4/12/24 6:24 PM, Robert Marko wrote:
+> > The common DT property can be used to limit the available channels
+> > but ath11k has to manually call wiphy_read_of_freq_limits().
+> >
+> > Signed-off-by: Robert Marko <robimarko@gmail.com>
+>
+> I've seen this before.
+>
+> https://patchwork.kernel.org/project/linux-wireless/patch/ed266944c721de8dbf0fe35f387a3a71b2c84037.1686486468.git.chunkeey@gmail.com/
+>
+> (dt-binding too. it has/had an ack)
+> https://patchwork.kernel.org/project/linux-wireless/patch/fc606d2550d047a53b4289235dd3c0fe23d5daac.1686486468.git.chunkeey@gmail.com/
+>
+> sooo.... this is awkward.
 
-Could you describe in more detail how do you make dentry cache to grow such
-a large partial slabs list? Thanks.
+Definitively,
+I completely missed your patch set and we needed this in OpenWrt.
 
+You were, first so your patch set should be applied.
+
+Regards,
+Robert
+
+
+
+>
+> > ---
+> >   drivers/net/wireless/ath/ath11k/mac.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+> > index c32be587000d..59bde128d351 100644
+> > --- a/drivers/net/wireless/ath/ath11k/mac.c
+> > +++ b/drivers/net/wireless/ath/ath11k/mac.c
+> > @@ -10124,6 +10124,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
+> >       if (ret)
+> >               goto err;
+> >
+> > +     wiphy_read_of_freq_limits(ar->hw->wiphy);
+> >       ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
+> >       ath11k_mac_setup_he_cap(ar, cap);
+> >
+>
