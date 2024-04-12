@@ -1,136 +1,79 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CE14E1D5;
-	Fri, 12 Apr 2024 09:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E503524DC;
+	Fri, 12 Apr 2024 10:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712915915; cv=none; b=Vz+u+TJlWL5//WvUwhqPSQWrQ1EiYeEat215wKSM1d7KAT7DU2QpK8MktWKU1kyFnLgtenvWKGkNtLnvZD//eC/il5dM5MoK5w65k1IWuXF+EtEiTbawx+SDVSaTcq3NeKJlyHkoxP1LU+uKBcEe3NCnpiMQTpGN3KIGPNbHPnw=
+	t=1712916066; cv=none; b=NQuxILOyApt9pexVl4mJ2E/7beYULa945ahHCxjjxcDGv3Roe1cF/GZGL6GgMul+Vk/ffFpBrdKPSC+tLErr603tgiHC6HqEd8K4IwFN6Cqhs/wfrfyC3cKPnM8psyXHY1Baf1Rq9+UxihqCUfuhzdqxQTPd+VVIGN9bN005Ido=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712915915; c=relaxed/simple;
-	bh=QndV9TT9pmDT+fXwJI9iOQE9VYOlSdccevWqhWNEacg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0s/DE0NS6lmxiRYPPzTc2iyecUaSpgi41V5rT2k+GagHgVY6M4PVggQ2T9PY6/tyommsvZ9Kv759FN7WdDvbGYDhcBjlGrtKL+bFVx48uoiadji4iAkoTk2zyghQM9J/YwIItdhQXBaLKaLNBAt43sdpauMOsngK/ELNtAYM04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=hxydG2DY; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="hxydG2DY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712915914; x=1744451914;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QndV9TT9pmDT+fXwJI9iOQE9VYOlSdccevWqhWNEacg=;
-  b=hxydG2DY9EC4gf9jhE6POyrRgP9gVbeFSIfbtTDRlNoYlmjNkHKDWyZg
-   lGFUk5KqlVY2Sv0yT/qSMD2y2dzKI9B/4M5LJNQSlbWtj8TLy0msjE0eD
-   xwvbJLM5WzQJ3Q6n/PLrPO2YviF8UHYbHEX1p34HgTmhwjCR3t2mmBGHD
-   Lw9uuYAFksj4VHQZEvdS5t/nVd72Vz7zhCBytqZv9wxQwfoL5ycyJ/jdA
-   FM6pz1ejiW2UNcrQJ8eX9RMCctyOP6V0G8fDxpFLpTPf1FNj8Tk7TOQ9+
-   uUI/UdWagxerd3YS0v3Z9jImbhVyi4YuOveGpm2o0KxcosWYQV6QqDL3R
-   A==;
-X-CSE-ConnectionGUID: OGnVlqFaSN2/PpP1KY9laQ==
-X-CSE-MsgGUID: +7SHxj1mSZiXXuIvu13hXg==
-X-IronPort-AV: E=Sophos;i="6.07,195,1708412400"; 
-   d="asc'?scan'208";a="20723575"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Apr 2024 02:58:33 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Apr 2024 02:58:16 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex02.mchp-main.com (10.10.85.144)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 12 Apr 2024 02:58:12 -0700
-Date: Fri, 12 Apr 2024 10:57:21 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Evan Green
-	<evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<shuah@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Palmer Dabbelt
-	<palmer@rivosinc.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 01/19] dt-bindings: riscv: Add vendorid and archid
-Message-ID: <20240412-revocable-dosage-99265debe66b@wendy>
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
- <20240411-dev-charlie-support_thead_vector_6_9-v1-1-4af9815ec746@rivosinc.com>
+	s=arc-20240116; t=1712916066; c=relaxed/simple;
+	bh=FHWV3NbTZJVvgX19u1exvDjE/a+Vl9HY6tKBV4SMR/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tcfCRt90S9VVklgULnUOfRAVyqQMZTWuYF/v82b471Y+M+XElgRIs+FEI5mLSPrq3SOmxxRBCjIpeeDjmKpakf0IRuxX8olCThXiRyf25vF0TiSawT+VSRU7vuRV7HPaYSWAXs5PcTusC92j8WmQKcAJavnNEJkk2NLSSouyWUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.07,195,1708354800"; 
+   d="scan'208";a="201242322"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 12 Apr 2024 19:01:01 +0900
+Received: from renesas-deb12.cephei.uk (unknown [10.226.93.65])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id BD76141E0D16;
+	Fri, 12 Apr 2024 19:00:56 +0900 (JST)
+From: Paul Barker <paul.barker.ct@bp.renesas.com>
+To: Sergey Shtylyov <s.shtylyov@omp.ru>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Paul Barker <paul.barker.ct@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	YueHaibing <yuehaibing@huawei.com>,
+	netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net PATCH v2 0/4] ravb Ethernet driver bugfixes
+Date: Fri, 12 Apr 2024 11:00:20 +0100
+Message-Id: <20240412100024.2296-1-paul.barker.ct@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="YzIxShuT9j2BnF76"
-Content-Disposition: inline
-In-Reply-To: <20240411-dev-charlie-support_thead_vector_6_9-v1-1-4af9815ec746@rivosinc.com>
+Content-Transfer-Encoding: 8bit
 
---YzIxShuT9j2BnF76
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These patches fix bugs found during recent work on the ravb driver.
 
-On Thu, Apr 11, 2024 at 09:11:07PM -0700, Charlie Jenkins wrote:
-> vendorid and marchid are required during devicetree parsing to determine
-> known hardware capabilities. This parsing happens before the whole
-> system has booted, so only the boot hart is online and able to report
-> the value of its vendorid and archid.
+Patches 1 & 2 affect the R-Car code paths so have been tested on an
+R-Car M3N Salvator-XS board - this is the only R-Car board I currently
+have access to.
 
-I'll comment on the kernel patch, but this is not needed.
+Patches 2, 3 & 4 affect the GbEth code paths so have been tested on
+RZ/G2L and RZ/G2UL SMARC EVK boards.
 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Document=
-ation/devicetree/bindings/riscv/cpus.yaml
-> index d87dd50f1a4b..c21d7374636c 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -94,6 +94,17 @@ properties:
->      description:
->        The blocksize in bytes for the Zicboz cache operations.
-> =20
-> +  riscv,vendorid:
-> +    $ref: /schemas/types.yaml#/definitions/uint64
-> +    description:
-> +      Same value as the mvendorid CSR.
-> +
-> +  riscv,archid:
-> +    $ref: /schemas/types.yaml#/definitions/uint64
-> +    description:
-> +      Same value as the marchid CSR.
-> +
-> +
->    # RISC-V has multiple properties for cache op block sizes as the sizes
->    # differ between individual CBO extensions
->    cache-op-block-size: false
->=20
-> --=20
-> 2.44.0
->=20
+Changes from v1:
+  * Fixed typos in commit message of patch
+    "net: ravb: Allow RX loop to move past DMA mapping errors".
+  * Added Sergey's Reviewed-by tags.
+  * Expanded Cc list as Patchwork complained that I had missed people.
+  * Trimmed the call trace in accordance with the docs [1] in patch
+    "net: ravb: Fix GbEth jumbo packet RX checksum handling".
 
---YzIxShuT9j2BnF76
-Content-Type: application/pgp-signature; name="signature.asc"
+[1]: https://docs.kernel.org/process/submitting-patches.html#backtraces-in-commit-messages
 
------BEGIN PGP SIGNATURE-----
+Paul Barker (4):
+  net: ravb: Count packets instead of descriptors in R-Car RX path
+  net: ravb: Allow RX loop to move past DMA mapping errors
+  net: ravb: Fix GbEth jumbo packet RX checksum handling
+  net: ravb: Fix RX byte accounting for jumbo packets
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhkFgQAKCRB4tDGHoIJi
-0taCAP4tYStLi/B4J7M5neONl/q/8R8/ZSNYoUC3mB5o++Qa+gD7BOaDcH4iTfuG
-7JqZQnqsXKTRSQOes4E+V+bAkjzkYQU=
-=x06j
------END PGP SIGNATURE-----
+ drivers/net/ethernet/renesas/ravb_main.c | 67 +++++++++++-------------
+ 1 file changed, 32 insertions(+), 35 deletions(-)
 
---YzIxShuT9j2BnF76--
+
+base-commit: 2ae9a8972ce04046957f8af214509cebfd3bfb9c
+-- 
+2.39.2
+
