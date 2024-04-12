@@ -1,169 +1,148 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BEC502AC
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB50750A6C;
+	Fri, 12 Apr 2024 11:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712921383; cv=none; b=GGprfhYt45929C5YoyVHvOHgH4+BFjEf92aKc7v4Dev3QgMCKw1USEq/4DcuGGFjs2sah5MABuCgTEvgZET4sIBhhAaWw5Ks1frQuA6Rs8kLtshvalfeEbe1PRxYU1kr2mnix9S3kLw1n/68cqGIquGPntACtCipLyaxSn3Td3I=
+	t=1712921469; cv=none; b=bTY/tyKAMvXDZDZ5PayP5HDwfuFBrGQTNgaDw3u1TkcXl0fZSQ3GpJc2JTfG2sf/hoJ29xLmo87HsxB7vng799JTl0TRTRWzbdhI1sULy7L9kANVY6FM+xtRbEhiYzjaV4Fm61K3BVk62n+uQNzZSbbZUXvApKK/gLyHAZw0mPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712921383; c=relaxed/simple;
-	bh=I3CV3FO9RlyUKYSIF3yGSQYqWWM3IOLuY86OeqBrCKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=c6q9qe4QDk1yMvIs3UtzE/LH45sIommh0ZnhrXCBLUxofkMcvSYzpNf5R900NSohfqHyvpolC14MNiLvKshtmSYKFOJTLHNX1m73zBKvoCUP5GN+FXlGjJuQ8OUIwpflf0wGMgqbprhRpg09MRO+CapmhV1ln4uE1Ex+upsgMx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=CIjFB/Wj; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1712921469; c=relaxed/simple;
+	bh=L960/YQ59RzbOd8aJJgKPfZJ+eguGt9hV8xigRjXTME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhuxBJZ9KRF2dsivc1CVIv0AqZS7X8txublp0GCNL5H14VHXX0haH1LwWNxnRSatgG7bWV7Io0PhLlIgePGTVN2oSYEVJpFvbUbqPoLiHRTwCKNsAzTTdO6ufVQABtkrX3ufDvrtSi/Ofda/kV+w1VRAz0tP0q38yHjND6gmy9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=caZylvsN; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="CIjFB/Wj"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ed32341906so855852b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1712921381; x=1713526181; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7TANC/O7vA+JiKQebAKkUVF/9/SWuImLeD8ZhsV9CTg=;
-        b=CIjFB/Wji2Ce4wUiE7CNuAa5JGmMBujoIDYcpP4TNt8WXoPKA5XaL1lvtpwkjOyXyy
-         EAJ4s4d5ixodCY/tjjHhVvQsdCH0NIp/ACX0kMxzshrG/jpw1tnKAWfF+ha1qzWElBEs
-         Yc1Dn3Zqy8PNrueCPPyyGhf7Rd8LJZDQ8oAE3j6/Tje8NLe81F5qL11qYDNg542+U0Wh
-         075LwEEZBWkhqmmUrSmnj0MXCxQ9/Ip5RgT/X0IgtmVfeVhu4C00YhKqgbzoQXqmy7pj
-         3NIY8gFhFM0fHxJuKTUolfCU6rzrsj5eab1FUfCtoV4j/Xb6GT0jdlnm59aRHggtdUD7
-         LyOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712921381; x=1713526181;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7TANC/O7vA+JiKQebAKkUVF/9/SWuImLeD8ZhsV9CTg=;
-        b=Ygoe4YqvKLR4Em+C376zzTkbfeyS/HidJ3znetfPwfDfNgMTQZ2Rlz7mSKmJ+qQAZ+
-         Nnjei1td90IxlHqXW5k9qMsh1wqOHEMS3pnBasiqgr+issfAdAzq6y6ZNrRYSfB8BCIe
-         9TKj0lkBqkuQ5IblgopBnKyU082jcPEPz/LUsQtAJqOLWJslPsIXOGbh/E7hosmJ+P7E
-         Ztuzn+CPc/nbw7e+wVedCDNcb0VyFLGgDd9lRZcyRK5qtW9zALIr5lIKuPvy2Ui6/Non
-         h1/CmZ0WrUxOTjbRzrQczGsR4UnBdG2Z8PVLuDZRzBQIjTb3ASN8RtW7UDpNRwAUcODl
-         a+yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqwHRfn8MJ7XyT72xCt9g8rIrIhpZDzzRgL7DNF4zXq6na1vjZPkgTua3w7k0DqKvSpTjW8HkA7DJK6b1YJTnxs1MkQxkOWl0QK1uq
-X-Gm-Message-State: AOJu0YxCo8y6TmW6o/oevK1Kyw8E4lP+SFbGu1qRyNhOA3VxME68nZR+
-	cq2Dh9XuzW8MZcichPuN+RD++xb2kpHQ49GMhkPFbZSJVC3S87YqM5C9S2ZbX5Q=
-X-Google-Smtp-Source: AGHT+IHY387bs/fjhRwu7PR3437O21AK+7fM8+la7npbiGwsFsFXlYS6TqYUTcepY2PQZxgsLVeTfA==
-X-Received: by 2002:a05:6a21:3395:b0:1a9:9664:ef12 with SMTP id yy21-20020a056a21339500b001a99664ef12mr2609342pzb.43.1712921381190;
-        Fri, 12 Apr 2024 04:29:41 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
-        by smtp.gmail.com with ESMTPSA id i89-20020a17090a3de200b002a005778f51sm2832846pjc.50.2024.04.12.04.29.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 04:29:40 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH] of: property: Add fw_devlink support for interrupt-map property
-Date: Fri, 12 Apr 2024 16:59:31 +0530
-Message-Id: <20240412112931.285507-1-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="caZylvsN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712921468; x=1744457468;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L960/YQ59RzbOd8aJJgKPfZJ+eguGt9hV8xigRjXTME=;
+  b=caZylvsN9zz+dU+ioKn5TP25fa07DShjHnzKP4lLs2iEWbXWEkmj72Nb
+   umtVhkaNcwfjkhOxw2nSfVs5JwpMqL2efcLLzFE8gIiAIQE5j7bEyVF5+
+   ScqdXCf/bzfp8KX6+nHL3ClpPN5YyXMG/RK9gWyi4Qtk3E9mFUGT8j5VJ
+   3wg6JfkADdLMIQIewm+4W5VZPZveMLXfmFyIB+Ae3CSxwzXTM9BrZHCUv
+   Vd0x2+P88qyexEVyobG1/qsP0sPAJIwN3Om+7OYj1bZ3zTiAQu/72dVnd
+   eXtI3FfA2OnNBc980HecdgTm0zgHeegp7urOyHpgp4M1oZqe2MXy8uY4K
+   w==;
+X-CSE-ConnectionGUID: 54COLSCpRAOcSrqKP+Xo6A==
+X-CSE-MsgGUID: y9glu24hQ9eAAehn+JAnpQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="25827805"
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="25827805"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 04:31:08 -0700
+X-CSE-ConnectionGUID: 5KxX8M8xRwqYtvWtVt2zMA==
+X-CSE-MsgGUID: f6EmvKVfRCe5jt5OCUxFdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
+   d="scan'208";a="21630403"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 04:31:05 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 7AEBA120359;
+	Fri, 12 Apr 2024 14:31:02 +0300 (EEST)
+Date: Fri, 12 Apr 2024 11:31:02 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Alexander Shiyan <eagle.alexander923@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	jacopo.mondi@ideasonboard.com
+Subject: Re: [PATCH v4 2/6] media: imx335: Parse fwnode properties
+Message-ID: <Zhkbdu2miLeCNbIg@kekkonen.localdomain>
+References: <20240402140924.10009-1-umang.jain@ideasonboard.com>
+ <20240402140924.10009-3-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402140924.10009-3-umang.jain@ideasonboard.com>
 
-Some of the PCI controllers (such as generic PCI host controller)
-use "interrupt-map" DT property to describe the mapping between
-PCI endpoints and PCI interrupt pins.
+Hi Umang, Kieran,
 
-Currently, there is no fw_devlink created based on "interrupt-map"
-DT property so interrupt controller is not guaranteed to be probed
-before PCI host controller. This mainly affects RISC-V platforms
-where both PCI host controller and interrupt controllers are probed
-as regular platform devices.
+On Tue, Apr 02, 2024 at 07:39:20PM +0530, Umang Jain wrote:
+> From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> 
+> Call the V4L2 fwnode device parser to handle controls that are
+> standardised by the framework.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
+> ---
+>  drivers/media/i2c/imx335.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index c633ea1380e7..b8cf85984127 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -1227,10 +1227,12 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  {
+>  	struct v4l2_ctrl_handler *ctrl_hdlr = &imx335->ctrl_handler;
+>  	const struct imx335_mode *mode = imx335->cur_mode;
+> +	struct v4l2_fwnode_device_properties props;
+>  	u32 lpfr;
+>  	int ret;
+>  
+> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 7);
+> +	/* v4l2_fwnode_device_properties can add two more controls */
+> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 9);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1296,15 +1298,27 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  		imx335->hblank_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>  
+>  	if (ctrl_hdlr->error) {
+> -		dev_err(imx335->dev, "control init failed: %d\n",
+> -			ctrl_hdlr->error);
+> -		v4l2_ctrl_handler_free(ctrl_hdlr);
+> -		return ctrl_hdlr->error;
+> +		ret = ctrl_hdlr->error;
+> +		dev_err(imx335->dev, "control init failed: %d\n", ret);
+> +		goto free_ctrl_hdlr;
+>  	}
+>  
+> +	ret = v4l2_fwnode_device_parse(imx335->dev, &props);
+> +	if (ret)
+> +		goto free_ctrl_hdlr;
+> +
+> +	ret = v4l2_ctrl_new_fwnode_properties(ctrl_hdlr, &imx335_ctrl_ops,
+> +					      &props);
+> +	if (ret)
+> +		goto free_ctrl_hdlr;
 
-This creates fw_devlink between consumers (PCI host controller) and
-supplier (interrupt controller) based on "interrupt-map" DT property.
+This works but it'd be nice if v4l2_ctrl_new_fwnode_properties() behaved as
+the control framework functions, i.e. bail out if the handler's state has
+an error. Then you could have a single check for that, dropping the two
+checks above.
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- drivers/of/property.c | 53 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Feel free to post a patch. :-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index a6358ee99b74..ccbbb651a89a 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1311,6 +1311,58 @@ static struct device_node *parse_interrupts(struct device_node *np,
- 	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
- }
- 
-+static struct device_node *parse_interrupt_map(struct device_node *np,
-+					       const char *prop_name, int index)
-+{
-+	struct device_node *tn, *ipar, *supnp = NULL;
-+	u32 addrcells, intcells, cells;
-+	const __be32 *imap, *imap_end;
-+	int i, imaplen;
-+
-+	if (!IS_ENABLED(CONFIG_OF_IRQ))
-+		return NULL;
-+
-+	if (strcmp(prop_name, "interrupt-map"))
-+		return NULL;
-+
-+	ipar = of_node_get(np);
-+	do {
-+		if (!of_property_read_u32(ipar, "#interrupt-cells", &intcells))
-+			break;
-+		tn = ipar;
-+		ipar = of_irq_find_parent(ipar);
-+		of_node_put(tn);
-+	} while (ipar);
-+	if (!ipar)
-+		return NULL;
-+	addrcells = of_bus_n_addr_cells(ipar);
-+	of_node_put(ipar);
-+
-+	imap = of_get_property(np, "interrupt-map", &imaplen);
-+	if (!imap || imaplen <= (addrcells + intcells))
-+		return NULL;
-+	imap_end = imap + imaplen;
-+
-+	for (i = 0; i <= index && imap < imap_end; i++) {
-+		if (supnp)
-+			of_node_put(supnp);
-+
-+		imap += addrcells;
-+		imap += intcells;
-+
-+		supnp = of_find_node_by_phandle(be32_to_cpu(imap[0]));
-+		if (!supnp)
-+			return NULL;
-+		imap += 1;
-+
-+		if (of_property_read_u32(supnp, "#interrupt-cells", &cells))
-+			return NULL;
-+		imap += cells;
-+	}
-+
-+	return supnp;
-+}
-+
- static struct device_node *parse_remote_endpoint(struct device_node *np,
- 						 const char *prop_name,
- 						 int index)
-@@ -1359,6 +1411,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_msi_parent, },
- 	{ .parse_prop = parse_gpio_compat, },
- 	{ .parse_prop = parse_interrupts, },
-+	{ .parse_prop = parse_interrupt_map, },
- 	{ .parse_prop = parse_regulators, },
- 	{ .parse_prop = parse_gpio, },
- 	{ .parse_prop = parse_gpios, },
+> +
+>  	imx335->sd.ctrl_handler = ctrl_hdlr;
+>  
+>  	return 0;
+> +
+> +free_ctrl_hdlr:
+> +	v4l2_ctrl_handler_free(ctrl_hdlr);
+> +	return ret;
+>  }
+>  
+>  /**
+
 -- 
-2.34.1
+Regards,
 
+Sakari Ailus
