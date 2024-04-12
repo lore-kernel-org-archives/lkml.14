@@ -1,239 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784B93CF79
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873013CF79;
+	Fri, 12 Apr 2024 10:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712918865; cv=none; b=kac0PJJ4A2NzMat84zBGrLJJPPgmpjqdvH7MK+gxJXVf+SmXSfLdkZ3RI24jJOPrp1sgHCIVe+QdAEZOWT65mII9Fp7nhhBqe8BigpzQI+nkrKmTfTpZF9bjo4xPmL4SDHpY3KTZtZHFe46sxBdnFcFu/9t4n9tKKsBW4tre9cs=
+	t=1712918930; cv=none; b=bclKpbxDNxLSJHncEr5XCEL1QK4jsfsLDLXttMAsAht8V81sk1SwxLg+szUMeCwFj6RMmtf7M02qLK8ZR+9b6sY3aqLW/hymptKM5vxotES6WayHtPmC0JC/H8WTWInTZXO4rvjEre0PrJpyEinCsDZUej8HsLLgAfZ6HZogF68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712918865; c=relaxed/simple;
-	bh=IseyYROrNtC5yCOh5GhyQmI6vCSbBmMCgIyPc8W0XFE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MYYPXSBFp68LevjFvSKhfPpG1Ps6q1ennKi+8Ub4PbqJrPYwY5mg8PFvn6beE4QXmY18IacodbPyG+kGnFSqYMdo48xWksRt5BBQt5tu0u+Ovra4P6jMloXTETZLgrf0TaC7tPoZN/TFB3RcH+HGEz7eOasGt38xqNNoRo9LYXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iP6PeJiy; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712918930; c=relaxed/simple;
+	bh=FDqUajE9GfA8H5Akw2N7P80Hc9nZh1oc2O8o1X0XICw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=eNL30wXuVAjtYFpR/lPCndsogsDAHN1k++PIwB31nGgxvUeH45KOV1jneVvwgD8PNbjGTaWF159Nl61kTH3xkeQTjpB6YaipEtLjE1wGtDv+AMovcDpqdIa1hjfNuKEt2FLKD5ULtUdkxc+pgneUO7zPqQnHHCqTkfsa48ph5vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OyAkddjx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iP6PeJiy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712918864; x=1744454864;
-  h=date:from:to:cc:subject:message-id;
-  bh=IseyYROrNtC5yCOh5GhyQmI6vCSbBmMCgIyPc8W0XFE=;
-  b=iP6PeJiymqkVv6UyIiFPPG8HgY7V+KikblXNgaXTIarqHlxqybRFfMFO
-   OO9aDD6T5QNdCe3JcH7dqz4QPnj4srA0vtuXF+lfmijvxhRsWGHdAmWCa
-   MYbRgw1nik9KTfYRtj0InI5ChGF3+MA9xS+bq/Uhp5oR2Bd+LXII0RRqJ
-   0tNHn0zvkJCzYwpl+R9ShjEondmpsosx9pzYPiMTvMryPNWKjWqywbqGW
-   6yxgtxAYFY9n4jrCZtlcZ+NxyEMaUegM5tF5k9V5LcTNGvRl7VrcVwShU
-   meT3BKf+8mkut360xDlXRfXyajfmC5vky22b7LzHaf6VodUXNMxbA5obR
-   Q==;
-X-CSE-ConnectionGUID: tssKzs6sT4ylHyHuFzq62Q==
-X-CSE-MsgGUID: rZI3MtZdQ2mBQI+hF+JMBA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8286897"
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="8286897"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 03:47:43 -0700
-X-CSE-ConnectionGUID: 06Hhb/+rT/62ZIe2aq1/kA==
-X-CSE-MsgGUID: OdAtUEq7TqaIABTr/+dmAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21254695"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 12 Apr 2024 03:47:42 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rvERX-0009gf-28;
-	Fri, 12 Apr 2024 10:47:39 +0000
-Date: Fri, 12 Apr 2024 18:47:00 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Subject: [gustavoars:testing/WFAMNAE-next20240408-CbC] BUILD SUCCESS
- 84c645c6335a57d94c1414c704e2fdb38d0ae5c8
-Message-ID: <202404121858.e5LP1BS4-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OyAkddjx"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43C4ivdO010574;
+	Fri, 12 Apr 2024 10:48:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=E//2tur9tqzFvXJEtnP+//xNEf8yb1xDRgrFPMK+W7g=; b=Oy
+	AkddjxSQwV5lDXSPhDv/sv1XIH+jC8tmnvNJgA5/Uy+HXUNiywhKcw1NiGmYzfO0
+	LGKRmI8Vmvry0WPozyokPm8D5A9G+B/y03sk5yQQL4emoG3e5NB61t4ab7D4lhV9
+	Ya8bDB/ylsLCAucgqst1KwBh+y9+TsmwopFsx7+1ilfTMKdRERCkzKzbzTOIW+/s
+	y4sPDRNNktjsjvo5EYYiZNxpNlbPspFH+ZjNwASMquw+zKbZj27CoR4TakMs5z/l
+	4TXc8J8j36kncKmsN+KOlkTsAxhuM4nY+/V1IZPiOQbhsTBVULZb5EtmmgYlgw9E
+	7Z2rWFxc3rZLcebg4RVg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xevwegvq0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Apr 2024 10:48:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43CAmggB024674
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Apr 2024 10:48:42 GMT
+Received: from [10.216.31.21] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 12 Apr
+ 2024 03:48:39 -0700
+Message-ID: <3ca2f601-ce45-43cf-b0dd-e28865874455@quicinc.com>
+Date: Fri, 12 Apr 2024 16:18:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] arm64: dts: qcom: qcs6490-rb3gen2: enable PMIC
+ Volume and Power buttons
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20240403132839.2117675-1-quic_uchheda@quicinc.com>
+ <6b3gqfrvljvlfaf365l55kjcbjd4rfmw223tro6rqy5crykxgb@l66dptcrujip>
+Content-Language: en-US
+From: Umang Chheda <quic_uchheda@quicinc.com>
+In-Reply-To: <6b3gqfrvljvlfaf365l55kjcbjd4rfmw223tro6rqy5crykxgb@l66dptcrujip>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 9XSzGivasphI21k24OGbDc3i3NJar2Wx
+X-Proofpoint-ORIG-GUID: 9XSzGivasphI21k24OGbDc3i3NJar2Wx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-04-12_07,2024-04-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 clxscore=1015 priorityscore=1501 impostorscore=0
+ mlxlogscore=999 bulkscore=0 phishscore=0 adultscore=0 suspectscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2404010003 definitions=main-2404120078
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git testing/WFAMNAE-next20240408-CbC
-branch HEAD: 84c645c6335a57d94c1414c704e2fdb38d0ae5c8  smb: Avoid -Wflex-array-member-not-at-end warnings
+Hi Bjorn,
 
-elapsed time: 1131m
+On 4/9/2024 8:47 PM, Bjorn Andersson wrote:
+> On Wed, Apr 03, 2024 at 06:58:39PM +0530, Umang Chheda wrote:
+>> The Volume Down & Power buttons are controlled by the PMIC via
+>> the PON hardware, and the Volume Up is connected to a PMIC gpio.
+>>
+>> Enable the necessary hardware and setup the GPIO state for the
+>> Volume Up gpio key.
+>>
+>> Signed-off-by: Umang Chheda <quic_uchheda@quicinc.com>
+>> ---
+> 
+> I suppose this isn't a "resend" either, so please send me a new version
+> of this as well.
+> 
 
-configs tested: 162
-configs skipped: 3
+I had earlier sent [1] for review, on which I hadn't received any review comments.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Hence, I resent this patch again after 2 weeks for review.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240412   gcc  
-arc                   randconfig-002-20240412   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240412   gcc  
-arm                   randconfig-002-20240412   clang
-arm                   randconfig-003-20240412   clang
-arm                   randconfig-004-20240412   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240412   gcc  
-arm64                 randconfig-002-20240412   gcc  
-arm64                 randconfig-003-20240412   clang
-arm64                 randconfig-004-20240412   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240412   gcc  
-csky                  randconfig-002-20240412   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240412   clang
-hexagon               randconfig-002-20240412   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240412   gcc  
-i386         buildonly-randconfig-002-20240412   clang
-i386         buildonly-randconfig-003-20240412   gcc  
-i386         buildonly-randconfig-004-20240412   gcc  
-i386         buildonly-randconfig-005-20240412   gcc  
-i386         buildonly-randconfig-006-20240412   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240412   clang
-i386                  randconfig-002-20240412   gcc  
-i386                  randconfig-003-20240412   clang
-i386                  randconfig-004-20240412   clang
-i386                  randconfig-005-20240412   clang
-i386                  randconfig-006-20240412   gcc  
-i386                  randconfig-011-20240412   clang
-i386                  randconfig-012-20240412   gcc  
-i386                  randconfig-013-20240412   clang
-i386                  randconfig-014-20240412   gcc  
-i386                  randconfig-015-20240412   gcc  
-i386                  randconfig-016-20240412   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240412   gcc  
-loongarch             randconfig-002-20240412   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240412   gcc  
-nios2                 randconfig-002-20240412   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240412   gcc  
-parisc                randconfig-002-20240412   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240412   clang
-powerpc               randconfig-002-20240412   clang
-powerpc               randconfig-003-20240412   gcc  
-powerpc64             randconfig-001-20240412   gcc  
-powerpc64             randconfig-002-20240412   gcc  
-powerpc64             randconfig-003-20240412   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240412   clang
-riscv                 randconfig-002-20240412   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240412   gcc  
-s390                  randconfig-002-20240412   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240412   gcc  
-sh                    randconfig-002-20240412   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240412   gcc  
-sparc64               randconfig-002-20240412   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240412   clang
-um                    randconfig-002-20240412   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240412   gcc  
-x86_64       buildonly-randconfig-002-20240412   gcc  
-x86_64       buildonly-randconfig-003-20240412   gcc  
-x86_64       buildonly-randconfig-004-20240412   clang
-x86_64       buildonly-randconfig-005-20240412   clang
-x86_64       buildonly-randconfig-006-20240412   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240412   clang
-x86_64                randconfig-002-20240412   gcc  
-x86_64                randconfig-003-20240412   gcc  
-x86_64                randconfig-004-20240412   clang
-x86_64                randconfig-005-20240412   clang
-x86_64                randconfig-006-20240412   clang
-x86_64                randconfig-011-20240412   clang
-x86_64                randconfig-012-20240412   gcc  
-x86_64                randconfig-013-20240412   clang
-x86_64                randconfig-014-20240412   clang
-x86_64                randconfig-015-20240412   clang
-x86_64                randconfig-016-20240412   gcc  
-x86_64                randconfig-071-20240412   gcc  
-x86_64                randconfig-072-20240412   clang
-x86_64                randconfig-073-20240412   clang
-x86_64                randconfig-074-20240412   gcc  
-x86_64                randconfig-075-20240412   gcc  
-x86_64                randconfig-076-20240412   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240412   gcc  
+[1] https://lore.kernel.org/linux-arm-msm/20240320121016.2878367-1-quic_uchheda@quicinc.com/
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Umang
+
+> Regards,
+> Bjorn
+> 
+>>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 37 ++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> index 63ebe0774f1d..73f6d18d2331 100644
+>> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+>> @@ -9,6 +9,8 @@
+>>  #define PM7250B_SID 8
+>>  #define PM7250B_SID1 9
+>>  
+>> +#include <dt-bindings/input/linux-event-codes.h>
+>> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>>  #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>>  #include "sc7280.dtsi"
+>>  #include "pm7250b.dtsi"
+>> @@ -39,6 +41,22 @@ chosen {
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>>  
+>> +	gpio-keys {
+>> +		compatible = "gpio-keys";
+>> +
+>> +		pinctrl-0 = <&key_vol_up_default>;
+>> +		pinctrl-names = "default";
+>> +
+>> +		key-volume-up {
+>> +			label = "Volume_up";
+>> +			gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
+>> +			linux,code = <KEY_VOLUMEUP>;
+>> +			wakeup-source;
+>> +			debounce-interval = <15>;
+>> +			linux,can-disable;
+>> +		};
+>> +	};
+>> +
+>>  	reserved-memory {
+>>  		xbl_mem: xbl@80700000 {
+>>  			reg = <0x0 0x80700000 0x0 0x100000>;
+>> @@ -471,6 +489,25 @@ &gcc {
+>>  			   <GCC_WPSS_RSCP_CLK>;
+>>  };
+>>  
+>> +&pm7325_gpios {
+>> +	key_vol_up_default: key-vol-up-state {
+>> +		pins = "gpio6";
+>> +		function = "normal";
+>> +		input-enable;
+>> +		bias-pull-up;
+>> +		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
+>> +	};
+>> +};
+>> +
+>> +&pon_pwrkey {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&pon_resin {
+>> +	linux,code = <KEY_VOLUMEDOWN>;
+>> +	status = "okay";
+>> +};
+>> +
+>>  &qupv3_id_0 {
+>>  	status = "okay";
+>>  };
+>> -- 
+>> 2.25.1
+>>
