@@ -1,91 +1,126 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFFC56B71
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0BA57863
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712924421; cv=none; b=R7RPL7oq7HyS4y915+7j75RKl98SVJTzXWCap2VqzYCZ9GWeT/myQP7J9Jxc9iBT8plEhgExfWgY1QOcwAG/8BG1jw0/kGE9WkAQrRdE7ng3Ch1/A35igdRuTqK+LFPSo6JTXTxReihg+GkxxgdGv/QNSCBVI29+QwRll8GKJ0E=
+	t=1712924431; cv=none; b=c7+m18w2CvXGpSb/9jvC+LeusZNKYVqLe4j4iodcprzw/y1NMd81zNrW8rk64pgC/MEh4pDmgX9jk3ww8iToYkXPQkwz73fgJnjnV/Mall0v8CmJRxVF84PHDPRiU2YacE11C1hsh3ZiB6wM2naCd4npJlQ45ab36nz68v2D4mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712924421; c=relaxed/simple;
-	bh=WFmjjSrbeFjEmhLlBiWpRUSOMUY8KYm186SmcYNgeYs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=FKBuZucUCrNFS6UabsP4BB0RuwvFQzid+4eQp/El6R0HsXxNeMWiMVSwerh8cKjUMkhUF03uQNMsQfVlfWUkOpWEKciO8sbbTFF1fb+2V7PnNQ6Q9dOFq9omJcjfHU4jQWZJD5Xeprh/3y75Lv2OBtR+k9Oq5OhPpXvNoenM5J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KnwvDbSy; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712924431; c=relaxed/simple;
+	bh=u0QycG5sxEy3Ki5TTR/2Bx884/gaAjTNZ8ar0Fu2/1s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMK3TjYcmEVnoybv0e2bgRzWcoKhrBqEHxVS+6WmtQmG0rH/k1Mi2my12jWJAtJYWXwy4sB4imkvgVHpESUbUopXtLT9ACgJ1VvEFtKEZkOtjJiH+H53ipnxw3fGKDdIZbp9491pj/sJyNuFSyAKrAh1dIFvGCiS/zOHQ8EpR60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=meRPTo3q; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KnwvDbSy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712924419;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="meRPTo3q"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5EB6DFF806;
+	Fri, 12 Apr 2024 12:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712924426;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WFmjjSrbeFjEmhLlBiWpRUSOMUY8KYm186SmcYNgeYs=;
-	b=KnwvDbSyCCN6150R11tW8lCAVfxfezflU7itrHTMDV5xWelNbu8HMC3S46Ghml7Gv8MufI
-	4BZRa7PHAwLWDl/4hYO/KMrxB4ShUbO4u46y50Ein/DhWyW0i+jCYrBGYJ+cSLBoPtahdM
-	S/t345Gp+H3+KbL+qXqvZqm1O/dCyh8=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-401-9-QdF3YVOoOkCvSq48YhwQ-1; Fri, 12 Apr 2024 08:20:18 -0400
-X-MC-Unique: 9-QdF3YVOoOkCvSq48YhwQ-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-789f2dee101so77135285a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 05:20:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712924418; x=1713529218;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WFmjjSrbeFjEmhLlBiWpRUSOMUY8KYm186SmcYNgeYs=;
-        b=MQb0TRQ91Hv/WtTV0H3YblsK+dFJinRPgCs7TdnDaF5JgJczCln2YeDvs8GT/dfBon
-         XuJao2eY64Zfrv/ngulHXLOcTnz7aWg36mUwAquXn+DbfxCJsgqnomgXYCZyuC5XUsSN
-         LC1y3stuINNlR+79gh1hvcvlC7VX9cv6iHwUMseC9zroxNyk5vnRUBKcfYzBmKx3tSx3
-         gPi/3xFeci9u/XAnt8PghmICIYBzcyl1yJWSFLtcmga3+ZrrkDYmbZT45IDEVVTAI93Z
-         btXgSs/JvS2hfjRXlgDNMhC4gHZyAYURto4d/n6rvOj/K5xK9skmYAyhAxqs4uffByDu
-         iDyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOD9riwFcprULIOS2pmVvkYPpTZYk4mY6ixRX5BCqr8eLgl9YHKt3IW1+q1DSTFJSlTaJE+fixOLYEwNJkUYRqBitwVA9E83sshW2M
-X-Gm-Message-State: AOJu0Ywqz/3ZHCXv2ctLkE7CsH8el8cyfYkCFKsVMsitXfL9K8Zx2pMa
-	ZDci+SnAobduTl3+jS8ym/lTe81cpw0/b+KsD3apXsglaoeLHSBCC/0X+Z17/cz+nWit/S0nAEL
-	NjcMmAlYBKoSD+vJ1/7PE/khI3MfnpZYQCP6WCoKGxaZvhxeuk9e+6ouAbGjIBg==
-X-Received: by 2002:a05:620a:394d:b0:78e:cc24:f3fe with SMTP id qs13-20020a05620a394d00b0078ecc24f3femr1810322qkn.2.1712924418003;
-        Fri, 12 Apr 2024 05:20:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEl1RGrNpjG++v4K183eeVV70SCzpHYcpeio2nSYQsNbwwZxjYJTxzbIAebB5VpqAVwSeJLGQ==
-X-Received: by 2002:a05:620a:394d:b0:78e:cc24:f3fe with SMTP id qs13-20020a05620a394d00b0078ecc24f3femr1810306qkn.2.1712924417731;
-        Fri, 12 Apr 2024 05:20:17 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id m29-20020a05620a215d00b0078d65a42db6sm2319340qkm.95.2024.04.12.05.20.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 05:20:16 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: dccp@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, mleitner@redhat.com, David Ahern
- <dsahern@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, Tomas Glozar
- <tglozar@redhat.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 1/1] tcp/dcpp: Un-pin tw_timer
-In-Reply-To: <20240411100536.224fa1e7@kernel.org>
-References: <20240411120535.2494067-1-vschneid@redhat.com>
- <20240411120535.2494067-2-vschneid@redhat.com>
- <20240411100536.224fa1e7@kernel.org>
-Date: Fri, 12 Apr 2024 14:20:12 +0200
-Message-ID: <xhsmhy19i93ib.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	bh=i4sen2yAIZEdwsIiTx7q/1/5M2usUlIfq98X99An4Ik=;
+	b=meRPTo3qwCeQEEBqjbzw02iw9iaEEUF/QTM8TJFY8wTaoYx/Fp9yNBvVj+FRijImlTAP8q
+	Vx90ol5GdbTIz86xpSCMi2AlYWdXH4bgO/EBbeyDUCSDi+n1BcZq+mgpBNl0jL5Coq2rCz
+	5LRb22Ktmu0Exigy9r2Rj9vKalU3xFag/pTKy9Wna4zzQAqS95j+8dTNwQZKNEqW4U75jN
+	hWU3I1kTG7J6ICPxgiIRaWQohR+T90E1AtO487IM/6JJ2Bg1VzOPMaxnU/zFBMg1XTYUXa
+	gdOSfqbUv4jR0YfFIfXzBvtW3G1ZlJPfZguunUCraEJJIRUwpzj672pyocsz/g==
+Message-ID: <6f064bd8-7937-4634-8a39-13ee5bcd6193@bootlin.com>
+Date: Fri, 12 Apr 2024 14:20:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
+ when not needed
+To: Rodolfo Giometti <giometti@enneenne.com>
+Cc: linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
+ christophercordahi@nanometrics.ca
+References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
+ <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
+ <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
+ <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
+ <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
+ <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
+ <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
+ <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
+Content-Language: en-US
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+In-Reply-To: <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-On 11/04/24 10:05, Jakub Kicinski wrote:
->
-> Some new crashes started appearing this morning on our testing branch,
-> quick look at the splats makes me suspect this change:
->
+Hi Rodolfo,
 
-Thanks for the testing! Seems like my own testing wasn't thorough enough,
-let me have a look at this...
+On 4/12/24 08:44, Rodolfo Giometti wrote:
+> On 11/04/24 14:44, Bastien Curutchet wrote:
+>>>
+>>> However we should think very well about this modification since it 
+>>> could be the case where we have a device sending both assert and 
+>>> clear events but we wish to catch just the asserts... in this case we 
+>>> will get doubled asserts!
+>>>
+>>
+>> My understanding is that clear events are to be captured only when this
+>> capture_clear boolean is set. If it is not set, the PPS_CAPTURECLEAR
+>> flag is not added to pps_source_info->mode and get_irqf_trigger_flags()
+>> will return only one edge flag (rising or falling depending on
+>> assert-falling-edge DT property).
+> 
+> Yes. You are right.
+> 
+>> By the way, I see that the capture_clear is never set since the legacy
+>> platform data support has been dropped (commit ee89646619ba).
+> 
+> I see, but it can be re-enabled in the future... In this scenario, I 
+> think we should add a DT entry to enable this special behavior. Maybe we 
+> can also add a warning as below: >
+> static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
+> {
+>          ...
+>          if ((rising_edge && !info->assert_falling_edge) ||
+>                          (!rising_edge && info->assert_falling_edge))
+>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
+>          else if (info->capture_clear &&
+>                          ((rising_edge && info->assert_falling_edge) ||
+>                          (!rising_edge && !info->assert_falling_edge)))
+>                  pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
+>      else
+>          dev_warn_ratelimited(dev, "no ASSERT or CAPTURE event? "
+>              "Maybe you need support-tiny-assert-pulse?");
+> 
+>          return IRQ_HANDLED;
+> }
+> 
 
+I'm not sure a DT entry is needed. IMO there are two cases:
+  1) capture_clear is unset. We need to capture only assert events,
+     interrupt will be triggered by assert edge only so there is no need
+     to check GPIO state: we can use the bypass.
+  2) capture_clear is set. We need to capture assert and/or clear
+     events, interrupt will be triggered by both assert and clear edges
+     so we can't avoid the GPIO state checking to distinguish clear
+     events from assert events: we can't use the bypass.
+
+So if we bypass the GPIO's state check when capture_clear is unset and
+leave current behavior when capture_clear is set:
+  - case 1) will be more efficient and we won't lose tiny pulses anymore
+  - case 2) is unchanged: we still might lose tiny pulses but as bypass
+can't be done here, I think that we can't do better.
+
+I agree that adding warning when the handler is left without triggering
+a pps event can be useful, I can add it in a V3 version.
+
+
+Best regards,
+Bastien
