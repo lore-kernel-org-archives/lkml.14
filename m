@@ -1,248 +1,288 @@
-Received: from mx0a-0039f301.pphosted.com (mx0a-0039f301.pphosted.com [148.163.133.242])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1B114F13E;
-	Fri, 12 Apr 2024 19:03:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.133.242
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712948617; cv=fail; b=GonEPDNz+eykvu0x+R8+Q1fxgfKd2AGrpiD7ezQ1kiH/I9TiS4D1dQmmjZ1T8IAWLwvnfWzkn7HR5xad+rX6xIvLBJBLGW1qFXK2tv3QMztBb+afyxOimovQMcKl08iDuaNN4+pzBhasB9eHA2MhR/gXmNk9C9q0MsQ5tWcSu8o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712948617; c=relaxed/simple;
-	bh=w0GXoPoVXq20ZzFqnCrUpBss5WcElt3jJ33vs4jXlQ4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nzslB+QNBjJLdLBxyMP+i9cRDE7NEIaEOmqeOAzJT1zyrSMpMAOxvNZVvG4YB3LNtVsfCABUQPrGkuckUD5bc1gLugtHr7Z6xTnUUg/IAuDwW4NbMZCcBFfTLY2b4CUMA/bo7SY6d7bVH16BpF0v1mqBaLqcTcQTu31M3/FaeaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com; spf=pass smtp.mailfrom=epam.com; dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b=PPuy52hP; arc=fail smtp.client-ip=148.163.133.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=epam.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=epam.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D410142E78
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712948800; cv=none; b=nl4Hue2x4QecFMixiCVUBJq9mAzKBFwhS81PiUer95pKpyko8Ztw4Kj/ml4jkW4EcBt9BiZMwWub53OBZj2Vs+0p5Af6154cDuddwpNfhTfP1YHvsPh/TTUh86+HadMn80RDXtv1EzxPRncD4wWJmDLfVDoUa0KpjtRlQRnO1MY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712948800; c=relaxed/simple;
+	bh=RC4qHCITV8KigBpe/x0hFdLe+IpXYedYIr9f1wun+Bs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=msec5U0T+uWYU1G+SRtEq3ygf8VSTqBh4ayCFhdtFhyc4xtV9NjBs8/AwghnFo1rR0USYEpVVgX9TtFs/kzolDjkn5USqNpBwU76FJ4nAYvKW940HwlDWgbID96TyM+VV/WPO/T6wvlRmJ3A+z/wAMywDTD4lm400/yqP58e0uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SeLzcFkv; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=epam.com header.i=@epam.com header.b="PPuy52hP"
-Received: from pps.filterd (m0174678.ppops.net [127.0.0.1])
-	by mx0a-0039f301.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43CDu5Bk020474;
-	Fri, 12 Apr 2024 19:03:29 GMT
-Received: from eur05-am6-obe.outbound.protection.outlook.com (mail-am6eur05lp2104.outbound.protection.outlook.com [104.47.18.104])
-	by mx0a-0039f301.pphosted.com (PPS) with ESMTPS id 3xf1saj9wy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 19:03:29 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=acg/u1ZXXLYOxbDDPIvA/R1HjDUAWTaaSdo6Gjsq697nSRlY9f3AB5feRc/1iLzpbtNqWKw9KF9Iv+fduwdopZLa3bJhdjT4KFG5yGgRFKKo9rtSKPgfyNUr2An/08ICNdkNkRsU6BTek4JclBTr6OMCR0aGI3n7VMwoVCPcqZvrYYmJzmPF4uMNR7F3v5nsNQG7rn6HL/CMPuf5earYEofTDbSPL38pd2fDj8unwdRQhnO0+Cdynpmwb9QkDWsjZQW5/YZ6uYEwHYPk+xYxKUYDCEQ58fhueFrBrAPKbN5BkO/1/v4YSTbZTIFO7/0eSVnLa7I3+sAgWd2g4pPxtQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RZgT/yvE/u5C2JKDXUNRvWqf5cFw7ZY2EWmbfUam6nE=;
- b=XqsM8BnqwjVisgEOQ4PSv3bwJI+8jeZ8o9MyT2Ug1pUSw3xV4p66Ohw3AsYSvpPVQ1KAxsJ75ouWuK9OCbkKwvd5WO2HckmE5gFUsI7uYFPkqwGNiaG12a1ndOgsnzhJHuY0eHoq9vTuil+aebh/TEKyJGDYi7qclI7wDelC45Gqu60gtNxfP3daMj6TJdi/Mmh1QIJ8LCgd/ttoLxf1PuH0cVhmRGvj6lyp8A8jG1/u2S3dEPMnoFnmHbj/dfmzMyT2WZinnW7M4xO3isEkvkWjVv5WIOlv3ePOGCxrx/tP7/Ba+y3zfPa0kDLYV+IoFCTWG5U6TJvY3l2Q9DQCTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=epam.com; dmarc=pass action=none header.from=epam.com;
- dkim=pass header.d=epam.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=epam.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RZgT/yvE/u5C2JKDXUNRvWqf5cFw7ZY2EWmbfUam6nE=;
- b=PPuy52hPuq2Et0SFGEPIeidvf4DMsrgg1D+a3LCFocl4GUODgBq6x3oZe+KfO3mgaeiR1jNKI2kv9JYKThbtRzsaSVj3Uq3FFp96XLLK1qBQhCplJsYXp2zipsZoy44xtzcI+H5BOlLo+mAqoj7QjdA7C5zWNiJslz5VEDK9bY4nJ90VzRbFAsmvRhMxSkK3L+gD6aC1FsyDWDV/T8hmsG56y9abTorMxs3e83FUFpsJp+rfTBlsdWfSv4K1CKJlIAeLT90Tx21gBRg2mqpPS6JpJMTICaX8DvOijAL4bZdypjm03hlJgCNADODdYa01gM2HxdoLRGqm9Kbjv+usPw==
-Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
- (2603:10a6:150:16a::21) by PAXPR03MB7934.eurprd03.prod.outlook.com
- (2603:10a6:102:219::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.54; Fri, 12 Apr
- 2024 19:03:26 +0000
-Received: from GV1PR03MB10456.eurprd03.prod.outlook.com
- ([fe80::74c9:2488:1dd7:b976]) by GV1PR03MB10456.eurprd03.prod.outlook.com
- ([fe80::74c9:2488:1dd7:b976%3]) with mapi id 15.20.7409.053; Fri, 12 Apr 2024
- 19:03:25 +0000
-From: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
-To: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
-CC: Stephan Gerhold <stephan@gerhold.net>,
-        Volodymyr Babchuk
-	<Volodymyr_Babchuk@epam.com>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad
- Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 1/2] arm64: dts: qcom: sa8155p-adp: fix SDHC2 CD pin
- configuration
-Thread-Topic: [PATCH v3 1/2] arm64: dts: qcom: sa8155p-adp: fix SDHC2 CD pin
- configuration
-Thread-Index: AQHajQwYOQ9To8w33EaflpLdE0ZqmQ==
-Date: Fri, 12 Apr 2024 19:03:25 +0000
-Message-ID: <20240412190310.1647893-1-volodymyr_babchuk@epam.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.44.0
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: GV1PR03MB10456:EE_|PAXPR03MB7934:EE_
-x-ms-office365-filtering-correlation-id: c3e3711f-1c08-4dfa-24fb-08dc5b233b52
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- tLpDiKot25bQ5fOA/mLZ5tEuv4yhQRk9KRmo/jIJLUji/FlQ5e3lxar5BEbScQqRqPHbOrO6DTsgRyTeHsqV2nysgUKaKo1WZ3YhFKv1iU0CPXAY1QiegwVyaPN/s9NV8XV9ELmZ11X1AzY7ACrW69tZyOg6VOTNfxwR7ciLHpSHi9EgzjF7ESJkEdrmHxsvq9hw0wRtgYGiXYJkjlw/GJtVQ5qdJ/QzgVFqbZtHcGMLhqkTyttb8q/1x9bhLWQRqc6Bj3uf3qMJnSHyB4vVrZ8x7pEtEH0ZrRJCEMKf58d4mfVBCpj90TtvrHuZB6e2xu2WFUsv6EOBeZC7wLOb9Xx4KXBi25NvvyzAhDxXGkOtViczi6fAxrapJ+BoOeontBwZsbSN8VMJf1WVFI86FNaBaxYhQoUK0XJ/eoqTwYIi14vxBGnwoVvlGubK1GSWeD216fwQh9OfiF54yx2ar76dTLy8HEDkIVgob8XBpfAY+Ka04hjb/wg5Wr7ooX8KHJVraxqb13Ciem62ADNFnUEGodRCkhi5tkQHlP9uL8BJOtI+Xq3rTzDynYoDLlgq+mOqB0WA7Hrs7eTkLEmbeXzlsCwiF4kVGraXguDFvvbAf1NjRInN+0Q4S/1kyeY+SOCC5scwrwM23YZzdECRnTHzQIwNab5KbKHEA6+e/TzeE+DsOeF+IuQSuLfm97Mn5hJhHKhaQ1qtCkZbsJSQjQ==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1PR03MB10456.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?iso-8859-1?Q?bILD0DFmUYl+HOfn4uk9rotdxpdMzuiSUDAIt4gnPnu/ciAHlavTCSmmTa?=
- =?iso-8859-1?Q?Jx7zMNQIBEyeq4oRnONCVWTGDFXgPjC92sJ2eQSM74zpIH50Z5z/4IOsKU?=
- =?iso-8859-1?Q?yCoQTVFr6y2BOqgnundNDd08wgc5ZL0cdXEcKebReXyPvcxhdI1lfJECSD?=
- =?iso-8859-1?Q?jyuJNkFn/Oiox1JUVA5xysBuKEtfOTmKqRoD5Om1iEVbyLiMs6FlNRx8P8?=
- =?iso-8859-1?Q?0P4IaLnsgncV+QHEhIbfQdQ84ygd95Vy12/7ugIMM9lIcHBqohha3VCNLI?=
- =?iso-8859-1?Q?GLVPzLVisdsjbDhNmo748aLepCIokEF0fz0IDhB41zW9CskbgWZIc5WRPc?=
- =?iso-8859-1?Q?l1hmVUJWfTqGKlubicbrLP+sWY9WhIYdx7oRylcg6FHzbQVuLWuCnGhhuA?=
- =?iso-8859-1?Q?+eHAgluEL76NcCYnbTuGDJOIZl5ftuGrAVopBl7h01e+pCcNVGCXNFOo+I?=
- =?iso-8859-1?Q?8lq6688999W7Au9GS9x6hab4sCy4czvAyHarcyttx51YR82J9HNJPOskAy?=
- =?iso-8859-1?Q?/f94poqrpQRDibTBXdnvlVql/wvZ/2PeRronC4bRjU+Po7YxQNjfiNhceG?=
- =?iso-8859-1?Q?Wc9un+U2lnDx1s6rVZrhgiqkglrqKNx9QETp/+fAINvUk2B4Z5oVmxFsnU?=
- =?iso-8859-1?Q?W6gMZVjKKyArtoWr5G8+xpb5yql2HsW+c8mgqa9t+9JoE+Mwg9ixwPpGN3?=
- =?iso-8859-1?Q?D5eKa3TiVlzO2jtgzVIs+qihfOr2Slr0Qn9Ye9+2oe0MM7TsuaKnANhCeL?=
- =?iso-8859-1?Q?/tSkhzvJ578gPYaovbXc0AtsLyoqvlODsYdqW0G6vsCW/w9+2dm9n3kYw1?=
- =?iso-8859-1?Q?voiRuduwE8+UWJVcHcqnxYLpqMBOUq7yKWzZYBlx58IwH1+Hk6lomPYa53?=
- =?iso-8859-1?Q?ypkJJVZuxFTleU7X5j/Z5Y2c02ObiJYvtBOu3HXgEU1Eed3qnI5ON+1Y1X?=
- =?iso-8859-1?Q?1+Omfgoe/CWagBNH2fIQ8DfCQBMDXtrEkX/pL2XgmWGtRvnFdlYnFerSp2?=
- =?iso-8859-1?Q?qrs2Iiy0XeVGucW0WkCg7UJpkhlxshQBxmab49n6wZCvoK6Z04J3terfjg?=
- =?iso-8859-1?Q?cDwo+gSTYLYEm2kCSzcHXHiV4K9k2g9RvK5SPi+nKdJ+La377bsnushMMI?=
- =?iso-8859-1?Q?zO0alzGf6RVspJCU1Tx3+S6SiHlg1txjF6fdxSQ1ehuchNr/Qg5Sjcl56L?=
- =?iso-8859-1?Q?p2HybWpMw23ucWoeZ/g3YBrA5PCmKjIkzpcf3oGCJDxckZLl4ENO25FlVA?=
- =?iso-8859-1?Q?gmwDnynv+JoCPwwfZ46rmKD4xURJ8tNNhI0Z6/6JIQtReWA1s1GpWc3uOd?=
- =?iso-8859-1?Q?D5l0QBz2N67sBh3RXg6gd6lvcAhCRJBnoW+7iCk4FjLnIvBtQI0tpodfdh?=
- =?iso-8859-1?Q?l18roawGyVDHJj6e/gQwko2J6Uy2j04mpl4i1Ax8OWukb94lfznkU6eaed?=
- =?iso-8859-1?Q?5NRMevKsEFc9q6ZfrB3k6idJc5NXQYHiq7mtCfjgwhtI91xrp/2+U+1+ub?=
- =?iso-8859-1?Q?zjpOb38dkvG6UBbSGdVtvgF+5CjXCnnRVXGOTV3Mm1e4twRzO4VrttG0lD?=
- =?iso-8859-1?Q?1UEqBcenLpRkUrxiZEqFrAdB/T7RjMX49t6HHKjNq50FMFksJIbSu29KhD?=
- =?iso-8859-1?Q?XBNIFUbdGsMZx9TlP7IJtqsFwepxZHmrJrBndJsLxDh6wFpYi5AiwaxQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SeLzcFkv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712948797;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Lii1dHcdCvX1rrevsO20pdS/4SDcLTunWyNWJoT299c=;
+	b=SeLzcFkvmFG4rTYGvpYvahA2c2qEe7vfAYy3iDNqGpeKviSzaPgwH+c/qIvFIWF2alF1eH
+	dIHDOSB93buqlQiPkyuZe1G0rppLee96xD2sje0yt90i6dA+wpp1O7YLYAGxXLtcCSlaK0
+	ZDgmKzAD1BenvVv13z+Y6x6fx2V9kcg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-106-tpgQFBUNONyxF3iUbf-U5g-1; Fri, 12 Apr 2024 15:06:35 -0400
+X-MC-Unique: tpgQFBUNONyxF3iUbf-U5g-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-41641a8895dso6193385e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:06:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712948794; x=1713553594;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lii1dHcdCvX1rrevsO20pdS/4SDcLTunWyNWJoT299c=;
+        b=FiIhKZ4SGu/JkjscL8syGfsr/ixNy7Bn7cExqjLyb0Zz8S8gvbDGIL3BqSeVtNXJns
+         7HU/Au9e9LxfUYA3NYuKLZv3MDk5t4NuLG692XhtSH1aiMyfHVcJoPVjI56wEIYfX/5U
+         C1oTAEARk/jkkB3IWGi8ElrtRdExEE59/WrQXGJraH8/6eYrLU6RPQaImfkEzxqWqu+0
+         yz/3gELHA1gcimHS6cXLuzmh3+ol37uzAm05G4Ah3hEMivwsDlhHMDbX0ORq4UD71ZpU
+         UGwh6nC2w42nUqN/2jPkODYbGTInnZlm98QSyyNuMhfotWUHqy2GgVwklIZpIwzCs/9G
+         bdwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXR0nLJWgM03cjFMWHOOCdJvb8NLLMNRmhdPWzqibtWoAQkVk8eMiYNBSvQHpci80gL8F5STzii74vIQD+7SoOxqehCzlSOG3fZtKH9
+X-Gm-Message-State: AOJu0YxK1LTiY7ZhP4pbpRQEknBUNzq/OSqPHxRs+4OCCyXi0tC9HX+f
+	uVCnu/h7/ZzSIdRHwBaaXFv4HmE5JpJ6kCfFwhrsohYQ2oqVEE+pfb9k693LAU/DefqmfsLPMXT
+	wgKjCzRwcC7DYU0DFYK2l1wpbL8kghNXAs9F2MjgFZotva/tFdCFr2EpbXpkqPQ==
+X-Received: by 2002:a05:600c:444d:b0:416:6a8a:d84c with SMTP id v13-20020a05600c444d00b004166a8ad84cmr2794385wmn.38.1712948794473;
+        Fri, 12 Apr 2024 12:06:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEqyldNljUNQkV2UhZdjV/1uuI2BJ0MMH0dzm/wjXHYpNz3UtqLTXe9gn/qaK9coonqThY0Nw==
+X-Received: by 2002:a05:600c:444d:b0:416:6a8a:d84c with SMTP id v13-20020a05600c444d00b004166a8ad84cmr2794368wmn.38.1712948794030;
+        Fri, 12 Apr 2024 12:06:34 -0700 (PDT)
+Received: from [192.168.3.108] (p4ff23ff1.dip0.t-ipconnect.de. [79.242.63.241])
+        by smtp.gmail.com with ESMTPSA id p10-20020a05600c468a00b00416ba2db6b4sm6463514wmo.18.2024.04.12.12.06.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Apr 2024 12:06:33 -0700 (PDT)
+Message-ID: <ee3be59c-4ffd-4fbf-a542-2d4cf45ed08e@redhat.com>
+Date: Fri, 12 Apr 2024 21:06:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: epam.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: GV1PR03MB10456.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c3e3711f-1c08-4dfa-24fb-08dc5b233b52
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2024 19:03:25.6564
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b41b72d0-4e9f-4c26-8a69-f949f367c91d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8H5QoYLZxSjkL2udwVudHeOcV0COy7xmNgX2bcvFBAQ6xC2PMO0VeJb87EbkpCQgpbQyD1SKSQe426FqCPaBIWSTBirRfQftkgdc0GrSF4Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR03MB7934
-X-Proofpoint-ORIG-GUID: HVhugvE8dnL-QWE9DmElssdcV1qdmlbV
-X-Proofpoint-GUID: HVhugvE8dnL-QWE9DmElssdcV1qdmlbV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_15,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- bulkscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0 suspectscore=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2404010003
- definitions=main-2404120138
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/rmap: do not add fully unmapped large folio to
+ deferred split list
+To: Zi Yan <ziy@nvidia.com>, Yang Shi <shy828301@gmail.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Barry Song <21cnbao@gmail.com>, linux-kernel@vger.kernel.org
+References: <20240411153232.169560-1-zi.yan@sent.com>
+ <ffbbade3-2de5-4bbe-a6e4-49d2ff7a2f0e@redhat.com>
+ <CAHbLzkr99knWKZvE4WCWKKr=eezkg89idpE59oo_oBneAQynAA@mail.gmail.com>
+ <86722546-1d54-4224-9f31-da4f368cd47e@redhat.com>
+ <CAHbLzkrxR_cpVd_KF1rz9CTVmr4q0KX7T=SseOo8X5u23-5ZJQ@mail.gmail.com>
+ <0A4D2CA1-E156-43E9-A1C9-E09E62E760A3@nvidia.com>
+ <A06608B4-9187-42DD-B9A2-CBBC3D5C9312@nvidia.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <A06608B4-9187-42DD-B9A2-CBBC3D5C9312@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-There are two issues with SDHC2 configuration for SA8155P-ADP,
-which prevent use of SDHC2 and causes issues with ethernet:
+On 12.04.24 16:31, Zi Yan wrote:
+> On 12 Apr 2024, at 10:21, Zi Yan wrote:
+> 
+>> On 11 Apr 2024, at 17:59, Yang Shi wrote:
+>>
+>>> On Thu, Apr 11, 2024 at 2:15 PM David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 11.04.24 21:01, Yang Shi wrote:
+>>>>> On Thu, Apr 11, 2024 at 8:46 AM David Hildenbrand <david@redhat.com> wrote:
+>>>>>>
+>>>>>> On 11.04.24 17:32, Zi Yan wrote:
+>>>>>>> From: Zi Yan <ziy@nvidia.com>
+>>>>>>>
+>>>>>>> In __folio_remove_rmap(), a large folio is added to deferred split list
+>>>>>>> if any page in a folio loses its final mapping. It is possible that
+>>>>>>> the folio is unmapped fully, but it is unnecessary to add the folio
+>>>>>>> to deferred split list at all. Fix it by checking folio mapcount before
+>>>>>>> adding a folio to deferred split list.
+>>>>>>>
+>>>>>>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>>>>>>> ---
+>>>>>>>     mm/rmap.c | 9 ++++++---
+>>>>>>>     1 file changed, 6 insertions(+), 3 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>>>>> index 2608c40dffad..d599a772e282 100644
+>>>>>>> --- a/mm/rmap.c
+>>>>>>> +++ b/mm/rmap.c
+>>>>>>> @@ -1494,7 +1494,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>>>>>                 enum rmap_level level)
+>>>>>>>     {
+>>>>>>>         atomic_t *mapped = &folio->_nr_pages_mapped;
+>>>>>>> -     int last, nr = 0, nr_pmdmapped = 0;
+>>>>>>> +     int last, nr = 0, nr_pmdmapped = 0, mapcount = 0;
+>>>>>>>         enum node_stat_item idx;
+>>>>>>>
+>>>>>>>         __folio_rmap_sanity_checks(folio, page, nr_pages, level);
+>>>>>>> @@ -1506,7 +1506,8 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>>>>>                         break;
+>>>>>>>                 }
+>>>>>>>
+>>>>>>> -             atomic_sub(nr_pages, &folio->_large_mapcount);
+>>>>>>> +             mapcount = atomic_sub_return(nr_pages,
+>>>>>>> +                                          &folio->_large_mapcount) + 1;
+>>>>>>
+>>>>>> That becomes a new memory barrier on some archs. Rather just re-read it
+>>>>>> below. Re-reading should be fine here.
+>>>>>>
+>>>>>>>                 do {
+>>>>>>>                         last = atomic_add_negative(-1, &page->_mapcount);
+>>>>>>>                         if (last) {
+>>>>>>> @@ -1554,7 +1555,9 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
+>>>>>>>                  * is still mapped.
+>>>>>>>                  */
+>>>>>>>                 if (folio_test_large(folio) && folio_test_anon(folio))
+>>>>>>> -                     if (level == RMAP_LEVEL_PTE || nr < nr_pmdmapped)
+>>>>>>> +                     if ((level == RMAP_LEVEL_PTE &&
+>>>>>>> +                          mapcount != 0) ||
+>>>>>>> +                         (level == RMAP_LEVEL_PMD && nr < nr_pmdmapped))
+>>>>>>>                                 deferred_split_folio(folio);
+>>>>>>>         }
+>>>>>>
+>>>>>> But I do wonder if we really care? Usually the folio will simply get
+>>>>>> freed afterwards, where we simply remove it from the list.
+>>>>>>
+>>>>>> If it's pinned, we won't be able to free or reclaim, but it's rather a
+>>>>>> corner case ...
+>>>>>>
+>>>>>> Is it really worth the added code? Not convinced.
+>>>>>
+>>>>> It is actually not only an optimization, but also fixed the broken
+>>>>> thp_deferred_split_page counter in /proc/vmstat.
+>>>>>
+>>>>> The counter actually counted the partially unmapped huge pages (so
+>>>>> they are on deferred split queue), but it counts the fully unmapped
+>>>>> mTHP as well now. For example, when a 64K THP is fully unmapped, the
+>>>>> thp_deferred_split_page is not supposed to get inc'ed, but it does
+>>>>> now.
+>>>>>
+>>>>> The counter is also useful for performance analysis, for example,
+>>>>> whether a workload did a lot of partial unmap or not. So fixing the
+>>>>> counter seems worthy. Zi Yan should have mentioned this in the commit
+>>>>> log.
+>>>>
+>>>> Yes, all that is information that is missing from the patch description.
+>>>> If it's a fix, there should be a "Fixes:".
+>>>>
+>>>> Likely we want to have a folio_large_mapcount() check in the code below.
+>>>> (I yet have to digest the condition where this happens -- can we have an
+>>>> example where we'd use to do the wrong thing and now would do the right
+>>>> thing as well?)
+>>>
+>>> For example, map 1G memory with 64K mTHP, then unmap the whole 1G or
+>>> some full 64K areas, you will see thp_deferred_split_page increased,
+>>> but it shouldn't.
+>>>
+>>> It looks __folio_remove_rmap() incorrectly detected whether the mTHP
+>>> is fully unmapped or partially unmapped by comparing the number of
+>>> still-mapped subpages to ENTIRELY_MAPPED, which should just work for
+>>> PMD-mappable THP.
+>>>
+>>> However I just realized this problem was kind of workaround'ed by commit:
+>>>
+>>> commit 98046944a1597f3a02b792dbe9665e9943b77f28
+>>> Author: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> Date:   Fri Mar 29 14:59:33 2024 +0800
+>>>
+>>>      mm: huge_memory: add the missing folio_test_pmd_mappable() for THP
+>>> split statistics
+>>>
+>>>      Now the mTHP can also be split or added into the deferred list, so add
+>>>      folio_test_pmd_mappable() validation for PMD mapped THP, to avoid
+>>>      confusion with PMD mapped THP related statistics.
+>>>
+>>>      Link: https://lkml.kernel.org/r/a5341defeef27c9ac7b85c97f030f93e4368bbc1.1711694852.git.baolin.wang@linux.alibaba.com
+>>>      Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>>      Acked-by: David Hildenbrand <david@redhat.com>
+>>>      Cc: Muchun Song <muchun.song@linux.dev>
+>>>      Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>>>
+>>> This commit made thp_deferred_split_page didn't count mTHP anymore, it
+>>> also made thp_split_page didn't count mTHP anymore.
+>>>
+>>> However Zi Yan's patch does make the code more robust and we don't
+>>> need to worry about the miscounting issue anymore if we will add
+>>> deferred_split_page and split_page counters for mTHP in the future.
+>>
+>> Actually, the patch above does not fix everything. A fully unmapped
+>> PTE-mapped order-9 THP is also added to deferred split list and
+>> counted as THP_DEFERRED_SPLIT_PAGE without my patch, since nr is 512
+>> (non zero), level is RMAP_LEVEL_PTE, and inside deferred_split_folio()
+>> the order-9 folio is folio_test_pmd_mappable().
+>>
+>> I will add this information in the next version.
+> 
+> It might
+> Fixes: b06dc281aa99 ("mm/rmap: introduce folio_remove_rmap_[pte|ptes|pmd]()"),
+> but before this commit fully unmapping a PTE-mapped order-9 THP still increased
+> THP_DEFERRED_SPLIT_PAGE, because PTEs are unmapped individually and first PTE
+> unmapping adds the THP into the deferred split list. This means commit b06dc281aa99
+> did not change anything and before that THP_DEFERRED_SPLIT_PAGE increase is
+> due to implementation. I will add this to the commit log as well without Fixes
+> tag.
 
-- Card Detect pin for SHDC2 on SA8155P-ADP is connected to gpio4 of
-  PMM8155AU_1, not to SoC itself. SoC's gpio4 is used for DWMAC
-  TX. If sdhc driver probes after dwmac driver, it reconfigures
-  gpio4 and this breaks Ethernet MAC.
+Right, so it's always been a problem for PTE-mapped PMD-sized THP and 
+only with batching we can now do "better". But not fix it completely.
 
-- pinctrl configuration mentions gpio96 as CD pin. It seems it was
-  copied from some SM8150 example, because as mentioned above,
-  correct CD pin is gpio4 on PMM8155AU_1.
+I'll reply separately to your other mail.
 
-This patch fixes both mentioned issues by providing correct pin handle
-and pinctrl configuration.
+-- 
+Cheers,
 
-Fixes: 0deb2624e2d0 ("arm64: dts: qcom: sa8155p-adp: Add support for uSD ca=
-rd")
-Cc: stable@vger.kernel.org
-Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+David / dhildenb
 
----
-
-In v3:
- - Moved regulator changes to a separate patch
- - Renamed pinctrl node
- - Moved pinctrl node so it will appear in alphabetical order
-In v2:
- - Added "Fixes:" tag
- - CCed stable ML
- - Fixed pinctrl configuration
- - Extended voltage range for L13C voltage regulator
----
- arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 30 ++++++++++--------------
- 1 file changed, 13 insertions(+), 17 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts=
-/qcom/sa8155p-adp.dts
-index 5e4287f8c8cd1..b2cf2c988336c 100644
---- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-+++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-@@ -367,6 +367,16 @@ queue0 {
- 	};
- };
-=20
-+&pmm8155au_1_gpios {
-+	pmm8155au_1_sdc2_cd: sdc2-cd-default-state {
-+		pins =3D "gpio4";
-+		function =3D "normal";
-+		input-enable;
-+		bias-pull-up;
-+		power-source =3D <0>;
-+	};
-+};
-+
- &qupv3_id_1 {
- 	status =3D "okay";
- };
-@@ -384,10 +394,10 @@ &remoteproc_cdsp {
- &sdhc_2 {
- 	status =3D "okay";
-=20
--	cd-gpios =3D <&tlmm 4 GPIO_ACTIVE_LOW>;
-+	cd-gpios =3D <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
- 	pinctrl-names =3D "default", "sleep";
--	pinctrl-0 =3D <&sdc2_on>;
--	pinctrl-1 =3D <&sdc2_off>;
-+	pinctrl-0 =3D <&sdc2_on &pmm8155au_1_sdc2_cd>;
-+	pinctrl-1 =3D <&sdc2_off &pmm8155au_1_sdc2_cd>;
- 	vqmmc-supply =3D <&vreg_l13c_2p96>; /* IO line power */
- 	vmmc-supply =3D <&vreg_l17a_2p96>;  /* Card power line */
- 	bus-width =3D <4>;
-@@ -505,13 +515,6 @@ data-pins {
- 			bias-pull-up;		/* pull up */
- 			drive-strength =3D <16>;	/* 16 MA */
- 		};
--
--		sd-cd-pins {
--			pins =3D "gpio96";
--			function =3D "gpio";
--			bias-pull-up;		/* pull up */
--			drive-strength =3D <2>;	/* 2 MA */
--		};
- 	};
-=20
- 	sdc2_off: sdc2-off-state {
-@@ -532,13 +535,6 @@ data-pins {
- 			bias-pull-up;		/* pull up */
- 			drive-strength =3D <2>;	/* 2 MA */
- 		};
--
--		sd-cd-pins {
--			pins =3D "gpio96";
--			function =3D "gpio";
--			bias-pull-up;		/* pull up */
--			drive-strength =3D <2>;	/* 2 MA */
--		};
- 	};
-=20
- 	usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
---=20
-2.44.0
