@@ -1,109 +1,94 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC89148842;
-	Fri, 12 Apr 2024 15:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273681487F4;
+	Fri, 12 Apr 2024 15:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712937134; cv=none; b=EEEQTYpejBX2CnnfrB8kZZCZc8/MK3jtMgbNwUP+tCHOUvBPyQSfXa/cqnPl1AVQKcQtvvssIuwAfgt5kybLf2q4otNAV24+REErm09fUXEaAu+zH2ONBZCb0MV6H8b973vaT3eLs+bTWH4DtHvbcKVQxYKTsCDO5nhICNuGRKk=
+	t=1712937143; cv=none; b=mfc3n5cdwB0zujEs/hv4idYD2OW9COceVj4f9ScAOGFfR/b0c/6t25965+T6wIIvi03Sv3fejBBSFJux7Z5yR0u1zmGE7Ikxiyz+DtqCaO/mbYsF6UiO5t9nHCrHvbUIMj6lFiC0pchg1LO2eNsM5bJWHTsg81/hE1iR3BuGeXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712937134; c=relaxed/simple;
-	bh=SZ5A86Q+9hpxFN2aey14jYeOw4FwO5dY2Jfg/P7yfI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lUgLNQb3OoO361cY9OqSju01azbF9X0RhKQnXayVGDUqGnpF3KPqEgnsGBpf+1C1d9XRBFE2yquVefNEBlfDc4j1Pu8EwNOhHH2ow0VthygyJH0SO8/eyqz2CHG3aFUBO1SFrC70EFcWGaZGWZTCb3zWIzuZGEdXqAN9xodsuX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LvQV5Pev; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1712937143; c=relaxed/simple;
+	bh=p8OAbH8ik4uO7b+Ydee6KnfTe8Pqv3txAKJdlPzFN+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JEU8B+yJqVXete+c7WrazGscBYFprHqkgAXcgtXThVA4SQYz+gR/o0IN3yYptLlSY89oWKQnw0GuU805tQQfVrqsn+IlZyy7LIfNAh1ByHwl/FSQ84V+RybBbh8s2ezU5+WoPW12k1ULA8KB/Veb+WkLCeHpZSeikhGAQ8BcVAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KO9P4/t2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LvQV5Pev"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43CCJlBR025087;
-	Fri, 12 Apr 2024 15:52:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=d1fpmCXwLq2bRVjY0U0+oCyAU038R/D9yejbAKhF/pA=; b=Lv
-	QV5PevzcinGxqFO8j2HMLTzhbCMHG3PW/BWoOKBzuwAZwADEb3TrdzSFfL/FtOx2
-	dOoPPf3L0qD+Uf7M2OITTIlv5DKq/ESyV8IBECMSXnaGMa2Iz6ejf05KoOs2VhcM
-	EoqEq758QabH7Sov2ZkWzSbWzSHxNWNJE2K8R98ItZZE3jyAXbeds3JUTJ99OD7w
-	JzI4vc3QTVs48vm0oTGmUrqI9j4ULfr8PXKDJJ1xpYq0jUgs/RXQfiWsK6LFLB5u
-	VxT85YGU3C7jJ6DdSFKeb43tWQP8ZeoaYnQIGPg+Mzv+dXaScWpxpXUC4wzvyPN5
-	aIqu4v8vDO4HpqxyTNPw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xeskt1sxm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 15:52:05 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 43CFq35T018481
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 15:52:03 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 12 Apr
- 2024 08:52:02 -0700
-Message-ID: <bba87a59-d8c0-419e-cc62-dd92bccf901d@quicinc.com>
-Date: Fri, 12 Apr 2024 09:52:02 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KO9P4/t2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B70AC113CC;
+	Fri, 12 Apr 2024 15:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712937142;
+	bh=p8OAbH8ik4uO7b+Ydee6KnfTe8Pqv3txAKJdlPzFN+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KO9P4/t2cDRuWl80w6gOUAPjO0AMXVxD7gC6uP2mwU8ISqAgxs6VNhHozXIZqPg4f
+	 IxIfIc4IjyGe/b6QhzPnay8cP37wmaDZ88pFaCzUFOMc20t0ikqGC58OGZCV+GbyDz
+	 WI93KbnDGseDAwz/NNdCUc5f/9jmB7Vx+RyIICUCQGBUzTfY6Lc75/E09y4R2RQe2v
+	 XWWzyszKnIIXYWZ4k9iyjsQE/3nSlsJtdFf1/ZKtjaJr7IAxKHUFfK6JqE2B+fM4UJ
+	 OZ/+WvCY1aZ1Sqg+hD4vkU9ARhl7iAtiPJbP+z/NrQJ8/kN6A/VFrOg8z4i27eJ5hK
+	 Ci19pwIr5RJ6Q==
+Date: Fri, 12 Apr 2024 10:52:20 -0500
+From: Rob Herring <robh@kernel.org>
+To: Seven Lee <wtli@nuvoton.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org,
+	devicetree@vger.kernel.org, linux-sound@vger.kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
+	conor+dt@kernel.org, perex@perex.cz, tiwai@suse.com,
+	YHCHuang@nuvoton.com, KCHSU0@nuvoton.com, CTLIN0@nuvoton.com,
+	SJLIN0@nuvoton.com, scott6986@gmail.com, supercraig0719@gmail.com,
+	dardar923@gmail.com, edson.drosdeck@gmail.com,
+	u.kleine-koenig@pengutronix.de
+Subject: Re: [PATCH 1/3] ASoC: dt-bindings: nau8821: Add delay control for ADC
+Message-ID: <20240412155220.GA2918590-robh@kernel.org>
+References: <20240412103554.3487290-1-wtli@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH] accel/qaic: mark debugfs stub functions as static inline
-Content-Language: en-US
-To: Arnd Bergmann <arnd@kernel.org>, Oded Gabbay <ogabbay@kernel.org>,
-        "Jacek
- Lawrynowicz" <jacek.lawrynowicz@linux.intel.com>,
-        "Pranjal Ramajor Asha
- Kanojiya" <quic_pkanojiy@quicinc.com>,
-        Carl Vanderlip
-	<quic_carlv@quicinc.com>
-CC: Arnd Bergmann <arnd@arndb.de>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240409133945.2976190-1-arnd@kernel.org>
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20240409133945.2976190-1-arnd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pQvByzwBaKuXN2Mlpmr2UkLCOsZcVLj8
-X-Proofpoint-ORIG-GUID: pQvByzwBaKuXN2Mlpmr2UkLCOsZcVLj8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_12,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 clxscore=1011 spamscore=0 malwarescore=0 adultscore=0
- mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2404120113
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412103554.3487290-1-wtli@nuvoton.com>
 
-On 4/9/2024 7:39 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Apr 12, 2024 at 06:35:52PM +0800, Seven Lee wrote:
+> Change the original fixed delay to the assignment from the property. It
+> will make it more flexible to different platforms to avoid pop noise at
+> the beginning of recording.
 > 
-> The alternative stub functions are listed as global, which produces
-> a build failure in some configs:
+> Signed-off-by: Seven Lee <wtli@nuvoton.com>
+> ---
+>  .../devicetree/bindings/sound/nuvoton,nau8821.yaml        | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> In file included from drivers/accel/qaic/qaic_drv.c:31:
-> drivers/accel/qaic/qaic_debugfs.h:16:5: error: no previous prototype for 'qaic_bootlog_register' [-Werror=missing-prototypes]
->     16 | int qaic_bootlog_register(void) { return 0; }
->        |     ^~~~~~~~~~~~~~~~~~~~~
-> drivers/accel/qaic/qaic_debugfs.h:17:6: error: no previous prototype for 'qaic_bootlog_unregister' [-Werror=missing-prototypes]
->     17 | void qaic_bootlog_unregister(void) {}
->        |      ^~~~~~~~~~~~~~~~~~~~~~~
-> drivers/accel/qaic/qaic_debugfs.h:18:6: error: no previous prototype for 'qaic_debugfs_init' [-Werror=missing-prototypes]
->     18 | void qaic_debugfs_init(struct qaic_drm_device *qddev) {}
->        |      ^~~~~~~~~~~~~~~~~
-> 
-> Make them static inline as intended.
-> 
-> Fixes: 5f8df5c6def6 ("accel/qaic: Add bootlog debugfs")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> diff --git a/Documentation/devicetree/bindings/sound/nuvoton,nau8821.yaml b/Documentation/devicetree/bindings/sound/nuvoton,nau8821.yaml
+> index 054b53954ac3..a726c5a9b067 100644
+> --- a/Documentation/devicetree/bindings/sound/nuvoton,nau8821.yaml
+> +++ b/Documentation/devicetree/bindings/sound/nuvoton,nau8821.yaml
+> @@ -103,6 +103,13 @@ properties:
+>          just limited to the left adc for design demand.
+>      type: boolean
+>  
+> +  nuvoton,adc-delay-ms:
+> +    description: Delay (in ms) to make input path stable and avoid pop noise.
+> +        The default value is 125 and range between 125 to 500 ms.
 
-Doh.  Thank you for addressing this so quickly.
+No need to state constraints in prose.
 
-Reviewed-by: Jeffrey Hugo <quic_jhugo@quicinc.com>
+> +    minimum: 125
+> +    maximum: 500
+> +    default: 125
+> +
+>    '#sound-dai-cells':
+>      const: 0
+>  
+> @@ -136,6 +143,7 @@ examples:
+>              nuvoton,jack-eject-debounce = <0>;
+>              nuvoton,dmic-clk-threshold = <3072000>;
+>              nuvoton,dmic-slew-rate = <0>;
+> +            nuvoton,nuvoton,adc-delay-ms = <125>;
+>              #sound-dai-cells = <0>;
+>          };
+>      };
+> -- 
+> 2.25.1
+> 
