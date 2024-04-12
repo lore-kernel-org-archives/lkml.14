@@ -1,164 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4015B610B;
-	Fri, 12 Apr 2024 21:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94DB152160
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 21:34:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712957657; cv=none; b=sIWLtttjWIDHUHRq8nJYeEnKbGBBeIm77JQpmIIWz1w+15lfEdDRdnRP6Q+cBGe9TNospqALhA9WdhZVhcpaZgLNnemH4I5ADKO6Sb7C4zTHpclDSeCaXxrpReqk3i+7I2Z9mKFXF/5mpefNcwVJ+NRJhb3ukXJ7FP3wNJcVKAs=
+	t=1712957698; cv=none; b=BnUk8Y1yVfslB87PWoaWo+hfjIdc+0yspMg3nxQO+LYYsd9s9XT9itLijIWiMdoVi9XyKtvE9U874fVVwRY4p5LGXT8WY+JvuZ3CZSbUO9yLkRs8TOrhA+ai0sTn/rcvy4cReC0+dlBLG0stCiWcrhrnOxh47SUBeVLxoEX9osI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712957657; c=relaxed/simple;
-	bh=RPMZISUCpRH7rGFvp7EbdpEtkFygpiRP/bPV6ApwRUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SLbNN+odO50am/JnkWc1n3ZWmfk65jXBs4VX1kbbjTLLT9wO0FlACCPKQnmBjcVqGX5g4jm5FJMTERlcpzJpSyqHO+No1M3DKyKdTJmbIUItGVqmqEEB3dbs6ZcsO8bWnbh6yxs0N3e7YmPsYUj2BsTqyX/2aTKDH3Qi5wYQxFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQSf3PB4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712957698; c=relaxed/simple;
+	bh=xvw5afYe/HqYZyOcx8EYuNqAOr1fJ9DeJWTEkIqDYqA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KTRzsmGS87F53TChorVd3MQTFO2q1EyD7mEvBbHHyAduP80YzB0b2ujvZfGAIK2e+gRO7eDyDYe/0R1iNEw4A1jX6hefDEJTYDMQBo+H2a52DNOgIvY6d595QgwEnOU74UykzyQ6CqyXX0tInhos0Fs69DCub/nIFUC+pcbzozE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VWX4Azfg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQSf3PB4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A7AC113CC;
-	Fri, 12 Apr 2024 21:34:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712957656;
-	bh=RPMZISUCpRH7rGFvp7EbdpEtkFygpiRP/bPV6ApwRUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQSf3PB42KVUAVL/1+OQDtLauoAha7gpWFLEfP7EkJZ7N4u8sjm1TXZET0lcr99if
-	 p323/cwpgZUxDFoAN0LtJD/WtUmkAowRMfrHXs2ADEs+POp65FYXDmivZLLbSGNrbU
-	 cK7psxBkc2pNWhws+T+BLn4rvwbGtErI3pKePtDRrrXtxg4SlAkty9qCRKwyAvaK4o
-	 4J1TYby7DtMN0iDHmvtIaHgU/2W7PPaw1EGmkk8oxy7YqdZ0CGvX2zAsbQmuPAc1vv
-	 Sybl6gdQ0nD7yXd8jpir5Kgy9dj6jXo2NV/g5uxXJoISW/2Z2e9/7qwwU4KNgSB4f8
-	 bogQT43yfNq2A==
-Date: Fri, 12 Apr 2024 22:34:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 08/19] riscv: Introduce vendor variants of extension
- helpers
-Message-ID: <20240412-geranium-monotone-b47f414715d1@spud>
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
- <20240411-dev-charlie-support_thead_vector_6_9-v1-8-4af9815ec746@rivosinc.com>
- <20240412-dwarf-shower-5a7300fcd283@wendy>
- <ZhlypvTdsFPZBr08@ghost>
- <20240412-drab-french-55d8ff2c8cfa@spud>
- <ZhmhtLS5NuRrPOfu@ghost>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VWX4Azfg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9DBC113CC;
+	Fri, 12 Apr 2024 21:34:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1712957698;
+	bh=xvw5afYe/HqYZyOcx8EYuNqAOr1fJ9DeJWTEkIqDYqA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=VWX4AzfgnCpedrZFXAzhx6nYm7Iwa8pedx/0Ox0YMFy1JFDMlWv62MbFfKrJGAjbO
+	 Iy8paFxH8TTl51hIlQvgRzjHXn9sWIivlgWGVUEAJ63HPLhGG6sIZycEDqDnJLLOm2
+	 wl6x1fXa6QhRZ8EQ5JWJTCpWlz7GUjIJUjmnwh88=
+Date: Fri, 12 Apr 2024 14:34:57 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
+Cc: Alex Shi <alexs@kernel.org>, "Kirill A . Shutemov"
+ <kirill.shutemov@linux.intel.com>, Hugh Dickins <hughd@google.com>, Baolin
+ Wang <baolin.wang@linux.alibaba.com>, <linux-mm@kvack.org>,
+ <linux-kernel@vger.kernel.org>, Zhaoyang Huang <huangzhaoyang@gmail.com>,
+ <steve.kang@unisoc.com>
+Subject: Re: [PATCH 1/1] mm: protect xa split stuff under lruvec->lru_lock
+ during migration
+Message-Id: <20240412143457.5c6c0ae8f6df0f647d7cf0be@linux-foundation.org>
+In-Reply-To: <20240412064353.133497-1-zhaoyang.huang@unisoc.com>
+References: <20240412064353.133497-1-zhaoyang.huang@unisoc.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="SiZFDomrOPZV4p3t"
-Content-Disposition: inline
-In-Reply-To: <ZhmhtLS5NuRrPOfu@ghost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Fri, 12 Apr 2024 14:43:53 +0800 "zhaoyang.huang" <zhaoyang.huang@unisoc.com> wrote:
 
---SiZFDomrOPZV4p3t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Livelock in [1] is reported multitimes since v515, 
 
-On Fri, Apr 12, 2024 at 02:03:48PM -0700, Charlie Jenkins wrote:
-> On Fri, Apr 12, 2024 at 09:40:03PM +0100, Conor Dooley wrote:
-> > On Fri, Apr 12, 2024 at 10:43:02AM -0700, Charlie Jenkins wrote:
-> > > On Fri, Apr 12, 2024 at 12:49:57PM +0100, Conor Dooley wrote:
-> > > > On Thu, Apr 11, 2024 at 09:11:14PM -0700, Charlie Jenkins wrote:
-> > > > > Create vendor variants of the existing extension helpers. If the
-> > > > > existing functions were instead modified to support vendor extens=
-ions, a
-> > > > > branch based on the ext value being greater than
-> > > > > RISCV_ISA_VENDOR_EXT_BASE would have to be introduced. This addit=
-ional
-> > > > > branch would have an unnecessary performance impact.
-> > > > >=20
-> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > >=20
-> > > > I've not looked at the "main" patch in the series that adds all of =
-the
-> > > > probing and structures for representing this info yet beyond a curs=
-ory
-> > > > glance, but it feels like we're duplicating a bunch of infrastructu=
-re
-> > > > here before it is necessary. The IDs are all internal to Linux, so =
-I'd
-> > > > rather we kept everything in the same structure until we have more =
-than
-> > > > a handful of vendor extensions. With this patch (and the theadpmu s=
-tuff)
-> > > > we will have three vendor extensions which feels like a drop in the
-> > > > bucket compared to the standard ones.
-> > >=20
-> > > It is not duplicating infrastructure. If we merge this into the exist=
-ing
-> > > infrastructure, we would be littering if (ext > RISCV_ISA_VENDOR_EXT_=
-BASE)
-> > > in __riscv_isa_extension_available. This is particularily important
-> > > exactly because we have so few vendor extensions currently so this ch=
-eck
-> > > would be irrelevant in the vast majority of cases.
-> >=20
-> > That's only because of your implementation. The existing vendor extensi=
-on
-> > works fine without this littering. That's another thing actually, you
-> > forgot to convert over the user we already have :)
->=20
-> Oh right, I will convert them over. The fundemental goal of this patch
-> is to allow a way for vendors to support their own extensions without
-> needing to populate riscv_isa_ext. This is to create separation between
-> vendors so they do not impact each other.
+Are you able to provide us with a means by which others can reproduce this?
 
-The one that needs converting is xandespmu. As I said on the other patch
-a minute I don't think isolating vendors for the internal representation
-is needed and can be left in hwprobe. I also don't think we can rely on
-a behaviour of "SiFive CPUs will always have SiFive's mvendorid" or that
-kinda thing, I've heard talk of the SoC vendor getting their mvendorid
-for custom CPU cores instead of the CPU vendor and it's possible for
-the SBI implementation to "adjust" the values also.
-
-> xlinuxenvcfg does not fit into this scheme however. This scheme assumes
-> that a hart cannot have multiple vendors which that extension breaks.
-> xlinuxenvcfg is really filling a hole in the standard isa that is
-> applicible to all vendors and does not appear in the device tree so it
-> is okay for that to live outside this scheme.
-
-Ye, xlinuxenvcfg is an internal psuedo-extension that should be treated
-more like a standard one than something vendor.
-
-> > > It is also unecessary to push off the refactoring until we have some
-> > > "sufficient" amount of vendor extensions to deem changing the
-> > > infrastructure when I already have the patch available here. This does
-> > > not introduce any extra overhead to existing functions and will be ab=
-le
-> > > to support vendors into the future.
-> >=20
-> > Yeah, maybe that's true but this was my gut reaction before reading the
-> > other patch in detail (which I've still yet to do).
->=20
-> - Charlie
->=20
-
---SiZFDomrOPZV4p3t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhmo0QAKCRB4tDGHoIJi
-0sB2AP9FeUoact1liM4pnP8xEk+uEek2FyqTjYcZiaib0RlcGwD/RBzXv10rgGru
-eAFY4Rmq36PhVYfHdF4UI+zCC4yTAgw=
-=xSsQ
------END PGP SIGNATURE-----
-
---SiZFDomrOPZV4p3t--
+Thanks.
