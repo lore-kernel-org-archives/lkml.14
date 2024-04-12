@@ -1,151 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B23B62818
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:08:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D3B5EE67;
+	Fri, 12 Apr 2024 13:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927290; cv=none; b=Lvph8hlBgsJhSd3/cW91lyzzrrNDfbFeuEseR0gvYvW7JjyWdDQQMrtUj8dTtwzQ3MNa1FCSt9sLxFjmFkPosvSGobIGZcoCyOlBZIoud2BsGuwBMN3E2jYj+OFfsjFWxhV/J0LuzZ3rdlVvhHiKQJSx3ABf5U28Gr7BY1lUAVs=
+	t=1712927308; cv=none; b=PJDbLIyRMNIfO75fLttzojg88nWZ2T8YYP8Wrdo+fYI2wFPpWjbbB+YEj6Zak4ExzBysANc4tx70aUo0VONA+Y8Vv/ukLbJth6kZvkEGs9X54hVnjn0VAMHZZTN03AigdbWWjKfQ3dWGUAGf2Sml0KxNRujcJfs3ImXwrakM09I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927290; c=relaxed/simple;
-	bh=Q1Db/ZKdhoYZY4z6pe4loFoumzC09sqIMjzSkx6k370=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jayIpPmpMa381G45d/Hk4S/d/OJfgUr0D26KRit94DSoN2DhhMla2USoGpnkzY70aJ2/ibCDjaOss/y6mag0fEpNVkKkce5SJr+1xpwaFHtC9AqgY+eKTXfNKsRRPx0dmApQZNOPdDwH8BOAereLW3x+bnRulLdUKJx9aVWxZY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoVb/NS1; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1712927308; c=relaxed/simple;
+	bh=smO65XDZ61emqicPocqbIM9artyu+v5qW43fYAgeCyQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AdlvD2dLXqDAD2AOZDfIbFZGc6x4j1Dz5XOtcb7ba+ZVAz2ZYVh9Zrykp0nHrHgWPFDGqJ1oyFgYwgC56ecAVoxbpryJgYAHvDl/xltRkl2GmADMgeL/PcowXwSCaqHzLYYFE2Bq9erhKe1yvzugbywytQUTKz17noer4qnXW3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CoN4/Gwd; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoVb/NS1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712927287; x=1744463287;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Q1Db/ZKdhoYZY4z6pe4loFoumzC09sqIMjzSkx6k370=;
-  b=VoVb/NS1mseqbLFZczbgW/RuAgPsa+uBdSoRjm0JVrupz0oeiW3qFSMq
-   AlwLbPzF9DCs4SpzKPhrDBD+MBaW/rq6zx/cVRrY+dK7OMoOfWgIfrgGy
-   FDhkFqxKYF3bCpxs3C6SUxag9zPahtc6i2gL2N79l5KCKgGAMrR/QVApz
-   MjFwNiCvfPNhlrPxmOZ8QTu0sM2VhPfL6kMWxNyVrr05OrVtd6ZMhINN7
-   6KSfDHA+iipgICCmTa3LenN3UNmmeC/zG3V6xERveUHdRDGmjI/hWncEx
-   q+HLn3QcqtG7jx8uHDSw8v6zHFx/amlpRsDFF0yckPrXYrnmWVQk6oJ49
-   w==;
-X-CSE-ConnectionGUID: QwTLxichSIi3CeFvDvI8zA==
-X-CSE-MsgGUID: peYNsKP7RP27nmdGofz6jw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8239295"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8239295"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:08:06 -0700
-X-CSE-ConnectionGUID: N6EQa6+ZS5ePyGkc5Q8A1g==
-X-CSE-MsgGUID: jdRJ4EDWT0ydliAjldhpZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="25882120"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 12 Apr 2024 06:08:05 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rvGdP-0009mP-00;
-	Fri, 12 Apr 2024 13:08:03 +0000
-Date: Fri, 12 Apr 2024 21:07:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kyle Huey <me@kylehuey.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>
-Subject: [tip:perf/core 10/17] kernel/events/core.c:9634:13: warning:
- 'perf_event_free_bpf_handler' defined but not used
-Message-ID: <202404122021.kE3qOoZo-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CoN4/Gwd"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d87660d5dbso7966741fa.3;
+        Fri, 12 Apr 2024 06:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712927304; x=1713532104; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gLcGq5zWMeYBBSqql3vIqVo619w1Ke1Wim2kKoEYI4=;
+        b=CoN4/GwdQ5wctbCOaSpr7um9fqAmwEi3dLIIPhSagzArGKSUx1bAjpu4PuyrSMjZjI
+         DUqomNi1bpLJs7mA6qJoxw7wiKv7Fmieh2ZIaGrzZ5KBIq1/dHdHUVXP3YR2SRXNxzPa
+         fpwGlmYzNmF5Oc09z1feHvbjb28MG6hkDOvpq0/34WlJkr2h2snrRd3vZzGKhacYspC6
+         JJKQGbutmDqHv+E7Y9sTsq96vMZzbucoiZxWezlu6EB0EsSkjTos/2NNWEwmUWe3SA8I
+         wEjVi7OsWmsdnDEUpAGBvn4l28HsUnpOJ7rV0/23oMC/pDOKEeqCSIMuvE0R3XQkeaM6
+         S38w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712927304; x=1713532104;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7gLcGq5zWMeYBBSqql3vIqVo619w1Ke1Wim2kKoEYI4=;
+        b=tw/kdDTBvVpiWKEA0zPUfc8uNQuxXoiuoKOGQ/w9JWIeHv/BXzTWQ1dFi3v5mFe2fu
+         ADR8Y6KrMa4hYe3s5J/R2ZBDisdKMhInlBh0ug19e67tdXcziZv6VnBao4sQESW0+3np
+         Y5a/3qR62+SgkQwA7wYOBtMqZma+KPILqCYPK4aFhTTI4HzqE9SkaZ70HRsRglNnn55Z
+         M7+Rsk0/TYkN119HoDdDV90j5YpmxvQAmlRQNq2Qr1nV98JWiw8bSpeLoXeg4UzT93Nj
+         d+44D8XYsXJjZC1VfvQFuWbo3Pbmm90UI8zHdCzF+VQZ4Hk+MZsr7wNSrPrgOw3LhXDH
+         WT4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXfgukvvXICb80wc7uSQJr+xK8Jx04Udgt9A+MJsqIHI9RkdkMiXgdsTb9EY8zs4UqQ7WXhk9i/LsjT2+pNPc0Yc6D3NRRp6Q1t
+X-Gm-Message-State: AOJu0Yyo8AlFoHnsWTKEQyjEEsOMbvfxNjZqxoOB0zefGnjafGhhvTtH
+	tnw+X/Ms7/UKhKTpf63A03gwyxDkgqZOvwZVgWY0OpE3lg5/Y1debnS7L8QowtQMkfn/ECDDZOg
+	z8Cc52i8MgVJKU5B6+pXgPyK7Hgs=
+X-Google-Smtp-Source: AGHT+IHbUhyiYY/APoRdVTDCnh2yqac9MzZHZ7FoQ0gwvmXFN4lE18e84XXmBoHMxZH5iDQHmGSgMhAUOZ1bchu1h3U=
+X-Received: by 2002:ac2:4142:0:b0:515:9150:ecc1 with SMTP id
+ c2-20020ac24142000000b005159150ecc1mr1584483lfi.24.1712927303881; Fri, 12 Apr
+ 2024 06:08:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAEkJfYON+ry7xPx=AiLR9jzUNT+i_Va68ACajOC3HoacOfL1ig@mail.gmail.com>
+ <92fe8e95-bc01-4d7d-9678-8cfc55cc4a7b@rowland.harvard.edu>
+In-Reply-To: <92fe8e95-bc01-4d7d-9678-8cfc55cc4a7b@rowland.harvard.edu>
+From: Sam Sun <samsun1006219@gmail.com>
+Date: Fri, 12 Apr 2024 21:08:12 +0800
+Message-ID: <CAEkJfYORHKO16xT3DCS04JFzkquz6oZ5CdC2USJ5-c0WihAMXg@mail.gmail.com>
+Subject: Re: [Linux kernel bug] general protection fault in disable_store
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	Greg KH <gregkh@linuxfoundation.org>, swboyd@chromium.org, ricardo@marliere.net, 
+	hkallweit1@gmail.com, heikki.krogerus@linux.intel.com, 
+	mathias.nyman@linux.intel.com, royluo@google.com, 
+	syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
-head:   93d3fde7fd19c2e2cde7220e7986f9a75e9c5680
-commit: 4c03fe11b96bda60610aca77002e83f37b4a2242 [10/17] perf/bpf: Reorder bpf_overflow_handler() ahead of __perf_event_overflow()
-config: arm64-defconfig (https://download.01.org/0day-ci/archive/20240412/202404122021.kE3qOoZo-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240412/202404122021.kE3qOoZo-lkp@intel.com/reproduce)
+On Thu, Apr 11, 2024 at 11:24=E2=80=AFPM Alan Stern <stern@rowland.harvard.=
+edu> wrote:
+>
+> On Thu, Apr 11, 2024 at 02:52:27PM +0800, Sam Sun wrote:
+> > Dear developers and maintainers,
+> >
+> > We encountered a general protection fault in function disable_store.
+> > It is tested against the latest upstream linux (tag 6.9-rc3). C repro
+> > and kernel config are attached to this email. Kernel crash log is
+> > listed below.
+> > ```
+> > general protection fault, probably for non-canonical address
+> > 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+> > KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+> > CPU: 1 PID: 9459 Comm: syz-executor414 Not tainted 6.7.0-rc7 #2
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04=
+/01/2014
+> > RIP: 0010:disable_store+0xd0/0x3d0 drivers/usb/core/port.c:88
+> > Code: 02 00 00 4c 8b 75 40 4d 8d be 58 ff ff ff 4c 89 ff e8 a4 20 fa
+> > ff 48 89 c2 48 89 c5 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c
+> > 02 00 0f 85 b0 02 00 00 48 8b 45 00 48 8d bb 34 05 00 00 48
+> > RSP: 0018:ffffc90006e3fc08 EFLAGS: 00010246
+> > RAX: dffffc0000000000 RBX: ffff88801d4d4008 RCX: ffffffff86706be8
+> > RDX: 0000000000000000 RSI: ffffffff86706c4d RDI: 0000000000000005
+> > RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 1ffff92000dc7f85
+> > R13: ffff88810f4bfb18 R14: ffff88801d4d10a8 R15: ffff88801d4d1000
+> > FS:  00007fa0af71b640(0000) GS:ffff888135c00000(0000) knlGS:00000000000=
+00000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 00007fa0af71a4b8 CR3: 0000000022f5f000 CR4: 0000000000750ef0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > PKRU: 55555554
+>
+> > ----------------
+> > Code disassembly (best guess):
+> >    0:    02 00                    add    (%rax),%al
+> >    2:    00 4c 8b 75              add    %cl,0x75(%rbx,%rcx,4)
+> >    6:    40                       rex
+> >    7:    4d 8d be 58 ff ff ff     lea    -0xa8(%r14),%r15
+> >    e:    4c 89 ff                 mov    %r15,%rdi
+> >   11:    e8 a4 20 fa ff           call   0xfffa20ba
+> >   16:    48 89 c2                 mov    %rax,%rdx
+> >   19:    48 89 c5                 mov    %rax,%rbp
+> >   1c:    48 b8 00 00 00 00 00     movabs $0xdffffc0000000000,%rax
+> >   23:    fc ff df
+> >   26:    48 c1 ea 03              shr    $0x3,%rdx
+> > * 2a:    80 3c 02 00              cmpb   $0x0,(%rdx,%rax,1) <--
+> > trapping instruction
+> >   2e:    0f 85 b0 02 00 00        jne    0x2e4
+> >   34:    48 8b 45 00              mov    0x0(%rbp),%rax
+> >   38:    48 8d bb 34 05 00 00     lea    0x534(%rbx),%rdi
+> >   3f:    48                       rex.W
+> > ```
+> > We analyzed the root cause of this bug. When calling disable_store()
+> > in drivers/usb/core/port.c, if function authorized_store() is calling
+> > usb_deauthorized_device() concurrently, the usb_interface will be
+> > removed by usb_disable_device. However, in function disable_store,
+> > usb_hub_to_struct_hub() would try to deref interface, causing
+> > nullptr-deref. We also tested other functions in
+> > drivers/usb/core/port.c. So far we haven't found a similar problem.
+>
+> I don't see how this explanation could be correct.  disable_store() is a
+> sysfs attribute file for the port device, so when it is called the port
+> device structure must still be registered.  The interface structure
+> doesn't get removed until after usb_disable_device() calls device_del(),
+> which won't return until hub_disconnect() returns, which won't happen
+> until after the port devices are unregistered, which doesn't happen
+> until disable_store() calls sysfs_break_active_protection(), which is
+> after the call to usb_hub_to_struct_hub().
+>
+> Can you do a little extra debugging to find out exactly which C
+> statement causes the trap?  The disassembly above indicates the trap
+> happens during a compare against 0 inside disable_store() -- not inside
+> usb_hub_to_struct_hub().  Can you figure out which comparison that is?
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404122021.kE3qOoZo-lkp@intel.com/
+Sorry for the mistake I made when debugging this bug. Now I have more
+information about it. Disassembly of function disable_store() in the
+latest upstream kernel is listed below.
+```
+Dump of assembler code for function disable_store:
+   ...
+   0xffffffff86e907eb <+187>:   lea    -0x8(%r14),%r12
+   0xffffffff86e907ef <+191>:   mov    (%rbx),%rax
+   0xffffffff86e907f2 <+194>:   mov    %rax,0x20(%rsp)
+   0xffffffff86e907f7 <+199>:   lea    -0xa8(%rax),%rdi
+   0xffffffff86e907fe <+206>:   mov    %rdi,0x18(%rsp)
+   0xffffffff86e90803 <+211>:   call   0xffffffff86e20220
+<usb_hub_to_struct_hub>
+   0xffffffff86e90808 <+216>:   mov    %rax,%rbx
+   0xffffffff86e9080b <+219>:   shr    $0x3,%rax
+   0xffffffff86e9080f <+223>:   movabs $0xdffffc0000000000,%rcx
+   0xffffffff86e90819 <+233>:   cmpb   $0x0,(%rax,%rcx,1)
+   0xffffffff86e9081d <+237>:   je     0xffffffff86e90827 <disable_store+24=
+7>
+   0xffffffff86e9081f <+239>:   mov    %rbx,%rdi
+   0xffffffff86e90822 <+242>:   call   0xffffffff81eeb0b0
+<__asan_report_load8_noabort>
+   0xffffffff86e90827 <+247>:   lea    0x60(%rsp),%rsi
+   ...
+```
+The cmpb in disable_store()<+233> is generated by KASAN to check the
+shadow memory status. If equals 0, which means the load 8 is valid,
+pass the KASAN check. However, this time rax is 0, so it first
+triggers general protection fault, since 0xdffffc0000000000 is not a
+valid address. rax contains the return address of function
+usb_hub_to_struct_hub(), in this case is a NULL.
 
-All warnings (new ones prefixed by >>):
+In function usb_hub_to_struct_hub(), I checked hdev and its sub
+domains, and they are not NULL. Is it possible that
+usb_deauthorized_device() set
+hdev->actconfig->interface[0]->dev.driver_data to NULL? I cannot
+confirm that since every time I try to breakpoint the code it crashes
+differently.
 
->> kernel/events/core.c:9634:13: warning: 'perf_event_free_bpf_handler' defined but not used [-Wunused-function]
-    9634 | static void perf_event_free_bpf_handler(struct perf_event *event)
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->> kernel/events/core.c:9596:12: warning: 'perf_event_set_bpf_handler' defined but not used [-Wunused-function]
-    9596 | static int perf_event_set_bpf_handler(struct perf_event *event,
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+If there is any other thing I could help, please let me know.
+
+Best,
+Yue
 
 
-vim +/perf_event_free_bpf_handler +9634 kernel/events/core.c
-
-  9595	
-> 9596	static int perf_event_set_bpf_handler(struct perf_event *event,
-  9597					      struct bpf_prog *prog,
-  9598					      u64 bpf_cookie)
-  9599	{
-  9600		if (event->overflow_handler_context)
-  9601			/* hw breakpoint or kernel counter */
-  9602			return -EINVAL;
-  9603	
-  9604		if (event->prog)
-  9605			return -EEXIST;
-  9606	
-  9607		if (prog->type != BPF_PROG_TYPE_PERF_EVENT)
-  9608			return -EINVAL;
-  9609	
-  9610		if (event->attr.precise_ip &&
-  9611		    prog->call_get_stack &&
-  9612		    (!(event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) ||
-  9613		     event->attr.exclude_callchain_kernel ||
-  9614		     event->attr.exclude_callchain_user)) {
-  9615			/*
-  9616			 * On perf_event with precise_ip, calling bpf_get_stack()
-  9617			 * may trigger unwinder warnings and occasional crashes.
-  9618			 * bpf_get_[stack|stackid] works around this issue by using
-  9619			 * callchain attached to perf_sample_data. If the
-  9620			 * perf_event does not full (kernel and user) callchain
-  9621			 * attached to perf_sample_data, do not allow attaching BPF
-  9622			 * program that calls bpf_get_[stack|stackid].
-  9623			 */
-  9624			return -EPROTO;
-  9625		}
-  9626	
-  9627		event->prog = prog;
-  9628		event->bpf_cookie = bpf_cookie;
-  9629		event->orig_overflow_handler = READ_ONCE(event->overflow_handler);
-  9630		WRITE_ONCE(event->overflow_handler, bpf_overflow_handler);
-  9631		return 0;
-  9632	}
-  9633	
-> 9634	static void perf_event_free_bpf_handler(struct perf_event *event)
-  9635	{
-  9636		struct bpf_prog *prog = event->prog;
-  9637	
-  9638		if (!prog)
-  9639			return;
-  9640	
-  9641		WRITE_ONCE(event->overflow_handler, event->orig_overflow_handler);
-  9642		event->prog = NULL;
-  9643		bpf_prog_put(prog);
-  9644	}
-  9645	#else
-  9646	static int perf_event_set_bpf_handler(struct perf_event *event,
-  9647					      struct bpf_prog *prog,
-  9648					      u64 bpf_cookie)
-  9649	{
-  9650		return -EOPNOTSUPP;
-  9651	}
-  9652	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Alan Stern
+>
+> > If you have any questions, please contact us.
+> >
+> > Reported by Yue Sun <samsun1006219@gmail.com>
+> > Reported by xingwei lee <xrivendell7@gmail.com>
+> >
+> > Best Regards,
+> > Yue
