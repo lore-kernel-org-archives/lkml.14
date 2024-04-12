@@ -1,84 +1,47 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpcmd0987.aruba.it (smtpcmd0987.aruba.it [62.149.156.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 645A84D59E
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D628F5C
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712906654; cv=none; b=JSouPQEzMXOF2gx1IS6kadc2Bt43t5rQHYZqxYMxPLm0uWN1KIfSb17mOvYNZbLNtCPMR0S2xldtD/DSStfZn43SMsk0r/f1wnwW8tQB0wJZrD3vGB6h9tCpmCd4TwTgIriSjA/XmK8zVXDvz/lVeAu/AGn0FOKYetzv7jqkzfk=
+	t=1712906700; cv=none; b=Cn9pJFC5t+geTr/c7xMGtrmERYmD1NtYRqV5IVtvcB7YGGA2ZvX3oJEZi5DPZqIFGvPnEi6qvuupCaK5CelSf/FFcgJCIZiy9zvvGou7dTvwXzqh/iuGzBSNca8ARI4esXLHI/qx949fj8S0KUYjYg7jiHF04x64I2rThWftS1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712906654; c=relaxed/simple;
-	bh=1WYsXBFhC9qT65v2C2+m5TmQIhaESOsNf/ipkoOinxM=;
+	s=arc-20240116; t=1712906700; c=relaxed/simple;
+	bh=Adjbq9pqMceLYxsxh7gwyIE+w8QmTE97IidBS1qBgak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ztp5xMijk12E94efkIjiEhL/JvU5qb6MUWFbGKaimyn5D/jkgzkfL/DlDTcqP9Hw6QNeD2LFgXNOPu2ac/YcFcUlgazFZoababA4d+CoWGIiEEI2yHPU10W5fKjtiaDsAlLh1EngRdcpUyZhD7YUUFf8GMCmskt+NJKOi61QX+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MH7J2liT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PomDPhVM; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Rpwv4I1a; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kmMdfvf9; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=PloZsrSBWkvInLHo5QJi8L2tkKiTqmvJuOpsg+J77UoSAQQAxVX3hXXuma/KDHVIPuMqsdbOmosYXQch6e84doov8ifUokP/wEX+af/oG8tWVUw7jG5l5PpuvVVxNyTANb5LyO2xQNy1PS+nCIqN26f8BYXqI1XBIgZgpV3j2ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=EX8HHya/; arc=none smtp.client-ip=62.149.156.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MH7J2liT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PomDPhVM";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Rpwv4I1a";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kmMdfvf9"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 345FF37FB1;
-	Fri, 12 Apr 2024 07:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712906646; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oV106H3TaEF2NxM6uz7Oj8X/Nd+Js+KHgrq9m6ZedyU=;
-	b=MH7J2liTMNcQpoFlIsaZ+bbKnCSA3/vfWfTGinG/nRZ3ANQT1AfXxdbeLAjiJYbp1jSxNQ
-	bOKh29hF5FypOkqVRjBsy2zGHNbZOHvoOfUvFnSimXA1oxpBi688/fOgIwqbDn3KwKMpph
-	ZpOXRgxoiMCtBG3kFKIvxk+Y4/aeGgU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712906646;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oV106H3TaEF2NxM6uz7Oj8X/Nd+Js+KHgrq9m6ZedyU=;
-	b=PomDPhVMMnnQjfNnwOgNrHBPMSCIJG3KjpzZYh+0YLdwdjxsJjW1+ovntgLntUpEzx68VK
-	iXo61lQ5EhGA7JDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1712906645; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oV106H3TaEF2NxM6uz7Oj8X/Nd+Js+KHgrq9m6ZedyU=;
-	b=Rpwv4I1aqeJwXRm4GNUwLWzv7ff3hpmBDtBIdmuKmzp4IBALrjRcgEj3+tRnWfjRpFObbp
-	kBpkaOH/qjERO+QidNvgOpFojC1DVHOeSWjR3+etsXPEuX+6CbERtvGVae9oXzQVAauXM7
-	b/u4Hm09c6ayjed/KW30sFGiacJN78Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1712906645;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oV106H3TaEF2NxM6uz7Oj8X/Nd+Js+KHgrq9m6ZedyU=;
-	b=kmMdfvf9kymr7kxyi7uysQV7iktsmkBhMWYetdQjp5Js+TBVL5a+MOUW7PFFoU0mADP5Ad
-	25PC+35f+rvEhWAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2224113942;
-	Fri, 12 Apr 2024 07:24:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dBjZA5XhGGaaaAAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Fri, 12 Apr 2024 07:24:05 +0000
-Date: Fri, 12 Apr 2024 09:24:04 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	James Smart <james.smart@broadcom.com>, Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/6]  nvme-fabrics: short-circuit connect retries
-Message-ID: <vbptto5zefkdadnpyhcjelfrsgadb2stjh3sole6n6mdd4h7dq@lrdxk5p5qh6w>
-References: <20240409093510.12321-1-dwagner@suse.de>
- <ZhiBzXBvjTeDuHbS@kbusch-mbp.dhcp.thefacebook.com>
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="EX8HHya/"
+Received: from engicam ([77.32.11.127])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id vBEIrWYlOjUFfvBEJrK5qW; Fri, 12 Apr 2024 09:21:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1712906507; bh=Adjbq9pqMceLYxsxh7gwyIE+w8QmTE97IidBS1qBgak=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=EX8HHya/xj1Az3yI1wtxRyfvhSIW9e822ajFI0Lb9zH6Kf1NcoBqtJ1XEpO6INBku
+	 1/TnLhwTiqYTafLn1P31t1wcWaP07OUTeE2q+nfEEiAvcGRG4cxmoUNnvuu8l1GGP5
+	 E+bMLlalj/xPV9jqZLiGKcBh+4A69ZqAKa7slilVT6HgTRMOexukolQGwJqbf2AvEp
+	 bp77keWfZ9c+/50Kpf1fkAh8iUstZMDTTqhofNZkPKQoqRqGVp7hPOBcVnXcFhGe49
+	 jecubu5hQ+jCksD4aG6IdK4aUJzY8FSpCOu2ita3kDsLu/XYOhPyssogPB2mleuuy+
+	 w3uvAYbbKnrYg==
+Date: Fri, 12 Apr 2024 09:21:46 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Robin Gong <yibin.gong@nxp.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: pca9450: add PMIC_RST_B
+ warm reset property
+Message-ID: <ZhjhCvVNezy9r7P4@engicam>
+References: <20240411165801.143160-1-fabio.aiuto@engicam.com>
+ <20240411165801.143160-2-fabio.aiuto@engicam.com>
+ <e86812b3-a3aa-4bdb-9b32-a0339f0f76b5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,51 +50,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhiBzXBvjTeDuHbS@kbusch-mbp.dhcp.thefacebook.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+In-Reply-To: <e86812b3-a3aa-4bdb-9b32-a0339f0f76b5@kernel.org>
+X-CMAE-Envelope: MS4xfKVA3PQbAv8+urcPHZqE0/UkF600nupPzGrfjmw8Jtownzu+YWWElrB9mNY1ZOFpf9cR7u+kDhS8ftgu4RpQxfk2ZlE4aZKRDZMnVbT56FfTDRPdfJTU
+ Q46tPwA/jDIk004a1NO6fuARb+kgV6ARi2LjIwu4xvGyq+qqDlkeKqWMop/kbvXhx5/nubJl7rtvNXmpzKVsdeJmxjXBStyAqBjsqjylXmAE8SZ/VTWhjLVn
+ jOPhymJTrt1WghAiyq1R4/ji0R6dYP4xPk4xTGAKw/jEQsqXBS8C6A+CV1dezhUe8Z+c5hUVb8vmfl5FPHCWCApVC+j+gDuYsx99w3NKkZmW0iIb3F+VWaCX
+ nFtfdt+pE6rByxELHa3uEuXGC/1d7atcNr2998WjRb/MIwAzk4wxPNuCRILv1GYtaqDyRvTOVKUR35SKGFHkF8iwgkIWhWPMYq6PfRLigQJSOkRx0TNRMFft
+ DIT2trTxnzc6biwt
 
-On Thu, Apr 11, 2024 at 06:35:25PM -0600, Keith Busch wrote:
-> On Tue, Apr 09, 2024 at 11:35:04AM +0200, Daniel Wagner wrote:
-> > The first patch returns only kernel error codes now and avoids overwriting error
-> > codes later. Thje newly introduced helper for deciding if a reconnect should be
-> > attempted is the only place where we have the logic (and documentation).
+Dear Krzysztof,
+
+Il Thu, Apr 11, 2024 at 09:52:12PM +0200, Krzysztof Kozlowski ha scritto:
+> On 11/04/2024 18:58, Fabio Aiuto wrote:
+> > Add property to trigger warm reset on PMIC_RST_B assertion
 > > 
-> > On the target side I've separate the nvme status from the dhchap status handling
-> > which made it a bit clearer. I was tempted to refactor the code in
-> > nvmet_execute_auth_send to avoid hitting the 80 chars limit but didn't came up
-> > with something nice yet. So let's keep this change at a minimum before any
-> > refactoring attempts.
-> > 
-> > I've tested with blktests and also an real hardware for nvme-fc.
 > 
-> Thanks, series applied to nvme-6.9.
+> That's rather vague and does not tell me much why this is supposed to be
+> board level configuration. It sounds more like a debugging feature:
+> during development you want to retain memory contents for pstore etc.
+> Then I could imagine this should be turned runtime, e.g. via
+> sysfs/debugfs, because for example you want to start inspecting a
+> customer's device.
 
-Thanks! I have an updated version here which addresses some of Sagi's
-feedback, e.g. using only one helper function. Sorry I didn't send out
-it earlier, I got a bit side tracked in testing because of the 'funky'
-results with RDMA.
+thanks, I spent too few time writing this commit log and I apologize
+for that. I was thinking about something like:
 
-Do you want me to send a complete fresh series or patches on top of this
-series? I'm fine either way.
+    The default configuration of the PMIC behavior makes the PMIC
+    power cycle most regulators on PMIC_RST_B assertion. This power
+    cycling causes the memory contents of OCRAM to be lost.
+    Some systems needs some memory that survives reset and
+    reboot, therefore add a property to tell PMIC_RST_B is
+    wired.
+
+The actual configuration is made at probe time, anyway we need
+to override the default behavior of the pmic to get a warm reset
+everytime the PMIC_RST_B pin is asserted and this property tells
+us that "something is wired to that pin" and "it has to behave
+that way on pin assertion". Our use cases do not meet the need
+of further runtime configuration change.
+
+Maybe this patchset is a simple starting point...
+
+kindly waiting for you reply before submitting v4.
+
+best regards,
+
+fabio
+
+> 
+> Best regards,
+> Krzysztof
+> 
