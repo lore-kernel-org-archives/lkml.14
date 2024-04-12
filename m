@@ -1,156 +1,239 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF245674E;
-	Fri, 12 Apr 2024 11:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1BC4087B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:39:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712921909; cv=none; b=oDt+yQddqy8ypjSYxfP8MnkCzruYTYP7oKC1WoPYjrWkUI6UH/4fvvK+xXwXQ03NleLePeG6kLQwAHp8hNIo1ZHBmQetjxDCjq8+Dqkd7K9LnpVVwaTcBVIl2AZ9IrgQAI9810mtQcW+zCHchVOytUAGNT/zqgv3WTELajROwXU=
+	t=1712921950; cv=none; b=afC92KJhnGnca/cyh0JuevwkwfmubV5KC1xAcEu/JsxXUiw7c6vMYuEA2b2H5vH3QzHYdeP0MZsy5vKKuPV6M6Fky+07TlaegOS1xIfbriWjVixquGd6JQRbwjQCrU5oO7kDhhlIi9isDiI/XqIpwkRMPPSV5YjDErcatP22zrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712921909; c=relaxed/simple;
-	bh=aWPWXWwePYJ7mcthXXcnh6W3EMOk6ujdepGmdYxSc0c=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HJsq8TpNdeQlIWq3QaksZlpxXCxO5vuYVnkRj1GUUTVPsAL5NGr6GtAMsk8Q8P4FAtIfXkpiyiOVOAiD/YHWd0bAWIyu+c4yI5CaYS2q6Oh/ePYJRAc53uRdUcgxTxyRMERlWvMsvGWVD7lx5mc2dCDo//8PnjFK7r0egy/guUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=B4ybTsXF; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1712921950; c=relaxed/simple;
+	bh=sIU3hgoHw1bRexRx3Jn7dEhIyiOYe5W+0NALhhgdBss=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aqKQPcm/YR9JdoUAZiFilbHeOjXZMvR5ZtzbW9vJqLNuXJ0jftj5axFsM5ixfKi82RGEq6H+fGdgvC4GmhWLK47GdjpH96Pu60JZpQgDNiGBf72JDnGv3rxTgSfBVMwzVWvMcC+CeQp6u2WKv6cR3OJpeW9wT/a+jYLUo88VT0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PXLUkW7H; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="B4ybTsXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1712921908; x=1744457908;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aWPWXWwePYJ7mcthXXcnh6W3EMOk6ujdepGmdYxSc0c=;
-  b=B4ybTsXFVrSB7obR05QAb5IRs7584qdbH4++gFBdVj1o6VZ1GfDS8Irv
-   ePwPuu8FILMnb3ZHUU+FAnj/rvxWpr6TGXCL48kFh73NFnNGXWNRErmgw
-   DFPE+XUOoVsl9f1hajG8b9N47NMY8JVfslhQcs70iCuqzLIANti+pLrkQ
-   BH7d6NeZCu68DKm3qih8nDAx5Y+E0IXTbRr27q5iAF7pKBnxTv91dktKU
-   BBbZjnsR4cF6DXhPBFGlSJGM0E4lul8NbajMJIzeCTpi1BNZciYjNZFvv
-   mX9zvcFKwFQauGWYd5XPAYDskpGoXSwQnLr2o+zCctuVpKn6Gpzvhrcq9
-   Q==;
-X-CSE-ConnectionGUID: ++lz7ARxTeyfeBIEUobjog==
-X-CSE-MsgGUID: KH8PpH+1RGyAV72cISUUNA==
-X-IronPort-AV: E=Sophos;i="6.07,196,1708412400"; 
-   d="asc'?scan'208";a="20734020"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Apr 2024 04:38:27 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 12 Apr 2024 04:38:03 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Fri, 12 Apr 2024 04:37:59 -0700
-Date: Fri, 12 Apr 2024 12:37:08 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Evan Green
-	<evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<shuah@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Palmer Dabbelt
-	<palmer@rivosinc.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 15/19] riscv: hwcap: Add v to hwcap if xtheadvector
- enabled
-Message-ID: <20240412-thrill-amnesty-019897f21466@wendy>
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
- <20240411-dev-charlie-support_thead_vector_6_9-v1-15-4af9815ec746@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXLUkW7H"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-56e1baf0380so849575a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712921947; x=1713526747; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ne+lbARHIxIH9ow2SNPs+xIBWW7muiKC/RnuB4JLtkU=;
+        b=PXLUkW7HTXGHTG7I+odzsCmKXNFKgKLc281M+82O40pNlW5Cr+PtA26HmIvhaYpZah
+         R/CjlE+2R+yb1/imRH5J9/ep9KT7BGMaD7J9WwywqK4fKF8vs89sa0wC9mm2Ya6BDQoP
+         VOf+8J0EOnKowArujSZAEYfZPmqP3a/nvIKlWOSM6QYsqT5eNB0RWod2jqLip9j7UzSZ
+         JfinW14boBMgsVQikGk/NjjWXSwDUUh8ai/Bx+kQ2rjHlFYcbXVPUAro157cnjKmKnTY
+         Wx4xtAZS4/9+9MqrqWTRQDYI+ceHiA44L/DlJalppccKEKZgppHe1OXirRTn3WhBkXx1
+         qbog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712921947; x=1713526747;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ne+lbARHIxIH9ow2SNPs+xIBWW7muiKC/RnuB4JLtkU=;
+        b=VjVo8cF0QBLVWBkG7DotrbNtFVaM0hMqqxpI6QgROBdlxYo6PZHbSiz+FNAy51HQR6
+         Tex0WosMqO7JC5SOMfNg1U1aPS8Z5eKWCbE36on1riDYgqKnx+qCPUo5cSdXlAsaAdD3
+         lsRMSbyhx4ykN22tvVFsa9WAlsqug+BU7vI/plV6ow226sd4+k5kyi9uKXqu8STdZPaP
+         nQHdzO59Wx9l2QNTRzVKKFcE1B1Q6GSmXVQ3UJdLq4WYpawadOiL5twsQJp80Db8U9Xm
+         NG6M0CSSy+pGch6Ru4N1FxTm45FN0RBsXSr1pvPJySGknMZBSAGY84e/B42GuX6lXSUs
+         Isxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzTuRTKclwNVvCEIBakUpmxCkdUZipxDLtlOPPC/5lUd/mYye2ELjH6r7bo6CytdaSMDu3YBqmLgl6KHhFHWFOXNg6JcaY5wWsQRdO
+X-Gm-Message-State: AOJu0Yxh/X6awSarYdvD3ty4Fr5e3lffRgKX5cV/UL9W/SpJdHsOINHa
+	z1OnKK6teY5TRIx9a9spyUQ9OMXyHjl/dODFO5XMcOsQRuyd3GVk9cprrMTbO3QyFQFsCgQZosu
+	LGeJRyw37wifbS0es67TwRtDiLFs=
+X-Google-Smtp-Source: AGHT+IGJKL463vGhgAykZA/DrJ7dmuatQjc3W/dExDHS0ebPMyuuPP1hoCfNK2hrcfqmUASRS5iguO3X2fBw2gqm1Qo=
+X-Received: by 2002:a50:c30e:0:b0:56e:543c:bbb5 with SMTP id
+ a14-20020a50c30e000000b0056e543cbbb5mr1435336edb.26.1712921946997; Fri, 12
+ Apr 2024 04:39:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ibtP5+Ck2kdPiHYk"
-Content-Disposition: inline
-In-Reply-To: <20240411-dev-charlie-support_thead_vector_6_9-v1-15-4af9815ec746@rivosinc.com>
-
---ibtP5+Ck2kdPiHYk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240409082631.187483-1-21cnbao@gmail.com> <20240409082631.187483-2-21cnbao@gmail.com>
+ <95bc0ebb-49f4-4331-8809-3e4625f1d91a@arm.com> <CANzGp4Jzw9bUnQw1zVdw7V6=pARx7x5s8QTyXJGfdEzrXVkZTA@mail.gmail.com>
+ <66afc978-0221-488b-9fc6-7d5213d385ed@arm.com>
+In-Reply-To: <66afc978-0221-488b-9fc6-7d5213d385ed@arm.com>
+From: Chuanhua Han <chuanhuahan@gmail.com>
+Date: Fri, 12 Apr 2024 19:38:55 +0800
+Message-ID: <CANzGp4J_7-Rj8N3jM3Tb+zAMZm21nf-cni0RjWWWfJNDXu5asQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched swap_free()
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	baolin.wang@linux.alibaba.com, chrisl@kernel.org, david@redhat.com, 
+	hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com, 
+	kasong@tencent.com, surenb@google.com, v-songbaohua@oppo.com, 
+	willy@infradead.org, xiang@kernel.org, ying.huang@intel.com, 
+	yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 11, 2024 at 09:11:21PM -0700, Charlie Jenkins wrote:
-> xtheadvector is not vector 1.0 compatible, but it can leverage all of
-> the same save/restore routines as vector plus
-> riscv_v_first_use_handler(). vector 1.0 and xtheadvector are mutually
-> exclusive so there is no risk of overlap.
+Ryan Roberts <ryan.roberts@arm.com> =E4=BA=8E2024=E5=B9=B44=E6=9C=8812=E6=
+=97=A5=E5=91=A8=E4=BA=94 19:28=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 12/04/2024 03:07, Chuanhua Han wrote:
+> > Ryan Roberts <ryan.roberts@arm.com> =E4=BA=8E2024=E5=B9=B44=E6=9C=8811=
+=E6=97=A5=E5=91=A8=E5=9B=9B 22:30=E5=86=99=E9=81=93=EF=BC=9A
+> >>
+> >> On 09/04/2024 09:26, Barry Song wrote:
+> >>> From: Chuanhua Han <hanchuanhua@oppo.com>
+> >>>
+> >>> While swapping in a large folio, we need to free swaps related to the=
+ whole
+> >>> folio. To avoid frequently acquiring and releasing swap locks, it is =
+better
+> >>> to introduce an API for batched free.
+> >>>
+> >>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> >>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> >>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> >>
+> >> Couple of nits; feel free to ignore.
+> >>
+> >> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> >>
+> >>> ---
+> >>>  include/linux/swap.h |  5 +++++
+> >>>  mm/swapfile.c        | 51 ++++++++++++++++++++++++++++++++++++++++++=
+++
+> >>>  2 files changed, 56 insertions(+)
+> >>>
+> >>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> >>> index 11c53692f65f..b7a107e983b8 100644
+> >>> --- a/include/linux/swap.h
+> >>> +++ b/include/linux/swap.h
+> >>> @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
+> >>>  extern int swap_duplicate(swp_entry_t);
+> >>>  extern int swapcache_prepare(swp_entry_t);
+> >>>  extern void swap_free(swp_entry_t);
+> >>> +extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+> >>>  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+> >>>  extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+> >>>  int swap_type_of(dev_t device, sector_t offset);
+> >>> @@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t swp)
+> >>>  {
+> >>>  }
+> >>>
+> >>> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+> >>> +{
+> >>> +}
+> >>> +
+> >>>  static inline void put_swap_folio(struct folio *folio, swp_entry_t s=
+wp)
+> >>>  {
+> >>>  }
+> >>> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> >>> index 28642c188c93..f4c65aeb088d 100644
+> >>> --- a/mm/swapfile.c
+> >>> +++ b/mm/swapfile.c
+> >>> @@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t entry)
+> >>>               __swap_entry_free(p, entry);
+> >>>  }
+> >>>
+> >>> +/*
+> >>> + * Free up the maximum number of swap entries at once to limit the
+> >>> + * maximum kernel stack usage.
+> >>> + */
+> >>> +#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_CLUST=
+ER)
+> >>> +
+> >>> +/*
+> >>> + * Called after swapping in a large folio, batched free swap entries
+> >>> + * for this large folio, entry should be for the first subpage and
+> >>> + * its offset is aligned with nr_pages
+> >>> + */
+> >>> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+> >>> +{
+> >>> +     int i, j;
+> >>> +     struct swap_cluster_info *ci;
+> >>> +     struct swap_info_struct *p;
+> >>> +     unsigned int type =3D swp_type(entry);
+> >>> +     unsigned long offset =3D swp_offset(entry);
+> >>> +     int batch_nr, remain_nr;
+> >>> +     DECLARE_BITMAP(usage, SWAP_BATCH_NR) =3D { 0 };
+> >>> +
+> >>> +     /* all swap entries are within a cluster for mTHP */
+> >>> +     VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUST=
+ER);
+> >>> +
+> >>> +     if (nr_pages =3D=3D 1) {
+> >>> +             swap_free(entry);
+> >>> +             return;
+> >>> +     }
+> >>> +
+> >>> +     remain_nr =3D nr_pages;
+> >>> +     p =3D _swap_info_get(entry);
+> >>> +     if (p) {
+> >>
+> >> nit: perhaps return early if (!p) ? Then you dedent the for() block.
+> >
+> > Agreed!
+> >
+> >>
+> >>> +             for (i =3D 0; i < nr_pages; i +=3D batch_nr) {
+> >>> +                     batch_nr =3D min_t(int, SWAP_BATCH_NR, remain_n=
+r);
+> >>> +
+> >>> +                     ci =3D lock_cluster_or_swap_info(p, offset);
+> >>> +                     for (j =3D 0; j < batch_nr; j++) {
+> >>> +                             if (__swap_entry_free_locked(p, offset =
++ i * SWAP_BATCH_NR + j, 1))
+> >>> +                                     __bitmap_set(usage, j, 1);
+> >>> +                     }
+> >>> +                     unlock_cluster_or_swap_info(p, ci);
+> >>> +
+> >>> +                     for_each_clear_bit(j, usage, batch_nr)
+> >>> +                             free_swap_slot(swp_entry(type, offset +=
+ i * SWAP_BATCH_NR + j));
+> >>> +
+> >>
+> >> nit: perhaps change to for (;;), and do the checks here to avoid clear=
+ing the
+> >> bitmap on the last run:
+> >>
+> >>                         i +=3D batch_nr;
+> >>                         if (i < nr_pages)
+> >>                                 break;
+Should be=EF=BC=9A
+if (i >=3D nr_pages)
+    break;
+> > Great, thank you for your advice!
+>
+> Or maybe leave the for() as is, but don't explicitly init the bitmap at t=
+he
+> start of the function and instead call:
+>
+>         bitmap_clear(usage, 0, SWAP_BATCH_NR);
+>
+> At the start of each loop?
+Yeah, that's OK, actually these two ways are similar, both are to
+reduce the number of bitmap_clear calls.
+>
+> >>
+> >>> +                     bitmap_clear(usage, 0, SWAP_BATCH_NR);
+> >>> +                     remain_nr -=3D batch_nr;
+> >>> +             }
+> >>> +     }
+> >>> +}
+> >>> +
+> >>>  /*
+> >>>   * Called after dropping swapcache to decrease refcnt to swap entrie=
+s.
+> >>>   */
+> >>
+> >>
+> >
+> >
+>
 
-I think this not okay to do - if a program checks hwcap to see if vector
-is supported they'll get told it is on T-Head system where only the 0.7.1
-is.
 
->=20
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->  arch/riscv/kernel/cpufeature.c | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeatur=
-e.c
-> index 41a4d2028428..59f628b1341c 100644
-> --- a/arch/riscv/kernel/cpufeature.c
-> +++ b/arch/riscv/kernel/cpufeature.c
-> @@ -647,9 +647,13 @@ static void __init riscv_fill_hwcap_from_isa_string(=
-unsigned long *isa2hwcap)
->  		 * Many vendors with T-Head CPU cores which implement the 0.7.1
->  		 * version of the vector specification put "v" into their DTs.
->  		 * CPU cores with the ratified spec will contain non-zero
-> -		 * marchid.
-> +		 * marchid. Only allow "v" to be set if xtheadvector is present.
->  		 */
-> -		if (acpi_disabled && this_vendorid =3D=3D THEAD_VENDOR_ID &&
-> +		if (__riscv_isa_vendor_extension_available(isavendorinfo->isa,
-> +							   RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
-> +			this_hwcap |=3D isa2hwcap[RISCV_ISA_EXT_v];
-> +			set_bit(RISCV_ISA_EXT_v, isainfo->isa);
-> +		} else if (acpi_disabled && this_vendorid =3D=3D THEAD_VENDOR_ID &&
->  		    this_archid =3D=3D 0x0) {
->  			this_hwcap &=3D ~isa2hwcap[RISCV_ISA_EXT_v];
->  			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
-> @@ -776,6 +780,15 @@ static int __init riscv_fill_hwcap_from_ext_list(uns=
-igned long *isa2hwcap)
-> =20
->  		of_node_put(cpu_node);
-> =20
-> +		/*
-> +		 * Enable kernel vector routines if xtheadvector is present
-> +		 */
-> +		if (__riscv_isa_vendor_extension_available(isavendorinfo->isa,
-> +							   RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
-> +			this_hwcap |=3D isa2hwcap[RISCV_ISA_EXT_v];
-> +			set_bit(RISCV_ISA_EXT_v, isainfo->isa);
-> +		}
-> +
->  		/*
->  		 * All "okay" harts should have same isa. Set HWCAP based on
->  		 * common capabilities of every "okay" hart, in case they don't.
->=20
-> --=20
-> 2.44.0
->=20
-
---ibtP5+Ck2kdPiHYk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhkc5AAKCRB4tDGHoIJi
-0gKCAP4v+esN57jD+BTAcXXG/qusYjMQbk1rVAldJniCgV0x0gEAibLnaoOuNXqF
-Pa0786aCvAvHYTWbBfJ/ykNix6NyKQI=
-=b/XX
------END PGP SIGNATURE-----
-
---ibtP5+Ck2kdPiHYk--
+--=20
+Thanks,
+Chuanhua
