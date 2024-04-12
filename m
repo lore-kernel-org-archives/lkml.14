@@ -1,58 +1,59 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B7B84DF6
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F244A83CDD
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:01:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712930459; cv=none; b=SgVar9bKTKo495LEY+WBfGOlGg3BdyLPz4fI/IVIzC+R9wKqUN1OeelKV0dSxKtDHuaar0RQvduhMfIdm1BkqrxDdTnyxV0hzQch01rqaor7uwmIl1tUAeIORBhkCbCVLRAyNy0ZQxS94ayniHkrIp6SnVkBq55SUbhLFmzjap4=
+	t=1712930500; cv=none; b=M/UNZt3l1Vb5MFQ4oSQHgv7Zlyo6Dhb6zePYlcwoZi5UIjP5fCIeBXUGaG3dHfEc9AFd/1uDyAqH+CaoS1HB4qW6OR0aj+vqq34ziYsBP8OfuDy95ACFRt4iFh2Nmv3WcSJDzm97OAIHcUwLTUDFxnO0zn0fv03vEIBNRlD6KWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712930459; c=relaxed/simple;
-	bh=k0kciFhHeMWk6cCqz4yeQgIFE/QGdu9G7p+hyuSYGGA=;
+	s=arc-20240116; t=1712930500; c=relaxed/simple;
+	bh=wM/qLHmObCPp0A36qPqz30NvxHM7nS4FGirrfQUSiU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KclMkT0f5Szs8yW29PDqp7/6DvEgiQGaiUKdsacjFb3O74Qq/SuB33EAVAUQ2KbPf5ngrzGMTPPywVIQ+rTc8uOGtE80kTlNoaG9oQ5Houo1TexJpuYKzuPemtJNTlHr5BESRJRu4XP6erqAozUxBg2f87secQdpKyhotQ/tllo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n6LIhXDv; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=amrPRZfGRjLPmdPnbf7OCYuYbM9G0iYXKMT3Z4aNTeThNkU2yvbUkpD4U1FpoPgpRPn/dog7C0ZpP/wuLymamDvgM5xJjLbFhw1j54FNq6BMcNUVOeoriYe6i98v1qPAK9kwBKeDynyyu93FLqqEBv85V0+QkS1eosCox4yxBjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=KjvAgDC/; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n6LIhXDv"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-343b7c015a8so632788f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:00:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="KjvAgDC/"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516cbf3fe68so1157969e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:01:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712930456; x=1713535256; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712930494; x=1713535294; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=axxv3exRUNlpWxgacDRk640x3V7VFxrh3mk8vTHKsfE=;
-        b=n6LIhXDv7YSOQoll9IdxttDwEhVHaIS4W0GrpZXQoPfajnP07pQ6lqVq9ON9sNub74
-         T8SO/h9BSfp2NtYy9iCE9CLnO63DlC3mx+6Jq3+zlg6CtCBOh0FhcCOTyi+xKzfryBYr
-         xd7oj7zpuX3OCQRokhWYR2z45ywxAKKhfKKN37jR9ytmO9cbrjxVM5iOVCoaD+OIjyVJ
-         yv1gH84BDFXYPzTrEVeVaOMc01gPB1vGrYNmC5LPI3tLVobg5AbEYFJPwnEj8xrC595b
-         flp/FWQz20SCml7EZGSLvdR/RzIwLoiLXGV2Tb33Vr1/cMyI3JjG4Iyss4w1LYuTzlNe
-         L9AA==
+        bh=wM/qLHmObCPp0A36qPqz30NvxHM7nS4FGirrfQUSiU8=;
+        b=KjvAgDC/Vs14VfzWr/+5EXa+gZ1XehbDgAxVoHuDimFLCGf3QYzdDUx1GutjUqfN02
+         nIGw6IibMrqmFZ3Jl8k1hal0h+b/Pykeo0ZEGzGXsj9HLdPX2jHUqa/QaNUUwyhTQ87k
+         AgdY4AgA/oy1gLok9pK20N5abY4hjTsPd00BsaVFWemu3PuEzduqXOqbe/jZ5roIct0i
+         IxzUh+inxq+M/hO8USWwafe0jS9/VBNXyn/bH9Dvqfxtynbx9U/KI2stXjBVwUUKkBTs
+         xJH5mzL3nIHW6qL+fJ+cPldFlovgOmDX6PoBzjUDn+dAlwA9XBMhG03wZLdpXfKgXTyM
+         MDFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712930456; x=1713535256;
+        d=1e100.net; s=20230601; t=1712930494; x=1713535294;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=axxv3exRUNlpWxgacDRk640x3V7VFxrh3mk8vTHKsfE=;
-        b=uQknnMsMiMjzbXmAe+UvApyRtqXIazrin+yVdHJ1xGQ8td4Kg/ovxR+DqQyjTVuAgm
-         /pFe2tFXw34FpnKf6sfyrlrgwgWa1KKpP1dH1jAE5XqCH/5X76XhGBCj+BTsuZ0jgMW7
-         Kl5trouh7otRdCqW85KxM0q/N8jRpAxh0ya9tmXsR6NeldXGcW328VkvP9gKfWTbpPFA
-         iqMpV0tb7z7/5nWy6kDOPbYCymKtS5sOq80BmvhTagjctww2XagFQvJYbbqLYpXG132A
-         H9Gju/9P/Njild79u3bsBh8YlwO07fSrTqC8d7NTdYnKMgye6bBvH2AyHUH2EN1JwRxL
-         HgiA==
-X-Gm-Message-State: AOJu0YxZheMIPXlGraze3VN4NqRyBzwlKL0w5tPXcoUniHyTMmKv5wy+
-	BI3Xg9Erbnfu3zmjcKyqTNur7qGVDc8CS+BGFIqiJtCQBZhuitue+6Rj2VpLGjU=
-X-Google-Smtp-Source: AGHT+IEC6OpeGC8GDPHDIg/HVT8gkVYiCxPQDyj+ORFfpgsNhYncGtGGbl2esbOLAccSKfM+0rXqrQ==
-X-Received: by 2002:adf:e9d0:0:b0:343:9292:b28f with SMTP id l16-20020adfe9d0000000b003439292b28fmr1680227wrn.54.1712930456222;
-        Fri, 12 Apr 2024 07:00:56 -0700 (PDT)
-Received: from [192.168.2.107] ([79.115.63.35])
-        by smtp.gmail.com with ESMTPSA id k1-20020a5d6281000000b003445bb2362esm4326402wru.65.2024.04.12.07.00.54
+        bh=wM/qLHmObCPp0A36qPqz30NvxHM7nS4FGirrfQUSiU8=;
+        b=R5yQDjMfjL+XuqqJTVJ6h17uG/8xfS6v5J9A3wIKJU9BO2hq3MDniVWQUu4RoTuCwl
+         22pPWm4/RDopW1VLQuNELk4FuCA16uGVNXAKMSnAzAGrpM9Bb3oAw3cYC7tFvwJo0/KR
+         Cc70w5zPCOBxU9tjLk8gI4VSqOWYUC49i7DvAfZPiUx6OQJaCJgWbNq7WI7pL0R86Xv7
+         BbEu3JJPMbtBY8uD7ot316ZjFlJ7IOK7nWzAgBGFjGMMBUBfDsBDjYCN0+qatEDPH3oj
+         sKinbObTGU+SGJNnXUicz9jWPSl6uwtLeZ+EvQ0uepBV8qqOa9wCWacggl8b5Y9XnTUq
+         WyKA==
+X-Forwarded-Encrypted: i=1; AJvYcCXXNzrEqQLkxQzpRdURXbxZJ+Bb1RSO6DZCH8jG0EfXWDHNCbvTO9rW+/KLO6+USzQ0jnEXp/Xyi/6TakrighehQcH/ak5QnpS1R/00
+X-Gm-Message-State: AOJu0YyT2NtSvcRdRCn2+mCZYqxBKSX3W8lehs/44XyCk0m4BkYib6jZ
+	ZcdCetOOkDC9rS6MWv3TFJsJiQD1+mYNyT7t4kEmHaycERBC/itSF92Oymed/BE=
+X-Google-Smtp-Source: AGHT+IEYkdfZvzjzQTuqNwyv3/1I2wTibAdy/3l+Tqdqfg9DbDMvxlxElX4Ty3O747WwsNgGkO2d6A==
+X-Received: by 2002:ac2:44c7:0:b0:516:cc9f:f8a with SMTP id d7-20020ac244c7000000b00516cc9f0f8amr1646189lfm.66.1712930494023;
+        Fri, 12 Apr 2024 07:01:34 -0700 (PDT)
+Received: from [192.168.1.70] ([84.102.31.74])
+        by smtp.gmail.com with ESMTPSA id u7-20020adfeb47000000b0033ec9ddc638sm4339471wrn.31.2024.04.12.07.01.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Apr 2024 07:00:54 -0700 (PDT)
-Message-ID: <14726a74-d54a-432d-a547-3b07ac97d413@linaro.org>
-Date: Fri, 12 Apr 2024 15:00:53 +0100
+        Fri, 12 Apr 2024 07:01:33 -0700 (PDT)
+Message-ID: <568a7740-ff47-49f0-978d-14cfe14f2b80@baylibre.com>
+Date: Fri, 12 Apr 2024 16:01:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,25 +61,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/6] mtd: spi-nor: get rid of SPI_NOR_NO_FR
-To: Michael Walle <mwalle@kernel.org>, Pratyush Yadav <pratyush@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-References: <20240412134405.381832-1-mwalle@kernel.org>
- <20240412134405.381832-4-mwalle@kernel.org>
+Subject: Re: [PATCH net-next v8 0/3] Add minimal XDP support to TI AM65 CPSW
+ Ethernet driver
+To: Jacob Keller <jacob.e.keller@intel.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simon Horman <horms@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ Ratheesh Kannoth <rkannoth@marvell.com>,
+ Naveen Mamindlapalli <naveenm@marvell.com>
+Cc: danishanwar@ti.com, yuehaibing@huawei.com, rogerq@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org
+References: <20240223-am65-cpsw-xdp-basic-v8-0-f3421b58da09@baylibre.com>
+ <e60c4a55-09bb-4bd7-a22c-9ab38bea174c@intel.com>
 Content-Language: en-US
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20240412134405.381832-4-mwalle@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+From: Julien Panis <jpanis@baylibre.com>
+In-Reply-To: <e60c4a55-09bb-4bd7-a22c-9ab38bea174c@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 4/10/24 01:51, Jacob Keller wrote:
+>
+> On 4/8/2024 2:38 AM, Julien Panis wrote:
+>> This patch adds XDP support to TI AM65 CPSW Ethernet driver.
+>>
+>> The following features are implemented: NETDEV_XDP_ACT_BASIC,
+>> NETDEV_XDP_ACT_REDIRECT, and NETDEV_XDP_ACT_NDO_XMIT.
+>>
+>> Zero-copy and non-linear XDP buffer supports are NOT implemented.
+>>
+>> Besides, the page pool memory model is used to get better performance.
+>>
+>> Signed-off-by: Julien Panis <jpanis@baylibre.com>
+>> ---
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 
+Thank you for your review Jacob.
+I'll add your 'Reviewed-by' tag for PATCH 1/3 in next version. Unfortunately,
+I will not for PATCH 2/3 and 3/3 because there will be too many changes,
+following Jakub's comments.
 
-On 4/12/24 14:44, Michael Walle wrote:
-> The evervision FRAM devices are the only user of the NO_FR flag. Drop
-> the global flag and instead use a manufacturer fixup for the evervision
-> flashes to drop the fast read support.
-> 
-
-Don't we want to get rid of FRAMs from SPI NOR? Why the dance then?
