@@ -1,33 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48AF56BFC2;
-	Fri, 12 Apr 2024 08:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D836F06D;
+	Fri, 12 Apr 2024 08:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911418; cv=none; b=oTy+CIWeEmLimQycCigIh5n+xY2ZJNfM1yU3E2jZ48tb3N6xrIiRg3OGll4yCzotqaXpCaameMNQS+2DvWcqTqFG0zrKb05CHTT7/QdHdiiqZ8ilaZzRqkdef1Lg9raEDbeJXjKbu7gmFFW9LehZDCW3y1Aa/xx4ttBphPNWWlQ=
+	t=1712911423; cv=none; b=qSrlMMTaJhoV+tEBInDkifY3UnesZ/ut0GezCr+GH8dgedP1EOlnBVAf21WV6sQ24Xx7vvphUsGQxexBfkt579x1nILmdUNuMztMWJ/ZykdZzVApti0VwX8FWtE4wAkaBWWQwAaX8bPE3W7qgZIuupvaK9SbcoB15n+lc3Z+rXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911418; c=relaxed/simple;
-	bh=O8PIW99Yt3hGqWBq9m+q+B0vLuqbkhfwWt+aPZ8O7p0=;
+	s=arc-20240116; t=1712911423; c=relaxed/simple;
+	bh=iW7CmwMngqtLV4hgAa4A7KNwNyk1+McJZTuxo/lcR0s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=thT6MlFfnXAYKyFhaZlrlZMcQusFaMxwvqimRZyrulTF8p496o8O5jxLBoZI5vw9DRFqlGdgDJRAeOgSUxB/OIrL1x2PVlEC15MfD5gzWh6CJV+ApPMiQY6b9i3w0rdkZkGY3ETFtix7Cm81U6Fmc+V0rYeJGgHnJ6kNq0Am0D4=
+	 MIME-Version; b=XCh+0pXEW4DuHS8P6I+Z9CfOhRL8DppuoiJzwy74nKgirBgZjdG+SNYQQF06YrynmBtZjrwYYmUbzo5UfgzzjkoPmcKYvh/Zjxj5d1m2YlZGH8PM9jgYibprRRvRiHuH7bxlZwYunQMHz5QM4lXs74LUlx5f7konH6qTlkknv4o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33BB31576;
-	Fri, 12 Apr 2024 01:44:06 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0981714BF;
+	Fri, 12 Apr 2024 01:44:11 -0700 (PDT)
 Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBD383F6C4;
-	Fri, 12 Apr 2024 01:43:34 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A13633F6C4;
+	Fri, 12 Apr 2024 01:43:39 -0700 (PDT)
 From: Steven Price <steven.price@arm.com>
 To: kvm@vger.kernel.org,
 	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Marc Zyngier <maz@kernel.org>,
 	Will Deacon <will@kernel.org>,
 	James Morse <james.morse@arm.com>,
 	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Zenghui Yu <yuzenghui@huawei.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
@@ -36,10 +35,11 @@ Cc: Steven Price <steven.price@arm.com>,
 	Christoffer Dall <christoffer.dall@arm.com>,
 	Fuad Tabba <tabba@google.com>,
 	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Subject: [PATCH v2 08/43] arm64: RME: Define the user ABI
-Date: Fri, 12 Apr 2024 09:42:34 +0100
-Message-Id: <20240412084309.1733783-9-steven.price@arm.com>
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+	Steven Price <steven.price@arm.com>
+Subject: [PATCH v2 10/43] kvm: arm64: Expose debug HW register numbers for Realm
+Date: Fri, 12 Apr 2024 09:42:36 +0100
+Message-Id: <20240412084309.1733783-11-steven.price@arm.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240412084309.1733783-1-steven.price@arm.com>
 References: <20240412084056.1733704-1-steven.price@arm.com>
@@ -52,124 +52,74 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is one (multiplexed) CAP which can be used to create, populate and
-then activate the realm.
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Expose VM specific Debug HW register numbers.
+
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- Documentation/virt/kvm/api.rst    |  1 +
- arch/arm64/include/uapi/asm/kvm.h | 49 +++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h          | 11 +++++++
- 3 files changed, 61 insertions(+)
+ arch/arm64/kvm/arm.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 0b5a33ee71ee..b4bd3d0928a2 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5064,6 +5064,7 @@ Recognised values for feature:
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 5729ea430d6d..22da6493912a 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -67,6 +67,22 @@ bool is_kvm_arm_initialised(void)
+ 	return kvm_arm_initialised;
+ }
  
-   =====      ===========================================
-   arm64      KVM_ARM_VCPU_SVE (requires KVM_CAP_ARM_SVE)
-+  arm64      KVM_ARM_VCPU_REC (requires KVM_CAP_ARM_RME)
-   =====      ===========================================
- 
- Finalizes the configuration of the specified vcpu feature.
-diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
-index 964df31da975..86110a8cc6be 100644
---- a/arch/arm64/include/uapi/asm/kvm.h
-+++ b/arch/arm64/include/uapi/asm/kvm.h
-@@ -108,6 +108,7 @@ struct kvm_regs {
- #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
- #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
- #define KVM_ARM_VCPU_HAS_EL2		7 /* Support nested virtualization */
-+#define KVM_ARM_VCPU_REC		8 /* VCPU REC state as part of Realm */
- 
- struct kvm_vcpu_init {
- 	__u32 target;
-@@ -418,6 +419,54 @@ enum {
- #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES	3
- #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
- 
-+/* KVM_CAP_ARM_RME on VM fd */
-+#define KVM_CAP_ARM_RME_CONFIG_REALM		0
-+#define KVM_CAP_ARM_RME_CREATE_RD		1
-+#define KVM_CAP_ARM_RME_INIT_IPA_REALM		2
-+#define KVM_CAP_ARM_RME_POPULATE_REALM		3
-+#define KVM_CAP_ARM_RME_ACTIVATE_REALM		4
++static u32 kvm_arm_get_num_brps(struct kvm *kvm)
++{
++	if (!kvm || !kvm_is_realm(kvm))
++		return get_num_brps();
++	/* Realm guest is not debuggable. */
++	return 0;
++}
 +
-+#define KVM_CAP_ARM_RME_MEASUREMENT_ALGO_SHA256		0
-+#define KVM_CAP_ARM_RME_MEASUREMENT_ALGO_SHA512		1
++static u32 kvm_arm_get_num_wrps(struct kvm *kvm)
++{
++	if (!kvm || !kvm_is_realm(kvm))
++		return get_num_wrps();
++	/* Realm guest is not debuggable. */
++	return 0;
++}
 +
-+#define KVM_CAP_ARM_RME_RPV_SIZE 64
-+
-+/* List of configuration items accepted for KVM_CAP_ARM_RME_CONFIG_REALM */
-+#define KVM_CAP_ARM_RME_CFG_RPV			0
-+#define KVM_CAP_ARM_RME_CFG_HASH_ALGO		1
-+
-+struct kvm_cap_arm_rme_config_item {
-+	__u32 cfg;
-+	union {
-+		/* cfg == KVM_CAP_ARM_RME_CFG_RPV */
-+		struct {
-+			__u8	rpv[KVM_CAP_ARM_RME_RPV_SIZE];
-+		};
-+
-+		/* cfg == KVM_CAP_ARM_RME_CFG_HASH_ALGO */
-+		struct {
-+			__u32	hash_algo;
-+		};
-+
-+		/* Fix the size of the union */
-+		__u8	reserved[256];
-+	};
-+};
-+
-+#define KVM_ARM_RME_POPULATE_FLAGS_MEASURE	(1U << 0)
-+struct kvm_cap_arm_rme_populate_realm_args {
-+	__u64 populate_ipa_base;
-+	__u64 populate_ipa_size;
-+	__u32 flags;
-+	__u32 reserved[3];
-+};
-+
-+struct kvm_cap_arm_rme_init_ipa_args {
-+	__u64 init_ipa_base;
-+	__u64 init_ipa_size;
-+	__u32 reserved[4];
-+};
-+
- /* Device Control API on vcpu fd */
- #define KVM_ARM_VCPU_PMU_V3_CTRL	0
- #define   KVM_ARM_VCPU_PMU_V3_IRQ	0
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 2190adbe3002..a1147036d1bd 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -918,6 +918,8 @@ struct kvm_enable_cap {
- #define KVM_CAP_GUEST_MEMFD 234
- #define KVM_CAP_VM_TYPES 235
- 
-+#define KVM_CAP_ARM_RME 300 /* FIXME: Large number to prevent conflicts */
-+
- struct kvm_irq_routing_irqchip {
- 	__u32 irqchip;
- 	__u32 pin;
-@@ -1548,4 +1550,13 @@ struct kvm_create_guest_memfd {
- 	__u64 reserved[6];
- };
- 
-+/* Available with KVM_CAP_ARM_RME, only for VMs with KVM_VM_TYPE_ARM_REALM  */
-+struct kvm_arm_rmm_psci_complete {
-+	__u64 target_mpidr;
-+	__u32 psci_status;
-+	__u32 padding[3];
-+};
-+
-+#define KVM_ARM_VCPU_RMM_PSCI_COMPLETE	_IOW(KVMIO, 0xd2, struct kvm_arm_rmm_psci_complete)
-+
- #endif /* __LINUX_KVM_H */
+ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
+ {
+ 	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
+@@ -257,7 +273,6 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_ARM_IRQ_LINE_LAYOUT_2:
+ 	case KVM_CAP_ARM_NISV_TO_USER:
+ 	case KVM_CAP_ARM_INJECT_EXT_DABT:
+-	case KVM_CAP_SET_GUEST_DEBUG:
+ 	case KVM_CAP_VCPU_ATTRIBUTES:
+ 	case KVM_CAP_PTP_KVM:
+ 	case KVM_CAP_ARM_SYSTEM_SUSPEND:
+@@ -265,6 +280,9 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_COUNTER_OFFSET:
+ 		r = 1;
+ 		break;
++	case KVM_CAP_SET_GUEST_DEBUG:
++		r = !kvm_is_realm(kvm);
++		break;
+ 	case KVM_CAP_SET_GUEST_DEBUG2:
+ 		return KVM_GUESTDBG_VALID_MASK;
+ 	case KVM_CAP_ARM_SET_DEVICE_ADDR:
+@@ -310,10 +328,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		r = cpus_have_final_cap(ARM64_HAS_32BIT_EL1);
+ 		break;
+ 	case KVM_CAP_GUEST_DEBUG_HW_BPS:
+-		r = get_num_brps();
++		r = kvm_arm_get_num_brps(kvm);
+ 		break;
+ 	case KVM_CAP_GUEST_DEBUG_HW_WPS:
+-		r = get_num_wrps();
++		r = kvm_arm_get_num_wrps(kvm);
+ 		break;
+ 	case KVM_CAP_ARM_PMU_V3:
+ 		r = kvm_arm_support_pmu_v3();
 -- 
 2.34.1
 
