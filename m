@@ -1,132 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C694D205E2B
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5195555C3B;
+	Fri, 12 Apr 2024 12:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712925437; cv=none; b=Zot1rW2auIJem9vsSkD1OBtyeQ7VociHDLDls7vavNji+YJY35fPojtiiZLbhRkCgeUbY08GBc8Wg/avwOc5GmOcQzrJssCx+wsFc5pvemK2HYxQ9JYkENaak+Hst5uuSwPpD0HinZcRObcNRv/apt9kT91+ZdE2Bh1lA/ZP5xY=
+	t=1712925475; cv=none; b=LUPiIOeY7L9qRgfO7s7TsEeiLh2H2YbXiyn82Bxb2O8QeBa4W12KYXpjwIevm3UqbkCOJo4E1tMjYkAI/6vRf4U+MsaHXZHj4ufgFIm6b9kBOi4hqEPaGCwW2Dk9qLmn/U3ez5DboH5d7p2CgW40zzzOak9T18FD0x3NGitveOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712925437; c=relaxed/simple;
-	bh=TOAT4TTAOWZXp1h7q54paBib/TPxqqPYt/m0hPrKDjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7kWEQKFwjm9r5o56CoaPy9xM+zOxaiapAW1nUe+ZiHlEFEIIv/qsrsck5pA8jMbJVjWJ1Ic8jcUr+zjXMZMXAh5yIcAYPoW9IMwER8xsPHEAmKWcmZSpYWY9kH0uU0fme0nDVRZcVeoD/uMqQ2vUjJrJPng/mJZIdkChRtmKM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Do472uni; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712925475; c=relaxed/simple;
+	bh=C0wVk5cOtI3tAGSa3X+/7Lo5QFB431pX7oYKu/xlIg4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qAiWXCV2WX4kx2Plhe0IT/v2gXFoQopRenJHUE+0H6zTVVvARzMNrCAR//1I6Uhr9VVEHhDUqJY4p/R/ai9xSNyu8sMsgz0OxmrUqjXpW2Ks0ruFa31QV3yIBdzKsXreXgKe0AfQuRtNiSkIIQ6/KFkubjfXeqFczIuFg4MB6NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NfSqe5yw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Do472uni"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712925434;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G73VCC5q7JEsOcm9nuCMvIK+kF0cB2PArLXaQyavNe0=;
-	b=Do472uniqkROiZYXJax8mdptbrz3rThguAzcst7eff90nr+5U15ZQufaeCdRvYzn4nKNG2
-	G3XFbC1MlCFe2qYrnYjSsWIkNMqWI/5Km6bUXNpLP1zILvOgomro7gVSUckIvlZO70dI5Z
-	IQ6cicrmWltYGJqqezGCGpGjWzswe4M=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-606-HdPWaD0fNQeNnOeMpYxRCw-1; Fri, 12 Apr 2024 08:37:11 -0400
-X-MC-Unique: HdPWaD0fNQeNnOeMpYxRCw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B505B802E4D;
-	Fri, 12 Apr 2024 12:37:10 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.136])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 73C72492BC7;
-	Fri, 12 Apr 2024 12:37:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 12 Apr 2024 14:35:44 +0200 (CEST)
-Date: Fri, 12 Apr 2024 14:35:36 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Mark Brown <broonie@kernel.org>
-Cc: John Stultz <jstultz@google.com>, Marco Elver <elver@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-	Edward Liaw <edliaw@google.com>,
-	Carlos Llamas <cmllamas@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] selftests: fix build failure with NOLIBC
-Message-ID: <20240412123536.GA32444@redhat.com>
-References: <87sf02bgez.ffs@tglx>
- <87r0fmbe65.ffs@tglx>
- <CANDhNCoGRnXLYRzQWpy2ZzsuAXeraqT4R13tHXmiUtGzZRD3gA@mail.gmail.com>
- <87o7aqb6uw.ffs@tglx>
- <CANDhNCreA6nJp4ZUhgcxNB5Zye1aySDoU99+_GDS57HAF4jZ_Q@mail.gmail.com>
- <87frw2axv0.ffs@tglx>
- <20240404145408.GD7153@redhat.com>
- <87le5t9f14.ffs@tglx>
- <20240406150950.GA3060@redhat.com>
- <f0523b3a-ea08-4615-b0fb-5b504a2d39df@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NfSqe5yw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F4AC4AF07;
+	Fri, 12 Apr 2024 12:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712925474;
+	bh=C0wVk5cOtI3tAGSa3X+/7Lo5QFB431pX7oYKu/xlIg4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NfSqe5ywT9N1aTLIrHBScsTlGElesoeZ2B4h01aGvwgLuo7e/GXmSnp1YdGBOzxhd
+	 ncO601AARHmgdyKTS+w8dEW6WOOBT7aJs6xA3/gETK2O2rAyZrlDcJELUgumpVNSoC
+	 PM2SG7Pq8qzdHTYAJ65ho3rM5lI/pLVhePj6Z5PEdVA8G25LV4l/+hbMvZXuT759cS
+	 PvAvpIKJIThrUf9EobZoeRgutQGI9grhb8jukktuID3mc4HHqXuhpL8m5NqDL45T2V
+	 tY3Tm0lmPYNVIAmJRmHIU90aUWm7YdO7prErJLpWO7OK3Pp+3WiL+/W/eAeD/1DS8o
+	 6t8QvDFFuyMvQ==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516d727074eso1086136e87.0;
+        Fri, 12 Apr 2024 05:37:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVfB0OvGKgA+ZFGgMsjpFb/HKHfDks5u3ORAy0JRsjDF9QRG4hPTMi37bXHbRfRxO4UR5zRU94zvMdarimb2PBtIPu+U/lTEvFInknRNt+1GHmDv+MAqTwzFPZILgpnhqVg5QgihxXhCA==
+X-Gm-Message-State: AOJu0Yw9RTqJOe/P6ple9waY5axGDkggJU9ILQ+KAgP4PfDWs7JgaGa+
+	nDlVmosJIPMf+hE1c1aKGgS/BRRF5DovBYcQdrR+MngOTnnMa7gaNc5jbbr+bmDVY8yna1GajPd
+	7UEgotaKSpjvgykhXZmfWp8utyg==
+X-Google-Smtp-Source: AGHT+IEPdekwyhDzkGjzMModGVmVX+iai4Ht/W6b6ZsLvIi1Pt2LX57dciG3IUlZb1DPGcgZeVS0Urn1rk9Ty5lLfV0=
+X-Received: by 2002:ac2:4248:0:b0:516:cc2d:f6a1 with SMTP id
+ m8-20020ac24248000000b00516cc2df6a1mr1489141lfl.51.1712925473235; Fri, 12 Apr
+ 2024 05:37:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f0523b3a-ea08-4615-b0fb-5b504a2d39df@sirena.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+References: <20240412112931.285507-1-apatel@ventanamicro.com>
+In-Reply-To: <20240412112931.285507-1-apatel@ventanamicro.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 12 Apr 2024 07:37:40 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJBpN2qNgiKs_nL+JxM7qaaQkd4Gk06UNefp3gB1HQ7_w@mail.gmail.com>
+Message-ID: <CAL_JsqJBpN2qNgiKs_nL+JxM7qaaQkd4Gk06UNefp3gB1HQ7_w@mail.gmail.com>
+Subject: Re: [PATCH] of: property: Add fw_devlink support for interrupt-map property
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Saravana Kannan <saravanak@google.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Atish Patra <atishp@atishpatra.org>, 
+	Andrew Jones <ajones@ventanamicro.com>, Sunil V L <sunilvl@ventanamicro.com>, 
+	Anup Patel <anup@brainfault.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As Mark explains ksft_min_kernel_version() can't be compiled with nolibc,
-it doesn't implement uname().
+On Fri, Apr 12, 2024 at 6:29=E2=80=AFAM Anup Patel <apatel@ventanamicro.com=
+> wrote:
+>
+> Some of the PCI controllers (such as generic PCI host controller)
+> use "interrupt-map" DT property to describe the mapping between
+> PCI endpoints and PCI interrupt pins.
 
-Fixes: 6d029c25b71f ("selftests/timers/posix_timers: Reimplement check_timer_distribution()")
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/f0523b3a-ea08-4615-b0fb-5b504a2d39df@sirena.org.uk/
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- tools/testing/selftests/kselftest.h           | 6 ++++++
- tools/testing/selftests/timers/posix_timers.c | 2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+I would go as far as saying that's the only case as that's the only
+case where the interrupts are not described in DT.
 
-diff --git a/tools/testing/selftests/kselftest.h b/tools/testing/selftests/kselftest.h
-index 973b18e156b2..0d9ed3255f5e 100644
---- a/tools/testing/selftests/kselftest.h
-+++ b/tools/testing/selftests/kselftest.h
-@@ -392,6 +392,11 @@ static inline __printf(1, 2) int ksft_exit_skip(const char *msg, ...)
- static inline int ksft_min_kernel_version(unsigned int min_major,
- 					  unsigned int min_minor)
- {
-+#ifdef NOLIBC
-+	ksft_print_msg("NOLIBC: Can't check kernel version: "
-+			"Function not implemented\n");
-+	return -1;
-+#else
- 	unsigned int major, minor;
- 	struct utsname info;
- 
-@@ -399,6 +404,7 @@ static inline int ksft_min_kernel_version(unsigned int min_major,
- 		ksft_exit_fail_msg("Can't parse kernel version\n");
- 
- 	return major > min_major || (major == min_major && minor >= min_minor);
-+#endif
- }
- 
- #endif /* __KSELFTEST_H */
-diff --git a/tools/testing/selftests/timers/posix_timers.c b/tools/testing/selftests/timers/posix_timers.c
-index d86a0e00711e..878496d2a656 100644
---- a/tools/testing/selftests/timers/posix_timers.c
-+++ b/tools/testing/selftests/timers/posix_timers.c
-@@ -241,7 +241,7 @@ static int check_timer_distribution(void)
- 
- 	if (!ctd_failed)
- 		ksft_test_result_pass("check signal distribution\n");
--	else if (ksft_min_kernel_version(6, 3))
-+	else if (ksft_min_kernel_version(6, 3) > 0)
- 		ksft_test_result_fail("check signal distribution\n");
- 	else
- 		ksft_test_result_skip("check signal distribution (old kernel)\n");
--- 
-2.25.1.362.g51ebf55
+> Currently, there is no fw_devlink created based on "interrupt-map"
+> DT property so interrupt controller is not guaranteed to be probed
+> before PCI host controller. This mainly affects RISC-V platforms
+> where both PCI host controller and interrupt controllers are probed
+> as regular platform devices.
 
+That's *every* system with PCI really.
 
+> This creates fw_devlink between consumers (PCI host controller) and
+> supplier (interrupt controller) based on "interrupt-map" DT property.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>  drivers/of/property.c | 53 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index a6358ee99b74..ccbbb651a89a 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1311,6 +1311,58 @@ static struct device_node *parse_interrupts(struct=
+ device_node *np,
+>         return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.n=
+p;
+>  }
+>
+> +static struct device_node *parse_interrupt_map(struct device_node *np,
+> +                                              const char *prop_name, int=
+ index)
+> +{
+> +       struct device_node *tn, *ipar, *supnp =3D NULL;
+> +       u32 addrcells, intcells, cells;
+> +       const __be32 *imap, *imap_end;
+> +       int i, imaplen;
+> +
+> +       if (!IS_ENABLED(CONFIG_OF_IRQ))
+> +               return NULL;
+> +
+> +       if (strcmp(prop_name, "interrupt-map"))
+> +               return NULL;
+> +
+> +       ipar =3D of_node_get(np);
+> +       do {
+> +               if (!of_property_read_u32(ipar, "#interrupt-cells", &intc=
+ells))
+> +                       break;
+> +               tn =3D ipar;
+> +               ipar =3D of_irq_find_parent(ipar);
+> +               of_node_put(tn);
+> +       } while (ipar);
+> +       if (!ipar)
+> +               return NULL;
+> +       addrcells =3D of_bus_n_addr_cells(ipar);
+> +       of_node_put(ipar);
+> +
+> +       imap =3D of_get_property(np, "interrupt-map", &imaplen);
+> +       if (!imap || imaplen <=3D (addrcells + intcells))
+> +               return NULL;
+> +       imap_end =3D imap + imaplen;
+> +
+> +       for (i =3D 0; i <=3D index && imap < imap_end; i++) {
+> +               if (supnp)
+> +                       of_node_put(supnp);
+> +
+> +               imap +=3D addrcells;
+> +               imap +=3D intcells;
+> +
+> +               supnp =3D of_find_node_by_phandle(be32_to_cpu(imap[0]));
+> +               if (!supnp)
+> +                       return NULL;
+> +               imap +=3D 1;
+> +
+> +               if (of_property_read_u32(supnp, "#interrupt-cells", &cell=
+s))
+> +                       return NULL;
+> +               imap +=3D cells;
+
+This is wrong. Technically, you can have #address-cells too.
+
+The bigger problem I have is this creates 2 sets of 'interrupt-map'
+parsing code. Your version skips a lot of things like whether the
+interrupt controller is available and there's the list of
+'interrupt-map' abusers to think about.
+
+Rob
