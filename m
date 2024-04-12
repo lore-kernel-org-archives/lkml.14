@@ -1,129 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B4C184DFF;
-	Fri, 12 Apr 2024 13:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D77684A37;
+	Fri, 12 Apr 2024 13:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712929918; cv=none; b=JnhRexF1AwwKWed2dQgimGvwYsbwFPulapqgwHi1pMFuG5wCufjSNXC3xK5NxeleHGeWDT7qcHh6P0IrEwkZ1oRa/GneLiMUkrkPbEUmIbKOGk6YriJU24N+jdrzDvpXMJ7G5+maPm+gGl1O/wfvHsDNP6PB0+MFwUROiJifFnE=
+	t=1712929942; cv=none; b=JlhJwm0ZSlGzaap/PHiRrFKa6MhMZ8E83wFkzOJxNd5lHhk5NQRDzRQf8vKBQDO3IR1AMaw8QZh8oxtlyFA7TNFOuwWS9+Zl8TtCygphfRZ8c1oF6FGMAhamj5TWfU9WsXMC5OVaAtQoGsV09PA9Su71XF+ZvxgL6YAW8hvW9Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712929918; c=relaxed/simple;
-	bh=uO3kNffPt8k6Rw16SW5d5r2nyLGqqfTi0dbeoGQYHb0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HfjLMx85MXP9svnlZD7Q1IJfhOXsRAtVeCPTKIPwzdf7xF4KfHoz8ek6PETNosRAJjZAD+5Nq5bksPiZ6Kj0L+y6JufTuxelgX7hFr5EtCQuGsmApZRFQ46AI/OuZ68t2+94dFluN7HJxltbHW4jy1Bxd6aOMmZyZlPfJ4SzY/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C6MJz8cN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C6MJz8cN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB845C113CC;
-	Fri, 12 Apr 2024 13:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712929917;
-	bh=uO3kNffPt8k6Rw16SW5d5r2nyLGqqfTi0dbeoGQYHb0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C6MJz8cNAjnyoHwQDegU15ad3V+cn/IzLHefnStqNB8OABQKrb+zcESQ/EENBPeHz
-	 iscHoBx1l6hGSfwv3g21ZWMOExNMi2rPgMDz3Z0JK4cPh9QnCq9R6wEd7OT7sbPxGf
-	 I1xlx3M9CEHaJ93aAmFdr6wrIPmFof8c4EDZGWmQUlupVxHvbHKbyY/rXQgqCITXD0
-	 UGuH0/va4PurxwDcuB8pJ/t3Y3krObZxB2/1sJZcFXP6wNtIYJ2Q6SgDr5j+JHxjm4
-	 bBQwYxhkCIc//HLBM/apynk9cA0zzT3/xtt4SI+JbUYiiGKVx5fyv+t7UK0v2Emxci
-	 tZvKeDnLBsLrA==
-Date: Fri, 12 Apr 2024 14:50:23 +0100
-From: Simon Horman <horms@kernel.org>
-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: Re: [PATCH net-next v1 11/12] mm: page_frag: add a test module for
- page_frag
-Message-ID: <20240412135023.GS514426@kernel.org>
-References: <20240407130850.19625-1-linyunsheng@huawei.com>
- <20240407130850.19625-12-linyunsheng@huawei.com>
+	s=arc-20240116; t=1712929942; c=relaxed/simple;
+	bh=55RiW4BEfu5Env7yZxccHZdVTi6u77GwAhH6ejdUMXo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uk7f5gB438b4lVT8/YzqNPkFxNd9gWiWdZl0MGV/ff0wtvW8uTvITGzVyO8RnDnfQUmJY6gyoACW5mIO7gBUiJE/9/mTEBmfVtbCymfufREX0ttysLqnJSX19U5eOX9L/yjiGfYtrH3Dqyt98SfGV/iGqbai4hAugwoizFljxMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VGHww2wX3z2CcCF;
+	Fri, 12 Apr 2024 21:49:20 +0800 (CST)
+Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 348DC140554;
+	Fri, 12 Apr 2024 21:52:14 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 21:52:13 +0800
+From: Zheng Yejian <zhengyejian1@huawei.com>
+To: <mchehab@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<zhengyejian1@huawei.com>
+Subject: [PATCH] media: dvb-usb: Fix unexpected infinite loop in dvb_usb_read_remote_control()
+Date: Fri, 12 Apr 2024 21:52:56 +0800
+Message-ID: <20240412135256.1546051-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240407130850.19625-12-linyunsheng@huawei.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 
-On Sun, Apr 07, 2024 at 09:08:48PM +0800, Yunsheng Lin wrote:
-> Basing on the lib/objpool.c, change it to something like a
-> ptrpool, so that we can utilize that to test the correctness
-> and performance of the page_frag.
-> 
-> The testing is done by ensuring that the fragments allocated
-> from a frag_frag_cache instance is pushed into a ptrpool
-> instance in a kthread binded to the first cpu, and a kthread
-> binded to the current node will pop the fragmemt from the
-> ptrpool and call page_frag_alloc_va() to free the fragmemt.
-> 
-> We may refactor out the common part between objpool and ptrpool
-> if this ptrpool thing turns out to be helpful for other place.
-> 
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Infinite log printing occurs during fuzz test:
 
-...
+  rc rc1: DViCO FusionHDTV DVB-T USB (LGZ201) as ...
+  ...
+  dvb-usb: schedule remote query interval to 100 msecs.
+  dvb-usb: DViCO FusionHDTV DVB-T USB (LGZ201) successfully initialized ...
+  dvb-usb: bulk message failed: -22 (1/0)
+  dvb-usb: bulk message failed: -22 (1/0)
+  dvb-usb: bulk message failed: -22 (1/0)
+  ...
+  dvb-usb: bulk message failed: -22 (1/0)
 
-> diff --git a/mm/page_frag_test.c b/mm/page_frag_test.c
+Looking into the codes, there is a loop in dvb_usb_read_remote_control(),
+that is in rc_core_dvb_usb_remote_init() create a work that will call
+dvb_usb_read_remote_control(), and this work will reschedule itself at
+'rc_interval' intervals to recursively call dvb_usb_read_remote_control(),
+see following code snippet:
 
-...
+  rc_core_dvb_usb_remote_init() {
+    ...
+    INIT_DELAYED_WORK(&d->rc_query_work, dvb_usb_read_remote_control);
+    schedule_delayed_work(&d->rc_query_work,
+                          msecs_to_jiffies(rc_interval));
+    ...
+  }
 
-> +/* allocate and initialize percpu slots */
-> +static int objpool_init_percpu_slots(struct objpool_head *pool,
-> +				     int nr_objs, gfp_t gfp)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < pool->nr_cpus; i++) {
-> +		struct objpool_slot *slot;
-> +		int size;
-> +
-> +		/* skip the cpu node which could never be present */
-> +		if (!cpu_possible(i))
-> +			continue;
-> +
-> +		size = struct_size(slot, entries, pool->capacity);
-> +
-> +		/*
-> +		 * here we allocate percpu-slot & objs together in a single
-> +		 * allocation to make it more compact, taking advantage of
-> +		 * warm caches and TLB hits. in default vmalloc is used to
-> +		 * reduce the pressure of kernel slab system. as we know,
-> +		 * mimimal size of vmalloc is one page since vmalloc would
+  dvb_usb_read_remote_control() {
+    ...
+    err = d->props.rc.core.rc_query(d);
+    if (err)
+      err(...)  // Did not return even if query failed
+    schedule_delayed_work(&d->rc_query_work,
+                          msecs_to_jiffies(rc_interval));
+  }
 
-nit: minimal
+When the infinite log printing occurs, the query callback
+'d->props.rc.core.rc_query' is cxusb_rc_query(). And the log is due to
+the failure of finding a valid 'generic_bulk_ctrl_endpoint'
+in usb_bulk_msg(), see following code snippet:
 
-> +		 * always align the requested size to page size
-> +		 */
-> +		if (gfp & GFP_ATOMIC)
-> +			slot = kmalloc_node(size, gfp, cpu_to_node(i));
-> +		else
-> +			slot = __vmalloc_node(size, sizeof(void *), gfp,
-> +					      cpu_to_node(i),
-> +					      __builtin_return_address(0));
-> +		if (!slot)
-> +			return -ENOMEM;
-> +
-> +		memset(slot, 0, size);
-> +		pool->cpu_slots[i] = slot;
-> +
-> +		objpool_init_percpu_slot(pool, slot);
-> +	}
-> +
-> +	return 0;
-> +}
+  cxusb_rc_query() {
+    cxusb_ctrl_msg() {
+      dvb_usb_generic_rw() {
+        ret = usb_bulk_msg(d->udev, usb_sndbulkpipe(d->udev,
+                           d->props.generic_bulk_ctrl_endpoint),...);
+        if (ret)
+          err("bulk message failed: %d (%d/%d)",ret,wlen,actlen);
+          ...
+      }
+  ...
+  }
 
-...
+By analyzing the corresponding USB descriptor, it shows that the
+bNumEndpoints is 0 in its interface descriptor, but
+the 'generic_bulk_ctrl_endpoint' is 1, that means user don't configure
+a valid endpoint for 'generic_bulk_ctrl_endpoint', therefore this
+'invalid' USB device should be rejected before it calls into
+dvb_usb_read_remote_control().
 
-> +static struct objpool_head ptr_pool;
-> +static int nr_objs = 512;
-> +static int nr_test = 5120000;
-> +static atomic_t nthreads;
-> +static struct completion wait;
-> +struct page_frag_cache test_frag;
+To fix it, iiuc, we can add endpoint check in dvb_usb_adapter_init().
 
-nit: Is test_frag used outside of this file?
-     If not, should it be static?
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ drivers/media/usb/dvb-usb/dvb-usb-init.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-...
+Hi, I'm not very familiar with USB driver, and I'm not sure the
+type check is appropriate or not here. Would be any device properties
+that allow 'generic_bulk_ctrl_endpoint' not being configured, or would
+it be configured late after init ? :)
+
+diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+index fbf58012becd..48e7b9fb93dd 100644
+--- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
++++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
+@@ -104,6 +104,14 @@ static int dvb_usb_adapter_init(struct dvb_usb_device *d, short *adapter_nrs)
+ 	 * sometimes a timeout occurs, this helps
+ 	 */
+ 	if (d->props.generic_bulk_ctrl_endpoint != 0) {
++		ret = usb_pipe_type_check(d->udev, usb_sndbulkpipe(d->udev,
++					  d->props.generic_bulk_ctrl_endpoint));
++		if (ret)
++			goto frontend_init_err;
++		ret = usb_pipe_type_check(d->udev, usb_rcvbulkpipe(d->udev,
++					  d->props.generic_bulk_ctrl_endpoint));
++		if (ret)
++			goto frontend_init_err;
+ 		usb_clear_halt(d->udev, usb_sndbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+ 		usb_clear_halt(d->udev, usb_rcvbulkpipe(d->udev, d->props.generic_bulk_ctrl_endpoint));
+ 	}
+-- 
+2.25.1
+
