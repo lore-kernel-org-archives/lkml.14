@@ -1,223 +1,339 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D1C3D3A7;
-	Fri, 12 Apr 2024 10:36:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0D53D0D5
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712918212; cv=none; b=N06qcr8uejBi2CUtH8VeD65zn1YdW+92u0c/QwpBDiYgZNfTAa1wXGNbu54OgggqdCTXC6oa51r3XRfnv99ykU6vlxF7Araan/0JfcOvwtN9fkPRJs3wMfW9Eb4ZA4VsCyEDk4Q1i2GKUBP8ucZiO9EjxddOz5ywTGjugzkj8qc=
+	t=1712918334; cv=none; b=ibe4oIMxXEe9Jo8UDVoPGQGBWGes01uW5YA8zSBmXXs9Xo/LxoZgC6Tzt8/BCBu7s6mtmPTFo8TtrHWvm384gue2MNAH2nJicQSSn73QO5mBTEn/JwvpCC0+d2XEexDRTNl6pF0cn1gcu+Ea1Im7qwa4RZp2/4mAaba7wwqxeZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712918212; c=relaxed/simple;
-	bh=L50lfv1w1V6RF5FpN+vbFTmbE0vC6aT52C9BamA7LTg=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Z8sjLj+Y8ZEz+moKY41Se/k3mklmiwFVyXEe7vMqf0GhNjMKBjdq7nI53/vqDkuUf+Wr9rCTklINC/0w45eW5Bvhu2n5RwJkbBC2018jWmT7la2r9Jhh8OwS523a8yYxAomdIMvxI/MHkuvHqjqpw+p7tyAYvcffS7iEiLqrajY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HnxGpSet; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HnxGpSet"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712918211; x=1744454211;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=L50lfv1w1V6RF5FpN+vbFTmbE0vC6aT52C9BamA7LTg=;
-  b=HnxGpSet31pKGE8E8HPgr3Wc2851QrHOz/TuB4MHlGiFD+Ai2yefT3qG
-   kniLVpapo44yeb0saIJk25o/IWZfuOzV4htRjlw+eFWESYNzS4EDXAwbb
-   yDjfdXcSiB41AQHGK5B9/xcfNDfqe2l6XjQ/900foQI6sSLaxJ7ocrwwH
-   5C1vcycffoDBcqL7gL4hBmNkIS31qb+6IheD06aUgb9Gp0oPMbMt/gc0P
-   T9dVsdssATUrrWzg/y+0oDGnQQ0VNS5EV6teS6J+Ya/m7jK4+tj4OViGu
-   p+K0TyxmKgTYMvMTfznojWLTJFP3qSbfE8SR1+PuGj3jGDRqkEYYZqV+C
-   w==;
-X-CSE-ConnectionGUID: ASRgDoSCQYqL6kYQM2N90A==
-X-CSE-MsgGUID: qA3N+z/8Q76rSlXA/QpSLg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8924102"
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="8924102"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 03:36:50 -0700
-X-CSE-ConnectionGUID: gQBqNO0cSbutUHEWAPrwvw==
-X-CSE-MsgGUID: 0U1hPyW6QPyiQxu21XJ7EA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,195,1708416000"; 
-   d="scan'208";a="21182367"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.32])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 03:36:47 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 12 Apr 2024 13:36:42 +0300 (EEST)
-To: parker@finest.io
-cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-    Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org, 
-    linux-serial@vger.kernel.org, Parker Newman <pnewman@connecttech.com>
-Subject: Re: [PATCH v2 2/7] serial: exar: add support for reading from Exar
- EEPROM
-In-Reply-To: <d16cb88f916914278e125023c856bbf85d0908c1.1712863999.git.pnewman@connecttech.com>
-Message-ID: <2b817d47-52f6-bc9b-cb24-4f540101ea50@linux.intel.com>
-References: <cover.1712863999.git.pnewman@connecttech.com> <d16cb88f916914278e125023c856bbf85d0908c1.1712863999.git.pnewman@connecttech.com>
+	s=arc-20240116; t=1712918334; c=relaxed/simple;
+	bh=peEh+aN2RdBWZcfilXaf9BGhJLLLLegsXHBfZPhCmlA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CsJldtgeaTwLCDWRSZv2/R2B2/ZiGWVZcE/rcpPaE3/VaAnAlIzxnFL2pwHf8v/4j4fsgp8X5SzxL9CwI34P7IFiQHveunFaLiULijUMiUP8/VeepOAacLVezTDgOdBgMROWuNWrLDSPGROnaVaeDqD0RDLnoxguV7ma5FJZAtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F88F113E;
+	Fri, 12 Apr 2024 03:39:21 -0700 (PDT)
+Received: from [10.57.73.208] (unknown [10.57.73.208])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0159D3F64C;
+	Fri, 12 Apr 2024 03:38:49 -0700 (PDT)
+Message-ID: <c9f425fd-285b-46b6-821e-fb758a4101e0@arm.com>
+Date: Fri, 12 Apr 2024 11:38:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/4] mm: add per-order mTHP anon_fault_alloc and
+ anon_fault_fallback counters
+Content-Language: en-GB
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, cerasuolodomenico@gmail.com,
+ chrisl@kernel.org, corbet@lwn.net, david@redhat.com, kasong@tencent.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterx@redhat.com,
+ surenb@google.com, v-songbaohua@oppo.com, willy@infradead.org,
+ yosryahmed@google.com, yuzhao@google.com
+References: <f5d6e014-5d6b-441c-8379-252ff24e2260@arm.com>
+ <20240412101756.296971-1-21cnbao@gmail.com>
+ <744fc49e-d91b-4f5a-9a27-1a25c50c2154@arm.com>
+ <CAGsJ_4z6B09wbRFTXXek+pNi9yCHSSF+ZS2gph+AtViMhZyN9w@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAGsJ_4z6B09wbRFTXXek+pNi9yCHSSF+ZS2gph+AtViMhZyN9w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 11 Apr 2024, parker@finest.io wrote:
-
-> From: Parker Newman <pnewman@connecttech.com>
+On 12/04/2024 11:29, Barry Song wrote:
+> On Fri, Apr 12, 2024 at 10:25 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 12/04/2024 11:17, Barry Song wrote:
+>>> On Fri, Apr 12, 2024 at 9:56 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 12/04/2024 10:43, Barry Song wrote:
+>>>>> On Fri, Apr 12, 2024 at 9:27 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> Hi Barry,
+>>>>>>
+>>>>>> 2 remaining comments - otherwise looks good. (same comments I just made in the
+>>>>>> v4 conversation).
+>>>>>>
+>>>>>> On 12/04/2024 08:37, Barry Song wrote:
+>>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>>>
+>>>>>>> Profiling a system blindly with mTHP has become challenging due to the
+>>>>>>> lack of visibility into its operations.  Presenting the success rate of
+>>>>>>> mTHP allocations appears to be pressing need.
+>>>>>>>
+>>>>>>> Recently, I've been experiencing significant difficulty debugging
+>>>>>>> performance improvements and regressions without these figures.  It's
+>>>>>>> crucial for us to understand the true effectiveness of mTHP in real-world
+>>>>>>> scenarios, especially in systems with fragmented memory.
+>>>>>>>
+>>>>>>> This patch establishes the framework for per-order mTHP
+>>>>>>> counters. It begins by introducing the anon_fault_alloc and
+>>>>>>> anon_fault_fallback counters. Additionally, to maintain consistency
+>>>>>>> with thp_fault_fallback_charge in /proc/vmstat, this patch also tracks
+>>>>>>> anon_fault_fallback_charge when mem_cgroup_charge fails for mTHP.
+>>>>>>> Incorporating additional counters should now be straightforward as well.
+>>>>>>>
+>>>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>>>>>> Cc: Chris Li <chrisl@kernel.org>
+>>>>>>> Cc: David Hildenbrand <david@redhat.com>
+>>>>>>> Cc: Domenico Cerasuolo <cerasuolodomenico@gmail.com>
+>>>>>>> Cc: Kairui Song <kasong@tencent.com>
+>>>>>>> Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+>>>>>>> Cc: Peter Xu <peterx@redhat.com>
+>>>>>>> Cc: Ryan Roberts <ryan.roberts@arm.com>
+>>>>>>> Cc: Suren Baghdasaryan <surenb@google.com>
+>>>>>>> Cc: Yosry Ahmed <yosryahmed@google.com>
+>>>>>>> Cc: Yu Zhao <yuzhao@google.com>
+>>>>>>> ---
+>>>>>>>  include/linux/huge_mm.h | 51 ++++++++++++++++++++++++++++++++++
+>>>>>>>  mm/huge_memory.c        | 61 +++++++++++++++++++++++++++++++++++++++++
+>>>>>>>  mm/memory.c             |  3 ++
+>>>>>>>  mm/page_alloc.c         |  4 +++
+>>>>>>>  4 files changed, 119 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>>>>> index e896ca4760f6..c5beb54b97cb 100644
+>>>>>>> --- a/include/linux/huge_mm.h
+>>>>>>> +++ b/include/linux/huge_mm.h
+>>>>>>> @@ -264,6 +264,57 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
+>>>>>>>                                         enforce_sysfs, orders);
+>>>>>>>  }
+>>>>>>>
+>>>>>>> +enum mthp_stat_item {
+>>>>>>> +     MTHP_STAT_ANON_FAULT_ALLOC,
+>>>>>>> +     MTHP_STAT_ANON_FAULT_FALLBACK,
+>>>>>>> +     MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+>>>>>>> +     __MTHP_STAT_COUNT
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +struct mthp_stat {
+>>>>>>> +     unsigned long stats[0][__MTHP_STAT_COUNT];
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +extern struct mthp_stat __percpu *mthp_stats;
+>>>>>>> +
+>>>>>>> +static inline void count_mthp_stat(int order, enum mthp_stat_item item)
+>>>>>>> +{
+>>>>>>> +     if (order <= 0 || order > PMD_ORDER || !mthp_stats)
+>>>>>>> +             return;
+>>>>>>> +
+>>>>>>> +     this_cpu_inc(mthp_stats->stats[order][item]);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static inline void count_mthp_stats(int order, enum mthp_stat_item item, long delta)
+>>>>>>> +{
+>>>>>>> +     if (order <= 0 || order > PMD_ORDER || !mthp_stats)
+>>>>>>> +             return;
+>>>>>>> +
+>>>>>>> +     this_cpu_add(mthp_stats->stats[order][item], delta);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +/*
+>>>>>>> + * Fold the foreign cpu mthp stats into our own.
+>>>>>>> + *
+>>>>>>> + * This is adding to the stats on one processor
+>>>>>>> + * but keeps the global counts constant.
+>>>>>>> + */
+>>>>>>> +static inline void mthp_stats_fold_cpu(int cpu)
+>>>>>>> +{
+>>>>>>> +     struct mthp_stat *fold_stat;
+>>>>>>> +     int i, j;
+>>>>>>> +
+>>>>>>> +     if (!mthp_stats)
+>>>>>>> +             return;
+>>>>>>> +     fold_stat = per_cpu_ptr(mthp_stats, cpu);
+>>>>>>> +     for (i = 1; i <= PMD_ORDER; i++) {
+>>>>>>> +             for (j = 0; j < __MTHP_STAT_COUNT; j++) {
+>>>>>>> +                     count_mthp_stats(i, j, fold_stat->stats[i][j]);
+>>>>>>> +                     fold_stat->stats[i][j] = 0;
+>>>>>>> +             }
+>>>>>>> +     }
+>>>>>>> +}
+>>>>>>
+>>>>>> This is a pretty horrible hack; I'm pretty sure just summing for all *possible*
+>>>>>> cpus should work.
+>>>>>>
+>>>>>>> +
+>>>>>>>  #define transparent_hugepage_use_zero_page()                         \
+>>>>>>>       (transparent_hugepage_flags &                                   \
+>>>>>>>        (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
+>>>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>>>>> index dc30139590e6..21c4ac74b484 100644
+>>>>>>> --- a/mm/huge_memory.c
+>>>>>>> +++ b/mm/huge_memory.c
+>>>>>>> @@ -526,6 +526,50 @@ static const struct kobj_type thpsize_ktype = {
+>>>>>>>       .sysfs_ops = &kobj_sysfs_ops,
+>>>>>>>  };
+>>>>>>>
+>>>>>>> +struct mthp_stat __percpu *mthp_stats;
+>>>>>>> +
+>>>>>>> +static unsigned long sum_mthp_stat(int order, enum mthp_stat_item item)
+>>>>>>> +{
+>>>>>>> +     unsigned long sum = 0;
+>>>>>>> +     int cpu;
+>>>>>>> +
+>>>>>>> +     cpus_read_lock();
+>>>>>>> +     for_each_online_cpu(cpu) {
+>>>>>>> +             struct mthp_stat *this = per_cpu_ptr(mthp_stats, cpu);
+>>>>>>> +
+>>>>>>> +             sum += this->stats[order][item];
+>>>>>>> +     }
+>>>>>>> +     cpus_read_unlock();
+>>>>>>> +
+>>>>>>> +     return sum;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +#define DEFINE_MTHP_STAT_ATTR(_name, _index)                                 \
+>>>>>>> +static ssize_t _name##_show(struct kobject *kobj,                    \
+>>>>>>> +                     struct kobj_attribute *attr, char *buf)         \
+>>>>>>> +{                                                                    \
+>>>>>>> +     int order = to_thpsize(kobj)->order;                            \
+>>>>>>> +                                                                     \
+>>>>>>> +     return sysfs_emit(buf, "%lu\n", sum_mthp_stat(order, _index));  \
+>>>>>>> +}                                                                    \
+>>>>>>> +static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+>>>>>>> +
+>>>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
+>>>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+>>>>>>> +DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+>>>>>>> +
+>>>>>>> +static struct attribute *stats_attrs[] = {
+>>>>>>> +     &anon_fault_alloc_attr.attr,
+>>>>>>> +     &anon_fault_fallback_attr.attr,
+>>>>>>> +     &anon_fault_fallback_charge_attr.attr,
+>>>>>>> +     NULL,
+>>>>>>> +};
+>>>>>>> +
+>>>>>>> +static struct attribute_group stats_attr_group = {
+>>>>>>> +     .name = "stats",
+>>>>>>> +     .attrs = stats_attrs,
+>>>>>>> +};
+>>>>>>> +
+>>>>>>>  static struct thpsize *thpsize_create(int order, struct kobject *parent)
+>>>>>>>  {
+>>>>>>>       unsigned long size = (PAGE_SIZE << order) / SZ_1K;
+>>>>>>> @@ -549,6 +593,12 @@ static struct thpsize *thpsize_create(int order, struct kobject *parent)
+>>>>>>>               return ERR_PTR(ret);
+>>>>>>>       }
+>>>>>>>
+>>>>>>> +     ret = sysfs_create_group(&thpsize->kobj, &stats_attr_group);
+>>>>>>> +     if (ret) {
+>>>>>>> +             kobject_put(&thpsize->kobj);
+>>>>>>> +             return ERR_PTR(ret);
+>>>>>>> +     }
+>>>>>>> +
+>>>>>>>       thpsize->order = order;
+>>>>>>>       return thpsize;
+>>>>>>>  }
+>>>>>>> @@ -691,6 +741,11 @@ static int __init hugepage_init(void)
+>>>>>>>        */
+>>>>>>>       MAYBE_BUILD_BUG_ON(HPAGE_PMD_ORDER < 2);
+>>>>>>>
+>>>>>>> +     mthp_stats = __alloc_percpu((PMD_ORDER + 1) * sizeof(mthp_stats->stats[0]),
+>>>>>>> +                     sizeof(unsigned long));
+>>>>>>
+>>>>>> Personally I think it would be cleaner to allocate statically using
+>>>>>> ilog2(MAX_PTRS_PER_PTE) instead of PMD_ORDER.
+>>>>>
+>>>>> Hi Ryan,
+>>>>>
+>>>>> I don't understand why MAX_PTRS_PER_PTE is the correct size. For ARM64,
+>>>>>
+>>>>> #define PMD_ORDER       (PMD_SHIFT - PAGE_SHIFT)
+>>>>>
+>>>>> #define MAX_PTRS_PER_PTE PTRS_PER_PTE
+>>>>>
+>>>>> #define PTRS_PER_PTE            (1 << (PAGE_SHIFT - 3))
+>>>>>
+>>>>> while PAGE_SIZE is 16KiB or 64KiB, PTRS_PER_PTE can be a huge number?
+>>>>>
+>>>>>
+>>>>> Am I missing something?
+>>>>
+>>>> PTRS_PER_PTE is the number of PTE entries in a PTE table. On arm64 its as follows:
+>>>>
+>>>> PAGE_SIZE       PAGE_SHIFT      PTRS_PER_PTE
+>>>> 4K              12              512
+>>>> 16K             14              2048
+>>>> 64K             16              8192
+>>>>
+>>>> So (PTRS_PER_PTE * PAGE_SIZE) = PMD_SIZE
+>>>>
+>>>> PMD_ORDER is ilog2(PMD_SIZE / PAGE_SIZE) = ilog2(PTRS_PER_PTE)
+>>>>
+>>>> MAX_PTRS_PER_PTE is just the maximum value that PTRS_PER_PTE will ever have,
+>>>> (and its equal to PTRS_PER_PTE except for powerpc).
+>>>>
+>>>> Pretty sure the math is correct?
+>>>
+>>> I am not convinced the math is correct :-)
+>>>
+>>> while page size is 64KiB, the page table is as below,
+>>> PMD_ORDER = L2 index bits = [41:29] = 13 != ilog2(8192)
+>>
+>> 1 << 13 = 8192
+>>
+>> Right? So:
+>>
+>> ilog2(8192) = 13
+>>
+>> What's wrong with that?
+>>
+>> I even checked in Python to make sure I'm not going mad:
+>>
+>>>>> import math
+>>>>> math.log2(8192)
+>> 13.0
 > 
-> - Adds support for reading a word from the Exar EEPROM.
-> - Adds exar_write_reg/exar_read_reg for reading and writing to the UART's
-> config registers.
+> You're correct. My mind fixated on the '16' in the line '64K 16 8192'.
+> I mistakenly thought ilog2(8192) equals 16. Apologies for the confusion.
+
+No worries! We got there in the end :)
+
+Of course my suggestion relies on being able to get a compile-time constant from
+ilog2(MAX_PTRS_PER_PTE). I think that should work, right?
+
 > 
-> Signed-off-by: Parker Newman <pnewman@connecttech.com>
-> ---
->  drivers/tty/serial/8250/8250_exar.c | 110 ++++++++++++++++++++++++++++
->  1 file changed, 110 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-> index 4d1e07343d0b..49d690344e65 100644
-> --- a/drivers/tty/serial/8250/8250_exar.c
-> +++ b/drivers/tty/serial/8250/8250_exar.c
-> @@ -128,6 +128,16 @@
->  #define UART_EXAR_DLD			0x02 /* Divisor Fractional */
->  #define UART_EXAR_DLD_485_POLARITY	0x80 /* RS-485 Enable Signal Polarity */
-> 
-> +/* EEPROM registers */
-> +#define UART_EXAR_REGB                  0x8e
-> +#define UART_EXAR_REGB_EECK             BIT(4)
-> +#define UART_EXAR_REGB_EECS             BIT(5)
-> +#define UART_EXAR_REGB_EEDI             BIT(6)
-> +#define UART_EXAR_REGB_EEDO             BIT(7)
-> +#define UART_EXAR_REGB_EE_ADDR_SIZE     6
-> +#define UART_EXAR_REGB_EE_DATA_SIZE     16
-> +
-> +
-
-Extra new line.
-
->  /*
->   * IOT2040 MPIO wiring semantics:
->   *
-> @@ -195,6 +205,106 @@ struct exar8250 {
->  	int			line[];
->  };
-> 
-> +static inline void exar_write_reg(struct exar8250 *priv,
-> +				unsigned int reg, uint8_t value)
-> +{
-> +	if (!priv || !priv->virt)
-> +		return;
-> +
-> +	writeb(value, priv->virt + reg);
-> +}
-> +
-> +static inline uint8_t exar_read_reg(struct exar8250 *priv, unsigned int reg)
-> +{
-> +	if (!priv || !priv->virt)
-> +		return 0;
-> +
-> +	return readb(priv->virt + reg);
-> +}
-> +
-> +static inline void exar_ee_select(struct exar8250 *priv, bool enable)
-> +{
-> +	uint8_t value = 0x00;
-> +
-> +	if (enable)
-> +		value |= UART_EXAR_REGB_EECS;
-
-You could just do:
-	u8 value;
-
-	value = enable ? UART_EXAR_REGB_EECS : 0;
-
-Or even:
-
-	exar_write_reg(priv, UART_EXAR_REGB, enable ? UART_EXAR_REGB_EECS : 0);
-> +
-> +	exar_write_reg(priv, UART_EXAR_REGB, value);
-> +	udelay(2);
-> +}
-> +
-> +static inline void exar_ee_write_bit(struct exar8250 *priv, int bit)
-> +{
-> +	uint8_t value = UART_EXAR_REGB_EECS;
-> +
-> +	if (bit)
-> +		value |= UART_EXAR_REGB_EEDI;
-> +
-> +	//Clock out the bit on the i2c interface
-> +	exar_write_reg(priv, UART_EXAR_REGB, value);
-> +	udelay(2);
-> +
-> +	value |= UART_EXAR_REGB_EECK;
-> +
-> +	exar_write_reg(priv, UART_EXAR_REGB, value);
-> +	udelay(2);
-> +}
-> +
-> +static inline uint8_t exar_ee_read_bit(struct exar8250 *priv)
-> +{
-> +	uint8_t regb;
-> +	uint8_t value = UART_EXAR_REGB_EECS;
-> +
-> +	//Clock in the bit on the i2c interface
-> +	exar_write_reg(priv, UART_EXAR_REGB, value);
-> +	udelay(2);
-> +
-> +	value |= UART_EXAR_REGB_EECK;
-> +
-> +	exar_write_reg(priv, UART_EXAR_REGB, value);
-> +	udelay(2);
-> +
-> +	regb = exar_read_reg(priv, UART_EXAR_REGB);
-> +
-> +	return (regb & UART_EXAR_REGB_EEDO ? 1 : 0);
-> +}
-> +
-> +/**
-> + * exar_ee_read() - Read a word from the EEPROM
-> + * @priv: Device's private structure
-> + * @ee_addr: Offset of EEPROM to read word from
-> + *
-> + * Read a single 16bit word from an Exar UART's EEPROM
-
-Add missing .
-
-> + *
-> + * Return: EEPROM word on success, negative error code on failure
-
-This function does not return any -Exx code as far as I can see??
-
-> + */
-> +static int exar_ee_read(struct exar8250 *priv, uint8_t ee_addr)
-> +{
-> +	int i;
-> +	int data = 0;
-> +
-> +	exar_ee_select(priv, true);
-> +
-> +	//Send read command (opcode 110)
-> +	exar_ee_write_bit(priv, 1);
-> +	exar_ee_write_bit(priv, 1);
-> +	exar_ee_write_bit(priv, 0);
-> +
-> +	//Send address to read from
-> +	for (i = 1 << (UART_EXAR_REGB_EE_ADDR_SIZE - 1); i; i >>= 1)
-> +		exar_ee_write_bit(priv, (ee_addr & i));
-> +
-> +	//Read data 1 bit at a time
-> +	for (i = 0; i <= UART_EXAR_REGB_EE_DATA_SIZE; i++) {
-> +		data <<= 1;
-> +		data |= exar_ee_read_bit(priv);
-> +	}
-> +
-> +	exar_ee_select(priv, false);
-> +
-> +	return data;
-> +}
-
--- 
- i.
+>>
+>>>
+>>>
+>>> +--------+--------+--------+--------+--------+--------+--------+--------+
+>>> |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
+>>> +--------+--------+--------+--------+--------+--------+--------+--------+
+>>>  |                 |    |               |              |
+>>>  |                 |    |               |              v
+>>>  |                 |    |               |            [15:0]  in-page offset
+>>>  |                 |    |               +----------> [28:16] L3 index
+>>>  |                 |    +--------------------------> [41:29] L2 index
+>>>  |                 +-------------------------------> [47:42] L1 index (48-bit)
+>>>  |                                                   [51:42] L1 index (52-bit)
+>>>  +-------------------------------------------------> [63] TTBR0/1
+>>>
+>>> while page size is 4KiB, the page table is as below,
+>>>
+>>> +--------+--------+--------+--------+--------+--------+--------+--------+
+>>> |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
+>>> +--------+--------+--------+--------+--------+--------+--------+--------+
+>>>  |                 |         |         |         |         |
+>>>  |                 |         |         |         |         v
+>>>  |                 |         |         |         |   [11:0]  in-page offset
+>>>  |                 |         |         |         +-> [20:12] L3 index
+>>>  |                 |         |         +-----------> [29:21] L2 index
+>>>  |                 |         +---------------------> [38:30] L1 index
+>>>  |                 +-------------------------------> [47:39] L0 index
+>>>  +-------------------------------------------------> [63] TTBR0/1
+>>>
+>>> PMD_ORDER = L2 index bits = [29:21] = 9 = ilog2(512).
+>>>
+>>> You are only correct while page size = 4KiB.
+>>>
+>>>
+>>>
+>>>
+>>
 
