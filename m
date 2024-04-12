@@ -1,84 +1,88 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4E05491F;
-	Fri, 12 Apr 2024 16:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9B61487F6;
+	Fri, 12 Apr 2024 16:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938505; cv=none; b=P6B1gAzKuxErbO7w4NoPCicFSOK0qGUWMR7RO9WM9k4E8RLmF2eGqJNTKQCTTIKKZTjrPWyo7xvghUX3EalpT5lJLKAYCNQxMSnge3i+JER/F1k/qCZAtxfHXlkPNiwjWuv4bskDmRvB6/XuudPVvD14RtL70uEIt1jpPMd/2+E=
+	t=1712938518; cv=none; b=SasC4JdA1hI9l02dgpFVLUM6VMp6F4R5+SBZXZeEEGsfie4xGzax8J7Zh+8eppO/5XQB+t0MTdYjnsWzDO0Cwrstltk6TEvlmaVicJG6IYyseWi2xvITJJzmqikGQeyGnX1Ktba0AycLgpGhg2Qs6SgH3abg6AmLmeULkE4h808=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938505; c=relaxed/simple;
-	bh=+IWy99af1h3JEWXUPm1/plozSegm1w4gAbK6Yqz41xQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RjXL2n4ePWQeAqGDtMLbr0KhN7bGi9aYreK2nMMYKCFY2S8pTCYoijJIglFQNzg+jQ9iTjgiM5Yzy7OqQPsDPtsoYWxaFCD0HEgcBC4tuDKmaqKDB3ei7gZm2W71e5RNRBIy7/Cd99yXE1sO+BKXOU8VNaGy08Ld1PsDdHc+hw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM3R0Q5nz688p7;
-	Sat, 13 Apr 2024 00:10:11 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 79F991400F4;
-	Sat, 13 Apr 2024 00:15:01 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:15:00 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 08/30] Documentation: xgene-pmu: Use /sys/bus/event_source/devices paths
-Date: Fri, 12 Apr 2024 17:10:35 +0100
-Message-ID: <20240412161057.14099-9-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712938518; c=relaxed/simple;
+	bh=V1ce7pLVJkYNy1H2D56NR0dfAzQf/796KsVr4ABO0B8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XkNAF6ca78ANEg7EZZ3D6ATLpftm++bAb98YKkPJ+URGMII8/8IPuTXlRTMbLFoJm+0kUlwWoLBrT1C1hzzp13jMQxH3K0TsaitK7xWX3W6CWHe8AUl7XobWqXOat2+2q/Njn7Jj7GrBeOnKdaOCWXuaPGih/58dHRCZInwy4CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MlZCXcez; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MlZCXcez"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712938517; x=1744474517;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V1ce7pLVJkYNy1H2D56NR0dfAzQf/796KsVr4ABO0B8=;
+  b=MlZCXcezFAoN/UcTunjpI0bcg//EiSUDR2+RiY99cn7lH0gbZn/bSLNx
+   Oskgmrot2m2tkuVbbO6E6gmEiuIE3rcoNvYIBE2877g0sJAXb13dxOmJk
+   p4j+ch4hifdOsLg0ijpO4/LoG8OlFWJAKfWA4R+EWoP8e1URCWw4MHRsf
+   STGeC2Qr/lhp5EXktMCsLg8rzELu4dni/nVTnHgUYcayGGNVRejedPSGU
+   4D8YlfLComMGuBbKcrwroW4GsHZ0ki+UHRh4X4+AZ4q8orpUu1dQKf3a8
+   U5ekhEGI/9Ik4FXc+gsRgu1whQQ6u9Bm8w3qYhUtiyvzExrVGxUGcRes1
+   Q==;
+X-CSE-ConnectionGUID: fddpKE/XQ0KpixAwDo0T3g==
+X-CSE-MsgGUID: VnE+YxcRRD+VzrP1d1FngA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19548224"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="19548224"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:15:16 -0700
+X-CSE-ConnectionGUID: KQDw4Xd9STietWAI4ytIoA==
+X-CSE-MsgGUID: ud941DghRkOk2DhWFAi44w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="21359037"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:15:14 -0700
+Date: Fri, 12 Apr 2024 19:15:11 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
+	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
+Message-ID: <ZhleDwUJLDEG5QwH@black.fi.intel.com>
+References: <20240412060812.20412-1-raag.jadav@intel.com>
+ <ZhlU176sS36_JvQU@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZhlU176sS36_JvQU@smile.fi.intel.com>
 
-To allow setting an appropriate parent for the struct pmu device
-remove existing references to /sys/devices/ path.
+On Fri, Apr 12, 2024 at 06:35:51PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+> > With 16 channel pwm support, we're registering two instances of pwm_chip
+> > with 8 channels each. We need to update PM functions to use both instances
+> > of pwm_chip during power state transitions.
+> > 
+> > Introduce struct dwc_pwm_drvdata and use it as driver_data, which will
+> > maintain both instances of pwm_chip along with dwc_pwm_info and allow us
+> > to use them inside suspend/resume handles.
+> 
+> ...
+> 
+> > +	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
+> > +	if (!data)
+> > +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
+> 
+> Haven't noticed before, but we do not print messages for -ENOMEM. Just return
+> the code.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Documentation/admin-guide/perf/xgene-pmu.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any special case for -ENOMEM?
+I found a few drivers which still do.
 
-diff --git a/Documentation/admin-guide/perf/xgene-pmu.rst b/Documentation/admin-guide/perf/xgene-pmu.rst
-index 644f8ed89152..98ccb8e777c4 100644
---- a/Documentation/admin-guide/perf/xgene-pmu.rst
-+++ b/Documentation/admin-guide/perf/xgene-pmu.rst
-@@ -13,7 +13,7 @@ PMU (perf) driver
- 
- The xgene-pmu driver registers several perf PMU drivers. Each of the perf
- driver provides description of its available events and configuration options
--in sysfs, see /sys/devices/<l3cX/iobX/mcbX/mcX>/.
-+in sysfs, see /sys/bus/event_source/devices/<l3cX/iobX/mcbX/mcX>/.
- 
- The "format" directory describes format of the config (event ID),
- config1 (agent ID) fields of the perf_event_attr structure. The "events"
--- 
-2.39.2
-
+Raag
