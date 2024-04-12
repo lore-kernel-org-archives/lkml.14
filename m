@@ -1,35 +1,41 @@
-Received: from smtpcmd03117.aruba.it (smtpcmd03117.aruba.it [62.149.158.117])
+Received: from esg.nwe.de (esg.nwe.de [195.226.126.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2344085A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.158.117
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2931342ABE
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.226.126.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712904443; cv=none; b=fe1dJc/q4TSHuoL2psv4wB0d+CIaDqf1lvLKMdrvG983UCviQRscOSZz9s4mHnXGIPu9s84IYjWv5RYFUiVi7/JRF3/qvnDzm1ycZjr5ukbqFdKy3P6Bul8dqeRwinym1+yuFc9HVi6QLHmPQYMVT7sGwE8hjpAPwNbmcl4Ulu0=
+	t=1712904447; cv=none; b=C2Fnr4+U5TIdWb3UON26GaFoTzANgsVQBRfJr+Q5hXfWr/g6UCSRCnEaBaLSbnn66ctYkpMZyfdb5/6vrFd1H/DaWjYAKAyrQN3mt0xInnsJubTnYuJVyFlFA+IZ/OM09fY5pijGkf4pjXKS8q66v6BTrD3LNntn/qrQMrqNyZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712904443; c=relaxed/simple;
-	bh=WyC9PNxXS/aVAIKL5oIDw9u87fuWEC6J4MSR68MMGAg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L69qhSKiFAMdlaEpRzBhR/dTJdvsy0W1tVCJqwbZfIC8m+6gv2aAKjyfq02h/+JiCK2txh8UNLLcX0SpzqqOYjQXR2t68vADnY5TRNbAn7qnmwu+Bz+VAx4CPs7RWiYpOQOzMVdKqMczGjaa5rPnVrSmqE6Awhmg5Wf/fA0Pic8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=QUPni0M9; arc=none smtp.client-ip=62.149.158.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	s=arc-20240116; t=1712904447; c=relaxed/simple;
+	bh=rUn7NaZAS5hnRq6kHRzju/FnH7ibYcmkgTvUbuxKoxg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iRjZ/cm5eR4jm2GgT6vy8to3IY8h3+BvfqLgyjoN1wLNdEZg6LBgrTPFndQEA/eEfRuVVEPzGaxQTbbDnlaRWv1plYa4asDxJ59fyyEWX1xXmCnIsNAWTzLN9HioNWToBS9z2TMyNIL6uMFizrg6R76uFRQg+kYmCkxn/I7DEU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=scram.de; spf=pass smtp.mailfrom=scram.de; dkim=pass (1024-bit key) header.d=scram.de header.i=@scram.de header.b=QU0RfYY8; arc=none smtp.client-ip=195.226.126.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=scram.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scram.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="QUPni0M9"
-Received: from [192.168.1.57] ([79.0.204.227])
-	by Aruba Outgoing Smtp  with ESMTPSA
-	id vAdsrE8KkQF1DvAdtre770; Fri, 12 Apr 2024 08:44:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1712904249; bh=WyC9PNxXS/aVAIKL5oIDw9u87fuWEC6J4MSR68MMGAg=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=QUPni0M9weIIkUhjH94dlpYJX2G5U0niAyW1687kg5ZHZ2sYsqt9o21+502WUgO3F
-	 OXZOaihb12N76O9FnYSAXQI9lvs4r7l8xNfB4t9bqaA38anKU8JfIYWqKHkUeaFZqo
-	 atQCkeR9/XPcHpF3t7tWGLpSLwo33I1RcOZv/T357tblHHQZnb/IjXdJC/tgzSYu5W
-	 1LL0MjxVLS1gEAitP8Iogfw30/z6YSQ1ImnqQIciovHjNOg3TH7rTWsgzUmDYeus8N
-	 Z8mECTFlyHk9QBk8Qqjpp22QVOEq/dbU6goShwcaRfUYqIzB3z/zpJ8aZS47UjQqLa
-	 waYypwbIcut2w==
-Message-ID: <9255124b-958e-4ab4-a812-67ad5d36e16d@enneenne.com>
-Date: Fri, 12 Apr 2024 08:44:08 +0200
+	dkim=pass (1024-bit key) header.d=scram.de header.i=@scram.de header.b="QU0RfYY8"
+X-ASG-Debug-ID: 1712903570-1ed71d5dc82363b80001-xx1T2L
+Received: from mail.scram.de ([213.206.175.31]) by esg.nwe.de with ESMTP id 2CinZMVeoB7m5L6B (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Fri, 12 Apr 2024 08:32:50 +0200 (CEST)
+X-Barracuda-Envelope-From: jochen@scram.de
+X-Barracuda-Effective-Source-IP: UNKNOWN[213.206.175.31]
+X-Barracuda-Apparent-Source-IP: 213.206.175.31
+Received: (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client did not present a certificate)
+	(Authenticated sender)
+	by mail.scram.de (Postfix) with ESMTPSA id F29EF8A7031;
+	Fri, 12 Apr 2024 08:32:49 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.scram.de F29EF8A7031
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=scram.de;
+	s=mail2021; t=1712903570;
+	bh=Gh1QR2+zPfWSt6AeuaYH86pSHzi1XIf0LhYJrlsTzsg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=QU0RfYY8DbePZ5cSqGjXgEv7Vqq8xXXIJdVQk1JyOqck38FEgC4x4H3/iUqgARSmp
+	 w/FjXl7ccBDgbfreaX/myLtF/cvSFBvQddT0I9Vr126eXMNC1gHQ5Fe2HBPVZf382k
+	 oaWYoJzQMfqct/IRNrqiFhe7B7263vktH3B2taw8=
+Message-ID: <2271dcf2-83c3-4570-87f5-c483faa2f9cd@scram.de>
+Date: Fri, 12 Apr 2024 08:32:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,101 +43,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] pps: clients: gpio: Bypass edge's direction check
- when not needed
-To: Bastien Curutchet <bastien.curutchet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, herve.codina@bootlin.com,
- christophercordahi@nanometrics.ca
-References: <20240410113502.73038-1-bastien.curutchet@bootlin.com>
- <1f7f5b2f-54d4-4dc1-90ff-b896c930faed@enneenne.com>
- <5bda0980-2373-4284-bda4-89f0c6944e76@bootlin.com>
- <eb64ec08-2ae3-48bb-9f84-3cec362280b2@enneenne.com>
- <27196117-32bc-4892-b545-d9cf43a89f0a@bootlin.com>
- <c1e93cfe-371c-4855-9a13-b4b453bb9e88@enneenne.com>
- <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-Content-Language: en-US, it, it-IT
-In-Reply-To: <28c5456d-535c-4ed9-b13a-fab7f50412be@bootlin.com>
+Subject: Re: [PATCH 14/64] i2c: cpm: reword according to newest specification
+To: Andi Shyti <andi.shyti@kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-i2c@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+X-ASG-Orig-Subj: Re: [PATCH 14/64] i2c: cpm: reword according to newest specification
+References: <20240322132619.6389-1-wsa+renesas@sang-engineering.com>
+ <20240322132619.6389-15-wsa+renesas@sang-engineering.com>
+ <jpp67ejeropvsc6gwompwc5t2nbl6cde2o33vtf42e2on2ycal@42ovfdhp6oh4>
+ <maxjcriuq6qfoeoing5ic7l5pnxdyylovjdoh4w3bzhnmco6ax@mslv35p4k35k>
+ <26y3smrxv3q56peuqatospr3q6annxvdmleyhykyrjrovne6mu@yg44mmr7aaqp>
+From: Jochen Friedrich <jochen@scram.de>
+In-Reply-To: <26y3smrxv3q56peuqatospr3q6annxvdmleyhykyrjrovne6mu@yg44mmr7aaqp>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfKB456YBgpqZ634JB5dUeyybZMVwsuXswVSVYhCb/VUND8r2xEhF5iSPw6RggeNGxEOctbMtAGW9qerebBZB1Afzf05oP6MgLrUj7bQSvPcktEvBrXAA
- W2nFtMwtaFDJF5Ulzb1sLAmquMPugbcQA7OvwM/7f0H4dvJXWRnXq08fmOC4+fAv0vvyAcNFO/Bdr2ydRZl0dTumjF+f3fUieGKiuStqPKyengfT5hSawCj5
- jbQ9IsMZ6POTZPVls34udWv8bTJzac5xEJFsgn0rU0nxVFF3gBxK+NPtdDG0Lh4OWhQDDm0GAdh8GbbyyqlYav3GzLUjrMxiVJgSKPEn+mVvjtfdcnOJPCI0
- LymDJgEKOwtX+UoMusQSdwrYGObTvA==
+Content-Transfer-Encoding: 7bit
+X-Barracuda-Connect: UNKNOWN[213.206.175.31]
+X-Barracuda-Start-Time: 1712903570
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://195.226.126.84:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at nwe.de
+X-Barracuda-Scan-Msg-Size: 423
+X-Barracuda-BRTS-Status: 0
+X-Barracuda-Spam-Score: 0.00
+X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.123398
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On 11/04/24 14:44, Bastien Curutchet wrote:
-> Hi Rodolfo
-> 
->>>> diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
->>>> index 2f4b11b4dfcd..f05fb15ed7f4 100644
->>>> --- a/drivers/pps/clients/pps-gpio.c
->>>> +++ b/drivers/pps/clients/pps-gpio.c
->>>> @@ -52,7 +52,9 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
->>>>
->>>>          info = data;
->>>>
->>>> -       rising_edge = gpiod_get_value(info->gpio_pin);
->>>> +       rising_edge = info->capture_clear ? \
->>>> +                       gpiod_get_value(info->gpio_pin) : \
->>>> +                       !info->assert_falling_edge;
->>>>          if ((rising_edge && !info->assert_falling_edge) ||
->>>>                          (!rising_edge && info->assert_falling_edge))
->>>>                  pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
->>>>
->>>> Please, review and test it before resubmitting. :)
->>>>
->>>
->>> I'll try this and send a V2 after my tests, thank you.
->>
->> OK, thanks.
->>
->> However we should think very well about this modification since it could be 
->> the case where we have a device sending both assert and clear events but we 
->> wish to catch just the asserts... in this case we will get doubled asserts!
->>
-> 
-> My understanding is that clear events are to be captured only when this
-> capture_clear boolean is set. If it is not set, the PPS_CAPTURECLEAR
-> flag is not added to pps_source_info->mode and get_irqf_trigger_flags()
-> will return only one edge flag (rising or falling depending on
-> assert-falling-edge DT property).
+>>>>   	out_8(&cpm->i2c_reg->i2mod, 0x00);
+>>>> -	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Master mode */
+>>>> +	out_8(&cpm->i2c_reg->i2com, I2COM_MASTER);	/* Host mode */
+>>> I2COM_MASTER might be coming from the datasheet.
+>> Maybe we can just drop the comment? The value we write is pretty
+>> self-explaining.
+> indeed.
+>
+> Andi
 
-Yes. You are right.
-
-> By the way, I see that the capture_clear is never set since the legacy
-> platform data support has been dropped (commit ee89646619ba).
-
-I see, but it can be re-enabled in the future... In this scenario, I think we 
-should add a DT entry to enable this special behavior. Maybe we can also add a 
-warning as below:
-
-static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
-{
-         ...
-         if ((rising_edge && !info->assert_falling_edge) ||
-                         (!rising_edge && info->assert_falling_edge))
-                 pps_event(info->pps, &ts, PPS_CAPTUREASSERT, data);
-         else if (info->capture_clear &&
-                         ((rising_edge && info->assert_falling_edge) ||
-                         (!rising_edge && !info->assert_falling_edge)))
-                 pps_event(info->pps, &ts, PPS_CAPTURECLEAR, data);
-	else
-		dev_warn_ratelimited(dev, "no ASSERT or CAPTURE event? "
-			"Maybe you need support-tiny-assert-pulse?");
-
-         return IRQ_HANDLED;
-}
-
-Ciao,
-
-Rodolfo
-
-P.S. I'm sorry, but I'm not good at finding names... ^_^"
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
+I also agree. You might add my Acked-By: <jochen@scram.de> here. Jochen
 
