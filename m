@@ -1,246 +1,153 @@
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7834014E2ED
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:25:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8329D14BF9B
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946308; cv=none; b=TrUkkfc/oiCnqhKY4I7wLkKNUOz0cdiKZYKhFcWOiDTLl31XsuEWKPIvpif1/fc4s1vQcEBHZ4gyBc9ZVaTsrhW2dSzI/xmi3z8/MxWknlm+nJ71j4Y9V8mClILD9J1JDQRF8CYWciC8bffO6xXjDOHOoTqsntBGzfFqlppXdW4=
+	t=1712946377; cv=none; b=sze9pMfiFi7TBStOGiHXYdUux+iaRUMWLTLeoyNfz0aDxSrTGRU0YftzALy2kGQC5yVKu7qcD9w1K3HDLuos/l4+JDGWZSxqzB7tLwhpv0xYum6csMHTaAMpHtHeNyn2yaoJlwBZqD6ssZi38wYao3Jv5HBwxBM5qTIqi3JdFYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946308; c=relaxed/simple;
-	bh=ry66YQlyt3rAYniCDBOFkCGxY2ZiHVBUqgNRBCuc3PY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BNMFDrM1FfKNH3j858l/a6tNiseJkcBQMvMod0Ptd5US1GFkYjh2EahcazNzpU2Vz6Cij36PZLvZwMZAqh/0VOAR9TD/6hOjUPgLLe6eh35N/001V8q1U2UtOfXDh7/ZMUczV3NJVFDKcyt6KzfHQrPcfdLngm2LwiCJS/FqLeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ct90XKBv; arc=none smtp.client-ip=209.85.221.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712946377; c=relaxed/simple;
+	bh=R6+sR1n2H8lveCws8FYqyXIHci1kpgk6V6NXn8xBGM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dot5ZS64xkVafd04uDJZ/uDViYGAXaPVoLB1HOot9D8zLd96xSUpPt0y3F8H3p6tNAuNUY76drNq6WeL8tT0yvaoGX4jC8Dol1wK0CKk9KEr+MHt9TxsWJDu0jCOQILTYvROv1Ujwakuh2HzR56ZnQ+ZUieP4xoRZ/RPoYSyXdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=IqYYPFzH; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ct90XKBv"
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4dabc6f141bso384942e0c.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:25:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="IqYYPFzH"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6ed054f282aso1027817b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712946305; x=1713551105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jQVC4UrxcWEkIXkGeGXm7dBR+1G2Vzp/gIdMFXmEOQM=;
-        b=ct90XKBvrGBu7+PmkCT5eFkaYTDuHA0NpasPZUHElDejtrA0EphD08Bv0sAi+LSJEB
-         yp1xWUj1f5lqfrYuC3oqULSuDPVGLXIjGliaFioVaRd9WuWf+hUYYeu9+urWB3IIKuen
-         GK2jXSTN6VxuyOKIMfQ80gLPqU0eFB1IxZw6Vzaz6eSdKES0UPOZsljwFBsllI4QDCSV
-         uodknjDMEmF1OFtYb7KZQu+jgUtwd/iiBFFxS6yuB9IG6dKKZ25QjrtzPMujAKR0FUlW
-         yFZXTYj75QRgaeKbs+nHmaMZzQ4Gmx8WdzBoZ5OfQAL47k0xYz8OHxRTdBPlfv9COgH4
-         EXbA==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712946375; x=1713551175; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oMxTHfwmfGngfKcHt9BB7WUlzUr2s5LaZsK/l59Ii3w=;
+        b=IqYYPFzHrWkKzXyyATo8fp1XTg/P/PLzPTOf6FPbfGmOsfizXWJwHOrSTXfghPxDBS
+         uZxZcMnR3zzl3bADTURz7NuYbWQOJFK0S0iNWVj69+KYaiyvyB4us/nRTbYRzAd181OT
+         5a6x6qgLP7BjzcpD6OedSCRQqTCj05WGFhIV3unDBaS9tOklkVeEgfSRbgyfENiBuXPh
+         wWS+fUVE7Gof7SaAcFwpTQVmxEGLDz+yGGe4AWPOLF3W64ibERCH4JQzH3jY6Cg8/Lfa
+         5972KNx7SEXqYnei1rHtFEhxpLbpVQNikNaUvfhV2w9qoSDCLgJfpvAW6WcEZ/Wz8zTz
+         JKSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712946305; x=1713551105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jQVC4UrxcWEkIXkGeGXm7dBR+1G2Vzp/gIdMFXmEOQM=;
-        b=ejyG3W5Vwy19IHQpc2fP4H60aiCLGfzJD+d4tUJqJSccpi1XJ1Hzv3bD7KvYNnVrx2
-         v4JvsW+6misX3jUBt5leHG4e/QUkd9Tp/5FgII9qG4HvhVdE0s/RayGxlrCY4W9qOCQx
-         SivwP36faLCMUNkyJ1OAYvO34F5+ngaPUgHnKSxX2z5rWptmGI28PbOBy2aLHvdb0Dst
-         rzKphIQ2bn0McjmfquKNn85ycMWikcRjQSEmDfvsLmyBXz9deUO2Sbgg2Bk4CMYWFYwi
-         bB9K+m0XAO9EtizwA8SO5uF6xafRTeZTP8IVxJHsaNVDDq3/Gh8ATTTJ2xFI2g00176h
-         pahQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKfMSEcf+RY76ir0bwsZaWBb0ktYi6pu7JEwNT7Gc14T5ydqY3TvI91F3lPf3dehggXzYgDesWc+4bKvgMhe2bo3yTqhsKRB+LI1hw
-X-Gm-Message-State: AOJu0YyqEWJThtF+LBSWKKy7U2r2e7zc5Gyzic9mB73U/dPGKabffjvg
-	B8hlbKiMh03XH36f2F/2wyM+bRIAgnaTwcwUlu4Q/vQtbJV7Ro0bkqx5Jdv2jipYGc0fL6HuODS
-	rGuoNJlO8UpZWhhaKGvXyHn7JExy1bjVBNwJAHQ==
-X-Google-Smtp-Source: AGHT+IHMP9iSKz9Wkqt1WKRSp65sfJmSOV5flXRlhZ3cVhkWjFku5qz8AJVj/wKL3Vrf+35SNZ0bmN6Lzol/yZLlCLs=
-X-Received: by 2002:a05:6122:3c56:b0:4da:9d3e:a7df with SMTP id
- fv22-20020a0561223c5600b004da9d3ea7dfmr3994403vkb.5.1712946305324; Fri, 12
- Apr 2024 11:25:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712946375; x=1713551175;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oMxTHfwmfGngfKcHt9BB7WUlzUr2s5LaZsK/l59Ii3w=;
+        b=MWbnrQuw9GDXPmeaGArqEOJ2ttWR+nPQlcMBwQc1fOo4uxfbmQ5A62JFwViRIGBg+e
+         10d9nzPtAWEBbGljhK90SDvpdHe/hCksu0DhmArm6A41MS1gGVmH1KoDSTGiY2uqIAcR
+         KwsOvdYDAoU0f64lzblwNns+n0jF/PTvQDPrpj11UszkEW1ZQl4G/+C6tDL1iSGsz9HF
+         +Lh/knz03Cye0SMzROYPqDnctca5rTGZoANOiLBvM130QMVmDjOxqYf3bX+gzlB/zXix
+         ClZRzjsvJkPVAK10W1GSYfFxxLprwxdMoOS4IW9OrbW94K9tcY1HVK/UJx3UTiYzEU55
+         JErQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTz0Bgq/NB3MbYivYtxPsD7i/oJ8BXivMdVc/DpwsPI5ljg7giJDh0++Y1jFWAomJ4bjy5v+6eU4x9SZywcUMsice7DyD+Xb1x5DDc
+X-Gm-Message-State: AOJu0YxBibwy4JqB+R++TFs6ppz8vss8HedtpmTF568sCA8fql04OFX9
+	6sJPFKG4smfXMimWhYz9YFP2CJjUqaMN4L9SD3lh3ujTiRsmdHknGh5SiczY/CQ=
+X-Google-Smtp-Source: AGHT+IF+XDdyB5UuM6N1UjqqE0/VQom0I9Op5dF9IOxOPYX/5ovaNt57ADIRPWe8tJpR7LWz5w/zoQ==
+X-Received: by 2002:a05:6a20:9717:b0:1a9:8861:9e77 with SMTP id hr23-20020a056a20971700b001a988619e77mr3208395pzc.28.1712946374944;
+        Fri, 12 Apr 2024 11:26:14 -0700 (PDT)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id q18-20020a63d612000000b005dc9ab425c2sm3053438pgg.35.2024.04.12.11.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 11:26:14 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:26:10 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 15/19] riscv: hwcap: Add v to hwcap if xtheadvector
+ enabled
+Message-ID: <Zhl8wtc5ikM2Btjv@ghost>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-15-4af9815ec746@rivosinc.com>
+ <20240412-thrill-amnesty-019897f21466@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411095407.982258070@linuxfoundation.org>
-In-Reply-To: <20240411095407.982258070@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 12 Apr 2024 23:54:54 +0530
-Message-ID: <CA+G9fYvGhW9dNHWiDwe1nCOtEMqbVuK7zC9kWQjvYPTb4hrHHA@mail.gmail.com>
-Subject: Re: [PATCH 5.15 00/57] 5.15.155-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412-thrill-amnesty-019897f21466@wendy>
 
-On Thu, 11 Apr 2024 at 16:20, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.155 release.
-> There are 57 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 13 Apr 2024 09:53:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.15.155-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Fri, Apr 12, 2024 at 12:37:08PM +0100, Conor Dooley wrote:
+> On Thu, Apr 11, 2024 at 09:11:21PM -0700, Charlie Jenkins wrote:
+> > xtheadvector is not vector 1.0 compatible, but it can leverage all of
+> > the same save/restore routines as vector plus
+> > riscv_v_first_use_handler(). vector 1.0 and xtheadvector are mutually
+> > exclusive so there is no risk of overlap.
+> 
+> I think this not okay to do - if a program checks hwcap to see if vector
+> is supported they'll get told it is on T-Head system where only the 0.7.1
+> is.
+
+That's fair. I did remove it from the hwprobe result but this is kind of
+a gross way of doing it. I'll mess around with this so this isn't
+necessary.
+
+- Charlie
+
+> 
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  arch/riscv/kernel/cpufeature.c | 17 +++++++++++++++--
+> >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+> > index 41a4d2028428..59f628b1341c 100644
+> > --- a/arch/riscv/kernel/cpufeature.c
+> > +++ b/arch/riscv/kernel/cpufeature.c
+> > @@ -647,9 +647,13 @@ static void __init riscv_fill_hwcap_from_isa_string(unsigned long *isa2hwcap)
+> >  		 * Many vendors with T-Head CPU cores which implement the 0.7.1
+> >  		 * version of the vector specification put "v" into their DTs.
+> >  		 * CPU cores with the ratified spec will contain non-zero
+> > -		 * marchid.
+> > +		 * marchid. Only allow "v" to be set if xtheadvector is present.
+> >  		 */
+> > -		if (acpi_disabled && this_vendorid == THEAD_VENDOR_ID &&
+> > +		if (__riscv_isa_vendor_extension_available(isavendorinfo->isa,
+> > +							   RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
+> > +			this_hwcap |= isa2hwcap[RISCV_ISA_EXT_v];
+> > +			set_bit(RISCV_ISA_EXT_v, isainfo->isa);
+> > +		} else if (acpi_disabled && this_vendorid == THEAD_VENDOR_ID &&
+> >  		    this_archid == 0x0) {
+> >  			this_hwcap &= ~isa2hwcap[RISCV_ISA_EXT_v];
+> >  			clear_bit(RISCV_ISA_EXT_v, isainfo->isa);
+> > @@ -776,6 +780,15 @@ static int __init riscv_fill_hwcap_from_ext_list(unsigned long *isa2hwcap)
+> >  
+> >  		of_node_put(cpu_node);
+> >  
+> > +		/*
+> > +		 * Enable kernel vector routines if xtheadvector is present
+> > +		 */
+> > +		if (__riscv_isa_vendor_extension_available(isavendorinfo->isa,
+> > +							   RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
+> > +			this_hwcap |= isa2hwcap[RISCV_ISA_EXT_v];
+> > +			set_bit(RISCV_ISA_EXT_v, isainfo->isa);
+> > +		}
+> > +
+> >  		/*
+> >  		 * All "okay" harts should have same isa. Set HWCAP based on
+> >  		 * common capabilities of every "okay" hart, in case they don't.
+> > 
+> > -- 
+> > 2.44.0
+> > 
 
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-NOTE:
-LKFT test setup using NFSv4 do not notice LTP syscalls fcntl17 test failure=
-s.
-
-## Build
-* kernel: 5.15.155-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.15.y
-* git commit: 857e7024b96feefc0c2ab59eb5e661df777e6a72
-* git describe: v5.15.154-58-g857e7024b96f
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
-.154-58-g857e7024b96f
-
-## Test Regressions (compared to v5.15.154)
-
-## Metric Regressions (compared to v5.15.154)
-
-## Test Fixes (compared to v5.15.154)
-
-## Metric Fixes (compared to v5.15.154)
-
-## Test result summary
-total: 93809, pass: 74866, fail: 2649, skip: 16230, xfail: 64
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 104 total, 104 passed, 0 failed
-* arm64: 31 total, 31 passed, 0 failed
-* i386: 25 total, 25 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 24 total, 24 passed, 0 failed
-* riscv: 8 total, 8 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 27 total, 27 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-android
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-filesystems-epoll
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kexec
-* kselftest-lib
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-forwarding
-* kselftest-net-mptcp
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-watchdog
-* kselftest-x86
-* kselftest-zram
-* kunit
-* libgpiod
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-smoketest
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
