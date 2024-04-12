@@ -1,127 +1,147 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB918626D;
-	Fri, 12 Apr 2024 14:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5362127E11;
+	Fri, 12 Apr 2024 14:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931808; cv=none; b=AeZKmNNueRC8lcZf14NRx8JfJZXJyz2uOgdamYEsvR/l/Tl3kNP+TMpsOufY4/ZJnAGxb7B2Bxm30kQThMqP4ZG4Br+NiAbDqW7I3IkVv/E8qxdWKmV86OWe8ABdqba8WLvhdDpLG2t1FLCfWgGE+qXGlTYaXMinsRLSSad/jRE=
+	t=1712931823; cv=none; b=mT9Tal8Bc1gB6Ion6v6Rw6xu7vX9l9/HQY56yX/2F5r6dcegHsPJ4T4eftx9tWQLJLq8sJWYxsXmmfYgZguHtgha3vbkQTAn4V0MIvORYuSShRuUhF6o1//AvjmaLOVtL3u06wZ8Mg555Vy74P/wdzJnyKa+28fpTcOp2y3hWAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931808; c=relaxed/simple;
-	bh=JxNUt0WI8VJtqkr1vI04CciRk6AsgIvjNELyWKMNfaI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kwi/v3swpW0G79F3dc51+tSgxRK1wjg6KmkBvFBWzeYyBRFaPkVbUJwc41dsVvb2cfOI5SNkuVhqCy6+CwSXyE5y10R3gXIf0nCqQX9vdnFJ7Zw1YrGyxX4yYrkrgvnUW1AB787cJwnGc+LA9I4fwQy6pMU1Sot9UQVC1/Mbgas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=aaK8eDl8; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=aaK8eDl8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712931823; c=relaxed/simple;
+	bh=8a4gsNEadLOtIZghi2tFBrfU/msc1IOPDhK9K4Lmb8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bm/Td1ljSTL6Xxq+/5sj7P1eibM2SGDVipwG/thhqL4+kMiFqHFSMfiTfAAsIxA40fLtA/nY3X6xZc5BAr9cHV3Dy2h2fColcptILk1qbTfFmmfRoTNGPAfYcXHeuhanb/SsSueVlmgG2HBQ88gjR8V3NghY4U4uR0p6IdcvFdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EaGQ5Sa3; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="aaK8eDl8";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="aaK8eDl8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8170B3835A;
-	Fri, 12 Apr 2024 14:23:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712931805; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JxNUt0WI8VJtqkr1vI04CciRk6AsgIvjNELyWKMNfaI=;
-	b=aaK8eDl8BbXj/V9hd6/mjA++UiyT5kZSEtZ189Pvr4jHoHuZz9d+z4mZzyui0I2g6ZS9+b
-	SuZrlvcQKWtdyZltI/Kt3evj81rlqpDyiLMckCFuyKea/bA5Oc+Q+d4wp8GTMglf/6LLHY
-	dfoGgS7VsdYJXfExdxGLfjyMWE/llbo=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712931805; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JxNUt0WI8VJtqkr1vI04CciRk6AsgIvjNELyWKMNfaI=;
-	b=aaK8eDl8BbXj/V9hd6/mjA++UiyT5kZSEtZ189Pvr4jHoHuZz9d+z4mZzyui0I2g6ZS9+b
-	SuZrlvcQKWtdyZltI/Kt3evj81rlqpDyiLMckCFuyKea/bA5Oc+Q+d4wp8GTMglf/6LLHY
-	dfoGgS7VsdYJXfExdxGLfjyMWE/llbo=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 66F6C1368B;
-	Fri, 12 Apr 2024 14:23:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id FUDyGN1DGWZvcAAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Fri, 12 Apr 2024 14:23:25 +0000
-Date: Fri, 12 Apr 2024 16:23:24 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: cgroups@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Subject: Re: Re: [RFC PATCH v3 2/9] cgroup/pids: Separate semantics of
- pids.events related to pids.max
-Message-ID: <w7cenotcuudapq4zsq6mybfvaqyljgy5hez3uc3byqzdn44yi6@76yfnhg4irt6>
-References: <20240405170548.15234-1-mkoutny@suse.com>
- <20240405170548.15234-3-mkoutny@suse.com>
- <ZhQvmnnxhiVo1duU@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EaGQ5Sa3"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e782e955adso946331b3a.3;
+        Fri, 12 Apr 2024 07:23:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712931821; x=1713536621; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YbcIWXIZQhqjePjNygTPT5SO2Zgomq/T2Ylg5jMiQ34=;
+        b=EaGQ5Sa3TXy4Sf74mlIe/opKMC6qEh9UJ8iUU9b0Rb9zodEUIJgPJhbRZ3OUdEIXKS
+         ffWGv9eB7/CX34cznWLxVrQWt1sDcxlKxXfZTXLWav2f4+fz3uJFuSRR8beK6U0iwPcj
+         1epTQa/M205E+EkM2Mh6xn6FhcK5kGxnrstZ18LL8heCmU0Jiy1+3DdM9SSh0oI81wLz
+         LxjfdcWoxUQGbJuSf00Ngd9jfrv3YRSBoKxOqdsoN9aTdGXoIRi8Lc3p7SSqJ1GTh0Ep
+         vHj3i8zLSc7gLXcR+C5ag8CYh3FOLln4M2Z6Olx+dXkdIgluNKCUqKon04vowvgi1WVf
+         wboA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712931821; x=1713536621;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YbcIWXIZQhqjePjNygTPT5SO2Zgomq/T2Ylg5jMiQ34=;
+        b=RmPIKRocVo1+lPHoBBXgFyyInh5dMhVwZwwc8gHuuj/zdwZzRavsjUZWxTuxUuYRNm
+         1zE/sL1eC8Tto5Mb+w9sIZEu6Og/Rxau+EdNZhhwWW1QKnmcPbNuSkXvdpz8Gh6vA6Vh
+         rXi7zG1SEY9mcoeCaF0Z5lPi3e11KJ1IQsw3Feqh+lyra/rYhXFu3+82C5LbhzzRSSep
+         bRtozh7ao+oqQAipmc1jqcrlSiHBoExv1VEvJ+P3r88uHj9fVnhtx/0hk6zLmuyVNTn9
+         KcgxTpTqPMVyauJPvxbHxy4HmTQUEaN0yI3xkWn+vqHXzNKro88WUR5o3N2PZoMT0F5h
+         V8ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWTygsT20JMUHXF6Y23owx/LqpsNvuznl2jSIRETFtH+j3D2rqsSWq8dMbUX6LGbxy11scJRYmWUdAL0V0Fy13KkzC3e2zTMywMZS2tqF/34ImyEfBQfjCX+cqPzugkvv16mGlHganLb6LaIjgMxqku2c6yl9Ybk4Uzl9emySmdtcHwMlHKbu044bo=
+X-Gm-Message-State: AOJu0YwH+LlXgyDApbUlWXpRxta+WqBiN7YJ6TvvysKUvPB9GEfHb34N
+	dokNRgWTmmjtYA3GGosu/VvKQ15BPMpw3l1wAqWwIWZm3YnyQzF9
+X-Google-Smtp-Source: AGHT+IEIWwkiKFZ0hzuBzAJRk9Ofk9JFitFBkWwieWH2JxFuFxdmYqQ6OtOWlIDk1o1/OEoLCXoo5Q==
+X-Received: by 2002:a05:6a21:99b:b0:1a7:6894:cec3 with SMTP id li27-20020a056a21099b00b001a76894cec3mr2899249pzb.32.1712931820933;
+        Fri, 12 Apr 2024 07:23:40 -0700 (PDT)
+Received: from localhost.localdomain ([113.30.217.222])
+        by smtp.gmail.com with ESMTPSA id n43-20020a056a000d6b00b006e5af565b1dsm2946952pfv.201.2024.04.12.07.23.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 07:23:40 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Alan Stern <stern@rowland.harvard.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: Anand Moon <linux.amoon@gmail.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Johan Hovold <johan@kernel.org>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/5] usb: ehci-exynos: Use devm_clk_get_enabled() helpers
+Date: Fri, 12 Apr 2024 19:52:50 +0530
+Message-ID: <20240412142317.5191-2-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240412142317.5191-1-linux.amoon@gmail.com>
+References: <20240412142317.5191-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="746pwchwjxtzohce"
-Content-Disposition: inline
-In-Reply-To: <ZhQvmnnxhiVo1duU@slm.duckdns.org>
-X-Spam-Flag: NO
-X-Spam-Score: -5.75
-X-Spam-Level: 
-X-Spamd-Result: default: False [-5.75 / 50.00];
-	BAYES_HAM(-2.85)[99.34%];
-	SIGNED_PGP(-2.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+Content-Transfer-Encoding: 8bit
 
+The devm_clk_get_enabled() helpers:
+    - call devm_clk_get()
+    - call clk_prepare_enable() and register what is needed in order to
+     call clk_disable_unprepare() when needed, as a managed resource.
 
---746pwchwjxtzohce
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This simplifies the code and avoids the calls to clk_disable_unprepare().
 
-On Mon, Apr 08, 2024 at 07:55:38AM -1000, Tejun Heo <tj@kernel.org> wrote:
-> The whole series make sense to me.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v3: drop dev_err_probe to simplify the error handle.
 
-Including the migration charging?
-(Asking whether I should keep it stacked in v4 posting.)
+v2: drop the clk_disable_unprepare in suspend/resume functions
+    fix the usb_put_hcd return before the devm_clk_get_enabled
+---
+ drivers/usb/host/ehci-exynos.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-Thanks,
-Michal
+diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
+index f644b131cc0b..e2303757bc0f 100644
+--- a/drivers/usb/host/ehci-exynos.c
++++ b/drivers/usb/host/ehci-exynos.c
+@@ -159,20 +159,16 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 
+ 	err = exynos_ehci_get_phy(&pdev->dev, exynos_ehci);
+ 	if (err)
+-		goto fail_clk;
++		goto fail_io;
+ 
+-	exynos_ehci->clk = devm_clk_get(&pdev->dev, "usbhost");
++	exynos_ehci->clk = devm_clk_get_enabled(&pdev->dev, "usbhost");
+ 
+ 	if (IS_ERR(exynos_ehci->clk)) {
+ 		dev_err(&pdev->dev, "Failed to get usbhost clock\n");
+ 		err = PTR_ERR(exynos_ehci->clk);
+-		goto fail_clk;
++		goto fail_io;
+ 	}
+ 
+-	err = clk_prepare_enable(exynos_ehci->clk);
+-	if (err)
+-		goto fail_clk;
+-
+ 	hcd->regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(hcd->regs)) {
+ 		err = PTR_ERR(hcd->regs);
+@@ -223,8 +219,6 @@ static int exynos_ehci_probe(struct platform_device *pdev)
+ 	exynos_ehci_phy_disable(&pdev->dev);
+ 	pdev->dev.of_node = exynos_ehci->of_node;
+ fail_io:
+-	clk_disable_unprepare(exynos_ehci->clk);
+-fail_clk:
+ 	usb_put_hcd(hcd);
+ 	return err;
+ }
+@@ -240,8 +234,6 @@ static void exynos_ehci_remove(struct platform_device *pdev)
+ 
+ 	exynos_ehci_phy_disable(&pdev->dev);
+ 
+-	clk_disable_unprepare(exynos_ehci->clk);
+-
+ 	usb_put_hcd(hcd);
+ }
+ 
+-- 
+2.44.0
 
---746pwchwjxtzohce
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZhlD1wAKCRAGvrMr/1gc
-jqWHAP43KM4VxC2WEkbxsocIW9835Ah5tJFCnWq+L9dCH0YYeQEAgf4YC5EsufMc
-emrWLa4i67lHae7Mxu5+aJkQVhJQ2AY=
-=vxlD
------END PGP SIGNATURE-----
-
---746pwchwjxtzohce--
