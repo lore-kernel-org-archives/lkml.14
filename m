@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0CB1514E9;
-	Fri, 12 Apr 2024 21:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D38152194;
+	Fri, 12 Apr 2024 21:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712956095; cv=none; b=Radh04TmG4xeRqmBFsUHwIwRXWQmVE/jXfnNGf+7grhzls8hIA+iPpafwewKr67SjV41NL4bMUl7jPII0fDBYA3P8o0mzQCxG6+t10+RCuBD71dkFlY6vff6fywDIre5yRgUWBc0rOEtMDX99mPA+IZDMaSqrqPiuxlFwQ5O+Uc=
+	t=1712956096; cv=none; b=pjLTU0LtBsbZkzOYlnclDKCgfun4nNswQ+JC5UEdEfkYnDWmvHqtKXgNSswXEux+zULxThweMJtVoqowq+ARwVBM8TPnkVRDscinAZTE/JlhWgITF63Cz3rOTvrEpe53iSXfBis9zPouqEZ1Sy3DqO0SEXwUZ0lgnR5TkN4WqPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712956095; c=relaxed/simple;
-	bh=kmD3Ow0z4vDuQgPB5ElG6sRuBpbFzXyR93y6Lfu2zDw=;
+	s=arc-20240116; t=1712956096; c=relaxed/simple;
+	bh=3hTJ9fWLDhNtE9cyNQKOk+MI436+hVx2AKwZNmm7sEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r8AvShsdHa3OCJ8aPssVGgy2x0CL6frCsWiwbCMM+yDub6SqSChu+q76dw+LPfB9Zqw4nMZYWEGiLd0aKzppI99kZsQB5kOJeSV+PO6CNSAcsg1IFtjGrORv9SIdUV8mTE94hjrTokM81qQtnRruI4iulbmf+pfxIR69eMJFck4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hJO8hpZI; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=Px6Mg6+Tm7eu1o6RR65noOMFItUKdmqo2kXId4nF2aTOVK2kwsGUG5FkT7WZs6S407A/f9+m8UfPPt+mjhu7R+Vbsgo4qwIBtgIcsCgqvBUzVIQ8Ue5zgPanVdQzK5D6RVzBetsavhcIOcvSoXJyQl4uI6XRXCaqd+khruV0DHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nq3GnpvR; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hJO8hpZI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nq3GnpvR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712956093; x=1744492093;
+  t=1712956095; x=1744492095;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kmD3Ow0z4vDuQgPB5ElG6sRuBpbFzXyR93y6Lfu2zDw=;
-  b=hJO8hpZIg9M7pXoHNDzUtSyd+GEJkJGtemYSg82DsYLoRL/ZZocSLy1j
-   9XJGGNpHaO9BBUtOdCI707aexsezm3RHW/ipD4s08h4/C9sP2q8H7upHv
-   Q2WcuAHAWJoBEcqp3PTL0hxbPZH5SEBkupsgSBLX079hObc8gmueqcvI7
-   7+nnjop5H5YtndUb3gFY0b793ZNcckPhFnVmgvB11iMEv6XqH2ILsY5/J
-   C4qEjIX1f/7SyWHW1JhpHISYeJf3JFjTUOBgoS3AdA/yT6A75pdf+JjRP
-   SERFvli3XidIYnkh3yNjHqPcf2B8QItz7OGcNQBR3gHbjINWoxzb+CF/l
-   w==;
-X-CSE-ConnectionGUID: ON+oiIkZSpe7OCN2DY08jg==
-X-CSE-MsgGUID: w/cI+8lWS9+wO9p42RgHNg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19575452"
+  bh=3hTJ9fWLDhNtE9cyNQKOk+MI436+hVx2AKwZNmm7sEg=;
+  b=Nq3GnpvRrj3oCPUH3j+Vxk6Pemmu+qjT8bUFEjWf33gbp6ts7kWG3SuB
+   pH0BPkCyoj1Ej60X2S8bOyYuKRa8ki2Vk8rBNEiwp7AbsQqkU8C5G9GUS
+   XlojAR5bbVOs+jqeZzhdKGhLZjq+5DDsX65rN2/rvosi4ZwOth3+wGVFu
+   mtLFHhh/xrXfDrnPqeXUBwJmsGLnJP2bx5WBPdYSfYD6nB1x7srGk3zEC
+   0nnnSOTq8LhLA34Azwc7HT3VgyqV1TE0Ba4ox9J8S+39pWaqy7c33BrA/
+   DEDWapOcSJJzABfxsxDr3TSnzOtIPod2ChFtEawLalosqim4V4Lw2S2Ve
+   g==;
+X-CSE-ConnectionGUID: kDkQcVOjTiWTmdlGZKvRSg==
+X-CSE-MsgGUID: Tf5R7+oKRNujPfoy+1KrIg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19575470"
 X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="19575452"
+   d="scan'208";a="19575470"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
   by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 14:08:11 -0700
-X-CSE-ConnectionGUID: HrkS4uKzRNO0KV46ALHd5A==
-X-CSE-MsgGUID: PAsh3twkTaipIdGqQ0kXuQ==
+X-CSE-ConnectionGUID: WnX19+FeQbCkCN15FrM1kQ==
+X-CSE-MsgGUID: HQYVwZRmSnCEh3FtHj3Opg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,197,1708416000"; 
-   d="scan'208";a="21772087"
+   d="scan'208";a="21772105"
 Received: from b49691a74b80.jf.intel.com ([10.165.54.183])
-  by orviesa006.jf.intel.com with ESMTP; 12 Apr 2024 14:08:09 -0700
+  by orviesa006.jf.intel.com with ESMTP; 12 Apr 2024 14:08:10 -0700
 From: weilin.wang@intel.com
 To: weilin.wang@intel.com,
 	Ian Rogers <irogers@google.com>,
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v5 05/16] perf stat: Add functions to set counter bitmaps for hardware-grouping method
-Date: Fri, 12 Apr 2024 14:07:45 -0700
-Message-ID: <20240412210756.309828-6-weilin.wang@intel.com>
+Subject: [RFC PATCH v5 09/16] perf stat: Add function to handle special events in hardware-grouping
+Date: Fri, 12 Apr 2024 14:07:49 -0700
+Message-ID: <20240412210756.309828-10-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240412210756.309828-1-weilin.wang@intel.com>
 References: <20240412210756.309828-1-weilin.wang@intel.com>
@@ -75,279 +75,87 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-Add metricgroup__event_info data structure to represent an event in the
-metric grouping context; the list of counters and the PMU name an event
-should be collected with.
+There are some special events like topdown events and TSC that are not
+described in pmu-event JSON files. Add support to handle this type of
+events. This should be considered as a temporary solution because including
+these events in JSON files would be a better solution.
 
-Add functions to parse event counter info from pmu-events and generate a
-list of metricgroup__event_info data to prepare grouping.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 ---
- tools/perf/util/metricgroup.c | 219 +++++++++++++++++++++++++++++++++-
- 1 file changed, 216 insertions(+), 3 deletions(-)
+ tools/perf/util/metricgroup.c | 38 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 37 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 8047f03b2b1f..1a7ac17f7ae1 100644
+index 04d988ace734..681aacc15787 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -24,6 +24,7 @@
- #include <linux/list_sort.h>
- #include <linux/string.h>
- #include <linux/zalloc.h>
-+#include <linux/bitmap.h>
- #include <perf/cpumap.h>
- #include <subcmd/parse-options.h>
- #include <api/fs/fs.h>
-@@ -159,6 +160,29 @@ struct metric {
- 	struct evlist *evlist;
+@@ -162,6 +162,20 @@ struct metric {
+ 
+ /* Maximum number of counters per PMU*/
+ #define NR_COUNTERS	16
++/* Special events that are not described in pmu-event JSON files.
++ * topdown-* and TSC use dedicated registers, set as free
++ * counter for grouping purpose
++ */
++enum special_events {
++	TOPDOWN	= 0,
++	TSC	= 1,
++	SPECIAL_EVENT_MAX,
++};
++
++static const char *const special_event_names[SPECIAL_EVENT_MAX] = {
++	"topdown-",
++	"TSC",
++};
+ 
+ /**
+  * An event used in a metric. This info is for metric grouping.
+@@ -2142,6 +2156,15 @@ static int create_grouping(struct list_head *pmu_info_list,
+ 	return ret;
  };
  
-+/* Maximum number of counters per PMU*/
-+#define NR_COUNTERS	16
-+
-+/**
-+ * An event used in a metric. This info is for metric grouping.
-+ */
-+struct metricgroup__event_info {
-+	struct list_head nd;
-+	/** The name of the event. */
-+	const char *name;
-+	/** The name of the pmu the event be collected on. */
-+	const char *pmu_name;
-+	/** The event uses fixed counter. */
-+	bool fixed_counter;
-+	/**
-+	 * The event uses special counters that we consider that as free counter
-+	 * during the event grouping.
-+	 */
-+	bool free_counter;
-+	/** The counters the event allowed to be collected on. */
-+	DECLARE_BITMAP(counters, NR_COUNTERS);
-+};
-+
- /**
-  * Each group is one node in the group string list.
-  */
-@@ -1440,6 +1464,181 @@ static int build_combined_expr_ctx(const struct list_head *metric_list,
- 	return ret;
- }
- 
-+/**
-+ * set_counter_bitmap - The counter bitmap: [0-15].
-+ */
-+static int set_counter_bitmap(int pos, unsigned long *bitmap)
++static bool is_special_event(const char *id)
 +{
-+	if (pos >= NR_COUNTERS || pos < 0)
-+		return -EINVAL;
-+	__set_bit(pos, bitmap);
-+	return 0;
-+}
-+
-+static int parse_fixed_counter(const char *counter,
-+			      unsigned long *bitmap,
-+			      bool *fixed)
-+{
-+	int ret = -ENOENT;
-+	/* TODO: this pattern maybe different on some other platforms */
-+	const char *pattern = "Fixed counter ";
-+	int pos = 0;
-+
-+	if (!strncmp(counter, pattern, strlen(pattern))) {
-+		pos = atoi(counter + strlen(pattern));
-+		ret = set_counter_bitmap(pos, bitmap);
-+		if (ret)
-+			return ret;
-+		*fixed = true;
-+		return 0;
++	for (int i = 0; i < SPECIAL_EVENT_MAX; i++) {
++		if (!strncmp(id, special_event_names[i], strlen(special_event_names[i])))
++			return true;
 +	}
-+	return ret;
-+}
-+
-+/**
-+ * parse_counter - Parse event counter info from pmu-events and set up bitmap
-+ * accordingly.
-+ *
-+ * @counter: counter info string to be parsed.
-+ * @bitmap: bitmap to set based on counter info parsed.
-+ * @fixed: is set to true if the event uses fixed counter.
-+ */
-+static int parse_counter(const char *counter,
-+			unsigned long *bitmap,
-+			bool *fixed)
-+{
-+	int ret = 0;
-+	char *p;
-+	char *tok;
-+	int pos = 0;
-+
-+	ret = parse_fixed_counter(counter, bitmap, fixed);
-+	/* ret==0 means matched with fixed counter */
-+	if (ret == 0)
-+		return ret;
-+
-+	p = strdup(counter);
-+	if (!p)
-+		return -ENOMEM;
-+	tok = strtok(p, ",");
-+	if (!tok)
-+		return -ENOENT;
-+
-+	while (tok) {
-+		pos = atoi(tok);
-+		ret = set_counter_bitmap(pos, bitmap);
-+		if (ret)
-+			return ret;
-+		tok = strtok(NULL, ",");
-+	}
-+	return 0;
-+}
-+
-+static struct metricgroup__event_info *event_info__new(const char *name,
-+						      const char *pmu_name,
-+						      const char *counter,
-+						      bool free_counter)
-+{
-+	int ret = 0;
-+	char *bit_buf = malloc(NR_COUNTERS);
-+	bool fixed_counter = false;
-+	struct metricgroup__event_info *e;
-+
-+	e = zalloc(sizeof(*e));
-+	if (!e)
-+		return NULL;
-+	if (!pmu_name)
-+		pmu_name = "core";
-+
-+	e->name = strdup(name);
-+	e->pmu_name = strdup(pmu_name);
-+	if (!e->pmu_name || !e->name)
-+		return NULL;
-+	e->free_counter = free_counter;
-+	if (free_counter) {
-+		ret = set_counter_bitmap(0, e->counters);
-+		if (ret)
-+			return NULL;
-+	} else {
-+		ret = parse_counter(counter, e->counters, &fixed_counter);
-+		if (ret)
-+			return NULL;
-+		e->fixed_counter = fixed_counter;
-+	}
-+
-+	bitmap_scnprintf(e->counters, NR_COUNTERS, bit_buf, NR_COUNTERS);
-+	pr_debug("Event %s requires pmu %s counter: %s bitmap %s, [pmu=%s]\n",
-+		e->name, e->pmu_name, counter, bit_buf, pmu_name);
-+
-+	return e;
-+}
-+
-+struct metricgroup__add_metric_event_data {
-+	struct list_head *list;
-+	/* pure event name, exclude umask and other info*/
-+	const char *event_name;
-+	/* event name and umask if applicable*/
-+	const char *event_id;
-+};
-+
-+static int metricgroup__add_metric_event_callback(const struct pmu_event *pe,
-+						 const struct pmu_events_table *table __maybe_unused,
-+						 void *data)
-+{
-+	struct metricgroup__event_info *event;
-+	struct metricgroup__add_metric_event_data *d = data;
-+
-+	if (!strcasecmp(pe->name, d->event_name)) {
-+		event = event_info__new(d->event_id, pe->pmu, pe->counter, /*free_counter=*/false);
-+		if (!event)
-+			return -ENOMEM;
-+		list_add(&event->nd, d->list);
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * get_metricgroup_events - Find counter requirement of events from the
-+ * pmu_events table
-+ * @full_id: the full event identifiers.
-+ * @table: pmu_events table that is searched for event data.
-+ * @event_info_list: the list that the new event counter info added to.
-+ */
-+static int get_metricgroup_events(const char *full_id,
-+				 const struct pmu_events_table *table,
-+				 struct list_head *event_info_list)
-+{
-+	LIST_HEAD(list);
-+	int ret = 0;
-+	const char *id;
-+	const char *rsep, *sep = strchr(full_id, '@');
-+
-+	if (sep) {
-+		rsep = strchr(full_id, ',');
-+		id = strndup(sep + 1, rsep - sep - 1);
-+		if (!id) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+	} else {
-+		id = full_id;
-+	}
-+	{
-+		struct metricgroup__add_metric_event_data data = {
-+			.list = &list,
-+			.event_name = id,
-+			.event_id = full_id,
-+		};
-+		ret = pmu_events_table_for_each_event(table,
-+				metricgroup__add_metric_event_callback, &data);
-+	}
-+
-+out:
-+	list_splice(&list, event_info_list);
-+	return ret;
++	return false;
 +}
 +
  /**
   * hw_aware_build_grouping - Build event groupings by reading counter
   * requirement of the events and counter available on the system from
-@@ -1453,9 +1652,25 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
- 				  const char *modifier __maybe_unused)
- {
- 	int ret = 0;
-+	struct hashmap_entry *cur;
-+	LIST_HEAD(pmu_info_list);
-+	LIST_HEAD(event_info_list);
-+	size_t bkt;
-+	const struct pmu_events_table *etable = perf_pmu__find_events_table(NULL);
-+
-+#define RETURN_IF_NON_ZERO(x) do { if (x) return x; } while (0)
-+	hashmap__for_each_entry(ctx->ids, cur, bkt) {
-+		const char *id = cur->pkey;
-+
-+		pr_debug("found event %s\n", id);
-+
-+		ret = get_metricgroup_events(id, etable, &event_info_list);
-+		if (ret)
-+			return ret;
-+	}
+@@ -2166,6 +2189,17 @@ static int hw_aware_build_grouping(struct expr_parse_ctx *ctx __maybe_unused,
+ 	hashmap__for_each_entry(ctx->ids, cur, bkt) {
+ 		const char *id = cur->pkey;
  
--	pr_debug("This is a placeholder\n");
- 	return ret;
-+#undef RETURN_IF_NON_ZERO
- }
++		if (is_special_event(id)) {
++			struct metricgroup__event_info *event;
++
++			event = event_info__new(id, "default_core", "0",
++						/*free_counter=*/true);
++			if (!event)
++				goto err_out;
++
++			list_add(&event->nd, &event_info_list);
++			continue;
++		}
+ 		ret = get_metricgroup_events(id, etable, &event_info_list);
+ 		if (ret)
+ 			goto err_out;
+@@ -2636,8 +2670,10 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 		ret = hw_aware_parse_groups(perf_evlist, pmu, str,
+ 			    metric_no_threshold, user_requested_cpu_list, system_wide,
+ 			    /*fake_pmu=*/NULL, metric_events, table);
+-		if (!ret)
++		if (!ret) {
++			pr_info("Hardware aware grouping completed\n");
+ 			return 0;
++		}
+ 	}
  
- static void group_str_free(struct metricgroup__group_strs *g)
-@@ -1529,8 +1744,6 @@ static int hw_aware_parse_ids(struct perf_pmu *fake_pmu,
- 	*out_evlist = parsed_evlist;
- 	parsed_evlist = NULL;
- err_out:
--	parse_events_error__exit(&parse_error);
--	evlist__delete(parsed_evlist);
- 	metricgroup__free_grouping_strs(&groupings);
- 	return ret;
- }
+ 	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
 -- 
 2.42.0
 
