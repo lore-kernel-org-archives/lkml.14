@@ -1,71 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED379249E8;
-	Fri, 12 Apr 2024 20:44:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C577E39FFB
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 20:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712954656; cv=none; b=OdygsbpCZAjaajYqiDKKSfKci1bDUbAKvZ5TFcYgGMouhcbNYSQutyw9e+znuNmyntHrF+9Igfn9TUSw3+wmE43lw0lop0amX1W1gRLEZBWJPK5erqM/l4Uj9Fj9QalDNYA4gB0sP6yrRgmsKn3IIcNjuNcZBRmux8LG0kVgZnA=
+	t=1712954687; cv=none; b=WJuzXS9cHVhWpsYHHWqNWVLGNq1fD8cQOTmRDSHX/AtgHZPYQMBN3p4A8caJfKkaORmHS0kFSbcBHg821cqFPsNxaPsQ9stTtdXVgrVPEI309jv1eqbUvycEmC0KqNpli4HiyNXzplsZZ5SCF1HcjlHW27LrwresYDPBNnzF1P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712954656; c=relaxed/simple;
-	bh=tbwmwgn+93O/SPG6Jq7D3DigC50YGQE/RYOTKsK0Izo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aUxXgyMVYNZY5MCSNcBHRK+KFl/V1AKywoO8YX1lqrr6SiDExEI3DSRuWAxBRiC/GgAKyhoJzb/npbCJRiBZINRuiy9uIeZVn+rgavh/SAUmqlgsS+vwLldwycntmhI1O4hTic/Y8ozeZzRDyVf4GmPVdwvqK+F3Hzs1CvujAMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mk6meqIM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712954687; c=relaxed/simple;
+	bh=4vp5qyEZGAMwuOagLnJKbRJSa5AiEMRLbDSwvkWArmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g2kVj+qJjkeYEFO8A6a3hVERmor1Vq3AOJFBMNFKqfSvzmRMp5JLApcebHR+4N2qu2JHIv4BjTr4B7yiF/KdvxcsOe/hXJubWFkzpZizcex+jaVEqDdw0p3ifSOyX/GCbzkQRPaMNBNeG+Yv0aW2IQV3EwsWbQGbUxeJbRY9z8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yQMQuYjb; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mk6meqIM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62D43C113CD;
-	Fri, 12 Apr 2024 20:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712954655;
-	bh=tbwmwgn+93O/SPG6Jq7D3DigC50YGQE/RYOTKsK0Izo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mk6meqIM1uViiPnfITf5lHdtLtYjdp952115uLMKuj10WOEJO2FPS49mHusgKEwJ4
-	 +Hux8u8J+z9UJTTLe3mLCPAXT7YYZTNcJU/0MZ1ZXOi5mhkybUHfJj7HRQkcNTTYXw
-	 cevKsalI7CC7kcMiSLXwXdQdBq5JAWGQJ/yIFeWkDXKb97TOtgglrFMd3ySF2oRC3+
-	 LWwXmSmCDVI9SoBxCDwvS7K2jeOk+sJLFwLhwHv47NjvZ9jQPTjPMVDxfT1FyEky5V
-	 kQFKWugcdszCdAKT6Vq4RzixjwyGIbpv3QRoH++tV8YHHmt5CPgqK2JBHj7WWknCtS
-	 YFJ15d20DCq5Q==
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: rockchip: helios4: Fix USB interface compatible string
-Date: Fri, 12 Apr 2024 15:44:04 -0500
-Message-ID: <20240412204405.3703638-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yQMQuYjb"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6ed2dc03df6so1150361b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712954686; x=1713559486; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7z+VKNpPRufGEfzC58h5hLq5eFFz0DWRzzztXBo7m7o=;
+        b=yQMQuYjbhFOlCQ8Gzdl9Xv5QCd08u8VB0kdTakIKfGcmTWPifX2DN5q+K6tDaZxH5n
+         m0uANjkHLbhn93+7D+MspsP2TiTCGrWh2pgaVNYTymjZJ7oJlrywjfqzqFltxdVqmtfh
+         spHaY02+TzoAG1rLUD/1xA9suQ5zVPpGahp9VJZJtU/l5QUI1o5+9kCdwblBN83wvfV9
+         +jxcKb5OHNiycfISJkgopR8+IlK+6wBMXciW4G3ZDW9yIKMYq6pF8aijFTZdYtmHndsm
+         gzF/VTejqERQC//+ZuY+46rEx90KZm0iyYcmg+cdGUZtdRwJ3JFFVuO1SrmWoAoH00Od
+         00Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712954686; x=1713559486;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7z+VKNpPRufGEfzC58h5hLq5eFFz0DWRzzztXBo7m7o=;
+        b=TlIfVC5h5DTd/0aZNmLjU5kDb+bIi07JtzsJuDPCe+6IN1TEvKAFOvzEA9SB9L4nB7
+         nCLfHNMvAnSm59keZ6wcxnC7qloJunCbe5nfNBkF+Cg+Z8tsem3O9fT0oz82c37uhMSE
+         tNKZdyWBuUJMVF9j/Ms0jcsi+M5RcwLUNWvJylpPndTm0s2zN4+MuHCakf5nVM4IJE1u
+         b6Y2toA9lKPMltQ8Ldh24XJHMDJ8s2EPuxPdPe6PmjVdFuoSP20kusw1t94EKQsFsFws
+         tuGfGB//tPhelVoPXln145n9mTttrsYCcoCz5laS7xVLhjaZ46t1a1o69dn1SQ4K4jC2
+         gVfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzIRE/c1XJqYP4VOzKzPy7kmpEhvCO6SNaNFnoVd8/yMySbc43pd9XZs9ZYW7C0S+wm6oZQLSZuLxwciSjT8C4wsLE8SvFoJ5KtQgY
+X-Gm-Message-State: AOJu0YxNDvR5hFiVPtuewWvwDTNi2aIBmwulf8+newuVz8aPuL8YJmHm
+	RHRuWXLMdOqsmqEjYKkHROald7UNQzoWSe4BCJqM0WI2YwP7fr7fxgCacMew6g==
+X-Google-Smtp-Source: AGHT+IFZFKdCRdPaL3Vb0XTMjnUQNtJVoruOo48GxoyfTAhTrJOnmmO+jVgRuAaY5z2jRsVdxr03aw==
+X-Received: by 2002:a05:6a20:8428:b0:1a9:6c42:77f5 with SMTP id c40-20020a056a20842800b001a96c4277f5mr4669546pzd.59.1712954685790;
+        Fri, 12 Apr 2024 13:44:45 -0700 (PDT)
+Received: from google.com (210.73.125.34.bc.googleusercontent.com. [34.125.73.210])
+        by smtp.gmail.com with ESMTPSA id lr31-20020a056a00739f00b006ecfe1c9630sm3368108pfb.92.2024.04.12.13.44.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 13:44:45 -0700 (PDT)
+Date: Fri, 12 Apr 2024 13:44:41 -0700
+From: David Matlack <dmatlack@google.com>
+To: James Houghton <jthoughton@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Yu Zhao <yuzhao@google.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Shaoqin Huang <shahuang@redhat.com>, Gavin Shan <gshan@redhat.com>,
+	Ricardo Koller <ricarkol@google.com>,
+	Raghavendra Rao Ananta <rananta@google.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	David Rientjes <rientjes@google.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 5/7] KVM: x86: Participate in bitmap-based PTE aging
+Message-ID: <ZhmdOb7lAd3DM5Tq@google.com>
+References: <20240401232946.1837665-1-jthoughton@google.com>
+ <20240401232946.1837665-6-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240401232946.1837665-6-jthoughton@google.com>
 
-The correct compatible string for a USB interface node begins with
-"usbif", not "usb". Fix the Rockchip RK3399 based Kobol Helios64 board.
+On 2024-04-01 11:29 PM, James Houghton wrote:
+> Only handle the TDP MMU case for now. In other cases, if a bitmap was
+> not provided, fallback to the slowpath that takes mmu_lock, or, if a
+> bitmap was provided, inform the caller that the bitmap is unreliable.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think this patch will trigger a lockdep assert in
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts b/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-index dfb2a0bdea5b..9586bb12a5d8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-kobol-helios64.dts
-@@ -611,7 +611,7 @@ device@4 {
- 				#size-cells = <0>;
- 
- 				interface@0 {	/* interface 0 of configuration 1 */
--					compatible = "usbbda,8156.config1.0";
-+					compatible = "usbifbda,8156.config1.0";
- 					reg = <0 1>;
- 				};
- 			};
--- 
-2.43.0
+  kvm_tdp_mmu_age_gfn_range
+    kvm_tdp_mmu_handle_gfn
+      for_each_tdp_mmu_root
+        __for_each_tdp_mmu_root
+          kvm_lockdep_assert_mmu_lock_held
 
+... because it walks tdp_mmu_roots without holding mmu_lock.
+
+Yu's patch[1] added a lockless walk to the TDP MMU. We'd need something
+similar here and also update the comment above tdp_mmu_roots describing
+how tdp_mmu_roots can be read locklessly.
+
+[1] https://lore.kernel.org/kvmarm/ZItX64Bbx5vdjo9M@google.com/
