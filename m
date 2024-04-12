@@ -1,173 +1,102 @@
-Received: from fhigh7-smtp.messagingengine.com (fhigh7-smtp.messagingengine.com [103.168.172.158])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B8B1509A0
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A3514F9E5
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712951338; cv=none; b=JAyB16q6FOmtibSgfuxsO9qmNb7rYaQU+lbGifLmNHpoA6Kcvooz6eqmiDGm8ijTdWzMGl/Hmp/4ObKHF5w7IOXOZwKSJyX9Bkrc5C8IxTkzVB9RsYQgj1qG6xmW1NwyqISBbHVTgP+BDSvcN+oPUPZtO1bNrNUk2JRnWWIKs7k=
+	t=1712951379; cv=none; b=Vu2Tga2XCLx60MifskhO8x68CwEhzQGVZntbtRhkdoDFHPQgRSO+Nr5/DvxccOZobe76ppWkBX2EDf1u4ErQPI6GKOakbc/s27SvdI5A0fsgUTuLDX50DJpdOWxbK6nidYt5rY7Z0unSlk10JQKQ4cT1DNZAt1Tff4FqUysEHC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712951338; c=relaxed/simple;
-	bh=H3UjF8u47f/yy1g/Ygd9Bgi0G51alamMZN1SSXXk7rk=;
-	h=MIME-Version:Message-Id:Date:From:To:Cc:Subject:Content-Type; b=Shuk6hDthqNOpxVEzgS6MOqMqkSOg5aEjTHJ8N5D07dFzudqo/mWYIJ41twz9DHxTEemO0R0SJruCY90LbWaRbp9lGIw7F4q6z13yjcsSNKr02s8EE53mpX3e4Ro8Lhdr6Z/XPYzImTbq6QC7BCeI43bHzkqQhs+F4AElZbmg3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=fMfr/MuN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=f6LjV1Oc; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1712951379; c=relaxed/simple;
+	bh=jA6ARrGtgWJ7UuNLrRb9blum6qtvsT8qGF19szID6Yc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=aR/GSogHCOuQqTqVoadIN1Aob6pqYFzYPfI3YOtU/6bAeNRWWnXM7x7TIz3QWo6z+AziBUPiNj0BMfIf8Rkvfl9Ee8JaO2+TV87O68a79ea4tPN5ZFSdlRqcaq7jaPuv+Uy4VJHpFpDIuIZUtg0sC+D6AIlVDV0P+wIjzfh1WMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x9z6nxd3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=45YL/6qm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="fMfr/MuN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="f6LjV1Oc"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id 0C7E711400D1;
-	Fri, 12 Apr 2024 15:48:55 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 12 Apr 2024 15:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm2;
-	 t=1712951335; x=1713037735; bh=Tm1Vv8iVtUIP+//CZh4vk18U1w5+u8zC
-	yyQYlZ4gpRE=; b=fMfr/MuNp7NG9aY9FrYQFR7Kufk2zWhMpgLFT+zhLjUuevZG
-	QDNVIcCHe+X+4fjorfVzXZjTpupxjDa2l8qvfiPtZeyCdAFOfMb92D6pJIp1dlL1
-	RzyIqYA/K5N3Kw7rbaoQTNKd20FPqEqbn4JTm5RmokkqULB71W2kDEhrwdEnlshQ
-	drdHWlH+/0YZoRjNb4WQsSxsxwIYHzW6lWxZP3RG+TS8HZ/fRtzMzYGmJcZDg0NL
-	Yrfmxpt69FjGTO1kc76fOSKaezV1xzA9jQN+Qnt51m+ww2iLuPGzp6Hfrr7Xfuo4
-	W+GIo3BygmFsff/QJvgUQIG5Z97hG2tTM+asiw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:message-id
-	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1712951335; x=1713037735; bh=Tm1Vv8iVtUIP+//CZh4vk18U1w5+u8zCyyQ
-	YlZ4gpRE=; b=f6LjV1OcP91btAf4iUhiRi4syJeNpCPj/GHIrJfD8TNsQToYqbD
-	OfR2+NE+4uZadr27E/6bx+gpmlt5AjhbSHsk7vHEFPnLrmm7P49iQE/bUJyHkOg8
-	rGSVxLp8ht/QFhAoZ4SDZ5bqnDHQV371TdbzDbg8PkJrsX5PpTt8VrmC3tK9Cp0Q
-	bm2kaqyciym4AVhFPJ/FWUISWwipWik20l3CTGlOP9LAgYLQ0CcVdJgIsWdpUJ3f
-	I5D4iaNpCtpTJQAx6dNJvVw3VUSyPF5TYvWZ9a5LSnzox7EIfuw6i1d5p5kxUJfB
-	SaPUdrpZfG+qa/OynYFKJ1VcKut4UPfmbeg==
-X-ME-Sender: <xms:JpAZZq5KO6dhMRuS4MXt_TpEIM7eFUTzMOP6ROj9YtFRcUEaaOMtSQ>
-    <xme:JpAZZj48tX1fMCSH6WhL5FwNc3ZNzCxCsYwjhYC_wTRyQcK_XPHm_3MLTEZ8qEEwl
-    YoImdQskOcOEiRzI_g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudeiuddgudegfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeeffeeuhfekjeevtddvtdelledttddtjeegvdfhtdduvdfhueekudeihfejtefg
-    ieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:JpAZZpey0p49ofdkihCGLXgVFLfNbul6BpzTTz-p4NFnJg4UYzxYcw>
-    <xmx:JpAZZnIgQcZGxNI1a_aRW2eHc7mrMO3_8y7X2q5yKUdg7yjsoJ4ztA>
-    <xmx:JpAZZuIAPe7eVBoFlIG4vUaRJ3jQdGbv6q_B_zhMCnyb12Fxj-5ZnA>
-    <xmx:JpAZZowIA4yCmT5vmU97rIgbK98H4OqFK-pE4gPSfnHHGFvhofPepA>
-    <xmx:J5AZZq1zlwTNoEs3CetuaO0CRGUYTcyBJWNFC_-iLMqdNIbVgQgLb3Kn>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id ACDD2B6008D; Fri, 12 Apr 2024 15:48:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-379-gabd37849b7-fm-20240408.001-gabd37849
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x9z6nxd3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="45YL/6qm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1712951376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wq8zW2oy5QC/9QD9CMB1fAp3LCVcl1LW1lDrklI7ZkM=;
+	b=x9z6nxd3tbC96PsU8CcvXTH/20675Hw5LLOzdeHH7SYqP5f2dSGqj9PtSSJ3uXYB3Cn2Fd
+	7S+wG3tLxgT2kmsmO6TJSaZl24iN8FcpsoRYY89IkimQKDyIKDKfXuKyhSrpM9vWyMTPoW
+	IpW7hSg6tUlyPLeGNhKauJSvLFrocnDrfMMMpCFfHPW3raLPluWarsSqGlGd7coo6NSw6G
+	8S3zVwvXEC/YfbkRbMxmUYJMMOAwP1WBAssrQeUWSFgZr4G3lWOWRxXrN/Hp3XF/hiWGxC
+	WeyunrbAwcq8HTuW2HTSwD2BV86kDx0HjYL/3/JrqkFmk7WqaqUSA4MOOGZ0yg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1712951376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wq8zW2oy5QC/9QD9CMB1fAp3LCVcl1LW1lDrklI7ZkM=;
+	b=45YL/6qmPa8wYhREKF9EEiuONy/EDAh2GdfHXoqN4ZXBeyxGy4fI7sBWx/nTlrJoJJNu5g
+	KxRTrXd2Bu0GtUDg==
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
+ John Stultz <jstultz@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Oleg
+ Nesterov <oleg@redhat.com>
+Subject: Re: [patch V2 10/50] posix-cpu-timers: Handle SIGEV_NONE timers
+ correctly in timer_get()
+In-Reply-To: <87cyquxw59.fsf@email.froward.int.ebiederm.org>
+References: <20240410164558.316665885@linutronix.de>
+ <20240410165551.571240036@linutronix.de>
+ <87cyquxw59.fsf@email.froward.int.ebiederm.org>
+Date: Fri, 12 Apr 2024 21:49:35 +0200
+Message-ID: <87h6g6z7hs.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <4c6039da-5362-46ad-8126-dacaf7ad1169@app.fastmail.com>
-Date: Fri, 12 Apr 2024 21:48:34 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: soc@kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: [GIT PULL] SoC fixes for 6.9
 Content-Type: text/plain
 
-The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
+On Fri, Apr 12 2024 at 13:40, Eric W. Biederman wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> -	if (iv && (timer->it_requeue_pending & REQUEUE_PENDING))
+>> +	if (iv && ((timer->it_requeue_pending & REQUEUE_PENDING) || sigev_none))
+>>  		expires = bump_cpu_timer(timer, now);
+>>  	else
+>>  		expires = cpu_timer_getexpires(&timer->it.cpu);
+>> @@ -809,11 +811,13 @@ static void __posix_cpu_timer_get(struct
+>>  		itp->it_value = ns_to_timespec64(expires - now);
+>>  	} else {
+> Why not make this else condition?
+> 	} else if (!sigev_none) {
+> And not need to change the rest of the code?
 
-  Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
+Duh, yes.
+  		/*
+>> -		 * The timer should have expired already, but the firing
+>> -		 * hasn't taken place yet.  Say it's just about to expire.
+>> +		 * A single shot SIGEV_NONE timer must return 0, when it is
+>> +		 * expired! Timers which have a real signal delivery mode
+>> +		 * must return a remaining time greater than 0 because the
+>> +		 * signal has not yet been delivered.
+>>  		 */
+>> -		itp->it_value.tv_nsec = 1;
+>> -		itp->it_value.tv_sec = 0;
+>> +		if (!sigev_none)
+>> +			itp->it_value.tv_nsec = 1;
+>
+> Do you perhaps need a comment somewhere that itp is zeroed in
+> do_timer_gettime?  The code now depends upon that for setting
+> itp->it_value when it did not used to, making it look at first
+> glance like you have created an uninitialized variable.
+>
+> Probably just something in the description of the change would be
+> sufficient.
 
-are available in the Git repository at:
+Fair enough.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-fixes-6.9-1
+Thanks,
 
-for you to fetch changes up to 011d79ef1cfad701c2d8e7e80d8c77523af9c771:
-
-  MAINTAINERS: Change Krzysztof Kozlowski's email address (2024-04-09 17:06:51 +0200)
-
-----------------------------------------------------------------
-SoC fixes for 6.9
-
-The device tree changes this time are all for NXP i.MX platforms, addressing
-issues with clocks and regulators on i.MX7 and i.MX8.
-
-The old OMAP2 based Nokia N8x0 tablet get a couple of code fixes for
-regressions that came in.
-
-The ARM SCMI and FF-A firmware interfaces get a couple of minor
-bug fixes.
-
-A regression fix for RISC-V cache management addresses a problem with
-probe order on Sifive cores.
-
-----------------------------------------------------------------
-Aaro Koskinen (6):
-      ARM: OMAP2+: fix bogus MMC GPIO labels on Nokia N8x0
-      ARM: OMAP2+: fix N810 MMC gpiod table
-      mmc: omap: fix broken slot switch lookup
-      mmc: omap: fix deferred probe
-      mmc: omap: restore original power up/down steps
-      ARM: OMAP2+: fix USB regression on Nokia N8x0
-
-Arnd Bergmann (5):
-      Merge tag 'omap-for-v6.9/n8x0-fixes-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap into arm/fixes
-      Merge tag 'imx-fixes-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into arm/fixes
-      Merge tag 'scmi-fixes-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/fixes
-      Merge tag 'ffa-fix-6.9' of git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux into arm/fixes
-      Merge tag 'riscv-soc-fixes-for-v6.9-rc3' of https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux into arm/fixes
-
-Cristian Marussi (1):
-      firmware: arm_scmi: Make raw debugfs entries non-seekable
-
-Fabio Estevam (2):
-      ARM: dts: imx7-mba7: Use 'no-mmc' property
-      ARM: dts: imx7s-warp: Pass OV2680 link-frequencies
-
-Frank Li (8):
-      arm64: dts: imx8-ss-conn: fix usdhc wrong lpcg clock order
-      arm64: dts: imx8-ss-lsio: fix pwm lpcg indices
-      arm64: dts: imx8-ss-conn: fix usb lpcg indices
-      arm64: dts: imx8-ss-dma: fix spi lpcg indices
-      arm64: dts: imx8-ss-dma: fix pwm lpcg indices
-      arm64: dts: imx8-ss-dma: fix adc lpcg indices
-      arm64: dts: imx8-ss-dma: fix can lpcg indices
-      arm64: dts: imx8qm-ss-dma: fix can lpcg indices
-
-Jens Wiklander (1):
-      firmware: arm_ffa: Fix the partition ID check in ffa_notification_info_get()
-
-Krzysztof Kozlowski (1):
-      MAINTAINERS: Change Krzysztof Kozlowski's email address
-
-Pierre Gondois (1):
-      firmware: arm_scmi: Fix wrong fastchannel initialization
-
-Samuel Holland (1):
-      cache: sifive_ccache: Partially convert to a platform driver
-
-Tim Harvey (2):
-      arm64: dts: freescale: imx8mp-venice-gw72xx-2x: fix USB vbus regulator
-      arm64: dts: freescale: imx8mp-venice-gw73xx-2x: fix USB vbus regulator
-
- MAINTAINERS                                        | 38 ++++++------
- arch/arm/boot/dts/nxp/imx/imx7-mba7.dtsi           |  2 +-
- arch/arm/boot/dts/nxp/imx/imx7s-warp.dts           |  1 +
- arch/arm/mach-omap2/board-n8x0.c                   | 23 +++----
- arch/arm64/boot/dts/freescale/imx8-ss-conn.dtsi    | 16 ++---
- arch/arm64/boot/dts/freescale/imx8-ss-dma.dtsi     | 40 ++++++------
- arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi    | 16 ++---
- .../boot/dts/freescale/imx8mp-venice-gw72xx.dtsi   |  2 +-
- .../boot/dts/freescale/imx8mp-venice-gw73xx.dtsi   |  2 +-
- arch/arm64/boot/dts/freescale/imx8qm-ss-dma.dtsi   |  8 +--
- drivers/cache/sifive_ccache.c                      | 72 ++++++++++++++--------
- drivers/firmware/arm_ffa/driver.c                  |  2 +-
- drivers/firmware/arm_scmi/powercap.c               |  2 +-
- drivers/firmware/arm_scmi/raw_mode.c               |  7 ++-
- drivers/mmc/host/omap.c                            | 48 ++++++++++-----
- 15 files changed, 158 insertions(+), 121 deletions(-)
+        tglx
