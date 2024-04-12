@@ -1,102 +1,305 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E7053378;
-	Fri, 12 Apr 2024 08:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DECC763CAC;
+	Fri, 12 Apr 2024 08:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911411; cv=none; b=PsZfiwda4RpZaXGgq+SCZdPUgBJDs/5trAgAWADUrifZXWlV9c9I6BG+xJaxi3vnSJf9fCIBjieCo/aIf+fQoFvvKfzfp28TT8dGSKgOL/EyBLL64JjG5JIHQ7S83bhkxVvbvwHdv2Jj86TVpdTRh3RMdsehE1k6DywdUeo4a/Y=
+	t=1712911416; cv=none; b=LjYdxtw7BEnow7hfNdRgovLpWi5FWLBli5aA2KuwDv0gApTqEnx9tFYOdOrBmV0pqwZrOnXlJn0ihgFufeQXzHnn1RE/MOuIkQXBeFnvbA6LPd0CuTCEZGjS1kqwYrksSJCRS0cFDOi/uxpAvQp4CjLbYumMc52JIrK8YzDaWNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911411; c=relaxed/simple;
-	bh=XLLxwOTa3tQ3ISUxUVT9CbxaZ2yDkfYTv7tVnzSV7YU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nDAUD0FPRpOrOVSHbsq1TLMOej2WK0Z3qEfQvwjRxl8Sooa4BaHjMdeTFrroh5OHK/sNCMtu+wZWDt9X4AFuAyJ6WNODzvW0rWeWTIA+aAO5CnIJW66Emdr4PRsMOADmg7RrKWzlr3Td7jH9xthjGWkKfoEPDh54PaQ6zD2PoDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=BMi3DoLc; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BMi3DoLc"
-X-UUID: b7bc68faf8a811eeb8927bc1f75efef4-20240412
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jHEqw9CX7F4B20BaWp50RaqOd08fKHGUHPcZwH22cL8=;
-	b=BMi3DoLcJ/kuscBxIPQw9KOF5egJ8YYAZ8tMNCmJrICpYwdid7AG46Dm8ECrQrdW5mVBVLBb5/ZSiOhY/DJX2fJQa7rdghzUffRE3lKB2iavtw3lBV+awPYV6kRd7NW83bTNk4vgwQQ84VR3E6CNK2ZUDLWG57E06tq1Dm9LB+g=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:2ea2a19c-4d6b-43ca-9b56-dde2376464db,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6f543d0,CLOUDID:c392d5fa-ed05-4274-9204-014369d201e8,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b7bc68faf8a811eeb8927bc1f75efef4-20240412
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <hao.qin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 818051881; Fri, 12 Apr 2024 16:43:21 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 12 Apr 2024 16:43:19 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 12 Apr 2024 16:43:18 +0800
-From: Hao Qin <hao.qin@mediatek.com>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Von Dentz <luiz.dentz@gmail.com>
-CC: Sean Wang <sean.wang@mediatek.com>, Deren Wu <deren.Wu@mediatek.com>,
-	Aaron Hou <aaron.hou@mediatek.com>, Chris Lu <chris.lu@mediatek.com>, "Steve
- Lee" <steve.lee@mediatek.com>, linux-bluetooth
-	<linux-bluetooth@vger.kernel.org>, linux-kernel
-	<linux-kernel@vger.kernel.org>, linux-mediatek
-	<linux-mediatek@lists.infradead.org>, Hao Qin <hao.qin@mediatek.com>
-Subject: [PATCH] Bluetooth: btusb: mediatek: Add usb reset for firmware setup failure
-Date: Fri, 12 Apr 2024 16:41:28 +0800
-Message-ID: <20240412084128.24452-1-hao.qin@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+	s=arc-20240116; t=1712911416; c=relaxed/simple;
+	bh=5+eFHnF8LRRtx4HJZoLHwx3epqQ7wBYgpBqB9L5Bl+s=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pBrTNqXxy7rvvBixtl12XGFFHQABv1dl6qk1yUbuuSAfhD+vH9LFdXeL8UXhMiA3NRn6Qod21/trzIvIrl59/2/fssC8f1L+MYZykvLzBe3dQPhBpiVNQjF564lLF864hqid/c0UyuMMd5Iqa+1Ld0SLycqx9gtmmgfsnW8TJTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFD8114BF;
+	Fri, 12 Apr 2024 01:44:03 -0700 (PDT)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73B103F6C4;
+	Fri, 12 Apr 2024 01:43:32 -0700 (PDT)
+From: Steven Price <steven.price@arm.com>
+To: kvm@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Cc: Steven Price <steven.price@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Alexandru Elisei <alexandru.elisei@arm.com>,
+	Christoffer Dall <christoffer.dall@arm.com>,
+	Fuad Tabba <tabba@google.com>,
+	linux-coco@lists.linux.dev,
+	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Subject: [PATCH v2 07/43] arm64: RME: Check for RME support at KVM init
+Date: Fri, 12 Apr 2024 09:42:33 +0100
+Message-Id: <20240412084309.1733783-8-steven.price@arm.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412084309.1733783-1-steven.price@arm.com>
+References: <20240412084056.1733704-1-steven.price@arm.com>
+ <20240412084309.1733783-1-steven.price@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--5.461600-8.000000
-X-TMASE-MatchedRID: k8Cd32tj8sGpk9YSiEd5IhWCVBr+Ay98DCe/LOiZlC3fUZT83lbkENPi
-	u9NSfhOYea+2R4F2ox/m2sRd5hAfQvm9WstcRwZxngIgpj8eDcBpkajQR5gb3savT21DsLD/UEh
-	Wy9W70AHCttcwYNipX6hYR7f40RGparKy8U17xnr71TnEQ1lbWMAvK1rVMcxdDBtPVrlqt3BWXG
-	vUUmKP2w==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--5.461600-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: DEEDB11A550F2C3488F2A62C3699A130331335E8C69700B5B9B735E150EFFC022000:8
+Content-Transfer-Encoding: 8bit
 
-Add usb reset to recover BT device from a firmware setup failure,
-it will restore the device to its original state and attempt setup
-firmware again.
+Query the RMI version number and check if it is a compatible version. A
+static key is also provided to signal that a supported RMM is available.
 
-Signed-off-by: Hao Qin <hao.qin@mediatek.com>
+Functions are provided to query if a VM or VCPU is a realm (or rec)
+which currently will always return false.
+
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- drivers/bluetooth/btusb.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/include/asm/kvm_emulate.h | 18 +++++++++
+ arch/arm64/include/asm/kvm_host.h    |  4 ++
+ arch/arm64/include/asm/kvm_rme.h     | 56 ++++++++++++++++++++++++++++
+ arch/arm64/include/asm/virt.h        |  1 +
+ arch/arm64/kvm/Makefile              |  3 +-
+ arch/arm64/kvm/arm.c                 |  9 +++++
+ arch/arm64/kvm/rme.c                 | 52 ++++++++++++++++++++++++++
+ 7 files changed, 142 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/include/asm/kvm_rme.h
+ create mode 100644 arch/arm64/kvm/rme.c
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index 4c0cc13adb47..c5aab361795e 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3160,6 +3160,9 @@ static int btusb_mtk_setup(struct hci_dev *hdev)
- 						btusb_mtk_hci_wmt_sync);
- 		if (err < 0) {
- 			bt_dev_err(hdev, "Failed to set up firmware (%d)", err);
-+			btusb_stop_traffic(data);
-+			usb_kill_anchored_urbs(&data->tx_anchor);
-+			usb_queue_reset_device(data->intf);
- 			return err;
- 		}
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index 975af30af31f..6f08398537e2 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -611,4 +611,22 @@ static __always_inline void kvm_reset_cptr_el2(struct kvm_vcpu *vcpu)
  
+ 	kvm_write_cptr_el2(val);
+ }
++
++static inline bool kvm_is_realm(struct kvm *kvm)
++{
++	if (static_branch_unlikely(&kvm_rme_is_available))
++		return kvm->arch.is_realm;
++	return false;
++}
++
++static inline enum realm_state kvm_realm_state(struct kvm *kvm)
++{
++	return READ_ONCE(kvm->arch.realm.state);
++}
++
++static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
+ #endif /* __ARM64_KVM_EMULATE_H__ */
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 9e8a496fb284..63b68b85db3f 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -27,6 +27,7 @@
+ #include <asm/fpsimd.h>
+ #include <asm/kvm.h>
+ #include <asm/kvm_asm.h>
++#include <asm/kvm_rme.h>
+ #include <asm/vncr_mapping.h>
+ 
+ #define __KVM_HAVE_ARCH_INTC_INITIALIZED
+@@ -348,6 +349,9 @@ struct kvm_arch {
+ 	 * the associated pKVM instance in the hypervisor.
+ 	 */
+ 	struct kvm_protected_vm pkvm;
++
++	bool is_realm;
++	struct realm realm;
+ };
+ 
+ struct kvm_vcpu_fault_info {
+diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+new file mode 100644
+index 000000000000..922da3f47227
+--- /dev/null
++++ b/arch/arm64/include/asm/kvm_rme.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2023 ARM Ltd.
++ */
++
++#ifndef __ASM_KVM_RME_H
++#define __ASM_KVM_RME_H
++
++/**
++ * enum realm_state - State of a Realm
++ */
++enum realm_state {
++	/**
++	 * @REALM_STATE_NONE:
++	 *      Realm has not yet been created. rmi_realm_create() may be
++	 *      called to create the realm.
++	 */
++	REALM_STATE_NONE,
++	/**
++	 * @REALM_STATE_NEW:
++	 *      Realm is under construction, not eligible for execution. Pages
++	 *      may be populated with rmi_data_create().
++	 */
++	REALM_STATE_NEW,
++	/**
++	 * @REALM_STATE_ACTIVE:
++	 *      Realm has been created and is eligible for execution with
++	 *      rmi_rec_enter(). Pages may no longer be populated with
++	 *      rmi_data_create().
++	 */
++	REALM_STATE_ACTIVE,
++	/**
++	 * @REALM_STATE_DYING:
++	 *      Realm is in the process of being destroyed or has already been
++	 *      destroyed.
++	 */
++	REALM_STATE_DYING,
++	/**
++	 * @REALM_STATE_DEAD:
++	 *      Realm has been destroyed.
++	 */
++	REALM_STATE_DEAD
++};
++
++/**
++ * struct realm - Additional per VM data for a Realm
++ *
++ * @state: The lifetime state machine for the realm
++ */
++struct realm {
++	enum realm_state state;
++};
++
++int kvm_init_rme(void);
++
++#endif
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index 261d6e9df2e1..12cf36c38189 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -81,6 +81,7 @@ void __hyp_reset_vectors(void);
+ bool is_kvm_arm_initialised(void);
+ 
+ DECLARE_STATIC_KEY_FALSE(kvm_protected_mode_initialized);
++DECLARE_STATIC_KEY_FALSE(kvm_rme_is_available);
+ 
+ /* Reports the availability of HYP mode */
+ static inline bool is_hyp_mode_available(void)
+diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+index c0c050e53157..1c1d8cdf381f 100644
+--- a/arch/arm64/kvm/Makefile
++++ b/arch/arm64/kvm/Makefile
+@@ -20,7 +20,8 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+ 	 vgic/vgic-v3.o vgic/vgic-v4.o \
+ 	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
+ 	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
+-	 vgic/vgic-its.o vgic/vgic-debug.o
++	 vgic/vgic-its.o vgic/vgic-debug.o \
++	 rme.o
+ 
+ kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+ 
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 3dee5490eea9..2056c660c5ee 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -38,6 +38,7 @@
+ #include <asm/kvm_mmu.h>
+ #include <asm/kvm_nested.h>
+ #include <asm/kvm_pkvm.h>
++#include <asm/kvm_rme.h>
+ #include <asm/kvm_emulate.h>
+ #include <asm/sections.h>
+ 
+@@ -47,6 +48,8 @@
+ 
+ static enum kvm_mode kvm_mode = KVM_MODE_DEFAULT;
+ 
++DEFINE_STATIC_KEY_FALSE(kvm_rme_is_available);
++
+ DECLARE_KVM_HYP_PER_CPU(unsigned long, kvm_hyp_vector);
+ 
+ DEFINE_PER_CPU(unsigned long, kvm_arm_hyp_stack_page);
+@@ -2562,6 +2565,12 @@ static __init int kvm_arm_init(void)
+ 
+ 	in_hyp_mode = is_kernel_in_hyp_mode();
+ 
++	if (in_hyp_mode) {
++		err = kvm_init_rme();
++		if (err)
++			return err;
++	}
++
+ 	if (cpus_have_final_cap(ARM64_WORKAROUND_DEVICE_LOAD_ACQUIRE) ||
+ 	    cpus_have_final_cap(ARM64_WORKAROUND_1508412))
+ 		kvm_info("Guests without required CPU erratum workarounds can deadlock system!\n" \
+diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+new file mode 100644
+index 000000000000..3dbbf9d046bf
+--- /dev/null
++++ b/arch/arm64/kvm/rme.c
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 ARM Ltd.
++ */
++
++#include <linux/kvm_host.h>
++
++#include <asm/rmi_cmds.h>
++#include <asm/virt.h>
++
++static int rmi_check_version(void)
++{
++	struct arm_smccc_res res;
++	int version_major, version_minor;
++	unsigned long host_version = RMI_ABI_VERSION(RMI_ABI_MAJOR_VERSION,
++						     RMI_ABI_MINOR_VERSION);
++
++	arm_smccc_1_1_invoke(SMC_RMI_VERSION, host_version, &res);
++
++	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
++		return -ENXIO;
++
++	version_major = RMI_ABI_VERSION_GET_MAJOR(res.a1);
++	version_minor = RMI_ABI_VERSION_GET_MINOR(res.a1);
++
++	if (version_major != RMI_ABI_MAJOR_VERSION) {
++		kvm_err("Unsupported RMI ABI (v%d.%d) host supports v%d.%d\n",
++			version_major, version_minor,
++			RMI_ABI_MAJOR_VERSION,
++			RMI_ABI_MINOR_VERSION);
++		return -ENXIO;
++	}
++
++	kvm_info("RMI ABI version %d.%d\n", version_major, version_minor);
++
++	return 0;
++}
++
++int kvm_init_rme(void)
++{
++	if (PAGE_SIZE != SZ_4K)
++		/* Only 4k page size on the host is supported */
++		return 0;
++
++	if (rmi_check_version())
++		/* Continue without realm support */
++		return 0;
++
++	/* Future patch will enable static branch kvm_rme_is_available */
++
++	return 0;
++}
 -- 
-2.18.0
+2.34.1
 
