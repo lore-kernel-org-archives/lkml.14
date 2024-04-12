@@ -1,229 +1,91 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC23759154;
-	Fri, 12 Apr 2024 13:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB8A4436E;
+	Fri, 12 Apr 2024 13:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712926898; cv=none; b=m/AW7NXJod2I+hKKuOc9jg8nmop8rbyT8tsbVOG68W6DWYODNFTEDVhkT2pdcIjcroJaWWPN9s3ZbNau1s1Dvz+uV36BWv4OurjpKixeigOqP0VIVMiNPyO7l+3y4roj8DGtPXIX78srbCUY1/onoOyrhjlshGTqK6Ng5xakzKM=
+	t=1712926993; cv=none; b=C9VAmy6FvwVm8cpFMuCwCuriCSJ4NryI11XT7/HDCBCU3vhj6lluze7G35Ggb3WrW/KLXL/4i/wgHZztY5SaIHif3ivbZxMbWpJvqP1IAYWh1MzTtX5CZ2FNgGVJFtwJYTLpswO7KKiCYoH7Rnx8aI9ey39iDyK7cV1rnKzR6Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712926898; c=relaxed/simple;
-	bh=93uqE9gEAlGpXZ66feFhk0/jl/wt6MRWbk8fCGmdTlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwrpXZld3ttZiv4seo1UrQlXO/3efbsLXnU2z05RzL0AV7AauRYW/JhrvyB6oxLEYP0RSOXiq/e029DXo0NYJm9+sCtEuQuqoiixL+ugLs0uPjdvJKiygYwvCzwp5b7ZYPCLF0coPVR36Iv1tqRLpdpGF3j17joQWEPaIGgZ7u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vqvar1aY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4ouxzsIt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=vqvar1aY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4ouxzsIt; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1712926993; c=relaxed/simple;
+	bh=8wdevPfrdtepk0PCtS0tbraBxnU6ILXWXbU+kfU/aQ0=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=l1uMaRBBcHxF8F2RhQbnr0z7H5s841xvQDjmhX+gnzLuLTZl9ovO6eJlTxDxdhqiv8JZU8hOjQ4Q3PVA999QXi18ZhM+cJQqWseXM64Firk0hJZ16WSOj6KsxJW5pqatFdrfij0R2H4Kd/LB9/hi5QSi/RvXxkJM+66IRVUa+Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=awI6En4B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vqvar1aY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4ouxzsIt";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="vqvar1aY";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4ouxzsIt"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0F3403829D;
-	Fri, 12 Apr 2024 13:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712926891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zuLpInTy0inRnIrcZ/ThCZgZYQ9g/2MUlwBJBedMgY=;
-	b=vqvar1aYJlzajQeBVvRSPF6CGapQhTqynsoIzc612hlgIc5KpI3fxllDdv1LlgOKjeFxLU
-	vfRAnCYOeYMM1JxXYWHLPpwQOs01XMpt5QpdlcJtYGwrhYsPNdVLgFOmFIeSPmFdxm7lyq
-	EdPQfCx5Frz83kWGlyfS/ZKwS57RaXo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712926891;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zuLpInTy0inRnIrcZ/ThCZgZYQ9g/2MUlwBJBedMgY=;
-	b=4ouxzsItf8E+dW3RbkTEsicnxvAyTgVasnPSntEY09fnwXr23DJik+kyBbdsaoGfn4P+o+
-	J6/Mh+gt3ml0+LAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=vqvar1aY;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=4ouxzsIt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1712926891; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zuLpInTy0inRnIrcZ/ThCZgZYQ9g/2MUlwBJBedMgY=;
-	b=vqvar1aYJlzajQeBVvRSPF6CGapQhTqynsoIzc612hlgIc5KpI3fxllDdv1LlgOKjeFxLU
-	vfRAnCYOeYMM1JxXYWHLPpwQOs01XMpt5QpdlcJtYGwrhYsPNdVLgFOmFIeSPmFdxm7lyq
-	EdPQfCx5Frz83kWGlyfS/ZKwS57RaXo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1712926891;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8zuLpInTy0inRnIrcZ/ThCZgZYQ9g/2MUlwBJBedMgY=;
-	b=4ouxzsItf8E+dW3RbkTEsicnxvAyTgVasnPSntEY09fnwXr23DJik+kyBbdsaoGfn4P+o+
-	J6/Mh+gt3ml0+LAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EF5B01368B;
-	Fri, 12 Apr 2024 13:01:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id F/toOqowGWYaVgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 12 Apr 2024 13:01:30 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 5A0F7A071E; Fri, 12 Apr 2024 15:01:30 +0200 (CEST)
-Date: Fri, 12 Apr 2024 15:01:30 +0200
-From: Jan Kara <jack@suse.cz>
-To: Chao Yu <chao@kernel.org>
-Cc: Jan Kara <jack@suse.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] quota: fix to propagate error of mark_dquot_dirty() to
- caller
-Message-ID: <20240412130130.m4msohzpiojtve7r@quack3>
-References: <20240412094942.2131243-1-chao@kernel.org>
- <20240412121517.dydwqiqkdzvwpwf5@quack3>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="awI6En4B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F856C113CC;
+	Fri, 12 Apr 2024 13:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712926993;
+	bh=8wdevPfrdtepk0PCtS0tbraBxnU6ILXWXbU+kfU/aQ0=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=awI6En4BnoNZRKhvZawTzXVzsV/D37RfCZWVwb0jDF/U9AMWf1YFeiczSz5Lh/Zl5
+	 V3fWdznlkQSyZeB8AvsmqDewwWXIISMDenlbET0aoLX2zzeWeA1PfTKYh6lcdb/JYi
+	 G4UpelDztrOemmvQ+mbH/FjKboE/JfPRBfECavtTL38QibxOLqZMQ40NGUJosK3A8h
+	 1Yy4pXxHAZB9xUayJCyeomyRO8ibLsjrfF2zljJAzqbgAmLDNym2vqjZKxkWBDA0dq
+	 f4rmv3QdM/IFJc2wY++J8r+a2bMBhMAcOhnCfLOBzxSvC2R5XTneHc9YLqLNS7XoQO
+	 akY2/Eo0aHpRg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240412121517.dydwqiqkdzvwpwf5@quack3>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MISSING_XM_UA(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCPT_COUNT_THREE(0.00)[4];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 0F3403829D
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Score: -4.01
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240412104615.3779632-1-maxime.chevallier@bootlin.com>
+References: <20240412104615.3779632-1-maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next] net: phy: phy_link_topology: Handle NULL topologies
+From: Antoine Tenart <atenart@kernel.org>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>, Heiner Kallweit <hkallweit1@gmail.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, =?utf-8?q?K=C3=B6ry?= Maincent <kory.maincent@bootlin.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>, Marek =?utf-8?q?Beh=C3=BAn?= <kabel@kernel.org>, Piergiorgio Beruto <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>, =?utf-8?q?Nicol=C3=B2?= Veronese <nicveronese@gmail.com>, Simon Horman <horms@kernel.org>, mwojtas@chromium.org, Nathan Chancellor <nathan@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net
+Date: Fri, 12 Apr 2024 15:03:10 +0200
+Message-ID: <171292699033.4917.4025686054785818967@kwain>
 
-On Fri 12-04-24 14:15:17, Jan Kara wrote:
-> On Fri 12-04-24 17:49:42, Chao Yu wrote:
-> > in order to let caller be aware of failure of mark_dquot_dirty().
-> > 
-> > Signed-off-by: Chao Yu <chao@kernel.org>
-> 
-> Thanks. I've added the patch to my tree.
+Hi Maxime,
 
-So this patch was buggy because mark_all_dquots() dirty was returning 1 in
-case some dquot was indeed dirtied which resulted in e.g.
-dquot_alloc_inode() to return 1 and consequently __ext4_new_inode() to fail
-and eventually we've crashed in ext4_create().  I've fixed up the patch to
-make mark_all_dquots() return 0 or error.
+Quoting Maxime Chevallier (2024-04-12 12:46:14)
+>=20
+> This patch fixes a commit that is in net-next, hence the net-next tag and=
+ the
+> lack of "Fixes" tag.
 
-								Honza
+You can use Fixes: on net-next, that still helps to identify which
+commit is being fixed (eg. for reviews, while looking at the history,
+etc).
 
-> > ---
-> >  fs/quota/dquot.c | 21 ++++++++++++++-------
-> >  1 file changed, 14 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> > index dacbee455c03..b2a109d8b198 100644
-> > --- a/fs/quota/dquot.c
-> > +++ b/fs/quota/dquot.c
-> > @@ -1737,7 +1737,7 @@ int __dquot_alloc_space(struct inode *inode, qsize_t number, int flags)
-> >  
-> >  	if (reserve)
-> >  		goto out_flush_warn;
-> > -	mark_all_dquot_dirty(dquots);
-> > +	ret = mark_all_dquot_dirty(dquots);
-> >  out_flush_warn:
-> >  	srcu_read_unlock(&dquot_srcu, index);
-> >  	flush_warnings(warn);
-> > @@ -1786,7 +1786,7 @@ int dquot_alloc_inode(struct inode *inode)
-> >  warn_put_all:
-> >  	spin_unlock(&inode->i_lock);
-> >  	if (ret == 0)
-> > -		mark_all_dquot_dirty(dquots);
-> > +		ret = mark_all_dquot_dirty(dquots);
-> >  	srcu_read_unlock(&dquot_srcu, index);
-> >  	flush_warnings(warn);
-> >  	return ret;
-> > @@ -1990,7 +1990,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
-> >  	qsize_t inode_usage = 1;
-> >  	struct dquot __rcu **dquots;
-> >  	struct dquot *transfer_from[MAXQUOTAS] = {};
-> > -	int cnt, index, ret = 0;
-> > +	int cnt, index, ret = 0, err;
-> >  	char is_valid[MAXQUOTAS] = {};
-> >  	struct dquot_warn warn_to[MAXQUOTAS];
-> >  	struct dquot_warn warn_from_inodes[MAXQUOTAS];
-> > @@ -2087,8 +2087,12 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
-> >  	 * mark_all_dquot_dirty().
-> >  	 */
-> >  	index = srcu_read_lock(&dquot_srcu);
-> > -	mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
-> > -	mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
-> > +	err = mark_all_dquot_dirty((struct dquot __rcu **)transfer_from);
-> > +	if (err < 0)
-> > +		ret = err;
-> > +	err = mark_all_dquot_dirty((struct dquot __rcu **)transfer_to);
-> > +	if (err < 0)
-> > +		ret = err;
-> >  	srcu_read_unlock(&dquot_srcu, index);
-> >  
-> >  	flush_warnings(warn_to);
-> > @@ -2098,7 +2102,7 @@ int __dquot_transfer(struct inode *inode, struct dquot **transfer_to)
-> >  	for (cnt = 0; cnt < MAXQUOTAS; cnt++)
-> >  		if (is_valid[cnt])
-> >  			transfer_to[cnt] = transfer_from[cnt];
-> > -	return 0;
-> > +	return ret;
-> >  over_quota:
-> >  	/* Back out changes we already did */
-> >  	for (cnt--; cnt >= 0; cnt--) {
-> > @@ -2726,6 +2730,7 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
-> >  	struct mem_dqblk *dm = &dquot->dq_dqb;
-> >  	int check_blim = 0, check_ilim = 0;
-> >  	struct mem_dqinfo *dqi = &sb_dqopt(dquot->dq_sb)->info[dquot->dq_id.type];
-> > +	int ret;
-> >  
-> >  	if (di->d_fieldmask & ~VFS_QC_MASK)
-> >  		return -EINVAL;
-> > @@ -2807,7 +2812,9 @@ static int do_set_dqblk(struct dquot *dquot, struct qc_dqblk *di)
-> >  	else
-> >  		set_bit(DQ_FAKE_B, &dquot->dq_flags);
-> >  	spin_unlock(&dquot->dq_dqb_lock);
-> > -	mark_dquot_dirty(dquot);
-> > +	ret = mark_dquot_dirty(dquot);
-> > +	if (ret < 0)
-> > +		return ret;
-> >  
-> >  	return 0;
-> >  }
-> > -- 
-> > 2.40.1
-> > 
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> diff --git a/drivers/net/phy/phy_link_topology.c b/drivers/net/phy/phy_li=
+nk_topology.c
+> index 985941c5c558..0f3973f07fac 100644
+> --- a/drivers/net/phy/phy_link_topology.c
+> +++ b/drivers/net/phy/phy_link_topology.c
+> @@ -42,6 +42,9 @@ int phy_link_topo_add_phy(struct phy_link_topology *top=
+o,
+>         struct phy_device_node *pdn;
+>         int ret;
+> =20
+> +       if (!topo)
+> +               return 0;
+> +
+
+With that phy_sfp_connect_phy does not need to check the topo validity
+before calling phy_link_topo_add_phy. The other way around is fine too.
+
+> @@ -93,7 +96,12 @@ EXPORT_SYMBOL_GPL(phy_link_topo_add_phy);
+>  void phy_link_topo_del_phy(struct phy_link_topology *topo,
+>                            struct phy_device *phy)
+>  {
+> -       struct phy_device_node *pdn =3D xa_erase(&topo->phys, phy->phyind=
+ex);
+> +       struct phy_device_node *pdn;
+> +
+> +       if (!topo)
+> +               return;
+> +
+> +       pdn =3D xa_erase(&topo->phys, phy->phyindex);
+
+Same here with phy_sfp_disconnect_phy.
+
+Thanks!
+Antoine
