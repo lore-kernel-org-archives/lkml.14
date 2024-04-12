@@ -1,74 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2ACF824A5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B13824A7
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712928572; cv=none; b=O1WedcXt1qeEKhtVeSkLRTZWIUq0k2wO4mmo9woH2gBkobXBL+PlNy7/ASr5PX4Y8J7fjWWaxkbVCy1gdbb6ldg/roBgptdvcwjvXbPBIEVSOFmx0s+A6XEI0EgOIZ9VGfmKXCfu93Zo9iJ/LWU30QtCWzUCbDB1CBlKdQtRzT4=
+	t=1712928572; cv=none; b=AUg6CKsza3Ez4LCCDl/z+67sH1f20kyy+JbsjAswCk8Woquu1oBRpcgs6tu4mciacFup3qKyBaRcmdoayqESAq7d3RK02/bcLQ9j4W4/Z29PLNUXdL/NMR6zB9Zmkk8AekOiFTQ6bNz6SxKd8xkEX7Lv1uPBQuHOPrOOTYnuilA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712928572; c=relaxed/simple;
-	bh=wb27C6YDs2SEano/0L13BedK6zkVHFjvN0jOfsycobQ=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=QD/Ac2d7Zpli52nYcJEHibKLzi9X3AcLYrYiaERzNbBFAamKq62Ze7XJ3fLtK3KG/Fhkq9V/XN/qm2CbGwWVuxTHWtMYvUTUEeNvwyGs1GpDT4Qc9PLwU9a9cBZ9ZnwN/hcXQCspWVx06mcno7ZPWj1+yPBsQEAQiJX3yE63tYQ=
+	bh=0TOkjBaTj5it68Im/6giqJjimq/460uMEJuzqUrd+Zk=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=Vnmuyvt6uvaE9JdTjDJ/2xnoA83Of/pYhw+prKWzK1s79JWAFrpWaCn4Y2QxwCeXM+WNSV3PDnkmvz/SyDRboBhLiH48rE+R4d6tearFkMN+61k4sijcWDSANxSzQURpZY8p2P0QItd+JY6vfn0LJk1obITm6MfH3W4HR9WsD58=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4838FC113CC;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4851BC2BD10;
 	Fri, 12 Apr 2024 13:29:32 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rvH0n-000000012ow-3O2L;
-	Fri, 12 Apr 2024 09:32:13 -0400
-Message-ID: <20240412133152.723632549@goodmis.org>
+	id 1rvH0o-000000012pu-0YH3;
+	Fri, 12 Apr 2024 09:32:14 -0400
+Message-ID: <20240412133213.994663842@goodmis.org>
 User-Agent: quilt/0.67
-Date: Fri, 12 Apr 2024 09:31:52 -0400
+Date: Fri, 12 Apr 2024 09:31:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 0/4] tracing: Fixes for v6.9
+ Andrew Morton <akpm@linux-foundation.org>,
+ Prasad Pandit <pjp@fedoraproject.org>,
+ Randy Dunlap <rdunlap@infradead.org>
+Subject: [for-linus][PATCH 2/4] tracing: Fix FTRACE_RECORD_RECURSION_SIZE Kconfig entry
+References: <20240412133152.723632549@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Tracing fixes for 6.9:
+From: Prasad Pandit <pjp@fedoraproject.org>
 
-- Fix the buffer_percent accounting as it is dependent on three variables:
-  1) pages_read - number of subbuffers read
-  2) pages_lost - number of subbuffers lost due to overwrite
-  3) pages_touched - number of pages that a writer entered
-  These three counters only increment, and to know how many active pages
-  there are on the buffer at any given time, the pages_read and
-  pages_lost are subtracted from pages_touched. But the pages touched
-  was incremented whenever any writer went to the next subbuffer even
-  if it wasn't the only one, so it was incremented more than it should
-  be causing the counter for how many subbuffers currently have content
-  incorrect, which caused the buffer_percent that holds waiters until
-  the ring buffer is filled to a given percentage to wake up early.
+Fix FTRACE_RECORD_RECURSION_SIZE entry, replace tab with
+a space character. It helps Kconfig parsers to read file
+without error.
 
-- Fix warning of unused functions when PERF_EVENTS is not configured in
+Link: https://lore.kernel.org/linux-trace-kernel/20240322121801.1803948-1-ppandit@redhat.com
 
-- Replace bad tab with space in Kconfig for FTRACE_RECORD_RECURSION_SIZE
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: 773c16705058 ("ftrace: Add recording of functions that caused recursion")
+Signed-off-by: Prasad Pandit <pjp@fedoraproject.org>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-- Fix to some kerneldoc function comments in eventfs code.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 61c541c36596..47345bf1d4a9 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -965,7 +965,7 @@ config FTRACE_RECORD_RECURSION
+ 
+ config FTRACE_RECORD_RECURSION_SIZE
+ 	int "Max number of recursed functions to record"
+-	default	128
++	default 128
+ 	depends on FTRACE_RECORD_RECURSION
+ 	help
+ 	  This defines the limit of number of functions that can be
+-- 
+2.43.0
 
-Arnd Bergmann (1):
-      tracing: hide unused ftrace_event_id_fops
 
-Prasad Pandit (1):
-      tracing: Fix FTRACE_RECORD_RECURSION_SIZE Kconfig entry
-
-Steven Rostedt (Google) (1):
-      ring-buffer: Only update pages_touched when a new page is touched
-
-Yang Li (1):
-      eventfs: Fix kernel-doc comments to functions
-
-----
- fs/tracefs/event_inode.c    | 14 ++++++++++----
- kernel/trace/Kconfig        |  2 +-
- kernel/trace/ring_buffer.c  |  6 +++---
- kernel/trace/trace_events.c |  4 ++++
- 4 files changed, 18 insertions(+), 8 deletions(-)
