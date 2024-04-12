@@ -1,227 +1,185 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E2054914
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A42EE5490A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712921240; cv=none; b=RpEIlwXGg7LpAyGKPidwkx/1VS0iCxlPKxCjPwpcj0j6lGYiXZHxdJ7ZChS+EXXI7Cwsx5/ITiY4uUq9q+/KSit8nTPPBb0v+oQBbKhXoPNlikrPWCbe6dlEA24Jgl4jQYol6ETDHwawjY5dnPzJ+Dr3E8nLxiQP2MDXyWsBltY=
+	t=1712921310; cv=none; b=NB3JWBgXrUcO0IM5bRSeglyMwVEXUBRK4VtiYr9VZOLs1HoIwsj72uyJ/ZdDrZnDGYdG5EI898ydlQvEIKLqPteB30M28AlGBio0yROO3uVOXHn+1kNuLEqm4htfVreHE2jyDxCUsh+spB1BJlIyrPqL/+4f+kYgAxZo0b81Z6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712921240; c=relaxed/simple;
-	bh=KzbRNg3HYWlYTdNdkqI+PUGd5pinSDyZgsTiePCYpcA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WtbAX4FN3Lc6HHLI80dwd4sNmdg91vBw2YF7vtjG/5+07KHrInPxeDRuz8d6S+5LRe/kbAdH84s9Ctw/0DbW21yB0oBJw2pX1JsEXJIh5AQzOtBa4ps+w4BfF6kK2xsmybW8yzO4yVc8TvO52WxzA2sP6VQ9QmAgBpoFw++tr38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvF3i-0007Gj-56; Fri, 12 Apr 2024 13:27:06 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvF3h-00Brjf-5R; Fri, 12 Apr 2024 13:27:05 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvF3h-0007nW-0F;
-	Fri, 12 Apr 2024 13:27:05 +0200
-Date: Fri, 12 Apr 2024 13:27:04 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	JunYi Zhao <junyi.zhao@amlogic.com>
-Subject: Re: [PATCH v5 4/5] pwm: meson: don't carry internal clock elements
- around
-Message-ID: <5j2n53asv5yw3apmwgcmopua55dqejqjmhdvfszss4r5xmc37f@uryn2fvwbkqy>
-References: <20240221151154.26452-1-jbrunet@baylibre.com>
- <20240221151154.26452-5-jbrunet@baylibre.com>
+	s=arc-20240116; t=1712921310; c=relaxed/simple;
+	bh=iFkkJ4gu5lFXEXw2w7qqEFUR/9XtHssnEUIom6DrWVI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eNEyKu02Jr/L1/rcG5Z/SmTp3iNVT9qFDDVw32jeS5i+gLKWmhXTZTbBRTMh3hMxxsZosUu7jo8Jn/D48cwl4Jbaqk16o0dPRZkmT31dIIAdFX/suCLxu7EauYt1OM8W/pSbmnIq7poFjjBaFPlIwhnykAo+Wvg7k53iyzqyYQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C208D339;
+	Fri, 12 Apr 2024 04:28:56 -0700 (PDT)
+Received: from [10.57.73.208] (unknown [10.57.73.208])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA6D73F766;
+	Fri, 12 Apr 2024 04:28:24 -0700 (PDT)
+Message-ID: <66afc978-0221-488b-9fc6-7d5213d385ed@arm.com>
+Date: Fri, 12 Apr 2024 12:28:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zt6g3v346aznprz2"
-Content-Disposition: inline
-In-Reply-To: <20240221151154.26452-5-jbrunet@baylibre.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] mm: swap: introduce swap_free_nr() for batched
+ swap_free()
+Content-Language: en-GB
+To: Chuanhua Han <chuanhuahan@gmail.com>
+Cc: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org,
+ linux-mm@kvack.org, baolin.wang@linux.alibaba.com, chrisl@kernel.org,
+ david@redhat.com, hanchuanhua@oppo.com, hannes@cmpxchg.org,
+ hughd@google.com, kasong@tencent.com, surenb@google.com,
+ v-songbaohua@oppo.com, willy@infradead.org, xiang@kernel.org,
+ ying.huang@intel.com, yosryahmed@google.com, yuzhao@google.com,
+ ziy@nvidia.com, linux-kernel@vger.kernel.org
+References: <20240409082631.187483-1-21cnbao@gmail.com>
+ <20240409082631.187483-2-21cnbao@gmail.com>
+ <95bc0ebb-49f4-4331-8809-3e4625f1d91a@arm.com>
+ <CANzGp4Jzw9bUnQw1zVdw7V6=pARx7x5s8QTyXJGfdEzrXVkZTA@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CANzGp4Jzw9bUnQw1zVdw7V6=pARx7x5s8QTyXJGfdEzrXVkZTA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 12/04/2024 03:07, Chuanhua Han wrote:
+> Ryan Roberts <ryan.roberts@arm.com> 于2024年4月11日周四 22:30写道：
+>>
+>> On 09/04/2024 09:26, Barry Song wrote:
+>>> From: Chuanhua Han <hanchuanhua@oppo.com>
+>>>
+>>> While swapping in a large folio, we need to free swaps related to the whole
+>>> folio. To avoid frequently acquiring and releasing swap locks, it is better
+>>> to introduce an API for batched free.
+>>>
+>>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+>>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+>>
+>> Couple of nits; feel free to ignore.
+>>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>>
+>>> ---
+>>>  include/linux/swap.h |  5 +++++
+>>>  mm/swapfile.c        | 51 ++++++++++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 56 insertions(+)
+>>>
+>>> diff --git a/include/linux/swap.h b/include/linux/swap.h
+>>> index 11c53692f65f..b7a107e983b8 100644
+>>> --- a/include/linux/swap.h
+>>> +++ b/include/linux/swap.h
+>>> @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
+>>>  extern int swap_duplicate(swp_entry_t);
+>>>  extern int swapcache_prepare(swp_entry_t);
+>>>  extern void swap_free(swp_entry_t);
+>>> +extern void swap_free_nr(swp_entry_t entry, int nr_pages);
+>>>  extern void swapcache_free_entries(swp_entry_t *entries, int n);
+>>>  extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
+>>>  int swap_type_of(dev_t device, sector_t offset);
+>>> @@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t swp)
+>>>  {
+>>>  }
+>>>
+>>> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+>>> +{
+>>> +}
+>>> +
+>>>  static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
+>>>  {
+>>>  }
+>>> diff --git a/mm/swapfile.c b/mm/swapfile.c
+>>> index 28642c188c93..f4c65aeb088d 100644
+>>> --- a/mm/swapfile.c
+>>> +++ b/mm/swapfile.c
+>>> @@ -1356,6 +1356,57 @@ void swap_free(swp_entry_t entry)
+>>>               __swap_entry_free(p, entry);
+>>>  }
+>>>
+>>> +/*
+>>> + * Free up the maximum number of swap entries at once to limit the
+>>> + * maximum kernel stack usage.
+>>> + */
+>>> +#define SWAP_BATCH_NR (SWAPFILE_CLUSTER > 512 ? 512 : SWAPFILE_CLUSTER)
+>>> +
+>>> +/*
+>>> + * Called after swapping in a large folio, batched free swap entries
+>>> + * for this large folio, entry should be for the first subpage and
+>>> + * its offset is aligned with nr_pages
+>>> + */
+>>> +void swap_free_nr(swp_entry_t entry, int nr_pages)
+>>> +{
+>>> +     int i, j;
+>>> +     struct swap_cluster_info *ci;
+>>> +     struct swap_info_struct *p;
+>>> +     unsigned int type = swp_type(entry);
+>>> +     unsigned long offset = swp_offset(entry);
+>>> +     int batch_nr, remain_nr;
+>>> +     DECLARE_BITMAP(usage, SWAP_BATCH_NR) = { 0 };
+>>> +
+>>> +     /* all swap entries are within a cluster for mTHP */
+>>> +     VM_BUG_ON(offset % SWAPFILE_CLUSTER + nr_pages > SWAPFILE_CLUSTER);
+>>> +
+>>> +     if (nr_pages == 1) {
+>>> +             swap_free(entry);
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     remain_nr = nr_pages;
+>>> +     p = _swap_info_get(entry);
+>>> +     if (p) {
+>>
+>> nit: perhaps return early if (!p) ? Then you dedent the for() block.
+> 
+> Agreed!
+> 
+>>
+>>> +             for (i = 0; i < nr_pages; i += batch_nr) {
+>>> +                     batch_nr = min_t(int, SWAP_BATCH_NR, remain_nr);
+>>> +
+>>> +                     ci = lock_cluster_or_swap_info(p, offset);
+>>> +                     for (j = 0; j < batch_nr; j++) {
+>>> +                             if (__swap_entry_free_locked(p, offset + i * SWAP_BATCH_NR + j, 1))
+>>> +                                     __bitmap_set(usage, j, 1);
+>>> +                     }
+>>> +                     unlock_cluster_or_swap_info(p, ci);
+>>> +
+>>> +                     for_each_clear_bit(j, usage, batch_nr)
+>>> +                             free_swap_slot(swp_entry(type, offset + i * SWAP_BATCH_NR + j));
+>>> +
+>>
+>> nit: perhaps change to for (;;), and do the checks here to avoid clearing the
+>> bitmap on the last run:
+>>
+>>                         i += batch_nr;
+>>                         if (i < nr_pages)
+>>                                 break;
+> Great, thank you for your advice!
 
---zt6g3v346aznprz2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Or maybe leave the for() as is, but don't explicitly init the bitmap at the
+start of the function and instead call:
 
-Hello Jerome,
+	bitmap_clear(usage, 0, SWAP_BATCH_NR);
 
-On Wed, Feb 21, 2024 at 04:11:50PM +0100, Jerome Brunet wrote:
-> Pointers to the internal clock elements of the PWM are useless
-> after probe. There is no need to carry this around in the device
-> data.
->=20
-> Rework the clock registration to let devres deal with it
->=20
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/pwm/pwm-meson.c | 73 ++++++++++++++++++++++-------------------
->  1 file changed, 40 insertions(+), 33 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index a02fdbc61256..fe61335d87d0 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -85,14 +85,17 @@ static struct meson_pwm_channel_data {
->  	}
->  };
-> =20
-> +struct meson8b_pwm_clocks {
-> +	struct clk_divider div;
-> +	struct clk_gate gate;
-> +	struct clk_mux mux;
-> +};
-> +
->  struct meson_pwm_channel {
->  	unsigned long rate;
->  	unsigned int hi;
->  	unsigned int lo;
-> =20
-> -	struct clk_mux mux;
-> -	struct clk_divider div;
-> -	struct clk_gate gate;
->  	struct clk *clk;
->  };
+At the start of each loop?
 
-I don't think there is a valuable benefit here. Yes, the three
-structures are not used explicitly in the driver afterwards, but the
-memory has to stay around to call clk_hw_unregister() when the device is
-unregistered. So to hide these from struct meson_pwm_channel, we're not
-saving any memory, but add the overhead of one additional devm_kzalloc
-per PWM channel. For me the cost-benefit calculation is bad here.
+>>
+>>> +                     bitmap_clear(usage, 0, SWAP_BATCH_NR);
+>>> +                     remain_nr -= batch_nr;
+>>> +             }
+>>> +     }
+>>> +}
+>>> +
+>>>  /*
+>>>   * Called after dropping swapcache to decrease refcnt to swap entries.
+>>>   */
+>>
+>>
+> 
+> 
 
-> @@ -419,9 +422,14 @@ static int meson_pwm_init_channels(struct pwm_chip *=
-chip)
-> =20
->  	for (i =3D 0; i < chip->npwm; i++) {
->  		struct meson_pwm_channel *channel =3D &meson->channels[i];
-> -		struct clk_parent_data div_parent =3D {}, gate_parent =3D {};
-> +		struct clk_parent_data pdata =3D {};
-> +		struct meson8b_pwm_clocks *clks;
->  		struct clk_init_data init =3D {};
-> =20
-> +		clks =3D devm_kzalloc(dev, sizeof(*clks), GFP_KERNEL);
-> +		if (!clks)
-> +			return -ENOMEM;
-> +
->  		snprintf(name, sizeof(name), "%s#mux%u", dev_name(dev), i);
-> =20
->  		init.name =3D name;
-> @@ -430,16 +438,15 @@ static int meson_pwm_init_channels(struct pwm_chip =
-*chip)
->  		init.parent_data =3D mux_parent_data;
->  		init.num_parents =3D MESON_NUM_MUX_PARENTS;
-> =20
-> -		channel->mux.reg =3D meson->base + REG_MISC_AB;
-> -		channel->mux.shift =3D
-> -				meson_pwm_per_channel_data[i].clk_sel_shift;
-> -		channel->mux.mask =3D MISC_CLK_SEL_MASK;
-> -		channel->mux.flags =3D 0;
-> -		channel->mux.lock =3D &meson->lock;
-> -		channel->mux.table =3D NULL;
-> -		channel->mux.hw.init =3D &init;
-> +		clks->mux.reg =3D meson->base + REG_MISC_AB;
-> +		clks->mux.shift =3D meson_pwm_per_channel_data[i].clk_sel_shift;
-> +		clks->mux.mask =3D MISC_CLK_SEL_MASK;
-> +		clks->mux.flags =3D 0;
-> +		clks->mux.lock =3D &meson->lock;
-> +		clks->mux.table =3D NULL;
-> +		clks->mux.hw.init =3D &init;
-> =20
-> -		err =3D devm_clk_hw_register(dev, &channel->mux.hw);
-> +		err =3D devm_clk_hw_register(dev, &clks->mux.hw);
->  		if (err)
->  			return dev_err_probe(dev, err,
->  					     "failed to register %s\n", name);
-> @@ -449,19 +456,19 @@ static int meson_pwm_init_channels(struct pwm_chip =
-*chip)
->  		init.name =3D name;
->  		init.ops =3D &clk_divider_ops;
->  		init.flags =3D CLK_SET_RATE_PARENT;
-> -		div_parent.index =3D -1;
-> -		div_parent.hw =3D &channel->mux.hw;
-> -		init.parent_data =3D &div_parent;
-> +		pdata.index =3D -1;
-> +		pdata.hw =3D &clks->mux.hw;
-> +		init.parent_data =3D &pdata;
-
-Is it safe to use a single pdata instead of separate div_parent +
-gate_parent below as before? That should be a separate change then (or
-at least motivated in the commit log.)
-
->  		init.num_parents =3D 1;
-> =20
-> -		channel->div.reg =3D meson->base + REG_MISC_AB;
-> -		channel->div.shift =3D meson_pwm_per_channel_data[i].clk_div_shift;
-> -		channel->div.width =3D MISC_CLK_DIV_WIDTH;
-> -		channel->div.hw.init =3D &init;
-> -		channel->div.flags =3D 0;
-> -		channel->div.lock =3D &meson->lock;
-> +		clks->div.reg =3D meson->base + REG_MISC_AB;
-> +		clks->div.shift =3D meson_pwm_per_channel_data[i].clk_div_shift;
-> +		clks->div.width =3D MISC_CLK_DIV_WIDTH;
-> +		clks->div.hw.init =3D &init;
-> +		clks->div.flags =3D 0;
-> +		clks->div.lock =3D &meson->lock;
-> =20
-> -		err =3D devm_clk_hw_register(dev, &channel->div.hw);
-> +		err =3D devm_clk_hw_register(dev, &clks->div.hw);
->  		if (err)
->  			return dev_err_probe(dev, err,
->  					     "failed to register %s\n", name);
-> @@ -471,22 +478,22 @@ static int meson_pwm_init_channels(struct pwm_chip =
-*chip)
->  		init.name =3D name;
->  		init.ops =3D &clk_gate_ops;
->  		init.flags =3D CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED;
-> -		gate_parent.index =3D -1;
-> -		gate_parent.hw =3D &channel->div.hw;
-> -		init.parent_data =3D &gate_parent;
-> +		pdata.index =3D -1;
-> +		pdata.hw =3D &clks->div.hw;
-> +		init.parent_data =3D &pdata;
->  		init.num_parents =3D 1;
-> =20
-> [...]
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---zt6g3v346aznprz2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYZGogACgkQj4D7WH0S
-/k7fEQf+NQGnK13u+LhUqW/7gz4svWQrnLUls2gZbxMsaAOp+aANWHeJHJOeA3xE
-fvht30GOvICObIWWvMu1ZaRTSlj/qirKhSYckkZ/wuUpCC2J1Rov9Wsrg4N3Dhkz
-KCqQc7B9LCrEqrzRbi52LO+t8OcplkY3C0m9qaw/ul4dKKeF87ip2dVxh4VCmO08
-sYNxFarlAiGpU7Qgavk5gBYitR4JRVVcw//9uWpOx8AbeKZFwXlSNCLZnz67J73m
-nzHpE9VYcvKMm8ZWE7TksbY88ZaLoehY3PyUx2Fxok00o27ubtMxXOt9m/v+yw3V
-jLCR6LOd8c+LV6b4gGnHhwNKOXtm1w==
-=gk25
------END PGP SIGNATURE-----
-
---zt6g3v346aznprz2--
