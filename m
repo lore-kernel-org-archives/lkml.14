@@ -1,45 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CBBF38FA3;
-	Fri, 12 Apr 2024 08:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B9F4A39
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911280; cv=none; b=fp6k4XQ+0uMchqzaz0ENFqHWHOXncarEezEtODWA74sQBOMLzVJykKJm+EMBQsU9Vb+DdDsED+nhp/xyzdlGzteU3kBqaGyZMxLgpKknNoefXHnXTVu/Xq/1pXyfx//lW4bniDldpT5FwGJoIv8j3J/iMfXWJV7sk5WUVSqg36M=
+	t=1712911315; cv=none; b=dpdDetEAM1zmYsZCwm1tQZ5M84IZPTy6VKLLhTj76q6OCGoxasWiyFZuD5jG+RS34S7yxcIJt1eWiK6k7xqtutZcPBm7S23kfcTuHZ5ud+DqPjdWAxPDHISVhHjOLMQrmI0BWJiIe0o7+Lj+8JBw/L8pd780vVArvgR9X+rhFfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911280; c=relaxed/simple;
-	bh=43sKYtsFLRVOrVPBcqhE8/RN5WZfWsuNH3OGHSxjLcU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YGQOaBEmfiMlZo8NT+H2LivO4RJW+XdC7xnSRTGr1D3LlLGb9JCn9t0I6oXMi9KgaHnsVr2zbZg7IBFzGg3eOEQJ0fKTyR5XfRdLqilc81Ao6f9xTYoktdpqacHNeXbhKRZysmesrws59491qgG13Kq5v8la4diMoc5rw/jgYFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7890339;
-	Fri, 12 Apr 2024 01:41:47 -0700 (PDT)
-Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EDFC3F6C4;
-	Fri, 12 Apr 2024 01:41:16 -0700 (PDT)
-From: Steven Price <steven.price@arm.com>
-To: kvm@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Cc: Steven Price <steven.price@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Will Deacon <will@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Alexandru Elisei <alexandru.elisei@arm.com>,
-	Christoffer Dall <christoffer.dall@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	linux-coco@lists.linux.dev,
-	Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Subject: [v2] Support for Arm CCA VMs on Linux
-Date: Fri, 12 Apr 2024 09:40:56 +0100
-Message-Id: <20240412084056.1733704-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1712911315; c=relaxed/simple;
+	bh=ikLHZ7DNZW/Ca/CIjkJHHCPEm9GHST1v51vR14ltSUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=avvlTRfIBlXFb/p39JrP/j0sGlvYPL3iWnkeWVZt0SxP206xuR8NzYBi7srDno8dyHyEnatz80PlZIBgW/wJyk+4H8ErXM0xz6sASDlEnpEdSNIv7EMq9OSPm8dNLM7/jyw97iQkqxEq5uQ6cmTEi07G8/zjOgGmhVENeSsp9HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B3Ux2N+K; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3Ux2N+K"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e0b889901bso6016215ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712911313; x=1713516113; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jiD5nR4sveHdMLlVkzf7AW+Iyy665nseig81tvRhcYc=;
+        b=B3Ux2N+KlO/ONETyL4O0ukDGXe8tzVMKIienB32opYEd+RNhVIPlFqEwzSlznpd1EG
+         Uq7D7Zu8EkMsi5MVt00ZDGuG2BhWI2Vu2oP8WqutLwLMO1DWmiTNhrHUSS8hMhgbpCte
+         nphl7zIrqgakl4U5L+4SpnmjtJ6YzAjfoy47lAkeRHb9xiYS5ppkEmmJ/nR7pUATTsE2
+         aZAuDiRXG56hNf5wHyB6fGr2lAIpmrSYxIIY1yCxOpOmERufXhHKAXQ3+NTDFcawz8a/
+         hRFfah+/fxp39S0WujvelLvXbY/uPpzPIgZBwWV7FgmB97eyrNWBfgy8BnuWNSlZAF8q
+         +Eyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712911313; x=1713516113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jiD5nR4sveHdMLlVkzf7AW+Iyy665nseig81tvRhcYc=;
+        b=oFOT0mDWbgMwQgTMZ1wLu5aBtuJpE18ruIecec2iqHskHKzjnZ9qBFws/r6+IwUbAd
+         i5ynkFODr/bBNdMjzTgzUKaBqMkC3YUqer2NfXVg+ELB9X1+nhirgcK5Bm7y24Cm3Yvk
+         ExMhUc2+m2DjG5w+ORZ1WHF4JkgvcjYWQAnYaqP2pY2OPwRTdq+/jZOjIYyc/VYrp7tG
+         ZHREjFLMJJpGaEMELtFBt7i8xHm8QZetZtzar+g2U6gn0ArQa/KlOLoaBhdUFg54umfq
+         rtokMiatMKeWFTsF9t56OwDUY43mhovSkfgK46A/13MOops0uQVHLMbt3obB7Ew+AzeX
+         B6Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcE4HJWpJW382sm5bL8YAYGAtYT+KXRE0nkV0SCDgKRfPAtsZuCc5oawRl3uQR+H7qre+Tkmbso2U3b9xb/w9vjb3s1tthWzC4KmPq
+X-Gm-Message-State: AOJu0YydG2E6bxojDZepMv4YOEqc6X8RzV4Msswtd+eUNz884vpoNe8y
+	cEmh/vyi2Y3yTd7R6GS9RY2MelgHhlCxgHRosbFW4UvYkiIj2SPpWNVevdGb0eo=
+X-Google-Smtp-Source: AGHT+IHqzlVXqP2gD1aO7lBgZP0b5sN+Gg/7Pf6rKemMohLxQodYUBQtZz+jscLJUuNFNJuktFAiiQ==
+X-Received: by 2002:a17:903:2442:b0:1e4:5b89:dbf3 with SMTP id l2-20020a170903244200b001e45b89dbf3mr2129510pls.35.1712911313230;
+        Fri, 12 Apr 2024 01:41:53 -0700 (PDT)
+Received: from localhost ([122.172.85.136])
+        by smtp.gmail.com with ESMTPSA id w3-20020a170902904300b001e2bbc0a672sm2455762plz.188.2024.04.12.01.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 01:41:52 -0700 (PDT)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2] cpufreq: Always clear freq_table pointer
+Date: Fri, 12 Apr 2024 14:11:46 +0530
+Message-Id: <68294ce534668c6ab3b71a1b3e6650227c6e1f20.1712911186.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,90 +68,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We are happy to announce the second version of the Arm Confidential
-Compute Architecture (CCA) support for the Linux stack. The intention is
-to seek early feedback in the following areas:
- * KVM integration of the Arm CCA;
- * KVM UABI for managing the Realms, seeking to generalise the
-   operations where possible with other Confidential Compute solutions;
- * Linux Guest support for Realms.
+The freq_table pointer must be cleared even if the exit() callback isn't
+present.
 
-See the previous RFC[1] for a more detailed overview of Arm's CCA
-solution, or visible the Arm CCA Landing page[2].
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V2:
 
-This series is based on the final RMM v1.0 (EAC5) specification[3].
+- Dropping the other change as it is covered by:
 
-Quick-start guide
-=================
+  https://lore.kernel.org/all/20240411231818.2471-1-sensor1010@163.com/
 
-The easiest way of getting started with the stack is by using
-Shrinkwrap[4]. Currently Shrinkwrap has a configuration for the initial
-v1.0-EAC5 release[5], so the following overlay needs to be applied to
-the standard 'cca-3world.yaml' file. Note that the 'rmm' component needs
-updating to 'main' because there are fixes that are needed and are not
-yet in a tagged release. The following will create an overlay file and
-build a working environment:
+ drivers/cpufreq/cpufreq.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-cat<<EOT >cca-v2.yaml
-build:
-  linux:
-    repo:
-      revision: cca-full/v2
-  kvmtool:
-    repo:
-      kvmtool:
-        revision: cca/v2
-  rmm:
-    repo:
-      revision: main
-  kvm-unit-tests:
-    repo:
-      revision: cca/v2
-EOT
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 66e10a19d76a..13980cb0527a 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1679,10 +1679,13 @@ static void __cpufreq_offline(unsigned int cpu, struct cpufreq_policy *policy)
+ 	 */
+ 	if (cpufreq_driver->offline) {
+ 		cpufreq_driver->offline(policy);
+-	} else if (cpufreq_driver->exit) {
+-		cpufreq_driver->exit(policy);
+-		policy->freq_table = NULL;
++		return;
+ 	}
++
++	if (cpufreq_driver->exit)
++		cpufreq_driver->exit(policy);
++
++	policy->freq_table = NULL;
+ }
+ 
+ static int cpufreq_offline(unsigned int cpu)
+-- 
+2.31.1.272.g89b43f80a514
 
-shrinkwrap build cca-3world.yaml --overlay buildroot.yaml --btvar GUEST_ROOTFS='${artifact:BUILDROOT}' --overlay cca-v2.yaml
-
-You will then want to modify the 'guest-disk.img' to include the files
-necessary for the realm guest (see the documentation in cca-3world.yaml
-for details of other options):
-
-  cd ~/.shrinkwrap/package/cca-3world
-  /sbin/e2fsck -fp rootfs.ext2 
-  /sbin/resize2fs rootfs.ext2 256M
-  mkdir mnt
-  sudo mount rootfs.ext2 mnt/
-  sudo mkdir mnt/cca
-  sudo cp guest-disk.img KVMTOOL_EFI.fd lkvm Image mnt/cca/
-  sudo umount mnt 
-  rmdir mnt/
-
-Finally you can run the FVP with the host:
-
-  shrinkwrap run cca-3world.yaml --rtvar ROOTFS=$HOME/.shrinkwrap/package/cca-3world/rootfs.ext2
-
-And once the host kernel has booted, login (user name 'root') and start
-a realm guest:
-
-  cd /cca
-  ./lkvm run --realm --restricted_mem -c 2 -m 256 -k Image -p earlycon
-
-Be patient and you should end up in a realm guest with the host's
-filesystem mounted via p9.
-
-It's also possible to use EFI within the realm guest, again see
-cca-3world.yaml within Shrinkwrap for more details.
-
-An branch of kvm-unit-tests including realm-specific tests is provided
-here:
-  https://gitlab.arm.com/linux-arm/kvm-unit-tests-cca/-/tree/cca/v2
-
-[1] Previous RFC
-    https://lore.kernel.org/r/20230127112248.136810-1-suzuki.poulose%40arm.com
-[2] Arm CCA Landing page (See Key Resources section for various documentation)
-    https://www.arm.com/architecture/security-features/arm-confidential-compute-architecture
-[3] RMM v1.0-EAC5 specification
-    https://developer.arm.com/documentation/den0137/1-0eac5/
-[4] Shrinkwrap
-    https://git.gitlab.arm.com/tooling/shrinkwrap
-[5] Linux support for Arm CCA RMM v1.0-EAC5
-    https://lore.kernel.org/r/fb259449-026e-4083-a02b-f8a4ebea1f87%40arm.com
