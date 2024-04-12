@@ -1,53 +1,55 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC1A14F120
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B5414EC7E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943342; cv=none; b=L3JNoTeG+DStpzNmzadTJzSh7UyaVIXdhuCiQ/v7wLls+4gXX37xc1QkQCFEfLveBf73uULjzpZrEVs0S1B0mhASmRd1E81ajtaswyKBATM0bCyISqjf/hhrN2UQn4kotuqMOLVlmyY/ZaLk+rrECx2coF0gWkaY036X0suH6X8=
+	t=1712943342; cv=none; b=Ginat8cjP9UwgNacWQXyxMyh0NNE0uSHiV9Y0UHGy1LxDWmwcBoE7Cdwpu5LjdCOmqpNdxEUtAhqkk/linCAbfnBJNV87rafYcZPmKjbvW9G1jxEE4fUsSI05v1pYrMnDeYSiSsA4Jt/mXb2XzlhvwbUSeOm86PXtAyBrUSyX8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1712943342; c=relaxed/simple;
-	bh=1B/zUTkP+xSjtPWcsP8oG3U9mKuxHuCkDO5ODjKdKFc=;
+	bh=dt5lCI9BKhgSVWERuQVtqfoHcvj8FsffJiAncsN/ffs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AKKOmM2WHA1rqcqC8q1Ta582vppabmpz+tIy5d6GezFhRAyZQ5RJg9KQvTW02XVXQgnUrrizyPxhHoiYlRueg7gLnjmpWULkGnTtZCCeJ2zD/iMY0Rh7wKZTdox/b/T2sxkaIwY0wYBEupYXPykw6iyOZQcD2Lir/Qd106rD3QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EpTusK/v; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=D4r2b+zXwFC0uvF6i0dA5GNH+KdlqC7IK3q5uu/tPFqOUdUnPcj4aiPEUvda7kJMdfoBomQDIedwnujh96/7+LX+79avoCMbR0IxWEQFxgyYQC//B/KWwsdWK7GLawI/lgUBObnzqIqpTeb8W2qfdqdHrhUJPoXCSX2nI4dlKRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VhxXKrP2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EpTusK/v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VhxXKrP2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1712943339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MMoankSPnsr51NzQw3GN0rThmSlkSJ5vluBsBS+Wb58=;
-	b=EpTusK/vHZ7vMqT11GgO+DcHeHo0ZXp4FW98/w88q9qgOaERD68zDuGBQDP0Xs/fIL1Nyh
-	U9YFH4EsBRl01zwEUI5P3S76LNLoBe18BYWxtrx6pQFeX5VHljH1vgp/slrpq5ry+MxaSV
-	rHI2lthgkzBGUrZhFexp89lpd9251eA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-665-zw4_kvqcO7-rgx4dU9lCjQ-1; Fri, 12 Apr 2024 13:35:34 -0400
-X-MC-Unique: zw4_kvqcO7-rgx4dU9lCjQ-1
+	bh=+W1eHdUpPKTTAI4bHqjai+AwCzOOKEeOgSH970S6/XU=;
+	b=VhxXKrP2FmN6g5EG6FnFotCn/KObao256cLI5yWlwu0/fAm0gzPqYx3RJQCKtS8qkyIBW9
+	S8B6Bl5xWsl4ADnhVIGvaRi8/mzPoewu60h3HMv5dcixB2ebcq5k/hZrCNsS4fwh7nPHAE
+	1b1DGpC4kbYLlVBVPhL8euvOeisY5p4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-635-ihlbFMMjNhqig2ZUgMXnXw-1; Fri,
+ 12 Apr 2024 13:35:33 -0400
+X-MC-Unique: ihlbFMMjNhqig2ZUgMXnXw-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D718280021A;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 43F9D29AB3EE;
 	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B58A1492BC7;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 17C9F492BC7;
 	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>,
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH 04/10] KVM: x86/mmu: Add Suppress VE bit to EPT shadow_mmio_mask/shadow_present_mask
-Date: Fri, 12 Apr 2024 13:35:26 -0400
-Message-ID: <20240412173532.3481264-5-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>,
+	Binbin Wu <binbin.wu@linux.intel.com>
+Subject: [PATCH 01/10] KVM: Allow page-sized MMU caches to be initialized with custom 64-bit values
+Date: Fri, 12 Apr 2024 13:35:23 -0400
+Message-ID: <20240412173532.3481264-2-pbonzini@redhat.com>
 In-Reply-To: <20240412173532.3481264-1-pbonzini@redhat.com>
 References: <20240412173532.3481264-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -60,62 +62,77 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <seanjc@google.com>
 
-To make use of the same value of shadow_mmio_mask and shadow_present_mask
-for TDX and VMX, add Suppress-VE bit to shadow_mmio_mask and
-shadow_present_mask so that they can be common for both VMX and TDX.
+Add support to MMU caches for initializing a page with a custom 64-bit
+value, e.g. to pre-fill an entire page table with non-zero PTE values.
+The functionality will be used by x86 to support Intel's TDX, which needs
+to set bit 63 in all non-present PTEs in order to prevent !PRESENT page
+faults from getting reflected into the guest (Intel's EPT Violation #VE
+architecture made the less than brilliant decision of having the per-PTE
+behavior be opt-out instead of opt-in).
 
-TDX will require shadow_mmio_mask and shadow_present_mask to include
-VMX_SUPPRESS_VE for shared GPA so that EPT violation is triggered for
-shared GPA.  For VMX, VMX_SUPPRESS_VE doesn't matter for MMIO because the
-spte value is defined so as to cause EPT misconfig.
-
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-Id: <97cc616b3563cd8277be91aaeb3e14bce23c3649.1705965635.git.isaku.yamahata@intel.com>
+Message-Id: <5919f685f109a1b0ebc6bd8fc4536ee94bcc172d.1705965635.git.isaku.yamahata@intel.com>
 Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/vmx.h | 1 +
- arch/x86/kvm/mmu/spte.c    | 6 ++++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ include/linux/kvm_types.h |  1 +
+ virt/kvm/kvm_main.c       | 16 ++++++++++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 4dba17363008..ac6da0a5f5e6 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -514,6 +514,7 @@ enum vmcs_field {
- #define VMX_EPT_IPAT_BIT    			(1ull << 6)
- #define VMX_EPT_ACCESS_BIT			(1ull << 8)
- #define VMX_EPT_DIRTY_BIT			(1ull << 9)
-+#define VMX_EPT_SUPPRESS_VE_BIT			(1ull << 63)
- #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
- 						 VMX_EPT_WRITABLE_MASK |       \
- 						 VMX_EPT_EXECUTABLE_MASK)
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index 6c7ab3aa6aa7..d97c4725c0b7 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -413,7 +413,9 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
- 	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
- 	shadow_nx_mask		= 0ull;
- 	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
--	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
-+	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
-+	shadow_present_mask	=
-+		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_BIT;
- 	/*
- 	 * EPT overrides the host MTRRs, and so KVM must program the desired
- 	 * memtype directly into the SPTEs.  Note, this mask is just the mask
-@@ -430,7 +432,7 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
- 	 * of an EPT paging-structure entry is 110b (write/execute).
- 	 */
- 	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE,
--				   VMX_EPT_RWX_MASK, 0);
-+				   VMX_EPT_RWX_MASK | VMX_EPT_SUPPRESS_VE_BIT, 0);
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_set_ept_masks);
+diff --git a/include/linux/kvm_types.h b/include/linux/kvm_types.h
+index d93f6522b2c3..827ecc0b7e10 100644
+--- a/include/linux/kvm_types.h
++++ b/include/linux/kvm_types.h
+@@ -86,6 +86,7 @@ struct gfn_to_pfn_cache {
+ struct kvm_mmu_memory_cache {
+ 	gfp_t gfp_zero;
+ 	gfp_t gfp_custom;
++	u64 init_value;
+ 	struct kmem_cache *kmem_cache;
+ 	int capacity;
+ 	int nobjs;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 658581d4ad68..38b498669ef9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -401,12 +401,17 @@ static void kvm_flush_shadow_all(struct kvm *kvm)
+ static inline void *mmu_memory_cache_alloc_obj(struct kvm_mmu_memory_cache *mc,
+ 					       gfp_t gfp_flags)
+ {
++	void *page;
++
+ 	gfp_flags |= mc->gfp_zero;
  
+ 	if (mc->kmem_cache)
+ 		return kmem_cache_alloc(mc->kmem_cache, gfp_flags);
+-	else
+-		return (void *)__get_free_page(gfp_flags);
++
++	page = (void *)__get_free_page(gfp_flags);
++	if (page && mc->init_value)
++		memset64(page, mc->init_value, PAGE_SIZE / sizeof(u64));
++	return page;
+ }
+ 
+ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity, int min)
+@@ -421,6 +426,13 @@ int __kvm_mmu_topup_memory_cache(struct kvm_mmu_memory_cache *mc, int capacity,
+ 		if (WARN_ON_ONCE(!capacity))
+ 			return -EIO;
+ 
++		/*
++		 * Custom init values can be used only for page allocations,
++		 * and obviously conflict with __GFP_ZERO.
++		 */
++		if (WARN_ON_ONCE(mc->init_value && (mc->kmem_cache || mc->gfp_zero)))
++			return -EIO;
++
+ 		mc->objects = kvmalloc_array(capacity, sizeof(void *), gfp);
+ 		if (!mc->objects)
+ 			return -ENOMEM;
 -- 
 2.43.0
 
