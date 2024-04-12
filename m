@@ -1,115 +1,85 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB171A28C;
-	Fri, 12 Apr 2024 04:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8055182C3
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 04:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712895967; cv=none; b=mO1aEUAu0CdcZkPHU5v0W1cXPliKpVY2cesW4H+uMId1AJZkSe/N40aUP+dGXeY0IMclorU5WZ+8j1TkPWYr4DSQTwIPpj60ZKK2C3bsTnFpvzsHPZJYSoYqDWhtfmvK5W8TfWRZRRpY2BXl9Q0nHs5tx8jHdN/ePYsrF/JN1Hk=
+	t=1712896155; cv=none; b=jz13QCHmv/4AjmGhqCNDda7zGLqL9AOe4y8q/TZb38CoXl1Z4qR/Cchd+TLGJkT9Z/22wm2vtidvvxqMoR8DS7nEIaJg+dzNv7lrivA7/hAoFH7t7fDJ4KMmRPhcBGLlOdZ28/4Ob+r4XFR9p0Fza3A2UHARjjqc+EeyejT3ZOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712895967; c=relaxed/simple;
-	bh=8FGWXdpcUxD7W+lGG412W8lDvibl3Nx6xj3HqQ+2cpY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZUHK6ZU1AtYEps1p4uYDoCQV/F/Beux3nLCNe/aH55jObf2yzXqd3sPkhnlLIXv3UCouHwzFcEuQAwwmM7afaF0KS/+59Mc9FoK7NqmbQZR9VFcSSL20/BtWZoqgpEn5kzr1XLSQDoq9mvynGl6gVtYBp7dpIQdGRyHx7QqCRW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PizEhuw0; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1712896155; c=relaxed/simple;
+	bh=DHM6nAj7Jy+55xoiSG9PHnUuCFZzkPIfgyOUGfjMPfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OD/wVZDUdRdp9c9Q9Bs+A8RWY5VggMlZUGsMdKA+NHy6vYjIny1xSh8j6M5Ka+O0PkqDei6SE55xq0UxrJxWRMZnUXEEg0BefWGJmkfxyl65kuMsah7IeH+QcHAmoboNsw8TZh4x9bPjMc2CQvUulkP/w86YAK3Z3bOon1ZZBHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=agtHApzR; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PizEhuw0"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 43C4PxNp013814;
-	Thu, 11 Apr 2024 23:25:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1712895959;
-	bh=2ffiITt8shuByn9EhxxwqtqqsP0zhX0EnuXWtTyMIxk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=PizEhuw0/5vPDFWkU4jYKTfJ/MnLTjQkNCEcaKx4wrMdeojSm1Z23FoK2Um85/xtN
-	 7iQ/DNhcsglnqDzq1nWD4Zr5twwq/K+h9PM94FDyi1c9KInsht53kJ8668RD61AuTu
-	 Pki0QmDffihWPV8PWy3sGLcx6Vvh6Bdz2X6+Oclw=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 43C4PxRg026300
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 11 Apr 2024 23:25:59 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 11
- Apr 2024 23:25:58 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 11 Apr 2024 23:25:59 -0500
-Received: from a0497641-HP-Z2-Tower-G9-Workstation-Desktop-PC.dhcp.ti.com (a0497641-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.227.36])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 43C4PbNf078207;
-	Thu, 11 Apr 2024 23:25:56 -0500
-From: Neha Malcom Francis <n-francis@ti.com>
-To: <robh@kernel.org>, <conor+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vigneshr@ti.com>, <nm@ti.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kristo@kernel.org>, <u-kumar1@ti.com>,
-        <n-francis@ti.com>
-Subject: [PATCH v2 5/5] arm64: dts: ti: k3-j7200-mcu: Add the MCU domain watchdog instances
-Date: Fri, 12 Apr 2024 09:55:37 +0530
-Message-ID: <20240412042537.666137-6-n-francis@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240412042537.666137-1-n-francis@ti.com>
-References: <20240412042537.666137-1-n-francis@ti.com>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="agtHApzR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SN8hBhDzhEUTSap+6csDB4UNd+5T+CN0+lWmQ/p4FDc=; b=agtHApzRQofGYkGfLMtOs1d/+m
+	hlYU+4xuzwyVQ3OuNO3ibmzlpuOQDWqWTS/9e8ZWgzm+oWfm/otMmAnqaQ04RGkZ6V4IFRWm5bwPh
+	i2DOVo13NVlZwFkXefjz84zAZ8VhwpqCPN3HnnlYQCvalyfsyYlbs2Dnl7N1tL+r0DpSP1r/8e66x
+	YC1RO1EIQPeMgUSeQRvACcySK3DpNkSpTU+W5t2YZf1FfIRrhRQ6f/srEDN4wVhagRdYNr4bVPfHP
+	EKSIMWETcJx914O80SSxpJFP5W9V4Ozd80f1pXF3zDldTW/d2PEVYpvVuqD9tvIMmEtRaTYQM7h+N
+	JfVwrktA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1rv8XG-00Avx6-2A;
+	Fri, 12 Apr 2024 04:29:10 +0000
+Date: Fri, 12 Apr 2024 05:29:10 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCHSET RFC 0/437] Kill off old fops ->read() and ->write()
+Message-ID: <20240412042910.GK2118490@ZenIV>
+References: <20240411153126.16201-1-axboe@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411153126.16201-1-axboe@kernel.dk>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-There are 2 watchdog instances in the MCU domain. These instances are
-coupled with the MCU domain R55 instances. Reserve them as they are not
-used by A72.
+On Thu, Apr 11, 2024 at 09:12:20AM -0600, Jens Axboe wrote:
+> Hi,
+> 
+> This patchset will obviously be split, commit messages updated, and
+> specific driver patches targeted to where they belong. But I figured
+> it'd be useful to blast out the full set at least once for reference,
+> and then I'll continue down the right path for the next one.
+> 
+> Subject line says it all, really. 10 years ago we added ->read_iter()
+> and ->write_iter() to struct file_operations. These are great, as they
+> pass in an iov_iter rather than a user buffer + length, and they also
+> take a struct kiocb rather than just a file. Since then we've had two
+> paths for any read or write - one legacy one that can't do per-IO hints
+> like "This read should be non-blocking", they strictly only work with
+> O_NONBLOCK on the file, and a newer one that supports everything the
+> old path does and a bunch more. We've had a few issues with the
+> iov_iter based path being slower, but those have basically been
+> resolved with solutions like ITER_UBUF to optimize the single segment
+> case that is often the fast path.
+> 
+> There are basically three parts to this series:
+> 
+> 1) Add generic helpers that we need to convert drivers.
+> 2) Convert any use of fops->read() and ->write()
+> 3) Kill off old cruft.
+> 3a) Profit.
 
-Signed-off-by: Neha Malcom Francis <n-francis@ti.com>
----
-Changes since v1:
-- patch added
+The fundamental problem with that is that a bunch of drivers
+do care about the vector boundaries.  Very much so.  It's very
+common to have this kind of situation:
+	write() parses the buffer sloppily, and ignores the junk in
+the end, claiming that everything that been written.
+	writev() feeds each vector to write().
 
- .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-index 7cf21c99956e..d1a42c3f30c0 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-@@ -686,4 +686,30 @@ mcu_mcan1: can@40568000 {
- 		bosch,mram-cfg = <0x0 128 64 64 64 64 32 32>;
- 		status = "disabled";
- 	};
-+
-+	/*
-+	 * The 2 RTI instances are couple with MCU R5Fs so keeping them
-+	 * reserved as these will be used by their respective firmware
-+	 */
-+	mcu_watchdog0: watchdog@40600000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x40600000 0x00 0xbd>;
-+		clocks = <&k3_clks 262 1>;
-+		power-domains = <&k3_pds 262 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 262 1>;
-+		assigned-clock-parents = <&k3_clks 262 5>;
-+		/* reserved for MCU_R5F0_0 */
-+		status = "reserved";
-+	};
-+
-+	mcu_watchdog1: watchdog@40610000 {
-+		compatible = "ti,j7-rti-wdt";
-+		reg = <0x00 0x40610000 0x00 0xbd>;
-+		clocks = <&k3_clks 263 1>;
-+		power-domains = <&k3_pds 263 TI_SCI_PD_EXCLUSIVE>;
-+		assigned-clocks = <&k3_clks 263 1>;
-+		assigned-clock-parents = <&k3_clks 263 5>;
-+		/* reserved for MCU_R5F0_1 */
-+		status = "reserved";
-+	};
- };
--- 
-2.34.1
-
+From a cursory look through that pile, you seem to have broken
+writev() on at least some (if not all) of those.
