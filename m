@@ -1,303 +1,200 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF36150981
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712951511; cv=none; b=vFhGa2A4nyv0LCG90Lk3qHLjpSyawc8mzieluGjXYM+dW6H90K5U5CDCWDmMo1A1JoUNatTD6LhbJ1W7MVjP1epa3wjY+Qjb6rp0Quq9hJNV3Mb39ZvzROpESWt8LR2hAJoSfdsrcX3s3dCnPpU05jAw1c9pu/RtbtLRkntfgls=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712951511; c=relaxed/simple;
-	bh=q5wK8qWyu1ly6paxXG5Rsydht5XYRaIbkzHHnH6XDno=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aok6twmFirQjRCABWp2K71hxPZuygE//8eJh1LahbAg+fMlNwF6Jo3yDWC2anVMcw521o51Dk/8lt+CkuXR0L+ygST0ZlwIcll/7kqIo8oyTQRkZbZBPXyqa4zagMLi/xyCnmwfrFKQVYMlXaDvzxXOj3TxMFcRqBNBa0Y9Xf4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HTAVhnsp; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C3814EC4E;
+	Fri, 12 Apr 2024 19:58:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712951896; cv=pass; b=FGvRkt12+aMrZpguaQl9QY0cdE7wkgqjp9uYYUmfSTZRSuONhFZsHHBeMcgq1WIxkuEMU6QBizq1YyCGOFcXDnkD4FrOZVa7Y/IMjMK6MXOaw7EujAofip3iQ/PK38lXk/T5gIWLRVN6Y3CASPBy2yavtuUy1GIGC7t3RT351cE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712951896; c=relaxed/simple;
+	bh=/Hfa0pk/8TRhz/aD5yPxTO5tbmw87XsGClapxWJ6kzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VgjVCv2B0zdXLmqmpLJL1+zqYqdTjtVhRHya/0NtNgnKsBzgbo8YxNHsnPtt3Ui7Lbm///8P6gtzVQkj+y6344uAWvhKfITLMU7Hnpqrd6SEQoOpekWfnAYpeKTfpgXIHnfkDG0dPNOpZ9Go6d5OjzxhE8IPJXzwY2sI1jWoiMs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=cM9RmZ7I; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=WcfDuctI; arc=pass smtp.client-ip=85.215.255.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HTAVhnsp"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-516d6898bebso1491153e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:51:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712951508; x=1713556308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jAsbWIWxDyCbTeCy6d/WiDDQ6YO4elX4E4lumQbhzs4=;
-        b=HTAVhnspWzekDgpXNC3AAyPhJBYMzbvseLYzPJ7mqHtZkgo2s6rmODHjuzSwXk90Z+
-         cUqy/Sr/CAI5zuXmO5+WfWTFpohfh3Q2VPu1vVT5CiE65klE8kiI+l6l2/oG/0E1Zt1X
-         Ayu+ozVZzJc0DKOs3gyf70epTJBS4QdNczdt1tDsI9lSkvyO7ZexPpiHMkzwaoGJGeOQ
-         UrU4Y56eYkVxvE9BrXwvDmaZ1UtIcg8Q4RILAE/JCf2LE80/k//bPB8giFbdmOJmYO9Y
-         y7cZpq5e2x98lG/oCVvycbcAspdjEIOa475T/WGa0xH86kIm/f6oUEDRhqHwUq7r1XID
-         T5og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712951508; x=1713556308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jAsbWIWxDyCbTeCy6d/WiDDQ6YO4elX4E4lumQbhzs4=;
-        b=sLQkyM8AtXnwgHM0vzyD+5XDaMx5HrG3jiU3Mq9DfpJZ+BJwZxNwX26m/3WUFR8P1m
-         1QY+ayyZBLdN6uw7lYRUU6gKIeHargl5Sye+CiN4AGYiy3h2QnRXBf+igIJ6j4RpcxFs
-         ucl9reruqE4zlE9qajphlxkW9jrFRjhoskmtom+YjuVw1dNxbccYoCK/pbCbLnL69ccz
-         5YVqqoD/OM5elbjKM3ZehKH8NKxP0O0iO0kmu2FCnEvmkHiMbm8vqHtCNmYig//ouNpV
-         hPpeXLqsci1SOI/ToeaLvJzZQcKz9yaLnFLL5rXr551iHCPJCscGWZWH8TRGZOmSk7EG
-         Fx3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnMsusBtkLdOHCnYWjInuJ3+zWQ3ogQireLdZ9nmxRkAwWSBGArF4Y/4fmbWCEeALazrmpU7J/z18B+jMFGs+8HXU1RgJAebPqM/1v
-X-Gm-Message-State: AOJu0YzjDr3/IRwY3EpvgmRQSW0x3y11x4woBocds4MceldKrlj2MD8o
-	PQSWT76AUYuuX2XYe8Wz8pndT+VMgu9TfSJVJiMC7007uCRtbERZtxUX9xR7Gbz0pczxC7epLGT
-	tH1otgmeH3ulsV74NJDlQAqlll25Kxyrk4zgt
-X-Google-Smtp-Source: AGHT+IFHmPijgWrApfizlTcY29Rrbg05HsjLi2+sFWc0+n5uAgIKka/EAL9+99DU+fWjHK2WtZAa8S/s1vI29shmIyY=
-X-Received: by 2002:ac2:41c5:0:b0:516:cdfa:17f6 with SMTP id
- d5-20020ac241c5000000b00516cdfa17f6mr2105982lfi.67.1712951507911; Fri, 12 Apr
- 2024 12:51:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="cM9RmZ7I";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="WcfDuctI"
+ARC-Seal: i=1; a=rsa-sha256; t=1712951879; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=MNwXDAeuAM5OlQUPvXecTVuzPdIx1e5ezey250l2sVc/Aj3aH/6DB3t5oCoyD48Dok
+    YK2o96+FjDMi0peqEcgsJZPKciW+1wI4U8chbGBqjqV6BBlLeKJ75JbRtBEUvLBz9wha
+    xminNmRjhLDMjGpXPEDMOjRm/oAvXMZ8gg6qDgLG2bhYDbAZ6PZKpOIDvG7HQoaMrPS5
+    yfxAwK+V0zJru18qKZAnjjYuLhu36RpJ/019sig1vRmqjWCPmHQU6gIChgaYIqdvSa/2
+    3MM+Zbd5pArzXCOjWQFqTb7mmIabMxsz2EMAHaW7tI1zI5EUacqZiOdmLPesGZgL5gF9
+    jq8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951879;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=4mpdrnGFXjbwGd37UfMZp+KiINlofTHsCaGVvFFusP0=;
+    b=PpeL1a/rS0p2JsvAT4o9SoVQYF2Xo1o4qPzbNume7VipJG2IMetAFQK3V1Lh9k1tS1
+    M/gy0lXKn/QzQ2bVl1owyAx6EGPexThlfHAOgirLpJBfHflQFmmr4ExegmjV6+YLoYPU
+    BvzMtr9NZCozNklGThKq67v8/GrJh5p9nKHUqkfzte59OvzLd+y8w9xiS7rTdXrfaf7+
+    5wuLH/0upWf/51HONj3oboizZUJBSWl9IkawhHncA+FkWmYXSGDiykfyhm1QsdZqf4Az
+    PUWVBqOZJMBnbXMTyCBcaznsuQJzvSQN5s1JsFLi65FlINO9jvJP6dYq7X4+zDim8Tku
+    HT4w==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951879;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=4mpdrnGFXjbwGd37UfMZp+KiINlofTHsCaGVvFFusP0=;
+    b=cM9RmZ7IJ1RuNn8IVcYXCx/g+//VNrduGBnNyjquWaN9kLak6xHt5SikK9tXRRhmZ7
+    lr2/+JhjAIE2Mb+gO3NzkOnUA9b0f6FQXW5NHESgvZ/TuzRCv6PRqfVWqH21GRHv1b3x
+    gaZY0jDbqUb60CaYSozbkzIkx6YRZx1VR7Lu53vjAu2VUgGiO8y7yhAaolK1uhl+H2sq
+    zXMKP/g/DIFGDFOQFlJJvmL/bkj4JP4P1ryOWeYL5HClriIa6AH9gUibp1kGsQofQZjp
+    8/XmGf50qCutGPRaFnzgL9/ZFI+d+e3nw2I2MbTmAYfQqWITQDC7CRputvCzhlCuSNxA
+    lnCg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712951879;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=4mpdrnGFXjbwGd37UfMZp+KiINlofTHsCaGVvFFusP0=;
+    b=WcfDuctIyxshGCgdMye4zwBy+06SyOZ45b9uhNiE53VzcmE03DHWTkZBSukS+kbBB2
+    akmSf+elbD9KDvFNqMBA==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA+p3h"
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
+    with ESMTPSA id Raf12503CJvwodo
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 12 Apr 2024 21:57:58 +0200 (CEST)
+Date: Fri, 12 Apr 2024 21:57:57 +0200
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] arm64: dts: qcom: sa8155p-adp: fix SDHC2 CD pin
+ configuration
+Message-ID: <ZhmSRSY8CSUGC-FS@gerhold.net>
+References: <20240412190310.1647893-1-volodymyr_babchuk@epam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <7cd05fac-9d93-45ca-aa15-afd1a34329c6@kernel.org>
- <20240319154437.GA144716@cmpxchg.org> <56556042-5269-4c7e-99ed-1a1ab21ac27f@kernel.org>
- <CAJD7tkYbO7MdKUBsaOiSp6-qnDesdmVsTCiZApN_ncS3YkDqGQ@mail.gmail.com>
- <bf94f850-fab4-4171-8dfe-b19ada22f3be@kernel.org> <CAJD7tkbn-wFEbhnhGWTy0-UsFoosr=m7wiJ+P96XnDoFnSH7Zg@mail.gmail.com>
- <ac4cf07f-52dd-454f-b897-2a4b3796a4d9@kernel.org> <96728c6d-3863-48c7-986b-b0b37689849e@redhat.com>
- <CAJD7tkZrVjhe5PPUZQNoAZ5oOO4a+MZe283MVTtQHghGSxAUnA@mail.gmail.com>
- <4fd9106c-40a6-415a-9409-c346d7ab91ce@redhat.com> <f72ab971-989e-4a1c-9246-9b8e57201b60@kernel.org>
- <CAJD7tka=1AnBNFn=frp7AwfjGsZMGcDjw=xiWeqNygC5rPf6uQ@mail.gmail.com> <75d837cc-4d33-44f6-bb0c-7558f0488d4e@kernel.org>
-In-Reply-To: <75d837cc-4d33-44f6-bb0c-7558f0488d4e@kernel.org>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Fri, 12 Apr 2024 12:51:09 -0700
-Message-ID: <CAJD7tka_ESbcK6cspyEfVqv1yTW0uhWSvvoO4bqMJExn-j-SEg@mail.gmail.com>
-Subject: Re: Advice on cgroup rstat lock
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Waiman Long <longman@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>, 
-	Jesper Dangaard Brouer <jesper@cloudflare.com>, "David S. Miller" <davem@davemloft.net>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Shakeel Butt <shakeelb@google.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	kernel-team <kernel-team@cloudflare.com>, cgroups@vger.kernel.org, 
-	Linux-MM <linux-mm@kvack.org>, Netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Ivan Babrou <ivan@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412190310.1647893-1-volodymyr_babchuk@epam.com>
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024 at 12:26=E2=80=AFPM Jesper Dangaard Brouer <hawk@kerne=
-l.org> wrote:
->
->
->
-> On 11/04/2024 19.22, Yosry Ahmed wrote:
-> > [..]
-> >>>>>>
-> >>>>>> How far can we go... could cgroup_rstat_lock be converted to a mut=
-ex?
-> >>   >>>
-> >>>>> The cgroup_rstat_lock was originally a mutex. It was converted to a
-> >>>>> spinlock in commit 0fa294fb1985 ("group: Replace cgroup_rstat_mutex=
- with
-> >>>>> a spinlock"). Irq was disabled to enable calling from atomic contex=
-t.
-> >>>>> Since commit 0a2dc6ac3329 ("cgroup: remove
-> >>>>> cgroup_rstat_flush_atomic()"), the rstat API hadn't been called fro=
-m
-> >>>>> atomic context anymore. Theoretically, we could change it back to a
-> >>>>> mutex or not disabling interrupt. That will require that the API ca=
-nnot
-> >>>>> be called from atomic context going forward.
-> >>   >>>
-> >>>> I think we should avoid flushing from atomic contexts going forward
-> >>>> anyway tbh. It's just too much work to do with IRQs disabled, and we
-> >>>> observed hard lockups before in worst case scenarios.
-> >>>>
-> >>
-> >> Appreciate the historic commits as documentation for how the code
-> >> evolved.  Sounds like we agree that the IRQ-disable can be lifted,
-> >> at-least between the three of us.
-> >
-> > It can be lifted, but whether it should be or not is a different
-> > story. I tried keeping it as a spinlock without disabling IRQs before
-> > and Tejun pointed out possible problems, see below.
-> >
->
-> IMHO it *MUST* be lifted, as disabling IRQs here is hurting other parts
-> of the system and actual production systems.
->
-> The "offending" IRQ-spin_lock commit (0fa294fb1985) is from 2018, and
-> GitHub noticed in 2019 (via blog[1]) and at Red Hat I backported[2]
-> patches (which I now understand) only mitigate the issues.  Our prod
-> systems are on 6.1 and 6.6 where we still clearly see the issue
-> occurring.  Also Daniel's "rtla timerlat" tool for catching systems
-> latency issues have "cgroup_rstat_flush_locked" as the poster child [3][4=
-].
+On Fri, Apr 12, 2024 at 07:03:25PM +0000, Volodymyr Babchuk wrote:
+> There are two issues with SDHC2 configuration for SA8155P-ADP,
+> which prevent use of SDHC2 and causes issues with ethernet:
+> 
+> - Card Detect pin for SHDC2 on SA8155P-ADP is connected to gpio4 of
+>   PMM8155AU_1, not to SoC itself. SoC's gpio4 is used for DWMAC
+>   TX. If sdhc driver probes after dwmac driver, it reconfigures
+>   gpio4 and this breaks Ethernet MAC.
+> 
+> - pinctrl configuration mentions gpio96 as CD pin. It seems it was
+>   copied from some SM8150 example, because as mentioned above,
+>   correct CD pin is gpio4 on PMM8155AU_1.
+> 
+> This patch fixes both mentioned issues by providing correct pin handle
+> and pinctrl configuration.
+> 
+> Fixes: 0deb2624e2d0 ("arm64: dts: qcom: sa8155p-adp: Add support for uSD card")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
 
-We have been bitten by the IRQ-spinlock before, so I cannot disagree,
-although for us removing atomic flushes and allowing the lock to be
-dropped between CPU flushes seems to be good enough (for now).
+Thanks for making all the changes and fixing all these issues! FWIW:
 
->
->
->   [1] https://github.blog/2019-11-21-debugging-network-stalls-on-kubernet=
-es/
->   [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D1795049
->   [3] https://bristot.me/linux-scheduling-latency-debug-and-analysis/
->   [4] Documentation/tools/rtla/rtla-timerlat-top.rst
->
-> >>
-> >>>> I think one problem that was discussed before is that flushing is
-> >>>> exercised from multiple contexts and could have very high concurrenc=
-y
-> >>>> (e.g. from reclaim when the system is under memory pressure). With a
-> >>>> mutex, the flusher could sleep with the mutex held and block other
-> >>>> threads for a while.
-> >>>>
-> >>
-> >> Fair point, so in first iteration we keep the spin_lock but don't do t=
-he
-> >> IRQ disable.
-> >
-> > I tried doing that before, and Tejun had some objections:
-> > https://lore.kernel.org/lkml/ZBz%2FV5a7%2F6PZeM7S@slm.duckdns.org/
-> >
-> > My read of that thread is that Tejun would prefer we look into
-> > converting cgroup_rsat_lock into a mutex again, or more aggressively
-> > drop the lock on CPU boundaries. Perhaps we can unconditionally drop
-> > the lock on each CPU boundary, but I am worried that contending the
-> > lock too often may be an issue, which is why I suggested dropping the
-> > lock if there are pending IRQs instead -- but I am not sure how to do
-> > that :)
-> >
->
-> Like Tejun, I share the concern that keeping this a spinlock will
-> can increase the chance of several CPUs contend on this lock (which is
-> also a production issue we see).  This is why I suggested to "exit" if
-> (1) we see the lock have been taken by somebody else, or if (2) stats
-> were flushed recently.
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
 
-When you say "exit", do you mean abort the whole thing, or just don't
-spin for the lock but wait for the ongoing flush?
-
->
-> For (2), memcg have a mem_cgroup_flush_stats_ratelimited() system
-> combined with memcg_vmstats_needs_flush(), which limits the pressure on
-> the global lock (cgroup_rstat_lock).
-> *BUT* other users of cgroup_rstat_flush() like when reading io.stat
-> (blk-cgroup.c) and cpu.stat, don't have such a system to limit pressure
-> on global lock. Further more, userspace can easily trigger this via
-> reading those stat files.  And normal userspace stats tools (like
-> cadvisor, nomad, systemd) spawn threads reading io.stat, cpu.stat and
-> memory.stat, likely without realizing that kernel side they share same
-> global lock...
->
-> I'm working on a code solution/proposal for "ratelimiting" global lock
-> access when reading io.stat and cpu.stat.
-
-I personally don't like mem_cgroup_flush_stats_ratelimited() very
-much, because it is time-based (unlike memcg_vmstats_needs_flush()),
-and a lot of changes can happen in a very short amount of time.
-However, it seems like for some workloads it's a necessary evil :/
-
-I briefly looked into a global scheme similar to
-memcg_vmstats_needs_flush() in core cgroups code, but I gave up
-quickly. Different subsystems have different incomparable stats, so we
-cannot have a simple magnitude of pending updates on a cgroup-level
-that represents all subsystems fairly.
-
-I tried to have per-subsystem callbacks to update the pending stats
-and check if flushing is required -- but it got complicated quickly
-and performance was bad.
-
-At some point, having different rstat trees for different subsystems
-was brought up. I never looked into actually implementing it, but I
-suppose if we do that we have a generic scheme similar to
-memcg_vmstats_needs_flush() that can be customized by each subsystem
-in a clean performant way? I am not sure.
-
-[..]
-> >>
-> >>>> I vaguely recall experimenting locally with changing that lock into =
-a
-> >>>> mutex and not liking the results, but I can't remember much more. I
-> >>>> could be misremembering though.
-> >>>>
-> >>>> Currently, the lock is dropped in cgroup_rstat_flush_locked() betwee=
-n
-> >>>> CPU iterations if rescheduling is needed or the lock is being
-> >>>> contended (i.e. spin_needbreak() returns true). I had always wondere=
-d
-> >>>> if it's possible to introduce a similar primitive for IRQs? We could
-> >>>> also drop the lock (and re-enable IRQs) if IRQs are pending then.
-> >>>
-> >>> I am not sure if there is a way to check if a hardirq is pending, but=
- we
-> >>> do have a local_softirq_pending() helper.
-> >>
-> >> The local_softirq_pending() might work well for me, as this is our pro=
-d
-> >> problem, that CPU local pending softirq's are getting starved.
-> >
-> > If my understanding is correct, softirqs are usually scheduled by
-> > IRQs, which means that local_softirq_pending() may return false if
-> > there are pending IRQs (that will schedule softirqs). Is this correct?
-> >
->
-> Yes, networking hard IRQ will raise softirq, but software often also
-> raise softirq.
-> I see where you are going with this... the cgroup_rstat_flush_locked()
-> loop "play nice" check happens with IRQ lock held, so you speculate that
-> IRQ handler will not be able to raise softirq, thus
-> local_softirq_pending() will not work inside IRQ lock.
-
-Exactly.
-
-I wonder if it would be okay to just unconditionally drop the lock at
-each CPU boundary. Would be interesting to experiment with this. One
-disadvantage of the mutex in this case (imo) is that outside of the
-percpu spinlock critical section, we don't really need to be holding
-the global lock/mutex. So sleeping while holding it is not needed and
-only introduces problems. Dropping the spinlock at each boundary seems
-like a way to circumvent that.
-
-If the problems you are observing are mainly on CPUs that are holding
-the lock and flushing, I suspect this should greatly. If the problems
-are mainly on CPUs spinning for the lock, I suspect it will still help
-redistribute the lock (and IRQs disablement) more often, but not as
-much.
-
->
->
-> >>
-> >> In production another problematic (but rarely occurring issue) is when
-> >> several CPUs contend on this lock.  Yosry's recent work/patches have
-> >> already reduced the chances of this happening (thanks), BUT it still c=
-an
-> >> and does happen.
-> >> A simple solution to this, would be to do a spin_trylock() in
-> >> cgroup_rstat_flush(), and exit if we cannot get the lock, because we
-> >> know someone else will do the work.
-> >
-> > I am not sure I understand what you mean specifically with the checks
-> > below, but I generally don't like this (as you predicted :) ).
-> >
-> > On the memcg side, we used to have similar logic when we used to
-> > always flush the entire tree. This leaded to flushing being
-> > indeterministic. You would occasionally get stale stats because of the
-> > contention, which resulted in some inconsistencies (e.g. performing
-> > proactive reclaim successfully then reading the stats that do not
-> > reflect that).
-> >
-> > Now that we dropped the logic to always flush the entire tree, it is
-> > even more difficult because concurrent flushes could be in completely
-> > irrelevant subtrees.
-> >
-> > If we were to introduce some smart logic to figure out that the
-> > subtree we are trying to flush is already being flushed, I think we
-> > would need to wait for that ongoing flush to complete instead of just
-> > returning (e.g. using completions). But I think such implementations
-> > to find overlapping flushes and wait for them may be too compicated.
-> >
->
-> We will see if you hate my current code approach ;-)
-
-Just to be clear, if the spinlock was to be converted to a mutex, or
-to be dropped at each CPU boundary, do you still think such
-ratelimiting is still needed to mitigate lock contention -- even if
-the IRQs latency problem is fixed?
+> 
+> ---
+> 
+> In v3:
+>  - Moved regulator changes to a separate patch
+>  - Renamed pinctrl node
+>  - Moved pinctrl node so it will appear in alphabetical order
+> In v2:
+>  - Added "Fixes:" tag
+>  - CCed stable ML
+>  - Fixed pinctrl configuration
+>  - Extended voltage range for L13C voltage regulator
+> ---
+>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 30 ++++++++++--------------
+>  1 file changed, 13 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> index 5e4287f8c8cd1..b2cf2c988336c 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> @@ -367,6 +367,16 @@ queue0 {
+>  	};
+>  };
+>  
+> +&pmm8155au_1_gpios {
+> +	pmm8155au_1_sdc2_cd: sdc2-cd-default-state {
+> +		pins = "gpio4";
+> +		function = "normal";
+> +		input-enable;
+> +		bias-pull-up;
+> +		power-source = <0>;
+> +	};
+> +};
+> +
+>  &qupv3_id_1 {
+>  	status = "okay";
+>  };
+> @@ -384,10 +394,10 @@ &remoteproc_cdsp {
+>  &sdhc_2 {
+>  	status = "okay";
+>  
+> -	cd-gpios = <&tlmm 4 GPIO_ACTIVE_LOW>;
+> +	cd-gpios = <&pmm8155au_1_gpios 4 GPIO_ACTIVE_LOW>;
+>  	pinctrl-names = "default", "sleep";
+> -	pinctrl-0 = <&sdc2_on>;
+> -	pinctrl-1 = <&sdc2_off>;
+> +	pinctrl-0 = <&sdc2_on &pmm8155au_1_sdc2_cd>;
+> +	pinctrl-1 = <&sdc2_off &pmm8155au_1_sdc2_cd>;
+>  	vqmmc-supply = <&vreg_l13c_2p96>; /* IO line power */
+>  	vmmc-supply = <&vreg_l17a_2p96>;  /* Card power line */
+>  	bus-width = <4>;
+> @@ -505,13 +515,6 @@ data-pins {
+>  			bias-pull-up;		/* pull up */
+>  			drive-strength = <16>;	/* 16 MA */
+>  		};
+> -
+> -		sd-cd-pins {
+> -			pins = "gpio96";
+> -			function = "gpio";
+> -			bias-pull-up;		/* pull up */
+> -			drive-strength = <2>;	/* 2 MA */
+> -		};
+>  	};
+>  
+>  	sdc2_off: sdc2-off-state {
+> @@ -532,13 +535,6 @@ data-pins {
+>  			bias-pull-up;		/* pull up */
+>  			drive-strength = <2>;	/* 2 MA */
+>  		};
+> -
+> -		sd-cd-pins {
+> -			pins = "gpio96";
+> -			function = "gpio";
+> -			bias-pull-up;		/* pull up */
+> -			drive-strength = <2>;	/* 2 MA */
+> -		};
+>  	};
+>  
+>  	usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
+> -- 
+> 2.44.0
