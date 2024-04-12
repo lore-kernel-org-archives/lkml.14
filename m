@@ -1,48 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550383F9E0;
-	Fri, 12 Apr 2024 20:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377F62F875
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 20:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712955146; cv=none; b=s4Y0cXw1vDVIKMTW4mIMQUl9y+NnYSKIYpfgTVBhcTKLcYNma7OaLrJC22nUUQAPdRUR9RFQTonHY3LwSwVROedY0AVIqwNzGEWqGy2XBEjy/6cUW1rq3u3x2baSWUSIG/6wcO61agYvEkxnZq6Z+8v3/xwhZci5SZ41Mlmx/aM=
+	t=1712955189; cv=none; b=K0Jaw1uZl+ZpUCrAe4EG8xXCpTKMkDXqCkDk3CwQo9ViFJFRXkdbXRDj0yj9zFewHXAaM/bbU5tlJKaCpI+MgF1+fc41+U7iT+WI8o+VsjHO2Ch+T3X/GDEec0xqp2MVmm2W7965sQSEXgAgY3vFotocjaE+pE2U5U96PCnRsDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712955146; c=relaxed/simple;
-	bh=9VR+EMdsvM+WGe+zuTXXUWxuK3h8e/TNNnEiaHfUVho=;
+	s=arc-20240116; t=1712955189; c=relaxed/simple;
+	bh=qGcc/rgVjEIkz41rcNhQCOoE29RUhq2mJkMJFN2mQyQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i+KB+4xEgMe46by7HikwRKKdzr6N8RrDCzcoExlJbiE+6rqe3Qq4seQQg1SpAxEux8VxKuuKUoQlkeFlUybTy3CSpvuS6S046rIGP0brjLAGhmGyAHoQ+e7lvmLNpAw7iKRx+/pEo8EwnGXKkt8tdGw/bRB6GZwHIidtDvGUgn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDl9ufB4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AmbxgWgcI7cQdcGo1TpJMRjmtNReK51uHEhUS+dShKYKhs0j6qYVnw7upL9Ok8YGCiOqzgmq5nUIAa+v2GImpPLeqFLsEQS1NdJWt+aTftB+HmAOK6O6Fav6hWnJ/uQSt4sm8MmFmuGQifnyOahogDGaLkK9GDzfDhX+g/JHuys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JOEhex0/; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDl9ufB4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E28EC113CC;
-	Fri, 12 Apr 2024 20:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712955145;
-	bh=9VR+EMdsvM+WGe+zuTXXUWxuK3h8e/TNNnEiaHfUVho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dDl9ufB4pOPMR954EaVyoqW/ePbx13SJIc00VvHo4qZI/gtdxLIRvsXv5fJZcrkBl
-	 C2kKSDohBHyHGPJEunt0axpZIib5DtmH1R4xabtILoGSsSMKe6k8M6xh9IJ9aJt8rY
-	 b6XkXHhRkylK/QqEh0SCh5I4GpoVCv/2xN+WtMhzJi8jUOHU10qNaMiMxqlDWOoF81
-	 VzES6lLzhk9n4YYI6UwDmYQoSg8r4fDAqjkm7vZ6BzHQ7M1zejI3UMtVO1UorTV9v0
-	 1VpXMOVZxyDp51Wl6yi8BONMBkfWfiPMr0RwSVl1evszS8u4yCYXvUcZl4TYxAM5C9
-	 RBHRgoYuogFoQ==
-Date: Fri, 12 Apr 2024 17:52:22 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Kees Cook <keescook@chromium.org>, Andrei Vagin <avagin@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf bench uprobe: Remove lib64 from libc.so.6
- binary path
-Message-ID: <ZhmfBl9_C1fMhR3z@x1>
-References: <20240406040911.1603801-1-irogers@google.com>
- <ZhY8xzVJ6_9BI-Vd@krava>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JOEhex0/"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed0e9ccca1so1272671b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:53:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712955188; x=1713559988; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kuI1xDSDY3wZqRxOoGKgeFXQbOBRCo2OPPgj3TfcWU4=;
+        b=JOEhex0/s/ow7z4CMqiadcfhvIHg0Uxi1d5Z7kkTTfVP76DW/9/u5zWsbmxg16pHAQ
+         dh3M0+xNPwCAXJPUZEp49nhrMIrqSKRfh6YvAnQ4ox9f24RzckPEO/mI2RCOcZxTjGeW
+         qZ1OhXi92XV+ThrCYM23ZigHzGsDY/NTB/6/3Yp2rEwZSYK0t4ImGWxjSIId0ZpwvcNf
+         EGxxoCHdekz6IxC/V/QZLvv68+JCmP88cxt6ftcnJPWm/LI9QixucKkf9u6NtYlkxkiz
+         oHiHNLBrxrvyII4YMOn3hZqbaF79PN64gqTN+K06a9UgnxJLcycQMxoOPI2d27eS9Szy
+         rKPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712955188; x=1713559988;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kuI1xDSDY3wZqRxOoGKgeFXQbOBRCo2OPPgj3TfcWU4=;
+        b=Lc2HdwMMiBB52tNsWhfVQkBJCu1naZCwYqKBZesEqG58jZ3OhHVuExHTZ9LeY3TKdN
+         ejEVvWLHWSxh1e40nfTzq2CRDDquLpJVAfCSz7PbtL7nuthVIJjnB2Pc7nVrRWOHZ441
+         VUlc8dlKjKB4ZqlBdyJ/4hLQB8fuTKYVvkl8pe4DXuMSoZ3rAS8CYdFN3HJx+4cJuODP
+         TDECvRy1MrU2ubGhO6bLNtG0wkAG4m11z5UXQlyCMIKTCSofF0KPN8DHAxmD8N+VqOMy
+         SeiQUfA9nJHzF5RT+XOH3ox7nFhWmZfLuD1aDLo8xpjFSKJOygtm7t/nfJBKqjdHzKlx
+         0Uvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW0zd5HgfgGsynYvWLuPjXt7JxyvFt3ZzOFof62HR9MnN+7TvEE7hMvO0k/2yk2WQJ2T0235p7wioGvn8Juv4Gj2xX7z8IaNIgAvJYN
+X-Gm-Message-State: AOJu0YxRKckqvL7+jtOkAxib8QpP8WQj6RhJ6JWg4izl3znn3HGwjYz6
+	KyRv66FRgeXo+0FPcBlhuM1mfYHG48gzXe1VQfDjfMBRvGMCM8ya3je7MYOg0c4=
+X-Google-Smtp-Source: AGHT+IHrp3HzycZe7Jfb+XseUZGp1zZGIQ3nFRwoibOMYKPLe2QkUbH6yPsYO0522TOlVaFgwYmSxw==
+X-Received: by 2002:a05:6a00:1798:b0:6ea:bdbc:6a4 with SMTP id s24-20020a056a00179800b006eabdbc06a4mr4030047pfg.13.1712955187671;
+        Fri, 12 Apr 2024 13:53:07 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id j16-20020a62b610000000b006ecceed26bfsm3264351pff.219.2024.04.12.13.53.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 13:53:07 -0700 (PDT)
+Date: Fri, 12 Apr 2024 13:53:03 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 12/19] riscv: Create xtheadvector file
+Message-ID: <ZhmfL4Nutu8s4SMF@ghost>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-12-4af9815ec746@rivosinc.com>
+ <20240412-thirty-sacrament-db052c7fe6fe@wendy>
+ <Zhl8Y+GzTB/ip7rT@ghost>
+ <20240412-displease-sensually-33d91fc3fe63@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,24 +85,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZhY8xzVJ6_9BI-Vd@krava>
+In-Reply-To: <20240412-displease-sensually-33d91fc3fe63@spud>
 
-On Wed, Apr 10, 2024 at 09:18:44AM +0200, Jiri Olsa wrote:
-> On Fri, Apr 05, 2024 at 09:09:10PM -0700, Ian Rogers wrote:
-> > bpf_program__attach_uprobe_opts will search LD_LIBRARY_PATH and so
-> > specifying `/lib64` is unnecessary and causes failures for libc.so.6
-> > paths like `/lib/x86_64-linux-gnu/libc.so.6`.
+On Fri, Apr 12, 2024 at 08:00:46PM +0100, Conor Dooley wrote:
+> On Fri, Apr 12, 2024 at 11:24:35AM -0700, Charlie Jenkins wrote:
+> > On Fri, Apr 12, 2024 at 12:30:32PM +0100, Conor Dooley wrote:
+> > > On Thu, Apr 11, 2024 at 09:11:18PM -0700, Charlie Jenkins wrote:
+> > > > These definitions didn't fit anywhere nicely, so create a new file to
+> > > > house various xtheadvector instruction encodings.
+> > > > 
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > ---
+> > > >  arch/riscv/include/asm/xtheadvector.h | 25 +++++++++++++++++++++++++
+> > > >  1 file changed, 25 insertions(+)
+> > > > 
+> > > > diff --git a/arch/riscv/include/asm/xtheadvector.h b/arch/riscv/include/asm/xtheadvector.h
+> > > > new file mode 100644
+> > > > index 000000000000..348263ea164c
+> > > > --- /dev/null
+> > > > +++ b/arch/riscv/include/asm/xtheadvector.h
+> > > > @@ -0,0 +1,25 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > +
+> > > > +/*
+> > > > + * Vector 0.7.1 as used for example on T-Head Xuantie cores, uses an older
+> > > > + * encoding for vsetvli (ta, ma vs. d1), so provide an instruction for
+> > > > + * vsetvli	t4, x0, e8, m8, d1
+> > > > + */
+> > > > +#define THEAD_VSETVLI_T4X0E8M8D1	".long	0x00307ed7\n\t"
+> > > > +#define THEAD_VSETVLI_X0X0E8M8D1	".long	0x00307057\n\t"
+> > > > +
+> > > > +/*
+> > > > + * While in theory, the vector-0.7.1 vsb.v and vlb.v result in the same
+> > > > + * encoding as the standard vse8.v and vle8.v, compilers seem to optimize
+> > > > + * the call resulting in a different encoding and then using a value for
+> > > > + * the "mop" field that is not part of vector-0.7.1
+> > > > + * So encode specific variants for vstate_save and _restore.
+> > > 
+> > > This wording seems oddly familiar to me, did Heiko not write this?
 > > 
-> > Fixes: 7b47623b8cae ("perf bench uprobe trace_printk: Add entry attaching an BPF program that does a trace_printk")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Yeah, I wasn't sure how to attribute him. He wrote almost all of the
+> > lines in this file, but I put it together into this file. What is the
+> > standard way of doing that?
 > 
-> patchset lgtm
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> The original patches have his sob and authorship, so I would at least
+> expect co-developed-by.
 
-Thanks, applied it to the series, b4 picked it just for this patch.
+Perfect, thank you for pointing me in the right direction.
 
-I tried to convince Konstantin to look for "patchset lgtm", "for the
-series", but for now we need to do it manually :-)
+- Charlie
 
-- Arnaldo
