@@ -1,181 +1,100 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED6E14D457
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:47:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7321214D29E;
+	Fri, 12 Apr 2024 17:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712944073; cv=none; b=Uyyq1T43AizdIJWfhk3yYYKlDfU5o/3vUpfa1RO2T280T4fYhLiLKh1T7uZC6f95sqDhKfUm5LlKBEDJO3iPZG4rpEWHOM70ECditCLc3+VQHs34DyT4peFXNfG3YCQcFhu76dvUuSkCutZ7Zd2UlijpkImVcXdbdKt9XpKZt2c=
+	t=1712944210; cv=none; b=fvUz2gvMSM+qw7rJZE/dnYspzSJ5UHXd/76bp32LyWqTAiF+93ZmTMX9Bge9luU1fzj7PjX0AxLzbtUVe6spkVaok6f/NvJJsNeAMHXa3tl5qa1cpdPDjNYX8oDaVK3wryWq4mnKt/GenDGlpLpJRkx1lMgPESaUsAJIY3i6dOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712944073; c=relaxed/simple;
-	bh=u7p7QBhAFqRmVebBU1A0EatPOywe3DXSvpCZCThiQp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rA0D8TQAISGOxu/Dg9DHK/S4hLMmpceS6E6fw0tWb+fSJLnMQlZzeV+B0oEv3yunP0X9atcR1FFFwP9PSDts8wo10lxyRzEFFst7mxdDaF353VuxtqMdmvr7Xo4lSH/ESeo5ngfAfVz7I6tJSf05b1qp4gpVugWlPaF5xyvNRKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvL04-0002tY-Ns; Fri, 12 Apr 2024 19:47:44 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvL03-00BuyP-GY; Fri, 12 Apr 2024 19:47:43 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rvL03-000JKn-1O;
-	Fri, 12 Apr 2024 19:47:43 +0200
-Date: Fri, 12 Apr 2024 19:47:43 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] driver core: Make dev_err_probe() silent for -ENOMEM
-Message-ID: <zjk3vnydp2yip343khmkq7v5vqbib6d6eyee6tx6h5nph4blzn@c26yrw2cqrt7>
-References: <20240412164405.335657-2-u.kleine-koenig@pengutronix.de>
- <ZhlmpPNbEMRye2wZ@smile.fi.intel.com>
- <cl5fmton3n5ayzr7ondnw7lzjaxoppyqhnoervj2fn4et75ish@cyko4abxbslg>
- <ZhlqUdywIur4dzgE@smile.fi.intel.com>
+	s=arc-20240116; t=1712944210; c=relaxed/simple;
+	bh=sQu31TKj1DykuJKDUxWpDtj7xAwMdG8O2RnnSSWBS5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WxnLU+SSaPEMGxobH276nROtM2BCnZomARt346F+eAI0aAXSwa5j7NdBdbifNfQgzan//JV8x+W3V93dgsPHnxKd41h/CPqX9aSNoHVgD1+835sXoJEGO+6VsV4ValXt7nSdcLwQculrop6rJR5t1B0Yy5QQ/pxhBl2/H97Ww/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBeigbiD; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBeigbiD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712944210; x=1744480210;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sQu31TKj1DykuJKDUxWpDtj7xAwMdG8O2RnnSSWBS5g=;
+  b=nBeigbiDKJYV6/1ZTKVab89uK9xzVrUosCK2BCdjLXKHHyPPsM43nDvQ
+   DnQmzPmWTgEcH+A4Xfws82dPLYI2nApNvgNoxmAeYppQKuE+8ll9sQ0Hu
+   HCnlQs8cnwPX+067YrJfPiumPwwG0WtJCoy9ofHq2KUlU8OFLvG/9IKf5
+   kWKUK+WNl6PiI+1hSA7J3EdTAw3x10kRcIyNMfs5EePjJKzV+di4oa2MN
+   +RM17pK2jCbyxiXxX25jWoYgcB35O1gcIYGGEJ1ytKya2R9rwOfBeXrL1
+   Oy6TY7CeWEd3cPRXPFGS8jKVoQmzBplzhwctRVHOj8y89KZLJmmHRmTW8
+   A==;
+X-CSE-ConnectionGUID: 522dSkskSMC1nJVgEHFDmA==
+X-CSE-MsgGUID: tjd5DmhRRU+SJueWOuP4Sg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8586232"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="8586232"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:50:09 -0700
+X-CSE-ConnectionGUID: xrZhma/XTdiCshLxpuCXCA==
+X-CSE-MsgGUID: A55UTogyQJ+4WxvqXu3GaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="21380981"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:50:08 -0700
+Date: Fri, 12 Apr 2024 10:54:39 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
+ <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
+ J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
+ <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>, Robin Murphy
+ <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
+ "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
+ <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
+ "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 06/13] x86/irq: Set up per host CPU posted interrupt
+ descriptors
+Message-ID: <20240412105439.37aa12cc@jacob-builder>
+In-Reply-To: <BN9PR11MB527696368E4022DBAC9DD7768C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+	<20240405223110.1609888-7-jacob.jun.pan@linux.intel.com>
+	<BN9PR11MB527696368E4022DBAC9DD7768C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4upext5dqz6toh4x"
-Content-Disposition: inline
-In-Reply-To: <ZhlqUdywIur4dzgE@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Hi Kevin,
 
---4upext5dqz6toh4x
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 12 Apr 2024 09:16:25 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
-Hello,
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, April 6, 2024 6:31 AM
+> > 
+> > +#ifdef CONFIG_X86_POSTED_MSI
+> > +
+> > +/* Posted Interrupt Descriptors for coalesced MSIs to be posted */
+> > +DEFINE_PER_CPU_ALIGNED(struct pi_desc, posted_interrupt_desc);  
+> 
+> 'posted_msi_desc' to be more accurate?
+makes sense, will do.
 
-On Fri, Apr 12, 2024 at 08:07:29PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 12, 2024 at 07:03:01PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Apr 12, 2024 at 07:51:48PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Apr 12, 2024 at 06:44:05PM +0200, Uwe Kleine-K=F6nig wrote:
-> > > > For an out-of-memory error there should be no additional output. Ad=
-apt
-> > > > dev_err_probe() to not emit the error message when err is -ENOMEM.
-> > > > This simplifies handling errors that might among others be -ENOMEM.
->=20
-> > > ...
-> > >=20
-> > > 	BUILD_BUG_ON(err =3D=3D -ENOMEM);
-> > >=20
-> > > Done!
-> >=20
-> > Well no, that doesn't do the trick. Consider for example device_add().
-> > That function can return (at least) -EINVAL and -ENOMEM. To properly
-> > ensure that the error handling is silent with the current
-> > dev_err_probe(), we'd need to do:
-> >=20
-> > 	ret =3D device_add(...);
-> > 	if (ret) {
-> > 		if (ret !=3D -ENOMEM)
-> > 			return dev_err_probe(...);
-> > 		else
-> > 			return ret;
-> > 	}
-> >=20
-> > With my suggested patch this can be reduced to:
-> >=20
-> > 	ret =3D device_add(...);
-> > 	if (ret)
-> > 		return dev_err_probe(...);
->=20
-> Fair enough, but these two should be combined.
-> Mine is for the rejecting a dead code on the phase of the submission.
+Thanks,
 
-So something like the following on top of my change (only compile
-tested):
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 0bc04dcf31d5..02b6ec9a26c1 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -5033,7 +5033,7 @@ define_dev_printk_level(_dev_info, KERN_INFO);
-  *
-  * Returns @err.
-  */
--int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
-+int __dev_err_probe(const struct device *dev, int err, const char *fmt, ..=
-=2E)
- {
- 	struct va_format vaf;
- 	va_list args;
-@@ -5064,7 +5064,7 @@ int dev_err_probe(const struct device *dev, int err, =
-const char *fmt, ...)
-=20
- 	return err;
- }
--EXPORT_SYMBOL_GPL(dev_err_probe);
-+EXPORT_SYMBOL_GPL(__dev_err_probe);
-=20
- static inline bool fwnode_is_primary(struct fwnode_handle *fwnode)
- {
-diff --git a/include/linux/dev_printk.h b/include/linux/dev_printk.h
-index 6bfe70decc9f..a7573355ff90 100644
---- a/include/linux/dev_printk.h
-+++ b/include/linux/dev_printk.h
-@@ -14,6 +14,7 @@
- #include <linux/compiler.h>
- #include <linux/types.h>
- #include <linux/ratelimit.h>
-+#include <linux/build_bug.h>
-=20
- #ifndef dev_fmt
- #define dev_fmt(fmt) fmt
-@@ -274,6 +275,7 @@ do {									\
- 	WARN_ONCE(condition, "%s %s: " format, \
- 			dev_driver_string(dev), dev_name(dev), ## arg)
-=20
--__printf(3, 4) int dev_err_probe(const struct device *dev, int err, const =
-char *fmt, ...);
-+__printf(3, 4) int __dev_err_probe(const struct device *dev, int err, cons=
-t char *fmt, ...);
-+#define dev_err_probe(dev, err, ...) ( { BUILD_BUG_ON(__builtin_constant_p=
-(err) && err =3D=3D -ENOMEM); __dev_err_probe((dev), (err), __VA_ARGS__); })
-=20
- #endif /* _DEVICE_PRINTK_H_ */
-
-
-I don't know if the kernel doc for dev_err_probe() should move to
-include/linux/dev_printk.h then?!
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---4upext5dqz6toh4x
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmYZc74ACgkQj4D7WH0S
-/k4jFAf8DuxSDT/KI0qb/f2BNnc5OF4AxuYsgZCC6TV73LhgGNdSetubkHjt+Mw8
-JmDmriGamkJgWboncr3uO2xP1ECa8/ECeJheUPYxCYvmoNbjOuCv/fdXngP5GmRO
-rB5p+jE8Ydbzx8ZnL+KO9qw+kzpD5NET+4KT14UGTdjexqMTPCqsElP3OG4pSmkl
-mCVKaRlAT1VUwZ7kkgNZIcapubC6xpUBcvqyHLOQFulCQDbgehQ5kH4hF0x+MeNH
-TPYVIqL66I9UJWpu5m8CFnqxCXpgy//cec6Jaym/RbqMtn2ShbnGgiWwPFIioaq9
-yKPlZKjOJ0sKoupOON8COchrko+4AA==
-=1xIK
------END PGP SIGNATURE-----
-
---4upext5dqz6toh4x--
+Jacob
