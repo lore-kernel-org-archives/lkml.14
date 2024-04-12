@@ -1,274 +1,572 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from mout.perfora.net (mout.perfora.net [74.208.4.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D4D28626E
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 13:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.148.174
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712930211; cv=fail; b=VGFSQhE3+blVFC+ek+2urlFjvi0OYZgBLmhxJ1WNSIlKHYIRhUJIBgZxv1BeD9O8RP3ZE44WktlKZydGq4rpVKXz+lwnPXOePPnK9EU18+VIp/G0uWWH5nqolzWwXzFuyKOcuTk1je4Q0u8TXCgf7N7aAR7M6Eb9aUvDzynhJzU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712930211; c=relaxed/simple;
-	bh=HhyS9PvzO4DbvooBxoCA7PX9QPgdSvm3578B9erTRNc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=M7GyzHXeI3AColfrDNLVD30b6Uz3PbR1Y2M9YM2v6+ad0qx3VArv0RZqVbXQJPGhBeQmYjYke7FI7jRx3HHOK17ojLBU/qw6vaTc0IRwtiLeNs7UkMFAE+Hl6RNp9R/1cSO48TrA6t926TI72/TxEpj6m4fyOiumw0Rve5wYa5U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=FcgYWgc0; arc=fail smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488E550241;
+	Fri, 12 Apr 2024 13:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.208.4.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712930251; cv=none; b=nXHg4WfrspnLzXhBgHbWy6gBTiKWQBPltZWb7BGiTPSWJwauGLDx2NSeKNi7zEJROjBxho/UVjuRfB5PLDZ5m6sZdljE/a70Kh+Kk9xMMmnBERyHtT4rozClB9F4ymn/6/vUSVBnvE0E7Ha5zfXBUnc7iHH5X1jg4ZYnEkRrSro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712930251; c=relaxed/simple;
+	bh=5B1nM1pJDK72OCmqlAmjkq8SqDxKr9qtmY11Wjqqnl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nBy7o+Vhm6agXVUQy5vEFaCi+R3aOI8xdGc5JcHPXkGoZxIscjKcD5vkCDnz8Iiafw1hunLUCtcYvTZdZM5pUxoI9n7Zuph97hMKOyvxLxSHKk6bRxEARWBLGlwhEOg1+L7jLBKm7/4xSsXTrPtoycPoYL6JTF22FzokW0lrEBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io; spf=pass smtp.mailfrom=finest.io; dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b=g685BjAL; arc=none smtp.client-ip=74.208.4.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=finest.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=finest.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="FcgYWgc0"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43C4AFgA009090;
-	Fri, 12 Apr 2024 06:56:39 -0700
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2040.outbound.protection.outlook.com [104.47.74.40])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xewph1qqd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 06:56:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LXB2WiCiDwWkmxxOy+/yQWIAb2jJzeeeD4OQy/eb558RtFAQtM35KF61f3Jhn35i4CJvVBH9QzFnXzhbAA3d7w+uiXXp4fAr+AJv9MMqXo3Hi3C+Dc8SptLNtJwJsqJb5YELFISyRpW6nfWi0i+qi2IAfLh5F08rQCTOD4qatnWCBxWeRFYNtZwLaBys4Bhqr4w7mo1zqROHOMTxxKvSsxc39vxRb2K0skzE/cIdV1uWuta3/VwuRO8FYm3YLpB9EOKdZ1/WRJz2wyQSuxxxwi7X3t05QFD01TPJRwwXPB7FoywZJg4ULjw4Y943m9fw4UM1k06w5FSCONnQVnPPcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XUrCYDmqkPzyfe8yMxDptwQAyX0c5X04ggUh8pODXbE=;
- b=hasWcf+U9Of+RNUGRT0YHHy78RQ+tJ629oZMmQcTxrMTykaKPMcgvimtaRi/frYLUfw87uBHFamEr32XgBHHpdzsBn7UDsJszOmz6JDXqUVfPQTQutOktCc/bz4ZLtY3t66x0VtLM8RORM3+QlBxCXOCL4kQsL41sIrlsC8pVWOqcQSTIpmuDbR2u3NdxWoUDukCLxDOtQ1d6rU6MnTvIyjlAwsCbh7SlghLJxGuGFZ72hD1ItvFRBeablF2kPKiw7WoGFh13ek2JiRM15LcWUggg8CWSCqZX0Ho0RSeAzH8PcNaymNJpiYj2rYxZlSu0nw5RJBwwEh8BWnQERbkPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XUrCYDmqkPzyfe8yMxDptwQAyX0c5X04ggUh8pODXbE=;
- b=FcgYWgc0ht1pE0Fjh0WgFHKuAje3dnO8D+bT4F3Y+jSh0xOkAAKJB4ItgehKmIxan658LI9DWp9QcUitmTw2GHOmCCLb9H+RaWWKi3g9X2Dd68M0UJ1ebkxAolr159FRTjYIDOxTa7np7zndG7AMa1PD76DG2tmCtZ8Kui/TSxg=
-Received: from MW4PR18MB5244.namprd18.prod.outlook.com (2603:10b6:303:1e0::16)
- by SN7PR18MB4094.namprd18.prod.outlook.com (2603:10b6:806:106::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Fri, 12 Apr
- 2024 13:56:36 +0000
-Received: from MW4PR18MB5244.namprd18.prod.outlook.com
- ([fe80::6244:4406:da13:da4d]) by MW4PR18MB5244.namprd18.prod.outlook.com
- ([fe80::6244:4406:da13:da4d%6]) with mapi id 15.20.7409.053; Fri, 12 Apr 2024
- 13:56:36 +0000
-From: Vamsi Krishna Attunuru <vattunuru@marvell.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH v5 1/1] misc: mrvl-cn10k-dpi: add Octeon
- CN10K DPI administrative driver
-Thread-Topic: [EXTERNAL] Re: [PATCH v5 1/1] misc: mrvl-cn10k-dpi: add Octeon
- CN10K DPI administrative driver
-Thread-Index: AQHajNJlUzRgj48oqke7eNtbl1jogrFkj7+AgAAOmwA=
-Date: Fri, 12 Apr 2024 13:56:36 +0000
-Message-ID: 
- <MW4PR18MB5244FA7231C64F8A7928B83EA6042@MW4PR18MB5244.namprd18.prod.outlook.com>
-References: 
- <MW4PR18MB5244C76290A15737DC94FFDBA6042@MW4PR18MB5244.namprd18.prod.outlook.com>
- <20240412121005.1825881-1-vattunuru@marvell.com>
- <2024041250-nursing-tidy-db7e@gregkh>
-In-Reply-To: <2024041250-nursing-tidy-db7e@gregkh>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW4PR18MB5244:EE_|SN7PR18MB4094:EE_
-x-ms-office365-filtering-correlation-id: 40fecf88-450a-4a79-0a09-08dc5af85e89
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- jLksAnD0LwuHxqPERYmBD7agIbUGvhQ2N0eOmqDLpLS2U+MLwv0xdGhKs8L8ufNYuJ3liI0w375N6jEZfxl9dWYavlK53rVXBYddC829PjAxtkuCb3zvMgzL7i0ITiZMa87+oCWR5dD2bw6MZK7GMNBwFE5uSSa/+KFfJMGV6EggVRXvNm86GKeybougxWn4L7irXis/AaMxPg2PixR49bqwti9ST8XvhoSKEdmseVbLrjIJdejqYvcYl57urcFXjdNZsJzpNPlfnuIGRnapKgbZ6wZ65WTBtmvBVpIR1WrvDp5zESoq7HPfJrYAYKDsyAelRkWFuzcwIWHz72ArJzyhb3Qn0fFlFzbbQWdTpS4jOqGh8fYmB2n+PyCAHqWSpfUUkGqaJ2+qYqFjfwc+t6c+X2OaJd2xmfS51+Z/oNC7GnnbUtPXhnu0tNirY1sGhBaNeUy0HQjRcDIsWOB+u0BiEuTEjZjcKFcoTnWovlVpYkalTCLhcp146f+YkBgA7KFSoqKi4cq5Hh6XrJvVUAUyndtJDD3UrQ1fyXzJT6D40qJCd+NvFpf6Z4o+3zpqoXDRaYaC0M3vON02ojzkjJrKFmgjbAx53WHC2TlXp+B6vwvyW91zueed2Yx30Im1d/MZn4n7YUd/dFtPStbN5ubppiGQXcw/f5IfGG3VeOLCRsA7ygO+QbmVkdlnG0SJCypMWdcknJuhkEZ68g7l+7PUNf1kPHEaf51H2Y8u9Ug=
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR18MB5244.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?5szOMqm6jczXwNwSY9DdZsr74I6cZcmnfPUS2HzWKH3V1Q5xfzfCd6pEeYLD?=
- =?us-ascii?Q?NOWYRuzmf4s+nFBGcfk6qa25lI9vU5VSnzCnB9/oKhauDnh80xillnxkU7CH?=
- =?us-ascii?Q?WchmFS513SOr/uagwGH7MVQW6s9/FXAqCY0m/r66FEHHPYF7tRplzEiey3V6?=
- =?us-ascii?Q?46iZNMpjnQYCqWsQ7Y4FGfEvC5wdsvNkf70nElyd5dbmyQ8JvcJwirD6P8hG?=
- =?us-ascii?Q?Vl3CHhmv8SPO2zondAt25GLIn02eEXVTvwZ53VYHGjyoGSsFgRe9UZvaTbQA?=
- =?us-ascii?Q?WQ85kT12WwkJfOU7Knk3tDfdaw00yQLKmZNhzJxhAN9ZQMTb/g6Sq+1XNLJv?=
- =?us-ascii?Q?cBZ0WRp+GaT/yvsYusuhj1f0xUezmO2TKJq8qgRs0QwZwuKE6kG3n0eYxPUe?=
- =?us-ascii?Q?dz09Gl4oUWE9I7OJRONe+0Ly3AlGWF9K7yxrkaMuGdMEUsEW/0b+tcqVbgDo?=
- =?us-ascii?Q?X99jAB2l9zgwpFMO1zQePcsACyQVykPJ9VqFmb0XLXOHBf9qX9mkJUUubwZJ?=
- =?us-ascii?Q?HcjwKu85/WavVfmvRqhAfePCkycFRe+/c/eNDLBLZjFmviECboBVIdiyaBqy?=
- =?us-ascii?Q?Uv9p28HLAw2vI4aoUuUO5CZ7nNCom8/I0B1TFdWjKRUqUejH8zyErV3rWulg?=
- =?us-ascii?Q?pwChEAghYDBeq1wH2eAp9TUV4k0hQ0lknxGb81JV72M94MVdrrw/4v/E04Fy?=
- =?us-ascii?Q?9xAB3Up9yRE+vU1eOchxKNq6tP7xsYUi2XB0Frc1f8so9PvWTeWjg5vE9ZAK?=
- =?us-ascii?Q?Dal/MIC4+VtVPhXfjFJy5UYofu+nWb2ZfbvyGHq7WJPkhON6N40DSqDIGI3J?=
- =?us-ascii?Q?NIp5VPKomuo/qh1xSBq+rzYbqOiKMvNJXmg4c0T9M3+ZPmchrwSZTAh+IzXY?=
- =?us-ascii?Q?ZNPPcpVCDnvoi9gAOw68NO+n2K0E6LYf5jm2JTtcBHutD4195I2BfGLGF9pn?=
- =?us-ascii?Q?7ZlJbIwK/if7simAyGzK1kybNWBkrx2tLfYrbdhoA6kAtzV2kDHiW7GAYT7w?=
- =?us-ascii?Q?5Tt1Osmru1ZtBuDi0dhb05EgAq11ostOZLyniCFVg0h7nvuRaXCEfqMA6a6x?=
- =?us-ascii?Q?pm+1FueuaSpfVYb22+9nt+4T1Cm0UKL0rBCKePDrtxbOWVOi2/tuRmbm5Y4R?=
- =?us-ascii?Q?WAetWI1SRguOHYcgRTqj31H54z6RCXBg6g93tPuy+QWe7aoMAPjr49ZJnnsg?=
- =?us-ascii?Q?LR2GtgJqAqbzTklXPIedQr5IEeQ8pVzom8D6ymAND2mvHLcxABtr2pciLzMJ?=
- =?us-ascii?Q?zbyggDCfyc/BViayq1S+R9AR7XyP9Kyjdfve2OZDQQSAHluGrF/rXhk29aZL?=
- =?us-ascii?Q?8bRcpal+GKo9RV4ulauQT751DAfBvZaPlL0y8+PLfeULTH3rgHGC5/xgo5Mk?=
- =?us-ascii?Q?N+nKu3V57vz2HaX6arl1Af110ElDUTJ+2d6Lkk+MQSMg5KcXizQRFg1nNIH4?=
- =?us-ascii?Q?U5Yx/YXzKPMb/W9efQtKFSq9LL6LXUlsJkrt72QiJzT3w7TA5r9Hjiw5zRKE?=
- =?us-ascii?Q?Uq2/OsEPfPTjdqlisYxbWSnZcfgQZs7euKjEFgOSUkQa1s5TcuK31CVUEOhr?=
- =?us-ascii?Q?LIgyVL3P9Vc1RConpta3KNOcDwH+afk3fU5dIKZy?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=finest.io header.i=parker@finest.io header.b="g685BjAL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=finest.io;
+	s=s1-ionos; t=1712930241; x=1713535041; i=parker@finest.io;
+	bh=GpVnDZHAlL6+V614w/CkgusOSqZHXOifmTrL4KTh6a4=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=g685BjALyiRkeAdWbGjuTUDp7WBY8K+UkZs6zzM1O9/fGlETJn5AdPM54dC462ZX
+	 b4xfpXswYTJsSOgjd0vAZs3u535Q9Fhs1yNfl/BugkH5azd9dnDFqkPlfIHeIgEGg
+	 9ZkIzErlnNjExXAEa250zb8ZlJGcbLcY3rSZbtxvfMCQRXz0GsI3y/UQQ7hv0+k7f
+	 CDASkcSeTdcLsHMSvTEBMjLt8XUB3NsjlBfXvT0U3E1WZv0POeSu3gJ8jZcp02Y8n
+	 LgvfF8LxOOlV/ysFJshDpiTy+USDL/yVGWaqwCj0Nz66GgT8T78SjUMaVuitJpeS2
+	 ezQPFYL3LbzffGp1VQ==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from SWDEV2.connecttech.local ([98.159.241.229]) by
+ mrelay.perfora.net (mreueus002 [74.208.5.2]) with ESMTPSA (Nemesis) id
+ 0MaHks-1sAjrF1HXE-00U5aI; Fri, 12 Apr 2024 15:57:21 +0200
+Date: Fri, 12 Apr 2024 09:57:19 -0400
+From: Parker Newman <parker@finest.io>
+To: Ilpo =?UTF-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby
+ <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-serial@vger.kernel.org, Parker Newman <pnewman@connecttech.com>
+Subject: Re: [PATCH v2 5/7] serial: exar: add some CTI helper functions
+Message-ID: <20240412095719.3dd3ffa5@SWDEV2.connecttech.local>
+In-Reply-To: <6bb475fd-0d71-1600-d76b-3dad5187c6fe@linux.intel.com>
+References: <cover.1712863999.git.pnewman@connecttech.com>
+	<f610d699b6d0495c76e732fb93afd2216aacbb85.1712863999.git.pnewman@connecttech.com>
+	<6bb475fd-0d71-1600-d76b-3dad5187c6fe@linux.intel.com>
+Organization: Connect Tech Inc.
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR18MB5244.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40fecf88-450a-4a79-0a09-08dc5af85e89
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Apr 2024 13:56:36.3700
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ImqBTntfrxNBZ9I+4T4shBWV2+Z+8ldWd/zkXsIYS/KlxJgkuKXlOjNs+Nqxrld6+PL8u4cdnEXJ1ycVwPqLAA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR18MB4094
-X-Proofpoint-GUID: T63In0Ehf8gEc9I6U88aKRWTlhKKY32L
-X-Proofpoint-ORIG-GUID: T63In0Ehf8gEc9I6U88aKRWTlhKKY32L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_10,2024-04-09_01,2023-05-22_02
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jNtIIVDdiXNLtYONI7sFBMGUffCGvuQqQV8mjP5OKoatA7mFwuS
+ FY7wRooiuETKPn6tvtaWx76O7K73gIEkDjpFATBAxBx7PkxZr/n9jYTYz1UcSVW9RT/O3PW
+ 1lQO5bJW6f3ybICauzrXGdPr3D9fmf6KGyKfVku7v3AClvT8+jRyT4/xb6Ft0SR+mQVjM8Y
+ m287tQoFCKeJvjHWxSroQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sWnDLSmePIk=;TLT4NdiireYnmgUeF1Db2L6VOJg
+ yUDRUyu4oXtdu5b8RIsTpCv28c6jYn8TRToQcyjOL2pAt4MXmgyyWPU8gxLwXzUP4oV82oDW3
+ CY+e7S7ddIK4qPiL4KJ46p9RcT4jcFpxefwvRUZDSVJ2XvyAvQPDInPIyHOG/ehDNc7+xl0DO
+ dqzXm3BY2xJinHNQtYIrZl6V2c41+f4h+pYte3SyNlDnUXHFPVB55yQU+KZJTdcpTm0L8iDRb
+ M86bdWpEFKC4Dmemfiuhx92JacMTLTQugFFsWHRWZM0X2yS3Ic+AGJGS3JT0Gx86zEFzOpb17
+ YfiYmaSqQWolAxi5bwgK1mxlYnYbuTnS8qdoquwDv5WFt56s+2zMuz7O8RZjBMnki5+qzIpsi
+ Q7WZ/oXGzzJPIhpaOF+clfDKamdrCEqNflm/0fwhNv5LMqBSs+oRlomVUavEppYAXKkQJeYQ2
+ 9VRqh7Q3jYwRoDPfmyFqTTBUS7lLq5GS69N9uU9bRUoD0vq5AYTT8jYRj/gt44cLWnE5C3UGZ
+ kFhLEfuxH1FJL/kDb4zTmqDUu3EumM4ehkof/aVB3OLQxyeOOLhiApJVLyr50h436fXm9P/Tl
+ XiVWEkzZLezSjqnDxygeNeqXwIXJUGY5ZTCxXdxLZm2Nr8Cd64npVb5mUp4u5JZDyrnumNXkc
+ 4vRDNz2+K33PQXMt+bxfjip/5K804c3MY2I/5HxJSbABxS0sh8LEPiFAw4jEEmfd7jXR5n6Jt
+ KgF7fD6d5XAM5qdYh1L18hqVZXL1be0OoshvkEUlxg9+ZwInn7+LjM=
 
+On Fri, 12 Apr 2024 13:48:56 +0300 (EEST)
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
 
-
-> -----Original Message-----
-> From: Greg KH <gregkh@linuxfoundation.org>
-> Sent: Friday, April 12, 2024 5:57 PM
-> To: Vamsi Krishna Attunuru <vattunuru@marvell.com>
-> Cc: arnd@arndb.de; linux-kernel@vger.kernel.org
-> Subject: [EXTERNAL] Re: [PATCH v5 1/1] misc: mrvl-cn10k-dpi: add Octeon
-> CN10K DPI administrative driver
+> On Thu, 11 Apr 2024, parker@finest.io wrote:
 >=20
-> Prioritize security for external emails: Confirm sender and content safet=
-y
-> before clicking links or opening attachments
+> > From: Parker Newman <pnewman@connecttech.com>
+> >=20
+> > - Adds various helper functions for CTI boards.
+> > - Add osc_freq and pcidev to struct exar8250
+> > - Added a exar_get_nr_ports function
+> >=20
+> > Signed-off-by: Parker Newman <pnewman@connecttech.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_exar.c | 363 +++++++++++++++++++++++++++-
+> >  1 file changed, 357 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8=
+250/8250_exar.c
+> > index b30f3855652a..6f3697e34722 100644
+> > --- a/drivers/tty/serial/8250/8250_exar.c
+> > +++ b/drivers/tty/serial/8250/8250_exar.c
+> > @@ -137,6 +137,9 @@
+> >  #define UART_EXAR_REGB_EE_ADDR_SIZE     6
+> >  #define UART_EXAR_REGB_EE_DATA_SIZE     16
+> >=20
+> > +#define UART_EXAR_XR17C15X_PORT_OFFSET  0x200
+> > +#define UART_EXAR_XR17V25X_PORT_OFFSET  0x200
+> > +#define UART_EXAR_XR17V35X_PORT_OFFSET  0x400
+> >=20
+> >  /*
+> >   * IOT2040 MPIO wiring semantics:
+> > @@ -173,6 +176,46 @@
+> >  #define IOT2040_UARTS_ENABLE		0x03
+> >  #define IOT2040_UARTS_GPIO_HI_MODE	0xF8	/* enable & LED as outputs */
+> >=20
+> > +/* CTI EEPROM offsets */
+> > +#define CTI_EE_OFF_XR17C15X_OSC_FREQ	0x04  /* 2 words (4 bytes) */
+> > +#define CTI_EE_OFF_XR17V25X_OSC_FREQ    0x08  /* 2 words (4 bytes) */
+> > +#define CTI_EE_OFF_XR17C15X_PART_NUM    0x0A  /* 4 words (8 bytes) */
+> > +#define CTI_EE_OFF_XR17V25X_PART_NUM    0x0E  /* 4 words (8 bytes) */
+> > +#define CTI_EE_OFF_XR17C15X_SERIAL_NUM  0x0E  /* 1 word  (2 bytes) */
+> > +#define CTI_EE_OFF_XR17V25X_SERIAL_NUM  0x12  /* 1 word  (2 bytes) */
+> > +#define CTI_EE_OFF_XR17V35X_SERIAL_NUM  0x11  /* 2 word  (4 bytes) */
+> > +#define CTI_EE_OFF_XR17V35X_BOARD_FLAGS 0x13  /* 1 word  (2 bytes) */ =
+=20
 >=20
-> ----------------------------------------------------------------------
-> On Fri, Apr 12, 2024 at 05:10:05AM -0700, Vamsi Attunuru wrote:
-> > Adds a misc driver for Marvell CN10K DPI(DMA Engine) device's physical
-> > function which initializes DPI DMA hardware's global configuration and
-> > enables hardware mailbox channels between physical function (PF) and
-> > it's virtual functions (VF). VF device drivers (User space drivers)
-> > use this hw mailbox to communicate any required device configuration
-> > on it's respective VF device. Accordingly, this DPI PF driver
-> > provisions the VF device resources.
-> >
-> > At the hardware level, the DPI physical function (PF) acts as a
-> > management interface to setup the VF device resources, VF devices are
-> > only provisioned to handle or control the actual DMA Engine's data tran=
-sfer
-> capabilities.
+> I'm not convinced but words and bytes is really needed.
 >=20
-> No pointer to the userspace code that uses this?  Why not?  How are we
-> supposed to be able to review this?
-
-Userspace code will use two functionalities (mailbox & ioctl) from this dri=
-ver. DPDK DMA driver uses the mailbox and
-the dpdk application uses the ioctl to setup the device attributes. We are =
-waiting for this kernel driver get merged
- to update the corresponding support in DPDK driver and applications. I wil=
-l provide the pointers to both the use
-cases in userspace code.=20
-Meanwhile below is the current dpdk dma driver that uses sysfs based scheme=
- to convey mbox requests to
-the kernel DPI driver which gets replaced with hardware mailbox scheme once=
- mrvl-cn10k-dpi kernel driver is merged.
-https://github.com/DPDK/dpdk/blob/main/drivers/common/cnxk/roc_dpi.c
-
-
+> > +#define CTI_EE_OFF_XR17V35X_PORT_FLAGS	0x14  /* 1 word (per port) */ =
+=20
 >=20
-> > +config MARVELL_CN10K_DPI
-> > +	tristate "Octeon CN10K DPI driver"
-> > +	depends on ARM64 && PCI
-> > +	help
-> > +	  Enables Octeon CN10K DPI driver which intializes DPI PF device's
-> global configuration
-> > +	  and its VFs resource configuration to enable DMA transfers. DPI PF
-> device
-> > +	  does not have any data movement functionality, it only serves VF's
-> resource
-> > +	  configuration requests.
+> There's something wrong with alignment of more than one define above.
 >=20
-> Did this pass checkpatch?  Please wrap your help text at the proper bound=
-ry.
-
-Yes, I did not find any failure, will double check and wrap the text as sug=
-gested.
->=20
-> And what is "DPI"?  What is "PF"?  What is "VF"?  These are all terms tha=
-t
-> need to be documented somewhere, right?
-
-Yes, I will describe in full form or document it somewhere.
-
->=20
-> > --- /dev/null
-> > +++ b/include/uapi/misc/mrvl_cn10k_dpi.h
-> > @@ -0,0 +1,36 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> > +
+> > +#define CTI_FPGA_RS485_IO_REG		0x2008
+> > +
+> > +#define CTI_DEFAULT_PCI_OSC_FREQ	29491200
+> > +#define CTI_DEFAULT_PCIE_OSC_FREQ	125000000
+> > +#define CTI_DEFAULT_FPGA_OSC_FREQ	33333333
+> > +
 > > +/*
-> > + * Marvell Octeon CN10K DPI driver
-> > + *
-> > + * Copyright (C) 2024 Marvell.
-> > + *
+> > + * CTI Serial port line types. These match the values stored in the fi=
+rst
+> > + * nibble of the CTI EEPROM port_flags word.
 > > + */
-> > +
-> > +#ifndef __MRVL_CN10K_DPI_H__
-> > +#define __MRVL_CN10K_DPI_H__
-> > +
-> > +#include <linux/types.h>
-> > +
-> > +#define DPI_MAX_ENGINES 6
-> > +
-> > +struct dpi_mps_mrrs_cfg {
-> > +	__u64 mrrs; /* Max read request size */
-> > +	__u64 mps;  /* Max packet size */
->=20
-> You can spell out variables with more characters :)
-ack
->=20
-> > +	__u64 port; /* Ebus port */
+> > +enum cti_port_type {
+> > +	CTI_PORT_TYPE_NONE =3D 0,
+> > +	CTI_PORT_TYPE_RS232,            //RS232 ONLY
+> > +	CTI_PORT_TYPE_RS422_485,        //RS422/RS485 ONLY
+> > +	CTI_PORT_TYPE_RS232_422_485_HW, //RS232/422/485 HW ONLY Switchable
+> > +	CTI_PORT_TYPE_RS232_422_485_SW, //RS232/422/485 SW ONLY Switchable
+> > +	CTI_PORT_TYPE_RS232_422_485_4B, //RS232/422/485 HW/SW (4bit ex. BCG00=
+4)
+> > +	CTI_PORT_TYPE_RS232_422_485_2B, //RS232/422/485 HW/SW (2bit ex. BBG00=
+8)
+> > +	CTI_PORT_TYPE_MAX,
 > > +};
 > > +
-> > +struct dpi_engine_cfg {
-> > +	__u64 fifo_mask; /* FIFO size mask in KBytes */
-> > +	__u64 molr[DPI_MAX_ENGINES];
+> > +#define CTI_PORT_TYPE_VALID(_port_type) \
+> > +	(((_port_type) > CTI_PORT_TYPE_NONE) && \
+> > +	((_port_type) < CTI_PORT_TYPE_MAX))
+> > +
+> > +#define CTI_PORT_TYPE_RS485(_port_type) \
+> > +	(((_port_type) > CTI_PORT_TYPE_RS232) && \
+> > +	((_port_type) < CTI_PORT_TYPE_MAX))
+> > +
+> >  struct exar8250;
+> >=20
+> >  struct exar8250_platform {
+> > @@ -202,6 +245,8 @@ struct exar8250_board {
+> >=20
+> >  struct exar8250 {
+> >  	unsigned int		nr;
+> > +	unsigned int            osc_freq;
+> > +	struct pci_dev		*pcidev;
+> >  	struct exar8250_board	*board;
+> >  	void __iomem		*virt;
+> >  	int			line[];
+> > @@ -557,6 +602,279 @@ pci_fastcom335_setup(struct exar8250 *priv, struc=
+t pci_dev *pcidev,
+> >  	return 0;
+> >  }
+> >=20
+> > +/**
+> > + * cti_set_tristate() - Enable/Disable RS485 transciever tristate
+> > + * @priv: Device's private structure
+> > + * @port_num: Port number to set tristate on/off
+> > + * @enable: Enable tristate if true, disable if false
+> > + *
+> > + * Most RS485 capable cards have a power on tristate jumper/switch tha=
+t ensures
+> > + * the RS422/RS485 transciever does not drive a multi-drop RS485 bus w=
+hen it is
+> > + * not the master. When this jumper is installed the user must set the=
+ RS485
+> > + * mode to disable tristate prior to using the port.
+> > + *
+> > + * Some Exar UARTs have an auto-tristate feature while others require =
+setting
+> > + * an MPIO to disable the tristate.
+> > + *
+> > + * Return: 0 on success, negative error code on failure
+> > + */
+> > +static int cti_set_tristate(struct exar8250 *priv,
+> > +			unsigned int port_num, bool enable)
+> > +{
+> > +	int ret =3D 0;
+> > +
+> > +	if (!priv || (port_num >=3D priv->nr))
+> > +		return -EINVAL;
+> > +
+> > +	//Only Exar based cards use MPIO, return 0 otherwise
+> > +	if (priv->pcidev->vendor !=3D PCI_VENDOR_ID_EXAR)
+> > +		return 0;
+> > +
+> > +	pci_dbg(priv->pcidev, "%s tristate for port %u\n",
+> > +		(enable ? "enabling" : "disabling"), port_num); =20
 >=20
-> What is a "molr"?
-Sorry, I will add required full forms. It's maximum outstanding load reques=
-ts.
+> dev_dbg()
 >=20
-> > +	__u64 update_molr; /* '1' to update engine MOLR */
->=20
-> You "burn" a whole 64 for 1 bit?  That feels wrong, who on your end
-> reviewed this api to be correct?
-
-Just for the explicit alignment, defined all variables as __u64. I will shr=
-ink it to minimal sizes
-considering any reserved fields if required.
-
->=20
-> > +#define DPI_MAGIC_NUM	0xB8
->=20
-> Did you document this api somewhere?
-
-No, I followed as other MAGIC NUM api definations, will document it as requ=
-ired.
+> Rephrasing the string slightly, you could consider using=20
+> str_enable_disable() from linux/string_choices.h
 >=20
 > > +
-> > +/* Set MPS & MRRS parameters */
-> > +#define DPI_MPS_MRRS_CFG _IOW(DPI_MAGIC_NUM, 1, struct
-> > +dpi_mps_mrrs_cfg)
+> > +	ret =3D exar_mpio_set(priv, port_num, !enable);
+> > +	if (ret)
+> > +		return ret;
 > > +
-> > +/* Set Engine FIFO configuration */
-> > +#define DPI_ENGINE_CFG   _IOW(DPI_MAGIC_NUM, 2, struct
-> dpi_engine_cfg)
+> > +	//ensure MPIO is an output
+> > +	ret =3D exar_mpio_config(priv, port_num, true);
 > > +
-> > +#endif /* __MRVL_CN10K_DPI_H__ */
-> > --
-> > 2.25.1
-> >
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * cti_set_plx_int_enable() - Enable/Disable PCI interrupts
+> > + * @priv: Device's private structure
+> > + * @enable: Enable interrupts if true, disable if false
+> > + *
+> > + * Some older CTI cards require MPIO_0 to be set low to enable the PCI
+> > + * interupts from the UART to the PLX PCI->PCIe bridge.
+> > + *
+> > + * Return: 0 on success, negative error code on failure
+> > + */
+> > +static int cti_set_plx_int_enable(struct exar8250 *priv, bool enable)
+> > +{
+> > +	int ret =3D 0;
+> > +
+> > +	if (!priv)
+> > +		return -EINVAL;
+> > +
+> > +	//Only Exar based cards use MPIO, return 0 otherwise
+> > +	if (priv->pcidev->vendor !=3D PCI_VENDOR_ID_EXAR)
+> > +		return 0;
+> > +
+> > +	pci_dbg(priv->pcidev, "%s plx fix\n",
+> > +		(enable ? "enabling" : "disabling"));
+> > +
+> > +	//INT enabled when MPIO0 is LOW
+> > +	ret =3D exar_mpio_set(priv, 0, !enable);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	//ensure MPIO is an output
+> > +	ret =3D exar_mpio_config(priv, 0, true);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +/**
+> > + * cti_read_osc_freq() - Read the UART oscillator frequency from EEPROM
+> > + * @priv: Device's private structure =20
+>=20
+> Missing second parameter.
+>=20
+> > + *
+> > + * CTI XR17x15X and XR17V25X cards have the serial boards oscillator f=
+requency
+> > + * stored in the EEPROM. FPGA and XR17V35X based cards use the PCI/PCI=
+e clock.
+> > + *
+> > + * Return: frequency on success, negative error code on failure
+> > + */
+> > +static int cti_read_osc_freq(struct exar8250 *priv, uint8_t eeprom_off=
+set)
+> > +{
+> > +	int osc_freq;
+> > +
+> > +	if (!priv)
+> > +		return -EINVAL;
+> > +
+> > +	osc_freq =3D (exar_ee_read(priv, eeprom_offset)); =20
+>=20
+> Unnecessary parenthesis.
+>=20
+> > +	osc_freq |=3D (exar_ee_read(priv, (eeprom_offset + 1)) << 16); =20
+>=20
+> Add the field #define with GENMASK() and use FIELD_PREP() here? Perhaps=20
+> both lines should use FIELD_PREP() even if one of them has 0 shift.
+>=20
+> > +
+> > +	//check if EEPROM word was blank
+> > +	if ((osc_freq =3D=3D 0xFFFF) || (osc_freq =3D=3D 0x0000))
+> > +		return -EIO;
+> > +
+> > +	pci_dbg(priv->pcidev, "osc_freq from EEPROM %d\n", osc_freq);
+> > +
+> > +	return osc_freq;
+> > +}
+> > +
+> > +/**
+> > + * cti_get_port_type_xr17c15x_xr17v25x() - Get the port type of a xr17=
+c15x
+> > + * or xr17v25x card =20
+>=20
+> I suppose this shorter version would be enough to provide the same amount=
+ =20
+> information:
+>=20
+> Get the port type of xr17c15x/xr17v25x
+>=20
+> > + * =20
+>=20
+> No empty line.
+>=20
+> > + * @priv: Device's private structure
+> > + * @port_num: Port to get type of
+> > + *
+> > + * CTI xr17c15x and xr17v25x based cards port types are based on PCI I=
+Ds
+> > + *
+> > + * Return: port type on success, CTI_PORT_TYPE_NONE on failure
+> > + */
+> > +static enum cti_port_type cti_get_port_type_xr17c15x_xr17v25x(struct e=
+xar8250 *priv,
+> > +							unsigned int port_num)
+> > +{
+> > +	enum cti_port_type port_type;
+> > +
+> > +	if (!priv)
+> > +		return CTI_PORT_TYPE_NONE; =20
+>=20
+> Can this happen?
+>=20
+> > +	switch (priv->pcidev->subsystem_device) {
+> > +	//RS232 only cards
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_232:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_232:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_232:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_232_NS:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_232_NS:
+> > +		port_type =3D CTI_PORT_TYPE_RS232;
+> > +		break;
+> > +	//1x RS232, 1x RS422/RS485
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_1_1:
+> > +		port_type =3D (port_num =3D=3D 0) ?
+> > +			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	//2x RS232, 2x RS422/RS485
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_2:
+> > +		port_type =3D (port_num < 2) ?
+> > +			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	//4x RS232, 4x RS422/RS485
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_SP:
+> > +		port_type =3D (port_num < 4) ?
+> > +			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	//RS232/RS422/RS485 HW (jumper) selectable
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_SP_OPTO:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_A:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_SP_OPTO_B:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_A:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_B:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_A:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_16_XPRS_B:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XPRS_OPTO:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_A:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XPRS_OPTO_B:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_LEFT:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_XP_OPTO_RIGHT:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_XP_OPTO:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_4_XPRS_OPTO:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP:
+> > +		port_type =3D CTI_PORT_TYPE_RS232_422_485_HW;
+> > +		break;
+> > +	//RS422/RS485 HW (jumper) selectable
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_485:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_4_485:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_485:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_SP_485:
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_8_XPRS_LP_485:
+> > +		port_type =3D CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	//6x RS232, 2x RS422/RS485
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_6_2_SP:
+> > +		port_type =3D (port_num < 6) ?
+> > +			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	//2x RS232, 6x RS422/RS485
+> > +	case PCI_SUBDEVICE_ID_CONNECT_TECH_PCI_UART_2_6_SP:
+> > +		port_type =3D (port_num < 2) ?
+> > +			CTI_PORT_TYPE_RS232 : CTI_PORT_TYPE_RS422_485;
+> > +		break;
+> > +	default:
+> > +		pci_err(priv->pcidev, "unknown/unsupported device\n");
+> > +		port_type =3D CTI_PORT_TYPE_NONE;
+> > +	}
+> > +
+> > +	return port_type;
+> > +}
+> > +
+> > +/**
+> > + * cti_get_port_type_fpga() - Get the port type of a CTI FPGA card
+> > + * @priv: Device's private structure
+> > + * @port_num: Port to get type of
+> > + *
+> > + * FPGA based cards port types are based on PCI IDs
+> > + *
+> > + * Return: port type on success, CTI_PORT_TYPE_NONE on failure
+> > + */
+> > +static enum cti_port_type cti_get_port_type_fpga(struct exar8250 *priv,
+> > +						unsigned int port_num)
+> > +{
+> > +	enum cti_port_type port_type;
+> > +
+> > +	if (!priv)
+> > +		return CTI_PORT_TYPE_NONE;
+> > +
+> > +	switch (priv->pcidev->device) {
+> > +	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
+> > +	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
+> > +	case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
+> > +		port_type =3D CTI_PORT_TYPE_RS232_422_485_HW;
+> > +		break;
+> > +	default:
+> > +		pci_err(priv->pcidev, "unknown/unsupported device\n"); =20
+>=20
+> dev_err()
+>=20
+> > +		return CTI_PORT_TYPE_NONE;
+> > +	}
+> > +
+> > +	return port_type;
+> > +}
+> > +
+> > +/**
+> > + * cti_get_port_type_xr17v35x() - Read port type from the EEPROM
+> > + * @priv: Device's private structure
+> > + * @port_num: port offset
+> > + *
+> > + * CTI XR17V35X based cards have the port types stored in the EEPROM.
+> > + * This function reads the port type for a single port.
+> > + *
+> > + * Return: port type on success, CTI_PORT_TYPE_NONE on failure
+> > + */
+> > +static enum cti_port_type cti_get_port_type_xr17v35x(struct exar8250 *=
+priv,
+> > +						unsigned int port_num)
+> > +{
+> > +	uint16_t port_flags;
+> > +	uint8_t offset;
+> > +	enum cti_port_type port_type;
+> > +
+> > +	if (!priv)
+> > +		return CTI_PORT_TYPE_NONE;
+> > +
+> > +	offset =3D CTI_EE_OFF_XR17V35X_PORT_FLAGS + port_num;
+> > +	port_flags =3D exar_ee_read(priv, offset);
+> > +
+> > +	port_type =3D (port_flags & 0x00FF); =20
+>=20
+> Add named define with GENMASK() and use FIELD_GET()
+>=20
+> > +
+> > +	if (!CTI_PORT_TYPE_VALID(port_type)) {
+> > +		/*
+> > +		 * If the port type is missing the card assume it is a
+> > +		 * RS232/RS422/RS485 card to be safe.
+> > +		 *
+> > +		 * There is one known board (BEG013) that only has
+> > +		 * 3 of 4 port types written to the EEPROM so this
+> > +		 * acts as a work around.
+> > +		 */
+> > +		pci_warn(priv->pcidev, =20
+>=20
+> dev_warn(). Please fix all pci_xx() logging, I won't flag them from this=
+=20
+> point onwards.
+>=20
+> > +			"failed to get port %d type from EEPROM\n", port_num);
+> > +		port_type =3D CTI_PORT_TYPE_RS232_422_485_HW;
+> > +	}
+> > +
+> > +	return port_type;
+> > +}
+> > +
+> >  static int
+> >  pci_connect_tech_setup(struct exar8250 *priv, struct pci_dev *pcidev,
+> >  		       struct uart_8250_port *port, int idx)
+> > @@ -914,6 +1232,39 @@ static irqreturn_t exar_misc_handler(int irq, voi=
+d *data)
+> >  	return IRQ_HANDLED;
+> >  }
+> >=20
+> > +static unsigned int exar_get_nr_ports(struct exar8250_board *board,
+> > +					struct pci_dev *pcidev)
+> > +{
+> > +	unsigned int nr_ports =3D 0;
+> > +
+> > +	if (!board || !pcidev)
+> > +		return 0;
+> > +
+> > +	if (pcidev->vendor =3D=3D PCI_VENDOR_ID_ACCESSIO) {
+> > +		nr_ports =3D BIT(((pcidev->device & 0x38) >> 3) - 1);
+> > +	} else if (board->num_ports > 0) {
+> > +		//Check if board struct overrides number of ports
+> > +		nr_ports =3D board->num_ports;
+> > +	} else if (pcidev->vendor =3D=3D PCI_VENDOR_ID_EXAR) {
+> > +		//Exar encodes # ports in last nibble of PCI Device ID ex. 0358
+> > +		nr_ports =3D pcidev->device & 0x0f;
+> > +	} else  if (pcidev->vendor =3D=3D PCI_VENDOR_ID_CONNECT_TECH) {
+> > +		//Handle CTI FPGA cards
+> > +		switch (pcidev->device) {
+> > +		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG00X:
+> > +		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_12_XIG01X:
+> > +			nr_ports =3D 12;
+> > +			break;
+> > +		case PCI_DEVICE_ID_CONNECT_TECH_PCI_XR79X_16:
+> > +			nr_ports =3D 16;
+> > +		default:
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	return nr_ports;
+> > +}
+> > +
+> >  static int
+> >  exar_pci_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
+> >  {
+> > @@ -933,18 +1284,18 @@ exar_pci_probe(struct pci_dev *pcidev, const str=
+uct pci_device_id *ent)
+> >=20
+> >  	maxnr =3D pci_resource_len(pcidev, bar) >> (board->reg_shift + 3);
+> >=20
+> > -	if (pcidev->vendor =3D=3D PCI_VENDOR_ID_ACCESSIO)
+> > -		nr_ports =3D BIT(((pcidev->device & 0x38) >> 3) - 1);
+> > -	else if (board->num_ports)
+> > -		nr_ports =3D board->num_ports;
+> > -	else
+> > -		nr_ports =3D pcidev->device & 0x0f;
+> > +	nr_ports =3D exar_get_nr_ports(board, pcidev);
+> > +	if (nr_ports =3D=3D 0) { =20
+>=20
+> Can you please do this refactoring in a preparatory patch, and only add=20
+> the new stuff in this patch into exar_get_nr_ports() patch.
+>=20
+
+I will fix above.=20
+
+Just to clarify By "do this refactoring in a preparatory patch" do you mean=
+:=20
+1. Move existing code to new function in "preparatory patch"
+2. Add new code to new function in another patch
+=20
+Thanks,
+-Parker
