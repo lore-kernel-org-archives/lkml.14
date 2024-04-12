@@ -1,140 +1,109 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A158914BF8A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A13014AD1A
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712941522; cv=none; b=V2bT2FaiDGqtomvXKdnmW0GIR+wb74cYUas9UhLzXJXcIGSS83U962fACSYuq7f+UyMTP2fI07HbVdA5egvCGvEoG2pbOxYU965/WQ/kFhE76YjRAjs4pbVLIGJ21YRlG8urM1R35f+UrWA0gAtjMiZPMPpw7zL8/786sPTJf6I=
+	t=1712941536; cv=none; b=J/KixlCC+757/kX+vkQvqlpetzVn9GC5qcmcOHLbo7WeYKTlT4l6SRYSkYJN6Gevl0qY4uSTEMTtACMVYTasGtwH7Wst3ff/zDGZhDjvnPFhIh9redv6UaIdC6motwGTFHfS9FaP2DnMv8GHYAjlRF4XS8cZuHDpwRKU1ORXpq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712941522; c=relaxed/simple;
-	bh=0iWl1Io+EcPTnphzUKNTmq8fNPf9pTiT7i8KtPiB01w=;
+	s=arc-20240116; t=1712941536; c=relaxed/simple;
+	bh=+su7OSUJsFls4CIQXxEZl65t0clagHiB1QsWAMbAmDE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQfjGaLIQDjQKNxmlByiCOTuFxBfirUvuiSWoMylynI7sqAaJC+Z0iQ7bYv3YSYqAoRUF9UgANZxcJs98Ru9QQkXxsxpGq8ipAa6bfupe/QigFHP1wZfCk/k/CNlVZoE19o14lKA0aFJz56iHGzSN+6dliA8OxmcvTJbQpuYpGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gPhjJHla; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 To:Cc:Content-Type; b=dK5bywlA9EF1cus3pqnJlgwtbw8wcOkOrDeHIi9R4QoOIbPgDu8FsfUM4gXTsR/25p+Pq6miI24FJor5ZjVu4sSFqhwG9D6ILk/CKjpiZUXFHbmo1ZDkS1JRKSQmO/C0XBE/FtxLMZCdzw5hKdsctuj4XN+ZYbtCE9iCvMbvT3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=PIA/i4s+; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gPhjJHla"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d717603aa5so13567121fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:05:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="PIA/i4s+"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5aa4204bacdso876227eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712941519; x=1713546319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o2+F6Z5+nSqcwJp5/u9iM3I5euO/lGGwbVB876NJ+N8=;
-        b=gPhjJHlaLUE/e3w+17PhCQyuh4F72X36mqiM3kO60Ot4HdC/t42y0c4b9UUv5NxYxY
-         MXIysTqFeyRPReWvMCuU3Ey6MDPWZ5l6Toi6InbxxGf0//W2sebHi6mH4UgPnbGZCBDI
-         dBzaYo0BbMnKud/8M8zmVY3gAjZULsPQx4FJwQanynAFknTMwZurVr0Y4pVijmE2AD0X
-         1P2DklG7e5Z9EUHGwNf0GD8n/W+qlPU1WhkK0C3mfrtlD8eRiB/G45Uh5VswDiemz3nT
-         80qMcVXiiSLEEBdli1V4vkVtwX65hdmBhAy66DBTUurt9K6XK+8QkIe8tHgfkhW6VdAo
-         nDfg==
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1712941534; x=1713546334; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/EuVGwHTxmbtDwTp4fNMFd9ojHayxYpTNJMubGDO+yg=;
+        b=PIA/i4s+83uQbaOaXto2oSszm8r4MTN8R47nuVJ5DKe7kQipQJoPAEJLySGKEaduoi
+         fBhzWW8686wJPotlI9vTyuNTFVQ1/NgKD4YGRbAwmGPCE+EW6hcRFU6vD48QyFN0oiUL
+         jrcLnNsM9nFzlKMCcrZxq0Prpz6jiiVreEg88ZC+Dk9IyK6in6rraBhlALD1hLnfPbj3
+         KyGuJBg3D5Y/7hLw1+Lo3fyfpQLwtYJ4c9QxFHdczXGO7nHr8k7m/4N1xKArcoGF+/oG
+         jeLKP3Gh7zn1JEtCgwVWkdYSNXUIayQvSZXgWtYEFlLNy0JbIHimXFCGGHd6DNop9T2f
+         0a2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712941519; x=1713546319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o2+F6Z5+nSqcwJp5/u9iM3I5euO/lGGwbVB876NJ+N8=;
-        b=hUPkcWUGEL9K6sHC8laAMdo98SLWvA0YxTOXwrNXAI8zRlGfIyHsvRRS+YOzIzSDY3
-         9R6j0tf5tKK24R9jF+2/usmNNYBZwj66mQsiomZbUStOxcpW0FJjNCSiT9/6mFnEXLYU
-         xSiruK/QrWKDxGsleaGTFwRbGvINuQ4mvetoLaP6TOHNsXuCGFmNiTvpxXHcIbZRi/fS
-         DYMMp5eG9yXK60+0O0AH+Q/4vPQUMI5oAjZ8+b28DJT7bazwJ8BH9eq9aCPt2dNJllmL
-         oP7ZJXZ/XFS3Io79NAtK8JtmP258THrFmbJM7hn1A4gj+O0cS99QXYT8dvERCS47abZk
-         SggA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0gZxn+sqnkR1I4P68Tsjofr+/c++UctSpQAdtPrbSNsn3nxncN26v9YFGZjfhEC7dbFtzGr4Ub4rZ0PB6bxE8bpLdAUbndTZfaYEj
-X-Gm-Message-State: AOJu0YxuAcVR5iQBEyOArxFY+oOlrArySajy2BnHVHvreA1mtw/AUczE
-	Js1//aTMPUds86mNWhTcgpSyTA800xkgqsWKqzHEqWuUhyqlvgc6RQBUdxZpblvhHCYJZzxkRZk
-	pmhEsnP6KSYH9N6ZWNhlDV4Ve+eohqFdg/zaknHcaHXw9zQB5ZYo=
-X-Google-Smtp-Source: AGHT+IFTwWgekolEJQkFIbbTNtxauFKuhwni5/Gb89sRytgSj62M43pT7a0jCUkjzdpqZU6SGxa9xotVOWrotjKfpBI=
-X-Received: by 2002:a2e:9b06:0:b0:2d5:122a:4b1f with SMTP id
- u6-20020a2e9b06000000b002d5122a4b1fmr2435885lji.43.1712941518949; Fri, 12 Apr
- 2024 10:05:18 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712941534; x=1713546334;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/EuVGwHTxmbtDwTp4fNMFd9ojHayxYpTNJMubGDO+yg=;
+        b=KIiAeY0b4DB/upKlz1cUmOkhw7Ix8BVXS6VSGpvJQ4HSBG/33V2BsYW/SifkURIJvp
+         AJw2lQbqJT23ArIP2NsQbdkL8tQ344TIVwnix3BL/SbvpY2uV3idvtmN7C0vRrzPliNq
+         sZdrdNk6nkaJZH9lOfc6HqpMml9S2MxAGATJO3piNv+Jgj+yX1nZqNgikyr37CGudqAa
+         3LjF39/prxWNKjeBgKSR7JxjlQ/xFrLA9FvNKbYU44QAp+Wx2dZrmh7voVQRqA+OLUW2
+         /jsBcpNb/6mgjlDLJJJEzL4HHobp7wP3w/qveimhCuo/W4o2sFnKnkQ0ar/yxOHmn5nw
+         +DqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXG9NpbN0t+QRgU1iG5bfNpv9KZqsjOSfJkuLW41Aa6nLOT10mdDEcN23CeXYW9MbgptdtJnFDV5kpKusiCE3p5kTqqtToQSP6SBwu/
+X-Gm-Message-State: AOJu0YxijkVssNMcnmU5BYM2A90hgFUhF54gOXVvLDlAQgvXLYiTYsqA
+	KZWxFnRpQDsxh1KOehjSxuwvNXkn9CyZ9g3cW8kIOquAWHNKaJpRcCY0qNYifInRyBPz8gCx9Ce
+	n0lyVVo6wQZVOMVDDucBg8coZvmm7/XX9JdXvjQ==
+X-Google-Smtp-Source: AGHT+IFFWNWDQpb4IdXMSld7uI+GGFrLl02QQNkjBBmvPtfyGISuhykwiEhQTc4Uews9+sCsYC//GV0j7fEO9UlX82A=
+X-Received: by 2002:a05:6870:1650:b0:22e:ed14:3e3d with SMTP id
+ c16-20020a056870165000b0022eed143e3dmr3334118oae.33.1712941534211; Fri, 12
+ Apr 2024 10:05:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
- <20240411-dev-charlie-support_thead_vector_6_9-v1-14-4af9815ec746@rivosinc.com>
- <20240412-moonshine-acting-0df1a90b86d2@wendy>
-In-Reply-To: <20240412-moonshine-acting-0df1a90b86d2@wendy>
-From: Evan Green <evan@rivosinc.com>
-Date: Fri, 12 Apr 2024 10:04:42 -0700
-Message-ID: <CALs-HsviR8E-sRvzz7pd5eVGb4+XsAdG1hhbZOPf+m3Cu4JP_Q@mail.gmail.com>
-Subject: Re: [PATCH 14/19] riscv: hwprobe: Disambiguate vector and
- xtheadvector in hwprobe
-To: Conor Dooley <conor.dooley@microchip.com>
-Cc: Charlie Jenkins <charlie@rivosinc.com>, Conor Dooley <conor@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Palmer Dabbelt <palmer@rivosinc.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+References: <20240220214558.3377482-1-souravpanda@google.com>
+ <20240220214558.3377482-2-souravpanda@google.com> <20240319143320.d1b1ef7f6fa77b748579ba59@linux-foundation.org>
+In-Reply-To: <20240319143320.d1b1ef7f6fa77b748579ba59@linux-foundation.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 12 Apr 2024 13:04:57 -0400
+Message-ID: <CA+CK2bDMNkCq6ts1BLAgJbAcUiq-106GCZZr_=cU0hW+jDYeiw@mail.gmail.com>
+Subject: Re: [PATCH v9 1/1] mm: report per-page metadata information
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Sourav Panda <souravpanda@google.com>, corbet@lwn.net, gregkh@linuxfoundation.org, 
+	rafael@kernel.org, mike.kravetz@oracle.com, muchun.song@linux.dev, 
+	rppt@kernel.org, david@redhat.com, rdunlap@infradead.org, 
+	chenlinxuan@uniontech.com, yang.yang29@zte.com.cn, tomas.mudrunka@gmail.com, 
+	bhelgaas@google.com, ivan@cloudflare.com, yosryahmed@google.com, 
+	hannes@cmpxchg.org, shakeelb@google.com, kirill.shutemov@linux.intel.com, 
+	wangkefeng.wang@huawei.com, adobriyan@gmail.com, vbabka@suse.cz, 
+	Liam.Howlett@oracle.com, surenb@google.com, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, weixugc@google.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 12, 2024 at 4:35=E2=80=AFAM Conor Dooley <conor.dooley@microchi=
-p.com> wrote:
+> >  Documentation/filesystems/proc.rst |  3 +++
+> >  fs/proc/meminfo.c                  |  4 ++++
+> >  include/linux/mmzone.h             |  4 ++++
+> >  include/linux/vmstat.h             |  4 ++++
+> >  mm/hugetlb_vmemmap.c               | 17 ++++++++++++----
+> >  mm/mm_init.c                       |  3 +++
+> >  mm/page_alloc.c                    |  1 +
+> >  mm/page_ext.c                      | 32 +++++++++++++++++++++---------
+> >  mm/sparse-vmemmap.c                |  8 ++++++++
+> >  mm/sparse.c                        |  7 ++++++-
+> >  mm/vmstat.c                        | 26 +++++++++++++++++++++++-
+> >  11 files changed, 94 insertions(+), 15 deletions(-)
 >
-> On Thu, Apr 11, 2024 at 09:11:20PM -0700, Charlie Jenkins wrote:
-> > Ensure that hwprobe does not flag "v" when xtheadvector is present.
-> >
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >  arch/riscv/kernel/sys_hwprobe.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hw=
-probe.c
-> > index 8cae41a502dd..e0a42c851511 100644
-> > --- a/arch/riscv/kernel/sys_hwprobe.c
-> > +++ b/arch/riscv/kernel/sys_hwprobe.c
-> > @@ -69,7 +69,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pa=
-ir,
-> >       if (riscv_isa_extension_available(NULL, c))
-> >               pair->value |=3D RISCV_HWPROBE_IMA_C;
-> >
-> > -     if (has_vector())
-> > +     if (has_vector() && !riscv_has_vendor_extension_unlikely(RISCV_IS=
-A_VENDOR_EXT_XTHEADVECTOR))
+> And yet we offer the users basically no documentation.  The new sysfs
+> file should be documented under Documentation/ABI somewhere and
+
+There are no new sysfs files in this change. The new Memmap field in
+/proc/meminfo is documented.
+
+> perhaps we could prepare some more expansive user-facing documentation
+> elsewhere?
 >
-> Hmm, I think this is "dangerous". has_vector() is used across the kernel
-> now in several places for the in-kernel vector. I don't think that
-> has_vector() should return true for the T-Head stuff given that &
-> has_vector() should represent the ratified spec. I'll have to think
-> about this one and how nasty this makes any of the save/restore code
-> etc.
+> I'd like to hear others' views on the overall usefulness/utility of this
+> change, please?
 
-Yeah, my nose crinkled here as well. If you're having to do a
-vendorish thing in this generic spot, then others may too, suggesting
-perhaps this isn't the cleanest way to go about it. Ideally extensions
-are all additive, rather than subtractive, I guess?
+Sourav, could you please consolidate the cover letter and the patch
+into one email, sync it with the upstream kernel, and send the new
+version putting the necessary background information into the stat
+area in the patch.
 
-
->
-> >               pair->value |=3D RISCV_HWPROBE_IMA_V;
-> >
-> >       /*
-> > @@ -112,7 +112,7 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *=
-pair,
-> >               EXT_KEY(ZACAS);
-> >               EXT_KEY(ZICOND);
-> >
-> > -             if (has_vector()) {
-> > +             if (has_vector() && !riscv_has_vendor_extension_unlikely(=
-RISCV_ISA_VENDOR_EXT_XTHEADVECTOR)) {
-> >                       EXT_KEY(ZVBB);
-> >                       EXT_KEY(ZVBC);
-> >                       EXT_KEY(ZVKB);
-> >
-> > --
-> > 2.44.0
-> >
+Thanks,
+Pasha
