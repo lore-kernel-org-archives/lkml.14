@@ -1,100 +1,251 @@
-Received: from fallback17.i.mail.ru (fallback17.i.mail.ru [79.137.243.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079BD4F200;
-	Fri, 12 Apr 2024 07:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.72
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B23614F613
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712908401; cv=none; b=sojxLutUBn/K4lA2lKBH/ypxXdJx0JKl33oj8YqdwzNN0u48Ige71t/Rk4MQmfIeT7KHOra4fM2VC1uvcXcpHxSuRyMYcLY/jRq7x+Rdo1/SdsNoQAtca0GuaJvOoh9E7w7uHt7hISW/9VmNj84cjSasCFz4+kM5CPcbgRh+GSc=
+	t=1712908404; cv=none; b=Dz1oNYHrKR9B1vZEkjBCMmBuTpQ47+bkCJdfIkJ04i8y9xKmIDnjiatIBbBLLw1rP7U7eMHN1uZbMMYnLE65H4mmZDyX+wOId3fL5W7P2hcJQNSZGiDCDbpOuLjN1BT/k57bHu2iY/2J+xbU1/vCi/pzrSgxVYyuZRYMjAu4dUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712908401; c=relaxed/simple;
-	bh=OKx8RMEOBNirQ1rOvDayBC9TYkIWkSrEyJ8Drzfi+tk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tfCenDZNj1nCevsQNcbW/qTj4ulV6xrpumJtMcTDgxveqWlLZO82gxoSZgpaQv0cFS8mGLwNDTL0fF0rUtfCIOUBUiTffM1QnILN+OCb59g1xy3dT0SEXZNhHsZk/uq9fb7ATBqGT2XnDzcDrPO/09DhLKWshOdM2NTBNerzgr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru; spf=pass smtp.mailfrom=mail.ru; dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b=btjszst1; dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b=RBM3cxh0; arc=none smtp.client-ip=79.137.243.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mail.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mail.ru
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b="btjszst1";
-	dkim=pass (2048-bit key) header.d=mail.ru header.i=@mail.ru header.b="RBM3cxh0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
-	h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=Nw7gw8V1g7SWa06oevaWJ4weuXT4Q/jFQXTqUvgoqX4=;
-	t=1712908398;x=1712998398; 
-	b=btjszst15a6Ib/omk+ca8PK+g0rdlk7OKNhvmuocv5kVdBGk5LtFYdtVvEkibV5RL3ISKIXgq2wHN526TtU0TNf91DeACthSL1u6FoX7jQOSDG7QkYswxhyaKOng6GYpG6lSpMTXOv6M2iGf0d9ddrS/+WZVWzmwykwI8bAkjv1/nx9kmszXEwIvMUIPRXhoim+KulVK52IXvIW1H88Egwx5Yt027I3CVeLaL2Y6lxnfQUmd81wTvxNcNKcXh5y6DaU/D6Fw2NDhZZMMoWjgwfTi8W9jLVIIpS65lCXHp+xzlZ9WDOSWYGbIy0JQ2cosfMGt5kTNxqSen5RIxUfmvA==;
-Received: from [10.12.4.26] (port=36338 helo=smtp50.i.mail.ru)
-	by fallback17.i.mail.ru with esmtp (envelope-from <end.to.start@mail.ru>)
-	id 1rvBig-009LvR-3k; Fri, 12 Apr 2024 10:53:10 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru;
-	s=mail4; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:Cc:
-	To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=Nw7gw8V1g7SWa06oevaWJ4weuXT4Q/jFQXTqUvgoqX4=; t=1712908390; x=1712998390; 
-	b=RBM3cxh0TkLK0BRHJ3Q19FsNncDmeqT92ZAonmjmDhUxKeXtHYUHbEtCuuv1vLI32ay3OEcz9Pf
-	oQ6FJEYhapATu9J6Ghpu3v+RadpqhnngMr2BB5c3Fcs8jsMV6J2ve3p/ewTO3/duQNO6TJ0yqHss9
-	tTWYCAqIKEXCi5VLytHM6kYlx+d/v0aHud4tWjj/avAbzruXxhUGFgXIPXyCvk98znEg8TpSa6Qf/
-	+CyLWDouw/mhmDvcjTtDVXBCizc7MV1Sn7r10Bv9ST0hoTSQEvcA0yOaqCxc2UwneTtz6QM54xyLi
-	GitAQrQ0ToQkz+P5QOELudjicibj2WZjPBVw==;
-Received: by smtp50.i.mail.ru with esmtpa (envelope-from <end.to.start@mail.ru>)
-	id 1rvBiR-0000000H2q6-2vBq; Fri, 12 Apr 2024 10:52:56 +0300
-From: "end.to.start" <end.to.start@mail.ru>
-To: broonie@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: linux-sound@vger.kernel.org,
-	"end.to.start" <end.to.start@mail.ru>
-Subject: [PATCH] Support microphone from Acer Aspire A315-24P
-Date: Fri, 12 Apr 2024 10:52:22 +0300
-Message-ID: <20240412075222.9562-1-end.to.start@mail.ru>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1712908404; c=relaxed/simple;
+	bh=cN8LZzqiF0iXw1IRK2mxtwca3ikor0Lzvme1Z/+UwxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ryLVpoWoFSGpFeyC1c1qEDnP6ke8aYAl3/my2hBW4e7A/QWVMUd3BVA7UfBp6pDejLcbiM6ZV5qfx2FfmzNgC2FU9QpXGevydUhGxSodrKIqfDSO2DzjkE6ei985d0Oyl8oHKBQZrnsjw0pMg9Qg1l9CjjJb2hd1lU5+VupQ0v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1962339;
+	Fri, 12 Apr 2024 00:53:50 -0700 (PDT)
+Received: from [10.57.73.208] (unknown [10.57.73.208])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5199F3F6C4;
+	Fri, 12 Apr 2024 00:53:20 -0700 (PDT)
+Message-ID: <37336367-f876-4429-a8a6-f887fc7f69ee@arm.com>
+Date: Fri, 12 Apr 2024 08:53:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-4EC0790: 1
-X-7564579A: 646B95376F6C166E
-X-77F55803: 4F1203BC0FB41BD9D327C87852EB66D37A377202123D15E2522C17BB21D33F58182A05F538085040F90E0877D182F11A89CEA9C911D0999574D1B7AB0ACAA2244EEA2BC59F931303E41C5801A3FD0B27
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE70F1463317FA92A59C2099A533E45F2D0395957E7521B51C2CFCAF695D4D8E9FCEA1F7E6F0F101C6778DA827A17800CE7624C4D757C4F5837EA1F7E6F0F101C6723150C8DA25C47586E58E00D9D99D84E1BDDB23E98D2D38B73AB1701401CD871DAA35A1D7314D5952739E8A0AC86CF83580ED61A867047991DF9E95F17B0083B26EA987F6312C9EC9ECD01F8117BC8BEA471835C12D1D9774AD6D5ED66289B5278DA827A17800CE764603B5C71CE8B8F9FA2833FD35BB23D2EF20D2F80756B5F868A13BD56FB6657A471835C12D1D977725E5C173C3A84C3776A0366D588B3C3117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CF86712D2D5FBAF151BA3038C0950A5D36C8A9BA7A39EFB766D91E3A1F190DE8FDBA3038C0950A5D36D5E8D9A59859A8B6322AD207363670A176E601842F6C81A1F004C906525384303E02D724532EE2C3F43C7A68FF6260569E8FC8737B5C2249D52CD31C43BF465FE827F84554CEF50127C277FBC8AE2E8BF1175FABE1C0F9B6AAAE862A0553A3920E30A4C9C8E338DA3C19E37C924DD61743847C11F186F3C59DAA53EE0834AAEE
-X-C1DE0DAB: 0D63561A33F958A58E751B7D3ABCA9CD5002B1117B3ED6969A73F4EC7CEBA76147A99E6294EE8661823CB91A9FED034534781492E4B8EEAD13926AAAFEFA6645C79554A2A72441328621D336A7BC284946AD531847A6065AED8438A78DFE0A9EBDAD6C7F3747799A
-X-C8649E89: 1C3962B70DF3F0AD93B9BA3C444D644977DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFA66A8B581C0755EC07C24D1998CB35ED275FE1048C5238080C47DAB95AAB298331E81B06003A5D531E5F415AA55898CC8DC79277775420DD71ECAF277B75E13A21A9F8578786A662C226CC413062362A913E6812662D5F2A65982B5FD154E7DC8F0ECD54AF826900C3981EEBE9DB10F943082AE146A756F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojj8Sl06kWf01chujAgwQSrg==
-X-Mailru-Sender: 0EFB88FCB9539F62C512525400A14327185286590AF757AD89CEA9C911D0999574D1B7AB0ACAA22487BBD21BC54961EB3F19AE7352BF46025A92E71CC7C3152D8D05DC8E9113C1AA6463BD5ADB651FAA6DC89CDB30474D55C77752E0C033A69E3453F38A29522196
-X-Mras: Ok
-X-4EC0790: 1
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B4DB7CCFC93CF1872E42D0773418C2900980F43BF76D49B75868F3CF0E9FE49B69572DE16CB4682662B32016D36410CA15E7BB253B9568306E66F4DF1066E2BE9E
-X-7FA49CB5: 0D63561A33F958A55113AB23EF158DD6AF3CAE66BD12DAE900FA3FC803982463CACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F79006378E5B25976F539216389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8C824672CB62AFFF2F6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA775ECD9A6C639B01B78DA827A17800CE7DCDFD9654CA3005A731C566533BA786AA5CC5B56E945C8DA
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojj8Sl06kWf02B1XWdI2jDlw==
-X-Mailru-MI: 8002000000000800
-X-Mras: Ok
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: mm: Don't remap pgtables for allocate vs
+ populate
+Content-Language: en-GB
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Donald Dutile <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Itaru Kitayama <itaru.kitayama@fujitsu.com>
+References: <20240404143308.2224141-1-ryan.roberts@arm.com>
+ <20240404143308.2224141-4-ryan.roberts@arm.com>
+ <ZhffSyrqCQsMV2pG@FVFF77S0Q05N>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ZhffSyrqCQsMV2pG@FVFF77S0Q05N>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: end.to.start <end.to.start@mail.ru>
----
- sound/soc/amd/yc/acp6x-mach.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi Mark,
 
-diff --git a/sound/soc/amd/yc/acp6x-mach.c b/sound/soc/amd/yc/acp6x-mach.c
-index 69c68d8e7a6b54fc1fcfc3fac3a73d58403071f5..1760b5d42460afe83f3d50dbcdd73daf9455fc12 100644
---- a/sound/soc/amd/yc/acp6x-mach.c
-+++ b/sound/soc/amd/yc/acp6x-mach.c
-@@ -430,6 +430,13 @@ static const struct dmi_system_id yc_acp_quirk_table[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "MRID6"),
- 		}
- 	},
-+	{
-+		.driver_data = &acp6x_card,
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "MDC"),
-+			DMI_MATCH(DMI_BOARD_NAME, "Herbag_MDU"),
-+		}
-+	},
- 	{
- 		.driver_data = &acp6x_card,
- 		.matches = {
--- 
-2.44.0
+[...]
+
+> Does something like the below look ok to you? The trade-off performance-wise is
+> that late uses will still use the fixmap, and will redundantly zero the tables,
+> but the logic remains fairly simple, and I suspect the overhead for late
+> allocations might not matter since the bulk of late changes are non-allocating.
+> 
+> Mark
+> 
+> ---->8-----
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 105a95a8845c5..1eecf87021bd0 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1010,6 +1010,8 @@ static inline p4d_t *p4d_offset_kimg(pgd_t *pgdp, u64 addr)
+>  
+>  static inline bool pgtable_l5_enabled(void) { return false; }
+>  
+> +#define p4d_index(addr)              (((addr) >> P4D_SHIFT) & (PTRS_PER_P4D - 1)
+> +
+>  /* Match p4d_offset folding in <asm/generic/pgtable-nop4d.h> */
+>  #define p4d_set_fixmap(addr)		NULL
+>  #define p4d_set_fixmap_offset(p4dp, addr)	((p4d_t *)p4dp)
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index dc86dceb0efe6..4b944ef8f618c 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -109,28 +109,12 @@ EXPORT_SYMBOL(phys_mem_access_prot);
+>  static phys_addr_t __init early_pgtable_alloc(int shift)
+>  {
+>  	phys_addr_t phys;
+> -	void *ptr;
+>  
+>  	phys = memblock_phys_alloc_range(PAGE_SIZE, PAGE_SIZE, 0,
+>  					 MEMBLOCK_ALLOC_NOLEAKTRACE);
+>  	if (!phys)
+>  		panic("Failed to allocate page table page\n");
+>  
+> -	/*
+> -	 * The FIX_{PGD,PUD,PMD} slots may be in active use, but the FIX_PTE
+> -	 * slot will be free, so we can (ab)use the FIX_PTE slot to initialise
+> -	 * any level of table.
+> -	 */
+> -	ptr = pte_set_fixmap(phys);
+> -
+> -	memset(ptr, 0, PAGE_SIZE);
+> -
+> -	/*
+> -	 * Implicit barriers also ensure the zeroed page is visible to the page
+> -	 * table walker
+> -	 */
+> -	pte_clear_fixmap();
+> -
+>  	return phys;
+>  }
+>  
+> @@ -172,6 +156,14 @@ bool pgattr_change_is_safe(u64 old, u64 new)
+>  	return ((old ^ new) & ~mask) == 0;
+>  }
+>  
+> +static void init_clear_pgtable(void *table)
+> +{
+> +	clear_page(table);
+> +
+> +	/* Ensure the zeroing is observed by page table walks. */
+> +	dsb(ishst);
+> +}
+> +
+>  static pte_t *init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+>  		       phys_addr_t phys, pgprot_t prot)
+>  {
+> @@ -216,12 +208,18 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>  			pmdval |= PMD_TABLE_PXN;
+>  		BUG_ON(!pgtable_alloc);
+>  		pte_phys = pgtable_alloc(PAGE_SHIFT);
+> +
+> +		ptep = pte_set_fixmap(pte_phys);
+> +		init_clear_pgtable(ptep);
+> +
+>  		__pmd_populate(pmdp, pte_phys, pmdval);
+>  		pmd = READ_ONCE(*pmdp);
+> +	} else {
+> +		ptep = pte_set_fixmap(pmd_page_paddr(pmd));
+>  	}
+>  	BUG_ON(pmd_bad(pmd));
+>  
+> -	ptep = pte_set_fixmap_offset(pmdp, addr);
+> +	ptep += pte_index(addr);
+>  	do {
+>  		pgprot_t __prot = prot;
+>  
+> @@ -303,12 +301,18 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+>  			pudval |= PUD_TABLE_PXN;
+>  		BUG_ON(!pgtable_alloc);
+>  		pmd_phys = pgtable_alloc(PMD_SHIFT);
+> +
+> +		pmdp = pmd_set_fixmap(pmd_phys);
+> +		init_clear_pgtable(pmdp);
+> +
+>  		__pud_populate(pudp, pmd_phys, pudval);
+>  		pud = READ_ONCE(*pudp);
+> +	} else {
+> +		pmdp = pmd_set_fixmap(pud_page_paddr(pud));
+>  	}
+>  	BUG_ON(pud_bad(pud));
+>  
+> -	pmdp = pmd_set_fixmap_offset(pudp, addr);
+> +	pmdp += pmd_index(addr);
+>  	do {
+>  		pgprot_t __prot = prot;
+>  
+> @@ -345,12 +349,18 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>  			p4dval |= P4D_TABLE_PXN;
+>  		BUG_ON(!pgtable_alloc);
+>  		pud_phys = pgtable_alloc(PUD_SHIFT);
+> +
+> +		pudp = pud_set_fixmap(pud_phys);
+> +		init_clear_pgtable(pudp);
+> +
+>  		__p4d_populate(p4dp, pud_phys, p4dval);
+>  		p4d = READ_ONCE(*p4dp);
+> +	} else {
+> +		pudp = pud_set_fixmap(p4d_page_paddr(p4d));
+
+With this change I end up in pgtable folding hell. pXX_set_fixmap() is defined
+as NULL when the level is folded (and pXX_page_paddr() is not defined at all).
+So it all compiles, but doesn't boot.
+
+I think the simplest approach is to follow this pattern:
+
+----8<----
+@@ -340,12 +338,15 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long
+addr, unsigned long end,
+                        p4dval |= P4D_TABLE_PXN;
+                BUG_ON(!pgtable_alloc);
+                pud_phys = pgtable_alloc(PUD_SHIFT);
++               pudp = pud_set_fixmap(pud_phys);
++               init_clear_pgtable(pudp);
++               pudp += pud_index(addr);
+                __p4d_populate(p4dp, pud_phys, p4dval);
+-               p4d = READ_ONCE(*p4dp);
++       } else {
++               BUG_ON(p4d_bad(p4d));
++               pudp = pud_set_fixmap_offset(p4dp, addr);
+        }
+-       BUG_ON(p4d_bad(p4d));
+
+-       pudp = pud_set_fixmap_offset(p4dp, addr);
+        do {
+                pud_t old_pud = READ_ONCE(*pudp);
+----8<----
+
+For the map case, we continue to use pud_set_fixmap_offset() which is always
+defined (and always works correctly).
+
+Note also that the previously unconditional BUG_ON needs to be prior to the
+fixmap call to be useful, and its really only valuable in the map case because
+for the alloc case we are the ones setting the p4d so we already know its not
+bad. This means we don't need the READ_ONCE() in the alloc case.
+
+Shout if you disagree.
+
+Thanks,
+Ryan
+
+>  	}
+>  	BUG_ON(p4d_bad(p4d));
+>  
+> -	pudp = pud_set_fixmap_offset(p4dp, addr);
+> +	pudp += pud_index(addr);
+>  	do {
+>  		pud_t old_pud = READ_ONCE(*pudp);
+>  
+> @@ -400,12 +410,18 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>  			pgdval |= PGD_TABLE_PXN;
+>  		BUG_ON(!pgtable_alloc);
+>  		p4d_phys = pgtable_alloc(P4D_SHIFT);
+> +
+> +		p4dp = p4d_set_fixmap(p4d_phys);
+> +		init_clear_pgtable(p4dp);
+> +
+>  		__pgd_populate(pgdp, p4d_phys, pgdval);
+>  		pgd = READ_ONCE(*pgdp);
+> +	} else {
+> +		p4dp = p4d_set_fixmap(pgd_page_paddr(pgd));
+>  	}
+>  	BUG_ON(pgd_bad(pgd));
+>  
+> -	p4dp = p4d_set_fixmap_offset(pgdp, addr);
+> +	p4dp += p4d_index(addr);
+>  	do {
+>  		p4d_t old_p4d = READ_ONCE(*p4dp);
+>  
+> @@ -475,8 +491,6 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
+>  	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL);
+>  	BUG_ON(!ptr);
+>  
+> -	/* Ensure the zeroed page is visible to the page table walker */
+> -	dsb(ishst);
+>  	return __pa(ptr);
+>  }
+>  
 
