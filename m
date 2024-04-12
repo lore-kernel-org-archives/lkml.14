@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6745E12DDA1
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B651E12F5BE
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931736; cv=none; b=c77cbwhO/uDzmOfdPdc+/Ai1VI17qwfLjCiWQBEBbu3MZxkBWdwxPsR0p/i5O93sXKfRIeTf5j9FSDY4n45K3dExPrgNbUssZH91nSUJti+qOu8BaLjkuFA8ruMXHrXZtu94TgM1d5VebtHXIGhH7OtLkt8uiej0xEAZc5pZ9Dw=
+	t=1712931743; cv=none; b=kbDTJE0lar5qFf1+0iR6kXOwin924j2PDUjffSFYPdJNJhCu2mXQ1TzZJWW3oFlf6ehS5eLGH9wa+Drzt9emtYcHknnFiR05lS4Z/p9zw/YWjS9nIRsgwpB1ouQ0FP7kuztw0jOptFLcdKEcJJHBqOXKxoo4qglDjxiUTd/NzZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931736; c=relaxed/simple;
-	bh=/tXyzOYyw4pq31cL1FFyaL3wPXVZ/5m/14BG0LXOZEM=;
+	s=arc-20240116; t=1712931743; c=relaxed/simple;
+	bh=IOUaMgAMDyPKIRLMCkvfgNrlkwlLkCurHBnDB1JP31U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N2Yomh3d5K/OZQ7bI7TSQqGd43Ti9bXyZypXAht8KcOsN3lR0GdDuFelHjC3En6kjMi0CIDKaxGHUQ/IssKyxxA2lsuyLE6be3CxQkbWryy0v0klnsrLpclihhJOQ0jCXuinUFUkkJZKAyaJjgrntrIWrwe+0skBsMPJylwzufo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R/KAOzVh; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=nnEKOZJ3Tjofcnmyl9e2Q3vpo5XQBZxRQntXiL6ItYN7/7C4b/P8lOWry1vYl56oQcWXP16U/csHMU3zTrHOOlLAX0RxP/Vn76r7M/ZIdEdkXY4SQWd9wimqzeXn1RaNXPQR5KlNHehRFTeXMXeoA49oUd3MXShGUruQdpQv5ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoVT+foZ; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R/KAOzVh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoVT+foZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712931734;
+	s=mimecast20190719; t=1712931740;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MbXbQefcOAyCyrQA8FaYb/pxsfcbT6vaazXi8Pr/n4g=;
-	b=R/KAOzVhrPjf1JlRxudY92TYy/JJCaOUnmy1tIx91WIH3ZKMitvo+HxFXLolwZwbgxNE05
-	XKRa9F5CAKn4c0kEmp2NKwq9hdowYm9y2rReBggdzKAAG6qbGjydFUKF76qPr8ynffPTaY
-	h+xzxLc8YD7IwtkYrrAmlsPnN3P/izk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-621-BXEQ_7SlMmigl_EDAZ0XiQ-1; Fri,
- 12 Apr 2024 10:22:10 -0400
-X-MC-Unique: BXEQ_7SlMmigl_EDAZ0XiQ-1
+	bh=ppsViCrPayPuYElY5iEdpfo5QgbpE7OrtZfdnZgX7ms=;
+	b=EoVT+foZikV8FVpJ6Yoz+twA8gw4pSJI0//VUg6arWJphbtn7WujMyharxubj4u1mdhDJh
+	F+Ej0F3QBCfUEzXVcFa3+yoz6dlzHdKIywFu526Qt1nLnzoZhaFxkFr0rkUC2AEdL9jAaB
+	9nVFLjJjxetEq0KACrz37Qx/kSdBbEY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-26-mGdE6oLKP3WmzI2aFwwpWg-1; Fri, 12 Apr 2024 10:22:17 -0400
+X-MC-Unique: mGdE6oLKP3WmzI2aFwwpWg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 940EB29AB3EE;
-	Fri, 12 Apr 2024 14:22:09 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 24D99188ACA2;
+	Fri, 12 Apr 2024 14:22:17 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.39.193.165])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BB36240C6CC0;
-	Fri, 12 Apr 2024 14:22:06 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 85A9E40C6DAE;
+	Fri, 12 Apr 2024 14:22:13 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc: kvm@vger.kernel.org,
 	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v2 07/10] s390/uv: convert uv_destroy_owned_page() to uv_destroy_(folio|pte)()
-Date: Fri, 12 Apr 2024 16:21:17 +0200
-Message-ID: <20240412142120.220087-8-david@redhat.com>
+Subject: [PATCH v2 09/10] s390/uv: implement HAVE_ARCH_MAKE_FOLIO_ACCESSIBLE
+Date: Fri, 12 Apr 2024 16:21:19 +0200
+Message-ID: <20240412142120.220087-10-david@redhat.com>
 In-Reply-To: <20240412142120.220087-1-david@redhat.com>
 References: <20240412142120.220087-1-david@redhat.com>
 Precedence: bulk
@@ -69,168 +69,120 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Let's have the following variants for destroying pages:
+Let's also implement HAVE_ARCH_MAKE_FOLIO_ACCESSIBLE, so we can convert
+arch_make_page_accessible() to be a simple wrapper around
+arch_make_folio_accessible(). Unfortuantely, we cannot do that in the
+header.
 
-(1) uv_destroy(): Like uv_pin_shared() and uv_convert_from_secure(),
-"low level" helper that operates on paddr and doesn't mess with folios.
+There are only two arch_make_page_accessible() calls remaining in gup.c.
+We can now drop HAVE_ARCH_MAKE_PAGE_ACCESSIBLE completely form core-MM.
+We'll handle that separately, once the s390x part landed.
 
-(2) uv_destroy_folio(): Consumes a folio to which we hold a reference.
-
-(3) uv_destroy_pte(): Consumes a PTE that holds a reference through the
-mapping.
-
-Unfortunately we need uv_destroy_pte(), because pfn_folio() and
-friends are not available in pgtable.h.
-
+Suggested-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/include/asm/pgtable.h |  2 +-
- arch/s390/include/asm/uv.h      | 10 ++++++++--
- arch/s390/kernel/uv.c           | 24 +++++++++++++++++-------
- arch/s390/mm/gmap.c             |  6 ++++--
- 4 files changed, 30 insertions(+), 12 deletions(-)
+ arch/s390/include/asm/page.h |  3 +++
+ arch/s390/kernel/uv.c        | 18 +++++++++++-------
+ arch/s390/mm/fault.c         | 14 ++++++++------
+ 3 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 60950e7a25f5..97e040617c29 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1199,7 +1199,7 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
- 	 * The notifier should have destroyed all protected vCPUs at this
- 	 * point, so the destroy should be successful.
- 	 */
--	if (full && !uv_destroy_owned_page(pte_val(res) & PAGE_MASK))
-+	if (full && !uv_destroy_pte(res))
- 		return res;
- 	/*
- 	 * If something went wrong and the page could not be destroyed, or
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index d2205ff97007..a1bef30066ef 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -483,7 +483,8 @@ static inline int is_prot_virt_host(void)
- int uv_pin_shared(unsigned long paddr);
- int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb);
- int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr);
--int uv_destroy_owned_page(unsigned long paddr);
-+int uv_destroy_folio(struct folio *folio);
-+int uv_destroy_pte(pte_t pte);
- int uv_convert_owned_from_secure(unsigned long paddr);
- int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr);
+diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+index b64384872c0f..03bbc782e286 100644
+--- a/arch/s390/include/asm/page.h
++++ b/arch/s390/include/asm/page.h
+@@ -162,6 +162,7 @@ static inline int page_reset_referenced(unsigned long addr)
+ #define _PAGE_ACC_BITS		0xf0	/* HW access control bits	*/
  
-@@ -497,7 +498,12 @@ static inline int uv_pin_shared(unsigned long paddr)
- 	return 0;
- }
+ struct page;
++struct folio;
+ void arch_free_page(struct page *page, int order);
+ void arch_alloc_page(struct page *page, int order);
  
--static inline int uv_destroy_owned_page(unsigned long paddr)
-+static inline int uv_destroy_folio(struct folio *folio)
-+{
-+	return 0;
-+}
-+
-+static inline int uv_destroy_pte(pte_t pte)
- {
- 	return 0;
- }
+@@ -174,6 +175,8 @@ static inline int devmem_is_allowed(unsigned long pfn)
+ #define HAVE_ARCH_ALLOC_PAGE
+ 
+ #if IS_ENABLED(CONFIG_PGSTE)
++int arch_make_folio_accessible(struct folio *folio);
++#define HAVE_ARCH_MAKE_FOLIO_ACCESSIBLE
+ int arch_make_page_accessible(struct page *page);
+ #define HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+ #endif
 diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 3d3250b406a6..61c1ce51c883 100644
+index b456066d72da..fa62fa0e369f 100644
 --- a/arch/s390/kernel/uv.c
 +++ b/arch/s390/kernel/uv.c
-@@ -110,7 +110,7 @@ EXPORT_SYMBOL_GPL(uv_pin_shared);
-  *
-  * @paddr: Absolute host address of page to be destroyed
-  */
--static int uv_destroy_page(unsigned long paddr)
-+static int uv_destroy(unsigned long paddr)
- {
- 	struct uv_cb_cfs uvcb = {
- 		.header.cmd = UVC_CMD_DESTR_SEC_STOR,
-@@ -131,11 +131,10 @@ static int uv_destroy_page(unsigned long paddr)
- }
+@@ -498,14 +498,13 @@ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
+ EXPORT_SYMBOL_GPL(gmap_destroy_page);
  
  /*
-- * The caller must already hold a reference to the page
-+ * The caller must already hold a reference to the folio
+- * To be called with the page locked or with an extra reference! This will
+- * prevent gmap_make_secure from touching the page concurrently. Having 2
+- * parallel make_page_accessible is fine, as the UV calls will become a
+- * no-op if the page is already exported.
++ * To be called with the folio locked or with an extra reference! This will
++ * prevent gmap_make_secure from touching the folio concurrently. Having 2
++ * parallel arch_make_folio_accessible is fine, as the UV calls will become a
++ * no-op if the folio is already exported.
   */
--int uv_destroy_owned_page(unsigned long paddr)
-+int uv_destroy_folio(struct folio *folio)
+-int arch_make_page_accessible(struct page *page)
++int arch_make_folio_accessible(struct folio *folio)
  {
--	struct folio *folio = phys_to_folio(paddr);
- 	int rc;
+-	struct folio *folio = page_folio(page);
+ 	int rc = 0;
  
  	/* See gmap_make_secure(): large folios cannot be secure */
-@@ -143,13 +142,22 @@ int uv_destroy_owned_page(unsigned long paddr)
- 		return 0;
+@@ -537,8 +536,13 @@ int arch_make_page_accessible(struct page *page)
  
- 	folio_get(folio);
--	rc = uv_destroy_page(paddr);
-+	rc = uv_destroy(folio_to_phys(folio));
- 	if (!rc)
- 		clear_bit(PG_arch_1, &folio->flags);
- 	folio_put(folio);
  	return rc;
  }
+-EXPORT_SYMBOL_GPL(arch_make_page_accessible);
++EXPORT_SYMBOL_GPL(arch_make_folio_accessible);
  
-+/*
-+ * The present PTE still indirectly holds a folio reference through the mapping.
-+ */
-+int uv_destroy_pte(pte_t pte)
++int arch_make_page_accessible(struct page *page)
 +{
-+	VM_WARN_ON(!pte_present(pte));
-+	return uv_destroy_folio(pfn_folio(pte_pfn(pte)));
++	return arch_make_folio_accessible(page_folio(page));
 +}
-+
- /*
-  * Requests the Ultravisor to encrypt a guest page and make it
-  * accessible to the host for paging (export).
-@@ -437,6 +445,7 @@ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
- {
++EXPORT_SYMBOL_GPL(arch_make_page_accessible);
+ #endif
+ 
+ #if defined(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) || IS_ENABLED(CONFIG_KVM)
+diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+index c421dd44ffbe..a1ba58460593 100644
+--- a/arch/s390/mm/fault.c
++++ b/arch/s390/mm/fault.c
+@@ -491,6 +491,7 @@ void do_secure_storage_access(struct pt_regs *regs)
+ 	unsigned long addr = get_fault_address(regs);
  	struct vm_area_struct *vma;
- 	unsigned long uaddr;
+ 	struct mm_struct *mm;
 +	struct folio *folio;
  	struct page *page;
+ 	struct gmap *gmap;
  	int rc;
- 
-@@ -460,7 +469,8 @@ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
- 	page = follow_page(vma, uaddr, FOLL_WRITE | FOLL_GET);
- 	if (IS_ERR_OR_NULL(page))
- 		goto out;
--	rc = uv_destroy_owned_page(page_to_phys(page));
-+	folio = page_folio(page);
-+	rc = uv_destroy_folio(folio);
- 	/*
- 	 * Fault handlers can race; it is possible that two CPUs will fault
- 	 * on the same secure page. One CPU can destroy the page, reboot,
-@@ -472,7 +482,7 @@ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
- 	 */
- 	if (rc)
- 		rc = uv_convert_owned_from_secure(page_to_phys(page));
--	put_page(page);
-+	folio_put(folio);
- out:
- 	mmap_read_unlock(gmap->mm);
- 	return rc;
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 094b43b121cd..0351cb139df4 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -2756,13 +2756,15 @@ static const struct mm_walk_ops gather_pages_ops = {
-  */
- void s390_uv_destroy_pfns(unsigned long count, unsigned long *pfns)
- {
-+	struct folio *folio;
- 	unsigned long i;
- 
- 	for (i = 0; i < count; i++) {
-+		folio = pfn_folio(pfns[i]);
- 		/* we always have an extra reference */
--		uv_destroy_owned_page(pfn_to_phys(pfns[i]));
-+		uv_destroy_folio(folio);
- 		/* get rid of the extra reference */
--		put_page(pfn_to_page(pfns[i]));
+@@ -538,17 +539,18 @@ void do_secure_storage_access(struct pt_regs *regs)
+ 			mmap_read_unlock(mm);
+ 			break;
+ 		}
+-		if (arch_make_page_accessible(page))
++		folio = page_folio(page);
++		if (arch_make_folio_accessible(folio))
+ 			send_sig(SIGSEGV, current, 0);
+-		put_page(page);
 +		folio_put(folio);
- 		cond_resched();
- 	}
- }
+ 		mmap_read_unlock(mm);
+ 		break;
+ 	case KERNEL_FAULT:
+-		page = phys_to_page(addr);
+-		if (unlikely(!try_get_page(page)))
++		folio = phys_to_folio(addr);
++		if (unlikely(!folio_try_get(folio)))
+ 			break;
+-		rc = arch_make_page_accessible(page);
+-		put_page(page);
++		rc = arch_make_folio_accessible(folio);
++		folio_put(folio);
+ 		if (rc)
+ 			BUG();
+ 		break;
 -- 
 2.44.0
 
