@@ -1,84 +1,118 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0D8127E2A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D99F86120
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931761; cv=none; b=P/5Yxzf/GwjiIVViib4oYhBCMKY0yInHgTIkffvsjeS3mmbdxUm1i/aQMloPofOiIdLPmhQ0yxRaDg090ppjJTxvvStgFOJyeQpuFvEmJEDMWl9tFKfJge8I9R6570SfR1lzhB5Pv0HNvIllQx8svOwftl9dT35f0Bp+qjgQRhg=
+	t=1712931778; cv=none; b=pCIQjN7IftL4bDSl7OZgEntZLz6mqdkfoXUyZ4gsdbnBshL6s/+VnF3cClySp2KZ89NNuShekki9d+6taARAAF+c+gunFXPzmovJYDB66iXQapAnjJaUPnFvkU6q1iXGLqcJjNAsGgdrOFDdR/fuqhlWsEP/zPsVFFhH9FnwVGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931761; c=relaxed/simple;
-	bh=+IRxEFwc9i6oI9P2rF2fRA5JFBSoqOhGYWv9Q4jR2Mg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4QmcRLY6ZNmd/ZuD4qETcMg1hwpxwx++ZSy0yDvECAK1C5n2M2r37vf841YcWpfO5yxTExj1XKHXCrnA57BnSZy37SRJMT/HQ8Qfds/WEu+uHHkyvXVy53pL65LLlF1etA3/5E4cT4/v9e+KQgJMa9S27UUuLQVFemLEpwdbFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cYNPXzJe; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712931778; c=relaxed/simple;
+	bh=1nhHHey9PJ8DLGIRPcryUPM5m7e5VFRwQCHuQCVRLEo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ap6DrehbNmHK3lXflEA7dBwRcaASqHVwSeVbSoCH6WsvT/64BZ2JZJ8CPtfZEzeXNLPapgz9ytnDF1g1q1H09CcSJ7f/qfRRmU7Vv/dwRK7aExJVY3rf7FZ0fcT7YDiPBjpTEDkrdGA6CsA86B0HTgvNS4rAOERSK5vggveroG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=T3ZTSdss; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cYNPXzJe"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d9fe2b37acso10577361fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:22:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="T3ZTSdss"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e509baddaso1041550a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:22:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1712931757; x=1713536557; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KZjz6ebT5RoHibV4k+w7N5R6e/euEWfeOaFuElHwClw=;
-        b=cYNPXzJeSH3AUQL2I8iczpu8hzMGR7/lS+eOewbNYWYieZy4SdtrFpkBXpycy1bnvS
-         s/TsFKK/mHEYJWSK3U9nR54WJ5IsgChkSAxQG+dAlevhTe2YFMIDCVk6pYnd9P5ikx9j
-         dFpCGry9k43K2Wwz/AG0aNGgduSg62a8YQgde3BWXA/tE0wdxAYG4VrLFT/0akeaNtRh
-         3gx/LEAsVuYOK2xy+gg37tLzGBgyyUHLJGy6zOTnhsPh7cmn1hHa4izlxz87OPQHHcXm
-         CDaO4/QEm7vMgSqrd2jUdUF8rbEknfDoIXfOnKm/MAumbfcAnWfaQtRDBNGOW3Uz/H5D
-         BT6w==
+        d=fairphone.com; s=fair; t=1712931775; x=1713536575; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HkmahkPkQACrnB5JyLYBblQR+A7iG3SRr36SJvXv7cI=;
+        b=T3ZTSdssnVDpAuyCks8a9zh1MTGMYhkUQFTpkvW6L++Ogb0G9gXIwdPoYikfLZBgtq
+         cbcrzMu4lHxmw66T2Ps64kn2OUofu2y7RUU6XYW7i4oQM6ST3ze3pOPmUeGokk2tMLb9
+         0ck9aWoPomsfo6p7Wpv4W9bwTqf+RLPiop0YWAJpGW3AN5O6b8AsQA50W/zg0j0dyp0I
+         iM+bVvSPWn2ndbCYM98j2EJliNj7o/Gzib2MTDTvraRC5dsz8jB9novhuX8+2Jhrt+3q
+         hyUGEAVV69DWblxAUfy3eNA3MEW+gdZrKXUNFY2hvVuXjPwh8VYuIbeSGfx0JLm/Wrca
+         Yigw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712931757; x=1713536557;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KZjz6ebT5RoHibV4k+w7N5R6e/euEWfeOaFuElHwClw=;
-        b=INpYNB0sWK1qVmu8E56k/4Vmx9ShNk5NR1bAdJfkOvA0PS+K4tthAaqYM89uWQ0oDf
-         nEIZEJ9CXkzaOh/fWcGOdxT0OqncadpHPRpqsnQtM0qZXG1Myup0aAYRDXWxcKsS3yOi
-         tKudgU0GkeiTbfTczCbWckNHFybwn1fhORdvWsOnI2hogrZ/s19ihpiquTPRYTWoGAOH
-         DoYbLYXNW0DWTrZY6XyXQ68Ckol2tmiI297wRY2qVDZZvxG/Mr+HK1AJyTQLkEOlcXfF
-         D5gxjw1Cvexm6KkJYDXKVIlZ0vLx/op+vM2PlKVStHkyZ/7tix2NTf8+oVtofK8w+Zx2
-         KUXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXJa/9DUD0NL7afhEsSDBRJcRNR3Nocj3DSAY3jV4PVNcvhtE3wyKz9tpa8gk1nu4Z1lYRIYJ1/5O4NZ/ChhjSdPT+JOVYAtxLvADbT
-X-Gm-Message-State: AOJu0YzjVNIhSnNKSQq+fDceTncCY1iAjVt86KTHthGVXBdnGPhRE7Fm
-	4yBT/cWLdi6BUASDnMAkyqw0vr8foUzDLMDNxdKSjHeYdRPAhlfeFIaNDs0/AtA=
-X-Google-Smtp-Source: AGHT+IEUU8x1l7wjbdeKsMq+FPv/J7wq2z9f4xVy6YCVoWFTDymS5ycv2fhymEL1ZS92Bi65H1pLsw==
-X-Received: by 2002:a2e:8046:0:b0:2d8:8368:e22d with SMTP id p6-20020a2e8046000000b002d88368e22dmr1347399ljg.42.1712931757637;
-        Fri, 12 Apr 2024 07:22:37 -0700 (PDT)
-Received: from localhost.localdomain ([176.114.240.50])
-        by smtp.gmail.com with ESMTPSA id n18-20020a05600c4f9200b00417caec4135sm5820623wmq.4.2024.04.12.07.22.37
+        d=1e100.net; s=20230601; t=1712931775; x=1713536575;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HkmahkPkQACrnB5JyLYBblQR+A7iG3SRr36SJvXv7cI=;
+        b=NOHxxPS2mlMKXivtgwzwrXKsDJuhOvmH41AdRGM5lRAfWnPd63BklIYbiLa8TF4Mo1
+         2vhB2A8/iML3o0rZ4E5yKljjynefMx06bVj+TqrA6p9DHE/drz0++RiBL1ezT5U2BHl+
+         ZBoQB+U1cujVAUAlFXLa3K3oAr3/kaVWAznkCtsSqICGuHcm3QJKpZ5ppa6iXiQlYVVx
+         hbJuLTgjHTmhEeiaPV4Amz4iJQ1Z2M1WryUNZo4YYCadJB/ATtG4hwBx33btGe2xY2BO
+         t7D8G/hNXeMunJEyyiFvNpOreLGUggyd0h/f3fpsuq81Ha5Ee3JDHs5cJHzgkYkw10Xf
+         haTw==
+X-Forwarded-Encrypted: i=1; AJvYcCXQxJdkO3msQP22bNAVPACGKANPr6SBvMWzO4OTaS/3ziEQ84XSi6ZI4FwmPLyDGR2ODi9n1rJKt8KfuUR5jopLknu7p3UOc+j8+j8S
+X-Gm-Message-State: AOJu0YwqSNDGHc4v62HsZU521YqpM0e40GJxwhlI3kgs0I+d4/zcTGqi
+	mWPSlFj9VEiT6VrXMUlzSZAiRJF4Xf6GLbHaki//puLT0Ke1uMGJaiJBATQECQs=
+X-Google-Smtp-Source: AGHT+IG7S6kcG25Ko/iQD8E1ukj2BrMGOMo+mSr1Prx4UJqquhinYSgF59xquhk/ALw5JQrPnyfQRg==
+X-Received: by 2002:a50:d501:0:b0:56e:2186:847d with SMTP id u1-20020a50d501000000b0056e2186847dmr1909304edi.16.1712931775390;
+        Fri, 12 Apr 2024 07:22:55 -0700 (PDT)
+Received: from otso.luca.vpn.lucaweiss.eu (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id k20-20020aa7c054000000b0056ff82e54a0sm920166edo.31.2024.04.12.07.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 07:22:37 -0700 (PDT)
-Date: Fri, 12 Apr 2024 16:22:35 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH printk v4 21/27] printk: Track nbcon consoles
-Message-ID: <ZhlDqyYw0JxmfUsr@localhost.localdomain>
-References: <20240402221129.2613843-1-john.ogness@linutronix.de>
- <20240402221129.2613843-22-john.ogness@linutronix.de>
+        Fri, 12 Apr 2024 07:22:54 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Fri, 12 Apr 2024 16:22:53 +0200
+Subject: [PATCH v2] dt-bindings: mfd: qcom,spmi-pmic: Add pbs to SPMI
+ device types
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240402221129.2613843-22-john.ogness@linutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240412-pmi632-ppg-v2-1-8ac892b1bb61@fairphone.com>
+X-B4-Tracking: v=1; b=H4sIALxDGWYC/03Myw7CIBCF4VdpZi0Gpjfble9huqg4lFkUCBiia
+ fruYt24/E9yvg0SRaYEY7VBpMyJvSuBpwq0nd1Cgh+lASU2UqlehJW7GkUIizCKzL2p1aVHhHI
+ IkQy/Duw2lbacnj6+Dzur7/pjULb/TFZCCsK600M7oxyGq5k5BusdnbVfYdr3/QNZ7iMkqAAAA
+ A==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.13.0
 
-On Wed 2024-04-03 00:17:23, John Ogness wrote:
-> Add a global flag @have_nbcon_console to identify if any nbcon
-> consoles are registered. This will be used in follow-up commits
-> to preserve legacy behavior when no nbcon consoles are registered.
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Add the PBS (Programmable Boot Sequencer) to the list of devices.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Changes in v2:
+- Pick up tags
+- Rebase on linux-next, drop merged patches
+- Link to v1: https://lore.kernel.org/r/20240205-pmi632-ppg-v1-0-e236c95a2099@fairphone.com
+---
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Best Regards,
-Petr
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+index 8103fb61a16c..b7f01cbb8fff 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -160,6 +160,10 @@ patternProperties:
+     type: object
+     $ref: /schemas/nvmem/qcom,spmi-sdam.yaml#
+ 
++  "^pbs@[0-9a-f]+$":
++    type: object
++    $ref: /schemas/soc/qcom/qcom,pbs.yaml#
++
+   "phy@[0-9a-f]+$":
+     type: object
+     $ref: /schemas/phy/qcom,snps-eusb2-repeater.yaml#
+
+---
+base-commit: fa8c2b5f446d6e8ff4bc8f67ba944b1be3aad790
+change-id: 20240117-pmi632-ppg-f1efb4318722
+
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
+
