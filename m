@@ -1,153 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C984149C4D
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D534C446BD;
+	Fri, 12 Apr 2024 16:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938864; cv=none; b=AF+Se0+K3xgFHP0cv2dtizM6YHKlZCHewX0+Z20D2SKRA6TpKwypzMwcfY2fLSUJ9wYxCGasE4vvbJ2zLYNV7kzRB9cxK3RY5XmjSwwhsZ4/hiVdwt/Ki361pST6YIQsu7c3BmKEsdKliH8P7TuMT+V/kqzp/FV7UatN/4H5vsY=
+	t=1712938874; cv=none; b=mmsZT82RxCOOGgyuqXhJwStps6j4Xl7Ro92iXGcxTvbZ8Qa+hd1yU5fLO+B6M9WlJl5uOa5ihXSWiDKfIHg30mC8W/H20mggKnZdoAO7ZcWS15WK9cFIOGTTlRpKYHmnwrDVCvQmMMw+MsThKolLCTJvmmhROzexXWrGVgWV3NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938864; c=relaxed/simple;
-	bh=ThIUTkskTJ3StO15VmG5tI0v0yhSfi9cYlLfVt0C3no=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWdM0kHROOSseTqbl3DeCst8rxQU3XTR3cbZLROKn+KH/JIvDHuR7HkWTfbGjdZmUfBfyVkOtDhZDfU278GVmY7FBQ0Q1+GpgaPz5cZ6QTcfQl00NgE2iPDToljj1YOEwArtIaBlYvdxBIh6zi89Cew9CifU+GnWfVz37M5M9KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5018339;
-	Fri, 12 Apr 2024 09:21:30 -0700 (PDT)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E39D43F64C;
-	Fri, 12 Apr 2024 09:20:58 -0700 (PDT)
-Date: Fri, 12 Apr 2024 17:20:56 +0100
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>, James Morse <james.morse@arm.com>,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com, lcherian@marvell.com,
-	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
-	dfustini@baylibre.com, amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>
-Subject: Re: [PATCH v1 31/31] x86/resctrl: Move the resctrl filesystem code
- to /fs/resctrl
-Message-ID: <ZhlfaHhIXe9ZLXmK@e133380.arm.com>
-References: <20240321165106.31602-1-james.morse@arm.com>
- <20240321165106.31602-32-james.morse@arm.com>
- <0aaae9ce-00ae-cd0b-ed25-4d52d1620ab5@intel.com>
- <Zhfz7KHJeXYNCw9/@e133380.arm.com>
- <be03a7e9-fb0b-4edb-b22e-4452255992ad@intel.com>
+	s=arc-20240116; t=1712938874; c=relaxed/simple;
+	bh=IigfVy1IYq5rcANH6+TO5CGSD+vRuzAC24jufyja+rA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bsAovmLObM8iZf0ZE0UXKmuFXPlbHL3dV0HMEsu/W6I7DufKvLM6cIDlpzpaW4yKql9Bm4AkDnkGki6juXS5xQa5tJ0gC87bFGJV2E5DvR7XZJtTPxuQq20MFYsTLBPZnDvcMfNBDftRKa/hi5dHRghE5M85uqD8iQdUCGs0oB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMG441shz67Lmq;
+	Sat, 13 Apr 2024 00:19:24 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 726C3140119;
+	Sat, 13 Apr 2024 00:21:10 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:21:09 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 20/30] perf/arm-dmc620: Assign parents for event_source device
+Date: Fri, 12 Apr 2024 17:10:47 +0100
+Message-ID: <20240412161057.14099-21-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be03a7e9-fb0b-4edb-b22e-4452255992ad@intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Apr 11, 2024 at 10:45:01AM -0700, Reinette Chatre wrote:
-> Hi Dave,
-> 
-> On 4/11/2024 7:30 AM, Dave Martin wrote:
-> > On Tue, Mar 26, 2024 at 12:44:26PM -0700, Fenghua Yu wrote:
-> >> Hi, James,
-> >>
-> >> On 3/21/24 09:51, James Morse wrote:
-> >>> resctrl is linux's defacto interface for managing cache and bandwidth
-> >>> policies for groups of tasks.
-> >>>
-> >>> To allow other architectures to make use of this pseudo filesystem,
-> >>> move it live in /fs/resctrl instead of /arch/x86.
-> >>>
-> >>> This move leaves behind the parts of resctrl that form the architecture
-> >>> interface for x86.
-> >>>
-> >>> Signed-off-by: James Morse <james.morse@arm.com>
-> >>> ---
-> >>> Discussion needed on how/when to merge this, as it would conflict with
-> >>> all outstanding series. It's probably worth deferring to some opportune
-> >>> time, but is included here for illustration.
-> >>> ---
-> >>>   arch/x86/kernel/cpu/resctrl/core.c        |   15 -
-> >>>   arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  505 ---
-> >>>   arch/x86/kernel/cpu/resctrl/internal.h    |  310 --
-> >>>   arch/x86/kernel/cpu/resctrl/monitor.c     |  821 -----
-> >>>   arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 1093 ------
-> >>>   arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 3994 --------------------
-> >>>   fs/resctrl/ctrlmondata.c                  |  527 +++
-> >>>   fs/resctrl/internal.h                     |  340 ++
-> >>>   fs/resctrl/monitor.c                      |  843 +++++
-> >>>   fs/resctrl/psuedo_lock.c                  | 1122 ++++++
-> >>>   fs/resctrl/rdtgroup.c                     | 4013 +++++++++++++++++++++
-> >>>   11 files changed, 6845 insertions(+), 6738 deletions(-)
-> >>>
-> >>
-> >> checkpatch reports warnings and checks on this patch. Please fix them. e.g.
-> >>
-> >> CHECK: Blank lines aren't necessary before a close brace '}'
-> >> #13340: FILE: fs/resctrl/rdtgroup.c:3184:
-> >> +
-> >> +	}
-> > 
-> > Thanks for spotting these...
-> > 
-> > However, this is a "move code around with no functional change" patch,
-> > so I think that it should paste the original code across verbatim
-> > without trying to address style violations.  (Otherwise, there is no
-> > hope of checking whether this patch is correct or not...)
-> 
-> I agree that this patch is too big for it to do more than just move
-> code (please see next comments though).
-> 
-> > 
-> > For the above example, see:
-> > 47820e73f5b3 ("x86/resctrl: Initialize a new resource group with default MBA values")
-> > 
-> > Other than code that is moved or cloned from previously existing code,
-> > do you see any new style problems actually introduced by this patch?
-> > 
-> > 
-> > Notwithstanding the above, this series will conflict with a lot of the
-> > in-flight changes pending for resctrl, so it could be a good opportunity
-> > to fix some legacy style nits.
-> > 
-> > Reinette, do you have a view on this?  If legacy style problems get
-> > addressed in the moved code, are they essential for this series or could
-> > that be done in a follow-up?
-> 
-> On its path upstream this series will be scrutinized by various checkers and 
-> to ensure a smooth merge I would like to recommend that this series aim to
-> get as clean slate as possible from the basic checkers.
-> 
-> Could a patch addressing these legacy issues precede this patch instead?
-> 
-> I do not think all need to be addressed though. Some of the spelling warnings
-> are false positives and the camel case appears to be the custom for filesystem
-> parameter code.
-> 
-> It is not obvious to me that all are legacy issues though ... could you
-> take a second look at the "WARNING: Use #include <linux/resctrl.h>
-> instead of <asm/resctrl.h>" ones?
-> 
-> Reinette
+Currently the PMU device appears directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parent to be the platform device.
 
-Ack, that does make sense, and it's probably better than letting the dust
-settle on this series before applying further cleanups.
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/arm_dmc620_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'll make a note to review.
+diff --git a/drivers/perf/arm_dmc620_pmu.c b/drivers/perf/arm_dmc620_pmu.c
+index 8a81be2dd5ec..2ec96e204c40 100644
+--- a/drivers/perf/arm_dmc620_pmu.c
++++ b/drivers/perf/arm_dmc620_pmu.c
+@@ -673,6 +673,7 @@ static int dmc620_pmu_device_probe(struct platform_device *pdev)
+ 
+ 	dmc620_pmu->pmu = (struct pmu) {
+ 		.module = THIS_MODULE,
++		.parent		= &pdev->dev,
+ 		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.event_init	= dmc620_pmu_event_init,
+-- 
+2.39.2
 
-Some of the #include <asm/*> look to have been inherited from the
-previous x86 arch code where they would have been more appropriate, but
-perhaps some can change to <linux/*> now that more of the definitions
-are in the common headers.
-
-Cheers
----Dave
