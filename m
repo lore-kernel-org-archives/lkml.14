@@ -1,56 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B853E48E;
-	Fri, 12 Apr 2024 06:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E330E542;
+	Fri, 12 Apr 2024 06:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712902926; cv=none; b=c6oneA8/IbwKmveSvR1NGhkHNBgUPyiZolDo6ZocACJ8BDeuMNphJpdzcemc0+7CcN5Eri2RbSBuntXrmG+aKOCrju4VzgJ9c1+tOfI3Fnr4WeCV4yzINpiq6f44xPYjO+NGihVIJsC1lX+1gDsH9qbMVCjVzTdIwO9XwN9NJEU=
+	t=1712902966; cv=none; b=FfiJT/5Fy3/jYFIhKlLwc1v6G+4TWGxfxeXXkt1WJsMwkx+UGXpbSRgZIwYEghFOJwAXB/TajF97x173ia5iZMsxfSTGi92C18iTp1Wwd1dhyFW4TSBbib1WSKPN9aM2oWwf6o7OJjQauSmpp0oxOWCKgJX53hhCXuUT1ImSFU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712902926; c=relaxed/simple;
-	bh=pZYfYfvm+jnX/RwGqdypPJz84vtXIB+UYrSq9SPSCuI=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=RtIZn3rxwruMtsOrkZOvEv303rzRszkvjaL9uKaZOj/RXuAar83zmD/veCi71o3IWnJIqn8gG/l6RkiaGK9V/4+WJDRDijXRAtp8wqlmxTMqvnzJcM0aqpIm6zZcDpHnZPNfGZm+eWBeUhxED2eywYvS+3Ml3nOpSl0Px2AyIXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNo0dQhw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712902966; c=relaxed/simple;
+	bh=I9aBK5dbrhcLKKL/MjbcYuCu6MZvLINSTsHK4HqiwmY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dNWXPnZ565Mawl3nX738qGtQFFXlG61od5gqDOU6CPYXNfKIpHbY+kRTETREBLfwG1SVCjELtZRfS/07JrkTR201EDOhk/Dy82QWgbmZFDb5rcC68srJP55xCjn0bJVQ1AwQ7MzpREZFhNijSBRPO2GfLRlpAGHTpS1J8/K68Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=lcjPlO4Q; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNo0dQhw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 258B4C4AF0C;
-	Fri, 12 Apr 2024 06:22:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712902926;
-	bh=pZYfYfvm+jnX/RwGqdypPJz84vtXIB+UYrSq9SPSCuI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=KNo0dQhwNSlTYrQz2rTgROGsm/QrvfLZGW44bDnZK90DIu5dtDZBsieYfjQjQZYRd
-	 wwWqFc7iOomf7ArYi+0RzxnEUlZpzXO4Xs6NKOCqU39GtAbMhHzyXxbedCaAohkAz3
-	 cyZWgSNiE14MYuAoP/H9ighfq9fmnlEvqU9NmegUg2/qn5OLJ72E0cQoN8TbYSsbMK
-	 csLz3rouTscy5p63r7TP3fqLfK9tJi5iZDL43MWTE9DkIl5EAqcsrrTB/Ij7NA890o
-	 M2syH3ypg5eKEaDw5hT2d8pyXVh8QECtHmVrZJ/DdxCYXFp8DirHrWa4+mQKb3Oga/
-	 EQL5aoVGLrk+A==
-Message-ID: <7efb8858995d0c97ad2deccb24318353.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="lcjPlO4Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=I5FV9y1cxUtXTeIw4zxGn7mwJ5/NnPbk/Fu5KJrJVaQ=;
+  b=lcjPlO4QuLiofl/z2VrHVX8/JVna8Xe2yfTHpz/M2jvRem9Gw/iW1JyT
+   DoXDc45a4ozCnM5br6N3g/NSN4MVWmA22eo4zXtHI1OAziqtWpy5m9+yY
+   r9ksScekmVXrDIFKg7Msv1blvJphv8bHCv681m6kli3BkLnW+IZ2xPZsg
+   k=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,195,1708383600"; 
+   d="scan'208";a="161185143"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 08:21:31 +0200
+Date: Fri, 12 Apr 2024 08:21:30 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Greg KH <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
+    Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org
+cc: Roman Storozhenko <romeusmeister@gmail.com>, jirislaby@kernel.org, 
+    skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com, 
+    linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH] sysrq: Auto release device node using __free attribute
+In-Reply-To: <2024041211-statistic-reformist-bf70@gregkh>
+Message-ID: <alpine.DEB.2.22.394.2404120807400.3229@hadrien>
+References: <20240411180256.61001-1-romeusmeister@gmail.com> <2024041111-tummy-boil-a6aa@gregkh> <b6b33aa-faef-6919-7125-c2db11e784ee@inria.fr> <2024041211-statistic-reformist-bf70@gregkh>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240411092453.243633-4-gabriel.fernandez@foss.st.com>
-References: <20240411092453.243633-1-gabriel.fernandez@foss.st.com> <20240411092453.243633-4-gabriel.fernandez@foss.st.com>
-Subject: Re: [PATCH v11 3/4] clk: stm32: introduce clocks for STM32MP257 platform
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>, Conor Dooley <conor+dt@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Date: Thu, 11 Apr 2024 23:22:03 -0700
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=US-ASCII
 
-Quoting gabriel.fernandez@foss.st.com (2024-04-11 02:24:52)
-> From: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
->=20
-> This driver is intended for the STM32MP25 clock family and utilizes
-> the stm32-core API, similar to the stm32mp13 clock driver.
->=20
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-> ---
+[Adding the OF maintainers and device tree mailing list]
 
-Applied to clk-next
+> > Maybe it would be nice to get rid of of_node_puts in the general case?
+>
+> That's a call for the of maintainer to make, and then if so, to do it
+> across the whole tree, right?
+
+Sure.
+
+Rob and Saravana, what do you think about the following:
+
+* Is it ok to use __free(device_tree) directly in a declaration, or is
+there some macro that should be used instead?
+
+* If is ok to use __free(device_tree) even in simple cases where a
+variable is just declared at the start of the scope and freed at the end,
+and there is no internediate error handling code?
+
+Please see for example:
+
+https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2401291455430.8649@hadrien/
+
+But I don't think we can do the whole thing at once, in one patch.  There
+are a lot of things that need to be checked, and it don't break anything
+to do them one at a time.
+
+>
+> > Even though this one is not very annoying, there are some other functions
+> > where there are many of_node_puts, and convoluted error handling code to
+> > incorporate them on both the success and failure path.  So maybe it would
+> > be better to avoid the situation of having them sometimes and not having
+> > them other times?  But this is an opinion, and if the general consensus is
+> > to only get rid of the cases that currently add complexity, then that is
+> > possible too.
+>
+> Let's keep things simple until it has to be complex please.
+
+I meant that the current code is complex and error prone, and using __free
+eliminates code that is ugly and has led to memory leaks in the past (and
+a lot of effort to find and fix them in the past).  Even if some instances
+don't have that property, they may become more complex in the future, if
+some error condition is detected.
+
+julia
