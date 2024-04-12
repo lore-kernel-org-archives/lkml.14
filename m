@@ -1,100 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5D017F5;
-	Fri, 12 Apr 2024 02:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85775DDA5
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 02:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712889658; cv=none; b=jBtqpVBPacDeqmgUvrN86Qif7DcQxq7RMXDdIwteo5sy9wf2eNr7dtC3JkOQeFfY/0CEPZcNYNizoG9sZoDd9A80PjCpdiAnhXcl5hEHgOqJAcldJ7+hq1q4trlpwY84doEocl/NWDmFq40sw0NpfuSKS98DvFpC6y1u99iF2WM=
+	t=1712889694; cv=none; b=oivQ8QsfvGTujLzJJ0NFrXckUyhB3gfukY6Qt4H93V9Qx8Gt9kQLRD2jrX+9yGls61Uxda8CUd642Z9qaFoJ7a3+AfNGce7ZOj+PSdo6p1+iNelctHQDMpWI3vZmKm6iAhXdIdKQ/9eaSWp8x7+CuAHaPnUkDy+pvLWqGkC96/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712889658; c=relaxed/simple;
-	bh=kGmm58BT06O9yqjxpPGmRd+KyvDBx4YO3Lh9CYHUisg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UazoFcuMKwlngKODrEhm76ZhPfJW9SHOJuweKG0M/YMJK4vAlOZjKxYUVVqx90UT5PoSMkwrnmTD2Un2ggKGkR3BEp9kV0RftRcFregcx+yYysVlTDOv2PR5MLZovynLiUGEd+jVMDQq91yVxJxJlRXPdvYfvWQwtK/d5UECsE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZnR28Fkg; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZnR28Fkg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712889657; x=1744425657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=kGmm58BT06O9yqjxpPGmRd+KyvDBx4YO3Lh9CYHUisg=;
-  b=ZnR28FkguTsxq3S8DWQeD7UHzdz+dtfdiAojjY5YEbMmv2jm4OQAOlgO
-   cOTax/Dm1VISU3/+MIl6uRjWDOda8ZThYq1RIFhk/clXFHprKI+IYtank
-   yESV2p+8JXugNpUaIGj8s5jAz76uS1KB/dREMJGMS4wmrnP3b4axg8Px+
-   IuIDTjoaoSZM6m5BPcjhgvBFEbpL9yOTkem/fD47qLNNXEC+9YmfU7ILq
-   I5DVIemNYsqZaRfYg3uS6ndLt+202VaK64FkFKiqE3InQxvUIs7S6CHEm
-   IsGelgRrZSxUpaN5AZ3grkzXvzWgDkhUK6NiwPpSpPfLcNhfTEZA3Mkoi
-   Q==;
-X-CSE-ConnectionGUID: y0FlLHP5T4i1cLQmtDnYCQ==
-X-CSE-MsgGUID: GAVaNsdoRSqL5ai5XaXqLw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8182974"
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="8182974"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 19:40:56 -0700
-X-CSE-ConnectionGUID: 1O/0wnL7Rhuv48mOco3sZA==
-X-CSE-MsgGUID: FSe5bPHMQZ2VFKQU6tVLlA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="25898351"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa004.jf.intel.com with ESMTP; 11 Apr 2024 19:40:52 -0700
-Date: Fri, 12 Apr 2024 10:35:48 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Lee Jones <lee@kernel.org>
-Cc: Peter Colberg <peter.colberg@intel.com>,
-	Moritz Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>,
-	Xu Yilun <yilun.xu@intel.com>, Tom Rix <trix@redhat.com>,
-	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Russ Weight <russ.weight@linux.dev>,
-	Marco Pagani <marpagan@redhat.com>,
-	Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v2] mfd: intel-m10-bmc: Change staging size to a variable
-Message-ID: <ZhieBC124oq/Fcqa@yilunxu-OptiPlex-7050>
-References: <20240402184925.1065932-1-peter.colberg@intel.com>
- <20240411154956.GH2399047@google.com>
+	s=arc-20240116; t=1712889694; c=relaxed/simple;
+	bh=r6duq0FA6ngzfgA6UdUjSasdAsCWCsz0uNz4wVJf528=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BjEdohWrdR1BR9rihimULKvon6PRbSRWW1ZI47aPRYwxkv6z+9roi2EnCNPnI+aWDxnpUrAI/Vw4PpwycsW1rkaaUzCDh0kHScxIsPv/J9OOyEi/jFJOQJJBhF8j/5T9KsZqgD1OoMRF96JMBXfUF3B9/MkwQ1kY/kirBsAl73I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2A11339;
+	Thu, 11 Apr 2024 19:41:59 -0700 (PDT)
+Received: from [10.162.42.6] (a077893.blr.arm.com [10.162.42.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2F243F6C4;
+	Thu, 11 Apr 2024 19:41:26 -0700 (PDT)
+Message-ID: <5a2a74b3-f6cd-4cb6-8ee8-5dd7dc2bd686@arm.com>
+Date: Fri, 12 Apr 2024 08:11:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240411154956.GH2399047@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 5/8] KVM: arm64: Explicitly handle MDSELR_EL1 traps as
+ UNDEFINED
+Content-Language: en-US
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>,
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240405080008.1225223-1-anshuman.khandual@arm.com>
+ <20240405080008.1225223-6-anshuman.khandual@arm.com>
+ <86a5m8t8s6.wl-maz@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <86a5m8t8s6.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 11, 2024 at 04:49:56PM +0100, Lee Jones wrote:
-> On Tue, 02 Apr 2024, Peter Colberg wrote:
-> 
-> > From: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > 
-> > The secure update driver does a sanity-check of the image size in
-> > comparison to the size of the staging area in FLASH. Instead of
-> > hard-wiring M10BMC_STAGING_SIZE, move the staging size to the
-> > m10bmc_csr_map structure to make the size assignment more flexible.
-> > 
-> > Co-developed-by: Russ Weight <russell.h.weight@intel.com>
-> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > Signed-off-by: Peter Colberg <peter.colberg@intel.com>
-> 
-> Xu Yilun, Peter,
-> 
-> Do you require a pull-request from an immutable branch for this?
 
-No need. The patchset could all be applied to mfd branch.
 
-Thanks,
-Yilun
+On 4/5/24 15:45, Marc Zyngier wrote:
+> On Fri, 05 Apr 2024 09:00:05 +0100,
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>>
+>> Currently read_sanitised_id_aa64dfr0_el1() caps the ID_AA64DFR0.DebugVer to
+>> ID_AA64DFR0_DebugVer_V8P8, resulting in FEAT_Debugv8p9 not being exposed to
+>> the guest. MDSELR_EL1 register access in the guest, is currently trapped by
+>> the existing configuration of the fine-grained traps.
+> 
+> Please add support for the HDFGxTR2_EL2 registers in the trap routing
+> arrays, add support for the corresponding FGUs in the corresponding
+
+Afraid that I might not have enough background here to sufficiently understand
+your suggestion above, but nonetheless here is an attempt in this regard.
+
+- Add HDFGRTR2_EL2/HDFGWTR2_EL2 to enum vcpu_sysreg
+	enum vcpu_sysreg {
+		..........
+		VNCR(HDFGRTR2_EL2),
+		VNCR(HDFGWTR2_EL2),
+		..........
+	}
+
+- Add their VNCR mappings addresses
+
+	#define VNCR_HDFGRTR2_EL2      0x1A0
+	#define VNCR_HDFGWTR2_EL2      0x1B0
+
+- Add HDFGRTR2_EL2/HDFGWTR2_EL2 to sys_reg_descs[]
+
+static const struct sys_reg_desc sys_reg_descs[] = {
+	..........
+	EL2_REG_VNCR(HDFGRTR2_EL2, reset_val, 0),
+	EL2_REG_VNCR(HDFGWTR2_EL2, reset_val, 0),
+	..........
+}
+
+- Add HDFGRTR2_GROUP to enum fgt_group_id
+- Add HDFGRTR2_GROUP to reg_to_fgt_group_id()
+- Update triage_sysreg_trap() for HDFGRTR2_GROUP
+- Update __activate_traps_hfgxtr() both for HDFGRTR2_EL2 and HDFGWTR2_EL2
+- Updated __deactivate_traps_hfgxtr() both for HDFGRTR2_EL2 and HDFGWTR2_EL2
+
+> structure, and condition the UNDEF on the lack of *guest* support for
+> the feature.
+
+Does something like the following looks OK for preventing guest access into
+MDSELR_EL1 instead ?
+
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1711,6 +1711,19 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+        return val;
+ }
+ 
++static bool trap_mdselr_el1(struct kvm_vcpu *vcpu,
++                          struct sys_reg_params *p,
++                          const struct sys_reg_desc *r)
++{
++       u64 dfr0 = read_sanitised_id_aa64dfr0_el1(vcpu, r);
++       int dver = cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_DebugVer_SHIFT);
++
++       if (dver != ID_AA64DFR0_EL1_DebugVer_V8P9)
++               return undef_access(vcpu, p, r);
++
++       return true;
++}
++
+ static int set_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+                               const struct sys_reg_desc *rd,
+                               u64 val)
+@@ -2203,7 +2216,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+        { SYS_DESC(SYS_MDSCR_EL1), trap_debug_regs, reset_val, MDSCR_EL1, 0 },
+        DBG_BCR_BVR_WCR_WVR_EL1(2),
+        DBG_BCR_BVR_WCR_WVR_EL1(3),
+-       { SYS_DESC(SYS_MDSELR_EL1), undef_access },
++       { SYS_DESC(SYS_MDSELR_EL1), trap_mdselr_el1 },
+        DBG_BCR_BVR_WCR_WVR_EL1(4),
+        DBG_BCR_BVR_WCR_WVR_EL1(5),
+        DBG_BCR_BVR_WCR_WVR_EL1(6),
+
+I am sure this is rather incomplete, but will really appreciate if you could
+provide some details and pointers.
 
 > 
-> -- 
-> Lee Jones [李琼斯]
+> In short, implement the architecture as described in the pseudocode,
+> and not a cheap shortcut.
+> 
+> Thanks,
+> 
+> 	M.
 > 
