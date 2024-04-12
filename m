@@ -1,358 +1,155 @@
-Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01olkn2092.outbound.protection.outlook.com [40.92.102.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB9D553384;
-	Fri, 12 Apr 2024 10:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.102.92
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712917407; cv=fail; b=gVG1uQtwHBA97L6bYFSxfD+KoG4pUI9YdkJO2sEYCuZnxf8AhwQSgwTICtpPT/V16Ypo3qt6sGJNi5FBmYJEzgHpNhs7AKoAXK4Y0sglj0Fd/QR0V8nOCgFe+0UOLO7ED0gghHLEeqWPaJ3z4QDYyPHdlG/3jxXyraxCjBdsjrE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712917407; c=relaxed/simple;
-	bh=SPwY/+bk/JO0ZFn7MGz96nM07sN9xIXy1IzFqOLzFAc=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ts8zC6hSVnWkqNC2HN9urJxrjVKglGy/9MObsBBJyT380dprZu3U0FqkdGI3xH7VbazKnt1TRgdZW+vEWoqHm+yzXhtTGgKqh6T/3Dq4SdrWdDqb6rKlsEQpTh+QJqSCSaZln6c0nOSuIWL8gmFIT+VcPY67/USyySPsWPQEev4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=DX28EUpl; arc=fail smtp.client-ip=40.92.102.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D0904A29
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712917500; cv=none; b=tOC+AhoZLf4KmG5Uhc/n8ebYhdD6iNMllmB606tZbF0Q1efu+XrYWssjo584qkiV1pWi5U0/VI09qOjm9z/Yi8kZT2smW4TEhzbXT/eUinfMmX8vW2wdsyK6DHHtNAAJ1leIcymElyONn/o/1lp5CDlRZ6SN1szN54PCSsta8yg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712917500; c=relaxed/simple;
+	bh=mTije8i7p8SYTaRp24DV1G8IgwrSNJqgcNiym+vSaCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fmy8ygGvlOgRCr/2oIoecd0fNCnTTH4yjKJln0BlyRFJGtL6c1ezXEuvSP6x1P54TPw/uWcdtadm55hEAAGy1/1Z2KgzoIEgqCImWuDJ623x3x8+Vm9PfPsk5Arg19uc5IOXHPLlvB7kjjMdMfiWFafVa1LbKddHcPCMfHmPQ74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=iOXyIG1O; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="DX28EUpl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oBok5bBibzXVjq4hf/Xa3+jA93JvxmOEEGCjzYyigX4e/QZJ2rhA/tAGRT9aT3OlqLnicuiCv0YGrDlivgar6noYaYEzE+qNw9kkBUl0qDiN//+EpBEByIJxEi6GjY51ANJb5f8QJ7oAO2S5gJVvZqX9pYNC25fcMu4MjFzA6NCd6GquL1wfcpi3VRjhrtFsgz4ArhFnsKvoGYgcO9pkXeP7heWnNGegYsdYKhgrWuTU0AU9Drrv5L+C/dA+iIB0uhjKMLqReaJXjhnuMJLNNro7AR3A19gfOwwcDadJFghlVBsh10hOuzkzpvlGIrrKJF6BGaNqEMAHMIEELLfqcg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xfblepfYTbRGVzZYMUwHrLjsmfB/aOh4FoCyB0F6H2c=;
- b=RLc2QPKV7SEU5m0Chk2tKUAp7suvg/pBN+r1VCw+jJN1hF2fVPYhGRJWwopFBKeaaNskWguMUu1YBlmNIuVIZ+oDIRz+IvcMbtmq+OPpJx8xoPfmJJR+FOgMnqxQoX7Ka+CdkBEsqaFbRDUo03DudYvvL1Fo1AwyOxYKXs5AEynYZkiwvqrjlI/jPV2zcEoZtIYn9GHIKISA5PROpQmsQA+CC4vinRKefgjWI6rDlEkbTNPTj3/UG6v2DbAKQBDITQRJGs88pw2njObnxNs+lqHMG5IysljanMSyvYmMGAvWgIwfOdKLVagyiohmxCPizlGA6QNnoBORPzT9rAQ1yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xfblepfYTbRGVzZYMUwHrLjsmfB/aOh4FoCyB0F6H2c=;
- b=DX28EUpliAQB/5lEbbdE5hRyrq5ft5fUc5VmMcjsFNN0DuzLjc3+jr8r4sfG4lYhJizK24N2bboUwcrixMKdWkLn2A1+CUkxfnVpZ5hiKWkMPk4iNcQFIjJjW84KjLsY4t2pqaqG3WjZTh/wAG/lxYvOePSWz0eI7b/1ljbnf98EbZLC/JihqQqluzp+XY3e1gLMrT3lRjTxWZ+ZhLoAn3ObllSPC5ZsXT1Ro+MnJTp8CfvXo9P+MAffOstywrDXMbST5JJdOzj8PIOc28jvm9rJ2g5NlnlhL/M4fq5bvVsi96NgWd6T1GpfgGRKaVqCC71WT78sToqKQ1s78O2RWg==
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:138::5)
- by PN0P287MB1078.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:141::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.47; Fri, 12 Apr
- 2024 10:23:13 +0000
-Received: from MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::664:2ecc:c36:1f2c]) by MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- ([fe80::664:2ecc:c36:1f2c%3]) with mapi id 15.20.7409.046; Fri, 12 Apr 2024
- 10:23:13 +0000
-Message-ID:
- <MA0P287MB28223E4F14E6D08E1139CA63FE042@MA0P287MB2822.INDP287.PROD.OUTLOOK.COM>
-Date: Fri, 12 Apr 2024 18:23:08 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 4/5] clk: sophgo: Add SG2042 clock driver
-To: Stephen Boyd <sboyd@kernel.org>, Chen Wang <unicornxw@gmail.com>,
- aou@eecs.berkeley.edu, chao.wei@sophgo.com, conor@kernel.org,
- devicetree@vger.kernel.org, guoren@kernel.org, haijiao.liu@sophgo.com,
- inochiama@outlook.com, jszhang@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, linux-clk@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- mturquette@baylibre.com, palmer@dabbelt.com, paul.walmsley@sifive.com,
- richardcochran@gmail.com, robh+dt@kernel.org, samuel.holland@sifive.com,
- xiaoguang.xing@sophgo.com
-References: <cover.1711692169.git.unicorn_wang@outlook.com>
- <816122e9f22ddd9927e81e627be7f4683ba5c9e8.1711692169.git.unicorn_wang@outlook.com>
- <433e01f22ce5472aeb28cf0182d951bd.sboyd@kernel.org>
-From: Chen Wang <unicorn_wang@outlook.com>
-In-Reply-To: <433e01f22ce5472aeb28cf0182d951bd.sboyd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TMN: [qdbs4tZprd1ql3E+xUca5by/1V4X87i3]
-X-ClientProxiedBy: SI2PR02CA0004.apcprd02.prod.outlook.com
- (2603:1096:4:194::14) To MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:138::5)
-X-Microsoft-Original-Message-ID:
- <adb50bdb-a30d-4c67-849e-d85ab6be65fa@outlook.com>
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="iOXyIG1O"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78ec0d2e1e9so32772785a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 03:24:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1712917497; x=1713522297; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=yXjVQsLqyM7W96iPN2njoIot7m3tPecpIfZcOMPHqes=;
+        b=iOXyIG1OHyqnAZaQ/p7AXXNqRpnsnQ9ivTdRO6jdBZ5BLsrtu5ttTuKBv3okmplddQ
+         JmmBevMnOkR9z7Wvkzsukt5vFtC5zeXPnyQo7itzLyGAXSthkfq6S+BvXtySWmWlx9K+
+         J2xEPAO5lgxBO55EEDEaUmEajDAcXuNicAr4c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712917497; x=1713522297;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yXjVQsLqyM7W96iPN2njoIot7m3tPecpIfZcOMPHqes=;
+        b=JWuSByrkrcCU2Bae/6dayew0sElDrVsMy1kYen8RZD11qdh6/wFUWajn31sRqP15/a
+         kZaMe6udEniznZIFVsAbP6XzHCPXoZvSQIq/AbYqPeA4vAFLQkUyuzLnz6Frr8xWQjpG
+         5mUMvLW9F0kNY0LQiz23bqpSllhAOhKBnaSC1UtDTJW4iWJ2JuaBdlCjX0D7qNq10oP/
+         WEOJTgcXsxx+ueQf2Tod2pJZC2JjSaU+vjLLN8FWAZkLicgTMGah999efAJWbsHCLjaH
+         f9h9wEvTybsmsjHO7whS631uJxEKGxLJcU9jPA9hQEUYq9AwgPFFU9fiMf3+fkKOCaVP
+         +K/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXCUNtrmvzhnV5zdwXe2pMJluq2+mVzhagN4untJ3JePKwWClfvx0GMcq7PKb+fRmgcHAa16jt+ApBakzm56czF/xRii0Iw08DaSLVS
+X-Gm-Message-State: AOJu0Yz7tQ7B6jU4IvS4uEiNXYM7Mimk+8DKJg16iFoAPn8yfFf9/Xji
+	PNAkaUAd/LHZLEbf2LdadDV58qwOyOUgp4iBQQJgAkGg9pR/HBguh+14eM0br3E=
+X-Google-Smtp-Source: AGHT+IELh32E1/vBC3BVRY2WDLYXtdDGoLZ01IM5jFGJ5nrnzt8Z85XGvgFw+/XxpDOpOimf+9McRA==
+X-Received: by 2002:a05:620a:5dce:b0:78d:68de:e3ac with SMTP id xy14-20020a05620a5dce00b0078d68dee3acmr2029293qkn.76.1712917497479;
+        Fri, 12 Apr 2024 03:24:57 -0700 (PDT)
+Received: from [10.80.67.140] (default-46-102-197-194.interdsl.co.uk. [46.102.197.194])
+        by smtp.gmail.com with ESMTPSA id m14-20020a05620a220e00b0078d61011c6fsm2219918qkh.6.2024.04.12.03.24.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Apr 2024 03:24:56 -0700 (PDT)
+Message-ID: <323fbfe5-ad21-4606-93c7-d3ad6bbc8620@citrix.com>
+Date: Fri, 12 Apr 2024 11:24:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0P287MB2822:EE_|PN0P287MB1078:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9a6f9d4-5a5b-4a28-314c-08dc5ada8f2f
-X-MS-Exchange-SLBlob-MailProps:
-	iS5pQZgsAQDmFN0yKEpvbPDpAvl+/SbOWXduVvlLbBWjF5sNSML0mcvsbdmL77ixpe34E2HOGTgYzKcemFerXjZae30mGFbQL3QAhukIiezaDHMx8I7z9zt9oE7WdT37qEXC8cqbKLYxczY9krdSd5dyAGTQ5/aryOuAEg6zfG0JEKKdcyDtPh78XvkQkG1hT4IBAUJlt3S3B/HV4cWGo7Jrba5ZTCuTWPjh0QcpefDS9A18Vt5iHL+mzEuGBridwsCvIyMc+xlsqKQtQ647JBgJesLZgdADwXVAq7zkyOzCty+W8YChdRY8TAvF+e6/LAs5Ec2wPhC/AUEVKW4Mf+lXysBd1gw4WKIUtyZ/zXbn6U4ioUbS1vYgEfr2dcnebD2NOv37p0vmFVpdZ0tlat/hzLXzLPR/I6jMEf73lkmxn5/OnEu93pSkmR5uwHf434CiZrYbe/Zj8QGFIyfZ7242/EzVpdQainFK/HZXXVoqo0GIwnb80bsGNqQTPFCj3xqU17gq7tT/+7kvzNaBHtWY1NGLW6rAeevdIsb2tPRWDIQ1Ov8iwbNKnZHAeCwtIPx55QKkKLNpfw8TR2EI0aPR7cBUxsLKxwAQEyTp0Mf/suDH5Go0ZalcQku8iyctiIKtNqW8EB5F79fgLObASrmcBBFZy02m2NO1vDiIednXg5x8o+p1sdZrvpor2GGRAxJ1g7iXYnCbWSPrKhzrhhcQdITnHCEPqrd/Dan4P8Bs2KqzCgGh5icLjGa3SovlJE8kR9s8UxXU6CnWdwMPNWdmdUDTNuRWl4S9LTmsNXyJ+Iwb34l5rkVMZP/bL+fh
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	LlYZuGBFzWn+vb+E3HDupUHAlESQljTXEuw9w3dDqVgGsfDqvgojylv7QtBrg2WEHUw/JMN5qfIZNpQRuoY2qI17hu1w4mXFCEIwKODbSDgWHEgv2sSbxJ1J5Gpu7UnhzU33h40RrTVstacwCgm6M1ptsn6nJZk2uButya6qehdPw40+eHszPgdu4SNibdkNnUBkcEntW1dcDScmt7DF2gkjQ9AczZzbeKM+QQvHd9fjp5vxPP5wKxfX999xhnC6P5S/pm2tsmBKF2BY9jLlRKKXCgrMhUnCnwTYWDzpeC3YxIr7rDuId1S1xSaf9YADX2CVBqbDX9KcONRX1AcXjc1rlHtppEUpas+OYNvUuCGHvpNdb5y0nB2if5RzVA2dcLIrkYY/HukkcBbRcTfJZ+ta7vSqAtMxfoN8KT8Fk3csCPSC3nv4OdDsccjUO4sAwTxubIi/8fZ90Qnn7KiD1qwxm7rvdKiEeIEyK0qg5hhNGpdq88tRn46oMc+6kBTr9E5rIxJzr7xMxyomgzNI+2P91rneg5r8N4VLswzyjfpKGU/hwEeeMu5BAfTv3Ux+eNYZ7AHLsQkioHoILXBNaPyIdacyGIxX2N7jsuKTZ7+D93j9G9xP0+wd8bHMbD/RSe2UTocoJa+LTxZ2EOYjhHowB26EKl6YFf3N0JArUWOJvZhelLFUBW3CCrYmIRbd9Ll3cFb4p/7zUbHkoodEAw==
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1VvRnlnOHI2OTVPWW5xa3ZselFUUVNzVDJNNWhrRmJqcldaOXVpYjI2emI0?=
- =?utf-8?B?OW5oNXR0amxRdG00SWZXeldRZEl0V2gya3F2Q2JaWk4vcGFSODdMMzRiVWJ4?=
- =?utf-8?B?ZFZVYWF1LzJEMHhzYXUvNGptWERPK29adExxVDdlNmFUZlV5WTkwVS9Rd2lM?=
- =?utf-8?B?ZWJDV1dncnI0TlNJNTd3NmsyaFZmRlRsVlVMekJlTytweURoM0pZQ1JBalEz?=
- =?utf-8?B?bG01NVRDNnZYUkNudXFMbHlsS2NCVllyNnpDV2piUG9Jc0dtdDJqTnl3NmZz?=
- =?utf-8?B?OWx5N1VBNVMxMXJwZ08rWWViSVd4eCtqWjJVRVpyV2dXZmE2SmdkbUd0SHhM?=
- =?utf-8?B?cTRwS3M5a2Z0SjVsTVpGNm1Zc3JxTFN1c3VUOHVlWk1aVEoyV0pSSkRmdEdR?=
- =?utf-8?B?aTVudExlNWZEUEZtOVNNM1daR3R5MjB4bjc2d2Q1OWszazVMZXZ5WXpnUnpF?=
- =?utf-8?B?Z25KTy9LWGxoOFZaclVyNWZucENuMjR3TTg1Tmhyb0IrZzB1NDR5amxKL2R3?=
- =?utf-8?B?L1RBZW9jYnpnbE13SXJNR1ZEb3lMQ0RUbVBMbHhENmRmK0IvZXZrYmx2VWJO?=
- =?utf-8?B?K1c4dUFoQnN3YmlDZHNEWnN2eC9MNVpOSGdiZmZzbVlHT1pTWHNwYXNKMzJn?=
- =?utf-8?B?Z2N0OUR2N0VYbFo2dmlnNVE5a2tzd20zc1dlaFNiaGhRUzBsZmRFSE5IQ1U0?=
- =?utf-8?B?aEdaT3RUaDlSdDEzZWpCc3VreWl0Y1RUcmtuT2duZjBRc2RheElkZ0FRU1Yv?=
- =?utf-8?B?ODNMaFFFL200VUJadVNVK1FYWkZRbGJnaENNS2x6a05XazhxSjdxQTVMdEhl?=
- =?utf-8?B?Z1o2U1dTM1pHRkxaSUYvMVYvTUc2V0ZuaTdNeGxlZ1NWV0lGajJjTVJkZ0x6?=
- =?utf-8?B?THNqcDB2NDBvbVZSVTZiNk5RTFVWMWhxdTV4RzdnZEJEeVNVOWVRWXg5QXE1?=
- =?utf-8?B?aS9vUGEwMS9uUFd3VUJXWFZQaGxhVGRLaXIzM1dMQUFBVGtwUzltdndSeWla?=
- =?utf-8?B?YTZuSkdYSUZOM2FCTWRJSzhoVUE3MGRoY21jcjd2UHhLWGFidVM5ZnEvZnJr?=
- =?utf-8?B?Mjl2cXEycUJpbWFvZUtpY29ibmpBbjRiTVpBaXBCMk5rLzVuOENXVWZPVTdB?=
- =?utf-8?B?dVR5elRaaEkvSGRHdlkxMUVvR0QycERBT3JGQUY4dEovRzFlNjBOaW5xNDZu?=
- =?utf-8?B?S3lralpGUkFUVzRFRDdCdnhpUzBmUElCT1h5Y0cwZ2F4UlhkYzNaQkJQZEZS?=
- =?utf-8?B?VlZVZ3ZlWGNhTXZvSHFiMlJWZ3oxVDNSZUsrQSs3NzZiZUdMY25GSHRJcmZB?=
- =?utf-8?B?Wlp5TktySlZqYVJIUGhvT254eEszbGI0K3lFSlppZ0hHRmVHTnphdWpobmxC?=
- =?utf-8?B?NE9lOThxL21pNW1TM3hwZ0FRaUdMQlR3dnlvQ2VwY2ZkY0lYWWFNcExsN1lJ?=
- =?utf-8?B?cWk0eVhRU0s3bmxDODJETkZ3R2wzbVlrVkVCV2NGZjJmaGtLZlBoalQxeHlt?=
- =?utf-8?B?VkVXNGw5UVdnLy9mdWxDbi9YczBYYVprTTRJTjBnT2JVRUZuUHI3ZFAwTzdJ?=
- =?utf-8?B?eGRwdXU1RHZyby84dkhSQ0lzdTR1akVzSW9DT0FNUVpTakdSZUZkdUFkaVNF?=
- =?utf-8?B?YXAyRitaSHZETVpNcm8xdXhqQlYvNFRldm85WG00WUhTK25pUmRUem9NSFZF?=
- =?utf-8?Q?pNe0V/yFsPw8w3x57ScU?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9a6f9d4-5a5b-4a28-314c-08dc5ada8f2f
-X-MS-Exchange-CrossTenant-AuthSource: MA0P287MB2822.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 10:23:13.3259
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB1078
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/7] x86/bugs: Only harden syscalls when needed
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Alexandre Chartre <alexandre.chartre@oracle.com>,
+ Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Sean Christopherson <seanjc@google.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Nikolay Borisov <nik.borisov@suse.com>, KP Singh <kpsingh@kernel.org>,
+ Waiman Long <longman@redhat.com>, Borislav Petkov <bp@alien8.de>
+References: <cover.1712813475.git.jpoimboe@kernel.org>
+ <97befd7c1e008797734dee05181c49056ff6de57.1712813475.git.jpoimboe@kernel.org>
+ <90405c43-daca-48e4-b424-d66d6bf4dd87@citrix.com>
+ <20240411153841.zexbsqrdli54kiez@treble>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20240411153841.zexbsqrdli54kiez@treble>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-My feedback embedded.
-
-On 2024/4/11 12:11, Stephen Boyd wrote:
-> Quoting Chen Wang (2024-03-28 23:21:40)
->> From: Chen Wang <unicorn_wang@outlook.com>
+On 11/04/2024 4:38 pm, Josh Poimboeuf wrote:
+> On Thu, Apr 11, 2024 at 11:06:37AM +0100, Andrew Cooper wrote:
+>>> +#define __do_syscall(table, func_direct, nr, regs)			\
+>>> +({									\
+>>> +	unsigned long __rax, __rdi, __rsi;				\
+>>> +									\
+>>> +	asm_inline volatile(						\
+>>> +		ALTERNATIVE("call " __stringify(func_direct) "\n\t",	\
+>>> +			    ANNOTATE_RETPOLINE_SAFE			\
+>>> +			    "call *%[func_ptr]\n\t",			\
+>> This wants to be a plain maybe-thunk'd indirect call, and without the
+>> ANNOTATE_RETPOLINE_SAFE.
 >>
->> Add a driver for the SOPHGO SG2042 clocks.
->>
->> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
->> ---
->>   drivers/clk/Kconfig                    |    1 +
->>   drivers/clk/Makefile                   |    1 +
->>   drivers/clk/sophgo/Kconfig             |    7 +
->>   drivers/clk/sophgo/Makefile            |    2 +
->>   drivers/clk/sophgo/clk-sophgo-sg2042.c | 1410 ++++++++++++++++++++++++
->>   drivers/clk/sophgo/clk-sophgo-sg2042.h |  216 ++++
-> Inline the contents of this file into the driver C file.
-ok, now only one c source is needed.
->> diff --git a/drivers/clk/sophgo/clk-sophgo-sg2042.c b/drivers/clk/sophgo/clk-sophgo-sg2042.c
->> new file mode 100644
->> index 000000000000..7b468e7299ae
->> --- /dev/null
->> +++ b/drivers/clk/sophgo/clk-sophgo-sg2042.c
->> @@ -0,0 +1,1410 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Sophgo SG2042 Clock Generator Driver
->> + *
->> + * Copyright (C) 2024 Sophgo Technology Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/platform_device.h>
-> Need include for BIT macro, io.h for readl/writel, do_div() header,
-> ARRAY_SIZE, etc. please check.
+>> Or you're going to get into cases where some combinations of command
+>> line options do unexpected things e.g. retpolining everything except the
+>> syscall dispatch.
+> In that case won't X86_FEATURE_INDIRECT_SAFE get cleared, resulting in
+> the above using a direct call?  Or did I miss something?
 
-ok, will check and add them, but I did not see warnings/errors when I 
-build with W=1
+That works until the next time anyone touches the logic.  Then it's
+latent vulnerability, or an incorrect trial of a non-default option.
 
-[...]
+I guarantee you'll save someone (probably someone on this CC list) a
+headache in the future by not introducing an unnecessary special case here.
 
->> +static inline int sg2042_pll_enable(struct sg2042_pll_clock *pll, bool en)
->> +{
->> +       unsigned int value = 0;
-> Don't need to initialize value? Also, type should be u32.
-
-Sure, no initializatation is required here, and u32 should be better, I 
-see some other places have the same problem, will fix them too.
-
-[...]
->> +static unsigned long sg2042_pll_recalc_rate(unsigned int reg_value,
->> +                                           unsigned long parent_rate)
->> +{
->> +       struct sg2042_pll_ctrl ctrl_table;
->> +       u64 rate, numerator, denominator;
->> +
->> +       sg2042_pll_ctrl_decode(reg_value, &ctrl_table);
->> +
->> +       numerator = parent_rate * ctrl_table.fbdiv;
->> +       denominator = ctrl_table.refdiv * ctrl_table.postdiv1 * ctrl_table.postdiv2;
->> +       do_div(numerator, denominator);
->> +       rate = numerator;
->> +
->> +       return rate;
-> return numerator
-
-yes, my stupid, will fix it, thanks.
-
-[...]
-
->> +
->> +       static int postdiv1_2[][3] = {
-> const
-
-Good catch, will fix.
-
-[...]
->> +static unsigned long sg2042_clk_divider_recalc_rate(struct clk_hw *hw,
->> +                                                   unsigned long parent_rate)
->> +{
->> +       struct sg2042_divider_clock *divider = to_sg2042_clk_divider(hw);
->> +       unsigned int val;
->> +       unsigned long ret_rate;
->> +
->> +       if (!(readl(divider->reg) & BIT(3))) {
-> What is bit 3? Please make a define.
-
-ok, will fix it and I see some other places have the similar problem, 
-will fix also.
-
-[...]
-
->> +       }
->> +       val |= value << divider->shift;
->> +       val |= 1 << 3;
-> Make a define for bit 3 and bit 0 please.
-
-Same as the issue upon, will fix it. thanks.
-
-[...]
-
->> +
->> +static const char *const clk_mux_ddr01_p[] = {
->> +                       "clk_div_ddr01_0", "clk_div_ddr01_1"};
->> +static const char *const clk_mux_ddr23_p[] = {
->> +                       "clk_div_ddr23_0", "clk_div_ddr23_1"};
->> +static const char *const clk_mux_rp_cpu_normal_p[] = {
->> +                       "clk_div_rp_cpu_normal_0", "clk_div_rp_cpu_normal_1"};
->> +static const char *const clk_mux_axi_ddr_p[] = {
->> +                       "clk_div_axi_ddr_0", "clk_div_axi_ddr_1"};
->> +
->> +static struct sg2042_mux_clock sg2042_mux_clks[] = {
->> +       SG2042_MUX(MUX_CLK_DDR01, "clk_mux_ddr01", clk_mux_ddr01_p,
-> Please use struct clk_parent_data or struct clk_hw directly instead of
-> string names.
-
-Learned and will use clk_parent_data, thanks.
-
-[......]
-
->> +               hw = &pll->hw;
->> +               ret = clk_hw_register(NULL, hw);
-> Use devm_clk_hw_register() and pass a device.
-
-yes, will use devm_xxx.
-
-[......]
->> +
->> +               hw = clk_hw_register_mux_table(NULL,
-> Pass a device and use devm.
-
-Yes, will use devm_xxx.
-
-[......]
-
->> +
->> +       clk_data->iobase = devm_of_iomap(&pdev->dev, pdev->dev.of_node, 0, NULL);
-> Why can't we use devm_platform_ioremap_resource()?
-
-yes, will change todevm_platform_ioremap_resource
-
-[......]
-
->> +
->> +       num_clks = ARRAY_SIZE(sg2042_pll_clks);
->> +       if (num_clks == 0) {
->> +               ret = -EINVAL;
->> +               goto error_out;
->> +       }
-> This is dead code, please remove.
-
-Thanks, you are right, I will remove it together with some other dead 
-code similiar.
-
->> +
->> +/*
->> + * Divider clock
->> + * @hw:                        clk_hw for initialization
->> + * @id:                        used to map clk_onecell_data
->> + * @reg:               used for readl/writel.
->> + *                     **NOTE**: DIV registers are ALL in CLOCK!
->> + * @lock:              spinlock to protect register access, modification of
->> + *                     frequency can only be served one at the time
->> + * @offset_ctrl:       offset of divider control registers
->> + * @shift:             shift of "Clock Divider Factor" in divider control register
->> + * @width:             width of "Clock Divider Factor" in divider control register
->> + * @div_flags:         private flags for this clock, not for framework-specific
->> + * @initval:           In the divider control register, we can configure whether
->> + *                     to use the value of "Clock Divider Factor" or just use
->> + *                     the initial value pre-configured by IC. BIT[3] controls
->> + *                     this and by default (value is 0), means initial value
->> + *                     is used.
->> + *                     **NOTE** that we cannot read the initial value (default
->> + *                     value when poweron) and default value of "Clock Divider
->> + *                     Factor" is zero, which I think is a hardware design flaw
->> + *                     and should be sync-ed with the initial value. So in
->> + *                     software we have to add a configuration item (initval)
->> + *                     to manually configure this value and use it when BIT[3]
->> + *                     is zero.
-> Do you use the init clk_op for this?
-
-I think this does not apply to init ops, because I want to configure 
-some parameters here, rather than communicate with the physical clocks 
-and do any special initialization work. As I explained in the comments, 
-due to hardware design issues, when the clock use the IC default 
-initval, we cannot read the current initval from the register, so we can 
-only use the initval we configure in code as current factor value.
-
-[......]
-
->> +
->> +/*
->> + * Gate clock
->> + * @hw:                        clk_hw for initialization
->> + * @id:                        used to map clk_onecell_data
->> + * @offset_enable:     offset of gate enable registers
->> + * @bit_idx:           which bit in the register controls gating of this clock
->> + */
->> +struct sg2042_gate_clock {
->> +       struct clk_hw hw;
->> +
->> +       unsigned int id;
->> +
->> +       unsigned long offset_enable;
-> Usually we use a u32 or a shorter size so that the member width is
-> unchanged on different CPU architecture.
-
-OK, I find some else similar problem and will fix them altogether.
-
-[......]
-
->> + * Mux clock
-> Please use kernel doc. See https://docs.kernel.org/doc-guide/kernel-doc.html
-
-Sure，I will learn and try this.
-
->> + * @hw:                        clk_hw for initialization
->> + * @id:                        used to map clk_onecell_data
->> + * @offset_select:     offset of mux selection registers
->> + *                     **NOTE**: MUX registers are ALL in CLOCK!
->> + * @shift:             shift of "Clock Select" in mux selection register
-> Is "Clock select" actually @offset_select?
-
-No, the "offset_select" is the offset of register, while "Clock Select" 
-is the bit shift for each mux. For SG2042, every mux has two parents and 
-so just one bit is enough for it to select the parent, and one register 
-contains multiple bits, one for each mux.
-
-[......]
-
+~Andrew
