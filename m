@@ -1,49 +1,53 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD621E53A
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959A014C596
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943337; cv=none; b=VCyGeImpDsgMAOfve4JzFdx8ymvhLGp+749/+go4KMXkKeX+kjB2+5YN7ASTRJK5qg3PlgVJygvpmt3kfhmwbHaCbTO/1NxbjHHkpk1TxNRQ1Tqh+mIEsk1hLcbQBM2sHWpgbvyNFLx5n4QgsgQCHG5cP7NPcb+r7wXNklQbT9s=
+	t=1712943339; cv=none; b=JbGstjY7gP/Q33mAS4tY0BlM2fSvEZZg2MIIx2Mad7ReAI3r0hZVrnAyiwSAxoD0EwzYggy53go4bQRotf7kSJMVNDxJNY7wCJtRZMVYTfpnYtC57+ibYie7p1nCKwFj9d86fjyh8j9pljVU7PNjPUlBzB/WI0+2HulB0HeksX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943337; c=relaxed/simple;
-	bh=aJFKNG8JFdsknm0cM70DGXhrFg8VJGGZkSPTRdlR2Gw=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YE8pszwLtPcZOZKfchfb1bupcM27VoDF9iXqxmOoJP0pCf6UTSePCs0wZp7gaXPSRnLMiuc8wFv9hHXYSRX4ip6DIN9rtaLUfx1HYCok73CIg0c7qpnMth9+TLbqM8KlLZ8aStlswcK0ep8ACX3c99YCSQwcmdFmyTWeNMPBk34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aW0iPIR1; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1712943339; c=relaxed/simple;
+	bh=m6cvDpKwQxw/+1HX6xn29yBbQlMJwxJA/GOc2nFuhwM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rC27ATsBwRixE/AN+3/mwVQK0o2V/Y88+4Edprfxw5ACdgCIYfgXNx8zTSdwsN7AGlhuFZynK7szFWWilQDz6V+pWdLdhBaYy69xDZSqJOveYS9wowIS4CTX5JeG9VExbJDeifOd7k/pONC0gWmXv1EQP9mjd979+20MmBHhQr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zw8jMsg1; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aW0iPIR1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zw8jMsg1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712943335;
+	s=mimecast20190719; t=1712943336;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=7F11F8b0j1hRRpTpVJdUgzEjbTqkJrpProdSq6OmwYM=;
-	b=aW0iPIR1UflS8NXIilLoUncqAeFV0TN76GAUTIqpplQigOuMftiMQbqrYx+VGX+Ni7nFOJ
-	ablkZEHGCYWxI6NGaW4/oWIkeTGxuQzqBdzc6XSXzkjJ5knYK0SfKZ6Pj6PRWjeV7cGq6M
-	bEJ2YLRSB3PP5y2/+nK6NS3dwzpPtW4=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-62-lzXLJ7bZMau5hyJugf41rg-1; Fri,
- 12 Apr 2024 13:35:33 -0400
-X-MC-Unique: lzXLJ7bZMau5hyJugf41rg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VpeDD5FA3om+hsK2jspL++DDgX73rZcz5eJV48XG4Vk=;
+	b=Zw8jMsg1HaIQ0KrTnUZwYCsCoowXto64vOXtfmAVjPokKSUWsI/1AVvel/49RjWdk1gys1
+	/yzL7Iqis/HdrsTXN9iNv//xh8RfnKsJ5amWBfpYsbH/5HWMihPPVxoCbdKRx2dmDYmuni
+	ZcZ+4ayJL+xiRwm+VS9kbCsl1Gf4l/I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-489-pGbX_jt3NbysqDWKIcvPAA-1; Fri, 12 Apr 2024 13:35:35 -0400
+X-MC-Unique: pGbX_jt3NbysqDWKIcvPAA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0F5A61C4C39B;
-	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DE3291807ACE;
+	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id EBA7B492BC7;
-	Fri, 12 Apr 2024 17:35:32 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C64B32166B31;
+	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Subject: [PATCH 00/10] KVM: MMU changes for confidential computing
-Date: Fri, 12 Apr 2024 13:35:22 -0400
-Message-ID: <20240412173532.3481264-1-pbonzini@redhat.com>
+Subject: [PATCH 10/10] KVM: x86/mmu: check for invalid async page faults involving private memory
+Date: Fri, 12 Apr 2024 13:35:32 -0400
+Message-ID: <20240412173532.3481264-11-pbonzini@redhat.com>
+In-Reply-To: <20240412173532.3481264-1-pbonzini@redhat.com>
+References: <20240412173532.3481264-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,74 +56,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-This includes the MMU parts of "TDX/SNP part 1 of n"[1] while the rest
-was posted as "KVM: guest_memfd: New hooks and functionality for SEV-SNP
-and TDX"[2] last week.
+Right now the error code is not used when an async page fault is completed.
+This is not a problem in the current code, but it is untidy.  For protected
+VMs, we will also need to check that the page attributes match the current
+state of the page, because asynchronous page faults can only occur on
+shared pages (private pages go through kvm_faultin_pfn_private() instead of
+__gfn_to_pfn_memslot()).
 
-It includes two basic parts:
+Start by piping the error code from kvm_arch_setup_async_pf() to
+kvm_arch_async_page_ready() via the architecture-specific async page
+fault data.  For now, it can be used to assert that there are no
+async page faults on private memory.
 
-- Allow non-zero value for non-present SPTE and removed SPTE, so that
-  TDX can set the "suppress VE" bit
+Extracted from a patch by Isaku Yamahata.
 
-- Use PFERR_GUEST_ENC_MASK to indicate fault is private.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/mmu/mmu.c          | 17 ++++++++++-------
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-The changes from v1 are:
-
-- splitting #VE architectural definitions to their own patch
-
-- replace the module parameter to trap #VE with a Kconfig symbol,
-  enabling it by default if PROVE_MMU || DEBUG_KERNEL.
-
-- Sean's suggestion that "if we're going to bother plumbing in the error
-  code, then we should use it to do sanity checks" on async page faults.
-
-- removing the dead function kvm_mmu_set_mmio_spte_value(), which can
-  be added by TDX patches when they need it
-
-Paolo
-
-[1] https://patchew.org/linux/20240227232100.478238-1-pbonzini@redhat.com/
-[2] https://patchew.org/linux/20240404185034.3184582-1-pbonzini@redhat.com/
-
-Isaku Yamahata (3):
-  KVM: x86/mmu: Add Suppress VE bit to EPT
-    shadow_mmio_mask/shadow_present_mask
-  KVM: VMX: Introduce test mode related to EPT violation VE
-  KVM: x86/mmu: Pass around full 64-bit error code for KVM page faults
-
-Paolo Bonzini (3):
-  KVM, x86: add architectural support code for #VE
-  KVM: x86/mmu: Use PFERR_GUEST_ENC_MASK to indicate fault is private
-  KVM: x86/mmu: check for invalid async page faults involving private
-    memory
-
-Sean Christopherson (4):
-  KVM: Allow page-sized MMU caches to be initialized with custom 64-bit
-    values
-  KVM: x86/mmu: Replace hardcoded value 0 for the initial value for SPTE
-  KVM: x86/mmu: Allow non-zero value for non-present SPTE and removed
-    SPTE
-  KVM: x86/mmu: Track shadow MMIO value on a per-VM basis
-
- arch/x86/include/asm/kvm_host.h |  5 +++
- arch/x86/include/asm/vmx.h      | 13 +++++++
- arch/x86/kvm/Kconfig            | 13 +++++++
- arch/x86/kvm/mmu/mmu.c          | 50 ++++++++++++++++---------
- arch/x86/kvm/mmu/mmu_internal.h |  6 +--
- arch/x86/kvm/mmu/mmutrace.h     |  2 +-
- arch/x86/kvm/mmu/paging_tmpl.h  |  4 +-
- arch/x86/kvm/mmu/spte.c         | 10 +++--
- arch/x86/kvm/mmu/spte.h         | 22 +++++++++--
- arch/x86/kvm/mmu/tdp_mmu.c      | 18 ++++-----
- arch/x86/kvm/vmx/vmcs.h         |  5 +++
- arch/x86/kvm/vmx/vmx.c          | 65 ++++++++++++++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.h          |  6 ++-
- include/linux/kvm_types.h       |  1 +
- virt/kvm/kvm_main.c             | 16 +++++++-
- 15 files changed, 193 insertions(+), 43 deletions(-)
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0b73f78dd70a..cf5f28dcda06 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1854,6 +1854,7 @@ struct kvm_arch_async_pf {
+ 	gfn_t gfn;
+ 	unsigned long cr3;
+ 	bool direct_map;
++	u64 error_code;
+ };
+ 
+ extern u32 __read_mostly kvm_nr_uret_msrs;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 0fb175ad6b9b..7b0d671cf696 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4207,24 +4207,27 @@ static u32 alloc_apf_token(struct kvm_vcpu *vcpu)
+ 	return (vcpu->arch.apf.id++ << 12) | vcpu->vcpu_id;
+ }
+ 
+-static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+-				    gfn_t gfn)
++static bool kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu,
++				    struct kvm_page_fault *fault)
+ {
+ 	struct kvm_arch_async_pf arch;
+ 
+ 	arch.token = alloc_apf_token(vcpu);
+-	arch.gfn = gfn;
++	arch.gfn = fault->gfn;
+ 	arch.direct_map = vcpu->arch.mmu->root_role.direct;
+ 	arch.cr3 = kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu);
+ 
+-	return kvm_setup_async_pf(vcpu, cr2_or_gpa,
+-				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
++	return kvm_setup_async_pf(vcpu, fault->addr,
++				  kvm_vcpu_gfn_to_hva(vcpu, fault->gfn), &arch);
+ }
+ 
+ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+ {
+ 	int r;
+ 
++	if (WARN_ON_ONCE(work->arch.error_code & PFERR_GUEST_ENC_MASK))
++		return;
++
+ 	if ((vcpu->arch.mmu->root_role.direct != work->arch.direct_map) ||
+ 	      work->wakeup_all)
+ 		return;
+@@ -4237,7 +4240,7 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+ 	      work->arch.cr3 != kvm_mmu_get_guest_pgd(vcpu, vcpu->arch.mmu))
+ 		return;
+ 
+-	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, 0, true, NULL);
++	kvm_mmu_do_page_fault(vcpu, work->cr2_or_gpa, work->arch.error_code, true, NULL);
+ }
+ 
+ static inline u8 kvm_max_level_for_order(int order)
+@@ -4350,7 +4353,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 			trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn);
+ 			kvm_make_request(KVM_REQ_APF_HALT, vcpu);
+ 			return RET_PF_RETRY;
+-		} else if (kvm_arch_setup_async_pf(vcpu, fault->addr, fault->gfn)) {
++		} else if (kvm_arch_setup_async_pf(vcpu, fault)) {
+ 			return RET_PF_RETRY;
+ 		}
+ 	}
 -- 
 2.43.0
 
