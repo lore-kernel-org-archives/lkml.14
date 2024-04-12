@@ -1,99 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA52714900C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E15382C60;
 	Fri, 12 Apr 2024 16:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712940355; cv=none; b=fJp28GtfnrcZTbDomfu08YnwAe8QrnF8FQgJtW1Js/F9s6HB3NG25BvdIg85CnSTycyxwFXn4nmie5oo3FayAaBZtzhRcwEt9e4sfpOi00HiTirUbOWDd2mKJZ72qXw6lD8m7pHDzPUiC12OYnNTWWpm1jt5RIdTTdDBZFpD6Gk=
+	t=1712940356; cv=none; b=MdKkActTwF4aWx4kHz17qCdeZts7zAU34tN/kttVviS4PSDsXSRiDezfWtF4YGPOiwO6Cc93U4vYJvFWu3BMLCXKteXCIUAXFZB+WZ8fbEJQxqGRSduO2QbuvLgxhXPaDgTmoLjBIGgIEF/CTvoz4BkoPLBaTGsiduwCzkv7MyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712940355; c=relaxed/simple;
-	bh=y9Yt29vHd8nVHODE69mLVM3p2B463p8ZHm84V3ZPix8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m40TJYZ88SNm8j0B1iZb/BqbBnYYvrxFU6hUhd8vAqsY0iWIaChg0pXITX4zptzaVz+IyCc41WgXoY89Eirq0O6dzeip6SzTX8iyM52rxuob8/LMuYzOxkV3LW3km8jVHKKwReF2EhbG+dbqyL3oJQbkUDVkerw2ufXmKKjGNsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UEFQO42R; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1712940356; c=relaxed/simple;
+	bh=oM4DdzknAHFnE6mRuMA2wl+932rmGVqLnvyBIg43hbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a+ZmpnfGR6aadpdNn/7XUECc/SDT/3wUuM1/CzEKJqK2OJu3u1mO/r1R9VvXwOAml68zt77IJcKwTzRGa55IirLWM5lnt44ElfhZEqsCqYY3cPU1xOtMu9gAXntcj0CjAU8i3R6aw9qz0D53uUysA5tpVqONyTLyeFuB119w1fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eprr8eHH; arc=none smtp.client-ip=192.198.163.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UEFQO42R"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eprr8eHH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1712940354; x=1744476354;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y9Yt29vHd8nVHODE69mLVM3p2B463p8ZHm84V3ZPix8=;
-  b=UEFQO42RedFyLf35jiqf3h3wp11DVTOFedgGMYOvttFDyN5UxffRa0LY
-   p+Y6kSjH4rVhNlEgB/IrWILkHZglPUM3rkyMLFlaOIlOXb4tWqtFVDxeE
-   v1ay5ZmgskvLifrk1UkiizHcexpmfDtB10N7WEoY+IG6hqPO8c+qGHJgx
-   5QFkiv9qEEnvAYE4K+yxAMDXKB/N0z+ogx2uLSgQL8NEq36G1gn/cV15/
-   buCVHDgWBIjRnIAq99qpqBrUnmBHdHMVJDOhZB5bfdWxzAYFhhea8J8It
-   C5e4Culy26PcFg9mtvxUsMXo7ygxZ04qjLMd4qxdifQoODQ3TsaAynKbW
-   A==;
-X-CSE-ConnectionGUID: uiD9kKEWTIW4YxEAsSXg+Q==
-X-CSE-MsgGUID: yf/C08fZTGGwk1J9hIGzsA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="19797470"
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=oM4DdzknAHFnE6mRuMA2wl+932rmGVqLnvyBIg43hbc=;
+  b=eprr8eHHXXfXFNLW7WEPRihqPXeZ+MnbX26R5Y2Ami0pBpVSEkkWBtLD
+   d8tSf7J6XlPHraEYbXrJ1vjBq4SrDRBOqSy8+TcUTaWdsZY5+JO9UVv1M
+   zjzwefHLrMk4fTGgQpRtOsGT6mZcj3QL2cy70nQn4AYBMt1+LkPL6yMzf
+   glaIqLU3PyoOjQLx7EcGF0H5xLO0zgmY0wcrx5MjvDPOh/8h9kT2xB2Pl
+   sUX11YmQYFYi/e4ZDz5sEpYvqGlSw0KpS6AzH0pZYGcG0F9l5BA5yw2Sj
+   yOjsRTsWtw+WA1qB2qd2rGLLJLQTUd+bq7dH7ikkNS6ZJt/ZsBA4zflCe
+   Q==;
+X-CSE-ConnectionGUID: AEZOwvMMReqMTNOKKeR0qA==
+X-CSE-MsgGUID: i8LM4LpyRSuftY+9GQZDmg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8579705"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="19797470"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:53 -0700
-X-CSE-ConnectionGUID: UH5B1YgpQ9OnH1uDJH94IA==
-X-CSE-MsgGUID: p1RMsWI9QiuYZltHW4VVwg==
+   d="scan'208";a="8579705"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:53 -0700
+X-CSE-ConnectionGUID: 80Tnr3S/TTO8zdcQeBQRVg==
+X-CSE-MsgGUID: 0APbk5XIQdKfqoIoV9mNrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="26079046"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rvK28-00000003huv-2pkl;
-	Fri, 12 Apr 2024 19:45:48 +0300
-Date: Fri, 12 Apr 2024 19:45:48 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: u.kleine-koenig@pengutronix.de, jarkko.nikula@linux.intel.com,
-	mika.westerberg@linux.intel.com, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] pwm: dwc: allow suspend/resume for 16 channels
-Message-ID: <ZhllPOXt41Ndlhc_@smile.fi.intel.com>
-References: <20240412060812.20412-1-raag.jadav@intel.com>
- <ZhlU176sS36_JvQU@smile.fi.intel.com>
- <ZhleDwUJLDEG5QwH@black.fi.intel.com>
+   d="scan'208";a="21703737"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 09:45:52 -0700
+Date: Fri, 12 Apr 2024 09:50:22 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
+ <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
+ Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
+ <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
+ J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
+ <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
+ "seanjc@google.com" <seanjc@google.com>, Robin Murphy
+ <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
+ "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
+ <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
+ "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 07/13] x86/irq: Factor out calling ISR from
+ common_interrupt
+Message-ID: <20240412095022.592508c9@jacob-builder>
+In-Reply-To: <BN9PR11MB52769DCDF70B551FCFF22DC58C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
+	<20240405223110.1609888-8-jacob.jun.pan@linux.intel.com>
+	<BN9PR11MB52769DCDF70B551FCFF22DC58C042@BN9PR11MB5276.namprd11.prod.outlook.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZhleDwUJLDEG5QwH@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024 at 07:15:11PM +0300, Raag Jadav wrote:
-> On Fri, Apr 12, 2024 at 06:35:51PM +0300, Andy Shevchenko wrote:
-> > On Fri, Apr 12, 2024 at 11:38:12AM +0530, Raag Jadav wrote:
+Hi Kevin,
 
-...
+On Fri, 12 Apr 2024 09:21:45 +0000, "Tian, Kevin" <kevin.tian@intel.com>
+wrote:
 
-> > > +	data = devm_kzalloc(dev, struct_size(data, chips, info->nr), GFP_KERNEL);
-> > > +	if (!data)
-> > > +		return dev_err_probe(dev, -ENOMEM, "Failed to allocate drvdata\n");
+> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > Sent: Saturday, April 6, 2024 6:31 AM
 > > 
-> > Haven't noticed before, but we do not print messages for -ENOMEM. Just return
-> > the code.
+> > Prepare for calling external IRQ handlers directly from the posted MSI
+> > demultiplexing loop. Extract the common code with common interrupt to
+> > avoid code duplication.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/irq.c | 23 ++++++++++++++---------
+> >  1 file changed, 14 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> > index f39f6147104c..c54de9378943 100644
+> > --- a/arch/x86/kernel/irq.c
+> > +++ b/arch/x86/kernel/irq.c
+> > @@ -242,18 +242,10 @@ static __always_inline void handle_irq(struct
+> > irq_desc *desc,
+> >  		__handle_irq(desc, regs);
+> >  }
+> > 
+> > -/*
+> > - * common_interrupt() handles all normal device IRQ's (the special SMP
+> > - * cross-CPU interrupts have their own entry points).
+> > - */
+> > -DEFINE_IDTENTRY_IRQ(common_interrupt)
+> > +static __always_inline void call_irq_handler(int vector, struct
+> > pt_regs *regs) {
+> > -	struct pt_regs *old_regs = set_irq_regs(regs);
+> >  	struct irq_desc *desc;
+> > 
+> > -	/* entry code tells RCU that we're not quiescent.  Check it. */
+> > -	RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up
+> > RCU");
+> > -
+> >  	desc = __this_cpu_read(vector_irq[vector]);
+> >  	if (likely(!IS_ERR_OR_NULL(desc))) {
+> >  		handle_irq(desc, regs);  
 > 
-> Any special case for -ENOMEM?
+> the hidden lines has one problem:
+> 
+> 	} else {
+> 		apic_eoi();
+> 
+> 		if (desc == VECTOR_UNUSED) {
+> 			...
+> 
+> there will be two EOI's for unused vectors, adding the one
+> in sysvec_posted_msi_notification().
 
-Yes. But I have no link to the discussion at hand. Just believe me, or look into
-Git history for changes that drop that messaging. Perhaps one or two will give a
-hint where it starts from...
+Indeed this unlikely case could cause lost interrupt. Imagine we have:
 
-> I found a few drivers which still do.
+- IDT vector N (MSI notification), O, and P (other high-priority
+system vectors).
+- Device MSI vector A which triggers N.
 
-They should be fixed.
+Action 			APIC IRR		APIC ISR
+---------------------------------------------------------
+Device MSI A		N
+APIC accepts N		-			N
+New IRQs arrive		O,P			N
+handle_irq(A)
+eoi() due to A's fault	-			O,P
+eoi in post_msi		-			P
+----------------------------------------------------------
+The second EOI clears ISR for vector O but missed processing it.
 
--- 
-With Best Regards,
-Andy Shevchenko
 
+Intel SDM 11.8.4 for background.
+"The IRR contains the active interrupt requests that have been accepted,
+but not yet dispatched to the processor for servicing. When the local APIC
+accepts an interrupt, it sets the bit in the IRR that corresponds the
+vector of the accepted interrupt. When the processor core is ready to
+handle the next interrupt, the local APIC clears the highest priority IRR
+bit that is set and sets the corresponding ISR bit. The vector for the
+highest priority bit set in the ISR is then dispatched to the processor
+core for servicing.
 
+While the processor is servicing the highest priority interrupt, the local
+APIC can send additional fixed interrupts by setting bits in the IRR. When
+the interrupt service routine issues a write to the EOI register (see
+Section 11.8.5, Signaling Interrupt Servicing Completion), the local APIC
+responds by clearing the highest priority ISR bit that is set. It then
+repeats the process of clearing the highest priority bit in the IRR and
+setting the corresponding bit in the ISR. The processor core then begins
+executing the service routing for the highest priority bit set in the ISR
+"
+
+I need to avoid the duplicated EOI in this case and at minimum cost for the
+hot path.
+
+Thanks,
+
+Jacob
