@@ -1,51 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487B714E2EC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5AE14E2F9
 	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712943340; cv=none; b=fCt1ivlOuaIrGRJZzIcdt5lD5Gkk4LxFC0ly/6LsNg3FWzng2A6/fiBhYyojVsI+BliH/sEHAT+R1hvDhTe0DgRFb4apP78fKtk4DssdJcSUYKErYMPG097iQvEBMdOdJM4YEQHBtguLBy5HPS9Kr8vXV4V/cnnMK1xa31EL4w8=
+	t=1712943341; cv=none; b=NPPjeu/sNES3SgHATLJCn2sAWMVhr3H8pyCjqBZQLIzVmuvlSXXa9OWv+ua+mxieXkeX/RN4VgSn7GKjQybw7Kd2Qjg2X9FZiSCS7V9VUR0CAMiPwUPPUstQBv8fK34fVWJnmc/vhr9vdxE8bO5bJtWtZQcqN7bGYKYxKDb6mCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712943340; c=relaxed/simple;
-	bh=AYc/dQIgIGfPyd8Ji3WVCJ/kBmRWzsyv1BvZrf6DJiU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PpMBUMoTpKeywpc2migo/h6c76b/L6Efdw7YXsthp6fYa1vqhuwcrDddxFK3t36GJ2eMqP98Q5a4slDV4t2pHC6OKPIE6Zl7otSpB6r++/3DsRwnJgHeI6CJQKhDtHAcnVEN3uuD/XGokAfOmeirBLDqZbo5IT/sGuZfACOEiZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fIjnWguQ; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1712943341; c=relaxed/simple;
+	bh=cRh3sCBdYdnEY4iJS5esOzxtTwTnGj6KPOCuuhvLsh8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QRQhDFXIh6Qfxt6IgDTwQMCXbfnCN2e4guvuE54nNi+Ao01Z93o0p06ztxesL0i9TmAm/e1LPR+cf0oxrRXaOFIp8O3Wn+iDwFk3XyqM5Rc0DgXyt3wZKFEvY1jb64/OSHBBKXr6amvLWsjfkmzaQRHJQ9P+HCGRs1c6mScQXh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J1/IHz/u; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIjnWguQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J1/IHz/u"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1712943338;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OiuOtF3km5mOrYS4QJpem+PodieKRqZDiEKM9mH6/7c=;
-	b=fIjnWguQq+xvcHemc6JvyPcfPYVZe33JF8Z75z8lL/O8STYywvs7ljfx38Iyytm7A8WM2B
-	9j07ZSqYgQj+B1qKZOGNyIA57nuODcjv/xM4KdKCo3zZy968X3nRQymHna2xR241CCdRls
-	2reEh0RxIRVoX9zGKIbSw5ZZNyp8BRw=
+	bh=HoJ35V3bK7vtXA0X0O/SFsr03fV4u8Q785/HuzrDGNA=;
+	b=J1/IHz/uTDMt5r3pt/pdb01KPluydgAIjwwThzKr0uM6wKc59GHPWoNtOLLy3EUx0JYk8/
+	gJulzJ5uDIace/ZH9swE3mdDyWl16bWudlKkdy55KIrIR2CoIDvUfihuOXBU8uClxYMIyP
+	bzbnXvzfwcUSFyd+SP1tSyhn+lMojbA=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-483-BRP0A3PAOyWRxaH4tNJ55Q-1; Fri,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-20-Esz3XpneNnyVEafpkas1fw-1; Fri,
  12 Apr 2024 13:35:34 -0400
-X-MC-Unique: BRP0A3PAOyWRxaH4tNJ55Q-1
+X-MC-Unique: Esz3XpneNnyVEafpkas1fw-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 36C4738049F9;
-	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD3EC29AB3F3;
+	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 1FA01492BC7;
-	Fri, 12 Apr 2024 17:35:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 81801492BC7;
+	Fri, 12 Apr 2024 17:35:33 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Subject: [PATCH 06/10] KVM, x86: add architectural support code for #VE
-Date: Fri, 12 Apr 2024 13:35:28 -0400
-Message-ID: <20240412173532.3481264-7-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Binbin Wu <binbin.wu@linux.intel.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH 03/10] KVM: x86/mmu: Allow non-zero value for non-present SPTE and removed SPTE
+Date: Fri, 12 Apr 2024 13:35:25 -0400
+Message-ID: <20240412173532.3481264-4-pbonzini@redhat.com>
 In-Reply-To: <20240412173532.3481264-1-pbonzini@redhat.com>
 References: <20240412173532.3481264-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -58,77 +62,66 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Dump the contents of the #VE info data structure and assert that #VE does
-not happen, but do not yet do anything with it.
+From: Sean Christopherson <seanjc@google.com>
 
-No functional change intended, separated for clarity only.
+For TD guest, the current way to emulate MMIO doesn't work any more, as KVM
+is not able to access the private memory of TD guest and do the emulation.
+Instead, TD guest expects to receive #VE when it accesses the MMIO and then
+it can explicitly make hypercall to KVM to get the expected information.
 
-Extracted from a patch by Isaku Yamahata <isaku.yamahata@intel.com>.
+To achieve this, the TDX module always enables "EPT-violation #VE" in the
+VMCS control.  And accordingly, for the MMIO spte for the shared GPA,
+1. KVM needs to set "suppress #VE" bit for the non-present SPTE so that EPT
+violation happens on TD accessing MMIO range.  2. On EPT violation, KVM
+sets the MMIO spte to clear "suppress #VE" bit so the TD guest can receive
+the #VE instead of EPT misconfiguration unlike VMX case.  For the shared GPA
+that is not populated yet, EPT violation need to be triggered when TD guest
+accesses such shared GPA.  The non-present SPTE value for shared GPA should
+set "suppress #VE" bit.
 
+Add "suppress #VE" bit (bit 63) to SHADOW_NONPRESENT_VALUE and
+REMOVED_SPTE.  Unconditionally set the "suppress #VE" bit (which is bit 63)
+for both AMD and Intel as: 1) AMD hardware doesn't use this bit when
+present bit is off; 2) for normal VMX guest, KVM never enables the
+"EPT-violation #VE" in VMCS control and "suppress #VE" bit is ignored by
+hardware.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Message-Id: <a99cb866897c7083430dce7f24c63b17d7121134.1705965635.git.isaku.yamahata@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/vmx.h | 12 ++++++++++++
- arch/x86/kvm/vmx/vmx.c     | 12 ++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/x86/kvm/mmu/spte.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index ac6da0a5f5e6..d77a31039f24 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -71,6 +71,7 @@
- #define SECONDARY_EXEC_ENCLS_EXITING		VMCS_CONTROL_BIT(ENCLS_EXITING)
- #define SECONDARY_EXEC_RDSEED_EXITING		VMCS_CONTROL_BIT(RDSEED_EXITING)
- #define SECONDARY_EXEC_ENABLE_PML               VMCS_CONTROL_BIT(PAGE_MOD_LOGGING)
-+#define SECONDARY_EXEC_EPT_VIOLATION_VE		VMCS_CONTROL_BIT(EPT_VIOLATION_VE)
- #define SECONDARY_EXEC_PT_CONCEAL_VMX		VMCS_CONTROL_BIT(PT_CONCEAL_VMX)
- #define SECONDARY_EXEC_ENABLE_XSAVES		VMCS_CONTROL_BIT(XSAVES)
- #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
-@@ -226,6 +227,8 @@ enum vmcs_field {
- 	VMREAD_BITMAP_HIGH              = 0x00002027,
- 	VMWRITE_BITMAP                  = 0x00002028,
- 	VMWRITE_BITMAP_HIGH             = 0x00002029,
-+	VE_INFORMATION_ADDRESS		= 0x0000202A,
-+	VE_INFORMATION_ADDRESS_HIGH	= 0x0000202B,
- 	XSS_EXIT_BITMAP                 = 0x0000202C,
- 	XSS_EXIT_BITMAP_HIGH            = 0x0000202D,
- 	ENCLS_EXITING_BITMAP		= 0x0000202E,
-@@ -631,4 +634,13 @@ enum vmx_l1d_flush_state {
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index 0f4ec2859474..465fa283326b 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -149,7 +149,21 @@ static_assert(MMIO_SPTE_GEN_LOW_BITS == 8 && MMIO_SPTE_GEN_HIGH_BITS == 11);
  
- extern enum vmx_l1d_flush_state l1tf_vmx_mitigation;
+ #define MMIO_SPTE_GEN_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_BITS + MMIO_SPTE_GEN_HIGH_BITS - 1, 0)
  
-+struct vmx_ve_information {
-+	u32 exit_reason;
-+	u32 delivery;
-+	u64 exit_qualification;
-+	u64 guest_linear_address;
-+	u64 guest_physical_address;
-+	u16 eptp_index;
-+};
-+
- #endif
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6780313914f8..2c746318c6c3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6408,6 +6408,18 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
- 	if (secondary_exec_control & SECONDARY_EXEC_ENABLE_VPID)
- 		pr_err("Virtual processor ID = 0x%04x\n",
- 		       vmcs_read16(VIRTUAL_PROCESSOR_ID));
-+	if (secondary_exec_control & SECONDARY_EXEC_EPT_VIOLATION_VE) {
-+		struct vmx_ve_information *ve_info;
-+
-+		pr_err("VE info address = 0x%016llx\n",
-+		       vmcs_read64(VE_INFORMATION_ADDRESS));
-+		ve_info = __va(vmcs_read64(VE_INFORMATION_ADDRESS));
-+		pr_err("ve_info: 0x%08x 0x%08x 0x%016llx 0x%016llx 0x%016llx 0x%04x\n",
-+		       ve_info->exit_reason, ve_info->delivery,
-+		       ve_info->exit_qualification,
-+		       ve_info->guest_linear_address,
-+		       ve_info->guest_physical_address, ve_info->eptp_index);
-+	}
- }
++/*
++ * Non-present SPTE value needs to set bit 63 for TDX, in order to suppress
++ * #VE and get EPT violations on non-present PTEs.  We can use the
++ * same value also without TDX for both VMX and SVM:
++ *
++ * For SVM NPT, for non-present spte (bit 0 = 0), other bits are ignored.
++ * For VMX EPT, bit 63 is ignored if #VE is disabled. (EPT_VIOLATION_VE=0)
++ *              bit 63 is #VE suppress if #VE is enabled. (EPT_VIOLATION_VE=1)
++ */
++#ifdef CONFIG_X86_64
++#define SHADOW_NONPRESENT_VALUE	BIT_ULL(63)
++static_assert(!(SHADOW_NONPRESENT_VALUE & SPTE_MMU_PRESENT_MASK));
++#else
+ #define SHADOW_NONPRESENT_VALUE	0ULL
++#endif
  
- /*
+ extern u64 __read_mostly shadow_host_writable_mask;
+ extern u64 __read_mostly shadow_mmu_writable_mask;
 -- 
 2.43.0
 
