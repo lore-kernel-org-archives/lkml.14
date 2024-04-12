@@ -1,124 +1,136 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538385B209;
-	Fri, 12 Apr 2024 13:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1891F55E4C;
+	Fri, 12 Apr 2024 13:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712927022; cv=none; b=I+8uop+HZ7gEETDG3Rv147qoGUXF1hwxbPt4uV55OwdVGFmatkHKg7Q0tvJpv0f59kYGZ7tGhDWnuaAvrc3Y1iykf8hHJeBXUJfXLpjB8Dus2vvifxO5Jwzi+TkaR+nnJm6Er2HRn9SkuK87Uppoip47gjyDJabXnXvOM5qeBJ4=
+	t=1712927023; cv=none; b=thSRQHiHriqEZ/ZL9kSfNqZgUOCMuggxt7N1BdIe8nAoAOFnkwlG8RSVnpOotyLaSLYjkb4CFhi7+9m151GaswIQApaMT3WLJvGJww0imSM+JiC1rakk5xjJpQ95/yc6GPoNK1vbdjvI+Jm0cSWL138gj92PNdgWbvwqLxPxx1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712927022; c=relaxed/simple;
-	bh=0YhlaO/sZ/lNFpDfyQm508LIh6BokOglMf/3nuV3KFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QX+xMAVpO/NfFsAak1NLSqwmx5KA3LpNct2CVkD4c1esgtHWlmmfqCqkk5oPklEy3dy/3wPUmomzn168UsWvA9RuV57sMjwzXf9zMRlnUEtVGJGD4rs/Yhsz9XPqajqxaecitjfqe7bLb/vOdW0PZZ7B2gri8x4tacX3aaVpQYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Ge9ufb63; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1712927023; c=relaxed/simple;
+	bh=vCkHpizOxk1oGDxM8fxP7qxinTI6j9RtzAj3GndDZa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFpZByrSvdwdSrIDbNISBueLaKJkxBwP/oy1NoiDBDsJ3ruAedQQeNH6dP/drY+EmX96/pexHm/kIVo/GsuzfnvN1N892ycaPodIzUDEtTFL5N4zW+xEpNqygJDV73ylm+D5+y7tnMchIEE+metbgOTsGl3l95dh8S8EgP0KnBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EP2Dwzri; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Ge9ufb63"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43C8iia5010918;
-	Fri, 12 Apr 2024 08:02:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	PODMain02222019; bh=HtpTjQV+kePvQ/cWjDO7/zh0v/lMKFoQUpCxIgN6XBg=; b=
-	Ge9ufb63T+FLn4Pru+/xqqxb5nkjIdp3H3el4FDOATIo/7XJ3NyOoTWmdh7TXApJ
-	jMkx3BE76gq/V/6CZfz8OKy7baicZfLmEfdT8Sga+98GmjRE5BmnxcTthZli1Ll4
-	l3kaTme3JhRGXbRZfdiGPeNo5JpDhvCntstm7qVhTncO/HScvs6zulHRFxw+PgKh
-	rnLeapAWZ01oDRWYR1GDlMnwe4lTzy5LSVWnvckQ0WWG/4FCqkIaB8G6bVr0jR8K
-	jwXGuEcgHmCjs+jxKEKVU/y0KgcMruESTgW9ZVZZu7yJ17ZESx2GUfgnVVnSC8xl
-	S8or50whM3m2yvMrEz1iDg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xf1q6071d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 08:02:21 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 12 Apr
- 2024 14:02:20 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Fri, 12 Apr 2024 14:02:20 +0100
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 1E4D8820270;
-	Fri, 12 Apr 2024 13:02:20 +0000 (UTC)
-Message-ID: <b66339af-1e07-4509-9fd8-12a927618172@opensource.cirrus.com>
-Date: Fri, 12 Apr 2024 14:02:20 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EP2Dwzri"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712927018; x=1744463018;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vCkHpizOxk1oGDxM8fxP7qxinTI6j9RtzAj3GndDZa8=;
+  b=EP2DwzritExFOFCDq6DvwPI8mLuQfNoT08bu2+Xcx6LbZys5SODWh0JN
+   pPsA9XjBvKv5rjNV6BwzJ/z8cX8sFFj1gMRt5NJB4LVEmSAmjwCDJ5jQK
+   p9P8nQ++UF7kQTzfpkvpb8N1rhWGamAZ8ogOk7FveXjK/tOcgE6lBNFXc
+   YnOOu7hnWeFqIq4LBIPVn+HxmzkLe0DX8L521tzTlLo9ehiHcPb9lYLER
+   OHYR8fgEr72hinkGcWJgqwQmitunn0QXhrSe14nEIKzlMPXVBfcE51c34
+   8G2fhQVpu7WqbKLZiXsezVx7X49mPXyNW/3NatTJrKSRc9v2xpWL4khmR
+   Q==;
+X-CSE-ConnectionGUID: grEAWrvQQWyOez51YCQhVg==
+X-CSE-MsgGUID: pw9K4v1jTluTPlwZULp7Rw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="12230264"
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="12230264"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:03:37 -0700
+X-CSE-ConnectionGUID: Ae/EZF/1SbC9WOOGl52Rmw==
+X-CSE-MsgGUID: vFYwf3fLRYGQ8pVEzMTaiw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
+   d="scan'208";a="26034729"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 06:03:36 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 3C47B120359;
+	Fri, 12 Apr 2024 16:03:33 +0300 (EEST)
+Date: Fri, 12 Apr 2024 13:03:33 +0000
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Umang Jain <umang.jain@ideasonboard.com>
+Cc: linux-media@vger.kernel.org,
+	Alexander Shiyan <eagle.alexander923@gmail.com>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/6] media: imx335: Parse fwnode properties
+Message-ID: <ZhkxJeQSKMxj0O7b@kekkonen.localdomain>
+References: <20240412122842.193713-1-umang.jain@ideasonboard.com>
+ <20240412122842.193713-3-umang.jain@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] ASoC: soc-card: soc-card-test: Fix some error handling
- in init()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <450dd21a-b24b-48ba-9aa4-c02e4617852f@moroto.mountain>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <450dd21a-b24b-48ba-9aa4-c02e4617852f@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: KH0pgunqufVkBEQtkVJJMIKs3hQ3mZVe
-X-Proofpoint-GUID: KH0pgunqufVkBEQtkVJJMIKs3hQ3mZVe
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412122842.193713-3-umang.jain@ideasonboard.com>
 
-On 12/04/2024 13:07, Dan Carpenter wrote:
-> There are two issues here:
-> 1) The get_device() needs a matching put_device() on error paths.
-> 2) The "if (!ret)" was supposed to be "if (ret)".
+Hi Umang,
+
+On Fri, Apr 12, 2024 at 05:58:38PM +0530, Umang Jain wrote:
+> From: Kieran Bingham <kieran.bingham@ideasonboard.com>
 > 
-> I re-arranged the code a bit to do the allocation before the
-> get_device().
+> Call the V4L2 fwnode device parser to handle controls that are
+> standardised by the framework.
 > 
-> Fixes: ef7784e41db7 ("ASoC: soc-card: Add KUnit test case for snd_soc_card_get_kcontrol")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
 > ---
-> v2: add a put_device()
-> v3: move the kunit_kzalloc() to avoid a second put_device().  Btw,
->      kunit_kzalloc() is cleaned up automatically.
+>  drivers/media/i2c/imx335.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
 > 
->   sound/soc/soc-card-test.c | 12 +++++++-----
->   1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/sound/soc/soc-card-test.c b/sound/soc/soc-card-test.c
-> index 075c52fe82e5..e4a4b101d743 100644
-> --- a/sound/soc/soc-card-test.c
-> +++ b/sound/soc/soc-card-test.c
-> @@ -134,22 +134,24 @@ static int soc_card_test_case_init(struct kunit *test)
->   
->   	test->priv = priv;
->   
-> +	priv->card = kunit_kzalloc(test, sizeof(*priv->card), GFP_KERNEL);
-> +	if (!priv->card)
-> +		return -ENOMEM;
-> +
->   	priv->card_dev = kunit_device_register(test, "sound-soc-card-test");
->   	priv->card_dev = get_device(priv->card_dev);
->   	if (!priv->card_dev)
->   		return -ENODEV;
->   
-> -	priv->card = kunit_kzalloc(test, sizeof(*priv->card), GFP_KERNEL);
-> -	if (!priv->card)
-> -		return -ENOMEM;
-> -
->   	priv->card->name = "soc-card-test";
->   	priv->card->dev = priv->card_dev;
->   	priv->card->owner = THIS_MODULE;
->   
->   	ret = snd_soc_register_card(priv->card);
-> -	if (!ret)
-> +	if (ret) {
-> +		put_device(priv->card_dev);
->   		return ret;
+> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+> index c633ea1380e7..3ea9c0ebe278 100644
+> --- a/drivers/media/i2c/imx335.c
+> +++ b/drivers/media/i2c/imx335.c
+> @@ -1227,10 +1227,12 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  {
+>  	struct v4l2_ctrl_handler *ctrl_hdlr = &imx335->ctrl_handler;
+>  	const struct imx335_mode *mode = imx335->cur_mode;
+> +	struct v4l2_fwnode_device_properties props;
+>  	u32 lpfr;
+>  	int ret;
+>  
+> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 7);
+> +	/* v4l2_fwnode_device_properties can add two more controls */
+> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 9);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -1295,9 +1297,15 @@ static int imx335_init_controls(struct imx335 *imx335)
+>  	if (imx335->hblank_ctrl)
+>  		imx335->hblank_ctrl->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>  
+> -	if (ctrl_hdlr->error) {
+> -		dev_err(imx335->dev, "control init failed: %d\n",
+> -			ctrl_hdlr->error);
+> +	ret = v4l2_fwnode_device_parse(imx335->dev, &props);
+> +	if (!ret) {
+> +		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+> +		v4l2_ctrl_new_fwnode_properties(ctrl_hdlr, &imx335_ctrl_ops,
+> +						&props);
 > +	}
->   
->   	return 0;
->   }
-Reviewed-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+> +
+> +	if (ctrl_hdlr->error || ret) {
+> +		dev_err(imx335->dev, "control init failed: %d\n", ctrl_hdlr->error);
+
+Too long line.
+
+>  		v4l2_ctrl_handler_free(ctrl_hdlr);
+>  		return ctrl_hdlr->error;
+
+The handler may not be in error state if only v4l2_fwnode_device_parse()
+failed.
+
+Should that be something that should prevent probing a driver though, or
+could it just be ignored? I.e. in that case I'd only check for handler's
+error, not ret.
+
+>  	}
+
+-- 
+Kind regards,
+
+Sakari Ailus
