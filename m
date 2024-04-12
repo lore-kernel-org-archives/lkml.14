@@ -1,98 +1,135 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF10F14A4CF;
-	Fri, 12 Apr 2024 16:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AE6D148850
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938665; cv=none; b=good3DYhy1fQ838kVB/to7nW8HcENMW8+oTCnzo9R/NlvdKYzSOro1+Ov2bhC+4HOLV+fHhnofqy0Py7WMnpgc5wH+ix3fkW2WCZGgJc8yQmwWdTK3xtOhilplFVTFzAl2ek6XfVrSZYALnkAMUCWM8mq+Ev4CzJT9HANTEvQX0=
+	t=1712938670; cv=none; b=nmxWJVhcSnNhyLAtTwx4S1/MOfTqZZPASP4YDQqxZOyDxm+6Jim/UOiEDWx3rXfn03Ki7DQ8p1vgDBFnUVLm22uXRDK2cQ9wKJYjsQ/aQNocJix8umPYLNOr+W6WZ/QuNe9kEZHgnnmXFfXeyyJ/PkkKVO7YP8UHX0ndRQM/0XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938665; c=relaxed/simple;
-	bh=BOV8cMImDOBvm8peb+XAJP16YrY2ZoXrm4injsYTtk0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qOuu2u1APwCQEfXEHQ1x97zpdIfwkfOskL+51/FTISnel2Kz7MUkkTkVCNFiwkb84y6RKYxWP9c5G1V4MRi5MG300jcJcjvaEofv+M/EyiBTmTu6mEwpFUr3BDxnP7TvDVI5lPg43bVkiq5VabIKKrvie/J81pIAn/Izw6ft5mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM9y5mlnz67ZR2;
-	Sat, 13 Apr 2024 00:15:50 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 574A21400F4;
-	Sat, 13 Apr 2024 00:17:35 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:17:34 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 13/30] Documentation: qcom-pmu: Use /sys/bus/event_source/devices paths
-Date: Fri, 12 Apr 2024 17:10:40 +0100
-Message-ID: <20240412161057.14099-14-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712938670; c=relaxed/simple;
+	bh=23qXPzccGbJUkVqJ029wkcVrlAyJmFHp8rYgdXlCJPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hGvCzPvZaUVc1yf6qxVVt/G1HrlVvsV1trlASMAMqp8DYKOpI6u9j9I+iVSpHgWDaPwNdDir7zahhHW3I/9wgAsqWn4wnOGmVWCJe/Mt/x0fPypVG2Ahm5YLKO0izE+VtC7xfPp2nHkiu5vM+bAxNtkYMHE2dxtvRrYx/UnyqKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19217339;
+	Fri, 12 Apr 2024 09:18:17 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 170173F64C;
+	Fri, 12 Apr 2024 09:17:44 -0700 (PDT)
+Date: Fri, 12 Apr 2024 17:17:42 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: "Shaopeng Tan (Fujitsu)" <tan.shaopeng@fujitsu.com>
+Cc: 'James Morse' <james.morse@arm.com>, "x86@kernel.org" <x86@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	"carl@os.amperecomputing.com" <carl@os.amperecomputing.com>,
+	"lcherian@marvell.com" <lcherian@marvell.com>,
+	"bobo.shaobowang@huawei.com" <bobo.shaobowang@huawei.com>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	"peternewman@google.com" <peternewman@google.com>,
+	"dfustini@baylibre.com" <dfustini@baylibre.com>,
+	"amitsinght@marvell.com" <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 09/31] x86/resctrl: Add a resctrl helper to reset all
+ the resources
+Message-ID: <ZhlepqX41cBsQh/m@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-10-james.morse@arm.com>
+ <TYAPR01MB63303577D268E2175A61D0968B3D2@TYAPR01MB6330.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB63303577D268E2175A61D0968B3D2@TYAPR01MB6330.jpnprd01.prod.outlook.com>
 
-To allow setting an appropriate parent for the struct pmu device
-remove existing references to /sys/devices/ path.
+On Wed, Apr 03, 2024 at 07:52:42AM +0000, Shaopeng Tan (Fujitsu) wrote:
+> Hello James,
+> 
+> > On umount(), resctrl resets each resource back to its default configuration. It
+> > only ever does this for all resources in one go.
+> > 
+> > reset_all_ctrls() is architecture specific as it works with struct
+> > rdt_hw_resource.
+> > 
+> > Add an architecture helper to reset all resources.
+> > 
+> > Signed-off-by: James Morse <james.morse@arm.com>
+> > ---
+> >  arch/x86/include/asm/resctrl.h         |  2 ++
+> >  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 16 +++++++++++-----
+> >  2 files changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
+> > index f61382258743..5f6a5375bb4a 100644
+> > --- a/arch/x86/include/asm/resctrl.h
+> > +++ b/arch/x86/include/asm/resctrl.h
+> > @@ -15,6 +15,8 @@
+> >   */
+> >  #define X86_RESCTRL_EMPTY_CLOSID         ((u32)~0)
+> > 
+> > +void resctrl_arch_reset_resources(void);
+> > +
+> >  /**
+> >   * struct resctrl_pqr_state - State cache for the PQR MSR
+> >   * @cur_rmid:		The cached Resource Monitoring ID
+> > diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > index 1a49c9918f8d..13c24cb18d76 100644
+> > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > @@ -2859,6 +2859,14 @@ static int reset_all_ctrls(struct rdt_resource *r)
+> >  	return 0;
+> >  }
+> > 
+> > +void resctrl_arch_reset_resources(void)
+> > +{
+> > +	struct rdt_resource *r;
+> > +
+> > +	for_each_capable_rdt_resource(r)
+> Could you explain why not "for_each_alloc_capable_rdt_resource(r)"?
+> 
+> > +		reset_all_ctrls(r);
+> > +}
+> > +
+> >  /*
+> >   * Move tasks from one to the other group. If @from is NULL, then all tasks
+> >   * in the systems are moved unconditionally (used for teardown).
+> > @@ -2968,16 +2976,14 @@ static void rmdir_all_sub(void)
+> > 
+> >  static void rdt_kill_sb(struct super_block *sb)  {
+> > -	struct rdt_resource *r;
+> > -
+> >  	cpus_read_lock();
+> >  	mutex_lock(&rdtgroup_mutex);
+> > 
+> >  	rdt_disable_ctx();
+> > 
+> > -	/*Put everything back to default values. */
+> > -	for_each_alloc_capable_rdt_resource(r)
+> This was "for_each_alloc_capable_rdt_resource(r)".
+> 
+> Best regards, 
+> Shaopeng TAN
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Documentation/admin-guide/perf/qcom_l2_pmu.rst | 2 +-
- Documentation/admin-guide/perf/qcom_l3_pmu.rst | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Noted for James to take a look at, thanks.
 
-diff --git a/Documentation/admin-guide/perf/qcom_l2_pmu.rst b/Documentation/admin-guide/perf/qcom_l2_pmu.rst
-index c130178a4a55..c37c6be9b8d8 100644
---- a/Documentation/admin-guide/perf/qcom_l2_pmu.rst
-+++ b/Documentation/admin-guide/perf/qcom_l2_pmu.rst
-@@ -10,7 +10,7 @@ There is one logical L2 PMU exposed, which aggregates the results from
- the physical PMUs.
- 
- The driver provides a description of its available events and configuration
--options in sysfs, see /sys/devices/l2cache_0.
-+options in sysfs, see /sys/bus/event_source/devices/l2cache_0.
- 
- The "format" directory describes the format of the events.
- 
-diff --git a/Documentation/admin-guide/perf/qcom_l3_pmu.rst b/Documentation/admin-guide/perf/qcom_l3_pmu.rst
-index a3d014a46bfd..a66556b7e985 100644
---- a/Documentation/admin-guide/perf/qcom_l3_pmu.rst
-+++ b/Documentation/admin-guide/perf/qcom_l3_pmu.rst
-@@ -9,7 +9,7 @@ PMU with device name l3cache_<socket>_<instance>. User space is responsible
- for aggregating across slices.
- 
- The driver provides a description of its available events and configuration
--options in sysfs, see /sys/devices/l3cache*. Given that these are uncore PMUs
-+options in sysfs, see /sys/bus/event_source/devices/l3cache*. Given that these are uncore PMUs
- the driver also exposes a "cpumask" sysfs attribute which contains a mask
- consisting of one CPU per socket which will be used to handle all the PMU
- events on that socket.
--- 
-2.39.2
+If this was intentional, it probably needs more explanation -- it looks
+quite likely to have been unintentional, though.
 
+Cheers
+---Dave
