@@ -1,79 +1,95 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from out203-205-221-149.mail.qq.com (out203-205-221-149.mail.qq.com [203.205.221.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2291CA80;
-	Fri, 12 Apr 2024 06:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B98B3F9E0
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 06:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712903255; cv=none; b=OQtWV+0WMwEhmjJ/BPVAQvjY0uhxUpLCi+r/72chP5qa4hwMOPVw0/kDYkqFmPIBkRw5iBdHHnJA+yo8+LKdmtvqGELa3NTci9ApnRiDsFWg4Xz/Pk7yVUvJNqz31uEztwLXJu6PTsXd179v62Nt2rsVID8fDeSNwMHipRWk5xY=
+	t=1712903261; cv=none; b=Wf1rDZzo7rDOVL785bVYngX/P238ojX5pWCQYzmU6LuP82AKWsXIcq3mDt4QNwlNncQCN8sKJsPSZ4AblluwolNIGNdism5QFt7d/KLzRW5D31jhK1vIsNmzTQxGdWRKPYyxBNTlj2OcN2bBhtYEn4v0Ip/G5zM9LgWn8+ZVGkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712903255; c=relaxed/simple;
-	bh=NiPOeWOuEjw88GRyE0zYlF6pjM+hyH0f8aXHg2mS7o0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/hPdY1KdMbCfazzv52EdM9ZfSvuUpJ++4hQ+xuv+RDVAD1sySBuL/d14/n1CHmD+l6vC+qxnSe42mXXnUEdPVaANF9cMqQztc9RIm93mMvsq8Y9igY6NJ0Q9VVOtK0if3qefkgdTOztnpTLyi6jCFEgaXF7bNpyz5GyEtwzrLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rvAMf-000k1Z-Ta; Fri, 12 Apr 2024 14:26:22 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 12 Apr 2024 14:26:39 +0800
-Date: Fri, 12 Apr 2024 14:26:39 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: David Gstir <david@sigma-star.at>, Mimi Zohar <zohar@linux.ibm.com>,
-	James Bottomley <jejb@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Shawn Guo <shawnguo@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	sigma star Kernel Team <upstream+dcp@sigma-star.at>,
-	David Howells <dhowells@redhat.com>, Li Yang <leoyang.li@nxp.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Tejun Heo <tj@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-security-module@vger.kernel.org,
-	Richard Weinberger <richard@nod.at>,
-	David Oberhollenzer <david.oberhollenzer@sigma-star.at>
-Subject: Re: [PATCH v8 6/6] docs: trusted-encrypted: add DCP as new trust
- source
-Message-ID: <ZhjUH3TZ99cT3Rhq@gondor.apana.org.au>
-References: <20240403072131.54935-1-david@sigma-star.at>
- <20240403072131.54935-7-david@sigma-star.at>
- <D0ALT2QCUIYB.8NFTE7Z18JKN@kernel.org>
+	s=arc-20240116; t=1712903261; c=relaxed/simple;
+	bh=mpG73ntkI+bKnWbZWLV1SvgJybIvz4F5Ii6CWsA53Qs=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=NA9mj0biL3l8ot73iAIM9lkEFMwl1FyLmxPzEcYk/UWq2vnvcnpwUA/1iyqCScbfrawnUkfakqOFe4QKbHB3ympGt+rv5pNTigy9ej80hQundnlp5zB3qoDsDToI8aNtNsS/ot8pAtaL/XfvmDZgrH4eVGO9CT5gRXnn8lB6GC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=omulzr0l; arc=none smtp.client-ip=203.205.221.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="omulzr0l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1712903254; bh=D8d08kdXjrFd28ginRdzdAdRNU2wwkO/zqvD1S6aOGE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=omulzr0leRzsi57LqNmlKQHklbB3iyYiKql9AigtmqNk/ZoKOS9po86lTcwDR7TxB
+	 mrCsruuospHXDPbmi5UTU6ZafuLMOxsk6KPftcXX6l8ekHB8O+NzBgW5pkhow8RZFO
+	 gCHrtBgN9zMC7pJX0bBIKzJcgb4Lm4zG1LxV14lo=
+Received: from Yangyus-MBP-2.lan ([219.141.235.82])
+	by newxmesmtplogicsvrszc6-0.qq.com (NewEsmtp) with SMTP
+	id 6DDA90ED; Fri, 12 Apr 2024 14:27:29 +0800
+X-QQ-mid: xmsmtpt1712903249tchi8hoao
+Message-ID: <tencent_49E156C63C84E435E6F16509D6699339520A@qq.com>
+X-QQ-XMAILINFO: M6lqjKFHeg8FipVhaxR+kEqYAYB7tJUinzNVL1AmDc5DgmTMqHVxOFMH9MdVvV
+	 RjPhvTEMHFHFNzmcs9Aso2kRDaElcQapDDlJwGkBBhWa59KhptInSCzFi03vMg4LzERqRTZQ1sJH
+	 CNwnCmgUbBUIIERkAWWI5ZK2gZuvi4zwiiGC+wR497dv+g43C3eN2JS5O7Je9Y6JSbC3b+djrjzT
+	 is/rS4G4tjTzsKLPax7qS7oAx7SJLE/XmKBeXrzrz3Qmc4F5hfqJ/3hZN3FsWWH3VcgFyuw8qf+j
+	 eiV9+dyW/PuokfeGq0Ko589nTnyFWgZECvR4yt5fKkP9bIgQDqLM6G2g5mly91OlFrL9On6PMTif
+	 FJdE9a192NEFtCl+UWCfyxh8ZZ2wbYvMmvE9UOb3GS6xU/Tr7TbPjPINZZ9ecjgnobJ7ocdNqNHi
+	 1s7o3Zq+t8JEi9C+16Uwe6O8ssdxqdtAgsbhco7k6BKEiBYkZUu0E2UYmS0rwFsMuIn6f/lAu646
+	 wLzCtFhObPbbeMQkiyf1dpvjVC8A/nXkupyawyK4+ldMuF8chHbnuffrn/WczlsV08UGuU/V/If4
+	 z2gvOQt8/PBLvTLv9w+dLovbn+7popyN1zfKg1MdqMOwjmGzK1Dj+cMMQjxZpQBC8+D9XbpFTRa3
+	 c9Px4pQB2KSD4hUsvPtpQfuNN42fQE5utHLK5kJYr2XOhgGy0Y6j79KVhI26e7m59RHkbRoxyWcc
+	 pGVurjjQF0Vgt0CP2K/RhKXKmXGR6Ez24GgnCCEp9v/RCWowSHECv6IIECzBfDlH+98UUR58dsiG
+	 DftcNxVBMSIoVMU24t23HUMnay7tCqipq67fxLzF0UsIlkLT/nUqJ/DjJVRXTB54DSsbMM/6SeKD
+	 qwUrpMixt0xaelMdd/Ucma3hsRRjqDxmo9LwXdiEYBcOUrjTeY+LpFcaolblLmrzLNU1tEYeaghx
+	 VEqmBD/GaU1ukUuKp4//LrQaxRNyClcp71h31IuKwmHJU5f/IiWqKhwnP8NevXBzJFk/yZem4=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Yangyu Chen <cyy@cyyself.name>
+To: conor@kernel.org
+Cc: ajones@ventanamicro.com,
+	anup@brainfault.org,
+	aou@eecs.berkeley.edu,
+	atishp@atishpatra.org,
+	conor.dooley@microchip.com,
+	dqfext@gmail.com,
+	guoren@kernel.org,
+	heiko@sntech.de,
+	inochiama@outlook.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	mark.rutland@arm.com,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	will@kernel.org
+Subject: Re: [PATCH] perf: RISC-V: fix IRQ detection on T-Head C908
+Date: Fri, 12 Apr 2024 14:27:28 +0800
+X-OQ-MSGID: <20240412062728.71533-1-cyy@cyyself.name>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20240314-pep-announcer-2d7f10ff8b65@spud>
+References: <20240314-pep-announcer-2d7f10ff8b65@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D0ALT2QCUIYB.8NFTE7Z18JKN@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 03, 2024 at 06:47:51PM +0300, Jarkko Sakkinen wrote:
->
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+>> IMHO, it may be better to use a new DT property like "riscv,cpu-errata" or
+>> "<vendor>,cpu-errata". It can achieve almost everything like using pseudo
+>> isa. And the only cost I think is a small amount code to parse this.
 > 
-> I can only test that this does not break a machine without the
-> hardware feature.
+> I suppose we could do that, but accounting for vendor specifics was one
+> of the goals for the property I only just added and that I am suggesting
+> to use here.
 
-Please feel free to take this through your tree.
+I think there is a simpler way to do that. We use T-Head PMU by default
+for All T-Head CPUs (from mvendor id). Then, to test there is sscofpmf in
+the ISA string being probed by the kernel. If yes, then use scofpmf.
+Otherwise, use T-Head PMU.
+
+I will check if this can also be switched in any vendor CSR like Svpbmt and
+T-Head MAE we discussed before.
 
 Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Yangyu Chen
+
