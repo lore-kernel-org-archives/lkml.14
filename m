@@ -1,146 +1,126 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3033D3A1DE
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 09:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35683A1DE;
+	Fri, 12 Apr 2024 09:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712913463; cv=none; b=u9Ufu6SwsmySjtWHnIsdvf5Klw60oNXLNSpItEcbTfJ7g6mAZC56T8M9Szwy4PGZaMlP2f8SHjmZMW9ITAb5JI7ajsT5k0dmjCKQgMZeRVDmBqOLAqDSx9A3mH7JRFyWU0p67K1cRYuDM/kAuu5U0AD5GqmEURKJrAyqH7VKDsY=
+	t=1712913487; cv=none; b=G1LOSGs7szA+DRqUj2w8P0ezd9aGKkcIs80CDlFFTWv5ag7DQjDDfTfkNoNG7GcS6dX6Q0ETITL80BvEF5yOe4pUIlcBPNwdbe+mOr1cDF1rhlXgEEzlr1GzGSfpxAAJxlRDSMi+A8YTTw+2SpylGujyZg8XIuLzR8KsNMeLxuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712913463; c=relaxed/simple;
-	bh=FUKtKtdq36Vt1r49LS8QSvI7oP2R7ODnRMLXyosQE2g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=euf+t+O5QtfT+s/vVo/7Fej2vgZUyXqKrLClZ2NJkh7ZP/9OOyuuEeKjEAYomFoFGvpIkVi0kiFLJbqKUW4WIQ2fohG99/RPsBssKTzLSU4AQzKt16ZrZTHlGMMwFwmwgjBWr9wLsVbzLr0XtbThtfv9wm/9aEoEmFtojjktvZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TKFX4Z1X; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1712913487; c=relaxed/simple;
+	bh=YC4Bgpu88WlNqCOJ3XFyA+QsjOPCcKLwt4UBvMe1g3s=;
+	h=From:To:Subject:Date:Message-Id:MIME-Version; b=c+qoxtrqDtHrmz0f0Dp2/N1eQQfKcNmzI8kOkexzf9mnUl14k0YRq5uqUSBhlVtg8WFTPzWb31IgozRM0tJxqotOb+ZVwQgXz8nt5BarPpfVw031uFG7qESD2Uec1vr1TYfrTAHpKGRWlTE1xT3VGiVixPzyMXLDSmIWQHCQLOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xb6A/56K; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TKFX4Z1X"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56e1bbdb362so700631a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 02:17:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xb6A/56K"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5a4f7a648dbso392708eaf.3;
+        Fri, 12 Apr 2024 02:18:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712913460; x=1713518260; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=NpTqhd0B9/xzNoER4WA8UDMsth7BUMydRvViv6uQMmo=;
-        b=TKFX4Z1XJWkQ9N4MhCD1f73C1dbDhjWbELbrHG+BfRwZ/jJlCSV4tCzZl3CviydKMf
-         RIBmsiog/28zIBS4juJKek9QmZ8CffYyiputBrLfPNZe7xmvvEyGWoXfwWjRc122MrbO
-         oabKaUJHviRzJnYDbJhbsD3J5pP5aG0CL+iSeCgXvYZP3Fb3cfcUY4WVVryH0A79nmpB
-         Uu4AncipQUvveomsgWxbohkonzuT2aKaT1lSWg6XMKwBg20iM+mTi+b8DTo8bKfzkVI2
-         OUv1PvPgF/lMnyDrB3me6+YR8y6dEF2M9BVtNTy7Mcubc74f6Eu7p/uczxX08kgDHm00
-         l0PA==
+        d=gmail.com; s=20230601; t=1712913485; x=1713518285; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wC6YvpE7b4hJoyARtBi91JyrMS4DalKwG74Rgk0uWK4=;
+        b=Xb6A/56KPqeYTIUJG4ltvUA+QJwFPi0RvwUvgx6AfJgqBSrxrUuqDxurnZhPecskUA
+         2JNmiywRAUzc/dP6x8IyWYylTSMep9ZU8USt7egPRsk0QGAjHivvQezln0gXfOJUpsok
+         OOsg9gPFZ3dv1Vrn+q095ibuuOvddBsaHTA/i1epXMB9ik7tcDVjTkBaPT5Uh+fr7zAa
+         TcRo+TdINJzNWwRu5yqX6QCLnwpg3AOKdIRHx8L4cK9sriVvqraX7cAv8XAvih8FHesQ
+         GJIxlBJOeCzVl85y70hK4dRfhsg1hGiFu88Vf+YJciUMOvHjOYdMLlZGFH97dDPNWzjK
+         gznQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712913460; x=1713518260;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NpTqhd0B9/xzNoER4WA8UDMsth7BUMydRvViv6uQMmo=;
-        b=CNquo8LVedQoK463hSyvoO/zIrUdF/ImbliQqUE+G4M608x9iIvSXJy77VQMCnYM9T
-         tio2d6ncxMubz/GeCZn3lsJPmaxXYMK3H4KA/wUXSiz4K0AxUrzpP7vyhOKNuL6CCRDM
-         U+1sE4/nL9GwWAkm1Ro468BDzPO3nhmcYYDBqWSatHNWZPehwJuK4Q80qLwFcTXe2oqU
-         XSI6+KmtXgbBcW3BNGSFPF617iFRWXadWf/0sU3kYJ7ccWkSs3QDj+jKb1udvajhEXho
-         adkBuPrt2uFVe/eIoxdiatK2+he4+ssvg5tl/tj8wH9NNVFYmaPuHxyB1Cb+OHQhYgvh
-         4/+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV+/DSU3PzHSe21G87u8MhBBV3ZjI4wQniZAQ1bQHDt/fB21Ag97MnebdFmhVCEQ/GKa4VcI29YsaH3RVthWM7CNnRGP9OL6VxS2Kyj
-X-Gm-Message-State: AOJu0Yy6FRLy+E+xw+l86sPNwJfrDKYOv8jULJiGRvMZpojENytN0q+H
-	L41/OuQdIp8LXnrAG+2X+aMIykJyofU1+Om+uDrVmsq1NnUilXGQQYAoIAEnhBw=
-X-Google-Smtp-Source: AGHT+IHq4nDOY9BE7wVDb1XOnSrleY4Dv23ThXeV1lFWTOEAGTh75Q6EpVDt8PPWewS00Yu7y3phRA==
-X-Received: by 2002:a50:d542:0:b0:56f:e489:471a with SMTP id f2-20020a50d542000000b0056fe489471amr1659588edj.5.1712913460463;
-        Fri, 12 Apr 2024 02:17:40 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id k20-20020aa7c054000000b0056ff82e54a0sm675063edo.31.2024.04.12.02.17.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Apr 2024 02:17:40 -0700 (PDT)
-Message-ID: <86bf8248-2443-4ced-a67c-7845fef98fd3@linaro.org>
-Date: Fri, 12 Apr 2024 11:17:38 +0200
+        d=1e100.net; s=20230601; t=1712913485; x=1713518285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wC6YvpE7b4hJoyARtBi91JyrMS4DalKwG74Rgk0uWK4=;
+        b=O0CGwq3/HnsrNFC1ILVP9klkUXYzLweOvd0h5oAKAKckP73NhDaAzfQIszeM8+N+Hx
+         yA+1iXEsY9SyTLkrGkLWCN2yOMI9B9R8W7cQuXNksmFhfD5Kgwl6npqEKwojpXS0R9Fu
+         5ZXcQT4O8Rh5KmOAfCgngP+C9dc+/EUPBWwKBsnBjtyEISDa20aj81UETNS5hENvXYN+
+         s7FsXXxWPwA30aRrxp2r98BV9/oHavV6V2fE+mXoXXpl1dtiGJJq9PbW6o58xaKglp40
+         kR/nBzc5GhGI2tiH4DqjDsmThQGnQhPDoHNkR/8hw0HUrX7RwFm+jNprk7Rd6KIRwm4Z
+         54uA==
+X-Forwarded-Encrypted: i=1; AJvYcCXHNqU5nroJbIpipENvpN3bt/3jgsaOu/1AcdxDku0cPMNLCvnBOV6aLEi+pW2yyMKbGnBJAGp4D+rHTLlXeUPuMTnEIB47jD7zOjrkP/tuAhDSy3ImS5D2h/UgCyLfKxuiGiCfrwWyrw==
+X-Gm-Message-State: AOJu0YxICvfZRT9und12T8Q5Tvg2KFBth0mfN9yMDz4EQO6hG7B5CAOE
+	U34xL0Dum9vGV+H9YwnPzHjonlPhah2lPVobAkuhCwhOajB/wvO+AGoqbg==
+X-Google-Smtp-Source: AGHT+IEXH91UuW/BOgWLuecnv/22wdajH927v/Oc9c/RokBJowFcYqTiNEL3bZQLhYB1XNnkLg7S/g==
+X-Received: by 2002:a05:6358:420b:b0:186:1128:bca7 with SMTP id t11-20020a056358420b00b001861128bca7mr2526716rwc.6.1712913484932;
+        Fri, 12 Apr 2024 02:18:04 -0700 (PDT)
+Received: from peter-bmc.dhcpserver.bu9bmc.local (1-34-21-66.hinet-ip.hinet.net. [1.34.21.66])
+        by smtp.gmail.com with ESMTPSA id b25-20020a63a119000000b005e840ad9aaesm2332711pgf.30.2024.04.12.02.18.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 02:18:04 -0700 (PDT)
+From: Peter Yin <peteryin.openbmc@gmail.com>
+To: patrick@stwcx.xyz,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@aj.id.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 00/12] Revise Meta(Facebook) Harma BMC(AST2600)
+Date: Fri, 12 Apr 2024 17:15:48 +0800
+Message-Id: <20240412091600.2534693-1-peteryin.openbmc@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] drivers/rtc/rtc-xgene: Add "snps,dw-apb-rtc" into the
- "compatible"
-To: wefu@redhat.com, jszhang@kernel.org, alexandre.belloni@bootlin.com,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- guoren@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <20240412080238.134191-1-wefu@redhat.com>
- <20240412080238.134191-4-wefu@redhat.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240412080238.134191-4-wefu@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/04/2024 10:01, wefu@redhat.com wrote:
-> From: Wei Fu <wefu@redhat.com>
-> 
-> This patch add "snps,dw-apb-rtc" into the "compatible".
+Summary:
+Revise linux device tree entry related to Meta(Facebook) Harma
+specific devices connected to BMC(AST2600) SoC.
 
+Base on : https://lore.kernel.org/all/CACPK8XePx+PvDKzPMjPRn_g9z8yrtAmLvP8Qbepm1AVjuCbaKw@mail.gmail.com/
 
-Please do not use "This commit/patch/change", but imperative mood. See
-longer explanation here:
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+Change log:
 
-This we see from the patch. Say what hardware are you adding?
+v4 -> v5
+  - Patch 0011 - Add retimer device
+  - Patch 0012 - Modify gpio line name
 
-Please run scripts/checkpatch.pl and fix reported warnings. Then please
-run `scripts/checkpatch.pl --strict` and (probably) fix more warnings.
-Some warnings can be ignored, especially from --strict run, but the code
-here looks like it needs a fix. Feel free to get in touch if the warning
-is not clear.
+v3 -> v4
+  - Patch 0010 - Revise node name
+  - fixed PDB temperature node name in Patch 0006
 
+v2 -> v3
+  - Patch 0007 - Revise max31790 address
+  - Patch 0008 - Harma: Add NIC Fru device
+  - Patch 0009 - Add ltc4286 device
 
-Best regards,
-Krzysztof
+v1 -> v2
+  - Add infineon,slb9670 information for tpm.
+  - Patch 0006 - Add PDB temperature.
+
+v1
+  - Patch 0001 - Revise SGPIO line name.
+  - Patch 0002 - Mapping ttyS2 to UART4.
+  - Patch 0003 - Remove Vuart.
+  - Patch 0004 - Add cpu power good line name.
+  - Patch 0005 - Add spi-gpio.
+
+Peter Yin (12):
+  ARM: dts: aspeed: Harma: Revise SGPIO line name.
+  ARM: dts: aspeed: Harma: mapping ttyS2 to UART4.
+  ARM: dts: aspeed: Harma: Remove Vuart
+  ARM: dts: aspeed: Harma: Add cpu power good line name
+  ARM: dts: aspeed: Harma: Add spi-gpio
+  ARM: dts: aspeed: Harma: Add PDB temperature
+  ARM: dts: aspeed: Harma: Revise max31790 address
+  ARM: dts: aspeed: Harma: Add NIC Fru device
+  ARM: dts: aspeed: Harma: Add ltc4286 device
+  ARM: dts: aspeed: Harma: Revise node name
+  ARM: dts: aspeed: Harma: Add retimer device
+  ARM: dts: aspeed: Harma: Modify GPIO line name
+
+ .../dts/aspeed/aspeed-bmc-facebook-harma.dts  | 107 ++++++++++++++----
+ 1 file changed, 85 insertions(+), 22 deletions(-)
+
+-- 
+2.25.1
 
