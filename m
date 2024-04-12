@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A247312FF67
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FC3130E44
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931744; cv=none; b=adFgFSfTGxo5vIogRX8G7hP2zKEsbrAvebLUjgvhloNE6s1kF8G7/yh0VySQJI4Sl3sZSmYF2pnNwklPzHPPXon+gR54mF1B2Yr/MU/SEdkHe0E8EmBj4uf654eQex7C6iC9aqpVm3Fay3madHkWkZzkY8LPs8SBByLQuIRSO90=
+	t=1712931749; cv=none; b=sRudGQVvROEASPrAwN7m8aAPb9MjaDoz1Lp6jAEj/0/VehbQJYwMlPXtcBwMM+QP9rSYEPbaihHZdfBSco8b4SiBVLLHwLjfeliIaKo7RWuTNdDwTMw+0B0vKxA1eJp8GSunijh5nFxkSmfE4BnZ6abtikO0CizVZOagasDHt8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931744; c=relaxed/simple;
-	bh=99Ad/+yB0OLA/IFjrcV/K2AG1wlKX5wXTkCVbDGwEvk=;
+	s=arc-20240116; t=1712931749; c=relaxed/simple;
+	bh=u4jveH2EIzl1xqJEs2ZcFZUQ2YbXX3eXQ3sMb6x71k4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l1ZQMRaMHovQiYDC/k8e1PTbXgjGbMJvH2BACYWm2XXz9so7gsaM1h2wDnfgO1GRz++sV5oMDOMyh+mKHlp6j2SthF8C41DDNxQ4qe6eeq/G8a1oHHgO7W8Q61Sl7OYCnrSLJZGbkC/nDeSFDC34/NaR7Wiz7jb1bBLRVT4zACM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vfkz7xIk; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=EbNS5ht0Dk36IuFkORExsxTDAK7zullshKvudikWY9wzZ5zxpwrxPl10kc0n3WtDecDTPcg8lF6iXDo2wVTu8exX5P0/YWdrz6eB4rio52vHpYDYRA28AwMe0h7qfia1lCN6I94hS34pDtknAtsHKJbutYMVglAueZ7jrTptUAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fIg5pzM8; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vfkz7xIk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fIg5pzM8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712931741;
+	s=mimecast20190719; t=1712931745;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cpOMdQ9TDo+1riOUh5uN9s2I/iRoxNLS/xmy35f9UDw=;
-	b=Vfkz7xIkpILo+aaW5XHJg2zeAciKPYYgO+nfYMzodgh10uWOcJWVww/1itu8kW81f4x9AW
-	2Ep3lO3XhsXGuN+z4QFgjT+C+gcWTGI+CFDNrMafmlj+YHzUft0r8huT1q/rMmcqkVsibR
-	p7xQP2ltkPQrXHGX7sGbty6C2vr+UMs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-193-j_llUqp9NHy2U8GxkF2GCg-1; Fri,
- 12 Apr 2024 10:22:13 -0400
-X-MC-Unique: j_llUqp9NHy2U8GxkF2GCg-1
+	bh=KWRmug5O+fgsfYD+sP/4mX7PdwrqikXbqWpiomCHNOQ=;
+	b=fIg5pzM83nSUmhc7f749GnA3EChVdI58D+VNLlpXreHuuJZGXO7U6RVGerHvLVpVcvlfuN
+	02GtY+6DnhqpFFCjQKSgxXdefYT0I2fQmY+EJ/Itbr0STc6FUQT1LtTTwCmdlY/LZs2rp5
+	r5FSdXm9aH+pzjWn84MuJA2vCKL7ETs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-70-rBEa3xiWN8m0NTwYBymYPQ-1; Fri, 12 Apr 2024 10:22:21 -0400
+X-MC-Unique: rBEa3xiWN8m0NTwYBymYPQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 262EF3C00086;
-	Fri, 12 Apr 2024 14:22:13 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B3F1C80021A;
+	Fri, 12 Apr 2024 14:22:20 +0000 (UTC)
 Received: from t14s.redhat.com (unknown [10.39.193.165])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DA370400D276;
-	Fri, 12 Apr 2024 14:22:09 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 841B140C6CBF;
+	Fri, 12 Apr 2024 14:22:17 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc: kvm@vger.kernel.org,
 	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v2 08/10] s390/uv: convert uv_convert_owned_from_secure() to uv_convert_from_secure_(folio|pte)()
-Date: Fri, 12 Apr 2024 16:21:18 +0200
-Message-ID: <20240412142120.220087-9-david@redhat.com>
+Subject: [PATCH v2 10/10] s390/hugetlb: convert PG_arch_1 code to work on folio->flags
+Date: Fri, 12 Apr 2024 16:21:20 +0200
+Message-ID: <20240412142120.220087-11-david@redhat.com>
 In-Reply-To: <20240412142120.220087-1-david@redhat.com>
 References: <20240412142120.220087-1-david@redhat.com>
 Precedence: bulk
@@ -69,132 +69,70 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Let's do the same as we did for uv_destroy_(folio|pte)() and
-have the following variants:
-
-(1) uv_convert_from_secure(): "low level" helper that operates on paddr
-and does not mess with folios.
-
-(2) uv_convert_from_secure_folio(): Consumes a folio to which we hold a
-reference.
-
-(3) uv_convert_from_secure_pte(): Consumes a PTE that holds a reference
-through the mapping.
-
-Unfortunately we need uv_convert_from_secure_pte(), because pfn_folio()
-and friends are not available in pgtable.h.
+Let's make it clearer that we are always working on folio flags and
+never page flags of tail pages.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/include/asm/pgtable.h |  6 +++---
- arch/s390/include/asm/uv.h      |  4 ++--
- arch/s390/kernel/uv.c           | 18 +++++++++++++-----
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ arch/s390/mm/gmap.c        | 4 ++--
+ arch/s390/mm/hugetlbpage.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 97e040617c29..5ffc4828c25a 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -1149,7 +1149,7 @@ static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
- 	res = ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
- 	/* At this point the reference through the mapping is still present */
- 	if (mm_is_protected(mm) && pte_present(res))
--		uv_convert_owned_from_secure(pte_val(res) & PAGE_MASK);
-+		uv_convert_from_secure_pte(res);
- 	return res;
- }
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 0351cb139df4..9eea05cd93b7 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -2648,7 +2648,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
+ {
+ 	pmd_t *pmd = (pmd_t *)pte;
+ 	unsigned long start, end;
+-	struct page *page = pmd_page(*pmd);
++	struct folio *folio = page_folio(pmd_page(*pmd));
  
-@@ -1167,7 +1167,7 @@ static inline pte_t ptep_clear_flush(struct vm_area_struct *vma,
- 	res = ptep_xchg_direct(vma->vm_mm, addr, ptep, __pte(_PAGE_INVALID));
- 	/* At this point the reference through the mapping is still present */
- 	if (mm_is_protected(vma->vm_mm) && pte_present(res))
--		uv_convert_owned_from_secure(pte_val(res) & PAGE_MASK);
-+		uv_convert_from_secure_pte(res);
- 	return res;
- }
- 
-@@ -1206,7 +1206,7 @@ static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
- 	 * if this is not a mm teardown, the slower export is used as
- 	 * fallback instead.
- 	 */
--	uv_convert_owned_from_secure(pte_val(res) & PAGE_MASK);
-+	uv_convert_from_secure_pte(res);
- 	return res;
- }
- 
-diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-index a1bef30066ef..0679445cac0b 100644
---- a/arch/s390/include/asm/uv.h
-+++ b/arch/s390/include/asm/uv.h
-@@ -485,7 +485,7 @@ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb);
- int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr);
- int uv_destroy_folio(struct folio *folio);
- int uv_destroy_pte(pte_t pte);
--int uv_convert_owned_from_secure(unsigned long paddr);
-+int uv_convert_from_secure_pte(pte_t pte);
- int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr);
- 
- void setup_uv(void);
-@@ -508,7 +508,7 @@ static inline int uv_destroy_pte(pte_t pte)
+ 	/*
+ 	 * The write check makes sure we do not set a key on shared
+@@ -2663,7 +2663,7 @@ static int __s390_enable_skey_hugetlb(pte_t *pte, unsigned long addr,
+ 	start = pmd_val(*pmd) & HPAGE_MASK;
+ 	end = start + HPAGE_SIZE - 1;
+ 	__storage_key_init_range(start, end);
+-	set_bit(PG_arch_1, &page->flags);
++	set_bit(PG_arch_1, &folio->flags);
+ 	cond_resched();
  	return 0;
  }
+diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+index c2e8242bd15d..a32047315f9a 100644
+--- a/arch/s390/mm/hugetlbpage.c
++++ b/arch/s390/mm/hugetlbpage.c
+@@ -121,7 +121,7 @@ static inline pte_t __rste_to_pte(unsigned long rste)
  
--static inline int uv_convert_owned_from_secure(unsigned long paddr)
-+static inline int uv_convert_from_secure_pte(pte_t pte)
+ static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
  {
- 	return 0;
- }
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 61c1ce51c883..b456066d72da 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -178,11 +178,10 @@ static int uv_convert_from_secure(unsigned long paddr)
- }
+-	struct page *page;
++	struct folio *folio;
+ 	unsigned long size, paddr;
  
- /*
-- * The caller must already hold a reference to the page
-+ * The caller must already hold a reference to the folio.
-  */
--int uv_convert_owned_from_secure(unsigned long paddr)
-+static int uv_convert_from_secure_folio(struct folio *folio)
- {
--	struct folio *folio = phys_to_folio(paddr);
- 	int rc;
+ 	if (!mm_uses_skeys(mm) ||
+@@ -129,16 +129,16 @@ static void clear_huge_pte_skeys(struct mm_struct *mm, unsigned long rste)
+ 		return;
  
- 	/* See gmap_make_secure(): large folios cannot be secure */
-@@ -190,13 +189,22 @@ int uv_convert_owned_from_secure(unsigned long paddr)
- 		return 0;
+ 	if ((rste & _REGION_ENTRY_TYPE_MASK) == _REGION_ENTRY_TYPE_R3) {
+-		page = pud_page(__pud(rste));
++		folio = page_folio(pud_page(__pud(rste)));
+ 		size = PUD_SIZE;
+ 		paddr = rste & PUD_MASK;
+ 	} else {
+-		page = pmd_page(__pmd(rste));
++		folio = page_folio(pmd_page(__pmd(rste)));
+ 		size = PMD_SIZE;
+ 		paddr = rste & PMD_MASK;
+ 	}
  
- 	folio_get(folio);
--	rc = uv_convert_from_secure(paddr);
-+	rc = uv_convert_from_secure(folio_to_phys(folio));
- 	if (!rc)
- 		clear_bit(PG_arch_1, &folio->flags);
- 	folio_put(folio);
- 	return rc;
+-	if (!test_and_set_bit(PG_arch_1, &page->flags))
++	if (!test_and_set_bit(PG_arch_1, &folio->flags))
+ 		__storage_key_init_range(paddr, paddr + size - 1);
  }
  
-+/*
-+ * The present PTE still indirectly holds a folio reference through the mapping.
-+ */
-+int uv_convert_from_secure_pte(pte_t pte)
-+{
-+	VM_WARN_ON(!pte_present(pte));
-+	return uv_convert_from_secure_folio(pfn_folio(pte_pfn(pte)));
-+}
-+
- /*
-  * Calculate the expected ref_count for a folio that would otherwise have no
-  * further pins. This was cribbed from similar functions in other places in
-@@ -481,7 +489,7 @@ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
- 	 * we instead try to export the page.
- 	 */
- 	if (rc)
--		rc = uv_convert_owned_from_secure(page_to_phys(page));
-+		rc = uv_convert_from_secure_folio(folio);
- 	folio_put(folio);
- out:
- 	mmap_read_unlock(gmap->mm);
 -- 
 2.44.0
 
