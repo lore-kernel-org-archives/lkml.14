@@ -1,128 +1,176 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E592356B64;
-	Fri, 12 Apr 2024 12:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7404597E
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712924993; cv=none; b=U0tQhA1zUnfls4B61OJGK9nvt4uBP9uD6kqjHrljNa4kqUzJ0etVCL/ToxqoH/p5hds8Di43ms6fXDSyrcfYrG7j77QjHCIUwfm1XJw5KyTNs47issfs/ieK3tjUZWQPSrzn5c4VBOqZp6JOLnuBRGJVNEOthfJk7dVCBM5llZk=
+	t=1712925054; cv=none; b=lhwP0mjxmiYcyZibfPO2M/HRhetxM7x0C1PVX4+f/HOeCmwvDCpeRMkmUwFd0EmDENG8rNeW/X1CA00YrhCFBCznxZ3z+dAOwK14S4/j+yFqp3Wp7vZg5wR8Hj3Synct+YvprqzwqEQi9wOBvfg7XKbpkDWgAAqqYJpt4a2davc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712924993; c=relaxed/simple;
-	bh=8h9T0GeTP+vOniNfikiPnfgeGCG1dXcgA4/FtwLyHHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CzIzyUEHIHg6ftM73eRyBhiGCMguokWP+v2V1oDTYpkHBIzVpsdJMuYmI6w+dfLy8HplFYcca+7+lJlQTK2biI66C7MkmR6zwrDyYE+qFi03wZ8GloLZ4vrQAdIVct0AXUdIf18F4E+X0Cal19rcydycAMiq3PzU3vBAmcyuF4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Kw7pa1wE; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1712925054; c=relaxed/simple;
+	bh=Vb6XdN2lfMY03jDF1qrR94KLXYE49Am0mLjanbcKARo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BnMoEa5Gm53ZQ+UO1n30f9tlfXqyfvQ0d0IXYiAOSi0A9oRhcXFz6XAqYmqXc77lNRnhfKu+57Ecm0RVejBr6AbkfRB7TwiXCWuO7by9Hqvbc9ncpx7VfKXM0DzqAKJvW7PKIoeYsjSkYmSlvDWeFgJ23V9QMH5cRwLPO6ZbzcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XR9POcIY; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Kw7pa1wE"
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43CC84Or028944;
-	Fri, 12 Apr 2024 12:29:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=IzaZDBYAW7Ds3k8XifIiNUwmHPCzZYo380zBubpNgSM=;
- b=Kw7pa1wEaLM3LwE0CjUh87mzrGs6+uK+K6hFBJMI5xhltzlxZLvfASU3lFEFCVmQvfVE
- 6Nr/sgW9Nvb3VhhjoJvnd5iwP+1LQTmtbJniAmGFK/EVqHEXDTs4eYD6dYRFqQqImUtH
- F3eJIceu7Zv6dCPowXpFJR7MqEW58BjyAhgIu1tcPkJGSDRlMTWxCDw0iUg4yYyC74m9
- jlCqy3Oa9QP3CH9Q4Q7jztflKmEurFW9Yd4i1mA30TaSeJ92WV911Qa13j30ZkyhAP7R
- ijDHq3rLOryBQSCjK0ahEsJwONmBdi7Z/7CHoq+RTOl0iWjisqI7LD0MfP2Fj3/4ZEUm BA== 
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xf4pg81pc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 12:29:49 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 43CAm3lK022560;
-	Fri, 12 Apr 2024 12:29:48 GMT
-Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xbhqphsxu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 12:29:48 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 43CCTjiA44171622
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Apr 2024 12:29:47 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C80AD58055;
-	Fri, 12 Apr 2024 12:29:45 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 351B05805D;
-	Fri, 12 Apr 2024 12:29:45 +0000 (GMT)
-Received: from [9.61.20.106] (unknown [9.61.20.106])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 12 Apr 2024 12:29:45 +0000 (GMT)
-Message-ID: <95b551f1-7599-96e1-b528-0701465baf5a@linux.ibm.com>
-Date: Fri, 12 Apr 2024 08:29:44 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XR9POcIY"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ed267f2936so726915b3a.3
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 05:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712925052; x=1713529852; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UBp2pQhn2lVJ6DLLpM94qL9WNtmqnM/dHEgV5vi8MEs=;
+        b=XR9POcIYrc/qdZt2gwTgaTHcpbD4dFQzj9Zl5TD/hmYcCSAkCTwmYZkVE9kSbSoDYF
+         RiJLR3pRnXimz+/vNTHrDGXBv8fM8q0PX1jK6xMr42gPaepEZixpnmdPiko8pqna5+uk
+         dSS86RO9yn+T1NHSp+MrELy1JmF2I4TLiNYEnA2nKMruxBC2HdxOZTAZ9YB5onrb5NJ5
+         guDNzui1tz4HhWbeg4a6lFpY9O8pPYBAt/GGQ2bGiR7xVg+f7Dey1QVCQKfyLCvs7Y+T
+         VZCxueF8AKkCFi4kSO50em4nCkz1K8WoQvGjZXRsfx8zMuifQ9yJ0g6KnAfuPD6gtv8q
+         bZbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712925052; x=1713529852;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UBp2pQhn2lVJ6DLLpM94qL9WNtmqnM/dHEgV5vi8MEs=;
+        b=BYwUsTCR4B+zCwuKCREFLdy+6yAXacWGZuXs1u8GcLP+jGjY7HjTPjkHmkG66fl9X0
+         C9kadW/MPJuzUjFKWhUSxDTLdtbo/pvB427et0YF7HtacLO9enl90/t0h8gE7Ad8GB3q
+         7c/x5jMgXMU1QgmTxLQZPW08XqsjVRI3kv5u0oJueeeXCjrNEKk3iuN2koQitIbnNoVB
+         MAQh3rYrpOBJEklrCbeQbh0+zGc3McJg/sx4d7ot2z6Ur1S5Inl5JFeD0vQXWAgDgHat
+         s8JCXTSFqmfObeiM6YEx5hbp0NlVPPvnl+RtURWetEyWT3Usn58zi9FurRza0A/gbdIg
+         9LgA==
+X-Gm-Message-State: AOJu0Yy5JaEVM9M3EgAOdWfdWW9NmAvduBzcbidNKph0ruaUvc4POCpy
+	25F29pvNiDhTmSxvHpkEfigfaQYbx9XFsRHzx8VIfb8vkC3a0/eo
+X-Google-Smtp-Source: AGHT+IFIUprURx2SnyjUhwDxV4Bh2nvA3DyQ8qZ4jt626IUF0nOKgdRgq8pciGun9s1GWuqw1O8L/g==
+X-Received: by 2002:a05:6a20:4309:b0:1a9:9e0f:142b with SMTP id h9-20020a056a20430900b001a99e0f142bmr2619543pzk.39.1712925052106;
+        Fri, 12 Apr 2024 05:30:52 -0700 (PDT)
+Received: from localhost.localdomain ([2407:7000:8942:5500:aaa1:59ff:fe57:eb97])
+        by smtp.gmail.com with ESMTPSA id g6-20020a1709026b4600b001e520495f51sm2864065plt.124.2024.04.12.05.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 05:30:51 -0700 (PDT)
+From: Barry Song <21cnbao@gmail.com>
+To: akpm@linux-foundation.org,
+	willy@infradead.org,
+	vbabka@suse.cz,
+	hannes@cmpxchg.org,
+	linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	Barry Song <v-songbaohua@oppo.com>,
+	Ryan Roberts <ryan.roberts@arm.com>
+Subject: [RFC PATCH] mm/vmstat: sum up all possible CPUs instead of using vm_events_fold_cpu
+Date: Sat, 13 Apr 2024 00:30:39 +1200
+Message-Id: <20240412123039.442743-1-21cnbao@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/5] s390/vfio-ap: Add write support to sysfs attr
- ap_config
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pasic@linux.ibm.com, akrowiak@linux.ibm.com, borntraeger@de.ibm.com,
-        gor@linux.ibm.com, hca@linux.ibm.com,
-        Matthew Rosato <mjrosato@linux.ibm.com>
-References: <20240326164706.29167-1-jjherne@linux.ibm.com>
- <20240326164706.29167-5-jjherne@linux.ibm.com>
- <ZhP9qHs6tjPbh1/J@tuxmaker.boeblingen.de.ibm.com>
-Content-Language: en-US
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-In-Reply-To: <ZhP9qHs6tjPbh1/J@tuxmaker.boeblingen.de.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 6gq9dZi1pChz8kaAM-SzDB43pCdY3NJu
-X-Proofpoint-ORIG-GUID: 6gq9dZi1pChz8kaAM-SzDB43pCdY3NJu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_08,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=0 clxscore=1011 phishscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404120090
+Content-Transfer-Encoding: 8bit
 
-On 4/8/24 10:22 AM, Alexander Gordeev wrote:
-> On Tue, Mar 26, 2024 at 12:47:05PM -0400, Jason J. Herne wrote:
-> 
-> Hi Jason,
-> 
-> This series still has some issues.
-> 
->> +	newbuf = rest = kstrndup(buf, AP_CONFIG_STRLEN, GFP_KERNEL);
-> 
-> This line triggers a checkpatch warning. Would it make sense
-> to turn it into below instead?
-> 
-> 	newbuf = kstrndup(buf, AP_CONFIG_STRLEN, GFP_KERNEL);
->> +	if (!newbuf)
->> +		return -ENOMEM;
-> 	rest = newbuf;
+From: Barry Song <v-songbaohua@oppo.com>
 
-Yes, I can make that change. My checkpatch.pl script does not point this
-issue out with --strict. Should I be running checkpatch with --strict?
+When unplugging a CPU, the current code merges its vm_events
+with an online CPU. Because, during summation, it only considers
+online CPUs, which is a crude workaround. By transitioning to
+summing up all possible CPUs, we can eliminate the need for
+vm_events_fold_cpu.
 
-> Also, please address other checkpatch suggestions.
-> 
+Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
+Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+---
+ -v1:
+ originally suggested by Ryan while he reviewed mTHP counters
+ patchset[1]; I am also applying this suggestion to vm_events
 
-Yep, I'll run with --strict and address everything.
+ [1] https://lore.kernel.org/linux-mm/ca73cbf1-8304-4790-a721-3c3a42f9d293@arm.com/
 
->> +	/* Save old state */
->> +	/* The volatile cast here is to work around a gcc false positive
->> +	 * Wstringop-overread-warning.
->> +	 */
->> +	ap_matrix_copy(&m_old, (*(struct ap_matrix * volatile *)(&matrix_mdev->matrix)));
-> 
-> Could you please come up with a different workaround? This issue has already
-> been resolved in the past in different ways. See commit 34186b48d29b ("ARM:
-> sharpsl_param: work around -Wstringop-overread warning") for example.
+ include/linux/vmstat.h |  5 -----
+ mm/page_alloc.c        |  8 --------
+ mm/vmstat.c            | 19 +------------------
+ 3 files changed, 1 insertion(+), 31 deletions(-)
 
-Sure, I like this solution way better than using volatile. Thanks for
-providing the pointer to this.
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 735eae6e272c..f7eaeb8bfa47 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -83,8 +83,6 @@ static inline void count_vm_events(enum vm_event_item item, long delta)
+ 
+ extern void all_vm_events(unsigned long *);
+ 
+-extern void vm_events_fold_cpu(int cpu);
+-
+ #else
+ 
+ /* Disable counters */
+@@ -103,9 +101,6 @@ static inline void __count_vm_events(enum vm_event_item item, long delta)
+ static inline void all_vm_events(unsigned long *ret)
+ {
+ }
+-static inline void vm_events_fold_cpu(int cpu)
+-{
+-}
+ 
+ #endif /* CONFIG_VM_EVENT_COUNTERS */
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index b51becf03d1e..640d5752e400 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5832,14 +5832,6 @@ static int page_alloc_cpu_dead(unsigned int cpu)
+ 	mlock_drain_remote(cpu);
+ 	drain_pages(cpu);
+ 
+-	/*
+-	 * Spill the event counters of the dead processor
+-	 * into the current processors event counters.
+-	 * This artificially elevates the count of the current
+-	 * processor.
+-	 */
+-	vm_events_fold_cpu(cpu);
+-
+ 	/*
+ 	 * Zero the differential counters of the dead processor
+ 	 * so that the vm statistics are consistent.
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index db79935e4a54..bae6ff476870 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -114,7 +114,7 @@ static void sum_vm_events(unsigned long *ret)
+ 
+ 	memset(ret, 0, NR_VM_EVENT_ITEMS * sizeof(unsigned long));
+ 
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		struct vm_event_state *this = &per_cpu(vm_event_states, cpu);
+ 
+ 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+@@ -135,23 +135,6 @@ void all_vm_events(unsigned long *ret)
+ }
+ EXPORT_SYMBOL_GPL(all_vm_events);
+ 
+-/*
+- * Fold the foreign cpu events into our own.
+- *
+- * This is adding to the events on one processor
+- * but keeps the global counts constant.
+- */
+-void vm_events_fold_cpu(int cpu)
+-{
+-	struct vm_event_state *fold_state = &per_cpu(vm_event_states, cpu);
+-	int i;
+-
+-	for (i = 0; i < NR_VM_EVENT_ITEMS; i++) {
+-		count_vm_events(i, fold_state->event[i]);
+-		fold_state->event[i] = 0;
+-	}
+-}
+-
+ #endif /* CONFIG_VM_EVENT_COUNTERS */
+ 
+ /*
+-- 
+2.34.1
+
