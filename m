@@ -1,133 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053B14D708;
-	Fri, 12 Apr 2024 18:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBA914D44F;
+	Fri, 12 Apr 2024 18:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712945941; cv=none; b=mxSbPN/gns5b8Tx20nbzvCjW7QDP/rU3KgNeFc1fiQdyDEs43spsrDCSqjANBRl6uECAYM6KwlF4ncRQkw7Kl+IzGJLqLC4WT6C2k+Ry0a/D6vpzxxOdxQF57grFE5y3K/dhfhL0KIu4qk1HxUSmk1l8mrtEChYsvtT5G2EWEJY=
+	t=1712946044; cv=none; b=JFZGpkdO7gdOnAk4lpKkImBIR/sZOJ0zZAbPaiqUtu3pflHZk5MZImzSrh0Wx8hpW4+8be4dODfe8Oo9N65j7w7xP5lTbRH9Q6iJ5GBvRbcHpatbFG0L7yD2zf9gkuBE4IG6jw4kjwQEwT/8VBProDV4JfzF8fO30c3pC8VQR/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712945941; c=relaxed/simple;
-	bh=qcfdW48aCV8kl2oRwl5wUXBZK6N010eZxw0UUUS0LKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ienWCaW78/eDv/yW6BINJ9TjeVx2kk9Uz2t9c7sReELIGBnQyiMu5B+CCbGgbPHtbxjkUveaS42C6pweuVx+bWWMrvYctqjGuRPRMvuhzbdxEHPk1FV803op7je8kOjCFRmLW4CBZ8OCYSqqGkVtR8sTkuH+d0WO8FiHjyfGCSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j1WD52EX; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712946044; c=relaxed/simple;
+	bh=BLnTy3ivk+xXDmUktJ4bE7E0wMv/VeVf/0tsKf09FTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l3yL+3EqTXXN04KNiiQB3vVH6Ar7GEpL/kx5fSsxdZ7Pv1XKs41jXDRTdHzv7BRyXDvH44WzwYPM5fOE7WcNF2iQbiHU9GGr0JjvO/FTISQXE0RX0hexe8wEVYYwJ46VhOXs9GC6A7atXli72XDkBjkvs0gBveT2NAXAwSmrE50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Advlw1M3; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j1WD52EX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712945941; x=1744481941;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qcfdW48aCV8kl2oRwl5wUXBZK6N010eZxw0UUUS0LKk=;
-  b=j1WD52EXiU4hFltMCgEQQe8LFHxnP5a2gsrII3W/jWc/gaN3x2wUX6II
-   qED/L5AILQfNW2Theo7rlT5akbgcv6YbuQrDlhdy0nBgK7kkCZjlT6O4A
-   cd9HofNRx+wdS2JPnFb9v7hCOVvdUxPggsSdzofQjmBqcpQqgl/PRztwN
-   h93Hskkmu+OWPcJ3raGtcIbddgT4iYNUslSTtLj+/O2+t0lz3Db7BLdjh
-   4PzRGtPfD3rPIZ0/1fpv7Ug6+vVSwgVhC3NRVwPN6cjwFe1O8KFl+gGei
-   Yx1cEzSd6imitzTSQ9rg6sJXOlryAcULjh3KYwrSwNxGDEBjl/zckNWOM
-   w==;
-X-CSE-ConnectionGUID: ul3xh4s3R76RG/dVQqVbQw==
-X-CSE-MsgGUID: l+p5st0BSnKajHTsRBjTqA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12261434"
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="12261434"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 11:19:00 -0700
-X-CSE-ConnectionGUID: taCPYSIGSIW2vzeZM8SWig==
-X-CSE-MsgGUID: uApujCAuS+uPPT+UvKgEGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21869422"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 11:18:59 -0700
-Date: Fri, 12 Apr 2024 11:23:31 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
- <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
- Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
- <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
- J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
- <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
- "seanjc@google.com" <seanjc@google.com>, Robin Murphy
- <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
- "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
- <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
- "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 10/13] x86/irq: Extend checks for pending vectors to
- posted interrupts
-Message-ID: <20240412112331.5a3c1d18@jacob-builder>
-In-Reply-To: <BN9PR11MB5276215478903C50701D05498C042@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
-	<20240405223110.1609888-11-jacob.jun.pan@linux.intel.com>
-	<BN9PR11MB5276215478903C50701D05498C042@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Advlw1M3"
+Received: from pendragon.ideasonboard.com (85-76-65-73-nat.elisa-mobile.fi [85.76.65.73])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A68479D5;
+	Fri, 12 Apr 2024 20:19:56 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1712945997;
+	bh=BLnTy3ivk+xXDmUktJ4bE7E0wMv/VeVf/0tsKf09FTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Advlw1M3BukmOQ7nreH/3SpMmc5/XRtzQq/ROLUAfjnAFTvlnRh45X8qv0W8JZIj1
+	 05v43vDot6S3/16S33DHZaSdu6shN0VZ5Of6o65HyJCVtS4LFv/EWr/0No3LKyHAsT
+	 I5wriTZzWQK2W3NLOFClnjVGHiy7Zn8TqMKyHtvE=
+Date: Fri, 12 Apr 2024 21:20:26 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 7/9] media: subdev: Support privacy led in
+ v4l2_subdev_enable/disable_streams()
+Message-ID: <20240412182026.GJ31122@pendragon.ideasonboard.com>
+References: <20240410-enable-streams-impro-v3-0-e5e7a5da7420@ideasonboard.com>
+ <20240410-enable-streams-impro-v3-7-e5e7a5da7420@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240410-enable-streams-impro-v3-7-e5e7a5da7420@ideasonboard.com>
 
-Hi Kevin,
+Hi Tomi,
 
-On Fri, 12 Apr 2024 09:25:57 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+Thank you for the patch.
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, April 6, 2024 6:31 AM
-> > 
-> > During interrupt affinity change, it is possible to have interrupts
-> > delivered to the old CPU after the affinity has changed to the new one.
-> > To prevent lost interrupts, local APIC IRR is checked on the old CPU.
-> > Similar checks must be done for posted MSIs given the same reason.
-> > 
-> > Consider the following scenario:
-> > 	Device		system agent		iommu
-> > 	memory CPU/LAPIC
-> > 1	FEEX_XXXX
-> > 2			Interrupt request
-> > 3						Fetch IRTE	->
-> > 4						->Atomic Swap
-> > PID.PIR(vec) Push to Global
-> > Observable(GO)
-> > 5						if (ON*)
-> > 	i						done;*  
+On Wed, Apr 10, 2024 at 03:35:54PM +0300, Tomi Valkeinen wrote:
+> We support camera privacy leds with the .s_stream, in call_s_stream, but
+
+s/the .s_stream/the .s_stream() operation/
+
+> we don't have that support when the subdevice implements
+> .enable/disable_streams.
 > 
-> there is a stray 'i'
-will fix, thanks
+> Add the support by enabling the led when the first stream for a
+> subdevice is enabled, and disabling the led then the last stream is
+> disabled.
 
+I wonder if that will always be the correct constraint for all devices,
+but I suppose we can worry about it later.
+
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> > 						else
-> > 6							send a
-> > notification ->
-> > 
-> > * ON: outstanding notification, 1 will suppress new notifications
-> > 
-> > If the affinity change happens between 3 and 5 in IOMMU, the old CPU's
-> > posted
-> > interrupt request (PIR) could have pending bit set for the vector being
-> > moved.  
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index 20b5a00cbeeb..f44aaa4e1fab 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -2150,6 +2150,7 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  {
+>  	struct device *dev = sd->entity.graph_obj.mdev->dev;
+>  	struct v4l2_subdev_state *state;
+> +	bool already_streaming;
+>  	u64 found_streams = 0;
+>  	unsigned int i;
+>  	int ret;
+> @@ -2198,6 +2199,8 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  
+>  	dev_dbg(dev, "enable streams %u:%#llx\n", pad, streams_mask);
+>  
+> +	already_streaming = v4l2_subdev_is_streaming(sd);
+> +
+>  	/* Call the .enable_streams() operation. */
+>  	ret = v4l2_subdev_call(sd, pad, enable_streams, state, pad,
+>  			       streams_mask);
+> @@ -2216,6 +2219,9 @@ int v4l2_subdev_enable_streams(struct v4l2_subdev *sd, u32 pad,
+>  			cfg->enabled = true;
+>  	}
+>  
+> +	if (!already_streaming)
+> +		v4l2_subdev_enable_privacy_led(sd);
+> +
+>  done:
+>  	v4l2_subdev_unlock_state(state);
+>  
+> @@ -2340,6 +2346,9 @@ int v4l2_subdev_disable_streams(struct v4l2_subdev *sd, u32 pad,
+>  	}
+>  
+>  done:
+> +	if (!v4l2_subdev_is_streaming(sd))
+
+Wouldn't it be more efficient to check this while looping over the
+stream configs in the loop just above ? Same for
+v4l2_subdev_enable_streams().
+
+> +		v4l2_subdev_disable_privacy_led(sd);
+> +
+>  	v4l2_subdev_unlock_state(state);
+>  
+>  	return ret;
 > 
-> how could affinity change be possible in 3/4 when the cache line is
-> locked by IOMMU? Strictly speaking it's about a change after 4 and
-> before 6.
-SW can still perform affinity change on IRTE and do the flushing on IR
-cache after IOMMU fectched it (step 3). They are async events.
 
-In step 4, the atomic swap is on the PID cacheline, not IRTE.
+-- 
+Regards,
 
-
-Thanks,
-
-Jacob
+Laurent Pinchart
