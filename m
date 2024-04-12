@@ -1,89 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACC342064;
-	Fri, 12 Apr 2024 11:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC3C3D3B1;
+	Fri, 12 Apr 2024 11:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712920649; cv=none; b=WW6Q7ntxU2rub62n9MAGu8PFmnAw+zifgmoGgweb+72Ya0tErsON6Pqjf406PzmjmJu8+8t0T4F4rGQei42MbV4WDzp8PuOxqc7JCwGegr/rzeOrup+SiYg24bBXkoVzTPbJzW/Yov9ZeVjLYP1bHxo+zkCJ3lEUDY3+luOaR9Q=
+	t=1712920758; cv=none; b=jgov2BuN8ZPP4Kj4oM3x7xDk7TBlWErb2dX4ABCnvOSWxxmzgZZspCo7CB4xRTGGqD7J61klwiKBScrRWMmOdh86AmdZd9cDl+1uqmGZEk6zUKq5DjbQr6zZ5XKdgONJFBJYSZULoJnnfOCR0auUoivFXtSZYZsvHHsnKZTmGQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712920649; c=relaxed/simple;
-	bh=SvdlhNNtUWHChB5l1joPBSlS4XqFexo2+rAXJJlhAE8=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=jEt38bIc/XlA4H3h79GI16jW4BUcON7TaKS5jfjgwu+YUeEuC+yZ46Z2FvxM1MQ0DGDMAnbsiTJi/pbOn//F88MYKtlxpQmOXbw2WPQkM1vZD+jzWLoTtes5N8wHN/IC48SZo2zJfOhZz4bBrTKb+HAel8QSY/oE28KyWOXzJ48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVb1Fjbu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712920758; c=relaxed/simple;
+	bh=8/SKetfBZBy2Kh39R7Wd6mztgC+n9WBxP1ZOYm7Roz4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=vGbEwEumwi0kASCvL5FWm0z85i/48I5YMo9EFudHYO1YU5k/3Yb/R0Ycj0iIPB4uttb7j8RHpae81gakpmO/FBQSfa8kin523Uy4u9AepJNdhOcY+fAllQDnHtuJ/HOmor5SdW2yTl0TCpSe0duHzB9ssKjs01cvQnFKXMZvypY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=eQ5UPlU0; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVb1Fjbu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B7A7C113CC;
-	Fri, 12 Apr 2024 11:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712920649;
-	bh=SvdlhNNtUWHChB5l1joPBSlS4XqFexo2+rAXJJlhAE8=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=FVb1FjbuIh0ACxAJQxzVk9u0EuMVSPdiXpsMhzvNDRhpiVlqEviQ9mzm6ZHvL+uiu
-	 LyPSyrh76UCV6BeRqUhXSHsnc73W+rmgc/FT0ya2cAkH+WHBG4tbyl4ds4AoL2lpdq
-	 NsBRgUzh8OSTyIuouYRSfCmZROhdqHr1I8zZssb14WoFS1Nv9rCIZUqLZZZNAoTA/T
-	 l+niw7ysStJGtIM+leJ/eiMY/oD2in17aYJjMUWf0SEDqEom61jE+lvF64NxoykFg7
-	 jaqw8SrgZTCEhL6QXuTiWcfsXOmMqDfUkcVpqt2I4A1y/ZobeVQ242TSVcBvPiucZC
-	 jIkpSYOezqtrg==
-Date: Fri, 12 Apr 2024 06:17:27 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="eQ5UPlU0"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 4D8FC600A2;
+	Fri, 12 Apr 2024 11:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1712920747;
+	bh=8/SKetfBZBy2Kh39R7Wd6mztgC+n9WBxP1ZOYm7Roz4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=eQ5UPlU0Il6iUiB9lA5UENtj+dwdRTE/O0z9PasN3FZrzEAn2nMd7Q0SIM0W8/aQ8
+	 jqcI4bdEm1dSfagbMh1rjAvhVmWpErHcW3JP7pxa2UM2I7IuC699JrkXOlynPP4lyj
+	 xoUwOeL7in/J+GKlDIr+4EbgsvhmPvziZTqh9jaPy8wFcfBBC9Jqu43SCy2BTf9YJl
+	 KvSecv/IU+n9XY/S/rr1rd5JJsQ362fxXcUs6bbqRphun3oGWWfSfM4xwXEM+uIDDC
+	 ccRoFVz7V/tR0ChVYf0PMa/x49KA1LKZPFOj8thumXZ6DSIehuSae8dXginPsdjZv/
+	 nkVgVSEZES+1Q==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by x201s (Postfix) with ESMTP id F196120106A;
+	Fri, 12 Apr 2024 11:18:59 +0000 (UTC)
+Message-ID: <5fb7638c-e70a-49ea-94d5-6b7f3e953255@fiberby.net>
+Date: Fri, 12 Apr 2024 11:18:59 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Seven Lee <wtli@nuvoton.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, broonie@kernel.org, 
- linux-sound@vger.kernel.org, dardar923@gmail.com, 
- devicetree@vger.kernel.org, CTLIN0@nuvoton.com, lgirdwood@gmail.com, 
- krzysztof.kozlowski+dt@linaro.org, KCHSU0@nuvoton.com, perex@perex.cz, 
- SJLIN0@nuvoton.com, scott6986@gmail.com, alsa-devel@alsa-project.org, 
- edson.drosdeck@gmail.com, YHCHuang@nuvoton.com, conor+dt@kernel.org, 
- u.kleine-koenig@pengutronix.de, supercraig0719@gmail.com, tiwai@suse.com
-In-Reply-To: <20240412103554.3487290-1-wtli@nuvoton.com>
-References: <20240412103554.3487290-1-wtli@nuvoton.com>
-Message-Id: <171292064682.1830010.10520655676449462428.robh@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: dt-bindings: nau8821: Add delay control for
- ADC
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] octeontx2-pf: fix FLOW_DIS_IS_FRAGMENT implementation
+From: =?UTF-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+To: "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+ Geethasowjanya Akula <gakula@marvell.com>,
+ Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
+ Hariprasad Kelam <hkelam@marvell.com>, Suman Ghosh <sumang@marvell.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+References: <20240410134303.21560-1-ast@fiberby.net>
+ <SJ0PR18MB5216D2276BA11D5C5E31D6A6DB042@SJ0PR18MB5216.namprd18.prod.outlook.com>
+ <27ac48c0-b19c-4104-8ec9-08232e3f42f6@fiberby.net>
+ <235918fc-9b9b-4efa-8258-69bd5c7d40d4@fiberby.net>
+Content-Language: en-US
+In-Reply-To: <235918fc-9b9b-4efa-8258-69bd5c7d40d4@fiberby.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Hi maintainers,
 
-On Fri, 12 Apr 2024 18:35:52 +0800, Seven Lee wrote:
-> Change the original fixed delay to the assignment from the property. It
-> will make it more flexible to different platforms to avoid pop noise at
-> the beginning of recording.
-> 
-> Signed-off-by: Seven Lee <wtli@nuvoton.com>
-> ---
->  .../devicetree/bindings/sound/nuvoton,nau8821.yaml        | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+On 4/12/24 10:25 AM, Asbjørn Sloth Tønnesen wrote:
+> On 4/12/24 9:01 AM, Asbjørn Sloth Tønnesen wrote:
+> I was a bit in a hurry, to get the reply in before a meeting,
+> so: s/FLOW_DIS_FIRST_FRAG/FLOW_DIS_IS_FRAGMENT/g
 
-My bot found errors running 'make dt_binding_check' on your patch:
+It was just a fix for my reply to Suman, so I am a bit confused
+why the patch itself got marked as "Changes Requested" in patchwork [1].
 
-yamllint warnings/errors:
+I can spin a v2, but the only change would currently be Jacob Keller's Reviewed-by.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/sound/nuvoton,nau8821.example.dtb: codec@1b: Unevaluated properties are not allowed ('nuvoton,nuvoton,adc-delay-ms' was unexpected)
-	from schema $id: http://devicetree.org/schemas/sound/nuvoton,nau8821.yaml#
+[1] https://patchwork.kernel.org/project/netdevbpf/patch/20240410134303.21560-1-ast@fiberby.net/
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240412103554.3487290-1-wtli@nuvoton.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+-- 
+Best regards
+Asbjørn Sloth Tønnesen
+Network Engineer
+Fiberby - AS42541
