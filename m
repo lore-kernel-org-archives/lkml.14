@@ -1,113 +1,192 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AF284DF6
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A4885958
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 14:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712931659; cv=none; b=DsG7FryVuDR3ZX32aCyRHCHeoaha7Wfs9jpTIHJbpAo4WxetjaCc91kxTC8y7BhIGTYRViXwTXvk6aem3J0duDRSTZUWA2Dtvd2rQ3I33IRvvockp9atRpX4XtOLEaBffCCYgc6q/MeJmR0Cejh19gb4FRMaeZhVuaTKBUkti2E=
+	t=1712931688; cv=none; b=KvKm+NcNAGstiEt+EWs4s0aWgVSx4EbLPVfMGA3qhFg8wOXmwZ5z0PDQuyzn70le/hsI56iHrcD2ia7+iPNH9CUA/0Zh8AxwCN74stsEqDWUEPJx+Il3ts50m1SuG/lntpT1swUMXK7mREIxtkPUgRkl5dQyReCsIrbrHB0MH8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712931659; c=relaxed/simple;
-	bh=UP+cGmNiYoAwGW8m8W6yr/q48Hsj4d5EwX9JW9HfKBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DLj97cLgul9uySbu3V2rprSREN78+Lyif/nSOq4RHVejMPV7vG2lARSc+b6FJr5f410cXBcg0Q1vdME5ZEz+5sF+52w5Pxpddw7SW8ea2INgmUHra4EH8cTbsahO2Y14mfvGcy4XgqwLHybDIos9mHCHZ8lQ/GAYiFW9Lb3kLDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cORVpr7V; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1712931688; c=relaxed/simple;
+	bh=SNzoGu02N1X0PfEaF5+I0n88UbtIph8/Gnfkm4/uJ4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpwMKpvjRepDC/U4WeYzf0f290cedtLrkPoFxt8PV25bL36DLBMKmpwKKh+Sjf3qgwGnaIFvdVMTpvBvuKXoMmlfbOFU0P1RpC/n50UHzBFA+EkIQW+1eqQKdnKio3Gd9L/69PtQ2s/lzu4PkRV0d25YvH1GgfTPUX4oMbgcws4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=GV9wHIgg; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cORVpr7V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712931657;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Qgw0vEZxafA068CWQUUNtsQrgIh5CdevYV3sXi6m8+Q=;
-	b=cORVpr7VYzrcPSSyVnIHQoa4M9WyR7GpwyTbpiykR8fzDaSf5lo9WHTkrcMTdYlgvqwa3N
-	mhJyA7evgFxZr1j4G73aUQWsTExl6F47ywyXqobSiT9BciN2wc6y+RZjwY+udEmKsR7418
-	CJSn2Hx0XeE7+RPkVhXV8WXRn/5fnD4=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-gR68dQzJMImFwvzbnXHfWw-1; Fri, 12 Apr 2024 10:20:55 -0400
-X-MC-Unique: gR68dQzJMImFwvzbnXHfWw-1
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36a38d56655so10721665ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:20:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="GV9wHIgg"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-417f5268b12so8959005e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1712931683; x=1713536483; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IuGZWZWhytkU3H9RstAytyRs4qLomTBn2C5NOarPIfY=;
+        b=GV9wHIgg7FF37A4k0xAOy0ETPbZF6O7pEpE8ZvVwuUPwO1opkVYL3QqYP/j2ucL6jG
+         uD73K9pN/tz4Wpj32G1hpu+WzFeo+Cis0sWjQeIx90tzVXcNrnOj4Rz7SsV6oWiFZXWe
+         bVbscdlJ3tXNxKLT5Ww1ix67onr4f4ZhYFn6U8NjTeawxQIeTCav7e1BSsCCGxdq1t10
+         sZv3nfQZrWTPPObh14bbs40FxQNriNn7pwxVHBBFuniKf6qwhmDHgmEPZPH1jBWgtGyZ
+         HNQbTrq0nFIKNGyHnXtY7EaHoNUbnbtNPaJPyEydTxwrZJ0Tc6gEa02/59PRCU8RRb20
+         rKRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712931655; x=1713536455;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qgw0vEZxafA068CWQUUNtsQrgIh5CdevYV3sXi6m8+Q=;
-        b=Vma9SBKXuynCCpuDTtRKq5ZOt+5df543uhNOVKEFZXr6tGtCw7xaqpsQhFZtB4ngPc
-         iB39F+1oqkl4C3PBDS/Xm0DqoC4jGmXSeHSbozgdXLxFPdEt9I0xELOaOUPXHWvPyjcA
-         93tyRChSDuGYNpVTsgu30dfQBKXtr8OXEeGukyxaSUWStTSyEJAColxebfGlhY8KzBFe
-         +0N8k7O6Qd/XVxv52bpzoh+iXb3UNmvI9EWoNIr26DpbrQRKS5ncakbEOg1+r5cvFYxm
-         /pe929vagOaUCaP4S4R1LVzDusoN2ooKh2wUSDNprGzCU2Ed9PrewORJZKEUeKkvgLaF
-         g3ag==
-X-Forwarded-Encrypted: i=1; AJvYcCXh94DfHD3l913R6tP1lkDpz5DHc1QO+vjj9tHVrF/i/6O+W8injovIK/RswcKI+zXAVSgZanN0Yv+o4uG+1nC0xGcibuFKjo/ZOO7G
-X-Gm-Message-State: AOJu0YzbfEEr7Jww/xFUlKI97yyVZQKb7okEUJImfepDIkOsYPYSv9GT
-	klgwlX9b2UwCtWP4TO2bv56FFfVrhGKFwOwZ/0CK2bUBISlgk+9OFQ0YSbGb0vGVwsdIZE9eFA4
-	z3eafeZyzzfabO4iXqrFTTCeO3Q8WCkC6HQE2fIG+9SrnKqR6shbuVbs5UoYnBw==
-X-Received: by 2002:a05:6e02:1b05:b0:36a:15bb:608c with SMTP id i5-20020a056e021b0500b0036a15bb608cmr3096346ilv.28.1712931655020;
-        Fri, 12 Apr 2024 07:20:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE4qm2aJCy42jLqJ2UrSQkuMIunPpATTlPV/ijXzsxxU6bggEIQyJkHYotnp6ZEyuowvnaGdg==
-X-Received: by 2002:a05:6e02:1b05:b0:36a:15bb:608c with SMTP id i5-20020a056e021b0500b0036a15bb608cmr3096329ilv.28.1712931654707;
-        Fri, 12 Apr 2024 07:20:54 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id r12-20020a92ce8c000000b00368706996b8sm1000820ilo.38.2024.04.12.07.20.53
+        d=1e100.net; s=20230601; t=1712931683; x=1713536483;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IuGZWZWhytkU3H9RstAytyRs4qLomTBn2C5NOarPIfY=;
+        b=UUOT8+d6M2ocKNbWiyLhkCRPea1F1nTyHkvlsrQTVMmHwnfZX6JnHFBNRNKFnfY5gm
+         NQd/2DKHYQlXgTz2zio0oVl7W2W4YAzwRpEIhuqoDrl7m1Z5rnZ2CuAZywoxlJ5n6xXW
+         BMqhyK9wLQ4UeV1N+ge3aIivPgCLAToefTDmv/Irr8+bRDOVr3pyWZvqFrXZTaJX4Xm5
+         NllWGsCGqnW5gbpPxnGflnr6Bzw0AY5AW1dNHXE3d2XYL00P+k+Fd38aw4WXzw8Mg8Gn
+         oQGTEVeZ7XCNkemRg2S3hxi/HJBDpq3CtpH1lHNUV/Z3wuE/LaEUqt5LoKnhb2Wi7Ksp
+         oE1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUax++KTnMPxHBm7ghVB5kZS+EMmY9v7uK0wYUXCPKJRh0ZfTR57Dol+EqX7EKlcojrjqJ9s2R5ODS9+ODVuX6AW/gK/FP7XFjmnZF6
+X-Gm-Message-State: AOJu0YxXJjoSJVh5TehEA0gH/a2O9ydDiqRqmE80QQ8ieqXqKElBQXA/
+	1d1GLhfJzU3BEXCOtdGO1pUw8EYFUoS5AYB2BOw7ZDbz5C1F4Hwr5z7FlSXUxHw=
+X-Google-Smtp-Source: AGHT+IG/NWllYtgmfGoYW6rH/AWHr1Pt63PXIyoyoSyUky/BK/w5LQIjfx9iD7/ct5erDAlcwCXX3A==
+X-Received: by 2002:a05:600c:5493:b0:416:f38:727 with SMTP id iv19-20020a05600c549300b004160f380727mr2393278wmb.9.1712931682981;
+        Fri, 12 Apr 2024 07:21:22 -0700 (PDT)
+Received: from localhost.localdomain ([176.114.240.50])
+        by smtp.gmail.com with ESMTPSA id k9-20020a05600c1c8900b00416c1e7c9e7sm5875177wms.2.2024.04.12.07.21.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 07:20:54 -0700 (PDT)
-Date: Fri, 12 Apr 2024 08:20:51 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: JianChunfu <chunfu.jian@shingroup.cn>
-Cc: cohuck@redhat.com, linux-kernel@vger.kernel.org, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH] vfio: change the description of
- VFIO_IOMMU_SPAPR_REGISTER_MEMORY
-Message-ID: <20240412082051.0f9959e3.alex.williamson@redhat.com>
-In-Reply-To: <20240412085333.1286724-1-chunfu.jian@shingroup.cn>
-References: <20240412085333.1286724-1-chunfu.jian@shingroup.cn>
-Organization: Red Hat
+        Fri, 12 Apr 2024 07:21:22 -0700 (PDT)
+Date: Fri, 12 Apr 2024 16:21:21 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH printk v4 20/27] printk: Avoid console_lock dance if no
+ legacy or boot consoles
+Message-ID: <ZhlDYWgEGf92xYWq@localhost.localdomain>
+References: <20240402221129.2613843-1-john.ogness@linutronix.de>
+ <20240402221129.2613843-21-john.ogness@linutronix.de>
+ <87r0fmydc3.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r0fmydc3.fsf@jogness.linutronix.de>
 
-On Fri, 12 Apr 2024 16:53:33 +0800
-JianChunfu <chunfu.jian@shingroup.cn> wrote:
-
-> The type1 ioctl(VFIO_IOMMU_MAP_DMA/VFIO_IOMMU_UNMAP_DMA) won't be called
-> in SPAPR machine, which is replaced by VFIO_IOMMU_SPAPR_TCE_CREATE/
-> VFIO_IOMMU_SPAPR_TCE_REMOVE, so change the description.
-
-This does not match my understanding of SPAPR which is that memory is
-registered for use by MAP_DMA/UNMAP_DMA calls, _CREATE and _REMOVE are
-used for managing DMA window apertures.  Thanks,
-
-Alex
-
-
-> Signed-off-by: JianChunfu <chunfu.jian@shingroup.cn>
-> ---
->  include/uapi/linux/vfio.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed 2024-04-03 12:07:32, John Ogness wrote:
+> On 2024-04-03, John Ogness <john.ogness@linutronix.de> wrote:
+> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> > index df84c6bfbb2d..4ff3800e8e8e 100644
+> > --- a/kernel/printk/printk.c
+> > +++ b/kernel/printk/printk.c
+> > @@ -3810,6 +3833,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
+> >  	u64 last_diff = 0;
+> >  	u64 printk_seq;
+> >  	short flags;
+> > +	bool locked;
+> >  	int cookie;
+> >  	u64 diff;
+> >  	u64 seq;
+> > @@ -3819,22 +3843,35 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
+> >  	seq = prb_next_reserve_seq(prb);
+> >  
+> >  	/* Flush the consoles so that records up to @seq are printed. */
+> > -	console_lock();
+> > -	console_unlock();
+> > +	if (printing_via_unlock) {
+> > +		console_lock();
+> > +		console_unlock();
+> > +	}
+> >  
+> >  	for (;;) {
+> >  		unsigned long begin_jiffies;
+> >  		unsigned long slept_jiffies;
+> >  
+> > +		locked = false;
+> >  		diff = 0;
+> >  
+> > +		if (printing_via_unlock) {
+> > +			/*
+> > +			 * Hold the console_lock to guarantee safe access to
+> > +			 * console->seq. Releasing console_lock flushes more
+> > +			 * records in case @seq is still not printed on all
+> > +			 * usable consoles.
+> > +			 */
+> > +			console_lock();
+> > +			locked = true;
+> > +		}
+> > +
+> >  		/*
+> > -		 * Hold the console_lock to guarantee safe access to
+> > -		 * console->seq. Releasing console_lock flushes more
+> > -		 * records in case @seq is still not printed on all
+> > -		 * usable consoles.
+> > +		 * Ensure the compiler does not optimize @locked to be
+> > +		 * @printing_via_unlock since the latter can change at any
+> > +		 * time.
+> >  		 */
+> > -		console_lock();
+> > +		barrier();
 > 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 2b68e6cdf..30efc8af4 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -1764,7 +1764,7 @@ struct vfio_eeh_pe_op {
->   *
->   * Registers user space memory where DMA is allowed. It pins
->   * user pages and does the locked memory accounting so
-> - * subsequent VFIO_IOMMU_MAP_DMA/VFIO_IOMMU_UNMAP_DMA calls
-> + * subsequent VFIO_IOMMU_SPAPR_TCE_CREATE/VFIO_IOMMU_SPAPR_TCE_REMOVE calls
->   * get faster.
->   */
->  struct vfio_iommu_spapr_register_memory {
+> When I originally implemented this, my objective was to force the
+> compiler to use a local variable. But to be fully paranoid (which we
+> should) we must also forbid the compiler from being able to do this
+> nonsense:
+> 
+> if (printing_via_unlock) {
+> 	console_lock();
+> 	locked = printing_via_unlock;
+> }
+> 
+> I suggest replacing the __pr_flush() hunks to be as follows instead
+> (i.e. ensure all conditional console lock usage within the loop is using
+> the local variable):
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index df84c6bfbb2d..1dbd2a837b67 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3819,22 +3842,34 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
+>  	seq = prb_next_reserve_seq(prb);
+>  
+>  	/* Flush the consoles so that records up to @seq are printed. */
+> -	console_lock();
+> -	console_unlock();
+> +	if (printing_via_unlock) {
+> +		console_lock();
+> +		console_unlock();
+> +	}
+>  
+>  	for (;;) {
+>  		unsigned long begin_jiffies;
+>  		unsigned long slept_jiffies;
+> -
+> -		diff = 0;
+> +		bool use_console_lock = printing_via_unlock;
+>  
+>  		/*
+> -		 * Hold the console_lock to guarantee safe access to
+> -		 * console->seq. Releasing console_lock flushes more
+> -		 * records in case @seq is still not printed on all
+> -		 * usable consoles.
+> +		 * Ensure the compiler does not optimize @use_console_lock to
+> +		 * be @printing_via_unlock since the latter can change at any
+> +		 * time.
+>  		 */
+> -		console_lock();
+> +		barrier();
 
+Indeed, this looks better. I have missed this as well.
+
+It seems that using the barrier() is more tricky than I have expected.
+I wonder if it would be better to use WRITE_ONCE()/READ_ONCE().
+It would be more clear what we want to achieve. Also it would let
+the compiler to optimize other things. Not that the the performance is
+importnat here but...
+
+Otherwise, the patch looks fine. With this change, feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regargds,
+Petr
