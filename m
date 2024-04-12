@@ -1,100 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7321214D29E;
-	Fri, 12 Apr 2024 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE1C14B065
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 17:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712944210; cv=none; b=fvUz2gvMSM+qw7rJZE/dnYspzSJ5UHXd/76bp32LyWqTAiF+93ZmTMX9Bge9luU1fzj7PjX0AxLzbtUVe6spkVaok6f/NvJJsNeAMHXa3tl5qa1cpdPDjNYX8oDaVK3wryWq4mnKt/GenDGlpLpJRkx1lMgPESaUsAJIY3i6dOA=
+	t=1712944389; cv=none; b=GWCYuIm8IW2uW8199BXSOILE45e2M/3f4G8gb9SSovus10wJPju6PRlYu3TJVQa9z1aPN/imCeAd4I8cA1DdKXE2iNZytfavVWFZ3Ts32tU3q2w9PrM3FPgoGfqAbos0WzXWv28LtMsHWnBavOLUu4II1nkP94vmhO0VvJcNE6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712944210; c=relaxed/simple;
-	bh=sQu31TKj1DykuJKDUxWpDtj7xAwMdG8O2RnnSSWBS5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WxnLU+SSaPEMGxobH276nROtM2BCnZomARt346F+eAI0aAXSwa5j7NdBdbifNfQgzan//JV8x+W3V93dgsPHnxKd41h/CPqX9aSNoHVgD1+835sXoJEGO+6VsV4ValXt7nSdcLwQculrop6rJR5t1B0Yy5QQ/pxhBl2/H97Ww/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nBeigbiD; arc=none smtp.client-ip=192.198.163.15
+	s=arc-20240116; t=1712944389; c=relaxed/simple;
+	bh=xhMO86cfjGGCHr2NAR4ZuwGYVKaaczvWdt34XD0Z1+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfqIoc1HSVPbkG3xQbpi2CEjdSTPFLP0R4tJV2ydIe1r841p1e70RE7DRVlkPtH+FcEJkZ5crVxs7SyWHGbTzLoQs6DDALKSc8UN650Z0ENIlK82njmfwnhqo10HxnTch4vTcGPyQ9uusil2dAnLfYss0Csp5mgeLKuVLp9LBjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UbCLiEjh; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nBeigbiD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UbCLiEjh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712944210; x=1744480210;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sQu31TKj1DykuJKDUxWpDtj7xAwMdG8O2RnnSSWBS5g=;
-  b=nBeigbiDKJYV6/1ZTKVab89uK9xzVrUosCK2BCdjLXKHHyPPsM43nDvQ
-   DnQmzPmWTgEcH+A4Xfws82dPLYI2nApNvgNoxmAeYppQKuE+8ll9sQ0Hu
-   HCnlQs8cnwPX+067YrJfPiumPwwG0WtJCoy9ofHq2KUlU8OFLvG/9IKf5
-   kWKUK+WNl6PiI+1hSA7J3EdTAw3x10kRcIyNMfs5EePjJKzV+di4oa2MN
-   +RM17pK2jCbyxiXxX25jWoYgcB35O1gcIYGGEJ1ytKya2R9rwOfBeXrL1
-   Oy6TY7CeWEd3cPRXPFGS8jKVoQmzBplzhwctRVHOj8y89KZLJmmHRmTW8
-   A==;
-X-CSE-ConnectionGUID: 522dSkskSMC1nJVgEHFDmA==
-X-CSE-MsgGUID: tjd5DmhRRU+SJueWOuP4Sg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="8586232"
+  t=1712944389; x=1744480389;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xhMO86cfjGGCHr2NAR4ZuwGYVKaaczvWdt34XD0Z1+o=;
+  b=UbCLiEjhjPSl51MO24Jlmny24JNhx9t5eCehXxIDI/mNnTxtLMOpTkn9
+   opTsI/obt0FeZl9oKlM9oPjOZ2f6bDdt9dsPX4GHM0JGS3YtkC5Cv/zZQ
+   7BejkjV3uuEqCOZvUaBammiyO4m8TT8pfJItS/V2mnPgsD4/p3OiZnZ+X
+   0vyv2BAna8ak32WcPbVbCv8+PxaAFQcq7ObgDpXBqVAP9mfM1HurRS5wL
+   Xz79WeU12EmZYtxvZ9tMubDcyo5BzOGx9rEuGoTbIYd7LdJogiCBJGYUw
+   cyMDrHpQFklJ7Tc9bT3QTpjPJvKkN83ynHTKetxA12WnWJjS9Sj2XgWY0
+   w==;
+X-CSE-ConnectionGUID: wrhqC+t4RKiGgdNYGM8PkQ==
+X-CSE-MsgGUID: AkGmM9IYSLK1EY5FgBy/YA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11042"; a="12199792"
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="8586232"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:50:09 -0700
-X-CSE-ConnectionGUID: xrZhma/XTdiCshLxpuCXCA==
-X-CSE-MsgGUID: A55UTogyQJ+4WxvqXu3GaA==
+   d="scan'208";a="12199792"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:53:09 -0700
+X-CSE-ConnectionGUID: 0/0O1bfpTdCzITWBeC6xyQ==
+X-CSE-MsgGUID: z7QjisBWTrKr/X0dtWv+9A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.07,196,1708416000"; 
-   d="scan'208";a="21380981"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:50:08 -0700
-Date: Fri, 12 Apr 2024 10:54:39 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, Thomas Gleixner <tglx@linutronix.de>, Lu Baolu
- <baolu.lu@linux.intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- "Hansen, Dave" <dave.hansen@intel.com>, Joerg Roedel <joro@8bytes.org>, "H.
- Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar
- <mingo@redhat.com>, "Luse, Paul E" <paul.e.luse@intel.com>, "Williams, Dan
- J" <dan.j.williams@intel.com>, Jens Axboe <axboe@kernel.dk>, "Raj, Ashok"
- <ashok.raj@intel.com>, "maz@kernel.org" <maz@kernel.org>,
- "seanjc@google.com" <seanjc@google.com>, Robin Murphy
- <robin.murphy@arm.com>, "jim.harris@samsung.com" <jim.harris@samsung.com>,
- "a.manzanares@samsung.com" <a.manzanares@samsung.com>, Bjorn Helgaas
- <helgaas@kernel.org>, "Zeng, Guang" <guang.zeng@intel.com>,
- "robert.hoo.linux@gmail.com" <robert.hoo.linux@gmail.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 06/13] x86/irq: Set up per host CPU posted interrupt
- descriptors
-Message-ID: <20240412105439.37aa12cc@jacob-builder>
-In-Reply-To: <BN9PR11MB527696368E4022DBAC9DD7768C042@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20240405223110.1609888-1-jacob.jun.pan@linux.intel.com>
-	<20240405223110.1609888-7-jacob.jun.pan@linux.intel.com>
-	<BN9PR11MB527696368E4022DBAC9DD7768C042@BN9PR11MB5276.namprd11.prod.outlook.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+   d="scan'208";a="25846959"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2024 10:53:06 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rvL5D-00000003iz0-3QM6;
+	Fri, 12 Apr 2024 20:53:03 +0300
+Date: Fri, 12 Apr 2024 20:53:03 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de, "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH] driver core: Make dev_err_probe() silent for -ENOMEM
+Message-ID: <Zhl0_8whWU1ftFeJ@smile.fi.intel.com>
+References: <20240412164405.335657-2-u.kleine-koenig@pengutronix.de>
+ <ZhlmpPNbEMRye2wZ@smile.fi.intel.com>
+ <cl5fmton3n5ayzr7ondnw7lzjaxoppyqhnoervj2fn4et75ish@cyko4abxbslg>
+ <ZhlqUdywIur4dzgE@smile.fi.intel.com>
+ <zjk3vnydp2yip343khmkq7v5vqbib6d6eyee6tx6h5nph4blzn@c26yrw2cqrt7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zjk3vnydp2yip343khmkq7v5vqbib6d6eyee6tx6h5nph4blzn@c26yrw2cqrt7>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Kevin,
+On Fri, Apr 12, 2024 at 07:47:43PM +0200, Uwe Kleine-König wrote:
+> On Fri, Apr 12, 2024 at 08:07:29PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 12, 2024 at 07:03:01PM +0200, Uwe Kleine-König wrote:
+> > > On Fri, Apr 12, 2024 at 07:51:48PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Apr 12, 2024 at 06:44:05PM +0200, Uwe Kleine-König wrote:
+> > > > > For an out-of-memory error there should be no additional output. Adapt
+> > > > > dev_err_probe() to not emit the error message when err is -ENOMEM.
+> > > > > This simplifies handling errors that might among others be -ENOMEM.
 
-On Fri, 12 Apr 2024 09:16:25 +0000, "Tian, Kevin" <kevin.tian@intel.com>
-wrote:
+...
 
-> > From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > Sent: Saturday, April 6, 2024 6:31 AM
+> > > > 	BUILD_BUG_ON(err == -ENOMEM);
+> > > > 
+> > > > Done!
+> > > 
+> > > Well no, that doesn't do the trick. Consider for example device_add().
+> > > That function can return (at least) -EINVAL and -ENOMEM. To properly
+> > > ensure that the error handling is silent with the current
+> > > dev_err_probe(), we'd need to do:
+> > > 
+> > > 	ret = device_add(...);
+> > > 	if (ret) {
+> > > 		if (ret != -ENOMEM)
+> > > 			return dev_err_probe(...);
+> > > 		else
+> > > 			return ret;
+> > > 	}
+> > > 
+> > > With my suggested patch this can be reduced to:
+> > > 
+> > > 	ret = device_add(...);
+> > > 	if (ret)
+> > > 		return dev_err_probe(...);
 > > 
-> > +#ifdef CONFIG_X86_POSTED_MSI
-> > +
-> > +/* Posted Interrupt Descriptors for coalesced MSIs to be posted */
-> > +DEFINE_PER_CPU_ALIGNED(struct pi_desc, posted_interrupt_desc);  
+> > Fair enough, but these two should be combined.
+> > Mine is for the rejecting a dead code on the phase of the submission.
 > 
-> 'posted_msi_desc' to be more accurate?
-makes sense, will do.
+> So something like the following on top of my change (only compile
+> tested):
 
-Thanks,
+Hmm, but why macro? Shouldn't compiler be clever enough to see it even for
+the exported function?
 
-Jacob
+...
+
+> I don't know if the kernel doc for dev_err_probe() should move to
+> include/linux/dev_printk.h then?!
+
+Not if you mark it for the __ variant.
+
+But it has other kernel-doc formatting issues...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
