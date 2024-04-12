@@ -1,32 +1,34 @@
-Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.154.197.177])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C95E1B5A0
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:59:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.154.197.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C2F40C15
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712919562; cv=none; b=Q0XABgeo7TmDuC+aQBcWeCXAj40+QoVoLD59wvhGVngDQMkE3DaqbdMeXHv55aS1pHk2HZ3srd9t3tZRPkRHqKNBYt/6gxFXiFl7/QhXnXeHXEp2mysa47jc60rgH5ZXDQQmsZmiStIjDeCVWHobCC0rnos3bnQeMUl5nJHIDJM=
+	t=1712919566; cv=none; b=NOF76q9ALABopXwxmnzzUfogu0uQLH7qg0zP7wJbEo7JeEnStDI93viwaIt9AHIEX4dJBaKeF/9wiyhKrwQwA6vkgA6TcauW3SyHnM65quaTnIBzSeWoH2Q5F0FyXyWfWqefpH7CmC7I7kHxxsbT+lxH2zxMZNlN8cnRic+8ThM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712919562; c=relaxed/simple;
-	bh=0RtFFg5+N9Y2kQzt26BiZ+RHuA9c5KrrvmaPyEYQ8xA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gmvPi9Kn6EiiYnlfw4XcshbC5qot70NNVNIpeGZW4TBhitd5OfhhNCGmjBxI58ZAImlwSPLeYku5Vsi2K96cwGjfxdwtbCXdfDjEYZO0xM1+9NMHCpHpciRGUvpeY/Q9t0utHefGJ4mGjASitqo5RU/yLixRR9gLnAhkjNhNReQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=43.154.197.177
+	s=arc-20240116; t=1712919566; c=relaxed/simple;
+	bh=Y2Fr2z85GiqrsspK1EWPARCrG8qEAgI0otN5jcdYGbA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=pvZ0q5PDKE/SYXKWk+UM3XAtElrcbL/3ddn/jgZUMjBFbrdHI9pB0aGGbFoCwA7NVZkmyLTZMDvkguPg7tApfcxA8nzZcWYgi0gZjVkzT41UO6Y3gKLF6PR0RaQAPbn8wN6devTFSiTFpXty6MZKvpPmf/H7Folx4goI6rURgJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.92.39.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
-X-QQ-mid: bizesmtpsz12t1712919532tgnpo2
-X-QQ-Originating-IP: 60s/XeLSjmpUxocLnKj2JdHh7MZlH2TCyjf2ATbWmkQ=
+X-QQ-mid: bizesmtpsz12t1712919554t1sc4f
+X-QQ-Originating-IP: XtOo9MhHpQmv59Q3FjqVGhMpUYTa/sen1b4+R/N3Lyg=
 Received: from localhost ( [112.0.147.129])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 12 Apr 2024 18:58:51 +0800 (CST)
+	id ; Fri, 12 Apr 2024 18:59:12 +0800 (CST)
 X-QQ-SSF: 01400000000000903000000A0000000
-X-QQ-FEAT: SX+E1PC0a4Bj3EOShPW6Qa/r+mYU5aXhQ9BafXC5UteUhZfU8MLQFKH23IYlR
-	vqGLwzgTtGRKu1O5Glrynb+Y8ed1CMq274/NlMl1yaG05Dc06b5Yx6KWtEldF23D763k4rk
-	uDmwvYRinRJF2R3FQOmnJlgurC1Yli4p7BTi7DC2ipaoP5MJDMVsPo7KtKqzQDC54XVPGZA
-	lDrqUm2a55JyJxLlV2jAqogkYvnYxdnuWR57y2QtQEyyUhUjFSLGTp3noGKFFNyNYDRowDI
-	O1kJiq7IEz4Gqjs5V/tFtcETk6n79377Qh3q7UaYja7BTCC5CCgpD6if0FrJVEskpntJ2PD
-	EUjCtLWrhMLIhEemF/C9aXo4Tp60Z2ilifEk0oOm9BuD/sBtk9fGbWaF+KtKVEO2gL00vBB
+X-QQ-FEAT: vrqOr+ppv0swERXAarxGZQvyAMZZ/l6B37dFgG2uQThzhiA2EgalD6ig2x8OV
+	NSQ75IlmVX14Xw2yeqH+ooyMOCVMRuqE6/VRs6tGFwE+f6A/aOB8LJl1+k1lZGTERf36BF4
+	9IU5PXB9teHLdp0oWbRPjFJFJEUp5Cqxjoj5MEInMdenxQdYYvO0qg1JJoc7ov9kXkWOITT
+	z+sMmqpVKdwFA6E1iiUi3dTJjTlbYDhME+SwkD7oWhx2zob5q9iQZ0LlPpxsDZ0/ufsF++V
+	4LBjVzJhfblyUIslnzRaqm3Dkg/idVALMz306M7CEkk17p2bYeSJLUQWywONh73BCpI88pc
+	/9u6T2QfAuX/ZvO00x42zBDIgY09+6A9cLXXM85TYmzcU6pVx9RuhFK9zOj6LCrCLl1HoDV
+	3UcfBM8Is3Flu7zkZtLRBA==
 X-QQ-GoodBg: 2
-X-BIZMAIL-ID: 9611785477904977050
+X-BIZMAIL-ID: 10109608025486522936
 From: Dawei Li <dawei.li@shingroup.cn>
 To: tglx@linutronix.de,
 	yury.norov@gmail.com
@@ -41,10 +43,12 @@ Cc: akpm@linux-foundation.org,
 	linux@rasmusvillemoes.dk,
 	linux-kernel@vger.kernel.org,
 	Dawei Li <dawei.li@shingroup.cn>
-Subject: [PATCH 0/6] Remove on-stack cpumask var for irq subsystem 
-Date: Fri, 12 Apr 2024 18:58:33 +0800
-Message-Id: <20240412105839.2896281-1-dawei.li@shingroup.cn>
+Subject: [PATCH 3/6] irqchip/gic-v3-its: Avoid explicit cpumask allocation on stack
+Date: Fri, 12 Apr 2024 18:58:36 +0800
+Message-Id: <20240412105839.2896281-4-dawei.li@shingroup.cn>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20240412105839.2896281-1-dawei.li@shingroup.cn>
+References: <20240412105839.2896281-1-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,49 +59,44 @@ Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrgz:qybglogicsvrgz5a-1
 
-Hi,
-
-Generally it's preferable to avoid placing cpumasks on the stack, as
+In general it's preferable to avoid placing cpumasks on the stack, as
 for large values of NR_CPUS these can consume significant amounts of
 stack space and make stack overflows more likely.
 
-One may argue that alloc_cpumask_var() and its friends are the formal
-way for these cases. But for struct irqchip::irq_set_affinity(), it's
-called under atomic context(raw spinlock held), and dynamic memory
-allocation in atomic context is less-favorable.
+Remove cpumask var on stack and use proper cpumask API to address it.
 
-So a new helper is introduced to address all these issues above. It's
-free of any context issue and intermediate cpumask variable allocation
-issue(no matter it's on stack or heap).
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-The case with gic-v3-its is special from others since it's not related
-to intersections between 3 cpumask.
-
-And yes, the helper naming(maybe the whole idea) is terrible, and I am
-all ears for any comments from you :).
-
-Dawei Li (6):
-  cpumask: introduce cpumask_first_and_and()
-  irqchip/irq-bcm6345-l1: Avoid explicit cpumask allocation on stack
-  irqchip/gic-v3-its: Avoid explicit cpumask allocation on stack
-  irqchip/loongson-eiointc: Avoid explicit cpumask allocation on stack
-  irqchip/riscv-aplic-direct: Avoid explicit cpumask allocation on stack
-  irqchip/sifive-plic: Avoid explicit cpumask allocation on stack
-
- drivers/irqchip/irq-bcm6345-l1.c         |  7 ++----
- drivers/irqchip/irq-gic-v3-its.c         |  9 +++++---
- drivers/irqchip/irq-loongson-eiointc.c   |  9 +++-----
- drivers/irqchip/irq-riscv-aplic-direct.c |  8 +++----
- drivers/irqchip/irq-sifive-plic.c        |  8 +++----
- include/linux/cpumask.h                  | 17 ++++++++++++++
- include/linux/find.h                     | 29 ++++++++++++++++++++++++
- lib/find_bit.c                           | 14 ++++++++++++
- 8 files changed, 77 insertions(+), 24 deletions(-)
-
-Thanks,
-
-    Dawei
-
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index fca888b36680..a821396c4261 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3826,7 +3826,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 				bool force)
+ {
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+-	struct cpumask common, *table_mask;
++	struct cpumask *table_mask;
+ 	unsigned long flags;
+ 	int from, cpu;
+ 
+@@ -3850,8 +3850,11 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ 	 * If we are offered another CPU in the same GICv4.1 ITS
+ 	 * affinity, pick this one. Otherwise, any CPU will do.
+ 	 */
+-	if (table_mask && cpumask_and(&common, mask_val, table_mask))
+-		cpu = cpumask_test_cpu(from, &common) ? from : cpumask_first(&common);
++	if (table_mask && cpumask_intersects(mask_val, table_mask)) {
++		cpu = cpumask_test_cpu(from, mask_val) &&
++		      cpumask_test_cpu(from, table_mask) ?
++		      from : cpumask_first_and(mask_val, table_mask);
++	}
+ 	else
+ 		cpu = cpumask_first(mask_val);
+ 
 -- 
 2.27.0
 
