@@ -1,104 +1,74 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D24E53E14;
-	Fri, 12 Apr 2024 08:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3565D54666
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712912043; cv=none; b=rq+OHWrKHGBeCWtCCOU5P9IeVj/S2kO8o9DiET3gag2TtP2fkyuqLaU/ygrWmtSf++PTXPTqCCz2KGL+NjaaJ9AfNMNYYVWHyCSx7FJmPI0PXd5l/3kSGuRSppT6THO2g5ErpxiSoZUQ7Q0Ub5VAfybnLbnlQYsTwU138UcuhNY=
+	t=1712912135; cv=none; b=HLqD7LIVjjDvEfap13ZWqzn4FFUEg3Jlisu8ql/DpiDSQ57m6ZXzM+YOPrAgIcMXDIyBtDkMyyczf/3kQDu4vMU9O++meQNOW/tb9xN9m5K15fsfLFyfm6LGIzUwksphp1LaiFvN5JhNvUFms6ilWLvxxFM5mQImGamO7NP6e8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712912043; c=relaxed/simple;
-	bh=3yjq8O1fvmVYBmCXtR/a8+GHrCslKZnP5yvQRyN6AnM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=TXZuyKyFV4YL1cNItJ02RSuf9dQ2PpoRXaVGSd7YEyvPYTfgrWxHmjMarabgma3i/J3gK1RBFwy2Wvvyl8FT8aefrzjoWLLmSIlUPS1TZBWlMzFc18W7O/XhGbtn6jMjGO1z2hra0tLY2p9xmIvD/hEMtIBQXAhH87LXCIPCjsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3q2TCxFt; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3q2TCxFt"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 43C8RL2t009700;
-	Fri, 12 Apr 2024 10:53:34 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=WjFgtosidiIyq2Zmcjtu8dtER2lY9hSTMSWSMhZ3Xas=; b=3q
-	2TCxFt8NbxX6zobRUXOLJRewuDgTt1BN3myoUYyhH9sDhS0f5EqUIsnxCc4vyRK1
-	e5RnWZgq0T6Qxn4IHCk9Q+MqpzuHzkcy35F+6OhcfwpcL9GBACuzt3fXeVlruiya
-	tuNV3dtKagQfB4J5uFWJmBEMxZmVMHmK3SFRcwpNoZmEsMVsboWDPnwQLIR5eCNZ
-	LQJzJ6n0C9qg+jqZPOV6icC49jOXQbtm0Irqq8+tUGQ7Kn01yuReBSGF7KmJOuZY
-	vSdcaNjGoHN4VcAZ1atP4hoJMmPn8NKIk2totehDNSByEPo4zuhwCgl/Vquf2eUx
-	gUvLjF+/e0bMCUhSRSTQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xaw9d86vt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 12 Apr 2024 10:53:34 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 70A6D40044;
-	Fri, 12 Apr 2024 10:53:30 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 80195210729;
-	Fri, 12 Apr 2024 10:53:07 +0200 (CEST)
-Received: from [10.48.86.69] (10.48.86.69) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 12 Apr
- 2024 10:53:07 +0200
-Message-ID: <abf316f7-f0c6-4eb3-aee2-fc5413d7c18b@foss.st.com>
-Date: Fri, 12 Apr 2024 10:52:49 +0200
+	s=arc-20240116; t=1712912135; c=relaxed/simple;
+	bh=jvULkoQb8Telt5bH/bAoGYm9ELyR9FJwhgTLwy6k7uI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cgRN3fNSXmE5CgzMbwLNwN/8BrrkDQMeAfhn0Entd+akEzp+At5oLMmmGgO8YS5AGQIqN9qWBtdRIPQZ8Fnnnb/IqOfUU9l7jDlERnDe2lAMmDqTiGY44tqmgJdrXh+6Ve5S1909IHKLeu6VLLd5qhsBoHxXSs1q27bCtD12ft0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn; spf=pass smtp.mailfrom=shingroup.cn; arc=none smtp.client-ip=54.254.200.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=shingroup.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shingroup.cn
+X-QQ-mid: bizesmtpsz10t1712912023tvoarp
+X-QQ-Originating-IP: R97qRij170LrT/MW5RfM1l0Kd9nqITC8rcgjajfH6+Y=
+Received: from localhost.localdomain ( [112.0.147.129])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 12 Apr 2024 16:53:35 +0800 (CST)
+X-QQ-SSF: 0140000000000090B000000A0000000
+X-QQ-FEAT: 9vsVjMb6wCzPgN6/N07igtreGEa/QssY7PbvEBadM6fn1CXeUw8H/rg15FcDF
+	taLJSvaCkP+RFYBBzlI8DNxq/w66k77sX+bmhjQYzyPjN4HHR8D9E58oftuImU3id06shbv
+	YuvK3EmvH7mj9mRz+wCeFo4m6dKl2ckxU10CZysBCypRT5xi6hA8/GOcFRhy1ZMg5tmhG7J
+	lQD5xemCmNaqIseWiaHC/+Iw7oFM0dABdBO7h0wwPX+Xf7I+bR+sk86W8MHOdz292A8oRpZ
+	/6wVfyrwR8xsHWOL/M7kyc3N3w4v23Mmk8l2t3zI0saDKwP9u8U75AgbkBRLeFefYspKjw4
+	MH8sMHa34RdGFCQBP8tlPqD3J4KlyyHtAYtzINCCscJ4n2yz5aa8kxuCp4xml7ecO6V4ZaU
+	cANeq1AXA0o=
+X-QQ-GoodBg: 2
+X-BIZMAIL-ID: 14227558502110067001
+From: JianChunfu <chunfu.jian@shingroup.cn>
+To: alex.williamson@redhat.com,
+	cohuck@redhat.com
+Cc: linux-kernel@vger.kernel.org,
+	JianChunfu <chunfu.jian@shingroup.cn>
+Subject: [PATCH] vfio: change the description of VFIO_IOMMU_SPAPR_REGISTER_MEMORY
+Date: Fri, 12 Apr 2024 16:53:33 +0800
+Message-Id: <20240412085333.1286724-1-chunfu.jian@shingroup.cn>
+X-Mailer: git-send-email 2.27.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: stm32_firewall: fix off by one in
- stm32_firewall_get_firewall()
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <17dce071-21ef-49f5-be45-f93bbf3642ec@moroto.mountain>
-Content-Language: en-US
-From: Gatien CHEVALLIER <gatien.chevallier@foss.st.com>
-In-Reply-To: <17dce071-21ef-49f5-be45-f93bbf3642ec@moroto.mountain>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_05,2024-04-09_01,2023-05-22_02
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpsz:shingroup.cn:qybglogicsvrsz:qybglogicsvrsz4a-1
 
-Hi Dan,
+The type1 ioctl(VFIO_IOMMU_MAP_DMA/VFIO_IOMMU_UNMAP_DMA) won't be called
+in SPAPR machine, which is replaced by VFIO_IOMMU_SPAPR_TCE_CREATE/
+VFIO_IOMMU_SPAPR_TCE_REMOVE, so change the description.
 
-On 4/12/24 10:25, Dan Carpenter wrote:
-> The "nb_firewall" variable is the number of elements in the firewall[]
-> array, which is allocated in stm32_firewall_populate_bus().  So change
-> this > comparison to >= to prevent an out of bound access.
-> 
-> Fixes: 5c9668cfc6d7 ("firewall: introduce stm32_firewall framework")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->   drivers/bus/stm32_firewall.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/stm32_firewall.c b/drivers/bus/stm32_firewall.c
-> index decb79449047..2fc9761dadec 100644
-> --- a/drivers/bus/stm32_firewall.c
-> +++ b/drivers/bus/stm32_firewall.c
-> @@ -53,7 +53,7 @@ int stm32_firewall_get_firewall(struct device_node *np, struct stm32_firewall *f
->   			return err;
->   		}
->   
-> -		if (j > nb_firewall) {
-> +		if (j >= nb_firewall) {
->   			pr_err("Too many firewall controllers");
->   			of_node_put(provider);
->   			return -EINVAL;
-Thank you.
+Signed-off-by: JianChunfu <chunfu.jian@shingroup.cn>
+---
+ include/uapi/linux/vfio.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Gatien Chevallier <gatien.chevallier@foss.st.com>
+diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+index 2b68e6cdf..30efc8af4 100644
+--- a/include/uapi/linux/vfio.h
++++ b/include/uapi/linux/vfio.h
+@@ -1764,7 +1764,7 @@ struct vfio_eeh_pe_op {
+  *
+  * Registers user space memory where DMA is allowed. It pins
+  * user pages and does the locked memory accounting so
+- * subsequent VFIO_IOMMU_MAP_DMA/VFIO_IOMMU_UNMAP_DMA calls
++ * subsequent VFIO_IOMMU_SPAPR_TCE_CREATE/VFIO_IOMMU_SPAPR_TCE_REMOVE calls
+  * get faster.
+  */
+ struct vfio_iommu_spapr_register_memory {
+-- 
+2.27.0
+
