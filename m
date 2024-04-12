@@ -1,27 +1,27 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A2E17C64;
-	Fri, 12 Apr 2024 04:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD811B81F;
+	Fri, 12 Apr 2024 04:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712895292; cv=none; b=t1Xmz9FVptnyB7GG1L3nq+dRlUgLkApue72PY5vaviz5UI59dBc1x3PYCq7bgwTYfebSadOf4ow5M4Gb+gXWCGg9YIXEtf3U4RZUNxRg7MioDlgJiOQtCzs+Tykd3rZvklfvUHvB59th4OkkAtQkttCfdyQVJEjlOwE11qF9WVA=
+	t=1712895294; cv=none; b=mHJ0rXJHR5qw3t9xByAo/uNQ7sBadrVijATkbEeVRYaMs7NGlXBRUYnQxERNOiI5wZtYjzc6zK4eAa9piE+qbbEQ69+7tVq96Nljdzl1tE6eTkjgPZWaNXDCadl5mbZ1U0eXUDBB64fwMysoBubMmzSO0IPAGDkNNZffsXHzu9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712895292; c=relaxed/simple;
-	bh=gIvpBVDdOYjlbsqtGbic3vWnwDNFVdIU3HpLKyKZOzE=;
-	h=From:To:Subject:Date:Message-Id; b=gEhEXb1R7pv00+jg1B0ZD4cNzbpBqC+R8wRG0ahsFuQbv0FrGfdDgboSIS7/1KjCdcxtouxBOCkZ0V1Auf8MKblr4hUpG1SuvJGSYJpQnAo99NAm4vo/MGIcdYHw+rU17/de+m88z4Pxk8amCGBnjtSJN/Cvc1ZEPQ9PdHdJpeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+	s=arc-20240116; t=1712895294; c=relaxed/simple;
+	bh=tDDb/tTQ4ws60s2OvSKeSyYAre0E/OFBuOxx8cOi9LM=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=VBQmKcvMy8+rLOyy2rW2qXci0LG+RhX+/gLG40vW89TWKPhvy8nLYoD2si9o6dJrk8kCA4XGlwd4K0iNgse1JYXgORsC+qe/ga/0QVnbNK80qoE8kaUg4ZA9gBbq0OatpurL02Z5SABOoo8mlETI++KQYbt6PEQ9jU8Yj+rrdHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AE6922003B8;
-	Fri, 12 Apr 2024 06:14:46 +0200 (CEST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F8001A0402;
+	Fri, 12 Apr 2024 06:14:49 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 770E0200383;
-	Fri, 12 Apr 2024 06:14:46 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1859D1A11D4;
+	Fri, 12 Apr 2024 06:14:49 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D1F0181D0E5;
-	Fri, 12 Apr 2024 12:14:44 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 4E6D5181D0E5;
+	Fri, 12 Apr 2024 12:14:47 +0800 (+08)
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
 To: lgirdwood@gmail.com,
 	broonie@kernel.org,
@@ -38,10 +38,12 @@ To: lgirdwood@gmail.com,
 	festevam@gmail.com,
 	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v5 0/2] convert imx-audio-spdif.txt to YAML
-Date: Fri, 12 Apr 2024 11:56:50 +0800
-Message-Id: <1712894212-32283-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH v5 2/2] ARM: dts: imx6: exchange fallback and specific compatible string
+Date: Fri, 12 Apr 2024 11:56:52 +0800
+Message-Id: <1712894212-32283-3-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1712894212-32283-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1712894212-32283-1-git-send-email-shengjiu.wang@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,39 +51,48 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-convert imx-audio-spdif.txt to YAML
+Exchange fallback and specific compatible string for spdif sound card.
+The specific compatible string needs to be in first place, the fallback
+compatible string needs to be in the end.
 
-changes in v5:
-- fix typos in second commit message
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+---
+ arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi | 4 ++--
+ arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi        | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-changes in v4:
-- change the enmu to const
-- add more comments in commit message for second patch
-
-changes in v3:
-- change file name to fsl,imx-audio-spdif.yaml
-- change example name back to sound-spdif
-- exchange the fallback and specific compatible string
-- update anyOf content
-
-changes in v2:
-- change file name to imx-spdif.yaml
-- remove |
-- add anyof for spdif-in and spdif-out requirement
-- change example name to sound
-
-Shengjiu Wang (2):
-  ASoC: dt-bindings: imx-audio-spdif: convert to YAML
-  ARM: dts: imx6: exchange fallback and specific compatible string
-
- .../bindings/sound/fsl,imx-audio-spdif.yaml   | 66 +++++++++++++++++++
- .../bindings/sound/imx-audio-spdif.txt        | 36 ----------
- .../boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi   |  4 +-
- arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi     |  4 +-
- 4 files changed, 70 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-audio-spdif.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/imx-audio-spdif.txt
-
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
+index 68e97180d33e..51517e27418c 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-sabreauto.dtsi
+@@ -144,8 +144,8 @@ sound-cs42888 {
+ 	};
+ 
+ 	sound-spdif {
+-		compatible = "fsl,imx-audio-spdif",
+-			   "fsl,imx-sabreauto-spdif";
++		compatible = "fsl,imx-sabreauto-spdif",
++			     "fsl,imx-audio-spdif";
+ 		model = "imx-spdif";
+ 		spdif-controller = <&spdif>;
+ 		spdif-in;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
+index c6e85e4a0883..67872c16372a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6sx-sdb.dtsi
+@@ -184,8 +184,8 @@ panel_in: endpoint {
+ 	};
+ 
+ 	sound-spdif {
+-		compatible = "fsl,imx-audio-spdif",
+-			   "fsl,imx6sx-sdb-spdif";
++		compatible = "fsl,imx6sx-sdb-spdif",
++			     "fsl,imx-audio-spdif";
+ 		model = "imx-spdif";
+ 		spdif-controller = <&spdif>;
+ 		spdif-out;
 -- 
 2.34.1
 
