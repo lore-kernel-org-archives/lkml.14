@@ -1,276 +1,106 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5237F14F10F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712946146; cv=fail; b=PF5cBDpGDAu1jSmvSUjQaH8/yDDB30pxP05vrU0uqdecGkVok9J4wo42IxiOAhuvssmG7A+Yb+q5ZUIjbee6oprTU6qIAn2jxYIDc/1yNRGsDPDyRli/KHjl7okcKDWs9VUTOcutZcTrjbGANmCSKsG1oU1oVkA/qRoXpZCJ9OI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712946146; c=relaxed/simple;
-	bh=yuRyK26QBP8hG6BfRY97wBbIHkLJsSAmFq6sLLy4qVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HbEe/rmBE7P4PEdvj5UMuEo2ZuCxGGlS1nzPGpflWU82iJ+3tR57a0SfGVe9R+4CjHvS5rx1DqkpuX/1ngYBE8nlbOWdeEtHahCeU5DrHswmUZrQBnQ2h4cN+kRMuBv05bJ3Ppyy47ZSeRKulMfSTCb7J8H6HxLF22+wMi9+F1U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jUKST0/k; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UHIHk3wM; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2907F14E2FE
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 18:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712946174; cv=none; b=qnJh5It2mnMokJk6JLgF+puLv3ASADsPgLuvdbJ8HQC7IzF/Zj1di+8R+aRMOU9Nv57yg/pxYXNCwDBECSI8h3MHZS8+pDZ4Z3w2aDx8SFBXfa+vuQZeNjV2T+YMAAD62BQujMd/0zjCxgMrlrVMba9KLGEUZFKr887kZcZKgiM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712946174; c=relaxed/simple;
+	bh=nxs6ymKTj6HI1SwIdNFV/IpFSXZC5BKSvMerZjmyt/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C6tTUPmMI/aeFXLgqrd6IT5JDidOVKaC0gPVhQBFw0mFgLd2dgXaACtmxMMbe8m8b78msui+8n2CVlM0S6vKWH0rL3G8MF76L1P8cjdvkELGah5r4P963jlvW/6uOjPZQ8rr8j2b3NkaqdP1QUvmrKMq7b6DQLoy6kwdNz+TXIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=0XvQ7PAO; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jUKST0/k";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UHIHk3wM"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 43CI9hZL026998;
-	Fri, 12 Apr 2024 18:21:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2023-11-20;
- bh=vA4YLOAyQ9xtjctU+acsQ0fDCbQX0dFxfmWmHAYHdf4=;
- b=jUKST0/krdyneCqrGpXRwvmK8KPvshjFheYeNhK40nBxhSkT1s6/UO1HTDytaDyJd8Iv
- vFPaZDysglkQNtKoswzKfchVVt/3kLKJD8730DCHmzRXsAyqeWVS5N6BzcjSWg7UGifd
- brcsCYGVMbszR48W2o8KVwML9NClrgkmkAkx7cJ89G4L0Xpc4JMAffXmBhs0nb6TadRy
- gwmgo3CacNDqZibpFFyAQm5yvduVF/dQycwl6wc2+Qrascdf7C/3LRO+n7G3/l0p0+Rx
- E/gA7jN1SsAwrwYQ9fFCy0h8xhWD8+gjiwh8HR7iZq0ZwfA4/b6f0LSa0p/wINUwMzxZ PQ== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xaw02ckmr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Apr 2024 18:21:50 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 43CHoaFl008048;
-	Fri, 12 Apr 2024 18:21:50 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2041.outbound.protection.outlook.com [104.47.51.41])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xavubb4nm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 12 Apr 2024 18:21:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G5RL9oniyVG/cTeakegf7x3/Dc0K9W138K0R9sQAYUwO3pe4BiomkZQC1YONRUt3vf9HQkFuLZhZMuGuriFGHeZuweDm/kFNQ2/Wqu/le127dn1++D/DfQcHjmtuk/i6AI1tbV0Dvt0cHbFsTOqa3VfrprPPD1xb1xR/lfUVqbRqum+rQPpDVwa0ebFt9mvjl2M6+15GRH6v69cM5Q5/Ij6OHp9Ru8Hm8iKnwR2bEvk4cgknAPZbHB4+7o4TFU9Ab76wq4C1l4l6IqHLIHksBHwrlsnCf4M5NjPM5d2XcN5Fxuc5ESk/JVtN6wmOE2P/h9T3qRX1prvZL93tFl50+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vA4YLOAyQ9xtjctU+acsQ0fDCbQX0dFxfmWmHAYHdf4=;
- b=PuIC2GOGDp04Ap1zGMVL8AdMhisLrQZdI+p1paXan2V1qhkXI5ZF8Q8SRFVYTLMB0aeiROaK5VvZCEo+s+3rZ29oKTxmwBX/hYRuN8w1duRkFVkuR8IuWkykjV10veILMtGxdYIDMDv9OGVYrh2Owsd6nr3asqU/iqXP1gaYRdrMS+Zksqk/1qGQDX0Zpj59pIUp1JPk4EL6biZx0EbxeaqPYfR3k8vM6z20d33XqJwY+BfKtRyQ9Zqgli6s9CZAuSjeyIibhJ7tJLPPMP7LiNeeowfvDEVeGN+c9KPtku/93posYtXgYCsPKs6vDdZNe0sHdyaa9csIfFMRl1muiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="0XvQ7PAO"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e419d203bdso8633995ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 11:22:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vA4YLOAyQ9xtjctU+acsQ0fDCbQX0dFxfmWmHAYHdf4=;
- b=UHIHk3wMzBDMzVsvA+NjV7M8MrjerinmsLMhSO9Afwe0vH9c8P78paFpGr3Z+39ags2s05q841ciBqvUhOTKIb+QUnmeD0XXUsLQR0Jy69gdnNxbsFLrbG553UV0xU8/Y165cG8fFVIpEcEOVPgtSnbETEPVpKoRskWN7opKPb0=
-Received: from CH0PR10MB5113.namprd10.prod.outlook.com (2603:10b6:610:c9::8)
- by CO1PR10MB4785.namprd10.prod.outlook.com (2603:10b6:303:95::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.55; Fri, 12 Apr
- 2024 18:21:47 +0000
-Received: from CH0PR10MB5113.namprd10.prod.outlook.com
- ([fe80::6573:ea04:fecc:cc68]) by CH0PR10MB5113.namprd10.prod.outlook.com
- ([fe80::6573:ea04:fecc:cc68%5]) with mapi id 15.20.7409.042; Fri, 12 Apr 2024
- 18:21:47 +0000
-From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-To: linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: akpm@linux-foundation.org, willy@infradead.org, linmiaohe@huawei.com,
-        jane.chu@oracle.com, muchun.song@linux.dev, nao.horiguchi@gmail.com,
-        osalvador@suse.de, Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Subject: [PATCH v2 1/2] mm/hugetlb: convert dissolve_free_huge_pages() to folios
-Date: Fri, 12 Apr 2024 11:21:38 -0700
-Message-ID: <20240412182139.120871-1-sidhartha.kumar@oracle.com>
-X-Mailer: git-send-email 2.44.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0184.namprd03.prod.outlook.com
- (2603:10b6:303:b8::9) To CH0PR10MB5113.namprd10.prod.outlook.com
- (2603:10b6:610:c9::8)
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1712946172; x=1713550972; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K1e60CwK0PVttJs1oeSOiibpRUbN18cUEABEgzA6wIs=;
+        b=0XvQ7PAOiGJEMrEOJbaDpdMLi5aFxGuUqVUmwqaAAaNmpHNhpI/mutnBUopimUJRrb
+         3pT20o9tXQv8ahxxxJDPz3SM7xfGT/IK6Glpn0D6RvIYfKr5DT3PLules27rmpdQyXmf
+         Z4jehc3raTyya8N83BDnKVtGuqM1fuej5iwN1sAUaV8BvJgTbp0gi9bMoDoJKdpjvqhH
+         C1ZHTKoEoz11rhX+KesDfQFUyE2d1wLsQDfxhnAXEtInfi40EPC/UY/4wt5xGY1XEFaL
+         Zi83UMx1lcu8TW51R4u2bZy8MbCB6ondUEFxMLEmhk2TdDs3gmhFsAC3xVYKkbo7kRVd
+         HRaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712946172; x=1713550972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K1e60CwK0PVttJs1oeSOiibpRUbN18cUEABEgzA6wIs=;
+        b=JnUd0p+3+jJH0NmzNukvYBeSmU9bmy14lWjEqLZlBDG5un1xmyu3jxhpm5bD7+HhjP
+         Z1frMWGjxoGjNvDY9ngYlxxrmxk497LzGxJC4JfCZVTnGDJ4BNOUP7QjsKjlc2SKzMDk
+         f6+oRL8iVX4k/vk7DNaPKU6wcTl7/A4ig62/8pkzrCW0qVjQU6MDZWUOoNX7L+pe7iw1
+         B/uE28LUDBjmZ+AvuuxNeTSv23fNQHEvYmSIC2jwAlamx4pVo7AYHdVAAoVdIT68RpGO
+         Qu2JT/pJyzMk6eTfgiAbB/HkkFzAoq1gpAjpMmxOXRsGxOMIlJtgUtpdtmQQGvYGcwFY
+         FcEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeQEzBIEVLUA+uOjJRbB7AOL59EY1Vaq9Bxebz+JCxF89xX/5oK+ASKQEp4oljoYxZ51AfsO/Z26uk+E+Q2iCcS4z7mi0ReQeIfsg2
+X-Gm-Message-State: AOJu0YyDTrfIiNKar+ibY/LvURG7HHhKvxRJd22Cu7Nxgh38FVWVIoUh
+	WsKeJ65SHuhtpLR9EgKdtSyD6OKPhYIchC/77FpoN+ORb8dv8q89kX3RMVPrNmI=
+X-Google-Smtp-Source: AGHT+IFxTX0XIuZbNR6qdEOLtuqZ+KqQsFRqq1yUy3tf+EcRY4ZnjF6vouMF9rorhX6yEu6I5X4zfw==
+X-Received: by 2002:a17:903:32c7:b0:1e4:3b58:7720 with SMTP id i7-20020a17090332c700b001e43b587720mr4370912plr.2.1712946172563;
+        Fri, 12 Apr 2024 11:22:52 -0700 (PDT)
+Received: from ghost (mobile-166-137-160-039.mycingular.net. [166.137.160.39])
+        by smtp.gmail.com with ESMTPSA id f12-20020a170902684c00b001e3d2314f3csm3352924pln.141.2024.04.12.11.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 11:22:52 -0700 (PDT)
+Date: Fri, 12 Apr 2024 11:22:44 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 10/19] RISC-V: define the elements of the VCSR vector CSR
+Message-ID: <Zhl79HOrWWGaM4lK@ghost>
+References: <20240411-dev-charlie-support_thead_vector_6_9-v1-0-4af9815ec746@rivosinc.com>
+ <20240411-dev-charlie-support_thead_vector_6_9-v1-10-4af9815ec746@rivosinc.com>
+ <20240412-viper-bullish-d57d19805a0c@wendy>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR10MB5113:EE_|CO1PR10MB4785:EE_
-X-MS-Office365-Filtering-Correlation-Id: c2c79d0d-aafe-4bd0-6602-08dc5b1d6a32
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	H+CeL5NOvTTx1hMbacFJiHwpjJbJkgUImRRnjB86Q7UHEq6k1/znTpUql0Mrgbi+yBSxScxPicKpsopNpvRfjhOcv50X7U3zyIVTy5LZZgyZ9GOp43jp1/+QY+aMX6Kk+VWmTlhcAgwVUoFzmwZzsjYCRurhNKeHBzOa8xP7XrEgOrR0SgfkVG1yafgvRgXRL/B3C9mu+GbyXU8NDEuYEvZPcYKNcqKBEwckg1z83T2+WVGkE6RhItkq4aTAy8RgZnUI3eo0C0dYLJTL9fbztD8YtjlvM/Ti8b7L94+lXbPxGZ15ktOCk0h8H3swiSoD7L9EQTiZ+V9pJgygAzzJBqzQz4Qy6fptgYfwETuDeNmYNeQMSoyaReOXKTIjdtZv7fIJ2E1LuH1nfpqCNwg6dO7POWz7v+yJhDL51iA6j3P0NLWirg7Jdckxyx3UGT2NZv2ja7NUHBB/fmrab+e0S5lpsuld77plex5qOJ7owG1maZGdHOg1exjLBTPubiHjN0BIBwxVGepf0AyMPdg5rNmX59ieMoL7MCsIkPZO4tlQCZx6BUskFt8A+d6rj3tATkDSRARpK7Vri6KmJG5oUCb/eZ+3Z1qWVR2MHXM1SCMVb3el/P9UYuHNHWlzfLpbccMns8RSetHq3PLJugw/Qj7UTXTu8Ndr+wtkU3NUhlw=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB5113.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?PxzAdf7CW5193iZvN6vfeNele+JZSiIJwj1VSi243DEaqQQyfTLcq65OC67X?=
- =?us-ascii?Q?+xSC0eqHH/Rj+qtBfoMU6f4eVTRDl6+BFBP3FFREABCVbKHKGbUzgK/swlJ1?=
- =?us-ascii?Q?A5Yg5+HoaJOa8v94Gpif1GA52nAhldUsHbgXKxra5lUgfxvAVjmoj1qbbKw9?=
- =?us-ascii?Q?rx3TS0/6F0Ncg0zfmGQkNOuGuxa+tKqeYixEw2lKIdFV4il5ExQJcQhQSBFY?=
- =?us-ascii?Q?pg7kZgkA8a7areEqobtN/esp3xpGEpJKdql/82UKyiutOmw0tHTN/2GBG3k7?=
- =?us-ascii?Q?LsFJUFEs+CJU9amBaefyhQC84avc1C2GOQGsfi+U8S0P5GloFYuRr3SOlL9K?=
- =?us-ascii?Q?PvD8JQQrOHtd+FxixCfQFnHKdd0SQAUMcCBp0rsqvE663s/I03fG2EXhDx57?=
- =?us-ascii?Q?yqESf+ferIYoVv9SMvAEtZ034N2MfNnLo2kzUaOXe2gvtorlyUmDTWtn1Vd+?=
- =?us-ascii?Q?rrqdoEoaeD41ohijYv36eXXBrsMfeniR9bnuFfMvRlzPJ25Zo2G0qbzdGIGr?=
- =?us-ascii?Q?FjQpcNeOxXR2dRhnoPz28cYFQZ03h4+wmxIYrJ9MKEKdQCq4eglt9yWsnwoD?=
- =?us-ascii?Q?4/m+GBNttgruVHk71gbuGD+kZtNjF5k2S0FI1z+pSjbVUjoDj0F+aICc8dU3?=
- =?us-ascii?Q?dIA7CC823IRloqp2BSVL0NT6mlCtA8H7hBBSUJbcefTdL/4rmBc8Dcggu7Pj?=
- =?us-ascii?Q?31/4K2brk2vF3iKLBj0hXWAwzB29UH0DLDlNjMbol8tuE4x+BibzkiyRQymY?=
- =?us-ascii?Q?FOu6OP6tRL3lH0QuRqTBX0ZrzqkZMRyHd5hZq8yq848WoD9gIRohjABnBX4B?=
- =?us-ascii?Q?po0GT4GB/IKMzfA/jEmudpptkOgkrRVgEsyx/HGZagoHJFW3H26TP6qHjBOf?=
- =?us-ascii?Q?jvC6udnsVeEZgq2K/o57J8FnOdl32QyaD4UJWrcKFDBKWX4/5ONi2JLTmL6J?=
- =?us-ascii?Q?FbqI/xEY4MnlfKrm/3wmwnPXlZHnZiLIIpwNG2mXEmwyC9ZjiA0wV4xKQDov?=
- =?us-ascii?Q?onXuW2DQ2CPYcyD/6nBXfbgW1DVPX0Bz4vq0pdYxN8gVst9ePxgF58pQU30n?=
- =?us-ascii?Q?zdrseg30dGuqbs1+Q5ZrOPrqtYnfCH1+XA+AI+yYmkWfnsvXwcp/3BExRPJ0?=
- =?us-ascii?Q?acCL5CjhVrRQTnS9e+lkv21h3Y9TNZJ6k/6JCg/ZDI9noOshSzYXXpfuL3GD?=
- =?us-ascii?Q?7X3/7LGRRKCxRqga4I37o8lkNvup40xIo5EBsTIDEpYgB4ABHTAkkXFwrKq8?=
- =?us-ascii?Q?DULV5Vp8p7aClF0tGqfUI/Iyuq68hnvxGYv1MC/p4rk+EaoVc0ODMLs6qUDh?=
- =?us-ascii?Q?Fw3MO7nX/DNh68Gh0yARpAtX8hU3cGEsIpqYcFvVvE890rneELPw5j3UmnkA?=
- =?us-ascii?Q?eXM+AUxXS42P2AHDo46kGWQAjzawzYydjCf3L179NEkYlOzknrpe0/0BdYyA?=
- =?us-ascii?Q?PXQNAX0OliS0QBHukl7OqiJCt/esuSzyWpNL16+Ap/gym84s5Lt2AxwcEKtH?=
- =?us-ascii?Q?KIFrQCfl3Dv+YSwhCAAefuO8Ah64wNpPgpscLPEbB83cxlJFn6GTiiE2LOuQ?=
- =?us-ascii?Q?k0VvFd1YRWNom059ee0TQM32JBfF3uClzD1VtZOZcsBu8PRIccCJ3WKjl2sQ?=
- =?us-ascii?Q?HL6D0AD2PZn3tE8qEaxbtZA=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	dhnCS13Ru9KJQiZV/ysz6G9twMpLWS42d9VZmoaB1xDTODI7zKPlwPWT3QD5oyvug9qulozqi4g1eZpqq7idDf1cEguSubFm2TlfOHF2p7UAlC6n7cQTlc/sSioNS88f9TOSAKEZ1xHlUiItg5oc60rn27DhqdUNAWrnPmVSs/y2kwUjA+XiLB1SUBWiARxtYkIt9dWEV6VEcJiAzt9RnvgQZBMNZa/BAc2Kl0YJT8dDxNvISM4M7ii212hob6ZNO2R4kn8jC6jKF78DMv096CTwoVVB158H+0HJe0BjzX9TdigNt1ToV2k8BMGBOTeQ2SRPA97XnU+dOQRRcG3e6ENmo6veCbDx+LaP1yegH5oTu5kBX7aY28lkU0n8DE5LEdoJiuVaxSg8A8aYn6iHtmzer3BdGDbadDcMGtIkJeGkVrXHGHAGlJNKK/xqSykvvdoibG6h7R4ks+R35meG1lLF0S2LEsVBjqpwK22wp/RGFM4l8r3OLvRvPNmujw0CeIUhwPU6CuRbecuBqQ0kaCAjxiA6d4R9nhrAvCq8QP1JDeXYK8/pOWIw/34JjYM/eOu1Dc+cA2Z3xZx6COnRWRSvtSCJCKfj4Uz/vT+ZJfY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2c79d0d-aafe-4bd0-6602-08dc5b1d6a32
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB5113.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Apr 2024 18:21:47.6504
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2CiacuYTcFimOE0p1deNnK4IHXCjIpq641IoDkNXn8w6kPPfOrUHipaK2pna+eLmUJIIx7NJxjY8Uq3wnK781xVrCXJ/Ke0pvH7wYHkpvZ8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4785
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-12_14,2024-04-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 adultscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404120135
-X-Proofpoint-ORIG-GUID: K643jE3cifWuy7VSwqMOYResIwd-7T42
-X-Proofpoint-GUID: K643jE3cifWuy7VSwqMOYResIwd-7T42
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240412-viper-bullish-d57d19805a0c@wendy>
 
-Allows us to rename dissolve_free_huge_pages() to
-dissolve_free_hugetlb_folio(). Convert one caller to pass in a folio
-directly and use page_folio() to convert the caller in mm/memory-failure.
+On Fri, Apr 12, 2024 at 12:27:50PM +0100, Conor Dooley wrote:
+> On Thu, Apr 11, 2024 at 09:11:16PM -0700, Charlie Jenkins wrote:
+> > From: Heiko Stuebner <heiko@sntech.de>
+> > 
+> > The VCSR CSR contains two elements VXRM[2:1] and VXSAT[0].
+> > 
+> > Define constants for those to access the elements in a readable way.
+> > 
+> > Acked-by: Guo Ren <guoren@kernel.org>
+> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@vrull.eu>
+> 
+> You need to sign off on this as the submitter Charlie.
 
-Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
----
+I wasn't sure, thank you!
 
-v1 -> v2:
-	- Change additional comments which reference hugepages to
-	  hugetlb folios per Miaohe Lin. 
-	- introduce patch 2
+- Charlie
 
- include/linux/hugetlb.h |  4 ++--
- mm/hugetlb.c            | 17 ++++++++---------
- mm/memory-failure.c     |  8 ++++----
- 3 files changed, 14 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 3f3e628802792..f4191b10345d6 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -861,7 +861,7 @@ static inline int hstate_index(struct hstate *h)
- 	return h - hstates;
- }
- 
--extern int dissolve_free_huge_page(struct page *page);
-+extern int dissolve_free_hugetlb_folio(struct folio *folio);
- extern int dissolve_free_huge_pages(unsigned long start_pfn,
- 				    unsigned long end_pfn);
- 
-@@ -1148,7 +1148,7 @@ static inline int hstate_index(struct hstate *h)
- 	return 0;
- }
- 
--static inline int dissolve_free_huge_page(struct page *page)
-+static inline int dissolve_free_hugetlb_folio(struct folio *folio)
- {
- 	return 0;
- }
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 454900c84b303..f6dd5f597df16 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2377,8 +2377,8 @@ static struct folio *remove_pool_hugetlb_folio(struct hstate *h,
- }
- 
- /*
-- * Dissolve a given free hugepage into free buddy pages. This function does
-- * nothing for in-use hugepages and non-hugepages.
-+ * Dissolve a given free hugetlb folio into free buddy pages. This function
-+ * does nothing for in-use hugetlb folios and non-hugetlb folios.
-  * This function returns values like below:
-  *
-  *  -ENOMEM: failed to allocate vmemmap pages to free the freed hugepages
-@@ -2390,10 +2390,9 @@ static struct folio *remove_pool_hugetlb_folio(struct hstate *h,
-  *       0:  successfully dissolved free hugepages or the page is not a
-  *           hugepage (considered as already dissolved)
-  */
--int dissolve_free_huge_page(struct page *page)
-+int dissolve_free_hugetlb_folio(struct folio *folio)
- {
- 	int rc = -EBUSY;
--	struct folio *folio = page_folio(page);
- 
- retry:
- 	/* Not to disrupt normal path by vainly holding hugetlb_lock */
-@@ -2470,13 +2469,13 @@ int dissolve_free_huge_page(struct page *page)
-  * make specified memory blocks removable from the system.
-  * Note that this will dissolve a free gigantic hugepage completely, if any
-  * part of it lies within the given range.
-- * Also note that if dissolve_free_huge_page() returns with an error, all
-- * free hugepages that were dissolved before that error are lost.
-+ * Also note that if dissolve_free_hugetlb_folio() returns with an error, all
-+ * free hugetlb folios that were dissolved before that error are lost.
-  */
- int dissolve_free_huge_pages(unsigned long start_pfn, unsigned long end_pfn)
- {
- 	unsigned long pfn;
--	struct page *page;
-+	struct folio *folio;
- 	int rc = 0;
- 	unsigned int order;
- 	struct hstate *h;
-@@ -2489,8 +2488,8 @@ int dissolve_free_huge_pages(unsigned long start_pfn, unsigned long end_pfn)
- 		order = min(order, huge_page_order(h));
- 
- 	for (pfn = start_pfn; pfn < end_pfn; pfn += 1 << order) {
--		page = pfn_to_page(pfn);
--		rc = dissolve_free_huge_page(page);
-+		folio = pfn_folio(pfn);
-+		rc = dissolve_free_hugetlb_folio(folio);
- 		if (rc)
- 			break;
- 	}
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 88359a185c5f9..8cc91aa1a3f47 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -155,11 +155,11 @@ static int __page_handle_poison(struct page *page)
- 
- 	/*
- 	 * zone_pcp_disable() can't be used here. It will hold pcp_batch_high_lock and
--	 * dissolve_free_huge_page() might hold cpu_hotplug_lock via static_key_slow_dec()
-+	 * dissolve_free_hugetlb_folio() might hold cpu_hotplug_lock via static_key_slow_dec()
- 	 * when hugetlb vmemmap optimization is enabled. This will break current lock
- 	 * dependency chain and leads to deadlock.
- 	 */
--	ret = dissolve_free_huge_page(page);
-+	ret = dissolve_free_hugetlb_folio(page_folio(page));
- 	if (!ret) {
- 		drain_all_pages(page_zone(page));
- 		ret = take_page_off_buddy(page);
-@@ -172,8 +172,8 @@ static bool page_handle_poison(struct page *page, bool hugepage_or_freepage, boo
- {
- 	if (hugepage_or_freepage) {
- 		/*
--		 * Doing this check for free pages is also fine since dissolve_free_huge_page
--		 * returns 0 for non-hugetlb pages as well.
-+		 * Doing this check for free pages is also fine since
-+		 * dissolve_free_hugetlb_folio() returns 0 for non-hugetlb folios as well.
- 		 */
- 		if (__page_handle_poison(page) <= 0)
- 			/*
--- 
-2.44.0
 
