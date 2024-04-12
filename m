@@ -1,97 +1,100 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxex2.tik.uni-stuttgart.de (mxex2.tik.uni-stuttgart.de [129.69.192.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748915099F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 19:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903971509AB;
+	Fri, 12 Apr 2024 19:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.69.192.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712951996; cv=none; b=DfNfppzUuVDkGfovf4RHuDeRfvhYzHB1zF7IPpfq6hpp3e7o1oDxS2r0qX9hI1CTQ1n4jK9yGRADkwG++WeUdLNw2gELmIhe37Ab/YWrmgjRIBbeEM0Ac2qDh+1vOlVGm57gbVoNpxXt8hBQ1bRsXLGc/j+wKEgRLgFKKQ8aZ6o=
+	t=1712951999; cv=none; b=LL6lAJbArAbIMhHwNb5gxZ1gnzBKwOAdVZbXmm//X/Yn54cpYeolPOrwESPVb9arrWdlf2+1yHZSFZxkiFQYafRUMFZL9zprKYodKd5pjvQeQcmWNaDs48JHpQSU2R6sHi35Fe2EmWWQmrxRVul+kgn/E0RpY1jxiIeEQTQtUWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712951996; c=relaxed/simple;
-	bh=36OsBtzi8touilTyPMVCVeWyHaAC35RPhFw91LknUmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sfIK2faAwLoU8jcYZ88Uo8EE0kewo4nUYozqk5ojIDqQmk3YOnvx6UlAZr94eRsWLtFw5yiQ6yco7H83VS5oQtDi0+WJeT+b1OmZ5O9Fj5J/DaOuf9FSC1fTuD7o75vasV4hOl9ayFbeVjFF1DJORXrqWPft/U3ZUCvIrCOFgLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YFO3sae4; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1712951999; c=relaxed/simple;
+	bh=ObWGWVtdg8U0NPbe/EAvSL2dL0N1qhqx+T4lt2FGPoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=r7vMm2aPaXa9dn/y7ys9KrRYo6FDKKsG9UCAUo4fYpvU4qyRUUxrqV7fi66fyRPS+VgkOW4Tp0B2vJ4gjNAC6POO6sPbIsjQZ/531u1Y1PjF0kmVoTMeNgiG/cVGoNylIkvbiK+bn0jYVTM8bmGqztnuM+5Fu8/it/Dh7QtDdSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isd.uni-stuttgart.de; spf=none smtp.mailfrom=isd.uni-stuttgart.de; dkim=pass (2048-bit key) header.d=uni-stuttgart.de header.i=@isd.uni-stuttgart.de header.b=bglzD7am; arc=none smtp.client-ip=129.69.192.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=isd.uni-stuttgart.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=isd.uni-stuttgart.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YFO3sae4"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-69b40061bbeso6745006d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 12:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1712951994; x=1713556794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KPQz4q6QEnMsxEgXrxtOlOJIEb7W/IfVxZZ4u95+bqo=;
-        b=YFO3sae4HNlgkYsTfIyaRrIatrclSzO4FQLhdyiQO4+wICgoVNpzS1VqSsZZynBOIL
-         F04xY8YNmW8bsRtEee9u6ElYlb1vGmat2/CwMfwufEykfitqe6fc9opX6Wn/NsYv/K++
-         x2WGV5HQAdQHiVGi1hvoccV8LKYBB+2fI0vh1MKK3vdT/9rTuh0h0kOw+Y8KsmHF1UaH
-         1OrKxstmrq/URumxrpEAzroFANst5Rd/4UdeUtIP6PtJw4Ire9be85ctps/y+tMLafyz
-         pnZMrAN884DhjpS8npBvrWJyxg/Dx0zavKUsNj2t6zpSQ8Y4gJ904//t7GeJxhe2jI2p
-         OcXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712951994; x=1713556794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KPQz4q6QEnMsxEgXrxtOlOJIEb7W/IfVxZZ4u95+bqo=;
-        b=Wo3hyTqp21FhtTTAM0bym3xouo06DewDXqPPKqX64a/v50JAcakQyj+CU/kTe3gZbk
-         6E5Ked2UPLpt4xKb1gw1uVARen9FPCVho3pgebsh4vEP0AG+3S5ikw2IPXFuzAmfXazH
-         mbt0k/xUBUtScVKyrD9DGa31BpIF+YiWv2ue7Cl+A2PbPYlIqQcp/C8brX/8QqQYxKKT
-         opyKp14l1hOi7C20qY4r1cgXdGoJ4xXNfgNo+zLvI4nau7GxRWP0h2Oxpzh5CwkUUtWu
-         YJLqmXsHzZaFYC4MQOsGykTVxQ71TXNC5tJCks7FI3UFZBFUDrasQurhA+KSPv0pE2Uo
-         UCWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUu1JKbXkwGIr246LsmGumlysyuiqWKXq2wsYwnjW6ITh0a15SaM09TqnCepDF1Qs87mC1q/AIT+kQQx5MnDGXjkcJozvaBwbuKhR8G
-X-Gm-Message-State: AOJu0YyIfQXnxaAtFSMATxP3OTaP1rK1l38DkRkRotGtwjZK4K7l7ZJR
-	3oLVgdFHEwGxkFUgeb21VA7Am8hBQhsA3burhsEFg+eVNL+FDJjolwuV4YJ028L/bInjvESKXv6
-	6ieVTZyxkS2tsHgooc6aTLalgk9tJxU7ROZZh
-X-Google-Smtp-Source: AGHT+IGeK6dgxqFFgjk4xeptvd+7a1JVOXy1GhRKD0oaMUJXxGZcYPZIaApdK65tlnPduDc4wy1hnWEc/ndpj12FbN4=
-X-Received: by 2002:a05:6214:2a1:b0:69b:1f8d:300b with SMTP id
- m1-20020a05621402a100b0069b1f8d300bmr4083789qvv.30.1712951994075; Fri, 12 Apr
- 2024 12:59:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=uni-stuttgart.de header.i=@isd.uni-stuttgart.de header.b="bglzD7am"
+Received: from localhost (localhost [127.0.0.1])
+	by mxex2.tik.uni-stuttgart.de (Postfix) with ESMTP id CFCA660B43;
+	Fri, 12 Apr 2024 21:52:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=uni-stuttgart.de;
+	 h=content-transfer-encoding:content-type:content-type
+	:in-reply-to:organization:from:from:content-language:references
+	:subject:subject:user-agent:mime-version:date:date:message-id;
+	 s=dkim; i=@isd.uni-stuttgart.de; t=1712951522; x=1714690323;
+	 bh=ObWGWVtdg8U0NPbe/EAvSL2dL0N1qhqx+T4lt2FGPoo=; b=bglzD7amfmfJ
+	kMS2GaVF0TWKN1LuhlbIIguj1W3FyyWEpxF1gHVyoj1aT5mMCGafjtUMk3eu/KMW
+	VaW8shkw+IkpLmY1Z/hzGPDMX+lL/T1+rWcwp4PDz46j/5hqLiP4McOOOJP2uV03
+	N4cbnbv008i0dIfgyN3pDMBLUpAEnBJFAN1YN4jjiFp4FUMzfx4wiXjG0fO2ma91
+	ZDQUDIiTq8nJfUNi0sXFamJqPQ8yiJ/Goj955aYNbcbd4ua2RJIRftnR9wsdrS5G
+	6XT97+7h1jzVYmAmASVwwy+l05rXBT6U+OtOsxEcxW9pLd5gByYsTNYI0/5VoS5a
+	T8Rd5sufrw==
+X-Virus-Scanned: USTUTT mailrelay AV services at mxex2.tik.uni-stuttgart.de
+Received: from mxex2.tik.uni-stuttgart.de ([127.0.0.1])
+ by localhost (mxex2.tik.uni-stuttgart.de [127.0.0.1]) (amavis, port 10031)
+ with ESMTP id hMBUxXXMAYCz; Fri, 12 Apr 2024 21:52:02 +0200 (CEST)
+Received: from authenticated client
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mxex2.tik.uni-stuttgart.de (Postfix) with ESMTPSA
+Message-ID: <4a1e0cb6-c319-4eb1-9bd1-5ff13eabfe1b@isd.uni-stuttgart.de>
+Date: Fri, 12 Apr 2024 21:52:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412053245.3328123-1-jfraker@google.com> <661953c285139_38e2532941f@willemb.c.googlers.com.notmuch>
-In-Reply-To: <661953c285139_38e2532941f@willemb.c.googlers.com.notmuch>
-From: John Fraker <jfraker@google.com>
-Date: Fri, 12 Apr 2024 12:59:42 -0700
-Message-ID: <CAGH0z2Hp_tXb1dBUDDbWn8J4VG4E9COBkYdWT3HB2NAHB4tXVA@mail.gmail.com>
-Subject: Re: [PATCH net-next 12] gve: Correctly report software timestamping capabilities
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: netdev@vger.kernel.org, Harshitha Ramamurthy <hramamurthy@google.com>, 
-	Shailend Chand <shailend@google.com>, Willem de Bruijn <willemb@google.com>, 
-	"David S. Miller" <davem@davemloft.net>, Jeroen de Borst <jeroendb@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Junfeng Guo <junfeng.guo@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] wifi: ath11k: support DT ieee80211-freq-limit
+ property to limit channels
+To: Robert Marko <robimarko@gmail.com>, kvalo@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, jjohnson@kernel.org, linux-wireless@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240412162510.29483-1-robimarko@gmail.com>
+ <20240412162510.29483-2-robimarko@gmail.com>
+Content-Language: de-DE, en-US
+From: Christian Lamparter <christian.lamparter@isd.uni-stuttgart.de>
+Organization: Universitaet Stuttgart - ISD
+In-Reply-To: <20240412162510.29483-2-robimarko@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 12, 2024 at 8:31=E2=80=AFAM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
+On 4/12/24 6:24 PM, Robert Marko wrote:
+> The common DT property can be used to limit the available channels
+> but ath11k has to manually call wiphy_read_of_freq_limits().
 >
-> John Fraker wrote:
-> > gve has supported software timestamp generation since its inception,
-> > but has not advertised that support via ethtool. This patch correctly
-> > advertises that support.
-> >
-> > Signed-off-by: John Fraker <jfraker@google.com>
-> > Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
->
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: Robert Marko <robimarko@gmail.com>
 
-Thank you
+I've seen this before.
 
-> > ---
-> > v2: Used ethtool_op_get_ts_info instead of our own implementation, as
-> >     suggested by Jakub
->
-> FYI: the subject says "net-next 12", not "net-next v2"
->
-Sorry about that!
+https://patchwork.kernel.org/project/linux-wireless/patch/ed266944c721de8dbf0fe35f387a3a71b2c84037.1686486468.git.chunkeey@gmail.com/
 
-I made two rookie mistakes haha. Sending the patch late at night, and
-not re-doing my test email after editing.
+(dt-binding too. it has/had an ack)
+https://patchwork.kernel.org/project/linux-wireless/patch/fc606d2550d047a53b4289235dd3c0fe23d5daac.1686486468.git.chunkeey@gmail.com/
+
+sooo.... this is awkward.
+
+> ---
+>   drivers/net/wireless/ath/ath11k/mac.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+> index c32be587000d..59bde128d351 100644
+> --- a/drivers/net/wireless/ath/ath11k/mac.c
+> +++ b/drivers/net/wireless/ath/ath11k/mac.c
+> @@ -10124,6 +10124,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
+>   	if (ret)
+>   		goto err;
+>   
+> +	wiphy_read_of_freq_limits(ar->hw->wiphy);
+>   	ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
+>   	ath11k_mac_setup_he_cap(ar, cap);
+>   
+
