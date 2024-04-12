@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C210147C8F;
-	Fri, 12 Apr 2024 15:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 736FF1487F2;
+	Fri, 12 Apr 2024 15:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712934873; cv=none; b=D0lWDhGsO4zmQcIfbdJxb1ZPfNs3QqeD0srnEwWSQJwfv6XuICvBpaKHJ8cqhCaTdJp9xpvEU9TInA71mxCf/8lIFk9Z/BW6LITJygmnAcSYm8mYcH3FNAt5V8O0UVISF5DSBcgI7rtA1Gcb/NPr1M71bghyrLXUhcxhQJA8Uuk=
+	t=1712934875; cv=none; b=j0i6uiq8Kjqw4hCdakSC8cX+i2I155XA4IGwwn8Qa/j9eqN9uH7r3Jj0e1KBYiWRb/fapSGu9VPc7QCGTbOglok+VRLPoZer+JlgLylOg89Wm4jVTaVJrwq42qsfGyElvm+6ov6cyyY3dEZ8DLsROHhUTZn/XPmxwZF90x+tpCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712934873; c=relaxed/simple;
-	bh=frKJkUH5HOAUMC8MElNqLZsDub/NkDADFAmaaaCNKKA=;
+	s=arc-20240116; t=1712934875; c=relaxed/simple;
+	bh=qcS3kbQCgIaXt9loTOK2wXSVFBTDBe9ONKy5I193WZ4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=MRliRbgVhBBPakWUmSZvyxxmg2+dmWMrsXU8GbqjuN4aUvtT5/zAObIyR5p7NmERQruPGzhmNXmq4DmDIKQKgH0/Fmw06dzS9TzokbN3ytJkZYlUH71uonySI9mu/eXirLt864jDrvtQZ0ZlnquZAvblxmKv40VFVlszuxerARI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=x7xXPb9U; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OKGtZdj3; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=F+7SIeDb9ODU06v5jdajfdxmiaxd+HUAYDD2ObtViL+WSU6HjehnutrpLRmmus+LtbDRSdmAsYv9bd2BIH5QLX7ECQTiTinRxUNYy6jSa73aX4geHdgT74alnxWJVIbEIDRjqAgq831x3naV3cNabBj/HlnqFyMcPbhbO/qQnFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wn6ZL6Nb; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t3HktWwF; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="x7xXPb9U";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OKGtZdj3"
-Date: Fri, 12 Apr 2024 15:14:28 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wn6ZL6Nb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t3HktWwF"
+Date: Fri, 12 Apr 2024 15:14:30 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1712934869;
+	s=2020; t=1712934871;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1aZ/fu7UYntQNPJjhyMDLFe1NRzC+T4RwtTLr3ZFSE4=;
-	b=x7xXPb9U2ZNoKurGPTZnUOl92+tasvP42J9YK7WVQ1JW8lsukYCIK1GIL9i9DG41t5Aprg
-	pfUXgvDkAXbK5w5nHeT8Yu7aJMQi2Y6uZxw3y1D1hY9piJUrJzjWA6XadQJbNH/eyR4zgB
-	DFf3bW7Qpce6g4OOA5cUV4a2u3DmMhXT3PL0DcLJ11KYhp6VXzx0oa2ulAh8MJuBluPBKd
-	XPYilG2kxC7ACVOU311VMvalc1MdrJZWS1AJ8ps/OpjbFchV0W6gEk3cSLlihGyZmoaLt5
-	dCZlWH8AItoDI8YRs5+k4uZjb6qt/2nAWaUlAMabKRmmMDyb+P+jCaLT6euokg==
+	bh=DYsxybRbHJADoeHwWoUIoA4oypUcOZiJa2jWyx5aNtM=;
+	b=wn6ZL6NbSWmPrb4Kmhg2Fj9HhYRLqPHQBYjY4tT/+oux7WOpB2RTngBNq7bDWoE3nvNEUX
+	DK1t4oIMxvNtr9FAt8MTiwlCCmU6ZGyYoSTf5FjregzzwIOXFHRlpMLs9EEyNRnk0HotEK
+	xsWHQakMdUqIjWGbM1HSGxfSnMnEUVNtNXHk8WXJ0EJICH2VBKLYC2Xjm3hjXUVV36LmY4
+	K7M0rkLVATeqhl0l9EGnPyjbeswHT2edDEFNOphNJLKyYTOV+7YGUMm+zG5GHIGJZUHkyO
+	sYCQm+GXSOM2ARYWADdu8/AyrJOJnmZv6N47YohDQKf+XZM/FbaVoxdgQmkzog==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1712934869;
+	s=2020e; t=1712934871;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1aZ/fu7UYntQNPJjhyMDLFe1NRzC+T4RwtTLr3ZFSE4=;
-	b=OKGtZdj37StrUD6QUaG3iNP1B1POjHi6E4QgeK1SvnbOhsQgC4FrZ84R/M3SePk/+jG2sC
-	XNrmOX05aJ4HHxCw==
+	bh=DYsxybRbHJADoeHwWoUIoA4oypUcOZiJa2jWyx5aNtM=;
+	b=t3HktWwFRDL+sFBEu2UosgVZmNIgkpxnQRUCyNpFjyFo+zZ/2DdZOVR3UCRgsnPYGc1fEK
+	NgE1BwVYOnV4uLAg==
 From: "tip-bot2 for Bitao Hu" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/core] watchdog/softlockup: Report the most frequent interrupts
-Cc: Bitao Hu <yaoma@linux.alibaba.com>, Thomas Gleixner <tglx@linutronix.de>,
+Subject: [tip: irq/core] genirq: Avoid summation loops for /proc/interrupts
+Cc: Thomas Gleixner <tglx@linutronix.de>, Bitao Hu <yaoma@linux.alibaba.com>,
  Liu Song <liusong@linux.alibaba.com>,
  Douglas Anderson <dianders@chromium.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20240411074134.30922-6-yaoma@linux.alibaba.com>
-References: <20240411074134.30922-6-yaoma@linux.alibaba.com>
+In-Reply-To: <20240411074134.30922-4-yaoma@linux.alibaba.com>
+References: <20240411074134.30922-4-yaoma@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171293486882.10875.2511614863489298418.tip-bot2@tip-bot2>
+Message-ID: <171293487060.10875.15677909235587319984.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,215 +68,107 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     e9a9292e2368e9be4a48aae6ff8aafa3433133e6
-Gitweb:        https://git.kernel.org/tip/e9a9292e2368e9be4a48aae6ff8aafa3433133e6
+Commit-ID:     25a4a015118037809c97d089d69e927737e589e1
+Gitweb:        https://git.kernel.org/tip/25a4a015118037809c97d089d69e927737e589e1
 Author:        Bitao Hu <yaoma@linux.alibaba.com>
-AuthorDate:    Thu, 11 Apr 2024 15:41:34 +08:00
+AuthorDate:    Thu, 11 Apr 2024 15:41:32 +08:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 12 Apr 2024 17:08:06 +02:00
+CommitterDate: Fri, 12 Apr 2024 17:08:05 +02:00
 
-watchdog/softlockup: Report the most frequent interrupts
+genirq: Avoid summation loops for /proc/interrupts
 
-When the watchdog determines that the current soft lockup is due to an
-interrupt storm based on CPU utilization, reporting the most frequent
-interrupts could be good enough for further troubleshooting.
+show_interrupts() unconditionally accumulates the per CPU interrupt
+statistics to determine whether an interrupt was ever raised.
 
-Below is an example of interrupt storm. The call tree does not provide
-useful information, but analyzing which interrupt caused the soft lockup by
-comparing the counts of interrupts during the lockup period allows to
-identify the culprit.
+This can be avoided for all interrupts which are not strictly per CPU
+and not of type NMI because those interrupts provide already an
+accumulated counter. The required logic is already implemented in
+kstat_irqs().
 
-[  638.870231] watchdog: BUG: soft lockup - CPU#9 stuck for 26s! [swapper/9:0]
-[  638.870825] CPU#9 Utilization every 4s during lockup:
-[  638.871194]  #1:   0% system,          0% softirq,   100% hardirq,     0% idle
-[  638.871652]  #2:   0% system,          0% softirq,   100% hardirq,     0% idle
-[  638.872107]  #3:   0% system,          0% softirq,   100% hardirq,     0% idle
-[  638.872563]  #4:   0% system,          0% softirq,   100% hardirq,     0% idle
-[  638.873018]  #5:   0% system,          0% softirq,   100% hardirq,     0% idle
-[  638.873494] CPU#9 Detect HardIRQ Time exceeds 50%. Most frequent HardIRQs:
-[  638.873994]  #1: 330945      irq#7
-[  638.874236]  #2: 31          irq#82
-[  638.874493]  #3: 10          irq#10
-[  638.874744]  #4: 2           irq#89
-[  638.874992]  #5: 1           irq#102
-...
-[  638.875313] Call trace:
-[  638.875315]  __do_softirq+0xa8/0x364
+Split the inner access logic out of kstat_irqs() and use it for
+kstat_irqs() and show_interrupts() to avoid the accumulation loop
+when possible.
 
+Originally-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Liu Song <liusong@linux.alibaba.com>
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Link: https://lore.kernel.org/r/20240411074134.30922-6-yaoma@linux.alibaba.com
+Link: https://lore.kernel.org/r/20240411074134.30922-4-yaoma@linux.alibaba.com
 
 ---
- kernel/watchdog.c | 116 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 112 insertions(+), 4 deletions(-)
+ kernel/irq/internals.h |  2 ++
+ kernel/irq/irqdesc.c   | 16 +++++++++++-----
+ kernel/irq/proc.c      |  6 ++----
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index ef8ebd3..d12ff74 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -12,22 +12,25 @@
+diff --git a/kernel/irq/internals.h b/kernel/irq/internals.h
+index 1d92532..6c43ef3 100644
+--- a/kernel/irq/internals.h
++++ b/kernel/irq/internals.h
+@@ -98,6 +98,8 @@ extern void mask_irq(struct irq_desc *desc);
+ extern void unmask_irq(struct irq_desc *desc);
+ extern void unmask_threaded_irq(struct irq_desc *desc);
  
- #define pr_fmt(fmt) "watchdog: " fmt
- 
--#include <linux/mm.h>
- #include <linux/cpu.h>
--#include <linux/nmi.h>
- #include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqdesc.h>
- #include <linux/kernel_stat.h>
-+#include <linux/kvm_para.h>
- #include <linux/math64.h>
-+#include <linux/mm.h>
- #include <linux/module.h>
-+#include <linux/nmi.h>
-+#include <linux/stop_machine.h>
- #include <linux/sysctl.h>
- #include <linux/tick.h>
++extern unsigned int kstat_irqs_desc(struct irq_desc *desc, const struct cpumask *cpumask);
 +
- #include <linux/sched/clock.h>
- #include <linux/sched/debug.h>
- #include <linux/sched/isolation.h>
--#include <linux/stop_machine.h>
- 
- #include <asm/irq_regs.h>
--#include <linux/kvm_para.h>
- 
- static DEFINE_MUTEX(watchdog_mutex);
- 
-@@ -418,13 +421,105 @@ static void print_cpustat(void)
- 	}
- }
- 
-+#define HARDIRQ_PERCENT_THRESH          50
-+#define NUM_HARDIRQ_REPORT              5
-+struct irq_counts {
-+	int irq;
-+	u32 counts;
-+};
-+
-+static DEFINE_PER_CPU(bool, snapshot_taken);
-+
-+/* Tabulate the most frequent interrupts. */
-+static void tabulate_irq_count(struct irq_counts *irq_counts, int irq, u32 counts, int rank)
-+{
-+	int i;
-+	struct irq_counts new_count = {irq, counts};
-+
-+	for (i = 0; i < rank; i++) {
-+		if (counts > irq_counts[i].counts)
-+			swap(new_count, irq_counts[i]);
-+	}
-+}
-+
-+/*
-+ * If the hardirq time exceeds HARDIRQ_PERCENT_THRESH% of the sample_period,
-+ * then the cause of softlockup might be interrupt storm. In this case, it
-+ * would be useful to start interrupt counting.
-+ */
-+static bool need_counting_irqs(void)
-+{
-+	u8 util;
-+	int tail = __this_cpu_read(cpustat_tail);
-+
-+	tail = (tail + NUM_HARDIRQ_REPORT - 1) % NUM_HARDIRQ_REPORT;
-+	util = __this_cpu_read(cpustat_util[tail][STATS_HARDIRQ]);
-+	return util > HARDIRQ_PERCENT_THRESH;
-+}
-+
-+static void start_counting_irqs(void)
-+{
-+	if (!__this_cpu_read(snapshot_taken)) {
-+		kstat_snapshot_irqs();
-+		__this_cpu_write(snapshot_taken, true);
-+	}
-+}
-+
-+static void stop_counting_irqs(void)
-+{
-+	__this_cpu_write(snapshot_taken, false);
-+}
-+
-+static void print_irq_counts(void)
-+{
-+	unsigned int i, count;
-+	struct irq_counts irq_counts_sorted[NUM_HARDIRQ_REPORT] = {
-+		{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}
-+	};
-+
-+	if (__this_cpu_read(snapshot_taken)) {
-+		for_each_active_irq(i) {
-+			count = kstat_get_irq_since_snapshot(i);
-+			tabulate_irq_count(irq_counts_sorted, i, count, NUM_HARDIRQ_REPORT);
-+		}
-+
-+		/*
-+		 * Outputting the "watchdog" prefix on every line is redundant and not
-+		 * concise, and the original alarm information is sufficient for
-+		 * positioning in logs, hence here printk() is used instead of pr_crit().
-+		 */
-+		printk(KERN_CRIT "CPU#%d Detect HardIRQ Time exceeds %d%%. Most frequent HardIRQs:\n",
-+		       smp_processor_id(), HARDIRQ_PERCENT_THRESH);
-+
-+		for (i = 0; i < NUM_HARDIRQ_REPORT; i++) {
-+			if (irq_counts_sorted[i].irq == -1)
-+				break;
-+
-+			printk(KERN_CRIT "\t#%u: %-10u\tirq#%d\n",
-+			       i + 1, irq_counts_sorted[i].counts,
-+			       irq_counts_sorted[i].irq);
-+		}
-+
-+		/*
-+		 * If the hardirq time is less than HARDIRQ_PERCENT_THRESH% in the last
-+		 * sample_period, then we suspect the interrupt storm might be subsiding.
-+		 */
-+		if (!need_counting_irqs())
-+			stop_counting_irqs();
-+	}
-+}
-+
- static void report_cpu_status(void)
- {
- 	print_cpustat();
-+	print_irq_counts();
- }
+ #ifdef CONFIG_SPARSE_IRQ
+ static inline void irq_mark_irq(unsigned int irq) { }
  #else
- static inline void update_cpustat(void) { }
- static inline void report_cpu_status(void) { }
-+static inline bool need_counting_irqs(void) { return false; }
-+static inline void start_counting_irqs(void) { }
-+static inline void stop_counting_irqs(void) { }
- #endif
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index f348faf..3820931 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -976,24 +976,30 @@ static bool irq_is_nmi(struct irq_desc *desc)
+ 	return desc->istate & IRQS_NMI;
+ }
  
- /*
-@@ -528,6 +623,18 @@ static int is_softlockup(unsigned long touch_ts,
- 			 unsigned long now)
+-static unsigned int kstat_irqs(unsigned int irq)
++unsigned int kstat_irqs_desc(struct irq_desc *desc, const struct cpumask *cpumask)
  {
- 	if ((watchdog_enabled & WATCHDOG_SOFTOCKUP_ENABLED) && watchdog_thresh) {
-+		/*
-+		 * If period_ts has not been updated during a sample_period, then
-+		 * in the subsequent few sample_periods, period_ts might also not
-+		 * be updated, which could indicate a potential softlockup. In
-+		 * this case, if we suspect the cause of the potential softlockup
-+		 * might be interrupt storm, then we need to count the interrupts
-+		 * to find which interrupt is storming.
-+		 */
-+		if (time_after_eq(now, period_ts + get_softlockup_thresh() / NUM_SAMPLE_PERIODS) &&
-+		    need_counting_irqs())
-+			start_counting_irqs();
+-	struct irq_desc *desc = irq_to_desc(irq);
+ 	unsigned int sum = 0;
+ 	int cpu;
+ 
+-	if (!desc || !desc->kstat_irqs)
+-		return 0;
+ 	if (!irq_settings_is_per_cpu_devid(desc) &&
+ 	    !irq_settings_is_per_cpu(desc) &&
+ 	    !irq_is_nmi(desc))
+ 		return data_race(desc->tot_count);
+ 
+-	for_each_possible_cpu(cpu)
++	for_each_cpu(cpu, cpumask)
+ 		sum += data_race(per_cpu(desc->kstat_irqs->cnt, cpu));
+ 	return sum;
+ }
+ 
++static unsigned int kstat_irqs(unsigned int irq)
++{
++	struct irq_desc *desc = irq_to_desc(irq);
 +
- 		/* Warn about unreasonable delays. */
- 		if (time_after(now, period_ts + get_softlockup_thresh()))
- 			return now - touch_ts;
-@@ -550,6 +657,7 @@ static DEFINE_PER_CPU(struct cpu_stop_work, softlockup_stop_work);
- static int softlockup_fn(void *data)
- {
- 	update_touch_ts();
-+	stop_counting_irqs();
- 	complete(this_cpu_ptr(&softlockup_completion));
++	if (!desc || !desc->kstat_irqs)
++		return 0;
++	return kstat_irqs_desc(desc, cpu_possible_mask);
++}
++
+ #ifdef CONFIG_GENERIC_IRQ_STAT_SNAPSHOT
  
- 	return 0;
+ void kstat_snapshot_irqs(void)
+diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
+index 6954e0a..5c320c3 100644
+--- a/kernel/irq/proc.c
++++ b/kernel/irq/proc.c
+@@ -488,10 +488,8 @@ int show_interrupts(struct seq_file *p, void *v)
+ 	if (!desc || irq_settings_is_hidden(desc))
+ 		goto outsparse;
+ 
+-	if (desc->kstat_irqs) {
+-		for_each_online_cpu(j)
+-			any_count |= data_race(per_cpu(desc->kstat_irqs->cnt, j));
+-	}
++	if (desc->kstat_irqs)
++		any_count = kstat_irqs_desc(desc, cpu_online_mask);
+ 
+ 	if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
+ 		goto outsparse;
