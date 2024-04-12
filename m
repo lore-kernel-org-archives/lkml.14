@@ -1,52 +1,79 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F48A14A4CF;
-	Fri, 12 Apr 2024 16:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C60F4148313;
+	Fri, 12 Apr 2024 16:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712939119; cv=none; b=Tr9Q/Kg+n+qFurKbfrF8t5QdLinrEbYzo72jb6TgbcoOcPmYvQTm+hAN7o5x33kwLiRyu/abrJmypt8ZhrZH3kxHDDkYDStPzQG4F1S8ig6/IWar7DNcrFPiL1p2GQrkhTf51U6SqF1zxkmlM3frYcgqhMHQ4qOUHeGRXRz6Hqc=
+	t=1712939118; cv=none; b=kXaY1O4vX5DbuvpJnxJEqbEkAL7H5LhEi0XNAckK6sosJYHxHGrHewFSm2vagZr/vD1LFW0P8wAJJpM36WctmCpkCSdubePADXFfr8pnxmSruBw/dwYlDtIQIvFZvXne9cyEghZccpCAzKOmD8a7uMKl8jo/1ALcN7H/ALHe2jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712939119; c=relaxed/simple;
-	bh=7OxTykh2lr+YtDDqUu7Y+fdYQNRRsjq1U29leyJGPSo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XZR0Atgliq7rP9hAHaztnr2RJ4VmlP/ivZp/C85fcC5qFNgRJWXIbTW0W5k+uqpY9IncL4I4rrdBEyml241BDc9botWXd3EqT+pGrNV8lH/7hbCqqM2pmG/zpONTHUYnBvPJpANm9w8mMDwVfwhi59Dm55krtvLiz3oC2ONawUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMLq454lz6K5v2;
-	Sat, 13 Apr 2024 00:23:31 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17D3A1400CF;
-	Sat, 13 Apr 2024 00:25:16 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:25:15 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 28/30] drivers/nvdimm: Assign parent for event_source device
-Date: Fri, 12 Apr 2024 17:10:55 +0100
-Message-ID: <20240412161057.14099-29-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712939118; c=relaxed/simple;
+	bh=+/Ao6tah8HHTzxYdBhw2rCA83A9fOpuOCf642ssB/IA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bq84A9SohPuyRIkveS3j30uhroi1mEjhwmg3fLpwjXUGKOkpbnacrFgPgzR/DOb1naMGLjnqkUz0IpxC8JLASe3biq95q0gQ65Qbt81trLbsZnnI3NfImwUOsiiJ13aTOYgyBw6K0rC241DH/vPmyTPyHVl3nEQBPEHAFyK/WU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e8504dgn; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e8504dgn"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2d8a2cbe1baso11947051fa.0;
+        Fri, 12 Apr 2024 09:25:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712939115; x=1713543915; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j1ZiDdEdBLa6WUq6dSl5bzwxlD6MdFYlMkt9vqw7lek=;
+        b=e8504dgnbJ+K6UBCdyiyKmMZTjip0hVHGbjosKHXBBxV5ejQnU+YkxY2REMf6gS2KN
+         k94nYE6uvWl/8lkZsDdocwjBxUEt8+J0VYHn0eCR+wBN5maVFUME5B/P+l2MaMRNW7mI
+         AGFL7oMn3vEbPLAAcycpjd6C5ri34sWvFKxqXP/OOSXLApOhz3S8Yf0MP/XqiFBSQlAa
+         oAqOtwnQ6nM5cm/hoip0tAcTMXP3aJ4DL1q0rokhFnwjsUIHkEs8AKdZZF3g56LL0TFF
+         JJsMmLm1IJykGJIevevvPxNfjAim4IxHK5pNxrN8llNE7SwN900y0GMlj527BM9wUNjj
+         NmDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712939115; x=1713543915;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j1ZiDdEdBLa6WUq6dSl5bzwxlD6MdFYlMkt9vqw7lek=;
+        b=p/+9K/hfo6acze3Mjmsk5Zyo3QyCi0v93incSr78v3m8rPhqOQIwchAbJX97Ec2Czv
+         iZ7fftSv6hZexA9/5PM/9T1rB9h/aZUwWYrfqJ3hWkHjxXcDvswh9RAPU3FljeTXPKST
+         fYK0DaaCtsORNnABuxEZ/fUk+kbg+fj7O9r5UmjayjM+cXeaF3ptXSpmMa+fnEKyz3OV
+         dbiTot0smW+BXG0pm/CMwrkUkttldE0I547vAAz4o9GNZmuXYcr0rmauw7LFqDwL30+T
+         RWto5TpMthvSDrHLZ7rkDRvuUfkfVkdrmCnk3WuFMK8GcLiepmucn6zOzppFE9HO4O95
+         wHYg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnFUPxT1HIElbv/3dWp7ChhxNbA7awOqLpO8wxEKrJSszgg4rSLGW7vXIO9PKIhi+tt2A2JEUUy6yUmfKMY9VKgzYXsyQkQ5JN4VWN1/Deq1ofG5iFA+szErvhppvSKSnHnwgQ3C0CiT9ERoIqXisLKOp+ujFoJLigfCfn8Cx9omRhJbx8MLL1taam84a6XYY7JBld6gWjbw0BTOGgpEdf
+X-Gm-Message-State: AOJu0Yz85IGk5Pxfa4cR+XdcstNGL5yVwAvBTa6yAu8F6d3w+17maHLn
+	aYnzQCxo9UheFFtD9nhgQIu9JIPsF76b8hwj5DzdO/s3i67b5/QY
+X-Google-Smtp-Source: AGHT+IEA2Mx2PVZ0wxEHfJ9V8RofGxmOrjMMCiJmTk1zmlFqSPe8iGWGd2yd72AmB/HZ5oyd/lApWA==
+X-Received: by 2002:a2e:7c19:0:b0:2d8:cd7f:3cc8 with SMTP id x25-20020a2e7c19000000b002d8cd7f3cc8mr2526091ljc.20.1712939114765;
+        Fri, 12 Apr 2024 09:25:14 -0700 (PDT)
+Received: from fedora.. (d-zg2-064.globalnet.hr. [213.149.37.64])
+        by smtp.googlemail.com with ESMTPSA id q4-20020adff504000000b0034635bd6ba5sm4576554wro.92.2024.04.12.09.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 09:25:14 -0700 (PDT)
+From: Robert Marko <robimarko@gmail.com>
+To: kvalo@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jjohnson@kernel.org,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Robert Marko <robimarko@gmail.com>
+Subject: [PATCH 2/2] wifi: ath11k: support DT ieee80211-freq-limit property to limit channels
+Date: Fri, 12 Apr 2024 18:24:09 +0200
+Message-ID: <20240412162510.29483-2-robimarko@gmail.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240412162510.29483-1-robimarko@gmail.com>
+References: <20240412162510.29483-1-robimarko@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,33 +81,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-Currently the PMU device appears directly under /sys/devices/
-Only root busses should appear there, so instead assign the pmu->dev
-parent to be the platform device.
+The common DT property can be used to limit the available channels
+but ath11k has to manually call wiphy_read_of_freq_limits().
 
-Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Robert Marko <robimarko@gmail.com>
 ---
- drivers/nvdimm/nd_perf.c | 1 +
+ drivers/net/wireless/ath/ath11k/mac.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvdimm/nd_perf.c b/drivers/nvdimm/nd_perf.c
-index 2b6dc80d8fb5..dfc2028b9add 100644
---- a/drivers/nvdimm/nd_perf.c
-+++ b/drivers/nvdimm/nd_perf.c
-@@ -292,6 +292,7 @@ int register_nvdimm_pmu(struct nvdimm_pmu *nd_pmu, struct platform_device *pdev)
- 	 * device data in events functions.
- 	 */
- 	nd_pmu->dev = &pdev->dev;
-+	nd_pmu->pmu.parent = &pdev->dev;
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index c32be587000d..59bde128d351 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -10124,6 +10124,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
+ 	if (ret)
+ 		goto err;
  
- 	/* Fill attribute groups for the nvdimm pmu device */
- 	nd_pmu->pmu.attr_groups[NVDIMM_PMU_FORMAT_ATTR] = &nvdimm_pmu_format_group;
++	wiphy_read_of_freq_limits(ar->hw->wiphy);
+ 	ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
+ 	ath11k_mac_setup_he_cap(ar, cap);
+ 
 -- 
-2.39.2
+2.44.0
 
