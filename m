@@ -1,113 +1,134 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A99750281
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B344F200;
+	Fri, 12 Apr 2024 08:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712909902; cv=none; b=os8qAjElrv6qv+t6n7k6WiNpU1T+TwDkYa5TvjORCThpKuzaZYshZSWSMPhLSKv2D+D6e4S4UQaEm4aWjW2tD+kvTlpeJImtyN5xmhRRn3tcPqGOR5BOClsxzYFuPhClQPE/A1Rj50ePRiHainrZ1Nimbda5qlQflEyuxbndE9U=
+	t=1712909989; cv=none; b=oSYak1+veenmv3EgkTeQu8GDqUGC832Wu/5rInTGBfXzoCKMoCpUcVB+BfEBAAj1j8yv4LFVNiSdaE9pGJyWSYRazTPhCImby7u5sn4Ly49T55B2mVRwmp9dJ+W5ejFLEhfCQqhI5DjAMfx92SDcYCxBsTCvDxqDOYow03dQYm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712909902; c=relaxed/simple;
-	bh=O4sSaXp+ZDTJnVTQLLWMUtAcAU7KxZl+BWsdAjRQWok=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AoxODEVeq0yjxn6f6GO+NzPoh1Y77xOYLvt08iSRJeqtxXdEFWjNQ03IX+HLg3yKW8WMlfb42Ot1drDSFnzQdtJ4C4kyeDmtLChT0r9IDSypFmMpeN0h9JgiESW3VrOIdCrmw3YRk3j2iqrfQZmO9aP3M0DkQZ6owL9NjfzL/S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CvhTx87m; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712909989; c=relaxed/simple;
+	bh=RU+HBnKS5Cxr82FY1Pa6+30o7iTPotD1YAU45NEfneY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=T3XS51jf1cY56U5LfbS6FjJgBf1iQWBWhOLwOVtE5kFUSneUo8kqn9mQD5eonUH8iDVr8m10B6ZlCtC666q4lmO2RgJF9z6ygHAdPqhkpQFaDNHQiZNGayELlyi0x4aRG4+49FEarnUJDAAWKMcDJxSfCC8DBQ3HExHPYJ88tp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=HIj6HPsX; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvhTx87m"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5aa2bd6f651so509824eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712909900; x=1713514700; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yu+6WxodjHSBLVJ4vTIVXBoPSo2RTNoZ1skXMjVRPl8=;
-        b=CvhTx87mqvefiiglmF3X2+3hYTPRY5sXcdoZAM5pwzbVUZlnPJO3zlI0ZSwk0+TnqT
-         UWK6nxUTnamhRfcFukid9xgAGUdErdZR1W0HBGjbIq9kZd3eaDAYdZzGP2SpQP7C/uiZ
-         ufes9LmSDltX1bSwZoYQ/naZR0H4Z2tFyrGJoOJiY8I9pTu/ot6xPEBQPFYEM5pIvaGQ
-         lV5QZ8msGTyixOncL0svJ88X7rp/hhRWIZ6ZVqDgxsjPH0tLnkRD1SbYyGysUwsO8Hid
-         TBjtOA0eTZ7rcoXPZLBQFi5qhqs96q7PXlz/lZv5Xn/IoZjK8IZZlVNMhrMRGw86xZa2
-         boFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712909900; x=1713514700;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yu+6WxodjHSBLVJ4vTIVXBoPSo2RTNoZ1skXMjVRPl8=;
-        b=L3snzE1B5AOQXBUwRVKWw+UqhpZIVDcTuEQS+az/x/+5O3v6N2UI0owMI8bdGF1E6k
-         ZjJOz6gIWQJ/CV5stgAhpknhRluOd29oqr27tMPAfhL6874k+nQ3nkTWQqE21yVLwkX/
-         FgTqQ2Jy9S+VO7dtbbZ6n6IY2/EJwPxlfELBZjalObUhR0mUuoQ2HWj3i2646zdB537o
-         5AvAs6QIagItkjCUU7ZqRCGnEnYB0WcCk8DDGaKKMpozNSxsQ4izomVeih+P2dg/ux+Q
-         /2q0HZjbaSVxOWJxT0PVVkx2VJsOOuHF1wC/ZouDAfVfjxE70UwMlmOmaxEFyodbkn6A
-         CHzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUckU7zUwG1UYCQWAi5UnZQueH3MGIiU+IBvPLgEd6wgVG0m4q85+v5Dgq0YonqUtsD18BiuRGbG/teMulXEFvnmyZLa5RWbU7T5uK0
-X-Gm-Message-State: AOJu0YxjN+L+loCjQtF8Ug6VCUlNAFNT3ZuC3HI9ThrODqzoL4O+rL1y
-	grddrDyE89kf9A6s/d7xQ2QouCT4UoLaXbSNTg7k8N6CnrqZEjbn
-X-Google-Smtp-Source: AGHT+IHPMOMeaKbgliBIs0e3rosx5Q0nLFvvupxWwTmnqCoL/oPJAeUnRhfVTFd1ktSK6VSj5Z4a3g==
-X-Received: by 2002:a05:6358:38d:b0:186:16ef:444 with SMTP id a13-20020a056358038d00b0018616ef0444mr2091677rwj.17.1712909900012;
-        Fri, 12 Apr 2024 01:18:20 -0700 (PDT)
-Received: from code.. ([144.202.108.46])
-        by smtp.gmail.com with ESMTPSA id i15-20020a63130f000000b005f43a5c4e7dsm2276393pgl.41.2024.04.12.01.18.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 01:18:19 -0700 (PDT)
-From: Yuntao Wang <ytcoode@gmail.com>
-To: mhiramat@kernel.org
-Cc: akpm@linux-foundation.org,
-	arnd@arndb.de,
-	christophe.leroy@csgroup.eu,
-	geert@linux-m68k.org,
-	jpoimboe@kernel.org,
-	kjlx@templeofstupid.com,
-	linux-kernel@vger.kernel.org,
-	ndesaulniers@google.com,
-	peterz@infradead.org,
-	rppt@kernel.org,
-	tglx@linutronix.de,
-	tj@kernel.org,
-	ytcoode@gmail.com
-Subject: [PATCH v2 2/2] init/main.c: Minor cleanup for the setup_command_line() function
-Date: Fri, 12 Apr 2024 16:17:33 +0800
-Message-ID: <20240412081733.35925-3-ytcoode@gmail.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240412081733.35925-1-ytcoode@gmail.com>
-References: <20240412141536.3f59fde391a6d28181562dbe@kernel.org>
- <20240412081733.35925-1-ytcoode@gmail.com>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="HIj6HPsX"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 8477F120063;
+	Fri, 12 Apr 2024 11:19:37 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 8477F120063
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1712909977;
+	bh=eTYUT+jxyV/dDyYagaIyHdQgsiA4EtrB+9ZjvPOjkEo=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version:From;
+	b=HIj6HPsXkWVWaqlbjAH5FASpHggYFeqzVSEYJmS7bEALspHmVj1O4C9P1J/yVzbGp
+	 XRk9F5+4yM17L6CyrliI1lxXcKgZ9mF72uOAsZsCRXrvefhesBpgJoaYJP6knI2hvB
+	 JOR4iSFCrHWt/tP84RmKNsjMTG9C2lVsunDB3oGFCZp0yQjqw8QcyMmETNjsxAFFgq
+	 4S6Bb0kK+1kSICpJeFjFGfHF4zCkOZxWe5ketZK2rRU8GFBXHfvlMRS3i0xI8sL0S7
+	 te06ztx6nJlc3u11rABf19OklUjGnTDYptiU+CxnQWIGmF23vBW1iAAVMyTxERPMQi
+	 ljZ/1zftTikTQ==
+Received: from smtp.sberdevices.ru (p-i-exch-a-m1.sberdevices.ru [172.24.196.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 12 Apr 2024 11:19:37 +0300 (MSK)
+Received: from p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) by
+ p-i-exch-a-m1.sberdevices.ru (172.24.196.116) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 12 Apr 2024 11:19:36 +0300
+Received: from p-i-exch-sc-m02.sberdevices.ru ([fe80::10c3:6e04:fd07:c511]) by
+ p-i-exch-sc-m02.sberdevices.ru ([fe80::10c3:6e04:fd07:c511%9]) with mapi id
+ 15.02.1118.040; Fri, 12 Apr 2024 11:19:36 +0300
+From: Alexey Romanov <avromanov@salutedevices.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "neil.armstrong@linaro.org" <neil.armstrong@linaro.org>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "davem@davemloft.net"
+	<davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>, "khilman@baylibre.com"
+	<khilman@baylibre.com>, "jbrunet@baylibre.com" <jbrunet@baylibre.com>,
+	"martin.blumenstingl@googlemail.com" <martin.blumenstingl@googlemail.com>,
+	"vadim.fedorenko@linux.dev" <vadim.fedorenko@linux.dev>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-amlogic@lists.infradead.org" <linux-amlogic@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, kernel <kernel@sberdevices.ru>
+Subject: Re: [PATCH v7 00/23] Support more Amlogic SoC families in crypto
+ driver
+Thread-Topic: [PATCH v7 00/23] Support more Amlogic SoC families in crypto
+ driver
+Thread-Index: AQHajBWUrVGAoz0gN0yHbEf56dYdJrFjvtOAgABbAIA=
+Date: Fri, 12 Apr 2024 08:19:36 +0000
+Message-ID: <20240412081931.3s2fw6hds3hh5cwg@cab-wsm-0029881.sigma.sbrf.ru>
+References: <20240411133832.2896463-1-avromanov@salutedevices.com>
+ <ZhiiPVckOYH9dFQ/@gondor.apana.org.au>
+In-Reply-To: <ZhiiPVckOYH9dFQ/@gondor.apana.org.au>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D8A89F4D4AFB8C4ABC5358E4B1C8666A@sberdevices.ru>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184683 [Apr 12 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 16 0.3.16 6e64c33514fcbd07e515710c86ba61de7f56194e, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;cab-wsm-0029881.sigma.sbrf.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;salutedevices.com:7.1.1;gondor.apana.org.au:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/04/12 04:30:00
+X-KSMG-LinksScanning: Clean, bases: 2024/04/12 04:30:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/04/12 02:59:00 #24750120
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-This is just a minor cleanup to make the code look a bit cleaner.
+Hello Herbert,
 
-Signed-off-by: Yuntao Wang <ytcoode@gmail.com>
----
- init/main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Fri, Apr 12, 2024 at 10:53:49AM +0800, Herbert Xu wrote:
+> On Thu, Apr 11, 2024 at 04:38:09PM +0300, Alexey Romanov wrote:
+> >
+> > Changes V6 -> V7 [9]:
+> >=20
+> > - Fix dt-schema: power domain now required only for A1.
+> > - Use crypto_skcipher_ctx_dma() helper for cipher instead of
+> >   ____cacheline_aligned.
+> > - Add import/export functions for hasher.
+> > - Fix commit message for patch 17, acorrding to discussion [10].
+>=20
+> Please ensure that this passes the self-tests with extra fuzzing
+> enabled.
 
-diff --git a/init/main.c b/init/main.c
-index 5dcf5274c09c..d6383e397e9f 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -630,11 +630,11 @@ static void __init setup_command_line(char *command_line)
- 	if (extra_init_args)
- 		ilen = strlen(extra_init_args) + 4; /* for " -- " */
- 
--	len = xlen + strlen(boot_command_line) + 1;
-+	len = xlen + strlen(boot_command_line) + ilen + 1;
- 
--	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
-+	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
- 	if (!saved_command_line)
--		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
-+		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
- 
- 	len = xlen + strlen(command_line) + 1;
- 
--- 
-2.44.0
+Old Amlogic Soc's for crypto HW used a BLKMV engine, which required
+a clk input and a second interrupt line. New SoC's uses DMA engine
+and don't need this.
 
+I spoke with vendor, and they confirmed that AXG, G12A, G12B, SM1,
+A1, S4 and GXL is using DMA engine and crypto HW is not connected
+to clk / second interrupt line.
+
+>=20
+> Thanks,
+> --=20
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+--=20
+Thank you,
+Alexey=
