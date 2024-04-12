@@ -1,145 +1,90 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E751474C0
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 15:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B861482EB;
+	Fri, 12 Apr 2024 15:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712934800; cv=none; b=MR0EcCiHgKvluQnwrjSQFRY6oYX0VL8no5TVILNNhrZrphYQclnVP2DpLnROQj9iZE9j25fxdvVMzUCjN9csL7pAILoVqgbG3ExkkAgw0ykfgMtBUcR53ZzJPmswQ+qBzMiWPM/01mNVFI98O1sQebKqwYlwLnZKoiJUueKaZWI=
+	t=1712934803; cv=none; b=nhd0+jj5+0QWx9Y9rQyBGrD3JqyA6x2jhaSGHb5H/NFyvCQuEgCN3DUD0e0EFrIfK9ZLE+RysF7wggK/T7Ybe5bQswE0RGpktmF2PgW0/Tj5R68B5DSk4sVHsjTh+m6GySc34/Vz5Q1sVOcObLSxp2+KigmQ9CgABK0FTB5Lb/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712934800; c=relaxed/simple;
-	bh=Zu3rFat9oWEwa27THa2x3ewitXdjVSlF/ryLxGZm5+k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pdp8Hb22EL0s1HohRitO6uYOBmf1isn9ADnLW1oTZSvhT4+cbbc3iV2fXYGyJD91T0Ll8k20mZv5Alypclvjl96qCJHwguit90fkjr9XGbNHC5zPkWN0ffBgUmrzeSMaRlNZv0xOCV4Ny4G0NJiG1jlz3p8yQ0o74jU20WPW1uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kGU8L1In; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=kGU8L1In; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1712934803; c=relaxed/simple;
+	bh=E1gk3LZozo44aITg1XCYWr1PwZC5BjHqphnzpkpHYjM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tqf/EAj1rYKlDuqLkssiCFksFndUl32tsrYrrM+qom4ylkHEVoBKUGio281M39Nc8dyYuNcfAnKid7bqKt6Nf5FxK8o7BIZE5OQotOsq4n+ysWPw8b8Q0k28rCK7KP8SBovxqYfZDfcfvdL/i6MovG6CPb9vjaFa6otXFgUaAT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=qQQc8YnJ reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kGU8L1In";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="kGU8L1In"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="qQQc8YnJ"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
+ id 4e6cc3ead897acee; Fri, 12 Apr 2024 17:13:13 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 764B25FE6A;
-	Fri, 12 Apr 2024 15:13:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712934797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wKKDrPuReVm9V7SbchYzGZK7Z61laQsoQLsr/aCN3lg=;
-	b=kGU8L1InEJtWLSeDy83fLJejkrRi68RG3beqX7sB4+YWspDYdzlqufw+jyxCeNskpHvbvw
-	l08CI1M0Jbvx2si7ufQzyQzOZpmLwZWwDjZqRZmqmCl3HzXdZp0BEPsRP6ScQogKd+y/He
-	ynynti1EkFGAaznuSMmsraz1x3v+vV0=
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1712934797; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wKKDrPuReVm9V7SbchYzGZK7Z61laQsoQLsr/aCN3lg=;
-	b=kGU8L1InEJtWLSeDy83fLJejkrRi68RG3beqX7sB4+YWspDYdzlqufw+jyxCeNskpHvbvw
-	l08CI1M0Jbvx2si7ufQzyQzOZpmLwZWwDjZqRZmqmCl3HzXdZp0BEPsRP6ScQogKd+y/He
-	ynynti1EkFGAaznuSMmsraz1x3v+vV0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2AE781368B;
-	Fri, 12 Apr 2024 15:13:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mQCxBYxPGWarAQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 12 Apr 2024 15:13:16 +0000
-From: Juergen Gross <jgross@suse.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Juergen Gross <jgross@suse.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 2/4] x86/mm: use lookup_address_in_pgd_attr() in show_fault_oops()
-Date: Fri, 12 Apr 2024 17:12:56 +0200
-Message-Id: <20240412151258.9171-3-jgross@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20240412151258.9171-1-jgross@suse.com>
-References: <20240412151258.9171-1-jgross@suse.com>
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id C46B766CC48;
+	Fri, 12 Apr 2024 17:13:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1712934793;
+	bh=E1gk3LZozo44aITg1XCYWr1PwZC5BjHqphnzpkpHYjM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=qQQc8YnJtiAwvEZ20eV052KswBaaCYyyxr1JkUtGHhecIH6rbRINc/+dBmNuB5oCB
+	 b+xnhHCUGBHQf01FNsxaKrSuI5ZaEMEB48gSJz00Yz9NvjmsTQtx/jibcX5NZfdmr+
+	 NgLowk/czedahZ3gnUuh79HWFNH6ucc0Wkz950LpOfAO8lZ+iwDuBnXngUTI534i/T
+	 faZd80S73NpYCqR+Ww5ZRKJyxPjWNnL6FEKSwCS1g5Vm+IpQWEcpXnCvBidTIC2Vha
+	 ARfzHeErC6RX8AL4BiZpfTx/XsFOFp8t8LSxSb5NDXREwduvNNM/UQecdhPwsW4ZfY
+	 OvjbOKXPQFhxA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux ACPI <linux-acpi@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
+ Saket Dumbre <saket.dumbre@intel.com>
+Subject:
+ [PATCH v1 12/12] ACPICA: Update acpixf.h for new ACPICA release 20240322
+Date: Fri, 12 Apr 2024 17:13:03 +0200
+Message-ID: <3487364.QJadu78ljV@kreacher>
+In-Reply-To: <4920972.31r3eYUQgx@kreacher>
+References: <4920972.31r3eYUQgx@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.79
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.79 / 50.00];
-	BAYES_HAM(-2.99)[99.96%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_TLS_ALL(0.00)[]
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrudeiuddgkeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepledtieekkeekveeikeetgffgteeuteefjeevjeegudelvdduheeiuedvieehieevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeegpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosggvrhhtrdhmohhorhgvsehinhhtvghlrdgtohhmpdhrtghpthhtohepshgrkhgvthdrughumhgsrhgvsehinhhtvghlrdgtohhm
+X-DCC--Metrics: v370.home.net.pl 1024; Body=4 Fuz1=4 Fuz2=4
 
-Fix show_fault_oops() to not only look at the leaf PTE for detecting
-NX violations, but to use the effective NX value returned by
-lookup_address_in_pgd_attr() instead.
+From: Saket Dumbre <saket.dumbre@intel.com>
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
+ACPICA commit 718374cd1bc21d08960b61069c8ac62b0cf67c0c
+
+Link: https://github.com/acpica/acpica/commit/718374cd
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-V2:
-- split off from V1 patch (Ingo Molnar)
----
- arch/x86/mm/fault.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/acpi/acpixf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 622d12ec7f08..6b2ca8ba75b8 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -514,18 +514,19 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
+diff --git a/include/acpi/acpixf.h b/include/acpi/acpixf.h
+index 3d90716f9522..94d0fc3bd412 100644
+--- a/include/acpi/acpixf.h
++++ b/include/acpi/acpixf.h
+@@ -12,7 +12,7 @@
  
- 	if (error_code & X86_PF_INSTR) {
- 		unsigned int level;
-+		bool nx, rw;
- 		pgd_t *pgd;
- 		pte_t *pte;
+ /* Current ACPICA subsystem version in YYYYMMDD format */
  
- 		pgd = __va(read_cr3_pa());
- 		pgd += pgd_index(address);
+-#define ACPI_CA_VERSION                 0x20230628
++#define ACPI_CA_VERSION                 0x20240322
  
--		pte = lookup_address_in_pgd(pgd, address, &level);
-+		pte = lookup_address_in_pgd_attr(pgd, address, &level, &nx, &rw);
- 
--		if (pte && pte_present(*pte) && !pte_exec(*pte))
-+		if (pte && pte_present(*pte) && (!pte_exec(*pte) || nx))
- 			pr_crit("kernel tried to execute NX-protected page - exploit attempt? (uid: %d)\n",
- 				from_kuid(&init_user_ns, current_uid()));
--		if (pte && pte_present(*pte) && pte_exec(*pte) &&
-+		if (pte && pte_present(*pte) && pte_exec(*pte) && !nx &&
- 				(pgd_flags(*pgd) & _PAGE_USER) &&
- 				(__read_cr4() & X86_CR4_SMEP))
- 			pr_crit("unable to execute userspace code (SMEP?) (uid: %d)\n",
+ #include <acpi/acconfig.h>
+ #include <acpi/actypes.h>
 -- 
 2.35.3
+
+
+
 
