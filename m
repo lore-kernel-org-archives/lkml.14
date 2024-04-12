@@ -1,113 +1,136 @@
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DE550296
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 07:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713721C6B6;
+	Fri, 12 Apr 2024 07:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712907063; cv=none; b=Ua5G+oxSrjXxCS5EwZyqZPjHhTCKEW2/3MzqHx7EPExYA3dFUtSWJCg+OP5kbtAAOC/8Ss8QWRPH1obxLFqP8CvF7iHmv26SNq9MoeRcz1LTWvLFSzEmhmuAVp4ljKHfRdDMq8XNesqD+aYQ4Z3Z4U9DN1eEFh8WuG/xs8L4n2w=
+	t=1712907105; cv=none; b=Jbh4cH6WNSX51KdXqkIYl3Qx63hXnvptJfaFVLofdAIEoi/21fGHRsgArtym3zy9RSDpnheoCTuG051zQt/Pw6BJW7bP4eErMo5fAiMHBlaoUoxeV76iZ8CIk8u0mi/5Fw69MStptSDvIOMxhCJ4mi+OKShuQn54toeL73pyXTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712907063; c=relaxed/simple;
-	bh=7FCb+zQUOtiGsCLei7LkLyGVhMO0RYM/Z1q3ODTRet4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SRUv8awcLG6xRlcKzQoM5Gu6ywRRoMhEEc2xvJNSwNupPtpP8q/fWhOzDtQUJSqvI3BAGZG0ZblCUkRaCTRZ0LW5uAxo7/h+KeRWgEeh3RAZATx9EAGlZkldOQPXohYsM3Xk4Zr131fZLb8yFU6VGuM8cnGoQHtuWHttKJZkW7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=heniOicJ; arc=none smtp.client-ip=209.85.166.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="heniOicJ"
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-36a0bca01e2so2762215ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 00:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1712907061; x=1713511861; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5RdZHSk4TFU7CzZXHHxRZDn956keZAqDxJBl6Nwvleg=;
-        b=heniOicJd5C1A2LxytOgFoDC7zUsuuWkX0viRRfsoaAygWH/lsWlP6lETns/GJJHjt
-         n551M1HDSO+mc+N6GQy5kz2xx6sLkF1qpnXkEq3rI/7mmoTqLevCMys5GvAp2zUclKPH
-         rCcZf8XG9e0VQqglu8Bx5S1wf0g2BqD20Fhss=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712907061; x=1713511861;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5RdZHSk4TFU7CzZXHHxRZDn956keZAqDxJBl6Nwvleg=;
-        b=A6gyUYw0j+fUYWQCHC26Smq+lEpmWA4SsAu9xoBTEnkKJlcmK5NWMu2cvYO+6pvKtR
-         WpE3ucdjRKBysqwk5q3Ngv/fHSdKxIDDeWvdLgtNQwG1CjvcjTC3OHuKHghIGNKIYx19
-         YWmPnqEuOjTXFbxXYveDH6I2FclOl490DPu3FmC0Fzy9zFK98IWEPTvx+uSYM7/3DCcL
-         /RKt5sIPeGtX1J/mZlRMr6ZAvcJkdPawQcCKJLvI/p5ziQAwIwU3KNMDyge0JhZarMKE
-         LYLrQsvcTeP3LPQATA69Dx0NDiKDYvax1g3kNRlQNu5ixl/mfdo9L7MhJnaoIsdM65cH
-         vdUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH/tJOND3vHo80BdJf3/cl4icHJJsC5mOvzjlfaxznxY2St4iLR8Eq33dRhmxgn4qY87w7KNKUfHQJGep2ziF5x+yU1Sy+b1aKktOt
-X-Gm-Message-State: AOJu0Yw2SM4ITVLpciilNPmC42FYN7txlJyz3QjHvtDsqv58E8f6ewqi
-	yG3+77lhCC9P6yCtJRxh9Y0l/i17iacMxztfN2m9Rw3gKtZe/a8lSMCRsJ2ywA==
-X-Google-Smtp-Source: AGHT+IEL4CHJZN6cyV51F6bVm8k72tn6WE6KhBCBOK+lKr3ueEZGkvYYXfBhK3hbMLBmSdrvlM2k9Q==
-X-Received: by 2002:a05:6e02:160a:b0:369:9492:c24b with SMTP id t10-20020a056e02160a00b003699492c24bmr2090150ilu.10.1712907061055;
-        Fri, 12 Apr 2024 00:31:01 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:e3c8:6e1:dcfa:3e8c])
-        by smtp.gmail.com with ESMTPSA id d6-20020a637346000000b005d3bae243bbsm2149609pgn.4.2024.04.12.00.30.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Apr 2024 00:31:00 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Sean Wang <sean.wang@mediatek.com>,
-	linux-bluetooth@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] arm64: dts: mediatek: mt8183-pico6: Fix bluetooth node
-Date: Fri, 12 Apr 2024 15:30:43 +0800
-Message-ID: <20240412073046.1192744-3-wenst@chromium.org>
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-In-Reply-To: <20240412073046.1192744-1-wenst@chromium.org>
-References: <20240412073046.1192744-1-wenst@chromium.org>
+	s=arc-20240116; t=1712907105; c=relaxed/simple;
+	bh=Ka9bocoV3z1Rqz9gdaa1Yi1ILRquOLH+4MaHJLVNmwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cOCwf7gQ7ZOzByOR8D0eLdeZIOmuBASA5eMb7ghK41F0s2LoypTgpfqPbxUEczqEUHlUY8LKDIdbOtHrmHP+6vObVum5lGGeUnrW+BHxp35HOuKdOHoPz8L2SQorE36uE0l/gfaekdOcv64LQtYzZXUdgSk/+6WJphyIX0nitAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rvBNn-000lkG-GJ; Fri, 12 Apr 2024 15:31:36 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 12 Apr 2024 15:31:53 +0800
+Date: Fri, 12 Apr 2024 15:31:53 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+	davem@davemloft.net, linux-kernel@vger.kernel.org,
+	saulo.alessandre@tse.jus.br, lukas@wunner.de, bbhushan2@marvell.com,
+	jarkko@kernel.org
+Subject: Re: [PATCH v8 00/13] Add support for NIST P521 to ecdsa
+Message-ID: <ZhjjaTwo8dYFY6Ky@gondor.apana.org.au>
+References: <20240404141856.2399142-1-stefanb@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404141856.2399142-1-stefanb@linux.ibm.com>
 
-Bluetooth is not a random device connected to the MMC/SD controller. It
-is function 2 of the SDIO device.
+On Thu, Apr 04, 2024 at 10:18:43AM -0400, Stefan Berger wrote:
+> This series adds support for the NIST P521 curve to the ecdsa module
+> to enable signature verification with it.
+> 
+> An issue with the current code in ecdsa is that it assumes that input
+> arrays providing key coordinates for example, are arrays of digits
+> (a 'digit' is a 'u64'). This works well for all currently supported
+> curves, such as NIST P192/256/384, but does not work for NIST P521 where
+> coordinates are 8 digits + 2 bytes long. So some of the changes deal with
+> converting byte arrays to digits and adjusting tests on input byte
+> array lengths to tolerate arrays not providing multiples of 8 bytes.
+> 
+> Regards,
+>    Stefan
+> 
+> v8:
+>  - Changed nbits from unsigned int to u32 (5/13)
+>  - Added MODULE_ALIAS_CRYPTO("ecdsa-nist-p521") (11/13)
+>  - Applied R-b & T-b tags from Jarkko
+>  - Rebased on master branch at
+>    https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+> 
+> v7:
+>  - Applied T-b tag from Christian to all patches
+>  - Applied R-b tag from Jarkko to some patches
+>  - Rephrased some patch descriptions per Jarkko's request
+> 
+> v6:
+>  - Use existing #defines for number of digits rather than plain numbers
+>    (1/13, 6/13) following Bharat's suggestion
+>  - Initialize result from lowest 521 bits of product rather than going
+>    through tmp variable (6/13)
+> 
+> v5:
+>  - Simplified ecc_digits_from_bytes as suggested by Lukas (1/12)
+>  - Using nbits == 521 to detect NIST P521 curve rather than strcmp()
+>    (5,6/12)
+>  - Nits in patch description and comments (11/12)
+> 
+> v4:
+>  - Followed suggestions by Lukas Wummer (1,5,8/12)
+>  - Use nbits rather than ndigits where needed (8/12)
+>  - Renaming 'keylen' variablest to bufsize where necessary (9/12)
+>  - Adjust signature size calculation for NIST P521 (11/12)
+> 
+> v3:
+>  - Dropped ecdh support
+>  - Use ecc_get_curve_nbits for getting number of bits in NIST P521 curve
+>    in ecc_point_mult (7/10)
+> 
+> v2:
+>  - Reformulated some patch descriptions
+>  - Fixed issue detected by krobot
+>  - Some other small changes to the code
+> 
+> 
+> Stefan Berger (13):
+>   crypto: ecc - Use ECC_CURVE_NIST_P192/256/384_DIGITS where possible
+>   crypto: ecdsa - Convert byte arrays with key coordinates to digits
+>   crypto: ecdsa - Adjust tests on length of key parameters
+>   crypto: ecdsa - Extend res.x mod n calculation for NIST P521
+>   crypto: ecc - Add nbits field to ecc_curve structure
+>   crypto: ecc - Implement vli_mmod_fast_521 for NIST p521
+>   crypto: ecc - Add special case for NIST P521 in ecc_point_mult
+>   crypto: ecc - Add NIST P521 curve parameters
+>   crypto: ecdsa - Replace ndigits with nbits where precision is needed
+>   crypto: ecdsa - Rename keylen to bufsize where necessary
+>   crypto: ecdsa - Register NIST P521 and extend test suite
+>   crypto: asymmetric_keys - Adjust signature size calculation for NIST
+>     P521
+>   crypto: x509 - Add OID for NIST P521 and extend parser for it
+> 
+>  crypto/asymmetric_keys/public_key.c       |  14 ++-
+>  crypto/asymmetric_keys/x509_cert_parser.c |   3 +
+>  crypto/ecc.c                              |  44 +++++--
+>  crypto/ecc_curve_defs.h                   |  49 ++++++++
+>  crypto/ecdsa.c                            |  63 +++++++---
+>  crypto/ecrdsa_defs.h                      |   5 +
+>  crypto/testmgr.c                          |   7 ++
+>  crypto/testmgr.h                          | 146 ++++++++++++++++++++++
+>  include/crypto/ecc_curve.h                |   2 +
+>  include/crypto/ecdh.h                     |   1 +
+>  include/crypto/internal/ecc.h             |  24 +++-
+>  include/linux/oid_registry.h              |   1 +
+>  12 files changed, 336 insertions(+), 23 deletions(-)
+> 
+> 
+> base-commit: a9a72140536fe02d98bce72a608ccf3ba9008a71
+> -- 
+> 2.43.0
 
-Fix the address of the bluetooth node. Also fix the node name and drop
-the label.
-
-Fixes: 055ef10ccdd4 ("arm64: dts: mt8183: Add jacuzzi pico/pico6 board")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
-No changes since v1.
-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts
-index a2e74b829320..6a7ae616512d 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts
-@@ -82,7 +82,8 @@ pins-clk {
- };
- 
- &mmc1 {
--	bt_reset: bt-reset {
-+	bluetooth@2 {
-+		reg = <2>;
- 		compatible = "mediatek,mt7921s-bluetooth";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&bt_pins_reset>;
+All applied.  Thanks.
 -- 
-2.44.0.683.g7961c838ac-goog
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
