@@ -1,176 +1,160 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2155D28E7
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81414C92
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712886514; cv=none; b=utL7sCeRYAox/9HzgoXQzaFbANpddByAkqvlmbzd//oOfs0/veonEOs0pEypO2hm3h0cVy8Y3RYAKCouVAINmwBsMAFXVcrfWIJ8QGlsjfgeoUo3+4P6xr2aOpg7WmcfcilZIpxYVLG3aZLxMwWdiLpnjsQC7WorURH9rRX4RzU=
+	t=1712886642; cv=none; b=gcnWXR237iaqQfT8N+JuEyPNg5liZyUrllksc1UAH7yxdD7HDWX6KS/AM7qQjuLvxAXzPFVzp3mfOOutcqljlq2MYF4cKqwRLHBCXv5M4YzL/QXE4JoFP8Y/tvIQlsf0Swnq2GZAsR7gxLxYLtxDJbEB6/kgxvYKiGpn2bmyk6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712886514; c=relaxed/simple;
-	bh=U6B6yXIYDDNx7uPX0FR0AL5WZT1BKa/SKkjYgShpBeo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jXg7avRXhM/PJN0K65nurZS06aAPW+KQF2b0vgSpuHQZcjd0r9spj88FqYJ5pLByg1o6NjIHMqmXNnjrDIvfTJTIJNzdaiZj91hj8PWui25+1gtK7//quycLpYUfkdZ+Uj6HFawaBTAuja74JjdHIP28x1dWb7rzleNjgC6L5d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WNSCn3q5; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712886642; c=relaxed/simple;
+	bh=RKfWMjr5Qx55FeibUP0Tdl8Z8rvHwRWMq761t6ZocyU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QhoD2J4anXn2wQy1qOF6yz5AyReaQe2tfRYpqbPlR6oTtwGUFvtQnV5AJ/9Z1NlUttZEOzhCHVa5bapMp21QY4B45ABG0js/X6Iod82PZvVum3WMGqyXgGJFIa3glcccZ7XsywnUpIgST8O/45RDssAKkaiWUp39w6weIPIoWZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=h78Qsxjb; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNSCn3q5"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-56e2c1650d8so324371a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:48:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="h78Qsxjb"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78d5e80bc42so34443985a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 11 Apr 2024 18:50:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712886511; x=1713491311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lGCc2xE7kNa3p/vj3nCRy1hQloRnEiDZ2zpk6AwtsY4=;
-        b=WNSCn3q55hclQF2ti75zotTgDs7DYzuhNzvdrhTfRPkqv4iHi21Jm7TaqrYKdj+ehW
-         ia3/ezUBBlA50CHP23rzXqKAPUB8FbcWd/CNe+El3X14fhf5rAeUA1Zc7xixAc9S4dj4
-         F/XUC4P78/6BQWut7/49J6+mTYgh3uTl2ROqVzZprrOBemqLQMIcBn4K/bm+62Vm++Dv
-         b1XUjdYbphbE5ucT5YXeDE89EcEhj7K9gPFQ1/Ai///hruxeTV2vm33/VZ51sbPt+Bin
-         0rcMJ47nsBaPvzNdoXaNn5VF6DMaQCvDD+q4B5DdoSTzhnBPwUI550zCWTWn5A/m6YQS
-         akIA==
+        d=kylehuey.com; s=google; t=1712886640; x=1713491440; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RKfWMjr5Qx55FeibUP0Tdl8Z8rvHwRWMq761t6ZocyU=;
+        b=h78QsxjbzPkO/ItaWrTyIkFan3/dyp94gMjCEpJH+Zvh1erJ2w5qSgko4G9vzet6Jh
+         yOe6LZmESQn50cwnYr0S9ENNQFSzKePUIY7yTirD8CyOmZmun11yd1oiCS2Ynklmybcp
+         v/wCgavYj02iCwJ6IlUSE0OHvXDnATLZEKExoJRkb5ilhtaDrIefqnyMFgGKuMMYbU+i
+         X00WeKDOBlL50XwfXR1c+yebDg1QJtEvrVPwKmO/ShtGqOzBmeDGKp5yM2sNFh6LO77a
+         OWptLaKGcVsRBi88GP0vB7u9+yjyQNBMx0JNpPh5FkMvisSNKrBhs/zimRkYxRaZ9SxT
+         qQog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712886511; x=1713491311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lGCc2xE7kNa3p/vj3nCRy1hQloRnEiDZ2zpk6AwtsY4=;
-        b=BHn2MY/SlDPLBdSwmkJ74tATVPhw+s4uRefJvpfu7FWJcSAXlY4DOHrFiC0zM4UP5Q
-         M/8JOXM7wtI7czXsytsh1OxcW7VjOGtOZTnUHAluBXv5wYDa6weeXIocn5Bycok/uqVF
-         DmVpMXBKOADmOXQc3lCOqXcGniwdHhPeAz254XGtMRSe2mcOYh1OuesoNj6M6UXrrvsf
-         G++8uoplcDRLP2hv8gfcJMMXCXTyGnf0KiVFGNe2Rf79b+oS9nQ0AUMhHN7955o1TkCR
-         /NeMOr7ueYaE/s5rU3OwWFjZ7JNiPIc4awANPjR0NnwbxbiKb6ihI4lSCBb+WEOhPaa1
-         1lyA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMhbMCeqjQZhoTUU9neHUBvCUIZ6N0leUbe1p2TYho9zHy8FCzr4o36z4WWMbPedvzRdJbr7E7hJUiDpyEhMqLReC2fLJYyQ7rjVFs
-X-Gm-Message-State: AOJu0YwGzCf2oiJs4yzr9NNG2Wh95DfgMU+GO7Q8nRpspV9VSUowChrz
-	g6SCZjfMIOPuJfgmpV4YZn9GL1DWrvauwA9QcN9KPgFLL20TS1p8eKrXvPoL3h4lAilSrVhYjDZ
-	iBMKUAGWjxJIuSJO+YxTsHxI7OfA=
-X-Google-Smtp-Source: AGHT+IEkT0SlHP+XvdDvomqIEYCJ0NkqUuIeE4LOBoI0dZ2bGFUm17BCitiNyd+8IXaiol4X/fjni5n49yo6n4y0Ubs=
-X-Received: by 2002:a50:a411:0:b0:56f:e75b:83aa with SMTP id
- u17-20020a50a411000000b0056fe75b83aamr918869edb.6.1712886511248; Thu, 11 Apr
- 2024 18:48:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712886640; x=1713491440;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RKfWMjr5Qx55FeibUP0Tdl8Z8rvHwRWMq761t6ZocyU=;
+        b=J66o2U13Z2AgXmUeXFgj2MaBrPib4n/TOHpVWm0HjHDJqjDxPopiAuNdwdQUG7nFwy
+         5ZvryS7ISL73AC0l15uJMBhgBYDzW+UaYeS9Mm1u4LjAFGly7pwc0MNqrFjKOq3/pHr9
+         +brH2VoZ2QUld8XR8YLwBPZ+VCOEfw+dW4vOtbhUHYzypEPBoSSrnvjd8Auj3dYM9xSA
+         vkx4YPwqLxhSlQPQD/CORYLgYklDO9rjqQLgH7wlH7gN/jSYvgGlJ5c63kMD5po3Xc0D
+         Qtc4nNNbgpyaJ95CWJK13d836PPibivfohcK1X/SuG8hF8Z36ybztGxTvsWfQ7TMBbbJ
+         tZZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwL7zE6zbjbzoyw6ROj99HXAwqfgnJOxy+uqRYsqtt3hnaM73ellBT51OGA3OTSbV6FTtDumKQ+b5UZXsxCaL5B7dbjMQeZ0WXYuPQ
+X-Gm-Message-State: AOJu0Yy2ljbPbJTHSnxw5EaPxJ58wB0AQ8OeZqFlVfrTNC3SO4hr1vfx
+	XmBeO48vJ1LiF1vaUyB3IKywJigPHyBfptN8ayE+s+fO9tzl0zaVzGgBqqEtuQ==
+X-Google-Smtp-Source: AGHT+IEGFAJCUIz0qOFVbQF9We1/gUwvWByxa1EsnJiVP7yOg9G4RuZdQ2KksmDUL1kOxZcOvJDljQ==
+X-Received: by 2002:a05:620a:14a1:b0:78d:5700:2ce0 with SMTP id x1-20020a05620a14a100b0078d57002ce0mr1227193qkj.68.1712886639804;
+        Thu, 11 Apr 2024 18:50:39 -0700 (PDT)
+Received: from ip-172-31-44-15.us-east-2.compute.internal (ec2-52-15-100-147.us-east-2.compute.amazonaws.com. [52.15.100.147])
+        by smtp.googlemail.com with ESMTPSA id f10-20020a05620a15aa00b0078d76c1178esm1756677qkk.119.2024.04.11.18.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Apr 2024 18:50:39 -0700 (PDT)
+From: Kyle Huey <me@kylehuey.com>
+X-Google-Original-From: Kyle Huey <khuey@kylehuey.com>
+To: Kyle Huey <khuey@kylehuey.com>,
+	linux-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Marco Elver <elver@google.com>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Robert O'Callahan <robert@ocallahan.org>,
+	bpf@vger.kernel.org
+Subject: [PATCH v6 0/7] Combine perf and bpf for fast eval of hw breakpoint conditions
+Date: Thu, 11 Apr 2024 18:50:12 -0700
+Message-Id: <20240412015019.7060-1-khuey@kylehuey.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408042437.10951-1-ioworker0@gmail.com> <20240408042437.10951-2-ioworker0@gmail.com>
- <38c4add8-53a2-49ca-9f1b-f62c2ee3e764@arm.com> <CAK1f24kh-vN3_6ZLUZWXu_g1UOPBuoVXq2jsnx_GBbGFXyXRFQ@mail.gmail.com>
- <3cda8e87-7095-4aad-beb1-6a420912df34@arm.com> <CAK1f24k6mhQZwws7fjvL0ynme4FtjqBM3T6ZYuFPytH0fG=v6w@mail.gmail.com>
- <8d674b15-ef74-4d96-bc27-8794f744517c@arm.com>
-In-Reply-To: <8d674b15-ef74-4d96-bc27-8794f744517c@arm.com>
-From: Lance Yang <ioworker0@gmail.com>
-Date: Fri, 12 Apr 2024 09:48:19 +0800
-Message-ID: <CAK1f24=iMEcD43AVv7Xbhviv_K=3CBAidTwT3bOTRMW8yhKt4w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] mm/madvise: optimize lazyfreeing with mTHP in madvise_free
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, 21cnbao@gmail.com, 
-	mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com, 
-	shy828301@gmail.com, xiehuan09@gmail.com, wangkefeng.wang@huawei.com, 
-	songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 11, 2024 at 10:39=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com=
-> wrote:
->
-> On 11/04/2024 15:07, Lance Yang wrote:
-> > On Thu, Apr 11, 2024 at 9:48=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.=
-com> wrote:
-> >>
-> >> [...]
-> >>
-> >>>>> +
-> >>>>> +             if (!folio_trylock(folio))
-> >>>>> +                     continue;
-> >>>>
-> >>>> This is still wrong. This should all be protected by the "if
-> >>>> (folio_test_swapcache(folio) || folio_test_dirty(folio))" as it was =
-previously
-> >>>> so that you only call folio_trylock() if that condition is true. You=
- are
-> >>>> unconditionally locking here, then unlocking, then relocking below i=
-f the
-> >>>> condition is met. Just put everything inside the condition and lock =
-once.
-> >>>
-> >>> I'm not sure if it's safe to call folio_mapcount() without holding th=
-e
-> >>> folio lock.
-> >>>
-> >>> As mentioned earlier by David in the v2[1]
-> >>>> What could work for large folios is making sure that #ptes that map =
-the
-> >>>> folio here correspond to the folio_mapcount(). And folio_mapcount()
-> >>>> should be called under folio lock, to avoid racing with swapout/migr=
-ation.
-> >>>
-> >>> [1] https://lore.kernel.org/all/5cc05529-eb80-410e-bc26-233b0ba0b21f@=
-redhat.com/
-> >>
-> >> But I'm not suggesting that you should call folio_mapcount() without t=
-he lock.
-> >> I'm proposing this:
-> >>
-> >>                 if (folio_test_swapcache(folio) || folio_test_dirty(fo=
-lio)) {
-> >>                         if (!folio_trylock(folio))
-> >>                                 continue;
-> >>                         /*
-> >> -                        * If folio is shared with others, we mustn't =
-clear
-> >> -                        * the folio's dirty flag.
-> >> +                        * If we have a large folio at this point, we =
-know it is
-> >> +                        * fully mapped so if its mapcount is the same=
- as its
-> >> +                        * number of pages, it must be exclusive.
-> >>                          */
-> >> -                       if (folio_mapcount(folio) !=3D 1) {
-> >> +                       if (folio_mapcount(folio) !=3D folio_nr_pages(=
-folio)) {
-> >>                                 folio_unlock(folio);
-> >>                                 continue;
-> >>                         }
-> >
-> > IIUC, if the folio is clean and not in the swapcache, we still need to
-> > compare the number of batched PTEs against folio_mapcount().
->
-> Why? That's not how the old code worked. In fact the comment says that th=
-e
-> reason for the exclusive check is to avoid marking a dirty *folio* as cle=
-an if
-> shared; that would be bad because we could throw away data that others re=
-lied
-> upon. It's perfectly safe to clear the dirty flag from the *pte* even if =
-it is
-> shared; the ptes are private to the process so that won't affect sharers.
->
-> You should just follow the pattern already estabilished by the original c=
-ode.
-> The only difference is that because the folio is now (potentially) large,=
- you
-> have to change the way to detect exclusivity.
+rr, a userspace record and replay debugger[0], replays asynchronous events
+such as signals and context switches by essentially[1] setting a breakpoint
+at the address where the asynchronous event was delivered during recording
+with a condition that the program state matches the state when the event
+was delivered.
 
-Thanks a lot for your patience and help!
+Currently, rr uses software breakpoints that trap (via ptrace) to the
+supervisor, and evaluates the condition from the supervisor. If the
+asynchronous event is delivered in a tight loop (thus requiring the
+breakpoint condition to be repeatedly evaluated) the overhead can be
+immense. A patch to rr that uses hardware breakpoints via perf events with
+an attached BPF program to reject breakpoint hits where the condition is
+not satisfied reduces rr's replay overhead by 94% on a pathological (but a
+real customer-provided, not contrived) rr trace.
 
-My bad for the oversight and mistake :(
-I'll take another look at the original code and make adjustments following =
-the
-established pattern.
+The only obstacle to this approach is that while the kernel allows a BPF
+program to suppress sample output when a perf event overflows it does not
+suppress signalling the perf event fd or sending the perf event's SIGTRAP.
+This patch set redesigns __perf_overflow_handler() and
+bpf_overflow_handler() so that the former invokes the latter directly when
+appropriate rather than through the generic overflow handler machinery,
+passes the return code of the BPF program back to __perf_overflow_handler()
+to allow it to decide whether to execute the regular overflow handler,
+reorders bpf_overflow_handler() and the side effects of perf event
+overflow, changes __perf_overflow_handler() to suppress those side effects
+if the BPF program returns zero, and adds a selftest.
 
-Thanks,
-Lance
+The previous version of this patchset can be found at
+https://lore.kernel.org/linux-kernel/20240214173950.18570-1-khuey@kylehuey.com/
 
->
-> >
-> > Thanks,
-> > Lance
-> >
-> >>
-> >> What am I missing?
-> >>
->
+Changes since v5:
+
+Patches 1, 2, and 3 are added to address Ingo's review comments.
+
+Patches 4 through 7 are the previous patches 1 through 4.
+
+Patches 4 through 7 add Andrii's Acked-by.
+
+Patch 5 fixes Ingo's comments about punctuation and newlines.
+
+v4 of this patchset can be found at
+https://lore.kernel.org/linux-kernel/20240119001352.9396-1-khuey@kylehuey.com/
+
+Changes since v4:
+
+Patches 1, 2, 3, 4 added various Acked-by.
+
+Patch 4 addresses additional nits from Song.
+
+v3 of this patchset can be found at
+https://lore.kernel.org/linux-kernel/20231211045543.31741-1-khuey@kylehuey.com/
+
+Changes since v3:
+
+Patches 1, 2, 3 added various Acked-by.
+
+Patch 4 addresses Song's review comments by dropping signals_expected and the
+corresponding ASSERT_OKs, handling errors from signal(), and fixing multiline
+comment formatting.
+
+v2 of this patchset can be found at
+https://lore.kernel.org/linux-kernel/20231207163458.5554-1-khuey@kylehuey.com/
+
+Changes since v2:
+
+Patches 1 and 2 were added from a suggestion by Namhyung Kim to refactor
+this code to implement this feature in a cleaner way. Patch 2 is separated
+for the benefit of the ARM arch maintainers.
+
+Patch 3 conceptually supercedes v2's patches 1 and 2, now with a cleaner
+implementation thanks to the earlier refactoring.
+
+Patch 4 is v2's patch 3, and addresses review comments about C++ style
+comments, getting a TRAP_PERF definition into the test, and unnecessary
+NULL checks.
+
+[0] https://rr-project.org/
+[1] Various optimizations exist to skip as much as execution as possible
+before setting a breakpoint, and to determine a subset of program state
+that is practical to check and verify.
+
+
