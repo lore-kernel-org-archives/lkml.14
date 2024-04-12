@@ -1,68 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585714EC4E;
-	Fri, 12 Apr 2024 19:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712951918; cv=none; b=tUNWqS8kDPD2iSRPXX7ITzIOurlnUJO34qa7H8vSyQcbT4N/FvjH5Ou62Ss4tKQ+GTNoK0dmKZ79E2x2X/De1XROV1vYtQV7u5toFuKbOUPkST2T/i99+IxG8tuWDEO+s3QN3YFx4H2KvzSNGGRkgJgTzpag1USrikgS8yxMewM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712951918; c=relaxed/simple;
-	bh=9HYoa2q9zbdAwhkuDRDtehEu+C2d3K7WfVfQ1MwY5ts=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=UsMt+tALfGQvR5WojI3kGQuCYNcAgf0jkY0t4zMgTu1sd92HQk1Mh1jQKPWWkdVXFIR7rYzpyds/KIVkKjm+4MwbDW9Fq5P7LKc6xqJTyooB8CefGvDLsDybDzoVCR4oi8twyh38lFfNcgAeboUPaKhVk4ZggKEcYlIxuMLxpG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SGLpNFOb; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6214E14EC4E;
+	Fri, 12 Apr 2024 19:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712951979; cv=pass; b=tM02eqSb0VXaU5aseqDfndC4vmK/DfD1l3sZPRySJSKEghbYm0IsV7w+79SCv/uilQ3/lAQNvQx71jCIqhnCTnwFZgsUULP3NBfpYUF2rJr9fzISIO15n8dO3EVJGBf+PvIT0HG6aFw7M3KGa+b3mpLkxf/wZzqdeNAK4c6FdMo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712951979; c=relaxed/simple;
+	bh=9GILyS5wOQePaTKkVr8cMkodqWg8VGVjdnrVrcN1rW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c1nm87q+sp2g+CV3VmLD3GgnE+08gH9pWgSTcAElVZ63ha8tp6nMgPMYDYiECeoeFzYKGl6RtrpWTcXb5S76Qn2AKyg/ifHQzg0xEdOSluX+eXpeh8pmkgycbmOkm+lNR+pG/vJXsoHzAAsoXK81PXIn3sRNIH80GpWKXMIJP4g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net; spf=none smtp.mailfrom=gerhold.net; dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=gpteDel6; dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b=5caQbqJE; arc=pass smtp.client-ip=85.215.255.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gerhold.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=gerhold.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGLpNFOb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECFEAC113CC;
-	Fri, 12 Apr 2024 19:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712951918;
-	bh=9HYoa2q9zbdAwhkuDRDtehEu+C2d3K7WfVfQ1MwY5ts=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SGLpNFOblQMeIbaJAa2RR1y9xP1A4VwRPfNvrMemMrQdH7DFIEqXfWjED1/QhvtxO
-	 hJwupFe0Zppd9Hx7FQ6sAD9A8zlkGNqxCKL93Lgv+HM/Tlv2ihysEEhBSMme0WU/xZ
-	 RmyWk2LZ0EfMI6v7/A50srEd/rQl8GV6TNI7lhloC7ZsNkN79QdcezoDxDudu48TlU
-	 6yeJb0nSJDsOMZYNoTJ//yRoBGLYAUywwOLqZRW1kYosaZ/FAmRG8UQ0qWOU9fuvNj
-	 MUvOqI6C3if4nm0zgjmb2nXTx/fQpWCIEwE1QW09jgPv9Q7AQOn6hkEUrmUqhOGaI4
-	 DTF2TST3dsEgA==
-Date: Fri, 12 Apr 2024 14:58:36 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Marek Vasut <marek.vasut+renesas@gmail.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Minghuan Lian <minghuan.Lian@nxp.com>,
-	Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Srikanth Thokala <srikanth.thokala@intel.com>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@axis.com, linux-rockchip@lists.infradead.org,
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v12 2/8] PCI: dwc: ep: Add Kernel-doc comments for APIs
-Message-ID: <20240412195836.GA13344@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="gpteDel6";
+	dkim=permerror (0-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="5caQbqJE"
+ARC-Seal: i=1; a=rsa-sha256; t=1712951603; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=mXyGqxePBmd8lepTK9pbK2hPDvbmzxqP0x17Md01t23w2aU7a5WkCyRHk1r/1usGiH
+    FX1oxFNvY/JCYdHn/28AN8z3OwDjmngIxWPyghO5ntAPLnEo/xA8jYtkZkmOZsO7ic13
+    C8z8DLohWxvChxLviNf24oeUSzd8w1bq3CLQSHY7X01aa1YrI0WZXbqnQHgjX8lKRiBK
+    H3GFTa696yq0mBsep4FP+NSibjrmSwqkNGIP95uEUvyP5P9Nc8Awr09LqtRE2l6XW0LI
+    OJF7tNzLn27AgpJc60ivEkp1ZmSDjjn+8kCjaW/O95fUNYRX+yy8Kb8RpyVEjlJP8VSs
+    Vfww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951603;
+    s=strato-dkim-0002; d=strato.com;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
+    b=TRhtcnenJDtY7Ywd7qaePVOa/MlvA+jL4MBT/8FcsbHJDGj99IDVgKDNVo9/oA38MS
+    1m3ZjXHtxjpT12QbrNb976NX9JiV9nctmeJhwIxtXzW1N+yAo/8FZT5bDwueE4c1ET0s
+    7KHgowHbNlhGUnEY3F8UTIofU7GQikxoNwIviT1jTLOk0SFlOvvtY/kqGG3ds9XIDCPY
+    bOJLM4T5KAde+qGHNj5BqdMORRYV3JPUu5OsicFlQ4Ll8osh4BqfbWDXFjOCZINdTDOf
+    1jPpQTdSFqzcLgFhrxjtKq2hW6xsWkP3IBNVJVpTKRTvkOvDsk+ZHD3Z/FYi+a3tVeiB
+    8qkg==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1712951603;
+    s=strato-dkim-0002; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
+    b=gpteDel69DQ0ThyZf+szYkf4LEln0Uw1Gu4zbWYDyHCJnQEWy5jUlX4CPTTz5q1eS4
+    //3LzhIGq9zSuCyyC3ffb0DSD2qUhYe0i6rd7nNwpz4cwe2xrFmG6AxZClI4KrpJlNU8
+    sFfhvxXp5YibwGMPOZMEaR3yZyIBBw+5y4LnUEU2xu/RcxW6Na6OVZ1I9t+sxvXKbe0R
+    TfVZdfAOtgtiwx7HTL7+pqVh9BqkvFctfT16uMo1WYxT/fKjTr/UdaviSwD11VaDMR24
+    B3NN2KUSOaLabW2uzlQd13cOWFeRAHUUoLP9pxfHgValNPsZil+ElxGhcfEjZ4/aEBlG
+    rWnA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1712951603;
+    s=strato-dkim-0003; d=gerhold.net;
+    h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
+    From:Subject:Sender;
+    bh=FhdLnrYDB2Gbpoa3iA3B4bHJbBtO20mT/yS1LRQLe4o=;
+    b=5caQbqJEeEmju7YbfP7/x+LNKYr7C1dExLHSFFtXhfpc4JddZWWvOctbNhJhcsdsEh
+    r2UB+9Dx32Fzfgp3yLBw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJD4paA+p3h"
+Received: from gerhold.net
+    by smtp.strato.de (RZmta 50.3.2 DYNA|AUTH)
+    with ESMTPSA id Raf12503CJrModL
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+	(Client did not present a certificate);
+    Fri, 12 Apr 2024 21:53:22 +0200 (CEST)
+Date: Fri, 12 Apr 2024 21:53:16 +0200
+From: Stephan Gerhold <stephan@gerhold.net>
+To: Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: sa8155p-adp: lower min volt for
+ L13C regulator
+Message-ID: <ZhmRJPAZUSlc1CSH@gerhold.net>
+References: <20240412190310.1647893-1-volodymyr_babchuk@epam.com>
+ <20240412190310.1647893-2-volodymyr_babchuk@epam.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,22 +89,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327-pci-dbi-rework-v12-2-082625472414@linaro.org>
+In-Reply-To: <20240412190310.1647893-2-volodymyr_babchuk@epam.com>
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 27, 2024 at 02:43:31PM +0530, Manivannan Sadhasivam wrote:
-> All of the APIs are missing the Kernel-doc comments. Hence, add them.
+On Fri, Apr 12, 2024 at 07:03:26PM +0000, Volodymyr Babchuk wrote:
+> Voltage regulator L13C is used by SD card IO interface. In order to
+> support UHS modes, IO interface voltage needs to be set to 1.8V. This
+> patch extends minimum voltage range of L13C regulator to allow this.
+> 
 
-> + * dw_pcie_ep_reset_bar - Reset endpoint BAR
+I think this one also deserves a Fixes and stable tag. One could argue
+that enabling UHS modes is a new "feature" but I would say the original
+commit just missed setting the correct voltages with the intended use
+case. I doubt limiting to high speed was intended.
 
-Apparently this resets @bar for every function of the device, so it's
-not just a single BAR?
+Maybe also add a Suggested-by tag from myself:
 
-> + * dw_pcie_ep_raise_intx_irq - Raise INTx IRQ to the host
-> + * @ep: DWC EP device
-> + * @func_no: Function number of the endpoint
-> + *
-> + * Return: 0 if success, errono otherwise.
+Fixes: 0deb2624e2d0 ("arm64: dts: qcom: sa8155p-adp: Add support for uSD card")
+Cc: stable@vger.kernel.org
+Suggested-by: Stephan Gerhold <stephan@gerhold.net>
 
-s/errono/errno/ (another instance below)
+I believe you do not need to resend just to add these tags, the b4 tool
+should pick them up while applying. It looks like this might not work
+for the Cc: stable tag though...
 
-Bjorn
+Thanks,
+Stephan
+
+> Signed-off-by: Volodymyr Babchuk <volodymyr_babchuk@epam.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sa8155p-adp.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> index b2cf2c988336c..9e9c7f81096bb 100644
+> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
+> @@ -283,7 +283,7 @@ vreg_l12c_1p808: ldo12 {
+>  
+>  		vreg_l13c_2p96: ldo13 {
+>  			regulator-name = "vreg_l13c_2p96";
+> -			regulator-min-microvolt = <2504000>;
+> +			regulator-min-microvolt = <1800000>;
+>  			regulator-max-microvolt = <2960000>;
+>  			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>  		};
+> -- 
+> 2.44.0
