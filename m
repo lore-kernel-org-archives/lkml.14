@@ -1,86 +1,147 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1BA147C7D;
-	Fri, 12 Apr 2024 16:20:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AECC147C7D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938843; cv=none; b=h35XrNUmzSH6cBV2X0RxnoZZAlFIC61p8Ovf7/FheNfwobI52X5VBHq6D4/jnjs4IlsH75eqJ2jIT+mAi8A4Nw2gFiaHF/kjokL0aNxeU3sF7CA3Cg5eYHcsOkEd8fRuIZoPh2TVah+vyA6GgpzLgMzzGyg9rhMnrJQh6IXBOso=
+	t=1712938846; cv=none; b=XFcUCSTtjpxk62mke+bQXNNdcX9lRCBlNdTGuRv0by0b4/MEr04+aM3GGuMC0xvH8KQiJFi51uXsfTpAKmIMgPY50O0MsdJ3xvaCKiNeCBC9Llo1dBAzNaEV4khr54Y4nXeIj7KWq0ablqo6FJaIAk5oy9kwnt2mClyRT84Ja2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938843; c=relaxed/simple;
-	bh=b2qFMR2+iwr3b0+J+yiyFFDMF9xfEF73dqW/f28sbH4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IvhuMdHpmCCaOzd+KDfpY5nVEnsbnVUid5oLq1YmRzpIYY03K+Myv1Jd5+KmCsFatab8R7UjLdpy/wqEAW6KYpkb8Uzi1v3vDVLu6J9K9gRVI3AN9144vQr68cnlrOtq9qslPQ/iVr3fluQ3/OYg+rTH5BON7k4OLHtrMv5X1XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGMFT4qnKz6J9hN;
-	Sat, 13 Apr 2024 00:18:53 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9A2321400CF;
-	Sat, 13 Apr 2024 00:20:39 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 12 Apr 2024 17:20:38 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<gregkh@linuxfoundation.org>
-CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
- Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
-	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
-	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
-	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
-	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
-	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
-	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
-	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
-	<kan.liang@linux.intel.com>
-Subject: [PATCH v2 19/30] perf/arm-ccn: Assign parents for event_source device
-Date: Fri, 12 Apr 2024 17:10:46 +0100
-Message-ID: <20240412161057.14099-20-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
-References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+	s=arc-20240116; t=1712938846; c=relaxed/simple;
+	bh=yC3XTUFwDh0xSStE/nTpmKIcliT8G1Hdq6DqZfDKtq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ovZyEqdGCO5B/xqYBjR8OeHAG93I1ExmvT0uogaUFw3aQDn10fv6PbsBWUUazAPrNgmyB5ulW2O8uADTamedxHQ3CRk/x+sx+CFXqBzs5WbmEwrmSUIHuEwCWXXG3X/Z77sukLUemys0owm7cNbJpQwKBk1+hl2lLKvNJ04zkJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CDD3339;
+	Fri, 12 Apr 2024 09:21:13 -0700 (PDT)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 866883F64C;
+	Fri, 12 Apr 2024 09:20:41 -0700 (PDT)
+Date: Fri, 12 Apr 2024 17:20:39 +0100
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: James Morse <james.morse@arm.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>, Babu Moger <Babu.Moger@amd.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com, lcherian@marvell.com,
+	bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+	dfustini@baylibre.com, amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>
+Subject: Re: [PATCH v1 30/31] x86/resctrl: Move the filesystem bits to
+ headers visible to fs/resctrl
+Message-ID: <ZhlfV446640jF/rd@e133380.arm.com>
+References: <20240321165106.31602-1-james.morse@arm.com>
+ <20240321165106.31602-31-james.morse@arm.com>
+ <8f4a05d5-2040-4cf2-8c05-a190c25d64db@intel.com>
+ <ZhfznA2Sp3KFdjrA@e133380.arm.com>
+ <0baf690b-4ed4-4dad-9f50-e5df93d599fd@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0baf690b-4ed4-4dad-9f50-e5df93d599fd@intel.com>
 
-Currently the PMU device appears directly under /sys/devices/
-Only root busses should appear there, so instead assign the pmu->dev
-parent to be the platform device.
+On Thu, Apr 11, 2024 at 10:43:55AM -0700, Reinette Chatre wrote:
+> Hi Dave,
+> 
+> On 4/11/2024 7:28 AM, Dave Martin wrote:
+> > On Mon, Apr 08, 2024 at 08:42:00PM -0700, Reinette Chatre wrote:
+> >> Hi James,
+> >>
+> >> On 3/21/2024 9:51 AM, James Morse wrote:
+> >> ..
+> >>> diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+> >>> index 4788bd95dac6..fe0b10b589c0 100644
+> >>> --- a/include/linux/resctrl_types.h
+> >>> +++ b/include/linux/resctrl_types.h
+> >>> @@ -7,6 +7,36 @@
+> >>>  #ifndef __LINUX_RESCTRL_TYPES_H
+> >>>  #define __LINUX_RESCTRL_TYPES_H
+> >>>  
+> >>> +#define CQM_LIMBOCHECK_INTERVAL	1000
+> >>> +
+> >>> +#define MBM_CNTR_WIDTH_BASE		24
+> >>> +#define MBM_OVERFLOW_INTERVAL		1000
+> >>> +#define MAX_MBA_BW			100u
+> >>> +#define MBA_IS_LINEAR			0x4
+> >>> +
+> >>> +/* rdtgroup.flags */
+> >>> +#define	RDT_DELETED		1
+> >>> +
+> >>> +/* rftype.flags */
+> >>> +#define RFTYPE_FLAGS_CPUS_LIST	1
+> >>> +
+> >>> +/*
+> >>> + * Define the file type flags for base and info directories.
+> >>> + */
+> >>> +#define RFTYPE_INFO			BIT(0)
+> >>> +#define RFTYPE_BASE			BIT(1)
+> >>> +#define RFTYPE_CTRL			BIT(4)
+> >>> +#define RFTYPE_MON			BIT(5)
+> >>> +#define RFTYPE_TOP			BIT(6)
+> >>> +#define RFTYPE_RES_CACHE		BIT(8)
+> >>> +#define RFTYPE_RES_MB			BIT(9)
+> >>> +#define RFTYPE_DEBUG			BIT(10)
+> >>> +#define RFTYPE_CTRL_INFO		(RFTYPE_INFO | RFTYPE_CTRL)
+> >>> +#define RFTYPE_MON_INFO			(RFTYPE_INFO | RFTYPE_MON)
+> >>> +#define RFTYPE_TOP_INFO			(RFTYPE_INFO | RFTYPE_TOP)
+> >>> +#define RFTYPE_CTRL_BASE		(RFTYPE_BASE | RFTYPE_CTRL)
+> >>> +#define RFTYPE_MON_BASE			(RFTYPE_BASE | RFTYPE_MON)
+> >>> +
+> >>>  /* Reads to Local DRAM Memory */
+> >>>  #define READS_TO_LOCAL_MEM		BIT(0)
+> >>>  
+> >>
+> >> Not all these new seem to belong in this file. Could you please confirm?
+> >>
+> >> For example:
+> >> Earlier in series it was mentioned that struct rdtgroup is private to the
+> >> fs so having RDT_DELETED is unexpected as it implies access to struct rdtgroup.
+> >>
+> >> CQM_LIMBOCHECK_INTERVAL seems private to the fs code, so too
+> >> RFTYPE_FLAGS_CPUS_LIST.
+> >>
+> >> Reinette
+> >>
+> > 
+> > I'll flag this for James to review.
+> > 
+> > These have to be moved out of the x86 private headers, but you're right
+> > that some of them seem logically private to the resctrl core.
+> > 
+> > I guess some of these could move to fs/resctrl/internal.h?
+> 
+> It looks to me that way.
+> 
+> > 
+> > OTOH, might it be preferable to keep all the flag definitions for a
+> > given member together for ease of maintenance, even if some are for
+> > resctrl internal use only?
+> 
+> Indeed, those RFTYPE flags really seem to be fs code but I agree that
+> architectures' use of RFTYPE_RES_CACHE and RFTYPE_RES_MB does make this
+> complicated and having these in a central place is reasonable to me.
+> 
+> Reinette
 
-Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/perf/arm-ccn.c | 1 +
- 1 file changed, 1 insertion(+)
+Maybe we could split these into two groups, and clearly comment the ones
+that have no user outside resctrl as internal use only?
 
-diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-index 641471bd5eff..f4495ff6525f 100644
---- a/drivers/perf/arm-ccn.c
-+++ b/drivers/perf/arm-ccn.c
-@@ -1265,6 +1265,7 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
- 	/* Perf driver registration */
- 	ccn->dt.pmu = (struct pmu) {
- 		.module = THIS_MODULE,
-+		.parent = ccn->dev,
- 		.attr_groups = arm_ccn_pmu_attr_groups,
- 		.task_ctx_nr = perf_invalid_context,
- 		.event_init = arm_ccn_pmu_event_init,
--- 
-2.39.2
+That's not as clean as removing those definitions from a shared header,
+but at least would help document the issue until/unless a better
+solution is found...
 
+Cheers
+---Dave
