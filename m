@@ -1,88 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F9D84A4F;
-	Fri, 12 Apr 2024 16:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324DE1487FF;
+	Fri, 12 Apr 2024 16:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938556; cv=none; b=kD6BZIJstCTWleEWdsA1SicUaY+jht0bnnE2aFKSSlYoRzxAdRWczPXPtg3MJGZmcfLKtmLO2sBNYTRCphsHOuX7OQDoXMuUg1ZHxQlwTIPwJiUO/IB5e20Sz16+xozIigZvE96Ms+YnDLPHTBuMaOWKUqiE9pzN38JjlySBSM0=
+	t=1712938566; cv=none; b=UlGpfDuMTKGqz3hNuw5DwYof4tzaiRsod5UicQUg/mun1JoTqZG7cx0QbBzkP0UOfKNnzXJRAaroxID9rJnx3027DyKsVcGZRuSUSC4MaxZdBHkUEgn5kfiKfiPWjYfpO0B9EONtE5le1JI2mf2Ei1HL0AhOaLa7xRFGAtgXo/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938556; c=relaxed/simple;
-	bh=OGemIX+8j/SNPZ6+9iiBSfvBSY+CSmmHswHoWL2kVOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dmEyQ2cG4NQV6ONsGxnYSpDOStwG5cElml8pE36o1pcQQ6W/Vs6ls56PJa+Jx9c3JslqEEddOr4/AyDTZsIZsli/dVrtM64ke9UWAVAKWJl9gZ2DU46VUVNfGYcjsQ3ZnKEGfOmKA7kA3ihucg+N7HVydyV2pETjORYK97O0NPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MolebbcD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MolebbcD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04972C113CC;
-	Fri, 12 Apr 2024 16:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712938556;
-	bh=OGemIX+8j/SNPZ6+9iiBSfvBSY+CSmmHswHoWL2kVOI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MolebbcDZ5evosjdFYXSEiJYVEIgZrNBKZZK3dkxLS/4oJUUc8OUhWxTZ7BlqdJuW
-	 OrP5ALCDNDHu+gonENkJaoMP3/IzdN5btztrEt2mV9lvCXfGRSNGU8pZiBZgvDvtzv
-	 YVQ8Y65MuVVbB/wP5NFy5tce1FdzECQzavYHOg3Ua5MBo/j7O+3pH6USMVy9WCqFVv
-	 ocALK9bb8w5NHoGyw7lDrV64k488p0X3m8/+nuFVfCHu1FV8Smy8tU7NK+EQDkRxQl
-	 x9u+2GHsfMvHHhRunejv+GZWXp0BDYvgJ26kqQ0dM51Npz9xItiqVSHXLN1VKWAGnk
-	 G1Dw1MIOexwGA==
-Date: Fri, 12 Apr 2024 11:15:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Christophe Roullier <christophe.roullier@foss.st.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/11] dt-bindings: net: add phy-supply property for stm32
-Message-ID: <20240412161553.GA3051386-robh@kernel.org>
-References: <20240411143658.1049706-1-christophe.roullier@foss.st.com>
- <20240411143658.1049706-3-christophe.roullier@foss.st.com>
+	s=arc-20240116; t=1712938566; c=relaxed/simple;
+	bh=R7LerIn/HSC7R8/axKcxrEFTXj4LE1SX89SZ9pIIKSI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IN/o7LzKn46XbrpLzH9f9/vc5dEAIs9UCbkYGKyoQl8zBj0zvzfYqPkgDlTJ6NhCyxsO/FT0JG7AKB5qoBEx+gEmUW7070DbL7M1lVU+v/uhwaSAEZIyFNIKFq3BUERZcaVZJg70DOUXH6rnAFUyfCI2SHoUj+FMq/S3giuz6Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM4c4M1Sz6K6hC;
+	Sat, 13 Apr 2024 00:11:12 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 064E7140119;
+	Sat, 13 Apr 2024 00:16:03 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:16:02 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 10/30] Documentation: thunderx2-pmu: Use /sys/bus/event_source/devices paths
+Date: Fri, 12 Apr 2024 17:10:37 +0100
+Message-ID: <20240412161057.14099-11-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240411143658.1049706-3-christophe.roullier@foss.st.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, Apr 11, 2024 at 04:36:49PM +0200, Christophe Roullier wrote:
-> Phandle to a regulator that provides power to the PHY. This
-> regulator will be managed during the PHY power on/off sequence.
-> 
-> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
-> ---
->  Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+To allow setting an appropriate parent for the struct pmu device
+remove existing references to /sys/devices/ path.
 
-Missing Krzysztof's ack or reason it was not added.
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ Documentation/admin-guide/perf/thunderx2-pmu.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> index 20f58eff6e6f9..34650cd9d6702 100644
-> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
-> @@ -91,6 +91,9 @@ properties:
->        RCC clock instead of ETH_CLK125.
->      type: boolean
->  
-> +  phy-supply:
-> +    description: PHY regulator
-> +
->    st,eth-clk-sel:
->      description:
->        set this property in RGMII PHY when you want to select RCC clock instead of ETH_CLK125.
-> -- 
-> 2.25.1
-> 
+diff --git a/Documentation/admin-guide/perf/thunderx2-pmu.rst b/Documentation/admin-guide/perf/thunderx2-pmu.rst
+index 01f158238ae1..9255f7bf9452 100644
+--- a/Documentation/admin-guide/perf/thunderx2-pmu.rst
++++ b/Documentation/admin-guide/perf/thunderx2-pmu.rst
+@@ -22,7 +22,7 @@ The thunderx2_pmu driver registers per-socket perf PMUs for the DMC and
+ L3C devices.  Each PMU can be used to count up to 4 (DMC/L3C) or up to 8
+ (CCPI2) events simultaneously. The PMUs provide a description of their
+ available events and configuration options under sysfs, see
+-/sys/devices/uncore_<l3c_S/dmc_S/ccpi2_S/>; S is the socket id.
++/sys/bus/event_source/devices/uncore_<l3c_S/dmc_S/ccpi2_S/>; S is the socket id.
+ 
+ The driver does not support sampling, therefore "perf record" will not
+ work. Per-task perf sessions are also not supported.
+-- 
+2.39.2
+
