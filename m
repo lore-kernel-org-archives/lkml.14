@@ -1,139 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCBC134B2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165AC134BD;
 	Fri, 12 Apr 2024 02:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712889702; cv=none; b=t5f7wl4Rx2u1kktDMj1BDtUiR08JeXUD4PHrWGrX71kBH7ohCo/wQfcuzwvK5KsMgTSHnSVzO54AIciEgzXYVup0Nmpu/Q7ehcYWts1WqEPdOCOJKMSj2A+3WhoffsucMY3qlwZVTm6ig9+hp8KLJ9jcY1tomneHbzvnnRUqMWY=
+	t=1712889705; cv=none; b=DBS0AWrYFXFmxc5wRVxEFZHbCViuLTKWyKCtYfYxRADglb8DjeGbRtM2WzBOUFDEkW4wjj6f5XVRnhZHEIs/YeM8YRHYX2UuB2GkhRfdE8YLnlc1NpFW7bndxFHg1EAGccizmZlCOY0OTC1Vpyc2ATkqyWp4YSaTRvYO8n/eGp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712889702; c=relaxed/simple;
-	bh=gyAmQHiRYV+HIpaJgNo9yjZlDqDiDb0tmnZMSirOQh0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UZU5LrAIadRcU2ZaM3qEcHMF7vPoAJfT1iD6w5oWm056w47tyGkG9qK3pVO/r79EkHGfbFb16Hk6zHHZ1De6tee0IclarWjCGCHz68NeoSO0IBQo8CGrGCvkMB+B0n6hn/M+dC241D3F4WDLJRktAKImL3e2VE2IWV1iirta/D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LhBMlhuV; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1712889705; c=relaxed/simple;
+	bh=kPTWyd27qtpz0j7CiJ8MLUsJpEDcMvRcWprNNYOooUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YFnOoBMQGV8dIZ+HPHQCEN8hdjdteSAI5DgvAoonHia0SlSnm/WZrMRO+3cHf7wf6Ka6w/99fwq4uLXKibTqDZFHjsnG1QqkHaR1++252H8Sq1YWVlS7+/qM3SlkGOpHAGxp63munPYOaL6o8BxLQfUk/+2PUJI5yOI4Pe/psco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BDohIcd+; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LhBMlhuV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712889701; x=1744425701;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gyAmQHiRYV+HIpaJgNo9yjZlDqDiDb0tmnZMSirOQh0=;
-  b=LhBMlhuVuahbYOrMk/GykIhNaTc0nJsUu47eU9W4QC/H2SLfVixEoKOq
-   KWgF7yvGfE1/cjE7qr4aTV79rmd4YdGm/t6YA1xvE8Bi62/Kyz7wqa0hD
-   ybf/sQNIZPeNBm5qx3jBWL89kxv11H2UqlIavUW8kP0qKlnU3maGpGRow
-   Iso75RLWa2ybmtTlhmoAHq4HEUzwyWWbi8C37/JrvJLfFFFK/bsE4M8wR
-   hSSIqnieGTyxR+sCWbT3gCEleBETxvxJ86f5cgFoW+Z8S8jrmvfGoKkH/
-   nn8SnS4Q0MuF0203Fl8bhHJLRy5ixF8r/FR7Z0DAqojf1CSxzo7OuW0OM
-   A==;
-X-CSE-ConnectionGUID: kYqiYsJ/TRiZN+8smgdQ/Q==
-X-CSE-MsgGUID: q3zwEHCITUqy1RVTjXEe0g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11041"; a="8509241"
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="8509241"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 19:41:40 -0700
-X-CSE-ConnectionGUID: 43qFm/8HR5Sq62vjVjcUgA==
-X-CSE-MsgGUID: FneYL0rOQdyFIsDuyE84vQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,194,1708416000"; 
-   d="scan'208";a="58519954"
-Received: from qzhang4-desk.sh.intel.com (HELO localhost) ([10.239.147.49])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2024 19:41:38 -0700
-From: qiang4.zhang@linux.intel.com
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Qiang Zhang <qiang4.zhang@intel.com>,
-	Stable@vger.kernel.org
-Subject: [PATCH RESEND] bootconfig: use memblock_free_late to free xbc memory to buddy
-Date: Fri, 12 Apr 2024 10:41:04 +0800
-Message-Id: <20240412024103.3078378-1-qiang4.zhang@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BDohIcd+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712889693; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=YjwBFUKfQzATV8MN0CZKmv5/RE4aS2y4MQlXc0URcto=;
+	b=BDohIcd+BA1HWdfhgGDJAB4OvcRuI7Bm+8EGF0jJ3kxgDTZWRqtV6H2voAk90PRsZaJRHLsQBXgdXFba11+Jeb5m1zR7jdryVSmgFdvcwkMqcwSvhFHJm0fn6atpRyOQwowrId6DC/kycD9UfLkhihsPa7Gr66MuuRwohPm0bVU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=tianruidong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W4MgPBj_1712889692;
+Received: from 30.221.130.139(mailfrom:tianruidong@linux.alibaba.com fp:SMTPD_---0W4MgPBj_1712889692)
+          by smtp.aliyun-inc.com;
+          Fri, 12 Apr 2024 10:41:32 +0800
+Message-ID: <8ff4deab-13ab-4fdf-b418-fbfefe46c087@linux.alibaba.com>
+Date: Fri, 12 Apr 2024 10:41:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] ACPICA: AEST: Support AEST V2
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: robert.moore@intel.com, rafael.j.wysocki@intel.com, lenb@kernel.org,
+ linux-acpi@vger.kernel.org, acpica-devel@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20240410063602.41540-1-tianruidong@linux.alibaba.com>
+ <ZhZacAOVpAXK8lDE@bogus>
+ <e3c91a7b-4bcc-45ce-92e6-c6a50ad80479@linux.alibaba.com>
+ <Zhep-UCqqPlg9BIh@bogus>
+Content-Language: en-US
+From: Ruidong Tian <tianruidong@linux.alibaba.com>
+In-Reply-To: <Zhep-UCqqPlg9BIh@bogus>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Qiang Zhang <qiang4.zhang@intel.com>
 
-On the time to free xbc memory, memblock has handed over memory to buddy
-allocator. So it doesn't make sense to free memory back to memblock.
-memblock_free() called by xbc_exit() even causes UAF bugs on architectures
-with CONFIG_ARCH_KEEP_MEMBLOCK disabled like x86. Following KASAN logs
-shows this case.
 
-[    9.410890] ==================================================================
-[    9.418962] BUG: KASAN: use-after-free in memblock_isolate_range+0x12d/0x260
-[    9.426850] Read of size 8 at addr ffff88845dd30000 by task swapper/0/1
+在 2024/4/11 17:14, Sudeep Holla 写道:
+> On Thu, Apr 11, 2024 at 03:54:48PM +0800, Ruidong Tian wrote:
+>>
+>>
+>> 在 2024/4/10 17:22, Sudeep Holla 写道:
+>>> On Wed, Apr 10, 2024 at 02:36:00PM +0800, Ruidong Tian wrote:
+>>>> AEST V2 was published[1], add V2 support based on AEST V1.
+>>>>
+>>>
+>>> Any changes to ACPICA has to get merged in the external ACPICA project.
+>>> Refer [1] for details from Rafael. You can also refer [2] in the kernel
+>>> docs.
+>>>
+>>
+>> Patch1 is just a fix to follow kernel code style.
+> 
+> IIUC such changes are not allowed as ACPICA changes are always imported
+> from the external project. So you have to take same route as patch2
 
-[    9.435901] CPU: 9 PID: 1 Comm: swapper/0 Tainted: G     U             6.9.0-rc3-00208-g586b5dfb51b9 #5
-[    9.446403] Hardware name: Intel Corporation RPLP LP5 (CPU:RaptorLake)/RPLP LP5 (ID:13), BIOS IRPPN02.01.01.00.00.19.015.D-00000000 Dec 28 2023
-[    9.460789] Call Trace:
-[    9.463518]  <TASK>
-[    9.465859]  dump_stack_lvl+0x53/0x70
-[    9.469949]  print_report+0xce/0x610
-[    9.473944]  ? __virt_addr_valid+0xf5/0x1b0
-[    9.478619]  ? memblock_isolate_range+0x12d/0x260
-[    9.483877]  kasan_report+0xc6/0x100
-[    9.487870]  ? memblock_isolate_range+0x12d/0x260
-[    9.493125]  memblock_isolate_range+0x12d/0x260
-[    9.498187]  memblock_phys_free+0xb4/0x160
-[    9.502762]  ? __pfx_memblock_phys_free+0x10/0x10
-[    9.508021]  ? mutex_unlock+0x7e/0xd0
-[    9.512111]  ? __pfx_mutex_unlock+0x10/0x10
-[    9.516786]  ? kernel_init_freeable+0x2d4/0x430
-[    9.521850]  ? __pfx_kernel_init+0x10/0x10
-[    9.526426]  xbc_exit+0x17/0x70
-[    9.529935]  kernel_init+0x38/0x1e0
-[    9.533829]  ? _raw_spin_unlock_irq+0xd/0x30
-[    9.538601]  ret_from_fork+0x2c/0x50
-[    9.542596]  ? __pfx_kernel_init+0x10/0x10
-[    9.547170]  ret_from_fork_asm+0x1a/0x30
-[    9.551552]  </TASK>
+In ACPICA, all struct use typedef which is not allowed in kernel:
 
-[    9.555649] The buggy address belongs to the physical page:
-[    9.561875] page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x45dd30
-[    9.570821] flags: 0x200000000000000(node=0|zone=2)
-[    9.576271] page_type: 0xffffffff()
-[    9.580167] raw: 0200000000000000 ffffea0011774c48 ffffea0012ba1848 0000000000000000
-[    9.588823] raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-[    9.597476] page dumped because: kasan: bad access detected
+     It's a **mistake** to use typedef for structures and pointers[1].
 
-[    9.605362] Memory state around the buggy address:
-[    9.610714]  ffff88845dd2ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[    9.618786]  ffff88845dd2ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-[    9.626857] >ffff88845dd30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-[    9.634930]                    ^
-[    9.638534]  ffff88845dd30080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-[    9.646605]  ffff88845dd30100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-[    9.654675] ==================================================================
+I see all other structs in actbl2.h follow this rule, so I fix all 
+typedef in AEST struct to follow kernel code style. But i can not apple 
+this fix in ACPICA. Patch1 is just a kernel patch.
 
-Cc: Stable@vger.kernel.org
-Signed-off-by: Qiang Zhang <qiang4.zhang@intel.com>
----
- lib/bootconfig.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1]: Documentation/process/coding-style.rst
 
-diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index c59d26068a64..4524ee944df0 100644
---- a/lib/bootconfig.c
-+++ b/lib/bootconfig.c
-@@ -63,7 +63,7 @@ static inline void * __init xbc_alloc_mem(size_t size)
- 
- static inline void __init xbc_free_mem(void *addr, size_t size)
- {
--	memblock_free(addr, size);
-+	memblock_free_late(__pa(addr), size);
- }
- 
- #else /* !__KERNEL__ */
--- 
-2.39.2
-
+> 1
+>> Patch2 had merged to
+>> acpica project, PR link can be see in patch2 comment:
+>>
+>>    Link: https://github.com/acpica/acpica/commit/ebb4979
+> 
+> Thanks, this will then get imported into kernel next time ACPICA changes
+> get merged which usually happens regularly.
+> 
