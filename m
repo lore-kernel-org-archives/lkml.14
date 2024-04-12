@@ -1,60 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF320D2FE
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 02:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF31134CE;
+	Fri, 12 Apr 2024 02:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712890227; cv=none; b=Wp4hpRUTU4G1k287DMeB/vr/vyUZQPLTIIuLsBowJFe5SafEwrd8iix0OTOsq/mcboiXlTVMT881h2ugnmKbSWpdOBAbmI5ERPXKAp8wKAB9cTvjyuSks/DbigNf5SwyAbEOgLsvLS+v7qvtXsrxcVzkOZa52ACRAjl4gMhdwUc=
+	t=1712890231; cv=none; b=G//B/Gc3BoWKQnygu+H8Am/gtlN4VCQ+u4NcQ4ls5BxhSgqF8nTJfIdCfw5HHiVzwVxfLOUXrc4ua8FLQiW9RgzSoDxzX/dB7/ZIyWwxP7htWnLakpwmytYmR/yZ5cVcVWG1I9kNNBZO9jlRtPMXVMZIeX1hrvqUuHf8/YhyhIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712890227; c=relaxed/simple;
-	bh=kjuxR8BzjV6OP/rkIJ1d1EwNgR/Yv1mV6uPaGcJvTIo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SXo+5VPdPWavJnUzrnPihzx4oSN7bi/TxRCPCWNZEx9RQFq9JfNMrjMVfIqzGoQ263jgARXI/YMwuUs5IBYqK27McxTaZ8i9HWRfLMjLOPQnMBD0Pu5OBb+bDgyCxWRnvCbERJXSzOKSA50DA1m/i2PHy5cog0FR8oNk3A18vSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfrYjvO2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712890231; c=relaxed/simple;
+	bh=zuHFbeFEeS204l/YqzpMFcRAaDus9Cr4Z1+LOMuO/Kc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=uDmwhyAelIH0V8xiXZp09FWn63CJ4oi26aQi8MPcz0pqOET2k6HZ8xHpCXGVYejFpKxqomr7CeGwTUvfGk9IM93DEJ4hfuTizd5BIbpLhExOpu4EY2aM/x7UfwyYwDgHaAkAAf1G8IbZ4ietGi0KLq0NJWmDc2nd/2lOB3TnZXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rLWzub48; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfrYjvO2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D66ABC072AA;
-	Fri, 12 Apr 2024 02:50:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rLWzub48"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EE5CBC32786;
+	Fri, 12 Apr 2024 02:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712890227;
-	bh=kjuxR8BzjV6OP/rkIJ1d1EwNgR/Yv1mV6uPaGcJvTIo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HfrYjvO2m9VgxuM7NgZiMsDiuzHouTbjMiajCIR2I3hY0I+C1c+PHSiqPheAaW2y5
-	 1QCm2fBdP6C5R/UDpIePxs9ZvZ3bqjUximnB0qYJb444NkI5MgAoX/kuC0+vXUhlis
-	 wpg43bd6BE8HoYM9xfHgpP59SIHf7fh3ui0Fdgs/NXB3l3RAm3XMNzw6AFgAHd7pkb
-	 TytTfnkh/el5xZjEKuW39ffbsACBjTzBRp4coUdZn2O/1A8SIe18LDpJLMaWwk/iVC
-	 zRrXzCBLaLKbMQBlR5KxdWpTS3wM5IHLZrEffJlqrjqYa4LtmEuQPbzszegL7lrmq7
-	 m2fEUyDpxShNg==
-Date: Thu, 11 Apr 2024 20:50:24 -0600
-From: Keith Busch <kbusch@kernel.org>
-To: Sagi Grimberg <sagi@grimberg.me>
-Cc: Daniel Wagner <dwagner@suse.de>, Christoph Hellwig <hch@lst.de>,
-	James Smart <james.smart@broadcom.com>,
-	Hannes Reinecke <hare@suse.de>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v5 4/6] nvme-rdma: short-circuit reconnect retries
-Message-ID: <ZhihcIORmdMr0Yas@kbusch-mbp.dhcp.thefacebook.com>
-References: <20240409093510.12321-1-dwagner@suse.de>
- <20240409093510.12321-5-dwagner@suse.de>
- <50a7e52a-c590-4281-9168-55ed7d5f2f3b@grimberg.me>
+	s=k20201202; t=1712890231;
+	bh=zuHFbeFEeS204l/YqzpMFcRAaDus9Cr4Z1+LOMuO/Kc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=rLWzub48BYy3SV9Bxg2cpH+T8AnWWqZK1WTsQi/vNSehXIe78z2aNPClPZtk0ms1J
+	 u30ntN5t+k1WOzd82z1u7OW18JaHS2KttpOOJ2exThBdUIxE8lTMjRgle7AcIqNJiF
+	 yxp9cvsZqdIW+ayr9ABdiuT/PvPGEm/pRsKfr1njQyi9JdiDSIUOM6284uHtob/Ggj
+	 /9BQJFF+BzBRn878E0SZst31juVZtKdX6XEGN6aKXwJ/m+oyzTwYrmhqCHxwkJ8EkT
+	 1ClJTY7s0c8/guWHCal+kewFg2hGawMsSnC4Zq/u+QhJn+5BbwQhHuxlDCKqeMV2Ok
+	 OuXBgoQiwQ9OA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DCBD3C43440;
+	Fri, 12 Apr 2024 02:50:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <50a7e52a-c590-4281-9168-55ed7d5f2f3b@grimberg.me>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] flow_offload: fix flow_offload_has_one_action() kdoc
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171289023089.15367.17253750888058630494.git-patchwork-notify@kernel.org>
+Date: Fri, 12 Apr 2024 02:50:30 +0000
+References: <20240410114718.15145-1-ast@fiberby.net>
+In-Reply-To: <20240410114718.15145-1-ast@fiberby.net>
+To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ pieter.jansenvanvuuren@netronome.com
 
-On Tue, Apr 09, 2024 at 11:28:04PM +0300, Sagi Grimberg wrote:
-> On 09/04/2024 12:35, Daniel Wagner wrote:
-> > 
-> > Returning an nvme status from nvme_rdma_setup_ctrl() indicates that the
-> > association was established and we have received a status from the
-> > controller; consequently we should honour
-> honor ?
+Hello:
 
-King's English vs. Freedom English? Whichever flavour or color you like,
-both are fine here!
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 10 Apr 2024 11:47:17 +0000 you wrote:
+> include/net/flow_offload.h:351: warning:
+>   No description found for return value of 'flow_offload_has_one_action'
+> 
+> Fixes: ab79af32b0a5 ("mlxsw: use intermediate representation for matchall offload")
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+> ---
+>  include/net/flow_offload.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Here is the summary with links:
+  - [net-next] flow_offload: fix flow_offload_has_one_action() kdoc
+    https://git.kernel.org/netdev/net-next/c/e1eb10f8ef10
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
