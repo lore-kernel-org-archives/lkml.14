@@ -1,130 +1,122 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2849358AAF
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F51953E14
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 08:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712911969; cv=none; b=gJWCvcvI1KD4MejMw8/FzSjhCPsKjE2PzuXzviAhILVfvxodYfUZFdbe9XmgmRHT9Dnx7eFF7sGU1vrxovti+5EY8+r0us4nxGEamIEUq8EheHBK5NWXOO2AfmPew0TXcq/fVaI1VMRsdYWB2IJqSkKdWfDBa5rvXWZb9ytWj78=
+	t=1712912014; cv=none; b=nPHSMxx2+xmIxrUi6JsVHX90TrXx+Yy34Lm3sAra5sDZrnp+iTct+nwUoHyBtHwyibopR5/IFfdSult+5bdaTVodt8GP1UeSasfGSbavKWnnhbbCd8Tc4YmkA6+rJKYLJIdzGJ/VX9UaKt6koB8KDK/DBoIH6xXeo7kzmVhHPZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712911969; c=relaxed/simple;
-	bh=/IeU9ssGSLw9Ct4KuGTCKCYgaCVVK3WWsbfp9sM9Zro=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=oW0huq32CtIaJNrVWDZACebvI9EzExkeK917UBM/wS0Uatp/MIxKkPQal1TRdoWAfyXKRv5oA/whT3faaYxDmPhLyh3pNAhPcTcRCQchLh1WZhwqKZRfF8bd2gs6pCGD5v7omZvtb3iD7CXWBIiYudcxsTeTm6E112MNEH90b5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RqOyfTLr; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1712912014; c=relaxed/simple;
+	bh=IfBjoXvsAqSszVL70UBX9LvJJQbmIVXzQ26EnPnGMSQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X7FaeaZ6WmvBJ8ps+Hf5ndzjKs5nyylWDqlFbafcTVyUS0dxBsIsOhqQog1Lyw+p8mPS4j+Iliu5aC8rPofFn5r8vwV664+zBXImbBkY4e+mgTjc22jGjfMaW7E48Y4dgpN+93KlTzYpOuW3mCN+MB3Lo2cnFX5+dS2X2ffkpQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mzwR1GH1; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RqOyfTLr"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-343d1003106so392253f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:52:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mzwR1GH1"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-516d264d0e4so1747137e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 01:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1712911965; x=1713516765; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yqg7/6oBVG7FC2A7yaPi7N20RXmvrxHvn6/HhvcSh6c=;
-        b=RqOyfTLrl4I0+Yl+iJg11oM+9a6lv6BgqUJ9wtodMOtWliCNM8w5JyeTGgqOJwBM1z
-         ftB6q+27wedCE+AIuSxFU3hbRhygw5fPjxpJE5ag9XRPPC7EyLnl1n6Pm+iPQ1k8LIZp
-         Xdy4CJigXNPFtOzOAg8ULhjbKBZv0GGLnERBlGMtwrDxwIbrkYv9wwKz5rsQatoO6YQ3
-         7mXR36iTAjgj5hk4SGcd2Z1eeZr1gEZZA14+z5DZNCbWYi6wb7XW0+mdY7W2sNpa8JxO
-         RajpZ1CxNxn5qCsrOxVol+8oU4aSwDNHBIucgM/oelKJGZgoGmRm9r0mLIgM0SGD+RYw
-         WwDA==
+        d=linaro.org; s=google; t=1712912010; x=1713516810; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YxatRE/93mGsglGJYCl3WbRD1jFFlo897Trav2ySzAI=;
+        b=mzwR1GH12OCNt69vs/ntUYZCxC/vqaLcPnGz2xAGWFeo2mlMqy+s1yGQ0FREmwE2Y5
+         LGDOrM8VutxC1dPX0Og7D+Cn6pWyiB8hDfnD7mhArmXx24rk+5DhrGfOreaQ2Erv8ske
+         xnxj/QrZY02rCKnWgC2JsODysPs3TcqXL9KfiFDXp4BKFqzZ+eqRQuEDrPdC0d8OQv/X
+         vfIoGzuFhIe5Nlmvngydrz0S2Vx6YDtTagppotQDZnf1NVY+N0q2lZZDLWF4lWoXyK79
+         Qgb1pmxlmtCa2/l3bdrlrZa3Iok0pPdtWGHGm+aFfxJNRr15pgxgplUlwchvIVSc3Lyq
+         iWKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712911965; x=1713516765;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yqg7/6oBVG7FC2A7yaPi7N20RXmvrxHvn6/HhvcSh6c=;
-        b=Z/hqISiRto7ajrYgcA3wH0XFwHmRwPI7jeuieNXK0eYqUYGDs5U+P3Jwm5SMNeWn5M
-         UKg+bqUgUIHw3AQ1rm4XCblN+5nvoQ4y8SnlLiGxMNQdgPNbOiRCeS9KDM0FEISymgKC
-         aadFTW0A9sqfX+N9B5+D9/sgZ/vzN6GNLh00XM3g7YdH6ix3ogphAro5994H9YTD+2wc
-         UAVOQv9TRN4MAHVVWUs0ZuaVLkYjOXGtrSJZqY+7wKIieGDpiyLy3kP0SoEMSNb63yr9
-         FuRiws7W8zp9hfmo1WYRiLkP6ZkQ0PRH1RdiHsvTV63BAMdoBhak6np2/Gv51sWJ5/VB
-         aVqA==
-X-Forwarded-Encrypted: i=1; AJvYcCVYPl/pFvrfSrNd29FMFa+B50l9bkWqutuasxf0GylcAt9lY+JjSTS1IHC4BeB4ce1bKEsOFziplB37VikZTqKswrAekSZYj4JHseLw
-X-Gm-Message-State: AOJu0Yxb5a/co2554+JbCzpzEjjslaSH19zLLtW0wCOOuT/cVimNEisw
-	yIdNwlqKIj8imh2ko9+gyIGQ7lz9ifFV/2smOUNEMuEMVsPfstd4fiJHkO5RtoA=
-X-Google-Smtp-Source: AGHT+IGaJEFW2OydWrtGlJEvOj+LQ9miUlniEJ47ZdatRM1Zm7j9aYX06RboRzFi8hrNNAXWEXWFlA==
-X-Received: by 2002:a5d:5982:0:b0:346:ba70:82f4 with SMTP id n2-20020a5d5982000000b00346ba7082f4mr2066199wri.46.1712911965458;
-        Fri, 12 Apr 2024 01:52:45 -0700 (PDT)
-Received: from localhost ([2a01:e0a:448:76e0:776e:989f:b50c:7cf6])
-        by smtp.gmail.com with ESMTPSA id b10-20020a056000054a00b00341b7d5054bsm3783180wrf.72.2024.04.12.01.52.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Apr 2024 01:52:45 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712912010; x=1713516810;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YxatRE/93mGsglGJYCl3WbRD1jFFlo897Trav2ySzAI=;
+        b=DF5mE/jgvenPbIynpRfziLOPbkcItOdUOAwopzd2Qetm3ZXc96KFK8BS2vZgcNtQUt
+         DK5rX1/3mTMi5IHig3/asLI6G/gJzsMABJUHEcXP0gyXKMcDPlfghhaIvqekTYk0WK4x
+         nzFklb3c0+AZkUO4c0rx6YiHCbPFRwtf/oQ5Lrd4RcqEJd7rKVn8hTZQMssVgxyG/zoK
+         rzW0qFqaIBGhtK3OZXjJPStN9ck3kooil6A0fdp/UpTtHuEVkpNXvFc7Y6yQwVN0U96b
+         kLxdF3RZktyTcWYOeFB/KJpMES31R/DKf5E8fWjFvDrM9veKPJyB7wdshgSWIXqEjsHp
+         5Uww==
+X-Forwarded-Encrypted: i=1; AJvYcCXl/wLNoLmGFjYglFR9GxKMCsT7h8avyV6OeWyoWfPdcvI4wda6jYZz9F/b0ESNhTZuKidzqvxEcU8KXx1XoU4mSZ0WwGcl722OR8iL
+X-Gm-Message-State: AOJu0YwD8ep0QgZtY3c7O/NPN2J2QnQo/Sn1s3c953yk/WiIwGUv1gAD
+	O7eE5zZ/ED9RXjRbl071251y3tmrxBQi/N5Nw+WG6rqRDPvWVLo2SBuMZNPCQSM=
+X-Google-Smtp-Source: AGHT+IHjgkDtt9V366P7Lg32vys821kGAn+wZ3KJVBrDfDCBQOWLQL30EXbA0v1fE9uOESGSbmyVxw==
+X-Received: by 2002:ac2:538c:0:b0:517:30a3:d000 with SMTP id g12-20020ac2538c000000b0051730a3d000mr538477lfh.28.1712912010091;
+        Fri, 12 Apr 2024 01:53:30 -0700 (PDT)
+Received: from [127.0.1.1] (netpanel-87-246-222-133.pol.akademiki.lublin.pl. [87.246.222.133])
+        by smtp.gmail.com with ESMTPSA id u9-20020ac248a9000000b00516cbd3e982sm461779lfg.178.2024.04.12.01.53.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Apr 2024 01:53:29 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Fri, 12 Apr 2024 10:53:25 +0200
+Subject: [PATCH] drm/msm/a6xx: Avoid a nullptr dereference when speedbin
+ setting fails
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Apr 2024 10:52:43 +0200
-Message-Id: <D0I0M4T4O9G1.UUESU247CE42@baylibre.com>
-Cc: <m.nirmaladevi@ltts.com>, <lee@kernel.org>, <robh+dt@kernel.org>,
- <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
- <jpanis@baylibre.com>, <devicetree@vger.kernel.org>, <arnd@arndb.de>,
- <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
- <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
- <kristo@kernel.org>
-Subject: Re: [PATCH v6 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
- pinctrl and GPIO
-From: "Esteban Blanc" <eblanc@baylibre.com>
-To: "Bhargav Raviprakash" <bhargav.r@ltts.com>,
- <linux-kernel@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240408124047.191895-1-bhargav.r@ltts.com>
- <20240408124047.191895-11-bhargav.r@ltts.com>
-In-Reply-To: <20240408124047.191895-11-bhargav.r@ltts.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240412-topic-adreno_nullptr_supphw-v1-1-eb30a1c1292f@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAIT2GGYC/x3MQQqEMAwAwK9IzltIa734FVlEbdSAtCHVXUH8u
+ 8XjXOaCTMqUoa0uUPpx5hQL7KeCaR3iQoZDMTh0Hr11Zk/CkxmCUkx9PLZNdu3zIbL+jcUwzk1
+ dI3oPZRClmc937773/QDRbrr7bQAAAA==
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>
+Cc: Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.14-dev
 
-On Mon Apr 8, 2024 at 2:40 PM CEST, Bhargav Raviprakash wrote:
-> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
->
-> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
-> significant functional overlap.
-> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-> dedicated device functions.
->
-> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/pinctrl-tps6594.c | 275 +++++++++++++++++++++++++-----
->  1 file changed, 228 insertions(+), 47 deletions(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-=
-tps6594.c
-> index 66985e54b..f3d1c1518 100644
-> --- a/drivers/pinctrl/pinctrl-tps6594.c
-> +++ b/drivers/pinctrl/pinctrl-tps6594.c
-> @@ -338,8 +506,20 @@ static int tps6594_pinctrl_probe(struct platform_dev=
-ice *pdev)
->  	config.parent =3D tps->dev;
->  	config.regmap =3D tps->regmap;
-> -	config.ngpio =3D TPS6594_PINCTRL_PINS_NB;
-> -	config.ngpio_per_reg =3D 8;
-> +	switch (tps->chip_id) {
-> +	case TPS65224:
-> +		config.ngpio =3D ARRAY_SIZE(tps65224_gpio_func_group_names);
-> +		config.ngpio_per_reg =3D TPS65224_NGPIO_PER_REG;
-> +		break;
-> +	case TPS6593:
-> +	case TPS6594:
-> +		config.ngpio =3D ARRAY_SIZE(tps6594_gpio_func_group_names);
-> +		config.ngpio_per_reg =3D TPS6594_NGPIO_PER_REG;
-> +		break;
-> +	default:
-> +		break;
-> +	}
+Calling a6xx_destroy() before adreno_gpu_init() leads to a null pointer
+dereference on:
 
-Please merge the two switch case.=20
+msm_gpu_cleanup() : platform_set_drvdata(gpu->pdev, NULL);
 
-Other than that I think it's ok.
+as gpu->pdev is only assigned in:
+
+a6xx_gpu_init()
+|_ adreno_gpu_init
+    |_ msm_gpu_init()
+
+Instead of relying on handwavy null checks down the cleanup chain,
+explicitly de-allocate the LLC data and free a6xx_gpu instead.
+
+Fixes: 76efc2453d0e ("drm/msm/gpu: Fix crash during system suspend after unbind")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 0674aca0f8a3..d10323f15d40 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -3058,7 +3058,8 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+ 
+ 	ret = a6xx_set_supported_hw(&pdev->dev, config->info);
+ 	if (ret) {
+-		a6xx_destroy(&(a6xx_gpu->base.base));
++		a6xx_llc_slices_destroy(a6xx_gpu);
++		kfree(a6xx_gpu);
+ 		return ERR_PTR(ret);
+ 	}
+ 
+
+---
+base-commit: 2b3d5988ae2cb5cd945ddbc653f0a71706231fdd
+change-id: 20240412-topic-adreno_nullptr_supphw-10dbf5330044
 
 Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
---=20
-Esteban "Skallwar" Blanc
-BayLibre
