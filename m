@@ -1,68 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A6C5491F
-	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 16:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495ED148853;
+	Fri, 12 Apr 2024 16:15:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712938534; cv=none; b=qUdJtBUo7QGcpCIER7Pfv4YBQohMJ9AkJjFwZSr+4OzAVxX9lgyXxXlm2/vp1PD9dTXvMM2BDx9FLTzRf9g99FqfIwHSFeFWXV4S4L+2va37HcdbniLhbTTyT0MaqV0MIVMSd44kw3NjDN11QTO5rQnyCZg26WmjlqUg39W86kU=
+	t=1712938535; cv=none; b=REMw8JnscqflJhWlU6ewNJj06sG3NRPhoq28DASuHdIAewNJutMX6Q859gbx2pcuTePXXsyiYn9cy8SfnVN8ipuVzwDBURBzV0BKK6AMnNijO3SfZ7YV5RKyK1om6u7qM5R9PbPJ1fvQOT/rd1eIaPRwnFPI3ySBcBiKPtTnTyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712938534; c=relaxed/simple;
-	bh=RLLZ17jVN1alxxjXE6arvEgnN2U+UxV8RZqw9BhEzqc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jbK8G6x2GZE/kd2e2PH68P6NbSfKeTpu6EmDuAqIoNJ5U6oM9/Ie1ogUdM3FipWXfImENwL7mQHwGOfcUrQ2Zs+BALyxsNWVJdgFf/DOX+1atKmaB+uyn3woMdNK2KRdp0dtIxXsgIQWReoaHx28ZY43BDXKMdqe61qfWFjBMF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0CFC113CC;
-	Fri, 12 Apr 2024 16:15:33 +0000 (UTC)
-Date: Fri, 12 Apr 2024 12:15:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
- Prasad Pandit <pjp@fedoraproject.org>, Yang Li <yang.lee@linux.alibaba.com>
-Subject: Re: [GIT PULL] tracing: Fixes for v6.9
-Message-ID: <20240412121531.24669544@gandalf.local.home>
-In-Reply-To: <CAHk-=wgw2NW5tar-Xew614JZPKfyTdet5fC0mgwK+2sUsZ0Ekw@mail.gmail.com>
-References: <20240412103204.453d912c@gandalf.local.home>
-	<CAHk-=wgw2NW5tar-Xew614JZPKfyTdet5fC0mgwK+2sUsZ0Ekw@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1712938535; c=relaxed/simple;
+	bh=/pzofHOtjjBuBu6uCg/ZJgmRq2KbW+P1FAixdoSkvYo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=urVodN96QpJQYz6eQF1BXlPkzx/qJdKlPhPK25cvAuj5HI/bh81Eycs9q7cih531moXY900qSWUChJMCiOH1FmZzhc7YnBj1zaUZaShfNqkHz/DbHOArMtj8MZK+oOXbNjlO2u/++qlm/kgbOjOcMunJ4rnGIJmSlTQi7kadtMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VGM7Z1Ksgz67Lmq;
+	Sat, 13 Apr 2024 00:13:46 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id 25D07140119;
+	Sat, 13 Apr 2024 00:15:32 +0800 (CST)
+Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
+ lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 17:15:31 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Will Deacon <will@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<gregkh@linuxfoundation.org>
+CC: <linuxarm@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Yicong
+ Yang <yangyicong@hisilicon.com>, Jiucheng Xu <jiucheng.xu@amlogic.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>, Atish Patra
+	<atishp@atishpatra.org>, Anup Patel <anup@brainfault.org>, Andy Gross
+	<agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, Frank Li
+	<Frank.li@nxp.com>, Shuai Xue <xueshuai@linux.alibaba.com>, Vineet Gupta
+	<vgupta@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fenghua Yu
+	<fenghua.yu@intel.com>, Dave Jiang <dave.jiang@intel.com>, Wu Hao
+	<hao.wu@intel.com>, Tom Rix <trix@redhat.com>, <linux-fpga@vger.kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Liang Kan
+	<kan.liang@linux.intel.com>
+Subject: [PATCH v2 09/30] perf/xgene: Assign parents for event_source devices
+Date: Fri, 12 Apr 2024 17:10:36 +0100
+Message-ID: <20240412161057.14099-10-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
+References: <20240412161057.14099-1-Jonathan.Cameron@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, 12 Apr 2024 09:07:18 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Currently all these devices appear directly under /sys/devices/
+Only root busses should appear there, so instead assign the pmu->dev
+parents to be the hardware related struct device.
 
-> On Fri, 12 Apr 2024 at 07:29, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > - Replace bad tab with space in Kconfig for FTRACE_RECORD_RECURSION_SIZE  
-> 
-> Argh. What parser is this? We need to fix this craziness.
-> 
-> Yes, yes, we have "tabs and spaces" issues due to the fundamental
-> brokenness of make, and we can't get rid of *that* bogosity.
-> 
-> But for our own Kconfig files? Whitespace is whitespace (ignoring
-> crazy unicode extensions), we need to get away from "tabs and spaces
-> act differently".
+Link: https://lore.kernel.org/linux-cxl/ZCLI9A40PJsyqAmq@kroah.com/
+Cc: Khuong Dinh <khuong@os.amperecomputing.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ drivers/perf/xgene_pmu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Note, the tab is here:
-
--	default	128
-+	default 128
-               ^
-
-That is, the tab was between "default" and "128".
-
-I'm really agnostic to if we care about it, and was questioning about
-taking it or not. But, it looks to be a hidden tab in a weird location,
-so I took it.
-
--- Steve
+diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
+index 0d49343d704b..8823b4c6b556 100644
+--- a/drivers/perf/xgene_pmu.c
++++ b/drivers/perf/xgene_pmu.c
+@@ -1102,6 +1102,7 @@ static int xgene_init_perf(struct xgene_pmu_dev *pmu_dev, char *name)
  
+ 	/* Perf driver registration */
+ 	pmu_dev->pmu = (struct pmu) {
++		.parent		= pmu_dev->parent->dev,
+ 		.attr_groups	= pmu_dev->attr_groups,
+ 		.task_ctx_nr	= perf_invalid_context,
+ 		.pmu_enable	= xgene_perf_pmu_enable,
+-- 
+2.39.2
+
