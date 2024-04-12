@@ -1,164 +1,57 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC25430673;
-	Fri, 12 Apr 2024 10:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F31865339D
+	for <linux-kernel@vger.kernel.org>; Fri, 12 Apr 2024 10:06:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712916339; cv=none; b=DdKD8KJQbI76dCNyoG3fbh33ie3XV+1C/yIEEW/PMrQWqpCKlRiqrihpSuVg85yAGLsuFHVlmwIFG5iD+sSkmxwPqqqYrwNHXx5twGYc2MvwX36DJrRP+Ny5kUuVC8vG13uW43d4rJ+RBQwCYJgCLHFmY8pZQxA8dit4HJj3eLY=
+	t=1712916415; cv=none; b=ex2ZdYCR/MUFRKkVH0dHUJVTYaOYtB8i5MmLfbFrfJNwl3eBKhQjkT+Lh/X5cLbl+TE7vQs6o8kX6yR2UIDXllRkoKr3Jc9FKGBqUStsiZjxkARoH0juWERCsThl1uV4RVB0kgUT2sXpEhMEPocjmdaBihcegCHriB1xji3TUi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712916339; c=relaxed/simple;
-	bh=EkjLXSEsa7m9cJl/GBEGrhoAnqPXfgfS8vyCa9AUeis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pUYNNNovtxHbBsVvz4VBGFUer7q6WCARy/FfC/lqOg/fERMMohNmOEgJKFP6H4sBBfccmnnYjGRBhKzqxvf9PtwHhf53ufGRvzVXpbvtis8Mu2YcsKHI1MfstNl9Rq3eCGl4qPf5P46NHJQinXUb768YEQMfeTOA4Mxt/d0ufvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FEAD339;
-	Fri, 12 Apr 2024 03:06:03 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1ED0B3F64C;
-	Fri, 12 Apr 2024 03:05:32 -0700 (PDT)
-Message-ID: <d707430f-00ee-4427-a9e4-6e42bc5b6aa9@arm.com>
-Date: Fri, 12 Apr 2024 11:05:31 +0100
+	s=arc-20240116; t=1712916415; c=relaxed/simple;
+	bh=rFJXMLQKoZvovqpOjObobPacPdR63TMJNgor5cU6a2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJiftC8j94iLCBMlGbGZSCMkq65JPJ3wqgM2wnZhvpMnLhwAj6vIMp2N3aKyeGLuv9nO9upMx6Rt1L76P6k5f5Gs+cH2gryvKAxEmt08BmK6ZhHzRbc8mCRcQ7wahTzxrjZaFUCzcuT1eQGJCw8LqHmwwnbG77dpnmbhye9tDbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=VKiHt3wv; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="VKiHt3wv"
+Received: from 8bytes.org (p4ffe0bdf.dip0.t-ipconnect.de [79.254.11.223])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 0E2D7281A38;
+	Fri, 12 Apr 2024 12:06:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1712916413;
+	bh=rFJXMLQKoZvovqpOjObobPacPdR63TMJNgor5cU6a2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VKiHt3wvwt/1NCxMQpzfZ+wsSajQJyvIlG3Qm6PcbMmal1QjPWv9fjPFhI9TtPCYZ
+	 0V7/2z0MTCMvG7CB0xUmfUXr32wZBpkRfYlYtRE0rcDxYyDwQVt+jOEBcrxvtTPsKf
+	 QhBkCar7G70zgdaWjGYoBdc3PCnjoLKNF4b8dFUpdqGYe0V7LySBxWGnvFqUG0TIMM
+	 8KjCdY/gOFcEn5hXF+uoTDtmilU6fpBLWyT1xY53DVekvmW7Q1HmqSmGoH78qNPD8f
+	 iGm55t7pVC5Tt8vBAp3M80JR2JhTjbJPyomTl3rAtbFGJfo1//U8R83YM+TYFIe3JP
+	 VLUZJJ5gZSV/g==
+Date: Fri, 12 Apr 2024 12:06:51 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Xuchun Shang <xuchun.shang@linux.alibaba.com>,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] [PULL REQUEST] iommu/vt-d: Fixes for v6.9-rc3
+Message-ID: <ZhkHuyUAkWwEOFmB@8bytes.org>
+References: <20240411030744.273460-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/7] coresight: tmc: Add support for reading crash data
-To: Linu Cherian <lcherian@marvell.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
- linux-kernel@vger.kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, sgoutham@marvell.com, gcherian@marvell.com,
- Anil Kumar Reddy <areddy3@marvell.com>, Tanmay Jagdale <tanmay@marvell.com>,
- mike.leach@linaro.org, leo.yan@linaro.org
-References: <20240307033625.325058-1-lcherian@marvell.com>
- <20240307033625.325058-6-lcherian@marvell.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240307033625.325058-6-lcherian@marvell.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240411030744.273460-1-baolu.lu@linux.intel.com>
 
+On Thu, Apr 11, 2024 at 11:07:41AM +0800, Lu Baolu wrote:
+> - Local memory for PRQ page allocation;
+> - Fix WARN_ON in iommu probe path;
+> - Fix wrong use of pasid config.
 
-
-On 07/03/2024 03:36, Linu Cherian wrote:
-> * Introduce a new mode CS_MODE_READ_CRASHDATA for reading trace
->   captured in previous crash/watchdog reset.
-> 
-> * Add special device files for reading ETR/ETF crash data.
-> 
-> * User can read the crash data as below
-> 
->   For example, for reading crash data from tmc_etf sink
-> 
->   #dd if=/dev/crash_tmc_etfXX of=~/cstrace.bin
-> 
-> Signed-off-by: Anil Kumar Reddy <areddy3@marvell.com>
-> Signed-off-by: Tanmay Jagdale <tanmay@marvell.com>
-> Signed-off-by: Linu Cherian <lcherian@marvell.com>
-> ---
-> Changelog from v6:
-> * Removed read_prevboot flag in sysfs
-> * Added special device files for reading crashdata 
-> * Renamed CS mode READ_PREVBOOT to READ_CRASHDATA 
-> * Setting the READ_CRASHDATA mode is done as part of file open.
-> 
-
-[...]
-
-> @@ -619,6 +740,19 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->  		coresight_unregister(drvdata->csdev);
->  	else
->  		pm_runtime_put(&adev->dev);
-> +
-> +	if (!is_tmc_reserved_region_valid(dev))
-> +		goto out;
-> +
-> +	drvdata->crashdev.name =
-> +		devm_kasprintf(dev, GFP_KERNEL, "%s_%s", "crash", desc.name);
-> +	drvdata->crashdev.minor = MISC_DYNAMIC_MINOR;
-> +	drvdata->crashdev.fops = &tmc_crashdata_fops;
-> +	ret = misc_register(&drvdata->crashdev);
-> +	if (ret)
-> +		pr_err("%s: Failed to setup dev interface for crashdata\n",
-> +		       desc.name);
-> +
-
-Is this all optional after the is_tmc_reserved_region_valid()? Skipping
-to out seems to be more like an error condition, but in this case it's
-not? Having it like this makes it more difficult to add extra steps to
-the probe function. You could move it to a function and flip the
-condition which would be clearer:
-
-   if (is_tmc_reserved_region_valid(dev))
-      register_crash_dev_interface(drvdata);
-
-
->  out:
->  	return ret;
->  }
-
-[...]
-
->  
-> +static int tmc_etr_setup_crashdata_buf(struct tmc_drvdata *drvdata)
-> +{
-> +	int rc = 0;
-> +	u64 trace_addr;
-> +	struct etr_buf *etr_buf;
-> +	struct etr_flat_buf *resrv_buf;
-> +	struct tmc_crash_metadata *mdata;
-> +	struct device *dev = &drvdata->csdev->dev;
-> +
-> +	mdata = drvdata->crash_mdata.vaddr;
-> +
-> +	etr_buf = kzalloc(sizeof(*etr_buf), GFP_ATOMIC);
-> +	if (!etr_buf) {
-> +		rc = -ENOMEM;
-> +		goto out;
-> +	}
-> +	etr_buf->size = drvdata->crash_tbuf.size;
-> +
-> +	resrv_buf = kzalloc(sizeof(*resrv_buf), GFP_ATOMIC);
-> +	if (!resrv_buf) {
-> +		rc = -ENOMEM;
-> +		goto rmem_err;
-> +	}
-> +
-> +	/*
-> +	 * Buffer address given by metadata for retrieval of trace data
-> +	 * from previous boot is expected to be same as the reserved
-> +	 * trace buffer memory region provided through DTS
-> +	 */
-> +	if (is_tmc_reserved_region_valid(dev->parent)
-> +	    && (drvdata->crash_tbuf.paddr == mdata->trc_paddr))
-> +		resrv_buf->vaddr = drvdata->crash_tbuf.vaddr;
-> +	else {
-> +		dev_dbg(dev, "Trace buffer address of previous boot invalid\n");
-> +		rc = -EINVAL;
-> +		goto map_err;
-> +	}
-> +
-> +	resrv_buf->size = etr_buf->size;
-> +	resrv_buf->dev = &drvdata->csdev->dev;
-> +	etr_buf->hwaddr = trace_addr;
-
-trace_addr is uninitialised at this point. If you pull the latest
-coresight branch we enabled some extra compiler warnings which catch this.
-
-I assume it's supposed to be mdata->trc_paddr?
-
-Is there some kind of test that could be added that could have caught
-this? Maybe skip the full reboot flow but just enable the feature and
-see if we can read from the buffer.
-
-Or even just toggling the mode on and off via sysfs. We're running the
-Perf and kselftests on Juno internally so I can add a reserved region to
-the Juno DT and make sure this stays working.
-
-
+Applied, thanks.
