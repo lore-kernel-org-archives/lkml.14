@@ -1,150 +1,169 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3061214F70;
-	Fri, 12 Apr 2024 03:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5F3125BA;
+	Fri, 12 Apr 2024 03:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712890859; cv=none; b=uDY7H+M2UuIZJEMSIDQvznvrV/PGo4BGGUlnO6OBrMAeoy86xCQqazSXOaCvPY9nHQfKs62dZUMnx9msWWUc6yYHx2s1mYX+l5Ja58UYIHkaj1E4YFOY/gjm1ZpGOzkLHNVMBBnvczPWn0YxvwYstMhLTttT4OPIujyJFxUVDFg=
+	t=1712890978; cv=none; b=rr2DN+lxTkUBzV/mwFlsLIZ3wIdTT6J2nbtkSH9zuZHttK6+kfXkuMRgJJqlanog+E8lMJ43q70RmHZN7KKB4zqoIkhGquUCz2UF0tUUdhKkXrPCWRBeFdQ1krtPNbQNr81vqnRi7HD7IJ6hK5evBDwteYxKX0GiWg+NX7Tbs2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712890859; c=relaxed/simple;
-	bh=7xpF9gk+Z73V/R643zePirjdWWYSTl9zp1dt3/U6OZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sak+rpOQK+UtJI6JUHx5Um+pyhG91l6MwxgrsRwgiNClXFgd69nrLUSNi7FGkPJdRBGzCUwcE8Mjmkesn1ciWU9kVOFcqUYKVIwe6bhkYlAqVe5DBDP00G9ntnOw9pq8cAY+arqF8nnku6jBTsTwL5izzvbF8lVFBPKT8OoXu0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VG1XY4J1Rz4f3jdB;
-	Fri, 12 Apr 2024 11:00:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 812A81A016E;
-	Fri, 12 Apr 2024 11:00:52 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.26])
-	by APP1 (Coremail) with SMTP id cCh0CgAn9g7koxhmW+8EJw--.45873S4;
-	Fri, 12 Apr 2024 11:00:52 +0800 (CST)
-From: Xiu Jianfeng <xiujianfeng@huaweicloud.com>
-To: tj@kernel.org,
-	lizefan.x@bytedance.com,
-	hannes@cmpxchg.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH -next] cgroup: move proc_cgroupstats_show() to cgroup.c
-Date: Fri, 12 Apr 2024 02:54:02 +0000
-Message-Id: <20240412025402.780603-1-xiujianfeng@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712890978; c=relaxed/simple;
+	bh=mksHlutSXcQUklVG/Sm4Rj52riQY7SIjyLfdHrSpKqs=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eP7L9CfuodQqN7zp+EO37gl3gIo0lFg/waWod/8tWjBLXnXYTyGduPkF0XK+lUKF0/cHrKEwa82w0nNqad302nYfZPJIHtdkseraEI7OZoRLbjahXmCR4pdzhf2KhNqC5e8idTMF8Nkc51LMWq63eYFbJG7WlC4uFpN4KhBLTR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VG1Z34nHXz1S5M8;
+	Fri, 12 Apr 2024 11:02:03 +0800 (CST)
+Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8E4DC180063;
+	Fri, 12 Apr 2024 11:02:51 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 12 Apr 2024 11:02:51 +0800
+Subject: Re: [PATCH v4 4/4] Documentation: add debugfs description for hisi
+ migration
+To: Alex Williamson <alex.williamson@redhat.com>
+CC: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
+References: <20240402032432.41004-1-liulongfang@huawei.com>
+ <20240402032432.41004-5-liulongfang@huawei.com>
+ <20240404140750.78549701.alex.williamson@redhat.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <699fed1e-51c0-2d74-0f1f-6f45813f4cb4@huawei.com>
+Date: Fri, 12 Apr 2024 11:02:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAn9g7koxhmW+8EJw--.45873S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4fGFyrAF4UJFW3tF48Xrb_yoW5AF17pF
-	n8A343Aw45GFyUKw17t34q9ryfKw4Fqw4UKw4DK34ftr12yr1Iqr1vvw18XryF9FySkF1a
-	qF4Yvryjkw1UtrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCj
-	c4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4
-	CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1x
-	MIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr
-	1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsG
-	vfC2KfnxnUUI43ZEXa7IUbPEf5UUUUU==
-X-CM-SenderInfo: x0lxyxpdqiv03j6k3tpzhluzxrxghudrp/
+In-Reply-To: <20240404140750.78549701.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600005.china.huawei.com (7.193.23.191)
 
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
+On 2024/4/5 4:07, Alex Williamson wrote:
+> On Tue, 2 Apr 2024 11:24:32 +0800
+> Longfang Liu <liulongfang@huawei.com> wrote:
+> 
+>> Add a debugfs document description file to help users understand
+>> how to use the hisilicon accelerator live migration driver's
+>> debugfs.
+>>
+>> Update the file paths that need to be maintained in MAINTAINERS
+>>
+>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>> ---
+>>  .../ABI/testing/debugfs-hisi-migration        | 34 +++++++++++++++++++
+>>  MAINTAINERS                                   |  1 +
+>>  2 files changed, 35 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
+>>
+>> diff --git a/Documentation/ABI/testing/debugfs-hisi-migration b/Documentation/ABI/testing/debugfs-hisi-migration
+>> new file mode 100644
+>> index 000000000000..3d7339276e6f
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/debugfs-hisi-migration
+>> @@ -0,0 +1,34 @@
+>> +What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/data
+>> +Date:		Apr 2024
+>> +KernelVersion:  6.9
+> 
+> At best 6.10 with a merge window in May.
+> 
+>> +Contact:	Longfang Liu <liulongfang@huawei.com>
+>> +Description:	Read the live migration data of the vfio device.
+>> +		These data include device status data, queue configuration
+>> +		data and some task configuration data.
+>> +		The output format of the data is defined by the live
+>> +		migration driver.
+> 
+> "Dumps the device debug migration buffer, state must first be saved
+> using the 'save' attribute."
+> 
+>> +
+>> +What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/attr
+>> +Date:		Apr 2024
+>> +KernelVersion:  6.9
+>> +Contact:	Longfang Liu <liulongfang@huawei.com>
+>> +Description:	Read the live migration attributes of the vfio device.
+>> +		it include device status attributes and data length attributes
+>> +		The output format of the attributes is defined by the live
+>> +		migration driver.
+> 
+> AFAICT from the previous patch, this attribute is useless.
+> 
+>> +
+>> +What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/cmd_state
+>> +Date:		Apr 2024
+>> +KernelVersion:  6.9
+>> +Contact:	Longfang Liu <liulongfang@huawei.com>
+>> +Description:	Used to obtain the device command sending and receiving
+>> +		channel status. If successful, returns the command value.
+>> +		If failed, return error log.
+>> +
+> 
+> Seems like it statically returns "OK" plus the actual value.
+> 
+> 
+>> +What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/save
+>> +Date:		Apr 2024
+>> +KernelVersion:  6.9
+>> +Contact:	Longfang Liu <liulongfang@huawei.com>
+>> +Description:	Trigger the Hisilicon accelerator device to perform
+>> +		the state saving operation of live migration through the read
+>> +		operation, and output the operation log results.
+> 
+> These interfaces are confusing, attr and data only work if there has
+> either been a previous save OR the user migration process closed saving
+> or resuming fds in the interim, and the user doesn't know which one
+> they get.  Note that debug_migf isn't even discarded between
+> open/close, only cmd and save require the device to be opened by a
+> user, data and attr might continue to return data from some previous
+> user save, resume, or debugfs save.
+>
 
-Currently proc_cgroupstats_show() is in cgroup-v1.c, however it can be
-used for v2 too, so it's better to move it cgroup.c.
+data: Indicates the device migration data obtained after the migration is completed.
+This data is saved in debug_migf. The user reads it through "cat" and
+presents it to the user in the form of hexadecimal pure data.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- kernel/cgroup/cgroup-internal.h |  1 -
- kernel/cgroup/cgroup-v1.c       | 21 ---------------------
- kernel/cgroup/cgroup.c          | 21 +++++++++++++++++++++
- 3 files changed, 21 insertions(+), 22 deletions(-)
+attr: Indicates the configuration parameters of the migration process after the
+migration is completed. These parameters are saved in vfio device and debug_migf.
+The user reads it through "cat" and presents it to the user in the form of key-value
+pairs such as <attribute name, attribute value>.
 
-diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-internal.h
-index 520b90dd97ec..9afb39da0d8d 100644
---- a/kernel/cgroup/cgroup-internal.h
-+++ b/kernel/cgroup/cgroup-internal.h
-@@ -284,7 +284,6 @@ extern struct cftype cgroup1_base_files[];
- extern struct kernfs_syscall_ops cgroup1_kf_syscall_ops;
- extern const struct fs_parameter_spec cgroup1_fs_parameters[];
- 
--int proc_cgroupstats_show(struct seq_file *m, void *v);
- bool cgroup1_ssid_disabled(int ssid);
- void cgroup1_pidlist_destroy_all(struct cgroup *cgrp);
- void cgroup1_release_agent(struct work_struct *work);
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index 520a11cb12f4..ca22f66b5c64 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -663,27 +663,6 @@ struct cftype cgroup1_base_files[] = {
- 	{ }	/* terminate */
- };
- 
--/* Display information about each subsystem and each hierarchy */
--int proc_cgroupstats_show(struct seq_file *m, void *v)
--{
--	struct cgroup_subsys *ss;
--	int i;
--
--	seq_puts(m, "#subsys_name\thierarchy\tnum_cgroups\tenabled\n");
--	/*
--	 * Grab the subsystems state racily. No need to add avenue to
--	 * cgroup_mutex contention.
--	 */
--
--	for_each_subsys(ss, i)
--		seq_printf(m, "%s\t%d\t%d\t%d\n",
--			   ss->legacy_name, ss->root->hierarchy_id,
--			   atomic_read(&ss->root->nr_cgrps),
--			   cgroup_ssid_enabled(i));
--
--	return 0;
--}
--
- /**
-  * cgroupstats_build - build and fill cgroupstats
-  * @stats: cgroupstats to fill information into
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index a66c088c851c..dcdc23d66aa0 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -6028,6 +6028,27 @@ static void __init cgroup_init_subsys(struct cgroup_subsys *ss, bool early)
- 	cgroup_unlock();
- }
- 
-+/* Display information about each subsystem and each hierarchy */
-+static int proc_cgroupstats_show(struct seq_file *m, void *v)
-+{
-+	struct cgroup_subsys *ss;
-+	int i;
-+
-+	seq_puts(m, "#subsys_name\thierarchy\tnum_cgroups\tenabled\n");
-+	/*
-+	 * Grab the subsystems state racily. No need to add avenue to
-+	 * cgroup_mutex contention.
-+	 */
-+
-+	for_each_subsys(ss, i)
-+		seq_printf(m, "%s\t%d\t%d\t%d\n",
-+			   ss->legacy_name, ss->root->hierarchy_id,
-+			   atomic_read(&ss->root->nr_cgrps),
-+			   cgroup_ssid_enabled(i));
-+
-+	return 0;
-+}
-+
- /**
-  * cgroup_init_early - cgroup initialization at system boot
-  *
--- 
-2.34.1
+Save is an action process. After "cat" it, a migration save operation will be
+performed and the result data will be updated to debug_migf.
 
+There is still a big difference between data and attr, and the data formats are
+also different. Not merging makes it easier for users to obtain information.
+If you feel confused about save, it is recommended to use migrate_save.
+
+Thanks,
+Longfang.
+
+> 
+> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7625911ec2f1..8c2d13b13273 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -23072,6 +23072,7 @@ M:	Longfang Liu <liulongfang@huawei.com>
+>>  M:	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+>>  L:	kvm@vger.kernel.org
+>>  S:	Maintained
+>> +F:	Documentation/ABI/testing/debugfs-hisi-migration
+>>  F:	drivers/vfio/pci/hisilicon/
+>>  
+>>  VFIO MEDIATED DEVICE DRIVERS
+> 
+> .
+> 
